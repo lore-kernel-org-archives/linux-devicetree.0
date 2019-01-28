@@ -1,196 +1,117 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: reset: meson: add g12a bindings
-Date: Mon, 28 Jan 2019 15:16:26 +0100
-Message-ID: <c5bdc421-1afa-f0d3-65d6-2d062f06267e@baylibre.com>
-References: <20190128141330.21927-1-jbrunet@baylibre.com>
- <20190128141330.21927-2-jbrunet@baylibre.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH v2 09/10] power: supply: Initial support for ROHM
+ BD70528 PMIC charger block
+Date: Mon, 28 Jan 2019 15:46:10 +0100
+Message-ID: <CACRpkdZDOJJ6qSS8fkqQsgmchDWATfhTP=TZATwt6-Z_WQXpJQ@mail.gmail.com>
+References: <20190125110600.GA29332@localhost.localdomain> <CACRpkdYTCgXo8FeitEfRujeWdshnsR3Kn57cKUZsA3CsZ5Cnrw@mail.gmail.com>
+ <20190128135354.GA4156@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190128141330.21927-2-jbrunet@baylibre.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190128135354.GA4156@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Baolin Wang <baolin.wang@linaro.org>, Matti Vaittinen <mazziesaccount@gmail.com>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, open list:OPEN
 List-Id: devicetree@vger.kernel.org
 
-On 28/01/2019 15:13, Jerome Brunet wrote:
-> Add device tree bindings for the reset controller of g12a SoC family.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  .../bindings/reset/amlogic,meson-reset.txt    |   7 +-
->  .../reset/amlogic,meson-g12a-reset.h          | 134 ++++++++++++++++++
->  2 files changed, 139 insertions(+), 2 deletions(-)
->  create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-> index 28ef6c295c76..053cb1322ee3 100644
-> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-> @@ -5,8 +5,11 @@ Please also refer to reset.txt in this directory for common reset
->  controller binding usage.
->  
->  Required properties:
-> -- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset" or
-> -	"amlogic,meson-axg-reset".
-> +- compatible: Should be
-> + * "amlogic,meson8b-reset" or
-> + * "amlogic,meson-gxbb-reset" or
-> + * "amlogic,meson-axg-reset" or
-> + * "amlogic,meson-g12a-reset"
->  - reg: should contain the register address base
->  - #reset-cells: 1, see below
->  
-> diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-> new file mode 100644
-> index 000000000000..8063e8314eef
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-> @@ -0,0 +1,134 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause */
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS.
-> + * Author: Jerome Brunet <jbrunet@baylibre.com>
-> + *
-> + */
-> +
-> +#ifndef _DT_BINDINGS_AMLOGIC_MESON_G12A_RESET_H
-> +#define _DT_BINDINGS_AMLOGIC_MESON_G12A_RESET_H
-> +
-> +/*	RESET0					*/
-> +#define RESET_HIU			0
-> +/*					1	*/
-> +#define RESET_DOS			2
-> +/*					3-4	*/
-> +#define RESET_VIU			5
-> +#define RESET_AFIFO			6
-> +#define RESET_VID_PLL_DIV		7
-> +/*					8-9	*/
-> +#define RESET_VENC			10
-> +#define RESET_ASSIST			11
-> +#define RESET_PCIE_CTRL_A		12
-> +#define RESET_VCBUS			13
-> +#define RESET_PCIE_PHY			14
-> +#define RESET_PCIE_APB			15
-> +#define RESET_GIC			16
-> +#define RESET_CAPB3_DECODE		17
-> +/*					18	*/
-> +#define RESET_HDMITX_CAPB3		19
-> +#define RESET_DVALIN_CAPB3		20
-> +#define RESET_DOS_CAPB3			21
-> +/*					22	*/
-> +#define RESET_CBUS_CAPB3		23
-> +#define RESET_AHB_CNTL			24
-> +#define RESET_AHB_DATA			25
-> +#define RESET_VCBUS_CLK81		26
-> +/*					27-31	*/
-> +/*	RESET1					*/
-> +/*					32	*/
-> +#define RESET_DEMUX			33
-> +#define RESET_USB			34
-> +#define RESET_DDR			35
-> +/*					36	*/
-> +#define RESET_BT656			37
-> +#define RESET_AHB_SRAM			38
-> +/*					39	*/
-> +#define RESET_PARSER			40
-> +/*					41	*/
-> +#define RESET_ISA			42
-> +#define RESET_ETHERNET			43
-> +#define RESET_SD_EMMC_A			44
-> +#define RESET_SD_EMMC_B			45
-> +#define RESET_SD_EMMC_C			46
-> +/*					47-60 */
-> +#define RESET_AUDIO_CODEC		61
-> +/*					62-63	*/
-> +/*	RESET2					*/
-> +/*					64	*/
-> +#define RESET_AUDIO			65
-> +#define RESET_HDMITX_PHY		66
-> +/*					67	*/
-> +#define RESET_MIPI_DSI_HOST		68
-> +#define RESET_ALOCKER			69
-> +#define RESET_GE2D			70
-> +#define RESET_PARSER_REG		71
-> +#define RESET_PARSER_FETCH		72
-> +#define RESET_CTL			73
-> +#define RESET_PARSER_TOP		74
-> +/*					75-77	*/
-> +#define RESET_DVALIN			78
-> +#define RESET_HDMITX			79
-> +/*					80-95	*/
-> +/*	RESET3					*/
-> +/*					96-95	*/
-> +#define RESET_DEMUX_TOP			105
-> +#define RESET_DEMUX_DES_PL		106
-> +#define RESET_DEMUX_S2P_0		107
-> +#define RESET_DEMUX_S2P_1		108
-> +#define RESET_DEMUX_0			109
-> +#define RESET_DEMUX_1			110
-> +#define RESET_DEMUX_2			111
-> +/*					112-127	*/
-> +/*	RESET4					*/
-> +/*					128-129	*/
-> +#define RESET_MIPI_DSI_PHY		130
-> +/*					131-132	*/
-> +#define RESET_RDMA			133
-> +#define RESET_VENCI			134
-> +#define RESET_VENCP			135
-> +/*					136	*/
-> +#define RESET_VDAC			137
-> +/*					138-139 */
-> +#define RESET_VDI6			140
-> +#define RESET_VENCL			141
-> +#define RESET_I2C_M1			142
-> +#define RESET_I2C_M2			143
-> +/*					144-159	*/
-> +/*	RESET5					*/
-> +/*					160-191	*/
-> +/*	RESET6					*/
-> +#define RESET_GEN			192
-> +#define RESET_SPICC0			193
-> +#define RESET_SC			194
-> +#define RESET_SANA_3			195
-> +#define RESET_I2C_M0			196
-> +#define RESET_TS_PLL			197
-> +#define RESET_SPICC1			198
-> +#define RESET_STREAM			199
-> +#define RESET_TS_CPU			200
-> +#define RESET_UART0			201
-> +#define RESET_UART1_2			202
-> +#define RESET_ASYNC0			203
-> +#define RESET_ASYNC1			204
-> +#define RESET_SPIFC0			205
-> +#define RESET_I2C_M3			206
-> +/*					207-223	*/
-> +/*	RESET7					*/
-> +#define RESET_USB_DDR_0			224
-> +#define RESET_USB_DDR_1			225
-> +#define RESET_USB_DDR_2			226
-> +#define RESET_USB_DDR_3			227
-> +#define RESET_TS_GPU			228
-> +#define RESET_DEVICE_MMC_ARB		229
-> +#define RESET_DVALIN_DMC_PIPL		230
-> +#define RESET_VID_LOCK			231
-> +#define RESET_NIC_DMC_PIPL		232
-> +#define RESET_DMC_VPU_PIPL		233
-> +#define RESET_GE2D_DMC_PIPL		234
-> +#define RESET_HCODEC_DMC_PIPL		235
-> +#define RESET_WAVE420_DMC_PIPL		236
-> +#define RESET_HEVCF_DMC_PIPL		237
-> +/*					238-255	*/
-> +
-> +#endif
-> 
+On Mon, Jan 28, 2019 at 2:54 PM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+> > These charging drivers are growing wild. This is starting to get out
+> > of hand, we need some more framework for properly handling charging
+> > state machines the kernel. Not specifically your problem, but
+> > when working on the driver try to keep generic support in mind.
+>
+> I for sure can try - but as the power subsystem is quite new to me - any
+> specific items you would like me to really pay attention?
+
+So I am not saying you have to do this or anything, but I think
+what we need is a generic state machine and policy engine
+for charging, where different charging drivers just plug in.
+
+They all seem to have trickle and fast charging, USB phy
+interaction and AC plug interaction of some kind for detecting
+those and in some cases temperature detection directly
+or using an ADC.
+
+We have a bunch of drivers with software-controlled charging:
+ab8500*
+axp288*
+etc.
+
+If we could get just two drivers to share some changing
+infrastructure we would have a start.
+
+I have no idea how hard it could be, but I think it would
+be a pretty interesting adventure if someone gathered
+some different hardwares and started to generalize parts
+of this.
+
+> > So what I am seeing is that these states are starting to turn up in more
+> > and more drivers, so we really need to think about a central management
+> > component for charging state machines. I do not think they are all
+> > that different after all.
+>
+> Any suggestions how I should take this into account with bd70528?
+
+Not more than above, it is unfair to ask random contributors to
+invent entire new worlds of kernel infrastructure. But I guess I
+just need to say it so we are aware: this charging state machine
+engine is needed. Doing it is another thing.
+
+> > I am certain you must have a graphical picture of this state
+> > machine somewhere, it seems to be how charging hardware people
+> > do their thinking.
+>
+> I don't have any document I could link to yet. I can ask around if we
+> can have some public doc for this :/ And as a last resort I can do some
+> ASCII art in commenets - if this is seen helpfull.
+
+That'd be nice.
+
+> > If I'm not mistaken this is yet another instance of linear interpolation
+> > from a table?
+>
+> "linear interpolation from a table" is really not part of my
+> vocabulary :] But I guess you know the REGULATOR_LINEAR_VOLTAGE - macro?
+> I borrowed the idea from there...
+
+I'm referring to this essentially:
+https://en.wikipedia.org/wiki/Linear_interpolation
+
+What many charging drivers tends to do is:
+- Look up where I am in a table, say between row 4 and 5
+- For x-axis n..n+1, interpolate y-axis between
+  the values found for x=1 and x=n+1 using
+  common linear interpolation.
+
+> > We really need to think about abstracting this. Last time this
+> > duplication appeared I suggested adding linear interpolation
+> > primitives to:
+> > include/linux/fixp-arith.h
+>
+> ... I really think a generic helper for this would be usefull.
+
+Indeed.
+
+> It will take some time untill I can send a proper (non RFC patch) for
+> the charger block as I currently lack of HW I could use for testing the
+> charger properly. Do you think it is better to drop the charger part
+> from the series untill then and submit it only later?
+
+Not really, we need to face the hardware out there and I usually
+use the stance "rough consensus and running code". If noone
+invents a unified charging framework, your hardware needs to
+run so a custom driver isn't that bad either, and it's still better
+to have it in-tree than to maintain it out-of-tree as long as it
+is clearly isolated.
+
+> As I mentioned in
+> cover-letter, the charger part is currently submitted more to give an
+> overview of the chip than to be applied as 'finalized' version of
+> driver.
+
+That's OK.
+
+Yours,
+Linus Walleij
