@@ -1,32 +1,50 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: imx8mq-evk: Add fsl,
- magic-packet property
-Date: Mon, 28 Jan 2019 10:11:56 -0200
-Message-ID: <CAOMZO5B1M9VPB=yXhyKDA8diXo7YuAusTa=uY1Uv6E+hWDqQHA@mail.gmail.com>
-References: <20190128095212.14681-1-ccaione@baylibre.com>
- <20190128095212.14681-3-ccaione@baylibre.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 4/5] spi: nxp-fspi: add octal mode flag bit for octal
+ support
+Date: Mon, 28 Jan 2019 12:26:31 +0000
+Message-ID: <20190128122631.GD11699@sirena.org.uk>
+References: <1547546584-5254-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1547546584-5254-5-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190128095212.14681-3-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8w3uRX/HFJGApMzv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1547546584-5254-5-git-send-email-yogeshnarayan.gaur@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 7:53 AM Carlo Caione <ccaione@baylibre.com> wrote:
->
-> Add the fsl,magic-packet property in the fec nome.
 
-s/nome/node/
+--8w3uRX/HFJGApMzv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+On Tue, Jan 15, 2019 at 10:05:29AM +0000, Yogesh Narayan Gaur wrote:
+
+> diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+> index e23ad9ef028e..adc3c0e14f38 100644
+> --- a/drivers/spi/spi-nxp-fspi.c
+> +++ b/drivers/spi/spi-nxp-fspi.c
+> @@ -952,8 +952,8 @@ static int nxp_fspi_probe(struct platform_device *pdev)
+
+This does not apply against current code, the above file is not present
+upstream.  Please do not submit patches to out of tree code upstream.
+
+--8w3uRX/HFJGApMzv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxO9PYACgkQJNaLcl1U
+h9Bc7wf+PzfVYK47sKb7gYCwrFPhskxTV0PfgznGOSHdzhtJmhuLjfDzsgLC+PH5
+T25AIY5kF5IKbod3WbKT8atM1uQCDHDae81MTD0m6da0uNCpqPsGBquyU+WPiwJA
+SOEpzPRyV0GSI/TQW5fKWnWVUxLVKdMEzTBZnvu9I7EvOpv+eiS0udKenqsE8iVp
+U0EgQng2D51VRhvVOmRY4bmvtby54bzZXjt/4TYsdvNux2ar00OzH8FOJ2XTKnOO
+JdDZlmY/K0NSgjE5T1JYHT4CDn8LLL1wJQ4g04CN/WAKdbGU1GgSMcnxK8OD0C2i
+t3E/tHBlG4R/WC4KdDO76rZk6mCTTg==
+=DbNg
+-----END PGP SIGNATURE-----
+
+--8w3uRX/HFJGApMzv--
