@@ -1,228 +1,153 @@
-From: =?UTF-8?q?Randolph=20Maa=C3=9Fen?= <gaireg@gaireg.de>
-Subject: [PATCH v2 2/2] iio: imu: mpu6050: Add support for the ICM 20602 IMU
-Date: Mon, 28 Jan 2019 19:50:03 +0100
-Message-ID: <20190128185010.8275-2-gaireg@gaireg.de>
-References: <20190128185010.8275-1-gaireg@gaireg.de>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 1/7] PM / OPP: Introduce a power estimation helper
+Date: Mon, 28 Jan 2019 11:02:51 -0800
+Message-ID: <20190128190251.GH81583@google.com>
+References: <20190128165522.31749-1-quentin.perret@arm.com>
+ <20190128165522.31749-2-quentin.perret@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128185010.8275-1-gaireg@gaireg.de>
+Content-Disposition: inline
+In-Reply-To: <20190128165522.31749-2-quentin.perret@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gaireg@gaireg.de
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Masney <masneyb@onstation.org>, Jonathan Marek <jonathan@marek.ca>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Douglas Fischer <fischerdouglasc@gmail.com>, Hans de Goede <hdegoede@redhat.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Quentin Perret <quentin.perret@arm.com>
+Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, sudeep.holla@arm.com, liviu.dudau@arm.com, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, nm@ti.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dietmar.eggemann@arm.com
 List-Id: devicetree@vger.kernel.org
 
-The Invensense ICM-20602 is a 6-axis MotionTracking device that
-combines a 3-axis gyroscope and an 3-axis accelerometer. It is very
-similar to the ICM-20608 imu which is already supported by the mpu6050
-driver. The main difference is that the ICM-20602 has the i2c bus
-disable bit in a separate register.
+rHi Quentin,
 
-Signed-off-by: Randolph Maaßen <gaireg@gaireg.de>
----
- drivers/iio/imu/inv_mpu6050/Kconfig        |  8 ++++----
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 31 ++++++++++++++++++++++++++++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  |  6 ++++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  8 ++++++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c  | 12 +++++++++---
- 5 files changed, 58 insertions(+), 7 deletions(-)
+On Mon, Jan 28, 2019 at 04:55:16PM +0000, Quentin Perret wrote:
+> The Energy Model (EM) framework provides an API to let drivers register
+> the active power of CPUs. The drivers are expected to provide a callback
+> method which estimates the power consumed by a CPU at each available
+> performance levels. How exactly this should be implemented, however,
+> depends on the platform.
+> 
+> On some systems, PM_OPP knows the voltage and frequency at which CPUs
+> can run. When coupled with the CPU 'capacitance' (as provided by the
+> 'dynamic-power-coefficient' devicetree binding), it is possible to
+> estimate the dynamic power consumption of a CPU as P = C * V^2 * f, with
+> C its capacitance and V and f respectively the voltage and frequency of
+> the OPP. The Intelligent Power Allocator (IPA) thermal governor already
+> implements that estimation method, in the thermal framework.
+> 
+> However, this power estimation method can be applied to any platform
+> where all the parameters are known (C, V and f), and not only those
+> suffering thermal issues. As such, the code implementing this feature
+> can be re-used to also populate the EM framework now used by EAS.
+> 
+> As a first step, introduce in PM_OPP a helper function which CPUFreq
+> drivers can use to register into the EM framework. This duplicates the
+> power estimation done in IPA until it can be migrated to using the EM
+> framework. This will be done later, once the EM framework has support
+> for at least all platforms currently supported by IPA.
+> 
+> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
+> ---
+>  drivers/opp/of.c       | 60 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h |  5 ++++
+>  2 files changed, 65 insertions(+)
+> 
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index 06f0f632ec47..7572a2eb2fd4 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -1047,3 +1047,63 @@ struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp)
+>  	return of_node_get(opp->np);
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_get_of_node);
+> +
+> +/**
+> + * of_dev_pm_opp_get_cpu_power() - Estimates the power of a CPU
+> + * @mW:		pointer to the power estimate in milli-watts
+> + * @KHz:	pointer to the OPP's frequency, in kilo-hertz
 
-diff --git a/drivers/iio/imu/inv_mpu6050/Kconfig b/drivers/iio/imu/inv_mpu6050/Kconfig
-index 5483b2ea754d..d2fe9dbddda7 100644
---- a/drivers/iio/imu/inv_mpu6050/Kconfig
-+++ b/drivers/iio/imu/inv_mpu6050/Kconfig
-@@ -13,8 +13,8 @@ config INV_MPU6050_I2C
- 	select INV_MPU6050_IIO
- 	select REGMAP_I2C
- 	help
--	  This driver supports the Invensense MPU6050/6500/9150 and ICM20608
--	  motion tracking devices over I2C.
-+	  This driver supports the Invensense MPU6050/6500/9150 and
-+	  ICM20608/20602 motion tracking devices over I2C.
- 	  This driver can be built as a module. The module will be called
- 	  inv-mpu6050-i2c.
- 
-@@ -24,7 +24,7 @@ config INV_MPU6050_SPI
- 	select INV_MPU6050_IIO
- 	select REGMAP_SPI
- 	help
--	  This driver supports the Invensense MPU6050/6500/9150 and ICM20608
--	  motion tracking devices over SPI.
-+	  This driver supports the Invensense MPU6050/6500/9150 and
-+	  ICM20608/20602 motion tracking devices over SPI.
- 	  This driver can be built as a module. The module will be called
- 	  inv-mpu6050-spi.
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index 1e428c196a82..650de0fefb7b 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -38,6 +38,29 @@ static const int gyro_scale_6050[] = {133090, 266181, 532362, 1064724};
-  */
- static const int accel_scale[] = {598, 1196, 2392, 4785};
- 
-+static const struct inv_mpu6050_reg_map reg_set_icm20602 = {
-+	.sample_rate_div	= INV_MPU6050_REG_SAMPLE_RATE_DIV,
-+	.lpf                    = INV_MPU6050_REG_CONFIG,
-+	.accel_lpf              = INV_MPU6500_REG_ACCEL_CONFIG_2,
-+	.user_ctrl              = INV_MPU6050_REG_USER_CTRL,
-+	.fifo_en                = INV_MPU6050_REG_FIFO_EN,
-+	.gyro_config            = INV_MPU6050_REG_GYRO_CONFIG,
-+	.accl_config            = INV_MPU6050_REG_ACCEL_CONFIG,
-+	.fifo_count_h           = INV_MPU6050_REG_FIFO_COUNT_H,
-+	.fifo_r_w               = INV_MPU6050_REG_FIFO_R_W,
-+	.raw_gyro               = INV_MPU6050_REG_RAW_GYRO,
-+	.raw_accl               = INV_MPU6050_REG_RAW_ACCEL,
-+	.temperature            = INV_MPU6050_REG_TEMPERATURE,
-+	.int_enable             = INV_MPU6050_REG_INT_ENABLE,
-+	.int_status             = INV_MPU6050_REG_INT_STATUS,
-+	.pwr_mgmt_1             = INV_MPU6050_REG_PWR_MGMT_1,
-+	.pwr_mgmt_2             = INV_MPU6050_REG_PWR_MGMT_2,
-+	.int_pin_cfg            = INV_MPU6050_REG_INT_PIN_CFG,
-+	.accl_offset            = INV_MPU6500_REG_ACCEL_OFFSET,
-+	.gyro_offset            = INV_MPU6050_REG_GYRO_OFFSET,
-+	.i2c_if                 = INV_ICM20602_REG_I2C_IF,
-+};
-+
- static const struct inv_mpu6050_reg_map reg_set_6500 = {
- 	.sample_rate_div	= INV_MPU6050_REG_SAMPLE_RATE_DIV,
- 	.lpf                    = INV_MPU6050_REG_CONFIG,
-@@ -58,6 +81,7 @@ static const struct inv_mpu6050_reg_map reg_set_6500 = {
- 	.int_pin_cfg		= INV_MPU6050_REG_INT_PIN_CFG,
- 	.accl_offset		= INV_MPU6500_REG_ACCEL_OFFSET,
- 	.gyro_offset		= INV_MPU6050_REG_GYRO_OFFSET,
-+	.i2c_if                 = 0,
- };
- 
- static const struct inv_mpu6050_reg_map reg_set_6050 = {
-@@ -78,6 +102,7 @@ static const struct inv_mpu6050_reg_map reg_set_6050 = {
- 	.int_pin_cfg		= INV_MPU6050_REG_INT_PIN_CFG,
- 	.accl_offset		= INV_MPU6050_REG_ACCEL_OFFSET,
- 	.gyro_offset		= INV_MPU6050_REG_GYRO_OFFSET,
-+	.i2c_if                 = 0,
- };
- 
- static const struct inv_mpu6050_chip_config chip_config_6050 = {
-@@ -140,6 +165,12 @@ static const struct inv_mpu6050_hw hw_info[] = {
- 		.reg = &reg_set_6500,
- 		.config = &chip_config_6050,
- 	},
-+	{
-+		.whoami = INV_ICM20602_WHOAMI_VALUE,
-+		.name = "ICM20602",
-+		.reg = &reg_set_icm20602,
-+		.config = &chip_config_6050,
-+	},
- };
- 
- int inv_mpu6050_switch_engine(struct inv_mpu6050_state *st, bool en, u32 mask)
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-index dd758e3d403d..e46eb4ddea21 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-@@ -127,6 +127,7 @@ static int inv_mpu_probe(struct i2c_client *client,
- 	st = iio_priv(dev_get_drvdata(&client->dev));
- 	switch (st->chip_type) {
- 	case INV_ICM20608:
-+	case INV_ICM20602:
- 		/* no i2c auxiliary bus on the chip */
- 		break;
- 	default:
-@@ -179,6 +180,7 @@ static const struct i2c_device_id inv_mpu_id[] = {
- 	{"mpu9250", INV_MPU9250},
- 	{"mpu9255", INV_MPU9255},
- 	{"icm20608", INV_ICM20608},
-+	{"icm20602", INV_ICM20602},
- 	{}
- };
- 
-@@ -213,6 +215,10 @@ static const struct of_device_id inv_of_match[] = {
- 		.compatible = "invensense,icm20608",
- 		.data = (void *)INV_ICM20608
- 	},
-+	{
-+		.compatible = "invensense,icm20602",
-+		.data = (void *)INV_ICM20602
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, inv_of_match);
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-index 6bcc11fc1b88..325afd9f5f61 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-@@ -44,6 +44,7 @@
-  *  @int_pin_cfg;	Controls interrupt pin configuration.
-  *  @accl_offset:	Controls the accelerometer calibration offset.
-  *  @gyro_offset:	Controls the gyroscope calibration offset.
-+ *  @i2c_if:		Controls the i2c interface
-  */
- struct inv_mpu6050_reg_map {
- 	u8 sample_rate_div;
-@@ -65,6 +66,7 @@ struct inv_mpu6050_reg_map {
- 	u8 int_pin_cfg;
- 	u8 accl_offset;
- 	u8 gyro_offset;
-+	u8 i2c_if;
- };
- 
- /*device enum */
-@@ -77,6 +79,7 @@ enum inv_devices {
- 	INV_MPU9250,
- 	INV_MPU9255,
- 	INV_ICM20608,
-+	INV_ICM20602,
- 	INV_NUM_PARTS
- };
- 
-@@ -195,6 +198,10 @@ struct inv_mpu6050_state {
- #define INV_MPU6050_BIT_PWR_ACCL_STBY       0x38
- #define INV_MPU6050_BIT_PWR_GYRO_STBY       0x07
- 
-+/* ICM20602 register */
-+#define INV_ICM20602_REG_I2C_IF             0x70
-+#define INV_ICM20602_BIT_I2C_IF_DIS         0x40
-+
- #define INV_MPU6050_REG_FIFO_COUNT_H        0x72
- #define INV_MPU6050_REG_FIFO_R_W            0x74
- 
-@@ -261,6 +268,7 @@ struct inv_mpu6050_state {
- #define INV_MPU9255_WHOAMI_VALUE		0x73
- #define INV_MPU6515_WHOAMI_VALUE		0x74
- #define INV_ICM20608_WHOAMI_VALUE		0xAF
-+#define INV_ICM20602_WHOAMI_VALUE		0x12
- 
- /* scan element definition */
- enum inv_mpu6050_scan {
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-index 227f50afff22..a112c3f45f74 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-@@ -31,9 +31,14 @@ static int inv_mpu_i2c_disable(struct iio_dev *indio_dev)
- 	if (ret)
- 		return ret;
- 
--	st->chip_config.user_ctrl |= INV_MPU6050_BIT_I2C_IF_DIS;
--	ret = regmap_write(st->map, st->reg->user_ctrl,
--			   st->chip_config.user_ctrl);
-+	if (st->reg->i2c_if) {
-+		ret = regmap_write(st->map, st->reg->i2c_if,
-+				   INV_ICM20602_BIT_I2C_IF_DIS);
-+	} else {
-+		st->chip_config.user_ctrl |= INV_MPU6050_BIT_I2C_IF_DIS;
-+		ret = regmap_write(st->map, st->reg->user_ctrl,
-+				   st->chip_config.user_ctrl);
-+	}
- 	if (ret) {
- 		inv_mpu6050_set_power_itg(st, false);
- 		return ret;
-@@ -81,6 +86,7 @@ static const struct spi_device_id inv_mpu_id[] = {
- 	{"mpu9250", INV_MPU9250},
- 	{"mpu9255", INV_MPU9255},
- 	{"icm20608", INV_ICM20608},
-+	{"icm20602", INV_ICM20602},
- 	{}
- };
- 
--- 
-2.11.0
+nit: should be kHz
+
+> + * @cpu:	CPU for which power needs to be estimated
+> + *
+> + * Computes the power estimated by @CPU at the first OPP above @KHz (ceil),
+> + * and updates @KHz and @mW accordingly.
+> + *
+> + * The power is estimated as P = C * V^2 * f, with C the CPU's capacitance
+> + * (read from the 'dynamic-power-coefficient' devicetree binding) and V and f
+> + * respectively the voltage and frequency of the OPP.
+> + *
+> + * Return: -ENODEV if the CPU device cannot be found, -EINVAL if the power
+> + * calculation failed because of missing parameters, 0 otherwise.
+> + */
+> +int of_dev_pm_opp_get_cpu_power(unsigned long *mW, unsigned long *KHz, int cpu)
+
+I think it is more common to put the input parameters first, then the
+output ones, i.e. cpu, kHz, mW.
+
+> +{
+> +	unsigned long mV, Hz, MHz;
+> +	struct device *cpu_dev;
+> +	struct dev_pm_opp *opp;
+> +	struct device_node *np;
+> +	u32 cap;
+> +	u64 tmp;
+> +	int ret;
+> +
+> +	cpu_dev = get_cpu_device(cpu);
+> +	if (!cpu_dev)
+> +		return -ENODEV;
+> +
+> +	np = of_node_get(cpu_dev->of_node);
+> +	if (!np)
+> +		return -EINVAL;
+> +
+> +	ret = of_property_read_u32(np, "dynamic-power-coefficient", &cap);
+> +	of_node_put(np);
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	Hz = *KHz * 1000;
+> +	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &Hz);
+> +	if (IS_ERR(opp))
+> +		return -EINVAL;
+> +
+> +	mV = dev_pm_opp_get_voltage(opp) / 1000;
+> +	dev_pm_opp_put(opp);
+> +	if (!mV)
+> +		return -EINVAL;
+> +
+> +	MHz = Hz / 1000000;
+> +	tmp = (u64)cap * mV * mV * MHz;
+> +	do_div(tmp, 1000000000);
+> +
+> +	*mW = (unsigned long)tmp;
+> +	*KHz = Hz / 1000;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_dev_pm_opp_get_cpu_power);
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index 0a2a88e5a383..fedde14f5187 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -322,6 +322,7 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpuma
+>  struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev);
+>  struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp);
+>  int of_get_required_opp_performance_state(struct device_node *np, int index);
+> +int of_dev_pm_opp_get_cpu_power(unsigned long *mW, unsigned long *KHz, int cpu);
+>  #else
+>  static inline int dev_pm_opp_of_add_table(struct device *dev)
+>  {
+> @@ -364,6 +365,10 @@ static inline int of_get_required_opp_performance_state(struct device_node *np,
+>  {
+>  	return -ENOTSUPP;
+>  }
+> +static inline int of_dev_pm_opp_get_cpu_power(unsigned long *mW, unsigned long *KHz, int cpu)
+> +{
+> +	return -ENOTSUPP;
+> +}
+>  #endif
+>  
+>  #endif		/* __LINUX_OPP_H__ */
+
+Besides the nits above:
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
