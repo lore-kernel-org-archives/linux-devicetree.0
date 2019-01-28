@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v2 07/14] clk: qcom: hfpll: register as clock provider
-Date: Mon, 28 Jan 2019 19:32:54 +0100
-Message-ID: <1548700381-22376-8-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v2 04/14] dt-bindings: mailbox: qcom: Add clock-name optional property
+Date: Mon, 28 Jan 2019 19:32:51 +0100
+Message-ID: <1548700381-22376-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
 References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
@@ -10,43 +10,66 @@ To: jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org
 Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Make the output of the high frequency pll a clock provider.
-On the QCS404 this PLL controls cpu frequency scaling.
+When the APCS clock is registered (platform dependent), it retrieves
+its parent names from hardcoded values in the driver.
+
+The following commit allows the DT node to provide such clock names to
+the platform data based clock driver therefore avoiding having to
+explicitly embed those names in the clock driver source code.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- drivers/clk/qcom/hfpll.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 24 +++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
-index 87b7f46..0ffed0d 100644
---- a/drivers/clk/qcom/hfpll.c
-+++ b/drivers/clk/qcom/hfpll.c
-@@ -53,6 +53,7 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
- 	struct regmap *regmap;
- 	struct clk_hfpll *h;
- 	struct clk *pclk;
-+	int ret;
- 	struct clk_init_data init = {
- 		.parent_names = (const char *[]){ "xo" },
- 		.num_parents = 1,
-@@ -87,7 +88,14 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
- 	h->clkr.hw.init = &init;
- 	spin_lock_init(&h->lock);
- 
--	return devm_clk_register_regmap(&pdev->dev, &h->clkr);
-+	ret = devm_clk_register_regmap(dev, &h->clkr);
-+	if (ret) {
-+		dev_err(dev, "failed to register regmap clock: %d\n", ret);
-+		return ret;
-+	}
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+index 1232fc9..b693103 100644
+--- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
++++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+@@ -18,10 +18,11 @@ platforms.
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+ 	Definition: must specify the base address and size of the global block
 +
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-+					   &h->clkr.hw);
- }
+ - clocks:
+-	Usage: required if #clocks-cells property is present
+-	Value type: <phandle>
+-	Definition: phandle to the input PLL, which feeds the APCS mux/divider
++	Usage: required if #clock-names property is present
++	Value type: <phandle array>
++	Definition: phandles to the two parent clocks of the clock driver.
  
- static struct platform_driver qcom_hfpll_driver = {
+ - #mbox-cells:
+ 	Usage: required
+@@ -33,6 +34,12 @@ platforms.
+ 	Value type: <u32>
+ 	Definition: as described in clock.txt, must be 0
+ 
++- clock-names:
++	Usage: required if the platform data based clock driver needs to
++	retrieve the parent clock names from device tree.
++	This will requires two mandatory clocks to be defined.
++	Value type: <string-array>
++	Definition: must be "aux" and "pll"
+ 
+ = EXAMPLE
+ The following example describes the APCS HMSS found in MSM8996 and part of the
+@@ -65,3 +72,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
+ 		clocks = <&a53pll>;
+ 		#clock-cells = <0>;
+ 	};
++
++Below is another example of the APCS binding on QCS404 platforms:
++
++	apcs_glb: mailbox@b011000 {
++		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
++		reg = <0x0b011000 0x1000>;
++		#mbox-cells = <1>;
++		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
++		clock-names = "aux", "pll";
++		#clock-cells = <0>;
++	};
 -- 
 2.7.4
