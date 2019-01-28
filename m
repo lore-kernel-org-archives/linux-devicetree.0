@@ -1,1039 +1,1168 @@
-Return-Path: <SRS0=NsZW=QG=opensource.cirrus.com=ckeepax@kernel.org>
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v7 4/6] mfd: lochnagar: Add support for the Cirrus Logic Lochnagar
-Date: Wed, 30 Jan 2019 11:41:26 +0000
-Message-ID: <20190130114128.21083-4-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20190130114128.21083-1-ckeepax@opensource.cirrus.com>
-References: <20190130114128.21083-1-ckeepax@opensource.cirrus.com>
+Return-Path: <SRS0=R6Db=QE=gmail.com=tmaimon77@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: lee.jones@linaro.org, sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linus.walleij@linaro.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, patches@opensource.cirrus.com, devicetree@vger.kernel.org
+References: <20190116164855.200357-1-tmaimon77@gmail.com> <20190116164855.200357-3-tmaimon77@gmail.com>
+ <20190119180843.78510580@archlinux> <CAP6Zq1j=wjkKYsP=aFSDCYKV3ESUibtV0oXTXG5P1LikVgdJdw@mail.gmail.com>
+ <20190126173240.4f87423d@archlinux>
+In-Reply-To: <20190126173240.4f87423d@archlinux>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Mon, 28 Jan 2019 12:53:18 +0200
+Message-ID: <CAP6Zq1g-Q7JvE1eEot0FEZuiNG-m-bsy3E+Jf2vO_ALjoaMCag@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] iio: adc: add NPCM ADC driver
+Content-Type: multipart/alternative; boundary="00000000000098947805808265fa"
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Brendan Higgins <brendanhiggins@google.com>, Avi Fishman <avifishman70@gmail.com>, Joel Stanley <joel@jms.id.au>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Lochnagar is an evaluation and development board for Cirrus
-Logic Smart CODEC and Amp devices. It allows the connection of
-most Cirrus Logic devices on mini-cards, as well as allowing
-connection of various application processor systems to provide a
-full evaluation platform. This driver supports the board
-controller chip on the Lochnagar board. Audio system topology,
-clocking and power can all be controlled through the Lochnagar
-controller chip, allowing the device under test to be used in
-a variety of possible use cases.
+--00000000000098947805808265fa
+Content-Type: text/plain; charset="UTF-8"
 
-As the Lochnagar is a fairly complex device this MFD driver
-allows the drivers for the various features to be bound
-in. Initially clocking, regulator and pinctrl will be added as
-these are necessary to configure the system. But in time at least
-audio and voltage/current monitoring will also be added.
+Hi Jonathan,
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+Thanks for the clarification,
 
-Changes since v6:
- - Added a couple of register that will be needed by hardware
-   monitor patches that will be send in the near future.
+ I will like to to Modify the NPCM ADC dt-binding document (
+https://patchwork.ozlabs.org/patch/1022527/ - removing rst node).
+
+To send a new commit to the iio.git testing branch or to send a new patch
+version?
 
 Thanks,
-Charles
 
- MAINTAINERS                         |  17 ++
- drivers/mfd/Kconfig                 |   8 +
- drivers/mfd/Makefile                |   2 +
- drivers/mfd/lochnagar-i2c.c         | 398 ++++++++++++++++++++++++++++++++++++
- include/linux/mfd/lochnagar.h       |  55 +++++
- include/linux/mfd/lochnagar1_regs.h | 157 ++++++++++++++
- include/linux/mfd/lochnagar2_regs.h | 291 ++++++++++++++++++++++++++
- 7 files changed, 928 insertions(+)
- create mode 100644 drivers/mfd/lochnagar-i2c.c
- create mode 100644 include/linux/mfd/lochnagar.h
- create mode 100644 include/linux/mfd/lochnagar1_regs.h
- create mode 100644 include/linux/mfd/lochnagar2_regs.h
+Tomer
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4d04cebb4a712..23577911b3e95 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3701,6 +3701,23 @@ L:	netdev@vger.kernel.org
- S:	Maintained
- F:	drivers/net/ethernet/cirrus/ep93xx_eth.c
- 
-+CIRRUS LOGIC LOCHNAGAR DRIVER
-+M:	Charles Keepax <ckeepax@opensource.cirrus.com>
-+M:	Richard Fitzgerald <rf@opensource.cirrus.com>
-+L:	patches@opensource.cirrus.com
-+S:	Supported
-+F:	drivers/clk/clk-lochnagar.c
-+F:	drivers/mfd/lochnagar-i2c.c
-+F:	drivers/pinctrl/cirrus/pinctrl-lochnagar.c
-+F:	drivers/regulator/lochnagar-regulator.c
-+F:	include/dt-bindings/clk/lochnagar.h
-+F:	include/dt-bindings/pinctrl/lochnagar.h
-+F:	include/linux/mfd/lochnagar*
-+F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
-+F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
-+F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
-+F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-+
- CISCO FCOE HBA DRIVER
- M:	Satish Kharat <satishkh@cisco.com>
- M:	Sesidhar Baddela <sebaddel@cisco.com>
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index f461460a2aeb9..f68ce6f38cebb 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1686,6 +1686,14 @@ config MFD_VX855
- 	  VIA VX855/VX875 south bridge. You will need to enable the vx855_spi
- 	  and/or vx855_gpio drivers for this to do anything useful.
- 
-+config MFD_LOCHNAGAR
-+	bool "Cirrus Logic Lochnagar Audio Development Board"
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	depends on I2C=y && OF
-+	help
-+	  Support for Cirrus Logic Lochnagar audio development board.
-+
- config MFD_ARIZONA
- 	select REGMAP
- 	select REGMAP_IRQ
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 12980a4ad4608..93284316d5307 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -37,6 +37,8 @@ obj-$(CONFIG_MFD_T7L66XB)	+= t7l66xb.o tmio_core.o
- obj-$(CONFIG_MFD_TC6387XB)	+= tc6387xb.o tmio_core.o
- obj-$(CONFIG_MFD_TC6393XB)	+= tc6393xb.o tmio_core.o
- 
-+obj-$(CONFIG_MFD_LOCHNAGAR)	+= lochnagar-i2c.o
-+
- obj-$(CONFIG_MFD_ARIZONA)	+= arizona-core.o
- obj-$(CONFIG_MFD_ARIZONA)	+= arizona-irq.o
- obj-$(CONFIG_MFD_ARIZONA_I2C)	+= arizona-i2c.o
-diff --git a/drivers/mfd/lochnagar-i2c.c b/drivers/mfd/lochnagar-i2c.c
-new file mode 100644
-index 0000000000000..3a65d99389023
---- /dev/null
-+++ b/drivers/mfd/lochnagar-i2c.c
-@@ -0,0 +1,398 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Lochnagar I2C bus interface
-+ *
-+ * Copyright (c) 2012-2018 Cirrus Logic, Inc. and
-+ *                         Cirrus Logic International Semiconductor Ltd.
-+ *
-+ * Author: Charles Keepax <ckeepax@opensource.cirrus.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/lockdep.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/mfd/lochnagar.h>
-+#include <linux/mfd/lochnagar1_regs.h>
-+#include <linux/mfd/lochnagar2_regs.h>
-+
-+#define LOCHNAGAR_BOOT_RETRIES		10
-+#define LOCHNAGAR_BOOT_DELAY_MS		350
-+
-+#define LOCHNAGAR_CONFIG_POLL_US	10000
-+
-+static bool lochnagar1_readable_register(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case LOCHNAGAR_SOFTWARE_RESET:
-+	case LOCHNAGAR_FIRMWARE_ID1...LOCHNAGAR_FIRMWARE_ID2:
-+	case LOCHNAGAR1_CDC_AIF1_SEL...LOCHNAGAR1_CDC_AIF3_SEL:
-+	case LOCHNAGAR1_CDC_MCLK1_SEL...LOCHNAGAR1_CDC_MCLK2_SEL:
-+	case LOCHNAGAR1_CDC_AIF_CTRL1...LOCHNAGAR1_CDC_AIF_CTRL2:
-+	case LOCHNAGAR1_EXT_AIF_CTRL:
-+	case LOCHNAGAR1_DSP_AIF1_SEL...LOCHNAGAR1_DSP_AIF2_SEL:
-+	case LOCHNAGAR1_DSP_CLKIN_SEL:
-+	case LOCHNAGAR1_DSP_AIF:
-+	case LOCHNAGAR1_GF_AIF1...LOCHNAGAR1_GF_AIF2:
-+	case LOCHNAGAR1_PSIA_AIF:
-+	case LOCHNAGAR1_PSIA1_SEL...LOCHNAGAR1_PSIA2_SEL:
-+	case LOCHNAGAR1_SPDIF_AIF_SEL:
-+	case LOCHNAGAR1_GF_AIF3_SEL...LOCHNAGAR1_GF_AIF4_SEL:
-+	case LOCHNAGAR1_GF_CLKOUT1_SEL:
-+	case LOCHNAGAR1_GF_AIF1_SEL...LOCHNAGAR1_GF_AIF2_SEL:
-+	case LOCHNAGAR1_GF_GPIO2...LOCHNAGAR1_GF_GPIO7:
-+	case LOCHNAGAR1_RST:
-+	case LOCHNAGAR1_LED1...LOCHNAGAR1_LED2:
-+	case LOCHNAGAR1_I2C_CTRL:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config lochnagar1_i2c_regmap = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.reg_format_endian = REGMAP_ENDIAN_BIG,
-+	.val_format_endian = REGMAP_ENDIAN_BIG,
-+
-+	.max_register = 0x50,
-+	.readable_reg = lochnagar1_readable_register,
-+
-+	.use_single_read = true,
-+	.use_single_write = true,
-+
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static const struct reg_sequence lochnagar1_patch[] = {
-+	{ 0x40, 0x0083 },
-+	{ 0x47, 0x0018 },
-+	{ 0x50, 0x0000 },
-+};
-+
-+static bool lochnagar2_readable_register(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case LOCHNAGAR_SOFTWARE_RESET:
-+	case LOCHNAGAR_FIRMWARE_ID1...LOCHNAGAR_FIRMWARE_ID2:
-+	case LOCHNAGAR2_CDC_AIF1_CTRL...LOCHNAGAR2_CDC_AIF3_CTRL:
-+	case LOCHNAGAR2_DSP_AIF1_CTRL...LOCHNAGAR2_DSP_AIF2_CTRL:
-+	case LOCHNAGAR2_PSIA1_CTRL...LOCHNAGAR2_PSIA2_CTRL:
-+	case LOCHNAGAR2_GF_AIF3_CTRL...LOCHNAGAR2_GF_AIF4_CTRL:
-+	case LOCHNAGAR2_GF_AIF1_CTRL...LOCHNAGAR2_GF_AIF2_CTRL:
-+	case LOCHNAGAR2_SPDIF_AIF_CTRL:
-+	case LOCHNAGAR2_USB_AIF1_CTRL...LOCHNAGAR2_USB_AIF2_CTRL:
-+	case LOCHNAGAR2_ADAT_AIF_CTRL:
-+	case LOCHNAGAR2_CDC_MCLK1_CTRL...LOCHNAGAR2_CDC_MCLK2_CTRL:
-+	case LOCHNAGAR2_DSP_CLKIN_CTRL:
-+	case LOCHNAGAR2_PSIA1_MCLK_CTRL...LOCHNAGAR2_PSIA2_MCLK_CTRL:
-+	case LOCHNAGAR2_SPDIF_MCLK_CTRL:
-+	case LOCHNAGAR2_GF_CLKOUT1_CTRL...LOCHNAGAR2_GF_CLKOUT2_CTRL:
-+	case LOCHNAGAR2_ADAT_MCLK_CTRL:
-+	case LOCHNAGAR2_SOUNDCARD_MCLK_CTRL:
-+	case LOCHNAGAR2_GPIO_FPGA_GPIO1...LOCHNAGAR2_GPIO_FPGA_GPIO6:
-+	case LOCHNAGAR2_GPIO_CDC_GPIO1...LOCHNAGAR2_GPIO_CDC_GPIO8:
-+	case LOCHNAGAR2_GPIO_DSP_GPIO1...LOCHNAGAR2_GPIO_DSP_GPIO6:
-+	case LOCHNAGAR2_GPIO_GF_GPIO2...LOCHNAGAR2_GPIO_GF_GPIO7:
-+	case LOCHNAGAR2_GPIO_CDC_AIF1_BCLK...LOCHNAGAR2_GPIO_CDC_AIF3_TXDAT:
-+	case LOCHNAGAR2_GPIO_DSP_AIF1_BCLK...LOCHNAGAR2_GPIO_DSP_AIF2_TXDAT:
-+	case LOCHNAGAR2_GPIO_PSIA1_BCLK...LOCHNAGAR2_GPIO_PSIA2_TXDAT:
-+	case LOCHNAGAR2_GPIO_GF_AIF3_BCLK...LOCHNAGAR2_GPIO_GF_AIF4_TXDAT:
-+	case LOCHNAGAR2_GPIO_GF_AIF1_BCLK...LOCHNAGAR2_GPIO_GF_AIF2_TXDAT:
-+	case LOCHNAGAR2_GPIO_DSP_UART1_RX...LOCHNAGAR2_GPIO_DSP_UART2_TX:
-+	case LOCHNAGAR2_GPIO_GF_UART2_RX...LOCHNAGAR2_GPIO_GF_UART2_TX:
-+	case LOCHNAGAR2_GPIO_USB_UART_RX:
-+	case LOCHNAGAR2_GPIO_CDC_PDMCLK1...LOCHNAGAR2_GPIO_CDC_PDMDAT2:
-+	case LOCHNAGAR2_GPIO_CDC_DMICCLK1...LOCHNAGAR2_GPIO_CDC_DMICDAT4:
-+	case LOCHNAGAR2_GPIO_DSP_DMICCLK1...LOCHNAGAR2_GPIO_DSP_DMICDAT2:
-+	case LOCHNAGAR2_GPIO_I2C2_SCL...LOCHNAGAR2_GPIO_I2C4_SDA:
-+	case LOCHNAGAR2_GPIO_DSP_STANDBY:
-+	case LOCHNAGAR2_GPIO_CDC_MCLK1...LOCHNAGAR2_GPIO_CDC_MCLK2:
-+	case LOCHNAGAR2_GPIO_DSP_CLKIN:
-+	case LOCHNAGAR2_GPIO_PSIA1_MCLK...LOCHNAGAR2_GPIO_PSIA2_MCLK:
-+	case LOCHNAGAR2_GPIO_GF_GPIO1...LOCHNAGAR2_GPIO_GF_GPIO5:
-+	case LOCHNAGAR2_GPIO_DSP_GPIO20:
-+	case LOCHNAGAR2_GPIO_CHANNEL1...LOCHNAGAR2_GPIO_CHANNEL16:
-+	case LOCHNAGAR2_MINICARD_RESETS:
-+	case LOCHNAGAR2_ANALOGUE_PATH_CTRL1...LOCHNAGAR2_ANALOGUE_PATH_CTRL2:
-+	case LOCHNAGAR2_COMMS_CTRL4:
-+	case LOCHNAGAR2_SPDIF_CTRL:
-+	case LOCHNAGAR2_IMON_CTRL1...LOCHNAGAR2_IMON_CTRL4:
-+	case LOCHNAGAR2_IMON_DATA1...LOCHNAGAR2_IMON_DATA2:
-+	case LOCHNAGAR2_POWER_CTRL:
-+	case LOCHNAGAR2_MICVDD_CTRL1:
-+	case LOCHNAGAR2_MICVDD_CTRL2:
-+	case LOCHNAGAR2_VDDCORE_CDC_CTRL1:
-+	case LOCHNAGAR2_VDDCORE_CDC_CTRL2:
-+	case LOCHNAGAR2_SOUNDCARD_AIF_CTRL:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool lochnagar2_volatile_register(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case LOCHNAGAR2_GPIO_CHANNEL1...LOCHNAGAR2_GPIO_CHANNEL16:
-+	case LOCHNAGAR2_ANALOGUE_PATH_CTRL1:
-+	case LOCHNAGAR2_IMON_CTRL3...LOCHNAGAR2_IMON_CTRL4:
-+	case LOCHNAGAR2_IMON_DATA1...LOCHNAGAR2_IMON_DATA2:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config lochnagar2_i2c_regmap = {
-+	.reg_bits = 16,
-+	.val_bits = 16,
-+	.reg_format_endian = REGMAP_ENDIAN_BIG,
-+	.val_format_endian = REGMAP_ENDIAN_BIG,
-+
-+	.max_register = 0x1F1F,
-+	.readable_reg = lochnagar2_readable_register,
-+	.volatile_reg = lochnagar2_volatile_register,
-+
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static const struct reg_sequence lochnagar2_patch[] = {
-+	{ 0x00EE, 0x0000 },
-+};
-+
-+struct lochnagar_config {
-+	int id;
-+	const char * const name;
-+	enum lochnagar_type type;
-+	const struct regmap_config *regmap;
-+	const struct reg_sequence *patch;
-+	int npatch;
-+};
-+
-+static struct lochnagar_config lochnagar_configs[] = {
-+	{
-+		.id = 0x50,
-+		.name = "lochnagar1",
-+		.type = LOCHNAGAR1,
-+		.regmap = &lochnagar1_i2c_regmap,
-+		.patch = lochnagar1_patch,
-+		.npatch = ARRAY_SIZE(lochnagar1_patch),
-+	},
-+	{
-+		.id = 0xCB58,
-+		.name = "lochnagar2",
-+		.type = LOCHNAGAR2,
-+		.regmap = &lochnagar2_i2c_regmap,
-+		.patch = lochnagar2_patch,
-+		.npatch = ARRAY_SIZE(lochnagar2_patch),
-+	},
-+};
-+
-+static const struct of_device_id lochnagar_of_match[] = {
-+	{ .compatible = "cirrus,lochnagar1", .data = &lochnagar_configs[0] },
-+	{ .compatible = "cirrus,lochnagar2", .data = &lochnagar_configs[1] },
-+	{},
-+};
-+
-+static int lochnagar_wait_for_boot(struct regmap *regmap, unsigned int *id)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < LOCHNAGAR_BOOT_RETRIES; ++i) {
-+		msleep(LOCHNAGAR_BOOT_DELAY_MS);
-+
-+		/* The reset register will return the device ID when read */
-+		ret = regmap_read(regmap, LOCHNAGAR_SOFTWARE_RESET, id);
-+		if (!ret)
-+			return ret;
-+	}
-+
-+	return -ETIMEDOUT;
-+}
-+
-+/**
-+ * lochnagar_update_config - Synchronise the boards analogue configuration to
-+ *                           the hardware.
-+ *
-+ * @lochnagar: A pointer to the primary core data structure.
-+ *
-+ * Return: Zero on success or an appropriate negative error code on failure.
-+ */
-+int lochnagar_update_config(struct lochnagar *lochnagar)
-+{
-+	struct regmap *regmap = lochnagar->regmap;
-+	unsigned int done = LOCHNAGAR2_ANALOGUE_PATH_UPDATE_STS_MASK;
-+	int timeout_ms = LOCHNAGAR_BOOT_DELAY_MS * LOCHNAGAR_BOOT_RETRIES;
-+	unsigned int val = 0;
-+	int ret;
-+
-+	lockdep_assert_held(&lochnagar->analogue_config_lock);
-+
-+	if (lochnagar->type != LOCHNAGAR2)
-+		return 0;
-+
-+	/*
-+	 * Toggle the ANALOGUE_PATH_UPDATE bit and wait for the device to
-+	 * acknowledge that any outstanding changes to the analogue
-+	 * configuration have been applied.
-+	 */
-+	ret = regmap_write(regmap, LOCHNAGAR2_ANALOGUE_PATH_CTRL1, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_write(regmap, LOCHNAGAR2_ANALOGUE_PATH_CTRL1,
-+			   LOCHNAGAR2_ANALOGUE_PATH_UPDATE_MASK);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_read_poll_timeout(regmap,
-+				       LOCHNAGAR2_ANALOGUE_PATH_CTRL1, val,
-+				       (val & done), LOCHNAGAR_CONFIG_POLL_US,
-+				       timeout_ms * 1000);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(lochnagar_update_config);
-+
-+static int lochnagar_i2c_probe(struct i2c_client *i2c)
-+{
-+	struct device *dev = &i2c->dev;
-+	const struct lochnagar_config *config = NULL;
-+	const struct of_device_id *of_id;
-+	struct lochnagar *lochnagar;
-+	struct gpio_desc *reset, *present;
-+	unsigned int val;
-+	unsigned int firmwareid;
-+	unsigned int devid, rev;
-+	int ret;
-+
-+	lochnagar = devm_kzalloc(dev, sizeof(*lochnagar), GFP_KERNEL);
-+	if (!lochnagar)
-+		return -ENOMEM;
-+
-+	of_id = of_match_device(lochnagar_of_match, dev);
-+	if (!of_id)
-+		return -EINVAL;
-+
-+	config = of_id->data;
-+
-+	lochnagar->dev = dev;
-+	mutex_init(&lochnagar->analogue_config_lock);
-+
-+	dev_set_drvdata(dev, lochnagar);
-+
-+	reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(reset)) {
-+		ret = PTR_ERR(reset);
-+		dev_err(dev, "Failed to get reset GPIO: %d\n", ret);
-+		return ret;
-+	}
-+
-+	present = devm_gpiod_get_optional(dev, "present", GPIOD_OUT_HIGH);
-+	if (IS_ERR(present)) {
-+		ret = PTR_ERR(present);
-+		dev_err(dev, "Failed to get present GPIO: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Leave the Lochnagar in reset for a reasonable amount of time */
-+	msleep(20);
-+
-+	/* Bring Lochnagar out of reset */
-+	gpiod_set_value_cansleep(reset, 1);
-+
-+	/* Identify Lochnagar */
-+	lochnagar->type = config->type;
-+
-+	lochnagar->regmap = devm_regmap_init_i2c(i2c, config->regmap);
-+	if (IS_ERR(lochnagar->regmap)) {
-+		ret = PTR_ERR(lochnagar->regmap);
-+		dev_err(dev, "Failed to allocate register map: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Wait for Lochnagar to boot */
-+	ret = lochnagar_wait_for_boot(lochnagar->regmap, &val);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to read device ID: %d\n", ret);
-+		return ret;
-+	}
-+
-+	devid = val & LOCHNAGAR_DEVICE_ID_MASK;
-+	rev = val & LOCHNAGAR_REV_ID_MASK;
-+
-+	if (devid != config->id) {
-+		dev_err(dev,
-+			"ID does not match %s (expected 0x%x got 0x%x)\n",
-+			config->name, config->id, devid);
-+		return -ENODEV;
-+	}
-+
-+	/* Identify firmware */
-+	ret = regmap_read(lochnagar->regmap, LOCHNAGAR_FIRMWARE_ID1, &val);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to read firmware id 1: %d\n", ret);
-+		return ret;
-+	}
-+
-+	firmwareid = val;
-+
-+	ret = regmap_read(lochnagar->regmap, LOCHNAGAR_FIRMWARE_ID2, &val);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to read firmware id 2: %d\n", ret);
-+		return ret;
-+	}
-+
-+	firmwareid |= (val << config->regmap->val_bits);
-+
-+	dev_info(dev, "Found %s (0x%x) revision %u firmware 0x%.6x\n",
-+		 config->name, devid, rev + 1, firmwareid);
-+
-+	ret = regmap_register_patch(lochnagar->regmap, config->patch,
-+				    config->npatch);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to register patch: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_of_platform_populate(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to populate child nodes: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static struct i2c_driver lochnagar_i2c_driver = {
-+	.driver = {
-+		.name = "lochnagar",
-+		.of_match_table = of_match_ptr(lochnagar_of_match),
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe_new = lochnagar_i2c_probe,
-+};
-+
-+static int __init lochnagar_i2c_init(void)
-+{
-+	int ret;
-+
-+	ret = i2c_add_driver(&lochnagar_i2c_driver);
-+	if (ret)
-+		pr_err("Failed to register Lochnagar driver: %d\n", ret);
-+
-+	return ret;
-+}
-+subsys_initcall(lochnagar_i2c_init);
-diff --git a/include/linux/mfd/lochnagar.h b/include/linux/mfd/lochnagar.h
-new file mode 100644
-index 0000000000000..ff9e64cfc9fb0
---- /dev/null
-+++ b/include/linux/mfd/lochnagar.h
-@@ -0,0 +1,55 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Lochnagar internals
-+ *
-+ * Copyright (c) 2013-2018 Cirrus Logic, Inc. and
-+ *                         Cirrus Logic International Semiconductor Ltd.
-+ *
-+ * Author: Charles Keepax <ckeepax@opensource.cirrus.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+
-+#ifndef CIRRUS_LOCHNAGAR_H
-+#define CIRRUS_LOCHNAGAR_H
-+
-+enum lochnagar_type {
-+	LOCHNAGAR1,
-+	LOCHNAGAR2,
-+};
-+
-+/**
-+ * struct lochnagar - Core data for the Lochnagar audio board driver.
-+ *
-+ * @type: The type of Lochnagar device connected.
-+ * @dev: A pointer to the struct device for the main MFD.
-+ * @regmap: The devices main register map.
-+ * @analogue_config_lock: Lock used to protect updates in the analogue
-+ * configuration as these must not be changed whilst the hardware is processing
-+ * the last update.
-+ */
-+struct lochnagar {
-+	enum lochnagar_type type;
-+	struct device *dev;
-+	struct regmap *regmap;
-+
-+	/* Lock to protect updates to the analogue configuration */
-+	struct mutex analogue_config_lock;
-+};
-+
-+/* Register Addresses */
-+#define LOCHNAGAR_SOFTWARE_RESET                             0x00
-+#define LOCHNAGAR_FIRMWARE_ID1                               0x01
-+#define LOCHNAGAR_FIRMWARE_ID2                               0x02
-+
-+/* (0x0000)  Software Reset */
-+#define LOCHNAGAR_DEVICE_ID_MASK                           0xFFFC
-+#define LOCHNAGAR_DEVICE_ID_SHIFT                               2
-+#define LOCHNAGAR_REV_ID_MASK                              0x0003
-+#define LOCHNAGAR_REV_ID_SHIFT                                  0
-+
-+int lochnagar_update_config(struct lochnagar *lochnagar);
-+
-+#endif
-diff --git a/include/linux/mfd/lochnagar1_regs.h b/include/linux/mfd/lochnagar1_regs.h
-new file mode 100644
-index 0000000000000..114b846245d96
---- /dev/null
-+++ b/include/linux/mfd/lochnagar1_regs.h
-@@ -0,0 +1,157 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Lochnagar1 register definitions
-+ *
-+ * Copyright (c) 2017-2018 Cirrus Logic, Inc. and
-+ *                         Cirrus Logic International Semiconductor Ltd.
-+ *
-+ * Author: Charles Keepax <ckeepax@opensource.cirrus.com>
-+ */
-+
-+#ifndef LOCHNAGAR1_REGISTERS_H
-+#define LOCHNAGAR1_REGISTERS_H
-+
-+/* Register Addresses */
-+#define LOCHNAGAR1_CDC_AIF1_SEL                       0x0008
-+#define LOCHNAGAR1_CDC_AIF2_SEL                       0x0009
-+#define LOCHNAGAR1_CDC_AIF3_SEL                       0x000A
-+#define LOCHNAGAR1_CDC_MCLK1_SEL                      0x000B
-+#define LOCHNAGAR1_CDC_MCLK2_SEL                      0x000C
-+#define LOCHNAGAR1_CDC_AIF_CTRL1                      0x000D
-+#define LOCHNAGAR1_CDC_AIF_CTRL2                      0x000E
-+#define LOCHNAGAR1_EXT_AIF_CTRL                       0x000F
-+#define LOCHNAGAR1_DSP_AIF1_SEL                       0x0010
-+#define LOCHNAGAR1_DSP_AIF2_SEL                       0x0011
-+#define LOCHNAGAR1_DSP_CLKIN_SEL                      0x0012
-+#define LOCHNAGAR1_DSP_AIF                            0x0013
-+#define LOCHNAGAR1_GF_AIF1                            0x0014
-+#define LOCHNAGAR1_GF_AIF2                            0x0015
-+#define LOCHNAGAR1_PSIA_AIF                           0x0016
-+#define LOCHNAGAR1_PSIA1_SEL                          0x0017
-+#define LOCHNAGAR1_PSIA2_SEL                          0x0018
-+#define LOCHNAGAR1_SPDIF_AIF_SEL                      0x0019
-+#define LOCHNAGAR1_GF_AIF3_SEL                        0x001C
-+#define LOCHNAGAR1_GF_AIF4_SEL                        0x001D
-+#define LOCHNAGAR1_GF_CLKOUT1_SEL                     0x001E
-+#define LOCHNAGAR1_GF_AIF1_SEL                        0x001F
-+#define LOCHNAGAR1_GF_AIF2_SEL                        0x0020
-+#define LOCHNAGAR1_GF_GPIO2                           0x0026
-+#define LOCHNAGAR1_GF_GPIO3                           0x0027
-+#define LOCHNAGAR1_GF_GPIO7                           0x0028
-+#define LOCHNAGAR1_RST                                0x0029
-+#define LOCHNAGAR1_LED1                               0x002A
-+#define LOCHNAGAR1_LED2                               0x002B
-+#define LOCHNAGAR1_I2C_CTRL                           0x0046
-+
-+/*
-+ * (0x0008 - 0x000C, 0x0010 - 0x0012, 0x0017 - 0x0020)
-+ * CDC_AIF1_SEL - GF_AIF2_SEL
-+ */
-+#define LOCHNAGAR1_SRC_MASK                             0xFF
-+#define LOCHNAGAR1_SRC_SHIFT                               0
-+
-+/* (0x000D)  CDC_AIF_CTRL1 */
-+#define LOCHNAGAR1_CDC_AIF2_LRCLK_DIR_MASK              0x40
-+#define LOCHNAGAR1_CDC_AIF2_LRCLK_DIR_SHIFT                6
-+#define LOCHNAGAR1_CDC_AIF2_BCLK_DIR_MASK               0x20
-+#define LOCHNAGAR1_CDC_AIF2_BCLK_DIR_SHIFT                 5
-+#define LOCHNAGAR1_CDC_AIF2_ENA_MASK                    0x10
-+#define LOCHNAGAR1_CDC_AIF2_ENA_SHIFT                      4
-+#define LOCHNAGAR1_CDC_AIF1_LRCLK_DIR_MASK              0x04
-+#define LOCHNAGAR1_CDC_AIF1_LRCLK_DIR_SHIFT                2
-+#define LOCHNAGAR1_CDC_AIF1_BCLK_DIR_MASK               0x02
-+#define LOCHNAGAR1_CDC_AIF1_BCLK_DIR_SHIFT                 1
-+#define LOCHNAGAR1_CDC_AIF1_ENA_MASK                    0x01
-+#define LOCHNAGAR1_CDC_AIF1_ENA_SHIFT                      0
-+
-+/* (0x000E)  CDC_AIF_CTRL2 */
-+#define LOCHNAGAR1_CDC_AIF3_LRCLK_DIR_MASK              0x40
-+#define LOCHNAGAR1_CDC_AIF3_LRCLK_DIR_SHIFT                6
-+#define LOCHNAGAR1_CDC_AIF3_BCLK_DIR_MASK               0x20
-+#define LOCHNAGAR1_CDC_AIF3_BCLK_DIR_SHIFT                 5
-+#define LOCHNAGAR1_CDC_AIF3_ENA_MASK                    0x10
-+#define LOCHNAGAR1_CDC_AIF3_ENA_SHIFT                      4
-+#define LOCHNAGAR1_CDC_MCLK1_ENA_MASK                   0x02
-+#define LOCHNAGAR1_CDC_MCLK1_ENA_SHIFT                     1
-+#define LOCHNAGAR1_CDC_MCLK2_ENA_MASK                   0x01
-+#define LOCHNAGAR1_CDC_MCLK2_ENA_SHIFT                     0
-+
-+/* (0x000F)  EXT_AIF_CTRL */
-+#define LOCHNAGAR1_SPDIF_AIF_LRCLK_DIR_MASK             0x20
-+#define LOCHNAGAR1_SPDIF_AIF_LRCLK_DIR_SHIFT               5
-+#define LOCHNAGAR1_SPDIF_AIF_BCLK_DIR_MASK              0x10
-+#define LOCHNAGAR1_SPDIF_AIF_BCLK_DIR_SHIFT                4
-+#define LOCHNAGAR1_SPDIF_AIF_ENA_MASK                   0x08
-+#define LOCHNAGAR1_SPDIF_AIF_ENA_SHIFT                     3
-+
-+/* (0x0013)  DSP_AIF */
-+#define LOCHNAGAR1_DSP_AIF2_LRCLK_DIR_MASK              0x40
-+#define LOCHNAGAR1_DSP_AIF2_LRCLK_DIR_SHIFT                6
-+#define LOCHNAGAR1_DSP_AIF2_BCLK_DIR_MASK               0x20
-+#define LOCHNAGAR1_DSP_AIF2_BCLK_DIR_SHIFT                 5
-+#define LOCHNAGAR1_DSP_AIF2_ENA_MASK                    0x10
-+#define LOCHNAGAR1_DSP_AIF2_ENA_SHIFT                      4
-+#define LOCHNAGAR1_DSP_CLKIN_ENA_MASK                   0x08
-+#define LOCHNAGAR1_DSP_CLKIN_ENA_SHIFT                     3
-+#define LOCHNAGAR1_DSP_AIF1_LRCLK_DIR_MASK              0x04
-+#define LOCHNAGAR1_DSP_AIF1_LRCLK_DIR_SHIFT                2
-+#define LOCHNAGAR1_DSP_AIF1_BCLK_DIR_MASK               0x02
-+#define LOCHNAGAR1_DSP_AIF1_BCLK_DIR_SHIFT                 1
-+#define LOCHNAGAR1_DSP_AIF1_ENA_MASK                    0x01
-+#define LOCHNAGAR1_DSP_AIF1_ENA_SHIFT                      0
-+
-+/* (0x0014)  GF_AIF1 */
-+#define LOCHNAGAR1_GF_CLKOUT1_ENA_MASK                  0x40
-+#define LOCHNAGAR1_GF_CLKOUT1_ENA_SHIFT                    6
-+#define LOCHNAGAR1_GF_AIF3_LRCLK_DIR_MASK               0x20
-+#define LOCHNAGAR1_GF_AIF3_LRCLK_DIR_SHIFT                 5
-+#define LOCHNAGAR1_GF_AIF3_BCLK_DIR_MASK                0x10
-+#define LOCHNAGAR1_GF_AIF3_BCLK_DIR_SHIFT                  4
-+#define LOCHNAGAR1_GF_AIF3_ENA_MASK                     0x08
-+#define LOCHNAGAR1_GF_AIF3_ENA_SHIFT                       3
-+#define LOCHNAGAR1_GF_AIF1_LRCLK_DIR_MASK               0x04
-+#define LOCHNAGAR1_GF_AIF1_LRCLK_DIR_SHIFT                 2
-+#define LOCHNAGAR1_GF_AIF1_BCLK_DIR_MASK                0x02
-+#define LOCHNAGAR1_GF_AIF1_BCLK_DIR_SHIFT                  1
-+#define LOCHNAGAR1_GF_AIF1_ENA_MASK                     0x01
-+#define LOCHNAGAR1_GF_AIF1_ENA_SHIFT                       0
-+
-+/* (0x0015)  GF_AIF2 */
-+#define LOCHNAGAR1_GF_AIF4_LRCLK_DIR_MASK               0x20
-+#define LOCHNAGAR1_GF_AIF4_LRCLK_DIR_SHIFT                 5
-+#define LOCHNAGAR1_GF_AIF4_BCLK_DIR_MASK                0x10
-+#define LOCHNAGAR1_GF_AIF4_BCLK_DIR_SHIFT                  4
-+#define LOCHNAGAR1_GF_AIF4_ENA_MASK                     0x08
-+#define LOCHNAGAR1_GF_AIF4_ENA_SHIFT                       3
-+#define LOCHNAGAR1_GF_AIF2_LRCLK_DIR_MASK               0x04
-+#define LOCHNAGAR1_GF_AIF2_LRCLK_DIR_SHIFT                 2
-+#define LOCHNAGAR1_GF_AIF2_BCLK_DIR_MASK                0x02
-+#define LOCHNAGAR1_GF_AIF2_BCLK_DIR_SHIFT                  1
-+#define LOCHNAGAR1_GF_AIF2_ENA_MASK                     0x01
-+#define LOCHNAGAR1_GF_AIF2_ENA_SHIFT                       0
-+
-+/* (0x0016)  PSIA_AIF */
-+#define LOCHNAGAR1_PSIA2_LRCLK_DIR_MASK                 0x40
-+#define LOCHNAGAR1_PSIA2_LRCLK_DIR_SHIFT                   6
-+#define LOCHNAGAR1_PSIA2_BCLK_DIR_MASK                  0x20
-+#define LOCHNAGAR1_PSIA2_BCLK_DIR_SHIFT                    5
-+#define LOCHNAGAR1_PSIA2_ENA_MASK                       0x10
-+#define LOCHNAGAR1_PSIA2_ENA_SHIFT                         4
-+#define LOCHNAGAR1_PSIA1_LRCLK_DIR_MASK                 0x04
-+#define LOCHNAGAR1_PSIA1_LRCLK_DIR_SHIFT                   2
-+#define LOCHNAGAR1_PSIA1_BCLK_DIR_MASK                  0x02
-+#define LOCHNAGAR1_PSIA1_BCLK_DIR_SHIFT                    1
-+#define LOCHNAGAR1_PSIA1_ENA_MASK                       0x01
-+#define LOCHNAGAR1_PSIA1_ENA_SHIFT                         0
-+
-+/* (0x0029)  RST */
-+#define LOCHNAGAR1_DSP_RESET_MASK                       0x02
-+#define LOCHNAGAR1_DSP_RESET_SHIFT                         1
-+#define LOCHNAGAR1_CDC_RESET_MASK                       0x01
-+#define LOCHNAGAR1_CDC_RESET_SHIFT                         0
-+
-+/* (0x0046)  I2C_CTRL */
-+#define LOCHNAGAR1_CDC_CIF_MODE_MASK                    0x01
-+#define LOCHNAGAR1_CDC_CIF_MODE_SHIFT                      0
-+
-+#endif
-diff --git a/include/linux/mfd/lochnagar2_regs.h b/include/linux/mfd/lochnagar2_regs.h
-new file mode 100644
-index 0000000000000..419b25a332fd9
---- /dev/null
-+++ b/include/linux/mfd/lochnagar2_regs.h
-@@ -0,0 +1,291 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Lochnagar2 register definitions
-+ *
-+ * Copyright (c) 2017-2018 Cirrus Logic, Inc. and
-+ *                         Cirrus Logic International Semiconductor Ltd.
-+ *
-+ * Author: Charles Keepax <ckeepax@opensource.cirrus.com>
-+ */
-+
-+#ifndef LOCHNAGAR2_REGISTERS_H
-+#define LOCHNAGAR2_REGISTERS_H
-+
-+/* Register Addresses */
-+#define LOCHNAGAR2_CDC_AIF1_CTRL                      0x000D
-+#define LOCHNAGAR2_CDC_AIF2_CTRL                      0x000E
-+#define LOCHNAGAR2_CDC_AIF3_CTRL                      0x000F
-+#define LOCHNAGAR2_DSP_AIF1_CTRL                      0x0010
-+#define LOCHNAGAR2_DSP_AIF2_CTRL                      0x0011
-+#define LOCHNAGAR2_PSIA1_CTRL                         0x0012
-+#define LOCHNAGAR2_PSIA2_CTRL                         0x0013
-+#define LOCHNAGAR2_GF_AIF3_CTRL                       0x0014
-+#define LOCHNAGAR2_GF_AIF4_CTRL                       0x0015
-+#define LOCHNAGAR2_GF_AIF1_CTRL                       0x0016
-+#define LOCHNAGAR2_GF_AIF2_CTRL                       0x0017
-+#define LOCHNAGAR2_SPDIF_AIF_CTRL                     0x0018
-+#define LOCHNAGAR2_USB_AIF1_CTRL                      0x0019
-+#define LOCHNAGAR2_USB_AIF2_CTRL                      0x001A
-+#define LOCHNAGAR2_ADAT_AIF_CTRL                      0x001B
-+#define LOCHNAGAR2_CDC_MCLK1_CTRL                     0x001E
-+#define LOCHNAGAR2_CDC_MCLK2_CTRL                     0x001F
-+#define LOCHNAGAR2_DSP_CLKIN_CTRL                     0x0020
-+#define LOCHNAGAR2_PSIA1_MCLK_CTRL                    0x0021
-+#define LOCHNAGAR2_PSIA2_MCLK_CTRL                    0x0022
-+#define LOCHNAGAR2_SPDIF_MCLK_CTRL                    0x0023
-+#define LOCHNAGAR2_GF_CLKOUT1_CTRL                    0x0024
-+#define LOCHNAGAR2_GF_CLKOUT2_CTRL                    0x0025
-+#define LOCHNAGAR2_ADAT_MCLK_CTRL                     0x0026
-+#define LOCHNAGAR2_SOUNDCARD_MCLK_CTRL                0x0027
-+#define LOCHNAGAR2_GPIO_FPGA_GPIO1                    0x0031
-+#define LOCHNAGAR2_GPIO_FPGA_GPIO2                    0x0032
-+#define LOCHNAGAR2_GPIO_FPGA_GPIO3                    0x0033
-+#define LOCHNAGAR2_GPIO_FPGA_GPIO4                    0x0034
-+#define LOCHNAGAR2_GPIO_FPGA_GPIO5                    0x0035
-+#define LOCHNAGAR2_GPIO_FPGA_GPIO6                    0x0036
-+#define LOCHNAGAR2_GPIO_CDC_GPIO1                     0x0037
-+#define LOCHNAGAR2_GPIO_CDC_GPIO2                     0x0038
-+#define LOCHNAGAR2_GPIO_CDC_GPIO3                     0x0039
-+#define LOCHNAGAR2_GPIO_CDC_GPIO4                     0x003A
-+#define LOCHNAGAR2_GPIO_CDC_GPIO5                     0x003B
-+#define LOCHNAGAR2_GPIO_CDC_GPIO6                     0x003C
-+#define LOCHNAGAR2_GPIO_CDC_GPIO7                     0x003D
-+#define LOCHNAGAR2_GPIO_CDC_GPIO8                     0x003E
-+#define LOCHNAGAR2_GPIO_DSP_GPIO1                     0x003F
-+#define LOCHNAGAR2_GPIO_DSP_GPIO2                     0x0040
-+#define LOCHNAGAR2_GPIO_DSP_GPIO3                     0x0041
-+#define LOCHNAGAR2_GPIO_DSP_GPIO4                     0x0042
-+#define LOCHNAGAR2_GPIO_DSP_GPIO5                     0x0043
-+#define LOCHNAGAR2_GPIO_DSP_GPIO6                     0x0044
-+#define LOCHNAGAR2_GPIO_GF_GPIO2                      0x0045
-+#define LOCHNAGAR2_GPIO_GF_GPIO3                      0x0046
-+#define LOCHNAGAR2_GPIO_GF_GPIO7                      0x0047
-+#define LOCHNAGAR2_GPIO_CDC_AIF1_BCLK                 0x0048
-+#define LOCHNAGAR2_GPIO_CDC_AIF1_RXDAT                0x0049
-+#define LOCHNAGAR2_GPIO_CDC_AIF1_LRCLK                0x004A
-+#define LOCHNAGAR2_GPIO_CDC_AIF1_TXDAT                0x004B
-+#define LOCHNAGAR2_GPIO_CDC_AIF2_BCLK                 0x004C
-+#define LOCHNAGAR2_GPIO_CDC_AIF2_RXDAT                0x004D
-+#define LOCHNAGAR2_GPIO_CDC_AIF2_LRCLK                0x004E
-+#define LOCHNAGAR2_GPIO_CDC_AIF2_TXDAT                0x004F
-+#define LOCHNAGAR2_GPIO_CDC_AIF3_BCLK                 0x0050
-+#define LOCHNAGAR2_GPIO_CDC_AIF3_RXDAT                0x0051
-+#define LOCHNAGAR2_GPIO_CDC_AIF3_LRCLK                0x0052
-+#define LOCHNAGAR2_GPIO_CDC_AIF3_TXDAT                0x0053
-+#define LOCHNAGAR2_GPIO_DSP_AIF1_BCLK                 0x0054
-+#define LOCHNAGAR2_GPIO_DSP_AIF1_RXDAT                0x0055
-+#define LOCHNAGAR2_GPIO_DSP_AIF1_LRCLK                0x0056
-+#define LOCHNAGAR2_GPIO_DSP_AIF1_TXDAT                0x0057
-+#define LOCHNAGAR2_GPIO_DSP_AIF2_BCLK                 0x0058
-+#define LOCHNAGAR2_GPIO_DSP_AIF2_RXDAT                0x0059
-+#define LOCHNAGAR2_GPIO_DSP_AIF2_LRCLK                0x005A
-+#define LOCHNAGAR2_GPIO_DSP_AIF2_TXDAT                0x005B
-+#define LOCHNAGAR2_GPIO_PSIA1_BCLK                    0x005C
-+#define LOCHNAGAR2_GPIO_PSIA1_RXDAT                   0x005D
-+#define LOCHNAGAR2_GPIO_PSIA1_LRCLK                   0x005E
-+#define LOCHNAGAR2_GPIO_PSIA1_TXDAT                   0x005F
-+#define LOCHNAGAR2_GPIO_PSIA2_BCLK                    0x0060
-+#define LOCHNAGAR2_GPIO_PSIA2_RXDAT                   0x0061
-+#define LOCHNAGAR2_GPIO_PSIA2_LRCLK                   0x0062
-+#define LOCHNAGAR2_GPIO_PSIA2_TXDAT                   0x0063
-+#define LOCHNAGAR2_GPIO_GF_AIF3_BCLK                  0x0064
-+#define LOCHNAGAR2_GPIO_GF_AIF3_RXDAT                 0x0065
-+#define LOCHNAGAR2_GPIO_GF_AIF3_LRCLK                 0x0066
-+#define LOCHNAGAR2_GPIO_GF_AIF3_TXDAT                 0x0067
-+#define LOCHNAGAR2_GPIO_GF_AIF4_BCLK                  0x0068
-+#define LOCHNAGAR2_GPIO_GF_AIF4_RXDAT                 0x0069
-+#define LOCHNAGAR2_GPIO_GF_AIF4_LRCLK                 0x006A
-+#define LOCHNAGAR2_GPIO_GF_AIF4_TXDAT                 0x006B
-+#define LOCHNAGAR2_GPIO_GF_AIF1_BCLK                  0x006C
-+#define LOCHNAGAR2_GPIO_GF_AIF1_RXDAT                 0x006D
-+#define LOCHNAGAR2_GPIO_GF_AIF1_LRCLK                 0x006E
-+#define LOCHNAGAR2_GPIO_GF_AIF1_TXDAT                 0x006F
-+#define LOCHNAGAR2_GPIO_GF_AIF2_BCLK                  0x0070
-+#define LOCHNAGAR2_GPIO_GF_AIF2_RXDAT                 0x0071
-+#define LOCHNAGAR2_GPIO_GF_AIF2_LRCLK                 0x0072
-+#define LOCHNAGAR2_GPIO_GF_AIF2_TXDAT                 0x0073
-+#define LOCHNAGAR2_GPIO_DSP_UART1_RX                  0x0074
-+#define LOCHNAGAR2_GPIO_DSP_UART1_TX                  0x0075
-+#define LOCHNAGAR2_GPIO_DSP_UART2_RX                  0x0076
-+#define LOCHNAGAR2_GPIO_DSP_UART2_TX                  0x0077
-+#define LOCHNAGAR2_GPIO_GF_UART2_RX                   0x0078
-+#define LOCHNAGAR2_GPIO_GF_UART2_TX                   0x0079
-+#define LOCHNAGAR2_GPIO_USB_UART_RX                   0x007A
-+#define LOCHNAGAR2_GPIO_CDC_PDMCLK1                   0x007C
-+#define LOCHNAGAR2_GPIO_CDC_PDMDAT1                   0x007D
-+#define LOCHNAGAR2_GPIO_CDC_PDMCLK2                   0x007E
-+#define LOCHNAGAR2_GPIO_CDC_PDMDAT2                   0x007F
-+#define LOCHNAGAR2_GPIO_CDC_DMICCLK1                  0x0080
-+#define LOCHNAGAR2_GPIO_CDC_DMICDAT1                  0x0081
-+#define LOCHNAGAR2_GPIO_CDC_DMICCLK2                  0x0082
-+#define LOCHNAGAR2_GPIO_CDC_DMICDAT2                  0x0083
-+#define LOCHNAGAR2_GPIO_CDC_DMICCLK3                  0x0084
-+#define LOCHNAGAR2_GPIO_CDC_DMICDAT3                  0x0085
-+#define LOCHNAGAR2_GPIO_CDC_DMICCLK4                  0x0086
-+#define LOCHNAGAR2_GPIO_CDC_DMICDAT4                  0x0087
-+#define LOCHNAGAR2_GPIO_DSP_DMICCLK1                  0x0088
-+#define LOCHNAGAR2_GPIO_DSP_DMICDAT1                  0x0089
-+#define LOCHNAGAR2_GPIO_DSP_DMICCLK2                  0x008A
-+#define LOCHNAGAR2_GPIO_DSP_DMICDAT2                  0x008B
-+#define LOCHNAGAR2_GPIO_I2C2_SCL                      0x008C
-+#define LOCHNAGAR2_GPIO_I2C2_SDA                      0x008D
-+#define LOCHNAGAR2_GPIO_I2C3_SCL                      0x008E
-+#define LOCHNAGAR2_GPIO_I2C3_SDA                      0x008F
-+#define LOCHNAGAR2_GPIO_I2C4_SCL                      0x0090
-+#define LOCHNAGAR2_GPIO_I2C4_SDA                      0x0091
-+#define LOCHNAGAR2_GPIO_DSP_STANDBY                   0x0092
-+#define LOCHNAGAR2_GPIO_CDC_MCLK1                     0x0093
-+#define LOCHNAGAR2_GPIO_CDC_MCLK2                     0x0094
-+#define LOCHNAGAR2_GPIO_DSP_CLKIN                     0x0095
-+#define LOCHNAGAR2_GPIO_PSIA1_MCLK                    0x0096
-+#define LOCHNAGAR2_GPIO_PSIA2_MCLK                    0x0097
-+#define LOCHNAGAR2_GPIO_GF_GPIO1                      0x0098
-+#define LOCHNAGAR2_GPIO_GF_GPIO5                      0x0099
-+#define LOCHNAGAR2_GPIO_DSP_GPIO20                    0x009A
-+#define LOCHNAGAR2_GPIO_CHANNEL1                      0x00B9
-+#define LOCHNAGAR2_GPIO_CHANNEL2                      0x00BA
-+#define LOCHNAGAR2_GPIO_CHANNEL3                      0x00BB
-+#define LOCHNAGAR2_GPIO_CHANNEL4                      0x00BC
-+#define LOCHNAGAR2_GPIO_CHANNEL5                      0x00BD
-+#define LOCHNAGAR2_GPIO_CHANNEL6                      0x00BE
-+#define LOCHNAGAR2_GPIO_CHANNEL7                      0x00BF
-+#define LOCHNAGAR2_GPIO_CHANNEL8                      0x00C0
-+#define LOCHNAGAR2_GPIO_CHANNEL9                      0x00C1
-+#define LOCHNAGAR2_GPIO_CHANNEL10                     0x00C2
-+#define LOCHNAGAR2_GPIO_CHANNEL11                     0x00C3
-+#define LOCHNAGAR2_GPIO_CHANNEL12                     0x00C4
-+#define LOCHNAGAR2_GPIO_CHANNEL13                     0x00C5
-+#define LOCHNAGAR2_GPIO_CHANNEL14                     0x00C6
-+#define LOCHNAGAR2_GPIO_CHANNEL15                     0x00C7
-+#define LOCHNAGAR2_GPIO_CHANNEL16                     0x00C8
-+#define LOCHNAGAR2_MINICARD_RESETS                    0x00DF
-+#define LOCHNAGAR2_ANALOGUE_PATH_CTRL1                0x00E3
-+#define LOCHNAGAR2_ANALOGUE_PATH_CTRL2                0x00E4
-+#define LOCHNAGAR2_COMMS_CTRL4                        0x00F0
-+#define LOCHNAGAR2_SPDIF_CTRL                         0x00FE
-+#define LOCHNAGAR2_IMON_CTRL1                         0x0108
-+#define LOCHNAGAR2_IMON_CTRL2                         0x0109
-+#define LOCHNAGAR2_IMON_CTRL3                         0x010A
-+#define LOCHNAGAR2_IMON_CTRL4                         0x010B
-+#define LOCHNAGAR2_IMON_DATA1                         0x010C
-+#define LOCHNAGAR2_IMON_DATA2                         0x010D
-+#define LOCHNAGAR2_POWER_CTRL                         0x0116
-+#define LOCHNAGAR2_MICVDD_CTRL1                       0x0119
-+#define LOCHNAGAR2_MICVDD_CTRL2                       0x011B
-+#define LOCHNAGAR2_VDDCORE_CDC_CTRL1                  0x011E
-+#define LOCHNAGAR2_VDDCORE_CDC_CTRL2                  0x0120
-+#define LOCHNAGAR2_SOUNDCARD_AIF_CTRL                 0x0180
-+
-+/* (0x000D-0x001B, 0x0180)  CDC_AIF1_CTRL - SOUNCARD_AIF_CTRL */
-+#define LOCHNAGAR2_AIF_ENA_MASK                       0x8000
-+#define LOCHNAGAR2_AIF_ENA_SHIFT                          15
-+#define LOCHNAGAR2_AIF_LRCLK_DIR_MASK                 0x4000
-+#define LOCHNAGAR2_AIF_LRCLK_DIR_SHIFT                    14
-+#define LOCHNAGAR2_AIF_BCLK_DIR_MASK                  0x2000
-+#define LOCHNAGAR2_AIF_BCLK_DIR_SHIFT                     13
-+#define LOCHNAGAR2_AIF_SRC_MASK                       0x00FF
-+#define LOCHNAGAR2_AIF_SRC_SHIFT                           0
-+
-+/* (0x001E - 0x0027)  CDC_MCLK1_CTRL - SOUNDCARD_MCLK_CTRL */
-+#define LOCHNAGAR2_CLK_ENA_MASK                       0x8000
-+#define LOCHNAGAR2_CLK_ENA_SHIFT                          15
-+#define LOCHNAGAR2_CLK_SRC_MASK                       0x00FF
-+#define LOCHNAGAR2_CLK_SRC_SHIFT                           0
-+
-+/* (0x0031 - 0x009A)  GPIO_FPGA_GPIO1 - GPIO_DSP_GPIO20 */
-+#define LOCHNAGAR2_GPIO_SRC_MASK                      0x00FF
-+#define LOCHNAGAR2_GPIO_SRC_SHIFT                          0
-+
-+/* (0x00B9 - 0x00C8)  GPIO_CHANNEL1 - GPIO_CHANNEL16 */
-+#define LOCHNAGAR2_GPIO_CHANNEL_STS_MASK              0x8000
-+#define LOCHNAGAR2_GPIO_CHANNEL_STS_SHIFT                 15
-+#define LOCHNAGAR2_GPIO_CHANNEL_SRC_MASK              0x00FF
-+#define LOCHNAGAR2_GPIO_CHANNEL_SRC_SHIFT                  0
-+
-+/* (0x00DF)  MINICARD_RESETS */
-+#define LOCHNAGAR2_DSP_RESET_MASK                     0x0002
-+#define LOCHNAGAR2_DSP_RESET_SHIFT                         1
-+#define LOCHNAGAR2_CDC_RESET_MASK                     0x0001
-+#define LOCHNAGAR2_CDC_RESET_SHIFT                         0
-+
-+/* (0x00E3)  ANALOGUE_PATH_CTRL1 */
-+#define LOCHNAGAR2_ANALOGUE_PATH_UPDATE_MASK          0x8000
-+#define LOCHNAGAR2_ANALOGUE_PATH_UPDATE_SHIFT             15
-+#define LOCHNAGAR2_ANALOGUE_PATH_UPDATE_STS_MASK      0x4000
-+#define LOCHNAGAR2_ANALOGUE_PATH_UPDATE_STS_SHIFT         14
-+
-+/* (0x00E4)  ANALOGUE_PATH_CTRL2 */
-+#define LOCHNAGAR2_P2_INPUT_BIAS_ENA_MASK             0x0080
-+#define LOCHNAGAR2_P2_INPUT_BIAS_ENA_SHIFT                 7
-+#define LOCHNAGAR2_P1_INPUT_BIAS_ENA_MASK             0x0040
-+#define LOCHNAGAR2_P1_INPUT_BIAS_ENA_SHIFT                 6
-+#define LOCHNAGAR2_P2_MICBIAS_SRC_MASK                0x0038
-+#define LOCHNAGAR2_P2_MICBIAS_SRC_SHIFT                    3
-+#define LOCHNAGAR2_P1_MICBIAS_SRC_MASK                0x0007
-+#define LOCHNAGAR2_P1_MICBIAS_SRC_SHIFT                    0
-+
-+/* (0x00F0)  COMMS_CTRL4 */
-+#define LOCHNAGAR2_CDC_CIF1MODE_MASK                  0x0001
-+#define LOCHNAGAR2_CDC_CIF1MODE_SHIFT                      0
-+
-+/* (0x00FE)  SPDIF_CTRL */
-+#define LOCHNAGAR2_SPDIF_HWMODE_MASK                  0x0008
-+#define LOCHNAGAR2_SPDIF_HWMODE_SHIFT                      3
-+#define LOCHNAGAR2_SPDIF_RESET_MASK                   0x0001
-+#define LOCHNAGAR2_SPDIF_RESET_SHIFT                       0
-+
-+/* (0x0108)  IMON_CTRL1 */
-+#define LOCHNAGAR2_IMON_ENA_MASK                      0x8000
-+#define LOCHNAGAR2_IMON_ENA_SHIFT                         15
-+#define LOCHNAGAR2_IMON_MEASURED_CHANNELS_MASK        0x03FC
-+#define LOCHNAGAR2_IMON_MEASURED_CHANNELS_SHIFT            2
-+#define LOCHNAGAR2_IMON_MODE_SEL_MASK                 0x0003
-+#define LOCHNAGAR2_IMON_MODE_SEL_SHIFT                     0
-+
-+/* (0x0109)  IMON_CTRL2 */
-+#define LOCHNAGAR2_IMON_FSR_MASK                      0x03FF
-+#define LOCHNAGAR2_IMON_FSR_SHIFT                          0
-+
-+/* (0x010A)  IMON_CTRL3 */
-+#define LOCHNAGAR2_IMON_DONE_MASK                     0x0004
-+#define LOCHNAGAR2_IMON_DONE_SHIFT                         2
-+#define LOCHNAGAR2_IMON_CONFIGURE_MASK                0x0002
-+#define LOCHNAGAR2_IMON_CONFIGURE_SHIFT                    1
-+#define LOCHNAGAR2_IMON_MEASURE_MASK                  0x0001
-+#define LOCHNAGAR2_IMON_MEASURE_SHIFT                      0
-+
-+/* (0x010B)  IMON_CTRL4 */
-+#define LOCHNAGAR2_IMON_DATA_REQ_MASK                 0x0080
-+#define LOCHNAGAR2_IMON_DATA_REQ_SHIFT                     7
-+#define LOCHNAGAR2_IMON_CH_SEL_MASK                   0x0070
-+#define LOCHNAGAR2_IMON_CH_SEL_SHIFT                       4
-+#define LOCHNAGAR2_IMON_DATA_RDY_MASK                 0x0008
-+#define LOCHNAGAR2_IMON_DATA_RDY_SHIFT                     3
-+#define LOCHNAGAR2_IMON_CH_SRC_MASK                   0x0007
-+#define LOCHNAGAR2_IMON_CH_SRC_SHIFT                       0
-+
-+/* (0x010C, 0x010D)  IMON_DATA1, IMON_DATA2 */
-+#define LOCHNAGAR2_IMON_DATA_MASK                     0xFFFF
-+#define LOCHNAGAR2_IMON_DATA_SHIFT                         0
-+
-+/* (0x0116)  POWER_CTRL */
-+#define LOCHNAGAR2_PWR_ENA_MASK                       0x0001
-+#define LOCHNAGAR2_PWR_ENA_SHIFT                           0
-+
-+/* (0x0119)  MICVDD_CTRL1 */
-+#define LOCHNAGAR2_MICVDD_REG_ENA_MASK                0x8000
-+#define LOCHNAGAR2_MICVDD_REG_ENA_SHIFT                   15
-+
-+/* (0x011B)  MICVDD_CTRL2 */
-+#define LOCHNAGAR2_MICVDD_VSEL_MASK                   0x001F
-+#define LOCHNAGAR2_MICVDD_VSEL_SHIFT                       0
-+
-+/* (0x011E)  VDDCORE_CDC_CTRL1 */
-+#define LOCHNAGAR2_VDDCORE_CDC_REG_ENA_MASK           0x8000
-+#define LOCHNAGAR2_VDDCORE_CDC_REG_ENA_SHIFT              15
-+
-+/* (0x0120)  VDDCORE_CDC_CTRL2 */
-+#define LOCHNAGAR2_VDDCORE_CDC_VSEL_MASK              0x007F
-+#define LOCHNAGAR2_VDDCORE_CDC_VSEL_SHIFT                  0
-+
-+#endif
--- 
-2.11.0
+On Sat, 26 Jan 2019 at 19:32, Jonathan Cameron <jic23@kernel.org> wrote:
+
+> On Sun, 20 Jan 2019 17:05:38 +0200
+> Tomer Maimon <tmaimon77@gmail.com> wrote:
+>
+> > Hi Jonathan,
+> >
+> > Thanks a lot for reviewing our driver,
+> >
+> > On Sat, 19 Jan 2019 at 20:08, Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > > On Wed, 16 Jan 2019 18:48:55 +0200
+> > > Tomer Maimon <tmaimon77@gmail.com> wrote:
+> > >
+> > > > Add Nuvoton NPCM BMC Analog-to-Digital Converter(ADC) driver.
+> > > >
+> > > > The NPCM ADC is a 10-bit converter for eight channel inputs.
+> > > >
+> > > > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> > > One trivial ordering in remove oddity that I'll just fix up.
+> > > Also, I don't particularly like printing a message on success
+> > > as it's not providing any useful info.  Hmm. I don't care
+> > > strongly enough to remove it though.
+> > >
+> >
+> > The Probe log is is important for us when customers doing bring-up or
+> have
+> > some issues,
+> > we ask the logs w/o asking to do all kinds of things to see if a device
+> was
+> > probed.
+>
+> You should probably develop a proper info gathering script.  Chances of
+> this
+> randomly getting 'tidied up' in future (i.e. remove) is rather high and
+> I doubt I'll remember this if you miss the patch...
+>
+> I don't care all that much though and your problem if it goes away. Kernel
+> logs shouldn't be used as ABI.  Even error messages tend to change over
+> time!
+>
+> Jonathan
+>
+> >
+> >
+> > > Applied to the togreg branch of iio.git and pushed out as
+> > > testing for the autobuilders to play with it.
+> > >
+> > > Thanks,
+> > >
+> > > Jonathan
+> > >
+> > > > ---
+> > > >  drivers/iio/adc/Kconfig    |  10 ++
+> > > >  drivers/iio/adc/Makefile   |   1 +
+> > > >  drivers/iio/adc/npcm_adc.c | 335
+> > > +++++++++++++++++++++++++++++++++++++++++++++
+> > > >  3 files changed, 346 insertions(+)
+> > > >  create mode 100644 drivers/iio/adc/npcm_adc.c
+> > > >
+> > > > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > > > index 7a3ca4ec0cb7..2d1e70a7d5c4 100644
+> > > > --- a/drivers/iio/adc/Kconfig
+> > > > +++ b/drivers/iio/adc/Kconfig
+> > > > @@ -576,6 +576,16 @@ config NAU7802
+> > > >         To compile this driver as a module, choose M here: the
+> > > >         module will be called nau7802.
+> > > >
+> > > > +config NPCM_ADC
+> > > > +     tristate "Nuvoton NPCM ADC driver"
+> > > > +     depends on ARCH_NPCM || COMPILE_TEST
+> > > > +     depends on HAS_IOMEM
+> > > > +     help
+> > > > +       Say yes here to build support for Nuvoton NPCM ADC.
+> > > > +
+> > > > +       This driver can also be built as a module. If so, the module
+> > > > +       will be called npcm_adc.
+> > > > +
+> > > >  config PALMAS_GPADC
+> > > >       tristate "TI Palmas General Purpose ADC"
+> > > >       depends on MFD_PALMAS
+> > > > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> > > > index 07df37f621bd..3337eb1f4c30 100644
+> > > > --- a/drivers/iio/adc/Makefile
+> > > > +++ b/drivers/iio/adc/Makefile
+> > > > @@ -55,6 +55,7 @@ obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
+> > > >  obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
+> > > >  obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
+> > > >  obj-$(CONFIG_NAU7802) += nau7802.o
+> > > > +obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
+> > > >  obj-$(CONFIG_PALMAS_GPADC) += palmas_gpadc.o
+> > > >  obj-$(CONFIG_QCOM_SPMI_ADC5) += qcom-spmi-adc5.o
+> > > >  obj-$(CONFIG_QCOM_SPMI_IADC) += qcom-spmi-iadc.o
+> > > > diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
+> > > > new file mode 100644
+> > > > index 000000000000..1cc377cdf1f7
+> > > > --- /dev/null
+> > > > +++ b/drivers/iio/adc/npcm_adc.c
+> > > > @@ -0,0 +1,335 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +// Copyright (c) 2019 Nuvoton Technology corporation.
+> > > > +
+> > > > +#include <linux/clk.h>
+> > > > +#include <linux/device.h>
+> > > > +#include <linux/mfd/syscon.h>
+> > > > +#include <linux/io.h>
+> > > > +#include <linux/iio/iio.h>
+> > > > +#include <linux/interrupt.h>
+> > > > +#include <linux/kernel.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/platform_device.h>
+> > > > +#include <linux/regmap.h>
+> > > > +#include <linux/regulator/consumer.h>
+> > > > +#include <linux/spinlock.h>
+> > > > +#include <linux/uaccess.h>
+> > > > +
+> > > > +struct npcm_adc {
+> > > > +     bool int_status;
+> > > > +     u32 adc_sample_hz;
+> > > > +     struct device *dev;
+> > > > +     void __iomem *regs;
+> > > > +     struct clk *adc_clk;
+> > > > +     wait_queue_head_t wq;
+> > > > +     struct regulator *vref;
+> > > > +     struct regmap *rst_regmap;
+> > > > +};
+> > > > +
+> > > > +/* NPCM7xx reset module */
+> > > > +#define NPCM7XX_IPSRST1_OFFSET               0x020
+> > > > +#define NPCM7XX_IPSRST1_ADC_RST              BIT(27)
+> > > > +
+> > > > +/* ADC registers */
+> > > > +#define NPCM_ADCCON   0x00
+> > > > +#define NPCM_ADCDATA  0x04
+> > > > +
+> > > > +/* ADCCON Register Bits */
+> > > > +#define NPCM_ADCCON_ADC_INT_EN               BIT(21)
+> > > > +#define NPCM_ADCCON_REFSEL           BIT(19)
+> > > > +#define NPCM_ADCCON_ADC_INT_ST               BIT(18)
+> > > > +#define NPCM_ADCCON_ADC_EN           BIT(17)
+> > > > +#define NPCM_ADCCON_ADC_RST          BIT(16)
+> > > > +#define NPCM_ADCCON_ADC_CONV         BIT(13)
+> > > > +
+> > > > +#define NPCM_ADCCON_CH_MASK          GENMASK(27, 24)
+> > > > +#define NPCM_ADCCON_CH(x)            ((x) << 24)
+> > > > +#define NPCM_ADCCON_DIV_SHIFT                1
+> > > > +#define NPCM_ADCCON_DIV_MASK         GENMASK(8, 1)
+> > > > +#define NPCM_ADC_DATA_MASK(x)                ((x) & GENMASK(9, 0))
+> > > > +
+> > > > +#define NPCM_ADC_ENABLE              (NPCM_ADCCON_ADC_EN |
+> > > NPCM_ADCCON_ADC_INT_EN)
+> > > > +
+> > > > +/* ADC General Definition */
+> > > > +#define NPCM_RESOLUTION_BITS         10
+> > > > +#define NPCM_INT_VREF_MV             2000
+> > > > +
+> > > > +#define NPCM_ADC_CHAN(ch) {                                  \
+> > > > +     .type = IIO_VOLTAGE,                                    \
+> > > > +     .indexed = 1,                                           \
+> > > > +     .channel = ch,                                          \
+> > > > +     .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),           \
+> > > > +     .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |  \
+> > > > +                             BIT(IIO_CHAN_INFO_SAMP_FREQ),   \
+> > > > +}
+> > > > +
+> > > > +static const struct iio_chan_spec npcm_adc_iio_channels[] = {
+> > > > +     NPCM_ADC_CHAN(0),
+> > > > +     NPCM_ADC_CHAN(1),
+> > > > +     NPCM_ADC_CHAN(2),
+> > > > +     NPCM_ADC_CHAN(3),
+> > > > +     NPCM_ADC_CHAN(4),
+> > > > +     NPCM_ADC_CHAN(5),
+> > > > +     NPCM_ADC_CHAN(6),
+> > > > +     NPCM_ADC_CHAN(7),
+> > > > +};
+> > > > +
+> > > > +static irqreturn_t npcm_adc_isr(int irq, void *data)
+> > > > +{
+> > > > +     u32 regtemp;
+> > > > +     struct iio_dev *indio_dev = data;
+> > > > +     struct npcm_adc *info = iio_priv(indio_dev);
+> > > > +
+> > > > +     regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > > +     if (regtemp & NPCM_ADCCON_ADC_INT_ST) {
+> > > > +             iowrite32(regtemp, info->regs + NPCM_ADCCON);
+> > > > +             wake_up_interruptible(&info->wq);
+> > > > +             info->int_status = true;
+> > > > +     }
+> > > > +
+> > > > +     return IRQ_HANDLED;
+> > > > +}
+> > > > +
+> > > > +static int npcm_adc_read(struct npcm_adc *info, int *val, u8
+> channel)
+> > > > +{
+> > > > +     int ret;
+> > > > +     u32 regtemp;
+> > > > +
+> > > > +     /* Select ADC channel */
+> > > > +     regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > > +     regtemp &= ~NPCM_ADCCON_CH_MASK;
+> > > > +     info->int_status = false;
+> > > > +     iowrite32(regtemp | NPCM_ADCCON_CH(channel) |
+> > > > +               NPCM_ADCCON_ADC_CONV, info->regs + NPCM_ADCCON);
+> > > > +
+> > > > +     ret = wait_event_interruptible_timeout(info->wq,
+> info->int_status,
+> > > > +                                            msecs_to_jiffies(10));
+> > > > +     if (ret == 0) {
+> > > > +             regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > > +             if ((regtemp & NPCM_ADCCON_ADC_CONV) &&
+> info->rst_regmap) {
+> > > > +                     /* if conversion failed - reset ADC module */
+> > > > +                     regmap_write(info->rst_regmap,
+> > > NPCM7XX_IPSRST1_OFFSET,
+> > > > +                                  NPCM7XX_IPSRST1_ADC_RST);
+> > > > +                     msleep(100);
+> > > > +                     regmap_write(info->rst_regmap,
+> > > NPCM7XX_IPSRST1_OFFSET,
+> > > > +                                  0x0);
+> > > > +                     msleep(100);
+> > > > +
+> > > > +                     /* Enable ADC and start conversion module */
+> > > > +                     iowrite32(NPCM_ADC_ENABLE |
+> NPCM_ADCCON_ADC_CONV,
+> > > > +                               info->regs + NPCM_ADCCON);
+> > > > +                     dev_err(info->dev, "RESET ADC Complete\n");
+> > > > +             }
+> > > > +             return -ETIMEDOUT;
+> > > > +     }
+> > > > +     if (ret < 0)
+> > > > +             return ret;
+> > > > +
+> > > > +     *val = NPCM_ADC_DATA_MASK(ioread32(info->regs + NPCM_ADCDATA));
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int npcm_adc_read_raw(struct iio_dev *indio_dev,
+> > > > +                          struct iio_chan_spec const *chan, int
+> *val,
+> > > > +                          int *val2, long mask)
+> > > > +{
+> > > > +     int ret;
+> > > > +     int vref_uv;
+> > > > +     struct npcm_adc *info = iio_priv(indio_dev);
+> > > > +
+> > > > +     switch (mask) {
+> > > > +     case IIO_CHAN_INFO_RAW:
+> > > > +             mutex_lock(&indio_dev->mlock);
+> > > > +             ret = npcm_adc_read(info, val, chan->channel);
+> > > > +             mutex_unlock(&indio_dev->mlock);
+> > > > +             if (ret) {
+> > > > +                     dev_err(info->dev, "NPCM ADC read failed\n");
+> > > > +                     return ret;
+> > > > +             }
+> > > > +             return IIO_VAL_INT;
+> > > > +     case IIO_CHAN_INFO_SCALE:
+> > > > +             if (info->vref) {
+> > > > +                     vref_uv = regulator_get_voltage(info->vref);
+> > > > +                     *val = vref_uv / 1000;
+> > > > +             } else {
+> > > > +                     *val = NPCM_INT_VREF_MV;
+> > > > +             }
+> > > > +             *val2 = NPCM_RESOLUTION_BITS;
+> > > > +             return IIO_VAL_FRACTIONAL_LOG2;
+> > > > +     case IIO_CHAN_INFO_SAMP_FREQ:
+> > > > +             *val = info->adc_sample_hz;
+> > > > +             return IIO_VAL_INT;
+> > > > +     default:
+> > > > +             return -EINVAL;
+> > > > +     }
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static const struct iio_info npcm_adc_iio_info = {
+> > > > +     .read_raw = &npcm_adc_read_raw,
+> > > > +};
+> > > > +
+> > > > +static const struct of_device_id npcm_adc_match[] = {
+> > > > +     { .compatible = "nuvoton,npcm750-adc", },
+> > > > +     { /* sentinel */ }
+> > > > +};
+> > > > +MODULE_DEVICE_TABLE(of, npcm_adc_match);
+> > > > +
+> > > > +static int npcm_adc_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +     int ret;
+> > > > +     int irq;
+> > > > +     u32 div;
+> > > > +     u32 reg_con;
+> > > > +     struct resource *res;
+> > > > +     struct npcm_adc *info;
+> > > > +     struct iio_dev *indio_dev;
+> > > > +     struct device *dev = &pdev->dev;
+> > > > +     struct device_node *np = pdev->dev.of_node;
+> > > > +
+> > > > +     indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+> > > > +     if (!indio_dev)
+> > > > +             return -ENOMEM;
+> > > > +     info = iio_priv(indio_dev);
+> > > > +
+> > > > +     info->dev = &pdev->dev;
+> > > > +
+> > > > +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > > +     info->regs = devm_ioremap_resource(&pdev->dev, res);
+> > > > +     if (IS_ERR(info->regs))
+> > > > +             return PTR_ERR(info->regs);
+> > > > +
+> > > > +     info->adc_clk = devm_clk_get(&pdev->dev, NULL);
+> > > > +     if (IS_ERR(info->adc_clk)) {
+> > > > +             dev_warn(&pdev->dev, "ADC clock failed: can't read
+> clk\n");
+> > > > +             return PTR_ERR(info->adc_clk);
+> > > > +     }
+> > > > +
+> > > > +     /* calculate ADC clock sample rate */
+> > > > +     reg_con = ioread32(info->regs + NPCM_ADCCON);
+> > > > +     div = reg_con & NPCM_ADCCON_DIV_MASK;
+> > > > +     div = div >> NPCM_ADCCON_DIV_SHIFT;
+> > > > +     info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1)
+> *
+> > > 2);
+> > > > +
+> > > > +     if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
+> > > > +             info->rst_regmap = syscon_regmap_lookup_by_compatible
+> > > > +                     ("nuvoton,npcm750-rst");
+> > > > +             if (IS_ERR(info->rst_regmap)) {
+> > > > +                     dev_err(&pdev->dev, "Failed to find
+> > > nuvoton,npcm750-rst\n");
+> > > > +                     ret = PTR_ERR(info->rst_regmap);
+> > > > +                     goto err_disable_clk;
+> > > > +             }
+> > > > +     }
+> > > > +
+> > > > +     irq = platform_get_irq(pdev, 0);
+> > > > +     if (irq <= 0) {
+> > > > +             dev_err(dev, "failed getting interrupt resource\n");
+> > > > +             ret = -EINVAL;
+> > > > +             goto err_disable_clk;
+> > > > +     }
+> > > > +
+> > > > +     ret = devm_request_irq(&pdev->dev, irq, npcm_adc_isr, 0,
+> > > > +                            "NPCM_ADC", indio_dev);
+> > > > +     if (ret < 0) {
+> > > > +             dev_err(dev, "failed requesting interrupt\n");
+> > > > +             goto err_disable_clk;
+> > > > +     }
+> > > > +
+> > > > +     reg_con = ioread32(info->regs + NPCM_ADCCON);
+> > > > +     info->vref = devm_regulator_get_optional(&pdev->dev, "vref");
+> > > > +     if (!IS_ERR(info->vref)) {
+> > > > +             ret = regulator_enable(info->vref);
+> > > > +             if (ret) {
+> > > > +                     dev_err(&pdev->dev, "Can't enable ADC
+> reference
+> > > voltage\n");
+> > > > +                     goto err_disable_clk;
+> > > > +             }
+> > > > +
+> > > > +             iowrite32(reg_con & ~NPCM_ADCCON_REFSEL,
+> > > > +                       info->regs + NPCM_ADCCON);
+> > > > +     } else {
+> > > > +             /*
+> > > > +              * Any error which is not ENODEV indicates the
+> regulator
+> > > > +              * has been specified and so is a failure case.
+> > > > +              */
+> > > > +             if (PTR_ERR(info->vref) != -ENODEV) {
+> > > > +                     ret = PTR_ERR(info->vref);
+> > > > +                     goto err_disable_clk;
+> > > > +             }
+> > > > +
+> > > > +             /* Use internal reference */
+> > > > +             iowrite32(reg_con | NPCM_ADCCON_REFSEL,
+> > > > +                       info->regs + NPCM_ADCCON);
+> > > > +     }
+> > > > +
+> > > > +     init_waitqueue_head(&info->wq);
+> > > > +
+> > > > +     reg_con = ioread32(info->regs + NPCM_ADCCON);
+> > > > +     reg_con |= NPCM_ADC_ENABLE;
+> > > > +
+> > > > +     /* Enable the ADC Module */
+> > > > +     iowrite32(reg_con, info->regs + NPCM_ADCCON);
+> > > > +
+> > > > +     /* Start ADC conversion */
+> > > > +     iowrite32(reg_con | NPCM_ADCCON_ADC_CONV, info->regs +
+> > > NPCM_ADCCON);
+> > > > +
+> > > > +     platform_set_drvdata(pdev, indio_dev);
+> > > > +     indio_dev->name = dev_name(&pdev->dev);
+> > > > +     indio_dev->dev.parent = &pdev->dev;
+> > > > +     indio_dev->info = &npcm_adc_iio_info;
+> > > > +     indio_dev->modes = INDIO_DIRECT_MODE;
+> > > > +     indio_dev->channels = npcm_adc_iio_channels;
+> > > > +     indio_dev->num_channels = ARRAY_SIZE(npcm_adc_iio_channels);
+> > > > +
+> > > > +     ret = iio_device_register(indio_dev);
+> > > > +     if (ret) {
+> > > > +             dev_err(&pdev->dev, "Couldn't register the device.\n");
+> > > > +             goto err_iio_register;
+> > > > +     }
+> > > > +
+> > > > +     pr_info("NPCM ADC driver probed\n");
+> > > Hmm. Not sure this tells us anything useful.  If we have succeeding
+> > > in probing there are lots of ways to find out that are better than
+> > > filling up the kernel log.
+> > >
+> > > > +
+> > > > +     return 0;
+> > > > +
+> > > > +err_iio_register:
+> > > > +     iowrite32(reg_con & ~NPCM_ADCCON_ADC_EN, info->regs +
+> NPCM_ADCCON);
+> > > > +     if (!IS_ERR(info->vref))
+> > > > +             regulator_disable(info->vref);
+> > > > +err_disable_clk:
+> > > > +     clk_disable_unprepare(info->adc_clk);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +static int npcm_adc_remove(struct platform_device *pdev)
+> > > > +{
+> > > > +     struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> > > > +     struct npcm_adc *info = iio_priv(indio_dev);
+> > > > +     u32 regtemp;
+> > > > +
+> > > > +     regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > >
+> > > The ordering is a bit odd here.  I would have done the unregister
+> > > first then read the value.  Doesn't have any real effect other than
+> making
+> > > reviewers wonder if there is something interesting going on!
+> > >
+> > > > +
+> > > > +     iio_device_unregister(indio_dev);
+> > > > +     iowrite32(regtemp & ~NPCM_ADCCON_ADC_EN, info->regs +
+> NPCM_ADCCON);
+> > > > +     if (!IS_ERR(info->vref))
+> > > > +             regulator_disable(info->vref);
+> > > > +     clk_disable_unprepare(info->adc_clk);
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static struct platform_driver npcm_adc_driver = {
+> > > > +     .probe          = npcm_adc_probe,
+> > > > +     .remove         = npcm_adc_remove,
+> > > > +     .driver         = {
+> > > > +             .name   = "npcm_adc",
+> > > > +             .of_match_table = npcm_adc_match,
+> > > > +     },
+> > > > +};
+> > > > +
+> > > > +module_platform_driver(npcm_adc_driver);
+> > > > +
+> > > > +MODULE_DESCRIPTION("Nuvoton NPCM ADC Driver");
+> > > > +MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
+> > > > +MODULE_LICENSE("GPL v2");
+> > >
+> > >
+> > Thanks,
+> >
+> > Tomer
+>
+>
+
+--00000000000098947805808265fa
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr">Hi=C2=A0Jonathan,<div><br></div><div>Than=
+ks for the clarification,</div><div><br></div><div>=C2=A0I will like to to =
+Modify the NPCM ADC dt-binding document (<a href=3D"https://patchwork.ozlab=
+s.org/patch/1022527/">https://patchwork.ozlabs.org/patch/1022527/</a> - rem=
+oving rst node).</div><div><br></div><div>To send a new commit to the iio.g=
+it testing branch or to send a new patch version?</div><div><br></div><div>=
+Thanks,</div><div><br></div><div>Tomer</div></div></div><br><div class=3D"g=
+mail_quote"><div dir=3D"ltr" class=3D"gmail-m_-7544673861919322502gmail-m_7=
+523592715727817579gmail-m_-4599046323260618770gmail_attr">On Sat, 26 Jan 20=
+19 at 19:32, Jonathan Cameron &lt;<a href=3D"mailto:jic23@kernel.org" targe=
+t=3D"_blank">jic23@kernel.org</a>&gt; wrote:<br></div><blockquote class=3D"=
+gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(20=
+4,204,204);padding-left:1ex">On Sun, 20 Jan 2019 17:05:38 +0200<br>
+Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com" target=3D"_blank">t=
+maimon77@gmail.com</a>&gt; wrote:<br>
+<br>
+&gt; Hi Jonathan,<br>
+&gt; <br>
+&gt; Thanks a lot for reviewing our driver,<br>
+&gt; <br>
+&gt; On Sat, 19 Jan 2019 at 20:08, Jonathan Cameron &lt;<a href=3D"mailto:j=
+ic23@kernel.org" target=3D"_blank">jic23@kernel.org</a>&gt; wrote:<br>
+&gt; <br>
+&gt; &gt; On Wed, 16 Jan 2019 18:48:55 +0200<br>
+&gt; &gt; Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com" target=3D=
+"_blank">tmaimon77@gmail.com</a>&gt; wrote:<br>
+&gt; &gt;=C2=A0 <br>
+&gt; &gt; &gt; Add Nuvoton NPCM BMC Analog-to-Digital Converter(ADC) driver=
+.<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; The NPCM ADC is a 10-bit converter for eight channel inputs.=
+<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; Signed-off-by: Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@=
+gmail.com" target=3D"_blank">tmaimon77@gmail.com</a>&gt;=C2=A0 <br>
+&gt; &gt; One trivial ordering in remove oddity that I&#39;ll just fix up.<=
+br>
+&gt; &gt; Also, I don&#39;t particularly like printing a message on success=
+<br>
+&gt; &gt; as it&#39;s not providing any useful info.=C2=A0 Hmm. I don&#39;t=
+ care<br>
+&gt; &gt; strongly enough to remove it though.<br>
+&gt; &gt;=C2=A0 <br>
+&gt; <br>
+&gt; The Probe log is is important for us when customers doing bring-up or =
+have<br>
+&gt; some issues,<br>
+&gt; we ask the logs w/o asking to do all kinds of things to see if a devic=
+e was<br>
+&gt; probed.<br>
+<br>
+You should probably develop a proper info gathering script.=C2=A0 Chances o=
+f this<br>
+randomly getting &#39;tidied up&#39; in future (i.e. remove) is rather high=
+ and<br>
+I doubt I&#39;ll remember this if you miss the patch...<br>
+<br>
+I don&#39;t care all that much though and your problem if it goes away. Ker=
+nel<br>
+logs shouldn&#39;t be used as ABI.=C2=A0 Even error messages tend to change=
+ over time!<br>
+<br>
+Jonathan<br>
+<br>
+&gt; <br>
+&gt; <br>
+&gt; &gt; Applied to the togreg branch of iio.git and pushed out as<br>
+&gt; &gt; testing for the autobuilders to play with it.<br>
+&gt; &gt;<br>
+&gt; &gt; Thanks,<br>
+&gt; &gt;<br>
+&gt; &gt; Jonathan<br>
+&gt; &gt;=C2=A0 <br>
+&gt; &gt; &gt; ---<br>
+&gt; &gt; &gt;=C2=A0 drivers/iio/adc/Kconfig=C2=A0 =C2=A0 |=C2=A0 10 ++<br>
+&gt; &gt; &gt;=C2=A0 drivers/iio/adc/Makefile=C2=A0 =C2=A0|=C2=A0 =C2=A01 +=
+<br>
+&gt; &gt; &gt;=C2=A0 drivers/iio/adc/npcm_adc.c | 335=C2=A0 <br>
+&gt; &gt; +++++++++++++++++++++++++++++++++++++++++++++=C2=A0 <br>
+&gt; &gt; &gt;=C2=A0 3 files changed, 346 insertions(+)<br>
+&gt; &gt; &gt;=C2=A0 create mode 100644 drivers/iio/adc/npcm_adc.c<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconf=
+ig<br>
+&gt; &gt; &gt; index 7a3ca4ec0cb7..2d1e70a7d5c4 100644<br>
+&gt; &gt; &gt; --- a/drivers/iio/adc/Kconfig<br>
+&gt; &gt; &gt; +++ b/drivers/iio/adc/Kconfig<br>
+&gt; &gt; &gt; @@ -576,6 +576,16 @@ config NAU7802<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0To compile this driver as a=
+ module, choose M here: the<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0module will be called nau78=
+02.<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; +config NPCM_ADC<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0tristate &quot;Nuvoton NPCM ADC driver&=
+quot;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0depends on ARCH_NPCM || COMPILE_TEST<br=
+>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0depends on HAS_IOMEM<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0help<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0Say yes here to build support fo=
+r Nuvoton NPCM ADC.<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0This driver can also be built as=
+ a module. If so, the module<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0will be called npcm_adc.<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt;=C2=A0 config PALMAS_GPADC<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0tristate &quot;TI Palmas General P=
+urpose ADC&quot;<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0depends on MFD_PALMAS<br>
+&gt; &gt; &gt; diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Make=
+file<br>
+&gt; &gt; &gt; index 07df37f621bd..3337eb1f4c30 100644<br>
+&gt; &gt; &gt; --- a/drivers/iio/adc/Makefile<br>
+&gt; &gt; &gt; +++ b/drivers/iio/adc/Makefile<br>
+&gt; &gt; &gt; @@ -55,6 +55,7 @@ obj-$(CONFIG_MEN_Z188_ADC) +=3D men_z188_a=
+dc.o<br>
+&gt; &gt; &gt;=C2=A0 obj-$(CONFIG_MESON_SARADC) +=3D meson_saradc.o<br>
+&gt; &gt; &gt;=C2=A0 obj-$(CONFIG_MXS_LRADC_ADC) +=3D mxs-lradc-adc.o<br>
+&gt; &gt; &gt;=C2=A0 obj-$(CONFIG_NAU7802) +=3D nau7802.o<br>
+&gt; &gt; &gt; +obj-$(CONFIG_NPCM_ADC) +=3D npcm_adc.o<br>
+&gt; &gt; &gt;=C2=A0 obj-$(CONFIG_PALMAS_GPADC) +=3D palmas_gpadc.o<br>
+&gt; &gt; &gt;=C2=A0 obj-$(CONFIG_QCOM_SPMI_ADC5) +=3D qcom-spmi-adc5.o<br>
+&gt; &gt; &gt;=C2=A0 obj-$(CONFIG_QCOM_SPMI_IADC) +=3D qcom-spmi-iadc.o<br>
+&gt; &gt; &gt; diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/np=
+cm_adc.c<br>
+&gt; &gt; &gt; new file mode 100644<br>
+&gt; &gt; &gt; index 000000000000..1cc377cdf1f7<br>
+&gt; &gt; &gt; --- /dev/null<br>
+&gt; &gt; &gt; +++ b/drivers/iio/adc/npcm_adc.c<br>
+&gt; &gt; &gt; @@ -0,0 +1,335 @@<br>
+&gt; &gt; &gt; +// SPDX-License-Identifier: GPL-2.0<br>
+&gt; &gt; &gt; +// Copyright (c) 2019 Nuvoton Technology corporation.<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +#include &lt;linux/clk.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/device.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/mfd/syscon.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/io.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/iio/iio.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/interrupt.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/kernel.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/module.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/platform_device.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/regmap.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/regulator/consumer.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/spinlock.h&gt;<br>
+&gt; &gt; &gt; +#include &lt;linux/uaccess.h&gt;<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +struct npcm_adc {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0bool int_status;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0u32 adc_sample_hz;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct device *dev;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0void __iomem *regs;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct clk *adc_clk;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0wait_queue_head_t wq;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct regulator *vref;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct regmap *rst_regmap;<br>
+&gt; &gt; &gt; +};<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +/* NPCM7xx reset module */<br>
+&gt; &gt; &gt; +#define NPCM7XX_IPSRST1_OFFSET=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A00x020<br>
+&gt; &gt; &gt; +#define NPCM7XX_IPSRST1_ADC_RST=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 BIT(27)<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +/* ADC registers */<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON=C2=A0 =C2=A00x00<br>
+&gt; &gt; &gt; +#define NPCM_ADCDATA=C2=A0 0x04<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +/* ADCCON Register Bits */<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_ADC_INT_EN=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0BIT(21)<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_REFSEL=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(19)<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_ADC_INT_ST=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0BIT(18)<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_ADC_EN=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(17)<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_ADC_RST=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 BIT(16)<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_ADC_CONV=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0BIT(13)<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_CH_MASK=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 GENMASK(27, 24)<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_CH(x)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 ((x) &lt;&lt; 24)<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_DIV_SHIFT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 1<br>
+&gt; &gt; &gt; +#define NPCM_ADCCON_DIV_MASK=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0GENMASK(8, 1)<br>
+&gt; &gt; &gt; +#define NPCM_ADC_DATA_MASK(x)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 ((x) &amp; GENMASK(9, 0))<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +#define NPCM_ADC_ENABLE=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 (NPCM_ADCCON_ADC_EN |=C2=A0 <br>
+&gt; &gt; NPCM_ADCCON_ADC_INT_EN)=C2=A0 <br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +/* ADC General Definition */<br>
+&gt; &gt; &gt; +#define NPCM_RESOLUTION_BITS=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A010<br>
+&gt; &gt; &gt; +#define NPCM_INT_VREF_MV=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A02000<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +#define NPCM_ADC_CHAN(ch) {=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 \<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0.type =3D IIO_VOLTAGE,=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 \<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0.indexed =3D 1,=C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0\<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0.channel =3D ch,=C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 \<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0.info_mask_separate =3D BIT(IIO_CHAN_IN=
+FO_RAW),=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0\<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0.info_mask_shared_by_type =3D BIT(IIO_C=
+HAN_INFO_SCALE) |=C2=A0 \<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0BIT(IIO_CHAN_INFO_SAMP_FREQ),=
+=C2=A0 =C2=A0\<br>
+&gt; &gt; &gt; +}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +static const struct iio_chan_spec npcm_adc_iio_channels[] =
+=3D {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0NPCM_ADC_CHAN(0),<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0NPCM_ADC_CHAN(1),<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0NPCM_ADC_CHAN(2),<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0NPCM_ADC_CHAN(3),<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0NPCM_ADC_CHAN(4),<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0NPCM_ADC_CHAN(5),<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0NPCM_ADC_CHAN(6),<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0NPCM_ADC_CHAN(7),<br>
+&gt; &gt; &gt; +};<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +static irqreturn_t npcm_adc_isr(int irq, void *data)<br>
+&gt; &gt; &gt; +{<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0u32 regtemp;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct iio_dev *indio_dev =3D data;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct npcm_adc *info =3D iio_priv(indi=
+o_dev);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0regtemp =3D ioread32(info-&gt;regs + NP=
+CM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (regtemp &amp; NPCM_ADCCON_ADC_INT_S=
+T) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0iowrite32(r=
+egtemp, info-&gt;regs + NPCM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0wake_up_int=
+erruptible(&amp;info-&gt;wq);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0info-&gt;in=
+t_status =3D true;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0return IRQ_HANDLED;<br>
+&gt; &gt; &gt; +}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +static int npcm_adc_read(struct npcm_adc *info, int *val, u=
+8 channel)<br>
+&gt; &gt; &gt; +{<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0int ret;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0u32 regtemp;<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0/* Select ADC channel */<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0regtemp =3D ioread32(info-&gt;regs + NP=
+CM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0regtemp &amp;=3D ~NPCM_ADCCON_CH_MASK;<=
+br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0info-&gt;int_status =3D false;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0iowrite32(regtemp | NPCM_ADCCON_CH(chan=
+nel) |<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0NPCM=
+_ADCCON_ADC_CONV, info-&gt;regs + NPCM_ADCCON);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0ret =3D wait_event_interruptible_timeou=
+t(info-&gt;wq, info-&gt;int_status,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 msecs_to_jiffies(10));<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (ret =3D=3D 0) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regtemp =3D=
+ ioread32(info-&gt;regs + NPCM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if ((regtem=
+p &amp; NPCM_ADCCON_ADC_CONV) &amp;&amp; info-&gt;rst_regmap) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0/* if conversion failed - reset ADC module */<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0regmap_write(info-&gt;rst_regmap,=C2=A0 <br>
+&gt; &gt; NPCM7XX_IPSRST1_OFFSET,=C2=A0 <br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 NPCM7XX_IPSRST1=
+_ADC_RST);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0msleep(100);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0regmap_write(info-&gt;rst_regmap,=C2=A0 <br>
+&gt; &gt; NPCM7XX_IPSRST1_OFFSET,=C2=A0 <br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 0x0);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0msleep(100);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0/* Enable ADC and start conversion module */<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0iowrite32(NPCM_ADC_ENABLE | NPCM_ADCCON_ADC_CONV,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0info-&gt;regs + NPCM_AD=
+CCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0dev_err(info-&gt;dev, &quot;RESET ADC Complete\n&quot;);<b=
+r>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ETI=
+MEDOUT;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;=
+<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0*val =3D NPCM_ADC_DATA_MASK(ioread32(in=
+fo-&gt;regs + NPCM_ADCDATA));<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
+&gt; &gt; &gt; +}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +static int npcm_adc_read_raw(struct iio_dev *indio_dev,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct iio_chan_spec const *chan, int *val,=
+<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 int *val2, long mask)<br>
+&gt; &gt; &gt; +{<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0int ret;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0int vref_uv;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct npcm_adc *info =3D iio_priv(indi=
+o_dev);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0switch (mask) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0case IIO_CHAN_INFO_RAW:<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mutex_lock(=
+&amp;indio_dev-&gt;mlock);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D npc=
+m_adc_read(info, val, chan-&gt;channel);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mutex_unloc=
+k(&amp;indio_dev-&gt;mlock);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret) {<=
+br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0dev_err(info-&gt;dev, &quot;NPCM ADC read failed\n&quot;);=
+<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0return ret;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return IIO_=
+VAL_INT;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0case IIO_CHAN_INFO_SCALE:<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (info-&g=
+t;vref) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0vref_uv =3D regulator_get_voltage(info-&gt;vref);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0*val =3D vref_uv / 1000;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0} else {<br=
+>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0*val =3D NPCM_INT_VREF_MV;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*val2 =3D N=
+PCM_RESOLUTION_BITS;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return IIO_=
+VAL_FRACTIONAL_LOG2;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0case IIO_CHAN_INFO_SAMP_FREQ:<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*val =3D in=
+fo-&gt;adc_sample_hz;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return IIO_=
+VAL_INT;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0default:<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EIN=
+VAL;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
+&gt; &gt; &gt; +}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +static const struct iio_info npcm_adc_iio_info =3D {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0.read_raw =3D &amp;npcm_adc_read_raw,<b=
+r>
+&gt; &gt; &gt; +};<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +static const struct of_device_id npcm_adc_match[] =3D {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0{ .compatible =3D &quot;nuvoton,npcm750=
+-adc&quot;, },<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0{ /* sentinel */ }<br>
+&gt; &gt; &gt; +};<br>
+&gt; &gt; &gt; +MODULE_DEVICE_TABLE(of, npcm_adc_match);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +static int npcm_adc_probe(struct platform_device *pdev)<br>
+&gt; &gt; &gt; +{<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0int ret;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0int irq;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0u32 div;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0u32 reg_con;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct resource *res;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct npcm_adc *info;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct iio_dev *indio_dev;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct device *dev =3D &amp;pdev-&gt;de=
+v;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct device_node *np =3D pdev-&gt;dev=
+.of_node;<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0indio_dev =3D devm_iio_device_alloc(&am=
+p;pdev-&gt;dev, sizeof(*info));<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (!indio_dev)<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENO=
+MEM;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0info =3D iio_priv(indio_dev);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0info-&gt;dev =3D &amp;pdev-&gt;dev;<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0res =3D platform_get_resource(pdev, IOR=
+ESOURCE_MEM, 0);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0info-&gt;regs =3D devm_ioremap_resource=
+(&amp;pdev-&gt;dev, res);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (IS_ERR(info-&gt;regs))<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return PTR_=
+ERR(info-&gt;regs);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0info-&gt;adc_clk =3D devm_clk_get(&amp;=
+pdev-&gt;dev, NULL);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (IS_ERR(info-&gt;adc_clk)) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_warn(&a=
+mp;pdev-&gt;dev, &quot;ADC clock failed: can&#39;t read clk\n&quot;);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return PTR_=
+ERR(info-&gt;adc_clk);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0/* calculate ADC clock sample rate */<b=
+r>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0reg_con =3D ioread32(info-&gt;regs + NP=
+CM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0div =3D reg_con &amp; NPCM_ADCCON_DIV_M=
+ASK;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0div =3D div &gt;&gt; NPCM_ADCCON_DIV_SH=
+IFT;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0info-&gt;adc_sample_hz =3D clk_get_rate=
+(info-&gt;adc_clk) / ((div + 1) *=C2=A0 <br>
+&gt; &gt; 2);=C2=A0 <br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (of_device_is_compatible(np, &quot;n=
+uvoton,npcm750-adc&quot;)) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0info-&gt;rs=
+t_regmap =3D syscon_regmap_lookup_by_compatible<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0(&quot;nuvoton,npcm750-rst&quot;);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (IS_ERR(=
+info-&gt;rst_regmap)) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0dev_err(&amp;pdev-&gt;dev, &quot;Failed to find=C2=A0 <br>
+&gt; &gt; nuvoton,npcm750-rst\n&quot;);=C2=A0 <br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0ret =3D PTR_ERR(info-&gt;rst_regmap);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0goto err_disable_clk;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0irq =3D platform_get_irq(pdev, 0);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (irq &lt;=3D 0) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(dev=
+, &quot;failed getting interrupt resource\n&quot;);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D -EI=
+NVAL;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto err_di=
+sable_clk;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0ret =3D devm_request_irq(&amp;pdev-&gt;=
+dev, irq, npcm_adc_isr, 0,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;NPCM_ADC&quot;, indio_dev);<br=
+>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (ret &lt; 0) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(dev=
+, &quot;failed requesting interrupt\n&quot;);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto err_di=
+sable_clk;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0reg_con =3D ioread32(info-&gt;regs + NP=
+CM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0info-&gt;vref =3D devm_regulator_get_op=
+tional(&amp;pdev-&gt;dev, &quot;vref&quot;);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (!IS_ERR(info-&gt;vref)) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D reg=
+ulator_enable(info-&gt;vref);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret) {<=
+br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0dev_err(&amp;pdev-&gt;dev, &quot;Can&#39;t enable ADC refe=
+rence=C2=A0 <br>
+&gt; &gt; voltage\n&quot;);=C2=A0 <br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0goto err_disable_clk;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0iowrite32(r=
+eg_con &amp; ~NPCM_ADCCON_REFSEL,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0info-&gt;regs + NPCM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0} else {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/*<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 * Any erro=
+r which is not ENODEV indicates the regulator<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 * has been=
+ specified and so is a failure case.<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 */<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (PTR_ERR=
+(info-&gt;vref) !=3D -ENODEV) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0ret =3D PTR_ERR(info-&gt;vref);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0goto err_disable_clk;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/* Use inte=
+rnal reference */<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0iowrite32(r=
+eg_con | NPCM_ADCCON_REFSEL,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0info-&gt;regs + NPCM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0init_waitqueue_head(&amp;info-&gt;wq);<=
+br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0reg_con =3D ioread32(info-&gt;regs + NP=
+CM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0reg_con |=3D NPCM_ADC_ENABLE;<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0/* Enable the ADC Module */<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0iowrite32(reg_con, info-&gt;regs + NPCM=
+_ADCCON);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0/* Start ADC conversion */<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0iowrite32(reg_con | NPCM_ADCCON_ADC_CON=
+V, info-&gt;regs +=C2=A0 <br>
+&gt; &gt; NPCM_ADCCON);=C2=A0 <br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0platform_set_drvdata(pdev, indio_dev);<=
+br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0indio_dev-&gt;name =3D dev_name(&amp;pd=
+ev-&gt;dev);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0indio_dev-&gt;dev.parent =3D &amp;pdev-=
+&gt;dev;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0indio_dev-&gt;info =3D &amp;npcm_adc_ii=
+o_info;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0indio_dev-&gt;modes =3D INDIO_DIRECT_MO=
+DE;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0indio_dev-&gt;channels =3D npcm_adc_iio=
+_channels;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0indio_dev-&gt;num_channels =3D ARRAY_SI=
+ZE(npcm_adc_iio_channels);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0ret =3D iio_device_register(indio_dev);=
+<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (ret) {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(&am=
+p;pdev-&gt;dev, &quot;Couldn&#39;t register the device.\n&quot;);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto err_ii=
+o_register;<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0pr_info(&quot;NPCM ADC driver probed\n&=
+quot;);=C2=A0 <br>
+&gt; &gt; Hmm. Not sure this tells us anything useful.=C2=A0 If we have suc=
+ceeding<br>
+&gt; &gt; in probing there are lots of ways to find out that are better tha=
+n<br>
+&gt; &gt; filling up the kernel log.<br>
+&gt; &gt;=C2=A0 <br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +err_iio_register:<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0iowrite32(reg_con &amp; ~NPCM_ADCCON_AD=
+C_EN, info-&gt;regs + NPCM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (!IS_ERR(info-&gt;vref))<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regulator_d=
+isable(info-&gt;vref);<br>
+&gt; &gt; &gt; +err_disable_clk:<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0clk_disable_unprepare(info-&gt;adc_clk)=
+;<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0return ret;<br>
+&gt; &gt; &gt; +}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +static int npcm_adc_remove(struct platform_device *pdev)<br=
+>
+&gt; &gt; &gt; +{<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct iio_dev *indio_dev =3D platform_=
+get_drvdata(pdev);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0struct npcm_adc *info =3D iio_priv(indi=
+o_dev);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0u32 regtemp;<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0regtemp =3D ioread32(info-&gt;regs + NP=
+CM_ADCCON);=C2=A0 <br>
+&gt; &gt;<br>
+&gt; &gt; The ordering is a bit odd here.=C2=A0 I would have done the unreg=
+ister<br>
+&gt; &gt; first then read the value.=C2=A0 Doesn&#39;t have any real effect=
+ other than making<br>
+&gt; &gt; reviewers wonder if there is something interesting going on!<br>
+&gt; &gt;=C2=A0 <br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0iio_device_unregister(indio_dev);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0iowrite32(regtemp &amp; ~NPCM_ADCCON_AD=
+C_EN, info-&gt;regs + NPCM_ADCCON);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0if (!IS_ERR(info-&gt;vref))<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regulator_d=
+isable(info-&gt;vref);<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0clk_disable_unprepare(info-&gt;adc_clk)=
+;<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
+&gt; &gt; &gt; +}<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +static struct platform_driver npcm_adc_driver =3D {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0.probe=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =3D npcm_adc_probe,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0.remove=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0=3D npcm_adc_remove,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0.driver=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0=3D {<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name=C2=A0=
+ =C2=A0=3D &quot;npcm_adc&quot;,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.of_match_t=
+able =3D npcm_adc_match,<br>
+&gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0},<br>
+&gt; &gt; &gt; +};<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +module_platform_driver(npcm_adc_driver);<br>
+&gt; &gt; &gt; +<br>
+&gt; &gt; &gt; +MODULE_DESCRIPTION(&quot;Nuvoton NPCM ADC Driver&quot;);<br=
+>
+&gt; &gt; &gt; +MODULE_AUTHOR(&quot;Tomer Maimon &lt;<a href=3D"mailto:tome=
+r.maimon@nuvoton.com" target=3D"_blank">tomer.maimon@nuvoton.com</a>&gt;&qu=
+ot;);<br>
+&gt; &gt; &gt; +MODULE_LICENSE(&quot;GPL v2&quot;);=C2=A0 <br>
+&gt; &gt;<br>
+&gt; &gt;=C2=A0 <br>
+&gt; Thanks,<br>
+&gt; <br>
+&gt; Tomer<br>
+<br>
+</blockquote></div>
+
+--00000000000098947805808265fa--
