@@ -1,93 +1,66 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
-Date: Mon, 28 Jan 2019 19:23:49 +0100
-Message-ID: <9118a1cc-7ad7-cdfc-4925-d609efbc8265@gmail.com>
-References: <20190125125513.23656-1-ccaione@baylibre.com>
- <20190125130612.npknjuzjmny4yohg@e5254000004ec.dyn.armlinux.org.uk>
- <20190125184330.dm3kaoewvbwddacy@xps>
- <a8b8e82f-2b68-ed9d-6106-0542dddc1181@gmail.com>
- <20190125191947.um4w4e5jpsv2kcxc@e5254000004ec.dyn.armlinux.org.uk>
- <3e09ef54-f817-2659-4e9e-74a88a80cbcc@gmail.com>
- <20190128104620.3e724lfm5xv5il4x@xps>
- <20190128155739.yyftnu7a5hz6if7d@e5254000004ec.dyn.armlinux.org.uk>
+From: Ioan-Adrian Ratiu <adi@adirat.com>
+Subject: Re: [RFC][PATCH] Revert "ARM: dts: bcm2837: Fix polarity of wifi reset GPIOs"
+Date: Mon, 28 Jan 2019 20:31:48 +0200
+Message-ID: <87tvhs8wh7.fsf@ni.com>
+References: <20190127202813.29493-1-adi@adirat.com> <1658074547.62977.1548624393424@email.ionos.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190128155739.yyftnu7a5hz6if7d@e5254000004ec.dyn.armlinux.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>, Carlo Caione <ccaione@baylibre.com>
-Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, abailon@baylibre.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
+Content-Type: text/plain; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1658074547.62977.1548624393424@email.ionos.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28.01.2019 16:57, Russell King - ARM Linux admin wrote:
-> On Mon, Jan 28, 2019 at 10:46:20AM +0000, Carlo Caione wrote:
->> On 25/01/19 20:27, Heiner Kallweit wrote:
->>> OK, then the description of the referenced patch isn't fully correct
->>> and SmartEEE and EEE are partially compatible, and the problem is
->>> just that we don't know exactly to which extent.
->>
->> Reading from the datasheet at [0] it seems that SmartEEE is compatible with
->> EEE but it's something different.
-> 
-> As I understand it, SmartEEE is just like normal EEE as far as the link
-> partner is concerned.  The difference is between the PHY and MAC.  What
-> follows is a simplified understanding of the differences.
-> 
-> In conventional EEE, the MAC takes part in EEE - the local MAC requests
-> that its attached PHY enters LPI mode, which signals to the link partner
-> PHY that the data stream on the link is going to pause.  When the local
-> MAC wants to transmit, it first has to signal to the attached PHY that
-> the link should be woken up, and the MAC has to wait for the link to
-> exit LPI before transmitting.
-> 
-> With SmartEEE, the decision to enter LPI mode is taken not by the local
-> MAC but by the PHY instead, since SmartEEE is designed to produce power
-> savings for MACs that do not support LPI.  Of course, they won't achieve
-> the same power saving as real EEE, but they do help to reduce the power
-> dissipation in the PHY.
-> 
-> PHYs that support this buffer some data from the MAC, and that buffering
-> has to be sufficient for the delay in the link coming out of LPI mode
-> without losing data.
-> 
-> As far as the link partner is concerned, EEE and SmartEEE appear the
-> same.
-> 
->> With SmartEEE the PHY can actually enter LPI state even if this is not
->> supported by the link partner since the LPI pattern is generated inside the
->> PHY itself, so auto-implementing a sort of EEE.
-> 
-> It sounds to me like you have this the wrong way round.  SmartEEE isn't
-> about the link partner not supporting LPI, it's about the local MAC not
-> supporting EEE, but still getting some power savings.
-> 
-> EEE (of either kind) can only be entered on the link when both the
-> local PHY and remote PHY indicate support for EEE, and have negotiated
-> that they support EEE.
-> 
-> Most of the power dissipation is from driving the signals into the
-> network cable (which is a lossy environment) to ensure that the far
-> end has sufficient signal to keep the link established.  SmartEEE is
-> about giving a way to enter 802.3az EEE mode on the _cable_ with a
-> MAC that does not support EEE.
-> 
-> I've monitored the signals on a link with an Atheros AR8035 with
-> SmartEEE mode enabled, and a Marvell 88e1514 PHY in a Marvell switch
-> on the other end, and seen the signals on the cable quiesce as a
-> result of SmartEEE, but only when _both_ partners are set to allow
-> EEE in the negotiated link mode.
-> 
+Hi Stefan and thank you for looking into this,
 
-If SmartEEE is compatible with EEE on a PHY level, then I'd expect that
-advertisement of SmartEEE at different speeds can be controlled via the
-standard EEE MMD regs. Is this the case?
+On Sun, 27 Jan 2019, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+> Hi Ioan-Adrian, 
+> 
+>> Ioan-Adrian Ratiu <adi@adirat.com> hat am 27. Januar 2019 um 
+>> 21:28 geschrieben:   This reverts commit 
+>> bea8a160c621d19f7f78b13e14e03f4b8e44cd4b.   Contrary to what 
+>> the commit message says, on my rpi 3 b v1.2 changing the 
+>> polarity causes the exact behaviour this commit intends to fix, 
+>> as described at the referenced link below (wlan0 disapears). 
+>> With reset-gpios = ... GPIO_ACTIVE_HIGH, brcmfmac errors in 
+>> dmesg:  [    7.977512] brcmfmac: brcmf_sdio_bus_sleep: error 
+>> while changing bus sleep state -110 [    7.977623] brcmfmac: 
+>> brcmf_sdio_txfail: sdio error, abort command and terminate 
+>> frame [    7.978007] brcmfmac: brcmf_sdio_txfail: sdio error, 
+>> abort command and terminate frame [    7.978377] brcmfmac: 
+>> brcmf_sdio_txfail: sdio error, abort command and terminate 
+>> frame [    7.978724] brcmfmac: brcmf_sdio_dpc: failed backplane 
+>> access over SDIO, halting operation [    7.978734] brcmfmac: 
+>> brcmf_proto_bcdc_query_dcmd: brcmf_proto_bcdc_msg failed 
+>> w/status -110 [    7.978747] brcmfmac: 
+>> brcmf_cfg80211_get_channel: chanspec failed (-110) [ 
+>> 7.982817] brcmfmac: brcmf_sdio_bus_sleep: error while changing 
+>> bus sleep state -110 [    7.982880] brcmfmac: 
+>> brcmf_sdio_txfail: sdio error, abort command and terminate 
+>> frame [    7.983255] brcmfmac: brcmf_sdio_txfail: sdio error, 
+>> abort command and terminate frame  The only solution I 
+>> currently have is to revert and everything works as expected 
+>> and as before changing the polarity.   Link: 
+>> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=911443 
+>> Signed-off-by: Ioan-Adrian Ratiu <adi@adirat.com> --- 
+> 
+> reverting this commit will only workaround the real issue. It 
+> lies in the sdhci-iproc driver. 
+> 
+> Could please try this instead patch [1]? 
+
+Yes, the patch fixes the bug and it's also in Linus' master branch 
+in v5.0-rc3 as commit 2bd44da ("mmc: sdhci-iproc: handle 
+mmc_of_parse() errors during prob").
+
+There was just a minor conflict cherry-picking it to 4.19.y 
+(sdhci_get_property -> sdhci_get_of_property).
+
+I would really like to have 2bd44da backported to the 4.19 stable 
+tree to have wifi working again. Please?
+
+Tested-by: Ioan-Adrian Ratiu <adi@adirat.com> #4.19.18
+
+>
+> [1] - https://patchwork.kernel.org/patch/10741809/
