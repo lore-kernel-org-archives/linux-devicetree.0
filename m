@@ -1,49 +1,31 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH] arm64: dts: imx8mq: Add on-chip OTP controller node
-Date: Mon, 28 Jan 2019 19:43:43 +0000
-Message-ID: <20190128194343.13713-1-ccaione@baylibre.com>
+From: Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH 0/2] Fix espressobin ethernet support on mainline u-boot
+Date: Mon, 28 Jan 2019 21:07:26 +0100
+Message-ID: <20190128200728.17747-1-repk@triplefau.lt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Carlo Caione <ccaione@baylibre.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
 List-Id: devicetree@vger.kernel.org
 
-Add the node for the OTP controller. The IP is the same as on the imx7d.
+This patchset fixes ethernet and mv88e6341 switch support on espressobin
+board when bootloader does not initialize needed registers.
 
-Signed-off-by: Carlo Caione <ccaione@baylibre.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This patchset should be applied along with pinctrl fixes from [1] which
+have been merged in next branch of linux-pinctrl tree.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 892063a7c26c..9a5205f08f3a 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -234,6 +234,14 @@
- 				reg = <0x30340000 0x10000>;
- 			};
- 
-+			ocotp: ocotp-ctrl@30350000 {
-+				compatible = "fsl,imx7d-ocotp", "syscon";
-+				reg = <0x30350000 0x10000>;
-+				clocks = <&clk IMX8MQ_CLK_OCOTP_ROOT>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+			};
-+
- 			anatop: syscon@30360000 {
- 				compatible = "fsl,imx8mq-anatop", "syscon";
- 				reg = <0x30360000 0x10000>;
+[1] https://lkml.org/lkml/2018/12/21/507
+
+Remi Pommarel (2):
+  arm64: dts: armada-3720-espressobin: Configure RGMII and SMI pins
+  arm64: dts: armada-3720-espressobin: Set mv88e6341 cpu port as
+    RGMII-ID
+
+ arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 7 +++++++
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi            | 5 +++++
+ 2 files changed, 12 insertions(+)
+
 -- 
-2.19.1
+2.20.1
