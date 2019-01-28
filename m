@@ -1,74 +1,73 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64-amarula-relic: Add STLM75
- sensor
-Date: Mon, 28 Jan 2019 13:33:53 +0100
-Message-ID: <20190128123353.zgvrepgqvvselwzb@flea>
-References: <20190124175254.27650-1-jagan@amarulasolutions.com>
- <20190125084004.fsbxtpcesb5yaiod@flea>
- <CAMty3ZBmHpsTRXARnT5nf1VcnCmz0QpZ5B8caHONLV0UZdXS9Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "MAINTAINERS: add maintainers for the NXP FlexSPI driver" to the spi tree
+Date: Mon, 28 Jan 2019 12:36:06 +0000 (GMT)
+Message-ID: <20190128123606.2F8641127D29@debutante.sirena.org.uk>
+References: <1547553487-9936-6-git-send-email-yogeshnarayan.gaur@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZBmHpsTRXARnT5nf1VcnCmz0QpZ5B8caHONLV0UZdXS9Q@mail.gmail.com>
+In-Reply-To: <1547553487-9936-6-git-send-email-yogeshnarayan.gaur@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: Mark Brown <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>"broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@kontron.de" <frieder.schrempf@kontron.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 12:46:48PM +0530, Jagan Teki wrote:
-> On Fri, Jan 25, 2019 at 2:10 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Thu, Jan 24, 2019 at 11:22:54PM +0530, Jagan Teki wrote:
-> > > Amarula A64 Relic has STLM75 sensor for digital temperature
-> > > and thermal watchdog.
-> > >
-> > > Add support for it.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > ---
-> > > Note: the respective driver change is already in mainline
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=2e9a41bbc1079776dabe42ed8113b086b99ae56c
-> > >
-> > >  .../dts/allwinner/sun50i-a64-amarula-relic.dts    | 15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > > index 6cb2b7f0c817..5d942543d978 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > > @@ -34,6 +34,21 @@
-> > >       status = "okay";
-> > >  };
-> > >
-> > > +&i2c0 {
-> > > +     pinctrl-names = "default";
-> > > +     pinctrl-0 = <&i2c0_pins>;
-> > > +     status = "okay";
-> > > +
-> > > +     temp@48 {
-> >
-> > That would be sensor@48
-> >
-> > > +             compatible = "st,stlm75";
-> >
-> > That compatible isn't documented.
-> 
-> True, but none of the compatible strings used on the driver doesn't
-> documented in binding instead there are documented in
-> Documentation/hwmon/lm75.
+The patch
 
-It doesn't look like a DT binding documentation.
+   MAINTAINERS: add maintainers for the NXP FlexSPI driver
 
-> Don't know the exact reason, do we need to document this in binding
-> as well?
+has been applied to the spi tree at
 
-Yep
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-Maxime
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From c71f9fd4503addcfa306f9bec95c3e7deade7ce1 Mon Sep 17 00:00:00 2001
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Date: Tue, 15 Jan 2019 12:00:37 +0000
+Subject: [PATCH] MAINTAINERS: add maintainers for the NXP FlexSPI driver
+
+Add maintainers for the NXP FlexSPI driver
+
+Signed-off-by: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8b6c0d454d7e..5e7ec7cda3bb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10927,6 +10927,14 @@ F:	lib/objagg.c
+ F:	lib/test_objagg.c
+ F:	include/linux/objagg.h
+ 
++NXP FSPI DRIVER
++R:	Yogesh Gaur <yogeshgaur.83@gmail.com>
++M:	Ashish Kumar <ashish.kumar@nxp.com>
++L:	linux-spi@vger.kernel.org
++S:	Maintained
++F:	drivers/spi/spi-nxp-fspi.c
++F:	Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
++
+ OBJTOOL
+ M:	Josh Poimboeuf <jpoimboe@redhat.com>
+ M:	Peter Zijlstra <peterz@infradead.org>
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
