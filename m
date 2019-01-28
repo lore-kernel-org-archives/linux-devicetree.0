@@ -1,57 +1,63 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: [PATCH] input: goodix - support Goodix gt5688
-Date: Mon, 28 Jan 2019 18:03:10 +0100
-Message-ID: <20190128170310.GA305@bogon.m.sigxcpu.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Ben Whitten <ben.whitten@gmail.com>
+Subject: [PATCH lora-next 01/11] dt-bindings: net: lora: sx130x: add power lut binding
+Date: Mon, 28 Jan 2019 16:12:55 +0000
+Message-ID: <20190128161306.27805-2-ben.whitten@lairdtech.com>
+References: <20190128161306.27805-1-ben.whitten@lairdtech.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <20190128161306.27805-1-ben.whitten@lairdtech.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bastien Nocera <hadess@hadess.net>, Matthias Brugger <matthias.bgg@gmail.com>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: afaerber@suse.de
+Cc: linux-lpwan@lists.infradead.org, Ben Whitten <ben.whitten@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->From what I've seen in vendor trees it's fine to treat this as gt1x¹.
+From: Ben Whitten <ben.whitten@gmail.com>
 
-[1]: https://github.com/TadiT7/android_kernel_mtk-4.4/tree/master/drivers/input/touchscreen/mediatek/GT5688
+Adding power lookup table for the concentrator specified in DT.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
+These values are calibrated for the hardware and are unique to hardware
+designs and certifications.
+
+First byte is signed power in dBm measured at the rf connector.
+Second byte is unsigned value for DIGITAL gain.
+Third byte is unsigned value for PA gain, 2 bits only.
+Fourth byte is unsigned value for DAC gain, 2 bits only.
+Fifth byte is unsigned value for MIXER gain, 4 bits only.
+
+Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
 ---
- Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
- drivers/input/touchscreen/goodix.c                             | 2 ++
- 2 files changed, 3 insertions(+)
+ .../bindings/net/lora/semtech,sx130x.yaml           | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-index f7e95c52f3c7..57d3d8870a09 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-@@ -3,6 +3,7 @@ Device tree bindings for Goodix GT9xx series touchscreen controller
- Required properties:
+diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
+index 24fad1218735..187fa2090a0b 100644
+--- a/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
++++ b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
+@@ -37,6 +37,15 @@ properties:
+     maxItems: 1
+     description: A connection of the reset gpio line.
  
-  - compatible		: Should be "goodix,gt1151"
-+				 or "goodix,gt5688"
- 				 or "goodix,gt911"
- 				 or "goodix,gt9110"
- 				 or "goodix,gt912"
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index f2d9c2c41885..47b1ced41576 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -216,6 +216,7 @@ static const struct goodix_chip_data *goodix_get_chip_data(u16 id)
- {
- 	switch (id) {
- 	case 1151:
-+	case 5688:
- 		return &gt1x_chip_data;
++  power-lut:
++    description: Power lookup table for the concentrator.
++      Consisting of maximum 16 entries, each entry having the following format;
++      First byte is signed power in dBm measured at the rf connector.
++      Second byte is unsigned value for DIGITAL gain.
++      Third byte is unsigned value for PA gain, 2 bits only.
++      Fourth byte is unsigned value for DAC gain, 2 bits only.
++      Fifth byte is unsigned value for MIXER gain, 4 bits only.
++
+   radio-spi:
+     type: object
+     description: The concentrator can have two radios connected which are
+@@ -83,6 +92,10 @@ examples:
+         reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
+         spi-max-frequency = <8000000>;
  
- 	case 911:
-@@ -942,6 +943,7 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
- #ifdef CONFIG_OF
- static const struct of_device_id goodix_of_match[] = {
- 	{ .compatible = "goodix,gt1151" },
-+	{ .compatible = "goodix,gt5688" },
- 	{ .compatible = "goodix,gt911" },
- 	{ .compatible = "goodix,gt9110" },
- 	{ .compatible = "goodix,gt912" },
++	power-lut =   [	00 00 00 03 09
++			03 00 00 03 0C
++			04 00 00 03 0D ];
++
+         radio-spi {
+           #address-cells = <1>;
+           #size-cells = <0>;
 -- 
-2.20.1
+2.17.1
