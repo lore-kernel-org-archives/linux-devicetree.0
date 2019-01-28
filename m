@@ -1,61 +1,63 @@
-Return-Path: <SRS0=OP5l=QE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr50051.outbound.protection.outlook.com ([40.107.5.51]:43744
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726415AbfA1JGT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Jan 2019 04:06:19 -0500
-From: Matthias Fend <Matthias.Fend@wolfvision.net>
-Subject: [PATCH 1/2] dt-bindings: input: touchscreen: st1232i: reference
- common DT bindings
-Date: Mon, 28 Jan 2019 09:06:06 +0000
-Message-ID: <1548666345-24667-1-git-send-email-matthias.fend@wolfvision.net>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <vkoul@kernel.org>
+Date: Mon, 28 Jan 2019 09:42:38 +0530
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: qcs404: Add AR8035 Phy node
+Message-ID: <20190128041238.GT4635@vkoul-mobl>
+References: <20190123174839.5321-1-vkoul@kernel.org>
+ <20190123174839.5321-3-vkoul@kernel.org>
+ <20190124220629.GA23971@centauri.lan>
 MIME-Version: 1.0
-References: <419160a7-edf5-48cf-85ea-d6d5e9cd6e59.95bf7d06-047e-438c-8c7b-895af195351a.1a874761-69ea-4dcd-b6ec-8bdc7777bc57@emailsignatures365.codetwo.com>
-Sender: devicetree-owner@vger.kernel.org
-To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-Cc: Matthias Fend <Matthias.Fend@wolfvision.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190124220629.GA23971@centauri.lan>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add a reference to common touchscreen bindings which are also partly
-supported.
+Hi Niklas,
 
-Signed-off-by: Matthias Fend <matthias.fend@wolfvision.net>
----
- Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.txt | =
-2 ++
- 1 file changed, 2 insertions(+)
+On 24-01-19, 23:06, Niklas Cassel wrote:
+> On Wed, Jan 23, 2019 at 11:18:39PM +0530, Vinod Koul wrote:
+> > EVB-4000 has ethernet port with AR8035 Phy, so add phy node
+> > 
+> > Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+> > index 5c02e874be12..ec85647cfed1 100644
+> > --- a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+> > +++ b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+> > @@ -21,6 +21,17 @@
+> >  	pinctrl-names = "default";
+> >  	pinctrl-0 = <&ethernet_defaults>;
+> >  
+> > +	phy-handle = <&phy1>;
+> > +	phy-mode = "rgmii";
+> > +	mdio {
+> > +		#address-cells = <0x1>;
+> > +		#size-cells = <0x0>;
+> > +		compatible = "snps,dwmac-mdio";
+> > +		phy1: phy@4 {
+> 
+> Hello Vinod,
+> 
+> The AR8035 PHY is compliant with IEEE802.3u clause 22, so please add:
+> compatible = "ethernet-phy-ieee802.3-c22";
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/sitronix-s=
-t1232.txt b/Documentation/devicetree/bindings/input/touchscreen/sitronix-st=
-1232.txt
-index 64ad48b..f3046e7 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.t=
-xt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.t=
-xt
-@@ -8,6 +8,8 @@ Required properties:
- Optional properties:
- - gpios: a phandle to the reset GPIO
-=20
-+For additional optional properties see: touchscreen.txt
-+
- Example:
-=20
- 	i2c@00000000 {
---=20
-2.7.4
+OKay will test and add..
 
+> 
+> Also, please squash this commit with PATCH 2/3.
+> The previous patch sets status = "ok" without having a PHY defined,
+> but I also don't see any reason to keep 2/3 and 3/3 as separate patches.
 
-Matthias Fend=0A=
-R&D Electronics =0A=
-=0A=
-Wolfvision GmbH=0A=
-Oberes Ried 14 | 6833 Klaus | Austria =0A=
-Tel: +43 5523 52250 | Mail: Matthias.Fend@wolfvision.net =0A=
-=0A=
-Webpage: www.wolfvision.com | www.wolfvision.com/green=0A=
-Firmenbuch / Commercial Register: FN283521v Feldkirch/Austria=0A=
-=0A=
+Yeah agree, in orignal scheme of things it made sense but not anymore so
+will do that..
+
+Thanks
+-- 
+~Vinod
