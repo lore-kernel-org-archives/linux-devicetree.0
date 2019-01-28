@@ -1,117 +1,139 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH v2 09/10] power: supply: Initial support for ROHM
- BD70528 PMIC charger block
-Date: Mon, 28 Jan 2019 15:46:10 +0100
-Message-ID: <CACRpkdZDOJJ6qSS8fkqQsgmchDWATfhTP=TZATwt6-Z_WQXpJQ@mail.gmail.com>
-References: <20190125110600.GA29332@localhost.localdomain> <CACRpkdYTCgXo8FeitEfRujeWdshnsR3Kn57cKUZsA3CsZ5Cnrw@mail.gmail.com>
- <20190128135354.GA4156@localhost.localdomain>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN
+ nodes
+Date: Mon, 28 Jan 2019 14:49:21 +0000
+Message-ID: <TY1PR01MB177071330C7BD433A701F728C0960@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1547736856-16539-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547736856-16539-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190118121353.3mb44a7rmmp2ru5d@verge.net.au>
+ <20190123095122.l3engeuwx6qr5lzc@verge.net.au>
+ <20190123113812.e3nojtxjxywmg4gn@verge.net.au>
+ <TYXPR01MB1775ABDCFD939F91F1053534C0990@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <CAMuHMdVkFJ7Cy-+tNHsOcYaxDj82WjMynuFuPRXa4k=DH2fGCQ@mail.gmail.com>
+ <TYXPR01MB1775B75CED683E38B9171EA8C0990@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <20190124100123.a2gvucnnwrxibulf@verge.net.au>
+ <TY1PR01MB177085C4C1DF3D9827EB769BC09B0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190128130111.t54jbcyx35fiymq6@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128135354.GA4156@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Baolin Wang <baolin.wang@linaro.org>, Matti Vaittinen <mazziesaccount@gmail.com>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, open list:OPEN
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190128130111.t54jbcyx35fiymq6@verge.net.au>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "David S. Miller" <davem@davemloft.net>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@v>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 2:54 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
-
-> > These charging drivers are growing wild. This is starting to get out
-> > of hand, we need some more framework for properly handling charging
-> > state machines the kernel. Not specifically your problem, but
-> > when working on the driver try to keep generic support in mind.
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 28 January 2019 13:01
+> Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock t=
+o CAN nodes
 >
-> I for sure can try - but as the power subsystem is quite new to me - any
-> specific items you would like me to really pay attention?
-
-So I am not saying you have to do this or anything, but I think
-what we need is a generic state machine and policy engine
-for charging, where different charging drivers just plug in.
-
-They all seem to have trickle and fast charging, USB phy
-interaction and AC plug interaction of some kind for detecting
-those and in some cases temperature detection directly
-or using an ADC.
-
-We have a bunch of drivers with software-controlled charging:
-ab8500*
-axp288*
-etc.
-
-If we could get just two drivers to share some changing
-infrastructure we would have a start.
-
-I have no idea how hard it could be, but I think it would
-be a pretty interesting adventure if someone gathered
-some different hardwares and started to generalize parts
-of this.
-
-> > So what I am seeing is that these states are starting to turn up in more
-> > and more drivers, so we really need to think about a central management
-> > component for charging state machines. I do not think they are all
-> > that different after all.
+> On Fri, Jan 25, 2019 at 11:33:41AM +0000, Fabrizio Castro wrote:
+> > Hello Simon,
+> >
+> > Thank you for your feedback!
+> >
+> > > From: Simon Horman <horms@verge.net.au>
+> > > Sent: 24 January 2019 10:01
+> > > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clo=
+ck to CAN nodes
+> > >
+> > > On Wed, Jan 23, 2019 at 12:18:45PM +0000, Fabrizio Castro wrote:
+> > > > Hello Geert,
+> > > >
+> > > > Thank you for your feedback!
+> > > >
+> > > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > > Sent: 23 January 2019 12:08
+> > > > > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2=
+ clock to CAN nodes
+> > > > >
+> > > > > Hi Fabrizio,
+> > > > >
+> > > > > On Wed, Jan 23, 2019 at 1:01 PM Fabrizio Castro
+> > > > > <fabrizio.castro@bp.renesas.com> wrote:
+> > > > > > > From: Simon Horman <horms@verge.net.au>
+> > > > > > > Sent: 23 January 2019 11:38
+> > > > > > > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add c=
+lkp2 clock to CAN nodes
+> > > > > > >
+> > > > > > > On Wed, Jan 23, 2019 at 10:51:23AM +0100, Simon Horman wrote:
+> > > > > > > > On Fri, Jan 18, 2019 at 01:13:53PM +0100, Simon Horman wrot=
+e:
+> > > > > > > > > On Thu, Jan 17, 2019 at 02:54:15PM +0000, Fabrizio Castro=
+ wrote:
+> > > > > > > > > > According to the latest information, clkp2 is available=
+ on RZ/G2.
+> > > > > > > > > > Modify CAN0 and CAN1 nodes accordingly.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.rene=
+sas.com>
+> > > > > > > > > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.co=
+m>
+> > > > >
+> > > > > > > > Thanks again, applied for v5.1.
+> > > > > > >
+> > > > > > > Sorry, I was a little hasty there.
+> > > > > > >
+> > > > > > > This patch depends on the presence of R8A774A1_CLK_CANFD whic=
+h
+> > > > > > > (rightly) is added in a different patch in this series which =
+is to
+> > > > > > > go upstream via a different tree.
+> > > > > > >
+> > > > > > > I have dropped this patch for now. I think there are two solu=
+tion to this
+> > > > > > > problem.
+> > > > > > >
+> > > > > > > 1. Provide a version of this patch which uses a numeric index=
+ instead of
+> > > > > > >    R8A774A1_CLK_CANFD. And then, once R8A774A1_CLK_CANFD is p=
+resent in an
+> > > > > > >    RC release provide a patch to switch to using R8A774A1_CLK=
+_CANFD.
+> > > > > > >
+> > > > > > > 2. Defer this patch until R8A774A1_CLK_CANFD is present in an=
+ RC release.
+> > > > > >
+> > > > > > Yeah, my personal preference is solution 2.
+> > > > >
+> > > > > Note that solution 2 will probably defer the DT patch to v5.2.
+> > > >
+> > > > Yeah, my understanding is that even if we chose solution 1 we would=
+ still
+> > > > need to be waiting for v5.2 for the patch to switch to using
+> > > > R8A774A1_CLK_CANFD to appear in a rc, therefore I think solution 2 =
+is
+> > > > fine.
+> > >
+> > > Your understanding is the same as mine.
+> > >
+> > > I do seem some slight value in option 1 in terms of getting the chang=
+e,
+> > > less the minor issue of using an index rather than a symbol, upstream
+> > > earlier. But I do not feel strongly about this.
+> > >
+> > > I am marking this patch as deferred. Please repost or otherwise ping =
+me
+> > > when you would like to revisit this topic.
+> >
+> > Thank you. Will do.
 >
-> Any suggestions how I should take this into account with bd70528?
-
-Not more than above, it is unfair to ask random contributors to
-invent entire new worlds of kernel infrastructure. But I guess I
-just need to say it so we are aware: this charging state machine
-engine is needed. Doing it is another thing.
-
-> > I am certain you must have a graphical picture of this state
-> > machine somewhere, it seems to be how charging hardware people
-> > do their thinking.
+> Thanks.
 >
-> I don't have any document I could link to yet. I can ask around if we
-> can have some public doc for this :/ And as a last resort I can do some
-> ASCII art in commenets - if this is seen helpfull.
+> I believe "[10/11] arm64: dts: renesas: r8a774c0: Add clkp2 clock to CAN =
+nodes"
+> falls into the same category. I have marked it as deferred accordingly.
 
-That'd be nice.
+Ok, thank you Simon
 
-> > If I'm not mistaken this is yet another instance of linear interpolation
-> > from a table?
->
-> "linear interpolation from a table" is really not part of my
-> vocabulary :] But I guess you know the REGULATOR_LINEAR_VOLTAGE - macro?
-> I borrowed the idea from there...
+Fab
 
-I'm referring to this essentially:
-https://en.wikipedia.org/wiki/Linear_interpolation
 
-What many charging drivers tends to do is:
-- Look up where I am in a table, say between row 4 and 5
-- For x-axis n..n+1, interpolate y-axis between
-  the values found for x=1 and x=n+1 using
-  common linear interpolation.
 
-> > We really need to think about abstracting this. Last time this
-> > duplication appeared I suggested adding linear interpolation
-> > primitives to:
-> > include/linux/fixp-arith.h
->
-> ... I really think a generic helper for this would be usefull.
 
-Indeed.
-
-> It will take some time untill I can send a proper (non RFC patch) for
-> the charger block as I currently lack of HW I could use for testing the
-> charger properly. Do you think it is better to drop the charger part
-> from the series untill then and submit it only later?
-
-Not really, we need to face the hardware out there and I usually
-use the stance "rough consensus and running code". If noone
-invents a unified charging framework, your hardware needs to
-run so a custom driver isn't that bad either, and it's still better
-to have it in-tree than to maintain it out-of-tree as long as it
-is clearly isolated.
-
-> As I mentioned in
-> cover-letter, the charger part is currently submitted more to give an
-> overview of the chip than to be applied as 'finalized' version of
-> driver.
-
-That's OK.
-
-Yours,
-Linus Walleij
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
