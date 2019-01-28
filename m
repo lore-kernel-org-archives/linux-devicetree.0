@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 25/80] ARM: dts: mmp2: fix TWSI2
-Date: Mon, 28 Jan 2019 11:23:06 -0500
-Message-ID: <20190128162401.58841-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 32/80] ARM: dts: Fix OMAP4430 SDP Ethernet startup
+Date: Mon, 28 Jan 2019 11:23:13 -0500
+Message-ID: <20190128162401.58841-32-sashal@kernel.org>
 References: <20190128162401.58841-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,58 +9,67 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190128162401.58841-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Russell King <rmk+kernel@armlinux.org.uk>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
 
-[ Upstream commit 1147e05ac9fc2ef86a3691e7ca5c2db7602d81dd ]
+[ Upstream commit 84fb6c7feb1494ebb7d1ec8b95cfb7ada0264465 ]
 
-Marvell keeps their MMP2 datasheet secret, but there are good clues
-that TWSI2 is not on 0xd4025000 on that platform, not does it use
-IRQ 58. In fact, the IRQ 58 on MMP2 seems to be a signal processor:
+It was noticed that unbinding and rebinding the KSZ8851 ethernet
+resulted in the driver reporting "failed to read device ID" at probe.
+Probing the reset line with a 'scope while repeatedly attempting to
+bind the driver in a shell loop revealed that the KSZ8851 RSTN pin is
+constantly held at zero, meaning the device is held in reset, and
+does not respond on the SPI bus.
 
-   arch/arm/mach-mmp/irqs.h:#define IRQ_MMP2_MSP  58
+Experimentation with the startup delay on the regulator set to 50ms
+shows that the reset is positively released after 20ms.
 
-I'm taking a somewhat educated guess that is probably a copy & paste
-error from PXA168 or PXA910 and that the real controller in fact hides
-at address 0xd4031000 and uses an interrupt line multiplexed via IRQ 17.
+Schematics for this board are not available, and the traces are buried
+in the inner layers of the board which makes tracing where the RSTN pin
+extremely difficult.  We can only guess that the RSTN pin is wired to a
+reset generator chip driven off the ethernet supply, which fits the
+observed behaviour.
 
-I'm also copying some properties from TWSI1 that were missing or
-incorrect.
+Include this delay in the regulator startup delay - effectively
+treating the reset as a "supply stable" indicator.
 
-Tested on a OLPC XO 1.75 machine, where the RTC is on TWSI2.
+This can not be modelled as a delay in the KSZ8851 driver since the
+reset generation is board specific - if the RSTN pin had been wired to
+a GPIO, reset could be released earlier via the already provided support
+in the KSZ8851 driver.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Tested-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+This also got confirmed by Peter Ujfalusi <peter.ujfalusi@ti.com> based
+on Blaze schematics that should be very close to SDP4430:
+
+TPS22902YFPR is used as the regulator switch (gpio48 controlled):
+Convert arm boot_lock to raw The VOUT is routed to TPS3808G01DBV.
+(SCH Note: Threshold set at 90%. Vsense: 0.405V).
+
+According to the TPS3808 data sheet the RESET delay time when Ct is
+open (this is the case in the schema): MIN/TYP/MAX: 12/20/28 ms.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+[tony@atomide.com: updated with notes from schematics from Peter]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/mmp2.dtsi | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/omap4-sdp.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 766bbb8495b6..47e5b63339d1 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -220,12 +220,15 @@
- 				status = "disabled";
- 			};
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index f0bdc41f8eff..235d1493f8aa 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -33,6 +33,7 @@
+ 		gpio = <&gpio2 16 GPIO_ACTIVE_HIGH>;  /* gpio line 48 */
+ 		enable-active-high;
+ 		regulator-boot-on;
++		startup-delay-us = <25000>;
+ 	};
  
--			twsi2: i2c@d4025000 {
-+			twsi2: i2c@d4031000 {
- 				compatible = "mrvl,mmp-twsi";
--				reg = <0xd4025000 0x1000>;
--				interrupts = <58>;
-+				reg = <0xd4031000 0x1000>;
-+				interrupt-parent = <&intcmux17>;
-+				interrupts = <0>;
- 				clocks = <&soc_clocks MMP2_CLK_TWSI1>;
- 				resets = <&soc_clocks MMP2_CLK_TWSI1>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				status = "disabled";
- 			};
- 
+ 	vbat: fixedregulator-vbat {
 -- 
 2.19.1
