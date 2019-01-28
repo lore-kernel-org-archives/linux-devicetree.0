@@ -1,44 +1,55 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [RFC PATCH v2 08/10] rtc: bd70528: Initial support for ROHM
- bd70528 RTC
-Date: Mon, 28 Jan 2019 22:20:09 +0100
-Message-ID: <20190128212009.GE18309@piout.net>
-References: <20190125110536.GA29321@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: thor.thayer@linux.intel.com
+Subject: [PATCHv3 0/6] Add SOCFPGA System Manager
+Date: Mon, 28 Jan 2019 16:14:09 -0600
+Message-ID: <1548713655-25940-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125110536.GA29321@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: lee.jones@linaro.org, arnd@arndb.de, dinguyen@kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com
+Cc: davem@davemloft.net, mcoquelin.stm32@gmail.com, mchehab+samsung@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, olof@lixom.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-On 25/01/2019 13:05:36+0200, Matti Vaittinen wrote:
-> +static const struct rtc_class_ops bd70528_rtc_ops = {
-> +	.read_time	= bd70528_get_time,
-> +	.set_time	= bd70528_set_time,
-> +	.read_alarm	= bd70528_read_alarm,
-> +	.set_alarm	= bd70528_set_alarm,
+Add MFD driver for SOCFPGA System Manager to handle
+System Manager calls differently for ARM32 vs ARM64.
+The SOCFPGA System Manager includes registers from several
+SOC peripherals.
 
-You actually need to provide a .alarm_irq_enable callback, else there is
-no way to disable a set alarm.
+On ARM32, syscon handles this aggregated register grouping.
+Implement System Manager calls as regmap_mmio similar to syscon
+for ARM32 SOCFPGA systems.
 
-> +	rtc = devm_rtc_device_register(&pdev->dev, "bd70528-rtc",
-> +				       &bd70528_rtc_ops, THIS_MODULE);
-> +	if (IS_ERR(rtc)) {
-> +		dev_err(&pdev->dev, "Registering RTC failed\n");
-> +		return PTR_ERR(rtc);
-> +	}
+The ARM64 System Manager can only be accessed from priority
+level EL3 so this new MFD driver handles the calls to EL3.
 
-Please use devm_rtc_allocate_device() and set rtc->range_min and
-rtc->range_max before registering with rtc_register_device() (which can
-be done after trying to request the irq).
+v3 Changes:
+Create and register regmap in probe().
+Lookup functions find registered regmap.
+Cleanup of header file.
+Fix copyright dates.
+Replace global pointer with traditional probe() methodology.
 
+Thor Thayer (6):
+  mfd: altera-sysmgr: Add SOCFPGA System Manager
+  Documentation: dt: socfpga: Add S10 System Manager binding
+  ARM: socfpga_defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+  arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+  net: stmmac: socfpga: Use shared System Manager driver
+  arm64: dts: stratix10: New System Manager compatible
+
+ .../bindings/arm/altera/socfpga-system.txt         |  12 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/configs/socfpga_defconfig                 |   1 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   2 +-
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/altera-sysmgr.c                        | 210 +++++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |   5 +-
+ include/linux/mfd/altera-sysmgr.h                  |  29 +++
+ 10 files changed, 274 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/mfd/altera-sysmgr.c
+ create mode 100644 include/linux/mfd/altera-sysmgr.h
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.7.4
