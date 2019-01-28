@@ -1,80 +1,72 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [RFC][PATCH] Revert "ARM: dts: bcm2837: Fix polarity of wifi
- reset GPIOs"
-Date: Mon, 28 Jan 2019 19:43:54 +0100 (CET)
-Message-ID: <1215525901.73446.1548701034611@email.ionos.de>
-References: <20190127202813.29493-1-adi@adirat.com>
- <1658074547.62977.1548624393424@email.ionos.de> <87tvhs8wh7.fsf@ni.com>
+From: Tomasz Duszynski <tduszyns@gmail.com>
+Subject: Re: [PATCH v2 3/3] dt-bindings: iio: chemical: pms7003: add device
+ tree support
+Date: Mon, 28 Jan 2019 19:43:33 +0100
+Message-ID: <20190128184332.GA25627@arch>
+References: <20190127181916.19948-1-tduszyns@gmail.com>
+ <20190127181916.19948-4-tduszyns@gmail.com>
+ <20190128075819.GK3691@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87tvhs8wh7.fsf@ni.com>
+Content-Disposition: inline
+In-Reply-To: <20190128075819.GK3691@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ioan-Adrian Ratiu <adi@adirat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, jic23@jic23.retrosnub.co.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-> Ioan-Adrian Ratiu <adi@adirat.com> hat am 28. Januar 2019 um 19:31 geschrieben:
-> 
-> 
-> Hi Stefan and thank you for looking into this,
-> 
-> On Sun, 27 Jan 2019, Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> > Hi Ioan-Adrian, 
-> > 
-> >> Ioan-Adrian Ratiu <adi@adirat.com> hat am 27. Januar 2019 um 
-> >> 21:28 geschrieben:   This reverts commit 
-> >> bea8a160c621d19f7f78b13e14e03f4b8e44cd4b.   Contrary to what 
-> >> the commit message says, on my rpi 3 b v1.2 changing the 
-> >> polarity causes the exact behaviour this commit intends to fix, 
-> >> as described at the referenced link below (wlan0 disapears). 
-> >> With reset-gpios = ... GPIO_ACTIVE_HIGH, brcmfmac errors in 
-> >> dmesg:  [    7.977512] brcmfmac: brcmf_sdio_bus_sleep: error 
-> >> while changing bus sleep state -110 [    7.977623] brcmfmac: 
-> >> brcmf_sdio_txfail: sdio error, abort command and terminate 
-> >> frame [    7.978007] brcmfmac: brcmf_sdio_txfail: sdio error, 
-> >> abort command and terminate frame [    7.978377] brcmfmac: 
-> >> brcmf_sdio_txfail: sdio error, abort command and terminate 
-> >> frame [    7.978724] brcmfmac: brcmf_sdio_dpc: failed backplane 
-> >> access over SDIO, halting operation [    7.978734] brcmfmac: 
-> >> brcmf_proto_bcdc_query_dcmd: brcmf_proto_bcdc_msg failed 
-> >> w/status -110 [    7.978747] brcmfmac: 
-> >> brcmf_cfg80211_get_channel: chanspec failed (-110) [ 
-> >> 7.982817] brcmfmac: brcmf_sdio_bus_sleep: error while changing 
-> >> bus sleep state -110 [    7.982880] brcmfmac: 
-> >> brcmf_sdio_txfail: sdio error, abort command and terminate 
-> >> frame [    7.983255] brcmfmac: brcmf_sdio_txfail: sdio error, 
-> >> abort command and terminate frame  The only solution I 
-> >> currently have is to revert and everything works as expected 
-> >> and as before changing the polarity.   Link: 
-> >> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=911443 
-> >> Signed-off-by: Ioan-Adrian Ratiu <adi@adirat.com> --- 
-> > 
-> > reverting this commit will only workaround the real issue. It 
-> > lies in the sdhci-iproc driver. 
-> > 
-> > Could please try this instead patch [1]? 
-> 
-> Yes, the patch fixes the bug and it's also in Linus' master branch 
-> in v5.0-rc3 as commit 2bd44da ("mmc: sdhci-iproc: handle 
-> mmc_of_parse() errors during prob").
-> 
-> There was just a minor conflict cherry-picking it to 4.19.y 
-> (sdhci_get_property -> sdhci_get_of_property).
-> 
-> I would really like to have 2bd44da backported to the 4.19 stable 
-> tree to have wifi working again. Please?
-> 
-> Tested-by: Ioan-Adrian Ratiu <adi@adirat.com> #4.19.18
-
-i wasn't aware of this conflict until sunday. Yes, i will backport it.
-
-Thanks
-Stefan
-
-> 
+On Mon, Jan 28, 2019 at 08:58:19AM +0100, Johan Hovold wrote:
+> On Sun, Jan 27, 2019 at 07:19:16PM +0100, Tomasz Duszynski wrote:
+> > Add device tree support for Plantower PMS7003 particulate matter sensor.
 > >
-> > [1] - https://patchwork.kernel.org/patch/10741809/
+> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+> > ---
+> >  .../iio/chemical/plantower,pms7003.txt        | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+> > new file mode 100644
+> > index 000000000000..e4c7f2fb1e30
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+> > @@ -0,0 +1,19 @@
+> > +* Plantower PMS7003 particulate matter sensor
+> > +
+> > +Required properties:
+> > +- compatible: must be "plantower,pms7003"
+> > +
+> > +Optional properties:
+> > +- vcc-supply: phandle to the regulator that provides power to the sensor
+>
+> Shouldn't this one be a required property?
+>
+
+Driver does not use regulator framework hence to me this property fits
+here better.
+
+> > +- set-gpios: phandle to the GPIO connected to the SET line
+> > +- reset-gpios: phandle to the GPIO connected to the RESET line
+> > +
+> > +Refer to serial/slave-device.txt for generic serial attached device bindings.
+> > +
+> > +Example:
+> > +
+> > +&uart0 {
+> > +	pms7003 {
+>
+> The node name should be generic and reflect the functionality rather
+> than model. Perhaps "pms" will do here.
+>
+
+Agree, ideally we should have a generic dt name for this kind of sensors
+(something like air-pollution-sensor perhaps?). But unfortunately there isn't
+anything available now so I guess compatible part name should be okay
+(besides this is the type of naming commonly used in other iio bindings).
+
+> > +		compatible = "plantower,pms7003";
+> > +	};
+> > +};
+>
+> Johan
