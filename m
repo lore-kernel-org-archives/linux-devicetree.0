@@ -1,103 +1,27 @@
-Return-Path: <SRS0=/eZE=QE=ysoft.com=michal.vokac@kernel.org>
-From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH RESEND v2 4/4] ARM: mxs: cfa10036: Fixup OLED display reset polarity
-Date: Mon, 28 Jan 2019 12:53:03 +0100
-Message-Id: <1548676383-29685-5-git-send-email-michal.vokac@ysoft.com>
-In-Reply-To: <1548676383-29685-1-git-send-email-michal.vokac@ysoft.com>
-References: <1548676383-29685-1-git-send-email-michal.vokac@ysoft.com>
+Return-Path: <SRS0=OP5l=QE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from michaelmillerfabrics.com ([93.119.178.86]:40602 "EHLO
+        urbanoutfitters.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726857AbfA1SRA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Jan 2019 13:17:00 -0500
+Subject: Want retouching for your photos?
+Message-ID: <d8ed34412db144db8dab63b27d26ee1e@pahlen.com>
+Date: Mon, 28 Jan 2019 10:44:40 +0100
+From: "Jennifer" <haksmsamzt@mail.fr>
+Reply-To: junlutai@sina.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; format=flowed; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-There was a bug in reset signal generation in ssd1307fb OLED driver.
-The display needs an active-low reset signal but the driver produced
-the correct sequence only if the GPIO used for reset was specified as
-GPIO_ACTIVE_HIGH.
+Did you receive my email from last week?
 
-Now as the OLED driver is fixed it is also necessarry to implement
-a fixup for all current users of the old DT ABI. There is only one
-in-tree user and that is the Crystalfontz CFA-10036 board. In case
-this board is booting and GPIO_ACTIVE_HIGH is used for reset we
-override it to GPIO_ACTIVE_LOW.
+Do you have needs for retouching of your photos? We can do it white
+background for your pictures.
+If you need clipping path just let me know.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
-Changes from v1:
- - Add R-by from Rob
- - Use of_property_read_variable_u32_array to read the GPIO specifier
-   array instead of reading it manualy in for cycle. (Rob)
+You can send 1 or 2 photos for testing to judge our quality.
 
- arch/arm/mach-mxs/mach-mxs.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
-
-diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
-index 1c6062d..50038d6 100644
---- a/arch/arm/mach-mxs/mach-mxs.c
-+++ b/arch/arm/mach-mxs/mach-mxs.c
-@@ -21,6 +21,7 @@
- #include <linux/reboot.h>
- #include <linux/micrel_phy.h>
- #include <linux/of_address.h>
-+#include <linux/of_gpio.h>
- #include <linux/of_platform.h>
- #include <linux/phy.h>
- #include <linux/pinctrl/consumer.h>
-@@ -268,9 +269,52 @@ static void __init apx4devkit_init(void)
- 					   apx4devkit_phy_fixup);
- }
- 
-+#define OLED_RESET_GPIO_LEN	3
-+#define OLED_RESET_GPIO_SIZE	(OLED_RESET_GPIO_LEN * sizeof(u32))
-+
-+static void __init crystalfontz_oled_reset_fixup(void)
-+{
-+	struct property *newgpio;
-+	struct device_node *np;
-+	u32 *gpiospec;
-+	int ret;
-+
-+	np = of_find_compatible_node(NULL, NULL, "solomon,ssd1306fb-i2c");
-+	if (!np)
-+		return;
-+
-+	newgpio = kzalloc(sizeof(*newgpio) + OLED_RESET_GPIO_SIZE, GFP_KERNEL);
-+	if (!newgpio)
-+		return;
-+
-+	newgpio->value = newgpio + 1;
-+	newgpio->length = OLED_RESET_GPIO_SIZE;
-+	newgpio->name = kstrdup("reset-gpios", GFP_KERNEL);
-+	if (!newgpio->name) {
-+		kfree(newgpio);
-+		return;
-+	}
-+
-+	gpiospec = newgpio->value;
-+	ret = of_property_read_variable_u32_array(np, "reset-gpios", gpiospec,
-+						  OLED_RESET_GPIO_LEN, 0);
-+
-+	if (ret < 0) {
-+		kfree(newgpio);
-+		return;
-+	}
-+
-+	if (!(gpiospec[2] & OF_GPIO_ACTIVE_LOW)) {
-+		gpiospec[2] |= OF_GPIO_ACTIVE_LOW;
-+		cpu_to_be32_array(gpiospec, gpiospec, OLED_RESET_GPIO_LEN);
-+		of_update_property(np, newgpio);
-+	}
-+}
-+
- static void __init crystalfontz_init(void)
- {
- 	update_fec_mac_prop(OUI_CRYSTALFONTZ);
-+	crystalfontz_oled_reset_fixup();
- }
- 
- static void __init duckbill_init(void)
--- 
-2.1.4
+Thanks,
+Jennifer
