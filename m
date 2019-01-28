@@ -1,75 +1,57 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 076/170] ARM: dts: Fix OMAP4430 SDP Ethernet startup
-Date: Mon, 28 Jan 2019 11:10:26 -0500
-Message-ID: <20190128161200.55107-76-sashal@kernel.org>
-References: <20190128161200.55107-1-sashal@kernel.org>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: [PATCH] input: goodix - support Goodix gt5688
+Date: Mon, 28 Jan 2019 18:03:10 +0100
+Message-ID: <20190128170310.GA305@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190128161200.55107-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Russell King <rmk+kernel@armlinux.org.uk>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bastien Nocera <hadess@hadess.net>, Matthias Brugger <matthias.bgg@gmail.com>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
+>From what I've seen in vendor trees it's fine to treat this as gt1x¹.
 
-[ Upstream commit 84fb6c7feb1494ebb7d1ec8b95cfb7ada0264465 ]
+[1]: https://github.com/TadiT7/android_kernel_mtk-4.4/tree/master/drivers/input/touchscreen/mediatek/GT5688
 
-It was noticed that unbinding and rebinding the KSZ8851 ethernet
-resulted in the driver reporting "failed to read device ID" at probe.
-Probing the reset line with a 'scope while repeatedly attempting to
-bind the driver in a shell loop revealed that the KSZ8851 RSTN pin is
-constantly held at zero, meaning the device is held in reset, and
-does not respond on the SPI bus.
-
-Experimentation with the startup delay on the regulator set to 50ms
-shows that the reset is positively released after 20ms.
-
-Schematics for this board are not available, and the traces are buried
-in the inner layers of the board which makes tracing where the RSTN pin
-extremely difficult.  We can only guess that the RSTN pin is wired to a
-reset generator chip driven off the ethernet supply, which fits the
-observed behaviour.
-
-Include this delay in the regulator startup delay - effectively
-treating the reset as a "supply stable" indicator.
-
-This can not be modelled as a delay in the KSZ8851 driver since the
-reset generation is board specific - if the RSTN pin had been wired to
-a GPIO, reset could be released earlier via the already provided support
-in the KSZ8851 driver.
-
-This also got confirmed by Peter Ujfalusi <peter.ujfalusi@ti.com> based
-on Blaze schematics that should be very close to SDP4430:
-
-TPS22902YFPR is used as the regulator switch (gpio48 controlled):
-Convert arm boot_lock to raw The VOUT is routed to TPS3808G01DBV.
-(SCH Note: Threshold set at 90%. Vsense: 0.405V).
-
-According to the TPS3808 data sheet the RESET delay time when Ct is
-open (this is the case in the schema): MIN/TYP/MAX: 12/20/28 ms.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-[tony@atomide.com: updated with notes from schematics from Peter]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
 ---
- arch/arm/boot/dts/omap4-sdp.dts | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
+ drivers/input/touchscreen/goodix.c                             | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 280d92d42bf1..bfad6aadfe88 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -33,6 +33,7 @@
- 		gpio = <&gpio2 16 GPIO_ACTIVE_HIGH>;  /* gpio line 48 */
- 		enable-active-high;
- 		regulator-boot-on;
-+		startup-delay-us = <25000>;
- 	};
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+index f7e95c52f3c7..57d3d8870a09 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+@@ -3,6 +3,7 @@ Device tree bindings for Goodix GT9xx series touchscreen controller
+ Required properties:
  
- 	vbat: fixedregulator-vbat {
+  - compatible		: Should be "goodix,gt1151"
++				 or "goodix,gt5688"
+ 				 or "goodix,gt911"
+ 				 or "goodix,gt9110"
+ 				 or "goodix,gt912"
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index f2d9c2c41885..47b1ced41576 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -216,6 +216,7 @@ static const struct goodix_chip_data *goodix_get_chip_data(u16 id)
+ {
+ 	switch (id) {
+ 	case 1151:
++	case 5688:
+ 		return &gt1x_chip_data;
+ 
+ 	case 911:
+@@ -942,6 +943,7 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
+ #ifdef CONFIG_OF
+ static const struct of_device_id goodix_of_match[] = {
+ 	{ .compatible = "goodix,gt1151" },
++	{ .compatible = "goodix,gt5688" },
+ 	{ .compatible = "goodix,gt911" },
+ 	{ .compatible = "goodix,gt9110" },
+ 	{ .compatible = "goodix,gt912" },
 -- 
-2.19.1
+2.20.1
