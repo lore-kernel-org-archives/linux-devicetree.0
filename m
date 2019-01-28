@@ -1,80 +1,104 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 10/11] arm64: dts: renesas: r8a774c0: Add clkp2 clock to
- CAN nodes
-Date: Mon, 28 Jan 2019 14:02:38 +0100
-Message-ID: <20190128130238.gork4cep3qonghwz@verge.net.au>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-11-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190117120541.slymsz47fjkzz3kg@verge.net.au>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 2/3] mfd: syscon: Add optional clock support
+Date: Mon, 28 Jan 2019 14:20:32 +0100
+Message-ID: <47a3fe9f-8adb-8f47-e7c1-342f8fc318aa@st.com>
+References: <1544604495-4082-1-git-send-email-fabrice.gasnier@st.com>
+ <1544604495-4082-3-git-send-email-fabrice.gasnier@st.com>
+ <CAK8P3a1MucNG86=bXwVVsasGBOLJ67kuRSpoeneF6M5aB6GmQA@mail.gmail.com>
+ <9e0ee154-a399-9bff-3beb-adfd9d6c6fee@st.com>
+ <CAK8P3a0kV4-OF7JPwM9cEqxaPvNM9dFZdyZetc47t+D5izkFwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190117120541.slymsz47fjkzz3kg@verge.net.au>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ben
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0kV4-OF7JPwM9cEqxaPvNM9dFZdyZetc47t+D5izkFwQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 01:05:42PM +0100, Simon Horman wrote:
-> On Wed, Jan 16, 2019 at 06:37:53PM +0000, Fabrizio Castro wrote:
-> > According to the latest information, clkp2 is available on RZ/G2.
-> > Modify CAN0 and CAN1 nodes accordingly.
-> > 
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+On 1/16/19 4:11 PM, Arnd Bergmann wrote:
+> On Wed, Jan 16, 2019 at 3:10 PM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+>>
+>> On 1/16/19 1:14 PM, Arnd Bergmann wrote:
+>>> (sorry for the late reply, I just realized that I had never sent out the
+>>> mail after Lee asked me for a review last year and I had drafted
+>>> my reply).
+>>
+>> Hi Arnd,
+>>
+>> Many thanks for reviewing, no worries :-)
+>>
+>>>
+>>> On Wed, Dec 12, 2018 at 9:48 AM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+>>>>
+>>>> Some system control registers need to be clocked, so the registers can
+>>>> be accessed. Add an optional clock and attach it to regmap.
+>>>>
+>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>
+>>> This looks ok to me in principle, but I have one question: When we
+>>> do a clk_get() and clk_prepare() as part of regmap_mmio_attach_clk(),
+>>> does that change the behavior of syscon nodes that are otherwise
+>>> unused?
+>>
+>> I'm not sure I correctly understand this question. I don't think it will
+>> change the behavior for "unused" nodes. These should remain unused with
+>> this patch.
 > 
-> Taking your word for the motivation for this change,
-> this patch seems fine to me but I would like to wait for review
-> from others.
+> What I mean is that nodes that listed as 'compatible="syscon"' get
+> probed by the syscon driver even when no other driver references
+> them, and that in turn would acquire the clock, right?
+
+Hi Arnd,
+
+Sorry for the late reply.
+
+When no other driver references them, nothing happens at probe time on
+the clock: no calls to get/prepare... the clock.
+
+=> The clock will remain unrequested & unused until another driver calls
+one of "of_syscon_register()" variants:
+- syscon_node_to_regmap
+- syscon_regmap_lookup_by_compatible
+- syscon_regmap_lookup_by_phandle
+
+When another driver references them (e.g. one of the above calls), then
+it will acquire the optional clock and use it, e.g.:
+- clk_prepare() upon of_syscon_register() variants
+- clk_enable & clk_disable when accessing the registers
+
+I hope this clarifies.
+
+Please advise,
+Best Regards,
+Fabrice
+
 > 
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
-I am marking this as deferred until R8A774C0_CLK_CANFD
-shows up in an rc release.
-
-Alternatively I'd be happy to take a version that uses
-numeric values, followed up by a patch to switching to R8A774C0_CLK_CANFD
-once it is available in an rc release.
-
-Please repost or otherwise ping me as appropriate.
-
+>>> I think we have a bunch of devices that started out as a syscon but
+>>> then we added a proper driver for them, which would handle the
+>>> clocks explicitly. Is it guaranteed that this will keep working (including
+>>> shutting down the clocks when they are unused) if we have two drivers
+>>> that call clk_get() on the same device node?
+>>
+>> I'd expect nothing wrong happens when two drivers call clk_get() for the
+>> same clock.
+>> Are there some case where two drivers are bind (e.g. syscon driver +
+>> another driver) for the same piece of hardware ?
 > 
-> > ---
-> >  arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 12 ++++++++----
-> >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-> > index 3970aaf..326ab3a 100644
-> > --- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-> > @@ -809,8 +809,10 @@
-> >  				     "renesas,rcar-gen3-can";
-> >  			reg = <0 0xe6c30000 0 0x1000>;
-> >  			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
-> > -			clocks = <&cpg CPG_MOD 916>, <&can_clk>;
-> > -			clock-names = "clkp1", "can_clk";
-> > +			clocks = <&cpg CPG_MOD 916>,
-> > +				 <&cpg CPG_CORE R8A774C0_CLK_CANFD>,
-> > +				 <&can_clk>;
-> > +			clock-names = "clkp1", "clkp2", "can_clk";
-> >  			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> >  			resets = <&cpg 916>;
-> >  			status = "disabled";
-> > @@ -821,8 +823,10 @@
-> >  				     "renesas,rcar-gen3-can";
-> >  			reg = <0 0xe6c38000 0 0x1000>;
-> >  			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
-> > -			clocks = <&cpg CPG_MOD 915>, <&can_clk>;
-> > -			clock-names = "clkp1", "can_clk";
-> > +			clocks = <&cpg CPG_MOD 915>,
-> > +				 <&cpg CPG_CORE R8A774C0_CLK_CANFD>,
-> > +				 <&can_clk>;
-> > +			clock-names = "clkp1", "clkp2", "can_clk";
-> >  			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> >  			resets = <&cpg 915>;
-> >  			status = "disabled";
-> > -- 
-> > 2.7.4
-> > 
+> You won't actually have two drivers binding to the same device, but you
+> could have a driver and a syscon user that does relies on the
+> syscon_regmap_lookup_by_*() functions.
+> 
+> I think we've had a couple of cases where we started out representing
+> a device as syscon, and then later decided that a high-level abstraction
+> would be needed because syscon didn't quite support all the needed
+> features.
+> 
+> Since each syscon node should also have a more specific
+> compatible value, you can then have another driver that binds
+> to that compatible string.
+> 
+>       Arnd
 > 
