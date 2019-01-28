@@ -1,7 +1,7 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCHv3 4/6] arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
-Date: Mon, 28 Jan 2019 16:14:13 -0600
-Message-ID: <1548713655-25940-5-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCHv3 6/6] arm64: dts: stratix10: New System Manager compatible
+Date: Mon, 28 Jan 2019 16:14:15 -0600
+Message-ID: <1548713655-25940-7-git-send-email-thor.thayer@linux.intel.com>
 References: <1548713655-25940-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1548713655-25940-1-git-send-email-thor.thayer@linux.intel.com>
@@ -12,26 +12,31 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Enable the Stratix10 System Manager by default.
+Use the new compatible string defined for the Stratix10
+System Manager. Remove syscon since it is not correct
+on this platform. Use "altr,sys-mgr" as the non-specific
+fallback compatible.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
-v2-3  No change
+v2  New. Use new Stratix10 System Manager compatible
+v3  Use "altr,sys-mgr" as the non-specific compatible.
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c8432e24207e..48a312126cf7 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -417,6 +417,7 @@ CONFIG_MESON_WATCHDOG=m
- CONFIG_RENESAS_WDT=y
- CONFIG_UNIPHIER_WATCHDOG=y
- CONFIG_BCM2835_WDT=y
-+CONFIG_MFD_ALTERA_SYSMGR=y
- CONFIG_MFD_BD9571MWV=y
- CONFIG_MFD_AXP20X_I2C=y
- CONFIG_MFD_AXP20X_RSB=y
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index b2c9bb664595..18e4e54db0bb 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -363,7 +363,7 @@
+ 		};
+ 
+ 		sysmgr: sysmgr@ffd12000 {
+-			compatible = "altr,sys-mgr", "syscon";
++			compatible = "altr,sys-mgr-s10","altr,sys-mgr";
+ 			reg = <0xffd12000 0x228>;
+ 		};
+ 
 -- 
 2.7.4
