@@ -1,91 +1,45 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
-Date: Mon, 28 Jan 2019 15:57:40 +0000
-Message-ID: <20190128155739.yyftnu7a5hz6if7d@e5254000004ec.dyn.armlinux.org.uk>
-References: <20190125125513.23656-1-ccaione@baylibre.com>
- <20190125130612.npknjuzjmny4yohg@e5254000004ec.dyn.armlinux.org.uk>
- <20190125184330.dm3kaoewvbwddacy@xps>
- <a8b8e82f-2b68-ed9d-6106-0542dddc1181@gmail.com>
- <20190125191947.um4w4e5jpsv2kcxc@e5254000004ec.dyn.armlinux.org.uk>
- <3e09ef54-f817-2659-4e9e-74a88a80cbcc@gmail.com>
- <20190128104620.3e724lfm5xv5il4x@xps>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/8] dt-bindings: Add vendor prefix for LeMaker
+Date: Mon, 28 Jan 2019 17:00:07 +0100
+Message-ID: <20190128160007.GD26200@ulmo>
+References: <20181107181843.27628-1-contact@paulk.fr>
+ <20181107181843.27628-5-contact@paulk.fr>
+Reply-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Qrgsu6vtpU/OV/zm"
+Return-path: <linux-sunxi+bncBDTKFPPJUEHRBCWOXTRAKGQEXKPNZXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190128104620.3e724lfm5xv5il4x@xps>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>
-Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, linux-imx@nxp.com, robh+dt@kernel.org, abailon@baylibre.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org, Heiner Kallweit <hkallweit1@gmail.com>
+In-Reply-To: <20181107181843.27628-5-contact-W9ppeneeCTY@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Van den Borre <mark-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Gerry Demaret <gerry-8Ycg9RsmSNMdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 10:46:20AM +0000, Carlo Caione wrote:
-> On 25/01/19 20:27, Heiner Kallweit wrote:
-> > OK, then the description of the referenced patch isn't fully correct
-> > and SmartEEE and EEE are partially compatible, and the problem is
-> > just that we don't know exactly to which extent.
+
+--Qrgsu6vtpU/OV/zm
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Wed, Nov 07, 2018 at 07:18:39PM +0100, Paul Kocialkowski wrote:
+> This introduces a new device-tree binding vendor prefix for Shenzhen
+> LeMaker Technology Co., Ltd.
 > 
-> Reading from the datasheet at [0] it seems that SmartEEE is compatible with
-> EEE but it's something different.
+> This vendor was already in use but it was not documented until now.
+> 
+> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+> Reviewed-by: Rob Hering <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-As I understand it, SmartEEE is just like normal EEE as far as the link
-partner is concerned.  The difference is between the PHY and MAC.  What
-follows is a simplified understanding of the differences.
+Applied to drm-misc-next, thanks.
 
-In conventional EEE, the MAC takes part in EEE - the local MAC requests
-that its attached PHY enters LPI mode, which signals to the link partner
-PHY that the data stream on the link is going to pause.  When the local
-MAC wants to transmit, it first has to signal to the attached PHY that
-the link should be woken up, and the MAC has to wait for the link to
-exit LPI before transmitting.
-
-With SmartEEE, the decision to enter LPI mode is taken not by the local
-MAC but by the PHY instead, since SmartEEE is designed to produce power
-savings for MACs that do not support LPI.  Of course, they won't achieve
-the same power saving as real EEE, but they do help to reduce the power
-dissipation in the PHY.
-
-PHYs that support this buffer some data from the MAC, and that buffering
-has to be sufficient for the delay in the link coming out of LPI mode
-without losing data.
-
-As far as the link partner is concerned, EEE and SmartEEE appear the
-same.
-
-> With SmartEEE the PHY can actually enter LPI state even if this is not
-> supported by the link partner since the LPI pattern is generated inside the
-> PHY itself, so auto-implementing a sort of EEE.
-
-It sounds to me like you have this the wrong way round.  SmartEEE isn't
-about the link partner not supporting LPI, it's about the local MAC not
-supporting EEE, but still getting some power savings.
-
-EEE (of either kind) can only be entered on the link when both the
-local PHY and remote PHY indicate support for EEE, and have negotiated
-that they support EEE.
-
-Most of the power dissipation is from driving the signals into the
-network cable (which is a lossy environment) to ensure that the far
-end has sufficient signal to keep the link established.  SmartEEE is
-about giving a way to enter 802.3az EEE mode on the _cable_ with a
-MAC that does not support EEE.
-
-I've monitored the signals on a link with an Atheros AR8035 with
-SmartEEE mode enabled, and a Marvell 88e1514 PHY in a Marvell switch
-on the other end, and seen the signals on the cable quiesce as a
-result of SmartEEE, but only when _both_ partners are set to allow
-EEE in the negotiated link mode.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Thierry
+--Qrgsu6vtpU/OV/zm--
