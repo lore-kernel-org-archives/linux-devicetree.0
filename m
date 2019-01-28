@@ -1,7 +1,7 @@
 From: Loys Ollivier <lollivier@baylibre.com>
-Subject: [PATCH v3 2/4] dt-bindings: gnss: add mediatek binding
-Date: Mon, 28 Jan 2019 17:37:59 +0100
-Message-ID: <1548693481-1162-3-git-send-email-lollivier@baylibre.com>
+Subject: [PATCH v3 1/4] dt-bindings: Add vendor prefix for "GlobalTop Technology, Inc."
+Date: Mon, 28 Jan 2019 17:37:58 +0100
+Message-ID: <1548693481-1162-2-git-send-email-lollivier@baylibre.com>
 References: <1548693481-1162-1-git-send-email-lollivier@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1548693481-1162-1-git-send-email-lollivier@baylibre.com>
@@ -10,69 +10,29 @@ To: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
 Cc: Loys Ollivier <lollivier@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add binding for Mediatek-based GNSS receivers.
+Add globaltop vendor definition.
 
 Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
 ---
 
-v3:
-Removed the I2C and SPI interfaces references.
-Removed the "mediatek,mt3339" compatible line.
-Added the optional propertied (reset, fix)
-Added the pin names for the optional properties.
+v3: No changes
 
-v2:
-Renamed bindings from Globaltop/gtop to Mediatek/mtk.
-Moved current-speed as an optional propertie.
-Removed the status line in the example.
-Added "mediatek,mt3339" compatible.
+v2: Alphabetical order
 
- .../devicetree/bindings/gnss/mediatek.txt          | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/gnss/mediatek.txt b/Documentation/devicetree/bindings/gnss/mediatek.txt
-new file mode 100644
-index 000000000000..00650d81c5c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
-@@ -0,0 +1,37 @@
-+Mediatek-based GNSS Receiver DT binding
-+
-+Mediatek chipsets are used in GNSS-receiver modules produced by several
-+vendors and can use an UART interface.
-+
-+Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-+properties.
-+
-+Required properties:
-+
-+- compatible	: Must be
-+
-+			"globaltop,pa6h"
-+
-+- vcc-supply	: Main voltage regulator (pin name: VCC)
-+
-+Optional properties:
-+
-+- gtop,reset-gpios	: GPIO used to reset the device
-+  			  (pin name: RESET, NRESET)
-+- gtop,fix-gpios	: GPIO used to determine device position fix state
-+			  (pin name: FIX, 3D_FIX)
-+- timepulse-gpios	: Time pulse GPIO (pin name: PPS1, 1PPS)
-+- v-bckp-supply		: Backup voltage regulator
-+  			  (pin name: VBAT, VBACKUP)
-+- current-speed		: Default UART baud rate
-+
-+Example:
-+
-+serial@1234 {
-+	compatible = "ns16550a";
-+
-+	gnss {
-+		compatible = "globaltop,pa6h";
-+		vcc-supply = <&vcc_3v3>;
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 389508584f48..d80a70343b36 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -150,6 +150,7 @@ geniatech	Geniatech, Inc.
+ giantec	Giantec Semiconductor, Inc.
+ giantplus	Giantplus Technology Co., Ltd.
+ globalscale	Globalscale Technologies, Inc.
++globaltop	GlobalTop Technology, Inc.
+ gmt	Global Mixed-mode Technology, Inc.
+ goodix	Shenzhen Huiding Technology Co., Ltd.
+ google	Google, Inc.
 -- 
 2.7.4
