@@ -1,73 +1,84 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Mon, 28 Jan 2019 10:15:08 -0700
-Message-ID: <CANLsYkxkTTfTMNNZZ1tmS=cjakcfveMDrW6wxXPXie8M9_VDOg@mail.gmail.com>
-References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <1bd39862-0725-70ce-6535-fdb59569f683@arm.com> <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
- <91a90daa-9e14-2d2e-e633-2ddfdc0955bf@arm.com> <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
- <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com> <5b54c6e0-7d22-ecee-486f-31333f49f84a@codeaurora.org>
- <18b70426-60fe-4871-6388-6e09fd5feb37@arm.com> <de6e021a-4f9a-8e2e-dff0-1e7c61ad8b2b@codeaurora.org>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 122/258] ARM: dts: Fix up the D-Link DIR-685 MTD partition info
+Date: Mon, 28 Jan 2019 10:57:08 -0500
+Message-ID: <20190128155924.51521-122-sashal@kernel.org>
+References: <20190128155924.51521-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <de6e021a-4f9a-8e2e-dff0-1e7c61ad8b2b@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, John Horley <John.Horley@arm.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190128155924.51521-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Jan 2019 at 11:21, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi Suzuki,
->
-> On 1/24/2019 4:49 PM, Suzuki K Poulose wrote:
-> > Hi Sai,
-> >
-> >
-> > That looks fine with me. But as Mathieu said, this needs to be a separate
-> > patch. But before all that please could you provide me the PIDR4 value for
-> > the Kryo A75 and A55 please ?
-> >
->
-> Sure.
->
-> PIDR4 value is 0x4.
->
-> I get it now. So we are looking for JEP106 identification(PIDR1[7:4] and
-> PIDR2[2:0]) and continuation code(PIDR4[3:0]).
->
->  From ARM Coresight Spec:
->
-> DES_0, PIDR1 bits[7:4] JEP106 identification code bits[3:0].
-> DES_1, PIDR2 bits[2:0] JEP106 identification code bits[6:4].
-> DES_2, PIDR4 bits[3:0] JEP106 continuation code.
->
-> For SDM845(A75 based):
->
-> *0xB_B8_03* does indicate that the JEP106 identification
-> code is 0x3B and continuation code is 0x4 which is of ARM and not
-> QCOM(JEP106 ID is 0x70) which is expected.
->
-> And the other values of PIDR0[0:7] and PIDR1[3:0] are *Implementation
-> defined part numbers* and can be different from ARM A75/A55.
->
-> I think this clears up case for SDM845.
->
-> As for MSM8996, it is not based on any ARM derivative and hence the
-> JEP106 ID is of QCOM(0x70) from the value of pid = *0xF_02_11*
-> based on PIDR1[7:4] and PIDR2[2:0]. This clears this as well.
->
-> Please correct me if I am wrong and also let me know if I can
-> continue with PID addition to table.
+From: Linus Walleij <linus.walleij@linaro.org>
 
-Please proceed.
+[ Upstream commit 738a05e673435afb986b53da43befd83ad87ec3b ]
 
->
-> Thanks,
-> Sai
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+The vendor firmware was analyzed to get the right idea about
+this flash layout. /proc/mtd contains:
+
+dev:    size   erasesize  name
+mtd0: 01e7ff40 00020000 "rootfs"
+mtd1: 01f40000 00020000 "upgrade"
+mtd2: 00040000 00020000 "rgdb"
+mtd3: 00020000 00020000 "nvram"
+mtd4: 00040000 00020000 "RedBoot"
+mtd5: 00020000 00020000 "LangPack"
+mtd6: 02000000 00020000 "flash"
+
+Here "flash" is obviously the whole device and we know "rootfs"
+is a bogus hack to point to a squashfs rootfs inside of the main
+"upgrade partition". We know "RedBoot" is the first 0x40000 of
+the flash and the "upgrade" partition follows from 0x40000 to
+0x1f8000. So we have mtd0, 1, 4 and 6 covered.
+
+Remains:
+mtd2: 00040000 00020000 "rgdb"
+mtd3: 00020000 00020000 "nvram"
+mtd5: 00020000 00020000 "LangPack"
+
+Inspecting the flash at 0x1f8000 and 0x1fa000 reveals each of
+these starting with "RGCFG1" so we assume 0x1f8000-1fbfff is
+"rgdb" of 0x40000.
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/gemini-dlink-dir-685.dts | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/boot/dts/gemini-dlink-dir-685.dts b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
+index 6f258b50eb44..502a361d1fe9 100644
+--- a/arch/arm/boot/dts/gemini-dlink-dir-685.dts
++++ b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
+@@ -274,20 +274,16 @@
+ 				read-only;
+ 			};
+ 			/*
+-			 * Between the boot loader and the rootfs is the kernel
+-			 * in a custom Storlink format flashed from the boot
+-			 * menu. The rootfs is in squashfs format.
++			 * This firmware image contains the kernel catenated
++			 * with the squashfs root filesystem. For some reason
++			 * this is called "upgrade" on the vendor system.
+ 			 */
+-			partition@1800c0 {
+-				label = "rootfs";
+-				reg = <0x001800c0 0x01dbff40>;
+-				read-only;
+-			};
+-			partition@1f40000 {
++			partition@40000 {
+ 				label = "upgrade";
+-				reg = <0x01f40000 0x00040000>;
++				reg = <0x00040000 0x01f40000>;
+ 				read-only;
+ 			};
++			/* RGDB, Residental Gateway Database? */
+ 			partition@1f80000 {
+ 				label = "rgdb";
+ 				reg = <0x01f80000 0x00040000>;
+-- 
+2.19.1
