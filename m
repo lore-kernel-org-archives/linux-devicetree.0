@@ -1,55 +1,48 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 4/5] ARM: dts: sun5i: q8-tablet: Add LCD Panel power
- supply
-Date: Mon, 28 Jan 2019 11:53:08 +0100
-Message-ID: <20190128105308.jynl4hdptiprkhqo@flea>
-References: <20190127144838.3578-1-wens@csie.org>
- <20190127144838.3578-5-wens@csie.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] Serial: Ingenic: Add support for the X1000.
+Date: Mon, 28 Jan 2019 11:53:27 +0100
+Message-ID: <CAMuHMdWgYgMWD=oE6vCZtb1_-K5y19AHwn1WptLhJ47hc6Ah+g@mail.gmail.com>
+References: <1548667176-119830-1-git-send-email-zhouyanjie@zoho.com> <1548667176-119830-2-git-send-email-zhouyanjie@zoho.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nzgdkp24ycyqpod3"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190127144838.3578-5-wens@csie.org>
+In-Reply-To: <1548667176-119830-2-git-send-email-zhouyanjie@zoho.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Zhou Yanjie <zhouyanjie@zoho.com>
+Cc: linux-mips@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@mips.com>, Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, syq@debian.org, jiaxun.yang@flygoat.com, 772753199@qq.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Zhou,
 
---nzgdkp24ycyqpod3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 28, 2019 at 10:23 AM Zhou Yanjie <zhouyanjie@zoho.com> wrote:
+> Add support for probing the 8250_ingenic driver on the
+> X1000 Soc from Ingenic.
+>
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 
-On Sun, Jan 27, 2019 at 10:48:37PM +0800, Chen-Yu Tsai wrote:
-> The A13 Q8 tablet, following the A13 reference tablet design, has the
-> system's fixed 3.3V rail feed the VCC supply of the LCD panel.
-> Additional voltage rails used by the panel are generated using a
-> regulator fed from the unregulated IPSOUT output of the PMIC. The latter
-> is unrepresentable in the device tree. Both are controlled with MOSFETs
-> by the enable GPIO added in the previous patch. The actual enable or
-> reset pin for the panel is tied directly to LCD-VCC after the MOSFET.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Thanks for your patch!
 
-Applied, thanks!
-Maxime
+> --- a/drivers/tty/serial/8250/8250_ingenic.c
+> +++ b/drivers/tty/serial/8250/8250_ingenic.c
+> @@ -145,6 +145,10 @@ EARLYCON_DECLARE(jz4780_uart, ingenic_early_console_setup);
+>  OF_EARLYCON_DECLARE(jz4780_uart, "ingenic,jz4780-uart",
+>                     ingenic_early_console_setup);
+>
+> +EARLYCON_DECLARE(x1000_uart, ingenic_early_console_setup);
+> +OF_EARLYCON_DECLARE(x1000_uart, "ingenic,x1000-uart",
+> +                   ingenic_early_console_setup);
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+As of commit 2eaa790989e03900 ("earlycon: Use common framework for
+earlycon declarations") it is no longer needer to specify both
+EARLYCON_DECLARE() and OF_EARLYCON_DECLARE().
 
---nzgdkp24ycyqpod3
-Content-Type: application/pgp-signature; name="signature.asc"
+Gr{oetje,eeting}s,
 
------BEGIN PGP SIGNATURE-----
+                        Geert
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXE7fFAAKCRDj7w1vZxhR
-xTsJAP4lShKIc4E7kP7BDzoBlb9H7+MuXbm+Z4cAOHdUngD7yQEA6DWAGlYD+iM7
-nuxiy1NvZe3U96ZAy8XnBMpC6eNj3wk=
-=wHYU
------END PGP SIGNATURE-----
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---nzgdkp24ycyqpod3--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
