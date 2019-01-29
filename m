@@ -1,73 +1,37 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 10/27] PCI: mobiveil: fix the INTx process error
-Date: Tue, 29 Jan 2019 08:09:32 +0000
-Message-ID: <20190129080926.36773-11-Zhiqiang.Hou@nxp.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: RE: [PATCH 3/3] devfreq: add mediatek cci devfreq
+Date: Tue, 29 Jan 2019 17:17:50 +0900
+Message-ID: <20190129081750epcms1p41e46de569005622ad3d90f9aaa75f545@epcms1p4>
+References: <1548743704-16821-4-git-send-email-andrew-sh.cheng@mediatek.com>
+        <1548743704-16821-1-git-send-email-andrew-sh.cheng@mediatek.com>
+        <CGME20190129063600epcas2p255b062c64f22555692ff895634ea4eb0@epcms1p4>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
-Content-Language: en-US
+In-Reply-To: <1548743704-16821-4-git-send-email-andrew-sh.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
-Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "fan.chen@mediatek.com" <fan.chen@mediatek.com>, "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+>
+>For big/little cpu cluster architecture,
+>not only CPU frequency, but CCI frequency will also affect performance.
+>
+>Little cores and cci share the same buck in Mediatek mt8183 IC,
+>so we add a CCI devfreq which will get notification when buck voltage
+>is changed, then CCI devfreq can set cci frequency as high as possible.
+>
+>Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
 
-In the loop block, there is not code change the loop key,
-this patch updated the loop key by re-read the INTx status
-register.
+Please correct the coding style first in the .c file.
 
-This patch also change to clear the handled INTx status.
+- empty last line?
+- inconsistent indentation (line26? match the first lines for all variable declarations OR don't match them at all)
+- Need proper boilerplate and try to comply with C89.
 
-Note: Need MV to test this fix.
-
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host
-Bridge IP driver")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
----
-V3:
- - No change
-
- drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
-r/pcie-mobiveil.c
-index 4ba458474e42..78e575e71f4d 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 	/* Handle INTx */
- 	if (intr_status & PAB_INTP_INTX_MASK) {
- 		shifted_status =3D csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-+		shifted_status &=3D PAB_INTP_INTX_MASK;
- 		shifted_status >>=3D PAB_INTX_START;
- 		do {
- 			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-@@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 					dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
- 							    bit);
-=20
--				/* clear interrupt */
--				csr_writel(pcie,
--					   shifted_status << PAB_INTX_START,
-+				/* clear interrupt handled */
-+				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
- 					   PAB_INTP_AMBA_MISC_STAT);
- 			}
--		} while ((shifted_status >> PAB_INTX_START) !=3D 0);
-+
-+			shifted_status =3D csr_readl(pcie,
-+						   PAB_INTP_AMBA_MISC_STAT);
-+			shifted_status &=3D PAB_INTP_INTX_MASK;
-+			shifted_status >>=3D PAB_INTX_START;
-+		} while (shifted_status !=3D 0);
- 	}
-=20
- 	/* read extra MSI status register */
---=20
-2.17.1
+Cheers,
+MyungJoo
