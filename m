@@ -1,49 +1,61 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] dt-bindings: display: add binding for Innolux ee101ia-01d
- panel
-Date: Tue, 29 Jan 2019 14:37:23 +0100
-Message-ID: <5825168.ASgtykK0VC@diego>
-References: <20181113124205.29319-1-heiko@sntech.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 01/13] dt-bindings: mfd: add DT bindings for max77650
+Date: Tue, 29 Jan 2019 14:35:32 +0100
+Message-ID: <20190129133545.1931-2-brgl@bgdev.pl>
+References: <20190129133545.1931-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181113124205.29319-1-heiko@sntech.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190129133545.1931-1-brgl@bgdev.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhpZXJyeSwKCkFtIERpZW5zdGFnLCAxMy4gTm92ZW1iZXIgMjAxOCwgMTM6NDI6MDUgQ0VU
-IHNjaHJpZWIgSGVpa28gU3R1ZWJuZXI6Cj4gRnJvbTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvLnN0
-dWVibmVyQGJxLmNvbT4KPiAKPiBUaGlzIGlzIGEgcGFuZWwgaGFuZGxlZCB0aHJvdWdoIHRoZSBn
-ZW5lcmljIGx2ZHMtcGFuZWwgYmluZGluZywKPiBzbyBvbmx5IG5lZWRzIGl0cyBhZGRpdGlvbmFs
-IGNvbXBhdGlibGUgc3BlY2lmaWVkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVy
-IDxoZWlrby5zdHVlYm5lckBicS5jb20+CgpqdXN0IHB1bGxpbmcgdGhpcyBwZW5kaW5nIHBhdGNo
-IG91dCBvZiB0aGUgd29vZHdvcmtzIGFnYWluIHRvbyA6LSkKClRoYW5rcyBpbiBhZHZhbmNlIGZv
-ciBjb25zaWRlcmluZyBpdC4KSGVpa28KCj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3Bh
-bmVsL2lubm9sdXgsZWUxMDFpYS0wMWQudHh0ICAgICAgICAgfCA3ICsrKysrKysKPiAgMSBmaWxl
-IGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQKPiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVlMTAxaWEt
-MDFkLnR4dAo+IAo+IGRpZmYgLS1naXQKPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZWUxMDFpYS0wMWQudHh0Cj4gYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVlMTAxaWEtMDFk
-LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5lNWNhNGNj
-ZDU1ZWQKPiAtLS0gL2Rldi9udWxsCj4gKysrCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGVlMTAxaWEtMDFkLnR4dAo+IEBAIC0wLDAg
-KzEsNyBAQAo+ICtJbm5vbHV4IENvcnBvcmF0aW9uIDEwLjEiIEVFMTAxSUEtMDFEIFdYR0EgKDEy
-ODB4ODAwKSBMVkRTIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBh
-dGlibGU6IHNob3VsZCBiZSAiaW5ub2x1eCxlZTEwMWlhLTAxZCIKPiArCj4gK1RoaXMgYmluZGlu
-ZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIGx2ZHMtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3Bl
-Y2lmaWVkCj4gK2luIHBhbmVsLWx2ZHMudHh0IGluIHRoaXMgZGlyZWN0b3J5LgoKCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Add a DT binding document for max77650 ultra-low power PMIC. This
+describes the core mfd device.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ .../devicetree/bindings/mfd/max77650.txt      | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
+new file mode 100644
+index 000000000000..84631d3b1e14
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max77650.txt
+@@ -0,0 +1,28 @@
++MAX77650 ultra low-power PMIC from Maxim Integrated.
++
++Required properties:
++-------------------
++- compatible:		Must be "maxim,max77650"
++- reg:			I2C device address.
++- interrupts:		The interrupt on the parent the controller is
++			connected to.
++- interrupt-parent:	phandle of the parent interrupt controller.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells:	Must be <2>.
++
++For device-tree bindings of sub-modules (regulator, power supply, GPIO, LEDs
++and onkey) refer to the binding documents under the respective sub-system
++directories.
++
++Example:
++--------
++
++	pmic: max77650@48 {
++		compatible = "maxim,max77650";
++		reg = <0x48>;
++
++		interrupt-controller;
++		interrupt-parent = <&gpio2>;
++		#interrupt-cells = <2>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++	};
+-- 
+2.20.1
