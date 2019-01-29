@@ -1,8 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 05/27] PCI: mobiveil: correct PCI base address in MEM/IO
- outbound windows
-Date: Tue, 29 Jan 2019 08:09:00 +0000
-Message-ID: <20190129080926.36773-6-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 06/27] PCI: mobiveil: replace the resource list iteration
+ function
+Date: Tue, 29 Jan 2019 08:09:06 +0000
+Message-ID: <20190129080926.36773-7-Zhiqiang.Hou@nxp.com>
 References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,37 +17,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-It should get PCI base address from the DT node property 'ranges'
-to setup MEM/IO outbound windows instead of always zero.
+As it won't delete any node in this iteration, replaced
+the function resource_list_for_each_entry_safe() with
+the resource_list_for_each_entry().
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge
-IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 ---
 V3:
  - No change
 
- drivers/pci/controller/pcie-mobiveil.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index a0dd337c6214..8ff873023b5f 100644
+index 8ff873023b5f..b2cc9c097fc9 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -630,8 +630,9 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
+@@ -569,7 +569,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
 e)
+ {
+ 	u32 value, pab_ctrl, type;
+ 	int err;
+-	struct resource_entry *win, *tmp;
++	struct resource_entry *win;
 =20
- 		/* configure outbound translation window */
- 		program_ob_windows(pcie, pcie->ob_wins_configured,
--				   win->res->start, 0, type,
--				   resource_size(win->res));
-+				   win->res->start,
-+				   win->res->start - win->offset,
-+				   type, resource_size(win->res));
- 	}
+ 	err =3D mobiveil_bringup_link(pcie);
+ 	if (err) {
+@@ -620,7 +620,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
+e)
+ 	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
 =20
- 	/* setup MSI hardware registers */
+ 	/* Get the I/O and memory ranges from DT */
+-	resource_list_for_each_entry_safe(win, tmp, &pcie->resources) {
++	resource_list_for_each_entry(win, &pcie->resources) {
+ 		if (resource_type(win->res) =3D=3D IORESOURCE_MEM)
+ 			type =3D MEM_WINDOW_TYPE;
+ 		else if (resource_type(win->res) =3D=3D IORESOURCE_IO)
 --=20
 2.17.1
