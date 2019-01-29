@@ -1,8 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 06/27] PCI: mobiveil: replace the resource list iteration
- function
-Date: Tue, 29 Jan 2019 08:09:06 +0000
-Message-ID: <20190129080926.36773-7-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 07/27] PCI: mobiveil: use WIN_NUM_0 explicitly for CFG
+ outbound window
+Date: Tue, 29 Jan 2019 08:09:12 +0000
+Message-ID: <20190129080926.36773-8-Zhiqiang.Hou@nxp.com>
 References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,9 +17,9 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-As it won't delete any node in this iteration, replaced
-the function resource_list_for_each_entry_safe() with
-the resource_list_for_each_entry().
+As the .map_bus() use the WIN_NUM_0 for CFG transactions,
+it's better passing WIN_NUM_0 explicitly when initialize
+the CFG outbound window.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
@@ -27,33 +27,26 @@ Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 V3:
  - No change
 
- drivers/pci/controller/pcie-mobiveil.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index 8ff873023b5f..b2cc9c097fc9 100644
+index b2cc9c097fc9..df71c11b4810 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -569,7 +569,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
+@@ -612,9 +612,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
 e)
- {
- 	u32 value, pab_ctrl, type;
- 	int err;
--	struct resource_entry *win, *tmp;
-+	struct resource_entry *win;
+ 	 */
 =20
- 	err =3D mobiveil_bringup_link(pcie);
- 	if (err) {
-@@ -620,7 +620,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
-e)
+ 	/* config outbound translation window */
+-	program_ob_windows(pcie, pcie->ob_wins_configured,
+-			   pcie->ob_io_res->start, 0, CFG_WINDOW_TYPE,
+-			   resource_size(pcie->ob_io_res));
++	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
++			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+=20
+ 	/* memory inbound translation window */
  	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-=20
- 	/* Get the I/O and memory ranges from DT */
--	resource_list_for_each_entry_safe(win, tmp, &pcie->resources) {
-+	resource_list_for_each_entry(win, &pcie->resources) {
- 		if (resource_type(win->res) =3D=3D IORESOURCE_MEM)
- 			type =3D MEM_WINDOW_TYPE;
- 		else if (resource_type(win->res) =3D=3D IORESOURCE_IO)
 --=20
 2.17.1
