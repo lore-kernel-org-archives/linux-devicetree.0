@@ -1,72 +1,90 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v3 6/7] arm64: dts: xilinx: ultra96: Standardize LED
- labels and triggers
-Date: Tue, 29 Jan 2019 14:17:31 +0100
-Message-ID: <bf2c3b1e-7f89-4f68-589e-29f81c782c80@xilinx.com>
-References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
- <20181029094245.7886-7-manivannan.sadhasivam@linaro.org>
- <20181221023708.GC3233@Mani-XPS-13-9360>
- <9f4f05cb-f326-a4e3-e306-cfbf64b629b4@xilinx.com>
- <CAL_Jsq+zfV66EZHX7psh2=r-=wDrmLLcr5PWtSzuKRNOdMR-Dw@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: devicetree: media: Documentation of Bt.656 Bus DT bindings
+Date: Tue, 29 Jan 2019 15:20:15 +0200
+Message-ID: <20190129132015.tvtzycrzr46kotbt@paasikivi.fi.intel.com>
+References: <CAPo_4QDW0r22ZTqtS_NDFWB3NFLBx9YEGgWKb-P9A3t_TBAFMQ@mail.gmail.com>
+ <c4d68627-b26a-6402-daf4-5cd103ec9fd0@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+zfV66EZHX7psh2=r-=wDrmLLcr5PWtSzuKRNOdMR-Dw@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <c4d68627-b26a-6402-daf4-5cd103ec9fd0@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, koen.kooi@linaro.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Ken Sloat <ken.sloat@ohmlinxelectronics.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, yong.deng@magewell.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, kieran.bingham@ideasonboard.com, laurent.pinchart@ideasonboard.com, jean-michel.hautbois@vodalys.com, Nate Drude <nate.drude@ohmlinxelectronics.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24. 01. 19 17:49, Rob Herring wrote:
-> On Fri, Dec 21, 2018 at 12:51 AM Michal Simek <michal.simek@xilinx.com> wrote:
->>
->> On 21. 12. 18 3:37, Manivannan Sadhasivam wrote:
->>> On Mon, Oct 29, 2018 at 03:12:44PM +0530, Manivannan Sadhasivam wrote:
->>>> For all 96Boards, the following standard is used for onboard LEDs.
->>>>
->>>> green:user1  default-trigger: heartbeat
->>>> green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
->>>> green:user3  default-trigger: mmc1 (SD-card)
->>>> green:user4  default-trigger: none, panic-indicator
->>>> yellow:wlan  default-trigger: phy0tx
->>>> blue:bt      default-trigger: hci0-power
->>>>
->>>> So lets adopt the same for Ultra96, which is one of the 96Boards
->>>> CE and AI platform. Since the WLAN and BT LEDs are hardwired onboard,
->>>> consolidate only User LEDs.
->>>>
->>>
->>> Hello,
->>>
->>> Any update on this patch?
->>
->> I am still waiting for reaction from Rob.
->> We are keep trying to keep backward compatibility and this patch is
->> breaking it that's why I want to know DT guys reaction on this change.
+Hi Ken, Hans,
+
+On Mon, Jan 28, 2019 at 02:11:54PM +0100, Hans Verkuil wrote:
+> +Sakari
+
+Thanks for cc'ing me!
+
 > 
-> dts changes and backwards compatibility are ultimately up to the
-> platform maintainers. Your users can yell at you if they care. I only
-> ask that changes that break compatibility are documented as doing so.
+> On 1/24/19 3:53 AM, Ken Sloat wrote:
+> > There are a number of v4l2 subdevices in the kernel that support a
+> > Bt.656 bus also known as "embedded sync." Previously in older versions
+> > of the kernel (and in the current 4.14 LTS kernel), the standard way
+> > to enable this in device tree on a parallel bus was to simply omit all
+> > hysync and vsync flags.
+> > 
+> > During some other kernel development I was doing, it was brought to my
+> > attention that there is now a standard defined binding in
+> > "video-interfaces.txt" called "bus-type" that should be used in order
+> > to enable Bt.656 mode. While omitting the flags still appears to work
+> > because of other assumptions made in v4l2-fwnode driver, this method
+> > is now outdated and improper.
+> > 
+> > However, I have noticed that several dt binding docs have not been
+> > updated to reflect this change and still reference the old method:
+> > 
+> > Documentation/devicetree/bindings/media/sun6i-csi.txt
+> > /* If hsync-active/vsync-active are missing,
+> >    embedded BT.656 sync is used */
+> > 
+> > Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> > "If none of hsync-active, vsync-active and field-even-active is specified,
+> > the endpoint is assumed to use embedded BT.656 synchronization."
+> > 
+> > Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> > "If none of hsync-active, vsync-active and pclk-sample is specified the
+> >   endpoint will use embedded BT.656 synchronization."
+> > 
+> > and amazingly even
+> > Documentation/devicetree/bindings/media/video-interfaces.txt in one of
+> > the code snippets
+> > /* If hsync-active/vsync-active are missing,
+> >    embedded BT.656 sync is used */
+
+Yeah, these are the old bindings indeed.
+
+> > 
+> > In order to avoid future confusion in the matter and ensure that the
+> > proper bindings are used, I am proposing submitting patches to update
+> > these docs to at minimum remove these statements and maybe even adding
+> > additional comments specifying the optional property and value for
+> > Bt.656 where missing. I wanted to open a discussion here first before
+> > doing this though. Thoughts?
+
+I agree. If a device supports different busses on the same port, then the
+bus-type property is needed. This is often the case for Bt.656 and parallel
+(Bt.601?) interfaces.
+
+This should be documented so that new devices would use the bus type. The
+existing bindings still need to be supported in drivers though.
+
+I cc'd the devicetree list as well.
+
+> > 
+> > Thanks,
+> > Ken Sloat
+> > 
 > 
-> Personally, I'm in favor of this change. I'd rather seem uniformity
-> across boards and this is just a dev board and LED functions won't
-> affect booting.
+> I certainly agree that this should be updated to make it all consistent.
 
-Ok.
+-- 
+Kind regards,
 
-Then please fix the patch and do it in a way
-
-label = "green:user1"; /* ds2 */
-
-ds2 reflects name on schematics.
-
-in ds4 case default trigger is changes to mmc1. It suggests sd/emmc but
-on ultra96 it is sd slot and wifi on second slot.
-
-ds5 - linux,default-trigger = "none"; looks weird. None trigger should
-be simply ensured by removing that line.
-
-Thanks,
-Michal
+Sakari Ailus
+sakari.ailus@linux.intel.com
