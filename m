@@ -1,117 +1,61 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH 09/10] soc: mediatek: change the argument of write and write_mask API
-Date: Tue, 29 Jan 2019 15:32:06 +0800
-Message-ID: <1548747128-60136-10-git-send-email-bibby.hsieh@mediatek.com>
-References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
+Subject: [PATCH 00/10] support gce on mt8183 platform
+Date: Tue, 29 Jan 2019 15:31:57 +0800
+Message-ID: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
+Cc: devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, kendrick.hsu@mediatek.com, linux-mediatek@lists.infradead.org, Houlong Wei <houlong.wei@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Frederic Chen <Frederic.Chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, linux-arm-kernel@lists.infradead.org, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-In order to enhance the convienience of client usage,
-we change the input argument from subsys and offset to
-struct cmdq_base and dma_addr_t.
+MTK will support gce function on mt8183 platform.
+	soc: mediatek: add mt8183 compatible name
+	dt-binding: gce: add gce header file for mt8183
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
----
- drivers/soc/mediatek/mtk-cmdq-helper.c | 24 +++++++++++++++++-------
- include/linux/soc/mediatek/mtk-cmdq.h  | 16 ++++++++--------
- 2 files changed, 25 insertions(+), 15 deletions(-)
+Besides above patches, we refine gce driver on those patches.
+	soc: mediatek: move the CMDQ_IRQ_MASK into cmdq driver data
+	soc: mediatek: clear the event in cmdq initial flow
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 923a815..34ae712 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -238,8 +238,13 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, s16 arg_c, s16 arg_b,
- 	return 0;
- }
- 
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-+		   dma_addr_t addr, u32 value)
- {
-+	const u32 base = (addr >> 32) ? 0 : addr & 0xFFFF0000;
-+	u8 subsys = cmdq_subsys_base_to_id(clt_base, base);
-+	s16 offset = addr & 0x0000FFFF;
-+
- 	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
- 				       CMDQ_GET_ARG_B(value), offset, subsys,
- 				       CMDQ_IMMEDIATE_VALUE,
-@@ -248,21 +253,26 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
- }
- EXPORT_SYMBOL(cmdq_pkt_write);
- 
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
--			u32 value, u32 mask)
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-+			dma_addr_t addr, u32 value, u32 mask)
- {
--	u32 offset_mask = offset;
-+	const u32 base = (addr >> 32) ? 0 : addr & 0xFFFF0000;
-+	u8 subsys = cmdq_subsys_base_to_id(clt_base, base);
-+	s16 offset = addr & 0x0000FFFF;
- 	int err = 0;
- 
- 	if (mask != 0xffffffff) {
- 		err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
- 					      CMDQ_GET_ARG_B(~mask), 0, 0, 0, 0,
- 					      0, CMDQ_CODE_MASK);
--		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
-+		offset |= CMDQ_WRITE_ENABLE_MASK;
- 	}
--	err |= cmdq_pkt_write(pkt, subsys, offset_mask, value);
- 
--	return err;
-+	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
-+				       CMDQ_GET_ARG_B(value), offset, subsys,
-+				       CMDQ_IMMEDIATE_VALUE,
-+				       CMDQ_IMMEDIATE_VALUE,
-+				       CMDQ_IMMEDIATE_VALUE, CMDQ_CODE_WRITE);
- }
- EXPORT_SYMBOL(cmdq_pkt_write_mask);
- 
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index e4d1876..230bc2b 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -70,26 +70,26 @@ struct cmdq_client *cmdq_mbox_create(struct device *dev, int index,
- /**
-  * cmdq_pkt_write() - append write command to the CMDQ packet
-  * @pkt:	the CMDQ packet
-- * @subsys:	the CMDQ sub system code
-- * @offset:	register offset from CMDQ sub system
-+ * @cmdq_base:	the CMDQ sub system code and base address
-+ * @addr:	register address
-  * @value:	the specified target register value
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
--
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-+		   dma_addr_t addr, u32 value);
- /**
-  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
-  * @pkt:	the CMDQ packet
-- * @subsys:	the CMDQ sub system code
-- * @offset:	register offset from CMDQ sub system
-+ * @cmdq_base:	the CMDQ sub system code and base address
-+ * @addr:	register address
-  * @value:	the specified target register value
-  * @mask:	the specified target register mask
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
--			u32 value, u32 mask);
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-+			dma_addr_t addr, u32 value, u32 mask);
- 
- /**
-  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+In ordet to enhance the convenience of gce usage, we add new helper
+functions and refine the method of instruction combining. 
+	soc: mediatek: add subsys-base address transform function
+	soc: mediatek: add register device function
+	soc: mediatek: add cmdq_dev_get_event function
+	soc: mediatek: add packet encoder function
+	soc: mediatek: change the argument of write and write_mask API
+	soc: mediatek: add polling function
+
+Bibby Hsieh (10):
+  soc: mediatek: add mt8183 compatible name
+  dt-binding: gce: add gce header file for mt8183
+  soc: mediatek: move the CMDQ_IRQ_MASK into cmdq driver data
+  soc: mediatek: clear the event in cmdq initial flow
+  soc: mediatek: add subsys-base address transform function
+  soc: mediatek: add register device function
+  soc: mediatek: add cmdq_dev_get_event function
+  soc: mediatek: add packet encoder function
+  soc: mediatek: change the argument of write and write_mask API
+  soc: mediatek: add polling function
+
+ .../devicetree/bindings/mailbox/mtk-gce.txt        |   6 +-
+ drivers/mailbox/mtk-cmdq-mailbox.c                 |  18 +-
+ drivers/soc/mediatek/mtk-cmdq-helper.c             | 212 +++++++++++++++++----
+ include/dt-bindings/gce/mt8183-gce.h               | 177 +++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h           |   5 +
+ include/linux/soc/mediatek/mtk-cmdq.h              |  52 +++--
+ 6 files changed, 412 insertions(+), 58 deletions(-)
+ create mode 100644 include/dt-bindings/gce/mt8183-gce.h
+
 -- 
 1.9.1
