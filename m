@@ -1,72 +1,81 @@
 From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Subject: Re: [PATCH] ARM: dts: socfpga: update more missing reset properties
-Date: Tue, 29 Jan 2019 21:05:55 +0100
-Message-ID: <d2080ae3-8bc9-1346-8ef6-3bba0274a425@gmail.com>
-References: <20190129194625.19218-1-goldsimon@gmx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] ARM: socfpga: fix base address of SDR controller
+Date: Tue, 29 Jan 2019 21:08:58 +0100
+Message-ID: <20190129200858.19773-1-goldsimon@gmx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129194625.19218-1-goldsimon@gmx.de>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Simon Goldschmidt <goldsimon@gmx.de>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alan Tull <atull@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am 29.01.2019 um 20:46 schrieb Simon Goldschmidt:
-> Add reset property for dma, can and sdram on socfpga gen5.
-> 
-> Signed-off-by: Simon Goldschmidt <goldsimon@gmx.de>
+From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
 
-That should have been:
+The documentation for socfpga gen5 says the base address of the sdram
+controller is 0xffc20000, while the current devicetree says it is at
+0xffc25000.
+
+While this is not a problem for Linux, as it only accesses the registers
+above 0xffc25000, it *is* a problem for U-Boot because the lower registers
+are used during DDR calibration (up to now, the U-Boot driver does not use
+the dts address, but that should change).
+
+To keep Linux and U-Boot devicetrees in sync, this patch changes the base
+address to 0xffc20000 and adapts the 2 files where it is currently used.
+
+This patch changes the dts and 2 drivers with one commit to prevent
+breaking the code if dts change and driver change would be split.
+
 Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+---
 
-Regards,
-Simon
+ arch/arm/boot/dts/socfpga.dtsi       | 4 ++--
+ arch/arm/mach-socfpga/self-refresh.S | 4 ++--
+ drivers/fpga/altera-fpga2sdram.c     | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-> 
-> ---
-> This series applies on top of  kernel/git/dinguyen/linux.git,
-> branch socfpga_for_next_v5.1_dts_v1
-> 
->   arch/arm/boot/dts/socfpga.dtsi | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index f365003f0..ec1966480 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -84,6 +84,7 @@
->   				#dma-requests = <32>;
->   				clocks = <&l4_main_clk>;
->   				clock-names = "apb_pclk";
-> +				resets = <&rst DMA_RESET>;
->   			};
->   		};
->   
-> @@ -100,6 +101,7 @@
->   			reg = <0xffc00000 0x1000>;
->   			interrupts = <0 131 4>, <0 132 4>, <0 133 4>, <0 134 4>;
->   			clocks = <&can0_clk>;
-> +			resets = <&rst CAN0_RESET>;
->   			status = "disabled";
->   		};
->   
-> @@ -108,6 +110,7 @@
->   			reg = <0xffc01000 0x1000>;
->   			interrupts = <0 135 4>, <0 136 4>, <0 137 4>, <0 138 4>;
->   			clocks = <&can1_clk>;
-> +			resets = <&rst CAN1_RESET>;
->   			status = "disabled";
->   		};
->   
-> @@ -791,6 +794,7 @@
->   		sdr: sdr@ffc25000 {
->   			compatible = "altr,sdr-ctl", "syscon";
->   			reg = <0xffc25000 0x1000>;
-> +			resets = <&rst SDR_RESET>;
->   		};
->   
->   		sdramedac {
-> 
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index f365003f0..8f6c1a5d6 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -788,9 +788,9 @@
+ 			reg = <0xfffec000 0x100>;
+ 		};
+ 
+-		sdr: sdr@ffc25000 {
++		sdr: sdr@ffc20000 {
+ 			compatible = "altr,sdr-ctl", "syscon";
+-			reg = <0xffc25000 0x1000>;
++			reg = <0xffc20000 0x6000>;
+ 		};
+ 
+ 		sdramedac {
+diff --git a/arch/arm/mach-socfpga/self-refresh.S b/arch/arm/mach-socfpga/self-refresh.S
+index f2d7f883e..bd7759357 100644
+--- a/arch/arm/mach-socfpga/self-refresh.S
++++ b/arch/arm/mach-socfpga/self-refresh.S
+@@ -19,8 +19,8 @@
+ #define MAX_LOOP_COUNT		1000
+ 
+ /* Register offset */
+-#define SDR_CTRLGRP_LOWPWREQ_ADDR       0x54
+-#define SDR_CTRLGRP_LOWPWRACK_ADDR      0x58
++#define SDR_CTRLGRP_LOWPWREQ_ADDR       0x5054
++#define SDR_CTRLGRP_LOWPWRACK_ADDR      0x5058
+ 
+ /* Bitfield positions */
+ #define SELFRSHREQ_POS                  3
+diff --git a/drivers/fpga/altera-fpga2sdram.c b/drivers/fpga/altera-fpga2sdram.c
+index a78e49c63..30767c254 100644
+--- a/drivers/fpga/altera-fpga2sdram.c
++++ b/drivers/fpga/altera-fpga2sdram.c
+@@ -30,7 +30,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/regmap.h>
+ 
+-#define ALT_SDR_CTL_FPGAPORTRST_OFST		0x80
++#define ALT_SDR_CTL_FPGAPORTRST_OFST		0x5080
+ #define ALT_SDR_CTL_FPGAPORTRST_PORTRSTN_MSK	0x00003fff
+ #define ALT_SDR_CTL_FPGAPORTRST_RD_SHIFT	0
+ #define ALT_SDR_CTL_FPGAPORTRST_WR_SHIFT	4
+-- 
+2.17.1
