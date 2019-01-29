@@ -1,54 +1,40 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH 2/4] arm64: dts: models: use list instead of tuple for
- mmci interrupts
-Date: Tue, 29 Jan 2019 14:35:34 +0000
-Message-ID: <20190129143534.GG25147@e110455-lin.cambridge.arm.com>
-References: <20190125175606.6607-1-sudeep.holla@arm.com>
- <20190125175606.6607-2-sudeep.holla@arm.com>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH] ARM: dts: omap3-gta04a5: Replace LXR reference with a local one
+Date: Tue, 29 Jan 2019 15:45:18 +0100
+Message-ID: <20190129144518.9744-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190125175606.6607-2-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMjUsIDIwMTkgYXQgMDU6NTY6MDRQTSArMDAwMCwgU3VkZWVwIEhvbGxhIHdy
-b3RlOgo+IFJUU00vRlZQIHZleHByZXNzIG1vdGhlcmJvYXJkIG1vZGVsIE1NQ0kgcmVxdWlyZXMg
-ZGVkaWNhdGVkIGludGVycnVwdHMKPiBmb3IgQ01EIGFuZCBQSU8sIHdoaWNoIG9idmlvdXNseSBz
-aG91bGQgYmUgZXhwcmVzc2VkIGFzIGEgbGlzdC4gQ3VycmVudAo+IGZvcm0gdXNlcyB0dXBsZSBh
-bmQgaXQgd29ya3MgZmluZSBzaW5jZSBpbnRlcnJ1cHQtY2VsbHMgZXF1YWwgdG8gMS4KPiAKPiBD
-YzogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+CgpGb3IgdGhlIHJlc3Qgb2YgdGhl
-IHNlcmllczoKCkFja2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KCkJl
-c3QgcmVnYXJkcywKTGl2aXUKCj4gUmVwb3J0ZWQtYnk6IFZsYWRpbWlyIE11cnppbiA8dmxhZGlt
-aXIubXVyemluQGFybS5jb20+Cj4gU2lnbmVkLW9mZi1ieTogU3VkZWVwIEhvbGxhIDxzdWRlZXAu
-aG9sbGFAYXJtLmNvbT4KPiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRzbV92ZS1t
-b3RoZXJib2FyZC5kdHNpIHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
-IDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hcm0v
-cnRzbV92ZS1tb3RoZXJib2FyZC5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRzbV92
-ZS1tb3RoZXJib2FyZC5kdHNpCj4gaW5kZXggYjI1ZjNjYmQzZGE4Li4xMDJlOTM3NDRlZGMgMTAw
-NjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRzbV92ZS1tb3RoZXJib2FyZC5k
-dHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRzbV92ZS1tb3RoZXJib2FyZC5k
-dHNpCj4gQEAgLTg2LDcgKzg2LDcgQEAKPiAgCQkJCW1tY2lANTAwMDAgewo+ICAJCQkJCWNvbXBh
-dGlibGUgPSAiYXJtLHBsMTgwIiwgImFybSxwcmltZWNlbGwiOwo+ICAJCQkJCXJlZyA9IDwweDA1
-MDAwMCAweDEwMDA+Owo+IC0JCQkJCWludGVycnVwdHMgPSA8OSAxMD47Cj4gKwkJCQkJaW50ZXJy
-dXB0cyA9IDw5PiwgPDEwPjsKPiAgCQkJCQljZC1ncGlvcyA9IDwmdjJtX3N5c3JlZyAwIDA+Owo+
-ICAJCQkJCXdwLWdwaW9zID0gPCZ2Mm1fc3lzcmVnIDEgMD47Cj4gIAkJCQkJbWF4LWZyZXF1ZW5j
-eSA9IDwxMjAwMDAwMD47Cj4gLS0gCj4gMi4xNy4xCj4gCgotLSAKPT09PT09PT09PT09PT09PT09
-PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0IHRoZXkncmUg
-bm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAtLS0tLS0tLS0t
-LS0tLS0KICAgIMKvXF8o44OEKV8vwq8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+There's no need to use an external link when the file is already here.
+
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+---
+
+Alternatively, I could change the link to https://elixir.bootlin.com
+(the successor of lxr.free-electrons.com), but this solution seemed
+simpler.
+---
+ arch/arm/boot/dts/omap3-gta04a5.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/omap3-gta04a5.dts b/arch/arm/boot/dts/omap3-gta04a5.dts
+index bd232b1b24cb..223b47ac596e 100644
+--- a/arch/arm/boot/dts/omap3-gta04a5.dts
++++ b/arch/arm/boot/dts/omap3-gta04a5.dts
+@@ -82,7 +82,7 @@
+ 
+ /*
+  * for WL183x module see
+- * http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
++ * Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
+  */
+ 
+ &wifi_pwrseq {
+-- 
+2.20.1
