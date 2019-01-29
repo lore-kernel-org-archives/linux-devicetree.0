@@ -1,15 +1,17 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add QuadSPI controller
-Date: Tue, 29 Jan 2019 18:40:52 +0100
-Message-ID: <1548783652.6869.11.camel@pengutronix.de>
-References: <20190129163457.7107-1-ccaione@baylibre.com>
- <1548780179.6869.9.camel@pengutronix.de>
- <3ff2f0d6-07d2-9ed4-878f-011406f09da3@baylibre.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 4/6] arm64: dts: Add Adreno GPU and GPU smmu definitions
+Date: Tue, 29 Jan 2019 17:46:58 +0000
+Message-ID: <d4954b0a-f8e8-b985-ca59-f93a8a44e2b2@linaro.org>
+References: <20190129132335.30695-1-srinivas.kandagatla@linaro.org>
+ <20190129132335.30695-5-srinivas.kandagatla@linaro.org>
+ <20190129160426.GA18874@jcrouse1-lnx.qualcomm.com>
+ <20190129164332.GB18874@jcrouse1-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3ff2f0d6-07d2-9ed4-878f-011406f09da3@baylibre.com>
+In-Reply-To: <20190129164332.GB18874@jcrouse1-lnx.qualcomm.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,43 +21,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIGRlbiAyOS4wMS4yMDE5LCAxNjo1NCArMDAwMCBzY2hyaWViIENhcmxvIENh
-aW9uZToKPiBPbiAyOS8wMS8yMDE5IDE2OjQyLCBMdWNhcyBTdGFjaCB3cm90ZToKPiA+IEhpIENh
-cmxvLAo+IAo+IEhpIEx1Y2FzLAo+IAo+ID4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9pbXg4bXEuZHRzaQo+ID4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9pbXg4bXEuZHRzaQo+ID4gPiBAQCAtNTE2LDYgKzUxNiwxOSBAQAo+ID4gPiA+ID4gPiA+
-ID4gwqDCoAkJCX07Cj4gPiA+ID4gwqDCoAkJfTsKPiA+ID4gCj4gPiA+IMKgwqAKPiA+ID4gKwkJ
-c3BpMDogc3BpQDMwYmIwMDAwIHsKPiA+IAo+ID4gMzBiYjAwMDAgaXMgcGFydCBvZiB0aGUgQUlQ
-UzMgYnVzIGFkZHJlc3Mgc3BhY2UsIHNvIHBsZWFzZSBtb3ZlIHRoaXMgdG8KPiA+IHRoZSBjb3Jy
-ZWN0IGxvY2F0aW9uIHdpdGhpbiB0aGlzIGJ1cyBub2RlLgo+IAo+IFRoZSBwcm9ibGVtIGlzIHRo
-YXQgdGhlICJRdWFkU1BJLW1lbW9yeSIgcmVnaW9uIGRvZXNuJ3QgZmFsbCB3aXRoaW4gdGhlwqAK
-PiBtZW1vcnkgcmFuZ2Ugb2YgdGhlIEFJUFMzIGJ1cywgc28gdGhlIGRldm1faW9yZW1hcF9yZXNv
-dXJjZSBpcyBmYWlsaW5nwqAKPiB3aGVuIG1vdmluZyB0aGUgbm9kZSB0aGVyZS4KClVoLCB0aGF0
-J3MgaW50ZXJlc3RpbmcuIE5vcm1hbGx5IHRoZSBEVHMgYXJlIG9yZ2FuaXplZCBhbG9uZyB0aGUK
-Y29udHJvbCBwYXRoIGFuZCBJIGd1ZXNzIHRoZSBRdWFkU1BJLW1lbW9yeSBpcyBub3QgcmVhbGx5
-IGEgY29udHJvbApwYXRoLCBidXQgdGhlIGZhc3QgbWVtb3J5IGFjY2VzcyBwYXRoLiBNYXliZSB0
-aGlzIGlzIHNvbWV0aGluZyB0aGUgRFQKZm9sa3MgY291bGQgdGFrZSBhIGxvb2sgYXQuCgpCdXQg
-dGhlbiBJIHdvdWxkIHN0aWxsIHByZWZlciB0byBoYXZlIHRoZSBRU1BJIGNvbnRyb2xsZXIgbW92
-ZWQgaW50bwp0aGUgY29ycmVjdCBjb250cm9sIGJ1cy4gSSBndWVzcyB3ZSBjYW4gd29yayBhcm91
-bmQgeW91cgpkZXZtX2lvcmVtYXBfcmVzb3VyY2UgZmFpbGluZyBpc3N1ZSBieSBhZGRpbmcgdGhl
-IFFTUEktbWVtb3J5IHJlZ2lvbiB0bwp0aGUgQUlQUzMgYnVzIHJhbmdlcy4KCj4gPiA+ICsJCQkj
-YWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+ID4gPiArCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gPiA+
-IAo+ID4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14N2QtcXNwaSI7Cj4gPiAKPiA+IFBsZWFz
-ZSBhZGQgYSAiZnNsLGlteDhtcS1xc3BpIiBjb21wYXRpYmxlIGhlcmUsIGFzIHdhcyBkb25lIHdp
-dGggYWxsCj4gPiB0aGUgb3RoZXIgbm9kZXMgaW4gdGhpcyBmaWxlLCBzbyB3ZSBjYW4gbWF0Y2gg
-dGhpcyBpbiB0aGUgZHJpdmVyIHNob3VsZAo+ID4gdGhlIG5lZWQgYXJpc2UuCj4gCj4gVGhpcyBp
-cyBvZGQgc2luY2UgYXQgbGVhc3QgZm9yIHRoZSBBbUxvZ2ljIFNvQ3Mgd2UgYXJlIGdvaW5nIGV4
-YWN0bHkgaW7CoAo+IHRoZSBvcHBvc2l0ZSBkaXJlY3Rpb24gd2hlcmUgd2UgYXZvaWQgdG8gYWRk
-IHVubmVjZXNzYXJ5IGNvbXBhdGlibGVzIGlmwqAKPiB0aGF0J3Mgbm90IHN0cmljdGx5IHJlcXVp
-cmVkLgoKSXQncyBhIHNhZmV0eSBuZXQsIHNvIHdlIGRvbid0IG5lZWQgdG8gY2hhbmdlIGV4aXN0
-aW5nIERUQnMgaWYgaXQgdHVybnMKb3V0IHRoYXQgYSBzcGVjaWZpYyBTb0MgaW50ZWdyYXRpb24g
-aGFzIGEgYnVnIHRoYXQgbmVlZHMgYSB3b3JrYXJvdW5kCmluIHRoZSBkcml2ZXIuCgpUaGlzIGlz
-IG9uZSBvZiB0aGluZ3MgSSd2ZSBwcm9wb3NlZCBpbiBteSBFTEMtRSB0YWxrICJTdGFibGUgRGV2
-aWNldHJlZQpBQkk6IGl0J3MgcG9zc2libGUhIiwgd2hpY2ggd2FzIGdlbmVyYWxseSB3ZWxsIHJl
-Y2VpdmVkIGJ5IHRoZSBEVApmb2xrcy4KClJlZ2FyZHMsCkx1Y2FzCgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Thanks Jordan,
+
+On 29/01/2019 16:43, Jordan Crouse wrote:
+> Ugh, I just found them sitting unsent in a dusty git branch. I can either send
+> them as incremental patches on top of yours to be squashed later or I can
+> refactor this patch and send it out again, whatever is easiest for you.
+
+If you can refactor this patch and send it out, that would be great!
+
+thanks,
+srini
