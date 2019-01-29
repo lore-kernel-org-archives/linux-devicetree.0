@@ -1,52 +1,65 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add QuadSPI controller
-Date: Tue, 29 Jan 2019 16:54:23 +0000
-Message-ID: <3ff2f0d6-07d2-9ed4-878f-011406f09da3@baylibre.com>
-References: <20190129163457.7107-1-ccaione@baylibre.com>
- <1548780179.6869.9.camel@pengutronix.de>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH] dt-bindings: pinctrl: Document the i.MX50 IOMUXC binding
+Date: Tue, 29 Jan 2019 17:55:28 +0100
+Message-ID: <20190129165530.7606-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1548780179.6869.9.camel@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Dong Aisheng <dong.aisheng@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjkvMDEvMjAxOSAxNjo0MiwgTHVjYXMgU3RhY2ggd3JvdGU6Cj4gSGkgQ2FybG8sCgpIaSBM
-dWNhcywKCj4+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNp
-Cj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4+IEBA
-IC01MTYsNiArNTE2LDE5IEBACj4+PiAgwqAJCQl9Owo+Pj4gIMKgCQl9Owo+PiAgIAo+PiArCQlz
-cGkwOiBzcGlAMzBiYjAwMDAgewo+IAo+IDMwYmIwMDAwIGlzIHBhcnQgb2YgdGhlIEFJUFMzIGJ1
-cyBhZGRyZXNzIHNwYWNlLCBzbyBwbGVhc2UgbW92ZSB0aGlzIHRvCj4gdGhlIGNvcnJlY3QgbG9j
-YXRpb24gd2l0aGluIHRoaXMgYnVzIG5vZGUuCgpUaGUgcHJvYmxlbSBpcyB0aGF0IHRoZSAiUXVh
-ZFNQSS1tZW1vcnkiIHJlZ2lvbiBkb2Vzbid0IGZhbGwgd2l0aGluIHRoZSAKbWVtb3J5IHJhbmdl
-IG9mIHRoZSBBSVBTMyBidXMsIHNvIHRoZSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UgaXMgZmFpbGlu
-ZyAKd2hlbiBtb3ZpbmcgdGhlIG5vZGUgdGhlcmUuCgo+PiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8
-MT47Cj4+PiArCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4+ICsJCQljb21wYXRpYmxlID0gImZzbCxp
-bXg3ZC1xc3BpIjsKPiAKPiBQbGVhc2UgYWRkIGEgImZzbCxpbXg4bXEtcXNwaSIgY29tcGF0aWJs
-ZSBoZXJlLCBhcyB3YXMgZG9uZSB3aXRoIGFsbAo+IHRoZSBvdGhlciBub2RlcyBpbiB0aGlzIGZp
-bGUsIHNvIHdlIGNhbiBtYXRjaCB0aGlzIGluIHRoZSBkcml2ZXIgc2hvdWxkCj4gdGhlIG5lZWQg
-YXJpc2UuCgpUaGlzIGlzIG9kZCBzaW5jZSBhdCBsZWFzdCBmb3IgdGhlIEFtTG9naWMgU29DcyB3
-ZSBhcmUgZ29pbmcgZXhhY3RseSBpbiAKdGhlIG9wcG9zaXRlIGRpcmVjdGlvbiB3aGVyZSB3ZSBh
-dm9pZCB0byBhZGQgdW5uZWNlc3NhcnkgY29tcGF0aWJsZXMgaWYgCnRoYXQncyBub3Qgc3RyaWN0
-bHkgcmVxdWlyZWQuCgo+PiArCQkJcmVnID0gPDB4MzBiYjAwMDAgMHgxMDAwMD4sIDwweDA4MDAw
-MDAwIDB4MTAwMDAwMDA+Owo+Pj4gKwkJCXJlZy1uYW1lcyA9ICJRdWFkU1BJIiwgIlF1YWRTUEkt
-bWVtb3J5IjsKPj4+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTA3IElSUV9UWVBFX0xFVkVM
-X0hJR0g+Owo+Pj4gKwkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUVNQSV9ST09UPiwKPj4g
-KwkJCTwmY2xrIElNWDhNUV9DTEtfUVNQSV9ST09UPjsKPiAKPiBQbGVhc2UgYWxpZ24gdGhlIHNl
-Y29uZCBjbG9jayByZWZlcmVuY2UsIGFzIGlzIGRvbmUgZm9yIGFsbCBvdGhlcgo+IHBlcmlwaGVy
-YWwgbm9kZXMgaW4gdGhpcyBmaWxlLgoKSSdsbCBkby4KCkNoZWVycywKCi0tCkNhcmxvIENhaW9u
-ZQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+AFAICS from the i.MX50 Reference Manual, the i.MX50 IOMUXC works the
+same as the one in i.MX51, so I copied fsl,imx51-pinctrl.txt and changed
+the text to imx50.
+
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Cc: Dong Aisheng <dong.aisheng@linaro.org>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+---
+ .../bindings/pinctrl/fsl,imx50-pinctrl.txt    | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx50-pinctrl.txt
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx50-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx50-pinctrl.txt
+new file mode 100644
+index 000000000000..6da01d619d33
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx50-pinctrl.txt
+@@ -0,0 +1,32 @@
++* Freescale IMX50 IOMUX Controller
++
++Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
++and usage.
++
++Required properties:
++- compatible: "fsl,imx50-iomuxc"
++- fsl,pins: two integers array, represents a group of pins mux and config
++  setting. The format is fsl,pins = <PIN_FUNC_ID CONFIG>, PIN_FUNC_ID is a
++  pin working on a specific function, CONFIG is the pad setting value like
++  pull-up for this pin. Please refer to imx50 datasheet for the valid pad
++  config settings.
++
++CONFIG bits definition:
++PAD_CTL_HVE			(1 << 13)
++PAD_CTL_HYS			(1 << 8)
++PAD_CTL_PKE			(1 << 7)
++PAD_CTL_PUE			(1 << 6)
++PAD_CTL_PUS_100K_DOWN		(0 << 4)
++PAD_CTL_PUS_47K_UP		(1 << 4)
++PAD_CTL_PUS_100K_UP		(2 << 4)
++PAD_CTL_PUS_22K_UP		(3 << 4)
++PAD_CTL_ODE			(1 << 3)
++PAD_CTL_DSE_LOW			(0 << 1)
++PAD_CTL_DSE_MED			(1 << 1)
++PAD_CTL_DSE_HIGH		(2 << 1)
++PAD_CTL_DSE_MAX			(3 << 1)
++PAD_CTL_SRE_FAST		(1 << 0)
++PAD_CTL_SRE_SLOW		(0 << 0)
++
++Refer to imx50-pinfunc.h in device tree source folder for all available
++imx50 PIN_FUNC_ID.
+-- 
+2.20.1
