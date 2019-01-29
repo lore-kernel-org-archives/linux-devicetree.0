@@ -1,59 +1,61 @@
-From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Subject: [PATCH] ARM: dts: socfpga: update more missing reset properties
-Date: Tue, 29 Jan 2019 20:46:25 +0100
-Message-ID: <20190129194625.19218-1-goldsimon@gmx.de>
+From: Otavio Salvador <otavio@ossystems.com.br>
+Subject: [PATCH 2/4] ARM: dts: rockchip: rv1108-elgin: Fix vcc5/6-supply representation
+Date: Tue, 29 Jan 2019 17:54:22 -0200
+Message-ID: <20190129195424.10161-2-otavio@ossystems.com.br>
+References: <20190129195424.10161-1-otavio@ossystems.com.br>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190129195424.10161-1-otavio@ossystems.com.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Simon Goldschmidt <goldsimon@gmx.de>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Jason Zhu <jason.zhu@rock-chips.com>, Vicent Chi <vicent.chi@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Philipp Tomsic <philipp.tomsich@theobroma-systems.com>, Tony Xie <tony.xie@rock-chips.com>, Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add reset property for dma, can and sdram on socfpga gen5.
+On rv1108-elgin-r1 board the RK805 VCC5 and VCC6 supplies come from
+the BUCK2 regulator at 2.2V, so fix the representation in the
+device tree.
 
-Signed-off-by: Simon Goldschmidt <goldsimon@gmx.de>
+While at it, rename it from vdd_cam to vdd_buck2, which is a better
+name for the regulator label.
 
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
-This series applies on top of  kernel/git/dinguyen/linux.git,
-branch socfpga_for_next_v5.1_dts_v1
 
- arch/arm/boot/dts/socfpga.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/rv1108-elgin-r1.dts | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index f365003f0..ec1966480 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -84,6 +84,7 @@
- 				#dma-requests = <32>;
- 				clocks = <&l4_main_clk>;
- 				clock-names = "apb_pclk";
-+				resets = <&rst DMA_RESET>;
+diff --git a/arch/arm/boot/dts/rv1108-elgin-r1.dts b/arch/arm/boot/dts/rv1108-elgin-r1.dts
+index 7b24558f13e0..dc2ae1731ae2 100644
+--- a/arch/arm/boot/dts/rv1108-elgin-r1.dts
++++ b/arch/arm/boot/dts/rv1108-elgin-r1.dts
+@@ -74,8 +74,8 @@
+ 		vcc2-supply = <&vcc_sys>;
+ 		vcc3-supply = <&vcc_sys>;
+ 		vcc4-supply = <&vcc_sys>;
+-		vcc5-supply = <&vcc_sys>;
+-		vcc6-supply = <&vcc_sys>;
++		vcc5-supply = <&vdd_buck2>;
++		vcc6-supply = <&vdd_buck2>;
+ 
+ 		regulators {
+ 			vdd_core: DCDC_REG1 {
+@@ -90,10 +90,12 @@
+ 				};
  			};
- 		};
  
-@@ -100,6 +101,7 @@
- 			reg = <0xffc00000 0x1000>;
- 			interrupts = <0 131 4>, <0 132 4>, <0 133 4>, <0 134 4>;
- 			clocks = <&can0_clk>;
-+			resets = <&rst CAN0_RESET>;
- 			status = "disabled";
- 		};
- 
-@@ -108,6 +110,7 @@
- 			reg = <0xffc01000 0x1000>;
- 			interrupts = <0 135 4>, <0 136 4>, <0 137 4>, <0 138 4>;
- 			clocks = <&can1_clk>;
-+			resets = <&rst CAN1_RESET>;
- 			status = "disabled";
- 		};
- 
-@@ -791,6 +794,7 @@
- 		sdr: sdr@ffc25000 {
- 			compatible = "altr,sdr-ctl", "syscon";
- 			reg = <0xffc25000 0x1000>;
-+			resets = <&rst SDR_RESET>;
- 		};
- 
- 		sdramedac {
+-			vdd_cam: DCDC_REG2 {
+-				regulator-name= "vdd_cam";
+-				regulator-min-microvolt = <700000>;
+-				regulator-max-microvolt = <2000000>;
++			vdd_buck2: DCDC_REG2 {
++				regulator-name= "vdd_buck2";
++				regulator-min-microvolt = <2200000>;
++				regulator-max-microvolt = <2200000>;
++				regulator-always-on;
++				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-state-disabled;
+ 				};
 -- 
-2.17.1
+2.20.1
