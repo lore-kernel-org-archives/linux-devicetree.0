@@ -1,242 +1,111 @@
-From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v6 3/3] drivers: soc: xilinx: Add ZynqMP PM driver
-Date: Tue, 29 Jan 2019 12:38:21 -0800
-Message-ID: <1548794301-30483-4-git-send-email-jollys@xilinx.com>
-References: <1548794301-30483-1-git-send-email-jollys@xilinx.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Add Qualcomm USB Super-Speed PHY
+ bindings
+Date: Tue, 29 Jan 2019 12:38:45 -0800
+Message-ID: <20190129203845.GB3036@builder>
+References: <1548761715-4004-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1548761715-4004-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548794301-30483-1-git-send-email-jollys@xilinx.com>
+Content-Disposition: inline
+In-Reply-To: <1548761715-4004-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
+To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, andy.gross@linaro.org, swboyd@chromium.org, shawn.guo@linaro.org, vkoul@kernel.org, khasim.mohammed@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+On Tue 29 Jan 03:35 PST 2019, Jorge Ramirez-Ortiz wrote:
 
-Add ZynqMP PM driver. PM driver provides power management
-support for ZynqMP.
+> Binding description for Qualcomm's Synopsys 1.0.0 super-speed PHY
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
----
- drivers/soc/xilinx/Kconfig        |  11 +++
- drivers/soc/xilinx/Makefile       |   1 +
- drivers/soc/xilinx/zynqmp_power.c | 178 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 190 insertions(+)
- create mode 100644 drivers/soc/xilinx/zynqmp_power.c
+SuperSpeed
 
-diff --git a/drivers/soc/xilinx/Kconfig b/drivers/soc/xilinx/Kconfig
-index 687c8f3..5025e0e 100644
---- a/drivers/soc/xilinx/Kconfig
-+++ b/drivers/soc/xilinx/Kconfig
-@@ -17,4 +17,15 @@ config XILINX_VCU
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called xlnx_vcu.
- 
-+config ZYNQMP_POWER
-+	bool "Enable Xilinx Zynq MPSoC Power Management driver"
-+	depends on PM && ARCH_ZYNQMP
-+	default y
-+	help
-+	  Say yes to enable power management support for ZyqnMP SoC.
-+	  This driver uses firmware driver as an interface for power
-+	  management request to firmware. It registers isr to handle
-+	  power management callbacks from firmware.
-+	  If in doubt, say N.
-+
- endmenu
-diff --git a/drivers/soc/xilinx/Makefile b/drivers/soc/xilinx/Makefile
-index dee8fd5..428b9db 100644
---- a/drivers/soc/xilinx/Makefile
-+++ b/drivers/soc/xilinx/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_XILINX_VCU)	+= xlnx_vcu.o
-+obj-$(CONFIG_ZYNQMP_POWER)	+= zynqmp_power.o
-diff --git a/drivers/soc/xilinx/zynqmp_power.c b/drivers/soc/xilinx/zynqmp_power.c
-new file mode 100644
-index 0000000..771cb59
---- /dev/null
-+++ b/drivers/soc/xilinx/zynqmp_power.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xilinx Zynq MPSoC Power Management
-+ *
-+ *  Copyright (C) 2014-2018 Xilinx, Inc.
-+ *
-+ *  Davorin Mista <davorin.mista@aggios.com>
-+ *  Jolly Shah <jollys@xilinx.com>
-+ *  Rajan Vaja <rajan.vaja@xilinx.com>
-+ */
-+
-+#include <linux/mailbox_client.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/suspend.h>
-+
-+#include <linux/firmware/xlnx-zynqmp.h>
-+
-+enum pm_suspend_mode {
-+	PM_SUSPEND_MODE_FIRST = 0,
-+	PM_SUSPEND_MODE_STD = PM_SUSPEND_MODE_FIRST,
-+	PM_SUSPEND_MODE_POWER_OFF,
-+};
-+
-+#define PM_SUSPEND_MODE_FIRST	PM_SUSPEND_MODE_STD
-+
-+static const char *const suspend_modes[] = {
-+	[PM_SUSPEND_MODE_STD] = "standard",
-+	[PM_SUSPEND_MODE_POWER_OFF] = "power-off",
-+};
-+
-+static enum pm_suspend_mode suspend_mode = PM_SUSPEND_MODE_STD;
-+
-+enum pm_api_cb_id {
-+	PM_INIT_SUSPEND_CB = 30,
-+	PM_ACKNOWLEDGE_CB,
-+	PM_NOTIFY_CB,
-+};
-+
-+static void zynqmp_pm_get_callback_data(u32 *buf)
-+{
-+	zynqmp_pm_invoke_fn(GET_CALLBACK_DATA, 0, 0, 0, 0, buf);
-+}
-+
-+static irqreturn_t zynqmp_pm_isr(int irq, void *data)
-+{
-+	u32 payload[CB_PAYLOAD_SIZE];
-+
-+	zynqmp_pm_get_callback_data(payload);
-+
-+	/* First element is callback API ID, others are callback arguments */
-+	if (payload[0] == PM_INIT_SUSPEND_CB) {
-+		switch (payload[1]) {
-+		case SUSPEND_SYSTEM_SHUTDOWN:
-+			orderly_poweroff(true);
-+			break;
-+		case SUSPEND_POWER_REQUEST:
-+			pm_suspend(PM_SUSPEND_MEM);
-+			break;
-+		default:
-+			pr_err("%s Unsupported InitSuspendCb reason "
-+				"code %d\n", __func__, payload[1]);
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static ssize_t suspend_mode_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	char *s = buf;
-+	int md;
-+
-+	for (md = PM_SUSPEND_MODE_FIRST; md < ARRAY_SIZE(suspend_modes); md++)
-+		if (suspend_modes[md]) {
-+			if (md == suspend_mode)
-+				s += sprintf(s, "[%s] ", suspend_modes[md]);
-+			else
-+				s += sprintf(s, "%s ", suspend_modes[md]);
-+		}
-+
-+	/* Convert last space to newline */
-+	if (s != buf)
-+		*(s - 1) = '\n';
-+	return (s - buf);
-+}
-+
-+static ssize_t suspend_mode_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	int md, ret = -EINVAL;
-+	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-+
-+	if (!eemi_ops || !eemi_ops->set_suspend_mode)
-+		return ret;
-+
-+	for (md = PM_SUSPEND_MODE_FIRST; md < ARRAY_SIZE(suspend_modes); md++)
-+		if (suspend_modes[md] &&
-+		    sysfs_streq(suspend_modes[md], buf)) {
-+			ret = 0;
-+			break;
-+		}
-+
-+	if (!ret && md != suspend_mode) {
-+		ret = eemi_ops->set_suspend_mode(md);
-+		if (likely(!ret))
-+			suspend_mode = md;
-+	}
-+
-+	return ret ? ret : count;
-+}
-+
-+static DEVICE_ATTR_RW(suspend_mode);
-+
-+static int zynqmp_pm_probe(struct platform_device *pdev)
-+{
-+	int ret, irq;
-+	u32 pm_api_version;
-+
-+	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-+
-+	if (!eemi_ops || !eemi_ops->get_api_version || !eemi_ops->init_finalize)
-+		return -ENXIO;
-+
-+	eemi_ops->init_finalize();
-+	eemi_ops->get_api_version(&pm_api_version);
-+
-+	/* Check PM API version number */
-+	if (pm_api_version < ZYNQMP_PM_VERSION)
-+		return -ENODEV;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq <= 0)
-+		return -ENXIO;
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, zynqmp_pm_isr,
-+					IRQF_NO_SUSPEND | IRQF_ONESHOT,
-+					dev_name(&pdev->dev), &pdev->dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "devm_request_threaded_irq '%d' failed "
-+			"with %d\n", irq, ret);
-+		return ret;
-+	}
-+
-+	ret = sysfs_create_file(&pdev->dev.kobj, &dev_attr_suspend_mode.attr);
-+	if (ret) {
-+		dev_err(&pdev->dev, "unable to create sysfs interface\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int zynqmp_pm_remove(struct platform_device *pdev)
-+{
-+	sysfs_remove_file(&pdev->dev.kobj, &dev_attr_suspend_mode.attr);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id pm_of_match[] = {
-+	{ .compatible = "xlnx,zynqmp-power", },
-+	{ /* end of table */ },
-+};
-+MODULE_DEVICE_TABLE(of, pm_of_match);
-+
-+static struct platform_driver zynqmp_pm_platform_driver = {
-+	.probe = zynqmp_pm_probe,
-+	.remove = zynqmp_pm_remove,
-+	.driver = {
-+		.name = "zynqmp_power",
-+		.of_match_table = pm_of_match,
-+	},
-+};
-+module_platform_driver(zynqmp_pm_platform_driver);
--- 
-2.7.4
+> controller embedded in QCS404.
+> 
+> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+> definitions.
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> ---
+>  .../devicetree/bindings/usb/qcom,usb-ssphy.txt     | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+> new file mode 100644
+> index 0000000..8ef6e39
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+> @@ -0,0 +1,73 @@
+> +Qualcomm Synopsys 1.0.0 SS phy controller
+> +===========================================
+> +
+> +Synopsys 1.0.0 ss phy controller supports SS usb connectivity on Qualcomm
+> +chipsets
+
+It's based on Synopsys IP, but it's Qualcomm's version, and isn't the
+1.0.0 Qualcomm's version number for this block?
+
+Also I think it "provides SuperSpeed USB connectivity on some Qualcomm
+platforms".
+
+> +
+> +Required properties:
+> +
+> +- compatible:
+> +    Value type: <string>
+> +    Definition: Should contain "qcom,usb-ssphy".
+> +
+> +- reg:
+> +    Value type: <prop-encoded-array>
+> +    Definition: USB PHY base address and length of the register map.
+> +
+> +- #phy-cells:
+> +    Value type: <u32>
+> +    Definition: Should be 0. See phy/phy-bindings.txt for details.
+> +
+> +- clocks:
+> +    Value type: <prop-encoded-array>
+> +    Definition: See clock-bindings.txt section "consumers". List of
+> +		 three clock specifiers for reference, phy core and
+> +		 pipe clocks.
+> +
+> +- clock-names:
+> +    Value type: <string>
+> +    Definition: Names of the clocks in 1-1 correspondence with the "clocks"
+> +		 property. Must contain "ref", "phy" and "pipe".
+> +
+> +- vdd-supply:
+> +    Value type: <phandle>
+> +    Definition: phandle to the regulator VDD supply node.
+> +
+> +- vdda1p8-supply:
+> +    Value type: <phandle>
+> +    Definition: phandle to the regulator 1.8V supply node.
+> +
+> +
+> +Optional child nodes:
+> +
+> +- vbus-supply:
+> +    Value type: <phandle>
+> +    Definition: phandle to the VBUS supply node.
+> +
+> +- resets:
+> +    Value type: <prop-encoded-array>
+> +    Definition: See reset.txt section "consumers". PHY reset specifiers
+> +		 for phy core and COR resets.
+> +
+> +- reset-names:
+> +    Value type: <string>
+> +    Definition: Names of the resets in 1-1 correspondence with the "resets"
+> +		 property. Must contain "com" and "phy".
+
+Perhaps "Must contain both com and phy, if property is specified", to
+clarify that it's all or nothing.
+
+
+Looks good otherwise.
+
+Regards,
+Bjorn
