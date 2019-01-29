@@ -1,102 +1,144 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH] r8169: Load MAC address from device tree if present
-Date: Tue, 29 Jan 2019 19:51:18 +0100
-Message-ID: <043ec556-5859-c229-6324-c598d0210063@gmail.com>
-References: <20190125101814.6262-1-thierry.reding@gmail.com>
- <59aa73fd-9cdc-8db8-b58e-ed106b084637@gmail.com>
- <20190129174035.GA25929@ulmo>
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
+Date: Tue, 29 Jan 2019 13:54:42 -0500
+Message-ID: <20190129135345-mutt-send-email-mst@kernel.org>
+References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
+ <20190118103235-mutt-send-email-mst@kernel.org>
+ <0ba215f5-e856-bf31-8dd9-a85710714a7a@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129174035.GA25929@ulmo>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Realtek linux nic maintainers <nic_swsd@realtek.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <virtio-dev-return-5351-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+Content-Disposition: inline
+In-Reply-To: <0ba215f5-e856-bf31-8dd9-a85710714a7a@arm.com>
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: mark.rutland@arm.com, virtio-dev@lists.oasis-open.org, kevin.tian@intel.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, marc.zyngier@arm.com, linux-pci@vger.kernel.org, will.deacon@arm.com, robin.murphy@arm.com, virtualization@lists.linux-foundation.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, kvmarm@lists.cs.columbia.edu, bhelgaas@google.com, frowand.list@gmail.com, jasowang@redhat.com, linuxppc-dev@lists.ozlabs.org, Thiago Jung Bauermann <bauerman@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29.01.2019 18:40, Thierry Reding wrote:
-> On Fri, Jan 25, 2019 at 07:34:31PM +0100, Heiner Kallweit wrote:
->> On 25.01.2019 11:18, Thierry Reding wrote:
->>> From: Thierry Reding <treding@nvidia.com>
->>>
->>> If the system was booted using a device tree and if the device tree
->>> contains a MAC address, use it instead of reading one from the EEPROM.
->>> This is useful in situations where the EEPROM isn't properly programmed
->>> or where the firmware wants to override the existing MAC address.
->>>
->> I rarely see DT-configured boards with RTL8168 network. Do you add this
->> patch because of a specific board?
->> And you state "if EEPROM isn't properly programmed": Did you come across
->> such a case?
+On Mon, Jan 21, 2019 at 11:29:05AM +0000, Jean-Philippe Brucker wrote:
+> Hi,
 > 
-> We use these Realtek chips on some of our boards that customers can
-> either purchase individually and integrate into their own designs or
-> they can get the module as part of a product.
+> On 18/01/2019 15:51, Michael S. Tsirkin wrote:
+> > 
+> > On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
+> >> Implement the virtio-iommu driver, following specification v0.9 [1].
+> >>
+> >> This is a simple rebase onto Linux v5.0-rc2. We now use the
+> >> dev_iommu_fwspec_get() helper introduced in v5.0 instead of accessing
+> >> dev->iommu_fwspec, but there aren't any functional change from v6 [2].
+> >>
+> >> Our current goal for virtio-iommu is to get a paravirtual IOMMU working
+> >> on Arm, and enable device assignment to guest userspace. In this
+> >> use-case the mappings are static, and don't require optimal performance,
+> >> so this series tries to keep things simple. However there is plenty more
+> >> to do for features and optimizations, and having this base in v5.1 would
+> >> be good. Given that most of the changes are to drivers/iommu, I believe
+> >> the driver and future changes should go via the IOMMU tree.
+> >>
+> >> You can find Linux driver and kvmtool device on v0.9.2 branches [3],
+> >> module and x86 support on virtio-iommu/devel. Also tested with Eric's
+> >> QEMU device [4]. Please note that the series depends on Robin's
+> >> probe-deferral fix [5], which will hopefully land in v5.0.
+> >>
+> >> [1] Virtio-iommu specification v0.9, sources and pdf
+> >>     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
+> >>     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
+> >>
+> >> [2] [PATCH v6 0/7] Add virtio-iommu driver
+> >>     https://lists.linuxfoundation.org/pipermail/iommu/2018-December/032127.html
+> >>
+> >> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9.2
+> >>     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9.2
+> >>
+> >> [4] [RFC v9 00/17] VIRTIO-IOMMU device
+> >>     https://www.mail-archive.com/qemu-devel@nongnu.org/msg575578.html
+> >>
+> >> [5] [PATCH] iommu/of: Fix probe-deferral
+> >>     https://www.spinics.net/lists/arm-kernel/msg698371.html
+> > 
+> > Thanks for the work!
+> > So really my only issue with this is that there's no
+> > way for the IOMMU to describe the devices that it
+> > covers.
+> > 
+> > As a result that is then done in a platform-specific way.
+> > 
+> > And this means that for example it does not solve the problem that e.g.
+> > some power people have in that their platform simply does not have a way
+> > to specify which devices are covered by the IOMMU.
 > 
-> In order to easily allow customers to reprogram the device (they may
-> want to do that if integrating the module into their own products), a
-> so-called ID EEPROM is part of the module that stores various bits of
-> information. The ethernet MAC address is part of that EEPROM.
-> 
-> Typically the ID EEPROM will contain a valid MAC address if the module
-> is part of a product, but if customers purchase the module individually,
-> it is expected that they use a MAC address from their own pool.
-> 
-> Typically early boot firmware will load the MAC address from the EEPROM
-> and store it in the ethernet device's device tree node so that the MAC
-> address programmed into the ID EEPROM will be used by the ethernet
-> device at runtime.
-> 
-Thanks for the explanation.
+> Isn't power using device tree? I haven't looked much at power because I
+> was told a while ago that they already paravirtualize their IOMMU and
+> don't need virtio-iommu, except perhaps for some legacy platforms. Or
+> something along those lines. But I would certainly be interested in
+> enabling the IOMMU for more architectures.
 
->> In general the patch is fine with me, I just want to understand the
->> motivation. One further comment see inline.
->> As of today we already have the option to set a MAC from userspace
->> via ethtool.
->>
->>> Signed-off-by: Thierry Reding <treding@nvidia.com>
->>> ---
->>> Based on net-next.
->>>
->>>  drivers/net/ethernet/realtek/r8169.c | 35 +++++++++++++++++-----------
->>>  1 file changed, 22 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
->>> index f574b6b557f9..fd9edd643ca5 100644
->>> --- a/drivers/net/ethernet/realtek/r8169.c
->>> +++ b/drivers/net/ethernet/realtek/r8169.c
->>> @@ -6957,6 +6957,21 @@ static int rtl_alloc_irq(struct rtl8169_private *tp)
->>>  	return pci_alloc_irq_vectors(tp->pci_dev, 1, 1, flags);
->>>  }
->>>  
->> [...]
->>> @@ -7252,20 +7268,13 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->>>  	u64_stats_init(&tp->rx_stats.syncp);
->>>  	u64_stats_init(&tp->tx_stats.syncp);
->>>  
->>> -	/* Get MAC address */
->>> -	switch (tp->mac_version) {
->>> -		u8 mac_addr[ETH_ALEN] __aligned(4);
->>> -	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
->>> -	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
->>> -		*(u32 *)&mac_addr[0] = rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
->>> -		*(u16 *)&mac_addr[4] = rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
->>> +	/* get MAC address */
->>> +	if (eth_platform_get_mac_address(&pdev->dev, mac_addr))
->>> +		rtl_read_mac_address(tp, mac_addr);
->>> +
->>> +	if (is_valid_ether_addr(mac_addr))
->>
->> Here array mac_addr may be uninitialized (if platform defines no MAC
->> and chip version is not covered by the switch statement).
-> 
-> Good point. I can memset() mac_addr to make sure it is invalid, rather
-> than undefined, for chip versions that are not covered.
-> 
-An empty initializer would work as well.
+I have CC'd the relevant ppc developers, let's see what do they think.
 
-> Thierry
+
+> As for the enumeration problem, I still don't think we can get much
+> better than DT and ACPI as solutions (and IMO they are necessary to make
+> this device portable). But I believe that getting DT and ACPI support is
+> just a one-off inconvenience. That is, once the required bindings are
+> accepted, any future extension can then be done at the virtio level with
+> feature bits and probe requests, without having to update ACPI or DT.
 > 
-Heiner
+> Thanks,
+> Jean
+> 
+> > Solving that problem would make me much more excited about
+> > this device.
+> > 
+> > On the other hand I can see that while there have been some
+> > developments most of the code has been stable for quite a while now.
+> > 
+> > So what I am trying to do right about now, is making a small module that
+> > loads early and pokes at the IOMMU sufficiently to get the data about
+> > which devices use the IOMMU out of it using standard virtio config
+> > space.  IIUC it's claimed to be impossible without messy changes to the
+> > boot sequence.
+> > 
+> > If I succeed at least on some platforms I'll ask that this design is
+> > worked into this device, minimizing info that goes through DT/ACPI.  If
+> > I see I can't make it in time to meet the next merge window, I plan
+> > merging the existing patches using DT (barring surprises).
+> > 
+> > As I only have a very small amount of time to spend on this attempt, If
+> > someone else wants to try doing that in parallel, that would be great!
+> > 
+> > 
+> >> Jean-Philippe Brucker (7):
+> >>   dt-bindings: virtio-mmio: Add IOMMU description
+> >>   dt-bindings: virtio: Add virtio-pci-iommu node
+> >>   of: Allow the iommu-map property to omit untranslated devices
+> >>   PCI: OF: Initialize dev->fwnode appropriately
+> >>   iommu: Add virtio-iommu driver
+> >>   iommu/virtio: Add probe request
+> >>   iommu/virtio: Add event queue
+> >>
+> >>  .../devicetree/bindings/virtio/iommu.txt      |   66 +
+> >>  .../devicetree/bindings/virtio/mmio.txt       |   30 +
+> >>  MAINTAINERS                                   |    7 +
+> >>  drivers/iommu/Kconfig                         |   11 +
+> >>  drivers/iommu/Makefile                        |    1 +
+> >>  drivers/iommu/virtio-iommu.c                  | 1158 +++++++++++++++++
+> >>  drivers/of/base.c                             |   10 +-
+> >>  drivers/pci/of.c                              |    7 +
+> >>  include/uapi/linux/virtio_ids.h               |    1 +
+> >>  include/uapi/linux/virtio_iommu.h             |  161 +++
+> >>  10 files changed, 1449 insertions(+), 3 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
+> >>  create mode 100644 drivers/iommu/virtio-iommu.c
+> >>  create mode 100644 include/uapi/linux/virtio_iommu.h
+> >>
+> >> -- 
+> >> 2.19.1
+> > _______________________________________________
+> > iommu mailing list
+> > iommu@lists.linux-foundation.org
+> > https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> > 
