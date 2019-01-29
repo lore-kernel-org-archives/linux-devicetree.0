@@ -1,81 +1,66 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH 2/2] Input: st1232 - switch to gpiod API
-Date: Tue, 29 Jan 2019 11:23:47 +0100
-Message-ID: <20190129102347.27754-2-martink@posteo.de>
-References: <20190129102347.27754-1-martink@posteo.de>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCHv3 0/2] Odroid c2 usb fixs
+Date: Tue, 29 Jan 2019 10:25:19 +0000
+Message-ID: <20190129102521.4141-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129102347.27754-1-martink@posteo.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@ginzinger.com>
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+This is follow up on my previous patches.
+Changes rebase on mainline: 5.0-rc4
 
-Use devm_gpiod_get_optional() and gpiod_set_value_cansleep() instead
-of the old API. The st1232_ts_power() now passes on the inverted "poweron"
-value to reflect the correct logical value.
+[0] https://lore.kernel.org/patchwork/patch/1031243/
+[1] https://lore.kernel.org/patchwork/patch/1031243/
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
----
+changes depend on phy patch
 
-Tested and works. thanks for your help Dmitry,
+[2] https://patchwork.kernel.org/patch/10777359/
 
-                          martin
+As per Martin's suggestion and input I have tried to fix below issue.
 
+Fixed the phy power issue on the usb port.
+# cat /sys/kernel/debug/regulator/regulator_summary
+ regulator                      use open bypass  opmode voltage current     min     max
+---------------------------------------------------------------------------------------
+ regulator-dummy                  5    4      0 unknown     0mV     0mA     0mV     0mV
+    c9100000.usb                  1                                 0mA     0mV     0mV
+    c9100000.usb                  1                                 0mA     0mV     0mV
+    c9000000.usb                  1                                 0mA     0mV     0mV
+    c9000000.usb                  1                                 0mA     0mV     0mV
+ P5V0                             1    1      0 unknown  5000mV     0mA  5000mV  5000mV
+    USB_OTG_PWR                   4    2      0 unknown  5000mV     0mA  5000mV  5000mV
+       phy-c0000020.phy.1         2                                 0mA     0mV     0mV
+       phy-c0000000.phy.0         2                                 0mA     0mV     0mV
 
+#  lsusb -t
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+        |__ Port 1: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+        |__ Port 3: Dev 3, If 0, Class=Video, Driver=uvcvideo, 480M
+        |__ Port 3: Dev 3, If 1, Class=Video, Driver=uvcvideo, 480M
+        |__ Port 3: Dev 3, If 2, Class=Audio, Driver=, 480M
+        |__ Port 3: Dev 3, If 3, Class=Audio, Driver=, 480M
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
 
- drivers/input/touchscreen/st1232.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+Now hotpluing of usb device is working on odroid c2 boards.
+TODO: need to initialize the otg usb port to accept usb device.
 
-diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscreen/st1232.c
-index 777df903605d..04d75b08be44 100644
---- a/drivers/input/touchscreen/st1232.c
-+++ b/drivers/input/touchscreen/st1232.c
-@@ -45,7 +45,7 @@ struct st1232_ts_data {
- 	struct i2c_client *client;
- 	struct input_dev *input_dev;
- 	struct dev_pm_qos_request low_latency_req;
--	int reset_gpio;
-+	struct gpio_desc *reset_gpio;
- 	const struct st_chip_info *chip_info;
- 	int read_buf_len;
- 	u8 *read_buf;
-@@ -142,8 +142,8 @@ static irqreturn_t st1232_ts_irq_handler(int irq, void *dev_id)
- 
- static void st1232_ts_power(struct st1232_ts_data *ts, bool poweron)
- {
--	if (gpio_is_valid(ts->reset_gpio))
--		gpio_direction_output(ts->reset_gpio, poweron);
-+	if (ts->reset_gpio)
-+		gpiod_set_value_cansleep(ts->reset_gpio, !poweron);
- }
- 
- static const struct st_chip_info st1232_chip_info = {
-@@ -215,15 +215,13 @@ static int st1232_ts_probe(struct i2c_client *client,
- 	ts->client = client;
- 	ts->input_dev = input_dev;
- 
--	ts->reset_gpio = of_get_gpio(client->dev.of_node, 0);
--	if (gpio_is_valid(ts->reset_gpio)) {
--		error = devm_gpio_request(&client->dev, ts->reset_gpio, NULL);
--		if (error) {
--			dev_err(&client->dev,
--				"Unable to request GPIO pin %d.\n",
--				ts->reset_gpio);
--				return error;
--		}
-+	ts->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-+						 GPIOD_OUT_HIGH);
-+	if (IS_ERR(ts->reset_gpio)) {
-+		error = PTR_ERR(ts->reset_gpio);
-+		dev_err(&client->dev, "Unable to request GPIO pin: %d.\n",
-+			error);
-+		return error;
- 	}
- 
- 	st1232_ts_power(ts, true);
+Any input are welcome
+
+Best Regards
+-Anand
+
+Anand Moon (2):
+  ARM64: dts: meson-gxbb-odroidc2: Fix usb phy reset warning
+  ARM64: dts: meson-gxbb-odroidc2: Fix usb phy regulator power failed
+    warning
+
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
 -- 
 2.20.1
