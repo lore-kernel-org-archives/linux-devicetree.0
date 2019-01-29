@@ -1,73 +1,72 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH] ARM: socfpga: fix base address of SDR controller
-Date: Tue, 29 Jan 2019 16:30:25 -0600
-Message-ID: <CANk1AXTcbqgoCYkTY-ssMvpAbdoncrkOxyRfu-piLE2tQ15a2g@mail.gmail.com>
-References: <20190129200858.19773-1-goldsimon@gmx.de>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcs404: evb: Fix voltages for s5 and l3
+Date: Tue, 29 Jan 2019 23:46:52 +0100
+Message-ID: <20190129224652.GB11349@centauri.lan>
+References: <20190125232954.26166-1-bjorn.andersson@linaro.org>
+ <32b8136d-3acb-66e9-948c-ee8903b91401@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129200858.19773-1-goldsimon@gmx.de>
+Content-Disposition: inline
+In-Reply-To: <32b8136d-3acb-66e9-948c-ee8903b91401@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Cc: Dinh Nguyen <dinguyen@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 2:09 PM Simon Goldschmidt
-<simon.k.r.goldschmidt@gmail.com> wrote:
+Adding Mark Brown on CC.
 
-Hi Simon,
-
-Thanks for submitting.   A couple of things...
-
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index f365003f0..8f6c1a5d6 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -788,9 +788,9 @@
->                         reg = <0xfffec000 0x100>;
->                 };
->
-> -               sdr: sdr@ffc25000 {
-> +               sdr: sdr@ffc20000 {
->                         compatible = "altr,sdr-ctl", "syscon";
-> -                       reg = <0xffc25000 0x1000>;
-> +                       reg = <0xffc20000 0x6000>;
-
-The binding doc will also need this change (in a separate patch)
-Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
-
-> diff --git a/arch/arm/mach-socfpga/self-refresh.S b/arch/arm/mach-socfpga/self-refresh.S
-> index f2d7f883e..bd7759357 100644
-> --- a/arch/arm/mach-socfpga/self-refresh.S
-> +++ b/arch/arm/mach-socfpga/self-refresh.S
-> @@ -19,8 +19,8 @@
->  #define MAX_LOOP_COUNT         1000
->
->  /* Register offset */
-> -#define SDR_CTRLGRP_LOWPWREQ_ADDR       0x54
-> -#define SDR_CTRLGRP_LOWPWRACK_ADDR      0x58
-> +#define SDR_CTRLGRP_LOWPWREQ_ADDR       0x5054
-> +#define SDR_CTRLGRP_LOWPWRACK_ADDR      0x5058
-
-These offsets are used for ldr/sdr and are limited to 12 bits.  This
-won't build if CONFIG_SOCFPGA_SUSPEND is enabled.
-
-/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:
-Assembler messages:
-/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:65:
-Error: bad immediate value for offset (20564)
-/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:67:
-Error: bad immediate value for offset (20564)
-/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:72:
-Error: bad immediate value for offset (20568)
-/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:101:
-Error: bad immediate value for offset (20564)
-/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:103:
-Error: bad immediate value for offset (20564)
-/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:108:
-Error: bad immediate value for offset (20568)
-/home/atull/repos/linux-socfpga/scripts/Makefile.build:367: recipe for
-target 'arch/arm/mach-socfpga/self-refresh.o' failed
-
-Thanks,
-Alan
+On Tue, Jan 29, 2019 at 10:58:47PM +0100, Jorge Ramirez wrote:
+> On 1/26/19 00:29, Bjorn Andersson wrote:
+> > PMS405 S5 was upstreamed without a voltage and PMS405 L3 is outside the
+> > acceptable range, causing PCIe to fail. Fix these.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> > index 579ddaf4f5fa..072061aa1b79 100644
+> > --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> > @@ -72,8 +72,8 @@
+> >  		};
+> >  
+> >  		vreg_s5_1p35: s5 {
+> > -			regulator-min-microvolt = <>;
+> > -			regulator-max-microvolt = <>;
+> > +			regulator-min-microvolt = <1352000>;
+> > +			regulator-max-microvolt = <1352000>;
+> >  		};
+> >  
+> >  		vreg_l1_1p3: l1 {
+> > @@ -87,7 +87,7 @@
+> >  		};
+> >  
+> >  		vreg_l3_1p05: l3 {
+> > -			regulator-min-microvolt = <976000>;
+> > +			regulator-min-microvolt = <1050000>;
+> 
+> 
+> the linear range for this regulator is
+>  - REGULATOR_LINEAR_RANGE(312000, 0, 127, 8000),
+> 
+> meaning that 1050000 is actually not a valid selectable value (ie, after
+> applying the above constrains 1056000 would be selected instead)
+> 
+> In order for a driver to be able to successfully request min = 1050000,
+> regulator-min-microvolt should be set to 1048000 (and 1056000 would be
+> applied)
+> 
+> the question is, should this property contain only hardware achievable
+> values? or should drivers only request hardware achievable values? the
+> way the constrains are implemented it has to be one of the two (I think
+> the former would be more intuitive - ie if the dts
+> regulator-min-microvolt is a valid value)
+> 
+> >  			regulator-max-microvolt = <1160000>;
+> >  		};
+> >  
+> > 
+> 
