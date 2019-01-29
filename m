@@ -1,8 +1,8 @@
 From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 06/13] ARM: dts: lpc32xx: remove inclusion of deprecated
- skeleton.dtsi
-Date: Tue, 29 Jan 2019 21:20:42 +0200
-Message-ID: <20190129192049.11223-7-vz@mleia.com>
+Subject: [PATCH 08/13] ARM: dts: lpc32xx: phy3250: setup LCD controller to
+ panel interface
+Date: Tue, 29 Jan 2019 21:20:44 +0200
+Message-ID: <20190129192049.11223-9-vz@mleia.com>
 References: <20190129192049.11223-1-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,42 +22,53 @@ To: Sylvain Lemieux <slemieux.tyco@gmail.com>, Russell King <linux@armlinux.org.
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Inclusion of skeleton.dtsi into DTS files is deprecated since
-commit 9c0da3cc61f1233c ("ARM: dts: explicitly mark skeleton.dtsi
-as deprecated").
+The change adds description of Sharp LQ035Q7DB03 3.5" 320x240 TFT panel,
+which is connected to Phytec phyCORE-LPC3250 board, ARM PrimeCell PL111
+LCD controller on NXP LPC3250 SoC gets its configuration appropriately
+to support graphics output to the panel.
 
 Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/lpc3250-phy3250.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 9ad3df11db0d..d27a0a722ad5 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -1,6 +1,7 @@
- /*
-  * NXP LPC32xx SoC
-  *
-+ * Copyright (C) 2015-2019 Vladimir Zapolskiy <vz@mleia.com>
-  * Copyright 2012 Roland Stigge <stigge@antcom.de>
-  *
-  * The code contained herein is licensed under the GNU General Public
-@@ -11,12 +12,13 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
+diff --git a/arch/arm/boot/dts/lpc3250-phy3250.dts b/arch/arm/boot/dts/lpc3250-phy3250.dts
+index d2dad2b541ff..aff72f14ad83 100644
+--- a/arch/arm/boot/dts/lpc3250-phy3250.dts
++++ b/arch/arm/boot/dts/lpc3250-phy3250.dts
+@@ -39,6 +39,17 @@
+ 		};
+ 	};
  
--#include "skeleton.dtsi"
--
- #include <dt-bindings/clock/lpc32xx-clock.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
++	panel: panel {
++		compatible = "sharp,lq035q7db03";
++		power-supply = <&reg_lcd>;
 +
- 	compatible = "nxp,lpc3220";
- 	interrupt-parent = <&mic>;
++		port {
++			panel_input: endpoint {
++				remote-endpoint = <&cldc_output>;
++			};
++		};
++	};
++
+ 	reg_backlight: regulator-backlight {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "backlight";
+@@ -71,7 +82,15 @@
+ };
  
+ &clcd {
++	max-memory-bandwidth = <18710000>;
+ 	status = "okay";
++
++	port {
++		cldc_output: endpoint {
++			remote-endpoint = <&panel_input>;
++			arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
++		};
++	};
+ };
+ 
+ &i2c1 {
 -- 
 2.20.1
