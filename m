@@ -1,77 +1,278 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 00/27] PCI: refactor Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Date: Tue, 29 Jan 2019 08:08:28 +0000
-Message-ID: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 01/27] PCI: mobiveil: uniform the register accessors
+Date: Tue, 29 Jan 2019 08:08:34 +0000
+Message-ID: <20190129080926.36773-2-Zhiqiang.Hou@nxp.com>
+References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Content-Language: en-US
-Content-ID: <5EB28B97FCD6E348AA7971A9D134AA44@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
 Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCg0KVGhpcyBwYXRjaCBz
-ZXQgaXMgYWltIHRvIHJlZmFjdG9yIHRoZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZA0KUENJZSBz
-dXBwb3J0IGZvciBOWFAgTGF5ZXJzY2FwZSBzZXJpZXMgU29DcyBpbnRlZ3JhdGVkIE1vYml2ZWls
-J3MNClBDSWUgR2VuNCBjb250cm9sbGVyLg0KDQpIb3UgWmhpcWlhbmcgKDI3KToNCiAgUENJOiBt
-b2JpdmVpbDogdW5pZm9ybSB0aGUgcmVnaXN0ZXIgYWNjZXNzb3JzDQogIFBDSTogbW9iaXZlaWw6
-IGZvcm1hdCB0aGUgY29kZSB3aXRob3V0IGZ1bmN0aW9uIGNoYW5nZQ0KICBQQ0k6IG1vYml2ZWls
-OiBjb3JyZWN0IHRoZSByZXR1cm5lZCBlcnJvciBudW1iZXINCiAgUENJOiBtb2JpdmVpbDogcmVt
-b3ZlIGZsYWcgTVNJX0ZMQUdfTVVMVElfUENJX01TSQ0KICBQQ0k6IG1vYml2ZWlsOiBjb3JyZWN0
-IFBDSSBiYXNlIGFkZHJlc3MgaW4gTUVNL0lPIG91dGJvdW5kIHdpbmRvd3MNCiAgUENJOiBtb2Jp
-dmVpbDogcmVwbGFjZSB0aGUgcmVzb3VyY2UgbGlzdCBpdGVyYXRpb24gZnVuY3Rpb24NCiAgUENJ
-OiBtb2JpdmVpbDogdXNlIFdJTl9OVU1fMCBleHBsaWNpdGx5IGZvciBDRkcgb3V0Ym91bmQgd2lu
-ZG93DQogIFBDSTogbW9iaXZlaWw6IHVzZSB0aGUgMXN0IGluYm91bmQgd2luZG93IGZvciBNRU0g
-aW5ib3VuZCB0cmFuc2FjdGlvbnMNCiAgUENJOiBtb2JpdmVpbDogY29ycmVjdCBpbmJvdW5kL291
-dGJvdW5kIHdpbmRvdyBzZXR1cCByb3V0aW5lcw0KICBQQ0k6IG1vYml2ZWlsOiBmaXggdGhlIElO
-VHggcHJvY2VzcyBlcnJvcg0KICBQQ0k6IG1vYml2ZWlsOiBvbmx5IGZpeCB1cCB0aGUgQ2xhc3Mg
-Q29kZSBmaWVsZA0KICBQQ0k6IG1vYml2ZWlsOiBtb3ZlIG91dCB0aGUgbGluayB1cCB3YWl0aW5n
-IGZyb20gbW9iaXZlaWxfaG9zdF9pbml0DQogIFBDSTogbW9iaXZlaWw6IG1vdmUgaXJxIGNoYWlu
-ZWQgaGFuZGxlciBzZXR1cCBvdXQgb2YgRFQgcGFyc2UNCiAgUENJOiBtb2JpdmVpbDogaW5pdGlh
-bGl6ZSBQcmltYXJ5L1NlY29uZGFyeS9TdWJvcmRpbmF0ZSBidXMgbnVtYmVyDQogIGR0LWJpbmRp
-bmdzOiBwY2k6IG1vYml2ZWlsOiBjaGFuZ2UgZ3Bpb19zbGF2ZSBhbmQgYXBiX2NzciB0byBvcHRp
-b25hbA0KICBQQ0k6IG1vYml2ZWlsOiByZWZhY3RvciBNb2JpdmVpbCBQQ0llIEhvc3QgQnJpZGdl
-IElQIGRyaXZlcg0KICBQQ0k6IG1vYml2ZWlsOiBmaXggdGhlIGNoZWNraW5nIG9mIHZhbGlkIGRl
-dmljZQ0KICBQQ0k6IG1vYml2ZWlsOiBjb250aW51ZSB0byBpbml0aWFsaXplIHRoZSBob3N0IHVw
-b24gbm8gUENJZSBsaW5rDQogIFBDSTogbW9iaXZlaWw6IGRpc2FibGVkIElCIGFuZCBPQiB3aW5k
-b3dzIHNldCBieSBib290bG9hZGVyDQogIFBDSTogbW9iaXZlaWw6IGFkZCBCeXRlIGFuZCBIYWxm
-LVdvcmQgd2lkdGggcmVnaXN0ZXIgYWNjZXNzb3JzDQogIFBDSTogbW9iaXZlaWw6IG1ha2UgbW9i
-aXZlaWxfaG9zdF9pbml0IGNhbiBiZSB1c2VkIHRvIHJlLWluaXQgaG9zdA0KICBkdC1iaW5kaW5n
-czogcGNpOiBBZGQgTlhQIExheWVyc2NhcGUgU29DcyBQQ0llIEdlbjQgY29udHJvbGxlcg0KICBQ
-Q0k6IG1vYml2ZWlsOiBhZGQgUENJZSBHZW40IFJDIGRyaXZlciBmb3IgTlhQIExheWVyc2NhcGUg
-U29Dcw0KICBQQ0k6IG1vYml2ZWlsOiBsc19wY2llX2c0OiBhZGQgV29ya2Fyb3VuZCBmb3IgQS0w
-MTE1NzcNCiAgUENJOiBtb2JpdmVpbDogbHNfcGNpZV9nNDogYWRkIFdvcmthcm91bmQgZm9yIEEt
-MDExNDUxDQogIGFybTY0OiBkdHM6IGZyZWVzY2FsZTogbHgyMTYwYTogYWRkIHBjaWUgRFQgbm9k
-ZXMNCiAgYXJtNjQ6IGRlZmNvbmZpZzogRW5hYmxlIENPTkZJR19QQ0lfTEFZRVJTQ0FQRV9HRU40
-DQoNCiAuLi4vYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLWdlbjQudHh0ICAgICAgfCAgNTIg
-KysNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbW9iaXZlaWwtcGNpZS50eHQgfCAgIDIg
-Kw0KIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMCAr
-LQ0KIC4uLi9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaSB8IDE2MyAr
-KysrDQogYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgIHwgICAx
-ICsNCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL0tjb25maWcgICAgICAgICAgICAgICAgfCAgMTEg
-Ky0NCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL01ha2VmaWxlICAgICAgICAgICAgICAgfCAgIDIg
-Ky0NCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL0tjb25maWcgICAgICAgfCAgMzQg
-Kw0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvTWFrZWZpbGUgICAgICB8ICAgNSAr
-DQogLi4uL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpLWxheWVyc2NhcGUtZ2VuNC5jIHwgMzA2ICsr
-KysrKysNCiAuLi4vY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYyAgfCA2
-NDAgKysrKysrKysrKysrKw0KIC4uLi9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwt
-cGxhdC5jICB8ICA1NCArKw0KIC4uLi9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2
-ZWlsLmMgICB8IDI0NiArKysrKw0KIC4uLi9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1v
-Yml2ZWlsLmggICB8IDIyOSArKysrKw0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2Jp
-dmVpbC5jICAgICAgICB8IDg2MSAtLS0tLS0tLS0tLS0tLS0tLS0NCiAxNSBmaWxlcyBjaGFuZ2Vk
-LCAxNzQzIGluc2VydGlvbnMoKyksIDg3MyBkZWxldGlvbnMoLSkNCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS1n
-ZW40LnR4dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2
-ZWlsL0tjb25maWcNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9t
-b2JpdmVpbC9NYWtlZmlsZQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9jb250cm9s
-bGVyL21vYml2ZWlsL3BjaS1sYXllcnNjYXBlLWdlbjQuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jDQogY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2Jp
-dmVpbC1wbGF0LmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9t
-b2JpdmVpbC9wY2llLW1vYml2ZWlsLmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmgNCiBkZWxldGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCg0KLS0gDQoyLjE3LjENCg0K
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+
+It's confused that R/W some registers by csr_readl()/csr_writel(),
+while others by read_paged_register()/write_paged_register().
+Actually the low 3KB of 4KB PCIe configure space can be accessed
+directly and high 1KB is paging area. So this patch uniformed the
+register accessors to csr_readl() and csr_writel() by comparing
+the register offset with page access boundary 3KB in the accessor
+internal.
+
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+---
+V3:
+ - No change
+
+ drivers/pci/controller/pcie-mobiveil.c | 179 +++++++++++++++++--------
+ 1 file changed, 124 insertions(+), 55 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
+r/pcie-mobiveil.c
+index 77052a0712d0..d55c7e780c6e 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -47,7 +47,6 @@
+ #define  PAGE_SEL_SHIFT	13
+ #define  PAGE_SEL_MASK		0x3f
+ #define  PAGE_LO_MASK		0x3ff
+-#define  PAGE_SEL_EN		0xc00
+ #define  PAGE_SEL_OFFSET_SHIFT	10
+=20
+ #define PAB_AXI_PIO_CTRL	0x0840
+@@ -117,6 +116,12 @@
+ #define LINK_WAIT_MIN	90000
+ #define LINK_WAIT_MAX	100000
+=20
++#define PAGED_ADDR_BNDRY			0xc00
++#define OFFSET_TO_PAGE_ADDR(off)		\
++	((off & PAGE_LO_MASK) | PAGED_ADDR_BNDRY)
++#define OFFSET_TO_PAGE_IDX(off)			\
++	((off >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK)
++
+ struct mobiveil_msi {			/* MSI information */
+ 	struct mutex lock;		/* protect bitmap variable */
+ 	struct irq_domain *msi_domain;
+@@ -145,15 +150,119 @@ struct mobiveil_pcie {
+ 	struct mobiveil_msi msi;
+ };
+=20
+-static inline void csr_writel(struct mobiveil_pcie *pcie, const u32 value,
+-		const u32 reg)
++/*
++ * mobiveil_pcie_sel_page - routine to access paged register
++ *
++ * Registers whose address greater than PAGED_ADDR_BNDRY (0xc00) are paged=
+,
++ * for this scheme to work extracted higher 6 bits of the offset will be
++ * written to pg_sel field of PAB_CTRL register and rest of the lower 10
++ * bits enabled with PAGED_ADDR_BNDRY are used as offset of the register.
++ */
++static void mobiveil_pcie_sel_page(struct mobiveil_pcie *pcie, u8 pg_idx)
+ {
+-	writel_relaxed(value, pcie->csr_axi_slave_base + reg);
++	u32 val;
++
++	val =3D readl(pcie->csr_axi_slave_base + PAB_CTRL);
++	val &=3D ~(PAGE_SEL_MASK << PAGE_SEL_SHIFT);
++	val |=3D (pg_idx & PAGE_SEL_MASK) << PAGE_SEL_SHIFT;
++
++	writel(val, pcie->csr_axi_slave_base + PAB_CTRL);
+ }
+=20
+-static inline u32 csr_readl(struct mobiveil_pcie *pcie, const u32 reg)
++static void *mobiveil_pcie_comp_addr(struct mobiveil_pcie *pcie, u32 off)
+ {
+-	return readl_relaxed(pcie->csr_axi_slave_base + reg);
++	if (off < PAGED_ADDR_BNDRY) {
++		/* For directly accessed registers, clear the pg_sel field */
++		mobiveil_pcie_sel_page(pcie, 0);
++		return pcie->csr_axi_slave_base + off;
++	}
++
++	mobiveil_pcie_sel_page(pcie, OFFSET_TO_PAGE_IDX(off));
++	return pcie->csr_axi_slave_base + OFFSET_TO_PAGE_ADDR(off);
++}
++
++static int mobiveil_pcie_read(void __iomem *addr, int size, u32 *val)
++{
++	if ((uintptr_t)addr & (size - 1)) {
++		*val =3D 0;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
++	}
++
++	switch (size) {
++	case 4:
++		*val =3D readl(addr);
++		break;
++	case 2:
++		*val =3D readw(addr);
++		break;
++	case 1:
++		*val =3D readb(addr);
++		break;
++	default:
++		*val =3D 0;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
++	}
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
++{
++	if ((uintptr_t)addr & (size - 1))
++		return PCIBIOS_BAD_REGISTER_NUMBER;
++
++	switch (size) {
++	case 4:
++		writel(val, addr);
++		break;
++	case 2:
++		writew(val, addr);
++		break;
++	case 1:
++		writeb(val, addr);
++		break;
++	default:
++		return PCIBIOS_BAD_REGISTER_NUMBER;
++	}
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
++{
++	void *addr;
++	u32 val;
++	int ret;
++
++	addr =3D mobiveil_pcie_comp_addr(pcie, off);
++
++	ret =3D mobiveil_pcie_read(addr, size, &val);
++	if (ret)
++		dev_err(&pcie->pdev->dev, "read CSR address failed\n");
++
++	return val;
++}
++
++static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t=
+ size)
++{
++	void *addr;
++	int ret;
++
++	addr =3D mobiveil_pcie_comp_addr(pcie, off);
++
++	ret =3D mobiveil_pcie_write(addr, size, val);
++	if (ret)
++		dev_err(&pcie->pdev->dev, "write CSR address failed\n");
++}
++
++static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
++{
++	return csr_read(pcie, off, 0x4);
++}
++
++static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
++{
++	csr_write(pcie, val, off, 0x4);
+ }
+=20
+ static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+@@ -342,45 +451,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie=
+ *pcie)
+ 	return 0;
+ }
+=20
+-/*
+- * select_paged_register - routine to access paged register of root comple=
+x
+- *
+- * registers of RC are paged, for this scheme to work
+- * extracted higher 6 bits of the offset will be written to pg_sel
+- * field of PAB_CTRL register and rest of the lower 10 bits enabled with
+- * PAGE_SEL_EN are used as offset of the register.
+- */
+-static void select_paged_register(struct mobiveil_pcie *pcie, u32 offset)
+-{
+-	int pab_ctrl_dw, pg_sel;
+-
+-	/* clear pg_sel field */
+-	pab_ctrl_dw =3D csr_readl(pcie, PAB_CTRL);
+-	pab_ctrl_dw =3D (pab_ctrl_dw & ~(PAGE_SEL_MASK << PAGE_SEL_SHIFT));
+-
+-	/* set pg_sel field */
+-	pg_sel =3D (offset >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK;
+-	pab_ctrl_dw |=3D ((pg_sel << PAGE_SEL_SHIFT));
+-	csr_writel(pcie, pab_ctrl_dw, PAB_CTRL);
+-}
+-
+-static void write_paged_register(struct mobiveil_pcie *pcie,
+-		u32 val, u32 offset)
+-{
+-	u32 off =3D (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
+-
+-	select_paged_register(pcie, offset);
+-	csr_writel(pcie, val, off);
+-}
+-
+-static u32 read_paged_register(struct mobiveil_pcie *pcie, u32 offset)
+-{
+-	u32 off =3D (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
+-
+-	select_paged_register(pcie, offset);
+-	return csr_readl(pcie, off);
+-}
+-
+ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 		int pci_addr, u32 type, u64 size)
+ {
+@@ -397,19 +467,19 @@ static void program_ib_windows(struct mobiveil_pcie *=
+pcie, int win_num,
+ 	pio_ctrl_val =3D csr_readl(pcie, PAB_PEX_PIO_CTRL);
+ 	csr_writel(pcie,
+ 		pio_ctrl_val | (1 << PIO_ENABLE_SHIFT), PAB_PEX_PIO_CTRL);
+-	amap_ctrl_dw =3D read_paged_register(pcie, PAB_PEX_AMAP_CTRL(win_num));
++	amap_ctrl_dw =3D csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+ 	amap_ctrl_dw =3D (amap_ctrl_dw | (type << AMAP_CTRL_TYPE_SHIFT));
+ 	amap_ctrl_dw =3D (amap_ctrl_dw | (1 << AMAP_CTRL_EN_SHIFT));
+=20
+-	write_paged_register(pcie, amap_ctrl_dw | lower_32_bits(size64),
+-				PAB_PEX_AMAP_CTRL(win_num));
++	csr_writel(pcie, amap_ctrl_dw | lower_32_bits(size64),
++		   PAB_PEX_AMAP_CTRL(win_num));
+=20
+-	write_paged_register(pcie, upper_32_bits(size64),
+-				PAB_EXT_PEX_AMAP_SIZEN(win_num));
++	csr_writel(pcie, upper_32_bits(size64),
++		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+=20
+-	write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
+-	write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
+-	write_paged_register(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
++	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
++	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
++	csr_writel(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
+ }
+=20
+ /*
+@@ -437,8 +507,7 @@ static void program_ob_windows(struct mobiveil_pcie *pc=
+ie, int win_num,
+ 	csr_writel(pcie, 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
+ 			lower_32_bits(size64), PAB_AXI_AMAP_CTRL(win_num));
+=20
+-	write_paged_register(pcie, upper_32_bits(size64),
+-				PAB_EXT_AXI_AMAP_SIZE(win_num));
++	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
+=20
+ 	/*
+ 	 * program AXI window base with appropriate value in
+--=20
+2.17.1
