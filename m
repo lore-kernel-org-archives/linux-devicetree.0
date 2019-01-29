@@ -1,52 +1,59 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 05/13] ARM: dts: lpc32xx: phy3250: fix SD card regulator
- voltage
-Date: Tue, 29 Jan 2019 21:20:41 +0200
-Message-ID: <20190129192049.11223-6-vz@mleia.com>
-References: <20190129192049.11223-1-vz@mleia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190129192049.11223-1-vz@mleia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylvain Lemieux <slemieux.tyco@gmail.com>, Russell King <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Subject: [PATCH] ARM: dts: socfpga: update more missing reset properties
+Date: Tue, 29 Jan 2019 20:46:25 +0100
+Message-ID: <20190129194625.19218-1-goldsimon@gmx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Simon Goldschmidt <goldsimon@gmx.de>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The fixed voltage regulator on Phytec phyCORE-LPC3250 board, which
-supplies SD/MMC card's power, has a constant output voltage level
-of either 3.15V or 3.3V, the actual value depends on JP4 position,
-the power rail is referenced as VCC_SDIO in the board hardware manual.
+Add reset property for dma, can and sdram on socfpga gen5.
 
-Fixes: d06670e96267 ("arm: dts: phy3250: add SD fixed regulator")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Simon Goldschmidt <goldsimon@gmx.de>
+
 ---
- arch/arm/boot/dts/lpc3250-phy3250.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This series applies on top of  kernel/git/dinguyen/linux.git,
+branch socfpga_for_next_v5.1_dts_v1
 
-diff --git a/arch/arm/boot/dts/lpc3250-phy3250.dts b/arch/arm/boot/dts/lpc3250-phy3250.dts
-index 1e1c2f517a82..ffcf78631b22 100644
---- a/arch/arm/boot/dts/lpc3250-phy3250.dts
-+++ b/arch/arm/boot/dts/lpc3250-phy3250.dts
-@@ -49,8 +49,8 @@
- 		sd_reg: regulator@2 {
- 			compatible = "regulator-fixed";
- 			regulator-name = "sd_reg";
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
- 			gpio = <&gpio 5 5 0>;
- 			enable-active-high;
+ arch/arm/boot/dts/socfpga.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index f365003f0..ec1966480 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -84,6 +84,7 @@
+ 				#dma-requests = <32>;
+ 				clocks = <&l4_main_clk>;
+ 				clock-names = "apb_pclk";
++				resets = <&rst DMA_RESET>;
+ 			};
  		};
+ 
+@@ -100,6 +101,7 @@
+ 			reg = <0xffc00000 0x1000>;
+ 			interrupts = <0 131 4>, <0 132 4>, <0 133 4>, <0 134 4>;
+ 			clocks = <&can0_clk>;
++			resets = <&rst CAN0_RESET>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -108,6 +110,7 @@
+ 			reg = <0xffc01000 0x1000>;
+ 			interrupts = <0 135 4>, <0 136 4>, <0 137 4>, <0 138 4>;
+ 			clocks = <&can1_clk>;
++			resets = <&rst CAN1_RESET>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -791,6 +794,7 @@
+ 		sdr: sdr@ffc25000 {
+ 			compatible = "altr,sdr-ctl", "syscon";
+ 			reg = <0xffc25000 0x1000>;
++			resets = <&rst SDR_RESET>;
+ 		};
+ 
+ 		sdramedac {
 -- 
-2.20.1
+2.17.1
