@@ -1,34 +1,61 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v2 09/21] memblock: drop memblock_alloc_base()
-Date: Tue, 29 Jan 2019 21:29:19 +1100
-Message-ID: <87sgxbrc3k.fsf@concordia.ellerman.id.au>
-References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com> <1548057848-15136-10-git-send-email-rppt@linux.ibm.com>
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH] input: goodix - support Goodix gt5688
+Date: Tue, 29 Jan 2019 11:30:53 +0100
+Message-ID: <12e21befacf68861ddf34020838ff7a6e6e078ad.camel@hadess.net>
+References: <20190128170310.GA305@bogon.m.sigxcpu.org>
+         <7e289e6b3410a3fdea99d7d6becfe5180a69f0c5.camel@hadess.net>
+         <20190129091651.GA8497@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548057848-15136-10-git-send-email-rppt@linux.ibm.com>
+In-Reply-To: <20190129091651.GA8497@bogon.m.sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Rapoport <rppt@linux.ibm.com>, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arml>
+To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Mike Rapoport <rppt@linux.ibm.com> writes:
+On Tue, 2019-01-29 at 10:16 +0100, Guido Günther wrote:
+> Hi,
+> On Mon, Jan 28, 2019 at 07:24:33PM +0100, Bastien Nocera wrote:
+> > On Mon, 2019-01-28 at 18:03 +0100, Guido Günther wrote:
+> > > From what I've seen in vendor trees it's fine to treat this as
+> > > gt1x¹.
+> > > 
+> > > [1]: 
+> > > https://github.com/TadiT7/android_kernel_mtk-4.4/tree/master/drivers/input/touchscreen/mediatek/GT5688
+> > 
+> > Can you please point to the exact line of code that makes you say
+> > that?
+> > I'm not saying it's not compatible, but it's not the same driver
+> > that
+> > the current goodix.c was based on, or even goodix.c.
+> > 
+> > Can you please elaborate?
+> 
+> I basically looked at the registers uses for the config update:
+> 
+> https://github.com/TadiT7/android_kernel_mtk-4.4/blob/master/drivers/input/touchscreen/mediatek/GT5688/include/gt1x_tpd_common.h#L152
+> https://github.com/TadiT7/android_kernel_mtk-4.4/blob/master/drivers/input/touchscreen/mediatek/GT5688/gt1x_generic.c#L430
 
-> The memblock_alloc_base() function tries to allocate a memory up to the
-> limit specified by its max_addr parameter and panics if the allocation
-> fails. Replace its usage with memblock_phys_alloc_range() and make the
-> callers check the return value and panic in case of error.
->
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/powerpc/kernel/rtas.c      |  6 +++++-
->  arch/powerpc/mm/hash_utils_64.c |  8 ++++++--
->  arch/s390/kernel/smp.c          |  6 +++++-
->  drivers/macintosh/smu.c         |  2 +-
->  include/linux/memblock.h        |  2 --
->  mm/memblock.c                   | 14 --------------
->  6 files changed, 17 insertions(+), 21 deletions(-)
+I'm not sure that's good enough to say that the touchscreen models are
+compatible.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+> That and the fact that the driver is doing it's job well made me
+> believe
+> that's good for base support.
 
-cheers
+If you've tested it, that's better. Can you please add a reference to
+the device that you've tested this on in the commit message?
+
+>  Things like hotknot, gesture wakeup and
+> proximity sensor will need additional work.
+> 
+> > Finding that data in the specs would also be fine:
+> > https://github.com/hadess/gt9xx/tree/master/specifications
+> 
+> https://github.com/hadess/gt9xx/pull/3
+
+Merged that, thanks
+
+Cheers
