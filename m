@@ -1,112 +1,115 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH v5 2/2] mtd: spi-nor: cadence-quadspi: Add support for
- Octal SPI controller
-Date: Tue, 29 Jan 2019 15:32:01 +0000
-Message-ID: <2efbca08-c4ab-34ea-0e34-05aed7168df8@microchip.com>
-References: <20190128054935.4972-1-vigneshr@ti.com>
- <20190128054935.4972-3-vigneshr@ti.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 1/8] clk: samsung: add needed IDs for DMC clocks in
+ Exynos5420
+Date: Tue, 29 Jan 2019 16:57:56 +0100
+Message-ID: <f41259c2-fe37-261d-2029-e4d4aecf52d6@partner.samsung.com>
+References: <1548703299-15806-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190128192151eucas1p1754d1286ff0f46e8e98796d7583d8e96@eucas1p1.samsung.com>
+        <1548703299-15806-2-git-send-email-l.luba@partner.samsung.com>
+        <d6cbbeac-c15f-91b8-caf3-b22b8715665a@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128054935.4972-3-vigneshr@ti.com>
+In-Reply-To: <d6cbbeac-c15f-91b8-caf3-b22b8715665a@samsung.com>
 Content-Language: en-US
-Content-ID: <6C03ECA0C3DEFA4D81C0A2EB1F62BB94@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vigneshr@ti.com, bbrezillon@kernel.org
-Cc: marek.vasut@gmail.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
+Cc: b.zolnierkie@samsung.com, myungjoo.ham@samsung.com, krzk@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDAxLzI4LzIwMTkgMDc6NDkgQU0sIFZpZ25lc2ggUiB3cm90ZToNCj4gQ2FkZW5jZSBP
-U1BJIGNvbnRyb2xsZXIgSVAgc3VwcG9ydHMgT2N0YWwgSU8gKHg4IElPIGxpbmVzKSwNCj4gSXQg
-YWxzbyBoYXMgYW4gaW50ZWdyYXRlZCBQSFkuIElQIHJlZ2lzdGVyIGxheW91dCBpcyB2ZXJ5DQo+
-IHNpbWlsYXIgdG8gZXhpc3RpbmcgUVNQSSBJUCBleGNlcHQgZm9yIGFkZGl0aW9uYWwgYml0cyB0
-byBzdXBwb3J0IE9jdGFsDQo+IGFuZCBPY3RhbCBERFIgbW9kZS4gVGhlcmVmb3JlLCBleHRlbmQg
-Y3VycmVudCBkcml2ZXIgdG8gc3VwcG9ydCBPY3RhbA0KPiBtb2RlLiBPbmx5IE9jdGFsIFNEUiBy
-ZWFkICgxLTEtOCltb2RlIGlzIHN1cHBvcnRlZCBmb3Igbm93Lg0KPiANCj4gVGVzdGVkIHdpdGgg
-bXQzNXh1NTEyYWJhIE9jdGFsIGZsYXNoIG9uIFRJJ3MgQU02NTQgRVZNLg0KPiANCj4gU2lnbmVk
-LW9mZi1ieTogVmlnbmVzaCBSIDx2aWduZXNockB0aS5jb20+DQo+IFJldmlld2VkLWJ5OiBUdWRv
-ciBBbWJhcnVzIDx0dWRvci5hbWJhcnVzQG1pY3JvY2hpcC5jb20+DQo+IC0tLQ0KPiANCj4gdjU6
-DQo+IHMvY3FzaV9iYXNlX2h3Y2Fwc19tYXNrL0NRU1BJX0JBU0VfSFdDQVBTX01BU0svZw0KPiBB
-ZGQgYmFjayBjcXNwaV9kcml2ZXJfcGxhdGRhdGEgZGVmaW5pdGlvbiBmb3IgYmFzZSBjb21wYXRp
-YmxlLg0KPiANCj4gdjQ6IEZpeCBjb21tZW50cyBieSBUdWRvciBvbiB2Mw0KPiB2MzogTm8gY2hh
-bmdlcw0KPiB2MjogRGVjbGFyZSBPY3RhbCBtb2RlIGNhcGFiaWxpdHkgYmFzZWQgb24gY29tcGF0
-aWJsZS4NCj4gDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL2NhZGVuY2UtcXVhZHNwaS5jIHwgNTgg
-KysrKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNDYgaW5zZXJ0
-aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQv
-c3BpLW5vci9jYWRlbmNlLXF1YWRzcGkuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1x
-dWFkc3BpLmMNCj4gaW5kZXggMDRjZWRkM2EyYmY2Li5jODExM2ViZTQ0ZmQgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gKysrIGIvZHJpdmVy
-cy9tdGQvc3BpLW5vci9jYWRlbmNlLXF1YWRzcGkuYw0KPiBAQCAtNDQsNiArNDQsMTIgQEANCj4g
-IC8qIFF1aXJrcyAqLw0KPiAgI2RlZmluZSBDUVNQSV9ORUVEU19XUl9ERUxBWQkJQklUKDApDQo+
-ICANCj4gKy8qIENhcGFiaWxpdGllcyBtYXNrICovDQo+ICsjZGVmaW5lIENRU1BJX0JBU0VfSFdD
-QVBTX01BU0sJCQkJCVwNCj4gKwkoU05PUl9IV0NBUFNfUkVBRCB8IFNOT1JfSFdDQVBTX1JFQURf
-RkFTVCB8CQlcDQo+ICsJU05PUl9IV0NBUFNfUkVBRF8xXzFfMiB8IFNOT1JfSFdDQVBTX1JFQURf
-MV8xXzQgfAlcDQo+ICsJU05PUl9IV0NBUFNfUFApDQo+ICsNCj4gIHN0cnVjdCBjcXNwaV9zdDsN
-Cj4gIA0KPiAgc3RydWN0IGNxc3BpX2ZsYXNoX3BkYXRhIHsNCj4gQEAgLTkzLDYgKzk5LDExIEBA
-IHN0cnVjdCBjcXNwaV9zdCB7DQo+ICAJc3RydWN0IGNxc3BpX2ZsYXNoX3BkYXRhIGZfcGRhdGFb
-Q1FTUElfTUFYX0NISVBTRUxFQ1RdOw0KPiAgfTsNCj4gIA0KPiArc3RydWN0IGNxc3BpX2RyaXZl
-cl9wbGF0ZGF0YSB7DQo+ICsJdTMyIGh3Y2Fwc19tYXNrOw0KPiArCXU4IHF1aXJrczsNCj4gK307
-DQo+ICsNCj4gIC8qIE9wZXJhdGlvbiB0aW1lb3V0IHZhbHVlICovDQo+ICAjZGVmaW5lIENRU1BJ
-X1RJTUVPVVRfTVMJCQk1MDANCj4gICNkZWZpbmUgQ1FTUElfUkVBRF9USU1FT1VUX01TCQkJMTAN
-Cj4gQEAgLTEwMSw2ICsxMTIsNyBAQCBzdHJ1Y3QgY3FzcGlfc3Qgew0KPiAgI2RlZmluZSBDUVNQ
-SV9JTlNUX1RZUEVfU0lOR0xFCQkJMA0KPiAgI2RlZmluZSBDUVNQSV9JTlNUX1RZUEVfRFVBTAkJ
-CTENCj4gICNkZWZpbmUgQ1FTUElfSU5TVF9UWVBFX1FVQUQJCQkyDQo+ICsjZGVmaW5lIENRU1BJ
-X0lOU1RfVFlQRV9PQ1RBTAkJCTMNCj4gIA0KPiAgI2RlZmluZSBDUVNQSV9EVU1NWV9DTEtTX1BF
-Ul9CWVRFCQk4DQo+ICAjZGVmaW5lIENRU1BJX0RVTU1ZX0JZVEVTX01BWAkJCTQNCj4gQEAgLTkx
-MSw2ICs5MjMsOSBAQCBzdGF0aWMgaW50IGNxc3BpX3NldF9wcm90b2NvbChzdHJ1Y3Qgc3BpX25v
-ciAqbm9yLCBjb25zdCBpbnQgcmVhZCkNCj4gIAkJY2FzZSBTTk9SX1BST1RPXzFfMV80Og0KPiAg
-CQkJZl9wZGF0YS0+ZGF0YV93aWR0aCA9IENRU1BJX0lOU1RfVFlQRV9RVUFEOw0KPiAgCQkJYnJl
-YWs7DQo+ICsJCWNhc2UgU05PUl9QUk9UT18xXzFfODoNCj4gKwkJCWZfcGRhdGEtPmRhdGFfd2lk
-dGggPSBDUVNQSV9JTlNUX1RZUEVfT0NUQUw7DQo+ICsJCQlicmVhazsNCj4gIAkJZGVmYXVsdDoN
-Cj4gIAkJCXJldHVybiAtRUlOVkFMOw0KPiAgCQl9DQo+IEBAIC0xMjEzLDIxICsxMjI4LDIyIEBA
-IHN0YXRpYyB2b2lkIGNxc3BpX3JlcXVlc3RfbW1hcF9kbWEoc3RydWN0IGNxc3BpX3N0ICpjcXNw
-aSkNCj4gIA0KPiAgc3RhdGljIGludCBjcXNwaV9zZXR1cF9mbGFzaChzdHJ1Y3QgY3FzcGlfc3Qg
-KmNxc3BpLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiAgew0KPiAtCWNvbnN0IHN0cnVjdCBz
-cGlfbm9yX2h3Y2FwcyBod2NhcHMgPSB7DQo+IC0JCS5tYXNrID0gU05PUl9IV0NBUFNfUkVBRCB8
-DQo+IC0JCQlTTk9SX0hXQ0FQU19SRUFEX0ZBU1QgfA0KPiAtCQkJU05PUl9IV0NBUFNfUkVBRF8x
-XzFfMiB8DQo+IC0JCQlTTk9SX0hXQ0FQU19SRUFEXzFfMV80IHwNCj4gLQkJCVNOT1JfSFdDQVBT
-X1BQLA0KPiAtCX07DQo+ICAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IGNxc3BpLT5w
-ZGV2Ow0KPiAgCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ICsJY29uc3Qgc3Ry
-dWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSAqZGRhdGE7DQo+ICsJc3RydWN0IHNwaV9ub3JfaHdj
-YXBzIGh3Y2FwczsNCj4gIAlzdHJ1Y3QgY3FzcGlfZmxhc2hfcGRhdGEgKmZfcGRhdGE7DQo+ICAJ
-c3RydWN0IHNwaV9ub3IgKm5vcjsNCj4gIAlzdHJ1Y3QgbXRkX2luZm8gKm10ZDsNCj4gIAl1bnNp
-Z25lZCBpbnQgY3M7DQo+ICAJaW50IGksIHJldDsNCj4gIA0KPiArCWRkYXRhID0gb2ZfZGV2aWNl
-X2dldF9tYXRjaF9kYXRhKGRldik7DQo+ICsJaWYgKCFkZGF0YSkNCj4gKwkJaHdjYXBzLm1hc2sg
-PSBDUVNQSV9CQVNFX0hXQ0FQU19NQVNLOw0KDQpOb3cgdGhhdCAuZGF0YSBpcyBzZXQgaW4gYWxs
-IGNxc3BpX2R0X2lkc1tdLCBtYXliZSBpdCdzIGJldHRlciB0byBwcmludCBhDQptZXNzYWdlIGFu
-ZCByZXR1cm4gYW4gZXJyb3IgaGVyZS4gQnV0IEkgZ3Vlc3MgaXQncyBhIG1hdHRlciBvZiB0YXN0
-ZSwgc28gbm90IGENCnNob3cgc3RvcHBlci4NCg0KPiArCWVsc2UNCj4gKwkJaHdjYXBzLm1hc2sg
-PSBkZGF0YS0+aHdjYXBzX21hc2s7DQo+ICsNCj4gIAkvKiBHZXQgZmxhc2ggZGV2aWNlIGRhdGEg
-Ki8NCj4gIAlmb3JfZWFjaF9hdmFpbGFibGVfY2hpbGRfb2Zfbm9kZShkZXYtPm9mX25vZGUsIG5w
-KSB7DQo+ICAJCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAicmVnIiwgJmNzKTsNCj4g
-QEAgLTEzMTAsNyArMTMyNiw3IEBAIHN0YXRpYyBpbnQgY3FzcGlfcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCj4gIAlzdHJ1Y3QgY3FzcGlfc3QgKmNxc3BpOw0KPiAgCXN0cnVj
-dCByZXNvdXJjZSAqcmVzOw0KPiAgCXN0cnVjdCByZXNvdXJjZSAqcmVzX2FoYjsNCj4gLQl1bnNp
-Z25lZCBsb25nIGRhdGE7DQo+ICsJY29uc3Qgc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSAq
-ZGRhdGE7DQo+ICAJaW50IHJldDsNCj4gIAlpbnQgaXJxOw0KPiAgDQo+IEBAIC0xMzc3LDggKzEz
-OTMsOCBAQCBzdGF0aWMgaW50IGNxc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYpDQo+ICAJfQ0KPiAgDQo+ICAJY3FzcGktPm1hc3Rlcl9yZWZfY2xrX2h6ID0gY2xrX2dldF9y
-YXRlKGNxc3BpLT5jbGspOw0KPiAtCWRhdGEgID0gKHVuc2lnbmVkIGxvbmcpb2ZfZGV2aWNlX2dl
-dF9tYXRjaF9kYXRhKGRldik7DQo+IC0JaWYgKGRhdGEgJiBDUVNQSV9ORUVEU19XUl9ERUxBWSkN
-Cj4gKwlkZGF0YSAgPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoZGV2KTsNCj4gKwlpZiAoZGRh
-dGEgJiYgKGRkYXRhLT5xdWlya3MgJiBDUVNQSV9ORUVEU19XUl9ERUxBWSkpDQo+ICAJCWNxc3Bp
-LT53cl9kZWxheSA9IDUgKiBESVZfUk9VTkRfVVAoTlNFQ19QRVJfU0VDLA0KPiAgCQkJCQkJICAg
-Y3FzcGktPm1hc3Rlcl9yZWZfY2xrX2h6KTsNCj4gIA0KPiBAQCAtMTQ2MCwxNCArMTQ3NiwzMiBA
-QCBzdGF0aWMgY29uc3Qgc3RydWN0IGRldl9wbV9vcHMgY3FzcGlfX2Rldl9wbV9vcHMgPSB7DQo+
-ICAjZGVmaW5lIENRU1BJX0RFVl9QTV9PUFMJTlVMTA0KPiAgI2VuZGlmDQo+ICANCj4gK3N0YXRp
-YyBjb25zdCBzdHJ1Y3QgY3FzcGlfZHJpdmVyX3BsYXRkYXRhIGNkbnNfcXNwaSA9IHsNCj4gKwku
-aHdjYXBzX21hc2sgPSBDUVNQSV9CQVNFX0hXQ0FQU19NQVNLLA0KPiArfTsNCj4gKw0KPiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBjcXNwaV9kcml2ZXJfcGxhdGRhdGEgazJnX3FzcGkgPSB7DQo+ICsJ
-Lmh3Y2Fwc19tYXNrID0gQ1FTUElfQkFTRV9IV0NBUFNfTUFTSywNCj4gKwkucXVpcmtzID0gQ1FT
-UElfTkVFRFNfV1JfREVMQVksDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNx
-c3BpX2RyaXZlcl9wbGF0ZGF0YSBhbTY1NF9vc3BpID0gew0KPiArCS5od2NhcHNfbWFzayA9IENR
-U1BJX0JBU0VfSFdDQVBTX01BU0sgfCBTTk9SX0hXQ0FQU19SRUFEXzFfMV84LA0KPiArCS5xdWly
-a3MgPSBDUVNQSV9ORUVEU19XUl9ERUxBWSwNCj4gK307DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGNxc3BpX2R0X2lkc1tdID0gew0KPiAgCXsNCj4gIAkJLmNvbXBh
-dGlibGUgPSAiY2Rucyxxc3BpLW5vciIsDQo+IC0JCS5kYXRhID0gKHZvaWQgKikwLA0KPiArCQku
-ZGF0YSA9ICZjZG5zX3FzcGksDQo+ICAJfSwNCj4gIAl7DQo+ICAJCS5jb21wYXRpYmxlID0gInRp
-LGsyZy1xc3BpIiwNCj4gLQkJLmRhdGEgPSAodm9pZCAqKUNRU1BJX05FRURTX1dSX0RFTEFZLA0K
-PiArCQkuZGF0YSA9ICZrMmdfcXNwaSwNCj4gKwl9LA0KPiArCXsNCj4gKwkJLmNvbXBhdGlibGUg
-PSAidGksYW02NTQtb3NwaSIsDQo+ICsJCS5kYXRhID0gJmFtNjU0X29zcGksDQo+ICAJfSwNCj4g
-IAl7IC8qIGVuZCBvZiB0YWJsZSAqLyB9DQo+ICB9Ow0KPiANCg==
+Hi Chanwoo,
+
+On 1/29/19 1:54 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
+> 
+> This patchset don't contain the cover-letter. Please send the
+> cover-letter which explains what to do on this patchset.
+> 
+> And is it supporting all Exynos5 for both 32bit(5420,5422)
+> and 64bit(5433) or only Exynos542x(32bit)? If it only support
+> the Exynos 542x series, you have to change the driver name
+> from 'exynos5-dmc.c' to 'exynos5420-dmc.c' or 'exynos5422-dmc.c'
+> in order to prevent the confusion according to the driver name.
+I will rename the driver file to exynos5422-dmc.c and the config entry.
+When the driver will get support for Exynos5433, the file name would
+have to be changed again.
+
+Regards,
+Lukasz
+
+> 
+> 
+> On 19. 1. 29. 오전 4:21, Lukasz Luba wrote:
+>> Define new IDs for clocks used by Dynamic Memory Controller in
+>> Exynos5422 SoC.
+>>
+>> CC: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> CC: Chanwoo Choi <cw00.choi@samsung.com>
+>> CC: Rob Herring <robh+dt@kernel.org>
+>> CC: Mark Rutland <mark.rutland@arm.com>
+>> CC: Kukjin Kim <kgene@kernel.org>
+>> CC: Krzysztof Kozlowski <krzk@kernel.org>
+>> CC: linux-samsung-soc@vger.kernel.org
+>> CC: devicetree@vger.kernel.org
+>> CC: linux-arm-kernel@lists.infradead.org
+>> CC: linux-kernel@vger.kernel.org
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
+>>   1 file changed, 17 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+>> index 355f469..1827a64 100644
+>> --- a/include/dt-bindings/clock/exynos5420.h
+>> +++ b/include/dt-bindings/clock/exynos5420.h
+>> @@ -60,6 +60,7 @@
+>>   #define CLK_MAU_EPLL		159
+>>   #define CLK_SCLK_HSIC_12M	160
+>>   #define CLK_SCLK_MPHY_IXTAL24	161
+>> +#define CLK_SCLK_BPLL		162
+>>   
+>>   /* gate clocks */
+>>   #define CLK_UART0		257
+>> @@ -195,6 +196,16 @@
+>>   #define CLK_ACLK432_CAM		518
+>>   #define CLK_ACLK_FL1550_CAM	519
+>>   #define CLK_ACLK550_CAM		520
+>> +#define CLK_CLKM_PHY0		521
+>> +#define CLK_CLKM_PHY1		522
+>> +#define CLK_ACLK_PPMU_DREX0_0	523
+>> +#define CLK_ACLK_PPMU_DREX0_1	524
+>> +#define CLK_ACLK_PPMU_DREX1_0	525
+>> +#define CLK_ACLK_PPMU_DREX1_1	526
+>> +#define CLK_PCLK_PPMU_DREX0_0	527
+>> +#define CLK_PCLK_PPMU_DREX0_1	528
+>> +#define CLK_PCLK_PPMU_DREX1_0	529
+>> +#define CLK_PCLK_PPMU_DREX1_1	530
+>>   
+>>   /* mux clocks */
+>>   #define CLK_MOUT_HDMI		640
+>> @@ -217,6 +228,10 @@
+>>   #define CLK_MOUT_EPLL		657
+>>   #define CLK_MOUT_MAU_EPLL	658
+>>   #define CLK_MOUT_USER_MAU_EPLL	659
+>> +#define CLK_MOUT_DPLL		660
+>> +#define CLK_MOUT_ACLK_G3D	661
+>> +#define CLK_MOUT_SCLK_SPLL	662
+>> +#define CLK_MOUT_MX_MSPLL_CCORE_PHY	663
+>>   
+>>   /* divider clocks */
+>>   #define CLK_DOUT_PIXEL		768
+>> @@ -248,8 +263,9 @@
+>>   #define CLK_DOUT_CCLK_DREX0	794
+>>   #define CLK_DOUT_CLK2X_PHY0	795
+>>   #define CLK_DOUT_PCLK_CORE_MEM	796
+>> +#define CLK_FF_DOUT_SPLL2	797
+>>   
+>>   /* must be greater than maximal clock id */
+>> -#define CLK_NR_CLKS		797
+>> +#define CLK_NR_CLKS		798
+>>   
+>>   #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5420_H */
+>>
+> 
+> 
