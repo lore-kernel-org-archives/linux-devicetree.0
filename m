@@ -1,56 +1,44 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: Re: [RESEND PATCH v2 8/8] Input: sx8654 - convert #defined flags to
- BIT(x)
-Date: Tue, 29 Jan 2019 12:23:01 +0100
-Message-ID: <50c0a3a5-7039-abc0-9b9e-4314504bcb6f@skidata.com>
-References: <20181218083606.25795-1-richard.leitner@skidata.com>
- <20181218084002.19454-1-richard.leitner@skidata.com>
- <20190129002518.GH34692@dtor-ws>
- <533e48bd35d360cec8d749f3b70425c1eb5e6e9d.camel@perches.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v2 0/2] USB SS PHY for Qualcomm's QCS404
+Date: Tue, 29 Jan 2019 12:35:13 +0100
+Message-ID: <1548761715-4004-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <533e48bd35d360cec8d749f3b70425c1eb5e6e9d.camel@perches.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jorge.ramirez-ortiz@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, andy.gross@linaro.org, swboyd@chromium.org
+Cc: shawn.guo@linaro.org, vkoul@kernel.org, bjorn.andersson@linaro.org, khasim.mohammed@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+This set adds USB SS PHY support to Qualcomm's QCS404 SoC
+The PHY is implemented using Synopsys SS PHY 1.0.0 IP
 
-On 29/01/2019 06:40, Joe Perches wrote:
-> On Mon, 2019-01-28 at 16:25 -0800, Dmitry Torokhov wrote:
->> On Tue, Dec 18, 2018 at 09:40:02AM +0100, Richard Leitner wrote:
->>> Some of the #defined register values are one-bit flags. Convert them to
->>> use the BIT(x) macro instead of 1 byte hexadecimal values. This improves
->>> readability and clarifies the intent.
->>>
->>> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
->>
->> Applied, thank you.
-> 
-> Not so sure this should be applied.
-> 
->>> diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-> []
->>> @@ -46,7 +47,7 @@
-> []
->>>   /* bits for I2C_REG_IRQSRC */
->>> -#define IRQ_PENTOUCH_TOUCHCONVDONE	0x08
->>> -#define IRQ_PENRELEASE			0x04
->>> +#define IRQ_PENTOUCH_TOUCHCONVDONE	BIT(7)
->>> +#define IRQ_PENRELEASE			BIT(6)
-> 
-> Shouldn't this be BIT(3) and BIT(2)
-> or did you mean to change the values too?
-> 
-> If so, this change should be noted in the commit message.
-> 
+The code is losely based on Sriharsha Allenki's
+<sallenki@codeaurora.org> original implementation.
 
-That's true, those values should stay the same. Thanks for the catch!
+v2:
+  enable OTG mode detection
+  move vdd voltage levels to driver
+  use bulk_ control interfaces
+  ss-phy-bindings [1]
 
-@Dimitry: Should I send an updated version or do you fix it yourself?
+[1] ss-phy-binding discussion:
+ - qcom,dwc3-ss-usb-phy exist for a generic usb2/usb3 phy driver that
+ was never merged. Rather than trying to re-use these bindings (or
+ delete them) I  propose that we go ahead with the new separate
+ bindings for HS and SS: if  not now - investigation  in progress- in
+ the  future  it might be  possible to have again a common phy driver
+ for  which these old  bindings would be the binding agreement. 
+    
+Jorge Ramirez-Ortiz (2):
+  dt-bindings: Add Qualcomm USB Super-Speed PHY bindings
+  phy: qualcomm: usb: Add Super-Speed PHY driver
 
-regards;Richard.L
+ .../devicetree/bindings/usb/qcom,usb-ssphy.txt     |  73 +++++
+ drivers/phy/qualcomm/Kconfig                       |  11 +
+ drivers/phy/qualcomm/Makefile                      |   1 +
+ drivers/phy/qualcomm/phy-qcom-usb-ss.c             | 347 +++++++++++++++++++++
+ 4 files changed, 432 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-ss.c
+
+-- 
+2.7.4
