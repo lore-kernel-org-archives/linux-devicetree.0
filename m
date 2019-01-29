@@ -1,90 +1,78 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 07/10] soc: mediatek: add cmdq_dev_get_event function
-Date: Tue, 29 Jan 2019 18:59:23 +0800
-Message-ID: <1548759563.11055.10.camel@mtksdaap41>
-References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1548747128-60136-8-git-send-email-bibby.hsieh@mediatek.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH 10/13] gpio: max77650: add GPIO support
+Date: Tue, 29 Jan 2019 12:00:32 +0100
+Message-ID: <CAMRc=MftwsuooC8vLmnGYiiKj2rVShXeuekTrho8JRihjiBJ+w@mail.gmail.com>
+References: <20190118134244.22253-1-brgl@bgdev.pl> <20190118134244.22253-11-brgl@bgdev.pl>
+ <CACRpkdZhy7yBZrGLxhRGaac7v5jZhgUSz9gZAhFXbevJbKjpZw@mail.gmail.com>
+ <CAMRc=Me6OSKDk7bN4++M68DjoeArd+gZx16o0oQBXfRoCWBt2A@mail.gmail.com> <CACRpkdacfOLSs1GPew4gMtL_BX0OTXqBQNWzWZMwAkk+Ah2ETQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548747128-60136-8-git-send-email-bibby.hsieh@mediatek.com>
+In-Reply-To: <CACRpkdacfOLSs1GPew4gMtL_BX0OTXqBQNWzWZMwAkk+Ah2ETQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Brian Masney <masneyb@onstation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+czw., 24 sty 2019 o 11:30 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> On Mon, Jan 21, 2019 at 6:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+>
+> > Thank you for your review. While I think you're right about the issue
+> > being present in this driver, I'm not sure it's really a problem. Do
+> > we actually require every gpio-controller to also be a stand-alone
+> > interrupt-controller?
+>
+> Absolutely not :D
+>
+> Just GPIO is fine.
+>
+> > The binding document for the GPIO module doesn't
+> > mention this - it only requires the gpio-controller property. Without
+> > the "interrupt-controller" property dtc will bail-out if anyone uses
+> > this node as the interrupt parent.
+> >
+> > If I'm wrong and we do require it, then I think we need to update
+> > Documentation/devicetree/bindings/gpio/gpio.txt.
+>
+> What is weird is if a driver with DT bindings not mentioning IRQ
+> and only probing from DT start implementing IRQ support, that
+> becomes quite inconsistent. So then max77650_gpio_to_irq()
+> should just return -ENOTSUPP
+> or something for now, then it's fine.
+>
 
-On Tue, 2019-01-29 at 15:32 +0800, Bibby Hsieh wrote:
-> When client ask gce to clear or wait for event,
-> client need to pass event number to the API.
-> We suggest client store the event information in device node,
-> so we provide an API for client parse the event property.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 +++++++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  |  1 +
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 6ad997f..16c0393 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -56,6 +56,35 @@ struct cmdq_base *cmdq_register_device(struct device *dev)
->  }
->  EXPORT_SYMBOL(cmdq_register_device);
->  
-> +s32 cmdq_dev_get_event(struct device *dev, const char *name)
-> +{
-> +	s32 index = 0;
-> +	struct of_phandle_args spec;
-> +	s32 result;
-> +
-> +	if (!dev)
-> +		return -EINVAL;
-> +
-> +	index = of_property_match_string(dev->of_node, "gce-event-names", name);
+I don't see it as weird at all. I see the need to define the register
+and interrupt resources in DT for SoC peripherals becaue SoCs often
+reuse IPs. But in the case of a self-contained i2c PMIC - the modules
+such as GPIO are tightly coupled with the core functionality. In the
+case of this device for example: there isn't even a separate set of
+mask/status registers for GPIO interrupts.
 
-Where is the binding?
+Most mfd devices setup the resources in a hard-coded manner.
 
-> +	if (index < 0) {
-> +		dev_err(dev, "no gce-event-names property or no such event:%s",
-> +			name);
-> +		return index;
-> +	}
-> +
-> +	if (of_parse_phandle_with_args(dev->of_node, "gce-events",
-> +	    "#gce-event-cells", index, &spec)) {
+> We can add the (complicated) IRQ handling later.
+>
+> I am trying to eat my own dogfood here, I was sweating all
+> last night trying to implement a hierarchical IRQ controller.
+> There is no running away from that now. :/
+>
+> Apparently doing hierarchical IRQs demand that all irq
+> controllers up to the top-level SoC IRQ controller support
+> hierarchical interrupts using the v2 version of the irqdomain
+> API, and currently it seems like the ARM
+> GIC seems like the only top level IRQ controller that can
+> do that.
+>
 
-Ditto.
+Yep, and for that reason I can't use the regmap irq_chip abstraction
+for now because it doesn't implement support for hierarchical
+interrupts either.
 
-Regards,
-CK
+How about the cascaded gpiochip irq_chip?
 
-> +		dev_err(dev, "can't parse gce-events property");
-> +		return -ENODEV;
-> +	}
-> +
-> +	result = spec.args[0];
-> +	of_node_put(spec.np);
-> +
-> +	return result;
-> +}
-> +EXPORT_SYMBOL(cmdq_dev_get_event);
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index a1f5eb6..e5b0a98 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -139,5 +139,6 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
->  
->  u8 cmdq_subsys_base_to_id(struct cmdq_base *clt_base, u32 base);
->  struct cmdq_base *cmdq_register_device(struct device *dev);
-> +s32 cmdq_dev_get_event(struct device *dev, const char *name);
->  
->  #endif	/* __MTK_CMDQ_H__ */
+Best regards,
+Bartosz
