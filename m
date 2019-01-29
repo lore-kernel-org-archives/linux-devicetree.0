@@ -1,59 +1,108 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [RESEND PATCH v2 4/8] Input: sx8654 - add sx8655 and sx8656 to
- compatibles
-Date: Mon, 28 Jan 2019 16:26:27 -0800
-Message-ID: <20190129002627.GK34692@dtor-ws>
-References: <20181218083606.25795-1-richard.leitner@skidata.com>
- <20181218083606.25795-5-richard.leitner@skidata.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 1/8] clk: samsung: add needed IDs for DMC clocks in
+ Exynos5420
+Date: Tue, 29 Jan 2019 09:54:49 +0900
+Message-ID: <d6cbbeac-c15f-91b8-caf3-b22b8715665a@samsung.com>
+References: <1548703299-15806-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190128192151eucas1p1754d1286ff0f46e8e98796d7583d8e96@eucas1p1.samsung.com>
+        <1548703299-15806-2-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181218083606.25795-5-richard.leitner@skidata.com>
+In-Reply-To: <1548703299-15806-2-git-send-email-l.luba@partner.samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Leitner <richard.leitner@skidata.com>
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org
+Cc: b.zolnierkie@samsung.com, myungjoo.ham@samsung.com, krzk@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 09:36:02AM +0100, Richard Leitner wrote:
-> As the sx865[456] share the same datasheet and differ only in the
-> presence of a "capacitive proximity detection circuit" and a "haptics
-> motor driver for LRA/ERM" add them to the compatbiles. As the driver
-> doesn't implement these features it should be no problem.
+Hi Lukasz,
+
+This patchset don't contain the cover-letter. Please send the
+cover-letter which explains what to do on this patchset.
+
+And is it supporting all Exynos5 for both 32bit(5420,5422)
+and 64bit(5433) or only Exynos542x(32bit)? If it only support
+the Exynos 542x series, you have to change the driver name
+from 'exynos5-dmc.c' to 'exynos5420-dmc.c' or 'exynos5422-dmc.c'
+in order to prevent the confusion according to the driver name.
+
+
+On 19. 1. 29. 오전 4:21, Lukasz Luba wrote:
+> Define new IDs for clocks used by Dynamic Memory Controller in
+> Exynos5422 SoC.
 > 
-> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
-
-Applied, thank you.
-
+> CC: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> CC: Chanwoo Choi <cw00.choi@samsung.com>
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Kukjin Kim <kgene@kernel.org>
+> CC: Krzysztof Kozlowski <krzk@kernel.org>
+> CC: linux-samsung-soc@vger.kernel.org
+> CC: devicetree@vger.kernel.org
+> CC: linux-arm-kernel@lists.infradead.org
+> CC: linux-kernel@vger.kernel.org
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 > ---
->  drivers/input/touchscreen/sx8654.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-> index 238f56b1581b..afa4da138fe9 100644
-> --- a/drivers/input/touchscreen/sx8654.c
-> +++ b/drivers/input/touchscreen/sx8654.c
-> @@ -293,6 +293,8 @@ static int sx8654_probe(struct i2c_client *client,
->  #ifdef CONFIG_OF
->  static const struct of_device_id sx8654_of_match[] = {
->  	{ .compatible = "semtech,sx8654", },
-> +	{ .compatible = "semtech,sx8655", },
-> +	{ .compatible = "semtech,sx8656", },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, sx8654_of_match);
-> @@ -300,6 +302,8 @@ MODULE_DEVICE_TABLE(of, sx8654_of_match);
+> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+> index 355f469..1827a64 100644
+> --- a/include/dt-bindings/clock/exynos5420.h
+> +++ b/include/dt-bindings/clock/exynos5420.h
+> @@ -60,6 +60,7 @@
+>  #define CLK_MAU_EPLL		159
+>  #define CLK_SCLK_HSIC_12M	160
+>  #define CLK_SCLK_MPHY_IXTAL24	161
+> +#define CLK_SCLK_BPLL		162
 >  
->  static const struct i2c_device_id sx8654_id_table[] = {
->  	{ "semtech_sx8654", 0 },
-> +	{ "semtech_sx8655", 0 },
-> +	{ "semtech_sx8656", 0 },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(i2c, sx8654_id_table);
-> -- 
-> 2.11.0
+>  /* gate clocks */
+>  #define CLK_UART0		257
+> @@ -195,6 +196,16 @@
+>  #define CLK_ACLK432_CAM		518
+>  #define CLK_ACLK_FL1550_CAM	519
+>  #define CLK_ACLK550_CAM		520
+> +#define CLK_CLKM_PHY0		521
+> +#define CLK_CLKM_PHY1		522
+> +#define CLK_ACLK_PPMU_DREX0_0	523
+> +#define CLK_ACLK_PPMU_DREX0_1	524
+> +#define CLK_ACLK_PPMU_DREX1_0	525
+> +#define CLK_ACLK_PPMU_DREX1_1	526
+> +#define CLK_PCLK_PPMU_DREX0_0	527
+> +#define CLK_PCLK_PPMU_DREX0_1	528
+> +#define CLK_PCLK_PPMU_DREX1_0	529
+> +#define CLK_PCLK_PPMU_DREX1_1	530
+>  
+>  /* mux clocks */
+>  #define CLK_MOUT_HDMI		640
+> @@ -217,6 +228,10 @@
+>  #define CLK_MOUT_EPLL		657
+>  #define CLK_MOUT_MAU_EPLL	658
+>  #define CLK_MOUT_USER_MAU_EPLL	659
+> +#define CLK_MOUT_DPLL		660
+> +#define CLK_MOUT_ACLK_G3D	661
+> +#define CLK_MOUT_SCLK_SPLL	662
+> +#define CLK_MOUT_MX_MSPLL_CCORE_PHY	663
+>  
+>  /* divider clocks */
+>  #define CLK_DOUT_PIXEL		768
+> @@ -248,8 +263,9 @@
+>  #define CLK_DOUT_CCLK_DREX0	794
+>  #define CLK_DOUT_CLK2X_PHY0	795
+>  #define CLK_DOUT_PCLK_CORE_MEM	796
+> +#define CLK_FF_DOUT_SPLL2	797
+>  
+>  /* must be greater than maximal clock id */
+> -#define CLK_NR_CLKS		797
+> +#define CLK_NR_CLKS		798
+>  
+>  #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5420_H */
 > 
+
 
 -- 
-Dmitry
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
