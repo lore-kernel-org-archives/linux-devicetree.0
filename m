@@ -1,99 +1,97 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/3] cpufreq: mediatek: add mt8183 cpufreq support
-Date: Tue, 29 Jan 2019 15:43:48 +0530
-Message-ID: <20190129101348.7oxqerszhcopanzr@vireshk-i7>
-References: <1548743704-16821-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1548743704-16821-2-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 18/24] PCI: dwc: Fix dw_pcie_ep_find_capability to return
+ correct capability offset
+Date: Tue, 29 Jan 2019 15:49:51 +0530
+Message-ID: <a3c7458b-f8e8-1f02-116b-3e9f4fbf00f3@ti.com>
+References: <20190114132424.6445-1-kishon@ti.com>
+ <20190114132424.6445-19-kishon@ti.com>
+ <13501c15-8f3d-604b-c4fc-bde3fb208745@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548743704-16821-2-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <13501c15-8f3d-604b-c4fc-bde3fb208745@synopsys.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew-sh Cheng <andrew-sh.cheng@mediatek.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com
+To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Murali Karicheri <m-karicheri2@ti.com>, Jesper Nilsson <jesper.nilsson@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29-01-19, 14:35, Andrew-sh Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Hi Gustavo,
+
+On 29/01/19 2:55 PM, Gustavo Pimentel wrote:
+> Hi Kishon,
 > 
-> For new mediatek chip mt8183,
-> cci and little cluster share the same buck,
-> so need to modify the attribute of regulator from exclusive to optional
+> On 14/01/2019 13:24, Kishon Vijay Abraham I wrote:
+>> commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
+>> adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
+>> __dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
+>>
+>> However if MSI or MSIX capability is the last capability (i.e there are
+>> no additional items in the capabilities list and the Next Capability
+>> Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
+>> even though MSI or MSIX capability may be present. This is because of
+>> incorrect ordering of "next_cap_ptr" check. Fix it here.
+>>
+>> Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> index d5144781005b..cd51b008858c 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> @@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+>>  	u8 cap_id, next_cap_ptr;
+>>  	u16 reg;
+>>  
+>> +	if (!cap_ptr)
+>> +		return 0;
+>> +
 > 
-> Intermediate clock is not always enabled by ccf in different projects,
-> so cpufreq should always enable it by itself.
+> Supposedly this was already verified by the function that calls this one.
+
+Right, with with this fix cap_ptr is checked only once. This being a recursive
+function, it makes sense to have the check only here instead of once in the
+calling function and once here.
 > 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
->  drivers/cpufreq/mediatek-cpufreq.c   | 7 ++++++-
->  2 files changed, 7 insertions(+), 1 deletion(-)
+>>  	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+>> -	next_cap_ptr = (reg & 0xff00) >> 8;
+>>  	cap_id = (reg & 0x00ff);
+>>  
+>> -	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
+>> +	if (cap_id > PCI_CAP_ID_MAX)
+>>  		return 0;
+>>  
+>>  	if (cap_id == cap)
+>>  		return cap_ptr;
+>>  
+>> +	next_cap_ptr = (reg & 0xff00) >> 8;
 > 
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index b1c5468..5a1c588 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -117,6 +117,7 @@
->  	{ .compatible = "mediatek,mt817x", },
->  	{ .compatible = "mediatek,mt8173", },
->  	{ .compatible = "mediatek,mt8176", },
-> +	{ .compatible = "mediatek,mt8183", },
->  
->  	{ .compatible = "nvidia,tegra124", },
->  
-> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-> index eb8920d..e956248 100644
-> --- a/drivers/cpufreq/mediatek-cpufreq.c
-> +++ b/drivers/cpufreq/mediatek-cpufreq.c
-> @@ -355,7 +355,7 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->  		goto out_free_resources;
->  	}
->  
-> -	proc_reg = regulator_get_exclusive(cpu_dev, "proc");
-> +	proc_reg = regulator_get_optional(cpu_dev, "proc");
->  	if (IS_ERR(proc_reg)) {
->  		if (PTR_ERR(proc_reg) == -EPROBE_DEFER)
->  			pr_warn("proc regulator for cpu%d not ready, retry.\n",
-> @@ -385,6 +385,9 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->  		goto out_free_resources;
->  	}
->  
-> +	ret = clk_prepare_enable(inter_clk);
-> +	if (ret)
-> +		goto out_free_resources;
+> This fix seems to be a bit overdone, especially when you only need to swap the
+> if blocks order to achieve the desired goal.
 
-Add a blank line here please.
+No, cap_id > PCI_CAP_ID_MAX is a base error case and it should checked before
+returning the offset IMO.
+> 
+>>  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+>>  }
+>>  
+>> @@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+>>  	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+>>  	next_cap_ptr = (reg & 0x00ff);
+>>  
+>> -	if (!next_cap_ptr)
+>> -		return 0;
+>> -
+> 
+> Why remove it?
+> If pointer is null, why to jump to another function to check is the the same
+> pointer is null?
 
-Also out_free_resources isn't enough here and you need to free OPP table as
-well.
+so that we check cap_ptr only once.
 
-
->  	/* Search a safe voltage for intermediate frequency. */
->  	rate = clk_get_rate(inter_clk);
->  	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
-> @@ -412,6 +415,7 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->  
->  out_free_opp_table:
->  	dev_pm_opp_of_cpumask_remove_table(&info->cpus);
-> +	clk_disable_unprepare(inter_clk);
-
-Clock was enabled after adding the table, and so it must be disabled before
-removing the table. Just the opposite sequence.
-
->  
->  out_free_resources:
->  	if (!IS_ERR(proc_reg))
-> @@ -551,6 +555,7 @@ static int mtk_cpufreq_probe(struct platform_device *pdev)
->  	{ .compatible = "mediatek,mt817x", },
->  	{ .compatible = "mediatek,mt8173", },
->  	{ .compatible = "mediatek,mt8176", },
-> +	{ .compatible = "mediatek,mt8183", },
->  
->  	{ }
->  };
-> -- 
-> 1.8.1.1.dirty
-
--- 
-viresh
+Thanks
+Kishon
