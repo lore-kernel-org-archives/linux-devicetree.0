@@ -1,101 +1,90 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 3/5 v10] regulator: fixed/gpio: Update device tree bindings
-Date: Tue, 29 Jan 2019 11:31:54 +0100
-Message-ID: <20190129103156.10139-3-linus.walleij@linaro.org>
-References: <20190129103156.10139-1-linus.walleij@linaro.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 07/10] soc: mediatek: add cmdq_dev_get_event function
+Date: Tue, 29 Jan 2019 18:59:23 +0800
+Message-ID: <1548759563.11055.10.camel@mtksdaap41>
+References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
+         <1548747128-60136-8-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129103156.10139-1-linus.walleij@linaro.org>
+In-Reply-To: <1548747128-60136-8-git-send-email-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Charles Keepax <ckeepax@opensource.cirrus.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Deprecate the open drain binding for fixed regulator and indicate
-that we prefer this to be passed in the GPIO phandle flags.
+Hi, Bibby:
 
-Clarify that the line inversion semantics for fixed and GPIO
-regulators completely overrides the active low flags in the
-phandle flags.
+On Tue, 2019-01-29 at 15:32 +0800, Bibby Hsieh wrote:
+> When client ask gce to clear or wait for event,
+> client need to pass event number to the API.
+> We suggest client store the event information in device node,
+> so we provide an API for client parse the event property.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 +++++++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  |  1 +
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 6ad997f..16c0393 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -56,6 +56,35 @@ struct cmdq_base *cmdq_register_device(struct device *dev)
+>  }
+>  EXPORT_SYMBOL(cmdq_register_device);
+>  
+> +s32 cmdq_dev_get_event(struct device *dev, const char *name)
+> +{
+> +	s32 index = 0;
+> +	struct of_phandle_args spec;
+> +	s32 result;
+> +
+> +	if (!dev)
+> +		return -EINVAL;
+> +
+> +	index = of_property_match_string(dev->of_node, "gce-event-names", name);
 
-Unfortunately this can not be changed to prefer that we pass
-the flags in the phandle: the bindings have been specified and
-deployed such that the presence/absence of this flag and only
-that controls the line inversion semantics. The crucial semantic
-is that the absence of the flag means the core will assume
-the line is active low, which in GPIO terms is an exception,
-as GPIO lines are normally assumed to be active high.
+Where is the binding?
 
-This special device tree semantic cannot be changed without
-introducing a whole new compatible string for the fixed and
-GPIO regulators, so we just contain the situation.
+> +	if (index < 0) {
+> +		dev_err(dev, "no gce-event-names property or no such event:%s",
+> +			name);
+> +		return index;
+> +	}
+> +
+> +	if (of_parse_phandle_with_args(dev->of_node, "gce-events",
+> +	    "#gce-event-cells", index, &spec)) {
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v9->v10:
-- Rebase on other changes.
-ChangeLog v8->v9:
-- Rebased on other changes.
-- Collected Marek's Tested-by.
-ChangeLog v7->v8:
-- Rebase on v5.0-rc1.
-ChangeLog v6->v7:
-- Resend with the rest.
-ChangeLog v3->v6:
-- Resending.
-ChangeLog v2->v3:
-- Resending.
-ChangeLog v1->v2:
-- Collect Rob's ACK.
----
- .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
- .../bindings/regulator/gpio-regulator.txt           |  4 ++++
- 2 files changed, 15 insertions(+), 2 deletions(-)
+Ditto.
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 0c2a6c8a1536..a7a1cd0dfa6e 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -8,10 +8,19 @@ Optional properties:
- - gpio: gpio to use for enable control
- - startup-delay-us: startup time in microseconds
- - enable-active-high: Polarity of GPIO is Active high
--If this property is missing, the default assumed is Active low.
-+  If this property is missing, the default assumed is Active low.
-+  If the phandle flags to the GPIO handle also flag the line as active
-+  low or high, that will be ignored for fixed regulators and the
-+  presence or absence of this flag solely controls the inversion
-+  semantics.
-+-vin-supply: Input supply name.
-+
-+Deprecated properties:
- - gpio-open-drain: GPIO is open drain type.
-   If this property is missing then default assumption is false.
---vin-supply: Input supply name.
-+  Do not use this property in new device trees: instead use the
-+  phandle flag to indicate to the GPIO provider that the line
-+  should be handled as open drain.
- 
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index 1f496159e2bb..8fef3e5358a2 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -14,6 +14,10 @@ Optional properties:
- 			  defualt is LOW if nothing is specified.
- - startup-delay-us	: Startup time in microseconds.
- - enable-active-high	: Polarity of GPIO is active high (default is low).
-+			  If the phandle flags to the GPIO handle also flag the line as
-+			  active low or high, that will be ignored for fixed regulators
-+			  and the presence or absence of this flag solely controls the
-+			  inversion semantics.
- - regulator-type	: Specifies what is being regulated, must be either
- 			  "voltage" or "current", defaults to voltage.
- 
--- 
-2.20.1
+Regards,
+CK
+
+> +		dev_err(dev, "can't parse gce-events property");
+> +		return -ENODEV;
+> +	}
+> +
+> +	result = spec.args[0];
+> +	of_node_put(spec.np);
+> +
+> +	return result;
+> +}
+> +EXPORT_SYMBOL(cmdq_dev_get_event);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a1f5eb6..e5b0a98 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -139,5 +139,6 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+>  
+>  u8 cmdq_subsys_base_to_id(struct cmdq_base *clt_base, u32 base);
+>  struct cmdq_base *cmdq_register_device(struct device *dev);
+> +s32 cmdq_dev_get_event(struct device *dev, const char *name);
+>  
+>  #endif	/* __MTK_CMDQ_H__ */
