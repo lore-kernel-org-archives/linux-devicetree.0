@@ -1,7 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 03/27] PCI: mobiveil: correct the returned error number
-Date: Tue, 29 Jan 2019 08:08:47 +0000
-Message-ID: <20190129080926.36773-4-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 05/27] PCI: mobiveil: correct PCI base address in MEM/IO
+ outbound windows
+Date: Tue, 29 Jan 2019 08:09:00 +0000
+Message-ID: <20190129080926.36773-6-Zhiqiang.Hou@nxp.com>
 References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,56 +17,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-This patch corrected the returned error number by convention,
-and removed a unnecessary error check.
+It should get PCI base address from the DT node property 'ranges'
+to setup MEM/IO outbound windows instead of always zero.
 
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge
+IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 ---
 V3:
  - No change
 
- drivers/pci/controller/pcie-mobiveil.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index b87471f08a40..563210e731d3 100644
+index a0dd337c6214..8ff873023b5f 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -819,7 +819,7 @@ static int mobiveil_pcie_init_irq_domain(struct mobivei=
-l_pcie *pcie)
+@@ -630,8 +630,9 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
+e)
 =20
- 	if (!pcie->intx_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
--		return -ENODEV;
-+		return -ENOMEM;
+ 		/* configure outbound translation window */
+ 		program_ob_windows(pcie, pcie->ob_wins_configured,
+-				   win->res->start, 0, type,
+-				   resource_size(win->res));
++				   win->res->start,
++				   win->res->start - win->offset,
++				   type, resource_size(win->res));
  	}
 =20
- 	raw_spin_lock_init(&pcie->intx_mask_lock);
-@@ -845,11 +845,9 @@ static int mobiveil_pcie_probe(struct platform_device =
-*pdev)
- 	/* allocate the PCIe port */
- 	bridge =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
- 	if (!bridge)
--		return -ENODEV;
-+		return -ENOMEM;
-=20
- 	pcie =3D pci_host_bridge_priv(bridge);
--	if (!pcie)
--		return -ENOMEM;
-=20
- 	pcie->pdev =3D pdev;
-=20
-@@ -866,7 +864,7 @@ static int mobiveil_pcie_probe(struct platform_device *=
-pdev)
- 						    &pcie->resources, &iobase);
- 	if (ret) {
- 		dev_err(dev, "Getting bridge resources failed\n");
--		return -ENOMEM;
-+		return ret;
- 	}
-=20
- 	/*
+ 	/* setup MSI hardware registers */
 --=20
 2.17.1
