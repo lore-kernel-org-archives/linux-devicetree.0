@@ -1,8 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 14/27] PCI: mobiveil: initialize
- Primary/Secondary/Subordinate bus number
-Date: Tue, 29 Jan 2019 08:09:58 +0000
-Message-ID: <20190129080926.36773-15-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 12/27] PCI: mobiveil: move out the link up waiting from
+ mobiveil_host_init
+Date: Tue, 29 Jan 2019 08:09:44 +0000
+Message-ID: <20190129080926.36773-13-Zhiqiang.Hou@nxp.com>
 References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,8 +17,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-The reset value is all zero, so set a workable value for Primary,
-Secondary and Subordinate bus numbers.
+Host initial sequence does not depend on PCIe link up, so move it
+to the place just before the enumeration.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
@@ -26,27 +26,54 @@ Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 V3:
  - No change
 
- drivers/pci/controller/pcie-mobiveil.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/controller/pcie-mobiveil.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index db7ecb021c63..9210165fe8c0 100644
+index 8eee1ab7ee24..c2848c22b466 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -582,6 +582,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pc=
-ie)
+@@ -582,15 +582,8 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_p=
+cie *pcie)
+ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ {
  	u32 value, pab_ctrl, type;
+-	int err;
  	struct resource_entry *win;
 =20
-+	/* setup bus numbers */
-+	value =3D csr_readl(pcie, PCI_PRIMARY_BUS);
-+	value &=3D 0xff000000;
-+	value |=3D 0x00ff0100;
-+	csr_writel(pcie, value, PCI_PRIMARY_BUS);
-+
+-	err =3D mobiveil_bringup_link(pcie);
+-	if (err) {
+-		dev_info(&pcie->pdev->dev, "link bring-up failed\n");
+-		return err;
+-	}
+-
  	/*
  	 * program Bus Master Enable Bit in Command Register in PAB Config
  	 * Space
+@@ -662,7 +655,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
+e)
+ 	/* setup MSI hardware registers */
+ 	mobiveil_pcie_enable_msi(pcie);
+=20
+-	return err;
++	return 0;
+ }
+=20
+ static void mobiveil_mask_intx_irq(struct irq_data *data)
+@@ -922,6 +915,12 @@ static int mobiveil_pcie_probe(struct platform_device =
+*pdev)
+ 	bridge->map_irq =3D of_irq_parse_and_map_pci;
+ 	bridge->swizzle_irq =3D pci_common_swizzle;
+=20
++	ret =3D mobiveil_bringup_link(pcie);
++	if (ret) {
++		dev_info(dev, "link bring-up failed\n");
++		goto error;
++	}
++
+ 	/* setup the kernel resources for the newly added PCIe root bus */
+ 	ret =3D pci_scan_root_bus_bridge(bridge);
+ 	if (ret)
 --=20
 2.17.1
