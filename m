@@ -1,59 +1,35 @@
-MIME-Version: 1.0
-Date: Mon, 14 Jan 2019 14:16:14 -0600
-References: <20190107164249.2342-1-nazgul33@gmail.com>
-	<20190107164249.2342-3-nazgul33@gmail.com>
-In-Reply-To: <20190107164249.2342-3-nazgul33@gmail.com>
-Message-ID: <CAL_JsqKtswjht4Xya6rfarSR8jRnaCmPquNgr-UOWmFWr9nM_g@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] Input: rotaty-encoder - Add DT binding document
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Donghoon Han <nazgul33@gmail.com>
-Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Mack <daniel@caiaq.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Return-Path: <SRS0=zDJw=QF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga11.intel.com ([192.55.52.93]:6466 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727339AbfA2WBd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Jan 2019 17:01:33 -0500
+From: thor.thayer@linux.intel.com
+Subject: [PATCH 0/4] Update Stratix10 EDAC Bindings
+Date: Tue, 29 Jan 2019 16:03:44 -0600
+Message-Id: <1548799428-10541-1-git-send-email-thor.thayer@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jan 7, 2019 at 10:43 AM Donghoon Han <nazgul33@gmail.com> wrote:
->
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-The subject needs to be improved. It doesn't match the change.
+Instead of using the Arria10 (ARM32) EDAC bindings for
+Stratix10 (ARM64), create Stratix10 specific EDAC bindings
+to capture architecture differences between ARM32 and ARM64.
+This requires fixing the previous Stratix10 bindings.
+Also add the peripheral bindings for the Stratix10.
 
-> Add DT binding document for rotary-encoder, keycode options.
->
-> Signed-off-by: Donghoon Han <nazgul33@gmail.com>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Daniel Mack <daniel@caiaq.de>
-> Cc: devicetree@vger.kernel.org
-> To: linux-input@vger.kernel.org
-> ---
->  .../devicetree/bindings/input/rotary-encoder.txt     | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> index f99fe5cdeaec..9986ec2af2d4 100644
-> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> @@ -12,6 +12,10 @@ Optional properties:
->  - rotary-encoder,relative-axis: register a relative axis rather than an
->    absolute one. Relative axis will only generate +1/-1 events on the input
->    device, hence no steps need to be passed.
-> +- rotary-encoder,relative-keys : generate pair of key events. This setting
-> +  behaves just like relative-axis, generating key events instead.
-> +  (Keycodes[2] corresponds to -1/1 events.)
-> +- rotary-encoder,relative-keycodes : keycodes for relative-keys
->  - rotary-encoder,rollover: Automatic rollover when the rotary value becomes
->    greater than the specified steps or smaller than 0. For absolute axis only.
->  - rotary-encoder,steps-per-period: Number of steps (stable states) per period.
-> @@ -48,3 +52,11 @@ Example:
->                         rotary-encoder,encoding = "binary";
->                         rotary-encoder,rollover;
->                 };
-> +
-> +               rotary@2 {
-> +                       compatible = "rotary-encoder";
-> +                       gpios = <&gpio 21 0>, <&gpio 22 0>;
-> +                       rotary-encoder,relative-keys;
-> +                       rotary-encoder,relative-keycode = <103>, <108>;
-> +                       rotary-encoder,steps-per-period = <2>;
-> +               };
-> --
-> 2.17.1
->
+Thor Thayer (4):
+  Documentation: dt: edac: Fix Stratix10 IRQ bindings
+  Documentation: dt: edac: Add Stratix10 Peripheral bindings
+  EDAC, altera: Skip DB IRQ for Stratix10
+  arm64: dts: stratix10: Use new Stratix10 EDAC bindings
+
+ .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 129 +++++++++++++++++++--
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  25 ++--
+ drivers/edac/altera_edac.c                         |  31 ++---
+ 3 files changed, 153 insertions(+), 32 deletions(-)
+
+-- 
+2.7.4
