@@ -1,88 +1,73 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 03/10] soc: mediatek: move the CMDQ_IRQ_MASK into cmdq
- driver data
-Date: Tue, 29 Jan 2019 17:22:56 +0800
-Message-ID: <1548753776.11055.4.camel@mtksdaap41>
-References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1548747128-60136-4-git-send-email-bibby.hsieh@mediatek.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCHv5 4/7] coresight: etm4x: Add support to enable ETMv4.2
+Date: Tue, 29 Jan 2019 09:26:04 +0000
+Message-ID: <342fa449-124e-7581-dfff-ef5d382f1f6b@arm.com>
+References: <cover.1548419933.git.saiprakash.ranjan@codeaurora.org>
+ <980aaf18c0fe92a667930e3a035394442af74869.1548419933.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548747128-60136-4-git-send-email-bibby.hsieh@mediatek.com>
+In-Reply-To: <980aaf18c0fe92a667930e3a035394442af74869.1548419933.git.saiprakash.ranjan@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
+To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, jhugo@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com, marc.w.gonzalez@free.fr
+Cc: rnayak@codeaurora.org, sibis@codeaurora.org, tingwei@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
 
-On Tue, 2019-01-29 at 15:32 +0800, Bibby Hsieh wrote:
-> The interrupt mask and thread number has positive correlation,
-> so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
-> it by thread number.
+
+On 28/01/2019 19:14, Sai Prakash Ranjan wrote:
+> SDM845 has ETMv4.2 and can use the existing etm4x driver.
+> But the current etm driver checks only for ETMv4.0 and
+> errors out for other etm4x versions. This patch adds this
+> missing support to enable SoC's with ETMv4x to use same
+> driver by checking only the ETM architecture major version
+> number.
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Without this change, we get below error during etm probe:
+> 
+> / # dmesg | grep etm
+> [    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
+> [    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
+> [    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
+> [    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
+> [    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
+> [    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
+> [    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
+> [    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
+> 
+> With this change, etm probe is successful:
+> 
+> / # dmesg | grep etm
+> [    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
+> [    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
+> [    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
+> [    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
+> [    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
+> [    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
+> [    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
+> [    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
->  drivers/mailbox/mtk-cmdq-mailbox.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+>   drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> index 909eb23..f6174ca 100644
-> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
-> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -17,7 +17,6 @@
->  #include <linux/of_device.h>
->  
->  #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
-> -#define CMDQ_IRQ_MASK			0xffff
->  #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
->  
->  #define CMDQ_CURR_IRQ_STATUS		0x10
-> @@ -71,6 +70,7 @@ struct cmdq {
->  	void __iomem		*base;
->  	u32			irq;
->  	u32			thread_nr;
-> +	u32			irq_mask;
->  	struct cmdq_thread	*thread;
->  	struct clk		*clock;
->  	bool			suspended;
-> @@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
->  	unsigned long irq_status, flags = 0L;
->  	int bit;
->  
-> -	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
-> -	if (!(irq_status ^ CMDQ_IRQ_MASK))
-> +	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
-> +	if (!(irq_status ^ cmdq->irq_mask))
->  		return IRQ_NONE;
->  
-> -	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-> +	for_each_clear_bit(bit, &irq_status, fls(cmdq->irq_mask)) {
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+> index 53e2fb6e86f6..fe76b176974a 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+> @@ -55,7 +55,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
+>   
+>   static bool etm4_arch_supported(u8 arch)
+>   {
+> -	switch (arch) {
+> +	/* Mask out the minor version number */
+> +	switch (arch & 0xf0) {
+>   	case ETM_ARCH_V4:
+>   		break;
+>   	default:
+> 
 
-for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
-
-Regards,
-CK
-
->  		struct cmdq_thread *thread = &cmdq->thread[bit];
->  
->  		spin_lock_irqsave(&thread->chan->lock, flags);
-> @@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
->  		dev_err(dev, "failed to get irq\n");
->  		return -EINVAL;
->  	}
-> +
-> +	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
->  	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
->  			       "mtk_cmdq", cmdq);
->  	if (err < 0) {
-> @@ -489,6 +492,7 @@ static int cmdq_probe(struct platform_device *pdev)
->  	}
->  
->  	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
->  	cmdq->mbox.dev = dev;
->  	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
->  					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
