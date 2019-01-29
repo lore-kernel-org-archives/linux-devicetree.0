@@ -1,8 +1,8 @@
 From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 04/13] ARM: dts: lpc32xx: fix ARM PrimeCell LCD controller
- clocks property
-Date: Tue, 29 Jan 2019 21:20:40 +0200
-Message-ID: <20190129192049.11223-5-vz@mleia.com>
+Subject: [PATCH 01/13] ARM: defconfig: lpc32xx: enable fixed voltage regulator
+ support
+Date: Tue, 29 Jan 2019 21:20:37 +0200
+Message-ID: <20190129192049.11223-2-vz@mleia.com>
 References: <20190129192049.11223-1-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,30 +22,26 @@ To: Sylvain Lemieux <slemieux.tyco@gmail.com>, Russell King <linux@armlinux.org.
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The originally added ARM PrimeCell PL111 clocks property misses
-the required "clcdclk" clock, which is the same as a clock to enable
-the LCD controller on NXP LPC3230 and NXP LPC3250 SoCs.
+Fixed voltage regulators are found on Phytec phyCORE-LPC3250 board,
+enable the correspondent device driver by default.
 
-Fixes: 93898eb775e5 ("arm: dts: lpc32xx: add clock properties to device nodes")
 Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/configs/lpc32xx_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index cfd422e7f774..9ad3df11db0d 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -142,8 +142,8 @@
- 			compatible = "arm,pl111", "arm,primecell";
- 			reg = <0x31040000 0x1000>;
- 			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clk LPC32XX_CLK_LCD>;
--			clock-names = "apb_pclk";
-+			clocks = <&clk LPC32XX_CLK_LCD>, <&clk LPC32XX_CLK_LCD>;
-+			clock-names = "clcdclk", "apb_pclk";
- 			status = "disabled";
- 		};
- 
+diff --git a/arch/arm/configs/lpc32xx_defconfig b/arch/arm/configs/lpc32xx_defconfig
+index 19a5e5e742d4..23b4d5348e39 100644
+--- a/arch/arm/configs/lpc32xx_defconfig
++++ b/arch/arm/configs/lpc32xx_defconfig
+@@ -104,6 +104,8 @@ CONFIG_SENSORS_DS620=y
+ CONFIG_SENSORS_MAX6639=y
+ CONFIG_WATCHDOG=y
+ CONFIG_PNX4008_WATCHDOG=y
++CONFIG_REGULATOR=y
++CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_DRM=y
+ CONFIG_DRM_PL111=y
+ CONFIG_FB_MODE_HELPERS=y
 -- 
 2.20.1
