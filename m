@@ -1,63 +1,44 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 3/7] cpufreq: scpi: Register an Energy Model
-Date: Tue, 29 Jan 2019 11:01:33 +0530
-Message-ID: <20190129053133.l5wix4qgvty7bzig@vireshk-i7>
-References: <20190128165522.31749-1-quentin.perret@arm.com>
- <20190128165522.31749-4-quentin.perret@arm.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [RESEND PATCH v2 8/8] Input: sx8654 - convert #defined flags to
+ BIT(x)
+Date: Mon, 28 Jan 2019 21:40:54 -0800
+Message-ID: <533e48bd35d360cec8d749f3b70425c1eb5e6e9d.camel@perches.com>
+References: <20181218083606.25795-1-richard.leitner@skidata.com>
+         <20181218084002.19454-1-richard.leitner@skidata.com>
+         <20190129002518.GH34692@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190128165522.31749-4-quentin.perret@arm.com>
+In-Reply-To: <20190129002518.GH34692@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Perret <quentin.perret@arm.com>
-Cc: rjw@rjwysocki.net, sudeep.holla@arm.com, liviu.dudau@arm.com, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, nm@ti.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dietmar.eggemann@arm.com, mka@chromium.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Richard Leitner <richard.leitner@skidata.com>
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28-01-19, 16:55, Quentin Perret wrote:
-> Now that PM_OPP provides a helper function to estimate the power
-> consumed by CPUs, make sure to try and register an Energy Model (EM)
-> from scpi-cpufreq, hence ensuring interested subsystems (the task
-> scheduler, for example) can make use of that information when available.
+On Mon, 2019-01-28 at 16:25 -0800, Dmitry Torokhov wrote:
+> On Tue, Dec 18, 2018 at 09:40:02AM +0100, Richard Leitner wrote:
+> > Some of the #defined register values are one-bit flags. Convert them to
+> > use the BIT(x) macro instead of 1 byte hexadecimal values. This improves
+> > readability and clarifies the intent.
+> > 
+> > Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
 > 
-> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
-> ---
->  drivers/cpufreq/scpi-cpufreq.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpufreq/scpi-cpufreq.c b/drivers/cpufreq/scpi-cpufreq.c
-> index 87a98ec77773..05fc7448f5cb 100644
-> --- a/drivers/cpufreq/scpi-cpufreq.c
-> +++ b/drivers/cpufreq/scpi-cpufreq.c
-> @@ -23,6 +23,7 @@
->  #include <linux/cpufreq.h>
->  #include <linux/cpumask.h>
->  #include <linux/cpu_cooling.h>
-> +#include <linux/energy_model.h>
->  #include <linux/export.h>
->  #include <linux/module.h>
->  #include <linux/of_platform.h>
-> @@ -98,11 +99,12 @@ scpi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
->  
->  static int scpi_cpufreq_init(struct cpufreq_policy *policy)
->  {
-> -	int ret;
-> +	int ret, nr_opp;
->  	unsigned int latency;
->  	struct device *cpu_dev;
->  	struct scpi_data *priv;
->  	struct cpufreq_frequency_table *freq_table;
-> +	struct em_data_callback em_cb = EM_DATA_CB(of_dev_pm_opp_get_cpu_power);
->  
->  	cpu_dev = get_cpu_device(policy->cpu);
->  	if (!cpu_dev) {
-> @@ -135,6 +137,7 @@ static int scpi_cpufreq_init(struct cpufreq_policy *policy)
->  		ret = -EPROBE_DEFER;
->  		goto out_free_opp;
->  	}
-> +	nr_opp = ret;
+> Applied, thank you.
 
-Same comment here.
+Not so sure this should be applied.
 
--- 
-viresh
+> > diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
+[]
+> > @@ -46,7 +47,7 @@
+[]
+> >  /* bits for I2C_REG_IRQSRC */
+> > -#define IRQ_PENTOUCH_TOUCHCONVDONE	0x08
+> > -#define IRQ_PENRELEASE			0x04
+> > +#define IRQ_PENTOUCH_TOUCHCONVDONE	BIT(7)
+> > +#define IRQ_PENRELEASE			BIT(6)
+
+Shouldn't this be BIT(3) and BIT(2)
+or did you mean to change the values too?
+
+If so, this change should be noted in the commit message.
