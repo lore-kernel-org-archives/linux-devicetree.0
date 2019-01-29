@@ -1,95 +1,86 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 04/10] soc: mediatek: clear the event in cmdq initial
- flow
-Date: Tue, 29 Jan 2019 17:29:50 +0800
-Message-ID: <1548754190.11055.7.camel@mtksdaap41>
-References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1548747128-60136-5-git-send-email-bibby.hsieh@mediatek.com>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: Re: [PATCH 18/24] PCI: dwc: Fix dw_pcie_ep_find_capability to return
+ correct capability offset
+Date: Tue, 29 Jan 2019 09:25:09 +0000
+Message-ID: <13501c15-8f3d-604b-c4fc-bde3fb208745@synopsys.com>
+References: <20190114132424.6445-1-kishon@ti.com>
+ <20190114132424.6445-19-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548747128-60136-5-git-send-email-bibby.hsieh@mediatek.com>
+In-Reply-To: <20190114132424.6445-19-kishon@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
+To: Kishon Vijay Abraham I <kishon@ti.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Murali Karicheri <m-karicheri2@ti.com>, Jesper Nilsson <jesper.nilsson@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+Hi Kishon,
 
-On Tue, 2019-01-29 at 15:32 +0800, Bibby Hsieh wrote:
-> GCE hardware stored event information in own internal sysram,
-> if the initial value in those sysram is not zero value
-> it will cause a situation that gce can wait the event immediately
-> after client ask gce to wait event but not really trigger the
-> corresponding hardware.
+On 14/01/2019 13:24, Kishon Vijay Abraham I wrote:
+> commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
+> adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
+> __dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
 > 
-> In order to make sure that the wait event function is
-> exactly correct, we need to clear the sysram value in
-> cmdq initial flow.
-
-If MT8173 has the same problem, add a fix tag.
-
-Regards,
-CK
-
+> However if MSI or MSIX capability is the last capability (i.e there are
+> no additional items in the capabilities list and the Next Capability
+> Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
+> even though MSI or MSIX capability may be present. This is because of
+> incorrect ordering of "next_cap_ptr" check. Fix it here.
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
->  include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
->  include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
->  3 files changed, 7 insertions(+), 3 deletions(-)
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> index f6174ca..2b5febd 100644
-> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
-> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -33,6 +33,7 @@
->  #define CMDQ_THR_END_ADDR		0x24
->  #define CMDQ_THR_WAIT_TOKEN		0x30
->  #define CMDQ_THR_PRIORITY		0x40
-> +#define CMDQ_SYNC_TOKEN_UPDATE		0x68
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index d5144781005b..cd51b008858c 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+>  	u8 cap_id, next_cap_ptr;
+>  	u16 reg;
 >  
->  #define CMDQ_THR_ACTIVE_SLOT_CYCLES	0x3200
->  #define CMDQ_THR_ENABLED		0x1
-> @@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
->  
->  static void cmdq_init(struct cmdq *cmdq)
->  {
-> +	int i;
+> +	if (!cap_ptr)
+> +		return 0;
 > +
->  	WARN_ON(clk_enable(cmdq->clock) < 0);
->  	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-> +	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-> +		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
->  	clk_disable(cmdq->clock);
+
+Supposedly this was already verified by the function that calls this one.
+
+>  	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+> -	next_cap_ptr = (reg & 0xff00) >> 8;
+>  	cap_id = (reg & 0x00ff);
+>  
+> -	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
+> +	if (cap_id > PCI_CAP_ID_MAX)
+>  		return 0;
+>  
+>  	if (cap_id == cap)
+>  		return cap_ptr;
+>  
+> +	next_cap_ptr = (reg & 0xff00) >> 8;
+
+This fix seems to be a bit overdone, especially when you only need to swap the
+if blocks order to achieve the desired goal.
+
+>  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
 >  }
 >  
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index ccb7342..911475da 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -19,6 +19,8 @@
->  #define CMDQ_WFE_UPDATE			BIT(31)
->  #define CMDQ_WFE_WAIT			BIT(15)
->  #define CMDQ_WFE_WAIT_VALUE		0x1
-> +/** cmdq event maximum */
-> +#define CMDQ_MAX_EVENT			0x3ff
+> @@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+>  	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+>  	next_cap_ptr = (reg & 0x00ff);
 >  
->  /*
->   * CMDQ_CODE_MASK:
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index 54ade13..4e88999 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -13,9 +13,6 @@
->  
->  #define CMDQ_NO_TIMEOUT		0xffffffffu
->  
-> -/** cmdq event maximum */
-> -#define CMDQ_MAX_EVENT				0x3ff
+> -	if (!next_cap_ptr)
+> -		return 0;
 > -
->  struct cmdq_pkt;
+
+Why remove it?
+If pointer is null, why to jump to another function to check is the the same
+pointer is null?
+
+>  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+>  }
 >  
->  struct cmdq_client {
+> 
