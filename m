@@ -1,7 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 2/6] dt-bindings: phy: mvebu-utmi: add UTMI PHY bindings
-Date: Tue, 29 Jan 2019 10:36:31 +0100
-Message-ID: <20190129093635.4321-3-miquel.raynal@bootlin.com>
+Subject: [PATCH v5 4/6] ARM64: dts: marvell: armada-37xx: fix USB2 memory
+ region
+Date: Tue, 29 Jan 2019 10:36:33 +0100
+Message-ID: <20190129093635.4321-5-miquel.raynal@bootlin.com>
 References: <20190129093635.4321-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,58 +22,34 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Ma
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for Marvell Armada 3700 USB2 UTMI+ PHY.
+The specification splits the USB2 memory region into three sections:
+1/ 0xD005E000-0xD005EFFF: USB2 Host Controller Registers
+2/ 0xD005F000-0xD005F7FF: USB2 UTMI PHY Registers
+3/ 0xD005F800-0xD005FFFF: USB2 Host Miscellaneous Registers
+
+Section 1/ belongs to the USB2 node but section 2/ belongs to the UTMI
+PHY node. Section 3/ can be accessed by both the USB controller and
+the PHY because of the miscaellaneous nature of the registers inside
+so a specific node will be created to cover the area and a handle to
+it will be added in both the USB controller and the PHY node.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/phy/phy-mvebu-utmi.txt           | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
-new file mode 100644
-index 000000000000..aa99ceec73b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
-@@ -0,0 +1,38 @@
-+MVEBU A3700 UTMI PHY
-+--------------------
-+
-+USB2 UTMI+ PHY controllers can be found on the following Marvell MVEBU SoCs:
-+* Armada 3700
-+
-+On Armada 3700, there are two USB controllers, one is compatible with the USB2
-+and USB3 specifications and supports OTG. The other one is USB2 compliant and
-+only supports host mode. Both of these controllers come with a slightly
-+different UTMI PHY.
-+
-+Required Properties:
-+
-+- compatible: Should be one of:
-+	      * "marvell,a3700-utmi-host-phy" for the PHY connected to
-+	        the USB2 host-only controller.
-+	      * "marvell,a3700-utmi-otg-phy" for the PHY connected to
-+	        the USB3 and USB2 OTG capable controller.
-+- reg: PHY IP register range.
-+- marvell,usb-misc-reg: handle on the "USB miscellaneous registers" shared
-+			region covering registers related to both the host
-+			controller and the PHY.
-+- #phy-cells: Standard property (Documentation: phy-bindings.txt) Should be 0.
-+
-+
-+Example:
-+
-+	usb2_utmi_host_phy: phy@5f000 {
-+		compatible = "marvell,armada-3700-utmi-host-phy";
-+		reg = <0x5f000 0x800>;
-+		marvell,usb-misc-reg = <&usb2_syscon>;
-+		#phy-cells = <0>;
-+	};
-+
-+	usb2_syscon: system-controller@5f800 {
-+		compatible = "marvell,armada-3700-usb2-host-misc", "syscon";
-+		reg = <0x5f800 0x800>;
-+	};
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index d6e548618a95..5cfd1b920f31 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -351,7 +351,7 @@
+ 
+ 			usb2: usb@5e000 {
+ 				compatible = "marvell,armada-3700-ehci";
+-				reg = <0x5e000 0x2000>;
++				reg = <0x5e000 0x1000>;
+ 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
 -- 
 2.19.1
