@@ -1,59 +1,88 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH] input: goodix - support Goodix gt5688
-Date: Tue, 29 Jan 2019 10:16:51 +0100
-Message-ID: <20190129091651.GA8497@bogon.m.sigxcpu.org>
-References: <20190128170310.GA305@bogon.m.sigxcpu.org>
- <7e289e6b3410a3fdea99d7d6becfe5180a69f0c5.camel@hadess.net>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 03/10] soc: mediatek: move the CMDQ_IRQ_MASK into cmdq
+ driver data
+Date: Tue, 29 Jan 2019 17:22:56 +0800
+Message-ID: <1548753776.11055.4.camel@mtksdaap41>
+References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
+         <1548747128-60136-4-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <7e289e6b3410a3fdea99d7d6becfe5180a69f0c5.camel@hadess.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bastien Nocera <hadess@hadess.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-input@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1548747128-60136-4-git-send-email-bibby.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Mon, Jan 28, 2019 at 07:24:33PM +0100, Bastien Nocera wrote:
-> On Mon, 2019-01-28 at 18:03 +0100, Guido G=FCnther wrote:
-> > From what I've seen in vendor trees it's fine to treat this as gt1x=B9.
-> > =
+Hi, Bibby:
 
-> > [1]: https://github.com/TadiT7/android_kernel_mtk-4.4/tree/master/drive=
-rs/input/touchscreen/mediatek/GT5688
-> =
+On Tue, 2019-01-29 at 15:32 +0800, Bibby Hsieh wrote:
+> The interrupt mask and thread number has positive correlation,
+> so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
+> it by thread number.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/mailbox/mtk-cmdq-mailbox.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> index 909eb23..f6174ca 100644
+> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
+> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/of_device.h>
+>  
+>  #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
+> -#define CMDQ_IRQ_MASK			0xffff
+>  #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+>  
+>  #define CMDQ_CURR_IRQ_STATUS		0x10
+> @@ -71,6 +70,7 @@ struct cmdq {
+>  	void __iomem		*base;
+>  	u32			irq;
+>  	u32			thread_nr;
+> +	u32			irq_mask;
+>  	struct cmdq_thread	*thread;
+>  	struct clk		*clock;
+>  	bool			suspended;
+> @@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
+>  	unsigned long irq_status, flags = 0L;
+>  	int bit;
+>  
+> -	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
+> -	if (!(irq_status ^ CMDQ_IRQ_MASK))
+> +	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
+> +	if (!(irq_status ^ cmdq->irq_mask))
+>  		return IRQ_NONE;
+>  
+> -	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
+> +	for_each_clear_bit(bit, &irq_status, fls(cmdq->irq_mask)) {
 
-> Can you please point to the exact line of code that makes you say that?
-> I'm not saying it's not compatible, but it's not the same driver that
-> the current goodix.c was based on, or even goodix.c.
->
-> Can you please elaborate?
+for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
 
-I basically looked at the registers uses for the config update:
+Regards,
+CK
 
-https://github.com/TadiT7/android_kernel_mtk-4.4/blob/master/drivers/input/=
-touchscreen/mediatek/GT5688/include/gt1x_tpd_common.h#L152
-https://github.com/TadiT7/android_kernel_mtk-4.4/blob/master/drivers/input/=
-touchscreen/mediatek/GT5688/gt1x_generic.c#L430
-
-That and the fact that the driver is doing it's job well made me believe
-that's good for base support. Things like hotknot, gesture wakeup and
-proximity sensor will need additional work.
-
-> Finding that data in the specs would also be fine:
-> https://github.com/hadess/gt9xx/tree/master/specifications
-
-https://github.com/hadess/gt9xx/pull/3
-
-Cheers,
- -- Guido
+>  		struct cmdq_thread *thread = &cmdq->thread[bit];
+>  
+>  		spin_lock_irqsave(&thread->chan->lock, flags);
+> @@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
+>  		dev_err(dev, "failed to get irq\n");
+>  		return -EINVAL;
+>  	}
+> +
+> +	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+>  	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
+>  			       "mtk_cmdq", cmdq);
+>  	if (err < 0) {
+> @@ -489,6 +492,7 @@ static int cmdq_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+>  	cmdq->mbox.dev = dev;
+>  	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
+>  					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
