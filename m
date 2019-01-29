@@ -1,11 +1,14 @@
 From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 00/13] ARM: lpc32xx: various minor fixes and clean-ups
-Date: Tue, 29 Jan 2019 21:20:36 +0200
-Message-ID: <20190129192049.11223-1-vz@mleia.com>
+Subject: [PATCH 04/13] ARM: dts: lpc32xx: fix ARM PrimeCell LCD controller
+ clocks property
+Date: Tue, 29 Jan 2019 21:20:40 +0200
+Message-ID: <20190129192049.11223-5-vz@mleia.com>
+References: <20190129192049.11223-1-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190129192049.11223-1-vz@mleia.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,40 +22,30 @@ To: Sylvain Lemieux <slemieux.tyco@gmail.com>, Russell King <linux@armlinux.org.
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The changeset consists of a number of minor clean-ups and fixes for
-NXP LPC32xx SoC support, likely the most noticeable change is stripping
-of platform data for PL180 SD/MMC controller and PL111 LCD controller,
-originally both given configurations are Phytec phyCORE-LPC3250 board
-specific, and now the right description is added to the correspondent
-board dts file. The LCD controller is proven to work with PL111 DRM
-driver, this justifies the correctness of switching the platform from
-a legacy fbdev to the new DRM driver.
+The originally added ARM PrimeCell PL111 clocks property misses
+the required "clcdclk" clock, which is the same as a clock to enable
+the LCD controller on NXP LPC3230 and NXP LPC3250 SoCs.
 
-Fixed voltage regulator and DRM simple panel driver should be enabled
-by default in NXP LPC32xx defconfig file to get better support of
-Phytec phyCORE-LPC3250 board.
+Fixes: 93898eb775e5 ("arm: dts: lpc32xx: add clock properties to device nodes")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+---
+ arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Vladimir Zapolskiy (13):
-  ARM: defconfig: lpc32xx: enable fixed voltage regulator support
-  ARM: defconfig: lpc32xx: enable DRM simple panel driver
-  ARM: dts: lpc32xx: fix ARM PrimeCell LCD controller variant
-  ARM: dts: lpc32xx: fix ARM PrimeCell LCD controller clocks property
-  ARM: dts: lpc32xx: phy3250: fix SD card regulator voltage
-  ARM: dts: lpc32xx: remove inclusion of deprecated skeleton.dtsi
-  ARM: dts: lpc32xx: phy3250: remove regulators umbrella device node
-  ARM: dts: lpc32xx: phy3250: setup LCD controller to panel interface
-  ARM: dts: lpc32xx: phy3250: add unit address to memory device node
-  ARM: dts: lpc32xx: ea3250: add unit address to memory device node
-  ARM: dts: lpc32xx: ea3250: beautify gpio keys children nodes
-  ARM: lpc32xx: remove platform data of ARM PL180 SD/MMC controller
-  ARM: lpc32xx: remove platform data of ARM PL111 LCD controller
-
- arch/arm/boot/dts/lpc3250-ea3250.dts  | 20 +++---
- arch/arm/boot/dts/lpc3250-phy3250.dts | 87 ++++++++++++++++-----------
- arch/arm/boot/dts/lpc32xx.dtsi        | 12 ++--
- arch/arm/configs/lpc32xx_defconfig    |  3 +
- arch/arm/mach-lpc32xx/phy3250.c       | 84 --------------------------
- 5 files changed, 75 insertions(+), 131 deletions(-)
-
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index cfd422e7f774..9ad3df11db0d 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -142,8 +142,8 @@
+ 			compatible = "arm,pl111", "arm,primecell";
+ 			reg = <0x31040000 0x1000>;
+ 			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk LPC32XX_CLK_LCD>;
+-			clock-names = "apb_pclk";
++			clocks = <&clk LPC32XX_CLK_LCD>, <&clk LPC32XX_CLK_LCD>;
++			clock-names = "clcdclk", "apb_pclk";
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.20.1
