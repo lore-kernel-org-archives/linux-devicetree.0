@@ -1,7 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 11/27] PCI: mobiveil: only fix up the Class Code field
-Date: Tue, 29 Jan 2019 08:09:38 +0000
-Message-ID: <20190129080926.36773-12-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 13/27] PCI: mobiveil: move irq chained handler setup out of
+ DT parse
+Date: Tue, 29 Jan 2019 08:09:51 +0000
+Message-ID: <20190129080926.36773-14-Zhiqiang.Hou@nxp.com>
 References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,49 +17,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Fix up the Class Code to PCI bridge, do not change the Revision ID.
-And move the fixup to mobiveil_host_init function.
+Move irq_set_chained_handler_and_data() out of DT parse function.
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge
-IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 ---
 V3:
  - No change
 
- drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index 78e575e71f4d..8eee1ab7ee24 100644
+index c2848c22b466..db7ecb021c63 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -653,6 +653,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pc=
-ie)
- 				   type, resource_size(win->res));
+@@ -460,8 +460,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie =
+*pcie)
+ 		return -ENODEV;
  	}
 =20
-+	/* fixup for PCIe class register */
-+	value =3D csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
-+	value &=3D 0xff;
-+	value |=3D (PCI_CLASS_BRIDGE_PCI << 16);
-+	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
-+
- 	/* setup MSI hardware registers */
- 	mobiveil_pcie_enable_msi(pcie);
+-	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
+-
+ 	return 0;
+ }
 =20
-@@ -896,9 +902,6 @@ static int mobiveil_pcie_probe(struct platform_device *=
+@@ -902,6 +900,8 @@ static int mobiveil_pcie_probe(struct platform_device *=
 pdev)
  		goto error;
  	}
 =20
--	/* fixup for PCIe class register */
--	csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
--
- 	/* initialize the IRQ domains */
- 	ret =3D mobiveil_pcie_init_irq_domain(pcie);
- 	if (ret) {
++	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
++
+ 	ret =3D devm_request_pci_bus_resources(dev, &pcie->resources);
+ 	if (ret)
+ 		goto error;
 --=20
 2.17.1
