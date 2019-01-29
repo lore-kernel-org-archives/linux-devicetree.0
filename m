@@ -1,102 +1,72 @@
-Return-Path: <SRS0=/X/n=QG=mellanox.com=kblaiech@kernel.org>
-From: Khalil Blaiech <kblaiech@mellanox.com>
-Subject: [PATCH v3 2/2] dt-bindings: i2c: I2C binding for Mellanox BlueField SoC
-Date: Wed, 30 Jan 2019 13:01:32 -0500
-Message-Id: <cf04b305725aacf0a52b3529131e510b1fd6565a.1548866223.git.kblaiech@mellanox.com>
-In-Reply-To: <cover.1548866223.git.kblaiech@mellanox.com>
-References: <cover.1548866223.git.kblaiech@mellanox.com>
-In-Reply-To: <cover.1548866223.git.kblaiech@mellanox.com>
-References: <cover.1548866223.git.kblaiech@mellanox.com>
-To: Rob Herring <robh@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, David Woods <dwoods@mellanox.com>
-Cc: Khalil Blaiech <kblaiech@mellanox.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, arm-soc <arm@kernel.org>
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v9 14/27] pwm: jz4740: Improve algorithm of clock calculation
+References: <20181227181319.31095-1-paul@crapouillou.net> <20181227181319.31095-15-paul@crapouillou.net> <20190105195725.cuxfge6zkpbt3cyk@pengutronix.de> <1546722339.30174.0@crapouillou.net> <20190105212711.s765knwwerceytvk@pengutronix.de> <1547129096.16183.0@crapouillou.net>
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <1547129096.16183.0@crapouillou.net>
+Message-ID: <154879972841.136743.8067109506420222877@swboyd.mtv.corp.google.com>
+Date: Tue, 29 Jan 2019 14:08:48 -0800
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Russell King <linux@armlinux.org.uk>
 List-ID: <devicetree@vger.kernel.org>
 
-Added device tree bindings documentation for Mellanox BlueField
-I2C SMBus controller.
+Quoting Paul Cercueil (2019-01-10 06:04:56)
+> Adding Stephen to the discussion.
+> Adding Stephen to the discussion.
+>=20
+> On Sat, Jan 5, 2019 at 6:27 PM, Uwe Kleine-K=C3=B6nig=20
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > Hello Paul,
+> >=20
+> > On Sat, Jan 05, 2019 at 06:05:38PM -0300, Paul Cercueil wrote:
+> >>  On Sat, Jan 5, 2019 at 4:57 PM, Uwe Kleine-K=C3=B6nig
+> >>  <u.kleine-koenig@pengutronix.de> wrote:
+> >>  > You are assuming stuff here about the parent clk which isn't=20
+> >> guaranteed
+> >>  > (AFAICT) by the clk framework: If you call clk_round_rate(clk,=20
+> >> rate - 1)
+> >>  > this might well return rate even if the clock could run slower=20
+> >> than
+> >>  > rate.
+> >>=20
+> >>  It may not be guaranteed by the clock framework itself, but it is=20
+> >> guaranteed
+> >>  to behave like that on this family of SoCs.
+> >=20
+> > You shouldn't rely on that. Experience shows that people will start
+> > copying code to machines where this is not guaranteed. Even if they
+> > don't copy and only learn from reading this is bad. Also how do you
+> > guarantee that this won't change in the future making the pwm code=20
+> > break
+> > without noticing?
+> >=20
+> > If you use an API better don't assume more things given than are
+> > guaranteed by the API.
+> >=20
+> > Having said that I would consider it sensible to introduce something
+> > like clk_roundup_rate() and clk_rounddown_rate() which would allow
+> > calculations like that.
+>=20
+> @Stephen:
+> Some context: my algorithm makes use of clk_round_rate(clk, rate - 1)=20
+> to get the
+> next (smaller) clock rate that a clock support.
+>=20
+> Is it something safe to assume? If not is there a better way?
 
-Reviewed-by: David Woods <dwoods@mellanox.com>
-Signed-off-by: Khalil Blaiech <kblaiech@mellanox.com>
----
- .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
+It isn't super efficient but it should work if you keep subtracting from
+rate until it reaches 0. The rounding of clk_round_rate() is
+implementation defined. All the API does is tell you what clk_set_rate()
+will set the rate to if you call it with the same arguments passed to
+clk_round_rate(). Having something like clk_roundup_rate() or
+clk_rounddown_rate() could be implemented with a wrapper around
+clk_round_rate(), and I believe Uwe has proposed such an API before, but
+I'm not sure we want to encourage that sort of API or behavior in
+general. The mailing list archives probably have discussions around this
+proposed API, I can't remember the whole discussion.
 
-diff --git a/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-new file mode 100644
-index 0000000..db20b23
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-@@ -0,0 +1,71 @@
-+Device tree configuration for the Mellanox I2C SMBus on BlueField SoCs
-+
-+Required Properties:
-+- reg :		address offset and length of the device registers. The
-+		registers consists of a set of dedicated and shared
-+		resources:
-+
-+			1: Smbus block registers.
-+			2: Cause master registers.
-+			3: Cause slave registers.
-+
-+		The BlueField SoCs includes three I2C bus controllers;
-+		the set of resources <address length> must be defined
-+		as follow:
-+
-+		BlueField 1:
-+
-+			* i2c bus 0:
-+		    	<0x02804000 0x800>	/* Smbus[0]        */
-+		    	<0x02801200 0x020>	/* Cause Master[0] */
-+		    	<0x02801260 0x020>	/* Cause Slave[0]  */
-+
-+			* i2c bus 1:
-+		    	<0x02804800 0x800>	/* Smbus[1]        */
-+		    	<0x02801220 0x020>	/* Cause Master[1] */
-+		    	<0x02801280 0x020>	/* Cause Slave[1]  */
-+
-+			* i2c bus 2:
-+		    	<0x02805000 0x800>	/* Smbus[2]        */
-+		    	<0x02801240 0x020>	/* Cause Master[2] */
-+		    	<0x028012a0 0x020>	/* Cause Slave[2]  */
-+
-+		BlueField 2:
-+
-+			* i2c bus 0:
-+		    	<0x02804000 0x800>	/* Smbus[0]        */
-+		    	<0x02801400 0x020>	/* Cause Master[0] */
-+		    	<0x02801540 0x020>	/* Cause Slave[0]  */
-+
-+			* i2c bus 1:
-+		    	<0x02804800 0x800>	/* Smbus[1]        */
-+		    	<0x02801420 0x020>	/* Cause Master[1] */
-+		    	<0x02801560 0x020>	/* Cause Slave[1]  */
-+
-+			* i2c bus 2:
-+		    	<0x02805000 0x800>	/* Smbus[2]        */
-+		    	<0x02801440 0x020>	/* Cause Master[2] */
-+		    	<0x02801580 0x020>	/* Cause Slave[2]  */
-+
-+- compatible : 	should be "mellanox,i2c-mlxbf1" or "mellanox,i2c-mlxbf2".
-+- interrupts : 	interrupt number.
-+
-+Optional Properties:
-+- clock-frequency :	bus frequency used to configure timing registers;
-+			allowed values are 100000, 400000 and 1000000;
-+			those are expressed in Hz.
-+
-+Example:
-+
-+aliases {
-+	i2c0 = &i2c_0
-+};
-+
-+i2c_0: i2c {
-+	compatible = "mellanox,i2c-mlxbf1";
-+	reg = <0x02804000 0x800>,
-+	      <0x02801200 0x020>,
-+	      <0x02801260 0x020>;
-+	interrupts = <57>;
-+	clock-frequency = <100000>;
-+};
--- 
-2.1.2
+Why do you need to find the "next" supported frequency anyway? It may be
+a sign that something is sort of off with the approach if you need to do
+this.
