@@ -1,65 +1,216 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH] dt-bindings: pinctrl: Document the i.MX50 IOMUXC binding
-Date: Tue, 29 Jan 2019 17:55:28 +0100
-Message-ID: <20190129165530.7606-1-j.neuschaefer@gmx.net>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 6/8] DT: arm: exynos: add DMC device for exynos5422
+Date: Tue, 29 Jan 2019 18:06:51 +0100
+Message-ID: <0daee320-1494-172a-9500-8b60dbdda3b7@partner.samsung.com>
+References: <CGME20190128192154eucas1p2e696de47c5aab0cdb80cff32254daaf9@eucas1p2.samsung.com>
+        <1548703299-15806-1-git-send-email-l.luba@partner.samsung.com>
+        <1548703299-15806-7-git-send-email-l.luba@partner.samsung.com>
+        <CAJKOXPfHzspKWxHcf=DGf73v0sdnG=oDAa-9QLv2eRCHoC9RwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPfHzspKWxHcf=DGf73v0sdnG=oDAa-9QLv2eRCHoC9RwQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Dong Aisheng <dong.aisheng@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, myungjoo.ham@samsung.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-AFAICS from the i.MX50 Reference Manual, the i.MX50 IOMUXC works the
-same as the one in i.MX51, so I copied fsl,imx51-pinctrl.txt and changed
-the text to imx50.
+Hi Krzysztof,
 
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Cc: Dong Aisheng <dong.aisheng@linaro.org>
-Cc: Shawn Guo <shawn.guo@linaro.org>
----
- .../bindings/pinctrl/fsl,imx50-pinctrl.txt    | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx50-pinctrl.txt
+On 1/29/19 4:13 PM, Krzysztof Kozlowski wrote:
+> On Mon, 28 Jan 2019 at 20:21, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Add description of Dynamic Memory Controller and PPMU counters.
+>> They are used by exynos5-dmc driver.
+>>
+>> CC: Rob Herring <robh+dt@kernel.org>
+>> CC: Mark Rutland <mark.rutland@arm.com>
+>> CC: Kukjin Kim <kgene@kernel.org>
+>> CC: Krzysztof Kozlowski <krzk@kernel.org>
+>> CC: devicetree@vger.kernel.org
+>> CC: linux-arm-kernel@lists.infradead.org
+>> CC: linux-samsung-soc@vger.kernel.org
+>> CC: linux-kernel@vger.kernel.org
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5420.dtsi             | 81 +++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 22 ++++++++
+>>   2 files changed, 103 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index aaff158..6880d13 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -1337,6 +1337,87 @@
+>>                                  opp-hz = /bits/ 64 <400000000>;
+>>                          };
+>>                  };
+>> +
+>> +               ppmu_dmc0_0: ppmu_dmc0_0@10d00000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d00000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+>> +                                       event-name = "ppmu-event3-dmc0_0";
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +
+> 
+> No need for double line.
+Agree
+> 
+>> +               ppmu_dmc0_1: ppmu_dmc0_1@10d10000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d10000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX0_1>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event_dmc0_1: ppmu-event3-dmc0_1 {
+>> +                                       event-name = "ppmu-event3-dmc0_1";
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +               ppmu_dmc1_0: ppmu_dmc1_0@10d10000 {
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d60000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX1_0>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event_dmc1_0: ppmu-event3-dmc1_0 {
+>> +                                       event-name = "ppmu-event3-dmc1_0";
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +               ppmu_dmc1_1: ppmu_dmc1_1@10d70000 {
+> 
+> 1. Generic node name, e.g. "ppmu".
+> 2. Please put all ppmu nodes after nocp nodes to group everything logically.
+OK
+> 
+>> +                       compatible = "samsung,exynos-ppmu";
+>> +                       reg = <0x10d70000 0x2000>;
+>> +                       clocks = <&clock CLK_PCLK_PPMU_DREX1_1>;
+>> +                       clock-names = "ppmu";
+>> +                       events {
+>> +                               ppmu_event_dmc1_1: ppmu-event3-dmc1_1 {
+>> +                                       event-name = "ppmu-event3-dmc1_1";
+>> +                               };
+>> +                       };
+>> +               };
+>> +
+>> +               dmc: dmc@10c20000 {
+> 
+> 1. Node name: memory-controller.
+> 2. Put it before nocp nodes.
+OK
+> 
+>> +                       compatible = "samsung,exynos5422-dmc";
+>> +                       reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
+>> +                               <0x10030000 0x1000>, <0x10000000 0x1000>;
+>> +                       clocks =        <&clock CLK_FOUT_SPLL>,
+> 
+> Weird indentation.
+> 
+>> +                                       <&clock CLK_MOUT_SCLK_SPLL>,
+>> +                                       <&clock CLK_FF_DOUT_SPLL2>,
+> 
+> Indent all continued lines with first entry (like in other places in this file)
+> 
+>> +                                       <&clock CLK_FOUT_BPLL>,
+>> +                                       <&clock CLK_MOUT_BPLL>,
+>> +                                       <&clock CLK_SCLK_BPLL>,
+>> +                                       <&clock CLK_MOUT_MX_MSPLL_CCORE>,
+>> +                                       <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+>> +                                       <&clock CLK_MOUT_MCLK_CDREX>,
+>> +                                       <&clock CLK_DOUT_CLK2X_PHY0>,
+>> +                                       <&clock CLK_CLKM_PHY0>,
+>> +                                       <&clock CLK_CLKM_PHY1>
+>> +                                       ;
+> 
+> Join the trailing semicolon with previous lines.
+OK
+> 
+>> +                       clock-names =   "fout_spll",
+>> +                                       "mout_sclk_spll",
+> 
+> Indent all continued lines with first entry (like in other places in this file).
+OK and all the entries will be compacted where possible for 80lines.
+> 
+>> +                                       "ff_dout_spll2",
+>> +                                       "fout_bpll",
+>> +                                       "mout_bpll",
+>> +                                       "sclk_bpll",
+>> +                                       "mout_mx_mspll_ccore",
+>> +                                       "mout_mx_mspll_ccore_phy",
+>> +                                       "mout_mclk_cdrex",
+>> +                                       "dout_clk2x_phy0",
+>> +                                       "clkm_phy0",
+>> +                                       "clkm_phy1"
+>> +                                       ;
+> 
+> Join the trailing semicolon with previous lines.
+>> +               };
+>>          };
+>>
+>>          thermal-zones {
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> index bf09eab..54ee8b2 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> @@ -119,6 +119,28 @@
+>>          status = "okay";
+>>   };
+>>
+>> +&ppmu_dmc0_0 {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&ppmu_dmc0_1 {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&ppmu_dmc1_0 {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&ppmu_dmc1_1 {
+>> +       status = "okay";
+>> +};
+> 
+> Put the new entries respecting alphabetical order (order of label name).
+OK
+> 
+>> +
+>> +&dmc {
+> 
+> The same.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx50-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx50-pinctrl.txt
-new file mode 100644
-index 000000000000..6da01d619d33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx50-pinctrl.txt
-@@ -0,0 +1,32 @@
-+* Freescale IMX50 IOMUX Controller
-+
-+Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
-+and usage.
-+
-+Required properties:
-+- compatible: "fsl,imx50-iomuxc"
-+- fsl,pins: two integers array, represents a group of pins mux and config
-+  setting. The format is fsl,pins = <PIN_FUNC_ID CONFIG>, PIN_FUNC_ID is a
-+  pin working on a specific function, CONFIG is the pad setting value like
-+  pull-up for this pin. Please refer to imx50 datasheet for the valid pad
-+  config settings.
-+
-+CONFIG bits definition:
-+PAD_CTL_HVE			(1 << 13)
-+PAD_CTL_HYS			(1 << 8)
-+PAD_CTL_PKE			(1 << 7)
-+PAD_CTL_PUE			(1 << 6)
-+PAD_CTL_PUS_100K_DOWN		(0 << 4)
-+PAD_CTL_PUS_47K_UP		(1 << 4)
-+PAD_CTL_PUS_100K_UP		(2 << 4)
-+PAD_CTL_PUS_22K_UP		(3 << 4)
-+PAD_CTL_ODE			(1 << 3)
-+PAD_CTL_DSE_LOW			(0 << 1)
-+PAD_CTL_DSE_MED			(1 << 1)
-+PAD_CTL_DSE_HIGH		(2 << 1)
-+PAD_CTL_DSE_MAX			(3 << 1)
-+PAD_CTL_SRE_FAST		(1 << 0)
-+PAD_CTL_SRE_SLOW		(0 << 0)
-+
-+Refer to imx50-pinfunc.h in device tree source folder for all available
-+imx50 PIN_FUNC_ID.
--- 
-2.20.1
+Thank you for review, in v2 it will be fixed.
+
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
+>> +       devfreq-events = <&ppmu_dmc0_0>, <&ppmu_dmc0_1>,
+>> +                       <&ppmu_dmc1_0>, <&ppmu_dmc1_1>;
+>> +       status = "okay";
+>> +};
+>> +
+>>   &cpu0 {
+>>          cpu-supply = <&buck6_reg>;
+>>   };
+>> --
+>> 2.7.4
+>>
+> 
+> 
