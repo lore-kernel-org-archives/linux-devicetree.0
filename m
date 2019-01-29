@@ -1,7 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 17/27] PCI: mobiveil: fix the checking of valid device
-Date: Tue, 29 Jan 2019 08:10:17 +0000
-Message-ID: <20190129080926.36773-18-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 18/27] PCI: mobiveil: continue to initialize the host upon
+ no PCIe link
+Date: Tue, 29 Jan 2019 08:10:23 +0000
+Message-ID: <20190129080926.36773-19-Zhiqiang.Hou@nxp.com>
 References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,47 +17,47 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Avoid to issue CFG transactions to link partner when the PCIe
-link is not up. And allow CFG transactions to all functions of
-Endpoint implemented multiple functions.
+Sometimes there is not a PCIe Endpoint in the PCIe slot, so do
+not exit when the PCIe link is not up. And degrade the print
+level of link up info.
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host
-Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 ---
 V3:
  - No change
 
- drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 1 -
+ drivers/pci/controller/mobiveil/pcie-mobiveil.c      | 2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers=
 /pci/controller/mobiveil/pcie-mobiveil-host.c
-index dc5324d94466..1ae82e790562 100644
+index 1ae82e790562..d1765d572f44 100644
 --- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
 +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-@@ -29,6 +29,10 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *b=
-us, unsigned int devfn)
- {
- 	struct mobiveil_pcie *pcie =3D bus->sysdata;
+@@ -596,7 +596,6 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie=
+)
+ 	ret =3D mobiveil_bringup_link(pcie);
+ 	if (ret) {
+ 		dev_info(dev, "link bring-up failed\n");
+-		goto error;
+ 	}
 =20
-+	/* If there is no link, then there is no device */
-+	if (bus->number > pcie->rp.root_bus_nr && !mobiveil_pcie_link_up(pcie))
-+		return false;
-+
- 	/* Only one device down on each root port */
- 	if ((bus->number =3D=3D pcie->rp.root_bus_nr) && (devfn > 0))
- 		return false;
-@@ -37,7 +41,7 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bu=
-s, unsigned int devfn)
- 	 * Do not read more than one device on the bus directly
- 	 * attached to RC
- 	 */
--	if ((bus->primary =3D=3D pcie->rp.root_bus_nr) && (devfn > 0))
-+	if ((bus->primary =3D=3D pcie->rp.root_bus_nr) && (PCI_SLOT(devfn) > 0))
- 		return false;
+ 	/* setup the kernel resources for the newly added PCIe root bus */
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.c b/drivers/pci/=
+controller/mobiveil/pcie-mobiveil.c
+index ee678a60825d..370658d6546d 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil.c
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.c
+@@ -222,7 +222,7 @@ int mobiveil_bringup_link(struct mobiveil_pcie *pcie)
+ 		usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
+ 	}
 =20
- 	return true;
+-	dev_err(&pcie->pdev->dev, "link never came up\n");
++	dev_info(&pcie->pdev->dev, "link never came up\n");
+=20
+ 	return -ETIMEDOUT;
+ }
 --=20
 2.17.1
