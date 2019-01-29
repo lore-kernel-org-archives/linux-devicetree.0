@@ -1,129 +1,56 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 09/10] soc: mediatek: change the argument of write and
- write_mask API
-Date: Tue, 29 Jan 2019 19:13:21 +0800
-Message-ID: <1548760401.11055.14.camel@mtksdaap41>
-References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1548747128-60136-10-git-send-email-bibby.hsieh@mediatek.com>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [RESEND PATCH v2 8/8] Input: sx8654 - convert #defined flags to
+ BIT(x)
+Date: Tue, 29 Jan 2019 12:23:01 +0100
+Message-ID: <50c0a3a5-7039-abc0-9b9e-4314504bcb6f@skidata.com>
+References: <20181218083606.25795-1-richard.leitner@skidata.com>
+ <20181218084002.19454-1-richard.leitner@skidata.com>
+ <20190129002518.GH34692@dtor-ws>
+ <533e48bd35d360cec8d749f3b70425c1eb5e6e9d.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548747128-60136-10-git-send-email-bibby.hsieh@mediatek.com>
+In-Reply-To: <533e48bd35d360cec8d749f3b70425c1eb5e6e9d.camel@perches.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com
+To: Joe Perches <joe@perches.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+Hi Joe,
 
-On Tue, 2019-01-29 at 15:32 +0800, Bibby Hsieh wrote:
-> In order to enhance the convienience of client usage,
-> we change the input argument from subsys and offset to
-> struct cmdq_base and dma_addr_t.
+On 29/01/2019 06:40, Joe Perches wrote:
+> On Mon, 2019-01-28 at 16:25 -0800, Dmitry Torokhov wrote:
+>> On Tue, Dec 18, 2018 at 09:40:02AM +0100, Richard Leitner wrote:
+>>> Some of the #defined register values are one-bit flags. Convert them to
+>>> use the BIT(x) macro instead of 1 byte hexadecimal values. This improves
+>>> readability and clarifies the intent.
+>>>
+>>> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+>>
+>> Applied, thank you.
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 24 +++++++++++++++++-------
->  include/linux/soc/mediatek/mtk-cmdq.h  | 16 ++++++++--------
->  2 files changed, 25 insertions(+), 15 deletions(-)
+> Not so sure this should be applied.
 > 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 923a815..34ae712 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -238,8 +238,13 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, s16 arg_c, s16 arg_b,
->  	return 0;
->  }
->  
-> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
-> +int cmdq_pkt_write(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-> +		   dma_addr_t addr, u32 value)
->  {
-> +	const u32 base = (addr >> 32) ? 0 : addr & 0xFFFF0000;
-> +	u8 subsys = cmdq_subsys_base_to_id(clt_base, base);
+>>> diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
+> []
+>>> @@ -46,7 +47,7 @@
+> []
+>>>   /* bits for I2C_REG_IRQSRC */
+>>> -#define IRQ_PENTOUCH_TOUCHCONVDONE	0x08
+>>> -#define IRQ_PENRELEASE			0x04
+>>> +#define IRQ_PENTOUCH_TOUCHCONVDONE	BIT(7)
+>>> +#define IRQ_PENRELEASE			BIT(6)
+> 
+> Shouldn't this be BIT(3) and BIT(2)
+> or did you mean to change the values too?
+> 
+> If so, this change should be noted in the commit message.
+> 
 
-I don't understand why this would let client more convenient?  Every
-time client call cmdq_pkt_write(), cmdq_subsys_base_to_id() would search
-again. Why do we need such frequently search?
+That's true, those values should stay the same. Thanks for the catch!
 
-Regards,
-CK
+@Dimitry: Should I send an updated version or do you fix it yourself?
 
-> +	s16 offset = addr & 0x0000FFFF;
-> +
->  	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
->  				       CMDQ_GET_ARG_B(value), offset, subsys,
->  				       CMDQ_IMMEDIATE_VALUE,
-> @@ -248,21 +253,26 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write);
->  
-> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
-> -			u32 value, u32 mask)
-> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-> +			dma_addr_t addr, u32 value, u32 mask)
->  {
-> -	u32 offset_mask = offset;
-> +	const u32 base = (addr >> 32) ? 0 : addr & 0xFFFF0000;
-> +	u8 subsys = cmdq_subsys_base_to_id(clt_base, base);
-> +	s16 offset = addr & 0x0000FFFF;
->  	int err = 0;
->  
->  	if (mask != 0xffffffff) {
->  		err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
->  					      CMDQ_GET_ARG_B(~mask), 0, 0, 0, 0,
->  					      0, CMDQ_CODE_MASK);
-> -		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
-> +		offset |= CMDQ_WRITE_ENABLE_MASK;
->  	}
-> -	err |= cmdq_pkt_write(pkt, subsys, offset_mask, value);
->  
-> -	return err;
-> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
-> +				       CMDQ_GET_ARG_B(value), offset, subsys,
-> +				       CMDQ_IMMEDIATE_VALUE,
-> +				       CMDQ_IMMEDIATE_VALUE,
-> +				       CMDQ_IMMEDIATE_VALUE, CMDQ_CODE_WRITE);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write_mask);
->  
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index e4d1876..230bc2b 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -70,26 +70,26 @@ struct cmdq_client *cmdq_mbox_create(struct device *dev, int index,
->  /**
->   * cmdq_pkt_write() - append write command to the CMDQ packet
->   * @pkt:	the CMDQ packet
-> - * @subsys:	the CMDQ sub system code
-> - * @offset:	register offset from CMDQ sub system
-> + * @cmdq_base:	the CMDQ sub system code and base address
-> + * @addr:	register address
->   * @value:	the specified target register value
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
-> -
-> +int cmdq_pkt_write(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-> +		   dma_addr_t addr, u32 value);
->  /**
->   * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
->   * @pkt:	the CMDQ packet
-> - * @subsys:	the CMDQ sub system code
-> - * @offset:	register offset from CMDQ sub system
-> + * @cmdq_base:	the CMDQ sub system code and base address
-> + * @addr:	register address
->   * @value:	the specified target register value
->   * @mask:	the specified target register mask
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
-> -			u32 value, u32 mask);
-> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-> +			dma_addr_t addr, u32 value, u32 mask);
->  
->  /**
->   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+regards;Richard.L
