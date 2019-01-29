@@ -1,8 +1,8 @@
 From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 11/13] ARM: dts: lpc32xx: ea3250: beautify gpio keys children
- nodes
-Date: Tue, 29 Jan 2019 21:20:47 +0200
-Message-ID: <20190129192049.11223-12-vz@mleia.com>
+Subject: [PATCH 03/13] ARM: dts: lpc32xx: fix ARM PrimeCell LCD controller
+ variant
+Date: Tue, 29 Jan 2019 21:20:39 +0200
+Message-ID: <20190129192049.11223-4-vz@mleia.com>
 References: <20190129192049.11223-1-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,97 +22,28 @@ To: Sylvain Lemieux <slemieux.tyco@gmail.com>, Russell King <linux@armlinux.org.
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Regarding the 'gpio_keys' device node a dtc reports a couple of
-warnings:
+ARM PrimeCell PL111 LCD controller is found on On NXP LPC3230
+and LPC3250 SoCs variants, the original reference in compatible
+property to an older one ARM PrimeCell PL110 is invalid.
 
-  Warning (avoid_unnecessary_addr_size): /gpio_keys: unnecessary
-  #address-cells/#size-cells without "ranges" or child "reg" property
-
-  Warning (unit_address_vs_reg): /gpio_keys/button@21: node has
-  a unit name, but no reg property
-
-The change fixes these issues and adds empty lines between adjacent
-children device nodes. The device node itself is renamed by substituting
-an underscore by hyphen to follow the standard naming convention
-of device tree nodes.
-
+Fixes: e04920d9efcb3 ("ARM: LPC32xx: DTS files for device tree conversion")
 Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 ---
- arch/arm/boot/dts/lpc3250-ea3250.dts | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/lpc3250-ea3250.dts b/arch/arm/boot/dts/lpc3250-ea3250.dts
-index ef6b3e74cd9f..f46a11827ef6 100644
---- a/arch/arm/boot/dts/lpc3250-ea3250.dts
-+++ b/arch/arm/boot/dts/lpc3250-ea3250.dts
-@@ -23,56 +23,64 @@
- 		reg = <0x80000000 0x4000000>;
- 	};
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index 4f8f671c3343..cfd422e7f774 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -139,7 +139,7 @@
+ 		};
  
--	gpio_keys {
-+	gpio-keys {
- 		compatible = "gpio-keys";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		autorepeat;
--		button@21 {
-+
-+		button {
- 			label = "Interrupt Key";
- 			linux,code = <103>;
- 			gpios = <&gpio 4 1 0>; /* GPI_P3 1 */
- 		};
-+
- 		key1 {
- 			label = "KEY1";
- 			linux,code = <1>;
- 			gpios = <&pca9532 0 0>;
- 		};
-+
- 		key2 {
- 			label = "KEY2";
- 			linux,code = <2>;
- 			gpios = <&pca9532 1 0>;
- 		};
-+
- 		key3 {
- 			label = "KEY3";
- 			linux,code = <3>;
- 			gpios = <&pca9532 2 0>;
- 		};
-+
- 		key4 {
- 			label = "KEY4";
- 			linux,code = <4>;
- 			gpios = <&pca9532 3 0>;
- 		};
-+
- 		joy0 {
- 			label = "Joystick Key 0";
- 			linux,code = <10>;
- 			gpios = <&gpio 2 0 0>; /* P2.0 */
- 		};
-+
- 		joy1 {
- 			label = "Joystick Key 1";
- 			linux,code = <11>;
- 			gpios = <&gpio 2 1 0>; /* P2.1 */
- 		};
-+
- 		joy2 {
- 			label = "Joystick Key 2";
- 			linux,code = <12>;
- 			gpios = <&gpio 2 2 0>; /* P2.2 */
- 		};
-+
- 		joy3 {
- 			label = "Joystick Key 3";
- 			linux,code = <13>;
- 			gpios = <&gpio 2 3 0>; /* P2.3 */
- 		};
-+
- 		joy4 {
- 			label = "Joystick Key 4";
- 			linux,code = <14>;
+ 		clcd: clcd@31040000 {
+-			compatible = "arm,pl110", "arm,primecell";
++			compatible = "arm,pl111", "arm,primecell";
+ 			reg = <0x31040000 0x1000>;
+ 			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk LPC32XX_CLK_LCD>;
 -- 
 2.20.1
