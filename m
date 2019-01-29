@@ -1,111 +1,80 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add Qualcomm USB Super-Speed PHY
- bindings
-Date: Tue, 29 Jan 2019 12:38:45 -0800
-Message-ID: <20190129203845.GB3036@builder>
-References: <1548761715-4004-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1548761715-4004-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH v5 2/3] firmware: xilinx: Implement ZynqMP power
+ management APIs
+Date: Tue, 29 Jan 2019 20:40:04 +0000
+Message-ID: <BYAPR02MB59921AA0C4ADDC078FA28BE3B8970@BYAPR02MB5992.namprd02.prod.outlook.com>
+References: <1547493778-22720-1-git-send-email-jollys@xilinx.com>
+ <1547493778-22720-3-git-send-email-jollys@xilinx.com>
+ <e4b34ee3-49ba-8b6e-76ad-69bf078a8256@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548761715-4004-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
+In-Reply-To: <e4b34ee3-49ba-8b6e-76ad-69bf078a8256@xilinx.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, andy.gross@linaro.org, swboyd@chromium.org, shawn.guo@linaro.org, vkoul@kernel.org, khasim.mohammed@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Michal Simek <michals@xilinx.com>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "andy.gross@linaro.org" <andy.gross@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>Michal Simek <michals@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>Rajan Vaja <RAJANV@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 29 Jan 03:35 PST 2019, Jorge Ramirez-Ortiz wrote:
-
-> Binding description for Qualcomm's Synopsys 1.0.0 super-speed PHY
-
-SuperSpeed
-
-> controller embedded in QCS404.
-> 
-> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
-> definitions.
-> 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> ---
->  .../devicetree/bindings/usb/qcom,usb-ssphy.txt     | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
-> new file mode 100644
-> index 0000000..8ef6e39
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
-> @@ -0,0 +1,73 @@
-> +Qualcomm Synopsys 1.0.0 SS phy controller
-> +===========================================
-> +
-> +Synopsys 1.0.0 ss phy controller supports SS usb connectivity on Qualcomm
-> +chipsets
-
-It's based on Synopsys IP, but it's Qualcomm's version, and isn't the
-1.0.0 Qualcomm's version number for this block?
-
-Also I think it "provides SuperSpeed USB connectivity on some Qualcomm
-platforms".
-
-> +
-> +Required properties:
-> +
-> +- compatible:
-> +    Value type: <string>
-> +    Definition: Should contain "qcom,usb-ssphy".
-> +
-> +- reg:
-> +    Value type: <prop-encoded-array>
-> +    Definition: USB PHY base address and length of the register map.
-> +
-> +- #phy-cells:
-> +    Value type: <u32>
-> +    Definition: Should be 0. See phy/phy-bindings.txt for details.
-> +
-> +- clocks:
-> +    Value type: <prop-encoded-array>
-> +    Definition: See clock-bindings.txt section "consumers". List of
-> +		 three clock specifiers for reference, phy core and
-> +		 pipe clocks.
-> +
-> +- clock-names:
-> +    Value type: <string>
-> +    Definition: Names of the clocks in 1-1 correspondence with the "clocks"
-> +		 property. Must contain "ref", "phy" and "pipe".
-> +
-> +- vdd-supply:
-> +    Value type: <phandle>
-> +    Definition: phandle to the regulator VDD supply node.
-> +
-> +- vdda1p8-supply:
-> +    Value type: <phandle>
-> +    Definition: phandle to the regulator 1.8V supply node.
-> +
-> +
-> +Optional child nodes:
-> +
-> +- vbus-supply:
-> +    Value type: <phandle>
-> +    Definition: phandle to the VBUS supply node.
-> +
-> +- resets:
-> +    Value type: <prop-encoded-array>
-> +    Definition: See reset.txt section "consumers". PHY reset specifiers
-> +		 for phy core and COR resets.
-> +
-> +- reset-names:
-> +    Value type: <string>
-> +    Definition: Names of the resets in 1-1 correspondence with the "resets"
-> +		 property. Must contain "com" and "phy".
-
-Perhaps "Must contain both com and phy, if property is specified", to
-clarify that it's all or nothing.
-
-
-Looks good otherwise.
-
-Regards,
-Bjorn
+SGkgTWljaGFsLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1pY2hh
+bCBTaW1layBbbWFpbHRvOm1pY2hhbC5zaW1la0B4aWxpbnguY29tXQ0KPiBTZW50OiBUdWVzZGF5
+LCBKYW51YXJ5IDI5LCAyMDE5IDU6MTEgQU0NCj4gVG86IEpvbGx5IFNoYWggPEpPTExZU0B4aWxp
+bnguY29tPjsgbWF0dGhpYXMuYmdnQGdtYWlsLmNvbTsNCj4gYW5keS5ncm9zc0BsaW5hcm8ub3Jn
+OyBzaGF3bmd1b0BrZXJuZWwub3JnOyBnZWVydCtyZW5lc2FzQGdsaWRlci5iZTsNCj4gYmpvcm4u
+YW5kZXJzc29uQGxpbmFyby5vcmc7IHNlYW4ud2FuZ0BtZWRpYXRlay5jb207DQo+IG0uc3p5cHJv
+d3NraUBzYW1zdW5nLmNvbTsgTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlueC5jb20+Ow0KPiBy
+b2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tDQo+IENjOiBSYWphbiBWYWph
+IDxSQUpBTlZAeGlsaW54LmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
+cm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBSYWphbiBWYWphDQo+IDxSQUpBTlZAeGlsaW54LmNvbT47IEpvbGx5IFNoYWggPEpP
+TExZU0B4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDIvM10gZmlybXdhcmU6
+IHhpbGlueDogSW1wbGVtZW50IFp5bnFNUCBwb3dlcg0KPiBtYW5hZ2VtZW50IEFQSXMNCj4gDQo+
+IE9uIDE0LiAwMS4gMTkgMjA6MjIsIEpvbGx5IFNoYWggd3JvdGU6DQo+ID4gRnJvbTogUmFqYW4g
+VmFqYSA8cmFqYW4udmFqYUB4aWxpbnguY29tPg0KPiA+DQo+ID4gQWRkIFhpbGlueCBaeW5xTVAg
+ZmlybXdhcmUgQVBJcyB0byBzZXQgc3VzcGVuZCBtb2RlDQo+ID4gYW5kIGluZm9ybSBmaXJtd2Fy
+ZSB0aGF0IG1hc3RlciBoYXMgaW5pdGlhbGl6ZWQgaXRzDQo+ID4gb3duIHBvd2VyIG1hbmFnZW1l
+bnQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBSYWphbiBWYWphIDxyYWphbi52YWphQHhpbGlu
+eC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogSm9sbHkgU2hhaCA8am9sbHlzQHhpbGlueC5jb20+
+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZmlybXdhcmUveGlsaW54L3p5bnFtcC5jICAgICB8IDI5
+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvbGludXgvZmlybXdh
+cmUveGxueC16eW5xbXAuaCB8IDIwICsrKysrKysrKysrKysrKysrKysrDQo+ID4gIDIgZmlsZXMg
+Y2hhbmdlZCwgNDkgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+ZmlybXdhcmUveGlsaW54L3p5bnFtcC5jDQo+IGIvZHJpdmVycy9maXJtd2FyZS94aWxpbngvenlu
+cW1wLmMNCj4gPiBpbmRleCA4NGIzZmQyLi5jN2EzYjZjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvZmlybXdhcmUveGlsaW54L3p5bnFtcC5jDQo+ID4gKysrIGIvZHJpdmVycy9maXJtd2FyZS94
+aWxpbngvenlucW1wLmMNCj4gPiBAQCAtNDI4LDYgKzQyOCwzMyBAQCBzdGF0aWMgaW50IHp5bnFt
+cF9wbV9jbG9ja19nZXRwYXJlbnQodTMyIGNsb2NrX2lkLA0KPiB1MzIgKnBhcmVudF9pZCkNCj4g
+PiAgCXJldHVybiByZXQ7DQo+ID4gIH0NCj4gPg0KPiA+ICsvKioNCj4gPiArICogenlucW1wX3Bt
+X2luaXRfZmluYWxpemUoKSAtIFBNIGNhbGwgdG8gaW5mb3JtIGZpcm13YXJlIHRoYXQgdGhlIGNh
+bGxlcg0KPiA+ICsgKgkJCSAgICAgICBtYXN0ZXIgaGFzIGluaXRpYWxpemVkIGl0cyBvd24gcG93
+ZXIgbWFuYWdlbWVudA0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIEFQSSBmdW5jdGlvbiBpcyB0byBi
+ZSB1c2VkIGZvciBub3RpZnkgdGhlIHBvd2VyIG1hbmFnZW1lbnQgY29udHJvbGxlcg0KPiA+ICsg
+KiBhYm91dCB0aGUgY29tcGxldGVkIHBvd2VyIG1hbmFnZW1lbnQgaW5pdGlhbGl6YXRpb24uDQo+
+ID4gKyAqDQo+ID4gKyAqIFJldHVybjogUmV0dXJucyBzdGF0dXMsIGVpdGhlciBzdWNjZXNzIG9y
+IGVycm9yK3JlYXNvbg0KPiA+ICsgKi8NCj4gPiArc3RhdGljIGludCB6eW5xbXBfcG1faW5pdF9m
+aW5hbGl6ZSh2b2lkKQ0KPiA+ICt7DQo+ID4gKwlyZXR1cm4genlucW1wX3BtX2ludm9rZV9mbihQ
+TV9QTV9JTklUX0ZJTkFMSVpFLCAwLCAwLCAwLCAwLCBOVUxMKTsNCj4gPiArfQ0KPiA+ICsNCj4g
+PiArLyoqDQo+ID4gKyAqIHp5bnFtcF9wbV9zZXRfc3VzcGVuZF9tb2RlKCkJLSBTZXQgc3lzdGVt
+IHN1c3BlbmQgbW9kZQ0KPiA+ICsgKiBAbW9kZToJTW9kZSB0byBzZXQgZm9yIHN5c3RlbSBzdXNw
+ZW5kDQo+ID4gKyAqDQo+ID4gKyAqIFRoaXMgQVBJIGZ1bmN0aW9uIGlzIHVzZWQgdG8gc2V0IG1v
+ZGUgb2Ygc3lzdGVtIHN1c3BlbmQuDQo+ID4gKyAqDQo+ID4gKyAqIFJldHVybjogUmV0dXJucyBz
+dGF0dXMsIGVpdGhlciBzdWNjZXNzIG9yIGVycm9yK3JlYXNvbg0KPiA+ICsgKi8NCj4gPiArc3Rh
+dGljIGludCB6eW5xbXBfcG1fc2V0X3N1c3BlbmRfbW9kZSh1MzIgbW9kZSkNCj4gPiArew0KPiA+
+ICsJcmV0dXJuIHp5bnFtcF9wbV9pbnZva2VfZm4oUE1fU0VUX1NVU1BFTkRfTU9ERSwgbW9kZSwg
+MCwgMCwgMCwNCj4gTlVMTCk7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgenlucW1wX2VlbWlfb3BzIGVlbWlfb3BzID0gew0KPiA+ICAJLmdldF9hcGlfdmVyc2lvbiA9
+IHp5bnFtcF9wbV9nZXRfYXBpX3ZlcnNpb24sDQo+ID4gIAkucXVlcnlfZGF0YSA9IHp5bnFtcF9w
+bV9xdWVyeV9kYXRhLA0KPiA+IEBAIC00NDAsNiArNDY3LDggQEAgc3RhdGljIGNvbnN0IHN0cnVj
+dCB6eW5xbXBfZWVtaV9vcHMgZWVtaV9vcHMgPSB7DQo+ID4gIAkuY2xvY2tfZ2V0cmF0ZSA9IHp5
+bnFtcF9wbV9jbG9ja19nZXRyYXRlLA0KPiA+ICAJLmNsb2NrX3NldHBhcmVudCA9IHp5bnFtcF9w
+bV9jbG9ja19zZXRwYXJlbnQsDQo+ID4gIAkuY2xvY2tfZ2V0cGFyZW50ID0genlucW1wX3BtX2Ns
+b2NrX2dldHBhcmVudCwNCj4gPiArCS5pbml0X2ZpbmFsaXplID0genlucW1wX3BtX2luaXRfZmlu
+YWxpemUsDQo+ID4gKwkuc2V0X3N1c3BlbmRfbW9kZSA9IHp5bnFtcF9wbV9zZXRfc3VzcGVuZF9t
+b2RlLA0KPiANCj4gVGhpcyBoYXMgYmVlbiBjcmVhdGVkIGxvbmcgdGltZSBhZ28gYW5kIHRoZXJl
+IHdhcyBvbmUgbW9yZSBwYXRjaCBpbiB0aGUNCj4gbWlkZGxlIG9mIHRoaXMuDQo+IEkgaGF2ZSBh
+cHBsaWVkIHJlc2V0IGRyaXZlciBqdXN0IG5vdyB3aGljaCBkaWRuJ3QgaGF2ZSBhbnkgaXNzdWUg
+dGhhdCdzDQo+IHdoeSBwbGVhc2UgcmViYXNlIHlvdXIgcGF0Y2hlcyBvbiB0aGUgdG9wIG9mIHRo
+aXMgYnJhbmNoDQo+IGh0dHBzOi8vZ2l0aHViLmNvbS9YaWxpbngvbGludXgteGxueC9jb21taXRz
+L3p5bnFtcC9zb2MgYW5kIHJlc2VuZC4NCj4gDQoNClJlYmFzZWQgYW5kIHNlbnQgdjYuDQoNClRo
+YW5rcywNCkpvbGx5IFNoYWgNCg0KPiBUaGFua3MsDQo+IE1pY2hhbA0K
