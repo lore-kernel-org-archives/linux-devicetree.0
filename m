@@ -1,97 +1,45 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 18/24] PCI: dwc: Fix dw_pcie_ep_find_capability to return
- correct capability offset
-Date: Tue, 29 Jan 2019 15:49:51 +0530
-Message-ID: <a3c7458b-f8e8-1f02-116b-3e9f4fbf00f3@ti.com>
-References: <20190114132424.6445-1-kishon@ti.com>
- <20190114132424.6445-19-kishon@ti.com>
- <13501c15-8f3d-604b-c4fc-bde3fb208745@synopsys.com>
+From: Martin Kepplinger <martink@posteo.de>
+Subject: [PATCH 1/2] dt-bindings: input: sitronix-st1232: document optional reset-gpios property
+Date: Tue, 29 Jan 2019 11:23:46 +0100
+Message-ID: <20190129102347.27754-1-martink@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <13501c15-8f3d-604b-c4fc-bde3fb208745@synopsys.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Murali Karicheri <m-karicheri2@ti.com>, Jesper Nilsson <jesper.nilsson@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>
+To: devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@ginzinger.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gustavo,
+From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
 
-On 29/01/19 2:55 PM, Gustavo Pimentel wrote:
-> Hi Kishon,
-> 
-> On 14/01/2019 13:24, Kishon Vijay Abraham I wrote:
->> commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
->> adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
->> __dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
->>
->> However if MSI or MSIX capability is the last capability (i.e there are
->> no additional items in the capabilities list and the Next Capability
->> Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
->> even though MSI or MSIX capability may be present. This is because of
->> incorrect ordering of "next_cap_ptr" check. Fix it here.
->>
->> Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
->>  1 file changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> index d5144781005b..cd51b008858c 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> @@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
->>  	u8 cap_id, next_cap_ptr;
->>  	u16 reg;
->>  
->> +	if (!cap_ptr)
->> +		return 0;
->> +
-> 
-> Supposedly this was already verified by the function that calls this one.
+The st1232 driver reads this via gpiod.
 
-Right, with with this fix cap_ptr is checked only once. This being a recursive
-function, it makes sense to have the check only here instead of once in the
-calling function and once here.
-> 
->>  	reg = dw_pcie_readw_dbi(pci, cap_ptr);
->> -	next_cap_ptr = (reg & 0xff00) >> 8;
->>  	cap_id = (reg & 0x00ff);
->>  
->> -	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
->> +	if (cap_id > PCI_CAP_ID_MAX)
->>  		return 0;
->>  
->>  	if (cap_id == cap)
->>  		return cap_ptr;
->>  
->> +	next_cap_ptr = (reg & 0xff00) >> 8;
-> 
-> This fix seems to be a bit overdone, especially when you only need to swap the
-> if blocks order to achieve the desired goal.
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+---
+ .../devicetree/bindings/input/touchscreen/sitronix-st1232.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-No, cap_id > PCI_CAP_ID_MAX is a base error case and it should checked before
-returning the offset IMO.
-> 
->>  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->>  }
->>  
->> @@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
->>  	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
->>  	next_cap_ptr = (reg & 0x00ff);
->>  
->> -	if (!next_cap_ptr)
->> -		return 0;
->> -
-> 
-> Why remove it?
-> If pointer is null, why to jump to another function to check is the the same
-> pointer is null?
-
-so that we check cap_ptr only once.
-
-Thanks
-Kishon
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.txt b/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.txt
+index e73e826e0f2a..365b32d30d4b 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.txt
+@@ -8,7 +8,7 @@ Required properties:
+ - interrupts: interrupt to which the chip is connected
+ 
+ Optional properties:
+-- gpios: a phandle to the reset GPIO
++- reset-gpios: a phandle to the reset GPIO
+ 
+ Example:
+ 
+@@ -19,7 +19,7 @@ Example:
+ 			compatible = "sitronix,st1232";
+ 			reg = <0x55>;
+ 			interrupts = <2 0>;
+-			gpios = <&gpio1 166 0>;
++			reset-gpios = <&gpio1 166 0>;
+ 		};
+ 
+ 		/* ... */
+-- 
+2.20.1
