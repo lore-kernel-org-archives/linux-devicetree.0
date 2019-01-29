@@ -1,14 +1,11 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 4/6] ARM64: dts: marvell: armada-37xx: fix USB2 memory
- region
-Date: Tue, 29 Jan 2019 10:36:33 +0100
-Message-ID: <20190129093635.4321-5-miquel.raynal@bootlin.com>
-References: <20190129093635.4321-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v5 0/6] A3700 USB UTMI PHY support
+Date: Tue, 29 Jan 2019 10:36:29 +0100
+Message-ID: <20190129093635.4321-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190129093635.4321-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,34 +19,52 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Ma
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The specification splits the USB2 memory region into three sections:
-1/ 0xD005E000-0xD005EFFF: USB2 Host Controller Registers
-2/ 0xD005F000-0xD005F7FF: USB2 UTMI PHY Registers
-3/ 0xD005F800-0xD005FFFF: USB2 Host Miscellaneous Registers
-
-Section 1/ belongs to the USB2 node but section 2/ belongs to the UTMI
-PHY node. Section 3/ can be accessed by both the USB controller and
-the PHY because of the miscaellaneous nature of the registers inside
-so a specific node will be created to cover the area and a handle to
-it will be added in both the USB controller and the PHY node.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index d6e548618a95..5cfd1b920f31 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -351,7 +351,7 @@
- 
- 			usb2: usb@5e000 {
- 				compatible = "marvell,armada-3700-ehci";
--				reg = <0x5e000 0x2000>;
-+				reg = <0x5e000 0x1000>;
- 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
--- 
-2.19.1
+VVNCMiBvbiBBMzcwMCBvbmx5IHdvcmtzIGJlY2F1c2UgVS1Cb290IGluaXRpYWxpemVzIHRoZSBV
+VE1JIFBIWXMgKG9uZQp3aXJlZCB0byBlYWNoIFVTQiBjb250cm9sbGVyKS4gV2hpbGUgdGhlcmUg
+aXMgbm8gaXNzdWUgd2l0aCByZWd1bGFyCnVzZSwgdGhpcyBhcmNoaXRlY3R1cmUgZG9lcyBub3Qg
+YWxsb3cgc3VzcGVuZCB0byBSQU0gdG8gd29yayBhcyB0aGUKUEhZcyBtdXN0IGJlIHJlLWluaXRp
+YWxpemVkIGF0IHJlc3VtZS4gSW4gb3JkZXIgdG8gc3VwcG9ydCB0aGlzCmZlYXR1cmUsIHRoaXMg
+c2VyaWVzIGFkZHMgYSBVVE1JIFBIWSBkcml2ZXIgZm9yIHRoZSBBMzcwMCBTb0MuCgpUaGUgQTM3
+MDAgZGV2aWNlIHRyZWUgaXMgdXBkYXRlZCB0byByZWZlcmVuY2UgdGhlIFBIWXMuCgpUaGFua3Ms
+Ck1pcXXDqGwKCkNoYW5nZXMgc2luY2UgdjQ6Cj09PT09PT09PT09PT09PT09CiogRHJvcCBVU0Ig
+cGF0Y2hlcyBhcyB0aGV5IGhhdmUgYmVlbiBzZW50IGluIGEgc2VwYXJhdGUgc2VyaWVzLiBObwog
+IHJlYWwgZnVuY3Rpb25hbCBjaGFuZ2VzIHNpbmNlIHRoZSB2NCB0aG91Z2gsIGtpbmQgb2YgYSBy
+ZXNlbmQgb2YgdGhlCiAgUEhZIHBhdGNoZXMgZnJvbSB0aGUgIkEzNzAwIFVTQiBTMlJBTSBzdXBw
+b3J0IiBzZXJpZXMuCgpDaGFuZ2VzIHNpbmNlIHYzOgo9PT09PT09PT09PT09PT09PQoqIEJpbmRp
+bmdzOiBhcyBzdWdnZXN0ZWQgYnkgR3JlZ29yeSBhbmQgUm9iLCB1c2VkIHRoZSAiLW1pc2MiIHN1
+ZmZpeAogIGluc3RlYWQgb2YgIi1taXNjZWxsYW5lb3VzIiBhbmQgcHJlZml4ZWQgdGhlIGNvbXBh
+dGlibGUgd2l0aAogICJhcm1hZGEtMzcwMCIgdG8gZm9sbG93IHdoYXQgaGFzIGJlZW4gdXNlZCBm
+b3IgdGhlIG90aGVyIElQcyBvZiB0aGUKICBzYW1lIFNvQyAoYW5kIGFkZGVkIFJvYidzIGFjayku
+CgpDaGFuZ2VzIHNpbmNlIHYyOgo9PT09PT09PT09PT09PT09PQoqIFR5cG9zCiogVVRNSSBQSFkg
+YmluZGluZ3M6CiAgPiBOZXcgbmFtZSBmb3IgdGhlIFVTQjIgaG9zdC9QSFkgc3lzY29ucyAoKyBj
+aGFuZ2VzIGluIHRoZSBEVCkuCiAgPiBDbGVhcmx5IHN0YXRlIHRoYXQgdGhlIFBIWXMgYXJlIGRp
+ZmZlcmVudCBiZXR3ZWVuIE9URyBhbmQKICAgIGhvc3Qtb25seSBjb250cm9sbGVycy4KKiBVVE1J
+IFBIWSBkcml2ZXI6CiAgPiBVc2UgR0VOTUFTSyBtYWNyby4KICA+IFJlbW92ZWQgdXNlbGVzcyBj
+aGVja3Mgb24gZHJpdmVyIGRhdGEgcmV0cmlldmFsLgogID4gRHJvcHBlZCB0aGUgZW1wdHkgLT5y
+ZW1vdmUoKSBob29rLgogID4gVXBkYXRlZCB0aGUgbGljZW5jZSBtYWNybyB0byBtYXRjaCB0aGUg
+U1BEWCB0YWcuCiAgPiBVc2VkIHRoZSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoKSBoZWxwZXIu
+CiAgPiBSZW1vdmVkIHRoZSB1c2Ugb2YgYSBsb2NhbCB2YXJpYWJsZSBpbiB0aGUgLT5wcm9iZSgp
+IGZvciB0aGUKICAgIGRyaXZlcidzIG9wZXJhdGlvbnMuCiAgPiBGaXhlZCB0aGUgZHJpdmVyIGNv
+LWF1dGhvcjogSWdhbCwgbm90IEV2YW4uCgpDaGFuZ2VzIHNpbmNlIHYxOgo9PT09PT09PT09PT09
+PT09PQoqIEFkZCBVVE1JIFBIWSBkcml2ZXIvYmluZGluZ3MvRFQgY2hhbmdlcyB0byBicmluZyBT
+MlJBTSBzdXBwb3J0IHRvCiAgYm90aCBVU0IgcG9ydHMgYXZhaWxhYmxlIG9uIHRoZSBBMzcwMCBT
+b0MuCiogUmViYXNlZCBvbiB0b3Agb2YgdjUuMC1yYzEuCgoKTWlxdWVsIFJheW5hbCAoNik6CiAg
+cGh5OiBhZGQgQTM3MDAgVVRNSSBQSFkgZHJpdmVyCiAgZHQtYmluZGluZ3M6IHBoeTogbXZlYnUt
+dXRtaTogYWRkIFVUTUkgUEhZIGJpbmRpbmdzCiAgTUFJTlRBSU5FUlM6IHBoeTogZmlsbCBBcm1h
+ZGEgMzcwMCBQSFkgZHJpdmVycyBlbnRyeQogIEFSTTY0OiBkdHM6IG1hcnZlbGw6IGFybWFkYS0z
+N3h4OiBmaXggVVNCMiBtZW1vcnkgcmVnaW9uCiAgQVJNNjQ6IGR0czogbWFydmVsbDogYXJtYWRh
+LTM3eHg6IGRlY2xhcmUgVVNCMiBVVE1JIFBIWXMKICBBUk02NDogZHRzOiBtYXJ2ZWxsOiBhcm1h
+ZGEtMzd4eDogbGluayBVU0IgaG9zdHMgd2l0aCB0aGVpciBQSFlzCgogLi4uL2JpbmRpbmdzL3Bo
+eS9waHktbXZlYnUtdXRtaS50eHQgICAgICAgICAgIHwgIDM4ICsrKwogTUFJTlRBSU5FUlMgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICstCiBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL21hcnZlbGwvYXJtYWRhLTM3eHguZHRzaSAgfCAgMzQgKystCiBkcml2ZXJzL3BoeS9tYXJ2
+ZWxsL0tjb25maWcgICAgICAgICAgICAgICAgICAgfCAgIDkgKwogZHJpdmVycy9waHkvbWFydmVs
+bC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvcGh5L21hcnZlbGwv
+cGh5LW12ZWJ1LWEzNzAwLXV0bWkuYyAgICB8IDI3OCArKysrKysrKysrKysrKysrKysKIDYgZmls
+ZXMgY2hhbmdlZCwgMzYyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXZlYnUt
+dXRtaS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BoeS9tYXJ2ZWxsL3BoeS1tdmVi
+dS1hMzcwMC11dG1pLmMKCi0tIAoyLjE5LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
