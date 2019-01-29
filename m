@@ -1,88 +1,64 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 10/13] gpio: max77650: add GPIO support
-Date: Tue, 29 Jan 2019 14:22:00 +0100
-Message-ID: <CAMRc=Mewf0p1v+afVKDhg8FJHip09ipt3_uO5uYtJP75HyuCSQ@mail.gmail.com>
-References: <20190118134244.22253-1-brgl@bgdev.pl> <20190118134244.22253-11-brgl@bgdev.pl>
- <CACRpkdZhy7yBZrGLxhRGaac7v5jZhgUSz9gZAhFXbevJbKjpZw@mail.gmail.com>
- <CAMRc=Me6OSKDk7bN4++M68DjoeArd+gZx16o0oQBXfRoCWBt2A@mail.gmail.com>
- <CACRpkdacfOLSs1GPew4gMtL_BX0OTXqBQNWzWZMwAkk+Ah2ETQ@mail.gmail.com> <CAMRc=MftwsuooC8vLmnGYiiKj2rVShXeuekTrho8JRihjiBJ+w@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 1/6] arm64: dts: msm8996: Add graphics smmu node
+Date: Tue, 29 Jan 2019 13:23:30 +0000
+Message-ID: <20190129132335.30695-2-srinivas.kandagatla@linaro.org>
+References: <20190129132335.30695-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=MftwsuooC8vLmnGYiiKj2rVShXeuekTrho8JRihjiBJ+w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Brian Masney <masneyb@onstation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190129132335.30695-1-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: andy.gross@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-wt., 29 sty 2019 o 12:00 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
-):
->
-> czw., 24 sty 2019 o 11:30 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
-> >
-> > On Mon, Jan 21, 2019 at 6:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wro=
-te:
-> >
-> > > Thank you for your review. While I think you're right about the issue
-> > > being present in this driver, I'm not sure it's really a problem. Do
-> > > we actually require every gpio-controller to also be a stand-alone
-> > > interrupt-controller?
-> >
-> > Absolutely not :D
-> >
-> > Just GPIO is fine.
-> >
-> > > The binding document for the GPIO module doesn't
-> > > mention this - it only requires the gpio-controller property. Without
-> > > the "interrupt-controller" property dtc will bail-out if anyone uses
-> > > this node as the interrupt parent.
-> > >
-> > > If I'm wrong and we do require it, then I think we need to update
-> > > Documentation/devicetree/bindings/gpio/gpio.txt.
-> >
-> > What is weird is if a driver with DT bindings not mentioning IRQ
-> > and only probing from DT start implementing IRQ support, that
-> > becomes quite inconsistent. So then max77650_gpio_to_irq()
-> > should just return -ENOTSUPP
-> > or something for now, then it's fine.
-> >
->
-> I don't see it as weird at all. I see the need to define the register
-> and interrupt resources in DT for SoC peripherals becaue SoCs often
-> reuse IPs. But in the case of a self-contained i2c PMIC - the modules
-> such as GPIO are tightly coupled with the core functionality. In the
-> case of this device for example: there isn't even a separate set of
-> mask/status registers for GPIO interrupts.
->
-> Most mfd devices setup the resources in a hard-coded manner.
->
-> > We can add the (complicated) IRQ handling later.
-> >
-> > I am trying to eat my own dogfood here, I was sweating all
-> > last night trying to implement a hierarchical IRQ controller.
-> > There is no running away from that now. :/
-> >
-> > Apparently doing hierarchical IRQs demand that all irq
-> > controllers up to the top-level SoC IRQ controller support
-> > hierarchical interrupts using the v2 version of the irqdomain
-> > API, and currently it seems like the ARM
-> > GIC seems like the only top level IRQ controller that can
-> > do that.
-> >
->
-> Yep, and for that reason I can't use the regmap irq_chip abstraction
-> for now because it doesn't implement support for hierarchical
-> interrupts either.
->
-> How about the cascaded gpiochip irq_chip?
->
-> Best regards,
-> Bartosz
+From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Nah that won't work either without a proper hierarchy...
+Add device node for graphics smmu, aka. adreno_smmu.
 
-In that case, let's leave out the irq support for now. I'll send v2.
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Bart
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 6ba96916c66d..c9b80d175fd4 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -1138,6 +1138,23 @@
+ 			};
+ 		};
+ 
++		adreno_smmu: arm,smmu@b40000 {
++			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
++			reg = <0xb40000 0x10000>;
++
++			#global-interrupts = <1>;
++			interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>;
++			#iommu-cells = <1>;
++
++			clocks = <&mmcc GPU_AHB_CLK>,
++				 <&gcc GCC_MMSS_BIMC_GFX_CLK>;
++			clock-names = "iface", "bus";
++
++			power-domains = <&mmcc GPU_GDSC>;
++		};
++
+ 		agnoc@0 {
+ 			power-domains = <&gcc AGGRE0_NOC_GDSC>;
+ 			compatible = "simple-pm-bus";
+-- 
+2.20.1
