@@ -1,77 +1,46 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v2 3/8] clk: samsung: add BPLL rate table for Exynos 5422 SoC
-Date: Tue, 29 Jan 2019 18:55:09 +0100
-Message-ID: <1548784514-26649-4-git-send-email-l.luba@partner.samsung.com>
-References: <1548784514-26649-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190129175524eucas1p1ead98a852f002461984b9b99c5b5b7e4@eucas1p1.samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 1/2] spi: support inter-word delay requirement for
+ devices
+Date: Tue, 29 Jan 2019 18:06:50 +0000
+Message-ID: <20190129180650.GJ10524@sirena.org.uk>
+References: <20190129083844.20572-1-jonas@norrbonn.se>
+ <20190129083844.20572-2-jonas@norrbonn.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1548784514-26649-1-git-send-email-l.luba@partner.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: b.zolnierkie@samsung.com, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, krzk@kernel.org, Lukasz Luba <l.luba@partner.samsung.com>, cw00.choi@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, myungjoo.ham@samsung.com, s.nawrocki@samsung.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GlnCQLZWzqLRJED8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190129083844.20572-2-jonas@norrbonn.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonas Bonn <jonas@norrbonn.se>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add new table rate for BPLL for Exynos5422 SoC supporting Dynamic Memory
-Controller frequencies for driver's DRAM timings.
 
-CC: Sylwester Nawrocki <s.nawrocki@samsung.com>
-CC: Chanwoo Choi <cw00.choi@samsung.com>
-CC: Michael Turquette <mturquette@baylibre.com>
-CC: Stephen Boyd <sboyd@kernel.org>
-CC: Kukjin Kim <kgene@kernel.org>
-CC: Krzysztof Kozlowski <krzk@kernel.org>
-CC: linux-samsung-soc@vger.kernel.org
-CC: linux-clk@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
-CC: linux-kernel@vger.kernel.org
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- drivers/clk/samsung/clk-exynos5420.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+--GlnCQLZWzqLRJED8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 3e87421..8bf9579 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -1325,6 +1325,19 @@ static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __ini
- 	PLL_35XX_RATE(24 * MHZ, 200000000,  200, 3, 3),
- };
- 
-+static const struct samsung_pll_rate_table exynos5422_bpll_rate_table[] = {
-+	PLL_35XX_RATE(24 * MHZ, 933000000, 311, 4, 1),
-+	PLL_35XX_RATE(24 * MHZ, 825000000, 275, 4, 1),
-+	PLL_35XX_RATE(24 * MHZ, 728000000, 182, 3, 1),
-+	PLL_35XX_RATE(24 * MHZ, 633000000, 211, 4, 1),
-+	PLL_35XX_RATE(24 * MHZ, 543000000, 181, 2, 2),
-+	PLL_35XX_RATE(24 * MHZ, 413000000, 413, 6, 2),
-+	PLL_35XX_RATE(24 * MHZ, 275000000, 275, 3, 3),
-+	PLL_35XX_RATE(24 * MHZ, 206000000, 206, 3, 3),
-+	PLL_35XX_RATE(24 * MHZ, 165000000, 110, 2, 3),
-+	PLL_35XX_RATE(24 * MHZ, 138000000, 184, 2, 4),
-+};
-+
- static const struct samsung_pll_rate_table exynos5420_epll_24mhz_tbl[] = {
- 	PLL_36XX_RATE(24 * MHZ, 600000000U, 100, 2, 1, 0),
- 	PLL_36XX_RATE(24 * MHZ, 400000000U, 200, 3, 2, 0),
-@@ -1467,7 +1480,7 @@ static void __init exynos5x_clk_init(struct device_node *np,
- 		exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
- 		exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
- 		exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
--		exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
-+		exynos5x_plls[bpll].rate_table = exynos5422_bpll_rate_table;
- 	}
- 
- 	samsung_clk_register_pll(ctx, exynos5x_plls, ARRAY_SIZE(exynos5x_plls),
--- 
-2.7.4
+On Tue, Jan 29, 2019 at 09:38:43AM +0100, Jonas Bonn wrote:
+> Some devices are slow and cannot keep up with the SPI bus and therefore
+> require a short delay between words of the SPI transfer.
+
+This doesn't apply against current code, please rebase against for-next
+and resend.
+
+--GlnCQLZWzqLRJED8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxQljoACgkQJNaLcl1U
+h9CoJAf+PUI9OL1C/VRVWhC7zzQ1+rRKldjD0Qb/Mkd+aUCCswh4g+ziFtSGpd68
+RQYKnHjsuzl2APPcWj/tBjMgwb77pzP/1krmXsEhSNT03Npl351BVLwcYccm8Ns5
+g+F8lIsTRPQFXkGkQ7Janp5HB2Kkchwi8272WsEcawsdCcmunnrEM8HHC5jk4h1r
+NME9jPc5YX48bJIdWumSrWP158JQpF2clp4IokMTBawFPfvSbVvFUfAKcRt6Kb3v
+8yZUPBBysCJRVcvEXOWi+ZH6IgyjLbWsEyRf60W7aO+uqYz9YaZHtHz6kn+S1Ea2
+rOomMbNnVzDribZPDUVoEoGVsZjZ3Q==
+=63oV
+-----END PGP SIGNATURE-----
+
+--GlnCQLZWzqLRJED8--
