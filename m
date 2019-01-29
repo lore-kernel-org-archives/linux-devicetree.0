@@ -1,36 +1,73 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v8 1/2] platform/mellanox: Add TmFifo driver for Mellanox
- BlueField Soc
-Date: Wed, 30 Jan 2019 00:06:50 +0200
-Message-ID: <CAHp75VeByqLAr3hakCTSO_M3xjUyt=A0bPgpWeSV62Vomcrsog@mail.gmail.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1548696487-8840-1-git-send-email-lsun@mellanox.com> <1548696487-8840-2-git-send-email-lsun@mellanox.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH] ARM: socfpga: fix base address of SDR controller
+Date: Tue, 29 Jan 2019 16:30:25 -0600
+Message-ID: <CANk1AXTcbqgoCYkTY-ssMvpAbdoncrkOxyRfu-piLE2tQ15a2g@mail.gmail.com>
+References: <20190129200858.19773-1-goldsimon@gmx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548696487-8840-2-git-send-email-lsun@mellanox.com>
+In-Reply-To: <20190129200858.19773-1-goldsimon@gmx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Cc: Dinh Nguyen <dinguyen@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 7:28 PM Liming Sun <lsun@mellanox.com> wrote:
+On Tue, Jan 29, 2019 at 2:09 PM Simon Goldschmidt
+<simon.k.r.goldschmidt@gmail.com> wrote:
+
+Hi Simon,
+
+Thanks for submitting.   A couple of things...
+
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index f365003f0..8f6c1a5d6 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -788,9 +788,9 @@
+>                         reg = <0xfffec000 0x100>;
+>                 };
 >
-> This commit adds the TmFifo platform driver for Mellanox BlueField
-> Soc. TmFifo is a shared FIFO which enables external host machine
-> to exchange data with the SoC via USB or PCIe. The driver is based
-> on virtio framework and has console and network access enabled.
+> -               sdr: sdr@ffc25000 {
+> +               sdr: sdr@ffc20000 {
+>                         compatible = "altr,sdr-ctl", "syscon";
+> -                       reg = <0xffc25000 0x1000>;
+> +                       reg = <0xffc20000 0x6000>;
+
+The binding doc will also need this change (in a separate patch)
+Documentation/devicetree/bindings/arm/altera/socfpga-sdram-controller.txt
+
+> diff --git a/arch/arm/mach-socfpga/self-refresh.S b/arch/arm/mach-socfpga/self-refresh.S
+> index f2d7f883e..bd7759357 100644
+> --- a/arch/arm/mach-socfpga/self-refresh.S
+> +++ b/arch/arm/mach-socfpga/self-refresh.S
+> @@ -19,8 +19,8 @@
+>  #define MAX_LOOP_COUNT         1000
 >
-> Reviewed-by: David Woods <dwoods@mellanox.com>
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
+>  /* Register offset */
+> -#define SDR_CTRLGRP_LOWPWREQ_ADDR       0x54
+> -#define SDR_CTRLGRP_LOWPWRACK_ADDR      0x58
+> +#define SDR_CTRLGRP_LOWPWREQ_ADDR       0x5054
+> +#define SDR_CTRLGRP_LOWPWRACK_ADDR      0x5058
 
+These offsets are used for ldr/sdr and are limited to 12 bits.  This
+won't build if CONFIG_SOCFPGA_SUSPEND is enabled.
 
-Please, go through this series taking into account review I just did
-for your another patch.
+/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:
+Assembler messages:
+/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:65:
+Error: bad immediate value for offset (20564)
+/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:67:
+Error: bad immediate value for offset (20564)
+/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:72:
+Error: bad immediate value for offset (20568)
+/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:101:
+Error: bad immediate value for offset (20564)
+/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:103:
+Error: bad immediate value for offset (20564)
+/home/atull/repos/linux-socfpga/arch/arm/mach-socfpga/self-refresh.S:108:
+Error: bad immediate value for offset (20568)
+/home/atull/repos/linux-socfpga/scripts/Makefile.build:367: recipe for
+target 'arch/arm/mach-socfpga/self-refresh.o' failed
 
-On top of that, see recent (for few years I think) drivers what modern
-APIs they are using, e.g. devm_.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Alan
