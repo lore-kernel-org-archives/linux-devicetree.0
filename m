@@ -1,7 +1,7 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 27/27] arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
-Date: Tue, 29 Jan 2019 08:11:20 +0000
-Message-ID: <20190129080926.36773-28-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 10/27] PCI: mobiveil: fix the INTx process error
+Date: Tue, 29 Jan 2019 08:09:32 +0000
+Message-ID: <20190129080926.36773-11-Zhiqiang.Hou@nxp.com>
 References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,28 +16,58 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Enable the PCIe Gen4 controller driver for Layerscape SoCs.
+In the loop block, there is not code change the loop key,
+this patch updated the loop key by re-read the INTx status
+register.
 
+This patch also change to clear the handled INTx status.
+
+Note: Need MV to test this fix.
+
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host
+Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 ---
 V3:
  - No change
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 6e5af2563ef5..5363c1fdce2e 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -82,6 +82,7 @@ CONFIG_PCI_HOST_THUNDER_PEM=3Dy
- CONFIG_PCI_HOST_THUNDER_ECAM=3Dy
- CONFIG_PCIE_ROCKCHIP_HOST=3Dm
- CONFIG_PCI_LAYERSCAPE=3Dy
-+CONFIG_PCI_LAYERSCAPE_GEN4=3Dy
- CONFIG_PCI_HISI=3Dy
- CONFIG_PCIE_QCOM=3Dy
- CONFIG_PCIE_ARMADA_8K=3Dy
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
+r/pcie-mobiveil.c
+index 4ba458474e42..78e575e71f4d 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 	/* Handle INTx */
+ 	if (intr_status & PAB_INTP_INTX_MASK) {
+ 		shifted_status =3D csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++		shifted_status &=3D PAB_INTP_INTX_MASK;
+ 		shifted_status >>=3D PAB_INTX_START;
+ 		do {
+ 			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
+@@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 					dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
+ 							    bit);
+=20
+-				/* clear interrupt */
+-				csr_writel(pcie,
+-					   shifted_status << PAB_INTX_START,
++				/* clear interrupt handled */
++				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+ 					   PAB_INTP_AMBA_MISC_STAT);
+ 			}
+-		} while ((shifted_status >> PAB_INTX_START) !=3D 0);
++
++			shifted_status =3D csr_readl(pcie,
++						   PAB_INTP_AMBA_MISC_STAT);
++			shifted_status &=3D PAB_INTP_INTX_MASK;
++			shifted_status >>=3D PAB_INTX_START;
++		} while (shifted_status !=3D 0);
+ 	}
+=20
+ 	/* read extra MSI status register */
 --=20
 2.17.1
