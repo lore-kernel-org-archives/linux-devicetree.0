@@ -1,133 +1,125 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum rate for PLL_MIPI
-Date: Tue, 29 Jan 2019 23:01:31 +0530
-Message-ID: <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
-References: <20190124195900.22620-1-jagan@amarulasolutions.com>
- <20190124195900.22620-12-jagan@amarulasolutions.com> <20190125212433.ni2jg3wvpyjazlxf@flea>
- <CAMty3ZAsH2iZ+JEqTE3D58aXfGuhMSg9YoO56ZhhOeE4c4yQHQ@mail.gmail.com> <20190129151348.mh27btttsqcmeban@flea>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] r8169: Load MAC address from device tree if present
+Date: Tue, 29 Jan 2019 18:40:35 +0100
+Message-ID: <20190129174035.GA25929@ulmo>
+References: <20190125101814.6262-1-thierry.reding@gmail.com>
+ <59aa73fd-9cdc-8db8-b58e-ed106b084637@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129151348.mh27btttsqcmeban@flea>
+Content-Disposition: inline
+In-Reply-To: <59aa73fd-9cdc-8db8-b58e-ed106b084637@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Realtek linux nic maintainers <nic_swsd@realtek.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 8:43 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Mon, Jan 28, 2019 at 03:06:10PM +0530, Jagan Teki wrote:
-> > On Sat, Jan 26, 2019 at 2:54 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Fri, Jan 25, 2019 at 01:28:49AM +0530, Jagan Teki wrote:
-> > > > Minimum PLL used for MIPI is 500MHz, as per manual, but
-> > > > lowering the min rate by 300MHz can result proper working
-> > > > nkms divider with the help of desired dclock rate from
-> > > > panel driver.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > Acked-by: Stephen Boyd <sboyd@kernel.org>
-> > >
-> > > Going 200MHz below the minimum doesn't seem really reasonable. What
-> > > is the issue that you are trying to fix here?
-> > >
-> > > It looks like it's picking bad dividers, but if that's the case, this
-> > > isn't the proper fix.
-> >
-> > As I stated in earlier patches, the whole idea is pick the desired
-> > dclk divider based dclk rate. So the dotclock, sun4i_dclk_round_rate
-> > is unable to get the proper dclk divider at the end, so it eventually
-> > picking up wrong divider value and fired vblank timeout.
-> >
-> > So, we come-up with optimal and working min_rate 300MHz in pll-mipi to
-> > get the desired clock something like below.
-> > [    2.415773] [drm] No driver support for vblank timestamp query.
-> > [    2.424116] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> > [    2.424172] ideal = 220000000, rounded = 0
-> > [    2.424176] ideal = 275000000, rounded = 0
-> > [    2.424194] ccu_nkm_round_rate: rate = 330000000
-> > [    2.424197] ideal = 330000000, rounded = 330000000
-> > [    2.424201] sun4i_dclk_round_rate: div = 6 rate = 55000000
-> > [    2.424205] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> > [    2.424209] ideal = 220000000, rounded = 0
-> > [    2.424213] ideal = 275000000, rounded = 0
-> > [    2.424230] ccu_nkm_round_rate: rate = 330000000
-> > [    2.424233] ideal = 330000000, rounded = 330000000
-> > [    2.424236] sun4i_dclk_round_rate: div = 6 rate = 55000000
-> > [    2.424253] ccu_nkm_round_rate: rate = 330000000
-> > [    2.424270] ccu_nkm_round_rate: rate = 330000000
-> > [    2.424278] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-> > [    2.424281] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-> > [    2.424306] ccu_nkm_set_rate: rate = 330000000, parent_rate = 297000000
-> > [    2.424309] ccu_nkm_set_rate: _nkm.n = 5
-> > [    2.424311] ccu_nkm_set_rate: _nkm.k = 2
-> > [    2.424313] ccu_nkm_set_rate: _nkm.m = 9
-> > [    2.424661] sun4i_dclk_set_rate div 6
-> > [    2.424668] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
-> >
-> > But look like this wouldn't valid for all other dclock rates, say BPI
-> > panel has 30MHz clock that would failed with this logic.
-> >
-> > On the other side Allwinner BSP calculating dclk divider based on the
-> > SoC's. for A33 [1] it is fixed dclk divider of 4 and for A64 is is
-> > calculated based on the bpp/lanes.
->
-> It looks like the A64 has the same divider of 4:
-> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
->
-> I think you're confusing it with the ratio between the pixel clock and
-> the dotclock, called dsi_div:
-> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L198
 
-Ahh.. I thought this initially but as far as DSI clock computation is
-concern, the L12 tcon_div is local variable which is used for edge0
-computation in burst mode and not for the dsi clock computation. Since
-the BSP is unable to get the tcon_div during edge0 computation, they
-defined it locally I think.
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You can see the lcd_clk_config() code [2], where we can see DSI clock
-computation using dsi_div value.
+On Fri, Jan 25, 2019 at 07:34:31PM +0100, Heiner Kallweit wrote:
+> On 25.01.2019 11:18, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > If the system was booted using a device tree and if the device tree
+> > contains a MAC address, use it instead of reading one from the EEPROM.
+> > This is useful in situations where the EEPROM isn't properly programmed
+> > or where the firmware wants to override the existing MAC address.
+> >=20
+> I rarely see DT-configured boards with RTL8168 network. Do you add this
+> patch because of a specific board?
+> And you state "if EEPROM isn't properly programmed": Did you come across
+> such a case?
 
-Here is dump after the in Line 792 which is after computation[3]
-[   10.800737] lcd_clk_config: dsi_div = 6, tcon_div = 4, lcd_div = 1
-[   10.800743] lcd_clk_config: lcd_dclk_freq = 55, dclk_rate = 55000000
-[   10.800749] lcd_clk_config: lcd_rate = 330000000, pll_rate = 330000000
+We use these Realtek chips on some of our boards that customers can
+either purchase individually and integrate into their own designs or
+they can get the module as part of a product.
 
-The above dump the lcd_rate 330MHz is computed with panel clock, 55MHz
-into dsi_div 6. So this can be our actual divider values dclk_min_div,
-dclk_max_div in sun4i_dclk_round_rate (from
-drivers/gpu/drm/sun4i/sun4i_dotclock.c)
+In order to easily allow customers to reprogram the device (they may
+want to do that if integrating the module into their own products), a
+so-called ID EEPROM is part of the module that stores various bits of
+information. The ethernet MAC address is part of that EEPROM.
 
-We can even confirm this from Mainline code:
-[    1.866128] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 55000000
-[    1.873112] round_rate, parent = 330000000
-[    1.877351] round_rate, rate = 330000000
-[    1.881338] ideal = 330000000, rounded = 330000000, div = 6
-[    1.887232] sun4i_dclk_round_rate: div = 6 rate = 55000000
-[    1.887239] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 55000000
-[    1.887243] round_rate, parent = 330000000
-[    1.887259] round_rate, rate = 330000000
-[    1.887264] ideal = 330000000, rounded = 330000000, div = 6
-[    1.887267] sun4i_dclk_round_rate: div = 6 rate = 55000000
-[    1.887270] round_rate, parent = 330000000
-[    1.887286] round_rate, rate = 330000000
-[    1.887292] round_rate, parent = 330000000
-[    1.887307] round_rate, rate = 330000000
-[    1.887320] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-[    1.887324] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-[    1.887350] rate = 330000000
-[    1.887353] parent_rate = 297000000
-[    1.887355] reg = 0x80c00000
-[    1.887359] _nkm.n = 5, nkm->n.offset = 0x1, nkm->n.shift = 8
-[    1.887362] _nkm.k = 2, nkm->k.offset = 0x1, nkm->k.shift = 4
-[    1.887365] _nkm.m = 9, nkm->m.offset = 0x1, nkm->m.shift = 0
-[    1.887712] sun4i_dclk_set_rate div 6
-[    1.887720] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
+Typically the ID EEPROM will contain a valid MAC address if the module
+is part of a product, but if customers purchase the module individually,
+it is expected that they use a MAC address from their own pool.
 
-So, the dsi_div from AW BSP is our dclk_mini_div(and dclk_max_div) and
-that can be computed as format/lanes in A64.
+Typically early boot firmware will load the MAC address from the EEPROM
+and store it in the ethernet device's device tree node so that the MAC
+address programmed into the ID EEPROM will be used by the ethernet
+device at runtime.
 
-Hope this explaining clears the diff, let me know if I miss anything.
+> In general the patch is fine with me, I just want to understand the
+> motivation. One further comment see inline.
+> As of today we already have the option to set a MAC from userspace
+> via ethtool.
+>=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> > Based on net-next.
+> >=20
+> >  drivers/net/ethernet/realtek/r8169.c | 35 +++++++++++++++++-----------
+> >  1 file changed, 22 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/etherne=
+t/realtek/r8169.c
+> > index f574b6b557f9..fd9edd643ca5 100644
+> > --- a/drivers/net/ethernet/realtek/r8169.c
+> > +++ b/drivers/net/ethernet/realtek/r8169.c
+> > @@ -6957,6 +6957,21 @@ static int rtl_alloc_irq(struct rtl8169_private =
+*tp)
+> >  	return pci_alloc_irq_vectors(tp->pci_dev, 1, 1, flags);
+> >  }
+> > =20
+> [...]
+> > @@ -7252,20 +7268,13 @@ static int rtl_init_one(struct pci_dev *pdev, c=
+onst struct pci_device_id *ent)
+> >  	u64_stats_init(&tp->rx_stats.syncp);
+> >  	u64_stats_init(&tp->tx_stats.syncp);
+> > =20
+> > -	/* Get MAC address */
+> > -	switch (tp->mac_version) {
+> > -		u8 mac_addr[ETH_ALEN] __aligned(4);
+> > -	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
+> > -	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
+> > -		*(u32 *)&mac_addr[0] =3D rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
+> > -		*(u16 *)&mac_addr[4] =3D rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
+> > +	/* get MAC address */
+> > +	if (eth_platform_get_mac_address(&pdev->dev, mac_addr))
+> > +		rtl_read_mac_address(tp, mac_addr);
+> > +
+> > +	if (is_valid_ether_addr(mac_addr))
+>=20
+> Here array mac_addr may be uninitialized (if platform defines no MAC
+> and chip version is not covered by the switch statement).
 
-[2] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L781
-[3] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L792
+Good point. I can memset() mac_addr to make sure it is invalid, rather
+than undefined, for chip versions that are not covered.
+
+Thierry
+
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxQkBAACgkQ3SOs138+
+s6GvkQ/7BEyMdMJpuYhqNU7g/U6ExGOPKKa+OJJoECaCreF4Wyg9i3rWiaY2ST7q
+1Py9vinh+EjEF/uMpkCCLTBB6UbA92aqWcI7d27GA+VV88yEWaQxHcty0/j5k2dX
+w7Bcip/Z/Tmul63WdFsdPrQmNvrrXV4NU51uXRlGj8zRK6GXobmZGzroH4rEXa+b
+3hvD1mT6htpGtGqet4VryDFW4+COVuMOycT4ABF/5vyn9g/Pe9C/9j+rPC7LXowR
+spVeLudHgIApYmdASpIBv73LiOZpVEpmgIOqhDNNvyeu1HMh+yU5fLRGTFKnMZ9B
+wvcjTaESNtX6yoEFi9a/HxdwGrUMqAbLtJ4s2CiNo7R4AvjM1JOweKP4QtTtRwIj
+LYO0UaOTQHhkpi4+kTitPZj5RCbei3PS/WQ7hZX34rcaM0xkYapm3mpxhhPUPnnq
+j7OHGMKvQFEHhkjI1a4icY8IRIURTRHWNgBfBg/r1ZKG4eO4eoF490bs5qDN/an5
+uRKBUVcENhYN270gD0tcnoL7HPmqNkIFjpr3PiVyXrrGBsV80avdhTFpwqQMoLCE
+1Tx78ezmmjlL9df07n8bixLhVeR2yneyo5FK4C+rtO9BQihvSZOxndoVQmnODoFC
+krw0pnPN2ReR2BKIj9Vhq3FgqT7DPiPSLn9B9N+wfJn7lF92Gh4=
+=OR3H
+-----END PGP SIGNATURE-----
+
+--dDRMvlgZJXvWKvBx--
