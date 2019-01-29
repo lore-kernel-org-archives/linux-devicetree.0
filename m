@@ -1,13 +1,16 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add QuadSPI controller
-Date: Tue, 29 Jan 2019 17:42:59 +0100
-Message-ID: <1548780179.6869.9.camel@pengutronix.de>
-References: <20190129163457.7107-1-ccaione@baylibre.com>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [PATCH 4/6] arm64: dts: Add Adreno GPU and GPU smmu definitions
+Date: Tue, 29 Jan 2019 09:43:32 -0700
+Message-ID: <20190129164332.GB18874@jcrouse1-lnx.qualcomm.com>
+References: <20190129132335.30695-1-srinivas.kandagatla@linaro.org>
+ <20190129132335.30695-5-srinivas.kandagatla@linaro.org>
+ <20190129160426.GA18874@jcrouse1-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190129163457.7107-1-ccaione@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190129160426.GA18874@jcrouse1-lnx.qualcomm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,60 +20,130 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2FybG8sCgpBbSBEaWVuc3RhZywgZGVuIDI5LjAxLjIwMTksIDE2OjM0ICswMDAwIHNjaHJp
-ZWIgQ2FybG8gQ2Fpb25lOgo+IEFkZCBhIG5vZGUgZm9yIHRoZSBGcmVlc2NhbGUvTlhQIFF1YWRT
-UEkgY29udHJvbGxlciB3aXRoIGEgcHJvcGVyCj4gcGluY3RybCBzZXQgYW5kIGVuYWJsZSBpdCBm
-b3IgdGhlIGkuTVg4TVEgRVZLIGJvYXJkLgo+IAo+ID4gU2lnbmVkLW9mZi1ieTogQ2FybG8gQ2Fp
-b25lIDxjY2Fpb25lQGJheWxpYnJlLmNvbT4KPiAtLS0KPiDCoGFyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2lteDhtcS1ldmsuZHRzIHwgMjcgKysrKysrKysrKysrKysrKysrKysKPiDCoGFy
-Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpwqDCoMKgwqB8IDEzICsrKysr
-KysrKysKPiDCoDIgZmlsZXMgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEtZXZrLmR0cyBiL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS1ldmsuZHRzCj4gaW5kZXggZjc0YjEzYWE1
-YWE1Li5hZTE4MWMyYTUwMDMgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvaW14OG1xLWV2ay5kdHMKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2Fs
-ZS9pbXg4bXEtZXZrLmR0cwo+IEBAIC0xMzcsNiArMTM3LDIxIEBACj4gPiDCoAlzdGF0dXMgPSAi
-b2theSI7Cj4gwqB9Owo+IMKgCj4gKyZzcGkwIHsKPiA+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZh
-dWx0IjsKPiA+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX3FzcGk+Owo+ID4gKwlzdGF0dXMgPSAi
-b2theSI7Cj4gKwo+ID4gPiArCWZsYXNoMDogbjI1cTI1NmFAMCB7Cj4gPiArCQlyZWcgPSA8MD47
-Cj4gPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+ICsJCSNzaXplLWNlbGxzID0gPDE+Owo+
-ID4gKwkJY29tcGF0aWJsZSA9ICJtaWNyb24sbjI1cTI1NmEiLCAiamVkZWMsc3BpLW5vciI7Cj4g
-PiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwyOTAwMDAwMD47Cj4gPiArCQlzcGktbm9yLGRkci1x
-dWFkLXJlYWQtZHVtbXkgPSA8Nj47Cj4gPiArCX07Cj4gK307Cj4gKwo+IMKgJnVzZGhjMSB7Cj4g
-PiDCoAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAic3RhdGVfMTAwbWh6IiwgInN0YXRlXzIw
-MG1oeiI7Cj4gPiDCoAlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNkaGMxPjsKPiBAQCAtMTk1LDYg
-KzIxMCwxOCBAQAo+ID4gwqAJCT47Cj4gPiDCoAl9Owo+IMKgCj4gPiArCXBpbmN0cmxfcXNwaTog
-cXNwaWdycCB7Cj4gPiArCQlmc2wscGlucyA9IDwKPiA+ID4gKwkJCU1YOE1RX0lPTVVYQ19OQU5E
-X0FMRV9RU1BJX0FfU0NMSwkweDgyCj4gPiA+ICsJCQlNWDhNUV9JT01VWENfTkFORF9DRTBfQl9R
-U1BJX0FfU1MwX0IJMHg4Mgo+ID4gPiArCQkJTVg4TVFfSU9NVVhDX05BTkRfREFUQTAwX1FTUElf
-QV9EQVRBMAkweDgyCj4gPiA+ICsJCQlNWDhNUV9JT01VWENfTkFORF9EQVRBMDFfUVNQSV9BX0RB
-VEExCTB4ODIKPiA+ID4gKwkJCU1YOE1RX0lPTVVYQ19OQU5EX0RBVEEwMl9RU1BJX0FfREFUQTIJ
-MHg4Mgo+ID4gPiArCQkJTVg4TVFfSU9NVVhDX05BTkRfREFUQTAzX1FTUElfQV9EQVRBMwkweDgy
-Cj4gKwo+ID4gKwkJPjsKPiA+ICsJfTsKPiArCj4gPiDCoAlwaW5jdHJsX3JlZ191c2RoYzI6IHJl
-Z3VzZGhjMmdycGdwaW8gewo+ID4gwqAJCWZzbCxwaW5zID0gPAo+ID4gPiDCoAkJCU1YOE1RX0lP
-TVVYQ19TRDJfUkVTRVRfQl9HUElPMl9JTzE5CQkweDQxCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvaW14OG1xLmR0c2kKPiBpbmRleCBkYmVkYzRhNWU3ZmIuLmUwMDU5ZjQ1MTU5MSAx
-MDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQo+
-ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gQEAgLTUx
-Niw2ICs1MTYsMTkgQEAKPiA+IMKgCQkJfTsKPiA+IMKgCQl9Owo+IMKgCj4gKwkJc3BpMDogc3Bp
-QDMwYmIwMDAwIHsKCjMwYmIwMDAwIGlzIHBhcnQgb2YgdGhlIEFJUFMzIGJ1cyBhZGRyZXNzIHNw
-YWNlLCBzbyBwbGVhc2UgbW92ZSB0aGlzIHRvCnRoZSBjb3JyZWN0IGxvY2F0aW9uIHdpdGhpbiB0
-aGlzIGJ1cyBub2RlLgoKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiArCQkJI3NpemUt
-Y2VsbHMgPSA8MD47Cj4gKwkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDdkLXFzcGkiOwoKUGxlYXNl
-IGFkZCBhICJmc2wsaW14OG1xLXFzcGkiIGNvbXBhdGlibGUgaGVyZSwgYXMgd2FzIGRvbmUgd2l0
-aCBhbGwKdGhlIG90aGVyIG5vZGVzIGluIHRoaXMgZmlsZSwgc28gd2UgY2FuIG1hdGNoIHRoaXMg
-aW4gdGhlIGRyaXZlciBzaG91bGQKdGhlIG5lZWQgYXJpc2UuCgo+ICsJCQlyZWcgPSA8MHgzMGJi
-MDAwMCAweDEwMDAwPiwgPDB4MDgwMDAwMDAgMHgxMDAwMDAwMD47Cj4gPiArCQkJcmVnLW5hbWVz
-ID0gIlF1YWRTUEkiLCAiUXVhZFNQSS1tZW1vcnkiOwo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lD
-X1NQSSAxMDcgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPiArCQkJY2xvY2tzID0gPCZjbGsgSU1Y
-OE1RX0NMS19RU1BJX1JPT1Q+LAo+ICsJCQk8JmNsayBJTVg4TVFfQ0xLX1FTUElfUk9PVD47CgpQ
-bGVhc2UgYWxpZ24gdGhlIHNlY29uZCBjbG9jayByZWZlcmVuY2UsIGFzIGlzIGRvbmUgZm9yIGFs
-bCBvdGhlcgpwZXJpcGhlcmFsIG5vZGVzIGluIHRoaXMgZmlsZS4KClJlZ2FyZHMsCkx1Y2FzCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+On Tue, Jan 29, 2019 at 09:04:26AM -0700, Jordan Crouse wrote:
+> On Tue, Jan 29, 2019 at 01:23:33PM +0000, Srinivas Kandagatla wrote:
+> > From: Jordan Crouse <jcrouse@codeaurora.org>
+> > 
+> > Add an initial node for the Adreno GPU and it's companion
+> > SMMU. The GPU node is mostly complete except for a bare
+> > bones power table that will be filled out more completely
+> > later.
+> > 
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > [Remove mmagic clocks from GPU/smmu nodes]
+> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
+> Thanks for sending this.
+> 
+> > ---
+> >  arch/arm64/boot/dts/qcom/msm8996.dtsi | 52 +++++++++++++++++++++++++++
+> >  1 file changed, 52 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > index 0d0b9482aa4d..b5f23594905c 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > @@ -84,6 +84,12 @@
+> >  			qcom,client-id = <1>;
+> >  			qcom,vmid = <15>;
+> >  		};
+> > +
+> > +		zap_shader_region: gpu@8f200000 {
+> > +			compatible = "shared-dma-pool";
+> > +			reg = <0x0 0x90b00000 0x0 0xa00000>;
+> > +			no-map;
+> > +		};
+> >  	};
+> >  
+> >  	cpus {
+> > @@ -1338,6 +1344,52 @@
+> >  			};
+> >  		};
+> >  
+> > +		gpu@b00000 {
+> > +			compatible = "qcom,adreno-530.2", "qcom,adreno";
+> > +			#stream-id-cells = <16>;
+> > +
+> > +			reg = <0xb00000 0x3f000>;
+> > +			reg-names = "kgsl_3d0_reg_memory";
+> > +
+> > +			interrupts = <0 300 IRQ_TYPE_LEVEL_HIGH>;
+> > +			interrupt-names = "kgsl_3d0_irq";
+> 
+> We dropped the interrupt name as of:
+> 
+> https://cgit.freedesktop.org/~robclark/linux/commit/?h=msm-next&id=2255f244f92e651dbd410f92d2968c6dae4ead8e
+> 
+> You should be able to safely omit it.
+> 
+> > +
+> > +			clocks = <&mmcc GPU_GX_GFX3D_CLK>,
+> > +				<&mmcc GPU_AHB_CLK>,
+> > +				<&mmcc GPU_GX_RBBMTIMER_CLK>,
+> > +				<&gcc GCC_BIMC_GFX_CLK>,
+> > +				<&gcc GCC_MMSS_BIMC_GFX_CLK>;
+> > +
+> > +			clock-names = "core",
+> > +				"iface",
+> > +				"rbbmtimer",
+> > +				"mem",
+> > +				"mem_iface";
+> > +
+> > +			power-domains = <&mmcc GPU_GDSC>;
+> > +			iommus = <&adreno_smmu 0>;
+> > +
+> > +			qcom,gpu-quirk-two-pass-use-wfi;
+> > +			qcom,gpu-quirk-fault-detect-mask;
+> 
+> This was downstream silliness - neither of these "flags" made it upstream
+> (thankfully).
+> 
+> > +
+> > +			/* This is a safe speed for bring up in all bin levels.
+> > +			 * This isn't the fastest the chip can go, but we can
+> > +			 * get there eventually */
+> > +			qcom,gpu-pwrlevels {
+> > +				compatible = "qcom,gpu-pwrlevels";
+> > +				qcom,gpu-pwrlevel@0 {
+> > +					qcom,gpu-freq = <510000000>;
+> > +				};
+> > +				qcom,gpu-pwrlevel@1 {
+> > +					qcom,gpu-freq = <27000000>;
+> > +				};
+> 
+> Hmm - I haven't looked at the integration branch in a while but I'm positive
+> that we had opp tables at some point because the driver supports
+> opp-supported-hw. I hope I didn't just leave that sitting on my hard drive
+> somewhere. I'll check and let you know.
+
+Ugh, I just found them sitting unsent in a dusty git branch. I can either send
+them as incremental patches on top of yours to be squashed later or I can
+refactor this patch and send it out again, whatever is easiest for you.
+
+Jordan
+
+> > +			};
+> > +
+> > +			zap-shader {
+> > +				memory-region = <&zap_shader_region>;
+> > +			};
+> > +		};
+> > +
+> >  		mdss: mdss@900000 {
+> >  			compatible = "qcom,mdss";
+> >  
+> > -- 
+> > 2.20.1
+> > 
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
