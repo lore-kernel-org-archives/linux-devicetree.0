@@ -1,44 +1,32 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [RESEND PATCH v2 8/8] Input: sx8654 - convert #defined flags to
- BIT(x)
-Date: Mon, 28 Jan 2019 21:40:54 -0800
-Message-ID: <533e48bd35d360cec8d749f3b70425c1eb5e6e9d.camel@perches.com>
-References: <20181218083606.25795-1-richard.leitner@skidata.com>
-         <20181218084002.19454-1-richard.leitner@skidata.com>
-         <20190129002518.GH34692@dtor-ws>
+From: Andrew-sh Cheng <andrew-sh.cheng@mediatek.com>
+Subject: [PATCH 0/3] Add cpufreq and cci devfreq for mt8183
+Date: Tue, 29 Jan 2019 14:35:01 +0800
+Message-ID: <1548743704-16821-1-git-send-email-andrew-sh.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129002518.GH34692@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Richard Leitner <richard.leitner@skidata.com>
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com, Andrew-sh Cheng <andrew-sh.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-01-28 at 16:25 -0800, Dmitry Torokhov wrote:
-> On Tue, Dec 18, 2018 at 09:40:02AM +0100, Richard Leitner wrote:
-> > Some of the #defined register values are one-bit flags. Convert them to
-> > use the BIT(x) macro instead of 1 byte hexadecimal values. This improves
-> > readability and clarifies the intent.
-> > 
-> > Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
-> 
-> Applied, thank you.
+MT8183 supports CPU DVFS and CCI DVFS, and LITTLE cpus and CCI are in the same voltage domain.
+So, this series is to add drivers to handle the voltage coupling between CPU and CCI DVFS.
 
-Not so sure this should be applied.
+Andrew-sh.Cheng (3):
+  cpufreq: mediatek: add mt8183 cpufreq support
+  dt-bindings: devfreq: add compatible for mt8183 cci devfreq
+  devfreq: add mediatek cci devfreq
 
-> > diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-[]
-> > @@ -46,7 +47,7 @@
-[]
-> >  /* bits for I2C_REG_IRQSRC */
-> > -#define IRQ_PENTOUCH_TOUCHCONVDONE	0x08
-> > -#define IRQ_PENRELEASE			0x04
-> > +#define IRQ_PENTOUCH_TOUCHCONVDONE	BIT(7)
-> > +#define IRQ_PENRELEASE			BIT(6)
+ .../bindings/devfreq/mt8183-cci-devfreq.txt        |  19 ++
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   1 +
+ drivers/cpufreq/mediatek-cpufreq.c                 |   7 +-
+ drivers/devfreq/Kconfig                            |   9 +
+ drivers/devfreq/Makefile                           |   1 +
+ drivers/devfreq/mt8183-cci-devfreq.c               | 224 +++++++++++++++++++++
+ 6 files changed, 260 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+ create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
 
-Shouldn't this be BIT(3) and BIT(2)
-or did you mean to change the values too?
-
-If so, this change should be noted in the commit message.
+-- 
+1.8.1.1.dirty
