@@ -1,103 +1,60 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 2/2] hwmon: pwm-fan: Add optional regulator support
-Date: Tue, 29 Jan 2019 18:07:11 +0100
-Message-ID: <1548781631-5736-2-git-send-email-stefan.wahren@i2se.com>
-References: <1548781631-5736-1-git-send-email-stefan.wahren@i2se.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v2] arm: dts: gta04: add gps support
+Date: Tue, 29 Jan 2019 08:38:43 +0100
+Message-ID: <20190129073843.14979-1-andreas@kemnade.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548781631-5736-1-git-send-email-stefan.wahren@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-This adds optional regulator support to the pwm-fan driver. This is
-necessary for pwm fans which are powered by a switchable supply.
+The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
+which one is mounted so use the compatibility entry for w2sg0004
+for all which will work for both.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- drivers/hwmon/pwm-fan.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Changes in v2:
+- some s/gps/gnss/
+- not added vcc-supply because the regulator is not modelled
+  in dts at all
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 2c94482..9e0591e 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -23,6 +23,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/sysfs.h>
- #include <linux/thermal.h>
+w2sg0004 bindings are in next-20190129
+
+https://git.kernel.org/pub/scm/linux/kernel/git/johan/gnss gnss-next
+ arch/arm/boot/dts/omap3-gta04.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index e53d32691308..d58c117e429f 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -312,6 +312,12 @@
+ 		>;
+        };
  
-@@ -31,6 +32,7 @@
- struct pwm_fan_ctx {
- 	struct mutex lock;
- 	struct pwm_device *pwm;
-+	struct regulator *reg_en;
- 	unsigned int pwm_value;
- 	unsigned int pwm_fan_state;
- 	unsigned int pwm_fan_max_state;
-@@ -244,6 +246,23 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ctx->reg_en = devm_regulator_get_optional(&pdev->dev, "fan");
-+	if (!IS_ERR(ctx->reg_en)) {
-+		ret = regulator_enable(ctx->reg_en);
-+		if (ret)
-+			dev_err(&pdev->dev,
-+				"Failed to enable fan supply: %d\n", ret);
-+	} else {
-+		switch (PTR_ERR(ctx->reg_en)) {
-+		case -ENODEV:
-+		case -ENOSYS:
-+			ctx->reg_en = NULL;
-+			break;
-+		default:
-+			return PTR_ERR(ctx->reg_en);
-+		}
-+	}
++	gps_pins: pinmux_gps_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x2176, PIN_OUTPUT_PULLDOWN | MUX_MODE4) /* gpio145 */
++		>;
++	};
 +
- 	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
- 						       ctx, pwm_fan_groups);
- 	if (IS_ERR(hwmon)) {
-@@ -287,6 +306,10 @@ static int pwm_fan_remove(struct platform_device *pdev)
- 	thermal_cooling_device_unregister(ctx->cdev);
- 	if (ctx->pwm_value)
- 		pwm_disable(ctx->pwm);
-+
-+	if (ctx->reg_en)
-+		regulator_disable(ctx->reg_en);
-+
- 	return 0;
- }
+ 	hdq_pins: hdq_pins {
+ 		pinctrl-single,pins = <
+ 			OMAP3_CORE1_IOPAD(0x21c6, PIN_INPUT_PULLUP | MUX_MODE0) /* i2c3_sda.hdq */
+@@ -644,6 +650,13 @@
+ &uart2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart2_pins>;
++	gnss: gnss {
++		compatible = "wi2wi,w2sg0004";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gps_pins>;
++		sirf,onoff-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
++		lna-supply = <&vsim>;
++	};
+ };
  
-@@ -299,6 +322,12 @@ static int pwm_fan_suspend(struct device *dev)
- 
- 	pwm_get_args(ctx->pwm, &args);
- 
-+	if (ctx->reg_en) {
-+		ret = regulator_disable(ctx->reg_en);
-+		if (ret)
-+			dev_err(dev, "Failed to disable fan supply: %d\n", ret);
-+	}
-+
- 	if (ctx->pwm_value) {
- 		ret = pwm_config(ctx->pwm, 0, args.period);
- 		if (ret < 0)
-@@ -317,6 +346,12 @@ static int pwm_fan_resume(struct device *dev)
- 	unsigned long duty;
- 	int ret;
- 
-+	if (ctx->reg_en) {
-+		ret = regulator_enable(ctx->reg_en);
-+		if (ret)
-+			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
-+	}
-+
- 	if (ctx->pwm_value == 0)
- 		return 0;
- 
+ &uart3 {
 -- 
-2.7.4
+2.11.0
