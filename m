@@ -1,86 +1,78 @@
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH 18/24] PCI: dwc: Fix dw_pcie_ep_find_capability to return
- correct capability offset
-Date: Tue, 29 Jan 2019 09:25:09 +0000
-Message-ID: <13501c15-8f3d-604b-c4fc-bde3fb208745@synopsys.com>
-References: <20190114132424.6445-1-kishon@ti.com>
- <20190114132424.6445-19-kishon@ti.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v5 2/6] dt-bindings: phy: mvebu-utmi: add UTMI PHY bindings
+Date: Tue, 29 Jan 2019 10:36:31 +0100
+Message-ID: <20190129093635.4321-3-miquel.raynal@bootlin.com>
+References: <20190129093635.4321-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114132424.6445-19-kishon@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Murali Karicheri <m-karicheri2@ti.com>, Jesper Nilsson <jesper.nilsson@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190129093635.4321-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Add bindings for Marvell Armada 3700 USB2 UTMI+ PHY.
 
-On 14/01/2019 13:24, Kishon Vijay Abraham I wrote:
-> commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
-> adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
-> __dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
-> 
-> However if MSI or MSIX capability is the last capability (i.e there are
-> no additional items in the capabilities list and the Next Capability
-> Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
-> even though MSI or MSIX capability may be present. This is because of
-> incorrect ordering of "next_cap_ptr" check. Fix it here.
-> 
-> Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index d5144781005b..cd51b008858c 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
->  	u8 cap_id, next_cap_ptr;
->  	u16 reg;
->  
-> +	if (!cap_ptr)
-> +		return 0;
-> +
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/phy/phy-mvebu-utmi.txt           | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
 
-Supposedly this was already verified by the function that calls this one.
-
->  	reg = dw_pcie_readw_dbi(pci, cap_ptr);
-> -	next_cap_ptr = (reg & 0xff00) >> 8;
->  	cap_id = (reg & 0x00ff);
->  
-> -	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
-> +	if (cap_id > PCI_CAP_ID_MAX)
->  		return 0;
->  
->  	if (cap_id == cap)
->  		return cap_ptr;
->  
-> +	next_cap_ptr = (reg & 0xff00) >> 8;
-
-This fix seems to be a bit overdone, especially when you only need to swap the
-if blocks order to achieve the desired goal.
-
->  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->  }
->  
-> @@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
->  	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
->  	next_cap_ptr = (reg & 0x00ff);
->  
-> -	if (!next_cap_ptr)
-> -		return 0;
-> -
-
-Why remove it?
-If pointer is null, why to jump to another function to check is the the same
-pointer is null?
-
->  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->  }
->  
-> 
+diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+new file mode 100644
+index 000000000000..aa99ceec73b0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+@@ -0,0 +1,38 @@
++MVEBU A3700 UTMI PHY
++--------------------
++
++USB2 UTMI+ PHY controllers can be found on the following Marvell MVEBU SoCs:
++* Armada 3700
++
++On Armada 3700, there are two USB controllers, one is compatible with the USB2
++and USB3 specifications and supports OTG. The other one is USB2 compliant and
++only supports host mode. Both of these controllers come with a slightly
++different UTMI PHY.
++
++Required Properties:
++
++- compatible: Should be one of:
++	      * "marvell,a3700-utmi-host-phy" for the PHY connected to
++	        the USB2 host-only controller.
++	      * "marvell,a3700-utmi-otg-phy" for the PHY connected to
++	        the USB3 and USB2 OTG capable controller.
++- reg: PHY IP register range.
++- marvell,usb-misc-reg: handle on the "USB miscellaneous registers" shared
++			region covering registers related to both the host
++			controller and the PHY.
++- #phy-cells: Standard property (Documentation: phy-bindings.txt) Should be 0.
++
++
++Example:
++
++	usb2_utmi_host_phy: phy@5f000 {
++		compatible = "marvell,armada-3700-utmi-host-phy";
++		reg = <0x5f000 0x800>;
++		marvell,usb-misc-reg = <&usb2_syscon>;
++		#phy-cells = <0>;
++	};
++
++	usb2_syscon: system-controller@5f800 {
++		compatible = "marvell,armada-3700-usb2-host-misc", "syscon";
++		reg = <0x5f800 0x800>;
++	};
+-- 
+2.19.1
