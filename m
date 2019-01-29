@@ -1,57 +1,49 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.20 075/117] EDAC, altera: Fix S10 persistent register offset
-Date: Tue, 29 Jan 2019 12:35:26 +0100
-Message-ID: <20190129113211.253650252@linuxfoundation.org>
-References: <20190129113207.477505932@linuxfoundation.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2] dt-bindings: aspeed-lpc: Make parameter optional
+Date: Tue, 29 Jan 2019 12:30:08 +0000
+Message-ID: <20190129123008.GC24070@dell>
+References: <20190118201547.640173-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129113207.477505932@linuxfoundation.org>
+Content-Disposition: inline
+In-Reply-To: <20190118201547.640173-1-vijaykhemka@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>, Borislav Petkov <bp@suse.de>, James Morse <james.morse@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, dinguyen@kernel.org, linux-edac <linux-edac@vger.kernel.org>, mark.rutland@arm.com, robh+dt@kernel.org
+To: Vijay Khemka <vijaykhemka@fb.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+On Fri, 18 Jan 2019, Vijay Khemka wrote:
 
-------------------
+> Memory-region and flash phandle is not a required parameter, it is
+> optional to describe in device tree and needed only use basis.
+> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/aspeed-lpc.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> index 34dd89087cff..d28c4e117611 100644
+> --- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> @@ -135,6 +135,9 @@ Required properties:
+>  - clocks:	contains a phandle to the syscon node describing the clocks.
+>  		There should then be one cell representing the clock to use
+>  
+> +Optional properties:
+> +These below properties are optional to define.
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+This line is superfluous.  Please remove it.
 
-commit 245b6c6558128327d330549b23d09594c46f58df upstream.
+> +
+>  - memory-region: A phandle to a reserved_memory region to be used for the LPC
+>  		to AHB mapping
+>  
 
-Correct the persistent register offset where address and status are
-stored.
-
-Fixes: 08f08bfb7b4c ("EDAC, altera: Merge Stratix10 into the Arria10 SDRAM probe routine")
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: dinguyen@kernel.org
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: mark.rutland@arm.com
-Cc: robh+dt@kernel.org
-Cc: stable <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/1548179287-21760-2-git-send-email-thor.thayer@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/edac/altera_edac.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -295,8 +295,8 @@ struct altr_sdram_mc_data {
- #define S10_SYSMGR_ECC_INTSTAT_DERR_OFST  0xA0
- 
- /* Sticky registers for Uncorrected Errors */
--#define S10_SYSMGR_UE_VAL_OFST            0x120
--#define S10_SYSMGR_UE_ADDR_OFST           0x124
-+#define S10_SYSMGR_UE_VAL_OFST            0x220
-+#define S10_SYSMGR_UE_ADDR_OFST           0x224
- 
- #define S10_DDR0_IRQ_MASK                 BIT(16)
- 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
