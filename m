@@ -1,72 +1,56 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcs404: evb: Fix voltages for s5 and l3
-Date: Tue, 29 Jan 2019 23:46:52 +0100
-Message-ID: <20190129224652.GB11349@centauri.lan>
-References: <20190125232954.26166-1-bjorn.andersson@linaro.org>
- <32b8136d-3acb-66e9-948c-ee8903b91401@linaro.org>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: Re: [PATCH v2] dt-bindings: aspeed-lpc: Make parameter optional
+Date: Tue, 29 Jan 2019 23:00:11 +0000
+Message-ID: <A29B3BAA-8FA1-4FED-AB8D-C6DA2C2F785C@fb.com>
+References: <20190118201547.640173-1-vijaykhemka@fb.com>
+ <20190129123008.GC24070@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <32b8136d-3acb-66e9-948c-ee8903b91401@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, broonie@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190129123008.GC24070@dell>
+Content-Language: en-US
+Content-ID: <AF1F6947D459C44888696407724BBA09@namprd15.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding Mark Brown on CC.
-
-On Tue, Jan 29, 2019 at 10:58:47PM +0100, Jorge Ramirez wrote:
-> On 1/26/19 00:29, Bjorn Andersson wrote:
-> > PMS405 S5 was upstreamed without a voltage and PMS405 L3 is outside the
-> > acceptable range, causing PCIe to fail. Fix these.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> > index 579ddaf4f5fa..072061aa1b79 100644
-> > --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> > @@ -72,8 +72,8 @@
-> >  		};
-> >  
-> >  		vreg_s5_1p35: s5 {
-> > -			regulator-min-microvolt = <>;
-> > -			regulator-max-microvolt = <>;
-> > +			regulator-min-microvolt = <1352000>;
-> > +			regulator-max-microvolt = <1352000>;
-> >  		};
-> >  
-> >  		vreg_l1_1p3: l1 {
-> > @@ -87,7 +87,7 @@
-> >  		};
-> >  
-> >  		vreg_l3_1p05: l3 {
-> > -			regulator-min-microvolt = <976000>;
-> > +			regulator-min-microvolt = <1050000>;
-> 
-> 
-> the linear range for this regulator is
->  - REGULATOR_LINEAR_RANGE(312000, 0, 127, 8000),
-> 
-> meaning that 1050000 is actually not a valid selectable value (ie, after
-> applying the above constrains 1056000 would be selected instead)
-> 
-> In order for a driver to be able to successfully request min = 1050000,
-> regulator-min-microvolt should be set to 1048000 (and 1056000 would be
-> applied)
-> 
-> the question is, should this property contain only hardware achievable
-> values? or should drivers only request hardware achievable values? the
-> way the constrains are implemented it has to be one of the two (I think
-> the former would be more intuitive - ie if the dts
-> regulator-min-microvolt is a valid value)
-> 
-> >  			regulator-max-microvolt = <1160000>;
-> >  		};
-> >  
-> > 
-> 
+VGhhbmtzIExlZSwNCg0K77u/T24gMS8yOS8xOSwgNDozMCBBTSwgIkxlZSBKb25lcyIgPGxlZS5q
+b25lc0BsaW5hcm8ub3JnPiB3cm90ZToNCg0KICAgIE9uIEZyaSwgMTggSmFuIDIwMTksIFZpamF5
+IEtoZW1rYSB3cm90ZToNCiAgICANCiAgICA+IE1lbW9yeS1yZWdpb24gYW5kIGZsYXNoIHBoYW5k
+bGUgaXMgbm90IGEgcmVxdWlyZWQgcGFyYW1ldGVyLCBpdCBpcw0KICAgID4gb3B0aW9uYWwgdG8g
+ZGVzY3JpYmUgaW4gZGV2aWNlIHRyZWUgYW5kIG5lZWRlZCBvbmx5IHVzZSBiYXNpcy4NCiAgICA+
+IA0KICAgID4gU2lnbmVkLW9mZi1ieTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+
+DQogICAgPiAtLS0NCiAgICA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZk
+L2FzcGVlZC1scGMudHh0IHwgMyArKysNCiAgICA+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRp
+b25zKCspDQogICAgPiANCiAgICA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWZkL2FzcGVlZC1scGMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21mZC9hc3BlZWQtbHBjLnR4dA0KICAgID4gaW5kZXggMzRkZDg5MDg3Y2ZmLi5k
+MjhjNGUxMTc2MTEgMTAwNjQ0DQogICAgPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWZkL2FzcGVlZC1scGMudHh0DQogICAgPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWZkL2FzcGVlZC1scGMudHh0DQogICAgPiBAQCAtMTM1LDYgKzEz
+NSw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQogICAgPiAgLSBjbG9ja3M6CWNvbnRhaW5zIGEg
+cGhhbmRsZSB0byB0aGUgc3lzY29uIG5vZGUgZGVzY3JpYmluZyB0aGUgY2xvY2tzLg0KICAgID4g
+IAkJVGhlcmUgc2hvdWxkIHRoZW4gYmUgb25lIGNlbGwgcmVwcmVzZW50aW5nIHRoZSBjbG9jayB0
+byB1c2UNCiAgICA+ICANCiAgICA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KICAgID4gK1RoZXNl
+IGJlbG93IHByb3BlcnRpZXMgYXJlIG9wdGlvbmFsIHRvIGRlZmluZS4NCiAgICANCiAgICBUaGlz
+IGxpbmUgaXMgc3VwZXJmbHVvdXMuICBQbGVhc2UgcmVtb3ZlIGl0Lg0KSSB3aWxsIHJlbW92ZSBp
+dC4gSSBhbSBhc3N1bWluZyBvbmx5IDEgbGluZSB0byByZW1vdmUuDQogICAgDQogICAgPiArDQog
+ICAgPiAgLSBtZW1vcnktcmVnaW9uOiBBIHBoYW5kbGUgdG8gYSByZXNlcnZlZF9tZW1vcnkgcmVn
+aW9uIHRvIGJlIHVzZWQgZm9yIHRoZSBMUEMNCiAgICA+ICAJCXRvIEFIQiBtYXBwaW5nDQogICAg
+PiAgDQogICAgDQogICAgLS0gDQogICAgTGVlIEpvbmVzIFvmnY7nkLzmlq9dDQogICAgTGluYXJv
+IFNlcnZpY2VzIFRlY2huaWNhbCBMZWFkDQogICAgTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ug
+c29mdHdhcmUgZm9yIEFSTSBTb0NzDQogICAgRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0
+dGVyIHwgQmxvZw0KICAgIA0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
