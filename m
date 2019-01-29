@@ -1,110 +1,111 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 4/6] arm64: dts: Add Adreno GPU and GPU smmu definitions
-Date: Tue, 29 Jan 2019 13:23:33 +0000
-Message-ID: <20190129132335.30695-5-srinivas.kandagatla@linaro.org>
-References: <20190129132335.30695-1-srinivas.kandagatla@linaro.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCHv5 6/7] coresight: debug: Add Unique Component Identifier
+ (UCI) table
+Date: Tue, 29 Jan 2019 21:25:28 +0800
+Message-ID: <20190129132528.GA16669@leoy-ThinkPad-X240s>
+References: <cover.1548419933.git.saiprakash.ranjan@codeaurora.org>
+ <1019e6fed1ade6a580f01df9b3f70c2a9df5b3be.1548419933.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190129132335.30695-1-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: andy.gross@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1019e6fed1ade6a580f01df9b3f70c2a9df5b3be.1548419933.git.saiprakash.ranjan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kerne
 List-Id: devicetree@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
+On Tue, Jan 29, 2019 at 12:44:03AM +0530, Sai Prakash Ranjan wrote:
+> Add UCI table and a helper macro for coresight CPU debug
+> module. This patch adds the UCI entries for Krypo CPUs
+> found on MSM8996 which shares the same PIDs as ETMs.
+> 
+> Without this, below error is observed on MSM8996:
+> 
+> [    5.429867] OF: graph: no port node found in /soc/debug@3810000
+> [    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
+> [    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
+> [    5.446474] OF: graph: no port node found in /soc/debug@3910000
+> [    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
+> [    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
+> [    5.487765] OF: graph: no port node found in /soc/debug@3a10000
+> [    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
+> [    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
+> [    5.501802] OF: graph: no port node found in /soc/debug@3b10000
+> [    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
+> [    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
+> 
+> Also add a helper macro to make adding CPU PIDs easier
+> similar to ETM4X driver.
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-Add an initial node for the Adreno GPU and it's companion
-SMMU. The GPU node is mostly complete except for a bare
-bones power table that will be filled out more completely
-later.
+Looks good to me and tested on my Hikey board (though I cannot test
+for a device with UCI ID):
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-[Remove mmagic clocks from GPU/smmu nodes]
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 52 +++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Reviewed-and-tested-by: Leo Yan <leo.yan@linaro.org>
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 0d0b9482aa4d..b5f23594905c 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -84,6 +84,12 @@
- 			qcom,client-id = <1>;
- 			qcom,vmid = <15>;
- 		};
-+
-+		zap_shader_region: gpu@8f200000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x90b00000 0x0 0xa00000>;
-+			no-map;
-+		};
- 	};
- 
- 	cpus {
-@@ -1338,6 +1344,52 @@
- 			};
- 		};
- 
-+		gpu@b00000 {
-+			compatible = "qcom,adreno-530.2", "qcom,adreno";
-+			#stream-id-cells = <16>;
-+
-+			reg = <0xb00000 0x3f000>;
-+			reg-names = "kgsl_3d0_reg_memory";
-+
-+			interrupts = <0 300 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "kgsl_3d0_irq";
-+
-+			clocks = <&mmcc GPU_GX_GFX3D_CLK>,
-+				<&mmcc GPU_AHB_CLK>,
-+				<&mmcc GPU_GX_RBBMTIMER_CLK>,
-+				<&gcc GCC_BIMC_GFX_CLK>,
-+				<&gcc GCC_MMSS_BIMC_GFX_CLK>;
-+
-+			clock-names = "core",
-+				"iface",
-+				"rbbmtimer",
-+				"mem",
-+				"mem_iface";
-+
-+			power-domains = <&mmcc GPU_GDSC>;
-+			iommus = <&adreno_smmu 0>;
-+
-+			qcom,gpu-quirk-two-pass-use-wfi;
-+			qcom,gpu-quirk-fault-detect-mask;
-+
-+			/* This is a safe speed for bring up in all bin levels.
-+			 * This isn't the fastest the chip can go, but we can
-+			 * get there eventually */
-+			qcom,gpu-pwrlevels {
-+				compatible = "qcom,gpu-pwrlevels";
-+				qcom,gpu-pwrlevel@0 {
-+					qcom,gpu-freq = <510000000>;
-+				};
-+				qcom,gpu-pwrlevel@1 {
-+					qcom,gpu-freq = <27000000>;
-+				};
-+			};
-+
-+			zap-shader {
-+				memory-region = <&zap_shader_region>;
-+			};
-+		};
-+
- 		mdss: mdss@900000 {
- 			compatible = "qcom,mdss";
- 
--- 
-2.20.1
+> ---
+> This patch depends on UCI support by Mike Leach in below link:
+>  https://lore.kernel.org/lkml/20190121233151.13363-2-mike.leach@linaro.org/
+> ---
+>  .../hwtracing/coresight/coresight-cpu-debug.c | 41 +++++++++++++------
+>  1 file changed, 28 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> index 45b2460f3166..a126ed0b9a76 100644
+> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> @@ -655,20 +655,35 @@ static int debug_remove(struct amba_device *adev)
+>  	return 0;
+>  }
+>  
+> +#define DEBUG_AMBA_ID(pid)			\
+> +	{					\
+> +		.id	= pid,			\
+> +		.mask	= 0x000fffff,		\
+> +	}
+> +
+> +static struct amba_cs_uci_id uci_id_debug[] = {
+> +	{
+> +		/*  CPU Debug UCI data */
+> +		.devarch	= 0x47706a15,
+> +		.devarch_mask	= 0xfff0ffff,
+> +		.devtype	= 0x00000015,
+> +	}
+> +};
+> +
+> +#define DEBUG_AMBA_UCI_ID(pid)			\
+> +	{					\
+> +		.id	= pid,			\
+> +		.mask	= 0x000fffff,		\
+> +		.data	= uci_id_debug,		\
+> +	}
+> +
+>  static const struct amba_id debug_ids[] = {
+> -	{       /* Debug for Cortex-A53 */
+> -		.id	= 0x000bbd03,
+> -		.mask	= 0x000fffff,
+> -	},
+> -	{       /* Debug for Cortex-A57 */
+> -		.id	= 0x000bbd07,
+> -		.mask	= 0x000fffff,
+> -	},
+> -	{       /* Debug for Cortex-A72 */
+> -		.id	= 0x000bbd08,
+> -		.mask	= 0x000fffff,
+> -	},
+> -	{ 0, 0 },
+> +	DEBUG_AMBA_ID(0x000bbd03),		/* Cortex-A53 */
+> +	DEBUG_AMBA_ID(0x000bbd07),		/* Cortex-A57 */
+> +	DEBUG_AMBA_ID(0x000bbd08),		/* Cortex-A72 */
+> +	DEBUG_AMBA_UCI_ID(0x000f0205),		/* Qualcomm Kryo */
+> +	DEBUG_AMBA_UCI_ID(0x000f0211),		/* Qualcomm Kryo */
+> +	{},
+>  };
+>  
+>  static struct amba_driver debug_driver = {
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
