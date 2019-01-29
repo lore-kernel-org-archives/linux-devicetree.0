@@ -1,58 +1,112 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 6/7] arm64: dts: juno: Add cpu dynamic-power-coefficient
- information
-Date: Tue, 29 Jan 2019 15:27:35 +0000
-Message-ID: <20190129152735.GA24772@e107155-lin>
-References: <20190128165522.31749-1-quentin.perret@arm.com>
- <20190128165522.31749-7-quentin.perret@arm.com>
+From: <Tudor.Ambarus@microchip.com>
+Subject: Re: [PATCH v5 2/2] mtd: spi-nor: cadence-quadspi: Add support for
+ Octal SPI controller
+Date: Tue, 29 Jan 2019 15:32:01 +0000
+Message-ID: <2efbca08-c4ab-34ea-0e34-05aed7168df8@microchip.com>
+References: <20190128054935.4972-1-vigneshr@ti.com>
+ <20190128054935.4972-3-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190128165522.31749-7-quentin.perret@arm.com>
+In-Reply-To: <20190128054935.4972-3-vigneshr@ti.com>
+Content-Language: en-US
+Content-ID: <6C03ECA0C3DEFA4D81C0A2EB1F62BB94@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Perret <quentin.perret@arm.com>
-Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, liviu.dudau@arm.com, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, nm@ti.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dietmar.eggemann@arm.com, Sudeep Holla <sudeep.holla@arm.com>, mka@chromium.org
+To: vigneshr@ti.com, bbrezillon@kernel.org
+Cc: marek.vasut@gmail.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 04:55:21PM +0000, Quentin Perret wrote:
-> From: Dietmar Eggemann <dietmar.eggemann@arm.com>
->
-> A CPUfreq driver, like the scpi driver used on Juno boards, which
-> provide the Energy Model with power cost information via the PM_OPP
-> of_dev_pm_opp_get_cpu_power() function, do need the
-> dynamic-power-coefficient (C) in the device tree.
->
-> Method used to obtain the C value:
-> C is computed by measuring energy (E) consumption of a frequency domain
-> (FD) over a 10s runtime (t) sysbench workload running at each Operating
-> Performance Point (OPP) affine to 1 or 2 CPUs of that FD while the other
-> CPUs of the system are hotplugged out.
-> By definition all CPUs of a FD have the the same micro-architecture. An
-> OPP is characterized by a certain frequency (f) and voltage (V) value.
-> The corresponding power values (P) are calculated by dividing the delta
-> of the E values between the runs with 2 and 1 CPUs by t.
->
-> With n data tuples (P, f, V), n equal to number of OPPs for this
-> frequency domain, we can solve C by:
->
-> P = Pstat + Pdyn
->
-> P = Pstat + CV²f
->
-> Cx = (Px - P1)/(Vx²fx - V1²f1) with x = {2, ..., n}
->
-> The C value is the arithmetic mean out of {C2, ..., Cn}.
->
-> Since DVFS is broken on Juno r1, no dynamic-power-coefficient
-> information has been added to its dts file.
->
-
-Since the binding for "dynamic-power-coefficient" property already exist,
-and I don't see any dependency for this and the next patch(TC2) on this
-series, I will apply them. Please shout if for any reason that's not true.
-
---
-Regards,
-Sudeep
+DQoNCk9uIDAxLzI4LzIwMTkgMDc6NDkgQU0sIFZpZ25lc2ggUiB3cm90ZToNCj4gQ2FkZW5jZSBP
+U1BJIGNvbnRyb2xsZXIgSVAgc3VwcG9ydHMgT2N0YWwgSU8gKHg4IElPIGxpbmVzKSwNCj4gSXQg
+YWxzbyBoYXMgYW4gaW50ZWdyYXRlZCBQSFkuIElQIHJlZ2lzdGVyIGxheW91dCBpcyB2ZXJ5DQo+
+IHNpbWlsYXIgdG8gZXhpc3RpbmcgUVNQSSBJUCBleGNlcHQgZm9yIGFkZGl0aW9uYWwgYml0cyB0
+byBzdXBwb3J0IE9jdGFsDQo+IGFuZCBPY3RhbCBERFIgbW9kZS4gVGhlcmVmb3JlLCBleHRlbmQg
+Y3VycmVudCBkcml2ZXIgdG8gc3VwcG9ydCBPY3RhbA0KPiBtb2RlLiBPbmx5IE9jdGFsIFNEUiBy
+ZWFkICgxLTEtOCltb2RlIGlzIHN1cHBvcnRlZCBmb3Igbm93Lg0KPiANCj4gVGVzdGVkIHdpdGgg
+bXQzNXh1NTEyYWJhIE9jdGFsIGZsYXNoIG9uIFRJJ3MgQU02NTQgRVZNLg0KPiANCj4gU2lnbmVk
+LW9mZi1ieTogVmlnbmVzaCBSIDx2aWduZXNockB0aS5jb20+DQo+IFJldmlld2VkLWJ5OiBUdWRv
+ciBBbWJhcnVzIDx0dWRvci5hbWJhcnVzQG1pY3JvY2hpcC5jb20+DQo+IC0tLQ0KPiANCj4gdjU6
+DQo+IHMvY3FzaV9iYXNlX2h3Y2Fwc19tYXNrL0NRU1BJX0JBU0VfSFdDQVBTX01BU0svZw0KPiBB
+ZGQgYmFjayBjcXNwaV9kcml2ZXJfcGxhdGRhdGEgZGVmaW5pdGlvbiBmb3IgYmFzZSBjb21wYXRp
+YmxlLg0KPiANCj4gdjQ6IEZpeCBjb21tZW50cyBieSBUdWRvciBvbiB2Mw0KPiB2MzogTm8gY2hh
+bmdlcw0KPiB2MjogRGVjbGFyZSBPY3RhbCBtb2RlIGNhcGFiaWxpdHkgYmFzZWQgb24gY29tcGF0
+aWJsZS4NCj4gDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL2NhZGVuY2UtcXVhZHNwaS5jIHwgNTgg
+KysrKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNDYgaW5zZXJ0
+aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQv
+c3BpLW5vci9jYWRlbmNlLXF1YWRzcGkuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1x
+dWFkc3BpLmMNCj4gaW5kZXggMDRjZWRkM2EyYmY2Li5jODExM2ViZTQ0ZmQgMTAwNjQ0DQo+IC0t
+LSBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gKysrIGIvZHJpdmVy
+cy9tdGQvc3BpLW5vci9jYWRlbmNlLXF1YWRzcGkuYw0KPiBAQCAtNDQsNiArNDQsMTIgQEANCj4g
+IC8qIFF1aXJrcyAqLw0KPiAgI2RlZmluZSBDUVNQSV9ORUVEU19XUl9ERUxBWQkJQklUKDApDQo+
+ICANCj4gKy8qIENhcGFiaWxpdGllcyBtYXNrICovDQo+ICsjZGVmaW5lIENRU1BJX0JBU0VfSFdD
+QVBTX01BU0sJCQkJCVwNCj4gKwkoU05PUl9IV0NBUFNfUkVBRCB8IFNOT1JfSFdDQVBTX1JFQURf
+RkFTVCB8CQlcDQo+ICsJU05PUl9IV0NBUFNfUkVBRF8xXzFfMiB8IFNOT1JfSFdDQVBTX1JFQURf
+MV8xXzQgfAlcDQo+ICsJU05PUl9IV0NBUFNfUFApDQo+ICsNCj4gIHN0cnVjdCBjcXNwaV9zdDsN
+Cj4gIA0KPiAgc3RydWN0IGNxc3BpX2ZsYXNoX3BkYXRhIHsNCj4gQEAgLTkzLDYgKzk5LDExIEBA
+IHN0cnVjdCBjcXNwaV9zdCB7DQo+ICAJc3RydWN0IGNxc3BpX2ZsYXNoX3BkYXRhIGZfcGRhdGFb
+Q1FTUElfTUFYX0NISVBTRUxFQ1RdOw0KPiAgfTsNCj4gIA0KPiArc3RydWN0IGNxc3BpX2RyaXZl
+cl9wbGF0ZGF0YSB7DQo+ICsJdTMyIGh3Y2Fwc19tYXNrOw0KPiArCXU4IHF1aXJrczsNCj4gK307
+DQo+ICsNCj4gIC8qIE9wZXJhdGlvbiB0aW1lb3V0IHZhbHVlICovDQo+ICAjZGVmaW5lIENRU1BJ
+X1RJTUVPVVRfTVMJCQk1MDANCj4gICNkZWZpbmUgQ1FTUElfUkVBRF9USU1FT1VUX01TCQkJMTAN
+Cj4gQEAgLTEwMSw2ICsxMTIsNyBAQCBzdHJ1Y3QgY3FzcGlfc3Qgew0KPiAgI2RlZmluZSBDUVNQ
+SV9JTlNUX1RZUEVfU0lOR0xFCQkJMA0KPiAgI2RlZmluZSBDUVNQSV9JTlNUX1RZUEVfRFVBTAkJ
+CTENCj4gICNkZWZpbmUgQ1FTUElfSU5TVF9UWVBFX1FVQUQJCQkyDQo+ICsjZGVmaW5lIENRU1BJ
+X0lOU1RfVFlQRV9PQ1RBTAkJCTMNCj4gIA0KPiAgI2RlZmluZSBDUVNQSV9EVU1NWV9DTEtTX1BF
+Ul9CWVRFCQk4DQo+ICAjZGVmaW5lIENRU1BJX0RVTU1ZX0JZVEVTX01BWAkJCTQNCj4gQEAgLTkx
+MSw2ICs5MjMsOSBAQCBzdGF0aWMgaW50IGNxc3BpX3NldF9wcm90b2NvbChzdHJ1Y3Qgc3BpX25v
+ciAqbm9yLCBjb25zdCBpbnQgcmVhZCkNCj4gIAkJY2FzZSBTTk9SX1BST1RPXzFfMV80Og0KPiAg
+CQkJZl9wZGF0YS0+ZGF0YV93aWR0aCA9IENRU1BJX0lOU1RfVFlQRV9RVUFEOw0KPiAgCQkJYnJl
+YWs7DQo+ICsJCWNhc2UgU05PUl9QUk9UT18xXzFfODoNCj4gKwkJCWZfcGRhdGEtPmRhdGFfd2lk
+dGggPSBDUVNQSV9JTlNUX1RZUEVfT0NUQUw7DQo+ICsJCQlicmVhazsNCj4gIAkJZGVmYXVsdDoN
+Cj4gIAkJCXJldHVybiAtRUlOVkFMOw0KPiAgCQl9DQo+IEBAIC0xMjEzLDIxICsxMjI4LDIyIEBA
+IHN0YXRpYyB2b2lkIGNxc3BpX3JlcXVlc3RfbW1hcF9kbWEoc3RydWN0IGNxc3BpX3N0ICpjcXNw
+aSkNCj4gIA0KPiAgc3RhdGljIGludCBjcXNwaV9zZXR1cF9mbGFzaChzdHJ1Y3QgY3FzcGlfc3Qg
+KmNxc3BpLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiAgew0KPiAtCWNvbnN0IHN0cnVjdCBz
+cGlfbm9yX2h3Y2FwcyBod2NhcHMgPSB7DQo+IC0JCS5tYXNrID0gU05PUl9IV0NBUFNfUkVBRCB8
+DQo+IC0JCQlTTk9SX0hXQ0FQU19SRUFEX0ZBU1QgfA0KPiAtCQkJU05PUl9IV0NBUFNfUkVBRF8x
+XzFfMiB8DQo+IC0JCQlTTk9SX0hXQ0FQU19SRUFEXzFfMV80IHwNCj4gLQkJCVNOT1JfSFdDQVBT
+X1BQLA0KPiAtCX07DQo+ICAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IGNxc3BpLT5w
+ZGV2Ow0KPiAgCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ICsJY29uc3Qgc3Ry
+dWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSAqZGRhdGE7DQo+ICsJc3RydWN0IHNwaV9ub3JfaHdj
+YXBzIGh3Y2FwczsNCj4gIAlzdHJ1Y3QgY3FzcGlfZmxhc2hfcGRhdGEgKmZfcGRhdGE7DQo+ICAJ
+c3RydWN0IHNwaV9ub3IgKm5vcjsNCj4gIAlzdHJ1Y3QgbXRkX2luZm8gKm10ZDsNCj4gIAl1bnNp
+Z25lZCBpbnQgY3M7DQo+ICAJaW50IGksIHJldDsNCj4gIA0KPiArCWRkYXRhID0gb2ZfZGV2aWNl
+X2dldF9tYXRjaF9kYXRhKGRldik7DQo+ICsJaWYgKCFkZGF0YSkNCj4gKwkJaHdjYXBzLm1hc2sg
+PSBDUVNQSV9CQVNFX0hXQ0FQU19NQVNLOw0KDQpOb3cgdGhhdCAuZGF0YSBpcyBzZXQgaW4gYWxs
+IGNxc3BpX2R0X2lkc1tdLCBtYXliZSBpdCdzIGJldHRlciB0byBwcmludCBhDQptZXNzYWdlIGFu
+ZCByZXR1cm4gYW4gZXJyb3IgaGVyZS4gQnV0IEkgZ3Vlc3MgaXQncyBhIG1hdHRlciBvZiB0YXN0
+ZSwgc28gbm90IGENCnNob3cgc3RvcHBlci4NCg0KPiArCWVsc2UNCj4gKwkJaHdjYXBzLm1hc2sg
+PSBkZGF0YS0+aHdjYXBzX21hc2s7DQo+ICsNCj4gIAkvKiBHZXQgZmxhc2ggZGV2aWNlIGRhdGEg
+Ki8NCj4gIAlmb3JfZWFjaF9hdmFpbGFibGVfY2hpbGRfb2Zfbm9kZShkZXYtPm9mX25vZGUsIG5w
+KSB7DQo+ICAJCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAicmVnIiwgJmNzKTsNCj4g
+QEAgLTEzMTAsNyArMTMyNiw3IEBAIHN0YXRpYyBpbnQgY3FzcGlfcHJvYmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikNCj4gIAlzdHJ1Y3QgY3FzcGlfc3QgKmNxc3BpOw0KPiAgCXN0cnVj
+dCByZXNvdXJjZSAqcmVzOw0KPiAgCXN0cnVjdCByZXNvdXJjZSAqcmVzX2FoYjsNCj4gLQl1bnNp
+Z25lZCBsb25nIGRhdGE7DQo+ICsJY29uc3Qgc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSAq
+ZGRhdGE7DQo+ICAJaW50IHJldDsNCj4gIAlpbnQgaXJxOw0KPiAgDQo+IEBAIC0xMzc3LDggKzEz
+OTMsOCBAQCBzdGF0aWMgaW50IGNxc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpDQo+ICAJfQ0KPiAgDQo+ICAJY3FzcGktPm1hc3Rlcl9yZWZfY2xrX2h6ID0gY2xrX2dldF9y
+YXRlKGNxc3BpLT5jbGspOw0KPiAtCWRhdGEgID0gKHVuc2lnbmVkIGxvbmcpb2ZfZGV2aWNlX2dl
+dF9tYXRjaF9kYXRhKGRldik7DQo+IC0JaWYgKGRhdGEgJiBDUVNQSV9ORUVEU19XUl9ERUxBWSkN
+Cj4gKwlkZGF0YSAgPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoZGV2KTsNCj4gKwlpZiAoZGRh
+dGEgJiYgKGRkYXRhLT5xdWlya3MgJiBDUVNQSV9ORUVEU19XUl9ERUxBWSkpDQo+ICAJCWNxc3Bp
+LT53cl9kZWxheSA9IDUgKiBESVZfUk9VTkRfVVAoTlNFQ19QRVJfU0VDLA0KPiAgCQkJCQkJICAg
+Y3FzcGktPm1hc3Rlcl9yZWZfY2xrX2h6KTsNCj4gIA0KPiBAQCAtMTQ2MCwxNCArMTQ3NiwzMiBA
+QCBzdGF0aWMgY29uc3Qgc3RydWN0IGRldl9wbV9vcHMgY3FzcGlfX2Rldl9wbV9vcHMgPSB7DQo+
+ICAjZGVmaW5lIENRU1BJX0RFVl9QTV9PUFMJTlVMTA0KPiAgI2VuZGlmDQo+ICANCj4gK3N0YXRp
+YyBjb25zdCBzdHJ1Y3QgY3FzcGlfZHJpdmVyX3BsYXRkYXRhIGNkbnNfcXNwaSA9IHsNCj4gKwku
+aHdjYXBzX21hc2sgPSBDUVNQSV9CQVNFX0hXQ0FQU19NQVNLLA0KPiArfTsNCj4gKw0KPiArc3Rh
+dGljIGNvbnN0IHN0cnVjdCBjcXNwaV9kcml2ZXJfcGxhdGRhdGEgazJnX3FzcGkgPSB7DQo+ICsJ
+Lmh3Y2Fwc19tYXNrID0gQ1FTUElfQkFTRV9IV0NBUFNfTUFTSywNCj4gKwkucXVpcmtzID0gQ1FT
+UElfTkVFRFNfV1JfREVMQVksDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNx
+c3BpX2RyaXZlcl9wbGF0ZGF0YSBhbTY1NF9vc3BpID0gew0KPiArCS5od2NhcHNfbWFzayA9IENR
+U1BJX0JBU0VfSFdDQVBTX01BU0sgfCBTTk9SX0hXQ0FQU19SRUFEXzFfMV84LA0KPiArCS5xdWly
+a3MgPSBDUVNQSV9ORUVEU19XUl9ERUxBWSwNCj4gK307DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGNxc3BpX2R0X2lkc1tdID0gew0KPiAgCXsNCj4gIAkJLmNvbXBh
+dGlibGUgPSAiY2Rucyxxc3BpLW5vciIsDQo+IC0JCS5kYXRhID0gKHZvaWQgKikwLA0KPiArCQku
+ZGF0YSA9ICZjZG5zX3FzcGksDQo+ICAJfSwNCj4gIAl7DQo+ICAJCS5jb21wYXRpYmxlID0gInRp
+LGsyZy1xc3BpIiwNCj4gLQkJLmRhdGEgPSAodm9pZCAqKUNRU1BJX05FRURTX1dSX0RFTEFZLA0K
+PiArCQkuZGF0YSA9ICZrMmdfcXNwaSwNCj4gKwl9LA0KPiArCXsNCj4gKwkJLmNvbXBhdGlibGUg
+PSAidGksYW02NTQtb3NwaSIsDQo+ICsJCS5kYXRhID0gJmFtNjU0X29zcGksDQo+ICAJfSwNCj4g
+IAl7IC8qIGVuZCBvZiB0YWJsZSAqLyB9DQo+ICB9Ow0KPiANCg==
