@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH 10/10] soc: mediatek: add polling function
-Date: Tue, 29 Jan 2019 15:32:07 +0800
-Message-ID: <1548747128-60136-11-git-send-email-bibby.hsieh@mediatek.com>
+Subject: [PATCH 05/10] soc: mediatek: add subsys-base address transform function
+Date: Tue, 29 Jan 2019 15:32:02 +0800
+Message-ID: <1548747128-60136-6-git-send-email-bibby.hsieh@mediatek.com>
 References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,87 +12,74 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediatek.com, Frederic Chen <Frederic.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-add polling function in cmdq helper functions
+GCE cannot know the register base address, we store the subsys-base address
+relationship in the device node, and store the relationship by
+cmdq_register_device function.
+
+When the client pass the base address and offset into GCE API,
+we will get the subsys ID by this API.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c   | 24 ++++++++++++++++++++++++
- include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
- include/linux/soc/mediatek/mtk-cmdq.h    | 15 +++++++++++++++
- 3 files changed, 40 insertions(+)
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 17 +++++++++++++++++
+ include/linux/soc/mediatek/mtk-cmdq.h  | 12 ++++++++++++
+ 2 files changed, 29 insertions(+)
 
 diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 34ae712..bc504ff 100644
+index ff9fef5..6e4b85e 100644
 --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -298,6 +298,30 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
- }
- EXPORT_SYMBOL(cmdq_pkt_clear_event);
+@@ -15,6 +15,23 @@
+ #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+ 				<< 32 | CMDQ_EOC_IRQ_EN)
  
-+int cmdq_pkt_poll(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-+		  dma_addr_t addr, u32 value, u32 mask)
++u8 cmdq_subsys_base_to_id(struct cmdq_base *clt_base, u32 base)
 +{
-+	int err;
-+	const u32 base = (addr >> 32) ? 0 : addr & 0xFFFF0000;
-+	u8 subsys = cmdq_subsys_base_to_id(clt_base, base);
-+	s16 offset = addr & 0x0000FFFF;
++	u8 i;
 +
-+	if (mask != 0xffffffff) {
-+		err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
-+					      CMDQ_GET_ARG_B(~mask),
-+					      0, 0, 0, 0, 0, CMDQ_CODE_MASK);
++	if (!clt_base)
++		return -EINVAL;
 +
-+		if (err != 0)
-+			return err;
++	base = base & 0xFFFF0000;
++	for (i = 0; i < clt_base->count; i++) {
++		if (clt_base->subsys[i].base == base)
++			return clt_base->subsys[i].id;
 +	}
-+	offset = offset | 0x1;
 +
-+	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
-+				       CMDQ_GET_ARG_B(value),
-+				       offset, subsys, 0, 0, 0, CMDQ_CODE_POLL);
++	return -EINVAL;
 +}
-+EXPORT_SYMBOL(cmdq_pkt_poll);
++EXPORT_SYMBOL(cmdq_subsys_base_to_id);
 +
- static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+ static void cmdq_client_timeout(struct timer_list *t)
  {
- 	int err;
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index f21801d..1dfd5ed 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -46,6 +46,7 @@
- enum cmdq_code {
- 	CMDQ_CODE_MASK = 0x02,
- 	CMDQ_CODE_WRITE = 0x04,
-+	CMDQ_CODE_POLL = 0x08,
- 	CMDQ_CODE_JUMP = 0x10,
- 	CMDQ_CODE_WFE = 0x20,
- 	CMDQ_CODE_EOC = 0x40,
+ 	struct cmdq_client *client = from_timer(client, t, timer);
 diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 230bc2b..f6227bf 100644
+index 4e88999..0c7a6ee 100644
 --- a/include/linux/soc/mediatek/mtk-cmdq.h
 +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -110,6 +110,21 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
- int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+@@ -15,6 +15,16 @@
  
- /**
-+ * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
-+ *		     execute an instruction that wait for a specified hardware
-+ *		     register to check for the value. All GCE hardware
-+ *		     threads will be blocked by this instruction.
-+ * @pkt:	the CMDQ packet
-+ * @cmdq_base:	the CMDQ sub system code and base address
-+ * @addr:	register address
-+ * @value:	the specified target register value
-+ * @mask:	the specified target register mask
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_poll(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
-+		  dma_addr_t addr, u32 value, u32 mask);
-+/**
-  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
-  *                          packet and call back at the end of done packet
-  * @pkt:	the CMDQ packet
+ struct cmdq_pkt;
+ 
++struct cmdq_subsys {
++	u32 base;
++	u8 id;
++};
++
++struct cmdq_base {
++	struct cmdq_subsys subsys[32];
++	u8 count;
++};
++
+ struct cmdq_client {
+ 	spinlock_t lock;
+ 	u32 pkt_cnt;
+@@ -127,4 +137,6 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+  */
+ int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+ 
++u8 cmdq_subsys_base_to_id(struct cmdq_base *clt_base, u32 base);
++
+ #endif	/* __MTK_CMDQ_H__ */
 -- 
 1.9.1
