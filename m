@@ -1,54 +1,68 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v2 08/10] rtc: bd70528: Initial support for ROHM
- bd70528 RTC
-Date: Tue, 29 Jan 2019 13:46:53 +0200
-Message-ID: <20190129114653.GB2551@localhost.localdomain>
-References: <20190125110536.GA29321@localhost.localdomain>
- <20190128212009.GE18309@piout.net>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv5 1/4] dt-bindings: add DT binding for the layerscape
+ PCIe controller with EP mode
+Date: Tue, 29 Jan 2019 12:06:21 +0000
+Message-ID: <20190129120621.GB7467@e107981-ln.cambridge.arm.com>
+References: <20190121094500.10657-1-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190128212009.GE18309@piout.net>
+In-Reply-To: <20190121094500.10657-1-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Xiaowei Bao <xiaowei.bao@nxp.com>, robh+dt@kernel.org
+Cc: bhelgaas@google.com, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Alexandre,
+Rob,
 
-Big thanks for the review!
+Is it OK for you if I pull this series into the pci tree ?
 
-On Mon, Jan 28, 2019 at 10:20:09PM +0100, Alexandre Belloni wrote:
-> Hello,
+Please let me know, thanks.
+
+Lorenzo
+
+On Mon, Jan 21, 2019 at 05:44:57PM +0800, Xiaowei Bao wrote:
+> Add the documentation for the Device Tree binding for the layerscape PCIe
+> controller with EP mode.
 > 
-> On 25/01/2019 13:05:36+0200, Matti Vaittinen wrote:
-> > +static const struct rtc_class_ops bd70528_rtc_ops = {
-> > +	.read_time	= bd70528_get_time,
-> > +	.set_time	= bd70528_set_time,
-> > +	.read_alarm	= bd70528_read_alarm,
-> > +	.set_alarm	= bd70528_set_alarm,
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Reviewed-by: Minghuan Lian <minghuan.lian@nxp.com>
+> Reviewed-by: Zhiqiang Hou <zhiqiang.hou@nxp.com>
+> ---
+> v2:
+>  - Add the SoC specific compatibles.
+> v3:
+>  - modify the commit message.
+> v4:
+>  - no change.
+> v5:
+>  - no change.
 > 
-> You actually need to provide a .alarm_irq_enable callback, else there is
-> no way to disable a set alarm.
-
-Glad that you pointed this out. I thought the RTC core would use
-set_alarm with enabled in struct rtc_wkalrm being zero for disabling
-the alarm. I'll add alarm_irq_enable for disabling alarm at v3.
-
-> > +	rtc = devm_rtc_device_register(&pdev->dev, "bd70528-rtc",
-> > +				       &bd70528_rtc_ops, THIS_MODULE);
-> > +	if (IS_ERR(rtc)) {
-> > +		dev_err(&pdev->dev, "Registering RTC failed\n");
-> > +		return PTR_ERR(rtc);
-> > +	}
+>  .../devicetree/bindings/pci/layerscape-pci.txt     |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
 > 
-> Please use devm_rtc_allocate_device() and set rtc->range_min and
-> rtc->range_max before registering with rtc_register_device() (which can
-> be done after trying to request the irq).
-
-Right. I should've noted that devm_rtc_device_register was marked
-deprecated. I'll fix this too at v3.
-
-Br,
-	Matti Vaittinen
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> index 9b2b8d6..e20ceaa 100644
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -13,6 +13,7 @@ information.
+>  
+>  Required properties:
+>  - compatible: should contain the platform identifier such as:
+> +  RC mode:
+>          "fsl,ls1021a-pcie"
+>          "fsl,ls2080a-pcie", "fsl,ls2085a-pcie"
+>          "fsl,ls2088a-pcie"
+> @@ -20,6 +21,8 @@ Required properties:
+>          "fsl,ls1046a-pcie"
+>          "fsl,ls1043a-pcie"
+>          "fsl,ls1012a-pcie"
+> +  EP mode:
+> +	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+>  - reg: base addresses and lengths of the PCIe controller register blocks.
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> -- 
+> 1.7.1
+> 
