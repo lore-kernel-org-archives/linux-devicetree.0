@@ -1,61 +1,101 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: Re: [PATCH] input: goodix - support Goodix gt5688
-Date: Tue, 29 Jan 2019 11:30:53 +0100
-Message-ID: <12e21befacf68861ddf34020838ff7a6e6e078ad.camel@hadess.net>
-References: <20190128170310.GA305@bogon.m.sigxcpu.org>
-         <7e289e6b3410a3fdea99d7d6becfe5180a69f0c5.camel@hadess.net>
-         <20190129091651.GA8497@bogon.m.sigxcpu.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 3/5 v10] regulator: fixed/gpio: Update device tree bindings
+Date: Tue, 29 Jan 2019 11:31:54 +0100
+Message-ID: <20190129103156.10139-3-linus.walleij@linaro.org>
+References: <20190129103156.10139-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129091651.GA8497@bogon.m.sigxcpu.org>
+In-Reply-To: <20190129103156.10139-1-linus.walleij@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Charles Keepax <ckeepax@opensource.cirrus.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-01-29 at 10:16 +0100, Guido Günther wrote:
-> Hi,
-> On Mon, Jan 28, 2019 at 07:24:33PM +0100, Bastien Nocera wrote:
-> > On Mon, 2019-01-28 at 18:03 +0100, Guido Günther wrote:
-> > > From what I've seen in vendor trees it's fine to treat this as
-> > > gt1x¹.
-> > > 
-> > > [1]: 
-> > > https://github.com/TadiT7/android_kernel_mtk-4.4/tree/master/drivers/input/touchscreen/mediatek/GT5688
-> > 
-> > Can you please point to the exact line of code that makes you say
-> > that?
-> > I'm not saying it's not compatible, but it's not the same driver
-> > that
-> > the current goodix.c was based on, or even goodix.c.
-> > 
-> > Can you please elaborate?
-> 
-> I basically looked at the registers uses for the config update:
-> 
-> https://github.com/TadiT7/android_kernel_mtk-4.4/blob/master/drivers/input/touchscreen/mediatek/GT5688/include/gt1x_tpd_common.h#L152
-> https://github.com/TadiT7/android_kernel_mtk-4.4/blob/master/drivers/input/touchscreen/mediatek/GT5688/gt1x_generic.c#L430
+Deprecate the open drain binding for fixed regulator and indicate
+that we prefer this to be passed in the GPIO phandle flags.
 
-I'm not sure that's good enough to say that the touchscreen models are
-compatible.
+Clarify that the line inversion semantics for fixed and GPIO
+regulators completely overrides the active low flags in the
+phandle flags.
 
-> That and the fact that the driver is doing it's job well made me
-> believe
-> that's good for base support.
+Unfortunately this can not be changed to prefer that we pass
+the flags in the phandle: the bindings have been specified and
+deployed such that the presence/absence of this flag and only
+that controls the line inversion semantics. The crucial semantic
+is that the absence of the flag means the core will assume
+the line is active low, which in GPIO terms is an exception,
+as GPIO lines are normally assumed to be active high.
 
-If you've tested it, that's better. Can you please add a reference to
-the device that you've tested this on in the commit message?
+This special device tree semantic cannot be changed without
+introducing a whole new compatible string for the fixed and
+GPIO regulators, so we just contain the situation.
 
->  Things like hotknot, gesture wakeup and
-> proximity sensor will need additional work.
-> 
-> > Finding that data in the specs would also be fine:
-> > https://github.com/hadess/gt9xx/tree/master/specifications
-> 
-> https://github.com/hadess/gt9xx/pull/3
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v9->v10:
+- Rebase on other changes.
+ChangeLog v8->v9:
+- Rebased on other changes.
+- Collected Marek's Tested-by.
+ChangeLog v7->v8:
+- Rebase on v5.0-rc1.
+ChangeLog v6->v7:
+- Resend with the rest.
+ChangeLog v3->v6:
+- Resending.
+ChangeLog v2->v3:
+- Resending.
+ChangeLog v1->v2:
+- Collect Rob's ACK.
+---
+ .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
+ .../bindings/regulator/gpio-regulator.txt           |  4 ++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-Merged that, thanks
-
-Cheers
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 0c2a6c8a1536..a7a1cd0dfa6e 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -8,10 +8,19 @@ Optional properties:
+ - gpio: gpio to use for enable control
+ - startup-delay-us: startup time in microseconds
+ - enable-active-high: Polarity of GPIO is Active high
+-If this property is missing, the default assumed is Active low.
++  If this property is missing, the default assumed is Active low.
++  If the phandle flags to the GPIO handle also flag the line as active
++  low or high, that will be ignored for fixed regulators and the
++  presence or absence of this flag solely controls the inversion
++  semantics.
++-vin-supply: Input supply name.
++
++Deprecated properties:
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
+--vin-supply: Input supply name.
++  Do not use this property in new device trees: instead use the
++  phandle flag to indicate to the GPIO provider that the line
++  should be handled as open drain.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+index 1f496159e2bb..8fef3e5358a2 100644
+--- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+@@ -14,6 +14,10 @@ Optional properties:
+ 			  defualt is LOW if nothing is specified.
+ - startup-delay-us	: Startup time in microseconds.
+ - enable-active-high	: Polarity of GPIO is active high (default is low).
++			  If the phandle flags to the GPIO handle also flag the line as
++			  active low or high, that will be ignored for fixed regulators
++			  and the presence or absence of this flag solely controls the
++			  inversion semantics.
+ - regulator-type	: Specifies what is being regulated, must be either
+ 			  "voltage" or "current", defaults to voltage.
+ 
+-- 
+2.20.1
