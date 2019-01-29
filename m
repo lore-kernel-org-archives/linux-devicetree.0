@@ -1,53 +1,44 @@
-Return-Path: <SRS0=/eZE=QE=ysoft.com=michal.vokac@kernel.org>
-From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH RESEND v2 1/4] dt-bindings: display: ssd1307fb: Remove reset-active-low from examples
-Date: Mon, 28 Jan 2019 12:53:00 +0100
-Message-Id: <1548676383-29685-2-git-send-email-michal.vokac@ysoft.com>
-In-Reply-To: <1548676383-29685-1-git-send-email-michal.vokac@ysoft.com>
-References: <1548676383-29685-1-git-send-email-michal.vokac@ysoft.com>
+Return-Path: <SRS0=uA5R=QF=opensource.cirrus.com=ckeepax@kernel.org>
+Date: Tue, 29 Jan 2019 16:58:32 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v6 1/6] mfd: lochnagar: Add initial binding documentation
+Message-ID: <20190129165832.GK3837@imbe.wolfsonmicro.main>
+References: <20190117145858.26659-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190117145858.26659-1-ckeepax@opensource.cirrus.com>
+To: lee.jones@linaro.org, sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linus.walleij@linaro.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, patches@opensource.cirrus.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The reset-active-low property has been removed brom the binding a while
-ago. So remove it from the examples as well.
+On Thu, Jan 17, 2019 at 02:58:53PM +0000, Charles Keepax wrote:
+> +Example:
+> +
+> +lochnagar: lochnagar@22 {
+> +	compatible = "cirrus,lochnagar2";
+> +	reg = <0x22>;
+> +
+> +	reset-gpios = <&gpio0 55 0>;
+> +	present-gpios = <&gpio0 60 0>;
+> +
+> +	lochnagar-clk {
+> +		compatible = "cirrus,lochnagar2-clk";
+> +		...
+> +	};
+> +
+> +	lochnagar-pinctrl {
+> +		compatible = "cirrus,lochnagar-pinctrl";
+> +		...
+> +	};
+> +
+> +	lochnagar-regulator {
+> +		compatible = "cirrus,lochnagar-regulator";
+> +		...
 
-Fixes: 519b4db ("fbdev: ssd1307fb: Remove reset-active-low from the DT binding document")
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
-Changes in v2 resend:
- - Add R-by from Alexandre.
+Sorry just realised this entry in the example is a hang over from
+earlier versions of the regulator code and needs to go apologies I
+will respin the series.
 
-Changes from v1:
- - Add R-by from Rob
-
- Documentation/devicetree/bindings/display/ssd1307fb.txt | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b/Documentation/devicetree/bindings/display/ssd1307fb.txt
-index 209d931..b67f8ca 100644
---- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
-+++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
-@@ -36,7 +36,6 @@ ssd1307: oled@3c {
-         reg = <0x3c>;
-         pwms = <&pwm 4 3000>;
-         reset-gpios = <&gpio2 7>;
--        reset-active-low;
- };
- 
- ssd1306: oled@3c {
-@@ -44,7 +43,6 @@ ssd1306: oled@3c {
-         reg = <0x3c>;
-         pwms = <&pwm 4 3000>;
-         reset-gpios = <&gpio2 7>;
--        reset-active-low;
-         solomon,com-lrremap;
-         solomon,com-invdir;
-         solomon,com-offset = <32>;
--- 
-2.1.4
+Thanks,
+Charles
