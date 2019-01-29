@@ -1,64 +1,29 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 6/7] arm: mediatek: add MT7629 smp bring up code
-Date: Tue, 29 Jan 2019 12:31:18 +0800
-Message-ID: <06cca198146e5583690e5cb6c838c4603c9fa821.1548735271.git.ryder.lee@mediatek.com>
-References: <d1ab6c89b115ad0582815816490fa0c13ea83178.1548735271.git.ryder.lee@mediatek.com>
+From: saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCHv5 7/7] arm64: dts: qcom: sdm845: Remove the duplicate
+ header inclusion
+Date: Tue, 29 Jan 2019 10:05:39 +0530
+Message-ID: <21171aed64071e5c83376de5a280b134@codeaurora.org>
+References: <cover.1548419933.git.saiprakash.ranjan@codeaurora.org>
+ <d0370bc569491d11827a6eb12a75a236c3d60a0e.1548419933.git.saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=XjVU=stq9U+tBtJpAiQa+6hDKi8+F5LOX4bq68-wQNaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d1ab6c89b115ad0582815816490fa0c13ea83178.1548735271.git.ryder.lee@mediatek.com>
+In-Reply-To: <CAD=FV=XjVU=stq9U+tBtJpAiQa+6hDKi8+F5LOX4bq68-wQNaA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <roychl666@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for booting secondary CPUs on MT7629.
+Hi Doug,
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- arch/arm/mach-mediatek/Kconfig    | 4 ++++
- arch/arm/mach-mediatek/mediatek.c | 1 +
- arch/arm/mach-mediatek/platsmp.c  | 1 +
- 3 files changed, 6 insertions(+)
+On 2019-01-29 00:54, Doug Anderson wrote:
+> Hi,
+> 
+> You can probably stop sending this one.  It's in Andy's tree now.  See
+> commit ea0edd7e63f4 ("arm64: dts: qcom: sdm845: Remove the duplicate
+> header inclusion").
 
-diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
-index 91cc461..11ed264 100644
---- a/arch/arm/mach-mediatek/Kconfig
-+++ b/arch/arm/mach-mediatek/Kconfig
-@@ -26,6 +26,10 @@ config MACH_MT7623
- 	bool "MediaTek MT7623 SoCs support"
- 	default ARCH_MEDIATEK
- 
-+config MACH_MT7629
-+	bool "MediaTek MT7629 SoCs support"
-+	default ARCH_MEDIATEK
-+
- config MACH_MT8127
- 	bool "MediaTek MT8127 SoCs support"
- 	default ARCH_MEDIATEK
-diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-index c3cf215..b6a81ba 100644
---- a/arch/arm/mach-mediatek/mediatek.c
-+++ b/arch/arm/mach-mediatek/mediatek.c
-@@ -49,6 +49,7 @@ static void __init mediatek_timer_init(void)
- 	"mediatek,mt6589",
- 	"mediatek,mt6592",
- 	"mediatek,mt7623",
-+	"mediatek,mt7629",
- 	"mediatek,mt8127",
- 	"mediatek,mt8135",
- 	NULL,
-diff --git a/arch/arm/mach-mediatek/platsmp.c b/arch/arm/mach-mediatek/platsmp.c
-index 51e8556..c9d7c04 100644
---- a/arch/arm/mach-mediatek/platsmp.c
-+++ b/arch/arm/mach-mediatek/platsmp.c
-@@ -60,6 +60,7 @@ struct mtk_smp_boot_info {
- static const struct of_device_id mtk_smp_boot_infos[] __initconst = {
- 	{ .compatible   = "mediatek,mt6589", .data = &mtk_mt6589_boot },
- 	{ .compatible   = "mediatek,mt7623", .data = &mtk_mt7623_boot },
-+	{ .compatible   = "mediatek,mt7629", .data = &mtk_mt7623_boot },
- 	{},
- };
- 
--- 
-1.9.1
+Sorry, missed this one.
