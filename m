@@ -1,14 +1,15 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCHv5 4/7] coresight: etm4x: Add support to enable ETMv4.2
-Date: Tue, 29 Jan 2019 09:26:04 +0000
-Message-ID: <342fa449-124e-7581-dfff-ef5d382f1f6b@arm.com>
+Subject: Re: [PATCHv5 5/7] coresight: etm4x: Add ETM PIDs for SDM845 and
+ MSM8996
+Date: Tue, 29 Jan 2019 09:28:03 +0000
+Message-ID: <bf0337b0-2b1c-f296-8a1d-e8a8f993c274@arm.com>
 References: <cover.1548419933.git.saiprakash.ranjan@codeaurora.org>
- <980aaf18c0fe92a667930e3a035394442af74869.1548419933.git.saiprakash.ranjan@codeaurora.org>
+ <cb7d3e715f154942fba1597b91d5b13c25f607e7.1548419933.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <980aaf18c0fe92a667930e3a035394442af74869.1548419933.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <cb7d3e715f154942fba1597b91d5b13c25f607e7.1548419933.git.saiprakash.ranjan@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, jhugo@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com, marc.w.gonzalez@free.fr
@@ -18,56 +19,35 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 28/01/2019 19:14, Sai Prakash Ranjan wrote:
-> SDM845 has ETMv4.2 and can use the existing etm4x driver.
-> But the current etm driver checks only for ETMv4.0 and
-> errors out for other etm4x versions. This patch adds this
-> missing support to enable SoC's with ETMv4x to use same
-> driver by checking only the ETM architecture major version
-> number.
-> 
-> Without this change, we get below error during etm probe:
-> 
-> / # dmesg | grep etm
-> [    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
-> [    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
-> [    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
-> [    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
-> [    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
-> [    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
-> [    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
-> [    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
-> 
-> With this change, etm probe is successful:
-> 
-> / # dmesg | grep etm
-> [    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
-> [    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
-> [    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
-> [    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
-> [    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
-> [    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
-> [    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
-> [    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
+> Instead of overriding the peripheral id(PID) check in AMBA
+> by hardcoding them in DT, add the PIDs to the ETM4x driver.
+> Here we use Unique Component Identifier(UCI) for MSM8996
+> since the ETM and CPU debug module shares the same PIDs.
+> SDM845 does not support CPU debug module.
 > 
 > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> 
 > ---
->   drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> This patch depends on UCI support by Mike Leach in below link:
+>   https://lore.kernel.org/lkml/20190121233151.13363-2-mike.leach@linaro.org/
+> ---
+>   drivers/hwtracing/coresight/coresight-etm4x.c | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
 > diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 53e2fb6e86f6..fe76b176974a 100644
+> index fe76b176974a..17731a8ae787 100644
 > --- a/drivers/hwtracing/coresight/coresight-etm4x.c
 > +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -55,7 +55,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
+> @@ -1080,6 +1080,10 @@ static const struct amba_id etm4_ids[] = {
+>   	ETM4x_AMBA_ID(0x000bb95a),		/* Cortex-A72 */
+>   	ETM4x_AMBA_ID(0x000bb959),		/* Cortex-A73 */
+>   	ETM4x_AMBA_ID(0x000bb9da),		/* Cortex-A35 */
+> +	ETM4x_AMBA_UCI_ID(0x000f0205),		/* Qualcomm Kryo */
+> +	ETM4x_AMBA_UCI_ID(0x000f0211),		/* Qualcomm Kryo */
+> +	ETM4x_AMBA_ID(0x000bb802),		/* Qualcomm Kryo 385 Cortex-A55 */
+> +	ETM4x_AMBA_ID(0x000bb803),		/* Qualcomm Kryo 385 Cortex-A75 */
+>   	{},
+>   };
 >   
->   static bool etm4_arch_supported(u8 arch)
->   {
-> -	switch (arch) {
-> +	/* Mask out the minor version number */
-> +	switch (arch & 0xf0) {
->   	case ETM_ARCH_V4:
->   		break;
->   	default:
-> 
 
 Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
