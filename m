@@ -1,68 +1,57 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv5 1/4] dt-bindings: add DT binding for the layerscape
- PCIe controller with EP mode
-Date: Tue, 29 Jan 2019 12:06:21 +0000
-Message-ID: <20190129120621.GB7467@e107981-ln.cambridge.arm.com>
-References: <20190121094500.10657-1-xiaowei.bao@nxp.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.20 075/117] EDAC, altera: Fix S10 persistent register offset
+Date: Tue, 29 Jan 2019 12:35:26 +0100
+Message-ID: <20190129113211.253650252@linuxfoundation.org>
+References: <20190129113207.477505932@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190121094500.10657-1-xiaowei.bao@nxp.com>
+In-Reply-To: <20190129113207.477505932@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>, robh+dt@kernel.org
-Cc: bhelgaas@google.com, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>, Borislav Petkov <bp@suse.de>, James Morse <james.morse@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, dinguyen@kernel.org, linux-edac <linux-edac@vger.kernel.org>, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
-Is it OK for you if I pull this series into the pci tree ?
+------------------
 
-Please let me know, thanks.
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Lorenzo
+commit 245b6c6558128327d330549b23d09594c46f58df upstream.
 
-On Mon, Jan 21, 2019 at 05:44:57PM +0800, Xiaowei Bao wrote:
-> Add the documentation for the Device Tree binding for the layerscape PCIe
-> controller with EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Reviewed-by: Minghuan Lian <minghuan.lian@nxp.com>
-> Reviewed-by: Zhiqiang Hou <zhiqiang.hou@nxp.com>
-> ---
-> v2:
->  - Add the SoC specific compatibles.
-> v3:
->  - modify the commit message.
-> v4:
->  - no change.
-> v5:
->  - no change.
-> 
->  .../devicetree/bindings/pci/layerscape-pci.txt     |    3 +++
->  1 files changed, 3 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> index 9b2b8d6..e20ceaa 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -13,6 +13,7 @@ information.
->  
->  Required properties:
->  - compatible: should contain the platform identifier such as:
-> +  RC mode:
->          "fsl,ls1021a-pcie"
->          "fsl,ls2080a-pcie", "fsl,ls2085a-pcie"
->          "fsl,ls2088a-pcie"
-> @@ -20,6 +21,8 @@ Required properties:
->          "fsl,ls1046a-pcie"
->          "fsl,ls1043a-pcie"
->          "fsl,ls1012a-pcie"
-> +  EP mode:
-> +	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
->  - reg: base addresses and lengths of the PCIe controller register blocks.
->  - interrupts: A list of interrupt outputs of the controller. Must contain an
->    entry for each entry in the interrupt-names property.
-> -- 
-> 1.7.1
-> 
+Correct the persistent register offset where address and status are
+stored.
+
+Fixes: 08f08bfb7b4c ("EDAC, altera: Merge Stratix10 into the Arria10 SDRAM probe routine")
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: dinguyen@kernel.org
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: mark.rutland@arm.com
+Cc: robh+dt@kernel.org
+Cc: stable <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/1548179287-21760-2-git-send-email-thor.thayer@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/edac/altera_edac.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -295,8 +295,8 @@ struct altr_sdram_mc_data {
+ #define S10_SYSMGR_ECC_INTSTAT_DERR_OFST  0xA0
+ 
+ /* Sticky registers for Uncorrected Errors */
+-#define S10_SYSMGR_UE_VAL_OFST            0x120
+-#define S10_SYSMGR_UE_ADDR_OFST           0x124
++#define S10_SYSMGR_UE_VAL_OFST            0x220
++#define S10_SYSMGR_UE_ADDR_OFST           0x224
+ 
+ #define S10_DDR0_IRQ_MASK                 BIT(16)
+ 
