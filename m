@@ -1,8 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 6/6] ARM64: dts: marvell: armada-37xx: link USB hosts with
- their PHYs
-Date: Tue, 29 Jan 2019 10:36:35 +0100
-Message-ID: <20190129093635.4321-7-miquel.raynal@bootlin.com>
+Subject: [PATCH v5 5/6] ARM64: dts: marvell: armada-37xx: declare USB2 UTMI
+ PHYs
+Date: Tue, 29 Jan 2019 10:36:34 +0100
+Message-ID: <20190129093635.4321-6-miquel.raynal@bootlin.com>
 References: <20190129093635.4321-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,41 +22,68 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Ma
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reference the PHY nodes from the USB controller nodes.
+On Marvell Armada 3700 SoCs there are two USB2 UTMI PHYs. They are
+both very similar but only one has OTG/charging capabilities.
 
-The USB3 host controller is wired to:
-  * the first PHY of the COMPHY IP
-  * the OTG-capable UTMI PHY
-
-The USB2 host controller is wired to:
-  * the host-only UTMI PHY
+Because there are USB host registers and PHY registers mixed in a
+single area, a system controller is also created and referenced from
+both the USB host node and the PHY node.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 28 ++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index d2d8ef00c592..c0b1c9146525 100644
+index 5cfd1b920f31..d2d8ef00c592 100644
 --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
 +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -347,6 +347,8 @@
- 				marvell,usb-misc-reg = <&usb32_syscon>;
+@@ -344,18 +344,46 @@
+ 				compatible = "marvell,armada3700-xhci",
+ 				"generic-xhci";
+ 				reg = <0x58000 0x4000>;
++				marvell,usb-misc-reg = <&usb32_syscon>;
  				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
  				clocks = <&sb_periph_clk 12>;
-+				phys = <&comphy0 0>, <&usb2_utmi_otg_phy>;
-+				phy-names = "usb3-phy", "usb2-utmi-otg-phy";
  				status = "disabled";
  			};
  
-@@ -368,6 +370,8 @@
++			usb2_utmi_otg_phy: phy@5d000 {
++				compatible = "marvell,a3700-utmi-otg-phy";
++				reg = <0x5d000 0x800>;
++				marvell,usb-misc-reg = <&usb32_syscon>;
++				#phy-cells = <0>;
++			};
++
++			usb32_syscon: system-controller@5d800 {
++				compatible = "marvell,armada-3700-usb2-host-device-misc",
++				"syscon";
++				reg = <0x5d800 0x800>;
++			};
++
+ 			usb2: usb@5e000 {
+ 				compatible = "marvell,armada-3700-ehci";
  				reg = <0x5e000 0x1000>;
- 				marvell,usb-misc-reg = <&usb2_syscon>;
++				marvell,usb-misc-reg = <&usb2_syscon>;
  				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				phys = <&usb2_utmi_host_phy>;
-+				phy-names = "usb2-utmi-host-phy";
  				status = "disabled";
  			};
  
++			usb2_utmi_host_phy: phy@5f000 {
++				compatible = "marvell,a3700-utmi-host-phy";
++				reg = <0x5f000 0x800>;
++				marvell,usb-misc-reg = <&usb2_syscon>;
++				#phy-cells = <0>;
++			};
++
++			usb2_syscon: system-controller@5f800 {
++				compatible = "marvell,armada-3700-usb2-host-misc",
++				"syscon";
++				reg = <0x5f800 0x800>;
++			};
++
+ 			xor@60900 {
+ 				compatible = "marvell,armada-3700-xor";
+ 				reg = <0x60900 0x100>,
 -- 
 2.19.1
