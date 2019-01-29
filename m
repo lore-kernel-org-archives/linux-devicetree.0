@@ -1,8 +1,7 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv3 24/27] PCI: mobiveil: ls_pcie_g4: add Workaround for
- A-011577
-Date: Tue, 29 Jan 2019 08:11:01 +0000
-Message-ID: <20190129080926.36773-25-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 26/27] arm64: dts: freescale: lx2160a: add pcie DT nodes
+Date: Tue, 29 Jan 2019 08:11:13 +0000
+Message-ID: <20190129080926.36773-27-Zhiqiang.Hou@nxp.com>
 References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,170 +16,202 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-PCIe configuration access to non-existent function triggered
-SERROR interrupt exception.
-
-Workaround:
-Disable error reporting on AXI bus during the Vendor ID read
-transactions in enumeration.
-
-This ERRATA is only for LX2160A Rev1.0, and it will be fixed
-in Rev2.0.
+The LX2160A integrated 6 PCIe Gen4 controllers.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 ---
 V3:
- - Integrated without change from http://patchwork.ozlabs.org/patch/1006790=
-/
+ - No change
 
- .../controller/mobiveil/pci-layerscape-gen4.c | 37 +++++++++++++++++++
- .../controller/mobiveil/pcie-mobiveil-host.c  | 17 ++++++++-
- .../pci/controller/mobiveil/pcie-mobiveil.h   |  3 ++
- 3 files changed, 56 insertions(+), 1 deletion(-)
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++++++++++++++++
+ 1 file changed, 163 insertions(+)
 
-diff --git a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c b/driver=
-s/pci/controller/mobiveil/pci-layerscape-gen4.c
-index 174cbcac4059..d2c5dbbd5e3c 100644
---- a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
-+++ b/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
-@@ -22,8 +22,13 @@
-=20
- #include "pcie-mobiveil.h"
-=20
-+#define REV_1_0				(0x10)
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/bo=
+ot/dts/freescale/fsl-lx2160a.dtsi
+index 3f6521c47f51..8f687a3ef185 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -882,5 +882,168 @@
+ 				};
+ 			};
+ 		};
 +
- /* LUT and PF control registers */
- #define PCIE_LUT_OFF			(0x80000)
-+#define PCIE_LUT_GCR			(0x28)
-+#define PCIE_LUT_GCR_RRE		(0)
++		pcie@3400000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
++			       0x80 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
 +
- #define PCIE_PF_OFF			(0xc0000)
- #define PCIE_PF_INT_STAT		(0x18)
- #define PF_INT_STAT_PABRST		(31)
-@@ -41,6 +46,7 @@ struct ls_pcie_g4 {
- 	struct mobiveil_pcie *pci;
- 	struct delayed_work dwork;
- 	int irq;
-+	u8 rev;
++		pcie@3500000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
++			       0x88 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3600000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03600000 0x0 0x00100000   /* controller registers */
++			       0x90 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <256>;
++			ppio-wins =3D <24>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x90 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3700000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03700000 0x0 0x00100000   /* controller registers */
++			       0x98 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x98 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3800000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03800000 0x0 0x00100000   /* controller registers */
++			       0xa0 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <256>;
++			ppio-wins =3D <24>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0xa0 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3900000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03900000 0x0 0x00100000   /* controller registers */
++			       0xa8 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0xa8 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
+ 	};
  };
-=20
- static inline u32 ls_pcie_g4_lut_readl(struct ls_pcie_g4 *pcie, u32 off)
-@@ -76,6 +82,15 @@ static bool ls_pcie_g4_is_bridge(struct ls_pcie_g4 *pcie=
-)
- 	return header_type =3D=3D PCI_HEADER_TYPE_BRIDGE;
- }
-=20
-+static int ls_pcie_g4_host_init(struct mobiveil_pcie *pci)
-+{
-+	struct ls_pcie_g4 *pcie =3D to_ls_pcie_g4(pci);
-+
-+	pcie->rev =3D csr_readb(pci, PCI_REVISION_ID);
-+
-+	return 0;
-+}
-+
- static int ls_pcie_g4_link_up(struct mobiveil_pcie *pci)
- {
- 	struct ls_pcie_g4 *pcie =3D to_ls_pcie_g4(pci);
-@@ -188,12 +203,34 @@ static void ls_pcie_g4_reset(struct work_struct *work=
-)
- 	ls_pcie_g4_reinit_hw(pcie);
- }
-=20
-+static int ls_pcie_g4_read_other_conf(struct pci_bus *bus, unsigned int de=
-vfn,
-+				   int where, int size, u32 *val)
-+{
-+	struct mobiveil_pcie *pci =3D bus->sysdata;
-+	struct ls_pcie_g4 *pcie =3D to_ls_pcie_g4(pci);
-+	int ret;
-+
-+	if (pcie->rev =3D=3D REV_1_0 && where =3D=3D PCI_VENDOR_ID)
-+		ls_pcie_g4_lut_writel(pcie, PCIE_LUT_GCR,
-+				      0 << PCIE_LUT_GCR_RRE);
-+
-+	ret =3D pci_generic_config_read(bus, devfn, where, size, val);
-+
-+	if (pcie->rev =3D=3D REV_1_0 && where =3D=3D PCI_VENDOR_ID)
-+		ls_pcie_g4_lut_writel(pcie, PCIE_LUT_GCR,
-+				      1 << PCIE_LUT_GCR_RRE);
-+
-+	return ret;
-+}
-+
- static struct mobiveil_rp_ops ls_pcie_g4_rp_ops =3D {
- 	.interrupt_init =3D ls_pcie_g4_interrupt_init,
-+	.read_other_conf =3D ls_pcie_g4_read_other_conf,
- };
-=20
- static const struct mobiveil_pab_ops ls_pcie_g4_pab_ops =3D {
- 	.link_up =3D ls_pcie_g4_link_up,
-+	.host_init =3D ls_pcie_g4_host_init,
- };
-=20
- static int __init ls_pcie_g4_probe(struct platform_device *pdev)
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers=
-/pci/controller/mobiveil/pcie-mobiveil-host.c
-index e8d0c4989013..5f51bc2dd6d7 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-@@ -79,9 +79,20 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bu=
-s *bus,
- 	return pcie->rp.config_axi_slave_base + where;
- }
-=20
-+static int mobiveil_pcie_config_read(struct pci_bus *bus, unsigned int dev=
-fn,
-+				     int where, int size, u32 *val)
-+{
-+	struct mobiveil_pcie *pcie =3D bus->sysdata;
-+	struct root_port *rp =3D &pcie->rp;
-+
-+	if (bus->number > rp->root_bus_nr && rp->ops->read_other_conf)
-+		return rp->ops->read_other_conf(bus, devfn, where, size, val);
-+
-+	return pci_generic_config_read(bus, devfn, where, size, val);
-+}
- static struct pci_ops mobiveil_pcie_ops =3D {
- 	.map_bus =3D mobiveil_pcie_map_bus,
--	.read =3D pci_generic_config_read,
-+	.read =3D mobiveil_pcie_config_read,
- 	.write =3D pci_generic_config_write,
- };
-=20
-@@ -309,6 +320,10 @@ int mobiveil_host_init(struct mobiveil_pcie *pcie, boo=
-l reinit)
- 	value |=3D (PCI_CLASS_BRIDGE_PCI << 16);
- 	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
-=20
-+	/* Platform specific host init */
-+	if (pcie->ops->host_init)
-+		return pcie->ops->host_init(pcie);
-+
- 	return 0;
- }
-=20
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/=
-controller/mobiveil/pcie-mobiveil.h
-index 0ccd6cee5f8f..ab43de5e4b2b 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-@@ -145,6 +145,8 @@ struct mobiveil_msi {			/* MSI information */
-=20
- struct mobiveil_rp_ops {
- 	int (*interrupt_init)(struct mobiveil_pcie *pcie);
-+	int (*read_other_conf)(struct pci_bus *bus, unsigned int devfn,
-+			       int where, int size, u32 *val);
- };
-=20
- struct root_port {
-@@ -160,6 +162,7 @@ struct root_port {
-=20
- struct mobiveil_pab_ops {
- 	int (*link_up)(struct mobiveil_pcie *pcie);
-+	int (*host_init)(struct mobiveil_pcie *pcie);
- };
-=20
- struct mobiveil_pcie {
 --=20
 2.17.1
