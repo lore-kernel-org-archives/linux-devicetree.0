@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v4 01/10] arm64: dts: qcom: sdm845: Update reserved memory map
-Date: Tue, 29 Jan 2019 15:20:00 -0800
-Message-ID: <20190129232009.5033-2-bjorn.andersson@linaro.org>
+Subject: [PATCH v4 06/10] soc: qcom: Add AOSS QMP genpd provider
+Date: Tue, 29 Jan 2019 15:20:05 -0800
+Message-ID: <20190129232009.5033-7-bjorn.andersson@linaro.org>
 References: <20190129232009.5033-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190129232009.5033-1-bjorn.andersson@linaro.org>
@@ -10,121 +10,199 @@ To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update existing and add missing regions to the reserved memory map, as
-described in version 10.
+The AOSS QMP genpd provider implements control over power-related
+resources related to low-power state associated with the remoteprocs in
+the system as well as control over a set of clocks related to debug
+hardware in the SoC.
 
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v3:
-- Added hyp and xbl memory nodes.
-- Labeled all PIL nodes
+- None
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 71 ++++++++++++++++++++++++++--
- 1 file changed, 68 insertions(+), 3 deletions(-)
+ drivers/soc/qcom/Kconfig       |   9 +++
+ drivers/soc/qcom/Makefile      |   1 +
+ drivers/soc/qcom/aoss-qmp-pd.c | 138 +++++++++++++++++++++++++++++++++
+ 3 files changed, 148 insertions(+)
+ create mode 100644 drivers/soc/qcom/aoss-qmp-pd.c
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 33f5f4ba6160..c363848e9001 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -73,6 +73,16 @@
- 		#size-cells = <2>;
- 		ranges;
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 28ab19bf8c98..893b56b70957 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -12,6 +12,15 @@ config QCOM_AOSS_QMP
+ 	  micro-controller in the AOSS, using QMP, to control certain resource
+ 	  that are not exposed through RPMh.
  
-+		hyp_mem: memory@85700000 {
-+			reg = <0x0 0x85700000 0 0x600000>;
-+			no-map;
-+		};
++config QCOM_AOSS_QMP_PD
++	tristate "Qualcomm AOSS Messaging Power Domain driver"
++	depends on QCOM_AOSS_QMP
++	select PM_GENERIC_DOMAINS
++	help
++	  This driver provides the means of controlling the AOSS's handling of
++	  low-power state for resources related to the remoteproc subsystems as
++	  well as controlling the debug clocks.
 +
-+		xbl_mem: memory@85e00000 {
-+			reg = <0x0 0x85e00000 0 0x100000>;
-+			no-map;
-+		};
+ config QCOM_COMMAND_DB
+ 	bool "Qualcomm Command DB"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index 2c04d27fbf9e..16913e73fddf 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS_rpmh-rsc.o := -I$(src)
+ obj-$(CONFIG_QCOM_AOSS_QMP) +=	aoss-qmp.o
++obj-$(CONFIG_QCOM_AOSS_QMP_PD) += aoss-qmp-pd.o
+ obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
+ obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
+ obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
+diff --git a/drivers/soc/qcom/aoss-qmp-pd.c b/drivers/soc/qcom/aoss-qmp-pd.c
+new file mode 100644
+index 000000000000..82dd569a2bc9
+--- /dev/null
++++ b/drivers/soc/qcom/aoss-qmp-pd.c
+@@ -0,0 +1,138 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2018, Linaro Ltd
++ */
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_domain.h>
++#include <linux/soc/qcom/aoss-qmp.h>
++#include <dt-bindings/power/qcom-aoss-qmp.h>
 +
- 		memory@85fc0000 {
- 			reg = <0 0x85fc0000 0 0x20000>;
- 			no-map;
-@@ -90,12 +100,47 @@
- 		};
- 
- 		memory@86200000 {
--			reg = <0 0x86200000 0 0x2d00000>;
-+			reg = <0 0x86200000 0 0x100000>;
-+			no-map;
-+		};
++/* Requests are expected to be 96 bytes long */
++#define AOSS_QMP_PD_MSG_LEN	96
 +
-+		tz_mem: memory@86300000 {
-+			reg = <0 0x86300000 0 0x2c00000>;
-+			no-map;
-+		};
++struct qmp_pd {
++	struct qmp *qmp;
 +
-+		qseecom_mem: memory@8ab00000 {
-+			reg = <0 0x8ab00000 0 0x1400000>;
-+			no-map;
-+		};
++	struct generic_pm_domain pd;
 +
-+		camera_mem: memory@8bf00000 {
-+			reg = <0 0x8bf00000 0 0x500000>;
- 			no-map;
- 		};
- 
--		wlan_msa_mem: memory@96700000 {
--			reg = <0 0x96700000 0 0x100000>;
-+		ipa_fw_mem: memory@8c400000 {
-+			reg = <0 0x8c400000 0 0x10000>;
-+			no-map;
-+		};
++	const char *name;
++};
 +
-+		ipa_gsi_mem: memory@8c410000 {
-+			reg = <0 0x8c410000 0 0x5000>;
-+			no-map;
-+		};
++#define to_qmp_pd_resource(res) container_of(res, struct qmp_pd, pd)
 +
-+		gpu_mem: memory@8c415000 {
-+			reg = <0 0x8c415000 0 0x2000>;
-+			no-map;
-+		};
++struct qmp_pd_resource {
++	const char *name;
++	int (*on)(struct generic_pm_domain *domain);
++	int (*off)(struct generic_pm_domain *domain);
++};
 +
-+		adsp_mem: memory@8c500000 {
-+			reg = <0 0x8c500000 0 0x1a00000>;
-+			no-map;
-+		};
++static int qmp_pd_clock_toggle(struct qmp_pd *res, bool enable)
++{
++	char buf[AOSS_QMP_PD_MSG_LEN];
 +
-+		wlan_msa_mem: memory@8df00000 {
-+			reg = <0 0x8df00000 0 0x100000>;
- 			no-map;
- 		};
- 
-@@ -104,10 +149,30 @@
- 			no-map;
- 		};
- 
-+		venus_mem: memory@95800000 {
-+			reg = <0 0x95800000 0 0x500000>;
-+			no-map;
-+		};
++	snprintf(buf, sizeof(buf), "{class: clock, res: %s, val: %d}",
++		 res->name, !!enable);
++	return qmp_send(res->qmp, buf, sizeof(buf));
++}
 +
-+		cdsp_mem: memory@95d00000 {
-+			reg = <0 0x95d00000 0 0x800000>;
-+			no-map;
-+		};
++static int qmp_pd_clock_on(struct generic_pm_domain *domain)
++{
++	return qmp_pd_clock_toggle(to_qmp_pd_resource(domain), true);
++}
 +
- 		mba_region: memory@96500000 {
- 			reg = <0 0x96500000 0 0x200000>;
- 			no-map;
- 		};
++static int qmp_pd_clock_off(struct generic_pm_domain *domain)
++{
++	return qmp_pd_clock_toggle(to_qmp_pd_resource(domain), false);
++}
 +
-+		slpi_mem: memory@96700000 {
-+			reg = <0 0x96700000 0 0x1400000>;
-+			no-map;
-+		};
++static int qmp_pd_image_toggle(struct qmp_pd *res, bool enable)
++{
++	char buf[AOSS_QMP_PD_MSG_LEN];
 +
-+		spss_mem: memory@97b00000 {
-+			reg = <0 0x97b00000 0 0x100000>;
-+			no-map;
-+		};
- 	};
- 
- 	cpus {
++	snprintf(buf, sizeof(buf),
++		 "{class: image, res: load_state, name: %s, val: %s}",
++		 res->name, enable ? "on" : "off");
++	return qmp_send(res->qmp, buf, sizeof(buf));
++}
++
++static int qmp_pd_image_on(struct generic_pm_domain *domain)
++{
++	return qmp_pd_image_toggle(to_qmp_pd_resource(domain), true);
++}
++
++static int qmp_pd_image_off(struct generic_pm_domain *domain)
++{
++	return qmp_pd_image_toggle(to_qmp_pd_resource(domain), false);
++}
++
++static const struct qmp_pd_resource sdm845_resources[] = {
++	[AOSS_QMP_QDSS_CLK] = { "qdss", qmp_pd_clock_on, qmp_pd_clock_off },
++	[AOSS_QMP_LS_CDSP] = { "cdsp", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_LPASS] = { "adsp", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_MODEM] = { "modem", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_SLPI] = { "slpi", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_SPSS] = { "spss", qmp_pd_image_on, qmp_pd_image_off },
++	[AOSS_QMP_LS_VENUS] = { "venus", qmp_pd_image_on, qmp_pd_image_off },
++};
++
++static int qmp_pd_probe(struct platform_device *pdev)
++{
++	struct genpd_onecell_data *data;
++	struct device *parent = pdev->dev.parent;
++	struct qmp_pd *res;
++	struct qmp *qmp;
++	size_t num = ARRAY_SIZE(sdm845_resources);
++	int i;
++
++	qmp = dev_get_drvdata(pdev->dev.parent);
++	if (!qmp)
++		return -EINVAL;
++
++	res = devm_kcalloc(&pdev->dev, num, sizeof(*res), GFP_KERNEL);
++	if (!res)
++		return -ENOMEM;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
++				     GFP_KERNEL);
++
++	for (i = 0; i < num; i++) {
++		pm_genpd_init(&res[i].pd, NULL, true);
++		res[i].qmp = qmp;
++		res[i].name = sdm845_resources[i].name;
++
++		res[i].pd.name = sdm845_resources[i].name;
++		res[i].pd.power_on = sdm845_resources[i].on;
++		res[i].pd.power_off = sdm845_resources[i].off;
++
++		data->domains[data->num_domains++] = &res[i].pd;
++	}
++
++	return of_genpd_add_provider_onecell(parent->of_node, data);
++}
++
++static int qmp_pd_remove(struct platform_device *pdev)
++{
++	struct device *parent = pdev->dev.parent;
++
++	of_genpd_del_provider(parent->of_node);
++
++	return 0;
++}
++
++static struct platform_driver qmp_pd_driver = {
++	.driver = {
++		.name		= "aoss_qmp_pd",
++	},
++	.probe = qmp_pd_probe,
++	.remove = qmp_pd_remove,
++};
++module_platform_driver(qmp_pd_driver);
++
++MODULE_ALIAS("platform:aoss_qmp_pd");
++MODULE_DESCRIPTION("Qualcomm AOSS QMP load-state driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.18.0
