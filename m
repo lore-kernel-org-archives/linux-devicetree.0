@@ -1,60 +1,98 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v2] arm: dts: gta04: add gps support
-Date: Tue, 29 Jan 2019 08:38:43 +0100
-Message-ID: <20190129073843.14979-1-andreas@kemnade.info>
+From: Boris Brezillon <bbrezillon@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: nand: Add Cadence NAND controller
+ driver
+Date: Tue, 29 Jan 2019 18:21:00 +0100
+Message-ID: <20190129182100.2fcb4e9f@bbrezillon>
+References: <20190129160337.24350-1-piotrs@cadence.com>
+        <20190129161040.20299-1-piotrs@cadence.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190129161040.20299-1-piotrs@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
-Cc: Andreas Kemnade <andreas@kemnade.info>
+To: Piotr Sroka <piotrs@cadence.com>
+Cc: linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, BrianNorris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
-which one is mounted so use the compatibility entry for w2sg0004
-for all which will work for both.
+Hi Piotr,
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Changes in v2:
-- some s/gps/gnss/
-- not added vcc-supply because the regulator is not modelled
-  in dts at all
+On Tue, 29 Jan 2019 16:10:40 +0000
+Piotr Sroka <piotrs@cadence.com> wrote:
 
-w2sg0004 bindings are in next-20190129
+> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+> ---
+>  .../devicetree/bindings/mtd/cadence-nand.txt       | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand.txt b/Documentation/devicetree/bindings/mtd/cadence-nand.txt
+> new file mode 100644
+> index 000000000000..82afa34d5652
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/cadence-nand.txt
+> @@ -0,0 +1,35 @@
+> +* Cadence NAND controller
+> +
+> +Required properties:
+> +  - compatible : "cdns,hpnfc-nand"
 
-https://git.kernel.org/pub/scm/linux/kernel/git/johan/gnss gnss-next
- arch/arm/boot/dts/omap3-gta04.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+"nfc" already means nand flash controller, no need to suffix it with
+-nand, "cdns,hpnfc" should be enough. 
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index e53d32691308..d58c117e429f 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -312,6 +312,12 @@
- 		>;
-        };
- 
-+	gps_pins: pinmux_gps_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2176, PIN_OUTPUT_PULLDOWN | MUX_MODE4) /* gpio145 */
-+		>;
-+	};
-+
- 	hdq_pins: hdq_pins {
- 		pinctrl-single,pins = <
- 			OMAP3_CORE1_IOPAD(0x21c6, PIN_INPUT_PULLUP | MUX_MODE0) /* i2c3_sda.hdq */
-@@ -644,6 +650,13 @@
- &uart2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart2_pins>;
-+	gnss: gnss {
-+		compatible = "wi2wi,w2sg0004";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gps_pins>;
-+		sirf,onoff-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
-+		lna-supply = <&vsim>;
-+	};
- };
- 
- &uart3 {
--- 
-2.11.0
+> +  - reg : Contains two entries, each of which is a tuple consisting of a
+> +	  physical address and length. The first entry is the address and
+> +	  length of the controller register set. The second entry is the
+> +	  address and length of the Slave DMA data port.
+
+Please name the register ranges.
+
+> +  - interrupts : The interrupt number.
+> +  - clocks: phandle of the controller core clock (nf_clk).
+> +
+> +Optional properties:
+> +Driver calculates controller timings base on NAND flash memory timings and
+> +the following delays in picoseconds.
+> +  - cdns,if-skew : Skew value of the output signals of the NAND Flash interface
+> +  - cdns,nand2-delay : Delay value of one NAND2 gate from which
+> +    the delay element is build
+> +  - cdns,board-delay : Estimated Board delay. The value includes the total
+> +    round trip delay for the signals and is used for deciding on values
+> +    associated with data read capture. The example formula for SDR mode is
+> +    the following:
+> +    board_delay = RE#PAD_delay + PCB trace to device + PCB trace from device
+> +    + DQ PAD delay
+
+The unit of those props is not defined, and if possible I'd like to
+avoid specifying custom timing adjustment values in the DT. Looks like
+some of these values are SoC specific (depends on the integration of
+this IP in a SoC) and others are board specific. For SoC specific
+values, this should be attached to the SoC specific compatible at the
+driver level. For board-specific values, I'd prefer to have a generic
+way to describe boards constraints. 
+
+Please point to the generic bindings to describe NAND chip
+representation under the NAND controller node.
+
+> +
+> +Example
+> +
+> +nand: nand@60000000 {
+
+nand_controller: nand-controller@60000000 { 
+
+> +	  compatible = "cdns,hpnfc-nand";
+> +	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
+> +	  clocks = <&nf_clk>;
+> +	  cdns,if-skew = <50>;
+> +	  cdns,nand2-delay = <37>;
+> +	  cdns,board-delay = <4830>;
+> +	  interrupts = <2 0>;
+
+Add a NAND chip in the example.
+
+> +};
+
+Regards,
+
+Boris
