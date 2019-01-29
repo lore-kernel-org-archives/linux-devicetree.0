@@ -1,40 +1,30 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH] ARM: dts: omap3-gta04a5: Replace LXR reference with a local one
-Date: Tue, 29 Jan 2019 15:45:18 +0100
-Message-ID: <20190129144518.9744-1-j.neuschaefer@gmx.net>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv5 4/7] coresight: etm4x: Add support to enable ETMv4.2
+Date: Tue, 29 Jan 2019 20:16:50 +0530
+Message-ID: <c243233a-96d3-ddde-1bff-f5ec5d0058e9@codeaurora.org>
+References: <cover.1548419933.git.saiprakash.ranjan@codeaurora.org>
+ <980aaf18c0fe92a667930e3a035394442af74869.1548419933.git.saiprakash.ranjan@codeaurora.org>
+ <342fa449-124e-7581-dfff-ef5d382f1f6b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <342fa449-124e-7581-dfff-ef5d382f1f6b@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, robh+dt@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, jhugo@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com, marc.w.gonzalez@free.fr
+Cc: rnayak@codeaurora.org, sibis@codeaurora.org, tingwei@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There's no need to use an external link when the file is already here.
+On 1/29/2019 2:56 PM, Suzuki K Poulose wrote:
+>
+> 
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> 
 
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
----
+Thanks Suzuki.
 
-Alternatively, I could change the link to https://elixir.bootlin.com
-(the successor of lxr.free-electrons.com), but this solution seemed
-simpler.
----
- arch/arm/boot/dts/omap3-gta04a5.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/omap3-gta04a5.dts b/arch/arm/boot/dts/omap3-gta04a5.dts
-index bd232b1b24cb..223b47ac596e 100644
---- a/arch/arm/boot/dts/omap3-gta04a5.dts
-+++ b/arch/arm/boot/dts/omap3-gta04a5.dts
-@@ -82,7 +82,7 @@
- 
- /*
-  * for WL183x module see
-- * http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
-+ * Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
-  */
- 
- &wifi_pwrseq {
 -- 
-2.20.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
