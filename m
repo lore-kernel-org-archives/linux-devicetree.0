@@ -1,46 +1,127 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 5/6] arm64: dts: allwinner: h6: Add support
- for the SRAM C1 section
-Date: Tue, 29 Jan 2019 10:08:29 +0100
-Message-ID: <20190129090829.k7omjzplkjiwvboq@flea>
-References: <20190128205504.11225-1-jernej.skrabec@siol.net>
- <20190128205504.11225-6-jernej.skrabec@siol.net>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH 1/7] PM / OPP: Introduce a power estimation helper
+Date: Tue, 29 Jan 2019 09:09:50 +0000
+Message-ID: <20190129090948.3yomjtpbdsar576w@queper01-lin>
+References: <20190128165522.31749-1-quentin.perret@arm.com>
+ <20190128165522.31749-2-quentin.perret@arm.com>
+ <20190129051030.gu5nhr6vmcd35bzk@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2tlylttralbldoot"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBENQYDRAKGQEGJAZM7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190128205504.11225-6-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190129051030.gu5nhr6vmcd35bzk@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: rjw@rjwysocki.net, sudeep.holla@arm.com, liviu.dudau@arm.com, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, nm@ti.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dietmar.eggemann@arm.com, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Viresh,
 
---2tlylttralbldoot
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Jan 28, 2019 at 09:55:03PM +0100, Jernej Skrabec wrote:
-> Add a node for H6 SRAM C1 section.
+On Tuesday 29 Jan 2019 at 10:40:30 (+0530), Viresh Kumar wrote:
+> > +int of_dev_pm_opp_get_cpu_power(unsigned long *mW, unsigned long *KHz, int cpu)
 > 
-> Manual calls it VE SRAM, but for consistency with older SoCs, SRAM C1
-> name is used.
+> I would suggest to change the return type to unsigned long and return 0 for
+> errors and positive values for mW.
+
+Well, I can't really do that -- this must match the API of PM_EM:
+
+https://elixir.bootlin.com/linux/v5.0-rc4/source/include/linux/energy_model.h#L62
+
+I'll make sure to make that explicit in the commit message for v2.
+
 > 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > +{
+> > +	unsigned long mV, Hz, MHz;
+> 
+> MHz is used only once, I think you can get rid of it just open code the division
+> by 1000000. Maybe remove Hz as well and directly use kHz.
 
-Applied, thanks!
-Maxime
+I would expect/hope the compiler will optimize things like that for me
+but yes, I can try to reduce a bit the temp variables if you prefer.
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---2tlylttralbldoot--
+> 
+> > +	struct device *cpu_dev;
+> > +	struct dev_pm_opp *opp;
+> > +	struct device_node *np;
+> > +	u32 cap;
+> > +	u64 tmp;
+> 
+> Name this mW with the above changes.
+
+So that doesn't really work given what I mentioned above.
+
+> > +	int ret;
+> > +
+> > +	cpu_dev = get_cpu_device(cpu);
+> > +	if (!cpu_dev)
+> > +		return -ENODEV;
+> > +
+> > +	np = of_node_get(cpu_dev->of_node);
+> > +	if (!np)
+> > +		return -EINVAL;
+> > +
+> > +	ret = of_property_read_u32(np, "dynamic-power-coefficient", &cap);
+> > +	of_node_put(np);
+> > +	if (ret)
+> > +		return -EINVAL;
+> > +
+> > +	Hz = *KHz * 1000;
+> > +	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &Hz);
+> > +	if (IS_ERR(opp))
+> > +		return -EINVAL;
+> > +
+> > +	mV = dev_pm_opp_get_voltage(opp) / 1000;
+> > +	dev_pm_opp_put(opp);
+> > +	if (!mV)
+> > +		return -EINVAL;
+> > +
+> > +	MHz = Hz / 1000000;
+> > +	tmp = (u64)cap * mV * mV * MHz;
+> > +	do_div(tmp, 1000000000);
+> > +
+> > +	*mW = (unsigned long)tmp;
+> > +	*KHz = Hz / 1000;
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_dev_pm_opp_get_cpu_power);
+> > diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> > index 0a2a88e5a383..fedde14f5187 100644
+> > --- a/include/linux/pm_opp.h
+> > +++ b/include/linux/pm_opp.h
+> > @@ -322,6 +322,7 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpuma
+> >  struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev);
+> >  struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp);
+> >  int of_get_required_opp_performance_state(struct device_node *np, int index);
+> > +int of_dev_pm_opp_get_cpu_power(unsigned long *mW, unsigned long *KHz, int cpu);
+> >  #else
+> >  static inline int dev_pm_opp_of_add_table(struct device *dev)
+> >  {
+> > @@ -364,6 +365,10 @@ static inline int of_get_required_opp_performance_state(struct device_node *np,
+> >  {
+> >  	return -ENOTSUPP;
+> >  }
+> 
+> Add a blank line here. We missed adding the same before
+> of_get_required_opp_performance_state() earlier, maybe add the new routine
+> before of_get_required_opp_performance_state() and add blank line before and
+> after it :)
+
+Sounds good !
+
+> 
+> > +static inline int of_dev_pm_opp_get_cpu_power(unsigned long *mW, unsigned long *KHz, int cpu)
+> > +{
+> > +	return -ENOTSUPP;
+> > +}
+> >  #endif
+> >  
+> >  #endif		/* __LINUX_OPP_H__ */
+> > -- 
+> > 2.20.1
+> 
+> -- 
+> viresh
+
+Thanks,
+Quentin
