@@ -1,111 +1,71 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/9] mfd: pm8xxx: convert to v2 irq interfaces to support
- hierarchical IRQ chips
-Date: Wed, 30 Jan 2019 13:27:39 +0000
-Message-ID: <20190130132739.GE4701@dell>
+Subject: Re: [PATCH 4/9] mfd: pm8xxx: disassociate old virq if hwirq mapping
+ already exists
+Date: Wed, 30 Jan 2019 13:31:16 +0000
+Message-ID: <20190130133116.GF4701@dell>
 References: <20190125162302.14036-1-masneyb@onstation.org>
- <20190125162302.14036-4-masneyb@onstation.org>
+ <20190125162302.14036-5-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190125162302.14036-4-masneyb@onstation.org>
+In-Reply-To: <20190125162302.14036-5-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Brian Masney <masneyb@onstation.org>
 Cc: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, marc.zyngier@arm.com, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Thomas,
+
 On Fri, 25 Jan 2019, Brian Masney wrote:
 
-> Convert the PM8XXX IRQ code to use the version 2 IRQ interface in order
-> to support hierarchical IRQ chips. This is necessary so that ssbi-gpio
-> can be setup as a hierarchical IRQ chip with PM8xxx as the parent. IRQ
-> chips in device tree should be usable from the start without the
-> having to make an additional call to gpio[d]_to_irq() to get the proper
-> IRQ on the parent.
+> Check to see if the hwirq is already associated with another virq on
+> this IRQ domain. If so, then disassociate it before associating the
+> hwirq with the new virq.
 > 
-> The IRQ handler was hardcoded as handle_level_irq and this patch
-> properly sets the handler to either handle_edge_irq or handle_level_irq
-> depending on the IRQ type.
+> This is a temporary hack that is needed in order to not break git
+> bisect for existing boards. The next patch in this series converts
+> ssbi-gpio to be a hierarchical IRQ chip, then there are several patches
+> to update all of the device tree files, and finally this patch will be
+> reverted within the same patch series.
 > 
-> pm8821_irq_domain_ops and pm8821_irq_domain_map are removed by this
-> patch since the irq_chip is now contained in the pm_irq_data struct, and
-> that allows us to use a common IRQ mapping function.
-> 
+> IRQs for ssbi-gpio are all initially setup without an IRQ hierarchy
+> this driver is probed due to the interrupts property in device tree.
+> Once ssbi-gpio is converted to be a hierarchical IRQ chip in the next
+> patch, existing users of gpio[d]_to_irq() will call pmic_gpio_to_irq(),
+> and that will use the new IRQ chip code in ssbi-gpio that sets up the
+> IRQ in an IRQ hierarchy. The hwirq is now associated with two Linux
+> virqs and interrupts will not work as expected. This patch corrects
+> that issue.
+
+I guess that's okay.  Would quite like a second opinion though.
+
 > This change was not tested on any actual hardware, however the same
-> change was made to spmi-gpio and tested on a LG Nexus 5 (hammerhead)
-> phone.
+> change was made to spmi-pmic-arb.c and tested on a LG Nexus 5
+> (hammerhead) phone.
 > 
 > Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
->  drivers/mfd/qcom-pm8xxx.c | 86 +++++++++++++++++++++++----------------
->  1 file changed, 50 insertions(+), 36 deletions(-)
+>  drivers/mfd/qcom-pm8xxx.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 > diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
-> index e6e8d81c15fd..a976890c4019 100644
+> index a976890c4019..97b931465601 100644
 > --- a/drivers/mfd/qcom-pm8xxx.c
 > +++ b/drivers/mfd/qcom-pm8xxx.c
-> @@ -70,20 +70,20 @@
->  #define PM8XXX_NR_IRQS		256
->  #define PM8821_NR_IRQS		112
->  
-> +struct pm_irq_data {
-> +	int num_irqs;
-> +	struct irq_chip *irq_chip;
-> +	void (*irq_handler)(struct irq_desc *desc);
-> +};
-> +
->  struct pm_irq_chip {
->  	struct regmap		*regmap;
->  	spinlock_t		pm_irq_lock;
->  	struct irq_domain	*irqdomain;
-> -	unsigned int		num_irqs;
->  	unsigned int		num_blocks;
->  	unsigned int		num_masters;
->  	u8			config[0];
-> -};
-> -
-> -struct pm_irq_data {
-> -	int num_irqs;
-> -	const struct irq_domain_ops  *irq_domain_ops;
-> -	void (*irq_handler)(struct irq_desc *desc);
-> +	const struct pm_irq_data *pm_irq_data;
->  };
->  
->  static int pm8xxx_read_block_irq(struct pm_irq_chip *chip, unsigned int bp,
-> @@ -303,6 +303,7 @@ static int pm8xxx_irq_set_type(struct irq_data *d, unsigned int flow_type)
+> @@ -387,6 +387,11 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip *chip,
+>  				  irq_hw_number_t hwirq, unsigned int type)
 >  {
->  	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
->  	unsigned int pmirq = irqd_to_hwirq(d);
-> +	irq_flow_handler_t flow_handler;
->  	int irq_bit;
->  	u8 block, config;
->  
-> @@ -316,6 +317,8 @@ static int pm8xxx_irq_set_type(struct irq_data *d, unsigned int flow_type)
->  			chip->config[pmirq] &= ~PM_IRQF_MASK_RE;
->  		if (flow_type & IRQF_TRIGGER_FALLING)
->  			chip->config[pmirq] &= ~PM_IRQF_MASK_FE;
+>  	irq_flow_handler_t handler;
+> +	unsigned int old_virq;
 > +
-> +		flow_handler = handle_edge_irq;
->  	} else {
->  		chip->config[pmirq] |= PM_IRQF_LVL_SEL;
+> +	old_virq = irq_find_mapping(domain, hwirq);
+> +	if (old_virq)
+> +		irq_domain_disassociate(domain, old_virq);
 >  
-> @@ -323,8 +326,12 @@ static int pm8xxx_irq_set_type(struct irq_data *d, unsigned int flow_type)
->  			chip->config[pmirq] &= ~PM_IRQF_MASK_RE;
->  		else
->  			chip->config[pmirq] &= ~PM_IRQF_MASK_FE;
-> +
-> +		flow_handler = handle_level_irq;
->  	}
->  
-> +	irq_set_handler_locked(d, flow_handler);
-> +
-
-Why don't you save yourself 3 lines of code and a variable and just
-call irq_set_handler_locked() where you set flow_handler?
-
-Apart from that nit, the code looks good to me.
+>  	if (type & IRQ_TYPE_EDGE_BOTH)
+>  		handler = handle_edge_irq;
 
 -- 
 Lee Jones [李琼斯]
