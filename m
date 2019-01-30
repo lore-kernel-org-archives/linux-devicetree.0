@@ -1,49 +1,49 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/7] cpufreq: dt: Register an Energy Model
-Date: Wed, 30 Jan 2019 10:48:06 +0530
-Message-ID: <20190130051806.fdsos27jaekkwgbs@vireshk-i7>
-References: <20190128165522.31749-1-quentin.perret@arm.com>
- <20190128165522.31749-3-quentin.perret@arm.com>
- <20190128193656.GI81583@google.com>
- <20190129052144.plicqu4vozh3l3ss@vireshk-i7>
- <20190129091546.tfh3lo4w4sosfuba@queper01-lin>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: Add Adreno GPU and GPU smmu definitions
+Date: Wed, 30 Jan 2019 11:02:09 +0530
+Message-ID: <CAFp+6iHzpZ70_qH9wvu=H_oSxVjoPXRaJ38kR9G73TRZXb5t5g@mail.gmail.com>
+References: <20190129132335.30695-5-srinivas.kandagatla@linaro.org>
+ <1548806314-31788-1-git-send-email-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190129091546.tfh3lo4w4sosfuba@queper01-lin>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Perret <quentin.perret@arm.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>, rjw@rjwysocki.net, sudeep.holla@arm.com, liviu.dudau@arm.com, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, nm@ti.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dietmar.eggemann@arm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1548806314-31788-1-git-send-email-jcrouse@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29-01-19, 09:15, Quentin Perret wrote:
-> On Tuesday 29 Jan 2019 at 10:51:44 (+0530), Viresh Kumar wrote:
-> > On 28-01-19, 11:36, Matthias Kaehlcke wrote:
-> > > I think this patch will result in error messages at registration on
-> > > platforms that use the cpufreq-dt driver and don't specify
-> > > 'dynamic-power-coefficient' for the CPUs in the DT. Not sure if that's
-> > > a problem as long as the cpufreq initialization succeeds regardless,
-> > > it could be seen as a not-so-gentle nudge to add the values.
-> > 
-> > That wouldn't be acceptable.
-> 
-> Fair enough. What I can propose in this case is to have in PM_OPP a
-> helper called 'dev_pm_opp_of_register_em()' or something like this. This
-> function will check all prerequisites are present (we have the right
-> values in DT, and so on) and then call (or not) em_register_perf_domain().
-> Then we can make the CPUFreq drivers use that instead of calling
-> em_register_perf_domain() directly.
+Hi,
 
-That should be fine.
+On Wed, Jan 30, 2019 at 5:29 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Add an initial node for the Adreno GPU and it's companion
+> SMMU.
 
-> That would also make it easy to implement Matthias' suggestion to not
-> call em_register_perf_domain() if an EM is already present.
+The SMMU node is in another patch, so may be change the title of this
+patch and update the commit text too?
 
-So you will track registration state within the OPP core for that ?
-Sorry but that doesn't sound right. What's wrong with having an
-unregister helper in energy-model to keep proper code flow everywhere
-?
+>
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 
--- 
-viresh
+[snip]
+
+Regards
+Vivek
+
+Vivek
+
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
