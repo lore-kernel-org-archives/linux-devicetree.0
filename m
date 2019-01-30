@@ -1,74 +1,136 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] Add device tree binding documentation for MAX44009
-Date: Wed, 30 Jan 2019 10:54:52 -0600
-Message-ID: <20190130165452.GA16535@bogus>
-References: <2b847f2b4ed5a94d21c41274395b97eed3ec39dd.1548580142.git.bobbyeshleman@gmail.com>
- <ab7652d06474f951bf764fdc087035554772d147.1548580142.git.bobbyeshleman@gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v9 2/9] PCI: Using PCI configuration space header type
+ instead of class type to assign resource
+Date: Wed, 30 Jan 2019 11:06:12 -0600
+Message-ID: <20190130170612.GH229773@google.com>
+References: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
+ <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ab7652d06474f951bf764fdc087035554772d147.1548580142.git.bobbyeshleman@gmail.com>
+In-Reply-To: <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Eshleman <bobbyeshleman@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: honghui.zhang@mediatek.com
+Cc: lorenzo.pieralisi@arm.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, youlin.pei@mediatek.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, marc.zyngier@arm.com, jianjun.wang@mediatek.com, yt.shen@mediatek.com, matthias.bgg@gmail.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 27, 2019 at 09:09:14AM -0800, Robert Eshleman wrote:
-> This patch adds device tree documentation for the max44009 ambient light sensor.
-
-Wrap long lines.
-
-Follow the subject style used for the directory (git log --oneline 
-<dir>). In this case, 'dt-bindings: iio: light: Add max44009'
-
+On Tue, Oct 16, 2018 at 06:44:43PM +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
 > 
-> Signed-off-by: Robert Eshleman <bobbyeshleman@gmail.com>
-> ---
-> Changes to v3:
-> - None
+> The PCI configuration space header type defines the layout of the rest
+> of the header (PCI r3.0 sec 6.1, PCIe r4.0 sec 7.5.1.1.9) while the
+> resource assignment is based on the configuration space layout instead
+> of its class type. Using configuration space header type instead of
+> class type for the resource assignment.
 > 
-> Changes to v2:
-> - Clean up style
-> 
->  .../bindings/iio/light/max44009.txt           | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/max44009.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/max44009.txt b/Documentation/devicetree/bindings/iio/light/max44009.txt
-> new file mode 100644
-> index 000000000000..b287d7732e37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/max44009.txt
-> @@ -0,0 +1,25 @@
-> +* MAX44009 Ambient Light Sensor
-> +
-> +Required properties:
-> +
-> +- compatible: should be "maxim,max44009"
-> +- reg: the I2C address of the device (default is <0x4a>)
-> +
-> +Optional properties:
-> +
-> +- interrupts: interrupt mapping for GPIO IRQ. Should be configured with
-> +  IRQ_TYPE_EDGE_FALLING.
-> +
-> +Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> +node bindings.
-> +
-> +Example:
-> +
-> +max44009: max44009@4a {
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 
-light-sensor@4a
+I applied the patch below to pci/enumeration for v5.1.
 
-> +	compatible = "maxim,max44009";
-> +	reg = <0x4a>;
-> +
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-> +};
-> +
-> -- 
-> 2.20.1
-> 
+I dropped the hunk that removed the PCI_CLASS_BRIDGE_HOST check per
+Lorenzo's concern.  Let me know if you have any other concerns.
+
+
+commit b2fb5cc57469
+Author: Honghui Zhang <honghui.zhang@mediatek.com>
+Date:   Tue Oct 16 18:44:43 2018 +0800
+
+    PCI: Rely on config space header type, not class code
+    
+    The PCI configuration space header type tells us whether the device is a
+    bridge, a CardBus bridge, or a normal device, and defines the layout of the
+    rest of the header (PCI r3.0 sec 6.1, PCIe r4.0 sec 7.5.1.1.9).
+    
+    When we rely on the header format, e.g., when we're dealing with bridge
+    windows, we should check the header type, not the class code.  The class
+    code is loosely related to the header type, but is often incorrect and the
+    spec doesn't actually require it to be related to the header format.
+    
+    Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+    Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+    [bhelgaas: changelog, keep the PCI_CLASS_BRIDGE_HOST check]
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index c9d8e3c837de..e9d938e14ba8 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6000,8 +6000,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
+ 	 * to enable the kernel to reassign new resource
+ 	 * window later on.
+ 	 */
+-	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE &&
+-	    (dev->class >> 8) == PCI_CLASS_BRIDGE_PCI) {
++	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+ 		for (i = PCI_BRIDGE_RESOURCES; i < PCI_NUM_RESOURCES; i++) {
+ 			r = &dev->resource[i];
+ 			if (!(r->flags & IORESOURCE_MEM))
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 8e2e4154cdd9..128459a0ffba 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1779,9 +1779,6 @@ int pci_setup_device(struct pci_dev *dev)
+ 		break;
+ 
+ 	case PCI_HEADER_TYPE_BRIDGE:		    /* bridge header */
+-		if (class != PCI_CLASS_BRIDGE_PCI)
+-			goto bad;
+-
+ 		/*
+ 		 * The PCI-to-PCI bridge spec requires that subtractive
+ 		 * decoding (i.e. transparent) bridge must have programming
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 1941bb0a6c13..ec44a0f3a7ac 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1186,12 +1186,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+ 		if (!b)
+ 			continue;
+ 
+-		switch (dev->class >> 8) {
+-		case PCI_CLASS_BRIDGE_CARDBUS:
++		switch (dev->hdr_type) {
++		case PCI_HEADER_TYPE_CARDBUS:
+ 			pci_bus_size_cardbus(b, realloc_head);
+ 			break;
+ 
+-		case PCI_CLASS_BRIDGE_PCI:
++		case PCI_HEADER_TYPE_BRIDGE:
+ 		default:
+ 			__pci_bus_size_bridges(b, realloc_head);
+ 			break;
+@@ -1202,12 +1202,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+ 	if (pci_is_root_bus(bus))
+ 		return;
+ 
+-	switch (bus->self->class >> 8) {
+-	case PCI_CLASS_BRIDGE_CARDBUS:
++	switch (bus->self->hdr_type) {
++	case PCI_HEADER_TYPE_CARDBUS:
+ 		/* don't size cardbuses yet. */
+ 		break;
+ 
+-	case PCI_CLASS_BRIDGE_PCI:
++	case PCI_HEADER_TYPE_BRIDGE:
+ 		pci_bridge_check_ranges(bus);
+ 		if (bus->self->is_hotplug_bridge) {
+ 			additional_io_size  = pci_hotplug_io_size;
+@@ -1356,13 +1356,13 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
+ 
+ 		__pci_bus_assign_resources(b, realloc_head, fail_head);
+ 
+-		switch (dev->class >> 8) {
+-		case PCI_CLASS_BRIDGE_PCI:
++		switch (dev->hdr_type) {
++		case PCI_HEADER_TYPE_BRIDGE:
+ 			if (!pci_is_enabled(dev))
+ 				pci_setup_bridge(b);
+ 			break;
+ 
+-		case PCI_CLASS_BRIDGE_CARDBUS:
++		case PCI_HEADER_TYPE_CARDBUS:
+ 			pci_setup_cardbus(b);
+ 			break;
+ 
