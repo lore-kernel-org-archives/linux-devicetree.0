@@ -1,41 +1,87 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 0/3] SMSC USB333x ULPI USB PHY Support
-Date: Wed, 30 Jan 2019 16:50:20 +0100
-Message-ID: <20190130155023.4495-1-paul.kocialkowski@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v7 2/5] dt-bindings: pstore-block: new support for blkoops
+Date: Wed, 30 Jan 2019 10:07:07 -0600
+Message-ID: <20190130160707.GA31844@bogus>
+References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: liaoweixiong <liaoweixiong@allwinnertech.com>
+Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for the SMSC USB333x ULPI USB PHY.
+On Wed, Jan 23, 2019 at 08:05:13PM +0800, liaoweixiong wrote:
+> Create DT binding document for blkoops.
+> 
+> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+> ---
+>  .../devicetree/bindings/pstore-block/blkoops.txt   | 32 ++++++++++++++++++++++
 
-The USB333x usually does not require particular configuration as it
-implements generic registers described in the ULPI specification.
+/bindings/pstore/...
 
-However, specific use cases require tweaking some bits. In our case,
-VBUS is not connected to anything so the internal EXTVBUS signal has to
-be routed to assert VbusValid. 
+I wouldn't call it blkoops either. I believe ramoops is called that to 
+maintain compatibility keeping the same kernel module name that 
+preceeded pstore.
 
-Paul Kocialkowski (3):
-  dt-bindings: phy: Add bindings for the SMSC USB333x ULPI USB PHY
-  phy: Add support for the SMSC USB333x ULPI USB PHY
-  MAINTAINERS: Add entry for the SMSC USB333x ULPI USB PHY
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pstore-block/blkoops.txt b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
+> new file mode 100644
+> index 0000000..a25835b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
+> @@ -0,0 +1,32 @@
+> +Blkoops oops logger
+> +===================
+> +
+> +Blkoops provides a block partition for oops, excluding panics now, so they can
+> +be recovered after a reboot.
+> +
+> +Any space of block partition will be used for a circular buffer of oops records.
+> +These records have a configurable size, with a size of 0 indicating that they
+> +should be disabled.
+> +
+> +"partition-size" and at least one of "dmesg-size" or "pmsg-size" must be set
+> +non-zero, but are otherwise optional as listed below.
+> +
+> +Blkoops will take value from Kconfig if device tree do not set, but settings
+> +from module parameters can also overwrite them.
 
- .../devicetree/bindings/phy/smsc-usb333x.txt  |  50 +++
- MAINTAINERS                                   |   6 +
- drivers/phy/Kconfig                           |   1 +
- drivers/phy/Makefile                          |   1 +
- drivers/phy/smsc/Kconfig                      |  11 +
- drivers/phy/smsc/Makefile                     |   2 +
- drivers/phy/smsc/phy-usb333x.c                | 301 ++++++++++++++++++
- 7 files changed, 372 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/smsc-usb333x.txt
- create mode 100644 drivers/phy/smsc/Kconfig
- create mode 100644 drivers/phy/smsc/Makefile
- create mode 100644 drivers/phy/smsc/phy-usb333x.c
+That's all kernel details not relevant to the binidng.
 
--- 
-2.20.1
+> +
+> +Required properties:
+> +
+> +- compatible: must be "blkoops".
+> +
+> +- partition-size: size in kbytes, must be a multiple of 4.
+
+This seems unnecessary given a partition has a known size.
+
+> +
+> +Optional properties:
+> +
+> +- partition-path: strings must begin with "/dev", tell blkoops which partition
+> +  it can used. If it is not set, blkoops will drop all data when reboot.
+
+No. '/dev/...' is a Linux thing and doesn't belong in DT.
+
+You should define a partition UUID and/or label and the kernel can find 
+the right partition to use.
+
+> +
+> +- dmesg-size: maximum size in kbytes of each dump done on oops, which must be a
+> +  multiple of 4.
+> +
+> +- pmsg-size: maximum size in kbytes for userspace messages, which must be a
+> +  multiple of 4.
+
+Common properties shared with ramoops should be in a common doc.
+
+Rob
