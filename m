@@ -1,40 +1,73 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 0/3] kbuild: Add wilddt function instead of listing dtbs
-Date: Wed, 30 Jan 2019 13:16:52 +0000
-Message-ID: <b6317087abfa81b37b0ac800b192f8e32786ce9a.camel@nxp.com>
-References: <cover.1546888138.git.leonard.crestez@nxp.com>
-         <VI1PR04MB553355D6D5EBC2604E1AD256EE9F0@VI1PR04MB5533.eurprd04.prod.outlook.com>
-         <CAK7LNAQ+eNhkfNsjGEdAg+j2ButQ8R6NyZ10SckCGSP5MZ4jtg@mail.gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH V2 1/4] dt-binding: irq: imx-irqsteer: use irq number
+ instead of group number
+Date: Wed, 30 Jan 2019 14:17:47 +0100
+Message-ID: <1548854267.6869.21.camel@pengutronix.de>
+References: <1548853196-11447-1-git-send-email-aisheng.dong@nxp.com>
+         <1548853196-11447-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAQ+eNhkfNsjGEdAg+j2ButQ8R6NyZ10SckCGSP5MZ4jtg@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <6EF3BD6963F2A741B9D919888AC0468B@eurprd04.prod.outlook.com>
+In-Reply-To: <1548853196-11447-2-git-send-email-aisheng.dong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "olof@lixom.net" <olof@lixom.net>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "michal.lkml@markovi.net" <michal.lkml@markovi.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTAxLTI1IGF0IDAxOjAzICswOTAwLCBNYXNhaGlybyBZYW1hZGEgd3JvdGU6
-DQo+IE9uIFR1ZSwgSmFuIDIyLCAyMDE5IGF0IDE6MTcgQU0gTGVvbmFyZCBDcmVzdGV6IDxsZW9u
-YXJkLmNyZXN0ZXpAbnhwLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gT24gMS83LzIwMTkgOTozMSBQ
-TSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOg0KPiA+ID4gVGhlIGR0cyBtYWtlZmlsZXMgZ28gdGhy
-b3VnaCBhIGxvdCBvZiBwb2ludGxlc3MgY2h1cm4gd2hlbiBib2FyZHMgYXJlDQo+ID4gPiBhZGRl
-ZC4gTWFueSBTT0NzIChzdWNoIGFzIGlteCkgaGF2ZSB2ZXJ5IHNpbXBsZSBuYW1pbmcgY29udmVu
-dGlvbnMgZm9yDQo+ID4gPiBhbGwgYm9hcmRzIHVzaW5nIGEgY2VydGFpbiBjaGlwIGFuZCBib2Fy
-ZCBsaXN0aW5ncyBjYW4gYmUgZWFzaWx5DQo+ID4gPiBjb2xsYXBzZWQgdXNpbmcgd2lsZGNhcmRz
-Lg0KPiA+ID4gDQo+ID4gPiBBZGQgYSAid2lsZGR0IiBmdW5jdGlvbiBhbmQgdXNlIGl0IGZvciBp
-bXg2LzcvOCBhbmQgbGF5ZXJzY2FwZS4gVGhpcyBjYW4NCj4gPiA+IGJlIGFwcGxpZWQgdG8gbWFu
-eSBvdGhlciBzb2MgZmFtaWxpZXMgbGF0ZXIuDQo+ID4gDQo+ID4gQW55IGZlZWRiYWNrPyBUaGlz
-IHNob3VsZCBiZSByZXZpZXdlZCBieSBrYnVpbGQgYW5kIGFybS1zb2MNCj4gDQo+IFBlcnNvbmFs
-bHksIEkgcHJlZmVyIGV4cGxpY2l0IGxpc3RpbmcNCj4gYmVjYXVzZSBJIGNhbiBicm93c2UgdGhl
-IE1ha2VmaWxlIHRvIGdldCBhIHF1aWNrIGlkZWENCj4gb2Ygd2hpY2ggYm9hcmRzIGFyZSBjb21w
-aWxlZC4NCg0KT3IgeW91IGNhbiBqdXN0IGxzIHNvYy0qLmR0cz8NCg0KPiBJIGxpa2UgdGhpcyB0
-byBiZSBjb25zaXN0ZW50Lg0KPiAtIEV4cGxvaXQgd2lsZGNhcmQgZm9yIGFsbCBwbGF0Zm9ybXMN
-Cj4gLSBEbyBub3QgZG8gdGhpcyBhdCBhbGwNCj4gDQo+IEJ1dCwgSSBhbSBwZXNzaW1pc3RpYyBh
-Ym91dCB0aGUgZm9ybWVyDQo+IHdoZW4gSSBsb29rIGF0IEFUOTEgcGxhdGZvcm0uDQoNCkkgY2Fu
-IHRyeSB0byByZXNlbmQgaW4gYSBmb3JtIHRoYXQgdXNlcyBhIHdpbGRjYXJkIGZvciBtb3N0IHBs
-YXRmb3Jtcw0KYnV0IHNraXBzIHRob3NlIHdpdGggdmVyeSBmZXcgU09DcyBvciBjb25mdXNpbmcg
-Y29udmVudGlvbnMgKGxpa2UNCmF0OTEpLg0KDQotLQ0KUmVnYXJkcywNCkxlb25hcmQNCg==
+Am Mittwoch, den 30.01.2019, 13:05 +0000 schrieb Aisheng Dong:
+> Not all 64 interrupts may be used in one group. e.g. most irqsteer in
+> imx8qxp and imx8qm subsystems supports only 32 interrupts.
+> 
+> As the IP integration parameters are Channel number and interrupts number,
+> let's use fsl,num-irqs to represents how many interrupts supported
+> by this irqsteer channel.
+> 
+> > Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+
+As the original fsl,irq-groups was born out of a misunderstanding of
+the HW config options and I'm not aware of any users of the current
+binding, I'm fine with merging this. I do think this warrants a
+backport to stable though, so we don't end up with different bindings
+in stable and current kernels.
+
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
+
+> ---
+> ChangeLog:
+>  v1->v2:
+>   * change property name fsl,irqs-per-chan to fsl,num-irqs.
+> ---
+>  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt       | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+> index 45790ce..6d0a41b 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+> @@ -16,8 +16,8 @@ Required properties:
+>  - #interrupt-cells: Specifies the number of cells needed to encode an
+>    interrupt source. The value must be 1.
+>  - fsl,channel: The output channel that all input IRQs should be steered into.
+> -- fsl,irq-groups: Number of IRQ groups managed by this controller instance.
+> -  Each group manages 64 input interrupts.
+> +- fsl,num-irqs: Number of input interrupts of this channel.
+> +  Should be multiple of 32 input interrupts and up to 512 interrupts.
+>  
+>  Example:
+>  
+> @@ -28,7 +28,7 @@ Example:
+> >  		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
+> >  		clock-names = "ipg";
+> >  		fsl,channel = <0>;
+> > -		fsl,irq-groups = <1>;
+> > +		fsl,num-irqs = <64>;
+> >  		interrupt-controller;
+> >  		#interrupt-cells = <1>;
+> >  	};
