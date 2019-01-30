@@ -1,13 +1,13 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH] ARM: dts: aspeed: quanta-q71l: enable lpc_ctrl node
-Date: Wed, 30 Jan 2019 14:37:58 +1100
-Message-ID: <CACPK8XeSoOkOqVtc7Xhov7Zrj8sMc28q1-BQ_t-d5FTYXMkggg@mail.gmail.com>
-References: <20190129214624.119330-1-venture@google.com>
+Subject: Re: [PATCH] ARM: dts: aspeed: quanta-q71l: enable uart1
+Date: Wed, 30 Jan 2019 14:38:17 +1100
+Message-ID: <CACPK8Xfz5m6++SWoN-E_sT-n6y68vvrcvunhso4nD5Yq3vN6+A@mail.gmail.com>
+References: <20190129214703.119694-1-venture@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190129214624.119330-1-venture@google.com>
+In-Reply-To: <20190129214703.119694-1-venture@google.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,10 +21,9 @@ To: Patrick Venture <venture@google.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Jan 2019 at 08:46, Patrick Venture <venture@google.com> wrote:
+On Wed, 30 Jan 2019 at 08:47, Patrick Venture <venture@google.com> wrote:
 >
-> Enable the lpc_ctrl node in the quanta-q71l dts such that the LPC_CLK is
-> enabled.
+> Enable the uart1 node such that the clock will be enabled.
 >
 > Signed-off-by: Patrick Venture <venture@google.com>
 
