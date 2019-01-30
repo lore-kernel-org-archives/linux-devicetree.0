@@ -1,48 +1,87 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: Kill off skeleton{64}.dtsi
-Date: Wed, 30 Jan 2019 17:31:31 +0100
-Message-ID: <CAK8P3a04uO2Nz-M4NVgMsGy2BPRx9pM1cCuUeS54Jf8N18-9NQ@mail.gmail.com>
-References: <20190109162614.30855-1-robh@kernel.org> <87h8ehpwm2.fsf@FE-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/3] ASoC: add fsl_audmix DT binding documentation
+Date: Wed, 30 Jan 2019 10:32:18 -0600
+Message-ID: <20190130163218.GA16270@bogus>
+References: <1548155654-12985-1-git-send-email-viorel.suman@nxp.com>
+ <1548155654-12985-3-git-send-email-viorel.suman@nxp.com>
+ <20190125194315.GA21222@Asurada-Nvidia.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <87h8ehpwm2.fsf@FE-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-oxnas-GWfripvEmMdhl2p70BpVqQ@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hauke
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190125194315.GA21222@Asurada-Nvidia.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Viorel Suman <viorel.suman@nxp.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 9, 2019 at 6:30 PM Gregory CLEMENT
-<gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> Hi Rob,
->
->  On mer., janv. 09 2019, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> > Remove the usage of skeleton.dtsi in the remaining dts files. It was
-> > deprecated since commit 9c0da3cc61f1 ("ARM: dts: explicitly mark
-> > skeleton.dtsi as deprecated"). This will make adding a unit-address to
-> > memory nodes easier.
-> >
-> > The main tricky part to removing skeleton.dtsi is we could end up with
-> > no /memory node at all when a bootloader depends on one being present. I
-> > hacked up dtc to check for this condition.
->
->
-> Reviewed-by: Gregory CLEMENT <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> and for Armada 38x:
-> Tested-by: Gregory CLEMENT <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
->
+On Fri, Jan 25, 2019 at 11:43:16AM -0800, Nicolin Chen wrote:
+> On Tue, Jan 22, 2019 at 11:14:27AM +0000, Viorel Suman wrote:
+> > Add the DT binding documentation for NXP Audio Mixer
+> > CPU DAI driver.
+> > 
+> > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+> > ---
+> >  .../devicetree/bindings/sound/fsl,audmix.txt       | 54 ++++++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/fsl,audmix.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl,audmix.txt b/Documentation/devicetree/bindings/sound/fsl,audmix.txt
+> > new file mode 100644
+> > index 0000000..45f807e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/fsl,audmix.txt
+> > @@ -0,0 +1,54 @@
+> > +NXP Audio Mixer (AUDMIX).
+> > +
+> > +The Audio Mixer is a on-chip functional module that allows mixing of two
+> > +audio streams into a single audio stream. Audio Mixer has two input serial
+> > +audio interfaces. These are driven by two Synchronous Audio interface
+> > +modules (SAI). Each input serial interface carries 8 audio channels in its
+> > +frame in TDM manner. Mixer mixes audio samples of corresponding channels
+> > +from two interfaces into a single sample. Before mixing, audio samples of
+> > +two inputs can be attenuated based on configuration. The output of the
+> > +Audio Mixer is also a serial audio interface. Like input interfaces it has
+> > +the same TDM frame format. This output is used to drive the serial DAC TDM
+> > +interface of audio codec and also sent to the external pins along with the
+> > +receive path of normal audio SAI module for readback by the CPU.
+> > +
+> > +The output of Audio Mixer can be selected from any of the three streams
+> > + - serial audio input 1
+> > + - serial audio input 2
+> > + - mixed audio
+> > +
+> > +Mixing operation is independent of audio sample rate but the two audio
+> > +input streams must have same audio sample rate with same number of channels
+> > +in TDM frame to be eligible for mixing.
+> > +
+> > +Device driver required properties:
+> > +=================================
+> > +  - compatible		: Compatible list, contains "fsl,imx8qm-audmix"
+> > +
+> > +  - reg			: Offset and length of the register set for the device.
+> > +
+> > +  - clocks		: Must contain an entry for each entry in clock-names.
+> > +
+> > +  - clock-names		: Must include the "ipg" for register access.
+> > +
+> > +  - power-domains	: Must contain the phandle to AUDMIX power domain node
+> > +
+> > +  - dais		: Must contain a list of phandles to AUDMIX connected
+> > +			  DAIs. The current implementation requires two phandles
+> > +			  to SAI interfaces to be provided, the first SAI in the
+> > +			  list being used to route the AUDMIX output.
+> > +
+> > +  - model		: Must contain machine driver name which will configure
+> > +			  and instantiate the appropriate audio card.
+> 
+> I don't feel this is necessary for DT node. The driver should be
+> able to figure out a proper name for the machine driver: it could
+> use the compatible string to get "imx8qm-audmix" as the name like
+> fsl_ssi; Or it could have built-in "imx-audmix" of_device_id data
+> corresponding to "fsl,imx8qm-audmix" compatible string -- for any
+> non-imx compatible in the future, use something else.
 
-Applied to arm/dt now, thanks!
+I tend to agree, but either way:
 
-     Arnd
+Rob Herring <robh@kernel.org>
