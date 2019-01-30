@@ -1,87 +1,167 @@
-From: Damian Kos <dkos@cadence.com>
-Subject: [PATCH v7 2/4] drm/dp: fix link probing for devices supporting DP 1.4+
-Date: Wed, 30 Jan 2019 11:03:19 +0000
-Message-ID: <1548846209-16406-3-git-send-email-dkos@cadence.com>
-References: <1548846209-16406-1-git-send-email-dkos@cadence.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 3/6] arm64: qcom: msm8996.dtsi: Add Display nodes
+Date: Wed, 30 Jan 2019 11:04:34 +0000
+Message-ID: <20190130110437.5424-4-srinivas.kandagatla@linaro.org>
+References: <20190130110437.5424-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548846209-16406-1-git-send-email-dkos@cadence.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: dkos@cadence.com, rafalc@cadence.com, piotrs@cadence.com, quentin.schulz@bootlin.com, jbergsagel@ti.com, Quentin Schulz <quentin.schulz@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190130110437.5424-1-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: andy.gross@linaro.org
+Cc: devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
+From: Archit Taneja <architt@codeaurora.org>
 
-DP 1.4 introduced a DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit in
-DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
-DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
-DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
-DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
-"true capabilities" of DPRX device.
-
-Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT
-might falsely return lower capabilities to "avoid interoperability
-issues with some of the existing DP Source devices that malfunction
-when they discover the higher capabilities within those three
-registers.".
-
-Before DP 1.4, DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit was reserved
-and read 0 so it's safe to check against it even if DP revision is
-<1.4
-
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-Signed-off-by: Damian Kos <dkos@cadence.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
+Signed-off-by: Archit Taneja <architt@codeaurora.org>
+[Removed instances of mmagic clocks;
+Use qcom,msm8996-smmu-v2 bindings]
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/gpu/drm/drm_dp_helper.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 120 ++++++++++++++++++++++++++
+ 1 file changed, 120 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index 54120b6319e7..4e36d708fdce 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -372,10 +372,38 @@ int drm_dp_link_probe(struct drm_dp_aux *aux, struct drm_dp_link *link)
- {
- 	u8 values[3];
- 	int err;
-+	unsigned int addr;
- 
- 	memset(link, 0, sizeof(*link));
- 
--	err = drm_dp_dpcd_read(aux, DP_DPCD_REV, values, sizeof(values));
-+	/*
-+	 * DP 1.4 introduced a DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit in
-+	 * DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
-+	 * DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
-+	 * DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
-+	 * DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
-+	 * "true capabilities" of DPRX device.
-+	 *
-+	 * Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT
-+	 * might falsely return lower capabilities to "avoid interoperability
-+	 * issues with some of the existing DP Source devices that malfunction
-+	 * when they discover the higher capabilities within those three
-+	 * registers.".
-+	 *
-+	 * Before DP 1.4, DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit was
-+	 * reserved and read 0 so it's safe to check against it even if
-+	 * DP revision is <1.4
-+	 */
-+	err = drm_dp_dpcd_readb(aux, DP_TRAINING_AUX_RD_INTERVAL, values);
-+	if (err < 0)
-+		return err;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 96adda520bd5..0d0b9482aa4d 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -1337,6 +1337,126 @@
+ 						"bus_slave";
+ 			};
+ 		};
 +
-+	if (values[0] & DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT)
-+		addr = DP_DP13_DPCD_REV;
-+	else
-+		addr = DP_DPCD_REV;
++		mdss: mdss@900000 {
++			compatible = "qcom,mdss";
 +
-+	err = drm_dp_dpcd_read(aux, addr, values, sizeof(values));
- 	if (err < 0)
- 		return err;
++			reg = <0x900000 0x1000>,
++			      <0x9b0000 0x1040>,
++			      <0x9b8000 0x1040>;
++			reg-names = "mdss_phys",
++				    "vbif_phys",
++				    "vbif_nrt_phys";
++
++			power-domains = <&mmcc MDSS_GDSC>;
++			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++
++			interrupt-controller;
++			#interrupt-cells = <1>;
++
++			clocks = <&mmcc MDSS_AHB_CLK>;
++			clock-names = "iface_clk";
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			mdp: mdp@901000 {
++				compatible = "qcom,mdp5";
++				reg = <0x901000 0x90000>;
++				reg-names = "mdp_phys";
++
++				interrupt-parent = <&mdss>;
++				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++
++				clocks = <&mmcc MDSS_AHB_CLK>,
++					 <&mmcc MDSS_AXI_CLK>,
++					 <&mmcc MDSS_MDP_CLK>,
++					 <&mmcc SMMU_MDP_AXI_CLK>,
++					 <&mmcc MDSS_VSYNC_CLK>;
++				clock-names = "iface_clk",
++					      "bus_clk",
++					      "core_clk",
++					      "iommu_clk",
++					      "vsync_clk";
++
++				iommus = <&mdp_smmu 0>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						mdp5_intf3_out: endpoint {
++							remote-endpoint = <&hdmi_in>;
++						};
++					};
++				};
++			};
++
++			hdmi: hdmi-tx@9a0000 {
++				compatible = "qcom,hdmi-tx-8996";
++				reg =	<0x009a0000 0x50c>,
++					<0x00070000 0x6158>,
++					<0x009e0000 0xfff>;
++				reg-names = "core_physical",
++					    "qfprom_physical",
++					    "hdcp_physical";
++
++				interrupt-parent = <&mdss>;
++				interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
++
++				clocks = <&mmcc MDSS_MDP_CLK>,
++					 <&mmcc MDSS_AHB_CLK>,
++					 <&mmcc MDSS_HDMI_CLK>,
++					 <&mmcc MDSS_HDMI_AHB_CLK>,
++					 <&mmcc MDSS_EXTPCLK_CLK>;
++				clock-names =
++					"mdp_core_clk",
++					"iface_clk",
++					"core_clk",
++					"alt_iface_clk",
++					"extp_clk";
++
++				phys = <&hdmi_phy>;
++				phy-names = "hdmi_phy";
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						hdmi_in: endpoint {
++							remote-endpoint = <&mdp5_intf3_out>;
++						};
++					};
++				};
++			};
++
++			hdmi_phy: hdmi-phy@9a0600 {
++				#phy-cells = <0>;
++				compatible = "qcom,hdmi-phy-8996";
++				reg = <0x9a0600 0x1c4>,
++				      <0x9a0a00 0x124>,
++				      <0x9a0c00 0x124>,
++				      <0x9a0e00 0x124>,
++				      <0x9a1000 0x124>,
++				      <0x9a1200 0x0c8>;
++				reg-names = "hdmi_pll",
++					    "hdmi_tx_l0",
++					    "hdmi_tx_l1",
++					    "hdmi_tx_l2",
++					    "hdmi_tx_l3",
++					    "hdmi_phy";
++
++				clocks = <&mmcc MDSS_AHB_CLK>,
++					 <&gcc GCC_HDMI_CLKREF_CLK>;
++				clock-names = "iface_clk",
++					      "ref_clk";
++			};
++		};
+ 	};
  
+ 	adsp-pil {
 -- 
-2.17.1
+2.20.1
