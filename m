@@ -1,39 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: display: renesas: lvds: Document
- r8a7744 bindings
-Date: Wed, 30 Jan 2019 10:39:10 -0600
-Message-ID: <20190130163910.GA29033@bogus>
-References: <1548170749-12773-1-git-send-email-biju.das@bp.renesas.com>
- <1548170749-12773-3-git-send-email-biju.das@bp.renesas.com>
- <20190122154428.GE11461@pendragon.ideasonboard.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 1/4] dt-bindings: nvmem: Add STM32 factory-programmed romem
+Date: Wed, 30 Jan 2019 17:38:53 +0100
+Message-ID: <1548866336-14765-2-git-send-email-fabrice.gasnier@st.com>
+References: <1548866336-14765-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190122154428.GE11461@pendragon.ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1548866336-14765-1-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, alexandre.torgue@st.com
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, lionel.debieve@st.com, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMjIsIDIwMTkgYXQgMDU6NDQ6MjhQTSArMDIwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiBIaSBCaWp1LAo+IAo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgo+IAo+IE9u
-IFR1ZSwgSmFuIDIyLCAyMDE5IGF0IDAzOjI1OjQ2UE0gKzAwMDAsIEJpanUgRGFzIHdyb3RlOgo+
-ID4gRG9jdW1lbnQgdGhlIFJaL0cxTiAoUjhBNzc0NCkgTFZEUyBiaW5kaW5ncy4KPiA+IAo+ID4g
-U2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPgo+IAo+IFJl
-dmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
-ZC5jb20+Cj4gCj4gYW5kIHRha2VuIGluIG15IHRyZWUuCgpCdXQgbm90IGluIGxpbnV4LW5leHQ/
-IE9yIHlvdSBkaWQgc29tZSAkc3ViamVjdCBmaXh1cHMgd2hpY2ggYnJlYWtzIG15IApkZXRlY3Rp
-bmcgdGhhdC4gOigKClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Add documentation for STMicroelectronics STM32 Factory-programmed
+read only memory area.
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ .../devicetree/bindings/nvmem/st,stm32-romem.txt   | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+
+diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+new file mode 100644
+index 0000000..fbff52e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+@@ -0,0 +1,31 @@
++STMicroelectronics STM32 Factory-programmed data device tree bindings
++
++This represents STM32 Factory-programmed read only non-volatile area: locked
++flash, OTP, read-only HW regs... This contains various information such as:
++analog calibration data for temperature sensor (e.g. TS_CAL1, TS_CAL2),
++internal vref (VREFIN_CAL), unique device ID...
++
++Required properties:
++- compatible:		Should be one of:
++			"st,stm32-romem"
++			"st,stm32mp15-bsec"
++- reg:			Offset and length of factory-programmed area.
++- #address-cells:	Should be '<1>'.
++- #size-cells:		Should be '<1>'.
++
++Optional Data cells:
++- Must be child nodes as described in nvmem.txt.
++
++Example on stm32f4:
++	romem: nvmem@1fff7800 {
++		compatible = "st,stm32-romem";
++		reg = <0x1fff7800 0x400>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		/* Data cells: ts_cal1 at 0x1fff7a2c */
++		ts_cal1: calib@22c {
++			reg = <0x22c 0x2>;
++		};
++		...
++	};
+-- 
+1.9.1
