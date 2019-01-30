@@ -1,13 +1,11 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2] arm64: dts: imx8mq: Add QuadSPI controller
-Date: Wed, 30 Jan 2019 10:30:46 +0100
-Message-ID: <1548840646.6869.15.camel@pengutronix.de>
-References: <20190130091953.20131-1-ccaione@baylibre.com>
+From: Carlo Caione <ccaione@baylibre.com>
+Subject: [PATCH v2] arm64: dts: imx8mq: Add QuadSPI controller
+Date: Wed, 30 Jan 2019 09:19:53 +0000
+Message-ID: <20190130091953.20131-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190130091953.20131-1-ccaione@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,69 +15,99 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, l.stach@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gTWl0dHdvY2gsIGRlbiAzMC4wMS4yMDE5LCAwOToxOSArMDAwMCBzY2hyaWViIENhcmxvIENh
-aW9uZToKPiBBZGQgYSBub2RlIGZvciB0aGUgRnJlZXNjYWxlL05YUCBRdWFkU1BJIGNvbnRyb2xs
-ZXIgd2l0aCBhIHByb3Blcgo+IHBpbmN0cmwgc2V0IGFuZCBlbmFibGUgaXQgZm9yIHRoZSBpLk1Y
-OE1RIEVWSyBib2FyZC4KPiBFeHRlbmQgYWxzbyB0aGUgQUlQUzMgbWVtb3J5IHJhbmdlIHRvIGFj
-Y29tbW9kYXRlIHRoZSBRdWFkU1BJLW1lbW9yeQo+IHJlZ2lvbi4KPiAKPiBTaWduZWQtb2ZmLWJ5
-OiBDYXJsbyBDYWlvbmUgPGNjYWlvbmVAYmF5bGlicmUuY29tPgoKSSB3b3VsZCBwcmVmZXIgdGhp
-cyB0byBiZSBzcGxpdCBpbnRvIDIgcGF0Y2hlcyBiZXR3ZWVuIHRoZSBiYXNlIERUIGFuZAp0aGUg
-RVZLIGJvYXJkIHN1cHBvcnQuIEJ1dCBJIGRvbid0IHRoaW5rIGl0IHdhcnJhbnRzIGEgcmVzcGlu
-IGp1c3QgZm9yCnRoaXMsIHNvOgoKUmV2aWV3ZWQtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBl
-bmd1dHJvbml4LmRlPgoKPiAtLS0KPiDCoGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lt
-eDhtcS1ldmsuZHRzIHwgMjcgKysrKysrKysrKysrKysrKysrKysKPiDCoGFyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpwqDCoMKgwqB8IDE2ICsrKysrKysrKysrLQo+IMKg
-MiBmaWxlcyBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS1ldmsuZHRzIGIv
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1xLWV2ay5kdHMKPiBpbmRleCBmNzRi
-MTNhYTVhYTUuLmFlMTgxYzJhNTAwMyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2ZyZWVzY2FsZS9pbXg4bXEtZXZrLmR0cwo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
-ZXNjYWxlL2lteDhtcS1ldmsuZHRzCj4gQEAgLTEzNyw2ICsxMzcsMjEgQEAKPiA+IMKgCXN0YXR1
-cyA9ICJva2F5IjsKPiDCoH07Cj4gwqAKPiArJnNwaTAgewo+ID4gKwlwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOwo+ID4gKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfcXNwaT47Cj4gPiArCXN0YXR1
-cyA9ICJva2F5IjsKPiArCj4gPiA+ICsJZmxhc2gwOiBuMjVxMjU2YUAwIHsKPiA+ICsJCXJlZyA9
-IDwwPjsKPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gKwkJI3NpemUtY2VsbHMgPSA8
-MT47Cj4gPiArCQljb21wYXRpYmxlID0gIm1pY3JvbixuMjVxMjU2YSIsICJqZWRlYyxzcGktbm9y
-IjsKPiA+ICsJCXNwaS1tYXgtZnJlcXVlbmN5ID0gPDI5MDAwMDAwPjsKPiA+ICsJCXNwaS1ub3Is
-ZGRyLXF1YWQtcmVhZC1kdW1teSA9IDw2PjsKPiA+ICsJfTsKPiArfTsKPiArCj4gwqAmdXNkaGMx
-IHsKPiA+IMKgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCIsICJzdGF0ZV8xMDBtaHoiLCAic3Rh
-dGVfMjAwbWh6IjsKPiA+IMKgCXBpbmN0cmwtMCA9IDwmcGluY3RybF91c2RoYzE+Owo+IEBAIC0x
-OTUsNiArMjEwLDE4IEBACj4gPiDCoAkJPjsKPiA+IMKgCX07Cj4gwqAKPiA+ICsJcGluY3RybF9x
-c3BpOiBxc3BpZ3JwIHsKPiA+ICsJCWZzbCxwaW5zID0gPAo+ID4gPiArCQkJTVg4TVFfSU9NVVhD
-X05BTkRfQUxFX1FTUElfQV9TQ0xLCTB4ODIKPiA+ID4gKwkJCU1YOE1RX0lPTVVYQ19OQU5EX0NF
-MF9CX1FTUElfQV9TUzBfQgkweDgyCj4gPiA+ICsJCQlNWDhNUV9JT01VWENfTkFORF9EQVRBMDBf
-UVNQSV9BX0RBVEEwCTB4ODIKPiA+ID4gKwkJCU1YOE1RX0lPTVVYQ19OQU5EX0RBVEEwMV9RU1BJ
-X0FfREFUQTEJMHg4Mgo+ID4gPiArCQkJTVg4TVFfSU9NVVhDX05BTkRfREFUQTAyX1FTUElfQV9E
-QVRBMgkweDgyCj4gPiA+ICsJCQlNWDhNUV9JT01VWENfTkFORF9EQVRBMDNfUVNQSV9BX0RBVEEz
-CTB4ODIKPiArCj4gPiArCQk+Owo+ID4gKwl9Owo+ICsKPiA+IMKgCXBpbmN0cmxfcmVnX3VzZGhj
-MjogcmVndXNkaGMyZ3JwZ3BpbyB7Cj4gPiDCoAkJZnNsLHBpbnMgPSA8Cj4gPiA+IMKgCQkJTVg4
-TVFfSU9NVVhDX1NEMl9SRVNFVF9CX0dQSU8yX0lPMTkJCTB4NDEKPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQo+IGluZGV4IGRiZWRjNGE1ZTdmYi4uYzIwZjQzZjYz
-YzRlIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5k
-dHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kKPiBA
-QCAtMzc5LDcgKzM3OSw4IEBACj4gPiDCoAkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1haXBz
-LWJ1cyIsICJzaW1wbGUtYnVzIjsKPiA+IMKgCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiDC
-oAkJCSNzaXplLWNlbGxzID0gPDE+Owo+ID4gLQkJCXJhbmdlcyA9IDwweDMwODAwMDAwIDB4MzA4
-MDAwMDAgMHg0MDAwMDA+Owo+ID4gKwkJCXJhbmdlcyA9IDwweDMwODAwMDAwIDB4MzA4MDAwMDAg
-MHg0MDAwMDA+LAo+ID4gKwkJCQnCoDwweDA4MDAwMDAwIDB4MDgwMDAwMDAgMHgxMDAwMDAwMD47
-Cj4gwqAKPiA+ID4gwqAJCQl1YXJ0MTogc2VyaWFsQDMwODYwMDAwIHsKPiA+IMKgCQkJCWNvbXBh
-dGlibGUgPSAiZnNsLGlteDhtcS11YXJ0IiwKPiBAQCAtNDk3LDYgKzQ5OCwxOSBAQAo+ID4gwqAJ
-CQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+IMKgCQkJfTsKPiDCoAo+ID4gPiArCQkJc3BpMDog
-c3BpQDMwYmIwMDAwIHsKPiA+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiArCQkJCSNz
-aXplLWNlbGxzID0gPDA+Owo+ID4gKwkJCQljb21wYXRpYmxlID0gImZzbCxpbXg4bXEtcXNwaSIs
-ICJmc2wsaW14N2QtcXNwaSI7Cj4gPiArCQkJCXJlZyA9IDwweDMwYmIwMDAwIDB4MTAwMDA+LCA8
-MHgwODAwMDAwMCAweDEwMDAwMDAwPjsKPiA+ICsJCQkJcmVnLW5hbWVzID0gIlF1YWRTUEkiLCAi
-UXVhZFNQSS1tZW1vcnkiOwo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTA3IElSUV9U
-WVBFX0xFVkVMX0hJR0g+Owo+ID4gKwkJCQljbG9ja3MgPSA8JmNsayBJTVg4TVFfQ0xLX1FTUElf
-Uk9PVD4sCj4gPiArCQkJCQnCoDwmY2xrIElNWDhNUV9DTEtfUVNQSV9ST09UPjsKPiA+ICsJCQkJ
-Y2xvY2stbmFtZXMgPSAicXNwaV9lbiIsICJxc3BpIjsKPiA+ICsJCQkJc3RhdHVzID0gImRpc2Fi
-bGVkIjsKPiA+ICsJCQl9Owo+ICsKPiA+ID4gwqAJCQlmZWMxOiBldGhlcm5ldEAzMGJlMDAwMCB7
-Cj4gPiDCoAkJCQljb21wYXRpYmxlID0gImZzbCxpbXg4bXEtZmVjIiwgImZzbCxpbXg2c3gtZmVj
-IjsKPiA+IMKgCQkJCXJlZyA9IDwweDMwYmUwMDAwIDB4MTAwMDA+OwoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Add a node for the Freescale/NXP QuadSPI controller with a proper
+pinctrl set and enable it for the i.MX8MQ EVK board.
+Extend also the AIPS3 memory range to accommodate the QuadSPI-memory
+region.
+
+Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 27 ++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 16 +++++++++++-
+ 2 files changed, 42 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+index f74b13aa5aa5..ae181c2a5003 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+@@ -137,6 +137,21 @@
+ 	status = "okay";
+ };
+ 
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi>;
++	status = "okay";
++
++	flash0: n25q256a@0 {
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "micron,n25q256a", "jedec,spi-nor";
++		spi-max-frequency = <29000000>;
++		spi-nor,ddr-quad-read-dummy = <6>;
++	};
++};
++
+ &usdhc1 {
+ 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+ 	pinctrl-0 = <&pinctrl_usdhc1>;
+@@ -195,6 +210,18 @@
+ 		>;
+ 	};
+ 
++	pinctrl_qspi: qspigrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_NAND_ALE_QSPI_A_SCLK	0x82
++			MX8MQ_IOMUXC_NAND_CE0_B_QSPI_A_SS0_B	0x82
++			MX8MQ_IOMUXC_NAND_DATA00_QSPI_A_DATA0	0x82
++			MX8MQ_IOMUXC_NAND_DATA01_QSPI_A_DATA1	0x82
++			MX8MQ_IOMUXC_NAND_DATA02_QSPI_A_DATA2	0x82
++			MX8MQ_IOMUXC_NAND_DATA03_QSPI_A_DATA3	0x82
++
++		>;
++	};
++
+ 	pinctrl_reg_usdhc2: regusdhc2grpgpio {
+ 		fsl,pins = <
+ 			MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19		0x41
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index dbedc4a5e7fb..c20f43f63c4e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -379,7 +379,8 @@
+ 			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges = <0x30800000 0x30800000 0x400000>;
++			ranges = <0x30800000 0x30800000 0x400000>,
++				 <0x08000000 0x08000000 0x10000000>;
+ 
+ 			uart1: serial@30860000 {
+ 				compatible = "fsl,imx8mq-uart",
+@@ -497,6 +498,19 @@
+ 				status = "disabled";
+ 			};
+ 
++			spi0: spi@30bb0000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx8mq-qspi", "fsl,imx7d-qspi";
++				reg = <0x30bb0000 0x10000>, <0x08000000 0x10000000>;
++				reg-names = "QuadSPI", "QuadSPI-memory";
++				interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_QSPI_ROOT>,
++					 <&clk IMX8MQ_CLK_QSPI_ROOT>;
++				clock-names = "qspi_en", "qspi";
++				status = "disabled";
++			};
++
+ 			fec1: ethernet@30be0000 {
+ 				compatible = "fsl,imx8mq-fec", "fsl,imx6sx-fec";
+ 				reg = <0x30be0000 0x10000>;
+-- 
+2.19.1
