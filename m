@@ -1,120 +1,60 @@
-From: Jonas Bonn <jonas@norrbonn.se>
-Subject: Re: [PATCH v5 1/2] spi: support inter-word delay requirement for
- devices
-Date: Wed, 30 Jan 2019 09:10:13 +0100
-Message-ID: <d9c495ac-825e-6dd0-5455-817c3f27b840@norrbonn.se>
-References: <20190129205502.7741-1-jonas@norrbonn.se>
- <20190129205502.7741-2-jonas@norrbonn.se>
- <CAMuHMdXv6U-VeznbXrTNk9oY1kCkYu-b+_o3KH_R6BMgpVn7YA@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v5 1/2] pwm: sifive: Add DT documentation for SiFive PWM
+ Controller
+Date: Wed, 30 Jan 2019 09:14:11 +0100
+Message-ID: <20190130081411.5rva7cpwoy2l5qjd@pengutronix.de>
+References: <1548762199-7065-1-git-send-email-yash.shah@sifive.com>
+ <1548762199-7065-2-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXv6U-VeznbXrTNk9oY1kCkYu-b+_o3KH_R6BMgpVn7YA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1548762199-7065-2-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Yash Shah <yash.shah@sifive.com>
+Cc: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On 30/01/2019 08:35, Geert Uytterhoeven wrote:
-> Hi Jonas,
+On Tue, Jan 29, 2019 at 05:13:18PM +0530, Yash Shah wrote:
+> DT documentation for PWM controller added.
 > 
-> On Tue, Jan 29, 2019 at 9:55 PM Jonas Bonn <jonas@norrbonn.se> wrote:
->> Some devices are slow and cannot keep up with the SPI bus and therefore
->> require a short delay between words of the SPI transfer.
->>
->> The example of this that I'm looking at is a SAMA5D2 with a minimum SPI
->> clock of 400kHz talking to an AVR-based SPI slave.  The AVR cannot put
->> bytes on the bus fast enough to keep up with the SoC's SPI controller
->> even at the lowest bus speed.
->>
->> This patch introduces the ability to specify a required inter-word
->> delay for SPI devices.  It is up to the controller driver to configure
->> itself accordingly in order to introduce the requested delay.
->>
->> Note that, for spi_transfer, there is already a field word_delay that
->> provides similar functionality.  This field, however, is specified in
->> clock cycles (and worse, SPI controller cycles, not SCK cycles); that
->> makes this value dependent on the master clock instead of the device
->> clock for which the delay is intended to provide some relief.  This
->> patch leaves this old word_delay in place and provides a time-based
->> word_delay_us alongside it; the new field fits in the struct padding
->> so struct size is constant.  There is only one in-kernel user of the
->> word_delay field and presumably that driver could be reworked to use
->> the time-based value instead.
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Compatible string update]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-sifive.txt         | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
 > 
-> Thanks for your patch!
-> 
->> The time-based delay is limited to 8 bits as these delays are intended
->> to be short.  The SAMA5D2 that I've tested this on limits delays to a
->> maximum of ~100us, which is already many word-transfer periods even at
->> the minimum transfer speed supported by the controller.
-> 
-> Still, the similar delay_usecs uses a u16.
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> new file mode 100644
+> index 0000000..8dcb40d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> @@ -0,0 +1,33 @@
+> +SiFive PWM controller
+> +
+> +Unlike most other PWM controllers, the SiFive PWM controller currently only
+> +supports one period for all channels in the PWM. This is set globally in DTS.
 
-The delays are not comparable.  delay_usecs is the "end of transfer" 
-delay and represents the processing time to handle a command or a bundle 
-of data.  The inter-word delay is just a stutter to give the slave time 
-to get the next word set up.
+You can simply drop this if the first user can set this using the usual
+interface. Don't you like this suggestion that I already made a few
+times now?
 
-On the Microchip (Atmel... these name changes take a year or two to sink 
-in!) board that I'm using (SAMA5D2), the inter-word delay is limited to 
-8192 SPI-controller-clock cycles (not SPI bus clock, input clock).  At 
-83Mhz, that's about 100us, and it only gets shorter as you clock up. 
-The Spreadtrum board has an upper limit of 130 SPI-controller-clock 
-cycles which is just a few microseconds.
+Did you consider to make the driver support only a single output with a
+more flexible period setting?
 
-Aside from that limitation, consider what's reasonable in terms of 
-delay.  More than 5x the word-transfer time and things are pretty 
-questionable.  A 250us delay with a word transfer time of 50us gives an 
-SPI-bus clock 160kHz.  That's already pretty slow in SPI terms and well 
-below what the SAMA5D2 is capable of driving with it's 83MHz input clock 
-(max divider is 255 which gives roughtly 400kHz minimum SPI bus clock).
+> +The period also has significant restrictions on the values it can achieve,
+> +which the driver rounds to the nearest achievable frequency.
 
-So with that, setting an inter-word delay larger than 255us is barely 
-reasonable.  If somebody finds a concrete use for such a setting, then 
-the size of the field can be expanded at that time.
+Rounding a period to a frequency sounds wrong.
 
-Just for info, the inter-word delay that I need to communicate with an 
-Atmega MCU running at 500kHz is ~20us which is on the order of the word 
-transfer time itself.  This chip is a poor example of how to design an 
-SPI slave so I suspect it can only get better from here! :)
+Best regards
+Uwe
 
-And with that said, if you insist having a u16 for this, I'll change it. 
-  Just let me know.
-
-
-> 
->> --- a/include/linux/spi/spi.h
->> +++ b/include/linux/spi/spi.h
-> 
->> @@ -803,6 +808,7 @@ struct spi_transfer {
->>   #define        SPI_NBITS_DUAL          0x02 /* 2bits transfer */
->>   #define        SPI_NBITS_QUAD          0x04 /* 4bits transfer */
->>          u8              bits_per_word;
->> +       u8              word_delay_us;
-> 
-> us for µs
-> 
->>          u16             delay_usecs;
-> 
-> usecs for µs
-> 
-> Can we please try to be consistent?
-
-
-
-I can change it to usecs if you want.  Is this a serious request to do 
-so?  _usecs and _us are used pretty interchangeably across the kernel 
-with a slight advantage to _us.
-
-/Jonas
-
-> 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-> 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
