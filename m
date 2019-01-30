@@ -1,116 +1,152 @@
-From: Jonas Bonn <jonas@norrbonn.se>
-Subject: [PATCH v6 1/2] spi: support inter-word delay requirement for devices
-Date: Wed, 30 Jan 2019 09:40:04 +0100
-Message-ID: <20190130084005.18649-2-jonas@norrbonn.se>
-References: <20190130084005.18649-1-jonas@norrbonn.se>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut
+ trampoline description
+Date: Wed, 30 Jan 2019 08:40:43 +0000
+Message-ID: <20190130084043.ajivzgxgahmxlv5g@e5254000004ec.dyn.armlinux.org.uk>
+References: <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
+ <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com>
+ <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
+ <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
+ <CAL_Jsq+dnKht3TwCh1qB1H4pYFhQJmSN0nAayU+=PJLAvq0bbQ@mail.gmail.com>
+ <90b00858-6e9e-8f7c-f6d4-b35e5daa6eee@socionext.com>
+ <CAL_JsqJ=FRfzVFiOJ0wvoV5iZV+Gx3ft9pGyhb-GoKnOAQgPtQ@mail.gmail.com>
+ <daa5f00a-1d9c-69b0-ed2d-8ff6a64251cc@socionext.com>
+ <20190122115010.ziopujojh6hkxyag@e5254000004ec.dyn.armlinux.org.uk>
+ <2bf9d327-580b-afb6-f872-701dde249b22@socionext.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130084005.18649-1-jonas@norrbonn.se>
+Content-Disposition: inline
+In-Reply-To: <2bf9d327-580b-afb6-f872-701dde249b22@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Jonas Bonn <jonas@norrbonn.se>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+To: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Some devices are slow and cannot keep up with the SPI bus and therefore
-require a short delay between words of the SPI transfer.
+On Tue, Jan 29, 2019 at 05:28:48PM +0900, Sugaya, Taichi wrote:
+> Hi,
+> 
+> On 2019/01/22 20:50, Russell King - ARM Linux admin wrote:
+> > On Tue, Jan 22, 2019 at 08:36:03PM +0900, Sugaya, Taichi wrote:
+> > > Hi
+> > > 
+> > > On 2018/12/04 22:32, Rob Herring wrote:
+> > > > On Tue, Dec 4, 2018 at 5:30 AM Sugaya, Taichi
+> > > > <sugaya.taichi@socionext.com> wrote:
+> > > > > 
+> > > > > Hi
+> > > > > 
+> > > > > On 2018/12/04 0:49, Rob Herring wrote:
+> > > > > > On Mon, Dec 3, 2018 at 1:42 AM Sugaya, Taichi
+> > > > > > <sugaya.taichi@socionext.com> wrote:
+> > > > > > > 
+> > > > > > > Hi,
+> > > > > > > 
+> > > > > > > On 2018/11/30 17:16, Stephen Boyd wrote:
+> > > > > > > > Quoting Sugaya, Taichi (2018-11-29 04:24:51)
+> > > > > > > > > On 2018/11/28 11:01, Stephen Boyd wrote:
+> > > > > > > > > > Quoting Sugaya Taichi (2018-11-18 17:01:07)
+> > > > > > > > > > >       create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> > > > > > > > > > > 
+> > > > > > > > > > > diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> > > > > > > > > > > new file mode 100644
+> > > > > > > > > > > index 0000000..f5d906c
+> > > > > > > > > > > --- /dev/null
+> > > > > > > > > > > +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> > > > > > > > > > > @@ -0,0 +1,12 @@
+> > > > > > > > > > > +Socionext M10V SMP trampoline driver binding
+> > > > > > > > > > > +
+> > > > > > > > > > > +This is a driver to wait for sub-cores while boot process.
+> > > > > > > > > > > +
+> > > > > > > > > > > +- compatible: should be "socionext,smp-trampoline"
+> > > > > > > > > > > +- reg: should be <0x4C000100 0x100>
+> > > > > > > > > > > +
+> > > > > > > > > > > +EXAMPLE
+> > > > > > > > > > > +       trampoline: trampoline@0x4C000100 {
+> > > > > > > > > > Drop the 0x part of unit addresses.
+> > > > > > > > > 
+> > > > > > > > > Okay.
+> > > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > > > +               compatible = "socionext,smp-trampoline";
+> > > > > > > > > > > +               reg = <0x4C000100 0x100>;
+> > > > > > > > > > Looks like a software construct, which we wouldn't want to put into DT
+> > > > > > > > > > this way. DT doesn't describe drivers.
+> > > > > > > > > We would like to use this node only getting the address of the
+> > > > > > > > > trampoline area
+> > > > > > > > > in which sub-cores wait.  (They have finished to go to this area in previous
+> > > > > > > > > bootloader process.)
+> > > > > > > > 
+> > > > > > > > Is this area part of memory, or a special SRAM? If it's part of memory,
+> > > > > > > > I would expect this node to be under the reserved-memory node and
+> > > > > > > > pointed to by some other node that uses this region. Could even be the
+> > > > > > > > CPU nodes.
+> > > > > > > 
+> > > > > > > Yes, 0x4C000100 is a part of memory under the reserved-memory node. So
+> > > > > > > we would like to use the SRAM ( allocated 0x00000000 ) area instead.
+> > > > > > > BTW, sorry, the trampoline address of this example is simply wrong.  We
+> > > > > > > were going to use a part of the SRAM from the beginning.
+> > > > > > > 
+> > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > So should we embed the constant value in source codes instead of getting
+> > > > > > > > > from
+> > > > > > > > > DT because the address is constant at the moment? Or is there other
+> > > > > > > > > approach?
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > If it's constant then that also works. Why does it need to come from DT
+> > > > > > > > at all then?
+> > > > > > > 
+> > > > > > > We think it is not good to embed constant value in driver codes and do
+> > > > > > > not have another way...
+> > > > > > > Are there better ways?
+> > > > > > 
+> > > > > > If this is just memory, can you use the standard spin-table binding in
+> > > > > > the DT spec? There are some requirements like 64-bit values even on
+> > > > > > 32-bit machines (though this gets violated).
+> > > > > 
+> > > > > The spin-table seems to be used on only 64-bit arch. Have it ever worked
+> > > > > on 32-bit machine?
+> > > > 
+> > > > Yes.
+> > > > 
+> > > > > And I would like not to use it because avoid violation.
+> > > > 
+> > > > The issue now that I remember is cpu-release-addr is defined to always
+> > > > be a 64-bit value while some platforms made it a 32-bit value.
+> > > > 'cpu-release-addr' is also used for some other enable-methods.
+> > > 
+> > > I have a question about the spin-table.
+> > > The code "smp_spin_table.c" is only in "arch/arm64/kernel" directory so can
+> > > not be compiled in arm-v7 arch. That means the spin-table can not be used
+> > > arm-v7 arch..? , or is there the way to compile the code in arm-v7 arch?
+> > 
+> > Why do you think you need it?  Do you have no way to control individual
+> > CPUs?
+> > 
+> > We are going through a process in 32-bit eliminating the "spin table"
+> > stuff from platforms.
+> > 
+> 
+> Not always necessary to us and considering the history I think it is not
+> suitable to use the spin-table.
+> I try to use another way.
 
-The example of this that I'm looking at is a SAMA5D2 with a minimum SPI
-clock of 400kHz talking to an AVR-based SPI slave.  The AVR cannot put
-bytes on the bus fast enough to keep up with the SoC's SPI controller
-even at the lowest bus speed.
+Please do - the "spin" approach was a hack to allow ARM Ltd's platforms
+to work.  These platforms have no power control or reset of secondary
+CPUs and no low power states (so can't suspend/resume).  Early firmware
+only had the capabilities to release _all_ secondary CPUs to the kernel
+together.  The "spin" approach is incompatible with suspend/resume,
+hibernate, and kexec features of the kernel.
 
-This patch introduces the ability to specify a required inter-word
-delay for SPI devices.  It is up to the controller driver to configure
-itself accordingly in order to introduce the requested delay.
+Real platforms do not have these problems, and thus should not use the
+spin-table approach.
 
-Note that, for spi_transfer, there is already a field word_delay that
-provides similar functionality.  This field, however, is specified in
-clock cycles (and worse, SPI controller cycles, not SCK cycles); that
-makes this value dependent on the master clock instead of the device
-clock for which the delay is intended to provide some relief.  This
-patch leaves this old word_delay in place and provides a time-based
-word_delay_us alongside it; the new field fits in the struct padding
-so struct size is constant.  There is only one in-kernel user of the
-word_delay field and presumably that driver could be reworked to use
-the time-based value instead.
+Modern platforms use PSCI to make the control of low power modes and
+secondary CPUs independent of the kernel.
 
-The time-based delay is limited to 8 bits as these delays are intended
-to be short.  The SAMA5D2 that I've tested this on limits delays to a
-maximum of ~100us, which is already many word-transfer periods even at
-the minimum transfer speed supported by the controller.
-
-Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
-CC: Mark Brown <broonie@kernel.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: linux-spi@vger.kernel.org
-CC: devicetree@vger.kernel.org
----
- drivers/spi/spi.c       | 5 +++++
- include/linux/spi/spi.h | 6 ++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 0e0f2c62973c..2f7176f07591 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3050,6 +3050,8 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
- 	 * it is not set for this transfer.
- 	 * Set transfer tx_nbits and rx_nbits as single transfer default
- 	 * (SPI_NBITS_SINGLE) if it is not set for this transfer.
-+	 * Ensure transfer word_delay is at least as long as that required by
-+	 * device itself.
- 	 */
- 	message->frame_length = 0;
- 	list_for_each_entry(xfer, &message->transfers, transfer_list) {
-@@ -3120,6 +3122,9 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
- 				!(spi->mode & SPI_RX_QUAD))
- 				return -EINVAL;
- 		}
-+
-+		if (xfer->word_delay_usecs < spi->word_delay_usecs)
-+			xfer->word_delay_usecs = spi->word_delay_usecs;
- 	}
- 
- 	message->status = -EINPROGRESS;
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 916bba47d156..662b336aa2e4 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -122,6 +122,8 @@ void spi_statistics_add_transfer_stats(struct spi_statistics *stats,
-  *	the spi_master.
-  * @cs_gpiod: gpio descriptor of the chipselect line (optional, NULL when
-  *	not using a GPIO line)
-+ * @word_delay_usecs: microsecond delay to be inserted between consecutive
-+ *	words of a transfer
-  *
-  * @statistics: statistics for the spi_device
-  *
-@@ -169,6 +171,7 @@ struct spi_device {
- 	const char		*driver_override;
- 	int			cs_gpio;	/* LEGACY: chip select gpio */
- 	struct gpio_desc	*cs_gpiod;	/* chip select gpio desc */
-+	uint8_t			word_delay_usecs; /* inter-word delay */
- 
- 	/* the statistics */
- 	struct spi_statistics	statistics;
-@@ -721,6 +724,8 @@ extern void spi_res_release(struct spi_controller *ctlr,
-  * @delay_usecs: microseconds to delay after this transfer before
-  *	(optionally) changing the chipselect status, then starting
-  *	the next transfer or completing this @spi_message.
-+ * @word_delay_usecs: microseconds to inter word delay after each word size
-+ *	(set by bits_per_word) transmission.
-  * @word_delay: clock cycles to inter word delay after each word size
-  *	(set by bits_per_word) transmission.
-  * @transfer_list: transfers are sequenced through @spi_message.transfers
-@@ -803,6 +808,7 @@ struct spi_transfer {
- #define	SPI_NBITS_DUAL		0x02 /* 2bits transfer */
- #define	SPI_NBITS_QUAD		0x04 /* 4bits transfer */
- 	u8		bits_per_word;
-+	u8		word_delay_usecs;
- 	u16		delay_usecs;
- 	u32		speed_hz;
- 	u16		word_delay;
 -- 
-2.19.1
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
