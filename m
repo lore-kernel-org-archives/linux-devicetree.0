@@ -1,24 +1,39 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2] arm64: dts: Remove inconsistent use of 'arm,armv8'
- compatible string
-Date: Wed, 30 Jan 2019 17:33:57 +0100
-Message-ID: <CAK8P3a28_=urR1h95GN_wvYxJSOTUr_gL-cOzk9Pt1CZFGnJCA@mail.gmail.com>
-References: <20190114174533.6134-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v1 0/4] MSM8998 Multimedia Clock Controller
+Date: Wed, 30 Jan 2019 09:35:02 -0700
+Message-ID: <1548866102-30224-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114174533.6134-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: arm-soc <arm@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Michal Simek <michal.simek@xilinx.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Nishanth Menon <nm@ti.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Chanho Min <chanho.min@lge.com>, Krzysztof Kozlowski <krzk@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thierry Reding <treding@nvidia.com>, Heiko Stuebner <heiko@sntech.de>, Simon Horman <horms+renesas@verge.net.au>, Tero Kristo <t-kristo@t>
+Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, andy.gross@linaro.org, david.brown@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 6:45 PM Rob Herring <robh@kernel.org> wrote:
->
-> The 'arm,armv8' compatible string is only for software models. It adds
-> little value otherwise and is inconsistently used as a fallback on some
-> platforms. Remove it from those platforms.
+The multimedia clock controller (mmcc) is the main clock controller for
+the multimedia subsystem and is required to enable things like display and
+camera.
 
-Applied on arm/dt, thanks!
+The mmcc consumes a few external clocks inorder to configure the root clock
+generators that it controls.  We can use DT to grab XO (from rpmcc) and
+gpll0 (from gcc), but we'll have to rely on the global namespace to consume
+the plls from elsewhere in the mmss.
 
-      Arnd
+Jeffrey Hugo (4):
+  clk: qcom: smd: Add XO clock for MSM8998
+  dt-bindings: clock: Add support for the MSM8998 mmcc
+  clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+  arm64: dts: qcom: msm8998: Add mmcc node
+
+ .../devicetree/bindings/clock/qcom,mmcc.txt        |    7 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi              |   15 +
+ drivers/clk/qcom/Kconfig                           |    9 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/clk-smd-rpm.c                     |    4 +
+ drivers/clk/qcom/mmcc-msm8998.c                    | 2937 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,mmcc-msm8998.h      |  210 ++
+ 7 files changed, 3183 insertions(+)
+ create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+
+-- 
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
