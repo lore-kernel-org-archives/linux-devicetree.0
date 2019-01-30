@@ -1,53 +1,167 @@
 From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH V2 2/4] dt-bindings: irq: imx-irqsteer: add multi output
- interrupts support
-Date: Wed, 30 Jan 2019 14:18:50 +0100
-Message-ID: <1548854330.6869.22.camel@pengutronix.de>
+Subject: Re: [PATCH V2 3/4] irq: imx-irqsteer: change to use reg_num instead
+ of irq_group
+Date: Wed, 30 Jan 2019 14:22:03 +0100
+Message-ID: <1548854523.6869.25.camel@pengutronix.de>
 References: <1548853196-11447-1-git-send-email-aisheng.dong@nxp.com>
-         <1548853196-11447-3-git-send-email-aisheng.dong@nxp.com>
+         <1548853196-11447-4-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548853196-11447-3-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <1548853196-11447-4-git-send-email-aisheng.dong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 30.01.2019, 13:05 +0000 schrieb Aisheng Dong:
-> One irqsteer channel can support up to 8 output interrupts.
+Am Mittwoch, den 30.01.2019, 13:06 +0000 schrieb Aisheng Dong:
+> One group can manage 64 interrupts by using two registers (e.g. STATUS/SET).
+> However, the integrated irqsteer may support only 32 interrupts which
+> needs only one register in a group. But the current driver assume there's
+> a mininum of two registers in a group which result in a wrong register map
+> for 32 interrupts per channel irqsteer. Let's use the reg_num caculated by
+> interrupts per channel instead of irq_group to cover this case.
 > 
 > > Cc: Marc Zyngier <marc.zyngier@arm.com>
 > > Cc: Rob Herring <robh+dt@kernel.org>
 > > Cc: Lucas Stach <l.stach@pengutronix.de>
 > > Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+
+Minor nit below, otherwise:
+
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
 > ---
-> ChangeLog:
 > v1->v2:
->  * remove one unnecessary note.
+>  * The using of property name updated accordingly
 > ---
->  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt        | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/irqchip/irq-imx-irqsteer.c | 35 +++++++++++++++++++----------------
+>  1 file changed, 19 insertions(+), 16 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> index 6d0a41b..984ab92 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> @@ -6,8 +6,9 @@ Required properties:
-> >  	- "fsl,imx8m-irqsteer"
-> >  	- "fsl,imx-irqsteer"
->  - reg: Physical base address and size of registers.
-> -- interrupts: Should contain the parent interrupt line used to multiplex the
-> -  input interrupts.
-> +- interrupts: Should contain the up to 8 parent interrupt lines used to
-> +  multiplex the input interrupts. They should be sepcified seqencially
+> diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
+> index 5b3f1d7..67ed862 100644
+> --- a/drivers/irqchip/irq-imx-irqsteer.c
+> +++ b/drivers/irqchip/irq-imx-irqsteer.c
+> @@ -13,7 +13,7 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/spinlock.h>
+>  
+> > -#define CTRL_STRIDE_OFF(_t, _r)	(_t * 8 * _r)
+> > +#define CTRL_STRIDE_OFF(_t, _r)	(_t * 4 * _r)
+> >  #define CHANCTRL		0x0
+> >  #define CHANMASK(n, t)		(CTRL_STRIDE_OFF(t, 0) + 0x4 * (n) + 0x4)
+> >  #define CHANSET(n, t)		(CTRL_STRIDE_OFF(t, 1) + 0x4 * (n) + 0x4)
+> @@ -26,7 +26,7 @@ struct irqsteer_data {
+> > >  	struct clk		*ipg_clk;
+> > >  	int			irq;
+> > >  	raw_spinlock_t		lock;
+> > > -	int			irq_groups;
+> > > +	int			reg_num;
+> > >  	int			channel;
+> > >  	struct irq_domain	*domain;
+> > >  	u32			*saved_reg;
+> @@ -35,7 +35,7 @@ struct irqsteer_data {
+>  static int imx_irqsteer_get_reg_index(struct irqsteer_data *data,
+> >  				      unsigned long irqnum)
+>  {
+> > -	return (data->irq_groups * 2 - irqnum / 32 - 1);
+> > +	return (data->reg_num - irqnum / 32 - 1);
+>  }
+>  
+>  static void imx_irqsteer_irq_unmask(struct irq_data *d)
+> @@ -46,9 +46,9 @@ static void imx_irqsteer_irq_unmask(struct irq_data *d)
+> >  	u32 val;
+>  
+> >  	raw_spin_lock_irqsave(&data->lock, flags);
+> > -	val = readl_relaxed(data->regs + CHANMASK(idx, data->irq_groups));
+> > +	val = readl_relaxed(data->regs + CHANMASK(idx, data->reg_num));
+> >  	val |= BIT(d->hwirq % 32);
+> > -	writel_relaxed(val, data->regs + CHANMASK(idx, data->irq_groups));
+> > +	writel_relaxed(val, data->regs + CHANMASK(idx, data->reg_num));
+> >  	raw_spin_unlock_irqrestore(&data->lock, flags);
+>  }
+>  
+> @@ -60,9 +60,9 @@ static void imx_irqsteer_irq_mask(struct irq_data *d)
+> >  	u32 val;
+>  
+> >  	raw_spin_lock_irqsave(&data->lock, flags);
+> > -	val = readl_relaxed(data->regs + CHANMASK(idx, data->irq_groups));
+> > +	val = readl_relaxed(data->regs + CHANMASK(idx, data->reg_num));
+> >  	val &= ~BIT(d->hwirq % 32);
+> > -	writel_relaxed(val, data->regs + CHANMASK(idx, data->irq_groups));
+> > +	writel_relaxed(val, data->regs + CHANMASK(idx, data->reg_num));
+> >  	raw_spin_unlock_irqrestore(&data->lock, flags);
+>  }
+>  
+> @@ -94,13 +94,13 @@ static void imx_irqsteer_irq_handler(struct irq_desc *desc)
+>  
+> >  	chained_irq_enter(irq_desc_get_chip(desc), desc);
+>  
+> > -	for (i = 0; i < data->irq_groups * 64; i += 32) {
+> > +	for (i = 0; i < data->reg_num * 32; i += 32) {
+> >  		int idx = imx_irqsteer_get_reg_index(data, i);
+> >  		unsigned long irqmap;
+> >  		int pos, virq;
+>  
+> >  		irqmap = readl_relaxed(data->regs +
+> > -				       CHANSTATUS(idx, data->irq_groups));
+> > +				       CHANSTATUS(idx, data->reg_num));
+>  
+> >  		for_each_set_bit(pos, &irqmap, 32) {
+> >  			virq = irq_find_mapping(data->domain, pos + i);
+> @@ -146,12 +146,15 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
+>  
+> >  	raw_spin_lock_init(&data->lock);
+>  
+> > -	of_property_read_u32(np, "fsl,irq-groups", &data->irq_groups);
+> > +	of_property_read_u32(np, "fsl,num-irqs", &data->reg_num);
+> >  	of_property_read_u32(np, "fsl,channel", &data->channel);
+>  
+> > +	/* one register bit map represents 32 input interrupts */
+> > +	data->reg_num /= 32;
+> +
+> >  	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
+> >  		data->saved_reg = devm_kzalloc(&pdev->dev,
+> > -					sizeof(u32) * data->irq_groups * 2,
+> > +					sizeof(u32) * data->reg_num,
+>  					GFP_KERNEL);
 
-Typos here, should be: "specified sequentially"
+Does this last parameter now fit on the line above?
 
-> +  from output 0 to 7.
->  - clocks: Should contain one clock for entry in clock-names
->    see Documentation/devicetree/bindings/clock/clock-bindings.txt
->  - clock-names:
+>  		if (!data->saved_reg)
+> >  			return -ENOMEM;
+> @@ -166,7 +169,7 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
+> >  	/* steer all IRQs into configured channel */
+> >  	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
+>  
+> > -	data->domain = irq_domain_add_linear(np, data->irq_groups * 64,
+> > +	data->domain = irq_domain_add_linear(np, data->reg_num * 32,
+> >  					     &imx_irqsteer_domain_ops, data);
+> >  	if (!data->domain) {
+> >  		dev_err(&pdev->dev, "failed to create IRQ domain\n");
+> @@ -199,9 +202,9 @@ static void imx_irqsteer_save_regs(struct irqsteer_data *data)
+>  {
+> >  	int i;
+>  
+> > -	for (i = 0; i < data->irq_groups * 2; i++)
+> > +	for (i = 0; i < data->reg_num; i++)
+> >  		data->saved_reg[i] = readl_relaxed(data->regs +
+> > -						CHANMASK(i, data->irq_groups));
+> > +						CHANMASK(i, data->reg_num));
+>  }
+>  
+>  static void imx_irqsteer_restore_regs(struct irqsteer_data *data)
+> @@ -209,9 +212,9 @@ static void imx_irqsteer_restore_regs(struct irqsteer_data *data)
+> >  	int i;
+>  
+> >  	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
+> > -	for (i = 0; i < data->irq_groups * 2; i++)
+> > +	for (i = 0; i < data->reg_num; i++)
+> >  		writel_relaxed(data->saved_reg[i],
+> > -			       data->regs + CHANMASK(i, data->irq_groups));
+> > +			       data->regs + CHANMASK(i, data->reg_num));
+>  }
+>  
+>  static int imx_irqsteer_suspend(struct device *dev)
