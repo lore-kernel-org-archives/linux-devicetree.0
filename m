@@ -1,167 +1,114 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH V2 3/4] irq: imx-irqsteer: change to use reg_num instead
- of irq_group
-Date: Wed, 30 Jan 2019 14:22:03 +0100
-Message-ID: <1548854523.6869.25.camel@pengutronix.de>
-References: <1548853196-11447-1-git-send-email-aisheng.dong@nxp.com>
-         <1548853196-11447-4-git-send-email-aisheng.dong@nxp.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/9] mfd: pm8xxx: convert to v2 irq interfaces to support
+ hierarchical IRQ chips
+Date: Wed, 30 Jan 2019 13:27:39 +0000
+Message-ID: <20190130132739.GE4701@dell>
+References: <20190125162302.14036-1-masneyb@onstation.org>
+ <20190125162302.14036-4-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548853196-11447-4-git-send-email-aisheng.dong@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20190125162302.14036-4-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+To: Brian Masney <masneyb@onstation.org>
+Cc: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, marc.zyngier@arm.com, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 30.01.2019, 13:06 +0000 schrieb Aisheng Dong:
-> One group can manage 64 interrupts by using two registers (e.g. STATUS/SET).
-> However, the integrated irqsteer may support only 32 interrupts which
-> needs only one register in a group. But the current driver assume there's
-> a mininum of two registers in a group which result in a wrong register map
-> for 32 interrupts per channel irqsteer. Let's use the reg_num caculated by
-> interrupts per channel instead of irq_group to cover this case.
+On Fri, 25 Jan 2019, Brian Masney wrote:
+
+> Convert the PM8XXX IRQ code to use the version 2 IRQ interface in order
+> to support hierarchical IRQ chips. This is necessary so that ssbi-gpio
+> can be setup as a hierarchical IRQ chip with PM8xxx as the parent. IRQ
+> chips in device tree should be usable from the start without the
+> having to make an additional call to gpio[d]_to_irq() to get the proper
+> IRQ on the parent.
 > 
-> > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-
-Minor nit below, otherwise:
-
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
-> ---
-> v1->v2:
->  * The using of property name updated accordingly
-> ---
->  drivers/irqchip/irq-imx-irqsteer.c | 35 +++++++++++++++++++----------------
->  1 file changed, 19 insertions(+), 16 deletions(-)
+> The IRQ handler was hardcoded as handle_level_irq and this patch
+> properly sets the handler to either handle_edge_irq or handle_level_irq
+> depending on the IRQ type.
 > 
-> diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
-> index 5b3f1d7..67ed862 100644
-> --- a/drivers/irqchip/irq-imx-irqsteer.c
-> +++ b/drivers/irqchip/irq-imx-irqsteer.c
-> @@ -13,7 +13,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/spinlock.h>
->  
-> > -#define CTRL_STRIDE_OFF(_t, _r)	(_t * 8 * _r)
-> > +#define CTRL_STRIDE_OFF(_t, _r)	(_t * 4 * _r)
-> >  #define CHANCTRL		0x0
-> >  #define CHANMASK(n, t)		(CTRL_STRIDE_OFF(t, 0) + 0x4 * (n) + 0x4)
-> >  #define CHANSET(n, t)		(CTRL_STRIDE_OFF(t, 1) + 0x4 * (n) + 0x4)
-> @@ -26,7 +26,7 @@ struct irqsteer_data {
-> > >  	struct clk		*ipg_clk;
-> > >  	int			irq;
-> > >  	raw_spinlock_t		lock;
-> > > -	int			irq_groups;
-> > > +	int			reg_num;
-> > >  	int			channel;
-> > >  	struct irq_domain	*domain;
-> > >  	u32			*saved_reg;
-> @@ -35,7 +35,7 @@ struct irqsteer_data {
->  static int imx_irqsteer_get_reg_index(struct irqsteer_data *data,
-> >  				      unsigned long irqnum)
->  {
-> > -	return (data->irq_groups * 2 - irqnum / 32 - 1);
-> > +	return (data->reg_num - irqnum / 32 - 1);
->  }
->  
->  static void imx_irqsteer_irq_unmask(struct irq_data *d)
-> @@ -46,9 +46,9 @@ static void imx_irqsteer_irq_unmask(struct irq_data *d)
-> >  	u32 val;
->  
-> >  	raw_spin_lock_irqsave(&data->lock, flags);
-> > -	val = readl_relaxed(data->regs + CHANMASK(idx, data->irq_groups));
-> > +	val = readl_relaxed(data->regs + CHANMASK(idx, data->reg_num));
-> >  	val |= BIT(d->hwirq % 32);
-> > -	writel_relaxed(val, data->regs + CHANMASK(idx, data->irq_groups));
-> > +	writel_relaxed(val, data->regs + CHANMASK(idx, data->reg_num));
-> >  	raw_spin_unlock_irqrestore(&data->lock, flags);
->  }
->  
-> @@ -60,9 +60,9 @@ static void imx_irqsteer_irq_mask(struct irq_data *d)
-> >  	u32 val;
->  
-> >  	raw_spin_lock_irqsave(&data->lock, flags);
-> > -	val = readl_relaxed(data->regs + CHANMASK(idx, data->irq_groups));
-> > +	val = readl_relaxed(data->regs + CHANMASK(idx, data->reg_num));
-> >  	val &= ~BIT(d->hwirq % 32);
-> > -	writel_relaxed(val, data->regs + CHANMASK(idx, data->irq_groups));
-> > +	writel_relaxed(val, data->regs + CHANMASK(idx, data->reg_num));
-> >  	raw_spin_unlock_irqrestore(&data->lock, flags);
->  }
->  
-> @@ -94,13 +94,13 @@ static void imx_irqsteer_irq_handler(struct irq_desc *desc)
->  
-> >  	chained_irq_enter(irq_desc_get_chip(desc), desc);
->  
-> > -	for (i = 0; i < data->irq_groups * 64; i += 32) {
-> > +	for (i = 0; i < data->reg_num * 32; i += 32) {
-> >  		int idx = imx_irqsteer_get_reg_index(data, i);
-> >  		unsigned long irqmap;
-> >  		int pos, virq;
->  
-> >  		irqmap = readl_relaxed(data->regs +
-> > -				       CHANSTATUS(idx, data->irq_groups));
-> > +				       CHANSTATUS(idx, data->reg_num));
->  
-> >  		for_each_set_bit(pos, &irqmap, 32) {
-> >  			virq = irq_find_mapping(data->domain, pos + i);
-> @@ -146,12 +146,15 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
->  
-> >  	raw_spin_lock_init(&data->lock);
->  
-> > -	of_property_read_u32(np, "fsl,irq-groups", &data->irq_groups);
-> > +	of_property_read_u32(np, "fsl,num-irqs", &data->reg_num);
-> >  	of_property_read_u32(np, "fsl,channel", &data->channel);
->  
-> > +	/* one register bit map represents 32 input interrupts */
-> > +	data->reg_num /= 32;
+> pm8821_irq_domain_ops and pm8821_irq_domain_map are removed by this
+> patch since the irq_chip is now contained in the pm_irq_data struct, and
+> that allows us to use a common IRQ mapping function.
+> 
+> This change was not tested on any actual hardware, however the same
+> change was made to spmi-gpio and tested on a LG Nexus 5 (hammerhead)
+> phone.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  drivers/mfd/qcom-pm8xxx.c | 86 +++++++++++++++++++++++----------------
+>  1 file changed, 50 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+> index e6e8d81c15fd..a976890c4019 100644
+> --- a/drivers/mfd/qcom-pm8xxx.c
+> +++ b/drivers/mfd/qcom-pm8xxx.c
+> @@ -70,20 +70,20 @@
+>  #define PM8XXX_NR_IRQS		256
+>  #define PM8821_NR_IRQS		112
+>  
+> +struct pm_irq_data {
+> +	int num_irqs;
+> +	struct irq_chip *irq_chip;
+> +	void (*irq_handler)(struct irq_desc *desc);
+> +};
 > +
-> >  	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
-> >  		data->saved_reg = devm_kzalloc(&pdev->dev,
-> > -					sizeof(u32) * data->irq_groups * 2,
-> > +					sizeof(u32) * data->reg_num,
->  					GFP_KERNEL);
+>  struct pm_irq_chip {
+>  	struct regmap		*regmap;
+>  	spinlock_t		pm_irq_lock;
+>  	struct irq_domain	*irqdomain;
+> -	unsigned int		num_irqs;
+>  	unsigned int		num_blocks;
+>  	unsigned int		num_masters;
+>  	u8			config[0];
+> -};
+> -
+> -struct pm_irq_data {
+> -	int num_irqs;
+> -	const struct irq_domain_ops  *irq_domain_ops;
+> -	void (*irq_handler)(struct irq_desc *desc);
+> +	const struct pm_irq_data *pm_irq_data;
+>  };
+>  
+>  static int pm8xxx_read_block_irq(struct pm_irq_chip *chip, unsigned int bp,
+> @@ -303,6 +303,7 @@ static int pm8xxx_irq_set_type(struct irq_data *d, unsigned int flow_type)
+>  {
+>  	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
+>  	unsigned int pmirq = irqd_to_hwirq(d);
+> +	irq_flow_handler_t flow_handler;
+>  	int irq_bit;
+>  	u8 block, config;
+>  
+> @@ -316,6 +317,8 @@ static int pm8xxx_irq_set_type(struct irq_data *d, unsigned int flow_type)
+>  			chip->config[pmirq] &= ~PM_IRQF_MASK_RE;
+>  		if (flow_type & IRQF_TRIGGER_FALLING)
+>  			chip->config[pmirq] &= ~PM_IRQF_MASK_FE;
+> +
+> +		flow_handler = handle_edge_irq;
+>  	} else {
+>  		chip->config[pmirq] |= PM_IRQF_LVL_SEL;
+>  
+> @@ -323,8 +326,12 @@ static int pm8xxx_irq_set_type(struct irq_data *d, unsigned int flow_type)
+>  			chip->config[pmirq] &= ~PM_IRQF_MASK_RE;
+>  		else
+>  			chip->config[pmirq] &= ~PM_IRQF_MASK_FE;
+> +
+> +		flow_handler = handle_level_irq;
+>  	}
+>  
+> +	irq_set_handler_locked(d, flow_handler);
+> +
 
-Does this last parameter now fit on the line above?
+Why don't you save yourself 3 lines of code and a variable and just
+call irq_set_handler_locked() where you set flow_handler?
 
->  		if (!data->saved_reg)
-> >  			return -ENOMEM;
-> @@ -166,7 +169,7 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
-> >  	/* steer all IRQs into configured channel */
-> >  	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
->  
-> > -	data->domain = irq_domain_add_linear(np, data->irq_groups * 64,
-> > +	data->domain = irq_domain_add_linear(np, data->reg_num * 32,
-> >  					     &imx_irqsteer_domain_ops, data);
-> >  	if (!data->domain) {
-> >  		dev_err(&pdev->dev, "failed to create IRQ domain\n");
-> @@ -199,9 +202,9 @@ static void imx_irqsteer_save_regs(struct irqsteer_data *data)
->  {
-> >  	int i;
->  
-> > -	for (i = 0; i < data->irq_groups * 2; i++)
-> > +	for (i = 0; i < data->reg_num; i++)
-> >  		data->saved_reg[i] = readl_relaxed(data->regs +
-> > -						CHANMASK(i, data->irq_groups));
-> > +						CHANMASK(i, data->reg_num));
->  }
->  
->  static void imx_irqsteer_restore_regs(struct irqsteer_data *data)
-> @@ -209,9 +212,9 @@ static void imx_irqsteer_restore_regs(struct irqsteer_data *data)
-> >  	int i;
->  
-> >  	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
-> > -	for (i = 0; i < data->irq_groups * 2; i++)
-> > +	for (i = 0; i < data->reg_num; i++)
-> >  		writel_relaxed(data->saved_reg[i],
-> > -			       data->regs + CHANMASK(i, data->irq_groups));
-> > +			       data->regs + CHANMASK(i, data->reg_num));
->  }
->  
->  static int imx_irqsteer_suspend(struct device *dev)
+Apart from that nit, the code looks good to me.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
