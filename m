@@ -1,107 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: clock: Add loongson-1 clock bindings
-Date: Wed, 30 Jan 2019 13:47:31 -0600
-Message-ID: <20190130194731.GA25716@bogus>
-References: <20190125133413.4130-1-jiaxun.yang@flygoat.com>
- <20190128152052.3047-1-jiaxun.yang@flygoat.com>
- <20190128152052.3047-4-jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: imu: add icm20602 bindings to
+ mpu6050
+Date: Wed, 30 Jan 2019 13:49:42 -0600
+Message-ID: <20190130194942.GA30767@bogus>
+References: <20190128185010.8275-1-gaireg@gaireg.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190128152052.3047-4-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190128185010.8275-1-gaireg@gaireg.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: gaireg@gaireg.de, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Brian Masney <masneyb@onstation.org>, Jonathan Marek <jonathan@marek.ca>, Douglas Fischer <fischerdouglasc@gmail.com>, Martin Kelly <mkelly@xevo.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Hans de Goede <hdegoede@redhat.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 11:20:52PM +0800, Jiaxun Yang wrote:
-> Loongson-1 is a series of MIPS MCUs.
-> This patch add the clock bindings for loongson-1b and
-> loongson-1c clock subsystem.
+On Mon, 28 Jan 2019 19:50:02 +0100, =?UTF-8?q?Randolph=20Maa=C3=9Fen?= wrote:
+> Adding the invensense ICM-20602 to the compatible list of the mpu6050
+> driver
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Randolph Maaﬂen <gaireg@gaireg.de>
+> 
 > ---
->  .../bindings/clock/loongson1-clock.txt        | 11 ++++++++++
->  include/dt-bindings/clock/ls1b-clock.h        | 20 +++++++++++++++++++
->  include/dt-bindings/clock/ls1c-clock.h        | 17 ++++++++++++++++
->  3 files changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/loongson1-clock.txt
->  create mode 100644 include/dt-bindings/clock/ls1b-clock.h
->  create mode 100644 include/dt-bindings/clock/ls1c-clock.h
+> Changes in v2:
+> - write i2c disable register using reg_set instead of define
+> - decide to write to i2c disable register based on reg_set instead of
+>   chip type
+> ---
+>  Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/loongson1-clock.txt b/Documentation/devicetree/bindings/clock/loongson1-clock.txt
-> new file mode 100644
-> index 000000000000..f0119fbd0851
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/loongson1-clock.txt
-> @@ -0,0 +1,11 @@
-> +* Clock bindings for Loongson-1 MCUs
-> +
-> +Required properties:
-> +- compatible: Should be "loongson,ls1c-clock" or "loongson,ls1b-clock"
 
-List one per line please.
-
-> +- reg: Address and length of the register set
-> +- #clock-cells: Should be <1>
-> +- clocks: list of input clocks
-> +
-> +The clock consumer should specify the desired clock by having the clock
-> +ID in its "clocks" phandle cell. See include/dt-bindings/clock/ls1c-clock.h
-> +or include/dt-bindings/clock/ls1b-clock.h for the full list of clocks.
-> diff --git a/include/dt-bindings/clock/ls1b-clock.h b/include/dt-bindings/clock/ls1b-clock.h
-> new file mode 100644
-> index 000000000000..814227842ae0
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/ls1b-clock.h
-> @@ -0,0 +1,20 @@
-> +// SPDX-License-Identifier:	GPL-2.0
-
-Headers should be /* */ style comments.
-
-> +/*
-> + * Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
-> + *
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_LS1B_CLOCK_H__
-> +#define __DT_BINDINGS_CLOCK_LS1B_CLOCK_H__
-> +
-> +#define LS1B_CLK_PLL 0
-> +#define LS1B_CLK_CPU_DIV 1
-> +#define LS1B_CLK_CPU 2
-> +#define LS1B_CLK_DC_DIV 3
-> +#define LS1B_CLK_DC 4
-> +#define LS1B_CLK_DDR_DIV 5
-> +#define LS1B_CLK_DDR 6
-> +#define LS1B_CLK_AHB 7
-> +#define LS1B_CLK_APB 8
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_LS1B_CLOCK_H__ */
-> diff --git a/include/dt-bindings/clock/ls1c-clock.h b/include/dt-bindings/clock/ls1c-clock.h
-> new file mode 100644
-> index 000000000000..40f386cb92ce
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/ls1c-clock.h
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier:	GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
-> + *
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_LS1C_CLOCK_H__
-> +#define __DT_BINDINGS_CLOCK_LS1C_CLOCK_H__
-> +
-> +#define LS1C_CLK_PLL 0
-> +#define LS1C_CLK_CPU 1
-> +#define LS1C_CLK_DC 2
-> +#define LS1C_CLK_DDR 3
-> +#define LS1C_CLK_AHB 4
-> +#define LS1C_CLK_APB 5
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_LS1C_CLOCK_H__ */
-> -- 
-> 2.20.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
