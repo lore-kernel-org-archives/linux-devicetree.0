@@ -1,103 +1,79 @@
-From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Subject: Re: [PATCH] ARM: socfpga: fix base address of SDR controller
-Date: Wed, 30 Jan 2019 07:00:17 +0100
-Message-ID: <CAAh8qszCQROUZVOyX9GCNF_09DebDDUWf_2cfW3M13yG1aJ_Xg@mail.gmail.com>
-References: <20190129200858.19773-1-goldsimon@gmx.de> <0711a2e0-b4fb-fa12-7c5c-0b5da73c8b02@kernel.org>
+From: Pi-Hsun Shih <pihsun@chromium.org>
+Subject: Re: [PATCH 06/10] soc: mediatek: add register device function
+Date: Wed, 30 Jan 2019 14:00:28 +0800
+Message-ID: <69c8ff46-c34c-c000-631c-a6ea8b4364c7@chromium.org>
+References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
+ <1548747128-60136-7-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0711a2e0-b4fb-fa12-7c5c-0b5da73c8b02@kernel.org>
+In-Reply-To: <1548747128-60136-7-git-send-email-bibby.hsieh@mediatek.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marex@denx.de>
-Cc: devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alan Tull <atull@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, kendrick.hsu@mediatek.com, linux-mediatek@lists.infradead.org, Houlong Wei <houlong.wei@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Frederic Chen <Frederic.Chen@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, linux-arm-kernel@lists.infradead.org, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-+ Marek (as I really want to keep the dts in Linux and U-Boot in sync)
-On Wed, Jan 30, 2019 at 1:16 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
->
->
->
-> On 1/29/19 2:08 PM, Simon Goldschmidt wrote:
-> > From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-> >
-> > The documentation for socfpga gen5 says the base address of the sdram
-> > controller is 0xffc20000, while the current devicetree says it is at
-> > 0xffc25000.
-> >
-> > While this is not a problem for Linux, as it only accesses the registers
-> > above 0xffc25000, it *is* a problem for U-Boot because the lower registers
-> > are used during DDR calibration (up to now, the U-Boot driver does not use
-> > the dts address, but that should change).
-> >
-> > To keep Linux and U-Boot devicetrees in sync, this patch changes the base
-> > address to 0xffc20000 and adapts the 2 files where it is currently used.
-> >
-> > This patch changes the dts and 2 drivers with one commit to prevent
-> > breaking the code if dts change and driver change would be split.
-> >
-> > Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-> > ---
-> >
-> >  arch/arm/boot/dts/socfpga.dtsi       | 4 ++--
-> >  arch/arm/mach-socfpga/self-refresh.S | 4 ++--
-> >  drivers/fpga/altera-fpga2sdram.c     | 2 +-
-> >  3 files changed, 5 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> > index f365003f0..8f6c1a5d6 100644
-> > --- a/arch/arm/boot/dts/socfpga.dtsi
-> > +++ b/arch/arm/boot/dts/socfpga.dtsi
-> > @@ -788,9 +788,9 @@
-> >                       reg = <0xfffec000 0x100>;
-> >               };
-> >
-> > -             sdr: sdr@ffc25000 {
-> > +             sdr: sdr@ffc20000 {
-> >                       compatible = "altr,sdr-ctl", "syscon";
-> > -                     reg = <0xffc25000 0x1000>;
-> > +                     reg = <0xffc20000 0x6000>;
->
-> I don't see the U-Boot device tree having this change. Yes, the
-> documentation does state that the SDR address starts at 0xffc20000, but
-> all of the pertinent registers start at 0x5000 offset. Thus, the
-> starting address should be 0xffc25000.[1]
+On 01/29/2019 03:32 PM, Bibby Hsieh wrote:
+> GCE cannot know the register base address, we store the subsys-base address
+> relationship in the device node, and store the relationship by
+> cmdq_register_device function.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>   drivers/soc/mediatek/mtk-cmdq-helper.c | 24 ++++++++++++++++++++++++
+>   include/linux/soc/mediatek/mtk-cmdq.h  |  1 +
+>   2 files changed, 25 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 6e4b85e..6ad997f 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -32,6 +32,30 @@ u8 cmdq_subsys_base_to_id(struct cmdq_base *clt_base, u32 base)
+>   }
+>   EXPORT_SYMBOL(cmdq_subsys_base_to_id);
+>   
+> +struct cmdq_base *cmdq_register_device(struct device *dev)
+> +{
+> +	struct cmdq_base *clt_base;
+> +	struct of_phandle_args spec;
+> +	u32 idx;
+> +
+> +	clt_base = devm_kzalloc(dev, sizeof(*clt_base), GFP_KERNEL);
+> +	if (!clt_base)
+> +		return NULL;
+> +
+> +	/* parse subsys */
+> +	for (idx = 0; idx < ARRAY_SIZE(clt_base->subsys); idx++) {
+> +		if (of_parse_phandle_with_args(dev->of_node, "gce-subsys",
+> +		    "#gce-subsys-cells", idx, &spec))
 
-You don't see it in U-Boot as I'm working on a patch for that.
-As I wrote in the commit message, U-Boot currently does not use the
-devicetree for the SDR driver, but I want to convert it to do that.
+nit: Should have more indention for the line above. (Align with the
+dev->of_node?)
 
-But before converting, I need to find a clean way to provide the
-register addresses to the driver. That doesn't work with the current dts.
-
->
-> [1]
-> https://www.intel.com/content/www/us/en/programmable/documentation/sfo1410143707420.html#sfo1411577366917
-
-Well, in [2], you see that the peripheral's address range actually starts
-at 0xffc20000. It's only the public documented registers that start at
-0xffc25000. I don't know why the lower address range is undocumented.
-Maybe you can help me here?
-
-But U-Boot needs to use the undocumented registers to bring up the DDR-RAM.
-Even if the registers for that are not (clearly?) documented, I think the
-devicetree should still reflect the correct address range.
-
-The U-Boot driver is made up of 2 files (in drivers/ddr/altera):
-- sdram_gen5.c [3]: using the documented registers from 0xffc25000
-- sequencer.c [4]: using the (undocumented?) registers from 0xffc20000
-
-In both files, you can see the register addresses they use by checking the
-static variables at the top of the file. And for convenience, use [5] to
-search for the values of defines.
-
-[2]
-https://www.intel.com/content/www/us/en/programmable/hps/cyclone-v/hps.html
-[3]
-https://github.com/u-boot/u-boot/blob/master/drivers/ddr/altera/sdram_gen5.c
-[4]
-https://github.com/u-boot/u-boot/blob/master/drivers/ddr/altera/sequencer.c
-[5]
-https://elixir.bootlin.com/u-boot/latest/source
-
-Regards,
-Simon
+> +			break;
+> +		clt_base->subsys[idx].base = spec.args[0];
+> +		clt_base->subsys[idx].id = spec.args[1];
+> +	}
+> +	clt_base->count = idx;
+> +
+> +	return clt_base;
+> +}
+> +EXPORT_SYMBOL(cmdq_register_device);
+> +
+>   static void cmdq_client_timeout(struct timer_list *t)
+>   {
+>   	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 0c7a6ee..a1f5eb6 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -138,5 +138,6 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+>   int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+>   
+>   u8 cmdq_subsys_base_to_id(struct cmdq_base *clt_base, u32 base);
+> +struct cmdq_base *cmdq_register_device(struct device *dev);
+>   
+>   #endif	/* __MTK_CMDQ_H__ */
+> 
