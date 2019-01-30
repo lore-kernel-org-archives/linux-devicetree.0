@@ -1,108 +1,31 @@
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v3 1/2] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
-Date: Wed, 30 Jan 2019 19:50:30 +0100
-Message-ID: <20190130185031.24798-2-jorge.ramirez-ortiz@linaro.org>
-References: <20190130185031.24798-1-jorge.ramirez-ortiz@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 12/13] input: max77650: add onkey support
+Date: Wed, 30 Jan 2019 10:53:28 -0800
+Message-ID: <20190130185328.GA149208@dtor-ws>
+References: <20190129133545.1931-1-brgl@bgdev.pl>
+ <20190129133545.1931-14-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130185031.24798-1-jorge.ramirez-ortiz@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20190129133545.1931-14-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, andy.gross@linaro.org, swboyd@chromium.org
-Cc: shawn.guo@linaro.org, vkoul@kernel.org, khasim.mohammed@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Binding description for Qualcomm's 1.0.0 SuperSpeed phy controller 
-embedded in QCS404.
+On Tue, Jan 29, 2019 at 02:35:44PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Add support for the push- and slide-button events for max77650.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
-definitions.
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- .../bindings/usb/qcom,usb-ssphy.txt           | 74 +++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+Please feel free to merge with other patches (MFD tree I suppose?).
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
-new file mode 100644
-index 000000000000..83748a07d665
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
-@@ -0,0 +1,74 @@
-+Qualcomm Synopsys 1.0.0 SS phy controller
-+===========================================
-+
-+Qualcomm 1.0.0 SS phy controller supports SuperSpeed USB connectivity on
-+some Qualcomm platforms.
-+
-+Required properties:
-+
-+- compatible:
-+    Value type: <string>
-+    Definition: Should contain "qcom,usb-ssphy".
-+
-+- reg:
-+    Value type: <prop-encoded-array>
-+    Definition: USB PHY base address and length of the register map.
-+
-+- #phy-cells:
-+    Value type: <u32>
-+    Definition: Should be 0. See phy/phy-bindings.txt for details.
-+
-+- clocks:
-+    Value type: <prop-encoded-array>
-+    Definition: See clock-bindings.txt section "consumers". List of
-+		 three clock specifiers for reference, phy core and
-+		 pipe clocks.
-+
-+- clock-names:
-+    Value type: <string>
-+    Definition: Names of the clocks in 1-1 correspondence with the "clocks"
-+		 property. Must contain "ref", "phy" and "pipe".
-+
-+- vdd-supply:
-+    Value type: <phandle>
-+    Definition: phandle to the regulator VDD supply node.
-+
-+- vdda1p8-supply:
-+    Value type: <phandle>
-+    Definition: phandle to the regulator 1.8V supply node.
-+
-+
-+Optional child nodes:
-+
-+- vbus-supply:
-+    Value type: <phandle>
-+    Definition: phandle to the VBUS supply node.
-+
-+- resets:
-+    Value type: <prop-encoded-array>
-+    Definition: See reset.txt section "consumers". PHY reset specifiers
-+		 for phy core and COR resets.
-+
-+- reset-names:
-+    Value type: <string>
-+    Definition: Names of the resets in 1-1 correspondence with the "resets"
-+		 property. Must contain "com" and "phy" if the property is
-+		 specified.
-+
-+Example:
-+
-+usb3_phy: phy@78000 {
-+	compatible = "qcom,usb-ssphy";
-+	reg = <0x78000 0x400>;
-+	#phy-cells = <0>;
-+	clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
-+		 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
-+		 <&gcc GCC_USB3_PHY_PIPE_CLK>;
-+	clock-names = "ref", "phy", "pipe";
-+	resets = <&gcc GCC_USB3_PHY_BCR>,
-+		 <&gcc GCC_USB3PHY_PHY_BCR>;
-+	reset-names = "com", "phy";
-+	vdd-supply = <&vreg_l3_1p05>;
-+	vdda1p8-supply = <&vreg_l5_1p8>;
-+	vbus-supply = <&usb3_vbus_reg>;
-+};
+Thanks.
+
 -- 
-2.20.1
+Dmitry
