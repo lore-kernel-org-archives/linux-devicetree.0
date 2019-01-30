@@ -1,122 +1,116 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5 1/2] spi: support inter-word delay requirement for devices
-Date: Wed, 30 Jan 2019 09:15:09 +0100
-Message-ID: <CAMuHMdXAjLBpQ6OXLwRsCzt5ydjuGFK6M6dKuFU4EL+6o0NB6Q@mail.gmail.com>
-References: <20190129205502.7741-1-jonas@norrbonn.se> <20190129205502.7741-2-jonas@norrbonn.se>
- <CAMuHMdXv6U-VeznbXrTNk9oY1kCkYu-b+_o3KH_R6BMgpVn7YA@mail.gmail.com> <d9c495ac-825e-6dd0-5455-817c3f27b840@norrbonn.se>
+From: Jonas Bonn <jonas@norrbonn.se>
+Subject: [PATCH v6 1/2] spi: support inter-word delay requirement for devices
+Date: Wed, 30 Jan 2019 09:40:04 +0100
+Message-ID: <20190130084005.18649-2-jonas@norrbonn.se>
+References: <20190130084005.18649-1-jonas@norrbonn.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d9c495ac-825e-6dd0-5455-817c3f27b840@norrbonn.se>
+In-Reply-To: <20190130084005.18649-1-jonas@norrbonn.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Bonn <jonas@norrbonn.se>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Jonas Bonn <jonas@norrbonn.se>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonas,
+Some devices are slow and cannot keep up with the SPI bus and therefore
+require a short delay between words of the SPI transfer.
 
-On Wed, Jan 30, 2019 at 9:10 AM Jonas Bonn <jonas@norrbonn.se> wrote:
-> On 30/01/2019 08:35, Geert Uytterhoeven wrote:
-> > On Tue, Jan 29, 2019 at 9:55 PM Jonas Bonn <jonas@norrbonn.se> wrote:
-> >> Some devices are slow and cannot keep up with the SPI bus and therefore
-> >> require a short delay between words of the SPI transfer.
-> >>
-> >> The example of this that I'm looking at is a SAMA5D2 with a minimum SPI
-> >> clock of 400kHz talking to an AVR-based SPI slave.  The AVR cannot put
-> >> bytes on the bus fast enough to keep up with the SoC's SPI controller
-> >> even at the lowest bus speed.
-> >>
-> >> This patch introduces the ability to specify a required inter-word
-> >> delay for SPI devices.  It is up to the controller driver to configure
-> >> itself accordingly in order to introduce the requested delay.
-> >>
-> >> Note that, for spi_transfer, there is already a field word_delay that
-> >> provides similar functionality.  This field, however, is specified in
-> >> clock cycles (and worse, SPI controller cycles, not SCK cycles); that
-> >> makes this value dependent on the master clock instead of the device
-> >> clock for which the delay is intended to provide some relief.  This
-> >> patch leaves this old word_delay in place and provides a time-based
-> >> word_delay_us alongside it; the new field fits in the struct padding
-> >> so struct size is constant.  There is only one in-kernel user of the
-> >> word_delay field and presumably that driver could be reworked to use
-> >> the time-based value instead.
-> >
-> > Thanks for your patch!
-> >
-> >> The time-based delay is limited to 8 bits as these delays are intended
-> >> to be short.  The SAMA5D2 that I've tested this on limits delays to a
-> >> maximum of ~100us, which is already many word-transfer periods even at
-> >> the minimum transfer speed supported by the controller.
-> >
-> > Still, the similar delay_usecs uses a u16.
->
-> The delays are not comparable.  delay_usecs is the "end of transfer"
-> delay and represents the processing time to handle a command or a bundle
-> of data.  The inter-word delay is just a stutter to give the slave time
-> to get the next word set up.
->
-> On the Microchip (Atmel... these name changes take a year or two to sink
-> in!) board that I'm using (SAMA5D2), the inter-word delay is limited to
-> 8192 SPI-controller-clock cycles (not SPI bus clock, input clock).  At
-> 83Mhz, that's about 100us, and it only gets shorter as you clock up.
-> The Spreadtrum board has an upper limit of 130 SPI-controller-clock
-> cycles which is just a few microseconds.
->
-> Aside from that limitation, consider what's reasonable in terms of
-> delay.  More than 5x the word-transfer time and things are pretty
-> questionable.  A 250us delay with a word transfer time of 50us gives an
-> SPI-bus clock 160kHz.  That's already pretty slow in SPI terms and well
-> below what the SAMA5D2 is capable of driving with it's 83MHz input clock
-> (max divider is 255 which gives roughtly 400kHz minimum SPI bus clock).
->
-> So with that, setting an inter-word delay larger than 255us is barely
-> reasonable.  If somebody finds a concrete use for such a setting, then
-> the size of the field can be expanded at that time.
->
-> Just for info, the inter-word delay that I need to communicate with an
-> Atmega MCU running at 500kHz is ~20us which is on the order of the word
-> transfer time itself.  This chip is a poor example of how to design an
-> SPI slave so I suspect it can only get better from here! :)
->
-> And with that said, if you insist having a u16 for this, I'll change it.
->   Just let me know.
+The example of this that I'm looking at is a SAMA5D2 with a minimum SPI
+clock of 400kHz talking to an AVR-based SPI slave.  The AVR cannot put
+bytes on the bus fast enough to keep up with the SoC's SPI controller
+even at the lowest bus speed.
 
-I'll defer that to the maintainer (Mark).
+This patch introduces the ability to specify a required inter-word
+delay for SPI devices.  It is up to the controller driver to configure
+itself accordingly in order to introduce the requested delay.
 
-> >> --- a/include/linux/spi/spi.h
-> >> +++ b/include/linux/spi/spi.h
-> >
-> >> @@ -803,6 +808,7 @@ struct spi_transfer {
-> >>   #define        SPI_NBITS_DUAL          0x02 /* 2bits transfer */
-> >>   #define        SPI_NBITS_QUAD          0x04 /* 4bits transfer */
-> >>          u8              bits_per_word;
-> >> +       u8              word_delay_us;
-> >
-> > us for µs
-> >
-> >>          u16             delay_usecs;
-> >
-> > usecs for µs
-> >
-> > Can we please try to be consistent?
->
-> I can change it to usecs if you want.  Is this a serious request to do
-> so?  _usecs and _us are used pretty interchangeably across the kernel
-> with a slight advantage to _us.
+Note that, for spi_transfer, there is already a field word_delay that
+provides similar functionality.  This field, however, is specified in
+clock cycles (and worse, SPI controller cycles, not SCK cycles); that
+makes this value dependent on the master clock instead of the device
+clock for which the delay is intended to provide some relief.  This
+patch leaves this old word_delay in place and provides a time-based
+word_delay_us alongside it; the new field fits in the struct padding
+so struct size is constant.  There is only one in-kernel user of the
+word_delay field and presumably that driver could be reworked to use
+the time-based value instead.
 
-Personally, I prefer "us", too. Unfortunately not everyone has been
-converted to metric, SI, and EURO yet ;-)
+The time-based delay is limited to 8 bits as these delays are intended
+to be short.  The SAMA5D2 that I've tested this on limits delays to a
+maximum of ~100us, which is already many word-transfer periods even at
+the minimum transfer speed supported by the controller.
 
-However, it looks really odd if the next line uses "usecs".
+Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
+CC: Mark Brown <broonie@kernel.org>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: linux-spi@vger.kernel.org
+CC: devicetree@vger.kernel.org
+---
+ drivers/spi/spi.c       | 5 +++++
+ include/linux/spi/spi.h | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 0e0f2c62973c..2f7176f07591 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -3050,6 +3050,8 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
+ 	 * it is not set for this transfer.
+ 	 * Set transfer tx_nbits and rx_nbits as single transfer default
+ 	 * (SPI_NBITS_SINGLE) if it is not set for this transfer.
++	 * Ensure transfer word_delay is at least as long as that required by
++	 * device itself.
+ 	 */
+ 	message->frame_length = 0;
+ 	list_for_each_entry(xfer, &message->transfers, transfer_list) {
+@@ -3120,6 +3122,9 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
+ 				!(spi->mode & SPI_RX_QUAD))
+ 				return -EINVAL;
+ 		}
++
++		if (xfer->word_delay_usecs < spi->word_delay_usecs)
++			xfer->word_delay_usecs = spi->word_delay_usecs;
+ 	}
+ 
+ 	message->status = -EINPROGRESS;
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 916bba47d156..662b336aa2e4 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -122,6 +122,8 @@ void spi_statistics_add_transfer_stats(struct spi_statistics *stats,
+  *	the spi_master.
+  * @cs_gpiod: gpio descriptor of the chipselect line (optional, NULL when
+  *	not using a GPIO line)
++ * @word_delay_usecs: microsecond delay to be inserted between consecutive
++ *	words of a transfer
+  *
+  * @statistics: statistics for the spi_device
+  *
+@@ -169,6 +171,7 @@ struct spi_device {
+ 	const char		*driver_override;
+ 	int			cs_gpio;	/* LEGACY: chip select gpio */
+ 	struct gpio_desc	*cs_gpiod;	/* chip select gpio desc */
++	uint8_t			word_delay_usecs; /* inter-word delay */
+ 
+ 	/* the statistics */
+ 	struct spi_statistics	statistics;
+@@ -721,6 +724,8 @@ extern void spi_res_release(struct spi_controller *ctlr,
+  * @delay_usecs: microseconds to delay after this transfer before
+  *	(optionally) changing the chipselect status, then starting
+  *	the next transfer or completing this @spi_message.
++ * @word_delay_usecs: microseconds to inter word delay after each word size
++ *	(set by bits_per_word) transmission.
+  * @word_delay: clock cycles to inter word delay after each word size
+  *	(set by bits_per_word) transmission.
+  * @transfer_list: transfers are sequenced through @spi_message.transfers
+@@ -803,6 +808,7 @@ struct spi_transfer {
+ #define	SPI_NBITS_DUAL		0x02 /* 2bits transfer */
+ #define	SPI_NBITS_QUAD		0x04 /* 4bits transfer */
+ 	u8		bits_per_word;
++	u8		word_delay_usecs;
+ 	u16		delay_usecs;
+ 	u32		speed_hz;
+ 	u16		word_delay;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.19.1
