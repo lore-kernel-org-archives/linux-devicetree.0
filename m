@@ -1,13 +1,11 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: imx8mq: Add QuadSPI controller
-Date: Wed, 30 Jan 2019 08:58:32 -0200
-Message-ID: <CAOMZO5DnJxgx1k3q4BxXJWV6rD9f3KUVfrK8uJmvD90BfB2NdA@mail.gmail.com>
-References: <20190130091953.20131-1-ccaione@baylibre.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 0/6] arm64: dts: DB820c: Add display and audio support
+Date: Wed, 30 Jan 2019 11:04:31 +0000
+Message-ID: <20190130110437.5424-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190130091953.20131-1-ccaione@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,58 +15,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+To: andy.gross@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Carlo,
+Hi Andy, 
 
-On Wed, Jan 30, 2019 at 7:19 AM Carlo Caione <ccaione@baylibre.com> wrote:
->
-> Add a node for the Freescale/NXP QuadSPI controller with a proper
-> pinctrl set and enable it for the i.MX8MQ EVK board.
-> Extend also the AIPS3 memory range to accommodate the QuadSPI-memory
-> region.
->
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 27 ++++++++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 16 +++++++++++-
+Now that most of the bits are in mainline, its good time to add display
+and audio support to DB820c.
+These patches are being tested in integration branch from long time.
 
-Please split this in two patches: one for the imx8mq.dtsi and other
-for the board dts.
+Am resending 2 SMMU patches (https://patchwork.kernel.org/cover/10726329/)
+in this series to keep all the display and sound patches together.
 
-> +&spi0 {
+Can you pick these up for 5.1
 
-I have recently sent a patch adding eCSPI support. Please call this
-qspi0 to avoid confusion with the eCSPI name instances.
+thanks,
+srini
 
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_qspi>;
-> +       status = "okay";
-> +
-> +       flash0: n25q256a@0 {
+Changes since v1:
+- GPU node updated by Jordan.
+- deleted extra lines from sound card dt patch
 
-Node names should be generic and label names specific, so:
+Archit Taneja (3):
+  arm64: dts: msm8996: Add display smmu node
+  arm64: qcom: msm8996.dtsi: Add Display nodes
+  arm64: dts: apq8096-db820c: Add HDMI display support
 
-n25q256a: flash@0
+Jordan Crouse (2):
+  arm64: dts: msm8996: Add graphics smmu node
+  arm64: dts: Add Adreno GPU definitions
 
-> +               reg = <0>;
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "micron,n25q256a", "jedec,spi-nor";
-> +               spi-max-frequency = <29000000>;
-> +               spi-nor,ddr-quad-read-dummy = <6>;
+Srinivas Kandagatla (1):
+  arm64: dts: db820c: Add sound card support
 
-This property does not exist in mainline.
+ .../boot/dts/qcom/apq8096-db820c-pins.dtsi    |  52 +++
+ .../dts/qcom/apq8096-db820c-pmic-pins.dtsi    |   8 +
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi  | 121 ++++++
+ arch/arm64/boot/dts/qcom/msm8996-pins.dtsi    |  43 ++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         | 380 ++++++++++++++++++
+ 5 files changed, 604 insertions(+)
 
->
-> +                       spi0: spi@30bb0000 {
-
-qspi0: spi@30bb0000 {
-
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +                               compatible = "fsl,imx8mq-qspi", "fsl,imx7d-qspi";
-
-Please send a separate patch documenting fsl,imx8mq-qspi
+-- 
+2.20.1
