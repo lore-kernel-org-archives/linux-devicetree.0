@@ -1,221 +1,69 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v6 3/3] drivers: soc: xilinx: Add ZynqMP PM driver
-Date: Wed, 30 Jan 2019 10:12:36 +0000
-Message-ID: <20190130101236.GA27201@e107155-lin>
-References: <1548794301-30483-1-git-send-email-jollys@xilinx.com>
- <1548794301-30483-4-git-send-email-jollys@xilinx.com>
+From: Carlo Caione <ccaione@baylibre.com>
+Subject: Re: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
+Date: Wed, 30 Jan 2019 10:16:39 +0000
+Message-ID: <5b7fa0ee-eea9-d92f-5cdf-6c1b83a61c89@baylibre.com>
+References: <20190125125513.23656-1-ccaione@baylibre.com>
+ <20190125130612.npknjuzjmny4yohg@e5254000004ec.dyn.armlinux.org.uk>
+ <20190125184330.dm3kaoewvbwddacy@xps>
+ <a8b8e82f-2b68-ed9d-6106-0542dddc1181@gmail.com>
+ <20190125191947.um4w4e5jpsv2kcxc@e5254000004ec.dyn.armlinux.org.uk>
+ <3e09ef54-f817-2659-4e9e-74a88a80cbcc@gmail.com>
+ <20190128104620.3e724lfm5xv5il4x@xps>
+ <20190128155739.yyftnu7a5hz6if7d@e5254000004ec.dyn.armlinux.org.uk>
+ <9118a1cc-7ad7-cdfc-4925-d609efbc8265@gmail.com>
+ <20190128190401.zzus6m6fjxpyf36d@e5254000004ec.dyn.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548794301-30483-4-git-send-email-jollys@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <jolly.shah@xilinx.com>
-Cc: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190128190401.zzus6m6fjxpyf36d@e5254000004ec.dyn.armlinux.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux admin <linux@armlinux.org.uk>, Heiner Kallweit <hkallweit1@gmail.com>
+Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, abailon@baylibre.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 12:38:21PM -0800, Jolly Shah wrote:
-> From: Rajan Vaja <rajan.vaja@xilinx.com>
-> 
-> Add ZynqMP PM driver. PM driver provides power management
-> support for ZynqMP.
-> 
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> ---
->  drivers/soc/xilinx/Kconfig        |  11 +++
->  drivers/soc/xilinx/Makefile       |   1 +
->  drivers/soc/xilinx/zynqmp_power.c | 178 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 190 insertions(+)
->  create mode 100644 drivers/soc/xilinx/zynqmp_power.c
-> 
-> diff --git a/drivers/soc/xilinx/Kconfig b/drivers/soc/xilinx/Kconfig
-> index 687c8f3..5025e0e 100644
-> --- a/drivers/soc/xilinx/Kconfig
-> +++ b/drivers/soc/xilinx/Kconfig
-> @@ -17,4 +17,15 @@ config XILINX_VCU
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called xlnx_vcu.
->  
-> +config ZYNQMP_POWER
-> +	bool "Enable Xilinx Zynq MPSoC Power Management driver"
-> +	depends on PM && ARCH_ZYNQMP
-> +	default y
-> +	help
-> +	  Say yes to enable power management support for ZyqnMP SoC.
-> +	  This driver uses firmware driver as an interface for power
-> +	  management request to firmware. It registers isr to handle
-> +	  power management callbacks from firmware.
-> +	  If in doubt, say N.
-> +
->  endmenu
-> diff --git a/drivers/soc/xilinx/Makefile b/drivers/soc/xilinx/Makefile
-> index dee8fd5..428b9db 100644
-> --- a/drivers/soc/xilinx/Makefile
-> +++ b/drivers/soc/xilinx/Makefile
-> @@ -1,2 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_XILINX_VCU)	+= xlnx_vcu.o
-> +obj-$(CONFIG_ZYNQMP_POWER)	+= zynqmp_power.o
-> diff --git a/drivers/soc/xilinx/zynqmp_power.c b/drivers/soc/xilinx/zynqmp_power.c
-> new file mode 100644
-> index 0000000..771cb59
-> --- /dev/null
-> +++ b/drivers/soc/xilinx/zynqmp_power.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Xilinx Zynq MPSoC Power Management
-> + *
-> + *  Copyright (C) 2014-2018 Xilinx, Inc.
-> + *
-> + *  Davorin Mista <davorin.mista@aggios.com>
-> + *  Jolly Shah <jollys@xilinx.com>
-> + *  Rajan Vaja <rajan.vaja@xilinx.com>
-> + */
-> +
-> +#include <linux/mailbox_client.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/suspend.h>
-> +
-> +#include <linux/firmware/xlnx-zynqmp.h>
-> +
-> +enum pm_suspend_mode {
-> +	PM_SUSPEND_MODE_FIRST = 0,
-> +	PM_SUSPEND_MODE_STD = PM_SUSPEND_MODE_FIRST,
-> +	PM_SUSPEND_MODE_POWER_OFF,
-> +};
-> +
-> +#define PM_SUSPEND_MODE_FIRST	PM_SUSPEND_MODE_STD
-> +
-> +static const char *const suspend_modes[] = {
-> +	[PM_SUSPEND_MODE_STD] = "standard",
-> +	[PM_SUSPEND_MODE_POWER_OFF] = "power-off",
-> +};
-> +
-> +static enum pm_suspend_mode suspend_mode = PM_SUSPEND_MODE_STD;
-> +
-> +enum pm_api_cb_id {
-> +	PM_INIT_SUSPEND_CB = 30,
-> +	PM_ACKNOWLEDGE_CB,
-> +	PM_NOTIFY_CB,
-> +};
-> +
-> +static void zynqmp_pm_get_callback_data(u32 *buf)
-> +{
-> +	zynqmp_pm_invoke_fn(GET_CALLBACK_DATA, 0, 0, 0, 0, buf);
-> +}
-> +
-> +static irqreturn_t zynqmp_pm_isr(int irq, void *data)
-> +{
-> +	u32 payload[CB_PAYLOAD_SIZE];
-> +
-> +	zynqmp_pm_get_callback_data(payload);
-> +
-> +	/* First element is callback API ID, others are callback arguments */
-> +	if (payload[0] == PM_INIT_SUSPEND_CB) {
-> +		switch (payload[1]) {
-> +		case SUSPEND_SYSTEM_SHUTDOWN:
-> +			orderly_poweroff(true);
-> +			break;
-> +		case SUSPEND_POWER_REQUEST:
-> +			pm_suspend(PM_SUSPEND_MEM);
-> +			break;
-> +		default:
-> +			pr_err("%s Unsupported InitSuspendCb reason "
-> +				"code %d\n", __func__, payload[1]);
-> +		}
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static ssize_t suspend_mode_show(struct device *dev,
-> +				 struct device_attribute *attr, char *buf)
-> +{
-> +	char *s = buf;
-> +	int md;
-> +
-> +	for (md = PM_SUSPEND_MODE_FIRST; md < ARRAY_SIZE(suspend_modes); md++)
-> +		if (suspend_modes[md]) {
-> +			if (md == suspend_mode)
-> +				s += sprintf(s, "[%s] ", suspend_modes[md]);
-> +			else
-> +				s += sprintf(s, "%s ", suspend_modes[md]);
-> +		}
-> +
-> +	/* Convert last space to newline */
-> +	if (s != buf)
-> +		*(s - 1) = '\n';
-> +	return (s - buf);
-> +}
-> +
-> +static ssize_t suspend_mode_store(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-> +{
-> +	int md, ret = -EINVAL;
-> +	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +
-> +	if (!eemi_ops || !eemi_ops->set_suspend_mode)
-> +		return ret;
-> +
-> +	for (md = PM_SUSPEND_MODE_FIRST; md < ARRAY_SIZE(suspend_modes); md++)
-> +		if (suspend_modes[md] &&
-> +		    sysfs_streq(suspend_modes[md], buf)) {
-> +			ret = 0;
-> +			break;
-> +		}
-> +
-> +	if (!ret && md != suspend_mode) {
-> +		ret = eemi_ops->set_suspend_mode(md);
-> +		if (likely(!ret))
-> +			suspend_mode = md;
-> +	}
-> +
-> +	return ret ? ret : count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(suspend_mode);
-> +
-> +static int zynqmp_pm_probe(struct platform_device *pdev)
-> +{
-> +	int ret, irq;
-> +	u32 pm_api_version;
-> +
-> +	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +
-> +	if (!eemi_ops || !eemi_ops->get_api_version || !eemi_ops->init_finalize)
-> +		return -ENXIO;
-> +
-> +	eemi_ops->init_finalize();
-> +	eemi_ops->get_api_version(&pm_api_version);
-> +
-> +	/* Check PM API version number */
-> +	if (pm_api_version < ZYNQMP_PM_VERSION)
-> +		return -ENODEV;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq <= 0)
-> +		return -ENXIO;
-> +
-> +	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, zynqmp_pm_isr,
-> +					IRQF_NO_SUSPEND | IRQF_ONESHOT,
-> +					dev_name(&pdev->dev), &pdev->dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "devm_request_threaded_irq '%d' failed "
-> +			"with %d\n", irq, ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = sysfs_create_file(&pdev->dev.kobj, &dev_attr_suspend_mode.attr);
+On 28/01/2019 19:04, Russell King - ARM Linux admin wrote:
 
-NACK, if this is for system suspend/reset ? You can just use exiting
-sysfs, no need to create Xilinx specific new ones. Moreover you need to
-use PSCI to make sure higher ELs can do orderly suspend/shutdown.
+Hi Russell,
+
+> There is no "advertisement of SmartEEE" - it's just EEE.  That is
+> because as far as the link partner is concerned, SmartEEE is just
+> EEE.
+> 
+> Carlio posted a link to one of the datasheets for the family.  In
+> there, it describes the EEE capability register, which describes
+> what is supported, and the EEE wake error counter register.
+> 
+> It also describes the EEE advertisement and link parter advertisement
+> registers.
+> 
+> All these registers correspond to the 802.3 section 45 defined MMD
+> and address offsets found in Clause 45 compliant PHYs, and these
+> registers control not only EEE but also SmartEEE.
+> 
+> Please stop thinking that SmartEEE is different on the link partner
+> side from EEE - as far as the link partner is concerned, there is
+> no difference.  The difference is all to do with the MAC side of
+> the local PHY.
+
+Thank you for clarifying how the SmartEEE is really working.
+
+Now, the problem is that the MMD registers controlling the EEE (7.3c and 
+7.3d, touched by the "eee-broken-*" property) are not the same as the 
+ones for the SmartEEE (3.805b, 3.805c, 3.805d). So, is it worth to add a 
+new DT property to deal also with the cases where we want to selectively 
+disable the SmartEEE?
+
+Thanks,
 
 --
-Regards,
-Sudeep
+Carlo Caione
