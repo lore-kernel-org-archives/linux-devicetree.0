@@ -1,7 +1,7 @@
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 2/3] phy: Add support for the SMSC USB333x ULPI USB PHY
-Date: Wed, 30 Jan 2019 16:50:22 +0100
-Message-ID: <20190130155023.4495-3-paul.kocialkowski@bootlin.com>
+Subject: [PATCH 1/3] dt-bindings: phy: Add bindings for the SMSC USB333x ULPI USB PHY
+Date: Wed, 30 Jan 2019 16:50:21 +0100
+Message-ID: <20190130155023.4495-2-paul.kocialkowski@bootlin.com>
 References: <20190130155023.4495-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,385 +12,72 @@ To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a standard ULPI USB PHY that works according to the ULPI 1.1
-specification, which supports USB 2.0 OTG.
-
-This drivers mostly allows settong a few generic bits that are specific
-to the use case, in addition to handling the reference clock and reset
-GPIO. In particular, it allows configuring the PHY to use an internal
-VBUS reference when nothing is connected to the VBUS pin.
-
-Two vendor-specific fields are also supported, which allow setting up
-high-speed compensation by lowering the squelch detector threshold and
-tweaking the PHY's data output voltage.
+Introduce the device-tree bindings for this ULPI USB PHY.
+Optional bindings that are not prefixed with the vendor may be
+relevant to other ULPI USB PHYs since they match generic ULPI
+registers.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- drivers/phy/Kconfig            |   1 +
- drivers/phy/Makefile           |   1 +
- drivers/phy/smsc/Kconfig       |  11 ++
- drivers/phy/smsc/Makefile      |   2 +
- drivers/phy/smsc/phy-usb333x.c | 301 +++++++++++++++++++++++++++++++++
- 5 files changed, 316 insertions(+)
- create mode 100644 drivers/phy/smsc/Kconfig
- create mode 100644 drivers/phy/smsc/Makefile
- create mode 100644 drivers/phy/smsc/phy-usb333x.c
+ .../devicetree/bindings/phy/smsc-usb333x.txt  | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/smsc-usb333x.txt
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 250abe290ca1..f1bed15f7e5c 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -64,6 +64,7 @@ source "drivers/phy/ralink/Kconfig"
- source "drivers/phy/renesas/Kconfig"
- source "drivers/phy/rockchip/Kconfig"
- source "drivers/phy/samsung/Kconfig"
-+source "drivers/phy/smsc/Kconfig"
- source "drivers/phy/socionext/Kconfig"
- source "drivers/phy/st/Kconfig"
- source "drivers/phy/tegra/Kconfig"
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 0d9fddc498a6..499987ba26d1 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -25,6 +25,7 @@ obj-y					+= broadcom/	\
- 					   qualcomm/	\
- 					   ralink/	\
- 					   samsung/	\
-+					   smsc/	\
- 					   socionext/	\
- 					   st/		\
- 					   ti/
-diff --git a/drivers/phy/smsc/Kconfig b/drivers/phy/smsc/Kconfig
+diff --git a/Documentation/devicetree/bindings/phy/smsc-usb333x.txt b/Documentation/devicetree/bindings/phy/smsc-usb333x.txt
 new file mode 100644
-index 000000000000..2d9904986250
+index 000000000000..50d500d67b2f
 --- /dev/null
-+++ b/drivers/phy/smsc/Kconfig
-@@ -0,0 +1,11 @@
-+#
-+# PHY drivers for SMSC platforms
-+#
-+config PHY_USB333X
-+	tristate "SMSC USB333x ULPI USB PHY Driver"
-+	depends on USB_ULPI_BUS
-+	select GENERIC_PHY
-+	help
-+	  Support for SMSC USB333x ULPI USB PHY.
++++ b/Documentation/devicetree/bindings/phy/smsc-usb333x.txt
+@@ -0,0 +1,50 @@
++Device tree bindings for SMSC USB333x ULPI USB PHY
 +
++Required properties:
++- compatible: Should be "smsc,usb333x".
 +
-diff --git a/drivers/phy/smsc/Makefile b/drivers/phy/smsc/Makefile
-new file mode 100644
-index 000000000000..1cafd3b5845f
---- /dev/null
-+++ b/drivers/phy/smsc/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PHY_USB333X)		+= phy-usb333x.o
-diff --git a/drivers/phy/smsc/phy-usb333x.c b/drivers/phy/smsc/phy-usb333x.c
-new file mode 100644
-index 000000000000..ed0b0cd4ba65
---- /dev/null
-+++ b/drivers/phy/smsc/phy-usb333x.c
-@@ -0,0 +1,301 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * SMSC USB333x ULPI USB PHY Driver
-+ *
-+ * Copyright (C) 2018 Bootlin
-+ *
-+ * Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
++Optional properties:
++- reset-gpios: GPIO to reset the PHY.
++- clocks: Reference clock that feeds the PHY's PLL.
++- clock-names: Should be "refclk" for the reference clock.
++- extvbus-passthru: Enable EXTVBUS signal pass-through to assert the VbusValid
++  signal internally. This is useful when no VBUS line is connected to the PHY.
++- auto-resume: Enable automatic transmission resume (in host mode).
++- chrg-vbus: Enable internal VBUS pull-up to 3.3 V during OTG SRP.
++- dischrg-vbus: Enable internal VBUS pull-down during OTG SRP.
++- id-pull-up: Enable internal ID pull-up tp 3.3 V.
++- smsc,varisense: Squelch detector threshold register field value, as described
++  in the datasheet.
++- smsc,phyboost: Output voltage change register field value, as described in the
++  datasheet.
 +
-+#include <linux/module.h>
-+#include <linux/delay.h>
-+#include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/ulpi/driver.h>
-+#include <linux/ulpi/regs.h>
-+#include <linux/phy/ulpi_phy.h>
++Refer to phy/phy-bindings.txt for the generic PHY binding properties.
++Refer to usb/ulpi.txt for the parent ULPI bus binding required for this PHY.
 +
-+#define USB333X_HS_COMP	0x31
++Example:
 +
-+#define USB333X_HS_COMP_VARISENSE_SHIFT	0
-+#define USB333X_HS_COMP_VARISENSE_MASK	GENMASK(1, 0)
-+#define USB333X_HS_COMP_PHYBOOST_SHIFT	4
-+#define USB333X_HS_COMP_PHYBOOST_MASK	GENMASK(6, 4)
++&usb0 {
++	compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
++	clocks = <&clkc 28>;
++	interrupt-parent = <&intc>;
++	interrupts = <0 21 4>;
++	reg = <0xe0002000 0x1000>;
++	dr_mode = "peripheral";
++	phys = <&usb_phy0>;
++	phy-names = "usb-phy";
++	phy_type = "ulpi";
 +
-+struct usb333x {
-+	struct ulpi *ulpi;
-+	struct phy *phy;
-+	struct clk *refclk;
-+	struct gpio_desc *reset;
-+
-+	bool extvbus_passthru;
-+	bool auto_resume;
-+	bool chrg_vbus;
-+	bool dischrg_vbus;
-+	bool id_pull_up;
-+
-+	u32 varisense;
-+	u32 phyboost;
++	ulpi {
++		usb_phy0: usb-phy0 {
++			#phy-cells = <0>;
++			compatible = "smsc,usb333x";
++			reset-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
++			clocks = <&usb_phy_clk>;
++			clock-names = "refclk";
++			smsc,varisense = <1>;
++			smsc,phyboost = <5>;
++			extvbus-passthru;
++			chrg-vbus;
++		};
++	};
 +};
-+
-+static int usb333x_setup_control(struct usb333x *usb333x)
-+{
-+	u8 val_ifc, val_otg;
-+	int ret;
-+
-+	ret = ulpi_read(usb333x->ulpi, ULPI_IFC_CTRL);
-+	if (ret < 0)
-+		return ret;
-+
-+	val_ifc = (u8)ret;
-+
-+	ret = ulpi_read(usb333x->ulpi, ULPI_OTG_CTRL);
-+	if (ret < 0)
-+		return ret;
-+
-+	val_otg = (u8)ret;
-+
-+	if (usb333x->extvbus_passthru) {
-+		/* Clear EXTVBUS complement to get EXTVBUS high. */
-+		val_ifc &= ~ULPI_IFC_CTRL_EXTERNAL_VBUS;
-+
-+		/* Drive VbusValid from EXTVBUS (high). */
-+		val_ifc |= ULPI_IFC_CTRL_PASSTHRU;
-+		val_otg |= ULPI_OTG_CTRL_EXTVBUSIND;
-+	}
-+
-+	if (usb333x->chrg_vbus)
-+		val_otg |= ULPI_OTG_CTRL_CHRGVBUS;
-+
-+	if (usb333x->dischrg_vbus)
-+		val_otg |= ULPI_OTG_CTRL_DISCHRGVBUS;
-+
-+	if (usb333x->id_pull_up)
-+		val_otg |= ULPI_OTG_CTRL_ID_PULLUP;
-+
-+	ret = ulpi_write(usb333x->ulpi, ULPI_IFC_CTRL, val_ifc);
-+	if (ret)
-+		return ret;
-+
-+	ret = ulpi_write(usb333x->ulpi, ULPI_OTG_CTRL, val_otg);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int usb333x_setup_hs_compensation(struct usb333x *usb333x)
-+{
-+	u8 val;
-+	int ret;
-+
-+	ret = ulpi_read(usb333x->ulpi, USB333X_HS_COMP);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = (u8)ret;
-+
-+	val |= (usb333x->varisense << USB333X_HS_COMP_VARISENSE_SHIFT) &
-+	       USB333X_HS_COMP_VARISENSE_MASK;
-+
-+	val |= (usb333x->phyboost << USB333X_HS_COMP_PHYBOOST_SHIFT) &
-+	       USB333X_HS_COMP_PHYBOOST_MASK;
-+
-+	ret = ulpi_write(usb333x->ulpi, USB333X_HS_COMP, val);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int usb333x_power_on(struct phy *phy)
-+{
-+	struct usb333x *usb333x = phy_get_drvdata(phy);
-+	int ret;
-+
-+	if (usb333x->refclk) {
-+		clk_prepare_enable(usb333x->refclk);
-+		usleep_range(1000, 2000);
-+	}
-+
-+	if (usb333x->reset) {
-+		gpiod_set_value_cansleep(usb333x->reset, 0);
-+		usleep_range(1000, 2000);
-+	}
-+
-+	ret = usb333x_setup_control(usb333x);
-+	if (ret)
-+		return ret;
-+
-+	ret = usb333x_setup_hs_compensation(usb333x);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int usb333x_power_off(struct phy *phy)
-+{
-+	struct usb333x *usb333x = phy_get_drvdata(phy);
-+
-+	if (usb333x->reset)
-+		gpiod_set_value_cansleep(usb333x->reset, 1);
-+
-+	if (usb333x->refclk)
-+		clk_disable_unprepare(usb333x->refclk);
-+
-+	return 0;
-+}
-+
-+static int usb333x_set_mode(struct phy *phy, enum phy_mode mode)
-+{
-+	struct usb333x *usb333x = phy_get_drvdata(phy);
-+	u8 val;
-+	int ret;
-+
-+	/* Note that this PHY does not drive VBUS on its own. */
-+
-+	switch (mode) {
-+	case PHY_MODE_USB_HOST:
-+		if (usb333x->auto_resume) {
-+			ret = ulpi_read(usb333x->ulpi, ULPI_OTG_CTRL);
-+			if (ret < 0)
-+				return ret;
-+
-+			val = (u8)ret;
-+			val |= ULPI_IFC_CTRL_AUTORESUME;
-+
-+			ret = ulpi_write(usb333x->ulpi, ULPI_OTG_CTRL, val);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops phy_ops = {
-+	.power_on = usb333x_power_on,
-+	.power_off = usb333x_power_off,
-+	.set_mode = usb333x_set_mode,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int usb333x_probe(struct ulpi *ulpi)
-+{
-+	struct usb333x *usb333x;
-+	struct phy_provider *provider;
-+	bool needs_reset, needs_clocks;
-+	int ret;
-+
-+	usb333x = devm_kzalloc(&ulpi->dev, sizeof(*usb333x), GFP_KERNEL);
-+	if (!usb333x)
-+		return -ENOMEM;
-+
-+	needs_reset = of_property_read_bool(ulpi->dev.of_node, "reset-gpios");
-+
-+	if (needs_reset) {
-+		/* Hold the PHY in reset at this point. */
-+		usb333x->reset = devm_gpiod_get_optional(&ulpi->dev, "reset",
-+							 GPIOD_OUT_HIGH);
-+		if (IS_ERR(usb333x->reset))
-+			return PTR_ERR(usb333x->reset);
-+	}
-+
-+	needs_clocks = of_property_read_bool(ulpi->dev.of_node, "clocks");
-+
-+	if (needs_clocks) {
-+		usb333x->refclk = devm_clk_get(&ulpi->dev, "refclk");
-+		if (IS_ERR(usb333x->refclk))
-+			return PTR_ERR(usb333x->refclk);
-+	}
-+
-+	usb333x->extvbus_passthru = of_property_read_bool(ulpi->dev.of_node,
-+							  "extvbus-passthru");
-+	usb333x->auto_resume = of_property_read_bool(ulpi->dev.of_node,
-+						     "auto-resume");
-+	usb333x->chrg_vbus = of_property_read_bool(ulpi->dev.of_node,
-+						   "chrg-vbus");
-+	usb333x->dischrg_vbus = of_property_read_bool(ulpi->dev.of_node,
-+						      "dischrg-vbus");
-+	usb333x->id_pull_up = of_property_read_bool(ulpi->dev.of_node,
-+						    "id-pull-up");
-+
-+	ret = of_property_read_u32(ulpi->dev.of_node, "smsc,varisense",
-+				   &usb333x->varisense);
-+	if (ret)
-+		usb333x->varisense = 0; /* Nominal */
-+
-+	ret = of_property_read_u32(ulpi->dev.of_node, "smsc,phyboost",
-+				   &usb333x->phyboost);
-+	if (ret)
-+		usb333x->phyboost = 0; /* Nominal */
-+
-+	usb333x->phy = ulpi_phy_create(ulpi, &phy_ops);
-+	if (IS_ERR(usb333x->phy))
-+		return PTR_ERR(usb333x->phy);
-+
-+	usb333x->ulpi = ulpi;
-+
-+	phy_set_drvdata(usb333x->phy, usb333x);
-+	ulpi_set_drvdata(ulpi, usb333x);
-+
-+	provider = devm_of_phy_provider_register(&ulpi->dev,
-+						 of_phy_simple_xlate);
-+	if (IS_ERR(provider)) {
-+		ret = PTR_ERR(provider);
-+		goto err_ulpi_phy;
-+	}
-+
-+	return 0;
-+
-+err_ulpi_phy:
-+	ulpi_phy_destroy(ulpi, usb333x->phy);
-+
-+	return ret;
-+}
-+
-+static void usb333x_remove(struct ulpi *ulpi)
-+{
-+	struct usb333x *usb333x = ulpi_get_drvdata(ulpi);
-+
-+	ulpi_phy_destroy(ulpi, usb333x->phy);
-+}
-+
-+#define SMSC_VENDOR_ID 0x0424
-+
-+static const struct ulpi_device_id usb333x_ulpi_id[] = {
-+	{ SMSC_VENDOR_ID, 0x000c, },  /* USB3331 */
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(ulpi, usb333x_ulpi_id);
-+
-+static const struct of_device_id usb333x_of_match[] = {
-+	{ .compatible = "smsc,usb333x", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, usb333x_of_match);
-+
-+static struct ulpi_driver usb333x_driver = {
-+	.id_table = usb333x_ulpi_id,
-+	.probe = usb333x_probe,
-+	.remove = usb333x_remove,
-+	.driver = {
-+		.name = "usb333x",
-+		.of_match_table = usb333x_of_match,
-+	},
-+};
-+
-+module_ulpi_driver(usb333x_driver);
-+
-+MODULE_AUTHOR("Paul Kocialkowski <paul.kocialkowski@bootlin.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("USB333x ULPI PHY driver");
 -- 
 2.20.1
