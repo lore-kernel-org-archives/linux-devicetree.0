@@ -1,88 +1,103 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: Re: [PATCH 03/10] soc: mediatek: move the CMDQ_IRQ_MASK into cmdq
- driver data
-Date: Wed, 30 Jan 2019 13:59:19 +0800
-Message-ID: <e5cffd3f-5b65-b3f3-80d8-b0567bd4baf3@chromium.org>
-References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
- <1548747128-60136-4-git-send-email-bibby.hsieh@mediatek.com>
+From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Subject: Re: [PATCH] ARM: socfpga: fix base address of SDR controller
+Date: Wed, 30 Jan 2019 07:00:17 +0100
+Message-ID: <CAAh8qszCQROUZVOyX9GCNF_09DebDDUWf_2cfW3M13yG1aJ_Xg@mail.gmail.com>
+References: <20190129200858.19773-1-goldsimon@gmx.de> <0711a2e0-b4fb-fa12-7c5c-0b5da73c8b02@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548747128-60136-4-git-send-email-bibby.hsieh@mediatek.com>
-Content-Language: en-GB
+In-Reply-To: <0711a2e0-b4fb-fa12-7c5c-0b5da73c8b02@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-Cc: devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, kendrick.hsu@mediatek.com, linux-mediatek@lists.infradead.org, Houlong Wei <houlong.wei@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Frederic Chen <Frederic.Chen@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, linux-arm-kernel@lists.infradead.org, ginny.chen@mediatek.com
+To: Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marex@denx.de>
+Cc: devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alan Tull <atull@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2019 03:32 PM, Bibby Hsieh wrote:
-> The interrupt mask and thread number has positive correlation,
-> so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
-> it by thread number.
++ Marek (as I really want to keep the dts in Linux and U-Boot in sync)
+On Wed, Jan 30, 2019 at 1:16 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
 >
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->   drivers/mailbox/mtk-cmdq-mailbox.c | 12 ++++++++----
->   1 file changed, 8 insertions(+), 4 deletions(-)
 >
-> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c 
-b/drivers/mailbox/mtk-cmdq-mailbox.c
-> index 909eb23..f6174ca 100644
-> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
-> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -17,7 +17,6 @@
->   #include <linux/of_device.h>
 >
->   #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
-> -#define CMDQ_IRQ_MASK			0xffff
->   #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+> On 1/29/19 2:08 PM, Simon Goldschmidt wrote:
+> > From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+> >
+> > The documentation for socfpga gen5 says the base address of the sdram
+> > controller is 0xffc20000, while the current devicetree says it is at
+> > 0xffc25000.
+> >
+> > While this is not a problem for Linux, as it only accesses the registers
+> > above 0xffc25000, it *is* a problem for U-Boot because the lower registers
+> > are used during DDR calibration (up to now, the U-Boot driver does not use
+> > the dts address, but that should change).
+> >
+> > To keep Linux and U-Boot devicetrees in sync, this patch changes the base
+> > address to 0xffc20000 and adapts the 2 files where it is currently used.
+> >
+> > This patch changes the dts and 2 drivers with one commit to prevent
+> > breaking the code if dts change and driver change would be split.
+> >
+> > Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+> > ---
+> >
+> >  arch/arm/boot/dts/socfpga.dtsi       | 4 ++--
+> >  arch/arm/mach-socfpga/self-refresh.S | 4 ++--
+> >  drivers/fpga/altera-fpga2sdram.c     | 2 +-
+> >  3 files changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> > index f365003f0..8f6c1a5d6 100644
+> > --- a/arch/arm/boot/dts/socfpga.dtsi
+> > +++ b/arch/arm/boot/dts/socfpga.dtsi
+> > @@ -788,9 +788,9 @@
+> >                       reg = <0xfffec000 0x100>;
+> >               };
+> >
+> > -             sdr: sdr@ffc25000 {
+> > +             sdr: sdr@ffc20000 {
+> >                       compatible = "altr,sdr-ctl", "syscon";
+> > -                     reg = <0xffc25000 0x1000>;
+> > +                     reg = <0xffc20000 0x6000>;
 >
->   #define CMDQ_CURR_IRQ_STATUS		0x10
-> @@ -71,6 +70,7 @@ struct cmdq {
->   	void __iomem		*base;
->   	u32			irq;
->   	u32			thread_nr;
-> +	u32			irq_mask;
->   	struct cmdq_thread	*thread;
->   	struct clk		*clock;
->   	bool			suspended;
-> @@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, 
-void *dev)
->   	unsigned long irq_status, flags = 0L;
->   	int bit;
->
-> -	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
-> -	if (!(irq_status ^ CMDQ_IRQ_MASK))
-> +	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
-> +	if (!(irq_status ^ cmdq->irq_mask))
->   		return IRQ_NONE;
->
-> -	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-> +	for_each_clear_bit(bit, &irq_status, fls(cmdq->irq_mask)) {
->   		struct cmdq_thread *thread = &cmdq->thread[bit];
->
->   		spin_lock_irqsave(&thread->chan->lock, flags);
-> @@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
->   		dev_err(dev, "failed to get irq\n");
->   		return -EINVAL;
->   	}
-> +
-> +	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
->   	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
->   			       "mtk_cmdq", cmdq);
->   	if (err < 0) {
-> @@ -489,6 +492,7 @@ static int cmdq_probe(struct platform_device *pdev)
->   	}
->
->   	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+> I don't see the U-Boot device tree having this change. Yes, the
+> documentation does state that the SDR address starts at 0xffc20000, but
+> all of the pertinent registers start at 0x5000 offset. Thus, the
+> starting address should be 0xffc25000.[1]
 
-The cmdq->thread_nr and cmdq->irq_mask are already set above, so these 
-two lines can be removed.
+You don't see it in U-Boot as I'm working on a patch for that.
+As I wrote in the commit message, U-Boot currently does not use the
+devicetree for the SDR driver, but I want to convert it to do that.
 
->   	cmdq->mbox.dev = dev;
->   	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
->   					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
+But before converting, I need to find a clean way to provide the
+register addresses to the driver. That doesn't work with the current dts.
+
 >
+> [1]
+> https://www.intel.com/content/www/us/en/programmable/documentation/sfo1410143707420.html#sfo1411577366917
+
+Well, in [2], you see that the peripheral's address range actually starts
+at 0xffc20000. It's only the public documented registers that start at
+0xffc25000. I don't know why the lower address range is undocumented.
+Maybe you can help me here?
+
+But U-Boot needs to use the undocumented registers to bring up the DDR-RAM.
+Even if the registers for that are not (clearly?) documented, I think the
+devicetree should still reflect the correct address range.
+
+The U-Boot driver is made up of 2 files (in drivers/ddr/altera):
+- sdram_gen5.c [3]: using the documented registers from 0xffc25000
+- sequencer.c [4]: using the (undocumented?) registers from 0xffc20000
+
+In both files, you can see the register addresses they use by checking the
+static variables at the top of the file. And for convenience, use [5] to
+search for the values of defines.
+
+[2]
+https://www.intel.com/content/www/us/en/programmable/hps/cyclone-v/hps.html
+[3]
+https://github.com/u-boot/u-boot/blob/master/drivers/ddr/altera/sdram_gen5.c
+[4]
+https://github.com/u-boot/u-boot/blob/master/drivers/ddr/altera/sequencer.c
+[5]
+https://elixir.bootlin.com/u-boot/latest/source
+
+Regards,
+Simon
