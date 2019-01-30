@@ -1,23 +1,20 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: Re: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
-Date: Wed, 30 Jan 2019 10:16:39 +0000
-Message-ID: <5b7fa0ee-eea9-d92f-5cdf-6c1b83a61c89@baylibre.com>
-References: <20190125125513.23656-1-ccaione@baylibre.com>
- <20190125130612.npknjuzjmny4yohg@e5254000004ec.dyn.armlinux.org.uk>
- <20190125184330.dm3kaoewvbwddacy@xps>
- <a8b8e82f-2b68-ed9d-6106-0542dddc1181@gmail.com>
- <20190125191947.um4w4e5jpsv2kcxc@e5254000004ec.dyn.armlinux.org.uk>
- <3e09ef54-f817-2659-4e9e-74a88a80cbcc@gmail.com>
- <20190128104620.3e724lfm5xv5il4x@xps>
- <20190128155739.yyftnu7a5hz6if7d@e5254000004ec.dyn.armlinux.org.uk>
- <9118a1cc-7ad7-cdfc-4925-d609efbc8265@gmail.com>
- <20190128190401.zzus6m6fjxpyf36d@e5254000004ec.dyn.armlinux.org.uk>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/7] cpufreq: dt: Register an Energy Model
+Date: Wed, 30 Jan 2019 15:47:15 +0530
+Message-ID: <20190130101715.nz2bpqnust7gv4at@vireshk-i7>
+References: <20190128165522.31749-1-quentin.perret@arm.com>
+ <20190128165522.31749-3-quentin.perret@arm.com>
+ <20190128193656.GI81583@google.com>
+ <20190129052144.plicqu4vozh3l3ss@vireshk-i7>
+ <20190129091546.tfh3lo4w4sosfuba@queper01-lin>
+ <20190130051806.fdsos27jaekkwgbs@vireshk-i7>
+ <20190130091055.zjj2jrjvi2n3ht66@queper01-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190128190401.zzus6m6fjxpyf36d@e5254000004ec.dyn.armlinux.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190130091055.zjj2jrjvi2n3ht66@queper01-lin>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -27,43 +24,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, abailon@baylibre.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
+To: Quentin Perret <quentin.perret@arm.com>
+Cc: mark.rutland@arm.com, nm@ti.com, lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org, sboyd@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, liviu.dudau@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Matthias Kaehlcke <mka@chromium.org>, sudeep.holla@arm.com, dietmar.eggemann@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/01/2019 19:04, Russell King - ARM Linux admin wrote:
-
-Hi Russell,
-
-> There is no "advertisement of SmartEEE" - it's just EEE.  That is
-> because as far as the link partner is concerned, SmartEEE is just
-> EEE.
+On 30-01-19, 09:12, Quentin Perret wrote:
+> What I had in mind is something as simple as:
 > 
-> Carlio posted a link to one of the datasheets for the family.  In
-> there, it describes the EEE capability register, which describes
-> what is supported, and the EEE wake error counter register.
+> 	void of_dev_pm_opp_register_em(struct cpumask *cpus)
+> 	{
+> 		/* Bail out if an EM is there */
+> 		if (em_cpu_get(cpumask_first(cpus)))
+> 			return;
 > 
-> It also describes the EEE advertisement and link parter advertisement
-> registers.
+> 		/* Check prerequisites: dpc coeff in DT, ... */
+> 		...
 > 
-> All these registers correspond to the 802.3 section 45 defined MMD
-> and address offsets found in Clause 45 compliant PHYs, and these
-> registers control not only EEE but also SmartEEE.
+> 		em_register_perf_domain(...);
+> 	}
 > 
-> Please stop thinking that SmartEEE is different on the link partner
-> side from EEE - as far as the link partner is concerned, there is
-> no difference.  The difference is all to do with the MAC side of
-> the local PHY.
+> IIUC, Matthias' point was that if the EM is already registered, there is
+> no good reason to call em_register_perf_domain() again. Now, that should
+> in fact be harmless because em_register_perf_domain() already does that
+> check. It's just cleaner and easier to understand from a conceptual
+> standpoint to not call that function several times for no reason I
+> assume.
 
-Thank you for clarifying how the SmartEEE is really working.
+If there is no good reason to call em_register_perf_domain() several
+times, then the same applies to of_dev_pm_opp_register_em() as well,
+isn't it ?
 
-Now, the problem is that the MMD registers controlling the EEE (7.3c and 
-7.3d, touched by the "eee-broken-*" property) are not the same as the 
-ones for the SmartEEE (3.805b, 3.805c, 3.805d). So, is it worth to add a 
-new DT property to deal also with the cases where we want to selectively 
-disable the SmartEEE?
+This is init code anyway isn't going to run a lot, so I wouldn't
+suggest adding any such (duplicate) checks in
+of_dev_pm_opp_register_em().
 
-Thanks,
-
---
-Carlo Caione
+-- 
+viresh
