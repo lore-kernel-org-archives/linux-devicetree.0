@@ -1,56 +1,153 @@
-From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Subject: [PATCH 2/3] dt-bindings: net: mt76: update binding for mt7603 driver
-Date: Wed, 30 Jan 2019 15:07:55 +0100
-Message-ID: <20190130140756.91317-2-nbd@nbd.name>
-References: <20190130140756.91317-1-nbd@nbd.name>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20190130140756.91317-1-nbd-Vt+b4OUoWG0@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH V2 4/4] irq: imx: irqsteer: add multi output interrupts
+ support
+Date: Wed, 30 Jan 2019 15:11:26 +0100
+Message-ID: <1548857486.6869.31.camel@pengutronix.de>
+References: <1548853196-11447-1-git-send-email-aisheng.dong@nxp.com>
+         <1548853196-11447-5-git-send-email-aisheng.dong@nxp.com>
+         <1548855138.6869.27.camel@pengutronix.de>
+         <CAA+hA=Q79RcUk=epBighR_jZCLxaNzRvc9Lukzrzby_Av6d9wQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAA+hA=Q79RcUk=epBighR_jZCLxaNzRvc9Lukzrzby_Av6d9wQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <dongas86@gmail.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-In addition to MT7603E PCI devices, the driver supports the WLAN core on
-MT7628/MT7688, which needs to be defined in DT.
+Am Mittwoch, den 30.01.2019, 22:03 +0800 schrieb Dong Aisheng:
+> > On Wed, Jan 30, 2019 at 9:33 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+> > 
+> > Am Mittwoch, den 30.01.2019, 13:06 +0000 schrieb Aisheng Dong:
+> > > One irqsteer channel can support up to 8 output interrupts.
+> > > 
+> > > > > > > > Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > > > > > > > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > > > > > > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > 
+> > > ---
+> > > ChangeLog:
+> > > v1->v2:
+> > >  * calculate irq_count by fsl,num-irqs instead of parsing interrupts
+> > >    property from devicetree to match the input interrupts and outputs
+> > >  * improve output interrupt handler by searching only two registers
+> > >    withint the same group
+> > > ---
+> > >  drivers/irqchip/irq-imx-irqsteer.c | 76 +++++++++++++++++++++++++++++---------
+> > >  1 file changed, 59 insertions(+), 17 deletions(-)
+> > > 
+> > > diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
+> > > index 67ed862..cc40039 100644
+> > > --- a/drivers/irqchip/irq-imx-irqsteer.c
+> > > +++ b/drivers/irqchip/irq-imx-irqsteer.c
+> > > @@ -10,6 +10,7 @@
+> > >  #include <linux/irqchip/chained_irq.h>
+> > >  #include <linux/irqdomain.h>
+> > >  #include <linux/kernel.h>
+> > > +#include <linux/of_irq.h>
+> > >  #include <linux/of_platform.h>
+> > >  #include <linux/spinlock.h>
+> > > 
+> > > @@ -21,10 +22,13 @@
+> > > >  #define CHAN_MINTDIS(t)            (CTRL_STRIDE_OFF(t, 3) + 0x4)
+> > > >  #define CHAN_MASTRSTAT(t)  (CTRL_STRIDE_OFF(t, 3) + 0x8)
+> > > > +#define CHAN_MAX_OUTPUT_INT        0x8
+> > > 
+> > > +
+> > >  struct irqsteer_data {
+> > > > >   void __iomem            *regs;
+> > > > >   struct clk              *ipg_clk;
+> > > > > - int                     irq;
+> > > > > + int                     irq[CHAN_MAX_OUTPUT_INT];
+> > > > > + int                     irq_count;
+> > > > >   raw_spinlock_t          lock;
+> > > > >   int                     reg_num;
+> > > > >   int                     channel;
+> > > 
+> > > @@ -87,26 +91,45 @@ static const struct irq_domain_ops imx_irqsteer_domain_ops = {
+> > > > >   .xlate          = irq_domain_xlate_onecell,
+> > > 
+> > >  };
+> > > 
+> > > +static int imx_irqsteer_get_hwirq_base(struct irqsteer_data *data, u32 irq)
+> > > +{
+> > > > +   int i;
+> > > 
+> > > +
+> > > > +   for (i = 0; i < data->irq_count; i++) {
+> > > > +           if (data->irq[i] == irq)
+> > > 
+> > > +                     break;
+> > 
+> > return i * 64; here...
+> > > +     }
+> > > +
+> > > +     return i * 64;
+> > 
+> > ... and -EINVAL or something here, so we don't return a out of bounds
+> > hwirq base if the loop ever doesn't match something?
+> > 
+> 
+> Good suggestion, will add it.
+> 
+> > > +}
+> > > +
+> > >  static void imx_irqsteer_irq_handler(struct irq_desc *desc)
+> > >  {
+> > > >     struct irqsteer_data *data = irq_desc_get_handler_data(desc);
+> > > > +   int hwirq;
+> > > >     int i;
+> > > >     chained_irq_enter(irq_desc_get_chip(desc), desc);
+> > > > -   for (i = 0; i < data->reg_num * 32; i += 32) {
+> > > > -           int idx = imx_irqsteer_get_reg_index(data, i);
+> > > > +   hwirq = imx_irqsteer_get_hwirq_base(data, irq_desc_get_irq(desc));
+> > > 
+> > > +
+> > > > +   for (i = 0; i < 2; i++) {
+> > > > +           int idx = imx_irqsteer_get_reg_index(data, hwirq);
+> > > >             unsigned long irqmap;
+> > > >             int pos, virq;
+> > > > +           if (hwirq >= data->reg_num * 32)
+> > > > +                   break;
+> > > 
+> > > +
+> > > >             irqmap = readl_relaxed(data->regs +
+> > > >                                    CHANSTATUS(idx, data->reg_num));
+> > > >             for_each_set_bit(pos, &irqmap, 32) {
+> > > > -                   virq = irq_find_mapping(data->domain, pos + i);
+> > > 
+> > > +                     virq = irq_find_mapping(data->domain, pos + hwirq);
+> > 
+> > The irq index calculation need to be "pos + i * 32 + hwirq", otherwise
+> > this will map to the wrong virqs for the second register in each group.
+> > 
+> 
+> For second register map, hwirq will plus 32 in next round.
+> So i can't see this will map a wrong virqs.
+> And it looks to me ""pos + i * 32 + hwirq" is equal to "hwirq + 32".
+> Am i missed something?
 
-Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
----
- .../bindings/net/wireless/mediatek,mt76.txt   | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+You are right, I forgot about the hwirq being incremented in the loop
+when writing this comment.
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-index 0c17a0ec9b7b..7b9a776230c0 100644
---- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-@@ -4,6 +4,13 @@ This node provides properties for configuring the MediaTek mt76xx wireless
- device. The node is expected to be specified as a child node of the PCI
- controller to which the wireless chip is connected.
- 
-+Alternatively, it can specify the wireless part of the MT7628/MT7688 SoC.
-+For SoC, use the compatible string "mediatek,mt7628-wmac" and the following
-+properties:
-+
-+- reg: Address and length of the register set for the device.
-+- interrupts: Main device interrupt
-+
- Optional properties:
- 
- - mac-address: See ethernet.txt in the parent directory
-@@ -30,3 +37,15 @@ Optional nodes:
- 		};
- 	};
- };
-+
-+MT7628 example:
-+
-+wmac: wmac@10300000 {
-+	compatible = "mediatek,mt7628-wmac";
-+	reg = <0x10300000 0x100000>;
-+
-+	interrupt-parent = <&cpuintc>;
-+	interrupts = <6>;
-+
-+	mediatek,mtd-eeprom = <&factory 0x0000>;
-+};
--- 
-2.17.0
+> > >                       if (virq)
+> > > >                             generic_handle_irq(virq);
+> > > >             }
+> > > 
+> > > +             hwirq += 32;
+> > 
+> > Could be folded into the loop head.
+> > 
+> 
+> You mean “for (i = 0; i < 2; i++, hwirq +=32)” ?
+> I feel that's not quite necessary.
+
+I personally find that quite a bit clearer than incrementing the loop
+variables at different spots. And I probably wouldn't have missed hwirq
+being incremented in the loop if I had seen it in the head.
+
+Regards,
+Lucas
