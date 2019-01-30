@@ -1,14 +1,15 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 1/3] arm64: dts: imx8mq: Add QuadSPI controller
-Date: Wed, 30 Jan 2019 17:24:40 -0200
-Message-ID: <CAOMZO5DqY-ofK6JDFGnN2MzqUGYTkDP+xU9xPQFprean2zxHug@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] arm64: dts: imx8mq-evk: Enable the QuadSPI
+ controller
+Date: Wed, 30 Jan 2019 17:25:09 -0200
+Message-ID: <CAOMZO5D_WyGCiGgBFkP3hvGHX-66o1wEGKkxCKwknVPCuvgS4Q@mail.gmail.com>
 References: <20190130120511.11555-1-ccaione@baylibre.com>
- <20190130120511.11555-2-ccaione@baylibre.com>
+ <20190130120511.11555-3-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190130120511.11555-2-ccaione@baylibre.com>
+In-Reply-To: <20190130120511.11555-3-ccaione@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,8 +25,8 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Jan 30, 2019 at 10:05 AM Carlo Caione <ccaione@baylibre.com> wrote:
 >
-> Add a node for the Freescale/NXP QuadSPI controller and extend the AIPS3
-> memory range to accommodate the QuadSPI-memory region.
+> Enable the Freescale/NXP QuadSPI controller with a proper pinctrl set on
+> the i.MX8MQ EVK board.
 >
 > Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
