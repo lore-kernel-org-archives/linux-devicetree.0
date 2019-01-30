@@ -1,189 +1,71 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3] remoteproc: qcom: Add support for parsing fw dt
- bindings
-Date: Wed, 30 Jan 2019 13:04:15 -0800
-Message-ID: <20190130210415.GV31919@minitux>
-References: <20190114195001.7016-1-sibis@codeaurora.org>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 1/3] Input: lpc32xx-key - add clocks property and fix DT
+ binding example
+Date: Wed, 30 Jan 2019 23:22:40 +0200
+Message-ID: <bd0b4bf2-dc14-2f9d-1350-25996a46760d@mleia.com>
+References: <20190126142921.16041-1-vz@mleia.com>
+ <20190126142921.16041-2-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190114195001.7016-1-sibis@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: briannorris@chromium.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, dianders@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190126142921.16041-2-vz@mleia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylvain Lemieux <slemieux.tyco@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 14 Jan 11:50 PST 2019, Sibi Sankar wrote:
+Hi Rob, Dmitry,
 
-> Add support for parsing "firmware-name" dt bindings which specifies
-> the relative paths of mba/modem/pas image as strings. Fallback to
-> the default paths for mba/modem/pas image on -EINVAL.
+On 01/26/2019 04:29 PM, Vladimir Zapolskiy wrote:
+> The keypad controller on NXP LPC32xx requires its clock gate to be open,
+> therefore add description of the requires 'clocks' property.
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-
-Applied,
-
-Thanks,
-Bjorn
-
+> In addition adjust the example by adding description of required 'clocks'
+> property and by fixing 'interrupts' property.
+> 
+> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 > ---
+>  Documentation/devicetree/bindings/input/lpc32xx-key.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> v3:
->  * Fixed minor code style issues
->  * Add comments for firmware blob name generation
->    and use sprintf instead
+> diff --git a/Documentation/devicetree/bindings/input/lpc32xx-key.txt b/Documentation/devicetree/bindings/input/lpc32xx-key.txt
+> index bcf62f856358..2b075a080d30 100644
+> --- a/Documentation/devicetree/bindings/input/lpc32xx-key.txt
+> +++ b/Documentation/devicetree/bindings/input/lpc32xx-key.txt
+> @@ -8,6 +8,7 @@ Required Properties:
+>  - reg: Physical base address of the controller and length of memory mapped
+>    region.
+>  - interrupts: The interrupt number to the cpu.
+> +- clocks: phandle to clock controller plus clock-specifier pair
+>  - nxp,debounce-delay-ms: Debounce delay in ms
+>  - nxp,scan-delay-ms: Repeated scan period in ms
+>  - linux,keymap: the key-code to be reported when the key is pressed
+> @@ -22,7 +23,9 @@ Example:
+>  	key@40050000 {
+>  		compatible = "nxp,lpc3220-key";
+>  		reg = <0x40050000 0x1000>;
+> -		interrupts = <54 0>;
+> +		clocks = <&clk LPC32XX_CLK_KEY>;
+> +		interrupt-parent = <&sic1>;
+> +		interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+>  		keypad,num-rows = <1>;
+>  		keypad,num-columns = <1>;
+>  		nxp,debounce-delay-ms = <3>;
 > 
->  drivers/remoteproc/qcom_q6v5_mss.c | 47 +++++++++++++++++++++++-------
->  drivers/remoteproc/qcom_q6v5_pas.c |  9 +++++-
->  2 files changed, 45 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index c86dc40cfb8c..41e92a025d21 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -188,6 +188,7 @@ struct q6v5 {
->  	bool has_alt_reset;
->  	int mpss_perm;
->  	int mba_perm;
-> +	const char *hexagon_mdt_image;
->  	int version;
->  };
->  
-> @@ -860,17 +861,26 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  	phys_addr_t min_addr = PHYS_ADDR_MAX;
->  	phys_addr_t max_addr = 0;
->  	bool relocate = false;
-> -	char seg_name[10];
-> +	char *fw_name;
-> +	size_t fw_name_len;
->  	ssize_t offset;
->  	size_t size = 0;
->  	void *ptr;
->  	int ret;
->  	int i;
->  
-> -	ret = request_firmware(&fw, "modem.mdt", qproc->dev);
-> +	fw_name_len = strlen(qproc->hexagon_mdt_image);
-> +	if (fw_name_len <= 4)
-> +		return -EINVAL;
-> +
-> +	fw_name = kstrdup(qproc->hexagon_mdt_image, GFP_KERNEL);
-> +	if (!fw_name)
-> +		return -ENOMEM;
-> +
-> +	ret = request_firmware(&fw, fw_name, qproc->dev);
->  	if (ret < 0) {
-> -		dev_err(qproc->dev, "unable to load modem.mdt\n");
-> -		return ret;
-> +		dev_err(qproc->dev, "unable to load %s\n", fw_name);
-> +		goto out;
->  	}
->  
->  	/* Initialize the RMB validator */
-> @@ -918,10 +928,11 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  		ptr = qproc->mpss_region + offset;
->  
->  		if (phdr->p_filesz) {
-> -			snprintf(seg_name, sizeof(seg_name), "modem.b%02d", i);
-> -			ret = request_firmware(&seg_fw, seg_name, qproc->dev);
-> +			/* Replace "xxx.xxx" with "xxx.bxx" */
-> +			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
-> +			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
->  			if (ret) {
-> -				dev_err(qproc->dev, "failed to load %s\n", seg_name);
-> +				dev_err(qproc->dev, "failed to load %s\n", fw_name);
->  				goto release_firmware;
->  			}
->  
-> @@ -960,6 +971,8 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  
->  release_firmware:
->  	release_firmware(fw);
-> +out:
-> +	kfree(fw_name);
->  
->  	return ret < 0 ? ret : 0;
->  }
-> @@ -1075,9 +1088,10 @@ static int qcom_q6v5_register_dump_segments(struct rproc *rproc,
->  	unsigned long i;
->  	int ret;
->  
-> -	ret = request_firmware(&fw, "modem.mdt", qproc->dev);
-> +	ret = request_firmware(&fw, qproc->hexagon_mdt_image, qproc->dev);
->  	if (ret < 0) {
-> -		dev_err(qproc->dev, "unable to load modem.mdt\n");
-> +		dev_err(qproc->dev, "unable to load %s\n",
-> +			qproc->hexagon_mdt_image);
->  		return ret;
->  	}
->  
-> @@ -1253,6 +1267,7 @@ static int q6v5_probe(struct platform_device *pdev)
->  	const struct rproc_hexagon_res *desc;
->  	struct q6v5 *qproc;
->  	struct rproc *rproc;
-> +	const char *mba_image;
->  	int ret;
->  
->  	desc = of_device_get_match_data(&pdev->dev);
-> @@ -1262,8 +1277,14 @@ static int q6v5_probe(struct platform_device *pdev)
->  	if (desc->need_mem_protection && !qcom_scm_is_available())
->  		return -EPROBE_DEFER;
->  
-> +	mba_image = desc->hexagon_mba_image;
-> +	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
-> +					    0, &mba_image);
-> +	if (ret < 0 && ret != -EINVAL)
-> +		return ret;
-> +
->  	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_ops,
-> -			    desc->hexagon_mba_image, sizeof(*qproc));
-> +			    mba_image, sizeof(*qproc));
->  	if (!rproc) {
->  		dev_err(&pdev->dev, "failed to allocate rproc\n");
->  		return -ENOMEM;
-> @@ -1272,6 +1293,12 @@ static int q6v5_probe(struct platform_device *pdev)
->  	qproc = (struct q6v5 *)rproc->priv;
->  	qproc->dev = &pdev->dev;
->  	qproc->rproc = rproc;
-> +	qproc->hexagon_mdt_image = "modem.mdt";
-> +	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
-> +					    1, &qproc->hexagon_mdt_image);
-> +	if (ret < 0 && ret != -EINVAL)
-> +		return ret;
-> +
->  	platform_set_drvdata(pdev, qproc);
->  
->  	ret = q6v5_init_mem(qproc, pdev);
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-> index b1e63fcd5fdf..cfdafd68e2cd 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -258,6 +258,7 @@ static int adsp_probe(struct platform_device *pdev)
->  	const struct adsp_data *desc;
->  	struct qcom_adsp *adsp;
->  	struct rproc *rproc;
-> +	const char *fw_name;
->  	int ret;
->  
->  	desc = of_device_get_match_data(&pdev->dev);
-> @@ -267,8 +268,14 @@ static int adsp_probe(struct platform_device *pdev)
->  	if (!qcom_scm_is_available())
->  		return -EPROBE_DEFER;
->  
-> +	fw_name = desc->firmware_name;
-> +	ret = of_property_read_string(pdev->dev.of_node, "firmware-name",
-> +				      &fw_name);
-> +	if (ret < 0 && ret != -EINVAL)
-> +		return ret;
-> +
->  	rproc = rproc_alloc(&pdev->dev, pdev->name, &adsp_ops,
-> -			    desc->firmware_name, sizeof(*adsp));
-> +			    fw_name, sizeof(*adsp));
->  	if (!rproc) {
->  		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
->  		return -ENOMEM;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+
+if you find time, please review/ack this change before 5.0-rc5 to give
+me a chance to push it through ARM tree, thank you in advance.
+
+--
+Best wishes,
+Vladimir
