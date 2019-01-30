@@ -1,87 +1,168 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v7 2/5] dt-bindings: pstore-block: new support for blkoops
-Date: Wed, 30 Jan 2019 10:07:07 -0600
-Message-ID: <20190130160707.GA31844@bogus>
-References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
+Subject: Re: [PATCH v6 5/6] dt-bindings: pinctrl: mt8183: add binding document
+Date: Wed, 30 Jan 2019 10:17:14 -0600
+Message-ID: <20190130161714.GA24352@bogus>
+References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
+ <1548317240-44682-6-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
+In-Reply-To: <1548317240-44682-6-git-send-email-erin.lo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: liaoweixiong <liaoweixiong@allwinnertech.com>
-Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Erin Lo <erin.lo@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Zhiyong Tao <zhiyong.tao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 23, 2019 at 08:05:13PM +0800, liaoweixiong wrote:
-> Create DT binding document for blkoops.
+On Thu, Jan 24, 2019 at 04:07:19PM +0800, Erin Lo wrote:
+> From: Zhiyong Tao <zhiyong.tao@mediatek.com>
 > 
-> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+> The commit adds mt8183 compatible node in binding document.
+> 
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 > ---
->  .../devicetree/bindings/pstore-block/blkoops.txt   | 32 ++++++++++++++++++++++
-
-/bindings/pstore/...
-
-I wouldn't call it blkoops either. I believe ramoops is called that to 
-maintain compatibility keeping the same kernel module name that 
-preceeded pstore.
-
->  MAINTAINERS                                        |  1 +
->  2 files changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
+>  .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt | 115 +++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/pstore-block/blkoops.txt b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
 > new file mode 100644
-> index 0000000..a25835b
+> index 0000000..364e673
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
-> @@ -0,0 +1,32 @@
-> +Blkoops oops logger
-> +===================
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> @@ -0,0 +1,115 @@
+> +* Mediatek MT8183 Pin Controller
 > +
-> +Blkoops provides a block partition for oops, excluding panics now, so they can
-> +be recovered after a reboot.
-> +
-> +Any space of block partition will be used for a circular buffer of oops records.
-> +These records have a configurable size, with a size of 0 indicating that they
-> +should be disabled.
-> +
-> +"partition-size" and at least one of "dmesg-size" or "pmsg-size" must be set
-> +non-zero, but are otherwise optional as listed below.
-> +
-> +Blkoops will take value from Kconfig if device tree do not set, but settings
-> +from module parameters can also overwrite them.
-
-That's all kernel details not relevant to the binidng.
-
+> +The Mediatek's Pin controller is used to control SoC pins.
 > +
 > +Required properties:
-> +
-> +- compatible: must be "blkoops".
-> +
-> +- partition-size: size in kbytes, must be a multiple of 4.
+> +- compatible: value should be one of the following.
+> +	"mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
+> +- gpio-controller : Marks the device node as a gpio controller.
+> +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+> +  binding is used, the amount of cells must be specified as 2. See the below
+> +  mentioned gpio binding representation for description of particular cells.
+> +- gpio-ranges : gpio valid number range.
+> +- reg: physicall address base for gpio base registers. There are nine
+> +  physicall address base in mt8183. They are 0x10005000, 0x11F20000,
 
-This seems unnecessary given a partition has a known size.
+Still have a typo in 'physicall'
 
+> +  0x11E80000, 0x11E70000, 0x11E90000, 0x11D30000, 0x11D20000, 0x11C50000,
+> +  0x11F30000.
+
+You don't need to list the address values. Only how many and what each 
+one is.
+
+> +
+> +	Eg: <&pio 6 0>
+> +	<[phandle of the gpio controller node]
+> +	[line number within the gpio controller]
+> +	[flags]>
+> +
+> +	Values for gpio specifier:
+> +	- Line number: is a value between 0 to 202.
+> +	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
+> +            Only the following flags are supported:
+> +            0 - GPIO_ACTIVE_HIGH
+> +            1 - GPIO_ACTIVE_LOW
 > +
 > +Optional properties:
+> +- reg-names: gpio base register names. There are nine gpio base register
+> +  names in mt8183. They are "iocfg0", "iocfg1", "iocfg2", "iocfg3", "iocfg4",
+> +  "iocfg5", "iocfg6", "iocfg7", "iocfg8".
+
+As I said before, these names aren't useful. There's already 
+inheritently an index with 'reg'.
+
+Unless some are optional and can be sparsely populated.
+
+> +- interrupt-controller: Marks the device node as an interrupt controller
+> +- #interrupt-cells: Should be two.
+> +- interrupts : The interrupt outputs from the controller.
 > +
-> +- partition-path: strings must begin with "/dev", tell blkoops which partition
-> +  it can used. If it is not set, blkoops will drop all data when reboot.
-
-No. '/dev/...' is a Linux thing and doesn't belong in DT.
-
-You should define a partition UUID and/or label and the kernel can find 
-the right partition to use.
-
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices.
 > +
-> +- dmesg-size: maximum size in kbytes of each dump done on oops, which must be a
-> +  multiple of 4.
+> +Subnode format
+> +A pinctrl node should contain at least one subnodes representing the
+> +pinctrl groups available on the machine. Each subnode will list the
+> +pins it needs, and how they should be configured, with regard to muxer
+> +configuration, pullups, drive strength, input enable/disable and input schmitt.
 > +
-> +- pmsg-size: maximum size in kbytes for userspace messages, which must be a
-> +  multiple of 4.
+> +    node {
+> +	pinmux = <PIN_NUMBER_PINMUX>;
+> +	GENERIC_PINCONFIG;
+> +    };
+> +
+> +Required properties:
+> +- pinmux: integer array, represents gpio pin number and mux setting.
+> +    Supported pin number and mux varies for different SoCs, and are defined
+> +    as macros in boot/dts/<soc>-pinfunc.h directly.
+> +
+> +Optional properties:
+> +- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
+> +    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
+> +    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
+> +
+> +    Some special pins have extra pull up strength, there are R0 and R1 pull-up
+> +    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
+> +    So when config mediatek,pull-up-adv or mediatek,pull-down-adv,
+> +    it support arguments for those special pins.
+> +
+> +    When config drive-strength, it can support some arguments, such as
+> +    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
+> +
+> +Examples:
+> +
+> +#include "mt8183-pinfunc.h"
+> +
+> +...
+> +{
+> +	pio: pinctrl@10005000 {
+> +		compatible = "mediatek,mt8183-pinctrl";
+> +		reg = <0 0x10005000 0 0x1000>,
+> +		      <0 0x11F20000 0 0x1000>,
+> +		      <0 0x11E80000 0 0x1000>,
+> +		      <0 0x11E70000 0 0x1000>,
+> +		      <0 0x11E90000 0 0x1000>,
+> +		      <0 0x11D30000 0 0x1000>,
+> +		      <0 0x11D20000 0 0x1000>,
+> +		      <0 0x11C50000 0 0x1000>,
+> +		      <0 0x11F30000 0 0x1000>;
 
-Common properties shared with ramoops should be in a common doc.
+Use lowercase hex.
 
-Rob
+> +		reg-names = "iocfg0", "iocfg1", "iocfg2",
+> +			    "iocfg3", "iocfg4", "iocfg5",
+> +			    "iocfg6", "iocfg7", "iocfg8";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		gpio-ranges = <&pio 0 0 192>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-parent = <&gic>;
+> +		#interrupt-cells = <2>;
+> +
+> +		i2c0_pins_a: i2c0 {
+> +			pins1 {
+> +				pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
+> +					 <PINMUX_GPIO49__FUNC_SDA5>;
+> +				mediatek,pull-up-adv = <11>;
+> +			};
+> +		};
+> +
+> +		i2c1_pins_a: i2c1 {
+> +			pins {
+> +				pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
+> +					 <PINMUX_GPIO51__FUNC_SDA3>;
+> +				mediatek,pull-down-adv = <10>;
+> +			};
+> +		};
+> +		...
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
