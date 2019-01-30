@@ -1,90 +1,49 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH 2/2] remoteproc: q6v5_adsp: Remove voting for lpass_aon
- clock
-Date: Wed, 30 Jan 2019 10:38:50 +0530
-Message-ID: <d90f7817-294e-a96e-0eb0-293a06e9190a@codeaurora.org>
-References: <1543562950-23997-1-git-send-email-rohitkr@codeaurora.org>
- <1543562950-23997-3-git-send-email-rohitkr@codeaurora.org>
- <f6f9b4a2-6205-0ba5-9a3a-b34bd814d303@codeaurora.org>
- <20190107071359.GK31596@builder>
- <214831ef-2139-7b48-1654-537634f898f4@codeaurora.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/7] cpufreq: dt: Register an Energy Model
+Date: Wed, 30 Jan 2019 10:48:06 +0530
+Message-ID: <20190130051806.fdsos27jaekkwgbs@vireshk-i7>
+References: <20190128165522.31749-1-quentin.perret@arm.com>
+ <20190128165522.31749-3-quentin.perret@arm.com>
+ <20190128193656.GI81583@google.com>
+ <20190129052144.plicqu4vozh3l3ss@vireshk-i7>
+ <20190129091546.tfh3lo4w4sosfuba@queper01-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <214831ef-2139-7b48-1654-537634f898f4@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190129091546.tfh3lo4w4sosfuba@queper01-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org
+To: Quentin Perret <quentin.perret@arm.com>
+Cc: Matthias Kaehlcke <mka@chromium.org>, rjw@rjwysocki.net, sudeep.holla@arm.com, liviu.dudau@arm.com, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, nm@ti.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dietmar.eggemann@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Bjorn,
+On 29-01-19, 09:15, Quentin Perret wrote:
+> On Tuesday 29 Jan 2019 at 10:51:44 (+0530), Viresh Kumar wrote:
+> > On 28-01-19, 11:36, Matthias Kaehlcke wrote:
+> > > I think this patch will result in error messages at registration on
+> > > platforms that use the cpufreq-dt driver and don't specify
+> > > 'dynamic-power-coefficient' for the CPUs in the DT. Not sure if that's
+> > > a problem as long as the cpufreq initialization succeeds regardless,
+> > > it could be seen as a not-so-gentle nudge to add the values.
+> > 
+> > That wouldn't be acceptable.
+> 
+> Fair enough. What I can propose in this case is to have in PM_OPP a
+> helper called 'dev_pm_opp_of_register_em()' or something like this. This
+> function will check all prerequisites are present (we have the right
+> values in DT, and so on) and then call (or not) em_register_perf_domain().
+> Then we can make the CPUFreq drivers use that instead of calling
+> em_register_perf_domain() directly.
 
-On 1/14/2019 4:14 PM, Rohit Kumar wrote:
->
-> On 1/7/2019 12:43 PM, Bjorn Andersson wrote:
->> On Thu 03 Jan 20:36 PST 2019, Rohit Kumar wrote:
->>
->>> Hello Bjorn,
->>>
->>> Can you please review this patch series too.
->>>
->>> LPASS_AON clock support is already removed from lpass clock driver.
->>>
->> Applied the two patches.
->
-I did not see this in next yet. Can you please pick this up.
+That should be fine.
 
-Thanks,
+> That would also make it easy to implement Matthias' suggestion to not
+> call em_register_perf_domain() if an EM is already present.
 
-Rohit
+So you will track registration state within the OPP core for that ?
+Sorry but that doesn't sound right. What's wrong with having an
+unregister helper in energy-model to keep proper code flow everywhere
+?
 
-> Hello Bjorn,
->
->
-> Can you please point me to the tree where this is applied.
->
->
-> Thanks,
->
-> Rohit
->
->> Thanks,
->> Bjorn
->>
->>> Thanks,
->>>
->>> Rohit
->>>
->>> On 11/30/2018 12:59 PM, Rohit kumar wrote:
->>>> Lpass_aon clock is on by default. Remove it from lpass
->>>> clock list to avoid voting for it.
->>>>
->>>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->>>> ---
->>>>    drivers/remoteproc/qcom_q6v5_adsp.c | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c 
->>>> b/drivers/remoteproc/qcom_q6v5_adsp.c
->>>> index 79374d1..4829173 100644
->>>> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
->>>> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
->>>> @@ -48,7 +48,7 @@
->>>>    /* list of clocks required by ADSP PIL */
->>>>    static const char * const adsp_clk_id[] = {
->>>> -    "sway_cbcr", "lpass_aon", "lpass_ahbs_aon_cbcr", 
->>>> "lpass_ahbm_aon_cbcr",
->>>> +    "sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
->>>>        "qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
->>>>    };
->>> -- 
->>> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a 
->>> member
->>> of the Code Aurora Forum, hosted by the Linux Foundation.
->>>
 -- 
-
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+viresh
