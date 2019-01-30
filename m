@@ -1,60 +1,134 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 0/6] arm64: dts: DB820c: Add display and audio support
-Date: Wed, 30 Jan 2019 11:04:31 +0000
-Message-ID: <20190130110437.5424-1-srinivas.kandagatla@linaro.org>
+From: Damian Kos <dkos@cadence.com>
+Subject: [PATCH v7 0/4] drm: add support for Cadence MHDP DPI/DP bridge.
+Date: Wed, 30 Jan 2019 11:03:17 +0000
+Message-ID: <1548846209-16406-1-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: andy.gross@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: dkos@cadence.com, rafalc@cadence.com, piotrs@cadence.com, quentin.schulz@bootlin.com, jbergsagel@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy, 
+Hello!
 
-Now that most of the bits are in mainline, its good time to add display
-and audio support to DB820c.
-These patches are being tested in integration branch from long time.
+This is the series of patches that will add support for the Cadence's DPI/DP
+bridge. Please note that this is a preliminary version of the driver and there
+will be more patches in the future with updates, fixes and improvements.
+Please keep that in mind when looking at FIXME/TODO/XXX comments.
 
-Am resending 2 SMMU patches (https://patchwork.kernel.org/cover/10726329/)
-in this series to keep all the display and sound patches together.
+Initially, MHDP driver was developed as a DRM bridge driver and was planed to
+be placed in drivers/gpu/drm/bridge/mhdp.c.  However, there was already
+a driver for Cadence's DP controller developed by RockChip, but that driver
+uses the different DRM framework and looks like a part of a bigger system.
+Both controllers (including firmware) are quite different internally
+(MST/FEC/DSC support, link training done by driver, additional commands, IRQ's
+etc.) but they have similar register map, except for Framer/Streamer (which is
+noticeably different), so they appear similar.
 
-Can you pick these up for 5.1
+The following patches contain:
+- Moving common code to drivers/gpu/drm/bridge/cdns-mhdp-common.* and
+  modifying it a bit (mostly new prefixes for functions and data types) so it
+  can be used by two, higher level, drivers.
+- Modifying existing RockChip's DP driver to use the common code after changes
+  made to it (use the new cdns_mhdp_device structure and new function names).
+- Modifying DRM helpers a bit. Some are required for new driver, some are
+  updates from DP 1.2 to 1.3 or 1.4.
+- Adding documentation for device tree bindings.
+- Adding preliminary Cadence DPI/DP bridge driver.
 
-thanks,
-srini
+Some of the things that will be added later on include (but are not limited
+to):
+- DSC support
+- FEC support
+- HDCP support
 
-Changes since v1:
-- GPU node updated by Jordan.
-- deleted extra lines from sound card dt patch
 
-Archit Taneja (3):
-  arm64: dts: msm8996: Add display smmu node
-  arm64: qcom: msm8996.dtsi: Add Display nodes
-  arm64: dts: apq8096-db820c: Add HDMI display support
+Changes in v7:
+- Overal code cleanup
+- Patched memory leak after EDID read
+- Fixed SPDX-License-Identifier tags
+- Sorted includes
+- In patch 4/6:
+  Cleanup and fix in mhdp_transfer
+  Replaced byteshifts with {put|get}_unaligned_be{32|24|16} (added 24bit one)
+- In patch 5/6:
+  Removed cdns_mhdp_mst_set_threshold (not needed anymore as HW does that)
+  Updated cdns_mhdp_mst_set_rate_governing
+  Replaced request_irq with devm_request_irq
+  And then merged with 4/6 (as many changes in this patch altered the SST part)
+- In patch 6/6:
+  Fix in checking devm_phy_get result
+  Updated bindings doc
+  And then merged with 4/6 (as this should be in the driver in the first place)
 
-Jordan Crouse (2):
-  arm64: dts: msm8996: Add graphics smmu node
-  arm64: dts: Add Adreno GPU definitions
+Changes in v6:
+- Added Reviewed-bys for already reviewed patches
+- Dropped patch v5-0003 (that made dp_get_lane_status helper public)
+- Added patch with MST support
+- Added patch with Cadence SD0801 PHY init
 
-Srinivas Kandagatla (1):
-  arm64: dts: db820c: Add sound card support
+Changes in v5:
+- Fixed Kconfig in drm/rockchip again
+- Moved cdn-dp-reg.h (cdns-mhdp-common.h) to include/drm/bridge instead of
+    drivers/gpu/drm/bridge/
+- Updated the mhdp_validate_cr function
 
- .../boot/dts/qcom/apq8096-db820c-pins.dtsi    |  52 +++
- .../dts/qcom/apq8096-db820c-pmic-pins.dtsi    |   8 +
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi  | 121 ++++++
- arch/arm64/boot/dts/qcom/msm8996-pins.dtsi    |  43 ++
- arch/arm64/boot/dts/qcom/msm8996.dtsi         | 380 ++++++++++++++++++
- 5 files changed, 604 insertions(+)
+Changes in v4:
+- Fixed Kconfig in drm/rockchip
+- Fixed Signed-offs
+- dp_link_status() is no longer public since it's used only in drm_dp_helper.c
+- Replaced EXTRA_CFLAGS with ccflags-y in drm/rockchip Makefile
+
+Changes in v3:
+- Corrected dt-bindings document
+- Enabled some clocks at startup (since FW doesn't do that anymore).
+- Changed Firmware file name to match the file on Linux Firmware repo.
+- Added SST audio support
+- Made common functions (in cdns-mhdp-common.*) public.
+
+Changes in v2:
+- Added actual description of what the patch contains, what is it for and
+  what's going on here in general.
+- New structure. Now we have one common low level driver + two high level
+  drivers - one for RockChip with minimum changes and one, more general, for
+  Cadence.
+- Dropped some changes made to DRM helpers.
+- Updated the device tree bindings document.
+
+
+Damian Kos (1):
+  drm/rockchip: prepare common code for cdns and rk dpi/dp driver
+
+Quentin Schulz (3):
+  drm/dp: fix link probing for devices supporting DP 1.4+
+  dt-bindings: drm/bridge: Document Cadence MHDP bridge bindings
+  drm: bridge: add support for Cadence MHDP DPI/DP bridge
+
+ .../bindings/display/bridge/cdns,mhdp.txt     |   47 +
+ drivers/gpu/drm/bridge/Kconfig                |    9 +
+ drivers/gpu/drm/bridge/Makefile               |    3 +
+ drivers/gpu/drm/bridge/cdns-mhdp-common.c     | 1103 ++++++++++++++
+ drivers/gpu/drm/bridge/cdns-mhdp-mst.c        |  549 +++++++
+ drivers/gpu/drm/bridge/cdns-mhdp.c            | 1349 +++++++++++++++++
+ drivers/gpu/drm/bridge/cdns-mhdp.h            |  209 +++
+ drivers/gpu/drm/drm_dp_helper.c               |   30 +-
+ drivers/gpu/drm/rockchip/Kconfig              |    4 +-
+ drivers/gpu/drm/rockchip/Makefile             |    2 +-
+ drivers/gpu/drm/rockchip/cdn-dp-core.c        |  234 +--
+ drivers/gpu/drm/rockchip/cdn-dp-core.h        |   43 +-
+ drivers/gpu/drm/rockchip/cdn-dp-reg.c         |  969 ------------
+ include/drm/bridge/cdns-mhdp-cbs.h            |   29 +
+ .../drm/bridge/cdns-mhdp-common.h             |  176 ++-
+ 15 files changed, 3606 insertions(+), 1150 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.txt
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-common.c
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-mst.c
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp.c
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp.h
+ delete mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.c
+ create mode 100644 include/drm/bridge/cdns-mhdp-cbs.h
+ rename drivers/gpu/drm/rockchip/cdn-dp-reg.h => include/drm/bridge/cdns-mhdp-common.h (77%)
 
 -- 
-2.20.1
+2.17.1
