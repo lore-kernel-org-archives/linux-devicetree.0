@@ -1,63 +1,62 @@
-Return-Path: <SRS0=y9Vk=QG=xs4all.nl=hverkuil@kernel.org>
-Subject: Re: [PATCH v2 2/3] [media] allegro: add Allegro DVT video IP core
- driver
-References: <20190118133716.29288-1-m.tretter@pengutronix.de>
- <20190118133716.29288-3-m.tretter@pengutronix.de>
- <1fab228e-3a5d-d1f4-23a3-bb8ec5914851@xs4all.nl>
- <9e29f43951bf25708060bc25f4d1e94756970ee2.camel@ndufresne.ca>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <f983efdb-4ac1-d2e2-4be3-421d337f94ef@xs4all.nl>
-Date: Wed, 30 Jan 2019 08:47:20 +0100
+Return-Path: <SRS0=SQzn=QG=chromium.org=tfiga@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <9e29f43951bf25708060bc25f4d1e94756970ee2.camel@ndufresne.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Nicolas Dufresne <nicolas@ndufresne.ca>, Michael Tretter <m.tretter@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org
+References: <20190118133716.29288-1-m.tretter@pengutronix.de>
+ <20190118133716.29288-3-m.tretter@pengutronix.de> <1fab228e-3a5d-d1f4-23a3-bb8ec5914851@xs4all.nl>
+ <20190123151709.395eec98@litschi.hi.pengutronix.de> <f0df52b3ac7dfd5bdac8f18053f7db27de5bc230.camel@ndufresne.ca>
+In-Reply-To: <f0df52b3ac7dfd5bdac8f18053f7db27de5bc230.camel@ndufresne.ca>
+From: Tomasz Figa <tfiga@chromium.org>
+Date: Wed, 30 Jan 2019 12:54:50 +0900
+Message-ID: <CAAFQd5A7w0veEeNXFYMfpzZw4d9HCwHMk8EyKBMv4wmUOVJYiA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] [media] allegro: add Allegro DVT video IP core driver
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: Michael Tretter <m.tretter@pengutronix.de>, Hans Verkuil <hverkuil@xs4all.nl>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Sasha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 1/30/19 4:41 AM, Nicolas Dufresne wrote:
-> Hi Hans,
-> 
-> Le mercredi 23 janvier 2019 à 11:44 +0100, Hans Verkuil a écrit :
->>> +     if (*nplanes != 0) {
->>> +             if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
->>> +                     if (*nplanes != 1 ||
->>> +                         sizes[0] < channel->sizeimage_encoded)
->>> +                             return -EINVAL;
->>
->> Question relating to calculating sizeimage_encoded: is that guaranteed to be
->> the largest buffer size that is needed to compress a frame? What if it is
->> not large enough after all? Does the encoder protect against that?
->>
->> I have a patch pending that allows an encoder to spread the compressed
->> output over multiple buffers:
->>
->> https://patchwork.linuxtv.org/patch/53536/
->>
->> I wonder if this encoder would be able to use it.
-> 
-> Userspace around most existing codecs expect well framed capture buffer
-> from the encoder. Spreading out the buffer will just break this
-> expectation.
-> 
-> This is specially needed for VP8/VP9 as these format are not meant to
-> be streamed that way.
+On Wed, Jan 30, 2019 at 12:46 PM Nicolas Dufresne <nicolas@ndufresne.ca> wr=
+ote:
+>
+> Le mercredi 23 janvier 2019 =C3=A0 15:17 +0100, Michael Tretter a =C3=A9c=
+rit :
+> > > I have a patch pending that allows an encoder to spread the compresse=
+d
+> > > output over multiple buffers:
+> > >
+> > > https://patchwork.linuxtv.org/patch/53536/
+> > >
+> > > I wonder if this encoder would be able to use it.
+> >
+> > I don't think that the encoder could use this, because of how the
+> > PUT_STREAM_BUFFER and the ENCODE_FRAME command are working: The
+> > ENCODE_FRAME will always write the compressed output to a single buffer=
+.
+> >
+> > However, if I stop passing the vb2 buffers to the encoder, use an
+> > internal buffer pool for the encoder stream buffers and copy the
+> > compressed buffer from the internal buffers to the vb2 buffers, I can
+> > spread the output over multiple buffers. That would also allow me, to
+> > get rid of putting filler nal units in front of the compressed data.
+> >
+> > I will try to implement it that way.
+>
+> As explained in my previous email, this will break current userspace
+> expectation, and will force userspace into parsing the following frame
+> to find the end of it (adding 1 frame latency).
 
-Good to know, thank you.
+I don't think you would need to do any parsing to detect it. I think
+the assumption that a buffer only contains 1 frame would still hold.
+An extra buffer would be used for the remaining part of the current
+frame and then we would take another buffer for the next frame.
 
-> I believe a proper solution to that would be to hang the decoding
-> process and send an event (similar to resolution changes) to tell user
-> space that capture buffers need to be re-allocated.
+Still, I also recall that we assumed that we have 1 buffer per 1 frame
+for encoders, so indeed it could break some apps. At least it needs
+some careful analysis, if we want to change it.
 
-That's indeed an alternative. I wait for further feedback from Tomasz
-on this.
-
-I do want to add that allowing it to be spread over multiple buffers
-also means more optimal use of memory. I.e. the buffers for the compressed
-data no longer need to be sized for the worst-case size.
-
-Regards,
-
-	Hans
+>
+> I have used a lot the vendor driver for this platform and it has always
+> been able possible to get the frame size right, so this should be
+> possible here too.
+>
+> Nicolas
+>
