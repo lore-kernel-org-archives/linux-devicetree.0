@@ -1,47 +1,82 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/4] arm64: dts: sprd: Add SC2731 charger device
-Date: Wed, 30 Jan 2019 17:45:43 +0100
-Message-ID: <CAK8P3a2+N9-uLi0GS07JEt3H5hwoku6DWZr+e2DXP-nYHEcOyw@mail.gmail.com>
-References: <cover.1548052878.git.baolin.wang@linaro.org> <1f57f120e915ea9af75a45f48c8ef2f446d10486.1548052878.git.baolin.wang@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RESEND v1 4/4] dt-bindings: imx8-clock: add a53 and a72
+ clock id
+Date: Wed, 30 Jan 2019 10:45:46 -0600
+Message-ID: <CAL_JsqKwJEJmb2iAom1nckj6-eFrpfMXoGC4id5rqWiQZZn2yw@mail.gmail.com>
+References: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
+ <1547207400-28307-5-git-send-email-aisheng.dong@nxp.com>
+ <20190122001011.GA15952@bogus>
+ <AM0PR04MB4211003C959DCC89B169D39B80980@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1f57f120e915ea9af75a45f48c8ef2f446d10486.1548052878.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM0PR04MB4211003C959DCC89B169D39B80980@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 8:39 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+On Tue, Jan 22, 2019 at 6:59 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
 >
-> Add charger device node and related battery node for SC2731 PMIC.
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Tuesday, January 22, 2019 8:10 AM
+> >
+> > On Fri, Jan 11, 2019 at 11:56:09AM +0000, Aisheng Dong wrote:
+> > > Add a53 and a72 clock id, as there's still no users, we update
+> > > IMX_LSIO_MEM_CLK base to start from 6 to allow a53 and a72 clock id to
+> > > be continued with a35 clk.
+> > >
+> > > Cc: Stephen Boyd <sboyd@kernel.org>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > > Cc: Michael Turquette <mturquette@baylibre.com>
+> > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > ---
+> > >  include/dt-bindings/clock/imx8-clock.h | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/include/dt-bindings/clock/imx8-clock.h
+> > > b/include/dt-bindings/clock/imx8-clock.h
+> > > index 4236818..2f1aa2f 100644
+> > > --- a/include/dt-bindings/clock/imx8-clock.h
+> > > +++ b/include/dt-bindings/clock/imx8-clock.h
+> > > @@ -13,10 +13,12 @@
+> > >
+> > >  /* CPU */
+> > >  #define IMX_A35_CLK                                        1
+> > > +#define IMX_A53_CLK                                        2
+> > > +#define IMX_A72_CLK                                        3
+> >
+> > All 3 cores in one chip? If not maybe these should be split or define them as
+> > cpu cluster x clocks.
+> >
 >
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  arch/arm64/boot/dts/sprd/sc2731.dtsi      |    6 ++++++
->  arch/arm64/boot/dts/sprd/sp9860g-1h10.dts |   16 ++++++++++++++++
->  2 files changed, 22 insertions(+)
+> Not in one chip.
+> Here are common clock IDs used for both MX8QXP and MX8QM.
+> You mean change to something like below?
 >
-> diff --git a/arch/arm64/boot/dts/sprd/sc2731.dtsi b/arch/arm64/boot/dts/sprd/sc2731.dtsi
-> index a2edc25..b52eaf0 100644
-> --- a/arch/arm64/boot/dts/sprd/sc2731.dtsi
-> +++ b/arch/arm64/boot/dts/sprd/sc2731.dtsi
-> @@ -17,6 +17,12 @@
->                 #address-cells = <1>;
->                 #size-cells = <0>;
->
-> +               charger@0 {
-> +                       compatible = "sprd,sc27xx-charger", "sprd,sc2731-charger";
-> +                       reg = <0x0>;
-> +                       monitored-battery = <&bat>;
-> +               };
+> #define IMX_CPU_CLUSTER_A53_CLK                 2
+> #define IMX_CPU_CLUSTER_A72_CLK                 3
 
-I see some of these have already slipped through, but we should probably
-fix those and not add new ones: "sprd,sc27xx-charger" is not an appropriate
-compatible string, because it has a 'xx' wildcard.
+What happened to A35? What I'm saying is if the same clock controller
+registers are used across chips even if the cores are different, use
+the same clock ID. Ideally, clock IDs have some relationship to the
+h/w such as their control register address and offset.
 
-What you should have instead is to list compatibility with specific older
-models. You also need to have the more generic string as the last one,
-not the first.
+To put it another way, don't create a common number space of clock IDs
+across SoCs unless they are strictly subsets and supersets of each
+other.
 
-     Arnd
+Rob
