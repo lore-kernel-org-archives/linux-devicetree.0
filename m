@@ -1,27 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] Dt-bindings: Serial: Add X1000 serial bindings.
-Date: Wed, 30 Jan 2019 12:46:47 -0600
-Message-ID: <20190130184647.GA9520@bogus>
-References: <1548667176-119830-1-git-send-email-zhouyanjie@zoho.com>
- <1548695029-11900-1-git-send-email-zhouyanjie@zoho.com>
- <1548695029-11900-3-git-send-email-zhouyanjie@zoho.com>
+Subject: Re: [PATCHv3 22/27] dt-bindings: pci: Add NXP Layerscape SoCs PCIe
+ Gen4  controller
+Date: Wed, 30 Jan 2019 12:49:22 -0600
+Message-ID: <20190130184922.GA13423@bogus>
+References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
+ <20190129080926.36773-23-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1548695029-11900-3-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <20190129080926.36773-23-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhou Yanjie <zhouyanjie@zoho.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, paul.burton@mips.com, gregkh@linuxfoundation.org, jslaby@suse.com, mark.rutland@arm.com, syq@debian.org, jiaxun.yang@flygoat.com, 772753199@qq.com
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Jan 2019 01:03:49 +0800, Zhou Yanjie wrote:
-> Add the serial bindings for the X1000 Soc from Ingenic.
+On Tue, 29 Jan 2019 08:10:49 +0000, "Z.q. Hou" wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> Add PCIe Gen4 controller DT bindings of NXP Layerscape SoCs.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > ---
->  Documentation/devicetree/bindings/serial/ingenic,uart.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> V3:
+>  - Change back to use an new doc for Layerscape PCIe Gen4 DT bindings.
+>  - Switch the order of "csr_axi_slave" and "config_axi_slave".
+> 
+>  .../bindings/pci/layerscape-pci-gen4.txt      | 52 +++++++++++++++++++
+>  MAINTAINERS                                   |  8 +++
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci-gen4.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
