@@ -1,279 +1,110 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [RFC PATCH v3 10/10] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Date: Wed, 30 Jan 2019 11:22:50 +0200
-Message-ID: <b8d625a56d206dd6458c8f9495be4fdef0d10ebe.1548838724.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1548838724.git.matti.vaittinen@fi.rohmeurope.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 10/10] arm64: dts: allwinner: h5: Add CPU
+ Operating Performance Points table
+Date: Wed, 30 Jan 2019 10:29:27 +0100
+Message-ID: <20190130092927.x65ihy3je5n6324w@flea>
+References: <20190130084203.25053-1-wens@csie.org>
+ <20190130084203.25053-11-wens@csie.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fkao57vkiawei5pc"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6W4YXRAKGQEYSMQFJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <cover.1548838724.git.matti.vaittinen@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc: heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+In-Reply-To: <20190130084203.25053-11-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Initial support for watchdog block included in ROHM BD70528
-power management IC.
 
-Configurations for low power states are still to be checked.
+--fkao57vkiawei5pc
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
+On Wed, Jan 30, 2019 at 04:42:03PM +0800, Chen-Yu Tsai wrote:
+>  			enable-method = "psci";
+>  			clocks = <&ccu CLK_CPUX>;
+>  			clock-latency-ns = <244144>; /* 8 32k periods */
+> +			operating-points-v2 = <&cpu_opp_table>;
+> +			#cooling-cells = <2>;
+> +		};
+> +	};
+> +
+> +	cpu_opp_table: opp_table {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp@408000000 {
+> +			opp-hz = /bits/ 64 <408000000>;
+> +			opp-microvolt = <1000000 1000000 1310000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@648000000 {
+> +			opp-hz = /bits/ 64 <648000000>;
+> +			opp-microvolt = <1040000 1040000 1310000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@816000000 {
+> +			opp-hz = /bits/ 64 <816000000>;
+> +			opp-microvolt = <1080000 1080000 1310000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@912000000 {
+> +			opp-hz = /bits/ 64 <912000000>;
+> +			opp-microvolt = <1120000 1120000 1310000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@960000000 {
+> +			opp-hz = /bits/ 64 <960000000>;
+> +			opp-microvolt = <1160000 1160000 1310000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@1008000000 {
+> +			opp-hz = /bits/ 64 <1008000000>;
+> +			opp-microvolt = <1200000 1200000 1310000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@1056000000 {
+> +			opp-hz = /bits/ 64 <1056000000>;
+> +			opp-microvolt = <1240000 1240000 1310000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@1104000000 {
+> +			opp-hz = /bits/ 64 <1104000000>;
+> +			opp-microvolt = <1260000 1260000 1310000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@1152000000 {
+> +			opp-hz = /bits/ 64 <1152000000>;
+> +			opp-microvolt = <1300000 1300000 1310000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
 
-I decided to see how it looks if I don't include the MFD data
-pointer to struct wdtbd70528 and if I just use lock pointer
-and offset_of() when I need the struct bd70528.
+What is the frequency and voltage that U-Boot sets up?
 
-By the way, the WDG provides an IRQ - would it be nice to
-get a print spilled out if the dog barks? There's some small
-delay after interrupt before the power goes down, so the print
-_might_ make it to the log (depending on system of course).
+We've had the issue with the A33 that it's started at 1008MHz, with
+the matching voltage, and ramping up the frequency to 1.2GHz on boards
+without PMIC support would increase the frequency but not the voltage,
+resulting in a brownout.
 
- drivers/watchdog/Kconfig       |  12 +++
- drivers/watchdog/Makefile      |   1 +
- drivers/watchdog/bd70528_wdt.c | 187 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 200 insertions(+)
- create mode 100644 drivers/watchdog/bd70528_wdt.c
-
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 57f017d74a97..f30e3a3e886e 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
- 	  watchdog. Be aware that governors might affect the watchdog because it
- 	  is purely software, e.g. the panic governor will stall it!
- 
-+config BD70528_WATCHDOG
-+	tristate "ROHM BD70528 PMIC Watchdog"
-+	depends on MFD_ROHM_BD70528
-+	select WATCHDOG_CORE
-+	help
-+	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
-+	  cause system reset.
-+
-+	  Say Y here to include support for the ROHM BD70528 watchdog.
-+	  Alternatively say M to compile the driver as a module,
-+	  which will be called bd70528_wdt.
-+
- config DA9052_WATCHDOG
- 	tristate "Dialog DA9052 Watchdog"
- 	depends on PMIC_DA9052 || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index a0917ef28e07..1ce87a3b1172 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -204,6 +204,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
- obj-$(CONFIG_XEN_WDT) += xen_wdt.o
- 
- # Architecture Independent
-+obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
- obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
- obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
- obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
-diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-new file mode 100644
-index 000000000000..c24d4cce5e9c
---- /dev/null
-+++ b/drivers/watchdog/bd70528_wdt.c
-@@ -0,0 +1,187 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 ROHM Semiconductors
-+// ROHM BD70528MWV watchdog driver
-+
-+#include <linux/bcd.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/rohm-bd70528.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/watchdog.h>
-+
-+struct wdtbd70528 {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct mutex *rtc_lock;
-+	struct watchdog_device wdt;
-+};
-+
-+static int bd70528_wdt_set_locked(struct wdtbd70528 *w, int enable)
-+{
-+	struct bd70528 *bd70528;
-+
-+	bd70528 = container_of(w->rtc_lock, struct bd70528, rtc_timer_lock);
-+	return bd70528->wdt_set(bd70528, enable, NULL);
-+}
-+static int bd70528_wdt_set(struct wdtbd70528 *w, int enable)
-+{
-+	int ret;
-+
-+	mutex_lock(w->rtc_lock);
-+	ret = bd70528_wdt_set_locked(w, enable);
-+	mutex_unlock(w->rtc_lock);
-+
-+	return ret;
-+}
-+
-+static int bd70528_wdt_start(struct watchdog_device *wdt)
-+{
-+	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-+
-+	dev_dbg(w->dev, "WDT ping...\n");
-+	return bd70528_wdt_set(w, 1);
-+}
-+
-+static int bd70528_wdt_stop(struct watchdog_device *wdt)
-+{
-+	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-+
-+	dev_dbg(w->dev, "WDT stopping...\n");
-+	return bd70528_wdt_set(w, 0);
-+}
-+
-+static int bd70528_wdt_set_timeout(struct watchdog_device *wdt,
-+				    unsigned int timeout)
-+{
-+	unsigned int hours;
-+	unsigned int minutes;
-+	unsigned int seconds;
-+	int ret;
-+	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-+
-+	seconds = timeout;
-+	hours = timeout / (60 * 60);
-+	/* Maximum timeout is 1h 59m 59s => hours is 1 or 0 */
-+	if (hours)
-+		seconds -= (60 * 60);
-+	minutes = seconds / 60;
-+	seconds = seconds % 60;
-+
-+	mutex_lock(w->rtc_lock);
-+
-+	ret = bd70528_wdt_set_locked(w, 0);
-+	if (ret)
-+		goto out_unlock;
-+
-+	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_HOUR,
-+				 BD70528_MASK_WDT_HOUR, hours);
-+	if (ret) {
-+		dev_err(w->dev, "Failed to set WDT hours\n");
-+		goto out_en_unlock;
-+	}
-+	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_MINUTE,
-+				 BD70528_MASK_WDT_MINUTE, bin2bcd(minutes));
-+	if (ret) {
-+		dev_err(w->dev, "Failed to set WDT minutes\n");
-+		goto out_en_unlock;
-+	}
-+	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_SEC,
-+				 BD70528_MASK_WDT_SEC, bin2bcd(seconds));
-+	if (ret)
-+		dev_err(w->dev, "Failed to set WDT seconds\n");
-+	else
-+		dev_dbg(w->dev, "WDT tmo set to %u\n", timeout);
-+
-+out_en_unlock:
-+	ret = bd70528_wdt_set_locked(w, 1);
-+out_unlock:
-+	mutex_unlock(w->rtc_lock);
-+
-+	return ret;
-+}
-+
-+static const struct watchdog_info bd70528_wdt_info = {
-+	.identity = "bd70528-wdt",
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+};
-+
-+static const struct watchdog_ops bd70528_wdt_ops = {
-+	.start		= bd70528_wdt_start,
-+	.stop		= bd70528_wdt_stop,
-+	.set_timeout	= bd70528_wdt_set_timeout,
-+};
-+
-+/* Max time we can set is 1 hour, 59 minutes and 59 seconds */
-+#define WDT_MAX_MS ((2 * 60 * 60 - 1) * 1000)
-+/* Minimum time is 1 second */
-+#define WDT_MIN_MS 1000
-+#define DEFAULT_TIMEOUT 60
-+
-+static int bd70528_wdt_probe(struct platform_device *pdev)
-+{
-+	struct bd70528 *bd70528;
-+	struct wdtbd70528 *w;
-+	int ret;
-+	unsigned int reg;
-+
-+	bd70528 = dev_get_drvdata(pdev->dev.parent);
-+	if (!bd70528) {
-+		dev_err(&pdev->dev, "No MFD driver data\n");
-+		return -EINVAL;
-+	}
-+	w = devm_kzalloc(&pdev->dev, sizeof(*w), GFP_KERNEL);
-+	if (!w)
-+		return -ENOMEM;
-+
-+	w->regmap = bd70528->chip.regmap;
-+	w->rtc_lock = &bd70528->rtc_timer_lock;
-+	w->dev = &pdev->dev;
-+
-+	w->wdt.info = &bd70528_wdt_info;
-+	w->wdt.ops =  &bd70528_wdt_ops;
-+	w->wdt.min_hw_heartbeat_ms = WDT_MIN_MS;
-+	w->wdt.max_hw_heartbeat_ms = WDT_MAX_MS;
-+	w->wdt.parent = pdev->dev.parent;
-+	w->wdt.timeout = DEFAULT_TIMEOUT;
-+	watchdog_set_drvdata(&w->wdt, w);
-+	watchdog_init_timeout(&w->wdt, 0, pdev->dev.parent);
-+
-+	ret = bd70528_wdt_set_timeout(&w->wdt, w->wdt.timeout);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to set the watchdog timeout\n");
-+		return ret;
-+	}
-+
-+	mutex_lock(w->rtc_lock);
-+	ret = regmap_read(w->regmap, BD70528_REG_WDT_CTRL, &reg);
-+	mutex_unlock(w->rtc_lock);
-+
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to get the watchdog state\n");
-+		return ret;
-+	}
-+	if (reg & BD70528_MASK_WDT_EN) {
-+		dev_dbg(&pdev->dev, "watchdog was running during probe\n");
-+		set_bit(WDOG_HW_RUNNING, &w->wdt.status);
-+	}
-+
-+	ret = devm_watchdog_register_device(&pdev->dev, &w->wdt);
-+	if (ret < 0)
-+		dev_err(&pdev->dev, "watchdog registration failed: %d\n", ret);
-+
-+	return ret;
-+}
-+static struct platform_driver bd70528_wdt = {
-+	.driver = {
-+		.name = "bd70528-wdt"
-+	},
-+	.probe = bd70528_wdt_probe,
-+};
-+
-+module_platform_driver(bd70528_wdt);
-+
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("BD70528 watchdog driver");
-+MODULE_LICENSE("GPL");
--- 
-2.14.3
-
+Maxime
 
 -- 
-Matti Vaittinen
-ROHM Semiconductors Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--fkao57vkiawei5pc--
