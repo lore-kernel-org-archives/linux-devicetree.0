@@ -1,27 +1,107 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/4] Irqchip: Ingenic: Add support for the X1000.
-Date: Wed, 30 Jan 2019 13:43:29 -0600
-Message-ID: <20190130194329.GA22264@bogus>
-References: <1548517123-60058-2-git-send-email-zhouyanjie@zoho.com>
- <1548604232-19159-1-git-send-email-zhouyanjie@zoho.com>
- <1548604232-19159-5-git-send-email-zhouyanjie@zoho.com>
+Subject: Re: [PATCH v2 3/3] dt-bindings: clock: Add loongson-1 clock bindings
+Date: Wed, 30 Jan 2019 13:47:31 -0600
+Message-ID: <20190130194731.GA25716@bogus>
+References: <20190125133413.4130-1-jiaxun.yang@flygoat.com>
+ <20190128152052.3047-1-jiaxun.yang@flygoat.com>
+ <20190128152052.3047-4-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1548604232-19159-5-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <20190128152052.3047-4-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhou Yanjie <zhouyanjie@zoho.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, paul.burton@mips.com, mark.rutland@arm.com, marc.zyngier@arm.com, jason@lakedaemon.net, tglx@linutronix.de, syq@debian.org, jiaxun.yang@flygoat.com, 772753199@qq.com
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 27 Jan 2019 23:50:32 +0800, Zhou Yanjie wrote:
-> Add support for probing the irq-ingenic driver on the X1000 Soc.
+On Mon, Jan 28, 2019 at 11:20:52PM +0800, Jiaxun Yang wrote:
+> Loongson-1 is a series of MIPS MCUs.
+> This patch add the clock bindings for loongson-1b and
+> loongson-1c clock subsystem.
 > 
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/clock/loongson1-clock.txt        | 11 ++++++++++
+>  include/dt-bindings/clock/ls1b-clock.h        | 20 +++++++++++++++++++
+>  include/dt-bindings/clock/ls1c-clock.h        | 17 ++++++++++++++++
+>  3 files changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/loongson1-clock.txt
+>  create mode 100644 include/dt-bindings/clock/ls1b-clock.h
+>  create mode 100644 include/dt-bindings/clock/ls1c-clock.h
 > 
+> diff --git a/Documentation/devicetree/bindings/clock/loongson1-clock.txt b/Documentation/devicetree/bindings/clock/loongson1-clock.txt
+> new file mode 100644
+> index 000000000000..f0119fbd0851
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/loongson1-clock.txt
+> @@ -0,0 +1,11 @@
+> +* Clock bindings for Loongson-1 MCUs
+> +
+> +Required properties:
+> +- compatible: Should be "loongson,ls1c-clock" or "loongson,ls1b-clock"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+List one per line please.
+
+> +- reg: Address and length of the register set
+> +- #clock-cells: Should be <1>
+> +- clocks: list of input clocks
+> +
+> +The clock consumer should specify the desired clock by having the clock
+> +ID in its "clocks" phandle cell. See include/dt-bindings/clock/ls1c-clock.h
+> +or include/dt-bindings/clock/ls1b-clock.h for the full list of clocks.
+> diff --git a/include/dt-bindings/clock/ls1b-clock.h b/include/dt-bindings/clock/ls1b-clock.h
+> new file mode 100644
+> index 000000000000..814227842ae0
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/ls1b-clock.h
+> @@ -0,0 +1,20 @@
+> +// SPDX-License-Identifier:	GPL-2.0
+
+Headers should be /* */ style comments.
+
+> +/*
+> + * Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + *
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_LS1B_CLOCK_H__
+> +#define __DT_BINDINGS_CLOCK_LS1B_CLOCK_H__
+> +
+> +#define LS1B_CLK_PLL 0
+> +#define LS1B_CLK_CPU_DIV 1
+> +#define LS1B_CLK_CPU 2
+> +#define LS1B_CLK_DC_DIV 3
+> +#define LS1B_CLK_DC 4
+> +#define LS1B_CLK_DDR_DIV 5
+> +#define LS1B_CLK_DDR 6
+> +#define LS1B_CLK_AHB 7
+> +#define LS1B_CLK_APB 8
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_LS1B_CLOCK_H__ */
+> diff --git a/include/dt-bindings/clock/ls1c-clock.h b/include/dt-bindings/clock/ls1c-clock.h
+> new file mode 100644
+> index 000000000000..40f386cb92ce
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/ls1c-clock.h
+> @@ -0,0 +1,17 @@
+> +// SPDX-License-Identifier:	GPL-2.0
+> +/*
+> + * Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + *
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_LS1C_CLOCK_H__
+> +#define __DT_BINDINGS_CLOCK_LS1C_CLOCK_H__
+> +
+> +#define LS1C_CLK_PLL 0
+> +#define LS1C_CLK_CPU 1
+> +#define LS1C_CLK_DC 2
+> +#define LS1C_CLK_DDR 3
+> +#define LS1C_CLK_AHB 4
+> +#define LS1C_CLK_APB 5
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_LS1C_CLOCK_H__ */
+> -- 
+> 2.20.1
+> 
