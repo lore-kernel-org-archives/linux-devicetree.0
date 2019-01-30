@@ -1,71 +1,345 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 6/8] DT: arm: exynos: add DMC device for exynos5422
-Date: Wed, 30 Jan 2019 10:46:40 +0100
-Message-ID: <CAJKOXPcfZsZPYStrV-QOd2YJsoaJdbtdz2RX-AJrC6A6B8vJqA@mail.gmail.com>
-References: <CGME20190129175526eucas1p253dc2e8a0d64b34d95c84d585fb0fac0@eucas1p2.samsung.com>
- <1548784514-26649-1-git-send-email-l.luba@partner.samsung.com> <1548784514-26649-7-git-send-email-l.luba@partner.samsung.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH v2 2/2] phy: qualcomm: usb: Add Super-Speed PHY driver
+Date: Wed, 30 Jan 2019 10:53:32 +0100
+Message-ID: <fbd70494-e2f1-ae04-8b14-2cc97cead8b9@linaro.org>
+References: <1548761715-4004-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1548761715-4004-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <20190129202726.GA3036@builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548784514-26649-7-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <20190129202726.GA3036@builder>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, andy.gross@linaro.org, swboyd@chromium.org, shawn.guo@linaro.org, vkoul@kernel.org, khasim.mohammed@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Jan 2019 at 18:55, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Add description of Dynamic Memory Controller and PPMU counters.
-> They are used by exynos5422-dmc driver.
->
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Kukjin Kim <kgene@kernel.org>
-> CC: Krzysztof Kozlowski <krzk@kernel.org>
-> CC: devicetree@vger.kernel.org
-> CC: linux-arm-kernel@lists.infradead.org
-> CC: linux-samsung-soc@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi             | 69 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 22 +++++++++
->  2 files changed, 91 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index aaff158..4d76335 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -235,6 +235,27 @@
->                         status = "disabled";
->                 };
->
-> +               dmc: memory-controller@10c20000 {
-> +                       compatible = "samsung,exynos5422-dmc";
-> +                       reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
-> +                               <0x10030000 0x1000>, <0x10000000 0x1000>;
-> +                       clocks = <&clock CLK_FOUT_SPLL>,
-> +                               <&clock CLK_MOUT_SCLK_SPLL>,
-> +                               <&clock CLK_FF_DOUT_SPLL2>,
-> +                               <&clock CLK_FOUT_BPLL>, <&clock CLK_MOUT_BPLL>,
-> +                               <&clock CLK_SCLK_BPLL>,
-> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE>,
-> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
-> +                               <&clock CLK_MOUT_MCLK_CDREX>,
-> +                               <&clock CLK_DOUT_CLK2X_PHY0>,
-> +                               <&clock CLK_CLKM_PHY0>, <&clock CLK_CLKM_PHY1>;
-> +                       clock-names = "fout_spll", "mout_sclk_spll",
-> +                               "ff_dout_spll2", "fout_bpll", "mout_bpll",
-> +                               "sclk_bpll", "mout_mx_mspll_ccore",
-> +                               "mout_mx_mspll_ccore_phy", "mout_mclk_cdrex",
-> +                               "dout_clk2x_phy0", "clkm_phy0", "clkm_phy1";
+On 1/29/19 21:27, Bjorn Andersson wrote:
+> On Tue 29 Jan 03:35 PST 2019, Jorge Ramirez-Ortiz wrote:
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-usb-ss.c b/drivers/phy/qualcomm/phy-qcom-usb-ss.c
+>> new file mode 100644
+>> index 0000000..e6ae96e
+>> --- /dev/null
+>> +++ b/drivers/phy/qualcomm/phy-qcom-usb-ss.c
+>> @@ -0,0 +1,347 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2012-2014,2017 The Linux Foundation. All rights reserved.
+>> + * Copyright (c) 2018, Linaro Limited
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/reset.h>
+>> +#include <linux/slab.h>
+>> +
+>> +#define PHY_CTRL0			0x6C
+>> +#define PHY_CTRL1			0x70
+>> +#define PHY_CTRL2			0x74
+>> +#define PHY_CTRL4			0x7C
+>> +
+>> +/* PHY_CTRL bits */
+>> +#define REF_PHY_EN			BIT(0)
+>> +#define LANE0_PWR_ON			BIT(2)
+>> +#define SWI_PCS_CLK_SEL			BIT(4)
+>> +#define TST_PWR_DOWN			BIT(4)
+>> +#define PHY_RESET			BIT(7)
+>> +
+>> +enum phy_vdd_ctrl { ENABLE, DISABLE, };
+> 
+> Use bool to describe boolean values.
 
-We misunderstood each other. I did not ask for compaction into one
-continued line but for proper indentation. Having one entry per one
-line was fine because you have really a lot of entries and it was
-making things easier to check.
-It should look like:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/exynos54xx.dtsi?h=v4.20#n78
+um, ok, but these are not booleans, they are actions (ie ctrl = action
+not true or false).
 
-Best regards,
-Krzysztof
+anyway will change it to something else
+
+> 
+>> +enum phy_regulator { VDD, VDDA1P8, };
+> 
+> It doesn't look like you need either of these if you remove the
+> set_voltage calls.
+
+we need to point to the regulator in the array so we need an index to it
+somehow.
+
+> 
+>> +
+>> +struct ssphy_priv {
+>> +	void __iomem *base;
+>> +	struct device *dev;
+>> +	struct reset_control *reset_com;
+>> +	struct reset_control *reset_phy;
+>> +	struct regulator *vbus;
+>> +	struct regulator_bulk_data *regs;
+>> +	int num_regs;
+>> +	struct clk_bulk_data *clks;
+>> +	int num_clks;
+>> +	enum phy_mode mode;
+>> +};
+>> +
+>> +static inline void qcom_ssphy_updatel(void __iomem *addr, u32 mask, u32 val)
+>> +{
+>> +	writel((readl(addr) & ~mask) | val, addr);
+>> +}
+>> +
+>> +static inline int qcom_ssphy_vbus_enable(struct regulator *vbus)
+>> +{
+>> +	return !regulator_is_enabled(vbus) ? regulator_enable(vbus) : 0;
+> 
+> regulator_is_enabled() will check if the actual regulator is on, not if
+> you already voted for it.
+> 
+> So if something else is enabling the vbus regulator you will skip your
+> enable and be in the mercy of them not releasing it. Presumably there's
+> only one consumer of this particular regulator, but it's a bad habit.
+
+yep
+
+> 
+> Please keep track of this drivers requested state in this driver, if
+> qcom_ssphy_vbus_ctrl() is called not only for the state changes.
+
+um, there is not such a function: the ctrl function is not for vbus but
+for vdd
+
+> 
+>> +}
+>> +
+>> +static inline int qcom_ssphy_vbus_disable(struct regulator *vbus)
+>> +{
+>> +	return regulator_is_enabled(vbus) ? regulator_disable(vbus) : 0;
+>> +}
+>> +
+>> +static int qcom_ssphy_vdd_ctrl(struct ssphy_priv *priv, enum phy_vdd_ctrl ctrl)
+> 
+> As discussed on IRC, I think you should just leave the voltage
+> constraints to DeviceTree.
+
+yes
+
+> 
+>> +{
+>> +	const int vdd_min = ctrl == ENABLE ? 1050000 : 0;
+>> +	const int vdd_max = 1050000;
+>> +	int ret;
+>> +
+>> +	ret = regulator_set_voltage(priv->regs[VDD].consumer, vdd_min, vdd_max);
+>> +	if (ret)
+>> +		dev_err(priv->dev, "Failed to set regulator vdd to %d\n",
+>> +			vdd_min);
+>> +
+>> +	return ret;
+>> +}
+> [..]
+>> +static int qcom_ssphy_power_on(struct phy *phy)
+>> +{
+>> +	struct ssphy_priv *priv = phy_get_drvdata(phy);
+>> +	int ret;
+>> +
+>> +	ret = qcom_ssphy_vdd_ctrl(priv, ENABLE);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = regulator_bulk_enable(priv->num_regs, priv->regs);
+>> +	if (ret)
+>> +		goto err1;
+>> +
+>> +	ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
+>> +	if (ret)
+>> +		goto err2;
+>> +
+>> +	ret = qcom_ssphy_vbus_ctrl(priv->vbus, priv->mode);
+>> +	if (ret)
+>> +		goto err3;
+>> +
+>> +	ret = qcom_ssphy_do_reset(priv);
+>> +	if (ret)
+>> +		goto err4;
+>> +
+>> +	writeb(SWI_PCS_CLK_SEL, priv->base + PHY_CTRL0);
+>> +	qcom_ssphy_updatel(priv->base + PHY_CTRL4, LANE0_PWR_ON, LANE0_PWR_ON);
+>> +	qcom_ssphy_updatel(priv->base + PHY_CTRL2, REF_PHY_EN, REF_PHY_EN);
+>> +	qcom_ssphy_updatel(priv->base + PHY_CTRL4, TST_PWR_DOWN, 0);
+>> +
+>> +	return 0;
+>> +err4:
+> 
+> Name your labels based on what they do, e.g. err_disable_vbus.
+
+ok
+
+> 
+>> +	if (priv->vbus && priv->mode != PHY_MODE_INVALID)
+>> +		qcom_ssphy_vbus_disable(priv->vbus);
+> 
+> qcom_ssphy_vbus_ctrl() above was either enabling or disabling vbus, but
+> here you're directly calling disable to unroll that. It think the result
+> is correct (in host this reverts to disabled and in gadget it's a
+> no-op), but I'm not sure I like the design of sometimes calling straight
+> to the vbus enable/disable and sometimes to the wrapper function.
+
+I think you misread: we have vbus enable/disable and vdd control
+(different regulators)
+
+
+I have to admit that the only reason I had separate functions for vbus
+enable/disable was cosmetic (and "if" on the control variable + another
+"if" to check that the regulator was already voted was taking me beyond
+the 80 lines character and I hate when that happens on simple
+operations). anyway will redo
+
+> 
+>> +err3:
+> 
+> err_clk_disable
+> 
+>> +	clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
+>> +err2:
+>> +	regulator_bulk_disable(priv->num_regs, priv->regs);
+>> +err1:
+>> +	qcom_ssphy_vdd_ctrl(priv, DISABLE);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int qcom_ssphy_power_off(struct phy *phy)
+>> +{
+>> +	struct ssphy_priv *priv = phy_get_drvdata(phy);
+>> +
+>> +	qcom_ssphy_updatel(priv->base + PHY_CTRL4, LANE0_PWR_ON, 0);
+>> +	qcom_ssphy_updatel(priv->base + PHY_CTRL2, REF_PHY_EN, 0);
+>> +	qcom_ssphy_updatel(priv->base + PHY_CTRL4, TST_PWR_DOWN, TST_PWR_DOWN);
+>> +
+>> +	clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
+>> +	regulator_bulk_disable(priv->num_regs, priv->regs);
+>> +
+>> +	if (priv->vbus && priv->mode != PHY_MODE_INVALID)
+>> +		qcom_ssphy_vbus_disable(priv->vbus);
+>> +
+>> +	qcom_ssphy_vdd_ctrl(priv, DISABLE);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int qcom_ssphy_init_clock(struct ssphy_priv *priv)
+>> +{
+>> +	const char * const clk_id[] = { "ref", "phy", "pipe", };
+>> +	int i;
+>> +
+>> +	priv->num_clks = ARRAY_SIZE(clk_id);
+>> +	priv->clks = devm_kcalloc(priv->dev, priv->num_clks,
+>> +				  sizeof(*priv->clks), GFP_KERNEL);
+> 
+> You know num_clks is 3, so I would suggest that you just change the
+> sshphy_priv to clks[3] and skip the dynamic allocation.
+
+
+ok
+
+> 
+> 
+> Also, as num_clks always is ARRAY_SIZE(priv->clks) I would suggest using
+> the latter, to make that clear throughout the driver.
+
+maybe then just define NBR_CLKS (I find long lines a pain to read)
+
+> 
+>> +	if (!priv->clks)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < priv->num_clks; i++)
+>> +		priv->clks[i].id = clk_id[i];
+> 
+> There's no harm in just writing this on three lines:
+> 
+> 	priv->clks[0].id = "ref";
+> 	priv->clks[1].id = "phy";
+> 	priv->clks[2].id = "pipe";
+> 
+>> +
+>> +	return devm_clk_bulk_get(priv->dev, priv->num_clks, priv->clks);
+>> +}
+>> +
+>> +static int qcom_ssphy_init_regulator(struct ssphy_priv *priv)
+>> +{
+>> +	const char * const reg_supplies[] = {
+>> +		[VDD] = "vdd",
+>> +		[VDDA1P8] = "vdda1p8",
+>> +	};
+>> +	int ret, i;
+>> +
+>> +	priv->num_regs = ARRAY_SIZE(reg_supplies);
+>> +	priv->regs = devm_kcalloc(priv->dev, priv->num_regs,
+>> +				  sizeof(*priv->regs), GFP_KERNEL);
+> 
+> As with clocks, you know there will only be 2 of these, make it fixed
+> size in ssphy_priv.
+
+well ok
+
+> 
+> And as with clocks, I would suggest using ARRAY_SIZE(priv->regs)
+> throughout the driver to make it obvious that's it's a static number. 
+> 
+>> +	if (!priv->regs)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < priv->num_regs; i++)
+>> +		priv->regs[i].supply = reg_supplies[i];
+> 
+> As with clocks, just unroll this and fill in the 2 supplies directly.
+
+um, ok, I find the above more readable but I see where you are going
+with these sort of recomendations...will just follow them
+
+> 
+>> +
+>> +	ret = devm_regulator_bulk_get(priv->dev, priv->num_regs, priv->regs);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	priv->vbus = devm_regulator_get_optional(priv->dev, "vbus");
+> 
+> get_optional means that if vbus-supply is not found, rather than
+> returning a dummy regulator object this will fail with -ENODEV.
+
+yes I messed this up.
+
+> 
+> Given the rest of the logic related to vbus you should set vbus to NULL
+> if the returned PTR_ERR(value) is -ENODEV, and fail for other errors.
+> 
+> 
+> Or just drop the _optional, and let your vbus controls operate on the
+> dummy regulator you get back.
+
+yes will do this. thanks for the suggestion and the review!
+
+> 
+> (Right now vbus can't be NULL, so these checks are not very useful)
+> 
+>> +	if (IS_ERR(priv->vbus))
+>> +		return PTR_ERR(priv->vbus);
+>> +
+>> +	return 0;
+> 
+> return PTR_ERR_OR_ZERO(priv->vbus)
+> 
+> (Although that might change based on above comment)
+> 
+>> +}
+> 
+> Regards,
+> Bjorn
+> 
