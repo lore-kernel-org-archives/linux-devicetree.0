@@ -1,86 +1,134 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 08/10] arm64: dts: allwinner: h5:
- orange-pi-prime: Add CPU regulator supply
-Date: Wed, 30 Jan 2019 16:42:01 +0800
-Message-ID: <20190130084203.25053-9-wens@csie.org>
-References: <20190130084203.25053-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB4WGYXRAKGQEIUSSOAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190130084203.25053-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH v2] arm64: dts: sdm845: Add Q6V5 ADSP node
+Date: Wed, 30 Jan 2019 14:16:29 +0530
+Message-ID: <1548837989-22904-1-git-send-email-rohitkr@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-remoteproc@vger.kernel.org, bjorn.andersson@linaro.org, rohkumar@qti.qualcomm.com
+Cc: Rohit kumar <rohitkr@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The OrangePi Prime uses a Silergy SY8106A regulator to supply the CPU
-cores. The fixed voltage when I2C programmed regulation is not in action
-is slightly higher than 1.1V. The value in the device tree description
-is based on calculations of the resistor values from the schematics.
+This patch adds Q6V5 ADSP pil remoteproc node
+for SDM845 SoC.
 
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
+Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
 ---
+Changes since v1:
+Addressed comments given by Bjorn.
 
-This patch is based on the schematics and has not been tested on an
-actual board.
----
- .../allwinner/sun50i-h5-orangepi-prime.dts    | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+This depends on below upstream patch which defines adsp_mem node:
+https://lkml.org/lkml/2019/1/29/1392
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-index b75ca4d7d001..e866a0734bb3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-@@ -139,6 +139,10 @@
- 	status = "okay";
- };
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 89 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 33f5f4b..31cb8db 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -18,6 +18,7 @@
+ #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+ #include <dt-bindings/reset/qcom,sdm845-pdc.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
++#include <dt-bindings/soc/qcom,apr.h>
  
-+&cpu0 {
-+	cpu-supply = <&reg_vdd_cpux>;
-+};
-+
- &de {
- 	status = "okay";
- };
-@@ -222,6 +226,30 @@
- 	status = "okay";
- };
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -2048,6 +2049,94 @@
+ 			status = "disabled";
+ 		};
  
-+&r_i2c {
-+	status = "okay";
++		adsp_pil: remoteproc-adsp-pil@17300000 {
++			compatible = "qcom,sdm845-adsp-pil";
 +
-+	reg_vdd_cpux: regulator@65 {
-+		compatible = "silergy,sy8106a";
-+		reg = <0x65>;
-+		regulator-name = "vdd-cpux";
-+		silergy,fixed-microvolt = <1108474>;
-+		/*
-+		 * The datasheet uses 1.1V as the minimum value of VDD-CPUX,
-+		 * however both the Armbian DVFS table and the official one
-+		 * have operating points with voltage under 1.1V, and both
-+		 * DVFS table are known to work properly at the lowest
-+		 * operating point.
-+		 *
-+		 * Use 1.0V as the minimum voltage instead.
-+		 */
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+};
++			reg = <0x17300000 0x410>;
++			interrupts-extended =
++				<&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
++				<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++				<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++				<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++				<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack";
 +
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_LPASS_SWAY_CLK>,
++				 <&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
++				 <&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
++				 <&lpasscc LPASS_QDSP6SS_XO_CLK>,
++				 <&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
++				 <&lpasscc LPASS_QDSP6SS_CORE_CLK>;
++
++			clock-names = "xo", "sway_cbcr", "lpass_ahbs_aon_cbcr",
++				      "lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
++				      "qdsp6ss_sleep", "qdsp6ss_core";
++
++			resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
++				 <&aoss_reset AOSS_CC_LPASS_RESTART>;
++			reset-names = "pdc_sync", "cc_lpass";
++
++			qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
++
++			memory-region = <&adsp_mem>;
++
++			qcom,smem-states = <&adsp_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			status = "disabled";
++			glink-edge {
++				interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
++				label = "lpass";
++				qcom,remote-pid = <2>;
++				mboxes = <&apss_shared 8>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				apr@4 {
++					compatible = "qcom,apr-v2";
++					qcom,glink-channels = "apr_audio_svc";
++					reg = <APR_DOMAIN_ADSP>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					q6core {
++						compatible = "qcom,q6core";
++						reg = <APR_SVC_ADSP_CORE>;
++					};
++
++					q6afe {
++						compatible = "qcom,q6afe";
++						reg = <APR_SVC_AFE>;
++						q6afedai: afedais {
++							compatible = "qcom,q6afe-dais";
++							#sound-dai-cells = <1>;
++							#address-cells = <1>;
++							#size-cells = <0>;
++						};
++					};
++
++					q6asm {
++						compatible = "qcom,q6asm";
++						reg = <APR_SVC_ASM>;
++						q6asmdai: asmdai{
++							compatible = "qcom,q6asm-dais";
++							iommus = <&apps_smmu 0x1821 0x0>;
++							#sound-dai-cells = <1>;
++						};
++					};
++
++					q6adm {
++						compatible = "qcom,q6adm";
++						reg = <APR_SVC_ADM>;
++						q6routing: routing {
++							compatible = "qcom,q6adm-routing";
++							#sound-dai-cells = <0>;
++						};
++					};
++				};
++			};
++		};
++
+ 		apss_shared: mailbox@17990000 {
+ 			compatible = "qcom,sdm845-apss-shared";
+ 			reg = <0 0x17990000 0 0x1000>;
 -- 
-2.20.1
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
