@@ -1,147 +1,91 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: support inter-word delay requirement for devices" to the spi tree
-Date: Wed, 30 Jan 2019 23:02:50 +0000 (GMT)
-Message-ID: <20190130230250.EC35C440082@finisterre.ee.mobilebroadband>
-References: <20190130084005.18649-2-jonas@norrbonn.se>
+From: alokc@codeaurora.org
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add interconnect binding for
+ GENI QUP
+Date: Wed, 30 Jan 2019 14:29:52 -0800
+Message-ID: <77a4841746b00a67a14daa42886be57b@codeaurora.org>
+References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
+ <1548138816-1149-2-git-send-email-alokc@codeaurora.org>
+ <c4260d66-5ca4-b194-0cbc-2a682a99db4b@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130084005.18649-2-jonas@norrbonn.se>
+In-Reply-To: <c4260d66-5ca4-b194-0cbc-2a682a99db4b@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Bonn <jonas@norrbonn.se>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.orglinux-spi@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 2019-01-23 10:35, Georgi Djakov wrote:
+> Hi Alok,
+> 
+> Thanks for the patches!
+> 
+> On 1/22/19 08:33, Alok Chauhan wrote:
+>> Add documentation for the interconnect and interconnect-names bindings
+> 
+> s/interconnect /interconnects /
+> 
+>> for the GENI QUP as detailed by 
+>> bindings/interconnect/interconnect.txt.
+>> 
+>> Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 10 
+>> ++++++++++
+>>  1 file changed, 10 insertions(+)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt 
+>> b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>> index dab7ca9..44d7e02 100644
+>> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>> @@ -17,6 +17,12 @@ Required properties if child node exists:
+>>  - #address-cells: 	Must be <1> for Serial Engine Address
+>>  - #size-cells: 		Must be <1> for Serial Engine Address Size
+>>  - ranges: 		Must be present
+>> +- interconnects:	phandle to a interconnect provider. Please refer
+> 
+> s/a interconnect/an interconnect/
+sure, will do.
+> 
+>> +			../interconnect/interconnect.txt for details.
+>> +			Must be 2 paths corresponding to 2 AXI ports.
+>> +- interconnect-names:	Port names to differentiate between the
+>> +			2 interconnect paths defined with interconnect
+>> +			specifier.
+>> 
+>>  Properties for children:
+>> 
+>> @@ -67,6 +73,10 @@ Example:
+>>  		#size-cells = <1>;
+>>  		ranges;
+>> 
+>> +		interconnects = <&qnoc 11 &qnoc 512>,
+>> +				<&qnoc 0 &qnoc 543>;
+> 
+> Please take a snippet from your patch 6/6 and put it here instead of 
+> the
+> hard-coded integers above.
+sure
+> 
+>> +		interconnect-names = "qup-memory", "qup-config";
+>> +
+>>  		i2c0: i2c@a94000 {
+>>  			compatible = "qcom,geni-i2c";
+>>  			reg = <0xa94000 0x4000>;
+>> 
+> 
+> When you post a new version, please change the subject of the patch
+> series to PATCH v2, PATCH v3 etc, in order to be able to distinguish
+> between different versions.
+sure, will do this.
+> 
+> Thanks,
+> Georgi
 
-   spi: support inter-word delay requirement for devices
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From b7bb367afa4bf9de60830683305c63030c3e581d Mon Sep 17 00:00:00 2001
-From: Jonas Bonn <jonas@norrbonn.se>
-Date: Wed, 30 Jan 2019 09:40:04 +0100
-Subject: [PATCH] spi: support inter-word delay requirement for devices
-
-Some devices are slow and cannot keep up with the SPI bus and therefore
-require a short delay between words of the SPI transfer.
-
-The example of this that I'm looking at is a SAMA5D2 with a minimum SPI
-clock of 400kHz talking to an AVR-based SPI slave.  The AVR cannot put
-bytes on the bus fast enough to keep up with the SoC's SPI controller
-even at the lowest bus speed.
-
-This patch introduces the ability to specify a required inter-word
-delay for SPI devices.  It is up to the controller driver to configure
-itself accordingly in order to introduce the requested delay.
-
-Note that, for spi_transfer, there is already a field word_delay that
-provides similar functionality.  This field, however, is specified in
-clock cycles (and worse, SPI controller cycles, not SCK cycles); that
-makes this value dependent on the master clock instead of the device
-clock for which the delay is intended to provide some relief.  This
-patch leaves this old word_delay in place and provides a time-based
-word_delay_us alongside it; the new field fits in the struct padding
-so struct size is constant.  There is only one in-kernel user of the
-word_delay field and presumably that driver could be reworked to use
-the time-based value instead.
-
-The time-based delay is limited to 8 bits as these delays are intended
-to be short.  The SAMA5D2 that I've tested this on limits delays to a
-maximum of ~100us, which is already many word-transfer periods even at
-the minimum transfer speed supported by the controller.
-
-Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
-CC: Mark Brown <broonie@kernel.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: linux-spi@vger.kernel.org
-CC: devicetree@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi.c       | 5 +++++
- include/linux/spi/spi.h | 6 ++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 0e0f2c62973c..2f7176f07591 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3050,6 +3050,8 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
- 	 * it is not set for this transfer.
- 	 * Set transfer tx_nbits and rx_nbits as single transfer default
- 	 * (SPI_NBITS_SINGLE) if it is not set for this transfer.
-+	 * Ensure transfer word_delay is at least as long as that required by
-+	 * device itself.
- 	 */
- 	message->frame_length = 0;
- 	list_for_each_entry(xfer, &message->transfers, transfer_list) {
-@@ -3120,6 +3122,9 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
- 				!(spi->mode & SPI_RX_QUAD))
- 				return -EINVAL;
- 		}
-+
-+		if (xfer->word_delay_usecs < spi->word_delay_usecs)
-+			xfer->word_delay_usecs = spi->word_delay_usecs;
- 	}
- 
- 	message->status = -EINPROGRESS;
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 916bba47d156..662b336aa2e4 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -122,6 +122,8 @@ void spi_statistics_add_transfer_stats(struct spi_statistics *stats,
-  *	the spi_master.
-  * @cs_gpiod: gpio descriptor of the chipselect line (optional, NULL when
-  *	not using a GPIO line)
-+ * @word_delay_usecs: microsecond delay to be inserted between consecutive
-+ *	words of a transfer
-  *
-  * @statistics: statistics for the spi_device
-  *
-@@ -169,6 +171,7 @@ struct spi_device {
- 	const char		*driver_override;
- 	int			cs_gpio;	/* LEGACY: chip select gpio */
- 	struct gpio_desc	*cs_gpiod;	/* chip select gpio desc */
-+	uint8_t			word_delay_usecs; /* inter-word delay */
- 
- 	/* the statistics */
- 	struct spi_statistics	statistics;
-@@ -721,6 +724,8 @@ extern void spi_res_release(struct spi_controller *ctlr,
-  * @delay_usecs: microseconds to delay after this transfer before
-  *	(optionally) changing the chipselect status, then starting
-  *	the next transfer or completing this @spi_message.
-+ * @word_delay_usecs: microseconds to inter word delay after each word size
-+ *	(set by bits_per_word) transmission.
-  * @word_delay: clock cycles to inter word delay after each word size
-  *	(set by bits_per_word) transmission.
-  * @transfer_list: transfers are sequenced through @spi_message.transfers
-@@ -803,6 +808,7 @@ struct spi_transfer {
- #define	SPI_NBITS_DUAL		0x02 /* 2bits transfer */
- #define	SPI_NBITS_QUAD		0x04 /* 4bits transfer */
- 	u8		bits_per_word;
-+	u8		word_delay_usecs;
- 	u16		delay_usecs;
- 	u32		speed_hz;
- 	u16		word_delay;
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,a Linux Foundation Collaborative Project
