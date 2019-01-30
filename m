@@ -1,58 +1,116 @@
-Return-Path: <SRS0=HE6G=P6=partner.samsung.com=k.konieczny@kernel.org>
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v5 0/5] Add imem clock for Exynos 5433
-Date: Tue, 22 Jan 2019 10:02:27 +0100
-Message-Id: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+Return-Path: <SRS0=IkuC=QG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr50071.outbound.protection.outlook.com ([40.107.5.71]:34112
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732323AbfA3Sbu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Jan 2019 13:31:50 -0500
+From: Khalil Blaiech <kblaiech@mellanox.com>
+Subject: RE: [PATCH v2 2/2] dt-bindings: i2c: I2C binding for Mellanox
+ BlueField SoC
+Date: Wed, 30 Jan 2019 18:31:46 +0000
+Message-ID: <VI1PR05MB427177E87A574AF126F4E169A6900@VI1PR05MB4271.eurprd05.prod.outlook.com>
+References: <cover.1543941145.git.kblaiech@mellanox.com>
+ <559a79756c9da9a7b188ffa141a2056a83c60de6.1543941145.git.kblaiech@mellanox.com>
+ <20181218155304.GA31027@bogus>
+In-Reply-To: <20181218155304.GA31027@bogus>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-References: <CGME20190122090249eucas1p1e464ab92e8d5a706981f8dbcb63b1500@eucas1p1.samsung.com>
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, David Woods <dwoods@mellanox.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add imem clock for Exynos 5433. This will allow to use SlimSSS (Slim
-Security SubSystem) with crypto functions.
+Rob,
 
-Changes since v4:
-- added Acked-by to 5th patch,
-- removed all clock ids except CLK_ACLK_SLIMSSS/CLK_PCLK_SLIMSSS and rewrite
-  commit message.
+Apologies for the late reply. It wasn't that easy to address your comments
+and revisit the design of the driver. Please note that I applied the necess=
+ary
+changes and submitted a V3.
 
-Changes since v3:
-- added Acked-by and Reviewed-by to patches 2 and 3
-- dropped "[PATCH v3 4/5] arm64: dts: exynos: add imem clock" because it
-  was already applied
-- split "[PATCH v3 5/5] clk: samsung: exynos5433: add imem clocks"
-  into two parts, first for DT bindings and second for clock driver. In
-  clock driver I dropped all SSS clocks and left only two slimSSS, as I
-  was unable to test SSS with crypto driver s5p-sss.
+> On Tue, Dec 04, 2018 at 12:40:58PM -0500, Khalil Blaiech wrote:
+> > Added device tree bindings documentation for Mellanox BlueField I2C
+> > SMBus controller.
+> >
+> > Reviewed-by: David Woods <dwoods@mellanox.com>
+> > Signed-off-by: Khalil Blaiech <kblaiech@mellanox.com>
+> > ---
+> >  .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt | 67
+> > ++++++++++++++++++++++
+> >  1 file changed, 67 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
+> > b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
+> > new file mode 100644
+> > index 0000000..61a8037
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
+> > @@ -0,0 +1,67 @@
+> > +Device tree configuration for the Mellanox I2C SMBus on BlueField
+> > +SoCs
+> > +
+> > +Required Properties:
+> > +- reg        :	address offset and length of the device registers. The
+> > +		registers consists of a set of dedicated and shared
+> > +	       	resources:
+>=20
+> mixed tab and spaces.
 
-Changes since v2:
-- added Reviewed-by to two first patches
-- fixed subject for 3rd patch and commit message
-- in patch 3 moved documentation of imem to end of clocks after CMU_CAM1
-- in patch 4 moved cmu_imem declarations after cmu_cam1
-- in patch 5 added newlines after clock registers, moved code after cmu_cam1,
-  removed CLK_OF_DECLARE and exynos5433_cmu_imem_init, moved cmu_imem
-  compatible to the end of exynos5433_cmu_of_match
+Removed the spaces and used tabs instead (sorry about that).
 
-Changes since v1:
-- splitted typo patch into two, one of them for stable, suggested by Krzysztof
-  Kozlowski
-- added more registers as suggested by Chanwoo Choi
+>=20
+> > +
+> > +			1: Smbus block registers (dedicated)
+> > +			2: Cause master registers (dedicated)
+> > +			3: Cause slave registers (dedicated)
+> > +			4: Cause coalesce registers (shared)
+> > +			5: GPIO 0 registers (shared)
+> > +			6: CorePLL registers (shared)
+> > +
+> > +		The BlueField SoCs includes three I2C bus controllers;
+> > +		the set of resources <address length> must be defined
+> > +		as follow:
+> > +
+> > +		i2c bus 0:
+> > +		    <0x02804000 0x800>	/* Smbus[0]        */
+> > +		    <0x02801200 0x020>	/* Cause Master[0] */
+> > +		    <0x02801260 0x020>	/* Cause Slave[0]  */
+> > +		    <0x02801300 0x010>	/* Cause Coalesce  */
+> > +		    <0x02802000 0x100>	/* GPIO 0          */
+> > +		    <0x02800358 0x008>	/* CorePll         */
+> > +
+> > +		i2c bus 1:
+> > +		    <0x02804800 0x800>	/* Smbus[1]        */
+> > +		    <0x02801220 0x020>	/* Cause Master[1] */
+> > +		    <0x02801280 0x020>	/* Cause Slave[1]  */
+>=20
+> > +		    <0x02801300 0x010>	/* Cause Coalesce  */
+> > +		    <0x02802000 0x100>	/* GPIO 0          */
+> > +		    <0x02800358 0x008>	/* CorePll         */
+>=20
+> You should not have overlapping register addresses in DT. These should be
+> separate nodes.
 
-Kamil Konieczny (5):
-  clk: samsung: exynos5433: fix typo in imem divider
-  clk: samsung: exynos5433: fix name typo in sssx
-  dt-bindings: clk: exynos5433: document imem clock
-  dt-bindings: clk: exynos5433: add imem clock
-  clk: samsung: exynos5433: add imem clocks
+>From our perspective, a separate node would make things more complicated
+because this would imply a sophisticated probe routine for such simple devi=
+ce;
+this may also require a deferral of the probe of the i2c controllers...
+That being said, I believe the intuitive approach would be to implement a l=
+ogic
+within the driver code that maps the device memory and serialize the access=
+ to
+the common registers. The only convenient of such approach is to keep the
+common register definitions consistent across our platforms...
 
- .../bindings/clock/exynos5433-clock.txt       | 23 +++++++++++
- drivers/clk/samsung/clk-exynos5433.c          | 38 +++++++++++++++++--
- include/dt-bindings/clock/exynos5433.h        |  8 +++-
- 3 files changed, 65 insertions(+), 4 deletions(-)
+By the way, these definitions were initially based on the design of our har=
+dware.
 
--- 
-2.20.0
+>=20
+> Rob
+
+Regards,
+Khalil
