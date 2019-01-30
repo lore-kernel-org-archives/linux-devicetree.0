@@ -1,38 +1,56 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 06/13] ARM: dts: lpc32xx: remove inclusion of deprecated
- skeleton.dtsi
-Date: Wed, 30 Jan 2019 22:33:29 +0200
-Message-ID: <66feef3c-1116-a853-e8ba-317e497c7dea@mleia.com>
-References: <20190129192049.11223-1-vz@mleia.com>
- <20190129192049.11223-7-vz@mleia.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH RFC 1/3] dt-bindings: hwmon: Add tachometer interrupt to
+ pwm-fan
+Date: Wed, 30 Jan 2019 12:35:25 -0800
+Message-ID: <20190130203525.GA23614@roeck-us.net>
+References: <1548860827-29796-1-git-send-email-stefan.wahren@i2se.com>
+ <1548860827-29796-2-git-send-email-stefan.wahren@i2se.com>
+ <20190130172815.GC14781@roeck-us.net>
+ <625436113.118199.1548879811777@email.ionos.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190129192049.11223-7-vz@mleia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylvain Lemieux <slemieux.tyco@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <625436113.118199.1548879811777@email.ionos.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2019 09:20 PM, Vladimir Zapolskiy wrote:
-> Inclusion of skeleton.dtsi into DTS files is deprecated since
-> commit 9c0da3cc61f1233c ("ARM: dts: explicitly mark skeleton.dtsi
-> as deprecated").
+On Wed, Jan 30, 2019 at 09:23:31PM +0100, Stefan Wahren wrote:
+> Hi Guenter,
 > 
+> > Guenter Roeck <linux@roeck-us.net> hat am 30. Januar 2019 um 18:28 geschrieben:
+> > 
+> > 
+> > On Wed, Jan 30, 2019 at 04:07:05PM +0100, Stefan Wahren wrote:
+> > > This adds the tachometer interrupt to the pwm-fan binding, which is
+> > > necessary for RPM support.
+> > > 
+> > > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> > > index 49ca5d8..7f69b0b 100644
+> > > --- a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> > > +++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> > > @@ -8,6 +8,9 @@ Required properties:
+> > >  
+> > >  Optional properties:
+> > >  - fan-supply    : phandle to the regulator that provides power to the fan
+> > > +- interrupts    : contains a single interrupt specifier which describes the
+> > > +                  tachometer pin output of a 2 pulse-per-revolution fan.
+> > > +                  See interrupt-controller/interrupts.txt for the format.
+> > 
+> > So a hypothetical {1,4} pulse-per-revolution fan would explicitly not be
+> > supported ? Why ?
+> 
+> i could add an additional property to specify the pulse per revolution and use the 2 as default (according to the Intel spec for 4 pin pwm fan) which should fit in most cases.
+> 
+That would be a possibility and make sense, but that is not
+the point here.  The "interrupts" property does not and should
+not care how many pulses per revolution the fan provides.
 
-This change will be dropped to avoid a conflict with a functionally
-equal applied change from Rob.
-
---
-Best wishes,
-Vladimir
+Guenter
