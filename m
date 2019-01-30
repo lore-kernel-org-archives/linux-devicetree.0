@@ -1,152 +1,110 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut
- trampoline description
-Date: Wed, 30 Jan 2019 08:40:43 +0000
-Message-ID: <20190130084043.ajivzgxgahmxlv5g@e5254000004ec.dyn.armlinux.org.uk>
-References: <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
- <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com>
- <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
- <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
- <CAL_Jsq+dnKht3TwCh1qB1H4pYFhQJmSN0nAayU+=PJLAvq0bbQ@mail.gmail.com>
- <90b00858-6e9e-8f7c-f6d4-b35e5daa6eee@socionext.com>
- <CAL_JsqJ=FRfzVFiOJ0wvoV5iZV+Gx3ft9pGyhb-GoKnOAQgPtQ@mail.gmail.com>
- <daa5f00a-1d9c-69b0-ed2d-8ff6a64251cc@socionext.com>
- <20190122115010.ziopujojh6hkxyag@e5254000004ec.dyn.armlinux.org.uk>
- <2bf9d327-580b-afb6-f872-701dde249b22@socionext.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 02/10] ARM: dts: bananapi-m2-plus: Add CPU
+ supply regulator
+Date: Wed, 30 Jan 2019 16:41:55 +0800
+Message-ID: <20190130084203.25053-3-wens@csie.org>
+References: <20190130084203.25053-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2bf9d327-580b-afb6-f872-701dde249b22@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3GGYXRAKGQEVM3BVAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190130084203.25053-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 05:28:48PM +0900, Sugaya, Taichi wrote:
-> Hi,
-> 
-> On 2019/01/22 20:50, Russell King - ARM Linux admin wrote:
-> > On Tue, Jan 22, 2019 at 08:36:03PM +0900, Sugaya, Taichi wrote:
-> > > Hi
-> > > 
-> > > On 2018/12/04 22:32, Rob Herring wrote:
-> > > > On Tue, Dec 4, 2018 at 5:30 AM Sugaya, Taichi
-> > > > <sugaya.taichi@socionext.com> wrote:
-> > > > > 
-> > > > > Hi
-> > > > > 
-> > > > > On 2018/12/04 0:49, Rob Herring wrote:
-> > > > > > On Mon, Dec 3, 2018 at 1:42 AM Sugaya, Taichi
-> > > > > > <sugaya.taichi@socionext.com> wrote:
-> > > > > > > 
-> > > > > > > Hi,
-> > > > > > > 
-> > > > > > > On 2018/11/30 17:16, Stephen Boyd wrote:
-> > > > > > > > Quoting Sugaya, Taichi (2018-11-29 04:24:51)
-> > > > > > > > > On 2018/11/28 11:01, Stephen Boyd wrote:
-> > > > > > > > > > Quoting Sugaya Taichi (2018-11-18 17:01:07)
-> > > > > > > > > > >       create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
-> > > > > > > > > > > 
-> > > > > > > > > > > diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
-> > > > > > > > > > > new file mode 100644
-> > > > > > > > > > > index 0000000..f5d906c
-> > > > > > > > > > > --- /dev/null
-> > > > > > > > > > > +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
-> > > > > > > > > > > @@ -0,0 +1,12 @@
-> > > > > > > > > > > +Socionext M10V SMP trampoline driver binding
-> > > > > > > > > > > +
-> > > > > > > > > > > +This is a driver to wait for sub-cores while boot process.
-> > > > > > > > > > > +
-> > > > > > > > > > > +- compatible: should be "socionext,smp-trampoline"
-> > > > > > > > > > > +- reg: should be <0x4C000100 0x100>
-> > > > > > > > > > > +
-> > > > > > > > > > > +EXAMPLE
-> > > > > > > > > > > +       trampoline: trampoline@0x4C000100 {
-> > > > > > > > > > Drop the 0x part of unit addresses.
-> > > > > > > > > 
-> > > > > > > > > Okay.
-> > > > > > > > > 
-> > > > > > > > > 
-> > > > > > > > > > > +               compatible = "socionext,smp-trampoline";
-> > > > > > > > > > > +               reg = <0x4C000100 0x100>;
-> > > > > > > > > > Looks like a software construct, which we wouldn't want to put into DT
-> > > > > > > > > > this way. DT doesn't describe drivers.
-> > > > > > > > > We would like to use this node only getting the address of the
-> > > > > > > > > trampoline area
-> > > > > > > > > in which sub-cores wait.  (They have finished to go to this area in previous
-> > > > > > > > > bootloader process.)
-> > > > > > > > 
-> > > > > > > > Is this area part of memory, or a special SRAM? If it's part of memory,
-> > > > > > > > I would expect this node to be under the reserved-memory node and
-> > > > > > > > pointed to by some other node that uses this region. Could even be the
-> > > > > > > > CPU nodes.
-> > > > > > > 
-> > > > > > > Yes, 0x4C000100 is a part of memory under the reserved-memory node. So
-> > > > > > > we would like to use the SRAM ( allocated 0x00000000 ) area instead.
-> > > > > > > BTW, sorry, the trampoline address of this example is simply wrong.  We
-> > > > > > > were going to use a part of the SRAM from the beginning.
-> > > > > > > 
-> > > > > > > > 
-> > > > > > > > > 
-> > > > > > > > > So should we embed the constant value in source codes instead of getting
-> > > > > > > > > from
-> > > > > > > > > DT because the address is constant at the moment? Or is there other
-> > > > > > > > > approach?
-> > > > > > > > > 
-> > > > > > > > 
-> > > > > > > > If it's constant then that also works. Why does it need to come from DT
-> > > > > > > > at all then?
-> > > > > > > 
-> > > > > > > We think it is not good to embed constant value in driver codes and do
-> > > > > > > not have another way...
-> > > > > > > Are there better ways?
-> > > > > > 
-> > > > > > If this is just memory, can you use the standard spin-table binding in
-> > > > > > the DT spec? There are some requirements like 64-bit values even on
-> > > > > > 32-bit machines (though this gets violated).
-> > > > > 
-> > > > > The spin-table seems to be used on only 64-bit arch. Have it ever worked
-> > > > > on 32-bit machine?
-> > > > 
-> > > > Yes.
-> > > > 
-> > > > > And I would like not to use it because avoid violation.
-> > > > 
-> > > > The issue now that I remember is cpu-release-addr is defined to always
-> > > > be a 64-bit value while some platforms made it a 32-bit value.
-> > > > 'cpu-release-addr' is also used for some other enable-methods.
-> > > 
-> > > I have a question about the spin-table.
-> > > The code "smp_spin_table.c" is only in "arch/arm64/kernel" directory so can
-> > > not be compiled in arm-v7 arch. That means the spin-table can not be used
-> > > arm-v7 arch..? , or is there the way to compile the code in arm-v7 arch?
-> > 
-> > Why do you think you need it?  Do you have no way to control individual
-> > CPUs?
-> > 
-> > We are going through a process in 32-bit eliminating the "spin table"
-> > stuff from platforms.
-> > 
-> 
-> Not always necessary to us and considering the history I think it is not
-> suitable to use the spin-table.
-> I try to use another way.
+The original Bananapi M2+ uses a fixed regulator to supply the CPU
+cores. According to Bananapi, the retail v1.1 version is designed to
+supply 1.3V. Actual measurements show 1.310V. Earlier engineering
+samples had it at 1.4V, but this is not covered here.
 
-Please do - the "spin" approach was a hack to allow ARM Ltd's platforms
-to work.  These platforms have no power control or reset of secondary
-CPUs and no low power states (so can't suspend/resume).  Early firmware
-only had the capabilities to release _all_ secondary CPUs to the kernel
-together.  The "spin" approach is incompatible with suspend/resume,
-hibernate, and kexec features of the kernel.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ .../boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 30 +++++++------------
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi | 14 +++++++++
+ 2 files changed, 25 insertions(+), 19 deletions(-)
 
-Real platforms do not have these problems, and thus should not use the
-spin-table approach.
-
-Modern platforms use PSCI to make the control of low power modes and
-secondary CPUs independent of the kernel.
-
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index a567567763f4..39834329b6ae 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -5,27 +5,19 @@
+ 
+ #include "sunxi-bananapi-m2-plus.dtsi"
+ 
+-/ {
++&reg_vdd_cpux {
+ 	/*
+ 	 * Bananapi M2+ v1.2 uses a GPIO line to change the effective
+ 	 * resistance on the CPU regulator's feedback pin.
+ 	 */
+-	reg_vdd_cpux: vdd-cpux {
+-		compatible = "regulator-gpio";
+-		regulator-name = "vdd-cpux";
+-		regulator-type = "voltage";
+-		regulator-boot-on;
+-		regulator-always-on;
+-		regulator-min-microvolt = <1108475>;
+-		regulator-max-microvolt = <1308475>;
+-		regulator-ramp-delay = <50>; /* 4ms */
+-		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
+-		gpios-states = <0x1>;
+-		states = <1108475 0x0
+-			  1308475 0x1>;
+-	};
+-};
+-
+-&cpu0 {
+-	cpu-supply = <&reg_vdd_cpux>;
++	compatible = "regulator-gpio";
++	regulator-type = "voltage";
++	regulator-min-microvolt = <1108475>;
++	regulator-max-microvolt = <1308475>;
++	regulator-ramp-delay = <50>; /* 4ms */
++	enable-gpios =  <&r_pio 0 8 GPIO_ACTIVE_HIGH>; /* PL8 */
++	gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
++	gpios-states = <0x1>;
++	states = <1108475 0x0
++		  1308475 0x1>;
+ };
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
+index 3bed375b9c03..eb90f53ae958 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
+@@ -99,6 +99,16 @@
+ 		      gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
+ 	};
+ 
++	reg_vdd_cpux: vdd-cpux {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd-cpux";
++		regulator-boot-on;
++		regulator-always-on;
++		regulator-min-microvolt = <1310000>;
++		regulator-max-microvolt = <1310000>;
++		gpios = <&r_pio 0 8 GPIO_ACTIVE_HIGH>; /* PL8 */
++	};
++
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		pinctrl-names = "default";
+@@ -108,6 +118,10 @@
+ 	};
+ };
+ 
++&cpu0 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
+ &de {
+ 	status = "okay";
+ };
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.20.1
