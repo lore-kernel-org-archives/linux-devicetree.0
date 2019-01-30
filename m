@@ -1,23 +1,33 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 1/7] clk: gcc-qcs404: Add PCIe resets
-Date: Wed, 30 Jan 2019 11:24:26 -0800
-Message-ID: <154887626650.169292.5794894680187564157@swboyd.mtv.corp.google.com>
-References: <20190125234509.26419-1-bjorn.andersson@linaro.org> <20190125234509.26419-2-bjorn.andersson@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 1/3] arm64: dts: imx8mq: Add QuadSPI controller
+Date: Wed, 30 Jan 2019 17:24:40 -0200
+Message-ID: <CAOMZO5DqY-ofK6JDFGnN2MzqUGYTkDP+xU9xPQFprean2zxHug@mail.gmail.com>
+References: <20190130120511.11555-1-ccaione@baylibre.com>
+ <20190130120511.11555-2-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125234509.26419-2-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190130120511.11555-2-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-01-25 15:45:03)
-> Enabling PCIe requires several of the PCIe related resets from GCC, so
-> add them all.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+On Wed, Jan 30, 2019 at 10:05 AM Carlo Caione <ccaione@baylibre.com> wrote:
+>
+> Add a node for the Freescale/NXP QuadSPI controller and extend the AIPS3
+> memory range to accommodate the QuadSPI-memory region.
+>
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
