@@ -1,54 +1,134 @@
-Return-Path: <SRS0=ctnT=P2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr730097.outbound.protection.outlook.com ([40.107.73.97]:58688
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727481AbfARO2Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 18 Jan 2019 09:28:24 -0500
-From: Ken Sloat <KSloat@aampglobal.com>
-Subject: [PATCH v2 2/2] media: atmel-isc: Update device tree binding
- documentation
-Date: Fri, 18 Jan 2019 14:28:17 +0000
-Message-ID: <20190118142803.70160-2-ksloat@aampglobal.com>
-References: <20190118142803.70160-1-ksloat@aampglobal.com>
-In-Reply-To: <20190118142803.70160-1-ksloat@aampglobal.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=NsZW=QG=opensource.cirrus.com=ckeepax@kernel.org>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH v7 2/6] clk: lochnagar: Add initial binding documentation
+Date: Wed, 30 Jan 2019 11:41:24 +0000
+Message-ID: <20190130114128.21083-2-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20190130114128.21083-1-ckeepax@opensource.cirrus.com>
+References: <20190130114128.21083-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "eugen.hristev@microchip.com" <eugen.hristev@microchip.com>
-Cc: "mchehab@kernel.org" <mchehab@kernel.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+To: lee.jones@linaro.org, sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linus.walleij@linaro.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, patches@opensource.cirrus.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Ken Sloat <ksloat@aampglobal.com>
+Lochnagar is an evaluation and development board for Cirrus
+Logic Smart CODEC and Amp devices. It allows the connection of
+most Cirrus Logic devices on mini-cards, as well as allowing
+connection of various application processor systems to provide a
+full evaluation platform. This driver supports the board
+controller chip on the Lochnagar board.
 
-Update device tree binding documentation specifying how to
-enable BT656 with CRC decoding.
-
-Signed-off-by: Ken Sloat <ksloat@aampglobal.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Changes in v2:
- -Use correct media "bus-type" dt property.
-=20
- Documentation/devicetree/bindings/media/atmel-isc.txt | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Docume=
-ntation/devicetree/bindings/media/atmel-isc.txt
-index bbe0e87c6188..2d4378dfd6c8 100644
---- a/Documentation/devicetree/bindings/media/atmel-isc.txt
-+++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-@@ -21,6 +21,11 @@ Required properties for ISC:
- - pinctrl-names, pinctrl-0
- 	Please refer to pinctrl-bindings.txt.
-=20
-+Optional properties for ISC:
-+- bus-type
-+	When set to 6, Bt.656 decoding (embedded sync) with CRC decoding
-+	is enabled.
+No changes since v6.
+
+Thanks,
+Charles
+
+ .../devicetree/bindings/clock/cirrus,lochnagar.txt | 93 ++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+
+diff --git a/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+new file mode 100644
+index 0000000000000..b8d8ef3bdc5f3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+@@ -0,0 +1,93 @@
++Cirrus Logic Lochnagar Audio Development Board
 +
- ISC supports a single port node with parallel bus. It should contain one
- 'port' child node with child 'endpoint' node. Please refer to the bindings
- defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
---=20
-2.17.1
++Lochnagar is an evaluation and development board for Cirrus Logic
++Smart CODEC and Amp devices. It allows the connection of most Cirrus
++Logic devices on mini-cards, as well as allowing connection of
++various application processor systems to provide a full evaluation
++platform.  Audio system topology, clocking and power can all be
++controlled through the Lochnagar, allowing the device under test
++to be used in a variety of possible use cases.
++
++This binding document describes the binding for the clock portion of
++the driver.
++
++Also see these documents for generic binding information:
++  [1] Clock : ../clock/clock-bindings.txt
++
++And these for relevant defines:
++  [2] include/dt-bindings/clock/lochnagar.h
++
++This binding must be part of the Lochnagar MFD binding:
++  [3] ../mfd/cirrus,lochnagar.txt
++
++Required properties:
++
++  - compatible : One of the following strings:
++                 "cirrus,lochnagar1-clk"
++                 "cirrus,lochnagar2-clk"
++
++  - #clock-cells : Must be 1. The first cell indicates the clock
++    number, see [2] for available clocks and [1].
++
++Optional properties:
++
++  - clocks : Must contain an entry for each clock in clock-names.
++  - clock-names : May contain entries for each of the following
++    clocks:
++     - ln-cdc-clkout : Output clock from CODEC card.
++     - ln-dsp-clkout : Output clock from DSP card.
++     - ln-gf-mclk1,ln-gf-mclk2,ln-gf-mclk3,ln-gf-mclk4 : Optional
++       input audio clocks from host system.
++     - ln-psia1-mclk, ln-psia2-mclk : Optional input audio clocks from
++       external connector.
++     - ln-spdif-clkout : Optional input audio clock from SPDIF.
++     - ln-adat-mclk : Optional input audio clock from ADAT.
++     - ln-pmic-32k : On board fixed clock.
++     - ln-clk-12m : On board fixed clock.
++     - ln-clk-11m : On board fixed clock.
++     - ln-clk-24m : On board fixed clock.
++     - ln-clk-22m : On board fixed clock.
++     - ln-clk-8m : On board fixed clock.
++     - ln-usb-clk-24m : On board fixed clock.
++     - ln-usb-clk-12m : On board fixed clock.
++
++  - assigned-clocks : A list of Lochnagar clocks to be reparented, see
++    [2] for available clocks.
++  - assigned-clock-parents : Parents to be assigned to the clocks
++    listed in "assigned-clocks".
++
++Optional nodes:
++
++  - fixed-clock nodes may be registered for the following on board clocks:
++     - ln-pmic-32k : 32768 Hz
++     - ln-clk-12m : 12288000 Hz
++     - ln-clk-11m : 11298600 Hz
++     - ln-clk-24m : 24576000 Hz
++     - ln-clk-22m : 22579200 Hz
++     - ln-clk-8m : 8192000 Hz
++     - ln-usb-clk-24m : 24576000 Hz
++     - ln-usb-clk-12m : 12288000 Hz
++
++Example:
++
++lochnagar {
++	lochnagar-clk {
++		compatible = "cirrus,lochnagar2-clk";
++
++		#clock-cells = <1>;
++
++		clocks = <&clk-audio>, <&clk_pmic>;
++		clock-names = "ln-gf-mclk2", "ln-pmic-32k";
++
++		assigned-clocks = <&lochnagar-clk LOCHNAGAR_CDC_MCLK1>,
++				  <&lochnagar-clk LOCHNAGAR_CDC_MCLK2>;
++		assigned-clock-parents = <&clk-audio>,
++					 <&clk-pmic>;
++	};
++
++	clk-pmic: clk-pmic {
++		compatible = "fixed-clock";
++		clock-cells = <0>;
++		clock-frequency = <32768>;
++	};
++};
+-- 
+2.11.0
