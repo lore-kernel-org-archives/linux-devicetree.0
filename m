@@ -1,33 +1,67 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: imu: add icm20602 bindings to
- mpu6050
-Date: Wed, 30 Jan 2019 13:49:42 -0600
-Message-ID: <20190130194942.GA30767@bogus>
-References: <20190128185010.8275-1-gaireg@gaireg.de>
+Subject: Re: [PATCH v2 2/4] mfd: max77620: add documentation for backup
+ battery charging
+Date: Wed, 30 Jan 2019 13:51:54 -0600
+Message-ID: <20190130195154.GA30939@bogus>
+References: <20190129085531.32364-1-markz@nvidia.com>
+ <20190129085531.32364-3-markz@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190128185010.8275-1-gaireg@gaireg.de>
+In-Reply-To: <20190129085531.32364-3-markz@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: gaireg@gaireg.de, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Brian Masney <masneyb@onstation.org>, Jonathan Marek <jonathan@marek.ca>, Douglas Fischer <fischerdouglasc@gmail.com>, Martin Kelly <mkelly@xevo.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Hans de Goede <hdegoede@redhat.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Zhang <markz@nvidia.com>
+Cc: lee.jones@linaro.org, blaws05@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Jan 2019 19:50:02 +0100, =?UTF-8?q?Randolph=20Maa=C3=9Fen?= wrote:
-> Adding the invensense ICM-20602 to the compatible list of the mpu6050
-> driver
+On Tue, Jan 29, 2019 at 04:55:29PM +0800, Mark Zhang wrote:
+> Adding documentation for 3 new backup battery charging dts
+> properties:
+> - maxim,backup-battery-charging-current
+> - maxim,backup-battery-charging-voltage
+> - maxim,backup-battery-output-resister
 > 
-> Signed-off-by: Randolph Maaﬂen <gaireg@gaireg.de>
-> 
+> Signed-off-by: Mark Zhang <markz@nvidia.com>
 > ---
-> Changes in v2:
-> - write i2c disable register using reg_set instead of define
-> - decide to write to i2c disable register based on reg_set instead of
->   chip type
-> ---
->  Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/mfd/max77620.txt      | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+> index 9c16d51cc15b..484b17e4fba5 100644
+> --- a/Documentation/devicetree/bindings/mfd/max77620.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+> @@ -122,6 +122,26 @@ For DT binding details of different sub modules like GPIO, pincontrol,
+>  regulator, power, please refer respective device-tree binding document
+>  under their respective sub-system directories.
+>  
+> +Backup Battery:
+> +==============
+> +This sub-node configure charging backup battery of the device. Device has
+> +support of charging the backup battery. The subnode name is "backup-battery".
+> +The property for backup-battery child nodes as:
+> +Presence of this child node will enable the backup battery charging.
+> +
+> +Optional properties:
+> +	-maxim,backup-battery-charging-current: Charging current setting.
+> +			The device supports 50/100/200/400/600/800uA.
+> +			If this property is unavailable then it will
+> +			charge with 50uA.
+> +	-maxim,backup-battery-charging-voltage: Charging Voltage Limit Setting.
+> +			Device supports 2500000/3000000/3300000/350000uV.
+> +			Default will be set to 2500mV. The voltage will be roundoff
+> +			to nearest lower side if other than above is configured.
+> +	-maxim,backup-battery-output-resister: Output resistor on Ohm.
+> +			Device supports 100/1000/3000/6000 Ohms.
+> +			Default will be set to 1000 Ohm.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+These need property unit suffixes as defined in property-units.txt. The 
+names are kind of long, so perhaps shorten them a bit.
+
+> +
+>  Example:
+>  --------
+>  #include <dt-bindings/mfd/max77620.h>
+> -- 
+> 2.19.2
+> 
