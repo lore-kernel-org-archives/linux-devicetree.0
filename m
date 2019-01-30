@@ -1,34 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/3] dt-bindings: spi: Document imx8mq binding
-Date: Wed, 30 Jan 2019 12:54:25 -0600
-Message-ID: <20190130185425.GA20402@bogus>
-References: <20190130120511.11555-1-ccaione@baylibre.com>
- <20190130120511.11555-4-ccaione@baylibre.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: ufs: Add #reset-cells for Qualcomm
+ controllers
+Date: Wed, 30 Jan 2019 12:56:32 -0600
+Message-ID: <20190130185632.GA23483@bogus>
+References: <20190123221137.41722-1-evgreen@chromium.org>
+ <20190123221137.41722-2-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190130120511.11555-4-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Carlo Caione <ccaione@baylibre.com>, shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+In-Reply-To: <20190123221137.41722-2-evgreen@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Can Guo <cang@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, liwei <liwei213@huawei.com>, linux-kernel@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Jan 2019 12:05:11 +0000, Carlo Caione wrote:
-> Add the "fsl,imx8mq-qspi" binding to the spi-fsl-qspi documentation.
+On Wed, 23 Jan 2019 14:11:29 -0800, Evan Green wrote:
+> Enable Qualcomm UFS controllers to expose the PHY reset via a reset
+> controller.
 > 
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> 
 > ---
->  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> Fixing up this aspect of it made me notice that this patch [1]
+> hasn't landed yet. It really ought to.
+> 
+> [1] https://lore.kernel.org/lkml/20181012213926.253765-1-dianders@chromium.org/T/#u
+> 
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
