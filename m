@@ -1,64 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: interrupt-controller: loongson ls1x
- intc
-Date: Wed, 30 Jan 2019 10:41:36 -0600
-Message-ID: <20190130164136.GB31687@bogus>
-References: <20190122154557.22689-1-jiaxun.yang@flygoat.com>
- <20190124032730.18237-1-jiaxun.yang@flygoat.com>
- <20190124032730.18237-3-jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: PCI: dra7xx: Add properties to
+ enable x2 lane in dra7
+Date: Wed, 30 Jan 2019 10:42:59 -0600
+Message-ID: <20190130164259.GA4191@bogus>
+References: <20190124082957.29077-1-kishon@ti.com>
+ <20190124082957.29077-3-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190124032730.18237-3-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190124082957.29077-3-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2019 at 11:27:30AM +0800, Jiaxun Yang wrote:
-> Dt-bindings doc about Loongson-1 interrupt controller
+On Thu, 24 Jan 2019 13:59:56 +0530, Kishon Vijay Abraham I wrote:
+> Add syscon properties required for configuring PCIe in x2 lane mode.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 > ---
->  .../loongson,ls1x-intc.txt                    | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
+>  Documentation/devicetree/bindings/pci/ti-pci.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
-> new file mode 100644
-> index 000000000000..a4e17c3f5f93
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
-> @@ -0,0 +1,24 @@
-> +Loongson ls1x Interrupt Controller
-> +
-> +Required properties:
-> +
-> +- compatible : should be "loongson,ls1x-intc". Valid strings are:
-> +
-> +- reg : Specifies base physical address and size of the registers.
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source. The value shall be 1.
-> +- interrupts : Specifies the CPU interrupts the controller is connected to.
-> +
-> +Example:
-> +
-> +intc: interrupt-controller@1fd01040 {
-> +	compatible = "loongson,ls1x-intc";
-> +	reg = <0x1fd01040 0x78>;
-> +
-> +	interrupt-controller;
-> +	#interrupt-cells = <1>;
-> +
-> +	interrupt-parent = <&cpu_intc>;
-> +	interrupts = <2>, <3>, <4>, <5>, <6>;
-> +};
-> \ No newline at end of file
-
-Please fix.
-
-Otherwise,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
