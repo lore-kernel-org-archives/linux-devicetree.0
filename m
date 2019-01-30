@@ -1,110 +1,85 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 10/10] arm64: dts: allwinner: h5: Add CPU
- Operating Performance Points table
-Date: Wed, 30 Jan 2019 10:29:27 +0100
-Message-ID: <20190130092927.x65ihy3je5n6324w@flea>
-References: <20190130084203.25053-1-wens@csie.org>
- <20190130084203.25053-11-wens@csie.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2] arm64: dts: imx8mq: Add QuadSPI controller
+Date: Wed, 30 Jan 2019 10:30:46 +0100
+Message-ID: <1548840646.6869.15.camel@pengutronix.de>
+References: <20190130091953.20131-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fkao57vkiawei5pc"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6W4YXRAKGQEYSMQFJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190130084203.25053-11-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190130091953.20131-1-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---fkao57vkiawei5pc
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, Jan 30, 2019 at 04:42:03PM +0800, Chen-Yu Tsai wrote:
->  			enable-method = "psci";
->  			clocks = <&ccu CLK_CPUX>;
->  			clock-latency-ns = <244144>; /* 8 32k periods */
-> +			operating-points-v2 = <&cpu_opp_table>;
-> +			#cooling-cells = <2>;
-> +		};
-> +	};
-> +
-> +	cpu_opp_table: opp_table {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp@408000000 {
-> +			opp-hz = /bits/ 64 <408000000>;
-> +			opp-microvolt = <1000000 1000000 1310000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +
-> +		opp@648000000 {
-> +			opp-hz = /bits/ 64 <648000000>;
-> +			opp-microvolt = <1040000 1040000 1310000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +
-> +		opp@816000000 {
-> +			opp-hz = /bits/ 64 <816000000>;
-> +			opp-microvolt = <1080000 1080000 1310000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +
-> +		opp@912000000 {
-> +			opp-hz = /bits/ 64 <912000000>;
-> +			opp-microvolt = <1120000 1120000 1310000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +
-> +		opp@960000000 {
-> +			opp-hz = /bits/ 64 <960000000>;
-> +			opp-microvolt = <1160000 1160000 1310000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +
-> +		opp@1008000000 {
-> +			opp-hz = /bits/ 64 <1008000000>;
-> +			opp-microvolt = <1200000 1200000 1310000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +
-> +		opp@1056000000 {
-> +			opp-hz = /bits/ 64 <1056000000>;
-> +			opp-microvolt = <1240000 1240000 1310000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +
-> +		opp@1104000000 {
-> +			opp-hz = /bits/ 64 <1104000000>;
-> +			opp-microvolt = <1260000 1260000 1310000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +
-> +		opp@1152000000 {
-> +			opp-hz = /bits/ 64 <1152000000>;
-> +			opp-microvolt = <1300000 1300000 1310000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-
-What is the frequency and voltage that U-Boot sets up?
-
-We've had the issue with the A33 that it's started at 1008MHz, with
-the matching voltage, and ramping up the frequency to 1.2GHz on boards
-without PMIC support would increase the frequency but not the voltage,
-resulting in a brownout.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---fkao57vkiawei5pc--
+QW0gTWl0dHdvY2gsIGRlbiAzMC4wMS4yMDE5LCAwOToxOSArMDAwMCBzY2hyaWViIENhcmxvIENh
+aW9uZToKPiBBZGQgYSBub2RlIGZvciB0aGUgRnJlZXNjYWxlL05YUCBRdWFkU1BJIGNvbnRyb2xs
+ZXIgd2l0aCBhIHByb3Blcgo+IHBpbmN0cmwgc2V0IGFuZCBlbmFibGUgaXQgZm9yIHRoZSBpLk1Y
+OE1RIEVWSyBib2FyZC4KPiBFeHRlbmQgYWxzbyB0aGUgQUlQUzMgbWVtb3J5IHJhbmdlIHRvIGFj
+Y29tbW9kYXRlIHRoZSBRdWFkU1BJLW1lbW9yeQo+IHJlZ2lvbi4KPiAKPiBTaWduZWQtb2ZmLWJ5
+OiBDYXJsbyBDYWlvbmUgPGNjYWlvbmVAYmF5bGlicmUuY29tPgoKSSB3b3VsZCBwcmVmZXIgdGhp
+cyB0byBiZSBzcGxpdCBpbnRvIDIgcGF0Y2hlcyBiZXR3ZWVuIHRoZSBiYXNlIERUIGFuZAp0aGUg
+RVZLIGJvYXJkIHN1cHBvcnQuIEJ1dCBJIGRvbid0IHRoaW5rIGl0IHdhcnJhbnRzIGEgcmVzcGlu
+IGp1c3QgZm9yCnRoaXMsIHNvOgoKUmV2aWV3ZWQtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBl
+bmd1dHJvbml4LmRlPgoKPiAtLS0KPiDCoGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lt
+eDhtcS1ldmsuZHRzIHwgMjcgKysrKysrKysrKysrKysrKysrKysKPiDCoGFyY2gvYXJtNjQvYm9v
+dC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpwqDCoMKgwqB8IDE2ICsrKysrKysrKysrLQo+IMKg
+MiBmaWxlcyBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS1ldmsuZHRzIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1xLWV2ay5kdHMKPiBpbmRleCBmNzRi
+MTNhYTVhYTUuLmFlMTgxYzJhNTAwMyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9pbXg4bXEtZXZrLmR0cwo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2lteDhtcS1ldmsuZHRzCj4gQEAgLTEzNyw2ICsxMzcsMjEgQEAKPiA+IMKgCXN0YXR1
+cyA9ICJva2F5IjsKPiDCoH07Cj4gwqAKPiArJnNwaTAgewo+ID4gKwlwaW5jdHJsLW5hbWVzID0g
+ImRlZmF1bHQiOwo+ID4gKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfcXNwaT47Cj4gPiArCXN0YXR1
+cyA9ICJva2F5IjsKPiArCj4gPiA+ICsJZmxhc2gwOiBuMjVxMjU2YUAwIHsKPiA+ICsJCXJlZyA9
+IDwwPjsKPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gKwkJI3NpemUtY2VsbHMgPSA8
+MT47Cj4gPiArCQljb21wYXRpYmxlID0gIm1pY3JvbixuMjVxMjU2YSIsICJqZWRlYyxzcGktbm9y
+IjsKPiA+ICsJCXNwaS1tYXgtZnJlcXVlbmN5ID0gPDI5MDAwMDAwPjsKPiA+ICsJCXNwaS1ub3Is
+ZGRyLXF1YWQtcmVhZC1kdW1teSA9IDw2PjsKPiA+ICsJfTsKPiArfTsKPiArCj4gwqAmdXNkaGMx
+IHsKPiA+IMKgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCIsICJzdGF0ZV8xMDBtaHoiLCAic3Rh
+dGVfMjAwbWh6IjsKPiA+IMKgCXBpbmN0cmwtMCA9IDwmcGluY3RybF91c2RoYzE+Owo+IEBAIC0x
+OTUsNiArMjEwLDE4IEBACj4gPiDCoAkJPjsKPiA+IMKgCX07Cj4gwqAKPiA+ICsJcGluY3RybF9x
+c3BpOiBxc3BpZ3JwIHsKPiA+ICsJCWZzbCxwaW5zID0gPAo+ID4gPiArCQkJTVg4TVFfSU9NVVhD
+X05BTkRfQUxFX1FTUElfQV9TQ0xLCTB4ODIKPiA+ID4gKwkJCU1YOE1RX0lPTVVYQ19OQU5EX0NF
+MF9CX1FTUElfQV9TUzBfQgkweDgyCj4gPiA+ICsJCQlNWDhNUV9JT01VWENfTkFORF9EQVRBMDBf
+UVNQSV9BX0RBVEEwCTB4ODIKPiA+ID4gKwkJCU1YOE1RX0lPTVVYQ19OQU5EX0RBVEEwMV9RU1BJ
+X0FfREFUQTEJMHg4Mgo+ID4gPiArCQkJTVg4TVFfSU9NVVhDX05BTkRfREFUQTAyX1FTUElfQV9E
+QVRBMgkweDgyCj4gPiA+ICsJCQlNWDhNUV9JT01VWENfTkFORF9EQVRBMDNfUVNQSV9BX0RBVEEz
+CTB4ODIKPiArCj4gPiArCQk+Owo+ID4gKwl9Owo+ICsKPiA+IMKgCXBpbmN0cmxfcmVnX3VzZGhj
+MjogcmVndXNkaGMyZ3JwZ3BpbyB7Cj4gPiDCoAkJZnNsLHBpbnMgPSA8Cj4gPiA+IMKgCQkJTVg4
+TVFfSU9NVVhDX1NEMl9SRVNFVF9CX0dQSU8yX0lPMTkJCTB4NDEKPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQo+IGluZGV4IGRiZWRjNGE1ZTdmYi4uYzIwZjQzZjYz
+YzRlIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5k
+dHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kKPiBA
+QCAtMzc5LDcgKzM3OSw4IEBACj4gPiDCoAkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1haXBz
+LWJ1cyIsICJzaW1wbGUtYnVzIjsKPiA+IMKgCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiDC
+oAkJCSNzaXplLWNlbGxzID0gPDE+Owo+ID4gLQkJCXJhbmdlcyA9IDwweDMwODAwMDAwIDB4MzA4
+MDAwMDAgMHg0MDAwMDA+Owo+ID4gKwkJCXJhbmdlcyA9IDwweDMwODAwMDAwIDB4MzA4MDAwMDAg
+MHg0MDAwMDA+LAo+ID4gKwkJCQnCoDwweDA4MDAwMDAwIDB4MDgwMDAwMDAgMHgxMDAwMDAwMD47
+Cj4gwqAKPiA+ID4gwqAJCQl1YXJ0MTogc2VyaWFsQDMwODYwMDAwIHsKPiA+IMKgCQkJCWNvbXBh
+dGlibGUgPSAiZnNsLGlteDhtcS11YXJ0IiwKPiBAQCAtNDk3LDYgKzQ5OCwxOSBAQAo+ID4gwqAJ
+CQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+IMKgCQkJfTsKPiDCoAo+ID4gPiArCQkJc3BpMDog
+c3BpQDMwYmIwMDAwIHsKPiA+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiArCQkJCSNz
+aXplLWNlbGxzID0gPDA+Owo+ID4gKwkJCQljb21wYXRpYmxlID0gImZzbCxpbXg4bXEtcXNwaSIs
+ICJmc2wsaW14N2QtcXNwaSI7Cj4gPiArCQkJCXJlZyA9IDwweDMwYmIwMDAwIDB4MTAwMDA+LCA8
+MHgwODAwMDAwMCAweDEwMDAwMDAwPjsKPiA+ICsJCQkJcmVnLW5hbWVzID0gIlF1YWRTUEkiLCAi
+UXVhZFNQSS1tZW1vcnkiOwo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTA3IElSUV9U
+WVBFX0xFVkVMX0hJR0g+Owo+ID4gKwkJCQljbG9ja3MgPSA8JmNsayBJTVg4TVFfQ0xLX1FTUElf
+Uk9PVD4sCj4gPiArCQkJCQnCoDwmY2xrIElNWDhNUV9DTEtfUVNQSV9ST09UPjsKPiA+ICsJCQkJ
+Y2xvY2stbmFtZXMgPSAicXNwaV9lbiIsICJxc3BpIjsKPiA+ICsJCQkJc3RhdHVzID0gImRpc2Fi
+bGVkIjsKPiA+ICsJCQl9Owo+ICsKPiA+ID4gwqAJCQlmZWMxOiBldGhlcm5ldEAzMGJlMDAwMCB7
+Cj4gPiDCoAkJCQljb21wYXRpYmxlID0gImZzbCxpbXg4bXEtZmVjIiwgImZzbCxpbXg2c3gtZmVj
+IjsKPiA+IMKgCQkJCXJlZyA9IDwweDMwYmUwMDAwIDB4MTAwMDA+OwoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
