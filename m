@@ -1,39 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 0/2] USB SS PHY for Qualcomm's QCS404
-Date: Wed, 30 Jan 2019 13:58:04 -0600
-Message-ID: <20190130195804.GA5908@bogus>
-References: <1548761715-4004-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 05/13] dt-bindings: leds: add DT bindings for max77650
+Date: Wed, 30 Jan 2019 20:58:26 +0100
+Message-ID: <0c9e7c6c-d1c0-8acc-88cb-16b01f75e134@gmail.com>
+References: <20190129133545.1931-1-brgl@bgdev.pl>
+ <20190129133545.1931-7-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548761715-4004-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+In-Reply-To: <20190129133545.1931-7-brgl@bgdev.pl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, andy.gross@linaro.org, swboyd@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, khasim.mohammed@linaro.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 12:35:13PM +0100, Jorge Ramirez-Ortiz wrote:
-> This set adds USB SS PHY support to Qualcomm's QCS404 SoC
-> The PHY is implemented using Synopsys SS PHY 1.0.0 IP
-> 
-> The code is losely based on Sriharsha Allenki's
-> <sallenki@codeaurora.org> original implementation.
-> 
-> v2:
->   enable OTG mode detection
->   move vdd voltage levels to driver
->   use bulk_ control interfaces
->   ss-phy-bindings [1]
-> 
-> [1] ss-phy-binding discussion:
->  - qcom,dwc3-ss-usb-phy exist for a generic usb2/usb3 phy driver that
->  was never merged. Rather than trying to re-use these bindings (or
->  delete them) I  propose that we go ahead with the new separate
->  bindings for HS and SS: if  not now - investigation  in progress- in
->  the  future  it might be  possible to have again a common phy driver
->  for  which these old  bindings would be the binding agreement. 
+Hi Bartosz,
 
-Either use/extend the old binding or remove it if it is not being used.
+Thank you for addressing my remarks.
 
-Rob
+On 1/29/19 2:35 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Add the DT binding document for the LEDs module of max77650.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>   .../bindings/leds/leds-max77650.txt           | 57 +++++++++++++++++++
+>   1 file changed, 57 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-max77650.txt b/Documentation/devicetree/bindings/leds/leds-max77650.txt
+> new file mode 100644
+> index 000000000000..b2fac8e719a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-max77650.txt
+> @@ -0,0 +1,57 @@
+> +LED driver for MAX77650 PMIC from Maxim Integrated.
+> +
+> +This module is part of the MAX77650 MFD device. For more details
+> +see Documentation/devicetree/bindings/mfd/max77650.txt.
+> +
+> +The LED controller is represented as a sub-node of the PMIC node on
+> +the device tree.
+> +
+> +This device has three current sinks.
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:		Must be "maxim,max77650-led"
+> +- #address-cells:	Must be <1>.
+> +- #size-cells:		Must be <0>.
+> +
+> +Each LED is represented as a sub-node of the LED-controller node. Up to
+> +three sub-nodes can be defined.
+> +
+> +Required properties of the sub-node:
+> +------------------------------------
+> +
+> +- reg:			Must be <0>, <1> or <2>.
+> +
+> +Optional properties of the sub-node:
+> +------------------------------------
+> +
+> +- label:		See Documentation/devicetree/bindings/leds/common.txt
+> +- linux,default-trigger: See Documentation/devicetree/bindings/leds/common.txt
+> +
+> +For more details, please refer to the generic GPIO DT binding document
+> +<devicetree/bindings/gpio/gpio.txt>.
+> +
+> +Example:
+> +--------
+> +
+> +	leds {
+> +		compatible = "maxim,max77650-leds";
+
+s/leds/led/
+
+With that:
+
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		led@0 {
+> +			reg = <0>;
+> +			label = "blue:usr0";
+> +		};
+> +
+> +		led@1 {
+> +			reg = <1>;
+> +			label = "red:usr1";
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +
+> +		led@2 {
+> +			reg = <2>;
+> +			label = "green:usr2";
+> +		};
+> +	};
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
