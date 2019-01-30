@@ -1,136 +1,87 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v9 2/9] PCI: Using PCI configuration space header type
- instead of class type to assign resource
-Date: Wed, 30 Jan 2019 11:06:12 -0600
-Message-ID: <20190130170612.GH229773@google.com>
-References: <1539686690-24068-1-git-send-email-honghui.zhang@mediatek.com>
- <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/2] iio:dac:dac7612: device tree bindings
+Date: Wed, 30 Jan 2019 11:07:23 -0600
+Message-ID: <20190130170723.GA24708@bogus>
+References: <20190128094931.4430-1-ricardo@ribalda.com>
+ <20190128094931.4430-2-ricardo@ribalda.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539686690-24068-3-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <20190128094931.4430-2-ricardo@ribalda.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: lorenzo.pieralisi@arm.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, youlin.pei@mediatek.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, marc.zyngier@arm.com, jianjun.wang@mediatek.com, yt.shen@mediatek.com, matthias.bgg@gmail.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com
+To: Ricardo Ribalda Delgado <ricardo@ribalda.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 06:44:43PM +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
+On Mon, Jan 28, 2019 at 10:49:31AM +0100, Ricardo Ribalda Delgado wrote:
+> Bindings for dac7612.
 > 
-> The PCI configuration space header type defines the layout of the rest
-> of the header (PCI r3.0 sec 6.1, PCIe r4.0 sec 7.5.1.1.9) while the
-> resource assignment is based on the configuration space layout instead
-> of its class type. Using configuration space header type instead of
-> class type for the resource assignment.
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo@ribalda.com>
+> ---
+>  .../bindings/iio/dac/ti,dac7612.txt           | 29 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
 > 
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+> new file mode 100644
+> index 000000000000..e1b8158fab35
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+> @@ -0,0 +1,29 @@
+> +* Texas Instruments Dual, 12-Bit Serial Input Digital-to-Analog Converter
+> +
+> +The DAC7612 is a dual, 12-bit digital-to-analog converter (DAC) with guaranteed
+> +12-bit monotonicity performance over the industrial temperature range.
+> +Is is programmable through an SPI interface.
+> +
+> +The internal DACs are loaded when the LOADDACS pin is pulled down.
+> +
+> +http://www.ti.com/lit/ds/sbas106/sbas106.pdf
+> +
+> +Required Properties:
+> +- compatible: Should be one of:
+> +		"ti,dac7612"
+> +		"ti,dac7612u"
+> +		"ti,dac7612b"
 
-I applied the patch below to pci/enumeration for v5.1.
+What's the difference? I can only find 'u' and 'ub' variants and nothing 
+about how those are different. So maybe just 1 string is enough?
 
-I dropped the hunk that removed the PCI_CLASS_BRIDGE_HOST check per
-Lorenzo's concern.  Let me know if you have any other concerns.
+> +- reg: Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Optional Properties:
+> +- loaddacs-gpios: GPIO descriptor for the LOADDACS pin.
 
+Needs a 'ti' vendor prefix.
 
-commit b2fb5cc57469
-Author: Honghui Zhang <honghui.zhang@mediatek.com>
-Date:   Tue Oct 16 18:44:43 2018 +0800
+> +- spi-*: Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Example:
+> +
+> +	dac7612@1 {
 
-    PCI: Rely on config space header type, not class code
-    
-    The PCI configuration space header type tells us whether the device is a
-    bridge, a CardBus bridge, or a normal device, and defines the layout of the
-    rest of the header (PCI r3.0 sec 6.1, PCIe r4.0 sec 7.5.1.1.9).
-    
-    When we rely on the header format, e.g., when we're dealing with bridge
-    windows, we should check the header type, not the class code.  The class
-    code is loosely related to the header type, but is often incorrect and the
-    spec doesn't actually require it to be related to the header format.
-    
-    Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-    Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-    [bhelgaas: changelog, keep the PCI_CLASS_BRIDGE_HOST check]
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+dac@1
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index c9d8e3c837de..e9d938e14ba8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6000,8 +6000,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
- 	 * to enable the kernel to reassign new resource
- 	 * window later on.
- 	 */
--	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE &&
--	    (dev->class >> 8) == PCI_CLASS_BRIDGE_PCI) {
-+	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
- 		for (i = PCI_BRIDGE_RESOURCES; i < PCI_NUM_RESOURCES; i++) {
- 			r = &dev->resource[i];
- 			if (!(r->flags & IORESOURCE_MEM))
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 8e2e4154cdd9..128459a0ffba 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1779,9 +1779,6 @@ int pci_setup_device(struct pci_dev *dev)
- 		break;
- 
- 	case PCI_HEADER_TYPE_BRIDGE:		    /* bridge header */
--		if (class != PCI_CLASS_BRIDGE_PCI)
--			goto bad;
--
- 		/*
- 		 * The PCI-to-PCI bridge spec requires that subtractive
- 		 * decoding (i.e. transparent) bridge must have programming
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 1941bb0a6c13..ec44a0f3a7ac 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1186,12 +1186,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		if (!b)
- 			continue;
- 
--		switch (dev->class >> 8) {
--		case PCI_CLASS_BRIDGE_CARDBUS:
-+		switch (dev->hdr_type) {
-+		case PCI_HEADER_TYPE_CARDBUS:
- 			pci_bus_size_cardbus(b, realloc_head);
- 			break;
- 
--		case PCI_CLASS_BRIDGE_PCI:
-+		case PCI_HEADER_TYPE_BRIDGE:
- 		default:
- 			__pci_bus_size_bridges(b, realloc_head);
- 			break;
-@@ -1202,12 +1202,12 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 	if (pci_is_root_bus(bus))
- 		return;
- 
--	switch (bus->self->class >> 8) {
--	case PCI_CLASS_BRIDGE_CARDBUS:
-+	switch (bus->self->hdr_type) {
-+	case PCI_HEADER_TYPE_CARDBUS:
- 		/* don't size cardbuses yet. */
- 		break;
- 
--	case PCI_CLASS_BRIDGE_PCI:
-+	case PCI_HEADER_TYPE_BRIDGE:
- 		pci_bridge_check_ranges(bus);
- 		if (bus->self->is_hotplug_bridge) {
- 			additional_io_size  = pci_hotplug_io_size;
-@@ -1356,13 +1356,13 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
- 
- 		__pci_bus_assign_resources(b, realloc_head, fail_head);
- 
--		switch (dev->class >> 8) {
--		case PCI_CLASS_BRIDGE_PCI:
-+		switch (dev->hdr_type) {
-+		case PCI_HEADER_TYPE_BRIDGE:
- 			if (!pci_is_enabled(dev))
- 				pci_setup_bridge(b);
- 			break;
- 
--		case PCI_CLASS_BRIDGE_CARDBUS:
-+		case PCI_HEADER_TYPE_CARDBUS:
- 			pci_setup_cardbus(b);
- 			break;
- 
+> +		compatible = "ti,dac7612";
+> +		reg = <0x1>;
+> +		loaddacs-gpios = <&msmgpio 25 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 30ba5435906b..e28e5afaae16 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14882,6 +14882,7 @@ M:	Ricardo Ribalda <ricardo@ribalda.com>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Supported
+>  F:	drivers/iio/dac/ti-dac7612.c
+> +F:	Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+>  
+>  THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
+>  M:	Hans Verkuil <hverkuil@xs4all.nl>
+> -- 
+> 2.20.1
+> 
