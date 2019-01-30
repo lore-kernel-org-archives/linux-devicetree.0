@@ -1,8 +1,8 @@
 From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH V2 4/4] irq: imx: irqsteer: add multi output interrupts
- support
-Date: Wed, 30 Jan 2019 13:06:07 +0000
-Message-ID: <1548853196-11447-5-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH V2 3/4] irq: imx-irqsteer: change to use reg_num instead of
+ irq_group
+Date: Wed, 30 Jan 2019 13:06:03 +0000
+Message-ID: <1548853196-11447-4-git-send-email-aisheng.dong@nxp.com>
 References: <1548853196-11447-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -15,190 +15,154 @@ To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-One irqsteer channel can support up to 8 output interrupts.
+One group can manage 64 interrupts by using two registers (e.g. STATUS/SET)=
+.
+However, the integrated irqsteer may support only 32 interrupts which
+needs only one register in a group. But the current driver assume there's
+a mininum of two registers in a group which result in a wrong register map
+for 32 interrupts per channel irqsteer. Let's use the reg_num caculated by
+interrupts per channel instead of irq_group to cover this case.
 
 Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
-ChangeLog:
 v1->v2:
- * calculate irq_count by fsl,num-irqs instead of parsing interrupts
-   property from devicetree to match the input interrupts and outputs
- * improve output interrupt handler by searching only two registers
-   withint the same group
+ * The using of property name updated accordingly
 ---
- drivers/irqchip/irq-imx-irqsteer.c | 76 +++++++++++++++++++++++++++++-----=
-----
- 1 file changed, 59 insertions(+), 17 deletions(-)
+ drivers/irqchip/irq-imx-irqsteer.c | 35 +++++++++++++++++++---------------=
+-
+ 1 file changed, 19 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-i=
 rqsteer.c
-index 67ed862..cc40039 100644
+index 5b3f1d7..67ed862 100644
 --- a/drivers/irqchip/irq-imx-irqsteer.c
 +++ b/drivers/irqchip/irq-imx-irqsteer.c
-@@ -10,6 +10,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
-+#include <linux/of_irq.h>
+@@ -13,7 +13,7 @@
  #include <linux/of_platform.h>
  #include <linux/spinlock.h>
 =20
-@@ -21,10 +22,13 @@
- #define CHAN_MINTDIS(t)		(CTRL_STRIDE_OFF(t, 3) + 0x4)
- #define CHAN_MASTRSTAT(t)	(CTRL_STRIDE_OFF(t, 3) + 0x8)
-=20
-+#define CHAN_MAX_OUTPUT_INT	0x8
-+
- struct irqsteer_data {
- 	void __iomem		*regs;
+-#define CTRL_STRIDE_OFF(_t, _r)	(_t * 8 * _r)
++#define CTRL_STRIDE_OFF(_t, _r)	(_t * 4 * _r)
+ #define CHANCTRL		0x0
+ #define CHANMASK(n, t)		(CTRL_STRIDE_OFF(t, 0) + 0x4 * (n) + 0x4)
+ #define CHANSET(n, t)		(CTRL_STRIDE_OFF(t, 1) + 0x4 * (n) + 0x4)
+@@ -26,7 +26,7 @@ struct irqsteer_data {
  	struct clk		*ipg_clk;
--	int			irq;
-+	int			irq[CHAN_MAX_OUTPUT_INT];
-+	int			irq_count;
+ 	int			irq;
  	raw_spinlock_t		lock;
- 	int			reg_num;
+-	int			irq_groups;
++	int			reg_num;
  	int			channel;
-@@ -87,26 +91,45 @@ static const struct irq_domain_ops imx_irqsteer_domain_=
-ops =3D {
- 	.xlate		=3D irq_domain_xlate_onecell,
- };
-=20
-+static int imx_irqsteer_get_hwirq_base(struct irqsteer_data *data, u32 irq=
-)
-+{
-+	int i;
-+
-+	for (i =3D 0; i < data->irq_count; i++) {
-+		if (data->irq[i] =3D=3D irq)
-+			break;
-+	}
-+
-+	return i * 64;
-+}
-+
- static void imx_irqsteer_irq_handler(struct irq_desc *desc)
+ 	struct irq_domain	*domain;
+ 	u32			*saved_reg;
+@@ -35,7 +35,7 @@ struct irqsteer_data {
+ static int imx_irqsteer_get_reg_index(struct irqsteer_data *data,
+ 				      unsigned long irqnum)
  {
- 	struct irqsteer_data *data =3D irq_desc_get_handler_data(desc);
-+	int hwirq;
- 	int i;
+-	return (data->irq_groups * 2 - irqnum / 32 - 1);
++	return (data->reg_num - irqnum / 32 - 1);
+ }
+=20
+ static void imx_irqsteer_irq_unmask(struct irq_data *d)
+@@ -46,9 +46,9 @@ static void imx_irqsteer_irq_unmask(struct irq_data *d)
+ 	u32 val;
+=20
+ 	raw_spin_lock_irqsave(&data->lock, flags);
+-	val =3D readl_relaxed(data->regs + CHANMASK(idx, data->irq_groups));
++	val =3D readl_relaxed(data->regs + CHANMASK(idx, data->reg_num));
+ 	val |=3D BIT(d->hwirq % 32);
+-	writel_relaxed(val, data->regs + CHANMASK(idx, data->irq_groups));
++	writel_relaxed(val, data->regs + CHANMASK(idx, data->reg_num));
+ 	raw_spin_unlock_irqrestore(&data->lock, flags);
+ }
+=20
+@@ -60,9 +60,9 @@ static void imx_irqsteer_irq_mask(struct irq_data *d)
+ 	u32 val;
+=20
+ 	raw_spin_lock_irqsave(&data->lock, flags);
+-	val =3D readl_relaxed(data->regs + CHANMASK(idx, data->irq_groups));
++	val =3D readl_relaxed(data->regs + CHANMASK(idx, data->reg_num));
+ 	val &=3D ~BIT(d->hwirq % 32);
+-	writel_relaxed(val, data->regs + CHANMASK(idx, data->irq_groups));
++	writel_relaxed(val, data->regs + CHANMASK(idx, data->reg_num));
+ 	raw_spin_unlock_irqrestore(&data->lock, flags);
+ }
+=20
+@@ -94,13 +94,13 @@ static void imx_irqsteer_irq_handler(struct irq_desc *d=
+esc)
 =20
  	chained_irq_enter(irq_desc_get_chip(desc), desc);
 =20
--	for (i =3D 0; i < data->reg_num * 32; i +=3D 32) {
--		int idx =3D imx_irqsteer_get_reg_index(data, i);
-+	hwirq =3D imx_irqsteer_get_hwirq_base(data, irq_desc_get_irq(desc));
-+
-+	for (i =3D 0; i < 2; i++) {
-+		int idx =3D imx_irqsteer_get_reg_index(data, hwirq);
+-	for (i =3D 0; i < data->irq_groups * 64; i +=3D 32) {
++	for (i =3D 0; i < data->reg_num * 32; i +=3D 32) {
+ 		int idx =3D imx_irqsteer_get_reg_index(data, i);
  		unsigned long irqmap;
  		int pos, virq;
 =20
-+		if (hwirq >=3D data->reg_num * 32)
-+			break;
-+
  		irqmap =3D readl_relaxed(data->regs +
- 				       CHANSTATUS(idx, data->reg_num));
+-				       CHANSTATUS(idx, data->irq_groups));
++				       CHANSTATUS(idx, data->reg_num));
 =20
  		for_each_set_bit(pos, &irqmap, 32) {
--			virq =3D irq_find_mapping(data->domain, pos + i);
-+			virq =3D irq_find_mapping(data->domain, pos + hwirq);
- 			if (virq)
- 				generic_handle_irq(virq);
- 		}
-+		hwirq +=3D 32;
- 	}
-=20
- 	chained_irq_exit(irq_desc_get_chip(desc), desc);
-@@ -117,7 +140,8 @@ static int imx_irqsteer_probe(struct platform_device *p=
-dev)
- 	struct device_node *np =3D pdev->dev.of_node;
- 	struct irqsteer_data *data;
- 	struct resource *res;
--	int ret;
-+	u32 irqs_num;
-+	int i, ret;
-=20
- 	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
- 	if (!data)
-@@ -130,12 +154,6 @@ static int imx_irqsteer_probe(struct platform_device *=
-pdev)
- 		return PTR_ERR(data->regs);
- 	}
-=20
--	data->irq =3D platform_get_irq(pdev, 0);
--	if (data->irq <=3D 0) {
--		dev_err(&pdev->dev, "failed to get irq\n");
--		return -ENODEV;
--	}
--
- 	data->ipg_clk =3D devm_clk_get(&pdev->dev, "ipg");
- 	if (IS_ERR(data->ipg_clk)) {
- 		ret =3D PTR_ERR(data->ipg_clk);
-@@ -146,11 +164,17 @@ static int imx_irqsteer_probe(struct platform_device =
+ 			virq =3D irq_find_mapping(data->domain, pos + i);
+@@ -146,12 +146,15 @@ static int imx_irqsteer_probe(struct platform_device =
 *pdev)
 =20
  	raw_spin_lock_init(&data->lock);
 =20
--	of_property_read_u32(np, "fsl,num-irqs", &data->reg_num);
-+	of_property_read_u32(np, "fsl,num-irqs", &irqs_num);
+-	of_property_read_u32(np, "fsl,irq-groups", &data->irq_groups);
++	of_property_read_u32(np, "fsl,num-irqs", &data->reg_num);
  	of_property_read_u32(np, "fsl,channel", &data->channel);
 =20
--	/* one register bit map represents 32 input interrupts */
--	data->reg_num /=3D 32;
-+	/*
-+	 * There is one output irqs for each group of 64 inputs.
-+	 * One register bit map can represent 32 input interrupts.
-+	 */
-+	data->irq_count =3D irqs_num / 64;
-+	if (irqs_num % 64)
-+		data->irq_count +=3D 1;
-+	data->reg_num =3D irqs_num / 32;
-=20
++	/* one register bit map represents 32 input interrupts */
++	data->reg_num /=3D 32;
++
  	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
  		data->saved_reg =3D devm_kzalloc(&pdev->dev,
-@@ -177,8 +201,22 @@ static int imx_irqsteer_probe(struct platform_device *=
-pdev)
- 		return -ENOMEM;
- 	}
+-					sizeof(u32) * data->irq_groups * 2,
++					sizeof(u32) * data->reg_num,
+ 					GFP_KERNEL);
+ 		if (!data->saved_reg)
+ 			return -ENOMEM;
+@@ -166,7 +169,7 @@ static int imx_irqsteer_probe(struct platform_device *p=
+dev)
+ 	/* steer all IRQs into configured channel */
+ 	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
 =20
--	irq_set_chained_handler_and_data(data->irq, imx_irqsteer_irq_handler,
--					 data);
-+	if (!data->irq_count || data->irq_count > CHAN_MAX_OUTPUT_INT) {
-+		clk_disable_unprepare(data->ipg_clk);
-+		return -EINVAL;
-+	}
-+
-+	for (i =3D 0; i < data->irq_count; i++) {
-+		data->irq[i] =3D irq_of_parse_and_map(np, i);
-+		if (!data->irq[i]) {
-+			clk_disable_unprepare(data->ipg_clk);
-+			return -EINVAL;
-+		}
-+
-+		irq_set_chained_handler_and_data(data->irq[i],
-+						 imx_irqsteer_irq_handler,
-+						 data);
-+	}
-=20
- 	platform_set_drvdata(pdev, data);
-=20
-@@ -188,8 +226,12 @@ static int imx_irqsteer_probe(struct platform_device *=
-pdev)
- static int imx_irqsteer_remove(struct platform_device *pdev)
+-	data->domain =3D irq_domain_add_linear(np, data->irq_groups * 64,
++	data->domain =3D irq_domain_add_linear(np, data->reg_num * 32,
+ 					     &imx_irqsteer_domain_ops, data);
+ 	if (!data->domain) {
+ 		dev_err(&pdev->dev, "failed to create IRQ domain\n");
+@@ -199,9 +202,9 @@ static void imx_irqsteer_save_regs(struct irqsteer_data=
+ *data)
  {
- 	struct irqsteer_data *irqsteer_data =3D platform_get_drvdata(pdev);
-+	int i;
-+
-+	for (i =3D 0; i < irqsteer_data->irq_count; i++)
-+		irq_set_chained_handler_and_data(irqsteer_data->irq[i],
-+						 NULL, NULL);
+ 	int i;
 =20
--	irq_set_chained_handler_and_data(irqsteer_data->irq, NULL, NULL);
- 	irq_domain_remove(irqsteer_data->domain);
+-	for (i =3D 0; i < data->irq_groups * 2; i++)
++	for (i =3D 0; i < data->reg_num; i++)
+ 		data->saved_reg[i] =3D readl_relaxed(data->regs +
+-						CHANMASK(i, data->irq_groups));
++						CHANMASK(i, data->reg_num));
+ }
 =20
- 	clk_disable_unprepare(irqsteer_data->ipg_clk);
+ static void imx_irqsteer_restore_regs(struct irqsteer_data *data)
+@@ -209,9 +212,9 @@ static void imx_irqsteer_restore_regs(struct irqsteer_d=
+ata *data)
+ 	int i;
+=20
+ 	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
+-	for (i =3D 0; i < data->irq_groups * 2; i++)
++	for (i =3D 0; i < data->reg_num; i++)
+ 		writel_relaxed(data->saved_reg[i],
+-			       data->regs + CHANMASK(i, data->irq_groups));
++			       data->regs + CHANMASK(i, data->reg_num));
+ }
+=20
+ static int imx_irqsteer_suspend(struct device *dev)
 --=20
 2.7.4
