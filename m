@@ -1,57 +1,34 @@
-Return-Path: <SRS0=OP5l=QE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41942 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfA1WZp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Jan 2019 17:25:45 -0500
-Received: by mail-lf1-f66.google.com with SMTP id c16so13115327lfj.8
-        for <devicetree@vger.kernel.org>; Mon, 28 Jan 2019 14:25:44 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2] i2c: Add DT bindings for Xscale I2C masters
-Date: Mon, 28 Jan 2019 23:25:33 +0100
-Message-Id: <20190128222534.32213-1-linus.walleij@linaro.org>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 30 Jan 2019 12:55:43 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: imx: Add clock binding doc for imx8mm
+Message-ID: <20190130185543.GA22259@bogus>
+References: <1548149769-32267-1-git-send-email-ping.bai@nxp.com>
+ <1548149769-32267-2-git-send-email-ping.bai@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1548149769-32267-2-git-send-email-ping.bai@nxp.com>
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This adds a device tree binding for Intel XScale I2C
-masters. We define compatible strings for the iop3xx and
-ixp4xx chip families.
+On Tue, 22 Jan 2019 09:31:46 +0000, Jacky Bai wrote:
+> From: Bai Ping <ping.bai@nxp.com>
+> 
+> Add the clock binding doc for i.MX8MM.
+> 
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> ---
+>  change v1->v2
+>  - add the provider node example;
+>  - replace table with space after define.
+> ---
+>  .../devicetree/bindings/clock/imx8mm-clock.txt     |  29 +++
+>  include/dt-bindings/clock/imx8mm-clock.h           | 244 +++++++++++++++++++++
+>  2 files changed, 273 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx8mm-clock.txt
+>  create mode 100644 include/dt-bindings/clock/imx8mm-clock.h
+> 
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../devicetree/bindings/i2c/i2c-xscale.txt    | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-xscale.txt
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-xscale.txt b/Documentation/devicetree/bindings/i2c/i2c-xscale.txt
-new file mode 100644
-index 000000000000..dcc8390e0d24
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-xscale.txt
-@@ -0,0 +1,20 @@
-+i2c Controller on XScale platforms such as IOP3xx and IXP4xx
-+
-+Required properties:
-+- compatible : Must be one of
-+  "intel,iop3xx-i2c"
-+  "intel,ixp4xx-i2c";
-+- reg
-+- #address-cells = <1>;
-+- #size-cells = <0>;
-+
-+Optional properties:
-+- Child nodes conforming to i2c bus binding
-+
-+Example:
-+
-+i2c@c8011000 {
-+	compatible = "intel,ixp4xx-i2c";
-+	reg = <0xc8011000 0x18>;
-+	interrupts = <33 IRQ_TYPE_LEVEL_LOW>;
-+};
--- 
-2.20.1
+Reviewed-by: Rob Herring <robh@kernel.org>
