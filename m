@@ -1,62 +1,87 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v11 00/13] media: staging/imx7: add i.MX7 media driver
-Date: Wed, 30 Jan 2019 14:41:26 +0200
-Message-ID: <20190130124126.ahewjkc7ycko5ckg@paasikivi.fi.intel.com>
-References: <20190124160928.31884-1-rui.silva@linaro.org>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v2 6/8] DT: arm: exynos: add DMC device for exynos5422
+Date: Wed, 30 Jan 2019 13:52:48 +0100
+Message-ID: <267bc3e3-efc1-c6a8-2a32-e298adb40cfe@partner.samsung.com>
+References: <CGME20190129175526eucas1p253dc2e8a0d64b34d95c84d585fb0fac0@eucas1p2.samsung.com>
+        <1548784514-26649-1-git-send-email-l.luba@partner.samsung.com>
+        <1548784514-26649-7-git-send-email-l.luba@partner.samsung.com>
+        <CAJKOXPcfZsZPYStrV-QOd2YJsoaJdbtdz2RX-AJrC6A6B8vJqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20190124160928.31884-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPcfZsZPYStrV-QOd2YJsoaJdbtdz2RX-AJrC6A6B8vJqA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2019 at 04:09:15PM +0000, Rui Miguel Silva wrote:
-> Hi,
-> This series introduces the Media driver to work with the i.MX7 SoC. it uses the
-> already existing imx media core drivers but since the i.MX7, contrary to
-> i.MX5/6, do not have an IPU and because of that some changes in the imx media
-> core are made along this series to make it support that case.
-> 
-> This patches adds CSI and MIPI-CSI2 drivers for i.MX7, along with several
-> configurations changes for this to work as a capture subsystem. Some bugs are
-> also fixed along the line. And necessary documentation.
-> 
-> For a more detailed view of the capture paths, pads links in the i.MX7 please
-> take a look at the documentation in PATCH 10.
-> 
-> The system used to test and develop this was the Warp7 board with an OV2680
-> sensor, which output format is 10-bit bayer. So, only MIPI interface was
-> tested, a scenario with an parallel input would nice to have.
-> 
-> Bellow goes an example of the output of the pads and links and the output of
-> v4l2-compliance testing.
-> 
-> The v4l-utils version used is:
-> v4l2-compliance SHA: 1a6c8fe9a65c26e78ba34bd4aa2df28ede7d00cb, 32 bits
-> 
-> The Media Driver fail some tests but this failures are coming from code out of
-> scope of this series (imx-capture), and some from the sensor OV2680
-> but that I think not related with the sensor driver but with the testing and
-> core.
-> 
-> The csi and mipi-csi entities pass all compliance tests.
+Hi Krzysztof,
 
-For patches 1, 4 and 10--13:
+On 1/30/19 10:46 AM, Krzysztof Kozlowski wrote:
+> On Tue, 29 Jan 2019 at 18:55, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Add description of Dynamic Memory Controller and PPMU counters.
+>> They are used by exynos5422-dmc driver.
+>>
+>> CC: Rob Herring <robh+dt@kernel.org>
+>> CC: Mark Rutland <mark.rutland@arm.com>
+>> CC: Kukjin Kim <kgene@kernel.org>
+>> CC: Krzysztof Kozlowski <krzk@kernel.org>
+>> CC: devicetree@vger.kernel.org
+>> CC: linux-arm-kernel@lists.infradead.org
+>> CC: linux-samsung-soc@vger.kernel.org
+>> CC: linux-kernel@vger.kernel.org
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5420.dtsi             | 69 +++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 22 +++++++++
+>>   2 files changed, 91 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index aaff158..4d76335 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -235,6 +235,27 @@
+>>                          status = "disabled";
+>>                  };
+>>
+>> +               dmc: memory-controller@10c20000 {
+>> +                       compatible = "samsung,exynos5422-dmc";
+>> +                       reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
+>> +                               <0x10030000 0x1000>, <0x10000000 0x1000>;
+>> +                       clocks = <&clock CLK_FOUT_SPLL>,
+>> +                               <&clock CLK_MOUT_SCLK_SPLL>,
+>> +                               <&clock CLK_FF_DOUT_SPLL2>,
+>> +                               <&clock CLK_FOUT_BPLL>, <&clock CLK_MOUT_BPLL>,
+>> +                               <&clock CLK_SCLK_BPLL>,
+>> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE>,
+>> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+>> +                               <&clock CLK_MOUT_MCLK_CDREX>,
+>> +                               <&clock CLK_DOUT_CLK2X_PHY0>,
+>> +                               <&clock CLK_CLKM_PHY0>, <&clock CLK_CLKM_PHY1>;
+>> +                       clock-names = "fout_spll", "mout_sclk_spll",
+>> +                               "ff_dout_spll2", "fout_bpll", "mout_bpll",
+>> +                               "sclk_bpll", "mout_mx_mspll_ccore",
+>> +                               "mout_mx_mspll_ccore_phy", "mout_mclk_cdrex",
+>> +                               "dout_clk2x_phy0", "clkm_phy0", "clkm_phy1";
+> 
+> We misunderstood each other. I did not ask for compaction into one
+> continued line but for proper indentation. Having one entry per one
+> line was fine because you have really a lot of entries and it was
+> making things easier to check.
+> It should look like:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/exynos54xx.dtsi?h=v4.20#n78
+> 
+Yes, we misunderstood each other. I will fix it in v3.
+Thank you for having a look on it. I assume that the other issues
+have been properly addressed.
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Regards,
+Lukasz
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> Best regards,
+> Krzysztof
+> 
+> 
