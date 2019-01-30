@@ -1,56 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/4] mfd: max77620: add documentation for low battery
- monitoring
-Date: Wed, 30 Jan 2019 13:53:55 -0600
-Message-ID: <20190130195355.GA1652@bogus>
-References: <20190129085531.32364-1-markz@nvidia.com>
- <20190129085531.32364-5-markz@nvidia.com>
+Subject: Re: [PATCH v2 0/2] USB SS PHY for Qualcomm's QCS404
+Date: Wed, 30 Jan 2019 13:58:04 -0600
+Message-ID: <20190130195804.GA5908@bogus>
+References: <1548761715-4004-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190129085531.32364-5-markz@nvidia.com>
+In-Reply-To: <1548761715-4004-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Zhang <markz@nvidia.com>
-Cc: lee.jones@linaro.org, blaws05@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, andy.gross@linaro.org, swboyd@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, khasim.mohammed@linaro.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 04:55:31PM +0800, Mark Zhang wrote:
-> Adding documentation for low battery monitor properties:
-> - maxim,low-battery-dac-enable
-> - maxim,low-battery-dac-disable
-> - maxim,low-battery-shutdown-enable
-> - maxim,low-battery-shutdown-disable
-> - maxim,low-battery-reset-enable
-> - maxim,low-battery-reset-disable
+On Tue, Jan 29, 2019 at 12:35:13PM +0100, Jorge Ramirez-Ortiz wrote:
+> This set adds USB SS PHY support to Qualcomm's QCS404 SoC
+> The PHY is implemented using Synopsys SS PHY 1.0.0 IP
 > 
-> Signed-off-by: Mark Zhang <markz@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/mfd/max77620.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> The code is losely based on Sriharsha Allenki's
+> <sallenki@codeaurora.org> original implementation.
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-> index 484b17e4fba5..5fed0a463b80 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77620.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-> @@ -142,6 +142,20 @@ Optional properties:
->  			Device supports 100/1000/3000/6000 Ohms.
->  			Default will be set to 1000 Ohm.
->  
-> +Low-Battery Monitor:
-> +==================
-> +This sub-node configure low battery monitor configuration registers. Device has
-> +support for low-battery monitor configuration through child DT node
-> +"low-battery-monitor".
-> +
-> +Optional properties:
-> +	- maxim,low-battery-dac-enable: Enable low battery DAC.
-> +	- maxim,low-battery-dac-disable: Disable low battery DAC.
-> +	- maxim,low-battery-shutdown-enable: Enable low battery shutdown.
-> +	- maxim,low-battery-shutdown-disable: Disable low battery shutdown.
-> +	- maxim,low-battery-reset-enable: Enable low battery reset.
-> +	- maxim,low-battery-reset-disable: Disable low battery reset.
+> v2:
+>   enable OTG mode detection
+>   move vdd voltage levels to driver
+>   use bulk_ control interfaces
+>   ss-phy-bindings [1]
+> 
+> [1] ss-phy-binding discussion:
+>  - qcom,dwc3-ss-usb-phy exist for a generic usb2/usb3 phy driver that
+>  was never merged. Rather than trying to re-use these bindings (or
+>  delete them) I  propose that we go ahead with the new separate
+>  bindings for HS and SS: if  not now - investigation  in progress- in
+>  the  future  it might be  possible to have again a common phy driver
+>  for  which these old  bindings would be the binding agreement. 
 
-Do you really need 3 states with the 3rd being prop not present.
+Either use/extend the old binding or remove it if it is not being used.
 
 Rob
