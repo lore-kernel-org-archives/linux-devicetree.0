@@ -1,134 +1,70 @@
-From: Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v2] arm64: dts: sdm845: Add Q6V5 ADSP node
-Date: Wed, 30 Jan 2019 14:16:29 +0530
-Message-ID: <1548837989-22904-1-git-send-email-rohitkr@codeaurora.org>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH] arm: dts: gta04: add gps support
+Date: Wed, 30 Jan 2019 10:02:32 +0100
+Message-ID: <20190130090232.GL3691@localhost>
+References: <20190125194310.11170-1-andreas@kemnade.info>
+ <20190128075356.GJ3691@localhost>
+ <20190128163025.7daa385b@kemnade.info>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190128163025.7daa385b@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-remoteproc@vger.kernel.org, bjorn.andersson@linaro.org, rohkumar@qti.qualcomm.com
-Cc: Rohit kumar <rohitkr@codeaurora.org>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Johan Hovold <johan@kernel.org>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Q6V5 ADSP pil remoteproc node
-for SDM845 SoC.
+On Mon, Jan 28, 2019 at 05:44:29PM +0100, Andreas Kemnade wrote:
+> On Mon, 28 Jan 2019 08:53:56 +0100
+> Johan Hovold <johan@kernel.org> wrote:
+> 
+> > On Fri, Jan 25, 2019 at 08:43:10PM +0100, Andreas Kemnade wrote:
+> > > The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
+> > > which one is mounted so use the compatibility entry for w2sg0004
+> > > for all which will work for both.
+> > > 
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > ---
+> > > w2sg0004 bindings (together with the corresponding support is in
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/johan/gnss gnss-next)
+> > >  arch/arm/boot/dts/omap3-gta04.dtsi | 13 +++++++++++++
+> > >  1 file changed, 13 insertions(+)
 
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
-Changes since v1:
-Addressed comments given by Bjorn.
+> > > +	gps: gps {  
+> > 
+> > The node should be named "gnss" as per the binding.
+> > 
+> > > +		compatible = "wi2wi,w2sg0004";
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&gps_pins>;
+> > > +		sirf,onoff-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
+> > > +		lna-supply = <&vsim>;  
+> > 
+> > Also, the vcc-supply is a required property.
+> > 
+> well, it is not require in the driver and it has different behavior
+> (on even when not opened if on-off is there) than the lna-supply used
+> here. So maybe fix the binding documentation?
 
-This depends on below upstream patch which defines adsp_mem node:
-https://lkml.org/lkml/2019/1/29/1392
+The device-tree describes hardware, and how a particular driver happens
+to implement a binding is not relevant.
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 89 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+That said, there is a bit of an on-going, shall we say philosophical,
+debate about this. The regulator maintainer takes a firm position that
+all mandatory physical supplies should be represented in firmware
+	
+	https://lore.kernel.org/lkml/20181123133126.GF2089@sirena.org.uk/T/#u
+	https://lore.kernel.org/lkml/20180409102244.GB11532@sirena.org.uk/T/#u
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 33f5f4b..31cb8db 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -18,6 +18,7 @@
- #include <dt-bindings/reset/qcom,sdm845-aoss.h>
- #include <dt-bindings/reset/qcom,sdm845-pdc.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-+#include <dt-bindings/soc/qcom,apr.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -2048,6 +2049,94 @@
- 			status = "disabled";
- 		};
- 
-+		adsp_pil: remoteproc-adsp-pil@17300000 {
-+			compatible = "qcom,sdm845-adsp-pil";
-+
-+			reg = <0x17300000 0x410>;
-+			interrupts-extended =
-+				<&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_LPASS_SWAY_CLK>,
-+				 <&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
-+				 <&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
-+				 <&lpasscc LPASS_QDSP6SS_XO_CLK>,
-+				 <&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
-+				 <&lpasscc LPASS_QDSP6SS_CORE_CLK>;
-+
-+			clock-names = "xo", "sway_cbcr", "lpass_ahbs_aon_cbcr",
-+				      "lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
-+				      "qdsp6ss_sleep", "qdsp6ss_core";
-+
-+			resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
-+				 <&aoss_reset AOSS_CC_LPASS_RESTART>;
-+			reset-names = "pdc_sync", "cc_lpass";
-+
-+			qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
-+
-+			memory-region = <&adsp_mem>;
-+
-+			qcom,smem-states = <&adsp_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+			glink-edge {
-+				interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
-+				label = "lpass";
-+				qcom,remote-pid = <2>;
-+				mboxes = <&apss_shared 8>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				apr@4 {
-+					compatible = "qcom,apr-v2";
-+					qcom,glink-channels = "apr_audio_svc";
-+					reg = <APR_DOMAIN_ADSP>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					q6core {
-+						compatible = "qcom,q6core";
-+						reg = <APR_SVC_ADSP_CORE>;
-+					};
-+
-+					q6afe {
-+						compatible = "qcom,q6afe";
-+						reg = <APR_SVC_AFE>;
-+						q6afedai: afedais {
-+							compatible = "qcom,q6afe-dais";
-+							#sound-dai-cells = <1>;
-+							#address-cells = <1>;
-+							#size-cells = <0>;
-+						};
-+					};
-+
-+					q6asm {
-+						compatible = "qcom,q6asm";
-+						reg = <APR_SVC_ASM>;
-+						q6asmdai: asmdai{
-+							compatible = "qcom,q6asm-dais";
-+							iommus = <&apps_smmu 0x1821 0x0>;
-+							#sound-dai-cells = <1>;
-+						};
-+					};
-+
-+					q6adm {
-+						compatible = "qcom,q6adm";
-+						reg = <APR_SVC_ADM>;
-+						q6routing: routing {
-+							compatible = "qcom,q6adm-routing";
-+							#sound-dai-cells = <0>;
-+						};
-+					};
-+				};
-+			};
-+		};
-+
- 		apss_shared: mailbox@17990000 {
- 			compatible = "qcom,sdm845-apss-shared";
- 			reg = <0 0x17990000 0 0x1000>;
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+while Rob appears to take a slightly different stance on fixed
+regulators while admitting that this an issue which has not yet been
+fully resolved:
+
+	https://lore.kernel.org/lkml/20180425171123.xhyoay3nu463btoq@rob-hp-laptop/T/#u
+
+Since this is a new binding, and the hardware requires the vcc supply
+and this is reflected in the binding, I think you should add a fixed
+regulator. At least until you hear otherwise. ;)
+
+Johan
