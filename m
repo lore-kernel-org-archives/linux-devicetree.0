@@ -1,95 +1,56 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [Letux-kernel] [PATCH] arm: dts: gta04: add gps support
-Date: Wed, 30 Jan 2019 15:06:12 +0100
-Message-ID: <89AF1666-1770-4C1C-A5E8-13E1C8D50EFA@goldelico.com>
-References: <20190125194310.11170-1-andreas@kemnade.info> <20190128075356.GJ3691@localhost> <20190128163025.7daa385b@kemnade.info> <20190130090232.GL3691@localhost>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130090232.GL3691@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Johan Hovold <johan@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Benoit Cousson <bcousson@baylibre.com>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Subject: [PATCH 2/3] dt-bindings: net: mt76: update binding for mt7603 driver
+Date: Wed, 30 Jan 2019 15:07:55 +0100
+Message-ID: <20190130140756.91317-2-nbd@nbd.name>
+References: <20190130140756.91317-1-nbd@nbd.name>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20190130140756.91317-1-nbd-Vt+b4OUoWG0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+In addition to MT7603E PCI devices, the driver supports the WLAN core on
+MT7628/MT7688, which needs to be defined in DT.
 
-> Am 30.01.2019 um 10:02 schrieb Johan Hovold <johan@kernel.org>:
->=20
-> On Mon, Jan 28, 2019 at 05:44:29PM +0100, Andreas Kemnade wrote:
->> On Mon, 28 Jan 2019 08:53:56 +0100
->> Johan Hovold <johan@kernel.org> wrote:
->>=20
->>> On Fri, Jan 25, 2019 at 08:43:10PM +0100, Andreas Kemnade wrote:
->>>> The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
->>>> which one is mounted so use the compatibility entry for w2sg0004
->>>> for all which will work for both.
->>>>=20
->>>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
->>>> ---
->>>> w2sg0004 bindings (together with the corresponding support is in
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/johan/gnss =
-gnss-next)
->>>> arch/arm/boot/dts/omap3-gta04.dtsi | 13 +++++++++++++
->>>> 1 file changed, 13 insertions(+)
->=20
->>>> +	gps: gps { =20
->>>=20
->>> The node should be named "gnss" as per the binding.
->>>=20
->>>> +		compatible =3D "wi2wi,w2sg0004";
->>>> +		pinctrl-names =3D "default";
->>>> +		pinctrl-0 =3D <&gps_pins>;
->>>> +		sirf,onoff-gpios =3D <&gpio5 17 GPIO_ACTIVE_HIGH>;
->>>> +		lna-supply =3D <&vsim>; =20
->>>=20
->>> Also, the vcc-supply is a required property.
->>>=20
->> well, it is not require in the driver and it has different behavior
->> (on even when not opened if on-off is there) than the lna-supply used
->> here. So maybe fix the binding documentation?
->=20
-> The device-tree describes hardware, and how a particular driver =
-happens
-> to implement a binding is not relevant.
->=20
-> That said, there is a bit of an on-going, shall we say philosophical,
-> debate about this. The regulator maintainer takes a firm position that
-> all mandatory physical supplies should be represented in firmware
-> =09
-> 	=
-https://lore.kernel.org/lkml/20181123133126.GF2089@sirena.org.uk/T/#u
-> 	=
-https://lore.kernel.org/lkml/20180409102244.GB11532@sirena.org.uk/T/#u
->=20
-> while Rob appears to take a slightly different stance on fixed
-> regulators while admitting that this an issue which has not yet been
-> fully resolved:
->=20
-> 	=
-https://lore.kernel.org/lkml/20180425171123.xhyoay3nu463btoq@rob-hp-laptop=
-/T/#u
->=20
-> Since this is a new binding, and the hardware requires the vcc supply
-> and this is reflected in the binding, I think you should add a fixed
-> regulator. At least until you hear otherwise. ;)
+Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+---
+ .../bindings/net/wireless/mediatek,mt76.txt   | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Assuming that there is no REGEN signal from the twl4030 unless 1V8 is =
-also
-stable, I'd suggest as a simple solution:
-
-	 vcc-supply =3D <&vio>;
-
-Alternatively, we could define a dedicated fixed-regulator in =
-omap3-gta04.dtsi
-for the 3V3 rail. Which is always-on. This would allow to describe that =
-e.g. the
-itg3200, panel and other chips and sensors are also supplied by this. =
-But since
-no driver can really make use of it (turn on/off on demand) this is IMHO =
-quite
-needless.
-
-BR,
-Nikolaus
+diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+index 0c17a0ec9b7b..7b9a776230c0 100644
+--- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
++++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+@@ -4,6 +4,13 @@ This node provides properties for configuring the MediaTek mt76xx wireless
+ device. The node is expected to be specified as a child node of the PCI
+ controller to which the wireless chip is connected.
+ 
++Alternatively, it can specify the wireless part of the MT7628/MT7688 SoC.
++For SoC, use the compatible string "mediatek,mt7628-wmac" and the following
++properties:
++
++- reg: Address and length of the register set for the device.
++- interrupts: Main device interrupt
++
+ Optional properties:
+ 
+ - mac-address: See ethernet.txt in the parent directory
+@@ -30,3 +37,15 @@ Optional nodes:
+ 		};
+ 	};
+ };
++
++MT7628 example:
++
++wmac: wmac@10300000 {
++	compatible = "mediatek,mt7628-wmac";
++	reg = <0x10300000 0x100000>;
++
++	interrupt-parent = <&cpuintc>;
++	interrupts = <6>;
++
++	mediatek,mtd-eeprom = <&factory 0x0000>;
++};
+-- 
+2.17.0
