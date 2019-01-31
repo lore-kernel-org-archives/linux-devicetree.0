@@ -1,73 +1,74 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v5 11/20] iommu/mediatek: Move vld_pa_rng into plat_data
-Date: Thu, 31 Jan 2019 08:36:12 -0800
-Message-ID: <CAE=gft7DNKu93c8e47nrC7Q7h4VL3vGwkj8ycQM8yVdCdjb+hw@mail.gmail.com>
-References: <1546314952-15990-1-git-send-email-yong.wu@mediatek.com>
- <1546314952-15990-12-git-send-email-yong.wu@mediatek.com> <CAE=gft4=4h_1MAnrC8CosSe3gOWx+DwFJSLvGNtOFNMZN8oZ3w@mail.gmail.com>
- <1548904841.19710.36.camel@mhfsdcap03>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH v2] arm: dts: gta04: add gps support
+Date: Thu, 31 Jan 2019 17:41:03 +0100
+Message-ID: <20190131174015.544a00f3@kemnade.info>
+References: <20190129073843.14979-1-andreas@kemnade.info>
+        <20190130090434.GM3691@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/vgmloT8=KlyDOyf+POR3ria"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548904841.19710.36.camel@mhfsdcap03>
+In-Reply-To: <20190130090434.GM3691@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, Arnd Bergmann <arnd@arndb.de>, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 7:20 PM Yong Wu <yong.wu@mediatek.com> wrote:
->
-> On Wed, 2019-01-30 at 10:30 -0800, Evan Green wrote:
-> > On Mon, Dec 31, 2018 at 7:58 PM Yong Wu <yong.wu@mediatek.com> wrote:
-> > >
-> > > Both mt8173 and mt8183 don't have this vld_pa_rng(valid physical address
-> > > range) register while mt2712 have. Move it into the plat_data.
-> > >
-> > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > > ---
-> > >  drivers/iommu/mtk_iommu.c | 3 ++-
-> > >  drivers/iommu/mtk_iommu.h | 1 +
-> > >  2 files changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> > > index 8d8ab21..2913ddb 100644
-> > > --- a/drivers/iommu/mtk_iommu.c
-> > > +++ b/drivers/iommu/mtk_iommu.c
-> > > @@ -548,7 +548,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
-> > >                          upper_32_bits(data->protect_base);
-> > >         writel_relaxed(regval, data->base + REG_MMU_IVRP_PADDR);
-> > >
-> > > -       if (data->enable_4GB && data->plat_data->m4u_plat != M4U_MT8173) {
-> > > +       if (data->enable_4GB && data->plat_data->vld_pa_rng) {
-> > >                 /*
-> > >                  * If 4GB mode is enabled, the validate PA range is from
-> > >                  * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
-> > > @@ -741,6 +741,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
-> > >         .m4u_plat     = M4U_MT2712,
-> > >         .has_4gb_mode = true,
-> > >         .has_bclk     = true,
-> > > +       .vld_pa_rng   = true,
-> > >         .larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
-> > >  };
-> > >
-> > > diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> > > index b46aeaa..a8c5d1e 100644
-> > > --- a/drivers/iommu/mtk_iommu.h
-> > > +++ b/drivers/iommu/mtk_iommu.h
-> > > @@ -48,6 +48,7 @@ struct mtk_iommu_plat_data {
-> > >         /* HW will use the EMI clock if there isn't the "bclk". */
-> > >         bool                has_bclk;
-> > >         bool                reset_axi;
-> > > +       bool                vld_pa_rng;
-> >
-> > I agree with Nicolas that valid_pa_range would be much clearer...
-> > although, even now that I know what it's supposed to mean, I don't get
-> > what it represents. What is this saying?
->
-> This register in the coda is called "vld_pa_rng".
->
-> How about I change it to "has_vld_pa_rng"?. In the comment above, I have
-> explained the meaning(valid physical address range).
->
+--Sig_/vgmloT8=KlyDOyf+POR3ria
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ok, that sounds fine.
--Evan
+On Wed, 30 Jan 2019 10:04:34 +0100
+Johan Hovold <johan@kernel.org> wrote:
+
+> On Tue, Jan 29, 2019 at 08:38:43AM +0100, Andreas Kemnade wrote:
+> > The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
+> > which one is mounted so use the compatibility entry for w2sg0004
+> > for all which will work for both.
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > ---
+> > Changes in v2:
+> > - some s/gps/gnss/
+> > - not added vcc-supply because the regulator is not modelled
+> >   in dts at all =20
+>=20
+> I strongly suggest not sending revised patches before people have a
+> chance to comment on your previous version and resolve any issues that
+> may have been raised.
+
+for technical check there was already some small team review ahead,
+so I expect only formality issues and not something complicated and
+was not mentally prepared for more discussion.
+
+At that point I had the impression that I am not allowed to have
+such driverless things into dtb, so I had the impression that I have
+to follow two conflicting rules at the same time.
+That leads to the impression that I worked a long way into a dead end
+which made me quite angry so I was not as contructive as I should be.
+
+Regards,
+Andreas
+
+--Sig_/vgmloT8=KlyDOyf+POR3ria
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlxTJR8ACgkQl4jFM1s/
+ye/4WxAApY3EPVu2dFHryhqT6YYsMDk+N6f2ERAo9HcBNIbOPGiz6FshPM7OygZU
+cpK/MUzxU/9Arar1F5zn31BfmQhsFlAEfyk5YLTq1k6qkCwkKcOQfeQT5eOvTh5w
+qJLJKGlQVX3nUz6gbANxUsRS9zhPrfbYjuI/lkEesOANXl95wBgTxouQb1TSK3Qz
+csKxCMXYAe2xEfaUcaC/bTPMSuxBCdra3O8o4m1rbMwc4cOihSUcuisKSkhv3402
+IBK3S4ctKd5UCaxmaEum90rjGkQ6l56EjJVrKC2L9IyrqA5pv9aet7ei4fS59NHg
+ciF9gjtw3eeqVM52byHQv5pv+enQE+y74wVuOr1BTUVHe3Uon8Io7JLWJ0aaSe3w
+ob3L66BYsqaR/Ub4J/TM4PGDXwTHNhpCGx2XayyDuGqPqiMWL40A8NEWSYQAfem8
+BUKT18OrjmUZjKu5vdqm3nzMqL/7L5Cm0jUGl1FWBPajNZbTBaSRSQxhjDzJTSuu
+B1vwirWlPelzFwtpy1cfcyVt5z8LVInQU3518EJJRwDohDuTkpKCjsO9SVT13FRw
+8t3/jAk9paA2SIOPZtRJvhHw0pUDsvMqoRQr3qqcamp3GAC/2MpzgDWDjjMN/7US
+3M0i/neoH3f1gP8uIppD7ScNlwLgTOHtz0w5bhPV3rvZF2ZGr+0=
+=2Hfv
+-----END PGP SIGNATURE-----
+
+--Sig_/vgmloT8=KlyDOyf+POR3ria--
