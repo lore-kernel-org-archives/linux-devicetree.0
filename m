@@ -1,53 +1,78 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add rpmcc node
-Date: Thu, 31 Jan 2019 03:11:13 +0100
-Message-ID: <20190131021113.GA11855@centauri.lan>
-References: <20190125181422.21434-1-bjorn.andersson@linaro.org>
+From: Mark Zhang <markz@nvidia.com>
+Subject: Re: [PATCH v2 2/4] mfd: max77620: add documentation for backup
+ battery charging
+Date: Thu, 31 Jan 2019 10:26:51 +0800
+Message-ID: <068e92a6-716c-8144-d504-3e8236dbf591@nvidia.com>
+References: <20190129085531.32364-1-markz@nvidia.com>
+ <20190129085531.32364-3-markz@nvidia.com> <20190130195154.GA30939@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125181422.21434-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190130195154.GA30939@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: lee.jones@linaro.org, blaws05@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 10:14:22AM -0800, Bjorn Andersson wrote:
-> Add the rpm clock controller node, to provide the low-noise baseband
-> clock for the USB PHYs, among other things.
+On 1/31/2019 3:51 AM, Rob Herring wrote:
+> On Tue, Jan 29, 2019 at 04:55:29PM +0800, Mark Zhang wrote:
+>> Adding documentation for 3 new backup battery charging dts
+>> properties:
+>> - maxim,backup-battery-charging-current
+>> - maxim,backup-battery-charging-voltage
+>> - maxim,backup-battery-output-resister
+>>
+>> Signed-off-by: Mark Zhang <markz@nvidia.com>
+>> ---
+>>  .../devicetree/bindings/mfd/max77620.txt      | 20 +++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+>> index 9c16d51cc15b..484b17e4fba5 100644
+>> --- a/Documentation/devicetree/bindings/mfd/max77620.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+>> @@ -122,6 +122,26 @@ For DT binding details of different sub modules like GPIO, pincontrol,
+>>  regulator, power, please refer respective device-tree binding document
+>>  under their respective sub-system directories.
+>>  
+>> +Backup Battery:
+>> +==============
+>> +This sub-node configure charging backup battery of the device. Device has
+>> +support of charging the backup battery. The subnode name is "backup-battery".
+>> +The property for backup-battery child nodes as:
+>> +Presence of this child node will enable the backup battery charging.
+>> +
+>> +Optional properties:
+>> +	-maxim,backup-battery-charging-current: Charging current setting.
+>> +			The device supports 50/100/200/400/600/800uA.
+>> +			If this property is unavailable then it will
+>> +			charge with 50uA.
+>> +	-maxim,backup-battery-charging-voltage: Charging Voltage Limit Setting.
+>> +			Device supports 2500000/3000000/3300000/350000uV.
+>> +			Default will be set to 2500mV. The voltage will be roundoff
+>> +			to nearest lower side if other than above is configured.
+>> +	-maxim,backup-battery-output-resister: Output resistor on Ohm.
+>> +			Device supports 100/1000/3000/6000 Ohms.
+>> +			Default will be set to 1000 Ohm.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index b3be39e088db..d90decd00f5c 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -3,6 +3,7 @@
->  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/clock/qcom,gcc-qcs404.h>
-> +#include <dt-bindings/clock/qcom,rpmcc.h>
->  #include <dt-bindings/gpio/gpio.h>
->  
->  / {
-> @@ -225,6 +226,11 @@
->  		rpm_requests: glink-channel {
->  			compatible = "qcom,rpm-qcs404";
->  			qcom,glink-channels = "rpm_requests";
-> +
-> +			rpmcc: clock-controller {
-> +				compatible = "qcom,rpmcc-qcs404";
-> +				#clock-cells = <1>;
-> +			};
->  		};
->  	};
->  
-> -- 
-> 2.18.0
+> These need property unit suffixes as defined in property-units.txt. The 
+> names are kind of long, so perhaps shorten them a bit.
 > 
 
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Thanks Rob. Given these properties will be under "backup-battery" section, so how about
+changing them to:
+- maxim,charging-current-microamp
+- maxim,charging-voltage-microvolt
+- maxim,output-resister-ohms
+
+Mark
+
+>> +
+>>  Example:
+>>  --------
+>>  #include <dt-bindings/mfd/max77620.h>
+>> -- 
+>> 2.19.2
+>>
