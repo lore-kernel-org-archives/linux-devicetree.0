@@ -1,207 +1,186 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [PATCH 3/9] ptp_qoriq: convert to use ptp_qoriq_init()
-Date: Thu, 31 Jan 2019 10:33:04 +0800
-Message-ID: <20190131023310.9563-4-yangbo.lu@nxp.com>
-References: <20190131023310.9563-1-yangbo.lu@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190131023310.9563-1-yangbo.lu@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Claudiu Manoil <claudiu.manoil@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>
+From: Yong Wu <yong.wu@mediatek.com>
+Subject: Re: [PATCH v5 01/20] dt-bindings: mediatek: Add binding for mt8183
+ IOMMU and SMI
+Date: Thu, 31 Jan 2019 11:19:05 +0800
+Message-ID: <1548904745.19710.33.camel@mhfsdcap03>
+References: <1546314952-15990-1-git-send-email-yong.wu@mediatek.com>
+         <1546314952-15990-2-git-send-email-yong.wu@mediatek.com>
+         <CAE=gft4dQjUw3j52dZJYjvQ4GTf8_KcZOdW5Wn9cFtY9wu_atg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAE=gft4dQjUw3j52dZJYjvQ4GTf8_KcZOdW5Wn9cFtY9wu_atg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>
+Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, Arnd Bergmann <arnd@arndb.de>, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Moved QorIQ PTP clock initialization into new function
-qoriq_ptp_init(). This function could also be reused
-by ENETC PTP drvier which is a PCI driver for same 1588
-timer IP block.
+Hi Evan,
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
- drivers/ptp/ptp_qoriq.c       |  120 +++++++++++++++++++++--------------------
- include/linux/fsl/ptp_qoriq.h |    2 +
- 2 files changed, 64 insertions(+), 58 deletions(-)
+Thanks very much for reviewing this patchset.
 
-diff --git a/drivers/ptp/ptp_qoriq.c b/drivers/ptp/ptp_qoriq.c
-index 1f3e73e..63896b5 100644
---- a/drivers/ptp/ptp_qoriq.c
-+++ b/drivers/ptp/ptp_qoriq.c
-@@ -458,25 +458,17 @@ static int ptp_qoriq_auto_config(struct ptp_qoriq *ptp_qoriq,
- 	return 0;
- }
- 
--static int ptp_qoriq_probe(struct platform_device *dev)
-+int ptp_qoriq_init(struct ptp_qoriq *ptp_qoriq, void __iomem *base,
-+		   const struct ptp_clock_info caps)
- {
--	struct device_node *node = dev->dev.of_node;
--	struct ptp_qoriq *ptp_qoriq;
-+	struct device_node *node = ptp_qoriq->dev->of_node;
- 	struct ptp_qoriq_registers *regs;
- 	struct timespec64 now;
--	int err = -ENOMEM;
--	u32 tmr_ctrl;
- 	unsigned long flags;
--	void __iomem *base;
--
--	ptp_qoriq = kzalloc(sizeof(*ptp_qoriq), GFP_KERNEL);
--	if (!ptp_qoriq)
--		goto no_memory;
--
--	err = -EINVAL;
-+	u32 tmr_ctrl;
- 
--	ptp_qoriq->dev = &dev->dev;
--	ptp_qoriq->caps = ptp_qoriq_caps;
-+	ptp_qoriq->base = base;
-+	ptp_qoriq->caps = caps;
- 
- 	if (of_property_read_u32(node, "fsl,cksel", &ptp_qoriq->cksel))
- 		ptp_qoriq->cksel = DEFAULT_CKSEL;
-@@ -501,44 +493,9 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 		pr_warn("device tree node missing required elements, try automatic configuration\n");
- 
- 		if (ptp_qoriq_auto_config(ptp_qoriq, node))
--			goto no_config;
-+			return -ENODEV;
- 	}
- 
--	err = -ENODEV;
--
--	ptp_qoriq->irq = platform_get_irq(dev, 0);
--
--	if (ptp_qoriq->irq < 0) {
--		pr_err("irq not in device tree\n");
--		goto no_node;
--	}
--	if (request_irq(ptp_qoriq->irq, ptp_qoriq_isr, IRQF_SHARED,
--			DRIVER, ptp_qoriq)) {
--		pr_err("request_irq failed\n");
--		goto no_node;
--	}
--
--	ptp_qoriq->rsrc = platform_get_resource(dev, IORESOURCE_MEM, 0);
--	if (!ptp_qoriq->rsrc) {
--		pr_err("no resource\n");
--		goto no_resource;
--	}
--	if (request_resource(&iomem_resource, ptp_qoriq->rsrc)) {
--		pr_err("resource busy\n");
--		goto no_resource;
--	}
--
--	spin_lock_init(&ptp_qoriq->lock);
--
--	base = ioremap(ptp_qoriq->rsrc->start,
--		       resource_size(ptp_qoriq->rsrc));
--	if (!base) {
--		pr_err("ioremap ptp registers failed\n");
--		goto no_ioremap;
--	}
--
--	ptp_qoriq->base = base;
--
- 	if (of_device_is_compatible(node, "fsl,fman-ptp-timer")) {
- 		ptp_qoriq->regs.ctrl_regs = base + FMAN_CTRL_REGS_OFFSET;
- 		ptp_qoriq->regs.alarm_regs = base + FMAN_ALARM_REGS_OFFSET;
-@@ -558,6 +515,7 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 	  (ptp_qoriq->tclk_period & TCLK_PERIOD_MASK) << TCLK_PERIOD_SHIFT |
- 	  (ptp_qoriq->cksel & CKSEL_MASK) << CKSEL_SHIFT;
- 
-+	spin_lock_init(&ptp_qoriq->lock);
- 	spin_lock_irqsave(&ptp_qoriq->lock, flags);
- 
- 	regs = &ptp_qoriq->regs;
-@@ -571,16 +529,63 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 
- 	spin_unlock_irqrestore(&ptp_qoriq->lock, flags);
- 
--	ptp_qoriq->clock = ptp_clock_register(&ptp_qoriq->caps, &dev->dev);
--	if (IS_ERR(ptp_qoriq->clock)) {
--		err = PTR_ERR(ptp_qoriq->clock);
--		goto no_clock;
--	}
--	ptp_qoriq->phc_index = ptp_clock_index(ptp_qoriq->clock);
-+	ptp_qoriq->clock = ptp_clock_register(&ptp_qoriq->caps, ptp_qoriq->dev);
-+	if (IS_ERR(ptp_qoriq->clock))
-+		return PTR_ERR(ptp_qoriq->clock);
- 
-+	ptp_qoriq->phc_index = ptp_clock_index(ptp_qoriq->clock);
- 	ptp_qoriq_create_debugfs(ptp_qoriq);
--	platform_set_drvdata(dev, ptp_qoriq);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(ptp_qoriq_init);
-+
-+static int ptp_qoriq_probe(struct platform_device *dev)
-+{
-+	struct ptp_qoriq *ptp_qoriq;
-+	int err = -ENOMEM;
-+	void __iomem *base;
-+
-+	ptp_qoriq = kzalloc(sizeof(*ptp_qoriq), GFP_KERNEL);
-+	if (!ptp_qoriq)
-+		goto no_memory;
-+
-+	ptp_qoriq->dev = &dev->dev;
-+
-+	err = -ENODEV;
-+
-+	ptp_qoriq->irq = platform_get_irq(dev, 0);
-+	if (ptp_qoriq->irq < 0) {
-+		pr_err("irq not in device tree\n");
-+		goto no_node;
-+	}
-+	if (request_irq(ptp_qoriq->irq, ptp_qoriq_isr, IRQF_SHARED,
-+			DRIVER, ptp_qoriq)) {
-+		pr_err("request_irq failed\n");
-+		goto no_node;
-+	}
- 
-+	ptp_qoriq->rsrc = platform_get_resource(dev, IORESOURCE_MEM, 0);
-+	if (!ptp_qoriq->rsrc) {
-+		pr_err("no resource\n");
-+		goto no_resource;
-+	}
-+	if (request_resource(&iomem_resource, ptp_qoriq->rsrc)) {
-+		pr_err("resource busy\n");
-+		goto no_resource;
-+	}
-+
-+	base = ioremap(ptp_qoriq->rsrc->start,
-+		       resource_size(ptp_qoriq->rsrc));
-+	if (!base) {
-+		pr_err("ioremap ptp registers failed\n");
-+		goto no_ioremap;
-+	}
-+
-+	err = ptp_qoriq_init(ptp_qoriq, base, ptp_qoriq_caps);
-+	if (err)
-+		goto no_clock;
-+
-+	platform_set_drvdata(dev, ptp_qoriq);
- 	return 0;
- 
- no_clock:
-@@ -589,7 +594,6 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 	release_resource(ptp_qoriq->rsrc);
- no_resource:
- 	free_irq(ptp_qoriq->irq, ptp_qoriq);
--no_config:
- no_node:
- 	kfree(ptp_qoriq);
- no_memory:
-diff --git a/include/linux/fsl/ptp_qoriq.h b/include/linux/fsl/ptp_qoriq.h
-index 75e6f05..d0c1e42 100644
---- a/include/linux/fsl/ptp_qoriq.h
-+++ b/include/linux/fsl/ptp_qoriq.h
-@@ -173,6 +173,8 @@ static inline void qoriq_write(unsigned __iomem *addr, u32 val)
- }
- 
- irqreturn_t ptp_qoriq_isr(int irq, void *priv);
-+int ptp_qoriq_init(struct ptp_qoriq *ptp_qoriq, void __iomem *base,
-+		   const struct ptp_clock_info caps);
- int ptp_qoriq_adjfine(struct ptp_clock_info *ptp, long scaled_ppm);
- int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta);
- int ptp_qoriq_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts);
--- 
-1.7.1
+On Wed, 2019-01-30 at 10:27 -0800, Evan Green wrote:
+> On Mon, Dec 31, 2018 at 7:56 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> >
+> > This patch adds decriptions for mt8183 IOMMU and SMI.
+> >
+> > mt8183 has only one M4U like mt8173 and is also MTK IOMMU gen2 which
+> > uses ARM Short-Descriptor translation table format.
+> >
+> > The mt8183 M4U-SMI HW diagram is as below:
+> >
+> >                           EMI
+> >                            |
+> >                           M4U
+> >                            |
+> >                        ----------
+> >                        |        |
+> >                    gals0-rx   gals1-rx
+> >                        |        |
+> >                        |        |
+> >                    gals0-tx   gals1-tx
+> >                        |        |
+> >                       ------------
+> >                        SMI Common
+> >                       ------------
+> >                            |
+> >   +-----+-----+--------+-----+-----+-------+-------+
+> >   |     |     |        |     |     |       |       |
+> >   |     |  gals-rx  gals-rx  |   gals-rx gals-rx gals-rx
+> >   |     |     |        |     |     |       |       |
+> >   |     |     |        |     |     |       |       |
+> >   |     |  gals-tx  gals-tx  |   gals-tx gals-tx gals-tx
+> >   |     |     |        |     |     |       |       |
+> > larb0 larb1  IPU0    IPU1  larb4  larb5  larb6    CCU
+> > disp  vdec   img     cam    venc   img    cam
+> 
+> It might be cool to put the gals in the picture in the bindings. Not a
+> big deal though.
+
+OK. the picture in the binding should be more generic, I will try add
+gals in the binding picture in next version.
+
+> 
+> >
+> > All the connections are HW fixed, SW can NOT adjust it.
+> >
+> > Compared with mt8173, we add a GALS(Global Async Local Sync) module
+> > between SMI-common and M4U, and additional GALS between larb2/3/5/6
+> > and SMI-common. GALS can help synchronize for the modules in different
+> > clock frequency, it can be seen as a "asynchronous fifo".
+> >
+> > GALS can only help transfer the command/data while it doesn't have
+> > the configuring register, thus it has the special "smi" clock and it
+> > doesn't have the "apb" clock. From the diagram above, we add "gals0"
+> > and "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
+> >
+> > From the diagram above, IPU0/IPU1(Image Processor Unit) and CCU(Camera
+> > Control Unit) is connected with smi-common directly, we can take them
+> > as "larb2", "larb3" and "larb7", and their register spaces are
+> > different with the normal larb.
+> >
+> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/iommu/mediatek,iommu.txt   |  15 ++-
+> >  .../memory-controllers/mediatek,smi-common.txt     |  11 +-
+> >  .../memory-controllers/mediatek,smi-larb.txt       |   3 +
+> >  include/dt-bindings/memory/mt8183-larb-port.h      | 130 +++++++++++++++++++++
+> >  4 files changed, 153 insertions(+), 6 deletions(-)
+> >  create mode 100644 include/dt-bindings/memory/mt8183-larb-port.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> > index 6922db5..6e758996 100644
+> > --- a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> > +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> > @@ -36,6 +36,10 @@ each local arbiter.
+> >  like display, video decode, and camera. And there are different ports
+> >  in each larb. Take a example, There are many ports like MC, PP, VLD in the
+> >  video decode local arbiter, all these ports are according to the video HW.
+> > +  In some SoCs, there may be a GALS(Global Async Local Sync) module between
+> > +smi-common and m4u, and additional GALS module between smi-larb and
+> > +smi-common. GALS can been seen as a "asynchronous fifo" which could help
+> > +synchronize for the modules in different clock frequency.
+> >
+> >  Required properties:
+> >  - compatible : must be one of the following string:
+> > @@ -44,18 +48,23 @@ Required properties:
+> >         "mediatek,mt7623-m4u", "mediatek,mt2701-m4u" for mt7623 which uses
+> >                                                      generation one m4u HW.
+> >         "mediatek,mt8173-m4u" for mt8173 which uses generation two m4u HW.
+> > +       "mediatek,mt8183-m4u" for mt8183 which uses generation two m4u HW.
+> >  - reg : m4u register base and size.
+> >  - interrupts : the interrupt of m4u.
+> >  - clocks : must contain one entry for each clock-names.
+> > -- clock-names : must be "bclk", It is the block clock of m4u.
+> > +- clock-names : Only 1 optional clock:
+> > +  - "bclk": the block clock of m4u.
+> > +  Note that m4u use the EMI clock which always has been enabled before kernel
+> > +  if there is no this "bclk".
+> 
+> Ideally bclk could be specified a little more crisply, as this is
+> actually required for some SoCs and not used at all on others (as in
+> patch 7).
+
+OK. I will add like this:
+
++ Here is the list which require the "bclk":
++   - mt2701, mt2712, mt7623 and mt8173. 
+
+> 
+> >  - mediatek,larbs : List of phandle to the local arbiters in the current Socs.
+> >         Refer to bindings/memory-controllers/mediatek,smi-larb.txt. It must sort
+> >         according to the local arbiter index, like larb0, larb1, larb2...
+> >  - iommu-cells : must be 1. This is the mtk_m4u_id according to the HW.
+> >         Specifies the mtk_m4u_id as defined in
+> >         dt-binding/memory/mt2701-larb-port.h for mt2701, mt7623
+> > -       dt-binding/memory/mt2712-larb-port.h for mt2712, and
+> > -       dt-binding/memory/mt8173-larb-port.h for mt8173.
+> > +       dt-binding/memory/mt2712-larb-port.h for mt2712,
+> > +       dt-binding/memory/mt8173-larb-port.h for mt8173, and
+> > +       dt-binding/memory/mt8183-larb-port.h for mt8183.
+> >
+> >  Example:
+> >         iommu: iommu@10205000 {
+> > diff --git a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
+> > index e937ddd..8d3240a 100644
+> > --- a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
+> > +++ b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
+> > @@ -2,9 +2,10 @@ SMI (Smart Multimedia Interface) Common
+> >
+> >  The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
+> >
+> > -Mediatek SMI have two generations of HW architecture, mt2712 and mt8173 use
+> > -the second generation of SMI HW while mt2701 uses the first generation HW of
+> > -SMI.
+> > +Mediatek SMI have two generations of HW architecture, here is the list
+> > +which generation the Socs use:
+> > +generation 1: mt2701 and mt7623.
+> > +generation 2: mt2712, mt8173 and mt8183.
+> >
+> >  There's slight differences between the two SMI, for generation 2, the
+> >  register which control the iommu port is at each larb's register base. But
+> > @@ -19,6 +20,7 @@ Required properties:
+> >         "mediatek,mt2712-smi-common"
+> >         "mediatek,mt7623-smi-common", "mediatek,mt2701-smi-common"
+> >         "mediatek,mt8173-smi-common"
+> > +       "mediatek,mt8183-smi-common"
+> >  - reg : the register and size of the SMI block.
+> >  - power-domains : a phandle to the power domain of this local arbiter.
+> >  - clocks : Must contain an entry for each entry in clock-names.
+> > @@ -30,6 +32,9 @@ Required properties:
+> >             They may be the same if both source clocks are the same.
+> >    - "async" : asynchronous clock, it help transform the smi clock into the emi
+> >               clock domain, this clock is only needed by generation 1 smi HW.
+> > +  and these 2 option clocks for generation 2 smi HW:
+> > +  - "gals0": the path0 clock of GALS(Global Async Local Sync).
+> > +  - "gals1": the path1 clock of GALS(Global Async Local Sync).
+> 
+> It would also be nice to specify these more clearly too, since these
+> are also required for some SoCs and not used on others (as in patch
+> 12).
+
+I will add:
+
++ Here is the list which has the "gals": mt8183.
