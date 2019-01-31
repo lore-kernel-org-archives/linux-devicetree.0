@@ -1,55 +1,53 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 5/7] dt-bindings: add bindings for SAM9X60
-Date: Thu, 31 Jan 2019 13:36:30 +0100
-Message-ID: <20190131123630.opxm5saomkp3b55h@M43218.corp.atmel.com>
-References: <1548937733-20189-1-git-send-email-claudiu.beznea@microchip.com>
- <1548937733-20189-6-git-send-email-claudiu.beznea@microchip.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 1/2] spi: support inter-word delay requirement for
+ devices
+Date: Thu, 31 Jan 2019 12:46:13 +0000
+Message-ID: <20190131124613.GD20797@sirena.org.uk>
+References: <20190129205502.7741-1-jonas@norrbonn.se>
+ <20190129205502.7741-2-jonas@norrbonn.se>
+ <CAMuHMdXv6U-VeznbXrTNk9oY1kCkYu-b+_o3KH_R6BMgpVn7YA@mail.gmail.com>
+ <d9c495ac-825e-6dd0-5455-817c3f27b840@norrbonn.se>
+ <CAMuHMdXAjLBpQ6OXLwRsCzt5ydjuGFK6M6dKuFU4EL+6o0NB6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VV4b6MQE+OnNyhkM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1548937733-20189-6-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <CAMuHMdXAjLBpQ6OXLwRsCzt5ydjuGFK6M6dKuFU4EL+6o0NB6Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Beznea - M18063 <Claudiu.Beznea@microchip.com>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jonas Bonn <jonas@norrbonn.se>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2019 at 01:29:40PM +0100, Claudiu Beznea - M18063 wrote:
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> 
-> Add device tree binding for SAM9X60 pin controller.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> index 40e33dfc36fd..c2d51ed86d47 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> @@ -19,7 +19,7 @@ such as pull-up, multi drive, etc.
->  
->  Required properties for iomux controller:
->  - compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl"
-> -		or "atmel,sama5d3-pinctrl"
-> +		or "atmel,sama5d3-pinctrl" or "microchip,sam9x60-pictrl"
 
-Typo s/microchip,sam9x60-pictrl/microchip,sam9x60-pinctrl
+--VV4b6MQE+OnNyhkM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  - atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
->    configured in this periph mode. All the periph and bank need to be describe.
->  
-> @@ -117,7 +117,8 @@ Some requirements for using atmel,at91rm9200-pinctrl binding:
->  4. The gpio controller must be describe in the pinctrl simple-bus.
->  
->  For each bank the required properties are:
-> -- compatible: "atmel,at91sam9x5-gpio" or "atmel,at91rm9200-gpio"
-> +- compatible: "atmel,at91sam9x5-gpio" or "atmel,at91rm9200-gpio" or
-> +  "microchip,sam9x60-gpio"
->  - reg: physical base address and length of the controller's registers
->  - interrupts: interrupt outputs from the controller
->  - interrupt-controller: marks the device node as an interrupt controller
-> -- 
-> 2.7.4
-> 
+On Wed, Jan 30, 2019 at 09:15:09AM +0100, Geert Uytterhoeven wrote:
+> On Wed, Jan 30, 2019 at 9:10 AM Jonas Bonn <jonas@norrbonn.se> wrote:
+
+> > And with that said, if you insist having a u16 for this, I'll change it.
+> >   Just let me know.
+
+> I'll defer that to the maintainer (Mark).
+
+It's an internal kernel thing, if we end up needing more space we can
+just change it.
+
+--VV4b6MQE+OnNyhkM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxS7hQACgkQJNaLcl1U
+h9Blbgf/UdZ/fY6wb4r2MpFasZi5arBoDtRp9jFfNtbLbH/ydhvLOQbNDVX3Kcs2
+sUbSgUbzBwmyK8vG4IgAKSLZIDenVwmlQNsIamLzo5sHHz0XWfMD4hWRlPrEc3zK
+FR7Xb7A3HugGnruRQM8WNJmGABn2Zv8XP7G8NuQ0WuoPip5UO9H2up46PTtqQXOV
+h042QZGPXO1AuFJfeFmPeUF+XIstPdX/HwvebpKAev8pZJ87Qg8IBE+NwgldmxgS
+0xKV08PhvDlHF0JqUsaMuSYtSpBKBQFxy56pEf0EyedJIcLXg2U05hsR2DyAHx1b
+kIvh/KifBVjBDBVcgnFJxznRWwopiQ==
+=Og52
+-----END PGP SIGNATURE-----
+
+--VV4b6MQE+OnNyhkM--
