@@ -1,41 +1,53 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH 7/7] dt-bindings: add documentation for slew rate
-Date: Thu, 31 Jan 2019 12:29:48 +0000
-Message-ID: <1548937733-20189-8-git-send-email-claudiu.beznea@microchip.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH 3/7] pinctrl: at91: add compatibles for SAM9X60 pin
+ controller
+Date: Thu, 31 Jan 2019 13:33:10 +0100
+Message-ID: <20190131123310.wwikkuiniqlcg445@M43218.corp.atmel.com>
 References: <1548937733-20189-1-git-send-email-claudiu.beznea@microchip.com>
+ <1548937733-20189-4-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548937733-20189-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1548937733-20189-4-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
+To: Claudiu Beznea - M18063 <Claudiu.Beznea@microchip.com>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+On Thu, Jan 31, 2019 at 01:29:33PM +0100, Claudiu Beznea - M18063 wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> 
+> Add compatibles for SAM9X60 pin controller.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  drivers/pinctrl/pinctrl-at91.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> index 46443b97d811..5456a2692b8c 100644
+> --- a/drivers/pinctrl/pinctrl-at91.c
+> +++ b/drivers/pinctrl/pinctrl-at91.c
+> @@ -1215,6 +1215,7 @@ static const struct of_device_id at91_pinctrl_of_match[] = {
+>  	{ .compatible = "atmel,sama5d3-pinctrl", .data = &sama5d3_ops },
+>  	{ .compatible = "atmel,at91sam9x5-pinctrl", .data = &at91sam9x5_ops },
+>  	{ .compatible = "atmel,at91rm9200-pinctrl", .data = &at91rm9200_ops },
+> +	{ .compatible = "microchip,sam9x60-pictrl", .data = &sam9x60_ops },
 
-Add documentation for slew rate.
+Typo s/microchip,sam9x60-pictrl/microchip,sam9x60-pinctrl
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.t=
-xt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-index c2d51ed86d47..19c255346a49 100644
---- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-@@ -100,6 +100,7 @@ DRIVE_STRENGTH (3 << 5): indicate the drive strength of=
- the pin using the
- 				11 - High
- OUTPUT		(1 << 7): indicate this pin need to be configured as an output.
- OUTPUT_VAL	(1 << 8): output val (1 =3D high, 0 =3D low)
-+SLEWRATE	(1 << 9): slew rate of the pin: 0 =3D disable, 1 =3D enable
- DEBOUNCE	(1 << 16): indicate this pin needs debounce.
- DEBOUNCE_VAL	(0x3fff << 17): debounce value.
-=20
---=20
-2.7.4
+>  	{ /* sentinel */ }
+>  };
+>  
+> @@ -1757,6 +1758,7 @@ static const struct gpio_chip at91_gpio_template = {
+>  static const struct of_device_id at91_gpio_of_match[] = {
+>  	{ .compatible = "atmel,at91sam9x5-gpio", .data = &at91sam9x5_ops, },
+>  	{ .compatible = "atmel,at91rm9200-gpio", .data = &at91rm9200_ops },
+> +	{ .compatible = "microchip,sam9x60-gpio", .data = &sam9x60_ops },
+>  	{ /* sentinel */ }
+>  };
+>  
+> -- 
+> 2.7.4
+> 
