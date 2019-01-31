@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [PATCH 9/9] MAINTAINERS: add enetc_ptp driver into QorIQ PTP list
-Date: Thu, 31 Jan 2019 10:33:10 +0800
-Message-ID: <20190131023310.9563-10-yangbo.lu@nxp.com>
+Subject: [PATCH 7/9] ptp: add QorIQ PTP support for ENETC
+Date: Thu, 31 Jan 2019 10:33:08 +0800
+Message-ID: <20190131023310.9563-8-yangbo.lu@nxp.com>
 References: <20190131023310.9563-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190131023310.9563-1-yangbo.lu@nxp.com>
@@ -10,25 +10,27 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org
 Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Claudiu Manoil <claudiu.manoil@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch to add enetc_ptp driver into QorIQ PTP list
-for maintaining.
+This patch is to add QorIQ PTP support for ENETC.
+ENETC PTP driver which is a PCI driver for same
+1588 timer IP block will reuse QorIQ PTP driver.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
- MAINTAINERS |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ drivers/ptp/Kconfig |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 019a2bc..f0b50f8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6093,6 +6093,7 @@ FREESCALE QORIQ PTP CLOCK DRIVER
- M:	Yangbo Lu <yangbo.lu@nxp.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
-+F:	drivers/net/ethernet/freescale/enetc/enetc_ptp.c
- F:	drivers/ptp/ptp_qoriq.c
- F:	drivers/ptp/ptp_qoriq_debugfs.c
- F:	include/linux/fsl/ptp_qoriq.h
+diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
+index aeb4a8b..7fe1863 100644
+--- a/drivers/ptp/Kconfig
++++ b/drivers/ptp/Kconfig
+@@ -43,7 +43,7 @@ config PTP_1588_CLOCK_DTE
+ 
+ config PTP_1588_CLOCK_QORIQ
+ 	tristate "Freescale QorIQ 1588 timer as PTP clock"
+-	depends on GIANFAR || FSL_DPAA_ETH
++	depends on GIANFAR || FSL_DPAA_ETH || FSL_ENETC || FSL_ENETC_VF
+ 	depends on PTP_1588_CLOCK
+ 	default y
+ 	help
 -- 
 1.7.1
