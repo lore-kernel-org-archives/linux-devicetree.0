@@ -1,148 +1,53 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] dt-bindings: gpu: add bindings for the ARM Mali Bifrost
- GPU
-Date: Thu, 31 Jan 2019 16:53:34 +0100
-Message-ID: <0d80f33a-32ba-4d87-0f40-bd5a4b7d23c0@baylibre.com>
-References: <20190131132939.2263-1-narmstrong@baylibre.com>
+From: <Tudor.Ambarus@microchip.com>
+Subject: [PATCH v2 00/10] spi: atmel-quadspi: introduce sam9x60 qspi
+ controller
+Date: Thu, 31 Jan 2019 16:15:25 +0000
+Message-ID: <20190131161515.21605-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131132939.2263-1-narmstrong@baylibre.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Tudor.Ambarus@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On 31/01/2019 14:29, Neil Armstrong wrote:
-> Add the bindings for the Bifrost family of ARM Mali GPUs.
-> 
-> The Bifrost GPU architecture is similar to the Midgard family,
-> but with a different Shader Core & Execution Engine structures.
-> 
-> Bindings are based on the Midgard family bindings, but the inner
-> architectural changes makes it a separate family needing separate
-> bindings.
-> 
-> The Bifrost GPUs are present in a number of recent SoCs, like the
-> Amlogic G12A Family, and many other vendors.
-> The Amlogic vendor specific compatible is added to handle the
-> specific IP integration differences and dependencies.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/gpu/arm,mali-bifrost.txt         | 94 +++++++++++++++++++
->  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-> new file mode 100644
-> index 000000000000..a632f5136b08
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-> @@ -0,0 +1,94 @@
-> +ARM Mali Bifrost GPU
-> +====================
-> +
-> +Required properties:
-> +
-> +- compatible :
-> +  * Must contain one of the following:
-> +    + "arm,mali-g71"
-> +    + "arm,mali-g51"
-> +    + "arm,mali-g72"
-> +    + "arm,mali-g76"
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Wrong order and forgot the G31 and G52 cores.
+Patches from 1 to 8 are minor fixes or cosmetics.
+Patches 9 and 10 introduce the sam9x60 qspi controller.
 
-Neil
+sam9x60 qspi controller tested with sst26vf064b jedec,spi-nor flash.
+Backward compatibility test done on sama5d2 qspi controller and
+mx25l25635e jedec,spi-nor flash.
 
-> +  * which must be preceded by one of the following vendor specifics:
-> +    + "amlogic,meson-g12a-mali"
-> +
-> +- reg : Physical base address of the device and length of the register area.
-> +
-> +- interrupts : Contains the three IRQ lines required by Mali Bifrost devices.
-> +
-> +- interrupt-names : Contains the names of IRQ resources in the order they were
-> +  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
-> +
-> +
-> +Optional properties:
-> +
-> +- clocks : Phandle to clock for the Mali Bifrost device.
-> +
-> +- mali-supply : Phandle to regulator for the Mali device. Refer to
-> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
-> +
-> +- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
-> +  for details.
-> +
-> +- resets : Phandle of the GPU reset line.
-> +
-> +Vendor-specific bindings
-> +------------------------
-> +
-> +The Mali GPU is integrated very differently from one SoC to
-> +another. In order to accomodate those differences, you have the option
-> +to specify one more vendor-specific compatible, among:
-> +
-> +- "amlogic,meson-g12a-mali"
-> +  Required properties:
-> +  - resets : Should contain phandles of :
-> +    + GPU reset line
-> +    + GPU APB glue reset line
-> +
-> +Example for a Mali-G71:
-> +
-> +gpu@ffa30000 {
-> +	compatible = "amlogic,meson-g12a-mali", "arm,mali-g71";
+The patches are generated on top of for-next branch.
 
+v2:
+- cache MR value,
+- drop iomem wrappers,
+- make "pclk" clock-name mandatory even for sama5d2,
+- rework clock handling,
+- reorder setting of register values in set_cfg() calls,
+- collect R-b tags.
 
-It's a typo, it's a G31 on Amlogic G12A, anyway the example is still valid.
+Tudor Ambarus (10):
+  spi: atmel-quadspi: cache MR value to avoid a write access
+  spi: atmel-quadspi: order header files inclusion alphabetically
+  spi: atmel-quadspi: drop wrappers for iomem accesses
+  spi: atmel-quadspi: fix naming scheme
+  spi: atmel-quadspi: remove unnecessary cast
+  spi: atmel-quadspi: return appropriate error code
+  spi: atmel-quadspi: switch to SPDX license identifiers
+  dt-bindings: spi: atmel-quadspi: update example to new clock binding
+  dt-bindings: spi: atmel-quadspi: QuadSPI driver for Microchip SAM9X60
+  spi: atmel-quadspi: add support for sam9x60 qspi controller
 
-> +	reg = <0xffe40000 0x10000>;
-> +	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "job", "mmu", "gpu";
-> +	clocks = <&clk CLKID_MALI>;
-> +	mali-supply = <&vdd_gpu>;
-> +	operating-points-v2 = <&gpu_opp_table>;
-> +	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
-> +};
-> +
-> +gpu_opp_table: opp_table0 {
-> +	compatible = "operating-points-v2";
-> +
-> +	opp@533000000 {
-> +		opp-hz = /bits/ 64 <533000000>;
-> +		opp-microvolt = <1250000>;
-> +	};
-> +	opp@450000000 {
-> +		opp-hz = /bits/ 64 <450000000>;
-> +		opp-microvolt = <1150000>;
-> +	};
-> +	opp@400000000 {
-> +		opp-hz = /bits/ 64 <400000000>;
-> +		opp-microvolt = <1125000>;
-> +	};
-> +	opp@350000000 {
-> +		opp-hz = /bits/ 64 <350000000>;
-> +		opp-microvolt = <1075000>;
-> +	};
-> +	opp@266000000 {
-> +		opp-hz = /bits/ 64 <266000000>;
-> +		opp-microvolt = <1025000>;
-> +	};
-> +	opp@160000000 {
-> +		opp-hz = /bits/ 64 <160000000>;
-> +		opp-microvolt = <925000>;
-> +	};
-> +	opp@100000000 {
-> +		opp-hz = /bits/ 64 <100000000>;
-> +		opp-microvolt = <912500>;
-> +	};
-> +};
-> 
+ .../devicetree/bindings/spi/atmel-quadspi.txt      |  14 +-
+ drivers/spi/atmel-quadspi.c                        | 374 +++++++++++++++--=
+----
+ 2 files changed, 281 insertions(+), 107 deletions(-)
+
+--=20
+2.9.5
