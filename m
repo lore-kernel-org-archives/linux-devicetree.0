@@ -1,7 +1,7 @@
 From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH 1/7] pinctrl: at91: add option to use drive strength bits
-Date: Thu, 31 Jan 2019 12:29:15 +0000
-Message-ID: <1548937733-20189-2-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 2/7] pinctrl: at91: add drive strength support for SAM9X60
+Date: Thu, 31 Jan 2019 12:29:29 +0000
+Message-ID: <1548937733-20189-3-git-send-email-claudiu.beznea@microchip.com>
 References: <1548937733-20189-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,104 +16,109 @@ List-Id: devicetree@vger.kernel.org
 
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-SAM9X60 uses high and low drive strengths. To implement this, in
-at91_pinctrl_mux_ops::set_drivestrength and
-at91_pinctrl_mux_ops::get_drivestrength we need bit numbers of
-drive strengths (1 for low, 2 for high), thus change the code to
-allow the usage of drive strength bit numbers.
+Add drive strength support for SAM9X60 pin controller.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/pinctrl/pinctrl-at91.c | 32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+ drivers/pinctrl/pinctrl-at91.c | 52 ++++++++++++++++++++++++++++++++++++++=
+++++
+ drivers/pinctrl/pinctrl-at91.h |  2 ++
+ 2 files changed, 54 insertions(+)
 
 diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.=
 c
-index 3d49bbbcdbc7..31f06dafca2e 100644
+index 31f06dafca2e..46443b97d811 100644
 --- a/drivers/pinctrl/pinctrl-at91.c
 +++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -72,10 +72,15 @@ static int gpio_banks;
-  * DRIVE_STRENGTH_DEFAULT is just a placeholder to avoid changing the driv=
-e
-  * strength when there is no dt config for it.
-  */
--#define DRIVE_STRENGTH_DEFAULT		(0 << DRIVE_STRENGTH_SHIFT)
--#define DRIVE_STRENGTH_LOW          (1 << DRIVE_STRENGTH_SHIFT)
--#define DRIVE_STRENGTH_MED          (2 << DRIVE_STRENGTH_SHIFT)
--#define DRIVE_STRENGTH_HI           (3 << DRIVE_STRENGTH_SHIFT)
-+enum drive_strength_bit {
-+	DRIVE_STRENGTH_BIT_DEF,
-+	DRIVE_STRENGTH_BIT_LOW,
-+	DRIVE_STRENGTH_BIT_MED,
-+	DRIVE_STRENGTH_BIT_HI,
+@@ -574,6 +574,17 @@ static unsigned at91_mux_sam9x5_get_drivestrength(void=
+ __iomem *pio,
+ 	return tmp;
+ }
+=20
++static unsigned at91_mux_sam9x60_get_drivestrength(void __iomem *pio,
++						   unsigned pin)
++{
++	unsigned tmp =3D readl_relaxed(pio + SAM9X60_PIO_DRIVER1);
++
++	if (tmp & BIT(pin))
++		return DRIVE_STRENGTH_BIT_HI;
++
++	return DRIVE_STRENGTH_BIT_LOW;
++}
++
+ static void set_drive_strength(void __iomem *reg, unsigned pin, u32 streng=
+th)
+ {
+ 	unsigned tmp =3D readl_relaxed(reg);
+@@ -611,6 +622,27 @@ static void at91_mux_sam9x5_set_drivestrength(void __i=
+omem *pio, unsigned pin,
+ 				setting);
+ }
+=20
++static void at91_mux_sam9x60_set_drivestrength(void __iomem *pio, unsigned=
+ pin,
++					       u32 setting)
++{
++	unsigned int tmp;
++
++	if (setting <=3D DRIVE_STRENGTH_BIT_DEF ||
++	    setting =3D=3D DRIVE_STRENGTH_BIT_MED ||
++	    setting > DRIVE_STRENGTH_BIT_HI)
++		return;
++
++	tmp =3D readl_relaxed(pio + SAM9X60_PIO_DRIVER1);
++
++	/* Strength is 0: low, 1: hi */
++	if (setting =3D=3D DRIVE_STRENGTH_BIT_LOW)
++		tmp &=3D ~BIT(pin);
++	else
++		tmp |=3D BIT(pin);
++
++	writel_relaxed(tmp, pio + SAM9X60_PIO_DRIVER1);
++}
++
+ static struct at91_pinctrl_mux_ops at91rm9200_ops =3D {
+ 	.get_periph	=3D at91_mux_get_periph,
+ 	.mux_A_periph	=3D at91_mux_set_A_periph,
+@@ -639,6 +671,26 @@ static struct at91_pinctrl_mux_ops at91sam9x5_ops =3D =
+{
+ 	.irq_type	=3D alt_gpio_irq_type,
+ };
+=20
++static const struct at91_pinctrl_mux_ops sam9x60_ops =3D {
++	.get_periph	=3D at91_mux_pio3_get_periph,
++	.mux_A_periph	=3D at91_mux_pio3_set_A_periph,
++	.mux_B_periph	=3D at91_mux_pio3_set_B_periph,
++	.mux_C_periph	=3D at91_mux_pio3_set_C_periph,
++	.mux_D_periph	=3D at91_mux_pio3_set_D_periph,
++	.get_deglitch	=3D at91_mux_pio3_get_deglitch,
++	.set_deglitch	=3D at91_mux_pio3_set_deglitch,
++	.get_debounce	=3D at91_mux_pio3_get_debounce,
++	.set_debounce	=3D at91_mux_pio3_set_debounce,
++	.get_pulldown	=3D at91_mux_pio3_get_pulldown,
++	.set_pulldown	=3D at91_mux_pio3_set_pulldown,
++	.get_schmitt_trig =3D at91_mux_pio3_get_schmitt_trig,
++	.disable_schmitt_trig =3D at91_mux_pio3_disable_schmitt_trig,
++	.get_drivestrength =3D at91_mux_sam9x60_get_drivestrength,
++	.set_drivestrength =3D at91_mux_sam9x60_set_drivestrength,
++	.irq_type	=3D alt_gpio_irq_type,
++
 +};
 +
-+#define DRIVE_STRENGTH_BIT_MSK(name)	(DRIVE_STRENGTH_BIT_##name << \
-+					 DRIVE_STRENGTH_SHIFT)
+ static struct at91_pinctrl_mux_ops sama5d3_ops =3D {
+ 	.get_periph	=3D at91_mux_pio3_get_periph,
+ 	.mux_A_periph	=3D at91_mux_pio3_set_A_periph,
+diff --git a/drivers/pinctrl/pinctrl-at91.h b/drivers/pinctrl/pinctrl-at91.=
+h
+index 79b957f1dfa2..19fc27e66bfd 100644
+--- a/drivers/pinctrl/pinctrl-at91.h
++++ b/drivers/pinctrl/pinctrl-at91.h
+@@ -69,4 +69,6 @@
+ #define AT91SAM9X5_PIO_DRIVER1	0x114  /*PIO Driver 1 register offset*/
+ #define AT91SAM9X5_PIO_DRIVER2	0x118  /*PIO Driver 2 register offset*/
 =20
- /**
-  * struct at91_pmx_func - describes AT91 pinmux functions
-@@ -551,7 +556,7 @@ static unsigned at91_mux_sama5d3_get_drivestrength(void=
- __iomem *pio,
- 	/* SAMA5 strength is 1:1 with our defines,
- 	 * except 0 is equivalent to low per datasheet */
- 	if (!tmp)
--		tmp =3D DRIVE_STRENGTH_LOW;
-+		tmp =3D DRIVE_STRENGTH_BIT_MSK(LOW);
-=20
- 	return tmp;
- }
-@@ -564,7 +569,7 @@ static unsigned at91_mux_sam9x5_get_drivestrength(void =
-__iomem *pio,
-=20
- 	/* strength is inverse in SAM9x5s hardware with the pinctrl defines
- 	 * hardware: 0 =3D hi, 1 =3D med, 2 =3D low, 3 =3D rsvd */
--	tmp =3D DRIVE_STRENGTH_HI - tmp;
-+	tmp =3D DRIVE_STRENGTH_BIT_MSK(HI) - tmp;
-=20
- 	return tmp;
- }
-@@ -600,7 +605,7 @@ static void at91_mux_sam9x5_set_drivestrength(void __io=
-mem *pio, unsigned pin,
-=20
- 	/* strength is inverse on SAM9x5s with our defines
- 	 * 0 =3D hi, 1 =3D med, 2 =3D low, 3 =3D rsvd */
--	setting =3D DRIVE_STRENGTH_HI - setting;
-+	setting =3D DRIVE_STRENGTH_BIT_MSK(HI) - setting;
-=20
- 	set_drive_strength(pio + at91sam9x5_get_drive_register(pin), pin,
- 				setting);
-@@ -959,11 +964,11 @@ static int at91_pinconf_set(struct pinctrl_dev *pctld=
-ev,
- 	}					\
- } while (0)
-=20
--#define DBG_SHOW_FLAG_MASKED(mask,flag) do {	\
-+#define DBG_SHOW_FLAG_MASKED(mask,flag,name) do {	\
- 	if ((config & mask) =3D=3D flag) {		\
- 		if (num_conf)			\
- 			seq_puts(s, "|");	\
--		seq_puts(s, #flag);		\
-+		seq_puts(s, #name);		\
- 		num_conf++;			\
- 	}					\
- } while (0)
-@@ -981,9 +986,12 @@ static void at91_pinconf_dbg_show(struct pinctrl_dev *=
-pctldev,
- 	DBG_SHOW_FLAG(PULL_DOWN);
- 	DBG_SHOW_FLAG(DIS_SCHMIT);
- 	DBG_SHOW_FLAG(DEGLITCH);
--	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_LOW);
--	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_MED);
--	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_HI);
-+	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_BIT_MSK(LOW),
-+			     DRIVE_STRENGTH_LOW);
-+	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_BIT_MSK(MED),
-+			     DRIVE_STRENGTH_MED);
-+	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_BIT_MSK(HI),
-+			     DRIVE_STRENGTH_HI);
- 	DBG_SHOW_FLAG(DEBOUNCE);
- 	if (config & DEBOUNCE) {
- 		val =3D config >> DEBOUNCE_VAL_SHIFT;
++#define SAM9X60_PIO_DRIVER1	0x118	/* PIO Driver 1 register offset */
++
+ #endif
 --=20
 2.7.4
