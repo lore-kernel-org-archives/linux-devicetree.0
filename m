@@ -1,54 +1,41 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 12/13] input: max77650: add onkey support
-Date: Thu, 31 Jan 2019 12:28:13 +0000
-Message-ID: <20190131122813.GB20797@sirena.org.uk>
-References: <20190129133545.1931-1-brgl@bgdev.pl>
- <20190129133545.1931-14-brgl@bgdev.pl>
- <20190130185328.GA149208@dtor-ws>
- <CAMRc=McaqqmU6S_Yz35ZMvhWtWO4hTASA0fmL5CT4JizbYgu4Q@mail.gmail.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH 0/7] add support for SAM9X60 pin controller
+Date: Thu, 31 Jan 2019 12:29:12 +0000
+Message-ID: <1548937733-20189-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McaqqmU6S_Yz35ZMvhWtWO4hTASA0fmL5CT4JizbYgu4Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
---9zSXsLTf0vkW971A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This series adds drive strenght and slew rate support for SAMX60's pin
+controller. For drive strenght we could have 2 values: low, high.
+For slew rate we could have 2 values: enable, disabled.
 
-On Thu, Jan 31, 2019 at 09:15:01AM +0100, Bartosz Golaszewski wrote:
+Besides this I took the chance and adapt the documentation for at91 pinctrl
+driver.
 
-> I'm not sure what the policy is on merging MFD drivers, but I'm seeing
-> that Mark Brown has already picked up the regulator part into his tree
-> (including the binding document). I think you can just pick up the
-> input patches and it will simply not show up in Kconfig until the core
-> mfd module is upstream.
+Claudiu Beznea (7):
+  pinctrl: at91: add option to use drive strength bits
+  pinctrl: at91: add drive strength support for SAM9X60
+  pinctrl: at91: add compatibles for SAM9X60 pin controller
+  dt-bindings: add documentation for banks
+  dt-bindings: add bindings for SAM9X60
+  pinctrl: at91: add slewrate support for SAM9X60
+  dt-bindings: add documentation for slew rate
 
-> @Mark: could you please confirm it?
+ .../bindings/pinctrl/atmel,at91-pinctrl.txt        |  27 ++++-
+ drivers/pinctrl/pinctrl-at91.c                     | 134 +++++++++++++++++=
+++--
+ drivers/pinctrl/pinctrl-at91.h                     |   3 +
+ include/dt-bindings/pinctrl/at91.h                 |   4 +
+ 4 files changed, 155 insertions(+), 13 deletions(-)
 
-Right, as it's a new MFD the Kconfig will stop it causing build breakage
-until the MFD is merged.  I'm doing it partly just to cut down on the
-amount of mail from resends while the rest of the series gets reviewed.
-
---9zSXsLTf0vkW971A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxS6dwACgkQJNaLcl1U
-h9BBNAf/Yq7Uoem9cGciS63O6v97feMamBfser9PLXATQwLIfr7vuvbz8Ig1I/jt
-1UQPV4xcX4J6Oj13T5hUuc6BgQ7eGEwwHE4fDLbSs5Ze2Hj1Brd9sM7ER/Ro3L3m
-Xuz7lFta+tF8gWGtdX8bKyJEcIfWOtawyLhIsCZ7qSWE44x5yUmUmV9kxSpXyAnI
-IfDJnfSW1E3XHt5WjfpIcDIxvup1fPxIstkHts7+OdsQcIcSUmrnFIvuzmbq94/z
-zvyu2vj0Qm0DkkGQDYfVMdINpac608CdtXlAUQ1F4+ImRgSDNn32QZ9Jde+1190c
-3HjaOajFH7egd9TFMTJxLaHaiEHaeA==
-=y+sH
------END PGP SIGNATURE-----
-
---9zSXsLTf0vkW971A--
+--=20
+2.7.4
