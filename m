@@ -1,77 +1,320 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v7 0/4] drm: add support for Cadence MHDP DPI/DP bridge.
-Date: Thu, 31 Jan 2019 14:08:18 +0200
-Message-ID: <0f11a4d8-d576-5af8-b7f4-afe3ff26678f@ti.com>
-References: <1548846209-16406-1-git-send-email-dkos@cadence.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [RFC PATCH v4 07/10] gpio: Initial support for ROHM bd70528 GPIO
+ block
+Date: Thu, 31 Jan 2019 14:08:44 +0200
+Message-ID: <5f63684b62c7a320c514088bcf9091ed7efbd2cc.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1548846209-16406-1-git-send-email-dkos@cadence.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Damian Kos <dkos@cadence.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: jbergsagel@ti.com, rafalc@cadence.com, quentin.schulz@bootlin.com, piotrs@cadence.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc: heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAzMC8wMS8yMDE5IDEzOjAzLCBEYW1pYW4gS29zIHdyb3RlOgo+IEhlbGxvIQo+IAo+
-IFRoaXMgaXMgdGhlIHNlcmllcyBvZiBwYXRjaGVzIHRoYXQgd2lsbCBhZGQgc3VwcG9ydCBmb3Ig
-dGhlIENhZGVuY2UncyBEUEkvRFAKPiBicmlkZ2UuIFBsZWFzZSBub3RlIHRoYXQgdGhpcyBpcyBh
-IHByZWxpbWluYXJ5IHZlcnNpb24gb2YgdGhlIGRyaXZlciBhbmQgdGhlcmUKPiB3aWxsIGJlIG1v
-cmUgcGF0Y2hlcyBpbiB0aGUgZnV0dXJlIHdpdGggdXBkYXRlcywgZml4ZXMgYW5kIGltcHJvdmVt
-ZW50cy4KPiBQbGVhc2Uga2VlcCB0aGF0IGluIG1pbmQgd2hlbiBsb29raW5nIGF0IEZJWE1FL1RP
-RE8vWFhYIGNvbW1lbnRzLgo+IAo+IEluaXRpYWxseSwgTUhEUCBkcml2ZXIgd2FzIGRldmVsb3Bl
-ZCBhcyBhIERSTSBicmlkZ2UgZHJpdmVyIGFuZCB3YXMgcGxhbmVkIHRvCj4gYmUgcGxhY2VkIGlu
-IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbWhkcC5jLiAgSG93ZXZlciwgdGhlcmUgd2FzIGFscmVh
-ZHkKPiBhIGRyaXZlciBmb3IgQ2FkZW5jZSdzIERQIGNvbnRyb2xsZXIgZGV2ZWxvcGVkIGJ5IFJv
-Y2tDaGlwLCBidXQgdGhhdCBkcml2ZXIKPiB1c2VzIHRoZSBkaWZmZXJlbnQgRFJNIGZyYW1ld29y
-ayBhbmQgbG9va3MgbGlrZSBhIHBhcnQgb2YgYSBiaWdnZXIgc3lzdGVtLgo+IEJvdGggY29udHJv
-bGxlcnMgKGluY2x1ZGluZyBmaXJtd2FyZSkgYXJlIHF1aXRlIGRpZmZlcmVudCBpbnRlcm5hbGx5
-Cj4gKE1TVC9GRUMvRFNDIHN1cHBvcnQsIGxpbmsgdHJhaW5pbmcgZG9uZSBieSBkcml2ZXIsIGFk
-ZGl0aW9uYWwgY29tbWFuZHMsIElSUSdzCj4gZXRjLikgYnV0IHRoZXkgaGF2ZSBzaW1pbGFyIHJl
-Z2lzdGVyIG1hcCwgZXhjZXB0IGZvciBGcmFtZXIvU3RyZWFtZXIgKHdoaWNoIGlzCj4gbm90aWNl
-YWJseSBkaWZmZXJlbnQpLCBzbyB0aGV5IGFwcGVhciBzaW1pbGFyLgo+IAo+IFRoZSBmb2xsb3dp
-bmcgcGF0Y2hlcyBjb250YWluOgo+IC0gTW92aW5nIGNvbW1vbiBjb2RlIHRvIGRyaXZlcnMvZ3B1
-L2RybS9icmlkZ2UvY2Rucy1taGRwLWNvbW1vbi4qIGFuZAo+ICAgbW9kaWZ5aW5nIGl0IGEgYml0
-IChtb3N0bHkgbmV3IHByZWZpeGVzIGZvciBmdW5jdGlvbnMgYW5kIGRhdGEgdHlwZXMpIHNvIGl0
-Cj4gICBjYW4gYmUgdXNlZCBieSB0d28sIGhpZ2hlciBsZXZlbCwgZHJpdmVycy4KPiAtIE1vZGlm
-eWluZyBleGlzdGluZyBSb2NrQ2hpcCdzIERQIGRyaXZlciB0byB1c2UgdGhlIGNvbW1vbiBjb2Rl
-IGFmdGVyIGNoYW5nZXMKPiAgIG1hZGUgdG8gaXQgKHVzZSB0aGUgbmV3IGNkbnNfbWhkcF9kZXZp
-Y2Ugc3RydWN0dXJlIGFuZCBuZXcgZnVuY3Rpb24gbmFtZXMpLgo+IC0gTW9kaWZ5aW5nIERSTSBo
-ZWxwZXJzIGEgYml0LiBTb21lIGFyZSByZXF1aXJlZCBmb3IgbmV3IGRyaXZlciwgc29tZSBhcmUK
-PiAgIHVwZGF0ZXMgZnJvbSBEUCAxLjIgdG8gMS4zIG9yIDEuNC4KPiAtIEFkZGluZyBkb2N1bWVu
-dGF0aW9uIGZvciBkZXZpY2UgdHJlZSBiaW5kaW5ncy4KPiAtIEFkZGluZyBwcmVsaW1pbmFyeSBD
-YWRlbmNlIERQSS9EUCBicmlkZ2UgZHJpdmVyLgo+IAo+IFNvbWUgb2YgdGhlIHRoaW5ncyB0aGF0
-IHdpbGwgYmUgYWRkZWQgbGF0ZXIgb24gaW5jbHVkZSAoYnV0IGFyZSBub3QgbGltaXRlZAo+IHRv
-KToKPiAtIERTQyBzdXBwb3J0Cj4gLSBGRUMgc3VwcG9ydAo+IC0gSERDUCBzdXBwb3J0CgpBIGZl
-dyByYW5kb20gY29tbWVudHMvcXVlc3Rpb25zIGFmdGVyIGEgcXVpY2sgbG9vayBhdCB0aGUgcGF0
-Y2hlcy4KClRoZSBuYW1lcyBvZiB0aGUgc291cmNlIGZpbGVzIGFuZCB0aGUga2VybmVsIEtjb25m
-aWcgYXJlIG9ubHkgYWJvdXQKIkNhZGVuY2UgRFAiLiBCdXQgdGhlIERUIGJpbmRpbmdzIGlzIGZv
-ciBjZG5zLG1oZHA4NTQ2LCBhbmQgdGhlCnJlc3VsdGluZyBtb2R1bGUgZmlsZSBpcyBtaGRwODU0
-Ni5rby4gSSB0aGluayBtb3JlIGNvbnNpc3RlbmN5IGhlcmUKd291bGQgYmUgZ29vZC4KCkkgcHJl
-c3VtZSB0aGUgcGFydCBudW1iZXIgKG9yIGZhbWlseT8gYXJlIHRoZXJlIG90aGVyIHNpbWlsYXIg
-cGFydHMgd2l0aApzaW1pbGFyIHBhcnQgbnVtYmVycz8pIGlzIHJlbGV2YW50LCBzbyBpdCBzaG91
-bGQgYmUgaW4gdGhlIEtjb25maWcKb3B0aW9uIGFuZCBoZWxwIHRleHQsIGFuZCBwcm9iYWJseSBp
-biB0aGUgZmlsZSBuYW1lcyB0b28uIFRoZSBtb2R1bGUKbmFtZSBzaG91bGQgaGF2ZSAiY2RucyIg
-cHJlZml4IHRoZXJlLCBzaW1pbGFyIHRvIHRoZSBzb3VyY2UgZmlsZXMgYW5kCnRoZSBjZG5zLWRz
-aS5rby4KCk9yIG1heWJlIHRoZSBzYW1lIGRyaXZlciB3aWxsIGhhbmRsZSBhbGwgQ2FkZW5jZSBE
-UCBwYXJ0cywgaW4gd2hpY2ggY2FzZQpnZW5lcmljIGZpbGVuYW1lcyBhcmUgZmluZSwgYnV0IHRo
-ZW4gdGhlIHJlc3VsdGluZyBrZXJuZWwgbW9kdWxlIHNob3VsZAphbHNvIGJlIGp1c3QgImNkbnMt
-bWhkcC5rbyIuCgpJIHNlZSBzb21lIGF1ZGlvIGZ1bmN0aW9ucyBpbiB0aGUgY29kZSwgYnV0IGl0
-J3Mgbm90IG1lbnRpb25lZCBpbiB0aGUgRFQKYmluZGluZ3MuIEknbSBub3QgYW4gYXVkaW8gZ3V5
-LCBidXQgdGhlIGRpc3BsYXkgYnJpZGdlcyB3aXRoIGF1ZGlvCnN1cHBvcnQgSSBoYXZlIHNlZW4g
-aGF2ZSBoYWQgRFQgYmluZGluZ3MgZm9yIHRoZSBhdWRpbyBzb3VyY2UgdG9vLiBJcwphdWRpbyBz
-dXBwb3J0ZWQgaW4gdGhlIGN1cnJlbnQgZHJpdmVyPwoKIFRvbWkKCi0tIApUZXhhcyBJbnN0cnVt
-ZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5u
-dXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+ROHM BD70528 PMIC has 4 GPIO pins. Allow them to be
+controlled by GPIO framework.
+
+IRQs are handled by regmap-irq and GPIO driver is not
+aware of the irq usage.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+
+I dropped the review-by from Linus Walleij because I would like to
+get a comment on if locking is required when we check the direction
+in order to detect the correct register for getting the pin state.
+
+My initial feeling is that locking makes no sense. If there is a race,
+then it is pointless to ask state just when someone is toggling the
+direction. State will be depening on the direction toggling anyways.
+I would still like to point out this change.
+
+ drivers/gpio/Kconfig        |  11 +++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-bd70528.c | 228 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 240 insertions(+)
+ create mode 100644 drivers/gpio/gpio-bd70528.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index b5a2845347ec..c82187648630 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -962,6 +962,17 @@ config GPIO_ARIZONA
+ 	help
+ 	  Support for GPIOs on Wolfson Arizona class devices.
+ 
++config GPIO_BD70528
++	tristate "ROHM BD70528 GPIO support"
++	depends on MFD_ROHM_BD70528
++	help
++	  Support for GPIOs on ROHM BD70528 PMIC. There are four GPIOs
++	  available on the ROHM PMIC in total. The GPIOs can also
++	  generate interrupts.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called gpio-bd70528.
++
+ config GPIO_BD9571MWV
+ 	tristate "ROHM BD9571 GPIO support"
+ 	depends on MFD_BD9571MWV
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 37628f8dbf70..6f12c83598fc 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_GPIO_ATH79)	+= gpio-ath79.o
+ obj-$(CONFIG_GPIO_ASPEED)	+= gpio-aspeed.o
+ obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+= gpio-raspberrypi-exp.o
+ obj-$(CONFIG_GPIO_BCM_KONA)	+= gpio-bcm-kona.o
++obj-$(CONFIG_GPIO_BD70528) 	+= gpio-bd70528.o
+ obj-$(CONFIG_GPIO_BD9571MWV)	+= gpio-bd9571mwv.o
+ obj-$(CONFIG_GPIO_BRCMSTB)	+= gpio-brcmstb.o
+ obj-$(CONFIG_GPIO_BT8XX)	+= gpio-bt8xx.o
+diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
+new file mode 100644
+index 000000000000..c88475fcf089
+--- /dev/null
++++ b/drivers/gpio/gpio-bd70528.c
+@@ -0,0 +1,228 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2018 ROHM Semiconductors
++// gpio-bd70528.c ROHM BD70528MWV gpio driver
++
++#include <linux/gpio/driver.h>
++#include <linux/gpio.h>
++#include <linux/mfd/rohm-bd70528.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#define GPIO_IN_REG(offset) (BD70528_REG_GPIO1_IN + offset*2)
++#define GPIO_OUT_REG(offset) (BD70528_REG_GPIO1_OUT + offset*2)
++
++struct bd70528_gpio {
++	struct rohm_regmap_dev chip;
++	struct gpio_chip gpio;
++};
++
++static int bd70528_set_debounce(struct bd70528_gpio *bdgpio,
++				unsigned int offset, unsigned int debounce)
++{
++	u8 val;
++
++	switch (debounce) {
++	case 0:
++		val = BD70528_DEBOUNCE_DISABLE;
++		break;
++	case 1 ... 15:
++		val = BD70528_DEBOUNCE_15MS;
++		break;
++	case 16 ... 30:
++		val = BD70528_DEBOUNCE_30MS;
++		break;
++	case 31 ... 50:
++		val = BD70528_DEBOUNCE_50MS;
++		break;
++	default:
++		dev_err(bdgpio->chip.dev,
++			"Invalid debouce value %u\n", debounce);
++		return -EINVAL;
++	}
++	return regmap_update_bits(bdgpio->chip.regmap, GPIO_IN_REG(offset),
++				 BD70528_DEBOUNCE_MASK, val);
++}
++
++static int bd70528_get_direction(struct gpio_chip *chip, unsigned int offset)
++{
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++	int val, ret;
++
++	/* Do we need to do something to IRQs here? */
++	ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset), &val);
++	if (ret) {
++		dev_err(bdgpio->chip.dev, "Could not read gpio direction\n");
++		return ret;
++	}
++
++	return !(val & BD70528_GPIO_OUT_EN_MASK);
++}
++
++static int bd70528_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
++				   unsigned long config)
++{
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++
++	switch (pinconf_to_config_param(config)) {
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD70528_GPIO_DRIVE_MASK,
++					  BD70528_GPIO_OPEN_DRAIN);
++		break;
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD70528_GPIO_DRIVE_MASK,
++					  BD70528_GPIO_PUSH_PULL);
++		break;
++	case PIN_CONFIG_INPUT_DEBOUNCE:
++		return bd70528_set_debounce(bdgpio, offset,
++					    pinconf_to_config_argument(config));
++		break;
++	default:
++		break;
++	}
++	return -ENOTSUPP;
++}
++
++static int bd70528_direction_input(struct gpio_chip *chip, unsigned int offset)
++{
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++
++	/* Do we need to do something to IRQs here? */
++	return regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				 BD70528_GPIO_OUT_EN_MASK,
++				 BD70528_GPIO_OUT_DISABLE);
++}
++static void bd70528_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			     int value)
++{
++	int ret;
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++	u8 val = (value) ? BD70528_GPIO_OUT_HI : BD70528_GPIO_OUT_LO;
++
++	ret = regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				  BD70528_GPIO_OUT_MASK, val);
++	if (ret)
++		dev_err(bdgpio->chip.dev, "Could not set gpio to %d\n", value);
++}
++
++static int bd70528_direction_output(struct gpio_chip *chip, unsigned int offset,
++				    int value)
++{
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++
++	bd70528_gpio_set(chip, offset, value);
++	return regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				 BD70528_GPIO_OUT_EN_MASK,
++				 BD70528_GPIO_OUT_ENABLE);
++}
++
++#define GPIO_IN_STATE_MASK(offset) (BD70528_GPIO_IN_STATE_BASE << offset)
++
++static int bd70528_gpio_get_o(struct bd70528_gpio *bdgpio, unsigned int offset)
++{
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset), &val);
++	if (!ret)
++		ret = !!(val & BD70528_GPIO_OUT_MASK);
++	else
++		dev_err(bdgpio->chip.dev, "GPIO (out) state read failed\n");
++
++	return ret;
++}
++
++static int bd70528_gpio_get_i(struct bd70528_gpio *bdgpio, unsigned int offset)
++{
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(bdgpio->chip.regmap, BD70528_REG_GPIO_STATE, &val);
++
++	if (!ret)
++		ret = !(val & GPIO_IN_STATE_MASK(offset));
++	else
++		dev_err(bdgpio->chip.dev, "GPIO (in) state read failed\n");
++
++	return ret;
++}
++
++static int bd70528_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	int ret = -EINVAL;
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++
++	/*
++	 * Do we need a lock here or does the GPIO framework
++	 * already guarantee that no one is changing the direction while
++	 * value is being read?
++	 */
++	ret = bd70528_get_direction(chip, offset);
++	if (ret == GPIOF_DIR_OUT)
++		ret = bd70528_gpio_get_o(bdgpio, offset);
++	else if (ret == GPIOF_DIR_IN)
++		ret = bd70528_gpio_get_i(bdgpio, offset);
++	else
++		dev_err(bdgpio->chip.dev, "failed to read GPIO direction\n");
++
++	return ret;
++}
++
++static int bd70528_probe(struct platform_device *pdev)
++{
++	struct bd70528_gpio *bdgpio;
++	struct bd70528 *bd70528;
++	int ret;
++
++	bd70528 = dev_get_drvdata(pdev->dev.parent);
++	if (!bd70528) {
++		dev_err(&pdev->dev, "No MFD driver data\n");
++		return -EINVAL;
++	}
++
++	bdgpio = devm_kzalloc(&pdev->dev, sizeof(*bdgpio),
++				    GFP_KERNEL);
++	if (!bdgpio)
++		return -ENOMEM;
++	bdgpio->chip.dev = &pdev->dev;
++	bdgpio->gpio.parent = pdev->dev.parent;
++	bdgpio->gpio.label = "bd70528-gpio";
++	bdgpio->gpio.owner = THIS_MODULE;
++	bdgpio->gpio.get_direction = &bd70528_get_direction;
++	bdgpio->gpio.direction_input = &bd70528_direction_input;
++	bdgpio->gpio.direction_output = &bd70528_direction_output;
++	bdgpio->gpio.set_config = &bd70528_gpio_set_config;
++	bdgpio->gpio.can_sleep = true;
++	bdgpio->gpio.get = &bd70528_gpio_get;
++	bdgpio->gpio.set = &bd70528_gpio_set;
++	bdgpio->gpio.ngpio = 4;
++	bdgpio->gpio.base = -1;
++#ifdef CONFIG_OF_GPIO
++	bdgpio->gpio.of_node = pdev->dev.parent->of_node;
++#endif
++	bdgpio->chip.regmap = bd70528->chip.regmap;
++
++	ret = devm_gpiochip_add_data(&pdev->dev, &bdgpio->gpio,
++				     bdgpio);
++	if (ret)
++		dev_err(&pdev->dev, "gpio_init: Failed to add bd70528-gpio\n");
++
++	return ret;
++}
++
++static struct platform_driver bd70528_gpio = {
++	.driver = {
++		.name = "bd70528-gpio"
++	},
++	.probe = bd70528_probe,
++};
++
++module_platform_driver(bd70528_gpio);
++
++MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
++MODULE_DESCRIPTION("BD70528 voltage regulator driver");
++MODULE_LICENSE("GPL");
+-- 
+2.14.3
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
