@@ -1,220 +1,224 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH V3 4/4] irq: imx: irqsteer: add multi output interrupts
- support
-Date: Thu, 31 Jan 2019 08:03:51 +0000
-Message-ID: <1548921464-28917-5-git-send-email-aisheng.dong@nxp.com>
-References: <1548921464-28917-1-git-send-email-aisheng.dong@nxp.com>
+From: Vishal Sagar <vsagar@xilinx.com>
+Subject: RE: [PATCH v2 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
+ CSI-2 Rx Subsystem
+Date: Thu, 31 Jan 2019 08:07:13 +0000
+Message-ID: <CY4PR02MB27091A04C6BA664C1C48D0D8A7910@CY4PR02MB2709.namprd02.prod.outlook.com>
+References: <1548438777-11203-1-git-send-email-vishal.sagar@xilinx.com>
+ <1548438777-11203-2-git-send-email-vishal.sagar@xilinx.com>
+ <20190130194052.GA9543@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548921464-28917-1-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <20190130194052.GA9543@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>
+To: Rob Herring <robh@kernel.org>, Vishal Sagar <vishal.sagar@xilinx.com>
+Cc: Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-One irqsteer channel can support up to 8 output interrupts.
+Hi Rob,
 
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
-v2->v3:
- * add error check for imx_irqsteer_get_hwirq_base
- * use DIV_ROUND_UP
- * merge 'hwirq +=3D32' into for loop
- * common error path in probe to avoid replicating clk_disable_unprepare
-v1->v2:
- * calculate irq_count by fsl,num-irqs instead of parsing interrupts
-   property from devicetree to match the input interrupts and outputs
- * improve output interrupt handler by searching only two registers
-   withint the same group
----
- drivers/irqchip/irq-imx-irqsteer.c | 88 +++++++++++++++++++++++++++++-----=
-----
- 1 file changed, 68 insertions(+), 20 deletions(-)
+Thanks for reviewing.
 
-diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-i=
-rqsteer.c
-index 67ed862..d1098f4 100644
---- a/drivers/irqchip/irq-imx-irqsteer.c
-+++ b/drivers/irqchip/irq-imx-irqsteer.c
-@@ -10,6 +10,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
-+#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/spinlock.h>
-=20
-@@ -21,10 +22,13 @@
- #define CHAN_MINTDIS(t)		(CTRL_STRIDE_OFF(t, 3) + 0x4)
- #define CHAN_MASTRSTAT(t)	(CTRL_STRIDE_OFF(t, 3) + 0x8)
-=20
-+#define CHAN_MAX_OUTPUT_INT	0x8
-+
- struct irqsteer_data {
- 	void __iomem		*regs;
- 	struct clk		*ipg_clk;
--	int			irq;
-+	int			irq[CHAN_MAX_OUTPUT_INT];
-+	int			irq_count;
- 	raw_spinlock_t		lock;
- 	int			reg_num;
- 	int			channel;
-@@ -87,23 +91,47 @@ static const struct irq_domain_ops imx_irqsteer_domain_=
-ops =3D {
- 	.xlate		=3D irq_domain_xlate_onecell,
- };
-=20
-+static int imx_irqsteer_get_hwirq_base(struct irqsteer_data *data, u32 irq=
-)
-+{
-+	int i;
-+
-+	for (i =3D 0; i < data->irq_count; i++) {
-+		if (data->irq[i] =3D=3D irq)
-+			return i * 64;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- static void imx_irqsteer_irq_handler(struct irq_desc *desc)
- {
- 	struct irqsteer_data *data =3D irq_desc_get_handler_data(desc);
--	int i;
-+	int hwirq;
-+	int irq, i;
-=20
- 	chained_irq_enter(irq_desc_get_chip(desc), desc);
-=20
--	for (i =3D 0; i < data->reg_num * 32; i +=3D 32) {
--		int idx =3D imx_irqsteer_get_reg_index(data, i);
-+	irq =3D irq_desc_get_irq(desc);
-+	hwirq =3D imx_irqsteer_get_hwirq_base(data, irq);
-+	if (hwirq < 0) {
-+		pr_warn("%s: unable to get hwirq base for irq %d\n",
-+			__func__, irq);
-+		return;
-+	}
-+
-+	for (i =3D 0; i < 2; i++, hwirq +=3D 32) {
-+		int idx =3D imx_irqsteer_get_reg_index(data, hwirq);
- 		unsigned long irqmap;
- 		int pos, virq;
-=20
-+		if (hwirq >=3D data->reg_num * 32)
-+			break;
-+
- 		irqmap =3D readl_relaxed(data->regs +
- 				       CHANSTATUS(idx, data->reg_num));
-=20
- 		for_each_set_bit(pos, &irqmap, 32) {
--			virq =3D irq_find_mapping(data->domain, pos + i);
-+			virq =3D irq_find_mapping(data->domain, pos + hwirq);
- 			if (virq)
- 				generic_handle_irq(virq);
- 		}
-@@ -117,7 +145,8 @@ static int imx_irqsteer_probe(struct platform_device *p=
-dev)
- 	struct device_node *np =3D pdev->dev.of_node;
- 	struct irqsteer_data *data;
- 	struct resource *res;
--	int ret;
-+	u32 irqs_num;
-+	int i, ret;
-=20
- 	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
- 	if (!data)
-@@ -130,12 +159,6 @@ static int imx_irqsteer_probe(struct platform_device *=
-pdev)
- 		return PTR_ERR(data->regs);
- 	}
-=20
--	data->irq =3D platform_get_irq(pdev, 0);
--	if (data->irq <=3D 0) {
--		dev_err(&pdev->dev, "failed to get irq\n");
--		return -ENODEV;
--	}
--
- 	data->ipg_clk =3D devm_clk_get(&pdev->dev, "ipg");
- 	if (IS_ERR(data->ipg_clk)) {
- 		ret =3D PTR_ERR(data->ipg_clk);
-@@ -146,11 +169,15 @@ static int imx_irqsteer_probe(struct platform_device =
-*pdev)
-=20
- 	raw_spin_lock_init(&data->lock);
-=20
--	of_property_read_u32(np, "fsl,num-irqs", &data->reg_num);
-+	of_property_read_u32(np, "fsl,num-irqs", &irqs_num);
- 	of_property_read_u32(np, "fsl,channel", &data->channel);
-=20
--	/* one register bit map represents 32 input interrupts */
--	data->reg_num /=3D 32;
-+	/*
-+	 * There is one output irq for each group of 64 inputs.
-+	 * One register bit map can represent 32 input interrupts.
-+	 */
-+	data->irq_count =3D DIV_ROUND_UP(irqs_num, 64);
-+	data->reg_num =3D irqs_num / 32;
-=20
- 	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
- 		data->saved_reg =3D devm_kzalloc(&pdev->dev,
-@@ -173,23 +200,44 @@ static int imx_irqsteer_probe(struct platform_device =
-*pdev)
- 					     &imx_irqsteer_domain_ops, data);
- 	if (!data->domain) {
- 		dev_err(&pdev->dev, "failed to create IRQ domain\n");
--		clk_disable_unprepare(data->ipg_clk);
--		return -ENOMEM;
-+		ret =3D -ENOMEM;
-+		goto out;
- 	}
-=20
--	irq_set_chained_handler_and_data(data->irq, imx_irqsteer_irq_handler,
--					 data);
-+	if (!data->irq_count || data->irq_count > CHAN_MAX_OUTPUT_INT) {
-+		ret =3D -EINVAL;
-+		goto out;
-+	}
-+
-+	for (i =3D 0; i < data->irq_count; i++) {
-+		data->irq[i] =3D irq_of_parse_and_map(np, i);
-+		if (!data->irq[i]) {
-+			ret =3D -EINVAL;
-+			goto out;
-+		}
-+
-+		irq_set_chained_handler_and_data(data->irq[i],
-+						 imx_irqsteer_irq_handler,
-+						 data);
-+	}
-=20
- 	platform_set_drvdata(pdev, data);
-=20
- 	return 0;
-+out:
-+	clk_disable_unprepare(data->ipg_clk);
-+	return ret;
- }
-=20
- static int imx_irqsteer_remove(struct platform_device *pdev)
- {
- 	struct irqsteer_data *irqsteer_data =3D platform_get_drvdata(pdev);
-+	int i;
-+
-+	for (i =3D 0; i < irqsteer_data->irq_count; i++)
-+		irq_set_chained_handler_and_data(irqsteer_data->irq[i],
-+						 NULL, NULL);
-=20
--	irq_set_chained_handler_and_data(irqsteer_data->irq, NULL, NULL);
- 	irq_domain_remove(irqsteer_data->domain);
-=20
- 	clk_disable_unprepare(irqsteer_data->ipg_clk);
---=20
-2.7.4
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Thursday, January 31, 2019 1:11 AM
+> To: Vishal Sagar <vishal.sagar@xilinx.com>
+> Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
+> mchehab@kernel.org; mark.rutland@arm.com; Michal Simek
+> <michals@xilinx.com>; linux-media@vger.kernel.org;
+> devicetree@vger.kernel.org; sakari.ailus@linux.intel.com;
+> hans.verkuil@cisco.com; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; Dinesh Kumar <dineshk@xilinx.com>; Sandip Kothari
+> <sandipk@xilinx.com>
+> Subject: Re: [PATCH v2 1/2] media: dt-bindings: media: xilinx: Add Xilinx=
+ MIPI
+> CSI-2 Rx Subsystem
+>=20
+> EXTERNAL EMAIL
+>=20
+> On Fri, Jan 25, 2019 at 11:22:56PM +0530, Vishal Sagar wrote:
+> > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> >
+> > The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+> > DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
+> >
+> > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > ---
+> > v2
+> > - updated the compatible string to latest version supported
+> > - removed DPHY related parameters
+> > - added CSI v2.0 related property (including VCX for supporting upto 16
+> >   virtual channels).
+> > - modified csi-pxl-format from string to unsigned int type where the va=
+lue
+> >   is as per the CSI specification
+> > - Defined port 0 and port 1 as sink and source ports.
+> > - Removed max-lanes property as suggested by Rob and Sakari
+> >
+> >  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 105
+> +++++++++++++++++++++
+> >  1 file changed, 105 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rx=
+ss.txt
+> b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> > new file mode 100644
+> > index 0000000..98781cf
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> > @@ -0,0 +1,105 @@
+> > +Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
+> > +--------------------------------------------------------
+> > +
+> > +The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 t=
+raffic
+> > +from compliant camera sensors and send the output as AXI4 Stream video
+> data
+> > +for image processing.
+> > +
+> > +The subsystem consists of a MIPI DPHY in slave mode which captures the
+> > +data packets. This is passed along the MIPI CSI2 Rx IP which extracts =
+the
+> > +packet data. The Video Format Bridge (VFB) converts this data to AXI4
+> Stream
+> > +video data.
+> > +
+> > +For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Sub=
+system.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-4.0".
+> > +- reg: Physical base address and length of the registers set for the d=
+evice.
+> > +- interrupt-parent: specifies the phandle to the parent interrupt cont=
+roller
+>=20
+> Don't document this. It is implied.
+
+Ok. I will remove this in next revision.
+
+>=20
+> > +- interrupts: Property with a value describing the interrupt number.
+> > +- clocks: List of phandles to AXI Lite, Video and 200 MHz DPHY clocks.
+> > +- clock-names: Must contain "lite_aclk", "video_aclk" and "dphy_clk_20=
+0M"
+> in
+> > +  the same order as clocks listed in clocks property.
+> > +- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw d=
+esign.
+> > +  Packets other than this data type (except for RAW8 and User defined =
+data
+> > +  types) will be filtered out. Possible values are as below -
+> > +  0x1E - YUV4228B
+> > +  0x1F - YUV42210B
+> > +  0x20 - RGB444
+> > +  0x21 - RGB555
+> > +  0x22 - RGB565
+> > +  0x23 - RGB666
+> > +  0x24 - RGB888
+> > +  0x28 - RAW6
+> > +  0x29 - RAW7
+> > +  0x2A - RAW8
+> > +  0x2B - RAW10
+> > +  0x2C - RAW12
+> > +  0x2D - RAW14
+> > +  0x2E - RAW16
+> > +  0x2F - RAW20
+> > +- xlnx,vfb: This is present when Video Format Bridge is enabled.
+>=20
+> boolean?
+>=20
+
+Yes this is a Boolean.=20
+
+> > +
+> > +Optional properties:
+> > +--------------------
+> > +- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
+> > +- xlnx,en-vcx: When present, there are maximum 16 virtual channels, el=
+se
+> > +  only 4. This is present only if xlnx,en-csi-v2-0 is present.
+> > +- xlnx,en-active-lanes: Enable Active lanes configuration in Protocol
+> > +  Configuration Register.
+> > +- xlnx,cfa-pattern: This goes in the sink port to indicate bayer patte=
+rn.
+> > +  Valid values are "bggr", "rggb", "gbrg" and "grbg".
+>=20
+> This should go in the endpoint with the other properties. I'd also move
+> it down below 'Ports' to be clear it goes in a different node.
+>=20
+
+Agree. I will do this in next revision.
+
+> > +
+> > +Ports
+> > +-----
+> > +The device node shall contain two 'port' child nodes as defined in
+> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +
+> > +The port@0 is sink port and shall connect to CSI2 source like camera.
+> > +It must have the data-lanes property. It may have the xlnx,cfa-pattern
+> > +property to indicate bayer pattern of source.
+> > +
+> > +The port@1 is source port could be connected to any video processing I=
+P
+> > +which can work with AXI4 Stream data.
+> > +
+> > +Both ports must have remote-endpoints.
+>=20
+> No need to state that. That's implicit for the graph to work...
+
+Ok=20
+
+Regards
+Vishal Sagar
+
+> > +
+> > +Example:
+> > +
+> > +     csiss_1: csiss@a0020000 {
+> > +             compatible =3D "xlnx,mipi-csi2-rx-subsystem-4.0";
+> > +             reg =3D <0x0 0xa0020000 0x0 0x10000>;
+> > +             interrupt-parent =3D <&gic>;
+> > +             interrupts =3D <0 95 4>;
+> > +             xlnx,csi-pxl-format =3D <0x2a>;
+> > +             xlnx,vfb;
+> > +             xlnx,en-active-lanes;
+> > +             xlnx,en-csi-v2-0;
+> > +             xlnx,en-vcx;
+> > +             clock-names =3D "lite_aclk", "dphy_clk_200M", "video_aclk=
+";
+> > +             clocks =3D <&misc_clk_0>, <&misc_clk_1>, <&misc_clk_2>;
+> > +
+> > +             ports {
+> > +                     #address-cells =3D <1>;
+> > +                     #size-cells =3D <0>;
+> > +
+> > +                     port@0 {
+> > +                             /* Sink port */
+> > +                             reg =3D <0>;
+> > +                             xlnx,cfa-pattern =3D "bggr"
+> > +                             csiss_in: endpoint {
+> > +                                     data-lanes =3D <1 2 3 4>;
+> > +                                     /* MIPI CSI2 Camera handle */
+> > +                                     remote-endpoint =3D <&camera_out>=
+;
+> > +                             };
+> > +                     };
+> > +                     port@1 {
+> > +                             /* Source port */
+> > +                             reg =3D <1>;
+> > +                             csiss_out: endpoint {
+> > +                                     remote-endpoint =3D <&vproc_in>;
+> > +                             };
+> > +                     };
+> > +             };
+> > +     };
+> > --
+> > 2.7.4
+> >
