@@ -1,68 +1,76 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v5 02/10] arm64: dts: qcom: sdm845: Define rmtfs memory
-Date: Thu, 31 Jan 2019 22:39:44 +0530
-Message-ID: <fabd30bb14cf174bbee06f6c1844cd98@codeaurora.org>
-References: <20190131003933.11436-1-bjorn.andersson@linaro.org>
- <20190131003933.11436-3-bjorn.andersson@linaro.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH RFC 1/3] dt-bindings: hwmon: Add tachometer interrupt to
+ pwm-fan
+Date: Thu, 31 Jan 2019 09:19:47 -0800
+Message-ID: <20190131171947.GA14844@roeck-us.net>
+References: <1548860827-29796-1-git-send-email-stefan.wahren@i2se.com>
+ <1548860827-29796-2-git-send-email-stefan.wahren@i2se.com>
+ <20190130172815.GC14781@roeck-us.net>
+ <625436113.118199.1548879811777@email.ionos.de>
+ <20190130203525.GA23614@roeck-us.net>
+ <fbfd2b67-f6d2-4d6e-9351-d1d2165e571b@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131003933.11436-3-bjorn.andersson@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <fbfd2b67-f6d2-4d6e-9351-d1d2165e571b@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-01-31 06:09, Bjorn Andersson wrote:
-> Define the rmtfs memory node. As the memory region specified in version
-> 10 of the memory map is only 1MB a chunk of unallocated memory is
-> chosen.
+On Thu, Jan 31, 2019 at 09:02:33AM +0100, Stefan Wahren wrote:
+> Hi Guenter,
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+> Am 30.01.19 um 21:35 schrieb Guenter Roeck:
+> > On Wed, Jan 30, 2019 at 09:23:31PM +0100, Stefan Wahren wrote:
+> >> Hi Guenter,
+> >>
+> >>> Guenter Roeck <linux@roeck-us.net> hat am 30. Januar 2019 um 18:28 geschrieben:
+> >>>
+> >>>
+> >>> On Wed, Jan 30, 2019 at 04:07:05PM +0100, Stefan Wahren wrote:
+> >>>> This adds the tachometer interrupt to the pwm-fan binding, which is
+> >>>> necessary for RPM support.
+> >>>>
+> >>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> >>>> ---
+> >>>>  Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 3 +++
+> >>>>  1 file changed, 3 insertions(+)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> >>>> index 49ca5d8..7f69b0b 100644
+> >>>> --- a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> >>>> +++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> >>>> @@ -8,6 +8,9 @@ Required properties:
+> >>>>  
+> >>>>  Optional properties:
+> >>>>  - fan-supply    : phandle to the regulator that provides power to the fan
+> >>>> +- interrupts    : contains a single interrupt specifier which describes the
+> >>>> +                  tachometer pin output of a 2 pulse-per-revolution fan.
+> >>>> +                  See interrupt-controller/interrupts.txt for the format.
+> >>> So a hypothetical {1,4} pulse-per-revolution fan would explicitly not be
+> >>> supported ? Why ?
+> >> i could add an additional property to specify the pulse per revolution and use the 2 as default (according to the Intel spec for 4 pin pwm fan) which should fit in most cases.
+> >>
+> > That would be a possibility and make sense, but that is not
+> > the point here.  The "interrupts" property does not and should
+> > not care how many pulses per revolution the fan provides.
 > 
-> Changes since v4:
-> - Moved rmtfs_mem, to not collide with xbl_mem
+> sorry, i'm not sure what's the problem about. Do you want me to use a
+> GPIO instead of interrupt?
 > 
-> Changes since v3:
-> - Labeled the node
+> Or is it the wording here?
 > 
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 45b1616392aa..d19486ba1e5e 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -104,6 +104,15 @@
->  			no-map;
->  		};
-> 
-> +		rmtfs_mem: memory@88f0000 {
 
-Hey Bjorn,
-we are missing a trailing zero here ^^
-rmtfs_mem: memory@88f00000
+You wording limits the use of interrupts with pwm fans to fans with
+2 pulses per revolution. You do not explain why that restriction would
+be required or even make sense, or why it should be associated with
+the 'interrupts' property.
 
-Tested-by: Sibi Sankar <sibis@codeaurora.org>
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Logically I assume that is because you expect an interrupt per pulse,
+but that is not explained (or what the interrupt is expected to be
+used for in the first place - it might, after all, be some kind of
+error interrupt).
 
-> +			compatible = "qcom,rmtfs-mem";
-> +			reg = <0 0x88f00000 0 0x200000>;
-> +			no-map;
-> +
-> +			qcom,client-id = <1>;
-> +			qcom,vmid = <15>;
-> +		};
-> +
->  		qseecom_mem: memory@8ab00000 {
->  			reg = <0 0x8ab00000 0 0x1400000>;
->  			no-map;
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Guenter
