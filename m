@@ -1,49 +1,58 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH] arm64: dts: imx8mq: Add RTC support
-Date: Thu, 31 Jan 2019 15:01:22 +0000
-Message-ID: <1548946870-29037-1-git-send-email-abel.vesa@nxp.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [PATCH v2 19/21] treewide: add checks for the return value of
+ memblock_alloc*()
+Date: Thu, 31 Jan 2019 07:23:02 -0800
+Message-ID: <CAMo8BfKhjwimXrGCcPjmS0+w8o6yW=ohG-hZ7caWnGpPSF6qJA@mail.gmail.com>
+References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
+ <1548057848-15136-20-git-send-email-rppt@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Baruch Siach <baruch@tkos.co.il>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1548057848-15136-20-git-send-email-rppt@linux.ibm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rich Felker <dalias@libc.org>, "open list:IA64 (Itanium) PL..." <linux-ia64@vger.kernel.org>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>, linux-mips@vger.kernel.org, linux-mm@kvack.org, Guo Ren <guoren@kernel.org>, "open list:SPARC + UltraSPAR..." <sparclinux@vger.kernel.org>, Christoph Hellwig <hch@lst.de>, linux-s390 <linux-s390@vger.kernel.org>, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, "open list:SUPERH" <linux-sh@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, kasan-dev@googlegroups.com, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.orgm
 List-Id: devicetree@vger.kernel.org
 
-Add RTC support for i.MX8MQ.
+On Mon, Jan 21, 2019 at 12:06 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> Add check for the return value of memblock_alloc*() functions and call
+> panic() in case of error.
+> The panic message repeats the one used by panicing memblock allocators with
+> adjustment of parameters to include only relevant ones.
+>
+> The replacement was mostly automated with semantic patches like the one
+> below with manual massaging of format strings.
+>
+> @@
+> expression ptr, size, align;
+> @@
+> ptr = memblock_alloc(size, align);
+> + if (!ptr)
+> +       panic("%s: Failed to allocate %lu bytes align=0x%lx\n", __func__,
+> size, align);
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Reviewed-by: Guo Ren <ren_guo@c-sky.com>             # c-sky
+> Acked-by: Paul Burton <paul.burton@mips.com>         # MIPS
+> Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com> # s390
+> Reviewed-by: Juergen Gross <jgross@suse.com>         # Xen
+> ---
+>  arch/xtensa/mm/kasan_init.c               |  4 ++++
+>  arch/xtensa/mm/mmu.c                      |  3 +++
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+For xtensa:
+Acked-by: Max Filippov <jcmvbkbc@gmail.com>
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mq.dtsi
-index 892063a..49b14af 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -240,6 +240,20 @@
- 				interrupts =3D <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
- 			};
-=20
-+			snvs: snvs@30370000 {
-+				compatible =3D "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
-+				reg =3D <0x30370000 0x10000>;
-+
-+				snvs_rtc: snvs-rtc-lp{
-+					compatible =3D "fsl,sec-v4.0-mon-rtc-lp";
-+					regmap =3D<&snvs>;
-+					offset =3D <0x34>;
-+					interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-+						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+
-+			};
-+
- 			clk: clock-controller@30380000 {
- 				compatible =3D "fsl,imx8mq-ccm";
- 				reg =3D <0x30380000 0x10000>;
---=20
-2.7.4
+-- 
+Thanks.
+-- Max
