@@ -1,64 +1,47 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH v2 07/10] spi: atmel-quadspi: switch to SPDX license
- identifiers
-Date: Thu, 31 Jan 2019 16:15:43 +0000
-Message-ID: <20190131161515.21605-8-tudor.ambarus@microchip.com>
-References: <20190131161515.21605-1-tudor.ambarus@microchip.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 3/7] pinctrl: at91: add compatibles for SAM9X60 pin
+ controller
+Date: Thu, 31 Jan 2019 16:16:18 +0000
+Message-ID: <e23b96ad-b920-4caf-d774-2c5c43d7cea8@microchip.com>
+References: <1548937733-20189-1-git-send-email-claudiu.beznea@microchip.com>
+ <1548937733-20189-4-git-send-email-claudiu.beznea@microchip.com>
+ <20190131123310.wwikkuiniqlcg445@M43218.corp.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131161515.21605-1-tudor.ambarus@microchip.com>
+In-Reply-To: <20190131123310.wwikkuiniqlcg445@M43218.corp.atmel.com>
 Content-Language: en-US
+Content-ID: <F481A476EBBBAA4DBE1912293A56F57D@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Tudor.Ambarus@microchip.com
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
-
-Adopt the SPDX license identifiers to ease license compliance
-management.
-
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
----
-v2: collect R-b
-
- drivers/spi/atmel-quadspi.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
-
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index 1f7cf5d2953a..d3e76acf8517 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Driver for Atmel QSPI Controller
-  *
-@@ -7,18 +8,6 @@
-  * Author: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-  * Author: Piotr Bugalski <bugalski.piotr@gmail.com>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but WIT=
-HOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License f=
-or
-- * more details.
-- *
-- * You should have received a copy of the GNU General Public License along=
- with
-- * this program.  If not, see <http://www.gnu.org/licenses/>.
-- *
-  * This driver is based on drivers/mtd/spi-nor/fsl-quadspi.c from Freescal=
-e.
-  */
-=20
---=20
-2.9.5
+DQoNCk9uIDMxLjAxLjIwMTkgMTQ6MzMsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPiBPbiBU
+aHUsIEphbiAzMSwgMjAxOSBhdCAwMToyOTozM1BNICswMTAwLCBDbGF1ZGl1IEJlem5lYSAtIE0x
+ODA2MyB3cm90ZToNCj4+IEZyb206IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNy
+b2NoaXAuY29tPg0KPj4NCj4+IEFkZCBjb21wYXRpYmxlcyBmb3IgU0FNOVg2MCBwaW4gY29udHJv
+bGxlci4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpu
+ZWFAbWljcm9jaGlwLmNvbT4NCj4+IC0tLQ0KPj4gIGRyaXZlcnMvcGluY3RybC9waW5jdHJsLWF0
+OTEuYyB8IDIgKysNCj4+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+Pg0KPj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLWF0OTEuYyBiL2RyaXZlcnMvcGlu
+Y3RybC9waW5jdHJsLWF0OTEuYw0KPj4gaW5kZXggNDY0NDNiOTdkODExLi41NDU2YTI2OTJiOGMg
+MTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvcGluY3RybC1hdDkxLmMNCj4+ICsrKyBi
+L2RyaXZlcnMvcGluY3RybC9waW5jdHJsLWF0OTEuYw0KPj4gQEAgLTEyMTUsNiArMTIxNSw3IEBA
+IHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGF0OTFfcGluY3RybF9vZl9tYXRjaFtd
+ID0gew0KPj4gIAl7IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDMtcGluY3RybCIsIC5kYXRh
+ID0gJnNhbWE1ZDNfb3BzIH0sDQo+PiAgCXsgLmNvbXBhdGlibGUgPSAiYXRtZWwsYXQ5MXNhbTl4
+NS1waW5jdHJsIiwgLmRhdGEgPSAmYXQ5MXNhbTl4NV9vcHMgfSwNCj4+ICAJeyAuY29tcGF0aWJs
+ZSA9ICJhdG1lbCxhdDkxcm05MjAwLXBpbmN0cmwiLCAuZGF0YSA9ICZhdDkxcm05MjAwX29wcyB9
+LA0KPj4gKwl7IC5jb21wYXRpYmxlID0gIm1pY3JvY2hpcCxzYW05eDYwLXBpY3RybCIsIC5kYXRh
+ID0gJnNhbTl4NjBfb3BzIH0sDQo+IA0KPiBUeXBvIHMvbWljcm9jaGlwLHNhbTl4NjAtcGljdHJs
+L21pY3JvY2hpcCxzYW05eDYwLXBpbmN0cmwNCg0KVGhhbmsgeW91LCBMdWRvdmljISBJJ2xsIHNl
+bmQgYSB2Mi4NCg0KPiANCj4+ICAJeyAvKiBzZW50aW5lbCAqLyB9DQo+PiAgfTsNCj4+ICANCj4+
+IEBAIC0xNzU3LDYgKzE3NTgsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGdwaW9fY2hpcCBhdDkx
+X2dwaW9fdGVtcGxhdGUgPSB7DQo+PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+YXQ5MV9ncGlvX29mX21hdGNoW10gPSB7DQo+PiAgCXsgLmNvbXBhdGlibGUgPSAiYXRtZWwsYXQ5
+MXNhbTl4NS1ncGlvIiwgLmRhdGEgPSAmYXQ5MXNhbTl4NV9vcHMsIH0sDQo+PiAgCXsgLmNvbXBh
+dGlibGUgPSAiYXRtZWwsYXQ5MXJtOTIwMC1ncGlvIiwgLmRhdGEgPSAmYXQ5MXJtOTIwMF9vcHMg
+fSwNCj4+ICsJeyAuY29tcGF0aWJsZSA9ICJtaWNyb2NoaXAsc2FtOXg2MC1ncGlvIiwgLmRhdGEg
+PSAmc2FtOXg2MF9vcHMgfSwNCj4+ICAJeyAvKiBzZW50aW5lbCAqLyB9DQo+PiAgfTsNCj4+ICAN
+Cj4+IC0tIA0KPj4gMi43LjQNCj4+DQo+IA0K
