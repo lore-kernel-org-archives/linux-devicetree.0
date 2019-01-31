@@ -1,7 +1,7 @@
 From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v2 2/7] pinctrl: at91: add drive strength support for SAM9X60
-Date: Thu, 31 Jan 2019 16:18:07 +0000
-Message-ID: <1548951466-26297-3-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 4/7] dt-bindings: add documentation for banks
+Date: Thu, 31 Jan 2019 16:18:14 +0000
+Message-ID: <1548951466-26297-5-git-send-email-claudiu.beznea@microchip.com>
 References: <1548951466-26297-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,109 +16,59 @@ List-Id: devicetree@vger.kernel.org
 
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Add drive strength support for SAM9X60 pin controller.
+Add documentation for at91 pin controller banks.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/pinctrl/pinctrl-at91.c | 52 ++++++++++++++++++++++++++++++++++++++=
+ .../bindings/pinctrl/atmel,at91-pinctrl.txt        | 23 ++++++++++++++++++=
 ++++
- drivers/pinctrl/pinctrl-at91.h |  2 ++
- 2 files changed, 54 insertions(+)
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.=
-c
-index 31f06dafca2e..46443b97d811 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -574,6 +574,17 @@ static unsigned at91_mux_sam9x5_get_drivestrength(void=
- __iomem *pio,
- 	return tmp;
- }
+diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.t=
+xt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+index 3e23fece99da..40e33dfc36fd 100644
+--- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+@@ -116,6 +116,18 @@ Some requirements for using atmel,at91rm9200-pinctrl b=
+inding:
+    configurations by referring to the phandle of that pin configuration no=
+de.
+ 4. The gpio controller must be describe in the pinctrl simple-bus.
 =20
-+static unsigned at91_mux_sam9x60_get_drivestrength(void __iomem *pio,
-+						   unsigned pin)
-+{
-+	unsigned tmp =3D readl_relaxed(pio + SAM9X60_PIO_DRIVER1);
++For each bank the required properties are:
++- compatible: "atmel,at91sam9x5-gpio" or "atmel,at91rm9200-gpio"
++- reg: physical base address and length of the controller's registers
++- interrupts: interrupt outputs from the controller
++- interrupt-controller: marks the device node as an interrupt controller
++- #interrupt-cells: should be 2; refer to ../interrupt-controller/interrup=
+ts.txt
++  for more details.
++- gpio-controller
++- #gpio-cells: should be 2; the first cell is the GPIO number and the seco=
+nd
++  cell specifies GPIO flags as defined in <dt-bindings/gpio/gpio.h>.
++- clocks: bank clock
 +
-+	if (tmp & BIT(pin))
-+		return DRIVE_STRENGTH_BIT_HI;
-+
-+	return DRIVE_STRENGTH_BIT_LOW;
-+}
-+
- static void set_drive_strength(void __iomem *reg, unsigned pin, u32 streng=
-th)
- {
- 	unsigned tmp =3D readl_relaxed(reg);
-@@ -611,6 +622,27 @@ static void at91_mux_sam9x5_set_drivestrength(void __i=
-omem *pio, unsigned pin,
- 				setting);
- }
+ Examples:
 =20
-+static void at91_mux_sam9x60_set_drivestrength(void __iomem *pio, unsigned=
- pin,
-+					       u32 setting)
-+{
-+	unsigned int tmp;
-+
-+	if (setting <=3D DRIVE_STRENGTH_BIT_DEF ||
-+	    setting =3D=3D DRIVE_STRENGTH_BIT_MED ||
-+	    setting > DRIVE_STRENGTH_BIT_HI)
-+		return;
-+
-+	tmp =3D readl_relaxed(pio + SAM9X60_PIO_DRIVER1);
-+
-+	/* Strength is 0: low, 1: hi */
-+	if (setting =3D=3D DRIVE_STRENGTH_BIT_LOW)
-+		tmp &=3D ~BIT(pin);
-+	else
-+		tmp |=3D BIT(pin);
-+
-+	writel_relaxed(tmp, pio + SAM9X60_PIO_DRIVER1);
-+}
-+
- static struct at91_pinctrl_mux_ops at91rm9200_ops =3D {
- 	.get_periph	=3D at91_mux_get_periph,
- 	.mux_A_periph	=3D at91_mux_set_A_periph,
-@@ -639,6 +671,26 @@ static struct at91_pinctrl_mux_ops at91sam9x5_ops =3D =
-{
- 	.irq_type	=3D alt_gpio_irq_type,
- };
+ pinctrl@fffff400 {
+@@ -125,6 +137,17 @@ pinctrl@fffff400 {
+ 	compatible =3D "atmel,at91rm9200-pinctrl", "simple-bus";
+ 	reg =3D <0xfffff400 0x600>;
 =20
-+static const struct at91_pinctrl_mux_ops sam9x60_ops =3D {
-+	.get_periph	=3D at91_mux_pio3_get_periph,
-+	.mux_A_periph	=3D at91_mux_pio3_set_A_periph,
-+	.mux_B_periph	=3D at91_mux_pio3_set_B_periph,
-+	.mux_C_periph	=3D at91_mux_pio3_set_C_periph,
-+	.mux_D_periph	=3D at91_mux_pio3_set_D_periph,
-+	.get_deglitch	=3D at91_mux_pio3_get_deglitch,
-+	.set_deglitch	=3D at91_mux_pio3_set_deglitch,
-+	.get_debounce	=3D at91_mux_pio3_get_debounce,
-+	.set_debounce	=3D at91_mux_pio3_set_debounce,
-+	.get_pulldown	=3D at91_mux_pio3_get_pulldown,
-+	.set_pulldown	=3D at91_mux_pio3_set_pulldown,
-+	.get_schmitt_trig =3D at91_mux_pio3_get_schmitt_trig,
-+	.disable_schmitt_trig =3D at91_mux_pio3_disable_schmitt_trig,
-+	.get_drivestrength =3D at91_mux_sam9x60_get_drivestrength,
-+	.set_drivestrength =3D at91_mux_sam9x60_set_drivestrength,
-+	.irq_type	=3D alt_gpio_irq_type,
++	pioA: gpio@fffff400 {
++		compatible =3D "atmel,at91sam9x5-gpio";
++		reg =3D <0xfffff400 0x200>;
++		interrupts =3D <2 IRQ_TYPE_LEVEL_HIGH 1>;
++		#gpio-cells =3D <2>;
++		gpio-controller;
++		interrupt-controller;
++		#interrupt-cells =3D <2>;
++		clocks =3D <&pmc PMC_TYPE_PERIPHERAL 2>;
++	};
 +
-+};
-+
- static struct at91_pinctrl_mux_ops sama5d3_ops =3D {
- 	.get_periph	=3D at91_mux_pio3_get_periph,
- 	.mux_A_periph	=3D at91_mux_pio3_set_A_periph,
-diff --git a/drivers/pinctrl/pinctrl-at91.h b/drivers/pinctrl/pinctrl-at91.=
-h
-index 79b957f1dfa2..19fc27e66bfd 100644
---- a/drivers/pinctrl/pinctrl-at91.h
-+++ b/drivers/pinctrl/pinctrl-at91.h
-@@ -69,4 +69,6 @@
- #define AT91SAM9X5_PIO_DRIVER1	0x114  /*PIO Driver 1 register offset*/
- #define AT91SAM9X5_PIO_DRIVER2	0x118  /*PIO Driver 2 register offset*/
-=20
-+#define SAM9X60_PIO_DRIVER1	0x118	/* PIO Driver 1 register offset */
-+
- #endif
+ 	atmel,mux-mask =3D <
+ 	      /*    A         B     */
+ 	       0xffffffff 0xffc00c3b  /* pioA */
 --=20
 2.7.4
