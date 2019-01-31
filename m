@@ -1,116 +1,49 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: qcs404: Define APPS IOMMU
-Date: Wed, 30 Jan 2019 16:00:06 -0800
-Message-ID: <20190131000006.11145-1-bjorn.andersson@linaro.org>
+Subject: [PATCH v5 00/10] Qualcomm AOSS QMP driver and modem dts
+Date: Wed, 30 Jan 2019 16:39:23 -0800
+Message-ID: <20190131003933.11436-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Arun Kumar Neelakantam <aneela@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The APPS IOMMU provides contexts for FastRPC, MDP and WLAN, among other
-things. Define these.
+Update the reserved memory map for SDM845, add the ADSP and CDSP nodes,
+introduce a communication driver for the AOSS and a PD driver for this and
+finally add the modem remoteproc driver.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 85 ++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+Bjorn Andersson (8):
+  arm64: dts: qcom: sdm845: Update reserved memory map
+  arm64: dts: qcom: sdm845: Define rmtfs memory
+  arm64: dts: sdm845: Introduce ADSP and CDSP PAS nodes
+  dt-bindings: soc: qcom: Add AOSS QMP binding
+  soc: qcom: Add AOSS QMP communication driver
+  soc: qcom: Add AOSS QMP genpd provider
+  remoteproc: q6v5-mss: Active powerdomain for SDM845
+  arm64: dts: qcom: Add AOSS QMP node
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index d90decd00f5c..c574e48c61d2 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -395,6 +395,91 @@
- 			reg = <0x01905000 0x20000>;
- 		};
- 
-+		apps_iommu: iommu@1e20000 {
-+			compatible = "qcom,qcs404-iommu", "qcom,msm-iommu-v1";
-+			clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+				 <&gcc GCC_APSS_TCU_CLK>;
-+			clock-names = "iface", "bus";
-+			qcom,iommu-secure-id = <17>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			#iommu-cells = <1>;
-+
-+			/* Define ranges such that the first bank is at 0x1000 */
-+			ranges = <0 0x01e20000 0x40000>;
-+
-+			/* Bank 5: CDSP compute bank 1 */
-+			iommu-ctx@5000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x5000 0x1000>;
-+				interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			/* Bank 6: CDSP compute bank 2 */
-+			iommu-ctx@6000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x6000 0x1000>;
-+				interrupts = <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			/* Bank 7: CDSP compute bank 3 */
-+			iommu-ctx@7000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x7000 0x1000>;
-+				interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			/* Bank 8: CDSP compute bank 4 */
-+			iommu-ctx@8000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x8000 0x1000>;
-+				interrupts = <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			/* Bank 9: CDSP compute bank 5 */
-+			iommu-ctx@9000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x9000 0x1000>;
-+				interrupts = <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			/* Bank 10: MDP */
-+			iommu-ctx@a000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0xa000 0x1000>;
-+				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			/* Bank 21: WLAN 0 */
-+			iommu-ctx@15000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x15000 0x1000>;
-+				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			/* Bank 23: ADSP compute bank 2 */
-+			iommu-ctx@17000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x17000 0x1000>;
-+				interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			/* Bank 24: ADSP compute bank 3 */
-+			iommu-ctx@18000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x18000 0x1000>;
-+				interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			/* Bank 25: ADSP compute bank 4 */
-+			iommu-ctx@19000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x19000 0x1000>;
-+				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		spmi_bus: spmi@200f000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0x0200f000 0x001000>,
+Rajendra Nayak (1):
+  remoteproc: q6v5-mss: Vote for rpmh power domains
+
+Sibi Sankar (1):
+  arm64: dts: qcom: sdm845: Add Q6V5 MSS node
+
+ .../bindings/soc/qcom/qcom,aoss-qmp.txt       |  76 +++++
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |   8 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 207 +++++++++++-
+ drivers/remoteproc/qcom_q6v5_mss.c            | 146 +++++++-
+ drivers/soc/qcom/Kconfig                      |  18 +
+ drivers/soc/qcom/Makefile                     |   2 +
+ drivers/soc/qcom/aoss-qmp-pd.c                | 138 ++++++++
+ drivers/soc/qcom/aoss-qmp.c                   | 317 ++++++++++++++++++
+ include/dt-bindings/power/qcom-aoss-qmp.h     |  15 +
+ include/linux/soc/qcom/aoss-qmp.h             |  14 +
+ 10 files changed, 930 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+ create mode 100644 drivers/soc/qcom/aoss-qmp-pd.c
+ create mode 100644 drivers/soc/qcom/aoss-qmp.c
+ create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
+ create mode 100644 include/linux/soc/qcom/aoss-qmp.h
+
 -- 
 2.18.0
