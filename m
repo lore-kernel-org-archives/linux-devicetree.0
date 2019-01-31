@@ -1,103 +1,72 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: iio: chemical: pms7003: add device
- tree support
-Date: Thu, 31 Jan 2019 21:40:04 +0100
-Message-ID: <20190131204000.GA14750@arch>
-References: <20190127181916.19948-1-tduszyns@gmail.com>
- <20190127181916.19948-4-tduszyns@gmail.com>
- <20190128075819.GK3691@localhost>
- <20190128184332.GA25627@arch>
- <20190130091254.GN3691@localhost>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/4] mfd: max77620: add documentation for low battery monitoring
+Date: Thu, 31 Jan 2019 15:05:46 -0600
+Message-ID: <CAL_JsqK6z2NbJeRB48S-kmDrHj5B8H6hciR04+_Tzq4_V2jH_Q@mail.gmail.com>
+References: <20190129085531.32364-1-markz@nvidia.com> <20190129085531.32364-5-markz@nvidia.com>
+ <20190130195355.GA1652@bogus> <a6cd5f7c-d8a5-3f93-b1cf-4da3e4760dff@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190130091254.GN3691@localhost>
+In-Reply-To: <a6cd5f7c-d8a5-3f93-b1cf-4da3e4760dff@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, jic23@jic23.retrosnub.co.uk
+To: Mark Zhang <markz@nvidia.com>
+Cc: Lee Jones <lee.jones@linaro.org>, blaws05@gmail.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 10:12:54AM +0100, Johan Hovold wrote:
-> On Mon, Jan 28, 2019 at 07:43:33PM +0100, Tomasz Duszynski wrote:
-> > On Mon, Jan 28, 2019 at 08:58:19AM +0100, Johan Hovold wrote:
-> > > On Sun, Jan 27, 2019 at 07:19:16PM +0100, Tomasz Duszynski wrote:
-> > > > Add device tree support for Plantower PMS7003 particulate matter sensor.
-> > > >
-> > > > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> > > > ---
-> > > >  .../iio/chemical/plantower,pms7003.txt        | 19 +++++++++++++++++++
-> > > >  1 file changed, 19 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > > > new file mode 100644
-> > > > index 000000000000..e4c7f2fb1e30
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > > > @@ -0,0 +1,19 @@
-> > > > +* Plantower PMS7003 particulate matter sensor
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible: must be "plantower,pms7003"
-> > > > +
-> > > > +Optional properties:
-> > > > +- vcc-supply: phandle to the regulator that provides power to the sensor
-> > >
-> > > Shouldn't this one be a required property?
-> > >
+On Wed, Jan 30, 2019 at 8:29 PM Mark Zhang <markz@nvidia.com> wrote:
+>
+> On 1/31/2019 3:53 AM, Rob Herring wrote:
+> > On Tue, Jan 29, 2019 at 04:55:31PM +0800, Mark Zhang wrote:
+> >> Adding documentation for low battery monitor properties:
+> >> - maxim,low-battery-dac-enable
+> >> - maxim,low-battery-dac-disable
+> >> - maxim,low-battery-shutdown-enable
+> >> - maxim,low-battery-shutdown-disable
+> >> - maxim,low-battery-reset-enable
+> >> - maxim,low-battery-reset-disable
+> >>
+> >> Signed-off-by: Mark Zhang <markz@nvidia.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/mfd/max77620.txt | 14 ++++++++++++++
+> >>  1 file changed, 14 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+> >> index 484b17e4fba5..5fed0a463b80 100644
+> >> --- a/Documentation/devicetree/bindings/mfd/max77620.txt
+> >> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+> >> @@ -142,6 +142,20 @@ Optional properties:
+> >>                      Device supports 100/1000/3000/6000 Ohms.
+> >>                      Default will be set to 1000 Ohm.
+> >>
+> >> +Low-Battery Monitor:
+> >> +==================
+> >> +This sub-node configure low battery monitor configuration registers. Device has
+> >> +support for low-battery monitor configuration through child DT node
+> >> +"low-battery-monitor".
+
+Missed this the first time, but there's not really any reason for
+these to be in a child node.
+
+> >> +
+> >> +Optional properties:
+> >> +    - maxim,low-battery-dac-enable: Enable low battery DAC.
+> >> +    - maxim,low-battery-dac-disable: Disable low battery DAC.
+> >> +    - maxim,low-battery-shutdown-enable: Enable low battery shutdown.
+> >> +    - maxim,low-battery-shutdown-disable: Disable low battery shutdown.
+> >> +    - maxim,low-battery-reset-enable: Enable low battery reset.
+> >> +    - maxim,low-battery-reset-disable: Disable low battery reset.
 > >
-> > Driver does not use regulator framework hence to me this property fits
-> > here better.
+> > Do you really need 3 states with the 3rd being prop not present.
 >
-> The device tree describes hardware, not any particular driver.
+> Yeah, so I think we can just keep 3 of them and shorten the names a little bit
+> (lbm stands for "low battery monitoring"):
+> - maxim,lbm-dac-enable
+> - maxim,lbm-shutdown-enable
+> - maxim,lbm-reset-enable
 >
-> That said, there is a bit of an on-going debate on whether mandatory
-> supplies (from a hardware perspective) should always be represented in
-> device tree or not.
->
-> 	https://lore.kernel.org/lkml/20181123133126.GF2089@sirena.org.uk/T/#u
->         https://lore.kernel.org/lkml/20180409102244.GB11532@sirena.org.uk/T/#u
-> 	https://lore.kernel.org/lkml/20180425171123.xhyoay3nu463btoq@rob-hp-laptop/T/#u
->
+> Does this look good to you?
 
-Even after going through this threads I am still unconvinced that
-vcc-supply should be a requirement. Making this a mandatory property
-would automatically imply using *_regulator_get() in a driver code
-(on condition one is adding regulator support). In case there
-isn't any physically connected we end up with a dummy one and a warning.
+Yes. However, are these 3 mutually exclusive? If so, then perhaps
+'maxim,low-battery-mode = "<dac|shutdown|reset>"'?
 
-Is it how this should work?
-
-> > > > +- set-gpios: phandle to the GPIO connected to the SET line
-> > > > +- reset-gpios: phandle to the GPIO connected to the RESET line
-> > > > +
-> > > > +Refer to serial/slave-device.txt for generic serial attached device bindings.
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +&uart0 {
-> > > > +	pms7003 {
-> > >
-> > > The node name should be generic and reflect the functionality rather
-> > > than model. Perhaps "pms" will do here.
-> >
-> > Agree, ideally we should have a generic dt name for this kind of sensors
-> > (something like air-pollution-sensor perhaps?). But unfortunately there isn't
-> > anything available now so I guess compatible part name should be okay
-> > (besides this is the type of naming commonly used in other iio bindings).
->
-> What's wrong with particulate matter sensor ("pms")?
->
-> Seems like a better fix than any particular model name to me at least.
->
-
-Personally I would vote for a more descriptive node name, for example:
-particulate-matter-sensor or air-pollution-sensor or other name
-which clearly shows what device we are dealing with.
-
-> > > > +		compatible = "plantower,pms7003";
-> > > > +	};
-> > > > +};
->
-> Johan
+Rob
