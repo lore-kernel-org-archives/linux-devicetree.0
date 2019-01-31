@@ -1,93 +1,105 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv6 6/6] coresight: debug: Add Unique Component Identifier (UCI) table
-Date: Thu, 31 Jan 2019 19:52:24 +0530
-Message-ID: <f724b28e5bfd7bca062aa5380cfd9328289559bf.1548943727.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1548943727.git.saiprakash.ranjan@codeaurora.org>
+From: Ricardo Ribalda Delgado <ricardo@ribalda.com>
+Subject: Re: [PATCH v3 2/2] iio:dac:dac7612: device tree bindings
+Date: Thu, 31 Jan 2019 15:33:04 +0100
+Message-ID: <CAPybu_0Pd4xNzhR2RAdegomckcMxHeM8t7uCrNCXY4CZz2bZZg@mail.gmail.com>
+References: <20190128094931.4430-1-ricardo@ribalda.com> <20190128094931.4430-2-ricardo@ribalda.com>
+ <20190130170723.GA24708@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1548943727.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20190130170723.GA24708@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add UCI table for coresight CPU debug module. This patch adds
-the UCI entries for Kryo CPUs found on MSM8996 which shares
-the same PIDs as ETMs.
+Hi Rob
 
-Without this, below error is observed on MSM8996:
+Thanks for your comments!
 
-[    5.429867] OF: graph: no port node found in /soc/debug@3810000
-[    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
-[    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
-[    5.446474] OF: graph: no port node found in /soc/debug@3910000
-[    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
-[    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
-[    5.487765] OF: graph: no port node found in /soc/debug@3a10000
-[    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
-[    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
-[    5.501802] OF: graph: no port node found in /soc/debug@3b10000
-[    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
-[    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
+On Wed, Jan 30, 2019 at 6:07 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Jan 28, 2019 at 10:49:31AM +0100, Ricardo Ribalda Delgado wrote:
+> > Bindings for dac7612.
+> >
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Ricardo Ribalda Delgado <ricardo@ribalda.com>
+> > ---
+> >  .../bindings/iio/dac/ti,dac7612.txt           | 29 +++++++++++++++++++
+> >  MAINTAINERS                                   |  1 +
+> >  2 files changed, 30 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+> > new file mode 100644
+> > index 000000000000..e1b8158fab35
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+> > @@ -0,0 +1,29 @@
+> > +* Texas Instruments Dual, 12-Bit Serial Input Digital-to-Analog Converter
+> > +
+> > +The DAC7612 is a dual, 12-bit digital-to-analog converter (DAC) with guaranteed
+> > +12-bit monotonicity performance over the industrial temperature range.
+> > +Is is programmable through an SPI interface.
+> > +
+> > +The internal DACs are loaded when the LOADDACS pin is pulled down.
+> > +
+> > +http://www.ti.com/lit/ds/sbas106/sbas106.pdf
+> > +
+> > +Required Properties:
+> > +- compatible: Should be one of:
+> > +             "ti,dac7612"
+> > +             "ti,dac7612u"
+> > +             "ti,dac7612b"
+>
+> What's the difference? I can only find 'u' and 'ub' variants and nothing
+> about how those are different. So maybe just 1 string is enough?
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+dac7612 is how it is named on the datasheet commercial name.
+dac7612u and dac7612ub being the variants. ub being slightly more
+accurante. Shall I leave only 7612?
+or keep the tree variants (fixing 7612b with 7612ub)?
 
----
-For testing, all dependent patches are in below tree:
- * https://github.com/saiprakash-ranjan/linux/tree/coresight-next
+Thanks!
 
-This patch depends on UCI support by Mike Leach in below link:
- * https://lore.kernel.org/lkml/20190130234051.2294-1-mike.leach@linaro.org/
----
- .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+>
+> > +- reg: Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt
+> > +
+> > +Optional Properties:
+> > +- loaddacs-gpios: GPIO descriptor for the LOADDACS pin.
+>
+> Needs a 'ti' vendor prefix.
+>
+> > +- spi-*: Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt
+> > +
+> > +Example:
+> > +
+> > +     dac7612@1 {
+>
+> dac@1
+>
+> > +             compatible = "ti,dac7612";
+> > +             reg = <0x1>;
+> > +             loaddacs-gpios = <&msmgpio 25 GPIO_ACTIVE_LOW>;
+> > +     };
+> > +
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 30ba5435906b..e28e5afaae16 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14882,6 +14882,7 @@ M:    Ricardo Ribalda <ricardo@ribalda.com>
+> >  L:   linux-iio@vger.kernel.org
+> >  S:   Supported
+> >  F:   drivers/iio/dac/ti-dac7612.c
+> > +F:   Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
+> >
+> >  THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
+> >  M:   Hans Verkuil <hverkuil@xs4all.nl>
+> > --
+> > 2.20.1
+> >
 
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index e8819d750938..915d86a39cee 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -655,24 +655,23 @@ static int debug_remove(struct amba_device *adev)
- 	return 0;
- }
- 
-+static struct amba_cs_uci_id uci_id_debug[] = {
-+	{
-+		/*  CPU Debug UCI data */
-+		.devarch	= 0x47706a15,
-+		.devarch_mask	= 0xfff0ffff,
-+		.devtype	= 0x00000015,
-+	}
-+};
-+
- static const struct amba_id debug_ids[] = {
--	{       /* Debug for Cortex-A53 */
--		.id	= 0x000bbd03,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A57 */
--		.id	= 0x000bbd07,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A72 */
--		.id	= 0x000bbd08,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A73 */
--		.id	= 0x000bbd09,
--		.mask	= 0x000fffff,
--	},
--	{ 0, 0 },
-+	CS_AMBA_ID(0x000bbd03),				/* Cortex-A53 */
-+	CS_AMBA_ID(0x000bbd07),				/* Cortex-A57 */
-+	CS_AMBA_ID(0x000bbd08),				/* Cortex-A72 */
-+	CS_AMBA_ID(0x000bbd09),				/* Cortex-A73 */
-+	CS_AMBA_UCI_ID(0x000f0205, uci_id_debug),	/* Qualcomm Kryo */
-+	CS_AMBA_UCI_ID(0x000f0211, uci_id_debug),	/* Qualcomm Kryo */
-+	{},
- };
- 
- static struct amba_driver debug_driver = {
+
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Ricardo Ribalda
