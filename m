@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [PATCH 6/9] ptp_qoriq: fix register memory map
-Date: Thu, 31 Jan 2019 10:33:07 +0800
-Message-ID: <20190131023310.9563-7-yangbo.lu@nxp.com>
+Subject: [PATCH 9/9] MAINTAINERS: add enetc_ptp driver into QorIQ PTP list
+Date: Thu, 31 Jan 2019 10:33:10 +0800
+Message-ID: <20190131023310.9563-10-yangbo.lu@nxp.com>
 References: <20190131023310.9563-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190131023310.9563-1-yangbo.lu@nxp.com>
@@ -10,68 +10,25 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org
 Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Claudiu Manoil <claudiu.manoil@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The 1588 timer on eTSEC Ethernet controller uses different
-register memory map with DPAA Ethernet controller.
-Now the new ENETC Ethernet controller uses same reigster
-memory map with DPAA. To support ENETC, let's use register
-memory map of DPAA/ENETC in default.
+This patch to add enetc_ptp driver into QorIQ PTP list
+for maintaining.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
- drivers/ptp/ptp_qoriq.c       |   11 ++++++-----
- include/linux/fsl/ptp_qoriq.h |   16 ++++++++--------
- 2 files changed, 14 insertions(+), 13 deletions(-)
+ MAINTAINERS |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/ptp/ptp_qoriq.c b/drivers/ptp/ptp_qoriq.c
-index 4308e25..af7a70e 100644
---- a/drivers/ptp/ptp_qoriq.c
-+++ b/drivers/ptp/ptp_qoriq.c
-@@ -504,11 +504,12 @@ int ptp_qoriq_init(struct ptp_qoriq *ptp_qoriq, void __iomem *base,
- 		ptp_qoriq->write = qoriq_write_be;
- 	}
- 
--	if (of_device_is_compatible(node, "fsl,fman-ptp-timer")) {
--		ptp_qoriq->regs.ctrl_regs = base + FMAN_CTRL_REGS_OFFSET;
--		ptp_qoriq->regs.alarm_regs = base + FMAN_ALARM_REGS_OFFSET;
--		ptp_qoriq->regs.fiper_regs = base + FMAN_FIPER_REGS_OFFSET;
--		ptp_qoriq->regs.etts_regs = base + FMAN_ETTS_REGS_OFFSET;
-+	/* The eTSEC uses differnt memory map with DPAA/ENETC */
-+	if (of_device_is_compatible(node, "fsl,etsec-ptp")) {
-+		ptp_qoriq->regs.ctrl_regs = base + ETSEC_CTRL_REGS_OFFSET;
-+		ptp_qoriq->regs.alarm_regs = base + ETSEC_ALARM_REGS_OFFSET;
-+		ptp_qoriq->regs.fiper_regs = base + ETSEC_FIPER_REGS_OFFSET;
-+		ptp_qoriq->regs.etts_regs = base + ETSEC_ETTS_REGS_OFFSET;
- 	} else {
- 		ptp_qoriq->regs.ctrl_regs = base + CTRL_REGS_OFFSET;
- 		ptp_qoriq->regs.alarm_regs = base + ALARM_REGS_OFFSET;
-diff --git a/include/linux/fsl/ptp_qoriq.h b/include/linux/fsl/ptp_qoriq.h
-index b44b466..902d3b1 100644
---- a/include/linux/fsl/ptp_qoriq.h
-+++ b/include/linux/fsl/ptp_qoriq.h
-@@ -58,15 +58,15 @@ struct ptp_qoriq_registers {
- };
- 
- /* Offset definitions for the four register groups */
--#define CTRL_REGS_OFFSET	0x0
--#define ALARM_REGS_OFFSET	0x40
--#define FIPER_REGS_OFFSET	0x80
--#define ETTS_REGS_OFFSET	0xa0
--
--#define FMAN_CTRL_REGS_OFFSET	0x80
--#define FMAN_ALARM_REGS_OFFSET	0xb8
--#define FMAN_FIPER_REGS_OFFSET	0xd0
--#define FMAN_ETTS_REGS_OFFSET	0xe0
-+#define ETSEC_CTRL_REGS_OFFSET	0x0
-+#define ETSEC_ALARM_REGS_OFFSET	0x40
-+#define ETSEC_FIPER_REGS_OFFSET	0x80
-+#define ETSEC_ETTS_REGS_OFFSET	0xa0
-+
-+#define CTRL_REGS_OFFSET	0x80
-+#define ALARM_REGS_OFFSET	0xb8
-+#define FIPER_REGS_OFFSET	0xd0
-+#define ETTS_REGS_OFFSET	0xe0
- 
- 
- /* Bit definitions for the TMR_CTRL register */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 019a2bc..f0b50f8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6093,6 +6093,7 @@ FREESCALE QORIQ PTP CLOCK DRIVER
+ M:	Yangbo Lu <yangbo.lu@nxp.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
++F:	drivers/net/ethernet/freescale/enetc/enetc_ptp.c
+ F:	drivers/ptp/ptp_qoriq.c
+ F:	drivers/ptp/ptp_qoriq_debugfs.c
+ F:	include/linux/fsl/ptp_qoriq.h
 -- 
 1.7.1
