@@ -1,14 +1,26 @@
 From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH 5/5] arm: dts: axpxx: add charge led node
-Date: Thu, 31 Jan 2019 10:23:07 +0200
-Message-ID: <20190131082308.22522-5-stefan@olimex.com>
+Subject: [PATCH 4/5] arm64: dts: allwinner: axp803: add charge led node
+Date: Thu, 31 Jan 2019 10:23:06 +0200
+Message-ID: <20190131082308.22522-4-stefan@olimex.com>
 References: <20190131082308.22522-1-stefan@olimex.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190131082308.22522-1-stefan@olimex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC
-        DEVICE DRIVERS" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Allwinner sunXi SoC
+ support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE
+ DRIVERS" <linux-kernel@vger.kernel.org>
 Cc: Stefan Mavrodiev <stefan@olimex.com>
 List-Id: devicetree@vger.kernel.org
 
@@ -17,48 +29,14 @@ Default status is disabled, since it may be not used.
 
 Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
 ---
- arch/arm/boot/dts/axp209.dtsi | 5 +++++
- arch/arm/boot/dts/axp22x.dtsi | 5 +++++
- arch/arm/boot/dts/axp81x.dtsi | 5 +++++
- 3 files changed, 15 insertions(+)
+ arch/arm64/boot/dts/allwinner/axp803.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
-index 0d9ff12bdf28..f972b6f3ecd0 100644
---- a/arch/arm/boot/dts/axp209.dtsi
-+++ b/arch/arm/boot/dts/axp209.dtsi
-@@ -69,6 +69,11 @@
- 		#gpio-cells = <2>;
- 	};
- 
-+	axp_led: led {
-+		compatible = "x-powers,axp20x-led";
-+		status = "disabled";
-+	};
-+
- 	battery_power_supply: battery-power-supply {
- 		compatible = "x-powers,axp209-battery-power-supply";
- 		status = "disabled";
-diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
-index 65a07a67aca9..92a0b64252b1 100644
---- a/arch/arm/boot/dts/axp22x.dtsi
-+++ b/arch/arm/boot/dts/axp22x.dtsi
-@@ -62,6 +62,11 @@
- 		#io-channel-cells = <1>;
- 	};
- 
-+	axp_led: led {
-+		compatible = "x-powers,axp20x-led";
-+		status = "disabled";
-+	};
-+
- 	battery_power_supply: battery-power-supply {
- 		compatible = "x-powers,axp221-battery-power-supply";
- 		status = "disabled";
-diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-index bd83962d3627..22e243cc40d5 100644
---- a/arch/arm/boot/dts/axp81x.dtsi
-+++ b/arch/arm/boot/dts/axp81x.dtsi
-@@ -74,6 +74,11 @@
+diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/dts/allwinner/axp803.dtsi
+index c3a618e1279a..af4898602b34 100644
+--- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
++++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
+@@ -76,6 +76,11 @@
  		};
  	};
  
@@ -68,7 +46,7 @@ index bd83962d3627..22e243cc40d5 100644
 +	};
 +
  	battery_power_supply: battery-power-supply {
- 		compatible = "x-powers,axp813-battery-power-supply";
- 		status = "disabled";
+ 		compatible = "x-powers,axp803-battery-power-supply",
+ 			     "x-powers,axp813-battery-power-supply";
 -- 
 2.17.1
