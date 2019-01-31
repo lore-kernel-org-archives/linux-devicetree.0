@@ -1,119 +1,250 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 10/10] arm64: dts: allwinner: h5: Add CPU
- Operating Performance Points table
-Date: Thu, 31 Jan 2019 11:28:20 +0800
-Message-ID: <CAGb2v670VszWfTNK9vtoBFWAuHVVHXmwrA84YfBFLLM5XX_6xg@mail.gmail.com>
-References: <20190130084203.25053-1-wens@csie.org> <20190130084203.25053-11-wens@csie.org>
- <20190130092927.x65ihy3je5n6324w@flea> <CAGb2v64ZFZty-jeeKmPU8Ecg+rAE6zEm65tedb_ZZTTSXMEPOA@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Yong Wu <yong.wu@mediatek.com>
+Subject: Re: [PATCH v5 15/20] memory: mtk-smi: Invoke pm runtime_callback to
+ enable clocks
+Date: Thu, 31 Jan 2019 11:42:41 +0800
+Message-ID: <1548906161.19710.47.camel@mhfsdcap03>
+References: <1546314952-15990-1-git-send-email-yong.wu@mediatek.com>
+ <1546314952-15990-16-git-send-email-yong.wu@mediatek.com>
+ <CAE=gft6XDC3YGe20iDOpCO0ASg99hucu7rKJwt+5i+3vgrEFvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZGWZHRAKGQEU7YWNKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v64ZFZty-jeeKmPU8Ecg+rAE6zEm65tedb_ZZTTSXMEPOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAE=gft6XDC3YGe20iDOpCO0ASg99hucu7rKJwt+5i+3vgrEFvg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Evan Green <evgreen@chromium.org>
+Cc: youlin.pei@mediatek.com, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 5:41 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> On Wed, Jan 30, 2019 at 5:29 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+On Wed, 2019-01-30 at 11:05 -0800, Evan Green wrote:
+> On Mon, Dec 31, 2018 at 7:59 PM Yong Wu <yong.wu@mediatek.com> wrote:
 > >
-> > On Wed, Jan 30, 2019 at 04:42:03PM +0800, Chen-Yu Tsai wrote:
-> > >                       enable-method = "psci";
-> > >                       clocks = <&ccu CLK_CPUX>;
-> > >                       clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +                     operating-points-v2 = <&cpu_opp_table>;
-> > > +                     #cooling-cells = <2>;
-> > > +             };
-> > > +     };
-> > > +
-> > > +     cpu_opp_table: opp_table {
-> > > +             compatible = "operating-points-v2";
-> > > +             opp-shared;
-> > > +
-> > > +             opp@408000000 {
-> > > +                     opp-hz = /bits/ 64 <408000000>;
-> > > +                     opp-microvolt = <1000000 1000000 1310000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +
-> > > +             opp@648000000 {
-> > > +                     opp-hz = /bits/ 64 <648000000>;
-> > > +                     opp-microvolt = <1040000 1040000 1310000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +
-> > > +             opp@816000000 {
-> > > +                     opp-hz = /bits/ 64 <816000000>;
-> > > +                     opp-microvolt = <1080000 1080000 1310000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +
-> > > +             opp@912000000 {
-> > > +                     opp-hz = /bits/ 64 <912000000>;
-> > > +                     opp-microvolt = <1120000 1120000 1310000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +
-> > > +             opp@960000000 {
-> > > +                     opp-hz = /bits/ 64 <960000000>;
-> > > +                     opp-microvolt = <1160000 1160000 1310000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +
-> > > +             opp@1008000000 {
-> > > +                     opp-hz = /bits/ 64 <1008000000>;
-> > > +                     opp-microvolt = <1200000 1200000 1310000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +
-> > > +             opp@1056000000 {
-> > > +                     opp-hz = /bits/ 64 <1056000000>;
-> > > +                     opp-microvolt = <1240000 1240000 1310000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +
-> > > +             opp@1104000000 {
-> > > +                     opp-hz = /bits/ 64 <1104000000>;
-> > > +                     opp-microvolt = <1260000 1260000 1310000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +
-> > > +             opp@1152000000 {
-> > > +                     opp-hz = /bits/ 64 <1152000000>;
-> > > +                     opp-microvolt = <1300000 1300000 1310000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
+> > This patch only move the clk_prepare_enable and config_port into the
+> > runtime suspend/resume callback. It doesn't change the code content
+> > and sequence.
 > >
-> > What is the frequency and voltage that U-Boot sets up?
->
-> 1008 MHz, and whatever voltage the board design defaults to (typically
-> the higher setting).
+> > This is a preparing patch for adjusting SMI_BUS_SEL for mt8183.
+> > (SMI_BUS_SEL need to be restored after smi-common resume every time.)
+> > Also it gives a chance to get rid of mtk_smi_larb_get/put which could
+> > be a next topic.
+> >
+> > CC: Matthias Brugger <matthias.bgg@gmail.com>
+> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> 
+> I believe this refactoring is a no-op as described, because the order is still:
+> 1) mtk_smi_clk_enable(common)
+> 2) mtk_smi_clk_enable(larb)
+> 3) larb_gen->config_port()
+> 
+> And teardown still happens in the opposite order, except for
 
-FYI I got this wrong. U-boot's default is 816 MHz. However it seems even
-this is misleading, as cpufreq in Linux reports:
+Thanks your confirm.
 
-    cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 792000 KHz
-    cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed
-to: 816000 KHz
+> config_port, which they seem not to do in suspend.
 
-So there seems tp be an off-by-1 error in some multiplier calculation.
+After suspend, the HW engine should not work. config_port is not
+helpful. At that time, use the HW default value.
 
->
-> > We've had the issue with the A33 that it's started at 1008MHz, with
-> > the matching voltage, and ramping up the frequency to 1.2GHz on boards
-> > without PMIC support would increase the frequency but not the voltage,
-> > resulting in a brownout.
->
-> Which is why I added the regulator to all boards before this patch. At
-> least for Linux, once the regulator supply is described in the device
-> tree, if the driver is missing, regulator_get_* and thus cpufreq should
-> fail with -EPROBE_DEFER.
+> So, looks good to me.
+> 
+> Reviewed-by: Evan Green <evgreen@chromium.org>
 
-I believe despite the above, this still stands. So we should be OK.
+Thanks.
+
+> 
+> > ---
+> >  drivers/memory/mtk-smi.c | 113 ++++++++++++++++++++++++++++++-----------------
+> >  1 file changed, 72 insertions(+), 41 deletions(-)
+> >
+> > diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> > index a430721..9790801 100644
+> > --- a/drivers/memory/mtk-smi.c
+> > +++ b/drivers/memory/mtk-smi.c
+> > @@ -86,17 +86,13 @@ struct mtk_smi_larb { /* larb: local arbiter */
+> >         u32                             *mmu;
+> >  };
+> >
+> > -static int mtk_smi_enable(const struct mtk_smi *smi)
+> > +static int mtk_smi_clk_enable(const struct mtk_smi *smi)
+> >  {
+> >         int ret;
+> >
+> > -       ret = pm_runtime_get_sync(smi->dev);
+> > -       if (ret < 0)
+> > -               return ret;
+> > -
+> >         ret = clk_prepare_enable(smi->clk_apb);
+> >         if (ret)
+> > -               goto err_put_pm;
+> > +               return ret;
+> >
+> >         ret = clk_prepare_enable(smi->clk_smi);
+> >         if (ret)
+> > @@ -118,59 +114,28 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
+> >         clk_disable_unprepare(smi->clk_smi);
+> >  err_disable_apb:
+> >         clk_disable_unprepare(smi->clk_apb);
+> > -err_put_pm:
+> > -       pm_runtime_put_sync(smi->dev);
+> >         return ret;
+> >  }
+> >
+> > -static void mtk_smi_disable(const struct mtk_smi *smi)
+> > +static void mtk_smi_clk_disable(const struct mtk_smi *smi)
+> >  {
+> >         clk_disable_unprepare(smi->clk_gals1);
+> >         clk_disable_unprepare(smi->clk_gals0);
+> >         clk_disable_unprepare(smi->clk_smi);
+> >         clk_disable_unprepare(smi->clk_apb);
+> > -       pm_runtime_put_sync(smi->dev);
+> >  }
+> >
+> >  int mtk_smi_larb_get(struct device *larbdev)
+> >  {
+> > -       struct mtk_smi_larb *larb = dev_get_drvdata(larbdev);
+> > -       const struct mtk_smi_larb_gen *larb_gen = larb->larb_gen;
+> > -       struct mtk_smi *common = dev_get_drvdata(larb->smi_common_dev);
+> > -       int ret;
+> > +       int ret = pm_runtime_get_sync(larbdev);
+> >
+> > -       /* Enable the smi-common's power and clocks */
+> > -       ret = mtk_smi_enable(common);
+> > -       if (ret)
+> > -               return ret;
+> > -
+> > -       /* Enable the larb's power and clocks */
+> > -       ret = mtk_smi_enable(&larb->smi);
+> > -       if (ret) {
+> > -               mtk_smi_disable(common);
+> > -               return ret;
+> > -       }
+> > -
+> > -       /* Configure the iommu info for this larb */
+> > -       larb_gen->config_port(larbdev);
+> > -
+> > -       return 0;
+> > +       return (ret < 0) ? ret : 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(mtk_smi_larb_get);
+> >
+> >  void mtk_smi_larb_put(struct device *larbdev)
+> >  {
+> > -       struct mtk_smi_larb *larb = dev_get_drvdata(larbdev);
+> > -       struct mtk_smi *common = dev_get_drvdata(larb->smi_common_dev);
+> > -
+> > -       /*
+> > -        * Don't de-configure the iommu info for this larb since there may be
+> > -        * several modules in this larb.
+> > -        * The iommu info will be reset after power off.
+> > -        */
+> > -
+> > -       mtk_smi_disable(&larb->smi);
+> > -       mtk_smi_disable(common);
+> > +       pm_runtime_put_sync(larbdev);
+> >  }
+> >  EXPORT_SYMBOL_GPL(mtk_smi_larb_put);
+> >
+> > @@ -385,12 +350,52 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
+> >         return 0;
+> >  }
+> >
+> > +static int __maybe_unused mtk_smi_larb_resume(struct device *dev)
+> > +{
+> > +       struct mtk_smi_larb *larb = dev_get_drvdata(dev);
+> > +       const struct mtk_smi_larb_gen *larb_gen = larb->larb_gen;
+> > +       int ret;
+> > +
+> > +       /* Power on smi-common. */
+> > +       ret = pm_runtime_get_sync(larb->smi_common_dev);
+> > +       if (ret < 0) {
+> > +               dev_err(dev, "Failed to pm get for smi-common(%d).\n", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       ret = mtk_smi_clk_enable(&larb->smi);
+> > +       if (ret < 0) {
+> > +               dev_err(dev, "Failed to enable clock(%d).\n", ret);
+> > +               pm_runtime_put_sync(larb->smi_common_dev);
+> > +               return ret;
+> > +       }
+> > +
+> > +       /* Configure the basic setting for this larb */
+> > +       larb_gen->config_port(dev);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
+> > +{
+> > +       struct mtk_smi_larb *larb = dev_get_drvdata(dev);
+> > +
+> > +       mtk_smi_clk_disable(&larb->smi);
+> > +       pm_runtime_put_sync(larb->smi_common_dev);
+> > +       return 0;
+> > +}
+> > +
+> > +static const struct dev_pm_ops smi_larb_pm_ops = {
+> > +       SET_RUNTIME_PM_OPS(mtk_smi_larb_suspend, mtk_smi_larb_resume, NULL)
+> > +};
+> > +
+> >  static struct platform_driver mtk_smi_larb_driver = {
+> >         .probe  = mtk_smi_larb_probe,
+> >         .remove = mtk_smi_larb_remove,
+> >         .driver = {
+> >                 .name = "mtk-smi-larb",
+> >                 .of_match_table = mtk_smi_larb_of_ids,
+> > +               .pm             = &smi_larb_pm_ops,
+> >         }
+> >  };
+> >
+> > @@ -489,12 +494,38 @@ static int mtk_smi_common_remove(struct platform_device *pdev)
+> >         return 0;
+> >  }
+> >
+> > +static int __maybe_unused mtk_smi_common_resume(struct device *dev)
+> > +{
+> > +       struct mtk_smi *common = dev_get_drvdata(dev);
+> > +       int ret;
+> > +
+> > +       ret = mtk_smi_clk_enable(common);
+> > +       if (ret) {
+> > +               dev_err(common->dev, "Failed to enable clock(%d).\n", ret);
+> > +               return ret;
+> > +       }
+> > +       return 0;
+> > +}
+> > +
+> > +static int __maybe_unused mtk_smi_common_suspend(struct device *dev)
+> > +{
+> > +       struct mtk_smi *common = dev_get_drvdata(dev);
+> > +
+> > +       mtk_smi_clk_disable(common);
+> > +       return 0;
+> > +}
+> > +
+> > +static const struct dev_pm_ops smi_common_pm_ops = {
+> > +       SET_RUNTIME_PM_OPS(mtk_smi_common_suspend, mtk_smi_common_resume, NULL)
+> > +};
+> > +
+> >  static struct platform_driver mtk_smi_common_driver = {
+> >         .probe  = mtk_smi_common_probe,
+> >         .remove = mtk_smi_common_remove,
+> >         .driver = {
+> >                 .name = "mtk-smi-common",
+> >                 .of_match_table = mtk_smi_common_of_ids,
+> > +               .pm             = &smi_common_pm_ops,
+> >         }
+> >  };
+> >
+> > --
+> > 1.9.1
+> >
