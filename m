@@ -1,57 +1,144 @@
-From: alex.williams@ettus.com
-Subject: [PATCH v2 net-next 2/2] net: nixge: Update device-tree bindings with v3.00
-Date: Thu, 31 Jan 2019 13:33:28 -0800
-Message-ID: <20190131213328.11236-2-alex.williams@ettus.com>
-References: <20190131213328.11236-1-alex.williams@ettus.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 3/5] dt-bindings: leds: Add binding for axp20x-led device
+ driver
+Date: Thu, 31 Jan 2019 22:37:25 +0100
+Message-ID: <990611bd-9c6f-aa03-6cb9-431d9415891d@gmail.com>
+References: <20190131082308.22522-1-stefan@olimex.com>
+ <20190131082308.22522-3-stefan@olimex.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131213328.11236-1-alex.williams@ettus.com>
+In-Reply-To: <20190131082308.22522-3-stefan@olimex.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mdf@kernel.org, mcgrof@kernel.org, keescook@chromium.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alex Williams <alex.williams@ni.com>
+To: Stefan Mavrodiev <stefan@olimex.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Williams <alex.williams@ni.com>
+Hi Stefan,
 
-Now the DMA engine is free to float elsewhere in the system map.
+Thank you for the patch.
 
-Signed-off-by: Alex Williams <alex.williams@ni.com>
----
- Documentation/devicetree/bindings/net/nixge.txt | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+I have few nits below.
 
-diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
-index e55af7f0881a..44a7358b4399 100644
---- a/Documentation/devicetree/bindings/net/nixge.txt
-+++ b/Documentation/devicetree/bindings/net/nixge.txt
-@@ -1,8 +1,14 @@
- * NI XGE Ethernet controller
- 
- Required properties:
--- compatible: Should be "ni,xge-enet-2.00"
--- reg: Address and length of the register set for the device
-+- compatible: Should be "ni,xge-enet-3.00", but can be "ni,xge-enet-2.00" for
-+              older device trees with DMA engines co-located in the address map,
-+              with the one reg entry to describe the whole device.
-+- reg: Address and length of the register set for the device. It contains the
-+       information of registers in the same order as described by reg-names.
-+- reg-names: Should contain the reg names
-+	"dma":  DMA engine control and status region
-+        "ctrl": MDIO and PHY control and status region
- - interrupts: Should contain tx and rx interrupt
- - interrupt-names: Should be "rx" and "tx"
- - phy-mode: See ethernet.txt file in the same directory.
-@@ -12,8 +18,10 @@ Required properties:
- 
- Examples (10G generic PHY):
- 	nixge0: ethernet@40000000 {
--		compatible = "ni,xge-enet-2.00";
--		reg = <0x40000000 0x6000>;
-+		compatible = "ni,xge-enet-3.00";
-+		reg = <0x40000000 0x4000
-+		       0x41002000 0x2000>;
-+		reg-names = "dma", "ctrl";
- 
- 		nvmem-cells = <&eth1_addr>;
- 		nvmem-cell-names = "address";
+On 1/31/19 9:23 AM, Stefan Mavrodiev wrote:
+> This adds the devicetree bindings for charge led indicator found
+> on most of X-Powers AXP20X PMICs.
+> 
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+> ---
+>   .../devicetree/bindings/leds/leds-axp20x.txt  | 74 +++++++++++++++++++
+>   1 file changed, 74 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-axp20x.txt b/Documentation/devicetree/bindings/leds/leds-axp20x.txt
+> new file mode 100644
+> index 000000000000..73fae22ffe29
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-axp20x.txt
+> @@ -0,0 +1,74 @@
+> +Device Tree Bindings for LED support on X-Powers PMIC
+> +
+> +Most of the X-Powers PMICs have integrated battery charger with LED indicator.
+> +The output is open-drain, so the state is either high-Z or output-low. The
+> +driver is subnode of AXP20X MFD driver, since it uses shared bus with all
+
+s/is subnode/is a subnode/
+
+> +other cells.
+> +The LED can be controlled either manually or automatic. Then in automatic
+
+s/or automatic/or automatically/
+
+> +(controlled by the charger) there are two indication modes:
+> +
+> +Mode-A
+> +======
+> +- output-low:		Charging
+> +- high-Z		Not charging
+> +- 1Hz flashing:		Abnormal alarm
+> +- 4Hz flashing		Overvoltage alarm
+> +
+> +Mode-B
+> +======
+> +- output-low:		Battery full
+> +- high-Z		Not charging
+> +- 1Hz flashing:		Charging
+> +- 4Hz flashing		Overvoltage or abnormal alarm
+> +
+> +The control and the mode can be changed from sysfs.
+> +
+> +For AXP20X MFD bindings see:
+> +Documentation/devicetree/bindings/mfd/axp20x.txt
+> +
+> +Required properties:
+> +- compatible : Must be "x-powers,axp20x-led"
+> +
+> +Supported common leds properties, see ./common.txt for more information:
+
+s/leds/LED/
+
+Please remove ", see ./common.txt for more information" in favor
+of references indicated below.
+
+> +- label : sets LED label. If omitted, dt device node is used
+
+Please change it to:
+- label : See Documentation/devicetree/bindings/leds/common.txt
+
+> +- linux,default-trigger : See
+> +- default-state:
+
+- linux,default-trigger : See 
+Documentation/devicetree/bindings/leds/common.txt
+
+> +
+> +Optional properties:
+> +- x-powers,charger-mode: 0 for Mode-A, 1 for Mode-B
+> +			 If omitted, then the control is set to manual mode.
+> +			 On invalid value, Mode-A is used.
+> +
+> +
+> +Example:
+> +
+> +	axp803: pmic@3a3 {
+> +		compatible = "x-powers,axp803";
+> +
+> +		...
+> +
+> +		axp20x-led {
+
+s/axp20x-led/led@0/
+
+> +			compatible = "x-powers,axp20x-led";
+> +			status = "okay";
+> +
+> +			label = "axp20x:yellow:chgled";
+> +			linux,default-trigger = "timer";
+> +			default-state = "on";
+> +		};
+> +	};
+> +
+> +or
+> +
+> +	axp803: pmic@3a3 {
+> +		compatible = "x-powers,axp803";
+> +
+> +		...
+> +
+> +		axp20x-led {
+
+s/axp20x-led/led@0/
+
+> +			compatible = "x-powers,axp20x-led";
+> +			status = "okay";
+> +
+> +			label = "axp20x:yellow:chgled";
+> +			x-powers,charger-mode = "mode-b";
+> +		};
+> +	};
+> 
+
 -- 
-2.14.5
+Best regards,
+Jacek Anaszewski
