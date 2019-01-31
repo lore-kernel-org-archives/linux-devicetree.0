@@ -1,87 +1,60 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: [PATCH V4 1/7] dt-bindings: timer: add Tegra210 timer
-Date: Thu, 31 Jan 2019 17:24:04 +0800
-Message-ID: <20190131092410.28222-2-josephl@nvidia.com>
-References: <20190131092410.28222-1-josephl@nvidia.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
+Subject: [PATCH v4 1/6] dt-bindings: Add a binding for Mediatek SCP
+Date: Thu, 31 Jan 2019 17:31:26 +0800
+Message-ID: <20190131093131.245531-2-pihsun@chromium.org>
+References: <20190131093131.245531-1-pihsun@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131092410.28222-1-josephl@nvidia.com>
+In-Reply-To: <20190131093131.245531-1-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR
+        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
-timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
-from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
-(TMR10-TMR13). Each TMR can be programmed to generate one-shot periodic,
-or watchdog interrupts.
+From: Erin Lo <erin.lo@mediatek.com>
 
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Joseph Lo <josephl@nvidia.com>
+Add a DT binding documentation of SCP for the
+MT8183 SoC from Mediatek.
+
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-V4:
- * no change
-v3:
- * no change
-v2:
- * list all the interrupts that are supported by tegra210 timers block
- * add RB tag from Rob.
----
- .../bindings/timer/nvidia,tegra210-timer.txt  | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra210=
--timer.txt
+Changes from v3:
+ - No change.
 
-diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.=
-txt b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+Changes from v2:
+ - No change. I realized that for this patch series, there's no need to
+   add anything under the mt8183-scp node (neither the mt8183-rpmsg or
+   the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
+   directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
+   created by SCP name service.
+
+Changes from v1:
+ - No change.
+---
+ .../devicetree/bindings/remoteproc/mtk,scp.txt         | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
 new file mode 100644
-index 000000000000..032cda96fe0d
+index 00000000000000..b07e5c4ca9af1d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
-@@ -0,0 +1,36 @@
-+NVIDIA Tegra210 timer
++++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+@@ -0,0 +1,10 @@
++Mediatek SCP Bindings
++----------------------------------------
 +
-+The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
-+timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
-+from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
-+(TMR10-TMR13). Each TMR can be programmed to generate one-shot, periodic,
-+or watchdog interrupts.
++This binding provides support for ARM Cortex M4 Co-processor found on some
++Mediatek SoCs.
 +
 +Required properties:
-+- compatible : "nvidia,tegra210-timer".
-+- reg : Specifies base physical address and size of the registers.
-+- interrupts : A list of 14 interrupts; one per each timer channels 0 thro=
-ugh
-+  13.
-+- clocks : Must contain one entry, for the module clock.
-+  See ../clocks/clock-bindings.txt for details.
++- compatible		Should be "mediatek,mt8183-scp"
++- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
 +
-+timer@60005000 {
-+	compatible =3D "nvidia,tegra210-timer";
-+	reg =3D <0x0 0x60005000 0x0 0x400>;
-+	interrupts =3D <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks =3D <&tegra_car TEGRA210_CLK_TIMER>;
-+	clock-names =3D "timer";
-+};
---=20
-2.20.1
+-- 
+2.20.1.611.gfbb209baf1-goog
