@@ -1,73 +1,61 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCHv6 6/6] coresight: debug: Add Unique Component Identifier
- (UCI) table
-Date: Thu, 31 Jan 2019 18:01:59 +0000
-Message-ID: <304febd7-da9a-92d6-47bb-d9983d4bc5d4@arm.com>
-References: <cover.1548943727.git.saiprakash.ranjan@codeaurora.org>
- <f724b28e5bfd7bca062aa5380cfd9328289559bf.1548943727.git.saiprakash.ranjan@codeaurora.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] dt-bindings: hwmon: Add lm75 documentation
+Date: Thu, 31 Jan 2019 10:06:19 -0800
+Message-ID: <20190131180619.GA17074@roeck-us.net>
+References: <20190129065623.6771-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f724b28e5bfd7bca062aa5380cfd9328289559bf.1548943727.git.saiprakash.ranjan@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190129065623.6771-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, jhugo@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com, marc.w.gonzalez@free.fr
-Cc: rnayak@codeaurora.org, sibis@codeaurora.org, tingwei@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 31/01/2019 14:22, Sai Prakash Ranjan wrote:
-> Add UCI table for coresight CPU debug module. This patch adds
-> the UCI entries for Kryo CPUs found on MSM8996 which shares
-> the same PIDs as ETMs.
+On Tue, Jan 29, 2019 at 12:26:23PM +0530, Jagan Teki wrote:
+> Add dt-binding documentation for lm75 hwmon sensor.
 > 
-> Without this, below error is observed on MSM8996:
+> Currently documented for national,lm75 and st,stlm75 and
+> rest might add when required.
 
-nit: Subject doesn't match the patch contents. You could simply say :
+Why ? The various properties are already implemented in the driver.
+I don't see the value documenting only two of them.
 
-coresight: cpu-debug: Add support for Qualcomm Kryo
+I do see though that nxp,lm75, and nxp,lm75a are used but _not_
+referenced in the driver.
 
+If we start cleaning that up I think it would make more sense
+to clean up everything, not just part of it.
+
+Thanks,
+Guenter
 
 > 
-> [    5.429867] OF: graph: no port node found in /soc/debug@3810000
-> [    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
-> [    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
-> [    5.446474] OF: graph: no port node found in /soc/debug@3910000
-> [    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
-> [    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
-> [    5.487765] OF: graph: no port node found in /soc/debug@3a10000
-> [    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
-> [    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
-> [    5.501802] OF: graph: no port node found in /soc/debug@3b10000
-> [    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
-> [    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
-> For testing, all dependent patches are in below tree:
->   * https://github.com/saiprakash-ranjan/linux/tree/coresight-next
+>  Documentation/devicetree/bindings/hwmon/lm75.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/lm75.txt
 > 
-> This patch depends on UCI support by Mike Leach in below link:
->   * https://lore.kernel.org/lkml/20190130234051.2294-1-mike.leach@linaro.org/
-> ---
->   .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
->   1 file changed, 16 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> index e8819d750938..915d86a39cee 100644
-> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> @@ -655,24 +655,23 @@ static int debug_remove(struct amba_device *adev)
->   	return 0;
->   }
->   
-> +static struct amba_cs_uci_id uci_id_debug[] = {
-
-As Stephen mentioned, this must be "const".
-
-Rest looks fine.
-
-Suzuki
+> diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> new file mode 100644
+> index 000000000000..e384a3765f10
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> @@ -0,0 +1,15 @@
+> +*LM75 hwmon sensor.
+> +
+> +Required properties:
+> +- compatible: one of
+> +	"national,lm75"
+> +	"st,stlm75"
+> +
+> +- reg: I2C address
+> +
+> +Example:
+> +
+> +sensor@48 {
+> +	compatible = "st,stlm75";
+> +	reg = <0x48>;
+> +};
