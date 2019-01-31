@@ -1,7 +1,7 @@
 From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH v2 2/3] ARM: dts: rockchip: rv1108-elgin: Use the correct regulator properties
-Date: Thu, 31 Jan 2019 10:47:08 -0200
-Message-ID: <20190131124710.30238-2-otavio@ossystems.com.br>
+Subject: [PATCH v2 3/3] ARM: dts: rockchip: rv1108-evb: Use the correct regulator properties
+Date: Thu, 31 Jan 2019 10:47:09 -0200
+Message-ID: <20190131124710.30238-3-otavio@ossystems.com.br>
 References: <20190131124710.30238-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -26,16 +26,17 @@ Fix it by using the correct properties as per the dt bindings.
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
 
-Changes in v2: None
+Changes in v2:
+- rebase on top of linux-next
 
- arch/arm/boot/dts/rv1108-elgin-r1.dts | 20 ++++++++++----------
+ arch/arm/boot/dts/rv1108-evb.dts | 20 ++++++++++----------
  1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rv1108-elgin-r1.dts b/arch/arm/boot/dts/rv1108-elgin-r1.dts
-index 66688fdf4fd8..1c4507b66fdd 100644
---- a/arch/arm/boot/dts/rv1108-elgin-r1.dts
-+++ b/arch/arm/boot/dts/rv1108-elgin-r1.dts
-@@ -85,8 +85,8 @@
+diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
+index 203d83e3bbf5..30f3d0470ad9 100644
+--- a/arch/arm/boot/dts/rv1108-evb.dts
++++ b/arch/arm/boot/dts/rv1108-evb.dts
+@@ -97,8 +97,8 @@
  				regulator-always-on;
  				regulator-boot-on;
  				regulator-state-mem {
@@ -46,16 +47,16 @@ index 66688fdf4fd8..1c4507b66fdd 100644
  				};
  			};
  
-@@ -97,7 +97,7 @@
- 				regulator-always-on;
- 				regulator-boot-on;
+@@ -107,7 +107,7 @@
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <2000000>;
  				regulator-state-mem {
 -					regulator-state-disabled;
 +					regulator-off-in-suspend;
  				};
  			};
  
-@@ -106,7 +106,7 @@
+@@ -116,7 +116,7 @@
  				regulator-always-on;
  				regulator-boot-on;
  				regulator-state-mem {
@@ -64,7 +65,7 @@ index 66688fdf4fd8..1c4507b66fdd 100644
  				};
  			};
  
-@@ -117,8 +117,8 @@
+@@ -127,8 +127,8 @@
  				regulator-always-on;
  				regulator-boot-on;
  				regulator-state-mem {
@@ -75,7 +76,7 @@ index 66688fdf4fd8..1c4507b66fdd 100644
  				};
  			};
  
-@@ -129,7 +129,7 @@
+@@ -139,7 +139,7 @@
  				regulator-always-on;
  				regulator-boot-on;
  				regulator-state-mem {
@@ -84,7 +85,7 @@ index 66688fdf4fd8..1c4507b66fdd 100644
  				};
  			};
  
-@@ -140,7 +140,7 @@
+@@ -150,7 +150,7 @@
  				regulator-always-on;
  				regulator-boot-on;
  				regulator-state-mem {
@@ -93,7 +94,7 @@ index 66688fdf4fd8..1c4507b66fdd 100644
  				};
  			};
  
-@@ -151,8 +151,8 @@
+@@ -161,8 +161,8 @@
  				regulator-always-on;
  				regulator-boot-on;
  				regulator-state-mem {
