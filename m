@@ -1,15 +1,15 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: meson: add g12a x96 max board
-Date: Thu, 31 Jan 2019 17:48:37 +0100
-Message-ID: <7h36p8hixm.fsf@baylibre.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: amlogic: add amediatech x96-max
+ bindings
+Date: Thu, 31 Jan 2019 17:49:52 +0100
+Message-ID: <7hwomkg4b3.fsf@baylibre.com>
 References: <20181219233519.35287-1-khilman@baylibre.com>
- <20181219233519.35287-2-khilman@baylibre.com>
- <4d1ae3a6-874a-f032-a873-a715a67a3992@baylibre.com>
+ <CAFBinCBUm+Js1-ZabP9bSmYE0qG9Z9gYr-ua+ayDyPOdXUsEyQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4d1ae3a6-874a-f032-a873-a715a67a3992@baylibre.com>
+In-Reply-To: <CAFBinCBUm+Js1-ZabP9bSmYE0qG9Z9gYr-ua+ayDyPOdXUsEyQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,30 +19,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
 > Hi Kevin,
 >
-> On 20/12/2018 00:35, Kevin Hilman wrote:
->> Add the G12a (S905X2) based X96 Max board[1].
->> 
->> There is no branding for the manufacturer anywhere on the product, so it
->> took some digging to find the manufacturer.  But since there's nothing
->> about the maker on the product I've left it out of the DT name because
->> 1) nobody will know that name and 2) keeps the DT filename shorter.
->> 
->> [1] https://www.cnx-software.com/2018/09/25/x96-max-amlogic-s905x2-tv-box/
->> 
->> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
->> ---
->>  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 28 +++++++++++++++++++
->
-> Just found out you forgot to update the Makefile !!
+> On Thu, Dec 20, 2018 at 12:35 AM Kevin Hilman <khilman@baylibre.com> wrote:
+>>
+>> Add new vendor for amediatech, and initial board: x96-max
+> as we have seen there is no "amediatech" branding anywhere on the board itself
+> however, FCC gave us a clue about the manufacturer: [0]
+> can you please add this info to the patch description when re-sending?
 
-D'oh, fixing for v3.
+Yes, will add.
+
+>> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> (with the two comments below)
+>
+>>  Documentation/devicetree/bindings/arm/amlogic.txt     | 1 +
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> if Rob is fine with vendor-prefixes.txt being updated together with
+> adding a new board then I'm as well :)
+>
+>>  2 files changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+>> index 8dbc259081e4..c50b084b6c59 100644
+>> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+>> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+>> @@ -99,6 +99,7 @@ Board compatible values (alphabetically, grouped by SoC):
+>>    - "amlogic,p281" (Meson gxl s905w)
+>>    - "oranth,tx3-mini" (Meson gxl s905w)
+>>
+>> +  - "amediatech,x96-max" (Meson gxm s912)
+> I assume that you'll not only fix the SoC here (G12A) as reported by
+> Chris Moore but also the ordering
+
+Yes, will fix.
 
 Kevin
