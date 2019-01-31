@@ -1,105 +1,49 @@
-From: Ricardo Ribalda Delgado <ricardo@ribalda.com>
-Subject: Re: [PATCH v3 2/2] iio:dac:dac7612: device tree bindings
-Date: Thu, 31 Jan 2019 15:33:04 +0100
-Message-ID: <CAPybu_0Pd4xNzhR2RAdegomckcMxHeM8t7uCrNCXY4CZz2bZZg@mail.gmail.com>
-References: <20190128094931.4430-1-ricardo@ribalda.com> <20190128094931.4430-2-ricardo@ribalda.com>
- <20190130170723.GA24708@bogus>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH] arm64: dts: imx8mq: Add RTC support
+Date: Thu, 31 Jan 2019 15:01:22 +0000
+Message-ID: <1548946870-29037-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130170723.GA24708@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Baruch Siach <baruch@tkos.co.il>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
+Add RTC support for i.MX8MQ.
 
-Thanks for your comments!
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-On Wed, Jan 30, 2019 at 6:07 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Jan 28, 2019 at 10:49:31AM +0100, Ricardo Ribalda Delgado wrote:
-> > Bindings for dac7612.
-> >
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Ricardo Ribalda Delgado <ricardo@ribalda.com>
-> > ---
-> >  .../bindings/iio/dac/ti,dac7612.txt           | 29 +++++++++++++++++++
-> >  MAINTAINERS                                   |  1 +
-> >  2 files changed, 30 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> > new file mode 100644
-> > index 000000000000..e1b8158fab35
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> > @@ -0,0 +1,29 @@
-> > +* Texas Instruments Dual, 12-Bit Serial Input Digital-to-Analog Converter
-> > +
-> > +The DAC7612 is a dual, 12-bit digital-to-analog converter (DAC) with guaranteed
-> > +12-bit monotonicity performance over the industrial temperature range.
-> > +Is is programmable through an SPI interface.
-> > +
-> > +The internal DACs are loaded when the LOADDACS pin is pulled down.
-> > +
-> > +http://www.ti.com/lit/ds/sbas106/sbas106.pdf
-> > +
-> > +Required Properties:
-> > +- compatible: Should be one of:
-> > +             "ti,dac7612"
-> > +             "ti,dac7612u"
-> > +             "ti,dac7612b"
->
-> What's the difference? I can only find 'u' and 'ub' variants and nothing
-> about how those are different. So maybe just 1 string is enough?
-
-dac7612 is how it is named on the datasheet commercial name.
-dac7612u and dac7612ub being the variants. ub being slightly more
-accurante. Shall I leave only 7612?
-or keep the tree variants (fixing 7612b with 7612ub)?
-
-Thanks!
-
->
-> > +- reg: Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt
-> > +
-> > +Optional Properties:
-> > +- loaddacs-gpios: GPIO descriptor for the LOADDACS pin.
->
-> Needs a 'ti' vendor prefix.
->
-> > +- spi-*: Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt
-> > +
-> > +Example:
-> > +
-> > +     dac7612@1 {
->
-> dac@1
->
-> > +             compatible = "ti,dac7612";
-> > +             reg = <0x1>;
-> > +             loaddacs-gpios = <&msmgpio 25 GPIO_ACTIVE_LOW>;
-> > +     };
-> > +
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 30ba5435906b..e28e5afaae16 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -14882,6 +14882,7 @@ M:    Ricardo Ribalda <ricardo@ribalda.com>
-> >  L:   linux-iio@vger.kernel.org
-> >  S:   Supported
-> >  F:   drivers/iio/dac/ti-dac7612.c
-> > +F:   Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> >
-> >  THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
-> >  M:   Hans Verkuil <hverkuil@xs4all.nl>
-> > --
-> > 2.20.1
-> >
-
-
-
--- 
-Ricardo Ribalda
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mq.dtsi
+index 892063a..49b14af 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -240,6 +240,20 @@
+ 				interrupts =3D <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+=20
++			snvs: snvs@30370000 {
++				compatible =3D "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
++				reg =3D <0x30370000 0x10000>;
++
++				snvs_rtc: snvs-rtc-lp{
++					compatible =3D "fsl,sec-v4.0-mon-rtc-lp";
++					regmap =3D<&snvs>;
++					offset =3D <0x34>;
++					interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
++						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++			};
++
+ 			clk: clock-controller@30380000 {
+ 				compatible =3D "fsl,imx8mq-ccm";
+ 				reg =3D <0x30380000 0x10000>;
+--=20
+2.7.4
