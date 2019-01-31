@@ -1,34 +1,55 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH V2 3/4] irq: imx-irqsteer: change to use reg_num instead
- of irq_group
-Date: Thu, 31 Jan 2019 15:27:16 +0800
-Message-ID: <CAA+hA=RMjER6v3u4GzvCiOEJXJyBrpVed7KWUJPGQKhZvne0AQ@mail.gmail.com>
-References: <1548853196-11447-1-git-send-email-aisheng.dong@nxp.com>
- <1548853196-11447-4-git-send-email-aisheng.dong@nxp.com> <1548854523.6869.25.camel@pengutronix.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V11 1/4] dt-bindings: mmc: Add supports-cqe property
+Date: Thu, 31 Jan 2019 08:27:53 +0100
+Message-ID: <CAPDyKFoX7o8pR7hpVPpnpUDmM4jqdjrg7WKj1zrJ1uXfXoSDTA@mail.gmail.com>
+References: <1548271854-1765-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548854523.6869.25.camel@pengutronix.de>
+In-Reply-To: <1548271854-1765-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mikko Perttunen <mperttunen@nvidia.com>, Chunyan Zhang <chunyan.zhang@unisoc.com>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, anrao@nvidia.com, DTML <devicetree@vger.kernel.org>, linux-tegra@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 9:23 PM Lucas Stach <l.stach@pengutronix.de> wrote:
-[...]
-> > > +   /* one register bit map represents 32 input interrupts */
-> > > +   data->reg_num /= 32;
-> > +
-> > >     if (IS_ENABLED(CONFIG_PM_SLEEP)) {
-> > >             data->saved_reg = devm_kzalloc(&pdev->dev,
-> > > -                                   sizeof(u32) * data->irq_groups * 2,
-> > > +                                   sizeof(u32) * data->reg_num,
-> >                                       GFP_KERNEL);
+On Wed, 23 Jan 2019 at 20:30, Sowjanya Komatineni
+<skomatineni@nvidia.com> wrote:
 >
-> Does this last parameter now fit on the line above?
+> Add supports-cqe optional property for MMC hosts.
 >
+> This property is used to identify the specific host controller
+> supporting command queue.
+>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
 
-No, 81 now. :)
+Applied for next, thanks!
 
-Regards
-Dong Aisheng
+Kind regards
+Uffe
+
+
+> ---
+>  [V11]: Same as V10
+>  [V10]: This patch version moves supports-cqe property from vendor
+>         specific MMC property to common MMC property.
+>
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index f5a0923b34ca..cdbcfd3a4ff2 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -62,6 +62,8 @@ Optional properties:
+>    be referred to mmc-pwrseq-simple.txt. But now it's reused as a tunable delay
+>    waiting for I/O signalling and card power supply to be stable, regardless of
+>    whether pwrseq-simple is used. Default to 10ms if no available.
+> +- supports-cqe : The presence of this property indicates that the corresponding
+> +  MMC host controller supports HW command queue feature.
+>
+>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
+> --
+> 2.7.4
+>
