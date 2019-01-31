@@ -1,109 +1,65 @@
-From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH v2 3/3] ARM: dts: rockchip: rv1108-evb: Use the correct regulator properties
-Date: Thu, 31 Jan 2019 10:47:09 -0200
-Message-ID: <20190131124710.30238-3-otavio@ossystems.com.br>
-References: <20190131124710.30238-1-otavio@ossystems.com.br>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 2/7] x86, olpc: Use a correct version when making up a
+ battery node
+Date: Thu, 31 Jan 2019 13:59:55 +0100
+Message-ID: <20190131125955.GI6749@zn.tnic>
+References: <20190110174005.1202564-1-lkundrak@v3.sk>
+ <20190110174005.1202564-3-lkundrak@v3.sk>
+ <20190123205627.nbddtfuy6qdo2bgb@earth.universe>
+ <0adff00d4c4797fe1f9d593a7ba7c772ac3312c4.camel@v3.sk>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131124710.30238-1-otavio@ossystems.com.br>
+Content-Disposition: inline
+In-Reply-To: <0adff00d4c4797fe1f9d593a7ba7c772ac3312c4.camel@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Jason Zhu <jason.zhu@rock-chips.com>, Vicent Chi <vicent.chi@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Philipp Tomsic <philipp.tomsich@theobroma-systems.com>, Tony Xie <tony.xie@rock-chips.com>, Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The following properties:
++ the platform maintainers.
 
-- regulator-state-enabled
-- regulator-state-disabled
-- regulator-state-uv
+On Thu, Jan 31, 2019 at 01:26:16PM +0100, Lubomir Rintel wrote:
+> Hi,
+> 
+> On Wed, 2019-01-23 at 21:56 +0100, Sebastian Reichel wrote:
+> > Hi,
+> > 
+> > On Thu, Jan 10, 2019 at 06:40:00PM +0100, Lubomir Rintel wrote:
+> > > The XO-1 and XO-1.5 batteries apparently differ in an ability to report
+> > > ambient temperature. Add a different compatible string to the 1.5
+> > > battery.
+> > > 
+> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > > 
+> > > ---
+> > 
+> > I either need an Acked-by from the x86 platform maintainers, that I
+> > can queue this through power-supply or a pull request for an immutable
+> > branch (probably the better idea).
+> 
+> I'm happy to prepare a branch that could be pulled from. In fact,
+> here's a branch with fixes for issues pointed out by the review that
+> could be pulled from:
+> 
+>   git pull https://github.com/hackerspace/olpc-xo175-linux lr/olpc-xo175-battery-for-v5.1
+> 
+> What do really not understand is how does this help. This is probably
+> just my unfamiliarity with the process; but perhaps you could help me
+> get less unfamiliar. Would it somehow help with a potential (though
+> unlikely) conflict resolution? Would an Ack from x86 crowd serve as an
+> altenative way off making sure things in their tree won't conflict with
+> this one?
+> 
+> > -- Sebastian
+> 
+> Thank you
+> Lubo
+> 
 
-are not valid ones as per
-Documentation/devicetree/bindings/regulator/regulator.txt
-
-Fix it by using the correct properties as per the dt bindings.
-
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
----
-
-Changes in v2:
-- rebase on top of linux-next
-
- arch/arm/boot/dts/rv1108-evb.dts | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index 203d83e3bbf5..30f3d0470ad9 100644
---- a/arch/arm/boot/dts/rv1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -97,8 +97,8 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
--					regulator-state-enabled;
--					regulator-state-uv = <900000>;
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <900000>;
- 				};
- 			};
- 
-@@ -107,7 +107,7 @@
- 				regulator-min-microvolt = <700000>;
- 				regulator-max-microvolt = <2000000>;
- 				regulator-state-mem {
--					regulator-state-disabled;
-+					regulator-off-in-suspend;
- 				};
- 			};
- 
-@@ -116,7 +116,7 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
--					regulator-state-enabled;
-+					regulator-on-in-suspend;
- 				};
- 			};
- 
-@@ -127,8 +127,8 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
--					regulator-state-enabled;
--					regulator-state-uv = <3300000>;
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
- 				};
- 			};
- 
-@@ -139,7 +139,7 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
--					regulator-state-disabled;
-+					regulator-off-in-suspend;
- 				};
- 			};
- 
-@@ -150,7 +150,7 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
--					regulator-state-disabled;
-+					regulator-off-in-suspend;
- 				};
- 			};
- 
-@@ -161,8 +161,8 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
--					regulator-state-enabled;
--					regulator-state-uv = <1000000>;
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1000000>;
- 				};
- 			};
- 		};
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
