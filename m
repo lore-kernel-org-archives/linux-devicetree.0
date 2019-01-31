@@ -1,76 +1,52 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH RFC 1/3] dt-bindings: hwmon: Add tachometer interrupt to
- pwm-fan
-Date: Thu, 31 Jan 2019 09:19:47 -0800
-Message-ID: <20190131171947.GA14844@roeck-us.net>
-References: <1548860827-29796-1-git-send-email-stefan.wahren@i2se.com>
- <1548860827-29796-2-git-send-email-stefan.wahren@i2se.com>
- <20190130172815.GC14781@roeck-us.net>
- <625436113.118199.1548879811777@email.ionos.de>
- <20190130203525.GA23614@roeck-us.net>
- <fbfd2b67-f6d2-4d6e-9351-d1d2165e571b@i2se.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 0/3] PCI: dra7xx: Support PCIe x2 lane mode
+Date: Thu, 31 Jan 2019 17:28:30 +0000
+Message-ID: <20190131172830.GA31110@e107981-ln.cambridge.arm.com>
+References: <20190124082957.29077-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <fbfd2b67-f6d2-4d6e-9351-d1d2165e571b@i2se.com>
+In-Reply-To: <20190124082957.29077-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2019 at 09:02:33AM +0100, Stefan Wahren wrote:
-> Hi Guenter,
+On Thu, Jan 24, 2019 at 01:59:54PM +0530, Kishon Vijay Abraham I wrote:
+> Previous version of the patch series can be found here [1]
 > 
-> Am 30.01.19 um 21:35 schrieb Guenter Roeck:
-> > On Wed, Jan 30, 2019 at 09:23:31PM +0100, Stefan Wahren wrote:
-> >> Hi Guenter,
-> >>
-> >>> Guenter Roeck <linux@roeck-us.net> hat am 30. Januar 2019 um 18:28 geschrieben:
-> >>>
-> >>>
-> >>> On Wed, Jan 30, 2019 at 04:07:05PM +0100, Stefan Wahren wrote:
-> >>>> This adds the tachometer interrupt to the pwm-fan binding, which is
-> >>>> necessary for RPM support.
-> >>>>
-> >>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> >>>> ---
-> >>>>  Documentation/devicetree/bindings/hwmon/pwm-fan.txt | 3 +++
-> >>>>  1 file changed, 3 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> >>>> index 49ca5d8..7f69b0b 100644
-> >>>> --- a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> >>>> +++ b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> >>>> @@ -8,6 +8,9 @@ Required properties:
-> >>>>  
-> >>>>  Optional properties:
-> >>>>  - fan-supply    : phandle to the regulator that provides power to the fan
-> >>>> +- interrupts    : contains a single interrupt specifier which describes the
-> >>>> +                  tachometer pin output of a 2 pulse-per-revolution fan.
-> >>>> +                  See interrupt-controller/interrupts.txt for the format.
-> >>> So a hypothetical {1,4} pulse-per-revolution fan would explicitly not be
-> >>> supported ? Why ?
-> >> i could add an additional property to specify the pulse per revolution and use the 2 as default (according to the Intel spec for 4 pin pwm fan) which should fit in most cases.
-> >>
-> > That would be a possibility and make sense, but that is not
-> > the point here.  The "interrupts" property does not and should
-> > not care how many pulses per revolution the fan provides.
+> Patch series adds support to enable x2 lane mode in dra74/dra76 and
+> dra72 based boards in pci-dra7xx driver. It introduces new compatible
+> strings in order to enable x2 lane mode support.
 > 
-> sorry, i'm not sure what's the problem about. Do you want me to use a
-> GPIO instead of interrupt?
+> Changes from v2:
+> *) Have a single syscon dt property for configuring x2 lanes
+> *) Fix minor comments given by Lorenzo (falling back to 1 lane mode,
+>    remove unused structure member).
 > 
-> Or is it the wording here?
+> Changes from v1:
+> *) Added ti prefix to syscon-lane-conf and syscon-lane-sel as
+>    suggested to Rob
+> *) Merged "PCI: dwc: dra7xx: Add support for SoC specific compatible
+>    strings" and "PCI: dwc: pci-dra7xx: Enable x2 mode support" into
+>    a single patch.
+> *) Fixed $subject as suggested by Bjorn
+> *) Added x2 lane mode support for DRA72x
 > 
+> The dts changes and phy changes will be sent as a separate series.
+> 
+> [1] ->  https://lkml.org/lkml/2017/12/19/175
+> 
+> Kishon Vijay Abraham I (3):
+>   dt-bindings: PCI: dra7xx: Add SoC specific compatible strings
+>   dt-bindings: PCI: dra7xx: Add properties to enable x2 lane in dra7
+>   PCI: dra7xx: Enable x2 mode support for dra74x, dra76x and dra72x
+> 
+>  .../devicetree/bindings/pci/ti-pci.txt        | 11 ++-
+>  drivers/pci/controller/dwc/pci-dra7xx.c       | 77 +++++++++++++++++++
+>  2 files changed, 86 insertions(+), 2 deletions(-)
 
-You wording limits the use of interrupts with pwm fans to fans with
-2 pulses per revolution. You do not explain why that restriction would
-be required or even make sense, or why it should be associated with
-the 'interrupts' property.
+I have applied the series to pci/dwc for v5.1, thanks.
 
-Logically I assume that is because you expect an interrupt per pulse,
-but that is not explained (or what the interrupt is expected to be
-used for in the first place - it might, after all, be some kind of
-error interrupt).
-
-Guenter
+Lorenzo
