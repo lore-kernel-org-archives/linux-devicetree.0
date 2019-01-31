@@ -1,92 +1,47 @@
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: crypto: document Exynos5433 SlimSSS
-Date: Thu, 31 Jan 2019 17:45:47 +0100
-Message-ID: <ecb05f4f-3873-4029-3428-efb60c3fdabe@partner.samsung.com>
-References: <20190124154521.13589-1-k.konieczny@partner.samsung.com>
-        <CGME20190124154539eucas1p16fb97dd0cab2c18d82113c511cd8a1ca@eucas1p1.samsung.com>
-        <20190124154521.13589-3-k.konieczny@partner.samsung.com>
-        <20190130165115.GA8926@bogus>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: amlogic: add amediatech x96-max
+ bindings
+Date: Thu, 31 Jan 2019 17:48:11 +0100
+Message-ID: <7h8sz0hiyc.fsf@baylibre.com>
+References: <20181219233519.35287-1-khilman@baylibre.com>
+ <dc14926f-4433-fa7b-311f-cb275a7e7aee@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130165115.GA8926@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dc14926f-4433-fa7b-311f-cb275a7e7aee@free.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Moore <moore@free.fr>, linux-amlogic@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 30.01.2019 17:51, Rob Herring wrote:
-> On Thu, Jan 24, 2019 at 04:45:20PM +0100, Kamil Konieczny wrote:
->> Document DT bindings for crypto Samsung Exynos5433 SlimSSS (Slim Security
->> SubSystem) IP.
->>
->> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
->> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
->> ---
->>  .../devicetree/bindings/crypto/samsung-sss.txt     | 14 +++++++++++---
->>  1 file changed, 11 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
->> index 7a5ca56683cc..d9af679d38ab 100644
->> --- a/Documentation/devicetree/bindings/crypto/samsung-sss.txt
->> +++ b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
->> @@ -1,4 +1,4 @@
->> -Samsung SoC SSS (Security SubSystem) module
->> +Samsung SoC SSS (Security SubSystem) and SlimSSS module
->>  
->>  The SSS module in S5PV210 SoC supports the following:
->>  -- Feeder (FeedCtrl)
->> @@ -15,6 +15,12 @@ supports the following also:
->>  -- True Random Number Generator (TRNG)
->>  -- Secure Key Manager
->>  
->> +Exynos5433 has both SSS and SlimSSS module.
-> 
-> That's not really relevant to the binding.
-> 
-> What do the SSS and SlimSSS share? Only that both have a single reg and 
-> interrupt based on the binding? This should probably be just 2 
-> documents. If not now, it will have to be when converted to a DT schema.
-
-They share hardware design, slimSSS is stripped-down SSS version,
-and can be handled by the same crypto s5p-sss driver. The register
-layout is the same for FeedControl (DMA) and AES crypt function.
-
-Do you prefer to put this description in new file samsung-slimsss.txt ?
-If yes, I can send v4, so it can be done right from beginning.
-
->> +SlimSSS in Exynos5433 supports:
->> +-- Feeder (FeedCtrl)
->> +-- Advanced Encryption Standard (AES)
->> +-- SHA-1/SHA-256/HMAC (SHA-1/SHA-256)
->> +
->>  Required properties:
->>  
->>  - compatible : Should contain entries for this and backward compatible
->> @@ -22,11 +28,13 @@ Required properties:
->>    - "samsung,s5pv210-secss" for S5PV210 SoC.
->>    - "samsung,exynos4210-secss" for Exynos4210, Exynos4212, Exynos4412, Exynos5250,
->>  		Exynos5260 and Exynos5420 SoCs.
->> +  - "samsung,exynos5433-slim-sss" for Exynos5433 SoCs.
->>  - reg : Offset and length of the register set for the module
->>  - interrupts : interrupt specifiers of SSS module interrupts (one feed
->>  		control interrupt).
->>  
->>  - clocks : list of clock phandle and specifier pairs for all clocks  listed in
->>  		clock-names property.
->> -- clock-names : list of device clock input names; should contain one entry
->> -		"secss".
->> +- clock-names : list of device clock input names; should contain "pclk" and
->> +		"aclk" for slim-sss in Exynos5433, and one entry "secss" for
->> +		other compatibles.
->> -- 
->> 2.20.0
-
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+Q2hyaXMgTW9vcmUgPG1vb3JlQGZyZWUuZnI+IHdyaXRlczoKCj4gSGksCj4KPiBTb3JyeSBmb3Ig
+dGhlIHJlcGVhdCA6IEkgcmVwbGllZCBwcmV2aW91c2x5IHRvIHYxIGFzIEkgaGFkbid0IG5vdGlj
+ZWQgCj4gdGhhdCB0aGVyZSB3YXMgYWxyZWFkeSBhIHYyLgo+Cj4gTGUgMjAvMTIvMjAxOCDDoCAw
+MDozNSwgS2V2aW4gSGlsbWFuIGEgw6ljcml0wqA6Cj4+IEFkZCBuZXcgdmVuZG9yIGZvciBhbWVk
+aWF0ZWNoLCBhbmQgaW5pdGlhbCBib2FyZDogeDk2LW1heAo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBL
+ZXZpbiBIaWxtYW4gPGtoaWxtYW5AYmF5bGlicmUuY29tPgo+PiAtLS0KPj4gICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FtbG9naWMudHh0ICAgICB8IDEgKwo+PiAgIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSAr
+Cj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYW1sb2dpYy50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FtbG9naWMudHh0Cj4+IGluZGV4IDhk
+YmMyNTkwODFlNC4uYzUwYjA4NGI2YzU5IDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2FtbG9naWMudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYW1sb2dpYy50eHQKPj4gQEAgLTk5LDYgKzk5LDcgQEAg
+Qm9hcmQgY29tcGF0aWJsZSB2YWx1ZXMgKGFscGhhYmV0aWNhbGx5LCBncm91cGVkIGJ5IFNvQyk6
+Cj4+ICAgICAtICJhbWxvZ2ljLHAyODEiIChNZXNvbiBneGwgczkwNXcpCj4+ICAgICAtICJvcmFu
+dGgsdHgzLW1pbmkiIChNZXNvbiBneGwgczkwNXcpCj4+ICAgCj4+ICsgIC0gImFtZWRpYXRlY2gs
+eDk2LW1heCIgKE1lc29uIGd4bSBzOTEyKQo+Cj4gU2hvdWxkbid0IHRoYXQgYmUgTWVzb24gZzEy
+YSBzOTA1eDIgPwoKWWVzIGluZGVlZC4KCktldmluCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
