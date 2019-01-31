@@ -1,54 +1,26 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v5 2/7] x86, olpc: Use a correct version when making up
- a battery node
-Date: Thu, 31 Jan 2019 13:26:16 +0100
-Message-ID: <0adff00d4c4797fe1f9d593a7ba7c772ac3312c4.camel@v3.sk>
-References: <20190110174005.1202564-1-lkundrak@v3.sk>
-         <20190110174005.1202564-3-lkundrak@v3.sk>
-         <20190123205627.nbddtfuy6qdo2bgb@earth.universe>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 4/6] usb:common Simplify usb_decode_get_set_descriptor function.
+Date: Thu, 31 Jan 2019 14:27:50 +0200
+Message-ID: <CAHp75Vd=rpOrVDhG=oALRPFtd-PCgPebQWv5zMKedZnT_9EKqw@mail.gmail.com>
+References: <1548935553-452-1-git-send-email-pawell@cadence.com> <1548935553-452-5-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123205627.nbddtfuy6qdo2bgb@earth.universe>
+In-Reply-To: <1548935553-452-5-git-send-email-pawell@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+To: Pawel Laszczak <pawell@cadence.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, USB <linux-usb@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, rogerq@ti.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, jbergsagel@ti.com, Sekhar Nori <nsekhar@ti.com>, Nishanth Menon <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jan 31, 2019 at 1:53 PM Pawel Laszczak <pawell@cadence.com> wrote:
+>
+> Patch moves switch responsible for decoding descriptor type
+> outside snprintf. It's little improves code readability.
 
-On Wed, 2019-01-23 at 21:56 +0100, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Thu, Jan 10, 2019 at 06:40:00PM +0100, Lubomir Rintel wrote:
-> > The XO-1 and XO-1.5 batteries apparently differ in an ability to report
-> > ambient temperature. Add a different compatible string to the 1.5
-> > battery.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > 
-> > ---
-> 
-> I either need an Acked-by from the x86 platform maintainers, that I
-> can queue this through power-supply or a pull request for an immutable
-> branch (probably the better idea).
+> +       char *s;
 
-I'm happy to prepare a branch that could be pulled from. In fact,
-here's a branch with fixes for issues pointed out by the review that
-could be pulled from:
+const ?
 
-  git pull https://github.com/hackerspace/olpc-xo175-linux lr/olpc-xo175-battery-for-v5.1
-
-What do really not understand is how does this help. This is probably
-just my unfamiliarity with the process; but perhaps you could help me
-get less unfamiliar. Would it somehow help with a potential (though
-unlikely) conflict resolution? Would an Ack from x86 crowd serve as an
-altenative way off making sure things in their tree won't conflict with
-this one?
-
-> -- Sebastian
-
-Thank you
-Lubo
+-- 
+With Best Regards,
+Andy Shevchenko
