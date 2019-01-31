@@ -1,67 +1,148 @@
-From: Robert Eshleman <bobbyeshleman@gmail.com>
-Subject: [PATCH v4 2/2] dt-bindings: iio: light: Add max44009
-Date: Thu, 31 Jan 2019 07:49:16 -0800
-Message-ID: <b36579acc3031a28657b6f2e143e9ea4051d7c46.1548947951.git.bobbyeshleman@gmail.com>
-References: <01f62d9d67110fd2c2f34e7835973fc6874a9fe8.1548947951.git.bobbyeshleman@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] dt-bindings: gpu: add bindings for the ARM Mali Bifrost
+ GPU
+Date: Thu, 31 Jan 2019 16:53:34 +0100
+Message-ID: <0d80f33a-32ba-4d87-0f40-bd5a4b7d23c0@baylibre.com>
+References: <20190131132939.2263-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <01f62d9d67110fd2c2f34e7835973fc6874a9fe8.1548947951.git.bobbyeshleman@gmail.com>
+In-Reply-To: <20190131132939.2263-1-narmstrong@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: bobbyeshleman@gmail.com
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adds device tree bindings for the max44009 light sensor.
+On 31/01/2019 14:29, Neil Armstrong wrote:
+> Add the bindings for the Bifrost family of ARM Mali GPUs.
+> 
+> The Bifrost GPU architecture is similar to the Midgard family,
+> but with a different Shader Core & Execution Engine structures.
+> 
+> Bindings are based on the Midgard family bindings, but the inner
+> architectural changes makes it a separate family needing separate
+> bindings.
+> 
+> The Bifrost GPUs are present in a number of recent SoCs, like the
+> Amlogic G12A Family, and many other vendors.
+> The Amlogic vendor specific compatible is added to handle the
+> specific IP integration differences and dependencies.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/gpu/arm,mali-bifrost.txt         | 94 +++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> new file mode 100644
+> index 000000000000..a632f5136b08
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> @@ -0,0 +1,94 @@
+> +ARM Mali Bifrost GPU
+> +====================
+> +
+> +Required properties:
+> +
+> +- compatible :
+> +  * Must contain one of the following:
+> +    + "arm,mali-g71"
+> +    + "arm,mali-g51"
+> +    + "arm,mali-g72"
+> +    + "arm,mali-g76"
 
-Signed-off-by: Robert Eshleman <bobbyeshleman@gmail.com>
----
-Changes to v4:
-- Add subsystem to subject line
-- Change node name to be 'light-sensor' 
-- Clean up style
+Wrong order and forgot the G31 and G52 cores.
 
-Changes to v3:
-- None
+Neil
 
-Changes to v2:
-- Clean up style
+> +  * which must be preceded by one of the following vendor specifics:
+> +    + "amlogic,meson-g12a-mali"
+> +
+> +- reg : Physical base address of the device and length of the register area.
+> +
+> +- interrupts : Contains the three IRQ lines required by Mali Bifrost devices.
+> +
+> +- interrupt-names : Contains the names of IRQ resources in the order they were
+> +  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
+> +
+> +
+> +Optional properties:
+> +
+> +- clocks : Phandle to clock for the Mali Bifrost device.
+> +
+> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+> +
+> +- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+> +  for details.
+> +
+> +- resets : Phandle of the GPU reset line.
+> +
+> +Vendor-specific bindings
+> +------------------------
+> +
+> +The Mali GPU is integrated very differently from one SoC to
+> +another. In order to accomodate those differences, you have the option
+> +to specify one more vendor-specific compatible, among:
+> +
+> +- "amlogic,meson-g12a-mali"
+> +  Required properties:
+> +  - resets : Should contain phandles of :
+> +    + GPU reset line
+> +    + GPU APB glue reset line
+> +
+> +Example for a Mali-G71:
+> +
+> +gpu@ffa30000 {
+> +	compatible = "amlogic,meson-g12a-mali", "arm,mali-g71";
 
- .../bindings/iio/light/max44009.txt           | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/max44009.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/light/max44009.txt b/Documentation/devicetree/bindings/iio/light/max44009.txt
-new file mode 100644
-index 000000000000..557297c86fba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/max44009.txt
-@@ -0,0 +1,25 @@
-+* MAX44009 Ambient Light Sensor
-+
-+Required properties:
-+
-+- compatible: should be "maxim,max44009"
-+- reg: the I2C address of the device (default is <0x4a>)
-+
-+Optional properties:
-+
-+- interrupts: interrupt mapping for GPIO IRQ. Should be configured with
-+  IRQ_TYPE_EDGE_FALLING.
-+
-+Refer to interrupt-controller/interrupts.txt for generic interrupt client
-+node bindings.
-+
-+Example:
-+
-+max44009: light-sensor@4a {
-+	compatible = "maxim,max44009";
-+	reg = <0x4a>;
-+
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-+};
-+
--- 
-2.20.1
+It's a typo, it's a G31 on Amlogic G12A, anyway the example is still valid.
+
+> +	reg = <0xffe40000 0x10000>;
+> +	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "job", "mmu", "gpu";
+> +	clocks = <&clk CLKID_MALI>;
+> +	mali-supply = <&vdd_gpu>;
+> +	operating-points-v2 = <&gpu_opp_table>;
+> +	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
+> +};
+> +
+> +gpu_opp_table: opp_table0 {
+> +	compatible = "operating-points-v2";
+> +
+> +	opp@533000000 {
+> +		opp-hz = /bits/ 64 <533000000>;
+> +		opp-microvolt = <1250000>;
+> +	};
+> +	opp@450000000 {
+> +		opp-hz = /bits/ 64 <450000000>;
+> +		opp-microvolt = <1150000>;
+> +	};
+> +	opp@400000000 {
+> +		opp-hz = /bits/ 64 <400000000>;
+> +		opp-microvolt = <1125000>;
+> +	};
+> +	opp@350000000 {
+> +		opp-hz = /bits/ 64 <350000000>;
+> +		opp-microvolt = <1075000>;
+> +	};
+> +	opp@266000000 {
+> +		opp-hz = /bits/ 64 <266000000>;
+> +		opp-microvolt = <1025000>;
+> +	};
+> +	opp@160000000 {
+> +		opp-hz = /bits/ 64 <160000000>;
+> +		opp-microvolt = <925000>;
+> +	};
+> +	opp@100000000 {
+> +		opp-hz = /bits/ 64 <100000000>;
+> +		opp-microvolt = <912500>;
+> +	};
+> +};
+> 
