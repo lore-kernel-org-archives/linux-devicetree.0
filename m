@@ -1,90 +1,132 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 6/6] arm64: dts: Add Mediatek SoC MT8183 and evaluation
- board dts and Makefile
-Date: Thu, 31 Jan 2019 15:10:52 -0600
-Message-ID: <CAL_JsqL1vQCgbb2yLL2E4KTDZve1vus5bDX75HGiOu14X26q7w@mail.gmail.com>
-References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
- <1548317240-44682-7-git-send-email-erin.lo@mediatek.com> <20190130162204.GA1521@bogus>
- <1548902050.23230.4.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548902050.23230.4.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ben Ho <Ben.Ho@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>, Mengqi Zhang <Mengqi.Zhang@mediatek.com>, linux-clk <linux-clk@vger.kernel.org>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Seiya Wang <seiya.wang@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTUR
+From: alex.williams@ettus.com
+Subject: [PATCH v2 net-next 1/2] net: nixge: Separate ctrl and dma resources
+Date: Thu, 31 Jan 2019 13:33:27 -0800
+Message-ID: <20190131213328.11236-1-alex.williams@ettus.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mdf@kernel.org, mcgrof@kernel.org, keescook@chromium.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alex Williams <alex.williams@ni.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 8:34 PM Erin Lo <erin.lo@mediatek.com> wrote:
->
-> On Wed, 2019-01-30 at 10:22 -0600, Rob Herring wrote:
-> > On Thu, Jan 24, 2019 at 04:07:20PM +0800, Erin Lo wrote:
-> > > From: Ben Ho <Ben.Ho@mediatek.com>
-> > >
-> > > Add basic chip support for Mediatek 8183, include
-> > > pinctrl file, uart node with correct uart clocks, pwrap device
-> > >
-> > > Add clock controller nodes, include topckgen, infracfg,
-> > > apmixedsys and subsystem.
-> > >
-> > > Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
-> > > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > > Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
-> > > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> > > Signed-off-by: Mengqi Zhang <Mengqi.Zhang@mediatek.com>
-> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> > > ---
-> >
-> >
-> > > +   sysirq: intpol-controller@c530a80 {
-> >
-> > interrupt-controller@...
->
-> I will modify it in next version.
-> >
-> >
-> > Place all the MMIO peripherals under one or more simple-bus nodes.
-> >
-> > Rob
-> >
->
-> Do you mean need to add simple-bus like this?
+From: Alex Williams <alex.williams@ni.com>
 
-Yes.
+The DMA engine is a separate entity altogether, and this allows the DMA
+controller's address to float elsewhere in the FPGA's map.
 
->
-> +   soc: soc {
-> +                #address-cells = <0x1>;
-> +                #size-cells = <0x1>;
-> +                ranges = <0 0 0 0xffffffff>;
-> +                compatible = "simple-bus";
->
->                 soc_data: soc_data@08000000 {
->                         compatible = "mediatek,mt8183-efuse",
->                                      "mediatek,efuse";
->                         reg = <0 0x08000000 0 0x0010>;
->                         #address-cells = <1>;
->                         #size-cells = <1>;
->                         status = "disabled";
->                 };
->
->                 gic: interrupt-controller@0c000000 {
->                         compatible = "arm,gic-v3";
->                         #interrupt-cells = <4>;
->
-> Best Regards,
-> Erin
->
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
->
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Signed-off-by: Alex Williams <alex.williams@ni.com>
+---
+ drivers/net/ethernet/ni/nixge.c | 74 ++++++++++++++++++++++++++++++++---------
+ 1 file changed, 58 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
+index 1e408d1a9b5f..73a98bd2fcd2 100644
+--- a/drivers/net/ethernet/ni/nixge.c
++++ b/drivers/net/ethernet/ni/nixge.c
+@@ -105,6 +105,12 @@
+ #define NIXGE_MAX_JUMBO_FRAME_SIZE \
+ 	(NIXGE_JUMBO_MTU + NIXGE_HDR_SIZE + NIXGE_TRL_SIZE)
+ 
++enum nixge_version {
++	NIXGE_V2,
++	NIXGE_V3,
++	NIXGE_VERSION_COUNT
++};
++
+ struct nixge_hw_dma_bd {
+ 	u32 next_lo;
+ 	u32 next_hi;
+@@ -1225,11 +1231,59 @@ static void *nixge_get_nvmem_address(struct device *dev)
+ 	return mac;
+ }
+ 
++/* Match table for of_platform binding */
++static const struct of_device_id nixge_dt_ids[] = {
++	{ .compatible = "ni,xge-enet-2.00", .data = (void *)NIXGE_V2 },
++	{ .compatible = "ni,xge-enet-3.00", .data = (void *)NIXGE_V3 },
++	{},
++};
++MODULE_DEVICE_TABLE(of, nixge_dt_ids);
++
++static int nixge_of_get_resources(struct platform_device *pdev)
++{
++	const struct of_device_id *of_id;
++	enum nixge_version version;
++	struct resource *ctrlres;
++	struct resource *dmares;
++	struct net_device *ndev;
++	struct nixge_priv *priv;
++
++	ndev = platform_get_drvdata(pdev);
++	priv = netdev_priv(ndev);
++	of_id = of_match_node(nixge_dt_ids, pdev->dev.of_node);
++	if (!of_id)
++		return -ENODEV;
++
++	version = (enum nixge_version)of_id->data;
++	if (version <= NIXGE_V2)
++		dmares = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	else
++		dmares = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						      "dma");
++
++	priv->dma_regs = devm_ioremap_resource(&pdev->dev, dmares);
++	if (IS_ERR(priv->dma_regs)) {
++		netdev_err(ndev, "failed to map dma regs\n");
++		return PTR_ERR(priv->dma_regs);
++	}
++	if (version <= NIXGE_V2) {
++		priv->ctrl_regs = priv->dma_regs + NIXGE_REG_CTRL_OFFSET;
++	} else {
++		ctrlres = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						       "ctrl");
++		priv->ctrl_regs = devm_ioremap_resource(&pdev->dev, ctrlres);
++	}
++	if (IS_ERR(priv->ctrl_regs)) {
++		netdev_err(ndev, "failed to map ctrl regs\n");
++		return PTR_ERR(priv->ctrl_regs);
++	}
++	return 0;
++}
++
+ static int nixge_probe(struct platform_device *pdev)
+ {
+ 	struct nixge_priv *priv;
+ 	struct net_device *ndev;
+-	struct resource *dmares;
+ 	const u8 *mac_addr;
+ 	int err;
+ 
+@@ -1261,14 +1315,9 @@ static int nixge_probe(struct platform_device *pdev)
+ 	priv->dev = &pdev->dev;
+ 
+ 	netif_napi_add(ndev, &priv->napi, nixge_poll, NAPI_POLL_WEIGHT);
+-
+-	dmares = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->dma_regs = devm_ioremap_resource(&pdev->dev, dmares);
+-	if (IS_ERR(priv->dma_regs)) {
+-		netdev_err(ndev, "failed to map dma regs\n");
+-		return PTR_ERR(priv->dma_regs);
+-	}
+-	priv->ctrl_regs = priv->dma_regs + NIXGE_REG_CTRL_OFFSET;
++	err = nixge_of_get_resources(pdev);
++	if (err)
++		return err;
+ 	__nixge_hw_set_mac_address(ndev);
+ 
+ 	priv->tx_irq = platform_get_irq_byname(pdev, "tx");
+@@ -1337,13 +1386,6 @@ static int nixge_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-/* Match table for of_platform binding */
+-static const struct of_device_id nixge_dt_ids[] = {
+-	{ .compatible = "ni,xge-enet-2.00", },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, nixge_dt_ids);
+-
+ static struct platform_driver nixge_driver = {
+ 	.probe		= nixge_probe,
+ 	.remove		= nixge_remove,
+-- 
+2.14.5
