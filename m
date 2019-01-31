@@ -1,62 +1,161 @@
-From: Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: [PATCH v2 01/10] spi: atmel-quadspi: cache MR value to avoid a
- write access
-Date: Thu, 31 Jan 2019 17:55:35 +0100
-Message-ID: <20190131175535.3f60ccff@bbrezillon>
-References: <20190131161515.21605-1-tudor.ambarus@microchip.com>
-        <20190131161515.21605-2-tudor.ambarus@microchip.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v5 01/10] arm64: dts: qcom: sdm845: Update reserved memory
+ map
+Date: Thu, 31 Jan 2019 22:28:32 +0530
+Message-ID: <0c5cc8f10e3c78f4d0eead81abb90d85@codeaurora.org>
+References: <20190131003933.11436-1-bjorn.andersson@linaro.org>
+ <20190131003933.11436-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131161515.21605-2-tudor.ambarus@microchip.com>
+In-Reply-To: <20190131003933.11436-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tudor.Ambarus@microchip.com
-Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jan 2019 16:15:28 +0000
-<Tudor.Ambarus@microchip.com> wrote:
+Hey Bjorn,
 
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+On 2019-01-31 06:09, Bjorn Andersson wrote:
+> Update existing and add missing regions to the reserved memory map, as
+> described in version 10.
 > 
-> Cache MR value to avoid write access when setting the controller
-> in Serial Memory Mode (SMM). SMM is set in exec_op() and not at
-> probe time, to let room for future regular SPI support.
-> 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
-> v2: cache MR value instead of moving the write access at probe
 > 
->  drivers/spi/atmel-quadspi.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> Changes since v4:
+> - Labeled aop_mem, aop_cmd_db_mem and made tz_mem span the last TZ
+> related segment
 > 
-> diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-> index ddc712410812..fe05aee5d845 100644
-> --- a/drivers/spi/atmel-quadspi.c
-> +++ b/drivers/spi/atmel-quadspi.c
-> @@ -155,6 +155,7 @@ struct atmel_qspi {
->  	struct clk		*clk;
->  	struct platform_device	*pdev;
->  	u32			pending;
-> +	u32			mr;
->  	struct completion	cmd_completion;
->  };
->  
-> @@ -238,7 +239,9 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
->  	icr = QSPI_ICR_INST(op->cmd.opcode);
->  	ifr = QSPI_IFR_INSTEN;
->  
-> -	qspi_writel(aq, QSPI_MR, QSPI_MR_SMM);
-> +	/* Set the QSPI controller in Serial Memory Mode */
-> +	if (!(aq->mr & QSPI_MR_SMM))
+> Changes since v3:
+> - Added hyp and xbl memory nodes.
+> - Labeled all PIL nodes
+> 
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 72 +++++++++++++++++++++++++---
+>  1 file changed, 66 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 33f5f4ba6160..45b1616392aa 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -73,12 +73,22 @@
+>  		#size-cells = <2>;
+>  		ranges;
+> 
+> -		memory@85fc0000 {
+> +		hyp_mem: memory@85700000 {
+> +			reg = <0x0 0x85700000 0 0x600000>;
+> +			no-map;
+> +		};
+> +
+> +		xbl_mem: memory@85e00000 {
+> +			reg = <0x0 0x85e00000 0 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		aop_mem: memory@85fc0000 {
+>  			reg = <0 0x85fc0000 0 0x20000>;
+>  			no-map;
+>  		};
+> 
+> -		memory@85fe0000 {
+> +		aop_cmd_db_mem: memory@85fe0000 {
+>  			compatible = "qcom,cmd-db";
+>  			reg = <0x0 0x85fe0000 0x0 0x20000>;
+>  			no-map;
+> @@ -89,13 +99,43 @@
+>  			no-map;
+>  		};
+> 
+> -		memory@86200000 {
+> -			reg = <0 0x86200000 0 0x2d00000>;
+> +		tz_mem: memory@86200000 {
+> +			reg = <0 0x86200000 0 0x3c00000>;
 
-	if (aq->mr != QSPI_MR_SMM)
+should be 0x2d00000 instead of 0x3c00000
+tz_mem ends at 0x88F00000 :-)
 
-> +		qspi_writel(aq, QSPI_MR, QSPI_MR_SMM);
+nit: Also for hyp_mem and xbl_mem you could
+use 0 instead of 0x0
 
-You need to update ->mr here.
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
->  
->  	mode = find_mode(op);
->  	if (mode < 0)
+> +			no-map;
+> +		};
+> +
+> +		qseecom_mem: memory@8ab00000 {
+> +			reg = <0 0x8ab00000 0 0x1400000>;
+> +			no-map;
+> +		};
+> +
+> +		camera_mem: memory@8bf00000 {
+> +			reg = <0 0x8bf00000 0 0x500000>;
+> +			no-map;
+> +		};
+> +
+> +		ipa_fw_mem: memory@8c400000 {
+> +			reg = <0 0x8c400000 0 0x10000>;
+> +			no-map;
+> +		};
+> +
+> +		ipa_gsi_mem: memory@8c410000 {
+> +			reg = <0 0x8c410000 0 0x5000>;
+>  			no-map;
+>  		};
+> 
+> -		wlan_msa_mem: memory@96700000 {
+> -			reg = <0 0x96700000 0 0x100000>;
+> +		gpu_mem: memory@8c415000 {
+> +			reg = <0 0x8c415000 0 0x2000>;
+> +			no-map;
+> +		};
+> +
+> +		adsp_mem: memory@8c500000 {
+> +			reg = <0 0x8c500000 0 0x1a00000>;
+> +			no-map;
+> +		};
+> +
+> +		wlan_msa_mem: memory@8df00000 {
+> +			reg = <0 0x8df00000 0 0x100000>;
+>  			no-map;
+>  		};
+> 
+> @@ -104,10 +144,30 @@
+>  			no-map;
+>  		};
+> 
+> +		venus_mem: memory@95800000 {
+> +			reg = <0 0x95800000 0 0x500000>;
+> +			no-map;
+> +		};
+> +
+> +		cdsp_mem: memory@95d00000 {
+> +			reg = <0 0x95d00000 0 0x800000>;
+> +			no-map;
+> +		};
+> +
+>  		mba_region: memory@96500000 {
+>  			reg = <0 0x96500000 0 0x200000>;
+>  			no-map;
+>  		};
+> +
+> +		slpi_mem: memory@96700000 {
+> +			reg = <0 0x96700000 0 0x1400000>;
+> +			no-map;
+> +		};
+> +
+> +		spss_mem: memory@97b00000 {
+> +			reg = <0 0x97b00000 0 0x100000>;
+> +			no-map;
+> +		};
+>  	};
+> 
+>  	cpus {
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
