@@ -1,74 +1,92 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH v2] arm: dts: gta04: add gps support
-Date: Thu, 31 Jan 2019 17:41:03 +0100
-Message-ID: <20190131174015.544a00f3@kemnade.info>
-References: <20190129073843.14979-1-andreas@kemnade.info>
-        <20190130090434.GM3691@localhost>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: crypto: document Exynos5433 SlimSSS
+Date: Thu, 31 Jan 2019 17:45:47 +0100
+Message-ID: <ecb05f4f-3873-4029-3428-efb60c3fdabe@partner.samsung.com>
+References: <20190124154521.13589-1-k.konieczny@partner.samsung.com>
+        <CGME20190124154539eucas1p16fb97dd0cab2c18d82113c511cd8a1ca@eucas1p1.samsung.com>
+        <20190124154521.13589-3-k.konieczny@partner.samsung.com>
+        <20190130165115.GA8926@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/vgmloT8=KlyDOyf+POR3ria"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130090434.GM3691@localhost>
+In-Reply-To: <20190130165115.GA8926@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+To: Rob Herring <robh@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/vgmloT8=KlyDOyf+POR3ria
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Wed, 30 Jan 2019 10:04:34 +0100
-Johan Hovold <johan@kernel.org> wrote:
+On 30.01.2019 17:51, Rob Herring wrote:
+> On Thu, Jan 24, 2019 at 04:45:20PM +0100, Kamil Konieczny wrote:
+>> Document DT bindings for crypto Samsung Exynos5433 SlimSSS (Slim Security
+>> SubSystem) IP.
+>>
+>> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>> ---
+>>  .../devicetree/bindings/crypto/samsung-sss.txt     | 14 +++++++++++---
+>>  1 file changed, 11 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+>> index 7a5ca56683cc..d9af679d38ab 100644
+>> --- a/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+>> +++ b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+>> @@ -1,4 +1,4 @@
+>> -Samsung SoC SSS (Security SubSystem) module
+>> +Samsung SoC SSS (Security SubSystem) and SlimSSS module
+>>  
+>>  The SSS module in S5PV210 SoC supports the following:
+>>  -- Feeder (FeedCtrl)
+>> @@ -15,6 +15,12 @@ supports the following also:
+>>  -- True Random Number Generator (TRNG)
+>>  -- Secure Key Manager
+>>  
+>> +Exynos5433 has both SSS and SlimSSS module.
+> 
+> That's not really relevant to the binding.
+> 
+> What do the SSS and SlimSSS share? Only that both have a single reg and 
+> interrupt based on the binding? This should probably be just 2 
+> documents. If not now, it will have to be when converted to a DT schema.
 
-> On Tue, Jan 29, 2019 at 08:38:43AM +0100, Andreas Kemnade wrote:
-> > The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
-> > which one is mounted so use the compatibility entry for w2sg0004
-> > for all which will work for both.
-> >=20
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > ---
-> > Changes in v2:
-> > - some s/gps/gnss/
-> > - not added vcc-supply because the regulator is not modelled
-> >   in dts at all =20
->=20
-> I strongly suggest not sending revised patches before people have a
-> chance to comment on your previous version and resolve any issues that
-> may have been raised.
+They share hardware design, slimSSS is stripped-down SSS version,
+and can be handled by the same crypto s5p-sss driver. The register
+layout is the same for FeedControl (DMA) and AES crypt function.
 
-for technical check there was already some small team review ahead,
-so I expect only formality issues and not something complicated and
-was not mentally prepared for more discussion.
+Do you prefer to put this description in new file samsung-slimsss.txt ?
+If yes, I can send v4, so it can be done right from beginning.
 
-At that point I had the impression that I am not allowed to have
-such driverless things into dtb, so I had the impression that I have
-to follow two conflicting rules at the same time.
-That leads to the impression that I worked a long way into a dead end
-which made me quite angry so I was not as contructive as I should be.
+>> +SlimSSS in Exynos5433 supports:
+>> +-- Feeder (FeedCtrl)
+>> +-- Advanced Encryption Standard (AES)
+>> +-- SHA-1/SHA-256/HMAC (SHA-1/SHA-256)
+>> +
+>>  Required properties:
+>>  
+>>  - compatible : Should contain entries for this and backward compatible
+>> @@ -22,11 +28,13 @@ Required properties:
+>>    - "samsung,s5pv210-secss" for S5PV210 SoC.
+>>    - "samsung,exynos4210-secss" for Exynos4210, Exynos4212, Exynos4412, Exynos5250,
+>>  		Exynos5260 and Exynos5420 SoCs.
+>> +  - "samsung,exynos5433-slim-sss" for Exynos5433 SoCs.
+>>  - reg : Offset and length of the register set for the module
+>>  - interrupts : interrupt specifiers of SSS module interrupts (one feed
+>>  		control interrupt).
+>>  
+>>  - clocks : list of clock phandle and specifier pairs for all clocks  listed in
+>>  		clock-names property.
+>> -- clock-names : list of device clock input names; should contain one entry
+>> -		"secss".
+>> +- clock-names : list of device clock input names; should contain "pclk" and
+>> +		"aclk" for slim-sss in Exynos5433, and one entry "secss" for
+>> +		other compatibles.
+>> -- 
+>> 2.20.0
 
-Regards,
-Andreas
-
---Sig_/vgmloT8=KlyDOyf+POR3ria
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlxTJR8ACgkQl4jFM1s/
-ye/4WxAApY3EPVu2dFHryhqT6YYsMDk+N6f2ERAo9HcBNIbOPGiz6FshPM7OygZU
-cpK/MUzxU/9Arar1F5zn31BfmQhsFlAEfyk5YLTq1k6qkCwkKcOQfeQT5eOvTh5w
-qJLJKGlQVX3nUz6gbANxUsRS9zhPrfbYjuI/lkEesOANXl95wBgTxouQb1TSK3Qz
-csKxCMXYAe2xEfaUcaC/bTPMSuxBCdra3O8o4m1rbMwc4cOihSUcuisKSkhv3402
-IBK3S4ctKd5UCaxmaEum90rjGkQ6l56EjJVrKC2L9IyrqA5pv9aet7ei4fS59NHg
-ciF9gjtw3eeqVM52byHQv5pv+enQE+y74wVuOr1BTUVHe3Uon8Io7JLWJ0aaSe3w
-ob3L66BYsqaR/Ub4J/TM4PGDXwTHNhpCGx2XayyDuGqPqiMWL40A8NEWSYQAfem8
-BUKT18OrjmUZjKu5vdqm3nzMqL/7L5Cm0jUGl1FWBPajNZbTBaSRSQxhjDzJTSuu
-B1vwirWlPelzFwtpy1cfcyVt5z8LVInQU3518EJJRwDohDuTkpKCjsO9SVT13FRw
-8t3/jAk9paA2SIOPZtRJvhHw0pUDsvMqoRQr3qqcamp3GAC/2MpzgDWDjjMN/7US
-3M0i/neoH3f1gP8uIppD7ScNlwLgTOHtz0w5bhPV3rvZF2ZGr+0=
-=2Hfv
------END PGP SIGNATURE-----
-
---Sig_/vgmloT8=KlyDOyf+POR3ria--
+-- 
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
