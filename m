@@ -1,164 +1,84 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH RFC 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-Date: Thu, 31 Jan 2019 09:40:40 -0800
-Message-ID: <20190131174040.GA15498@roeck-us.net>
-References: <1548860827-29796-1-git-send-email-stefan.wahren@i2se.com>
- <1548860827-29796-4-git-send-email-stefan.wahren@i2se.com>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v5 17/20] memory: mtk-smi: Get rid of need_larbid
+Date: Thu, 31 Jan 2019 09:45:48 -0800
+Message-ID: <CAE=gft6do4Ku7ErqxY2tbPwqDN_3w6i_ygxvyUSyXLYzxvNwTg@mail.gmail.com>
+References: <1546314952-15990-1-git-send-email-yong.wu@mediatek.com>
+ <1546314952-15990-18-git-send-email-yong.wu@mediatek.com> <CAE=gft4vOxt7G0CqZxvNUxCmuGq_L4wc2Wv6LF4Y62BoJQEUXw@mail.gmail.com>
+ <1548904937.19710.39.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548860827-29796-4-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <1548904937.19710.39.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: youlin.pei@mediatek.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 04:07:07PM +0100, Stefan Wahren wrote:
-> This adds RPM support to the pwm-fan driver in order to use with
-> fancontrol/pwmconfig. This feature is intended for 2 pulse-per-revolution
-> fans which provides a tachometer output signal.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  drivers/hwmon/pwm-fan.c | 55 +++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 9e0591e..731fdc6 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -18,6 +18,7 @@
->  
->  #include <linux/hwmon.h>
->  #include <linux/hwmon-sysfs.h>
-> +#include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/of.h>
-> @@ -26,13 +27,22 @@
->  #include <linux/regulator/consumer.h>
->  #include <linux/sysfs.h>
->  #include <linux/thermal.h>
-> +#include <linux/timer.h>
->  
->  #define MAX_PWM 255
-> +#define SAMPLE_TIME		1 /* seconds */
-> +#define PULSE_PER_REVOLUTION	2
->  
->  struct pwm_fan_ctx {
->  	struct mutex lock;
->  	struct pwm_device *pwm;
->  	struct regulator *reg_en;
-> +
-> +	int irq;
-> +	unsigned int pulses;
-> +	unsigned int rpm;
-> +	struct timer_list sample_timer;
-> +
->  	unsigned int pwm_value;
->  	unsigned int pwm_fan_state;
->  	unsigned int pwm_fan_max_state;
-> @@ -40,6 +50,27 @@ struct pwm_fan_ctx {
->  	struct thermal_cooling_device *cdev;
->  };
->  
-> +static irqreturn_t pulse_handler(int irq, void *dev_id)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_id;
-> +
-> +	if (ctx->pulses < INT_MAX / 2)
-> +		ctx->pulses++;
+On Wed, Jan 30, 2019 at 7:22 PM Yong Wu <yong.wu@mediatek.com> wrote:
+>
+> On Wed, 2019-01-30 at 11:11 -0800, Evan Green wrote:
+> > On Mon, Dec 31, 2018 at 7:59 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> > >
+> > > The "mediatek,larb-id" has already been parsed in MTK IOMMU driver.
+> > > It's no need to parse it again in SMI driver. Only clean some codes.
+> > > This patch is fit for all the current mt2701, mt2712, mt7623, mt8173
+> > > and mt8183.
+> > >
+> > > After this patch, the "mediatek,larb-id" only be needed for mt2712
+> > > which have 2 M4Us. In the other SoCs, we can get the larb-id from M4U
+> > > in which the larbs in the "mediatek,larbs" always are ordered.
+> > >
+> > > CC: Matthias Brugger <matthias.bgg@gmail.com>
+> > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > > ---
+> > >  drivers/memory/mtk-smi.c | 26 ++------------------------
+> > >  1 file changed, 2 insertions(+), 24 deletions(-)
+> > >
+> > > diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> > > index 08cf40d..10e6493 100644
+> > > --- a/drivers/memory/mtk-smi.c
+> > > +++ b/drivers/memory/mtk-smi.c
+> > > @@ -67,7 +67,6 @@ struct mtk_smi_common_plat {
+> > >  };
+> > >
+> > >  struct mtk_smi_larb_gen {
+> > > -       bool need_larbid;
+> > >         int port_in_larb[MTK_LARB_NR_MAX + 1];
+> > >         void (*config_port)(struct device *);
+> > >         unsigned int larb_direct_to_common_mask;
+> > > @@ -153,18 +152,9 @@ void mtk_smi_larb_put(struct device *larbdev)
+> > >         struct mtk_smi_iommu *smi_iommu = data;
+> > >         unsigned int         i;
+> > >
+> > > -       if (larb->larb_gen->need_larbid) {
+> > > -               larb->mmu = &smi_iommu->larb_imu[larb->larbid].mmu;
+> > > -               return 0;
+> > > -       }
+> > > -
+> > > -       /*
+> > > -        * If there is no larbid property, Loop to find the corresponding
+> > > -        * iommu information.
+> > > -        */
+> > > -       for (i = 0; i < smi_iommu->larb_nr; i++) {
+> > > +       for (i = 0; i < MTK_LARB_NR_MAX; i++) {
+> >
+> > Looks like this was the only use of mtk_smi_iommu.larb_nr. Should we
+> > remove that now?
+>
+> This is necessary since the mt2712 which has two M4U HW.
+>
+> From its dtsi[1], take iommu1 as a example, its larb_nr only is 3, but
+> we need scan all the larb.
+>
+> [1]
+> http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016119.html
 
-Please explain the limit. With this code, the maximum number
-for pulses is INT_MAX / 2. The calculation below multiplies
-that with 60, which is well above UINT_MAX. Either use a 
-realistic limit or drop the if statement (it is kind of
-unlikely to get that many interrupts per second).
+I'm not sure I follow. My point was that this structure member is only
+ever set but never read:
+$ git grep '[.>]larb_nr'
+drivers/iommu/mtk_iommu.c:      data->smi_imu.larb_nr = larb_nr;
+drivers/iommu/mtk_iommu_v1.c:   data->smi_imu.larb_nr = larb_nr;
 
-> +
-> +	return IRQ_HANDLED;
-
-This assumes a self resetting edge triggered interrupt ?
-You might want to mention that somewhere.
-
-> +}
-> +
-> +static void sample_timer(struct timer_list *t)
-> +{
-> +	struct pwm_fan_ctx *ctx = from_timer(ctx, t, sample_timer);
-> +	unsigned int pulses;
-> +
-> +	pulses = ctx->pulses;
-> +	ctx->pulses -= pulses;
-
-This is racy; the substract operation is not atomic, and neither
-is the addition in the interrupt handler.
-
-> +	ctx->rpm = pulses * 60 / SAMPLE_TIME / PULSE_PER_REVOLUTION;
-
-The calculation assumes that sample_timer is called exactly after one
-second. Have to tested how much variation this causes on a loaded system ?
-
-> +	mod_timer(&ctx->sample_timer, jiffies + (HZ * SAMPLE_TIME));
-> +}
-> +
->  static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
->  {
->  	unsigned long period;
-> @@ -100,11 +131,20 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
->  	return sprintf(buf, "%u\n", ctx->pwm_value);
->  }
->  
-> +static ssize_t rpm_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u\n", ctx->rpm);
-> +}
->  
->  static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
-> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
->  
->  static struct attribute *pwm_fan_attrs[] = {
->  	&sensor_dev_attr_pwm1.dev_attr.attr,
-> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
-
-This attribute is visible even if not supported, meaning it will
-report a fan speed of 0 rpm in that case. Please make the attribute
-conditional.
-
->  	NULL,
->  };
->  
-> @@ -263,6 +303,19 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	timer_setup(&ctx->sample_timer, sample_timer, 0);
-> +
-> +	ctx->irq = platform_get_irq(pdev, 0);
-> +	if (ctx->irq >= 0) {
-> +		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
-> +				       pdev->name, ctx);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Can't get interrupt working.\n");
-> +			return ret;
-> +		}
-> +		mod_timer(&ctx->sample_timer, jiffies + (HZ * SAMPLE_TIME));
-> +	}
-> +
->  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
->  						       ctx, pwm_fan_groups);
->  	if (IS_ERR(hwmon)) {
-> @@ -304,6 +357,8 @@ static int pwm_fan_remove(struct platform_device *pdev)
->  	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
->  
->  	thermal_cooling_device_unregister(ctx->cdev);
-> +	del_timer_sync(&ctx->sample_timer);
-> +
->  	if (ctx->pwm_value)
->  		pwm_disable(ctx->pwm);
->  
+Maybe I've applied the patches to the wrong tree, and there is a use
+of this member I'm not seeing?
+-Evan
