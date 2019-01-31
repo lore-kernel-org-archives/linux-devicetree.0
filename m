@@ -1,146 +1,77 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [RFC PATCH v4 06/10] devicetree: bindings: Document first ROHM
- BD70528 bindings
-Date: Thu, 31 Jan 2019 14:04:45 +0200
-Message-ID: <127bd8d6765e35272ad174c59838d1374813c910.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v7 0/4] drm: add support for Cadence MHDP DPI/DP bridge.
+Date: Thu, 31 Jan 2019 14:08:18 +0200
+Message-ID: <0f11a4d8-d576-5af8-b7f4-afe3ff26678f@ti.com>
+References: <1548846209-16406-1-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc: heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1548846209-16406-1-git-send-email-dkos@cadence.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: jbergsagel@ti.com, rafalc@cadence.com, quentin.schulz@bootlin.com, piotrs@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
-drivers) and 4 GPIO pins which can be configured for I/O or
-as interrupt sources withe configurable trigger levels.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 102 +++++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-new file mode 100644
-index 000000000000..f80be7e40184
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-@@ -0,0 +1,102 @@
-+* ROHM BD70528 Power Management Integrated Circuit bindings
-+
-+BD70528MWV is an ultra-low Iq general purpose single-chip power management IC
-+for battery-powered portable devices. The IC integrates 3 ultra-low current
-+consumption buck converters, 3 LDOs and 2 LED Drivers. Also included are 4
-+GPIOs, a real-time clock (RTC), a 32kHz clock gate, high-accuracy VREF
-+for use with an external ADC, flexible dual-input power path, 10 bits SAR ADC
-+for battery temperature monitor and 1S battery charger with scalable charge
-+currents.
-+
-+Required properties:
-+ - compatible		: Should be "rohm,bd70528"
-+ - reg			: I2C slave address.
-+ - interrupts		: The interrupt line the device is connected to.
-+ - interrupt-controller	: To indicate bd70528 acts as an interrupt controller.
-+ - #interrupt-cells	: Should be 2. usage is compliant to the 2 cells
-+			  variant of ../interrupt-controller/interrupts.txt
-+ - gpio-controller	: To indicate bd70528 acts as a gpio controller.
-+ - #gpio-cells		: Should be 2. The first cell is the pin number and
-+			  the second cell is used to specify flags. See
-+			  ../gpio/gpio.txt for more information.
-+ - #clock-cells		: Should be 0.
-+ - regulators:		: List of child nodes that specify the regulators.
-+			  Please see ../regulator/rohm,bd70528-regulator.txt
-+
-+Optional properties:
-+ - clock-output-names	: Should contain name for output clock.
-+
-+Example:
-+/* external oscillator */
-+osc: oscillator {
-+	compatible = "fixed-clock";
-+	#clock-cells = <1>;
-+	clock-frequency  = <32768>;
-+	clock-output-names = "osc";
-+};
-+
-+pmic: pmic@4b {
-+	compatible = "rohm,bd70528";
-+	reg = <0x4b>;
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <29 GPIO_ACTIVE_LOW>;
-+	clocks = <&osc 0>;
-+	#clock-cells = <0>;
-+	clock-output-names = "bd70528-32k-out";
-+	#gpio-cells = <2>;
-+	gpio-controller;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+
-+	regulators {
-+		buck1: BUCK1 {
-+			regulator-name = "buck1";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <3400000>;
-+			regulator-boot-on;
-+			regulator-ramp-delay = <125>;
-+		};
-+		buck2: BUCK2 {
-+			regulator-name = "buck2";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+			regulator-ramp-delay = <125>;
-+		};
-+		buck3: BUCK3 {
-+			regulator-name = "buck3";
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-boot-on;
-+			regulator-ramp-delay = <250>;
-+		};
-+		ldo1: LDO1 {
-+			regulator-name = "ldo1";
-+			regulator-min-microvolt = <1650000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+		};
-+		ldo2: LDO2 {
-+			regulator-name = "ldo2";
-+			regulator-min-microvolt = <1650000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+		};
-+
-+		ldo3: LDO3 {
-+			regulator-name = "ldo3";
-+			regulator-min-microvolt = <1650000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+		led_ldo1: LED_LDO1 {
-+			regulator-name = "led_ldo1";
-+			regulator-min-microvolt = <200000>;
-+			regulator-max-microvolt = <300000>;
-+		};
-+		led_ldo2: LED_LDO2 {
-+			regulator-name = "led_ldo2";
-+			regulator-min-microvolt = <200000>;
-+			regulator-max-microvolt = <300000>;
-+		};
-+	};
-+};
--- 
-2.14.3
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+SGksCgpPbiAzMC8wMS8yMDE5IDEzOjAzLCBEYW1pYW4gS29zIHdyb3RlOgo+IEhlbGxvIQo+IAo+
+IFRoaXMgaXMgdGhlIHNlcmllcyBvZiBwYXRjaGVzIHRoYXQgd2lsbCBhZGQgc3VwcG9ydCBmb3Ig
+dGhlIENhZGVuY2UncyBEUEkvRFAKPiBicmlkZ2UuIFBsZWFzZSBub3RlIHRoYXQgdGhpcyBpcyBh
+IHByZWxpbWluYXJ5IHZlcnNpb24gb2YgdGhlIGRyaXZlciBhbmQgdGhlcmUKPiB3aWxsIGJlIG1v
+cmUgcGF0Y2hlcyBpbiB0aGUgZnV0dXJlIHdpdGggdXBkYXRlcywgZml4ZXMgYW5kIGltcHJvdmVt
+ZW50cy4KPiBQbGVhc2Uga2VlcCB0aGF0IGluIG1pbmQgd2hlbiBsb29raW5nIGF0IEZJWE1FL1RP
+RE8vWFhYIGNvbW1lbnRzLgo+IAo+IEluaXRpYWxseSwgTUhEUCBkcml2ZXIgd2FzIGRldmVsb3Bl
+ZCBhcyBhIERSTSBicmlkZ2UgZHJpdmVyIGFuZCB3YXMgcGxhbmVkIHRvCj4gYmUgcGxhY2VkIGlu
+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbWhkcC5jLiAgSG93ZXZlciwgdGhlcmUgd2FzIGFscmVh
+ZHkKPiBhIGRyaXZlciBmb3IgQ2FkZW5jZSdzIERQIGNvbnRyb2xsZXIgZGV2ZWxvcGVkIGJ5IFJv
+Y2tDaGlwLCBidXQgdGhhdCBkcml2ZXIKPiB1c2VzIHRoZSBkaWZmZXJlbnQgRFJNIGZyYW1ld29y
+ayBhbmQgbG9va3MgbGlrZSBhIHBhcnQgb2YgYSBiaWdnZXIgc3lzdGVtLgo+IEJvdGggY29udHJv
+bGxlcnMgKGluY2x1ZGluZyBmaXJtd2FyZSkgYXJlIHF1aXRlIGRpZmZlcmVudCBpbnRlcm5hbGx5
+Cj4gKE1TVC9GRUMvRFNDIHN1cHBvcnQsIGxpbmsgdHJhaW5pbmcgZG9uZSBieSBkcml2ZXIsIGFk
+ZGl0aW9uYWwgY29tbWFuZHMsIElSUSdzCj4gZXRjLikgYnV0IHRoZXkgaGF2ZSBzaW1pbGFyIHJl
+Z2lzdGVyIG1hcCwgZXhjZXB0IGZvciBGcmFtZXIvU3RyZWFtZXIgKHdoaWNoIGlzCj4gbm90aWNl
+YWJseSBkaWZmZXJlbnQpLCBzbyB0aGV5IGFwcGVhciBzaW1pbGFyLgo+IAo+IFRoZSBmb2xsb3dp
+bmcgcGF0Y2hlcyBjb250YWluOgo+IC0gTW92aW5nIGNvbW1vbiBjb2RlIHRvIGRyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvY2Rucy1taGRwLWNvbW1vbi4qIGFuZAo+ICAgbW9kaWZ5aW5nIGl0IGEgYml0
+IChtb3N0bHkgbmV3IHByZWZpeGVzIGZvciBmdW5jdGlvbnMgYW5kIGRhdGEgdHlwZXMpIHNvIGl0
+Cj4gICBjYW4gYmUgdXNlZCBieSB0d28sIGhpZ2hlciBsZXZlbCwgZHJpdmVycy4KPiAtIE1vZGlm
+eWluZyBleGlzdGluZyBSb2NrQ2hpcCdzIERQIGRyaXZlciB0byB1c2UgdGhlIGNvbW1vbiBjb2Rl
+IGFmdGVyIGNoYW5nZXMKPiAgIG1hZGUgdG8gaXQgKHVzZSB0aGUgbmV3IGNkbnNfbWhkcF9kZXZp
+Y2Ugc3RydWN0dXJlIGFuZCBuZXcgZnVuY3Rpb24gbmFtZXMpLgo+IC0gTW9kaWZ5aW5nIERSTSBo
+ZWxwZXJzIGEgYml0LiBTb21lIGFyZSByZXF1aXJlZCBmb3IgbmV3IGRyaXZlciwgc29tZSBhcmUK
+PiAgIHVwZGF0ZXMgZnJvbSBEUCAxLjIgdG8gMS4zIG9yIDEuNC4KPiAtIEFkZGluZyBkb2N1bWVu
+dGF0aW9uIGZvciBkZXZpY2UgdHJlZSBiaW5kaW5ncy4KPiAtIEFkZGluZyBwcmVsaW1pbmFyeSBD
+YWRlbmNlIERQSS9EUCBicmlkZ2UgZHJpdmVyLgo+IAo+IFNvbWUgb2YgdGhlIHRoaW5ncyB0aGF0
+IHdpbGwgYmUgYWRkZWQgbGF0ZXIgb24gaW5jbHVkZSAoYnV0IGFyZSBub3QgbGltaXRlZAo+IHRv
+KToKPiAtIERTQyBzdXBwb3J0Cj4gLSBGRUMgc3VwcG9ydAo+IC0gSERDUCBzdXBwb3J0CgpBIGZl
+dyByYW5kb20gY29tbWVudHMvcXVlc3Rpb25zIGFmdGVyIGEgcXVpY2sgbG9vayBhdCB0aGUgcGF0
+Y2hlcy4KClRoZSBuYW1lcyBvZiB0aGUgc291cmNlIGZpbGVzIGFuZCB0aGUga2VybmVsIEtjb25m
+aWcgYXJlIG9ubHkgYWJvdXQKIkNhZGVuY2UgRFAiLiBCdXQgdGhlIERUIGJpbmRpbmdzIGlzIGZv
+ciBjZG5zLG1oZHA4NTQ2LCBhbmQgdGhlCnJlc3VsdGluZyBtb2R1bGUgZmlsZSBpcyBtaGRwODU0
+Ni5rby4gSSB0aGluayBtb3JlIGNvbnNpc3RlbmN5IGhlcmUKd291bGQgYmUgZ29vZC4KCkkgcHJl
+c3VtZSB0aGUgcGFydCBudW1iZXIgKG9yIGZhbWlseT8gYXJlIHRoZXJlIG90aGVyIHNpbWlsYXIg
+cGFydHMgd2l0aApzaW1pbGFyIHBhcnQgbnVtYmVycz8pIGlzIHJlbGV2YW50LCBzbyBpdCBzaG91
+bGQgYmUgaW4gdGhlIEtjb25maWcKb3B0aW9uIGFuZCBoZWxwIHRleHQsIGFuZCBwcm9iYWJseSBp
+biB0aGUgZmlsZSBuYW1lcyB0b28uIFRoZSBtb2R1bGUKbmFtZSBzaG91bGQgaGF2ZSAiY2RucyIg
+cHJlZml4IHRoZXJlLCBzaW1pbGFyIHRvIHRoZSBzb3VyY2UgZmlsZXMgYW5kCnRoZSBjZG5zLWRz
+aS5rby4KCk9yIG1heWJlIHRoZSBzYW1lIGRyaXZlciB3aWxsIGhhbmRsZSBhbGwgQ2FkZW5jZSBE
+UCBwYXJ0cywgaW4gd2hpY2ggY2FzZQpnZW5lcmljIGZpbGVuYW1lcyBhcmUgZmluZSwgYnV0IHRo
+ZW4gdGhlIHJlc3VsdGluZyBrZXJuZWwgbW9kdWxlIHNob3VsZAphbHNvIGJlIGp1c3QgImNkbnMt
+bWhkcC5rbyIuCgpJIHNlZSBzb21lIGF1ZGlvIGZ1bmN0aW9ucyBpbiB0aGUgY29kZSwgYnV0IGl0
+J3Mgbm90IG1lbnRpb25lZCBpbiB0aGUgRFQKYmluZGluZ3MuIEknbSBub3QgYW4gYXVkaW8gZ3V5
+LCBidXQgdGhlIGRpc3BsYXkgYnJpZGdlcyB3aXRoIGF1ZGlvCnN1cHBvcnQgSSBoYXZlIHNlZW4g
+aGF2ZSBoYWQgRFQgYmluZGluZ3MgZm9yIHRoZSBhdWRpbyBzb3VyY2UgdG9vLiBJcwphdWRpbyBz
+dXBwb3J0ZWQgaW4gdGhlIGN1cnJlbnQgZHJpdmVyPwoKIFRvbWkKCi0tIApUZXhhcyBJbnN0cnVt
+ZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5u
+dXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
