@@ -1,160 +1,123 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v4 3/5] misc: fastrpc: Add support for context Invoke
- method
-Date: Thu, 31 Jan 2019 17:55:17 +0000
-Message-ID: <c60cd4ba-af1c-537a-2ee4-b80b61408625@linaro.org>
-References: <20190124152412.10503-1-srinivas.kandagatla@linaro.org>
- <20190124152412.10503-4-srinivas.kandagatla@linaro.org>
- <20190131153419.GA18667@kroah.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/2] hwmon: pwm-fan: Add optional regulator support
+Date: Thu, 31 Jan 2019 09:56:52 -0800
+Message-ID: <20190131175651.GA16231@roeck-us.net>
+References: <1548781631-5736-1-git-send-email-stefan.wahren@i2se.com>
+ <1548781631-5736-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131153419.GA18667@kroah.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1548781631-5736-2-git-send-email-stefan.wahren@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: robh+dt@kernel.org, arnd@arndb.de, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, thierry.escande@linaro.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review,
+On Tue, Jan 29, 2019 at 06:07:11PM +0100, Stefan Wahren wrote:
+> This adds optional regulator support to the pwm-fan driver. This is
+> necessary for pwm fans which are powered by a switchable supply.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  drivers/hwmon/pwm-fan.c | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 2c94482..9e0591e 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/thermal.h>
+>  
+> @@ -31,6 +32,7 @@
+>  struct pwm_fan_ctx {
+>  	struct mutex lock;
+>  	struct pwm_device *pwm;
+> +	struct regulator *reg_en;
+>  	unsigned int pwm_value;
+>  	unsigned int pwm_fan_state;
+>  	unsigned int pwm_fan_max_state;
+> @@ -244,6 +246,23 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	ctx->reg_en = devm_regulator_get_optional(&pdev->dev, "fan");
+> +	if (!IS_ERR(ctx->reg_en)) {
 
-I will fix them and send new version!
+It is customary to handle the error case first.
 
-On 31/01/2019 15:34, Greg KH wrote:
-> On Thu, Jan 24, 2019 at 03:24:10PM +0000, Srinivas Kandagatla wrote:
->> This patch adds support to compute context invoke method
->> on the remote processor (DSP).
->> This involves setting up the functions input and output arguments,
->> input and output handles and mapping the dmabuf fd for the
->> argument/handle buffers.
->>
-> 
-> This says _what_ this code does, but not why.  What about all of that
-> explaination you had in the 0/5 patch, shouldn't that be here, or on
-> patch 2/5?
-> 
-Yes, I will add more details in to the log.
+> +		ret = regulator_enable(ctx->reg_en);
+> +		if (ret)
+> +			dev_err(&pdev->dev,
+> +				"Failed to enable fan supply: %d\n", ret);
+> +	} else {
+> +		switch (PTR_ERR(ctx->reg_en)) {
+> +		case -ENODEV:
+> +		case -ENOSYS:
 
-> Some nits below:
-> 
->> +static int fastrpc_invoke(struct fastrpc_user *fl, char __user *argp)
->> +{
->> +	struct fastrpc_invoke_args *args = NULL;
->> +	struct fastrpc_invoke inv;
->> +	u32 nscalars;
->> +	int err;
->> +
->> +	if (copy_from_user(&inv, argp, sizeof(inv)))
->> +		return -EFAULT;
->> +
->> +	nscalars = REMOTE_SCALARS_LENGTH(inv.sc);
->> +	if (nscalars) {
->> +		args = kcalloc(nscalars, sizeof(*args), GFP_KERNEL);
-> 
-> Yeah, let's not bounds check the input variables and suck up all of the
-> kernel memory!
-> 
-> Remember:
-> 	ALL INPUT IS EVIL
+Does devm_regulator_get_optional() ever return -ENOSYS ?
+I glanced through other calls to devm_regulator_get_optional(),
+but I don't see that check anywhere.
 
-I will add more checks here and other such instances in next version....
->> +static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
->> +				 unsigned long arg)
->> +{
->> +	struct fastrpc_user *fl = (struct fastrpc_user *)file->private_data;
->> +	char __user *argp = (char __user *)arg;
->> +	int err;
->> +
->> +	switch (cmd) {
->> +	case FASTRPC_IOCTL_INVOKE:
->> +		err = fastrpc_invoke(fl, argp);
->> +		break;
->> +	default:
->> +		err = -ENOTTY;
->> +		dev_err(fl->sctx->dev, "bad ioctl: %d\n", cmd);
-> 
-> Don't spam the syslog if someone sends you an invalid ioctl.  That's a
-> sure way to DoS the system.
-will fix this in next version.
-> 
->> +		break;
->> +	}
->> +
->> +	if (err)
->> +		dev_dbg(fl->sctx->dev, "Error: IOCTL Failed with %d\n", err);
->> +
->> +	return err;
->> +}
->> +
->>   static const struct file_operations fastrpc_fops = {
->>   	.open = fastrpc_device_open,
->>   	.release = fastrpc_device_release,
->> +	.unlocked_ioctl = fastrpc_device_ioctl,
->> +	.compat_ioctl = fastrpc_device_ioctl,
->>   };
->>   
->>   static int fastrpc_cb_probe(struct platform_device *pdev)
->> @@ -260,9 +932,25 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
->>   	return of_platform_populate(rdev->of_node, NULL, NULL, rdev);
->>   }
->>   
->> +static void fastrpc_notify_users(struct fastrpc_user *user)
->> +{
->> +	struct fastrpc_invoke_ctx *ctx, *n;
->> +
->> +	spin_lock(&user->lock);
->> +	list_for_each_entry_safe(ctx, n, &user->pending, node)
->> +		complete(&ctx->work);
-> 
-> Why safe?  You aren't deleting the list here.
-> 
-Not sure why it ended up with safe here, does not make sense unless am 
-deleting it.. will fix this in next version.
+> +			ctx->reg_en = NULL;
+> +			break;
+> +		default:
+> +			return PTR_ERR(ctx->reg_en);
+> +		}
 
-...>> diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
->> new file mode 100644
->> index 000000000000..a69ef33dc37e
->> --- /dev/null
->> +++ b/include/uapi/misc/fastrpc.h
->> @@ -0,0 +1,23 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +
->> +#ifndef __QCOM_FASTRPC_H__
->> +#define __QCOM_FASTRPC_H__
->> +
->> +#include <linux/types.h>
->> +
->> +#define FASTRPC_IOCTL_INVOKE		_IOWR('R', 3, struct fastrpc_invoke)
->> +
->> +struct fastrpc_invoke_args {
->> +	__u64 ptr;
->> +	__u64 length;
->> +	__s32 fd;
->> +	__u32 reserved;
-> 
-> Are you checking that reserved is all 0 now?
+This is inconsistent. Provided regulators which fail to enable are
+accepted, albeit with an error message, while unexpected errors from
+devm_regulator_get_optional() result in a bailout. Please be consistent.
 
-No, I should add the checks!
+> +	}
+> +
+>  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
+>  						       ctx, pwm_fan_groups);
+>  	if (IS_ERR(hwmon)) {
+> @@ -287,6 +306,10 @@ static int pwm_fan_remove(struct platform_device *pdev)
+>  	thermal_cooling_device_unregister(ctx->cdev);
+>  	if (ctx->pwm_value)
+>  		pwm_disable(ctx->pwm);
+> +
+> +	if (ctx->reg_en)
+> +		regulator_disable(ctx->reg_en);
 
-> 
->> +};
->> +
->> +struct fastrpc_invoke {
->> +	__u32 handle;
->> +	__u32 sc;
->> +	__u64 args;
->> +};
-> 
-> Do you need packed here?  What about endian issues?
-We do not need this packed here, as this is not the actual structure 
-that the passed to the DSP.
+As written, this is also called after regulator_enable() failed.
+Same below.
 
-Thanks,
-srini
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> +
+>  	return 0;
+>  }
+>  
+> @@ -299,6 +322,12 @@ static int pwm_fan_suspend(struct device *dev)
+>  
+>  	pwm_get_args(ctx->pwm, &args);
+>  
+> +	if (ctx->reg_en) {
+> +		ret = regulator_disable(ctx->reg_en);
+> +		if (ret)
+> +			dev_err(dev, "Failed to disable fan supply: %d\n", ret);
+> +	}
+> +
+>  	if (ctx->pwm_value) {
+>  		ret = pwm_config(ctx->pwm, 0, args.period);
+>  		if (ret < 0)
+> @@ -317,6 +346,12 @@ static int pwm_fan_resume(struct device *dev)
+>  	unsigned long duty;
+>  	int ret;
+>  
+> +	if (ctx->reg_en) {
+> +		ret = regulator_enable(ctx->reg_en);
+> +		if (ret)
+> +			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
+> +	}
+> +
+>  	if (ctx->pwm_value == 0)
+>  		return 0;
+>  
