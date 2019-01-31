@@ -1,123 +1,73 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/2] hwmon: pwm-fan: Add optional regulator support
-Date: Thu, 31 Jan 2019 09:56:52 -0800
-Message-ID: <20190131175651.GA16231@roeck-us.net>
-References: <1548781631-5736-1-git-send-email-stefan.wahren@i2se.com>
- <1548781631-5736-2-git-send-email-stefan.wahren@i2se.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCHv6 6/6] coresight: debug: Add Unique Component Identifier
+ (UCI) table
+Date: Thu, 31 Jan 2019 18:01:59 +0000
+Message-ID: <304febd7-da9a-92d6-47bb-d9983d4bc5d4@arm.com>
+References: <cover.1548943727.git.saiprakash.ranjan@codeaurora.org>
+ <f724b28e5bfd7bca062aa5380cfd9328289559bf.1548943727.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548781631-5736-2-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <f724b28e5bfd7bca062aa5380cfd9328289559bf.1548943727.git.saiprakash.ranjan@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, jhugo@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com, marc.w.gonzalez@free.fr
+Cc: rnayak@codeaurora.org, sibis@codeaurora.org, tingwei@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 06:07:11PM +0100, Stefan Wahren wrote:
-> This adds optional regulator support to the pwm-fan driver. This is
-> necessary for pwm fans which are powered by a switchable supply.
+
+
+On 31/01/2019 14:22, Sai Prakash Ranjan wrote:
+> Add UCI table for coresight CPU debug module. This patch adds
+> the UCI entries for Kryo CPUs found on MSM8996 which shares
+> the same PIDs as ETMs.
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Without this, below error is observed on MSM8996:
+
+nit: Subject doesn't match the patch contents. You could simply say :
+
+coresight: cpu-debug: Add support for Qualcomm Kryo
+
+
+> 
+> [    5.429867] OF: graph: no port node found in /soc/debug@3810000
+> [    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
+> [    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
+> [    5.446474] OF: graph: no port node found in /soc/debug@3910000
+> [    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
+> [    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
+> [    5.487765] OF: graph: no port node found in /soc/debug@3a10000
+> [    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
+> [    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
+> [    5.501802] OF: graph: no port node found in /soc/debug@3b10000
+> [    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
+> [    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> 
 > ---
->  drivers/hwmon/pwm-fan.c | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+> For testing, all dependent patches are in below tree:
+>   * https://github.com/saiprakash-ranjan/linux/tree/coresight-next
 > 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 2c94482..9e0591e 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -23,6 +23,7 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwm.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/sysfs.h>
->  #include <linux/thermal.h>
->  
-> @@ -31,6 +32,7 @@
->  struct pwm_fan_ctx {
->  	struct mutex lock;
->  	struct pwm_device *pwm;
-> +	struct regulator *reg_en;
->  	unsigned int pwm_value;
->  	unsigned int pwm_fan_state;
->  	unsigned int pwm_fan_max_state;
-> @@ -244,6 +246,23 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	ctx->reg_en = devm_regulator_get_optional(&pdev->dev, "fan");
-> +	if (!IS_ERR(ctx->reg_en)) {
+> This patch depends on UCI support by Mike Leach in below link:
+>   * https://lore.kernel.org/lkml/20190130234051.2294-1-mike.leach@linaro.org/
+> ---
+>   .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
+>   1 file changed, 16 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> index e8819d750938..915d86a39cee 100644
+> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> @@ -655,24 +655,23 @@ static int debug_remove(struct amba_device *adev)
+>   	return 0;
+>   }
+>   
+> +static struct amba_cs_uci_id uci_id_debug[] = {
 
-It is customary to handle the error case first.
+As Stephen mentioned, this must be "const".
 
-> +		ret = regulator_enable(ctx->reg_en);
-> +		if (ret)
-> +			dev_err(&pdev->dev,
-> +				"Failed to enable fan supply: %d\n", ret);
-> +	} else {
-> +		switch (PTR_ERR(ctx->reg_en)) {
-> +		case -ENODEV:
-> +		case -ENOSYS:
+Rest looks fine.
 
-Does devm_regulator_get_optional() ever return -ENOSYS ?
-I glanced through other calls to devm_regulator_get_optional(),
-but I don't see that check anywhere.
-
-> +			ctx->reg_en = NULL;
-> +			break;
-> +		default:
-> +			return PTR_ERR(ctx->reg_en);
-> +		}
-
-This is inconsistent. Provided regulators which fail to enable are
-accepted, albeit with an error message, while unexpected errors from
-devm_regulator_get_optional() result in a bailout. Please be consistent.
-
-> +	}
-> +
->  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
->  						       ctx, pwm_fan_groups);
->  	if (IS_ERR(hwmon)) {
-> @@ -287,6 +306,10 @@ static int pwm_fan_remove(struct platform_device *pdev)
->  	thermal_cooling_device_unregister(ctx->cdev);
->  	if (ctx->pwm_value)
->  		pwm_disable(ctx->pwm);
-> +
-> +	if (ctx->reg_en)
-> +		regulator_disable(ctx->reg_en);
-
-As written, this is also called after regulator_enable() failed.
-Same below.
-
-> +
->  	return 0;
->  }
->  
-> @@ -299,6 +322,12 @@ static int pwm_fan_suspend(struct device *dev)
->  
->  	pwm_get_args(ctx->pwm, &args);
->  
-> +	if (ctx->reg_en) {
-> +		ret = regulator_disable(ctx->reg_en);
-> +		if (ret)
-> +			dev_err(dev, "Failed to disable fan supply: %d\n", ret);
-> +	}
-> +
->  	if (ctx->pwm_value) {
->  		ret = pwm_config(ctx->pwm, 0, args.period);
->  		if (ret < 0)
-> @@ -317,6 +346,12 @@ static int pwm_fan_resume(struct device *dev)
->  	unsigned long duty;
->  	int ret;
->  
-> +	if (ctx->reg_en) {
-> +		ret = regulator_enable(ctx->reg_en);
-> +		if (ret)
-> +			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
-> +	}
-> +
->  	if (ctx->pwm_value == 0)
->  		return 0;
->  
+Suzuki
