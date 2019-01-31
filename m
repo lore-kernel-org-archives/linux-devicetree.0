@@ -1,57 +1,134 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCHv5 1/7] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Thu, 31 Jan 2019 18:46:38 +0530
-Message-ID: <6ba118d5-5b54-8b91-d003-3f56fae5b925@codeaurora.org>
-References: <cover.1548419933.git.saiprakash.ranjan@codeaurora.org>
- <60ebf1617f0285c89e921bf3839cba6906d493c9.1548419933.git.saiprakash.ranjan@codeaurora.org>
- <20190130183723.GA19234@xps15>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] dt-bindings: gpu: add bindings for the ARM Mali Bifrost GPU
+Date: Thu, 31 Jan 2019 14:29:39 +0100
+Message-ID: <20190131132939.2263-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130183723.GA19234@xps15>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.or
+To: daniel@ffwll.ch
+Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/31/2019 12:07 AM, Mathieu Poirier wrote:
-> On Tue, Jan 29, 2019 at 12:43:58AM +0530, Sai Prakash Ranjan wrote:
->> Add coresight components found on Qualcomm SDM845 SoC.
->>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>
->> ---
->> Depends on AOSS QMP side channel patches and AMBA bus pclk change
->> by Bjorn Andersson [1][2].
->> Also depends on patch ("arm64: dts: qcom: sdm845: Increase address
->> and size cells for soc") [3].
->>
->> [1] https://lore.kernel.org/lkml/20190106080915.4493-1-bjorn.andersson@linaro.org/
->> [2] https://lore.kernel.org/lkml/20190106080915.4493-7-bjorn.andersson@linaro.org/
->> [3] https://lore.kernel.org/lkml/20190117042940.25487-2-bjorn.andersson@linaro.org/
-> 
-> This patch still doesn't compile for me.  In the above [1] is a cover letter and
-> [2] is a patch that is part of [1] - what do you want me to do?  Add all the
-> patches in [1]?  And how do those related to the dependencies you've listed in
-> the cover letter?
-> 
-> I can't continue reviewing your work until you provide me with a tree based on
-> coresight-next [3] with all the depencendies to get this set applied and
-> compiled.
-> 
+Add the bindings for the Bifrost family of ARM Mali GPUs.
 
-Hi Mathieu,
+The Bifrost GPU architecture is similar to the Midgard family,
+but with a different Shader Core & Execution Engine structures.
 
-Sorry to have wasted your time. There were many dependencies
-with some nesting and getting updated as well, so in the next version, I 
-will have my patches rebased on top of coresight-next and also I will
-give a tree based on the same with all dependencies applied.
+Bindings are based on the Midgard family bindings, but the inner
+architectural changes makes it a separate family needing separate
+bindings.
 
-Thanks,
-Sai
+The Bifrost GPUs are present in a number of recent SoCs, like the
+Amlogic G12A Family, and many other vendors.
+The Amlogic vendor specific compatible is added to handle the
+specific IP integration differences and dependencies.
 
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/gpu/arm,mali-bifrost.txt         | 94 +++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+new file mode 100644
+index 000000000000..a632f5136b08
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+@@ -0,0 +1,94 @@
++ARM Mali Bifrost GPU
++====================
++
++Required properties:
++
++- compatible :
++  * Must contain one of the following:
++    + "arm,mali-g71"
++    + "arm,mali-g51"
++    + "arm,mali-g72"
++    + "arm,mali-g76"
++  * which must be preceded by one of the following vendor specifics:
++    + "amlogic,meson-g12a-mali"
++
++- reg : Physical base address of the device and length of the register area.
++
++- interrupts : Contains the three IRQ lines required by Mali Bifrost devices.
++
++- interrupt-names : Contains the names of IRQ resources in the order they were
++  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
++
++
++Optional properties:
++
++- clocks : Phandle to clock for the Mali Bifrost device.
++
++- mali-supply : Phandle to regulator for the Mali device. Refer to
++  Documentation/devicetree/bindings/regulator/regulator.txt for details.
++
++- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
++  for details.
++
++- resets : Phandle of the GPU reset line.
++
++Vendor-specific bindings
++------------------------
++
++The Mali GPU is integrated very differently from one SoC to
++another. In order to accomodate those differences, you have the option
++to specify one more vendor-specific compatible, among:
++
++- "amlogic,meson-g12a-mali"
++  Required properties:
++  - resets : Should contain phandles of :
++    + GPU reset line
++    + GPU APB glue reset line
++
++Example for a Mali-G71:
++
++gpu@ffa30000 {
++	compatible = "amlogic,meson-g12a-mali", "arm,mali-g71";
++	reg = <0xffe40000 0x10000>;
++	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "job", "mmu", "gpu";
++	clocks = <&clk CLKID_MALI>;
++	mali-supply = <&vdd_gpu>;
++	operating-points-v2 = <&gpu_opp_table>;
++	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
++};
++
++gpu_opp_table: opp_table0 {
++	compatible = "operating-points-v2";
++
++	opp@533000000 {
++		opp-hz = /bits/ 64 <533000000>;
++		opp-microvolt = <1250000>;
++	};
++	opp@450000000 {
++		opp-hz = /bits/ 64 <450000000>;
++		opp-microvolt = <1150000>;
++	};
++	opp@400000000 {
++		opp-hz = /bits/ 64 <400000000>;
++		opp-microvolt = <1125000>;
++	};
++	opp@350000000 {
++		opp-hz = /bits/ 64 <350000000>;
++		opp-microvolt = <1075000>;
++	};
++	opp@266000000 {
++		opp-hz = /bits/ 64 <266000000>;
++		opp-microvolt = <1025000>;
++	};
++	opp@160000000 {
++		opp-hz = /bits/ 64 <160000000>;
++		opp-microvolt = <925000>;
++	};
++	opp@100000000 {
++		opp-hz = /bits/ 64 <100000000>;
++		opp-microvolt = <912500>;
++	};
++};
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.20.1
