@@ -1,36 +1,42 @@
 From: David Miller <davem@davemloft.net>
 Subject: Re: [PATCH 0/9] Add ENETC PTP clock driver
-Date: Fri, 01 Feb 2019 15:17:02 -0800 (PST)
-Message-ID: <20190201.151702.1371937989366446994.davem@davemloft.net>
+Date: Fri, 01 Feb 2019 15:23:06 -0800 (PST)
+Message-ID: <20190201.152306.2005700588823816930.davem@davemloft.net>
 References: <20190131023310.9563-1-yangbo.lu@nxp.com>
+        <20190201.151702.1371937989366446994.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190131023310.9563-1-yangbo.lu@nxp.com>
+In-Reply-To: <20190201.151702.1371937989366446994.davem@davemloft.net>
 Sender: netdev-owner@vger.kernel.org
 To: yangbo.lu@nxp.com
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, richardcochran@gmail.com, robh+dt@kernel.org, claudiu.manoil@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Date: Thu, 31 Jan 2019 10:33:01 +0800
-
-> There is same QorIQ 1588 timer IP block on the new ENETC Ethernet
-> controller with eTSEC/DPAA Ethernet controllers. However it's
-> different endianness (little-endian) and using PCI driver.
-> 
-> To support ENETC PTP driver, ptp_qoriq driver needed to be
-> reworked to make functions global for reusing, to add little-
-> endian support, to add ENETC memory map support, and to add
-> ENETC dependency for ptp_qoriq driver.
-> 
-> In addition, although ENETC PTP driver is a PCI driver, the dts
-> node still could be used. Currently the ls1028a dtsi which is
-> the only platform by now using ENETC is not complete, so there
-> is still dependency for ENETC PTP node upstreaming. This will
-> be done in the near future. The hardware timestamping support
-> for ENETC is done but needs to be reworked with new method in
-> internal git tree, and will be sent out soon.
-
-Series applied to net-next, thanks.
+RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogRnJpLCAwMSBG
+ZWIgMjAxOSAxNToxNzowMiAtMDgwMCAoUFNUKQ0KDQo+IEZyb206IFlhbmdibyBMdSA8eWFuZ2Jv
+Lmx1QG54cC5jb20+DQo+IERhdGU6IFRodSwgMzEgSmFuIDIwMTkgMTA6MzM6MDEgKzA4MDANCj4g
+DQo+PiBUaGVyZSBpcyBzYW1lIFFvcklRIDE1ODggdGltZXIgSVAgYmxvY2sgb24gdGhlIG5ldyBF
+TkVUQyBFdGhlcm5ldA0KPj4gY29udHJvbGxlciB3aXRoIGVUU0VDL0RQQUEgRXRoZXJuZXQgY29u
+dHJvbGxlcnMuIEhvd2V2ZXIgaXQncw0KPj4gZGlmZmVyZW50IGVuZGlhbm5lc3MgKGxpdHRsZS1l
+bmRpYW4pIGFuZCB1c2luZyBQQ0kgZHJpdmVyLg0KPj4gDQo+PiBUbyBzdXBwb3J0IEVORVRDIFBU
+UCBkcml2ZXIsIHB0cF9xb3JpcSBkcml2ZXIgbmVlZGVkIHRvIGJlDQo+PiByZXdvcmtlZCB0byBt
+YWtlIGZ1bmN0aW9ucyBnbG9iYWwgZm9yIHJldXNpbmcsIHRvIGFkZCBsaXR0bGUtDQo+PiBlbmRp
+YW4gc3VwcG9ydCwgdG8gYWRkIEVORVRDIG1lbW9yeSBtYXAgc3VwcG9ydCwgYW5kIHRvIGFkZA0K
+Pj4gRU5FVEMgZGVwZW5kZW5jeSBmb3IgcHRwX3FvcmlxIGRyaXZlci4NCj4+IA0KPj4gSW4gYWRk
+aXRpb24sIGFsdGhvdWdoIEVORVRDIFBUUCBkcml2ZXIgaXMgYSBQQ0kgZHJpdmVyLCB0aGUgZHRz
+DQo+PiBub2RlIHN0aWxsIGNvdWxkIGJlIHVzZWQuIEN1cnJlbnRseSB0aGUgbHMxMDI4YSBkdHNp
+IHdoaWNoIGlzDQo+PiB0aGUgb25seSBwbGF0Zm9ybSBieSBub3cgdXNpbmcgRU5FVEMgaXMgbm90
+IGNvbXBsZXRlLCBzbyB0aGVyZQ0KPj4gaXMgc3RpbGwgZGVwZW5kZW5jeSBmb3IgRU5FVEMgUFRQ
+IG5vZGUgdXBzdHJlYW1pbmcuIFRoaXMgd2lsbA0KPj4gYmUgZG9uZSBpbiB0aGUgbmVhciBmdXR1
+cmUuIFRoZSBoYXJkd2FyZSB0aW1lc3RhbXBpbmcgc3VwcG9ydA0KPj4gZm9yIEVORVRDIGlzIGRv
+bmUgYnV0IG5lZWRzIHRvIGJlIHJld29ya2VkIHdpdGggbmV3IG1ldGhvZCBpbg0KPj4gaW50ZXJu
+YWwgZ2l0IHRyZWUsIGFuZCB3aWxsIGJlIHNlbnQgb3V0IHNvb24uDQo+IA0KPiBTZXJpZXMgYXBw
+bGllZCB0byBuZXQtbmV4dCwgdGhhbmtzLg0KDQpBY3R1YWxseSwgSSBoYWQgdG8gcmV2ZXJ0LCB0
+aGlzIGJyZWFrcyB0aGUgYnVpbGQ6DQoNCmRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9n
+aWFuZmFyX2V0aHRvb2wuYzogSW4gZnVuY3Rpb24goWdmYXJfZ2V0X3RzX2luZm+iOg0KZHJpdmVy
+cy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2dpYW5mYXJfZXRodG9vbC5jOjE1MTM6MjQ6IGVycm9y
+OiBkZXJlZmVyZW5jaW5nIHBvaW50ZXIgdG8gaW5jb21wbGV0ZSB0eXBlIKFzdHJ1Y3QgcW9yaXFf
+cHRwog0KICAgaW5mby0+cGhjX2luZGV4ID0gcHRwLT5waGNfaW5kZXg7DQogICAgICAgICAgICAg
+ICAgICAgICAgICBefg0K
