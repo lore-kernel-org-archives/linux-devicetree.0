@@ -1,112 +1,236 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: iio: chemical: pms7003: add device
- tree support
-Date: Fri, 1 Feb 2019 10:12:31 +0100
-Message-ID: <20190201091231.GZ3691@localhost>
-References: <20190127181916.19948-1-tduszyns@gmail.com>
- <20190127181916.19948-4-tduszyns@gmail.com>
- <20190128075819.GK3691@localhost>
- <20190128184332.GA25627@arch>
- <20190130091254.GN3691@localhost>
- <20190131204000.GA14750@arch>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 2/8] clk: samsung: add new clocks for DMC for
+ Exynos5422 SoC
+Date: Fri, 1 Feb 2019 18:20:05 +0900
+Message-ID: <45e61b41-3be1-2090-6ab0-4d1743d0913c@samsung.com>
+References: <1548924594-19084-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190131085006eucas1p1ca478545c107086d427909c88d3b232e@eucas1p1.samsung.com>
+        <1548924594-19084-3-git-send-email-l.luba@partner.samsung.com>
+        <768b4147-35fb-64ad-5da8-6b348e962c70@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190131204000.GA14750@arch>
+In-Reply-To: <768b4147-35fb-64ad-5da8-6b348e962c70@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Duszynski <tduszyns@gmail.com>
-Cc: Johan Hovold <johan@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, jic23@jic23.retrosnub.co.uk
+To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2019 at 09:40:04PM +0100, Tomasz Duszynski wrote:
-> On Wed, Jan 30, 2019 at 10:12:54AM +0100, Johan Hovold wrote:
-> > On Mon, Jan 28, 2019 at 07:43:33PM +0100, Tomasz Duszynski wrote:
-> > > On Mon, Jan 28, 2019 at 08:58:19AM +0100, Johan Hovold wrote:
-> > > > On Sun, Jan 27, 2019 at 07:19:16PM +0100, Tomasz Duszynski wrote:
-> > > > > Add device tree support for Plantower PMS7003 particulate matter sensor.
-> > > > >
-> > > > > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> > > > > ---
-> > > > >  .../iio/chemical/plantower,pms7003.txt        | 19 +++++++++++++++++++
-> > > > >  1 file changed, 19 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > > > > new file mode 100644
-> > > > > index 000000000000..e4c7f2fb1e30
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > > > > @@ -0,0 +1,19 @@
-> > > > > +* Plantower PMS7003 particulate matter sensor
-> > > > > +
-> > > > > +Required properties:
-> > > > > +- compatible: must be "plantower,pms7003"
-> > > > > +
-> > > > > +Optional properties:
-> > > > > +- vcc-supply: phandle to the regulator that provides power to the sensor
-> > > >
-> > > > Shouldn't this one be a required property?
-> > > >
-> > >
-> > > Driver does not use regulator framework hence to me this property fits
-> > > here better.
-> >
-> > The device tree describes hardware, not any particular driver.
-> >
-> > That said, there is a bit of an on-going debate on whether mandatory
-> > supplies (from a hardware perspective) should always be represented in
-> > device tree or not.
-> >
-> > 	https://lore.kernel.org/lkml/20181123133126.GF2089@sirena.org.uk/T/#u
-> >         https://lore.kernel.org/lkml/20180409102244.GB11532@sirena.org.uk/T/#u
-> > 	https://lore.kernel.org/lkml/20180425171123.xhyoay3nu463btoq@rob-hp-laptop/T/#u
-> >
+Hi,
+
+There are some wrong comments by me. Sorry for confusion.
+
+On 19. 2. 1. 오후 5:07, Chanwoo Choi wrote:
+> Hi,
 > 
-> Even after going through this threads I am still unconvinced that
-> vcc-supply should be a requirement. Making this a mandatory property
-> would automatically imply using *_regulator_get() in a driver code
-> (on condition one is adding regulator support). In case there
-> isn't any physically connected we end up with a dummy one and a warning.
-
-How would the device work at all without a physical vcc supply?
-
-> Is it how this should work?
-
-As Mark mentioned in the threads above, you could add a fixed,
-always-on regulator for cases where the device is always powered.
-
-Boards failing to describe this supply would still work on Linux, but
-would end up with a dummy regulator and a warning.
-
-> > > > > +- set-gpios: phandle to the GPIO connected to the SET line
-> > > > > +- reset-gpios: phandle to the GPIO connected to the RESET line
-> > > > > +
-> > > > > +Refer to serial/slave-device.txt for generic serial attached device bindings.
-> > > > > +
-> > > > > +Example:
-> > > > > +
-> > > > > +&uart0 {
-> > > > > +	pms7003 {
-> > > >
-> > > > The node name should be generic and reflect the functionality rather
-> > > > than model. Perhaps "pms" will do here.
-> > >
-> > > Agree, ideally we should have a generic dt name for this kind of sensors
-> > > (something like air-pollution-sensor perhaps?). But unfortunately there isn't
-> > > anything available now so I guess compatible part name should be okay
-> > > (besides this is the type of naming commonly used in other iio bindings).
-> >
-> > What's wrong with particulate matter sensor ("pms")?
-> >
-> > Seems like a better fix than any particular model name to me at least.
-> >
+> When I reviewed this patch, the almost changes are wrong.
+> Frankly, I can't believe that you had tested and verified it
+> on real board. Please check my comments.
+> If I misunderstood, please let me know.
 > 
-> Personally I would vote for a more descriptive node name, for example:
-> particulate-matter-sensor or air-pollution-sensor or other name
-> which clearly shows what device we are dealing with.
+> On 19. 1. 31. 오후 5:49, Lukasz Luba wrote:
+>> This patch provides support for clocks needed for Dynamic Memory Controller
+>> in Exynos5422 SoC. It adds CDREX base register addresses, new DIV, MUX and
+>> GATE entries.
+>>
+>> CC: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> CC: Chanwoo Choi <cw00.choi@samsung.com>
+>> CC: Michael Turquette <mturquette@baylibre.com>
+>> CC: Stephen Boyd <sboyd@kernel.org>
+>> CC: Kukjin Kim <kgene@kernel.org>
+>> CC: Krzysztof Kozlowski <krzk@kernel.org>
+>> CC: linux-samsung-soc@vger.kernel.org
+>> CC: linux-clk@vger.kernel.org
+>> CC: linux-arm-kernel@lists.infradead.org
+>> CC: linux-kernel@vger.kernel.org
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>  drivers/clk/samsung/clk-exynos5420.c | 48 +++++++++++++++++++++++++++++++++---
+>>  1 file changed, 44 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+>> index 34cce3c..3e87421 100644
+>> --- a/drivers/clk/samsung/clk-exynos5420.c
+>> +++ b/drivers/clk/samsung/clk-exynos5420.c
+>> @@ -132,6 +132,8 @@
+>>  #define BPLL_LOCK		0x20010
+>>  #define BPLL_CON0		0x20110
+>>  #define SRC_CDREX		0x20200
+>> +#define GATE_BUS_CDREX0		0x20700
+>> +#define GATE_BUS_CDREX1		0x20704
+>>  #define DIV_CDREX0		0x20500
+>>  #define DIV_CDREX1		0x20504
+>>  #define KPLL_LOCK		0x28000
+>> @@ -248,6 +250,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
+>>  	DIV_CDREX1,
+>>  	SRC_KFC,
+>>  	DIV_KFC0,
+>> +	GATE_BUS_CDREX0,
+>> +	GATE_BUS_CDREX1,
+>>  };
+>>  
+>>  static const unsigned long exynos5800_clk_regs[] __initconst = {
+>> @@ -425,6 +429,10 @@ PNAME(mout_group13_5800_p)	= { "dout_osc_div", "mout_sw_aclkfl1_550_cam" };
+>>  PNAME(mout_group14_5800_p)	= { "dout_aclk550_cam", "dout_sclk_sw" };
+>>  PNAME(mout_group15_5800_p)	= { "dout_osc_div", "mout_sw_aclk550_cam" };
+>>  PNAME(mout_group16_5800_p)	= { "dout_osc_div", "mout_mau_epll_clk" };
+>> +PNAME(mout_mx_mspll_ccore_phy_p) = { "sclk_bpll", "mout_dpll_ctrl",
+>> +					"mout_mpll_ctrl", "ff_dout_spll2",
+>> +					"mout_sclk_spll"};
+> 
+> - mout_dpll_ctrl was not defined. This patch doesn't define it.
+> - mout_mpll_ctrl was not defined. ditto.
+> - ff_dout_spll2 was only registered when SOC is EXYNOS5800.
+>   It meant that ff_dout_spll2 was not registered on exynos5422 board.
+> 
+> It is wrong patch. You would have not checked the parent clocks
+> except for sclk_bpll.
+> 
+> Also,
+> In the exynos5422 datasheet, MUX_MX_MSPLL_CCORE_PHY_SEL is possible
+> having the six parents as following:
+> - sclk_bpll
+> - sclk_dpll
+> - sclk_mpll
+> - sclk_spll2
+> - sclk_spll
+> - sclk_epll
+> 
+> Why do you missing last 'sclk_epll'?
+> 
+> 
+>> +
+>>  
+>>  /* fixed rate clocks generated outside the soc */
+>>  static struct samsung_fixed_rate_clock
+>> @@ -450,7 +458,7 @@ static const struct samsung_fixed_factor_clock
+>>  static const struct samsung_fixed_factor_clock
+>>  		exynos5800_fixed_factor_clks[] __initconst = {
+>>  	FFACTOR(0, "ff_dout_epll2", "mout_sclk_epll", 1, 2, 0),
+>> -	FFACTOR(0, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
+>> +	FFACTOR(CLK_FF_DOUT_SPLL2, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
+> 
+> It doesn't affect the Exynos5422 because exynos5800_fixed_factor_clks[]
+> is registered when SOC is EXYNOS5800. Exynos5422 board cannot use this clock.
 
-Spelling it out seems preferable, yes. You know the domain better than
-I do; I only suggest you come up with a generic node name.
+It is my fault. Please ignore this comment.
 
-Johan
+> 
+>>  };
+>>  
+>>  static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
+>> @@ -472,11 +480,14 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
+>>  	MUX(0, "mout_aclk300_disp1", mout_group5_5800_p, SRC_TOP2, 24, 2),
+>>  	MUX(0, "mout_aclk300_gscl", mout_group5_5800_p, SRC_TOP2, 28, 2),
+>>  
+>> +	MUX(CLK_MOUT_MX_MSPLL_CCORE_PHY, "mout_mx_mspll_ccore_phy",
+>> +		mout_mx_mspll_ccore_phy_p, SRC_TOP7, 0, 3),
+>> +
+> 
+> Why do you modify the exynos5800_mux_clks instead of exynos5420_mux_clks
+> or exynos5x_mux_clks? In the coverletter this patch is for Exynos5422 board.
+> Did you test it?
+
+It is my fault. Please ignore this comment.
+
+> 
+>>  	MUX(CLK_MOUT_MX_MSPLL_CCORE, "mout_mx_mspll_ccore",
+>> -			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 2),
+>> +			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 3),
+> 
+> ditto.
+
+It is my fault. Please ignore this comment.
+
+> 
+>>  	MUX_F(CLK_MOUT_MAU_EPLL, "mout_mau_epll_clk", mout_mau_epll_clk_5800_p,
+>>  			SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
+>> -	MUX(0, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
+>> +	MUX(CLK_SCLK_BPLL, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
+> 
+> ditto.
+
+It is my fault. Please ignore this comment.
+
+> 
+>>  	MUX(0, "mout_epll2", mout_epll2_5800_p, SRC_TOP7, 28, 1),
+>>  
+>>  	MUX(0, "mout_aclk550_cam", mout_group3_5800_p, SRC_TOP8, 16, 3),
+>> @@ -648,7 +659,7 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
+>>  
+>>  	MUX(0, "mout_sclk_mpll", mout_mpll_p, SRC_TOP6, 0, 1),
+>>  	MUX(CLK_MOUT_VPLL, "mout_sclk_vpll", mout_vpll_p, SRC_TOP6, 4, 1),
+>> -	MUX(0, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
+>> +	MUX(CLK_MOUT_SCLK_SPLL, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
+>>  	MUX(0, "mout_sclk_ipll", mout_ipll_p, SRC_TOP6, 12, 1),
+>>  	MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
+>>  	MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
+>> @@ -814,9 +825,13 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
+>>  			DIV_CDREX0, 16, 3),
+>>  	DIV(CLK_DOUT_CCLK_DREX0, "dout_cclk_drex0", "dout_clk2x_phy0",
+>>  			DIV_CDREX0, 8, 3),
+>> +	DIV(0, "dout_cclk_drex1", "dout_clk2x_phy0", DIV_CDREX0, 8, 3),
+> 
+> Hmm. CLK_DIV_CDREX0[10:8] of DIV_CDREX0 register was already implemented
+> by CLK_DOUT_CCLK_DREX0. It is fault.
+> 
+> Also, PCLK_CORE_MEM_RATIO[10:8] of DIV_CDREX1 register was defined as following
+> in clock-exynos5420.c.
+> - DIV(CLK_DOUT_PCLK_CORE_MEM, "dout_pclk_core_mem", "mout_mclk_cdrex", DIV_CDREX1, 8, 3), 
+> 
+> 
+>>  	DIV(CLK_DOUT_CLK2X_PHY0, "dout_clk2x_phy0", "dout_sclk_cdrex",
+>>  			DIV_CDREX0, 3, 5),
+>>  
+>> +	DIV(0, "dout_pclk_drex0", "dout_cclk_drex0", DIV_CDREX0, 28, 3),
+>> +	DIV(0, "dout_pclk_drex1", "dout_cclk_drex1", DIV_CDREX0, 28, 3),
+> 
+> dout_cclk_drex1 is wrong. It is fault.
+> 
+>> +
+>>  	DIV(CLK_DOUT_PCLK_CORE_MEM, "dout_pclk_core_mem", "mout_mclk_cdrex",
+>>  			DIV_CDREX1, 8, 3),
+>>  
+>> @@ -1170,6 +1185,31 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+>>  			GATE_TOP_SCLK_ISP, 12, CLK_SET_RATE_PARENT, 0),
+>>  
+>>  	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
+>> +
+>> +	GATE(CLK_CLKM_PHY0, "clkm_phy0", "dout_sclk_cdrex",
+>> +			GATE_BUS_CDREX0, 0, 0, 0),
+>> +	GATE(CLK_CLKM_PHY1, "clkm_phy1", "dout_sclk_cdrex",
+>> +			GATE_BUS_CDREX0, 1, 0, 0),
+>> +	GATE(0, "mx_mspll_ccore_phy", "mout_mx_mspll_ccore_phy",
+>> +			SRC_MASK_TOP7, 0, CLK_IGNORE_UNUSED, 0),
+>> +
+>> +	GATE(CLK_ACLK_PPMU_DREX0_0, "aclk_ppmu_drex0_0", "dout_aclk_cdrex1",
+>> +			GATE_BUS_CDREX1, 15, CLK_IGNORE_UNUSED, 0),
+>> +	GATE(CLK_ACLK_PPMU_DREX0_1, "aclk_ppmu_drex0_1", "dout_aclk_cdrex1",
+>> +			GATE_BUS_CDREX1, 14, CLK_IGNORE_UNUSED, 0),
+>> +	GATE(CLK_ACLK_PPMU_DREX1_0, "aclk_ppmu_drex1_0", "dout_aclk_cdrex1",
+>> +			GATE_BUS_CDREX1, 13, CLK_IGNORE_UNUSED, 0),
+>> +	GATE(CLK_ACLK_PPMU_DREX1_1, "aclk_ppmu_drex1_1", "dout_aclk_cdrex1",
+>> +			GATE_BUS_CDREX1, 12, CLK_IGNORE_UNUSED, 0),
+>> +
+>> +	GATE(CLK_PCLK_PPMU_DREX0_0, "pclk_ppmu_drex0_0", "dout_pclk_cdrex",
+>> +			GATE_BUS_CDREX1, 29, CLK_IGNORE_UNUSED, 0),
+>> +	GATE(CLK_PCLK_PPMU_DREX0_1, "pclk_ppmu_drex0_1", "dout_pclk_cdrex",
+>> +			GATE_BUS_CDREX1, 28, CLK_IGNORE_UNUSED, 0),
+>> +	GATE(CLK_PCLK_PPMU_DREX1_0, "pclk_ppmu_drex1_0", "dout_pclk_cdrex",
+>> +			GATE_BUS_CDREX1, 27, CLK_IGNORE_UNUSED, 0),
+>> +	GATE(CLK_PCLK_PPMU_DREX1_1, "pclk_ppmu_drex1_1", "dout_pclk_cdrex",
+>> +			GATE_BUS_CDREX1, 26, CLK_IGNORE_UNUSED, 0),
+>>  };
+>>  
+>>  static const struct samsung_div_clock exynos5x_disp_div_clks[] __initconst = {
+>>
+> 
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
