@@ -1,240 +1,79 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 09/11] leds: max77650: add LEDs support
-Date: Fri, 1 Feb 2019 14:14:46 -0600
-Message-ID: <d86adc21-627f-0350-72e0-f6f10b023413@ti.com>
-References: <20190201094736.32057-1-brgl@bgdev.pl>
- <20190201094736.32057-10-brgl@bgdev.pl>
- <78b99abb-f367-1533-0690-8da26957a664@gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 2/2] drm/panel: Add driver for Samsung S6E63M0 panel
+Date: Fri, 1 Feb 2019 22:36:07 +0100
+Message-ID: <20190201213607.GA27951@ravnborg.org>
+References: <20190201172852.4944-1-pawel.mikolaj.chmiel@gmail.com>
+ <20190201172852.4944-2-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <78b99abb-f367-1533-0690-8da26957a664@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190201172852.4944-2-pawel.mikolaj.chmiel@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-On 2/1/19 1:45 PM, Jacek Anaszewski wrote:
-> Hi Bartosz,
-> 
-> Thanks for the update.
-> 
-> On 2/1/19 10:47 AM, Bartosz Golaszewski wrote:
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> This adds basic support for LEDs for the max77650 PMIC. The device has
->> three current sinks for driving LEDs.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->> ---
->>   drivers/leds/Kconfig         |   6 ++
->>   drivers/leds/Makefile        |   1 +
->>   drivers/leds/leds-max77650.c | 147 +++++++++++++++++++++++++++++++++++
->>   3 files changed, 154 insertions(+)
->>   create mode 100644 drivers/leds/leds-max77650.c
->>
->> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->> index a72f97fca57b..6e7a8f51eccc 100644
->> --- a/drivers/leds/Kconfig
->> +++ b/drivers/leds/Kconfig
->> @@ -608,6 +608,12 @@ config LEDS_TLC591XX
->>         This option enables support for Texas Instruments TLC59108
->>         and TLC59116 LED controllers.
->>   +config LEDS_MAX77650
->> +    tristate "LED support for Maxim MAX77650 PMIC"
->> +    depends on MFD_MAX77650
->> +    help
->> +      LEDs driver for MAX77650 family of PMICs from Maxim Integrated."
->> +
->>   config LEDS_MAX77693
->>       tristate "LED support for MAX77693 Flash"
->>       depends on LEDS_CLASS_FLASH
->> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
->> index 4c1b0054f379..f48b2404dbb7 100644
->> --- a/drivers/leds/Makefile
->> +++ b/drivers/leds/Makefile
->> @@ -61,6 +61,7 @@ obj-$(CONFIG_LEDS_MC13783)        += leds-mc13783.o
->>   obj-$(CONFIG_LEDS_NS2)            += leds-ns2.o
->>   obj-$(CONFIG_LEDS_NETXBIG)        += leds-netxbig.o
->>   obj-$(CONFIG_LEDS_ASIC3)        += leds-asic3.o
->> +obj-$(CONFIG_LEDS_MAX77650)        += leds-max77650.o
->>   obj-$(CONFIG_LEDS_MAX77693)        += leds-max77693.o
->>   obj-$(CONFIG_LEDS_MAX8997)        += leds-max8997.o
->>   obj-$(CONFIG_LEDS_LM355x)        += leds-lm355x.o
->> diff --git a/drivers/leds/leds-max77650.c b/drivers/leds/leds-max77650.c
->> new file mode 100644
->> index 000000000000..6b74ce9cac12
->> --- /dev/null
->> +++ b/drivers/leds/leds-max77650.c
->> @@ -0,0 +1,147 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +//
->> +// Copyright (C) 2018 BayLibre SAS
->> +// Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->> +//
->> +// LED driver for MAXIM 77650/77651 charger/power-supply.
->> +
->> +#include <linux/i2c.h>
->> +#include <linux/leds.h>
->> +#include <linux/mfd/max77650.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +
->> +#define MAX77650_LED_NUM_LEDS        3
->> +
->> +#define MAX77650_LED_A_BASE        0x40
->> +#define MAX77650_LED_B_BASE        0x43
->> +
->> +#define MAX77650_LED_BR_MASK        GENMASK(4, 0)
->> +#define MAX77650_LED_EN_MASK        GENMASK(7, 6)
->> +
->> +#define MAX77650_LED_MAX_BRIGHTNESS    MAX77650_LED_BR_MASK
->> +
->> +/* Enable EN_LED_MSTR. */
->> +#define MAX77650_LED_TOP_DEFAULT    BIT(0)
->> +
->> +#define MAX77650_LED_ENABLE        GENMASK(7, 6)
->> +#define MAX77650_LED_DISABLE        0x00
->> +
->> +#define MAX77650_LED_A_DEFAULT        MAX77650_LED_DISABLE
->> +/* 100% on duty */
->> +#define MAX77650_LED_B_DEFAULT        GENMASK(3, 0)
->> +
->> +struct max77650_led {
->> +    struct led_classdev cdev;
->> +    struct regmap *map;
->> +    unsigned int regA;
->> +    unsigned int regB;
-
-Please don't use camel case.
-
->> +};
->> +
->> +static struct max77650_led *max77650_to_led(struct led_classdev *cdev)
->> +{
->> +    return container_of(cdev, struct max77650_led, cdev);
->> +}
->> +
->> +static int max77650_led_brightness_set(struct led_classdev *cdev,
->> +                       enum led_brightness brightness)
->> +{
->> +    struct max77650_led *led = max77650_to_led(cdev);
->> +    int val, mask;
->> +
-
-The register value and bits are only 8 bit why an int?
-
->> +    mask = MAX77650_LED_BR_MASK | MAX77650_LED_EN_MASK;
->> +
->> +    if (brightness == LED_OFF)
->> +        val = MAX77650_LED_DISABLE;
->> +    else
->> +        val = MAX77650_LED_ENABLE | brightness;
->> +
->> +    return regmap_update_bits(led->map, led->regA, mask, val);
->> +}
->> +
->> +static int max77650_led_probe(struct platform_device *pdev)
->> +{
->> +    struct device_node *of_node, *child;
->> +    struct max77650_led *leds, *led;
->> +    struct device *parent;
->> +    struct device *dev;
->> +    struct regmap *map;
->> +    const char *label;
->> +    int rv, num_leds;
->> +    u32 reg;
->> +
->> +    dev = &pdev->dev;
->> +    parent = dev->parent;
->> +    of_node = dev->of_node;
->> +
->> +    if (!of_node)
->> +        return -ENODEV;
->> +
->> +    leds = devm_kcalloc(dev, sizeof(*leds),
->> +                MAX77650_LED_NUM_LEDS, GFP_KERNEL);
->> +    if (!leds)
->> +        return -ENOMEM;
->> +
->> +    map = dev_get_regmap(dev->parent, NULL);
->> +    if (!map)
->> +        return -ENODEV;
->> +
->> +    num_leds = of_get_child_count(of_node);
->> +    if (!num_leds || num_leds > MAX77650_LED_NUM_LEDS)
->> +        return -ENODEV;
->> +
->> +    for_each_child_of_node(of_node, child) {
->> +        rv = of_property_read_u32(child, "reg", &reg);
-
-Can we use the fwnode_property_read_u32 call here?
-And the same for all below as well?
-
-
->> +        if (rv || reg >= MAX77650_LED_NUM_LEDS)
->> +            return -EINVAL;
->> +
->> +        led = &leds[reg];
->> +        led->map = map;
->> +        led->regA = MAX77650_LED_A_BASE + reg;
->> +        led->regB = MAX77650_LED_B_BASE + reg;
->> +        led->cdev.brightness_set_blocking = max77650_led_brightness_set;
->> +        led->cdev.max_brightness = MAX77650_LED_MAX_BRIGHTNESS;
->> +
->> +        label = of_get_property(child, "label", NULL);
->> +        if (!label) {
->> +            led->cdev.name = "max77650::";
->> +        } else {
->> +            led->cdev.name = devm_kasprintf(dev, GFP_KERNEL,
->> +                            "max77650:%s", label);
->> +            if (!led->cdev.name)
->> +                return -ENOMEM;
->> +        }
->> +
->> +        of_property_read_string(child, "linux,default-trigger",
->> +                    &led->cdev.default_trigger);
->> +
->> +        rv = devm_of_led_classdev_register(dev, child, &led->cdev);
->> +        if (rv)
->> +            return rv;
->> +
->> +        rv = regmap_write(map, led->regA, MAX77650_LED_A_DEFAULT);
->> +        if (rv)
->> +            return rv;
->> +
->> +        rv = regmap_write(map, led->regB, MAX77650_LED_B_DEFAULT);
->> +        if (rv)
->> +            return rv;
->> +    }
->> +
->> +    return regmap_write(map,
->> +                MAX77650_REG_CNFG_LED_TOP,
->> +                MAX77650_LED_TOP_DEFAULT);
->> +}
->> +
->> +static struct platform_driver max77650_led_driver = {
->> +    .driver = {
->> +        .name = "max77650-led",
->> +    },
->> +    .probe = max77650_led_probe,
->> +};
->> +module_platform_driver(max77650_led_driver);
->> +
->> +MODULE_DESCRIPTION("MAXIM 77650/77651 LED driver");
->> +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
->> +MODULE_LICENSE("GPL v2");
->>
-> 
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> 
-
-
--- 
-------------------
-Dan Murphy
+SGkgUGF3ZcWCCgpMb29rcyBnb29kLCB0aGFua3MgZm9yIGFkZHJlc3NpbmcgYWxsIHRoZSByZXZp
+ZXcgZmVlZGJhY2suCgpPbiBGcmksIEZlYiAwMSwgMjAxOSBhdCAwNjoyODo1MlBNICswMTAwLCBQ
+YXdlxYIgQ2htaWVsIHdyb3RlOgo+IFRoaXMgcGF0Y2ggYWRkcyBTYW1zdW5nIFM2RTYzTTAgQU1P
+TEVEIExDRCBwYW5lbCBkcml2ZXIsIGNvbm5lY3RlZCBvdmVyCj4gc3BpLiBJdCdzIGJhc2VkIG9u
+IGFscmVhZHkgcmVtb3ZlZCwgbm9uIGR0IHM2ZTYzbTAgZHJpdmVyIGFuZAo+IHBhbmVsLXNhbXN1
+bmctbGQ5MDQwLiBJdCBjYW4gYmUgZm91bmQgZm9yIGV4YW1wbGUgaW4gc29tZSBvZiBTYW1zdW5n
+Cj4gQXJpZXMgYmFzZWQgcGhvbmVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBhd2XFgiBDaG1pZWwg
+PHBhd2VsLm1pa29sYWouY2htaWVsQGdtYWlsLmNvbT4KSWYgeW91IGNvbnNpZGVyIChkbyBub3Qg
+Y2hhbmdlIHVubGVzcyB5b3UgdGhpbmsgaXQgYmV0dGVyKSB0aGUKZm9sbG93aW5nIG5pdHMgdGhh
+biB5b3UgY2FuIGFkZCBteToKClJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9y
+Zy5vcmc+CgoJU2FtCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZp
+ZyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCj4gaW5kZXggM2YzNTM3NzE5YmViLi5i
+ZTA1ZWQ1MjE4ZWIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcK
+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZwo+IEBAIC0xNTgsNiArMTU4LDEz
+IEBAIGNvbmZpZyBEUk1fUEFORUxfU0FNU1VOR19TNkU2M0owWDAzCj4gIAlkZXBlbmRzIG9uIEJB
+Q0tMSUdIVF9DTEFTU19ERVZJQ0UKPiAgCXNlbGVjdCBWSURFT01PREVfSEVMUEVSUwo+ICAKPiAr
+Y29uZmlnIERSTV9QQU5FTF9TQU1TVU5HX1M2RTYzTTAKPiArCXRyaXN0YXRlICJTYW1zdW5nIFM2
+RTYzTTAgUkdCL1NQSSBwYW5lbCIKPiArCWRlcGVuZHMgb24gT0YKPiArCWRlcGVuZHMgb24gU1BJ
+Cj4gKwlkZXBlbmRzIG9uIEJBQ0tMSUdIVF9DTEFTU19ERVZJQ0UKPiArCXNlbGVjdCBWSURFT01P
+REVfSEVMUEVSUwpXaXRoIHRoZSB1c2Ugb2YgZGlzcGxheV9tb2RlIHRoZSBhYm92ZSAic2VsZWN0
+IFZJREVPTU9ERV9IRUxQRVJTIgppcyBsaWtlbHkgbm8gbG9uZ2VyIHJlcXVpcmVkLiBQbGVhc2Ug
+Y2hlY2suCgpBIGhlbHAgdGV4dCB3b3VsZCBiZSBuaWNlLgoKPiArCj4gIGNvbmZpZyBEUk1fUEFO
+RUxfU0FNU1VOR19TNkU4QUEwCj4gIAl0cmlzdGF0ZSAiU2Ftc3VuZyBTNkU4QUEwIERTSSB2aWRl
+byBtb2RlIHBhbmVsIgo+ICAJZGVwZW5kcyBvbiBPRgoKCj4gKyNpbmNsdWRlIDx2aWRlby9vZl92
+aWRlb21vZGUuaD4KPiArI2luY2x1ZGUgPHZpZGVvL3ZpZGVvbW9kZS5oPgpQbGVhc2UgY2hlY2sg
+aWYgdGhlc2UgdHdvIGZpbGVzIGFyZSByZXF1aXJlZC4KCj4gK3N0cnVjdCBzNmU2M20wIHsKPiAr
+CXN0cnVjdCBkZXZpY2UgKmRldjsKPiArCXN0cnVjdCBkcm1fcGFuZWwgcGFuZWw7Cj4gKwlzdHJ1
+Y3QgYmFja2xpZ2h0X2RldmljZSAqYmxfZGV2Owo+ICsKPiArCXN0cnVjdCByZWd1bGF0b3JfYnVs
+a19kYXRhIHN1cHBsaWVzWzJdOwo+ICsJc3RydWN0IGdwaW9fZGVzYyAqcmVzZXRfZ3BpbzsKPiAr
+CXN0cnVjdCB2aWRlb21vZGUgdm07CnZtIGlzIG5vIGxvbmdlciB1c2VkIC0gZGVsZXRlIGl0LgoK
+PiArCj4gKwlib29sIHByZXBhcmVkOwo+ICsJYm9vbCBlbmFibGVkOwo+ICsKPiArCS8qCj4gKwkg
+KiBUaGlzIGZpZWxkIGlzIHRlc3RlZCBieSBmdW5jdGlvbnMgZGlyZWN0bHkgYWNjZXNzaW5nIGJ1
+cyBiZWZvcmUKPiArCSAqIHRyYW5zZmVyLCB0cmFuc2ZlciBpcyBza2lwcGVkIGlmIGl0IGlzIHNl
+dC4gSW4gY2FzZSBvZiB0cmFuc2Zlcgo+ICsJICogZmFpbHVyZSBvciB1bmV4cGVjdGVkIHJlc3Bv
+bnNlIHRoZSBmaWVsZCBpcyBzZXQgdG8gZXJyb3IgdmFsdWUuCj4gKwkgKiBTdWNoIGNvbnN0cnVj
+dCBhbGxvd3MgdG8gZWxpbWluYXRlIG1hbnkgY2hlY2tzIGluIGhpZ2hlciBsZXZlbAo+ICsJICog
+ZnVuY3Rpb25zLgo+ICsJICovCj4gKwlpbnQgZXJyb3I7Cj4gK307Cj4gKwoKPiArc3RhdGljIGlu
+dCBzNmU2M20wX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPiArewo+ICsJc3Ry
+dWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciA9IHBhbmVsLT5jb25uZWN0b3I7Cj4gKwlzdHJ1
+Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZTsKPiArCj4gKwltb2RlID0gZHJtX21vZGVfZHVwbGlj
+YXRlKHBhbmVsLT5kcm0sICZkZWZhdWx0X21vZGUpOwo+ICsJaWYgKCFtb2RlKSB7Cj4gKwkJRFJN
+X0VSUk9SKCJmYWlsZWQgdG8gYWRkIG1vZGUgJXV4JXV4QCV1XG4iLAo+ICsJCQkgIGRlZmF1bHRf
+bW9kZS5oZGlzcGxheSwgZGVmYXVsdF9tb2RlLnZkaXNwbGF5LAo+ICsJCQkgIGRlZmF1bHRfbW9k
+ZS52cmVmcmVzaCk7CkkgcmVjYWxsIEkgaGF2ZSBzZWVuIGEgZ2VuZXJpYyB3YXkgdG8gcHJpbnQg
+dGhlIGFib3ZlLApidXQgSSBoYXZlIGZhaWxlZCB0byBmaW5kIGl0LgpNYXliZSBpdCBpcyBqdXN0
+IG15IG1lbW9yeSB0aGF0IGZvb2xzIG1lLgoKVGhlIGFib3ZlIGlzIGZpbmUuCgo+ICsKPiArCXM2
+ZTYzbTBfYmFja2xpZ2h0X3JlZ2lzdGVyKGN0eCk7CgpJcyBpdCBjb3JyZWN0IHRoYXQgd2UgY29u
+dGludWUgZXZlbiBpZiB3ZSBmYWlsIHRvIHJlZ2lzdGVyIGJhY2tsaWdodD8KCgo+ICsKPiArCXJl
+dHVybiAwOwo+ICt9Cj4gKwo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+czZlNjNtMF9vZl9tYXRjaFtdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM2ZTYz
+bTAiIH0sCj4gKwl7IH0KCkFkZCAvKiBzZW50aW5lbCAqLyBjb21tZW50PwoKPiArfTsKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
