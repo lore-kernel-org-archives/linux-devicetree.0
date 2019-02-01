@@ -1,87 +1,224 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH v3 2/2] arm: dts: gta04: add gps support
-Date: Fri, 1 Feb 2019 20:06:30 +0100
-Message-ID: <20190201200630.2efc9eef@kemnade.info>
-References: <20190131180640.14480-1-andreas@kemnade.info>
-        <20190131180640.14480-3-andreas@kemnade.info>
-        <20190201100416.GD3691@localhost>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 09/11] leds: max77650: add LEDs support
+Date: Fri, 1 Feb 2019 20:45:57 +0100
+Message-ID: <78b99abb-f367-1533-0690-8da26957a664@gmail.com>
+References: <20190201094736.32057-1-brgl@bgdev.pl>
+ <20190201094736.32057-10-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/01NHARD8ceDsp1l45OdUP9y"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190201100416.GD3691@localhost>
+In-Reply-To: <20190201094736.32057-10-brgl@bgdev.pl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, tony@atomide.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/01NHARD8ceDsp1l45OdUP9y
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Bartosz,
 
-On Fri, 1 Feb 2019 11:04:16 +0100
-Johan Hovold <johan@kernel.org> wrote:
+Thanks for the update.
 
-> On Thu, Jan 31, 2019 at 07:06:40PM +0100, Andreas Kemnade wrote:
-> > The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
-> > which one is mounted so use the compatibility entry for w2sg0004
-> > for all which will work for both.
-> >=20
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > ---
-> > Changes in v3:
-> > - converted to a patchset
-> > - added vcc-supply
-> >=20
-> > Changes in v2:
-> > - some s/gps/gnss/
-> > - not added vcc-supply because the regulator is not modelled
-> >   in dts at all
-> >=20
-> > w2sg0004 bindings are in next-20190129
-> >=20
-> >  arch/arm/boot/dts/omap3-gta04.dtsi | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/oma=
-p3-gta04.dtsi
-> > index 02d8274a2f47..4ea0f7dc37c6 100644
-> > --- a/arch/arm/boot/dts/omap3-gta04.dtsi
-> > +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-> > @@ -320,6 +320,12 @@ =20
-> >  		>; =20
-> >         };
-> > =20
-> > +	gps_pins: pinmux_gps_pins { =20
->=20
-> s/gps/gnss/ would be more consistent, but whatever.
->=20
-well, gps is already in the file at another place. So it is a bit
-inconsistent in any case, without further cleanup. If someone comes
-up with a strong opinion here I would of course change it.
+On 2/1/19 10:47 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> This adds basic support for LEDs for the max77650 PMIC. The device has
+> three current sinks for driving LEDs.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>   drivers/leds/Kconfig         |   6 ++
+>   drivers/leds/Makefile        |   1 +
+>   drivers/leds/leds-max77650.c | 147 +++++++++++++++++++++++++++++++++++
+>   3 files changed, 154 insertions(+)
+>   create mode 100644 drivers/leds/leds-max77650.c
+> 
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index a72f97fca57b..6e7a8f51eccc 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -608,6 +608,12 @@ config LEDS_TLC591XX
+>   	  This option enables support for Texas Instruments TLC59108
+>   	  and TLC59116 LED controllers.
+>   
+> +config LEDS_MAX77650
+> +	tristate "LED support for Maxim MAX77650 PMIC"
+> +	depends on MFD_MAX77650
+> +	help
+> +	  LEDs driver for MAX77650 family of PMICs from Maxim Integrated."
+> +
+>   config LEDS_MAX77693
+>   	tristate "LED support for MAX77693 Flash"
+>   	depends on LEDS_CLASS_FLASH
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 4c1b0054f379..f48b2404dbb7 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -61,6 +61,7 @@ obj-$(CONFIG_LEDS_MC13783)		+= leds-mc13783.o
+>   obj-$(CONFIG_LEDS_NS2)			+= leds-ns2.o
+>   obj-$(CONFIG_LEDS_NETXBIG)		+= leds-netxbig.o
+>   obj-$(CONFIG_LEDS_ASIC3)		+= leds-asic3.o
+> +obj-$(CONFIG_LEDS_MAX77650)		+= leds-max77650.o
+>   obj-$(CONFIG_LEDS_MAX77693)		+= leds-max77693.o
+>   obj-$(CONFIG_LEDS_MAX8997)		+= leds-max8997.o
+>   obj-$(CONFIG_LEDS_LM355x)		+= leds-lm355x.o
+> diff --git a/drivers/leds/leds-max77650.c b/drivers/leds/leds-max77650.c
+> new file mode 100644
+> index 000000000000..6b74ce9cac12
+> --- /dev/null
+> +++ b/drivers/leds/leds-max77650.c
+> @@ -0,0 +1,147 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2018 BayLibre SAS
+> +// Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> +//
+> +// LED driver for MAXIM 77650/77651 charger/power-supply.
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/leds.h>
+> +#include <linux/mfd/max77650.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define MAX77650_LED_NUM_LEDS		3
+> +
+> +#define MAX77650_LED_A_BASE		0x40
+> +#define MAX77650_LED_B_BASE		0x43
+> +
+> +#define MAX77650_LED_BR_MASK		GENMASK(4, 0)
+> +#define MAX77650_LED_EN_MASK		GENMASK(7, 6)
+> +
+> +#define MAX77650_LED_MAX_BRIGHTNESS	MAX77650_LED_BR_MASK
+> +
+> +/* Enable EN_LED_MSTR. */
+> +#define MAX77650_LED_TOP_DEFAULT	BIT(0)
+> +
+> +#define MAX77650_LED_ENABLE		GENMASK(7, 6)
+> +#define MAX77650_LED_DISABLE		0x00
+> +
+> +#define MAX77650_LED_A_DEFAULT		MAX77650_LED_DISABLE
+> +/* 100% on duty */
+> +#define MAX77650_LED_B_DEFAULT		GENMASK(3, 0)
+> +
+> +struct max77650_led {
+> +	struct led_classdev cdev;
+> +	struct regmap *map;
+> +	unsigned int regA;
+> +	unsigned int regB;
+> +};
+> +
+> +static struct max77650_led *max77650_to_led(struct led_classdev *cdev)
+> +{
+> +	return container_of(cdev, struct max77650_led, cdev);
+> +}
+> +
+> +static int max77650_led_brightness_set(struct led_classdev *cdev,
+> +				       enum led_brightness brightness)
+> +{
+> +	struct max77650_led *led = max77650_to_led(cdev);
+> +	int val, mask;
+> +
+> +	mask = MAX77650_LED_BR_MASK | MAX77650_LED_EN_MASK;
+> +
+> +	if (brightness == LED_OFF)
+> +		val = MAX77650_LED_DISABLE;
+> +	else
+> +		val = MAX77650_LED_ENABLE | brightness;
+> +
+> +	return regmap_update_bits(led->map, led->regA, mask, val);
+> +}
+> +
+> +static int max77650_led_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *of_node, *child;
+> +	struct max77650_led *leds, *led;
+> +	struct device *parent;
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	const char *label;
+> +	int rv, num_leds;
+> +	u32 reg;
+> +
+> +	dev = &pdev->dev;
+> +	parent = dev->parent;
+> +	of_node = dev->of_node;
+> +
+> +	if (!of_node)
+> +		return -ENODEV;
+> +
+> +	leds = devm_kcalloc(dev, sizeof(*leds),
+> +			    MAX77650_LED_NUM_LEDS, GFP_KERNEL);
+> +	if (!leds)
+> +		return -ENOMEM;
+> +
+> +	map = dev_get_regmap(dev->parent, NULL);
+> +	if (!map)
+> +		return -ENODEV;
+> +
+> +	num_leds = of_get_child_count(of_node);
+> +	if (!num_leds || num_leds > MAX77650_LED_NUM_LEDS)
+> +		return -ENODEV;
+> +
+> +	for_each_child_of_node(of_node, child) {
+> +		rv = of_property_read_u32(child, "reg", &reg);
+> +		if (rv || reg >= MAX77650_LED_NUM_LEDS)
+> +			return -EINVAL;
+> +
+> +		led = &leds[reg];
+> +		led->map = map;
+> +		led->regA = MAX77650_LED_A_BASE + reg;
+> +		led->regB = MAX77650_LED_B_BASE + reg;
+> +		led->cdev.brightness_set_blocking = max77650_led_brightness_set;
+> +		led->cdev.max_brightness = MAX77650_LED_MAX_BRIGHTNESS;
+> +
+> +		label = of_get_property(child, "label", NULL);
+> +		if (!label) {
+> +			led->cdev.name = "max77650::";
+> +		} else {
+> +			led->cdev.name = devm_kasprintf(dev, GFP_KERNEL,
+> +							"max77650:%s", label);
+> +			if (!led->cdev.name)
+> +				return -ENOMEM;
+> +		}
+> +
+> +		of_property_read_string(child, "linux,default-trigger",
+> +					&led->cdev.default_trigger);
+> +
+> +		rv = devm_of_led_classdev_register(dev, child, &led->cdev);
+> +		if (rv)
+> +			return rv;
+> +
+> +		rv = regmap_write(map, led->regA, MAX77650_LED_A_DEFAULT);
+> +		if (rv)
+> +			return rv;
+> +
+> +		rv = regmap_write(map, led->regB, MAX77650_LED_B_DEFAULT);
+> +		if (rv)
+> +			return rv;
+> +	}
+> +
+> +	return regmap_write(map,
+> +			    MAX77650_REG_CNFG_LED_TOP,
+> +			    MAX77650_LED_TOP_DEFAULT);
+> +}
+> +
+> +static struct platform_driver max77650_led_driver = {
+> +	.driver = {
+> +		.name = "max77650-led",
+> +	},
+> +	.probe = max77650_led_probe,
+> +};
+> +module_platform_driver(max77650_led_driver);
+> +
+> +MODULE_DESCRIPTION("MAXIM 77650/77651 LED driver");
+> +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
+> +MODULE_LICENSE("GPL v2");
+> 
 
-Regards,
-Andreas
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
---Sig_/01NHARD8ceDsp1l45OdUP9y
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlxUmLYACgkQl4jFM1s/
-ye+00xAAujwl4zZ01Q52FI7OapO7C6j5SXClBced5WldTb6FBxs6aS6ui9LdQp6Y
-upieKwXd3WUwLqrfvw2EfEpeY6vDd6zIXbuQookzUJebIf2rN1DrLmQaXF8IVfmw
-lFbybhZykmmGyqeS0S0008+PHlVDtBDXAJ/wR1EhwuUJYcDGrB7NWyRx5mzUy/YW
-UXTZJmKE7Ce0si2zJW00NJ1rBo5c/HfNcLdnzxLpW2VyHzC8cVupFlPsa6lAX/DX
-VsbtONc0gIVBgT8mcCnkT2f4InpJDBb1Y1ndCpaD2CA6VitbrWVfunshW5umlZne
-7aTf1uckalGLMPtZg71CXBndFi8OtRYydeX9JF7nO9iL9cpEkFnE04yNgiDDWedv
-IzYq+m94T4pXfCfB07A1gIFvMAec2nOuDbQ0VfLOOPPPSNatnyYV7vggfaurmGwI
-M9tz5+mxd3pI7cSKMH/3Q7o/4vejEQ0iMi5/45g9ePOTb3Nddi7kerzMhcz8vqHz
-sDzvg60pkFS3vlUqfE0+arSUuA0IwPvimb53DxMUUCLJpCbKoNIgNQLbnO4Y0WFd
-x6RTDiTOvnYFquXpT+JioYYCxkHyFYsayngXn0e3d2VrdZmYhlXhYMjtOJikxvZA
-7zpLyjlhEpLZRjzb+QlDggfDGU1HbRPuY8aeX+UDGoP8D3CgYGM=
-=/2br
------END PGP SIGNATURE-----
-
---Sig_/01NHARD8ceDsp1l45OdUP9y--
+-- 
+Best regards,
+Jacek Anaszewski
