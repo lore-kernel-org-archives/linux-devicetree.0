@@ -1,64 +1,24 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2] dt-bindings: PCI: rcar: Add device tree support for
- r8a774c0
-Date: Fri, 1 Feb 2019 17:40:05 +0000
-Message-ID: <20190201174005.GD22887@e107981-ln.cambridge.arm.com>
-References: <1545134562-22450-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2 1/9] dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
+Date: Fri, 01 Feb 2019 09:41:01 -0800
+Message-ID: <154904286159.169292.15890098179989196572@swboyd.mtv.corp.google.com>
+References: <20190123221137.41722-1-evgreen@chromium.org> <20190123221137.41722-2-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545134562-22450-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20190123221137.41722-2-evgreen@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Can Guo <cang@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, liwei <liwei213@huawei.com>, linux-kernel@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 12:02:42PM +0000, Fabrizio Castro wrote:
-> Add PCIe support for the RZ/G2E (a.k.a. R8A774C0).
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Quoting Evan Green (2019-01-23 14:11:29)
+> Enable Qualcomm UFS controllers to expose the PHY reset via a reset
+> controller.
+>=20
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+>=20
 > ---
-> v1->v2:
-> * Dropped change to the description of "phys" optional property according
->   to Geert's comment
-> 
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Hi Fabrizio,
-
-Apologies for the delay in responding.
-
-Should I take this patch via the PCI tree ?
-
-Thanks,
-Lorenzo
-
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> index 976ef7b..6904882 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -3,6 +3,7 @@
->  Required properties:
->  compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
->  	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
-> +	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
->  	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
->  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
->  	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
-> @@ -13,7 +14,8 @@ compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
->  	    "renesas,pcie-r8a77990" for the R8A77990 SoC;
->  	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 or
->  				     RZ/G1 compatible device.
-> -	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
-> +	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 or
-> +				     RZ/G2 compatible device.
->  
->  	    When compatible with the generic version, nodes must list the
->  	    SoC-specific version corresponding to the platform first
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
