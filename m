@@ -1,87 +1,78 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 1/8] clk: samsung: add needed IDs for DMC clocks in
- Exynos5420
-Date: Fri, 1 Feb 2019 16:40:38 +0900
-Message-ID: <d6124295-cb72-0d5f-f887-438698cf48e1@samsung.com>
-References: <1548924594-19084-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190131085006eucas1p2e4ba3f69e039c394e7cd42389ac8bfa7@eucas1p2.samsung.com>
-        <1548924594-19084-2-git-send-email-l.luba@partner.samsung.com>
+From: Boris Brezillon <bbrezillon@kernel.org>
+Subject: Re: [PATCH v2 10/10] spi: atmel-quadspi: add support for sam9x60
+ qspi controller
+Date: Fri, 1 Feb 2019 08:57:39 +0100
+Message-ID: <20190201085739.775add3f@bbrezillon>
+References: <20190131161515.21605-1-tudor.ambarus@microchip.com>
+        <20190131161515.21605-11-tudor.ambarus@microchip.com>
+        <20190131173207.56481a42@bbrezillon>
+        <947f148d-3fd8-4e7d-4301-9d67715fbf7d@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548924594-19084-2-git-send-email-l.luba@partner.samsung.com>
-Content-Language: en-US
+In-Reply-To: <947f148d-3fd8-4e7d-4301-9d67715fbf7d@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Tudor.Ambarus@microchip.com
+Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 1 Feb 2019 07:07:40 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
-On 19. 1. 31. 오후 5:49, Lukasz Luba wrote:
-> Define new IDs for clocks used by Dynamic Memory Controller in
-> Exynos5422 SoC.
+> >   
+> >>  #define QSPI_IFR_TFRTYP_MASK            GENMASK(13, 12)
+> >>  #define QSPI_IFR_TFRTYP_TRSFR_READ      (0 << 12)
+> >>  #define QSPI_IFR_TFRTYP_TRSFR_READ_MEM  (1 << 12)  
+> > 
+> > Looks like the read/write flag is on bit 13. Can we just add  
 > 
-> CC: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> CC: Chanwoo Choi <cw00.choi@samsung.com>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Kukjin Kim <kgene@kernel.org>
-> CC: Krzysztof Kozlowski <krzk@kernel.org>
-> CC: linux-samsung-soc@vger.kernel.org
-> CC: devicetree@vger.kernel.org
-> CC: linux-arm-kernel@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+> for sama5d2 only
+
+Feel free to prefix macros with the SoC name to make it clear:
+
+#define QSPI_IFR_SAMA5D2_WRITE_TRSFR		BIT(13)
+
 > 
-> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-> index 355f469..1827a64 100644
-> --- a/include/dt-bindings/clock/exynos5420.h
-> +++ b/include/dt-bindings/clock/exynos5420.h
-> @@ -60,6 +60,7 @@
->  #define CLK_MAU_EPLL		159
->  #define CLK_SCLK_HSIC_12M	160
->  #define CLK_SCLK_MPHY_IXTAL24	161
-> +#define CLK_SCLK_BPLL		162
->  
->  /* gate clocks */
->  #define CLK_UART0		257
-> @@ -195,6 +196,16 @@
->  #define CLK_ACLK432_CAM		518
->  #define CLK_ACLK_FL1550_CAM	519
->  #define CLK_ACLK550_CAM		520
-> +#define CLK_CLKM_PHY0		521
-> +#define CLK_CLKM_PHY1		522
-> +#define CLK_ACLK_PPMU_DREX0_0	523
-> +#define CLK_ACLK_PPMU_DREX0_1	524
-> +#define CLK_ACLK_PPMU_DREX1_0	525
-> +#define CLK_ACLK_PPMU_DREX1_1	526
-> +#define CLK_PCLK_PPMU_DREX0_0	527
-> +#define CLK_PCLK_PPMU_DREX0_1	528
-> +#define CLK_PCLK_PPMU_DREX1_0	529
-> +#define CLK_PCLK_PPMU_DREX1_1	530
->  
->  /* mux clocks */
->  #define CLK_MOUT_HDMI		640
-> @@ -217,6 +228,10 @@
->  #define CLK_MOUT_EPLL		657
->  #define CLK_MOUT_MAU_EPLL	658
->  #define CLK_MOUT_USER_MAU_EPLL	659
-> +#define CLK_MOUT_DPLL		660
-> +#define CLK_MOUT_ACLK_G3D	661
+> > 
+> > #define QSPI_IFR_TFRTYP_TRSFR_WRITE	BIT(13)
+> > 
+> > and drop all others def? This way the implementation is consistent
+> > between sam9x60 and sama5d2.  
+> 
+> BIT(13) has no meaning for sam9x60. I can drop the macros with zero value for
+> sama5d2 in a separate patch.
+> >   
+> >> +#define QSPI_IFR_APBTFRTYP_READ		BIT(24)
 
-The second patch don't implement some clocks
-for CLK_MOUT_DPLL, CLK_MOUT_ACLK_G3D.
+And this one would be
 
-Why do you define them?
+define QSPI_IFR_SAM9X60_READ_TRSFR		BIT(24)
 
-(snip)
+> >>  
+> >>  /* Bitfields in QSPI_SMR (Scrambling Mode Register) */
+> >>  #define QSPI_SMR_SCREN                  BIT(0)
+> >> @@ -137,16 +144,37 @@
+> >>  #define QSPI_WPSR_WPVSRC(src)           (((src) << 8) & QSPI_WPSR_WPVSRC)
+> >>  
+> >>  
+> >> +/* Describes register values. */
+> >> +struct atmel_qspi_cfg {
+> >> +	u32 icr;
+> >> +	u32 iar;
+> >> +	u32 ifr;
+> >> +};
+> >> +
+> >> +struct atmel_qspi_caps;
+> >> +
+> >>  struct atmel_qspi {
+> >>  	void __iomem		*regs;
+> >>  	void __iomem		*mem;
+> >>  	struct clk		*clk;  
+> > 
+> > Can we rename that on pclk?  
+> 
+> will rename it, together with the support for unnamed clock of sama5d2 in a separate
+> patch. The dt-bindings patch that imposes "pclk" for sama5d2 should be separated too.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Sounds good.
