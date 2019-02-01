@@ -1,71 +1,62 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2] arm64: dts: qcom: sdm845: Add clocks and iommus to
- WCN3990 WLAN node
-Date: Fri, 01 Feb 2019 14:27:42 +0530
-Message-ID: <f8a085407b751b26316ff91ebcae99f3@codeaurora.org>
-References: <20190131051438.12867-1-bjorn.andersson@linaro.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH v3 0/2] Support for eMMC in AM65x-evm
+Date: Fri, 1 Feb 2019 11:00:47 +0200
+Message-ID: <228cf5ac-b07e-bce7-6078-bbab94692d8d@ti.com>
+References: <20190117094424.7683-1-faiz_abbas@ti.com>
+ <d75a123b-9e97-a3d1-1e3c-41ef6942dffb@ti.com>
+ <20190124124032.aqp4ctqkpozbttwl@kahuna>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131051438.12867-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190124124032.aqp4ctqkpozbttwl@kahuna>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-01-31 10:44, Bjorn Andersson wrote:
-> From: Douglas Anderson <dianders@chromium.org>
+On 24/01/2019 14:40, Nishanth Menon wrote:
+> On 13:43-20190124, Faiz Abbas wrote:
+>> Hi,
+>>
+>> On 17/01/19 3:14 PM, Faiz Abbas wrote:
+>>> The following patches add eMMC support on TI's AM65x-evm.
+>>>
+>>> v3:
+>>>   1. Fixed patch titles to only include eMMC
+>>>   2. Added dma-coherent to the sdhci0 node.
+>>>
+>>> v2:
+>>>   1. The SD card node is under debug for some usecases.
+>>>      Only upstreaming eMMC support for now.
+>>>   2. Rebased to latest mainline.
+>>>   3. Removed status = "disabled" from dtsi patch
+>>>   4. Fixed node name to not include '_'s
+>>>
+>>> Faiz Abbas (2):
+>>>    arm64: dts: ti: k3-am654: Add Support for eMMC host controller
+>>>    arm64: dts: ti: k3-am654-base-board: Add eMMC Support
+>>>
+>>>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 14 +++++++++++
+>>>   .../arm64/boot/dts/ti/k3-am654-base-board.dts | 25 +++++++++++++++++++
+>>>   2 files changed, 39 insertions(+)
+>>>
+>>
+>> Gentle ping.
 > 
-> When commit be7019103469 ("dts: arm64/sdm845: Add WCN3990 WLAN module
-> device node") was posted upstream no clocks were specified.  However,
-> when the pack was picked into the Chrome OS kernel tree (allegedly
-> directly from the mailing list post) it had clock properties.
 > 
-> I presume that the clock should be there, so let's add it.
+> OK With me. Tero: are you publishing a next branch? could you
+> pick this up please?
+> 
 
-Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Ok, queued up for 5.1.
 
-> 
-> Fixes: be7019103469 ("dts: arm64/sdm845: Add WCN3990 WLAN module device 
-> node")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> [bjorn: Add also the required iommus property]
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Hijacking Doug's fixup patch to also add the missing iommus property. 
-> Without
-> this the MTP reboots once the ath10k is trying to exercise the 
-> copyengine.
-> 
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index cba09899282e..58f034664336 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2422,6 +2422,8 @@
->  			reg = <0 0x18800000 0 0x800000>;
->  			reg-names = "membase";
->  			memory-region = <&wlan_msa_mem>;
-> +			clock-names = "cxo_ref_clk_pin";
-> +			clocks = <&rpmhcc RPMH_RF_CLK2>;
->  			interrupts =
->  				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH>,
->  				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH>,
-> @@ -2435,6 +2437,7 @@
->  				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
->  				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
->  				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>;
-> +			iommus = <&apps_smmu 0x0040 0x1>;
->  		};
->  	};
+I also pushed an am654-next branch to git.kernel.org. This is not 
+tracked in linux-next yet though, I am not quite sure if anybody is 
+doing any am654 testing with linux-next, and I only push DT patches via 
+this branch anyway which are kind of special.
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
