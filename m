@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v7 12/23] drm/sun4i: sun6i_mipi_dsi: Add support
- for VCC-DSI voltage regulator
-Date: Fri,  1 Feb 2019 21:12:21 +0530
-Message-ID: <20190201154232.10505-13-jagan@amarulasolutions.com>
+Subject: [PATCH v7 10/23] drm/sun4i: tcon: Compute DCLK dividers
+ based on format, lanes
+Date: Fri,  1 Feb 2019 21:12:19 +0530
+Message-ID: <20190201154232.10505-11-jagan@amarulasolutions.com>
 References: <20190201154232.10505-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBCWS2HRAKGQESI7PQXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBB6S2HRAKGQEPCMQPSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190201154232.10505-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,78 +20,50 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner MIPI DSI controllers are supplied with SoC DSI power rails
-via VCC-DSI pin.
+TCON dotclock compute the desired DCLK register divider based on panel
+pixel clock along with input DCLK or DSI clock dividers from tcon driver.
 
-Add support for this supply pin by adding voltage regulator handling
-code to MIPI DSI driver.
+The current code allowing an input DCLK dividers ranging from 4 to 127,
+but the existing dclock logic is unable to compute the desired output
+DCLK divider value for new panels instead it ended-up producing unknown
+divider values which no longer exists.
+
+So, add the computation logic 'format/lanes' to dclk min and max dividers
+and indeed it produced the desired DCLK divider even for the new panels.
+
+This computation logic align with Allwinner A64 BSP, hoping that would work
+even for A33.
+
+Tested this on 3 different panels, and below are the desired divider values
+with respect to pixel clock frequency.
+
+- 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
+  is 6 with the output parent clock rate of 330MHz.
+- 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
+  is 6 with parent clock rate of 180MHz.
+- 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
+  is 12 with the output parent clock rate of 330MHz.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Tested-by: Merlijn Wajer <merlijn-tF0PIh4TN3odnm+yROfE0A@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 14 ++++++++++++++
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  3 +++
- 2 files changed, 17 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 3d7c03161954..9be414131460 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -1107,6 +1107,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
- 		return PTR_ERR(base);
- 	}
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 3da75a0c5c5d..4d5a158d9a25 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -342,8 +342,8 @@ static void sun4i_tcon0_mode_set_cpu(struct sun4i_tcon *tcon,
+ 	u32 block_space, start_delay;
+ 	u32 tcon_div;
  
-+	dsi->regulator = devm_regulator_get(dev, "vcc-dsi");
-+	if (IS_ERR(dsi->regulator)) {
-+		dev_err(dev, "Couldn't get VCC-DSI supply\n");
-+		return PTR_ERR(dsi->regulator);
-+	}
-+
- 	dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
- 					      &sun6i_dsi_regmap_config);
- 	if (IS_ERR(dsi->regs)) {
-@@ -1183,6 +1189,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
- static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
- {
- 	struct sun6i_dsi *dsi = dev_get_drvdata(dev);
-+	int err;
-+
-+	err = regulator_enable(dsi->regulator);
-+	if (err) {
-+		dev_err(dsi->dev, "failed to enable VCC-DSI supply: %d\n", err);
-+		return err;
-+	}
+-	tcon->dclk_min_div = 4;
+-	tcon->dclk_max_div = 127;
++	tcon->dclk_min_div = bpp / lanes;
++	tcon->dclk_max_div = bpp / lanes;
  
- 	reset_control_deassert(dsi->reset);
- 	clk_prepare_enable(dsi->mod_clk);
-@@ -1215,6 +1228,7 @@ static int __maybe_unused sun6i_dsi_runtime_suspend(struct device *dev)
- 
- 	clk_disable_unprepare(dsi->mod_clk);
- 	reset_control_assert(dsi->reset);
-+	regulator_disable(dsi->regulator);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-index 257cca660da0..06cce0d0d3ad 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-@@ -13,6 +13,8 @@
- #include <drm/drm_encoder.h>
- #include <drm/drm_mipi_dsi.h>
- 
-+#include <linux/regulator/consumer.h>
-+
- struct sun6i_dphy {
- 	struct clk		*bus_clk;
- 	struct clk		*mod_clk;
-@@ -28,6 +30,7 @@ struct sun6i_dsi {
- 	struct clk		*bus_clk;
- 	struct clk		*mod_clk;
- 	struct regmap		*regs;
-+	struct regulator	*regulator;
- 	struct reset_control	*reset;
- 	struct sun6i_dphy	*dphy;
+ 	sun4i_tcon0_mode_set_common(tcon, mode);
  
 -- 
 2.18.0.321.gffc6fa0e3
