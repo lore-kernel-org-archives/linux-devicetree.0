@@ -1,40 +1,98 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH v2 10/10] spi: atmel-quadspi: add support for sam9x60 qspi
- controller
-Date: Fri, 1 Feb 2019 14:49:27 +0000
-Message-ID: <8b935a95-0aaa-3430-e2c2-f5793fd9cf11@microchip.com>
-References: <20190131161515.21605-1-tudor.ambarus@microchip.com>
- <20190131161515.21605-11-tudor.ambarus@microchip.com>
- <20190131173207.56481a42@bbrezillon>
- <947f148d-3fd8-4e7d-4301-9d67715fbf7d@microchip.com>
- <20190201085739.775add3f@bbrezillon>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] ARM: socfpga: fix base address of SDR controller
+Date: Fri, 1 Feb 2019 09:13:03 -0600
+Message-ID: <080c0900-4c34-e097-3e0e-4508951b0ddd@kernel.org>
+References: <20190129200858.19773-1-goldsimon@gmx.de>
+ <0711a2e0-b4fb-fa12-7c5c-0b5da73c8b02@kernel.org>
+ <CAAh8qszCQROUZVOyX9GCNF_09DebDDUWf_2cfW3M13yG1aJ_Xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190201085739.775add3f@bbrezillon>
+In-Reply-To: <CAAh8qszCQROUZVOyX9GCNF_09DebDDUWf_2cfW3M13yG1aJ_Xg@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <CDEBE13018FC9646BCC995CB63ADBC6C@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bbrezillon@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org, Ludovic.Desroches@microchip.com, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, Marek Vasut <marex@denx.de>
+Cc: devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alan Tull <atull@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDAyLzAxLzIwMTkgMDk6NTcgQU0sIEJvcmlzIEJyZXppbGxvbiB3cm90ZToNCj4gT24g
-RnJpLCAxIEZlYiAyMDE5IDA3OjA3OjQwICswMDAwDQo+IDxUdWRvci5BbWJhcnVzQG1pY3JvY2hp
-cC5jb20+IHdyb3RlOg0KPiANCj4+PiAgIA0KPj4+PiAgI2RlZmluZSBRU1BJX0lGUl9URlJUWVBf
-TUFTSyAgICAgICAgICAgIEdFTk1BU0soMTMsIDEyKQ0KPj4+PiAgI2RlZmluZSBRU1BJX0lGUl9U
-RlJUWVBfVFJTRlJfUkVBRCAgICAgICgwIDw8IDEyKQ0KPj4+PiAgI2RlZmluZSBRU1BJX0lGUl9U
-RlJUWVBfVFJTRlJfUkVBRF9NRU0gICgxIDw8IDEyKSAgDQo+Pj4NCj4+PiBMb29rcyBsaWtlIHRo
-ZSByZWFkL3dyaXRlIGZsYWcgaXMgb24gYml0IDEzLiBDYW4gd2UganVzdCBhZGQgIA0KPj4NCj4+
-IGZvciBzYW1hNWQyIG9ubHkNCj4gDQo+IEZlZWwgZnJlZSB0byBwcmVmaXggbWFjcm9zIHdpdGgg
-dGhlIFNvQyBuYW1lIHRvIG1ha2UgaXQgY2xlYXI6DQo+IA0KPiAjZGVmaW5lIFFTUElfSUZSX1NB
-TUE1RDJfV1JJVEVfVFJTRlIJCUJJVCgxMykNCg0KYWdyZWVkDQoNCj4gDQoNCmN1dA0KDQo+Pj4+
-ICsjZGVmaW5lIFFTUElfSUZSX0FQQlRGUlRZUF9SRUFECQlCSVQoMjQpDQo+IA0KPiBBbmQgdGhp
-cyBvbmUgd291bGQgYmUNCj4gDQo+IGRlZmluZSBRU1BJX0lGUl9TQU05WDYwX1JFQURfVFJTRlIJ
-CUJJVCgyNCkNCg0KSSBwcmVmZXIgbGV0dGluZyB0aGlzIGJpdCBuYW1lZCBhcyBpbiB0aGUgZGF0
-YXNoZWV0LCBRU1BJX0lGUl9BUEJURlJUWVBfUkVBRCwNCmFuZCBjaGFuZ2UgaXQgaWYgZnV0dXJl
-IHZlcnNpb25zIG9mIHRoZSBJUCB3aWxsIG1vZGlmeSBpdHMgc2Vuc2UuIEl0IGlzIGEgUkVBRA0K
-dHJhbnNmZXIgZG9uZSBvbiBBUEIsIGl0IGlzIG1vcmUgZ2VuZXJpYyB0aGlzIHdheS4gSWYgeW91
-IGhhdmUgYSBzdHJvbmcgb3Bpbmlvbg0Kb24gdGhpcywgcGxlYXNlIGxldCBtZSBrbm93Lg0KDQp0
-YQ0K
+
+
+On 1/30/19 12:00 AM, Simon Goldschmidt wrote:
+> + Marek (as I really want to keep the dts in Linux and U-Boot in sync)
+
+So can you wait until your patch in U-Boot is in?
+
+> On Wed, Jan 30, 2019 at 1:16 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
+>>
+>>
+>>
+>> On 1/29/19 2:08 PM, Simon Goldschmidt wrote:
+>>> From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+>>>
+>>> The documentation for socfpga gen5 says the base address of the sdram
+>>> controller is 0xffc20000, while the current devicetree says it is at
+>>> 0xffc25000.
+>>>
+>>> While this is not a problem for Linux, as it only accesses the registers
+>>> above 0xffc25000, it *is* a problem for U-Boot because the lower registers
+>>> are used during DDR calibration (up to now, the U-Boot driver does not use
+>>> the dts address, but that should change).
+>>>
+>>> To keep Linux and U-Boot devicetrees in sync, this patch changes the base
+>>> address to 0xffc20000 and adapts the 2 files where it is currently used.
+>>>
+>>> This patch changes the dts and 2 drivers with one commit to prevent
+>>> breaking the code if dts change and driver change would be split.
+>>>
+>>> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+>>> ---
+>>>
+>>>  arch/arm/boot/dts/socfpga.dtsi       | 4 ++--
+>>>  arch/arm/mach-socfpga/self-refresh.S | 4 ++--
+>>>  drivers/fpga/altera-fpga2sdram.c     | 2 +-
+>>>  3 files changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>>> index f365003f0..8f6c1a5d6 100644
+>>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>>> @@ -788,9 +788,9 @@
+>>>                       reg = <0xfffec000 0x100>;
+>>>               };
+>>>
+>>> -             sdr: sdr@ffc25000 {
+>>> +             sdr: sdr@ffc20000 {
+>>>                       compatible = "altr,sdr-ctl", "syscon";
+>>> -                     reg = <0xffc25000 0x1000>;
+>>> +                     reg = <0xffc20000 0x6000>;
+>>
+>> I don't see the U-Boot device tree having this change. Yes, the
+>> documentation does state that the SDR address starts at 0xffc20000, but
+>> all of the pertinent registers start at 0x5000 offset. Thus, the
+>> starting address should be 0xffc25000.[1]
+> 
+> You don't see it in U-Boot as I'm working on a patch for that.
+> As I wrote in the commit message, U-Boot currently does not use the
+> devicetree for the SDR driver, but I want to convert it to do that.
+> 
+> But before converting, I need to find a clean way to provide the
+> register addresses to the driver. That doesn't work with the current dts.
+> 
+>>
+>> [1]
+>> https://www.intel.com/content/www/us/en/programmable/documentation/sfo1410143707420.html#sfo1411577366917
+> 
+> Well, in [2], you see that the peripheral's address range actually starts
+> at 0xffc20000. It's only the public documented registers that start at
+> 0xffc25000. I don't know why the lower address range is undocumented.
+> Maybe you can help me here?
+> 
+
+Yes, the reason these register are not documented is that the ddr
+engineers didn't really want anyone outside of their team messing around
+with the calibration. These registers, from the limited documentation I
+have, are related to the PHY settings. I've been told the calibration
+sequence is something of a "black" magic.
+
+Dinh
