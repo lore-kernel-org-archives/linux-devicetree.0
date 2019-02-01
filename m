@@ -1,120 +1,74 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: iio: chemical: pms7003: add device
- tree support
-Date: Fri, 1 Feb 2019 18:10:33 +0100
-Message-ID: <20190201171031.GA20304@arch>
-References: <20190127181916.19948-1-tduszyns@gmail.com>
- <20190127181916.19948-4-tduszyns@gmail.com>
- <20190128075819.GK3691@localhost>
- <20190128184332.GA25627@arch>
- <20190130091254.GN3691@localhost>
- <20190131204000.GA14750@arch>
- <20190201091231.GZ3691@localhost>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH v2 1/2] dt-bindings: drm: panel: Add Samsung s6e63m0 panel documentation
+Date: Fri,  1 Feb 2019 18:28:51 +0100
+Message-ID: <20190201172852.4944-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190201091231.GZ3691@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, jic23@jic23.retrosnub.co.uk
+To: thierry.reding@gmail.com
+Cc: airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, m.szyprowski@samsung.com, krzk@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 01, 2019 at 10:12:31AM +0100, Johan Hovold wrote:
-> On Thu, Jan 31, 2019 at 09:40:04PM +0100, Tomasz Duszynski wrote:
-> > On Wed, Jan 30, 2019 at 10:12:54AM +0100, Johan Hovold wrote:
-> > > On Mon, Jan 28, 2019 at 07:43:33PM +0100, Tomasz Duszynski wrote:
-> > > > On Mon, Jan 28, 2019 at 08:58:19AM +0100, Johan Hovold wrote:
-> > > > > On Sun, Jan 27, 2019 at 07:19:16PM +0100, Tomasz Duszynski wrote:
-> > > > > > Add device tree support for Plantower PMS7003 particulate matter sensor.
-> > > > > >
-> > > > > > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> > > > > > ---
-> > > > > >  .../iio/chemical/plantower,pms7003.txt        | 19 +++++++++++++++++++
-> > > > > >  1 file changed, 19 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..e4c7f2fb1e30
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > > > > > @@ -0,0 +1,19 @@
-> > > > > > +* Plantower PMS7003 particulate matter sensor
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > +- compatible: must be "plantower,pms7003"
-> > > > > > +
-> > > > > > +Optional properties:
-> > > > > > +- vcc-supply: phandle to the regulator that provides power to the sensor
-> > > > >
-> > > > > Shouldn't this one be a required property?
-> > > > >
-> > > >
-> > > > Driver does not use regulator framework hence to me this property fits
-> > > > here better.
-> > >
-> > > The device tree describes hardware, not any particular driver.
-> > >
-> > > That said, there is a bit of an on-going debate on whether mandatory
-> > > supplies (from a hardware perspective) should always be represented in
-> > > device tree or not.
-> > >
-> > > 	https://lore.kernel.org/lkml/20181123133126.GF2089@sirena.org.uk/T/#u
-> > >         https://lore.kernel.org/lkml/20180409102244.GB11532@sirena.org.uk/T/#u
-> > > 	https://lore.kernel.org/lkml/20180425171123.xhyoay3nu463btoq@rob-hp-laptop/T/#u
-> > >
-> >
-> > Even after going through this threads I am still unconvinced that
-> > vcc-supply should be a requirement. Making this a mandatory property
-> > would automatically imply using *_regulator_get() in a driver code
-> > (on condition one is adding regulator support). In case there
-> > isn't any physically connected we end up with a dummy one and a warning.
->
-> How would the device work at all without a physical vcc supply?
->
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-I meant the discrete IC regulator.
+This commit adds documentation for Samsung s6e63m0 AMOLED LCD panel
+driver.
 
-> > Is it how this should work?
->
-> As Mark mentioned in the threads above, you could add a fixed,
-> always-on regulator for cases where the device is always powered.
->
-> Boards failing to describe this supply would still work on Linux, but
-> would end up with a dummy regulator and a warning.
->
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+---
+Changes from v1:
+  - Add missing subject prefix
+  - Rename reset-gpio to reset-gpios
+  - Add link to spi properites documentation. They're required
+    for driver to work
+  - Removed delay properties, which are now hardcoded in driver
+  - Removed display timings, which are now hardcoded in driver
+---
+ .../display/panel/samsung,s6e63m0.txt         | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
 
-Fair enough.
-
-> > > > > > +- set-gpios: phandle to the GPIO connected to the SET line
-> > > > > > +- reset-gpios: phandle to the GPIO connected to the RESET line
-> > > > > > +
-> > > > > > +Refer to serial/slave-device.txt for generic serial attached device bindings.
-> > > > > > +
-> > > > > > +Example:
-> > > > > > +
-> > > > > > +&uart0 {
-> > > > > > +	pms7003 {
-> > > > >
-> > > > > The node name should be generic and reflect the functionality rather
-> > > > > than model. Perhaps "pms" will do here.
-> > > >
-> > > > Agree, ideally we should have a generic dt name for this kind of sensors
-> > > > (something like air-pollution-sensor perhaps?). But unfortunately there isn't
-> > > > anything available now so I guess compatible part name should be okay
-> > > > (besides this is the type of naming commonly used in other iio bindings).
-> > >
-> > > What's wrong with particulate matter sensor ("pms")?
-> > >
-> > > Seems like a better fix than any particular model name to me at least.
-> > >
-> >
-> > Personally I would vote for a more descriptive node name, for example:
-> > particulate-matter-sensor or air-pollution-sensor or other name
-> > which clearly shows what device we are dealing with.
->
-> Spelling it out seems preferable, yes. You know the domain better than
-> I do; I only suggest you come up with a generic node name.
->
-> Johan
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt b/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
+new file mode 100644
+index 000000000000..9fb9ebeef8e4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
+@@ -0,0 +1,33 @@
++Samsung s6e63m0 AMOLED LCD panel
++
++Required properties:
++  - compatible: "samsung,s6e63m0"
++  - reset-gpios: GPIO spec for reset pin
++  - vdd3-supply: VDD regulator
++  - vci-supply: VCI regulator
++
++The panel must obey rules for SPI slave device specified in document [1].
++
++The device node can contain one 'port' child node with one child
++'endpoint' node, according to the bindings defined in [2]. This
++node should describe panel's video bus.
++
++[1]: Documentation/devicetree/bindings/spi/spi-bus.txt
++[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++		s6e63m0: display@0 {
++			compatible = "samsung,s6e63m0";
++			reg = <0>;
++			reset-gpio = <&mp05 5 1>;
++			vdd3-supply = <&ldo12_reg>;
++			vci-supply = <&ldo11_reg>;
++			spi-max-frequency = <1200000>;
++
++			port {
++				lcd_ep: endpoint {
++					remote-endpoint = <&fimd_ep>;
++				};
++			};
++		};
+-- 
+2.17.1
