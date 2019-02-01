@@ -1,8 +1,8 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v7 03/23] drm/sun4i: sun6i_mipi_dsi: Setup burst
- mode timings
-Date: Fri,  1 Feb 2019 21:12:12 +0530
-Message-ID: <20190201154232.10505-4-jagan@amarulasolutions.com>
+Subject: [PATCH v7 02/23] drm/sun4i: sun6i_mipi_dsi: Support
+ instruction loop selection
+Date: Fri,  1 Feb 2019 21:12:11 +0530
+Message-ID: <20190201154232.10505-3-jagan@amarulasolutions.com>
 References: <20190201154232.10505-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
@@ -20,54 +20,35 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Burst mode display timings are different from conventional video mode.
+Instruction loop selection would require before writing
+loop number registers, so enable idle, LP11 bits on
+loop selection register.
 
-For burst mode most of the timings hsa, hbp, hfp, vblk are 0 and hblk
-is computed as (mode->hdisplay * Bpp)
-
-This patch simply add burst mode timings without touching existing mode
-timings.
-
-Reference code taken from BSP (from linux-sunxi/
+Reference code available in BSP (from linux-sunxi/
 drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
 
-dsi_hsa  = 0;
-dsi_hbp  = 0;
-dsi_hact = x*dsi_pixel_bits[format]/8;
-dsi_hblk = dsi_hact;
-dsi_hfp  = 0;
-dsi_vblk = 0;
+(dsi_dev[sel]->dsi_inst_loop_sel.dwval = 2<<(4*DSI_INST_ID_LP11) |
+	3<<(4*DSI_INST_ID_DLY);
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Tested-by: Merlijn Wajer <merlijn-tF0PIh4TN3odnm+yROfE0A@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 813d5523f1c7..0f02bcc997a5 100644
+index a5fcee750bee..813d5523f1c7 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -477,6 +477,12 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+@@ -403,6 +403,9 @@ static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
+ {
+ 	u16 delay = sun6i_dsi_setup_inst_delay(dsi, mode);
  
- 	/* Do all timing calculations up front to allocate buffer space */
- 
-+	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-+		hbp = hfp = hsa = vblk = 0;
-+		hblk = (mode->hdisplay * Bpp);
-+		goto alloc_buf;
-+	}
-+
- 	/*
- 	 * A sync period is composed of a blanking packet (4 bytes +
- 	 * payload + 2 bytes) and a sync event packet (4 bytes). Its
-@@ -515,6 +521,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
- 	 */
- 	vblk = 0;
- 
-+alloc_buf:
- 	/* How many bytes do we need to send all payloads? */
- 	bytes = max_t(size_t, max(max(hfp, hblk), max(hsa, hbp)), vblk);
- 	buffer = kmalloc(bytes, GFP_KERNEL);
++	regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_SEL_REG,
++		     DSI_INST_ID_HSC  << (4 * DSI_INST_ID_LP11) |
++		     DSI_INST_ID_HSD  << (4 * DSI_INST_ID_DLY));
+ 	regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_NUM_REG(0),
+ 		     SUN6I_DSI_INST_LOOP_NUM_N0(50 - 1) |
+ 		     SUN6I_DSI_INST_LOOP_NUM_N1(delay));
 -- 
 2.18.0.321.gffc6fa0e3
