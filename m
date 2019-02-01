@@ -1,32 +1,38 @@
-Return-Path: <SRS0=oLYD=QI=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 4/5] dt-bindings: timer: renesas: tmu: Document r8a774c0 bindings
-Date: Fri,  1 Feb 2019 10:10:40 +0000
-Message-Id: <1549015841-33536-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1549015841-33536-1-git-send-email-biju.das@bp.renesas.com>
-References: <1549015841-33536-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=YPSF=QI=samsung.com=s.nawrocki@kernel.org>
+Subject: Re: [PATCH v5 0/5] Add imem clock for Exynos 5433
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-id: <b4bee5f1-8063-28d8-da56-31338581896c@samsung.com>
+Date: Fri, 01 Feb 2019 14:30:49 +0100
+MIME-version: 1.0
+In-reply-to: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+Content-type: text/plain; charset="utf-8"
+Content-language: en-GB
+Content-transfer-encoding: 7bit
+References: <CGME20190122090249eucas1p1e464ab92e8d5a706981f8dbcb63b1500@eucas1p1.samsung.com>
+	<20190122090232.29194-1-k.konieczny@partner.samsung.com>
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document RZ/G2E (R8A774C0) SoC in the Renesas TMU bindings.
+Hi,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
- 1 file changed, 1 insertion(+)
+I applied whole series with minor commit message edits and change as
+below squashed to patch 4/5.
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-index 4ddff85..13ad074 100644
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-@@ -10,6 +10,7 @@ Required Properties:
+diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
+index 52652aaabc06..25ffa53573a5 100644
+--- a/include/dt-bindings/clock/exynos5433.h
++++ b/include/dt-bindings/clock/exynos5433.h
+@@ -1410,6 +1410,6 @@
+ #define CLK_ACLK_SLIMSSS               2
+ #define CLK_PCLK_SLIMSSS               35
  
-   - compatible: must contain one or more of the following:
-     - "renesas,tmu-r8a7740" for the r8a7740 TMU
-+    - "renesas,tmu-r8a774c0" for the r8a774C0 TMU
-     - "renesas,tmu-r8a7778" for the r8a7778 TMU
-     - "renesas,tmu-r8a7779" for the r8a7779 TMU
-     - "renesas,tmu-r8a77970" for the r8a77970 TMU
+-#define IMEM_NR_CLK                    52
++#define IMEM_NR_CLK                    36
+ 
+ #endif /* _DT_BINDINGS_CLOCK_EXYNOS5433_H */
+
+
 -- 
-2.7.4
+Thanks,
+Sylwester
