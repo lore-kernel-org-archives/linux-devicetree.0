@@ -1,93 +1,92 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv7 6/6] coresight: cpu-debug: Add support for Qualcomm Kryo
-Date: Fri,  1 Feb 2019 06:23:14 +0530
-Message-ID: <53cf9d9d3b14f503a6c842754f3c55413f5a3392.1548981329.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1548981329.git.saiprakash.ranjan@codeaurora.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 06/10] soc: mediatek: add register device function
+Date: Fri, 1 Feb 2019 09:31:10 +0800
+Message-ID: <1548984670.7501.2.camel@mtksdaap41>
+References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
+ <1548747128-60136-7-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1548981329.git.saiprakash.ranjan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1548747128-60136-7-git-send-email-bibby.hsieh@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, kendrick.hsu@mediatek.com, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Houlong Wei <houlong.wei@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Frederic Chen <Frederic.Chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for coresight CPU debug module on Qualcomm
-Kryo CPUs. This patch adds the UCI entries for Kryo CPUs
-found on MSM8996 which shares the same PIDs as ETMs.
+Hi, Bibby:
 
-Without this, below error is observed on MSM8996:
+On Tue, 2019-01-29 at 15:32 +0800, Bibby Hsieh wrote:
+> GCE cannot know the register base address, we store the subsys-base address
+> relationship in the device node, and store the relationship by
+> cmdq_register_device function.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 24 ++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  |  1 +
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 6e4b85e..6ad997f 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -32,6 +32,30 @@ u8 cmdq_subsys_base_to_id(struct cmdq_base *clt_base, u32 base)
+>  }
+>  EXPORT_SYMBOL(cmdq_subsys_base_to_id);
+>  
+> +struct cmdq_base *cmdq_register_device(struct device *dev)
+> +{
+> +	struct cmdq_base *clt_base;
+> +	struct of_phandle_args spec;
+> +	u32 idx;
+> +
+> +	clt_base = devm_kzalloc(dev, sizeof(*clt_base), GFP_KERNEL);
+> +	if (!clt_base)
+> +		return NULL;
+> +
+> +	/* parse subsys */
+> +	for (idx = 0; idx < ARRAY_SIZE(clt_base->subsys); idx++) {
+> +		if (of_parse_phandle_with_args(dev->of_node, "gce-subsys",
+> +		    "#gce-subsys-cells", idx, &spec))
+> +			break;
+> +		clt_base->subsys[idx].base = spec.args[0];
+> +		clt_base->subsys[idx].id = spec.args[1];
 
-[    5.429867] OF: graph: no port node found in /soc/debug@3810000
-[    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
-[    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
-[    5.446474] OF: graph: no port node found in /soc/debug@3910000
-[    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
-[    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
-[    5.487765] OF: graph: no port node found in /soc/debug@3a10000
-[    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
-[    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
-[    5.501802] OF: graph: no port node found in /soc/debug@3b10000
-[    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
-[    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
+This does not match the binding [1].
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+[1]
+https://www.kernel.org/doc/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
 
----
-For testing, all dependent patches are in below tree:
- * https://github.com/saiprakash-ranjan/linux/tree/coresight-next
+Regards,
+CK
 
-This patch depends on UCI support by Mike Leach in below link:
- * https://lore.kernel.org/lkml/20190130234051.2294-1-mike.leach@linaro.org/
----
- .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
- 1 file changed, 16 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index e8819d750938..50ebf5b7fa4f 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -655,24 +655,23 @@ static int debug_remove(struct amba_device *adev)
- 	return 0;
- }
- 
-+static const struct amba_cs_uci_id uci_id_debug[] = {
-+	{
-+		/*  CPU Debug UCI data */
-+		.devarch	= 0x47706a15,
-+		.devarch_mask	= 0xfff0ffff,
-+		.devtype	= 0x00000015,
-+	}
-+};
-+
- static const struct amba_id debug_ids[] = {
--	{       /* Debug for Cortex-A53 */
--		.id	= 0x000bbd03,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A57 */
--		.id	= 0x000bbd07,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A72 */
--		.id	= 0x000bbd08,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A73 */
--		.id	= 0x000bbd09,
--		.mask	= 0x000fffff,
--	},
--	{ 0, 0 },
-+	CS_AMBA_ID(0x000bbd03),				/* Cortex-A53 */
-+	CS_AMBA_ID(0x000bbd07),				/* Cortex-A57 */
-+	CS_AMBA_ID(0x000bbd08),				/* Cortex-A72 */
-+	CS_AMBA_ID(0x000bbd09),				/* Cortex-A73 */
-+	CS_AMBA_UCI_ID(0x000f0205, uci_id_debug),	/* Qualcomm Kryo */
-+	CS_AMBA_UCI_ID(0x000f0211, uci_id_debug),	/* Qualcomm Kryo */
-+	{},
- };
- 
- static struct amba_driver debug_driver = {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> +	}
+> +	clt_base->count = idx;
+> +
+> +	return clt_base;
+> +}
+> +EXPORT_SYMBOL(cmdq_register_device);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 0c7a6ee..a1f5eb6 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -138,5 +138,6 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+>  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+>  
+>  u8 cmdq_subsys_base_to_id(struct cmdq_base *clt_base, u32 base);
+> +struct cmdq_base *cmdq_register_device(struct device *dev);
+>  
+>  #endif	/* __MTK_CMDQ_H__ */
