@@ -1,61 +1,57 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 01/11] dt-bindings: mfd: add DT bindings for max77650
-Date: Fri,  1 Feb 2019 10:47:26 +0100
-Message-ID: <20190201094736.32057-2-brgl@bgdev.pl>
-References: <20190201094736.32057-1-brgl@bgdev.pl>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 1/2] arm: dts: gta04: add ldo 3v3 regulator
+Date: Fri, 1 Feb 2019 11:02:44 +0100
+Message-ID: <20190201100244.GC3691@localhost>
+References: <20190131180640.14480-1-andreas@kemnade.info>
+ <20190131180640.14480-2-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190201094736.32057-1-brgl@bgdev.pl>
+Content-Disposition: inline
+In-Reply-To: <20190131180640.14480-2-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Johan Hovold <johan@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, tony@atomide.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, Jan 31, 2019 at 07:06:39PM +0100, Andreas Kemnade wrote:
+> Required for completeness sake to be able to specify
+> a regulator for devices having a non-optional regulator
+> property. It corresponds to the "3V3" net in the
+> schematics.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> new in v3
+> 
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> index e53d32691308..02d8274a2f47 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -32,6 +32,14 @@
+>  		display1 = &tv0;
+>  	};
+>  
+> +	ldo_3v3: fixedregulator {
 
-Add a DT binding document for max77650 ultra-low power PMIC. This
-describes the core mfd device.
+A suffix, even if its just to rename as "fixedregulator0", would allow
+further fixed regulators to be added later, but I guess that can be
+handled then.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../devicetree/bindings/mfd/max77650.txt      | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "ldo_3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+>  	/* fixed 26MHz oscillator */
+>  	hfclk_26m: oscillator {
+>  		#clock-cells = <0>;
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
-new file mode 100644
-index 000000000000..84631d3b1e14
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max77650.txt
-@@ -0,0 +1,28 @@
-+MAX77650 ultra low-power PMIC from Maxim Integrated.
-+
-+Required properties:
-+-------------------
-+- compatible:		Must be "maxim,max77650"
-+- reg:			I2C device address.
-+- interrupts:		The interrupt on the parent the controller is
-+			connected to.
-+- interrupt-parent:	phandle of the parent interrupt controller.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells:	Must be <2>.
-+
-+For device-tree bindings of sub-modules (regulator, power supply, GPIO, LEDs
-+and onkey) refer to the binding documents under the respective sub-system
-+directories.
-+
-+Example:
-+--------
-+
-+	pmic: max77650@48 {
-+		compatible = "maxim,max77650";
-+		reg = <0x48>;
-+
-+		interrupt-controller;
-+		interrupt-parent = <&gpio2>;
-+		#interrupt-cells = <2>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+	};
--- 
-2.20.1
+Reviewed-by: Johan Hovold <johan@kernel.org>
+
+Johan
