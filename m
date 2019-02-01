@@ -1,98 +1,42 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH] ARM: socfpga: fix base address of SDR controller
-Date: Fri, 1 Feb 2019 09:13:03 -0600
-Message-ID: <080c0900-4c34-e097-3e0e-4508951b0ddd@kernel.org>
-References: <20190129200858.19773-1-goldsimon@gmx.de>
- <0711a2e0-b4fb-fa12-7c5c-0b5da73c8b02@kernel.org>
- <CAAh8qszCQROUZVOyX9GCNF_09DebDDUWf_2cfW3M13yG1aJ_Xg@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: display: renesas: lvds: Document
+ r8a7744 bindings
+Date: Fri, 1 Feb 2019 17:16:24 +0200
+Message-ID: <20190201151624.GB4359@pendragon.ideasonboard.com>
+References: <1548170749-12773-1-git-send-email-biju.das@bp.renesas.com>
+ <1548170749-12773-3-git-send-email-biju.das@bp.renesas.com>
+ <20190122154428.GE11461@pendragon.ideasonboard.com>
+ <20190130163910.GA29033@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAh8qszCQROUZVOyX9GCNF_09DebDDUWf_2cfW3M13yG1aJ_Xg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, Marek Vasut <marex@denx.de>
-Cc: devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alan Tull <atull@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190130163910.GA29033@bogus>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 1/30/19 12:00 AM, Simon Goldschmidt wrote:
-> + Marek (as I really want to keep the dts in Linux and U-Boot in sync)
-
-So can you wait until your patch in U-Boot is in?
-
-> On Wed, Jan 30, 2019 at 1:16 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
->>
->>
->>
->> On 1/29/19 2:08 PM, Simon Goldschmidt wrote:
->>> From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
->>>
->>> The documentation for socfpga gen5 says the base address of the sdram
->>> controller is 0xffc20000, while the current devicetree says it is at
->>> 0xffc25000.
->>>
->>> While this is not a problem for Linux, as it only accesses the registers
->>> above 0xffc25000, it *is* a problem for U-Boot because the lower registers
->>> are used during DDR calibration (up to now, the U-Boot driver does not use
->>> the dts address, but that should change).
->>>
->>> To keep Linux and U-Boot devicetrees in sync, this patch changes the base
->>> address to 0xffc20000 and adapts the 2 files where it is currently used.
->>>
->>> This patch changes the dts and 2 drivers with one commit to prevent
->>> breaking the code if dts change and driver change would be split.
->>>
->>> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
->>> ---
->>>
->>>  arch/arm/boot/dts/socfpga.dtsi       | 4 ++--
->>>  arch/arm/mach-socfpga/self-refresh.S | 4 ++--
->>>  drivers/fpga/altera-fpga2sdram.c     | 2 +-
->>>  3 files changed, 5 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->>> index f365003f0..8f6c1a5d6 100644
->>> --- a/arch/arm/boot/dts/socfpga.dtsi
->>> +++ b/arch/arm/boot/dts/socfpga.dtsi
->>> @@ -788,9 +788,9 @@
->>>                       reg = <0xfffec000 0x100>;
->>>               };
->>>
->>> -             sdr: sdr@ffc25000 {
->>> +             sdr: sdr@ffc20000 {
->>>                       compatible = "altr,sdr-ctl", "syscon";
->>> -                     reg = <0xffc25000 0x1000>;
->>> +                     reg = <0xffc20000 0x6000>;
->>
->> I don't see the U-Boot device tree having this change. Yes, the
->> documentation does state that the SDR address starts at 0xffc20000, but
->> all of the pertinent registers start at 0x5000 offset. Thus, the
->> starting address should be 0xffc25000.[1]
-> 
-> You don't see it in U-Boot as I'm working on a patch for that.
-> As I wrote in the commit message, U-Boot currently does not use the
-> devicetree for the SDR driver, but I want to convert it to do that.
-> 
-> But before converting, I need to find a clean way to provide the
-> register addresses to the driver. That doesn't work with the current dts.
-> 
->>
->> [1]
->> https://www.intel.com/content/www/us/en/programmable/documentation/sfo1410143707420.html#sfo1411577366917
-> 
-> Well, in [2], you see that the peripheral's address range actually starts
-> at 0xffc20000. It's only the public documented registers that start at
-> 0xffc25000. I don't know why the lower address range is undocumented.
-> Maybe you can help me here?
-> 
-
-Yes, the reason these register are not documented is that the ddr
-engineers didn't really want anyone outside of their team messing around
-with the calibration. These registers, from the limited documentation I
-have, are related to the PHY settings. I've been told the calibration
-sequence is something of a "black" magic.
-
-Dinh
+SGkgUm9iLAoKT24gV2VkLCBKYW4gMzAsIDIwMTkgYXQgMTA6Mzk6MTBBTSAtMDYwMCwgUm9iIEhl
+cnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBKYW4gMjIsIDIwMTkgYXQgMDU6NDQ6MjhQTSArMDIwMCwg
+TGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IE9uIFR1ZSwgSmFuIDIyLCAyMDE5IGF0IDAzOjI1
+OjQ2UE0gKzAwMDAsIEJpanUgRGFzIHdyb3RlOgo+ID4+IERvY3VtZW50IHRoZSBSWi9HMU4gKFI4
+QTc3NDQpIExWRFMgYmluZGluZ3MuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMg
+PGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPgo+ID4gCj4gPiBSZXZpZXdlZC1ieTogTGF1cmVudCBQ
+aW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+ID4gCj4gPiBhbmQg
+dGFrZW4gaW4gbXkgdHJlZS4KPiAKPiBCdXQgbm90IGluIGxpbnV4LW5leHQ/IE9yIHlvdSBkaWQg
+c29tZSAkc3ViamVjdCBmaXh1cHMgd2hpY2ggYnJlYWtzIG15IAo+IGRldGVjdGluZyB0aGF0LiA6
+KAoKTXkgdHJlZSBpc24ndCBwYXJ0IG9mIGxpbnV4LW5leHQuIEknbGwgc2VuZCBhIHB1bGwgcmVx
+dWVzIHRvIERhdmUgdmVyeQpzb29uLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
