@@ -1,94 +1,52 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v3 3/3] dt-bindings: clock: Add loongson-1 clock bindings
-Date: Fri,  1 Feb 2019 14:35:40 +0800
-Message-ID: <20190201063540.19636-4-jiaxun.yang@flygoat.com>
-References: <20190128152052.3047-1-jiaxun.yang@flygoat.com>
- <20190201063540.19636-1-jiaxun.yang@flygoat.com>
+From: <Tudor.Ambarus@microchip.com>
+Subject: Re: [PATCH v2 01/10] spi: atmel-quadspi: cache MR value to avoid a
+ write access
+Date: Fri, 1 Feb 2019 06:51:39 +0000
+Message-ID: <a0f6dbf3-e9c3-6695-2b85-3907b3f679cd@microchip.com>
+References: <20190131161515.21605-1-tudor.ambarus@microchip.com>
+ <20190131161515.21605-2-tudor.ambarus@microchip.com>
+ <20190131175535.3f60ccff@bbrezillon>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190201063540.19636-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190131175535.3f60ccff@bbrezillon>
+Content-Language: en-US
+Content-ID: <AD8D57D6CCC52140A936C75E8005BF0F@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+To: bbrezillon@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org, Ludovic.Desroches@microchip.com, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Loongson-1 is a series of MIPS MCUs.
-This patch add the clock bindings for loongson-1b and
-loongson-1c clock subsystem.
-
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../bindings/clock/loongson1-clock.txt          | 14 ++++++++++++++
- include/dt-bindings/clock/ls1b-clock.h          | 17 +++++++++++++++++
- include/dt-bindings/clock/ls1c-clock.h          | 14 ++++++++++++++
- 3 files changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/loongson1-clock.txt
- create mode 100644 include/dt-bindings/clock/ls1b-clock.h
- create mode 100644 include/dt-bindings/clock/ls1c-clock.h
-
-diff --git a/Documentation/devicetree/bindings/clock/loongson1-clock.txt b/Documentation/devicetree/bindings/clock/loongson1-clock.txt
-new file mode 100644
-index 000000000000..5afd13a98eaa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/loongson1-clock.txt
-@@ -0,0 +1,14 @@
-+* Clock bindings for Loongson-1 MCUs
-+
-+Required properties:
-+- compatible: must contain one of the following compatibles:
-+                - "loongson,ls1b-clock"
-+                - "loongson,ls1c-clock"
-+
-+- reg: Address and length of the register set
-+- #clock-cells: Should be <1>
-+- clocks: list of input clocks
-+
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell. See include/dt-bindings/clock/ls1c-clock.h
-+or include/dt-bindings/clock/ls1b-clock.h for the full list of clocks.
-diff --git a/include/dt-bindings/clock/ls1b-clock.h b/include/dt-bindings/clock/ls1b-clock.h
-new file mode 100644
-index 000000000000..c7ae85bb4583
---- /dev/null
-+++ b/include/dt-bindings/clock/ls1b-clock.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com> */
-+
-+#ifndef __DT_BINDINGS_CLOCK_LS1B_CLOCK_H__
-+#define __DT_BINDINGS_CLOCK_LS1B_CLOCK_H__
-+
-+#define LS1B_CLK_PLL 0
-+#define LS1B_CLK_CPU_DIV 1
-+#define LS1B_CLK_CPU 2
-+#define LS1B_CLK_DC_DIV 3
-+#define LS1B_CLK_DC 4
-+#define LS1B_CLK_DDR_DIV 5
-+#define LS1B_CLK_DDR 6
-+#define LS1B_CLK_AHB 7
-+#define LS1B_CLK_APB 8
-+
-+#endif /* __DT_BINDINGS_CLOCK_LS1B_CLOCK_H__ */
-diff --git a/include/dt-bindings/clock/ls1c-clock.h b/include/dt-bindings/clock/ls1c-clock.h
-new file mode 100644
-index 000000000000..9d01914f374e
---- /dev/null
-+++ b/include/dt-bindings/clock/ls1c-clock.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com> */
-+
-+#ifndef __DT_BINDINGS_CLOCK_LS1C_CLOCK_H__
-+#define __DT_BINDINGS_CLOCK_LS1C_CLOCK_H__
-+
-+#define LS1C_CLK_PLL 0
-+#define LS1C_CLK_CPU 1
-+#define LS1C_CLK_DC 2
-+#define LS1C_CLK_DDR 3
-+#define LS1C_CLK_AHB 4
-+#define LS1C_CLK_APB 5
-+
-+#endif /* __DT_BINDINGS_CLOCK_LS1C_CLOCK_H__ */
--- 
-2.20.1
+DQoNCk9uIDAxLzMxLzIwMTkgMDY6NTUgUE0sIEJvcmlzIEJyZXppbGxvbiB3cm90ZToNCj4gT24g
+VGh1LCAzMSBKYW4gMjAxOSAxNjoxNToyOCArMDAwMA0KPiA8VHVkb3IuQW1iYXJ1c0BtaWNyb2No
+aXAuY29tPiB3cm90ZToNCj4gDQo+PiBGcm9tOiBUdWRvciBBbWJhcnVzIDx0dWRvci5hbWJhcnVz
+QG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gQ2FjaGUgTVIgdmFsdWUgdG8gYXZvaWQgd3JpdGUgYWNj
+ZXNzIHdoZW4gc2V0dGluZyB0aGUgY29udHJvbGxlcg0KPj4gaW4gU2VyaWFsIE1lbW9yeSBNb2Rl
+IChTTU0pLiBTTU0gaXMgc2V0IGluIGV4ZWNfb3AoKSBhbmQgbm90IGF0DQo+PiBwcm9iZSB0aW1l
+LCB0byBsZXQgcm9vbSBmb3IgZnV0dXJlIHJlZ3VsYXIgU1BJIHN1cHBvcnQuDQo+Pg0KPj4gU2ln
+bmVkLW9mZi1ieTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0K
+Pj4gLS0tDQo+PiB2MjogY2FjaGUgTVIgdmFsdWUgaW5zdGVhZCBvZiBtb3ZpbmcgdGhlIHdyaXRl
+IGFjY2VzcyBhdCBwcm9iZQ0KPj4NCj4+ICBkcml2ZXJzL3NwaS9hdG1lbC1xdWFkc3BpLmMgfCA1
+ICsrKystDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NwaS9hdG1lbC1xdWFkc3BpLmMgYi9kcml2
+ZXJzL3NwaS9hdG1lbC1xdWFkc3BpLmMNCj4+IGluZGV4IGRkYzcxMjQxMDgxMi4uZmUwNWFlZTVk
+ODQ1IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9zcGkvYXRtZWwtcXVhZHNwaS5jDQo+PiArKysg
+Yi9kcml2ZXJzL3NwaS9hdG1lbC1xdWFkc3BpLmMNCj4+IEBAIC0xNTUsNiArMTU1LDcgQEAgc3Ry
+dWN0IGF0bWVsX3FzcGkgew0KPj4gIAlzdHJ1Y3QgY2xrCQkqY2xrOw0KPj4gIAlzdHJ1Y3QgcGxh
+dGZvcm1fZGV2aWNlCSpwZGV2Ow0KPj4gIAl1MzIJCQlwZW5kaW5nOw0KPj4gKwl1MzIJCQltcjsN
+Cj4+ICAJc3RydWN0IGNvbXBsZXRpb24JY21kX2NvbXBsZXRpb247DQo+PiAgfTsNCj4+ICANCj4+
+IEBAIC0yMzgsNyArMjM5LDkgQEAgc3RhdGljIGludCBhdG1lbF9xc3BpX2V4ZWNfb3Aoc3RydWN0
+IHNwaV9tZW0gKm1lbSwgY29uc3Qgc3RydWN0IHNwaV9tZW1fb3AgKm9wKQ0KPj4gIAlpY3IgPSBR
+U1BJX0lDUl9JTlNUKG9wLT5jbWQub3Bjb2RlKTsNCj4+ICAJaWZyID0gUVNQSV9JRlJfSU5TVEVO
+Ow0KPj4gIA0KPj4gLQlxc3BpX3dyaXRlbChhcSwgUVNQSV9NUiwgUVNQSV9NUl9TTU0pOw0KPj4g
+KwkvKiBTZXQgdGhlIFFTUEkgY29udHJvbGxlciBpbiBTZXJpYWwgTWVtb3J5IE1vZGUgKi8NCj4+
+ICsJaWYgKCEoYXEtPm1yICYgUVNQSV9NUl9TTU0pKQ0KPiANCj4gCWlmIChhcS0+bXIgIT0gUVNQ
+SV9NUl9TTU0pDQoNCnRoZW4gSSBzaG91bGQgcHJvYmFibHkgcmVuYW1lIG1yIHRvIHNtbS4NCg0K
+PiANCj4+ICsJCXFzcGlfd3JpdGVsKGFxLCBRU1BJX01SLCBRU1BJX01SX1NNTSk7DQo+IA0KPiBZ
+b3UgbmVlZCB0byB1cGRhdGUgLT5tciBoZXJlLg0KDQpvZiBjb3Vyc2UsIHRoYW5rcyENCg0KPiAN
+Cj4+ICANCj4+ICAJbW9kZSA9IGZpbmRfbW9kZShvcCk7DQo+PiAgCWlmIChtb2RlIDwgMCkNCj4g
+DQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
+PiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdA0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcNCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9saW51eC1hcm0ta2VybmVsDQo+IA0K
