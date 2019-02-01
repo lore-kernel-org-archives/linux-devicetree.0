@@ -1,43 +1,34 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v3 3/8] clk: samsung: add BPLL rate table for Exynos
- 5422 SoC
-Date: Fri, 1 Feb 2019 16:39:04 +0100
-Message-ID: <7c28d817-84bd-c88e-de84-801fd97645ec@partner.samsung.com>
-References: <1548924594-19084-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190131085007eucas1p2f16107042b8ce5638811840618bcf017@eucas1p2.samsung.com>
-        <1548924594-19084-4-git-send-email-l.luba@partner.samsung.com>
-        <d5b8d165-564e-b776-77de-31a069118067@samsung.com>
-        <0ca15b4c-ddaa-1be5-35be-e76b008b28a8@partner.samsung.com>
-        <08850f80-0cc1-8e0d-6a8a-286a750d3a8c@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 3/3] reset: hisilicon: Add HiSilicon HI3670 reset support
+Date: Fri,  1 Feb 2019 21:08:41 +0530
+Message-ID: <20190201153841.21903-4-manivannan.sadhasivam@linaro.org>
+References: <20190201153841.21903-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <08850f80-0cc1-8e0d-6a8a-286a750d3a8c@samsung.com>
-Content-Language: en-US
+In-Reply-To: <20190201153841.21903-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, myungjoo.ham@samsung.com, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: p.zabel@pengutronix.de, xuwei5@hisilicon.com, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, guodong.xu@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+HI3670 SoC is architecturally same as the HI3660 SoC. Hence, add the
+HI3670 compatible to HI3660 reset driver in order to reuse it.
 
-On 2/1/19 3:19 PM, Sylwester Nawrocki wrote:
-> On 2/1/19 14:56, Lukasz Luba wrote:
->>> Exynos5422 used the same PLL table for apll, kpll, bpll and so on.
->>> You don't need to make the separate pll table. Just add new entries
->>> to exynos5420_pll2550x_24mhz_tbl table.
->> OK, I will extend the exynos5420_pll2550x_24mhz_tbl table.
->>
->> In v4 patch set, it will be fixed.
-> 
-> I would prefer to keep the rate table separate for BPLL, until correctness
-> of new rates introduced in the patch and their applicability to the other PLLs
-> is confirmed by the hardware team and verified in tests.
-Good point, I share the same opinion. So, this new table for BPLL will stay.
-Do you agree Chanwoo?
-The BPLL is only used only by DMC.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/reset/hisilicon/reset-hi3660.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
-Lukasz
-> 
+diff --git a/drivers/reset/hisilicon/reset-hi3660.c b/drivers/reset/hisilicon/reset-hi3660.c
+index 17d8bb128e6e..1c22f3457ba7 100644
+--- a/drivers/reset/hisilicon/reset-hi3660.c
++++ b/drivers/reset/hisilicon/reset-hi3660.c
+@@ -103,6 +103,7 @@ static int hi3660_reset_probe(struct platform_device *pdev)
+ 
+ static const struct of_device_id hi3660_reset_match[] = {
+ 	{ .compatible = "hisilicon,hi3660-reset", },
++	{ .compatible = "hisilicon,hi3670-reset", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, hi3660_reset_match);
+-- 
+2.17.1
