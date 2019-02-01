@@ -1,40 +1,25 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 0/5] Add initial Bitmain BM1880 SoC/Board support
-Date: Fri, 1 Feb 2019 09:20:05 +0530
-Message-ID: <20190201035005.GA4283@Mani-XPS-13-9360>
-References: <20190126041041.13173-1-manivannan.sadhasivam@linaro.org>
- <CAK8P3a3Y_w5_ZavpyUh0VKrS8FeUPTJKkchtGGLc1qe3nG2mfA@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v7 5/5] arm64: dts: lx2160a: update fspi node
+Date: Fri, 1 Feb 2019 11:51:50 +0800
+Message-ID: <20190201035148.GG19882@dragon>
+References: <1547546584-5254-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1547546584-5254-6-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a3Y_w5_ZavpyUh0VKrS8FeUPTJKkchtGGLc1qe3nG2mfA@mail.gmail.com>
+In-Reply-To: <1547546584-5254-6-git-send-email-yogeshnarayan.gaur@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, haitao.suo@bitmain.com, darren.tsao@bitmain.com, Amit Kucheria <amit.kucheria@linaro.org>
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On Sun, Jan 27, 2019 at 10:24:09AM +0100, Arnd Bergmann wrote:
-> On Sat, Jan 26, 2019 at 5:11 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > Hello,
-> >
-> > This patchset adds initial support for Bitmain BM1880 SoC and Sophon
-> > Edge board. BM1880 SoC consists of a Dual Core ARM Cortex A53 Application
-> > processor subsystem, a single core RISC-V subsystem and a Tensor
-> > Processor subsystem. This patchset adds support for only ARM Cortex
-> > A53 Application processor subsystem with UART, which enables the board to
-> > boot into initramfs with 2 CPUs.
+On Tue, Jan 15, 2019 at 10:05:35AM +0000, Yogesh Narayan Gaur wrote:
+> Flash mt35xu512aba connected to FlexSPI controller supports
+> 1-1-8/1-8-8 protocol.
+> Added flag spi-rx-bus-width and spi-tx-bus-width with values as
+> 8 and 8 respectively for both flashes connected at CS0 and CS1.
 > 
-> Nice work! All patches in this series
-> 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
 
-Thanks. What is the merge strategy for this patchset? Shall I send a
-Pull Request to arm@kernel.org with topic branches?
-
-Regards,
-Mani
+Applied, thanks.
