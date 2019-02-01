@@ -1,63 +1,90 @@
 Return-Path: <SRS0=cBdN=QI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mailout1.samsung.com ([203.254.224.24]:19919 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729754AbfBAK5S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Feb 2019 05:57:18 -0500
-Subject: Re: [PATCH v5 4/5] dt-bindings: clk: exynos5433: add imem clock
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-id: <ad3926f7-8884-9f2b-85d7-8a50a028d075@samsung.com>
-Date: Fri, 01 Feb 2019 11:57:08 +0100
-MIME-version: 1.0
-In-reply-to: <fd39fd40-f452-f763-c9ab-d717c80967cd@samsung.com>
-Content-type: text/plain; charset="utf-8"
-Content-language: en-GB
-Content-transfer-encoding: 7bit
-References: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
-        <CGME20190122090251eucas1p122f1c6d47f3cb60febeadda88ada3a76@eucas1p1.samsung.com>
-        <20190122090232.29194-5-k.konieczny@partner.samsung.com>
-        <fd39fd40-f452-f763-c9ab-d717c80967cd@samsung.com>
+Received: from mga18.intel.com ([134.134.136.126]:36450 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726172AbfBAQtl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Feb 2019 11:49:41 -0500
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCH 3/4] EDAC, altera: Skip DB IRQ for Stratix10
+References: <1548799428-10541-1-git-send-email-thor.thayer@linux.intel.com>
+ <1548799428-10541-4-git-send-email-thor.thayer@linux.intel.com>
+ <86856ea5-815b-6c21-f54a-d5dc0373361a@kernel.org>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <4dbb757b-e44a-a0e0-d2c1-b7018f3df471@linux.intel.com>
+Date: Fri, 1 Feb 2019 10:51:55 -0600
+MIME-Version: 1.0
+In-Reply-To: <86856ea5-815b-6c21-f54a-d5dc0373361a@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Kamil Konieczny <k.konieczny@partner.samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Dinh Nguyen <dinguyen@kernel.org>, bp@alien8.de, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com
+Cc: devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 1/31/19 13:30, Chanwoo Choi wrote:
->> diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
->> index 87bb2b017143..52652aaabc06 100644
->> --- a/include/dt-bindings/clock/exynos5433.h
->> +++ b/include/dt-bindings/clock/exynos5433.h
->> @@ -1406,4 +1406,10 @@
->>  
->>  #define CAM1_NR_CLK					113
->>  
->> +/* CMU_IMEM */
->> +#define CLK_ACLK_SLIMSSS		2
->> +#define CLK_PCLK_SLIMSSS		35
->> +
->> +#define IMEM_NR_CLK			52
->> +
->>  #endif /* _DT_BINDINGS_CLOCK_EXYNOS5433_H */
+Hi Dinh,
+
+On 2/1/19 9:37 AM, Dinh Nguyen wrote:
+> Hi Thor,
+> 
+> On 1/29/19 4:03 PM, thor.thayer@linux.intel.com wrote:
+>> From: Thor Thayer <thor.thayer@linux.intel.com>
 >>
-> If you define that IMEM_NR_CLK is 52, clock driver allocates
-> the memory for 52 clocks. It cause the memory waste.
-> IMO, you better to change it as following:
+>> Stratix10 Double Bit errors are configured as SErrors
+>> so skip the Double Bit IRQ initialization if Stratix10.
+>>
+>> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+>> ---
+>>   drivers/edac/altera_edac.c | 31 ++++++++++++++++++-------------
+>>   1 file changed, 18 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+>> index c89d82aa2776..6a460c742e3f 100644
+>> --- a/drivers/edac/altera_edac.c
+>> +++ b/drivers/edac/altera_edac.c
+>> @@ -1924,20 +1924,25 @@ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
+>>   		goto err_release_group1;
+>>   	}
+>>   
+>> -	altdev->db_irq = irq_of_parse_and_map(np, 1);
+>> -	if (!altdev->db_irq) {
+>> -		edac_printk(KERN_ERR, EDAC_DEVICE, "Error allocating DBIRQ\n");
+>> -		rc = -ENODEV;
+>> -		goto err_release_group1;
+>> -	}
+>> -	rc = devm_request_irq(edac->dev, altdev->db_irq, prv->ecc_irq_handler,
+>> -			      IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+>> -			      ecc_name, altdev);
+>> -	if (rc) {
+>> -		edac_printk(KERN_ERR, EDAC_DEVICE, "No DBERR IRQ resource\n");
+>> -		goto err_release_group1;
+>> +	/* Arria10 has double bit error IRQs. Stratix10 uses SErrors */
+>> +	if (socfpga_is_a10()) {
 > 
-> #define CLK_ACLK_SLIMSSS		1
-> #define CLK_PCLK_SLIMSSS		2
+> I see that there are socfpga_is_a10() and socfpga_is_s10() sprinkled
+> around the driver. Since you're adding a specific binding for s10, would
+> it make sense to remove these functions? I've gotten comments in the
+> past from ARM maintainers that we want to avoid looking up platforms at
+> runtime and make the differentiation at load time.
 > 
-> #define IMEM_NR_CLK			3
+> Dinh
+> 
 
-Let's keep the clock ID enumeration as is, so sorting is per clock
-type as for all other CMUs in this header file. I.e. first all ACLK
-then all PCLK clocks in case remaining clock ID get added in future. 
-I'm going to adjust IMEM_NR_CLK to 36, as is not a part of DT ABI 
-definition and for now it will allow us to save some memory. Although
-I think the memory saving is negligible, we have already similar gaps 
-in the clock ID enumeration.
+If there were larger differences between the Arria10 and Stratix10 then 
+I'd agree. The differences between Arria10 and Stratix10 are minor 
+because the ECC blocks are similar.
 
-I'm going to apply the patch with IMEM_NR_CLK changed 36, assuming
-that Rob's Reviewed-by still stands, if not please let me know.
+Since all the different families of Altera EDACs are in the same file, I 
+think the runtime allocation is warranted especially since these checks 
+are in the initialization functions. The interrupt handling functions 
+are clean.
 
--- 
-Thanks,
-Sylwester
+If the maintainers have a strong preference for separate functions, I 
+can make that change but the Stratix10 functions will be very similar to 
+the Arria10 functions resulting in a much larger file.
+
+My preference would be to keep the method in this patch but of course, 
+I'll follow the consensus of the maintainers.
+
+Thanks for the review and comment!
+
+Thor
