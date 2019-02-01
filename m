@@ -1,46 +1,91 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 0/4] Add new device nodes for Spreadtrum SC9860 platform
-Date: Fri, 1 Feb 2019 20:05:30 +0800
-Message-ID: <CAMz4kuLotnNom9kx2EmdfVEb+gvWfEbxoh6+hiqk87EjmtYJwA@mail.gmail.com>
-References: <cover.1548052878.git.baolin.wang@linaro.org> <CAK8P3a3UROFLTtEcNXKtMUN283UQ6auQUOXCR=6e3BdLu5K8Nw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
+Subject: [PATCH v2] ARC: [plat-hsdk]: Add support of Vivante GPU
+Date: Fri,  1 Feb 2019 15:12:11 +0300
+Message-ID: <20190201121211.23701-1-Eugeniy.Paltsev@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3UROFLTtEcNXKtMUN283UQ6auQUOXCR=6e3BdLu5K8Nw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+To: linux-snps-arc@lists.infradead.org, Vineet Gupta <vineet.gupta1@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, Alexey Brodkin <alexey.brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>, Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+HSDK board has built-in Vivante GPU IP which works perfectly fine
+with Etnaviv driver, so let's use it.
 
-On Thu, 31 Jan 2019 at 00:46, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Jan 21, 2019 at 8:39 AM Baolin Wang <baolin.wang@linaro.org> wrote:
-> >
-> > This patch set adds charger and fuel gauge device nodes for Spreadtrum
-> > SC2731 PMIC, it also removes redundant irq trigger setting for PMIC
-> > devices and adds nvmem cells for ADC to calibrate the ADC channel scales.
-> >
-> > Baolin Wang (4):
-> >   arm64: dts: sprd: Remove PMIC INTC irq trigger type
-> >   arm64: dts: sprd: Add ADC calibration support
-> >   arm64: dts: sprd: Add SC2731 charger device
-> >   arm64: dts: sprd: Add SC27XX fuel gauge device
->
-> I did not apply these because of the 'sc27xx' wildcard matching.
->
-> Please fix those up and resend.
->
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+Changes v1->v2:
+ * Add clock inputs to etnaviv device tree node (reported by Lucas Stach)
 
-On Spreadtrum platform, we use one mfd driver [1] to populate the
-SC27XX series PMICs including SC2731, SC2721, SC2720 and SC2730. So we
-use sc27xx to be compatible with different PMICs' devices, otherwise
-it will be difficult to define the mfd cell arrays in mfd driver. Do
-you have any good suggestion? Thanks.
+ arch/arc/boot/dts/hsdk.dts      | 29 +++++++++++++++++++++++++++++
+ arch/arc/configs/hsdk_defconfig |  2 +-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/mfd/sprd-sc27xx-spi.c
-
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 43f17b51ee89..df86d0818db8 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -167,6 +167,24 @@
+ 			#clock-cells = <0>;
+ 		};
+ 
++		gpu_core_clk: gpu-core-clk {
++			compatible = "fixed-clock";
++			clock-frequency = <400000000>;
++			#clock-cells = <0>;
++		};
++
++		gpu_dma_clk: gpu-dma-clk {
++			compatible = "fixed-clock";
++			clock-frequency = <400000000>;
++			#clock-cells = <0>;
++		};
++
++		gpu_cfg_clk: gpu-cfg-clk {
++			compatible = "fixed-clock";
++			clock-frequency = <200000000>;
++			#clock-cells = <0>;
++		};
++
+ 		gmac: ethernet@8000 {
+ 			#interrupt-cells = <1>;
+ 			compatible = "snps,dwmac";
+@@ -237,6 +255,17 @@
+ 				reg = <0>;
+ 			};
+ 		};
++
++		gpu_3d: gpu@90000 {
++			compatible = "vivante,gc";
++			reg = <0x90000 0x4000>;
++			clocks = <&gpu_dma_clk>,
++				 <&gpu_cfg_clk>,
++				 <&gpu_core_clk>,
++				 <&gpu_core_clk>;
++			clock-names = "bus", "reg", "core", "shader";
++			interrupts = <28>;
++		};
+ 	};
+ 
+ 	memory@80000000 {
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 87b23b7fb781..915e1cca31f8 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -52,6 +52,7 @@ CONFIG_GPIO_DWAPB=y
+ CONFIG_DRM=y
+ # CONFIG_DRM_FBDEV_EMULATION is not set
+ CONFIG_DRM_UDL=y
++CONFIG_DRM_ETNAVIV=y
+ CONFIG_FB=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_USB_EHCI_HCD=y
+@@ -63,7 +64,6 @@ CONFIG_MMC=y
+ CONFIG_MMC_SDHCI=y
+ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_DW=y
+-# CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_EXT3_FS=y
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
 -- 
-Baolin Wang
-Best Regards
+2.14.5
