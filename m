@@ -1,53 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/4] Add new device nodes for Spreadtrum SC9860 platform
-Date: Fri, 1 Feb 2019 13:05:19 +0000
-Message-ID: <20190201130519.GH20797@sirena.org.uk>
-References: <cover.1548052878.git.baolin.wang@linaro.org>
- <CAK8P3a3UROFLTtEcNXKtMUN283UQ6auQUOXCR=6e3BdLu5K8Nw@mail.gmail.com>
- <CAMz4kuLotnNom9kx2EmdfVEb+gvWfEbxoh6+hiqk87EjmtYJwA@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v5 0/5] misc: Add support to Qualcomm FastRPC driver
+Date: Fri,  1 Feb 2019 13:09:20 +0000
+Message-ID: <20190201130925.27066-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J/zg8ciPNcraoWb6"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMz4kuLotnNom9kx2EmdfVEb+gvWfEbxoh6+hiqk87EjmtYJwA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Thanks for reviewing the v4, here is new version addressing the
+comments from v4.
+This patchset adds support to Qualcomm FastRPC driver which implements
+an IPC (Inter-Processor Communication) mechanism that allows for clients
+to transparently make remote method invocations across processor boundaries.
 
---J/zg8ciPNcraoWb6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The below diagram depicts invocation of a single method where the client
+and objects reside on different processors. An object could expose
+multiple methods which can be grouped together and referred to as an
+interface.
 
-On Fri, Feb 01, 2019 at 08:05:30PM +0800, Baolin Wang wrote:
+: ,--------,        ,------,  ,-----------,  ,------,        ,--------,
+: |        | method |      |  |           |  |      | method |        |
+: | Client |------->| Stub |->| Transport |->| Skel |------->| Object |
+: |        |        |      |  |           |  |      |        |        |
+: `--------`        `------`  `-----------`  `------`        `--------`
 
-> On Spreadtrum platform, we use one mfd driver [1] to populate the
-> SC27XX series PMICs including SC2731, SC2721, SC2720 and SC2730. So we
-> use sc27xx to be compatible with different PMICs' devices, otherwise
-> it will be difficult to define the mfd cell arrays in mfd driver. Do
-> you have any good suggestion? Thanks.
+Client:    Linux user mode process that initiates the remote invocation
+Stub:      Auto generated code linked in with the user mode process that
+           takes care of marshaling parameters
+Transport: Involved in carrying an invocation from a client to an
+           object. This involves two portions: 1) FastRPC Linux
+           kernel driver that receives the remote invocation, queues
+           them up and then waits for the response after signaling the
+           remote side. 2) Service running on the remote side that
+           dequeues the messages from the queue and dispatches them for
+           processing.
+Skel:      Auto generated code that takes care of un-marshaling
+           parameters
+Object:    Method implementation
 
-You can just list all the individual device names in the of_match_table
-for the MFD and then it can bind to any of them.  You can always map
-them onto the same behaviour in the MFD driver if they are identical
-=66rom a software point of view.
+Most of the work is derived from various downstream Qualcomm kernels.
+Credits to various Qualcomm authors who have contributed to this code.
+Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
 
---J/zg8ciPNcraoWb6
-Content-Type: application/pgp-signature; name="signature.asc"
+TODO:
+ - Support INIT_STATIC process
+ - Support remote mmap/unmap methods.
+ - Handling secure compute context banks.
+ - Add secure buffer support
 
------BEGIN PGP SIGNATURE-----
+This patchset has been tested on DB410c(msm8916), DB820c (msm8996), SDM845
+and QCS404 Qualcomm SoCs with sample apps like matrix multiply, calculator
+from Hexagon SDK. You can find more info on how to test this at:
+https://github.com/96boards/documentation/wiki/Dragonboard-Hexagon-DSP
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxURA4ACgkQJNaLcl1U
-h9CmfQf/YnVOFQBR/ZdKkjt44v9jtogltQorJrsUP4SjfNU6eEDwFekGutld//0B
-ymGkp7vX9jhWfoLvSl/U8R8iHdhuiI9n/0nE5ryQAPoPc9/CFTpDi+V3F5eR0OR4
-CvahpdUXfPJ81Z5NjIFfpeAw086b1kzrceNnPLk9+r6L1jZSu6g4i5r+b8nLGUih
-2I3PngIQvW+RKpXm8cpQLnIbyuec7nsQM2yoZi2Lsf4MM3u5saLEVakirb5vND7c
-M/Y8uhtiKXQIzeOvi3LtZWMorRulBycpDIT9FjQLvUMDFVQrbtrCIGcaBGnWyq19
-bV2dEgsE4ucI6gbuDOn9xMxpO7tUgA==
-=zaWr
------END PGP SIGNATURE-----
+Changes since v4(https://patchwork.kernel.org/cover/10779341/) :
+- collected acks for DT from Rob.
+- Removed unnecessary list safe iteration spotted by Greg KH.
+- Removed unnecessary syslog spams.
+- Added more checks to input validity.
 
---J/zg8ciPNcraoWb6--
+Srinivas Kandagatla (5):
+  misc: dt-bindings: Add Qualcomm Fastrpc bindings
+  misc: fastrpc: Add Qualcomm fastrpc basic driver model
+  misc: fastrpc: Add support for context Invoke method
+  misc: fastrpc: Add support for create remote init process
+  misc: fastrpc: Add support for dmabuf exporter
+
+ .../devicetree/bindings/misc/qcom,fastrpc.txt |   78 +
+ drivers/misc/Kconfig                          |   10 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/fastrpc.c                        | 1366 +++++++++++++++++
+ include/uapi/misc/fastrpc.h                   |   41 +
+ 5 files changed, 1496 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
+ create mode 100644 drivers/misc/fastrpc.c
+ create mode 100644 include/uapi/misc/fastrpc.h
+
+-- 
+2.20.1
