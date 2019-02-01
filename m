@@ -1,91 +1,35 @@
-From: Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
-Subject: [PATCH v2] ARC: [plat-hsdk]: Add support of Vivante GPU
-Date: Fri,  1 Feb 2019 15:12:11 +0300
-Message-ID: <20190201121211.23701-1-Eugeniy.Paltsev@synopsys.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v6 3/3] drivers: soc: xilinx: Add ZynqMP PM driver
+Date: Fri, 1 Feb 2019 12:14:45 +0000
+Message-ID: <20190201121445.GD10042@e107155-lin>
+References: <1548794301-30483-1-git-send-email-jollys@xilinx.com>
+ <1548794301-30483-4-git-send-email-jollys@xilinx.com>
+ <20190130101236.GA27201@e107155-lin>
+ <BYAPR02MB59926CC0829613B4B52A7D3EB8910@BYAPR02MB5992.namprd02.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <BYAPR02MB59926CC0829613B4B52A7D3EB8910@BYAPR02MB5992.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-snps-arc@lists.infradead.org, Vineet Gupta <vineet.gupta1@synopsys.com>
-Cc: linux-kernel@vger.kernel.org, Alexey Brodkin <alexey.brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>, Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
+To: Jolly Shah <JOLLYS@xilinx.com>
+Cc: "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "andy.gross@linaro.org" <andy.gross@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, Michal Simek <michals@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-HSDK board has built-in Vivante GPU IP which works perfectly fine
-with Etnaviv driver, so let's use it.
+On Thu, Jan 31, 2019 at 07:01:05PM +0000, Jolly Shah wrote:
+> >
+> > NACK, if this is for system suspend/reset ? You can just use exiting
+> > sysfs, no need to create Xilinx specific new ones. Moreover you need to
+> > use PSCI to make sure higher ELs can do orderly suspend/shutdown.
+> >
+>
+> We have power off suspend mode which is not supported by existing sysfs and
+> hence new one is needed. Suspend is handled through PSCI interface only.
+>
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
-Changes v1->v2:
- * Add clock inputs to etnaviv device tree node (reported by Lucas Stach)
+I see only 2 cases supported SUSPEND_SYSTEM_SHUTDOWN and
+SUSPEND_POWER_REQUEST. Both are already support so my NACK still stands.
 
- arch/arc/boot/dts/hsdk.dts      | 29 +++++++++++++++++++++++++++++
- arch/arc/configs/hsdk_defconfig |  2 +-
- 2 files changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 43f17b51ee89..df86d0818db8 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -167,6 +167,24 @@
- 			#clock-cells = <0>;
- 		};
- 
-+		gpu_core_clk: gpu-core-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <400000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		gpu_dma_clk: gpu-dma-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <400000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		gpu_cfg_clk: gpu-cfg-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <200000000>;
-+			#clock-cells = <0>;
-+		};
-+
- 		gmac: ethernet@8000 {
- 			#interrupt-cells = <1>;
- 			compatible = "snps,dwmac";
-@@ -237,6 +255,17 @@
- 				reg = <0>;
- 			};
- 		};
-+
-+		gpu_3d: gpu@90000 {
-+			compatible = "vivante,gc";
-+			reg = <0x90000 0x4000>;
-+			clocks = <&gpu_dma_clk>,
-+				 <&gpu_cfg_clk>,
-+				 <&gpu_core_clk>,
-+				 <&gpu_core_clk>;
-+			clock-names = "bus", "reg", "core", "shader";
-+			interrupts = <28>;
-+		};
- 	};
- 
- 	memory@80000000 {
-diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-index 87b23b7fb781..915e1cca31f8 100644
---- a/arch/arc/configs/hsdk_defconfig
-+++ b/arch/arc/configs/hsdk_defconfig
-@@ -52,6 +52,7 @@ CONFIG_GPIO_DWAPB=y
- CONFIG_DRM=y
- # CONFIG_DRM_FBDEV_EMULATION is not set
- CONFIG_DRM_UDL=y
-+CONFIG_DRM_ETNAVIV=y
- CONFIG_FB=y
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_USB_EHCI_HCD=y
-@@ -63,7 +64,6 @@ CONFIG_MMC=y
- CONFIG_MMC_SDHCI=y
- CONFIG_MMC_SDHCI_PLTFM=y
- CONFIG_MMC_DW=y
--# CONFIG_IOMMU_SUPPORT is not set
- CONFIG_EXT3_FS=y
- CONFIG_VFAT_FS=y
- CONFIG_TMPFS=y
--- 
-2.14.5
+--
+Regards,
+Sudeep
