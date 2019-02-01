@@ -1,66 +1,148 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH 0/2] drm/omap: panel-tpo-td028ttec1: add backlight
- support
-Date: Fri, 1 Feb 2019 12:33:40 +0100
-Message-ID: <20190201123340.05cd385c@kemnade.info>
-References: <20190119182131.9341-1-andreas@kemnade.info>
+From: Harald Geyer <harald@ccbib.org>
+Subject: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
+Date: Fri,  1 Feb 2019 11:37:43 +0000
+Message-ID: <20190201113743.10058-1-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/TK.FMOv4Uh3fx1=dIZnmILX"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190119182131.9341-1-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com, sre@kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, info@olimex.com, Mark Brown <broonie@kernel.org>, Harald Geyer <harald@ccbib.org>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/TK.FMOv4Uh3fx1=dIZnmILX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The TERES-I has internal speakers (left, right), internal microphone
+and a headset combo jack (headphones + mic).
 
-ping
+The headphone lines are multiplexed with the debug console.
+The headphone and mic detect lines of the A64 are connected properly,
+but AFAIK currently unsupported by the driver.
 
-On Sat, 19 Jan 2019 19:21:29 +0100
-Andreas Kemnade <andreas@kemnade.info> wrote:
+Signed-off-by: Harald Geyer <harald@ccbib.org>
+---
+Hi all,
 
-> This panel has a backlight, so add a property describing that and
-> add the code to use that.
-> This makes things like xset dpms force off
-> also turn off the backlight, so we do not need to rely on additional
-> userspace programs to do that.
->=20
-> Andreas Kemnade (2):
->   drm/omap: panel-tpo-td028ttec1: add backlight support
->   dt-bindings: panel: td028ttec1: add backlight property
->=20
->  .../bindings/display/panel/tpo,td028ttec1.txt          |  2 ++
->  .../gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c    | 18 ++++++++++++=
-+++---
->  2 files changed, 17 insertions(+), 3 deletions(-)
->=20
-> --=20
-> 2.11.0
->=20
->=20
+a couple of issues make this patch RFC:
 
---Sig_/TK.FMOv4Uh3fx1=dIZnmILX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+hpvcc-supply vs. cpvdd-supply:
+On the A64 manual the pin is called CPVDD and the binding documents
+requires a cpvdd-supply property. However in the actual driver and
+devicetrees so far hpvcc-supply is used. This is a very new binding,
+so we have the luxury to decide either way, I think. Any input from
+the devicetree maintainers would be appreciated.
 
------BEGIN PGP SIGNATURE-----
+debug console multiplexing:
+Olimex have a userspace script that controls gpio PL9 during boot,
+to select between HP and serial console. I guess this is not acceptable
+for mainline.
 
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlxULpQACgkQl4jFM1s/
-ye+p3Q/+KX4oNY/BOMP8qZPMRZNNpS0XMyxHBLEsippvX+FHxArZyNUNoddq6L9K
-2RMLFkZfSKUwjZprXh2U/6H+qqkmyvrZPR74XMx5ZzEN/h8MQPHko9aYXAYYg6Oe
-hxkMNhSKHlFRowOk4h4rd65JCjYxDIQwrfDyHcDxeushjgsRFFugGsly1zXnAXCj
-LttvHwFpKe8tECx5DkwVEGH0tXUhBG78xH/GNK77/Wyqm000U9qZbnRkp/hBg8d+
-Iz3BvA838TpfPPEW99eoTqjJjkHDZeiGejFX2979vgGvF+o1F44Atk5PMqAeXbAz
-sP7sbxhHYbZqJNqbBwBuFqREQjLzBDXATNjY71iyYFbR9j3N5hqFxeV+KaWPqC64
-fpe44CEiO0jEwCleDyrpHA6YzYx0FjphNlFW7LymfoY8sMfOwg5LCXesMtpvXNFk
-ny9JnR7GvTtvpMlMO5vvSO9p3jv/p+AQuSUbZuQ9R0fNfbukM79u5x4BBo8MmtOW
-fpy/ags2TSLnr8hxBWLAMuAVb3G/qL16QwMwKYdw0RLsopQTSoSxspzvU9H6OWHs
-wLsMoVrU5JP9NmVTc6hde7cjih1nW6wEZ1nT7wPbVvDcS0m214Fz97LKmkIFHIdA
-oP85NiQrvwb62gxumGpaTZdk4UssesUoDVb7KSiaW6+xsdmZ/vw=
-=duFK
------END PGP SIGNATURE-----
+The best solution I can see is to switch the HP jack from serial console
+to audio once the audio drivers load. With this people can still capture
+the bootlogs but everybody gets audio once the system is up and
+switching back to console output is as simple as unloading the audio
+drivers.
 
---Sig_/TK.FMOv4Uh3fx1=dIZnmILX--
+However the current implementation with a pinctrl group doesn't work:
+The audio card device correctly claims the pin (ie I can't export the
+gpio in sysfs anymore), but the pinctrl driver doesn't set the pin
+to output.
+
+Testing:
+I don't have a headset with combo connector, so I could only test the
+headphones output, but not the headset mic. If somebody happens to
+have a TERES-I and a suitable headset, testing this would be nice.
+
+TIA,
+Harald
+
+ .../boot/dts/allwinner/sun50i-a64-teres-i.dts | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index f9eede0a8bd3..d57049fbdaca 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -70,6 +70,26 @@
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+ 	};
++
++	speaker_amp: audio-amplifier {
++		compatible = "simple-audio-amplifier";
++		enable-gpios = <&r_pio 0 12 GPIO_ACTIVE_HIGH>; /* PL12 */
++		sound-name-prefix = "Speaker Amp";
++	};
++};
++
++&codec {
++	status = "okay";
++};
++
++&codec_analog {
++	hpvcc-supply = <&reg_eldo1>; /* TODO: Use only one of these */
++	cpvdd-supply = <&reg_eldo1>;
++	status = "okay";
++};
++
++&dai {
++	status = "okay";
+ };
+ 
+ &ehci1 {
+@@ -131,6 +151,14 @@
+ 	status = "okay";
+ };
+ 
++&r_pio {
++	r_debug_select_pin: debug-select {
++		pins = "PL9";
++		function = "gpio_out";
++		output-high;
++	};
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+@@ -258,6 +286,31 @@
+ 	vcc-hdmi-supply = <&reg_dldo1>;
+ };
+ 
++&sound {
++	pinctrl-names = "default";
++	pinctrl-0 = <&r_debug_select_pin>;
++	simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
++	simple-audio-card,widgets = "Headphone", "Headphone Jack",
++				    "Microphone", "Headset Microphone",
++				    "Microphone", "Internal Microphone",
++				    "Speaker", "Internal Speaker";
++	simple-audio-card,routing =
++			"Left DAC", "AIF1 Slot 0 Left",
++			"Right DAC", "AIF1 Slot 0 Right",
++			"AIF1 Slot 0 Left ADC", "Left ADC",
++			"AIF1 Slot 0 Right ADC", "Right ADC",
++			"Headphone Jack", "HP",
++			"Speaker Amp INL", "LINEOUT",
++			"Speaker Amp INR", "LINEOUT",
++			"Internal Speaker", "Speaker Amp OUTL",
++			"Internal Speaker", "Speaker Amp OUTR",
++			"Internal Microphone", "MBIAS",
++			"MIC1", "Internal Microphone",
++			"Headset Microphone", "HBIAS",
++			"MIC2", "Headset Microphone";
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
+-- 
+2.20.1
