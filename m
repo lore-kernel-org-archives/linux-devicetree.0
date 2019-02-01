@@ -1,190 +1,179 @@
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: Re: [PATCH v2 4/7] drm: rockchip: introduce rk3066 hdmi
-Date: Fri, 1 Feb 2019 15:25:54 +0100
-Message-ID: <CA+z=w3UKrDODY964WOtq-FQhuFJWg4C2jKXn0=3QT45gJ3UG_A@mail.gmail.com>
-References: <20181229133318.18128-1-jbx6244@gmail.com> <20181229133318.18128-5-jbx6244@gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
+ rate for PLL_MIPI
+Date: Fri, 1 Feb 2019 15:31:02 +0100
+Message-ID: <20190201143102.rcvrxstc365mezvx@flea>
+References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+ <20190124195900.22620-12-jagan@amarulasolutions.com>
+ <20190125212433.ni2jg3wvpyjazlxf@flea>
+ <CAMty3ZAsH2iZ+JEqTE3D58aXfGuhMSg9YoO56ZhhOeE4c4yQHQ@mail.gmail.com>
+ <20190129151348.mh27btttsqcmeban@flea>
+ <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181229133318.18128-5-jbx6244@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: hjc@rock-chips.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="urqj3qodl5kincq4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKVQ2HRAKGQE5QPXVCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Beside the binding for "rockchip,rk3066-vop" this patch series
-also has a new binding for "rockchip,rk3066-hdmi".
-Can Rob Herring advise here? Including the document describing the binding.
+--urqj3qodl5kincq4
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-This patch still has the original license text included.
-Can the copyright holder (or Sandy) approve the replacement of the GPL text
-by a SPDX License Identifier for GPL-2.0?
+On Tue, Jan 29, 2019 at 11:01:31PM +0530, Jagan Teki wrote:
+> On Tue, Jan 29, 2019 at 8:43 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Mon, Jan 28, 2019 at 03:06:10PM +0530, Jagan Teki wrote:
+> > > On Sat, Jan 26, 2019 at 2:54 AM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > >
+> > > > On Fri, Jan 25, 2019 at 01:28:49AM +0530, Jagan Teki wrote:
+> > > > > Minimum PLL used for MIPI is 500MHz, as per manual, but
+> > > > > lowering the min rate by 300MHz can result proper working
+> > > > > nkms divider with the help of desired dclock rate from
+> > > > > panel driver.
+> > > > >
+> > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > > > Acked-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > >
+> > > > Going 200MHz below the minimum doesn't seem really reasonable. What
+> > > > is the issue that you are trying to fix here?
+> > > >
+> > > > It looks like it's picking bad dividers, but if that's the case, this
+> > > > isn't the proper fix.
+> > >
+> > > As I stated in earlier patches, the whole idea is pick the desired
+> > > dclk divider based dclk rate. So the dotclock, sun4i_dclk_round_rate
+> > > is unable to get the proper dclk divider at the end, so it eventually
+> > > picking up wrong divider value and fired vblank timeout.
+> > >
+> > > So, we come-up with optimal and working min_rate 300MHz in pll-mipi to
+> > > get the desired clock something like below.
+> > > [    2.415773] [drm] No driver support for vblank timestamp query.
+> > > [    2.424116] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > [    2.424172] ideal = 220000000, rounded = 0
+> > > [    2.424176] ideal = 275000000, rounded = 0
+> > > [    2.424194] ccu_nkm_round_rate: rate = 330000000
+> > > [    2.424197] ideal = 330000000, rounded = 330000000
+> > > [    2.424201] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > [    2.424205] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > [    2.424209] ideal = 220000000, rounded = 0
+> > > [    2.424213] ideal = 275000000, rounded = 0
+> > > [    2.424230] ccu_nkm_round_rate: rate = 330000000
+> > > [    2.424233] ideal = 330000000, rounded = 330000000
+> > > [    2.424236] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > [    2.424253] ccu_nkm_round_rate: rate = 330000000
+> > > [    2.424270] ccu_nkm_round_rate: rate = 330000000
+> > > [    2.424278] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > [    2.424281] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > [    2.424306] ccu_nkm_set_rate: rate = 330000000, parent_rate = 297000000
+> > > [    2.424309] ccu_nkm_set_rate: _nkm.n = 5
+> > > [    2.424311] ccu_nkm_set_rate: _nkm.k = 2
+> > > [    2.424313] ccu_nkm_set_rate: _nkm.m = 9
+> > > [    2.424661] sun4i_dclk_set_rate div 6
+> > > [    2.424668] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
+> > >
+> > > But look like this wouldn't valid for all other dclock rates, say BPI
+> > > panel has 30MHz clock that would failed with this logic.
+> > >
+> > > On the other side Allwinner BSP calculating dclk divider based on the
+> > > SoC's. for A33 [1] it is fixed dclk divider of 4 and for A64 is is
+> > > calculated based on the bpp/lanes.
+> >
+> > It looks like the A64 has the same divider of 4:
+> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
+> >
+> > I think you're confusing it with the ratio between the pixel clock and
+> > the dotclock, called dsi_div:
+> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L198
+> 
+> Ahh.. I thought this initially but as far as DSI clock computation is
+> concern, the L12 tcon_div is local variable which is used for edge0
+> computation in burst mode and not for the dsi clock computation. Since
+> the BSP is unable to get the tcon_div during edge0 computation, they
+> defined it locally I think.
+> 
+> You can see the lcd_clk_config() code [2], where we can see DSI clock
+> computation using dsi_div value.
+> 
+> Here is dump after the in Line 792 which is after computation[3]
+> [   10.800737] lcd_clk_config: dsi_div = 6, tcon_div = 4, lcd_div = 1
+> [   10.800743] lcd_clk_config: lcd_dclk_freq = 55, dclk_rate = 55000000
+> [   10.800749] lcd_clk_config: lcd_rate = 330000000, pll_rate = 330000000
+> 
+> The above dump the lcd_rate 330MHz is computed with panel clock, 55MHz
+> into dsi_div 6. So this can be our actual divider values dclk_min_div,
+> dclk_max_div in sun4i_dclk_round_rate (from
+> drivers/gpu/drm/sun4i/sun4i_dotclock.c)
 
-Is Heiko's test setup for rk3066 already functional?
+I wish it was in your commit log in the first place, instead of having
+to exchange multiple mails over this.
 
-Thanks
+However, I don't think that's quite true, and it might be a bug in
+Allwinner's implementation (or rather something quite confusing).
 
-2018-12-29 14:33 GMT+01:00, Johan Jonker <jbx6244@gmail.com>:
+You're right that the lcd_rate and pll_rate seem to be generated from
+the pixel clock, and it indeed looks like the ratio between the pixel
+clock and the TCON dotclock is defined through the number of bits per
+lanes.
 
-> +++ b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-> @@ -0,0 +1,928 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) Fuzhou Rockchip Electronics Co.Ltd
-> + *    Zheng Yang <zhengyang@rock-chips.com>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+However, in this case, dsi_rate is actually the same than lcd_rate,
+since pll_rate is going to be divided by dsi_div:
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L791
 
-> +static inline u8 rk3066_hdmi_get_power_mode(struct rk3066_hdmi *hdmi)
-> +{
-> +	return hdmi_readb(hdmi, HDMI_SYS_CTRL) & HDMI_SYS_POWER_MODE_MASK;
-> +}
-> +
-> +static void rk3066_hdmi_set_power_mode(struct rk3066_hdmi *hdmi, int mode)
-> +{
-> +	u8 current_mode, next_mode;
-> +	u8 i = 0;
-> +
+Since lcd_div is 1, it also means that in this case, dsi_rate ==
+dclk_rate.
 
-The function rk3066_hdmi_get_power_mode can also returns 0 with VIO
-power domain disabled.
-That would lead to an endless loop. Just replaced 0 with
-HDMI_SYS_POWER_MODE_A to prevent a crash.
-Please advise if this function is OK with you?
+The DSI module clock however, is always set to 148.5 MHz. Indeed, if
+we look at:
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L804
 
-> +	current_mode = rk3066_hdmi_get_power_mode(hdmi);
-> +
-> +	dev_dbg(hdmi->dev, "mode         :%d\n", mode);
-> +	dev_dbg(hdmi->dev, "current_mode :%d\n", current_mode);
-> +
-> +	if (current_mode == mode)
-> +		return;
-> +
-> +	do {
-> +		if (current_mode > mode)
-> +			next_mode = current_mode / 2;
-> +		else {
-> +			if (current_mode < HDMI_SYS_POWER_MODE_A)
-> +				next_mode = HDMI_SYS_POWER_MODE_A;
-> +			else
-> +				next_mode = current_mode * 2;
-> +		}
-> +
-> +		dev_dbg(hdmi->dev, "%d: next_mode :%d\n", i, next_mode);
-> +
-> +		if (next_mode != HDMI_SYS_POWER_MODE_D) {
-> +			hdmi_modb(hdmi, HDMI_SYS_CTRL,
-> +				  HDMI_SYS_POWER_MODE_MASK, next_mode);
-> +		} else {
-> +			hdmi_writeb(hdmi, HDMI_SYS_CTRL,
-> +				    HDMI_SYS_POWER_MODE_D |
-> +				    HDMI_SYS_PLL_RESET_MASK);
-> +			usleep_range(90, 100);
-> +			hdmi_writeb(hdmi, HDMI_SYS_CTRL,
-> +				    HDMI_SYS_POWER_MODE_D |
-> +				    HDMI_SYS_PLLB_RESET);
-> +			usleep_range(90, 100);
-> +			hdmi_writeb(hdmi, HDMI_SYS_CTRL,
-> +				    HDMI_SYS_POWER_MODE_D);
-> +		}
-> +		current_mode = next_mode;
-> +		i = i + 1;
-> +	} while ((next_mode != mode) && (i < 5));
+We can see that the rate in clk_info is used if it's different than
+0. This is filled by disp_al_lcd_get_clk_info, which, in the case of a
+DSI panel, will hardcode it to 148.5 MHz:
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L164
 
-> +static const struct drm_display_mode edid_cea_modes[] = {
-> +	/* 4 - 1280x720@60Hz 16:9 */
-> +	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 74250, 1280, 1390,
-> +		   1430, 1650, 0, 720, 725, 730, 750, 0,
-> +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> +};
-> +
-> +static int rk3066_hdmi_connector_get_modes(struct drm_connector
-> *connector)
-> +{
-> +	struct rk3066_hdmi *hdmi = to_rk3066_hdmi(connector);
-> +	struct drm_display_mode *mode = NULL;
-> +	struct edid *edid;
-> +	int ret = 0;
-> +
-> +	if (!hdmi->ddc)
-> +		return 0;
-> +
-> +	hdmi->hdmi_data.sink_is_hdmi = false;
-> +
-> +	edid = drm_get_edid(connector, hdmi->ddc);
-> +	if (edid) {
-> +		hdmi->hdmi_data.sink_is_hdmi = drm_detect_hdmi_monitor(edid);
-> +
-> +		dev_info(hdmi->dev, "monitor type : %s : %dx%d cm\n",
-> +			(hdmi->hdmi_data.sink_is_hdmi ? "HDMI" : "DVI"),
-> +			edid->width_cm, edid->height_cm);
-> +
-> +		drm_connector_update_edid_property(connector, edid);
-> +		ret = drm_add_edid_modes(connector, edid);
-> +		kfree(edid);
-> +	}
-> +
+So, the DSI clock is set to this here:
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L805
 
-The DRM framework doesn't provide a function to make a CEA mode. DVI-D
-needs a mode set here.
-Adding more modes needs an extra for loop. For now one mode is enough.
-Just leave it that way.? Please advise.
+The TCON *module* clock (the one in the clock controller) has been set
+to lcd_rate (so the pixel clock times the number of bits per lane) here:
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L800
 
-> +	if ((ret == 0) || (hdmi->hdmi_data.sink_is_hdmi == false)) {
-> +		hdmi->hdmi_data.sink_is_hdmi = false;
-> +
-> +		mode = drm_mode_duplicate(hdmi->drm_dev, &edid_cea_modes[0]);
-> +		if (!mode)
-> +			return ret;
-> +		mode->type |= DRM_MODE_TYPE_PREFERRED;
-> +		drm_mode_probed_add(connector, mode);
-> +		ret++;
-> +
-> +		dev_info(hdmi->dev, "no CEA mode found, use default\n");
-> +	}
-> +
-> +	return ret;
-> +}
+And the PLL has been set to the same rate here:
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L794
 
-> +struct platform_driver rk3066_hdmi_driver = {
-> +	.probe  = rk3066_hdmi_probe,
-> +	.remove = rk3066_hdmi_remove,
-> +	.driver = {
-> +		.name = "rockchip-rk3066hdmi",
-> +		.of_match_table = rk3066_hdmi_dt_ids,
-> +	},
-> +};
+Let's take a step back now: that function we were looking at,
+lcd_clk_config, is called by lcd_clk_enable, which is in turn called
+by disp_lcd_enable here:
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1328
 
+The next function being called is disp_al_lcd_cfg, and that function
+will hardcode the TCON dotclock divider to 4, here:
+https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L240
 
-> diff --git a/drivers/gpu/drm/rockchip/rk3066_hdmi.h
-> b/drivers/gpu/drm/rockchip/rk3066_hdmi.h
-> new file mode 100644
-> index 000000000..f4c2e2081
-> --- /dev/null
-> +++ b/drivers/gpu/drm/rockchip/rk3066_hdmi.h
-> @@ -0,0 +1,235 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) Fuzhou Rockchip Electronics Co.Ltd
-> + *    Zheng Yang <zhengyang@rock-chips.com>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+So, in the end, the dotclock divider is always 4, the DSI module clock
+is set to 148.5 MHz, and the TCON module clock is set to 330MHz. Since
+the TCON module clock doesn't have a divider, the PLL is set at that
+same value but this is redundant.
+
+I'll experiment with this and try to see how it works on the A33.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--urqj3qodl5kincq4--
