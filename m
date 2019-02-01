@@ -1,12 +1,12 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v5 05/10] soc: qcom: Add AOSS QMP communication driver
-Date: Fri, 1 Feb 2019 15:36:38 -0800
-Message-ID: <CAD=FV=U617Q6RFPnJaRoNEf=hr1ag9qqon2M-msbQD483tmicg@mail.gmail.com>
-References: <20190131003933.11436-1-bjorn.andersson@linaro.org> <20190131003933.11436-6-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 06/10] soc: qcom: Add AOSS QMP genpd provider
+Date: Fri, 1 Feb 2019 15:39:00 -0800
+Message-ID: <CAD=FV=Us8-VBGhwuJHCAGAxV13FOYOx2WBDegQ60SSG=oSO=EQ@mail.gmail.com>
+References: <20190131003933.11436-1-bjorn.andersson@linaro.org> <20190131003933.11436-7-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131003933.11436-6-bjorn.andersson@linaro.org>
+In-Reply-To: <20190131003933.11436-7-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
@@ -16,215 +16,94 @@ Hi,
 
 On Wed, Jan 30, 2019 at 4:40 PM Bjorn Andersson
 <bjorn.andersson@linaro.org> wrote:
-> +++ b/drivers/soc/qcom/aoss-qmp.c
-> @@ -0,0 +1,317 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, Linaro Ltd
-> + */
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/soc/qcom/aoss-qmp.h>
-> +
-> +#define QMP_DESC_MAGIC                 0x0
-> +#define QMP_DESC_VERSION               0x4
-> +#define QMP_DESC_FEATURES              0x8
-> +
-> +#define QMP_DESC_UCORE_LINK_STATE      0xc
-> +#define QMP_DESC_UCORE_LINK_STATE_ACK  0x10
-> +#define QMP_DESC_UCORE_CH_STATE                0x14
-> +#define QMP_DESC_UCORE_CH_STATE_ACK    0x18
-> +#define QMP_DESC_UCORE_MBOX_SIZE       0x1c
-> +#define QMP_DESC_UCORE_MBOX_OFFSET     0x20
-> +
-> +#define QMP_DESC_MCORE_LINK_STATE      0x24
-> +#define QMP_DESC_MCORE_LINK_STATE_ACK  0x28
-> +#define QMP_DESC_MCORE_CH_STATE                0x2c
-> +#define QMP_DESC_MCORE_CH_STATE_ACK    0x30
-> +#define QMP_DESC_MCORE_MBOX_SIZE       0x34
-> +#define QMP_DESC_MCORE_MBOX_OFFSET     0x38
-
-I sure wish something in this file told me what a mcore and a ucore
-were.  The only thing I can think of is that an "m" core is two "u"
-cores flipped upside down and placed really close to each other.
-...if we had 6 upside down "u" cores we'd have an "mmm" core.  Mmm,
-core.
-
-
-> +static int qmp_open(struct qmp *qmp)
-> +{
-> +       int ret;
-> +       u32 val;
-> +
-> +       ret = wait_event_timeout(qmp->event, qmp_magic_valid(qmp), HZ);
-
-I'm a totally noob here, but I'm curious: what kicks this event?  Do
-we just assume that an IRQ is pending already when the probe()
-function is called?  Maybe you could add a comment?
-
-...or maybe you never actually get an IRQ here and just rely on the
-magic value being right at boot in which case we should just check
-qmp_magic_valid()
-
-...or maybe you never actually get an IRQ here and this is equivalent
-to msleep(1000) followed by a check of qmp_magic_valid()?
-
-
-> +       if (!ret) {
-> +               dev_err(qmp->dev, "QMP magic doesn't match\n");
-> +               return -ETIMEDOUT;
-> +       }
-> +
-> +       val = readl(qmp->msgram + QMP_DESC_VERSION);
-> +       if (val != QMP_VERSION) {
-> +               dev_err(qmp->dev, "unsupported QMP version %d\n", val);
-> +               return -EINVAL;
-> +       }
-> +
-> +       qmp->offset = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_OFFSET);
-> +       qmp->size = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_SIZE);
-> +       if (!qmp->size) {
-> +               dev_err(qmp->dev, "invalid mailbox size 0x%zx\n", qmp->size);
-
-nitty nit: Can you do "%#zx" to avoid the need for the 0x?
-
-
-> +               return -EINVAL;
-> +       }
-> +
-> +       /* Ack remote core's link state */
-> +       val = readl(qmp->msgram + QMP_DESC_UCORE_LINK_STATE);
-> +       writel(val, qmp->msgram + QMP_DESC_UCORE_LINK_STATE_ACK);
-> +
-> +       /* Set local core's link state to up */
-> +       writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
-> +
-> +       qmp_kick(qmp);
-> +
-> +       ret = wait_event_timeout(qmp->event, qmp_link_acked(qmp), HZ);
-> +       if (!ret) {
-> +               dev_err(qmp->dev, "ucore didn't ack link\n");
-> +               goto timeout_close_link;
-> +       }
-> +
-> +       writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
-> +
-> +       ret = wait_event_timeout(qmp->event, qmp_ucore_channel_up(qmp), HZ);
-
-Again maybe a noob question, but what kicks the interrupt here?  Is
-the other side looping waiting to see us write "QMP_STATE_UP" into
-"QMP_DESC_MCORE_CH_STATE" and then it sends us another interrupt?
-...or are we just getting lucky that the condition is right to begin
-with?
-
-
-> +       if (!ret) {
-> +               dev_err(qmp->dev, "ucore didn't open channel\n");
-> +               goto timeout_close_channel;
-> +       }
-> +
-> +       /* Ack remote core's channel state */
-> +       val = readl(qmp->msgram + QMP_DESC_UCORE_CH_STATE);
-> +       writel(val, qmp->msgram + QMP_DESC_UCORE_CH_STATE_ACK);
-
-nit: the readl() is silly here.  Just before this you called
-qmp_ucore_channel_up() and that confirmed that the value you're
-getting here is exactly equal to "QMP_STATE_UP".  Just write that.
-
-
-> +static int qmp_probe(struct platform_device *pdev)
-> +{
-> +       struct resource *res;
+> +struct qmp_pd {
 > +       struct qmp *qmp;
-> +       int irq;
-> +       int ret;
 > +
-> +       qmp = devm_kzalloc(&pdev->dev, sizeof(*qmp), GFP_KERNEL);
+> +       struct generic_pm_domain pd;
+> +
+> +       const char *name;
+
+nit: why do you need name?  Can't you just reach in and use pd.name
+since they're the same?
+
+
+> +static int qmp_pd_clock_toggle(struct qmp_pd *res, bool enable)
+> +{
+> +       char buf[AOSS_QMP_PD_MSG_LEN];
+> +
+> +       snprintf(buf, sizeof(buf), "{class: clock, res: %s, val: %d}",
+> +                res->name, !!enable);
+
+nit: "enable" is a bool, so "!!" shouldn't be necessary right?
+
+
+> +       return qmp_send(res->qmp, buf, sizeof(buf));
+
+It appears that you write a string less than 96 bytes onto your stack
+buffer but then send the full 96 bytes of stack to the AOSS.  That
+doesn't seem like a very good idea to me.  Sorry, but your secret plan
+to embed NSA code in the AOSS firmware and scrape data off the kernel
+stack has been foiled.
+
+
+> +static int qmp_pd_image_toggle(struct qmp_pd *res, bool enable)
+> +{
+> +       char buf[AOSS_QMP_PD_MSG_LEN];
+> +
+> +       snprintf(buf, sizeof(buf),
+> +                "{class: image, res: load_state, name: %s, val: %s}",
+> +                res->name, enable ? "on" : "off");
+> +       return qmp_send(res->qmp, buf, sizeof(buf));
+
+Please tell me you're joking that for turning on/off clocks "val" is
+1/0 but for turning off images "val" is on/off.
+
+
+> +static int qmp_pd_probe(struct platform_device *pdev)
+> +{
+> +       struct genpd_onecell_data *data;
+> +       struct device *parent = pdev->dev.parent;
+> +       struct qmp_pd *res;
+> +       struct qmp *qmp;
+> +       size_t num = ARRAY_SIZE(sdm845_resources);
+> +       int i;
+> +
+> +       qmp = dev_get_drvdata(pdev->dev.parent);
 > +       if (!qmp)
+> +               return -EINVAL;
+> +
+> +       res = devm_kcalloc(&pdev->dev, num, sizeof(*res), GFP_KERNEL);
+> +       if (!res)
 > +               return -ENOMEM;
 > +
-> +       qmp->dev = &pdev->dev;
-> +       init_waitqueue_head(&qmp->event);
-> +       mutex_init(&qmp->tx_lock);
+> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +       if (!data)
+> +               return -ENOMEM;
 > +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       qmp->msgram = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(qmp->msgram))
-> +               return PTR_ERR(qmp->msgram);
+> +       data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
+> +                                    GFP_KERNEL);
 > +
-> +       qmp->mbox_client.dev = &pdev->dev;
-> +       qmp->mbox_client.knows_txdone = true;
-> +       qmp->mbox_chan = mbox_request_channel(&qmp->mbox_client, 0);
-
-nit: your code would be simplified a bit if you created
-devm_mbox_request_channel() in a prior patch.
-
-
-> +       if (IS_ERR(qmp->mbox_chan)) {
-> +               dev_err(&pdev->dev, "failed to acquire ipc mailbox\n");
-> +               return PTR_ERR(qmp->mbox_chan);
-> +       }
+> +       for (i = 0; i < num; i++) {
+> +               pm_genpd_init(&res[i].pd, NULL, true);
+> +               res[i].qmp = qmp;
+> +               res[i].name = sdm845_resources[i].name;
 > +
-> +       irq = platform_get_irq(pdev, 0);
-> +       ret = devm_request_irq(&pdev->dev, irq, qmp_intr, IRQF_ONESHOT,
-> +                              "aoss-qmp", qmp);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "failed to request interrupt\n");
-> +               mbox_free_channel(qmp->mbox_chan);
-> +               return ret;
-> +       }
+> +               res[i].pd.name = sdm845_resources[i].name;
+> +               res[i].pd.power_on = sdm845_resources[i].on;
+> +               res[i].pd.power_off = sdm845_resources[i].off;
 > +
-> +       ret = qmp_open(qmp);
-> +       if (ret < 0) {
-> +               mbox_free_channel(qmp->mbox_chan);
-> +               return ret;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, qmp);
-> +
-> +       if (of_property_read_bool(pdev->dev.of_node, "#power-domain-cells")) {
-> +               qmp->pd_pdev = platform_device_register_data(&pdev->dev,
-> +                                                            "aoss_qmp_pd",
-> +                                                            PLATFORM_DEVID_NONE,
-> +                                                            NULL, 0);
-> +               if (IS_ERR(qmp->pd_pdev))
-> +                       dev_err(&pdev->dev, "failed to register AOSS PD\n");
+> +               data->domains[data->num_domains++] = &res[i].pd;
 
-nit: I'd prefer dev_warn() for serious but non-fatal errors.  This
-appears to be non-fatal since it doesn't cause you to return an error.
+nit: data->domains[i] = &res[i].pd;
 
-...ideally the error message should indicate that the error is being ignored.
+...and then somewhere in this function (not in the loop) just write:
+
+data->num_domains = num;
 
 
-I'm also not 100% sure why the "aoss_qmp_pd" needs to be broken up as
-a separate driver.  I guess there is expectation that there will be
-more sub-drivers that use qmp_send() and that stuffing them all in the
-same driver would be too much?  It sure seems like your life would be
-simplified if they were just one driver though unless you think
-someone would want to enable "AOSS_QMP" without enabling
-"AOSS_QMP_PD".
+I think that's the same, right?  They you don't have to re-compute
+num_domains by adding 1 at at time and it'd also be more obvious that
+all the array accesses in the loop were the same number?
 
 
-> +static int qmp_remove(struct platform_device *pdev)
-> +{
-> +       struct qmp *qmp = platform_get_drvdata(pdev);
-> +
-> +       platform_device_unregister(qmp->pd_pdev);
-
-Presumably the above should be prefixed with:
-
-if (!IS_ERR(qmp->pd_pdev))
-
-...since it appears that the probe will return with no error if you
-fail to register the pd_pdev and thus you need to handle it being an
-error in remove.
-
-
-> +       mbox_free_channel(qmp->mbox_chan);
-> +       qmp_close(qmp);
-
-nit: I always expect that remove should be in the opposite order of
-probe.  That means qmp_close() should be before mbox_free_channel().
+-Doug
