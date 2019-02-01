@@ -1,37 +1,66 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: imx8mq-evk: Add fsl,magic-packet
- property
-Date: Fri, 1 Feb 2019 18:49:00 +0800
-Message-ID: <20190201104859.GA22413@dragon>
-References: <20190128095212.14681-1-ccaione@baylibre.com>
- <20190128095212.14681-3-ccaione@baylibre.com>
- <CAOMZO5B1M9VPB=yXhyKDA8diXo7YuAusTa=uY1Uv6E+hWDqQHA@mail.gmail.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH 0/2] drm/omap: panel-tpo-td028ttec1: add backlight
+ support
+Date: Fri, 1 Feb 2019 12:33:40 +0100
+Message-ID: <20190201123340.05cd385c@kemnade.info>
+References: <20190119182131.9341-1-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5B1M9VPB=yXhyKDA8diXo7YuAusTa=uY1Uv6E+hWDqQHA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Carlo Caione <ccaione@baylibre.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/TK.FMOv4Uh3fx1=dIZnmILX"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190119182131.9341-1-andreas@kemnade.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com, sre@kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 10:11:56AM -0200, Fabio Estevam wrote:
-> On Mon, Jan 28, 2019 at 7:53 AM Carlo Caione <ccaione@baylibre.com> wrote:
-> >
-> > Add the fsl,magic-packet property in the fec nome.
-> 
-> s/nome/node/
+--Sig_/TK.FMOv4Uh3fx1=dIZnmILX
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixed it up and applied both patches.
+ping
 
-Shawn
+On Sat, 19 Jan 2019 19:21:29 +0100
+Andreas Kemnade <andreas@kemnade.info> wrote:
+
+> This panel has a backlight, so add a property describing that and
+> add the code to use that.
+> This makes things like xset dpms force off
+> also turn off the backlight, so we do not need to rely on additional
+> userspace programs to do that.
+>=20
+> Andreas Kemnade (2):
+>   drm/omap: panel-tpo-td028ttec1: add backlight support
+>   dt-bindings: panel: td028ttec1: add backlight property
+>=20
+>  .../bindings/display/panel/tpo,td028ttec1.txt          |  2 ++
+>  .../gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c    | 18 ++++++++++++=
++++---
+>  2 files changed, 17 insertions(+), 3 deletions(-)
+>=20
+> --=20
+> 2.11.0
+>=20
+>=20
+
+--Sig_/TK.FMOv4Uh3fx1=dIZnmILX
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlxULpQACgkQl4jFM1s/
+ye+p3Q/+KX4oNY/BOMP8qZPMRZNNpS0XMyxHBLEsippvX+FHxArZyNUNoddq6L9K
+2RMLFkZfSKUwjZprXh2U/6H+qqkmyvrZPR74XMx5ZzEN/h8MQPHko9aYXAYYg6Oe
+hxkMNhSKHlFRowOk4h4rd65JCjYxDIQwrfDyHcDxeushjgsRFFugGsly1zXnAXCj
+LttvHwFpKe8tECx5DkwVEGH0tXUhBG78xH/GNK77/Wyqm000U9qZbnRkp/hBg8d+
+Iz3BvA838TpfPPEW99eoTqjJjkHDZeiGejFX2979vgGvF+o1F44Atk5PMqAeXbAz
+sP7sbxhHYbZqJNqbBwBuFqREQjLzBDXATNjY71iyYFbR9j3N5hqFxeV+KaWPqC64
+fpe44CEiO0jEwCleDyrpHA6YzYx0FjphNlFW7LymfoY8sMfOwg5LCXesMtpvXNFk
+ny9JnR7GvTtvpMlMO5vvSO9p3jv/p+AQuSUbZuQ9R0fNfbukM79u5x4BBo8MmtOW
+fpy/ags2TSLnr8hxBWLAMuAVb3G/qL16QwMwKYdw0RLsopQTSoSxspzvU9H6OWHs
+wLsMoVrU5JP9NmVTc6hde7cjih1nW6wEZ1nT7wPbVvDcS0m214Fz97LKmkIFHIdA
+oP85NiQrvwb62gxumGpaTZdk4UssesUoDVb7KSiaW6+xsdmZ/vw=
+=duFK
+-----END PGP SIGNATURE-----
+
+--Sig_/TK.FMOv4Uh3fx1=dIZnmILX--
