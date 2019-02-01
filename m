@@ -1,169 +1,300 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH v2 10/10] spi: atmel-quadspi: add support for sam9x60 qspi
- controller
-Date: Fri, 1 Feb 2019 07:07:40 +0000
-Message-ID: <947f148d-3fd8-4e7d-4301-9d67715fbf7d@microchip.com>
-References: <20190131161515.21605-1-tudor.ambarus@microchip.com>
- <20190131161515.21605-11-tudor.ambarus@microchip.com>
- <20190131173207.56481a42@bbrezillon>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
+Date: Thu, 31 Jan 2019 23:09:49 -0800
+Message-ID: <154900498906.169292.1193422735086292701@swboyd.mtv.corp.google.com>
+References: <20181219221105.3004-1-ilina@codeaurora.org> <20181219221105.3004-5-ilina@codeaurora.org> <20181229000714.GA3654@bogus> <20190107185113.GH14960@codeaurora.org> <CAL_Jsq+McuN5F9_a2bmECegR65vziNATpUqt4hysKL7FT=b9RA@mail.gmail.com> <20190109173111.GB22547@codeaurora.org> <CAL_JsqL1z-iOewqBeE43n1cVSGiQyOPHBGbRmEm9zcVLJkoLEA@mail.gmail.com> <154724884881.169631.9705938789464714812@swboyd.mtv.corp.google.com> <154827672955.136743.8509585166504871320@swboyd.mtv.corp.google.com> <154897162267.169292.1911486544543857784@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131173207.56481a42@bbrezillon>
-Content-Language: en-US
-Content-ID: <FDE3A9ADDF16244C80058B0BF4938DDC@namprd11.prod.outlook.com>
+In-Reply-To: <154897162267.169292.1911486544543857784@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bbrezillon@kernel.org
-Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+To: Lina Iyer <ilina@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDAxLzMxLzIwMTkgMDY6MzIgUE0sIEJvcmlzIEJyZXppbGxvbiB3cm90ZToNCj4gT24g
-VGh1LCAzMSBKYW4gMjAxOSAxNjoxNTo1MSArMDAwMA0KPiA8VHVkb3IuQW1iYXJ1c0BtaWNyb2No
-aXAuY29tPiB3cm90ZToNCj4gDQo+PiBGcm9tOiBUdWRvciBBbWJhcnVzIDx0dWRvci5hbWJhcnVz
-QG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gVGhlIHNhbTl4NjAgcXNwaSBjb250cm9sbGVyIHVzZXMg
-MiBjbG9ja3MsIG9uZSBmb3IgdGhlIHBlcmlwaGVyYWwgcmVnaXN0ZXINCj4+IGFjY2VzcywgdGhl
-IG90aGVyIGZvciB0aGUgcXNwaSBjb3JlIGFuZCBwaHkuIEJvdGggYXJlIG1hbmRhdG9yeS4gSXQg
-dXNlcw0KPj4gZGVkaWNhdGVkIHJlZ2lzdGVyIGZvciBSZWFkIEluc3RydWN0aW9uIENvZGUgUmVn
-aXN0ZXIgKFJJQ1IpIGFuZA0KPj4gV3JpdGUgSW5zdHJ1Y3Rpb24gQ29kZSBSZWdpc3RlciAoV0lD
-UikuIElDUi9SSUNSL1dJQ1IgaGF2ZSBpZGVudGljYWwNCj4+IGZpZWxkcy4NCj4+DQo+PiBUZXN0
-ZWQgd2l0aCBzc3QyNnZmMDY0YiBqZWRlYyxzcGktbm9yIGZsYXNoLiBCYWNrd2FyZCBjb21wYXRp
-YmlsaXR5IHRlc3QNCj4+IGRvbmUgb24gc2FtYTVkMiBxc3BpIGNvbnRyb2xsZXIgYW5kIG14MjVs
-MjU2MzVlIGplZGVjLHNwaS1ub3IgZmxhc2guDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogVHVkb3Ig
-QW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0KPj4gLS0tDQo+PiB2MjoNCj4+
-IC0gcmV3b3JrIGNsb2NrIGhhbmRsaW5nDQo+PiAtIHJlb3JkZXIgc2V0dGluZyBvZiByZWdpc3Rl
-ciB2YWx1ZXMgaW4gc2V0X2NmZygpIGNhbGxzIC0+IG1vdmUgZnVuY3Rpb25zDQo+PiAgIHRoYXQg
-Y2FuIGZhaWwgaW4gdGhlIHVwcGVyIHBhcnQgb2YgdGhlIGZ1bmN0aW9uIGJvZHkuDQo+Pg0KPj4g
-IGRyaXZlcnMvc3BpL2F0bWVsLXF1YWRzcGkuYyB8IDI5NiArKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKy0tLS0tLS0tLQ0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAyMzkgaW5zZXJ0aW9u
-cygrKSwgNTcgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3BpL2F0
-bWVsLXF1YWRzcGkuYyBiL2RyaXZlcnMvc3BpL2F0bWVsLXF1YWRzcGkuYw0KPj4gaW5kZXggZDNl
-NzZhY2Y4NTE3Li44MGM5MzRmM2U0NzkgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3NwaS9hdG1l
-bC1xdWFkc3BpLmMNCj4+ICsrKyBiL2RyaXZlcnMvc3BpL2F0bWVsLXF1YWRzcGkuYw0KPj4gQEAg
-LTE5LDYgKzE5LDcgQEANCj4+ICAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+PiAgI2luY2x1
-ZGUgPGxpbnV4L21vZHVsZS5oPg0KPj4gICNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPj4gKyNpbmNs
-dWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPg0KPj4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9k
-ZXZpY2UuaD4NCj4+ICAjaW5jbHVkZSA8bGludXgvc3BpL3NwaS1tZW0uaD4NCj4+ICANCj4+IEBA
-IC0zNSw3ICszNiw5IEBADQo+PiAgDQo+PiAgI2RlZmluZSBRU1BJX0lBUiAgICAgMHgwMDMwICAv
-KiBJbnN0cnVjdGlvbiBBZGRyZXNzIFJlZ2lzdGVyICovDQo+PiAgI2RlZmluZSBRU1BJX0lDUiAg
-ICAgMHgwMDM0ICAvKiBJbnN0cnVjdGlvbiBDb2RlIFJlZ2lzdGVyICovDQo+PiArI2RlZmluZSBR
-U1BJX1dJQ1IgICAgMHgwMDM0ICAvKiBXcml0ZSBJbnN0cnVjdGlvbiBDb2RlIFJlZ2lzdGVyICov
-DQo+PiAgI2RlZmluZSBRU1BJX0lGUiAgICAgMHgwMDM4ICAvKiBJbnN0cnVjdGlvbiBGcmFtZSBS
-ZWdpc3RlciAqLw0KPj4gKyNkZWZpbmUgUVNQSV9SSUNSICAgIDB4MDAzQyAgLyogUmVhZCBJbnN0
-cnVjdGlvbiBDb2RlIFJlZ2lzdGVyICovDQo+PiAgDQo+PiAgI2RlZmluZSBRU1BJX1NNUiAgICAg
-MHgwMDQwICAvKiBTY3JhbWJsaW5nIE1vZGUgUmVnaXN0ZXIgKi8NCj4+ICAjZGVmaW5lIFFTUElf
-U0tSICAgICAweDAwNDQgIC8qIFNjcmFtYmxpbmcgS2V5IFJlZ2lzdGVyICovDQo+PiBAQCAtODgs
-NyArOTEsNyBAQA0KPj4gICNkZWZpbmUgUVNQSV9TQ1JfRExZQlNfTUFTSyAgICAgICAgICAgICBH
-RU5NQVNLKDIzLCAxNikNCj4+ICAjZGVmaW5lIFFTUElfU0NSX0RMWUJTKG4pICAgICAgICAgICAg
-ICAgKCgobikgPDwgMTYpICYgUVNQSV9TQ1JfRExZQlNfTUFTSykNCj4+ICANCj4+IC0vKiBCaXRm
-aWVsZHMgaW4gUVNQSV9JQ1IgKEluc3RydWN0aW9uIENvZGUgUmVnaXN0ZXIpICovDQo+PiArLyog
-Qml0ZmllbGRzIGluIFFTUElfSUNSIChSZWFkL1dyaXRlIEluc3RydWN0aW9uIENvZGUgUmVnaXN0
-ZXIpICovDQo+PiAgI2RlZmluZSBRU1BJX0lDUl9JTlNUX01BU0sgICAgICAgICAgICAgIEdFTk1B
-U0soNywgMCkNCj4+ICAjZGVmaW5lIFFTUElfSUNSX0lOU1QoaW5zdCkgICAgICAgICAgICAgKCgo
-aW5zdCkgPDwgMCkgJiBRU1BJX0lDUl9JTlNUX01BU0spDQo+PiAgI2RlZmluZSBRU1BJX0lDUl9P
-UFRfTUFTSyAgICAgICAgICAgICAgIEdFTk1BU0soMjMsIDE2KQ0KPj4gQEAgLTExMyw2ICsxMTYs
-OCBAQA0KPj4gICNkZWZpbmUgUVNQSV9JRlJfT1BUTF80QklUICAgICAgICAgICAgICAoMiA8PCA4
-KQ0KPj4gICNkZWZpbmUgUVNQSV9JRlJfT1BUTF84QklUICAgICAgICAgICAgICAoMyA8PCA4KQ0K
-Pj4gICNkZWZpbmUgUVNQSV9JRlJfQUREUkwgICAgICAgICAgICAgICAgICBCSVQoMTApDQo+PiAr
-I2RlZmluZSBRU1BJX0lGUl9URlJUWVBfVFJTRlJfTUVNCUJJVCgxMikNCj4+ICsjZGVmaW5lIFFT
-UElfSUZSX1RGUlRZUF9UUlNGUl9SRUcJKDAgPDwgMTIpDQo+IA0KPiBZb3UgZG9uJ3QgbmVlZCB0
-byBkZWZpbmUgVFJTRlJfUkVHLCBqdXN0IHNldCBRU1BJX0lGUl9URlJUWVBfVFJTRlJfTUVNDQo+
-IHdoZW4geW91IGRvIGEgbWVtIHRyYW5zZmVyIGFuZCBkbyBub3RoaW5nIHdoZW4gdGhpcyBpcyBh
-IHJlZ3VsYXINCj4gdHJhbnNmZXIuDQoNCg0KSSBjaG9zZSB0byBpbnRyb2R1Y2UgbWFjcm9zIHdp
-dGggemVybyB2YWx1ZSBmb3IgYmV0dGVyIGNvZGUgcmVhZGFiaWxpdHkuIEkgd291bGQNCmV4cGVj
-dCB0aGF0IHRoZSBOT1Agb3BlcmF0aW9ucyB0byBiZSBvcHRpbWl6ZWQgYXQgY29tcGlsZSB0aW1l
-LiBJIHdpbGwgcmVtb3ZlIHRoZW0NCmlmIHlvdSBwcmVmZXIsIGl0IHdpbGwgcmVzdWx0IGluIGZl
-d2VyIGxpbmVzIG9mIGNvZGUuDQoNCj4gDQo+PiAgI2RlZmluZSBRU1BJX0lGUl9URlJUWVBfTUFT
-SyAgICAgICAgICAgIEdFTk1BU0soMTMsIDEyKQ0KPj4gICNkZWZpbmUgUVNQSV9JRlJfVEZSVFlQ
-X1RSU0ZSX1JFQUQgICAgICAoMCA8PCAxMikNCj4+ICAjZGVmaW5lIFFTUElfSUZSX1RGUlRZUF9U
-UlNGUl9SRUFEX01FTSAgKDEgPDwgMTIpDQo+IA0KPiBMb29rcyBsaWtlIHRoZSByZWFkL3dyaXRl
-IGZsYWcgaXMgb24gYml0IDEzLiBDYW4gd2UganVzdCBhZGQNCg0KZm9yIHNhbWE1ZDIgb25seQ0K
-DQo+IA0KPiAjZGVmaW5lIFFTUElfSUZSX1RGUlRZUF9UUlNGUl9XUklURQlCSVQoMTMpDQo+IA0K
-PiBhbmQgZHJvcCBhbGwgb3RoZXJzIGRlZj8gVGhpcyB3YXkgdGhlIGltcGxlbWVudGF0aW9uIGlz
-IGNvbnNpc3RlbnQNCj4gYmV0d2VlbiBzYW05eDYwIGFuZCBzYW1hNWQyLg0KDQpCSVQoMTMpIGhh
-cyBubyBtZWFuaW5nIGZvciBzYW05eDYwLiBJIGNhbiBkcm9wIHRoZSBtYWNyb3Mgd2l0aCB6ZXJv
-IHZhbHVlIGZvcg0Kc2FtYTVkMiBpbiBhIHNlcGFyYXRlIHBhdGNoLg0KDQo+IA0KPj4gQEAgLTEy
-MSw2ICsxMjYsOCBAQA0KPj4gICNkZWZpbmUgUVNQSV9JRlJfQ1JNICAgICAgICAgICAgICAgICAg
-ICBCSVQoMTQpDQo+PiAgI2RlZmluZSBRU1BJX0lGUl9OQkRVTV9NQVNLICAgICAgICAgICAgIEdF
-Tk1BU0soMjAsIDE2KQ0KPj4gICNkZWZpbmUgUVNQSV9JRlJfTkJEVU0obikgICAgICAgICAgICAg
-ICAoKChuKSA8PCAxNikgJiBRU1BJX0lGUl9OQkRVTV9NQVNLKQ0KPj4gKyNkZWZpbmUgUVNQSV9J
-RlJfQVBCVEZSVFlQX1dSSVRFCSgwIDw8IDI0KQ0KPiANCj4gQXMgZm9yIHRoZSBvdGhlciBkZWZz
-LCBJIGRvbid0IHRoaW5rIHlvdSBuZWVkIHRvIGRlZmluZSBfV1JJVEUuDQoNCnVuZGVyc3Rvb2QN
-Cg0KPiANCj4+ICsjZGVmaW5lIFFTUElfSUZSX0FQQlRGUlRZUF9SRUFECQlCSVQoMjQpDQo+PiAg
-DQo+PiAgLyogQml0ZmllbGRzIGluIFFTUElfU01SIChTY3JhbWJsaW5nIE1vZGUgUmVnaXN0ZXIp
-ICovDQo+PiAgI2RlZmluZSBRU1BJX1NNUl9TQ1JFTiAgICAgICAgICAgICAgICAgIEJJVCgwKQ0K
-Pj4gQEAgLTEzNywxNiArMTQ0LDM3IEBADQo+PiAgI2RlZmluZSBRU1BJX1dQU1JfV1BWU1JDKHNy
-YykgICAgICAgICAgICgoKHNyYykgPDwgOCkgJiBRU1BJX1dQU1JfV1BWU1JDKQ0KPj4gIA0KPj4g
-IA0KPj4gKy8qIERlc2NyaWJlcyByZWdpc3RlciB2YWx1ZXMuICovDQo+PiArc3RydWN0IGF0bWVs
-X3FzcGlfY2ZnIHsNCj4+ICsJdTMyIGljcjsNCj4+ICsJdTMyIGlhcjsNCj4+ICsJdTMyIGlmcjsN
-Cj4+ICt9Ow0KPj4gKw0KPj4gK3N0cnVjdCBhdG1lbF9xc3BpX2NhcHM7DQo+PiArDQo+PiAgc3Ry
-dWN0IGF0bWVsX3FzcGkgew0KPj4gIAl2b2lkIF9faW9tZW0JCSpyZWdzOw0KPj4gIAl2b2lkIF9f
-aW9tZW0JCSptZW07DQo+PiAgCXN0cnVjdCBjbGsJCSpjbGs7DQo+IA0KPiBDYW4gd2UgcmVuYW1l
-IHRoYXQgb24gcGNsaz8NCg0Kd2lsbCByZW5hbWUgaXQsIHRvZ2V0aGVyIHdpdGggdGhlIHN1cHBv
-cnQgZm9yIHVubmFtZWQgY2xvY2sgb2Ygc2FtYTVkMiBpbiBhIHNlcGFyYXRlDQpwYXRjaC4gVGhl
-IGR0LWJpbmRpbmdzIHBhdGNoIHRoYXQgaW1wb3NlcyAicGNsayIgZm9yIHNhbWE1ZDIgc2hvdWxk
-IGJlIHNlcGFyYXRlZCB0b28uDQoNCj4gDQo+PiArCXN0cnVjdCBjbGsJCSpxc3BpY2s7DQo+PiAg
-CXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UJKnBkZXY7DQo+PiArCWNvbnN0IHN0cnVjdCBhdG1lbF9x
-c3BpX2NhcHMgKmNhcHM7DQo+PiAgCXUzMgkJCXBlbmRpbmc7DQo+PiAgCXUzMgkJCW1yOw0KPj4g
-IAlzdHJ1Y3QgY29tcGxldGlvbgljbWRfY29tcGxldGlvbjsNCj4+ICB9Ow0KPj4gIA0KPiANCj4g
-Li4uDQo+IA0KPj4gKw0KPj4gK3N0YXRpYyBpbnQgYXRtZWxfc2FtOXg2MF9xc3BpX3NldF9jZmco
-dm9pZCBfX2lvbWVtICpiYXNlLA0KPj4gKwkJCQkgICAgICBjb25zdCBzdHJ1Y3Qgc3BpX21lbV9v
-cCAqb3AsDQo+PiArCQkJCSAgICAgIHN0cnVjdCBhdG1lbF9xc3BpX2NmZyAqY2ZnKQ0KPj4gK3sN
-Cj4+ICsJaW50IHJldCA9IGF0bWVsX3FzcGlfc2V0X21vZGUoY2ZnLCBvcCk7DQo+PiArDQo+PiAr
-CWlmIChyZXQpDQo+PiArCQlyZXR1cm4gcmV0Ow0KPj4gKw0KPj4gKwlyZXQgPSBhdG1lbF9xc3Bp
-X3NldF9hZGRyZXNzX21vZGUoY2ZnLCBvcCk7DQo+PiArCWlmIChyZXQpDQo+PiArCQlyZXR1cm4g
-cmV0Ow0KPj4gKw0KPj4gKwljZmctPmlmciB8PSBRU1BJX0lGUl9JTlNURU47DQo+PiArCWNmZy0+
-aWNyIHw9IFFTUElfSUNSX0lOU1Qob3AtPmNtZC5vcGNvZGUpOw0KPj4gKw0KPj4gKwkvKiBTZXQg
-ZGF0YSBlbmFibGUgKi8NCj4+ICsJaWYgKG9wLT5kYXRhLm5ieXRlcykNCj4+ICsJCWNmZy0+aWZy
-IHw9IFFTUElfSUZSX0RBVEFFTjsNCj4+ICsNCj4+ICsJaWYgKCFvcC0+YWRkci5uYnl0ZXMpIHsN
-Cj4+ICsJCWNmZy0+aWZyIHw9IFFTUElfSUZSX1RGUlRZUF9UUlNGUl9SRUc7DQo+PiArCQlpZiAo
-b3AtPmRhdGEuZGlyID09IFNQSV9NRU1fREFUQV9PVVQpDQo+PiArCQkJY2ZnLT5pZnIgfD0gUVNQ
-SV9JRlJfQVBCVEZSVFlQX1dSSVRFOw0KPj4gKwkJZWxzZQ0KPj4gKwkJCWNmZy0+aWZyIHw9IFFT
-UElfSUZSX0FQQlRGUlRZUF9SRUFEOw0KPj4gKwl9IGVsc2Ugew0KPj4gKwkJY2ZnLT5pZnIgfD0g
-UVNQSV9JRlJfVEZSVFlQX1RSU0ZSX01FTTsNCj4gDQo+IENhbiB5b3UgdHJ5IGRvaW5nIG9ubHkg
-cmVndWxhciB0cmFuc2ZlcnMgYW5kIGxldCBtZSBrbm93IGlmIGl0IHN0aWxsDQo+IHdvcmtzLiBT
-dXBwb3J0IGZvciBtZW0gdHJhbnNmZXJzIGNhbiB0aGVuIGJlIGFkZGVkIGFsb25nIHdpdGggZGly
-bWFwDQo+IHN1cHBvcnQuDQoNCnNob3VsZCB3b3JrLiBXaWxsIHRyeSBhbmQgbGV0IHlvdSBrbm93
-Lg0KDQo+IA0KPj4gKwl9DQo+PiAgDQo+PiAgCS8qIENsZWFyIHBlbmRpbmcgaW50ZXJydXB0cyAq
-Lw0KPj4gIAkodm9pZClyZWFkbF9yZWxheGVkKGJhc2UgKyBRU1BJX1NSKTsNCj4+ICANCj4+ICAJ
-LyogU2V0IFFTUEkgSW5zdHJ1Y3Rpb24gRnJhbWUgcmVnaXN0ZXJzICovDQo+PiAtCXdyaXRlbF9y
-ZWxheGVkKGlhciwgYmFzZSArIFFTUElfSUFSKTsNCj4+IC0Jd3JpdGVsX3JlbGF4ZWQoaWNyLCBi
-YXNlICsgUVNQSV9JQ1IpOw0KPj4gLQl3cml0ZWxfcmVsYXhlZChpZnIsIGJhc2UgKyBRU1BJX0lG
-Uik7DQo+PiArCXdyaXRlbF9yZWxheGVkKGNmZy0+aWFyLCBiYXNlICsgUVNQSV9JQVIpOw0KPj4g
-KwlpZiAob3AtPmRhdGEuZGlyID09IFNQSV9NRU1fREFUQV9PVVQpDQo+PiArCQl3cml0ZWxfcmVs
-YXhlZChjZmctPmljciwgYmFzZSArIFFTUElfSUNSKTsNCj4+ICsJZWxzZQ0KPj4gKwkJd3JpdGVs
-X3JlbGF4ZWQoY2ZnLT5pY3IsIGJhc2UgKyBRU1BJX1JJQ1IpOw0KPj4gKwl3cml0ZWxfcmVsYXhl
-ZChjZmctPmlmciwgYmFzZSArIFFTUElfSUZSKTsNCj4+ICsNCj4+ICsJcmV0dXJuIDA7DQo+PiAr
-fQ0KPj4gKw0KPiANCj4gLi4uDQo+IA0KPj4gQEAgLTQ0MywzMiArNTc4LDUyIEBAIHN0YXRpYyBp
-bnQgYXRtZWxfcXNwaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPj4gIAkv
-KiBFbmFibGUgdGhlIHBlcmlwaGVyYWwgY2xvY2sgKi8NCj4+ICAJZXJyID0gY2xrX3ByZXBhcmVf
-ZW5hYmxlKGFxLT5jbGspOw0KPj4gIAlpZiAoZXJyKSB7DQo+PiAtCQlkZXZfZXJyKCZwZGV2LT5k
-ZXYsICJmYWlsZWQgdG8gZW5hYmxlIHRoZSBwZXJpcGhlcmFsIGNsb2NrXG4iKTsNCj4+ICsJCWRl
-dl9lcnIoZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSB0aGUgcGVyaXBoZXJhbCBjbG9ja1xuIik7DQo+
-PiAgCQlnb3RvIGV4aXQ7DQo+PiAgCX0NCj4+ICANCj4+ICsJaWYgKGNhcHMtPmhhc19xc3BpY2sp
-IHsNCj4+ICsJCS8qIEdldCB0aGUgUVNQSSBzeXN0ZW0gY2xvY2sgKi8NCj4+ICsJCWFxLT5xc3Bp
-Y2sgPSBkZXZtX2Nsa19nZXQoZGV2LCAicXNwaWNrIik7DQo+PiArCQlpZiAoSVNfRVJSKGFxLT5x
-c3BpY2spKSB7DQo+PiArCQkJZGV2X2VycihkZXYsICJtaXNzaW5nIHN5c3RlbSBjbG9ja1xuIik7
-DQo+PiArCQkJZXJyID0gUFRSX0VSUihhcS0+cXNwaWNrKTsNCj4+ICsJCQlnb3RvIGRpc2FibGVf
-Y2xrOw0KPj4gKwkJfQ0KPj4gKw0KPj4gKwkJLyogRW5hYmxlIHRoZSBRU1BJIHN5c3RlbSBjbG9j
-ayAqLw0KPj4gKwkJZXJyID0gY2xrX3ByZXBhcmVfZW5hYmxlKGFxLT5xc3BpY2spOw0KPj4gKwkJ
-aWYgKGVycikgew0KPj4gKwkJCWRldl9lcnIoZGV2LA0KPj4gKwkJCQkiZmFpbGVkIHRvIGVuYWJs
-ZSB0aGUgUVNQSSBzeXN0ZW0gY2xvY2tcbiIpOw0KPj4gKwkJCWdvdG8gZGlzYWJsZV9jbGs7DQo+
-PiArCQl9DQo+PiArCX0NCj4+ICsNCj4+ICAJLyogUmVxdWVzdCB0aGUgSVJRICovDQo+PiAgCWly
-cSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7DQo+PiAgCWlmIChpcnEgPCAwKSB7DQo+PiAt
-CQlkZXZfZXJyKCZwZGV2LT5kZXYsICJtaXNzaW5nIElSUVxuIik7DQo+PiArCQlkZXZfZXJyKGRl
-diwgIm1pc3NpbmcgSVJRXG4iKTsNCj4+ICAJCWVyciA9IGlycTsNCj4+IC0JCWdvdG8gZGlzYWJs
-ZV9jbGs7DQo+PiArCQlnb3RvIGRpc2FibGVfcXNwaWNrOw0KPj4gIAl9DQo+PiAtCWVyciA9IGRl
-dm1fcmVxdWVzdF9pcnEoJnBkZXYtPmRldiwgaXJxLCBhdG1lbF9xc3BpX2ludGVycnVwdCwNCj4+
-IC0JCQkgICAgICAgMCwgZGV2X25hbWUoJnBkZXYtPmRldiksIGFxKTsNCj4+ICsJZXJyID0gZGV2
-bV9yZXF1ZXN0X2lycShkZXYsIGlycSwgYXRtZWxfcXNwaV9pbnRlcnJ1cHQsIDAsDQo+PiArCQkJ
-ICAgICAgIGRldl9uYW1lKGRldiksIGFxKTsNCj4+ICAJaWYgKGVycikNCj4+IC0JCWdvdG8gZGlz
-YWJsZV9jbGs7DQo+PiArCQlnb3RvIGRpc2FibGVfcXNwaWNrOw0KPj4gIA0KPj4gIAllcnIgPSBh
-dG1lbF9xc3BpX2luaXQoYXEpOw0KPj4gIAlpZiAoZXJyKQ0KPj4gLQkJZ290byBkaXNhYmxlX2Ns
-azsNCj4+ICsJCWdvdG8gZGlzYWJsZV9xc3BpY2s7DQo+PiAgDQo+PiAgCWVyciA9IHNwaV9yZWdp
-c3Rlcl9jb250cm9sbGVyKGN0cmwpOw0KPj4gIAlpZiAoZXJyKQ0KPj4gLQkJZ290byBkaXNhYmxl
-X2NsazsNCj4+ICsJCWdvdG8gZGlzYWJsZV9xc3BpY2s7DQo+PiAgDQo+PiAgCXJldHVybiAwOw0K
-Pj4gIA0KPj4gK2Rpc2FibGVfcXNwaWNrOg0KPj4gKwljbGtfZGlzYWJsZV91bnByZXBhcmUoYXEt
-PnFzcGljayk7DQo+PiAgZGlzYWJsZV9jbGs6DQo+IA0KPiBXZSBzaG91bGQgcHJvYmFibHkgcmVu
-YW1lIHRoaXMgbGFiZWwgZGlzYWJsZV9wY2xrLg0KDQpzdXJlLiBUaGFua3MsIEJvcmlzIQ0KDQo+
-IA0KPj4gIAljbGtfZGlzYWJsZV91bnByZXBhcmUoYXEtPmNsayk7DQo+PiAgZXhpdDoNCj4gDQo=
+Quoting Stephen Boyd (2019-01-31 13:53:42)
+>=20
+> I'm prototyping out some code to do the remapping based on this type of
+> DT property, because it will make the irqdomain::alloc function a little
+> simpler to implement by passing in a struct irq_fwspec and getting out a
+> parent irq_fwspec and it will make the patches to add these mapping
+> tables in C irrelevant. Plus, I think Lina will be happy that the
+> pinctrl driver will know if some pin maps to the PDC or not without
+> having to see if it fails to allocate in the parent irqdomain. But there
+> will still need to be a property for 'wakeup-parent' unless we do
+> something to expose irqdomain tokens into DT.
+>=20
+
+And here's the code to do this remapping idea, heavily based on the
+phandle remapping code. I didn't properly fix up the irq alloc function
+for the pinctrl driver here, but it should work out properly without
+much more diff. I realize now that the pass-thru mechanism will fail
+horribly when a specifier changes size types. I guess we'll need to keep
+that in mind if we convert the PDC driver to this too. Or we can leave
+the PDC driver as is and not worry about listing out the individual
+pins.
+
+-----8<-----
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qco=
+m/sdm845.dtsi
+index a2241dd9c185..6b3a4227f433 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1213,6 +1213,83 @@
+ 			#interrupt-cells =3D <2>;
+ 			gpio-ranges =3D <&tlmm 0 0 150>;
+ 			wakeup-parent =3D <&pdc_intc>;
++			irqdomain-map =3D <1 0 &pdc_intc 30 0>,
++					<3 0 &pdc_intc 31 0>,
++					<5 0 &pdc_intc 32 0>,
++					<10 0 &pdc_intc 33 0>,
++					<11 0 &pdc_intc 34 0>,
++					<20 0 &pdc_intc 35 0>,
++					<22 0 &pdc_intc 36 0>,
++					<24 0 &pdc_intc 37 0>,
++					<26 0 &pdc_intc 38 0>,
++					<30 0 &pdc_intc 39 0>,
++					<31 0 &pdc_intc 117 0>,
++					<32 0 &pdc_intc 41 0>,
++					<34 0 &pdc_intc 42 0>,
++					<36 0 &pdc_intc 43 0>,
++					<37 0 &pdc_intc 44 0>,
++					<38 0 &pdc_intc 45 0>,
++					<39 0 &pdc_intc 46 0>,
++					<40 0 &pdc_intc 47 0>,
++					<41 0 &pdc_intc 115 0>,
++					<43 0 &pdc_intc 49 0>,
++					<44 0 &pdc_intc 50 0>,
++					<46 0 &pdc_intc 51 0>,
++					<48 0 &pdc_intc 52 0>,
++					<49 0 &pdc_intc 118 0>,
++					<52 0 &pdc_intc 54 0>,
++					<53 0 &pdc_intc 55 0>,
++					<54 0 &pdc_intc 56 0>,
++					<56 0 &pdc_intc 57 0>,
++					<57 0 &pdc_intc 58 0>,
++					<58 0 &pdc_intc 59 0>,
++					<59 0 &pdc_intc 60 0>,
++					<60 0 &pdc_intc 61 0>,
++					<61 0 &pdc_intc 62 0>,
++					<62 0 &pdc_intc 63 0>,
++					<63 0 &pdc_intc 64 0>,
++					<64 0 &pdc_intc 65 0>,
++					<66 0 &pdc_intc 66 0>,
++					<68 0 &pdc_intc 67 0>,
++					<71 0 &pdc_intc 68 0>,
++					<73 0 &pdc_intc 69 0>,
++					<77 0 &pdc_intc 70 0>,
++					<78 0 &pdc_intc 71 0>,
++					<79 0 &pdc_intc 72 0>,
++					<80 0 &pdc_intc 73 0>,
++					<84 0 &pdc_intc 74 0>,
++					<85 0 &pdc_intc 75 0>,
++					<86 0 &pdc_intc 76 0>,
++					<88 0 &pdc_intc 77 0>,
++					<89 0 &pdc_intc 116 0>,
++					<91 0 &pdc_intc 79 0>,
++					<92 0 &pdc_intc 80 0>,
++					<95 0 &pdc_intc 81 0>,
++					<96 0 &pdc_intc 82 0>,
++					<97 0 &pdc_intc 83 0>,
++					<101 0 &pdc_intc 84 0>,
++					<103 0 &pdc_intc 85 0>,
++					<104 0 &pdc_intc 86 0>,
++					<115 0 &pdc_intc 90 0>,
++					<116 0 &pdc_intc 91 0>,
++					<117 0 &pdc_intc 92 0>,
++					<118 0 &pdc_intc 93 0>,
++					<119 0 &pdc_intc 94 0>,
++					<120 0 &pdc_intc 95 0>,
++					<121 0 &pdc_intc 96 0>,
++					<122 0 &pdc_intc 97 0>,
++					<123 0 &pdc_intc 98 0>,
++					<124 0 &pdc_intc 99 0>,
++					<125 0 &pdc_intc 100 0>,
++					<127 0 &pdc_intc 102 0>,
++					<128 0 &pdc_intc 103 0>,
++					<129 0 &pdc_intc 104 0>,
++					<130 0 &pdc_intc 105 0>,
++					<132 0 &pdc_intc 106 0>,
++					<133 0 &pdc_intc 107 0>,
++					<145 0 &pdc_intc 108 0>;
++			irqdomain-map-mask =3D <0xff 0>;
++			irqdomain-map-pass-thru =3D <0 0xff>;
+=20
+ 			qspi_clk: qspi-clk {
+ 				pinmux {
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 02ad93a304a4..b37f4cdfda53 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -274,6 +274,130 @@ int of_irq_parse_raw(const __be32 *addr, struct of_ph=
+andle_args *out_irq)
+ }
+ EXPORT_SYMBOL_GPL(of_irq_parse_raw);
+=20
++int of_irq_domain_map(const struct irq_fwspec *in, struct irq_fwspec *out)
++{
++	char *stem_name;
++	char *cells_name, *map_name =3D NULL, *mask_name =3D NULL;
++	char *pass_name =3D NULL;
++	struct device_node *cur, *new =3D NULL;
++	const __be32 *map, *mask, *pass;
++	static const __be32 dummy_mask[] =3D { [0 ... MAX_PHANDLE_ARGS] =3D ~0 };
++	static const __be32 dummy_pass[] =3D { [0 ... MAX_PHANDLE_ARGS] =3D 0 };
++	__be32 initial_match_array[MAX_PHANDLE_ARGS];
++	const __be32 *match_array =3D initial_match_array;
++	int i, ret, map_len, match;
++	u32 in_size, out_size;
++
++	stem_name =3D "";
++	cells_name =3D "#interrupt-cells";
++
++	ret =3D -ENOMEM;
++	map_name =3D kasprintf(GFP_KERNEL, "irqdomain%s-map", stem_name);
++	if (!map_name)
++		goto free;
++
++	mask_name =3D kasprintf(GFP_KERNEL, "irqdomain%s-map-mask", stem_name);
++	if (!mask_name)
++		goto free;
++
++	pass_name =3D kasprintf(GFP_KERNEL, "irqdomain%s-map-pass-thru", stem_nam=
+e);
++	if (!pass_name)
++		goto free;
++
++	/* Get the #interrupt-cells property */
++	cur =3D to_of_node(in->fwnode);
++	ret =3D of_property_read_u32(cur, cells_name, &in_size);
++	if (ret < 0)
++		goto put;
++
++	/* Precalculate the match array - this simplifies match loop */
++	for (i =3D 0; i < in_size; i++)
++		initial_match_array[i] =3D cpu_to_be32(in->param[i]);
++
++	ret =3D -EINVAL;
++	/* Get the irqdomain-map property */
++	map =3D of_get_property(cur, map_name, &map_len);
++	if (!map) {
++		ret =3D 0;
++		goto free;
++	}
++	map_len /=3D sizeof(u32);
++
++	/* Get the irqdomain-map-mask property (optional) */
++	mask =3D of_get_property(cur, mask_name, NULL);
++	if (!mask)
++		mask =3D dummy_mask;
++	/* Iterate through irqdomain-map property */
++	match =3D 0;
++	while (map_len > (in_size + 1) && !match) {
++		/* Compare specifiers */
++		match =3D 1;
++		for (i =3D 0; i < in_size; i++, map_len--)
++			match &=3D !((match_array[i] ^ *map++) & mask[i]);
++
++		of_node_put(new);
++		new =3D of_find_node_by_phandle(be32_to_cpup(map));
++		map++;
++		map_len--;
++
++		/* Check if not found */
++		if (!new)
++			goto put;
++
++		if (!of_device_is_available(new))
++			match =3D 0;
++
++		ret =3D of_property_read_u32(new, cells_name, &out_size);
++		if (ret)
++			goto put;
++
++		/* Check for malformed properties */
++		if (WARN_ON(out_size > MAX_PHANDLE_ARGS))
++			goto put;
++		if (map_len < out_size)
++			goto put;
++
++		/* Move forward by new node's #interrupt-cells amount */
++		map +=3D out_size;
++		map_len -=3D out_size;
++	}
++	if (match) {
++		/* Get the irqdomain-map-pass-thru property (optional) */
++		pass =3D of_get_property(cur, pass_name, NULL);
++		if (!pass)
++			pass =3D dummy_pass;
++
++		/*
++		 * Successfully parsed a irqdomain-map translation; copy new
++		 * specifier into the out structure, keeping the
++		 * bits specified in irqdomain-map-pass-thru.
++		 */
++		match_array =3D map - out_size;
++		for (i =3D 0; i < out_size; i++) {
++			__be32 val =3D *(map - out_size + i);
++
++			out->param[i] =3D in->param[i];
++			if (i < in_size) {
++				val &=3D ~pass[i];
++				val |=3D cpu_to_be32(out->param[i]) & pass[i];
++			}
++
++			out->param[i] =3D be32_to_cpu(val);
++		}
++		out->param_count =3D in_size =3D out_size;
++		out->fwnode =3D of_node_to_fwnode(new);
++	}
++put:
++	of_node_put(new);
++free:
++	kfree(mask_name);
++	kfree(map_name);
++	kfree(pass_name);
++
++	return ret;
++}
++EXPORT_SYMBOL(of_irq_domain_map);
++
+ /**
+  * of_irq_parse_one - Resolve an interrupt for a device
+  * @device: the device whose interrupt is to be resolved
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinc=
+trl-msm.c
+index 9b45219893bd..0473b180dc8d 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1011,6 +1011,12 @@ static int msm_gpio_domain_alloc(struct irq_domain *=
+domain, unsigned int virq,
+ 	if (!domain->parent)
+ 		return 0;
+=20
++	ret =3D of_irq_domain_map(fwspec, &parent.fwspec);
++	if (ret)
++		return ret;
++
++	pr_info("incoming is %d %#x and outgoing is %d %#x\n", fwspec->param[0], =
+fwspec->param[1], parent.fwspec.param[0], parent.fwspec.param[1]);
++
+ 	parent.fwspec.fwnode      =3D domain->parent->fwnode;
+ 	parent.fwspec.param_count =3D 2;
+ 	parent.fwspec.param[0]    =3D hwirq;
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 1214cabb2247..80ba1e9be68d 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -32,6 +32,8 @@ static inline int of_irq_parse_oldworld(struct device_nod=
+e *device, int index,
+ }
+ #endif /* CONFIG_PPC32 && CONFIG_PPC_PMAC */
+=20
++extern int of_irq_domain_map(const struct irq_fwspec *in, struct irq_fwspe=
+c *out);
++
+ extern int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *ou=
+t_irq);
+ extern int of_irq_parse_one(struct device_node *device, int index,
+ 			  struct of_phandle_args *out_irq);
