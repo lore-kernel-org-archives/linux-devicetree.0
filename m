@@ -1,154 +1,142 @@
-From: Michael Bittner <m.bittner@ebs-systart.com>
-Subject: AW: [PATCH v3 0/5] Add Oxalis board support
-Date: Fri, 01 Feb 2019 06:43:58 +0100
-Message-ID: <209ab7e9.1d4b9f1.197c0e38.52d9@ebs-systart.com>
-References: <20190201032817.GA3008@Mani-XPS-13-9360>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v5 03/10] arm64: dts: sdm845: Introduce ADSP and CDSP PAS
+ nodes
+Date: Fri, 1 Feb 2019 11:19:51 +0530
+Message-ID: <4539b3ca-cace-9c71-0453-94427ad79b73@codeaurora.org>
+References: <20190131003933.11436-1-bjorn.andersson@linaro.org>
+ <20190131003933.11436-4-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190201032817.GA3008@Mani-XPS-13-9360>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, a.tropschug@ebs-systart.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, leoyang.li@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190131003933.11436-4-bjorn.andersson@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello @all,
+Hey Bjorn,
 
-in the meantime all interfaces are supported. Following a short overview.
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-> * RAM: 2GB (!) DDR3L
-> * PMU: NXP VR5100
-> * Storage: 64MByte SPI Flash for bootloader and RCW, MicroSD Card, =
+On 01/31/2019 06:09 AM, Bjorn Andersson wrote:
+> Add the Audio DSP (ADSP) and Compute DSP (CDSP) nodes for TrustZone
+> based remoteproc, supporting booting these cores on e.g. the MTP, and
+> enable the same for the MTP.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v4:
+> - None
+> 
+> Changes since v3:
+> - Make xo reference the actual CXO clock
+> 
+>   arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  8 ++++
+>   arch/arm64/boot/dts/qcom/sdm845.dtsi    | 58 +++++++++++++++++++++++++
+>   2 files changed, 66 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index af8c6a2445a2..02b8357c8ce8 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -48,6 +48,10 @@
+>   	};
+>   };
+>   
+> +&adsp_pas {
+> +	status = "okay";
+> +};
+> +
+>   &apps_rsc {
+>   	pm8998-rpmh-regulators {
+>   		compatible = "qcom,pm8998-rpmh-regulators";
+> @@ -344,6 +348,10 @@
+>   	};
+>   };
+>   
+> +&cdsp_pas {
+> +	status = "okay";
+> +};
+> +
+>   &gcc {
+>   	protected-clocks = <GCC_QSPI_CORE_CLK>,
+>   			   <GCC_QSPI_CORE_CLK_SRC>,
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index d19486ba1e5e..07d9cd6fba7d 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -325,6 +325,64 @@
+>   		};
+>   	};
+>   
+> +	adsp_pas: remoteproc-adsp {
+> +		compatible = "qcom,sdm845-adsp-pas";
+> +
+> +		interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
+> +				      <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +				      <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +				      <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +				      <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-names = "wdog", "fatal", "ready",
+> +				  "handover", "stop-ack";
+> +
+> +		clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +		clock-names = "xo";
+> +
+> +		memory-region = <&adsp_mem>;
+> +
+> +		qcom,smem-states = <&adsp_smp2p_out 0>;
+> +		qcom,smem-state-names = "stop";
+> +
+> +		status = "disabled";
+> +
+> +		glink-edge {
+> +			interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
+> +			label = "lpass";
+> +			qcom,remote-pid = <2>;
+> +			mboxes = <&apss_shared 8>;
+> +		};
+> +	};
+> +
+> +	cdsp_pas: remoteproc-cdsp {
+> +		compatible = "qcom,sdm845-cdsp-pas";
+> +
+> +		interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_EDGE_RISING>,
+> +				      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +				      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +				      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +				      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-names = "wdog", "fatal", "ready",
+> +				  "handover", "stop-ack";
+> +
+> +		clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +		clock-names = "xo";
+> +
+> +		memory-region = <&cdsp_mem>;
+> +
+> +		qcom,smem-states = <&cdsp_smp2p_out 0>;
+> +		qcom,smem-state-names = "stop";
+> +
+> +		status = "disabled";
+> +
+> +		glink-edge {
+> +			interrupts = <GIC_SPI 574 IRQ_TYPE_EDGE_RISING>;
+> +			label = "turing";
+> +			qcom,remote-pid = <5>;
+> +			mboxes = <&apss_shared 4>;
+> +		};
+> +	};
+> +
+>   	tcsr_mutex: hwlock {
+>   		compatible = "qcom,tcsr-mutex";
+>   		syscon = <&tcsr_mutex_regs 0 0x1000>;
+> 
 
-> * mSATA 3.0
-> * Connectivity: 2x Ethernet
-> * miniPCIe
-> * SD Card
-> * USB: 2x USB3.0
-> * I2C x 2: 2x 96Boards Expansion Connector
-> * UART x 2: 1 x Terminal and 1x 96Boards Expansion Connector
-> * SPI: 1x 96Boards Expansion Connector
-> * GPIOs =
-
-
-The first 96Board Community Header Board will be available in March, this i=
-s currently in production.
-I will put the schematics online soon. If you have any information missing =
-please let me know. =
-
-
-Best regards,
-Michael
-
---
-Tel.: +49 (0)8142/30505-0
-Fax: +49 (0)8142/30505-50
-Mail: m.bittner@ebs-systart.com
-Internet: www.ebs-systart.com
-
-EBS-SYSTART GmbH
-Industriestra=DFe 33a
-D-82194 Gr=F6benzell
-
-Amtsgericht M=FCnchen, HRB 70338, UST-IdNr. DE128221970
-Gesch=E4ftsf=FChrer: Michael Bittner
-
-
------Urspr=FCngliche Nachricht-----
-Von: Manivannan Sadhasivam [mailto:manivannan.sadhasivam@linaro.org] =
-
-Gesendet: Freitag, 1. Februar 2019 04:28
-An: shawnguo@kernel.org
-Cc: leoyang.li@nxp.com; robh+dt@kernel.org; linux-arm-kernel@lists.infradea=
-d.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; a.tropschu=
-g@ebs-systart.com; m.bittner@ebs-systart.com; amit.kucheria@linaro.org
-Betreff: Re: [PATCH v3 0/5] Add Oxalis board support
-
-On Tue, Jan 22, 2019 at 09:51:42AM +0530, Manivannan Sadhasivam wrote:
-> Hello,
-> =
-
-> This patchset adds Oxalis board support. This board is one of the
-> 96Boards Enterprise Edition platform from EBS-SYSTART GmbH. Below are some
-> of the key features of this board:
-> =
-
-> * SoC: NXP Layerscape LS1012A
-> * RAM: 1GB DDR3L
-> * PMU: NXP VR5100
-> * Storage: 64MByte SPI Flash for bootloader and RCW, MicroSD Card, SATA
-> * Connectivity: 2x Ethernet
-> * USB: 2x USB3.0
-> =
-
-> More information about this board can be found in 96Boards product
-> page: https://www.96boards.org/product/oxalis/
-> =
-
-> Ethernet and SPI flash are not supported yet!
-> =
-
-> Thanks,
-> Mani
-> =
-
-
-Hi Shawn,
-
-Any update on this patchset?
-
-Thanks,
-Mani
-
-> Changes in v3:
-> =
-
-> * Fixed LS1012A and LS1021A bindings
-> * Added missing devicetree compatibles for LS1021A based boards
-> * Added Rob's Reviewed-by tag for Vendor prefix patch
-> =
-
-> Changes in v2:
-> =
-
-> As per Rob's review:
-> =
-
-> * Adopted the Oxalis board binding to JSON format.
-> * Sorted the EBS-SYSTART vendor prefix alphabetically.
-> * Used the generic node name for audio codec.
-> =
-
-> Manivannan Sadhasivam (5):
->   dt-bindings: arm: fsl: Fix bindings for LS1012A and LS1021A based
->     boards
->   ARM: dts: Add devicetree compatibles for LS1021A based boards
->   dt-bindings: vendor-prefixes: Add EBS-SYSTART GmbH Vendor Prefix
->   dt-bindings: arm: fsl: Add devicetree binding for Oxalis
->   arm64: dts: freescale: Add devicetree for Oxalis
-> =
-
->  .../devicetree/bindings/arm/fsl.yaml          | 11 ++-
->  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->  arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts   |  1 +
->  arch/arm/boot/dts/ls1021a-qds.dts             |  1 +
->  arch/arm/boot/dts/ls1021a-twr.dts             |  1 +
->  arch/arm64/boot/dts/freescale/Makefile        |  1 +
->  .../boot/dts/freescale/fsl-ls1012a-oxalis.dts | 96 +++++++++++++++++++
->  7 files changed, 111 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-oxalis.dts
-> =
-
-> -- =
-
-> 2.17.1
-> =
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
