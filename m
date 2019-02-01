@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v7 01/23] drm/sun4i: sun6i_mipi_dsi: Compute
- burst mode loop N1 instruction delay
-Date: Fri,  1 Feb 2019 21:12:10 +0530
-Message-ID: <20190201154232.10505-2-jagan@amarulasolutions.com>
+Subject: [PATCH v7 03/23] drm/sun4i: sun6i_mipi_dsi: Setup burst
+ mode timings
+Date: Fri,  1 Feb 2019 21:12:12 +0530
+Message-ID: <20190201154232.10505-4-jagan@amarulasolutions.com>
 References: <20190201154232.10505-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB56R2HRAKGQEEGOX5ZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB6WR2HRAKGQEKBN6MRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190201154232.10505-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,66 +20,54 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Loop N1 instruction delay varies between burst and non-burst video modes.
+Burst mode display timings are different from conventional video mode.
 
-1) for burst mode panels it is computed based on the panel pixel clock
-   along with horizontal sync and porch timings.
-2) for non-burst mode panels, it is same as existing (50 - 1)
+For burst mode most of the timings hsa, hbp, hfp, vblk are 0 and hblk
+is computed as (mode->hdisplay * Bpp)
 
-Reference code is available in BSP (from linux-sunxi
+This patch simply add burst mode timings without touching existing mode
+timings.
+
+Reference code taken from BSP (from linux-sunxi/
 drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
 
-dsi_dev[sel]->dsi_inst_loop_num.bits.loop_n1=
-(panel->lcd_ht-panel->lcd_x)*(150)/(panel->lcd_dclk_freq*8) - 50;
-=> (((mode->htotal - mode->hdisplay) * 150) /
-     ((mode->clock / 1000) * 8)) - 50;
-
-This patch add loop N1 computation for burst mode by simplifying
-existing code to support all possible modes.
+dsi_hsa  = 0;
+dsi_hbp  = 0;
+dsi_hact = x*dsi_pixel_bits[format]/8;
+dsi_hblk = dsi_hact;
+dsi_hfp  = 0;
+dsi_vblk = 0;
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Tested-by: Merlijn Wajer <merlijn-tF0PIh4TN3odnm+yROfE0A@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index e3b34a345546..a5fcee750bee 100644
+index 813d5523f1c7..0f02bcc997a5 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -354,6 +354,24 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
- 		     SUN6I_DSI_INST_JUMP_CFG_NUM(1));
- };
+@@ -477,6 +477,12 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
  
-+static u16 sun6i_dsi_setup_inst_delay(struct sun6i_dsi *dsi,
-+				      struct drm_display_mode *mode)
-+{
-+	struct mipi_dsi_device *device = dsi->device;
-+	u32 hsync_porch, dclk;
-+	u16 delay;
-+
-+	hsync_porch = (mode->htotal - mode->hdisplay);
-+	dclk = (mode->clock / 1000);
-+
-+	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
-+		delay = ((hsync_porch * 150) / (dclk * 8)) - 50;
-+	else
-+		delay = 50 - 1;
-+
-+	return delay;
-+}
-+
- static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
- 					   struct drm_display_mode *mode)
- {
-@@ -383,7 +401,7 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
- static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
- 				      struct drm_display_mode *mode)
- {
--	u16 delay = 50 - 1;
-+	u16 delay = sun6i_dsi_setup_inst_delay(dsi, mode);
+ 	/* Do all timing calculations up front to allocate buffer space */
  
- 	regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_NUM_REG(0),
- 		     SUN6I_DSI_INST_LOOP_NUM_N0(50 - 1) |
++	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
++		hbp = hfp = hsa = vblk = 0;
++		hblk = (mode->hdisplay * Bpp);
++		goto alloc_buf;
++	}
++
+ 	/*
+ 	 * A sync period is composed of a blanking packet (4 bytes +
+ 	 * payload + 2 bytes) and a sync event packet (4 bytes). Its
+@@ -515,6 +521,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+ 	 */
+ 	vblk = 0;
+ 
++alloc_buf:
+ 	/* How many bytes do we need to send all payloads? */
+ 	bytes = max_t(size_t, max(max(hfp, hblk), max(hsa, hbp)), vblk);
+ 	buffer = kmalloc(bytes, GFP_KERNEL);
 -- 
 2.18.0.321.gffc6fa0e3
