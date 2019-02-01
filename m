@@ -1,56 +1,107 @@
-Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 27/33] ARM: davinci: cp-intc: improve coding style
-Date: Fri,  8 Feb 2019 18:31:48 +0100
-Message-Id: <20190208173154.4665-28-brgl@bgdev.pl>
-In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
-References: <20190208173154.4665-1-brgl@bgdev.pl>
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v2 1/2] arm64: dts: qcom: qcs404: Add Ethernet node
+Date: Fri,  1 Feb 2019 23:33:30 +0530
+Message-Id: <20190201180331.6960-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Add the ethernet node found in QCS404 platform.
 
-Drop tabs from variable initialization. Arrange variables in reverse
-christmas-tree order. Add a newline before a return.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm/mach-davinci/cp_intc.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+changes in v2:
+	- add queues and mtl config
 
-diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
-index faf3d74d3719..f3787ae4cdbd 100644
---- a/arch/arm/mach-davinci/cp_intc.c
-+++ b/arch/arm/mach-davinci/cp_intc.c
-@@ -77,12 +77,12 @@ static void davinci_cp_intc_unmask_irq(struct irq_data *d)
- static int davinci_cp_intc_set_irq_type(struct irq_data *d,
- 					unsigned int flow_type)
- {
--	unsigned reg		= BIT_WORD(d->hwirq);
--	unsigned mask		= BIT_MASK(d->hwirq);
--	unsigned polarity	= davinci_cp_intc_read(
--					DAVINCI_CP_INTC_SYS_POLARITY(reg));
--	unsigned type		= davinci_cp_intc_read(
--					DAVINCI_CP_INTC_SYS_TYPE(reg));
-+	unsigned int reg, mask, polarity, type;
-+
-+	reg = BIT_WORD(d->hwirq);
-+	mask = BIT_MASK(d->hwirq);
-+	polarity = davinci_cp_intc_read(DAVINCI_CP_INTC_SYS_POLARITY(reg));
-+	type = davinci_cp_intc_read(DAVINCI_CP_INTC_SYS_TYPE(reg));
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 71 ++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index 76699435c8bd..e4f6bba0c7f2 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -646,6 +646,77 @@
+ 			status = "disabled";
+ 		};
  
- 	switch (flow_type) {
- 	case IRQ_TYPE_EDGE_RISING:
-@@ -150,6 +150,7 @@ static int davinci_cp_intc_host_map(struct irq_domain *h, unsigned int virq,
- 	irq_set_chip(virq, &davinci_cp_intc_irq_chip);
- 	irq_set_probe(virq);
- 	irq_set_handler(virq, handle_edge_irq);
++		ethernet: ethernet@7a80000 {
++			compatible = "qcom,qcs404-ethqos";
++			reg = <0x07a80000 0x10000>,
++				<0x07a96000 0x100>;
++			reg-names = "stmmaceth", "rgmii";
++			clock-names = "stmmaceth", "pclk", "ptp_ref", "rgmii";
++			clocks = <&gcc GCC_ETH_AXI_CLK>,
++				<&gcc GCC_ETH_SLAVE_AHB_CLK>,
++				<&gcc GCC_ETH_PTP_CLK>,
++				<&gcc GCC_ETH_RGMII_CLK>;
++			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq", "eth_lpi";
 +
- 	return 0;
- }
- 
++			snps,axi-config = <&stmmac_axi_setup>;
++			snps,mtl-rx-config = <&mtl_rx_setup>;
++			snps,mtl-tx-config = <&mtl_tx_setup>;
++
++			snps,txpbl = <8>;
++			snps,rxpbl = <2>;
++			snps,aal;
++			snps,tso;
++			rx-fifo-depth = <16384>;
++			tx-fifo-depth = <20480>;
++
++			status = "disabled";
++
++			stmmac_axi_setup: stmmac-axi-setup {
++				snps,rd_osr_lmt = <2>;
++				snps,blen = <0 0 0 0 16 8 4>;
++			};
++
++			mtl_rx_setup: rx-queues-config {
++				snps,rx-queues-to-use = <0x4>;
++				snps,rx-sched-sp;
++
++				queue0 {
++					snps,dcb-algorithm;
++				};
++				queue1 {
++					snps,dcb-algorithm;
++				};
++				queue2 {
++					snps,dcb-algorithm;
++				};
++				queue3 {
++					snps,dcb-algorithm;
++				};
++			};
++			mtl_tx_setup: tx-queues-config {
++				snps,tx-queues-to-use = <0x5>;
++				snps,tx-sched-sp;
++
++				queue0 {
++					snps,dcb-algorithm;
++				};
++				queue1 {
++					snps,dcb-algorithm;
++				};
++				queue2 {
++					snps,dcb-algorithm;
++				};
++				queue3 {
++					snps,dcb-algorithm;
++				};
++				queue4 {
++					snps,dcb-algorithm;
++				};
++			};
++		};
++
+ 		blsp2_dma: dma@7ac4000 {
+ 			compatible = "qcom,bam-v1.7.0";
+ 			reg = <0x07ac4000 0x17000>;
 -- 
 2.20.1
