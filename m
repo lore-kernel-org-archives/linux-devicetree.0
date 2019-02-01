@@ -1,38 +1,43 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/3] arm64: dts: hisilicon: hi3670: Add reset controller support
-Date: Fri,  1 Feb 2019 21:08:40 +0530
-Message-ID: <20190201153841.21903-3-manivannan.sadhasivam@linaro.org>
-References: <20190201153841.21903-1-manivannan.sadhasivam@linaro.org>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v3 3/8] clk: samsung: add BPLL rate table for Exynos
+ 5422 SoC
+Date: Fri, 1 Feb 2019 16:39:04 +0100
+Message-ID: <7c28d817-84bd-c88e-de84-801fd97645ec@partner.samsung.com>
+References: <1548924594-19084-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190131085007eucas1p2f16107042b8ce5638811840618bcf017@eucas1p2.samsung.com>
+        <1548924594-19084-4-git-send-email-l.luba@partner.samsung.com>
+        <d5b8d165-564e-b776-77de-31a069118067@samsung.com>
+        <0ca15b4c-ddaa-1be5-35be-e76b008b28a8@partner.samsung.com>
+        <08850f80-0cc1-8e0d-6a8a-286a750d3a8c@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190201153841.21903-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <08850f80-0cc1-8e0d-6a8a-286a750d3a8c@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de, xuwei5@hisilicon.com, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, guodong.xu@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, myungjoo.ham@samsung.com, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add reset controller support for HiSilicon HI3670 SoC.
+Hi Sylwester,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi3670.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 2/1/19 3:19 PM, Sylwester Nawrocki wrote:
+> On 2/1/19 14:56, Lukasz Luba wrote:
+>>> Exynos5422 used the same PLL table for apll, kpll, bpll and so on.
+>>> You don't need to make the separate pll table. Just add new entries
+>>> to exynos5420_pll2550x_24mhz_tbl table.
+>> OK, I will extend the exynos5420_pll2550x_24mhz_tbl table.
+>>
+>> In v4 patch set, it will be fixed.
+> 
+> I would prefer to keep the rate table separate for BPLL, until correctness
+> of new rates introduced in the patch and their applicability to the other PLLs
+> is confirmed by the hardware team and verified in tests.
+Good point, I share the same opinion. So, this new table for BPLL will stay.
+Do you agree Chanwoo?
+The BPLL is only used only by DMC.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-index a5bd6d80b226..83950119100e 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-@@ -151,6 +151,12 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		crg_rst: crg_rst_controller {
-+			compatible = "hisilicon,hi3670-reset";
-+			#reset-cells = <2>;
-+			hisi,rst-syscon = <&crg_ctrl>;
-+		};
-+
- 		pctrl: pctrl@e8a09000 {
- 			compatible = "hisilicon,hi3670-pctrl", "syscon";
- 			reg = <0x0 0xe8a09000 0x0 0x1000>;
--- 
-2.17.1
+Regards,
+Lukasz
+> 
