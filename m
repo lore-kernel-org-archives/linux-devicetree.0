@@ -1,79 +1,50 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v2 2/2] drm/panel: Add driver for Samsung S6E63M0 panel
-Date: Fri, 1 Feb 2019 22:36:07 +0100
-Message-ID: <20190201213607.GA27951@ravnborg.org>
-References: <20190201172852.4944-1-pawel.mikolaj.chmiel@gmail.com>
- <20190201172852.4944-2-pawel.mikolaj.chmiel@gmail.com>
+From: Tomasz Duszynski <tduszyns@gmail.com>
+Subject: [PATCH v3 0/3] add support for PMS7003 PM sensor
+Date: Fri,  1 Feb 2019 22:57:56 +0100
+Message-ID: <20190201215759.14569-1-tduszyns@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190201172852.4944-2-pawel.mikolaj.chmiel@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org, m.szyprowski@samsung.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@jic23.retrosnub.co.uk, pmeerw@pmeerw.net, johan@kernel.org, Tomasz Duszynski <tduszyns@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGF3ZcWCCgpMb29rcyBnb29kLCB0aGFua3MgZm9yIGFkZHJlc3NpbmcgYWxsIHRoZSByZXZp
-ZXcgZmVlZGJhY2suCgpPbiBGcmksIEZlYiAwMSwgMjAxOSBhdCAwNjoyODo1MlBNICswMTAwLCBQ
-YXdlxYIgQ2htaWVsIHdyb3RlOgo+IFRoaXMgcGF0Y2ggYWRkcyBTYW1zdW5nIFM2RTYzTTAgQU1P
-TEVEIExDRCBwYW5lbCBkcml2ZXIsIGNvbm5lY3RlZCBvdmVyCj4gc3BpLiBJdCdzIGJhc2VkIG9u
-IGFscmVhZHkgcmVtb3ZlZCwgbm9uIGR0IHM2ZTYzbTAgZHJpdmVyIGFuZAo+IHBhbmVsLXNhbXN1
-bmctbGQ5MDQwLiBJdCBjYW4gYmUgZm91bmQgZm9yIGV4YW1wbGUgaW4gc29tZSBvZiBTYW1zdW5n
-Cj4gQXJpZXMgYmFzZWQgcGhvbmVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBhd2XFgiBDaG1pZWwg
-PHBhd2VsLm1pa29sYWouY2htaWVsQGdtYWlsLmNvbT4KSWYgeW91IGNvbnNpZGVyIChkbyBub3Qg
-Y2hhbmdlIHVubGVzcyB5b3UgdGhpbmsgaXQgYmV0dGVyKSB0aGUKZm9sbG93aW5nIG5pdHMgdGhh
-biB5b3UgY2FuIGFkZCBteToKClJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9y
-Zy5vcmc+CgoJU2FtCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZp
-ZyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCj4gaW5kZXggM2YzNTM3NzE5YmViLi5i
-ZTA1ZWQ1MjE4ZWIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcK
-PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZwo+IEBAIC0xNTgsNiArMTU4LDEz
-IEBAIGNvbmZpZyBEUk1fUEFORUxfU0FNU1VOR19TNkU2M0owWDAzCj4gIAlkZXBlbmRzIG9uIEJB
-Q0tMSUdIVF9DTEFTU19ERVZJQ0UKPiAgCXNlbGVjdCBWSURFT01PREVfSEVMUEVSUwo+ICAKPiAr
-Y29uZmlnIERSTV9QQU5FTF9TQU1TVU5HX1M2RTYzTTAKPiArCXRyaXN0YXRlICJTYW1zdW5nIFM2
-RTYzTTAgUkdCL1NQSSBwYW5lbCIKPiArCWRlcGVuZHMgb24gT0YKPiArCWRlcGVuZHMgb24gU1BJ
-Cj4gKwlkZXBlbmRzIG9uIEJBQ0tMSUdIVF9DTEFTU19ERVZJQ0UKPiArCXNlbGVjdCBWSURFT01P
-REVfSEVMUEVSUwpXaXRoIHRoZSB1c2Ugb2YgZGlzcGxheV9tb2RlIHRoZSBhYm92ZSAic2VsZWN0
-IFZJREVPTU9ERV9IRUxQRVJTIgppcyBsaWtlbHkgbm8gbG9uZ2VyIHJlcXVpcmVkLiBQbGVhc2Ug
-Y2hlY2suCgpBIGhlbHAgdGV4dCB3b3VsZCBiZSBuaWNlLgoKPiArCj4gIGNvbmZpZyBEUk1fUEFO
-RUxfU0FNU1VOR19TNkU4QUEwCj4gIAl0cmlzdGF0ZSAiU2Ftc3VuZyBTNkU4QUEwIERTSSB2aWRl
-byBtb2RlIHBhbmVsIgo+ICAJZGVwZW5kcyBvbiBPRgoKCj4gKyNpbmNsdWRlIDx2aWRlby9vZl92
-aWRlb21vZGUuaD4KPiArI2luY2x1ZGUgPHZpZGVvL3ZpZGVvbW9kZS5oPgpQbGVhc2UgY2hlY2sg
-aWYgdGhlc2UgdHdvIGZpbGVzIGFyZSByZXF1aXJlZC4KCj4gK3N0cnVjdCBzNmU2M20wIHsKPiAr
-CXN0cnVjdCBkZXZpY2UgKmRldjsKPiArCXN0cnVjdCBkcm1fcGFuZWwgcGFuZWw7Cj4gKwlzdHJ1
-Y3QgYmFja2xpZ2h0X2RldmljZSAqYmxfZGV2Owo+ICsKPiArCXN0cnVjdCByZWd1bGF0b3JfYnVs
-a19kYXRhIHN1cHBsaWVzWzJdOwo+ICsJc3RydWN0IGdwaW9fZGVzYyAqcmVzZXRfZ3BpbzsKPiAr
-CXN0cnVjdCB2aWRlb21vZGUgdm07CnZtIGlzIG5vIGxvbmdlciB1c2VkIC0gZGVsZXRlIGl0LgoK
-PiArCj4gKwlib29sIHByZXBhcmVkOwo+ICsJYm9vbCBlbmFibGVkOwo+ICsKPiArCS8qCj4gKwkg
-KiBUaGlzIGZpZWxkIGlzIHRlc3RlZCBieSBmdW5jdGlvbnMgZGlyZWN0bHkgYWNjZXNzaW5nIGJ1
-cyBiZWZvcmUKPiArCSAqIHRyYW5zZmVyLCB0cmFuc2ZlciBpcyBza2lwcGVkIGlmIGl0IGlzIHNl
-dC4gSW4gY2FzZSBvZiB0cmFuc2Zlcgo+ICsJICogZmFpbHVyZSBvciB1bmV4cGVjdGVkIHJlc3Bv
-bnNlIHRoZSBmaWVsZCBpcyBzZXQgdG8gZXJyb3IgdmFsdWUuCj4gKwkgKiBTdWNoIGNvbnN0cnVj
-dCBhbGxvd3MgdG8gZWxpbWluYXRlIG1hbnkgY2hlY2tzIGluIGhpZ2hlciBsZXZlbAo+ICsJICog
-ZnVuY3Rpb25zLgo+ICsJICovCj4gKwlpbnQgZXJyb3I7Cj4gK307Cj4gKwoKPiArc3RhdGljIGlu
-dCBzNmU2M20wX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPiArewo+ICsJc3Ry
-dWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciA9IHBhbmVsLT5jb25uZWN0b3I7Cj4gKwlzdHJ1
-Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZTsKPiArCj4gKwltb2RlID0gZHJtX21vZGVfZHVwbGlj
-YXRlKHBhbmVsLT5kcm0sICZkZWZhdWx0X21vZGUpOwo+ICsJaWYgKCFtb2RlKSB7Cj4gKwkJRFJN
-X0VSUk9SKCJmYWlsZWQgdG8gYWRkIG1vZGUgJXV4JXV4QCV1XG4iLAo+ICsJCQkgIGRlZmF1bHRf
-bW9kZS5oZGlzcGxheSwgZGVmYXVsdF9tb2RlLnZkaXNwbGF5LAo+ICsJCQkgIGRlZmF1bHRfbW9k
-ZS52cmVmcmVzaCk7CkkgcmVjYWxsIEkgaGF2ZSBzZWVuIGEgZ2VuZXJpYyB3YXkgdG8gcHJpbnQg
-dGhlIGFib3ZlLApidXQgSSBoYXZlIGZhaWxlZCB0byBmaW5kIGl0LgpNYXliZSBpdCBpcyBqdXN0
-IG15IG1lbW9yeSB0aGF0IGZvb2xzIG1lLgoKVGhlIGFib3ZlIGlzIGZpbmUuCgo+ICsKPiArCXM2
-ZTYzbTBfYmFja2xpZ2h0X3JlZ2lzdGVyKGN0eCk7CgpJcyBpdCBjb3JyZWN0IHRoYXQgd2UgY29u
-dGludWUgZXZlbiBpZiB3ZSBmYWlsIHRvIHJlZ2lzdGVyIGJhY2tsaWdodD8KCgo+ICsKPiArCXJl
-dHVybiAwOwo+ICt9Cj4gKwo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
-czZlNjNtMF9vZl9tYXRjaFtdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM2ZTYz
-bTAiIH0sCj4gKwl7IH0KCkFkZCAvKiBzZW50aW5lbCAqLyBjb21tZW50PwoKPiArfTsKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This patch series adds support for Plantower PMS7003 PM matter sensor.
+
+Unfortunately datasheet is not available for download from the Plantower
+website so one needs to find it elsewhere, for instance here:
+
+https://download.kamami.com/p564008-p564008-PMS7003%20series%20data%20manua_English_V2.5.pdf
+
+v3:
+* fix whitespaces
+* drop unused printk format specifier
+* make vcc-supply mandatory in dt binding
+* use a generic node name (air-pollution-sensor) instead of a sensor model
+
+v2:
+ * check number of bytes returned from serdev_device_write()
+   (due to changes in linux 5.0 serdev api)
+ * add missing pins descriptions to the driver binding
+ * keep commands in the lookup table
+ * buffer data and process everything in one go instead of using state machine
+ * keep pm offset in channel address to simplify reading measurements
+
+
+Tomasz Duszynski (3):
+  iio: chemical: add support for Plantower PMS7003 sensor
+  dt-bindings: add Plantower to the vendor prefixes
+  dt-bindings: iio: chemical: pms7003: add device tree support
+
+ .../iio/chemical/plantower,pms7003.txt        |  20 ++
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ drivers/iio/chemical/Kconfig                  |  10 +
+ drivers/iio/chemical/Makefile                 |   1 +
+ drivers/iio/chemical/pms7003.c                | 340 ++++++++++++++++++
+ 5 files changed, 372 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+ create mode 100644 drivers/iio/chemical/pms7003.c
+
+--
+2.20.1
