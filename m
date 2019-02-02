@@ -1,148 +1,52 @@
-From: Moritz Fischer <mdf@kernel.org>
-Subject: [net-next RFC/PATCH] net: nixge: Make mdio child node optional
-Date: Fri,  1 Feb 2019 18:50:48 -0800
-Message-ID: <20190202025048.14772-1-mdf@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, alex.williams@ni.com, Moritz Fischer <mdf@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>
+From: Yangbo Lu <yangbo.lu@nxp.com>
+Subject: [v2, 0/9] Add ENETC PTP clock driver
+Date: Sat,  2 Feb 2019 10:56:58 +0800
+Message-ID: <20190202025707.10794-1-yangbo.lu@nxp.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Claudiu Manoil <claudiu.manoil@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Make MDIO child optional and only instantiate the
-MDIO bus if the child is actually present.
+There is same QorIQ 1588 timer IP block on the new ENETC Ethernet
+controller with eTSEC/DPAA Ethernet controllers. However it's
+different endianness (little-endian) and using PCI driver.
 
-There are currently no (in-tree) users of this
-binding; all (out-of-tree) users use overlays that
-get shipped together with the FPGA images that contain
-the IP.
+To support ENETC PTP driver, ptp_qoriq driver needed to be
+reworked to make functions global for reusing, to add little-
+endian support, to add ENETC memory map support, and to add
+ENETC dependency for ptp_qoriq driver.
 
-This will significantly increase maintainabilty
-of future revisions of this IP.
+In addition, although ENETC PTP driver is a PCI driver, the dts
+node still could be used. Currently the ls1028a dtsi which is
+the only platform by now using ENETC is not complete, so there
+is still dependency for ENETC PTP node upstreaming. This will
+be done in the near future. The hardware timestamping support
+for ENETC is done but needs to be reworked with new method in
+internal git tree, and will be sent out soon.
 
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh+dt@kernel.org>
----
+Yangbo Lu (9):
+  ptp_qoriq: make structure/function names more consistent
+  ptp_qoriq: make ptp operations global
+  ptp_qoriq: convert to use ptp_qoriq_init()
+  ptp_qoriq: add little enadian support
+  dt-binding: ptp_qoriq: add little-endian support
+  ptp_qoriq: fix register memory map
+  ptp: add QorIQ PTP support for ENETC
+  enetc: add PTP clock driver
+  MAINTAINERS: add enetc_ptp driver into QorIQ PTP list
 
-Hi Rob, Andrew,
-
-I know generally changing bindings is a no-no. Ultimately
-I'm working on adding fixed-link support to this driver,
-during the review of that Andrew suggested to drop the wrong
-binding if I don't need legacy behavior.
-
-In my case I can pretty much guarantee there's no users,
-even out of tree due to how we ship the software with our
-devices (overlays & fpga images always go together).
-
-I think in the long this change will make the code easier to
-maintain and allow to easier support the different variants.
-
-Thanks,
-
-Moritz
-
----
- .../devicetree/bindings/net/nixge.txt         | 27 ++++++++++++++++---
- drivers/net/ethernet/ni/nixge.c               | 19 ++++++++-----
- 2 files changed, 37 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
-index e55af7f0881a..5a0072b69ce7 100644
---- a/Documentation/devicetree/bindings/net/nixge.txt
-+++ b/Documentation/devicetree/bindings/net/nixge.txt
-@@ -10,6 +10,9 @@ Required properties:
- - nvmem-cells: Phandle of nvmem cell containing the MAC address
- - nvmem-cell-names: Should be "address"
- 
-+Optional properties:
-+- mdio subnode to indicate presence of MDIO controller
-+
- Examples (10G generic PHY):
- 	nixge0: ethernet@40000000 {
- 		compatible = "ni,xge-enet-2.00";
-@@ -25,8 +28,26 @@ Examples (10G generic PHY):
- 		phy-mode = "xgmii";
- 		phy-handle = <&ethernet_phy1>;
- 
--		ethernet_phy1: ethernet-phy@4 {
--			compatible = "ethernet-phy-ieee802.3-c45";
--			reg = <4>;
-+		mdio {
-+			ethernet_phy1: ethernet-phy@4 {
-+				compatible = "ethernet-phy-ieee802.3-c45";
-+				reg = <4>;
-+			};
- 		};
- 	};
-+
-+Examples (10G generic PHY, no MDIO):
-+	nixge0: ethernet@40000000 {
-+		compatible = "ni,xge-enet-2.00";
-+		reg = <0x40000000 0x6000>;
-+
-+		nvmem-cells = <&eth1_addr>;
-+		nvmem-cell-names = "address";
-+
-+		interrupts = <0 29 IRQ_TYPE_LEVEL_HIGH>, <0 30 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "rx", "tx";
-+		interrupt-parent = <&intc>;
-+
-+		phy-mode = "xgmii";
-+		phy-handle = <&ethernet_phy1>;
-+	};
-diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
-index 1e408d1a9b5f..93d5263cc57e 100644
---- a/drivers/net/ethernet/ni/nixge.c
-+++ b/drivers/net/ethernet/ni/nixge.c
-@@ -1230,6 +1230,7 @@ static int nixge_probe(struct platform_device *pdev)
- 	struct nixge_priv *priv;
- 	struct net_device *ndev;
- 	struct resource *dmares;
-+	struct device_node *mn;
- 	const u8 *mac_addr;
- 	int err;
- 
-@@ -1286,10 +1287,14 @@ static int nixge_probe(struct platform_device *pdev)
- 	priv->coalesce_count_rx = XAXIDMA_DFT_RX_THRESHOLD;
- 	priv->coalesce_count_tx = XAXIDMA_DFT_TX_THRESHOLD;
- 
--	err = nixge_mdio_setup(priv, pdev->dev.of_node);
--	if (err) {
--		netdev_err(ndev, "error registering mdio bus");
--		goto free_netdev;
-+	mn = of_get_child_by_name(pdev->dev.of_node, "mdio");
-+	if (mn) {
-+		err = nixge_mdio_setup(priv, mn);
-+		of_node_put(mn);
-+		if (err) {
-+			netdev_err(ndev, "error registering mdio bus");
-+			goto free_netdev;
-+		}
- 	}
- 
- 	priv->phy_mode = of_get_phy_mode(pdev->dev.of_node);
-@@ -1315,7 +1320,8 @@ static int nixge_probe(struct platform_device *pdev)
- 	return 0;
- 
- unregister_mdio:
--	mdiobus_unregister(priv->mii_bus);
-+	if (priv->mii_bus)
-+		mdiobus_unregister(priv->mii_bus);
- 
- free_netdev:
- 	free_netdev(ndev);
-@@ -1330,7 +1336,8 @@ static int nixge_remove(struct platform_device *pdev)
- 
- 	unregister_netdev(ndev);
- 
--	mdiobus_unregister(priv->mii_bus);
-+	if (priv->mii_bus)
-+		mdiobus_unregister(priv->mii_bus);
- 
- 	free_netdev(ndev);
- 
--- 
-2.20.1
+ .../devicetree/bindings/ptp/ptp-qoriq.txt          |    3 +
+ MAINTAINERS                                        |    1 +
+ drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c |    2 +-
+ drivers/net/ethernet/freescale/enetc/Kconfig       |   12 +
+ drivers/net/ethernet/freescale/enetc/Makefile      |    3 +
+ drivers/net/ethernet/freescale/enetc/enetc_hw.h    |    5 +-
+ drivers/net/ethernet/freescale/enetc/enetc_ptp.c   |  151 +++++++
+ drivers/net/ethernet/freescale/gianfar_ethtool.c   |    2 +-
+ drivers/ptp/Kconfig                                |    2 +-
+ drivers/ptp/ptp_qoriq.c                            |  427 ++++++++++----------
+ drivers/ptp/ptp_qoriq_debugfs.c                    |   48 ++--
+ include/linux/fsl/ptp_qoriq.h                      |   62 ++-
+ 12 files changed, 464 insertions(+), 254 deletions(-)
+ create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_ptp.c
