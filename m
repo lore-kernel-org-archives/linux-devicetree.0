@@ -1,604 +1,512 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH v3 13/13] spi: atmel-quadspi: add support for sam9x60 qspi
- controller
-Date: Sat, 2 Feb 2019 08:58:25 +0000
-Message-ID: <57d4d4b2-e765-1255-0b89-a4fd61f6c1e0@microchip.com>
-References: <20190202040653.1217-1-tudor.ambarus@microchip.com>
- <20190202040653.1217-14-tudor.ambarus@microchip.com>
- <20190202082910.0e60a757@bbrezillon>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 2/2] iio: adc: add NPCM ADC driver
+Date: Sat, 2 Feb 2019 09:47:39 +0000
+Message-ID: <20190202094739.42ff0319@archlinux>
+References: <20190116164855.200357-1-tmaimon77@gmail.com>
+        <20190116164855.200357-3-tmaimon77@gmail.com>
+        <20190119180843.78510580@archlinux>
+        <CAP6Zq1j=wjkKYsP=aFSDCYKV3ESUibtV0oXTXG5P1LikVgdJdw@mail.gmail.com>
+        <20190126173240.4f87423d@archlinux>
+        <CAP6Zq1g-Q7JvE1eEot0FEZuiNG-m-bsy3E+Jf2vO_ALjoaMCag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190202082910.0e60a757@bbrezillon>
-Content-Language: en-US
-Content-ID: <CD61049DA973C14B8A67EA3FE99967AE@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bbrezillon@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, broonie@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Ludovic.Desroches@microchip.com, Cyrille.Pitchen@microchip.com, linux-mtd@lists.infradead.org, bugalski.piotr@gmail.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAP6Zq1g-Q7JvE1eEot0FEZuiNG-m-bsy3E+Jf2vO_ALjoaMCag@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Brendan Higgins <brendanhiggins@google.com>, Avi Fishman <avifishman70@gmail.com>, Joel Stanley <joel@jms.id.au>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 28 Jan 2019 12:53:18 +0200
+Tomer Maimon <tmaimon77@gmail.com> wrote:
 
-
-On 02/02/2019 09:29 AM, Boris Brezillon wrote:
-> On Sat, 2 Feb 2019 04:07:46 +0000
-> <Tudor.Ambarus@microchip.com> wrote:
+> Hi Jonathan,
 > 
->> From: Tudor Ambarus <tudor.ambarus@microchip.com>
->>
->> The sam9x60 qspi controller uses 2 clocks, one for the peripheral register
->> access, the other for the qspi core and phy. Both are mandatory. It uses
->> different transfer type bits in IFR register. It has dedicated registers
->> to specify a read or a write instruction: Read Instruction Code Register
->> (RICR) and Write Instruction Code Register (WICR). ICR/RICR/WICR have
->> identical fields.
->>
->> Tested with sst26vf064b jedec,spi-nor flash. Backward compatibility test
->> done on sama5d2 qspi controller and mx25l25635e jedec,spi-nor flash.
->>
->> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
->> ---
->> v3:
->> - reorganize the code and change ops functions pointers to avoid code
->>   duplication. From the IP perspective, the transfer type bits are
->>   different, and what registers are written: ricr/wicr instead of icr.
->> - treat just regular spi transfers. Mem transfers will be added together
->>   with dirmap support.
->> v2:
->> - rework clock handling
->> - reorder setting of register values in set_cfg() calls -> move functions
->>   that can fail in the upper part of the function body.
->>
->>  drivers/spi/atmel-quadspi.c | 295 +++++++++++++++++++++++++++++++++++---------
->>  1 file changed, 234 insertions(+), 61 deletions(-)
->>
->> diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
->> index c9548942535a..af1e4e25097a 100644
->> --- a/drivers/spi/atmel-quadspi.c
->> +++ b/drivers/spi/atmel-quadspi.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->> +#include <linux/of_platform.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/spi/spi-mem.h>
->>  
->> @@ -35,7 +36,9 @@
->>  
->>  #define QSPI_IAR     0x0030  /* Instruction Address Register */
->>  #define QSPI_ICR     0x0034  /* Instruction Code Register */
->> +#define QSPI_WICR    0x0034  /* Write Instruction Code Register */
->>  #define QSPI_IFR     0x0038  /* Instruction Frame Register */
->> +#define QSPI_RICR    0x003C  /* Read Instruction Code Register */
->>  
->>  #define QSPI_SMR     0x0040  /* Scrambling Mode Register */
->>  #define QSPI_SKR     0x0044  /* Scrambling Key Register */
->> @@ -88,7 +91,7 @@
->>  #define QSPI_SCR_DLYBS_MASK             GENMASK(23, 16)
->>  #define QSPI_SCR_DLYBS(n)               (((n) << 16) & QSPI_SCR_DLYBS_MASK)
->>  
->> -/* Bitfields in QSPI_ICR (Instruction Code Register) */
->> +/* Bitfields in QSPI_ICR (Read/Write Instruction Code Register) */
->>  #define QSPI_ICR_INST_MASK              GENMASK(7, 0)
->>  #define QSPI_ICR_INST(inst)             (((inst) << 0) & QSPI_ICR_INST_MASK)
->>  #define QSPI_ICR_OPT_MASK               GENMASK(23, 16)
->> @@ -117,6 +120,7 @@
->>  #define QSPI_IFR_CRM                    BIT(14)
->>  #define QSPI_IFR_NBDUM_MASK             GENMASK(20, 16)
->>  #define QSPI_IFR_NBDUM(n)               (((n) << 16) & QSPI_IFR_NBDUM_MASK)
->> +#define QSPI_IFR_APBTFRTYP_READ		BIT(24)
+> Thanks for the clarification,
 > 
-> Maybe add a comment saying it's only available on SAM9X60 or prefix it
-> with SAM9X60.
+>  I will like to to Modify the NPCM ADC dt-binding document (
+> https://patchwork.ozlabs.org/patch/1022527/ - removing rst node).
+> 
+> To send a new commit to the iio.git testing branch or to send a new patch
+> version?
+New commit is good at this point.
 
-I'll add a comment. The macro name is more generic how it is now and can be used
-by future versions of the IP. Hypothetically speaking, if we rename it to
-QSPI_IFR_SAM9x60_TFSFR_READ and other sam9x will come out, then I'll have to
-rename this macro again, to make it more generic.	
+Thanks,
+
+Jonathan
 
 > 
->>  
->>  /* Bitfields in QSPI_SMR (Scrambling Mode Register) */
->>  #define QSPI_SMR_SCREN                  BIT(0)
->> @@ -133,16 +137,39 @@
->>  #define QSPI_WPSR_WPVSRC(src)           (((src) << 8) & QSPI_WPSR_WPVSRC)
->>  
->>  
->> +/* Describes register values. */
->> +struct atmel_qspi_cfg {
->> +	u32 icr;
->> +	u32 iar;
->> +	u32 ifr;
->> +};
->> +
->> +struct atmel_qspi_caps;
->> +
->>  struct atmel_qspi {
->>  	void __iomem		*regs;
->>  	void __iomem		*mem;
->>  	struct clk		*pclk;
->> +	struct clk		*qspick;
->>  	struct platform_device	*pdev;
->> +	const struct atmel_qspi_caps *caps;
->>  	u32			pending;
->>  	u32			smm;
->>  	struct completion	cmd_completion;
->>  };
->>  
->> +struct atmel_qspi_ops {
->> +	void (*set_tfrtyp)(const struct spi_mem_op *op,
->> +			   struct atmel_qspi_cfg *cfg);
->> +	void (*write_regs)(void __iomem *base, const struct spi_mem_op *op,
->> +			   const struct atmel_qspi_cfg *cfg);
->> +};
->> +
->> +struct atmel_qspi_caps {
->> +	const struct atmel_qspi_ops *ops;
->> +	bool has_qspick;
->> +};
->> +
->>  struct atmel_qspi_mode {
->>  	u8 cmd_buswidth;
->>  	u8 addr_buswidth;
->> @@ -200,30 +227,36 @@ static bool atmel_qspi_supports_op(struct spi_mem *mem,
->>  	return true;
->>  }
->>  
->> -static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
->> +static int atmel_qspi_set_mode(struct atmel_qspi_cfg *cfg,
->> +			       const struct spi_mem_op *op)
->>  {
->> -	struct atmel_qspi *aq = spi_controller_get_devdata(mem->spi->master);
->> -	void __iomem *base = aq->regs;
->> -	int mode;
->> -	u32 dummy_cycles = 0;
->> -	u32 iar, icr, ifr, sr;
->> -	int err = 0;
->> -
->> -	iar = 0;
->> -	icr = QSPI_ICR_INST(op->cmd.opcode);
->> -	ifr = QSPI_IFR_INSTEN;
->> +	int mode = atmel_qspi_find_mode(op);
->>  
->> -	/* Set the QSPI controller in Serial Memory Mode */
->> -	if (aq->smm != QSPI_MR_SMM) {
->> -		writel_relaxed(QSPI_MR_SMM, base + QSPI_MR);
->> -		aq->smm = QSPI_MR_SMM;
->> -	}
->> -
->> -	mode = atmel_qspi_find_mode(op);
->>  	if (mode < 0)
->>  		return mode;
->> +	cfg->ifr = sama5d2_qspi_modes[mode].config;
+> Thanks,
 > 
-> Looks like modes are the same for sama5d2 and sam9x60, so maybe you
-> should rename the sama5d2_qspi_modes variable into something more
-> generic.
-
-will do
-
+> Tomer
 > 
->> +	return 0;
->> +}
->>  
->> -	ifr |= sama5d2_qspi_modes[mode].config;
->> +/*
+> On Sat, 26 Jan 2019 at 19:32, Jonathan Cameron <jic23@kernel.org> wrote:
 > 
-> Kernel doc headers should starts with /**, but maybe you did that on
-> purpose to avoid having this header parsed in case someone decides to
-> add this file to the list of files parsed for doc creation.
-
-I'll add /**
-
-> 
->> + * atmel_qspi_set_address_mode() - set address mode.
->> + * @cfg:	contains register values
->> + * @op:		describes a SPI memory operation
->> + *
->> + * The controller allows 24 and 32-bit addressing while NAND-flash requires
->> + * 16-bit long. Handling 8-bit long addresses is done using the option field.
->> + * For the 16-bit addresses, the workaround depends of the number of requested
->> + * dummy bits. If there are 8 or more dummy cycles, the address is shifted and
->> + * sent with the first dummy byte. Otherwise opcode is disabled and the first
->> + * byte of the address contains the command opcode (works only if the opcode and
->> + * address use the same buswidth). The limitation is when the 16-bit address is
->> + * used without enough dummy cycles and the opcode is using a different buswidth
->> + * than the address.
-> 
-> This comment would better be placed directly in the function just
-> before the switch() statement.
-
-ok
-
-> 
->> + */
->> +static int atmel_qspi_set_address_mode(struct atmel_qspi_cfg *cfg,
->> +				       const struct spi_mem_op *op)
->> +{
->> +	u32 dummy_cycles = 0;
->>  
->>  	if (op->dummy.buswidth && op->dummy.nbytes)
->>  		dummy_cycles = op->dummy.nbytes * 8 / op->dummy.buswidth;
->> @@ -233,28 +266,28 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
->>  		case 0:
->>  			break;
->>  		case 1:
->> -			ifr |= QSPI_IFR_OPTEN | QSPI_IFR_OPTL_8BIT;
->> -			icr |= QSPI_ICR_OPT(op->addr.val & 0xff);
->> +			cfg->ifr |= QSPI_IFR_OPTEN | QSPI_IFR_OPTL_8BIT;
->> +			cfg->icr = QSPI_ICR_OPT(op->addr.val & 0xff);
->>  			break;
->>  		case 2:
->>  			if (dummy_cycles < 8 / op->addr.buswidth) {
->> -				ifr &= ~QSPI_IFR_INSTEN;
->> -				ifr |= QSPI_IFR_ADDREN;
->> -				iar = (op->cmd.opcode << 16) |
->> -					(op->addr.val & 0xffff);
->> +				cfg->ifr &= ~QSPI_IFR_INSTEN;
->> +				cfg->ifr |= QSPI_IFR_ADDREN;
->> +				cfg->iar = (op->cmd.opcode << 16) |
->> +					   (op->addr.val & 0xffff);
->>  			} else {
->> -				ifr |= QSPI_IFR_ADDREN;
->> -				iar = (op->addr.val << 8) & 0xffffff;
->> +				cfg->ifr |= QSPI_IFR_ADDREN;
->> +				cfg->iar = (op->addr.val << 8) & 0xffffff;
->>  				dummy_cycles -= 8 / op->addr.buswidth;
->>  			}
->>  			break;
->>  		case 3:
->> -			ifr |= QSPI_IFR_ADDREN;
->> -			iar = op->addr.val & 0xffffff;
->> +			cfg->ifr |= QSPI_IFR_ADDREN;
->> +			cfg->iar = op->addr.val & 0xffffff;
->>  			break;
->>  		case 4:
->> -			ifr |= QSPI_IFR_ADDREN | QSPI_IFR_ADDRL;
->> -			iar = op->addr.val & 0x7ffffff;
->> +			cfg->ifr |= QSPI_IFR_ADDREN | QSPI_IFR_ADDRL;
->> +			cfg->iar = op->addr.val & 0x7ffffff;
->>  			break;
->>  		default:
->>  			return -ENOTSUPP;
->> @@ -263,22 +296,99 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
->>  
->>  	/* Set number of dummy cycles */
->>  	if (dummy_cycles)
->> -		ifr |= QSPI_IFR_NBDUM(dummy_cycles);
->> +		cfg->ifr |= QSPI_IFR_NBDUM(dummy_cycles);
->>  
->> -	/* Set data enable */
->> -	if (op->data.nbytes)
->> -		ifr |= QSPI_IFR_DATAEN;
->> +	return 0;
->> +}
->>  
->> +static void atmel_qspi_sama5d2_set_tfrtyp(const struct spi_mem_op *op,
->> +					  struct atmel_qspi_cfg *cfg)
->> +{
->>  	if (op->data.dir == SPI_MEM_DATA_OUT)
->> -		ifr |= QSPI_IFR_SAMA5D2_WRITE_TRSFR;
->> +		cfg->ifr |= QSPI_IFR_SAMA5D2_WRITE_TRSFR;
->> +}
->>  
->> +static void atmel_qspi_sama5d2_write_regs(void __iomem *base,
->> +					  const struct spi_mem_op *op,
->> +					  const struct atmel_qspi_cfg *cfg)
->> +{
->>  	/* Clear pending interrupts */
->>  	(void)readl_relaxed(base + QSPI_SR);
->>  
->>  	/* Set QSPI Instruction Frame registers */
->> -	writel_relaxed(iar, base + QSPI_IAR);
->> -	writel_relaxed(icr, base + QSPI_ICR);
->> -	writel_relaxed(ifr, base + QSPI_IFR);
->> +	writel_relaxed(cfg->iar, base + QSPI_IAR);
->> +	writel_relaxed(cfg->icr, base + QSPI_ICR);
->> +	writel_relaxed(cfg->ifr, base + QSPI_IFR);
->> +}
->> +
->> +static void atmel_qspi_sam9x60_set_tfrtyp(const struct spi_mem_op *op,
->> +					  struct atmel_qspi_cfg *cfg)
->> +{
->> +	if (!op->addr.nbytes && op->data.dir == SPI_MEM_DATA_IN)
->> +		cfg->ifr |= QSPI_IFR_APBTFRTYP_READ;
->> +}
->> +
->> +static void atmel_qspi_sam9x60_write_regs(void __iomem *base,
->> +					  const struct spi_mem_op *op,
->> +					  const struct atmel_qspi_cfg *cfg)
->> +{
->> +	/* Clear pending interrupts */
->> +	(void)readl_relaxed(base + QSPI_SR);
->> +
->> +	/* Set QSPI Instruction Frame registers */
->> +	writel_relaxed(cfg->iar, base + QSPI_IAR);
->> +	if (op->data.dir == SPI_MEM_DATA_IN)
->> +		writel_relaxed(cfg->icr, base + QSPI_RICR);
->> +	else
->> +		writel_relaxed(cfg->icr, base + QSPI_ICR);
->> +	writel_relaxed(cfg->ifr, base + QSPI_IFR);
->> +}
->> +
->> +static int atmel_qspi_set_cfg(struct atmel_qspi *aq,
->> +			      const struct spi_mem_op *op,
->> +			      struct atmel_qspi_cfg *cfg)
->> +{
->> +	void __iomem *base = aq->regs;
->> +	int ret;
->> +
->> +	/* Set the QSPI controller in Serial Memory Mode */
->> +	if (aq->smm != QSPI_MR_SMM) {
->> +		writel_relaxed(QSPI_MR_SMM, base + QSPI_MR);
-> 
-> 					    aq->reqs +
-> 
-> and you can get rid of base.
-
-I will wait your reasons on this, see 3/13
-
-> 
->> +		aq->smm = QSPI_MR_SMM;
->> +	}
->> +
->> +	ret = atmel_qspi_set_mode(cfg, op);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = atmel_qspi_set_address_mode(cfg, op);
->> +	if (ret)
->> +		return ret;
->> +
->> +	cfg->ifr |= QSPI_IFR_INSTEN;
->> +	cfg->icr |= QSPI_ICR_INST(op->cmd.opcode);
->> +
->> +	/* Set data enable */
->> +	if (op->data.nbytes)
->> +		cfg->ifr |= QSPI_IFR_DATAEN;
->> +
->> +	aq->caps->ops->set_tfrtyp(op, cfg);
->> +	aq->caps->ops->write_regs(base, op, cfg);
->> +
->> +	return 0;
->> +}
->> +
->> +static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
->> +{
->> +	struct atmel_qspi *aq = spi_controller_get_devdata(mem->spi->master);
->> +	void __iomem *base = aq->regs;
->> +	struct atmel_qspi_cfg cfg = {0};
->> +	u32 sr;
->> +	int err;
->> +
->> +	err = atmel_qspi_set_cfg(aq, op, &cfg);
->> +	if (err)
->> +		return err;
->>  
->>  	/* Skip to the final steps if there is no data */
->>  	if (op->data.nbytes) {
->> @@ -287,11 +397,11 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
->>  
->>  		/* Send/Receive data */
->>  		if (op->data.dir == SPI_MEM_DATA_IN)
->> -			_memcpy_fromio(op->data.buf.in,
->> -				aq->mem + iar, op->data.nbytes);
->> +			_memcpy_fromio(op->data.buf.in, aq->mem + cfg.iar,
->> +				       op->data.nbytes);
->>  		else
->> -			_memcpy_toio(aq->mem + iar,
->> -				op->data.buf.out, op->data.nbytes);
->> +			_memcpy_toio(aq->mem + cfg.iar, op->data.buf.out,
->> +				     op->data.nbytes);
->>  
->>  		/* Release the chip-select */
->>  		writel_relaxed(QSPI_CR_LASTXFER, base + QSPI_CR);
->> @@ -391,9 +501,22 @@ static int atmel_qspi_probe(struct platform_device *pdev)
->>  	struct spi_controller *ctrl;
->>  	struct atmel_qspi *aq;
->>  	struct resource *res;
->> +	const struct atmel_qspi_caps *caps;
->> +	struct device *dev = &pdev->dev;
-> 
-> If you really want to do this &pdev->dev -> dev conversion (which I
-> don't think is necessary given that we don't have over 80 chars lines),
-> please do it in separate patch.
-
-ditto. Thanks again!
-ta
-
-> 
->>  	int irq, err = 0;
->>  
->> -	ctrl = spi_alloc_master(&pdev->dev, sizeof(*aq));
->> +	caps = of_device_get_match_data(dev);
->> +	if (!caps) {
->> +		dev_err(dev, "Could not retrieve QSPI caps\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (!caps->ops->set_tfrtyp || !caps->ops->write_regs) {
->> +		dev_err(dev, "Could not retrieve QSPI ops\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	ctrl = spi_alloc_master(dev, sizeof(*aq));
->>  	if (!ctrl)
->>  		return -ENOMEM;
->>  
->> @@ -409,32 +532,33 @@ static int atmel_qspi_probe(struct platform_device *pdev)
->>  
->>  	init_completion(&aq->cmd_completion);
->>  	aq->pdev = pdev;
->> +	aq->caps = caps;
->>  
->>  	/* Map the registers */
->>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi_base");
->> -	aq->regs = devm_ioremap_resource(&pdev->dev, res);
->> +	aq->regs = devm_ioremap_resource(dev, res);
->>  	if (IS_ERR(aq->regs)) {
->> -		dev_err(&pdev->dev, "missing registers\n");
->> +		dev_err(dev, "missing registers\n");
->>  		err = PTR_ERR(aq->regs);
->>  		goto exit;
->>  	}
->>  
->>  	/* Map the AHB memory */
->>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi_mmap");
->> -	aq->mem = devm_ioremap_resource(&pdev->dev, res);
->> +	aq->mem = devm_ioremap_resource(dev, res);
->>  	if (IS_ERR(aq->mem)) {
->> -		dev_err(&pdev->dev, "missing AHB memory\n");
->> +		dev_err(dev, "missing AHB memory\n");
->>  		err = PTR_ERR(aq->mem);
->>  		goto exit;
->>  	}
->>  
->>  	/* Get the peripheral clock */
->> -	aq->pclk = devm_clk_get(&pdev->dev, "pclk");
->> +	aq->pclk = devm_clk_get(dev, "pclk");
->>  	if (IS_ERR(aq->pclk))
->> -		aq->pclk = devm_clk_get(&pdev->dev, NULL);
->> +		aq->pclk = devm_clk_get(dev, NULL);
->>  
->>  	if (IS_ERR(aq->pclk)) {
->> -		dev_err(&pdev->dev, "missing peripheral clock\n");
->> +		dev_err(dev, "missing peripheral clock\n");
->>  		err = PTR_ERR(aq->pclk);
->>  		goto exit;
->>  	}
->> @@ -442,32 +566,52 @@ static int atmel_qspi_probe(struct platform_device *pdev)
->>  	/* Enable the peripheral clock */
->>  	err = clk_prepare_enable(aq->pclk);
->>  	if (err) {
->> -		dev_err(&pdev->dev, "failed to enable the peripheral clock\n");
->> +		dev_err(dev, "failed to enable the peripheral clock\n");
->>  		goto exit;
->>  	}
->>  
->> +	if (caps->has_qspick) {
->> +		/* Get the QSPI system clock */
->> +		aq->qspick = devm_clk_get(dev, "qspick");
->> +		if (IS_ERR(aq->qspick)) {
->> +			dev_err(dev, "missing system clock\n");
->> +			err = PTR_ERR(aq->qspick);
->> +			goto disable_pclk;
->> +		}
->> +
->> +		/* Enable the QSPI system clock */
->> +		err = clk_prepare_enable(aq->qspick);
->> +		if (err) {
->> +			dev_err(dev,
->> +				"failed to enable the QSPI system clock\n");
->> +			goto disable_pclk;
->> +		}
->> +	}
->> +
->>  	/* Request the IRQ */
->>  	irq = platform_get_irq(pdev, 0);
->>  	if (irq < 0) {
->> -		dev_err(&pdev->dev, "missing IRQ\n");
->> +		dev_err(dev, "missing IRQ\n");
->>  		err = irq;
->> -		goto disable_pclk;
->> +		goto disable_qspick;
->>  	}
->> -	err = devm_request_irq(&pdev->dev, irq, atmel_qspi_interrupt,
->> -			       0, dev_name(&pdev->dev), aq);
->> +	err = devm_request_irq(dev, irq, atmel_qspi_interrupt, 0,
->> +			       dev_name(dev), aq);
->>  	if (err)
->> -		goto disable_pclk;
->> +		goto disable_qspick;
->>  
->>  	err = atmel_qspi_init(aq);
->>  	if (err)
->> -		goto disable_pclk;
->> +		goto disable_qspick;
->>  
->>  	err = spi_register_controller(ctrl);
->>  	if (err)
->> -		goto disable_pclk;
->> +		goto disable_qspick;
->>  
->>  	return 0;
->>  
->> +disable_qspick:
->> +	clk_disable_unprepare(aq->qspick);
->>  disable_pclk:
->>  	clk_disable_unprepare(aq->pclk);
->>  exit:
->> @@ -483,6 +627,7 @@ static int atmel_qspi_remove(struct platform_device *pdev)
->>  
->>  	spi_unregister_controller(ctrl);
->>  	writel_relaxed(QSPI_CR_QSPIDIS, aq->regs + QSPI_CR);
->> +	clk_disable_unprepare(aq->qspick);
->>  	clk_disable_unprepare(aq->pclk);
->>  	return 0;
->>  }
->> @@ -491,6 +636,7 @@ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
->>  {
->>  	struct atmel_qspi *aq = dev_get_drvdata(dev);
->>  
->> +	clk_disable_unprepare(aq->qspick);
->>  	clk_disable_unprepare(aq->pclk);
->>  
->>  	return 0;
->> @@ -501,6 +647,7 @@ static int __maybe_unused atmel_qspi_resume(struct device *dev)
->>  	struct atmel_qspi *aq = dev_get_drvdata(dev);
->>  
->>  	clk_prepare_enable(aq->pclk);
->> +	clk_prepare_enable(aq->qspick);
->>  
->>  	return atmel_qspi_init(aq);
->>  }
->> @@ -508,8 +655,34 @@ static int __maybe_unused atmel_qspi_resume(struct device *dev)
->>  static SIMPLE_DEV_PM_OPS(atmel_qspi_pm_ops, atmel_qspi_suspend,
->>  			 atmel_qspi_resume);
->>  
->> +static const struct atmel_qspi_ops atmel_sama5d2_qspi_ops = {
->> +	.set_tfrtyp = atmel_qspi_sama5d2_set_tfrtyp,
->> +	.write_regs = atmel_qspi_sama5d2_write_regs,
->> +};
->> +
->> +static const struct atmel_qspi_caps atmel_sama5d2_qspi_caps = {
->> +	.ops = &atmel_sama5d2_qspi_ops,
->> +};
->> +
->> +static const struct atmel_qspi_ops atmel_sam9x60_qspi_ops = {
->> +	.set_tfrtyp = atmel_qspi_sam9x60_set_tfrtyp,
->> +	.write_regs = atmel_qspi_sam9x60_write_regs,
->> +};
->> +
->> +static const struct atmel_qspi_caps atmel_sam9x60_qspi_caps = {
->> +	.ops = &atmel_sam9x60_qspi_ops,
->> +	.has_qspick = true,
->> +};
->> +
->>  static const struct of_device_id atmel_qspi_dt_ids[] = {
->> -	{ .compatible = "atmel,sama5d2-qspi" },
->> +	{
->> +		.compatible = "atmel,sama5d2-qspi",
->> +		.data = &atmel_sama5d2_qspi_caps,
->> +	},
->> +	{
->> +		.compatible = "microchip,sam9x60-qspi",
->> +		.data = &atmel_sam9x60_qspi_caps,
->> +	},
->>  	{ /* sentinel */ }
->>  };
->>  
-> 
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-> 
+> > On Sun, 20 Jan 2019 17:05:38 +0200
+> > Tomer Maimon <tmaimon77@gmail.com> wrote:
+> >  
+> > > Hi Jonathan,
+> > >
+> > > Thanks a lot for reviewing our driver,
+> > >
+> > > On Sat, 19 Jan 2019 at 20:08, Jonathan Cameron <jic23@kernel.org> wrote:
+> > >  
+> > > > On Wed, 16 Jan 2019 18:48:55 +0200
+> > > > Tomer Maimon <tmaimon77@gmail.com> wrote:
+> > > >  
+> > > > > Add Nuvoton NPCM BMC Analog-to-Digital Converter(ADC) driver.
+> > > > >
+> > > > > The NPCM ADC is a 10-bit converter for eight channel inputs.
+> > > > >
+> > > > > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>  
+> > > > One trivial ordering in remove oddity that I'll just fix up.
+> > > > Also, I don't particularly like printing a message on success
+> > > > as it's not providing any useful info.  Hmm. I don't care
+> > > > strongly enough to remove it though.
+> > > >  
+> > >
+> > > The Probe log is is important for us when customers doing bring-up or  
+> > have  
+> > > some issues,
+> > > we ask the logs w/o asking to do all kinds of things to see if a device  
+> > was  
+> > > probed.  
+> >
+> > You should probably develop a proper info gathering script.  Chances of
+> > this
+> > randomly getting 'tidied up' in future (i.e. remove) is rather high and
+> > I doubt I'll remember this if you miss the patch...
+> >
+> > I don't care all that much though and your problem if it goes away. Kernel
+> > logs shouldn't be used as ABI.  Even error messages tend to change over
+> > time!
+> >
+> > Jonathan
+> >  
+> > >
+> > >  
+> > > > Applied to the togreg branch of iio.git and pushed out as
+> > > > testing for the autobuilders to play with it.
+> > > >
+> > > > Thanks,
+> > > >
+> > > > Jonathan
+> > > >  
+> > > > > ---
+> > > > >  drivers/iio/adc/Kconfig    |  10 ++
+> > > > >  drivers/iio/adc/Makefile   |   1 +
+> > > > >  drivers/iio/adc/npcm_adc.c | 335  
+> > > > +++++++++++++++++++++++++++++++++++++++++++++  
+> > > > >  3 files changed, 346 insertions(+)
+> > > > >  create mode 100644 drivers/iio/adc/npcm_adc.c
+> > > > >
+> > > > > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > > > > index 7a3ca4ec0cb7..2d1e70a7d5c4 100644
+> > > > > --- a/drivers/iio/adc/Kconfig
+> > > > > +++ b/drivers/iio/adc/Kconfig
+> > > > > @@ -576,6 +576,16 @@ config NAU7802
+> > > > >         To compile this driver as a module, choose M here: the
+> > > > >         module will be called nau7802.
+> > > > >
+> > > > > +config NPCM_ADC
+> > > > > +     tristate "Nuvoton NPCM ADC driver"
+> > > > > +     depends on ARCH_NPCM || COMPILE_TEST
+> > > > > +     depends on HAS_IOMEM
+> > > > > +     help
+> > > > > +       Say yes here to build support for Nuvoton NPCM ADC.
+> > > > > +
+> > > > > +       This driver can also be built as a module. If so, the module
+> > > > > +       will be called npcm_adc.
+> > > > > +
+> > > > >  config PALMAS_GPADC
+> > > > >       tristate "TI Palmas General Purpose ADC"
+> > > > >       depends on MFD_PALMAS
+> > > > > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> > > > > index 07df37f621bd..3337eb1f4c30 100644
+> > > > > --- a/drivers/iio/adc/Makefile
+> > > > > +++ b/drivers/iio/adc/Makefile
+> > > > > @@ -55,6 +55,7 @@ obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
+> > > > >  obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
+> > > > >  obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
+> > > > >  obj-$(CONFIG_NAU7802) += nau7802.o
+> > > > > +obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
+> > > > >  obj-$(CONFIG_PALMAS_GPADC) += palmas_gpadc.o
+> > > > >  obj-$(CONFIG_QCOM_SPMI_ADC5) += qcom-spmi-adc5.o
+> > > > >  obj-$(CONFIG_QCOM_SPMI_IADC) += qcom-spmi-iadc.o
+> > > > > diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..1cc377cdf1f7
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/iio/adc/npcm_adc.c
+> > > > > @@ -0,0 +1,335 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +// Copyright (c) 2019 Nuvoton Technology corporation.
+> > > > > +
+> > > > > +#include <linux/clk.h>
+> > > > > +#include <linux/device.h>
+> > > > > +#include <linux/mfd/syscon.h>
+> > > > > +#include <linux/io.h>
+> > > > > +#include <linux/iio/iio.h>
+> > > > > +#include <linux/interrupt.h>
+> > > > > +#include <linux/kernel.h>
+> > > > > +#include <linux/module.h>
+> > > > > +#include <linux/platform_device.h>
+> > > > > +#include <linux/regmap.h>
+> > > > > +#include <linux/regulator/consumer.h>
+> > > > > +#include <linux/spinlock.h>
+> > > > > +#include <linux/uaccess.h>
+> > > > > +
+> > > > > +struct npcm_adc {
+> > > > > +     bool int_status;
+> > > > > +     u32 adc_sample_hz;
+> > > > > +     struct device *dev;
+> > > > > +     void __iomem *regs;
+> > > > > +     struct clk *adc_clk;
+> > > > > +     wait_queue_head_t wq;
+> > > > > +     struct regulator *vref;
+> > > > > +     struct regmap *rst_regmap;
+> > > > > +};
+> > > > > +
+> > > > > +/* NPCM7xx reset module */
+> > > > > +#define NPCM7XX_IPSRST1_OFFSET               0x020
+> > > > > +#define NPCM7XX_IPSRST1_ADC_RST              BIT(27)
+> > > > > +
+> > > > > +/* ADC registers */
+> > > > > +#define NPCM_ADCCON   0x00
+> > > > > +#define NPCM_ADCDATA  0x04
+> > > > > +
+> > > > > +/* ADCCON Register Bits */
+> > > > > +#define NPCM_ADCCON_ADC_INT_EN               BIT(21)
+> > > > > +#define NPCM_ADCCON_REFSEL           BIT(19)
+> > > > > +#define NPCM_ADCCON_ADC_INT_ST               BIT(18)
+> > > > > +#define NPCM_ADCCON_ADC_EN           BIT(17)
+> > > > > +#define NPCM_ADCCON_ADC_RST          BIT(16)
+> > > > > +#define NPCM_ADCCON_ADC_CONV         BIT(13)
+> > > > > +
+> > > > > +#define NPCM_ADCCON_CH_MASK          GENMASK(27, 24)
+> > > > > +#define NPCM_ADCCON_CH(x)            ((x) << 24)
+> > > > > +#define NPCM_ADCCON_DIV_SHIFT                1
+> > > > > +#define NPCM_ADCCON_DIV_MASK         GENMASK(8, 1)
+> > > > > +#define NPCM_ADC_DATA_MASK(x)                ((x) & GENMASK(9, 0))
+> > > > > +
+> > > > > +#define NPCM_ADC_ENABLE              (NPCM_ADCCON_ADC_EN |  
+> > > > NPCM_ADCCON_ADC_INT_EN)  
+> > > > > +
+> > > > > +/* ADC General Definition */
+> > > > > +#define NPCM_RESOLUTION_BITS         10
+> > > > > +#define NPCM_INT_VREF_MV             2000
+> > > > > +
+> > > > > +#define NPCM_ADC_CHAN(ch) {                                  \
+> > > > > +     .type = IIO_VOLTAGE,                                    \
+> > > > > +     .indexed = 1,                                           \
+> > > > > +     .channel = ch,                                          \
+> > > > > +     .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),           \
+> > > > > +     .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |  \
+> > > > > +                             BIT(IIO_CHAN_INFO_SAMP_FREQ),   \
+> > > > > +}
+> > > > > +
+> > > > > +static const struct iio_chan_spec npcm_adc_iio_channels[] = {
+> > > > > +     NPCM_ADC_CHAN(0),
+> > > > > +     NPCM_ADC_CHAN(1),
+> > > > > +     NPCM_ADC_CHAN(2),
+> > > > > +     NPCM_ADC_CHAN(3),
+> > > > > +     NPCM_ADC_CHAN(4),
+> > > > > +     NPCM_ADC_CHAN(5),
+> > > > > +     NPCM_ADC_CHAN(6),
+> > > > > +     NPCM_ADC_CHAN(7),
+> > > > > +};
+> > > > > +
+> > > > > +static irqreturn_t npcm_adc_isr(int irq, void *data)
+> > > > > +{
+> > > > > +     u32 regtemp;
+> > > > > +     struct iio_dev *indio_dev = data;
+> > > > > +     struct npcm_adc *info = iio_priv(indio_dev);
+> > > > > +
+> > > > > +     regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > > > +     if (regtemp & NPCM_ADCCON_ADC_INT_ST) {
+> > > > > +             iowrite32(regtemp, info->regs + NPCM_ADCCON);
+> > > > > +             wake_up_interruptible(&info->wq);
+> > > > > +             info->int_status = true;
+> > > > > +     }
+> > > > > +
+> > > > > +     return IRQ_HANDLED;
+> > > > > +}
+> > > > > +
+> > > > > +static int npcm_adc_read(struct npcm_adc *info, int *val, u8  
+> > channel)  
+> > > > > +{
+> > > > > +     int ret;
+> > > > > +     u32 regtemp;
+> > > > > +
+> > > > > +     /* Select ADC channel */
+> > > > > +     regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > > > +     regtemp &= ~NPCM_ADCCON_CH_MASK;
+> > > > > +     info->int_status = false;
+> > > > > +     iowrite32(regtemp | NPCM_ADCCON_CH(channel) |
+> > > > > +               NPCM_ADCCON_ADC_CONV, info->regs + NPCM_ADCCON);
+> > > > > +
+> > > > > +     ret = wait_event_interruptible_timeout(info->wq,  
+> > info->int_status,  
+> > > > > +                                            msecs_to_jiffies(10));
+> > > > > +     if (ret == 0) {
+> > > > > +             regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > > > +             if ((regtemp & NPCM_ADCCON_ADC_CONV) &&  
+> > info->rst_regmap) {  
+> > > > > +                     /* if conversion failed - reset ADC module */
+> > > > > +                     regmap_write(info->rst_regmap,  
+> > > > NPCM7XX_IPSRST1_OFFSET,  
+> > > > > +                                  NPCM7XX_IPSRST1_ADC_RST);
+> > > > > +                     msleep(100);
+> > > > > +                     regmap_write(info->rst_regmap,  
+> > > > NPCM7XX_IPSRST1_OFFSET,  
+> > > > > +                                  0x0);
+> > > > > +                     msleep(100);
+> > > > > +
+> > > > > +                     /* Enable ADC and start conversion module */
+> > > > > +                     iowrite32(NPCM_ADC_ENABLE |  
+> > NPCM_ADCCON_ADC_CONV,  
+> > > > > +                               info->regs + NPCM_ADCCON);
+> > > > > +                     dev_err(info->dev, "RESET ADC Complete\n");
+> > > > > +             }
+> > > > > +             return -ETIMEDOUT;
+> > > > > +     }
+> > > > > +     if (ret < 0)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     *val = NPCM_ADC_DATA_MASK(ioread32(info->regs + NPCM_ADCDATA));
+> > > > > +
+> > > > > +     return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static int npcm_adc_read_raw(struct iio_dev *indio_dev,
+> > > > > +                          struct iio_chan_spec const *chan, int  
+> > *val,  
+> > > > > +                          int *val2, long mask)
+> > > > > +{
+> > > > > +     int ret;
+> > > > > +     int vref_uv;
+> > > > > +     struct npcm_adc *info = iio_priv(indio_dev);
+> > > > > +
+> > > > > +     switch (mask) {
+> > > > > +     case IIO_CHAN_INFO_RAW:
+> > > > > +             mutex_lock(&indio_dev->mlock);
+> > > > > +             ret = npcm_adc_read(info, val, chan->channel);
+> > > > > +             mutex_unlock(&indio_dev->mlock);
+> > > > > +             if (ret) {
+> > > > > +                     dev_err(info->dev, "NPCM ADC read failed\n");
+> > > > > +                     return ret;
+> > > > > +             }
+> > > > > +             return IIO_VAL_INT;
+> > > > > +     case IIO_CHAN_INFO_SCALE:
+> > > > > +             if (info->vref) {
+> > > > > +                     vref_uv = regulator_get_voltage(info->vref);
+> > > > > +                     *val = vref_uv / 1000;
+> > > > > +             } else {
+> > > > > +                     *val = NPCM_INT_VREF_MV;
+> > > > > +             }
+> > > > > +             *val2 = NPCM_RESOLUTION_BITS;
+> > > > > +             return IIO_VAL_FRACTIONAL_LOG2;
+> > > > > +     case IIO_CHAN_INFO_SAMP_FREQ:
+> > > > > +             *val = info->adc_sample_hz;
+> > > > > +             return IIO_VAL_INT;
+> > > > > +     default:
+> > > > > +             return -EINVAL;
+> > > > > +     }
+> > > > > +
+> > > > > +     return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static const struct iio_info npcm_adc_iio_info = {
+> > > > > +     .read_raw = &npcm_adc_read_raw,
+> > > > > +};
+> > > > > +
+> > > > > +static const struct of_device_id npcm_adc_match[] = {
+> > > > > +     { .compatible = "nuvoton,npcm750-adc", },
+> > > > > +     { /* sentinel */ }
+> > > > > +};
+> > > > > +MODULE_DEVICE_TABLE(of, npcm_adc_match);
+> > > > > +
+> > > > > +static int npcm_adc_probe(struct platform_device *pdev)
+> > > > > +{
+> > > > > +     int ret;
+> > > > > +     int irq;
+> > > > > +     u32 div;
+> > > > > +     u32 reg_con;
+> > > > > +     struct resource *res;
+> > > > > +     struct npcm_adc *info;
+> > > > > +     struct iio_dev *indio_dev;
+> > > > > +     struct device *dev = &pdev->dev;
+> > > > > +     struct device_node *np = pdev->dev.of_node;
+> > > > > +
+> > > > > +     indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+> > > > > +     if (!indio_dev)
+> > > > > +             return -ENOMEM;
+> > > > > +     info = iio_priv(indio_dev);
+> > > > > +
+> > > > > +     info->dev = &pdev->dev;
+> > > > > +
+> > > > > +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > > > +     info->regs = devm_ioremap_resource(&pdev->dev, res);
+> > > > > +     if (IS_ERR(info->regs))
+> > > > > +             return PTR_ERR(info->regs);
+> > > > > +
+> > > > > +     info->adc_clk = devm_clk_get(&pdev->dev, NULL);
+> > > > > +     if (IS_ERR(info->adc_clk)) {
+> > > > > +             dev_warn(&pdev->dev, "ADC clock failed: can't read  
+> > clk\n");  
+> > > > > +             return PTR_ERR(info->adc_clk);
+> > > > > +     }
+> > > > > +
+> > > > > +     /* calculate ADC clock sample rate */
+> > > > > +     reg_con = ioread32(info->regs + NPCM_ADCCON);
+> > > > > +     div = reg_con & NPCM_ADCCON_DIV_MASK;
+> > > > > +     div = div >> NPCM_ADCCON_DIV_SHIFT;
+> > > > > +     info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1)  
+> > *  
+> > > > 2);  
+> > > > > +
+> > > > > +     if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
+> > > > > +             info->rst_regmap = syscon_regmap_lookup_by_compatible
+> > > > > +                     ("nuvoton,npcm750-rst");
+> > > > > +             if (IS_ERR(info->rst_regmap)) {
+> > > > > +                     dev_err(&pdev->dev, "Failed to find  
+> > > > nuvoton,npcm750-rst\n");  
+> > > > > +                     ret = PTR_ERR(info->rst_regmap);
+> > > > > +                     goto err_disable_clk;
+> > > > > +             }
+> > > > > +     }
+> > > > > +
+> > > > > +     irq = platform_get_irq(pdev, 0);
+> > > > > +     if (irq <= 0) {
+> > > > > +             dev_err(dev, "failed getting interrupt resource\n");
+> > > > > +             ret = -EINVAL;
+> > > > > +             goto err_disable_clk;
+> > > > > +     }
+> > > > > +
+> > > > > +     ret = devm_request_irq(&pdev->dev, irq, npcm_adc_isr, 0,
+> > > > > +                            "NPCM_ADC", indio_dev);
+> > > > > +     if (ret < 0) {
+> > > > > +             dev_err(dev, "failed requesting interrupt\n");
+> > > > > +             goto err_disable_clk;
+> > > > > +     }
+> > > > > +
+> > > > > +     reg_con = ioread32(info->regs + NPCM_ADCCON);
+> > > > > +     info->vref = devm_regulator_get_optional(&pdev->dev, "vref");
+> > > > > +     if (!IS_ERR(info->vref)) {
+> > > > > +             ret = regulator_enable(info->vref);
+> > > > > +             if (ret) {
+> > > > > +                     dev_err(&pdev->dev, "Can't enable ADC  
+> > reference  
+> > > > voltage\n");  
+> > > > > +                     goto err_disable_clk;
+> > > > > +             }
+> > > > > +
+> > > > > +             iowrite32(reg_con & ~NPCM_ADCCON_REFSEL,
+> > > > > +                       info->regs + NPCM_ADCCON);
+> > > > > +     } else {
+> > > > > +             /*
+> > > > > +              * Any error which is not ENODEV indicates the  
+> > regulator  
+> > > > > +              * has been specified and so is a failure case.
+> > > > > +              */
+> > > > > +             if (PTR_ERR(info->vref) != -ENODEV) {
+> > > > > +                     ret = PTR_ERR(info->vref);
+> > > > > +                     goto err_disable_clk;
+> > > > > +             }
+> > > > > +
+> > > > > +             /* Use internal reference */
+> > > > > +             iowrite32(reg_con | NPCM_ADCCON_REFSEL,
+> > > > > +                       info->regs + NPCM_ADCCON);
+> > > > > +     }
+> > > > > +
+> > > > > +     init_waitqueue_head(&info->wq);
+> > > > > +
+> > > > > +     reg_con = ioread32(info->regs + NPCM_ADCCON);
+> > > > > +     reg_con |= NPCM_ADC_ENABLE;
+> > > > > +
+> > > > > +     /* Enable the ADC Module */
+> > > > > +     iowrite32(reg_con, info->regs + NPCM_ADCCON);
+> > > > > +
+> > > > > +     /* Start ADC conversion */
+> > > > > +     iowrite32(reg_con | NPCM_ADCCON_ADC_CONV, info->regs +  
+> > > > NPCM_ADCCON);  
+> > > > > +
+> > > > > +     platform_set_drvdata(pdev, indio_dev);
+> > > > > +     indio_dev->name = dev_name(&pdev->dev);
+> > > > > +     indio_dev->dev.parent = &pdev->dev;
+> > > > > +     indio_dev->info = &npcm_adc_iio_info;
+> > > > > +     indio_dev->modes = INDIO_DIRECT_MODE;
+> > > > > +     indio_dev->channels = npcm_adc_iio_channels;
+> > > > > +     indio_dev->num_channels = ARRAY_SIZE(npcm_adc_iio_channels);
+> > > > > +
+> > > > > +     ret = iio_device_register(indio_dev);
+> > > > > +     if (ret) {
+> > > > > +             dev_err(&pdev->dev, "Couldn't register the device.\n");
+> > > > > +             goto err_iio_register;
+> > > > > +     }
+> > > > > +
+> > > > > +     pr_info("NPCM ADC driver probed\n");  
+> > > > Hmm. Not sure this tells us anything useful.  If we have succeeding
+> > > > in probing there are lots of ways to find out that are better than
+> > > > filling up the kernel log.
+> > > >  
+> > > > > +
+> > > > > +     return 0;
+> > > > > +
+> > > > > +err_iio_register:
+> > > > > +     iowrite32(reg_con & ~NPCM_ADCCON_ADC_EN, info->regs +  
+> > NPCM_ADCCON);  
+> > > > > +     if (!IS_ERR(info->vref))
+> > > > > +             regulator_disable(info->vref);
+> > > > > +err_disable_clk:
+> > > > > +     clk_disable_unprepare(info->adc_clk);
+> > > > > +
+> > > > > +     return ret;
+> > > > > +}
+> > > > > +
+> > > > > +static int npcm_adc_remove(struct platform_device *pdev)
+> > > > > +{
+> > > > > +     struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> > > > > +     struct npcm_adc *info = iio_priv(indio_dev);
+> > > > > +     u32 regtemp;
+> > > > > +
+> > > > > +     regtemp = ioread32(info->regs + NPCM_ADCCON);  
+> > > >
+> > > > The ordering is a bit odd here.  I would have done the unregister
+> > > > first then read the value.  Doesn't have any real effect other than  
+> > making  
+> > > > reviewers wonder if there is something interesting going on!
+> > > >  
+> > > > > +
+> > > > > +     iio_device_unregister(indio_dev);
+> > > > > +     iowrite32(regtemp & ~NPCM_ADCCON_ADC_EN, info->regs +  
+> > NPCM_ADCCON);  
+> > > > > +     if (!IS_ERR(info->vref))
+> > > > > +             regulator_disable(info->vref);
+> > > > > +     clk_disable_unprepare(info->adc_clk);
+> > > > > +
+> > > > > +     return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static struct platform_driver npcm_adc_driver = {
+> > > > > +     .probe          = npcm_adc_probe,
+> > > > > +     .remove         = npcm_adc_remove,
+> > > > > +     .driver         = {
+> > > > > +             .name   = "npcm_adc",
+> > > > > +             .of_match_table = npcm_adc_match,
+> > > > > +     },
+> > > > > +};
+> > > > > +
+> > > > > +module_platform_driver(npcm_adc_driver);
+> > > > > +
+> > > > > +MODULE_DESCRIPTION("Nuvoton NPCM ADC Driver");
+> > > > > +MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
+> > > > > +MODULE_LICENSE("GPL v2");  
+> > > >
+> > > >  
+> > > Thanks,
+> > >
+> > > Tomer  
+> >
+> >  
