@@ -1,87 +1,42 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: iio: light: Add max44009
-Date: Sat, 2 Feb 2019 15:54:05 +0000
-Message-ID: <20190202155405.6c9fb5ca@archlinux>
-References: <01f62d9d67110fd2c2f34e7835973fc6874a9fe8.1548947951.git.bobbyeshleman@gmail.com>
-        <b36579acc3031a28657b6f2e143e9ea4051d7c46.1548947951.git.bobbyeshleman@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [GIT PULL] Devicetree fix for 5.0-rc5
+Date: Sat, 2 Feb 2019 11:10:06 -0600
+Message-ID: <CAL_JsqLPN1ko5nPSTh80EQa2Zz_LHvFFCw42XYBcv8VSa_cYvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b36579acc3031a28657b6f2e143e9ea4051d7c46.1548947951.git.bobbyeshleman@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Eshleman <bobbyeshleman@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jan 2019 07:49:16 -0800
-Robert Eshleman <bobbyeshleman@gmail.com> wrote:
+Linus,
 
-> Adds device tree bindings for the max44009 light sensor.
-> 
-> Signed-off-by: Robert Eshleman <bobbyeshleman@gmail.com>
+Please pull.
 
-Still time for Rob to comment if he want's to, but I think
-with few tweaks as below this matches what he asked for.
+Rob
 
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
+The following changes since commit 75a080cde08d2dcba19ee864f9732094d93fab41:
 
-Thanks,
+  powerpc: chrp: Use of_node_is_type to access device_type (2019-01-19
+10:35:42 -0600)
 
-Jonathan
+are available in the Git repository at:
 
-> ---
-> Changes to v4:
-> - Add subsystem to subject line
-> - Change node name to be 'light-sensor' 
-> - Clean up style
-> 
-> Changes to v3:
-> - None
-> 
-> Changes to v2:
-> - Clean up style
-> 
->  .../bindings/iio/light/max44009.txt           | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/max44009.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/max44009.txt b/Documentation/devicetree/bindings/iio/light/max44009.txt
-> new file mode 100644
-> index 000000000000..557297c86fba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/max44009.txt
-> @@ -0,0 +1,25 @@
-> +* MAX44009 Ambient Light Sensor
-> +
-> +Required properties:
-> +
-> +- compatible: should be "maxim,max44009"
-> +- reg: the I2C address of the device (default is <0x4a>)
-> +
-> +Optional properties:
-> +
-> +- interrupts: interrupt mapping for GPIO IRQ. Should be configured with
-> +  IRQ_TYPE_EDGE_FALLING.
-> +
-> +Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> +node bindings.
-> +
-> +Example:
-> +
-> +max44009: light-sensor@4a {
-The label is only useful if something is going to cross reference it.
-Can't see that happening so dropped it. Above now reads.
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-5.0-3
 
-light-sensor@4a {
+for you to fetch changes up to 5fa98c2eda35fcd1a1d91a9785c390f54688240c:
 
+  dt-bindings: Fix dt_binding_check target for in tree builds
+(2019-01-23 09:15:57 -0600)
 
-> +	compatible = "maxim,max44009";
-> +	reg = <0x4a>;
-> +
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-> +};
-> +
-Cleaned up extra entirely blank line at end of file.
+----------------------------------------------------------------
+A single fix for building DT bindings in-tree.
+
+----------------------------------------------------------------
+Rob Herring (1):
+      dt-bindings: Fix dt_binding_check target for in tree builds
+
+ Documentation/devicetree/bindings/Makefile | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
