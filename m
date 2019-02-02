@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 3/9] ptp_qoriq: convert to use ptp_qoriq_init()
-Date: Sat,  2 Feb 2019 10:57:01 +0800
-Message-ID: <20190202025707.10794-4-yangbo.lu@nxp.com>
+Subject: [v2, 2/9] ptp_qoriq: make ptp operations global
+Date: Sat,  2 Feb 2019 10:57:00 +0800
+Message-ID: <20190202025707.10794-3-yangbo.lu@nxp.com>
 References: <20190202025707.10794-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190202025707.10794-1-yangbo.lu@nxp.com>
@@ -10,201 +10,148 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org
 Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Claudiu Manoil <claudiu.manoil@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Moved QorIQ PTP clock initialization into new function
-qoriq_ptp_init(). This function could also be reused
-by ENETC PTP drvier which is a PCI driver for same 1588
-timer IP block.
+This patch is to make functions of ptp operations global,
+so that ENETC PTP driver which is a PCI driver for same
+1588 timer IP block could reuse them.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
 Changes for v2:
 	- None.
 ---
- drivers/ptp/ptp_qoriq.c       |  120 +++++++++++++++++++++--------------------
- include/linux/fsl/ptp_qoriq.h |    2 +
- 2 files changed, 64 insertions(+), 58 deletions(-)
+ drivers/ptp/ptp_qoriq.c       |   27 ++++++++++++++++-----------
+ include/linux/fsl/ptp_qoriq.h |    9 +++++++++
+ 2 files changed, 25 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/ptp/ptp_qoriq.c b/drivers/ptp/ptp_qoriq.c
-index 1f3e73e..63896b5 100644
+index 8c10d0f..1f3e73e 100644
 --- a/drivers/ptp/ptp_qoriq.c
 +++ b/drivers/ptp/ptp_qoriq.c
-@@ -458,25 +458,17 @@ static int ptp_qoriq_auto_config(struct ptp_qoriq *ptp_qoriq,
+@@ -22,7 +22,6 @@
+ 
+ #include <linux/device.h>
+ #include <linux/hrtimer.h>
+-#include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+@@ -135,7 +134,7 @@ static int extts_clean_up(struct ptp_qoriq *ptp_qoriq, int index,
+  * Interrupt service routine
+  */
+ 
+-static irqreturn_t isr(int irq, void *priv)
++irqreturn_t ptp_qoriq_isr(int irq, void *priv)
+ {
+ 	struct ptp_qoriq *ptp_qoriq = priv;
+ 	struct ptp_qoriq_registers *regs = &ptp_qoriq->regs;
+@@ -200,12 +199,13 @@ static irqreturn_t isr(int irq, void *priv)
+ 	} else
+ 		return IRQ_NONE;
+ }
++EXPORT_SYMBOL_GPL(ptp_qoriq_isr);
+ 
+ /*
+  * PTP clock operations
+  */
+ 
+-static int ptp_qoriq_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
++int ptp_qoriq_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+ {
+ 	u64 adj, diff;
+ 	u32 tmr_add;
+@@ -233,8 +233,9 @@ static int ptp_qoriq_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+ 
  	return 0;
  }
++EXPORT_SYMBOL_GPL(ptp_qoriq_adjfine);
  
--static int ptp_qoriq_probe(struct platform_device *dev)
-+int ptp_qoriq_init(struct ptp_qoriq *ptp_qoriq, void __iomem *base,
-+		   const struct ptp_clock_info caps)
+-static int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta)
++int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta)
  {
--	struct device_node *node = dev->dev.of_node;
--	struct ptp_qoriq *ptp_qoriq;
-+	struct device_node *node = ptp_qoriq->dev->of_node;
- 	struct ptp_qoriq_registers *regs;
- 	struct timespec64 now;
--	int err = -ENOMEM;
--	u32 tmr_ctrl;
+ 	s64 now;
  	unsigned long flags;
--	void __iomem *base;
--
--	ptp_qoriq = kzalloc(sizeof(*ptp_qoriq), GFP_KERNEL);
--	if (!ptp_qoriq)
--		goto no_memory;
--
--	err = -EINVAL;
-+	u32 tmr_ctrl;
+@@ -251,9 +252,9 @@ static int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta)
  
--	ptp_qoriq->dev = &dev->dev;
--	ptp_qoriq->caps = ptp_qoriq_caps;
-+	ptp_qoriq->base = base;
-+	ptp_qoriq->caps = caps;
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(ptp_qoriq_adjtime);
  
- 	if (of_property_read_u32(node, "fsl,cksel", &ptp_qoriq->cksel))
- 		ptp_qoriq->cksel = DEFAULT_CKSEL;
-@@ -501,44 +493,9 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 		pr_warn("device tree node missing required elements, try automatic configuration\n");
+-static int ptp_qoriq_gettime(struct ptp_clock_info *ptp,
+-			       struct timespec64 *ts)
++int ptp_qoriq_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+ {
+ 	u64 ns;
+ 	unsigned long flags;
+@@ -269,9 +270,10 @@ static int ptp_qoriq_gettime(struct ptp_clock_info *ptp,
  
- 		if (ptp_qoriq_auto_config(ptp_qoriq, node))
--			goto no_config;
-+			return -ENODEV;
- 	}
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(ptp_qoriq_gettime);
  
--	err = -ENODEV;
--
--	ptp_qoriq->irq = platform_get_irq(dev, 0);
--
--	if (ptp_qoriq->irq < 0) {
--		pr_err("irq not in device tree\n");
--		goto no_node;
--	}
--	if (request_irq(ptp_qoriq->irq, ptp_qoriq_isr, IRQF_SHARED,
--			DRIVER, ptp_qoriq)) {
--		pr_err("request_irq failed\n");
--		goto no_node;
--	}
--
--	ptp_qoriq->rsrc = platform_get_resource(dev, IORESOURCE_MEM, 0);
--	if (!ptp_qoriq->rsrc) {
--		pr_err("no resource\n");
--		goto no_resource;
--	}
--	if (request_resource(&iomem_resource, ptp_qoriq->rsrc)) {
--		pr_err("resource busy\n");
--		goto no_resource;
--	}
--
--	spin_lock_init(&ptp_qoriq->lock);
--
--	base = ioremap(ptp_qoriq->rsrc->start,
--		       resource_size(ptp_qoriq->rsrc));
--	if (!base) {
--		pr_err("ioremap ptp registers failed\n");
--		goto no_ioremap;
--	}
--
--	ptp_qoriq->base = base;
--
- 	if (of_device_is_compatible(node, "fsl,fman-ptp-timer")) {
- 		ptp_qoriq->regs.ctrl_regs = base + FMAN_CTRL_REGS_OFFSET;
- 		ptp_qoriq->regs.alarm_regs = base + FMAN_ALARM_REGS_OFFSET;
-@@ -558,6 +515,7 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 	  (ptp_qoriq->tclk_period & TCLK_PERIOD_MASK) << TCLK_PERIOD_SHIFT |
- 	  (ptp_qoriq->cksel & CKSEL_MASK) << CKSEL_SHIFT;
+-static int ptp_qoriq_settime(struct ptp_clock_info *ptp,
+-			       const struct timespec64 *ts)
++int ptp_qoriq_settime(struct ptp_clock_info *ptp,
++		      const struct timespec64 *ts)
+ {
+ 	u64 ns;
+ 	unsigned long flags;
+@@ -288,9 +290,10 @@ static int ptp_qoriq_settime(struct ptp_clock_info *ptp,
  
-+	spin_lock_init(&ptp_qoriq->lock);
- 	spin_lock_irqsave(&ptp_qoriq->lock, flags);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(ptp_qoriq_settime);
  
- 	regs = &ptp_qoriq->regs;
-@@ -571,16 +529,63 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 
+-static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
+-			      struct ptp_clock_request *rq, int on)
++int ptp_qoriq_enable(struct ptp_clock_info *ptp,
++		     struct ptp_clock_request *rq, int on)
+ {
+ 	struct ptp_qoriq *ptp_qoriq = container_of(ptp, struct ptp_qoriq, caps);
+ 	struct ptp_qoriq_registers *regs = &ptp_qoriq->regs;
+@@ -336,6 +339,7 @@ static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
  	spin_unlock_irqrestore(&ptp_qoriq->lock, flags);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(ptp_qoriq_enable);
  
--	ptp_qoriq->clock = ptp_clock_register(&ptp_qoriq->caps, &dev->dev);
--	if (IS_ERR(ptp_qoriq->clock)) {
--		err = PTR_ERR(ptp_qoriq->clock);
--		goto no_clock;
--	}
--	ptp_qoriq->phc_index = ptp_clock_index(ptp_qoriq->clock);
-+	ptp_qoriq->clock = ptp_clock_register(&ptp_qoriq->caps, ptp_qoriq->dev);
-+	if (IS_ERR(ptp_qoriq->clock))
-+		return PTR_ERR(ptp_qoriq->clock);
- 
-+	ptp_qoriq->phc_index = ptp_clock_index(ptp_qoriq->clock);
- 	ptp_qoriq_create_debugfs(ptp_qoriq);
--	platform_set_drvdata(dev, ptp_qoriq);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(ptp_qoriq_init);
-+
-+static int ptp_qoriq_probe(struct platform_device *dev)
-+{
-+	struct ptp_qoriq *ptp_qoriq;
-+	int err = -ENOMEM;
-+	void __iomem *base;
-+
-+	ptp_qoriq = kzalloc(sizeof(*ptp_qoriq), GFP_KERNEL);
-+	if (!ptp_qoriq)
-+		goto no_memory;
-+
-+	ptp_qoriq->dev = &dev->dev;
-+
-+	err = -ENODEV;
-+
-+	ptp_qoriq->irq = platform_get_irq(dev, 0);
-+	if (ptp_qoriq->irq < 0) {
-+		pr_err("irq not in device tree\n");
-+		goto no_node;
-+	}
+ static const struct ptp_clock_info ptp_qoriq_caps = {
+ 	.owner		= THIS_MODULE,
+@@ -508,7 +512,8 @@ static int ptp_qoriq_probe(struct platform_device *dev)
+ 		pr_err("irq not in device tree\n");
+ 		goto no_node;
+ 	}
+-	if (request_irq(ptp_qoriq->irq, isr, IRQF_SHARED, DRIVER, ptp_qoriq)) {
 +	if (request_irq(ptp_qoriq->irq, ptp_qoriq_isr, IRQF_SHARED,
 +			DRIVER, ptp_qoriq)) {
-+		pr_err("request_irq failed\n");
-+		goto no_node;
-+	}
- 
-+	ptp_qoriq->rsrc = platform_get_resource(dev, IORESOURCE_MEM, 0);
-+	if (!ptp_qoriq->rsrc) {
-+		pr_err("no resource\n");
-+		goto no_resource;
-+	}
-+	if (request_resource(&iomem_resource, ptp_qoriq->rsrc)) {
-+		pr_err("resource busy\n");
-+		goto no_resource;
-+	}
-+
-+	base = ioremap(ptp_qoriq->rsrc->start,
-+		       resource_size(ptp_qoriq->rsrc));
-+	if (!base) {
-+		pr_err("ioremap ptp registers failed\n");
-+		goto no_ioremap;
-+	}
-+
-+	err = ptp_qoriq_init(ptp_qoriq, base, ptp_qoriq_caps);
-+	if (err)
-+		goto no_clock;
-+
-+	platform_set_drvdata(dev, ptp_qoriq);
- 	return 0;
- 
- no_clock:
-@@ -589,7 +594,6 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 	release_resource(ptp_qoriq->rsrc);
- no_resource:
- 	free_irq(ptp_qoriq->irq, ptp_qoriq);
--no_config:
- no_node:
- 	kfree(ptp_qoriq);
- no_memory:
+ 		pr_err("request_irq failed\n");
+ 		goto no_node;
+ 	}
 diff --git a/include/linux/fsl/ptp_qoriq.h b/include/linux/fsl/ptp_qoriq.h
-index 75e6f05..d0c1e42 100644
+index c2a32d9..75e6f05 100644
 --- a/include/linux/fsl/ptp_qoriq.h
 +++ b/include/linux/fsl/ptp_qoriq.h
-@@ -173,6 +173,8 @@ static inline void qoriq_write(unsigned __iomem *addr, u32 val)
+@@ -7,6 +7,7 @@
+ #define __PTP_QORIQ_H__
+ 
+ #include <linux/io.h>
++#include <linux/interrupt.h>
+ #include <linux/ptp_clock_kernel.h>
+ 
+ /*
+@@ -171,6 +172,14 @@ static inline void qoriq_write(unsigned __iomem *addr, u32 val)
+ 	iowrite32be(val, addr);
  }
  
- irqreturn_t ptp_qoriq_isr(int irq, void *priv);
-+int ptp_qoriq_init(struct ptp_qoriq *ptp_qoriq, void __iomem *base,
-+		   const struct ptp_clock_info caps);
- int ptp_qoriq_adjfine(struct ptp_clock_info *ptp, long scaled_ppm);
- int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta);
- int ptp_qoriq_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts);
++irqreturn_t ptp_qoriq_isr(int irq, void *priv);
++int ptp_qoriq_adjfine(struct ptp_clock_info *ptp, long scaled_ppm);
++int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta);
++int ptp_qoriq_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts);
++int ptp_qoriq_settime(struct ptp_clock_info *ptp,
++		      const struct timespec64 *ts);
++int ptp_qoriq_enable(struct ptp_clock_info *ptp,
++		     struct ptp_clock_request *rq, int on);
+ #ifdef CONFIG_DEBUG_FS
+ void ptp_qoriq_create_debugfs(struct ptp_qoriq *ptp_qoriq);
+ void ptp_qoriq_remove_debugfs(struct ptp_qoriq *ptp_qoriq);
 -- 
 1.7.1
