@@ -1,51 +1,59 @@
-Return-Path: <SRS0=+1U8=QV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:44830
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725975AbfBNLos (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Feb 2019 06:44:48 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 0/4] Add i.MX8QXP system controller watchdog support
-Date: Thu, 14 Feb 2019 11:44:38 +0000
-Message-ID: <1550144346-1187-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <jic23@kernel.org>
+Date: Sat, 2 Feb 2019 09:46:41 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 0/6] iio:bmi160: add drdy interrupt support
+Message-ID: <20190202094641.6dad8095@archlinux>
+In-Reply-To: <20190127203911.8696-1-martin@martingkelly.com>
+References: <20190127203911.8696-1-martin@martingkelly.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Martin Kelly <martin@martingkelly.com>
+Cc: linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-i.MX8QXP is an ARMv8 Cortex-A35 SoC with a Cortex-M4 system controller insi=
-de,
-the system controller manages overall power, clock, secure RTC and watchdog
-etc., so Linux kernel running on A35 needs to communicate with system
-controller for watchdog operation, this system controller watchdog will
-call SMC to trap to EL3 secure world ARM-Trusted-Firmware and then it will
-request system controller to do the watchdog operation via IPC.
+On Sun, 27 Jan 2019 12:39:05 -0800
+Martin Kelly <martin@martingkelly.com> wrote:
 
-Below are the patch dependency:
+> From: Martin Kelly <martin@martingkelly.com>
+> 
+> This patch series adds drdy interrupt support to the BMI160 IMU. It also updates
+> the relevant DT bindings and does a little bit of related cleanup.
+> 
+> v2:
+> - Drop "BOTH" interrupt setting.
+> - Change to "if (ret)" instead of "if (ret < 0)".
+> - Stylistic changes suggested by Jonathan Cameron.
+> - Fix bogus return check after iio_trigger_get.
+> 
+> v3:
+> - More cleanup changes.
+> - Directly get INT1/INT2 by name instead of using I2C/SPI IRQs. Move this code
+>   to the probe function.
+> - Fix EDGE/LEVEL #define naming. The code was correct but the names were wrong.
+> 
+> Martin Kelly (6):
+>   iio:bmi160: add SPDX identifiers
+>   iio:bmi160: add drdy interrupt support
+>   dt-bindings: fix incorrect bmi160 IRQ note
+>   dt-bindings: document open-drain property
+>   iio:bmi160: use iio_pollfunc_store_time
+>   iio:bmi160: use if (ret) instead of if (ret < 0)
+> 
+>  .../devicetree/bindings/iio/imu/bmi160.txt         |   6 +-
+>  drivers/iio/imu/bmi160/bmi160.h                    |  11 +
+>  drivers/iio/imu/bmi160/bmi160_core.c               | 317 +++++++++++++++++++--
+>  drivers/iio/imu/bmi160/bmi160_i2c.c                |   5 +-
+>  drivers/iio/imu/bmi160/bmi160_spi.c                |   4 +-
+>  5 files changed, 304 insertions(+), 39 deletions(-)
+Other than addressing Rob's comments I think this is looking good.
+Will take one last look at v4 of course!
 
-The dt-binding and imx8qxp.dtsi patch are based on my thermal patch series =
-as below:
-https://patchwork.kernel.org/patch/10800699/
+Thanks,
 
-Anson Huang (4):
-  dt-bindings: fsl: scu: add watchdog binding
-  watchdog: imx_sc: Add i.MX system controller watchdog support
-  arm64: defconfig: add support for i.MX system controller watchdog
-  arm64: dts: freescale: imx8qxp: add watchdog support
+Jonathan
 
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  |  10 +
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   4 +
- arch/arm64/configs/defconfig                       |   1 +
- drivers/watchdog/Kconfig                           |  13 ++
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/imx_sc_wdt.c                      | 210 +++++++++++++++++=
-++++
- 6 files changed, 239 insertions(+)
- create mode 100644 drivers/watchdog/imx_sc_wdt.c
-
---=20
-2.7.4
+> 
+> --
+> 2.11.0
+> 
