@@ -1,172 +1,87 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v2 3/5] input: misc: bma150: Add support for device tree
-Date: Sat,  2 Feb 2019 16:18:04 +0100
-Message-ID: <20190202151806.9064-4-pawel.mikolaj.chmiel@gmail.com>
-References: <20190202151806.9064-1-pawel.mikolaj.chmiel@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio: light: Add max44009
+Date: Sat, 2 Feb 2019 15:54:05 +0000
+Message-ID: <20190202155405.6c9fb5ca@archlinux>
+References: <01f62d9d67110fd2c2f34e7835973fc6874a9fe8.1548947951.git.bobbyeshleman@gmail.com>
+        <b36579acc3031a28657b6f2e143e9ea4051d7c46.1548947951.git.bobbyeshleman@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190202151806.9064-1-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <b36579acc3031a28657b6f2e143e9ea4051d7c46.1548947951.git.bobbyeshleman@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, pawel.mikolaj.chmiel@gmail.com, xc-racer2@live.ca, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Robert Eshleman <bobbyeshleman@gmail.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+On Thu, 31 Jan 2019 07:49:16 -0800
+Robert Eshleman <bobbyeshleman@gmail.com> wrote:
 
-Add of_match table to enable bma150 to be probed via DT
+> Adds device tree bindings for the max44009 light sensor.
+> 
+> Signed-off-by: Robert Eshleman <bobbyeshleman@gmail.com>
 
-Changes from v1:
- - Add properties for all of bma150_cfg
+Still time for Rob to comment if he want's to, but I think
+with few tweaks as below this matches what he asked for.
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- drivers/input/misc/bma150.c | 64 ++++++++++++++++++++++++++++++++++++-
- include/linux/bma150.h      | 20 ++++++------
- 2 files changed, 73 insertions(+), 11 deletions(-)
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
 
-diff --git a/drivers/input/misc/bma150.c b/drivers/input/misc/bma150.c
-index 79acaaf86b7e..e86df79490ad 100644
---- a/drivers/input/misc/bma150.c
-+++ b/drivers/input/misc/bma150.c
-@@ -31,6 +31,7 @@
- #include <linux/interrupt.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
- #include <linux/bma150.h>
-@@ -146,7 +147,7 @@ struct bma150_data {
-  * are stated and verified by Bosch Sensortec where they are configured
-  * to provide a generic sensitivity performance.
-  */
--static const struct bma150_cfg default_cfg = {
-+static struct bma150_cfg default_cfg = {
- 	.any_motion_int = 1,
- 	.hg_int = 1,
- 	.lg_int = 1,
-@@ -518,6 +519,51 @@ static int bma150_register_polled_device(struct bma150_data *bma150)
- 	return 0;
- }
- 
-+int bma150_cfg_from_of(struct device_node *np)
-+{
-+	int error;
-+
-+	default_cfg.any_motion_int =
-+			of_property_read_bool(np, "any-motion-int");
-+	default_cfg.hg_int =
-+			of_property_read_bool(np, "hg-int");
-+	default_cfg.lg_int =
-+			of_property_read_bool(np, "lg-int");
-+
-+	error = of_property_read_u32_array(np, "any-motion-cfg",
-+			&default_cfg.any_motion_dur, 2);
-+	if (error < 0 && error != -EINVAL)
-+		return error;
-+
-+	error = of_property_read_u32_array(np, "hg-cfg",
-+			&default_cfg.hg_hyst, 3);
-+	if (error < 0 && error != -EINVAL)
-+		return error;
-+
-+	error = of_property_read_u32_array(np, "lg-cfg",
-+			&default_cfg.lg_hyst, 3);
-+	if (error < 0 && error != -EINVAL)
-+		return error;
-+
-+	error = of_property_read_u32(np, "range",
-+			&default_cfg.range);
-+	if (error < 0 && error != -EINVAL)
-+		return error;
-+	else if (default_cfg.range < BMA150_RANGE_2G ||
-+			default_cfg.range > BMA150_RANGE_8G)
-+		return -EINVAL;
-+
-+	error = of_property_read_u32(np, "bandwidth",
-+			&default_cfg.bandwidth);
-+	if (error < 0 && error != -EINVAL)
-+		return error;
-+	else if (default_cfg.bandwidth < BMA150_BW_25HZ ||
-+			default_cfg.bandwidth > BMA150_BW_1500HZ)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static int bma150_probe(struct i2c_client *client,
- 				  const struct i2c_device_id *id)
- {
-@@ -557,6 +603,13 @@ static int bma150_probe(struct i2c_client *client,
- 			}
- 		}
- 		cfg = &pdata->cfg;
-+	} else if (client->dev.of_node) {
-+		error = bma150_cfg_from_of(client->dev.of_node);
-+		if (error) {
-+			dev_err(&client->dev, "Failed to parse of data\n");
-+			return error;
-+		}
-+		cfg = &default_cfg;
- 	} else {
- 		cfg = &default_cfg;
- 	}
-@@ -620,6 +673,14 @@ static int bma150_resume(struct device *dev)
- 
- static UNIVERSAL_DEV_PM_OPS(bma150_pm, bma150_suspend, bma150_resume, NULL);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id bma150_of_match[] = {
-+	{ .compatible = "bosch,bma150" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, bma150_of_match);
-+#endif
-+
- static const struct i2c_device_id bma150_id[] = {
- 	{ "bma150", 0 },
- 	{ "smb380", 0 },
-@@ -632,6 +693,7 @@ MODULE_DEVICE_TABLE(i2c, bma150_id);
- static struct i2c_driver bma150_driver = {
- 	.driver = {
- 		.name	= BMA150_DRIVER,
-+		.of_match_table = of_match_ptr(bma150_of_match),
- 		.pm	= &bma150_pm,
- 	},
- 	.class		= I2C_CLASS_HWMON,
-diff --git a/include/linux/bma150.h b/include/linux/bma150.h
-index b85266a9c35c..ad19dc7a30d7 100644
---- a/include/linux/bma150.h
-+++ b/include/linux/bma150.h
-@@ -29,16 +29,16 @@ struct bma150_cfg {
- 	bool any_motion_int;		/* Set to enable any-motion interrupt */
- 	bool hg_int;			/* Set to enable high-G interrupt */
- 	bool lg_int;			/* Set to enable low-G interrupt */
--	unsigned char any_motion_dur;	/* Any-motion duration */
--	unsigned char any_motion_thres;	/* Any-motion threshold */
--	unsigned char hg_hyst;		/* High-G hysterisis */
--	unsigned char hg_dur;		/* High-G duration */
--	unsigned char hg_thres;		/* High-G threshold */
--	unsigned char lg_hyst;		/* Low-G hysterisis */
--	unsigned char lg_dur;		/* Low-G duration */
--	unsigned char lg_thres;		/* Low-G threshold */
--	unsigned char range;		/* one of BMA0150_RANGE_xxx */
--	unsigned char bandwidth;	/* one of BMA0150_BW_xxx */
-+	u32 any_motion_dur;		/* Any-motion duration */
-+	u32 any_motion_thres;		/* Any-motion threshold */
-+	u32 hg_hyst;			/* High-G hysterisis */
-+	u32 hg_dur;			/* High-G duration */
-+	u32 hg_thres;			/* High-G threshold */
-+	u32 lg_hyst;			/* Low-G hysterisis */
-+	u32 lg_dur;			/* Low-G duration */
-+	u32 lg_thres;			/* Low-G threshold */
-+	u32 range;			/* one of BMA0150_RANGE_xxx */
-+	u32 bandwidth;			/* one of BMA0150_BW_xxx */
- };
- 
- struct bma150_platform_data {
--- 
-2.17.1
+Thanks,
+
+Jonathan
+
+> ---
+> Changes to v4:
+> - Add subsystem to subject line
+> - Change node name to be 'light-sensor' 
+> - Clean up style
+> 
+> Changes to v3:
+> - None
+> 
+> Changes to v2:
+> - Clean up style
+> 
+>  .../bindings/iio/light/max44009.txt           | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/max44009.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/max44009.txt b/Documentation/devicetree/bindings/iio/light/max44009.txt
+> new file mode 100644
+> index 000000000000..557297c86fba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/max44009.txt
+> @@ -0,0 +1,25 @@
+> +* MAX44009 Ambient Light Sensor
+> +
+> +Required properties:
+> +
+> +- compatible: should be "maxim,max44009"
+> +- reg: the I2C address of the device (default is <0x4a>)
+> +
+> +Optional properties:
+> +
+> +- interrupts: interrupt mapping for GPIO IRQ. Should be configured with
+> +  IRQ_TYPE_EDGE_FALLING.
+> +
+> +Refer to interrupt-controller/interrupts.txt for generic interrupt client
+> +node bindings.
+> +
+> +Example:
+> +
+> +max44009: light-sensor@4a {
+The label is only useful if something is going to cross reference it.
+Can't see that happening so dropped it. Above now reads.
+
+light-sensor@4a {
+
+
+> +	compatible = "maxim,max44009";
+> +	reg = <0x4a>;
+> +
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
+> +};
+> +
+Cleaned up extra entirely blank line at end of file.
