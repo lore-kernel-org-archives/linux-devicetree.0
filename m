@@ -1,56 +1,47 @@
 Return-Path: <SRS0=/0Ct=QJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:38374 "EHLO
+Received: from smtp.codeaurora.org ([198.145.29.96]:41910 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbfBBP1K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Feb 2019 10:27:10 -0500
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v4 8/8] remoteproc: qcom: wcss: explicitly request exclusive reset control
-Date: Sat,  2 Feb 2019 20:56:26 +0530
-Message-Id: <20190202152626.1006-9-govinds@codeaurora.org>
-In-Reply-To: <20190202152626.1006-1-govinds@codeaurora.org>
-References: <20190202152626.1006-1-govinds@codeaurora.org>
+        with ESMTP id S1726697AbfBBPc2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Feb 2019 10:32:28 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Sat, 02 Feb 2019 21:02:26 +0530
+From: Govind Singh <govinds@codeaurora.org>
+Subject: Re: [PATCH v3 4/7] clk: qcom: Add WCSS gcc clock control for QCS404
+In-Reply-To: <20181215175657.GB12886@minitux>
+References: <20181215103557.2748-1-govinds@codeaurora.org>
+ <20181215103557.2748-5-govinds@codeaurora.org>
+ <20181215175657.GB12886@minitux>
+Message-ID: <1b902e355d7b4f03229f821082e21147@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Use request exclusive reset control for wcss reset controls.
+On 2018-12-15 23:26, Bjorn Andersson wrote:
+> On Sat 15 Dec 02:35 PST 2018, Govind Singh wrote:
+>> diff --git a/drivers/clk/qcom/gcc-qcs404.c 
+>> b/drivers/clk/qcom/gcc-qcs404.c
+> [..]
+>> @@ -2726,6 +2770,11 @@ static int gcc_qcs404_probe(struct 
+>> platform_device *pdev)
+>>  			return ret;
+>>  	}
+>> 
+>> +#ifdef CONFIG_QCS_WCSSCC_404
+> 
+> We don't do compile time configuration of things like this, expect all
+> variants of QCS404 (regardless of security solution) to run off the 
+> same
+> kernel binary.
+> 
+> Instead use the recently introduced "protected-clocks" property.
+> 
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_wcss.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Fixed in v4. Seems LPASS is no more using "protected-clocks", i used 
+"unprotected-clocks" property to avoid inverted logic.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 0b1f6f537a1e..0821c94be6eb 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -752,20 +752,20 @@ static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss,
- 	struct device *dev = wcss->dev;
- 
- 	if (aon_reset_required) {
--		wcss->wcss_aon_reset = devm_reset_control_get(dev, "wcss_aon_reset");;
-+		wcss->wcss_aon_reset = devm_reset_control_get_exclusive(dev, "wcss_aon_reset");
- 		if (IS_ERR(wcss->wcss_aon_reset)) {
- 			dev_err(wcss->dev, "fail to acquire wcss_aon_reset\n");
- 			return PTR_ERR(wcss->wcss_aon_reset);
- 		}
- 	}
- 
--	wcss->wcss_reset = devm_reset_control_get(dev, "wcss_reset");
-+	wcss->wcss_reset = devm_reset_control_get_exclusive(dev, "wcss_reset");
- 	if (IS_ERR(wcss->wcss_reset)) {
- 		dev_err(wcss->dev, "unable to acquire wcss_reset\n");
- 		return PTR_ERR(wcss->wcss_reset);
- 	}
- 
--	wcss->wcss_q6_reset = devm_reset_control_get(dev, "wcss_q6_reset");
-+	wcss->wcss_q6_reset = devm_reset_control_get_exclusive(dev, "wcss_q6_reset");
- 	if (IS_ERR(wcss->wcss_q6_reset)) {
- 		dev_err(wcss->dev, "unable to acquire wcss_q6_reset\n");
- 		return PTR_ERR(wcss->wcss_q6_reset);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Regards,
+> Bjorn
