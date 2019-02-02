@@ -1,124 +1,74 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 2/2] arm64: dts: qcom: qcs404: Enable ethernet for EVB-4000
-Date: Fri,  1 Feb 2019 23:33:31 +0530
-Message-Id: <20190201180331.6960-2-vkoul@kernel.org>
-In-Reply-To: <20190201180331.6960-1-vkoul@kernel.org>
-References: <20190201180331.6960-1-vkoul@kernel.org>
+Return-Path: <SRS0=/0Ct=QJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:43806 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfBBPfR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Feb 2019 10:35:17 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Sat, 02 Feb 2019 21:05:15 +0530
+From: Govind Singh <govinds@codeaurora.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: clock: qcom: Introduce QCOM WCSS
+ Q6DSP clock bindings
+In-Reply-To: <154507522782.19322.17858102871851741802@swboyd.mtv.corp.google.com>
+References: <20181215103557.2748-1-govinds@codeaurora.org>
+ <20181215103557.2748-2-govinds@codeaurora.org>
+ <154507522782.19322.17858102871851741802@swboyd.mtv.corp.google.com>
+Message-ID: <1285eb4d33b796fd523634cead8142bf@codeaurora.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, linux-clk@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-EVB-4000 comes with ethernet so enable it and add pinctrl bindings.
+On 2018-12-18 01:03, Stephen Boyd wrote:
+> Quoting Govind Singh (2018-12-15 02:35:51)
+>> Add device tree bindings for WiFi QDSP subsystem clock controls
+>> found in OCS405 soc.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
-Changes in v2:
-	squash patch2  and 3
-	add ethernet-phy-ieee802.3-c22 compatible
 
- arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts | 82 ++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+> 
+>> +- reg                  : shall contain base register address and 
+>> size,
+>> +                         in the order
+>> +                       Index-0 maps to WCSS_Q6SSTOP clocks register 
+>> region
+>> +                       Index-1 maps to WCSS_TCSR register region
+>> +                       Index-2 maps to WCSS_QDSP6SS register region
+>> +
+> 
+> Index 0, Index 1, Index 2? Not sure why there's a hyphen there.
+> 
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
-index 11269ad3de0d..8234cff414de 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
-@@ -3,9 +3,91 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include "qcs404-evb.dtsi"
- 
- / {
- 	model = "Qualcomm Technologies, Inc. QCS404 EVB 4000";
- 	compatible = "qcom,qcs404-evb";
- };
-+
-+&ethernet {
-+	status = "ok";
-+
-+	snps,reset-gpio = <&tlmm 60 GPIO_ACTIVE_LOW>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 10000>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ethernet_defaults>;
-+
-+	phy-handle = <&phy1>;
-+	phy-mode = "rgmii";
-+	mdio {
-+		#address-cells = <0x1>;
-+		#size-cells = <0x0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy1: phy@4 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			device_type = "ethernet-phy";
-+			reg = <0x4>;
-+		};
-+	};
-+};
-+
-+&tlmm {
-+	ethernet_defaults: ethernet-defaults {
-+		int {
-+			pins = "gpio61";
-+			function = "rgmii_int";
-+			bias-disable;
-+			drive-strength = <2>;
-+		};
-+		mdc {
-+			pins = "gpio76";
-+			function = "rgmii_mdc";
-+			bias-pull-up;
-+		};
-+		mdio {
-+			pins = "gpio75";
-+			function = "rgmii_mdio";
-+			bias-pull-up;
-+		};
-+		tx {
-+			pins = "gpio67", "gpio66", "gpio65", "gpio64";
-+			function = "rgmii_tx";
-+			bias-pull-up;
-+			drive-strength = <16>;
-+		};
-+		rx {
-+			pins = "gpio73", "gpio72", "gpio71", "gpio70";
-+			function = "rgmii_rx";
-+			bias-disable;
-+			drive-strength = <2>;
-+		};
-+		tx-ctl {
-+			pins = "gpio68";
-+			function = "rgmii_ctl";
-+			bias-pull-up;
-+			drive-strength = <16>;
-+		};
-+		rx-ctl {
-+			pins = "gpio74";
-+			function = "rgmii_ctl";
-+			bias-disable;
-+			drive-strength = <2>;
-+		};
-+		tx-ck {
-+			pins = "gpio63";
-+			function = "rgmii_ck";
-+			bias-pull-up;
-+			drive-strength = <16>;
-+		};
-+		rx-ck {
-+			pins = "gpio69";
-+			function = "rgmii_ck";
-+			bias-disable;
-+			drive-strength = <2>;
-+		};
-+	};
-+};
--- 
-2.20.1
+Fixed in v4.
+
+>> +Optional properties :
+>> +- reg-names    : register names of WCSS domain
+>> +                "wcss_q6sstop", "wcnss_tcsr", "wcss_qdsp6ss".
+>> +
+>> +Example:
+>> +The below node has to be defined in the cases where the WCSS 
+>> peripheral loader
+>> +would bring the subsystem out of reset.
+>> +
+>> +       clock_wcsscc: qcom,wcsscc@7000000 {
+> 
+> clock-controller@7000000
+> 
+>> +               compatible = "qcom,qcs404-wcsscc";
+>> +               reg = <0x07500000 0x4e000>, <0x07550000 0x8012>, 
+>> <0x07400000 0x104>;
+> 
+> And then that unit address doesn't match the first offset so that needs
+> fixing too.
+> 
+
+Fixed in V4.
+
+>> +               reg-names = "wcss_q6sstop", "wcnss_tcsr", 
+>> "wcss_qdsp6ss";
+>> +               #clock-cells = <1>;
+>> +       };
+
+BR,
+Govind
