@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 2/9] dt-bindings: mtd: ingenic: Add compatible strings for the JZ4740
-Date: Sat,  2 Feb 2019 20:19:19 -0300
-Message-ID: <20190202231926.2444-3-paul@crapouillou.net>
+Subject: [PATCH v2 3/9] mtd: rawnand: jz4780: Use SPDX license notifiers
+Date: Sat,  2 Feb 2019 20:19:20 -0300
+Message-ID: <20190202231926.2444-4-paul@crapouillou.net>
 References: <20190202231926.2444-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190202231926.2444-1-paul@crapouillou.net>
@@ -10,59 +10,74 @@ To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail
 Cc: Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible strings to probe the jz4780-nand and jz4780-bch drivers
-from devicetree on the JZ4725B and JZ4740 SoCs from Ingenic.
+Use SPDX license notifiers instead of GPLv2 license text in the headers.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
 ---
 
 Changes:
 
-v2: - Change 'ingenic,jz4725b-nand' compatible string to
-      'ingenic,jz4740-nand' to reflect driver change
-    - Add 'ingenic,jz4740-bch' compatible string
-    - Document 'ingenic,oob-layout' property
+v2: No changes
 
- .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/raw/ingenic/jz4780_bch.c  | 5 +----
+ drivers/mtd/nand/raw/ingenic/jz4780_bch.h  | 5 +----
+ drivers/mtd/nand/raw/ingenic/jz4780_nand.c | 5 +----
+ 3 files changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-index 29ea5853ca91..294b56a2098a 100644
---- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-@@ -6,7 +6,9 @@ memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
- be children of the NEMC node.
+diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
+index 7201827809e9..7e4e5e627603 100644
+--- a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
++++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
+@@ -1,12 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * JZ4780 BCH controller
+  *
+  * Copyright (c) 2015 Imagination Technologies
+  * Author: Alex Smith <alex.smith@imgtec.com>
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2 as published
+- * by the Free Software Foundation.
+  */
  
- Required NAND controller device properties:
--- compatible: Should be set to "ingenic,jz4780-nand".
-+- compatible: Should be one of:
-+  * ingenic,jz4740-nand
-+  * ingenic,jz4780-nand
- - reg: For each bank with a NAND chip attached, should specify a bank number,
-   an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+ #include <linux/bitops.h>
+diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch.h b/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
+index bf4718088a3a..451e0c770160 100644
+--- a/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
++++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch.h
+@@ -1,12 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * JZ4780 BCH controller
+  *
+  * Copyright (c) 2015 Imagination Technologies
+  * Author: Alex Smith <alex.smith@imgtec.com>
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2 as published
+- * by the Free Software Foundation.
+  */
  
-@@ -15,6 +17,10 @@ Optional NAND controller device properties:
-   property must contain a phandle for the BCH controller node. The required
-   properties for this node are described below. If this is not specified,
-   software BCH will be used instead.
-+- ingenic,oob-layout: Specify the OOB layout to replace the default one.
-+  Valid values are:
-+  * ingenic,jz4725b
-+  * qi,lb60
+ #ifndef __DRIVERS_MTD_NAND_JZ4780_BCH_H__
+diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
+index 22e58975f0d5..7f55358b860f 100644
+--- a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
++++ b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
+@@ -1,12 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * JZ4780 NAND driver
+  *
+  * Copyright (c) 2015 Imagination Technologies
+  * Author: Alex Smith <alex.smith@imgtec.com>
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2 as published
+- * by the Free Software Foundation.
+  */
  
- Optional children nodes:
- - Individual NAND chips are children of the NAND controller node.
-@@ -72,7 +78,10 @@ NAND devices. The following is a description of the device properties for a
- BCH controller.
- 
- Required BCH properties:
--- compatible: Should be set to "ingenic,jz4780-bch".
-+- compatible: Should be one of:
-+  * ingenic,jz4740-bch
-+  * ingenic,jz4725b-bch
-+  * ingenic,jz4780-bch
- - reg: Should specify the BCH controller registers location and length.
- - clocks: Clock for the BCH controller.
- 
+ #include <linux/delay.h>
 -- 
 2.20.1
