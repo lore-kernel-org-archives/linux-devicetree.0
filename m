@@ -1,24 +1,29 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] Devicetree fix for 5.0-rc5
-Date: Sat, 02 Feb 2019 18:45:04 +0000
-Message-ID: <154913310425.3857.14878049937437445302.pr-tracker-bot@kernel.org>
-References: <CAL_JsqLPN1ko5nPSTh80EQa2Zz_LHvFFCw42XYBcv8VSa_cYvg@mail.gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 0/9] Ingenic JZ4780 NAND patchset v2
+Date: Sat,  2 Feb 2019 20:19:17 -0300
+Message-ID: <20190202231926.2444-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLPN1ko5nPSTh80EQa2Zz_LHvFFCw42XYBcv8VSa_cYvg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
+Cc: Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The pull request you sent on Sat, 2 Feb 2019 11:10:06 -0600:
+Hi,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.0-3
+As requested by Boris, I added a patch to move all the Ingenic NAND
+drivers to their own directory.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/12491ed354d23c0ecbe02459bf4be58b8c772bc8
+In this V2 I added support for the JZ4740 SoC. The combo of the
+jz4780-nemc, jz4780-nand and jz4740-bch now obsolete the old and dusty
+jz4740-nand driver.
 
-Thank you!
+To support the only upstream JZ4740-based board we have, the Ben
+Nanonote, I added an option to specify the OOB layout of that device
+from a device property string.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Finally, I dropped the last two patches that moved the platform NAND
+code to devicetree; I will upstream them as part of a different
+patchset.
+
+Cheers,
+-Paul
