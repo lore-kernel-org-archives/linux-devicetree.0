@@ -1,64 +1,50 @@
-Return-Path: <SRS0=lQgi=Q2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34302 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbfBSGpO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Feb 2019 01:45:14 -0500
-Received: by mail-pl1-f193.google.com with SMTP id d15so2789684plr.1
-        for <devicetree@vger.kernel.org>; Mon, 18 Feb 2019 22:45:14 -0800 (PST)
-Date: Mon, 18 Feb 2019 22:45:11 -0800
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: clock: qcom: Add QCOM WCSS GCC clock
- bindings
-Message-ID: <20190219064511.GD13018@tuxbook-pro>
+Return-Path: <SRS0=/0Ct=QJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:37248 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfBBP0m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Feb 2019 10:26:42 -0500
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH v4 1/8] dt-bindings: clock: qcom: Add QCOM WCSS GCC clock bindings
+Date: Sat,  2 Feb 2019 20:56:19 +0530
+Message-Id: <20190202152626.1006-2-govinds@codeaurora.org>
+In-Reply-To: <20190202152626.1006-1-govinds@codeaurora.org>
 References: <20190202152626.1006-1-govinds@codeaurora.org>
- <20190202152626.1006-2-govinds@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190202152626.1006-2-govinds@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Govind Singh <govinds@codeaurora.org>
-Cc: linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org
+Cc: linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat 02 Feb 07:26 PST 2019, Govind Singh wrote:
+Add device tree bindings for WiFi QDSP gcc clock controls found in
+QCS404 soc.
 
-> Add device tree bindings for WiFi QDSP gcc clock controls found in
-> QCS404 soc.
-> 
-> Signed-off-by: Govind Singh <govinds@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Govind Singh <govinds@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ include/dt-bindings/clock/qcom,gcc-qcs404.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
->  include/dt-bindings/clock/qcom,gcc-qcs404.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> index 00ab0d77b38a..f5dfc1890870 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> @@ -146,6 +146,8 @@
->  #define GCC_MDP_TBU_CLK					138
->  #define GCC_QDSS_DAP_CLK				139
->  #define GCC_DCC_XO_CLK					140
-> +#define GCC_WCSS_Q6_AHB_CLK				141
-> +#define GCC_WCSS_Q6_AXIM_CLK				142
->  
->  #define GCC_GENI_IR_BCR					0
->  #define GCC_USB_HS_BCR					1
-> @@ -168,5 +170,6 @@
->  #define GCC_PCIE_0_CORE_STICKY_ARES			18
->  #define GCC_PCIE_0_SLEEP_ARES				19
->  #define GCC_PCIE_0_PIPE_ARES				20
-> +#define GCC_WDSP_RESTART				21
->  
->  #endif
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+index 00ab0d77b38a..f5dfc1890870 100644
+--- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
++++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+@@ -146,6 +146,8 @@
+ #define GCC_MDP_TBU_CLK					138
+ #define GCC_QDSS_DAP_CLK				139
+ #define GCC_DCC_XO_CLK					140
++#define GCC_WCSS_Q6_AHB_CLK				141
++#define GCC_WCSS_Q6_AXIM_CLK				142
+ 
+ #define GCC_GENI_IR_BCR					0
+ #define GCC_USB_HS_BCR					1
+@@ -168,5 +170,6 @@
+ #define GCC_PCIE_0_CORE_STICKY_ARES			18
+ #define GCC_PCIE_0_SLEEP_ARES				19
+ #define GCC_PCIE_0_PIPE_ARES				20
++#define GCC_WDSP_RESTART				21
+ 
+ #endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
