@@ -1,99 +1,112 @@
-From: Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: [PATCH v2 9/9] mtd: rawnand: jz4780-bch: Add support for the
- JZ4740
-Date: Sun, 3 Feb 2019 16:07:09 +0100
-Message-ID: <20190203160709.29d7d721@bbrezillon>
-References: <20190202231926.2444-1-paul@crapouillou.net>
-        <20190202231926.2444-10-paul@crapouillou.net>
-        <20190203083505.4dc52278@bbrezillon>
-        <1549202293.1950.2@crapouillou.net>
-        <20190203151604.23061e2a@bbrezillon>
-        <1549205792.1588.0@crapouillou.net>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 4/5] media: tvp5150: make use of generic connector parsing
+Date: Sat,  2 Feb 2019 13:10:03 +0100
+Message-ID: <20190202121004.9014-5-m.felsch@pengutronix.de>
+References: <20190202121004.9014-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549205792.1588.0@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>, Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190202121004.9014-1-m.felsch@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: robh+dt@kernel.org, mchehab@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 03 Feb 2019 11:56:32 -0300
-Paul Cercueil <paul@crapouillou.net> wrote:
-
-> Le dim. 3 f=C3=A9vr. 2019 =C3=A0 11:16, Boris Brezillon <bbrezillon@kerne=
-l.org>=20
-> a =C3=A9crit :
-> > On Sun, 03 Feb 2019 10:58:13 -0300
-> > Paul Cercueil <paul@crapouillou.net> wrote:
-> >  =20
-> >>  Le dim. 3 f=C3=A9vr. 2019 =C3=A0 4:35, Boris Brezillon=20
-> >> <bbrezillon@kernel.org>
-> >>  a =C3=A9crit : =20
-> >>  > On Sat,  2 Feb 2019 20:19:26 -0300
-> >>  > Paul Cercueil <paul@crapouillou.net> wrote:
-> >>  > =20
-> >>  >>  Add the backend code for the jz4780-bch driver to support the  =20
-> >> JZ4740 =20
-> >>  >>  SoC from Ingenic.
-> >>  >>
-> >>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>  >>  ---
-> >>  >>
-> >>  >>  Changes:
-> >>  >>
-> >>  >>  v2: New patch
-> >>  >>
-> >>  >>   drivers/mtd/nand/raw/ingenic/Makefile         |   2 +-
-> >>  >>   drivers/mtd/nand/raw/ingenic/jz4740_bch.c     | 173
-> >>  >> ++++++++++++++++++
-> >>  >>   .../mtd/nand/raw/ingenic/jz4780_bch_common.c  |   1 +
-> >>  >>   .../nand/raw/ingenic/jz4780_bch_internal.h    |   1 +
-> >>  >>   4 files changed, 176 insertions(+), 1 deletion(-)
-> >>  >>   create mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_bch.c
-> >>  >>
-> >>  >>  diff --git a/drivers/mtd/nand/raw/ingenic/Makefile
-> >>  >> b/drivers/mtd/nand/raw/ingenic/Makefile
-> >>  >>  index f38b467490cf..d16c96113a93 100644
-> >>  >>  --- a/drivers/mtd/nand/raw/ingenic/Makefile
-> >>  >>  +++ b/drivers/mtd/nand/raw/ingenic/Makefile
-> >>  >>  @@ -1,3 +1,3 @@
-> >>  >>   obj-$(CONFIG_MTD_NAND_JZ4740) +=3D jz4740_nand.o
-> >>  >>   obj-$(CONFIG_MTD_NAND_JZ4780) +=3D jz4780_nand.o  =20
-> >> jz4780_bch_common.o =20
-> >>  >> \
-> >>  >>  -				 jz4780_bch.o jz4725b_bch.o
-> >>  >>  +				 jz4780_bch.o jz4725b_bch.o jz4740_bch.o =20
-> >>  >
-> >>  > I still don't see the point of the jz4780_bch_common/jz47xxx_bch
-> >>  > separation. You seem to always embed all objects anyway, so you  =20
-> >> can =20
-> >>  > just put the code for both engines in the same source file and  =20
-> >> decide =20
-> >>  > which one to use based on the compat (which you already do  =20
-> >> anyway).
-> >>=20
-> >>  Each SoC has a different set of registers for the BCH hardware. I=20
-> >> can
-> >>  try to
-> >>  cram everything into one file, but it won't be that much cleaner. =20
-> >=20
-> > Then maybe they deserve separate drivers/modules.
-> >=20
-> > BTW, didn't you say that one IP uses Reed-Salomon instead of BCH. I'd
-> > suggest prefixing structs and functions with jz47xx_ecc instead of
-> > jz47xx_bch and naming the common part jz47xx_ecc.c to reflect that. =20
->=20
-> Would it be a good idea to make a generic ECC API that the jz47xx_nand
-> driver could use? Then the three jz47xx BCH codepaths could be separate
-> drivers that register with the generic ECC core.
-
-Definitely. Actually, Miquel is already working on that, but I don't
-think it's a good idea to wait for this new framework to be finished to
-get your changes merged. So I'd recommend having a jz specific ECC API
-(pretty much the one you have in the common file expect it would be
-prefixed with _ecc instead of _bch) and convert it to the generic
-approach afterwards. Given the size of the common.c file, you can even
-put everything in jz47xx_ecc.h as inline funcs to avoid having yet
-another module.
+RHJvcCB0aGUgZHJpdmVyIHNwZWNpZmljIGNvbm5lY3RvciBwYXJzaW5nIHNpbmNlIHdlIGNhbiB1
+c2UgdGhlIGdlbmVyaWMKcGFyc2luZyBwcm92aWRlZCBieSB0aGUgdjRsMi1md25vZGUgY29yZS4K
+ClNpZ25lZC1vZmYtYnk6IE1hcmNvIEZlbHNjaCA8bS5mZWxzY2hAcGVuZ3V0cm9uaXguZGU+Ci0t
+LQogZHJpdmVycy9tZWRpYS9pMmMvdHZwNTE1MC5jIHwgNzUgKysrKysrKysrKy0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDU1IGRl
+bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvaTJjL3R2cDUxNTAuYyBiL2Ry
+aXZlcnMvbWVkaWEvaTJjL3R2cDUxNTAuYwppbmRleCAxZjBkZDlkMzY1NWMuLmYzYTJhZDAwYTQw
+ZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9tZWRpYS9pMmMvdHZwNTE1MC5jCisrKyBiL2RyaXZlcnMv
+bWVkaWEvaTJjL3R2cDUxNTAuYwpAQCAtNTksMTAgKzU5LDkgQEAgZW51bSB0dnA1MTUwX3BhZHNf
+c3RhdGUgewogfTsKIAogc3RydWN0IHR2cDUxNTBfY29ubmVjdG9yIHsKKwlzdHJ1Y3QgdjRsMl9m
+d25vZGVfY29ubmVjdG9yIGJhc2U7CiAJc3RydWN0IG1lZGlhX2VudGl0eSBlbnQ7CiAJc3RydWN0
+IG1lZGlhX3BhZCBwYWQ7Ci0JdW5zaWduZWQgaW50IHBvcnRfbnVtOwotCWJvb2wgaXNfc3ZpZGVv
+OwogfTsKICNlbmRpZgogCkBAIC0xMzEwLDcgKzEzMDksOCBAQCBzdGF0aWMgaW50IHR2cDUxNTBf
+bGlua19zZXR1cChzdHJ1Y3QgbWVkaWFfZW50aXR5ICplbnRpdHksCiAJLyogY2hlY2sgaWYgdGhl
+IHN2aWRlbyBjb25uZWN0b3Igc2hvdWxkIGJlIGVuYWJsZWQgKi8KIAlmb3IgKGkgPSAwOyBpIDwg
+ZGVjb2Rlci0+Y29ubmVjdG9yc19udW07IGkrKykgewogCQlpZiAocmVtb3RlLT5lbnRpdHkgPT0g
+JmRlY29kZXItPmNvbm5lY3RvcnNbaV0uZW50KSB7Ci0JCQlpc19zdmlkZW8gPSBkZWNvZGVyLT5j
+b25uZWN0b3JzW2ldLmlzX3N2aWRlbzsKKwkJCWlzX3N2aWRlbyA9CisJCQkgICBkZWNvZGVyLT5j
+b25uZWN0b3JzW2ldLmJhc2UudHlwZSA9PSBWNEwyX0NPTl9TVklERU87CiAJCQlicmVhazsKIAkJ
+fQogCX0KQEAgLTE1NTUsOCArMTU1NSw5IEBAIHN0YXRpYyBpbnQgdHZwNTE1MF9yZWdpc3RlcmVk
+KHN0cnVjdCB2NGwyX3N1YmRldiAqc2QpCiAJZm9yIChpID0gMDsgaSA8IGRlY29kZXItPmNvbm5l
+Y3RvcnNfbnVtOyBpKyspIHsKIAkJc3RydWN0IG1lZGlhX2VudGl0eSAqY29uID0gJmRlY29kZXIt
+PmNvbm5lY3RvcnNbaV0uZW50OwogCQlzdHJ1Y3QgbWVkaWFfcGFkICpwYWQgPSAmZGVjb2Rlci0+
+Y29ubmVjdG9yc1tpXS5wYWQ7Ci0JCXVuc2lnbmVkIGludCBwb3J0ID0gZGVjb2Rlci0+Y29ubmVj
+dG9yc1tpXS5wb3J0X251bTsKLQkJYm9vbCBpc19zdmlkZW8gPSBkZWNvZGVyLT5jb25uZWN0b3Jz
+W2ldLmlzX3N2aWRlbzsKKwkJdW5zaWduZWQgaW50IHBvcnQgPSBkZWNvZGVyLT5jb25uZWN0b3Jz
+W2ldLmJhc2UucmVtb3RlX3BvcnQ7CisJCWJvb2wgaXNfc3ZpZGVvID0KKwkJCWRlY29kZXItPmNv
+bm5lY3RvcnNbaV0uYmFzZS50eXBlID09IFY0TDJfQ09OX1NWSURFTzsKIAkJaW50IGZsYWdzID0g
+aSA/IDAgOiBNRURJQV9MTktfRkxfRU5BQkxFRDsKIAogCQlwYWQtPmZsYWdzID0gTUVESUFfUEFE
+X0ZMX1NPVVJDRTsKQEAgLTE4MjEsOCArMTgyMiw2IEBAIHN0YXRpYyBpbnQgdHZwNTE1MF9pbml0
+KHN0cnVjdCBpMmNfY2xpZW50ICpjKQogc3RhdGljIGludCB0dnA1MTUwX2FkZF9vZl9jb25uZWN0
+b3JzKHN0cnVjdCB0dnA1MTUwICpkZWNvZGVyKQogewogCXN0cnVjdCBkZXZpY2UgKmRldiA9IGRl
+Y29kZXItPnNkLmRldjsKLQlzdHJ1Y3QgZGV2aWNlX25vZGUgKnJwOwotCXN0cnVjdCBvZl9lbmRw
+b2ludCBlcDsKIAlzdHJ1Y3QgdHZwNTE1MF9jb25uZWN0b3IgKmNvbm5lY3RvcnM7CiAJdW5zaWdu
+ZWQgaW50IGNvbm5lY3RvcnNfbnVtID0gZGVjb2Rlci0+Y29ubmVjdG9yc19udW07CiAJaW50IGks
+IHJldDsKQEAgLTE4MzQsMjIgKzE4MzMsMTUgQEAgc3RhdGljIGludCB0dnA1MTUwX2FkZF9vZl9j
+b25uZWN0b3JzKHN0cnVjdCB0dnA1MTUwICpkZWNvZGVyKQogCQlyZXR1cm4gLUVOT01FTTsKIAog
+CWZvciAoaSA9IDA7IGkgPCBjb25uZWN0b3JzX251bTsgaSsrKSB7Ci0JCXJwID0gb2ZfZ3JhcGhf
+Z2V0X3JlbW90ZV9wb3J0X3BhcmVudChkZWNvZGVyLT5lbmRwb2ludHNbaV0pOwotCQlvZl9ncmFw
+aF9wYXJzZV9lbmRwb2ludChkZWNvZGVyLT5lbmRwb2ludHNbaV0sICZlcCk7Ci0JCWNvbm5lY3Rv
+cnNbaV0ucG9ydF9udW0gPSBlcC5wb3J0OwotCQljb25uZWN0b3JzW2ldLmlzX3N2aWRlbyA9ICEh
+b2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUocnAsCi0JCQkJCQkJICAgICJzdmlkZW8tY29ubmVjdG9y
+Iik7Ci0KLQkJaWYgKGNvbm5lY3RvcnNbaV0uaXNfc3ZpZGVvKQotCQkJY29ubmVjdG9yc1tpXS5l
+bnQuZnVuY3Rpb24gPSBNRURJQV9FTlRfRl9DT05OX1NWSURFTzsKLQkJZWxzZQotCQkJY29ubmVj
+dG9yc1tpXS5lbnQuZnVuY3Rpb24gPSBNRURJQV9FTlRfRl9DT05OX0NPTVBPU0lURTsKKwkJc3Ry
+dWN0IHY0bDJfZndub2RlX2Nvbm5lY3RvciAqYyA9ICZjb25uZWN0b3JzW2ldLmJhc2U7CisKKwkJ
+cmV0ID0gdjRsMl9md25vZGVfcGFyc2VfY29ubmVjdG9yKAorCQkJCSAgIG9mX2Z3bm9kZV9oYW5k
+bGUoZGVjb2Rlci0+ZW5kcG9pbnRzW2ldKSwgYyk7CiAKIAkJY29ubmVjdG9yc1tpXS5lbnQuZmxh
+Z3MgPSBNRURJQV9FTlRfRkxfQ09OTkVDVE9SOwotCQlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3N0
+cmluZyhycCwgImxhYmVsIiwKLQkJCQkJICAgICAgJmNvbm5lY3RvcnNbaV0uZW50Lm5hbWUpOwot
+CQlpZiAocmV0IDwgMCkKLQkJCXJldHVybiByZXQ7CisJCWNvbm5lY3RvcnNbaV0uZW50LmZ1bmN0
+aW9uID0gYy0+dHlwZSA9PSBWNEwyX0NPTl9TVklERU8gPworCQkJTUVESUFfRU5UX0ZfQ09OTl9T
+VklERU8gOiBNRURJQV9FTlRfRl9DT05OX0NPTVBPU0lURTsKKwkJY29ubmVjdG9yc1tpXS5lbnQu
+bmFtZSA9IGMtPmxhYmVsOwogCX0KIAogCWRlY29kZXItPmNvbm5lY3RvcnMgPSBjb25uZWN0b3Jz
+OwpAQCAtMTg5MCw0MSArMTg4MiwxMSBAQCBzdGF0aWMgaW50IHR2cDUxNTBfbWNfaW5pdChzdHJ1
+Y3QgdjRsMl9zdWJkZXYgKnNkKQogCXJldHVybiByZXQ7CiB9CiAKLXN0YXRpYyBib29sIHR2cDUx
+NTBfb2ZfdmFsaWRfaW5wdXQoc3RydWN0IGRldmljZV9ub2RlICplbmRwb2ludCwKLQkJCQl1bnNp
+Z25lZCBpbnQgcG9ydCwgdW5zaWduZWQgaW50IGlkKQotewotCXN0cnVjdCBkZXZpY2Vfbm9kZSAq
+cnAgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KGVuZHBvaW50KTsKLQljb25zdCBj
+aGFyICppbnB1dDsKLQlpbnQgcmV0OwotCi0JLyogcGVyZm9ybSBzb21lIGJhc2ljIGNoZWNrcyBu
+ZWVkZWQgZm9yIGxhdGVyIG1jX2luaXQgKi8KLQlzd2l0Y2ggKHBvcnQpIHsKLQljYXNlIFRWUDUx
+NTBfUEFEX0FJUDFBOgotCQkvKiBzdmlkZW8gbXVzdCBiZSBjb25uZWN0ZWQgdG8gZW5kcG9pbnRA
+MSAgKi8KLQkJcmV0ID0gaWQgPyBvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShycCwgInN2aWRlby1j
+b25uZWN0b3IiKSA6Ci0JCQkgICBvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShycCwKLQkJCQkJCSAg
+ICJjb21wb3NpdGUtdmlkZW8tY29ubmVjdG9yIik7Ci0JCWlmICghcmV0KQotCQkJcmV0dXJuIGZh
+bHNlOwotCQlicmVhazsKLQljYXNlIFRWUDUxNTBfUEFEX0FJUDFCOgotCQlyZXQgPSBvZl9kZXZp
+Y2VfaXNfY29tcGF0aWJsZShycCwgImNvbXBvc2l0ZS12aWRlby1jb25uZWN0b3IiKTsKLQkJaWYg
+KCFyZXQpCi0JCQlyZXR1cm4gZmFsc2U7Ci0JCWJyZWFrOwotCX0KLQotCXJldCA9IG9mX3Byb3Bl
+cnR5X3JlYWRfc3RyaW5nKHJwLCAibGFiZWwiLCAmaW5wdXQpOwotCWlmIChyZXQgPCAwKQotCQly
+ZXR1cm4gZmFsc2U7Ci0KLQlyZXR1cm4gdHJ1ZTsKLX0KLQogc3RhdGljIGludCB0dnA1MTUwX3Bh
+cnNlX2R0KHN0cnVjdCB0dnA1MTUwICpkZWNvZGVyLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQog
+ewogCXN0cnVjdCBkZXZpY2UgKmRldiA9IGRlY29kZXItPnNkLmRldjsKIAlzdHJ1Y3QgdjRsMl9m
+d25vZGVfZW5kcG9pbnQgYnVzX2NmZyA9IHsgLmJ1c190eXBlID0gMCB9OworCXN0cnVjdCB2NGwy
+X2Z3bm9kZV9jb25uZWN0b3IgYzsKIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKmVwX25wOwogCXVuc2ln
+bmVkIGludCBmbGFnczsKIAlpbnQgcmV0LCBpID0gMCwgaW4gPSAwOwpAQCAtMTk1MywxMCArMTkx
+NSwxMyBAQCBzdGF0aWMgaW50IHR2cDUxNTBfcGFyc2VfZHQoc3RydWN0IHR2cDUxNTAgKmRlY29k
+ZXIsIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCiAJCQkvKiBmYWxsIHRocm91Z2ggKi8KIAkJY2Fz
+ZSBUVlA1MTUwX1BBRF9BSVAxQToKIAkJY2FzZSBUVlA1MTUwX1BBRF9BSVAxQjoKLQkJCWlmICgh
+dHZwNTE1MF9vZl92YWxpZF9pbnB1dChlcF9ucCwgZXAucG9ydCwgZXAuaWQpKSB7CisJCQlyZXQg
+PSB2NGwyX2Z3bm9kZV9wYXJzZV9jb25uZWN0b3IoCisJCQkJCQkgICBvZl9md25vZGVfaGFuZGxl
+KGVwX25wKSwgJmMpOworCQkJaWYgKGMudHlwZSAhPSBWNEwyX0NPTl9DT01QT1NJVEUgJiYKKwkJ
+CSAgICBjLnR5cGUgIT0gVjRMMl9DT05fU1ZJREVPKSB7CiAJCQkJZGV2X2VycihkZXYsCi0JCQkJ
+CSJJbnZhbGlkIGVuZHBvaW50ICVwT0Ygb24gcG9ydCAlZFxuIiwKLQkJCQkJZXAubG9jYWxfbm9k
+ZSwgZXAucG9ydCk7CisJCQkJCSJJbnZhbGlkIGVuZHBvaW50ICVkIG9uIHBvcnQgJWRcbiIsCisJ
+CQkJCWMucmVtb3RlX2lkLCBjLnJlbW90ZV9wb3J0KTsKIAkJCQlyZXQgPSAtRUlOVkFMOwogCQkJ
+CWdvdG8gZXJyOwogCQkJfQotLSAKMi4yMC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
