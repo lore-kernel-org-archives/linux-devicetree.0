@@ -1,42 +1,72 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] Devicetree fix for 5.0-rc5
-Date: Sat, 2 Feb 2019 11:10:06 -0600
-Message-ID: <CAL_JsqLPN1ko5nPSTh80EQa2Zz_LHvFFCw42XYBcv8VSa_cYvg@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 3/3] dt-bindings: iio: chemical: pms7003: add device
+ tree support
+Date: Sat, 2 Feb 2019 17:12:47 +0000
+Message-ID: <20190202171247.0d0fc122@archlinux>
+References: <20190201215759.14569-1-tduszyns@gmail.com>
+        <20190201215759.14569-4-tduszyns@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190201215759.14569-4-tduszyns@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+To: Tomasz Duszynski <tduszyns@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, johan@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+On Fri,  1 Feb 2019 22:57:59 +0100
+Tomasz Duszynski <tduszyns@gmail.com> wrote:
 
-Please pull.
+> Add device tree support for Plantower PMS7003 particulate matter sensor.
+> 
+> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+Hi Tomasz,
 
-Rob
+Sorry, I clearly didn't look at this in enough detail on earlier versions.
+I think the set gpio is rather device specific so should have a vendor
+prefix.
 
-The following changes since commit 75a080cde08d2dcba19ee864f9732094d93fab41:
+I would also like to get an opinion on the generic name from the devicetree
+maintainers before we start to standardise on it.
 
-  powerpc: chrp: Use of_node_is_type to access device_type (2019-01-19
-10:35:42 -0600)
+Thanks,
 
-are available in the Git repository at:
+Jonathan
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-5.0-3
+> ---
+>  .../iio/chemical/plantower,pms7003.txt        | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+> new file mode 100644
+> index 000000000000..cbad95480e04
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+> @@ -0,0 +1,20 @@
+> +* Plantower PMS7003 particulate matter sensor
+> +
+> +Required properties:
+> +- compatible: must be "plantower,pms7003"
+> +- vcc-supply: phandle to the regulator that provides power to the sensor
+> +
+> +Optional properties:
+> +- set-gpios: phandle to the GPIO connected to the SET line
 
-for you to fetch changes up to 5fa98c2eda35fcd1a1d91a9785c390f54688240c:
+Hmm. This is a somewhat 'unusual' one so should probably have a vendor prefix.
 
-  dt-bindings: Fix dt_binding_check target for in tree builds
-(2019-01-23 09:15:57 -0600)
+> +- reset-gpios: phandle to the GPIO connected to the RESET line
 
-----------------------------------------------------------------
-A single fix for building DT bindings in-tree.
-
-----------------------------------------------------------------
-Rob Herring (1):
-      dt-bindings: Fix dt_binding_check target for in tree builds
-
- Documentation/devicetree/bindings/Makefile | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+reset is common and clear in meaning, so vendor prefix probably not appropriate.
+> +
+> +Refer to serial/slave-device.txt for generic serial attached device bindings.
+> +
+> +Example:
+> +
+> +&uart0 {
+> +	air-pollution-sensor {
+> +		vcc-supply = <&reg_vcc5v0>;
+> +		compatible = "plantower,pms7003";
+> +	};
+> +};
