@@ -1,54 +1,72 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH v3 10/13] dt-bindings: spi: atmel-quadspi: make "pclk"
- mandatory
-Date: Sat, 2 Feb 2019 08:47:00 +0000
-Message-ID: <25ed6e19-4fe6-7b8c-4eeb-5bd5be1075fe@microchip.com>
-References: <20190202040653.1217-1-tudor.ambarus@microchip.com>
- <20190202040653.1217-11-tudor.ambarus@microchip.com>
- <20190202081502.47ca404d@bbrezillon>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2] arm64/hisilicon: fix SDcard detection
+Date: Sat, 2 Feb 2019 09:52:52 +0100
+Message-ID: <CAKfTPtDcHC=gbKciUVWb6_q=qyEcBZNnYpQ_VvYo0EsbST41BQ@mail.gmail.com>
+References: <1547454274-1674-1-git-send-email-vincent.guittot@linaro.org>
+ <3722223a-4f06-3e1c-86ca-542289c7c918@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190202081502.47ca404d@bbrezillon>
-Content-Language: en-US
-Content-ID: <99E80F55C8520C429E271364A66E5D0E@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bbrezillon@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, Cyrille.Pitchen@microchip.com, Nicolas.Ferre@microchip.com, robh+dt@kernel.org, linux-spi@vger.kernel.org, Ludovic.Desroches@microchip.com, broonie@kernel.org, linux-mtd@lists.infradead.org, bugalski.piotr@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3722223a-4f06-3e1c-86ca-542289c7c918@hisilicon.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wei Xu <xuwei5@hisilicon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDAyLzAyLzIwMTkgMDk6MTUgQU0sIEJvcmlzIEJyZXppbGxvbiB3cm90ZToNCj4gT24g
-U2F0LCAyIEZlYiAyMDE5IDA0OjA3OjM5ICswMDAwDQo+IDxUdWRvci5BbWJhcnVzQG1pY3JvY2hp
-cC5jb20+IHdyb3RlOg0KPiANCj4+IEZyb206IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNA
-bWljcm9jaGlwLmNvbT4NCj4+DQo+PiBOYW1pbmcgY2xvY2tzIGlzIGEgZ29vZCBwcmFjdGljZS4g
-TWFrZSAicGNsayIgbWFkYXRvcnkgZXZlbiBpZg0KPj4gd2Ugc3VwcG9ydCB1bm5hbWVkIGNsb2Nr
-IGluIHRoZSBkcml2ZXIsIHRvIGJlIGJhY2t3YXJkIGNvbXBhdGlibGUNCj4+IHdpdGggb2xkIERU
-cy4NCj4+DQo+PiBTdWdnZXN0ZWQtYnk6IEJvcmlzIEJyZXppbGxvbiA8YmJyZXppbGxvbkBrZXJu
-ZWwub3JnPg0KPj4gU2lnbmVkLW9mZi1ieTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0Bt
-aWNyb2NoaXAuY29tPg0KPj4gLS0tDQo+PiB2MzogbmV3IHBhdGNoDQo+Pg0KPj4gIERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvYXRtZWwtcXVhZHNwaS50eHQgfCAyICsrDQo+
-PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL2F0bWVsLXF1YWRzcGkudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9hdG1lbC1xdWFkc3BpLnR4dA0K
-Pj4gaW5kZXggZTlkYWU2MjY0ZDg5Li4xZGU1NGU4N2Y1ZDYgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL2F0bWVsLXF1YWRzcGkudHh0DQo+PiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL2F0bWVsLXF1YWRzcGku
-dHh0DQo+PiBAQCAtOSw2ICs5LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4+ICAgICAgICAg
-ICAgICAgICAgICAtIHFzcGlfbW1hcDogbWVtb3J5IG1hcHBlZCBhZGRyZXNzIHNwYWNlDQo+PiAg
-LSBpbnRlcnJ1cHRzOiAgICAgU2hvdWxkIGNvbnRhaW4gdGhlIGludGVycnVwdCBmb3IgdGhlIGRl
-dmljZS4NCj4+ICAtIGNsb2NrczogICAgICAgICBUaGUgcGhhbmRsZSBvZiB0aGUgY2xvY2sgbmVl
-ZGVkIGJ5IHRoZSBRU1BJIGNvbnRyb2xsZXIuDQo+PiArLSBjbG9jay1uYW1lczogICAgU2hvdWxk
-IGNvbnRhaW4gInBjbGsiIGZvciB0aGUgcGVyaXBoZXJhbCBjbG9jay4NCj4+ICAtICNhZGRyZXNz
-LWNlbGxzOiBTaG91bGQgYmUgPDE+Lg0KPj4gIC0gI3NpemUtY2VsbHM6ICAgIFNob3VsZCBiZSA8
-MD4uDQo+PiAgDQo+PiBAQCAtMjAsNiArMjEsNyBAQCBzcGlAZjAwMjAwMDAgew0KPj4gIAlyZWct
-bmFtZXMgPSAicXNwaV9iYXNlIiwgInFzcGlfbW1hcCI7DQo+PiAgCWludGVycnVwdHMgPSA8NTIg
-SVJRX1RZUEVfTEVWRUxfSElHSCA3PjsNCj4+ICAJY2xvY2tzID0gPCZwbWMgUE1DX1RZUEVfUEVS
-SVBIRVJBTCA1Mj47DQo+PiArCWNsb2NrLW5hbWVzID0gInBjbGsiDQo+IA0KPiBNaXNzaW5nIHNl
-bWljb2xvbi4gT25jZSBmaXhlZCB5b3UgY2FuIGFkZA0KPiANCj4gUmV2aWV3ZWQtYnk6IEJvcmlz
-IEJyZXppbGxvbiA8YmJyZXppbGxvbkBrZXJuZWwub3JnPg0KDQp3aWxsIGRvLCB0aGFua3MhDQoN
-Cj4gDQo+PiAgCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPj4gIAkjc2l6ZS1jZWxscyA9IDwwPjsN
-Cj4+ICAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gDQo+IA0KPiBfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gTGludXggTVREIGRp
-c2N1c3Npb24gbWFpbGluZyBsaXN0DQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtbXRkLw0KPiANCg==
+Hi Wei,
+
+On Fri, 1 Feb 2019 at 18:00, Wei Xu <xuwei5@hisilicon.com> wrote:
+>
+> Hi Vincent,
+>
+> On 1/14/2019 8:24 AM, Vincent Guittot wrote:
+> > The SDcard detection of hikey960 is active low so cd-inverted is wrong.
+> > Instead of adding cd-inverted, we should better set correctly cd-gpios
+> > to use GPIO_ACTIVE_LOW.
+> >
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+>
+> Updated the subject as Leo suggested and applied to the hisilicon tree.
+
+Thanks
+
+> Thanks!
+>
+> Best Regards,
+> Wei
+>
+> > ---
+> >
+> > SD card detection was not working on v5.0-rc1 but patch
+> > https://marc.info/?l=linux-mmc&m=154637189021211&w=2 makes it work.
+> > Nevertheles, latest changes in of_mmc_detection makes possible to have
+> > a correct DT config.
+> >
+> >  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> > index 71bfe41..dc314e7 100644
+> > --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> > +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> > @@ -665,8 +665,7 @@
+> >       sd-uhs-sdr50;
+> >       sd-uhs-sdr104;
+> >       disable-wp;
+> > -     cd-inverted;
+> > -     cd-gpios = <&gpio25 3 0>;
+> > +     cd-gpios = <&gpio25 3 GPIO_ACTIVE_LOW>;
+> >       pinctrl-names = "default";
+> >       pinctrl-0 = <&sd_pmx_func
+> >                    &sd_clk_cfg_func
+> >
+>
