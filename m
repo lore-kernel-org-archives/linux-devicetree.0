@@ -1,13 +1,13 @@
 From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RESEND v2 08/12] dt-bindings: add binding for
- generic eDP panel
-Date: Sun,  3 Feb 2019 10:54:57 -0800
-Message-ID: <20190203185501.8958-9-anarsoul@gmail.com>
+Subject: [PATCH RESEND v2 11/12] arm64: allwinner: a64: enable
+ LCD-related hardware for Pinebook
+Date: Sun,  3 Feb 2019 10:55:00 -0800
+Message-ID: <20190203185501.8958-12-anarsoul@gmail.com>
 References: <20190203185501.8958-1-anarsoul@gmail.com>
 Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBMHS3TRAKGQEOE3SNVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDV3B667TUHBBM7S3TRAKGQEWTZBEII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190203185501.8958-1-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,28 +20,132 @@ To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/
 Cc: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-eDP panels usually have EDID EEPROM, so there's no need to define panel
-width/height or any modes/timings in dts. But this panel still may have
-regulator and/or backlight.
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
+Pinebook has an ANX6345 bridge connected to the RGB666 LCD output and
+eDP panel input. The bridge is controlled via I2C that's connected to
+R_I2C bus.
+
+Enable all this hardware in device tree.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/display/panel/panel-edp.txt        | 7 +++++++
- 1 file changed, 7 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
+ .../dts/allwinner/sun50i-a64-pinebook.dts     | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-edp.txt b/Documentation/devicetree/bindings/display/panel/panel-edp.txt
-new file mode 100644
-index 000000000000..fc7a0868048e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/panel-edp.txt
-@@ -0,0 +1,7 @@
-+Generic eDP Display Panel
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+index d22736a62481..49f5d4b0c7f4 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+@@ -63,6 +63,18 @@
+ 		};
+ 	};
+ 
++	edp_panel: edp-panel {
++		compatible = "panel-edp", "simple-panel";
++		backlight = <&backlight>;
++		power-supply = <&reg_dc1sw>;
 +
-+Required properties:
-+  - compatible: "panel-edp"
++		port {
++			panel_in_edp: endpoint {
++				remote-endpoint = <&anx6345_out_panel>;
++			};
++		};
++	};
 +
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
+ 	reg_vcc3v3: vcc3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc3v3";
+@@ -102,6 +114,10 @@
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	phys = <&usbphy 0>;
+ 	phy-names = "usb";
+@@ -112,6 +128,10 @@
+ 	status = "okay";
+ };
+ 
++&mixer0 {
++	status = "okay";
++};
++
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
+@@ -163,6 +183,46 @@
+ 	status = "okay";
+ };
+ 
++&r_i2c {
++	pinctrl-names = "default";
++	pinctrl-0 = <&r_i2c_pins_a>;
++	status = "okay";
++
++	anx6345: anx6345@38 {
++		compatible = "analogix,anx6345";
++		reg = <0x38>;
++		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
++		dvdd25-supply = <&reg_dldo2>;
++		dvdd12-supply = <&reg_fldo1>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			anx6345_in: port@0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0>;
++				anx6345_in_tcon0: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&tcon0_out_anx6345>;
++				};
++			};
++
++			anx6345_out: port@1 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <1>;
++
++				anx6345_out_panel: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&panel_in_edp>;
++				};
++			};
++		};
++	};
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+@@ -334,6 +394,20 @@
+ 			"MIC2", "Internal Microphone Right";
+ };
+ 
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
++
++	status = "okay";
++};
++
++&tcon0_out {
++	tcon0_out_anx6345: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&anx6345_in_tcon0>;
++	};
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
 2.20.1
