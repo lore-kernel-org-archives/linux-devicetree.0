@@ -1,170 +1,55 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH v2 3/3] nvmem: zynqmp: Added zynqmp nvmem firmware driver
-Date: Mon, 4 Feb 2019 12:39:51 +0530
-Message-ID: <20190204070951.6933-4-nava.manne@xilinx.com>
-References: <20190204070951.6933-1-nava.manne@xilinx.com>
+From: Boris Brezillon <bbrezillon@kernel.org>
+Subject: Re: [PATCH v2 0/9] Ingenic JZ4780 NAND patchset v2
+Date: Sun, 3 Feb 2019 08:20:32 +0100
+Message-ID: <20190203082032.6e37c523@bbrezillon>
+References: <20190202231926.2444-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204070951.6933-1-nava.manne@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, jollys@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20190202231926.2444-1-paul@crapouillou.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Harvey Hunt <harveyhuntnexus@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds zynqmp nvmem firmware driver to access the
-SoC revision information from the hardware register.
+On Sat,  2 Feb 2019 20:19:17 -0300
+Paul Cercueil <paul@crapouillou.net> wrote:
 
-Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
----
-Changes for v2:
-		-None.
-Changes for v1:
-                -None.
+> Hi,
+> 
+> As requested by Boris, I added a patch to move all the Ingenic NAND
+> drivers to their own directory.
+> 
+> In this V2 I added support for the JZ4740 SoC. The combo of the
+> jz4780-nemc, jz4780-nand and jz4740-bch now obsolete the old and dusty
+> jz4740-nand driver.
 
-Changes for RFC-V3:
-                -Changed nvmem_register() to devm_nvmem_register()
-                 and pr_debug() to dev_dbg() as suggested by srinivas.
+Any plan to get the old driver removed? I guess you want to migrate the
+boards to DT first.
 
-Changes for RFC-V2:
-                -None.
+> 
+> To support the only upstream JZ4740-based board we have, the Ben
+> Nanonote, I added an option to specify the OOB layout of that device
+> from a device property string.
+> 
+> Finally, I dropped the last two patches that moved the platform NAND
+> code to devicetree; I will upstream them as part of a different
+> patchset.
+> 
+> Cheers,
+> -Paul
+> 
 
- drivers/nvmem/Kconfig        | 15 +++----
- drivers/nvmem/Makefile       |  5 ++-
- drivers/nvmem/zynqmp_nvmem.c | 86 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 96 insertions(+), 10 deletions(-)
- create mode 100644 drivers/nvmem/zynqmp_nvmem.c
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 0a7a470ee859..2edb1428ef6d 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -181,15 +181,14 @@ config RAVE_SP_EEPROM
- 	help
- 	  Say y here to enable Rave SP EEPROM support.
- 
--config SC27XX_EFUSE
--	tristate "Spreadtrum SC27XX eFuse Support"
--	depends on MFD_SC27XX_PMIC || COMPILE_TEST
--	depends on HAS_IOMEM
-+config NVMEM_ZYNQMP
-+	bool "Xilinx ZYNQMP SoC nvmem firmware support"
-+	depends on ARCH_ZYNQMP
- 	help
--	  This is a simple driver to dump specified values of Spreadtrum
--	  SC27XX PMICs from eFuse.
-+	  This is a driver to access hardware related data like
-+	  soc revision, IDCODE... etc by using the firmware
-+	  interface.
- 
--	  This driver can also be built as a module. If so, the module
--	  will be called nvmem-sc27xx-efuse.
-+	  If sure, say yes. If unsure, say no.
- 
- endif
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index 4e8c61628f1a..0b3abd7f5d02 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -39,5 +39,6 @@ obj-$(CONFIG_NVMEM_SNVS_LPGPR)	+= nvmem_snvs_lpgpr.o
- nvmem_snvs_lpgpr-y		:= snvs_lpgpr.o
- obj-$(CONFIG_RAVE_SP_EEPROM)	+= nvmem-rave-sp-eeprom.o
- nvmem-rave-sp-eeprom-y		:= rave-sp-eeprom.o
--obj-$(CONFIG_SC27XX_EFUSE)	+= nvmem-sc27xx-efuse.o
--nvmem-sc27xx-efuse-y		:= sc27xx-efuse.o
-+obj-$(CONFIG_NVMEM_ZYNQMP)     += nvmem_zynqmp_nvmem.o
-+nvmem_zynqmp_nvmem-y           := zynqmp_nvmem.o
-+
-diff --git a/drivers/nvmem/zynqmp_nvmem.c b/drivers/nvmem/zynqmp_nvmem.c
-new file mode 100644
-index 000000000000..b910864e91b7
---- /dev/null
-+++ b/drivers/nvmem/zynqmp_nvmem.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2018 Xilinx, Inc.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/firmware/xlnx-zynqmp.h>
-+
-+#define SILICON_REVISION_MASK 0xF
-+
-+struct zynqmp_nvmem_data {
-+	struct device *dev;
-+	struct nvmem_device *nvmem;
-+};
-+
-+static int zynqmp_nvmem_read(void *context, unsigned int offset,
-+			     void *val, size_t bytes)
-+{
-+	int ret;
-+	int idcode, version;
-+	struct zynqmp_nvmem_data *priv = context;
-+
-+	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-+
-+	if (!eemi_ops || !eemi_ops->get_chipid)
-+		return -ENXIO;
-+
-+	ret = eemi_ops->get_chipid(&idcode, &version);
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_dbg(priv->dev, "Read chipid val %x %x\n", idcode, version);
-+	*(int *)val = version & SILICON_REVISION_MASK;
-+
-+	return 0;
-+}
-+
-+static struct nvmem_config econfig = {
-+	.name = "zynqmp-nvmem",
-+	.owner = THIS_MODULE,
-+	.word_size = 1,
-+	.size = 1,
-+	.read_only = true,
-+};
-+
-+static const struct of_device_id zynqmp_nvmem_match[] = {
-+	{ .compatible = "xlnx,zynqmp-nvmem-fw", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, zynqmp_nvmem_match);
-+
-+static int zynqmp_nvmem_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct zynqmp_nvmem_data *priv;
-+
-+	priv = devm_kzalloc(dev, sizeof(struct zynqmp_nvmem_data), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	econfig.dev = dev;
-+	econfig.reg_read = zynqmp_nvmem_read;
-+	econfig.priv = priv;
-+
-+	priv->nvmem = devm_nvmem_register(dev, &econfig);
-+
-+	return PTR_ERR_OR_ZERO(priv->nvmem);
-+}
-+
-+static struct platform_driver zynqmp_nvmem_driver = {
-+	.probe = zynqmp_nvmem_probe,
-+	.driver = {
-+		.name = "zynqmp-nvmem",
-+		.of_match_table = zynqmp_nvmem_match,
-+	},
-+};
-+
-+module_platform_driver(zynqmp_nvmem_driver);
-+
-+MODULE_AUTHOR("Michal Simek <michal.simek@xilinx.com>, Nava kishore Manne <navam@xilinx.com>");
-+MODULE_DESCRIPTION("ZynqMP NVMEM driver");
-+MODULE_LICENSE("GPL");
--- 
-2.18.0
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
