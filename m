@@ -1,13 +1,13 @@
 From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 06/12] drm/sun4i: rgb: Add 1% tolerance to
- dclk frequency check when bridge is connected
-Date: Sun,  3 Feb 2019 10:44:44 -0800
-Message-ID: <20190203184450.8050-7-anarsoul@gmail.com>
+Subject: [PATCH v2 07/12] drm/panel: simple: don't fail if we
+ don't have panel desc
+Date: Sun,  3 Feb 2019 10:44:45 -0800
+Message-ID: <20190203184450.8050-8-anarsoul@gmail.com>
 References: <20190203184450.8050-1-anarsoul@gmail.com>
 Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBLXN3TRAKGQEVYLKGAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDV3B667TUHBBMHN3TRAKGQEYB5SYOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190203184450.8050-1-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,96 +20,73 @@ To: David Airlie Daniel Vetter <airlied-cv59FeDIM0fLFAHvckquKw@public.gmane.org>
 Cc: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Clock rate check that was added in commit bb43d40d7c83 ("drm/sun4i: rgb:
-Validate the clock rate") prevents some panel and bridges from working with
-sun4i driver.
-
-Unfortunately, dotclock frequency for some modes are not achievable on
-sunxi hardware, and there's a slight deviation in rate returned by
-clk_round_rate(), so they fail this check.
-
-Experiments show that panels and bridges work fine with this slight
-deviation, e.g. Pinebook that uses ANX6345 bridge with 768p eDP panel
-requests 73 MHz, gets 72.296MHz instead (0.96% difference) and works just
-fine.
-
-This patch adds a 1% tolerence to the dot clock check when bridge is
-connected.
+This is preparation for addition of generic eDP panel that
+doesn't have any modes or delays defined.
 
 Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_rgb.c  | 16 ++++++++++------
- drivers/gpu/drm/sun4i/sun4i_tcon.h |  1 +
- 2 files changed, 11 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_rgb.c b/drivers/gpu/drm/sun4i/sun4i_rgb.c
-index f4a22689eb54..3f04446120f6 100644
---- a/drivers/gpu/drm/sun4i/sun4i_rgb.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_rgb.c
-@@ -61,6 +61,7 @@ static enum drm_mode_status sun4i_rgb_mode_valid(struct drm_encoder *crtc,
- 	u32 vsync = mode->vsync_end - mode->vsync_start;
- 	unsigned long rate = mode->clock * 1000;
- 	long rounded_rate;
-+	long tolerance = 0;
- 
- 	DRM_DEBUG_DRIVER("Validating modes...\n");
- 
-@@ -95,10 +96,14 @@ static enum drm_mode_status sun4i_rgb_mode_valid(struct drm_encoder *crtc,
- 	tcon->dclk_min_div = 6;
- 	tcon->dclk_max_div = 127;
- 	rounded_rate = clk_round_rate(tcon->dclk, rate);
--	if (rounded_rate < rate)
-+	if (tcon->bridge)
-+		/* Check against a 1% tolerance for the dot clock for bridge */
-+		tolerance = rate / 100;
-+
-+	if (rounded_rate < (rate - tolerance))
- 		return MODE_CLOCK_LOW;
- 
--	if (rounded_rate > rate)
-+	if (rounded_rate > (rate + tolerance))
- 		return MODE_CLOCK_HIGH;
- 
- 	DRM_DEBUG_DRIVER("Clock rate OK\n");
-@@ -172,7 +177,6 @@ static struct drm_encoder_funcs sun4i_rgb_enc_funcs = {
- int sun4i_rgb_init(struct drm_device *drm, struct sun4i_tcon *tcon)
- {
- 	struct drm_encoder *encoder;
--	struct drm_bridge *bridge;
- 	struct sun4i_rgb *rgb;
- 	int ret;
- 
-@@ -183,7 +187,7 @@ int sun4i_rgb_init(struct drm_device *drm, struct sun4i_tcon *tcon)
- 	encoder = &rgb->encoder;
- 
- 	ret = drm_of_find_panel_or_bridge(tcon->dev->of_node, 1, 0,
--					  &tcon->panel, &bridge);
-+					  &tcon->panel, &tcon->bridge);
- 	if (ret) {
- 		dev_info(drm->dev, "No panel or bridge found... RGB output disabled\n");
- 		return 0;
-@@ -225,8 +229,8 @@ int sun4i_rgb_init(struct drm_device *drm, struct sun4i_tcon *tcon)
- 		}
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 9c69e739a524..2f2cb2d81f2b 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -176,7 +176,7 @@ static int panel_simple_disable(struct drm_panel *panel)
+ 		backlight_update_status(p->backlight);
  	}
  
--	if (bridge) {
--		ret = drm_bridge_attach(encoder, bridge, NULL);
-+	if (tcon->bridge) {
-+		ret = drm_bridge_attach(encoder, tcon->bridge, NULL);
- 		if (ret) {
- 			dev_err(drm->dev, "Couldn't attach our bridge\n");
- 			goto err_cleanup_connector;
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index b5214d71610f..487cb070b25c 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -258,6 +258,7 @@ struct sun4i_tcon {
- 	struct reset_control		*lvds_rst;
+-	if (p->desc->delay.disable)
++	if (p->desc && p->desc->delay.disable)
+ 		msleep(p->desc->delay.disable);
  
- 	struct drm_panel		*panel;
-+	struct drm_bridge		*bridge;
+ 	p->enabled = false;
+@@ -195,7 +195,7 @@ static int panel_simple_unprepare(struct drm_panel *panel)
  
- 	/* Platform adjustments */
- 	const struct sun4i_tcon_quirks	*quirks;
+ 	regulator_disable(p->supply);
+ 
+-	if (p->desc->delay.unprepare)
++	if (p->desc && p->desc->delay.unprepare)
+ 		msleep(p->desc->delay.unprepare);
+ 
+ 	p->prepared = false;
+@@ -220,11 +220,13 @@ static int panel_simple_prepare(struct drm_panel *panel)
+ 
+ 	gpiod_set_value_cansleep(p->enable_gpio, 1);
+ 
+-	delay = p->desc->delay.prepare;
+-	if (p->no_hpd)
+-		delay += p->desc->delay.hpd_absent_delay;
+-	if (delay)
+-		msleep(delay);
++	if (p->desc) {
++		delay = p->desc->delay.prepare;
++		if (p->no_hpd)
++			delay += p->desc->delay.hpd_absent_delay;
++		if (delay)
++			msleep(delay);
++	}
+ 
+ 	p->prepared = true;
+ 
+@@ -238,7 +240,7 @@ static int panel_simple_enable(struct drm_panel *panel)
+ 	if (p->enabled)
+ 		return 0;
+ 
+-	if (p->desc->delay.enable)
++	if (p->desc && p->desc->delay.enable)
+ 		msleep(p->desc->delay.enable);
+ 
+ 	if (p->backlight) {
+@@ -280,6 +282,9 @@ static int panel_simple_get_timings(struct drm_panel *panel,
+ 	struct panel_simple *p = to_panel_simple(panel);
+ 	unsigned int i;
+ 
++	if (!p->desc)
++		return 0;
++
+ 	if (p->desc->num_timings < num_timings)
+ 		num_timings = p->desc->num_timings;
+ 
 -- 
 2.20.1
