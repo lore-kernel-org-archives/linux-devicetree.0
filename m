@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 15/17 v1] ARM: ixp4xx: Add DT bindings
-Date: Sun,  3 Feb 2019 22:42:03 +0100
-Message-ID: <20190203214205.13594-16-linus.walleij@linaro.org>
+Subject: [PATCH 09/17 v1] irqchip: ixp4xx: Add DT bindings
+Date: Sun,  3 Feb 2019 22:41:57 +0100
+Message-ID: <20190203214205.13594-10-linus.walleij@linaro.org>
 References: <20190203214205.13594-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,64 +18,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>
-Cc: Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Tim Harvey <tharvey@gateworks.com>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds initial device tree bindings for the IXP4xx machines.
-This time I tried something wild and crazy and try to make proper
-JSON-style YAML bindings for the top level.
+This adds device tree bindings for the IXP4xx interrupt
+controller. It's a standard 2-cell controller.
 
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-I have no clear idea on how to auto-test this schema for validity,
-since it is a bit of a new thing I hope to figure it out as
-we go.
+irqchip maintainers: I am requesting an ACK for this once
+you're happy with the bindings, as I intend to merge all of
+this IXP4xx rework through ARM SoC.
 ---
- .../devicetree/bindings/arm/intel-ixp4xx.yaml | 22 +++++++++++++++++++
+ .../intel,ixp4xx-interrupt.txt                | 33 +++++++++++++++++++
  MAINTAINERS                                   |  1 +
- 2 files changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+ 2 files changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml b/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
 new file mode 100644
-index 000000000000..da5f6ffe6f2d
+index 000000000000..70ee93b9a6c0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/intel-ixp4xx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
+@@ -0,0 +1,33 @@
++* Intel IXP4xx XScale Networking Processors Interrupt Controller
 +
-+title: Intel IXP4xx Device Tree Bindings
++This interrupt controller is found in the Intel IXP4xx processors.
++Some processors have 32 interrupts, some have up to 64 interrupts.
++The exact number of interrupts is determined from the compatible
++string.
 +
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
++The distinct IXP4xx families with different interrupt controller
++variations are IXP42x, IXP43x, IXP45x and IXP46x. Those four
++families were the only ones to reach the developer and consumer
++market.
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - linksys,nslu2
-+          - const: intel,ixp42x
-+      - items:
-+          - enum:
-+              - gateworks,gw2358-4
-+          - const: intel,ixp43x
++Required properties:
++- compatible: must be one of
++  "intel,ixp42x-interrupt"
++  "intel,ixp43x-interrupt"
++  "intel,ixp45x-interrupt"
++  "intel,ixp46x-interrupt"
++- reg: The register bank for the interrupt controller.
++- interrupt-controller: Identifies the node as an interrupt controller
++- #interrupt-cells: The number of cells to define the interrupts.
++  Must be <2>. The bindings follows the standard binding for controllers
++  with two cells specified in
++  interrupt-controller/interrupts.txt
++
++Example:
++
++intcon: interrupt-controller@c8003000 {
++	compatible = "intel,ixp43x-interrupt";
++	reg = <0xc8003000 0x100>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++};
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 57d098b85523..c4ca249a2075 100644
+index a2fb67b75026..ec318f09540c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -1650,6 +1650,7 @@ M:	Imre Kaloz <kaloz@openwrt.org>
  M:	Krzysztof Halasa <khalasa@piap.pl>
  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
  S:	Maintained
-+F:	Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
- F:	Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
- F:	Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
- F:	Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.txt
++F:	Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
+ F:	arch/arm/mach-ixp4xx/
+ F:	drivers/clocksource/timer-ixp4xx.c
+ F:	drivers/gpio/gpio-ixp4xx.c
 -- 
 2.20.1
