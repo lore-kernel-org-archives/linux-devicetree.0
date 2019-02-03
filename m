@@ -1,15 +1,16 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 4/9] mtd: rawnand: jz4780: Add support for the JZ4740
-Date: Sun, 03 Feb 2019 10:56:53 -0300
-Message-ID: <1549202213.1950.1@crapouillou.net>
+Subject: Re: [PATCH v2 9/9] mtd: rawnand: jz4780-bch: Add support for the
+ JZ4740
+Date: Sun, 03 Feb 2019 10:58:13 -0300
+Message-ID: <1549202293.1950.2@crapouillou.net>
 References: <20190202231926.2444-1-paul@crapouillou.net>
-        <20190202231926.2444-5-paul@crapouillou.net>
-        <20190203083151.4fc29c5b@bbrezillon>
+        <20190202231926.2444-10-paul@crapouillou.net>
+        <20190203083505.4dc52278@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190203083151.4fc29c5b@bbrezillon>
+In-Reply-To: <20190203083505.4dc52278@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Boris Brezillon <bbrezillon@kernel.org>
 Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -17,170 +18,262 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-Le dim. 3 f=E9vr. 2019 =E0 4:31, Boris Brezillon <bbrezillon@kernel.org>=20
+Le dim. 3 f=E9vr. 2019 =E0 4:35, Boris Brezillon <bbrezillon@kernel.org>=20
 a =E9crit :
-> On Sat,  2 Feb 2019 20:19:21 -0300
+> On Sat,  2 Feb 2019 20:19:26 -0300
 > Paul Cercueil <paul@crapouillou.net> wrote:
 >=20
->>  Add support for probing the jz4780-nand driver on the JZ4740 SoC=20
->> from
->>  Ingenic.
+>>  Add the backend code for the jz4780-bch driver to support the JZ4740
+>>  SoC from Ingenic.
 >>=20
 >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 >>  ---
 >>=20
 >>  Changes:
 >>=20
->>  v2: - Add support for the JZ4740 and not the JZ4725B: they behave=20
->> the
->>        same, and JZ4740 is fully upstream while JZ4725B is not. The
->>        JZ4725B devicetree will then simply use the=20
->> "ingenic,jz4740-nand"
->>        compatible string.
->>      - Fix the number of bytes for the ECC when the ECC strength is=20
->> 4.
->>        This is needed for the JZ4740, which uses Reed-Solomon=20
->> instead of
->>        BCH.
+>>  v2: New patch
 >>=20
->>   drivers/mtd/nand/raw/ingenic/jz4780_nand.c | 48=20
->> +++++++++++++++++-----
+>>   drivers/mtd/nand/raw/ingenic/Makefile         |   2 +-
+>>   drivers/mtd/nand/raw/ingenic/jz4740_bch.c     | 173=20
+>> ++++++++++++++++++
+>>   .../mtd/nand/raw/ingenic/jz4780_bch_common.c  |   1 +
+>>   .../nand/raw/ingenic/jz4780_bch_internal.h    |   1 +
+>>   4 files changed, 176 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_bch.c
+>>=20
+>>  diff --git a/drivers/mtd/nand/raw/ingenic/Makefile=20
+>> b/drivers/mtd/nand/raw/ingenic/Makefile
+>>  index f38b467490cf..d16c96113a93 100644
+>>  --- a/drivers/mtd/nand/raw/ingenic/Makefile
+>>  +++ b/drivers/mtd/nand/raw/ingenic/Makefile
+>>  @@ -1,3 +1,3 @@
+>>   obj-$(CONFIG_MTD_NAND_JZ4740) +=3D jz4740_nand.o
+>>   obj-$(CONFIG_MTD_NAND_JZ4780) +=3D jz4780_nand.o jz4780_bch_common.o=20
+>> \
+>>  -				 jz4780_bch.o jz4725b_bch.o
+>>  +				 jz4780_bch.o jz4725b_bch.o jz4740_bch.o
 >=20
-> If we're going to make the driver compatible with jz4740 and jz4725b
-> maybe we should rename the source files jz47xx_{nand,bch}.{c,h}.
+> I still don't see the point of the jz4780_bch_common/jz47xxx_bch
+> separation. You seem to always embed all objects anyway, so you can
+> just put the code for both engines in the same source file and decide
+> which one to use based on the compat (which you already do anyway).
 
-I don't know about that. Adding support for new hardware isn't a good=20
-reason to
-rename the driver, or so I've been told around here, as you then make=20
-it harder
-to review the git history of the driver.
+Each SoC has a different set of registers for the BCH hardware. I can=20
+try to
+cram everything into one file, but it won't be that much cleaner.
 
->>   1 file changed, 37 insertions(+), 11 deletions(-)
->>=20
->>  diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c=20
->> b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
->>  index 7f55358b860f..c0855fef7735 100644
->>  --- a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
->>  +++ b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
->>  @@ -13,6 +13,7 @@
->>   #include <linux/module.h>
->>   #include <linux/of.h>
->>   #include <linux/of_address.h>
->>  +#include <linux/of_device.h>
->>   #include <linux/gpio/consumer.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/slab.h>
->>  @@ -26,13 +27,15 @@
->>=20
->>   #define DRV_NAME	"jz4780-nand"
->>=20
->>  -#define OFFSET_DATA	0x00000000
->>  -#define OFFSET_CMD	0x00400000
->>  -#define OFFSET_ADDR	0x00800000
->>  -
->>   /* Command delay when there is no R/B pin. */
->>   #define RB_DELAY_US	100
->>=20
->>  +struct jz_soc_info {
->>  +	unsigned long data_offset;
->>  +	unsigned long addr_offset;
->>  +	unsigned long cmd_offset;
+>>  diff --git a/drivers/mtd/nand/raw/ingenic/jz4740_bch.c=20
+>> b/drivers/mtd/nand/raw/ingenic/jz4740_bch.c
+>>  new file mode 100644
+>>  index 000000000000..61ea109cee9d
+>>  --- /dev/null
+>>  +++ b/drivers/mtd/nand/raw/ingenic/jz4740_bch.c
+>>  @@ -0,0 +1,173 @@
+>>  +// SPDX-License-Identifier: GPL-2.0
+>>  +/*
+>>  + * JZ4740 backend code for the jz4780-bch driver
+>>  + * based on jz4740-nand.c
+>>  + *
+>>  + * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net>
+>>  + */
+>>  +
+>>  +#include <linux/bitops.h>
+>>  +#include <linux/device.h>
+>>  +
+>>  +#include "jz4780_bch.h"
+>>  +#include "jz4780_bch_internal.h"
+>>  +
+>>  +#define JZ_REG_NAND_ECC_CTRL	0x00
+>>  +#define JZ_REG_NAND_DATA	0x04
+>>  +#define JZ_REG_NAND_PAR0	0x08
+>>  +#define JZ_REG_NAND_PAR1	0x0C
+>>  +#define JZ_REG_NAND_PAR2	0x10
+>>  +#define JZ_REG_NAND_IRQ_STAT	0x14
+>>  +#define JZ_REG_NAND_IRQ_CTRL	0x18
+>>  +#define JZ_REG_NAND_ERR(x)	(0x1C + ((x) << 2))
+>>  +
+>>  +#define JZ_NAND_ECC_CTRL_PAR_READY	BIT(4)
+>>  +#define JZ_NAND_ECC_CTRL_ENCODING	BIT(3)
+>>  +#define JZ_NAND_ECC_CTRL_RS		BIT(2)
+>>  +#define JZ_NAND_ECC_CTRL_RESET		BIT(1)
+>>  +#define JZ_NAND_ECC_CTRL_ENABLE		BIT(0)
+>>  +
+>>  +#define JZ_NAND_STATUS_ERR_COUNT	(BIT(31) | BIT(30) | BIT(29))
+>>  +#define JZ_NAND_STATUS_PAD_FINISH	BIT(4)
+>>  +#define JZ_NAND_STATUS_DEC_FINISH	BIT(3)
+>>  +#define JZ_NAND_STATUS_ENC_FINISH	BIT(2)
+>>  +#define JZ_NAND_STATUS_UNCOR_ERROR	BIT(1)
+>>  +#define JZ_NAND_STATUS_ERROR		BIT(0)
+>>  +
+>>  +static const uint8_t empty_block_ecc[] =3D {
+>>  +	0xcd, 0x9d, 0x90, 0x58, 0xf4, 0x8b, 0xff, 0xb7, 0x6f
 >>  +};
 >>  +
->>   struct jz4780_nand_cs {
->>   	unsigned int bank;
->>   	void __iomem *base;
->>  @@ -40,6 +43,7 @@ struct jz4780_nand_cs {
->>=20
->>   struct jz4780_nand_controller {
->>   	struct device *dev;
->>  +	const struct jz_soc_info *soc_info;
->>   	struct jz4780_bch *bch;
->>   	struct nand_controller controller;
->>   	unsigned int num_banks;
->>  @@ -101,9 +105,9 @@ static void jz4780_nand_cmd_ctrl(struct=20
->> nand_chip *chip, int cmd,
->>   		return;
->>=20
->>   	if (ctrl & NAND_ALE)
->>  -		writeb(cmd, cs->base + OFFSET_ADDR);
->>  +		writeb(cmd, cs->base + nfc->soc_info->addr_offset);
->>   	else if (ctrl & NAND_CLE)
->>  -		writeb(cmd, cs->base + OFFSET_CMD);
->>  +		writeb(cmd, cs->base + nfc->soc_info->cmd_offset);
->>   }
->>=20
->>   static int jz4780_nand_dev_ready(struct nand_chip *chip)
->>  @@ -161,8 +165,13 @@ static int jz4780_nand_attach_chip(struct=20
->> nand_chip *chip)
->>   	struct jz4780_nand_controller *nfc =3D=20
->> to_jz4780_nand_controller(chip->controller);
->>   	int eccbytes;
->>=20
->>  -	chip->ecc.bytes =3D fls((1 + 8) * chip->ecc.size)	*
->>  -				(chip->ecc.strength / 8);
->>  +	if (chip->ecc.strength =3D=3D 4) {
->>  +		/* JZ4740 uses 9 bytes of ECC to correct maximum 4 errors */
->>  +		chip->ecc.bytes =3D 9;
->>  +	} else {
->>  +		chip->ecc.bytes =3D fls((1 + 8) * chip->ecc.size)	*
->>  +				  (chip->ecc.strength / 8);
+>>  +static void jz4740_bch_init(struct jz4780_bch *bch, bool encode)
+>>  +{
+>>  +	uint32_t reg;
+>>  +
+>>  +	/* Clear interrupt status */
+>>  +	writel(0, bch->base + JZ_REG_NAND_IRQ_STAT);
+>>  +
+>>  +	/* Initialize and enable BCH */
+>>  +	reg =3D readl(bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +	reg |=3D JZ_NAND_ECC_CTRL_RESET;
+>>  +	reg |=3D JZ_NAND_ECC_CTRL_ENABLE;
+>>  +	reg |=3D JZ_NAND_ECC_CTRL_RS;
+>>  +	if (encode)
+>>  +		reg |=3D JZ_NAND_ECC_CTRL_ENCODING;
+>>  +	else
+>>  +		reg &=3D ~JZ_NAND_ECC_CTRL_ENCODING;
+>>  +
+>>  +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +}
+>>  +
+>>  +static int jz4740_bch_calculate(struct jz4780_bch *bch,
+>>  +				struct jz4780_bch_params *params,
+>>  +				const u8 *buf, u8 *ecc_code)
+>>  +{
+>>  +	uint32_t reg, status;
+>>  +	unsigned int timeout =3D 1000;
+>>  +	int i;
+>>  +
+>>  +	jz4740_bch_init(bch, true);
+>>  +
+>>  +	do {
+>>  +		status =3D readl(bch->base + JZ_REG_NAND_IRQ_STAT);
+>>  +	} while (!(status & JZ_NAND_STATUS_ENC_FINISH) && --timeout);
+>>  +
+>>  +	if (timeout =3D=3D 0)
+>>  +		return -ETIMEDOUT;
+>>  +
+>>  +	reg =3D readl(bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +	reg &=3D ~JZ_NAND_ECC_CTRL_ENABLE;
+>>  +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +
+>>  +	for (i =3D 0; i < params->bytes; ++i)
+>>  +		ecc_code[i] =3D readb(bch->base + JZ_REG_NAND_PAR0 + i);
+>>  +
+>>  +	/* If the written data is completely 0xff, we also want to write=20
+>> 0xff as
+>>  +	 * ecc, otherwise we will get in trouble when doing subpage=20
+>> writes.
+>>  +	 */
+>>  +	if (memcmp(ecc_code, empty_block_ecc,=20
+>> ARRAY_SIZE(empty_block_ecc)) =3D=3D 0)
+>>  +		memset(ecc_code, 0xff, ARRAY_SIZE(empty_block_ecc));
+>>  +
+>>  +	return 0;
+>>  +}
+>>  +
+>>  +static void jz_nand_correct_data(uint8_t *buf, int index, int mask)
+>>  +{
+>>  +	int offset =3D index & 0x7;
+>>  +	uint16_t data;
+>>  +
+>>  +	index +=3D (index >> 3);
+>>  +
+>>  +	data =3D buf[index];
+>>  +	data |=3D buf[index + 1] << 8;
+>>  +
+>>  +	mask ^=3D (data >> offset) & 0x1ff;
+>>  +	data &=3D ~(0x1ff << offset);
+>>  +	data |=3D (mask << offset);
+>>  +
+>>  +	buf[index] =3D data & 0xff;
+>>  +	buf[index + 1] =3D (data >> 8) & 0xff;
+>>  +}
+>>  +
+>>  +static int jz4740_bch_correct(struct jz4780_bch *bch,
+>>  +			      struct jz4780_bch_params *params,
+>>  +			      u8 *buf, u8 *ecc_code)
+>>  +{
+>>  +	int i, error_count, index;
+>>  +	uint32_t reg, status, error;
+>>  +	unsigned int timeout =3D 1000;
+>>  +
+>>  +	jz4740_bch_init(bch, false);
+>>  +
+>>  +	for (i =3D 0; i < params->bytes; ++i)
+>>  +		writeb(ecc_code[i], bch->base + JZ_REG_NAND_PAR0 + i);
+>>  +
+>>  +	reg =3D readl(bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +	reg |=3D JZ_NAND_ECC_CTRL_PAR_READY;
+>>  +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +
+>>  +	do {
+>>  +		status =3D readl(bch->base + JZ_REG_NAND_IRQ_STAT);
+>>  +	} while (!(status & JZ_NAND_STATUS_DEC_FINISH) && --timeout);
+>>  +
+>>  +	if (timeout =3D=3D 0)
+>>  +		return -ETIMEDOUT;
+>>  +
+>>  +	reg =3D readl(bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +	reg &=3D ~JZ_NAND_ECC_CTRL_ENABLE;
+>>  +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +
+>>  +	if (status & JZ_NAND_STATUS_ERROR) {
+>>  +		if (status & JZ_NAND_STATUS_UNCOR_ERROR)
+>>  +			return -EBADMSG;
+>>  +
+>>  +		error_count =3D (status & JZ_NAND_STATUS_ERR_COUNT) >> 29;
+>>  +
+>>  +		for (i =3D 0; i < error_count; ++i) {
+>>  +			error =3D readl(bch->base + JZ_REG_NAND_ERR(i));
+>>  +			index =3D ((error >> 16) & 0x1ff) - 1;
+>>  +			if (index >=3D 0 && index < params->size)
+>>  +				jz_nand_correct_data(buf, index, error & 0x1ff);
+>>  +		}
+>>  +
+>>  +		return error_count;
 >>  +	}
->>=20
->>   	switch (chip->ecc.mode) {
->>   	case NAND_ECC_HW:
->>  @@ -272,8 +281,8 @@ static int jz4780_nand_init_chip(struct=20
->> platform_device *pdev,
->>   		return -ENOMEM;
->>   	mtd->dev.parent =3D dev;
->>=20
->>  -	chip->legacy.IO_ADDR_R =3D cs->base + OFFSET_DATA;
->>  -	chip->legacy.IO_ADDR_W =3D cs->base + OFFSET_DATA;
->>  +	chip->legacy.IO_ADDR_R =3D cs->base + nfc->soc_info->data_offset;
->>  +	chip->legacy.IO_ADDR_W =3D cs->base + nfc->soc_info->data_offset;
->>   	chip->legacy.chip_delay =3D RB_DELAY_US;
->>   	chip->options =3D NAND_NO_SUBPAGE_WRITE;
->>   	chip->legacy.select_chip =3D jz4780_nand_select_chip;
->>  @@ -353,6 +362,10 @@ static int jz4780_nand_probe(struct=20
->> platform_device *pdev)
->>   	if (!nfc)
->>   		return -ENOMEM;
->>=20
->>  +	nfc->soc_info =3D device_get_match_data(dev);
->>  +	if (!nfc->soc_info)
->>  +		return -EINVAL;
 >>  +
->>   	/*
->>   	 * Check for BCH HW before we call nand_scan_ident, to prevent us=20
->> from
->>   	 * having to call it again if the BCH driver returns=20
->> -EPROBE_DEFER.
->>  @@ -390,8 +403,21 @@ static int jz4780_nand_remove(struct=20
+>>  +	return 0;
+>>  +}
+>>  +
+>>  +static void jz4740_bch_disable(struct jz4780_bch *bch)
+>>  +{
+>>  +	u32 reg;
+>>  +
+>>  +	writel(0, bch->base + JZ_REG_NAND_IRQ_STAT);
+>>  +	reg =3D readl(bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +	reg &=3D ~JZ_NAND_ECC_CTRL_ENABLE;
+>>  +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
+>>  +}
+>>  +
+>>  +const struct jz4780_bch_ops jz4780_bch_jz4740_ops =3D {
+>>  +	.disable =3D jz4740_bch_disable,
+>>  +	.calculate =3D jz4740_bch_calculate,
+>>  +	.correct =3D jz4740_bch_correct,
+>>  +};
+>>  diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c=20
+>> b/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c
+>>  index f505816193a8..c2326286abb2 100644
+>>  --- a/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c
+>>  +++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c
+>>  @@ -157,6 +157,7 @@ static int jz4780_bch_probe(struct=20
 >> platform_device *pdev)
->>   	return 0;
 >>   }
 >>=20
->>  +static const struct jz_soc_info jz4740_soc_info =3D {
->>  +	.data_offset =3D 0x00000000,
->>  +	.cmd_offset  =3D 0x00008000,
->>  +	.addr_offset =3D 0x00010000,
->>  +};
->>  +
->>  +static const struct jz_soc_info jz4780_soc_info =3D {
->>  +	.data_offset =3D 0x00000000,
->>  +	.cmd_offset  =3D 0x00400000,
->>  +	.addr_offset =3D 0x00800000,
->>  +};
->>  +
->>   static const struct of_device_id jz4780_nand_dt_match[] =3D {
->>  -	{ .compatible =3D "ingenic,jz4780-nand" },
->>  +	{ .compatible =3D "ingenic,jz4740-nand", .data =3D &jz4740_soc_info }=
-,
->>  +	{ .compatible =3D "ingenic,jz4780-nand",  .data =3D &jz4780_soc_info =
-=20
->> },
+>>   static const struct of_device_id jz4780_bch_dt_match[] =3D {
+>>  +	{ .compatible =3D "ingenic,jz4740-bch", .data =3D=20
+>> &jz4780_bch_jz4740_ops},
+>>   	{ .compatible =3D "ingenic,jz4725b-bch", .data =3D=20
+>> &jz4780_bch_jz4725b_ops},
+>>   	{ .compatible =3D "ingenic,jz4780-bch", .data =3D=20
+>> &jz4780_bch_jz4780_ops },
 >>   	{},
+>>  diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h=20
+>> b/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h
+>>  index 462aded811b1..7909a49c57db 100644
+>>  --- a/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h
+>>  +++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h
+>>  @@ -30,6 +30,7 @@ struct jz4780_bch {
+>>   	struct mutex lock;
 >>   };
->>   MODULE_DEVICE_TABLE(of, jz4780_nand_dt_match);
+>>=20
+>>  +extern const struct jz4780_bch_ops jz4780_bch_jz4740_ops;
+>>   extern const struct jz4780_bch_ops jz4780_bch_jz4725b_ops;
+>>   extern const struct jz4780_bch_ops jz4780_bch_jz4780_ops;
+>>=20
 >=20
 =
