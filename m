@@ -1,89 +1,117 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 2/5] media: v4l2-fwnode: add v4l2_fwnode_connector
-Date: Sat,  2 Feb 2019 13:10:01 +0100
-Message-ID: <20190202121004.9014-3-m.felsch@pengutronix.de>
-References: <20190202121004.9014-1-m.felsch@pengutronix.de>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 9/9] mtd: rawnand: jz4780-bch: Add support for the
+ JZ4740
+Date: Sun, 03 Feb 2019 12:41:30 -0300
+Message-ID: <1549208490.1588.1@crapouillou.net>
+References: <20190202231926.2444-1-paul@crapouillou.net>
+        <20190202231926.2444-10-paul@crapouillou.net>
+        <20190203083505.4dc52278@bbrezillon> <1549202293.1950.2@crapouillou.net>
+        <20190203151604.23061e2a@bbrezillon> <1549205792.1588.0@crapouillou.net>
+        <20190203160709.29d7d721@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190202121004.9014-1-m.felsch@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: robh+dt@kernel.org, mchehab@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190203160709.29d7d721@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Q3VycmVudGx5IGV2ZXJ5IGRyaXZlciBuZWVkcyB0byBwYXJzZSB0aGUgY29ubmVjdG9yIGVuZHBv
-aW50cyBieSBpdCBzZWxmLgpUaGlzIGlzIHRoZSBpbml0aWFsIHdvcmsgdG8gbWFrZSB0aGlzIGdl
-bmVyaWMuIFRoZSBnZW5lcmljIGNvbm5lY3RvciBoYXMKc29tZSBjb21tb24gZmllbGRzIGFuZCBz
-b21lIGNvbm5lY3RvciBzcGVjaWZpYyBwYXJ0cy4gVGhlIGdlbmVyaWMgb25lCmluY2x1ZGVzOgog
-IC0gdHlwZQogIC0gbGFiZWwKICAtIHJlbW90ZV9wb3J0ICh0aGUgcG9ydCB3aGVyZSB0aGUgY29u
-bmVjdG9yIGlzIGNvbm5lY3RlZCB0bykKICAtIHJlbW90ZV9pZCAgICh0aGUgZW5kcG9pbnQgd2hl
-cmUgdGhlIGNvbm5lY3RvciBpcyBjb25uZWN0ZWQgdG8pCgpUaGUgc3BlY2lmaWMgZmllbGRzIGFy
-ZSB3aXRoaW4gYSB1bmlvbiwgc2luY2Ugb25seSBvbmUgb2YgdGhlbSBjYW4gYmUKYXZhaWxhYmxl
-IGF0IHRoZSB0aW1lLiBTaW5jZSB0aGlzIGlzIHRoZSBpbml0aWFsIHN1cHBvcnQgdGhlIHBhdGNo
-IGFkZHMKb25seSB0aGUgYW5hbG9nLWNvbm5lY3RvciBzcGVjaWZpYyBvbmVzLgoKU2lnbmVkLW9m
-Zi1ieTogTWFyY28gRmVsc2NoIDxtLmZlbHNjaEBwZW5ndXRyb25peC5kZT4KLS0tCiBpbmNsdWRl
-L21lZGlhL3Y0bDItY29ubmVjdG9yLmggfCAzNCArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrCiBpbmNsdWRlL21lZGlhL3Y0bDItZndub2RlLmggICAgfCAzMyArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgNjcgaW5zZXJ0aW9ucygrKQog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbWVkaWEvdjRsMi1jb25uZWN0b3IuaAoKZGlmZiAt
-LWdpdCBhL2luY2x1ZGUvbWVkaWEvdjRsMi1jb25uZWN0b3IuaCBiL2luY2x1ZGUvbWVkaWEvdjRs
-Mi1jb25uZWN0b3IuaApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjk2
-NzMzNmUzODIxNQotLS0gL2Rldi9udWxsCisrKyBiL2luY2x1ZGUvbWVkaWEvdjRsMi1jb25uZWN0
-b3IuaApAQCAtMCwwICsxLDM0IEBACisvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
-MC1vbmx5ICovCisvKgorICogdjRsMi1jb25uZWN0b3IuaAorICoKKyAqIFY0TDIgY29ubmVjdG9y
-IHR5cGVzLgorICoKKyAqIENvcHlyaWdodCAyMDE5IFBlbmd1dHJvbml4LCBNYXJjbyBGZWxzY2gg
-PGtlcm5lbEBwZW5ndXRyb25peC5kZT4KKyAqLworCisjaWZuZGVmIFY0TDJfQ09OTkVDVE9SX0gK
-KyNkZWZpbmUgVjRMMl9DT05ORUNUT1JfSAorCisjZGVmaW5lIFY0TDJfQ09OTkVDVE9SX01BWF9M
-QUJFTCA0MQorCisvKioKKyAqIGVudW0gdjRsMl9jb25uZWN0b3JfdHlwZSAtIGNvbm5lY3RvciB0
-eXBlCisgKiBAVjRMMl9DT05fVU5LTk9XTjogICB1bmtub3duIGNvbm5lY3RvciB0eXBlLCBubyBW
-NEwyIGNvbm5ldG9yIGNvbmZpZ3VyYXRpb24KKyAqIEBWNEwyX0NPTl9DT01QT1NJVEU6IGFuYWxv
-ZyBjb21wb3NpdGUgY29ubmVjdG9yCisgKiBAVjRMMl9DT05fU1ZJREVPOiAgICBhbmFsb2cgc3Zp
-ZGVvIGNvbm5lY3RvcgorICogQFY0TDJfQ09OX1ZHQTogICAgICAgYW5hbG9nIHZnYSBjb25uZWN0
-b3IKKyAqIEBWNEwyX0NPTl9EVkk6CWFuYWxvZyBvciBkaWdpdGFsIGR2aSBjb25uZWN0b3IKKyAq
-IEBWNEwyX0NPTl9IRE1JOiAgICAgIGRpZ2l0YWwgaGRtaSBjb25uZXRvcgorICovCitlbnVtIHY0
-bDJfY29ubmVjdG9yX3R5cGUgeworCVY0TDJfQ09OX1VOS05PV04sCisJVjRMMl9DT05fQ09NUE9T
-SVRFLAorCVY0TDJfQ09OX1NWSURFTywKKwlWNEwyX0NPTl9WR0EsCisJVjRMMl9DT05fRFZJLAor
-CVY0TDJfQ09OX0hETUksCit9OworCisjZW5kaWYgLyogVjRMMl9DT05ORUNUT1JfSCAqLworCmRp
-ZmYgLS1naXQgYS9pbmNsdWRlL21lZGlhL3Y0bDItZndub2RlLmggYi9pbmNsdWRlL21lZGlhL3Y0
-bDItZndub2RlLmgKaW5kZXggNmQ5ZDlmMTgzOWFjLi5jZjg3ZTgxOTgwMGYgMTAwNjQ0Ci0tLSBh
-L2luY2x1ZGUvbWVkaWEvdjRsMi1md25vZGUuaAorKysgYi9pbmNsdWRlL21lZGlhL3Y0bDItZndu
-b2RlLmgKQEAgLTIyLDYgKzIyLDcgQEAKICNpbmNsdWRlIDxsaW51eC9saXN0Lmg+CiAjaW5jbHVk
-ZSA8bGludXgvdHlwZXMuaD4KIAorI2luY2x1ZGUgPG1lZGlhL3Y0bDItY29ubmVjdG9yLmg+CiAj
-aW5jbHVkZSA8bWVkaWEvdjRsMi1tZWRpYWJ1cy5oPgogI2luY2x1ZGUgPG1lZGlhL3Y0bDItc3Vi
-ZGV2Lmg+CiAKQEAgLTEyNiw2ICsxMjcsMzggQEAgc3RydWN0IHY0bDJfZndub2RlX2xpbmsgewog
-CXVuc2lnbmVkIGludCByZW1vdGVfcG9ydDsKIH07CiAKKy8qKgorICogc3RydWN0IHY0bDJfZndu
-b2RlX2Nvbm5lY3Rvcl9hbmFsb2cgLSBhbmFsb2cgY29ubmVjdG9yIGRhdGEgc3RydWN0dXJlCisg
-KiBAc3VwcG9ydGVkX3R2bm9ybXM6IHR2IG5vcm1zIHRoaXMgY29ubmVjdG9yIHN1cHBvcnRzLCBz
-ZXQgdG8gVjRMMl9TVERfQUxMCisgKiAgICAgICAgICAgICAgICAgICAgIGlmIG5vIHJlc3RyaWN0
-aW9ucyBhcmUgc3BlY2lmaWVkLgorICovCitzdHJ1Y3QgdjRsMl9md25vZGVfY29ubmVjdG9yX2Fu
-YWxvZyB7CisJdjRsMl9zdGRfaWQgc3VwcG9ydGVkX3R2bm9ybXM7Cit9OworCisvKiogc3RydWN0
-IHY0bDJfZndub2RlX2Nvbm5lY3RvciAtIHRoZSBjb25uZWN0b3IgZGF0YSBzdHJ1Y3R1cmUKKyAq
-IEByZW1vdGVfcG9ydDogaWRlbnRpZmllciBvZiB0aGUgcG9ydCB0aGUgcmVtb3RlIGVuZHBvaW50
-IGJlbG9uZ3MgdG8KKyAqIEByZW1vdGVfaWQ6IGlkZW50aWZpZXIgb2YgdGhlIGlkIHRoZSByZW1v
-dGUgZW5kcG9pbnQgYmVsb25ncyB0bworICogQGxhYmVsOiBjb25uZXRvciBsYWJlbAorICogQHR5
-cGU6IGNvbm5lY3RvciB0eXBlCisgKiBAY29ubmVjdG9yOiB1bmlvbiB3aXRoIGNvbm5lY3RvciBj
-b25maWd1cmF0aW9uIGRhdGEgc3RydWN0CisgKiBAY29ubmVjdG9yLmFuYWxvZzogZW1iZWRkZWQg
-JnN0cnVjdCB2NGwyX2Z3bm9kZV9jb25uZWN0b3JfYW5hbG9nLgorICogICAgICAgICAgICAgICAg
-ICAgIFVzZWQgaWYgY29ubmVjdG9yIGlzIG9mIHR5cGUgYW5hbG9nLgorICovCitzdHJ1Y3QgdjRs
-Ml9md25vZGVfY29ubmVjdG9yIHsKKwkvKiBjb21tb24gZmllbGRzIGZvciBhbGwgdjRsMl9md25v
-ZGVfY29ubmVjdG9ycyAqLworCXVuc2lnbmVkIGludCByZW1vdGVfcG9ydDsKKwl1bnNpZ25lZCBp
-bnQgcmVtb3RlX2lkOworCWNoYXIgbGFiZWxbVjRMMl9DT05ORUNUT1JfTUFYX0xBQkVMXTsKKwll
-bnVtIHY0bDJfY29ubmVjdG9yX3R5cGUgdHlwZTsKKworCS8qIGNvbm5lY3RvciBzcGVjaWZpYyBm
-aWVsZHMgKi8KKwl1bmlvbiB7CisJCXN0cnVjdCB2NGwyX2Z3bm9kZV9jb25uZWN0b3JfYW5hbG9n
-IGFuYWxvZzsKKwkJLyogZnV0dXJlIGNvbm5lY3RvcnMgKi8KKwl9IGNvbm5lY3RvcjsKK307CisK
-IC8qKgogICogdjRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2UoKSAtIHBhcnNlIGFsbCBmd25vZGUg
-bm9kZSBwcm9wZXJ0aWVzCiAgKiBAZndub2RlOiBwb2ludGVyIHRvIHRoZSBlbmRwb2ludCdzIGZ3
-bm9kZSBoYW5kbGUKLS0gCjIuMjAuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+
+
+Le dim. 3 f=E9vr. 2019 =E0 12:07, Boris Brezillon <bbrezillon@kernel.org>=20
+a =E9crit :
+> On Sun, 03 Feb 2019 11:56:32 -0300
+> Paul Cercueil <paul@crapouillou.net> wrote:
+>=20
+>>  Le dim. 3 f=E9vr. 2019 =E0 11:16, Boris Brezillon=20
+>> <bbrezillon@kernel.org>
+>>  a =E9crit :
+>>  > On Sun, 03 Feb 2019 10:58:13 -0300
+>>  > Paul Cercueil <paul@crapouillou.net> wrote:
+>>  >
+>>  >>  Le dim. 3 f=E9vr. 2019 =E0 4:35, Boris Brezillon
+>>  >> <bbrezillon@kernel.org>
+>>  >>  a =E9crit :
+>>  >>  > On Sat,  2 Feb 2019 20:19:26 -0300
+>>  >>  > Paul Cercueil <paul@crapouillou.net> wrote:
+>>  >>  >
+>>  >>  >>  Add the backend code for the jz4780-bch driver to support=20
+>> the
+>>  >> JZ4740
+>>  >>  >>  SoC from Ingenic.
+>>  >>  >>
+>>  >>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  >>  >>  ---
+>>  >>  >>
+>>  >>  >>  Changes:
+>>  >>  >>
+>>  >>  >>  v2: New patch
+>>  >>  >>
+>>  >>  >>   drivers/mtd/nand/raw/ingenic/Makefile         |   2 +-
+>>  >>  >>   drivers/mtd/nand/raw/ingenic/jz4740_bch.c     | 173
+>>  >>  >> ++++++++++++++++++
+>>  >>  >>   .../mtd/nand/raw/ingenic/jz4780_bch_common.c  |   1 +
+>>  >>  >>   .../nand/raw/ingenic/jz4780_bch_internal.h    |   1 +
+>>  >>  >>   4 files changed, 176 insertions(+), 1 deletion(-)
+>>  >>  >>   create mode 100644=20
+>> drivers/mtd/nand/raw/ingenic/jz4740_bch.c
+>>  >>  >>
+>>  >>  >>  diff --git a/drivers/mtd/nand/raw/ingenic/Makefile
+>>  >>  >> b/drivers/mtd/nand/raw/ingenic/Makefile
+>>  >>  >>  index f38b467490cf..d16c96113a93 100644
+>>  >>  >>  --- a/drivers/mtd/nand/raw/ingenic/Makefile
+>>  >>  >>  +++ b/drivers/mtd/nand/raw/ingenic/Makefile
+>>  >>  >>  @@ -1,3 +1,3 @@
+>>  >>  >>   obj-$(CONFIG_MTD_NAND_JZ4740) +=3D jz4740_nand.o
+>>  >>  >>   obj-$(CONFIG_MTD_NAND_JZ4780) +=3D jz4780_nand.o
+>>  >> jz4780_bch_common.o
+>>  >>  >> \
+>>  >>  >>  -				 jz4780_bch.o jz4725b_bch.o
+>>  >>  >>  +				 jz4780_bch.o jz4725b_bch.o jz4740_bch.o
+>>  >>  >
+>>  >>  > I still don't see the point of the=20
+>> jz4780_bch_common/jz47xxx_bch
+>>  >>  > separation. You seem to always embed all objects anyway, so=20
+>> you
+>>  >> can
+>>  >>  > just put the code for both engines in the same source file and
+>>  >> decide
+>>  >>  > which one to use based on the compat (which you already do
+>>  >> anyway).
+>>  >>
+>>  >>  Each SoC has a different set of registers for the BCH hardware.=20
+>> I
+>>  >> can
+>>  >>  try to
+>>  >>  cram everything into one file, but it won't be that much=20
+>> cleaner.
+>>  >
+>>  > Then maybe they deserve separate drivers/modules.
+>>  >
+>>  > BTW, didn't you say that one IP uses Reed-Salomon instead of BCH.=20
+>> I'd
+>>  > suggest prefixing structs and functions with jz47xx_ecc instead of
+>>  > jz47xx_bch and naming the common part jz47xx_ecc.c to reflect=20
+>> that.
+>>=20
+>>  Would it be a good idea to make a generic ECC API that the=20
+>> jz47xx_nand
+>>  driver could use? Then the three jz47xx BCH codepaths could be=20
+>> separate
+>>  drivers that register with the generic ECC core.
+>=20
+> Definitely. Actually, Miquel is already working on that, but I don't
+> think it's a good idea to wait for this new framework to be finished=20
+> to
+> get your changes merged. So I'd recommend having a jz specific ECC API
+> (pretty much the one you have in the common file expect it would be
+> prefixed with _ecc instead of _bch) and convert it to the generic
+> approach afterwards. Given the size of the common.c file, you can even
+> put everything in jz47xx_ecc.h as inline funcs to avoid having yet
+> another module.
+
+Ok, perfect, I'll do that.
+Thank you for your input!
+=
