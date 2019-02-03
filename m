@@ -1,243 +1,47 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 9/9] mtd: rawnand: jz4780-bch: Add support for the JZ4740
-Date: Sat,  2 Feb 2019 20:19:26 -0300
-Message-ID: <20190202231926.2444-10-paul@crapouillou.net>
-References: <20190202231926.2444-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190202231926.2444-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
-Cc: Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 9/9] [DO NOT MERGE] drm/sun4i: rgb: Add 5%
+ tolerance to dot clock frequency check
+Date: Sat, 2 Feb 2019 17:32:42 -0800
+Message-ID: <CA+E=qVew_TFXQzz+7V6njG4w-Ay4YZND0FZ+8F2TRnhhOBb2Mg@mail.gmail.com>
+References: <20181018073327.64942-1-icenowy@aosc.io> <CAKMK7uFp2c=wqzPi096MTRB6Cdfacerkp6dM=fEqCAr99PQG9w@mail.gmail.com>
+ <20181018094258.oahlopafvm2udvoe@flea> <1585874.9P5eR8PMbl@avalon>
+Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDV3B667TUHBBVEJ3HRAKGQETMDTPAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1585874.9P5eR8PMbl@avalon>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the backend code for the jz4780-bch driver to support the JZ4740
-SoC from Ingenic.
+On Thu, Oct 18, 2018 at 4:31 AM Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+> Given that the tolerance is a property of the panel or bridge, I agree with
+> Daniel that it should be implemented there, or at least in cooperation with
+> drm_panel and drm_bridge.
 
-Changes:
+Clock tolerance is not specified in ANX6345 datasheet.
 
-v2: New patch
+> Semi-related information, I think the CEA and VESA standards allow a 0.5%
+> clock tolerance. What is the maximum clock frequency deviation required for
+> this platform ?
 
- drivers/mtd/nand/raw/ingenic/Makefile         |   2 +-
- drivers/mtd/nand/raw/ingenic/jz4740_bch.c     | 173 ++++++++++++++++++
- .../mtd/nand/raw/ingenic/jz4780_bch_common.c  |   1 +
- .../nand/raw/ingenic/jz4780_bch_internal.h    |   1 +
- 4 files changed, 176 insertions(+), 1 deletion(-)
- create mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_bch.c
+This particular platform requires ~1% deviation.
 
-diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
-index f38b467490cf..d16c96113a93 100644
---- a/drivers/mtd/nand/raw/ingenic/Makefile
-+++ b/drivers/mtd/nand/raw/ingenic/Makefile
-@@ -1,3 +1,3 @@
- obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
- obj-$(CONFIG_MTD_NAND_JZ4780) += jz4780_nand.o jz4780_bch_common.o \
--				 jz4780_bch.o jz4725b_bch.o
-+				 jz4780_bch.o jz4725b_bch.o jz4740_bch.o
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4740_bch.c b/drivers/mtd/nand/raw/ingenic/jz4740_bch.c
-new file mode 100644
-index 000000000000..61ea109cee9d
---- /dev/null
-+++ b/drivers/mtd/nand/raw/ingenic/jz4740_bch.c
-@@ -0,0 +1,173 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * JZ4740 backend code for the jz4780-bch driver
-+ * based on jz4740-nand.c
-+ *
-+ * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/device.h>
-+
-+#include "jz4780_bch.h"
-+#include "jz4780_bch_internal.h"
-+
-+#define JZ_REG_NAND_ECC_CTRL	0x00
-+#define JZ_REG_NAND_DATA	0x04
-+#define JZ_REG_NAND_PAR0	0x08
-+#define JZ_REG_NAND_PAR1	0x0C
-+#define JZ_REG_NAND_PAR2	0x10
-+#define JZ_REG_NAND_IRQ_STAT	0x14
-+#define JZ_REG_NAND_IRQ_CTRL	0x18
-+#define JZ_REG_NAND_ERR(x)	(0x1C + ((x) << 2))
-+
-+#define JZ_NAND_ECC_CTRL_PAR_READY	BIT(4)
-+#define JZ_NAND_ECC_CTRL_ENCODING	BIT(3)
-+#define JZ_NAND_ECC_CTRL_RS		BIT(2)
-+#define JZ_NAND_ECC_CTRL_RESET		BIT(1)
-+#define JZ_NAND_ECC_CTRL_ENABLE		BIT(0)
-+
-+#define JZ_NAND_STATUS_ERR_COUNT	(BIT(31) | BIT(30) | BIT(29))
-+#define JZ_NAND_STATUS_PAD_FINISH	BIT(4)
-+#define JZ_NAND_STATUS_DEC_FINISH	BIT(3)
-+#define JZ_NAND_STATUS_ENC_FINISH	BIT(2)
-+#define JZ_NAND_STATUS_UNCOR_ERROR	BIT(1)
-+#define JZ_NAND_STATUS_ERROR		BIT(0)
-+
-+static const uint8_t empty_block_ecc[] = {
-+	0xcd, 0x9d, 0x90, 0x58, 0xf4, 0x8b, 0xff, 0xb7, 0x6f
-+};
-+
-+static void jz4740_bch_init(struct jz4780_bch *bch, bool encode)
-+{
-+	uint32_t reg;
-+
-+	/* Clear interrupt status */
-+	writel(0, bch->base + JZ_REG_NAND_IRQ_STAT);
-+
-+	/* Initialize and enable BCH */
-+	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-+	reg |= JZ_NAND_ECC_CTRL_RESET;
-+	reg |= JZ_NAND_ECC_CTRL_ENABLE;
-+	reg |= JZ_NAND_ECC_CTRL_RS;
-+	if (encode)
-+		reg |= JZ_NAND_ECC_CTRL_ENCODING;
-+	else
-+		reg &= ~JZ_NAND_ECC_CTRL_ENCODING;
-+
-+	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-+}
-+
-+static int jz4740_bch_calculate(struct jz4780_bch *bch,
-+				struct jz4780_bch_params *params,
-+				const u8 *buf, u8 *ecc_code)
-+{
-+	uint32_t reg, status;
-+	unsigned int timeout = 1000;
-+	int i;
-+
-+	jz4740_bch_init(bch, true);
-+
-+	do {
-+		status = readl(bch->base + JZ_REG_NAND_IRQ_STAT);
-+	} while (!(status & JZ_NAND_STATUS_ENC_FINISH) && --timeout);
-+
-+	if (timeout == 0)
-+		return -ETIMEDOUT;
-+
-+	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-+	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
-+	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-+
-+	for (i = 0; i < params->bytes; ++i)
-+		ecc_code[i] = readb(bch->base + JZ_REG_NAND_PAR0 + i);
-+
-+	/* If the written data is completely 0xff, we also want to write 0xff as
-+	 * ecc, otherwise we will get in trouble when doing subpage writes.
-+	 */
-+	if (memcmp(ecc_code, empty_block_ecc, ARRAY_SIZE(empty_block_ecc)) == 0)
-+		memset(ecc_code, 0xff, ARRAY_SIZE(empty_block_ecc));
-+
-+	return 0;
-+}
-+
-+static void jz_nand_correct_data(uint8_t *buf, int index, int mask)
-+{
-+	int offset = index & 0x7;
-+	uint16_t data;
-+
-+	index += (index >> 3);
-+
-+	data = buf[index];
-+	data |= buf[index + 1] << 8;
-+
-+	mask ^= (data >> offset) & 0x1ff;
-+	data &= ~(0x1ff << offset);
-+	data |= (mask << offset);
-+
-+	buf[index] = data & 0xff;
-+	buf[index + 1] = (data >> 8) & 0xff;
-+}
-+
-+static int jz4740_bch_correct(struct jz4780_bch *bch,
-+			      struct jz4780_bch_params *params,
-+			      u8 *buf, u8 *ecc_code)
-+{
-+	int i, error_count, index;
-+	uint32_t reg, status, error;
-+	unsigned int timeout = 1000;
-+
-+	jz4740_bch_init(bch, false);
-+
-+	for (i = 0; i < params->bytes; ++i)
-+		writeb(ecc_code[i], bch->base + JZ_REG_NAND_PAR0 + i);
-+
-+	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-+	reg |= JZ_NAND_ECC_CTRL_PAR_READY;
-+	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-+
-+	do {
-+		status = readl(bch->base + JZ_REG_NAND_IRQ_STAT);
-+	} while (!(status & JZ_NAND_STATUS_DEC_FINISH) && --timeout);
-+
-+	if (timeout == 0)
-+		return -ETIMEDOUT;
-+
-+	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-+	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
-+	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-+
-+	if (status & JZ_NAND_STATUS_ERROR) {
-+		if (status & JZ_NAND_STATUS_UNCOR_ERROR)
-+			return -EBADMSG;
-+
-+		error_count = (status & JZ_NAND_STATUS_ERR_COUNT) >> 29;
-+
-+		for (i = 0; i < error_count; ++i) {
-+			error = readl(bch->base + JZ_REG_NAND_ERR(i));
-+			index = ((error >> 16) & 0x1ff) - 1;
-+			if (index >= 0 && index < params->size)
-+				jz_nand_correct_data(buf, index, error & 0x1ff);
-+		}
-+
-+		return error_count;
-+	}
-+
-+	return 0;
-+}
-+
-+static void jz4740_bch_disable(struct jz4780_bch *bch)
-+{
-+	u32 reg;
-+
-+	writel(0, bch->base + JZ_REG_NAND_IRQ_STAT);
-+	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-+	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
-+	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-+}
-+
-+const struct jz4780_bch_ops jz4780_bch_jz4740_ops = {
-+	.disable = jz4740_bch_disable,
-+	.calculate = jz4740_bch_calculate,
-+	.correct = jz4740_bch_correct,
-+};
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c b/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c
-index f505816193a8..c2326286abb2 100644
---- a/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c
-+++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c
-@@ -157,6 +157,7 @@ static int jz4780_bch_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id jz4780_bch_dt_match[] = {
-+	{ .compatible = "ingenic,jz4740-bch", .data = &jz4780_bch_jz4740_ops},
- 	{ .compatible = "ingenic,jz4725b-bch", .data = &jz4780_bch_jz4725b_ops},
- 	{ .compatible = "ingenic,jz4780-bch", .data = &jz4780_bch_jz4780_ops },
- 	{},
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h b/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h
-index 462aded811b1..7909a49c57db 100644
---- a/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h
-+++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h
-@@ -30,6 +30,7 @@ struct jz4780_bch {
- 	struct mutex lock;
- };
- 
-+extern const struct jz4780_bch_ops jz4780_bch_jz4740_ops;
- extern const struct jz4780_bch_ops jz4780_bch_jz4725b_ops;
- extern const struct jz4780_bch_ops jz4780_bch_jz4780_ops;
- 
--- 
-2.20.1
+E.g. on Pinebook with 768p panel: requested clock: 73.0 MHz, real
+clock: 72.296296 MHz (0.96%)
+on Pinebook with 1080p panel: requested clock: 138.5 MHz, real clock:
+138.461538 MHz (0.03%)
+
+So unfortunately 0.5% is not enough.
+
+Regards,
+Vasily
