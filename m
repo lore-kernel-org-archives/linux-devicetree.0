@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 13/17 v1] gpio: ixp4xx: Add DT bindings
-Date: Sun,  3 Feb 2019 22:42:01 +0100
-Message-ID: <20190203214205.13594-14-linus.walleij@linaro.org>
+Subject: [PATCH 15/17 v1] ARM: ixp4xx: Add DT bindings
+Date: Sun,  3 Feb 2019 22:42:03 +0100
+Message-ID: <20190203214205.13594-16-linus.walleij@linaro.org>
 References: <20190203214205.13594-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,79 +18,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-This adds DT bindings for the IXP4xx GPIO controller.
+This adds initial device tree bindings for the IXP4xx machines.
+This time I tried something wild and crazy and try to make proper
+JSON-style YAML bindings for the top level.
 
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-Bartosz: looking for your ACK on this, it'd be good if
-the other GPIO maintainer is aligned with my ideas here.
-I intend to merge this through the ARM SoC tree.
+I have no clear idea on how to auto-test this schema for validity,
+since it is a bit of a new thing I hope to figure it out as
+we go.
 ---
- .../bindings/gpio/intel,ixp4xx-gpio.txt       | 38 +++++++++++++++++++
+ .../devicetree/bindings/arm/intel-ixp4xx.yaml | 22 +++++++++++++++++++
  MAINTAINERS                                   |  1 +
- 2 files changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
+ 2 files changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
 
-diff --git a/Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt b/Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
+diff --git a/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml b/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
 new file mode 100644
-index 000000000000..8dc41ed99685
+index 000000000000..da5f6ffe6f2d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
-@@ -0,0 +1,38 @@
-+Intel IXP4xx XScale Networking Processors GPIO
++++ b/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+@@ -0,0 +1,22 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/intel-ixp4xx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+This GPIO controller is found in the Intel IXP4xx processors.
-+It supports 16 GPIO lines.
++title: Intel IXP4xx Device Tree Bindings
 +
-+The interrupt portions of the GPIO controller is hierarchical:
-+the synchronous edge detector is part of the GPIO block, but the
-+actual enabling/disabling of the interrupt line is done in the
-+main IXP4xx interrupt controller which has a 1:1 mapping for
-+the first 12 GPIO lines to 12 system interrupts.
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
 +
-+The remaining 4 GPIO lines can not be used for receiving
-+interrupts.
-+
-+The interrupt parent of this GPIO controller must be the
-+IXP4xx interrupt controller.
-+
-+Required properties:
-+
-+- compatible : Should be
-+  "intel,ixp4xx-gpio"
-+- reg : Should contain registers location and length
-+- gpio-controller : marks this as a GPIO controller
-+- #gpio-cells : Should be 2, see gpio/gpio.txt
-+- interrupt-controller : marks this as an interrupt controller
-+- #interrupt-cells : a standard two-cell interrupt, see
-+  interrupt-controller/interrupts.txt
-+
-+Example:
-+
-+gpio0: gpio@c8004000 {
-+	compatible = "intel,ixp4xx-gpio";
-+	reg = <0xc8004000 0x1000>;
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+};
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - linksys,nslu2
++          - const: intel,ixp42x
++      - items:
++          - enum:
++              - gateworks,gw2358-4
++          - const: intel,ixp43x
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 775a623dc91d..57d098b85523 100644
+index 57d098b85523..c4ca249a2075 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -1650,6 +1650,7 @@ M:	Imre Kaloz <kaloz@openwrt.org>
  M:	Krzysztof Halasa <khalasa@piap.pl>
  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
  S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
++F:	Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+ F:	Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
  F:	Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
  F:	Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.txt
- F:	arch/arm/mach-ixp4xx/
 -- 
 2.20.1
