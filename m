@@ -1,255 +1,104 @@
-From: Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: [PATCH v2 9/9] mtd: rawnand: jz4780-bch: Add support for the
- JZ4740
-Date: Sun, 3 Feb 2019 08:35:05 +0100
-Message-ID: <20190203083505.4dc52278@bbrezillon>
-References: <20190202231926.2444-1-paul@crapouillou.net>
-        <20190202231926.2444-10-paul@crapouillou.net>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v3 3/8] clk: samsung: add BPLL rate table for Exynos 5422
+ SoC
+Date: Sun, 3 Feb 2019 16:54:09 +0900
+Message-ID: <CAGTfZH05zn_FiNt3zSHZJfspvo4RXWPrAtWLUq5xsqKoB3qxBA@mail.gmail.com>
+References: <1548924594-19084-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190131085007eucas1p2f16107042b8ce5638811840618bcf017@eucas1p2.samsung.com>
+ <1548924594-19084-4-git-send-email-l.luba@partner.samsung.com>
+ <d5b8d165-564e-b776-77de-31a069118067@samsung.com>
+ <0ca15b4c-ddaa-1be5-35be-e76b008b28a8@partner.samsung.com>
+Reply-To: cwchoi00@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190202231926.2444-10-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0ca15b4c-ddaa-1be5-35be-e76b008b28a8@partner.samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Linux PM list <linux-pm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat,  2 Feb 2019 20:19:26 -0300
-Paul Cercueil <paul@crapouillou.net> wrote:
-
-> Add the backend code for the jz4780-bch driver to support the JZ4740
-> SoC from Ingenic.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Changes:
-> 
-> v2: New patch
-> 
->  drivers/mtd/nand/raw/ingenic/Makefile         |   2 +-
->  drivers/mtd/nand/raw/ingenic/jz4740_bch.c     | 173 ++++++++++++++++++
->  .../mtd/nand/raw/ingenic/jz4780_bch_common.c  |   1 +
->  .../nand/raw/ingenic/jz4780_bch_internal.h    |   1 +
->  4 files changed, 176 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_bch.c
-> 
-> diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
-> index f38b467490cf..d16c96113a93 100644
-> --- a/drivers/mtd/nand/raw/ingenic/Makefile
-> +++ b/drivers/mtd/nand/raw/ingenic/Makefile
-> @@ -1,3 +1,3 @@
->  obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
->  obj-$(CONFIG_MTD_NAND_JZ4780) += jz4780_nand.o jz4780_bch_common.o \
-> -				 jz4780_bch.o jz4725b_bch.o
-> +				 jz4780_bch.o jz4725b_bch.o jz4740_bch.o
-
-I still don't see the point of the jz4780_bch_common/jz47xxx_bch
-separation. You seem to always embed all objects anyway, so you can
-just put the code for both engines in the same source file and decide
-which one to use based on the compat (which you already do anyway). 
-
-> diff --git a/drivers/mtd/nand/raw/ingenic/jz4740_bch.c b/drivers/mtd/nand/raw/ingenic/jz4740_bch.c
-> new file mode 100644
-> index 000000000000..61ea109cee9d
-> --- /dev/null
-> +++ b/drivers/mtd/nand/raw/ingenic/jz4740_bch.c
-> @@ -0,0 +1,173 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * JZ4740 backend code for the jz4780-bch driver
-> + * based on jz4740-nand.c
-> + *
-> + * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net>
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/device.h>
-> +
-> +#include "jz4780_bch.h"
-> +#include "jz4780_bch_internal.h"
-> +
-> +#define JZ_REG_NAND_ECC_CTRL	0x00
-> +#define JZ_REG_NAND_DATA	0x04
-> +#define JZ_REG_NAND_PAR0	0x08
-> +#define JZ_REG_NAND_PAR1	0x0C
-> +#define JZ_REG_NAND_PAR2	0x10
-> +#define JZ_REG_NAND_IRQ_STAT	0x14
-> +#define JZ_REG_NAND_IRQ_CTRL	0x18
-> +#define JZ_REG_NAND_ERR(x)	(0x1C + ((x) << 2))
-> +
-> +#define JZ_NAND_ECC_CTRL_PAR_READY	BIT(4)
-> +#define JZ_NAND_ECC_CTRL_ENCODING	BIT(3)
-> +#define JZ_NAND_ECC_CTRL_RS		BIT(2)
-> +#define JZ_NAND_ECC_CTRL_RESET		BIT(1)
-> +#define JZ_NAND_ECC_CTRL_ENABLE		BIT(0)
-> +
-> +#define JZ_NAND_STATUS_ERR_COUNT	(BIT(31) | BIT(30) | BIT(29))
-> +#define JZ_NAND_STATUS_PAD_FINISH	BIT(4)
-> +#define JZ_NAND_STATUS_DEC_FINISH	BIT(3)
-> +#define JZ_NAND_STATUS_ENC_FINISH	BIT(2)
-> +#define JZ_NAND_STATUS_UNCOR_ERROR	BIT(1)
-> +#define JZ_NAND_STATUS_ERROR		BIT(0)
-> +
-> +static const uint8_t empty_block_ecc[] = {
-> +	0xcd, 0x9d, 0x90, 0x58, 0xf4, 0x8b, 0xff, 0xb7, 0x6f
-> +};
-> +
-> +static void jz4740_bch_init(struct jz4780_bch *bch, bool encode)
-> +{
-> +	uint32_t reg;
-> +
-> +	/* Clear interrupt status */
-> +	writel(0, bch->base + JZ_REG_NAND_IRQ_STAT);
-> +
-> +	/* Initialize and enable BCH */
-> +	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-> +	reg |= JZ_NAND_ECC_CTRL_RESET;
-> +	reg |= JZ_NAND_ECC_CTRL_ENABLE;
-> +	reg |= JZ_NAND_ECC_CTRL_RS;
-> +	if (encode)
-> +		reg |= JZ_NAND_ECC_CTRL_ENCODING;
-> +	else
-> +		reg &= ~JZ_NAND_ECC_CTRL_ENCODING;
-> +
-> +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-> +}
-> +
-> +static int jz4740_bch_calculate(struct jz4780_bch *bch,
-> +				struct jz4780_bch_params *params,
-> +				const u8 *buf, u8 *ecc_code)
-> +{
-> +	uint32_t reg, status;
-> +	unsigned int timeout = 1000;
-> +	int i;
-> +
-> +	jz4740_bch_init(bch, true);
-> +
-> +	do {
-> +		status = readl(bch->base + JZ_REG_NAND_IRQ_STAT);
-> +	} while (!(status & JZ_NAND_STATUS_ENC_FINISH) && --timeout);
-> +
-> +	if (timeout == 0)
-> +		return -ETIMEDOUT;
-> +
-> +	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-> +	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
-> +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-> +
-> +	for (i = 0; i < params->bytes; ++i)
-> +		ecc_code[i] = readb(bch->base + JZ_REG_NAND_PAR0 + i);
-> +
-> +	/* If the written data is completely 0xff, we also want to write 0xff as
-> +	 * ecc, otherwise we will get in trouble when doing subpage writes.
-> +	 */
-> +	if (memcmp(ecc_code, empty_block_ecc, ARRAY_SIZE(empty_block_ecc)) == 0)
-> +		memset(ecc_code, 0xff, ARRAY_SIZE(empty_block_ecc));
-> +
-> +	return 0;
-> +}
-> +
-> +static void jz_nand_correct_data(uint8_t *buf, int index, int mask)
-> +{
-> +	int offset = index & 0x7;
-> +	uint16_t data;
-> +
-> +	index += (index >> 3);
-> +
-> +	data = buf[index];
-> +	data |= buf[index + 1] << 8;
-> +
-> +	mask ^= (data >> offset) & 0x1ff;
-> +	data &= ~(0x1ff << offset);
-> +	data |= (mask << offset);
-> +
-> +	buf[index] = data & 0xff;
-> +	buf[index + 1] = (data >> 8) & 0xff;
-> +}
-> +
-> +static int jz4740_bch_correct(struct jz4780_bch *bch,
-> +			      struct jz4780_bch_params *params,
-> +			      u8 *buf, u8 *ecc_code)
-> +{
-> +	int i, error_count, index;
-> +	uint32_t reg, status, error;
-> +	unsigned int timeout = 1000;
-> +
-> +	jz4740_bch_init(bch, false);
-> +
-> +	for (i = 0; i < params->bytes; ++i)
-> +		writeb(ecc_code[i], bch->base + JZ_REG_NAND_PAR0 + i);
-> +
-> +	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-> +	reg |= JZ_NAND_ECC_CTRL_PAR_READY;
-> +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-> +
-> +	do {
-> +		status = readl(bch->base + JZ_REG_NAND_IRQ_STAT);
-> +	} while (!(status & JZ_NAND_STATUS_DEC_FINISH) && --timeout);
-> +
-> +	if (timeout == 0)
-> +		return -ETIMEDOUT;
-> +
-> +	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-> +	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
-> +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-> +
-> +	if (status & JZ_NAND_STATUS_ERROR) {
-> +		if (status & JZ_NAND_STATUS_UNCOR_ERROR)
-> +			return -EBADMSG;
-> +
-> +		error_count = (status & JZ_NAND_STATUS_ERR_COUNT) >> 29;
-> +
-> +		for (i = 0; i < error_count; ++i) {
-> +			error = readl(bch->base + JZ_REG_NAND_ERR(i));
-> +			index = ((error >> 16) & 0x1ff) - 1;
-> +			if (index >= 0 && index < params->size)
-> +				jz_nand_correct_data(buf, index, error & 0x1ff);
-> +		}
-> +
-> +		return error_count;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void jz4740_bch_disable(struct jz4780_bch *bch)
-> +{
-> +	u32 reg;
-> +
-> +	writel(0, bch->base + JZ_REG_NAND_IRQ_STAT);
-> +	reg = readl(bch->base + JZ_REG_NAND_ECC_CTRL);
-> +	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
-> +	writel(reg, bch->base + JZ_REG_NAND_ECC_CTRL);
-> +}
-> +
-> +const struct jz4780_bch_ops jz4780_bch_jz4740_ops = {
-> +	.disable = jz4740_bch_disable,
-> +	.calculate = jz4740_bch_calculate,
-> +	.correct = jz4740_bch_correct,
-> +};
-> diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c b/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c
-> index f505816193a8..c2326286abb2 100644
-> --- a/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c
-> +++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch_common.c
-> @@ -157,6 +157,7 @@ static int jz4780_bch_probe(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id jz4780_bch_dt_match[] = {
-> +	{ .compatible = "ingenic,jz4740-bch", .data = &jz4780_bch_jz4740_ops},
->  	{ .compatible = "ingenic,jz4725b-bch", .data = &jz4780_bch_jz4725b_ops},
->  	{ .compatible = "ingenic,jz4780-bch", .data = &jz4780_bch_jz4780_ops },
->  	{},
-> diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h b/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h
-> index 462aded811b1..7909a49c57db 100644
-> --- a/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h
-> +++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch_internal.h
-> @@ -30,6 +30,7 @@ struct jz4780_bch {
->  	struct mutex lock;
->  };
->  
-> +extern const struct jz4780_bch_ops jz4780_bch_jz4740_ops;
->  extern const struct jz4780_bch_ops jz4780_bch_jz4725b_ops;
->  extern const struct jz4780_bch_ops jz4780_bch_jz4780_ops;
->  
+SGkgTHVrYXN6LAoKMjAxOeuFhCAy7JuUIDHsnbwgKOq4iCkg7Jik7ZuEIDExOjIyLCBMdWthc3og
+THViYSA8bC5sdWJhQHBhcnRuZXIuc2Ftc3VuZy5jb20+64uY7J20IOyekeyEsToKCj4KPiBIaSBD
+aGFud29vLAo+Cj4gT24gMi8xLzE5IDk6NDQgQU0sIENoYW53b28gQ2hvaSB3cm90ZToKPiA+IEhp
+LAo+ID4KPiA+IE9uIDE5LiAxLiAzMS4g7Jik7ZuEIDU6NDksIEx1a2FzeiBMdWJhIHdyb3RlOgo+
+ID4+IEFkZCBuZXcgdGFibGUgcmF0ZSBmb3IgQlBMTCBmb3IgRXh5bm9zNTQyMiBTb0Mgc3VwcG9y
+dGluZyBEeW5hbWljIE1lbW9yeQo+ID4+IENvbnRyb2xsZXIgZnJlcXVlbmNpZXMgZm9yIGRyaXZl
+cidzIERSQU0gdGltaW5ncy4KPiA+Pgo+ID4+IENDOiBTeWx3ZXN0ZXIgTmF3cm9ja2kgPHMubmF3
+cm9ja2lAc2Ftc3VuZy5jb20+Cj4gPj4gQ0M6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNhbXN1
+bmcuY29tPgo+ID4+IENDOiBNaWNoYWVsIFR1cnF1ZXR0ZSA8bXR1cnF1ZXR0ZUBiYXlsaWJyZS5j
+b20+Cj4gPj4gQ0M6IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4KPiA+PiBDQzogS3Vr
+amluIEtpbSA8a2dlbmVAa2VybmVsLm9yZz4KPiA+PiBDQzogS3J6eXN6dG9mIEtvemxvd3NraSA8
+a3J6a0BrZXJuZWwub3JnPgo+ID4+IENDOiBsaW51eC1zYW1zdW5nLXNvY0B2Z2VyLmtlcm5lbC5v
+cmcKPiA+PiBDQzogbGludXgtY2xrQHZnZXIua2VybmVsLm9yZwo+ID4+IENDOiBsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+PiBDQzogbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZwo+ID4+IFNpZ25lZC1vZmYtYnk6IEx1a2FzeiBMdWJhIDxsLmx1YmFAcGFydG5lci5z
+YW1zdW5nLmNvbT4KPiA+PiAtLS0KPiA+PiAgIGRyaXZlcnMvY2xrL3NhbXN1bmcvY2xrLWV4eW5v
+czU0MjAuYyB8IDE1ICsrKysrKysrKysrKysrLQo+ID4+ICAgMSBmaWxlIGNoYW5nZWQsIDE0IGlu
+c2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+Pgo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L2Nsay9zYW1zdW5nL2Nsay1leHlub3M1NDIwLmMgYi9kcml2ZXJzL2Nsay9zYW1zdW5nL2Nsay1l
+eHlub3M1NDIwLmMKPiA+PiBpbmRleCAzZTg3NDIxLi44YmY5NTc5IDEwMDY0NAo+ID4+IC0tLSBh
+L2RyaXZlcnMvY2xrL3NhbXN1bmcvY2xrLWV4eW5vczU0MjAuYwo+ID4+ICsrKyBiL2RyaXZlcnMv
+Y2xrL3NhbXN1bmcvY2xrLWV4eW5vczU0MjAuYwo+ID4+IEBAIC0xMzI1LDYgKzEzMjUsMTkgQEAg
+c3RhdGljIGNvbnN0IHN0cnVjdCBzYW1zdW5nX3BsbF9yYXRlX3RhYmxlIGV4eW5vczU0MjBfcGxs
+MjU1MHhfMjRtaHpfdGJsW10gX19pbmkKPiA+PiAgICAgIFBMTF8zNVhYX1JBVEUoMjQgKiBNSFos
+IDIwMDAwMDAwMCwgIDIwMCwgMywgMyksCj4gPj4gICB9Owo+ID4+Cj4gPj4gK3N0YXRpYyBjb25z
+dCBzdHJ1Y3Qgc2Ftc3VuZ19wbGxfcmF0ZV90YWJsZSBleHlub3M1NDIyX2JwbGxfcmF0ZV90YWJs
+ZVtdID0gewo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgOTMzMDAwMDAwLCAzMTEs
+IDQsIDEpLAo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgODI1MDAwMDAwLCAyNzUs
+IDQsIDEpLAo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgNzI4MDAwMDAwLCAxODIs
+IDMsIDEpLAo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgNjMzMDAwMDAwLCAyMTEs
+IDQsIDEpLAo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgNTQzMDAwMDAwLCAxODEs
+IDIsIDIpLAo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgNDEzMDAwMDAwLCA0MTMs
+IDYsIDIpLAo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgMjc1MDAwMDAwLCAyNzUs
+IDMsIDMpLAo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgMjA2MDAwMDAwLCAyMDYs
+IDMsIDMpLAo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgMTY1MDAwMDAwLCAxMTAs
+IDIsIDMpLAo+ID4+ICsgICAgUExMXzM1WFhfUkFURSgyNCAqIE1IWiwgMTM4MDAwMDAwLCAxODQs
+IDIsIDQpLAo+ID4KPiA+IEV4Y2VwdCBmb3IgODI1TWh6LCBJIGNhbid0IGZpbmQgdGhlIHRhcmdl
+dCBmcmVxdWVuY3kKPiA+IG9uIEV4eW5vczU0MjIgVFJNIGRvY3VtZW50LiBVc3VhbGx5LCBFeHlu
+b3MgVFJNIHNwZWNpZmllZAo+ID4gdGhlIHN1cHBvcnRlZCBzdGFibGUgY2xvY2tzLiBJdCBtZWFu
+cyB0aGF0IHVuZGVmaW5lZCBjbG9ja3MKPiA+IGFyZSBub3Qgc3RhYmxlIGFzIEkga25ldy4gV2hl
+cmUgZG8geW91IGZpbmQgdGhlbT8KPiA+Cj4gPiBXaGVuIEkgY2FsY3VsYXRlZCB0aGUgUExMIGZy
+ZXF1ZW5jeSB3aXRoIFBNUyB2YWx1ZSwgaXQgaXMgY29ycmVjdC4KPiA+IEJ1dCwganVzdCB3ZSBu
+ZWVkIHRvIGNoZWNrIHRoZSByZWZlcmVuY2Ugb2YgdW5kZWZpbmVkIGNsb2NrcyBvbiBUUk0KPiA+
+IGluIG9yZGVyIHRvIGd1YXJhbnRlZSB0aGUgc3RhYmxlIG9wZXJhdGlvbi4KPiBUaGV5IHZhbHVl
+cyBsaXZlIGluIHZlbmRvciBjb2RlIGZvciBBbmRyb2lkLgo+IEkgaGF2ZSB0ZXN0ZWQgdGhlIERN
+QyAmIEREUiB3aXRoIHRoZXNlIHJhdGlvcyBpbiBzdHJlc3Mgc2NlbmFyaW9zCj4gZm9yIGEgZmV3
+IGRheXMgYW5kIGl0IHdhcyBzdGFibGUuCgpJZiBwb3NzaWJsZSwgcGxlYXNlIHNoYXJlIHRoZSB1
+cmwgb2Ygb3JpZ2luYWwgdmVuZG9yIGNvZGUuCgo+Cj4gPgo+ID4gUmVtb3ZlIDkzMy8xMzhNaHog
+YmVjYXVzZSBleHlub3M1NDMzLWRtYy5jIGRvZXNuJ3QgdXNlIDkzM01oeiBhbmQgMTM4TWh6Cj4g
+PiBhbmQgYWxzbyBFeHlub3M1NDIyIFRSTSBkb2Vzbid0IGRlZmluZSA5MzMvMTM4TWh6IG9uIHBs
+bCB0YWJsZS4KPiBPSywgSSB3aWxsIHJlbW92ZSB0aGVtLgo+ID4KPiA+PiArfTsKPiA+PiArCj4g
+Pj4gICBzdGF0aWMgY29uc3Qgc3RydWN0IHNhbXN1bmdfcGxsX3JhdGVfdGFibGUgZXh5bm9zNTQy
+MF9lcGxsXzI0bWh6X3RibFtdID0gewo+ID4+ICAgICAgUExMXzM2WFhfUkFURSgyNCAqIE1IWiwg
+NjAwMDAwMDAwVSwgMTAwLCAyLCAxLCAwKSwKPiA+PiAgICAgIFBMTF8zNlhYX1JBVEUoMjQgKiBN
+SFosIDQwMDAwMDAwMFUsIDIwMCwgMywgMiwgMCksCj4gPj4gQEAgLTE0NjcsNyArMTQ4MCw3IEBA
+IHN0YXRpYyB2b2lkIF9faW5pdCBleHlub3M1eF9jbGtfaW5pdChzdHJ1Y3QgZGV2aWNlX25vZGUg
+Km5wLAo+ID4+ICAgICAgICAgICAgICBleHlub3M1eF9wbGxzW2FwbGxdLnJhdGVfdGFibGUgPSBl
+eHlub3M1NDIwX3BsbDI1NTB4XzI0bWh6X3RibDsKPiA+PiAgICAgICAgICAgICAgZXh5bm9zNXhf
+cGxsc1tlcGxsXS5yYXRlX3RhYmxlID0gZXh5bm9zNTQyMF9lcGxsXzI0bWh6X3RibDsKPiA+PiAg
+ICAgICAgICAgICAgZXh5bm9zNXhfcGxsc1trcGxsXS5yYXRlX3RhYmxlID0gZXh5bm9zNTQyMF9w
+bGwyNTUweF8yNG1oel90Ymw7Cj4gPj4gLSAgICAgICAgICAgIGV4eW5vczV4X3BsbHNbYnBsbF0u
+cmF0ZV90YWJsZSA9IGV4eW5vczU0MjBfcGxsMjU1MHhfMjRtaHpfdGJsOwo+ID4+ICsgICAgICAg
+ICAgICBleHlub3M1eF9wbGxzW2JwbGxdLnJhdGVfdGFibGUgPSBleHlub3M1NDIyX2JwbGxfcmF0
+ZV90YWJsZTsKPiA+Cj4gPiBFeHlub3M1NDIyIHVzZWQgdGhlIHNhbWUgUExMIHRhYmxlIGZvciBh
+cGxsLCBrcGxsLCBicGxsIGFuZCBzbyBvbi4KPiA+IFlvdSBkb24ndCBuZWVkIHRvIG1ha2UgdGhl
+IHNlcGFyYXRlIHBsbCB0YWJsZS4gSnVzdCBhZGQgbmV3IGVudHJpZXMKPiA+IHRvIGV4eW5vczU0
+MjBfcGxsMjU1MHhfMjRtaHpfdGJsIHRhYmxlLgo+IE9LLCBJIHdpbGwgZXh0ZW5kIHRoZSBleHlu
+b3M1NDIwX3BsbDI1NTB4XzI0bWh6X3RibCB0YWJsZS4KPgo+IEluIHY0IHBhdGNoIHNldCwgaXQg
+d2lsbCBiZSBmaXhlZC4KPgo+IFJlZ2FyZHMsCj4gTHVrYXN6Cj4gPgo+ID4+ICAgICAgfQo+ID4+
+Cj4gPj4gICAgICBzYW1zdW5nX2Nsa19yZWdpc3Rlcl9wbGwoY3R4LCBleHlub3M1eF9wbGxzLCBB
+UlJBWV9TSVpFKGV4eW5vczV4X3BsbHMpLAo+ID4+Cj4gPgoKCgotLQpCZXN0IFJlZ2FyZHMsCkNo
+YW53b28gQ2hvaQpTYW1zdW5nIEVsZWN0cm9uaWNzCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
