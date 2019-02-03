@@ -1,35 +1,96 @@
-From: Benjamin Drung <bdrung@posteo.de>
-Subject: [PATCH] ARM: dts: exynos: Fix spelling mistake of EXYNOS5420
-Date: Sun, 03 Feb 2019 21:13:30 +0100
-Message-ID: <bb0903e066484e02f5dcd0e9cbe94a491a179fba.camel@posteo.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 13/17 v1] gpio: ixp4xx: Add DT bindings
+Date: Sun,  3 Feb 2019 22:42:01 +0100
+Message-ID: <20190203214205.13594-14-linus.walleij@linaro.org>
+References: <20190203214205.13594-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190203214205.13594-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The SoC name EXYNOS5420 was misspelled.
+This adds DT bindings for the IXP4xx GPIO controller.
 
-Signed-off-by: Benjamin Drung <bdrung@posteo.de>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/exynos5420.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Bartosz: looking for your ACK on this, it'd be good if
+the other GPIO maintainer is aligned with my ideas here.
+I intend to merge this through the ARM SoC tree.
+---
+ .../bindings/gpio/intel,ixp4xx-gpio.txt       | 38 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index aaff15880761..5fb2326875dc 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -5,7 +5,7 @@
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  *
-- * SAMSUNG EXYNOS54200 SoC device nodes are listed in this file.
-+ * SAMSUNG EXYNOS5420 SoC device nodes are listed in this file.
-  * EXYNOS5420 based board files can include this file and provide
-  * values for board specfic bindings.
-  */
+diff --git a/Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt b/Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
+new file mode 100644
+index 000000000000..8dc41ed99685
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
+@@ -0,0 +1,38 @@
++Intel IXP4xx XScale Networking Processors GPIO
++
++This GPIO controller is found in the Intel IXP4xx processors.
++It supports 16 GPIO lines.
++
++The interrupt portions of the GPIO controller is hierarchical:
++the synchronous edge detector is part of the GPIO block, but the
++actual enabling/disabling of the interrupt line is done in the
++main IXP4xx interrupt controller which has a 1:1 mapping for
++the first 12 GPIO lines to 12 system interrupts.
++
++The remaining 4 GPIO lines can not be used for receiving
++interrupts.
++
++The interrupt parent of this GPIO controller must be the
++IXP4xx interrupt controller.
++
++Required properties:
++
++- compatible : Should be
++  "intel,ixp4xx-gpio"
++- reg : Should contain registers location and length
++- gpio-controller : marks this as a GPIO controller
++- #gpio-cells : Should be 2, see gpio/gpio.txt
++- interrupt-controller : marks this as an interrupt controller
++- #interrupt-cells : a standard two-cell interrupt, see
++  interrupt-controller/interrupts.txt
++
++Example:
++
++gpio0: gpio@c8004000 {
++	compatible = "intel,ixp4xx-gpio";
++	reg = <0xc8004000 0x1000>;
++	gpio-controller;
++	#gpio-cells = <2>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 775a623dc91d..57d098b85523 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1650,6 +1650,7 @@ M:	Imre Kaloz <kaloz@openwrt.org>
+ M:	Krzysztof Halasa <khalasa@piap.pl>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpio.txt
+ F:	Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
+ F:	Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.txt
+ F:	arch/arm/mach-ixp4xx/
 -- 
-2.19.1
+2.20.1
