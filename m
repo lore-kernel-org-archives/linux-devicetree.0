@@ -1,67 +1,88 @@
 From: Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: [PATCH v2 9/9] mtd: rawnand: jz4780-bch: Add support for the
- JZ4740
-Date: Sun, 3 Feb 2019 15:16:04 +0100
-Message-ID: <20190203151604.23061e2a@bbrezillon>
+Subject: Re: [PATCH v2 4/9] mtd: rawnand: jz4780: Add support for the JZ4740
+Date: Sun, 3 Feb 2019 15:24:08 +0100
+Message-ID: <20190203152408.2795de7e@bbrezillon>
 References: <20190202231926.2444-1-paul@crapouillou.net>
- <20190202231926.2444-10-paul@crapouillou.net>
- <20190203083505.4dc52278@bbrezillon>
- <1549202293.1950.2@crapouillou.net>
+        <20190202231926.2444-5-paul@crapouillou.net>
+        <20190203083151.4fc29c5b@bbrezillon>
+        <1549202213.1950.1@crapouillou.net>
+        <20190203150827.401ac31d@bbrezillon>
+        <1549203050.1950.3@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1549202293.1950.2@crapouillou.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1549203050.1950.3@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Harvey Hunt <harveyhuntnexus@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAwMyBGZWIgMjAxOSAxMDo1ODoxMyAtMDMwMApQYXVsIENlcmN1ZWlsIDxwYXVsQGNy
-YXBvdWlsbG91Lm5ldD4gd3JvdGU6Cgo+IExlIGRpbS4gMyBmw6l2ci4gMjAxOSDDoCA0OjM1LCBC
-b3JpcyBCcmV6aWxsb24gPGJicmV6aWxsb25Aa2VybmVsLm9yZz4gCj4gYSDDqWNyaXQgOgo+ID4g
-T24gU2F0LCAgMiBGZWIgMjAxOSAyMDoxOToyNiAtMDMwMAo+ID4gUGF1bCBDZXJjdWVpbCA8cGF1
-bEBjcmFwb3VpbGxvdS5uZXQ+IHdyb3RlOgo+ID4gICAKPiA+PiAgQWRkIHRoZSBiYWNrZW5kIGNv
-ZGUgZm9yIHRoZSBqejQ3ODAtYmNoIGRyaXZlciB0byBzdXBwb3J0IHRoZSBKWjQ3NDAKPiA+PiAg
-U29DIGZyb20gSW5nZW5pYy4KPiA+PiAKPiA+PiAgU2lnbmVkLW9mZi1ieTogUGF1bCBDZXJjdWVp
-bCA8cGF1bEBjcmFwb3VpbGxvdS5uZXQ+Cj4gPj4gIC0tLQo+ID4+IAo+ID4+ICBDaGFuZ2VzOgo+
-ID4+IAo+ID4+ICB2MjogTmV3IHBhdGNoCj4gPj4gCj4gPj4gICBkcml2ZXJzL210ZC9uYW5kL3Jh
-dy9pbmdlbmljL01ha2VmaWxlICAgICAgICAgfCAgIDIgKy0KPiA+PiAgIGRyaXZlcnMvbXRkL25h
-bmQvcmF3L2luZ2VuaWMvano0NzQwX2JjaC5jICAgICB8IDE3MyAKPiA+PiArKysrKysrKysrKysr
-KysrKysKPiA+PiAgIC4uLi9tdGQvbmFuZC9yYXcvaW5nZW5pYy9qejQ3ODBfYmNoX2NvbW1vbi5j
-ICB8ICAgMSArCj4gPj4gICAuLi4vbmFuZC9yYXcvaW5nZW5pYy9qejQ3ODBfYmNoX2ludGVybmFs
-LmggICAgfCAgIDEgKwo+ID4+ICAgNCBmaWxlcyBjaGFuZ2VkLCAxNzYgaW5zZXJ0aW9ucygrKSwg
-MSBkZWxldGlvbigtKQo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbXRkL25hbmQv
-cmF3L2luZ2VuaWMvano0NzQwX2JjaC5jCj4gPj4gCj4gPj4gIGRpZmYgLS1naXQgYS9kcml2ZXJz
-L210ZC9uYW5kL3Jhdy9pbmdlbmljL01ha2VmaWxlIAo+ID4+IGIvZHJpdmVycy9tdGQvbmFuZC9y
-YXcvaW5nZW5pYy9NYWtlZmlsZQo+ID4+ICBpbmRleCBmMzhiNDY3NDkwY2YuLmQxNmM5NjExM2E5
-MyAxMDA2NDQKPiA+PiAgLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9yYXcvaW5nZW5pYy9NYWtlZmls
-ZQo+ID4+ICArKysgYi9kcml2ZXJzL210ZC9uYW5kL3Jhdy9pbmdlbmljL01ha2VmaWxlCj4gPj4g
-IEBAIC0xLDMgKzEsMyBAQAo+ID4+ICAgb2JqLSQoQ09ORklHX01URF9OQU5EX0paNDc0MCkgKz0g
-ano0NzQwX25hbmQubwo+ID4+ICAgb2JqLSQoQ09ORklHX01URF9OQU5EX0paNDc4MCkgKz0gano0
-NzgwX25hbmQubyBqejQ3ODBfYmNoX2NvbW1vbi5vIAo+ID4+IFwKPiA+PiAgLQkJCQkgano0Nzgw
-X2JjaC5vIGp6NDcyNWJfYmNoLm8KPiA+PiAgKwkJCQkgano0NzgwX2JjaC5vIGp6NDcyNWJfYmNo
-Lm8gano0NzQwX2JjaC5vICAKPiA+IAo+ID4gSSBzdGlsbCBkb24ndCBzZWUgdGhlIHBvaW50IG9m
-IHRoZSBqejQ3ODBfYmNoX2NvbW1vbi9qejQ3eHh4X2JjaAo+ID4gc2VwYXJhdGlvbi4gWW91IHNl
-ZW0gdG8gYWx3YXlzIGVtYmVkIGFsbCBvYmplY3RzIGFueXdheSwgc28geW91IGNhbgo+ID4ganVz
-dCBwdXQgdGhlIGNvZGUgZm9yIGJvdGggZW5naW5lcyBpbiB0aGUgc2FtZSBzb3VyY2UgZmlsZSBh
-bmQgZGVjaWRlCj4gPiB3aGljaCBvbmUgdG8gdXNlIGJhc2VkIG9uIHRoZSBjb21wYXQgKHdoaWNo
-IHlvdSBhbHJlYWR5IGRvIGFueXdheSkuICAKPiAKPiBFYWNoIFNvQyBoYXMgYSBkaWZmZXJlbnQg
-c2V0IG9mIHJlZ2lzdGVycyBmb3IgdGhlIEJDSCBoYXJkd2FyZS4gSSBjYW4gCj4gdHJ5IHRvCj4g
-Y3JhbSBldmVyeXRoaW5nIGludG8gb25lIGZpbGUsIGJ1dCBpdCB3b24ndCBiZSB0aGF0IG11Y2gg
-Y2xlYW5lci4KClRoZW4gbWF5YmUgdGhleSBkZXNlcnZlIHNlcGFyYXRlIGRyaXZlcnMvbW9kdWxl
-cy4KCkJUVywgZGlkbid0IHlvdSBzYXkgdGhhdCBvbmUgSVAgdXNlcyBSZWVkLVNhbG9tb24gaW5z
-dGVhZCBvZiBCQ0guIEknZApzdWdnZXN0IHByZWZpeGluZyBzdHJ1Y3RzIGFuZCBmdW5jdGlvbnMg
-d2l0aCBqejQ3eHhfZWNjIGluc3RlYWQgb2YKano0N3h4X2JjaCBhbmQgbmFtaW5nIHRoZSBjb21t
-b24gcGFydCBqejQ3eHhfZWNjLmMgdG8gcmVmbGVjdCB0aGF0LgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNjdXNzaW9u
-IG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LW10ZC8K
+On Sun, 03 Feb 2019 11:10:50 -0300
+Paul Cercueil <paul@crapouillou.net> wrote:
+
+> Le dim. 3 f=C3=A9vr. 2019 =C3=A0 11:08, Boris Brezillon <bbrezillon@kerne=
+l.org>=20
+> a =C3=A9crit :
+> > On Sun, 03 Feb 2019 10:56:53 -0300
+> > Paul Cercueil <paul@crapouillou.net> wrote:
+> >  =20
+> >>  Le dim. 3 f=C3=A9vr. 2019 =C3=A0 4:31, Boris Brezillon=20
+> >> <bbrezillon@kernel.org>
+> >>  a =C3=A9crit : =20
+> >>  > On Sat,  2 Feb 2019 20:19:21 -0300
+> >>  > Paul Cercueil <paul@crapouillou.net> wrote:
+> >>  > =20
+> >>  >>  Add support for probing the jz4780-nand driver on the JZ4740 SoC
+> >>  >> from
+> >>  >>  Ingenic.
+> >>  >>
+> >>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >>  >>  ---
+> >>  >>
+> >>  >>  Changes:
+> >>  >>
+> >>  >>  v2: - Add support for the JZ4740 and not the JZ4725B: they  =20
+> >> behave =20
+> >>  >> the
+> >>  >>        same, and JZ4740 is fully upstream while JZ4725B is not.  =
+=20
+> >> The =20
+> >>  >>        JZ4725B devicetree will then simply use the
+> >>  >> "ingenic,jz4740-nand"
+> >>  >>        compatible string.
+> >>  >>      - Fix the number of bytes for the ECC when the ECC strength  =
+=20
+> >> is =20
+> >>  >> 4.
+> >>  >>        This is needed for the JZ4740, which uses Reed-Solomon
+> >>  >> instead of
+> >>  >>        BCH.
+> >>  >>
+> >>  >>   drivers/mtd/nand/raw/ingenic/jz4780_nand.c | 48
+> >>  >> +++++++++++++++++----- =20
+> >>  >
+> >>  > If we're going to make the driver compatible with jz4740 and  =20
+> >> jz4725b =20
+> >>  > maybe we should rename the source files jz47xx_{nand,bch}.{c,h}. =20
+> >>=20
+> >>  I don't know about that. Adding support for new hardware isn't a=20
+> >> good
+> >>  reason to
+> >>  rename the driver, or so I've been told around here, as you then=20
+> >> make
+> >>  it harder
+> >>  to review the git history of the driver. =20
+> >=20
+> > You already move files to a sub-directory so that doesn't make a huge
+> > difference, history will be hard to follow because of this move=20
+> > anyway. =20
+>=20
+> Yes, but if I merge the *_bch.c files together, and eventually drop
+> jz4740-nand.c, does it still make sense to move to a sub-directory?
+>=20
+
+Still prefer to make things explicit over preserving file names to
+make git log <path> history linear. And anyway, how hard is it to figure
+out that the last commit in git log drivers/mtd/nand/raw/<driver>.c is
+moving the file (there might even be an option for that)?
