@@ -1,68 +1,119 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 0/3] mmc: sunxi: Fix eMMC usage on H5 boards
-Date: Sun,  3 Feb 2019 23:59:40 +0800
-Message-ID: <20190203155940.18977-1-wens@csie.org>
-References: <20190203155628.16767-1-wens@csie.org>
+From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 01/12] drm/bridge: move ANA78xx driver to
+ analogix subdirectory
+Date: Sun,  3 Feb 2019 10:44:39 -0800
+Message-ID: <20190203184450.8050-2-anarsoul@gmail.com>
+References: <20190203184450.8050-1-anarsoul@gmail.com>
+Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190203155628.16767-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Chris Blake <chrisrblake93@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDV3B667TUHBBKPN3TRAKGQEYFGQV7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190203184450.8050-1-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: David Airlie Daniel Vetter <airlied-cv59FeDIM0fLFAHvckquKw@public.gmane.org>, ffwll.ch, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(Resent with proper subject tag.)
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Hi everyone,
+As ANA78xx chips are designed and produced by Analogix Semiconductor,
+Inc, move their driver codes into analogix subdirectory.
 
-Since the HS-DDR mode was enabled for the A64 eMMC controller, there
-have been reports of eMMC failing to work on some H5 boards. It seems
-that while the H5 and A64 share the same controller for eMMC, some H5
-boards don't have trace lengths that work under HS-DDR with the default
-delay chain settings. Unfortunately we don't support tuning them at the
-moment, and these boards didn't seem to come with any settings either.
-Instead HS-DDR just wasn't enabled.
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+---
+ drivers/gpu/drm/bridge/Kconfig                         | 10 ----------
+ drivers/gpu/drm/bridge/Makefile                        |  4 ++--
+ drivers/gpu/drm/bridge/analogix/Kconfig                | 10 ++++++++++
+ drivers/gpu/drm/bridge/analogix/Makefile               |  1 +
+ .../gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c   |  0
+ .../gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h   |  0
+ 6 files changed, 13 insertions(+), 12 deletions(-)
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (100%)
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h (100%)
 
-The failure is typically a data CRC error on data reads, such as the
-partition scanning when the device is first probed. While this in itself
-would result in the device being unusable, there seems to be a timing
-issue in the recovery of the MMC controller. After the CRC error, the
-driver manually issues a stop command to the device, which also fails.
-After this a following command would stall: the MMC subsystem waits for
-the completion notice of the request, which never happens. The stall
-also blocks udev, which kind of blocks the whole boot process. However
-if I turn on debug messages to try to narrow down the issue, it recovers
-just fine. Any help on this issue would be much appreciated.
-
-I propose we turn off HS-DDR on the H5 (maybe even the H6, but I don't
-have anything to test right now) by default, and enable it per-board
-using the common mmc binding properties for speed modes.
-
-Patch 1 disables HS-DDR for H5 eMMC.
-
-Patch 2 adds a check blocking (force disabling) any modes the driver
-doesn't support. In retrospect this should have been added a long time
-ago.
-
-Patch 3 enables HS-DDR for the Libre Computer ALL-H3-CC H5, which works
-normally.
-
-If possible please merge all of them as fixes.
-
-
-Regards
-ChenYu
-
-Chen-Yu Tsai (3):
-  mmc: sunxi: Disable HS-DDR mode for H5 eMMC controller by default
-  mmc: sunxi: Filter out unsupported modes declared in the device tree
-  arm64: dts: allwinner: h5: libretech-all-h3-cc: Mark eMMC HS-DDR 3.3V
-    capable
-
- .../sun50i-h5-libretech-all-h3-cc.dts         |  4 +++
- drivers/mmc/host/sunxi-mmc.c                  | 27 ++++++++++++++++++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 2fee47b0d50b..4922c1ceffef 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -15,16 +15,6 @@ config DRM_PANEL_BRIDGE
+ menu "Display Interface Bridges"
+ 	depends on DRM && DRM_BRIDGE
+ 
+-config DRM_ANALOGIX_ANX78XX
+-	tristate "Analogix ANX78XX bridge"
+-	select DRM_KMS_HELPER
+-	select REGMAP_I2C
+-	---help---
+-	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
+-	  designed for portable devices. The ANX78XX transforms
+-	  the HDMI output of an application processor to MyDP
+-	  or DisplayPort.
+-
+ config DRM_CDNS_DSI
+ 	tristate "Cadence DPI/DSI bridge"
+ 	select DRM_KMS_HELPER
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 4934fcf5a6f8..a6c7dd7727ea 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -1,5 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+ obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+@@ -12,8 +11,9 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
+ obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
+-obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
+ obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+ obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+ obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
++
++obj-y += analogix/
+ obj-y += synopsys/
+diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
+index 80f286fa3a69..c4d343a2f04d 100644
+--- a/drivers/gpu/drm/bridge/analogix/Kconfig
++++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+@@ -1,3 +1,13 @@
++config DRM_ANALOGIX_ANX78XX
++	tristate "Analogix ANX78XX bridge"
++	select DRM_KMS_HELPER
++	select REGMAP_I2C
++	help
++	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
++	  designed for portable devices. The ANX78XX transforms
++	  the HDMI output of an application processor to MyDP
++	  or DisplayPort.
++
+ config DRM_ANALOGIX_DP
+ 	tristate
+ 	depends on DRM
+diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
+index cd4010ba6890..ce1687e60975 100644
+--- a/drivers/gpu/drm/bridge/analogix/Makefile
++++ b/drivers/gpu/drm/bridge/analogix/Makefile
+@@ -1,2 +1,3 @@
+ analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
++obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.c
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.h
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
 -- 
 2.20.1
