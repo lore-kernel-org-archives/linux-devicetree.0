@@ -1,117 +1,71 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 9/9] mtd: rawnand: jz4780-bch: Add support for the
- JZ4740
-Date: Sun, 03 Feb 2019 12:41:30 -0300
-Message-ID: <1549208490.1588.1@crapouillou.net>
-References: <20190202231926.2444-1-paul@crapouillou.net>
-        <20190202231926.2444-10-paul@crapouillou.net>
-        <20190203083505.4dc52278@bbrezillon> <1549202293.1950.2@crapouillou.net>
-        <20190203151604.23061e2a@bbrezillon> <1549205792.1588.0@crapouillou.net>
-        <20190203160709.29d7d721@bbrezillon>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: mmc: sunxi: Fix eMMC usage on H5 boards
+Date: Sun,  3 Feb 2019 23:56:25 +0800
+Message-ID: <20190203155628.16767-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190203160709.29d7d721@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLU63TRAKGQEQOFYW7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chris Blake <chrisrblake93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi everyone,
+
+Since the HS-DDR mode was enabled for the A64 eMMC controller, there
+have been reports of eMMC failing to work on some H5 boards. It seems
+that while the H5 and A64 share the same controller for eMMC, some H5
+boards don't have trace lengths that work under HS-DDR with the default
+delay chain settings. Unfortunately we don't support tuning them at the
+moment, and these boards didn't seem to come with any settings either.
+Instead HS-DDR just wasn't enabled.
+
+The failure is typically a data CRC error on data reads, such as the
+partition scanning when the device is first probed. While this in itself
+would result in the device being unusable, there seems to be a timing
+issue in the recovery of the MMC controller. After the CRC error, the
+driver manually issues a stop command to the device, which also fails.
+After this a following command would stall: the MMC subsystem waits for
+the completion notice of the request, which never happens. The stall
+also blocks udev, which kind of blocks the whole boot process. However
+if I turn on debug messages to try to narrow down the issue, it recovers
+just fine. Any help on this issue would be much appreciated.
+
+I propose we turn off HS-DDR on the H5 (maybe even the H6, but I don't
+have anything to test right now) by default, and enable it per-board
+using the common mmc binding properties for speed modes.
+
+Patch 1 disables HS-DDR for H5 eMMC.
+
+Patch 2 adds a check blocking (force disabling) any modes the driver
+doesn't support. In retrospect this should have been added a long time
+ago.
+
+Patch 3 enables HS-DDR for the Libre Computer ALL-H3-CC H5, which works
+normally.
+
+If possible please merge all of them as fixes.
 
 
-Le dim. 3 f=E9vr. 2019 =E0 12:07, Boris Brezillon <bbrezillon@kernel.org>=20
-a =E9crit :
-> On Sun, 03 Feb 2019 11:56:32 -0300
-> Paul Cercueil <paul@crapouillou.net> wrote:
->=20
->>  Le dim. 3 f=E9vr. 2019 =E0 11:16, Boris Brezillon=20
->> <bbrezillon@kernel.org>
->>  a =E9crit :
->>  > On Sun, 03 Feb 2019 10:58:13 -0300
->>  > Paul Cercueil <paul@crapouillou.net> wrote:
->>  >
->>  >>  Le dim. 3 f=E9vr. 2019 =E0 4:35, Boris Brezillon
->>  >> <bbrezillon@kernel.org>
->>  >>  a =E9crit :
->>  >>  > On Sat,  2 Feb 2019 20:19:26 -0300
->>  >>  > Paul Cercueil <paul@crapouillou.net> wrote:
->>  >>  >
->>  >>  >>  Add the backend code for the jz4780-bch driver to support=20
->> the
->>  >> JZ4740
->>  >>  >>  SoC from Ingenic.
->>  >>  >>
->>  >>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  >>  >>  ---
->>  >>  >>
->>  >>  >>  Changes:
->>  >>  >>
->>  >>  >>  v2: New patch
->>  >>  >>
->>  >>  >>   drivers/mtd/nand/raw/ingenic/Makefile         |   2 +-
->>  >>  >>   drivers/mtd/nand/raw/ingenic/jz4740_bch.c     | 173
->>  >>  >> ++++++++++++++++++
->>  >>  >>   .../mtd/nand/raw/ingenic/jz4780_bch_common.c  |   1 +
->>  >>  >>   .../nand/raw/ingenic/jz4780_bch_internal.h    |   1 +
->>  >>  >>   4 files changed, 176 insertions(+), 1 deletion(-)
->>  >>  >>   create mode 100644=20
->> drivers/mtd/nand/raw/ingenic/jz4740_bch.c
->>  >>  >>
->>  >>  >>  diff --git a/drivers/mtd/nand/raw/ingenic/Makefile
->>  >>  >> b/drivers/mtd/nand/raw/ingenic/Makefile
->>  >>  >>  index f38b467490cf..d16c96113a93 100644
->>  >>  >>  --- a/drivers/mtd/nand/raw/ingenic/Makefile
->>  >>  >>  +++ b/drivers/mtd/nand/raw/ingenic/Makefile
->>  >>  >>  @@ -1,3 +1,3 @@
->>  >>  >>   obj-$(CONFIG_MTD_NAND_JZ4740) +=3D jz4740_nand.o
->>  >>  >>   obj-$(CONFIG_MTD_NAND_JZ4780) +=3D jz4780_nand.o
->>  >> jz4780_bch_common.o
->>  >>  >> \
->>  >>  >>  -				 jz4780_bch.o jz4725b_bch.o
->>  >>  >>  +				 jz4780_bch.o jz4725b_bch.o jz4740_bch.o
->>  >>  >
->>  >>  > I still don't see the point of the=20
->> jz4780_bch_common/jz47xxx_bch
->>  >>  > separation. You seem to always embed all objects anyway, so=20
->> you
->>  >> can
->>  >>  > just put the code for both engines in the same source file and
->>  >> decide
->>  >>  > which one to use based on the compat (which you already do
->>  >> anyway).
->>  >>
->>  >>  Each SoC has a different set of registers for the BCH hardware.=20
->> I
->>  >> can
->>  >>  try to
->>  >>  cram everything into one file, but it won't be that much=20
->> cleaner.
->>  >
->>  > Then maybe they deserve separate drivers/modules.
->>  >
->>  > BTW, didn't you say that one IP uses Reed-Salomon instead of BCH.=20
->> I'd
->>  > suggest prefixing structs and functions with jz47xx_ecc instead of
->>  > jz47xx_bch and naming the common part jz47xx_ecc.c to reflect=20
->> that.
->>=20
->>  Would it be a good idea to make a generic ECC API that the=20
->> jz47xx_nand
->>  driver could use? Then the three jz47xx BCH codepaths could be=20
->> separate
->>  drivers that register with the generic ECC core.
->=20
-> Definitely. Actually, Miquel is already working on that, but I don't
-> think it's a good idea to wait for this new framework to be finished=20
-> to
-> get your changes merged. So I'd recommend having a jz specific ECC API
-> (pretty much the one you have in the common file expect it would be
-> prefixed with _ecc instead of _bch) and convert it to the generic
-> approach afterwards. Given the size of the common.c file, you can even
-> put everything in jz47xx_ecc.h as inline funcs to avoid having yet
-> another module.
+Regards
+ChenYu
 
-Ok, perfect, I'll do that.
-Thank you for your input!
-=
+Chen-Yu Tsai (3):
+  mmc: sunxi: Disable HS-DDR mode for H5 eMMC controller by default
+  mmc: sunxi: Filter out unsupported modes declared in the device tree
+  arm64: dts: allwinner: h5: libretech-all-h3-cc: Mark eMMC HS-DDR 3.3V
+    capable
+
+ .../sun50i-h5-libretech-all-h3-cc.dts         |  4 +++
+ drivers/mmc/host/sunxi-mmc.c                  | 27 ++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
+
+-- 
+2.20.1
