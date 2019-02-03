@@ -1,13 +1,13 @@
 From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RESEND v2 06/12] drm/sun4i: rgb: Add 1%
- tolerance to dclk frequency check when bridge is connected
-Date: Sun,  3 Feb 2019 10:54:55 -0800
-Message-ID: <20190203185501.8958-7-anarsoul@gmail.com>
+Subject: [PATCH RESEND v2 09/12] drm/panel: simple: add generic
+ eDP panel
+Date: Sun,  3 Feb 2019 10:54:58 -0800
+Message-ID: <20190203185501.8958-10-anarsoul@gmail.com>
 References: <20190203185501.8958-1-anarsoul@gmail.com>
 Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBLPS3TRAKGQECCXD2IQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDV3B667TUHBBMPS3TRAKGQE42YT74I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190203185501.8958-1-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,96 +20,31 @@ To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/
 Cc: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Clock rate check that was added in commit bb43d40d7c83 ("drm/sun4i: rgb:
-Validate the clock rate") prevents some panel and bridges from working with
-sun4i driver.
+eDP panels usually have EDID EEPROM, so there's no need to define panel
+width/height or any modes/timings in dts. But this panel still has
+regulator and backlight.
 
-Unfortunately, dotclock frequency for some modes are not achievable on
-sunxi hardware, and there's a slight deviation in rate returned by
-clk_round_rate(), so they fail this check.
-
-Experiments show that panels and bridges work fine with this slight
-deviation, e.g. Pinebook that uses ANX6345 bridge with 768p eDP panel
-requests 73 MHz, gets 72.296MHz instead (0.96% difference) and works just
-fine.
-
-This patch adds a 1% tolerence to the dot clock check when bridge is
-connected.
+Add compatible for generic eDP panel so such kind of panel can be
+defined in dts.
 
 Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_rgb.c  | 16 ++++++++++------
- drivers/gpu/drm/sun4i/sun4i_tcon.h |  1 +
- 2 files changed, 11 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_rgb.c b/drivers/gpu/drm/sun4i/sun4i_rgb.c
-index f4a22689eb54..3f04446120f6 100644
---- a/drivers/gpu/drm/sun4i/sun4i_rgb.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_rgb.c
-@@ -61,6 +61,7 @@ static enum drm_mode_status sun4i_rgb_mode_valid(struct drm_encoder *crtc,
- 	u32 vsync = mode->vsync_end - mode->vsync_start;
- 	unsigned long rate = mode->clock * 1000;
- 	long rounded_rate;
-+	long tolerance = 0;
- 
- 	DRM_DEBUG_DRIVER("Validating modes...\n");
- 
-@@ -95,10 +96,14 @@ static enum drm_mode_status sun4i_rgb_mode_valid(struct drm_encoder *crtc,
- 	tcon->dclk_min_div = 6;
- 	tcon->dclk_max_div = 127;
- 	rounded_rate = clk_round_rate(tcon->dclk, rate);
--	if (rounded_rate < rate)
-+	if (tcon->bridge)
-+		/* Check against a 1% tolerance for the dot clock for bridge */
-+		tolerance = rate / 100;
-+
-+	if (rounded_rate < (rate - tolerance))
- 		return MODE_CLOCK_LOW;
- 
--	if (rounded_rate > rate)
-+	if (rounded_rate > (rate + tolerance))
- 		return MODE_CLOCK_HIGH;
- 
- 	DRM_DEBUG_DRIVER("Clock rate OK\n");
-@@ -172,7 +177,6 @@ static struct drm_encoder_funcs sun4i_rgb_enc_funcs = {
- int sun4i_rgb_init(struct drm_device *drm, struct sun4i_tcon *tcon)
- {
- 	struct drm_encoder *encoder;
--	struct drm_bridge *bridge;
- 	struct sun4i_rgb *rgb;
- 	int ret;
- 
-@@ -183,7 +187,7 @@ int sun4i_rgb_init(struct drm_device *drm, struct sun4i_tcon *tcon)
- 	encoder = &rgb->encoder;
- 
- 	ret = drm_of_find_panel_or_bridge(tcon->dev->of_node, 1, 0,
--					  &tcon->panel, &bridge);
-+					  &tcon->panel, &tcon->bridge);
- 	if (ret) {
- 		dev_info(drm->dev, "No panel or bridge found... RGB output disabled\n");
- 		return 0;
-@@ -225,8 +229,8 @@ int sun4i_rgb_init(struct drm_device *drm, struct sun4i_tcon *tcon)
- 		}
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 2f2cb2d81f2b..9698f5819930 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2759,6 +2759,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "winstar,wf35ltiacd",
+ 		.data = &winstar_wf35ltiacd,
++	}, {
++		.compatible = "panel-edp",
++		.data = NULL,
+ 	}, {
+ 		/* sentinel */
  	}
- 
--	if (bridge) {
--		ret = drm_bridge_attach(encoder, bridge, NULL);
-+	if (tcon->bridge) {
-+		ret = drm_bridge_attach(encoder, tcon->bridge, NULL);
- 		if (ret) {
- 			dev_err(drm->dev, "Couldn't attach our bridge\n");
- 			goto err_cleanup_connector;
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index b5214d71610f..487cb070b25c 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -258,6 +258,7 @@ struct sun4i_tcon {
- 	struct reset_control		*lvds_rst;
- 
- 	struct drm_panel		*panel;
-+	struct drm_bridge		*bridge;
- 
- 	/* Platform adjustments */
- 	const struct sun4i_tcon_quirks	*quirks;
 -- 
 2.20.1
