@@ -1,38 +1,45 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: rv1108-elgin: Fix
- vcc5/6-supply representation
-Date: Sun, 03 Feb 2019 10:00:58 +0100
-Message-ID: <59585681.DkdmuU3GWD@phil>
-References: <20190131124710.30238-1-otavio@ossystems.com.br>
+Subject: Re: [PATCH] dt-bindings: display: add binding for Innolux ee101ia-01d
+ panel
+Date: Sun, 03 Feb 2019 10:26:15 +0100
+Message-ID: <172133439.YmBYh9xVVU@phil>
+References: <20181113124205.29319-1-heiko@sntech.de>
+ <5825168.ASgtykK0VC@diego> <20190129164550.GU3271@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190131124710.30238-1-otavio@ossystems.com.br>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Otavio Salvador <otavio@ossystems.com.br>
-Cc: Jason Zhu <jason.zhu@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Tony Xie <tony.xie@rock-chips.com>, Vicent Chi <vicent.chi@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Philipp Tomsic <philipp.tomsich@theobroma-systems.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190129164550.GU3271@phenom.ffwll.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 31. Januar 2019, 13:47:07 CET schrieb Otavio Salvador:
-> On rv1108-elgin-r1 board the RK805 VCC5 and VCC6 supplies come from
-> the BUCK2 regulator at 2.2V, so fix the representation in the
-> device tree.
-> 
-> While at it, rename it from vdd_cam to vdd_buck2, which is a better
-> name for the regulator label.
-> 
-> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
-
-applied all 3 for 5.1
-
-Thanks
-Heiko
+QW0gRGllbnN0YWcsIDI5LiBKYW51YXIgMjAxOSwgMTc6NDU6NTAgQ0VUIHNjaHJpZWIgRGFuaWVs
+IFZldHRlcjoKPiBPbiBUdWUsIEphbiAyOSwgMjAxOSBhdCAwMjozNzoyM1BNICswMTAwLCBIZWlr
+byBTdMO8Ym5lciB3cm90ZToKPiA+IEhpIFRoaWVycnksCj4gPiAKPiA+IEFtIERpZW5zdGFnLCAx
+My4gTm92ZW1iZXIgMjAxOCwgMTM6NDI6MDUgQ0VUIHNjaHJpZWIgSGVpa28gU3R1ZWJuZXI6Cj4g
+PiA+IEZyb206IEhlaWtvIFN0dWVibmVyIDxoZWlrby5zdHVlYm5lckBicS5jb20+Cj4gPiA+IAo+
+ID4gPiBUaGlzIGlzIGEgcGFuZWwgaGFuZGxlZCB0aHJvdWdoIHRoZSBnZW5lcmljIGx2ZHMtcGFu
+ZWwgYmluZGluZywKPiA+ID4gc28gb25seSBuZWVkcyBpdHMgYWRkaXRpb25hbCBjb21wYXRpYmxl
+IHNwZWNpZmllZC4KPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxo
+ZWlrby5zdHVlYm5lckBicS5jb20+Cj4gPiAKPiA+IGp1c3QgcHVsbGluZyB0aGlzIHBlbmRpbmcg
+cGF0Y2ggb3V0IG9mIHRoZSB3b29kd29ya3MgYWdhaW4gdG9vIDotKQo+ID4gCj4gPiBUaGFua3Mg
+aW4gYWR2YW5jZSBmb3IgY29uc2lkZXJpbmcgaXQuCj4gCj4gSXQncyBhIHBhbmVsIHBhdGNoLCB5
+b3UgaGF2ZSB0aGUgcmV2aWV3IGZyb20gUm9iLCB5b3UgaGF2ZSBjb21taXQgcmlnaHRzCj4gdG8g
+ZHJtLW1pc2MgYW5kIHBhbmVsIGlzIG1haW50YWluZWQgaW4gZHJtLW1pc2MuIFRoZXJlJ3Mgbm90
+aGluZyBibG9ja2luZwo+IHlvdSBmcm9tIHB1c2hpbmcgaXQsIGp1c3QgZG8gaXQgOi0pCgp5ZWFo
+LCBhdCBzb21lIHBvaW50IEknbGwgcHJvYmFibHkgaW50ZXJuYWxpemUgdGhlIGRybS1taXNjIGNv
+bmNlcHQKd2l0aG91dCBmZWVsaW5nIG9mIHN0ZXBwaW5nIG9uIHNvbWVvbmUncyB0b2VzIDotRAoK
+QW55d2F5LCBhcHBsaWVkIGFuZCBwdXNoZWQgbm93LgpIZWlrbwoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
