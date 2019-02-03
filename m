@@ -1,13 +1,12 @@
 From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 10/12] arm64: allwinner: a64: add pinmux for
- RGB666 LCD
-Date: Sun,  3 Feb 2019 10:44:48 -0800
-Message-ID: <20190203184450.8050-11-anarsoul@gmail.com>
+Subject: Re: [PATCH v2 00/12] Analogix ANX6345 RGB-(e)DP bridge support
+Date: Sun, 3 Feb 2019 10:49:14 -0800
+Message-ID: <CA+E=qVexoHVt1SHFeHqdqjuj_x79yNvMLJeEch1Qu-Az3t9dfg@mail.gmail.com>
 References: <20190203184450.8050-1-anarsoul@gmail.com>
 Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBM7N3TRAKGQE6OIMEII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDV3B667TUHBBRPP3TRAKGQEB5KUYLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190203184450.8050-1-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -16,41 +15,80 @@ List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: David Airlie Daniel Vetter <airlied-cv59FeDIM0fLFAHvckquKw@public.gmane.org>, ffwll.ch, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Oops, looks like I screwed up with recipients list.I'll resend the series.
 
-Allwinner A64's TCON0 can output RGB666 LCD signal.
-
-Add its pinmux.
-
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 837a03dee875..4fc3ca5fa53e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -559,6 +559,15 @@
- 				function = "i2c1";
- 			};
- 
-+			lcd_rgb666_pins: lcd-rgb666 {
-+				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
-+				       "PD5", "PD6", "PD7", "PD8", "PD9",
-+				       "PD10", "PD11", "PD12", "PD13",
-+				       "PD14", "PD15", "PD16", "PD17",
-+				       "PD18", "PD19", "PD20", "PD21";
-+				function = "lcd0";
-+			};
-+
- 			mmc0_pins: mmc0-pins {
- 				pins = "PF0", "PF1", "PF2", "PF3",
- 				       "PF4", "PF5";
--- 
-2.20.1
+On Sun, Feb 3, 2019 at 10:44 AM Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> This patchset brings support for Analogix ANX6345 RGB-(e)DP bridge, which
+> is used by some Allwinner A64 laptops, such as Pinebook and Olimex
+> TERES-I.
+>
+> It reuses some definitions from ANX78xx driver that already exists in the
+> kernel tree, but the driver code itself is rewritten due to significant
+> difference between ANX6345 and ANX78xx.
+>
+> This patchset also enables the bridge on Pinebook and TERES-I and adds 1%
+> tolerance into dotclock check in sun4i driver in case if bridge is
+> connected
+>
+> v2: - sort Kconfig and Makefile entries alphabetically
+>     - remove panel supply from anx6345
+>     - add support for panels into anx6345 driver
+>     - add compatible and binding for generic eDP panel
+>     - replace patch that adds 5% tolerance for dotclock check in sun4i
+>       driver for panel and bridges with patch that adds 1% tolerance
+>       in case if bridge is connected.
+>
+> Icenowy Zheng (8):
+>   drm/bridge: move ANA78xx driver to analogix subdirectory
+>   drm/bridge: split some definitions of ANX78xx to dedicated headers
+>   drm/bridge: extract some Analogix I2C DP common code
+>   dt-bindings: Add ANX6345 DP/eDP transmitter binding
+>   drm/bridge: Add Analogix anx6345 support
+>   arm64: allwinner: a64: add pinmux for RGB666 LCD
+>   arm64: allwinner: a64: enable LCD-related hardware for Pinebook
+>   arm64: allwinner: a64: enable LCD-related hardware for TERES-I
+>
+> Vasily Khoruzhick (4):
+>   drm/sun4i: rgb: Add 1% tolerance to dclk frequency check when bridge
+>     is connected
+>   drm/panel: simple: don't fail if we don't have panel desc
+>   dt-bindings: add binding for generic eDP panel
+>   drm/panel: simple: add generic eDP panel
+>
+>  .../bindings/display/bridge/anx6345.txt       |  56 ++
+>  .../bindings/display/panel/panel-edp.txt      |   7 +
+>  .../dts/allwinner/sun50i-a64-pinebook.dts     |  74 ++
+>  .../boot/dts/allwinner/sun50i-a64-teres-i.dts |  71 +-
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |   9 +
+>  drivers/gpu/drm/bridge/Kconfig                |  10 -
+>  drivers/gpu/drm/bridge/Makefile               |   4 +-
+>  drivers/gpu/drm/bridge/analogix-anx78xx.h     | 719 ---------------
+>  drivers/gpu/drm/bridge/analogix/Kconfig       |  25 +
+>  drivers/gpu/drm/bridge/analogix/Makefile      |   4 +
+>  .../drm/bridge/analogix/analogix-anx6345.c    | 845 ++++++++++++++++++
+>  .../bridge/{ => analogix}/analogix-anx78xx.c  | 146 +--
+>  .../drm/bridge/analogix/analogix-anx78xx.h    | 265 ++++++
+>  .../drm/bridge/analogix/analogix-i2c-dptx.c   | 169 ++++
+>  .../drm/bridge/analogix/analogix-i2c-dptx.h   | 258 ++++++
+>  .../bridge/analogix/analogix-i2c-txcommon.h   | 240 +++++
+>  drivers/gpu/drm/panel/panel-simple.c          |  24 +-
+>  drivers/gpu/drm/sun4i/sun4i_rgb.c             |  16 +-
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h            |   1 +
+>  19 files changed, 2049 insertions(+), 894 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
+>  delete mode 100644 drivers/gpu/drm/bridge/analogix-anx78xx.h
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+>  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (90%)
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
+>
+> --
+> 2.20.1
+>
