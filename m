@@ -1,13 +1,13 @@
 From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RESEND v2 09/12] drm/panel: simple: add generic
- eDP panel
-Date: Sun,  3 Feb 2019 10:54:58 -0800
-Message-ID: <20190203185501.8958-10-anarsoul@gmail.com>
+Subject: [PATCH RESEND v2 08/12] dt-bindings: add binding for
+ generic eDP panel
+Date: Sun,  3 Feb 2019 10:54:57 -0800
+Message-ID: <20190203185501.8958-9-anarsoul@gmail.com>
 References: <20190203185501.8958-1-anarsoul@gmail.com>
 Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBMPS3TRAKGQE42YT74I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDV3B667TUHBBMHS3TRAKGQEOE3SNVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190203185501.8958-1-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,30 +21,27 @@ Cc: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 eDP panels usually have EDID EEPROM, so there's no need to define panel
-width/height or any modes/timings in dts. But this panel still has
-regulator and backlight.
-
-Add compatible for generic eDP panel so such kind of panel can be
-defined in dts.
+width/height or any modes/timings in dts. But this panel still may have
+regulator and/or backlight.
 
 Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/display/panel/panel-edp.txt        | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 2f2cb2d81f2b..9698f5819930 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2759,6 +2759,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "winstar,wf35ltiacd",
- 		.data = &winstar_wf35ltiacd,
-+	}, {
-+		.compatible = "panel-edp",
-+		.data = NULL,
- 	}, {
- 		/* sentinel */
- 	}
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-edp.txt b/Documentation/devicetree/bindings/display/panel/panel-edp.txt
+new file mode 100644
+index 000000000000..fc7a0868048e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/panel-edp.txt
+@@ -0,0 +1,7 @@
++Generic eDP Display Panel
++
++Required properties:
++  - compatible: "panel-edp"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
 -- 
 2.20.1
