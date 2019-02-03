@@ -1,43 +1,62 @@
 From: Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: [PATCH v2 0/9] Ingenic JZ4780 NAND patchset v2
-Date: Sun, 3 Feb 2019 15:04:53 +0100
-Message-ID: <20190203150453.43732f7c@bbrezillon>
+Subject: Re: [PATCH v2 4/9] mtd: rawnand: jz4780: Add support for the JZ4740
+Date: Sun, 3 Feb 2019 15:08:27 +0100
+Message-ID: <20190203150827.401ac31d@bbrezillon>
 References: <20190202231926.2444-1-paul@crapouillou.net>
- <20190203082032.6e37c523@bbrezillon>
- <1549198896.1950.0@crapouillou.net>
+        <20190202231926.2444-5-paul@crapouillou.net>
+        <20190203083151.4fc29c5b@bbrezillon>
+        <1549202213.1950.1@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1549198896.1950.0@crapouillou.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1549202213.1950.1@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Harvey Hunt <harveyhuntnexus@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAwMyBGZWIgMjAxOSAxMDowMTozNiAtMDMwMApQYXVsIENlcmN1ZWlsIDxwYXVsQGNy
-YXBvdWlsbG91Lm5ldD4gd3JvdGU6Cgo+IEhpLAo+IAo+IExlIGRpbS4gMyBmw6l2ci4gMjAxOSDD
-oCA0OjIwLCBCb3JpcyBCcmV6aWxsb24gPGJicmV6aWxsb25Aa2VybmVsLm9yZz4gCj4gYSDDqWNy
-aXQgOgo+ID4gT24gU2F0LCAgMiBGZWIgMjAxOSAyMDoxOToxNyAtMDMwMAo+ID4gUGF1bCBDZXJj
-dWVpbCA8cGF1bEBjcmFwb3VpbGxvdS5uZXQ+IHdyb3RlOgo+ID4gICAKPiA+PiAgSGksCj4gPj4g
-Cj4gPj4gIEFzIHJlcXVlc3RlZCBieSBCb3JpcywgSSBhZGRlZCBhIHBhdGNoIHRvIG1vdmUgYWxs
-IHRoZSBJbmdlbmljIE5BTkQKPiA+PiAgZHJpdmVycyB0byB0aGVpciBvd24gZGlyZWN0b3J5Lgo+
-ID4+IAo+ID4+ICBJbiB0aGlzIFYyIEkgYWRkZWQgc3VwcG9ydCBmb3IgdGhlIEpaNDc0MCBTb0Mu
-IFRoZSBjb21ibyBvZiB0aGUKPiA+PiAgano0NzgwLW5lbWMsIGp6NDc4MC1uYW5kIGFuZCBqejQ3
-NDAtYmNoIG5vdyBvYnNvbGV0ZSB0aGUgb2xkIGFuZCAKPiA+PiBkdXN0eQo+ID4+ICBqejQ3NDAt
-bmFuZCBkcml2ZXIuICAKPiA+IAo+ID4gQW55IHBsYW4gdG8gZ2V0IHRoZSBvbGQgZHJpdmVyIHJl
-bW92ZWQ/IEkgZ3Vlc3MgeW91IHdhbnQgdG8gbWlncmF0ZSAKPiA+IHRoZQo+ID4gYm9hcmRzIHRv
-IERUIGZpcnN0LiAgCj4gCj4gWWVzLCB0aGF0J3MgdGhlIHBsYW4gLSBtaWdyYXRlIHRoZSBxaV9s
-YjYwIGJvYXJkIGZpcnN0IHRoZW4gZHJvcCB0aGUgb2xkCj4gZHJpdmVyLgoKR29vZCwgSSBoYXRl
-IGhhdmluZyAyIGRyaXZlcnMgZm9yIHRoZSBzYW1lIElQIGxpdmUgaW4gcGFyYWxsZWwgZm9yIHRv
-bwpsb25nLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
+On Sun, 03 Feb 2019 10:56:53 -0300
+Paul Cercueil <paul@crapouillou.net> wrote:
+
+> Le dim. 3 f=C3=A9vr. 2019 =C3=A0 4:31, Boris Brezillon <bbrezillon@kernel=
+.org>=20
+> a =C3=A9crit :
+> > On Sat,  2 Feb 2019 20:19:21 -0300
+> > Paul Cercueil <paul@crapouillou.net> wrote:
+> >  =20
+> >>  Add support for probing the jz4780-nand driver on the JZ4740 SoC=20
+> >> from
+> >>  Ingenic.
+> >>=20
+> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >>  ---
+> >>=20
+> >>  Changes:
+> >>=20
+> >>  v2: - Add support for the JZ4740 and not the JZ4725B: they behave=20
+> >> the
+> >>        same, and JZ4740 is fully upstream while JZ4725B is not. The
+> >>        JZ4725B devicetree will then simply use the=20
+> >> "ingenic,jz4740-nand"
+> >>        compatible string.
+> >>      - Fix the number of bytes for the ECC when the ECC strength is=20
+> >> 4.
+> >>        This is needed for the JZ4740, which uses Reed-Solomon=20
+> >> instead of
+> >>        BCH.
+> >>=20
+> >>   drivers/mtd/nand/raw/ingenic/jz4780_nand.c | 48=20
+> >> +++++++++++++++++----- =20
+> >=20
+> > If we're going to make the driver compatible with jz4740 and jz4725b
+> > maybe we should rename the source files jz47xx_{nand,bch}.{c,h}. =20
+>=20
+> I don't know about that. Adding support for new hardware isn't a good=20
+> reason to
+> rename the driver, or so I've been told around here, as you then make=20
+> it harder
+> to review the git history of the driver.
+
+You already move files to a sub-directory so that doesn't make a huge
+difference, history will be hard to follow because of this move anyway.
