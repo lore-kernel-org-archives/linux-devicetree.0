@@ -1,52 +1,35 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [v2, 0/9] Add ENETC PTP clock driver
-Date: Sun, 03 Feb 2019 12:11:44 -0800 (PST)
-Message-ID: <20190203.121144.623666032377925349.davem@davemloft.net>
-References: <20190202025707.10794-1-yangbo.lu@nxp.com>
-        <20190203.113921.1847323007238920901.davem@davemloft.net>
+From: Benjamin Drung <bdrung@posteo.de>
+Subject: [PATCH] ARM: dts: exynos: Fix spelling mistake of EXYNOS5420
+Date: Sun, 03 Feb 2019 21:13:30 +0100
+Message-ID: <bb0903e066484e02f5dcd0e9cbe94a491a179fba.camel@posteo.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190203.113921.1847323007238920901.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: yangbo.lu@nxp.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, richardcochran@gmail.com, robh+dt@kernel.org, claudiu.manoil@nxp.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
-Date: Sun, 03 Feb 2019 11:39:21 -0800 (PST)
+The SoC name EXYNOS5420 was misspelled.
 
-> From: Yangbo Lu <yangbo.lu@nxp.com>
-> Date: Sat,  2 Feb 2019 10:56:58 +0800
-> 
->> There is same QorIQ 1588 timer IP block on the new ENETC Ethernet
->> controller with eTSEC/DPAA Ethernet controllers. However it's
->> different endianness (little-endian) and using PCI driver.
->> 
->> To support ENETC PTP driver, ptp_qoriq driver needed to be
->> reworked to make functions global for reusing, to add little-
->> endian support, to add ENETC memory map support, and to add
->> ENETC dependency for ptp_qoriq driver.
->> 
->> In addition, although ENETC PTP driver is a PCI driver, the dts
->> node still could be used. Currently the ls1028a dtsi which is
->> the only platform by now using ENETC is not complete, so there
->> is still dependency for ENETC PTP node upstreaming. This will
->> be done in the near future. The hardware timestamping support
->> for ENETC is done but needs to be reworked with new method in
->> internal git tree, and will be sent out soon.
-> 
-> Series applied.
+Signed-off-by: Benjamin Drung <bdrung@posteo.de>
+---
+ arch/arm/boot/dts/exynos5420.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Once AGAIN, I had to revert:
-
-[davem@localhost net-next]$ make -s -j8
-ERROR: "ptp_qoriq_remove_debugfs" [drivers/net/ethernet/freescale/enetc/fsl-enetc-ptp.ko] undefined!
-make[1]: *** [scripts/Makefile.modpost:92: __modpost] Error 1
-make: *** [Makefile:1262: modules] Error 2
-
-Please do an allmodconfig build and don't resubmit this until it all
-passes.
-
-Thank you.
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index aaff15880761..5fb2326875dc 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -5,7 +5,7 @@
+  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
+  *
+- * SAMSUNG EXYNOS54200 SoC device nodes are listed in this file.
++ * SAMSUNG EXYNOS5420 SoC device nodes are listed in this file.
+  * EXYNOS5420 based board files can include this file and provide
+  * values for board specfic bindings.
+  */
+-- 
+2.19.1
