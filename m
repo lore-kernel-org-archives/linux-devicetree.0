@@ -1,107 +1,38 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/3] firmware: xilinx: Add zynqmp_pm_get_chipid() API
-Date: Sun, 3 Feb 2019 08:50:30 +0000
-Message-ID: <d949520b-452f-9e66-42ae-263959a8c549@linaro.org>
-References: <20190204070951.6933-1-nava.manne@xilinx.com>
- <20190204070951.6933-2-nava.manne@xilinx.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: rv1108-elgin: Fix
+ vcc5/6-supply representation
+Date: Sun, 03 Feb 2019 10:00:58 +0100
+Message-ID: <59585681.DkdmuU3GWD@phil>
+References: <20190131124710.30238-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204070951.6933-2-nava.manne@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, jollys@xilinx.com, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190131124710.30238-1-otavio@ossystems.com.br>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Otavio Salvador <otavio@ossystems.com.br>
+Cc: Jason Zhu <jason.zhu@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Tony Xie <tony.xie@rock-chips.com>, Vicent Chi <vicent.chi@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Philipp Tomsic <philipp.tomsich@theobroma-systems.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishore,
+Am Donnerstag, 31. Januar 2019, 13:47:07 CET schrieb Otavio Salvador:
+> On rv1108-elgin-r1 board the RK805 VCC5 and VCC6 supplies come from
+> the BUCK2 regulator at 2.2V, so fix the representation in the
+> device tree.
+> 
+> While at it, rename it from vdd_cam to vdd_buck2, which is a better
+> name for the regulator label.
+> 
+> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 
-I need ack for this patch from Michal Simek to take this via nvmem tree.
+applied all 3 for 5.1
 
-thanks,
-srini
-
-On 04/02/2019 07:09, Nava kishore Manne wrote:
-> This patch adds a new API to provide access to the
-> hardware related data like soc revision, IDCODE... etc.
-> 
-> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> ---
-> Changes for v2:
-> 		-None.
-> Changes for v1:
->                  -None.
-> 
-> Changes for RFC-V3:
->                  -corrected typo error in commit msg.
-> 
-> Changes for RFC-v2:
->                  -New Patch.
-> 
->   drivers/firmware/xilinx/zynqmp.c     | 24 ++++++++++++++++++++++++
->   include/linux/firmware/xlnx-zynqmp.h |  2 ++
->   2 files changed, 26 insertions(+)
-> 
-> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-> index 9a1c72a9280f..af2a209fc2da 100644
-> --- a/drivers/firmware/xilinx/zynqmp.c
-> +++ b/drivers/firmware/xilinx/zynqmp.c
-> @@ -186,6 +186,29 @@ static int zynqmp_pm_get_api_version(u32 *version)
->   	return ret;
->   }
->   
-> +/**
-> + * zynqmp_pm_get_chipid - Get silicon ID registers
-> + * @idcode:     IDCODE register
-> + * @version:    version register
-> + *
-> + * Return:      Returns the status of the operation and the idcode and version
-> + *              registers in @idcode and @version.
-> + */
-> +static int zynqmp_pm_get_chipid(u32 *idcode, u32 *version)
-> +{
-> +	u32 ret_payload[PAYLOAD_ARG_CNT];
-> +	int ret;
-> +
-> +	if (!idcode || !version)
-> +		return -EINVAL;
-> +
-> +	ret = zynqmp_pm_invoke_fn(PM_GET_CHIPID, 0, 0, 0, 0, ret_payload);
-> +	*idcode = ret_payload[1];
-> +	*version = ret_payload[2];
-> +
-> +	return ret;
-> +}
-> +
->   /**
->    * zynqmp_pm_get_trustzone_version() - Get secure trustzone firmware version
->    * @version:	Returned version value
-> @@ -471,6 +494,7 @@ static int zynqmp_pm_ioctl(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2,
->   
->   static const struct zynqmp_eemi_ops eemi_ops = {
->   	.get_api_version = zynqmp_pm_get_api_version,
-> +	.get_chipid = zynqmp_pm_get_chipid,
->   	.query_data = zynqmp_pm_query_data,
->   	.clock_enable = zynqmp_pm_clock_enable,
->   	.clock_disable = zynqmp_pm_clock_disable,
-> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-> index 3c3c28eff56a..c435f4b35adf 100644
-> --- a/include/linux/firmware/xlnx-zynqmp.h
-> +++ b/include/linux/firmware/xlnx-zynqmp.h
-> @@ -34,6 +34,7 @@
->   
->   enum pm_api_id {
->   	PM_GET_API_VERSION = 1,
-> +	PM_GET_CHIPID = 22,
->   	PM_IOCTL = 34,
->   	PM_QUERY_DATA,
->   	PM_CLOCK_ENABLE,
-> @@ -91,6 +92,7 @@ struct zynqmp_pm_query_data {
->   
->   struct zynqmp_eemi_ops {
->   	int (*get_api_version)(u32 *version);
-> +	int (*get_chipid)(u32 *idcode, u32 *version);
->   	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
->   	int (*clock_enable)(u32 clock_id);
->   	int (*clock_disable)(u32 clock_id);
-> 
+Thanks
+Heiko
