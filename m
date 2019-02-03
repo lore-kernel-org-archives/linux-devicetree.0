@@ -1,54 +1,186 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 0/9] Ingenic JZ4780 NAND patchset v2
-Date: Sun, 03 Feb 2019 10:01:36 -0300
-Message-ID: <1549198896.1950.0@crapouillou.net>
+Subject: Re: [PATCH v2 4/9] mtd: rawnand: jz4780: Add support for the JZ4740
+Date: Sun, 03 Feb 2019 10:56:53 -0300
+Message-ID: <1549202213.1950.1@crapouillou.net>
 References: <20190202231926.2444-1-paul@crapouillou.net>
-        <20190203082032.6e37c523@bbrezillon>
+        <20190202231926.2444-5-paul@crapouillou.net>
+        <20190203083151.4fc29c5b@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190203082032.6e37c523@bbrezillon>
+In-Reply-To: <20190203083151.4fc29c5b@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Boris Brezillon <bbrezillon@kernel.org>
 Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Le dim. 3 f=E9vr. 2019 =E0 4:20, Boris Brezillon <bbrezillon@kernel.org>=20
+
+Le dim. 3 f=E9vr. 2019 =E0 4:31, Boris Brezillon <bbrezillon@kernel.org>=20
 a =E9crit :
-> On Sat,  2 Feb 2019 20:19:17 -0300
+> On Sat,  2 Feb 2019 20:19:21 -0300
 > Paul Cercueil <paul@crapouillou.net> wrote:
 >=20
->>  Hi,
+>>  Add support for probing the jz4780-nand driver on the JZ4740 SoC=20
+>> from
+>>  Ingenic.
 >>=20
->>  As requested by Boris, I added a patch to move all the Ingenic NAND
->>  drivers to their own directory.
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
 >>=20
->>  In this V2 I added support for the JZ4740 SoC. The combo of the
->>  jz4780-nemc, jz4780-nand and jz4740-bch now obsolete the old and=20
->> dusty
->>  jz4740-nand driver.
+>>  Changes:
+>>=20
+>>  v2: - Add support for the JZ4740 and not the JZ4725B: they behave=20
+>> the
+>>        same, and JZ4740 is fully upstream while JZ4725B is not. The
+>>        JZ4725B devicetree will then simply use the=20
+>> "ingenic,jz4740-nand"
+>>        compatible string.
+>>      - Fix the number of bytes for the ECC when the ECC strength is=20
+>> 4.
+>>        This is needed for the JZ4740, which uses Reed-Solomon=20
+>> instead of
+>>        BCH.
+>>=20
+>>   drivers/mtd/nand/raw/ingenic/jz4780_nand.c | 48=20
+>> +++++++++++++++++-----
 >=20
-> Any plan to get the old driver removed? I guess you want to migrate=20
-> the
-> boards to DT first.
+> If we're going to make the driver compatible with jz4740 and jz4725b
+> maybe we should rename the source files jz47xx_{nand,bch}.{c,h}.
 
-Yes, that's the plan - migrate the qi_lb60 board first then drop the old
-driver.
+I don't know about that. Adding support for new hardware isn't a good=20
+reason to
+rename the driver, or so I've been told around here, as you then make=20
+it harder
+to review the git history of the driver.
 
+>>   1 file changed, 37 insertions(+), 11 deletions(-)
 >>=20
->>  To support the only upstream JZ4740-based board we have, the Ben
->>  Nanonote, I added an option to specify the OOB layout of that device
->>  from a device property string.
+>>  diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c=20
+>> b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
+>>  index 7f55358b860f..c0855fef7735 100644
+>>  --- a/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
+>>  +++ b/drivers/mtd/nand/raw/ingenic/jz4780_nand.c
+>>  @@ -13,6 +13,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_address.h>
+>>  +#include <linux/of_device.h>
+>>   #include <linux/gpio/consumer.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/slab.h>
+>>  @@ -26,13 +27,15 @@
 >>=20
->>  Finally, I dropped the last two patches that moved the platform NAND
->>  code to devicetree; I will upstream them as part of a different
->>  patchset.
+>>   #define DRV_NAME	"jz4780-nand"
 >>=20
->>  Cheers,
->>  -Paul
+>>  -#define OFFSET_DATA	0x00000000
+>>  -#define OFFSET_CMD	0x00400000
+>>  -#define OFFSET_ADDR	0x00800000
+>>  -
+>>   /* Command delay when there is no R/B pin. */
+>>   #define RB_DELAY_US	100
 >>=20
+>>  +struct jz_soc_info {
+>>  +	unsigned long data_offset;
+>>  +	unsigned long addr_offset;
+>>  +	unsigned long cmd_offset;
+>>  +};
+>>  +
+>>   struct jz4780_nand_cs {
+>>   	unsigned int bank;
+>>   	void __iomem *base;
+>>  @@ -40,6 +43,7 @@ struct jz4780_nand_cs {
+>>=20
+>>   struct jz4780_nand_controller {
+>>   	struct device *dev;
+>>  +	const struct jz_soc_info *soc_info;
+>>   	struct jz4780_bch *bch;
+>>   	struct nand_controller controller;
+>>   	unsigned int num_banks;
+>>  @@ -101,9 +105,9 @@ static void jz4780_nand_cmd_ctrl(struct=20
+>> nand_chip *chip, int cmd,
+>>   		return;
+>>=20
+>>   	if (ctrl & NAND_ALE)
+>>  -		writeb(cmd, cs->base + OFFSET_ADDR);
+>>  +		writeb(cmd, cs->base + nfc->soc_info->addr_offset);
+>>   	else if (ctrl & NAND_CLE)
+>>  -		writeb(cmd, cs->base + OFFSET_CMD);
+>>  +		writeb(cmd, cs->base + nfc->soc_info->cmd_offset);
+>>   }
+>>=20
+>>   static int jz4780_nand_dev_ready(struct nand_chip *chip)
+>>  @@ -161,8 +165,13 @@ static int jz4780_nand_attach_chip(struct=20
+>> nand_chip *chip)
+>>   	struct jz4780_nand_controller *nfc =3D=20
+>> to_jz4780_nand_controller(chip->controller);
+>>   	int eccbytes;
+>>=20
+>>  -	chip->ecc.bytes =3D fls((1 + 8) * chip->ecc.size)	*
+>>  -				(chip->ecc.strength / 8);
+>>  +	if (chip->ecc.strength =3D=3D 4) {
+>>  +		/* JZ4740 uses 9 bytes of ECC to correct maximum 4 errors */
+>>  +		chip->ecc.bytes =3D 9;
+>>  +	} else {
+>>  +		chip->ecc.bytes =3D fls((1 + 8) * chip->ecc.size)	*
+>>  +				  (chip->ecc.strength / 8);
+>>  +	}
+>>=20
+>>   	switch (chip->ecc.mode) {
+>>   	case NAND_ECC_HW:
+>>  @@ -272,8 +281,8 @@ static int jz4780_nand_init_chip(struct=20
+>> platform_device *pdev,
+>>   		return -ENOMEM;
+>>   	mtd->dev.parent =3D dev;
+>>=20
+>>  -	chip->legacy.IO_ADDR_R =3D cs->base + OFFSET_DATA;
+>>  -	chip->legacy.IO_ADDR_W =3D cs->base + OFFSET_DATA;
+>>  +	chip->legacy.IO_ADDR_R =3D cs->base + nfc->soc_info->data_offset;
+>>  +	chip->legacy.IO_ADDR_W =3D cs->base + nfc->soc_info->data_offset;
+>>   	chip->legacy.chip_delay =3D RB_DELAY_US;
+>>   	chip->options =3D NAND_NO_SUBPAGE_WRITE;
+>>   	chip->legacy.select_chip =3D jz4780_nand_select_chip;
+>>  @@ -353,6 +362,10 @@ static int jz4780_nand_probe(struct=20
+>> platform_device *pdev)
+>>   	if (!nfc)
+>>   		return -ENOMEM;
+>>=20
+>>  +	nfc->soc_info =3D device_get_match_data(dev);
+>>  +	if (!nfc->soc_info)
+>>  +		return -EINVAL;
+>>  +
+>>   	/*
+>>   	 * Check for BCH HW before we call nand_scan_ident, to prevent us=20
+>> from
+>>   	 * having to call it again if the BCH driver returns=20
+>> -EPROBE_DEFER.
+>>  @@ -390,8 +403,21 @@ static int jz4780_nand_remove(struct=20
+>> platform_device *pdev)
+>>   	return 0;
+>>   }
+>>=20
+>>  +static const struct jz_soc_info jz4740_soc_info =3D {
+>>  +	.data_offset =3D 0x00000000,
+>>  +	.cmd_offset  =3D 0x00008000,
+>>  +	.addr_offset =3D 0x00010000,
+>>  +};
+>>  +
+>>  +static const struct jz_soc_info jz4780_soc_info =3D {
+>>  +	.data_offset =3D 0x00000000,
+>>  +	.cmd_offset  =3D 0x00400000,
+>>  +	.addr_offset =3D 0x00800000,
+>>  +};
+>>  +
+>>   static const struct of_device_id jz4780_nand_dt_match[] =3D {
+>>  -	{ .compatible =3D "ingenic,jz4780-nand" },
+>>  +	{ .compatible =3D "ingenic,jz4740-nand", .data =3D &jz4740_soc_info }=
+,
+>>  +	{ .compatible =3D "ingenic,jz4780-nand",  .data =3D &jz4780_soc_info =
+=20
+>> },
+>>   	{},
+>>   };
+>>   MODULE_DEVICE_TABLE(of, jz4780_nand_dt_match);
 >=20
 =
