@@ -1,143 +1,273 @@
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in early
- memory reservation
-Date: Mon, 4 Feb 2019 15:37:21 +0100
-Message-ID: <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
-References: <d4facdc2-0581-929f-caa2-b9efa9bd8f97@arm.com>
- <CAL_JsqKFT8J6g02gxeBiTfBb_XHhp2-ZNB6DgaLPK85kNZGRig@mail.gmail.com>
- <20190121143704.GE29504@arrakis.emea.arm.com>
- <CAL_JsqKQb34zVNTzo9DLNiDwmWGxkrKezSOjwCUPAvgzUoLYjg@mail.gmail.com>
- <20190121174234.GC26461@rapoport-lnx>
- <2bb30550-435a-046c-4f45-21dd594aa695@free.fr>
- <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
- <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
- <20190123055414.GA4747@rapoport-lnx>
- <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
- <20190123123143.GE4747@rapoport-lnx>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RFC PATCH v5 10/10] watchdog: bd70528: Initial support for ROHM
+ BD70528 watchdog block
+Date: Mon, 4 Feb 2019 06:38:43 -0800
+Message-ID: <a76ec2b9-a95e-a17a-f231-c1d04ec8e846@roeck-us.net>
+References: <cover.1549283919.git.matti.vaittinen@fi.rohmeurope.com>
+ <c03a470dac74047a72dc3ed8f51ab81f456594d1.1549283920.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190123123143.GE4747@rapoport-lnx>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c03a470dac74047a72dc3ed8f51ab81f456594d1.1549283920.git.matti.vaittinen@fi.rohmeurope.com>
 Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
+Cc: heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+On 2/4/19 4:49 AM, Matti Vaittinen wrote:
+> Initial support for watchdog block included in ROHM BD70528
+> power management IC.
+> 
+> Configurations for low power states are still to be checked.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>   drivers/watchdog/Kconfig       |  12 +++
+>   drivers/watchdog/Makefile      |   1 +
+>   drivers/watchdog/bd70528_wdt.c | 187 +++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 200 insertions(+)
+>   create mode 100644 drivers/watchdog/bd70528_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 57f017d74a97..f30e3a3e886e 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
+>   	  watchdog. Be aware that governors might affect the watchdog because it
+>   	  is purely software, e.g. the panic governor will stall it!
+>   
+> +config BD70528_WATCHDOG
+> +	tristate "ROHM BD70528 PMIC Watchdog"
+> +	depends on MFD_ROHM_BD70528
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
+> +	  cause system reset.
+> +
+> +	  Say Y here to include support for the ROHM BD70528 watchdog.
+> +	  Alternatively say M to compile the driver as a module,
+> +	  which will be called bd70528_wdt.
+> +
+>   config DA9052_WATCHDOG
+>   	tristate "Dialog DA9052 Watchdog"
+>   	depends on PMIC_DA9052 || COMPILE_TEST
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index a0917ef28e07..1ce87a3b1172 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -204,6 +204,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
+>   obj-$(CONFIG_XEN_WDT) += xen_wdt.o
+>   
+>   # Architecture Independent
+> +obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
+>   obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
+>   obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
+>   obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
+> diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
+> new file mode 100644
+> index 000000000000..c24d4cce5e9c
+> --- /dev/null
+> +++ b/drivers/watchdog/bd70528_wdt.c
+> @@ -0,0 +1,187 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2018 ROHM Semiconductors
+> +// ROHM BD70528MWV watchdog driver
+> +
+> +#include <linux/bcd.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/rohm-bd70528.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/watchdog.h>
+> +
+> +struct wdtbd70528 {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	struct mutex *rtc_lock;
+> +	struct watchdog_device wdt;
+> +};
+> +
+> +static int bd70528_wdt_set_locked(struct wdtbd70528 *w, int enable)
+> +{
+> +	struct bd70528 *bd70528;
+> +
+> +	bd70528 = container_of(w->rtc_lock, struct bd70528, rtc_timer_lock);
+> +	return bd70528->wdt_set(bd70528, enable, NULL);
+> +}
 
-Marc Gonzalez reported the following kmemleak crash:
+Please add an empty line here.
 
-Unable to handle kernel paging request at virtual address ffffffc021e00000
-Mem abort info:
-  ESR = 0x96000006
-  Exception class = DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000006
-  CM = 0, WnR = 0
-swapper pgtable: 4k pages, 39-bit VAs, pgdp = (____ptrval____)
-[ffffffc021e00000] pgd=000000017e3ba803, pud=000000017e3ba803,
-pmd=0000000000000000
-Internal error: Oops: 96000006 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 6 PID: 523 Comm: kmemleak Tainted: G S      W         5.0.0-rc1 #13
-Hardware name: Qualcomm Technologies, Inc. MSM8998 v1 MTP (DT)
-pstate: 80000085 (Nzcv daIf -PAN -UAO)
-pc : scan_block+0x70/0x190
-lr : scan_block+0x6c/0x190
-sp : ffffff8012e8bd20
-x29: ffffff8012e8bd20 x28: ffffffc0fdbaf018
-x27: ffffffc022000000 x26: 0000000000000080
-x25: ffffff8011aadf70 x24: ffffffc0f8cc8000
-x23: ffffff8010dc8000 x22: ffffff8010dc8830
-x21: ffffffc021e00ff9 x20: ffffffc0f8cc8050
-x19: ffffffc021e00000 x18: 0000000000002409
-x17: 0000000000000200 x16: 0000000000000000
-x15: ffffff8010e14dd8 x14: 0000000000002406
-x13: 000000004c4dd0c6 x12: ffffffc0f77dad58
-x11: 0000000000000001 x10: ffffff8010d9e688
-x9 : ffffff8010d9f000 x8 : ffffff8010d9e688
-x7 : 0000000000000002 x6 : 0000000000000000
-x5 : ffffff8011511c20 x4 : 00000000000026d1
-x3 : ffffff8010e14d88 x2 : 5b36396f4e7d4000
-x1 : 0000000000208040 x0 : 0000000000000000
-Process kmemleak (pid: 523, stack limit = 0x(____ptrval____))
-Call trace:
- scan_block+0x70/0x190
- scan_gray_list+0x108/0x1c0
- kmemleak_scan+0x33c/0x7c0
- kmemleak_scan_thread+0x98/0xf0
- kthread+0x11c/0x120
- ret_from_fork+0x10/0x1c
-Code: f9000fb4 d503201f 97ffffd2 35000580 (f9400260)
----[ end trace 176d6ed9d86a0c33 ]---
-note: kmemleak[523] exited with preempt_count 2
+> +static int bd70528_wdt_set(struct wdtbd70528 *w, int enable)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(w->rtc_lock);
+> +	ret = bd70528_wdt_set_locked(w, enable);
+> +	mutex_unlock(w->rtc_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int bd70528_wdt_start(struct watchdog_device *wdt)
+> +{
+> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
+> +
+> +	dev_dbg(w->dev, "WDT ping...\n");
+> +	return bd70528_wdt_set(w, 1);
+> +}
+> +
+> +static int bd70528_wdt_stop(struct watchdog_device *wdt)
+> +{
+> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
+> +
+> +	dev_dbg(w->dev, "WDT stopping...\n");
+> +	return bd70528_wdt_set(w, 0);
+> +}
+> +
+> +static int bd70528_wdt_set_timeout(struct watchdog_device *wdt,
+> +				    unsigned int timeout)
+> +{
+> +	unsigned int hours;
+> +	unsigned int minutes;
+> +	unsigned int seconds;
+> +	int ret;
+> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
+> +
+> +	seconds = timeout;
+> +	hours = timeout / (60 * 60);
+> +	/* Maximum timeout is 1h 59m 59s => hours is 1 or 0 */
+> +	if (hours)
+> +		seconds -= (60 * 60);
+> +	minutes = seconds / 60;
+> +	seconds = seconds % 60;
+> +
+> +	mutex_lock(w->rtc_lock);
+> +
+> +	ret = bd70528_wdt_set_locked(w, 0);
+> +	if (ret)
+> +		goto out_unlock;
+> +
+> +	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_HOUR,
+> +				 BD70528_MASK_WDT_HOUR, hours);
+> +	if (ret) {
+> +		dev_err(w->dev, "Failed to set WDT hours\n");
+> +		goto out_en_unlock;
+> +	}
+> +	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_MINUTE,
+> +				 BD70528_MASK_WDT_MINUTE, bin2bcd(minutes));
+> +	if (ret) {
+> +		dev_err(w->dev, "Failed to set WDT minutes\n");
+> +		goto out_en_unlock;
+> +	}
+> +	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_SEC,
+> +				 BD70528_MASK_WDT_SEC, bin2bcd(seconds));
+> +	if (ret)
+> +		dev_err(w->dev, "Failed to set WDT seconds\n");
+> +	else
+> +		dev_dbg(w->dev, "WDT tmo set to %u\n", timeout);
+> +
+> +out_en_unlock:
+> +	ret = bd70528_wdt_set_locked(w, 1);
+> +out_unlock:
+> +	mutex_unlock(w->rtc_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct watchdog_info bd70528_wdt_info = {
+> +	.identity = "bd70528-wdt",
+> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
+> +};
+> +
+> +static const struct watchdog_ops bd70528_wdt_ops = {
+> +	.start		= bd70528_wdt_start,
+> +	.stop		= bd70528_wdt_stop,
+> +	.set_timeout	= bd70528_wdt_set_timeout,
+> +};
+> +
+> +/* Max time we can set is 1 hour, 59 minutes and 59 seconds */
+> +#define WDT_MAX_MS ((2 * 60 * 60 - 1) * 1000)
+> +/* Minimum time is 1 second */
+> +#define WDT_MIN_MS 1000
+> +#define DEFAULT_TIMEOUT 60
+> +
 
-The crash happens when a no-map area is allocated in
-early_init_dt_alloc_reserved_memory_arch(). The allocated region is
-registered with kmemleak, but it is then removed from memblock using
-memblock_remove() that is not kmemleak-aware.
+Please move to top, and tab-align the values.
 
-Replacing __memblock_alloc_base() with memblock_find_in_range() makes sure
-that the allocated memory is not added to kmemleak and then
-memblock_remove()'ing this memory is safe.
+Otherwise I am ok with the patch.
 
-As a bonus, since memblock_find_in_range() ensures the allocation in the
-specified range, the bounds check can be removed.
+On a side note, isn't it past time to drop the RFC ?
 
-Cc: stable@vger.kernel.org # 3.15+
-Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Prateek Patel <prpatel@nvidia.com>
-Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
-Resend with DT CCed to reach robh's patch queue
-I added CC: stable, Fixes, and Prateek's ack
-Trim recipients list to minimize inconvenience
----
- drivers/of/of_reserved_mem.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+Guenter
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 1977ee0adcb1..2ae81604ffef 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -31,27 +31,19 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
- 	phys_addr_t *res_base)
- {
- 	phys_addr_t base;
--	/*
--	 * We use __memblock_alloc_base() because memblock_alloc_base()
--	 * panic()s on allocation failure.
--	 */
-+
- 	end = !end ? MEMBLOCK_ALLOC_ANYWHERE : end;
- 	align = !align ? SMP_CACHE_BYTES : align;
--	base = __memblock_alloc_base(size, align, end);
-+	base = memblock_find_in_range(size, align, start, end);
- 	if (!base)
- 		return -ENOMEM;
- 
--	/*
--	 * Check if the allocated region fits in to start..end window
--	 */
--	if (base < start) {
--		memblock_free(base, size);
--		return -ENOMEM;
--	}
--
- 	*res_base = base;
- 	if (nomap)
- 		return memblock_remove(base, size);
-+	else
-+		return memblock_reserve(base, size);
-+
- 	return 0;
- }
- 
--- 
-2.7.4
+> +static int bd70528_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct bd70528 *bd70528;
+> +	struct wdtbd70528 *w;
+> +	int ret;
+> +	unsigned int reg;
+> +
+> +	bd70528 = dev_get_drvdata(pdev->dev.parent);
+> +	if (!bd70528) {
+> +		dev_err(&pdev->dev, "No MFD driver data\n");
+> +		return -EINVAL;
+> +	}
+> +	w = devm_kzalloc(&pdev->dev, sizeof(*w), GFP_KERNEL);
+> +	if (!w)
+> +		return -ENOMEM;
+> +
+> +	w->regmap = bd70528->chip.regmap;
+> +	w->rtc_lock = &bd70528->rtc_timer_lock;
+> +	w->dev = &pdev->dev;
+> +
+> +	w->wdt.info = &bd70528_wdt_info;
+> +	w->wdt.ops =  &bd70528_wdt_ops;
+> +	w->wdt.min_hw_heartbeat_ms = WDT_MIN_MS;
+> +	w->wdt.max_hw_heartbeat_ms = WDT_MAX_MS;
+> +	w->wdt.parent = pdev->dev.parent;
+> +	w->wdt.timeout = DEFAULT_TIMEOUT;
+> +	watchdog_set_drvdata(&w->wdt, w);
+> +	watchdog_init_timeout(&w->wdt, 0, pdev->dev.parent);
+> +
+> +	ret = bd70528_wdt_set_timeout(&w->wdt, w->wdt.timeout);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to set the watchdog timeout\n");
+> +		return ret;
+> +	}
+> +
+> +	mutex_lock(w->rtc_lock);
+> +	ret = regmap_read(w->regmap, BD70528_REG_WDT_CTRL, &reg);
+> +	mutex_unlock(w->rtc_lock);
+> +
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to get the watchdog state\n");
+> +		return ret;
+> +	}
+> +	if (reg & BD70528_MASK_WDT_EN) {
+> +		dev_dbg(&pdev->dev, "watchdog was running during probe\n");
+> +		set_bit(WDOG_HW_RUNNING, &w->wdt.status);
+> +	}
+> +
+> +	ret = devm_watchdog_register_device(&pdev->dev, &w->wdt);
+> +	if (ret < 0)
+> +		dev_err(&pdev->dev, "watchdog registration failed: %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +static struct platform_driver bd70528_wdt = {
+> +	.driver = {
+> +		.name = "bd70528-wdt"
+> +	},
+> +	.probe = bd70528_wdt_probe,
+> +};
+> +
+> +module_platform_driver(bd70528_wdt);
+> +
+> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+> +MODULE_DESCRIPTION("BD70528 watchdog driver");
+> +MODULE_LICENSE("GPL");
+> 
