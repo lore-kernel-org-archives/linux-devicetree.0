@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 09/12] ARM: davinci: dm365: switch to using the clocksource driver
-Date: Mon,  4 Feb 2019 18:17:54 +0100
-Message-ID: <20190204171757.32073-10-brgl@bgdev.pl>
+Subject: [PATCH v2 11/12] ARM: davinci: dm646x: switch to using the clocksource driver
+Date: Mon,  4 Feb 2019 18:17:56 +0100
+Message-ID: <20190204171757.32073-12-brgl@bgdev.pl>
 References: <20190204171757.32073-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -19,14 +19,14 @@ to using it.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/dm365.c | 30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
+ arch/arm/mach-davinci/dm646x.c | 36 ++++++++++++++++++++++------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
-index 68bd78dac293..fa83dec162e6 100644
---- a/arch/arm/mach-davinci/dm365.c
-+++ b/arch/arm/mach-davinci/dm365.c
-@@ -34,7 +34,8 @@
+diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
+index 73a0f0226017..5058be123dbe 100644
+--- a/arch/arm/mach-davinci/dm646x.c
++++ b/arch/arm/mach-davinci/dm646x.c
+@@ -27,7 +27,8 @@
  #include <mach/irqs.h>
  #include <mach/mux.h>
  #include <mach/serial.h>
@@ -36,15 +36,21 @@ index 68bd78dac293..fa83dec162e6 100644
  
  #include "asp.h"
  #include "davinci.h"
-@@ -658,10 +659,24 @@ static struct davinci_id dm365_ids[] = {
+@@ -498,16 +499,24 @@ static struct davinci_id dm646x_ids[] = {
  	},
  };
  
--static struct davinci_timer_info dm365_timer_info = {
+-/*
+- * T0_BOT: Timer 0, bottom:  clockevent source for hrtimers
+- * T0_TOP: Timer 0, top   :  clocksource for generic timekeeping
+- * T1_BOT: Timer 1, bottom:  (used by DSP in TI DSPLink code)
+- * T1_TOP: Timer 1, top   :  <unused>
+- */
+-static struct davinci_timer_info dm646x_timer_info = {
 -	.timers		= davinci_timer_instance,
 -	.clockevent_id	= T0_BOT,
 -	.clocksource_id	= T0_TOP,
-+static const struct davinci_timer_cfg dm365_timer_cfg = {
++static const struct davinci_timer_cfg dm646x_timer_cfg = {
 +	.reg = {
 +		.start		= DAVINCI_TIMER0_BASE,
 +		.end		= DAVINCI_TIMER0_BASE + SZ_4K,
@@ -64,32 +70,32 @@ index 68bd78dac293..fa83dec162e6 100644
 +	}
  };
  
- #define DM365_UART1_BASE	(IO_PHYS + 0x106000)
-@@ -725,7 +740,6 @@ static const struct davinci_soc_info davinci_soc_info_dm365 = {
+ static struct plat_serial8250_port dm646x_serial0_platform_data[] = {
+@@ -589,7 +598,6 @@ static const struct davinci_soc_info davinci_soc_info_dm646x = {
  	.intc_type		= DAVINCI_INTC_TYPE_AINTC,
- 	.intc_irq_prios		= dm365_default_priorities,
+ 	.intc_irq_prios		= dm646x_default_priorities,
  	.intc_irq_num		= DAVINCI_N_AINTC_IRQ,
--	.timer_info		= &dm365_timer_info,
- 	.emac_pdata		= &dm365_emac_pdata,
- 	.sram_dma		= 0x00010000,
+-	.timer_info		= &dm646x_timer_info,
+ 	.emac_pdata		= &dm646x_emac_pdata,
+ 	.sram_dma		= 0x10010000,
  	.sram_len		= SZ_32K,
-@@ -773,6 +787,7 @@ void __init dm365_init_time(void)
+@@ -654,6 +662,7 @@ void __init dm646x_init_time(unsigned long ref_clk_rate,
  {
- 	void __iomem *pll1, *pll2, *psc;
+ 	void __iomem *pll1, *psc;
  	struct clk *clk;
 +	int rv;
  
- 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM365_REF_FREQ);
- 
-@@ -791,7 +806,8 @@ void __init dm365_init_time(void)
+ 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, ref_clk_rate);
+ 	clk_register_fixed_rate(NULL, "aux_clkin", NULL, 0, aux_clkin_rate);
+@@ -670,7 +679,8 @@ void __init dm646x_init_time(unsigned long ref_clk_rate,
  		return;
  	}
  
 -	davinci_timer_init(clk);
-+	rv = davinci_timer_register(clk, &dm365_timer_cfg);
++	rv = davinci_timer_register(clk, &dm646x_timer_cfg);
 +	WARN(rv, "Unable to register the timer: %d\n", rv);
  }
  
- void __init dm365_register_clocks(void)
+ static struct resource dm646x_pll2_resources[] = {
 -- 
 2.20.1
