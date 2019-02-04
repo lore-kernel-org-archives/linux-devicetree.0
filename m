@@ -1,242 +1,68 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RFC PATCH v4 08/13] genirq/msi: Add support for allocating
- single MSI for a device
-Date: Mon, 4 Feb 2019 10:33:44 +0000
-Message-ID: <523c4a23-b5b9-ff10-051d-c90e6e8341d4@arm.com>
-References: <20181227060829.5080-1-lokeshvutla@ti.com>
- <20181227061313.5451-1-lokeshvutla@ti.com>
- <20181227061313.5451-8-lokeshvutla@ti.com>
- <5be38277-3348-a6d9-4b67-3ead308c009a@arm.com>
- <faad8e90-2f97-1dbb-fb98-e0f1462e29c5@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcs404: evb: Fix voltages for s5 and l3
+Date: Mon, 4 Feb 2019 11:43:47 +0100
+Message-ID: <20190204104347.GD23441@sirena.org.uk>
+References: <20190125232954.26166-1-bjorn.andersson@linaro.org>
+ <32b8136d-3acb-66e9-948c-ee8903b91401@linaro.org>
+ <20190129224652.GB11349@centauri.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4zI0WCX1RcnW9Hbu"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <faad8e90-2f97-1dbb-fb98-e0f1462e29c5@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190129224652.GB11349@centauri.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>
-Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/01/2019 10:19, Lokesh Vutla wrote:
-> Hi Marc,
-> 	Sorry for the delayed response. Just back from vacation.
-> 
-> On 17/01/19 12:00 AM, Marc Zyngier wrote:
->> On 27/12/2018 06:13, Lokesh Vutla wrote:
->>> Previously all msi for a device are allocated in one go
->>> by calling msi_domain_alloc_irq() from a bus layer. This might
->>> not be the case when a device is trying to allocate interrupts
->>> dynamically based on a request to it.
->>>
->>> So introduce msi_domain_alloc/free_irq() apis to allocate a single
->>> msi. prepare and activate operations to be handled by bus layer
->>> calling msi_domain_alloc/free_irq() apis.
->>>
->>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>> ---
->>>  include/linux/msi.h |  3 +++
->>>  kernel/irq/msi.c    | 62 +++++++++++++++++++++++++++++----------------
->>>  2 files changed, 43 insertions(+), 22 deletions(-)
->>>
->>> diff --git a/include/linux/msi.h b/include/linux/msi.h
->>> index 784fb52b9900..474490826f8c 100644
->>> --- a/include/linux/msi.h
->>> +++ b/include/linux/msi.h
->>> @@ -301,8 +301,11 @@ int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
->>>  struct irq_domain *msi_create_irq_domain(struct fwnode_handle *fwnode,
->>>   struct msi_domain_info *info,
->>>   struct irq_domain *parent);
->>> +int msi_domain_alloc_irq(struct irq_domain *domain, struct device *dev,
->>> + struct msi_desc *desc,  msi_alloc_info_t *arg);
->>>  int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
->>>    int nvec);
->>> +void msi_domain_free_irq(struct msi_desc *desc);
->>>  void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
->>>  struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain);
->>>
->>> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
->>> index ad26fbcfbfc8..eb7459324113 100644
->>> --- a/kernel/irq/msi.c
->>> +++ b/kernel/irq/msi.c
->>> @@ -387,6 +387,35 @@ static bool msi_check_reservation_mode(struct irq_domain *domain,
->>>  return desc->msi_attrib.is_msix || desc->msi_attrib.maskbit;
->>>  }
->>>
->>> +int msi_domain_alloc_irq(struct irq_domain *domain, struct device *dev,
->>> + struct msi_desc *desc,  msi_alloc_info_t *arg)
->>> +{
->>> +struct msi_domain_info *info = domain->host_data;
->>> +struct msi_domain_ops *ops = info->ops;
->>> +int i, ret, virq;
->>> +
->>> +ops->set_desc(arg, desc);
->>> +
->>> +virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
->>> +       dev_to_node(dev), arg, false,
->>> +       desc->affinity);
->>> +if (virq < 0) {
->>> +ret = -ENOSPC;
->>> +if (ops->handle_error)
->>> +ret = ops->handle_error(domain, desc, ret);
->>> +if (ops->msi_finish)
->>> +ops->msi_finish(arg, ret);
->>> +return ret;
->>> +}
->>> +
->>> +for (i = 0; i < desc->nvec_used; i++) {
->>> +irq_set_msi_desc_off(virq, i, desc);
->>> +irq_debugfs_copy_devname(virq + i, dev);
->>> +}
->>> +
->>> +return 0;
->>> +}
->>> +
->>>  /**
->>>   * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
->>>   * @domain:The domain to allocate from
->>> @@ -404,7 +433,7 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
->>>  struct irq_data *irq_data;
->>>  struct msi_desc *desc;
->>>  msi_alloc_info_t arg;
->>> -int i, ret, virq;
->>> +int ret, virq;
->>>  bool can_reserve;
->>>
->>>  ret = msi_domain_prepare_irqs(domain, dev, nvec, &arg);
->>> @@ -412,24 +441,9 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
->>>  return ret;
->>>
->>>  for_each_msi_entry(desc, dev) {
->>> -ops->set_desc(&arg, desc);
->>> -
->>> -virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
->>> -       dev_to_node(dev), &arg, false,
->>> -       desc->affinity);
->>> -if (virq < 0) {
->>> -ret = -ENOSPC;
->>> -if (ops->handle_error)
->>> -ret = ops->handle_error(domain, desc, ret);
->>> -if (ops->msi_finish)
->>> -ops->msi_finish(&arg, ret);
->>> +ret = msi_domain_alloc_irq(domain, dev, desc, &arg);
->>> +if (ret)
->>>  return ret;
->>> -}
->>> -
->>> -for (i = 0; i < desc->nvec_used; i++) {
->>> -irq_set_msi_desc_off(virq, i, desc);
->>> -irq_debugfs_copy_devname(virq + i, dev);
->>> -}
->>>  }
->>>
->>>  if (ops->msi_finish)
->>> @@ -487,6 +501,12 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
->>>  return ret;
->>>  }
->>>
->>> +void msi_domain_free_irq(struct msi_desc *desc)
->>> +{
->>> +irq_domain_free_irqs(desc->irq, desc->nvec_used);
->>> +desc->irq = 0;
->>> +}
->>> +
->>>  /**
->>>   * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
->>>   * @domain:The domain to managing the interrupts
->>> @@ -503,10 +523,8 @@ void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
->>>   * enough that there is no IRQ associated to this
->>>   * entry. If that's the case, don't do anything.
->>>   */
->>> -if (desc->irq) {
->>> -irq_domain_free_irqs(desc->irq, desc->nvec_used);
->>> -desc->irq = 0;
->>> -}
->>> +if (desc->irq)
->>> +msi_domain_free_irq(desc);
->>>  }
->>>  }
->>>
->>>
->>
->> I can see some interesting issues with this API.
->>
->> At the moment, MSIs are allocated upfront, and that's usually done
->> before the driver can do anything else. With what you're suggesting
->> here, MSIs can now be allocated at any time, which sounds great. But how
->> does it work when MSIs get added/freed in parallel? I can't see any
->> locking here...
->>
->> It is also pretty nasty that the user of this API has to know about the
->> MSI descriptor. Really, nobody should have to deal with this outside of
->> the MSI layer.
->>
->> The real question is why you need to need to allocate MSIs on demand for
->> a given device. Usually, you allocate them because this is a per-CPU
->> resource, or something similar. What makes it so variable that you need
->> to resort to fine grained MSI allocation?
-> 
-> I added this after the discussion we had in the previous version[1] of this
-> series. Let me provide the details again:
-> 
-> As you must be aware INTR is interrupt re-director and INTA is the interrupt
-> multiplexer is the SoC. Here we are trying to address the interrupt connection
-> route as below:
-> Device(Global event) --> INTA --> INTR --> GIC
-> 
-> For the above case you suggested to have the following sw IRQ domain hierarchy:
-> INTA multi MSI --> INTA  -->  INTR  --> GIC
-> 
-> The problem here with the INTA MSI is that all the interrupts for a device
-> should be pre-allocated during the device probe time. But this is not what we
-> wanted especially for the DMA case.
-> 
-> An example DMA ring connection would look like below[2]:
-> 
->                       +---------------------+
->                        |         IA                |
-> +--------+        |            +------+   |        +--------+         +------+
-> | ring 1 +----->evtA+->VintX+-------->+   IR   +-- --->  GIC +-->
-> +--------+       |             +------+   |        +--------+         +------+
-> Linux IRQ Y
->    evtA            |                             |
->                        |                             |
->                       +----------------------+
-> 
-> So when a DMA client driver requests a dma channel during probe, the DMA driver
-> gets a free ring in its allocated range. Then DMA driver requests MSI layer for
-> an IRQ. This is why I had to introduce on demand allocation of MSIs for a device.
-> 
-> The reason why we avoided DMA driver to allocate interrupts during its probe as
-> it is not aware of the exact no of channels that are going to be used. Also max
-> allocation of interrupts will overrun the gic IRQs available to this INTA and
-> the IPs that are connected to INTR directly will not get any interrupts.
 
-But surely there is an upper bound that does exist for a given system,
-right?  DMA rings are not allocated out of nowhere. Or are you saying
-that when a DMA client requests DMA rings, it doesn't know how many it
-wants? Or does it? I don't think this is new in any of TI's design (the
-crossbar already had such limitation).
+--4zI0WCX1RcnW9Hbu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That being said, I'm open to revisiting this, but you must then
-introduce the right level of mutual exclusion in core code, as the
-msi_desc list now becomes much more dynamic and things would otherwise
-break badly. This has implications all over the place, and probably
-requires quite a bit of work (things like for_each_msi_desc_entry will
-break).
+On Tue, Jan 29, 2019 at 11:46:52PM +0100, Niklas Cassel wrote:
 
-Between the two solutions outlined above, the first one is much easier
-to achieve than the second one.
+> Adding Mark Brown on CC.
 
-Another avenue to explore would be to let the clients allocate as many
-MSIs as they want upfront, and use the "activate" callback to actually
-perform the assignment when such interrupt gets requested. In a way,
-this is not that different from what x86 does with the "early
-reservation, late assignment" type mechanism.
+It really helps if you ask a specific question when doing something like
+this rather than just have a big quoted mail - it makes it much easier
+to find what's relevant rather than trying to find things, especially
+when they're buried behind several layers of quoting.
 
-Thanks,
+> On Tue, Jan 29, 2019 at 10:58:47PM +0100, Jorge Ramirez wrote:
+> > On 1/26/19 00:29, Bjorn Andersson wrote:
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> > the question is, should this property contain only hardware achievable
+> > values? or should drivers only request hardware achievable values? the
+> > way the constrains are implemented it has to be one of the two (I think
+> > the former would be more intuitive - ie if the dts
+> > regulator-min-microvolt is a valid value)
+
+Drivers should not be coded with a specific regulator or board in mind
+and should just request whatever they need.  This will then be matched
+with whatever the board is actually able to deliver.  Similarly there is
+no requirement that machine constraints be written with specific
+reference to what the physical regulator on the board is able to do, for
+example the constraints will come from electrical engineering
+restrictions like the specifications of the parts connected to the
+regulator rather than from what the regulator can actually do so people
+should feel free to just write down the actual physical constraint and
+let the regulator API ensure that the constraint is met.
+
+--4zI0WCX1RcnW9Hbu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxYF18ACgkQJNaLcl1U
+h9Au6Qf+LpdYqVbelJRtzkiY7hM8KnLPW22HxU3sbgDRIo8tyQ1HY3hWhY63+cmE
+XLTH4I5sv+tJsk4sEVYGHHH81DYdVlMEg3FnHqUU3YLWqULlEtmCTvs+alKAR2TA
+IgXdRs4oG8A4iC0lAN+umBokj1xXDl0sSs/Uf/kAAVN6zoymThziFVrpI868+e01
+fmo+lILI1d1DLqB6epeNkaDoIjitZ/4H5ycYr6yFIJvspZC0rrSJwKxsvyubUKTW
+Athu41csXgHdmri1WM2toON7zpPslVLpxBslGwWngGFjgaDE+ohLic4sZ1Q8uLjS
+XeB8tsDpt6XWCdvZt8ltbeeDpoZWkQ==
+=RsID
+-----END PGP SIGNATURE-----
+
+--4zI0WCX1RcnW9Hbu--
