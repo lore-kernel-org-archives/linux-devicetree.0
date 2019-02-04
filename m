@@ -1,73 +1,55 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 1/2] drm/omap: panel-tpo-td028ttec1: add backlight support
-Date: Mon, 4 Feb 2019 10:13:46 +0200
-Message-ID: <9eb955aa-3a87-7f25-21ce-c177b67de522@ti.com>
-References: <20190119182131.9341-1-andreas@kemnade.info>
- <20190119182131.9341-2-andreas@kemnade.info>
+From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding
+ for generic eDP panel
+Date: Mon, 4 Feb 2019 00:13:55 -0800
+Message-ID: <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
+References: <20190203185501.8958-1-anarsoul@gmail.com> <20190203185501.8958-9-anarsoul@gmail.com>
+ <20190204074350.GC16448@ulmo>
+Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190119182131.9341-2-andreas@kemnade.info>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, sre@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, letux-kernel@openphoenux.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDV3B667TUHBBXXI37RAKGQE6QSKW5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190204074350.GC16448@ulmo>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAxOS8wMS8yMDE5IDIwOjIxLCBBbmRyZWFzIEtlbW5hZGUgd3JvdGU6Cj4gVGhpcyBw
-YW5lbCBoYXMgYSBiYWNrbGlnaHQsIHNvIGZldGNoIGl0IGZyb20gZGV2aWNldHJlZSB1c2luZyB0
-aGUKPiBhcyBkb2N1bWVudGVkIGluIHBhbmVsLWNvbW1vbi50eHQuIEl0IGlzIGltcGxlbWVudGVk
-IHRoZSBzYW1lIHdheSBhcyBpbgoKRXh0cmEgd29yZHMgYWJvdmUsIG9yIG1heWJlIHNvbWUgYXJl
-IG1pc3NpbmcuLi4KCj4gcGFuZWwtZHBpLmMKPiBUaGlzIGVuc3VyZXMgdGhlIGJhY2tsaWdodCBp
-cyBhbHNvIGRpc2FibGVkIHdoZW4gdGhlIGRpc3BsYXkgaXMKPiB0dXJuZWQgb2ZmIGxpa2Ugd2hl
-biBkb2luZyB4c2V0IGRwbXMgZm9yY2Ugb2ZmLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFuZHJlYXMg
-S2VtbmFkZSA8YW5kcmVhc0BrZW1uYWRlLmluZm8+Cj4gLS0tCj4gIC4uLi9ncHUvZHJtL29tYXBk
-cm0vZGlzcGxheXMvcGFuZWwtdHBvLXRkMDI4dHRlYzEuYyAgICB8IDE4ICsrKysrKysrKysrKysr
-Ky0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkK
-PiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZGlzcGxheXMvcGFuZWwt
-dHBvLXRkMDI4dHRlYzEuYyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL2Rpc3BsYXlzL3BhbmVs
-LXRwby10ZDAyOHR0ZWMxLmMKPiBpbmRleCA3ZGRjOGM1NzRhNjEuLmYzMjZiYTlkY2Y2MiAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9kaXNwbGF5cy9wYW5lbC10cG8tdGQw
-Mjh0dGVjMS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZGlzcGxheXMvcGFuZWwt
-dHBvLXRkMDI4dHRlYzEuYwo+IEBAIC0zNSw2ICszNSw4IEBAIHN0cnVjdCBwYW5lbF9kcnZfZGF0
-YSB7Cj4gIAo+ICAJc3RydWN0IHZpZGVvbW9kZSB2bTsKPiAgCj4gKwlzdHJ1Y3QgYmFja2xpZ2h0
-X2RldmljZSAqYmFja2xpZ2h0Owo+ICsKPiAgCXN0cnVjdCBzcGlfZGV2aWNlICpzcGlfZGV2Owo+
-ICB9Owo+ICAKPiBAQCAtMjY4LDYgKzI3MCw4IEBAIHN0YXRpYyBpbnQgdGQwMjh0dGVjMV9wYW5l
-bF9lbmFibGUoc3RydWN0IG9tYXBfZHNzX2RldmljZSAqZHNzZGV2KQo+ICAKPiAgCXIgfD0gamJ0
-X3JldF93cml0ZV8wKGRkYXRhLCBKQlRfUkVHX0RJU1BMQVlfT04pOwo+ICAKPiArCWJhY2tsaWdo
-dF9lbmFibGUoZGRhdGEtPmJhY2tsaWdodCk7Cj4gKwo+ICAJZHNzZGV2LT5zdGF0ZSA9IE9NQVBf
-RFNTX0RJU1BMQVlfQUNUSVZFOwo+ICAKPiAgdHJhbnNmZXJfZXJyOgo+IEBAIC0yODMsNiArMjg3
-LDggQEAgc3RhdGljIHZvaWQgdGQwMjh0dGVjMV9wYW5lbF9kaXNhYmxlKHN0cnVjdCBvbWFwX2Rz
-c19kZXZpY2UgKmRzc2RldikKPiAgCWlmICghb21hcGRzc19kZXZpY2VfaXNfZW5hYmxlZChkc3Nk
-ZXYpKQo+ICAJCXJldHVybjsKPiAgCj4gKwliYWNrbGlnaHRfZGlzYWJsZShkZGF0YS0+YmFja2xp
-Z2h0KTsKPiArCj4gIAlkZXZfZGJnKGRzc2Rldi0+ZGV2LCAidGQwMjh0dGVjMV9wYW5lbF9kaXNh
-YmxlKClcbiIpOwo+ICAKPiAgCWpidF9yZXRfd3JpdGVfMChkZGF0YSwgSkJUX1JFR19ESVNQTEFZ
-X09GRik7Cj4gQEAgLTMyMSw2ICszMjcsMTUgQEAgc3RhdGljIGludCB0ZDAyOHR0ZWMxX3BhbmVs
-X3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpzcGkpCj4gIAo+ICAJZGV2X2RiZygmc3BpLT5kZXYs
-ICIlc1xuIiwgX19mdW5jX18pOwo+ICAKPiArCWRkYXRhID0gZGV2bV9remFsbG9jKCZzcGktPmRl
-diwgc2l6ZW9mKCpkZGF0YSksIEdGUF9LRVJORUwpOwo+ICsJaWYgKGRkYXRhID09IE5VTEwpCj4g
-KwkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJZGRhdGEtPmJhY2tsaWdodCA9IGRldm1fb2ZfZmlu
-ZF9iYWNrbGlnaHQoJnNwaS0+ZGV2KTsKPiArCj4gKwlpZiAoSVNfRVJSKGRkYXRhLT5iYWNrbGln
-aHQpKQo+ICsJCXJldHVybiBQVFJfRVJSKGRkYXRhLT5iYWNrbGlnaHQpOwo+ICsKCklzIHRoZXJl
-IGEgcmVhc29uIGZvciBtb3ZpbmcgdGhlIGRkYXRhIGFsbG9jIGhlcmUsIGluc3RlYWQgb2Yga2Vl
-cGluZyBpdAp3aGVyZSBpdCB3YXM/Cgo+ICAJc3BpLT5iaXRzX3Blcl93b3JkID0gOTsKPiAgCXNw
-aS0+bW9kZSA9IFNQSV9NT0RFXzM7Cj4gIAo+IEBAIC0zMzAsOSArMzQ1LDYgQEAgc3RhdGljIGlu
-dCB0ZDAyOHR0ZWMxX3BhbmVsX3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpzcGkpCj4gIAkJcmV0
-dXJuIHI7Cj4gIAl9Cj4gIAo+IC0JZGRhdGEgPSBkZXZtX2t6YWxsb2MoJnNwaS0+ZGV2LCBzaXpl
-b2YoKmRkYXRhKSwgR0ZQX0tFUk5FTCk7Cj4gLQlpZiAoZGRhdGEgPT0gTlVMTCkKPiAtCQlyZXR1
-cm4gLUVOT01FTTsKPiAgCgpUaGlzIGxlYXZlcyBhbiBleHRyYSBlbXB0eSBsaW5lIGhlcmUuCgo+
-ICAJZGV2X3NldF9kcnZkYXRhKCZzcGktPmRldiwgZGRhdGEpOwo+ICAKCiBUb21pCgotLSAKVGV4
-YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lu
-a2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6
-IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Sun, Feb 3, 2019 at 11:43 PM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> On Sun, Feb 03, 2019 at 10:54:57AM -0800, Vasily Khoruzhick wrote:
+> > eDP panels usually have EDID EEPROM, so there's no need to define panel
+> > width/height or any modes/timings in dts. But this panel still may have
+> > regulator and/or backlight.
+> >
+> > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/display/panel/panel-edp.txt        | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
+>
+> Please don't try to make panels look more generic than they really are.
+> You're going to have to provide a compatible string for your device that
+> is more specific than "panel-edp". You claim that you don't need any
+> extra information that is panel specific, but you don't know that now.
+> We have in the past thought that we didn't need things like prepare
+> delay, but then we ran into situations where we did need them.
+>
+> Just do what everybody else does. Provide a specific compatible string
+> and match on that in the panel-simple driver. Even if you can read all
+> the video timings from an EDID EEPROM, you can still provide a mode in
+> the panel descriptor to serve as a fallback if for example the EEPROM
+> is faulty on some device.
+
+Pinebook used several 768p panels that have slightly different timings
+and recent batch uses 1080p panel.
+
+What panel descriptor should I use as fallback?
+
+> Thierry
