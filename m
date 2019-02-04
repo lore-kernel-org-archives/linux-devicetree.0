@@ -1,31 +1,73 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] csky: remove deprecated arch/csky/boot/dts/include/dt-bindings
-Date: Mon,  4 Feb 2019 16:56:01 +0900
-Message-ID: <1549266961-13765-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <guoren@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 1/2] drm/omap: panel-tpo-td028ttec1: add backlight support
+Date: Mon, 4 Feb 2019 10:13:46 +0200
+Message-ID: <9eb955aa-3a87-7f25-21ce-c177b67de522@ti.com>
+References: <20190119182131.9341-1-andreas@kemnade.info>
+ <20190119182131.9341-2-andreas@kemnade.info>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190119182131.9341-2-andreas@kemnade.info>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, sre@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-Having a symbolic link arch/*/boot/dts/include/dt-bindings was
-deprecated by commit d5d332d3f7e8 ("devicetree: Move include
-prefixes from arch to separate directory").
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- arch/csky/boot/dts/include/dt-bindings | 1 -
- 1 file changed, 1 deletion(-)
- delete mode 120000 arch/csky/boot/dts/include/dt-bindings
-
-diff --git a/arch/csky/boot/dts/include/dt-bindings b/arch/csky/boot/dts/include/dt-bindings
-deleted file mode 120000
-index 08c00e4..0000000
---- a/arch/csky/boot/dts/include/dt-bindings
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../../include/dt-bindings
-\ No newline at end of file
--- 
-2.7.4
+SGksCgpPbiAxOS8wMS8yMDE5IDIwOjIxLCBBbmRyZWFzIEtlbW5hZGUgd3JvdGU6Cj4gVGhpcyBw
+YW5lbCBoYXMgYSBiYWNrbGlnaHQsIHNvIGZldGNoIGl0IGZyb20gZGV2aWNldHJlZSB1c2luZyB0
+aGUKPiBhcyBkb2N1bWVudGVkIGluIHBhbmVsLWNvbW1vbi50eHQuIEl0IGlzIGltcGxlbWVudGVk
+IHRoZSBzYW1lIHdheSBhcyBpbgoKRXh0cmEgd29yZHMgYWJvdmUsIG9yIG1heWJlIHNvbWUgYXJl
+IG1pc3NpbmcuLi4KCj4gcGFuZWwtZHBpLmMKPiBUaGlzIGVuc3VyZXMgdGhlIGJhY2tsaWdodCBp
+cyBhbHNvIGRpc2FibGVkIHdoZW4gdGhlIGRpc3BsYXkgaXMKPiB0dXJuZWQgb2ZmIGxpa2Ugd2hl
+biBkb2luZyB4c2V0IGRwbXMgZm9yY2Ugb2ZmLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFuZHJlYXMg
+S2VtbmFkZSA8YW5kcmVhc0BrZW1uYWRlLmluZm8+Cj4gLS0tCj4gIC4uLi9ncHUvZHJtL29tYXBk
+cm0vZGlzcGxheXMvcGFuZWwtdHBvLXRkMDI4dHRlYzEuYyAgICB8IDE4ICsrKysrKysrKysrKysr
+Ky0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkK
+PiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZGlzcGxheXMvcGFuZWwt
+dHBvLXRkMDI4dHRlYzEuYyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL2Rpc3BsYXlzL3BhbmVs
+LXRwby10ZDAyOHR0ZWMxLmMKPiBpbmRleCA3ZGRjOGM1NzRhNjEuLmYzMjZiYTlkY2Y2MiAxMDA2
+NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9kaXNwbGF5cy9wYW5lbC10cG8tdGQw
+Mjh0dGVjMS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZGlzcGxheXMvcGFuZWwt
+dHBvLXRkMDI4dHRlYzEuYwo+IEBAIC0zNSw2ICszNSw4IEBAIHN0cnVjdCBwYW5lbF9kcnZfZGF0
+YSB7Cj4gIAo+ICAJc3RydWN0IHZpZGVvbW9kZSB2bTsKPiAgCj4gKwlzdHJ1Y3QgYmFja2xpZ2h0
+X2RldmljZSAqYmFja2xpZ2h0Owo+ICsKPiAgCXN0cnVjdCBzcGlfZGV2aWNlICpzcGlfZGV2Owo+
+ICB9Owo+ICAKPiBAQCAtMjY4LDYgKzI3MCw4IEBAIHN0YXRpYyBpbnQgdGQwMjh0dGVjMV9wYW5l
+bF9lbmFibGUoc3RydWN0IG9tYXBfZHNzX2RldmljZSAqZHNzZGV2KQo+ICAKPiAgCXIgfD0gamJ0
+X3JldF93cml0ZV8wKGRkYXRhLCBKQlRfUkVHX0RJU1BMQVlfT04pOwo+ICAKPiArCWJhY2tsaWdo
+dF9lbmFibGUoZGRhdGEtPmJhY2tsaWdodCk7Cj4gKwo+ICAJZHNzZGV2LT5zdGF0ZSA9IE9NQVBf
+RFNTX0RJU1BMQVlfQUNUSVZFOwo+ICAKPiAgdHJhbnNmZXJfZXJyOgo+IEBAIC0yODMsNiArMjg3
+LDggQEAgc3RhdGljIHZvaWQgdGQwMjh0dGVjMV9wYW5lbF9kaXNhYmxlKHN0cnVjdCBvbWFwX2Rz
+c19kZXZpY2UgKmRzc2RldikKPiAgCWlmICghb21hcGRzc19kZXZpY2VfaXNfZW5hYmxlZChkc3Nk
+ZXYpKQo+ICAJCXJldHVybjsKPiAgCj4gKwliYWNrbGlnaHRfZGlzYWJsZShkZGF0YS0+YmFja2xp
+Z2h0KTsKPiArCj4gIAlkZXZfZGJnKGRzc2Rldi0+ZGV2LCAidGQwMjh0dGVjMV9wYW5lbF9kaXNh
+YmxlKClcbiIpOwo+ICAKPiAgCWpidF9yZXRfd3JpdGVfMChkZGF0YSwgSkJUX1JFR19ESVNQTEFZ
+X09GRik7Cj4gQEAgLTMyMSw2ICszMjcsMTUgQEAgc3RhdGljIGludCB0ZDAyOHR0ZWMxX3BhbmVs
+X3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpzcGkpCj4gIAo+ICAJZGV2X2RiZygmc3BpLT5kZXYs
+ICIlc1xuIiwgX19mdW5jX18pOwo+ICAKPiArCWRkYXRhID0gZGV2bV9remFsbG9jKCZzcGktPmRl
+diwgc2l6ZW9mKCpkZGF0YSksIEdGUF9LRVJORUwpOwo+ICsJaWYgKGRkYXRhID09IE5VTEwpCj4g
+KwkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJZGRhdGEtPmJhY2tsaWdodCA9IGRldm1fb2ZfZmlu
+ZF9iYWNrbGlnaHQoJnNwaS0+ZGV2KTsKPiArCj4gKwlpZiAoSVNfRVJSKGRkYXRhLT5iYWNrbGln
+aHQpKQo+ICsJCXJldHVybiBQVFJfRVJSKGRkYXRhLT5iYWNrbGlnaHQpOwo+ICsKCklzIHRoZXJl
+IGEgcmVhc29uIGZvciBtb3ZpbmcgdGhlIGRkYXRhIGFsbG9jIGhlcmUsIGluc3RlYWQgb2Yga2Vl
+cGluZyBpdAp3aGVyZSBpdCB3YXM/Cgo+ICAJc3BpLT5iaXRzX3Blcl93b3JkID0gOTsKPiAgCXNw
+aS0+bW9kZSA9IFNQSV9NT0RFXzM7Cj4gIAo+IEBAIC0zMzAsOSArMzQ1LDYgQEAgc3RhdGljIGlu
+dCB0ZDAyOHR0ZWMxX3BhbmVsX3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpzcGkpCj4gIAkJcmV0
+dXJuIHI7Cj4gIAl9Cj4gIAo+IC0JZGRhdGEgPSBkZXZtX2t6YWxsb2MoJnNwaS0+ZGV2LCBzaXpl
+b2YoKmRkYXRhKSwgR0ZQX0tFUk5FTCk7Cj4gLQlpZiAoZGRhdGEgPT0gTlVMTCkKPiAtCQlyZXR1
+cm4gLUVOT01FTTsKPiAgCgpUaGlzIGxlYXZlcyBhbiBleHRyYSBlbXB0eSBsaW5lIGhlcmUuCgo+
+ICAJZGV2X3NldF9kcnZkYXRhKCZzcGktPmRldiwgZGRhdGEpOwo+ICAKCiBUb21pCgotLSAKVGV4
+YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lu
+a2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6
+IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
