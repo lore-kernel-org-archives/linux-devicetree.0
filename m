@@ -1,63 +1,72 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [RFC PATCH v4 07/10] gpio: Initial support for ROHM bd70528 GPIO block
-Date: Mon, 4 Feb 2019 13:53:12 +0100
-Message-ID: <CAMpxmJXKmq29misG_zx9qeaQ11qzYSvWqNwcNpRGc3cv4AK8eg@mail.gmail.com>
-References: <cover.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
- <5f63684b62c7a320c514088bcf9091ed7efbd2cc.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
- <CACRpkdauoQ=qcFUi7wTUKu22ZHeq=g0grWqvZz1gfOt0=dXrbw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5] ARM: dspi: Provide support for DSPI slave mode
+ operation (Vybryd vf610)
+Date: Mon, 4 Feb 2019 14:03:56 +0100
+Message-ID: <20190204130356.GF23441@sirena.org.uk>
+References: <20180927150709.17010-1-lukma@denx.de>
+ <20190109082644.14941-1-lukma@denx.de>
+ <20190204113001.77d59570@jawa>
+ <20190204105737.GE23441@sirena.org.uk>
+ <20190204135242.7112d48c@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rWhLK7VZz0iBluhq"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdauoQ=qcFUi7wTUKu22ZHeq=g0grWqvZz1gfOt0=dXrbw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190204135242.7112d48c@jawa>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Matti Vaittinen <mazziesaccount@gmail.com>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDIN
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Esben Haabendal <eha@deif.com>, Martin =?iso-8859-1?Q?Hundeb=F8ll?= <martin@geanix.com>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-pon., 4 lut 2019 o 12:30 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
-=82(a):
->
-> On Thu, Jan 31, 2019 at 1:08 PM Matti Vaittinen
-> <matti.vaittinen@fi.rohmeurope.com> wrote:
->
-> > ROHM BD70528 PMIC has 4 GPIO pins. Allow them to be
-> > controlled by GPIO framework.
-> >
-> > IRQs are handled by regmap-irq and GPIO driver is not
-> > aware of the irq usage.
-> >
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> (...)
-> > I dropped the review-by from Linus Walleij because I would like to
-> > get a comment on if locking is required when we check the direction
-> > in order to detect the correct register for getting the pin state.
->
-> I don't know that. You isn't regmap locking inherently?
->
 
-FYI you can disable regmap locking by setting the disable_locking
-field in regmap_config to true.
+--rWhLK7VZz0iBluhq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bart
+On Mon, Feb 04, 2019 at 01:52:42PM +0100, Lukasz Majewski wrote:
+> > On Mon, Feb 04, 2019 at 11:30:01AM +0100, Lukasz Majewski wrote:
 
-> > My initial feeling is that locking makes no sense.
->
-> Mine too.
->
-> > +       bdgpio->gpio.get_direction =3D &bd70528_get_direction;
-> > +       bdgpio->gpio.direction_input =3D &bd70528_direction_input;
-> > +       bdgpio->gpio.direction_output =3D &bd70528_direction_output;
-> > +       bdgpio->gpio.set_config =3D &bd70528_gpio_set_config;
-> > +       bdgpio->gpio.can_sleep =3D true;
-> > +       bdgpio->gpio.get =3D &bd70528_gpio_get;
-> > +       bdgpio->gpio.set =3D &bd70528_gpio_set;
->
-> Drop the &ampersand in from of the functions. All functions
-> are pointers.
->
-> With that:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Yours,
-> Linus Walleij
+> > You've been sending ARM: patches to me (the SPI maintainer) and one of
+> > the DT maintainers.=20
+
+=2E..
+
+> Moreover, I've CC'ed developers (Esben, Andrey, Martin) involved in the
+> changes for previous work done in this file/driver.
+
+> And those changes are solely related to SPI work in this driver, no ARM
+> Vybrid.
+
+If they're SPI patches they should have a changelog that looks like a
+SPI patch which means that it should start with "spi" (see other patches
+on the list or git log for examples).  When your patch subject lines
+start with ARM: that means they are for arch/arm - I don't 100% know but
+I suspect I've just not got far enough into the mails to notice that
+they're for SPI, people do send a lot of patches that just happen to
+mention buses to maintainers for those buses.  In general you should try
+to make sure that the subject line for your patch matches the style used
+in the relevant subsystem.
+
+> What else shall I do?
+
+You'll need to resend the patch, preferrably with a suitable subject
+line.
+
+--rWhLK7VZz0iBluhq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxYODkACgkQJNaLcl1U
+h9DgQQgAgIDt2K7uNIIQCWmf0tz+YhIqnAV6fh/hvA12LQbTpN4ftZoMo5rgPbRH
+JWreTvSwfdGdZzirzndN+UhweiK4x6JoqZRbrRFbGKxzRHNbp+n03fzNc0M14n1B
+EH4nm4vyVzVmMND/HgJGuD2UcQaObYqU/4gVzDPrMJKkPVMPBeyQkUpW/p2A36Ga
+I+UsFv9rCzBAF+X+wI/DEvAGT5R3ZdKUrii5cHuivaqNnUlGBdfi3JUgtv4n4bQh
+HTdCR3ElX7QgA1lAeGxesmIZFYga/5BrKsxXabGgwzccIArFSdWtnlPuicmHbWEV
+wqCsLjz17IPcjB0SH1tuUOAQXWo50w==
+=yqeA
+-----END PGP SIGNATURE-----
+
+--rWhLK7VZz0iBluhq--
