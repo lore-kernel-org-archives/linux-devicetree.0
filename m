@@ -1,16 +1,14 @@
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFCv1 2/3] ARM: dts: meson8b: odroidc1: fix USB power supplies
- for phy
-Date: Tue, 5 Feb 2019 01:33:16 +0530
-Message-ID: <CANAwSgQ4=Vn6RM4Kpd20UWkQNW81=mfg-qB0G73dsRem3qwjcA@mail.gmail.com>
+Subject: Re: [RFCv1 0/3] Odroid c1+ usb fixs
+Date: Tue, 5 Feb 2019 01:34:07 +0530
+Message-ID: <CANAwSgT3tVss-hQ0jYzTaSvkfVkSQZtiRFhdq1KmUSL4idZmLw@mail.gmail.com>
 References: <20190123151209.2080-1-linux.amoon@gmail.com>
- <20190123151209.2080-3-linux.amoon@gmail.com>
- <CAFBinCAdf0rtt-7tON_LRNH_cpvGJXX3LX8g-i4xsC3wahZSVA@mail.gmail.com>
+ <CAFBinCC1xjqogcLm94gu+iLS_b_zB8eNEXL+4bYhog==zN0S+A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCAdf0rtt-7tON_LRNH_cpvGJXX3LX8g-i4xsC3wahZSVA@mail.gmail.com>
+In-Reply-To: <CAFBinCC1xjqogcLm94gu+iLS_b_zB8eNEXL+4bYhog==zN0S+A@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,126 +19,108 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Martin,
 
-Thanks for your comments.
-Please find my comments below.
-
-On Mon, 4 Feb 2019 at 18:59, Martin Blumenstingl
+On Mon, 4 Feb 2019 at 19:21, Martin Blumenstingl
 <martin.blumenstingl@googlemail.com> wrote:
 >
 > Hi Anand,
 >
 > On Wed, Jan 23, 2019 at 4:12 PM Anand Moon <linux.amoon@gmail.com> wrote:
 > >
-> > This patch enables the USB Host controller (USB0) and the relative USB0 PHY.
-> > From the shematics GPIOAO.BIT5 gpio input for the PWREN signal of the
-> > USB_OTG controller (usb0) which is also linked to USB_HOST controller (usb1).
-> > Add missing phy-supply link to both  USB0 and USB1 phy controller
-> > This changes fixed the power issue on usb ports. Changes help fix usb reset warning.
-> I prefer to change the way patches 2 and 3 are split:
-> - this one should only add the regulators and link it with the USB controller
-> - patch 3 should enable usb0 and usb0_phy
+> > This is follow up on my previous patches.
+> >
+> > [0] https://lore.kernel.org/patchwork/patch/1031616/
+> > [1] https://lore.kernel.org/patchwork/patch/1031617/
+> >
+> > As per Martin's suggestion and input I have tried to fix below issue.
+> >
+> > Fixed the phy power issue on the usb port.
+> > # cat /sys/kernel/debug/regulator/regulator_summary
+> >     USB_VBUS                      4    2      0 unknown  5000mV     0mA  5000mV  5000mV
+> >        phy-c1108820.phy.1         2                                 0mA     0mV     0mV
+> >        phy-c1108800.phy.0         2                                 0mA     0mV     0mV
+> >
+> > Fixed the OTG phy warning and initilizaion of usb0_phy
+> > # lsusb -t
+> > /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+> >     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+> >         |__ Port 1: Dev 5, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+> >         |__ Port 2: Dev 3, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+> >         |__ Port 3: Dev 4, If 1, Class=Video, Driver=uvcvideo, 480M
+> >         |__ Port 3: Dev 4, If 2, Class=Audio, Driver=snd-usb-audio, 480M
+> >         |__ Port 3: Dev 4, If 0, Class=Video, Driver=uvcvideo, 480M
+> >         |__ Port 3: Dev 4, If 3, Class=Audio, Driver=snd-usb-audio, 480M
+> > /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+> >
+> > Now hotpluing of usb device is working on odroid c1+ boards.
+> unfortunately it's still not working for me :(
 >
-> the reason behind this is the "Fixes" tag below. it's good to have it,
-> so please keep it in this patch!
-> however, enabling usb0 is not a fix for a commit which enables the
-> "USB host controller on Odroid-C1/C1+" (which is why enabling usb0 and
-> usb0_phy should be part of patch 3)
+> all following descriptions are seen when looking at the PCB with the
+> 40-pin connector on the bottom, USB ports on the left, micro USB
+> connector on the top right.
 >
-
-Ok I will split this changes as per your suggestion.
-
-> > [  821.991470] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  825.243385] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  828.151310] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  830.991241] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> >
-> > Fixes: 2eb79a4d15ff ("ARM: dts: meson: enabling the USB Host controller on Odroid-C1/C1+ board")
-> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Cc: Kevin Hilman <khilman@baylibre.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > Changes from previous patch.
-> >
-> > Fix the subject and commit message as per Martin's request
-> >  --Add the signal name in the comment
-> >  --Replace vbus-supply with phy-supply linking the power supply to phy node as pointed by Marine
-> >    which a PWREN signal in the USB_HOST controller (usb1)
-> >
-> > USB_VBUS                      4    2      0 unknown  5000mV     0mA  5000mV  5000mV
-> >    phy-c1108820.phy.1         2                                 0mA     0mV     0mV
-> >    phy-c1108800.phy.0         2                                 0mA     0mV     0mV
-> > ---
-> >  arch/arm/boot/dts/meson8b-odroidc1.dts | 26 ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> > index 58669abda259..bfa472a679d9 100644
-> > --- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-> > +++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> > @@ -83,6 +83,22 @@
-> >                 regulator-max-microvolt = <5000000>;
-> >         };
-> >
-> > +       usb_vbus: regulator-usb-vbus {
-> > +               compatible = "regulator-fixed";
-> > +
-> > +               regulator-name = "USB_VBUS";
-> > +               regulator-min-microvolt = <5000000>;
-> > +               regulator-max-microvolt = <5000000>;
-> > +
-> > +               vin-supply = <&p5v0>;
-> > +
-> > +               /*
-> > +                * signal name from schematics: PWREN
-> > +                */
-> > +               gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
-> > +               enable-active-high;
-> > +       };
-> > +
-> >         tflash_vdd: regulator-tflash_vdd {
-> >                 /*
-> >                  * signal name from schematics: TFLASH_VDD_EN
-> > @@ -295,8 +311,18 @@
-> >         pinctrl-names = "default";
-> >  };
-> >
-> > +&usb0_phy {
-> > +       status = "okay";
-> > +       phy-supply = <&usb_vbus>;
-> I'm not sure whether phy-supply is correct here
-> with the PHY framework and the dwc2 controller regulators can be set as:
-> - phy-supply (inside the PHY node)
-> - vbus-supply (inside the dwc2 controller node)
+> my test-case is:
+> - power-cycle the board
+> - enter u-boot command prompt
+> - gset GPIOAO_5 out high (or replace high with low)
+> - measure
 >
-> phy-supply is always enabled when the PHY is enabled.
-> vbus-supply is smarter: it's enabled whenever the controller is in
-> host mode (or OTG detects hosts mode), but disabled in
-> device/peripheral mode
+> I checked the voltage at RT9715EGB (U19) with a volt meter:
+> GPIOAO_5 HIGH:
+> - EN pin (bottom, left): 3.3V
+> - VOUT pin (top right): 5V
+> GPIOAO_5 LOW:
+> - EN pin (bottom, left). 0V
+> - VOUT pin (top right): 5V (not sure why...)
 >
-phy-supply enables the power per port power setting which get on when
-device is connected.
-
-vbus-supply controls the D+ D- signal during high seed data transfer.
-
-I have check this setting dr_mode="peripheral" it did not work out for me.
-Initial it supper the warning but it was not the correct solution.
-
-> as far as I understand we don't want to send power to the "Micro USB"
-> port if we're in device/peripheral mode.
+> I also checked the voltage at Q5 2N7002W with a volt meter:
+> - gate (bottom, right): 0V
+> - source (top, right): 3.3V
+> - drain (left): 0V
+> this is always the same, regardless of whether GPIOAO_5 is HIGH or LOW.
+> however, with Armbian booted (which uses some Amlogic 3.10 kernel
+> where USB works) I get:
+> - gate (bottom, right): 0V
+> - source (top, right): 0V
+> - drain (left): 3.3V
 >
+> what do you get on your board?
+>
+I dont have multi-meter to check this out on old and new kernel.
+As per my observation Amlogic 3.10 (32 bit) and 3.14 (64 bit)
+both use some state machine the tune the usb port.
+
+It's not clear that this will work with upstream kernel.
+
+I just checked with board booted with usb device connected we are observing
+the bus and is getting power up and hot plugging of usb device is working fine.
+
+$ lsusb -v|egrep "^Bus|MaxPower"
+Couldn't open device, some information will be missing
+Bus 002 Device 003: ID 1b71:0056 Fushicai
+    MaxPower              500mA
+Couldn't open device, some information will be missing
+Bus 002 Device 004: ID 152d:0578 JMicron Technology Corp. / JMicron
+USA Technology Corp. JMS567 SATA 6Gb/s bridge
+    MaxPower               30mA
+Couldn't open device, some information will be missing
+Couldn't open device, some information will be missing
+Bus 002 Device 002: ID 05e3:0610 Genesys Logic, Inc. 4-port hub
+    MaxPower              100mA
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Couldn't open device, some information will be missing
+    MaxPower                0mA
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    MaxPower                0mA
+
 >
 > Regards
 > Martin
 
 Best Regards
-
-
 
 -Anand
