@@ -1,40 +1,64 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 03/14] dt-binding: irqchip: Add pruss-intc-irq driver
- for PRUSS interrupts
-Date: Mon, 4 Feb 2019 08:36:37 -0800
-Message-ID: <20190204163637.GK5720@atomide.com>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
- <1549290167-876-4-git-send-email-rogerq@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding for generic eDP
+ panel
+Date: Mon, 4 Feb 2019 10:39:08 -0600
+Message-ID: <CAL_JsqLAODca_U94hCi9O3E6XiUjAYCoL7_0gkf_eMY0nnT8Ag@mail.gmail.com>
+References: <20190203185501.8958-1-anarsoul@gmail.com>
+ <20190203185501.8958-9-anarsoul@gmail.com>
+ <20190204074350.GC16448@ulmo>
+ <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
+ <20190204082353.GE19087@ulmo>
+ <CA+E=qVew+8__yrAud1gFnLQ8HCwDdGhVjV=c173HGvZxH=7zZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1549290167-876-4-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CA+E=qVew+8__yrAud1gFnLQ8HCwDdGhVjV=c173HGvZxH=7zZQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [190204 14:23]:
-> From: "Andrew F. Davis" <afd@ti.com>
-> 
-> The Programmable Real-Time Unit Subsystem (PRUSS) contains an
-> interrupt controller (INTC) that can handle various system input
-> events and post interrupts back to the device-level initiators.
-> The INTC can support upto 64 input events with individual control
-> configuration and hardware prioritization. These events are mapped
-> onto 10 interrupt signals through two levels of many-to-one mapping
-> support. Different interrupt signals are routed to the individual
-> PRU cores or to the host CPU.
-> 
-> The PRUSS INTC platform driver manages this PRUSS interrupt
-> controller and implements an irqchip driver to provide a Linux
-> standard way for the PRU client users to enable/disable/ack/
-> re-trigger a PRUSS system event. The system events to interrupt
-> channels and host interrupts relies on the mapping configuration
-> provided through a firmware resource table for now. This will be
-> revisited and enhanced in the future for a better interface. The
-> mappings will currently be programmed during the boot/shutdown
-> of the PRU.
-
-Acked-by: Tony Lindgren <tony@atomide.com>
+T24gTW9uLCBGZWIgNCwgMjAxOSBhdCAxMDoxMSBBTSBWYXNpbHkgS2hvcnV6aGljayA8YW5hcnNv
+dWxAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIE1vbiwgRmViIDQsIDIwMTkgYXQgMTI6MjQgQU0g
+VGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiA+Cj4g
+PiA+IFBpbmVib29rIHVzZWQgc2V2ZXJhbCA3NjhwIHBhbmVscyB0aGF0IGhhdmUgc2xpZ2h0bHkg
+ZGlmZmVyZW50IHRpbWluZ3MKPiA+ID4gYW5kIHJlY2VudCBiYXRjaCB1c2VzIDEwODBwIHBhbmVs
+Lgo+ID4gPgo+ID4gPiBXaGF0IHBhbmVsIGRlc2NyaXB0b3Igc2hvdWxkIEkgdXNlIGFzIGZhbGxi
+YWNrPwo+ID4KPiA+IFlvdSBkb24ndCB1c2UgcGFuZWwgZGVzY3JpcHRvcnMgYXMgZmFsbGJhY2su
+IFRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyCj4gPiB3aWxsIGJpbmQgdG8gYSBwYW5lbCBkZXZpY2Ug
+YW5kIHVzZSB0aGUgY29ycmVzcG9uZGluZyBkZXNjcmlwdG9yLiBJZgo+ID4geW91ciBkZXZpY2Ug
+dHJlZSBjb250YWlucyB0aGUgY29ycmVjdCBpbmZvcm1hdGlvbiwgdGhlIGRlc2NyaXB0b3IgaXMK
+PiA+IGNvcnJlY3QgZm9yIHRoZSBwYW5lbCB5b3UgaGF2ZS4KPiA+Cj4gPiBJbiBvdGhlciB3b3Jk
+cyB5b3UgbmVlZCB0byBlbnN1cmUgdGhhdCB5b3UgaGF2ZSB0aGUgY29ycmVjdCBwYW5lbCBpbgo+
+ID4gZGV2aWNlIHRyZWUgZm9yIHRoZSBib2FyZCB0aGF0IHlvdSdyZSB1c2luZy4gVGhpcyBpcyBl
+eGFjdGx5IHRoZSBzYW1lCj4gPiB0aGluZyBhcyBmb3Igb3RoZXIgZGV2aWNlcy4KPiA+Cj4gPiBP
+bmUgd2F5IHRvIHRvIHRoaXMgaXMgdG8gaGF2ZSBzZXBhcmF0ZSBkZXZpY2UgdHJlZXMgZm9yIGVh
+Y2ggdmFyaWFudAo+ID4gb2YgdGhlIGJvYXJkIHRoYXQgeW91IHdhbnQgdG8gc3VwcG9ydC4gQW5v
+dGhlciB2YXJpYW50IG1heSBiZSB0byBoYXZlCj4gPiBhIGNvbW1vbiBkZXZpY2UgdHJlZSBhbmQg
+dGhlbiBoYXZlIHNvbWUgZWFybHkgZmlybXdhcmUgdXBkYXRlIHRoZSBEVEIKPiA+IHdpdGggdGhl
+IGNvcnJlY3QgcGFuZWwgaW5mb3JtYXRpb24uCj4KPiBUaGF0IGRlZmVhdHMgdGhlIHB1cnBvc2Ug
+b2YgdXNpbmcgZURQIHBhbmVscy4gUGFuZWwgY2FuIGlkZW50aWZ5Cj4gaXRzZWxmIGFuZCByZXBv
+cnQgd2hhdCB0aW1pbmdzIGl0IHN1cHBvcnRzLgoKSWYgeW91IGFyZSBjb25maWRlbnQgdGhhdCB0
+aGlzIHdvcmtzIGZvciBhbGwgcGFuZWxzLCB0aGVuIHRoZSBmaXJtd2FyZQpjYW4gaWRlbnRpZnkg
+dGhlIHJpZ2h0IHBhbmVsIGFuZCB1cGRhdGUgdGhlIERUQiB3aXRoIHRoZSBjb3JyZWN0CmluZm9y
+bWF0aW9uLiBJZiB0aGlzIGRvZXNuJ3Qgd29yayBpbiB0aGUgZmlybXdhcmUsIHRoZW4gaXQgaXMg
+bm90CmdvaW5nIHRvIHdvcmsgaW4gdGhlIGtlcm5lbCBlaXRoZXIgYW5kIHlvdSBhcmUgU09MIHdp
+dGhvdXQgc3BlY2lmaWMKcGFuZWwgaW5mb3JtYXRpb24gaW4gdGhlIERULgoKPiBJZiB3ZSB1c2Ug
+c2VwYXJhdGUgRFRCcyB0aGVuIHVzZXJzIHdpbGwgaGF2ZSB0byBmaWd1cmUgb3V0IHdoYXQgcGFu
+ZWwKPiBpcyBpbnN0YWxsZWQgaW4gdGhlaXIgaGFyZHdhcmUgYW5kIHVzZSBhcHByb3ByaWF0ZSBz
+b2Z0d2FyZSBpbWFnZSAtCj4gdGhhdCdzIHNvbWV0aGluZyBJJ2QgbGlrZSB0byBhdm9pZC4KCkkg
+dGhpbmsgVGhpZXJyeSBtZWFudCBlaXRoZXIgd2F5IHRoaXMgaXMgYSBmaXJtd2FyZSBwcm9ibGVt
+LiBJZiB5b3UKaGF2ZSBhIFNLVSBwZXIgZGV2aWNlIGFuZCBwYW5lbCB0eXBlLCB0aGVuIHRoZSBm
+aXJtd2FyZSBqdXN0IHBpY2tzIGEKZHRiIGFtb25nIGEgc2V0LgoKUm9iCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
