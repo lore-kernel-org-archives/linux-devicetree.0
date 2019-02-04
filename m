@@ -1,34 +1,121 @@
-From: Jeremy Gebben <jgebben@sweptlaser.com>
-Subject: [PATCH v3 2/4] dt-bindings: Add LM96000 as a trivial device
-Date: Mon,  4 Feb 2019 13:19:04 -0700
-Message-ID: <20190204201906.8859-3-jgebben@sweptlaser.com>
-References: <20190204201906.8859-1-jgebben@sweptlaser.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204201906.8859-1-jgebben@sweptlaser.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding for generic eDP
+ panel
+Date: Mon, 4 Feb 2019 14:23:41 -0600
+Message-ID: <CAL_JsqJx98DfHZSafiXA8QiO=bn1zy8g6keQ15L=cUmbVkTTOA@mail.gmail.com>
+References: <20190203185501.8958-1-anarsoul@gmail.com>
+ <20190203185501.8958-9-anarsoul@gmail.com>
+ <20190204074350.GC16448@ulmo>
+ <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
+ <20190204082353.GE19087@ulmo>
+ <CAL_JsqKt1kOXmRNvkYsQ6AL69+TPZURKpDbKkkEUb2+KZ5hKjQ@mail.gmail.com>
+ <20190204165637.GA30876@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190204165637.GA30876@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-The LM96000 is a temperature sensor and fan controller based
-on the LM85.
-
-Signed-off-by: Jeremy Gebben <jgebben@sweptlaser.com>
----
- Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index cc64ec63a6ad..d79fb22bde39 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -322,6 +322,8 @@ properties:
-           - ti,ads7830
-             # Temperature Monitoring and Fan Control
-           - ti,amc6821
-+            # Temperature sensor with integrated fan control
-+          - ti,lm96000
-             # I2C Touch-Screen Controller
-           - ti,tsc2003
-             # Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
--- 
-2.17.1
+T24gTW9uLCBGZWIgNCwgMjAxOSBhdCAxMDo1NiBBTSBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5y
+ZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIE1vbiwgRmViIDA0LCAyMDE5IGF0IDEwOjI3
+OjA5QU0gLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOgo+ID4gT24gTW9uLCBGZWIgNCwgMjAxOSBh
+dCAyOjI0IEFNIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+IHdyb3Rl
+Ogo+ID4gPgo+ID4gPiBPbiBNb24sIEZlYiAwNCwgMjAxOSBhdCAxMjoxMzo1NUFNIC0wODAwLCBW
+YXNpbHkgS2hvcnV6aGljayB3cm90ZToKPiA+ID4gPiBPbiBTdW4sIEZlYiAzLCAyMDE5IGF0IDEx
+OjQzIFBNIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+IHdyb3RlOgo+
+ID4gPiA+ID4KPiA+ID4gPiA+IE9uIFN1biwgRmViIDAzLCAyMDE5IGF0IDEwOjU0OjU3QU0gLTA4
+MDAsIFZhc2lseSBLaG9ydXpoaWNrIHdyb3RlOgo+ID4gPiA+ID4gPiBlRFAgcGFuZWxzIHVzdWFs
+bHkgaGF2ZSBFRElEIEVFUFJPTSwgc28gdGhlcmUncyBubyBuZWVkIHRvIGRlZmluZSBwYW5lbAo+
+ID4gPiA+ID4gPiB3aWR0aC9oZWlnaHQgb3IgYW55IG1vZGVzL3RpbWluZ3MgaW4gZHRzLiBCdXQg
+dGhpcyBwYW5lbCBzdGlsbCBtYXkgaGF2ZQo+ID4gPiA+ID4gPiByZWd1bGF0b3IgYW5kL29yIGJh
+Y2tsaWdodC4KPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogVmFzaWx5IEto
+b3J1emhpY2sgPGFuYXJzb3VsQGdtYWlsLmNvbT4KPiA+ID4gPiA+ID4gLS0tCj4gPiA+ID4gPiA+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWVkcC50eHQgICAg
+ICAgIHwgNyArKysrKysrCj4gPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25z
+KCspCj4gPiA+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtZWRwLnR4dAo+ID4gPiA+ID4KPiA+ID4g
+PiA+IFBsZWFzZSBkb24ndCB0cnkgdG8gbWFrZSBwYW5lbHMgbG9vayBtb3JlIGdlbmVyaWMgdGhh
+biB0aGV5IHJlYWxseSBhcmUuCj4gPiA+ID4gPiBZb3UncmUgZ29pbmcgdG8gaGF2ZSB0byBwcm92
+aWRlIGEgY29tcGF0aWJsZSBzdHJpbmcgZm9yIHlvdXIgZGV2aWNlIHRoYXQKPiA+ID4gPiA+IGlz
+IG1vcmUgc3BlY2lmaWMgdGhhbiAicGFuZWwtZWRwIi4gWW91IGNsYWltIHRoYXQgeW91IGRvbid0
+IG5lZWQgYW55Cj4gPiA+ID4gPiBleHRyYSBpbmZvcm1hdGlvbiB0aGF0IGlzIHBhbmVsIHNwZWNp
+ZmljLCBidXQgeW91IGRvbid0IGtub3cgdGhhdCBub3cuCj4gPiA+ID4gPiBXZSBoYXZlIGluIHRo
+ZSBwYXN0IHRob3VnaHQgdGhhdCB3ZSBkaWRuJ3QgbmVlZCB0aGluZ3MgbGlrZSBwcmVwYXJlCj4g
+PiA+ID4gPiBkZWxheSwgYnV0IHRoZW4gd2UgcmFuIGludG8gc2l0dWF0aW9ucyB3aGVyZSB3ZSBk
+aWQgbmVlZCB0aGVtLgo+ID4gPiA+ID4KPiA+ID4gPiA+IEp1c3QgZG8gd2hhdCBldmVyeWJvZHkg
+ZWxzZSBkb2VzLiBQcm92aWRlIGEgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcKPiA+ID4gPiA+
+IGFuZCBtYXRjaCBvbiB0aGF0IGluIHRoZSBwYW5lbC1zaW1wbGUgZHJpdmVyLiBFdmVuIGlmIHlv
+dSBjYW4gcmVhZCBhbGwKPiA+ID4gPiA+IHRoZSB2aWRlbyB0aW1pbmdzIGZyb20gYW4gRURJRCBF
+RVBST00sIHlvdSBjYW4gc3RpbGwgcHJvdmlkZSBhIG1vZGUgaW4KPiA+ID4gPiA+IHRoZSBwYW5l
+bCBkZXNjcmlwdG9yIHRvIHNlcnZlIGFzIGEgZmFsbGJhY2sgaWYgZm9yIGV4YW1wbGUgdGhlIEVF
+UFJPTQo+ID4gPiA+ID4gaXMgZmF1bHR5IG9uIHNvbWUgZGV2aWNlLgo+ID4gPiA+Cj4gPiA+ID4g
+UGluZWJvb2sgdXNlZCBzZXZlcmFsIDc2OHAgcGFuZWxzIHRoYXQgaGF2ZSBzbGlnaHRseSBkaWZm
+ZXJlbnQgdGltaW5ncwo+ID4gPiA+IGFuZCByZWNlbnQgYmF0Y2ggdXNlcyAxMDgwcCBwYW5lbC4K
+PiA+ID4gPgo+ID4gPiA+IFdoYXQgcGFuZWwgZGVzY3JpcHRvciBzaG91bGQgSSB1c2UgYXMgZmFs
+bGJhY2s/Cj4gPiA+Cj4gPiA+IFlvdSBkb24ndCB1c2UgcGFuZWwgZGVzY3JpcHRvcnMgYXMgZmFs
+bGJhY2suIFRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyCj4gPiA+IHdpbGwgYmluZCB0byBhIHBhbmVs
+IGRldmljZSBhbmQgdXNlIHRoZSBjb3JyZXNwb25kaW5nIGRlc2NyaXB0b3IuIElmCj4gPiA+IHlv
+dXIgZGV2aWNlIHRyZWUgY29udGFpbnMgdGhlIGNvcnJlY3QgaW5mb3JtYXRpb24sIHRoZSBkZXNj
+cmlwdG9yIGlzCj4gPiA+IGNvcnJlY3QgZm9yIHRoZSBwYW5lbCB5b3UgaGF2ZS4KPiA+ID4KPiA+
+ID4gSW4gb3RoZXIgd29yZHMgeW91IG5lZWQgdG8gZW5zdXJlIHRoYXQgeW91IGhhdmUgdGhlIGNv
+cnJlY3QgcGFuZWwgaW4KPiA+ID4gZGV2aWNlIHRyZWUgZm9yIHRoZSBib2FyZCB0aGF0IHlvdSdy
+ZSB1c2luZy4gVGhpcyBpcyBleGFjdGx5IHRoZSBzYW1lCj4gPiA+IHRoaW5nIGFzIGZvciBvdGhl
+ciBkZXZpY2VzLgo+ID4gPgo+ID4gPiBPbmUgd2F5IHRvIHRvIHRoaXMgaXMgdG8gaGF2ZSBzZXBh
+cmF0ZSBkZXZpY2UgdHJlZXMgZm9yIGVhY2ggdmFyaWFudAo+ID4gPiBvZiB0aGUgYm9hcmQgdGhh
+dCB5b3Ugd2FudCB0byBzdXBwb3J0LiBBbm90aGVyIHZhcmlhbnQgbWF5IGJlIHRvIGhhdmUKPiA+
+ID4gYSBjb21tb24gZGV2aWNlIHRyZWUgYW5kIHRoZW4gaGF2ZSBzb21lIGVhcmx5IGZpcm13YXJl
+IHVwZGF0ZSB0aGUgRFRCCj4gPiA+IHdpdGggdGhlIGNvcnJlY3QgcGFuZWwgaW5mb3JtYXRpb24u
+Cj4gPgo+ID4gVGhhdCBjYW4gYmUgYSBwYWluIHRvIG1hbmFnZSBlc3BlY2lhbGx5IGlmIHBhbmVs
+cyBhcmUgc3dhcHBlZCBydW4gdG8KPiA+IHJ1biB3aXRoIDJuZCBzb3VyY2VzLgo+ID4KPiA+IEkg
+dGhpbmsgaXQgaXMgcGVyZmVjdGx5IGZpbmUgdG8gaGF2ZSBhIGdlbmVyaWMtaXNoIGZhbGxiYWNr
+IGFzIGxvbmcgYXMKPiA+IGl0IGlzIGp1c3QgdGhhdCwgYSBmYWxsYmFjay4gSWYgdGhlIHBhbmVs
+IGhhcyBxdWlya3MsIHRoZW4geW91J2QKPiA+IGJldHRlciBtYWtlIHN1cmUgdGhlIGZpcm13YXJl
+IGlzIHN0dWZmaW5nIGluIHRoZSByaWdodCBjb21wYXRpYmxlcyBvcgo+ID4gdGhhdCB5b3UgY2Fu
+IHVwZGF0ZSB0aGUgZmlybXdhcmUuCj4KPiBzaW1wbGUtcGFuZWwgd291bGQgcHJvYmFibHkgd29y
+ayBpZiB5b3Ugc3R1Y2sgaW4gc29tZSBtb3N0bHkgY29tcGF0aWJsZQo+IHN0cmluZyBhbmQgcHJv
+dmlkZWQgYSBkZGMtaTJjLWJ1cyBwcm9wZXJ0eSBpbiB0aGUgZGV2aWNlIHRyZWUgbm9kZS4gVGhl
+Cj4gZ2VuZXJpYy1pc2ggZmFsbGJhY2sgY2FzZSBjb3VsZCBiZSBpbXBsZW1lbnRlZCBieSBwcm92
+aWRpbmcgYSBmYWxsYmFjawo+IGNvbXBhdGlibGUgc3RyaW5nICh3ZSB1c2VkIHRvIGhhdmUgInNp
+bXBsZS1wYW5lbCIsIHdoaWNoIEkgdGhpbmsgd291bGQKPiBzdGlsbCBiZSBhZGVxdWF0ZSBmb3Ig
+dGhpcyBJIHN1cHBvc2UpIGFuZCBhZGRpbmcgYSBkdW1teSBkZXNjcmlwdG9yIGluCj4gdGhlIGRy
+aXZlciwgcGVyaGFwcyBvbmUgd2l0aCBwcmUtZGVmaW5lZCBkZWxheXMgdGhhdCBjb3VsZCBiZSBh
+ZGp1c3RlZAo+IHRvIHdvcmsgZm9yIGFsbCBjYXNlcywgb3IgdGhleSBjb3VsZCBqdXN0IGJlIDAu
+IEF0IGxlYXN0IHRoYXQgd2F5IHdlJ2QKPiBiZSBleHBsaWNpdGx5IGRvY3VtZW50aW5nIHRoYXQg
+d2Ugc3VwcG9ydCB0aGlzIGFzIGEgZmFsbGJhY2suCgpJJ2QgbGlrZSBzb21ldGhpbmcgbW9yZSBz
+cGVjaWZpYyB0aGFuICdzaW1wbGUtcGFuZWwnIHRoYXQgYXQgbGVhc3QKaW1wbGllcyBpdCBoYXMg
+RURJRCBhbmQgd2hhdGV2ZXIgZWxzZSB3ZSB0aGluayBpdCBzaG91bGQgaW1wbHkuCgpMb29raW5n
+IGludG8gdGhpcyBhIGJpdCBtb3JlLCB3aHkgZG9uJ3Qgd2UganVzdCBkbyBhIGNvbm5lY3RvciBo
+ZXJlPwplRFAgaGFzIGEgc3RhbmRhcmQgY29ubmVjdG9yICh3aXRoIHBvd2VyKS4gSXQncyBqdXN0
+IGxpa2Ugb3RoZXIKY29ubmVjdG9ycywgYnV0IHdpdGggcG93ZXIgYW5kIG5vIGhvdHBsdWcuIElm
+IHNvbWVvbmUgZG9lcyB0aGVpciBvd24KaW50ZXJmYWNlLCB0aGVuIHRoZXkgc2hvdWxkIGRvIHRo
+ZWlyIG93biBjb25uZWN0b3Igb3IgcGFuZWwgYmluZGluZy4KCj4gSSdtIG5vdCBzdXJlIGhvdyB5
+b3UnZCB3YW50IHRvIGVuZm9yY2UgdGhhdCBwZW9wbGUgcHJvdmlkZSB0aGUgcmlnaHQKPiBjb21w
+YXRpYmxlIHN0cmluZ3MgdGhhdCB3YXkuIEN1cnJlbnRseSB0aGVyZSdzIG5vIHdheSB0byBtYWtl
+IHlvdXIgcGFuZWwKPiB3b3JrIHdpdGhvdXQgYWRkaW5nIGEgcGFuZWwgZHJpdmVyLCBzbyBwZW9w
+bGUgYXJlIGZvcmNlZCB0byB3cml0ZSB0aGUKPiBEVCBiaW5kaW5ncyBhbmQgYSBkcml2ZXIsIG9y
+IGFkZCBzdXBwb3J0IHRvIGFuIGV4aXN0aW5nIG9uZS4gSWYgd2Ugb3Blbgo+IHRoaXMgYmFja2Rv
+b3IsIEkgc3VzcGVjdCBtYW55IHBlb3BsZSB3aWxsIGp1c3QgdGFrZSB0aGUgZWFzeSByb3V0ZSBh
+bmQKPiByZWx5IG9uIHRoZSBmYWxsYmFjay4gQW5kIHRoZW4gd2hhdCBkbyB3ZSBkbyB3aGVuIHdl
+IGdldCBidWcgcmVwb3J0cwo+IGFib3V0IHBhbmVscyBub3Qgd29ya2luZywgb3IgcmVxdWlyaW5n
+IHNvbWUgcXVpcmtzLiBIb3cgZG8gd2UgZ28gYW5kCj4gZmluZCBvdXQgd2hhdCB0aGUgcmlnaHQg
+Y29tcGF0aWJsZSBzdHJpbmdzIGFyZSBmb3IgZWFjaCBib2FyZCwgb3IgaG93IHRvCj4gZml4IHRo
+aW5ncyBmb3Igc29tZXRoaW5nIHdlIGRvbid0IGhhdmUgYWNjZXNzIHRvLgoKV2UnbGwgc2ltcGx5
+IHJlamVjdCBhbnl0aGluZyB0aGF0IHNob3VsZCBiZSBpbXBsaWVkIGJ5IGNvbXBhdGlibGUuIEFu
+ZApub3cgd2UgY2FuIGVuZm9yY2Ugd2l0aCBzY2hlbWEgdGhhdCBEVHMgYXJlbid0IHBvcHVsYXRl
+ZCB3aXRoCmZhbGxiYWNrcyBhbG9uZS4gT2YgY291cnNlLCB3ZSBjYW4ndCBtYWtlIGFueW9uZSBw
+YXNzIGFsbCBzY2hlbWEKY2hlY2tzIGJlZm9yZSBzaGlwcGluZyBhIGR0Yi4KClJvYgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
