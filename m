@@ -1,45 +1,188 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] arm64: dts: imx8mq: Add on-chip OTP controller node
-Date: Mon, 04 Feb 2019 11:26:30 +0100
-Message-ID: <1549275990.2544.3.camel@pengutronix.de>
-References: <20190202150638.13672-1-ccaione@baylibre.com>
- <20190202150638.13672-2-ccaione@baylibre.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v5] ARM: dspi: Provide support for DSPI slave mode
+ operation (Vybryd vf610)
+Date: Mon, 4 Feb 2019 11:30:01 +0100
+Message-ID: <20190204113001.77d59570@jawa>
+References: <20180927150709.17010-1-lukma@denx.de>
+        <20190109082644.14941-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190202150638.13672-2-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/W4Esgja4AsQbHE3sTBx7r6y"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190109082644.14941-1-lukma@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Esben Haabendal <eha@deif.com>, Martin =?UTF-8?B?SHVuZGViw7hsbA==?= <martin@geanix.com>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gU2Ftc3RhZywgZGVuIDAyLjAyLjIwMTksIDE1OjA2ICswMDAwIHNjaHJpZWIgQ2FybG8gQ2Fp
-b25lOgo+IEFkZCB0aGUgbm9kZSBmb3IgdGhlIE9UUCBjb250cm9sbGVyLiBUaGUgSVAgaXMgdGhl
-IHNhbWUgYXMgb24gdGhlIGlteDdkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IENhcmxvIENhaW9uZSA8
-Y2NhaW9uZUBiYXlsaWJyZS5jb20+CgpSZXZpZXdlZC1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hA
-cGVuZ3V0cm9uaXguZGU+Cgo+IC0tLQo+IMKgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-aW14OG1xLmR0c2kgfCA4ICsrKysrKysrCj4gwqAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25z
-KCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDht
-cS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kKPiBpbmRl
-eCBjMzRjYWJlOWIzNTYuLmYzN2YxN2I3MTE1MSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jv
-b3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gQEAgLTI0MSw2ICsyNDEsMTQgQEAKPiDCoAkJCQlyZWcg
-PSA8MHgzMDM0MDAwMCAweDEwMDAwPjsKPiDCoAkJCX07Cj4gwqAKPiArCQkJb2NvdHA6IG9jb3Rw
-LWN0cmxAMzAzNTAwMDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OG1xLW9jb3RwIiwg
-ImZzbCxpbXg3ZC1vY290cCIsICJzeXNjb24iOwo+ICsJCQkJcmVnID0gPDB4MzAzNTAwMDAgMHgx
-MDAwMD47Cj4gKwkJCQljbG9ja3MgPSA8JmNsayBJTVg4TVFfQ0xLX09DT1RQX1JPT1Q+Owo+ICsJ
-CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwxPjsKPiArCQkJ
-fTsKPiArCj4gwqAJCQlhbmF0b3A6IHN5c2NvbkAzMDM2MDAwMCB7Cj4gwqAJCQkJY29tcGF0aWJs
-ZSA9ICJmc2wsaW14OG1xLWFuYXRvcCIsICJzeXNjb24iOwo+IMKgCQkJCXJlZyA9IDwweDMwMzYw
-MDAwIDB4MTAwMDA+OwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtYXJtLWtlcm5lbAo=
+--Sig_/W4Esgja4AsQbHE3sTBx7r6y
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Dear All,
+
+> The NXP's Vybryd vf610 can work as a SPI slave device (the CS and
+> clock signals are provided by master).
+>=20
+> It is possible to specify a single device to work in that mode. As we
+> do use DMA for transferring data, the RX channel must be prepared for
+> incoming data.
+> Moreover, in slave mode we just set a subset of control fields in
+> configuration registers (CTAR0, PUSHR).
+>=20
+> For testing the spidev_test program has been used.
+> Test script for this patch can be found here:
+> https://github.com/lmajewski/tests-spi/blob/master/tests/spi/spi_tests.sh
+>=20
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+> Changes for v5:
+>=20
+> - Rebase to v5.0-rc1 (no code changes needed)
+
+Is there any interest in adding new code (or fixes) to VF610 ?=20
+
+The first version of this patch was posted more than 4 months ago with
+no feedback on the VF610 dspi controller part (after I've rewritten it
+to use the generic SPI slave code after comments from Geert [1]).
+
+I do have a feeling that upstreaming this code takes a bit too long ...
+
+[1] - https://lkml.org/lkml/2018/9/26/836
+
+>=20
+> Changes for v4:
+>=20
+> - Rebase to v4.20-rc5 (no code changes needed)
+>=20
+> Changes for v3:
+>=20
+> - Rebase to v4.20-rc2 (no code changes needed)
+>=20
+> Changes for v2:
+>=20
+> - Remove patch which adds extra NXP specific DTS property to support
+> slave mode and reuse the generic one (spi-slave)
+> - Remove patch which brings back the mcr_register local copy. It is
+> not needed as generic SPI slave infrastructure is used.
+> - Rewrite the code to use spi_controller_is_slave() helper functions
+> ---
+>  drivers/spi/spi-fsl-dspi.c | 40
+> ++++++++++++++++++++++++++++++---------- 1 file changed, 30
+> insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 5e10dc5c93a5..348682be9dd5 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -233,6 +233,9 @@ static u32 dspi_pop_tx_pushr(struct fsl_dspi
+> *dspi) {
+>  	u16 cmd =3D dspi->tx_cmd, data =3D dspi_pop_tx(dspi);
+> =20
+> +	if (spi_controller_is_slave(dspi->master))
+> +		return data;
+> +
+>  	if (dspi->len > 0)
+>  		cmd |=3D SPI_PUSHR_CMD_CONT;
+>  	return cmd << 16 | data;
+> @@ -329,6 +332,11 @@ static int dspi_next_xfer_dma_submit(struct
+> fsl_dspi *dspi) dma_async_issue_pending(dma->chan_rx);
+>  	dma_async_issue_pending(dma->chan_tx);
+> =20
+> +	if (spi_controller_is_slave(dspi->master)) {
+> +
+> wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
+> +		return 0;
+> +	}
+> +
+>  	time_left =3D
+> wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
+> DMA_COMPLETION_TIMEOUT); if (time_left =3D=3D 0) {
+> @@ -798,14 +806,18 @@ static int dspi_setup(struct spi_device *spi)
+>  	ns_delay_scale(&pasc, &asc, sck_cs_delay, clkrate);
+> =20
+>  	chip->ctar_val =3D SPI_CTAR_CPOL(spi->mode & SPI_CPOL ? 1 : 0)
+> -		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0)
+> -		| SPI_CTAR_LSBFE(spi->mode & SPI_LSB_FIRST ? 1 : 0)
+> -		| SPI_CTAR_PCSSCK(pcssck)
+> -		| SPI_CTAR_CSSCK(cssck)
+> -		| SPI_CTAR_PASC(pasc)
+> -		| SPI_CTAR_ASC(asc)
+> -		| SPI_CTAR_PBR(pbr)
+> -		| SPI_CTAR_BR(br);
+> +		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0);
+> +
+> +	if (!spi_controller_is_slave(dspi->master)) {
+> +		chip->ctar_val |=3D SPI_CTAR_LSBFE(spi->mode &
+> +						 SPI_LSB_FIRST ? 1 :
+> 0)
+> +			| SPI_CTAR_PCSSCK(pcssck)
+> +			| SPI_CTAR_CSSCK(cssck)
+> +			| SPI_CTAR_PASC(pasc)
+> +			| SPI_CTAR_ASC(asc)
+> +			| SPI_CTAR_PBR(pbr)
+> +			| SPI_CTAR_BR(br);
+> +	}
+> =20
+>  	spi_set_ctldata(spi, chip);
+> =20
+> @@ -970,8 +982,13 @@ static const struct regmap_config
+> dspi_xspi_regmap_config[] =3D {=20
+>  static void dspi_init(struct fsl_dspi *dspi)
+>  {
+> -	regmap_write(dspi->regmap, SPI_MCR, SPI_MCR_MASTER |
+> SPI_MCR_PCSIS |
+> -		     (dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI :
+> 0));
+> +	unsigned int mcr =3D SPI_MCR_PCSIS |
+> +		(dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI : 0);
+> +
+> +	if (!spi_controller_is_slave(dspi->master))
+> +		mcr |=3D SPI_MCR_MASTER;
+> +
+> +	regmap_write(dspi->regmap, SPI_MCR, mcr);
+>  	regmap_write(dspi->regmap, SPI_SR, SPI_SR_CLEAR);
+>  	if (dspi->devtype_data->xspi_mode)
+>  		regmap_write(dspi->regmap, SPI_CTARE(0),
+> @@ -1027,6 +1044,9 @@ static int dspi_probe(struct platform_device
+> *pdev) }
+>  		master->bus_num =3D bus_num;
+> =20
+> +		if (of_property_read_bool(np, "spi-slave"))
+> +			master->slave =3D true;
+> +
+>  		dspi->devtype_data =3D
+> of_device_get_match_data(&pdev->dev); if (!dspi->devtype_data) {
+>  			dev_err(&pdev->dev, "can't get
+> devtype_data\n");
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/W4Esgja4AsQbHE3sTBx7r6y
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlxYFCkACgkQAR8vZIA0
+zr1T7gf8DLa3CcHiFqBGUSa7LlfF73nm1NjO1JAbIB9inEccDPGYG9FoT0oVTzl6
+7xOlOClt+hjsZC80MTBcyqKImEqHyUEdCzyvoPymqIgl3ZIJe9hGvDyve/N1NHEB
+JgbDE16xZlhiEJFHCMjXFg7AO2ZftOtbeZIQRcFnS/DOK+q1ezM74X0sVP32/RNl
+ZnBdqB4cEFLjxcpRupWtJqjCpfo4RULn5SNeWLhL+F3qvduapNedEiMgQVkjhA8W
+NGu0rXCbkobe73Rqg+KRZQdaP0IB+4Q56jSSJ06zXoMUEHzfKR5uT+ehBTKDqMYF
+nA5ICtn4v0jdcHgqsp9yS0phICwWWQ==
+=PII2
+-----END PGP SIGNATURE-----
+
+--Sig_/W4Esgja4AsQbHE3sTBx7r6y--
