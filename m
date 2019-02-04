@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v12 11/13] media: staging/imx: add i.MX7 entries to TODO file
-Date: Mon,  4 Feb 2019 12:00:37 +0000
-Message-ID: <20190204120039.1198-12-rui.silva@linaro.org>
+Subject: [PATCH v12 07/13] ARM: dts: imx7s: add multiplexer controls
+Date: Mon,  4 Feb 2019 12:00:33 +0000
+Message-ID: <20190204120039.1198-8-rui.silva@linaro.org>
 References: <20190204120039.1198-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,30 +21,36 @@ To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add some i.MX7 related entries to TODO file.
+The IOMUXC General Purpose Register has bitfield to control video bus
+multiplexer to control the CSI input between the MIPI-CSI2 and parallel
+interface. Add that register and mask.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- drivers/staging/media/imx/TODO | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/imx/TODO b/drivers/staging/media/imx/TODO
-index aeeb15494a49..6f29b5ca5324 100644
---- a/drivers/staging/media/imx/TODO
-+++ b/drivers/staging/media/imx/TODO
-@@ -45,3 +45,12 @@
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 9a680d3d6424..792efcd2caa1 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -497,8 +497,15 @@
  
-      Which means a port must not contain mixed-use endpoints, they
-      must all refer to media links between V4L2 subdevices.
+ 			gpr: iomuxc-gpr@30340000 {
+ 				compatible = "fsl,imx7d-iomuxc-gpr",
+-					"fsl,imx6q-iomuxc-gpr", "syscon";
++					"fsl,imx6q-iomuxc-gpr", "syscon",
++					"simple-mfd";
+ 				reg = <0x30340000 0x10000>;
 +
-+- i.MX7: all of the above, since it uses the imx media core
-+
-+- i.MX7: use Frame Interval Monitor
-+
-+- i.MX7: runtime testing with parallel sensor, links setup and streaming
-+
-+- i.MX7: runtime testing with different formats, for the time only 10-bit bayer
-+  is tested
++				mux: mux-controller {
++					compatible = "mmio-mux";
++					#mux-control-cells = <0>;
++					mux-reg-masks = <0x14 0x00000010>;
++				};
+ 			};
+ 
+ 			ocotp: ocotp-ctrl@30350000 {
 -- 
 2.20.1
