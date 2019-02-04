@@ -1,39 +1,52 @@
 From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: [PATCH v1 0/6] drm/msm: Improved a6xx GMU reset
-Date: Mon,  4 Feb 2019 09:15:38 -0700
-Message-ID: <1549296944-17285-1-git-send-email-jcrouse@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v1 2/6] dt-bindings: drm/msm/a6xx: Add GX power-domain for GMU
+ bindings
+Date: Mon,  4 Feb 2019 09:15:40 -0700
+Message-ID: <1549296944-17285-3-git-send-email-jcrouse@codeaurora.org>
+References: <1549296944-17285-1-git-send-email-jcrouse@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1549296944-17285-1-git-send-email-jcrouse@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: freedreno@lists.freedesktop.org
-Cc: linux-arm-msm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Thomas Zimmermann <tzimmermann@suse.de>, Sharat Masetty <smasetty@codeaurora.org>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Douglas Anderson <dianders@chromium.org>, Rob Clark <robdclark@gmail.com>, Colin Ian King <colin.king@canonical.com>, devicetree@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, Andy Gross <andy.gross@linaro.org>, Daniel Mack <daniel@zonque.org>, linux-kernel@vger.kernel.org, Mamta Shukla <mamtashukla555@gmail.com>, Jonathan Marek <jonathan@marek.ca>, Mark Rutland <mark.rutland@arm.com>, Sean Paul <seanpaul@chromium.org>, Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a stack of changes for 5.1 (if I'm not already too late). The bulk of
-the changes implement a better GMU reset sequence using the new gpucc power
-domain added in 5.0. If a GMU fault occurs during runtime we try to do a
-standard GPU recovery and if the fault happens during GMU start then try to
-fail somewhat gracefully than BUG_ON.
-
-There will be a DT change to go along with this, but we can send that along
-after the core code is merged. The downside for not having the domain
-properly listed is that the runtime reset sequence probably won't work which
-is no worse than it is today.
-
-Jordan Crouse (6):
-  drm/msm/a6xx: Remove unwanted regulator code
-  dt-bindings: drm/msm/a6xx: Add GX power-domain for GMU bindings
-  drm/msm/gpu: Attach to the GPU GX power domain
-  drm/msm/a6xx: Make GMU reset useful
-  msm/drm/a6xx: Turn off the GMU if resume fails
-  drm/msm/a6xx: Remove an unused struct member
-
- .../devicetree/bindings/display/msm/gmu.txt        |  10 +-
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 200 +++++++++++++--------
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h              |   9 +-
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c              |  20 +--
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h              |   3 +-
- drivers/gpu/drm/msm/adreno/adreno_device.c         |   1 +
- 6 files changed, 144 insertions(+), 99 deletions(-)
-
--- 
-2.7.4
+VGhlIEdNVSBzaG91bGQgaGF2ZSB0d28gcG93ZXIgZG9tYWlucyBkZWZpbmVkOiAiY3giIGFuZCAi
+Z3giLiAiY3giIGlzIHRoZQphY3R1YWwgcG93ZXIgZG9tYWluIGZvciB0aGUgZGV2aWNlIGFuZCAi
+Z3giIHdpbGwgYmUgYXR0YWNoZWQgYXQgcnVudGltZQp0byBtYW5hZ2UgcmVmZXJlbmNlIGNvdW50
+aW5nIG9uIHRoZSBHUFUgZGV2aWNlIGluIGNhc2Ugb2YgYSBHTVUgY3Jhc2guCgpTaWduZWQtb2Zm
+LWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgotLS0KCiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dCB8IDEwICsrKysr
+KysrLS0KIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
+L2dtdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20v
+Z211LnR4dAppbmRleCAzNDM5YjM4Li45MGFmNWIwIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAorKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dApAQCAtMjQsNyArMjQs
+MTAgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAgICogImN4byIKICAgICogImF4aSIKICAgICog
+Im1ub2MiCi0tIHBvd2VyLWRvbWFpbnM6IHNob3VsZCBiZSA8JmNsb2NrX2dwdWNjIEdQVV9DWF9H
+RFNDPgorLSBwb3dlci1kb21haW5zOiBzaG91bGQgYmU6CisJPCZjbG9ja19ncHVjYyBHUFVfQ1hf
+R0RTQz4KKwk8JmNsb2NrX2dwdWNjIEdQVV9HWF9HRFNDPgorLSBwb3dlci1kb21haW4tbmFtZXM6
+IE1hdGNoaW5nIG5hbWVzIGZvciB0aGUgcG93ZXIgZG9tYWlucwogLSBpb21tdXM6IHBoYW5kbGUg
+dG8gdGhlIGFkcmVubyBpb21tdQogLSBvcGVyYXRpbmctcG9pbnRzLXYyOiBwaGFuZGxlIHRvIHRo
+ZSBPUFAgb3BlcmF0aW5nIHBvaW50cwogCkBAIC01MSw3ICs1NCwxMCBAQCBFeGFtcGxlOgogCQkJ
+PCZnY2MgR0NDX0dQVV9NRU1OT0NfR0ZYX0NMSz47CiAJCWNsb2NrLW5hbWVzID0gImdtdSIsICJj
+eG8iLCAiYXhpIiwgIm1lbW5vYyI7CiAKLQkJcG93ZXItZG9tYWlucyA9IDwmZ3B1Y2MgR1BVX0NY
+X0dEU0M+OworCQlwb3dlci1kb21haW5zID0gPCZncHVjYyBHUFVfQ1hfR0RTQz4sCisJCQkJPCZn
+cHVjYyBHUFVfR1hfR0RTQz47CisJCXBvd2VyLWRvbWFpbi1uYW1lcyA9ICJjeCIsICJneCI7CisK
+IAkJaW9tbXVzID0gPCZhZHJlbm9fc21tdSA1PjsKIAogCQlvcGVyYXRpbmctcG9pbnRzLXYyID0g
+PCZnbXVfb3BwX3RhYmxlPjsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
