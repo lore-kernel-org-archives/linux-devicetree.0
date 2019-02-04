@@ -1,95 +1,106 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH RESEND v2 06/12] drm/sun4i: rgb: Add 1%
- tolerance to dclk frequency check when bridge is connected
-Date: Tue, 05 Feb 2019 00:28:21 +0800
-Message-ID: <0F6CBEA4-6DB6-40F1-A2FD-65101AF64F1F@aosc.io>
-References: <20190203185501.8958-1-anarsoul@gmail.com> <20190203185501.8958-7-anarsoul@gmail.com> <20190204142036.vd42nvyjnjr5yeoi@flea> <CA+E=qVfTfJ9E29gz83tdVGx5_KGWSQVJOAxKTzC+-n7=gdj0cA@mail.gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Mon, 4 Feb 2019 08:33:12 -0800
+Message-ID: <20190204163312.GI5720@atomide.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB5WQ4HRAKGQE2KO6YVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CA+E=qVfTfJ9E29gz83tdVGx5_KGWSQVJOAxKTzC+-n7=gdj0cA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1549290167-876-2-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+* Roger Quadros <rogerq@ti.com> [190204 14:23]:
+> From: Suman Anna <s-anna@ti.com>
+...
+> +Example:
+> +========
+> +1.	/* AM33xx PRU-ICSS */
+> +
+> +	pruss: pruss@0 {
+> +		compatible = "ti,am3356-pruss";
+> +		reg = <0x0 0x2000>,
+> +		      <0x2000 0x2000>,
+> +		      <0x10000 0x3000>;
+> +		reg-names = "dram0", "dram1",
+> +			    "shrdram2";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 
-=E4=BA=8E 2019=E5=B9=B42=E6=9C=885=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8812:=
-26:43, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
->On Mon, Feb 4, 2019 at 6:20 AM Maxime Ripard
-><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->>
->> Hi,
->>
->> On Sun, Feb 03, 2019 at 10:54:55AM -0800, Vasily Khoruzhick wrote:
->> > Clock rate check that was added in commit bb43d40d7c83 ("drm/sun4i:
->rgb:
->> > Validate the clock rate") prevents some panel and bridges from
->working with
->> > sun4i driver.
->> >
->> > Unfortunately, dotclock frequency for some modes are not achievable
->on
->> > sunxi hardware, and there's a slight deviation in rate returned by
->> > clk_round_rate(), so they fail this check.
->> >
->> > Experiments show that panels and bridges work fine with this slight
->> > deviation, e.g. Pinebook that uses ANX6345 bridge with 768p eDP
->panel
->> > requests 73 MHz, gets 72.296MHz instead (0.96% difference) and
->works just
->> > fine.
->> >
->> > This patch adds a 1% tolerence to the dot clock check when bridge
->is
->> > connected.
->> >
->> > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> I'm not sure we want to make exceptions for all the hardware
->> combination we face, but we should go for something more generic (and
->> easier to maintain instead).
->>
->> IIRC, from the previous discussion, HDMI had a tolerancy requirement
->> in the standard. Do you know if there's such a thing for eDP? That
->> would solve the issue for all the eDP displays at once.
->
->I don't have access to eDP standard - vesa.org says it's available to
->members only.
+Thanks for fixing up the reg ranges for the top level node.
 
-Try out to grab an old version?
+Ideally there would not even be a top level node here as
+AFAIK the whole PRUSS is a collection of devices on a PRU
+internal interconnect. So following that path a bit further..
+How about just get rid of the top level node and just do:
 
-I remember 1.0 is open.
+pruss: pruss@0 {
+	dram0: memory@0 {
+	       device_type = "memory";
+	       reg = <0x0 0x2000>;
+	};
 
->
->> Maxime
->>
->> --
->> Maxime Ripard, Bootlin
->> Embedded Linux and Kernel engineering
->> https://bootlin.com
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+	dram1: memory@2000 {
+	       device_type = "memory";
+	       reg = <0x2000 0x2000>;
+	};
 
---=20
-=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84An=
-droid=E8=AE=BE=E5=A4=87=E3=80=82
+	shrdram2: memory@10000 {
+		device_type = "memory";
+		reg = <0x10000 0x3000>;
+	};
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+	pruss_cfg: cfg@26000 {
+		...
+	};
+	...
+};
+
+If the device_type = "memory" cannot be used here for
+being specific to the top level properties, then
+there's probably some other generic property usable
+here :)
+
+> +		pruss_mii_rt: mii_rt@32000 {
+> +			reg = <0x32000 0x58>;
+> +		};
+
+The node name should not have underscores so
+pruss_mii_rt: mii-rt@32000. Please check the others
+too, like app_node.
+
+> +	app_node: app_node {
+> +		prus = <&pru0>, <&pru1>;
+> +		firmware-name = "pruss-app-fw", "pruss-app-fw-2";
+> +		ti,pruss-gp-mux-sel = <2>, <1>;
+> +		/* setup interrupts for prus:
+> +		   prus[0] => pru1_0: ev=16, chnl=2, host-irq=7,
+> +		   prus[1] => pru1_1: ev=19, chnl=1, host-irq=3 */
+> +		ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
+> +	}
+
+If the ti,pruss-gp-mux-sel and ti,pru-interrupt-map are
+firmware configuration options, maybe leave them out of
+the dts completely and make the app-node optional.
+
+And have a proper compatible for this node such as
+"ti,pruss-app-xyz". And this should be only set if the the
+hardware is wired up in such way that things need to be
+configured in the dts rather than by the firmware.
+
+And then you can just hide mux-sel and interrupt-map
+behind the compatible property for that hardware. And
+leave them out from the dts and have the handling driver
+would set mux-sel and interrupt-map based on the
+match->data during probe.
+
+Regards,
+
+Tony
