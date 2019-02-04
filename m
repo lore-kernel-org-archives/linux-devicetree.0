@@ -1,24 +1,70 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 0/8 v5] k3dma patches to add support for hi3660/HiKey960
-Date: Mon, 4 Feb 2019 14:31:54 +0530
-Message-ID: <20190204090154.GM4296@vkoul-mobl>
-References: <1548361463-28372-1-git-send-email-john.stultz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2] sh: fix build error for invisible CONFIG_BUILTIN_DTB_SOURCE
+Date: Mon,  4 Feb 2019 18:10:55 +0900
+Message-ID: <1549271455-19292-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548361463-28372-1-git-send-email-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Dan Williams <dan.j.williams@intel.com>, Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ryan Grachek <ryan@edited.us>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-kbuild@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-kernel@vger.kernel.org, Rich Felker <dalias@libc.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24-01-19, 12:24, John Stultz wrote:
-> This patch series is based on recent work by Tanglei Han, and
-> adds support for hi3660 SoCs as found on the HiKey960 board,
-> along with a few patches I've been carrying.
+I fixed a similar build error in commit 1b1e4ee86e00 ("sh: fix build
+error for empty CONFIG_BUILTIN_DTB_SOURCE"), but it came back again.
 
-Applied and fixed the minor style issues in patch 5, and retagged 3 thru
-5 to dmaengine: xxx, thanks
+Since commit 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb
+build rules"), the combination of CONFIG_OF_EARLY_FLATTREE=y and
+CONFIG_USE_BUILTIN_DTB=n results in the following build error:
+
+make[1]: *** No rule to make target 'arch/sh/boot/dts/.dtb.o', needed by 'arch/sh/boot/dts/built-in.a'.  Stop.
+make: *** [Makefile;1727: arch/sh/boot/dts/] Error 2
+
+Prior to that commit, there was only one path to descend into
+arch/sh/boot/dts/, and arch/sh/Makefile correctly guards it with
+CONFIG_USE_BUILTIN_DTB:
+
+  core-$(CONFIG_USE_BUILTIN_DTB)  += arch/sh/boot/dts/
+
+Now, there is another path to descend there from the top Makefile
+when CONFIG_OF_EARLY_FLATTREE=y. If CONFIG_USE_BUILTIN_DTB is disabled,
+CONFIG_BUILTIN_DTB_SOURCE is invisible instead of defined as "".
+
+Add obj-$(CONFIG_USE_BUILTIN_DTB) guard to avoid the attempt to build
+the non-existing file.
+
+Fixes: 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Observant reviewers may point out another problem.
+There is a race condition when CONFIG_OF_EARLY_FLATTREE=y.
+
+Some architectures (sh, xtensa, etc.) embed a DTB in vmlinux,
+so there are two paths to descend into arch/*/boot/dts/.
+For parallel build with -j<N> option, two threads may build
+under arch/*/boot/dts/ simultaneously.
+
+Yes, this is a problem, and it is in my TODO list.
+For some reasons, I will postpone it by the next development cycle.
+
+For now, I want to fix this sh build error first because kbuild test
+robot is still complaining about it.
+
+
+Changes in v2:
+  - Change the subject a bit because the cause of the error is different
+
+ arch/sh/boot/dts/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
+index 01d0f7f..2563d1e 100644
+--- a/arch/sh/boot/dts/Makefile
++++ b/arch/sh/boot/dts/Makefile
+@@ -1,3 +1,3 @@
+ ifneq ($(CONFIG_BUILTIN_DTB_SOURCE),"")
+-obj-y += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
++obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
+ endif
 -- 
-~Vinod
+2.7.4
