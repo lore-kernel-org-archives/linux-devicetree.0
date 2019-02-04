@@ -1,15 +1,15 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFCv1 1/3] phy: meson8b-usb2: Enable otg phy controller on
- Meson8b SoCs
-Date: Mon, 4 Feb 2019 14:20:59 +0100
-Message-ID: <CAFBinCCOQ_GqHZuYf6n8ba_ZMbOwKmUzc4EJAuXRpn4tTTCUKA@mail.gmail.com>
+Subject: Re: [RFCv1 2/3] ARM: dts: meson8b: odroidc1: fix USB power supplies
+ for phy
+Date: Mon, 4 Feb 2019 14:29:13 +0100
+Message-ID: <CAFBinCAdf0rtt-7tON_LRNH_cpvGJXX3LX8g-i4xsC3wahZSVA@mail.gmail.com>
 References: <20190123151209.2080-1-linux.amoon@gmail.com>
- <20190123151209.2080-2-linux.amoon@gmail.com>
+ <20190123151209.2080-3-linux.amoon@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190123151209.2080-2-linux.amoon@gmail.com>
+In-Reply-To: <20190123151209.2080-3-linux.amoon@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -27,73 +27,93 @@ Hi Anand,
 
 On Wed, Jan 23, 2019 at 4:12 PM Anand Moon <linux.amoon@gmail.com> wrote:
 >
-> Meson8b support two USB phy controller, one with otg port and
-> other usb host controller. USB OTG controller ie. otg port can
-> be used to power on board or host port for usb device.
-> Changes enable usb otg host controller when dr_mode is set to otg.
-can you please add a sentence explaining *why* this allows enabling USB OTG?
+> This patch enables the USB Host controller (USB0) and the relative USB0 PHY.
+> From the shematics GPIOAO.BIT5 gpio input for the PWREN signal of the
+> USB_OTG controller (usb0) which is also linked to USB_HOST controller (usb1).
+> Add missing phy-supply link to both  USB0 and USB1 phy controller
+> This changes fixed the power issue on usb ports. Changes help fix usb reset warning.
+I prefer to change the way patches 2 and 3 are split:
+- this one should only add the regulators and link it with the USB controller
+- patch 3 should enable usb0 and usb0_phy
 
-> Currenly otg port can be used to power on the board.
-typo, should be "Currently"
+the reason behind this is the "Fixes" tag below. it's good to have it,
+so please keep it in this patch!
+however, enabling usb0 is not a fix for a commit which enables the
+"USB host controller on Odroid-C1/C1+" (which is why enabling usb0 and
+usb0_phy should be part of patch 3)
 
+> [  821.991470] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> [  825.243385] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> [  828.151310] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> [  830.991241] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+>
+> Fixes: 2eb79a4d15ff ("ARM: dts: meson: enabling the USB Host controller on Odroid-C1/C1+ board")
 > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > Cc: Jerome Brunet <jbrunet@baylibre.com>
 > Cc: Neil Armstrong <narmstrong@baylibre.com>
 > Cc: Kevin Hilman <khilman@baylibre.com>
 > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
-> New patch in this series.
-> --TOTO enable OTG port to work as host.
-> --Currently we can power on the board from this OTG port.
+> Changes from previous patch.
 >
-> /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
->     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
->         |__ Port 1: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 480M
->         |__ Port 3: Dev 3, If 0, Class=Video, Driver=uvcvideo, 480M
->         |__ Port 3: Dev 3, If 1, Class=Video, Driver=uvcvideo, 480M
->         |__ Port 3: Dev 3, If 2, Class=Audio, Driver=snd-usb-audio, 480M
->         |__ Port 3: Dev 3, If 3, Class=Audio, Driver=snd-usb-audio, 480M
-> /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+> Fix the subject and commit message as per Martin's request
+>  --Add the signal name in the comment
+>  --Replace vbus-supply with phy-supply linking the power supply to phy node as pointed by Marine
+>    which a PWREN signal in the USB_HOST controller (usb1)
+>
+> USB_VBUS                      4    2      0 unknown  5000mV     0mA  5000mV  5000mV
+>    phy-c1108820.phy.1         2                                 0mA     0mV     0mV
+>    phy-c1108800.phy.0         2                                 0mA     0mV     0mV
 > ---
->  drivers/phy/amlogic/phy-meson8b-usb2.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  arch/arm/boot/dts/meson8b-odroidc1.dts | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 >
-> diff --git a/drivers/phy/amlogic/phy-meson8b-usb2.c b/drivers/phy/amlogic/phy-meson8b-usb2.c
-> index 9c01b7e19b06..1333c77e9172 100644
-> --- a/drivers/phy/amlogic/phy-meson8b-usb2.c
-> +++ b/drivers/phy/amlogic/phy-meson8b-usb2.c
-> @@ -109,6 +109,7 @@
+> diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+> index 58669abda259..bfa472a679d9 100644
+> --- a/arch/arm/boot/dts/meson8b-odroidc1.dts
+> +++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+> @@ -83,6 +83,22 @@
+>                 regulator-max-microvolt = <5000000>;
+>         };
 >
->  #define RESET_COMPLETE_TIME                            500
->  #define ACA_ENABLE_COMPLETE_TIME                       50
-> +#define DCD_ENABLE_COMPLETE_TIME                       10
+> +       usb_vbus: regulator-usb-vbus {
+> +               compatible = "regulator-fixed";
+> +
+> +               regulator-name = "USB_VBUS";
+> +               regulator-min-microvolt = <5000000>;
+> +               regulator-max-microvolt = <5000000>;
+> +
+> +               vin-supply = <&p5v0>;
+> +
+> +               /*
+> +                * signal name from schematics: PWREN
+> +                */
+> +               gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +       };
+> +
+>         tflash_vdd: regulator-tflash_vdd {
+>                 /*
+>                  * signal name from schematics: TFLASH_VDD_EN
+> @@ -295,8 +311,18 @@
+>         pinctrl-names = "default";
+>  };
 >
->  struct phy_meson8b_usb2_priv {
->         void __iomem            *regs;
-> @@ -188,6 +189,20 @@ static int phy_meson8b_usb2_power_on(struct phy *phy)
->
->                 udelay(ACA_ENABLE_COMPLETE_TIME);
->
-> +               if (phy_meson8b_usb2_read(priv, REG_ADP_BC) &
-> +                       REG_ADP_BC_ACA_PIN_FLOAT) {
-> +                       dev_warn(&phy->dev, "USB ID detect failed!\n");
-> +                       clk_disable_unprepare(priv->clk_usb);
-> +                       clk_disable_unprepare(priv->clk_usb_general);
-> +                       return -EINVAL;
-> +               }
-> +       } else if (priv->dr_mode == USB_DR_MODE_OTG) {
-> +               phy_meson8b_usb2_mask_bits(priv, REG_ADP_BC,
-> +                                          REG_ADP_BC_DCD_ENABLE,
-> +                                          REG_ADP_BC_DCD_ENABLE);
-where did you take this from?
-$ grep -iR DCD arm-src-kernel-2015-01-15-321cfb5a46/drivers/amlogic/usb/dwc_otg/310/
--> I only find code which clears REG_ADP_BC_DCD_ENABLE (your patch sets it):
-  adp_bc.b.dcd_enable = 0;
+> +&usb0_phy {
+> +       status = "okay";
+> +       phy-supply = <&usb_vbus>;
+I'm not sure whether phy-supply is correct here
+with the PHY framework and the dwc2 controller regulators can be set as:
+- phy-supply (inside the PHY node)
+- vbus-supply (inside the dwc2 controller node)
 
-> +               udelay(DCD_ENABLE_COMPLETE_TIME);
-from Amlogic's code: DWC_MDELAY(T_DCD_TIMEOUT);
-while you are also using a delay of "10" the unit is different (your
-patch: us, Amlogic: ms)
+phy-supply is always enabled when the PHY is enabled.
+vbus-supply is smarter: it's enabled whenever the controller is in
+host mode (or OTG detects hosts mode), but disabled in
+device/peripheral mode
+
+as far as I understand we don't want to send power to the "Micro USB"
+port if we're in device/peripheral mode.
 
 
 Regards
