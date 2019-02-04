@@ -1,273 +1,140 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC PATCH v5 10/10] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Date: Mon, 4 Feb 2019 06:38:43 -0800
-Message-ID: <a76ec2b9-a95e-a17a-f231-c1d04ec8e846@roeck-us.net>
-References: <cover.1549283919.git.matti.vaittinen@fi.rohmeurope.com>
- <c03a470dac74047a72dc3ed8f51ab81f456594d1.1549283920.git.matti.vaittinen@fi.rohmeurope.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 2/6] usb:common Separated decoding functions from dwc3
+ driver.
+Date: Mon, 4 Feb 2019 15:47:25 +0100
+Message-ID: <20190204144725.GA31360@kroah.com>
+References: <1548935553-452-1-git-send-email-pawell@cadence.com>
+ <1548935553-452-3-git-send-email-pawell@cadence.com>
+ <20190204114502.GA28608@kroah.com>
+ <87y36vmyeb.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c03a470dac74047a72dc3ed8f51ab81f456594d1.1549283920.git.matti.vaittinen@fi.rohmeurope.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <87y36vmyeb.fsf@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
-Cc: heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On 2/4/19 4:49 AM, Matti Vaittinen wrote:
-> Initial support for watchdog block included in ROHM BD70528
-> power management IC.
+On Mon, Feb 04, 2019 at 04:17:00PM +0200, Felipe Balbi wrote:
 > 
-> Configurations for low power states are still to be checked.
+> Hi,
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->   drivers/watchdog/Kconfig       |  12 +++
->   drivers/watchdog/Makefile      |   1 +
->   drivers/watchdog/bd70528_wdt.c | 187 +++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 200 insertions(+)
->   create mode 100644 drivers/watchdog/bd70528_wdt.c
+> Greg KH <gregkh@linuxfoundation.org> writes:
+> > On Thu, Jan 31, 2019 at 11:52:29AM +0000, Pawel Laszczak wrote:
+> >> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
+> >> to driver/usb/common/debug.c file. These moved functions include:
+> >>     dwc3_decode_get_status
+> >>     dwc3_decode_set_clear_feature
+> >>     dwc3_decode_set_address
+> >>     dwc3_decode_get_set_descriptor
+> >>     dwc3_decode_get_configuration
+> >>     dwc3_decode_set_configuration
+> >>     dwc3_decode_get_intf
+> >>     dwc3_decode_set_intf
+> >>     dwc3_decode_synch_frame
+> >>     dwc3_decode_set_sel
+> >>     dwc3_decode_set_isoch_delay
+> >>     dwc3_decode_ctrl
+> >> 
+> >> These functions are used also in inroduced cdns3 driver.
+> >> 
+> >> All functions prefixes were changed from dwc3 to usb.
+> >
+> > Ick, why?
 > 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 57f017d74a97..f30e3a3e886e 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
->   	  watchdog. Be aware that governors might affect the watchdog because it
->   	  is purely software, e.g. the panic governor will stall it!
->   
-> +config BD70528_WATCHDOG
-> +	tristate "ROHM BD70528 PMIC Watchdog"
-> +	depends on MFD_ROHM_BD70528
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
-> +	  cause system reset.
-> +
-> +	  Say Y here to include support for the ROHM BD70528 watchdog.
-> +	  Alternatively say M to compile the driver as a module,
-> +	  which will be called bd70528_wdt.
-> +
->   config DA9052_WATCHDOG
->   	tristate "Dialog DA9052 Watchdog"
->   	depends on PMIC_DA9052 || COMPILE_TEST
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index a0917ef28e07..1ce87a3b1172 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -204,6 +204,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
->   obj-$(CONFIG_XEN_WDT) += xen_wdt.o
->   
->   # Architecture Independent
-> +obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
->   obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
->   obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
->   obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
-> diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-> new file mode 100644
-> index 000000000000..c24d4cce5e9c
-> --- /dev/null
-> +++ b/drivers/watchdog/bd70528_wdt.c
-> @@ -0,0 +1,187 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 ROHM Semiconductors
-> +// ROHM BD70528MWV watchdog driver
-> +
-> +#include <linux/bcd.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/rohm-bd70528.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/watchdog.h>
-> +
-> +struct wdtbd70528 {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	struct mutex *rtc_lock;
-> +	struct watchdog_device wdt;
-> +};
-> +
-> +static int bd70528_wdt_set_locked(struct wdtbd70528 *w, int enable)
-> +{
-> +	struct bd70528 *bd70528;
-> +
-> +	bd70528 = container_of(w->rtc_lock, struct bd70528, rtc_timer_lock);
-> +	return bd70528->wdt_set(bd70528, enable, NULL);
-> +}
+> moving dwc3-specific code into generic code.
 
-Please add an empty line here.
+That says what it does, but not why :)
 
-> +static int bd70528_wdt_set(struct wdtbd70528 *w, int enable)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(w->rtc_lock);
-> +	ret = bd70528_wdt_set_locked(w, enable);
-> +	mutex_unlock(w->rtc_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static int bd70528_wdt_start(struct watchdog_device *wdt)
-> +{
-> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-> +
-> +	dev_dbg(w->dev, "WDT ping...\n");
-> +	return bd70528_wdt_set(w, 1);
-> +}
-> +
-> +static int bd70528_wdt_stop(struct watchdog_device *wdt)
-> +{
-> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-> +
-> +	dev_dbg(w->dev, "WDT stopping...\n");
-> +	return bd70528_wdt_set(w, 0);
-> +}
-> +
-> +static int bd70528_wdt_set_timeout(struct watchdog_device *wdt,
-> +				    unsigned int timeout)
-> +{
-> +	unsigned int hours;
-> +	unsigned int minutes;
-> +	unsigned int seconds;
-> +	int ret;
-> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-> +
-> +	seconds = timeout;
-> +	hours = timeout / (60 * 60);
-> +	/* Maximum timeout is 1h 59m 59s => hours is 1 or 0 */
-> +	if (hours)
-> +		seconds -= (60 * 60);
-> +	minutes = seconds / 60;
-> +	seconds = seconds % 60;
-> +
-> +	mutex_lock(w->rtc_lock);
-> +
-> +	ret = bd70528_wdt_set_locked(w, 0);
-> +	if (ret)
-> +		goto out_unlock;
-> +
-> +	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_HOUR,
-> +				 BD70528_MASK_WDT_HOUR, hours);
-> +	if (ret) {
-> +		dev_err(w->dev, "Failed to set WDT hours\n");
-> +		goto out_en_unlock;
-> +	}
-> +	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_MINUTE,
-> +				 BD70528_MASK_WDT_MINUTE, bin2bcd(minutes));
-> +	if (ret) {
-> +		dev_err(w->dev, "Failed to set WDT minutes\n");
-> +		goto out_en_unlock;
-> +	}
-> +	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_SEC,
-> +				 BD70528_MASK_WDT_SEC, bin2bcd(seconds));
-> +	if (ret)
-> +		dev_err(w->dev, "Failed to set WDT seconds\n");
-> +	else
-> +		dev_dbg(w->dev, "WDT tmo set to %u\n", timeout);
-> +
-> +out_en_unlock:
-> +	ret = bd70528_wdt_set_locked(w, 1);
-> +out_unlock:
-> +	mutex_unlock(w->rtc_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct watchdog_info bd70528_wdt_info = {
-> +	.identity = "bd70528-wdt",
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-> +};
-> +
-> +static const struct watchdog_ops bd70528_wdt_ops = {
-> +	.start		= bd70528_wdt_start,
-> +	.stop		= bd70528_wdt_stop,
-> +	.set_timeout	= bd70528_wdt_set_timeout,
-> +};
-> +
-> +/* Max time we can set is 1 hour, 59 minutes and 59 seconds */
-> +#define WDT_MAX_MS ((2 * 60 * 60 - 1) * 1000)
-> +/* Minimum time is 1 second */
-> +#define WDT_MIN_MS 1000
-> +#define DEFAULT_TIMEOUT 60
-> +
+And if this really was just moving things around, why was only one
+symbol needed to be exported and not all of them?
 
-Please move to top, and tab-align the values.
-
-Otherwise I am ok with the patch.
-
-On a side note, isn't it past time to drop the RFC ?
-
-Guenter
-
-> +static int bd70528_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct bd70528 *bd70528;
-> +	struct wdtbd70528 *w;
-> +	int ret;
-> +	unsigned int reg;
-> +
-> +	bd70528 = dev_get_drvdata(pdev->dev.parent);
-> +	if (!bd70528) {
-> +		dev_err(&pdev->dev, "No MFD driver data\n");
-> +		return -EINVAL;
-> +	}
-> +	w = devm_kzalloc(&pdev->dev, sizeof(*w), GFP_KERNEL);
-> +	if (!w)
-> +		return -ENOMEM;
-> +
-> +	w->regmap = bd70528->chip.regmap;
-> +	w->rtc_lock = &bd70528->rtc_timer_lock;
-> +	w->dev = &pdev->dev;
-> +
-> +	w->wdt.info = &bd70528_wdt_info;
-> +	w->wdt.ops =  &bd70528_wdt_ops;
-> +	w->wdt.min_hw_heartbeat_ms = WDT_MIN_MS;
-> +	w->wdt.max_hw_heartbeat_ms = WDT_MAX_MS;
-> +	w->wdt.parent = pdev->dev.parent;
-> +	w->wdt.timeout = DEFAULT_TIMEOUT;
-> +	watchdog_set_drvdata(&w->wdt, w);
-> +	watchdog_init_timeout(&w->wdt, 0, pdev->dev.parent);
-> +
-> +	ret = bd70528_wdt_set_timeout(&w->wdt, w->wdt.timeout);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to set the watchdog timeout\n");
-> +		return ret;
-> +	}
-> +
-> +	mutex_lock(w->rtc_lock);
-> +	ret = regmap_read(w->regmap, BD70528_REG_WDT_CTRL, &reg);
-> +	mutex_unlock(w->rtc_lock);
-> +
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to get the watchdog state\n");
-> +		return ret;
-> +	}
-> +	if (reg & BD70528_MASK_WDT_EN) {
-> +		dev_dbg(&pdev->dev, "watchdog was running during probe\n");
-> +		set_bit(WDOG_HW_RUNNING, &w->wdt.status);
-> +	}
-> +
-> +	ret = devm_watchdog_register_device(&pdev->dev, &w->wdt);
-> +	if (ret < 0)
-> +		dev_err(&pdev->dev, "watchdog registration failed: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +static struct platform_driver bd70528_wdt = {
-> +	.driver = {
-> +		.name = "bd70528-wdt"
-> +	},
-> +	.probe = bd70528_wdt_probe,
-> +};
-> +
-> +module_platform_driver(bd70528_wdt);
-> +
-> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-> +MODULE_DESCRIPTION("BD70528 watchdog driver");
-> +MODULE_LICENSE("GPL");
+> >> + * @bRequestType: matches the USB bmRequestType field
+> >> + * @bRequest: matches the USB bRequest field
+> >> + * @wValue: matches the USB wValue field (CPU byte order)
+> >> + * @wIndex: matches the USB wIndex field (CPU byte order)
+> >> + * @wLength: matches the USB wLength field (CPU byte order)
+> >> + *
+> >> + * Function returns decoded, formatted and human-readable description of
+> >> + * control request packet.
+> >> + *
+> >> + * Important: wValue, wIndex, wLength parameters before invoking this function
+> >> + * should be processed by le16_to_cpu macro.
+> >> + */
+> >> +const char *usb_decode_ctrl(char *str, __u8 bRequestType, __u8 bRequest,
+> >> +			    __u16 wValue,  __u16 wIndex, __u16 wLength);
+> >
+> > Why are you returning a value, isn't the data stored in str?  Why not
+> > just return an int saying if the call succeeded or not?
 > 
+> There is one detail here. The usage scenario for this is for
+> tracepoints. When dealing with tracepoints we want to delay decoding of
+> the data into strings until print-time. I guess it's best to illustrate
+> with an example:
+> 
+> DECLARE_EVENT_CLASS(dwc3_log_ctrl,
+> 	TP_PROTO(struct usb_ctrlrequest *ctrl),
+> 	TP_ARGS(ctrl),
+> 	TP_STRUCT__entry(
+> 		__field(__u8, bRequestType)
+> 		__field(__u8, bRequest)
+> 		__field(__u16, wValue)
+> 		__field(__u16, wIndex)
+> 		__field(__u16, wLength)
+> 		__dynamic_array(char, str, DWC3_MSG_MAX)
+> 	),
+> 	TP_fast_assign(
+> 		__entry->bRequestType = ctrl->bRequestType;
+> 		__entry->bRequest = ctrl->bRequest;
+> 		__entry->wValue = le16_to_cpu(ctrl->wValue);
+> 		__entry->wIndex = le16_to_cpu(ctrl->wIndex);
+> 		__entry->wLength = le16_to_cpu(ctrl->wLength);
+> 	),
+> 	TP_printk("%s", dwc3_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
+> 					__entry->bRequestType,
+> 					__entry->bRequest, __entry->wValue,
+> 					__entry->wIndex, __entry->wLength)
+> 	)
+> );
+> 
+> The above is the code is today (well, I've added buffer size as an
+> argument). If I make dwc3_decode_ctrl() return an integer, I can't call
+> it from TP_printk() time. I'd have to move it to TP_fast_assign() time
+> which is supposed to be, simply, a copy of the necessary data. IOW, I
+> would have this:
+> 
+> DECLARE_EVENT_CLASS(dwc3_log_ctrl,
+> 	TP_PROTO(struct usb_ctrlrequest *ctrl),
+> 	TP_ARGS(ctrl),
+> 	TP_STRUCT__entry(
+> 		__dynamic_array(char, str, DWC3_MSG_MAX)
+> 	),
+> 	TP_fast_assign(
+> 		dwc3_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
+> 				ctrl->bRequestType,
+> 				ctrl->bRequest,
+>                                 le16_to_cpu(ctrl->wValue),
+> 				le16_to_cpu(ctrl->wIndex),
+>                                 le16_to_cpu(ctrl->wLength));
+> 	),
+> 	TP_printk("%s", __get_str(str)
+> 	)
+> );
+> 
+> Essentially, we end up moving decoding of the tracepoint to the time it
+> is captured; IOW, we reintroduce regular latency of string formatting.
+> 
+> What we could do, is move all functions called by dwc3_decode_ctrl() to
+> return int, but leave dwc3_decode_ctrl() returning a pointer to str just
+> so we continue decoding the data at printing time.
+
+Ok, it wasn't obvious that this was used in a tracepoint like this, that
+makes more sense.
+
+So, it should be documented as well :)
+
+thanks,
+
+greg k-h
