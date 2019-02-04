@@ -1,103 +1,94 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 00/24] Add support for PCIe RC and EP mode in TI's AM654
- SoC
-Date: Mon, 4 Feb 2019 16:40:54 +0000
-Message-ID: <20190204164054.GA21488@e107981-ln.cambridge.arm.com>
-References: <20190114132424.6445-1-kishon@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v2 1/2] r8169: Load MAC address from device tree if present
+Date: Mon,  4 Feb 2019 17:42:12 +0100
+Message-ID: <20190204164213.30727-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190114132424.6445-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Murali Karicheri <m-karicheri2@ti.com>, Jesper Nilsson <jesper.nilsson@axis.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Realtek linux nic maintainers <nic_swsd@realtek.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 06:54:00PM +0530, Kishon Vijay Abraham I wrote:
-> Add PCIe RC support for TI's AM654 SoC. The PCIe controller in AM654
-> uses Synopsys core revision 4.90a and uses the same TI wrapper as used
-> in keystone2 with certain modification. Hence AM654 will use the same
-> pci wrapper driver pci-keystone.c
-> 
-> This series was initially part of [1]. This series only includes patches
-> that has to be merged via Lorenzo's tree. The PHY patches and dt patches
-> will be sent separately.
-> 
-> This series is created over my keystone MSI cleanup series [2] and EPC
-> features series [3].
+From: Thierry Reding <treding@nvidia.com>
 
-Hi Kishon,
+If the system was booted using a device tree and if the device tree
+contains a MAC address, use it instead of reading one from the EEPROM.
+This is useful in situations where the EEPROM isn't properly programmed
+or where the firmware wants to override the existing MAC address.
 
-so I would suggest we merge those series first, starting from the MSI
-clean-up.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+Applies to net-next.
 
-I will mark this series as awaiting upstream, it is on my radar but
-we have to get the two others done first.
+Changes in v2:
+- rewrite error check for readability
+- initialize mac_addr array
 
-Thanks,
-Lorenzo
+ drivers/net/ethernet/realtek/r8169.c | 36 ++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
 
-> This series:
-> *) Cleanup pci-keystone driver so that both RC mode and EP mode of
->    AM654 can be supported
-> *) Modify epc-core to support allocation of aligned buffers required for
->    AM654
-> *) Fix ATU unroll identification
-> *) Add support for both host mode and device mode in AM654    
-> 
-> [1] -> https://lore.kernel.org/patchwork/cover/989487/
-> [2] -> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1883081.html
-> [3] -> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1899011.html
-> 
-> Kishon Vijay Abraham I (24):
->   PCI: keystone: Add start_link/stop_link dw_pcie_ops
->   PCI: keystone: Cleanup error_irq configuration
->   dt-bindings: PCI: keystone: Add "reg-names" binding information
->   PCI: keystone: Perform host initialization in a single function
->   PCI: keystone: Use platform_get_resource_byname to get memory
->     resources
->   PCI: keystone: Move initializations to appropriate places
->   dt-bindings: PCI: Add dt-binding to configure PCIe mode
->   PCI: keystone: Explicitly set the PCIe mode
->   dt-bindings: PCI: Document "atu" reg-names
->   PCI: dwc: Enable iATU unroll for endpoint too
->   PCI: dwc: Fix ATU identification for designware version >= 4.80
->   PCI: keystone: Prevent ARM32 specific code to be compiled for ARM64
->   dt-bindings: PCI: Add PCI RC dt binding documentation for AM654
->   PCI: keystone: Add support for PCIe RC in AM654x Platforms
->   PCI: keystone: Invoke phy_reset API before enabling PHY
->   PCI: endpoint: Add support to allocate aligned buffers to be mapped in
->     BARs
->   PCI: dwc: Add const qualifier to struct dw_pcie_ep_ops
->   PCI: dwc: Fix dw_pcie_ep_find_capability to return correct capability
->     offset
->   PCI: dwc: Add callbacks for accessing dbi2 address space
->   PCI: keystone: Add support for PCIe EP in AM654x Platforms
->   PCI: designware-ep: Configure RESBAR to advertise the smallest size
->   PCI: designware-ep: Use aligned ATU window for raising MSI interrupts
->   misc: pci_endpoint_test: Add support to test PCI EP in AM654x
->   misc: pci_endpoint_test: Fix test_reg_bar to be updated in
->     pci_endpoint_test
-> 
->  .../bindings/pci/designware-pcie.txt          |   7 +-
->  .../devicetree/bindings/pci/pci-keystone.txt  |  14 +-
->  drivers/misc/pci_endpoint_test.c              |  17 +
->  drivers/pci/controller/dwc/Kconfig            |  25 +-
->  drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
->  drivers/pci/controller/dwc/pci-keystone.c     | 505 ++++++++++++++----
->  drivers/pci/controller/dwc/pcie-artpec6.c     |   2 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   |  55 +-
->  .../pci/controller/dwc/pcie-designware-host.c |  19 -
->  .../pci/controller/dwc/pcie-designware-plat.c |   2 +-
->  drivers/pci/controller/dwc/pcie-designware.c  |  52 ++
->  drivers/pci/controller/dwc/pcie-designware.h  |  15 +-
->  drivers/pci/endpoint/functions/pci-epf-test.c |   5 +-
->  drivers/pci/endpoint/pci-epf-core.c           |  10 +-
->  include/linux/pci-epc.h                       |   2 +
->  include/linux/pci-epf.h                       |   3 +-
->  16 files changed, 587 insertions(+), 148 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
+index e8a112149a62..501891be7c56 100644
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -7110,6 +7110,21 @@ static int rtl_alloc_irq(struct rtl8169_private *tp)
+ 	return pci_alloc_irq_vectors(tp->pci_dev, 1, 1, flags);
+ }
+ 
++static void rtl_read_mac_address(struct rtl8169_private *tp,
++				 u8 mac_addr[ETH_ALEN])
++{
++	/* Get MAC address */
++	switch (tp->mac_version) {
++	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
++	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
++		*(u32 *)&mac_addr[0] = rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
++		*(u16 *)&mac_addr[4] = rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
++		break;
++	default:
++		break;
++	}
++}
++
+ DECLARE_RTL_COND(rtl_link_list_ready_cond)
+ {
+ 	return RTL_R8(tp, MCU) & LINK_LIST_RDY;
+@@ -7301,6 +7316,7 @@ static int rtl_get_ether_clk(struct rtl8169_private *tp)
+ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	const struct rtl_cfg_info *cfg = rtl_cfg_infos + ent->driver_data;
++	u8 mac_addr[ETH_ALEN] __aligned(4) = {};
+ 	struct rtl8169_private *tp;
+ 	struct net_device *dev;
+ 	int chipset, region, i;
+@@ -7403,20 +7419,14 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	u64_stats_init(&tp->rx_stats.syncp);
+ 	u64_stats_init(&tp->tx_stats.syncp);
+ 
+-	/* Get MAC address */
+-	switch (tp->mac_version) {
+-		u8 mac_addr[ETH_ALEN] __aligned(4);
+-	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
+-	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
+-		*(u32 *)&mac_addr[0] = rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
+-		*(u16 *)&mac_addr[4] = rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
++	/* get MAC address */
++	rc = eth_platform_get_mac_address(&pdev->dev, mac_addr);
++	if (rc)
++		rtl_read_mac_address(tp, mac_addr);
++
++	if (is_valid_ether_addr(mac_addr))
++		rtl_rar_set(tp, mac_addr);
+ 
+-		if (is_valid_ether_addr(mac_addr))
+-			rtl_rar_set(tp, mac_addr);
+-		break;
+-	default:
+-		break;
+-	}
+ 	for (i = 0; i < ETH_ALEN; i++)
+ 		dev->dev_addr[i] = RTL_R8(tp, MAC0 + i);
+ 
+-- 
+2.19.1
