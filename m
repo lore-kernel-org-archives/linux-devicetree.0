@@ -1,83 +1,38 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcs404: evb: Fix voltages for s5 and l3
-Date: Mon, 4 Feb 2019 19:23:21 +0100
-Message-ID: <20190204182321.GH23441@sirena.org.uk>
-References: <20190125232954.26166-1-bjorn.andersson@linaro.org>
- <32b8136d-3acb-66e9-948c-ee8903b91401@linaro.org>
- <20190129224652.GB11349@centauri.lan>
- <20190204104347.GD23441@sirena.org.uk>
- <20190204160337.GG2387@tuxbook-pro>
+From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH RESEND v2 06/12] drm/sun4i: rgb: Add 1%
+ tolerance to dclk frequency check when bridge is connected
+Date: Mon, 4 Feb 2019 10:50:17 -0800
+Message-ID: <CA+E=qVd7yh=JNZSvrfY4Diu+VJWFK6yLUJ5MavBcZ8Cftn6f-Q@mail.gmail.com>
+References: <20190203185501.8958-1-anarsoul@gmail.com> <20190203185501.8958-7-anarsoul@gmail.com>
+ <20190204142036.vd42nvyjnjr5yeoi@flea> <CA+E=qVfTfJ9E29gz83tdVGx5_KGWSQVJOAxKTzC+-n7=gdj0cA@mail.gmail.com>
+ <0F6CBEA4-6DB6-40F1-A2FD-65101AF64F1F@aosc.io>
+Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tcC6YSqBgqqkz7Sb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190204160337.GG2387@tuxbook-pro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDV3B667TUHBBZMS4LRAKGQEW4VHNTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <0F6CBEA4-6DB6-40F1-A2FD-65101AF64F1F-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 4, 2019 at 8:29 AM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> >> IIRC, from the previous discussion, HDMI had a tolerancy requirement
+> >> in the standard. Do you know if there's such a thing for eDP? That
+> >> would solve the issue for all the eDP displays at once.
+> >
+> >I don't have access to eDP standard - vesa.org says it's available to
+> >members only.
+>
+> Try out to grab an old version?
+>
+> I remember 1.0 is open.
 
---tcC6YSqBgqqkz7Sb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Feb 04, 2019 at 08:03:37AM -0800, Bjorn Andersson wrote:
-
-> We have a regulator that is described as 1.05V in the schematics for the
-> board we're working on and we have the USB block wanting 1.05V on one of
-> its pins.  But the particular regulator works in steps of 8mV, and the
-> adjacent steps are 1.048V and 1.056V.
-
-> A) If we describe the min-microvolt = max-microvolt = 1.05V then the
-> regulator frameworks adjusts the min value to 1.056V, per the steps, and
-> fail as min > max.
-
-Right, because that constraint isn't satisifiable on the board, an exact
-value has been asked for which can't be delivered.  We *could* try to
-allow some fudge factor for tolerance but that feels risky, it'd be
-better if the constraints were written to be satisfiable.
-
-> B) The USB driver that we inherited was written to request min/max of
-> 1.05V/1.05V, so pointing this to a regulator with min/max of e.g.
-> 1.05V/1.06V we're outside the adjusted range of 1.056V/1.06V.
-
-This is just very bad practice on the part of the USB driver, if it is
-not varying the voltage it should not be setting the voltage and let the
-machine figure things out.  It is completely pointless for the driver to
-be setting an exact value that it never varies, this is the sort of
-thing machine constraints are for as it leads to trouble like this.
-This is one of the many unfortunate practices in the Qualcomm BSP code
-sadly.
-
-> So the question is, should the board dts be written with
-> min/max-microvolt adjusted to match the hardware steps? Or could the
-
-Well, it is definitely unwise of the board to request a specific
-voltage if the board can't physically set it, that's asking for trouble,
-so I'd have expected the board should pick the value it wants.
-
-> regulator framework be made to round down to the previous valid step
-> instead of up?
-
-We definitely don't want to round voltages down, it is vastly more
-common for devices to experience problems like brownouts if they go
-under voltage so it'd be more likely to cause harm than good.
-
---tcC6YSqBgqqkz7Sb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxYgxYACgkQJNaLcl1U
-h9AaFQf/SvrQP9sXF235FC/gkj+AF6i4fv4/vGBY4XsXb908c8PfFKaNNersjsky
-bcXdRd8CsREiUGR9aj2H3jiDYeyIFH4jabFkzaCtu+1yEvYCT16sWkEJIbBTWq/M
-HzEHamVvnWVMy6UgZWl6xzKo3J17bEQcV60DEOxAjHWpngWxWE2g7JXwbAqg8gYW
-yNms1aza6iThWY75jX5VdFuqHrdcCyZvk0EVntmGUgX+81qiYXwrGLIu0NwklDBz
-Hhac17dl0uHE4SaqZRGJiERlFf3oVWGY+fDRjdYFXqoFlh2HE4vVlVUkfoLgm8EG
-PygEYvcH9LRs/F4TvxCxxHmLop0xDA==
-=Y1HY
------END PGP SIGNATURE-----
-
---tcC6YSqBgqqkz7Sb--
+I can't find anything regarding dot clock tolerance in DisplayPort
+specification.
