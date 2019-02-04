@@ -1,179 +1,213 @@
-Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 04/33] ARM: davinci: remove davinci_intc_type
-Date: Fri,  8 Feb 2019 18:31:25 +0100
-Message-Id: <20190208173154.4665-5-brgl@bgdev.pl>
-In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
-References: <20190208173154.4665-1-brgl@bgdev.pl>
+Return-Path: <SRS0=xTTO=QL=xilinx.com=navam@kernel.org>
+From: Nava kishore Manne <navam@xilinx.com>
+Subject: RE: [PATCH v2 3/3] nvmem: zynqmp: Added zynqmp nvmem firmware driver
+Date: Mon, 4 Feb 2019 05:49:54 +0000
+Message-ID: 
+ <BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0@BYAPR02MB4710.namprd02.prod.outlook.com>
+References: <20190204070951.6933-1-nava.manne@xilinx.com>
+ <20190204070951.6933-4-nava.manne@xilinx.com>
+ <67e2af69-10bc-655c-e730-4c02a6375381@linaro.org>
+In-Reply-To: <67e2af69-10bc-655c-e730-4c02a6375381@linaro.org>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0BYAPR02MB4710namp_"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+--_000_BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0BYAPR02MB4710namp_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-We now use the generic ARM irq handler on davinci. There are no more
-users that check davinci_intc_type. Remove the variable and all its
-references.
+SGkgU3Jpbml2YXMsDQoNCg0KDQogICAgICAgICAgICAgICBUaGFua3MgZm9yIHByb3ZpZGluZyB0
+aGUgcmV2aWV3IGNvbW1lbnRzLi4NCg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cg0KPiBGcm9tOiBTcmluaXZhcyBLYW5kYWdhdGxhIFttYWlsdG86c3Jpbml2YXMua2FuZGFnYXRs
+YUBsaW5hcm8ub3JnXQ0KDQo+IFNlbnQ6IFN1bmRheSwgRmVicnVhcnkgMywgMjAxOSAzOjA4IFBN
+DQoNCj4gVG86IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT47IHJvYmgrZHRA
+a2VybmVsLm9yZzsNCg0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgTWljaGFsIFNpbWVrIDxtaWNo
+YWxzQHhpbGlueC5jb20+OyBKb2xseSBTaGFoDQoNCj4gPEpPTExZU0B4aWxpbnguY29tPjsgUmFq
+YW4gVmFqYSA8UkFKQU5WQHhpbGlueC5jb20+Ow0KDQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KDQo+IGtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDMvM10gbnZt
+ZW06IHp5bnFtcDogQWRkZWQgenlucW1wIG52bWVtIGZpcm13YXJlDQoNCj4gZHJpdmVyDQoNCj4N
+Cg0KPg0KDQo+DQoNCj4gT24gMDQvMDIvMjAxOSAwNzowOSwgTmF2YSBraXNob3JlIE1hbm5lIHdy
+b3RlOg0KDQo+ID4NCg0KPiA+IC1jb25maWcgU0MyN1hYX0VGVVNFDQoNCj4gPiAtICAgICAgIHRy
+aXN0YXRlICJTcHJlYWR0cnVtIFNDMjdYWCBlRnVzZSBTdXBwb3J0Ig0KDQo+ID4gLSAgICAgICBk
+ZXBlbmRzIG9uIE1GRF9TQzI3WFhfUE1JQyB8fCBDT01QSUxFX1RFU1QNCg0KPiA+IC0gICAgICAg
+ZGVwZW5kcyBvbiBIQVNfSU9NRU0NCg0KPg0KDQo+IFdoeSBhcmUgeW91IHJlbW92aW5nIFNDMjdY
+WF9FRlVTRSBzdXBwb3J0IGhlcmU/DQoNCj4NCg0KPiBJdCBkb2VzIG5vdCBsb29rIHJpZ2h0IQ0K
+DQo+DQoNCg0KDQpUaGFua3MgZm9yIHBvaW50aW5nIGl0Li4uDQoNClllcywgd2Ugc2hvdWxkIG5v
+dCByZW1vdmUgdGhpcyBzdXBwb3J0Lg0KDQpCeSBtaXN0YWtlLCBJIGhhdmUgZG9uZSB0aGlzIGNo
+YW5nZXMuLiB3aWxsIGZpeCBpbiB0aGUgbmV4dCB2ZXJzaW9uLi4uDQoNCg0KDQo+ID4gK2NvbmZp
+ZyBOVk1FTV9aWU5RTVANCg0KPiA+ICsgICAgICBib29sICJYaWxpbnggWllOUU1QIFNvQyBudm1l
+bSBmaXJtd2FyZSBzdXBwb3J0Ig0KDQo+ID4gKyAgICAgIGRlcGVuZHMgb24gQVJDSF9aWU5RTVAN
+Cg0KPiA+ICAgICAgICAgIGhlbHANCg0KPiA+IC0gICAgICAgICBUaGlzIGlzIGEgc2ltcGxlIGRy
+aXZlciB0byBkdW1wIHNwZWNpZmllZCB2YWx1ZXMgb2YgU3ByZWFkdHJ1bQ0KDQo+ID4gLSAgICAg
+ICAgIFNDMjdYWCBQTUlDcyBmcm9tIGVGdXNlLg0KDQo+ID4gKyAgICAgICAgVGhpcyBpcyBhIGRy
+aXZlciB0byBhY2Nlc3MgaGFyZHdhcmUgcmVsYXRlZCBkYXRhIGxpa2UNCg0KPiA+ICsgICAgICAg
+IHNvYyByZXZpc2lvbiwgSURDT0RFLi4uIGV0YyBieSB1c2luZyB0aGUgZmlybXdhcmUNCg0KPiA+
+ICsgICAgICAgIGludGVyZmFjZS4NCg0KPiA+DQoNCj4gPiAtICAgICAgICAgVGhpcyBkcml2ZXIg
+Y2FuIGFsc28gYmUgYnVpbHQgYXMgYSBtb2R1bGUuIElmIHNvLCB0aGUgbW9kdWxlDQoNCj4gPiAt
+ICAgICAgICAgd2lsbCBiZSBjYWxsZWQgbnZtZW0tc2MyN3h4LWVmdXNlLg0KDQo+ID4gKyAgICAg
+ICAgSWYgc3VyZSwgc2F5IHllcy4gSWYgdW5zdXJlLCBzYXkgbm8uDQoNCj4gPg0KDQo+ID4gICBl
+bmRpZg0KDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZtZW0vTWFrZWZpbGUgYi9kcml2ZXJz
+L252bWVtL01ha2VmaWxlIGluZGV4DQoNCj4gPiA0ZThjNjE2MjhmMWEuLjBiM2FiZDdmNWQwMiAx
+MDA2NDQNCg0KPiA+IC0tLSBhL2RyaXZlcnMvbnZtZW0vTWFrZWZpbGUNCg0KPiA+ICsrKyBiL2Ry
+aXZlcnMvbnZtZW0vTWFrZWZpbGUNCg0KPiA+IEBAIC0zOSw1ICszOSw2IEBAIG9iai0kKENPTkZJ
+R19OVk1FTV9TTlZTX0xQR1BSKSAgICArPQ0KDQo+IG52bWVtX3NudnNfbHBncHIubw0KDQo+ID4g
+ICBudm1lbV9zbnZzX2xwZ3ByLXkgICAgICAgICAgICAgICAgICAgICAgICAgICAgOj0gc252c19s
+cGdwci5vDQoNCj4gPiAgIG9iai0kKENPTkZJR19SQVZFX1NQX0VFUFJPTSkgICArPSBudm1lbS1y
+YXZlLXNwLWVlcHJvbS5vDQoNCj4gPiAgIG52bWVtLXJhdmUtc3AtZWVwcm9tLXkgICAgICAgICAg
+ICAgICAgICAgOj0gcmF2ZS1zcC1lZXByb20ubw0KDQo+ID4gLW9iai0kKENPTkZJR19TQzI3WFhf
+RUZVU0UpICAgICAgICAgICArPSBudm1lbS1zYzI3eHgtZWZ1c2Uubw0KDQo+ID4gLW52bWVtLXNj
+Mjd4eC1lZnVzZS15ICAgICAgICAgICAgICAgICAgICAgICAgIDo9IHNjMjd4eC1lZnVzZS5vDQoN
+Cj4NCg0KPiBzYW1lIGhlcmU/DQoNCj4NCg0KDQoNCldpbGwgZml4IGluIHRoZSBuZXh0IHZlcnNp
+b24uLi4NCg0KDQoNClJlZ2FyZHMsDQoNCk5hdmFraXNob3JlLg0K
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: David Lechner <david@lechnology.com>
----
- arch/arm/mach-davinci/common.c              | 1 -
- arch/arm/mach-davinci/cp_intc.c             | 1 -
- arch/arm/mach-davinci/da830.c               | 1 -
- arch/arm/mach-davinci/da850.c               | 1 -
- arch/arm/mach-davinci/dm355.c               | 1 -
- arch/arm/mach-davinci/dm365.c               | 1 -
- arch/arm/mach-davinci/dm644x.c              | 1 -
- arch/arm/mach-davinci/dm646x.c              | 1 -
- arch/arm/mach-davinci/include/mach/common.h | 2 --
- arch/arm/mach-davinci/include/mach/irqs.h   | 3 ---
- arch/arm/mach-davinci/irq.c                 | 1 -
- 11 files changed, 14 deletions(-)
+--_000_BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0BYAPR02MB4710namp_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-diff --git a/arch/arm/mach-davinci/common.c b/arch/arm/mach-davinci/common.c
-index e1d0f0d841ff..a87e158a709b 100644
---- a/arch/arm/mach-davinci/common.c
-+++ b/arch/arm/mach-davinci/common.c
-@@ -24,7 +24,6 @@ struct davinci_soc_info davinci_soc_info;
- EXPORT_SYMBOL(davinci_soc_info);
- 
- void __iomem *davinci_intc_base;
--int davinci_intc_type;
- 
- void davinci_get_mac_addr(struct nvmem_device *nvmem, void *context)
- {
-diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
-index 4a372add8cf9..19874f5ef542 100644
---- a/arch/arm/mach-davinci/cp_intc.c
-+++ b/arch/arm/mach-davinci/cp_intc.c
-@@ -146,7 +146,6 @@ int __init cp_intc_of_init(struct device_node *node, struct device_node *parent)
- 	unsigned num_reg	= BITS_TO_LONGS(num_irq);
- 	int i, irq_base;
- 
--	davinci_intc_type = DAVINCI_INTC_TYPE_CP_INTC;
- 	if (node) {
- 		davinci_intc_base = of_iomap(node, 0);
- 		if (of_property_read_u32(node, "ti,intc-size", &num_irq))
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index 2cc9fe4c3a91..9e18b245266b 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -807,7 +807,6 @@ static const struct davinci_soc_info davinci_soc_info_da830 = {
- 	.pinmux_pins		= da830_pins,
- 	.pinmux_pins_num	= ARRAY_SIZE(da830_pins),
- 	.intc_base		= DA8XX_CP_INTC_BASE,
--	.intc_type		= DAVINCI_INTC_TYPE_CP_INTC,
- 	.intc_irq_prios		= da830_default_priorities,
- 	.intc_irq_num		= DA830_N_CP_INTC_IRQ,
- 	.timer_info		= &da830_timer_info,
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index e7b78df2bfef..e823b89e2b7a 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -739,7 +739,6 @@ static const struct davinci_soc_info davinci_soc_info_da850 = {
- 	.pinmux_pins		= da850_pins,
- 	.pinmux_pins_num	= ARRAY_SIZE(da850_pins),
- 	.intc_base		= DA8XX_CP_INTC_BASE,
--	.intc_type		= DAVINCI_INTC_TYPE_CP_INTC,
- 	.intc_irq_prios		= da850_default_priorities,
- 	.intc_irq_num		= DA850_N_CP_INTC_IRQ,
- 	.timer_info		= &da850_timer_info,
-diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
-index 4c6e0bef4509..03ce5df28d87 100644
---- a/arch/arm/mach-davinci/dm355.c
-+++ b/arch/arm/mach-davinci/dm355.c
-@@ -705,7 +705,6 @@ static const struct davinci_soc_info davinci_soc_info_dm355 = {
- 	.pinmux_pins		= dm355_pins,
- 	.pinmux_pins_num	= ARRAY_SIZE(dm355_pins),
- 	.intc_base		= DAVINCI_ARM_INTC_BASE,
--	.intc_type		= DAVINCI_INTC_TYPE_AINTC,
- 	.intc_irq_prios		= dm355_default_priorities,
- 	.intc_irq_num		= DAVINCI_N_AINTC_IRQ,
- 	.timer_info		= &dm355_timer_info,
-diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
-index 01fb2b0c82de..3e034f0478d2 100644
---- a/arch/arm/mach-davinci/dm365.c
-+++ b/arch/arm/mach-davinci/dm365.c
-@@ -722,7 +722,6 @@ static const struct davinci_soc_info davinci_soc_info_dm365 = {
- 	.pinmux_pins		= dm365_pins,
- 	.pinmux_pins_num	= ARRAY_SIZE(dm365_pins),
- 	.intc_base		= DAVINCI_ARM_INTC_BASE,
--	.intc_type		= DAVINCI_INTC_TYPE_AINTC,
- 	.intc_irq_prios		= dm365_default_priorities,
- 	.intc_irq_num		= DAVINCI_N_AINTC_IRQ,
- 	.timer_info		= &dm365_timer_info,
-diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
-index 38f92b7d413e..66bab4782c62 100644
---- a/arch/arm/mach-davinci/dm644x.c
-+++ b/arch/arm/mach-davinci/dm644x.c
-@@ -646,7 +646,6 @@ static const struct davinci_soc_info davinci_soc_info_dm644x = {
- 	.pinmux_pins		= dm644x_pins,
- 	.pinmux_pins_num	= ARRAY_SIZE(dm644x_pins),
- 	.intc_base		= DAVINCI_ARM_INTC_BASE,
--	.intc_type		= DAVINCI_INTC_TYPE_AINTC,
- 	.intc_irq_prios 	= dm644x_default_priorities,
- 	.intc_irq_num		= DAVINCI_N_AINTC_IRQ,
- 	.timer_info		= &dm644x_timer_info,
-diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
-index 7dc54b2a610f..45efa715a2c1 100644
---- a/arch/arm/mach-davinci/dm646x.c
-+++ b/arch/arm/mach-davinci/dm646x.c
-@@ -586,7 +586,6 @@ static const struct davinci_soc_info davinci_soc_info_dm646x = {
- 	.pinmux_pins		= dm646x_pins,
- 	.pinmux_pins_num	= ARRAY_SIZE(dm646x_pins),
- 	.intc_base		= DAVINCI_ARM_INTC_BASE,
--	.intc_type		= DAVINCI_INTC_TYPE_AINTC,
- 	.intc_irq_prios		= dm646x_default_priorities,
- 	.intc_irq_num		= DAVINCI_N_AINTC_IRQ,
- 	.timer_info		= &dm646x_timer_info,
-diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
-index 944afd57ee38..34e48de92dcc 100644
---- a/arch/arm/mach-davinci/include/mach/common.h
-+++ b/arch/arm/mach-davinci/include/mach/common.h
-@@ -21,7 +21,6 @@ void davinci_timer_init(struct clk *clk);
- 
- extern void davinci_irq_init(void);
- extern void __iomem *davinci_intc_base;
--extern int davinci_intc_type;
- 
- struct davinci_timer_instance {
- 	u32		base;
-@@ -58,7 +57,6 @@ struct davinci_soc_info {
- 	const struct mux_config		*pinmux_pins;
- 	unsigned long			pinmux_pins_num;
- 	u32				intc_base;
--	int				intc_type;
- 	u8				*intc_irq_prios;
- 	unsigned long			intc_irq_num;
- 	struct davinci_timer_info	*timer_info;
-diff --git a/arch/arm/mach-davinci/include/mach/irqs.h b/arch/arm/mach-davinci/include/mach/irqs.h
-index edb2ca62321a..03c446635301 100644
---- a/arch/arm/mach-davinci/include/mach/irqs.h
-+++ b/arch/arm/mach-davinci/include/mach/irqs.h
-@@ -30,9 +30,6 @@
- /* Base address */
- #define DAVINCI_ARM_INTC_BASE 0x01C48000
- 
--#define DAVINCI_INTC_TYPE_AINTC		0
--#define DAVINCI_INTC_TYPE_CP_INTC	1
--
- /* Interrupt lines */
- #define IRQ_VDINT0       0
- #define IRQ_VDINT1       1
-diff --git a/arch/arm/mach-davinci/irq.c b/arch/arm/mach-davinci/irq.c
-index 3ce821a06e52..2494d9b36966 100644
---- a/arch/arm/mach-davinci/irq.c
-+++ b/arch/arm/mach-davinci/irq.c
-@@ -99,7 +99,6 @@ void __init davinci_irq_init(void)
- 	const u8 *davinci_def_priorities = davinci_soc_info.intc_irq_prios;
- 	int rv, irq_base;
- 
--	davinci_intc_type = DAVINCI_INTC_TYPE_AINTC;
- 	davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_4K);
- 	if (WARN_ON(!davinci_intc_base))
- 		return;
--- 
-2.20.1
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
+OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
+cjojMDU2M0MxOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
+Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjoj
+OTU0RjcyOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KcC5Nc29QbGFpblRleHQsIGxp
+Lk1zb1BsYWluVGV4dCwgZGl2Lk1zb1BsYWluVGV4dA0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7
+DQoJbXNvLXN0eWxlLWxpbms6IlBsYWluIFRleHQgQ2hhciI7DQoJbWFyZ2luOjBpbjsNCgltYXJn
+aW4tYm90dG9tOi4wMDAxcHQ7DQoJZm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2Fs
+aWJyaSIsc2Fucy1zZXJpZjt9DQpzcGFuLlBsYWluVGV4dENoYXINCgl7bXNvLXN0eWxlLW5hbWU6
+IlBsYWluIFRleHQgQ2hhciI7DQoJbXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCW1zby1zdHlsZS1s
+aW5rOiJQbGFpbiBUZXh0IjsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQou
+TXNvQ2hwRGVmYXVsdA0KCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsNCglmb250LWZhbWls
+eToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQpAcGFnZSBXb3JkU2VjdGlvbjENCgl7c2l6ZTo4LjVp
+biAxMS4waW47DQoJbWFyZ2luOjEuMGluIDEyOS43NXB0IDEuMGluIDEyOS43cHQ7fQ0KZGl2Lldv
+cmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0eWxlPjwhLS1baWYgZ3Rl
+IG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAy
+NiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hh
+cGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+
+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+DQo8L2hlYWQ+DQo8Ym9keSBsYW5n
+PSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPg0KPGRpdiBjbGFzcz0iV29y
+ZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPkhpIFNyaW5pdmFzLDxvOnA+PC9v
+OnA+PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8
+cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgVGhhbmtz
+IGZvciBwcm92aWRpbmcgdGhlIHJldmlldyBjb21tZW50cy4uPG86cD48L286cD48L3A+DQo8cCBj
+bGFzcz0iTXNvUGxhaW5UZXh0Ij48YSBuYW1lPSJfTWFpbEVuZENvbXBvc2UiPjxvOnA+Jm5ic3A7
+PC9vOnA+PC9hPjwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS08L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7IEZyb206IFNy
+aW5pdmFzIEthbmRhZ2F0bGEgW21haWx0bzpzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFyby5vcmdd
+PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBTZW50OiBTdW5kYXksIEZlYnJ1YXJ5
+IDMsIDIwMTkgMzowOCBQTTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgVG86IE5h
+dmEga2lzaG9yZSBNYW5uZSAmbHQ7bmF2YW1AeGlsaW54LmNvbSZndDs7IHJvYmgmIzQzO2R0QGtl
+cm5lbC5vcmc7PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBtYXJrLnJ1dGxhbmRA
+YXJtLmNvbTsgTWljaGFsIFNpbWVrICZsdDttaWNoYWxzQHhpbGlueC5jb20mZ3Q7OyBKb2xseSBT
+aGFoPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmbHQ7Sk9MTFlTQHhpbGlueC5j
+b20mZ3Q7OyBSYWphbiBWYWphICZsdDtSQUpBTlZAeGlsaW54LmNvbSZndDs7PC9wPg0KPHAgY2xh
+c3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC08L3A+DQo8cCBjbGFzcz0iTXNv
+UGxhaW5UZXh0Ij4mZ3Q7IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc8L3A+DQo8cCBjbGFzcz0iTXNv
+UGxhaW5UZXh0Ij4mZ3Q7IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMy8zXSBudm1lbTogenlucW1w
+OiBBZGRlZCB6eW5xbXAgbnZtZW0gZmlybXdhcmU8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0
+Ij4mZ3Q7IGRyaXZlcjwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgPC9wPg0KPHAg
+Y2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyA8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4m
+Z3Q7IDwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgT24gMDQvMDIvMjAxOSAwNzow
+OSwgTmF2YSBraXNob3JlIE1hbm5lIHdyb3RlOjwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQi
+PiZndDsgJmd0OzwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyAtY29uZmln
+IFNDMjdYWF9FRlVTRTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyAtJm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHRyaXN0YXRlICZxdW90O1NwcmVhZHRy
+dW0gU0MyN1hYIGVGdXNlIFN1cHBvcnQmcXVvdDs8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0
+Ij4mZ3Q7ICZndDsgLSZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBkZXBlbmRz
+IG9uIE1GRF9TQzI3WFhfUE1JQyB8fCBDT01QSUxFX1RFU1Q8L3A+DQo8cCBjbGFzcz0iTXNvUGxh
+aW5UZXh0Ij4mZ3Q7ICZndDsgLSZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBk
+ZXBlbmRzIG9uIEhBU19JT01FTTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgPC9w
+Pg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBXaHkgYXJlIHlvdSByZW1vdmluZyBTQzI3
+WFhfRUZVU0Ugc3VwcG9ydCBoZXJlPzwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsg
+PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBJdCBkb2VzIG5vdCBsb29rIHJpZ2h0
+ITwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgPC9wPg0KPHAgY2xhc3M9Ik1zb1Bs
+YWluVGV4dCI+PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNrIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bh
+bj48L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2si
+PlRoYW5rcyBmb3IgcG9pbnRpbmcgaXQuLi48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFz
+cz0iTXNvUGxhaW5UZXh0Ij48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2siPlllcywgd2Ugc2hvdWxk
+IG5vdCByZW1vdmUgdGhpcyBzdXBwb3J0LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNz
+PSJNc29QbGFpblRleHQiPjxzcGFuIHN0eWxlPSJjb2xvcjpibGFjayI+QnkgbWlzdGFrZSwgSSBo
+YXZlIGRvbmUgdGhpcyBjaGFuZ2VzLi4gd2lsbCBmaXggaW4gdGhlIG5leHQgdmVyc2lvbi4uLjxv
+OnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPjxzcGFuIHN0eWxl
+PSJjb2xvcjpibGFjayI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1z
+b1BsYWluVGV4dCI+Jmd0OyAmZ3Q7ICYjNDM7Y29uZmlnIE5WTUVNX1pZTlFNUDwvcD4NCjxwIGNs
+YXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyAmIzQzOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyBib29sICZxdW90O1hpbGlueCBaWU5RTVAgU29DIG52bWVtIGZpcm13YXJlIHN1cHBv
+cnQmcXVvdDs8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDsgJiM0MzsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgZGVwZW5kcyBvbiBBUkNIX1pZTlFNUDwvcD4NCjxw
+IGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyZuYnNwOyZuYnNwOyAmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgaGVscDwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQi
+PiZndDsgJmd0OyAtJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyBU
+aGlzIGlzIGEgc2ltcGxlIGRyaXZlciB0byBkdW1wIHNwZWNpZmllZCB2YWx1ZXMgb2YgU3ByZWFk
+dHJ1bTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyAtJm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyBTQzI3WFggUE1JQ3MgZnJvbSBlRnVzZS48
+L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDsgJiM0MzsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsgJm5ic3A7IFRoaXMgaXMgYSBkcml2ZXIgdG8gYWNjZXNzIGhhcmR3
+YXJlIHJlbGF0ZWQgZGF0YSBsaWtlPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAm
+Z3Q7ICYjNDM7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyBzb2MgcmV2aXNp
+b24sIElEQ09ERS4uLiBldGMgYnkgdXNpbmcgdGhlIGZpcm13YXJlPC9wPg0KPHAgY2xhc3M9Ik1z
+b1BsYWluVGV4dCI+Jmd0OyAmZ3Q7ICYjNDM7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+ICZuYnNwOyBpbnRlcmZhY2UuPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7
+PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7IC0mbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsgJm5ic3A7IFRoaXMgZHJpdmVyIGNhbiBhbHNvIGJlIGJ1aWx0
+IGFzIGEgbW9kdWxlLiBJZiBzbywgdGhlIG1vZHVsZTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRl
+eHQiPiZndDsgJmd0OyAtJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNw
+OyB3aWxsIGJlIGNhbGxlZCBudm1lbS1zYzI3eHgtZWZ1c2UuPC9wPg0KPHAgY2xhc3M9Ik1zb1Bs
+YWluVGV4dCI+Jmd0OyAmZ3Q7ICYjNDM7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZu
+YnNwOyBJZiBzdXJlLCBzYXkgeWVzLiBJZiB1bnN1cmUsIHNheSBuby48L3A+DQo8cCBjbGFzcz0i
+TXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDs8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7
+ICZndDsmbmJzcDsmbmJzcDsgZW5kaWY8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7
+ICZndDsgZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZtZW0vTWFrZWZpbGUgYi9kcml2ZXJzL252bWVt
+L01ha2VmaWxlIGluZGV4PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7IDRl
+OGM2MTYyOGYxYS4uMGIzYWJkN2Y1ZDAyIDEwMDY0NDwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRl
+eHQiPiZndDsgJmd0OyAtLS0gYS9kcml2ZXJzL252bWVtL01ha2VmaWxlPC9wPg0KPHAgY2xhc3M9
+Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7ICYjNDM7JiM0MzsmIzQzOyBiL2RyaXZlcnMvbnZtZW0v
+TWFrZWZpbGU8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDsgQEAgLTM5LDUg
+JiM0MzszOSw2IEBAIG9iai0kKENPTkZJR19OVk1FTV9TTlZTX0xQR1BSKSZuYnNwOyZuYnNwOyZu
+YnNwOyAmIzQzOz08L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7IG52bWVtX3NudnNf
+bHBncHIubzwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyZuYnNwOyZuYnNw
+OyBudm1lbV9zbnZzX2xwZ3ByLXkmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsgOj0gc252c19scGdwci5vPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+
+Jmd0OyAmZ3Q7Jm5ic3A7Jm5ic3A7IG9iai0kKENPTkZJR19SQVZFX1NQX0VFUFJPTSkmbmJzcDsm
+bmJzcDsgJiM0Mzs9IG52bWVtLXJhdmUtc3AtZWVwcm9tLm88L3A+DQo8cCBjbGFzcz0iTXNvUGxh
+aW5UZXh0Ij4mZ3Q7ICZndDsmbmJzcDsmbmJzcDsgbnZtZW0tcmF2ZS1zcC1lZXByb20teSZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyA6PSByYXZlLXNw
+LWVlcHJvbS5vPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7IC1vYmotJChD
+T05GSUdfU0MyN1hYX0VGVVNFKSZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAmIzQzOz0gbnZtZW0tc2MyN3h4LWVmdXNlLm88L3A+DQo8
+cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDsgLW52bWVtLXNjMjd4eC1lZnVzZS15Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDo9IHNjMjd4eC1lZnVzZS5vPC9wPg0KPHAgY2xh
+c3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyA8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7
+IHNhbWUgaGVyZT88L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7IDwvcD4NCjxwIGNs
+YXNzPSJNc29QbGFpblRleHQiPjxzcGFuIHN0eWxlPSJjb2xvcjpibGFjayI+PG86cD4mbmJzcDs8
+L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PHNwYW4gc3R5bGU9ImNv
+bG9yOmJsYWNrIj5XaWxsIGZpeCBpbiB0aGUgbmV4dCB2ZXJzaW9uLi4uPG86cD48L286cD48L3Nw
+YW4+PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNr
+Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij48
+c3BhbiBzdHlsZT0iY29sb3I6YmxhY2siPlJlZ2FyZHMsPG86cD48L286cD48L3NwYW4+PC9wPg0K
+PHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNrIj5OYXZha2lz
+aG9yZTwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2siPi48bzpwPjwvbzpwPjwvc3Bhbj48
+L3A+DQo8L2Rpdj4NCjwvYm9keT4NCjwvaHRtbD4NCg==
+
+--_000_BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0BYAPR02MB4710namp_--
