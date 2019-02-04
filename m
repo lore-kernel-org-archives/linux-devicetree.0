@@ -1,64 +1,103 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding for generic eDP
- panel
-Date: Mon, 4 Feb 2019 10:39:08 -0600
-Message-ID: <CAL_JsqLAODca_U94hCi9O3E6XiUjAYCoL7_0gkf_eMY0nnT8Ag@mail.gmail.com>
-References: <20190203185501.8958-1-anarsoul@gmail.com>
- <20190203185501.8958-9-anarsoul@gmail.com>
- <20190204074350.GC16448@ulmo>
- <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
- <20190204082353.GE19087@ulmo>
- <CA+E=qVew+8__yrAud1gFnLQ8HCwDdGhVjV=c173HGvZxH=7zZQ@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 00/24] Add support for PCIe RC and EP mode in TI's AM654
+ SoC
+Date: Mon, 4 Feb 2019 16:40:54 +0000
+Message-ID: <20190204164054.GA21488@e107981-ln.cambridge.arm.com>
+References: <20190114132424.6445-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CA+E=qVew+8__yrAud1gFnLQ8HCwDdGhVjV=c173HGvZxH=7zZQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190114132424.6445-1-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Murali Karicheri <m-karicheri2@ti.com>, Jesper Nilsson <jesper.nilsson@axis.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBGZWIgNCwgMjAxOSBhdCAxMDoxMSBBTSBWYXNpbHkgS2hvcnV6aGljayA8YW5hcnNv
-dWxAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIE1vbiwgRmViIDQsIDIwMTkgYXQgMTI6MjQgQU0g
-VGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiA+Cj4g
-PiA+IFBpbmVib29rIHVzZWQgc2V2ZXJhbCA3NjhwIHBhbmVscyB0aGF0IGhhdmUgc2xpZ2h0bHkg
-ZGlmZmVyZW50IHRpbWluZ3MKPiA+ID4gYW5kIHJlY2VudCBiYXRjaCB1c2VzIDEwODBwIHBhbmVs
-Lgo+ID4gPgo+ID4gPiBXaGF0IHBhbmVsIGRlc2NyaXB0b3Igc2hvdWxkIEkgdXNlIGFzIGZhbGxi
-YWNrPwo+ID4KPiA+IFlvdSBkb24ndCB1c2UgcGFuZWwgZGVzY3JpcHRvcnMgYXMgZmFsbGJhY2su
-IFRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyCj4gPiB3aWxsIGJpbmQgdG8gYSBwYW5lbCBkZXZpY2Ug
-YW5kIHVzZSB0aGUgY29ycmVzcG9uZGluZyBkZXNjcmlwdG9yLiBJZgo+ID4geW91ciBkZXZpY2Ug
-dHJlZSBjb250YWlucyB0aGUgY29ycmVjdCBpbmZvcm1hdGlvbiwgdGhlIGRlc2NyaXB0b3IgaXMK
-PiA+IGNvcnJlY3QgZm9yIHRoZSBwYW5lbCB5b3UgaGF2ZS4KPiA+Cj4gPiBJbiBvdGhlciB3b3Jk
-cyB5b3UgbmVlZCB0byBlbnN1cmUgdGhhdCB5b3UgaGF2ZSB0aGUgY29ycmVjdCBwYW5lbCBpbgo+
-ID4gZGV2aWNlIHRyZWUgZm9yIHRoZSBib2FyZCB0aGF0IHlvdSdyZSB1c2luZy4gVGhpcyBpcyBl
-eGFjdGx5IHRoZSBzYW1lCj4gPiB0aGluZyBhcyBmb3Igb3RoZXIgZGV2aWNlcy4KPiA+Cj4gPiBP
-bmUgd2F5IHRvIHRvIHRoaXMgaXMgdG8gaGF2ZSBzZXBhcmF0ZSBkZXZpY2UgdHJlZXMgZm9yIGVh
-Y2ggdmFyaWFudAo+ID4gb2YgdGhlIGJvYXJkIHRoYXQgeW91IHdhbnQgdG8gc3VwcG9ydC4gQW5v
-dGhlciB2YXJpYW50IG1heSBiZSB0byBoYXZlCj4gPiBhIGNvbW1vbiBkZXZpY2UgdHJlZSBhbmQg
-dGhlbiBoYXZlIHNvbWUgZWFybHkgZmlybXdhcmUgdXBkYXRlIHRoZSBEVEIKPiA+IHdpdGggdGhl
-IGNvcnJlY3QgcGFuZWwgaW5mb3JtYXRpb24uCj4KPiBUaGF0IGRlZmVhdHMgdGhlIHB1cnBvc2Ug
-b2YgdXNpbmcgZURQIHBhbmVscy4gUGFuZWwgY2FuIGlkZW50aWZ5Cj4gaXRzZWxmIGFuZCByZXBv
-cnQgd2hhdCB0aW1pbmdzIGl0IHN1cHBvcnRzLgoKSWYgeW91IGFyZSBjb25maWRlbnQgdGhhdCB0
-aGlzIHdvcmtzIGZvciBhbGwgcGFuZWxzLCB0aGVuIHRoZSBmaXJtd2FyZQpjYW4gaWRlbnRpZnkg
-dGhlIHJpZ2h0IHBhbmVsIGFuZCB1cGRhdGUgdGhlIERUQiB3aXRoIHRoZSBjb3JyZWN0CmluZm9y
-bWF0aW9uLiBJZiB0aGlzIGRvZXNuJ3Qgd29yayBpbiB0aGUgZmlybXdhcmUsIHRoZW4gaXQgaXMg
-bm90CmdvaW5nIHRvIHdvcmsgaW4gdGhlIGtlcm5lbCBlaXRoZXIgYW5kIHlvdSBhcmUgU09MIHdp
-dGhvdXQgc3BlY2lmaWMKcGFuZWwgaW5mb3JtYXRpb24gaW4gdGhlIERULgoKPiBJZiB3ZSB1c2Ug
-c2VwYXJhdGUgRFRCcyB0aGVuIHVzZXJzIHdpbGwgaGF2ZSB0byBmaWd1cmUgb3V0IHdoYXQgcGFu
-ZWwKPiBpcyBpbnN0YWxsZWQgaW4gdGhlaXIgaGFyZHdhcmUgYW5kIHVzZSBhcHByb3ByaWF0ZSBz
-b2Z0d2FyZSBpbWFnZSAtCj4gdGhhdCdzIHNvbWV0aGluZyBJJ2QgbGlrZSB0byBhdm9pZC4KCkkg
-dGhpbmsgVGhpZXJyeSBtZWFudCBlaXRoZXIgd2F5IHRoaXMgaXMgYSBmaXJtd2FyZSBwcm9ibGVt
-LiBJZiB5b3UKaGF2ZSBhIFNLVSBwZXIgZGV2aWNlIGFuZCBwYW5lbCB0eXBlLCB0aGVuIHRoZSBm
-aXJtd2FyZSBqdXN0IHBpY2tzIGEKZHRiIGFtb25nIGEgc2V0LgoKUm9iCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Jan 14, 2019 at 06:54:00PM +0530, Kishon Vijay Abraham I wrote:
+> Add PCIe RC support for TI's AM654 SoC. The PCIe controller in AM654
+> uses Synopsys core revision 4.90a and uses the same TI wrapper as used
+> in keystone2 with certain modification. Hence AM654 will use the same
+> pci wrapper driver pci-keystone.c
+> 
+> This series was initially part of [1]. This series only includes patches
+> that has to be merged via Lorenzo's tree. The PHY patches and dt patches
+> will be sent separately.
+> 
+> This series is created over my keystone MSI cleanup series [2] and EPC
+> features series [3].
+
+Hi Kishon,
+
+so I would suggest we merge those series first, starting from the MSI
+clean-up.
+
+I will mark this series as awaiting upstream, it is on my radar but
+we have to get the two others done first.
+
+Thanks,
+Lorenzo
+
+> This series:
+> *) Cleanup pci-keystone driver so that both RC mode and EP mode of
+>    AM654 can be supported
+> *) Modify epc-core to support allocation of aligned buffers required for
+>    AM654
+> *) Fix ATU unroll identification
+> *) Add support for both host mode and device mode in AM654    
+> 
+> [1] -> https://lore.kernel.org/patchwork/cover/989487/
+> [2] -> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1883081.html
+> [3] -> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1899011.html
+> 
+> Kishon Vijay Abraham I (24):
+>   PCI: keystone: Add start_link/stop_link dw_pcie_ops
+>   PCI: keystone: Cleanup error_irq configuration
+>   dt-bindings: PCI: keystone: Add "reg-names" binding information
+>   PCI: keystone: Perform host initialization in a single function
+>   PCI: keystone: Use platform_get_resource_byname to get memory
+>     resources
+>   PCI: keystone: Move initializations to appropriate places
+>   dt-bindings: PCI: Add dt-binding to configure PCIe mode
+>   PCI: keystone: Explicitly set the PCIe mode
+>   dt-bindings: PCI: Document "atu" reg-names
+>   PCI: dwc: Enable iATU unroll for endpoint too
+>   PCI: dwc: Fix ATU identification for designware version >= 4.80
+>   PCI: keystone: Prevent ARM32 specific code to be compiled for ARM64
+>   dt-bindings: PCI: Add PCI RC dt binding documentation for AM654
+>   PCI: keystone: Add support for PCIe RC in AM654x Platforms
+>   PCI: keystone: Invoke phy_reset API before enabling PHY
+>   PCI: endpoint: Add support to allocate aligned buffers to be mapped in
+>     BARs
+>   PCI: dwc: Add const qualifier to struct dw_pcie_ep_ops
+>   PCI: dwc: Fix dw_pcie_ep_find_capability to return correct capability
+>     offset
+>   PCI: dwc: Add callbacks for accessing dbi2 address space
+>   PCI: keystone: Add support for PCIe EP in AM654x Platforms
+>   PCI: designware-ep: Configure RESBAR to advertise the smallest size
+>   PCI: designware-ep: Use aligned ATU window for raising MSI interrupts
+>   misc: pci_endpoint_test: Add support to test PCI EP in AM654x
+>   misc: pci_endpoint_test: Fix test_reg_bar to be updated in
+>     pci_endpoint_test
+> 
+>  .../bindings/pci/designware-pcie.txt          |   7 +-
+>  .../devicetree/bindings/pci/pci-keystone.txt  |  14 +-
+>  drivers/misc/pci_endpoint_test.c              |  17 +
+>  drivers/pci/controller/dwc/Kconfig            |  25 +-
+>  drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
+>  drivers/pci/controller/dwc/pci-keystone.c     | 505 ++++++++++++++----
+>  drivers/pci/controller/dwc/pcie-artpec6.c     |   2 +-
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  55 +-
+>  .../pci/controller/dwc/pcie-designware-host.c |  19 -
+>  .../pci/controller/dwc/pcie-designware-plat.c |   2 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  |  52 ++
+>  drivers/pci/controller/dwc/pcie-designware.h  |  15 +-
+>  drivers/pci/endpoint/functions/pci-epf-test.c |   5 +-
+>  drivers/pci/endpoint/pci-epf-core.c           |  10 +-
+>  include/linux/pci-epc.h                       |   2 +
+>  include/linux/pci-epf.h                       |   3 +-
+>  16 files changed, 587 insertions(+), 148 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
