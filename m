@@ -1,64 +1,39 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/7] thermal: mediatek: fix register index error
-Date: Mon, 4 Feb 2019 18:24:08 +0100
-Message-ID: <6496b13f-57e4-af86-bb59-91a4705d91b0@gmail.com>
-References: <1549006693-11659-1-git-send-email-michael.kao@mediatek.com>
- <1549006693-11659-2-git-send-email-michael.kao@mediatek.com>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: [PATCH net-next 0/3] nixge: Fixed-link support
+Date: Mon,  4 Feb 2019 09:30:37 -0800
+Message-ID: <20190204173040.5538-1-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549006693-11659-2-git-send-email-michael.kao@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: michael.kao@mediatek.com, =Zhang Rui <rui.zhang@intel.com>, =Eduardo Valentin <edubezval@gmail.com>, =Daniel Lezcano <daniel.lezcano@linaro.org>, =Rob Herring <robh+dt@kernel.org>, =Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex.williams@ni.com, andrew@lunn.ch, robh+dt@kernel.org, davem@davemloft.net, moritz.fischer@ettus.com, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Moritz Fischer <mdf@kernel.org>
 
+This series adds fixed-link support to nixge.
 
-On 01/02/2019 08:38, michael.kao@mediatek.com wrote:
-> From: Michael Kao <michael.kao@mediatek.com>
-> 
-> The index of msr and adcpnp should match the sensor
-> which belongs to the selected bank in the for loop.
-> 
+The first patch corrects the binding to correctly reflect
+hardware that does not come with MDIO cores instantiated.
 
-If I get that right, this fixes
-b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
+The second patch adds fixed link support to the driver.
 
-So please add a fixes tag to the commit.
+The third patch updates the binding document with the now
+optional (formerly required) phy-handle property and references
+the fixed-link docs.
 
 Thanks,
-Matthias
+Moritz
 
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> ---
->  drivers/thermal/mtk_thermal.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-> index 0691f26..f646436 100644
-> --- a/drivers/thermal/mtk_thermal.c
-> +++ b/drivers/thermal/mtk_thermal.c
-> @@ -431,7 +431,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
->  	u32 raw;
->  
->  	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
-> -		raw = readl(mt->thermal_base + conf->msr[i]);
-> +		raw = readl(mt->thermal_base +
-> +			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
->  
->  		temp = raw_to_mcelsius(mt,
->  				       conf->bank_data[bank->id].sensors[i],
-> @@ -568,7 +569,8 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
->  
->  	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
->  		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
-> -		       mt->thermal_base + conf->adcpnp[i]);
-> +		       mt->thermal_base +
-> +		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
->  
->  	writel((1 << conf->bank_data[num].num_sensors) - 1,
->  	       mt->thermal_base + TEMP_MONCTL0);
-> 
+Moritz Fischer (3):
+  net: nixge: Make mdio child node optional
+  net: nixge: Add support for fixed-link configurations
+  dt-bindings: net: Add fixed-link support
+
+ .../devicetree/bindings/net/nixge.txt         | 60 +++++++++++++++++--
+ drivers/net/ethernet/ni/nixge.c               | 44 ++++++++++----
+ 2 files changed, 88 insertions(+), 16 deletions(-)
+
+-- 
+2.20.1
