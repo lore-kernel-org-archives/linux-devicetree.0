@@ -1,75 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcs404: evb: Fix voltages for s5 and l3
-Date: Mon, 4 Feb 2019 21:59:30 +0100
-Message-ID: <20190204205930.GK23441@sirena.org.uk>
-References: <20190125232954.26166-1-bjorn.andersson@linaro.org>
- <32b8136d-3acb-66e9-948c-ee8903b91401@linaro.org>
- <20190129224652.GB11349@centauri.lan>
- <20190204104347.GD23441@sirena.org.uk>
- <20190204160337.GG2387@tuxbook-pro>
- <20190204182321.GH23441@sirena.org.uk>
- <20190204192510.GZ31919@minitux>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v3 0/8] Add IPROC I2C slave mode and NIC I2C support
+Date: Mon, 4 Feb 2019 15:09:46 -0800
+Message-ID: <f00f179b-9824-2211-1456-57fb53ec482f@broadcom.com>
+References: <1547791464-3540-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <e658ce66-98e3-3ca6-5786-56bfea6d176e@broadcom.com>
+ <746cf074-69e0-7bd1-034e-c8d3156b5506@broadcom.com>
+ <20190204111205.GA2068@kunai>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="BFVE2HhgxTpCzM8t"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190204192510.GZ31919@minitux>
+In-Reply-To: <20190204111205.GA2068@kunai>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, rjui@broadcom.com, bcm-kernel-feedback-list@broadcom.com, shreesha.rajashekar@broadcom.com, sbranden@broadcom.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ccheng@broadcom.com, heikki.krogerus@linux.intel.com, geert@linux-m68k.org, arnd@arndb.de, manivannan.sadhasivam@linaro.org, ajayg@nvidia.com, ard.biesheuvel@linaro.org, eajames@linux.vnet.ibm.com, kramasub@codeaurora.org, vigneshr@ti.com, mika.westerberg@linux.intel.com, pierre-yves.mordret@st.com, f.fainelli@gmail.com, aaron.wu@analog.com, jdelvare@suse.de, andriy.shevchenko@linux.intel.com, jarkko.nikula@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, rayagonoda.kokatanur
 List-Id: devicetree@vger.kernel.org
 
+Hi Wolfram,
 
---BFVE2HhgxTpCzM8t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2/4/2019 3:12 AM, Wolfram Sang wrote:
+> Hi,
+> 
+>> Just want to check if you had a chance to review the following patch series?
+> 
+> I am sorry, but for some reason they are not listed in my patchwork
+> instance, so they fell through the cracks :( Can you please resend them?
+> 
+> I will double check they show up in patchwork then.
 
-On Mon, Feb 04, 2019 at 11:25:10AM -0800, Bjorn Andersson wrote:
-> On Mon 04 Feb 10:23 PST 2019, Mark Brown wrote:
-> > On Mon, Feb 04, 2019 at 08:03:37AM -0800, Bjorn Andersson wrote:
+Thanks. I think the issue might have something to do with Rayagonda's
+email client configuration. I will be helping to send out v4 of the
+patch series.
 
-> Okay, I don't see a big problem with expecting the DT to only contain
-> values that the hardware can actually do. I do however see that
-> machine_constraints_voltage() has been changes to expect the driver to
-> return -ENOTRECOVERABLE when we don't have a way to query the voltage
-> during probe.
+Regards,
 
-> So there's a risk of this breaking compatibility with older dtb files on
-> other boards. We will have to do some more verification on this.
+Ray
 
-That's basically only going to affect Qualcomm hardware FWIW, I had
-thought that such devices didn't manage to probe with upstream before
-that change either but I could be misremembering.
-
-> > > regulator framework be made to round down to the previous valid step
-> > > instead of up?
-
-> > We definitely don't want to round voltages down, it is vastly more
-> > common for devices to experience problems like brownouts if they go
-> > under voltage so it'd be more likely to cause harm than good.
-
-> We're 2mV off in this case, but it could have been way off. So I'm good
-> with this position.
-
-Never mind that that's 2mV assuming the regulator has perfect accuracy
-and there's headroom.  For something like this it's likely not a problem
-but some high current things (especially CPUs or anything like that) are
-operating on thin margins.
-
---BFVE2HhgxTpCzM8t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxYp68ACgkQJNaLcl1U
-h9DL1Qf9ED2ORN4Cuibho/qUCZ5Vmyq+ZZRNIMfcx+diIXcc2K8kfEGbQRNOcaOC
-XYV9xfdv0kf6wJmw/KSn78iOhBac6VpZDTV2HDytsNd97JKExcBB3w9KficyBWNz
-3CxQIBsyrzrwXsAaXQwbqqSabaUL4GMdQaK2LutuzIti4mjT8bUNSzSvP55kK+PK
-vp9IwHvDjIJppc0YyupME4lRsWHUAuK+TmJuTWfsuQOMwGPe9SUbwoBV/FU3QzJ9
-p+1iRIDWN/G9TkRgo4MqhzAL1L1mTpOB0S9xk392sG4J8L4N7xk1Z6ZCBsT8sVXP
-CglfiH5s9zVjbXlKyehlSRbgPqSskg==
-=eM4M
------END PGP SIGNATURE-----
-
---BFVE2HhgxTpCzM8t--
+> 
+> Thanks,
+> 
+>    Wolfram
+> 
