@@ -1,13 +1,14 @@
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv3 1/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy reset warning
-Date: Tue, 5 Feb 2019 01:34:42 +0530
-Message-ID: <CANAwSgSnR-DWffg3vKStuXQXahLf8ONssxr4+byL=PSr5JR=xA@mail.gmail.com>
-References: <20190129102521.4141-1-linux.amoon@gmail.com> <20190129102521.4141-2-linux.amoon@gmail.com>
- <CAFBinCDj=Y9HWEhJYMjo9FviAosxpHW5d61CceZ7HPV4ObZ79Q@mail.gmail.com>
+Subject: Re: [PATCHv3 2/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy
+ regulator power failed warning
+Date: Tue, 5 Feb 2019 01:35:45 +0530
+Message-ID: <CANAwSgRUqXiDLMxQ4bTE0M8-UT_1=S5Om5PCR2S94iZsRuS0Zw@mail.gmail.com>
+References: <20190129102521.4141-1-linux.amoon@gmail.com> <20190129102521.4141-3-linux.amoon@gmail.com>
+ <CAFBinCDRTeO9FWoJ-=BUc8uizN5_mhJE9EBYv0X6pse7Rxsxew@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDj=Y9HWEhJYMjo9FviAosxpHW5d61CceZ7HPV4ObZ79Q@mail.gmail.com>
+In-Reply-To: <CAFBinCDRTeO9FWoJ-=BUc8uizN5_mhJE9EBYv0X6pse7Rxsxew@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
@@ -15,96 +16,114 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Martin,
 
-Thanks for your review comments.
-
-On Mon, 4 Feb 2019 at 19:29, Martin Blumenstingl
+On Mon, 4 Feb 2019 at 19:36, Martin Blumenstingl
 <martin.blumenstingl@googlemail.com> wrote:
 >
 > Hi Anand,
 >
 > On Tue, Jan 29, 2019 at 11:25 AM Anand Moon <linux.amoon@gmail.com> wrote:
 > >
-> > Add missing vin-supply node 5.0V regulator setting to power
-> > to usb ports, changes help fix the usb reset warning.
+> > Override the dr_mode from "host" to "otg" for USB_HOST controller (usb0)
+> > changes help usb_phy0->usb0 initialization of OTG bus port.
 > >
-> > [  795.380156] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  798.356073] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  801.331999] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  804.307919] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  807.283844] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> > Changes fix the below warning.
 > >
-> > Fixes: 5a0803bd5ae (ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes)
-> > Tested-by: Kevin Hilman <khilman@baylibre.com>
-> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > changes from prevoius
-> >
-> >  regulator                      use open bypass  opmode voltage current     min     max
-> > ---------------------------------------------------------------------------------------
-> >  regulator-dummy                  5    4      0 unknown     0mV     0mA     0mV     0mV
-> >     c9100000.usb                  1                                 0mA     0mV     0mV
-> >     c9100000.usb                  1                                 0mA     0mV     0mV
-> >     c9000000.usb                  1                                 0mA     0mV     0mV
-> >     c9000000.usb                  1                                 0mA     0mV     0mV
-> >  P5V0                             1    1      0 unknown  5000mV     0mA  5000mV  5000mV
-> >     USB_OTG_PWR                   4    2      0 unknown  5000mV     0mA  5000mV  5000mV
-> >        phy-c0000020.phy.1         2                                 0mA     0mV     0mV
-> >        phy-c0000000.phy.0         2                                 0mA     0mV     0mV
-> > --
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > index 2e1cd5e3a246..da729ed00408 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > @@ -28,6 +28,13 @@
-> >                 reg = <0x0 0x0 0x0 0x80000000>;
-> >         };
-> >
-> > +       p5v0: regulator-p5v0 {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "P5V0";
-> > +               regulator-min-microvolt = <5000000>;
-> > +               regulator-max-microvolt = <5000000>;
-> > +       };
-> > +
-> >         usb_otg_pwr: regulator-usb-pwrs {
-> >                 compatible = "regulator-fixed";
-> >
-> > @@ -36,6 +43,8 @@
-> >                 regulator-min-microvolt = <5000000>;
-> >                 regulator-max-microvolt = <5000000>;
-> >
-> > +               vin-supply = <&p5v0>;
-> did you find out why this patch fixes the USB_OTG_PWR regulator?
-> based on just reading the patch I can't find an explanation myself
+> > [    1.183681] dwc2 c9000000.usb: c9000000.usb supply vusb_d not found, using dummy regulator
+> > [    1.190627] dwc2 c9000000.usb: Linked as a consumer to regulator.0
+> > [    1.196696] dwc2 c9000000.usb: c9000000.usb supply vusb_a not found, using dummy regulator
+> > [    1.206094] phy phy-c0000000.phy.0: USB ID detect failed!
+> > [    1.210243] phy phy-c0000000.phy.0: phy poweron failed --> -22
+> I wonder if the warning below are a side-effect of "phy poweron failed"...
+
+As pointed by you we need the fix this issue earlier email.
+unless we enable the phy and set the correct dr_mode to tune the phy
+we cannot the tune and power on phy bus properly.
+
+After this patch we get phy and power correctly registered.
+
+# cat /sys/kernel/debug/regulator/regulator_summary
+ regulator                      use open bypass  opmode voltage
+current     min     max
+---------------------------------------------------------------------------------------
+ regulator-dummy                  5    4      0 unknown     0mV
+0mA     0mV     0mV
+    c9100000.usb                  1
+0mA     0mV     0mV
+    c9100000.usb                  1
+0mA     0mV     0mV
+    c9000000.usb                  1
+0mA     0mV     0mV
+    c9000000.usb                  1
+0mA     0mV     0mV
+ P5V0                             1    1      0 unknown  5000mV
+0mA  5000mV  5000mV
+    USB_OTG_PWR                   4    2      0 unknown  5000mV
+0mA  5000mV  5000mV
+       phy-c0000020.phy.1         2
+0mA     0mV     0mV
+       phy-c0000000.phy.0         2
+0mA     0mV     0mV
+
 >
+> > [    1.216072] WARNING: CPU: 0 PID: 78 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
+> > [    1.225147] Modules linked in:
+> > [    1.228169] CPU: 0 PID: 78 Comm: kworker/0:1 Not tainted 5.0.0-rc4-xc2ml #1
+> > [    1.235066] Hardware name: Hardkernel ODROID-C2 (DT)
+> > [    1.239987] Workqueue: events deferred_probe_work_func
+> > [    1.245072] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> > [    1.249816] pc : _regulator_put.part.11+0xf0/0xf8
+> > [    1.254473] lr : regulator_put+0x34/0x48
+> > [    1.258353] sp : ffff0000117b3b00
+> > [    1.261630] x29: ffff0000117b3b00 x28: 0000000000000000
+> > [    1.266891] x27: ffff80007ec1a7b8 x26: ffff000010eec280
+> > [    1.272153] x25: 0000000000000000 x24: 0000000000000009
+> > [    1.277414] x23: ffff0000117b3bc8 x22: ffff80007ecd3c00
+> > [    1.282675] x21: ffff0000111ad6c8 x20: ffff80007ecd3e00
+> > [    1.287936] x19: ffff80007ecd3e00 x18: 0000000000000124
+> > [    1.293198] x17: 0000000000000000 x16: 0000000000000000
+> > [    1.298459] x15: 0000000000000400 x14: 0000000000000400
+> > [    1.303720] x13: ff00000000000000 x12: ffffffffffffffff
+> > [    1.308981] x11: 0000000000000038 x10: 0000000000000040
+> > [    1.314243] x9 : ffff0000111c58b0 x8 : ffff0000111c58a8
+> > [    1.319504] x7 : ffff80006b055200 x6 : ffff80007edd2880
+> > [    1.324765] x5 : ffff80007f400248 x4 : ffff80007fb92b00
+> > [    1.330026] x3 : ffff0000112c9d58 x2 : ffff80007edd2880
+> > [    1.335288] x1 : 0000000000000000 x0 : 0000000000000001
+> > [    1.340549] Call trace:
+> > [    1.342966]  _regulator_put.part.11+0xf0/0xf8
+> > [    1.347278]  regulator_put+0x34/0x48
+> > [    1.350814]  regulator_bulk_free+0x30/0x50
+> > [    1.354868]  devm_regulator_bulk_release+0x18/0x20
+> > [    1.359612]  release_nodes+0x1b0/0x220
+> > [    1.363320]  devres_release_all+0x34/0x50
+> > [    1.367288]  really_probe+0xec/0x290
+> > [    1.370824]  driver_probe_device+0x54/0xe8
+> > [    1.374878]  __device_attach_driver+0xb8/0xe8
+> > [    1.379190]  bus_for_each_drv+0x78/0xc8
+> > [    1.382985]  __device_attach+0xd4/0x130
+> > [    1.386780]  device_initial_probe+0x10/0x18
+> > [    1.390920]  bus_probe_device+0x90/0x98
+> > [    1.394715]  deferred_probe_work_func+0x6c/0xa0
+> > [    1.399203]  process_one_work+0x1e0/0x318
+> > [    1.403168]  worker_thread+0x228/0x428
+> > [    1.406877]  kthread+0x124/0x128
+> > [    1.410070]  ret_from_fork+0x10/0x18
+> > [    1.413603] ---[ end trace 498aca4cb07e5377 ]---
+> phy_power_on fails above with -EINVAL and then something else breaks
+> (it seems like you're hitting the WARN_ON in drivers/regulator/core.c
+> below the comment which states: "Docs say you must disable before
+> calling regulator_put()")
 
-As per the device tree binding we need this setting to enable power input source
-[0] Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+Ok will look into this later.
 
-*I have observed few more place where this setting is missing*
-
-> have you tested without this patch to rule out that you hit some bug
-> in the regulator framework back when you wrote the patch?
-> (I don't have an Odroid-C2 so I can't test this myself).
+> so this looks like a bug in either the dwc2 driver or the PHY
+> framework. can you please report that to the dwc2 and PHY maintainers
+> so it can be fixed independently?
 >
-
-Yes I have tested this patch.Some device like usb camera and usb hard drive
-when connected to usb port will generate warning message.
-which shows us that not enough power is being set to the port.
-
 >
 > Regards
 > Martin
 
 Best Regards
-
-
 
 -Anand
