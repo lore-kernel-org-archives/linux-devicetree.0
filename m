@@ -1,52 +1,61 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v3 3/5] dt-bindings: phy-qcom-qmp: Add
- qcom,msm8998-qmp-ufs-phy
-Date: Mon, 4 Feb 2019 11:08:35 -0700
-Message-ID: <5c18d9c4-a65c-1dbb-dc19-34db9717a33a@codeaurora.org>
-References: <e3c82a49-c601-effc-348f-f768656c659f@free.fr>
- <73f65f2d-2137-1d2b-be19-eae77773ccc1@free.fr>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 04/14] irqchip: pruss: Add a PRUSS irqchip driver for
+ PRUSS interrupts
+Date: Mon, 4 Feb 2019 10:15:18 -0800
+Message-ID: <20190204181518.GN5720@atomide.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-5-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <73f65f2d-2137-1d2b-be19-eae77773ccc1@free.fr>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1549290167-876-5-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Gonzalez <marc.w.gonzalez@free.fr>, MSM <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Evan Green <evgreen@chromium.org>, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, DT <devicetree@vger.kernel.org>
+To: Roger Quadros <rogerq@ti.com>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/4/2019 10:38 AM, Marc Gonzalez wrote:
-> Add compatible string for QMP UFS phy on msm8998.
+* Roger Quadros <rogerq@ti.com> [190204 14:23]:
+> From: "Andrew F. Davis" <afd@ti.com>
 > 
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> ---
->   Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 1 +
->   1 file changed, 1 insertion(+)
+> The Programmable Real-Time Unit Subsystem (PRUSS) contains an
+> interrupt controller (INTC) that can handle various system input
+> events and post interrupts back to the device-level initiators.
+> The INTC can support upto 64 input events with individual control
+> configuration and hardware prioritization. These events are mapped
+> onto 10 interrupt signals through two levels of many-to-one mapping
+> support. Different interrupt signals are routed to the individual
+> PRU cores or to the host CPU.
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> index 41a1074228ba..6ec278f5af86 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> @@ -9,6 +9,7 @@ Required properties:
->   	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
->   	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
->   	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
-> +	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
->   	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
->   	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
->   	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
+> The PRUSS INTC platform driver manages this PRUSS interrupt
+> controller and implements an irqchip driver to provide a Linux
+> standard way for the PRU client users to enable/disable/ack/
+> re-trigger a PRUSS system event. The system events to interrupt
+> channels and host interrupts relies on the mapping configuration
+> provided through a firmware resource table for now. This will be
+> revisited and enhanced in the future for a better interface. The
+> mappings will currently be programmed during the boot/shutdown
+> of the PRU.
 > 
+> The PRUSS INTC module is reference counted during the interrupt
+> setup phase through the irqchip's irq_request_resources() and
+> irq_release_resources() ops. This restricts the module from being
+> removed as long as there are active interrupt users.
+> 
+> The PRUSS INTC can generate an interrupt to various processor
+> subsystems on the SoC through a set of 64 possible PRU system
+> events. These system events can be used by PRU client drivers
+> or applications for event notifications/signalling between PRUs
+> and MPU or other processors. An API, pruss_intc_trigger() is
+> provided to MPU-side PRU client drivers/applications to be able
+> to trigger an event/interrupt using IRQ numbers provided by the
+> PRUSS-INTC irqdomain chip.
 
-I think this needs to be based on phy-next, otherwise I forsee a merge 
-conflict.
+I suggest you send the binding patch and the interrupt
+controller driver separately to the irqchip guys. Maybe
+put the trigger function in to a separate patch that can
+be reviewed and applied separately.
 
-Also, I would expect changes to the rest of the file as well (what 
-clocks are required, etc).
+Regards,
 
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Tony
