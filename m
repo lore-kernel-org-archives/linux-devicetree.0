@@ -1,89 +1,32 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 9/9] mtd: rawnand: ingenic: Add ooblayout for the Qi Ben Nanonote
-Date: Mon,  4 Feb 2019 16:04:26 -0300
-Message-ID: <20190204190426.11618-9-paul@crapouillou.net>
-References: <20190204190426.11618-1-paul@crapouillou.net>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 0/8 v5] k3dma patches to add support for hi3660/HiKey960
+Date: Mon, 4 Feb 2019 11:15:15 -0800
+Message-ID: <CALAqxLVo8aukbc61YX0r3ABDWYJ_cisSb2NxN1qNyWJ_tfYCyw@mail.gmail.com>
+References: <1548361463-28372-1-git-send-email-john.stultz@linaro.org> <20190204090154.GM4296@vkoul-mobl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204190426.11618-1-paul@crapouillou.net>
+In-Reply-To: <20190204090154.GM4296@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
-Cc: Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Dan Williams <dan.j.williams@intel.com>, Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ryan Grachek <ryan@edited.us>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Ben Nanonote from Qi Hardware expects a specific OOB layout on its
-NAND.
+On Mon, Feb 4, 2019 at 1:03 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 24-01-19, 12:24, John Stultz wrote:
+> > This patch series is based on recent work by Tanglei Han, and
+> > adds support for hi3660 SoCs as found on the HiKey960 board,
+> > along with a few patches I've been carrying.
+>
+> Applied and fixed the minor style issues in patch 5, and retagged 3 thru
+> 5 to dmaengine: xxx, thanks
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+My apologies for the style mistake. Your help is very much appreciated
+here! Thanks so much again!
 
-Changes:
+Just to clarify, are you planning on taking the reviewed binding
+documents (patches 1&2) via your tree?
 
-v2: New patch
-
-v3: Use the qi,lb60 layout unconditionally if we detect that we're
-    running on that board.
-
- drivers/mtd/nand/raw/ingenic/ingenic_nand.c | 41 ++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-index 0e6d79993ff3..fc6309895162 100644
---- a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-+++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-@@ -72,6 +72,41 @@ static inline struct ingenic_nfc *to_ingenic_nfc(struct nand_controller *ctrl)
- 	return container_of(ctrl, struct ingenic_nfc, controller);
- }
- 
-+static int qi_lb60_ooblayout_ecc(struct mtd_info *mtd, int section,
-+				 struct mtd_oob_region *oobregion)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct nand_ecc_ctrl *ecc = &chip->ecc;
-+
-+	if (section || !ecc->total)
-+		return -ERANGE;
-+
-+	oobregion->length = ecc->total;
-+	oobregion->offset = 12;
-+
-+	return 0;
-+}
-+
-+static int qi_lb60_ooblayout_free(struct mtd_info *mtd, int section,
-+				  struct mtd_oob_region *oobregion)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+	struct nand_ecc_ctrl *ecc = &chip->ecc;
-+
-+	if (section)
-+		return -ERANGE;
-+
-+	oobregion->length = mtd->oobsize - ecc->total - 12;
-+	oobregion->offset = 12 + ecc->total;
-+
-+	return 0;
-+}
-+
-+const struct mtd_ooblayout_ops qi_lb60_ooblayout_ops = {
-+	.ecc = qi_lb60_ooblayout_ecc,
-+	.free = qi_lb60_ooblayout_free,
-+};
-+
- static int jz4725b_ooblayout_ecc(struct mtd_info *mtd, int section,
- 				 struct mtd_oob_region *oobregion)
- {
-@@ -247,7 +282,11 @@ static int ingenic_nand_attach_chip(struct nand_chip *chip)
- 		return -EINVAL;
- 	}
- 
--	mtd_set_ooblayout(mtd, nfc->soc_info->oob_layout);
-+	/* For legacy reasons we use a different layout on the qi,lb60 board. */
-+	if (of_machine_is_compatible("qi,lb60"))
-+		mtd_set_ooblayout(mtd, &qi_lb60_ooblayout_ops);
-+	else
-+		mtd_set_ooblayout(mtd, nfc->soc_info->oob_layout);
- 
- 	return 0;
- }
--- 
-2.11.0
+thanks
+-john
