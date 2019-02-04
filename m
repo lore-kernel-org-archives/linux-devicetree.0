@@ -1,122 +1,39 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv3 00/27] PCI: refactor Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Date: Mon, 4 Feb 2019 16:13:03 +0000
-Message-ID: <20190204161303.GA18220@red-moon>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
- <20190129113910.GA7467@e107981-ln.cambridge.arm.com>
- <CAFZiPx002HED+YH2GysS7a7uoEDQuHGjxa_CQtwb9nSDH-XNuA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: [PATCH v1 0/6] drm/msm: Improved a6xx GMU reset
+Date: Mon,  4 Feb 2019 09:15:38 -0700
+Message-ID: <1549296944-17285-1-git-send-email-jcrouse@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFZiPx002HED+YH2GysS7a7uoEDQuHGjxa_CQtwb9nSDH-XNuA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: freedreno@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Thomas Zimmermann <tzimmermann@suse.de>, Sharat Masetty <smasetty@codeaurora.org>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Douglas Anderson <dianders@chromium.org>, Rob Clark <robdclark@gmail.com>, Colin Ian King <colin.king@canonical.com>, devicetree@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, Andy Gross <andy.gross@linaro.org>, Daniel Mack <daniel@zonque.org>, linux-kernel@vger.kernel.org, Mamta Shukla <mamtashukla555@gmail.com>, Jonathan Marek <jonathan@marek.ca>, Mark Rutland <mark.rutland@arm.com>, Sean Paul <seanpaul@chromium.org>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2019 at 07:44:25PM +0530, Subrahmanya Lingappa wrote:
->    Bjorn,
->    My apologies, I was away for a while from this work.
->    I am starting to review now.
+This is a stack of changes for 5.1 (if I'm not already too late). The bulk of
+the changes implement a better GMU reset sequence using the new gpucc power
+domain added in 5.0. If a GMU fault occurs during runtime we try to do a
+standard GPU recovery and if the fault happens during GMU start then try to
+fail somewhat gracefully than BUG_ON.
 
-Hi,
+There will be a DT change to go along with this, but we can send that along
+after the core code is merged. The downside for not having the domain
+properly listed is that the runtime reset sequence probably won't work which
+is no worse than it is today.
 
-I am not Bjorn and as I told you before you should not reply
-with html context (ie use plain text, the public lists will
-reject your emails otherwise) and top-post.
+Jordan Crouse (6):
+  drm/msm/a6xx: Remove unwanted regulator code
+  dt-bindings: drm/msm/a6xx: Add GX power-domain for GMU bindings
+  drm/msm/gpu: Attach to the GPU GX power domain
+  drm/msm/a6xx: Make GMU reset useful
+  msm/drm/a6xx: Turn off the GMU if resume fails
+  drm/msm/a6xx: Remove an unused struct member
 
-You are supposed to maintain this code, if you can't it is fine but I
-should know because there are developers who are waiting for your
-review, please understand.
+ .../devicetree/bindings/display/msm/gmu.txt        |  10 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 200 +++++++++++++--------
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h              |   9 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c              |  20 +--
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h              |   3 +-
+ drivers/gpu/drm/msm/adreno/adreno_device.c         |   1 +
+ 6 files changed, 144 insertions(+), 99 deletions(-)
 
-Thanks,
-Lorenzo
-
->    Thanks,
->    ~subbu
->    On Tue, Jan 29, 2019 at 5:09 PM Lorenzo Pieralisi
->    <lorenzo.pieralisi@arm.com> wrote:
-> 
->      On Tue, Jan 29, 2019 at 08:08:28AM +0000, Z.q. Hou wrote:
->      > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->      >
->      > This patch set is aim to refactor the Mobiveil driver and add
->      > PCIe support for NXP Layerscape series SoCs integrated Mobiveil's
->      > PCIe Gen4 controller.
->      >
->      > Hou Zhiqiang (27):
->      >   PCI: mobiveil: uniform the register accessors
->      >   PCI: mobiveil: format the code without function change
->      >   PCI: mobiveil: correct the returned error number
->      >   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
->      >   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
->      >   PCI: mobiveil: replace the resource list iteration function
->      >   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
->      >   PCI: mobiveil: use the 1st inbound window for MEM inbound
->      transactions
->      >   PCI: mobiveil: correct inbound/outbound window setup routines
->      >   PCI: mobiveil: fix the INTx process error
->      >   PCI: mobiveil: only fix up the Class Code field
->      >   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
->      >   PCI: mobiveil: move irq chained handler setup out of DT parse
->      >   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
->      >   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to
->      optional
->      >   PCI: mobiveil: refactor Mobiveil PCIe Host Bridge IP driver
->      >   PCI: mobiveil: fix the checking of valid device
->      >   PCI: mobiveil: continue to initialize the host upon no PCIe link
->      >   PCI: mobiveil: disabled IB and OB windows set by bootloader
->      >   PCI: mobiveil: add Byte and Half-Word width register accessors
->      >   PCI: mobiveil: make mobiveil_host_init can be used to re-init host
->      >   dt-bindings: pci: Add NXP Layerscape SoCs PCIe Gen4 controller
->      >   PCI: mobiveil: add PCIe Gen4 RC driver for NXP Layerscape SoCs
->      >   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
->      >   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
->      >   arm64: dts: freescale: lx2160a: add pcie DT nodes
->      >   arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
-> 
->      Subrahmanya,
-> 
->      Either you review this series or I will have to drop you from
->      the MAINTAINERS list for this driver, I am sorry but I asked you
->      before to no avail.
-> 
->      Thanks,
->      Lorenzo
-> 
->      >  .../bindings/pci/layerscape-pci-gen4.txt      |  52 ++
->      >  .../devicetree/bindings/pci/mobiveil-pcie.txt |   2 +
->      >  MAINTAINERS                                   |  10 +-
->      >  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++
->      >  arch/arm64/configs/defconfig                  |   1 +
->      >  drivers/pci/controller/Kconfig                |  11 +-
->      >  drivers/pci/controller/Makefile               |   2 +-
->      >  drivers/pci/controller/mobiveil/Kconfig       |  34 +
->      >  drivers/pci/controller/mobiveil/Makefile      |   5 +
->      >  .../controller/mobiveil/pci-layerscape-gen4.c | 306 +++++++
->      >  .../controller/mobiveil/pcie-mobiveil-host.c  | 640 +++++++++++++
->      >  .../controller/mobiveil/pcie-mobiveil-plat.c  |  54 ++
->      >  .../pci/controller/mobiveil/pcie-mobiveil.c   | 246 +++++
->      >  .../pci/controller/mobiveil/pcie-mobiveil.h   | 229 +++++
->      >  drivers/pci/controller/pcie-mobiveil.c        | 861
->      ------------------
->      >  15 files changed, 1743 insertions(+), 873 deletions(-)
->      >  create mode 100644
->      Documentation/devicetree/bindings/pci/layerscape-pci-gen4.txt
->      >  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
->      >  create mode 100644 drivers/pci/controller/mobiveil/Makefile
->      >  create mode 100644
->      drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
->      >  create mode 100644
->      drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
->      >  create mode 100644
->      drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
->      >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
->      >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
->      >  delete mode 100644 drivers/pci/controller/pcie-mobiveil.c
->      >
->      > --
->      > 2.17.1
->      >
+-- 
+2.7.4
