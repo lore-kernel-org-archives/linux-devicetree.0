@@ -1,64 +1,65 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v3 2/2] arm: dts: gta04: add gps support
-Date: Mon, 4 Feb 2019 09:30:32 +0100
-Message-ID: <20190204083032.GB4686@localhost>
-References: <20190131180640.14480-1-andreas@kemnade.info>
- <20190131180640.14480-3-andreas@kemnade.info>
- <20190201100416.GD3691@localhost>
- <20190201200630.2efc9eef@kemnade.info>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] sh: fix build error for empty CONFIG_BUILTIN_DTB_SOURCE again
+Date: Mon,  4 Feb 2019 17:55:26 +0900
+Message-ID: <1549270526-17230-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190201200630.2efc9eef@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Johan Hovold <johan@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, tony@atomide.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+To: linux-kbuild@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-kernel@vger.kernel.org, Rich Felker <dalias@libc.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 01, 2019 at 08:06:30PM +0100, Andreas Kemnade wrote:
-> On Fri, 1 Feb 2019 11:04:16 +0100
-> Johan Hovold <johan@kernel.org> wrote:
-> 
-> > On Thu, Jan 31, 2019 at 07:06:40PM +0100, Andreas Kemnade wrote:
-> > > The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
-> > > which one is mounted so use the compatibility entry for w2sg0004
-> > > for all which will work for both.
-> > > 
-> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > ---
-> > > Changes in v3:
-> > > - converted to a patchset
-> > > - added vcc-supply
-> > > 
-> > > Changes in v2:
-> > > - some s/gps/gnss/
-> > > - not added vcc-supply because the regulator is not modelled
-> > >   in dts at all
-> > > 
-> > > w2sg0004 bindings are in next-20190129
-> > > 
-> > >  arch/arm/boot/dts/omap3-gta04.dtsi | 14 ++++++++++++++
-> > >  1 file changed, 14 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-> > > index 02d8274a2f47..4ea0f7dc37c6 100644
-> > > --- a/arch/arm/boot/dts/omap3-gta04.dtsi
-> > > +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-> > > @@ -320,6 +320,12 @@  
-> > >  		>;  
-> > >         };
-> > >  
-> > > +	gps_pins: pinmux_gps_pins {  
-> > 
-> > s/gps/gnss/ would be more consistent, but whatever.
-> > 
-> well, gps is already in the file at another place. So it is a bit
-> inconsistent in any case, without further cleanup. If someone comes
-> up with a strong opinion here I would of course change it.
+I fixed this build error in commit 1b1e4ee86e00 ("sh: fix build error
+for empty CONFIG_BUILTIN_DTB_SOURCE"), but it came back again.
 
-Up to you. As long as the gnss node is named "gnss" I don't have a
-strong opinion on the other names (as long as they follow the spec of
-course).
+Since commit 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb
+build rules"), the combination of CONFIG_OF_EARLY_FLATTREE=y and
+CONFIG_USE_BUILTIN_DTB=n results in the following build error:
 
-Johan
+make[1]: *** No rule to make target 'arch/sh/boot/dts/.dtb.o', needed by 'arch/sh/boot/dts/built-in.a'.  Stop.
+make: *** [Makefile;1727: arch/sh/boot/dts/] Error 2
+
+Prior to that commit, there was only one path to descend into
+arch/sh/boot/dts/, and arch/sh/Makefile correctly guards it with
+CONFIG_USE_BUILTIN_DTB:
+
+  core-$(CONFIG_USE_BUILTIN_DTB)  += arch/sh/boot/dts/
+
+Now, there is another path to descend there from the top Makefile
+when CONFIG_OF_EARLY_FLATTREE=y. Add obj-$(CONFIG_USE_BUILTIN_DTB)
+guard in case CONFIG_BUILTIN_DTB_SOURCE is hidden due to the unmet
+'depends on'.
+
+Fixes: 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Observant reviewers may point out another problem.
+There is a race condition when CONFIG_OF_EARLY_FLATTREE=y.
+
+Some architectures (sh, xtensa, etc.) embed a DTB in vmlinux,
+so there are two paths to descend into arch/*/boot/dts/.
+For parallel build with -j<N> option, two threads may build
+under arch/*/boot/dts/ simultaneously.
+
+Yes, this is a problem, and it is in my TODO list.
+For some reasons, I will postpone it by the next development cycle.
+
+For now, I want to fix this sh build error first because kbuild test
+robot is still complaining about it.
+
+
+ arch/sh/boot/dts/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
+index 01d0f7f..2563d1e 100644
+--- a/arch/sh/boot/dts/Makefile
++++ b/arch/sh/boot/dts/Makefile
+@@ -1,3 +1,3 @@
+ ifneq ($(CONFIG_BUILTIN_DTB_SOURCE),"")
+-obj-y += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
++obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
+ endif
+-- 
+2.7.4
