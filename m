@@ -1,49 +1,38 @@
-Return-Path: <SRS0=bjk3=QP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr50070.outbound.protection.outlook.com ([40.107.5.70]:14256
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727393AbfBHScv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Feb 2019 13:32:51 -0500
-From: Frank Li <frank.li@nxp.com>
-Subject: [PATCH 2/4] arm64: dts: imx8qxp: added ddr performance monitor nodes
-Date: Fri, 8 Feb 2019 18:32:42 +0000
-Message-ID: <1549650743-27581-2-git-send-email-Frank.Li@nxp.com>
-References: <1549650743-27581-1-git-send-email-Frank.Li@nxp.com>
-In-Reply-To: <1549650743-27581-1-git-send-email-Frank.Li@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=1fni=QL=linaro.org=rui.silva@kernel.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH 5/5] ARM: dts: imx7s-warp: add fxas2100x gyroscope
+Date: Mon,  4 Feb 2019 17:00:12 +0000
+Message-Id: <20190204170012.13617-6-rui.silva@linaro.org>
+In-Reply-To: <20190204170012.13617-1-rui.silva@linaro.org>
+References: <20190204170012.13617-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>
-Cc: Frank Li <frank.li@nxp.com>
+Content-Transfer-Encoding: 8bit
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add ddr performance monitor
+Add entry to enable the fxas2100x in the warp7 board
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/imx7s-warp.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 4c3dd95..243d7b3 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -79,6 +79,13 @@
- 		interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index 58d1a89ee3e3..47ff43cd229e 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -238,6 +238,11 @@
+ 		compatible = "fsl,mpl3115";
+ 		reg = <0x60>;
  	};
-=20
-+	ddr_pmu0: ddr_pmu@5c020000 {
-+		compatible =3D "fsl,imx8-ddr-pmu";
-+		reg =3D <0x0 0x5c020000 0x0 0x10000>;
-+		interrupt-parent =3D <&gic>;
-+		interrupts =3D <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-+	};
 +
- 	psci {
- 		compatible =3D "arm,psci-1.0";
- 		method =3D "smc";
---=20
-2.5.2
++	fxas2100x@20 {
++		compatible = "nxp,fxas2100x";
++		reg = <0x20>;
++	};
+ };
+ 
+ &sai1 {
+-- 
+2.20.1
