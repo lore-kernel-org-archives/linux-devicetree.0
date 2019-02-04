@@ -1,129 +1,81 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv3 2/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy
- regulator power failed warning
-Date: Tue, 5 Feb 2019 01:35:45 +0530
-Message-ID: <CANAwSgRUqXiDLMxQ4bTE0M8-UT_1=S5Om5PCR2S94iZsRuS0Zw@mail.gmail.com>
-References: <20190129102521.4141-1-linux.amoon@gmail.com> <20190129102521.4141-3-linux.amoon@gmail.com>
- <CAFBinCDRTeO9FWoJ-=BUc8uizN5_mhJE9EBYv0X6pse7Rxsxew@mail.gmail.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: soc: fsl: Document Qixis FPGA usage
+Date: Mon, 4 Feb 2019 14:12:06 -0600
+Message-ID: <CADRPPNTjD1nN2eoyV6NucFYjH4vG8TaCG0u3YgEJd1699d07bQ@mail.gmail.com>
+References: <20190204143449.25040-1-pankaj.bansal@nxp.com>
+ <20190204143449.25040-2-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDRTeO9FWoJ-=BUc8uizN5_mhJE9EBYv0X6pse7Rxsxew@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190204143449.25040-2-pankaj.bansal@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pankaj Bansal <pankaj.bansal@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
-
-On Mon, 4 Feb 2019 at 19:36, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Anand,
->
-> On Tue, Jan 29, 2019 at 11:25 AM Anand Moon <linux.amoon@gmail.com> wrote:
-> >
-> > Override the dr_mode from "host" to "otg" for USB_HOST controller (usb0)
-> > changes help usb_phy0->usb0 initialization of OTG bus port.
-> >
-> > Changes fix the below warning.
-> >
-> > [    1.183681] dwc2 c9000000.usb: c9000000.usb supply vusb_d not found, using dummy regulator
-> > [    1.190627] dwc2 c9000000.usb: Linked as a consumer to regulator.0
-> > [    1.196696] dwc2 c9000000.usb: c9000000.usb supply vusb_a not found, using dummy regulator
-> > [    1.206094] phy phy-c0000000.phy.0: USB ID detect failed!
-> > [    1.210243] phy phy-c0000000.phy.0: phy poweron failed --> -22
-> I wonder if the warning below are a side-effect of "phy poweron failed"...
-
-As pointed by you we need the fix this issue earlier email.
-unless we enable the phy and set the correct dr_mode to tune the phy
-we cannot the tune and power on phy bus properly.
-
-After this patch we get phy and power correctly registered.
-
-# cat /sys/kernel/debug/regulator/regulator_summary
- regulator                      use open bypass  opmode voltage
-current     min     max
----------------------------------------------------------------------------------------
- regulator-dummy                  5    4      0 unknown     0mV
-0mA     0mV     0mV
-    c9100000.usb                  1
-0mA     0mV     0mV
-    c9100000.usb                  1
-0mA     0mV     0mV
-    c9000000.usb                  1
-0mA     0mV     0mV
-    c9000000.usb                  1
-0mA     0mV     0mV
- P5V0                             1    1      0 unknown  5000mV
-0mA  5000mV  5000mV
-    USB_OTG_PWR                   4    2      0 unknown  5000mV
-0mA  5000mV  5000mV
-       phy-c0000020.phy.1         2
-0mA     0mV     0mV
-       phy-c0000000.phy.0         2
-0mA     0mV     0mV
-
->
-> > [    1.216072] WARNING: CPU: 0 PID: 78 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
-> > [    1.225147] Modules linked in:
-> > [    1.228169] CPU: 0 PID: 78 Comm: kworker/0:1 Not tainted 5.0.0-rc4-xc2ml #1
-> > [    1.235066] Hardware name: Hardkernel ODROID-C2 (DT)
-> > [    1.239987] Workqueue: events deferred_probe_work_func
-> > [    1.245072] pstate: 80000005 (Nzcv daif -PAN -UAO)
-> > [    1.249816] pc : _regulator_put.part.11+0xf0/0xf8
-> > [    1.254473] lr : regulator_put+0x34/0x48
-> > [    1.258353] sp : ffff0000117b3b00
-> > [    1.261630] x29: ffff0000117b3b00 x28: 0000000000000000
-> > [    1.266891] x27: ffff80007ec1a7b8 x26: ffff000010eec280
-> > [    1.272153] x25: 0000000000000000 x24: 0000000000000009
-> > [    1.277414] x23: ffff0000117b3bc8 x22: ffff80007ecd3c00
-> > [    1.282675] x21: ffff0000111ad6c8 x20: ffff80007ecd3e00
-> > [    1.287936] x19: ffff80007ecd3e00 x18: 0000000000000124
-> > [    1.293198] x17: 0000000000000000 x16: 0000000000000000
-> > [    1.298459] x15: 0000000000000400 x14: 0000000000000400
-> > [    1.303720] x13: ff00000000000000 x12: ffffffffffffffff
-> > [    1.308981] x11: 0000000000000038 x10: 0000000000000040
-> > [    1.314243] x9 : ffff0000111c58b0 x8 : ffff0000111c58a8
-> > [    1.319504] x7 : ffff80006b055200 x6 : ffff80007edd2880
-> > [    1.324765] x5 : ffff80007f400248 x4 : ffff80007fb92b00
-> > [    1.330026] x3 : ffff0000112c9d58 x2 : ffff80007edd2880
-> > [    1.335288] x1 : 0000000000000000 x0 : 0000000000000001
-> > [    1.340549] Call trace:
-> > [    1.342966]  _regulator_put.part.11+0xf0/0xf8
-> > [    1.347278]  regulator_put+0x34/0x48
-> > [    1.350814]  regulator_bulk_free+0x30/0x50
-> > [    1.354868]  devm_regulator_bulk_release+0x18/0x20
-> > [    1.359612]  release_nodes+0x1b0/0x220
-> > [    1.363320]  devres_release_all+0x34/0x50
-> > [    1.367288]  really_probe+0xec/0x290
-> > [    1.370824]  driver_probe_device+0x54/0xe8
-> > [    1.374878]  __device_attach_driver+0xb8/0xe8
-> > [    1.379190]  bus_for_each_drv+0x78/0xc8
-> > [    1.382985]  __device_attach+0xd4/0x130
-> > [    1.386780]  device_initial_probe+0x10/0x18
-> > [    1.390920]  bus_probe_device+0x90/0x98
-> > [    1.394715]  deferred_probe_work_func+0x6c/0xa0
-> > [    1.399203]  process_one_work+0x1e0/0x318
-> > [    1.403168]  worker_thread+0x228/0x428
-> > [    1.406877]  kthread+0x124/0x128
-> > [    1.410070]  ret_from_fork+0x10/0x18
-> > [    1.413603] ---[ end trace 498aca4cb07e5377 ]---
-> phy_power_on fails above with -EINVAL and then something else breaks
-> (it seems like you're hitting the WARN_ON in drivers/regulator/core.c
-> below the comment which states: "Docs say you must disable before
-> calling regulator_put()")
-
-Ok will look into this later.
-
-> so this looks like a bug in either the dwc2 driver or the PHY
-> framework. can you please report that to the dwc2 and PHY maintainers
-> so it can be fixed independently?
->
->
-> Regards
-> Martin
-
-Best Regards
-
--Anand
+UGxlYXNlIGluY2x1ZGUgZGV2aWNlIHRyZWUgYmluZGluZyBtYWlsaW5nIGxpc3QgYW5kIG1haW50
+YWluZXJzIGZvcgpiaW5kaW5nIHBhdGNoZXMoY2MnZWQgbm93KS4KCk9uIE1vbiwgRmViIDQsIDIw
+MTkgYXQgMzoxNSBBTSBQYW5rYWogQmFuc2FsIDxwYW5rYWouYmFuc2FsQG54cC5jb20+IHdyb3Rl
+Ogo+Cj4gYW4gRlBHQS1iYXNlZCBzeXN0ZW0gY29udHJvbGxlciwgY2FsbGVkIOKAnFFpeGlz4oCd
+LCB3aGljaAo+IG1hbmFnZXMgc2V2ZXJhbCBjcml0aWNhbCBzeXN0ZW0gZmVhdHVyZXMsIGluY2x1
+ZGluZzoKPiDigKIgUmVzZXQgc2VxdWVuY2luZwo+IOKAoiBQb3dlciBzdXBwbHkgY29uZmlndXJh
+dGlvbgo+IOKAoiBCb2FyZCBjb25maWd1cmF0aW9uCj4g4oCiIGhhcmR3YXJlIGNvbmZpZ3VyYXRp
+b24KPgo+IFRoZSBxaXhpcyByZWdpc3RlcnMgYXJlIGFjY2Vzc2libGUgb3ZlciBvbmUgb3IgbW9y
+ZSBzeXN0ZW0tc3BlY2lmaWMKPiBpbnRlcmZhY2VzLCB0eXBpY2FsbHkgSTJDLCBKVEFHIG9yIGFu
+IGVtYmVkZGVkIHByb2Nlc3Nvci4KPgo+IFNpZ25lZC1vZmYtYnk6IFBhbmthaiBCYW5zYWwgPHBh
+bmthai5iYW5zYWxAbnhwLmNvbT4KPiAtLS0KPgo+IE5vdGVzOgo+ICAgICBWMzoKPiAgICAgLSBB
+ZGRlZCBib2FyZG5hbWUgYmFzZWQgY29tcGF0aWJsZSBmaWVsZCBpbiBiaW5kaW5ncwo+ICAgICAt
+IEFkZGVkIGJpbmRpbmdzIGZvciBNTUlPIGJhc2VkIEZQR0EKPiAgICAgVjI6Cj4gICAgIC0gTm8g
+Y2hhbmdlCj4KPiAgLi4uL2JpbmRpbmdzL3NvYy9mc2wvcWl4aXNfY3RybC50eHQgICAgICAgICAg
+fCA1MyArKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDUzIGluc2VydGlvbnMo
+KykKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29j
+L2ZzbC9xaXhpc19jdHJsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b2MvZnNsL3FpeGlzX2N0cmwudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAw
+MDAwMDAwMDAuLjVkNTEwZGYxNGJlOAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9xaXhpc19jdHJsLnR4dAo+IEBAIC0wLDAg
+KzEsNTMgQEAKPiArKiBRSVhJUyBGUEdBIGJsb2NrCj4gKwo+ICthbiBGUEdBLWJhc2VkIHN5c3Rl
+bSBjb250cm9sbGVyLCBjYWxsZWQg4oCcUWl4aXPigJ0sIHdoaWNoCj4gK21hbmFnZXMgc2V2ZXJh
+bCBjcml0aWNhbCBzeXN0ZW0gZmVhdHVyZXMsIGluY2x1ZGluZzoKPiAr4oCiIENvbmZpZ3VyYXRp
+b24gc3dpdGNoIG1vbml0b3JpbmcKPiAr4oCiIFBvd2VyIG9uL29mZiBzZXF1ZW5jaW5nCj4gK+KA
+oiBSZXNldCBzZXF1ZW5jaW5nCj4gK+KAoiBQb3dlciBzdXBwbHkgY29uZmlndXJhdGlvbgo+ICvi
+gKIgQm9hcmQgY29uZmlndXJhdGlvbgo+ICvigKIgaGFyZHdhcmUgY29uZmlndXJhdGlvbgo+ICvi
+gKIgQmFja2dyb3VuZCBwb3dlciBkYXRhIGNvbGxlY3Rpb24gKERDTSkKPiAr4oCiIEZhdWx0IG1v
+bml0b3JpbmcKPiAr4oCiIFJDVyBieXBhc3MgU1JBTSAocmVwbGFjZSBmbGFzaCBSQ1cgd2l0aCBp
+bnRlcm5hbCBSQ1cpIChOT1Igb25seSkKPiAr4oCiIERlZGljYXRlZCBmdW5jdGlvbmFsIHZhbGlk
+YXRpb24gYmxvY2tzIChQT1N0L0lSUywgdHJpZ2dlcmVkIGV2ZW50LCBhbmQgc28gb24pCj4gK+KA
+oiBJMkMgbWFzdGVyIGZvciByZW1vdGUgYm9hcmQgY29udHJvbCBldmVuIHdpdGggbm8gRFVUIGF2
+YWlsYWJsZQo+ICsKPiArVGhlIHFpeGlzIHJlZ2lzdGVycyBhcmUgYWNjZXNzaWJsZSBvdmVyIG9u
+ZSBvciBtb3JlIHN5c3RlbS1zcGVjaWZpYyBpbnRlcmZhY2VzLAo+ICt0eXBpY2FsbHkgSTJDLCBK
+VEFHIG9yIGFuIGVtYmVkZGVkIHByb2Nlc3Nvci4KPiArCj4gK0ZQR0EgY29ubmVjdGVkIHRvIEky
+QzoKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArCj4gKyAtIGNvbXBhdGlibGU6IHNob3VsZCBi
+ZSBhIGJvYXJkLXNwZWNpZmljIHN0cmluZyBmb2xsb3dlZCBieSBhIHN0cmluZwo+ICsgICBpbmRp
+Y2F0aW5nIHRoZSB0eXBlIG9mIEZQR0EuICBFeGFtcGxlOgo+ICsgICAgICAgImZzbCw8Ym9hcmQ+
+LWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMtaTJjIgo+ICsgLSByZWcgOiBpMmMgYWRkcmVzcyBvZiB0
+aGUgcWl4aXMgZGV2aWNlLgo+ICsKPiArRXhhbXBsZSAoTFgyMTYwQS1RRFMpOgo+ICsgICAgICAg
+LyogVGhlIEZQR0Egbm9kZSAqLwo+ICsgICAgICAgIGZwZ2FANjYgewo+ICsgICAgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gImZzbCxseDIxNjBhcWRzLWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMtaTJj
+IjsKPiArICAgICAgICAgICAgICAgcmVnID0gPDB4NjY+Owo+ICsgICAgICAgICAgICAgICAjYWRk
+cmVzcy1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4g
+KyAgICAgICB9Cj4gKwo+ICsqIEZyZWVzY2FsZSBvbi1ib2FyZCBGUEdBCj4gKwo+ICtUaGlzIGlz
+IHRoZSBtZW1vcnktbWFwcGVkIHJlZ2lzdGVycyBmb3Igb24gYm9hcmQgRlBHQS4KPiArCj4gK1Jl
+cXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlIGEgYm9hcmQtc3Bl
+Y2lmaWMgc3RyaW5nIGZvbGxvd2VkIGJ5IGEgc3RyaW5nCj4gKyAgaW5kaWNhdGluZyB0aGUgdHlw
+ZSBvZiBGUEdBLiAgRXhhbXBsZToKPiArICAgICAgICJmc2wsPGJvYXJkPi1mcGdhIiwgImZzbCxm
+cGdhLXFpeGlzIgo+ICstIHJlZzogc2hvdWxkIGNvbnRhaW4gdGhlIGFkZHJlc3MgYW5kIHRoZSBs
+ZW5ndGggb2YgdGhlIEZQR0EgcmVnaXN0ZXIgc2V0Lgo+ICsKPiArRXhhbXBsZSAoTFMyMDgwQS1S
+REIpOgo+ICsKPiArICAgICAgICBjcGxkQDMsMCB7Cj4gKyAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gImZzbCxsczIwODBhcmRiLWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMiOwo+ICsgICAgICAg
+ICAgICAgICAgcmVnID0gPDB4MyAwIDB4MTAwMDA+Owo+ICsgICAgICAgIH07Cj4gKwo+IC0tCj4g
+Mi4xNy4xCj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
