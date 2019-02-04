@@ -1,51 +1,80 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH v4 07/10] gpio: Initial support for ROHM bd70528 GPIO block
-Date: Mon, 4 Feb 2019 12:29:53 +0100
-Message-ID: <CACRpkdauoQ=qcFUi7wTUKu22ZHeq=g0grWqvZz1gfOt0=dXrbw@mail.gmail.com>
-References: <cover.1548935790.git.matti.vaittinen@fi.rohmeurope.com> <5f63684b62c7a320c514088bcf9091ed7efbd2cc.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 2/6] usb:common Separated decoding functions from dwc3
+ driver.
+Date: Mon, 4 Feb 2019 12:45:02 +0100
+Message-ID: <20190204114502.GA28608@kroah.com>
+References: <1548935553-452-1-git-send-email-pawell@cadence.com>
+ <1548935553-452-3-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5f63684b62c7a320c514088bcf9091ed7efbd2cc.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Disposition: inline
+In-Reply-To: <1548935553-452-3-git-send-email-pawell@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+To: Pawel Laszczak <pawell@cadence.com>
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2019 at 1:08 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+On Thu, Jan 31, 2019 at 11:52:29AM +0000, Pawel Laszczak wrote:
+> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
+> to driver/usb/common/debug.c file. These moved functions include:
+>     dwc3_decode_get_status
+>     dwc3_decode_set_clear_feature
+>     dwc3_decode_set_address
+>     dwc3_decode_get_set_descriptor
+>     dwc3_decode_get_configuration
+>     dwc3_decode_set_configuration
+>     dwc3_decode_get_intf
+>     dwc3_decode_set_intf
+>     dwc3_decode_synch_frame
+>     dwc3_decode_set_sel
+>     dwc3_decode_set_isoch_delay
+>     dwc3_decode_ctrl
+> 
+> These functions are used also in inroduced cdns3 driver.
+> 
+> All functions prefixes were changed from dwc3 to usb.
 
-> ROHM BD70528 PMIC has 4 GPIO pins. Allow them to be
-> controlled by GPIO framework.
->
-> IRQs are handled by regmap-irq and GPIO driver is not
-> aware of the irq usage.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-(...)
-> I dropped the review-by from Linus Walleij because I would like to
-> get a comment on if locking is required when we check the direction
-> in order to detect the correct register for getting the pin state.
+Ick, why?
 
-I don't know that. You isn't regmap locking inherently?
+> Also, function's parameters has been extended according to the name
+> of fields in standard SETUP packet.
+> Additionally, patch adds usb_decode_ctrl function to
+> include/linux/usb/ch9.h file.
 
-> My initial feeling is that locking makes no sense.
+Why ch9.h?  It's not something that is specified in the spec, it's a
+usb-specific thing :)
 
-Mine too.
+Also, the api for that function is not ok.  If you are going to make
+this something that the whole kernel can call, you have to fix it up:
 
-> +       bdgpio->gpio.get_direction = &bd70528_get_direction;
-> +       bdgpio->gpio.direction_input = &bd70528_direction_input;
-> +       bdgpio->gpio.direction_output = &bd70528_direction_output;
-> +       bdgpio->gpio.set_config = &bd70528_gpio_set_config;
-> +       bdgpio->gpio.can_sleep = true;
-> +       bdgpio->gpio.get = &bd70528_gpio_get;
-> +       bdgpio->gpio.set = &bd70528_gpio_set;
+> +/**
+> + * usb_decode_ctrl - Returns human readable representation of control request.
+> + * @str: buffer to return a human-readable representation of control request.
+> + *       This buffer should have about 200 bytes.
 
-Drop the &ampersand in from of the functions. All functions
-are pointers.
+"about 200 bytes" is not very specific.
 
-With that:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Pass in the length so we know we don't overflow it.
 
-Yours,
-Linus Walleij
+> + * @bRequestType: matches the USB bmRequestType field
+> + * @bRequest: matches the USB bRequest field
+> + * @wValue: matches the USB wValue field (CPU byte order)
+> + * @wIndex: matches the USB wIndex field (CPU byte order)
+> + * @wLength: matches the USB wLength field (CPU byte order)
+> + *
+> + * Function returns decoded, formatted and human-readable description of
+> + * control request packet.
+> + *
+> + * Important: wValue, wIndex, wLength parameters before invoking this function
+> + * should be processed by le16_to_cpu macro.
+> + */
+> +const char *usb_decode_ctrl(char *str, __u8 bRequestType, __u8 bRequest,
+> +			    __u16 wValue,  __u16 wIndex, __u16 wLength);
+
+Why are you returning a value, isn't the data stored in str?  Why not
+just return an int saying if the call succeeded or not?
+
+thanks,
+
+greg k-h
