@@ -1,94 +1,133 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 1/2] r8169: Load MAC address from device tree if present
-Date: Mon,  4 Feb 2019 17:42:12 +0100
-Message-ID: <20190204164213.30727-1-thierry.reding@gmail.com>
+From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Subject: Re: [PATCHv3 00/27] PCI: refactor Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Date: Mon, 4 Feb 2019 22:21:04 +0530
+Message-ID: <CAFZiPx3DTCgRtSehsQKOAfZoSpBgyU-JZXwVhmDvWesefW-32w@mail.gmail.com>
+References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com> <20190129113910.GA7467@e107981-ln.cambridge.arm.com>
+ <CAFZiPx002HED+YH2GysS7a7uoEDQuHGjxa_CQtwb9nSDH-XNuA@mail.gmail.com> <20190204161303.GA18220@red-moon>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190204161303.GA18220@red-moon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Realtek linux nic maintainers <nic_swsd@realtek.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+Lorenzo,
+My apologies again,
 
-If the system was booted using a device tree and if the device tree
-contains a MAC address, use it instead of reading one from the EEPROM.
-This is useful in situations where the EEPROM isn't properly programmed
-or where the firmware wants to override the existing MAC address.
+I have started looking into these.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Applies to net-next.
+Thanks,
 
-Changes in v2:
-- rewrite error check for readability
-- initialize mac_addr array
 
- drivers/net/ethernet/realtek/r8169.c | 36 ++++++++++++++++++----------
- 1 file changed, 23 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
-index e8a112149a62..501891be7c56 100644
---- a/drivers/net/ethernet/realtek/r8169.c
-+++ b/drivers/net/ethernet/realtek/r8169.c
-@@ -7110,6 +7110,21 @@ static int rtl_alloc_irq(struct rtl8169_private *tp)
- 	return pci_alloc_irq_vectors(tp->pci_dev, 1, 1, flags);
- }
- 
-+static void rtl_read_mac_address(struct rtl8169_private *tp,
-+				 u8 mac_addr[ETH_ALEN])
-+{
-+	/* Get MAC address */
-+	switch (tp->mac_version) {
-+	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
-+	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
-+		*(u32 *)&mac_addr[0] = rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
-+		*(u16 *)&mac_addr[4] = rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
- DECLARE_RTL_COND(rtl_link_list_ready_cond)
- {
- 	return RTL_R8(tp, MCU) & LINK_LIST_RDY;
-@@ -7301,6 +7316,7 @@ static int rtl_get_ether_clk(struct rtl8169_private *tp)
- static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	const struct rtl_cfg_info *cfg = rtl_cfg_infos + ent->driver_data;
-+	u8 mac_addr[ETH_ALEN] __aligned(4) = {};
- 	struct rtl8169_private *tp;
- 	struct net_device *dev;
- 	int chipset, region, i;
-@@ -7403,20 +7419,14 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	u64_stats_init(&tp->rx_stats.syncp);
- 	u64_stats_init(&tp->tx_stats.syncp);
- 
--	/* Get MAC address */
--	switch (tp->mac_version) {
--		u8 mac_addr[ETH_ALEN] __aligned(4);
--	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
--	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
--		*(u32 *)&mac_addr[0] = rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
--		*(u16 *)&mac_addr[4] = rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
-+	/* get MAC address */
-+	rc = eth_platform_get_mac_address(&pdev->dev, mac_addr);
-+	if (rc)
-+		rtl_read_mac_address(tp, mac_addr);
-+
-+	if (is_valid_ether_addr(mac_addr))
-+		rtl_rar_set(tp, mac_addr);
- 
--		if (is_valid_ether_addr(mac_addr))
--			rtl_rar_set(tp, mac_addr);
--		break;
--	default:
--		break;
--	}
- 	for (i = 0; i < ETH_ALEN; i++)
- 		dev->dev_addr[i] = RTL_R8(tp, MAC0 + i);
- 
--- 
-2.19.1
+
+On Mon, Feb 4, 2019 at 9:43 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Mon, Feb 04, 2019 at 07:44:25PM +0530, Subrahmanya Lingappa wrote:
+> >    Bjorn,
+> >    My apologies, I was away for a while from this work.
+> >    I am starting to review now.
+>
+> Hi,
+>
+> I am not Bjorn and as I told you before you should not reply
+> with html context (ie use plain text, the public lists will
+> reject your emails otherwise) and top-post.
+>
+> You are supposed to maintain this code, if you can't it is fine but I
+> should know because there are developers who are waiting for your
+> review, please understand.
+>
+> Thanks,
+> Lorenzo
+>
+> >    Thanks,
+> >    ~subbu
+> >    On Tue, Jan 29, 2019 at 5:09 PM Lorenzo Pieralisi
+> >    <lorenzo.pieralisi@arm.com> wrote:
+> >
+> >      On Tue, Jan 29, 2019 at 08:08:28AM +0000, Z.q. Hou wrote:
+> >      > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> >      >
+> >      > This patch set is aim to refactor the Mobiveil driver and add
+> >      > PCIe support for NXP Layerscape series SoCs integrated Mobiveil's
+> >      > PCIe Gen4 controller.
+> >      >
+> >      > Hou Zhiqiang (27):
+> >      >   PCI: mobiveil: uniform the register accessors
+> >      >   PCI: mobiveil: format the code without function change
+> >      >   PCI: mobiveil: correct the returned error number
+> >      >   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
+> >      >   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
+> >      >   PCI: mobiveil: replace the resource list iteration function
+> >      >   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
+> >      >   PCI: mobiveil: use the 1st inbound window for MEM inbound
+> >      transactions
+> >      >   PCI: mobiveil: correct inbound/outbound window setup routines
+> >      >   PCI: mobiveil: fix the INTx process error
+> >      >   PCI: mobiveil: only fix up the Class Code field
+> >      >   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
+> >      >   PCI: mobiveil: move irq chained handler setup out of DT parse
+> >      >   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
+> >      >   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to
+> >      optional
+> >      >   PCI: mobiveil: refactor Mobiveil PCIe Host Bridge IP driver
+> >      >   PCI: mobiveil: fix the checking of valid device
+> >      >   PCI: mobiveil: continue to initialize the host upon no PCIe link
+> >      >   PCI: mobiveil: disabled IB and OB windows set by bootloader
+> >      >   PCI: mobiveil: add Byte and Half-Word width register accessors
+> >      >   PCI: mobiveil: make mobiveil_host_init can be used to re-init host
+> >      >   dt-bindings: pci: Add NXP Layerscape SoCs PCIe Gen4 controller
+> >      >   PCI: mobiveil: add PCIe Gen4 RC driver for NXP Layerscape SoCs
+> >      >   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
+> >      >   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
+> >      >   arm64: dts: freescale: lx2160a: add pcie DT nodes
+> >      >   arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
+> >
+> >      Subrahmanya,
+> >
+> >      Either you review this series or I will have to drop you from
+> >      the MAINTAINERS list for this driver, I am sorry but I asked you
+> >      before to no avail.
+> >
+> >      Thanks,
+> >      Lorenzo
+> >
+> >      >  .../bindings/pci/layerscape-pci-gen4.txt      |  52 ++
+> >      >  .../devicetree/bindings/pci/mobiveil-pcie.txt |   2 +
+> >      >  MAINTAINERS                                   |  10 +-
+> >      >  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++
+> >      >  arch/arm64/configs/defconfig                  |   1 +
+> >      >  drivers/pci/controller/Kconfig                |  11 +-
+> >      >  drivers/pci/controller/Makefile               |   2 +-
+> >      >  drivers/pci/controller/mobiveil/Kconfig       |  34 +
+> >      >  drivers/pci/controller/mobiveil/Makefile      |   5 +
+> >      >  .../controller/mobiveil/pci-layerscape-gen4.c | 306 +++++++
+> >      >  .../controller/mobiveil/pcie-mobiveil-host.c  | 640 +++++++++++++
+> >      >  .../controller/mobiveil/pcie-mobiveil-plat.c  |  54 ++
+> >      >  .../pci/controller/mobiveil/pcie-mobiveil.c   | 246 +++++
+> >      >  .../pci/controller/mobiveil/pcie-mobiveil.h   | 229 +++++
+> >      >  drivers/pci/controller/pcie-mobiveil.c        | 861
+> >      ------------------
+> >      >  15 files changed, 1743 insertions(+), 873 deletions(-)
+> >      >  create mode 100644
+> >      Documentation/devicetree/bindings/pci/layerscape-pci-gen4.txt
+> >      >  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
+> >      >  create mode 100644 drivers/pci/controller/mobiveil/Makefile
+> >      >  create mode 100644
+> >      drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+> >      >  create mode 100644
+> >      drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> >      >  create mode 100644
+> >      drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
+> >      >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
+> >      >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> >      >  delete mode 100644 drivers/pci/controller/pcie-mobiveil.c
+> >      >
+> >      > --
+> >      > 2.17.1
+> >      >
