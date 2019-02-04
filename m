@@ -1,191 +1,146 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 2/4] bus: ti-sysc: Add support for PRUSS SYSC type
-Date: Mon, 4 Feb 2019 17:53:55 +0200
-Message-ID: <1549295637-24890-3-git-send-email-rogerq@ti.com>
-References: <1549295637-24890-1-git-send-email-rogerq@ti.com>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding
+ for generic eDP panel
+Date: Mon, 4 Feb 2019 16:59:09 +0100
+Message-ID: <20190204155909.GU3271@phenom.ffwll.local>
+References: <20190203185501.8958-1-anarsoul@gmail.com>
+ <20190203185501.8958-9-anarsoul@gmail.com>
+ <20190204074350.GC16448@ulmo>
+ <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
+ <20190204082353.GE19087@ulmo>
+ <20190204094012.GP3271@phenom.ffwll.local>
+ <20190204112218.GB10412@ulmo>
+Reply-To: daniel-/w4YWyX8dFk@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549295637-24890-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: s-anna@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, david@lechnology.com, woods.technical@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDYZDG4VSMIRBUWC4HRAKGQE7PMOZXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190204112218.GB10412@ulmo>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PRUSS module has a SYSCFG which is unique. Add
-support for it.
+On Mon, Feb 04, 2019 at 12:22:18PM +0100, Thierry Reding wrote:
+> On Mon, Feb 04, 2019 at 10:40:12AM +0100, Daniel Vetter wrote:
+> > On Mon, Feb 04, 2019 at 09:23:59AM +0100, Thierry Reding wrote:
+> > > On Mon, Feb 04, 2019 at 12:13:55AM -0800, Vasily Khoruzhick wrote:
+> > > > On Sun, Feb 3, 2019 at 11:43 PM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > >
+> > > > > On Sun, Feb 03, 2019 at 10:54:57AM -0800, Vasily Khoruzhick wrote:
+> > > > > > eDP panels usually have EDID EEPROM, so there's no need to define panel
+> > > > > > width/height or any modes/timings in dts. But this panel still may have
+> > > > > > regulator and/or backlight.
+> > > > > >
+> > > > > > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/display/panel/panel-edp.txt        | 7 +++++++
+> > > > > >  1 file changed, 7 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
+> > > > >
+> > > > > Please don't try to make panels look more generic than they really are.
+> > > > > You're going to have to provide a compatible string for your device that
+> > > > > is more specific than "panel-edp". You claim that you don't need any
+> > > > > extra information that is panel specific, but you don't know that now.
+> > > > > We have in the past thought that we didn't need things like prepare
+> > > > > delay, but then we ran into situations where we did need them.
+> > > > >
+> > > > > Just do what everybody else does. Provide a specific compatible string
+> > > > > and match on that in the panel-simple driver. Even if you can read all
+> > > > > the video timings from an EDID EEPROM, you can still provide a mode in
+> > > > > the panel descriptor to serve as a fallback if for example the EEPROM
+> > > > > is faulty on some device.
+> > > > 
+> > > > Pinebook used several 768p panels that have slightly different timings
+> > > > and recent batch uses 1080p panel.
+> > > > 
+> > > > What panel descriptor should I use as fallback?
+> > > 
+> > > You don't use panel descriptors as fallback. The simple-panel driver
+> > > will bind to a panel device and use the corresponding descriptor. If
+> > > your device tree contains the correct information, the descriptor is
+> > > correct for the panel you have.
+> > > 
+> > > In other words you need to ensure that you have the correct panel in
+> > > device tree for the board that you're using. This is exactly the same
+> > > thing as for other devices.
+> > > 
+> > > One way to to this is to have separate device trees for each variant
+> > > of the board that you want to support. Another variant may be to have
+> > > a common device tree and then have some early firmware update the DTB
+> > > with the correct panel information.
+> > 
+> > This would defeat the point of edp, which is to standardize the mess of
+> > panels (at least somewhat) and avoid having to change the DT/ACPI
+> > tables/firmware for every board you ship. Also, we do have DP quirking
+> > infrastructure already (using the OUI), I think if there's something that
+> > doesn't work then we should quirk it there.
+> 
+> The problem is that while the attempt may have been to standardize, it
+> failed. It doesn't take into account any of the details such as timing
+> between things like powering up the display and enabling the backlight
+> or similar. I don't know how you'd want to "quirk" those kinds of
+> requirements because they are highly panel specific.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/bus/ti-sysc.c                 | 77 +++++++++++++++++++++++++++++++++++
- include/dt-bindings/bus/ti-sysc.h     | 11 -----
- include/linux/platform_data/ti-sysc.h |  1 +
- 3 files changed, 78 insertions(+), 11 deletions(-)
+Hm right, we get these from some firmware tables (and mix them with the
+spec one, since some of the firmware values are nonsense). I don't even
+know whether we can read the timings over dp aux somehow (you can power up
+the panel with some pessimistic values to figure those out, and you only
+need dp aux to work, which is much simpler than the entire panel).
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index f94d335..5b9c81a 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -622,6 +622,50 @@ static void sysc_show_registers(struct sysc *ddata)
- 		buf);
- }
- 
-+static int sysc_enable_pruss(struct sysc *sysc)
-+{
-+	int i;
-+	u32 reg;
-+	bool ready;
-+
-+	/* configure for Smart Idle & Smart Standby */
-+	reg = sysc_read(sysc, sysc->offsets[SYSC_SYSCONFIG]);
-+	reg &= ~(SYSC_PRUSS_STANDBY_MASK | SYSC_PRUSS_IDLE_MASK);
-+	reg |= SYSC_PRUSS_STANDBY_SMART | SYSC_IDLE_SMART;
-+	sysc_write(sysc, sysc->offsets[SYSC_SYSCONFIG], reg);
-+
-+	/* bring out of Standby */
-+	reg = sysc_read(sysc, sysc->offsets[SYSC_SYSCONFIG]);
-+	reg &= ~SYSC_PRUSS_STANDBY_INIT;
-+	sysc_write(sysc, sysc->offsets[SYSC_SYSCONFIG], reg);
-+
-+	/* wait till we are ready for transactions - delay is arbitrary */
-+	for (i = 0; i < 10; i++) {
-+		reg = sysc_read(sysc, sysc->offsets[SYSC_SYSCONFIG]);
-+		ready = !(reg & SYSC_PRUSS_SUB_MWAIT);
-+		if (ready)
-+			break;
-+		udelay(5);
-+	}
-+
-+	if (!ready) {
-+		dev_err(sysc->dev, "not ready for transaction\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sysc_disable_pruss(struct sysc *sysc)
-+{
-+	u32 reg;
-+
-+	/* initiate Standby */
-+	reg = sysc_read(sysc, sysc->offsets[SYSC_SYSCONFIG]);
-+	reg |= SYSC_PRUSS_STANDBY_INIT;
-+	sysc_write(sysc, sysc->offsets[SYSC_SYSCONFIG], reg);
-+}
-+
- static int __maybe_unused sysc_runtime_suspend(struct device *dev)
- {
- 	struct ti_sysc_platform_data *pdata;
-@@ -649,6 +693,9 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
- 		goto idled;
- 	}
- 
-+	if (ddata->cap->type == TI_SYSC_PRUSS)
-+		sysc_disable_pruss(ddata);
-+
- 	for (i = 0; i < ddata->nr_clocks; i++) {
- 		if (IS_ERR_OR_NULL(ddata->clocks[i]))
- 			continue;
-@@ -704,6 +751,9 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
- 			return error;
- 	}
- 
-+	if (ddata->cap->type == TI_SYSC_PRUSS)
-+		sysc_enable_pruss(ddata);
-+
- awake:
- 	ddata->enabled = true;
- 
-@@ -1573,6 +1623,26 @@ static const struct sysc_capabilities sysc_dra7_mcan = {
- 	.regbits = &sysc_regbits_dra7_mcan,
- };
- 
-+/*
-+ * PRUSS on AM33x and later
-+ */
-+static const struct sysc_regbits sysc_regbits_pruss = {
-+	.midle_shift = -ENODEV,
-+	.clkact_shift = -ENODEV,
-+	.sidle_shift = -ENODEV,
-+	.enwkup_shift = -ENODEV,
-+	.srst_shift = -ENODEV,
-+	.autoidle_shift = -ENODEV,
-+	.dmadisable_shift = -ENODEV,
-+	.emufree_shift = -ENODEV,
-+};
-+
-+static const struct sysc_capabilities sysc_pruss = {
-+	.type = TI_SYSC_PRUSS,
-+	.sysc_mask = SYSC_PRUSS_STANDBY_INIT | SYSC_PRUSS_SUB_MWAIT,
-+	.regbits = &sysc_regbits_pruss,
-+};
-+
- static int sysc_init_pdata(struct sysc *ddata)
- {
- 	struct ti_sysc_platform_data *pdata = dev_get_platdata(ddata->dev);
-@@ -1702,6 +1772,10 @@ static int sysc_probe(struct platform_device *pdev)
- 
- 	INIT_DELAYED_WORK(&ddata->idle_work, ti_sysc_idle);
- 
-+	/* FIXME: how to ensure PRUSS stays enabled? */
-+	if (ddata->cap->type == TI_SYSC_PRUSS)
-+		goto skip_pm_put;
-+
- 	/* At least earlycon won't survive without deferred idle */
- 	if (ddata->cfg.quirks & (SYSC_QUIRK_NO_IDLE_ON_INIT |
- 				 SYSC_QUIRK_NO_RESET_ON_INIT)) {
-@@ -1710,6 +1784,8 @@ static int sysc_probe(struct platform_device *pdev)
- 		pm_runtime_put(&pdev->dev);
- 	}
- 
-+skip_pm_put:
-+
- 	if (!of_get_available_child_count(ddata->dev->of_node))
- 		reset_control_assert(ddata->rsts);
- 
-@@ -1766,6 +1842,7 @@ static const struct of_device_id sysc_match[] = {
- 	{ .compatible = "ti,sysc-usb-host-fs",
- 	  .data = &sysc_omap4_usb_host_fs, },
- 	{ .compatible = "ti,sysc-dra7-mcan", .data = &sysc_dra7_mcan, },
-+	{ .compatible = "ti,sysc-pruss", .data = &sysc_pruss, },
- 	{  },
- };
- MODULE_DEVICE_TABLE(of, sysc_match);
-diff --git a/include/dt-bindings/bus/ti-sysc.h b/include/dt-bindings/bus/ti-sysc.h
-index 8ec78e8..7138384 100644
---- a/include/dt-bindings/bus/ti-sysc.h
-+++ b/include/dt-bindings/bus/ti-sysc.h
-@@ -17,17 +17,6 @@
- 
- #define SYSC_DRA7_MCAN_ENAWAKEUP	(1 << 4)
- 
--/* SYSCONFIG specific to PRUSS */
--#define SYSC_PRUSS_SUB_MWAIT		(1 << 5)
--#define SYSC_PRUSS_STANDBY_INIT		(1 << 4)
--
--#define SYSC_PRUSS_STANDBY_FORCE	(0 << 2)
--#define SYSC_PRUSS_STANDBY_NO		(1 << 2)
--#define SYSC_PRUSS_STANDBY_SMART	(2 << 2)
--#define SYSC_PRUSS_STANDBY_MASK		(3 << 2)
--
--#define SYSC_PRUSS_IDLE_MASK		3
--
- /* SYSCONFIG STANDBYMODE/MIDLEMODE/SIDLEMODE supported by hardware */
- #define SYSC_IDLE_FORCE			0
- #define SYSC_IDLE_NO			1
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
-index 1ea3aab..56098e7 100644
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -15,6 +15,7 @@ enum ti_sysc_module_type {
- 	TI_SYSC_OMAP4_MCASP,
- 	TI_SYSC_OMAP4_USB_HOST_FS,
- 	TI_SYSC_DRA7_MCAN,
-+	TI_SYSC_PRUSS,
- };
- 
- struct ti_sysc_cookie {
+> > What does make sense though imo is if we try not to stuff the edp panel
+> > into panel-simple, because it's anything like a simple dumb panel. There's
+> > also some integration awkwardness since with this panel you need to do dp
+> > aux/i2c transactions to get at the information (edid alone isn't good
+> > enough for edp), and I'm not sure how exactly that's supposed to be
+> > instantiated. Maybe a special function to instantiate an edp panel, which
+> > takes both a DT node and the dp_aux controller would be much better,
+> > instead of trying to auto-match against a DT compatible string and load a
+> > panel driver which is almost all fake.
+> > 
+> > Or we teach dp_aux to register itself and somehow teach panel-edp how it
+> > can get hold of the dp_aux channel it needs.
+> 
+> We already do that. drm_dp_aux registers as an I2C adapter that can be
+> used to read EDID EEPROMs using I2C-over-AUX transactions. We already
+> use that on some platforms.
+> 
+> Also note that simple-panel already supports getting video timings from
+> EDID. If a DDC link is present in DT, the driver will load the modes
+> from EDID and use them.
+
+Could we extend this to dp aux somehow? For edp you need the dp aux (which
+then gives you the ddc link automatically).
+
+> > But fake mode in panel-simple sounds like the wrong approach. At least
+> > from our experience with i915 (and I think other drivers supporting edp),
+> > the standardization of panels for basic stuff at least worked.
+> > Self-refresh seems an entirely different story unfortunately ... but again
+> > quirking that for DP stuff should be done using the OUI I think.
+> 
+> I can imagine that on x86 platforms OEMs can also easily hide some of
+> the necessary quirks in ACPI. None of that exists on ARM or other
+> architectures that solely rely on device tree to describe the device.
+> Since there's no way of specifying power sequences in DT (there have
+> been attempts in the past to make that work, but they failed miserably)
+> all we can do is match on a compatible string and encode the necessary
+> logic in the driver. Luckily we haven't run into anything too fancy up
+> to now and we've been able to make things work mostly with just a couple
+> of fairly generic parameters.
+> 
+> Also note that initially people thought this wasn't going to be
+> necessary and we only added the various "delay" parameters later on
+> because it did turn out that not all panels are created equal.
+
+Yeah this sucks, but oh well.
+-Daniel
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
