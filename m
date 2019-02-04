@@ -1,87 +1,37 @@
-Return-Path: <SRS0=K5hT=QO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr20064.outbound.protection.outlook.com ([40.107.2.64]:20944
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726727AbfBGJxt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Feb 2019 04:53:49 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V6 4/4] arm64: dts: imx: add i.MX8QXP thermal support
-Date: Thu, 7 Feb 2019 09:53:04 +0000
-Message-ID: <1549532838-27025-4-git-send-email-Anson.Huang@nxp.com>
-References: <1549532838-27025-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1549532838-27025-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=Au6m=QL=martingkelly.com=martin@kernel.org>
+Subject: Re: [PATCH v4 6/6] iio:bmi160: use if (ret) instead of if (ret < 0)
+References: <20190202215601.20275-1-martin@martingkelly.com>
+ <20190202215601.20275-7-martin@martingkelly.com>
+ <CAOMZO5DsbEhdW1dhcWxig7b5VB7qnkWtbU-SqY5cGJp2Ld0nuA@mail.gmail.com>
+ <aff2e86e-a6be-24da-0f4a-add25a2cbee2@martingkelly.com>
+ <CAOMZO5BNK+v6t3qFYs5b+NpPHkrR4jiuy13DsM=AOQxAR3kY4g@mail.gmail.com>
+From: Martin Kelly <martin@martingkelly.com>
+Message-ID: <1197951a-61c3-65a7-b7c7-2396116ea13e@martingkelly.com>
+Date: Mon, 4 Feb 2019 09:07:50 -0800
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <CAOMZO5BNK+v6t3qFYs5b+NpPHkrR4jiuy13DsM=AOQxAR3kY4g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Fabio Estevam <festevam@gmail.com>
+Cc: linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add i.MX8QXP CPU thermal zone support.
+On 2/4/19 7:15 AM, Fabio Estevam wrote:
+> On Sat, Feb 2, 2019 at 10:30 PM Martin Kelly <martin@martingkelly.com> wrote:
+> 
+>> Jonathan Cameron pointed out that the check is for functions that return
+>> 0 on success. Thus, the check should be either "if (ret != 0)" or "if
+>> (ret)". Jonathan prefers "if (ret)", so I'm using that. By leaving it at
+>> "if (ret < 0)", technically a function could return positive numbers and
+>> not count as an error, which is a bug.
+> 
+> I fail to see how regmap_read()/regmap_write() functions could return
+> positive numbers on error.
+> 
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-ChangeLog since V5:
-	- add a property in each thermal zone to pass resource ID for thermal driv=
-er.
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 28 ++++++++++++++++++++++++++=
-++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 4c3dd95..88eb04b 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/pads-imx8qxp.h>
-+#include <dt-bindings/thermal/thermal.h>
-=20
- / {
- 	interrupt-parent =3D <&gic>;
-@@ -116,6 +117,12 @@
- 		rtc: rtc {
- 			compatible =3D "fsl,imx8qxp-sc-rtc";
- 		};
-+
-+		tsens: thermal-sensor {
-+			compatible =3D "fsl,imx8qxp-sc-thermal";
-+			tsens-num =3D <1>;
-+			#thermal-sensor-cells =3D <1>;
-+		};
- 	};
-=20
- 	timer {
-@@ -443,4 +450,25 @@
- 			power-domains =3D <&pd IMX_SC_R_GPIO_7>;
- 		};
- 	};
-+
-+	thermal_zones: thermal-zones {
-+		cpu-thermal0 {
-+			polling-delay-passive =3D <250>;
-+			polling-delay =3D <2000>;
-+			thermal-sensors =3D <&tsens 0>;
-+			imx,sensor-resource-id =3D <355>;
-+			trips {
-+				cpu_alert0: trip0 {
-+					temperature =3D <107000>;
-+					hysteresis =3D <2000>;
-+					type =3D "passive";
-+				};
-+				cpu_crit0: trip1 {
-+					temperature =3D <127000>;
-+					hysteresis =3D <2000>;
-+					type =3D "critical";
-+				};
-+			};
-+		};
-+	};
- };
---=20
-2.7.4
+It's not that the functions actually do return positive numbers (they 
+don't). It's just that the success criteria is documented as "returns 0 
+on success". Thus logically the correct check for error is "if (ret != 
+0)" or just "if (ret)". This also is a bit self-documenting. That's why 
+this patch is a cleanup instead of a bugfix.
