@@ -1,48 +1,46 @@
-Return-Path: <SRS0=1fni=QL=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 0/5] iio: gyro: add fxas2100x driver
-Date: Mon,  4 Feb 2019 17:00:07 +0000
-Message-Id: <20190204170012.13617-1-rui.silva@linaro.org>
+Return-Path: <SRS0=1YNY=QL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from icicles.com ([185.53.169.21]:58676 "EHLO homeydesign.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727691AbfBDRx7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Feb 2019 12:53:59 -0500
+Subject: Need to retouch your photos?
+Message-ID: <632eca6741e87c4c9f188fd57039d267@coroflot.com>
+Date: Mon, 04 Feb 2019 12:41:42 +0100
+From: "Stacy" <tuenkaznzsat@verizon.net>
+Reply-To: foshzhian@sina.com
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-This series introduce a NXP fxas2100x family tri axis gyroscope driver [0]
-It add a core implementaiton plus an i2c and spi.
+Need to retouch your photos?  Deep etching or masking for your photos?
 
-This device can be found in the warp7 board [1], where it was tested.
+We are the studio who can do those service for your photos.
 
----
-Cheers,
-   Rui
+Please send photos to start
 
-[0]: https://www.nxp.com/docs/en/data-sheet/FXAS21002.pdf
-[1]: https://www.element14.com/community/community/designcenter/single-board-computers/warp7/overview
+Thanks,
+Stacy
 
-Rui Miguel Silva (5):
-  iio: gyro: add DT bindings to fxas2100x
-  iio: gyro: fxas2100x: add core driver for fxas2100x gyroscope
-  iio: gyro: fxas2100x: add i2c driver
-  iio: gyro: fxas2100x: add spi driver
-  ARM: dts: imx7s-warp: add fxas2100x gyroscope
 
- .../bindings/iio/gyroscope/fxas2100x.txt      |  14 +
- arch/arm/boot/dts/imx7s-warp.dts              |   5 +
- drivers/iio/gyro/Kconfig                      |  22 +
- drivers/iio/gyro/Makefile                     |   3 +
- drivers/iio/gyro/fxas2100x.h                  | 149 +++
- drivers/iio/gyro/fxas2100x_core.c             | 930 ++++++++++++++++++
- drivers/iio/gyro/fxas2100x_i2c.c              |  73 ++
- drivers/iio/gyro/fxas2100x_spi.c              |  70 ++
- 8 files changed, 1266 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/fxas2100x.txt
- create mode 100644 drivers/iio/gyro/fxas2100x.h
- create mode 100644 drivers/iio/gyro/fxas2100x_core.c
- create mode 100644 drivers/iio/gyro/fxas2100x_i2c.c
- create mode 100644 drivers/iio/gyro/fxas2100x_spi.c
 
--- 
-2.20.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Neudwied
+
+
+Leddmgo
