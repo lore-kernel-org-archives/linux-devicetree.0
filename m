@@ -1,38 +1,74 @@
-From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH RESEND v2 06/12] drm/sun4i: rgb: Add 1%
- tolerance to dclk frequency check when bridge is connected
-Date: Mon, 4 Feb 2019 10:50:17 -0800
-Message-ID: <CA+E=qVd7yh=JNZSvrfY4Diu+VJWFK6yLUJ5MavBcZ8Cftn6f-Q@mail.gmail.com>
-References: <20190203185501.8958-1-anarsoul@gmail.com> <20190203185501.8958-7-anarsoul@gmail.com>
- <20190204142036.vd42nvyjnjr5yeoi@flea> <CA+E=qVfTfJ9E29gz83tdVGx5_KGWSQVJOAxKTzC+-n7=gdj0cA@mail.gmail.com>
- <0F6CBEA4-6DB6-40F1-A2FD-65101AF64F1F@aosc.io>
-Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBZMS4LRAKGQEW4VHNTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <0F6CBEA4-6DB6-40F1-A2FD-65101AF64F1F-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 2/9] dt-bindings: mtd: ingenic: Change 'BCH' to 'ECC' in documentation
+Date: Mon,  4 Feb 2019 16:04:19 -0300
+Message-ID: <20190204190426.11618-2-paul@crapouillou.net>
+References: <20190204190426.11618-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190204190426.11618-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
+Cc: Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 4, 2019 at 8:29 AM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> >> IIRC, from the previous discussion, HDMI had a tolerancy requirement
-> >> in the standard. Do you know if there's such a thing for eDP? That
-> >> would solve the issue for all the eDP displays at once.
-> >
-> >I don't have access to eDP standard - vesa.org says it's available to
-> >members only.
->
-> Try out to grab an old version?
->
-> I remember 1.0 is open.
+The JZ4740 ECC hardware is not BCH but Reed-Solomon, so it makes more
+sense to use the more generic ECC term.
 
-I can't find anything regarding dot clock tolerance in DisplayPort
-specification.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+
+Changes:
+
+v3: New patch
+
+ .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt    | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+index a5b940f18bf6..5a45cc54f46d 100644
+--- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+@@ -1,4 +1,4 @@
+-* Ingenic JZ4780 NAND/BCH
++* Ingenic JZ4780 NAND/ECC
+ 
+ This file documents the device tree bindings for NAND flash devices on the
+ JZ4780. NAND devices are connected to the NEMC controller (described in
+@@ -14,10 +14,10 @@ Required NAND controller device properties:
+   an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+ 
+ Optional NAND controller device properties:
+-- ingenic,bch-controller: To make use of the hardware BCH controller, this
+-  property must contain a phandle for the BCH controller node. The required
++- ingenic,bch-controller: To make use of the hardware ECC controller, this
++  property must contain a phandle for the ECC controller node. The required
+   properties for this node are described below. If this is not specified,
+-  software BCH will be used instead.
++  software ECC will be used instead.
+ 
+ Optional children nodes:
+ - Individual NAND chips are children of the NAND controller node.
+@@ -70,17 +70,17 @@ nemc: nemc@13410000 {
+ 	};
+ };
+ 
+-The BCH controller is a separate SoC component used for error correction on
++The ECC controller is a separate SoC component used for error correction on
+ NAND devices. The following is a description of the device properties for a
+-BCH controller.
++ECC controller.
+ 
+-Required BCH properties:
++Required ECC properties:
+ - compatible: Should be one of:
+   * ingenic,jz4740-ecc
+   * ingenic,jz4725b-bch
+   * ingenic,jz4780-bch
+-- reg: Should specify the BCH controller registers location and length.
+-- clocks: Clock for the BCH controller.
++- reg: Should specify the ECC controller registers location and length.
++- clocks: Clock for the ECC controller.
+ 
+ Example:
+ 
+-- 
+2.11.0
