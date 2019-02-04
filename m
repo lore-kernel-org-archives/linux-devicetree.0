@@ -1,131 +1,38 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/7] thermal: mediatek: add calibration item
-Date: Mon, 4 Feb 2019 18:31:41 +0100
-Message-ID: <dcc04c1e-eb7d-024e-abc8-7b75504947c2@gmail.com>
-References: <1549006693-11659-1-git-send-email-michael.kao@mediatek.com>
- <1549006693-11659-4-git-send-email-michael.kao@mediatek.com>
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v3 3/5] dt-bindings: phy-qcom-qmp: Add
+ qcom,msm8998-qmp-ufs-phy
+Date: Mon, 4 Feb 2019 18:38:14 +0100
+Message-ID: <73f65f2d-2137-1d2b-be19-eae77773ccc1@free.fr>
+References: <e3c82a49-c601-effc-348f-f768656c659f@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549006693-11659-4-git-send-email-michael.kao@mediatek.com>
+In-Reply-To: <e3c82a49-c601-effc-348f-f768656c659f@free.fr>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: michael.kao@mediatek.com, =Zhang Rui <rui.zhang@intel.com>, =Eduardo Valentin <edubezval@gmail.com>, =Daniel Lezcano <daniel.lezcano@linaro.org>, =Rob Herring <robh+dt@kernel.org>, =Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+To: MSM <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Evan Green <evgreen@chromium.org>, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Add compatible string for QMP UFS phy on msm8998.
 
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 01/02/2019 08:38, michael.kao@mediatek.com wrote:
-> From: Michael Kao <michael.kao@mediatek.com>
-> 
-> Add calibration item in thermal_data to support
-> the project with different calibration coefficient.
-> 
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> ---
->  drivers/thermal/mtk_thermal.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-> index 07f8ad7..45c6587 100644
-> --- a/drivers/thermal/mtk_thermal.c
-> +++ b/drivers/thermal/mtk_thermal.c
-> @@ -105,6 +105,9 @@
->  /* The number of sensing points per bank */
->  #define MT8173_NUM_SENSORS_PER_ZONE	4
->  
-> +/* The calibration coefficient of sensor  */
-> +#define MT8173_CALIBRATION	165
-> +
-
-Calibration value is the same for all SoCs (including mt8183), we can define it
-once and use it in all mtk_thermal structs.
-
-Regards,
-Matthias
-
-
->  /*
->   * Layout of the fuses providing the calibration data
->   * These macros could be used for MT8173, MT2701, and MT2712.
-> @@ -147,6 +150,9 @@ enum {
->  /* The number of sensing points per bank */
->  #define MT2701_NUM_SENSORS_PER_ZONE	3
->  
-> +/* The calibration coefficient of sensor  */
-> +#define MT2701_CALIBRATION	165
-> +
->  /* MT2712 thermal sensors */
->  #define MT2712_TS1	0
->  #define MT2712_TS2	1
-> @@ -162,12 +168,18 @@ enum {
->  /* The number of sensing points per bank */
->  #define MT2712_NUM_SENSORS_PER_ZONE	4
->  
-> +/* The calibration coefficient of sensor  */
-> +#define MT2712_CALIBRATION	165
-> +
->  #define MT7622_TEMP_AUXADC_CHANNEL	11
->  #define MT7622_NUM_SENSORS		1
->  #define MT7622_NUM_ZONES		1
->  #define MT7622_NUM_SENSORS_PER_ZONE	1
->  #define MT7622_TS1	0
->  
-> +/* The calibration coefficient of sensor  */
-> +#define MT7622_CALIBRATION	165
-> +
->  struct mtk_thermal;
->  
->  struct thermal_bank_cfg {
-> @@ -188,6 +200,7 @@ struct mtk_thermal_data {
->  	const int *sensor_mux_values;
->  	const int *msr;
->  	const int *adcpnp;
-> +	const int cali_val;
->  	struct thermal_bank_cfg bank_data[];
->  };
->  
-> @@ -295,6 +308,7 @@ struct mtk_thermal {
->  	.num_banks = MT8173_NUM_ZONES,
->  	.num_sensors = MT8173_NUM_SENSORS,
->  	.vts_index = mt8173_vts_index,
-> +	.cali_val = MT8173_CALIBRATION,
->  	.bank_data = {
->  		{
->  			.num_sensors = 2,
-> @@ -330,6 +344,7 @@ struct mtk_thermal {
->  	.num_banks = 1,
->  	.num_sensors = MT2701_NUM_SENSORS,
->  	.vts_index = mt2701_vts_index,
-> +	.cali_val = MT2701_CALIBRATION,
->  	.bank_data = {
->  		{
->  			.num_sensors = 3,
-> @@ -356,6 +371,7 @@ struct mtk_thermal {
->  	.num_banks = 1,
->  	.num_sensors = MT2712_NUM_SENSORS,
->  	.vts_index = mt2712_vts_index,
-> +	.cali_val = MT2712_CALIBRATION,
->  	.bank_data = {
->  		{
->  			.num_sensors = 4,
-> @@ -376,6 +392,7 @@ struct mtk_thermal {
->  	.num_banks = MT7622_NUM_ZONES,
->  	.num_sensors = MT7622_NUM_SENSORS,
->  	.vts_index = mt7622_vts_index,
-> +	.cali_val = MT7622_CALIBRATION,
->  	.bank_data = {
->  		{
->  			.num_sensors = 1,
-> @@ -402,7 +419,7 @@ static int raw_to_mcelsius(struct mtk_thermal *mt, int sensno, s32 raw)
->  	raw &= 0xfff;
->  
->  	tmp = 203450520 << 3;
-> -	tmp /= 165 + mt->o_slope;
-> +	tmp /= mt->conf->cali_val + mt->o_slope;
->  	tmp /= 10000 + mt->adc_ge;
->  	tmp *= raw - mt->vts[sensno] - 3350;
->  	tmp >>= 3;
-> 
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index 41a1074228ba..6ec278f5af86 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
+ 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+ 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
++	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
+ 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+ 	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
+ 	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
+-- 
+2.17.1
