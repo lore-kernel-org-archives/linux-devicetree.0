@@ -1,7 +1,8 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v12 12/13] media: video-mux: add bayer formats
-Date: Mon,  4 Feb 2019 12:00:38 +0000
-Message-ID: <20190204120039.1198-13-rui.silva@linaro.org>
+Subject: [PATCH v12 13/13] media: MAINTAINERS: add entry for Freescale i.MX7
+ media driver
+Date: Mon,  4 Feb 2019 12:00:39 +0000
+Message-ID: <20190204120039.1198-14-rui.silva@linaro.org>
 References: <20190204120039.1198-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,45 +22,36 @@ To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add non vendor bayer formats to the  allowed format array.
+Add maintainer entry for the imx7 media csi, mipi csis driver,
+dt-bindings and documentation.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/platform/video-mux.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
-index c33900e3c23e..0ba30756e1e4 100644
---- a/drivers/media/platform/video-mux.c
-+++ b/drivers/media/platform/video-mux.c
-@@ -263,6 +263,26 @@ static int video_mux_set_format(struct v4l2_subdev *sd,
- 	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
- 	case MEDIA_BUS_FMT_JPEG_1X8:
- 	case MEDIA_BUS_FMT_AHSV8888_1X32:
-+	case MEDIA_BUS_FMT_SBGGR8_1X8:
-+	case MEDIA_BUS_FMT_SGBRG8_1X8:
-+	case MEDIA_BUS_FMT_SGRBG8_1X8:
-+	case MEDIA_BUS_FMT_SRGGB8_1X8:
-+	case MEDIA_BUS_FMT_SBGGR10_1X10:
-+	case MEDIA_BUS_FMT_SGBRG10_1X10:
-+	case MEDIA_BUS_FMT_SGRBG10_1X10:
-+	case MEDIA_BUS_FMT_SRGGB10_1X10:
-+	case MEDIA_BUS_FMT_SBGGR12_1X12:
-+	case MEDIA_BUS_FMT_SGBRG12_1X12:
-+	case MEDIA_BUS_FMT_SGRBG12_1X12:
-+	case MEDIA_BUS_FMT_SRGGB12_1X12:
-+	case MEDIA_BUS_FMT_SBGGR14_1X14:
-+	case MEDIA_BUS_FMT_SGBRG14_1X14:
-+	case MEDIA_BUS_FMT_SGRBG14_1X14:
-+	case MEDIA_BUS_FMT_SRGGB14_1X14:
-+	case MEDIA_BUS_FMT_SBGGR16_1X16:
-+	case MEDIA_BUS_FMT_SGBRG16_1X16:
-+	case MEDIA_BUS_FMT_SGRBG16_1X16:
-+	case MEDIA_BUS_FMT_SRGGB16_1X16:
- 		break;
- 	default:
- 		sdformat->format.code = MEDIA_BUS_FMT_Y8_1X8;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 51029a425dbe..ad267b3dd18b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9350,6 +9350,17 @@ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
+ F:	drivers/media/platform/imx-pxp.[ch]
+ 
++MEDIA DRIVERS FOR FREESCALE IMX7
++M:	Rui Miguel Silva <rmfrfs@gmail.com>
++L:	linux-media@vger.kernel.org
++T:	git git://linuxtv.org/media_tree.git
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/imx7-csi.txt
++F:	Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
++F:	Documentation/media/v4l-drivers/imx7.rst
++F:	drivers/staging/media/imx/imx7-media-csi.c
++F:	drivers/staging/media/imx/imx7-mipi-csis.c
++
+ MEDIA DRIVERS FOR HELENE
+ M:	Abylay Ospan <aospan@netup.ru>
+ L:	linux-media@vger.kernel.org
 -- 
 2.20.1
