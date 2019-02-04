@@ -1,75 +1,80 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding
- for generic eDP panel
-Date: Mon, 4 Feb 2019 17:27:19 +0100
-Message-ID: <20190204162719.GC25476@ulmo>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding for generic eDP
+ panel
+Date: Mon, 4 Feb 2019 10:27:09 -0600
+Message-ID: <CAL_JsqKt1kOXmRNvkYsQ6AL69+TPZURKpDbKkkEUb2+KZ5hKjQ@mail.gmail.com>
 References: <20190203185501.8958-1-anarsoul@gmail.com>
  <20190203185501.8958-9-anarsoul@gmail.com>
  <20190204074350.GC16448@ulmo>
  <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
  <20190204082353.GE19087@ulmo>
- <CA+E=qVew+8__yrAud1gFnLQ8HCwDdGhVjV=c173HGvZxH=7zZQ@mail.gmail.com>
-Reply-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Pk6IbRAofICFmK5e"
-Return-path: <linux-sunxi+bncBDTKFPPJUEHRB2WP4HRAKGQESDGTYRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVew+8__yrAud1gFnLQ8HCwDdGhVjV=c173HGvZxH=7zZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190204082353.GE19087@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-
---Pk6IbRAofICFmK5e
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Feb 04, 2019 at 08:11:05AM -0800, Vasily Khoruzhick wrote:
-> On Mon, Feb 4, 2019 at 12:24 AM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > >
-> > > Pinebook used several 768p panels that have slightly different timings
-> > > and recent batch uses 1080p panel.
-> > >
-> > > What panel descriptor should I use as fallback?
-> >
-> > You don't use panel descriptors as fallback. The simple-panel driver
-> > will bind to a panel device and use the corresponding descriptor. If
-> > your device tree contains the correct information, the descriptor is
-> > correct for the panel you have.
-> >
-> > In other words you need to ensure that you have the correct panel in
-> > device tree for the board that you're using. This is exactly the same
-> > thing as for other devices.
-> >
-> > One way to to this is to have separate device trees for each variant
-> > of the board that you want to support. Another variant may be to have
-> > a common device tree and then have some early firmware update the DTB
-> > with the correct panel information.
-> 
-> That defeats the purpose of using eDP panels. Panel can identify
-> itself and report what timings it supports.
-> 
-> If we use separate DTBs then users will have to figure out what panel
-> is installed in their hardware and use appropriate software image -
-> that's something I'd like to avoid.
-> 
-> I can add a descriptor for something like "pinebook eDP panel" if it
-> works for you, but it won't have any display timings in it.
-
-I'd like to point you to this:
-
-	http://sietch-tagr.blogspot.com/2016/04/display-panels-are-not-special.html
-
-it addresses some of your questions. Hopefully that will also help you
-understand that this isn't only about display timings.
-
-Thierry
---Pk6IbRAofICFmK5e--
+T24gTW9uLCBGZWIgNCwgMjAxOSBhdCAyOjI0IEFNIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJl
+ZGluZ0BnbWFpbC5jb20+IHdyb3RlOgo+Cj4gT24gTW9uLCBGZWIgMDQsIDIwMTkgYXQgMTI6MTM6
+NTVBTSAtMDgwMCwgVmFzaWx5IEtob3J1emhpY2sgd3JvdGU6Cj4gPiBPbiBTdW4sIEZlYiAzLCAy
+MDE5IGF0IDExOjQzIFBNIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+
+IHdyb3RlOgo+ID4gPgo+ID4gPiBPbiBTdW4sIEZlYiAwMywgMjAxOSBhdCAxMDo1NDo1N0FNIC0w
+ODAwLCBWYXNpbHkgS2hvcnV6aGljayB3cm90ZToKPiA+ID4gPiBlRFAgcGFuZWxzIHVzdWFsbHkg
+aGF2ZSBFRElEIEVFUFJPTSwgc28gdGhlcmUncyBubyBuZWVkIHRvIGRlZmluZSBwYW5lbAo+ID4g
+PiA+IHdpZHRoL2hlaWdodCBvciBhbnkgbW9kZXMvdGltaW5ncyBpbiBkdHMuIEJ1dCB0aGlzIHBh
+bmVsIHN0aWxsIG1heSBoYXZlCj4gPiA+ID4gcmVndWxhdG9yIGFuZC9vciBiYWNrbGlnaHQuCj4g
+PiA+ID4KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBWYXNpbHkgS2hvcnV6aGljayA8YW5hcnNvdWxA
+Z21haWwuY29tPgo+ID4gPiA+IC0tLQo+ID4gPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3BhbmVsLWVkcC50eHQgICAgICAgIHwgNyArKysrKysrCj4gPiA+ID4gIDEg
+ZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWVk
+cC50eHQKPiA+ID4KPiA+ID4gUGxlYXNlIGRvbid0IHRyeSB0byBtYWtlIHBhbmVscyBsb29rIG1v
+cmUgZ2VuZXJpYyB0aGFuIHRoZXkgcmVhbGx5IGFyZS4KPiA+ID4gWW91J3JlIGdvaW5nIHRvIGhh
+dmUgdG8gcHJvdmlkZSBhIGNvbXBhdGlibGUgc3RyaW5nIGZvciB5b3VyIGRldmljZSB0aGF0Cj4g
+PiA+IGlzIG1vcmUgc3BlY2lmaWMgdGhhbiAicGFuZWwtZWRwIi4gWW91IGNsYWltIHRoYXQgeW91
+IGRvbid0IG5lZWQgYW55Cj4gPiA+IGV4dHJhIGluZm9ybWF0aW9uIHRoYXQgaXMgcGFuZWwgc3Bl
+Y2lmaWMsIGJ1dCB5b3UgZG9uJ3Qga25vdyB0aGF0IG5vdy4KPiA+ID4gV2UgaGF2ZSBpbiB0aGUg
+cGFzdCB0aG91Z2h0IHRoYXQgd2UgZGlkbid0IG5lZWQgdGhpbmdzIGxpa2UgcHJlcGFyZQo+ID4g
+PiBkZWxheSwgYnV0IHRoZW4gd2UgcmFuIGludG8gc2l0dWF0aW9ucyB3aGVyZSB3ZSBkaWQgbmVl
+ZCB0aGVtLgo+ID4gPgo+ID4gPiBKdXN0IGRvIHdoYXQgZXZlcnlib2R5IGVsc2UgZG9lcy4gUHJv
+dmlkZSBhIHNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5nCj4gPiA+IGFuZCBtYXRjaCBvbiB0aGF0
+IGluIHRoZSBwYW5lbC1zaW1wbGUgZHJpdmVyLiBFdmVuIGlmIHlvdSBjYW4gcmVhZCBhbGwKPiA+
+ID4gdGhlIHZpZGVvIHRpbWluZ3MgZnJvbSBhbiBFRElEIEVFUFJPTSwgeW91IGNhbiBzdGlsbCBw
+cm92aWRlIGEgbW9kZSBpbgo+ID4gPiB0aGUgcGFuZWwgZGVzY3JpcHRvciB0byBzZXJ2ZSBhcyBh
+IGZhbGxiYWNrIGlmIGZvciBleGFtcGxlIHRoZSBFRVBST00KPiA+ID4gaXMgZmF1bHR5IG9uIHNv
+bWUgZGV2aWNlLgo+ID4KPiA+IFBpbmVib29rIHVzZWQgc2V2ZXJhbCA3NjhwIHBhbmVscyB0aGF0
+IGhhdmUgc2xpZ2h0bHkgZGlmZmVyZW50IHRpbWluZ3MKPiA+IGFuZCByZWNlbnQgYmF0Y2ggdXNl
+cyAxMDgwcCBwYW5lbC4KPiA+Cj4gPiBXaGF0IHBhbmVsIGRlc2NyaXB0b3Igc2hvdWxkIEkgdXNl
+IGFzIGZhbGxiYWNrPwo+Cj4gWW91IGRvbid0IHVzZSBwYW5lbCBkZXNjcmlwdG9ycyBhcyBmYWxs
+YmFjay4gVGhlIHNpbXBsZS1wYW5lbCBkcml2ZXIKPiB3aWxsIGJpbmQgdG8gYSBwYW5lbCBkZXZp
+Y2UgYW5kIHVzZSB0aGUgY29ycmVzcG9uZGluZyBkZXNjcmlwdG9yLiBJZgo+IHlvdXIgZGV2aWNl
+IHRyZWUgY29udGFpbnMgdGhlIGNvcnJlY3QgaW5mb3JtYXRpb24sIHRoZSBkZXNjcmlwdG9yIGlz
+Cj4gY29ycmVjdCBmb3IgdGhlIHBhbmVsIHlvdSBoYXZlLgo+Cj4gSW4gb3RoZXIgd29yZHMgeW91
+IG5lZWQgdG8gZW5zdXJlIHRoYXQgeW91IGhhdmUgdGhlIGNvcnJlY3QgcGFuZWwgaW4KPiBkZXZp
+Y2UgdHJlZSBmb3IgdGhlIGJvYXJkIHRoYXQgeW91J3JlIHVzaW5nLiBUaGlzIGlzIGV4YWN0bHkg
+dGhlIHNhbWUKPiB0aGluZyBhcyBmb3Igb3RoZXIgZGV2aWNlcy4KPgo+IE9uZSB3YXkgdG8gdG8g
+dGhpcyBpcyB0byBoYXZlIHNlcGFyYXRlIGRldmljZSB0cmVlcyBmb3IgZWFjaCB2YXJpYW50Cj4g
+b2YgdGhlIGJvYXJkIHRoYXQgeW91IHdhbnQgdG8gc3VwcG9ydC4gQW5vdGhlciB2YXJpYW50IG1h
+eSBiZSB0byBoYXZlCj4gYSBjb21tb24gZGV2aWNlIHRyZWUgYW5kIHRoZW4gaGF2ZSBzb21lIGVh
+cmx5IGZpcm13YXJlIHVwZGF0ZSB0aGUgRFRCCj4gd2l0aCB0aGUgY29ycmVjdCBwYW5lbCBpbmZv
+cm1hdGlvbi4KClRoYXQgY2FuIGJlIGEgcGFpbiB0byBtYW5hZ2UgZXNwZWNpYWxseSBpZiBwYW5l
+bHMgYXJlIHN3YXBwZWQgcnVuIHRvCnJ1biB3aXRoIDJuZCBzb3VyY2VzLgoKSSB0aGluayBpdCBp
+cyBwZXJmZWN0bHkgZmluZSB0byBoYXZlIGEgZ2VuZXJpYy1pc2ggZmFsbGJhY2sgYXMgbG9uZyBh
+cwppdCBpcyBqdXN0IHRoYXQsIGEgZmFsbGJhY2suIElmIHRoZSBwYW5lbCBoYXMgcXVpcmtzLCB0
+aGVuIHlvdSdkCmJldHRlciBtYWtlIHN1cmUgdGhlIGZpcm13YXJlIGlzIHN0dWZmaW5nIGluIHRo
+ZSByaWdodCBjb21wYXRpYmxlcyBvcgp0aGF0IHlvdSBjYW4gdXBkYXRlIHRoZSBmaXJtd2FyZS4K
+ClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
