@@ -1,80 +1,95 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding for generic eDP
- panel
-Date: Mon, 4 Feb 2019 10:27:09 -0600
-Message-ID: <CAL_JsqKt1kOXmRNvkYsQ6AL69+TPZURKpDbKkkEUb2+KZ5hKjQ@mail.gmail.com>
-References: <20190203185501.8958-1-anarsoul@gmail.com>
- <20190203185501.8958-9-anarsoul@gmail.com>
- <20190204074350.GC16448@ulmo>
- <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
- <20190204082353.GE19087@ulmo>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH RESEND v2 06/12] drm/sun4i: rgb: Add 1%
+ tolerance to dclk frequency check when bridge is connected
+Date: Tue, 05 Feb 2019 00:28:21 +0800
+Message-ID: <0F6CBEA4-6DB6-40F1-A2FD-65101AF64F1F@aosc.io>
+References: <20190203185501.8958-1-anarsoul@gmail.com> <20190203185501.8958-7-anarsoul@gmail.com> <20190204142036.vd42nvyjnjr5yeoi@flea> <CA+E=qVfTfJ9E29gz83tdVGx5_KGWSQVJOAxKTzC+-n7=gdj0cA@mail.gmail.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190204082353.GE19087@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB5WQ4HRAKGQE2KO6YVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CA+E=qVfTfJ9E29gz83tdVGx5_KGWSQVJOAxKTzC+-n7=gdj0cA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBGZWIgNCwgMjAxOSBhdCAyOjI0IEFNIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJl
-ZGluZ0BnbWFpbC5jb20+IHdyb3RlOgo+Cj4gT24gTW9uLCBGZWIgMDQsIDIwMTkgYXQgMTI6MTM6
-NTVBTSAtMDgwMCwgVmFzaWx5IEtob3J1emhpY2sgd3JvdGU6Cj4gPiBPbiBTdW4sIEZlYiAzLCAy
-MDE5IGF0IDExOjQzIFBNIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+
-IHdyb3RlOgo+ID4gPgo+ID4gPiBPbiBTdW4sIEZlYiAwMywgMjAxOSBhdCAxMDo1NDo1N0FNIC0w
-ODAwLCBWYXNpbHkgS2hvcnV6aGljayB3cm90ZToKPiA+ID4gPiBlRFAgcGFuZWxzIHVzdWFsbHkg
-aGF2ZSBFRElEIEVFUFJPTSwgc28gdGhlcmUncyBubyBuZWVkIHRvIGRlZmluZSBwYW5lbAo+ID4g
-PiA+IHdpZHRoL2hlaWdodCBvciBhbnkgbW9kZXMvdGltaW5ncyBpbiBkdHMuIEJ1dCB0aGlzIHBh
-bmVsIHN0aWxsIG1heSBoYXZlCj4gPiA+ID4gcmVndWxhdG9yIGFuZC9vciBiYWNrbGlnaHQuCj4g
-PiA+ID4KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBWYXNpbHkgS2hvcnV6aGljayA8YW5hcnNvdWxA
-Z21haWwuY29tPgo+ID4gPiA+IC0tLQo+ID4gPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL3BhbmVsLWVkcC50eHQgICAgICAgIHwgNyArKysrKysrCj4gPiA+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWVk
-cC50eHQKPiA+ID4KPiA+ID4gUGxlYXNlIGRvbid0IHRyeSB0byBtYWtlIHBhbmVscyBsb29rIG1v
-cmUgZ2VuZXJpYyB0aGFuIHRoZXkgcmVhbGx5IGFyZS4KPiA+ID4gWW91J3JlIGdvaW5nIHRvIGhh
-dmUgdG8gcHJvdmlkZSBhIGNvbXBhdGlibGUgc3RyaW5nIGZvciB5b3VyIGRldmljZSB0aGF0Cj4g
-PiA+IGlzIG1vcmUgc3BlY2lmaWMgdGhhbiAicGFuZWwtZWRwIi4gWW91IGNsYWltIHRoYXQgeW91
-IGRvbid0IG5lZWQgYW55Cj4gPiA+IGV4dHJhIGluZm9ybWF0aW9uIHRoYXQgaXMgcGFuZWwgc3Bl
-Y2lmaWMsIGJ1dCB5b3UgZG9uJ3Qga25vdyB0aGF0IG5vdy4KPiA+ID4gV2UgaGF2ZSBpbiB0aGUg
-cGFzdCB0aG91Z2h0IHRoYXQgd2UgZGlkbid0IG5lZWQgdGhpbmdzIGxpa2UgcHJlcGFyZQo+ID4g
-PiBkZWxheSwgYnV0IHRoZW4gd2UgcmFuIGludG8gc2l0dWF0aW9ucyB3aGVyZSB3ZSBkaWQgbmVl
-ZCB0aGVtLgo+ID4gPgo+ID4gPiBKdXN0IGRvIHdoYXQgZXZlcnlib2R5IGVsc2UgZG9lcy4gUHJv
-dmlkZSBhIHNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5nCj4gPiA+IGFuZCBtYXRjaCBvbiB0aGF0
-IGluIHRoZSBwYW5lbC1zaW1wbGUgZHJpdmVyLiBFdmVuIGlmIHlvdSBjYW4gcmVhZCBhbGwKPiA+
-ID4gdGhlIHZpZGVvIHRpbWluZ3MgZnJvbSBhbiBFRElEIEVFUFJPTSwgeW91IGNhbiBzdGlsbCBw
-cm92aWRlIGEgbW9kZSBpbgo+ID4gPiB0aGUgcGFuZWwgZGVzY3JpcHRvciB0byBzZXJ2ZSBhcyBh
-IGZhbGxiYWNrIGlmIGZvciBleGFtcGxlIHRoZSBFRVBST00KPiA+ID4gaXMgZmF1bHR5IG9uIHNv
-bWUgZGV2aWNlLgo+ID4KPiA+IFBpbmVib29rIHVzZWQgc2V2ZXJhbCA3NjhwIHBhbmVscyB0aGF0
-IGhhdmUgc2xpZ2h0bHkgZGlmZmVyZW50IHRpbWluZ3MKPiA+IGFuZCByZWNlbnQgYmF0Y2ggdXNl
-cyAxMDgwcCBwYW5lbC4KPiA+Cj4gPiBXaGF0IHBhbmVsIGRlc2NyaXB0b3Igc2hvdWxkIEkgdXNl
-IGFzIGZhbGxiYWNrPwo+Cj4gWW91IGRvbid0IHVzZSBwYW5lbCBkZXNjcmlwdG9ycyBhcyBmYWxs
-YmFjay4gVGhlIHNpbXBsZS1wYW5lbCBkcml2ZXIKPiB3aWxsIGJpbmQgdG8gYSBwYW5lbCBkZXZp
-Y2UgYW5kIHVzZSB0aGUgY29ycmVzcG9uZGluZyBkZXNjcmlwdG9yLiBJZgo+IHlvdXIgZGV2aWNl
-IHRyZWUgY29udGFpbnMgdGhlIGNvcnJlY3QgaW5mb3JtYXRpb24sIHRoZSBkZXNjcmlwdG9yIGlz
-Cj4gY29ycmVjdCBmb3IgdGhlIHBhbmVsIHlvdSBoYXZlLgo+Cj4gSW4gb3RoZXIgd29yZHMgeW91
-IG5lZWQgdG8gZW5zdXJlIHRoYXQgeW91IGhhdmUgdGhlIGNvcnJlY3QgcGFuZWwgaW4KPiBkZXZp
-Y2UgdHJlZSBmb3IgdGhlIGJvYXJkIHRoYXQgeW91J3JlIHVzaW5nLiBUaGlzIGlzIGV4YWN0bHkg
-dGhlIHNhbWUKPiB0aGluZyBhcyBmb3Igb3RoZXIgZGV2aWNlcy4KPgo+IE9uZSB3YXkgdG8gdG8g
-dGhpcyBpcyB0byBoYXZlIHNlcGFyYXRlIGRldmljZSB0cmVlcyBmb3IgZWFjaCB2YXJpYW50Cj4g
-b2YgdGhlIGJvYXJkIHRoYXQgeW91IHdhbnQgdG8gc3VwcG9ydC4gQW5vdGhlciB2YXJpYW50IG1h
-eSBiZSB0byBoYXZlCj4gYSBjb21tb24gZGV2aWNlIHRyZWUgYW5kIHRoZW4gaGF2ZSBzb21lIGVh
-cmx5IGZpcm13YXJlIHVwZGF0ZSB0aGUgRFRCCj4gd2l0aCB0aGUgY29ycmVjdCBwYW5lbCBpbmZv
-cm1hdGlvbi4KClRoYXQgY2FuIGJlIGEgcGFpbiB0byBtYW5hZ2UgZXNwZWNpYWxseSBpZiBwYW5l
-bHMgYXJlIHN3YXBwZWQgcnVuIHRvCnJ1biB3aXRoIDJuZCBzb3VyY2VzLgoKSSB0aGluayBpdCBp
-cyBwZXJmZWN0bHkgZmluZSB0byBoYXZlIGEgZ2VuZXJpYy1pc2ggZmFsbGJhY2sgYXMgbG9uZyBh
-cwppdCBpcyBqdXN0IHRoYXQsIGEgZmFsbGJhY2suIElmIHRoZSBwYW5lbCBoYXMgcXVpcmtzLCB0
-aGVuIHlvdSdkCmJldHRlciBtYWtlIHN1cmUgdGhlIGZpcm13YXJlIGlzIHN0dWZmaW5nIGluIHRo
-ZSByaWdodCBjb21wYXRpYmxlcyBvcgp0aGF0IHlvdSBjYW4gdXBkYXRlIHRoZSBmaXJtd2FyZS4K
-ClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+=E4=BA=8E 2019=E5=B9=B42=E6=9C=885=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8812:=
+26:43, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Mon, Feb 4, 2019 at 6:20 AM Maxime Ripard
+><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+>>
+>> Hi,
+>>
+>> On Sun, Feb 03, 2019 at 10:54:55AM -0800, Vasily Khoruzhick wrote:
+>> > Clock rate check that was added in commit bb43d40d7c83 ("drm/sun4i:
+>rgb:
+>> > Validate the clock rate") prevents some panel and bridges from
+>working with
+>> > sun4i driver.
+>> >
+>> > Unfortunately, dotclock frequency for some modes are not achievable
+>on
+>> > sunxi hardware, and there's a slight deviation in rate returned by
+>> > clk_round_rate(), so they fail this check.
+>> >
+>> > Experiments show that panels and bridges work fine with this slight
+>> > deviation, e.g. Pinebook that uses ANX6345 bridge with 768p eDP
+>panel
+>> > requests 73 MHz, gets 72.296MHz instead (0.96% difference) and
+>works just
+>> > fine.
+>> >
+>> > This patch adds a 1% tolerence to the dot clock check when bridge
+>is
+>> > connected.
+>> >
+>> > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> I'm not sure we want to make exceptions for all the hardware
+>> combination we face, but we should go for something more generic (and
+>> easier to maintain instead).
+>>
+>> IIRC, from the previous discussion, HDMI had a tolerancy requirement
+>> in the standard. Do you know if there's such a thing for eDP? That
+>> would solve the issue for all the eDP displays at once.
+>
+>I don't have access to eDP standard - vesa.org says it's available to
+>members only.
+
+Try out to grab an old version?
+
+I remember 1.0 is open.
+
+>
+>> Maxime
+>>
+>> --
+>> Maxime Ripard, Bootlin
+>> Embedded Linux and Kernel engineering
+>> https://bootlin.com
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84An=
+droid=E8=AE=BE=E5=A4=87=E3=80=82
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
