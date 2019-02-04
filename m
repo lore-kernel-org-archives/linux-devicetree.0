@@ -1,81 +1,45 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: soc: fsl: Document Qixis FPGA usage
-Date: Mon, 4 Feb 2019 14:12:06 -0600
-Message-ID: <CADRPPNTjD1nN2eoyV6NucFYjH4vG8TaCG0u3YgEJd1699d07bQ@mail.gmail.com>
-References: <20190204143449.25040-1-pankaj.bansal@nxp.com>
- <20190204143449.25040-2-pankaj.bansal@nxp.com>
+From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/9] Analogix ANX6345 RGB-(e)DP bridge support
+Date: Mon, 4 Feb 2019 12:21:42 -0800
+Message-ID: <CA+E=qVfHMqo_ZWPTgvr+5G2J29Yy-TU4aceVD0oHLeyaOxVogA@mail.gmail.com>
+References: <20181018073327.64942-1-icenowy@aosc.io> <20190204122250.GB7660@lst.de>
+Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190204143449.25040-2-pankaj.bansal@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDV3B667TUHBBUV54LRAKGQEYEXUYDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190204122250.GB7660-jcswGhMUV9g@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Torsten Duwe <duwe-jcswGhMUV9g@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-UGxlYXNlIGluY2x1ZGUgZGV2aWNlIHRyZWUgYmluZGluZyBtYWlsaW5nIGxpc3QgYW5kIG1haW50
-YWluZXJzIGZvcgpiaW5kaW5nIHBhdGNoZXMoY2MnZWQgbm93KS4KCk9uIE1vbiwgRmViIDQsIDIw
-MTkgYXQgMzoxNSBBTSBQYW5rYWogQmFuc2FsIDxwYW5rYWouYmFuc2FsQG54cC5jb20+IHdyb3Rl
-Ogo+Cj4gYW4gRlBHQS1iYXNlZCBzeXN0ZW0gY29udHJvbGxlciwgY2FsbGVkIOKAnFFpeGlz4oCd
-LCB3aGljaAo+IG1hbmFnZXMgc2V2ZXJhbCBjcml0aWNhbCBzeXN0ZW0gZmVhdHVyZXMsIGluY2x1
-ZGluZzoKPiDigKIgUmVzZXQgc2VxdWVuY2luZwo+IOKAoiBQb3dlciBzdXBwbHkgY29uZmlndXJh
-dGlvbgo+IOKAoiBCb2FyZCBjb25maWd1cmF0aW9uCj4g4oCiIGhhcmR3YXJlIGNvbmZpZ3VyYXRp
-b24KPgo+IFRoZSBxaXhpcyByZWdpc3RlcnMgYXJlIGFjY2Vzc2libGUgb3ZlciBvbmUgb3IgbW9y
-ZSBzeXN0ZW0tc3BlY2lmaWMKPiBpbnRlcmZhY2VzLCB0eXBpY2FsbHkgSTJDLCBKVEFHIG9yIGFu
-IGVtYmVkZGVkIHByb2Nlc3Nvci4KPgo+IFNpZ25lZC1vZmYtYnk6IFBhbmthaiBCYW5zYWwgPHBh
-bmthai5iYW5zYWxAbnhwLmNvbT4KPiAtLS0KPgo+IE5vdGVzOgo+ICAgICBWMzoKPiAgICAgLSBB
-ZGRlZCBib2FyZG5hbWUgYmFzZWQgY29tcGF0aWJsZSBmaWVsZCBpbiBiaW5kaW5ncwo+ICAgICAt
-IEFkZGVkIGJpbmRpbmdzIGZvciBNTUlPIGJhc2VkIEZQR0EKPiAgICAgVjI6Cj4gICAgIC0gTm8g
-Y2hhbmdlCj4KPiAgLi4uL2JpbmRpbmdzL3NvYy9mc2wvcWl4aXNfY3RybC50eHQgICAgICAgICAg
-fCA1MyArKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDUzIGluc2VydGlvbnMo
-KykKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29j
-L2ZzbC9xaXhpc19jdHJsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-b2MvZnNsL3FpeGlzX2N0cmwudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAw
-MDAwMDAwMDAuLjVkNTEwZGYxNGJlOAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9xaXhpc19jdHJsLnR4dAo+IEBAIC0wLDAg
-KzEsNTMgQEAKPiArKiBRSVhJUyBGUEdBIGJsb2NrCj4gKwo+ICthbiBGUEdBLWJhc2VkIHN5c3Rl
-bSBjb250cm9sbGVyLCBjYWxsZWQg4oCcUWl4aXPigJ0sIHdoaWNoCj4gK21hbmFnZXMgc2V2ZXJh
-bCBjcml0aWNhbCBzeXN0ZW0gZmVhdHVyZXMsIGluY2x1ZGluZzoKPiAr4oCiIENvbmZpZ3VyYXRp
-b24gc3dpdGNoIG1vbml0b3JpbmcKPiAr4oCiIFBvd2VyIG9uL29mZiBzZXF1ZW5jaW5nCj4gK+KA
-oiBSZXNldCBzZXF1ZW5jaW5nCj4gK+KAoiBQb3dlciBzdXBwbHkgY29uZmlndXJhdGlvbgo+ICvi
-gKIgQm9hcmQgY29uZmlndXJhdGlvbgo+ICvigKIgaGFyZHdhcmUgY29uZmlndXJhdGlvbgo+ICvi
-gKIgQmFja2dyb3VuZCBwb3dlciBkYXRhIGNvbGxlY3Rpb24gKERDTSkKPiAr4oCiIEZhdWx0IG1v
-bml0b3JpbmcKPiAr4oCiIFJDVyBieXBhc3MgU1JBTSAocmVwbGFjZSBmbGFzaCBSQ1cgd2l0aCBp
-bnRlcm5hbCBSQ1cpIChOT1Igb25seSkKPiAr4oCiIERlZGljYXRlZCBmdW5jdGlvbmFsIHZhbGlk
-YXRpb24gYmxvY2tzIChQT1N0L0lSUywgdHJpZ2dlcmVkIGV2ZW50LCBhbmQgc28gb24pCj4gK+KA
-oiBJMkMgbWFzdGVyIGZvciByZW1vdGUgYm9hcmQgY29udHJvbCBldmVuIHdpdGggbm8gRFVUIGF2
-YWlsYWJsZQo+ICsKPiArVGhlIHFpeGlzIHJlZ2lzdGVycyBhcmUgYWNjZXNzaWJsZSBvdmVyIG9u
-ZSBvciBtb3JlIHN5c3RlbS1zcGVjaWZpYyBpbnRlcmZhY2VzLAo+ICt0eXBpY2FsbHkgSTJDLCBK
-VEFHIG9yIGFuIGVtYmVkZGVkIHByb2Nlc3Nvci4KPiArCj4gK0ZQR0EgY29ubmVjdGVkIHRvIEky
-QzoKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArCj4gKyAtIGNvbXBhdGlibGU6IHNob3VsZCBi
-ZSBhIGJvYXJkLXNwZWNpZmljIHN0cmluZyBmb2xsb3dlZCBieSBhIHN0cmluZwo+ICsgICBpbmRp
-Y2F0aW5nIHRoZSB0eXBlIG9mIEZQR0EuICBFeGFtcGxlOgo+ICsgICAgICAgImZzbCw8Ym9hcmQ+
-LWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMtaTJjIgo+ICsgLSByZWcgOiBpMmMgYWRkcmVzcyBvZiB0
-aGUgcWl4aXMgZGV2aWNlLgo+ICsKPiArRXhhbXBsZSAoTFgyMTYwQS1RRFMpOgo+ICsgICAgICAg
-LyogVGhlIEZQR0Egbm9kZSAqLwo+ICsgICAgICAgIGZwZ2FANjYgewo+ICsgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gImZzbCxseDIxNjBhcWRzLWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMtaTJj
-IjsKPiArICAgICAgICAgICAgICAgcmVnID0gPDB4NjY+Owo+ICsgICAgICAgICAgICAgICAjYWRk
-cmVzcy1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4g
-KyAgICAgICB9Cj4gKwo+ICsqIEZyZWVzY2FsZSBvbi1ib2FyZCBGUEdBCj4gKwo+ICtUaGlzIGlz
-IHRoZSBtZW1vcnktbWFwcGVkIHJlZ2lzdGVycyBmb3Igb24gYm9hcmQgRlBHQS4KPiArCj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlIGEgYm9hcmQtc3Bl
-Y2lmaWMgc3RyaW5nIGZvbGxvd2VkIGJ5IGEgc3RyaW5nCj4gKyAgaW5kaWNhdGluZyB0aGUgdHlw
-ZSBvZiBGUEdBLiAgRXhhbXBsZToKPiArICAgICAgICJmc2wsPGJvYXJkPi1mcGdhIiwgImZzbCxm
-cGdhLXFpeGlzIgo+ICstIHJlZzogc2hvdWxkIGNvbnRhaW4gdGhlIGFkZHJlc3MgYW5kIHRoZSBs
-ZW5ndGggb2YgdGhlIEZQR0EgcmVnaXN0ZXIgc2V0Lgo+ICsKPiArRXhhbXBsZSAoTFMyMDgwQS1S
-REIpOgo+ICsKPiArICAgICAgICBjcGxkQDMsMCB7Cj4gKyAgICAgICAgICAgICAgICBjb21wYXRp
-YmxlID0gImZzbCxsczIwODBhcmRiLWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMiOwo+ICsgICAgICAg
-ICAgICAgICAgcmVnID0gPDB4MyAwIDB4MTAwMDA+Owo+ICsgICAgICAgIH07Cj4gKwo+IC0tCj4g
-Mi4xNy4xCj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+On Mon, Feb 4, 2019 at 4:22 AM Torsten Duwe <duwe-jcswGhMUV9g@public.gmane.org> wrote:
+>
+> On Thu, Oct 18, 2018 at 03:33:18PM +0800, Icenowy Zheng wrote:
+> > This patchset brings the support for Analogix ANX6345 RGB-(e)DP bridge,
+> > which is used by some Allwinner A64 laptops, such as Pinebook and Olimex
+> > TERES-I.
+> >
+>
+> So what's the status here? I'm working on the Teres-I and I find myself
+> recreating the chunks in this patchset almost verbatim (only DT so far),
+> one by one, so there must be something right about them ;-)
+>
+> Whose turn is it?
+
+I've sent v2 yesterday, however I tested it only on Pinebook.
+
+>
+>         Torsten
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
