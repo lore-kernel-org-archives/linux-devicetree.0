@@ -1,70 +1,112 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2] sh: fix build error for invisible CONFIG_BUILTIN_DTB_SOURCE
-Date: Mon,  4 Feb 2019 18:10:55 +0900
-Message-ID: <1549271455-19292-1-git-send-email-yamada.masahiro@socionext.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: clk: add G12A AO Clock and Reset Bindings
+Date: Mon,  4 Feb 2019 10:13:29 +0100
+Message-ID: <20190204091331.9298-2-narmstrong@baylibre.com>
+References: <20190204091331.9298-1-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190204091331.9298-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kbuild@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-kernel@vger.kernel.org, Rich Felker <dalias@libc.org>, Mark Rutland <mark.rutland@arm.com>
+To: jbrunet@baylibre.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-I fixed a similar build error in commit 1b1e4ee86e00 ("sh: fix build
-error for empty CONFIG_BUILTIN_DTB_SOURCE"), but it came back again.
+Add bindings for the Amlogic G12A AO Clock and Reset controllers.
 
-Since commit 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb
-build rules"), the combination of CONFIG_OF_EARLY_FLATTREE=y and
-CONFIG_USE_BUILTIN_DTB=n results in the following build error:
-
-make[1]: *** No rule to make target 'arch/sh/boot/dts/.dtb.o', needed by 'arch/sh/boot/dts/built-in.a'.  Stop.
-make: *** [Makefile;1727: arch/sh/boot/dts/] Error 2
-
-Prior to that commit, there was only one path to descend into
-arch/sh/boot/dts/, and arch/sh/Makefile correctly guards it with
-CONFIG_USE_BUILTIN_DTB:
-
-  core-$(CONFIG_USE_BUILTIN_DTB)  += arch/sh/boot/dts/
-
-Now, there is another path to descend there from the top Makefile
-when CONFIG_OF_EARLY_FLATTREE=y. If CONFIG_USE_BUILTIN_DTB is disabled,
-CONFIG_BUILTIN_DTB_SOURCE is invisible instead of defined as "".
-
-Add obj-$(CONFIG_USE_BUILTIN_DTB) guard to avoid the attempt to build
-the non-existing file.
-
-Fixes: 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
+ .../bindings/clock/amlogic,gxbb-aoclkc.txt    |  1 +
+ include/dt-bindings/clock/g12a-aoclkc.h       | 43 +++++++++++++++++++
+ include/dt-bindings/reset/g12a-aoclkc.h       | 18 ++++++++
+ 3 files changed, 62 insertions(+)
+ create mode 100644 include/dt-bindings/clock/g12a-aoclkc.h
+ create mode 100644 include/dt-bindings/reset/g12a-aoclkc.h
 
-Observant reviewers may point out another problem.
-There is a race condition when CONFIG_OF_EARLY_FLATTREE=y.
-
-Some architectures (sh, xtensa, etc.) embed a DTB in vmlinux,
-so there are two paths to descend into arch/*/boot/dts/.
-For parallel build with -j<N> option, two threads may build
-under arch/*/boot/dts/ simultaneously.
-
-Yes, this is a problem, and it is in my TODO list.
-For some reasons, I will postpone it by the next development cycle.
-
-For now, I want to fix this sh build error first because kbuild test
-robot is still complaining about it.
-
-
-Changes in v2:
-  - Change the subject a bit because the cause of the error is different
-
- arch/sh/boot/dts/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
-index 01d0f7f..2563d1e 100644
---- a/arch/sh/boot/dts/Makefile
-+++ b/arch/sh/boot/dts/Makefile
-@@ -1,3 +1,3 @@
- ifneq ($(CONFIG_BUILTIN_DTB_SOURCE),"")
--obj-y += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
-+obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
- endif
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+index 79511d7bb321..c41f0be5d438 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
++++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+@@ -10,6 +10,7 @@ Required Properties:
+ 	- GXL (S905X, S905D) : "amlogic,meson-gxl-aoclkc"
+ 	- GXM (S912) : "amlogic,meson-gxm-aoclkc"
+ 	- AXG (A113D, A113X) : "amlogic,meson-axg-aoclkc"
++	- G12A (S905X2, S905D2, S905Y2) : "amlogic,meson-g12a-aoclkc"
+ 	followed by the common "amlogic,meson-gx-aoclkc"
+ - clocks: list of clock phandle, one for each entry clock-names.
+ - clock-names: should contain the following:
+diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-bindings/clock/g12a-aoclkc.h
+new file mode 100644
+index 000000000000..997aca16c94f
+--- /dev/null
++++ b/include/dt-bindings/clock/g12a-aoclkc.h
+@@ -0,0 +1,43 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (c) 2016 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * Copyright (c) 2018 Amlogic, inc.
++ * Author: Qiufang Dai <qiufang.dai@amlogic.com>
++ */
++
++#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
++#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
++
++#define CLKID_AO_AHB		0
++#define CLKID_AO_IR_IN		1
++#define CLKID_AO_I2C_M0		2
++#define CLKID_AO_I2C_S0		3
++#define CLKID_AO_UART		4
++#define CLKID_AO_PROD_I2C	5
++#define CLKID_AO_UART2		6
++#define CLKID_AO_IR_OUT		7
++#define CLKID_AO_SAR_ADC	8
++#define CLKID_AO_MAILBOX	9
++#define CLKID_AO_M3		10
++#define CLKID_AO_AHB_SRAM	11
++#define CLKID_AO_RTI		12
++#define CLKID_AO_M4_FCLK	13
++#define CLKID_AO_M4_HCLK	14
++#define CLKID_AO_CLK81		15
++#define CLKID_AO_SAR_ADC_SEL	16
++#define CLKID_AO_SAR_ADC_DIV	17
++#define CLKID_AO_SAR_ADC_CLK	18
++#define CLKID_AO_CTS_OSCIN	19
++#define CLKID_AO_32K_PRE	20
++#define CLKID_AO_32K_DIV	21
++#define CLKID_AO_32K_SEL	22
++#define CLKID_AO_32K		23
++#define CLKID_AO_CEC_PRE	24
++#define CLKID_AO_CEC_DIV	25
++#define CLKID_AO_CEC_SEL	26
++#define CLKID_AO_CEC		27
++#define CLKID_AO_CTS_RTC_OSCIN	28
++
++#endif
+diff --git a/include/dt-bindings/reset/g12a-aoclkc.h b/include/dt-bindings/reset/g12a-aoclkc.h
+new file mode 100644
+index 000000000000..bd2e2337135c
+--- /dev/null
++++ b/include/dt-bindings/reset/g12a-aoclkc.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (c) 2016 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
++#define DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
++
++#define RESET_AO_IR_IN		0
++#define RESET_AO_UART		1
++#define RESET_AO_I2C_M		2
++#define RESET_AO_I2C_S		3
++#define RESET_AO_SAR_ADC	4
++#define RESET_AO_UART2		5
++#define RESET_AO_IR_OUT		6
++
++#endif
 -- 
-2.7.4
+2.20.1
