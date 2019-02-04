@@ -1,54 +1,122 @@
-From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding
- for generic eDP panel
-Date: Mon, 4 Feb 2019 08:11:05 -0800
-Message-ID: <CA+E=qVew+8__yrAud1gFnLQ8HCwDdGhVjV=c173HGvZxH=7zZQ@mail.gmail.com>
-References: <20190203185501.8958-1-anarsoul@gmail.com> <20190203185501.8958-9-anarsoul@gmail.com>
- <20190204074350.GC16448@ulmo> <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
- <20190204082353.GE19087@ulmo>
-Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv3 00/27] PCI: refactor Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Date: Mon, 4 Feb 2019 16:13:03 +0000
+Message-ID: <20190204161303.GA18220@red-moon>
+References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
+ <20190129113910.GA7467@e107981-ln.cambridge.arm.com>
+ <CAFZiPx002HED+YH2GysS7a7uoEDQuHGjxa_CQtwb9nSDH-XNuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBNGI4HRAKGQELD4IQHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190204082353.GE19087@ulmo>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFZiPx002HED+YH2GysS7a7uoEDQuHGjxa_CQtwb9nSDH-XNuA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 4, 2019 at 12:24 AM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> > Pinebook used several 768p panels that have slightly different timings
-> > and recent batch uses 1080p panel.
-> >
-> > What panel descriptor should I use as fallback?
->
-> You don't use panel descriptors as fallback. The simple-panel driver
-> will bind to a panel device and use the corresponding descriptor. If
-> your device tree contains the correct information, the descriptor is
-> correct for the panel you have.
->
-> In other words you need to ensure that you have the correct panel in
-> device tree for the board that you're using. This is exactly the same
-> thing as for other devices.
->
-> One way to to this is to have separate device trees for each variant
-> of the board that you want to support. Another variant may be to have
-> a common device tree and then have some early firmware update the DTB
-> with the correct panel information.
+On Mon, Feb 04, 2019 at 07:44:25PM +0530, Subrahmanya Lingappa wrote:
+>    Bjorn,
+>    My apologies, I was away for a while from this work.
+>    I am starting to review now.
 
-That defeats the purpose of using eDP panels. Panel can identify
-itself and report what timings it supports.
+Hi,
 
-If we use separate DTBs then users will have to figure out what panel
-is installed in their hardware and use appropriate software image -
-that's something I'd like to avoid.
+I am not Bjorn and as I told you before you should not reply
+with html context (ie use plain text, the public lists will
+reject your emails otherwise) and top-post.
 
-I can add a descriptor for something like "pinebook eDP panel" if it
-works for you, but it won't have any display timings in it.
+You are supposed to maintain this code, if you can't it is fine but I
+should know because there are developers who are waiting for your
+review, please understand.
+
+Thanks,
+Lorenzo
+
+>    Thanks,
+>    ~subbu
+>    On Tue, Jan 29, 2019 at 5:09 PM Lorenzo Pieralisi
+>    <lorenzo.pieralisi@arm.com> wrote:
+> 
+>      On Tue, Jan 29, 2019 at 08:08:28AM +0000, Z.q. Hou wrote:
+>      > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>      >
+>      > This patch set is aim to refactor the Mobiveil driver and add
+>      > PCIe support for NXP Layerscape series SoCs integrated Mobiveil's
+>      > PCIe Gen4 controller.
+>      >
+>      > Hou Zhiqiang (27):
+>      >   PCI: mobiveil: uniform the register accessors
+>      >   PCI: mobiveil: format the code without function change
+>      >   PCI: mobiveil: correct the returned error number
+>      >   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
+>      >   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
+>      >   PCI: mobiveil: replace the resource list iteration function
+>      >   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
+>      >   PCI: mobiveil: use the 1st inbound window for MEM inbound
+>      transactions
+>      >   PCI: mobiveil: correct inbound/outbound window setup routines
+>      >   PCI: mobiveil: fix the INTx process error
+>      >   PCI: mobiveil: only fix up the Class Code field
+>      >   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
+>      >   PCI: mobiveil: move irq chained handler setup out of DT parse
+>      >   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
+>      >   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to
+>      optional
+>      >   PCI: mobiveil: refactor Mobiveil PCIe Host Bridge IP driver
+>      >   PCI: mobiveil: fix the checking of valid device
+>      >   PCI: mobiveil: continue to initialize the host upon no PCIe link
+>      >   PCI: mobiveil: disabled IB and OB windows set by bootloader
+>      >   PCI: mobiveil: add Byte and Half-Word width register accessors
+>      >   PCI: mobiveil: make mobiveil_host_init can be used to re-init host
+>      >   dt-bindings: pci: Add NXP Layerscape SoCs PCIe Gen4 controller
+>      >   PCI: mobiveil: add PCIe Gen4 RC driver for NXP Layerscape SoCs
+>      >   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
+>      >   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
+>      >   arm64: dts: freescale: lx2160a: add pcie DT nodes
+>      >   arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
+> 
+>      Subrahmanya,
+> 
+>      Either you review this series or I will have to drop you from
+>      the MAINTAINERS list for this driver, I am sorry but I asked you
+>      before to no avail.
+> 
+>      Thanks,
+>      Lorenzo
+> 
+>      >  .../bindings/pci/layerscape-pci-gen4.txt      |  52 ++
+>      >  .../devicetree/bindings/pci/mobiveil-pcie.txt |   2 +
+>      >  MAINTAINERS                                   |  10 +-
+>      >  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++
+>      >  arch/arm64/configs/defconfig                  |   1 +
+>      >  drivers/pci/controller/Kconfig                |  11 +-
+>      >  drivers/pci/controller/Makefile               |   2 +-
+>      >  drivers/pci/controller/mobiveil/Kconfig       |  34 +
+>      >  drivers/pci/controller/mobiveil/Makefile      |   5 +
+>      >  .../controller/mobiveil/pci-layerscape-gen4.c | 306 +++++++
+>      >  .../controller/mobiveil/pcie-mobiveil-host.c  | 640 +++++++++++++
+>      >  .../controller/mobiveil/pcie-mobiveil-plat.c  |  54 ++
+>      >  .../pci/controller/mobiveil/pcie-mobiveil.c   | 246 +++++
+>      >  .../pci/controller/mobiveil/pcie-mobiveil.h   | 229 +++++
+>      >  drivers/pci/controller/pcie-mobiveil.c        | 861
+>      ------------------
+>      >  15 files changed, 1743 insertions(+), 873 deletions(-)
+>      >  create mode 100644
+>      Documentation/devicetree/bindings/pci/layerscape-pci-gen4.txt
+>      >  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
+>      >  create mode 100644 drivers/pci/controller/mobiveil/Makefile
+>      >  create mode 100644
+>      drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+>      >  create mode 100644
+>      drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+>      >  create mode 100644
+>      drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
+>      >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
+>      >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
+>      >  delete mode 100644 drivers/pci/controller/pcie-mobiveil.c
+>      >
+>      > --
+>      > 2.17.1
+>      >
