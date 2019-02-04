@@ -1,23 +1,35 @@
-Return-Path: <SRS0=WNwJ=QM=verge.net.au=horms@kernel.org>
-Date: Tue, 5 Feb 2019 16:04:32 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 4/5] dt-bindings: timer: renesas: tmu: Document
- r8a774c0 bindings
-Message-ID: <20190205150432.ngl4suuhcum35hhl@verge.net.au>
+Return-Path: <SRS0=ieoU=QL=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 4/5] dt-bindings: timer: renesas: tmu: Document r8a774c0 bindings
+Date: Mon,  4 Feb 2019 09:20:06 +0000
+Message-Id: <1549272007-33471-5-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1549272007-33471-1-git-send-email-biju.das@bp.renesas.com>
 References: <1549272007-33471-1-git-send-email-biju.das@bp.renesas.com>
- <1549272007-33471-5-git-send-email-biju.das@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1549272007-33471-5-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Feb 04, 2019 at 09:20:06AM +0000, Biju Das wrote:
-> Document RZ/G2E (R8A774C0) SoC in the Renesas TMU bindings.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Document RZ/G2E (R8A774C0) SoC in the Renesas TMU bindings.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+V1-->V2 No change
+---
+ Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+index 4ddff85..13ad074 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+@@ -10,6 +10,7 @@ Required Properties:
+ 
+   - compatible: must contain one or more of the following:
+     - "renesas,tmu-r8a7740" for the r8a7740 TMU
++    - "renesas,tmu-r8a774c0" for the r8a774C0 TMU
+     - "renesas,tmu-r8a7778" for the r8a7778 TMU
+     - "renesas,tmu-r8a7779" for the r8a7779 TMU
+     - "renesas,tmu-r8a77970" for the r8a77970 TMU
+-- 
+2.7.4
