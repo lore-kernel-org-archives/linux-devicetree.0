@@ -1,27 +1,28 @@
-From: David Miller <davem@redhat.com>
-Subject: Re: [PATCH v2 net-next 2/2] net: nixge: Update device-tree
- bindings with v3.00
-Date: Sat, 02 Feb 2019 20:10:31 -0800 (PST)
-Message-ID: <20190202.201031.939725225267845792.davem@redhat.com>
-References: <20190131213328.11236-1-alex.williams@ettus.com>
-        <20190131213328.11236-2-alex.williams@ettus.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH v2 0/3] Add nvmem driver support for ZynqMP
+Date: Mon, 4 Feb 2019 12:39:48 +0530
+Message-ID: <20190204070951.6933-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131213328.11236-2-alex.williams@ettus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alex.williams@ettus.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mdf@kernel.org, mcgrof@kernel.org, keescook@chromium.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex.williams@ni.com
+To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, jollys@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: alex.williams@ettus.com
-Date: Thu, 31 Jan 2019 13:33:28 -0800
+Nava kishore Manne (3):
+  firmware: xilinx: Add zynqmp_pm_get_chipid() API
+  dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
+  nvmem: zynqmp: Added zynqmp nvmem firmware driver
 
-> From: Alex Williams <alex.williams@ni.com>
-> 
-> Now the DMA engine is free to float elsewhere in the system map.
-> 
-> Signed-off-by: Alex Williams <alex.williams@ni.com>
+ .../bindings/nvmem/xlnx,zynqmp-nvmem.txt      | 47 ++++++++++
+ drivers/firmware/xilinx/zynqmp.c              | 24 ++++++
+ drivers/nvmem/Kconfig                         | 15 ++--
+ drivers/nvmem/Makefile                        |  5 +-
+ drivers/nvmem/zynqmp_nvmem.c                  | 86 +++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h          |  2 +
+ 6 files changed, 169 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+ create mode 100644 drivers/nvmem/zynqmp_nvmem.c
 
-Applied.
+-- 
+2.18.0
