@@ -1,137 +1,131 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: [PATCH net-next 1/3] net: nixge: Make mdio child node optional
-Date: Mon,  4 Feb 2019 09:30:38 -0800
-Message-ID: <20190204173040.5538-2-moritz.fischer@ettus.com>
-References: <20190204173040.5538-1-moritz.fischer@ettus.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/7] thermal: mediatek: add calibration item
+Date: Mon, 4 Feb 2019 18:31:41 +0100
+Message-ID: <dcc04c1e-eb7d-024e-abc8-7b75504947c2@gmail.com>
+References: <1549006693-11659-1-git-send-email-michael.kao@mediatek.com>
+ <1549006693-11659-4-git-send-email-michael.kao@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204173040.5538-1-moritz.fischer@ettus.com>
+In-Reply-To: <1549006693-11659-4-git-send-email-michael.kao@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex.williams@ni.com, andrew@lunn.ch, robh+dt@kernel.org, davem@davemloft.net, moritz.fischer@ettus.com, Moritz Fischer <mdf@kernel.org>
+To: michael.kao@mediatek.com, =Zhang Rui <rui.zhang@intel.com>, =Eduardo Valentin <edubezval@gmail.com>, =Daniel Lezcano <daniel.lezcano@linaro.org>, =Rob Herring <robh+dt@kernel.org>, =Mark Rutland <mark.rutland@arm.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Moritz Fischer <mdf@kernel.org>
 
-Make MDIO child optional and only instantiate the
-MDIO bus if the child is actually present.
 
-There are currently no (in-tree) users of this
-binding; all (out-of-tree) users use overlays that
-get shipped together with the FPGA images that contain
-the IP.
+On 01/02/2019 08:38, michael.kao@mediatek.com wrote:
+> From: Michael Kao <michael.kao@mediatek.com>
+> 
+> Add calibration item in thermal_data to support
+> the project with different calibration coefficient.
+> 
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> ---
+>  drivers/thermal/mtk_thermal.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+> index 07f8ad7..45c6587 100644
+> --- a/drivers/thermal/mtk_thermal.c
+> +++ b/drivers/thermal/mtk_thermal.c
+> @@ -105,6 +105,9 @@
+>  /* The number of sensing points per bank */
+>  #define MT8173_NUM_SENSORS_PER_ZONE	4
+>  
+> +/* The calibration coefficient of sensor  */
+> +#define MT8173_CALIBRATION	165
+> +
 
-This will significantly increase maintainabilty
-of future revisions of this IP.
+Calibration value is the same for all SoCs (including mt8183), we can define it
+once and use it in all mtk_thermal structs.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
----
+Regards,
+Matthias
 
-Changes from RFC:
-- Add Andrew's Reviewed-by tag
-- Rebased on top of net-next
 
----
- .../devicetree/bindings/net/nixge.txt         | 27 ++++++++++++++++---
- drivers/net/ethernet/ni/nixge.c               | 19 ++++++++-----
- 2 files changed, 37 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
-index 44a7358b4399..bb2929f9c64f 100644
---- a/Documentation/devicetree/bindings/net/nixge.txt
-+++ b/Documentation/devicetree/bindings/net/nixge.txt
-@@ -16,6 +16,9 @@ Required properties:
- - nvmem-cells: Phandle of nvmem cell containing the MAC address
- - nvmem-cell-names: Should be "address"
- 
-+Optional properties:
-+- mdio subnode to indicate presence of MDIO controller
-+
- Examples (10G generic PHY):
- 	nixge0: ethernet@40000000 {
- 		compatible = "ni,xge-enet-3.00";
-@@ -33,8 +36,26 @@ Examples (10G generic PHY):
- 		phy-mode = "xgmii";
- 		phy-handle = <&ethernet_phy1>;
- 
--		ethernet_phy1: ethernet-phy@4 {
--			compatible = "ethernet-phy-ieee802.3-c45";
--			reg = <4>;
-+		mdio {
-+			ethernet_phy1: ethernet-phy@4 {
-+				compatible = "ethernet-phy-ieee802.3-c45";
-+				reg = <4>;
-+			};
- 		};
- 	};
-+
-+Examples (10G generic PHY, no MDIO):
-+	nixge0: ethernet@40000000 {
-+		compatible = "ni,xge-enet-2.00";
-+		reg = <0x40000000 0x6000>;
-+
-+		nvmem-cells = <&eth1_addr>;
-+		nvmem-cell-names = "address";
-+
-+		interrupts = <0 29 IRQ_TYPE_LEVEL_HIGH>, <0 30 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "rx", "tx";
-+		interrupt-parent = <&intc>;
-+
-+		phy-mode = "xgmii";
-+		phy-handle = <&ethernet_phy1>;
-+	};
-diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
-index 73a98bd2fcd2..c8dd1e4c759d 100644
---- a/drivers/net/ethernet/ni/nixge.c
-+++ b/drivers/net/ethernet/ni/nixge.c
-@@ -1284,6 +1284,7 @@ static int nixge_probe(struct platform_device *pdev)
- {
- 	struct nixge_priv *priv;
- 	struct net_device *ndev;
-+	struct device_node *mn;
- 	const u8 *mac_addr;
- 	int err;
- 
-@@ -1335,10 +1336,14 @@ static int nixge_probe(struct platform_device *pdev)
- 	priv->coalesce_count_rx = XAXIDMA_DFT_RX_THRESHOLD;
- 	priv->coalesce_count_tx = XAXIDMA_DFT_TX_THRESHOLD;
- 
--	err = nixge_mdio_setup(priv, pdev->dev.of_node);
--	if (err) {
--		netdev_err(ndev, "error registering mdio bus");
--		goto free_netdev;
-+	mn = of_get_child_by_name(pdev->dev.of_node, "mdio");
-+	if (mn) {
-+		err = nixge_mdio_setup(priv, mn);
-+		of_node_put(mn);
-+		if (err) {
-+			netdev_err(ndev, "error registering mdio bus");
-+			goto free_netdev;
-+		}
- 	}
- 
- 	priv->phy_mode = of_get_phy_mode(pdev->dev.of_node);
-@@ -1364,7 +1369,8 @@ static int nixge_probe(struct platform_device *pdev)
- 	return 0;
- 
- unregister_mdio:
--	mdiobus_unregister(priv->mii_bus);
-+	if (priv->mii_bus)
-+		mdiobus_unregister(priv->mii_bus);
- 
- free_netdev:
- 	free_netdev(ndev);
-@@ -1379,7 +1385,8 @@ static int nixge_remove(struct platform_device *pdev)
- 
- 	unregister_netdev(ndev);
- 
--	mdiobus_unregister(priv->mii_bus);
-+	if (priv->mii_bus)
-+		mdiobus_unregister(priv->mii_bus);
- 
- 	free_netdev(ndev);
- 
--- 
-2.20.1
+>  /*
+>   * Layout of the fuses providing the calibration data
+>   * These macros could be used for MT8173, MT2701, and MT2712.
+> @@ -147,6 +150,9 @@ enum {
+>  /* The number of sensing points per bank */
+>  #define MT2701_NUM_SENSORS_PER_ZONE	3
+>  
+> +/* The calibration coefficient of sensor  */
+> +#define MT2701_CALIBRATION	165
+> +
+>  /* MT2712 thermal sensors */
+>  #define MT2712_TS1	0
+>  #define MT2712_TS2	1
+> @@ -162,12 +168,18 @@ enum {
+>  /* The number of sensing points per bank */
+>  #define MT2712_NUM_SENSORS_PER_ZONE	4
+>  
+> +/* The calibration coefficient of sensor  */
+> +#define MT2712_CALIBRATION	165
+> +
+>  #define MT7622_TEMP_AUXADC_CHANNEL	11
+>  #define MT7622_NUM_SENSORS		1
+>  #define MT7622_NUM_ZONES		1
+>  #define MT7622_NUM_SENSORS_PER_ZONE	1
+>  #define MT7622_TS1	0
+>  
+> +/* The calibration coefficient of sensor  */
+> +#define MT7622_CALIBRATION	165
+> +
+>  struct mtk_thermal;
+>  
+>  struct thermal_bank_cfg {
+> @@ -188,6 +200,7 @@ struct mtk_thermal_data {
+>  	const int *sensor_mux_values;
+>  	const int *msr;
+>  	const int *adcpnp;
+> +	const int cali_val;
+>  	struct thermal_bank_cfg bank_data[];
+>  };
+>  
+> @@ -295,6 +308,7 @@ struct mtk_thermal {
+>  	.num_banks = MT8173_NUM_ZONES,
+>  	.num_sensors = MT8173_NUM_SENSORS,
+>  	.vts_index = mt8173_vts_index,
+> +	.cali_val = MT8173_CALIBRATION,
+>  	.bank_data = {
+>  		{
+>  			.num_sensors = 2,
+> @@ -330,6 +344,7 @@ struct mtk_thermal {
+>  	.num_banks = 1,
+>  	.num_sensors = MT2701_NUM_SENSORS,
+>  	.vts_index = mt2701_vts_index,
+> +	.cali_val = MT2701_CALIBRATION,
+>  	.bank_data = {
+>  		{
+>  			.num_sensors = 3,
+> @@ -356,6 +371,7 @@ struct mtk_thermal {
+>  	.num_banks = 1,
+>  	.num_sensors = MT2712_NUM_SENSORS,
+>  	.vts_index = mt2712_vts_index,
+> +	.cali_val = MT2712_CALIBRATION,
+>  	.bank_data = {
+>  		{
+>  			.num_sensors = 4,
+> @@ -376,6 +392,7 @@ struct mtk_thermal {
+>  	.num_banks = MT7622_NUM_ZONES,
+>  	.num_sensors = MT7622_NUM_SENSORS,
+>  	.vts_index = mt7622_vts_index,
+> +	.cali_val = MT7622_CALIBRATION,
+>  	.bank_data = {
+>  		{
+>  			.num_sensors = 1,
+> @@ -402,7 +419,7 @@ static int raw_to_mcelsius(struct mtk_thermal *mt, int sensno, s32 raw)
+>  	raw &= 0xfff;
+>  
+>  	tmp = 203450520 << 3;
+> -	tmp /= 165 + mt->o_slope;
+> +	tmp /= mt->conf->cali_val + mt->o_slope;
+>  	tmp /= 10000 + mt->adc_ge;
+>  	tmp *= raw - mt->vts[sensno] - 3350;
+>  	tmp >>= 3;
+> 
