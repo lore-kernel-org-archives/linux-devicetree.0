@@ -1,146 +1,70 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding
- for generic eDP panel
-Date: Mon, 4 Feb 2019 16:59:09 +0100
-Message-ID: <20190204155909.GU3271@phenom.ffwll.local>
-References: <20190203185501.8958-1-anarsoul@gmail.com>
- <20190203185501.8958-9-anarsoul@gmail.com>
- <20190204074350.GC16448@ulmo>
- <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
- <20190204082353.GE19087@ulmo>
- <20190204094012.GP3271@phenom.ffwll.local>
- <20190204112218.GB10412@ulmo>
-Reply-To: daniel-/w4YWyX8dFk@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcs404: evb: Fix voltages for s5 and l3
+Date: Mon, 4 Feb 2019 08:03:37 -0800
+Message-ID: <20190204160337.GG2387@tuxbook-pro>
+References: <20190125232954.26166-1-bjorn.andersson@linaro.org>
+ <32b8136d-3acb-66e9-948c-ee8903b91401@linaro.org>
+ <20190129224652.GB11349@centauri.lan>
+ <20190204104347.GD23441@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDYZDG4VSMIRBUWC4HRAKGQE7PMOZXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190204112218.GB10412@ulmo>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20190204104347.GD23441@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Niklas Cassel <niklas.cassel@linaro.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2019 at 12:22:18PM +0100, Thierry Reding wrote:
-> On Mon, Feb 04, 2019 at 10:40:12AM +0100, Daniel Vetter wrote:
-> > On Mon, Feb 04, 2019 at 09:23:59AM +0100, Thierry Reding wrote:
-> > > On Mon, Feb 04, 2019 at 12:13:55AM -0800, Vasily Khoruzhick wrote:
-> > > > On Sun, Feb 3, 2019 at 11:43 PM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > > >
-> > > > > On Sun, Feb 03, 2019 at 10:54:57AM -0800, Vasily Khoruzhick wrote:
-> > > > > > eDP panels usually have EDID EEPROM, so there's no need to define panel
-> > > > > > width/height or any modes/timings in dts. But this panel still may have
-> > > > > > regulator and/or backlight.
-> > > > > >
-> > > > > > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/display/panel/panel-edp.txt        | 7 +++++++
-> > > > > >  1 file changed, 7 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
-> > > > >
-> > > > > Please don't try to make panels look more generic than they really are.
-> > > > > You're going to have to provide a compatible string for your device that
-> > > > > is more specific than "panel-edp". You claim that you don't need any
-> > > > > extra information that is panel specific, but you don't know that now.
-> > > > > We have in the past thought that we didn't need things like prepare
-> > > > > delay, but then we ran into situations where we did need them.
-> > > > >
-> > > > > Just do what everybody else does. Provide a specific compatible string
-> > > > > and match on that in the panel-simple driver. Even if you can read all
-> > > > > the video timings from an EDID EEPROM, you can still provide a mode in
-> > > > > the panel descriptor to serve as a fallback if for example the EEPROM
-> > > > > is faulty on some device.
-> > > > 
-> > > > Pinebook used several 768p panels that have slightly different timings
-> > > > and recent batch uses 1080p panel.
-> > > > 
-> > > > What panel descriptor should I use as fallback?
-> > > 
-> > > You don't use panel descriptors as fallback. The simple-panel driver
-> > > will bind to a panel device and use the corresponding descriptor. If
-> > > your device tree contains the correct information, the descriptor is
-> > > correct for the panel you have.
-> > > 
-> > > In other words you need to ensure that you have the correct panel in
-> > > device tree for the board that you're using. This is exactly the same
-> > > thing as for other devices.
-> > > 
-> > > One way to to this is to have separate device trees for each variant
-> > > of the board that you want to support. Another variant may be to have
-> > > a common device tree and then have some early firmware update the DTB
-> > > with the correct panel information.
-> > 
-> > This would defeat the point of edp, which is to standardize the mess of
-> > panels (at least somewhat) and avoid having to change the DT/ACPI
-> > tables/firmware for every board you ship. Also, we do have DP quirking
-> > infrastructure already (using the OUI), I think if there's something that
-> > doesn't work then we should quirk it there.
-> 
-> The problem is that while the attempt may have been to standardize, it
-> failed. It doesn't take into account any of the details such as timing
-> between things like powering up the display and enabling the backlight
-> or similar. I don't know how you'd want to "quirk" those kinds of
-> requirements because they are highly panel specific.
+On Mon 04 Feb 02:43 PST 2019, Mark Brown wrote:
 
-Hm right, we get these from some firmware tables (and mix them with the
-spec one, since some of the firmware values are nonsense). I don't even
-know whether we can read the timings over dp aux somehow (you can power up
-the panel with some pessimistic values to figure those out, and you only
-need dp aux to work, which is much simpler than the entire panel).
-
-> > What does make sense though imo is if we try not to stuff the edp panel
-> > into panel-simple, because it's anything like a simple dumb panel. There's
-> > also some integration awkwardness since with this panel you need to do dp
-> > aux/i2c transactions to get at the information (edid alone isn't good
-> > enough for edp), and I'm not sure how exactly that's supposed to be
-> > instantiated. Maybe a special function to instantiate an edp panel, which
-> > takes both a DT node and the dp_aux controller would be much better,
-> > instead of trying to auto-match against a DT compatible string and load a
-> > panel driver which is almost all fake.
-> > 
-> > Or we teach dp_aux to register itself and somehow teach panel-edp how it
-> > can get hold of the dp_aux channel it needs.
+> On Tue, Jan 29, 2019 at 11:46:52PM +0100, Niklas Cassel wrote:
 > 
-> We already do that. drm_dp_aux registers as an I2C adapter that can be
-> used to read EDID EEPROMs using I2C-over-AUX transactions. We already
-> use that on some platforms.
+> > Adding Mark Brown on CC.
 > 
-> Also note that simple-panel already supports getting video timings from
-> EDID. If a DDC link is present in DT, the driver will load the modes
-> from EDID and use them.
-
-Could we extend this to dp aux somehow? For edp you need the dp aux (which
-then gives you the ddc link automatically).
-
-> > But fake mode in panel-simple sounds like the wrong approach. At least
-> > from our experience with i915 (and I think other drivers supporting edp),
-> > the standardization of panels for basic stuff at least worked.
-> > Self-refresh seems an entirely different story unfortunately ... but again
-> > quirking that for DP stuff should be done using the OUI I think.
+> It really helps if you ask a specific question when doing something like
+> this rather than just have a big quoted mail - it makes it much easier
+> to find what's relevant rather than trying to find things, especially
+> when they're buried behind several layers of quoting.
 > 
-> I can imagine that on x86 platforms OEMs can also easily hide some of
-> the necessary quirks in ACPI. None of that exists on ARM or other
-> architectures that solely rely on device tree to describe the device.
-> Since there's no way of specifying power sequences in DT (there have
-> been attempts in the past to make that work, but they failed miserably)
-> all we can do is match on a compatible string and encode the necessary
-> logic in the driver. Luckily we haven't run into anything too fancy up
-> to now and we've been able to make things work mostly with just a couple
-> of fairly generic parameters.
+> > On Tue, Jan 29, 2019 at 10:58:47PM +0100, Jorge Ramirez wrote:
+> > > On 1/26/19 00:29, Bjorn Andersson wrote:
 > 
-> Also note that initially people thought this wasn't going to be
-> necessary and we only added the various "delay" parameters later on
-> because it did turn out that not all panels are created equal.
+> > > the question is, should this property contain only hardware achievable
+> > > values? or should drivers only request hardware achievable values? the
+> > > way the constrains are implemented it has to be one of the two (I think
+> > > the former would be more intuitive - ie if the dts
+> > > regulator-min-microvolt is a valid value)
+> 
+> Drivers should not be coded with a specific regulator or board in mind
+> and should just request whatever they need.  This will then be matched
+> with whatever the board is actually able to deliver.  Similarly there is
+> no requirement that machine constraints be written with specific
+> reference to what the physical regulator on the board is able to do, for
+> example the constraints will come from electrical engineering
+> restrictions like the specifications of the parts connected to the
+> regulator rather than from what the regulator can actually do so people
+> should feel free to just write down the actual physical constraint and
+> let the regulator API ensure that the constraint is met.
 
-Yeah this sucks, but oh well.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+We have a regulator that is described as 1.05V in the schematics for the
+board we're working on and we have the USB block wanting 1.05V on one of
+its pins.  But the particular regulator works in steps of 8mV, and the
+adjacent steps are 1.048V and 1.056V.
+
+A) If we describe the min-microvolt = max-microvolt = 1.05V then the
+regulator frameworks adjusts the min value to 1.056V, per the steps, and
+fail as min > max.
+
+B) The USB driver that we inherited was written to request min/max of
+1.05V/1.05V, so pointing this to a regulator with min/max of e.g.
+1.05V/1.06V we're outside the adjusted range of 1.056V/1.06V.
+
+
+So the question is, should the board dts be written with
+min/max-microvolt adjusted to match the hardware steps? Or could the
+regulator framework be made to round down to the previous valid step
+instead of up?
+
+Regards,
+Bjorn
