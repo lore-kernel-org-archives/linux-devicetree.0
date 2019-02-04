@@ -1,55 +1,73 @@
 From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: [PATCH net-next 3/3] dt-bindings: net: Add fixed-link support
-Date: Mon,  4 Feb 2019 09:30:40 -0800
-Message-ID: <20190204173040.5538-4-moritz.fischer@ettus.com>
+Subject: [PATCH net-next 1/3] net: nixge: Make mdio child node optional
+Date: Mon,  4 Feb 2019 09:30:38 -0800
+Message-ID: <20190204173040.5538-2-moritz.fischer@ettus.com>
 References: <20190204173040.5538-1-moritz.fischer@ettus.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190204173040.5538-1-moritz.fischer@ettus.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alex.williams@ni.com, andrew@lunn.ch, robh+dt@kernel.org, davem@davemloft.net, moritz.fischer@ettus.com, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Moritz Fischer <mdf@kernel.org>
 
-Update device-tree binding with fixed-link support.
+Make MDIO child optional and only instantiate the
+MDIO bus if the child is actually present.
 
-With fixed-link support the formerly required property 'phy-handle'
-is now optional if 'fixed-link' child is present.
+There are currently no (in-tree) users of this
+binding; all (out-of-tree) users use overlays that
+get shipped together with the FPGA images that contain
+the IP.
 
+This will significantly increase maintainabilty
+of future revisions of this IP.
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Moritz Fischer <mdf@kernel.org>
 ---
- .../devicetree/bindings/net/nixge.txt         | 33 ++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+
+Changes from RFC:
+- Add Andrew's Reviewed-by tag
+- Rebased on top of net-next
+
+---
+ .../devicetree/bindings/net/nixge.txt         | 27 ++++++++++++++++---
+ drivers/net/ethernet/ni/nixge.c               | 19 ++++++++-----
+ 2 files changed, 37 insertions(+), 9 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
-index bb2929f9c64f..85d7240a9b20 100644
+index 44a7358b4399..bb2929f9c64f 100644
 --- a/Documentation/devicetree/bindings/net/nixge.txt
 +++ b/Documentation/devicetree/bindings/net/nixge.txt
-@@ -12,12 +12,14 @@ Required properties:
- - interrupts: Should contain tx and rx interrupt
- - interrupt-names: Should be "rx" and "tx"
- - phy-mode: See ethernet.txt file in the same directory.
--- phy-handle: See ethernet.txt file in the same directory.
+@@ -16,6 +16,9 @@ Required properties:
  - nvmem-cells: Phandle of nvmem cell containing the MAC address
  - nvmem-cell-names: Should be "address"
  
- Optional properties:
- - mdio subnode to indicate presence of MDIO controller
-+- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
-+  Use instead of phy-handle.
-+- phy-handle: See ethernet.txt file in the same directory.
- 
++Optional properties:
++- mdio subnode to indicate presence of MDIO controller
++
  Examples (10G generic PHY):
  	nixge0: ethernet@40000000 {
-@@ -59,3 +61,32 @@ Examples (10G generic PHY, no MDIO):
+ 		compatible = "ni,xge-enet-3.00";
+@@ -33,8 +36,26 @@ Examples (10G generic PHY):
  		phy-mode = "xgmii";
  		phy-handle = <&ethernet_phy1>;
+ 
+-		ethernet_phy1: ethernet-phy@4 {
+-			compatible = "ethernet-phy-ieee802.3-c45";
+-			reg = <4>;
++		mdio {
++			ethernet_phy1: ethernet-phy@4 {
++				compatible = "ethernet-phy-ieee802.3-c45";
++				reg = <4>;
++			};
+ 		};
  	};
 +
-+Examples (1G generic fixed-link + MDIO):
++Examples (10G generic PHY, no MDIO):
 +	nixge0: ethernet@40000000 {
 +		compatible = "ni,xge-enet-2.00";
 +		reg = <0x40000000 0x6000>;
@@ -62,20 +80,58 @@ index bb2929f9c64f..85d7240a9b20 100644
 +		interrupt-parent = <&intc>;
 +
 +		phy-mode = "xgmii";
-+
-+		fixed-link {
-+			speed = <1000>;
-+			pause;
-+			link-gpios = <&gpio0 63 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		mdio {
-+			ethernet_phy1: ethernet-phy@4 {
-+				compatible = "ethernet-phy-ieee802.3-c22";
-+				reg = <4>;
-+			};
-+		};
-+
++		phy-handle = <&ethernet_phy1>;
 +	};
+diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
+index 73a98bd2fcd2..c8dd1e4c759d 100644
+--- a/drivers/net/ethernet/ni/nixge.c
++++ b/drivers/net/ethernet/ni/nixge.c
+@@ -1284,6 +1284,7 @@ static int nixge_probe(struct platform_device *pdev)
+ {
+ 	struct nixge_priv *priv;
+ 	struct net_device *ndev;
++	struct device_node *mn;
+ 	const u8 *mac_addr;
+ 	int err;
+ 
+@@ -1335,10 +1336,14 @@ static int nixge_probe(struct platform_device *pdev)
+ 	priv->coalesce_count_rx = XAXIDMA_DFT_RX_THRESHOLD;
+ 	priv->coalesce_count_tx = XAXIDMA_DFT_TX_THRESHOLD;
+ 
+-	err = nixge_mdio_setup(priv, pdev->dev.of_node);
+-	if (err) {
+-		netdev_err(ndev, "error registering mdio bus");
+-		goto free_netdev;
++	mn = of_get_child_by_name(pdev->dev.of_node, "mdio");
++	if (mn) {
++		err = nixge_mdio_setup(priv, mn);
++		of_node_put(mn);
++		if (err) {
++			netdev_err(ndev, "error registering mdio bus");
++			goto free_netdev;
++		}
+ 	}
+ 
+ 	priv->phy_mode = of_get_phy_mode(pdev->dev.of_node);
+@@ -1364,7 +1369,8 @@ static int nixge_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ unregister_mdio:
+-	mdiobus_unregister(priv->mii_bus);
++	if (priv->mii_bus)
++		mdiobus_unregister(priv->mii_bus);
+ 
+ free_netdev:
+ 	free_netdev(ndev);
+@@ -1379,7 +1385,8 @@ static int nixge_remove(struct platform_device *pdev)
+ 
+ 	unregister_netdev(ndev);
+ 
+-	mdiobus_unregister(priv->mii_bus);
++	if (priv->mii_bus)
++		mdiobus_unregister(priv->mii_bus);
+ 
+ 	free_netdev(ndev);
+ 
 -- 
 2.20.1
