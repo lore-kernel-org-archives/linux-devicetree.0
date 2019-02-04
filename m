@@ -1,133 +1,114 @@
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: Re: [PATCHv3 00/27] PCI: refactor Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Date: Mon, 4 Feb 2019 22:21:04 +0530
-Message-ID: <CAFZiPx3DTCgRtSehsQKOAfZoSpBgyU-JZXwVhmDvWesefW-32w@mail.gmail.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com> <20190129113910.GA7467@e107981-ln.cambridge.arm.com>
- <CAFZiPx002HED+YH2GysS7a7uoEDQuHGjxa_CQtwb9nSDH-XNuA@mail.gmail.com> <20190204161303.GA18220@red-moon>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding
+ for generic eDP panel
+Date: Mon, 4 Feb 2019 17:56:37 +0100
+Message-ID: <20190204165637.GA30876@ulmo>
+References: <20190203185501.8958-1-anarsoul@gmail.com>
+ <20190203185501.8958-9-anarsoul@gmail.com>
+ <20190204074350.GC16448@ulmo>
+ <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
+ <20190204082353.GE19087@ulmo>
+ <CAL_JsqKt1kOXmRNvkYsQ6AL69+TPZURKpDbKkkEUb2+KZ5hKjQ@mail.gmail.com>
+Reply-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204161303.GA18220@red-moon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Return-path: <linux-sunxi+bncBDTKFPPJUEHRBSG54HRAKGQEU62WBCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKt1kOXmRNvkYsQ6AL69+TPZURKpDbKkkEUb2+KZ5hKjQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lorenzo,
-My apologies again,
 
-I have started looking into these.
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Thanks,
-
-
-
-
-On Mon, Feb 4, 2019 at 9:43 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Mon, Feb 04, 2019 at 07:44:25PM +0530, Subrahmanya Lingappa wrote:
-> >    Bjorn,
-> >    My apologies, I was away for a while from this work.
-> >    I am starting to review now.
->
-> Hi,
->
-> I am not Bjorn and as I told you before you should not reply
-> with html context (ie use plain text, the public lists will
-> reject your emails otherwise) and top-post.
->
-> You are supposed to maintain this code, if you can't it is fine but I
-> should know because there are developers who are waiting for your
-> review, please understand.
->
-> Thanks,
-> Lorenzo
->
-> >    Thanks,
-> >    ~subbu
-> >    On Tue, Jan 29, 2019 at 5:09 PM Lorenzo Pieralisi
-> >    <lorenzo.pieralisi@arm.com> wrote:
+On Mon, Feb 04, 2019 at 10:27:09AM -0600, Rob Herring wrote:
+> On Mon, Feb 4, 2019 at 2:24 AM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > >
-> >      On Tue, Jan 29, 2019 at 08:08:28AM +0000, Z.q. Hou wrote:
-> >      > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> >      >
-> >      > This patch set is aim to refactor the Mobiveil driver and add
-> >      > PCIe support for NXP Layerscape series SoCs integrated Mobiveil's
-> >      > PCIe Gen4 controller.
-> >      >
-> >      > Hou Zhiqiang (27):
-> >      >   PCI: mobiveil: uniform the register accessors
-> >      >   PCI: mobiveil: format the code without function change
-> >      >   PCI: mobiveil: correct the returned error number
-> >      >   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
-> >      >   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
-> >      >   PCI: mobiveil: replace the resource list iteration function
-> >      >   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
-> >      >   PCI: mobiveil: use the 1st inbound window for MEM inbound
-> >      transactions
-> >      >   PCI: mobiveil: correct inbound/outbound window setup routines
-> >      >   PCI: mobiveil: fix the INTx process error
-> >      >   PCI: mobiveil: only fix up the Class Code field
-> >      >   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
-> >      >   PCI: mobiveil: move irq chained handler setup out of DT parse
-> >      >   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
-> >      >   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to
-> >      optional
-> >      >   PCI: mobiveil: refactor Mobiveil PCIe Host Bridge IP driver
-> >      >   PCI: mobiveil: fix the checking of valid device
-> >      >   PCI: mobiveil: continue to initialize the host upon no PCIe link
-> >      >   PCI: mobiveil: disabled IB and OB windows set by bootloader
-> >      >   PCI: mobiveil: add Byte and Half-Word width register accessors
-> >      >   PCI: mobiveil: make mobiveil_host_init can be used to re-init host
-> >      >   dt-bindings: pci: Add NXP Layerscape SoCs PCIe Gen4 controller
-> >      >   PCI: mobiveil: add PCIe Gen4 RC driver for NXP Layerscape SoCs
-> >      >   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
-> >      >   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
-> >      >   arm64: dts: freescale: lx2160a: add pcie DT nodes
-> >      >   arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
+> > On Mon, Feb 04, 2019 at 12:13:55AM -0800, Vasily Khoruzhick wrote:
+> > > On Sun, Feb 3, 2019 at 11:43 PM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > >
+> > > > On Sun, Feb 03, 2019 at 10:54:57AM -0800, Vasily Khoruzhick wrote:
+> > > > > eDP panels usually have EDID EEPROM, so there's no need to define panel
+> > > > > width/height or any modes/timings in dts. But this panel still may have
+> > > > > regulator and/or backlight.
+> > > > >
+> > > > > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > > ---
+> > > > >  .../devicetree/bindings/display/panel/panel-edp.txt        | 7 +++++++
+> > > > >  1 file changed, 7 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
+> > > >
+> > > > Please don't try to make panels look more generic than they really are.
+> > > > You're going to have to provide a compatible string for your device that
+> > > > is more specific than "panel-edp". You claim that you don't need any
+> > > > extra information that is panel specific, but you don't know that now.
+> > > > We have in the past thought that we didn't need things like prepare
+> > > > delay, but then we ran into situations where we did need them.
+> > > >
+> > > > Just do what everybody else does. Provide a specific compatible string
+> > > > and match on that in the panel-simple driver. Even if you can read all
+> > > > the video timings from an EDID EEPROM, you can still provide a mode in
+> > > > the panel descriptor to serve as a fallback if for example the EEPROM
+> > > > is faulty on some device.
+> > >
+> > > Pinebook used several 768p panels that have slightly different timings
+> > > and recent batch uses 1080p panel.
+> > >
+> > > What panel descriptor should I use as fallback?
 > >
-> >      Subrahmanya,
+> > You don't use panel descriptors as fallback. The simple-panel driver
+> > will bind to a panel device and use the corresponding descriptor. If
+> > your device tree contains the correct information, the descriptor is
+> > correct for the panel you have.
 > >
-> >      Either you review this series or I will have to drop you from
-> >      the MAINTAINERS list for this driver, I am sorry but I asked you
-> >      before to no avail.
+> > In other words you need to ensure that you have the correct panel in
+> > device tree for the board that you're using. This is exactly the same
+> > thing as for other devices.
 > >
-> >      Thanks,
-> >      Lorenzo
-> >
-> >      >  .../bindings/pci/layerscape-pci-gen4.txt      |  52 ++
-> >      >  .../devicetree/bindings/pci/mobiveil-pcie.txt |   2 +
-> >      >  MAINTAINERS                                   |  10 +-
-> >      >  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++
-> >      >  arch/arm64/configs/defconfig                  |   1 +
-> >      >  drivers/pci/controller/Kconfig                |  11 +-
-> >      >  drivers/pci/controller/Makefile               |   2 +-
-> >      >  drivers/pci/controller/mobiveil/Kconfig       |  34 +
-> >      >  drivers/pci/controller/mobiveil/Makefile      |   5 +
-> >      >  .../controller/mobiveil/pci-layerscape-gen4.c | 306 +++++++
-> >      >  .../controller/mobiveil/pcie-mobiveil-host.c  | 640 +++++++++++++
-> >      >  .../controller/mobiveil/pcie-mobiveil-plat.c  |  54 ++
-> >      >  .../pci/controller/mobiveil/pcie-mobiveil.c   | 246 +++++
-> >      >  .../pci/controller/mobiveil/pcie-mobiveil.h   | 229 +++++
-> >      >  drivers/pci/controller/pcie-mobiveil.c        | 861
-> >      ------------------
-> >      >  15 files changed, 1743 insertions(+), 873 deletions(-)
-> >      >  create mode 100644
-> >      Documentation/devicetree/bindings/pci/layerscape-pci-gen4.txt
-> >      >  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
-> >      >  create mode 100644 drivers/pci/controller/mobiveil/Makefile
-> >      >  create mode 100644
-> >      drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
-> >      >  create mode 100644
-> >      drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-> >      >  create mode 100644
-> >      drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
-> >      >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
-> >      >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> >      >  delete mode 100644 drivers/pci/controller/pcie-mobiveil.c
-> >      >
-> >      > --
-> >      > 2.17.1
-> >      >
+> > One way to to this is to have separate device trees for each variant
+> > of the board that you want to support. Another variant may be to have
+> > a common device tree and then have some early firmware update the DTB
+> > with the correct panel information.
+> 
+> That can be a pain to manage especially if panels are swapped run to
+> run with 2nd sources.
+> 
+> I think it is perfectly fine to have a generic-ish fallback as long as
+> it is just that, a fallback. If the panel has quirks, then you'd
+> better make sure the firmware is stuffing in the right compatibles or
+> that you can update the firmware.
+
+simple-panel would probably work if you stuck in some mostly compatible
+string and provided a ddc-i2c-bus property in the device tree node. The
+generic-ish fallback case could be implemented by providing a fallback
+compatible string (we used to have "simple-panel", which I think would
+still be adequate for this I suppose) and adding a dummy descriptor in
+the driver, perhaps one with pre-defined delays that could be adjusted
+to work for all cases, or they could just be 0. At least that way we'd
+be explicitly documenting that we support this as a fallback.
+
+I'm not sure how you'd want to enforce that people provide the right
+compatible strings that way. Currently there's no way to make your panel
+work without adding a panel driver, so people are forced to write the
+DT bindings and a driver, or add support to an existing one. If we open
+this backdoor, I suspect many people will just take the easy route and
+rely on the fallback. And then what do we do when we get bug reports
+about panels not working, or requiring some quirks. How do we go and
+find out what the right compatible strings are for each board, or how to
+fix things for something we don't have access to.
+
+This all sounds like a Pandora's box to me.
+
+Thierry
+--k+w/mQv8wyuph6w0--
