@@ -1,170 +1,43 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 07/14] remoteproc: Add a rproc_set_firmware() API
-Date: Mon, 4 Feb 2019 16:22:40 +0200
-Message-ID: <1549290167-876-8-git-send-email-rogerq@ti.com>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+From: <Tudor.Ambarus@microchip.com>
+Subject: Re: [PATCH v4 13/13] spi: atmel-quadspi: add support for sam9x60 qspi
+ controller
+Date: Mon, 4 Feb 2019 14:28:27 +0000
+Message-ID: <25f6ee72-e6e1-7014-6e4b-abe0a1a0eebc@microchip.com>
+References: <20190204100910.26701-1-tudor.ambarus@microchip.com>
+ <20190204100910.26701-14-tudor.ambarus@microchip.com>
+ <20190204151643.0354180d@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549290167-876-1-git-send-email-rogerq@ti.com>
+In-Reply-To: <20190204151643.0354180d@bbrezillon>
+Content-Language: en-US
+Content-ID: <76203A191EB89340847F683DC537E571@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc: s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rogerq@ti.com
+To: bbrezillon@kernel.org
+Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, Cyrille.Pitchen@microchip.com, bugalski.piotr@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
-
-A new API, rproc_set_firmware() is added to allow the remoteproc platform
-drivers and remoteproc client drivers to be able to configure a custom
-firmware name that is different from the default name used during
-remoteproc registration. This function is being introduced to provide
-a kernel-level equivalent of the current sysfs interface to remoteproc
-client drivers. This allows some remoteproc drivers to choose different
-firmwares at runtime when the remote processor is not running based on
-the functional feature it is providing using that remote processor.
-The TI PRU Ethernet driver will be an example of such usage as it
-requires to use different firmwares for different supported protocols.
-
-Also, update the firmware_store() function used by the sysfs interface
-to reuse this function to avoid code duplication.
-
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/remoteproc/remoteproc_core.c  | 61 +++++++++++++++++++++++++++++++++++
- drivers/remoteproc/remoteproc_sysfs.c | 33 ++-----------------
- include/linux/remoteproc.h            |  1 +
- 3 files changed, 64 insertions(+), 31 deletions(-)
-
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 06ef4fa..2d9646f 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -2149,6 +2149,67 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
- }
- EXPORT_SYMBOL(rproc_report_crash);
- 
-+/**
-+ * rproc_set_firmware() - assign a new firmware
-+ * @rproc: rproc handle to which the new firmware is being assigned
-+ * @fw_name: new firmware name to be assigned
-+ *
-+ * This function allows remoteproc drivers or clients to configure a custom
-+ * firmware name that is different from the default name used during remoteproc
-+ * registration. The function does not trigger a remote processor boot,
-+ * only sets the firmware name used for a subsequent boot. This function
-+ * should also be called only when the remote processor is offline.
-+ *
-+ * This allows either the userspace to configure a different name through
-+ * sysfs or a kernel-level remoteproc or a remoteproc client driver to set
-+ * a specific firmware when it is controlling the boot and shutdown of the
-+ * remote processor.
-+ *
-+ * Returns 0 on success or a negative value upon failure
-+ */
-+int rproc_set_firmware(struct rproc *rproc, const char *fw_name)
-+{
-+	struct device *dev = rproc->dev.parent;
-+	int ret, len;
-+	char *p;
-+
-+	if (!rproc || !fw_name)
-+		return -EINVAL;
-+
-+	ret = mutex_lock_interruptible(&rproc->lock);
-+	if (ret) {
-+		dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
-+		return -EINVAL;
-+	}
-+
-+	if (rproc->state != RPROC_OFFLINE) {
-+		dev_err(dev, "can't change firmware while running\n");
-+		ret = -EBUSY;
-+		goto out;
-+	}
-+
-+	len = strcspn(fw_name, "\n");
-+	if (!len) {
-+		dev_err(dev, "empty firmware name string\n");
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	p = kstrndup(fw_name, len, GFP_KERNEL);
-+	if (!p) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	kfree(rproc->firmware);
-+	rproc->firmware = p;
-+
-+out:
-+	mutex_unlock(&rproc->lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL(rproc_set_firmware);
-+
- static int __init remoteproc_init(void)
- {
- 	rproc_init_sysfs();
-diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-index 3a4c3d7..6cf04a7 100644
---- a/drivers/remoteproc/remoteproc_sysfs.c
-+++ b/drivers/remoteproc/remoteproc_sysfs.c
-@@ -32,38 +32,9 @@ static ssize_t firmware_store(struct device *dev,
- 			      const char *buf, size_t count)
- {
- 	struct rproc *rproc = to_rproc(dev);
--	char *p;
--	int err, len = count;
-+	int err;
- 
--	err = mutex_lock_interruptible(&rproc->lock);
--	if (err) {
--		dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, err);
--		return -EINVAL;
--	}
--
--	if (rproc->state != RPROC_OFFLINE) {
--		dev_err(dev, "can't change firmware while running\n");
--		err = -EBUSY;
--		goto out;
--	}
--
--	len = strcspn(buf, "\n");
--	if (!len) {
--		dev_err(dev, "can't provide a NULL firmware\n");
--		err = -EINVAL;
--		goto out;
--	}
--
--	p = kstrndup(buf, len, GFP_KERNEL);
--	if (!p) {
--		err = -ENOMEM;
--		goto out;
--	}
--
--	kfree(rproc->firmware);
--	rproc->firmware = p;
--out:
--	mutex_unlock(&rproc->lock);
-+	err = rproc_set_firmware(rproc, buf);
- 
- 	return err ? err : count;
- }
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index e908b58..b5aa5fb 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -590,6 +590,7 @@ rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, int len,
- 
- int rproc_boot(struct rproc *rproc);
- void rproc_shutdown(struct rproc *rproc);
-+int rproc_set_firmware(struct rproc *rproc, const char *fw_name);
- void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type);
- int rproc_coredump_add_segment(struct rproc *rproc, dma_addr_t da, size_t size);
- int rproc_coredump_add_custom_segment(struct rproc *rproc,
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+DQoNCk9uIDAyLzA0LzIwMTkgMDQ6MTYgUE0sIEJvcmlzIEJyZXppbGxvbiB3cm90ZToNCj4gT24g
+TW9uLCA0IEZlYiAyMDE5IDEwOjEwOjIxICswMDAwDQo+IDxUdWRvci5BbWJhcnVzQG1pY3JvY2hp
+cC5jb20+IHdyb3RlOg0KPiANCj4+ICsNCj4+ICtzdGF0aWMgdm9pZCBhdG1lbF9xc3BpX3NhbTl4
+NjBfd3JpdGVfcmVncyhjb25zdCBzdHJ1Y3QgYXRtZWxfcXNwaSAqYXEsDQo+PiArCQkJCQkgIGNv
+bnN0IHN0cnVjdCBzcGlfbWVtX29wICpvcCwNCj4+ICsJCQkJCSAgY29uc3Qgc3RydWN0IGF0bWVs
+X3FzcGlfY2ZnICpjZmcpDQo+PiArew0KPj4gKwkvKiBDbGVhciBwZW5kaW5nIGludGVycnVwdHMg
+Ki8NCj4+ICsJKHZvaWQpcmVhZGxfcmVsYXhlZChhcS0+cmVncyArIFFTUElfU1IpOw0KPj4gKw0K
+Pj4gKwkvKiBTZXQgUVNQSSBJbnN0cnVjdGlvbiBGcmFtZSByZWdpc3RlcnMgKi8NCj4+ICsJd3Jp
+dGVsX3JlbGF4ZWQoY2ZnLT5pYXIsIGFxLT5yZWdzICsgUVNQSV9JQVIpOw0KPj4gKwlpZiAob3At
+PmRhdGEuZGlyID09IFNQSV9NRU1fREFUQV9JTikNCj4+ICsJCXdyaXRlbF9yZWxheGVkKGNmZy0+
+aWNyLCBhcS0+cmVncyArIFFTUElfUklDUik7DQo+PiArCWVsc2UNCj4+ICsJCXdyaXRlbF9yZWxh
+eGVkKGNmZy0+aWNyLCBhcS0+cmVncyArIFFTUElfSUNSKTsNCj4gDQo+IENhbiB5b3UgdXNlIFdJ
+Q1IgaGVyZSAoZXZlbiBpZiBJQ1IgPT0gV0lDUik/DQoNCnllcywgZ29vZCBjYXRjaC4NCj4gDQo+
+PiArCXdyaXRlbF9yZWxheGVkKGNmZy0+aWZyLCBhcS0+cmVncyArIFFTUElfSUZSKTsNCj4+ICt9
+DQo+IA0KPiBIbSwgc28gdGhlIG9ubHkgZGlmZmVyZW5jZSB3ZSBoYXZlIGlzIHRoZSBSSUNSIHZz
+IElDUiByZWcgYW5kIHRoZQ0KPiBBUEJURlJUWVBfUkVBRCB2cyBTQU1BNUQyX1dSSVRFX1RSU0ZS
+IGJpdC4gTm90IHN1cmUgaXQgZGVzZXJ2ZXMNCj4gY3JlYXRpbmcgMiBob29rcyBmb3IgdGhhdC4g
+Q2FuIHdlIGhhdmUgc29tZXRoaW5nIGxpa2UgLT5oYXNfcmljciBpbg0KPiB0aGUgY2FwcyBhbmQg
+dGhlbiBoYXZlIGFuIGlmL2Vsc2UgYmxvY2sgZGlyZWN0bHkgaW4NCj4gYXRtZWxfcXNwaV9zZXRf
+Y2ZnKCk/DQo+IA0KDQpDb3JyZWN0LiBJdCBpcyBhIGNvc3Qgb2YgYW4gZXh0cmEgaWYsIEkgdHJp
+ZWQgdG8gYXZvaWQgaXQuIEkgbGlrZSBpdCBiZXR0ZXIgd2l0aA0KdGhlc2UgdHdvIGhvb2tzLCBi
+dXQgaWYgeW91IGhhdmUgYSBzdHJvbmcgb3BpbmlvbiBJJ2xsIGRvIGl0LCBqdXN0IGNvbmZpcm0g
+aXQgYWdhaW4uDQoNClRoYW5rcywNCnRhDQo=
