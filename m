@@ -1,86 +1,63 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH v5] ARM: dspi: Provide support for DSPI slave mode
- operation (Vybryd vf610)
-Date: Mon, 4 Feb 2019 13:52:42 +0100
-Message-ID: <20190204135242.7112d48c@jawa>
-References: <20180927150709.17010-1-lukma@denx.de>
-        <20190109082644.14941-1-lukma@denx.de>
-        <20190204113001.77d59570@jawa>
-        <20190204105737.GE23441@sirena.org.uk>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RFC PATCH v4 07/10] gpio: Initial support for ROHM bd70528 GPIO block
+Date: Mon, 4 Feb 2019 13:53:12 +0100
+Message-ID: <CAMpxmJXKmq29misG_zx9qeaQ11qzYSvWqNwcNpRGc3cv4AK8eg@mail.gmail.com>
+References: <cover.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
+ <5f63684b62c7a320c514088bcf9091ed7efbd2cc.1548935790.git.matti.vaittinen@fi.rohmeurope.com>
+ <CACRpkdauoQ=qcFUi7wTUKu22ZHeq=g0grWqvZz1gfOt0=dXrbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/F.zUuRU1SQQ7HjrB2HRAYut"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204105737.GE23441@sirena.org.uk>
+In-Reply-To: <CACRpkdauoQ=qcFUi7wTUKu22ZHeq=g0grWqvZz1gfOt0=dXrbw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Esben Haabendal <eha@deif.com>, Martin =?UTF-8?B?SHVuZGViw7hsbA==?= <martin@geanix.com>, Andrey Smirnov <andrew.smirnov@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Matti Vaittinen <mazziesaccount@gmail.com>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDIN
 List-Id: devicetree@vger.kernel.org
 
---Sig_/F.zUuRU1SQQ7HjrB2HRAYut
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+pon., 4 lut 2019 o 12:30 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Thu, Jan 31, 2019 at 1:08 PM Matti Vaittinen
+> <matti.vaittinen@fi.rohmeurope.com> wrote:
+>
+> > ROHM BD70528 PMIC has 4 GPIO pins. Allow them to be
+> > controlled by GPIO framework.
+> >
+> > IRQs are handled by regmap-irq and GPIO driver is not
+> > aware of the irq usage.
+> >
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> (...)
+> > I dropped the review-by from Linus Walleij because I would like to
+> > get a comment on if locking is required when we check the direction
+> > in order to detect the correct register for getting the pin state.
+>
+> I don't know that. You isn't regmap locking inherently?
+>
 
-Hi Mark,
+FYI you can disable regmap locking by setting the disable_locking
+field in regmap_config to true.
 
-> On Mon, Feb 04, 2019 at 11:30:01AM +0100, Lukasz Majewski wrote:
->=20
-> > Is there any interest in adding new code (or fixes) to VF610 ?  =20
->=20
-> You've been sending ARM: patches to me (the SPI maintainer) and one of
-> the DT maintainers.=20
-> You need to send patches for that platform to the
-> relevant platform maintainers, I only maintain drivers/spi (and some
-> other subsystems).  Similarly the DT maintainers only maintain the
-> generic devicetree stuff (but apply relatively few patches directly).
->=20
-> Please see submitting-patches.rst for details.
+Bart
 
-https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html
-Point 5):
-
-git format-patch -1 e26e01ac03aae6cf296e7b4de47354d3151b21e7
-0001-ARM-dspi-Provide-support-for-DSPI-slave-mode-operati.patch
-
-./scripts/get_maintainer.pl
-0001-ARM-dspi-Provide-support-for-DSPI-slave-mode-operati.patch Mark
-Brown <broonie@kernel.org> (maintainer:SPI SUBSYSTEM)
-linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM)
-linux-kernel@vger.kernel.org (open list)
-
-Moreover, I've CC'ed developers (Esben, Andrey, Martin) involved in the
-changes for previous work done in this file/driver.
-
-And those changes are solely related to SPI work in this driver, no ARM
-Vybrid.
-
-What else shall I do?
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/F.zUuRU1SQQ7HjrB2HRAYut
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlxYNZoACgkQAR8vZIA0
-zr1NRgf8CH5Sc12KgowOsWlBhD7ixLeZAihKwP/LV7loEyTPoavCSahgCd9u6Au3
-g2V9AHmew5s8j1eFmEixI7dXZHBBXL0j24DaH4dMJCBUQ5POfqz1cXOBgxo2/V+p
-fc+QJkNlH5p8kmxDwmjO+yyvGVNpjAo6MZTvQU2UBiCVh793YqlodOQMajX5AYnK
-uawizR9WcwIN9644Dj1RcRkYi5dF0NGWiRxl56cn1PdD5L6b3Fgp1l/evfy0c16Z
-GbCXLUwl24RpUdsYxwVvdN9jPuXvytWXrl0ZRLfHl2TxNgT69PSvo8//H4GlHxA3
-zc1zHhDy162j2S56jIq0B6M+VyDspg==
-=oXFs
------END PGP SIGNATURE-----
-
---Sig_/F.zUuRU1SQQ7HjrB2HRAYut--
+> > My initial feeling is that locking makes no sense.
+>
+> Mine too.
+>
+> > +       bdgpio->gpio.get_direction =3D &bd70528_get_direction;
+> > +       bdgpio->gpio.direction_input =3D &bd70528_direction_input;
+> > +       bdgpio->gpio.direction_output =3D &bd70528_direction_output;
+> > +       bdgpio->gpio.set_config =3D &bd70528_gpio_set_config;
+> > +       bdgpio->gpio.can_sleep =3D true;
+> > +       bdgpio->gpio.get =3D &bd70528_gpio_get;
+> > +       bdgpio->gpio.set =3D &bd70528_gpio_set;
+>
+> Drop the &ampersand in from of the functions. All functions
+> are pointers.
+>
+> With that:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Yours,
+> Linus Walleij
