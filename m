@@ -1,86 +1,114 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 1/3] dt-bindings: clock: ti,sci-clk: Add support for
- parsing clock info from DT
-Date: Tue, 5 Feb 2019 10:25:40 +0200
-Message-ID: <ab8707fb-e632-5be9-9fdb-4b1fb3cb26ba@ti.com>
-References: <1546954223-9738-1-git-send-email-t-kristo@ti.com>
- <1546954223-9738-2-git-send-email-t-kristo@ti.com>
- <20190121210449.GB7851@bogus> <7ce7bd25-b5c4-f99d-fda6-0f21376f2204@ti.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v3 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Tue, 5 Feb 2019 08:33:04 +0000
+Message-ID: <BYAPR07MB47097B8DD9A86D9066B35E31DD6E0@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1548935553-452-1-git-send-email-pawell@cadence.com>
+ <1548935553-452-6-git-send-email-pawell@cadence.com>
+ <20190204114841.GD28608@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7ce7bd25-b5c4-f99d-fda6-0f21376f2204@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190204114841.GD28608@kroah.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, ssantosh@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjIvMDEvMjAxOSAwOTozMywgVGVybyBLcmlzdG8gd3JvdGU6Cj4gT24gMjEvMDEvMjAxOSAy
-MzowNCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+IE9uIFR1ZSwgSmFuIDA4LCAyMDE5IGF0IDAzOjMw
-OjIxUE0gKzAyMDAsIFRlcm8gS3Jpc3RvIHdyb3RlOgo+Pj4gQnkgZGVmYXVsdCwgdGhlIGF2YWls
-YWJsZSBjbG9jayBpbmZvIGlzIHF1ZXJpZWQgZnJvbSBmaXJtd2FyZSwgd2hpY2ggY2FuCj4+PiBi
-ZSBxdWl0ZSBhIGxlbmd0aHkgb3BlcmF0aW9uIGlmIHRoZXJlIGlzIGEgdmVyeSBsYXJnZSBhbW91
-bnQgb2YgY2xvY2tzCj4+PiBhdmFpbGFibGUuIEFkZCBvcHRpb24gZm9yIHBhcnNpbmcgdGhlIHVz
-ZWQgY2xvY2tzIGZyb20gRFQgaW5zdGVhZCwgYW5kCj4+PiBvbmx5IHJlZ2lzdGVyIHRoZXNlIHdo
-aWNoIGNhbiBpbXByb3ZlIHRoZSBib290IHRpbWUgb2YgdGhlIGRldmljZSBxdWl0ZQo+Pj4gYSBs
-b3QuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogVGVybyBLcmlzdG8gPHQta3Jpc3RvQHRpLmNvbT4K
-Pj4+IC0tLQo+Pj4gwqAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Rp
-LHNjaS1jbGsudHh0IHwgNyArKysrKysrCj4+PiDCoCAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRp
-b25zKCspCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9jbG9jay90aSxzY2ktY2xrLnR4dCAKPj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Nsb2NrL3RpLHNjaS1jbGsudHh0Cj4+PiBpbmRleCA0ZTU5ZGM2Li5jNzU3YWUx
-IDEwMDY0NAo+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
-L3RpLHNjaS1jbGsudHh0Cj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvY2xvY2svdGksc2NpLWNsay50eHQKPj4+IEBAIC0xOCw2ICsxOCwxMyBAQCBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOgo+Pj4gwqDCoMKgIGFuZCBjbG9ja3MgSURzIGZvciA2NkFLMkcgU29DIGFyZSBk
-b2N1bWVudGVkIGF0Cj4+PiDCoMKgwqAgaHR0cDovL3Byb2Nlc3NvcnMud2lraS50aS5jb20vaW5k
-ZXgucGhwL1RJU0NJIzY2QUsyRzAyX0RhdGEKPj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+Pj4g
-Ky0tLS0tLS0tLS0tLS0tLS0tLS0KPj4+ICstIHRpLHNjYW4tY2xvY2tzLWZyb20tZHQ6IFNjYW4g
-Y2xvY2sgdHJlZSBpbmZvIGZyb20gRFQuIEJ5IGRlZmF1bHQsCj4+PiArwqAgY2xvY2tzIGFyZSBx
-dWVyaWVkIGZyb20gZmlybXdhcmUsIHdoaWNoIGNhbiBiZSByYXRoZXIgc2xvdyBvcGVyYXRpb24s
-Cj4+PiArwqAgZXNwZWNpYWxseSBpZiB0aGVyZSBpcyBhIHJlYWxseSBsYXJnZSBudW1iZXIgb2Yg
-Y2xvY2tzIGF2YWlsYWJsZSBvdXQKPj4+ICvCoCBvZiB3aGljaCBvbmx5IGEgaGFuZGZ1bCBhcmUg
-ZXZlciB1c2VkIGJ5IGtlcm5lbC4KPj4KPj4gQXQgZmlyc3QsIEkgdGhvdWdodCB0aGlzIHdhcyBh
-biBlaXRoZXIvb3IgdGhpbmcuIFVzZSBmaXJtd2FyZSBvciB1c2UgRFQsCj4+IGJ1dCBpdCBpcyBy
-ZWFsbHkgb25seSBnZXQgdGhlIGNsb2NrcyB1c2VkIGluIHRoZSBEVCBmcm9tIGZpcm13YXJlLgo+
-Pgo+PiBXaHkgd291bGRuJ3QgeW91IGp1c3QgYWx3YXlzIGRvIHRoYXQ/IEkgY2FuIHRoaW5rIG9m
-IDMgY2FzZXM6Cj4+IHJlcGFyZW50aW5nLCBkZWJ1ZyBhbmQgb3ZlcmxheXMuIFRoaXMgYnJlYWtz
-IHJlcGFyZW50aW5nIGFuZCBvdmVybGF5cywKPj4gcmlnaHQ/IERlYnVnIGNvdWxkIGJlIGhhbmRs
-ZWQgd2l0aCBzb21lIHVzZXJzcGFjZSB0cmlnZ2VyIHRvIGdldCBhbGwgdGhlCj4+IGNsb2Nrcy4K
-PiAKPiBSZS1wYXJlbnRpbmcgdGhpcyBkb2VzIG5vdCBicmVhaywgYXMgdGhlIHNjYW4gc3RpbGwg
-Y2hlY2tzIGV2ZXJ5IAo+IHBvc3NpYmxlIHBhcmVudCBvZiBhIGNsb2NrIHNjYW5uZWQuIE92ZXJs
-YXlzIGFyZSBicm9rZW4gZm9yIHN1cmUsIGFzIHdlIAo+IGRvbid0IGtub3cgd2hpY2ggb3Zlcmxh
-eXMgd2Ugd291bGQgYmUgYXBwbHlpbmcsIGFuZCB3aGF0IGNsb2NrcyB3b3VsZCBiZSAKPiBpbiB0
-aGVtLiBEZWJ1ZyBpcyBraW5kIG9mIGJyb2tlbiBhcyB3ZSBvbmx5IHNjYW4gYSBzbWFsbCBwb3J0
-aW9uIG9mIHRoZSAKPiBjbG9ja3MuCj4gCj4+Cj4+IFdoeSBzY2FuIGFueSBvZiB0aGUgY2xvY2tz
-IHVwIGZyb250PyBXaHkgbm90IGp1c3QgY3JlYXRlIHRoZSBjbG9ja3Mgb24KPj4gZGVtYW5kPyBJ
-ZiBhbiB1bmtub3duIGNsb2NrIGlkIGlzIHJlcXVlc3RlZCwgdGhlbiBjcmVhdGUgdGhlIGNsb2Nr
-IGFuZAo+PiBxdWVyeSB0aGUgZmlybXdhcmUgYXQgdGhhdCBwb2ludC4gVGhhdCB3b3VsZCBhdm9p
-ZCB0aGUgRFQgc2NhbiB0b28uCj4+IE1heWJlIHRoZXJlJ3Mgc29tZSBpc3N1ZXMgaW4gdGhlIGNs
-ayBmcmFtZXdvcmsgcHJldmVudGluZyB0aGF0LCBidXQKPj4gdGhhdCdzIG5vdCByZWFsbHkgYSBE
-VCBwcm9ibGVtLgo+IAo+IFRoZSB2ZXJ5IGluaXRpYWwgdmVyc2lvbiBJIGRpZCBhIGNvdXBsZSBv
-ZiB5ZWFycyBiYWNrLCBkaWQgc2NhbiB0aGUgCj4gY2xvY2tzIGJhc2VkIG9uIG5lZWQsIGFuZCBy
-ZWdpc3RlcmVkIHRoZW0gZHluYW1pY2FsbHkuIFN0ZXBoZW4gc2hvdCBkb3duIAo+IHRoaXMgYmFz
-ZWQgb24gdGhlIGFzc2Vzc21lbnQgdGhhdCB0aGVyZSBtaWdodCBiZSBsb2NraW5nIGlzc3VlcyB3
-aXRoIHRoZSAKPiBjb21tb24gY2xvY2sgZnJhbWV3b3JrIHdpdGggdGhpcyBhcHByb2FjaCBsZWFk
-aW5nIGludG8gcG90ZW50aWFsIAo+IGRlYWRsb2NrIHNpdHVhdGlvbnMuCgpTbyBSb2IsIHdoYXQg
-aXMgdGhlIGZpbmFsIGNhbGwgb24gdGhpcyBiaW5kaW5nPyBBY2svTkFLPyBJZiBOQUssIHNoYWxs
-IEkgCmltcGxlbWVudCBhIGtlcm5lbCBjbWRsaW5lIHBhcmFtIHRvIHNlbGVjdCB0aGUgcGFyc2lu
-ZyBtZXRob2Qgb3Igd2hhdCBpcyAKcHJlZmVycmVkPyBEb2luZyBpdCBidWlsZCB0aW1lIHdpdGgg
-YSBzaW1wbGUgS2NvbmZpZyBzZWVtcyB0b28gbGltaXRpbmcuCgotVGVybwotLQpUZXhhcyBJbnN0
-cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4gWS10
-dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lu
-a2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+Hi,
+
+>On Thu, Jan 31, 2019 at 11:52:32AM +0000, Pawel Laszczak wrote:
+>> This patch introduce new Cadence USBSS DRD driver
+>> to linux kernel.
+>>
+>> The Cadence USBSS DRD Driver is a highly
+>> configurable IP Core which can be
+>> instantiated as Dual-Role Device (DRD),
+>> Peripheral Only and Host Only (XHCI)
+>> configurations.
+>>
+>> The current driver has been validated with
+>> FPGA burned. We have support for PCIe
+>> bus, which is used on FPGA prototyping.
+>>
+>> The host side of USBSS-DRD controller is compliance
+>> with XHCI specification, so it works with
+>> standard XHCI linux driver.
+>
+>Please line-wrap this properly at 72 columns, like your editor asks you
+>to when you run git :)
+>
+>>
+>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>> ---
+>>  drivers/usb/Kconfig                |    2 +
+>>  drivers/usb/Makefile               |    2 +
+>>  drivers/usb/cdns3/Kconfig          |   44 +
+>>  drivers/usb/cdns3/Makefile         |   14 +
+>>  drivers/usb/cdns3/cdns3-pci-wrap.c |  155 +++
+>>  drivers/usb/cdns3/core.c           |  403 ++++++
+>>  drivers/usb/cdns3/core.h           |  116 ++
+>>  drivers/usb/cdns3/debug.h          |  168 +++
+>>  drivers/usb/cdns3/debugfs.c        |  164 +++
+>>  drivers/usb/cdns3/drd.c            |  365 +++++
+>>  drivers/usb/cdns3/drd.h            |  162 +++
+>>  drivers/usb/cdns3/ep0.c            |  907 +++++++++++++
+>>  drivers/usb/cdns3/gadget-export.h  |   28 +
+>>  drivers/usb/cdns3/gadget.c         | 1985 ++++++++++++++++++++++++++++
+>>  drivers/usb/cdns3/gadget.h         | 1207 +++++++++++++++++
+>>  drivers/usb/cdns3/host-export.h    |   28 +
+>>  drivers/usb/cdns3/host.c           |   72 +
+>>  drivers/usb/cdns3/trace.c          |   23 +
+>>  drivers/usb/cdns3/trace.h          |  404 ++++++
+>>  19 files changed, 6249 insertions(+)
+>>  create mode 100644 drivers/usb/cdns3/Kconfig
+>>  create mode 100644 drivers/usb/cdns3/Makefile
+>>  create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
+>>  create mode 100644 drivers/usb/cdns3/core.c
+>>  create mode 100644 drivers/usb/cdns3/core.h
+>>  create mode 100644 drivers/usb/cdns3/debug.h
+>>  create mode 100644 drivers/usb/cdns3/debugfs.c
+>>  create mode 100644 drivers/usb/cdns3/drd.c
+>>  create mode 100644 drivers/usb/cdns3/drd.h
+>>  create mode 100644 drivers/usb/cdns3/ep0.c
+>>  create mode 100644 drivers/usb/cdns3/gadget-export.h
+>>  create mode 100644 drivers/usb/cdns3/gadget.c
+>>  create mode 100644 drivers/usb/cdns3/gadget.h
+>>  create mode 100644 drivers/usb/cdns3/host-export.h
+>>  create mode 100644 drivers/usb/cdns3/host.c
+>>  create mode 100644 drivers/usb/cdns3/trace.c
+>>  create mode 100644 drivers/usb/cdns3/trace.h
+>
+>This is way too big to try to review all at once.  You need to break
+>this up into logical chunks, each one adding a single functionality to
+>make it possible to actually review it.
+>
+
+In the past driver was split into series of patch, but it was difficult to =
+review for other=20
+reviewers so I made decision to prepare it in this way.=20
+The short discuss you can find on https://lkml.org/lkml/2018/11/30/502.
+
+Quotation: "
+>> Frankly, I don't understand why this is a series. It's a single driver a=
+nd splitting it into
+>> a series just makes it more difficult to review, actually.
+>>
+>> Sure, a single patch will be large, but there's no way to have a functio=
+nal driver until
+>> all patches are applied, anyway.
+>>
+>
+>Yes, I agree with Felipe. Pawel, you could remove the "RFC" prefix, and se=
+nd the whole
+>one as one patch. I will test it at my hardware.
+
+Ok, I will prepare such single patch. =20
+Peter I know that you have little different platform.=20
+Probably you should made some additional changes for your platform.
+"
+
+Thanks
+
+Pawel Laszczak.
