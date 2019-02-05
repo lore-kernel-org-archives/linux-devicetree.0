@@ -1,13 +1,15 @@
 From: Pankaj Bansal <pankaj.bansal@nxp.com>
-Subject: [PATCH v4 0/2] add qixis driver
-Date: Tue, 5 Feb 2019 10:14:39 +0000
-Message-ID: <20190205153924.7204-1-pankaj.bansal@nxp.com>
+Subject: [PATCH v4 1/2] dt-bindings: soc: fsl: Document Qixis FPGA usage
+Date: Tue, 5 Feb 2019 10:14:40 +0000
+Message-ID: <20190205153924.7204-2-pankaj.bansal@nxp.com>
+References: <20190205153924.7204-1-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190205153924.7204-1-pankaj.bansal@nxp.com>
 Content-Language: en-US
-Content-ID: <7F4E9F77F385CF47BE8D769A11A9B993@eurprd04.prod.outlook.com>
+Content-ID: <31172365421942458B85A799827935AC@eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,40 +21,57 @@ Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: "open list : OPEN FIRMWARE AND
- FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Varun Sethi <V.Sethi@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+ FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-FPGA on LX2160AQDS/LX2160ARDB connected on I2C bus, so add qixis driver which is basically an i2c client driver to control FPGA.
-
-Also added platform driver for MMIO based FPGA, like the one available on LS2088ARDB/LS2088AQDS.
-
-This driver is essential to control MDIO mux multiplexing.
-
-This driver is dependent on below patches:
-https://www.mail-archive.com/netdev@vger.kernel.org/msg281274.html
-
-Cc: Varun Sethi <V.Sethi@nxp.com>
-
----
-Notes:
-	V3:
-	- https://patchwork.kernel.org/cover/10795195/
-	V2:
-	- https://patchwork.kernel.org/cover/10788341/
-	V1:
-	- https://patchwork.kernel.org/cover/10627297/
-
-Pankaj Bansal (2):
-  dt-bindings: soc: fsl: Document Qixis FPGA usage
-  drivers: soc: fsl: add qixis driver
-
- .../bindings/soc/fsl/qixis_ctrl.txt           |  53 +++++
- drivers/soc/fsl/Kconfig                       |  11 +
- drivers/soc/fsl/Makefile                      |   1 +
- drivers/soc/fsl/qixis_ctrl.c                  | 222 ++++++++++++++++++
- 4 files changed, 287 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/fsl/qixis_ctrl.txt
- create mode 100644 drivers/soc/fsl/qixis_ctrl.c
-
--- 
-2.17.1
+YW4gRlBHQS1iYXNlZCBzeXN0ZW0gY29udHJvbGxlciwgY2FsbGVkIOKAnFFpeGlz4oCdLCB3aGlj
+aA0KbWFuYWdlcyBzZXZlcmFsIGNyaXRpY2FsIHN5c3RlbSBmZWF0dXJlcywgaW5jbHVkaW5nOg0K
+4oCiIFJlc2V0IHNlcXVlbmNpbmcNCuKAoiBQb3dlciBzdXBwbHkgY29uZmlndXJhdGlvbg0K4oCi
+IEJvYXJkIGNvbmZpZ3VyYXRpb24NCuKAoiBoYXJkd2FyZSBjb25maWd1cmF0aW9uDQoNClRoZSBx
+aXhpcyByZWdpc3RlcnMgYXJlIGFjY2Vzc2libGUgb3ZlciBvbmUgb3IgbW9yZSBzeXN0ZW0tc3Bl
+Y2lmaWMNCmludGVyZmFjZXMsIHR5cGljYWxseSBJMkMsIEpUQUcgb3IgYW4gZW1iZWRkZWQgcHJv
+Y2Vzc29yLg0KDQpTaWduZWQtb2ZmLWJ5OiBQYW5rYWogQmFuc2FsIDxwYW5rYWouYmFuc2FsQG54
+cC5jb20+DQotLS0NCg0KTm90ZXM6DQogICAgVjQ6DQogICAgLSBObyBDaGFuZ2UNCiAgICBWMzoN
+CiAgICAtIEFkZGVkIGJvYXJkbmFtZSBiYXNlZCBjb21wYXRpYmxlIGZpZWxkIGluIGJpbmRpbmdz
+DQogICAgLSBBZGRlZCBiaW5kaW5ncyBmb3IgTU1JTyBiYXNlZCBGUEdBDQogICAgVjI6DQogICAg
+LSBObyBjaGFuZ2UNCg0KIC4uLi9iaW5kaW5ncy9zb2MvZnNsL3FpeGlzX2N0cmwudHh0ICAgICAg
+ICAgIHwgNTMgKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDUzIGluc2VydGlv
+bnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b2MvZnNsL3FpeGlzX2N0cmwudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3NvYy9mc2wvcWl4aXNfY3RybC50eHQNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAw
+MDAwMDAwMDAuLjVkNTEwZGYxNGJlOA0KLS0tIC9kZXYvbnVsbA0KKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcWl4aXNfY3RybC50eHQNCkBAIC0wLDAgKzEs
+NTMgQEANCisqIFFJWElTIEZQR0EgYmxvY2sNCisNCithbiBGUEdBLWJhc2VkIHN5c3RlbSBjb250
+cm9sbGVyLCBjYWxsZWQg4oCcUWl4aXPigJ0sIHdoaWNoDQorbWFuYWdlcyBzZXZlcmFsIGNyaXRp
+Y2FsIHN5c3RlbSBmZWF0dXJlcywgaW5jbHVkaW5nOg0KK+KAoiBDb25maWd1cmF0aW9uIHN3aXRj
+aCBtb25pdG9yaW5nDQor4oCiIFBvd2VyIG9uL29mZiBzZXF1ZW5jaW5nDQor4oCiIFJlc2V0IHNl
+cXVlbmNpbmcNCivigKIgUG93ZXIgc3VwcGx5IGNvbmZpZ3VyYXRpb24NCivigKIgQm9hcmQgY29u
+ZmlndXJhdGlvbg0KK+KAoiBoYXJkd2FyZSBjb25maWd1cmF0aW9uDQor4oCiIEJhY2tncm91bmQg
+cG93ZXIgZGF0YSBjb2xsZWN0aW9uIChEQ00pDQor4oCiIEZhdWx0IG1vbml0b3JpbmcNCivigKIg
+UkNXIGJ5cGFzcyBTUkFNIChyZXBsYWNlIGZsYXNoIFJDVyB3aXRoIGludGVybmFsIFJDVykgKE5P
+UiBvbmx5KQ0KK+KAoiBEZWRpY2F0ZWQgZnVuY3Rpb25hbCB2YWxpZGF0aW9uIGJsb2NrcyAoUE9T
+dC9JUlMsIHRyaWdnZXJlZCBldmVudCwgYW5kIHNvIG9uKQ0KK+KAoiBJMkMgbWFzdGVyIGZvciBy
+ZW1vdGUgYm9hcmQgY29udHJvbCBldmVuIHdpdGggbm8gRFVUIGF2YWlsYWJsZQ0KKw0KK1RoZSBx
+aXhpcyByZWdpc3RlcnMgYXJlIGFjY2Vzc2libGUgb3ZlciBvbmUgb3IgbW9yZSBzeXN0ZW0tc3Bl
+Y2lmaWMgaW50ZXJmYWNlcywNCit0eXBpY2FsbHkgSTJDLCBKVEFHIG9yIGFuIGVtYmVkZGVkIHBy
+b2Nlc3Nvci4NCisNCitGUEdBIGNvbm5lY3RlZCB0byBJMkM6DQorUmVxdWlyZWQgcHJvcGVydGll
+czoNCisNCisgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgYSBib2FyZC1zcGVjaWZpYyBzdHJpbmcg
+Zm9sbG93ZWQgYnkgYSBzdHJpbmcNCisgICBpbmRpY2F0aW5nIHRoZSB0eXBlIG9mIEZQR0EuICBF
+eGFtcGxlOg0KKwkiZnNsLDxib2FyZD4tZnBnYSIsICJmc2wsZnBnYS1xaXhpcy1pMmMiDQorIC0g
+cmVnIDogaTJjIGFkZHJlc3Mgb2YgdGhlIHFpeGlzIGRldmljZS4NCisNCitFeGFtcGxlIChMWDIx
+NjBBLVFEUyk6DQorCS8qIFRoZSBGUEdBIG5vZGUgKi8NCisgICAgICAgIGZwZ2FANjYgew0KKwkJ
+Y29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYXFkcy1mcGdhIiwgImZzbCxmcGdhLXFpeGlzLWkyYyI7
+DQorCQlyZWcgPSA8MHg2Nj47DQorCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCisJCSNzaXplLWNl
+bGxzID0gPDA+Ow0KKwl9DQorDQorKiBGcmVlc2NhbGUgb24tYm9hcmQgRlBHQQ0KKw0KK1RoaXMg
+aXMgdGhlIG1lbW9yeS1tYXBwZWQgcmVnaXN0ZXJzIGZvciBvbiBib2FyZCBGUEdBLg0KKw0KK1Jl
+cXVpcmVkIHByb3BlcnRpZXM6DQorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgYSBib2FyZC1zcGVj
+aWZpYyBzdHJpbmcgZm9sbG93ZWQgYnkgYSBzdHJpbmcNCisgIGluZGljYXRpbmcgdGhlIHR5cGUg
+b2YgRlBHQS4gIEV4YW1wbGU6DQorCSJmc2wsPGJvYXJkPi1mcGdhIiwgImZzbCxmcGdhLXFpeGlz
+Ig0KKy0gcmVnOiBzaG91bGQgY29udGFpbiB0aGUgYWRkcmVzcyBhbmQgdGhlIGxlbmd0aCBvZiB0
+aGUgRlBHQSByZWdpc3RlciBzZXQuDQorDQorRXhhbXBsZSAoTFMyMDgwQS1SREIpOg0KKw0KKyAg
+ICAgICAgY3BsZEAzLDAgew0KKyAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxsczIw
+ODBhcmRiLWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMiOw0KKyAgICAgICAgICAgICAgICByZWcgPSA8
+MHgzIDAgMHgxMDAwMD47DQorICAgICAgICB9Ow0KKw0KLS0gDQoyLjE3LjENCg0KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
