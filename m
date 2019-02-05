@@ -1,81 +1,58 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v12 00/13] media: staging/imx7: add i.MX7 media driver
-Date: Tue, 5 Feb 2019 13:14:36 +0200
-Message-ID: <20190205111435.2oz46dqphfdt6mn5@kekkonen.localdomain>
-References: <20190204120039.1198-1-rui.silva@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 1/3] arm64: dts: exynos: add SlimSSS for Exynos5433
+Date: Tue, 5 Feb 2019 12:23:30 +0100
+Message-ID: <CAJKOXPfm1L2FvcyhbfYEgv-04RQpVnARc0zXt6j_41nCzfE53Q@mail.gmail.com>
+References: <CGME20190124154538eucas1p2cdc2ce1eab4446e3ac139fd07d622ca7@eucas1p2.samsung.com>
+ <20190124154521.13589-1-k.konieczny@partner.samsung.com> <20190124154521.13589-2-k.konieczny@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20190204120039.1198-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190124154521.13589-2-k.konieczny@partner.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui,
+On Thu, 24 Jan 2019 at 16:45, Kamil Konieczny
+<k.konieczny@partner.samsung.com> wrote:
+>
+> Add DT node for SlimSSS (aka Slim SecuritySubSystem) in Exynos5433 SoC.
+> The users can use compatibility "samsung,exynos5433-slim-sss".
+>
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-On Mon, Feb 04, 2019 at 12:00:26PM +0000, Rui Miguel Silva wrote:
-> Hi,
-> This series introduces the Media driver to work with the i.MX7 SoC. it uses the
-> already existing imx media core drivers but since the i.MX7, contrary to
-> i.MX5/6, do not have an IPU and because of that some changes in the imx media
-> core are made along this series to make it support that case.
-> 
-> This patches adds CSI and MIPI-CSI2 drivers for i.MX7, along with several
-> configurations changes for this to work as a capture subsystem. Some bugs are
-> also fixed along the line. And necessary documentation.
-> 
-> For a more detailed view of the capture paths, pads links in the i.MX7 please
-> take a look at the documentation in PATCH 10.
-> 
-> The system used to test and develop this was the Warp7 board with an OV2680
-> sensor, which output format is 10-bit bayer. So, only MIPI interface was
-> tested, a scenario with an parallel input would nice to have.
-> 
-> Bellow goes an example of the output of the pads and links and the output of
-> v4l2-compliance testing.
-> 
-> The v4l-utils version used is:
-> v4l2-compliance SHA: 1a6c8fe9a65c26e78ba34bd4aa2df28ede7d00cb, 32 bits
-> 
-> The Media Driver fail some tests but this failures are coming from code out of
-> scope of this series (imx-capture), and some from the sensor OV2680
-> but that I think not related with the sensor driver but with the testing and
-> core.
-> 
-> The csi and mipi-csi entities pass all compliance tests.
-> 
-> Cheers,
->     Rui
-> 
-> v11->v12:
->   Sakari:
->     - check v4l2_ctrl_handler_free and init when exposed to userspace
->     - check csi_remove missing v4l2_async_notifier_unregister
->     - media device unregister before ctrl_handler_free
->     - GPL => GPL v2
->     - Fix squash of CSI patches, issue on v11
->     - add Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com> 10--13
->     - mipi_s_stream check for ret < 0 and call pm_runtime_put_noidle
->     - use __maybe_unused in pm functions
->     - Extra space before labels
+Before picking this up, bindings have to be accepted and I see
+discussion is still ongoing (no Ack from Rob yet). Anyway this depends
+on header file with clock ID, so it will have to wait for next cycle.
 
-For patches 1, 2 and 4:
+I will pick it up for v5.2, after v5.1 merge window.
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-Thanks!
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Best regards,
+Krzysztof
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> index e7cd3b67d818..9e5fcb6c7776 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> @@ -559,6 +559,15 @@
+>                                 <&cmu_top CLK_DIV_ACLK_IMEM_200>;
+>                 };
+>
+> +               slim_sss: slim-sss@11140000 {
+> +                       compatible = "samsung,exynos5433-slim-sss";
+> +                       reg = <0x11140000 0x1000>;
+> +                       interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clock-names = "aclk", "pclk";
+> +                       clocks = <&cmu_imem CLK_ACLK_SLIMSSS>,
+> +                                <&cmu_imem CLK_PCLK_SLIMSSS>;
+> +               };
+> +
+>                 pd_gscl: power-domain@105c4000 {
+>                         compatible = "samsung,exynos5433-pd";
+>                         reg = <0x105c4000 0x20>;
+> --
+> 2.20.0
+>
