@@ -1,7 +1,7 @@
 From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v3 3/8] dt-bindings: phy: qcom-ufs: Add resets property
-Date: Tue,  5 Feb 2019 10:58:57 -0800
-Message-ID: <20190205185902.106085-4-evgreen@chromium.org>
+Subject: [PATCH v3 5/8] arm64: dts: msm8996: Add UFS PHY reset controller
+Date: Tue,  5 Feb 2019 10:58:59 -0800
+Message-ID: <20190205185902.106085-6-evgreen@chromium.org>
 References: <20190205185902.106085-1-evgreen@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,51 +9,47 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190205185902.106085-1-evgreen@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a resets property to the PHY that represents the PHY reset
-register in the UFS controller itself. This better describes the
-complete specification of the PHY, and allows the PHY to perform
-its initialization in a single function, rather than relying on
-back-channel sequencing of initialization through the PHY framework.
+Add the reset controller for the UFS controller, and wire it up
+so that the UFS PHY can initialize itself without relying on
+implicit sequencing between the two drivers.
 
 Signed-off-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Changes in v3: None
-Changes in v2:
-- Added resets to example (Stephen).
+Changes in v2: None
 
- Documentation/devicetree/bindings/ufs/ufs-qcom.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
-index 21d9a93db2e9..fd59f93e9556 100644
---- a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
-@@ -29,6 +29,7 @@ Optional properties:
- - vdda-pll-max-microamp : specifies max. load that can be drawn from pll supply
- - vddp-ref-clk-supply   : phandle to UFS device ref_clk pad power supply
- - vddp-ref-clk-max-microamp : specifies max. load that can be drawn from this supply
-+- resets : specifies the PHY reset in the UFS controller
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 99b7495455a6..179f1988d45c 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -663,10 +663,11 @@
+ 			clock-names = "ref_clk_src", "ref_clk";
+ 			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+ 				 <&gcc GCC_UFS_CLKREF_CLK>;
++			resets = <&ufshc 0>;
+ 			status = "disabled";
+ 		};
  
- Example:
+-		ufshc@624000 {
++		ufshc: ufshc@624000 {
+ 			compatible = "qcom,ufshc";
+ 			reg = <0x624000 0x2500>;
+ 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+@@ -722,6 +723,7 @@
+ 				<0 0>;
  
-@@ -51,9 +52,11 @@ Example:
- 			<&clock_gcc clk_ufs_phy_ldo>,
- 			<&clock_gcc clk_gcc_ufs_tx_cfg_clk>,
- 			<&clock_gcc clk_gcc_ufs_rx_cfg_clk>;
-+		resets = <&ufshc 0>;
- 	};
+ 			lanes-per-direction = <1>;
++			#reset-cells = <1>;
+ 			status = "disabled";
  
--	ufshc@fc598000 {
-+	ufshc: ufshc@fc598000 {
-+		#reset-cells = <1>;
- 		...
- 		phys = <&ufsphy1>;
- 		phy-names = "ufsphy";
+ 			ufs_variant {
 -- 
 2.20.1
