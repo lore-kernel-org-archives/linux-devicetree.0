@@ -1,220 +1,269 @@
-From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Subject: Re: [PATCH 2/2] Input: st1232 - switch to gpiod API
-Date: Tue, 5 Feb 2019 11:20:16 +0100
-Message-ID: <83a86244-f40b-44b1-d7be-1fcbeb4c359e@ginzinger.com>
-References: <20190129102347.27754-1-martink@posteo.de>
- <20190129102347.27754-2-martink@posteo.de>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding for generic eDP
+ panel
+Date: Tue, 5 Feb 2019 11:24:19 +0100
+Message-ID: <20190205102419.GA591@ulmo>
+References: <20190203185501.8958-1-anarsoul@gmail.com>
+ <20190203185501.8958-9-anarsoul@gmail.com>
+ <20190204074350.GC16448@ulmo>
+ <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
+ <20190204082353.GE19087@ulmo>
+ <20190204094012.GP3271@phenom.ffwll.local>
+ <20190204112218.GB10412@ulmo>
+ <20190204155909.GU3271@phenom.ffwll.local>
+ <20190204162258.GB25476@ulmo>
+ <20190205085737.GY3271@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----7E37049725A1B525FC88E92716BF18CC"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129102347.27754-2-martink@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martink@posteo.de>, devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1243138594=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190205085737.GY3271@phenom.ffwll.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-This is an S/MIME signed message
 
-------7E37049725A1B525FC88E92716BF18CC
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+--===============1243138594==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
+Content-Disposition: inline
+
+
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-=EF=BB=BF
-
-Martin=C2=A0Kepplinger=C2=A0|=C2=A0Entwicklung Software=C2=A0
-
-GINZINGER ELECTRONIC SYSTEMS GMBH
-
-Tel.: +43 7723 5422 157
-Mail: martin.kepplinger@ginzinger.com
-Web: www.ginzinger.com
-
-
-
-
-On 29.01.19 11:23, Martin Kepplinger wrote:
-> From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+On Tue, Feb 05, 2019 at 09:57:37AM +0100, Daniel Vetter wrote:
+> On Mon, Feb 04, 2019 at 05:22:58PM +0100, Thierry Reding wrote:
+> > On Mon, Feb 04, 2019 at 04:59:09PM +0100, Daniel Vetter wrote:
+> > > On Mon, Feb 04, 2019 at 12:22:18PM +0100, Thierry Reding wrote:
+> > > > On Mon, Feb 04, 2019 at 10:40:12AM +0100, Daniel Vetter wrote:
+> > > > > On Mon, Feb 04, 2019 at 09:23:59AM +0100, Thierry Reding wrote:
+> > > > > > On Mon, Feb 04, 2019 at 12:13:55AM -0800, Vasily Khoruzhick wro=
+te:
+> > > > > > > On Sun, Feb 3, 2019 at 11:43 PM Thierry Reding <thierry.redin=
+g@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > On Sun, Feb 03, 2019 at 10:54:57AM -0800, Vasily Khoruzhick=
+ wrote:
+> > > > > > > > > eDP panels usually have EDID EEPROM, so there's no need t=
+o define panel
+> > > > > > > > > width/height or any modes/timings in dts. But this panel =
+still may have
+> > > > > > > > > regulator and/or backlight.
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > > > > > > > > ---
+> > > > > > > > >  .../devicetree/bindings/display/panel/panel-edp.txt     =
+   | 7 +++++++
+> > > > > > > > >  1 file changed, 7 insertions(+)
+> > > > > > > > >  create mode 100644 Documentation/devicetree/bindings/dis=
+play/panel/panel-edp.txt
+> > > > > > > >
+> > > > > > > > Please don't try to make panels look more generic than they=
+ really are.
+> > > > > > > > You're going to have to provide a compatible string for you=
+r device that
+> > > > > > > > is more specific than "panel-edp". You claim that you don't=
+ need any
+> > > > > > > > extra information that is panel specific, but you don't kno=
+w that now.
+> > > > > > > > We have in the past thought that we didn't need things like=
+ prepare
+> > > > > > > > delay, but then we ran into situations where we did need th=
+em.
+> > > > > > > >
+> > > > > > > > Just do what everybody else does. Provide a specific compat=
+ible string
+> > > > > > > > and match on that in the panel-simple driver. Even if you c=
+an read all
+> > > > > > > > the video timings from an EDID EEPROM, you can still provid=
+e a mode in
+> > > > > > > > the panel descriptor to serve as a fallback if for example =
+the EEPROM
+> > > > > > > > is faulty on some device.
+> > > > > > >=20
+> > > > > > > Pinebook used several 768p panels that have slightly differen=
+t timings
+> > > > > > > and recent batch uses 1080p panel.
+> > > > > > >=20
+> > > > > > > What panel descriptor should I use as fallback?
+> > > > > >=20
+> > > > > > You don't use panel descriptors as fallback. The simple-panel d=
+river
+> > > > > > will bind to a panel device and use the corresponding descripto=
+r. If
+> > > > > > your device tree contains the correct information, the descript=
+or is
+> > > > > > correct for the panel you have.
+> > > > > >=20
+> > > > > > In other words you need to ensure that you have the correct pan=
+el in
+> > > > > > device tree for the board that you're using. This is exactly th=
+e same
+> > > > > > thing as for other devices.
+> > > > > >=20
+> > > > > > One way to to this is to have separate device trees for each va=
+riant
+> > > > > > of the board that you want to support. Another variant may be t=
+o have
+> > > > > > a common device tree and then have some early firmware update t=
+he DTB
+> > > > > > with the correct panel information.
+> > > > >=20
+> > > > > This would defeat the point of edp, which is to standardize the m=
+ess of
+> > > > > panels (at least somewhat) and avoid having to change the DT/ACPI
+> > > > > tables/firmware for every board you ship. Also, we do have DP qui=
+rking
+> > > > > infrastructure already (using the OUI), I think if there's someth=
+ing that
+> > > > > doesn't work then we should quirk it there.
+> > > >=20
+> > > > The problem is that while the attempt may have been to standardize,=
+ it
+> > > > failed. It doesn't take into account any of the details such as tim=
+ing
+> > > > between things like powering up the display and enabling the backli=
+ght
+> > > > or similar. I don't know how you'd want to "quirk" those kinds of
+> > > > requirements because they are highly panel specific.
+> > >=20
+> > > Hm right, we get these from some firmware tables (and mix them with t=
+he
+> > > spec one, since some of the firmware values are nonsense). I don't ev=
+en
+> > > know whether we can read the timings over dp aux somehow (you can pow=
+er up
+> > > the panel with some pessimistic values to figure those out, and you o=
+nly
+> > > need dp aux to work, which is much simpler than the entire panel).
+> > >=20
+> > > > > What does make sense though imo is if we try not to stuff the edp=
+ panel
+> > > > > into panel-simple, because it's anything like a simple dumb panel=
+=2E There's
+> > > > > also some integration awkwardness since with this panel you need =
+to do dp
+> > > > > aux/i2c transactions to get at the information (edid alone isn't =
+good
+> > > > > enough for edp), and I'm not sure how exactly that's supposed to =
+be
+> > > > > instantiated. Maybe a special function to instantiate an edp pane=
+l, which
+> > > > > takes both a DT node and the dp_aux controller would be much bett=
+er,
+> > > > > instead of trying to auto-match against a DT compatible string an=
+d load a
+> > > > > panel driver which is almost all fake.
+> > > > >=20
+> > > > > Or we teach dp_aux to register itself and somehow teach panel-edp=
+ how it
+> > > > > can get hold of the dp_aux channel it needs.
+> > > >=20
+> > > > We already do that. drm_dp_aux registers as an I2C adapter that can=
+ be
+> > > > used to read EDID EEPROMs using I2C-over-AUX transactions. We alrea=
+dy
+> > > > use that on some platforms.
+> > > >=20
+> > > > Also note that simple-panel already supports getting video timings =
+=66rom
+> > > > EDID. If a DDC link is present in DT, the driver will load the modes
+> > > > from EDID and use them.
+> > >=20
+> > > Could we extend this to dp aux somehow? For edp you need the dp aux (=
+which
+> > > then gives you the ddc link automatically).
+> >=20
+> > I suppose we could do that. We could introduce a new property that would
+> > allow the panel driver to get at the struct drm_dp_aux that can access
+> > the panel. I'm not sure how much that would buy us. I suppose the driver
+> > could go and use that drm_dp_aux to do I2C-over-AUX and ignore any
+> > ddc-bus property in device tree. A drm_dp_aux object could also be used
+> > to access DPCD if that's helpful.
+> >=20
+> > The driver proposed here doesn't need access to DPCD, so I'm not sure
+> > that would immediately help.
 >=20
-> Use devm_gpiod_get_optional() and gpiod_set_value_cansleep() instead
-> of the old API. The st1232_ts_power() now passes on the inverted "poweron=
-"
-> value to reflect the correct logical value.
->=20
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-> ---
->=20
-> Tested and works. thanks for your help Dmitry,
->=20
+> You definitely need dp aux to drive edp. That's where a lot of the really
+> important stuff is stored, and it sounds like on non-broken panels even
+> the timings (we've never implemented that on i915 somehow).
 
-is this what you had in mind? any problems or questions?
+I'm not sure I understand what you're saying here. I haven't worked with
+eDP panels in a while, but my recollection is that you can use DP AUX to
+read video timings over EDID. We provide support for that by exporting a
+DP AUX controller as I2C adapter (i.e. register with the I2C subsystem)
+and then that I2C adapter can be used to read the EDID. I wasn't aware
+that eDP panels additionally stored the video timings somewhere else.
 
-thanks
-                              martin
+What I meant above was that aside from the I2C-over-AUX for reading the
+EDID, this driver doesn't do anything else with DP AUX in order to turn
+the panel on. Looking at the eDP support we have on Tegra, there's a
+DPCD register (DP_SET_POWER) that needs to be written in order to take
+the sink device (i.e. panel) out of the power saving state. We do that
+as part of the connector implementation rather than within the panel
+driver. There are also additional registers such as DP_LINK_BW_SET that
+need to be programmed. I think this is also relevant to regular DP and
+detailed in the specification.
 
+Given all the above, I'm beginning to think that Rob's right in that
+perhaps we shouldn't be treating eDP panels as panels, but rather to
+make them look more like DP monitors and make all this code part of the
+connector implementation. I think pretty much the only differences to
+regular DP are that we might require some lower-level resources that a
+DP monitor would usually have built-in (reset or power GPIOs, power
+supplies, backlight, ...).
 
->=20
->=20
->=20
->   drivers/input/touchscreen/st1232.c | 22 ++++++++++------------
->   1 file changed, 10 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscre=
-en/st1232.c
-> index 777df903605d..04d75b08be44 100644
-> --- a/drivers/input/touchscreen/st1232.c
-> +++ b/drivers/input/touchscreen/st1232.c
-> @@ -45,7 +45,7 @@ struct st1232_ts_data {
->   	struct i2c_client *client;
->   	struct input_dev *input_dev;
->   	struct dev_pm_qos_request low_latency_req;
-> -	int reset_gpio;
-> +	struct gpio_desc *reset_gpio;
->   	const struct st_chip_info *chip_info;
->   	int read_buf_len;
->   	u8 *read_buf;
-> @@ -142,8 +142,8 @@ static irqreturn_t st1232_ts_irq_handler(int irq, voi=
-d *dev_id)
->  =20
->   static void st1232_ts_power(struct st1232_ts_data *ts, bool poweron)
->   {
-> -	if (gpio_is_valid(ts->reset_gpio))
-> -		gpio_direction_output(ts->reset_gpio, poweron);
-> +	if (ts->reset_gpio)
-> +		gpiod_set_value_cansleep(ts->reset_gpio, !poweron);
->   }
->  =20
->   static const struct st_chip_info st1232_chip_info =3D {
-> @@ -215,15 +215,13 @@ static int st1232_ts_probe(struct i2c_client *clien=
-t,
->   	ts->client =3D client;
->   	ts->input_dev =3D input_dev;
->  =20
-> -	ts->reset_gpio =3D of_get_gpio(client->dev.of_node, 0);
-> -	if (gpio_is_valid(ts->reset_gpio)) {
-> -		error =3D devm_gpio_request(&client->dev, ts->reset_gpio, NULL);
-> -		if (error) {
-> -			dev_err(&client->dev,
-> -				"Unable to request GPIO pin %d.\n",
-> -				ts->reset_gpio);
-> -				return error;
-> -		}
-> +	ts->reset_gpio =3D devm_gpiod_get_optional(&client->dev, "reset",
-> +						 GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ts->reset_gpio)) {
-> +		error =3D PTR_ERR(ts->reset_gpio);
-> +		dev_err(&client->dev, "Unable to request GPIO pin: %d.\n",
-> +			error);
-> +		return error;
->   	}
->  =20
->   	st1232_ts_power(ts, true);
->=20
+I'm not sure if that's enough for eDP panels, though. For example the
+AUO B133HTN01 panel, used by the exynos5800-peach-pi, seems to be an eDP
+panel. But the driver also specifies a couple of additional delays which
+suggests that either it violates the eDP specification or that the eDP
+specification doesn't define any power sequencing delays that would've
+been needed. Or perhaps these delays are specified somewhere and the
+driver just doesn't use them?
 
+Thierry
 
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-________________________________________
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxZZFAACgkQ3SOs138+
+s6Hy8g//Y3J7LpurPMPM65PrgKuiXb8B2YbNLA1rrdVt+xmP0j05QI3k/9RMkR2t
+K9OZz15RbfulYl6yspYfeuYAlp8YFX1Wt9dApVH7MzJ7HTEkpprKXtWc1AkzuM85
+Gjh+Dud5SGZYQzlUqEjO5wpDAX+K4+sQQxJQeLykoks/rAwp8X2O4afxYnhU7U7m
+37IP6zwEHc4dCmXBPVmdVVB8x2sSG+el4NzfQlN3lVU05gn9utTG1Ee87T+0l5VY
+ftuYeRey9WpP+9qcW/130H/za7lpLJGnuoOzsxXMEv9WxVrU+ngFJ/W5Eo9YaD1q
+Kx7R5hLzuKXX0aYgdidLCteI7qRdFdOeIxHnQvYhWPywCw7eNrbAiyjdu3SlMfji
+FKOGG6rdowZ4bc4BhdsnhS1Wn3cpCG2MPGAVF1j/DvkcHGQajo+0yDYiRqN4MAts
+yf42Zq9pvD9Fn+T4Xc7KQgBxXt4JAO+ZHTLk7K5LED/TRbpaO3uMKNYLGrAuFP5f
+XyL39l50SDdxPladWCr67m1YmSzINnKB0aRtsRuKPw6i6AZ2ExkaYiLz2eupAhDe
+XxkEsIcZBu0T/dBPMmMZunsZzM81iXZSyy35twHuLexB+HbOcqreYrWhbdSNNOdM
+SrAScYYPe5Sq+oGMmCr/UnIk8cr9K666uD17jEfg3KyFVLJPWg8=
+=a+/I
+-----END PGP SIGNATURE-----
 
-Ginzinger electronic systems GmbH
-Gewerbegebiet Pirath 16
-4952 Weng im Innkreis
-www.ginzinger.com
+--0OAP2g/MAC+5xKAE--
 
-Firmenbuchnummer: FN 364958d
-Firmenbuchgericht: Ried im Innkreis
-UID-Nr.: ATU66521089
-
-
-Diese Nachricht ist vertraulich und darf nicht an andere Personen weitergeg=
-eben oder von diesen verwendet werden. Verst=C3=A4ndigen Sie uns, wenn Sie =
-irrt=C3=BCmlich eine Mitteilung empfangen haben.
-
-This message is confidential. It may not be disclosed to, or used by, anyon=
-e other than the addressee. If you receive this message by mistake, please =
-advise the sender.
-
-------7E37049725A1B525FC88E92716BF18CC
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+--===============1243138594==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
+Content-Disposition: inline
 
-MIIOHAYJKoZIhvcNAQcCoIIODTCCDgkCAQExDzANBglghkgBZQMEAgEFADALBgkq
-hkiG9w0BBwGgggshMIIF5jCCA86gAwIBAgIQapvhODv/K2ufAdXZuKdSVjANBgkq
-hkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFu
-Y2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExp
-bWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3Jp
-dHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMC
-R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
-ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
-U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEi
-MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYh
-UPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9NEjk6vW7rN/5sYFLIP1of3l0NKZ6
-fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+UlNEQ1/5ErCsHq9x9aU/x1
-KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2qvGlnHJvijjI
-03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZjrqc
-k39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMB
-AAGjggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNV
-HQ4EFgQUgq9sjPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1Ud
-EwEB/wQIMAYBAf8CAQAwEQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/
-oD2GO2h0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRp
-b25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEBBGUwYzA7BggrBgEFBQcwAoYvaHR0
-cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRkVHJ1c3RDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkqhkiG9w0BAQwF
-AAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+jsQgwR
-GiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDc
-ZoFD7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwp
-WZT89RY0wpJO+2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNm
-NppI4ZNMUH4Tam85S1j6E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade
-2022O/tUU1gb4jfWCcyvB8czm12FgX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztve
-BdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiOSEmIDsS5N5w/8IW1Hva5hEFy6fDA
-fd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz/W3JlHaeI5iKFn4UJu1/
-cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSam9V1niiCfOBe
-2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpOUvxh
-csjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIwggUzMIIEG6AD
-AgECAhBNQrEzGzrZ6FVYh1EEYH4+MA0GCSqGSIb3DQEBCwUAMIGXMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
-b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
-IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAe
-Fw0xODA3MTgwMDAwMDBaFw0yMTA3MTcyMzU5NTlaMDAxLjAsBgkqhkiG9w0BCQEW
-H21hcnRpbi5rZXBwbGluZ2VyQGdpbnppbmdlci5jb20wggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQDsMC77L0D+2D8I8X5ubnBhADLgU+HtlwMTFt/WJIhc
-kgbvnawYXWrCIpk8F6BJ0R/iFCykPdG7741EmlcHRKOJfhVxjXhwnoGFqnYmurCt
-fvZLR3+mT3FWnVv2RAdrXscXH3BpijqqWabdtTbiTvmcl86Zc6mNlVhYZSbDul/E
-voIGZotGcGIWrgZxN+8MQJQHKb0KHyWlPVPkrjvEfOJHKKLFsBNSnNMR95Ijg3Sp
-h8/8RG490/zRHflGzUlxDSlLyY9YJGzSdDzcFKoYcc4oaaUY5N3uhRna43TLUIQh
-6ybt3DKVz1Pw/ikwYJrOsulJrVr3D8KVHdGxq7HYl7jnAgMBAAGjggHfMIIB2zAf
-BgNVHSMEGDAWgBSCr2yM+MX+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQU/GtSUbHg
-14sPDlmo27eQYwtjaS0wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYD
-VR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMEYGA1UdIAQ/MD0wOwYMKwYBBAGy
-MQECAQMFMCswKQYIKwYBBQUHAgEWHWh0dHBzOi8vc2VjdXJlLmNvbW9kby5uZXQv
-Q1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NP
-TU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmww
-gYsGCCsGAQUFBwEBBH8wfTBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5jb21vZG9j
-YS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuY29tb2RvY2EuY29tMCoG
-A1UdEQQjMCGBH21hcnRpbi5rZXBwbGluZ2VyQGdpbnppbmdlci5jb20wDQYJKoZI
-hvcNAQELBQADggEBAGEuG01K1tt5i3gUdQkYem/KpbJUYBZd43QwmoTa0TGXUiYq
-b+g/TeGG9QQ1yq+73xOr8fu6oT2608C7EiJc6JmjTs485/OZmTqgYkrLfs71F1kB
-3Z59WPf5aoR/pnn5vdfkkoO29V1cKPJR4z+iOG2hOlcK/dXrX8i6mnL5DGIe8l5n
-udUPvIbUhbMavrDd6kwhs0oCjylwdKGlFkCpKMn3HPflfDeHuV9Z8Nrpeq/7+Pm0
-I/fLPkaYlULASJoJCucMYcedY9rmuro9JhV+NuVXaqLIrQPc1vyKFeRuLHh84M6c
-1h1DArdGTykXZUwjXnnHtuOtzjIAzkx2Ns43vEsxggK/MIICuwIBATCBrDCBlzEL
-MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMT
-NENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEE1CsTMbOtnoVViHUQRgfj4wDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZI
-hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkwMjA1MTAyMDE5
-WjAvBgkqhkiG9w0BCQQxIgQgLasB+S7eaVVEtVBG/l17+OjsyWdN/uUJmJW0RCnO
-Go4weQYJKoZIhvcNAQkPMWwwajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsG
-CWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcN
-AwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEA
-vfjTn8o8oWSWY63NifkJVb+nnxfhK3HeN2gb4CUQRGxIh7GRwkXEsSQMfgbpnK9h
-wO+BiMnHLC8NbIAG2cJfwrYMcuDGaYPXpFge1xw4yBbhDs3TYih+banMpOHfh46t
-O9ZXSFCpYpC2CaOq4BA9YkeWmMzhnl2Hb74QFcp28jEPaCWY+YoY/U/wS2rdXify
-vYvGgbc8ZVEG1IhZ0CZi0jv6whqKSax7TBWAJKEe1rV5VaqUp/HCerQIomeiz89E
-ZLiG3RpB2stTiVS8JDyrFROGG239VHq9JyoQicP39zwonUHcBvn0vIkaX5EAAAB5
-9gHCiV8NONmLs3GVlWEmrw==
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
-------7E37049725A1B525FC88E92716BF18CC--
+--===============1243138594==--
