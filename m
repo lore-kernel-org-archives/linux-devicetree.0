@@ -1,86 +1,41 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 5/5] arm: dts: axpxx: add charge led node
-Date: Wed, 6 Feb 2019 00:16:53 +0800
-Message-ID: <CAGb2v66B3X=hyCCanUv6yGziVcu3WrRcKODBp266ODL+yQ4m1w@mail.gmail.com>
-References: <20190131082308.22522-1-stefan@olimex.com> <20190131082308.22522-5-stefan@olimex.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Tue, 5 Feb 2019 08:19:45 -0800
+Message-ID: <20190205161945.GS5720@atomide.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com>
+ <20190204163312.GI5720@atomide.com>
+ <5C5959DB.2090608@ti.com>
+ <f1b689cc-5d1b-0333-7a1c-cb6d58169e12@ti.com>
+ <5C59AEA3.1080400@ti.com>
+ <124e9f09-fb60-071d-e2ba-ec6f7fb3955c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190131082308.22522-5-stefan@olimex.com>
+Content-Disposition: inline
+In-Reply-To: <124e9f09-fb60-071d-e2ba-ec6f7fb3955c@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Mavrodiev <stefan@olimex.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>, s-anna@ti.com, ohad@wizery.com, bjorn.andersson@linaro.org, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2019 at 4:25 PM Stefan Mavrodiev <stefan@olimex.com> wrote:
->
-> Add dt node for axp20x-led driver controlling CHGLED.
-> Default status is disabled, since it may be not used.
->
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+* Murali Karicheri <m-karicheri2@ti.com> [190205 16:13]:
+> On 02/05/2019 10:41 AM, Roger Quadros wrote:
+> > What I'm suggesting here is that kernel remoteproc driver should have nothing to do
+> > with the other PRU's data RAM.
+> > 
+> > The application driver if needs both PRUs then it can obviously access both DRAMs
+> > as it has a phandle to both PRUs.
+> > 
+> That should be fine.
 
-Please include a cover letter for such a patch series.
+That sounds good to me too.
 
-Also, do any boards actually use this? I know the Pine64 does, but the
-LED is left to the user to populate. I would really like to have an in
-kernel user of this function, so that we can verify it.
+For dts, yeah please allocate the resources for the modules
+where the resources belong to on the PRUSS internal interconnect :)
+Devices can move around on the interconnect between SoCs and the
+modules can get swapped or added.
 
-ChenYu
+Regards,
 
-> ---
->  arch/arm/boot/dts/axp209.dtsi | 5 +++++
->  arch/arm/boot/dts/axp22x.dtsi | 5 +++++
->  arch/arm/boot/dts/axp81x.dtsi | 5 +++++
->  3 files changed, 15 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
-> index 0d9ff12bdf28..f972b6f3ecd0 100644
-> --- a/arch/arm/boot/dts/axp209.dtsi
-> +++ b/arch/arm/boot/dts/axp209.dtsi
-> @@ -69,6 +69,11 @@
->                 #gpio-cells = <2>;
->         };
->
-> +       axp_led: led {
-> +               compatible = "x-powers,axp20x-led";
-> +               status = "disabled";
-> +       };
-> +
->         battery_power_supply: battery-power-supply {
->                 compatible = "x-powers,axp209-battery-power-supply";
->                 status = "disabled";
-> diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
-> index 65a07a67aca9..92a0b64252b1 100644
-> --- a/arch/arm/boot/dts/axp22x.dtsi
-> +++ b/arch/arm/boot/dts/axp22x.dtsi
-> @@ -62,6 +62,11 @@
->                 #io-channel-cells = <1>;
->         };
->
-> +       axp_led: led {
-> +               compatible = "x-powers,axp20x-led";
-> +               status = "disabled";
-> +       };
-> +
->         battery_power_supply: battery-power-supply {
->                 compatible = "x-powers,axp221-battery-power-supply";
->                 status = "disabled";
-> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-> index bd83962d3627..22e243cc40d5 100644
-> --- a/arch/arm/boot/dts/axp81x.dtsi
-> +++ b/arch/arm/boot/dts/axp81x.dtsi
-> @@ -74,6 +74,11 @@
->                 };
->         };
->
-> +       axp_led: led {
-> +               compatible = "x-powers,axp20x-led";
-> +               status = "disabled";
-> +       };
-> +
->         battery_power_supply: battery-power-supply {
->                 compatible = "x-powers,axp813-battery-power-supply";
->                 status = "disabled";
-> --
-> 2.17.1
->
+Tony
