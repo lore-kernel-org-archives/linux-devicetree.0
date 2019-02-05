@@ -1,228 +1,142 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 04/14] irqchip: pruss: Add a PRUSS irqchip driver for
- PRUSS interrupts
-Date: Tue, 5 Feb 2019 10:51:14 +0200
-Message-ID: <5C594E82.8040601@ti.com>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
- <1549290167-876-5-git-send-email-rogerq@ti.com>
- <57e5b54e-430e-daa1-4b5d-f61827095606@ti.com> <5C585B33.4030505@ti.com>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding
+ for generic eDP panel
+Date: Tue, 5 Feb 2019 09:57:37 +0100
+Message-ID: <20190205085737.GY3271@phenom.ffwll.local>
+References: <20190203185501.8958-1-anarsoul@gmail.com>
+ <20190203185501.8958-9-anarsoul@gmail.com>
+ <20190204074350.GC16448@ulmo>
+ <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
+ <20190204082353.GE19087@ulmo>
+ <20190204094012.GP3271@phenom.ffwll.local>
+ <20190204112218.GB10412@ulmo>
+ <20190204155909.GU3271@phenom.ffwll.local>
+ <20190204162258.GB25476@ulmo>
+Reply-To: daniel-/w4YWyX8dFk@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C585B33.4030505@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, tony@atomide.com, ohad@wizery.com, bjorn.andersson@linaro.org, Rob Herring <robh+dt@kernel.org>
-Cc: s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDYZDG4VSMIRBBNA4XRAKGQEBA6PZVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190204162258.GB25476@ulmo>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+Rob
-
-Andrew,
-
-On 04/02/19 17:33, Roger Quadros wrote:
-> On 04/02/19 17:11, Andrew F. Davis wrote:
->> On 2/4/19 8:22 AM, Roger Quadros wrote:
->>> From: "Andrew F. Davis" <afd@ti.com>
->>>
->>
->> [...]
->>
->>> +static const struct pruss_intc_match_data am437x_pruss_intc_data = {
->>> +	.no_host7_intr = true,
->>
->> Like done for the PRUSS driver with 'has_no_sharedram' becoming a DT
->> flag the same could be done here, then all this match data stuff could
->> be dropped.
+On Mon, Feb 04, 2019 at 05:22:58PM +0100, Thierry Reding wrote:
+> On Mon, Feb 04, 2019 at 04:59:09PM +0100, Daniel Vetter wrote:
+> > On Mon, Feb 04, 2019 at 12:22:18PM +0100, Thierry Reding wrote:
+> > > On Mon, Feb 04, 2019 at 10:40:12AM +0100, Daniel Vetter wrote:
+> > > > On Mon, Feb 04, 2019 at 09:23:59AM +0100, Thierry Reding wrote:
+> > > > > On Mon, Feb 04, 2019 at 12:13:55AM -0800, Vasily Khoruzhick wrote:
+> > > > > > On Sun, Feb 3, 2019 at 11:43 PM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > > > >
+> > > > > > > On Sun, Feb 03, 2019 at 10:54:57AM -0800, Vasily Khoruzhick wrote:
+> > > > > > > > eDP panels usually have EDID EEPROM, so there's no need to define panel
+> > > > > > > > width/height or any modes/timings in dts. But this panel still may have
+> > > > > > > > regulator and/or backlight.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > > > > > ---
+> > > > > > > >  .../devicetree/bindings/display/panel/panel-edp.txt        | 7 +++++++
+> > > > > > > >  1 file changed, 7 insertions(+)
+> > > > > > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
+> > > > > > >
+> > > > > > > Please don't try to make panels look more generic than they really are.
+> > > > > > > You're going to have to provide a compatible string for your device that
+> > > > > > > is more specific than "panel-edp". You claim that you don't need any
+> > > > > > > extra information that is panel specific, but you don't know that now.
+> > > > > > > We have in the past thought that we didn't need things like prepare
+> > > > > > > delay, but then we ran into situations where we did need them.
+> > > > > > >
+> > > > > > > Just do what everybody else does. Provide a specific compatible string
+> > > > > > > and match on that in the panel-simple driver. Even if you can read all
+> > > > > > > the video timings from an EDID EEPROM, you can still provide a mode in
+> > > > > > > the panel descriptor to serve as a fallback if for example the EEPROM
+> > > > > > > is faulty on some device.
+> > > > > > 
+> > > > > > Pinebook used several 768p panels that have slightly different timings
+> > > > > > and recent batch uses 1080p panel.
+> > > > > > 
+> > > > > > What panel descriptor should I use as fallback?
+> > > > > 
+> > > > > You don't use panel descriptors as fallback. The simple-panel driver
+> > > > > will bind to a panel device and use the corresponding descriptor. If
+> > > > > your device tree contains the correct information, the descriptor is
+> > > > > correct for the panel you have.
+> > > > > 
+> > > > > In other words you need to ensure that you have the correct panel in
+> > > > > device tree for the board that you're using. This is exactly the same
+> > > > > thing as for other devices.
+> > > > > 
+> > > > > One way to to this is to have separate device trees for each variant
+> > > > > of the board that you want to support. Another variant may be to have
+> > > > > a common device tree and then have some early firmware update the DTB
+> > > > > with the correct panel information.
+> > > > 
+> > > > This would defeat the point of edp, which is to standardize the mess of
+> > > > panels (at least somewhat) and avoid having to change the DT/ACPI
+> > > > tables/firmware for every board you ship. Also, we do have DP quirking
+> > > > infrastructure already (using the OUI), I think if there's something that
+> > > > doesn't work then we should quirk it there.
+> > > 
+> > > The problem is that while the attempt may have been to standardize, it
+> > > failed. It doesn't take into account any of the details such as timing
+> > > between things like powering up the display and enabling the backlight
+> > > or similar. I don't know how you'd want to "quirk" those kinds of
+> > > requirements because they are highly panel specific.
+> > 
+> > Hm right, we get these from some firmware tables (and mix them with the
+> > spec one, since some of the firmware values are nonsense). I don't even
+> > know whether we can read the timings over dp aux somehow (you can power up
+> > the panel with some pessimistic values to figure those out, and you only
+> > need dp aux to work, which is much simpler than the entire panel).
+> > 
+> > > > What does make sense though imo is if we try not to stuff the edp panel
+> > > > into panel-simple, because it's anything like a simple dumb panel. There's
+> > > > also some integration awkwardness since with this panel you need to do dp
+> > > > aux/i2c transactions to get at the information (edid alone isn't good
+> > > > enough for edp), and I'm not sure how exactly that's supposed to be
+> > > > instantiated. Maybe a special function to instantiate an edp panel, which
+> > > > takes both a DT node and the dp_aux controller would be much better,
+> > > > instead of trying to auto-match against a DT compatible string and load a
+> > > > panel driver which is almost all fake.
+> > > > 
+> > > > Or we teach dp_aux to register itself and somehow teach panel-edp how it
+> > > > can get hold of the dp_aux channel it needs.
+> > > 
+> > > We already do that. drm_dp_aux registers as an I2C adapter that can be
+> > > used to read EDID EEPROMs using I2C-over-AUX transactions. We already
+> > > use that on some platforms.
+> > > 
+> > > Also note that simple-panel already supports getting video timings from
+> > > EDID. If a DDC link is present in DT, the driver will load the modes
+> > > from EDID and use them.
+> > 
+> > Could we extend this to dp aux somehow? For edp you need the dp aux (which
+> > then gives you the ddc link automatically).
 > 
-> Agreed.
+> I suppose we could do that. We could introduce a new property that would
+> allow the panel driver to get at the struct drm_dp_aux that can access
+> the panel. I'm not sure how much that would buy us. I suppose the driver
+> could go and use that drm_dp_aux to do I2C-over-AUX and ignore any
+> ddc-bus property in device tree. A drm_dp_aux object could also be used
+> to access DPCD if that's helpful.
 > 
+> The driver proposed here doesn't need access to DPCD, so I'm not sure
+> that would immediately help.
 
-Going back and looking at code here is a different perspective.
-
-The has_no_sharedram case was a an odd duck because the 2 ICSSG instances
-within the same SoC (AM437x) had differences. So we couldn't use
-the compatible to differentiate there. The DT flag makes sense there.
-
-In the no_host7_intr case, it SoC specific so we can use the compatible to
-differentiate. And AM6 SoC has different number of system_events and host_interrupts
-so that could come in macth_data as well. See below.
-
-static const struct pruss_intc_match_data am335x_am57xx_pruss_intc_data = {
-        .num_system_events = 64,
-        .num_host_intrs = 10,
-        .no_host7_intr = false,
-};
-
-static const struct pruss_intc_match_data am437x_k2g_pruss_intc_data = {
-        .num_system_events = 64,
-        .num_host_intrs = 10,
-        .no_host7_intr = true,
-};
-
-static const struct pruss_intc_match_data am6x_icssg_intc_data = {
-        .num_system_events = 160,
-        .num_host_intrs = 20,
-        .no_host7_intr = false,
-};
-
-Alternatively, we add a DT property each for all 3 of them and get rid
-of match_data entirely.
-
-Which is a better approach?
-
-cheers,
--roger
-
-
->>
->>> +};
->>> +
->>> +static const struct of_device_id pruss_intc_of_match[] = {
->>> +	{
->>> +		.compatible = "ti,am3356-pruss-intc",
->>> +		.data = NULL,
->>> +	},
->>> +	{
->>> +		.compatible = "ti,am4376-pruss-intc",
->>> +		.data = &am437x_pruss_intc_data,
->>> +	},
->>> +	{
->>> +		.compatible = "ti,am5728-pruss-intc",
->>> +		.data = NULL,
->>> +	},
->>> +	{ /* sentinel */ },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, pruss_intc_of_match);
->>> +
->>> +static struct platform_driver pruss_intc_driver = {
->>> +	.driver = {
->>> +		.name = "pruss-intc",
->>> +		.of_match_table = pruss_intc_of_match,
->>> +	},
->>> +	.probe  = pruss_intc_probe,
->>> +	.remove = pruss_intc_remove,
->>> +};
->>> +module_platform_driver(pruss_intc_driver);
->>> +
->>> +MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
->>> +MODULE_AUTHOR("Suman Anna <s-anna@ti.com>");
->>> +MODULE_DESCRIPTION("PRU-ICSS INTC Driver");
->>> +MODULE_LICENSE("GPL v2");
->>> diff --git a/include/linux/irqchip/irq-pruss-intc.h b/include/linux/irqchip/irq-pruss-intc.h
->>> new file mode 100644
->>> index 0000000..4538a0b
->>> --- /dev/null
->>> +++ b/include/linux/irqchip/irq-pruss-intc.h
->>> @@ -0,0 +1,94 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 */
->>> +/**
->>> + * irq-pruss-intc.h - PRU-ICSS INTC management
->>
->> Filename not needed.
-> 
-> OK.
-> 
-> cheers,
-> -roger
-> 
->>
->> Andrew
->>
->>> + *
->>> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
->>> + */
->>> +
->>> +#ifndef __INCLUDE_LINUX_IRQCHIP_IRQ_PRUSS_INTC_H
->>> +#define __INCLUDE_LINUX_IRQCHIP_IRQ_PRUSS_INTC_H
->>> +
->>> +/* maximum number of system events */
->>> +#define MAX_PRU_SYS_EVENTS	64
->>> +
->>> +/* maximum number of interrupt channels */
->>> +#define MAX_PRU_CHANNELS	10
->>> +
->>> +/**
->>> + * struct pruss_intc_config - INTC configuration info
->>> + * @sysev_to_ch: system events to channel mapping information
->>> + * @ch_to_host: interrupt channel to host interrupt information
->>> + */
->>> +struct pruss_intc_config {
->>> +	s8 sysev_to_ch[MAX_PRU_SYS_EVENTS];
->>> +	s8 ch_to_host[MAX_PRU_CHANNELS];
->>> +};
->>> +
->>> +#if IS_ENABLED(CONFIG_TI_PRUSS)
->>> +
->>> +/**
->>> + * pruss_intc_configure() - configure the PRUSS INTC
->>> + * @dev: device
->>> + * @intc_config: PRU core-specific INTC configuration
->>> + *
->>> + * Configures the PRUSS INTC with the provided configuration from
->>> + * a PRU core. Any existing event to channel mappings or channel to
->>> + * host interrupt mappings are checked to make sure there are no
->>> + * conflicting configuration between both the PRU cores. The function
->>> + * is intended to be used only by the PRU remoteproc driver.
->>> + *
->>> + * Returns 0 on success, or a suitable error code otherwise
->>> + */
->>> +int pruss_intc_configure(struct device *dev,
->>> +			 struct pruss_intc_config *intc_config);
->>> +
->>> +/**
->>> + * pruss_intc_unconfigure() - unconfigure the PRUSS INTC
->>> + * @dev: device
->>> + * @intc_config: PRU core specific INTC configuration
->>> + *
->>> + * Undo whatever was done in pruss_intc_configure() for a PRU core.
->>> + * It should be sufficient to just mark the resources free in the
->>> + * global map and disable the host interrupts and sysevents.
->>> + */
->>> +int pruss_intc_unconfigure(struct device *dev,
->>> +			   struct pruss_intc_config *intc_config);
->>> +/**
->>> + * pruss_intc_trigger() - trigger a PRU system event
->>> + * @irq: linux IRQ number associated with a PRU system event
->>> + *
->>> + * Trigger an interrupt by signalling a specific PRU system event.
->>> + * This can be used by PRUSS client users to raise/send an event to
->>> + * a PRU or any other core that is listening on the host interrupt
->>> + * mapped to that specific PRU system event. The @irq variable is the
->>> + * Linux IRQ number associated with a specific PRU system event that
->>> + * a client user/application uses. The interrupt mappings for this is
->>> + * provided by the PRUSS INTC irqchip instance.
->>> + *
->>> + * Returns 0 on success, or an error value upon failure.
->>> + */
->>> +int pruss_intc_trigger(unsigned int irq);
->>> +
->>> +#else
->>> +
->>> +static inline int pruss_intc_configure(struct device *dev,
->>> +				       struct pruss_intc_config *intc_config)
->>> +{
->>> +	return -ENOTSUPP;
->>> +}
->>> +
->>> +static inline int pruss_intc_unconfigure(struct device *dev,
->>> +					 struct pruss_intc_config *intc_config)
->>> +{
->>> +	return -ENOTSUPP;
->>> +}
->>> +
->>> +static inline int pruss_intc_trigger(unsigned int irq)
->>> +{
->>> +	return -ENOTSUPP;
->>> +}
->>> +
->>> +#endif	/* CONFIG_TI_PRUSS */
->>> +
->>> +#endif /* __INCLUDE_LINUX_IRQCHIP_IRQ_OMAP_INTC_H */
->>> +
->>>
-> 
-
+You definitely need dp aux to drive edp. That's where a lot of the really
+important stuff is stored, and it sounds like on non-broken panels even
+the timings (we've never implemented that on i915 somehow).
+-Daniel
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
