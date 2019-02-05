@@ -1,40 +1,285 @@
-From: Tao Ren <taoren@fb.com>
-Subject: [PATCH] ARM: dts: aspeed: cmm: enable iio-hwmon-adc
-Date: Tue, 5 Feb 2019 14:46:19 -0800
-Message-ID: <20190205224619.2102873-1-taoren@fb.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v6] arm64: dts: marvell: Add device tree for uDPU board
+Date: Tue, 05 Feb 2019 23:51:43 +0100
+Message-ID: <87imxx97cw.fsf@FE-laptop>
+References: <20190125171707.27742-1-vladimir.vid@sartura.hr>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: Tao Ren <taoren@fb.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190125171707.27742-1-vladimir.vid@sartura.hr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Luis Torres <luis.torres@methode.com>, Jason Cooper <jason@lakedaemon.net>, Paul Arola <paul.arola@telus.com>, Vladimir Vid <vladimir.vid@sartura.hr>, Scott Roberts <scott.roberts@telus.com>, Luka Perkov <luka.perkov@sartura.hr>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Bind aspeed ADC channels 0-7 to "iio-hwmon" driver so the data of these
-voltage sensing channels can be accessed by "lm_sensors". Channels 8-15
-are not used on CMM BMC.
-
-Signed-off-by: Tao Ren <taoren@fb.com>
----
- arch/arm/boot/dts/aspeed-bmc-facebook-cmm.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-cmm.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-cmm.dts
-index 9f194b5eeba4..43aba4071a5c 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-cmm.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-cmm.dts
-@@ -56,6 +56,12 @@
- 	memory@80000000 {
- 		reg = <0x80000000 0x20000000>;
- 	};
-+
-+	ast-adc-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
-+			      <&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>;
-+	};
- };
+Hi Vladimir,
  
- &pinctrl {
+ On ven., janv. 25 2019, Vladimir Vid <vladimir.vid@sartura.hr> wrote:
+
+> This adds initial support for micro-DPU (uDPU) board which is based on
+> Armada-3720 SoC.  micro-DPU is the single-port FTTdp distribution point
+> unit made by Methode Electronics which offers complete modularity with
+> replaceable SFP modules both for uplink and downlink (G.hn over
+> twisted-pair, G.hn over coax, 1G and 2.5G Ethernet over Cat-5e cable).
+>
+> On-board features:
+> - 512 MiB DDR3
+> - 2 x 2.5G SFP via HSGMII SERDES interface to the A3720 SoC
+> - USB 2.0 Type-C connector
+> - 4GB eMMC
+> - ETSI TS 101548 reverse powering via twisted pair (RJ45) or coax (F Type)
+>
+> Cc: Luka Perkov <luka.perkov@sartura.hr>
+> Cc: Luis Torres <luis.torres@methode.com>
+> Cc: Scott Roberts <scott.roberts@telus.com>
+> Cc: Paul Arola <paul.arola@telus.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Gregory Clement <gregory.clement@bootlin.com>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Vladimir Vid <vladimir.vid@sartura.hr>
+
+Looks good, I will apply it on mvebu/dt64 with Andrew reviewed-by flag
+
+Thanks,
+
+Gregory
+
+I have just a minor remark: see below.
+
+> ---
+>
+> v6 changes:
+> - updated LED labels per naming convention (Documentation/leds/leds-class.txt)
+>
+> ---
+>  MAINTAINERS                                   |   5 +
+>  arch/arm64/boot/dts/marvell/Makefile          |   1 +
+>  .../boot/dts/marvell/armada-3720-uDPU.dts     | 164 ++++++++++++++++++
+>  3 files changed, 170 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 51029a425dbe..21174a13049b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9851,6 +9851,11 @@ F:	drivers/media/platform/meson/ao-cec.c
+>  F:	Documentation/devicetree/bindings/media/meson-ao-cec.txt
+>  T:	git git://linuxtv.org/media_tree.git
+>  
+> +METHODE UDPU SUPPORT
+> +M:	Vladimir Vid <vladimir.vid@sartura.hr>
+> +S:	Maintained
+> +F:	arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+> +
+>  MICROBLAZE ARCHITECTURE
+>  M:	Michal Simek <monstr@monstr.eu>
+>  W:	http://www.monstr.eu/fdt/
+> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+> index 2eff1f927471..caed4334f27d 100644
+> --- a/arch/arm64/boot/dts/marvell/Makefile
+> +++ b/arch/arm64/boot/dts/marvell/Makefile
+> @@ -2,6 +2,7 @@
+>  # Mvebu SoC Family
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
+> +dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-uDPU.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-clearfog-gt-8k.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+> new file mode 100644
+> index 000000000000..2441481643a4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+> @@ -0,0 +1,164 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Device tree for the uDPU board.
+> + * Based on Marvell Armada 3720 development board (DB-88F3720-DDR3)
+> + * Copyright (C) 2016 Marvell
+> + * Copyright (C) 2019 Methode Electronics
+> + * Copyright (C) 2019 Telus
+> + *
+> + * Vladimir Vid <vladimir.vid@sartura.hr>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "armada-372x.dtsi"
+> +
+> +/ {
+> +	model = "Methode uDPU Board";
+> +	compatible = "methode,udpu", "marvell,armada3720";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
+> +	};
+> +
+> +	leds {
+> +		pinctrl-names = "default";
+> +		compatible = "gpio-leds";
+> +
+> +		power1 {
+> +			label = "udpu:green:power";
+> +			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		power2 {
+> +			label = "udpu:red:power";
+> +			gpios = <&gpionb 12 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		network1 {
+> +			label = "udpu:green:network";
+> +			gpios = <&gpionb 13 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		network2 {
+> +			label = "udpu:red:network";
+> +			gpios = <&gpionb 14 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		alarm1 {
+> +			label = "udpu:green:alarm";
+> +			gpios = <&gpionb 15 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		alarm2 {
+> +			label = "udpu:red:alarm";
+> +			gpios = <&gpionb 16 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	sfp_eth0: sfp-eth0 {
+> +		compatible = "sff,sfp";
+> +		i2c-bus = <&i2c0>;
+> +		los-gpio = <&gpiosb 2 GPIO_ACTIVE_HIGH>;
+> +		mod-def0-gpio = <&gpiosb 3 GPIO_ACTIVE_LOW>;
+> +		tx-disable-gpio = <&gpiosb 4 GPIO_ACTIVE_HIGH>;
+> +		tx-fault-gpio = <&gpiosb 5 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	sfp_eth1: sfp-eth1 {
+> +		compatible = "sff,sfp";
+> +		i2c-bus = <&i2c1>;
+> +		los-gpio = <&gpiosb 7 GPIO_ACTIVE_HIGH>;
+> +		mod-def0-gpio = <&gpiosb 8 GPIO_ACTIVE_LOW>;
+> +		tx-disable-gpio = <&gpiosb 9 GPIO_ACTIVE_HIGH>;
+> +		tx-fault-gpio = <&gpiosb 10 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +&sdhci0 {
+> +	status = "okay";
+> +	bus-width = <8>;
+> +	mmc-ddr-1_8v;
+> +	mmc-hs400-1_8v;
+> +	marvell,pad-type = "fixed-1-8v";
+> +	non-removable;
+> +	no-sd;
+> +	no-sdio;
+> +};
+> +
+> +&spi0 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi_quad_pins>;
+> +
+> +	m25p80@0 {
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
+
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+
+As you use the new way to declare the partitions then you don't have to
+use these 2 properties. It is harmless, and we have the same mistake on
+some other platform. However I will fix it while applying the patch: you
+don't need to submit a new version.
+
+
+> +		spi-max-frequency = <54000000>;
+> +
+> +		partitions {
+> +			compatible = "fixed-partitions";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			/* only bootloader is located on the SPI */
+> +			partition@0 {
+> +				label = "uboot";
+> +				reg = <0 0x400000>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins>;
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins>;
+> +
+> +	lm75@48 {
+> +		status = "okay";
+> +		compatible = "lm75";
+> +		reg = <0x48>;
+> +	};
+> +
+> +	lm75@49 {
+> +		status = "okay";
+> +		compatible = "lm75";
+> +		reg = <0x49>;
+> +	};
+> +};
+> +
+> +&eth0 {
+> +	phy-mode = "sgmii";
+> +	status = "okay";
+> +	managed = "in-band-status";
+> +	sfp = <&sfp_eth0>;
+> +};
+> +
+> +&eth1 {
+> +	phy-mode = "sgmii";
+> +	status = "okay";
+> +	managed = "in-band-status";
+> +	sfp = <&sfp_eth1>;
+> +};
+> +
+> +&usb3 {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> -- 
+> 2.19.0
+>
+
 -- 
-2.17.1
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
