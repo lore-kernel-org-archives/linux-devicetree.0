@@ -1,52 +1,64 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 5/6] dt-bindings: i2c: Add Mediatek MT8183 i2c binding
-Date: Tue, 5 Feb 2019 14:16:41 +0100
-Message-ID: <20190205131641.GF12401@kunai>
-References: <1548057574-8061-1-git-send-email-qii.wang@mediatek.com>
- <1548057574-8061-6-git-send-email-qii.wang@mediatek.com>
+From: Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCH RESEND v2 05/12] drm/bridge: Add Analogix anx6345
+ support
+Date: Tue, 5 Feb 2019 14:19:02 +0100
+Message-ID: <20190205131902.GA7432@lst.de>
+References: <20181018073327.64942-1-icenowy@aosc.io> <20190204122250.GB7660@lst.de> <CA+E=qVfHMqo_ZWPTgvr+5G2J29Yy-TU4aceVD0oHLeyaOxVogA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qftxBdZWiueWNAVY"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1548057574-8061-6-git-send-email-qii.wang@mediatek.com>
+In-Reply-To: <20190203185501.8958-6-anarsoul@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: qii wang <qii.wang@mediatek.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, ryder.lee@mediatek.com, xinping.qian@mediatek.com, liguo.zhang@mediatek.com
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Icenowy Zheng <icenowy@aosc.io>, devicetree <devicetree@vger.kernel.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+First thing that struck me is that the chip's reset is actually low active
 
---qftxBdZWiueWNAVY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
+                                        ^^^^
+(please correct this in patches 11 and 12)
 
+Consequently, you're using inverted values here in the driver:
 
-> +  - mediatek,share-i3c: i3c controller can share i2c function.
+> +static void anx6345_poweron(struct anx6345 *anx6345)
+> +{
+[...]
+> +	gpiod_set_value_cansleep(pdata->gpiod_reset, 0);
 
-I am not happy with this binding. There must be a better way of using
-the I3C controller in I2C mode. I think it would be easier to tell if we
-had an I3C driver to see how it implements I2C fallback there. Is the
-I3C driver on the way?
+0 = reset on, ok.
 
+> +	usleep_range(1000, 2000);
+> +
+> +	gpiod_set_value_cansleep(pdata->gpiod_reset, 1);
 
---qftxBdZWiueWNAVY
-Content-Type: application/pgp-signature; name="signature.asc"
+1 = reset off, also fine.
 
------BEGIN PGP SIGNATURE-----
+> +
+> +	/* Power on registers module */
+> +	anx6345_set_bits(anx6345->map[I2C_IDX_TXCOM], SP_POWERDOWN_CTRL_REG,
+> +			 SP_HDCP_PD | SP_AUDIO_PD | SP_VIDEO_PD | SP_LINK_PD);
+> +	anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM], SP_POWERDOWN_CTRL_REG,
+> +			   SP_REGISTER_PD | SP_TOTAL_PD);
+> +
+> +	anx6345->powered = true;
+> +}
+> +
+> +static void anx6345_poweroff(struct anx6345 *anx6345)
+> +{
+> +	struct anx6345_platform_data *pdata = &anx6345->pdata;
+> +	int err;
+> +
+> +	if (WARN_ON(!anx6345->powered))
+> +		return;
+> +
+> +	gpiod_set_value_cansleep(pdata->gpiod_reset, 1);
+> +	usleep_range(1000, 2000);
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlxZjLUACgkQFA3kzBSg
-KbZ3kw/+MPQnVnSHx074f3k4k9AbHCPpsJjFvArfPHwjRjIzGcf8jm/qxMrSppV5
-Jjhbjy4VBTdXWt27pyjEhZyc/cypfl+PgCypWi51nvXor7AVu+Cn0oKPeSvQM6QF
-6LnUyxnQ+g2gLPM0iZR4QyiY34YVGY3XL6hYcsNFYsX5ezVgFmlH1Rc7m2K1b5KT
-CdKaULa8YvRaBfEdCJr3vxszVr8dJXocollbbbWFxTM7O6mIeSKhJ2nG8PiZVhYc
-gA6wKFyS+RQrIwRZSAUXvuP6haDpWMzzUCJ6WvHiByGwnuXKq1lk9d4IBe7qjqx4
-M8o0gX+uyCV28q6EeUn4s7hWMVp8YL/bjyaVlwmtphNypRRBs9iqeIhSsJ1LdvWD
-8m5eTFDdRE2cWfbAM4XfKQ2KPOYVQlVsCo5NFFN28xzfGzFrp1ilIaw1rbM+8nYH
-pf942Oxyk2cjoxJJv/O2xoJckESWcNfX7snlYiyFJcGhSQITn/FcFQQSc2uKNX8Q
-1hByqi4GD2B2U9lwSWGaiu5yuz3kgwYpcqc0hED7dkOS9dk7vDIGuV88dZS5jo09
-rIcU1UwVtCSWLtoIMLVc+PYZEsjtmmlx7293W3BWZjBAoLVUQpPVrdUAl1vM93Lp
-NQi1oxly7GIeo2AvFM83rdiI1bcmndZv5yZwgCpbPl0Bf5XgdHY=
-=/6Dp
------END PGP SIGNATURE-----
+This one got me a bit confused. Assert or deassert reset (again) before
+poweroff?
 
---qftxBdZWiueWNAVY--
+Please stick to the logical value of the reset line.
+
+	Torsten
