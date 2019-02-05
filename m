@@ -1,45 +1,58 @@
-From: Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [PATCH 2/2] dt-bindings: nand: Add Cadence NAND controller driver
-Date: Tue, 5 Feb 2019 17:08:14 +0000
-Message-ID: <20190205170812.GA18748@global.cadence.com>
-References: <20190129160337.24350-1-piotrs@cadence.com>
- <20190129161040.20299-1-piotrs@cadence.com>
- <20190129182100.2fcb4e9f@bbrezillon>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2] dt-bindings: PCI: rcar: Add device tree support for
+ r8a774c0
+Date: Tue, 5 Feb 2019 17:24:02 +0000
+Message-ID: <20190205172402.GA12090@e107981-ln.cambridge.arm.com>
+References: <1545134562-22450-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190129182100.2fcb4e9f@bbrezillon>
+In-Reply-To: <1545134562-22450-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <bbrezillon@kernel.org>
-Cc: linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, BrianNorris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The 01/29/2019 18:21, Boris Brezillon wrote:
-  
->> +Optional properties:
->> +Driver calculates controller timings base on NAND flash memory timings and
->> +the following delays in picoseconds.
->> +  - cdns,if-skew : Skew value of the output signals of the NAND Flash interface
->> +  - cdns,nand2-delay : Delay value of one NAND2 gate from which
->> +    the delay element is build
->> +  - cdns,board-delay : Estimated Board delay. The value includes the total
->> +    round trip delay for the signals and is used for deciding on values
->> +    associated with data read capture. The example formula for SDR mode is
->> +    the following:
->> +    board_delay = RE#PAD_delay + PCB trace to device + PCB trace from device
->> +    + DQ PAD delay
->
->The unit of those props is not defined, and if possible I'd like to
->avoid specifying custom timing adjustment values in the DT. Looks like
->some of these values are SoC specific (depends on the integration of
->this IP in a SoC) and others are board specific. For SoC specific
->values, this should be attached to the SoC specific compatible at the
->driver level. For board-specific values, I'd prefer to have a generic
->way to describe boards constraints.
-Moving SoC specific delays from DTS to the driver data is clear for me. I do not know how to handle a board delay. Could you give me an example how it may be implemented? Where this board related stuff could be placed?
+On Tue, Dec 18, 2018 at 12:02:42PM +0000, Fabrizio Castro wrote:
+> Add PCIe support for the RZ/G2E (a.k.a. R8A774C0).
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v1->v2:
+> * Dropped change to the description of "phys" optional property according
+>   to Geert's comment
+> 
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
--- 
---
-Regards
-Piotr Sroka
+Applied to pci/dt for v5.1, thanks.
+
+Lorenzo
+
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> index 976ef7b..6904882 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> @@ -3,6 +3,7 @@
+>  Required properties:
+>  compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
+>  	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
+> +	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
+>  	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
+>  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
+>  	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
+> @@ -13,7 +14,8 @@ compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
+>  	    "renesas,pcie-r8a77990" for the R8A77990 SoC;
+>  	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 or
+>  				     RZ/G1 compatible device.
+> -	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
+> +	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 or
+> +				     RZ/G2 compatible device.
+>  
+>  	    When compatible with the generic version, nodes must list the
+>  	    SoC-specific version corresponding to the platform first
+> -- 
+> 2.7.4
+> 
