@@ -1,60 +1,34 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845: Define iommus for USB controllers
-Date: Mon,  4 Feb 2019 16:56:08 -0800
-Message-ID: <20190205005608.21556-1-bjorn.andersson@linaro.org>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v2 01/12] ARM: dts: da850: fix interrupt numbers for
+ clocksource
+Date: Mon, 4 Feb 2019 19:18:12 -0600
+Message-ID: <ce4c305e-7d76-6028-07e4-4922f3c700bf@lechnology.com>
+References: <20190204171757.32073-1-brgl@bgdev.pl>
+ <20190204171757.32073-2-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190204171757.32073-2-brgl@bgdev.pl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Zhuowei Zhang <zhuoweizhang@yahoo.com>, Vivek Gautam <vivek.gautam@codeaurora.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, stable@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The USB controllers need to be associated with their respective IOMMU
-bank, so define this on the dwc3 nodes.
+On 2/4/19 11:17 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> The timer interrupts specified in commit 3652e2741f42 ("ARM: dts:
+> da850: Add clocks") are wrong but since the current timer code
+> hard-codes them, the bug was never spotted.
+> 
+> This patch must go into stable since, once we introduce a proper
+> clocksource driver, devices with buggy device tree will stop booting.
+> 
+> Fixes: 3652e2741f42 ("ARM: dts: da850: Add clocks")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
 
-Also add dma-ranges to the qcom-dwc3 nodes to make the bus' DMA mask
-propagate to the dwc3 controller instances.
-
-Fixes: 4429e57567bb ("arm64: dts: sdm845: Add node for arm,mmu-500")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 05577f08d18f..1deebf797636 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1659,6 +1659,7 @@
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges;
-+			dma-ranges;
- 
- 			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
- 				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
-@@ -1687,6 +1688,7 @@
- 				compatible = "snps,dwc3";
- 				reg = <0 0x0a600000 0 0xcd00>;
- 				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+				iommus = <&apps_smmu 0x740 0>;
- 				snps,dis_u2_susphy_quirk;
- 				snps,dis_enblslpm_quirk;
- 				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
-@@ -1701,6 +1703,7 @@
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges;
-+			dma-ranges;
- 
- 			clocks = <&gcc GCC_CFG_NOC_USB3_SEC_AXI_CLK>,
- 				 <&gcc GCC_USB30_SEC_MASTER_CLK>,
-@@ -1729,6 +1732,7 @@
- 				compatible = "snps,dwc3";
- 				reg = <0 0x0a800000 0 0xcd00>;
- 				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-+				iommus = <&apps_smmu 0x760 0>;
- 				snps,dis_u2_susphy_quirk;
- 				snps,dis_enblslpm_quirk;
- 				phys = <&usb_2_hsphy>, <&usb_2_ssphy>;
--- 
-2.18.0
+Reviewed-by: David Lechner <david@lechnology.com>
