@@ -1,112 +1,86 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: RE: [PATCH v3 2/6] usb:common Separated decoding functions from dwc3 driver.
-Date: Tue, 05 Feb 2019 10:25:07 +0200
-Message-ID: <87tvhimyl8.fsf@linux.intel.com>
-References: <1548935553-452-1-git-send-email-pawell@cadence.com> <1548935553-452-3-git-send-email-pawell@cadence.com> <20190204114502.GA28608@kroah.com> <BYAPR07MB4709F763E5F1823520FB2AF1DD6E0@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: ti,sci-clk: Add support for
+ parsing clock info from DT
+Date: Tue, 5 Feb 2019 10:25:40 +0200
+Message-ID: <ab8707fb-e632-5be9-9fdb-4b1fb3cb26ba@ti.com>
+References: <1546954223-9738-1-git-send-email-t-kristo@ti.com>
+ <1546954223-9738-2-git-send-email-t-kristo@ti.com>
+ <20190121210449.GB7851@bogus> <7ce7bd25-b5c4-f99d-fda6-0f21376f2204@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB4709F763E5F1823520FB2AF1DD6E0@BYAPR07MB4709.namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7ce7bd25-b5c4-f99d-fda6-0f21376f2204@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, ssantosh@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-Pawel Laszczak <pawell@cadence.com> writes:
->>On Thu, Jan 31, 2019 at 11:52:29AM +0000, Pawel Laszczak wrote:
->>> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
->>> to driver/usb/common/debug.c file. These moved functions include:
->>>     dwc3_decode_get_status
->>>     dwc3_decode_set_clear_feature
->>>     dwc3_decode_set_address
->>>     dwc3_decode_get_set_descriptor
->>>     dwc3_decode_get_configuration
->>>     dwc3_decode_set_configuration
->>>     dwc3_decode_get_intf
->>>     dwc3_decode_set_intf
->>>     dwc3_decode_synch_frame
->>>     dwc3_decode_set_sel
->>>     dwc3_decode_set_isoch_delay
->>>     dwc3_decode_ctrl
->>>
->>> These functions are used also in inroduced cdns3 driver.
->>>
->>> All functions prefixes were changed from dwc3 to usb.
->>
->>Ick, why?
->
-> Because CDNS3 driver in one of the previous version had implemented very =
-similar function as dwc3 and Felipe suggested that we should=20
-> make common file with these functions. He also suggested that this functi=
-on also could be used on host side.=20
-
-right, host controllers can make use of Control transfer decoding.a
-
->>> Also, function's parameters has been extended according to the name
->>> of fields in standard SETUP packet.
->>> Additionally, patch adds usb_decode_ctrl function to
->>> include/linux/usb/ch9.h file.
->>
->>Why ch9.h?  It's not something that is specified in the spec, it's a
->>usb-specific thing :)
-> Why not ?
->
-> Similar as usb_state_string function from include/linux/usb/ch9.h which=20
-> " Returns human readable name for the state", the usb_decode_ctrl functio=
-n=20
-> make the same but for standard USB request.=20
-
-right, I would say usb_state_string() should be moved elsewhere. ch9.h
-is, really, just what's described in chapter 9 of the usb specification.
-
->>Also, the api for that function is not ok.  If you are going to make
->>this something that the whole kernel can call, you have to fix it up:
->>
->>> +/**
->>> + * usb_decode_ctrl - Returns human readable representation of control =
-request.
->>> + * @str: buffer to return a human-readable representation of control r=
-equest.
->>> + *       This buffer should have about 200 bytes.
->>
->>"about 200 bytes" is not very specific.
->>
->>Pass in the length so we know we don't overflow it.
->
-> I didn't want to change to much this code, because it's not my code.=20
-> I'm not sure if I should ?
-
-I have a patch for that, then you can start on top of it. I'll send it
-soon after testing.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlxZSGMACgkQzL64meEa
-mQbMGg//VXLDsETbEraPdlFH6KERmPC/PHNq6LpXI9OUu4q5DGk/vfHEuKb64Sr5
-crkH64hxvxCswj3qCIlV4wr9iikEeijvV9bCwl4jVv1wqyaVZB7kXu501jUBHe8y
-XM0S9SI6jXdbByG0z4pLXe075IXQamzbGPtwUxOPiAkBeHXlc0wljzJFf1SNCbl0
-7W2JHpWlzkwEFyQ8cl/rl+P7tM3T1oBufijqTLTdUlqXrYB12yJxnIIvWMIRXQnn
-uzGWIhPQql2sbefretjJWeArTA6yE7yNXh8fscmWvXoL1FudSRsKwjg2C2kySfhH
-Cq1PozYk+JEbIK1ZDuFqAoVd3ikro7D2MMwOrLCH/bRIi/jLvtHFBOor9fdHPaGq
-wZJYUX1uHje3HxoDB2RC2zn8CbIZrauGygL7nxp6keVbCZ+8u6FZbo25hgyP4Sxi
-7XKHdBXJt7xV3l5L1O0lx/ispMLeAGRLpndRfoq8jVM+mFfPUigwlkjFw/qxhmcM
-zj1uKmCqLgE+TssyMIrDyIyFFHHmm822+rzkDtkEmoSlLa4Qb9f/+u2SOYLDSzDn
-QqsATtd7hE+7868iu9jLY2y8tWU0FqUTsRZfj8hE/a89y708F5ZR6HEgddW7SKOC
-QGyg8Xlqt+qlWoZC1wcUkw0e+xm1kWFrRvNYb3LA3grdeRlaS44=
-=iEDt
------END PGP SIGNATURE-----
---=-=-=--
+T24gMjIvMDEvMjAxOSAwOTozMywgVGVybyBLcmlzdG8gd3JvdGU6Cj4gT24gMjEvMDEvMjAxOSAy
+MzowNCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+IE9uIFR1ZSwgSmFuIDA4LCAyMDE5IGF0IDAzOjMw
+OjIxUE0gKzAyMDAsIFRlcm8gS3Jpc3RvIHdyb3RlOgo+Pj4gQnkgZGVmYXVsdCwgdGhlIGF2YWls
+YWJsZSBjbG9jayBpbmZvIGlzIHF1ZXJpZWQgZnJvbSBmaXJtd2FyZSwgd2hpY2ggY2FuCj4+PiBi
+ZSBxdWl0ZSBhIGxlbmd0aHkgb3BlcmF0aW9uIGlmIHRoZXJlIGlzIGEgdmVyeSBsYXJnZSBhbW91
+bnQgb2YgY2xvY2tzCj4+PiBhdmFpbGFibGUuIEFkZCBvcHRpb24gZm9yIHBhcnNpbmcgdGhlIHVz
+ZWQgY2xvY2tzIGZyb20gRFQgaW5zdGVhZCwgYW5kCj4+PiBvbmx5IHJlZ2lzdGVyIHRoZXNlIHdo
+aWNoIGNhbiBpbXByb3ZlIHRoZSBib290IHRpbWUgb2YgdGhlIGRldmljZSBxdWl0ZQo+Pj4gYSBs
+b3QuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogVGVybyBLcmlzdG8gPHQta3Jpc3RvQHRpLmNvbT4K
+Pj4+IC0tLQo+Pj4gwqAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Rp
+LHNjaS1jbGsudHh0IHwgNyArKysrKysrCj4+PiDCoCAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRp
+b25zKCspCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9jbG9jay90aSxzY2ktY2xrLnR4dCAKPj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Nsb2NrL3RpLHNjaS1jbGsudHh0Cj4+PiBpbmRleCA0ZTU5ZGM2Li5jNzU3YWUx
+IDEwMDY0NAo+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
+L3RpLHNjaS1jbGsudHh0Cj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvY2xvY2svdGksc2NpLWNsay50eHQKPj4+IEBAIC0xOCw2ICsxOCwxMyBAQCBSZXF1aXJlZCBw
+cm9wZXJ0aWVzOgo+Pj4gwqDCoMKgIGFuZCBjbG9ja3MgSURzIGZvciA2NkFLMkcgU29DIGFyZSBk
+b2N1bWVudGVkIGF0Cj4+PiDCoMKgwqAgaHR0cDovL3Byb2Nlc3NvcnMud2lraS50aS5jb20vaW5k
+ZXgucGhwL1RJU0NJIzY2QUsyRzAyX0RhdGEKPj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+Pj4g
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0KPj4+ICstIHRpLHNjYW4tY2xvY2tzLWZyb20tZHQ6IFNjYW4g
+Y2xvY2sgdHJlZSBpbmZvIGZyb20gRFQuIEJ5IGRlZmF1bHQsCj4+PiArwqAgY2xvY2tzIGFyZSBx
+dWVyaWVkIGZyb20gZmlybXdhcmUsIHdoaWNoIGNhbiBiZSByYXRoZXIgc2xvdyBvcGVyYXRpb24s
+Cj4+PiArwqAgZXNwZWNpYWxseSBpZiB0aGVyZSBpcyBhIHJlYWxseSBsYXJnZSBudW1iZXIgb2Yg
+Y2xvY2tzIGF2YWlsYWJsZSBvdXQKPj4+ICvCoCBvZiB3aGljaCBvbmx5IGEgaGFuZGZ1bCBhcmUg
+ZXZlciB1c2VkIGJ5IGtlcm5lbC4KPj4KPj4gQXQgZmlyc3QsIEkgdGhvdWdodCB0aGlzIHdhcyBh
+biBlaXRoZXIvb3IgdGhpbmcuIFVzZSBmaXJtd2FyZSBvciB1c2UgRFQsCj4+IGJ1dCBpdCBpcyBy
+ZWFsbHkgb25seSBnZXQgdGhlIGNsb2NrcyB1c2VkIGluIHRoZSBEVCBmcm9tIGZpcm13YXJlLgo+
+Pgo+PiBXaHkgd291bGRuJ3QgeW91IGp1c3QgYWx3YXlzIGRvIHRoYXQ/IEkgY2FuIHRoaW5rIG9m
+IDMgY2FzZXM6Cj4+IHJlcGFyZW50aW5nLCBkZWJ1ZyBhbmQgb3ZlcmxheXMuIFRoaXMgYnJlYWtz
+IHJlcGFyZW50aW5nIGFuZCBvdmVybGF5cywKPj4gcmlnaHQ/IERlYnVnIGNvdWxkIGJlIGhhbmRs
+ZWQgd2l0aCBzb21lIHVzZXJzcGFjZSB0cmlnZ2VyIHRvIGdldCBhbGwgdGhlCj4+IGNsb2Nrcy4K
+PiAKPiBSZS1wYXJlbnRpbmcgdGhpcyBkb2VzIG5vdCBicmVhaywgYXMgdGhlIHNjYW4gc3RpbGwg
+Y2hlY2tzIGV2ZXJ5IAo+IHBvc3NpYmxlIHBhcmVudCBvZiBhIGNsb2NrIHNjYW5uZWQuIE92ZXJs
+YXlzIGFyZSBicm9rZW4gZm9yIHN1cmUsIGFzIHdlIAo+IGRvbid0IGtub3cgd2hpY2ggb3Zlcmxh
+eXMgd2Ugd291bGQgYmUgYXBwbHlpbmcsIGFuZCB3aGF0IGNsb2NrcyB3b3VsZCBiZSAKPiBpbiB0
+aGVtLiBEZWJ1ZyBpcyBraW5kIG9mIGJyb2tlbiBhcyB3ZSBvbmx5IHNjYW4gYSBzbWFsbCBwb3J0
+aW9uIG9mIHRoZSAKPiBjbG9ja3MuCj4gCj4+Cj4+IFdoeSBzY2FuIGFueSBvZiB0aGUgY2xvY2tz
+IHVwIGZyb250PyBXaHkgbm90IGp1c3QgY3JlYXRlIHRoZSBjbG9ja3Mgb24KPj4gZGVtYW5kPyBJ
+ZiBhbiB1bmtub3duIGNsb2NrIGlkIGlzIHJlcXVlc3RlZCwgdGhlbiBjcmVhdGUgdGhlIGNsb2Nr
+IGFuZAo+PiBxdWVyeSB0aGUgZmlybXdhcmUgYXQgdGhhdCBwb2ludC4gVGhhdCB3b3VsZCBhdm9p
+ZCB0aGUgRFQgc2NhbiB0b28uCj4+IE1heWJlIHRoZXJlJ3Mgc29tZSBpc3N1ZXMgaW4gdGhlIGNs
+ayBmcmFtZXdvcmsgcHJldmVudGluZyB0aGF0LCBidXQKPj4gdGhhdCdzIG5vdCByZWFsbHkgYSBE
+VCBwcm9ibGVtLgo+IAo+IFRoZSB2ZXJ5IGluaXRpYWwgdmVyc2lvbiBJIGRpZCBhIGNvdXBsZSBv
+ZiB5ZWFycyBiYWNrLCBkaWQgc2NhbiB0aGUgCj4gY2xvY2tzIGJhc2VkIG9uIG5lZWQsIGFuZCBy
+ZWdpc3RlcmVkIHRoZW0gZHluYW1pY2FsbHkuIFN0ZXBoZW4gc2hvdCBkb3duIAo+IHRoaXMgYmFz
+ZWQgb24gdGhlIGFzc2Vzc21lbnQgdGhhdCB0aGVyZSBtaWdodCBiZSBsb2NraW5nIGlzc3VlcyB3
+aXRoIHRoZSAKPiBjb21tb24gY2xvY2sgZnJhbWV3b3JrIHdpdGggdGhpcyBhcHByb2FjaCBsZWFk
+aW5nIGludG8gcG90ZW50aWFsIAo+IGRlYWRsb2NrIHNpdHVhdGlvbnMuCgpTbyBSb2IsIHdoYXQg
+aXMgdGhlIGZpbmFsIGNhbGwgb24gdGhpcyBiaW5kaW5nPyBBY2svTkFLPyBJZiBOQUssIHNoYWxs
+IEkgCmltcGxlbWVudCBhIGtlcm5lbCBjbWRsaW5lIHBhcmFtIHRvIHNlbGVjdCB0aGUgcGFyc2lu
+ZyBtZXRob2Qgb3Igd2hhdCBpcyAKcHJlZmVycmVkPyBEb2luZyBpdCBidWlsZCB0aW1lIHdpdGgg
+YSBzaW1wbGUgS2NvbmZpZyBzZWVtcyB0b28gbGltaXRpbmcuCgotVGVybwotLQpUZXhhcyBJbnN0
+cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4gWS10
+dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lu
+a2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
