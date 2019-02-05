@@ -1,133 +1,122 @@
-From: Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 2/2] power: supply: gpio-charger: Add support for charger status.
-Date: Tue,  5 Feb 2019 20:03:16 +0100
-Message-ID: <20190205190316.19296-2-contact@artur-rojek.eu>
-References: <20190205190316.19296-1-contact@artur-rojek.eu>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: apq8016-sbc: Standardize LED
+ labels
+Date: Tue, 5 Feb 2019 11:24:12 -0800
+Message-ID: <20190205192412.GG31919@minitux>
+References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
+ <20181029094245.7886-8-manivannan.sadhasivam@linaro.org>
+ <20181221023554.GB3233@Mani-XPS-13-9360>
+ <CAP71WjzWiCg-NXDnh58N-5O7kvNj+DDndSK04DeoPxFE2L8W0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205190316.19296-1-contact@artur-rojek.eu>
+Content-Disposition: inline
+In-Reply-To: <CAP71WjzWiCg-NXDnh58N-5O7kvNj+DDndSK04DeoPxFE2L8W0g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andy Gross <andy.gross@linaro.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Koen Kooi <koen.kooi@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduce optional support of POWER_SUPPLY_PROP_STATUS for chargers
-which provide charging status GPIO.
+On Tue 05 Feb 11:00 PST 2019, Nicolas Dechesne wrote:
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
----
- drivers/power/supply/gpio-charger.c | 53 +++++++++++++++++++++++------
- 1 file changed, 42 insertions(+), 11 deletions(-)
+> Hey Mani,
+> 
+> thanks for sending this out, it should have been just like that in the
+> first place ;)
+> 
 
-diff --git a/drivers/power/supply/gpio-charger.c b/drivers/power/supply/gpio-charger.c
-index 7e4f11d5a230..ebe986f09472 100644
---- a/drivers/power/supply/gpio-charger.c
-+++ b/drivers/power/supply/gpio-charger.c
-@@ -29,11 +29,13 @@
- 
- struct gpio_charger {
- 	unsigned int irq;
-+	unsigned int status_irq;
- 	bool wakeup_enabled;
- 
- 	struct power_supply *charger;
- 	struct power_supply_desc charger_desc;
- 	struct gpio_desc *gpiod;
-+	struct gpio_desc *status;
- };
- 
- static irqreturn_t gpio_charger_irq(int irq, void *devid)
-@@ -59,6 +61,12 @@ static int gpio_charger_get_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_ONLINE:
- 		val->intval = gpiod_get_value_cansleep(gpio_charger->gpiod);
- 		break;
-+	case POWER_SUPPLY_PROP_STATUS:
-+		if (gpiod_get_value_cansleep(gpio_charger->status))
-+			val->intval = POWER_SUPPLY_STATUS_CHARGING;
-+		else
-+			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -93,8 +101,29 @@ static enum power_supply_type gpio_charger_get_type(struct device *dev)
- 	return POWER_SUPPLY_TYPE_UNKNOWN;
- }
- 
-+static int gpio_charger_get_irq(struct device *dev, void *dev_id,
-+				struct gpio_desc *gpio)
-+{
-+	int ret, irq = gpiod_to_irq(gpio);
-+
-+	if (irq > 0) {
-+		ret = devm_request_any_context_irq(dev, irq, gpio_charger_irq,
-+						   IRQF_TRIGGER_RISING |
-+						   IRQF_TRIGGER_FALLING,
-+						   dev_name(dev),
-+						   dev_id);
-+		if (ret < 0) {
-+			dev_warn(dev, "Failed to request irq: %d\n", ret);
-+			irq = 0;
-+		}
-+	}
-+
-+	return irq;
-+}
-+
- static enum power_supply_property gpio_charger_properties[] = {
- 	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_STATUS /* Must always be last in the array. */
- };
- 
- static int gpio_charger_probe(struct platform_device *pdev)
-@@ -105,7 +134,7 @@ static int gpio_charger_probe(struct platform_device *pdev)
- 	struct gpio_charger *gpio_charger;
- 	struct power_supply_desc *charger_desc;
- 	unsigned long flags;
--	int irq, ret;
-+	int ret;
- 
- 	if (!pdata && !dev->of_node) {
- 		dev_err(dev, "No platform data\n");
-@@ -151,9 +180,16 @@ static int gpio_charger_probe(struct platform_device *pdev)
- 		return PTR_ERR(gpio_charger->gpiod);
- 	}
- 
-+	gpio_charger->status = devm_gpiod_get_optional(dev, "status", GPIOD_IN);
-+	if (IS_ERR(gpio_charger->status))
-+		return PTR_ERR(gpio_charger->status);
-+
- 	charger_desc = &gpio_charger->charger_desc;
- 	charger_desc->properties = gpio_charger_properties;
- 	charger_desc->num_properties = ARRAY_SIZE(gpio_charger_properties);
-+	/* Remove POWER_SUPPLY_PROP_STATUS from the supported properties. */
-+	if (!gpio_charger->status)
-+		charger_desc->num_properties -= 1;
- 	charger_desc->get_property = gpio_charger_get_property;
- 
- 	psy_cfg.of_node = dev->of_node;
-@@ -180,16 +216,11 @@ static int gpio_charger_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	irq = gpiod_to_irq(gpio_charger->gpiod);
--	if (irq > 0) {
--		ret = devm_request_any_context_irq(dev, irq, gpio_charger_irq,
--				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
--				dev_name(dev), gpio_charger->charger);
--		if (ret < 0)
--			dev_warn(dev, "Failed to request irq: %d\n", ret);
--		else
--			gpio_charger->irq = irq;
--	}
-+	gpio_charger->irq = gpio_charger_get_irq(dev, gpio_charger->charger,
-+						 gpio_charger->gpiod);
-+	gpio_charger->status_irq = gpio_charger_get_irq(dev,
-+							gpio_charger->charger,
-+							gpio_charger->status);
- 
- 	platform_set_drvdata(pdev, gpio_charger);
- 
--- 
-2.20.1
+Thanks Nico for the confirmation, I will queue this for v5.2
+
+Regards,
+Bjorn
+
+> On Fri, Dec 21, 2018 at 3:36 AM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Mon, Oct 29, 2018 at 03:12:45PM +0530, Manivannan Sadhasivam wrote:
+> > > For all 96Boards, the following standard is used for onboard LEDs.
+> > >
+> > > green:user1  default-trigger: heartbeat
+> > > green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
+> > > green:user3  default-trigger: mmc1 (SD-card)
+> > > green:user4  default-trigger: none, panic-indicator
+> > > yellow:wlan  default-trigger: phy0tx
+> > > blue:bt      default-trigger: hci0-power
+> > >
+> > > So lets adopt the same for APQ8016 SBC (Dragonboard410c), which is
+> > > one of the 96Boards CE platform.
+> > >
+> >
+> > Hello,
+> >
+> > Any update on this patch?
+> 
+> Reviewed-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+> 
+> >
+> > Regards,
+> > Mani
+> >
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 12 ++++++------
+> > >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> > > index 46feedf7c989..35f95154316b 100644
+> > > --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> > > @@ -300,28 +300,28 @@
+> > >                       compatible = "gpio-leds";
+> > >
+> > >                       led@1 {
+> > > -                             label = "apq8016-sbc:green:user1";
+> > > +                             label = "green:user1";
+> > >                               gpios = <&msmgpio 21 GPIO_ACTIVE_HIGH>;
+> > >                               linux,default-trigger = "heartbeat";
+> > >                               default-state = "off";
+> > >                       };
+> > >
+> > >                       led@2 {
+> > > -                             label = "apq8016-sbc:green:user2";
+> > > +                             label = "green:user2";
+> > >                               gpios = <&msmgpio 120 GPIO_ACTIVE_HIGH>;
+> > >                               linux,default-trigger = "mmc0";
+> > >                               default-state = "off";
+> > >                       };
+> > >
+> > >                       led@3 {
+> > > -                             label = "apq8016-sbc:green:user3";
+> > > +                             label = "green:user3";
+> > >                               gpios = <&pm8916_gpios 1 GPIO_ACTIVE_HIGH>;
+> > >                               linux,default-trigger = "mmc1";
+> > >                               default-state = "off";
+> > >                       };
+> > >
+> > >                       led@4 {
+> > > -                             label = "apq8016-sbc:green:user4";
+> > > +                             label = "green:user4";
+> > >                               gpios = <&pm8916_gpios 2 GPIO_ACTIVE_HIGH>;
+> > >                               linux,default-trigger = "none";
+> > >                               panic-indicator;
+> > > @@ -329,14 +329,14 @@
+> > >                       };
+> > >
+> > >                       led@5 {
+> > > -                             label = "apq8016-sbc:yellow:wlan";
+> > > +                             label = "yellow:wlan";
+> > >                               gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
+> > >                               linux,default-trigger = "phy0tx";
+> > >                               default-state = "off";
+> > >                       };
+> > >
+> > >                       led@6 {
+> > > -                             label = "apq8016-sbc:blue:bt";
+> > > +                             label = "blue:bt";
+> > >                               gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
+> > >                               linux,default-trigger = "bluetooth-power";
+> > >                               default-state = "off";
+> > > --
+> > > 2.17.1
+> > >
