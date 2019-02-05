@@ -1,15 +1,15 @@
 From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: Re: [PATCHv3 06/27] PCI: mobiveil: replace the resource list
- iteration function
-Date: Tue, 5 Feb 2019 11:37:24 +0530
-Message-ID: <CAFZiPx3yW89pXsB+Qo5nSQX-C998CYPVr7HWDrJotrV+6q9DBQ@mail.gmail.com>
+Subject: Re: [PATCHv3 07/27] PCI: mobiveil: use WIN_NUM_0 explicitly for CFG
+ outbound window
+Date: Tue, 5 Feb 2019 11:38:03 +0530
+Message-ID: <CAFZiPx3soEXCKixiix=L+Bvy2-V2rqvxdHEeYDgdnnra+AMq4g@mail.gmail.com>
 References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
- <20190129080926.36773-7-Zhiqiang.Hou@nxp.com>
+ <20190129080926.36773-8-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190129080926.36773-7-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190129080926.36773-8-Zhiqiang.Hou@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -29,9 +29,9 @@ On Tue, Jan 29, 2019 at 1:39 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
 >
 > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 >
-> As it won't delete any node in this iteration, replaced
-> the function resource_list_for_each_entry_safe() with
-> the resource_list_for_each_entry().
+> As the .map_bus() use the WIN_NUM_0 for CFG transactions,
+> it's better passing WIN_NUM_0 explicitly when initialize
+> the CFG outbound window.
 >
 > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
@@ -39,31 +39,25 @@ On Tue, Jan 29, 2019 at 1:39 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
 > V3:
 >  - No change
 >
->  drivers/pci/controller/pcie-mobiveil.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pci/controller/pcie-mobiveil.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 >
 > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 8ff873023b5f..b2cc9c097fc9 100644
+> index b2cc9c097fc9..df71c11b4810 100644
 > --- a/drivers/pci/controller/pcie-mobiveil.c
 > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -569,7 +569,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  {
->         u32 value, pab_ctrl, type;
->         int err;
-> -       struct resource_entry *win, *tmp;
-> +       struct resource_entry *win;
+> @@ -612,9 +612,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>          */
 >
->         err = mobiveil_bringup_link(pcie);
->         if (err) {
-> @@ -620,7 +620,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>         /* config outbound translation window */
+> -       program_ob_windows(pcie, pcie->ob_wins_configured,
+> -                          pcie->ob_io_res->start, 0, CFG_WINDOW_TYPE,
+> -                          resource_size(pcie->ob_io_res));
+> +       program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
+> +                          CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+>
+>         /* memory inbound translation window */
 >         program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
->
->         /* Get the I/O and memory ranges from DT */
-> -       resource_list_for_each_entry_safe(win, tmp, &pcie->resources) {
-> +       resource_list_for_each_entry(win, &pcie->resources) {
->                 if (resource_type(win->res) == IORESOURCE_MEM)
->                         type = MEM_WINDOW_TYPE;
->                 else if (resource_type(win->res) == IORESOURCE_IO)
 > --
 > 2.17.1
 >
