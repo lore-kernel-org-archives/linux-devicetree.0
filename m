@@ -1,70 +1,52 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v1 2/4] dt-bindings: clock: Add support for the MSM8998 mmcc
-Date: Tue, 05 Feb 2019 14:16:02 -0800
-Message-ID: <154940496255.169292.11279175475668034167@swboyd.mtv.corp.google.com>
-References: <1548866102-30224-1-git-send-email-jhugo@codeaurora.org> <1548866159-30304-1-git-send-email-jhugo@codeaurora.org> <154940414347.169292.9150834270087697417@swboyd.mtv.corp.google.com> <ba5d7855-9dd2-5a99-ae8c-a7fce125ca25@codeaurora.org>
+Subject: Re: [PATCH v1 3/4] clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+Date: Tue, 05 Feb 2019 14:16:41 -0800
+Message-ID: <154940500172.169292.7462110370898212066@swboyd.mtv.corp.google.com>
+References: <1548866102-30224-1-git-send-email-jhugo@codeaurora.org> <1548866171-30341-1-git-send-email-jhugo@codeaurora.org> <154940436246.169292.7591382350282828249@swboyd.mtv.corp.google.com> <54750df0-245c-74ab-2a33-ce1588f3e38e@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba5d7855-9dd2-5a99-ae8c-a7fce125ca25@codeaurora.org>
+In-Reply-To: <54750df0-245c-74ab-2a33-ce1588f3e38e@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>, bjorn.andersson@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
-Cc: marc.w.gonzalez@free.fr, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jeffrey Hugo <jhugo@codeaurora.org>, bjorn.andersson@linaro.org, mturquette@baylibre.com
+Cc: marc.w.gonzalez@free.fr, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jeffrey Hugo (2019-02-05 14:08:43)
-> On 2/5/2019 3:02 PM, Stephen Boyd wrote:
-> > Quoting Jeffrey Hugo (2019-01-30 08:35:59)
-> >> Document the multimedia clock controller found on MSM8998
-> >>
-> >> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> >> ---
-> >>   Documentation/devicetree/bindings/clock/qcom,mmcc.txt | 7 +++++++
-> >>   1 file changed, 7 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/D=
-ocumentation/devicetree/bindings/clock/qcom,mmcc.txt
-> >> index 8b0f784..ae85bca 100644
-> >> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
-> >> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
-> >> @@ -10,11 +10,18 @@ Required properties :
-> >>                          "qcom,mmcc-msm8960"
-> >>                          "qcom,mmcc-msm8974"
-> >>                          "qcom,mmcc-msm8996"
-> >> +                       "qcom,mmcc-msm8998"
-> >>  =20
-> >>   - reg : shall contain base register location and length
-> >>   - #clock-cells : shall contain 1
-> >>   - #reset-cells : shall contain 1
-> >>  =20
-> >> +For MSM8998 only:
-> >> +       - clocks: a list of phandles and clock-specifier pairs,
-> >> +                 one for each entry in clock-names.
-> >> +       - clock-names: "xo" for the xo clock,
-> >> +                      "gpll0" for the global pll 0 clock.
+Quoting Jeffrey Hugo (2019-02-05 14:12:00)
+> On 2/5/2019 3:06 PM, Stephen Boyd wrote:
+> > Quoting Jeffrey Hugo (2019-01-30 08:36:11)
+> > [..]
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, mmcc_msm8998_match_table);
+> >> +
+> >> +static int mmcc_msm8998_probe(struct platform_device *pdev)
+> >> +{
+> >> +       struct device *dev =3D &pdev->dev;
+> >> +       int i, ret;
+> >> +       struct regmap *regmap;
+> >> +       struct clk *c;
+> >> +
+> >> +       c =3D devm_clk_get(dev, "xo");
+> >> +       if (!IS_ERR(c))
+> >> +               dummy_xo_init.parent_names =3D
+> >> +                                       (const char *[]){__clk_get_nam=
+e(c)};
+> >> +       else
+> >> +               return PTR_ERR(c);
+> >> +
+> >> +       c =3D devm_clk_get(dev, "gpll0");
+> >> +       if (!IS_ERR(c))
+> >> +               dummy_gpll0_init.parent_names =3D
+> >> +                                       (const char *[]){__clk_get_nam=
+e(c)};
+> >> +       else
+> >> +               return PTR_ERR(c);
 > >=20
-> > Wouldn't the DSI plls also be listed here? And anything else that is
-> > external to this clock controller?
-> >=20
+> > Urgh, my parent mapping series can't come be merged fast enough it
+> > seems!
 >=20
-> We can't get the DSI plls from DT as far as I am aware (upstream).  That =
-
-> is why I mentioned in the cover letter we need to rely on the global=20
-> namespace.
-
-Why not? Because the DSI PLL isn't a clk provider? Or it doesn't have
-#clock-cells? Please try to use the DSI PLLs from DT or at least specify
-them in the binding as optional clocks that may not matter if DSI is not
-enabled for example.
-
->=20
-> Also, the DSI plls, etc present a chicken and egg situation, as the plls =
-
-> require mmcc, and mmcc requires the plls.  I forsee an unsolvable=20
-> EPROBE_DEFER issue.
+> Sorry, I'm not familiar with the context.  Something I should incorporate?
 >=20
 
-We've "solved" that problem with orphan clks and the clk parent rewrite
-series. Maybe you can try it out to help flush out any bugs lurking
-there.
+https://lkml.kernel.org/r/20190129061021.94775-1-sboyd@kernel.org
