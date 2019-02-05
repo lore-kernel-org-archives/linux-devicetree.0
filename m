@@ -1,124 +1,58 @@
-Return-Path: <SRS0=hZYI=QZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr30089.outbound.protection.outlook.com ([40.107.3.89]:11296
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726692AbfBRF2L (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Feb 2019 00:28:11 -0500
-From: Pankaj Bansal <pankaj.bansal@nxp.com>
-Subject: [PATCH] dt-bindings: add register based devices' mux controller DT
- bindings
-Date: Mon, 18 Feb 2019 05:28:07 +0000
-Message-ID: <20190218105246.23488-1-pankaj.bansal@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=9zAw=QM=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from sauhun.de ([88.99.104.3]:57244 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbfBEMtp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Feb 2019 07:49:45 -0500
+Date: Tue, 5 Feb 2019 13:49:43 +0100
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] i2c: Add DT bindings for Xscale I2C masters
+Message-ID: <20190205124943.GG1045@kunai>
+References: <20190128222534.32213-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3xoW37o/FfUZJwQG"
+Content-Disposition: inline
+In-Reply-To: <20190128222534.32213-1-linus.walleij@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This adds device tree binding documentation for generic register
-based multiplexer controlled by a bitfields in a parent device's
-register range.
 
-Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
----
- .../devicetree/bindings/mux/reg-mux.txt      | 84 ++++++++++++++++++
- 1 file changed, 84 insertions(+)
+--3xoW37o/FfUZJwQG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/mux/reg-mux.txt b/Documentat=
-ion/devicetree/bindings/mux/reg-mux.txt
-new file mode 100644
-index 000000000000..c5e6faa2a7cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mux/reg-mux.txt
-@@ -0,0 +1,84 @@
-+Generic register bitfield-based multiplexer controller bindings
-+
-+Define register bitfields to be used to control multiplexers. The parent
-+device tree node must be a device node to provide register r/w access.
-+
-+Required properties:
-+- compatible : "reg-mux"
-+- #mux-control-cells : <1>
-+- mux-reg-masks : an array of register offset and pre-shifted bitfield mas=
-k
-+                  pairs, each describing a single mux control.
-+* Standard mux-controller bindings as decribed in mux-controller.txt
-+
-+Optional properties:
-+- idle-states : if present, the state the muxes will have when idle. The
-+		special state MUX_IDLE_AS_IS is the default.
-+
-+The multiplexer state of each multiplexer is defined as the value of the
-+bitfield described by the corresponding register offset and bitfield mask =
-pair
-+in the mux-reg-masks array, accessed through the parent syscon.
-+
-+Example:
-+
-+&i2c0 {
-+	status =3D "okay";
-+
-+	fpga@66 { // fpga connected to i2c
-+		compatible =3D "fsl,lx2160aqds-fpga", "fsl,fpga-qixis-i2c",
-+			     "simple-mfd";
-+		reg =3D <0x66>;
-+
-+		mux: mux-controller { // Mux Producer
-+			compatible =3D "reg-mux";
-+			#mux-control-cells =3D <1>;
-+			mux-reg-masks =3D <0x54 0xf8>, /* 0: reg 0x54, bits 7:3 */
-+					<0x54 0x07>; /* 1: reg 0x54, bit 2:0 */
-+		};
-+	};
-+};
-+
-+	mdio-mux-1 { // Mux consumer
-+		compatible =3D "mdio-mux";
-+		mux-controls =3D <&mux 0>;
-+		mdio-parent-bus =3D <&emdio1>;
-+		#address-cells=3D<1>;
-+		#size-cells =3D <0>;
-+
-+		mdio@0 {
-+			reg =3D <0x00>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		mdio@40 {
-+			reg =3D <0x40>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		..
-+		..
-+	};
-+
-+	mdio-mux-2 { // Mux consumer
-+		compatible =3D "mdio-mux";
-+		mux-controls =3D <&mux 1>;
-+		mdio-parent-bus =3D <&emdio2>;
-+		#address-cells=3D<1>;
-+		#size-cells =3D <0>;
-+
-+		mdio@0 {
-+			reg =3D <0x00>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		mdio@1 {
-+			reg =3D <0x01>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+		};
-+
-+		..
-+		..
-+	};
---=20
-2.17.1
+On Mon, Jan 28, 2019 at 11:25:33PM +0100, Linus Walleij wrote:
+> This adds a device tree binding for Intel XScale I2C
+> masters. We define compatible strings for the iop3xx and
+> ixp4xx chip families.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+Applied to for-next, thanks!
+
+
+--3xoW37o/FfUZJwQG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlxZhmcACgkQFA3kzBSg
+KbZEqg/+KLHXKiq+2geqemVKBV2rV6wqCj9TvHmFmoAVK8gDU/agEYC8H2MdOofh
+F6DeJCnKOPyeD0NWiiqaYoNYaMh9swKG4BfJ+H19VnUQbR5yGZhft3zrIl+b0/iJ
+Q8X/NBlyyPm7sFv3B2w/mFWF1AickDnC6m8IY6Ne88DrZBfXnK38zy0MnlYZlLMB
+Wr0pUsCC4T0fitNqy97usRTHo+r5orRZZB0OT0zIYKHljI6mm9s/7jzOolVn3VFf
+jWhX8zpepjAXaunzTR2+MDtl5xkzv5yg7ZGTUUoMvAZxK5DBD4/MBd7YZ6T5hCBN
+cK32D00QknOVQtOHhTZ3HiuuJast2LKqMQ2+yLrxKStXoO5OA3GDAWr16bsktZC5
+lHggFBRgVdx4/U4wJNQ7obJ9+gVMaFghKS3VAUthQ/c+JfXUDGGRN6WNjCUAOqYi
+4rn0WPf/n5Mc13j+nndZbAT8UG871YB9vdYVnAU/F2+yaSxGbwCPoG0YdXjkJEa1
+VYmq4qizwQxdX+IfvppLE7Mgj7C7mv8BxYNvt8am/Ck/irdkmGxkBssiokTvQ+ZK
+v6mg2/38M7kZ3v345LI0B+iwdHPpT2UA/9B6qmt/08wwFPcJw5HFj5Fl7HteYX1Z
+tXPdbQD9hPrjyjkiGt9DHm/OyvJkzYkj09cfbdj8KTPl7o/51uM=
+=sNZZ
+-----END PGP SIGNATURE-----
+
+--3xoW37o/FfUZJwQG--
