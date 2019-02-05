@@ -1,80 +1,80 @@
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: Re: [PATCHv3 03/27] PCI: mobiveil: correct the returned error number
-Date: Tue, 5 Feb 2019 11:23:17 +0530
-Message-ID: <CAFZiPx0wjqHFbu_b9cphSfsbBSU9W6Nupn6QS6R9MgmO_S0Vnw@mail.gmail.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
- <20190129080926.36773-4-Zhiqiang.Hou@nxp.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2 PHY
+Date: Tue, 5 Feb 2019 11:24:16 +0530
+Message-ID: <20190205055416.GX4296@vkoul-mobl>
+References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
+ <20190125234509.26419-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190129080926.36773-4-Zhiqiang.Hou@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190125234509.26419-3-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Michael Turquette <mturquette@baylibre.com>, Niklas Cassel <niklas.cassel@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-
-On Tue, Jan 29, 2019 at 1:38 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
->
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->
-> This patch corrected the returned error number by convention,
-> and removed a unnecessary error check.
->
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+On 25-01-19, 15:45, Bjorn Andersson wrote:
+> The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
+> Qualcomm platforms, add a binding to describe this.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
-> V3:
->  - No change
->
->  drivers/pci/controller/pcie-mobiveil.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index b87471f08a40..563210e731d3 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -819,7 +819,7 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
->
->         if (!pcie->intx_domain) {
->                 dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> -               return -ENODEV;
-> +               return -ENOMEM;
->         }
->
->         raw_spin_lock_init(&pcie->intx_mask_lock);
-> @@ -845,11 +845,9 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->         /* allocate the PCIe port */
->         bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
->         if (!bridge)
-> -               return -ENODEV;
-> +               return -ENOMEM;
->
->         pcie = pci_host_bridge_priv(bridge);
-> -       if (!pcie)
-> -               return -ENOMEM;
->
->         pcie->pdev = pdev;
->
-> @@ -866,7 +864,7 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->                                                     &pcie->resources, &iobase);
->         if (ret) {
->                 dev_err(dev, "Getting bridge resources failed\n");
-> -               return -ENOMEM;
-> +               return ret;
->         }
->
->         /*
-> --
-> 2.17.1
->
+>  .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> new file mode 100644
+> index 000000000000..7da02f9d78c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> @@ -0,0 +1,40 @@
+> +Qualcomm PCIe2 PHY controller
+> +=============================
+> +
+> +The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
+> +platforms.
+> +
+> +Required properties:
+> + - compatible: compatible list, should be:
+> +	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
+> +
+> + - reg: offset and length of the PHY register set.
+> + - #phy-cells: must be 0.
+> +
+> + - clocks: a clock-specifier pair for the "pipe" clock
+> +
+> + - vdda-vp-supply: phandle to low voltage regulator
+> + - vdda-vph-supply: phandle to high voltage regulator
+> +
+> + - resets: reset-specifier pairs for the "phy" and "pipe" resets
+> + - reset-names: list of resets, should contain:
+> +		"phy" and "pipe"
+> +
+> + - clock-output-names: name of the outgoing clock signal from the PHY PLL
+
+Should we specify the clk name here?
+
+> +
+> +Example:
+> + phy@7786000 {
+> +	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
+> +	reg = <0x07786000 0xb8>;
+> +
+> +	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+> +	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
+> +	         <&gcc GCC_PCIE_0_PIPE_ARES>;
+> +	reset-names = "phy", "pipe";
+> +
+> +	vdda-vp-supply = <&vreg_l3_1p05>;
+> +	vdda-vph-supply = <&vreg_l5_1p8>;
+> +
+> +	clock-output-names = "pcie_0_pipe_clk";
+> +	#phy-cells = <0>;
+> + };
+> -- 
+> 2.18.0
+
+-- 
+~Vinod
