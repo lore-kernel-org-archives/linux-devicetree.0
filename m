@@ -1,27 +1,101 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: nvmem: Add bindings for ZynqMP nvmem
- driver
-Date: Tue, 5 Feb 2019 11:25:07 +0000
-Message-ID: <3fdea48b-a3dc-a4d2-2fa6-b1128576ffcd@linaro.org>
-References: <20190206110721.27765-1-nava.manne@xilinx.com>
- <20190206110721.27765-3-nava.manne@xilinx.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH v12 00/13] media: staging/imx7: add i.MX7 media driver
+Date: Tue, 05 Feb 2019 11:53:11 +0000
+Message-ID: <m3y36u3108.fsf@linaro.org>
+References: <20190204120039.1198-1-rui.silva@linaro.org>
+ <20190205111435.2oz46dqphfdt6mn5@kekkonen.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190206110721.27765-3-nava.manne@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, jollys@xilinx.com, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <20190205111435.2oz46dqphfdt6mn5@kekkonen.localdomain>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sakari,
+On Tue 05 Feb 2019 at 11:14, Sakari Ailus wrote:
+> Hi Rui,
+>
+> On Mon, Feb 04, 2019 at 12:00:26PM +0000, Rui Miguel Silva 
+> wrote:
+>> Hi,
+>> This series introduces the Media driver to work with the i.MX7 
+>> SoC. it uses the
+>> already existing imx media core drivers but since the i.MX7, 
+>> contrary to
+>> i.MX5/6, do not have an IPU and because of that some changes in 
+>> the imx media
+>> core are made along this series to make it support that case.
+>> 
+>> This patches adds CSI and MIPI-CSI2 drivers for i.MX7, along 
+>> with several
+>> configurations changes for this to work as a capture subsystem. 
+>> Some bugs are
+>> also fixed along the line. And necessary documentation.
+>> 
+>> For a more detailed view of the capture paths, pads links in 
+>> the i.MX7 please
+>> take a look at the documentation in PATCH 10.
+>> 
+>> The system used to test and develop this was the Warp7 board 
+>> with an OV2680
+>> sensor, which output format is 10-bit bayer. So, only MIPI 
+>> interface was
+>> tested, a scenario with an parallel input would nice to have.
+>> 
+>> Bellow goes an example of the output of the pads and links and 
+>> the output of
+>> v4l2-compliance testing.
+>> 
+>> The v4l-utils version used is:
+>> v4l2-compliance SHA: 1a6c8fe9a65c26e78ba34bd4aa2df28ede7d00cb, 
+>> 32 bits
+>> 
+>> The Media Driver fail some tests but this failures are coming 
+>> from code out of
+>> scope of this series (imx-capture), and some from the sensor 
+>> OV2680
+>> but that I think not related with the sensor driver but with 
+>> the testing and
+>> core.
+>> 
+>> The csi and mipi-csi entities pass all compliance tests.
+>> 
+>> Cheers,
+>>     Rui
+>> 
+>> v11->v12:
+>>   Sakari:
+>>     - check v4l2_ctrl_handler_free and init when exposed to 
+>>     userspace
+>>     - check csi_remove missing v4l2_async_notifier_unregister
+>>     - media device unregister before ctrl_handler_free
+>>     - GPL => GPL v2
+>>     - Fix squash of CSI patches, issue on v11
+>>     - add Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com> 
+>>     10--13
+>>     - mipi_s_stream check for ret < 0 and call 
+>>     pm_runtime_put_noidle
+>>     - use __maybe_unused in pm functions
+>>     - Extra space before labels
+>
+> For patches 1, 2 and 4:
+>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
+Thanks for all your reviews, I did not add this before, because I
+messed the patch order in v11.
 
-On 06/02/2019 11:07, Nava kishore Manne wrote:
-> Add documentation to describe Xilinx ZynqMP nvmem driver
-> bindings.
-> 
-> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+Cheers,
+	Rui
