@@ -1,46 +1,80 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2 0/2] Add STM32MP157 discovery boards support
-Date: Tue, 5 Feb 2019 10:10:39 +0100
-Message-ID: <b42eb57e-a413-d65a-e040-b380d859423f@st.com>
-References: <1549357625-7229-1-git-send-email-alexandre.torgue@st.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v4 01/10] dt-bindings: mfd: add DT bindings for max77650
+Date: Tue,  5 Feb 2019 10:12:28 +0100
+Message-ID: <20190205091237.6448-2-brgl@bgdev.pl>
+References: <20190205091237.6448-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549357625-7229-1-git-send-email-alexandre.torgue@st.com>
-Content-Language: en-US
+In-Reply-To: <20190205091237.6448-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Typo in title, it's a v1 not a v2.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On 2/5/19 10:07 AM, Alexandre Torgue wrote:
-> This patch series add support of two new discovery boards based on
-> STM32MP157 MPU: stm32mp157a-dk1 and stm32mp157c-dk2.
-> 
-> stm32mp157a-dk1 board embeds a STM32MP157a SOC with AC package (TFBGA361,
-> 148 ios) and 512MB of DDR3. Several connections are available on this boards:
-> 4*USB2.0, 1*USB2.0 typeC, SDcard, RJ45, HDMI, Arduino connector, ...
-> 
-> stm32mp157c-dk2 board complements stm32mp157a-dk1 board with a display panel
-> (otm8009a) and a Murata Wifi/BT combo. It embeds a STM32MP157c SOC with AC
-> package.
-> 
-> Those patches enable basic support for a kernel boot.
-> 
-> regards
-> Alex
-> 
-> Alexandre Torgue (2):
->    ARM: dts: stm32: add initial support of stm32mp157a-dk1 board
->    ARM: dts: stm32: add initial support of stm32mp157c-dk2 board
-> 
->   arch/arm/boot/dts/Makefile            |  2 +
->   arch/arm/boot/dts/stm32mp157a-dk1.dts | 77 +++++++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c-dk2.dts | 75 ++++++++++++++++++++++++++++++++++
->   3 files changed, 154 insertions(+)
->   create mode 100644 arch/arm/boot/dts/stm32mp157a-dk1.dts
->   create mode 100644 arch/arm/boot/dts/stm32mp157c-dk2.dts
-> 
+Add a DT binding document for max77650 ultra-low power PMIC. This
+describes the core mfd device and the GPIO module.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ .../devicetree/bindings/mfd/max77650.txt      | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
+new file mode 100644
+index 000000000000..0a40e9c6aab8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max77650.txt
+@@ -0,0 +1,47 @@
++MAX77650 ultra low-power PMIC from Maxim Integrated.
++
++Required properties:
++-------------------
++- compatible:		Must be "maxim,max77650"
++- reg:			I2C device address.
++- interrupts:		The interrupt on the parent the controller is
++			connected to.
++- interrupt-parent:	phandle of the parent interrupt controller.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells:	Must be <2>.
++
++- gpio-controller : 	Marks the device node as a gpio controller.
++- #gpio-cells : 	Must be <2>. The first cell is the pin number and
++			the second cell is used to specify the gpio active
++			state.
++
++Optional properties:
++--------------------
++gpio-line-names:	Single string containing the name of the GPIO line.
++
++The GPIO-controller module is represented as part of the top-level PMIC
++node. The device exposes a single GPIO line.
++
++For device-tree bindings of other sub-modules (regulator, power supply,
++LEDs and onkey) refer to the binding documents under the respective
++sub-system directories.
++
++For more details on GPIO bindings, please refer to the generic GPIO DT
++binding document <devicetree/bindings/gpio/gpio.txt>.
++
++Example:
++--------
++
++	pmic: max77650@48 {
++		compatible = "maxim,max77650";
++		reg = <0x48>;
++
++		interrupt-controller;
++		interrupt-parent = <&gpio2>;
++		#interrupt-cells = <2>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "max77650-charger";
++	};
+-- 
+2.20.1
