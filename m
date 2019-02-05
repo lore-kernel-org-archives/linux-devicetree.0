@@ -1,120 +1,54 @@
 From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v3 0/8] phy: qcom-ufs: Enable regulators to be off in suspend
-Date: Tue,  5 Feb 2019 10:58:54 -0800
-Message-ID: <20190205185902.106085-1-evgreen@chromium.org>
+Subject: [PATCH v3 1/8] dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
+Date: Tue,  5 Feb 2019 10:58:55 -0800
+Message-ID: <20190205185902.106085-2-evgreen@chromium.org>
+References: <20190205185902.106085-1-evgreen@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190205185902.106085-1-evgreen@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Vinayak Holikatti <vinholikatti@gmail.com>, Jeffrey Hugo <jhugo@codeaurora.org>, linux-scsi@vger.kernel.org, David Brown <david.brown@linaro.org>, "James E.J. Bottomley" <jejb@linux.ibm.com>, devicetree@vger.kernel.org, liwei <liwei213@huawei.com>, linux-arm-msm@vger.kernel.org, "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, liwei <liwei213@huawei.com>, linux-kernel@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The goal with this series is to enable shutting off regulators that power
-UFS during system suspend.
+Enable Qualcomm UFS controllers to expose the PHY reset via a reset
+controller.
 
-In "the good life" version of this, we'd just disable the regulators
-in phy_poweroff() and be done with it. Unfortunately, that's not symmetric,
-as regulators are not enabled during phy_poweron(). Ok, so you might think
-we could just move the regulator enable and anything else that needs to
-come along into phy_poweron(), so that we can then undo it all in
-phy_poweroff(). That's where things get tricky.
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-The qcom-qmp-phy overloaded the phy_init() and phy_poweron() callbacks,
-basically to mean "init phase 1" and "init phase 2". There are two phases
-because they have this phy_reset bit outside of the phy (in the UFS
-controller registers), and they need to make sure this bit is toggled at
-specific points in the phy init sequence. So there's this implicit
-sequence in the init dance between ufs-qcom.c and phy-qcom-qmp.c:
-1) ufs-qcom asserts the PHY reset bit.
-2) phy-qcom-qmp phy_init() does most of its initialization, but exits early.
-3) ufs-qcom deasserts the PHY reset bit.
-4) phy-qcom-qmp phy_poweron() finishes its initialization.
+---
+Fixing up this aspect of it made me notice that this patch [1]
+hasn't landed yet. It really ought to.
 
-This init dance is very difficult to follow in the code (since it's split
-between two drivers and not spelled out well), and arguably represents a
-deficiency in the hardware description of these devices.
+[1] https://lore.kernel.org/lkml/20181012213926.253765-1-dianders@chromium.org/T/#u
 
-In this series I'm proposing tweaking the bindings for the Qualcomm
-UFS controller and PHY. In it we expose a reset controller from the
-UFS controller, that is then picked up and used from the PHY code.
-With this, the phy code can be reorganized to complete its initialization
-in a single function, removing the implicit two-phase overloading.
+Changes in v3: None
+Changes in v2: None
 
-Then I can move most of the phy initialization, including enabling
-the regulators, into phy_poweron(). Now, when phy_poweroff() is called,
-the phy actually powers off. This finally disables the regulators
-and allows me to save power in system suspend.
+ Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Because the UFS PHY reset bit is now toggled in the PHY, rather
-than in ufs-qcom, this also percolated to all other PHYs using
-ufs-qcom, which from what I can see is just 8996.
-
-I removed the calls to phy_poweroff() during clock gating. This
-was originally dialing down a clock or two, while leaving the phy powered.
-I've now changed the semantics of phy_poweroff() to, well, actually power off.
-This works great for userlands that have set UFS's spm_lvl to 5 (off) like
-I have, but maybe changes power consumption for devices that have spm_lvl
-set to 3. I could try to use phy_init() and phy_poweron() as the two
-different possible transitions (fully off, and clocks off respectively),
-but I'm not sure if it actually matters, and I like the idea that
-phy_poweroff() really does power the thing off.
-
-Also, I don't have an 8996 device to test. If someone is able to test this
-out and perhaps point out any (hopefully obvious) bugs in the 8996 portion,
-I'd be grateful.
-
-This patch is based atop phy-next, plus the UFS DT nodes, which are now
-patch 3, 4, 5 of [1].
-
-[1] https://lore.kernel.org/lkml/20181210192826.241350-1-evgreen@chromium.org/
-
-Changes in v3:
-- Refactor to only expose the reset controller in one change (Stephen).
-- Add period to comment (Stephen).
-- Reset err to 0 in ignored error case (Stephen).
-- Add include of reset-controller.h (Stephen)
-- Refactored to move reset control in a single commit (Stephen)
-- Use no_pcs_sw_reset as an indicator of UFS reset in qmp-phy (Stephen).
-- Assign ret = PTR_ERR() earlier, for better reuse (Stephen).
-- Refactor init => poweron for all PHYs and UFS in one step (Stephen)
-
-Changes in v2:
-- Added resets to example (Stephen).
-- Remove include of reset.h (Stephen)
-- Fix error print of phy_power_on (Stephen)
-- Comment for reset controller warnings on id != 0 (Stephen)
-- Add static to ufs_qcom_reset_ops (Stephen).
-- Use devm_* to get the reset (Stephen)
-- Clear ufs_reset on error getting it
-- Remove needless error print (Stephen)
-- Use devm_ to get the reset (Stephen)
-- Removed whitespace changes (Stephen)
-
-Evan Green (8):
-  dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
-  dt-bindings: phy-qcom-qmp: Add UFS PHY reset
-  dt-bindings: phy: qcom-ufs: Add resets property
-  arm64: dts: sdm845: Add UFS PHY reset
-  arm64: dts: msm8996: Add UFS PHY reset controller
-  scsi: ufs: qcom: Expose the reset controller for PHY
-  phy: qcom: Utilize UFS reset controller
-  phy: ufs-qcom: Refactor all init steps into phy_poweron
-
- .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   6 +-
- .../devicetree/bindings/ufs/ufs-qcom.txt      |   5 +-
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   3 +
- arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +-
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |   3 +
- drivers/phy/qualcomm/phy-qcom-qmp.c           | 117 +++++++++---------
- drivers/phy/qualcomm/phy-qcom-ufs-i.h         |   5 +-
- drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c  |  25 +---
- drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c  |  25 +---
- drivers/phy/qualcomm/phy-qcom-ufs.c           |  57 +++++++--
- drivers/scsi/ufs/Kconfig                      |   1 +
- drivers/scsi/ufs/ufs-qcom.c                   | 114 ++++++++++-------
- drivers/scsi/ufs/ufs-qcom.h                   |   4 +
- 13 files changed, 202 insertions(+), 167 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+index 8cf59452c675..e2460b666ae4 100644
+--- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
++++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+@@ -47,6 +47,8 @@ Optional properties:
+ -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
+ 			  Note that it is assume same number of lanes is used both
+ 			  directions at once. If not specified, default is 2 lanes per direction.
++- #reset-cells		: Must be <1> for Qualcomm UFS controllers that expose
++			  PHY reset from the UFS controller.
+ - resets            : reset node register
+ - reset-names       : describe reset node register, the "rst" corresponds to reset the whole UFS IP.
+ 
+@@ -76,4 +78,5 @@ Example:
+ 		reset-names = "rst";
+ 		phys = <&ufsphy1>;
+ 		phy-names = "ufsphy";
++		#reset-cells = <1>;
+ 	};
 -- 
 2.20.1
