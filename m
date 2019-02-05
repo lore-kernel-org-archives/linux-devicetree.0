@@ -1,50 +1,73 @@
 From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH v4 6/8] dt-bindings: i2c: iproc: add "brcm,iproc-nic-i2c" compatible string
-Date: Mon,  4 Feb 2019 15:15:52 -0800
-Message-ID: <20190204231554.87666-7-ray.jui@broadcom.com>
-References: <20190204231554.87666-1-ray.jui@broadcom.com>
+Subject: Re: [PATCH v6 0/3] Stingray thermal driver support
+Date: Mon, 4 Feb 2019 16:16:19 -0800
+Message-ID: <a6113115-453c-4606-f99d-c79263d8f4bb@broadcom.com>
+References: <1546505734-24527-1-git-send-email-srinath.mannam@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204231554.87666-1-ray.jui@broadcom.com>
+In-Reply-To: <1546505734-24527-1-git-send-email-srinath.mannam@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Ray Jui <ray.jui@broadcom.com>
+To: Srinath Mannam <srinath.mannam@broadcom.com>, daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Hi Zhang/Eduardo,
 
-Update iProc I2C binding document to add new compatible string
-"brcm,iproc-nic-i2c". Optional property "brcm,ape-hsls-addr-mask" is
-also added that allows configuration of the host view into the APE's
-address for "brcm,iproc-nic-i2c"
+Can this patch series be merged? It looks like Srinath has addressed all
+review comments?
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
----
- Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+The following tag should be added to the binding document patch:
 
-diff --git a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
-index d3a3620b1f06..02e82d20239e 100644
---- a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
-@@ -3,7 +3,7 @@ Broadcom iProc I2C controller
- Required properties:
- 
- - compatible:
--    Must be "brcm,iproc-i2c"
-+    Must be "brcm,iproc-i2c" or "brcm,iproc-nic-i2c"
- 
- - reg:
-     Define the base and range of the I/O address space that contain the iProc
-@@ -24,6 +24,9 @@ Optional properties:
-     Should contain the I2C interrupt. If unspecified, driver will fall back to
-     polling mode
- 
-+- brcm,ape-hsls-addr-mask:
-+    Required for "brcm,iproc-nic-i2c". Host view of address mask into the
-+    'APE' co-processor
- 
- Example:
- 	i2c0: i2c@18008000 {
--- 
-2.17.1
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+Thanks,
+
+Ray
+
+On 1/3/2019 12:55 AM, Srinath Mannam wrote:
+> These patches adds the stingray thermal driver and its
+> corresponding DT nodes with documentation.
+> 
+> Changes from v5
+>   - Addressed Eduardo Valentin comments.
+> 
+> Changes from v4
+>   - Addressed Rob Herring comments on DT parameters and
+>     thermal driver architecture.
+>   - Removed brcm,max-crit-temp DT parameter
+>   - Changed driver to thermal sensor registration model.
+>   - Added trip DT properties.
+> 
+> Changes from v3
+>   - Addressed Daniel lezcano comments.
+>   - Elaborated commit description of thermal driver patch.
+>   - Added brcm,max-crit-temp DT parameter.
+> 
+> Changes from v2:
+>   - All stingray TMON DT nodes are combine together into single.
+>     Temperature registers are combined into one mem resource.
+>     brcm,tmon-mask parameter has available TMONs mask value.
+>   - All available TMONs are initialized together in single
+>     instance of driver probe call.
+> 
+> Changes from v1:
+>   - Fixed auto build sparce warning.
+> 
+> Pramod Kumar (3):
+>   dt-bindings: thermal: Add binding document for SR thermal
+>   thermal: broadcom: Add Stingray thermal driver
+>   arm64: dts: stingray: Add Stingray Thermal DT support.
+> 
+>  .../bindings/thermal/brcm,sr-thermal.txt           | 105 ++++++++++++++++++
+>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89 +++++++++++++++
+>  drivers/thermal/Kconfig                            |   3 +-
+>  drivers/thermal/broadcom/Kconfig                   |   9 ++
+>  drivers/thermal/broadcom/Makefile                  |   1 +
+>  drivers/thermal/broadcom/sr-thermal.c              | 122 +++++++++++++++++++++
+>  6 files changed, 328 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
+> 
