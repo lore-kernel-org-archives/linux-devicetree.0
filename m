@@ -1,41 +1,35 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
-Date: Tue, 5 Feb 2019 08:19:45 -0800
-Message-ID: <20190205161945.GS5720@atomide.com>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
- <1549290167-876-2-git-send-email-rogerq@ti.com>
- <20190204163312.GI5720@atomide.com>
- <5C5959DB.2090608@ti.com>
- <f1b689cc-5d1b-0333-7a1c-cb6d58169e12@ti.com>
- <5C59AEA3.1080400@ti.com>
- <124e9f09-fb60-071d-e2ba-ec6f7fb3955c@ti.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v5 13/13] spi: atmel-quadspi: add support for sam9x60
+ qspi controller
+Date: Tue, 5 Feb 2019 17:26:38 +0100
+Message-ID: <20190205172638.11a69968@collabora.com>
+References: <20190205154257.29529-1-tudor.ambarus@microchip.com>
+        <20190205154257.29529-14-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <124e9f09-fb60-071d-e2ba-ec6f7fb3955c@ti.com>
+In-Reply-To: <20190205154257.29529-14-tudor.ambarus@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>, s-anna@ti.com, ohad@wizery.com, bjorn.andersson@linaro.org, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Tudor.Ambarus@microchip.com
+Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, Cyrille.Pitchen@microchip.com, bugalski.piotr@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Murali Karicheri <m-karicheri2@ti.com> [190205 16:13]:
-> On 02/05/2019 10:41 AM, Roger Quadros wrote:
-> > What I'm suggesting here is that kernel remoteproc driver should have nothing to do
-> > with the other PRU's data RAM.
-> > 
-> > The application driver if needs both PRUs then it can obviously access both DRAMs
-> > as it has a phandle to both PRUs.
-> > 
-> That should be fine.
+On Tue, 5 Feb 2019 15:44:04 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
-That sounds good to me too.
+> @@ -450,28 +499,49 @@ static int atmel_qspi_probe(struct
+> platform_device *pdev) goto exit;
+>  	}
+>  
+> +	aq->caps = of_device_get_match_data(&pdev->dev);
+> +	if (aq->caps && aq->caps->has_qspick) {
 
-For dts, yeah please allocate the resources for the modules
-where the resources belong to on the PRUSS internal interconnect :)
-Devices can move around on the interconnect between SoCs and the
-modules can get swapped or added.
+Can we add a caps instance to the sama5d2 entry instead of allowing
+caps to be NULL?
 
-Regards,
+The rest looks good to me, feel free to add
 
-Tony
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+on your next version.
