@@ -1,516 +1,191 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 8/9] mtd: rawnand: ingenic: Add support for the JZ4725B
-Date: Tue, 05 Feb 2019 13:29:17 -0300
-Message-ID: <1549384157.1610.0@crapouillou.net>
-References: <20190204190426.11618-1-paul@crapouillou.net>
-        <20190204190426.11618-8-paul@crapouillou.net>
-        <20190205151256.1bb3dab0@xps13>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding
+ for generic eDP panel
+Date: Tue, 5 Feb 2019 17:36:49 +0100
+Message-ID: <20190205163649.GG3271@phenom.ffwll.local>
+References: <20190203185501.8958-9-anarsoul@gmail.com>
+ <20190204074350.GC16448@ulmo>
+ <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
+ <20190204082353.GE19087@ulmo>
+ <20190204094012.GP3271@phenom.ffwll.local>
+ <20190204112218.GB10412@ulmo>
+ <20190204155909.GU3271@phenom.ffwll.local>
+ <20190204162258.GB25476@ulmo>
+ <20190205085737.GY3271@phenom.ffwll.local>
+ <20190205102419.GA591@ulmo>
+Reply-To: daniel-/w4YWyX8dFk@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205151256.1bb3dab0@xps13>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, Mathieu Malaterre <malat@debian.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDYZDG4VSMIRBJXX43RAKGQE4TKBDSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190205102419.GA591@ulmo>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
+On Tue, Feb 05, 2019 at 11:24:19AM +0100, Thierry Reding wrote:
+> On Tue, Feb 05, 2019 at 09:57:37AM +0100, Daniel Vetter wrote:
+> > On Mon, Feb 04, 2019 at 05:22:58PM +0100, Thierry Reding wrote:
+> > > On Mon, Feb 04, 2019 at 04:59:09PM +0100, Daniel Vetter wrote:
+> > > > On Mon, Feb 04, 2019 at 12:22:18PM +0100, Thierry Reding wrote:
+> > > > > On Mon, Feb 04, 2019 at 10:40:12AM +0100, Daniel Vetter wrote:
+> > > > > > On Mon, Feb 04, 2019 at 09:23:59AM +0100, Thierry Reding wrote:
+> > > > > > > On Mon, Feb 04, 2019 at 12:13:55AM -0800, Vasily Khoruzhick wrote:
+> > > > > > > > On Sun, Feb 3, 2019 at 11:43 PM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > > > > > >
+> > > > > > > > > On Sun, Feb 03, 2019 at 10:54:57AM -0800, Vasily Khoruzhick wrote:
+> > > > > > > > > > eDP panels usually have EDID EEPROM, so there's no need to define panel
+> > > > > > > > > > width/height or any modes/timings in dts. But this panel still may have
+> > > > > > > > > > regulator and/or backlight.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > > > > > > > ---
+> > > > > > > > > >  .../devicetree/bindings/display/panel/panel-edp.txt        | 7 +++++++
+> > > > > > > > > >  1 file changed, 7 insertions(+)
+> > > > > > > > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
+> > > > > > > > >
+> > > > > > > > > Please don't try to make panels look more generic than they really are.
+> > > > > > > > > You're going to have to provide a compatible string for your device that
+> > > > > > > > > is more specific than "panel-edp". You claim that you don't need any
+> > > > > > > > > extra information that is panel specific, but you don't know that now.
+> > > > > > > > > We have in the past thought that we didn't need things like prepare
+> > > > > > > > > delay, but then we ran into situations where we did need them.
+> > > > > > > > >
+> > > > > > > > > Just do what everybody else does. Provide a specific compatible string
+> > > > > > > > > and match on that in the panel-simple driver. Even if you can read all
+> > > > > > > > > the video timings from an EDID EEPROM, you can still provide a mode in
+> > > > > > > > > the panel descriptor to serve as a fallback if for example the EEPROM
+> > > > > > > > > is faulty on some device.
+> > > > > > > > 
+> > > > > > > > Pinebook used several 768p panels that have slightly different timings
+> > > > > > > > and recent batch uses 1080p panel.
+> > > > > > > > 
+> > > > > > > > What panel descriptor should I use as fallback?
+> > > > > > > 
+> > > > > > > You don't use panel descriptors as fallback. The simple-panel driver
+> > > > > > > will bind to a panel device and use the corresponding descriptor. If
+> > > > > > > your device tree contains the correct information, the descriptor is
+> > > > > > > correct for the panel you have.
+> > > > > > > 
+> > > > > > > In other words you need to ensure that you have the correct panel in
+> > > > > > > device tree for the board that you're using. This is exactly the same
+> > > > > > > thing as for other devices.
+> > > > > > > 
+> > > > > > > One way to to this is to have separate device trees for each variant
+> > > > > > > of the board that you want to support. Another variant may be to have
+> > > > > > > a common device tree and then have some early firmware update the DTB
+> > > > > > > with the correct panel information.
+> > > > > > 
+> > > > > > This would defeat the point of edp, which is to standardize the mess of
+> > > > > > panels (at least somewhat) and avoid having to change the DT/ACPI
+> > > > > > tables/firmware for every board you ship. Also, we do have DP quirking
+> > > > > > infrastructure already (using the OUI), I think if there's something that
+> > > > > > doesn't work then we should quirk it there.
+> > > > > 
+> > > > > The problem is that while the attempt may have been to standardize, it
+> > > > > failed. It doesn't take into account any of the details such as timing
+> > > > > between things like powering up the display and enabling the backlight
+> > > > > or similar. I don't know how you'd want to "quirk" those kinds of
+> > > > > requirements because they are highly panel specific.
+> > > > 
+> > > > Hm right, we get these from some firmware tables (and mix them with the
+> > > > spec one, since some of the firmware values are nonsense). I don't even
+> > > > know whether we can read the timings over dp aux somehow (you can power up
+> > > > the panel with some pessimistic values to figure those out, and you only
+> > > > need dp aux to work, which is much simpler than the entire panel).
+> > > > 
+> > > > > > What does make sense though imo is if we try not to stuff the edp panel
+> > > > > > into panel-simple, because it's anything like a simple dumb panel. There's
+> > > > > > also some integration awkwardness since with this panel you need to do dp
+> > > > > > aux/i2c transactions to get at the information (edid alone isn't good
+> > > > > > enough for edp), and I'm not sure how exactly that's supposed to be
+> > > > > > instantiated. Maybe a special function to instantiate an edp panel, which
+> > > > > > takes both a DT node and the dp_aux controller would be much better,
+> > > > > > instead of trying to auto-match against a DT compatible string and load a
+> > > > > > panel driver which is almost all fake.
+> > > > > > 
+> > > > > > Or we teach dp_aux to register itself and somehow teach panel-edp how it
+> > > > > > can get hold of the dp_aux channel it needs.
+> > > > > 
+> > > > > We already do that. drm_dp_aux registers as an I2C adapter that can be
+> > > > > used to read EDID EEPROMs using I2C-over-AUX transactions. We already
+> > > > > use that on some platforms.
+> > > > > 
+> > > > > Also note that simple-panel already supports getting video timings from
+> > > > > EDID. If a DDC link is present in DT, the driver will load the modes
+> > > > > from EDID and use them.
+> > > > 
+> > > > Could we extend this to dp aux somehow? For edp you need the dp aux (which
+> > > > then gives you the ddc link automatically).
+> > > 
+> > > I suppose we could do that. We could introduce a new property that would
+> > > allow the panel driver to get at the struct drm_dp_aux that can access
+> > > the panel. I'm not sure how much that would buy us. I suppose the driver
+> > > could go and use that drm_dp_aux to do I2C-over-AUX and ignore any
+> > > ddc-bus property in device tree. A drm_dp_aux object could also be used
+> > > to access DPCD if that's helpful.
+> > > 
+> > > The driver proposed here doesn't need access to DPCD, so I'm not sure
+> > > that would immediately help.
+> > 
+> > You definitely need dp aux to drive edp. That's where a lot of the really
+> > important stuff is stored, and it sounds like on non-broken panels even
+> > the timings (we've never implemented that on i915 somehow).
+> 
+> I'm not sure I understand what you're saying here. I haven't worked with
+> eDP panels in a while, but my recollection is that you can use DP AUX to
+> read video timings over EDID. We provide support for that by exporting a
+> DP AUX controller as I2C adapter (i.e. register with the I2C subsystem)
+> and then that I2C adapter can be used to read the EDID. I wasn't aware
+> that eDP panels additionally stored the video timings somewhere else.
 
-> Hi Paul,
-> 
-> Paul Cercueil <paul@crapouillou.net> wrote on Mon,  4 Feb 2019 
-> 16:04:25
-> -0300:
-> 
->>  The boot ROM of the JZ4725B SoC expects a specific OOB layout on the
->>  NAND, so we use it unconditionally in the ingenic-nand driver.
->> 
->>  Also add the jz4725b-bch driver to support the JZ4725B-specific BCH
->>  hardware.
->> 
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->> 
->>  Changes:
->> 
->>  v2: Instead of forcing the OOB layout, leave it to the board code or
->>      devicetree to decide if the jz4725b-specific layout should be 
->> used
->>      or not.
->> 
->>  v3: - Revert the change in v2, as the previous behaviour was 
->> correct.
->>      - Also add support for the hardware BCH of the JZ4725B in this
->>        patch.
->> 
->>   drivers/mtd/nand/raw/ingenic/Kconfig        |  10 ++
->>   drivers/mtd/nand/raw/ingenic/Makefile       |   1 +
->>   drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  48 +++++-
->>   drivers/mtd/nand/raw/ingenic/jz4725b_bch.c  | 251 
->> ++++++++++++++++++++++++++++
->>   4 files changed, 309 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
->> 
->>  diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig 
->> b/drivers/mtd/nand/raw/ingenic/Kconfig
->>  index cc663cc15119..497b46b144f2 100644
->>  --- a/drivers/mtd/nand/raw/ingenic/Kconfig
->>  +++ b/drivers/mtd/nand/raw/ingenic/Kconfig
->>  @@ -27,6 +27,16 @@ config MTD_NAND_JZ4740_ECC
->>   	  This driver can also be built as a module. If so, the module
->>   	  will be called jz4740-ecc.
->> 
->>  +config MTD_NAND_JZ4725B_BCH
->>  +	tristate "Hardware BCH support for JZ4725B SoC"
->>  +	select MTD_NAND_INGENIC_ECC
->>  +	help
->>  +	  Enable this driver to support the BCH error-correction hardware
->>  +	  present on the JZ4725B SoC from Ingenic.
->>  +
->>  +	  This driver can also be built as a module. If so, the module
->>  +	  will be called jz4725b-bch.
->>  +
->>   config MTD_NAND_JZ4780_BCH
->>   	tristate "Hardware BCH support for JZ4780 SoC"
->>   	select MTD_NAND_INGENIC_ECC
->>  diff --git a/drivers/mtd/nand/raw/ingenic/Makefile 
->> b/drivers/mtd/nand/raw/ingenic/Makefile
->>  index 563b7effcf59..ab2c5f47e5b7 100644
->>  --- a/drivers/mtd/nand/raw/ingenic/Makefile
->>  +++ b/drivers/mtd/nand/raw/ingenic/Makefile
->>  @@ -3,4 +3,5 @@ obj-$(CONFIG_MTD_NAND_JZ4780) += ingenic_nand.o
->> 
->>   obj-$(CONFIG_MTD_NAND_INGENIC_ECC) += ingenic_ecc.o
->>   obj-$(CONFIG_MTD_NAND_JZ4740_ECC) += jz4740_ecc.o
->>  +obj-$(CONFIG_MTD_NAND_JZ4725B_BCH) += jz4725b_bch.o
->>   obj-$(CONFIG_MTD_NAND_JZ4780_BCH) += jz4780_bch.o
->>  diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c 
->> b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
->>  index 3fd078920b17..0e6d79993ff3 100644
->>  --- a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
->>  +++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
->>  @@ -34,6 +34,7 @@ struct jz_soc_info {
->>   	unsigned long data_offset;
->>   	unsigned long addr_offset;
->>   	unsigned long cmd_offset;
->>  +	const struct mtd_ooblayout_ops *oob_layout;
->>   };
->> 
->>   struct ingenic_nand_cs {
->>  @@ -71,6 +72,41 @@ static inline struct ingenic_nfc 
->> *to_ingenic_nfc(struct nand_controller *ctrl)
->>   	return container_of(ctrl, struct ingenic_nfc, controller);
->>   }
->> 
->>  +static int jz4725b_ooblayout_ecc(struct mtd_info *mtd, int section,
->>  +				 struct mtd_oob_region *oobregion)
->>  +{
->>  +	struct nand_chip *chip = mtd_to_nand(mtd);
->>  +	struct nand_ecc_ctrl *ecc = &chip->ecc;
->>  +
->>  +	if (section || !ecc->total)
->>  +		return -ERANGE;
->>  +
->>  +	oobregion->length = ecc->total;
->>  +	oobregion->offset = 3;
->>  +
->>  +	return 0;
->>  +}
->>  +
->>  +static int jz4725b_ooblayout_free(struct mtd_info *mtd, int 
->> section,
->>  +				  struct mtd_oob_region *oobregion)
->>  +{
->>  +	struct nand_chip *chip = mtd_to_nand(mtd);
->>  +	struct nand_ecc_ctrl *ecc = &chip->ecc;
->>  +
->>  +	if (section)
->>  +		return -ERANGE;
->>  +
->>  +	oobregion->length = mtd->oobsize - ecc->total - 3;
->>  +	oobregion->offset = 3 + ecc->total;
->>  +
->>  +	return 0;
->>  +}
->>  +
->>  +const struct mtd_ooblayout_ops jz4725b_ooblayout_ops = {
->>  +	.ecc = jz4725b_ooblayout_ecc,
->>  +	.free = jz4725b_ooblayout_free,
->>  +};
->>  +
->>   static void ingenic_nand_select_chip(struct nand_chip *chip, int 
->> chipnr)
->>   {
->>   	struct ingenic_nand *nand = to_ingenic_nand(nand_to_mtd(chip));
->>  @@ -211,7 +247,7 @@ static int ingenic_nand_attach_chip(struct 
->> nand_chip *chip)
->>   		return -EINVAL;
->>   	}
->> 
->>  -	mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
->>  +	mtd_set_ooblayout(mtd, nfc->soc_info->oob_layout);
->> 
->>   	return 0;
->>   }
->>  @@ -407,16 +443,26 @@ static const struct jz_soc_info 
->> jz4740_soc_info = {
->>   	.data_offset = 0x00000000,
->>   	.cmd_offset  = 0x00008000,
->>   	.addr_offset = 0x00010000,
->>  +	.oob_layout = &nand_ooblayout_lp_ops,
->>  +};
->>  +
->>  +static const struct jz_soc_info jz4725b_soc_info = {
->>  +	.data_offset = 0x00000000,
->>  +	.cmd_offset  = 0x00008000,
->>  +	.addr_offset = 0x00010000,
->>  +	.oob_layout = &jz4725b_ooblayout_ops,
->>   };
->> 
->>   static const struct jz_soc_info jz4780_soc_info = {
->>   	.data_offset = 0x00000000,
->>   	.cmd_offset  = 0x00400000,
->>   	.addr_offset = 0x00800000,
->>  +	.oob_layout = &nand_ooblayout_lp_ops,
->>   };
->> 
->>   static const struct of_device_id ingenic_nand_dt_match[] = {
->>   	{ .compatible = "ingenic,jz4740-nand", .data = &jz4740_soc_info },
->>  +	{ .compatible = "ingenic,jz4725b-nand", .data = &jz4725b_soc_info 
->> },
->>   	{ .compatible = "ingenic,jz4780-nand",  .data = &jz4780_soc_info  
->> },
->>   	{},
->>   };
->>  diff --git a/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c 
->> b/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
->>  new file mode 100644
->>  index 000000000000..66be454be383
->>  --- /dev/null
->>  +++ b/drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
->>  @@ -0,0 +1,251 @@
->>  +// SPDX-License-Identifier: GPL-2.0
->>  +/*
->>  + * JZ4725B BCH controller driver
->>  + *
->>  + * Copyright (C) 2018 Paul Cercueil <paul@crapouillou.net>
->>  + *
->>  + * Based on jz4780_bch.c
->>  + */
->>  +
->>  +#include <linux/bitops.h>
->>  +#include <linux/device.h>
->>  +#include <linux/io.h>
->>  +#include <linux/iopoll.h>
->>  +#include <linux/module.h>
->>  +#include <linux/mutex.h>
->>  +#include <linux/of_platform.h>
->>  +#include <linux/platform_device.h>
->>  +
->>  +#include "ingenic_ecc.h"
->>  +
->>  +#define BCH_BHCR			0x0
->>  +#define BCH_BHCSR			0x4
->>  +#define BCH_BHCCR			0x8
->>  +#define BCH_BHCNT			0xc
->>  +#define BCH_BHDR			0x10
->>  +#define BCH_BHPAR0			0x14
->>  +#define BCH_BHERR0			0x28
->>  +#define BCH_BHINT			0x24
->>  +#define BCH_BHINTES			0x3c
->>  +#define BCH_BHINTEC			0x40
->>  +#define BCH_BHINTE			0x38
->>  +
->>  +#define BCH_BHCR_BSEL_SHIFT		2
->>  +#define BCH_BHCR_BSEL_MASK		(0x1 << BCH_BHCR_BSEL_SHIFT)
->>  +#define BCH_BHCR_ENCE			BIT(3)
->>  +#define BCH_BHCR_INIT			BIT(1)
->>  +#define BCH_BHCR_BCHE			BIT(0)
->>  +
->>  +#define BCH_BHCNT_DEC_COUNT_SHIFT	16
->>  +#define BCH_BHCNT_DEC_COUNT_MASK	(0x3ff << 
->> BCH_BHCNT_DEC_COUNT_SHIFT)
->>  +#define BCH_BHCNT_ENC_COUNT_SHIFT	0
->>  +#define BCH_BHCNT_ENC_COUNT_MASK	(0x3ff << 
->> BCH_BHCNT_ENC_COUNT_SHIFT)
->>  +
->>  +#define BCH_BHERR_INDEX0_SHIFT		0
->>  +#define BCH_BHERR_INDEX0_MASK		(0x1fff << BCH_BHERR_INDEX0_SHIFT)
->>  +#define BCH_BHERR_INDEX1_SHIFT		16
->>  +#define BCH_BHERR_INDEX1_MASK		(0x1fff << BCH_BHERR_INDEX1_SHIFT)
->>  +
->>  +#define BCH_BHINT_ERRC_SHIFT		28
->>  +#define BCH_BHINT_ERRC_MASK		(0xf << BCH_BHINT_ERRC_SHIFT)
->>  +#define BCH_BHINT_TERRC_SHIFT		16
->>  +#define BCH_BHINT_TERRC_MASK		(0x7f << BCH_BHINT_TERRC_SHIFT)
->>  +#define BCH_BHINT_ALL_0			BIT(5)
->>  +#define BCH_BHINT_ALL_F			BIT(4)
->>  +#define BCH_BHINT_DECF			BIT(3)
->>  +#define BCH_BHINT_ENCF			BIT(2)
->>  +#define BCH_BHINT_UNCOR			BIT(1)
->>  +#define BCH_BHINT_ERR			BIT(0)
->>  +
->>  +/* Timeout for BCH calculation/correction. */
->>  +#define BCH_TIMEOUT_US			100000
->>  +
->>  +static void jz4725b_bch_init(struct ingenic_ecc *bch,
->>  +			     struct ingenic_ecc_params *params, bool encode)
-> 
-> I don't know the IP but 'encode' looks strange, what is it supposed to
-> mean?
+I didn't know either, but understood Vasily's comment that this is
+possible. Haven't dug around in the specs though.
 
-It is used to toggle between calculating the ECC codes for a given set 
-of data,
-and using supplied ECC codes to verify a set of data.
+> What I meant above was that aside from the I2C-over-AUX for reading the
+> EDID, this driver doesn't do anything else with DP AUX in order to turn
+> the panel on. Looking at the eDP support we have on Tegra, there's a
+> DPCD register (DP_SET_POWER) that needs to be written in order to take
+> the sink device (i.e. panel) out of the power saving state. We do that
+> as part of the connector implementation rather than within the panel
+> driver. There are also additional registers such as DP_LINK_BW_SET that
+> need to be programmed. I think this is also relevant to regular DP and
+> detailed in the specification.
+> 
+> Given all the above, I'm beginning to think that Rob's right in that
+> perhaps we shouldn't be treating eDP panels as panels, but rather to
+> make them look more like DP monitors and make all this code part of the
+> connector implementation. I think pretty much the only differences to
+> regular DP are that we might require some lower-level resources that a
+> DP monitor would usually have built-in (reset or power GPIOs, power
+> supplies, backlight, ...).
+> 
+> I'm not sure if that's enough for eDP panels, though. For example the
+> AUO B133HTN01 panel, used by the exynos5800-peach-pi, seems to be an eDP
+> panel. But the driver also specifies a couple of additional delays which
+> suggests that either it violates the eDP specification or that the eDP
+> specification doesn't define any power sequencing delays that would've
+> been needed. Or perhaps these delays are specified somewhere and the
+> driver just doesn't use them?
 
-I just reused the function and parameter names that were used in the
-jz4780-bch driver, that's where the 'encode' comes from.
-
->>  +{
->>  +	u32 reg;
->>  +
->>  +	/* Clear interrupt status. */
->>  +	writel(readl(bch->base + BCH_BHINT), bch->base + BCH_BHINT);
->>  +
->>  +	/* Initialise and enable BCH. */
->>  +	writel(0x1f, bch->base + BCH_BHCCR);
->>  +	writel(BCH_BHCR_BCHE, bch->base + BCH_BHCSR);
->>  +
->>  +	if (params->strength == 8)
->>  +		writel(BCH_BHCR_BSEL_MASK, bch->base + BCH_BHCSR);
->>  +	else
->>  +		writel(BCH_BHCR_BSEL_MASK, bch->base + BCH_BHCCR);
-> 
-> Here you write to BCH_BHCSR or BCH_BHCCR depending on
-> params->strength...
-> 
->>  +
->>  +	if (encode)
->>  +		writel(BCH_BHCR_ENCE, bch->base + BCH_BHCSR);
->>  +	else
->>  +		writel(BCH_BHCR_ENCE, bch->base + BCH_BHCCR);
-> 
-> ...and here depending on encode.
-> 
-> Can you explain a bit?
-
-BCH_BHCSR / BCH_BHCCR are set and clear registers for the BCH_BHCR
-register, which is itself read-only. The BSEL field is used to toggle
-between a strength of 4 (if cleared) and 8 (if set), while the ENCE
-field configures the IP for 'encoding' mode.
-
->>  +
->>  +	writel(BCH_BHCR_INIT, bch->base + BCH_BHCSR);
->>  +
->>  +	/* Set up BCH count register. */
->>  +	reg = params->size << BCH_BHCNT_ENC_COUNT_SHIFT;
->>  +	reg |= (params->size + params->bytes) << 
->> BCH_BHCNT_DEC_COUNT_SHIFT;
-> 
-> Maybe you want to check params->size to fit the bitfield length?
-
-I guess I could do that, yes.
-
->>  +	writel(reg, bch->base + BCH_BHCNT);
->>  +}
->>  +
->>  +static void jz4725b_bch_disable(struct ingenic_ecc *bch)
->>  +{
->>  +	writel(readl(bch->base + BCH_BHINT), bch->base + BCH_BHINT);
->>  +	writel(BCH_BHCR_BCHE, bch->base + BCH_BHCCR);
-> 
-> I would add comments, one to say you clear the interrupts, one when 
-> you
-> disable the engine.
-
-OK.
-
->>  +}
->>  +
->>  +static void jz4725b_bch_write_data(struct ingenic_ecc *bch, const 
->> u8 *buf,
->>  +				   size_t size)
->>  +{
->>  +	while (size--)
->>  +		writeb(*buf++, bch->base + BCH_BHDR);
->>  +}
->>  +
->>  +static void jz4725b_bch_read_parity(struct ingenic_ecc *bch, u8 
->> *buf,
->>  +				    size_t size)
->>  +{
->>  +	size_t size32 = size / sizeof(u32);
->>  +	size_t size8 = size % sizeof(u32);
->>  +	u32 *dest32;
->>  +	u8 *dest8;
->>  +	u32 val, offset = 0;
->>  +
->>  +	dest32 = (u32 *)buf;
->>  +	while (size32--) {
->>  +		*dest32++ = readl(bch->base + BCH_BHPAR0 + offset);
->>  +		offset += sizeof(u32);
->>  +	}
->>  +
->>  +	dest8 = (u8 *)dest32;
->>  +	val = readl(bch->base + BCH_BHPAR0 + offset);
->>  +	switch (size8) {
->>  +	case 3:
->>  +		dest8[2] = (val >> 16) & 0xff;
->>  +	case 2:
->>  +		dest8[1] = (val >> 8) & 0xff;
->>  +	case 1:
->>  +		dest8[0] = val & 0xff;
->>  +		break;
->>  +	}
->>  +}
-> 
-> Have you tried with _relaxed operators?
-
-Never heard about these :)
-
->>  +
->>  +static bool jz4725b_bch_wait_complete(struct ingenic_ecc *bch, 
->> unsigned int irq,
->>  +				      u32 *status)
->>  +{
->>  +	u32 reg;
->>  +	int ret;
->>  +
->>  +	/*
->>  +	 * While we could use interrupts here and sleep until the 
->> operation
->>  +	 * completes, the controller works fairly quickly (usually a few
->>  +	 * microseconds) and so the overhead of sleeping until we get an
->>  +	 * interrupt quite noticeably decreases performance.
->>  +	 */
->>  +	ret = readl_poll_timeout(bch->base + BCH_BHINT, reg,
->>  +				 (reg & irq) == irq, 0, BCH_TIMEOUT_US);
-> 
-> I suppose (reg & irq) is enough?
-> 
->>  +	if (ret)
->>  +		return false;
->>  +
->>  +	if (status)
->>  +		*status = reg;
->>  +
->>  +	writel(reg, bch->base + BCH_BHINT);
-> 
-> space
-> 
->>  +	return true;
->>  +}
->>  +
->>  +static int jz4725b_calculate(struct ingenic_ecc *bch,
->>  +			     struct ingenic_ecc_params *params,
->>  +			     const u8 *buf, u8 *ecc_code)
->>  +{
->>  +	int ret = 0;
->>  +
->>  +	mutex_lock(&bch->lock);
->>  +	jz4725b_bch_init(bch, params, true);
->>  +	jz4725b_bch_write_data(bch, buf, params->size);
->>  +
->>  +	if (jz4725b_bch_wait_complete(bch, BCH_BHINT_ENCF, NULL)) {
-> 
-> I would prefer bch_wait_complete() to return an usual negative error
-> instead of a boolean.
-> 
-> And maybe a goto could be used in case of error to disable BCH, unlock
-> the mutex and return.
-
-OK.
-
->>  +		jz4725b_bch_read_parity(bch, ecc_code, params->bytes);
->>  +	} else {
->>  +		dev_err(bch->dev, "timed out while calculating ECC\n");
->>  +		ret = -ETIMEDOUT;
->>  +	}
->>  +
->>  +	jz4725b_bch_disable(bch);
->>  +	mutex_unlock(&bch->lock);
-> 
-> Space
-> 
->>  +	return ret;
->>  +}
->>  +
->>  +static int jz4725b_correct(struct ingenic_ecc *bch,
->>  +			   struct ingenic_ecc_params *params,
->>  +			   u8 *buf, u8 *ecc_code)
->>  +{
->>  +	u32 reg, errors, bit;
->>  +	unsigned int i;
->>  +	int ret = 0;
->>  +
->>  +	mutex_lock(&bch->lock);
->>  +
->>  +	jz4725b_bch_init(bch, params, false);
->>  +	jz4725b_bch_write_data(bch, buf, params->size);
->>  +	jz4725b_bch_write_data(bch, ecc_code, params->bytes);
->>  +
->>  +	if (!jz4725b_bch_wait_complete(bch, BCH_BHINT_DECF, &reg)) {
->>  +		dev_err(bch->dev, "timed out while correcting data\n");
->>  +		ret = -ETIMEDOUT;
->>  +		goto out;
->>  +	}
->>  +
->>  +	if (reg & (BCH_BHINT_ALL_F | BCH_BHINT_ALL_0)) {
->>  +		/* Data and ECC is all 0xff or 0x00 - nothing to correct */
->>  +		ret = 0;
->>  +		goto out;
->>  +	}
->>  +
->>  +	if (reg & BCH_BHINT_UNCOR) {
->>  +		/* Uncorrectable ECC error */
->>  +		ret = -EBADMSG;
->>  +		goto out;
->>  +	}
->>  +
->>  +	errors = (reg & BCH_BHINT_ERRC_MASK) >> BCH_BHINT_ERRC_SHIFT;
->>  +
->>  +	/* Correct any detected errors. */
->>  +	for (i = 0; i < errors; i++) {
->>  +		if (i & 1) {
->>  +			bit = (reg & BCH_BHERR_INDEX1_MASK) >> BCH_BHERR_INDEX1_SHIFT;
->>  +		} else {
->>  +			reg = readl(bch->base + BCH_BHERR0 + (i * 4));
->>  +			bit = (reg & BCH_BHERR_INDEX0_MASK) >> BCH_BHERR_INDEX0_SHIFT;
->>  +		}
->>  +
->>  +		buf[(bit >> 3)] ^= BIT(bit & 0x7);
->>  +	}
->>  +
->>  +out:
->>  +	jz4725b_bch_disable(bch);
->>  +	mutex_unlock(&bch->lock);
->>  +	return ret;
->>  +}
->>  +
->>  +static const struct ingenic_ecc_ops jz4725b_bch_ops = {
->>  +	.disable = jz4725b_bch_disable,
->>  +	.calculate = jz4725b_calculate,
->>  +	.correct = jz4725b_correct,
->>  +};
->>  +
->>  +static const struct of_device_id jz4725b_bch_dt_match[] = {
->>  +	{ .compatible = "ingenic,jz4725b-bch", .data = &jz4725b_bch_ops },
->>  +	{},
->>  +};
->>  +MODULE_DEVICE_TABLE(of, jz4725b_bch_dt_match);
->>  +
->>  +static struct platform_driver jz4725b_bch_driver = {
->>  +	.probe		= ingenic_ecc_probe,
->>  +	.driver	= {
->>  +		.name	= "jz4725b-bch",
->>  +		.of_match_table = jz4725b_bch_dt_match,
->>  +	},
->>  +};
->>  +module_platform_driver(jz4725b_bch_driver);
-> 
-> Missing MODULE_ macros? (author, license)
-
-You're right, I will add them.
-
-Thanks,
--Paul
+I honestly don't know, but gut feeling also goes towards making edp
+something else than a dumb panel. There's a lot of stuff you need to do
+that overlaps with normal DP sinks, plus there's a lot of stuff (but not
+everything, or at least it needs some quirking sometimes) that you're
+supposed to autodiscover. But I'm not sure what's the best solution really
+is, since for i915 all the quirking we need is in some i915-specific
+tables (and I'm not even sure how much of that quirking is really
+necessary, and how much just convenience for us because the fw already did
+the hard work of poking the information out of the panel).
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
