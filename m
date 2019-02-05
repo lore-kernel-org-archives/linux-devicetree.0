@@ -1,135 +1,73 @@
-From: Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v3] arm64: dts: sdm845: Add Q6V5 ADSP node
-Date: Tue,  5 Feb 2019 16:04:54 +0530
-Message-ID: <1549362894-3408-1-git-send-email-rohitkr@codeaurora.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 04/14] irqchip: pruss: Add a PRUSS irqchip driver for
+ PRUSS interrupts
+Date: Tue, 5 Feb 2019 12:35:44 +0200
+Message-ID: <5C596700.1010000@ti.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-5-git-send-email-rogerq@ti.com>
+ <20190204181518.GN5720@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190204181518.GN5720@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-remoteproc@vger.kernel.org, bjorn.andersson@linaro.org, rohkumar@qti.qualcomm.com
-Cc: Rohit kumar <rohitkr@codeaurora.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Q6V5 ADSP pil remoteproc node
-for SDM845 SoC.
+On 04/02/19 20:15, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [190204 14:23]:
+>> From: "Andrew F. Davis" <afd@ti.com>
+>>
+>> The Programmable Real-Time Unit Subsystem (PRUSS) contains an
+>> interrupt controller (INTC) that can handle various system input
+>> events and post interrupts back to the device-level initiators.
+>> The INTC can support upto 64 input events with individual control
+>> configuration and hardware prioritization. These events are mapped
+>> onto 10 interrupt signals through two levels of many-to-one mapping
+>> support. Different interrupt signals are routed to the individual
+>> PRU cores or to the host CPU.
+>>
+>> The PRUSS INTC platform driver manages this PRUSS interrupt
+>> controller and implements an irqchip driver to provide a Linux
+>> standard way for the PRU client users to enable/disable/ack/
+>> re-trigger a PRUSS system event. The system events to interrupt
+>> channels and host interrupts relies on the mapping configuration
+>> provided through a firmware resource table for now. This will be
+>> revisited and enhanced in the future for a better interface. The
+>> mappings will currently be programmed during the boot/shutdown
+>> of the PRU.
+>>
+>> The PRUSS INTC module is reference counted during the interrupt
+>> setup phase through the irqchip's irq_request_resources() and
+>> irq_release_resources() ops. This restricts the module from being
+>> removed as long as there are active interrupt users.
+>>
+>> The PRUSS INTC can generate an interrupt to various processor
+>> subsystems on the SoC through a set of 64 possible PRU system
+>> events. These system events can be used by PRU client drivers
+>> or applications for event notifications/signalling between PRUs
+>> and MPU or other processors. An API, pruss_intc_trigger() is
+>> provided to MPU-side PRU client drivers/applications to be able
+>> to trigger an event/interrupt using IRQ numbers provided by the
+>> PRUSS-INTC irqdomain chip.
+> 
+> I suggest you send the binding patch and the interrupt
+> controller driver separately to the irqchip guys. Maybe
+> put the trigger function in to a separate patch that can
+> be reviewed and applied separately.
 
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
-Changes since v2:
-Updated reg property values from <0x17300000 0x410> to <0 0x17300000 0 0x410>
+Good idea. I will send irqchip related patches separately.
 
-This depends on below upstream patches:
-Add adsp_mem dt node: https://lkml.org/lkml/2019/1/29/1392
-Remove lpass_aon clock from adsp clk list:  https://lore.kernel.org/patchwork/patch/1019609/
+cheers,
+-roger
+> 
+> Regards,
+> 
+> Tony
+> 
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 89 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 33f5f4b..c5cde12 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -18,6 +18,7 @@
- #include <dt-bindings/reset/qcom,sdm845-aoss.h>
- #include <dt-bindings/reset/qcom,sdm845-pdc.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-+#include <dt-bindings/soc/qcom,apr.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -2048,6 +2049,94 @@
- 			status = "disabled";
- 		};
- 
-+		adsp_pil: remoteproc-adsp-pil@17300000 {
-+			compatible = "qcom,sdm845-adsp-pil";
-+
-+			reg = <0 0x17300000 0 0x410>;
-+			interrupts-extended =
-+				<&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_LPASS_SWAY_CLK>,
-+				 <&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
-+				 <&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
-+				 <&lpasscc LPASS_QDSP6SS_XO_CLK>,
-+				 <&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
-+				 <&lpasscc LPASS_QDSP6SS_CORE_CLK>;
-+
-+			clock-names = "xo", "sway_cbcr", "lpass_ahbs_aon_cbcr",
-+				      "lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
-+				      "qdsp6ss_sleep", "qdsp6ss_core";
-+
-+			resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
-+				 <&aoss_reset AOSS_CC_LPASS_RESTART>;
-+			reset-names = "pdc_sync", "cc_lpass";
-+
-+			qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
-+
-+			memory-region = <&adsp_mem>;
-+
-+			qcom,smem-states = <&adsp_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+			glink-edge {
-+				interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
-+				label = "lpass";
-+				qcom,remote-pid = <2>;
-+				mboxes = <&apss_shared 8>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				apr@4 {
-+					compatible = "qcom,apr-v2";
-+					qcom,glink-channels = "apr_audio_svc";
-+					reg = <APR_DOMAIN_ADSP>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					q6core {
-+						compatible = "qcom,q6core";
-+						reg = <APR_SVC_ADSP_CORE>;
-+					};
-+
-+					q6afe {
-+						compatible = "qcom,q6afe";
-+						reg = <APR_SVC_AFE>;
-+						q6afedai: afedais {
-+							compatible = "qcom,q6afe-dais";
-+							#sound-dai-cells = <1>;
-+							#address-cells = <1>;
-+							#size-cells = <0>;
-+						};
-+					};
-+
-+					q6asm {
-+						compatible = "qcom,q6asm";
-+						reg = <APR_SVC_ASM>;
-+						q6asmdai: asmdai{
-+							compatible = "qcom,q6asm-dais";
-+							iommus = <&apps_smmu 0x1821 0x0>;
-+							#sound-dai-cells = <1>;
-+						};
-+					};
-+
-+					q6adm {
-+						compatible = "qcom,q6adm";
-+						reg = <APR_SVC_ADM>;
-+						q6routing: routing {
-+							compatible = "qcom,q6adm-routing";
-+							#sound-dai-cells = <0>;
-+						};
-+					};
-+				};
-+			};
-+		};
-+
- 		apss_shared: mailbox@17990000 {
- 			compatible = "qcom,sdm845-apss-shared";
- 			reg = <0 0x17990000 0 0x1000>;
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
