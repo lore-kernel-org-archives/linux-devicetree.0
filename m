@@ -1,7 +1,7 @@
 From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v3 1/8] dt-bindings: ufs: Add #reset-cells for Qualcomm controllers
-Date: Tue,  5 Feb 2019 10:58:55 -0800
-Message-ID: <20190205185902.106085-2-evgreen@chromium.org>
+Subject: [PATCH v3 2/8] dt-bindings: phy-qcom-qmp: Add UFS PHY reset
+Date: Tue,  5 Feb 2019 10:58:56 -0800
+Message-ID: <20190205185902.106085-3-evgreen@chromium.org>
 References: <20190205185902.106085-1-evgreen@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,46 +9,63 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190205185902.106085-1-evgreen@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, liwei <liwei213@huawei.com>, linux-kernel@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable Qualcomm UFS controllers to expose the PHY reset via a reset
-controller.
+Add a required reset to the SDM845 UFS phy to express the PHY reset
+bit inside the UFS controller register space. Before this change, this
+reset was not expressed in the DT, and the driver utilized two different
+callbacks (phy_init and phy_poweron) to implement a two-phase
+initialization procedure that involved deasserting this reset between
+init and poweron. This abused the two callbacks and diluted their
+purpose.
+
+That scheme does not work as regulators cannot be turned off in
+phy_poweroff because they were turned on in init, rather than poweron.
+The net result is that regulators are left on in suspend that shouldn't
+be.
+
+This new scheme gives the UFS reset to the PHY, so that it can fully
+initialize itself in a single callback. We can then turn regulators on
+during poweron and off during poweroff.
 
 Signed-off-by: Evan Green <evgreen@chromium.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
 ---
-Fixing up this aspect of it made me notice that this patch [1]
-hasn't landed yet. It really ought to.
-
-[1] https://lore.kernel.org/lkml/20181012213926.253765-1-dianders@chromium.org/T/#u
+I realize I'm not supposed to add a required property after the fact,
+but given that the UFS DT nodes that would use this binding are not
+yet upstream (and this would be the first), I was hoping to squeak by.
 
 Changes in v3: None
 Changes in v2: None
 
- Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index 8cf59452c675..e2460b666ae4 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -47,6 +47,8 @@ Optional properties:
- -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
- 			  Note that it is assume same number of lanes is used both
- 			  directions at once. If not specified, default is 2 lanes per direction.
-+- #reset-cells		: Must be <1> for Qualcomm UFS controllers that expose
-+			  PHY reset from the UFS controller.
- - resets            : reset node register
- - reset-names       : describe reset node register, the "rst" corresponds to reset the whole UFS IP.
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index 4ff26dbf4310..49b8a5eed3cd 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -56,7 +56,8 @@ Required properties:
+ 	   one for each entry in reset-names.
+  - reset-names: "phy" for reset of phy block,
+ 		"common" for phy common block reset,
+-		"cfg" for phy's ahb cfg block reset.
++		"cfg" for phy's ahb cfg block reset,
++		"ufsphy" for the PHY reset in the UFS controller.
  
-@@ -76,4 +78,5 @@ Example:
- 		reset-names = "rst";
- 		phys = <&ufsphy1>;
- 		phy-names = "ufsphy";
-+		#reset-cells = <1>;
- 	};
+ 		For "qcom,ipq8074-qmp-pcie-phy" must contain:
+ 			"phy", "common".
+@@ -70,7 +71,8 @@ Required properties:
+ 			"phy", "common".
+ 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+ 			"phy", "common".
+-		For "qcom,sdm845-qmp-ufs-phy": no resets are listed.
++		For "qcom,sdm845-qmp-ufs-phy": must contain:
++			"ufsphy".
+ 
+  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
+  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
 -- 
 2.20.1
