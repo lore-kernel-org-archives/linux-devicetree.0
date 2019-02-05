@@ -1,74 +1,88 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv3 1/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy reset warning
-Date: Wed, 6 Feb 2019 01:23:45 +0530
-Message-ID: <CANAwSgT_q6zDVC8UVz+hrzA5Hn34eT_k-ZGB2LTO3dauT45T7g@mail.gmail.com>
-References: <20190129102521.4141-1-linux.amoon@gmail.com> <20190129102521.4141-2-linux.amoon@gmail.com>
- <CAFBinCDj=Y9HWEhJYMjo9FviAosxpHW5d61CceZ7HPV4ObZ79Q@mail.gmail.com>
- <CANAwSgSnR-DWffg3vKStuXQXahLf8ONssxr4+byL=PSr5JR=xA@mail.gmail.com> <CAFBinCBjF5iOkUjhxSGXpQa7Nc1=bWAzA=XjrfXRYxSPZO15nQ@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 2/4] pwm: stm32-lp: Add power management support
+Date: Tue, 5 Feb 2019 21:47:32 +0100
+Message-ID: <20190205204732.zrbhgyxnvjbwfyw4@pengutronix.de>
+References: <1549370429-19116-1-git-send-email-fabrice.gasnier@st.com>
+ <1549370429-19116-3-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCBjF5iOkUjhxSGXpQa7Nc1=bWAzA=XjrfXRYxSPZO15nQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1549370429-19116-3-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: jic23@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vilhelm.gray@gmail.com, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-hi Martin,
+Hello,
 
-On Tue, 5 Feb 2019 at 02:19, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Anand,
->
-> On Mon, Feb 4, 2019 at 9:04 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> [...]
-> > > > @@ -36,6 +43,8 @@
-> > > >                 regulator-min-microvolt = <5000000>;
-> > > >                 regulator-max-microvolt = <5000000>;
-> > > >
-> > > > +               vin-supply = <&p5v0>;
-> > > did you find out why this patch fixes the USB_OTG_PWR regulator?
-> > > based on just reading the patch I can't find an explanation myself
-> > >
-> >
-> > As per the device tree binding we need this setting to enable power input source
-> > [0] Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-> >
-> > *I have observed few more place where this setting is missing*
-> OK, I understand that we should describe the hierarchy of the regulators
->
-> > > have you tested without this patch to rule out that you hit some bug
-> > > in the regulator framework back when you wrote the patch?
-> > > (I don't have an Odroid-C2 so I can't test this myself).
-> > >
-> >
-> > Yes I have tested this patch.Some device like usb camera and usb hard drive
-> > when connected to usb port will generate warning message.
-> > which shows us that not enough power is being set to the port.
-> I don't understand why adding "p5v0" as parent of "usb_otg_pwr"
-> changes the output of "usb_otg_pwr":
-> - "p5v0" is a fixed regulator which cannot be controlled at all (apart
-> from removing power from it)
-> - "usb_otg_pwr" does not have any current limits set inside the .dts
-> - "usb_otg_pwr" has the same fixed voltage as the new "p5v0" regulator
->
-> what are your steps-to-reproduce for your original issue ("reset
-> high-speed USB device number 3 using dwc2")?
->
+On Tue, Feb 05, 2019 at 01:40:27PM +0100, Fabrice Gasnier wrote:
+> Add suspend/resume PM sleep ops. When going to low power, disable
+> active PWM channel. Active PWM channel is resumed, by calling
+> pwm_apply_state(). This is inspired by Thierry's comment in [1].
+> Don't touch inactive channels, as it may be used by other LPTimer MFD
+> child driver.
+> [1]https://lkml.org/lkml/2017/12/5/175
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  drivers/pwm/pwm-stm32-lp.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+> index 0059b24c..0c40d48 100644
+> --- a/drivers/pwm/pwm-stm32-lp.c
+> +++ b/drivers/pwm/pwm-stm32-lp.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/mfd/stm32-lptimer.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+>  
+> @@ -20,6 +21,8 @@ struct stm32_pwm_lp {
+>  	struct pwm_chip chip;
+>  	struct clk *clk;
+>  	struct regmap *regmap;
+> +	struct pwm_state suspend;
+> +	bool suspended;
+>  };
+>  
+>  static inline struct stm32_pwm_lp *to_stm32_pwm_lp(struct pwm_chip *chip)
+> @@ -223,6 +226,40 @@ static int stm32_pwm_lp_remove(struct platform_device *pdev)
+>  	return pwmchip_remove(&priv->chip);
+>  }
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +static int stm32_pwm_lp_suspend(struct device *dev)
+> +{
+> +	struct stm32_pwm_lp *priv = dev_get_drvdata(dev);
+> +
+> +	pwm_get_state(&priv->chip.pwms[0], &priv->suspend);
+> +	priv->suspended = priv->suspend.enabled;
+> +
+> +	/* safe to call pwm_disable() for already disabled pwm */
+> +	pwm_disable(&priv->chip.pwms[0]);
+> +
+> +	return pinctrl_pm_select_sleep_state(dev);
 
-I have tried to reproduce this but some how I cannot get the logs
-I might have enable some more debug options to reproduce but currently
-it's lost.
-because of over flashing of the operating system on sdcards.
+IMHO a PWM should not stop if the PWM user didn't call pwm_disable() (or
+pwm_apply_state() with .enabled = false).
 
-But definitely this fix the power issue needed to get usb-storage
-device to work on Odroid c1/c2 boards.
+I don't understand all the PM details, but I think there is no defined
+order in which devices are signalled to suspend. If so the PWM might be
+stopped before its consumer. Then the PWM changes state without the
+consumer being aware of that.
 
->
-> Regards
-> Martin
+I understand Thierry's position in the link you provided in the commit
+log consistant with my position here.
 
-Best Regards
+Best regards
+Uwe
 
--Anand
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
