@@ -1,47 +1,70 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v1 1/4] clk: qcom: smd: Add XO clock for MSM8998
-Date: Tue, 5 Feb 2019 15:15:16 -0700
-Message-ID: <6e62a49a-fdb1-a087-fe83-e86aed969ae7@codeaurora.org>
-References: <1548866102-30224-1-git-send-email-jhugo@codeaurora.org>
- <1548866144-30265-1-git-send-email-jhugo@codeaurora.org>
- <154940408967.169292.15276398799323074789@swboyd.mtv.corp.google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v1 2/4] dt-bindings: clock: Add support for the MSM8998 mmcc
+Date: Tue, 05 Feb 2019 14:16:02 -0800
+Message-ID: <154940496255.169292.11279175475668034167@swboyd.mtv.corp.google.com>
+References: <1548866102-30224-1-git-send-email-jhugo@codeaurora.org> <1548866159-30304-1-git-send-email-jhugo@codeaurora.org> <154940414347.169292.9150834270087697417@swboyd.mtv.corp.google.com> <ba5d7855-9dd2-5a99-ae8c-a7fce125ca25@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154940408967.169292.15276398799323074789@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <ba5d7855-9dd2-5a99-ae8c-a7fce125ca25@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, bjorn.andersson@linaro.org, mturquette@baylibre.com
-Cc: marc.w.gonzalez@free.fr, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jeffrey Hugo <jhugo@codeaurora.org>, bjorn.andersson@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
+Cc: marc.w.gonzalez@free.fr, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/5/2019 3:01 PM, Stephen Boyd wrote:
-> Quoting Jeffrey Hugo (2019-01-30 08:35:44)
->> The XO clock generally feeds into other clock controllers as the parent
->> for a lot of clock generators.
->>
->> Fixes: 6131dc81211c (clk: qcom: smd: Add support for MSM8998 rpm clocks)
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> 
-> We've historically left out the XO clk because it causes problems where
-> the XO vote goes away during late init because nobody references it from
-> the rest of the clk tree and also because RPM defers probe of the system
-> and then the console blows up when it gets a clk that can't change rate.
-> See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
-> clocks") for some more info on why we removed all the workarounds and
-> stuff around here too.
-> 
-> So are you sure this is OK to do?
->   
-> 
+Quoting Jeffrey Hugo (2019-02-05 14:08:43)
+> On 2/5/2019 3:02 PM, Stephen Boyd wrote:
+> > Quoting Jeffrey Hugo (2019-01-30 08:35:59)
+> >> Document the multimedia clock controller found on MSM8998
+> >>
+> >> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> >> ---
+> >>   Documentation/devicetree/bindings/clock/qcom,mmcc.txt | 7 +++++++
+> >>   1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/D=
+ocumentation/devicetree/bindings/clock/qcom,mmcc.txt
+> >> index 8b0f784..ae85bca 100644
+> >> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+> >> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+> >> @@ -10,11 +10,18 @@ Required properties :
+> >>                          "qcom,mmcc-msm8960"
+> >>                          "qcom,mmcc-msm8974"
+> >>                          "qcom,mmcc-msm8996"
+> >> +                       "qcom,mmcc-msm8998"
+> >>  =20
+> >>   - reg : shall contain base register location and length
+> >>   - #clock-cells : shall contain 1
+> >>   - #reset-cells : shall contain 1
+> >>  =20
+> >> +For MSM8998 only:
+> >> +       - clocks: a list of phandles and clock-specifier pairs,
+> >> +                 one for each entry in clock-names.
+> >> +       - clock-names: "xo" for the xo clock,
+> >> +                      "gpll0" for the global pll 0 clock.
+> >=20
+> > Wouldn't the DSI plls also be listed here? And anything else that is
+> > external to this clock controller?
+> >=20
+>=20
+> We can't get the DSI plls from DT as far as I am aware (upstream).  That =
 
-So, I've got pretty much everything as modules, and I haven't seen any 
-issues.  However let me take a look at the commit you point out and see.
+> is why I mentioned in the cover letter we need to rely on the global=20
+> namespace.
 
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Why not? Because the DSI PLL isn't a clk provider? Or it doesn't have
+#clock-cells? Please try to use the DSI PLLs from DT or at least specify
+them in the binding as optional clocks that may not matter if DSI is not
+enabled for example.
+
+>=20
+> Also, the DSI plls, etc present a chicken and egg situation, as the plls =
+
+> require mmcc, and mmcc requires the plls.  I forsee an unsolvable=20
+> EPROBE_DEFER issue.
+>=20
+
+We've "solved" that problem with orphan clks and the clk parent rewrite
+series. Maybe you can try it out to help flush out any bugs lurking
+there.
