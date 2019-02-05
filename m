@@ -1,95 +1,43 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 4/4] memory: jz4780_nemc: Add support for the JZ4740
-Date: Tue,  5 Feb 2019 00:52:40 -0300
-Message-ID: <20190205035240.31410-5-paul@crapouillou.net>
-References: <20190205035240.31410-1-paul@crapouillou.net>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 0/8 v5] k3dma patches to add support for hi3660/HiKey960
+Date: Tue, 5 Feb 2019 10:31:16 +0530
+Message-ID: <20190205050116.GV4296@vkoul-mobl>
+References: <1548361463-28372-1-git-send-email-john.stultz@linaro.org>
+ <20190204090154.GM4296@vkoul-mobl>
+ <CALAqxLVo8aukbc61YX0r3ABDWYJ_cisSb2NxN1qNyWJ_tfYCyw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205035240.31410-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <CALAqxLVo8aukbc61YX0r3ABDWYJ_cisSb2NxN1qNyWJ_tfYCyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <bbrezillon@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Dan Williams <dan.j.williams@intel.com>, Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ryan Grachek <ryan@edited.us>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the JZ4740 SoC from Ingenic.
+On 04-02-19, 11:15, John Stultz wrote:
+> On Mon, Feb 4, 2019 at 1:03 AM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > On 24-01-19, 12:24, John Stultz wrote:
+> > > This patch series is based on recent work by Tanglei Han, and
+> > > adds support for hi3660 SoCs as found on the HiKey960 board,
+> > > along with a few patches I've been carrying.
+> >
+> > Applied and fixed the minor style issues in patch 5, and retagged 3 thru
+> > 5 to dmaengine: xxx, thanks
+> 
+> My apologies for the style mistake. Your help is very much appreciated
+> here! Thanks so much again!
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
----
+No issues it was a minor one so didnt warrant a respin!
+> 
+> Just to clarify, are you planning on taking the reviewed binding
+> documents (patches 1&2) via your tree?
 
-v2: No change
+yes sorry I should have clarified since this is multi-subsystem series.
+I have applied 1 thru 5 that includes DT binding. I do that typically
+for dmaengine driver patches with Rob's ack.
 
-v3: Support the JZ4740 instead of the JZ4725B (exact same functionality
-    but JZ4740 is already fully upstream)
-
- drivers/memory/jz4780-nemc.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index 66b8b43eaeff..f3a19b9b76ac 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -44,9 +44,14 @@
- #define NEMC_NFCSR_NFCEn(n)	BIT((((n) - 1) << 1) + 1)
- #define NEMC_NFCSR_TNFEn(n)	BIT(16 + (n) - 1)
- 
-+struct jz_soc_info {
-+	u8 tas_tah_cycles_max;
-+};
-+
- struct jz4780_nemc {
- 	spinlock_t lock;
- 	struct device *dev;
-+	const struct jz_soc_info *soc_info;
- 	void __iomem *base;
- 	struct clk *clk;
- 	uint32_t clk_period;
-@@ -202,7 +207,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAS", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAS_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAS %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -214,7 +219,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAH", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAH_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAH %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -278,6 +283,10 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
- 	if (!nemc)
- 		return -ENOMEM;
- 
-+	nemc->soc_info = device_get_match_data(dev);
-+	if (!nemc->soc_info)
-+		return -EINVAL;
-+
- 	spin_lock_init(&nemc->lock);
- 	nemc->dev = dev;
- 
-@@ -370,8 +379,17 @@ static int jz4780_nemc_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct jz_soc_info jz4740_soc_info = {
-+	.tas_tah_cycles_max = 7,
-+};
-+
-+static const struct jz_soc_info jz4780_soc_info = {
-+	.tas_tah_cycles_max = 15,
-+};
-+
- static const struct of_device_id jz4780_nemc_dt_match[] = {
--	{ .compatible = "ingenic,jz4780-nemc" },
-+	{ .compatible = "ingenic,jz4740-nemc", .data = &jz4740_soc_info, },
-+	{ .compatible = "ingenic,jz4780-nemc", .data = &jz4780_soc_info, },
- 	{},
- };
- 
+Thanks
 -- 
-2.11.0
+~Vinod
