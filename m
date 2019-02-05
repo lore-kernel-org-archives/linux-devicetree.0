@@ -1,77 +1,150 @@
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: Re: [PATCHv3 12/27] PCI: mobiveil: move out the link up waiting from mobiveil_host_init
-Date: Tue, 5 Feb 2019 11:42:13 +0530
-Message-ID: <CAFZiPx3wPsO3CkLZD9SxUTkqVZR1fW4qqAtsNxcYHMNVsD82gw@mail.gmail.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com> <20190129080926.36773-13-Zhiqiang.Hou@nxp.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v5 2/2] mtd: spi-nor: cadence-quadspi: Add support for
+ Octal SPI controller
+Date: Tue, 5 Feb 2019 11:43:46 +0530
+Message-ID: <daa35c21-195e-eeb5-8aa2-cf42eff6a554@ti.com>
+References: <20190128054935.4972-1-vigneshr@ti.com>
+ <20190128054935.4972-3-vigneshr@ti.com>
+ <2efbca08-c4ab-34ea-0e34-05aed7168df8@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129080926.36773-13-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <2efbca08-c4ab-34ea-0e34-05aed7168df8@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>
+Cc: "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Hi,
 
-On Tue, Jan 29, 2019 at 1:39 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
->
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->
-> Host initial sequence does not depend on PCIe link up, so move it
-> to the place just before the enumeration.
->
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> ---
-> V3:
->  - No change
->
->  drivers/pci/controller/pcie-mobiveil.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 8eee1ab7ee24..c2848c22b466 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -582,15 +582,8 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
->  static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  {
->         u32 value, pab_ctrl, type;
-> -       int err;
->         struct resource_entry *win;
->
-> -       err = mobiveil_bringup_link(pcie);
-> -       if (err) {
-> -               dev_info(&pcie->pdev->dev, "link bring-up failed\n");
-> -               return err;
-> -       }
-> -
->         /*
->          * program Bus Master Enable Bit in Command Register in PAB Config
->          * Space
-> @@ -662,7 +655,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->         /* setup MSI hardware registers */
->         mobiveil_pcie_enable_msi(pcie);
->
-> -       return err;
-> +       return 0;
->  }
->
->  static void mobiveil_mask_intx_irq(struct irq_data *data)
-> @@ -922,6 +915,12 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->         bridge->map_irq = of_irq_parse_and_map_pci;
->         bridge->swizzle_irq = pci_common_swizzle;
->
-> +       ret = mobiveil_bringup_link(pcie);
-> +       if (ret) {
-> +               dev_info(dev, "link bring-up failed\n");
-> +               goto error;
-> +       }
-> +
->         /* setup the kernel resources for the newly added PCIe root bus */
->         ret = pci_scan_root_bus_bridge(bridge);
->         if (ret)
-> --
-> 2.17.1
->
+On 29/01/19 9:02 PM, Tudor.Ambarus@microchip.com wrote:
+> 
+> 
+> On 01/28/2019 07:49 AM, Vignesh R wrote:
+>> Cadence OSPI controller IP supports Octal IO (x8 IO lines),
+>> It also has an integrated PHY. IP register layout is very
+>> similar to existing QSPI IP except for additional bits to support Octal
+>> and Octal DDR mode. Therefore, extend current driver to support Octal
+>> mode. Only Octal SDR read (1-1-8)mode is supported for now.
+>>
+>> Tested with mt35xu512aba Octal flash on TI's AM654 EVM.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+>> ---
+>>
+>> v5:
+>> s/cqsi_base_hwcaps_mask/CQSPI_BASE_HWCAPS_MASK/g
+>> Add back cqspi_driver_platdata definition for base compatible.
+>>
+>> v4: Fix comments by Tudor on v3
+>> v3: No changes
+>> v2: Declare Octal mode capability based on compatible.
+>>
+>>  drivers/mtd/spi-nor/cadence-quadspi.c | 58 +++++++++++++++++++++------
+>>  1 file changed, 46 insertions(+), 12 deletions(-)
+[...]
+>>  
+>>  static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
+>>  {
+>> -	const struct spi_nor_hwcaps hwcaps = {
+>> -		.mask = SNOR_HWCAPS_READ |
+>> -			SNOR_HWCAPS_READ_FAST |
+>> -			SNOR_HWCAPS_READ_1_1_2 |
+>> -			SNOR_HWCAPS_READ_1_1_4 |
+>> -			SNOR_HWCAPS_PP,
+>> -	};
+>>  	struct platform_device *pdev = cqspi->pdev;
+>>  	struct device *dev = &pdev->dev;
+>> +	const struct cqspi_driver_platdata *ddata;
+>> +	struct spi_nor_hwcaps hwcaps;
+>>  	struct cqspi_flash_pdata *f_pdata;
+>>  	struct spi_nor *nor;
+>>  	struct mtd_info *mtd;
+>>  	unsigned int cs;
+>>  	int i, ret;
+>>  
+>> +	ddata = of_device_get_match_data(dev);
+>> +	if (!ddata)
+>> +		hwcaps.mask = CQSPI_BASE_HWCAPS_MASK;
+> 
+> Now that .data is set in all cqspi_dt_ids[], maybe it's better to print a
+> message and return an error here. But I guess it's a matter of taste, so not a
+> show stopper.
+
+Since, driver data is kernel internal field, I guess there is little
+help in printing out the error to the user when its missing. I prefer to
+keep this as is, as basic Quad mode is supported by all versions of the IP.
+
+Regards
+Vignesh
+
+> 
+>> +	else
+>> +		hwcaps.mask = ddata->hwcaps_mask;
+>> +
+>>  	/* Get flash device data */
+>>  	for_each_available_child_of_node(dev->of_node, np) {
+>>  		ret = of_property_read_u32(np, "reg", &cs);
+>> @@ -1310,7 +1326,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>>  	struct cqspi_st *cqspi;
+>>  	struct resource *res;
+>>  	struct resource *res_ahb;
+>> -	unsigned long data;
+>> +	const struct cqspi_driver_platdata *ddata;
+>>  	int ret;
+>>  	int irq;
+>>  
+>> @@ -1377,8 +1393,8 @@ static int cqspi_probe(struct platform_device *pdev)
+>>  	}
+>>  
+>>  	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+>> -	data  = (unsigned long)of_device_get_match_data(dev);
+>> -	if (data & CQSPI_NEEDS_WR_DELAY)
+>> +	ddata  = of_device_get_match_data(dev);
+>> +	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
+>>  		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
+>>  						   cqspi->master_ref_clk_hz);
+>>  
+>> @@ -1460,14 +1476,32 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
+>>  #define CQSPI_DEV_PM_OPS	NULL
+>>  #endif
+>>  
+>> +static const struct cqspi_driver_platdata cdns_qspi = {
+>> +	.hwcaps_mask = CQSPI_BASE_HWCAPS_MASK,
+>> +};
+>> +
+>> +static const struct cqspi_driver_platdata k2g_qspi = {
+>> +	.hwcaps_mask = CQSPI_BASE_HWCAPS_MASK,
+>> +	.quirks = CQSPI_NEEDS_WR_DELAY,
+>> +};
+>> +
+>> +static const struct cqspi_driver_platdata am654_ospi = {
+>> +	.hwcaps_mask = CQSPI_BASE_HWCAPS_MASK | SNOR_HWCAPS_READ_1_1_8,
+>> +	.quirks = CQSPI_NEEDS_WR_DELAY,
+>> +};
+>> +
+>>  static const struct of_device_id cqspi_dt_ids[] = {
+>>  	{
+>>  		.compatible = "cdns,qspi-nor",
+>> -		.data = (void *)0,
+>> +		.data = &cdns_qspi,
+>>  	},
+>>  	{
+>>  		.compatible = "ti,k2g-qspi",
+>> -		.data = (void *)CQSPI_NEEDS_WR_DELAY,
+>> +		.data = &k2g_qspi,
+>> +	},
+>> +	{
+>> +		.compatible = "ti,am654-ospi",
+>> +		.data = &am654_ospi,
+>>  	},
+>>  	{ /* end of table */ }
+>>  };
+>>
+
+-- 
+Regards
+Vignesh
