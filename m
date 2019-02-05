@@ -1,142 +1,198 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH RESEND v2 08/12] dt-bindings: add binding
- for generic eDP panel
-Date: Tue, 5 Feb 2019 09:57:37 +0100
-Message-ID: <20190205085737.GY3271@phenom.ffwll.local>
-References: <20190203185501.8958-1-anarsoul@gmail.com>
- <20190203185501.8958-9-anarsoul@gmail.com>
- <20190204074350.GC16448@ulmo>
- <CA+E=qVecudACOEXt74Kf=UA_F-uuHgEqHzKpYAq1ocMx3Sx+eQ@mail.gmail.com>
- <20190204082353.GE19087@ulmo>
- <20190204094012.GP3271@phenom.ffwll.local>
- <20190204112218.GB10412@ulmo>
- <20190204155909.GU3271@phenom.ffwll.local>
- <20190204162258.GB25476@ulmo>
-Reply-To: daniel-/w4YWyX8dFk@public.gmane.org
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v6 00/10] support ROHM BD70528 PMIC
+Date: Tue, 5 Feb 2019 11:03:56 +0200
+Message-ID: <cover.1549356505.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDYZDG4VSMIRBBNA4XRAKGQEBA6PZVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190204162258.GB25476@ulmo>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc: heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2019 at 05:22:58PM +0100, Thierry Reding wrote:
-> On Mon, Feb 04, 2019 at 04:59:09PM +0100, Daniel Vetter wrote:
-> > On Mon, Feb 04, 2019 at 12:22:18PM +0100, Thierry Reding wrote:
-> > > On Mon, Feb 04, 2019 at 10:40:12AM +0100, Daniel Vetter wrote:
-> > > > On Mon, Feb 04, 2019 at 09:23:59AM +0100, Thierry Reding wrote:
-> > > > > On Mon, Feb 04, 2019 at 12:13:55AM -0800, Vasily Khoruzhick wrote:
-> > > > > > On Sun, Feb 3, 2019 at 11:43 PM Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > > > > >
-> > > > > > > On Sun, Feb 03, 2019 at 10:54:57AM -0800, Vasily Khoruzhick wrote:
-> > > > > > > > eDP panels usually have EDID EEPROM, so there's no need to define panel
-> > > > > > > > width/height or any modes/timings in dts. But this panel still may have
-> > > > > > > > regulator and/or backlight.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > > > > > ---
-> > > > > > > >  .../devicetree/bindings/display/panel/panel-edp.txt        | 7 +++++++
-> > > > > > > >  1 file changed, 7 insertions(+)
-> > > > > > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-edp.txt
-> > > > > > >
-> > > > > > > Please don't try to make panels look more generic than they really are.
-> > > > > > > You're going to have to provide a compatible string for your device that
-> > > > > > > is more specific than "panel-edp". You claim that you don't need any
-> > > > > > > extra information that is panel specific, but you don't know that now.
-> > > > > > > We have in the past thought that we didn't need things like prepare
-> > > > > > > delay, but then we ran into situations where we did need them.
-> > > > > > >
-> > > > > > > Just do what everybody else does. Provide a specific compatible string
-> > > > > > > and match on that in the panel-simple driver. Even if you can read all
-> > > > > > > the video timings from an EDID EEPROM, you can still provide a mode in
-> > > > > > > the panel descriptor to serve as a fallback if for example the EEPROM
-> > > > > > > is faulty on some device.
-> > > > > > 
-> > > > > > Pinebook used several 768p panels that have slightly different timings
-> > > > > > and recent batch uses 1080p panel.
-> > > > > > 
-> > > > > > What panel descriptor should I use as fallback?
-> > > > > 
-> > > > > You don't use panel descriptors as fallback. The simple-panel driver
-> > > > > will bind to a panel device and use the corresponding descriptor. If
-> > > > > your device tree contains the correct information, the descriptor is
-> > > > > correct for the panel you have.
-> > > > > 
-> > > > > In other words you need to ensure that you have the correct panel in
-> > > > > device tree for the board that you're using. This is exactly the same
-> > > > > thing as for other devices.
-> > > > > 
-> > > > > One way to to this is to have separate device trees for each variant
-> > > > > of the board that you want to support. Another variant may be to have
-> > > > > a common device tree and then have some early firmware update the DTB
-> > > > > with the correct panel information.
-> > > > 
-> > > > This would defeat the point of edp, which is to standardize the mess of
-> > > > panels (at least somewhat) and avoid having to change the DT/ACPI
-> > > > tables/firmware for every board you ship. Also, we do have DP quirking
-> > > > infrastructure already (using the OUI), I think if there's something that
-> > > > doesn't work then we should quirk it there.
-> > > 
-> > > The problem is that while the attempt may have been to standardize, it
-> > > failed. It doesn't take into account any of the details such as timing
-> > > between things like powering up the display and enabling the backlight
-> > > or similar. I don't know how you'd want to "quirk" those kinds of
-> > > requirements because they are highly panel specific.
-> > 
-> > Hm right, we get these from some firmware tables (and mix them with the
-> > spec one, since some of the firmware values are nonsense). I don't even
-> > know whether we can read the timings over dp aux somehow (you can power up
-> > the panel with some pessimistic values to figure those out, and you only
-> > need dp aux to work, which is much simpler than the entire panel).
-> > 
-> > > > What does make sense though imo is if we try not to stuff the edp panel
-> > > > into panel-simple, because it's anything like a simple dumb panel. There's
-> > > > also some integration awkwardness since with this panel you need to do dp
-> > > > aux/i2c transactions to get at the information (edid alone isn't good
-> > > > enough for edp), and I'm not sure how exactly that's supposed to be
-> > > > instantiated. Maybe a special function to instantiate an edp panel, which
-> > > > takes both a DT node and the dp_aux controller would be much better,
-> > > > instead of trying to auto-match against a DT compatible string and load a
-> > > > panel driver which is almost all fake.
-> > > > 
-> > > > Or we teach dp_aux to register itself and somehow teach panel-edp how it
-> > > > can get hold of the dp_aux channel it needs.
-> > > 
-> > > We already do that. drm_dp_aux registers as an I2C adapter that can be
-> > > used to read EDID EEPROMs using I2C-over-AUX transactions. We already
-> > > use that on some platforms.
-> > > 
-> > > Also note that simple-panel already supports getting video timings from
-> > > EDID. If a DDC link is present in DT, the driver will load the modes
-> > > from EDID and use them.
-> > 
-> > Could we extend this to dp aux somehow? For edp you need the dp aux (which
-> > then gives you the ddc link automatically).
-> 
-> I suppose we could do that. We could introduce a new property that would
-> allow the panel driver to get at the struct drm_dp_aux that can access
-> the panel. I'm not sure how much that would buy us. I suppose the driver
-> could go and use that drm_dp_aux to do I2C-over-AUX and ignore any
-> ddc-bus property in device tree. A drm_dp_aux object could also be used
-> to access DPCD if that's helpful.
-> 
-> The driver proposed here doesn't need access to DPCD, so I'm not sure
-> that would immediately help.
+Patch series introducing support for ROHM BD70528 PMIC
 
-You definitely need dp aux to drive edp. That's where a lot of the really
-important stuff is stored, and it sounds like on non-broken panels even
-the timings (we've never implemented that on i915 somehow).
--Daniel
+Please note that patch 1 breaks compilation without patches 2 and 3
+Knowing the bd718x7 driver is already in upstream, it might be good
+if this change went through single tree, right?
+
+ROHM BD70528 is a programmable Power Management IC for battery
+powered 'ultra low power' systems like the pre-announced NXP
+i.MX7 ULP. This patch series introduces support for the PMIC. Please
+note that this driver only supports HW setup where PMIC is connected
+to I2C on A7 core. The other scenario is to use M4 as a power manager
+and connect pmic to M4. On such setups the A7 can only access pmic
+via M4 core using RPMSG virtio. Such setup depends on RPMSG
+implementation on M4 core and is currently not supported by this
+patch series.
+
+RTC block of the bd70528 can support 'wake' irq which wakes PMIC
+from standby state. Wake irq's can be armed to wake up system up
+to 24 hours from arming. bd70528 can also generate alarm interrupts
+which can be armed to occur years after triggering. The RTC driver
+does always arm both the waker and alarm irqs and does not utilize
+longer period of alarm interrupts. All the RTC timers are limited
+to occur within the next 24 hours. Any suggestions on more elegant
+timer support are welcome =)
+
+GPIO portion of bd70528 driver adds I/O support for driving GPIO
+pins or reading the state. The interrupt functionality is provided
+by regmap-irq. Current GPIO driver is not aware of whether the pin(s)
+are used for I/O or interrupts and it is up-to driver user to
+ensure there is no misconfiguration or "double use".
+
+The power-supply patch included in series is only poorly tested as I
+lack of hardware with real battery connected. Reset and ADC are not
+supported by this series.
+
+Changelog v6:
+Only patch 10 changed.
+- styling fixes pointed by Gunter Roeck
+- dropped RFC tag
+
+Changelog v5 (RFC):
+Only patch 7 changed.
+- Explained why lock is not needed at GPIO value getting
+- removed ampersands from function pointer assignments.
+
+Changelog v4 (RFC):
+patches 1,2,3,4,5,10 are unchanged from v3
+DT-binding fixes suggested by Rob Herring:
+- drop interrupt-parent
+- drop clock-frequency
+- change pmic node name to a generic one
+RTC:
+- enable RTC block's irqs before registering rtc
+GPIO fixes after initial testing:
+- fix getting GPIO value when direction is output
+POWER:
+- Add ASCII art intended to clarify the charger HW state machine
+
+Changelog v3 (RFC):
+patches 1,2,3,4,5,6,7,8 and 10 are unchanged from v2
+RTC fixups suggested by Guenter Roeck:
+- create bd70528_set_time_locked function in order to simplify
+  error handling and to make mutex lock/unlock path more obvious
+- don't ignore errors on bd70528_set_time_locked
+- simplify bd70528_read_alarm enabled condition setting
+- add __packed to structs where members are mapped to HW registers
+- remove unnecessary brackets from enable condition in set_wake
+RTC: fixups suggested by Alessandro Belloni
+- don't use deprecated devm_rtc_device_register
+- add alarm_irq_enable callback
+- add range_min and range_max
+WDT:
+- add regmap and mutex pointers to WDT data so that they can be accessed
+  without dereferencing the parent data
+- remove parent data pointer from WDT data
+- embed struct watchdog_device into WDT data in order to avoid double
+  allocation.
+GPIO:
+- remove unused header as pointed by Linus Walleij
+POWER:
+- do not copy the whole MFD data (especially the mutex to avoid
+  all possibilities of accidentally using the copy of a mutex)
+
+Changelog v2 (RFC): Mainly feedback from Guenter Roeck:
+- patches 1, 2, 3, 4, 5, 9 are unchanged.
+- mfd: own mutex for each bd70528 instance - embed in struct bd70528
+- watchdog: do not copy parent device data
+- watchdog: fix deadlock caused by double locked mutex
+- watchdog: set initial timeouts and WDT parent information
+- watchdog: remove unnecessary ping function from ops
+- watchdog: and the comment regarding it
+- watchdog: allocate watchdog struct in order to allow multiple WDG
+  instances
+- rtc: bd70528 fix the order of mutex unlock and re-enabling RTC based
+  timers
+- rtc: fix the irq mask register address
+- power: fix the irq mask register address
+- regulator/regmap-irq: Drop the patches 1, 8 and 9 from original series
+  as those were already applied by Mark 
+
+Patch 1:
+	split the bd718x7.h to generic and chip specific portions.
+	(breaks compilation without patch 2 and 3)
+Patch 2:
+	adapt bd718x7.h changes to bd718x7 regulator driver
+Patch 3:
+	adapt bd718x7.h changes to bd718x7 clk driver
+Patch 4:
+	add MFD core support for bd70528
+Patch 5:
+	support bd70528 clk using bd718x7 clk driver
+Patch 6:
+	document DT bindings for BD70528
+Patch 7:
+	support BD70528 GPIO block
+Patch 8:
+	support BD70528 RTC
+Patch 9:
+	support BD70528 battery charger
+Patch 10:
+	support BD70528 watchdog
+
+This patch series is based on Mark's regulator/for-next branch
+
+---
+
+
+
+Matti Vaittinen (10):
+  mfd: bd718x7.h split to ROHM common and bd718x7 specific parts
+  regulator: bd718x7 use chip specific and generic data structs
+  clk: bd718x7: use chip specific and generic data structs
+  mfd: bd70528: Support ROHM bd70528 PMIC - core
+  clk: bd718x7: Support ROHM BD70528 clk block
+  devicetree: bindings: Document first ROHM BD70528 bindings
+  gpio: Initial support for ROHM bd70528 GPIO block
+  rtc: bd70528: Initial support for ROHM bd70528 RTC
+  power: supply: Initial support for ROHM BD70528 PMIC charger block
+  watchdog: bd70528: Initial support for ROHM BD70528 watchdog block
+
+ .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 102 +++
+ drivers/clk/Kconfig                                |   6 +-
+ drivers/clk/clk-bd718x7.c                          |  25 +-
+ drivers/gpio/Kconfig                               |  11 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-bd70528.c                        | 232 +++++++
+ drivers/mfd/Kconfig                                |  17 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/rohm-bd70528.c                         | 410 ++++++++++++
+ drivers/mfd/rohm-bd718x7.c                         |  23 +-
+ drivers/power/supply/Kconfig                       |   9 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/bd70528-charger.c             | 738 +++++++++++++++++++++
+ drivers/regulator/bd718x7-regulator.c              |  22 +-
+ drivers/rtc/Kconfig                                |   8 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-bd70528.c                          | 500 ++++++++++++++
+ drivers/watchdog/Kconfig                           |  12 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/bd70528_wdt.c                     | 190 ++++++
+ include/linux/mfd/rohm-bd70528.h                   | 392 +++++++++++
+ include/linux/mfd/rohm-bd718x7.h                   |  22 +-
+ include/linux/mfd/rohm-generic.h                   |  20 +
+ 23 files changed, 2699 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+ create mode 100644 drivers/gpio/gpio-bd70528.c
+ create mode 100644 drivers/mfd/rohm-bd70528.c
+ create mode 100644 drivers/power/supply/bd70528-charger.c
+ create mode 100644 drivers/rtc/rtc-bd70528.c
+ create mode 100644 drivers/watchdog/bd70528_wdt.c
+ create mode 100644 include/linux/mfd/rohm-bd70528.h
+ create mode 100644 include/linux/mfd/rohm-generic.h
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.14.3
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
