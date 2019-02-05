@@ -1,36 +1,59 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v2 02/12] clocksource: davinci-timer: new driver
-Date: Mon, 4 Feb 2019 20:37:47 -0600
-Message-ID: <e47ad813-6469-85c2-e493-af075cd084b4@lechnology.com>
-References: <20190204171757.32073-1-brgl@bgdev.pl>
- <20190204171757.32073-3-brgl@bgdev.pl>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/6] dt-bindings: sound: Document jz4740-codec
+	bindings
+Date: Tue,  5 Feb 2019 00:11:03 -0300
+Message-ID: <20190205031108.26171-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190204171757.32073-3-brgl@bgdev.pl>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/4/19 11:17 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Currently the clocksource and clockevent support for davinci platforms
-> lives in mach-davinci. It hard-codes many things, used global variables,
+Add documentation about how to probe the jz4740-codec driver from
+devicetree.
 
-s/used/uses/
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ .../bindings/sound/ingenic,jz4740-codec.txt          | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
 
-> implements functionalities unused by any platform and has code fragments
-> scattered across many (often unrelated) files.
-> 
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
+new file mode 100644
+index 000000000000..1ffcade87e7b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
+@@ -0,0 +1,20 @@
++Ingenic JZ4740 codec controller
++
++Required properties:
++- compatible : "ingenic,jz4740-codec"
++- reg : codec registers location and length
++- clocks : phandle to the AIC clock.
++- clock-names: must be set to "aic".
++- #sound-dai-cells: Must be set to 0.
++
++Example:
++
++codec: audio-codec@10020080 {
++	compatible = "ingenic,jz4740-codec";
++	reg = <0x10020080 0x8>;
++
++	#sound-dai-cells = <0>;
++
++	clocks = <&cgu JZ4740_CLK_AIC>;
++	clock-names = "aic";
++};
+-- 
+2.11.0
