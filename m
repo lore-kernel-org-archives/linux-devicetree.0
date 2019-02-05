@@ -1,78 +1,45 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
-Date: Tue, 5 Feb 2019 08:41:32 -0800
-Message-ID: <20190205164132.GT5720@atomide.com>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
- <1549290167-876-2-git-send-email-rogerq@ti.com>
- <20190204163312.GI5720@atomide.com>
- <5C5959DB.2090608@ti.com>
+From: Piotr Sroka <piotrs@cadence.com>
+Subject: Re: [PATCH 2/2] dt-bindings: nand: Add Cadence NAND controller driver
+Date: Tue, 5 Feb 2019 17:08:14 +0000
+Message-ID: <20190205170812.GA18748@global.cadence.com>
+References: <20190129160337.24350-1-piotrs@cadence.com>
+ <20190129161040.20299-1-piotrs@cadence.com>
+ <20190129182100.2fcb4e9f@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5C5959DB.2090608@ti.com>
+In-Reply-To: <20190129182100.2fcb4e9f@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: s-anna@ti.com, ohad@wizery.com, bjorn.andersson@linaro.org, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+To: Boris Brezillon <bbrezillon@kernel.org>
+Cc: linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, BrianNorris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [190205 09:40]:
-> On 04/02/19 18:33, Tony Lindgren wrote:
-> > 
-> > 	shrdram2: memory@10000 {
-> > 		device_type = "memory";
-> > 		reg = <0x10000 0x3000>;
-> > 	};
-> 
-> Shared RAM is not so straight forward. Both PRU firmwares and both application drivers
-> might need to read/write here. The area split is decided by firmware design and there
-> is no hardware protection to prevent from stomping on each others toes.
-> 
-> We need a carveout based memory allocator at least I think that can do a
-> allocate(base_offset, size); into shared RAM.
-> 
-> This could be used by pru_rproc driver at firmware load time and by application drivers
-> at initialization time.
-> 
-> Thoughts?
+The 01/29/2019 18:21, Boris Brezillon wrote:
+  
+>> +Optional properties:
+>> +Driver calculates controller timings base on NAND flash memory timings and
+>> +the following delays in picoseconds.
+>> +  - cdns,if-skew : Skew value of the output signals of the NAND Flash interface
+>> +  - cdns,nand2-delay : Delay value of one NAND2 gate from which
+>> +    the delay element is build
+>> +  - cdns,board-delay : Estimated Board delay. The value includes the total
+>> +    round trip delay for the signals and is used for deciding on values
+>> +    associated with data read capture. The example formula for SDR mode is
+>> +    the following:
+>> +    board_delay = RE#PAD_delay + PCB trace to device + PCB trace from device
+>> +    + DQ PAD delay
+>
+>The unit of those props is not defined, and if possible I'd like to
+>avoid specifying custom timing adjustment values in the DT. Looks like
+>some of these values are SoC specific (depends on the integration of
+>this IP in a SoC) and others are board specific. For SoC specific
+>values, this should be attached to the SoC specific compatible at the
+>driver level. For board-specific values, I'd prefer to have a generic
+>way to describe boards constraints.
+Moving SoC specific delays from DTS to the driver data is clear for me. I do not know how to handle a board delay. Could you give me an example how it may be implemented? Where this board related stuff could be placed?
 
-That sounds sane to me :)
-
-> > If the ti,pruss-gp-mux-sel and ti,pru-interrupt-map are
-> > firmware configuration options, maybe leave them out of
-> > the dts completely and make the app-node optional.
-> 
-> Yes the app-node is optional. I will mention it.
-> 
-> No, ti,pruss-gp-mux-sel and ti,pru-interrupt-map are not firmware options.
-> But these settings are application/firmware specific.
-> 
-> ti,pru-interrupt-map specifies the configuration to be used for the INTC interrupt
-> controller.
-
-OK. So just to see if we have a standard solution available already..
-It sounds a bit similar to what we're doing with omap-wakeupgen.c
-and stacked interrupts? I wonder if something similar might help
-here?
-
-> ti,pruss-gp-mux-sel is used to configure this register.
-> "Table 30-20. PRUSS_GPCFG0" in http://www.tij.co.jp/jp/lit/ug/spruhz7h/spruhz7h.pdf
-> "29:26 PR1_PRU0_GP_MUX_SEL"
-> 
-> It configures how the pins from the PRUSS module are routed internally
-> to the various modules.
-> 
-> see "30.2.1 PRU-ICSS I/O Interface"
-> and "Table 30-1. PRU-ICSS1 I/O Signals"
-
-Well these are external signals for PRUSS processor (although not
-necessarily external signals for the SoC). So why not handle them
-with a standard pinctlr binding with #pinctrl-cells?
-
-Sure it may not even be the Linux pinctrl framework running on the
-main SoC handling these pins, but after all you're describing
-hardware for a processor. Maybe Linus W has some comments on this?
-
-Regards,
-
-Tony
+-- 
+--
+Regards
+Piotr Sroka
