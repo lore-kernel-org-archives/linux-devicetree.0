@@ -1,136 +1,47 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v6] spi: spi-fsl-dspi: Provide support for DSPI slave mode operation (Vybryd vf610)
-Date: Tue,  5 Feb 2019 23:13:49 +0100
-Message-ID: <20190205221349.16321-1-lukma@denx.de>
-References: <20180927150709.17010-1-lukma@denx.de>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH v1 1/4] clk: qcom: smd: Add XO clock for MSM8998
+Date: Tue, 5 Feb 2019 15:15:16 -0700
+Message-ID: <6e62a49a-fdb1-a087-fe83-e86aed969ae7@codeaurora.org>
+References: <1548866102-30224-1-git-send-email-jhugo@codeaurora.org>
+ <1548866144-30265-1-git-send-email-jhugo@codeaurora.org>
+ <154940408967.169292.15276398799323074789@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927150709.17010-1-lukma@denx.de>
+In-Reply-To: <154940408967.169292.15276398799323074789@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Esben Haabendal <eha@deif.com>, =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Sascha Hauer <s.hauer@pengutronix.de>, Lukasz Majewski <lukma@denx.de>
+To: Stephen Boyd <sboyd@kernel.org>, bjorn.andersson@linaro.org, mturquette@baylibre.com
+Cc: marc.w.gonzalez@free.fr, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The NXP's Vybryd vf610 can work as a SPI slave device (the CS and clock
-signals are provided by master).
+On 2/5/2019 3:01 PM, Stephen Boyd wrote:
+> Quoting Jeffrey Hugo (2019-01-30 08:35:44)
+>> The XO clock generally feeds into other clock controllers as the parent
+>> for a lot of clock generators.
+>>
+>> Fixes: 6131dc81211c (clk: qcom: smd: Add support for MSM8998 rpm clocks)
+>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> 
+> We've historically left out the XO clk because it causes problems where
+> the XO vote goes away during late init because nobody references it from
+> the rest of the clk tree and also because RPM defers probe of the system
+> and then the console blows up when it gets a clk that can't change rate.
+> See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
+> clocks") for some more info on why we removed all the workarounds and
+> stuff around here too.
+> 
+> So are you sure this is OK to do?
+>   
+> 
 
-It is possible to specify a single device to work in that mode. As we do
-use DMA for transferring data, the RX channel must be prepared for
-incoming data.
-Moreover, in slave mode we just set a subset of control fields in
-configuration registers (CTAR0, PUSHR).
+So, I've got pretty much everything as modules, and I haven't seen any 
+issues.  However let me take a look at the commit you point out and see.
 
-For testing the spidev_test program has been used.
-Test script for this patch can be found here:
-https://github.com/lmajewski/tests-spi/blob/master/tests/spi/spi_tests.sh
-
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
-Changes for v6:
-
-- Rebase to v5.0-rc4 (no code changes needed)
-- Change the patch topic from ARM: dspi: to spi: spi-fsl-dspi:
-
-Changes for v5:
-
-- Rebase to v5.0-rc1 (no code changes needed)
-
-Changes for v4:
-
-- Rebase to v4.20-rc5 (no code changes needed)
-
-Changes for v3:
-
-- Rebase to v4.20-rc2 (no code changes needed)
-
-Changes for v2:
-
-- Remove patch which adds extra NXP specific DTS property to support slave
-mode and reuse the generic one (spi-slave)
-- Remove patch which brings back the mcr_register local copy. It is not
-needed as generic SPI slave infrastructure is used.
-- Rewrite the code to use spi_controller_is_slave() helper functions
----
- drivers/spi/spi-fsl-dspi.c | 40 ++++++++++++++++++++++++++++++----------
- 1 file changed, 30 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 5e10dc5c93a5..348682be9dd5 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -233,6 +233,9 @@ static u32 dspi_pop_tx_pushr(struct fsl_dspi *dspi)
- {
- 	u16 cmd = dspi->tx_cmd, data = dspi_pop_tx(dspi);
- 
-+	if (spi_controller_is_slave(dspi->master))
-+		return data;
-+
- 	if (dspi->len > 0)
- 		cmd |= SPI_PUSHR_CMD_CONT;
- 	return cmd << 16 | data;
-@@ -329,6 +332,11 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
- 	dma_async_issue_pending(dma->chan_rx);
- 	dma_async_issue_pending(dma->chan_tx);
- 
-+	if (spi_controller_is_slave(dspi->master)) {
-+		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
-+		return 0;
-+	}
-+
- 	time_left = wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
- 					DMA_COMPLETION_TIMEOUT);
- 	if (time_left == 0) {
-@@ -798,14 +806,18 @@ static int dspi_setup(struct spi_device *spi)
- 	ns_delay_scale(&pasc, &asc, sck_cs_delay, clkrate);
- 
- 	chip->ctar_val = SPI_CTAR_CPOL(spi->mode & SPI_CPOL ? 1 : 0)
--		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0)
--		| SPI_CTAR_LSBFE(spi->mode & SPI_LSB_FIRST ? 1 : 0)
--		| SPI_CTAR_PCSSCK(pcssck)
--		| SPI_CTAR_CSSCK(cssck)
--		| SPI_CTAR_PASC(pasc)
--		| SPI_CTAR_ASC(asc)
--		| SPI_CTAR_PBR(pbr)
--		| SPI_CTAR_BR(br);
-+		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0);
-+
-+	if (!spi_controller_is_slave(dspi->master)) {
-+		chip->ctar_val |= SPI_CTAR_LSBFE(spi->mode &
-+						 SPI_LSB_FIRST ? 1 : 0)
-+			| SPI_CTAR_PCSSCK(pcssck)
-+			| SPI_CTAR_CSSCK(cssck)
-+			| SPI_CTAR_PASC(pasc)
-+			| SPI_CTAR_ASC(asc)
-+			| SPI_CTAR_PBR(pbr)
-+			| SPI_CTAR_BR(br);
-+	}
- 
- 	spi_set_ctldata(spi, chip);
- 
-@@ -970,8 +982,13 @@ static const struct regmap_config dspi_xspi_regmap_config[] = {
- 
- static void dspi_init(struct fsl_dspi *dspi)
- {
--	regmap_write(dspi->regmap, SPI_MCR, SPI_MCR_MASTER | SPI_MCR_PCSIS |
--		     (dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI : 0));
-+	unsigned int mcr = SPI_MCR_PCSIS |
-+		(dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI : 0);
-+
-+	if (!spi_controller_is_slave(dspi->master))
-+		mcr |= SPI_MCR_MASTER;
-+
-+	regmap_write(dspi->regmap, SPI_MCR, mcr);
- 	regmap_write(dspi->regmap, SPI_SR, SPI_SR_CLEAR);
- 	if (dspi->devtype_data->xspi_mode)
- 		regmap_write(dspi->regmap, SPI_CTARE(0),
-@@ -1027,6 +1044,9 @@ static int dspi_probe(struct platform_device *pdev)
- 		}
- 		master->bus_num = bus_num;
- 
-+		if (of_property_read_bool(np, "spi-slave"))
-+			master->slave = true;
-+
- 		dspi->devtype_data = of_device_get_match_data(&pdev->dev);
- 		if (!dspi->devtype_data) {
- 			dev_err(&pdev->dev, "can't get devtype_data\n");
 -- 
-2.11.0
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
