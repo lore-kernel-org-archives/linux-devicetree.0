@@ -1,56 +1,147 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 1/3] dt-bindings: imx6q-pcie: Add description of
- imx7d pcie phy
-Date: Tue, 05 Feb 2019 10:43:56 +0100
-Message-ID: <1549359836.2544.33.camel@pengutronix.de>
-References: <20190205001721.18639-1-tpiepho@impinj.com>
- <20190205001721.18639-2-tpiepho@impinj.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/3] mmc: sunxi: Filter out unsupported modes declared in
+ the device tree
+Date: Tue, 5 Feb 2019 10:51:28 +0100
+Message-ID: <20190205095128.shc73w377gkb2hyk@flea>
+References: <20190203155628.16767-1-wens@csie.org>
+ <20190203155628.16767-3-wens@csie.org>
+ <20190204093427.vg63e5xmd7u52leh@flea>
+ <CAGb2v64-3Cs_RaO4erAr96JStEUzZ7ZRDjAYYjK2QsWfxusKxQ@mail.gmail.com>
+ <20190204134110.dvo3qvnhiksqig2l@flea>
+ <CAGb2v64RAfa1zTq+A0Vjc6TPZ7K9z7qU6qNd8nfKm1U87xDcxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190205001721.18639-2-tpiepho@impinj.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Trent Piepho <tpiepho@impinj.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ep7x3z4weqysn6n6"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64RAfa1zTq+A0Vjc6TPZ7K9z7qU6qNd8nfKm1U87xDcxw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Chris Blake <chrisrblake93@gmail.com>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIGRlbiAwNS4wMi4yMDE5LCAwMDoxNyArMDAwMCBzY2hyaWViIFRyZW50IFBp
-ZXBobzoKPiBUaGVyZSBpcyBhIHNlcGFyYXRlIFBIWSBkZXZpY2Ugd2l0aCBpdHMgb3duIHJlZ2lz
-dGVycyBvbiBpbXg3ZC7CoMKgSXQncwo+IGN1cnJlbnRseSB1bnVzZWQsIGJ1dCBhIFBDSWUgZXJy
-YXR1bSBvbiBpbXg3ZCB3aWxsIHJlcXVpcmUgaXQgZm9yIHRoZQo+IHdvcmthcm91bmQuCj4gCj4g
-U2lnbmVkLW9mZi1ieTogVHJlbnQgUGllcGhvIDx0cGllcGhvQGltcGluai5jb20+CgpJJ20gZ2Vu
-ZXJhbGx5IGZpbmUgd2l0aCB0aGlzLCBidXQgcmVhbGx5IHdhbnQgdG8gc2VlIGFuIEFjayBmcm9t
-IHRoZSBEVApmb2xrcyAoQ0MnZWQpIG9uIHRoaXMuCgpBY2tlZC1ieTogTHVjYXMgU3RhY2ggPGwu
-c3RhY2hAcGVuZ3V0cm9uaXguZGU+CgpSZWdhcmRzLApMdWNhcwoKPiAtLS0KPiDCoERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZnNsLGlteDZxLXBjaWUudHh0IHwgMTEgKysr
-KysrKysrKysKPiDCoDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZnNsLGlteDZxLXBj
-aWUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9mc2wsaW14NnEt
-cGNpZS50eHQKPiBpbmRleCBkNTE0YzFmMjM2NWYuLmY0OTMzYzg5NTFiYyAxMDA2NDQKPiAtLS0g
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2ZzbCxpbXg2cS1wY2llLnR4
-dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZnNsLGlteDZx
-LXBjaWUudHh0Cj4gQEAgLTUzLDYgKzUzLDcgQEAgQWRkaXRpb25hbCByZXF1aXJlZCBwcm9wZXJ0
-aWVzIGZvciBpbXg3ZC1wY2llOgo+ID4gwqAJwqDCoMKgwqDCoMKgwqAtICJwY2llcGh5Igo+ID4g
-wqAJwqDCoMKgwqDCoMKgwqAtICJhcHBzIgo+ID4gwqAJwqDCoMKgwqDCoMKgwqAtICJ0dXJub2Zm
-Igo+ICstIGZzbCxpbXg3ZC1wY2llLXBoeTogQSBwaGFuZGxlIHRvIGFuIGZzbCxpbXg3ZC1wY2ll
-LXBoeSBub2RlLgo+IMKgCj4gwqBFeGFtcGxlOgo+IMKgCj4gQEAgLTc5LDMgKzgwLDEzIEBAIEV4
-YW1wbGU6Cj4gPiDCoAkJY2xvY2tzID0gPCZjbGtzIDE0ND4sIDwmY2xrcyAyMDY+LCA8JmNsa3Mg
-MTg5PjsKPiA+IMKgCQljbG9jay1uYW1lcyA9ICJwY2llIiwgInBjaWVfYnVzIiwgInBjaWVfcGh5
-IjsKPiA+IMKgCX07Cj4gKwo+ICsqIEZyZWVzY2FsZSBpLk1YN2QgUENJZSBQSFkKPiArCj4gK1Ro
-aXMgaXMgdGhlIFBIWSBhc3NvY2lhdGVkIHdpdGggdGhlIElNWDdkIFBDSWUgY29udHJvbGxlci7C
-oMKgSXQncyB1c2VkIGJ5IHRoZQo+ICtQQ0ktZSBjb250cm9sbGVyIHZpYSB0aGUgZnNsLGlteDdk
-LXBjaWUtcGh5IHBoYW5kbGUuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBh
-dGlibGU6Cj4gPiArCS0gImZzbCxpbXg3ZC1wY2llLXBoeSIKPiArLSByZWc6IGJhc2UgYWRkcmVz
-cyBhbmQgbGVuZ3RoIG9mIHRoZSBQQ0llIFBIWSBjb250cm9sbGVyCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+--ep7x3z4weqysn6n6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 05, 2019 at 04:42:53PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Feb 4, 2019 at 9:41 PM Maxime Ripard <maxime.ripard@bootlin.com> =
+wrote:
+> >
+> > On Mon, Feb 04, 2019 at 06:16:24PM +0800, Chen-Yu Tsai wrote:
+> > > On Mon, Feb 4, 2019 at 5:34 PM Maxime Ripard <maxime.ripard@bootlin.c=
+om> wrote:
+> > > >
+> > > > On Sun, Feb 03, 2019 at 11:56:27PM +0800, Chen-Yu Tsai wrote:
+> > > > > The MMC device tree bindings include properties used to signal va=
+rious
+> > > > > signalling speed modes. Until now the sunxi driver was accepting =
+them
+> > > > > without any further filtering, while the sunxi device trees were =
+not
+> > > > > actually using them.
+> > > > >
+> > > > > Since some of the H5 boards can not run at higher speed modes sta=
+bly,
+> > > > > we are resorting to declaring the higher speed modes per-board.
+> > > > >
+> > > > > Regardless, having boards declare modes and blindly following the=
+m,
+> > > > > even without proper support in the driver, is generally a bad thi=
+ng.
+> > > > >
+> > > > > Filter out all unsupported modes from the capabilities mask after
+> > > > > the device tree properties have been parsed.
+> > > > >
+> > > > > Cc: <stable@vger.kernel.org>
+> > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > > >
+> > > > > ---
+> > > > >
+> > > > > This should be backported to stable kernels in case people try to=
+ run
+> > > > > new device trees (that declare newly supported modes) with old ke=
+rnels.
+> > > > > ---
+> > > > >  drivers/mmc/host/sunxi-mmc.c | 16 ++++++++++++++++
+> > > > >  1 file changed, 16 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunx=
+i-mmc.c
+> > > > > index 7415af8c8ff6..a01433012db0 100644
+> > > > > --- a/drivers/mmc/host/sunxi-mmc.c
+> > > > > +++ b/drivers/mmc/host/sunxi-mmc.c
+> > > > > @@ -1415,6 +1415,22 @@ static int sunxi_mmc_probe(struct platform=
+_device *pdev)
+> > > > >       if (ret)
+> > > > >               goto error_free_dma;
+> > > > >
+> > > > > +     /*
+> > > > > +      * If we don't support delay chains in the SoC, we can't us=
+e any
+> > > > > +      * of the DDR speed modes. Mask them out in case the device
+> > > > > +      * tree specifies the properties for them, which gets added=
+ to
+> > > > > +      * the caps by mmc_of_parse() above.
+> > > > > +      */
+> > > > > +     if (!(host->cfg->clk_delays || host->use_new_timings))
+> > > > > +             mmc->caps &=3D ~(MMC_CAP_3_3V_DDR | MMC_CAP_1_8V_DD=
+R |
+> > > > > +                            MMC_CAP_1_2V_DDR);
+> > > > > +
+> > > > > +     /* TODO: UHS modes untested due to lack of supporting board=
+s */
+> > > > > +     mmc->caps &=3D ~MMC_CAP_UHS;
+> > > >
+> > > > I've tested up to SDR104 and it works on the A64 at least
+> > >
+> > > That's good to know. What board was this on? I had given up hope wait=
+ing
+> > > for a vendor to produce a board that could do proper voltage switchin=
+g for
+> > > SD cards.
+> >
+> > On a Sootech SoM, that had an HS400 eMMC and an SDR104 Marvell WiFi
+> > chip. I don't have that board anymore, and the website seems down now
+> > though :/
+>=20
+> Bummer. So no commercially available board still. :/
+>=20
+> > > > > +     /* TODO: This driver doesn't support HS200 and HS400 modes =
+yet */
+> > > > > +     mmc->caps2 &=3D ~(MMC_CAP2_HS200 | MMC_CAP2_HS400);
+> > > >
+> > > > And HS200 works too.
+> > >
+> > > OK. I thought there was some special magic required in the driver. Ma=
+ybe
+> > > that was for HS400 only? Again, what board was this on?
+> >
+> > Yeah, that was for HS400 only
+>=20
+> OK. So would unblocking UHS and HS200, but not enabling them by default,
+> which is essentially the original behavior, work for you?
+
+Yep, that's perfect
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ep7x3z4weqysn6n6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXFlcoAAKCRDj7w1vZxhR
+xeBTAQDTD1TeSPYHWCfSOpA49MiOgyqfqfJf9WsbGmRTM/kV9AD+LTPEbrIm1YC1
+p84q4fNuLhLgueCaZ63WpNbbl/K9Egg=
+=CT8r
+-----END PGP SIGNATURE-----
+
+--ep7x3z4weqysn6n6--
