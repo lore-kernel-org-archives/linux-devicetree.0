@@ -1,67 +1,53 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 3/3] arm64: dts: ti: k3-am654-base-board: enable USB1
-Date: Tue, 5 Feb 2019 14:45:22 +0200
-Message-ID: <1549370722-414-4-git-send-email-rogerq@ti.com>
-References: <1549370722-414-1-git-send-email-rogerq@ti.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 1/6] dt-bindings: i2c: Add Mediatek MT7629 i2c binding
+Date: Tue, 5 Feb 2019 14:10:19 +0100
+Message-ID: <20190205131019.GC12401@kunai>
+References: <1548057574-8061-1-git-send-email-qii.wang@mediatek.com>
+ <1548057574-8061-2-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Y5rl02BVI9TCfPar"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549370722-414-1-git-send-email-rogerq@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1548057574-8061-2-git-send-email-qii.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: t-kristo@ti.com
-Cc: nm@ti.com, nsekhar@ti.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: qii wang <qii.wang@mediatek.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, ryder.lee@mediatek.com, xinping.qian@mediatek.com, liguo.zhang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add pinmux for USB1 and enable it as a dual role port.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 28 ++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+--Y5rl02BVI9TCfPar
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index 11e9a2a..a70e904 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -86,6 +86,12 @@
- 			AM65X_IOPAD(0x01b0, PIN_INPUT, 0) /* (C25) MMC0_DS */
- 		>;
- 	};
-+
-+	usb1_pins_default: usb1_pins_default {
-+		pinctrl-single,pins = <
-+			AM65X_IOPAD(0x02c0, PIN_OUTPUT, 0) /* (AC8) USB1_DRVVBUS */
-+		>;
-+	};
- };
- 
- &main_pmx1 {
-@@ -188,3 +194,25 @@
- 	non-removable;
- 	ti,driver-strength-ohm = <50>;
- };
-+
-+&dwc3_1 {
-+	status = "okay";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb1_pins_default>;
-+	dr_mode = "otg";
-+};
-+
-+&dwc3_0 {
-+	status = "disabled";
-+};
-+
-+&usb0_phy {
-+	status = "disabled";
-+};
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+On Mon, Jan 21, 2019 at 03:59:29PM +0800, qii wang wrote:
+> Add MT7629 i2c binding to binding file.
+>=20
+> Signed-off-by: qii wang <qii.wang@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Applied to for-next, thanks!
+
+
+--Y5rl02BVI9TCfPar
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlxZizsACgkQFA3kzBSg
+KbaOBhAAn5gQBSiH1zVHGMVVEsoQ/iM3aRvgJzIe+Kw2ewEd7DgSUl2MfFHDeKO/
+GAnml9dH6/28H68FMncaHXzgCasUBM2Kuigbdbhhrhe3pbojdmH4+bkWCYvg5wU8
+yC1S85m8C2T4xuvYm7ZvM4A+ieo98xyki7rRIkAwdDRppGo7AUQav1ZH5GhWj33o
+DeFJD9gKK9AYNN/5qOnYIpA8AmpFSRJ7t2cTNZ6Ykyo1nSwHs/DebJ46U10uoOwI
+SKReqsDzPj3b938asqh8EPVgcaRZTjQhY/BnL0I8kHL4jvBZLICNNsoJOneRnuMO
+mYOjOdI9rps9vv54HddOji5BtLmqEiB8Dj/4bmo7SPvdJyJJoCOCA3DOaS0VPK/N
+bS72M3axP3nGa1g8WxlQqv4qGBBf1Xx4tmzpMQ0tQqDPx33Vpmvfr0Ka+ZHqYfte
+FF1fiO79hKG48G1itlJE3iXV8AwPlD4YiBBOYxk0gQu/alWDaF4bVKeKI8hFDkFt
+w2V3/a+5/EOMWHHzGePqiZdzifw1ugK6cTK4Q2Q6obFfkSayp9kfUjTYal08OM6Z
+cyFdtGEuhefi774hr3QfR2oFcBKUQiz1TSk2zn0wE3g16UdOi3XiBEecQCIOPrsb
+XLB80WMrseoVQiCUCqDqKqU4zyEeynKHHqXPO5OACATXNpHIiAM=
+=LkO+
+-----END PGP SIGNATURE-----
+
+--Y5rl02BVI9TCfPar--
