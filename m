@@ -1,54 +1,110 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v3 4/8] arm64: dts: sdm845: Add UFS PHY reset
-Date: Tue,  5 Feb 2019 10:58:58 -0800
-Message-ID: <20190205185902.106085-5-evgreen@chromium.org>
-References: <20190205185902.106085-1-evgreen@chromium.org>
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: apq8016-sbc: Standardize LED labels
+Date: Tue, 5 Feb 2019 20:00:43 +0100
+Message-ID: <CAP71WjzWiCg-NXDnh58N-5O7kvNj+DDndSK04DeoPxFE2L8W0g@mail.gmail.com>
+References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
+ <20181029094245.7886-8-manivannan.sadhasivam@linaro.org> <20181221023554.GB3233@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205185902.106085-1-evgreen@chromium.org>
+In-Reply-To: <20181221023554.GB3233@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Koen Kooi <koen.kooi@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Wire up the reset controller in the Qcom UFS controller for the PHY.
-This will be used to toggle PHY reset during initialization of the PHY.
+Hey Mani,
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
-This commit is based atop the series at [1]. Patches 1 and 2 of that
-series have landed, but 3, 4, and 5 are still outstanding.
+thanks for sending this out, it should have been just like that in the
+first place ;)
 
-[1] https://lore.kernel.org/lkml/20181210192826.241350-1-evgreen@chromium.org/
+On Fri, Dec 21, 2018 at 3:36 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Mon, Oct 29, 2018 at 03:12:45PM +0530, Manivannan Sadhasivam wrote:
+> > For all 96Boards, the following standard is used for onboard LEDs.
+> >
+> > green:user1  default-trigger: heartbeat
+> > green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
+> > green:user3  default-trigger: mmc1 (SD-card)
+> > green:user4  default-trigger: none, panic-indicator
+> > yellow:wlan  default-trigger: phy0tx
+> > blue:bt      default-trigger: hci0-power
+> >
+> > So lets adopt the same for APQ8016 SBC (Dragonboard410c), which is
+> > one of the 96Boards CE platform.
+> >
+>
+> Hello,
+>
+> Any update on this patch?
 
-Changes in v3: None
-Changes in v2: None
+Reviewed-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index b29332b265d9..029ab66405cf 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -990,6 +990,7 @@
- 			phy-names = "ufsphy";
- 			lanes-per-direction = <2>;
- 			power-domains = <&gcc UFS_PHY_GDSC>;
-+			#reset-cells = <1>;
- 
- 			clock-names =
- 				"core_clk",
-@@ -1033,6 +1034,8 @@
- 			clocks = <&gcc GCC_UFS_MEM_CLKREF_CLK>,
- 				 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
- 
-+			resets = <&ufs_mem_hc 0>;
-+			reset-names = "ufsphy";
- 			status = "disabled";
- 
- 			ufs_mem_phy_lanes: lanes@1d87400 {
--- 
-2.20.1
+>
+> Regards,
+> Mani
+>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> > index 46feedf7c989..35f95154316b 100644
+> > --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> > @@ -300,28 +300,28 @@
+> >                       compatible = "gpio-leds";
+> >
+> >                       led@1 {
+> > -                             label = "apq8016-sbc:green:user1";
+> > +                             label = "green:user1";
+> >                               gpios = <&msmgpio 21 GPIO_ACTIVE_HIGH>;
+> >                               linux,default-trigger = "heartbeat";
+> >                               default-state = "off";
+> >                       };
+> >
+> >                       led@2 {
+> > -                             label = "apq8016-sbc:green:user2";
+> > +                             label = "green:user2";
+> >                               gpios = <&msmgpio 120 GPIO_ACTIVE_HIGH>;
+> >                               linux,default-trigger = "mmc0";
+> >                               default-state = "off";
+> >                       };
+> >
+> >                       led@3 {
+> > -                             label = "apq8016-sbc:green:user3";
+> > +                             label = "green:user3";
+> >                               gpios = <&pm8916_gpios 1 GPIO_ACTIVE_HIGH>;
+> >                               linux,default-trigger = "mmc1";
+> >                               default-state = "off";
+> >                       };
+> >
+> >                       led@4 {
+> > -                             label = "apq8016-sbc:green:user4";
+> > +                             label = "green:user4";
+> >                               gpios = <&pm8916_gpios 2 GPIO_ACTIVE_HIGH>;
+> >                               linux,default-trigger = "none";
+> >                               panic-indicator;
+> > @@ -329,14 +329,14 @@
+> >                       };
+> >
+> >                       led@5 {
+> > -                             label = "apq8016-sbc:yellow:wlan";
+> > +                             label = "yellow:wlan";
+> >                               gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
+> >                               linux,default-trigger = "phy0tx";
+> >                               default-state = "off";
+> >                       };
+> >
+> >                       led@6 {
+> > -                             label = "apq8016-sbc:blue:bt";
+> > +                             label = "blue:bt";
+> >                               gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
+> >                               linux,default-trigger = "bluetooth-power";
+> >                               default-state = "off";
+> > --
+> > 2.17.1
+> >
