@@ -1,173 +1,287 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH v6 03/13] spi: atmel-quadspi: drop wrappers for iomem accesses
-Date: Tue, 5 Feb 2019 17:33:11 +0000
-Message-ID: <20190205173254.16388-4-tudor.ambarus@microchip.com>
-References: <20190205173254.16388-1-tudor.ambarus@microchip.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv3 01/27] PCI: mobiveil: uniform the register accessors
+Date: Tue, 5 Feb 2019 17:43:16 +0000
+Message-ID: <20190205174316.GA12956@e107981-ln.cambridge.arm.com>
+References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
+ <20190129080926.36773-2-Zhiqiang.Hou@nxp.com>
+ <CAFZiPx0wA5=juO0PnuMKY_mJSPD12W09Vy+buW_EyQAKzZkjKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205173254.16388-1-tudor.ambarus@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAFZiPx0wA5=juO0PnuMKY_mJSPD12W09Vy+buW_EyQAKzZkjKw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org, Cyrille.Pitchen@microchip.com, bugalski.piotr@gmail.com
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Tudor.Ambarus@microchip.com
+To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+On Tue, Feb 05, 2019 at 11:09:19AM +0530, Subrahmanya Lingappa wrote:
+> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 
-The wrappers hid that the accesses are relaxed. Drop them.
+I have a feeling you do not read what I write. Please never top-post.
 
-Suggested-by: Boris Brezillon <bbrezillon@kernel.org>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
----
-v6: no change
-v5: no change
-v4:
-- drop local variable that kept aq->regs, the compiler should be
-  smart enough to store it in a register
-- collect R-b
-v3: no change
-v2: new patch
+Read this, especially the email etiquette section:
 
- drivers/spi/atmel-quadspi.c | 45 +++++++++++++++++------------------------=
-----
- 1 file changed, 17 insertions(+), 28 deletions(-)
+https://kernelnewbies.org/PatchCulture
 
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index 7d83ce8747e8..c745e75b755e 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -175,17 +175,6 @@ static const struct qspi_mode sama5d2_qspi_modes[] =3D=
- {
- 	{ 4, 4, 4, QSPI_IFR_WIDTH_QUAD_CMD },
- };
-=20
--/* Register access functions */
--static inline u32 qspi_readl(struct atmel_qspi *aq, u32 reg)
--{
--	return readl_relaxed(aq->regs + reg);
--}
--
--static inline void qspi_writel(struct atmel_qspi *aq, u32 reg, u32 value)
--{
--	writel_relaxed(value, aq->regs + reg);
--}
--
- static inline bool is_compatible(const struct spi_mem_op *op,
- 				 const struct qspi_mode *mode)
- {
-@@ -243,7 +232,7 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, cons=
-t struct spi_mem_op *op)
- 	 * Serial Memory Mode (SMM).
- 	 */
- 	if (aq->mr !=3D QSPI_MR_SMM) {
--		qspi_writel(aq, QSPI_MR, QSPI_MR_SMM);
-+		writel_relaxed(QSPI_MR_SMM, aq->regs + QSPI_MR);
- 		aq->mr =3D QSPI_MR_SMM;
- 	}
-=20
-@@ -303,17 +292,17 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, co=
-nst struct spi_mem_op *op)
- 		ifr |=3D QSPI_IFR_TFRTYP_TRSFR_WRITE;
-=20
- 	/* Clear pending interrupts */
--	(void)qspi_readl(aq, QSPI_SR);
-+	(void)readl_relaxed(aq->regs + QSPI_SR);
-=20
- 	/* Set QSPI Instruction Frame registers */
--	qspi_writel(aq, QSPI_IAR, iar);
--	qspi_writel(aq, QSPI_ICR, icr);
--	qspi_writel(aq, QSPI_IFR, ifr);
-+	writel_relaxed(iar, aq->regs + QSPI_IAR);
-+	writel_relaxed(icr, aq->regs + QSPI_ICR);
-+	writel_relaxed(ifr, aq->regs + QSPI_IFR);
-=20
- 	/* Skip to the final steps if there is no data */
- 	if (op->data.nbytes) {
- 		/* Dummy read of QSPI_IFR to synchronize APB and AHB accesses */
--		(void)qspi_readl(aq, QSPI_IFR);
-+		(void)readl_relaxed(aq->regs + QSPI_IFR);
-=20
- 		/* Send/Receive data */
- 		if (op->data.dir =3D=3D SPI_MEM_DATA_IN)
-@@ -324,22 +313,22 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, co=
-nst struct spi_mem_op *op)
- 				op->data.buf.out, op->data.nbytes);
-=20
- 		/* Release the chip-select */
--		qspi_writel(aq, QSPI_CR, QSPI_CR_LASTXFER);
-+		writel_relaxed(QSPI_CR_LASTXFER, aq->regs + QSPI_CR);
- 	}
-=20
- 	/* Poll INSTRuction End status */
--	sr =3D qspi_readl(aq, QSPI_SR);
-+	sr =3D readl_relaxed(aq->regs + QSPI_SR);
- 	if ((sr & QSPI_SR_CMD_COMPLETED) =3D=3D QSPI_SR_CMD_COMPLETED)
- 		return err;
-=20
- 	/* Wait for INSTRuction End interrupt */
- 	reinit_completion(&aq->cmd_completion);
- 	aq->pending =3D sr & QSPI_SR_CMD_COMPLETED;
--	qspi_writel(aq, QSPI_IER, QSPI_SR_CMD_COMPLETED);
-+	writel_relaxed(QSPI_SR_CMD_COMPLETED, aq->regs + QSPI_IER);
- 	if (!wait_for_completion_timeout(&aq->cmd_completion,
- 					 msecs_to_jiffies(1000)))
- 		err =3D -ETIMEDOUT;
--	qspi_writel(aq, QSPI_IDR, QSPI_SR_CMD_COMPLETED);
-+	writel_relaxed(QSPI_SR_CMD_COMPLETED, aq->regs + QSPI_IDR);
-=20
- 	return err;
- }
-@@ -378,7 +367,7 @@ static int atmel_qspi_setup(struct spi_device *spi)
- 		scbr--;
-=20
- 	scr =3D QSPI_SCR_SCBR(scbr);
--	qspi_writel(aq, QSPI_SCR, scr);
-+	writel_relaxed(scr, aq->regs + QSPI_SCR);
-=20
- 	return 0;
- }
-@@ -386,14 +375,14 @@ static int atmel_qspi_setup(struct spi_device *spi)
- static int atmel_qspi_init(struct atmel_qspi *aq)
- {
- 	/* Reset the QSPI controller */
--	qspi_writel(aq, QSPI_CR, QSPI_CR_SWRST);
-+	writel_relaxed(QSPI_CR_SWRST, aq->regs + QSPI_CR);
-=20
- 	/* Set the QSPI controller by default in Serial Memory Mode */
--	qspi_writel(aq, QSPI_MR, QSPI_MR_SMM);
-+	writel_relaxed(QSPI_MR_SMM, aq->regs + QSPI_MR);
- 	aq->mr =3D QSPI_MR_SMM;
-=20
- 	/* Enable the QSPI controller */
--	qspi_writel(aq, QSPI_CR, QSPI_CR_QSPIEN);
-+	writel_relaxed(QSPI_CR_QSPIEN, aq->regs + QSPI_CR);
-=20
- 	return 0;
- }
-@@ -403,8 +392,8 @@ static irqreturn_t atmel_qspi_interrupt(int irq, void *=
-dev_id)
- 	struct atmel_qspi *aq =3D (struct atmel_qspi *)dev_id;
- 	u32 status, mask, pending;
-=20
--	status =3D qspi_readl(aq, QSPI_SR);
--	mask =3D qspi_readl(aq, QSPI_IMR);
-+	status =3D readl_relaxed(aq->regs + QSPI_SR);
-+	mask =3D readl_relaxed(aq->regs + QSPI_IMR);
- 	pending =3D status & mask;
-=20
- 	if (!pending)
-@@ -510,7 +499,7 @@ static int atmel_qspi_remove(struct platform_device *pd=
-ev)
- 	struct atmel_qspi *aq =3D spi_controller_get_devdata(ctrl);
-=20
- 	spi_unregister_controller(ctrl);
--	qspi_writel(aq, QSPI_CR, QSPI_CR_QSPIDIS);
-+	writel_relaxed(QSPI_CR_QSPIDIS, aq->regs + QSPI_CR);
- 	clk_disable_unprepare(aq->clk);
- 	return 0;
- }
---=20
-2.9.5
+> 
+> 
+> 
+> On Tue, Jan 29, 2019 at 1:38 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> >
+> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> >
+> > It's confused that R/W some registers by csr_readl()/csr_writel(),
+> > while others by read_paged_register()/write_paged_register().
+> > Actually the low 3KB of 4KB PCIe configure space can be accessed
+> > directly and high 1KB is paging area. So this patch uniformed the
+> > register accessors to csr_readl() and csr_writel() by comparing
+> > the register offset with page access boundary 3KB in the accessor
+> > internal.
+> >
+> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > ---
+> > V3:
+> >  - No change
+> >
+> >  drivers/pci/controller/pcie-mobiveil.c | 179 +++++++++++++++++--------
+> >  1 file changed, 124 insertions(+), 55 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> > index 77052a0712d0..d55c7e780c6e 100644
+> > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > @@ -47,7 +47,6 @@
+> >  #define  PAGE_SEL_SHIFT        13
+> >  #define  PAGE_SEL_MASK         0x3f
+> >  #define  PAGE_LO_MASK          0x3ff
+> > -#define  PAGE_SEL_EN           0xc00
+> >  #define  PAGE_SEL_OFFSET_SHIFT 10
+> >
+> >  #define PAB_AXI_PIO_CTRL       0x0840
+> > @@ -117,6 +116,12 @@
+> >  #define LINK_WAIT_MIN  90000
+> >  #define LINK_WAIT_MAX  100000
+> >
+> > +#define PAGED_ADDR_BNDRY                       0xc00
+> > +#define OFFSET_TO_PAGE_ADDR(off)               \
+> > +       ((off & PAGE_LO_MASK) | PAGED_ADDR_BNDRY)
+> > +#define OFFSET_TO_PAGE_IDX(off)                        \
+> > +       ((off >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK)
+> > +
+> >  struct mobiveil_msi {                  /* MSI information */
+> >         struct mutex lock;              /* protect bitmap variable */
+> >         struct irq_domain *msi_domain;
+> > @@ -145,15 +150,119 @@ struct mobiveil_pcie {
+> >         struct mobiveil_msi msi;
+> >  };
+> >
+> > -static inline void csr_writel(struct mobiveil_pcie *pcie, const u32 value,
+> > -               const u32 reg)
+> > +/*
+> > + * mobiveil_pcie_sel_page - routine to access paged register
+> > + *
+> > + * Registers whose address greater than PAGED_ADDR_BNDRY (0xc00) are paged,
+> > + * for this scheme to work extracted higher 6 bits of the offset will be
+> > + * written to pg_sel field of PAB_CTRL register and rest of the lower 10
+> > + * bits enabled with PAGED_ADDR_BNDRY are used as offset of the register.
+> > + */
+> > +static void mobiveil_pcie_sel_page(struct mobiveil_pcie *pcie, u8 pg_idx)
+> >  {
+> > -       writel_relaxed(value, pcie->csr_axi_slave_base + reg);
+> > +       u32 val;
+> > +
+> > +       val = readl(pcie->csr_axi_slave_base + PAB_CTRL);
+> > +       val &= ~(PAGE_SEL_MASK << PAGE_SEL_SHIFT);
+> > +       val |= (pg_idx & PAGE_SEL_MASK) << PAGE_SEL_SHIFT;
+> > +
+> > +       writel(val, pcie->csr_axi_slave_base + PAB_CTRL);
+> >  }
+> >
+> > -static inline u32 csr_readl(struct mobiveil_pcie *pcie, const u32 reg)
+> > +static void *mobiveil_pcie_comp_addr(struct mobiveil_pcie *pcie, u32 off)
+> >  {
+> > -       return readl_relaxed(pcie->csr_axi_slave_base + reg);
+> > +       if (off < PAGED_ADDR_BNDRY) {
+> > +               /* For directly accessed registers, clear the pg_sel field */
+> > +               mobiveil_pcie_sel_page(pcie, 0);
+> > +               return pcie->csr_axi_slave_base + off;
+> > +       }
+> > +
+> > +       mobiveil_pcie_sel_page(pcie, OFFSET_TO_PAGE_IDX(off));
+> > +       return pcie->csr_axi_slave_base + OFFSET_TO_PAGE_ADDR(off);
+> > +}
+> > +
+> > +static int mobiveil_pcie_read(void __iomem *addr, int size, u32 *val)
+> > +{
+> > +       if ((uintptr_t)addr & (size - 1)) {
+> > +               *val = 0;
+> > +               return PCIBIOS_BAD_REGISTER_NUMBER;
+> > +       }
+> > +
+> > +       switch (size) {
+> > +       case 4:
+> > +               *val = readl(addr);
+> > +               break;
+> > +       case 2:
+> > +               *val = readw(addr);
+> > +               break;
+> > +       case 1:
+> > +               *val = readb(addr);
+> > +               break;
+> > +       default:
+> > +               *val = 0;
+> > +               return PCIBIOS_BAD_REGISTER_NUMBER;
+> > +       }
+> > +
+> > +       return PCIBIOS_SUCCESSFUL;
+> > +}
+> > +
+> > +static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
+> > +{
+> > +       if ((uintptr_t)addr & (size - 1))
+> > +               return PCIBIOS_BAD_REGISTER_NUMBER;
+> > +
+> > +       switch (size) {
+> > +       case 4:
+> > +               writel(val, addr);
+> > +               break;
+> > +       case 2:
+> > +               writew(val, addr);
+> > +               break;
+> > +       case 1:
+> > +               writeb(val, addr);
+> > +               break;
+> > +       default:
+> > +               return PCIBIOS_BAD_REGISTER_NUMBER;
+> > +       }
+> > +
+> > +       return PCIBIOS_SUCCESSFUL;
+> > +}
+> > +
+> > +static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+> > +{
+> > +       void *addr;
+> > +       u32 val;
+> > +       int ret;
+> > +
+> > +       addr = mobiveil_pcie_comp_addr(pcie, off);
+> > +
+> > +       ret = mobiveil_pcie_read(addr, size, &val);
+> > +       if (ret)
+> > +               dev_err(&pcie->pdev->dev, "read CSR address failed\n");
+> > +
+> > +       return val;
+> > +}
+> > +
+> > +static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+> > +{
+> > +       void *addr;
+> > +       int ret;
+> > +
+> > +       addr = mobiveil_pcie_comp_addr(pcie, off);
+> > +
+> > +       ret = mobiveil_pcie_write(addr, size, val);
+> > +       if (ret)
+> > +               dev_err(&pcie->pdev->dev, "write CSR address failed\n");
+> > +}
+> > +
+> > +static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
+> > +{
+> > +       return csr_read(pcie, off, 0x4);
+> > +}
+> > +
+> > +static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+> > +{
+> > +       csr_write(pcie, val, off, 0x4);
+> >  }
+> >
+> >  static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+> > @@ -342,45 +451,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+> >         return 0;
+> >  }
+> >
+> > -/*
+> > - * select_paged_register - routine to access paged register of root complex
+> > - *
+> > - * registers of RC are paged, for this scheme to work
+> > - * extracted higher 6 bits of the offset will be written to pg_sel
+> > - * field of PAB_CTRL register and rest of the lower 10 bits enabled with
+> > - * PAGE_SEL_EN are used as offset of the register.
+> > - */
+> > -static void select_paged_register(struct mobiveil_pcie *pcie, u32 offset)
+> > -{
+> > -       int pab_ctrl_dw, pg_sel;
+> > -
+> > -       /* clear pg_sel field */
+> > -       pab_ctrl_dw = csr_readl(pcie, PAB_CTRL);
+> > -       pab_ctrl_dw = (pab_ctrl_dw & ~(PAGE_SEL_MASK << PAGE_SEL_SHIFT));
+> > -
+> > -       /* set pg_sel field */
+> > -       pg_sel = (offset >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK;
+> > -       pab_ctrl_dw |= ((pg_sel << PAGE_SEL_SHIFT));
+> > -       csr_writel(pcie, pab_ctrl_dw, PAB_CTRL);
+> > -}
+> > -
+> > -static void write_paged_register(struct mobiveil_pcie *pcie,
+> > -               u32 val, u32 offset)
+> > -{
+> > -       u32 off = (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
+> > -
+> > -       select_paged_register(pcie, offset);
+> > -       csr_writel(pcie, val, off);
+> > -}
+> > -
+> > -static u32 read_paged_register(struct mobiveil_pcie *pcie, u32 offset)
+> > -{
+> > -       u32 off = (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
+> > -
+> > -       select_paged_register(pcie, offset);
+> > -       return csr_readl(pcie, off);
+> > -}
+> > -
+> >  static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+> >                 int pci_addr, u32 type, u64 size)
+> >  {
+> > @@ -397,19 +467,19 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+> >         pio_ctrl_val = csr_readl(pcie, PAB_PEX_PIO_CTRL);
+> >         csr_writel(pcie,
+> >                 pio_ctrl_val | (1 << PIO_ENABLE_SHIFT), PAB_PEX_PIO_CTRL);
+> > -       amap_ctrl_dw = read_paged_register(pcie, PAB_PEX_AMAP_CTRL(win_num));
+> > +       amap_ctrl_dw = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+> >         amap_ctrl_dw = (amap_ctrl_dw | (type << AMAP_CTRL_TYPE_SHIFT));
+> >         amap_ctrl_dw = (amap_ctrl_dw | (1 << AMAP_CTRL_EN_SHIFT));
+> >
+> > -       write_paged_register(pcie, amap_ctrl_dw | lower_32_bits(size64),
+> > -                               PAB_PEX_AMAP_CTRL(win_num));
+> > +       csr_writel(pcie, amap_ctrl_dw | lower_32_bits(size64),
+> > +                  PAB_PEX_AMAP_CTRL(win_num));
+> >
+> > -       write_paged_register(pcie, upper_32_bits(size64),
+> > -                               PAB_EXT_PEX_AMAP_SIZEN(win_num));
+> > +       csr_writel(pcie, upper_32_bits(size64),
+> > +                  PAB_EXT_PEX_AMAP_SIZEN(win_num));
+> >
+> > -       write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
+> > -       write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> > -       write_paged_register(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
+> > +       csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
+> > +       csr_writel(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> > +       csr_writel(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
+> >  }
+> >
+> >  /*
+> > @@ -437,8 +507,7 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
+> >         csr_writel(pcie, 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
+> >                         lower_32_bits(size64), PAB_AXI_AMAP_CTRL(win_num));
+> >
+> > -       write_paged_register(pcie, upper_32_bits(size64),
+> > -                               PAB_EXT_AXI_AMAP_SIZE(win_num));
+> > +       csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
+> >
+> >         /*
+> >          * program AXI window base with appropriate value in
+> > --
+> > 2.17.1
+> >
