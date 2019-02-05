@@ -1,126 +1,57 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 4/4] iio: counter: stm32-lptimer: Add power management support
-Date: Tue, 5 Feb 2019 13:40:29 +0100
-Message-ID: <1549370429-19116-5-git-send-email-fabrice.gasnier@st.com>
-References: <1549370429-19116-1-git-send-email-fabrice.gasnier@st.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 0/3] arm64: ti: k3-am654: USB support
+Date: Tue, 5 Feb 2019 14:45:19 +0200
+Message-ID: <1549370722-414-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549370429-19116-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vilhelm.gray@gmail.com, linux-stm32@st-md-mailman.stormreply.com
+To: t-kristo@ti.com
+Cc: nm@ti.com, nsekhar@ti.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add suspend/resume PM sleep ops. When going to low power, disable
-active counter. Only active counter should be resumed: don't touch
-disabled counter, as it may be used by other LPTimer MFD child driver.
+Hi,
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/iio/counter/stm32-lptimer-cnt.c | 55 +++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+The AM654 SoC supports 2 DWC3 USB controller instances. The
+AM654 base board supports the 2nd (USB1) instance in high-speed.
 
-diff --git a/drivers/iio/counter/stm32-lptimer-cnt.c b/drivers/iio/counter/stm32-lptimer-cnt.c
-index 42fb8ba..2a49cce 100644
---- a/drivers/iio/counter/stm32-lptimer-cnt.c
-+++ b/drivers/iio/counter/stm32-lptimer-cnt.c
-@@ -14,6 +14,7 @@
- #include <linux/iio/iio.h>
- #include <linux/mfd/stm32-lptimer.h>
- #include <linux/module.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- 
- struct stm32_lptim_cnt {
-@@ -23,6 +24,7 @@ struct stm32_lptim_cnt {
- 	u32 preset;
- 	u32 polarity;
- 	u32 quadrature_mode;
-+	bool enabled;
- };
- 
- static int stm32_lptim_is_enabled(struct stm32_lptim_cnt *priv)
-@@ -50,6 +52,7 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
- 
- 	if (!enable) {
- 		clk_disable(priv->clk);
-+		priv->enabled = false;
- 		return 0;
- 	}
- 
-@@ -79,6 +82,7 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
- 		regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
- 		return ret;
- 	}
-+	priv->enabled = true;
- 
- 	/* Start LP timer in continuous mode */
- 	return regmap_update_bits(priv->regmap, STM32_LPTIM_CR,
-@@ -361,6 +365,56 @@ static int stm32_lptim_cnt_probe(struct platform_device *pdev)
- 	return devm_iio_device_register(&pdev->dev, indio_dev);
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int stm32_lptim_cnt_suspend(struct device *dev)
-+{
-+	struct stm32_lptim_cnt *priv = dev_get_drvdata(dev);
-+	int ret;
-+
-+	/* Only take care of enabled counter: don't disturb other MFD child */
-+	if (priv->enabled) {
-+		ret = stm32_lptim_setup(priv, 0);
-+		if (ret)
-+			return ret;
-+
-+		ret = stm32_lptim_set_enable_state(priv, 0);
-+		if (ret)
-+			return ret;
-+
-+		/* Force enable state for later resume */
-+		priv->enabled = true;
-+	}
-+
-+	return pinctrl_pm_select_sleep_state(dev);
-+}
-+
-+static int stm32_lptim_cnt_resume(struct device *dev)
-+{
-+	struct stm32_lptim_cnt *priv = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = pinctrl_pm_select_default_state(dev);
-+	if (ret)
-+		return ret;
-+
-+	if (priv->enabled) {
-+		priv->enabled = false;
-+		ret = stm32_lptim_setup(priv, 1);
-+		if (ret)
-+			return ret;
-+
-+		ret = stm32_lptim_set_enable_state(priv, 1);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(stm32_lptim_cnt_pm_ops, stm32_lptim_cnt_suspend,
-+			 stm32_lptim_cnt_resume);
-+
- static const struct of_device_id stm32_lptim_cnt_of_match[] = {
- 	{ .compatible = "st,stm32-lptimer-counter", },
- 	{},
-@@ -372,6 +426,7 @@ static int stm32_lptim_cnt_probe(struct platform_device *pdev)
- 	.driver = {
- 		.name = "stm32-lptimer-counter",
- 		.of_match_table = stm32_lptim_cnt_of_match,
-+		.pm = &stm32_lptim_cnt_pm_ops,
- 	},
- };
- module_platform_driver(stm32_lptim_cnt_driver);
+This series enables support for USB1 instance on the AM654-base-board.
+
+The series depends on [1] and [2]. Both are in the -next branch of their
+respective maintainer trees.
+
+To test you can apply on top of linux-next. As usb/next was just pushed
+today, it might have not reached linux-next yet. If so please pull that from [3].
+
+If using arm64 defconfig, you need to enable
+	CONFIG_USB_DWC3_KEYSTONE=y
+	CONFIG_OMAP_USB2=y
+and the necessary USB drivers that you want to test. e.g. USB network adapter.
+
+[1] AM654 USB2 PHY support https://lkml.org/lkml/2018/12/5/908
+[2] AM654 DWC3 support https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1896101.html
+[3] usb-next https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/log/?h=next
+
+Changelog:
+v2
+- usb & phy nodes are not kept disabled in k3-am65-main.dtsi.
+  Unused ones are disabled in board dts instead.
+
+cheers,
+-roger
+
+
+Jyri Sarha (1):
+  arm64: dts: ti: am654: Add Main System Control Module node
+
+Roger Quadros (2):
+  arm64: dts: ti: k3-am6: add USB support
+  arm64: dts: ti: k3-am654-base-board: enable USB1
+
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi       | 84 ++++++++++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 28 +++++++++
+ 2 files changed, 112 insertions(+)
+
 -- 
-1.9.1
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
