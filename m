@@ -1,315 +1,220 @@
-From: Pankaj Bansal <pankaj.bansal@nxp.com>
-Subject: [PATCH v4 2/2] drivers: soc: fsl: add qixis driver
-Date: Tue, 5 Feb 2019 10:14:42 +0000
-Message-ID: <20190205153924.7204-3-pankaj.bansal@nxp.com>
-References: <20190205153924.7204-1-pankaj.bansal@nxp.com>
+From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Subject: Re: [PATCH 2/2] Input: st1232 - switch to gpiod API
+Date: Tue, 5 Feb 2019 11:20:16 +0100
+Message-ID: <83a86244-f40b-44b1-d7be-1fcbeb4c359e@ginzinger.com>
+References: <20190129102347.27754-1-martink@posteo.de>
+ <20190129102347.27754-2-martink@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190205153924.7204-1-pankaj.bansal@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "open list : OPEN FIRMWARE AND
- FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Wang Dongsheng <dongsheng.wang@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----7E37049725A1B525FC88E92716BF18CC"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190129102347.27754-2-martink@posteo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Kepplinger <martink@posteo.de>, devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-FPGA on LX2160AQDS/LX2160ARDB connected on I2C bus, so add qixis
-driver which is basically an i2c client driver to control FPGA.
+This is an S/MIME signed message
 
-Also added platform driver for MMIO based FPGA, like the one available
-on LS2088ARDB/LS2088AQDS.
+------7E37049725A1B525FC88E92716BF18CC
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Wang Dongsheng <dongsheng.wang@freescale.com>
-Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
----
+=EF=BB=BF
 
-Notes:
-    V4:
-    - Fix compilation error when qixis_ctrl is built as standalone module.
-    V3:
-    - Add MMIO based FPGA driver
-    V2:
-    - Modify the driver to not create platform devices corresponding to subnodes.
-      because the subnodes are not actual devices.
-    - Use mdio_mux_regmap_init/mdio_mux_regmap_uninit
-    - Remove header file from include folder, as no qixis api is called from outside
-    - Add regmap_exit in driver's remove function
-    Dendencies:
-    - https://www.mail-archive.com/netdev@vger.kernel.org/msg281274.html
+Martin=C2=A0Kepplinger=C2=A0|=C2=A0Entwicklung Software=C2=A0
 
- drivers/soc/fsl/Kconfig      |  11 ++
- drivers/soc/fsl/Makefile     |   1 +
- drivers/soc/fsl/qixis_ctrl.c | 222 +++++++++++++++++++++++++++++++++
- 3 files changed, 234 insertions(+)
+GINZINGER ELECTRONIC SYSTEMS GMBH
 
-diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-index 8f80e8bbf29e..75993be04e42 100644
---- a/drivers/soc/fsl/Kconfig
-+++ b/drivers/soc/fsl/Kconfig
-@@ -28,4 +28,15 @@ config FSL_MC_DPIO
- 	  other DPAA2 objects. This driver does not expose the DPIO
- 	  objects individually, but groups them under a service layer
- 	  API.
-+
-+config FSL_QIXIS
-+	tristate "QIXIS system controller driver"
-+	depends on OF
-+	select REGMAP_I2C
-+	select REGMAP_MMIO
-+	default n
-+	help
-+	  Say y here to enable QIXIS system controller api. The qixis driver
-+	  provides FPGA functions to control system.
-+
- endmenu
-diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
-index 803ef1bfb5ff..47e0cfc66ca4 100644
---- a/drivers/soc/fsl/Makefile
-+++ b/drivers/soc/fsl/Makefile
-@@ -5,5 +5,6 @@
- obj-$(CONFIG_FSL_DPAA)                 += qbman/
- obj-$(CONFIG_QUICC_ENGINE)		+= qe/
- obj-$(CONFIG_CPM)			+= qe/
-+obj-$(CONFIG_FSL_QIXIS) 		+= qixis_ctrl.o
- obj-$(CONFIG_FSL_GUTS)			+= guts.o
- obj-$(CONFIG_FSL_MC_DPIO) 		+= dpio/
-diff --git a/drivers/soc/fsl/qixis_ctrl.c b/drivers/soc/fsl/qixis_ctrl.c
-new file mode 100644
-index 000000000000..a8108bfd5195
---- /dev/null
-+++ b/drivers/soc/fsl/qixis_ctrl.c
-@@ -0,0 +1,222 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+/* Freescale QIXIS system controller driver.
-+ *
-+ * Copyright 2015 Freescale Semiconductor, Inc.
-+ * Copyright 2018-2019 NXP
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mdio-mux.h>
-+
-+/* QIXIS MAP */
-+struct fsl_qixis_regs {
-+	u8		id;		/* Identification Registers */
-+	u8		version;	/* Version Register */
-+	u8		qixis_ver;	/* QIXIS Version Register */
-+	u8		reserved1[0x1f];
-+};
-+
-+struct mdio_mux_data {
-+	void			*data;
-+	struct list_head	link;
-+};
-+
-+struct qixis_priv {
-+	struct regmap		*regmap;
-+	struct list_head	mdio_mux_list;
-+};
-+
-+static struct regmap_config qixis_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int fsl_qixis_mdio_mux_init(struct device *dev, struct qixis_priv *priv)
-+{
-+	struct device_node *child;
-+	struct mdio_mux_data *mux_data;
-+	int ret;
-+
-+	INIT_LIST_HEAD(&priv->mdio_mux_list);
-+	for_each_child_of_node(dev->of_node, child) {
-+		if (!of_node_name_prefix(child, "mdio-mux"))
-+			continue;
-+
-+		mux_data = devm_kzalloc(dev, sizeof(struct mdio_mux_data),
-+					GFP_KERNEL);
-+		if (!mux_data)
-+			return -ENOMEM;
-+		ret = mdio_mux_regmap_init(dev, child, &mux_data->data);
-+		if (ret)
-+			return ret;
-+		list_add(&mux_data->link, &priv->mdio_mux_list);
-+	}
-+
-+	return 0;
-+}
-+
-+static int fsl_qixis_mdio_mux_uninit(struct qixis_priv *priv)
-+{
-+	struct list_head *pos;
-+	struct mdio_mux_data *mux_data;
-+
-+	list_for_each(pos, &priv->mdio_mux_list) {
-+		mux_data = list_entry(pos, struct mdio_mux_data, link);
-+		mdio_mux_regmap_uninit(mux_data->data);
-+	}
-+
-+	return 0;
-+}
-+
-+static int fsl_qixis_probe(struct platform_device *pdev)
-+{
-+	static struct fsl_qixis_regs __iomem *qixis;
-+	struct qixis_priv *priv;
-+	int ret;
-+	u32 qver;
-+
-+	qixis = of_iomap(pdev->dev.of_node, 0);
-+	if (IS_ERR_OR_NULL(qixis)) {
-+		pr_err("%s: Could not map qixis registers\n", __func__);
-+		return -ENODEV;
-+	}
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(struct qixis_priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->regmap = devm_regmap_init_mmio(&pdev->dev, qixis,
-+					     &qixis_regmap_config);
-+	regmap_read(priv->regmap, offsetof(struct fsl_qixis_regs, qixis_ver),
-+		    &qver);
-+	pr_info("Freescale QIXIS Version: 0x%08x\n", qver);
-+
-+	ret = fsl_qixis_mdio_mux_init(&pdev->dev, priv);
-+	if (ret)
-+		goto error;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+error:
-+	regmap_exit(priv->regmap);
-+
-+	return ret;
-+}
-+
-+static int fsl_qixis_remove(struct platform_device *pdev)
-+{
-+	struct qixis_priv *priv;
-+
-+	priv = platform_get_drvdata(pdev);
-+	fsl_qixis_mdio_mux_uninit(priv);
-+	regmap_exit(priv->regmap);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id fsl_qixis_of_match[] = {
-+	{ .compatible = "fsl,fpga-qixis", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, fsl_qixis_of_match);
-+
-+static struct platform_driver fsl_qixis_driver = {
-+	.driver = {
-+		.name = "qixis_ctrl",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(fsl_qixis_of_match),
-+	},
-+	.probe = fsl_qixis_probe,
-+	.remove = fsl_qixis_remove,
-+};
-+
-+static int fsl_qixis_i2c_probe(struct i2c_client *client)
-+{
-+	struct qixis_priv *priv;
-+	int ret;
-+	u32 qver;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
-+		return -EOPNOTSUPP;
-+
-+	priv = devm_kzalloc(&client->dev, sizeof(struct qixis_priv),
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->regmap = regmap_init_i2c(client, &qixis_regmap_config);
-+	regmap_read(priv->regmap, offsetof(struct fsl_qixis_regs, qixis_ver),
-+		    &qver);
-+	pr_info("Freescale QIXIS Version: 0x%08x\n", qver);
-+
-+	ret = fsl_qixis_mdio_mux_init(&client->dev, priv);
-+	if (ret)
-+		goto error;
-+
-+	i2c_set_clientdata(client, priv);
-+
-+	return 0;
-+error:
-+	regmap_exit(priv->regmap);
-+
-+	return ret;
-+}
-+
-+static int fsl_qixis_i2c_remove(struct i2c_client *client)
-+{
-+	struct qixis_priv *priv;
-+
-+	priv = i2c_get_clientdata(client);
-+	fsl_qixis_mdio_mux_uninit(priv);
-+	regmap_exit(priv->regmap);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id fsl_qixis_i2c_of_match[] = {
-+	{ .compatible = "fsl,fpga-qixis-i2c" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, fsl_qixis_i2c_of_match);
-+
-+static struct i2c_driver fsl_qixis_i2c_driver = {
-+	.driver = {
-+		.name	= "qixis_ctrl_i2c",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(fsl_qixis_i2c_of_match),
-+	},
-+	.probe_new	= fsl_qixis_i2c_probe,
-+	.remove		= fsl_qixis_i2c_remove,
-+};
-+
-+static int __init fsl_qixis_init(void)
-+{
-+	pr_info("FSL: Qixis Control driver\n");
-+
-+	if (platform_driver_register(&fsl_qixis_driver))
-+		pr_warn("could not register Qixis Control platform driver\n");
-+	return i2c_add_driver(&fsl_qixis_i2c_driver);
-+}
-+module_init(fsl_qixis_init);
-+
-+static void __exit fsl_qixis_exit(void)
-+{
-+	platform_driver_unregister(&fsl_qixis_driver);
-+	i2c_del_driver(&fsl_qixis_i2c_driver);
-+}
-+module_exit(fsl_qixis_exit);
-+
-+MODULE_AUTHOR("Wang Dongsheng <dongsheng.wang@freescale.com>");
-+MODULE_DESCRIPTION("Freescale QIXIS system controller driver");
-+MODULE_LICENSE("GPL");
-+
--- 
-2.17.1
+Tel.: +43 7723 5422 157
+Mail: martin.kepplinger@ginzinger.com
+Web: www.ginzinger.com
+
+
+
+
+On 29.01.19 11:23, Martin Kepplinger wrote:
+> From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+>=20
+> Use devm_gpiod_get_optional() and gpiod_set_value_cansleep() instead
+> of the old API. The st1232_ts_power() now passes on the inverted "poweron=
+"
+> value to reflect the correct logical value.
+>=20
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+> ---
+>=20
+> Tested and works. thanks for your help Dmitry,
+>=20
+
+is this what you had in mind? any problems or questions?
+
+thanks
+                              martin
+
+
+>=20
+>=20
+>=20
+>   drivers/input/touchscreen/st1232.c | 22 ++++++++++------------
+>   1 file changed, 10 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscre=
+en/st1232.c
+> index 777df903605d..04d75b08be44 100644
+> --- a/drivers/input/touchscreen/st1232.c
+> +++ b/drivers/input/touchscreen/st1232.c
+> @@ -45,7 +45,7 @@ struct st1232_ts_data {
+>   	struct i2c_client *client;
+>   	struct input_dev *input_dev;
+>   	struct dev_pm_qos_request low_latency_req;
+> -	int reset_gpio;
+> +	struct gpio_desc *reset_gpio;
+>   	const struct st_chip_info *chip_info;
+>   	int read_buf_len;
+>   	u8 *read_buf;
+> @@ -142,8 +142,8 @@ static irqreturn_t st1232_ts_irq_handler(int irq, voi=
+d *dev_id)
+>  =20
+>   static void st1232_ts_power(struct st1232_ts_data *ts, bool poweron)
+>   {
+> -	if (gpio_is_valid(ts->reset_gpio))
+> -		gpio_direction_output(ts->reset_gpio, poweron);
+> +	if (ts->reset_gpio)
+> +		gpiod_set_value_cansleep(ts->reset_gpio, !poweron);
+>   }
+>  =20
+>   static const struct st_chip_info st1232_chip_info =3D {
+> @@ -215,15 +215,13 @@ static int st1232_ts_probe(struct i2c_client *clien=
+t,
+>   	ts->client =3D client;
+>   	ts->input_dev =3D input_dev;
+>  =20
+> -	ts->reset_gpio =3D of_get_gpio(client->dev.of_node, 0);
+> -	if (gpio_is_valid(ts->reset_gpio)) {
+> -		error =3D devm_gpio_request(&client->dev, ts->reset_gpio, NULL);
+> -		if (error) {
+> -			dev_err(&client->dev,
+> -				"Unable to request GPIO pin %d.\n",
+> -				ts->reset_gpio);
+> -				return error;
+> -		}
+> +	ts->reset_gpio =3D devm_gpiod_get_optional(&client->dev, "reset",
+> +						 GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ts->reset_gpio)) {
+> +		error =3D PTR_ERR(ts->reset_gpio);
+> +		dev_err(&client->dev, "Unable to request GPIO pin: %d.\n",
+> +			error);
+> +		return error;
+>   	}
+>  =20
+>   	st1232_ts_power(ts, true);
+>=20
+
+
+
+
+________________________________________
+
+Ginzinger electronic systems GmbH
+Gewerbegebiet Pirath 16
+4952 Weng im Innkreis
+www.ginzinger.com
+
+Firmenbuchnummer: FN 364958d
+Firmenbuchgericht: Ried im Innkreis
+UID-Nr.: ATU66521089
+
+
+Diese Nachricht ist vertraulich und darf nicht an andere Personen weitergeg=
+eben oder von diesen verwendet werden. Verst=C3=A4ndigen Sie uns, wenn Sie =
+irrt=C3=BCmlich eine Mitteilung empfangen haben.
+
+This message is confidential. It may not be disclosed to, or used by, anyon=
+e other than the addressee. If you receive this message by mistake, please =
+advise the sender.
+
+------7E37049725A1B525FC88E92716BF18CC
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+
+MIIOHAYJKoZIhvcNAQcCoIIODTCCDgkCAQExDzANBglghkgBZQMEAgEFADALBgkq
+hkiG9w0BBwGgggshMIIF5jCCA86gAwIBAgIQapvhODv/K2ufAdXZuKdSVjANBgkq
+hkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFu
+Y2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExp
+bWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3Jp
+dHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMC
+R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
+ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
+U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYh
+UPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9NEjk6vW7rN/5sYFLIP1of3l0NKZ6
+fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+UlNEQ1/5ErCsHq9x9aU/x1
+KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2qvGlnHJvijjI
+03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZjrqc
+k39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMB
+AAGjggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNV
+HQ4EFgQUgq9sjPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1Ud
+EwEB/wQIMAYBAf8CAQAwEQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/
+oD2GO2h0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRp
+b25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEBBGUwYzA7BggrBgEFBQcwAoYvaHR0
+cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRkVHJ1c3RDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkqhkiG9w0BAQwF
+AAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+jsQgwR
+GiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDc
+ZoFD7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwp
+WZT89RY0wpJO+2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNm
+NppI4ZNMUH4Tam85S1j6E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade
+2022O/tUU1gb4jfWCcyvB8czm12FgX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztve
+BdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiOSEmIDsS5N5w/8IW1Hva5hEFy6fDA
+fd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz/W3JlHaeI5iKFn4UJu1/
+cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSam9V1niiCfOBe
+2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpOUvxh
+csjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIwggUzMIIEG6AD
+AgECAhBNQrEzGzrZ6FVYh1EEYH4+MA0GCSqGSIb3DQEBCwUAMIGXMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
+b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
+IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAe
+Fw0xODA3MTgwMDAwMDBaFw0yMTA3MTcyMzU5NTlaMDAxLjAsBgkqhkiG9w0BCQEW
+H21hcnRpbi5rZXBwbGluZ2VyQGdpbnppbmdlci5jb20wggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQDsMC77L0D+2D8I8X5ubnBhADLgU+HtlwMTFt/WJIhc
+kgbvnawYXWrCIpk8F6BJ0R/iFCykPdG7741EmlcHRKOJfhVxjXhwnoGFqnYmurCt
+fvZLR3+mT3FWnVv2RAdrXscXH3BpijqqWabdtTbiTvmcl86Zc6mNlVhYZSbDul/E
+voIGZotGcGIWrgZxN+8MQJQHKb0KHyWlPVPkrjvEfOJHKKLFsBNSnNMR95Ijg3Sp
+h8/8RG490/zRHflGzUlxDSlLyY9YJGzSdDzcFKoYcc4oaaUY5N3uhRna43TLUIQh
+6ybt3DKVz1Pw/ikwYJrOsulJrVr3D8KVHdGxq7HYl7jnAgMBAAGjggHfMIIB2zAf
+BgNVHSMEGDAWgBSCr2yM+MX+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQU/GtSUbHg
+14sPDlmo27eQYwtjaS0wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYD
+VR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMEYGA1UdIAQ/MD0wOwYMKwYBBAGy
+MQECAQMFMCswKQYIKwYBBQUHAgEWHWh0dHBzOi8vc2VjdXJlLmNvbW9kby5uZXQv
+Q1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NP
+TU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmww
+gYsGCCsGAQUFBwEBBH8wfTBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5jb21vZG9j
+YS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuY29tb2RvY2EuY29tMCoG
+A1UdEQQjMCGBH21hcnRpbi5rZXBwbGluZ2VyQGdpbnppbmdlci5jb20wDQYJKoZI
+hvcNAQELBQADggEBAGEuG01K1tt5i3gUdQkYem/KpbJUYBZd43QwmoTa0TGXUiYq
+b+g/TeGG9QQ1yq+73xOr8fu6oT2608C7EiJc6JmjTs485/OZmTqgYkrLfs71F1kB
+3Z59WPf5aoR/pnn5vdfkkoO29V1cKPJR4z+iOG2hOlcK/dXrX8i6mnL5DGIe8l5n
+udUPvIbUhbMavrDd6kwhs0oCjylwdKGlFkCpKMn3HPflfDeHuV9Z8Nrpeq/7+Pm0
+I/fLPkaYlULASJoJCucMYcedY9rmuro9JhV+NuVXaqLIrQPc1vyKFeRuLHh84M6c
+1h1DArdGTykXZUwjXnnHtuOtzjIAzkx2Ns43vEsxggK/MIICuwIBATCBrDCBlzEL
+MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMT
+NENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEE1CsTMbOtnoVViHUQRgfj4wDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZI
+hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkwMjA1MTAyMDE5
+WjAvBgkqhkiG9w0BCQQxIgQgLasB+S7eaVVEtVBG/l17+OjsyWdN/uUJmJW0RCnO
+Go4weQYJKoZIhvcNAQkPMWwwajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsG
+CWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcN
+AwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEA
+vfjTn8o8oWSWY63NifkJVb+nnxfhK3HeN2gb4CUQRGxIh7GRwkXEsSQMfgbpnK9h
+wO+BiMnHLC8NbIAG2cJfwrYMcuDGaYPXpFge1xw4yBbhDs3TYih+banMpOHfh46t
+O9ZXSFCpYpC2CaOq4BA9YkeWmMzhnl2Hb74QFcp28jEPaCWY+YoY/U/wS2rdXify
+vYvGgbc8ZVEG1IhZ0CZi0jv6whqKSax7TBWAJKEe1rV5VaqUp/HCerQIomeiz89E
+ZLiG3RpB2stTiVS8JDyrFROGG239VHq9JyoQicP39zwonUHcBvn0vIkaX5EAAAB5
+9gHCiV8NONmLs3GVlWEmrw==
+
+------7E37049725A1B525FC88E92716BF18CC--
