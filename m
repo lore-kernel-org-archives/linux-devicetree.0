@@ -1,141 +1,185 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 2/3] Input: add new vibrator driver for various MSM
- SOCs
-Date: Tue, 5 Feb 2019 11:42:46 -0800
-Message-ID: <20190205194246.GA19151@dtor-ws>
-References: <20181025012937.2154-1-masneyb@onstation.org>
- <20181025012937.2154-3-masneyb@onstation.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [RFCv1 1/3] phy: meson8b-usb2: Enable otg phy controller on
+ Meson8b SoCs
+Date: Wed, 6 Feb 2019 01:22:33 +0530
+Message-ID: <CANAwSgSh--pom9kmVBWejHwVHJNv2o4Ta93wabR3Ak=f3V4JbQ@mail.gmail.com>
+References: <20190123151209.2080-1-linux.amoon@gmail.com>
+ <20190123151209.2080-2-linux.amoon@gmail.com>
+ <CAFBinCCOQ_GqHZuYf6n8ba_ZMbOwKmUzc4EJAuXRpn4tTTCUKA@mail.gmail.com>
+ <CANAwSgSQH2zta+tOcqnM3JPZ45XkqWEJAWOL3Do0Mnrbam8VSw@mail.gmail.com>
+ <CAFBinCD_O7FEX5iLyo2BzqE1KcrmATaZMMq5pFr-Q7wnRBPziw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181025012937.2154-3-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, jonathan@marek.ca
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFBinCD_O7FEX5iLyo2BzqE1KcrmATaZMMq5pFr-Q7wnRBPziw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Hi Martin,
 
-On Wed, Oct 24, 2018 at 09:29:36PM -0400, Brian Masney wrote:
-> This patch adds a new vibrator driver that supports various Qualcomm
-> MSM SOCs. Driver was tested on a LG Nexus 5 (hammerhead) phone.
-> 
+Thanks for your views.
 
-...
+On Tue, 5 Feb 2019 at 01:56, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Anand,
+>
+> On Mon, Feb 4, 2019 at 9:03 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> >
+> > Hi Martin,
+> >
+> > Thanks for your review comment.
+> > Please find my comments below.
+> >
+> > On Mon, 4 Feb 2019 at 18:51, Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
+> > >
+> > > Hi Anand,
+> > >
+> > > On Wed, Jan 23, 2019 at 4:12 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> > > >
+> > > > Meson8b support two USB phy controller, one with otg port and
+> > > > other usb host controller. USB OTG controller ie. otg port can
+> > > > be used to power on board or host port for usb device.
+> > > > Changes enable usb otg host controller when dr_mode is set to otg.
+> > > can you please add a sentence explaining *why* this allows enabling USB OTG?
+> > >
+> > > > Currenly otg port can be used to power on the board.
+> > > typo, should be "Currently"
+> >
+> > Ok I will fix this next version.
+> >
+> > >
+> > > > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > > > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > > > Cc: Neil Armstrong <narmstrong@baylibre.com>
+> > > > Cc: Kevin Hilman <khilman@baylibre.com>
+> > > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > > ---
+> > > > New patch in this series.
+> > > > --TOTO enable OTG port to work as host.
+> > > > --Currently we can power on the board from this OTG port.
+> > > >
+> > > > /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+> > > >     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+> > > >         |__ Port 1: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+> > > >         |__ Port 3: Dev 3, If 0, Class=Video, Driver=uvcvideo, 480M
+> > > >         |__ Port 3: Dev 3, If 1, Class=Video, Driver=uvcvideo, 480M
+> > > >         |__ Port 3: Dev 3, If 2, Class=Audio, Driver=snd-usb-audio, 480M
+> > > >         |__ Port 3: Dev 3, If 3, Class=Audio, Driver=snd-usb-audio, 480M
+> > > > /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+> > > > ---
+> > > >  drivers/phy/amlogic/phy-meson8b-usb2.c | 15 +++++++++++++++
+> > > >  1 file changed, 15 insertions(+)
+> > > >
+> > > > diff --git a/drivers/phy/amlogic/phy-meson8b-usb2.c b/drivers/phy/amlogic/phy-meson8b-usb2.c
+> > > > index 9c01b7e19b06..1333c77e9172 100644
+> > > > --- a/drivers/phy/amlogic/phy-meson8b-usb2.c
+> > > > +++ b/drivers/phy/amlogic/phy-meson8b-usb2.c
+> > > > @@ -109,6 +109,7 @@
+> > > >
+> > > >  #define RESET_COMPLETE_TIME                            500
+> > > >  #define ACA_ENABLE_COMPLETE_TIME                       50
+> > > > +#define DCD_ENABLE_COMPLETE_TIME                       10
+> > > >
+> > > >  struct phy_meson8b_usb2_priv {
+> > > >         void __iomem            *regs;
+> > > > @@ -188,6 +189,20 @@ static int phy_meson8b_usb2_power_on(struct phy *phy)
+> > > >
+> > > >                 udelay(ACA_ENABLE_COMPLETE_TIME);
+> > > >
+> > > > +               if (phy_meson8b_usb2_read(priv, REG_ADP_BC) &
+> > > > +                       REG_ADP_BC_ACA_PIN_FLOAT) {
+> > > > +                       dev_warn(&phy->dev, "USB ID detect failed!\n");
+> > > > +                       clk_disable_unprepare(priv->clk_usb);
+> > > > +                       clk_disable_unprepare(priv->clk_usb_general);
+> > > > +                       return -EINVAL;
+> > > > +               }
+> > > > +       } else if (priv->dr_mode == USB_DR_MODE_OTG) {
+> > > > +               phy_meson8b_usb2_mask_bits(priv, REG_ADP_BC,
+> > > > +                                          REG_ADP_BC_DCD_ENABLE,
+> > > > +                                          REG_ADP_BC_DCD_ENABLE);
+> > > where did you take this from?
+> >
+> > As per the schematic it's otg phy,
+> > I study the code to enable "host" mode for phy1 and on similar line I
+> > tried to enable otg phy.
+> dragons ahead!
+> if you want to work on OTG support then I'm fine with this (from time
+> to time people ask about this on IRC)!
+> But beware that this needs more than a few changes to the PHY driver.
+>
+> Amlogic's code uses a timer to poll whether the port is in HOST or
+> DEVICE mode and switches the mode accordingly, see [0]
+> however, this is not just limited to the PHY but it also requires
+> switching the dwc2 registers
 
-> +
-> +#define msm_vibrator_write(msm_vibrator, offset, value) \
-> +	writel((value), (void __iomem *)((msm_vibrator)->base + (offset)))
+Ok thanks for the input.
 
-Make in a function? It will be inlined anyways...
+>
+> personally I would start with getting device / peripheral mode working for usb0.
+> if you're lucky the PHY driver will work without any changes and you
+> only need to set the correct dr_mode along with the g-* properties.
+>
 
-> +
-> +	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> +	if (IS_ERR(vibrator->vcc)) {
-> +		if (PTR_ERR(vibrator->vcc) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to get regulator: %ld\n",
-> +				PTR_ERR(vibrator->vcc));
-> +		return PTR_ERR(vibrator->vcc);
-> +	}
-> +
-> +	vibrator->enable_gpio = devm_gpiod_get(&pdev->dev, "enable",
-> +					       GPIOD_OUT_LOW);
-> +	if (IS_ERR(vibrator->enable_gpio)) {
+Yes that should be the goal on getting working usb0 phy and otg port.
+So for now we will drop this patch and disable the usb_phy0 mode in
+dts for Odroid c2
+in order to get ride of the power failed WARNING.
 
-You have explicit deferral handling for the regulator, but not gpio. I'd
-prefer if we did (or not) it consistently.
+When we get the usb0 node to work again with good phy configuration and
+tuning we can re-enable the nodes. I will try to look into this in the future.
 
-> +		dev_err(&pdev->dev, "Failed to get enable gpio: %ld\n",
-> +			PTR_ERR(vibrator->enable_gpio));
-> +		return PTR_ERR(vibrator->enable_gpio);
-> +	}
-> +
-> +	vibrator->clk = devm_clk_get(&pdev->dev, "pwm");
-> +	if (IS_ERR(vibrator->clk)) {
+Can you share your thought on this.
 
-Same here.
 
-> +		dev_err(&pdev->dev, "Failed to lookup pwm clock: %ld\n",
-> +			PTR_ERR(vibrator->clk));
-> +		return PTR_ERR(vibrator->clk);
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "Failed to get platform resource\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	vibrator->base = devm_ioremap(&pdev->dev, res->start,
-> +				     resource_size(res));
-> +	if (IS_ERR(vibrator->base)) {
 
-devm_ioremap() returns NULL on error. You either need to check for NULL
-or see of you can use devm_ioremap_resource().
-
-> +		dev_err(&pdev->dev, "Failed to iomap resource: %ld\n",
-> +			PTR_ERR(vibrator->base));
-> +		return PTR_ERR(vibrator->base);
-> +	}
-> +
-> +	vibrator->enabled = false;
-> +	mutex_init(&vibrator->mutex);
-> +	INIT_WORK(&vibrator->worker, msm_vibrator_worker);
-> +
-> +	vibrator->input->name = "msm-vibrator";
-> +	vibrator->input->id.bustype = BUS_HOST;
-> +	vibrator->input->dev.parent = &pdev->dev;
-
-You allocated input device with devm so there is no need to set parent
-by hand.
-
-> +	vibrator->input->close = msm_vibrator_close;
-> +
-> +	input_set_drvdata(vibrator->input, vibrator);
-> +	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
-> +
-> +	ret = input_ff_create_memless(vibrator->input, NULL,
-> +				      msm_vibrator_play_effect);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to create ff memless: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = input_register_device(vibrator->input);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register input device: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused msm_vibrator_suspend(struct device *dev)
-> +{
-> +	struct msm_vibrator *vibrator = dev_get_drvdata(dev);
-
-Prefer explicit platform_get_drvdata() since we are working with
-platform device (even though it resolves to the same thing).
-
-> +
-> +	cancel_work_sync(&vibrator->worker);
-> +
-> +	if (vibrator->enabled)
-> +		msm_vibrator_stop(vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused msm_vibrator_resume(struct device *dev)
-> +{
-> +	struct msm_vibrator *vibrator = dev_get_drvdata(dev);
-
-Same here.
-
-Thanks.
-
--- 
-Dmitry
+> > this changes will come into effect when we set dr_mode="otg" in dts.
+> > but it do not enable this as host port.
+> >
+> > *Second thought this enable DCD which seem the be wrong. Thanks for porting out*
+> > We could set this to 0 at initial state for now and it will work as it should.
+> > I will send the correct fix later.
+> >
+> > > $ grep -iR DCD arm-src-kernel-2015-01-15-321cfb5a46/drivers/amlogic/usb/dwc_otg/310/
+> > > -> I only find code which clears REG_ADP_BC_DCD_ENABLE (your patch sets it):
+> > >   adp_bc.b.dcd_enable = 0;
+> >
+> > This usb port act as a changer port but it also depend on the how this
+> > port is tuned to various states as shown below.
+> >
+> > Standard Downstream Port (SDP) is a downstream port that complies
+> >               with the USB 2.0 or USB 3.0 definition of a host or hub.
+> > Charging Downstream Port (CDP) is a downstream port that complies
+> >               with the USB 2.0 or USB 3.0 definition of a host or a hub.
+> > Dedicated Charging Port (DCP)  is a downstream port on a device
+> >               that outputs power through a USB connector.
+> >
+> > We cannot observe this now because this behave like a states machine which
+> > is possible handled both in kernel driver and u-boot of Amlogic.
+> > As per schematics this (page 7)  we have a external jumper set to
+> > control the power path of the port.
+> >
+> > Odroid Wiki also says so.
+> > [0] https://wiki.odroid.com/odroid-c1/hardware/otg_power_enable
+> this seems hard to implement, because the same wiki page also states:
+> "If your C1+ PCB is previous version, you need to desolder the R94 as
+> described in this link."
+>
+>
+> Regards
+> Martin
+>
+>
+> [0] https://github.com/endlessm/linux-meson/blob/0672f0b61eb92ba63c91d858a678d2c3a0bba06a/drivers/amlogic/usb/dwc_otg/310/dwc_otg_driver.c#L716
