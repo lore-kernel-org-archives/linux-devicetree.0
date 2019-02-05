@@ -1,7 +1,7 @@
 From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH 1/2] ARM: dts: stm32: add initial support of stm32mp157a-dk1 board
-Date: Tue, 5 Feb 2019 10:07:04 +0100
-Message-ID: <1549357625-7229-2-git-send-email-alexandre.torgue@st.com>
+Subject: [PATCH 2/2] ARM: dts: stm32: add initial support of stm32mp157c-dk2 board
+Date: Tue, 5 Feb 2019 10:07:05 +0100
+Message-ID: <1549357625-7229-3-git-send-email-alexandre.torgue@st.com>
 References: <1549357625-7229-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,33 +12,35 @@ To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.o
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support of stm32mp157a discovery1 board (part number: STM32MP157A-DK1).
-This board embeds a STM32MP157a SOC with AC package (TFBGA361, 148 ios)
-and 512MB of DDR3. Several connections are available on this boards:
-4*USB2.0, 1*USB2.0 typeC, SDcard, RJ45, HDMI, Arduino connector, ...
+Add support of stm32mp157c discovery2 board (part number: STM32MP157C-DK2).
+This board is a "super-set" of stm32mp157a-dk1. It embeds a STM32MP157c SOC
+with AC package (TFBGA361, 148 ios) and 512MB of DDR3. Same connections
+than stm32mp157a-dk1 board are available. Display panel (otm8009a) and
+Murata wifi/BT combo is added.
 
-This patch enables basic support for a kernel boot.
+This patch adds basic support for a kernel boot and enable otm8009a display
+panel.
 
 Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bd40148..a1ca713 100644
+index a1ca713..b3105e7 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -951,6 +951,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
- 	stm32746g-eval.dtb \
+@@ -952,6 +952,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
  	stm32h743i-eval.dtb \
  	stm32h743i-disco.dtb \
-+	stm32mp157a-dk1.dtb \
+ 	stm32mp157a-dk1.dtb \
++	stm32mp157c-dk2.dtb \
  	stm32mp157c-ed1.dtb \
  	stm32mp157c-ev1.dtb
  dtb-$(CONFIG_MACH_SUN4I) += \
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
 new file mode 100644
-index 0000000..873a80e
+index 0000000..363aeb9
 --- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -0,0 +1,77 @@
++++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+@@ -0,0 +1,75 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
 +/*
 + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
@@ -47,74 +49,72 @@ index 0000000..873a80e
 +
 +/dts-v1/;
 +
-+#include "stm32mp157c.dtsi"
-+#include "stm32mp157-pinctrl.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
++#include "stm32mp157a-dk1.dts"
 +
 +/ {
-+	model = "STMicroelectronics STM32MP157A-DK1 Discovery Board";
-+	compatible = "st,stm32mp157a-dk1", "st,stm32mp157";
++	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
++	compatible = "st,stm32mp157c-dk2", "st,stm32mp157";
 +
-+	aliases {
-+		ethernet0 = &ethernet0;
-+		serial0 = &uart4;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@c0000000 {
-+		reg = <0xc0000000 0x20000000>;
-+	};
-+
-+	led {
-+		compatible = "gpio-leds";
-+		blue {
-+			label = "heartbeat";
-+			gpios = <&gpiod 11 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
++	reg18: reg18 {
++		compatible = "regulator-fixed";
++		regulator-name = "reg18";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
 +	};
 +};
 +
-+&ethernet0 {
++&dsi {
++	#address-cells = <1>;
++	#size-cells = <0>;
 +	status = "okay";
-+	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
-+	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
-+	pinctrl-names = "default", "sleep";
-+	phy-mode = "rgmii";
-+	max-speed = <1000>;
-+	phy-handle = <&phy0>;
++	phy-dsi-supply = <&reg18>;
 +
-+	mdio0 {
++	ports {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy0: ethernet-phy@0 {
++
++		port@0 {
 +			reg = <0>;
++			dsi_in: endpoint {
++				remote-endpoint = <&ltdc_ep1_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			dsi_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++
++	panel@0 {
++		compatible = "orisetech,otm8009a";
++		reg = <0>;
++		reset-gpios = <&gpioe 4 GPIO_ACTIVE_LOW>;
++		status = "okay";
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&dsi_out>;
++			};
 +		};
 +	};
 +};
 +
-+&iwdg2 {
-+	timeout-sec = <32>;
++&ltdc {
 +	status = "okay";
-+};
 +
-+&rng1 {
-+	status = "okay";
-+};
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+&rtc {
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_pins_a>;
-+	status = "okay";
++		ltdc_ep1_out: endpoint@1 {
++			reg = <1>;
++			remote-endpoint = <&dsi_in>;
++		};
++	};
 +};
 -- 
 2.7.4
