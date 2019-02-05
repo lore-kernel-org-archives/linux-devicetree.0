@@ -1,225 +1,86 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
-Date: Tue, 5 Feb 2019 11:15:13 -0500
-Message-ID: <124e9f09-fb60-071d-e2ba-ec6f7fb3955c@ti.com>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
- <1549290167-876-2-git-send-email-rogerq@ti.com>
- <20190204163312.GI5720@atomide.com> <5C5959DB.2090608@ti.com>
- <f1b689cc-5d1b-0333-7a1c-cb6d58169e12@ti.com> <5C59AEA3.1080400@ti.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 5/5] arm: dts: axpxx: add charge led node
+Date: Wed, 6 Feb 2019 00:16:53 +0800
+Message-ID: <CAGb2v66B3X=hyCCanUv6yGziVcu3WrRcKODBp266ODL+yQ4m1w@mail.gmail.com>
+References: <20190131082308.22522-1-stefan@olimex.com> <20190131082308.22522-5-stefan@olimex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C59AEA3.1080400@ti.com>
-Content-Language: en-US
+In-Reply-To: <20190131082308.22522-5-stefan@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>, s-anna@ti.com
-Cc: ohad@wizery.com, bjorn.andersson@linaro.org, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Stefan Mavrodiev <stefan@olimex.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Roger,
+On Thu, Jan 31, 2019 at 4:25 PM Stefan Mavrodiev <stefan@olimex.com> wrote:
+>
+> Add dt node for axp20x-led driver controlling CHGLED.
+> Default status is disabled, since it may be not used.
+>
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
 
-On 02/05/2019 10:41 AM, Roger Quadros wrote:
-> Murali,
-> 
-> On 05/02/19 17:08, Murali Karicheri wrote:
->> Hi Roger,
->>
->> On 02/05/2019 04:39 AM, Roger Quadros wrote:
->>> Hi Tony & Suman,
->>>
->>> On 04/02/19 18:33, Tony Lindgren wrote:
->>>> Hi,
->>>>
->>>> * Roger Quadros <rogerq@ti.com> [190204 14:23]:
->>>>> From: Suman Anna <s-anna@ti.com>
->>>> ...
->>>>> +Example:
->>>>> +========
->>>>> +1.    /* AM33xx PRU-ICSS */
->>>>> +
->>>>> +    pruss: pruss@0 {
->>>>> +        compatible = "ti,am3356-pruss";
->>>>> +        reg = <0x0 0x2000>,
->>>>> +              <0x2000 0x2000>,
->>>>> +              <0x10000 0x3000>;
->>>>> +        reg-names = "dram0", "dram1",
->>>>> +                "shrdram2";
->>>>> +        #address-cells = <1>;
->>>>> +        #size-cells = <1>;
->>>>> +        ranges;
->>>>
->>>> Thanks for fixing up the reg ranges for the top level node.
->>>>
->>>> Ideally there would not even be a top level node here as
->>>> AFAIK the whole PRUSS is a collection of devices on a PRU
->>>> internal interconnect. So following that path a bit further..
->>>> How about just get rid of the top level node and just do:
->>>>
->>>> pruss: pruss@0 {
->>>>      dram0: memory@0 {
->>>>             device_type = "memory";
->>>>             reg = <0x0 0x2000>;
->>>>      };
->>>>
->>>>      dram1: memory@2000 {
->>>>             device_type = "memory";
->>>>             reg = <0x2000 0x2000>;
->>>>      };
->>>
->>> Actually dram0 and dram1 are data memories for PRU0 and PRU1 respectively.
->>> Isn't it better if they are moved to the pru node?
->>> e.g.
->>>
->>>      pru0: pru@34000 {
->>>          compatible = "ti,am3356-pru";
->>>          reg = <0x34000 0x2000>,
->>>                <0x22000 0x400>,
->>>                <0x22400 0x100>,
->>>                <0x0     0x2000>;
->>>          reg-names = "iram", "control", "debug", "dram";
->>>          ...
->>>      };
->>>
->>>      pru1: pru@38000 {
->>>          compatible = "ti,am3356-pru";
->>>          reg = <0x38000 0x2000>,
->>>                <0x24000 0x400>,
->>>                <0x24400 0x100>,
->>>                <0x2000  0x2000>;
->>>          reg-names = "iram", "control", "debug", "dram";
->>>          ...
->>>      };
->>>
->>> I think it is better to place a restriction that firmware on PRU0 cannot use data
->>> memory of PRU1 and vice versa.
->>>
->> That will not work as there are switch firmware cases where PRU access
->> DRAM of other PRU and is a valid case to support in the future. So let
->> us not do that.
-> 
-> PRU firmware accessing DRAM of other PRU is a design contract and that use case
-> requires both PRUs to be loaded with matching firmware. That should continue to work.
-> 
-> What I'm suggesting here is that kernel remoteproc driver should have nothing to do
-> with the other PRU's data RAM.
-> 
-> The application driver if needs both PRUs then it can obviously access both DRAMs
-> as it has a phandle to both PRUs.
-> 
-That should be fine.
+Please include a cover letter for such a patch series.
 
-Regards,
-Murali
+Also, do any boards actually use this? I know the Pine64 does, but the
+LED is left to the user to populate. I would really like to have an in
+kernel user of this function, so that we can verify it.
 
-> cheers,
-> -roger
-> 
->>
->> Murali
->>> Application drivers do sometimes need to read/write to data memory. The pru_rproc
->>> driver could provide a API for the application drivers to get virtual address of
->>> the respective PRU's data memory.
->>>
->>>>
->>>>      shrdram2: memory@10000 {
->>>>          device_type = "memory";
->>>>          reg = <0x10000 0x3000>;
->>>>      };
->>>
->>> Shared RAM is not so straight forward. Both PRU firmwares and both application drivers
->>> might need to read/write here. The area split is decided by firmware design and there
->>> is no hardware protection to prevent from stomping on each others toes.
->>>
->>> We need a carveout based memory allocator at least I think that can do a
->>> allocate(base_offset, size); into shared RAM.
->>>
->>> This could be used by pru_rproc driver at firmware load time and by application drivers
->>> at initialization time.
->>>
->>> Thoughts?
->>>
->>>>
->>>>      pruss_cfg: cfg@26000 {
->>>>          ...
->>>>      };
->>>>      ...
->>>> };
->>>>
->>>> If the device_type = "memory" cannot be used here for
->>>> being specific to the top level properties, then
->>>> there's probably some other generic property usable
->>>> here :)
->>>>
->>>>> +        pruss_mii_rt: mii_rt@32000 {
->>>>> +            reg = <0x32000 0x58>;
->>>>> +        };
->>>>
->>>> The node name should not have underscores so
->>>> pruss_mii_rt: mii-rt@32000. Please check the others
->>>> too, like app_node.
->>>>
->>>
->>> OK.
->>>
->>>>> +    app_node: app_node {
->>>>> +        prus = <&pru0>, <&pru1>;
->>>>> +        firmware-name = "pruss-app-fw", "pruss-app-fw-2";
->>>>> +        ti,pruss-gp-mux-sel = <2>, <1>;
->>>>> +        /* setup interrupts for prus:
->>>>> +           prus[0] => pru1_0: ev=16, chnl=2, host-irq=7,
->>>>> +           prus[1] => pru1_1: ev=19, chnl=1, host-irq=3 */
->>>>> +        ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
->>>>> +    }
->>>>
->>>> If the ti,pruss-gp-mux-sel and ti,pru-interrupt-map are
->>>> firmware configuration options, maybe leave them out of
->>>> the dts completely and make the app-node optional.
->>>
->>> Yes the app-node is optional. I will mention it.
->>>
->>> No, ti,pruss-gp-mux-sel and ti,pru-interrupt-map are not firmware options.
->>> But these settings are application/firmware specific.
->>>
->>> ti,pru-interrupt-map specifies the configuration to be used for the INTC interrupt
->>> controller.
->>>
->>> ti,pruss-gp-mux-sel is used to configure this register.
->>> "Table 30-20. PRUSS_GPCFG0" in http://www.tij.co.jp/jp/lit/ug/spruhz7h/spruhz7h.pdf
->>> "29:26 PR1_PRU0_GP_MUX_SEL"
->>>
->>> It configures how the pins from the PRUSS module are routed internally
->>> to the various modules.
->>>
->>> see "30.2.1 PRU-ICSS I/O Interface"
->>> and "Table 30-1. PRU-ICSS1 I/O Signals"
->>>
->>>>
->>>> And have a proper compatible for this node such as
->>>> "ti,pruss-app-xyz". And this should be only set if the the
->>>> hardware is wired up in such way that things need to be
->>>> configured in the dts rather than by the firmware.
->>>
->>> Yes, compatible is a required property as we need to load
->>> the appropriate application (kernel space) driver for it.
->>> I will fix the example.
->>>
->>>>
->>>> And then you can just hide mux-sel and interrupt-map
->>>> behind the compatible property for that hardware. And
->>>> leave them out from the dts and have the handling driver
->>>> would set mux-sel and interrupt-map based on the
->>>> match->data during probe.
->>>
->>> To summarize:
->>>
->>> I'll mark the app node as optional. Only required if a kernel
->>> driver is required for the application.
->>> Compatible is mandatory for app node.
->>> ti,pruss-gp-mux-sel and ti,pru-interrupt-map are optional
->>> for app node.
->>>
->>> cheers,
->>> -roger
->>>
-> 
+ChenYu
+
+> ---
+>  arch/arm/boot/dts/axp209.dtsi | 5 +++++
+>  arch/arm/boot/dts/axp22x.dtsi | 5 +++++
+>  arch/arm/boot/dts/axp81x.dtsi | 5 +++++
+>  3 files changed, 15 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
+> index 0d9ff12bdf28..f972b6f3ecd0 100644
+> --- a/arch/arm/boot/dts/axp209.dtsi
+> +++ b/arch/arm/boot/dts/axp209.dtsi
+> @@ -69,6 +69,11 @@
+>                 #gpio-cells = <2>;
+>         };
+>
+> +       axp_led: led {
+> +               compatible = "x-powers,axp20x-led";
+> +               status = "disabled";
+> +       };
+> +
+>         battery_power_supply: battery-power-supply {
+>                 compatible = "x-powers,axp209-battery-power-supply";
+>                 status = "disabled";
+> diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
+> index 65a07a67aca9..92a0b64252b1 100644
+> --- a/arch/arm/boot/dts/axp22x.dtsi
+> +++ b/arch/arm/boot/dts/axp22x.dtsi
+> @@ -62,6 +62,11 @@
+>                 #io-channel-cells = <1>;
+>         };
+>
+> +       axp_led: led {
+> +               compatible = "x-powers,axp20x-led";
+> +               status = "disabled";
+> +       };
+> +
+>         battery_power_supply: battery-power-supply {
+>                 compatible = "x-powers,axp221-battery-power-supply";
+>                 status = "disabled";
+> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
+> index bd83962d3627..22e243cc40d5 100644
+> --- a/arch/arm/boot/dts/axp81x.dtsi
+> +++ b/arch/arm/boot/dts/axp81x.dtsi
+> @@ -74,6 +74,11 @@
+>                 };
+>         };
+>
+> +       axp_led: led {
+> +               compatible = "x-powers,axp20x-led";
+> +               status = "disabled";
+> +       };
+> +
+>         battery_power_supply: battery-power-supply {
+>                 compatible = "x-powers,axp813-battery-power-supply";
+>                 status = "disabled";
+> --
+> 2.17.1
+>
