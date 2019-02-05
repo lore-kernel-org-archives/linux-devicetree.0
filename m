@@ -1,114 +1,97 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v3 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Tue, 5 Feb 2019 08:33:04 +0000
-Message-ID: <BYAPR07MB47097B8DD9A86D9066B35E31DD6E0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1548935553-452-1-git-send-email-pawell@cadence.com>
- <1548935553-452-6-git-send-email-pawell@cadence.com>
- <20190204114841.GD28608@kroah.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 2/3] mmc: sunxi: Filter out unsupported modes declared in
+ the device tree
+Date: Tue, 5 Feb 2019 16:42:53 +0800
+Message-ID: <CAGb2v64RAfa1zTq+A0Vjc6TPZ7K9z7qU6qNd8nfKm1U87xDcxw@mail.gmail.com>
+References: <20190203155628.16767-1-wens@csie.org> <20190203155628.16767-3-wens@csie.org>
+ <20190204093427.vg63e5xmd7u52leh@flea> <CAGb2v64-3Cs_RaO4erAr96JStEUzZ7ZRDjAYYjK2QsWfxusKxQ@mail.gmail.com>
+ <20190204134110.dvo3qvnhiksqig2l@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204114841.GD28608@kroah.com>
-Content-Language: en-US
+In-Reply-To: <20190204134110.dvo3qvnhiksqig2l@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Chris Blake <chrisrblake93@gmail.com>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
->On Thu, Jan 31, 2019 at 11:52:32AM +0000, Pawel Laszczak wrote:
->> This patch introduce new Cadence USBSS DRD driver
->> to linux kernel.
->>
->> The Cadence USBSS DRD Driver is a highly
->> configurable IP Core which can be
->> instantiated as Dual-Role Device (DRD),
->> Peripheral Only and Host Only (XHCI)
->> configurations.
->>
->> The current driver has been validated with
->> FPGA burned. We have support for PCIe
->> bus, which is used on FPGA prototyping.
->>
->> The host side of USBSS-DRD controller is compliance
->> with XHCI specification, so it works with
->> standard XHCI linux driver.
+On Mon, Feb 4, 2019 at 9:41 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
->Please line-wrap this properly at 72 columns, like your editor asks you
->to when you run git :)
+> On Mon, Feb 04, 2019 at 06:16:24PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, Feb 4, 2019 at 5:34 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Sun, Feb 03, 2019 at 11:56:27PM +0800, Chen-Yu Tsai wrote:
+> > > > The MMC device tree bindings include properties used to signal various
+> > > > signalling speed modes. Until now the sunxi driver was accepting them
+> > > > without any further filtering, while the sunxi device trees were not
+> > > > actually using them.
+> > > >
+> > > > Since some of the H5 boards can not run at higher speed modes stably,
+> > > > we are resorting to declaring the higher speed modes per-board.
+> > > >
+> > > > Regardless, having boards declare modes and blindly following them,
+> > > > even without proper support in the driver, is generally a bad thing.
+> > > >
+> > > > Filter out all unsupported modes from the capabilities mask after
+> > > > the device tree properties have been parsed.
+> > > >
+> > > > Cc: <stable@vger.kernel.org>
+> > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > >
+> > > > ---
+> > > >
+> > > > This should be backported to stable kernels in case people try to run
+> > > > new device trees (that declare newly supported modes) with old kernels.
+> > > > ---
+> > > >  drivers/mmc/host/sunxi-mmc.c | 16 ++++++++++++++++
+> > > >  1 file changed, 16 insertions(+)
+> > > >
+> > > > diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+> > > > index 7415af8c8ff6..a01433012db0 100644
+> > > > --- a/drivers/mmc/host/sunxi-mmc.c
+> > > > +++ b/drivers/mmc/host/sunxi-mmc.c
+> > > > @@ -1415,6 +1415,22 @@ static int sunxi_mmc_probe(struct platform_device *pdev)
+> > > >       if (ret)
+> > > >               goto error_free_dma;
+> > > >
+> > > > +     /*
+> > > > +      * If we don't support delay chains in the SoC, we can't use any
+> > > > +      * of the DDR speed modes. Mask them out in case the device
+> > > > +      * tree specifies the properties for them, which gets added to
+> > > > +      * the caps by mmc_of_parse() above.
+> > > > +      */
+> > > > +     if (!(host->cfg->clk_delays || host->use_new_timings))
+> > > > +             mmc->caps &= ~(MMC_CAP_3_3V_DDR | MMC_CAP_1_8V_DDR |
+> > > > +                            MMC_CAP_1_2V_DDR);
+> > > > +
+> > > > +     /* TODO: UHS modes untested due to lack of supporting boards */
+> > > > +     mmc->caps &= ~MMC_CAP_UHS;
+> > >
+> > > I've tested up to SDR104 and it works on the A64 at least
+> >
+> > That's good to know. What board was this on? I had given up hope waiting
+> > for a vendor to produce a board that could do proper voltage switching for
+> > SD cards.
 >
->>
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->> ---
->>  drivers/usb/Kconfig                |    2 +
->>  drivers/usb/Makefile               |    2 +
->>  drivers/usb/cdns3/Kconfig          |   44 +
->>  drivers/usb/cdns3/Makefile         |   14 +
->>  drivers/usb/cdns3/cdns3-pci-wrap.c |  155 +++
->>  drivers/usb/cdns3/core.c           |  403 ++++++
->>  drivers/usb/cdns3/core.h           |  116 ++
->>  drivers/usb/cdns3/debug.h          |  168 +++
->>  drivers/usb/cdns3/debugfs.c        |  164 +++
->>  drivers/usb/cdns3/drd.c            |  365 +++++
->>  drivers/usb/cdns3/drd.h            |  162 +++
->>  drivers/usb/cdns3/ep0.c            |  907 +++++++++++++
->>  drivers/usb/cdns3/gadget-export.h  |   28 +
->>  drivers/usb/cdns3/gadget.c         | 1985 ++++++++++++++++++++++++++++
->>  drivers/usb/cdns3/gadget.h         | 1207 +++++++++++++++++
->>  drivers/usb/cdns3/host-export.h    |   28 +
->>  drivers/usb/cdns3/host.c           |   72 +
->>  drivers/usb/cdns3/trace.c          |   23 +
->>  drivers/usb/cdns3/trace.h          |  404 ++++++
->>  19 files changed, 6249 insertions(+)
->>  create mode 100644 drivers/usb/cdns3/Kconfig
->>  create mode 100644 drivers/usb/cdns3/Makefile
->>  create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
->>  create mode 100644 drivers/usb/cdns3/core.c
->>  create mode 100644 drivers/usb/cdns3/core.h
->>  create mode 100644 drivers/usb/cdns3/debug.h
->>  create mode 100644 drivers/usb/cdns3/debugfs.c
->>  create mode 100644 drivers/usb/cdns3/drd.c
->>  create mode 100644 drivers/usb/cdns3/drd.h
->>  create mode 100644 drivers/usb/cdns3/ep0.c
->>  create mode 100644 drivers/usb/cdns3/gadget-export.h
->>  create mode 100644 drivers/usb/cdns3/gadget.c
->>  create mode 100644 drivers/usb/cdns3/gadget.h
->>  create mode 100644 drivers/usb/cdns3/host-export.h
->>  create mode 100644 drivers/usb/cdns3/host.c
->>  create mode 100644 drivers/usb/cdns3/trace.c
->>  create mode 100644 drivers/usb/cdns3/trace.h
+> On a Sootech SoM, that had an HS400 eMMC and an SDR104 Marvell WiFi
+> chip. I don't have that board anymore, and the website seems down now
+> though :/
+
+Bummer. So no commercially available board still. :/
+
+> > > > +     /* TODO: This driver doesn't support HS200 and HS400 modes yet */
+> > > > +     mmc->caps2 &= ~(MMC_CAP2_HS200 | MMC_CAP2_HS400);
+> > >
+> > > And HS200 works too.
+> >
+> > OK. I thought there was some special magic required in the driver. Maybe
+> > that was for HS400 only? Again, what board was this on?
 >
->This is way too big to try to review all at once.  You need to break
->this up into logical chunks, each one adding a single functionality to
->make it possible to actually review it.
->
+> Yeah, that was for HS400 only
 
-In the past driver was split into series of patch, but it was difficult to =
-review for other=20
-reviewers so I made decision to prepare it in this way.=20
-The short discuss you can find on https://lkml.org/lkml/2018/11/30/502.
+OK. So would unblocking UHS and HS200, but not enabling them by default,
+which is essentially the original behavior, work for you?
 
-Quotation: "
->> Frankly, I don't understand why this is a series. It's a single driver a=
-nd splitting it into
->> a series just makes it more difficult to review, actually.
->>
->> Sure, a single patch will be large, but there's no way to have a functio=
-nal driver until
->> all patches are applied, anyway.
->>
->
->Yes, I agree with Felipe. Pawel, you could remove the "RFC" prefix, and se=
-nd the whole
->one as one patch. I will test it at my hardware.
+If so, I'll respin a version tonight.
 
-Ok, I will prepare such single patch. =20
-Peter I know that you have little different platform.=20
-Probably you should made some additional changes for your platform.
-"
-
-Thanks
-
-Pawel Laszczak.
+ChenYu
