@@ -1,54 +1,84 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v3 15/15] ARM64: dts: marvell: armada-3720-espressobin: declare PCIe warm reset pin
-Date: Wed, 06 Feb 2019 12:12:46 +0100
-Message-ID: <87r2cl6uhd.fsf@FE-laptop>
-References: <20190108162441.5278-1-miquel.raynal@bootlin.com> <20190108162441.5278-16-miquel.raynal@bootlin.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 0/7] Add Armada 3700 COMPHY support
+Date: Wed, 6 Feb 2019 16:47:39 +0530
+Message-ID: <300b86e7-1d00-da92-2203-a7cfeb2d7aa8@ti.com>
+References: <20190108163124.6409-1-miquel.raynal@bootlin.com>
+ <20190206095743.5eed3584@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108162441.5278-16-miquel.raynal@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190206095743.5eed3584@xps13>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On mar., janv. 08 2019, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-
-> Ensure the PCIe endpoint card reset that is toggled by the PCIe
-> controller itself is muxed correctly on the EspressoBin.
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Applied to mvebu/dt64
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> index c5c72902c647..f19c1ecd5703 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> @@ -47,6 +47,8 @@
->  &pcie0 {
->  	status = "okay";
->  	phys = <&comphy1 0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
->  };
->  
->  /* J6 */
-> -- 
-> 2.19.1
->
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+SGksCgpPbiAwNi8wMi8xOSAyOjI3IFBNLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+IEhpIEtpc2hv
+biwKPiAKPiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZSBv
+biBUdWUsICA4IEphbiAyMDE5Cj4gMTc6MzE6MTcgKzAxMDA6Cj4gCj4+IEhlbGxvLAo+Pgo+PiBU
+aGlzIHNlcmllcyBhZGRzIGEgbmV3IGRyaXZlciB0byBzdXBwb3J0IEFybWFkYSAzNzAwIENPTVBI
+WSBJUC4KPj4gVGhlIHNlcmllcyBoYXMgYmVlbiB0ZXN0ZWQgb24gYW4gRVNQUkVTU09iaW4gd2l0
+aCBTQVRBLCBQQ0llCj4+IGFuZCBVU0IzIGhvc3QuIEZvciB0aGlzIHB1cnBvc2UsIHBhdGNoIDEg
+ZW51bWVyYXRlcyB0aGUgU0FUQSBQSFkKPj4gbW9kZS4gVGhlIFNHTUlJIFBIWSBtb2RlIHRoYXQg
+aXMgc3VwcG9ydGVkIGJ5IHRoZSBJUCBoYXMgYmVlbiB3cml0dGVuCj4+ICh1c2VzIFNNQyBjYWxs
+cyBhbnl3YXkpIGJ1dCBjb3VsZCBub3QgYmUgdGVzdGVkIG9uIHRoaXMgcGxhdGZvcm0uCj4+Cj4+
+IFRocmVlIHNlcmllcyB3aWxsIGZvbGxvdyB0byBhZGQgUEhZIHN1cHBvcnQgKG9yIGF0IGxlYXN0
+IGEgUEhZIG5vZGVzCj4+IGluIHRoZSBBMzcwMC9FU1BSRVNTT2JpbiBkZXZpY2UgdHJlZXMpIHRv
+IHRoZSBNVkVCVSBBSENJIGRyaXZlciwgdGhlCj4+IEFhcmR2YXJrIFBDSSBjb250cm9sbGVyIGRy
+aXZlciBhbmQgdGhlIE1WRUJVIHhIQ0kgZHJpdmVyLiBBbGwgdGhpcyBpcwo+PiBuZWVkZWQgaW4g
+b3JkZXIgdG8gYWNoaWV2ZSBzdXNwZW5kIHRvIFJBTSBvbiB0aGlzIHBsYXRmb3JtLgo+Pgo+PiBU
+aGFua3MsCj4+IE1pcXXDqGwKPj4KPiAKPiBBbnkgaW5wdXRzIG9uIHRoaXMgc2VyaWVzPyBJdCBp
+cyBpbXBvcnRhbnQgZm9yIG1lIGJlY2F1c2UgaXQgaW1wYWN0cwo+IFNBVEEsIFBDSWUgYW5kIFVT
+QiBjaGFuZ2VzIEkgcGxhbiB0byBnZXQgbWVyZ2UuCgptZXJnZWQgbm93LCB0aGFua3MuCgotS2lz
+aG9uCj4gCj4gVGhhbmtzLAo+IE1pcXXDqGwKPiAKPj4KPj4gQ2hhbmdlcyBzaW5jZSB2NDoKPj4g
+PT09PT09PT09PT09PT09PT0KPj4gKiBGaXhlZCBlcnJvciBpbiB0aGUgZHJpdmVyIHByb2JlIHdo
+ZXJlIFBIWV9JTlRFUkZBQ0VfTU9ERV9OQSB3YXMKPj4gICBhc3NpZ25lZCB0byBsYW5lLT5tb2Rl
+IGluc3RlYWQgb2YgbGFuZS0+c3VibW9kZS4KPj4gKiBDb21waWxlLWluIHRoZSBkcml2ZXIgYnkg
+ZGVmYXVsdCAoZGVwZW5kcyBvbiBBUkNIX01WRUJVKS4KPj4gKiBBZGQgZGVwZW5kZW5jeSBvbiBI
+QVZFX0FSTV9TTUNDIGluIEtjb25maWcuCj4+Cj4+IENoYW5nZXMgc2luY2UgdjM6Cj4+ID09PT09
+PT09PT09PT09PT09Cj4+ICogQWRkZWQgUm9iJ3MgUmV2aWV3ZWQtYnkgdGFnIG9uIGJpbmRpbmdz
+Lgo+PiAqIFJlYmFzZWQgb24gdG9wIG9mIHBoeSAtbmV4dCBhcyBvZiB0aGUgMTJ0aCBvZiBEZWNl
+bWJlciwgMjAxOC4KPj4gKiBBZGFwdGVkIHRoZSBkcml2ZXIgdG8gc3VwcG9ydCBTR01JSS8xMDAw
+QkFTRVggYW5kCj4+ICAgSFNfU0dNSUkvMjUwMEJBU0VYLgo+Pgo+PiBDaGFuZ2VzIHNpbmNlIHYy
+Ogo+PiA9PT09PT09PT09PT09PT09PQo+PiAqIFJlbW92ZSByZWR1bmRhbnQgY2hlY2sgb24gbGFu
+ZS0+cG9ydC9hcmdzLT5hcmdbMF0gYXQgdGhlIGVuZCBvZiB0aGUKPj4gICAtPnhsYXRlKCkgY2Fs
+bGJhY2suIERvIGl0IG9uIGJvdGggYXJtYWRhLWNwMTEwIGFuZCBhcm1hZGEtYTM3MDAgIAo+PiAg
+IENPTVBIWSBkcml2ZXJzLgo+PiAqIFB1dCBteSBTb0IgYXMgYXV0aG9yIG9mIHRoZSBwYXRjaCBm
+aXJzdCB3aGVuIGEgcGF0Y2ggaXMgY28tZGV2ZWxvcGVkLgo+Pgo+PiBDaGFuZ2VzIHNpbmNlIHYx
+Ogo+PiA9PT09PT09PT09PT09PT09PQo+PiAqIEZpeCB3cm9uZyBjaGVjayBpbiAtPnhsYXRlKCku
+Cj4+ICogQXBwbHkgdGhlIHNhbWUgZml4IHRvIHRoZSBjcDExMCBjb21waHkgZHJpdmVyIGZyb20g
+d2hpY2ggdGhlIGEzNzAwCj4+ICAgZHJpdmVyIGlzIGJhc2VkLgo+PiAqIEFkZGVkIGNyZWRpdCB0
+byBHcmVnb3J6IEphc3pjenlrIGZvciBoaXMgd29yay4KPj4gKiBBZGRlZCBTdWdnZXN0ZWQtYnkg
+dGFnIHRvIHRoZSBwYXRjaCBhZGRpbmcgdGhlIENPTVBIWSBEVCBub2RlLgo+Pgo+Pgo+PiBHcnpl
+Z29yeiBKYXN6Y3p5ayAoMSk6Cj4+ICAgcGh5OiBlbnVtZXJhdGUgU0FUQSBQSFkgbW9kZQo+Pgo+
+PiBNaXF1ZWwgUmF5bmFsICg2KToKPj4gICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogZml4IHBv
+cnQgY2hlY2sgaW4gLT54bGF0ZSgpCj4+ICAgcGh5OiBhZGQgQTM3MDAgQ09NUEhZIHN1cHBvcnQK
+Pj4gICBkdC1iaW5kaW5nczogcGh5OiBtdmVidS1jb21waHk6IGV4dGVuZCB0aGUgZmlsZSB0byBk
+ZXNjcmliZSBhMzcwMAo+PiAgICAgYmluZGluZ3MKPj4gICBNQUlOVEFJTkVSUzogcGh5OiBhZGQg
+ZW50cnkgZm9yIEFybWFkYSAzNzAwIENPTVBIWSBkcml2ZXIKPj4gICBBUk02NDogZHRzOiBtYXJ2
+ZWxsOiBhcm1hZGEtMzd4eDogZml4IFNBVEEgbm9kZSBzY29wZQo+PiAgIEFSTTY0OiBkdHM6IG1h
+cnZlbGw6IGFybWFkYS0zN3h4OiBkZWNsYXJlIHRoZSBDT01QSFkgbm9kZQo+Pgo+PiAgLi4uL2Jp
+bmRpbmdzL3BoeS9waHktbXZlYnUtY29tcGh5LnR4dCAgICAgICAgIHwgIDY1ICsrKy0KPj4gIE1B
+SU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNiArCj4+ICBh
+cmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTM3eHguZHRzaSAgfCAgMzEgKy0KPj4g
+IGRyaXZlcnMvcGh5L21hcnZlbGwvS2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAxMiArCj4+
+ICBkcml2ZXJzL3BoeS9tYXJ2ZWxsL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+
+PiAgZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUtYTM3MDAtY29tcGh5LmMgIHwgMzE4ICsr
+KysrKysrKysrKysrKysrKwo+PiAgZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUtY3AxMTAt
+Y29tcGh5LmMgIHwgICAyIC0KPj4gIGluY2x1ZGUvbGludXgvcGh5L3BoeS5oICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgMSArCj4+ICA4IGZpbGVzIGNoYW5nZWQsIDQyMSBpbnNlcnRpb25zKCsp
+LCAxNSBkZWxldGlvbnMoLSkKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BoeS9tYXJ2
+ZWxsL3BoeS1tdmVidS1hMzcwMC1jb21waHkuYwo+PgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
