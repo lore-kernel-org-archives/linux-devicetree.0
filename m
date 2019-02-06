@@ -1,72 +1,60 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: clock: ti,
- sci-clk: Add support for parsing clock info from DT
-Date: Wed, 06 Feb 2019 09:47:18 -0800
-Message-ID: <154947523891.74891.8214442349263473281@swboyd.mtv.corp.google.com>
-References: <1546954223-9738-1-git-send-email-t-kristo@ti.com>
- <1546954223-9738-2-git-send-email-t-kristo@ti.com>
- <20190121210449.GB7851@bogus> <7ce7bd25-b5c4-f99d-fda6-0f21376f2204@ti.com>
- <ab8707fb-e632-5be9-9fdb-4b1fb3cb26ba@ti.com>
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 0/8] ARM: at91/dt: update to existing drivers for the
+ sam9x60 SoC
+Date: Wed, 6 Feb 2019 17:51:33 +0000
+Message-ID: <0a24778f-9fc3-6edc-5d74-d152a95d5a98@microchip.com>
+References: <cover.1547629763.git.nicolas.ferre@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ab8707fb-e632-5be9-9fdb-4b1fb3cb26ba@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>
-Cc: devicetree@vger.kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ssantosh@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1547629763.git.nicolas.ferre@microchip.com>
+Content-Language: en-US
+Content-ID: <C96802A825E3BB469161DBD1AE2DE3B9@namprd11.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, sre@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, linux-usb@vger.kernel.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tero Kristo (2019-02-05 00:25:40)
-> On 22/01/2019 09:33, Tero Kristo wrote:
-> > On 21/01/2019 23:04, Rob Herring wrote:
-> >> At first, I thought this was an either/or thing. Use firmware or use DT,
-> >> but it is really only get the clocks used in the DT from firmware.
-> >>
-> >> Why wouldn't you just always do that? I can think of 3 cases:
-> >> reparenting, debug and overlays. This breaks reparenting and overlays,
-> >> right? Debug could be handled with some userspace trigger to get all the
-> >> clocks.
-> > 
-> > Re-parenting this does not break, as the scan still checks every 
-> > possible parent of a clock scanned. Overlays are broken for sure, as we 
-> > don't know which overlays we would be applying, and what clocks would be 
-> > in them. Debug is kind of broken as we only scan a small portion of the 
-> > clocks.
-> > 
-> >>
-> >> Why scan any of the clocks up front? Why not just create the clocks on
-> >> demand? If an unknown clock id is requested, then create the clock and
-> >> query the firmware at that point. That would avoid the DT scan too.
-> >> Maybe there's some issues in the clk framework preventing that, but
-> >> that's not really a DT problem.
-> > 
-> > The very initial version I did a couple of years back, did scan the 
-> > clocks based on need, and registered them dynamically. Stephen shot down 
-> > this based on the assessment that there might be locking issues with the 
-> > common clock framework with this approach leading into potential 
-> > deadlock situations.
-
-It's an interesting idea to limit the scope of clks that are registered
-to only the leaf and whatever up to the root of the tree is involved in
-the working set of the kernel.
-
-> 
-> So Rob, what is the final call on this binding? Ack/NAK? If NAK, shall I 
-> implement a kernel cmdline param to select the parsing method or what is 
-> preferred? Doing it build time with a simple Kconfig seems too limiting.
-> 
-
-Is the problem a performance problem where probing the firmware for all
-the clks is costly and time intensive? So instead of doing that we're
-describing some of the details in DT? Why can't we describe the clk tree
-in C code with some data structure that indicates parent child linkages?
-This is how every other SoC is doing this so far.
+QWxsLA0KDQpPbiAxNi8wMS8yMDE5IGF0IDEwOjU3LCBOaWNvbGFzIEZlcnJlIHdyb3RlOg0KPiBI
+aSwNCj4gDQo+IFRoaXMgc2VyaWVzIGNvbGxlY3RzIHNvbWUgbGl0dGxlIG1vZGlmaWNhdGlvbnMg
+dG8gRFQgYmluZGluZ3MgYW5kIGFzc29jaWF0ZWQNCj4gZHJpdmVycyBjaGFuZ2VzIGZvciBzdXBw
+b3J0aW5nIHRoZSB1cGNvbWluZyBTQU05WDYwIFNvQy4NCj4gDQo+IEkgdG9vayB0aGUgYWR2YW50
+YWdlIG9mIHRoaXMgc2VyaWVzIGZvciBmaXhpbmcgc29tZSBvZiB0aGUgbGVmdG92ZXJzIGluIERU
+DQo+IGJpbmRpbmdzIGZvciByZXNldCBjb250cm9sbGVyIGFuZCBFdGhlcm5ldCBtYWNiLg0KPiAN
+Cj4gVGhlc2UgY2hhbmdlcyB0b3VjaCBzZXZlcmFsIHN1Yi1zeXN0ZW1zIGJ1dCBJIHdvdWxkIGxp
+a2UgdGhhdCB0aGVzZSAobW9zdGx5DQo+IHRyaXZpYWwpIHBhdGNoZXMgc3RheSB0b2dldGhlciBm
+b3IgZmFjaWxpdGF0aW5nIHJldmlld3MsIHByZXZlbnQgYnJlYWtpbmcNCj4gZGVwZW5kZW5jaWVz
+IGFuZCBmYWNpbGl0YXRpbmcgdGhlIHRyYWNraW5nIG9mIGFjY2VwdGFuY2Ugc3RhdHVzLiBIb3dl
+dmVyLCB0ZWxsDQo+IG1lIGlmIHlvdSB0aGluayBvdGhlcndpc2UuDQoNCkl0IHNlZW1zIGl0J3Mg
+bm90IHRoZSBwcmVmZXJyZWQgd2F5IHRvIGdvIGFuZCB0aGF0IEkgbXVzdCBzcGxpdCBhbmQgc2Vu
+ZCANCnRvIHN1Yi1zeXN0ZW0gTWFpbnRhaW5lcnMgc28gdGhhdCBiaW5kaW5ncyBhbmQgZHJpdmVy
+IGNvZGUgZ28gdG9nZXRoZXIgDQp0aHJvdWdoIE1haW50YWluZXIncyBnaXQgdHJlZXMgKFVTQiwg
+cG93ZXIvcmVzZXQsIG5ldGRldikuDQoNCj4gTXkgaW50ZW50aW9ucyBhcmUgdGhhdCB0aGUgc2Vy
+aWVzIHdvdWxkIGVudGVyIE1haW5saW5lIHRocm91Z2ggYXJtLXNvYyB0cmVlOg0KPiBzb3VuZHMg
+b2theSB0byBldmVyeW9uZT8gSWYgb2theSwgSSdtIHJlYWR5IHRvIGNvbGxlY3QgQWNrIHRhZ3Mu
+Li4NCg0KSSdtIHJlLXNlbmRpbmcgdGhpcyBzcGxpdCBzZXJpZXMuIFNvbWUgb2YgdGhlICJSZXZp
+ZXdlZC1ieToiIGFyZSBtaXNzaW5nIA0Kc28gd2UnbGwgaGF2ZSB0aGUgY2hhbmNlIHRvIGFkZCB0
+aGVtIG9uIGluZGl2aWR1YWwgc2VyaWVzLg0KDQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3cyBzbyBm
+YXIuDQoNCkJlc3QgcmVnYXJkcywNCiAgIE5pY29sYXMNCg0KDQo+IEZvciB0aGUgZmlyc3QgYmF0
+Y2gsIEkgc2VuZCB0aGUgd2hvbGUgc2VyaWVzIHRvIGV2ZXJ5b25lLiBJJ2xsIHRyeSBteSBiZXN0
+IHRvDQo+IHJlZHVjZSBzdWJzZXF1ZW50IG1lc3NhZ2UgZGVsaXZlcmllcyBpZiBvbmUgcGFydCBv
+ZiB0aGUgc2VycmllcyBuZWVkcyByZXdvcmsuDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+ICAgIE5p
+Y29sYXMNCj4gDQo+IA0KPiBOaWNvbGFzIEZlcnJlICg4KToNCj4gICAgZHQtYmluZGluZ3M6IGFy
+bTogYXRtZWw6IGFkZCBtaXNzaW5nIHNhbXg3IHRvIHJlc2V0IGNvbnRyb2xsZXINCj4gICAgZHQt
+YmluZGluZ3M6IGFybTogYXRtZWw6IGFkZCBuZXcgc2FtOXg2MCByZXNldCBjb250cm9sbGVyIGJp
+bmRpbmcNCj4gICAgZHQtYmluZGluZ3M6IGFybTogYXRtZWw6IGFkZCBuZXcgc2FtOXg2MCBTRlIg
+YmluZGluZw0KPiAgICBuZXQvbWFjYjogYmluZGluZ3MgZG9jL3RyaXZpYWw6IGZpeCBkb2N1bWVu
+dGF0aW9uIGZvciBzYW1hNWQzIDEwLzEwMA0KPiAgICAgIGludGVyZmFjZQ0KPiAgICBuZXQvbWFj
+YjogYmluZGluZ3MgZG9jOiBhZGQgc2FtOXg2MCBiaW5kaW5nDQo+ICAgIHBvd2VyOiByZXNldDog
+YXQ5MS1yZXNldDogYWRkIHN1cHBvcnQgZm9yIHNhbTl4NjAgU29DDQo+ICAgIFVTQjogaG9zdDog
+b2hjaS1hdDkxOiBhZGQgc2FtOXg2MC1zZnIgZGVmaW5pdGlvbiBmb3Igb2hjaQ0KPiAgICBuZXQ6
+IG1hY2I6IGFkZCBzYW05eDYwLW1hY2IgY29tcGF0aWJpbGl0eSBzdHJpbmcNCj4gDQo+ICAgLi4u
+L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2F0bWVsLXN5c3JlZ3MudHh0ICAgICAgIHwgIDQgKysr
+LQ0KPiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvbWFjYi50eHQgICAg
+ICB8ICA0ICsrLS0NCj4gICBkcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5j
+ICAgICAgICAgICAgfCAgMSArDQo+ICAgZHJpdmVycy9wb3dlci9yZXNldC9hdDkxLXJlc2V0LmMg
+ICAgICAgICAgICAgICAgICAgIHwgMTMgKysrKysrKysrKysrKw0KPiAgIGRyaXZlcnMvdXNiL2hv
+c3Qvb2hjaS1hdDkxLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICA3ICsrKysrLS0NCj4gICA1
+IGZpbGVzIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KDQoN
+Ci0tIA0KTmljb2xhcyBGZXJyZQ0K
