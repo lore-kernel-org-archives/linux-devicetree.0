@@ -1,60 +1,171 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH 3/9] mfd: pm8xxx: convert to v2 irq interfaces to support
- hierarchical IRQ chips
-Date: Wed, 6 Feb 2019 09:10:34 -0500
-Message-ID: <20190206141034.GA5833@basecamp>
-References: <20190125162302.14036-1-masneyb@onstation.org>
- <20190125162302.14036-4-masneyb@onstation.org>
- <CACRpkdZMe+JEQOa1yBfOoAErrC41Q9rggwxNb=_uwq1m2QKWyw@mail.gmail.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Add Qualcomm USB Super-Speed PHY
+ bindings
+Date: Wed, 6 Feb 2019 15:11:47 +0100
+Message-ID: <63959c4f-211e-bc2e-12a4-c4ef61c818a9@linaro.org>
+References: <1548761715-4004-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1548761715-4004-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <20190130200218.GB5908@bogus>
+ <f6823a9e-f2d0-ca5b-a2f8-eb362221ab81@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZMe+JEQOa1yBfOoAErrC41Q9rggwxNb=_uwq1m2QKWyw@mail.gmail.com>
+In-Reply-To: <f6823a9e-f2d0-ca5b-a2f8-eb362221ab81@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+To: Rob Herring <robh@kernel.org>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, andy.gross@linaro.org, swboyd@chromium.org, shawn.guo@linaro.org, vkoul@kernel.org, bjorn.andersson@linaro.org, khasim.mohammed@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Wed, Feb 06, 2019 at 02:07:52PM +0100, Linus Walleij wrote:
-> > +struct pm_irq_data {
-> > +       int num_irqs;
-> > +       struct irq_chip *irq_chip;
-> > +       void (*irq_handler)(struct irq_desc *desc);
-> > +};
-> > +
-> >  struct pm_irq_chip {
-> >         struct regmap           *regmap;
-> >         spinlock_t              pm_irq_lock;
-> >         struct irq_domain       *irqdomain;
-> > -       unsigned int            num_irqs;
-> >         unsigned int            num_blocks;
-> >         unsigned int            num_masters;
-> >         u8                      config[0];
-> > -};
-> > -
-> > -struct pm_irq_data {
-> > -       int num_irqs;
-> > -       const struct irq_domain_ops  *irq_domain_ops;
-> > -       void (*irq_handler)(struct irq_desc *desc);
-> > +       const struct pm_irq_data *pm_irq_data;
-> >  };
+On 2/5/19 12:02, Jorge Ramirez wrote:
+> On 1/30/19 21:02, Rob Herring wrote:
+>> On Tue, Jan 29, 2019 at 12:35:14PM +0100, Jorge Ramirez-Ortiz wrote:
+>>> Binding description for Qualcomm's Synopsys 1.0.0 super-speed PHY
+>>> controller embedded in QCS404.
+>>>
+>>> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+>>> definitions.
+>>>
+>>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+>>> ---
+>>>  .../devicetree/bindings/usb/qcom,usb-ssphy.txt     | 73 ++++++++++++++++++++++
+>>>  1 file changed, 73 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+>>> new file mode 100644
+>>> index 0000000..8ef6e39
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+>>> @@ -0,0 +1,73 @@
+>>> +Qualcomm Synopsys 1.0.0 SS phy controller
+>>> +===========================================
+>>> +
+>>> +Synopsys 1.0.0 ss phy controller supports SS usb connectivity on Qualcomm
+>>> +chipsets
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible:
+>>> +    Value type: <string>
+>>> +    Definition: Should contain "qcom,usb-ssphy".
+>>
+>> This is in no way specific enough.
 > 
-> This doesn't work: the config[0] must be the tail element
-> of the struct since we allocate dynamically the trailing
-> config[] bytes.
+> ok. will remove the old unused bindings and reuse qcom,dwc3-ss-usb-phy
 > 
-> As it looks now, the *pm_irq_data gets overwritten by
-> the configs and it crashes.
+>>
+>>> +
+>>> +- reg:
+>>> +    Value type: <prop-encoded-array>
+>>> +    Definition: USB PHY base address and length of the register map.
+>>> +
+>>> +- #phy-cells:
+>>> +    Value type: <u32>
+>>> +    Definition: Should be 0. See phy/phy-bindings.txt for details.
+>>> +
+>>> +- clocks:
+>>> +    Value type: <prop-encoded-array>
+>>> +    Definition: See clock-bindings.txt section "consumers". List of
+>>> +		 three clock specifiers for reference, phy core and
+>>> +		 pipe clocks.
+>>> +
+>>> +- clock-names:
+>>> +    Value type: <string>
+>>> +    Definition: Names of the clocks in 1-1 correspondence with the "clocks"
+>>> +		 property. Must contain "ref", "phy" and "pipe".
+>>> +
+>>> +- vdd-supply:
+>>> +    Value type: <phandle>
+>>> +    Definition: phandle to the regulator VDD supply node.
+>>> +
+>>> +- vdda1p8-supply:
+>>> +    Value type: <phandle>
+>>> +    Definition: phandle to the regulator 1.8V supply node.
+>>> +
+>>> +
+>>> +Optional child nodes:
+>>> +
+>>> +- vbus-supply:
+>>> +    Value type: <phandle>
+>>> +    Definition: phandle to the VBUS supply node.
+>>
+>> Does the phy actually get supplied by Vbus? If not, then Vbus supply 
+>> should be defined in a USB connector node.
+> 
+> yes per the documentation vbus can optionally be routed to the phy to
+> drive a signal to the controller.
 
-Thank you for testing all of this on actual hardware. You can either
-send out the little issues like this that need corrected and I'll
-collect everything up, and send out a V2 once you are done with testing.
-Or, you can just take my patches, incorporate the fixes, and add me
-with a Co-developed-by tag to the relevant patches. Whatever is easier
-for you. I assume that the latter approach may be easier since you're
-already making the changes in your tree for testing.
 
-Brian
+funny enough when vbus is optionally routed to the phy is not to be
+controlled like we do when the vbus-supply property is present.
+
+So to all effects no, you are right, the phy does not get supplied by VBUS.
+
+would defining the connector like this be enough?
+
+usb3_phy: usb3-phy@78000 {
+	compatible = "qcom,snps-usb-ssphy";
+	[...]
+	usb3_c_connector: usb3-c-connector {
+		compatible = "usb-c-connector";
+		label = "USB-C";
+		type = "micro";
+		vbus-supply = <&usb3_vbus_reg>;
+	};
+};
+
+
+> 
+> 
+>>
+>>> +
+>>> +- resets:
+>>> +    Value type: <prop-encoded-array>
+>>> +    Definition: See reset.txt section "consumers". PHY reset specifiers
+>>> +		 for phy core and COR resets.
+>>
+>> COR or COM?
+> 
+> com
+>>
+>> Looks to me the order is reversed.
+> 
+> yes
+> 
+>>
+>>> +
+>>> +- reset-names:
+>>> +    Value type: <string>
+>>> +    Definition: Names of the resets in 1-1 correspondence with the "resets"
+>>> +		 property. Must contain "com" and "phy".
+>>> +
+>>> +Example:
+>>> +
+>>> +usb3_phy: phy@78000 {
+>>
+>> usb3-phy@...
+> 
+> ok
+> 
+>>
+>>> +	compatible = "qcom,usb-ssphy";
+>>> +	reg = <0x78000 0x400>;
+>>> +	#phy-cells = <0>;
+>>> +	clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+>>> +		 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+>>> +		 <&gcc GCC_USB3_PHY_PIPE_CLK>;
+>>> +	clock-names = "ref", "phy", "pipe";
+>>> +	resets = <&gcc GCC_USB3_PHY_BCR>,
+>>> +		 <&gcc GCC_USB3PHY_PHY_BCR>;
+>>> +	reset-names = "com", "phy";
+>>> +	vdd-supply = <&vreg_l3_1p05>;
+>>> +	vdda1p8-supply = <&vreg_l5_1p8>;
+>>> +	vbus-supply = <&usb3_vbus_reg>;
+>>> +};
+>>> -- 
+>>> 2.7.4
+>>>
+>>
+> 
