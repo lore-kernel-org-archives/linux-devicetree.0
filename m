@@ -1,38 +1,100 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 4/7] of: address: Add support for the dma-parent
- property
-Date: Wed, 6 Feb 2019 14:57:51 -0600
-Message-ID: <CAL_Jsq+y++qMkCNehPxZ3J8bfU7Atgppy4uMtTEdPdkt9Xv_jQ@mail.gmail.com>
-References: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
- <824396752ee40c8e4222fddb4a80408646989c17.1549482066.git-series.maxime.ripard@bootlin.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 3/5] media: sunxi: Add A10 CSI driver
+Date: Wed, 6 Feb 2019 22:16:05 +0100
+Message-ID: <20190206211605.27cq2lxuv3gtyyux@flea>
+References: <cover.ba7411f0c7155d0292b38d3dec698e26b5cc813b.1548687041.git-series.maxime.ripard@bootlin.com>
+ <c1a7d46f8504decb58ff224b0b5f2f0733282cc6.1548687041.git-series.maxime.ripard@bootlin.com>
+ <20190129123949.qdmqnfaym3y42dvj@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <824396752ee40c8e4222fddb4a80408646989c17.1549482066.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190129123949.qdmqnfaym3y42dvj@paasikivi.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgNiwgMjAxOSBhdCAxOjQyIFBNIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBh
-cmRAYm9vdGxpbi5jb20+IHdyb3RlOgo+Cj4gU29tZSBTb0NzIGhhdmUgZGV2aWNlcyB0aGF0IGFy
-ZSB1c2luZyBhIHNlcGFyYXRlIGJ1cyBmcm9tIHRoZSBtYWluIGJ1cyB0bwo+IHBlcmZvcm0gRE1B
-Lgo+Cj4gVGhlc2UgYnVzZXMgbWlnaHQgaGF2ZSBzb21lIHJlc3RyaWN0aW9ucyBhbmQvb3IgZGlm
-ZmVyZW50IG1hcHBpbmcgdGhhbiBmcm9tCj4gdGhlIENQVSBzaWRlLCBzbyB3ZSdkIG5lZWQgdG8g
-ZXhwcmVzcyB0aG9zZSB1c2luZyB0aGUgdXN1YWwgZG1hLXJhbmdlcywgYnV0Cj4gdXNpbmcgYSBk
-aWZmZXJlbnQgRFQgbm9kZSB0aGFuIHRoZSBub2RlJ3MgcGFyZW50Lgo+Cj4gQWRkIHN1cHBvcnQg
-Zm9yIGEgZG1hLXBhcmVudCBwcm9wZXJ0eSB0aGF0IGxpbmtzIHRvIHRoZSBETUEgYnVzIHVzZWQg
-YnkgdGhlCj4gZGV2aWNlIGluIHN1Y2ggYSBjYXNlLgoKPz8gZG1hLXBhcmVudCBpcyBnb25lIG5v
-dywgcmlnaHQ/IEFuZCBJIHNlZSAjZG1hLXBhcmVudC1jZWxscz8KClJvYgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Sakari,
+
+Thanks for your review, I have a few questions though, and the rest
+will be addressed in the next version.
+
+On Tue, Jan 29, 2019 at 02:39:49PM +0200, Sakari Ailus wrote:
+> > +static int csi_notify_complete(struct v4l2_async_notifier *notifier)
+> > +{
+> > +	struct sun4i_csi *csi = container_of(notifier, struct sun4i_csi,
+> > +					     notifier);
+> > +	int ret;
+> > +
+> > +	ret = v4l2_device_register_subdev_nodes(&csi->v4l);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	ret = sun4i_csi_v4l2_register(csi);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	return media_create_pad_link(&csi->src_subdev->entity, csi->src_pad,
+> > +				     &csi->vdev.entity, 0,
+> > +				     MEDIA_LNK_FL_ENABLED |
+> > +				     MEDIA_LNK_FL_IMMUTABLE);
+> 
+> This appears to create a link directly from the sensor entity to the video
+> device entity. Is that intentional? I'd expect to see a CSI-2 receiver
+> sub-device as well, which I don't see being created by the driver.
+> 
+> This is indeed a novel proposal. I have some concerns though.
+> 
+> The user doesn't have access to the configured media bus format (reflecting
+> the format on the CSI-2 bus on receiver's side). It's thus difficult to
+> figure out whether the V4L2 pixel format configured on the video node
+> matches what the sensor outputs. Admittedly, we don't have a perfect
+> solution to that whenever the DMA hardware supports multiple V4L2 pixel
+> formats on a single media bus format. We might need to have a different
+> solution for this one, should it be without that receiver sub-device.
+> 
+> Could you add the CSI-2 receiver sub-device, please?
+
+Even though the name of the controller is *very* confusing, this isn't
+a MIPI-CSI receiver, but a parallel one that supports RGB and BT656
+buses.
+
+> > +	csi->pad.flags = MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_MUST_CONNECT;
+> 
+> Could you make it IMMUTABLE and ENABLED? If there is no need to disable it,
+> that is.
+
+The link is already created with those flags, and as far as I know it
+doesn't exist for the pads
+
+> > +static int csi_release(struct file *file)
+> > +{
+> > +	struct sun4i_csi *csi = video_drvdata(file);
+> > +	int ret;
+> > +
+> > +	mutex_lock(&csi->lock);
+> > +
+> > +	ret = v4l2_fh_release(file);
+> 
+> v4l2_fh_release() always returns 0. I guess it could be changed to return
+> void. The reason it has int is that it could be used as the release
+> callback as such.
+> 
+> > +	v4l2_pipeline_pm_use(&csi->vdev.entity, 0);
+> > +	pm_runtime_put(csi->dev);
+> > +
+> > +	mutex_unlock(&csi->lock);
+> > +
+> > +	return ret;
+> > +}
+
+Do you want me to change the construct then?
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
