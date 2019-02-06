@@ -1,97 +1,111 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v5 0/7] Add Armada 3700 COMPHY support
-Date: Wed, 6 Feb 2019 09:57:43 +0100
-Message-ID: <20190206095743.5eed3584@xps13>
-References: <20190108163124.6409-1-miquel.raynal@bootlin.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [linux-sunxi] Re: [PATCH RESEND v2 06/12] drm/sun4i: rgb: Add 1%
+ tolerance to dclk frequency check when bridge is connected
+Date: Wed, 6 Feb 2019 10:16:08 +0100
+Message-ID: <20190206091608.yvws7iyjuhw3xsdk@flea>
+References: <20190203185501.8958-1-anarsoul@gmail.com>
+ <20190203185501.8958-7-anarsoul@gmail.com>
+ <20190204142036.vd42nvyjnjr5yeoi@flea>
+ <CA+E=qVfTfJ9E29gz83tdVGx5_KGWSQVJOAxKTzC+-n7=gdj0cA@mail.gmail.com>
+ <0F6CBEA4-6DB6-40F1-A2FD-65101AF64F1F@aosc.io>
+ <CA+E=qVd7yh=JNZSvrfY4Diu+VJWFK6yLUJ5MavBcZ8Cftn6f-Q@mail.gmail.com>
+ <20190205154156.o3aa4cy6uxenkwol@flea>
+ <CA+E=qVePKnQLwObfu=ya7-GcUiUkjyFg2p-rmg=FiJJUhQBvxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108163124.6409-1-miquel.raynal@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>
+Content-Type: multipart/mixed; boundary="===============2086806998=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CA+E=qVePKnQLwObfu=ya7-GcUiUkjyFg2p-rmg=FiJJUhQBvxw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sean Paul <seanpaul@chromium.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
 
-Miquel Raynal <miquel.raynal@bootlin.com> wrote on Tue,  8 Jan 2019
-17:31:17 +0100:
+--===============2086806998==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6mbqqqmv7k77dcll"
+Content-Disposition: inline
 
-> Hello,
-> 
-> This series adds a new driver to support Armada 3700 COMPHY IP.
-> The series has been tested on an ESPRESSObin with SATA, PCIe
-> and USB3 host. For this purpose, patch 1 enumerates the SATA PHY
-> mode. The SGMII PHY mode that is supported by the IP has been written
-> (uses SMC calls anyway) but could not be tested on this platform.
-> 
-> Three series will follow to add PHY support (or at least a PHY nodes
-> in the A3700/ESPRESSObin device trees) to the MVEBU AHCI driver, the
-> Aardvark PCI controller driver and the MVEBU xHCI driver. All this is
-> needed in order to achieve suspend to RAM on this platform.
-> 
-> Thanks,
-> Miquèl
-> 
 
-Any inputs on this series? It is important for me because it impacts
-SATA, PCIe and USB changes I plan to get merge.
+--6mbqqqmv7k77dcll
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Miquèl
+On Tue, Feb 05, 2019 at 09:49:17AM -0800, Vasily Khoruzhick wrote:
+> On Tue, Feb 5, 2019 at 7:42 AM Maxime Ripard <maxime.ripard@bootlin.com> =
+wrote:
+> >
+> > On Mon, Feb 04, 2019 at 10:50:17AM -0800, Vasily Khoruzhick wrote:
+> > > On Mon, Feb 4, 2019 at 8:29 AM Icenowy Zheng <icenowy@aosc.io> wrote:
+> > > > >> IIRC, from the previous discussion, HDMI had a tolerancy require=
+ment
+> > > > >> in the standard. Do you know if there's such a thing for eDP? Th=
+at
+> > > > >> would solve the issue for all the eDP displays at once.
+> > > > >
+> > > > >I don't have access to eDP standard - vesa.org says it's available=
+ to
+> > > > >members only.
+> > > >
+> > > > Try out to grab an old version?
+> > > >
+> > > > I remember 1.0 is open.
+> > >
+> > > I can't find anything regarding dot clock tolerance in DisplayPort
+> > > specification.
+> >
+> > I guess since the DP is a VESA spec, it's probably .5%, just like on
+> > the EDID (well, CVT).
+>=20
+> Unfortunately that's not enough for Pinebook. It needs 1% for 768p
+> panel.
 
-> 
-> Changes since v4:
-> =================
-> * Fixed error in the driver probe where PHY_INTERFACE_MODE_NA was
->   assigned to lane->mode instead of lane->submode.
-> * Compile-in the driver by default (depends on ARCH_MVEBU).
-> * Add dependency on HAVE_ARM_SMCC in Kconfig.
-> 
-> Changes since v3:
-> =================
-> * Added Rob's Reviewed-by tag on bindings.
-> * Rebased on top of phy -next as of the 12th of December, 2018.
-> * Adapted the driver to support SGMII/1000BASEX and
->   HS_SGMII/2500BASEX.
-> 
-> Changes since v2:
-> =================
-> * Remove redundant check on lane->port/args->arg[0] at the end of the
->   ->xlate() callback. Do it on both armada-cp110 and armada-a3700  
->   COMPHY drivers.
-> * Put my SoB as author of the patch first when a patch is co-developed.
-> 
-> Changes since v1:
-> =================
-> * Fix wrong check in ->xlate().
-> * Apply the same fix to the cp110 comphy driver from which the a3700
->   driver is based.
-> * Added credit to Gregorz Jaszczyk for his work.
-> * Added Suggested-by tag to the patch adding the COMPHY DT node.
-> 
-> 
-> Grzegorz Jaszczyk (1):
->   phy: enumerate SATA PHY mode
-> 
-> Miquel Raynal (6):
->   phy: mvebu-cp110-comphy: fix port check in ->xlate()
->   phy: add A3700 COMPHY support
->   dt-bindings: phy: mvebu-comphy: extend the file to describe a3700
->     bindings
->   MAINTAINERS: phy: add entry for Armada 3700 COMPHY driver
->   ARM64: dts: marvell: armada-37xx: fix SATA node scope
->   ARM64: dts: marvell: armada-37xx: declare the COMPHY node
-> 
->  .../bindings/phy/phy-mvebu-comphy.txt         |  65 +++-
->  MAINTAINERS                                   |   6 +
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  31 +-
->  drivers/phy/marvell/Kconfig                   |  12 +
->  drivers/phy/marvell/Makefile                  |   1 +
->  drivers/phy/marvell/phy-mvebu-a3700-comphy.c  | 318 ++++++++++++++++++
->  drivers/phy/marvell/phy-mvebu-cp110-comphy.c  |   2 -
->  include/linux/phy/phy.h                       |   1 +
->  8 files changed, 421 insertions(+), 15 deletions(-)
->  create mode 100644 drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-> 
+And that mode is stored in the EDID as a standard (or established)
+timing, or a detailed timing?
+
+If the latter, then it should also provide the tolerancies as part of
+the panel timing description.
+
+If the former, then what would be the advertised pixel clock and the
+one we can compute? Maybe we have a bug somewhere.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--6mbqqqmv7k77dcll
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXFql0gAKCRDj7w1vZxhR
+xWGpAP9D/c/QkTM7RkEmYqX278PgTsD6DZQS9V3WGIvI9bLJXgEAm3+HDc3qJQPA
+0HQwnjxRf6y79VXPkZBpd2H0cw1tdQY=
+=vBLL
+-----END PGP SIGNATURE-----
+
+--6mbqqqmv7k77dcll--
+
+--===============2086806998==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============2086806998==--
