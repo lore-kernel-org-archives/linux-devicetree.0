@@ -1,49 +1,49 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 2/9] ARM: dts: sun9i: a80-optimus: Add node for
- AXP809's unused dc1sw regulator
-Date: Wed,  6 Feb 2019 11:32:32 +0800
-Message-ID: <20190206033239.3619-3-wens@csie.org>
-References: <20190206033239.3619-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBYNK5HRAKGQELHBSDQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190206033239.3619-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v6 2/8] arm64: dts: qcom: sdm845: Define rmtfs memory
+Date: Tue,  5 Feb 2019 21:13:29 -0800
+Message-ID: <20190206051335.23799-3-bjorn.andersson@linaro.org>
+References: <20190206051335.23799-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190206051335.23799-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The DC1SW output from the AXP809 is unused. Unused regulators should
-still be listed so as to be considered to be fully constrained.
+Define the rmtfs memory node. As the memory region specified in version
+10 of the memory map is only 1MB a chunk of unallocated memory is
+chosen.
 
-Fixes: aa4a27bc819e ("ARM: dts: sun9i: a80-optimus: Add AXP809 PMIC
-		      device node and regulators")
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm/boot/dts/sun9i-a80-optimus.dts | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-index 58a199b0e494..1ee2792b3a27 100644
---- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-@@ -213,6 +213,10 @@
- 				regulator-name = "vdd-cpus-09-usbh";
- 			};
+Changes since v5:
+- Corrected unit address
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 16a060063882..a33d27b3a389 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -103,6 +103,15 @@
+ 			no-map;
+ 		};
  
-+			dc1sw {
-+				/* unused */
-+			};
++		rmtfs_mem: memory@88f00000 {
++			compatible = "qcom,rmtfs-mem";
++			reg = <0 0x88f00000 0 0x200000>;
++			no-map;
 +
- 			reg_dcdc1: dcdc1 {
- 				regulator-always-on;
- 				regulator-min-microvolt = <3000000>;
++			qcom,client-id = <1>;
++			qcom,vmid = <15>;
++		};
++
+ 		qseecom_mem: memory@8ab00000 {
+ 			reg = <0 0x8ab00000 0 0x1400000>;
+ 			no-map;
 -- 
-2.20.1
+2.18.0
