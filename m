@@ -1,48 +1,24 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH net-next 5/6] net: marvell: neta: add comphy support
-Date: Wed, 6 Feb 2019 17:23:17 +0000
-Message-ID: <20190206172316.olapzjsv7e3jr3nv@shell.armlinux.org.uk>
-References: <20190206113409.ko7lwuv5kb7l7rjo@shell.armlinux.org.uk>
- <E1grLTv-00061v-Tw@rmk-PC.armlinux.org.uk>
- <20190206160928.56fb4808@bootlin.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v7 03/10] clk: bd718x7: use chip specific and generic data structs
+Date: Wed, 06 Feb 2019 09:30:47 -0800
+Message-ID: <154947424775.74891.14167975959188860194@swboyd.mtv.corp.google.com>
+References: <cover.1549444366.git.matti.vaittinen@fi.rohmeurope.com> <d30e869929638cb4907e52222124df8250b0980c.1549444366.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190206160928.56fb4808@bootlin.com>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d30e869929638cb4907e52222124df8250b0980c.1549444366.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
+Cc: Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 06, 2019 at 04:09:28PM +0100, Maxime Chevallier wrote:
-> Hello Russell,
-> 
-> On Wed, 06 Feb 2019 11:35:07 +0000
-> Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> 
-> 
-> >+	if (pp->comphy) {
-> >+		enum phy_mode mode = PHY_MODE_INVALID;
-> >+
-> >+		switch (state->interface) {
-> >+		case PHY_INTERFACE_MODE_SGMII:
-> >+		case PHY_INTERFACE_MODE_1000BASEX:
-> >+			mode = PHY_MODE_SGMII;
-> 
-> PHY_MODE_SGMII no longer exists, the new PHY_MODE_ETHERNET must be used
-> with the correct submode now, so this doesn't build unfortunately.
-> 
-> >+			break;
-> >+		case PHY_INTERFACE_MODE_2500BASEX:
-> >+			mode = PHY_MODE_2500SGMII;
-> 
-> Same here.
+Quoting Matti Vaittinen (2019-02-06 01:38:54)
+> Header rohm-bd718x7.h was split to generic and component specific
+> parts. This changed the struct bd718x7. Adapt the clk driver to
+> these changes.
+>=20
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
 
-Of course, I knew there was some reason I hadn't sent them yet... thanks
-for spotting.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Acked-by: Stephen Boyd <sboyd@kernel.org>
