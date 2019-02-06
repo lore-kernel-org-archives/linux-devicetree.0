@@ -1,100 +1,118 @@
-From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: Re: [PATCH 5/5] arm: dts: axpxx: add charge led node
-Date: Wed, 6 Feb 2019 08:06:10 +0200
-Message-ID: <4493d1cb-d1bb-bcc9-c37d-68c79f33e762@olimex.com>
-References: <20190131082308.22522-1-stefan@olimex.com>
- <20190131082308.22522-5-stefan@olimex.com>
- <CAGb2v66B3X=hyCCanUv6yGziVcu3WrRcKODBp266ODL+yQ4m1w@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH v2 1/7] pinctrl: at91: add option to use drive strength
+ bits
+Date: Wed, 6 Feb 2019 09:13:04 +0100
+Message-ID: <20190206081304.cv344rjzvz7wzih5@M43218.corp.atmel.com>
+References: <1548951466-26297-1-git-send-email-claudiu.beznea@microchip.com>
+ <1548951466-26297-2-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v66B3X=hyCCanUv6yGziVcu3WrRcKODBp266ODL+yQ4m1w@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1548951466-26297-2-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Stefan Mavrodiev <stefan@olimex.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>
+To: Claudiu Beznea - M18063 <Claudiu.Beznea@microchip.com>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 31, 2019 at 05:18:04PM +0100, Claudiu Beznea - M18063 wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> 
+> SAM9X60 uses high and low drive strengths. To implement this, in
+> at91_pinctrl_mux_ops::set_drivestrength and
+> at91_pinctrl_mux_ops::get_drivestrength we need bit numbers of
+> drive strengths (1 for low, 2 for high), thus change the code to
+> allow the usage of drive strength bit numbers.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  drivers/pinctrl/pinctrl-at91.c | 32 ++++++++++++++++++++------------
+>  1 file changed, 20 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> index 3d49bbbcdbc7..31f06dafca2e 100644
+> --- a/drivers/pinctrl/pinctrl-at91.c
+> +++ b/drivers/pinctrl/pinctrl-at91.c
+> @@ -72,10 +72,15 @@ static int gpio_banks;
+>   * DRIVE_STRENGTH_DEFAULT is just a placeholder to avoid changing the drive
+>   * strength when there is no dt config for it.
+>   */
+> -#define DRIVE_STRENGTH_DEFAULT		(0 << DRIVE_STRENGTH_SHIFT)
+> -#define DRIVE_STRENGTH_LOW          (1 << DRIVE_STRENGTH_SHIFT)
+> -#define DRIVE_STRENGTH_MED          (2 << DRIVE_STRENGTH_SHIFT)
+> -#define DRIVE_STRENGTH_HI           (3 << DRIVE_STRENGTH_SHIFT)
+> +enum drive_strength_bit {
+> +	DRIVE_STRENGTH_BIT_DEF,
+> +	DRIVE_STRENGTH_BIT_LOW,
+> +	DRIVE_STRENGTH_BIT_MED,
+> +	DRIVE_STRENGTH_BIT_HI,
+> +};
+> +
+> +#define DRIVE_STRENGTH_BIT_MSK(name)	(DRIVE_STRENGTH_BIT_##name << \
+> +					 DRIVE_STRENGTH_SHIFT)
+>  
+>  /**
+>   * struct at91_pmx_func - describes AT91 pinmux functions
+> @@ -551,7 +556,7 @@ static unsigned at91_mux_sama5d3_get_drivestrength(void __iomem *pio,
+>  	/* SAMA5 strength is 1:1 with our defines,
+>  	 * except 0 is equivalent to low per datasheet */
+>  	if (!tmp)
+> -		tmp = DRIVE_STRENGTH_LOW;
+> +		tmp = DRIVE_STRENGTH_BIT_MSK(LOW);
+>  
+>  	return tmp;
+>  }
+> @@ -564,7 +569,7 @@ static unsigned at91_mux_sam9x5_get_drivestrength(void __iomem *pio,
+>  
+>  	/* strength is inverse in SAM9x5s hardware with the pinctrl defines
+>  	 * hardware: 0 = hi, 1 = med, 2 = low, 3 = rsvd */
+> -	tmp = DRIVE_STRENGTH_HI - tmp;
+> +	tmp = DRIVE_STRENGTH_BIT_MSK(HI) - tmp;
+>  
+>  	return tmp;
+>  }
+> @@ -600,7 +605,7 @@ static void at91_mux_sam9x5_set_drivestrength(void __iomem *pio, unsigned pin,
+>  
+>  	/* strength is inverse on SAM9x5s with our defines
+>  	 * 0 = hi, 1 = med, 2 = low, 3 = rsvd */
+> -	setting = DRIVE_STRENGTH_HI - setting;
+> +	setting = DRIVE_STRENGTH_BIT_MSK(HI) - setting;
+>  
+>  	set_drive_strength(pio + at91sam9x5_get_drive_register(pin), pin,
+>  				setting);
+> @@ -959,11 +964,11 @@ static int at91_pinconf_set(struct pinctrl_dev *pctldev,
+>  	}					\
+>  } while (0)
+>  
+> -#define DBG_SHOW_FLAG_MASKED(mask,flag) do {	\
+> +#define DBG_SHOW_FLAG_MASKED(mask,flag,name) do {	\
 
-On 2/5/19 6:16 PM, Chen-Yu Tsai wrote:
-> On Thu, Jan 31, 2019 at 4:25 PM Stefan Mavrodiev <stefan@olimex.com> wrote:
->> Add dt node for axp20x-led driver controlling CHGLED.
->> Default status is disabled, since it may be not used.
->>
->> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> Please include a cover letter for such a patch series.
-Sorry, I will.
->
-> Also, do any boards actually use this? I know the Pine64 does, but the
-> LED is left to the user to populate. I would really like to have an in
-> kernel user of this function, so that we can verify it.
+checkpatch error: space required
 
-All boards made by Olimex has this led populated. The development and the
-testing of the driver was done on A64-OLinuXino board.
-
-Should I make another patch, enabling the LED for the mention board?
-
-Best regards,
-Stefan Mavrodiev
-
->
-> ChenYu
->
->> ---
->>   arch/arm/boot/dts/axp209.dtsi | 5 +++++
->>   arch/arm/boot/dts/axp22x.dtsi | 5 +++++
->>   arch/arm/boot/dts/axp81x.dtsi | 5 +++++
->>   3 files changed, 15 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
->> index 0d9ff12bdf28..f972b6f3ecd0 100644
->> --- a/arch/arm/boot/dts/axp209.dtsi
->> +++ b/arch/arm/boot/dts/axp209.dtsi
->> @@ -69,6 +69,11 @@
->>                  #gpio-cells = <2>;
->>          };
->>
->> +       axp_led: led {
->> +               compatible = "x-powers,axp20x-led";
->> +               status = "disabled";
->> +       };
->> +
->>          battery_power_supply: battery-power-supply {
->>                  compatible = "x-powers,axp209-battery-power-supply";
->>                  status = "disabled";
->> diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
->> index 65a07a67aca9..92a0b64252b1 100644
->> --- a/arch/arm/boot/dts/axp22x.dtsi
->> +++ b/arch/arm/boot/dts/axp22x.dtsi
->> @@ -62,6 +62,11 @@
->>                  #io-channel-cells = <1>;
->>          };
->>
->> +       axp_led: led {
->> +               compatible = "x-powers,axp20x-led";
->> +               status = "disabled";
->> +       };
->> +
->>          battery_power_supply: battery-power-supply {
->>                  compatible = "x-powers,axp221-battery-power-supply";
->>                  status = "disabled";
->> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
->> index bd83962d3627..22e243cc40d5 100644
->> --- a/arch/arm/boot/dts/axp81x.dtsi
->> +++ b/arch/arm/boot/dts/axp81x.dtsi
->> @@ -74,6 +74,11 @@
->>                  };
->>          };
->>
->> +       axp_led: led {
->> +               compatible = "x-powers,axp20x-led";
->> +               status = "disabled";
->> +       };
->> +
->>          battery_power_supply: battery-power-supply {
->>                  compatible = "x-powers,axp813-battery-power-supply";
->>                  status = "disabled";
->> --
->> 2.17.1
->>
+>  	if ((config & mask) == flag) {		\
+>  		if (num_conf)			\
+>  			seq_puts(s, "|");	\
+> -		seq_puts(s, #flag);		\
+> +		seq_puts(s, #name);		\
+>  		num_conf++;			\
+>  	}					\
+>  } while (0)
+> @@ -981,9 +986,12 @@ static void at91_pinconf_dbg_show(struct pinctrl_dev *pctldev,
+>  	DBG_SHOW_FLAG(PULL_DOWN);
+>  	DBG_SHOW_FLAG(DIS_SCHMIT);
+>  	DBG_SHOW_FLAG(DEGLITCH);
+> -	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_LOW);
+> -	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_MED);
+> -	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_HI);
+> +	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_BIT_MSK(LOW),
+> +			     DRIVE_STRENGTH_LOW);
+> +	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_BIT_MSK(MED),
+> +			     DRIVE_STRENGTH_MED);
+> +	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_BIT_MSK(HI),
+> +			     DRIVE_STRENGTH_HI);
+>  	DBG_SHOW_FLAG(DEBOUNCE);
+>  	if (config & DEBOUNCE) {
+>  		val = config >> DEBOUNCE_VAL_SHIFT;
+> -- 
+> 2.7.4
+> 
