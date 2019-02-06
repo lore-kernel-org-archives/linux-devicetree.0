@@ -1,463 +1,140 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v4 1/1] arm64: dts: sdm845: wireup the thermal trip points to cpufreq
-Date: Wed,  6 Feb 2019 16:04:49 +0530
-Message-ID: <edfe493e2f2034d531702c333c5acb4fabfbbb97.1549448839.git.amit.kucheria@linaro.org>
-References: <cover.1549448839.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH v3 1/1] arm64: dts: sdm845: wireup the thermal trip points
+ to cpufreq
+Date: Wed, 6 Feb 2019 16:05:41 +0530
+Message-ID: <CAP245DUy5pe9KQrEX_5iiHg9RtLPHyZcygy6fkrLgsJQYak-_g@mail.gmail.com>
+References: <cover.1548093127.git.amit.kucheria@linaro.org>
+ <6a21a9ee7663e1b32d8ea81ac5e51d187aed25fb.1548093127.git.amit.kucheria@linaro.org>
+ <20190123021251.GJ261387@google.com> <20190124233528.GA81583@google.com> <20190125222051.GF81583@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1549448839.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1549448839.git.amit.kucheria@linaro.org>
-References: <cover.1549448839.git.amit.kucheria@linaro.org>
+In-Reply-To: <20190125222051.GF81583@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Doug Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Since all cpus in the big and little clusters, respectively, are in the
-same frequency domain, use all of them for mitigation in the
-cooling-map. We end up with two cooling devices - one each for the big
-and little clusters.
+On Sat, Jan 26, 2019 at 3:50 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > >                   trips {
+> > > > -                         cpu_alert0: trip0 {
+> > > > +                         cpu0_alert1: trip-point@0 {
+> > > >                                   temperature =3D <75000>;
+> > >
+> > > In my observations a 'switch on/threshold' temperature of 75 degrees
+> > > leads to aggressive throttling with IPA when the temperature is above
+> > > this threshold:
+> > >
+> > > [  716.760804] cpu_cooling_ratelimit: 31 callbacks suppressed
+> > > [  716.760836] cpu cpu4: Cooling state set to 10. New max freq =3D 19=
+20000
+> > > [  716.773390] power_allocator_ratelimit: 15 callbacks suppressed
+> > > [  716.773405] thermal thermal_zone5: Controlling power: control_temp=
+=3D95000 last_temp=3D73500, curr_temp=3D75200 total_requested_power=3D39025=
+ total_granted_power=3D18654
+> > > [  749.609336] cpu_cooling_ratelimit: 45 callbacks suppressed
+> > > [  749.609371] cpu cpu4: Cooling state set to 11. New max freq =3D 18=
+43200
+> > > [  749.624300] power_allocator_ratelimit: 24 callbacks suppressed
+> > > [  749.624323] thermal thermal_zone5: Controlling power: control_temp=
+=3D95000 last_temp=3D70800, curr_temp=3D77200 total_requested_power=3D40136=
+ total_granted_power=3D17402
+> > > [  780.152633] cpu_cooling_ratelimit: 41 callbacks suppressed
+> > > [  780.152666] cpu cpu4: Cooling state set to 11. New max freq =3D 18=
+43200
+> > > [  780.165247] power_allocator_ratelimit: 21 callbacks suppressed
+> > > [  780.165261] thermal thermal_zone5: Controlling power: control_temp=
+=3D95000 last_temp=3D64800, curr_temp=3D76900 total_requested_power=3D39719=
+ total_granted_power=3D1759
+> > >
+> > > (the logs come from a local patch in our tree:
+> > > https://chromium.googlesource.com/chromiumos/third_party/kernel/+/ec1=
+c501a8093fed44a6697a5913ef2765f518e1f)
+> > >
+> > > At this point I don't have a clear idea what would be a reasonable
+> > > value for the 'switch on/threshold' temperature, but probably it
+> > > should to be higher than 75 degrees, at least with IPA. If there is
+> > > no reasonable common configuration for different thermal governors I
+> > > guess we'll have to target a commonly used governor and systems
+> > > using other 'incompatible' governors need to override the config in
+> > > their <board>.dtsi.
+> >
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 241 ++++++++++++++++++++++++---
- 1 file changed, 217 insertions(+), 24 deletions(-)
+Thanks for the elaborate testing and for sharing the numbers. This is
+very useful information.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index c27cbd3bcb0a..8ce5bf55a345 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -13,6 +13,7 @@
- #include <dt-bindings/reset/qcom,sdm845-aoss.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -99,6 +100,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 				compatible = "cache";
-@@ -114,6 +116,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_100>;
- 			L2_100: l2-cache {
- 				compatible = "cache";
-@@ -126,6 +129,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_200>;
- 			L2_200: l2-cache {
- 				compatible = "cache";
-@@ -138,6 +142,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_300>;
- 			L2_300: l2-cache {
- 				compatible = "cache";
-@@ -150,6 +155,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_400>;
- 			L2_400: l2-cache {
- 				compatible = "cache";
-@@ -162,6 +168,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_500>;
- 			L2_500: l2-cache {
- 				compatible = "cache";
-@@ -174,6 +181,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_600>;
- 			L2_600: l2-cache {
- 				compatible = "cache";
-@@ -186,6 +194,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_700>;
- 			L2_700: l2-cache {
- 				compatible = "cache";
-@@ -1691,18 +1700,41 @@
- 			thermal-sensors = <&tsens0 1>;
- 
- 			trips {
--				cpu_alert0: trip0 {
--					temperature = <75000>;
-+				cpu0_alert0: trip-point@0 {
-+					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit0: trip1 {
-+				cpu0_alert1: trip-point@1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu0_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu0_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu0_alert1>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu1-thermal {
-@@ -1712,18 +1744,41 @@
- 			thermal-sensors = <&tsens0 2>;
- 
- 			trips {
--				cpu_alert1: trip0 {
--					temperature = <75000>;
-+				cpu1_alert0: trip-point@0 {
-+					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit1: trip1 {
-+				cpu1_alert1: trip-point@1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu1_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu1_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu1_alert1>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu2-thermal {
-@@ -1733,18 +1788,41 @@
- 			thermal-sensors = <&tsens0 3>;
- 
- 			trips {
--				cpu_alert2: trip0 {
--					temperature = <75000>;
-+				cpu2_alert0: trip-point@0 {
-+					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit2: trip1 {
-+				cpu2_alert1: trip-point@1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu2_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu2_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu2_alert1>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu3-thermal {
-@@ -1754,18 +1832,41 @@
- 			thermal-sensors = <&tsens0 4>;
- 
- 			trips {
--				cpu_alert3: trip0 {
--					temperature = <75000>;
-+				cpu3_alert0: trip-point@0 {
-+					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit3: trip1 {
-+				cpu3_alert1: trip-point@1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu3_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu3_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu3_alert1>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu4-thermal {
-@@ -1775,18 +1876,41 @@
- 			thermal-sensors = <&tsens0 7>;
- 
- 			trips {
--				cpu_alert4: trip0 {
--					temperature = <75000>;
-+				cpu4_alert0: trip-point@0 {
-+					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit4: trip1 {
-+				cpu4_alert1: trip-point@1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu4_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu4_alert0>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu4_alert1>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu5-thermal {
-@@ -1796,18 +1920,41 @@
- 			thermal-sensors = <&tsens0 8>;
- 
- 			trips {
--				cpu_alert5: trip0 {
--					temperature = <75000>;
-+				cpu5_alert0: trip-point@0 {
-+					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit5: trip1 {
-+				cpu5_alert1: trip-point@1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu5_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu5_alert0>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu5_alert1>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu6-thermal {
-@@ -1817,18 +1964,41 @@
- 			thermal-sensors = <&tsens0 9>;
- 
- 			trips {
--				cpu_alert6: trip0 {
--					temperature = <75000>;
-+				cpu6_alert0: trip-point@0 {
-+					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit6: trip1 {
-+				cpu6_alert1: trip-point@1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu6_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu6_alert0>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu6_alert1>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu7-thermal {
-@@ -1838,18 +2008,41 @@
- 			thermal-sensors = <&tsens0 10>;
- 
- 			trips {
--				cpu_alert7: trip0 {
--					temperature = <75000>;
-+				cpu7_alert0: trip-point@0 {
-+					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit7: trip1 {
-+				cpu7_alert1: trip-point@1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu7_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu7_alert0>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu7_alert1>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 	};
- };
--- 
-2.17.1
+> > On my system I don't see a significant delta in core temperatures for
+> > 'threshold' temperatures of 80, 85 or 90=C2=B0C. However Dhrystone
+> > performance goes up by ~8% when changing the trip point from 80 to
+> > 85=C2=B0C. For a switch from 85 to 90=C2=B0C I see a ~2% performance de=
+lta. For
+> > all trip points the average core temperatures are ~80=C2=B0C (silver) a=
+nd
+> > ~85=C2=B0C (gold). Interestingly I observed the highest average
+> > temperatures with the trip point at 80=C2=B0C (repeated measurements we=
+re
+> > taken for different temperatures).
+> >
+> > Supposedly LMH throttling is disabled in the firmware I used for
+> > these tests, however data suggests that it is still active
+> > (temperature doesn't rise beyond 95=C2=B0C, even without throttling in
+> > Linux; Dhrystone performance drops when raising the temperature beyond
+> > 95=C2=B0C with a heat gun. I will do some more testing when I get my ha=
+nds
+> > on a FW that effectively disables LMH (or raises the threshold to
+> > something like 105=C2=B0C).
+> >
+> > From the data collected so far I'd suggest a 'threshold' temperature
+> > of 90=C2=B0C or if that seems to high 85=C2=B0C. Behavior might be diff=
+erent
+> > with other thermal governors or without LMH throttling..
+>
+> Some more data from measurements with different trips points, for the
+> IPA and the Fair Share governors, LMH throttling was enabled:
+>
+>                         IPA
+>         Dhrystone       Temp Silver     Temp Gold
+> 75      6M              78.4            84.9
+> 80      6.21M           81.4            89.8
+> 85      6.74M           81.7            88.2
+> 90      6.88M           79.4            84.6
+>
+>                         Fair Share
+>         Dhrystone       Temp Silver     Temp Gold
+> 75      6.63M           80.1            88.5
+> 80      6.71M           80.1            88.5
+> 85      6.77M           81.1            87.8
+> 90      7.12M           81.2            87.8
+
+Interesting that you get more MIPs out of fair share governor when
+compared to IPA across the board. What devices were providing energy
+cost information (dynamic-power-coefficient) to the IPA engine? Just
+CPU and GPU? Can you point me to those patches in gerrit?
+
+> Within this range the 'threshold' temperature doesn't seem to have a
+> large impact on the average CPU temperature. There is a bit of
+> fluctuation between individual measurements, I wouldn't be surprised
+> if the outliers of Temp Gold for 75 and 90=C2=B0C converged more with the
+> other values with some more measurements.
+>
+> I learned how to effectively disable LMH throttling, however with that
+> it was fairly easy to have the CPUs overheat, even with throttling in
+> Linux. If it is feasible at all to run with LMH disabled some more
+> actions will be needed (e.g. attaching a heatsink or interrupt support
+> for thermal sensors instead of polling, ...).
+
+Given that LMH kicks in at 95 and IPA manages to maintain temperatures
+in the ballpark of 80-90 regardless of the trip point value, I agree
+that we should move the 1st trip point to 90. This will give maximum
+performance. So in "threshold" and "target" terms 90 becomes the
+threshold. And since LMH kicks in at 95, I've left it as the target
+trip.
+
+These should be sane defaults for upstream and any device can override
+those numbers in their board file.
+
+Thanks again for your thorough review.
+
+Regards,
+Amit
