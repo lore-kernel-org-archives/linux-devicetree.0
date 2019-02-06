@@ -1,14 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 9/9] ARM: dts: sun9i: cubieboard4: Enable GMAC
-Date: Wed,  6 Feb 2019 11:32:39 +0800
-Message-ID: <20190206033239.3619-10-wens@csie.org>
-References: <20190206033239.3619-1-wens@csie.org>
+Subject: [PATCH 0/9] ARM: sun9i: a80: Enable GMAC
+Date: Wed,  6 Feb 2019 11:32:30 +0800
+Message-ID: <20190206033239.3619-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBYVK5HRAKGQERCXMUIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBX5K5HRAKGQENB26VHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190206033239.3619-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,55 +17,46 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linus
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Cubieboard4 has a Realtek RTL8211E ethernet PHY which uses RGMII to
-talk to the MAC. The PHY is powered by 2 regulators: cldo1 for the PHY's
-core logic and gpio1-ldo for I/O. The latter also powers the SoC side
-pins. As there is no binding to model a second regulator supply for the
-PHY, it is omitted. It is however properly modeled for the PIO.
+Hi everyone,
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+On the Allwinner A80, the PIO pin controller includes configuration
+registers to set the I/O voltage. These must match the actual voltage
+provided externally. A mismatch results in signals not being passed
+through.
 
-diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-index 0daab9b374e6..28c034928d67 100644
---- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-@@ -133,6 +133,19 @@
- 	status = "okay";
- };
- 
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_rgmii_pins>;
-+	phy = <&phy1>;
-+	phy-mode = "rgmii";
-+	phy-supply = <&reg_cldo1>;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &i2c3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c3_pins>;
-@@ -402,6 +415,14 @@
- 				 */
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
-+				/*
-+				 * The PHY requires 20ms after all voltages
-+				 * are applied until core logic is ready and
-+				 * 30ms after the reset pin is de-asserted.
-+				 * Set a 100ms delay to account for PMIC
-+				 * ramp time and board traces.
-+				 */
-+				regulator-enable-ramp-delay = <100000>;
- 				regulator-name = "vcc-gmac-phy";
- 			};
- 
+With the new PIO pin-bank regulator supply support in place, we can
+tack on support for setting up these registers.
+
+This in turn allows us to enable the GMAC, which runs at a reduced
+2.5V for RGMII, instead of the standard 3.0V or 3.3V.
+
+Please have a look.
+
+
+Regards
+ChenYu
+
+
+Chen-Yu Tsai (9):
+  pinctrl: sunxi: Support I/O bias voltage setting on A80
+  ARM: dts: sun9i: a80-optimus: Add node for AXP809's unused dc1sw
+    regulator
+  ARM: dts: sun9i: a80-optimus: Add GPIO pin-bank regulator supplies
+  ARM: dts: sun9i: cubieboard4: Add GPIO pin-bank regulator supplies
+  ARM: dts: sun9i: Add GMAC clock node
+  ARM: dts: sun9i: Add A80 GMAC gigabit ethernet controller node
+  ARM: dts: sun9i: Add A80 GMAC RGMII pinmux setting
+  ARM: dts: sun9i: a80-optimus: Enable GMAC
+  ARM: dts: sun9i: cubieboard4: Enable GMAC
+
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 44 +++++++++++++-
+ arch/arm/boot/dts/sun9i-a80-optimus.dts     | 44 +++++++++++++-
+ arch/arm/boot/dts/sun9i-a80.dtsi            | 65 +++++++++++++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c |  1 +
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c   |  1 +
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c       | 41 +++++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h       | 12 ++++
+ 7 files changed, 202 insertions(+), 6 deletions(-)
+
 -- 
 2.20.1
