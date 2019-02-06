@@ -1,368 +1,387 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v4 2/3] Input: add new vibrator driver for various MSM
- SOCs
-Date: Wed, 6 Feb 2019 10:16:55 -0800
-Message-ID: <20190206181655.GA174258@dtor-ws>
-References: <20190206013329.18195-1-masneyb@onstation.org>
- <20190206013329.18195-3-masneyb@onstation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: atmel-quadspi: add support for sam9x60 qspi controller" to the spi tree
+Date: Wed,  6 Feb 2019 18:17:48 +0000 (GMT)
+Message-ID: <20190206181748.B744D1127EA3@debutante.sirena.org.uk>
+References: <20190205173254.16388-14-tudor.ambarus@microchip.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190206013329.18195-3-masneyb@onstation.org>
+In-Reply-To: <20190205173254.16388-14-tudor.ambarus@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, jonathan@marek.ca
+To: Tudor Ambarus <tudor.ambarus@microchip.com>
+Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org, Cyrille.Pitchen@microchip.com, bugalski.piotr@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Tudor.Ambarus@microchip.comlinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 05, 2019 at 08:33:28PM -0500, Brian Masney wrote:
-> This patch adds a new vibrator driver that supports various Qualcomm
-> MSM SOCs. Driver was tested on a LG Nexus 5 (hammerhead) phone.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+The patch
 
-Applied together with binding patch, thank you.
+   spi: atmel-quadspi: add support for sam9x60 qspi controller
 
-> ---
-> Changes since v3:
-> - Made msm_vibrator_write a function instead of a macro.
-> - Check for -EPROBE_DEFER for gpio and clk for consistency with the
->   regulator.
-> - Check for NULL return value from devm_ioremap() instead of using
->   IS_ERR()
-> - Don't set dev.parent
-> - Use platform_get_drvdata() in suspend and resume
-> 
->  drivers/input/misc/Kconfig        |  10 ++
->  drivers/input/misc/Makefile       |   1 +
->  drivers/input/misc/msm-vibrator.c | 282 ++++++++++++++++++++++++++++++
->  3 files changed, 293 insertions(+)
->  create mode 100644 drivers/input/misc/msm-vibrator.c
-> 
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index ca59a2be9bc5..e39aef84f357 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -117,6 +117,16 @@ config INPUT_E3X0_BUTTON
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called e3x0_button.
->  
-> +config INPUT_MSM_VIBRATOR
-> +	tristate "Qualcomm MSM vibrator driver"
-> +	select INPUT_FF_MEMLESS
-> +	help
-> +	  Support for the vibrator that is found on various Qualcomm MSM
-> +	  SOCs.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called msm_vibrator.
-> +
->  config INPUT_PCSPKR
->  	tristate "PC Speaker support"
->  	depends on PCSPKR_PLATFORM
-> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> index 9d0f9d1ff68f..96a6419cb1f2 100644
-> --- a/drivers/input/misc/Makefile
-> +++ b/drivers/input/misc/Makefile
-> @@ -48,6 +48,7 @@ obj-$(CONFIG_INPUT_MAX8925_ONKEY)	+= max8925_onkey.o
->  obj-$(CONFIG_INPUT_MAX8997_HAPTIC)	+= max8997_haptic.o
->  obj-$(CONFIG_INPUT_MC13783_PWRBUTTON)	+= mc13783-pwrbutton.o
->  obj-$(CONFIG_INPUT_MMA8450)		+= mma8450.o
-> +obj-$(CONFIG_INPUT_MSM_VIBRATOR)	+= msm-vibrator.o
->  obj-$(CONFIG_INPUT_PALMAS_PWRBUTTON)	+= palmas-pwrbutton.o
->  obj-$(CONFIG_INPUT_PCAP)		+= pcap_keys.o
->  obj-$(CONFIG_INPUT_PCF50633_PMU)	+= pcf50633-input.o
-> diff --git a/drivers/input/misc/msm-vibrator.c b/drivers/input/misc/msm-vibrator.c
-> new file mode 100644
-> index 000000000000..c06941021447
-> --- /dev/null
-> +++ b/drivers/input/misc/msm-vibrator.c
-> @@ -0,0 +1,282 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Qualcomm MSM vibrator driver
-> + *
-> + * Copyright (c) 2018 Brian Masney <masneyb@onstation.org>
-> + *
-> + * Based on qcom,pwm-vibrator.c from:
-> + * Copyright (c) 2018 Jonathan Marek <jonathan@marek.ca>
-> + *
-> + * Based on msm_pwm_vibrator.c from downstream Android sources:
-> + * Copyright (C) 2009-2014 LGE, Inc.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio.h>
-> +#include <linux/input.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#define REG_CMD_RCGR           0x00
-> +#define REG_CFG_RCGR           0x04
-> +#define REG_M                  0x08
-> +#define REG_N                  0x0C
-> +#define REG_D                  0x10
-> +#define REG_CBCR               0x24
-> +#define MMSS_CC_M_DEFAULT      1
-> +
-> +struct msm_vibrator {
-> +	struct input_dev *input;
-> +	struct mutex mutex;
-> +	struct work_struct worker;
-> +	void __iomem *base;
-> +	struct regulator *vcc;
-> +	struct clk *clk;
-> +	struct gpio_desc *enable_gpio;
-> +	u16 magnitude;
-> +	bool enabled;
-> +};
-> +
-> +static void msm_vibrator_write(struct msm_vibrator *vibrator, int offset,
-> +			       u32 value)
-> +{
-> +	writel(value, vibrator->base + offset);
-> +}
-> +
-> +static int msm_vibrator_start(struct msm_vibrator *vibrator)
-> +{
-> +	int d_reg_val, ret = 0;
-> +
-> +	mutex_lock(&vibrator->mutex);
-> +
-> +	if (!vibrator->enabled) {
-> +		ret = clk_set_rate(vibrator->clk, 24000);
-> +		if (ret) {
-> +			dev_err(&vibrator->input->dev,
-> +				"Failed to set clock rate: %d\n", ret);
-> +			goto unlock;
-> +		}
-> +
-> +		ret = clk_prepare_enable(vibrator->clk);
-> +		if (ret) {
-> +			dev_err(&vibrator->input->dev,
-> +				"Failed to enable clock: %d\n", ret);
-> +			goto unlock;
-> +		}
-> +
-> +		ret = regulator_enable(vibrator->vcc);
-> +		if (ret) {
-> +			dev_err(&vibrator->input->dev,
-> +				"Failed to enable regulator: %d\n", ret);
-> +			clk_disable(vibrator->clk);
-> +			goto unlock;
-> +		}
-> +
-> +		gpiod_set_value_cansleep(vibrator->enable_gpio, 1);
-> +
-> +		vibrator->enabled = true;
-> +	}
-> +
-> +	d_reg_val = 127 - ((126 * vibrator->magnitude) / 0xffff);
-> +	msm_vibrator_write(vibrator, REG_CFG_RCGR,
-> +			   (2 << 12) | /* dual edge mode */
-> +			   (0 << 8) |  /* cxo */
-> +			   (7 << 0));
-> +	msm_vibrator_write(vibrator, REG_M, 1);
-> +	msm_vibrator_write(vibrator, REG_N, 128);
-> +	msm_vibrator_write(vibrator, REG_D, d_reg_val);
-> +	msm_vibrator_write(vibrator, REG_CMD_RCGR, 1);
-> +	msm_vibrator_write(vibrator, REG_CBCR, 1);
-> +
-> +unlock:
-> +	mutex_unlock(&vibrator->mutex);
-> +
-> +	return ret;
-> +}
-> +
-> +static void msm_vibrator_stop(struct msm_vibrator *vibrator)
-> +{
-> +	mutex_lock(&vibrator->mutex);
-> +
-> +	if (vibrator->enabled) {
-> +		gpiod_set_value_cansleep(vibrator->enable_gpio, 0);
-> +		regulator_disable(vibrator->vcc);
-> +		clk_disable(vibrator->clk);
-> +		vibrator->enabled = false;
-> +	}
-> +
-> +	mutex_unlock(&vibrator->mutex);
-> +}
-> +
-> +static void msm_vibrator_worker(struct work_struct *work)
-> +{
-> +	struct msm_vibrator *vibrator = container_of(work,
-> +						     struct msm_vibrator,
-> +						     worker);
-> +
-> +	if (vibrator->magnitude)
-> +		msm_vibrator_start(vibrator);
-> +	else
-> +		msm_vibrator_stop(vibrator);
-> +}
-> +
-> +static int msm_vibrator_play_effect(struct input_dev *dev, void *data,
-> +				    struct ff_effect *effect)
-> +{
-> +	struct msm_vibrator *vibrator = input_get_drvdata(dev);
-> +
-> +	mutex_lock(&vibrator->mutex);
-> +
-> +	if (effect->u.rumble.strong_magnitude > 0)
-> +		vibrator->magnitude = effect->u.rumble.strong_magnitude;
-> +	else
-> +		vibrator->magnitude = effect->u.rumble.weak_magnitude;
-> +
-> +	mutex_unlock(&vibrator->mutex);
-> +
-> +	schedule_work(&vibrator->worker);
-> +
-> +	return 0;
-> +}
-> +
-> +static void msm_vibrator_close(struct input_dev *input)
-> +{
-> +	struct msm_vibrator *vibrator = input_get_drvdata(input);
-> +
-> +	cancel_work_sync(&vibrator->worker);
-> +	msm_vibrator_stop(vibrator);
-> +}
-> +
-> +static int msm_vibrator_probe(struct platform_device *pdev)
-> +{
-> +	struct msm_vibrator *vibrator;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
-> +	if (!vibrator)
-> +		return -ENOMEM;
-> +
-> +	vibrator->input = devm_input_allocate_device(&pdev->dev);
-> +	if (!vibrator->input)
-> +		return -ENOMEM;
-> +
-> +	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> +	if (IS_ERR(vibrator->vcc)) {
-> +		if (PTR_ERR(vibrator->vcc) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to get regulator: %ld\n",
-> +				PTR_ERR(vibrator->vcc));
-> +		return PTR_ERR(vibrator->vcc);
-> +	}
-> +
-> +	vibrator->enable_gpio = devm_gpiod_get(&pdev->dev, "enable",
-> +					       GPIOD_OUT_LOW);
-> +	if (IS_ERR(vibrator->enable_gpio)) {
-> +		if (PTR_ERR(vibrator->enable_gpio) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to get enable gpio: %ld\n",
-> +				PTR_ERR(vibrator->enable_gpio));
-> +		return PTR_ERR(vibrator->enable_gpio);
-> +	}
-> +
-> +	vibrator->clk = devm_clk_get(&pdev->dev, "pwm");
-> +	if (IS_ERR(vibrator->clk)) {
-> +		if (PTR_ERR(vibrator->clk) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to lookup pwm clock: %ld\n",
-> +				PTR_ERR(vibrator->clk));
-> +		return PTR_ERR(vibrator->clk);
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "Failed to get platform resource\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	vibrator->base = devm_ioremap(&pdev->dev, res->start,
-> +				     resource_size(res));
-> +	if (!vibrator->base) {
-> +		dev_err(&pdev->dev, "Failed to iomap resource: %ld\n",
-> +			PTR_ERR(vibrator->base));
-> +		return -ENOMEM;
-> +	}
-> +
-> +	vibrator->enabled = false;
-> +	mutex_init(&vibrator->mutex);
-> +	INIT_WORK(&vibrator->worker, msm_vibrator_worker);
-> +
-> +	vibrator->input->name = "msm-vibrator";
-> +	vibrator->input->id.bustype = BUS_HOST;
-> +	vibrator->input->close = msm_vibrator_close;
-> +
-> +	input_set_drvdata(vibrator->input, vibrator);
-> +	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
-> +
-> +	ret = input_ff_create_memless(vibrator->input, NULL,
-> +				      msm_vibrator_play_effect);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to create ff memless: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = input_register_device(vibrator->input);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register input device: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused msm_vibrator_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct msm_vibrator *vibrator = platform_get_drvdata(pdev);
-> +
-> +	cancel_work_sync(&vibrator->worker);
-> +
-> +	if (vibrator->enabled)
-> +		msm_vibrator_stop(vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused msm_vibrator_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct msm_vibrator *vibrator = platform_get_drvdata(pdev);
-> +
-> +	if (vibrator->enabled)
-> +		msm_vibrator_start(vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(msm_vibrator_pm_ops, msm_vibrator_suspend,
-> +			 msm_vibrator_resume);
-> +
-> +static const struct of_device_id msm_vibrator_of_match[] = {
-> +	{ .compatible = "qcom,msm8226-vibrator" },
-> +	{ .compatible = "qcom,msm8974-vibrator" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, msm_vibrator_of_match);
-> +
-> +static struct platform_driver msm_vibrator_driver = {
-> +	.probe	= msm_vibrator_probe,
-> +	.driver	= {
-> +		.name = "msm-vibrator",
-> +		.pm = &msm_vibrator_pm_ops,
-> +		.of_match_table = of_match_ptr(msm_vibrator_of_match),
-> +	},
-> +};
-> +module_platform_driver(msm_vibrator_driver);
-> +
-> +MODULE_AUTHOR("Brian Masney <masneyb@onstation.org>");
-> +MODULE_DESCRIPTION("Qualcomm MSM vibrator driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.17.2
-> 
+has been applied to the spi tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 2e5c888873586400e3e9197514995458c7f4c3e0 Mon Sep 17 00:00:00 2001
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
+Date: Tue, 5 Feb 2019 17:33:38 +0000
+Subject: [PATCH] spi: atmel-quadspi: add support for sam9x60 qspi controller
+
+The sam9x60 qspi controller uses 2 clocks, one for the peripheral register
+access, the other for the qspi core and phy. Both are mandatory. It uses
+different transfer type bits in IFR register. It has dedicated registers
+to specify a read or a write instruction: Read Instruction Code Register
+(RICR) and Write Instruction Code Register (WICR). ICR/RICR/WICR have
+identical fields.
+
+Tested with sst26vf064b jedec,spi-nor flash. Backward compatibility test
+done on sama5d2 qspi controller and mx25l25635e jedec,spi-nor flash.
+
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/atmel-quadspi.c | 163 ++++++++++++++++++++++++++++--------
+ 1 file changed, 128 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
+index 336501d962e5..fffc21cd5f79 100644
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -19,6 +19,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/spi/spi-mem.h>
+ 
+@@ -35,7 +36,9 @@
+ 
+ #define QSPI_IAR     0x0030  /* Instruction Address Register */
+ #define QSPI_ICR     0x0034  /* Instruction Code Register */
++#define QSPI_WICR    0x0034  /* Write Instruction Code Register */
+ #define QSPI_IFR     0x0038  /* Instruction Frame Register */
++#define QSPI_RICR    0x003C  /* Read Instruction Code Register */
+ 
+ #define QSPI_SMR     0x0040  /* Scrambling Mode Register */
+ #define QSPI_SKR     0x0044  /* Scrambling Key Register */
+@@ -88,7 +91,7 @@
+ #define QSPI_SCR_DLYBS_MASK             GENMASK(23, 16)
+ #define QSPI_SCR_DLYBS(n)               (((n) << 16) & QSPI_SCR_DLYBS_MASK)
+ 
+-/* Bitfields in QSPI_ICR (Instruction Code Register) */
++/* Bitfields in QSPI_ICR (Read/Write Instruction Code Register) */
+ #define QSPI_ICR_INST_MASK              GENMASK(7, 0)
+ #define QSPI_ICR_INST(inst)             (((inst) << 0) & QSPI_ICR_INST_MASK)
+ #define QSPI_ICR_OPT_MASK               GENMASK(23, 16)
+@@ -118,6 +121,7 @@
+ #define QSPI_IFR_CRM                    BIT(14)
+ #define QSPI_IFR_NBDUM_MASK             GENMASK(20, 16)
+ #define QSPI_IFR_NBDUM(n)               (((n) << 16) & QSPI_IFR_NBDUM_MASK)
++#define QSPI_IFR_APBTFRTYP_READ		BIT(24)	/* Defined in SAM9X60 */
+ 
+ /* Bitfields in QSPI_SMR (Scrambling Mode Register) */
+ #define QSPI_SMR_SCREN                  BIT(0)
+@@ -133,12 +137,18 @@
+ #define QSPI_WPSR_WPVSRC_MASK           GENMASK(15, 8)
+ #define QSPI_WPSR_WPVSRC(src)           (((src) << 8) & QSPI_WPSR_WPVSRC)
+ 
++struct atmel_qspi_caps {
++	bool has_qspick;
++	bool has_ricr;
++};
+ 
+ struct atmel_qspi {
+ 	void __iomem		*regs;
+ 	void __iomem		*mem;
+ 	struct clk		*pclk;
++	struct clk		*qspick;
+ 	struct platform_device	*pdev;
++	const struct atmel_qspi_caps *caps;
+ 	u32			pending;
+ 	u32			mr;
+ 	struct completion	cmd_completion;
+@@ -151,7 +161,7 @@ struct atmel_qspi_mode {
+ 	u32 config;
+ };
+ 
+-static const struct atmel_qspi_mode sama5d2_qspi_modes[] = {
++static const struct atmel_qspi_mode atmel_qspi_modes[] = {
+ 	{ 1, 1, 1, QSPI_IFR_WIDTH_SINGLE_BIT_SPI },
+ 	{ 1, 1, 2, QSPI_IFR_WIDTH_DUAL_OUTPUT },
+ 	{ 1, 1, 4, QSPI_IFR_WIDTH_QUAD_OUTPUT },
+@@ -180,8 +190,8 @@ static int atmel_qspi_find_mode(const struct spi_mem_op *op)
+ {
+ 	u32 i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(sama5d2_qspi_modes); i++)
+-		if (atmel_qspi_is_compatible(op, &sama5d2_qspi_modes[i]))
++	for (i = 0; i < ARRAY_SIZE(atmel_qspi_modes); i++)
++		if (atmel_qspi_is_compatible(op, &atmel_qspi_modes[i]))
+ 			return i;
+ 
+ 	return -ENOTSUPP;
+@@ -201,36 +211,37 @@ static bool atmel_qspi_supports_op(struct spi_mem *mem,
+ 	return true;
+ }
+ 
+-static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
++static int atmel_qspi_set_cfg(struct atmel_qspi *aq,
++			      const struct spi_mem_op *op, u32 *offset)
+ {
+-	struct atmel_qspi *aq = spi_controller_get_devdata(mem->spi->master);
+-	int mode;
++	u32 iar, icr, ifr;
+ 	u32 dummy_cycles = 0;
+-	u32 iar, icr, ifr, sr;
+-	int err = 0;
++	int mode;
+ 
+ 	iar = 0;
+ 	icr = QSPI_ICR_INST(op->cmd.opcode);
+ 	ifr = QSPI_IFR_INSTEN;
+ 
+-	/*
+-	 * If the QSPI controller is set in regular SPI mode, set it in
+-	 * Serial Memory Mode (SMM).
+-	 */
+-	if (aq->mr != QSPI_MR_SMM) {
+-		writel_relaxed(QSPI_MR_SMM, aq->regs + QSPI_MR);
+-		aq->mr = QSPI_MR_SMM;
+-	}
+-
+ 	mode = atmel_qspi_find_mode(op);
+ 	if (mode < 0)
+ 		return mode;
+-
+-	ifr |= sama5d2_qspi_modes[mode].config;
++	ifr |= atmel_qspi_modes[mode].config;
+ 
+ 	if (op->dummy.buswidth && op->dummy.nbytes)
+ 		dummy_cycles = op->dummy.nbytes * 8 / op->dummy.buswidth;
+ 
++	/*
++	 * The controller allows 24 and 32-bit addressing while NAND-flash
++	 * requires 16-bit long. Handling 8-bit long addresses is done using
++	 * the option field. For the 16-bit addresses, the workaround depends
++	 * of the number of requested dummy bits. If there are 8 or more dummy
++	 * cycles, the address is shifted and sent with the first dummy byte.
++	 * Otherwise opcode is disabled and the first byte of the address
++	 * contains the command opcode (works only if the opcode and address
++	 * use the same buswidth). The limitation is when the 16-bit address is
++	 * used without enough dummy cycles and the opcode is using a different
++	 * buswidth than the address.
++	 */
+ 	if (op->addr.buswidth) {
+ 		switch (op->addr.nbytes) {
+ 		case 0:
+@@ -264,6 +275,9 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 		}
+ 	}
+ 
++	/* offset of the data access in the QSPI memory space */
++	*offset = iar;
++
+ 	/* Set number of dummy cycles */
+ 	if (dummy_cycles)
+ 		ifr |= QSPI_IFR_NBDUM(dummy_cycles);
+@@ -272,16 +286,51 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	if (op->data.nbytes)
+ 		ifr |= QSPI_IFR_DATAEN;
+ 
+-	if (op->data.dir == SPI_MEM_DATA_OUT)
+-		ifr |= QSPI_IFR_SAMA5D2_WRITE_TRSFR;
++	/*
++	 * If the QSPI controller is set in regular SPI mode, set it in
++	 * Serial Memory Mode (SMM).
++	 */
++	if (aq->mr != QSPI_MR_SMM) {
++		writel_relaxed(QSPI_MR_SMM, aq->regs + QSPI_MR);
++		aq->mr = QSPI_MR_SMM;
++	}
+ 
+ 	/* Clear pending interrupts */
+ 	(void)readl_relaxed(aq->regs + QSPI_SR);
+ 
+-	/* Set QSPI Instruction Frame registers */
+-	writel_relaxed(iar, aq->regs + QSPI_IAR);
+-	writel_relaxed(icr, aq->regs + QSPI_ICR);
+-	writel_relaxed(ifr, aq->regs + QSPI_IFR);
++	if (aq->caps->has_ricr) {
++		if (!op->addr.nbytes && op->data.dir == SPI_MEM_DATA_IN)
++			ifr |= QSPI_IFR_APBTFRTYP_READ;
++
++		/* Set QSPI Instruction Frame registers */
++		writel_relaxed(iar, aq->regs + QSPI_IAR);
++		if (op->data.dir == SPI_MEM_DATA_IN)
++			writel_relaxed(icr, aq->regs + QSPI_RICR);
++		else
++			writel_relaxed(icr, aq->regs + QSPI_WICR);
++		writel_relaxed(ifr, aq->regs + QSPI_IFR);
++	} else {
++		if (op->data.dir == SPI_MEM_DATA_OUT)
++			ifr |= QSPI_IFR_SAMA5D2_WRITE_TRSFR;
++
++		/* Set QSPI Instruction Frame registers */
++		writel_relaxed(iar, aq->regs + QSPI_IAR);
++		writel_relaxed(icr, aq->regs + QSPI_ICR);
++		writel_relaxed(ifr, aq->regs + QSPI_IFR);
++	}
++
++	return 0;
++}
++
++static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
++{
++	struct atmel_qspi *aq = spi_controller_get_devdata(mem->spi->master);
++	u32 sr, offset;
++	int err;
++
++	err = atmel_qspi_set_cfg(aq, op, &offset);
++	if (err)
++		return err;
+ 
+ 	/* Skip to the final steps if there is no data */
+ 	if (op->data.nbytes) {
+@@ -290,11 +339,11 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 
+ 		/* Send/Receive data */
+ 		if (op->data.dir == SPI_MEM_DATA_IN)
+-			_memcpy_fromio(op->data.buf.in,
+-				aq->mem + iar, op->data.nbytes);
++			_memcpy_fromio(op->data.buf.in, aq->mem + offset,
++				       op->data.nbytes);
+ 		else
+-			_memcpy_toio(aq->mem + iar,
+-				op->data.buf.out, op->data.nbytes);
++			_memcpy_toio(aq->mem + offset, op->data.buf.out,
++				     op->data.nbytes);
+ 
+ 		/* Release the chip-select */
+ 		writel_relaxed(QSPI_CR_LASTXFER, aq->regs + QSPI_CR);
+@@ -450,28 +499,55 @@ static int atmel_qspi_probe(struct platform_device *pdev)
+ 		goto exit;
+ 	}
+ 
++	aq->caps = of_device_get_match_data(&pdev->dev);
++	if (!aq->caps) {
++		dev_err(&pdev->dev, "Could not retrieve QSPI caps\n");
++		err = -EINVAL;
++		goto exit;
++	}
++
++	if (aq->caps->has_qspick) {
++		/* Get the QSPI system clock */
++		aq->qspick = devm_clk_get(&pdev->dev, "qspick");
++		if (IS_ERR(aq->qspick)) {
++			dev_err(&pdev->dev, "missing system clock\n");
++			err = PTR_ERR(aq->qspick);
++			goto disable_pclk;
++		}
++
++		/* Enable the QSPI system clock */
++		err = clk_prepare_enable(aq->qspick);
++		if (err) {
++			dev_err(&pdev->dev,
++				"failed to enable the QSPI system clock\n");
++			goto disable_pclk;
++		}
++	}
++
+ 	/* Request the IRQ */
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&pdev->dev, "missing IRQ\n");
+ 		err = irq;
+-		goto disable_pclk;
++		goto disable_qspick;
+ 	}
+ 	err = devm_request_irq(&pdev->dev, irq, atmel_qspi_interrupt,
+ 			       0, dev_name(&pdev->dev), aq);
+ 	if (err)
+-		goto disable_pclk;
++		goto disable_qspick;
+ 
+ 	err = atmel_qspi_init(aq);
+ 	if (err)
+-		goto disable_pclk;
++		goto disable_qspick;
+ 
+ 	err = spi_register_controller(ctrl);
+ 	if (err)
+-		goto disable_pclk;
++		goto disable_qspick;
+ 
+ 	return 0;
+ 
++disable_qspick:
++	clk_disable_unprepare(aq->qspick);
+ disable_pclk:
+ 	clk_disable_unprepare(aq->pclk);
+ exit:
+@@ -487,6 +563,7 @@ static int atmel_qspi_remove(struct platform_device *pdev)
+ 
+ 	spi_unregister_controller(ctrl);
+ 	writel_relaxed(QSPI_CR_QSPIDIS, aq->regs + QSPI_CR);
++	clk_disable_unprepare(aq->qspick);
+ 	clk_disable_unprepare(aq->pclk);
+ 	return 0;
+ }
+@@ -495,6 +572,7 @@ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
+ {
+ 	struct atmel_qspi *aq = dev_get_drvdata(dev);
+ 
++	clk_disable_unprepare(aq->qspick);
+ 	clk_disable_unprepare(aq->pclk);
+ 
+ 	return 0;
+@@ -505,6 +583,7 @@ static int __maybe_unused atmel_qspi_resume(struct device *dev)
+ 	struct atmel_qspi *aq = dev_get_drvdata(dev);
+ 
+ 	clk_prepare_enable(aq->pclk);
++	clk_prepare_enable(aq->qspick);
+ 
+ 	return atmel_qspi_init(aq);
+ }
+@@ -512,8 +591,22 @@ static int __maybe_unused atmel_qspi_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(atmel_qspi_pm_ops, atmel_qspi_suspend,
+ 			 atmel_qspi_resume);
+ 
++static const struct atmel_qspi_caps atmel_sama5d2_qspi_caps = {};
++
++static const struct atmel_qspi_caps atmel_sam9x60_qspi_caps = {
++	.has_qspick = true,
++	.has_ricr = true,
++};
++
+ static const struct of_device_id atmel_qspi_dt_ids[] = {
+-	{ .compatible = "atmel,sama5d2-qspi" },
++	{
++		.compatible = "atmel,sama5d2-qspi",
++		.data = &atmel_sama5d2_qspi_caps,
++	},
++	{
++		.compatible = "microchip,sam9x60-qspi",
++		.data = &atmel_sam9x60_qspi_caps,
++	},
+ 	{ /* sentinel */ }
+ };
+ 
 -- 
-Dmitry
+2.20.1
