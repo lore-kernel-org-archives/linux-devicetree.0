@@ -1,58 +1,63 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 7/7] ARM: dts: sun5i: Add the MBUS controller
-Date: Wed,  6 Feb 2019 20:41:24 +0100
-Message-ID: <03d3f58a2747b06da5d497a77be9b425a7b37528.1549482066.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 6/7] clk: sunxi-ng: sun5i: Export the MBUS clock
+Date: Wed,  6 Feb 2019 20:41:23 +0100
+Message-ID: <631521f362904022dd3a1b7a7d3d90c572773e49.1549482066.git-series.maxime.ripard@bootlin.com>
 References: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE1CVVMgKGFuZCBpdHMgYXNzb2NpYXRlZCBjb250cm9sbGVyKSBpcyB0aGUgYnVzIGluIHRo
-ZSBBbGx3aW5uZXIgU29Dcwp0aGF0IERNQSBkZXZpY2VzIHVzZSBpbiB0aGUgc3lzdGVtIHRvIGFj
-Y2VzcyB0aGUgbWVtb3J5LgoKQW1vbmcgb3RoZXIgdGhpbmdzIChhbmQgZGVwZW5kaW5nIG9uIHRo
-ZSBTb0MgZ2VuZXJhdGlvbiksIGl0IGNhbiBhbHNvCmVuZm9yY2UgcHJpb3JpdGllcyBvciByZXBv
-cnQgYmFuZHdpZHRoIHVzYWdlcyBvbiBhIHBlci1tYXN0ZXIgYmFzaXMuCgpPbmUgb2YgdGhlIG1v
-c3Qgbm90YWJsZSB0aGluZyBpcyB0aGF0IGluc3RlYWQgb2YgaGF2aW5nIHRoZSBzYW1lIG1hcHBp
-bmcKZm9yIHRoZSBSQU0gdGhhbiB0aGUgQ1BVLCBpdCBtYXBzIGl0IGF0IGFkZHJlc3MgMCwgd2hp
-Y2ggbWVhbnMgd2UnbGwgaGF2ZQp0byBkbyBhZGRyZXNzIHRyYW5zbGF0aW9uIHRoYW5rcyB0byB0
-aGUgZG1hLXJhbmdlcyBwcm9wZXJ0eS4KClNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1h
-eGltZS5yaXBhcmRAYm9vdGxpbi5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuNWkuZHRz
-aSB8IDEzICsrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuNWkuZHRzaSBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjVpLmR0c2kKaW5kZXggNTQ5N2Q5ODVjNTRhLi5hMjkyMDNiNzY2MWQgMTAwNjQ0Ci0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjVpLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-c3VuNWkuZHRzaQpAQCAtMTI3LDYgKzEyNyw3IEBACiAJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1
-cyI7CiAJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJZG1h
-LXJhbmdlczsKIAkJcmFuZ2VzOwogCiAJCXN5c3RlbS1jb250cm9sQDFjMDAwMDAgewpAQCAtMTgx
-LDYgKzE4MiwxNCBAQAogCQkJfTsKIAkJfTsKIAorCQltYnVzOiBkcmFtLWNvbnRyb2xsZXJAMWMw
-MTAwMCB7CisJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW41aS1hMTMtbWJ1cyI7CisJCQly
-ZWcgPSA8MHgwMWMwMTAwMCAweDEwMDA+OworCQkJY2xvY2tzID0gPCZjY3UgQ0xLX01CVVM+Owor
-CQkJZG1hLXJhbmdlcyA9IDwweDAwMDAwMDAwIDB4NDAwMDAwMDAgMHgyMDAwMDAwMD47CisJCQkj
-aW50ZXJjb25uZWN0LWNlbGxzID0gPDE+OworCQl9OworCiAJCWRtYTogZG1hLWNvbnRyb2xsZXJA
-MWMwMjAwMCB7CiAJCQljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW40aS1hMTAtZG1hIjsKIAkJ
-CXJlZyA9IDwweDAxYzAyMDAwIDB4MTAwMD47CkBAIC03MjcsNiArNzM2LDggQEAKIAkJCWNsb2Nr
-LW5hbWVzID0gImFoYiIsICJtb2QiLAogCQkJCSAgICAgICJyYW0iOwogCQkJcmVzZXRzID0gPCZj
-Y3UgUlNUX0RFX0ZFPjsKKwkJCWludGVyY29ubmVjdHMgPSA8Jm1idXMgMTk+OworCQkJaW50ZXJj
-b25uZWN0LW5hbWVzID0gImRtYSI7CiAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCiAJCQlwb3J0
-cyB7CkBAIC03NTUsNiArNzY2LDggQEAKIAkJCWNsb2NrLW5hbWVzID0gImFoYiIsICJtb2QiLAog
-CQkJCSAgICAgICJyYW0iOwogCQkJcmVzZXRzID0gPCZjY3UgUlNUX0RFX0JFPjsKKwkJCWludGVy
-Y29ubmVjdHMgPSA8Jm1idXMgMTg+OworCQkJaW50ZXJjb25uZWN0LW5hbWVzID0gImRtYSI7CiAJ
-CQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCiAJCQlhc3NpZ25lZC1jbG9ja3MgPSA8JmNjdSBDTEtf
-REVfQkU+OwotLSAKZ2l0LXNlcmllcyAwLjkuMQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+The MBUS clock is used by the MBUS controller, so let's export it so that
+we can use it in our DT node.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ drivers/clk/sunxi-ng/ccu-sun5i.h      | 4 ----
+ include/dt-bindings/clock/sun5i-ccu.h | 2 +-
+ 2 files changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/drivers/clk/sunxi-ng/ccu-sun5i.h b/drivers/clk/sunxi-ng/ccu-sun5i.h
+index 93a275fbd9a9..b66abd4fd0bf 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun5i.h
++++ b/drivers/clk/sunxi-ng/ccu-sun5i.h
+@@ -60,10 +60,6 @@
+ 
+ /* The rest of the module clocks are exported */
+ 
+-#define CLK_MBUS		99
+-
+-/* And finally the IEP clock */
+-
+ #define CLK_NUMBER		(CLK_IEP + 1)
+ 
+ #endif /* _CCU_SUN5I_H_ */
+diff --git a/include/dt-bindings/clock/sun5i-ccu.h b/include/dt-bindings/clock/sun5i-ccu.h
+index 81f34d477aeb..2e6b9ddcc24e 100644
+--- a/include/dt-bindings/clock/sun5i-ccu.h
++++ b/include/dt-bindings/clock/sun5i-ccu.h
+@@ -100,7 +100,7 @@
+ #define CLK_AVS			96
+ #define CLK_HDMI		97
+ #define CLK_GPU			98
+-
++#define CLK_MBUS		99
+ #define CLK_IEP			100
+ 
+ #endif /* _DT_BINDINGS_CLK_SUN5I_H_ */
+-- 
+git-series 0.9.1
