@@ -1,34 +1,70 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/9] mfd: pm8xxx: convert to v2 irq interfaces to support
- hierarchical IRQ chips
-Date: Wed, 6 Feb 2019 15:37:47 +0100
-Message-ID: <CACRpkdYSW0jNEevduPwN_4T8evihh9yEUQyQpAao6fBjEBRVhg@mail.gmail.com>
-References: <20190125162302.14036-1-masneyb@onstation.org> <20190125162302.14036-4-masneyb@onstation.org>
- <CACRpkdZMe+JEQOa1yBfOoAErrC41Q9rggwxNb=_uwq1m2QKWyw@mail.gmail.com> <20190206141034.GA5833@basecamp>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 2/4] pwm: stm32-lp: Add power management support
+Date: Wed, 6 Feb 2019 15:54:50 +0100
+Message-ID: <ddb93754-2734-e4c2-a209-517984c6d814@st.com>
+References: <1549370429-19116-1-git-send-email-fabrice.gasnier@st.com>
+ <1549370429-19116-3-git-send-email-fabrice.gasnier@st.com>
+ <20190205204732.zrbhgyxnvjbwfyw4@pengutronix.de>
+ <20190205222522.GB1372@mithrandir>
+ <6584a59b-657d-adc9-fab2-eb1a9baba05d@st.com>
+ <20190206085405.pdiwd3c6wjog5hl7@pengutronix.de>
+ <20190206125545.GI21676@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190206141034.GA5833@basecamp>
+In-Reply-To: <20190206125545.GI21676@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+To: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vilhelm.gray@gmail.com, linux-stm32@st-md-mailman.stormreply.com, Tomasz Duszynski <tduszyns@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 6, 2019 at 3:10 PM Brian Masney <masneyb@onstation.org> wrote:
+On 2/6/19 1:55 PM, Thierry Reding wrote:
+> On Wed, Feb 06, 2019 at 09:54:05AM +0100, Uwe Kleine-König wrote:
+>> On Wed, Feb 06, 2019 at 09:42:48AM +0100, Fabrice Gasnier wrote:
+>>> If you agree with the current approach, I can send a V2 with Tomasz's
+>>> suggestion to remove the ifdefs and use __maybe_unused instead.
+>>
+>> I think the suspend callback should have something like:
+>>
+>> 	if (is_still_enabled) {
+>> 		/*
+>> 		 * The consumer didn't stop us, so refuse to suspend.
+>> 		 */
+>> 		dev_err(dev, "The consumer didn't stop us, so refuse to suspend.\n");
+>> 		return -EBUSY;
+>> 	}
+>>
+>> This way there are no bad surprises if the pwm is suspended before its
+>> consumer and it's obvious what is missing.
 
-> Thank you for testing all of this on actual hardware. You can either
-> send out the little issues like this that need corrected and I'll
-> collect everything up, and send out a V2 once you are done with testing.
-> Or, you can just take my patches, incorporate the fixes, and add me
-> with a Co-developed-by tag to the relevant patches. Whatever is easier
-> for you. I assume that the latter approach may be easier since you're
-> already making the changes in your tree for testing.
+Thierry, Uwe,
 
-Well there are some remarks from Marc you need to address in v2
-as well so you better keep the master patch set for now.
+When the pwm is suspended before its consumer, the bad surprise is the
+suspend request will fail... I'm not sure a new attempt may be better.
+So, it looks like the only way to have this clean is by implementing the
+device link e.g. via pwm_get() ?
 
-I can copy/paste the diff I have though, but there is some bug
-I still need to dig into...
+> 
+> Something that just occurred to me: perhaps as part of pwm_get() we
+> should track where we were being requested from so that we could give
+> hints in situations like this as to where the consumer is that forgot
+> to suspend the PWM.
 
-Yours,
-Linus Walleij
+The current approach handles the situation where the consumer forgot to
+suspend the PWM... I can add some warning about that in the suspend
+routine, incl the label.
+
+What do you think? What's the best approach ?
+
+Please advise,
+BR,
+Fabrice
+> 
+> I suppose we already have pwm_device.label to help with this, but
+> perhaps we could improve things if we stored __builtin_return_address
+> during pwm_get() to help users pinpoint where they need to look.
+> 
+> Thierry
+> 
