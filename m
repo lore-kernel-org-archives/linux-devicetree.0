@@ -1,143 +1,385 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/9] qcom: ssbi-gpio: add support for hierarchical IRQ chip
-Date: Wed, 6 Feb 2019 16:21:20 +0100
-Message-ID: <CACRpkdbKGfupo6uWukYQ-+zsfyS8rbU4v96HBxCgbJi5OhA83g@mail.gmail.com>
-References: <20190125162302.14036-1-masneyb@onstation.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v14 01/13] media: staging/imx: refactor imx media device
+ probe
+Date: Wed, 6 Feb 2019 16:36:03 +0100
+Message-ID: <50cb0aad-0aa4-620e-2e3c-bd08a8c9cec7@xs4all.nl>
+References: <20190206151328.21629-1-rui.silva@linaro.org>
+ <20190206151328.21629-2-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125162302.14036-1-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20190206151328.21629-2-rui.silva@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 5:23 PM Brian Masney <masneyb@onstation.org> wrote:
+On 2/6/19 4:13 PM, Rui Miguel Silva wrote:
+> Refactor and move media device initialization code to a new common
+> module, so it can be used by other devices, this will allow for example
+> a near to introduce imx7 CSI driver, to use this media device.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  drivers/staging/media/imx/Makefile            |  1 +
+>  .../staging/media/imx/imx-media-dev-common.c  | 90 +++++++++++++++++++
+>  drivers/staging/media/imx/imx-media-dev.c     | 86 ++++--------------
+>  drivers/staging/media/imx/imx-media-of.c      |  6 +-
+>  drivers/staging/media/imx/imx-media.h         | 14 +++
+>  5 files changed, 127 insertions(+), 70 deletions(-)
+>  create mode 100644 drivers/staging/media/imx/imx-media-dev-common.c
+> 
+> diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
+> index 698a4210316e..a30b3033f9a3 100644
+> --- a/drivers/staging/media/imx/Makefile
+> +++ b/drivers/staging/media/imx/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  imx-media-objs := imx-media-dev.o imx-media-internal-sd.o imx-media-of.o
+> +imx-media-objs += imx-media-dev-common.o
+>  imx-media-common-objs := imx-media-utils.o imx-media-fim.o
+>  imx-media-ic-objs := imx-ic-common.o imx-ic-prp.o imx-ic-prpencvf.o
+>  
+> diff --git a/drivers/staging/media/imx/imx-media-dev-common.c b/drivers/staging/media/imx/imx-media-dev-common.c
+> new file mode 100644
+> index 000000000000..28bcb31cf6ca
+> --- /dev/null
+> +++ b/drivers/staging/media/imx/imx-media-dev-common.c
+> @@ -0,0 +1,90 @@
+> +// SPDX-License-Identifier: GPL
 
-> This patch series adds hierarchical IRQ chip support to ssbi-gpio so
-> that device tree consumers can request an IRQ directly from the GPIO
-> block rather than having to request an IRQ from the underlying PMIC.
+WARNING: 'SPDX-License-Identifier: GPL' is not supported in LICENSES/...
+#18: FILE: drivers/staging/media/imx/imx-media-dev-common.c:1:
++// SPDX-License-Identifier: GPL
 
-I had to apply the patch I just sent out:
-"genirq: introduce irq_chip_mask_ack_parent()"
-and then the following diff to make things work. But after that:
-Tested-by: Linus Walleij <linus.walleij@linaro.org>
-It works like a charm on the APQ8060 DragonBoard!
+You no doubt mean GPL-2.0. Just repost this patch with this change.
 
-I would recommend you just fold the below into your series
-and add the extra patch for genirq to your patch stack.
+Regards,
 
->From 14569f7901cfe84221ed775ba63b09b32277de62 Mon Sep 17 00:00:00 2001
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 6 Feb 2019 16:19:32 +0100
-Subject: [PATCH] qcom hierarchy: fixup hacks
+	Hans
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/mfd/qcom-pm8xxx.c                | 19 ++++---------------
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c |  8 ++++----
- 2 files changed, 8 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
-index a976890c4019..2ee3b075cd0e 100644
---- a/drivers/mfd/qcom-pm8xxx.c
-+++ b/drivers/mfd/qcom-pm8xxx.c
-@@ -82,8 +82,9 @@ struct pm_irq_chip {
-  struct irq_domain *irqdomain;
-  unsigned int num_blocks;
-  unsigned int num_masters;
-- u8 config[0];
-  const struct pm_irq_data *pm_irq_data;
-+ /* MUST BE AT THE END OF THIS STRUCT */
-+ u8 config[0];
- };
-
- static int pm8xxx_read_block_irq(struct pm_irq_chip *chip, unsigned int bp,
-@@ -303,7 +304,6 @@ static int pm8xxx_irq_set_type(struct irq_data *d,
-unsigned int flow_type)
- {
-  struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
-  unsigned int pmirq = irqd_to_hwirq(d);
-- irq_flow_handler_t flow_handler;
-  int irq_bit;
-  u8 block, config;
-
-@@ -317,8 +317,6 @@ static int pm8xxx_irq_set_type(struct irq_data *d,
-unsigned int flow_type)
-  chip->config[pmirq] &= ~PM_IRQF_MASK_RE;
-  if (flow_type & IRQF_TRIGGER_FALLING)
-  chip->config[pmirq] &= ~PM_IRQF_MASK_FE;
--
-- flow_handler = handle_edge_irq;
-  } else {
-  chip->config[pmirq] |= PM_IRQF_LVL_SEL;
-
-@@ -326,11 +324,9 @@ static int pm8xxx_irq_set_type(struct irq_data
-*d, unsigned int flow_type)
-  chip->config[pmirq] &= ~PM_IRQF_MASK_RE;
-  else
-  chip->config[pmirq] &= ~PM_IRQF_MASK_FE;
--
-- flow_handler = handle_level_irq;
-  }
-
-- irq_set_handler_locked(d, flow_handler);
-+ irq_set_handler_locked(d, handle_level_irq);
-
-  config = chip->config[pmirq] | PM_IRQF_CLR;
-  return pm8xxx_config_irq(chip, block, config);
-@@ -386,15 +382,8 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip *chip,
-    struct irq_domain *domain, unsigned int irq,
-    irq_hw_number_t hwirq, unsigned int type)
- {
-- irq_flow_handler_t handler;
--
-- if (type & IRQ_TYPE_EDGE_BOTH)
-- handler = handle_edge_irq;
-- else
-- handler = handle_level_irq;
--
-  irq_domain_set_info(domain, irq, hwirq, chip->pm_irq_data->irq_chip,
--     chip, handler, NULL, NULL);
-+     chip, handle_level_irq, NULL, NULL);
-  irq_set_noprobe(irq);
- }
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-index d4847f42f52f..e2509f26be4c 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-@@ -696,8 +696,7 @@ static int pm8xxx_pin_populate(struct pm8xxx_gpio *pctrl,
-
- static struct irq_chip pm8xxx_irq_chip = {
-  .name = "ssbi-gpio",
-- .irq_mask = irq_chip_mask_parent,
-- .irq_ack = irq_chip_ack_parent,
-+ .irq_mask_ack = irq_chip_mask_ack_parent,
-  .irq_unmask = irq_chip_unmask_parent,
-  .irq_set_type = irq_chip_set_type_parent,
-  .flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE,
-@@ -781,13 +780,14 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
-  struct pinctrl_pin_desc *pins;
-  struct pm8xxx_gpio *pctrl;
-  int ret;
-- int i, npins;
-+ int i;
-
-  pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
-  if (!pctrl)
-  return -ENOMEM;
-
-- npins = (uintptr_t) device_get_match_data(&pdev->dev);
-+ pctrl->dev = &pdev->dev;
-+ pctrl->npins = (uintptr_t) device_get_match_data(&pdev->dev);
-
-  pctrl->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-  if (!pctrl->regmap) {
--- 
-2.20.1
-
-
-Yours,
-Linus Walleij
+> +/*
+> + * V4L2 Media Controller Driver for Freescale common i.MX5/6/7 SOC
+> + *
+> + * Copyright (c) 2019 Linaro Ltd
+> + * Copyright (c) 2016 Mentor Graphics Inc.
+> + */
+> +
+> +#include <linux/of_graph.h>
+> +#include <linux/of_platform.h>
+> +#include "imx-media.h"
+> +
+> +static const struct v4l2_async_notifier_operations imx_media_subdev_ops = {
+> +	.bound = imx_media_subdev_bound,
+> +	.complete = imx_media_probe_complete,
+> +};
+> +
+> +static const struct media_device_ops imx_media_md_ops = {
+> +	.link_notify = imx_media_link_notify,
+> +};
+> +
+> +struct imx_media_dev *imx_media_dev_init(struct device *dev)
+> +{
+> +	struct imx_media_dev *imxmd;
+> +	int ret;
+> +
+> +	imxmd = devm_kzalloc(dev, sizeof(*imxmd), GFP_KERNEL);
+> +	if (!imxmd)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	dev_set_drvdata(dev, imxmd);
+> +
+> +	strlcpy(imxmd->md.model, "imx-media", sizeof(imxmd->md.model));
+> +	imxmd->md.ops = &imx_media_md_ops;
+> +	imxmd->md.dev = dev;
+> +
+> +	mutex_init(&imxmd->mutex);
+> +
+> +	imxmd->v4l2_dev.mdev = &imxmd->md;
+> +	imxmd->v4l2_dev.notify = imx_media_notify;
+> +	strlcpy(imxmd->v4l2_dev.name, "imx-media",
+> +		sizeof(imxmd->v4l2_dev.name));
+> +
+> +	media_device_init(&imxmd->md);
+> +
+> +	ret = v4l2_device_register(dev, &imxmd->v4l2_dev);
+> +	if (ret < 0) {
+> +		v4l2_err(&imxmd->v4l2_dev,
+> +			 "Failed to register v4l2_device: %d\n", ret);
+> +		goto cleanup;
+> +	}
+> +
+> +	dev_set_drvdata(imxmd->v4l2_dev.dev, imxmd);
+> +
+> +	INIT_LIST_HEAD(&imxmd->vdev_list);
+> +
+> +	v4l2_async_notifier_init(&imxmd->notifier);
+> +
+> +	return imxmd;
+> +
+> +cleanup:
+> +	media_device_cleanup(&imxmd->md);
+> +
+> +	return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(imx_media_dev_init);
+> +
+> +int imx_media_dev_notifier_register(struct imx_media_dev *imxmd)
+> +{
+> +	int ret;
+> +
+> +	/* no subdevs? just bail */
+> +	if (list_empty(&imxmd->notifier.asd_list)) {
+> +		v4l2_err(&imxmd->v4l2_dev, "no subdevs\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* prepare the async subdev notifier and register it */
+> +	imxmd->notifier.ops = &imx_media_subdev_ops;
+> +	ret = v4l2_async_notifier_register(&imxmd->v4l2_dev,
+> +					   &imxmd->notifier);
+> +	if (ret) {
+> +		v4l2_err(&imxmd->v4l2_dev,
+> +			 "v4l2_async_notifier_register failed with %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(imx_media_dev_notifier_register);
+> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
+> index 25e916562c66..c42bddd78906 100644
+> --- a/drivers/staging/media/imx/imx-media-dev.c
+> +++ b/drivers/staging/media/imx/imx-media-dev.c
+> @@ -116,9 +116,9 @@ static int imx_media_get_ipu(struct imx_media_dev *imxmd,
+>  }
+>  
+>  /* async subdev bound notifier */
+> -static int imx_media_subdev_bound(struct v4l2_async_notifier *notifier,
+> -				  struct v4l2_subdev *sd,
+> -				  struct v4l2_async_subdev *asd)
+> +int imx_media_subdev_bound(struct v4l2_async_notifier *notifier,
+> +			   struct v4l2_subdev *sd,
+> +			   struct v4l2_async_subdev *asd)
+>  {
+>  	struct imx_media_dev *imxmd = notifier2dev(notifier);
+>  	int ret = 0;
+> @@ -302,7 +302,7 @@ static int imx_media_create_pad_vdev_lists(struct imx_media_dev *imxmd)
+>  }
+>  
+>  /* async subdev complete notifier */
+> -static int imx_media_probe_complete(struct v4l2_async_notifier *notifier)
+> +int imx_media_probe_complete(struct v4l2_async_notifier *notifier)
+>  {
+>  	struct imx_media_dev *imxmd = notifier2dev(notifier);
+>  	int ret;
+> @@ -326,11 +326,6 @@ static int imx_media_probe_complete(struct v4l2_async_notifier *notifier)
+>  	return media_device_register(&imxmd->md);
+>  }
+>  
+> -static const struct v4l2_async_notifier_operations imx_media_subdev_ops = {
+> -	.bound = imx_media_subdev_bound,
+> -	.complete = imx_media_probe_complete,
+> -};
+> -
+>  /*
+>   * adds controls to a video device from an entity subdevice.
+>   * Continues upstream from the entity's sink pads.
+> @@ -374,8 +369,8 @@ static int imx_media_inherit_controls(struct imx_media_dev *imxmd,
+>  	return ret;
+>  }
+>  
+> -static int imx_media_link_notify(struct media_link *link, u32 flags,
+> -				 unsigned int notification)
+> +int imx_media_link_notify(struct media_link *link, u32 flags,
+> +			  unsigned int notification)
+>  {
+>  	struct media_entity *source = link->source->entity;
+>  	struct imx_media_pad_vdev *pad_vdev;
+> @@ -438,13 +433,8 @@ static int imx_media_link_notify(struct media_link *link, u32 flags,
+>  	return ret;
+>  }
+>  
+> -static const struct media_device_ops imx_media_md_ops = {
+> -	.link_notify = imx_media_link_notify,
+> -};
+> -
+> -static void imx_media_notify(struct v4l2_subdev *sd,
+> -			     unsigned int notification,
+> -			     void *arg)
+> +void imx_media_notify(struct v4l2_subdev *sd, unsigned int notification,
+> +		      void *arg)
+>  {
+>  	struct media_entity *entity = &sd->entity;
+>  	int i;
+> @@ -472,77 +462,37 @@ static int imx_media_probe(struct platform_device *pdev)
+>  	struct imx_media_dev *imxmd;
+>  	int ret;
+>  
+> -	imxmd = devm_kzalloc(dev, sizeof(*imxmd), GFP_KERNEL);
+> -	if (!imxmd)
+> -		return -ENOMEM;
+> -
+> -	dev_set_drvdata(dev, imxmd);
+> -
+> -	strscpy(imxmd->md.model, "imx-media", sizeof(imxmd->md.model));
+> -	imxmd->md.ops = &imx_media_md_ops;
+> -	imxmd->md.dev = dev;
+> -
+> -	mutex_init(&imxmd->mutex);
+> -
+> -	imxmd->v4l2_dev.mdev = &imxmd->md;
+> -	imxmd->v4l2_dev.notify = imx_media_notify;
+> -	strscpy(imxmd->v4l2_dev.name, "imx-media",
+> -		sizeof(imxmd->v4l2_dev.name));
+> -
+> -	media_device_init(&imxmd->md);
+> -
+> -	ret = v4l2_device_register(dev, &imxmd->v4l2_dev);
+> -	if (ret < 0) {
+> -		v4l2_err(&imxmd->v4l2_dev,
+> -			 "Failed to register v4l2_device: %d\n", ret);
+> -		goto cleanup;
+> -	}
+> -
+> -	dev_set_drvdata(imxmd->v4l2_dev.dev, imxmd);
+> -
+> -	INIT_LIST_HEAD(&imxmd->vdev_list);
+> -
+> -	v4l2_async_notifier_init(&imxmd->notifier);
+> +	imxmd = imx_media_dev_init(dev);
+> +	if (IS_ERR(imxmd))
+> +		return PTR_ERR(imxmd);
+>  
+>  	ret = imx_media_add_of_subdevs(imxmd, node);
+>  	if (ret) {
+>  		v4l2_err(&imxmd->v4l2_dev,
+>  			 "add_of_subdevs failed with %d\n", ret);
+> -		goto notifier_cleanup;
+> +		goto cleanup;
+>  	}
+>  
+>  	ret = imx_media_add_internal_subdevs(imxmd);
+>  	if (ret) {
+>  		v4l2_err(&imxmd->v4l2_dev,
+>  			 "add_internal_subdevs failed with %d\n", ret);
+> -		goto notifier_cleanup;
+> -	}
+> -
+> -	/* no subdevs? just bail */
+> -	if (list_empty(&imxmd->notifier.asd_list)) {
+> -		ret = -ENODEV;
+> -		goto notifier_cleanup;
+> +		goto cleanup;
+>  	}
+>  
+> -	/* prepare the async subdev notifier and register it */
+> -	imxmd->notifier.ops = &imx_media_subdev_ops;
+> -	ret = v4l2_async_notifier_register(&imxmd->v4l2_dev,
+> -					   &imxmd->notifier);
+> -	if (ret) {
+> -		v4l2_err(&imxmd->v4l2_dev,
+> -			 "v4l2_async_notifier_register failed with %d\n", ret);
+> +	ret = imx_media_dev_notifier_register(imxmd);
+> +	if (ret)
+>  		goto del_int;
+> -	}
+>  
+>  	return 0;
+>  
+>  del_int:
+>  	imx_media_remove_internal_subdevs(imxmd);
+> -notifier_cleanup:
+> +cleanup:
+>  	v4l2_async_notifier_cleanup(&imxmd->notifier);
+>  	v4l2_device_unregister(&imxmd->v4l2_dev);
+> -cleanup:
+>  	media_device_cleanup(&imxmd->md);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -556,8 +506,8 @@ static int imx_media_remove(struct platform_device *pdev)
+>  	v4l2_async_notifier_unregister(&imxmd->notifier);
+>  	imx_media_remove_internal_subdevs(imxmd);
+>  	v4l2_async_notifier_cleanup(&imxmd->notifier);
+> -	v4l2_device_unregister(&imxmd->v4l2_dev);
+>  	media_device_unregister(&imxmd->md);
+> +	v4l2_device_unregister(&imxmd->v4l2_dev);
+>  	media_device_cleanup(&imxmd->md);
+>  
+>  	return 0;
+> diff --git a/drivers/staging/media/imx/imx-media-of.c b/drivers/staging/media/imx/imx-media-of.c
+> index a01327f6e045..03446335ac03 100644
+> --- a/drivers/staging/media/imx/imx-media-of.c
+> +++ b/drivers/staging/media/imx/imx-media-of.c
+> @@ -20,7 +20,8 @@
+>  #include <video/imx-ipu-v3.h>
+>  #include "imx-media.h"
+>  
+> -static int of_add_csi(struct imx_media_dev *imxmd, struct device_node *csi_np)
+> +int imx_media_of_add_csi(struct imx_media_dev *imxmd,
+> +			 struct device_node *csi_np)
+>  {
+>  	int ret;
+>  
+> @@ -45,6 +46,7 @@ static int of_add_csi(struct imx_media_dev *imxmd, struct device_node *csi_np)
+>  
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(imx_media_of_add_csi);
+>  
+>  int imx_media_add_of_subdevs(struct imx_media_dev *imxmd,
+>  			     struct device_node *np)
+> @@ -57,7 +59,7 @@ int imx_media_add_of_subdevs(struct imx_media_dev *imxmd,
+>  		if (!csi_np)
+>  			break;
+>  
+> -		ret = of_add_csi(imxmd, csi_np);
+> +		ret = imx_media_of_add_csi(imxmd, csi_np);
+>  		of_node_put(csi_np);
+>  		if (ret)
+>  			return ret;
+> diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
+> index 7a0e658753f0..0d1c6bbf1109 100644
+> --- a/drivers/staging/media/imx/imx-media.h
+> +++ b/drivers/staging/media/imx/imx-media.h
+> @@ -228,6 +228,18 @@ int imx_media_add_async_subdev(struct imx_media_dev *imxmd,
+>  			       struct fwnode_handle *fwnode,
+>  			       struct platform_device *pdev);
+>  
+> +int imx_media_subdev_bound(struct v4l2_async_notifier *notifier,
+> +			   struct v4l2_subdev *sd,
+> +			   struct v4l2_async_subdev *asd);
+> +int imx_media_link_notify(struct media_link *link, u32 flags,
+> +			  unsigned int notification);
+> +void imx_media_notify(struct v4l2_subdev *sd, unsigned int notification,
+> +		      void *arg);
+> +int imx_media_probe_complete(struct v4l2_async_notifier *notifier);
+> +
+> +struct imx_media_dev *imx_media_dev_init(struct device *dev);
+> +int imx_media_dev_notifier_register(struct imx_media_dev *imxmd);
+> +
+>  /* imx-media-fim.c */
+>  struct imx_media_fim;
+>  void imx_media_fim_eof_monitor(struct imx_media_fim *fim, ktime_t timestamp);
+> @@ -251,6 +263,8 @@ int imx_media_create_of_links(struct imx_media_dev *imxmd,
+>  			      struct v4l2_subdev *sd);
+>  int imx_media_create_csi_of_links(struct imx_media_dev *imxmd,
+>  				  struct v4l2_subdev *csi);
+> +int imx_media_of_add_csi(struct imx_media_dev *imxmd,
+> +			 struct device_node *csi_np);
+>  
+>  /* imx-media-capture.c */
+>  struct imx_media_video_dev *
+> 
