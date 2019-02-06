@@ -1,299 +1,99 @@
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: Re: [PATCHv3 01/27] PCI: mobiveil: uniform the register accessors
-Date: Wed, 6 Feb 2019 16:29:06 +0530
-Message-ID: <CAFZiPx3v3-L4h83-hjSq5eeHd_c2vdwx3cyjqeTuRiPeMsRzFQ@mail.gmail.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com> <20190129080926.36773-2-Zhiqiang.Hou@nxp.com>
- <CAFZiPx0wA5=juO0PnuMKY_mJSPD12W09Vy+buW_EyQAKzZkjKw@mail.gmail.com> <20190205174316.GA12956@e107981-ln.cambridge.arm.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v5 1/2] pwm: sifive: Add DT documentation for SiFive PWM
+ Controller
+Date: Wed, 6 Feb 2019 12:07:30 +0100
+Message-ID: <20190206110730.ogqxncrnblyazgjw@pengutronix.de>
+References: <1548762199-7065-1-git-send-email-yash.shah@sifive.com>
+ <1548762199-7065-2-git-send-email-yash.shah@sifive.com>
+ <20190130081411.5rva7cpwoy2l5qjd@pengutronix.de>
+ <CAJ2_jOHiJ3X5VYZMCNk2bpvUdDOsrqHJna3HPvtdNQpJB9fxjg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205174316.GA12956@e107981-ln.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ2_jOHiJ3X5VYZMCNk2bpvUdDOsrqHJna3HPvtdNQpJB9fxjg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Thierry Reding <thierry.reding@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Lorenzo,
-
-On Tue, Feb 5, 2019 at 11:13 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Tue, Feb 05, 2019 at 11:09:19AM +0530, Subrahmanya Lingappa wrote:
-> > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
->
-> I have a feeling you do not read what I write.
-
-My apologies, I do read. I am new to reviewing process and trying to learn here.
->
-> Please never top-post.
->
-I'll make sure not to top-post now on-wards.
->
-> Read this, especially the email etiquette section:
->
-> https://kernelnewbies.org/PatchCulture
->
-I read it.
-
-Thank you.
+On Wed, Feb 06, 2019 at 04:18:47PM +0530, Yash Shah wrote:
+> On Wed, Jan 30, 2019 at 1:44 PM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
 > >
-> >
-> >
-> > On Tue, Jan 29, 2019 at 1:38 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> > On Tue, Jan 29, 2019 at 05:13:18PM +0530, Yash Shah wrote:
+> > > DT documentation for PWM controller added.
 > > >
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > It's confused that R/W some registers by csr_readl()/csr_writel(),
-> > > while others by read_paged_register()/write_paged_register().
-> > > Actually the low 3KB of 4KB PCIe configure space can be accessed
-> > > directly and high 1KB is paging area. So this patch uniformed the
-> > > register accessors to csr_readl() and csr_writel() by comparing
-> > > the register offset with page access boundary 3KB in the accessor
-> > > internal.
-> > >
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> > > [Atish: Compatible string update]
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > > > ---
-> > > V3:
-> > >  - No change
+> > >  .../devicetree/bindings/pwm/pwm-sifive.txt         | 33 ++++++++++++=
+++++++++++
+> > >  1 file changed, 33 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.=
+txt
 > > >
-> > >  drivers/pci/controller/pcie-mobiveil.c | 179 +++++++++++++++++--------
-> > >  1 file changed, 124 insertions(+), 55 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> > > index 77052a0712d0..d55c7e780c6e 100644
-> > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > @@ -47,7 +47,6 @@
-> > >  #define  PAGE_SEL_SHIFT        13
-> > >  #define  PAGE_SEL_MASK         0x3f
-> > >  #define  PAGE_LO_MASK          0x3ff
-> > > -#define  PAGE_SEL_EN           0xc00
-> > >  #define  PAGE_SEL_OFFSET_SHIFT 10
-> > >
-> > >  #define PAB_AXI_PIO_CTRL       0x0840
-> > > @@ -117,6 +116,12 @@
-> > >  #define LINK_WAIT_MIN  90000
-> > >  #define LINK_WAIT_MAX  100000
-> > >
-> > > +#define PAGED_ADDR_BNDRY                       0xc00
-> > > +#define OFFSET_TO_PAGE_ADDR(off)               \
-> > > +       ((off & PAGE_LO_MASK) | PAGED_ADDR_BNDRY)
-> > > +#define OFFSET_TO_PAGE_IDX(off)                        \
-> > > +       ((off >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK)
+> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/D=
+ocumentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > > new file mode 100644
+> > > index 0000000..8dcb40d
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > > @@ -0,0 +1,33 @@
+> > > +SiFive PWM controller
 > > > +
-> > >  struct mobiveil_msi {                  /* MSI information */
-> > >         struct mutex lock;              /* protect bitmap variable */
-> > >         struct irq_domain *msi_domain;
-> > > @@ -145,15 +150,119 @@ struct mobiveil_pcie {
-> > >         struct mobiveil_msi msi;
-> > >  };
-> > >
-> > > -static inline void csr_writel(struct mobiveil_pcie *pcie, const u32 value,
-> > > -               const u32 reg)
-> > > +/*
-> > > + * mobiveil_pcie_sel_page - routine to access paged register
-> > > + *
-> > > + * Registers whose address greater than PAGED_ADDR_BNDRY (0xc00) are paged,
-> > > + * for this scheme to work extracted higher 6 bits of the offset will be
-> > > + * written to pg_sel field of PAB_CTRL register and rest of the lower 10
-> > > + * bits enabled with PAGED_ADDR_BNDRY are used as offset of the register.
-> > > + */
-> > > +static void mobiveil_pcie_sel_page(struct mobiveil_pcie *pcie, u8 pg_idx)
-> > >  {
-> > > -       writel_relaxed(value, pcie->csr_axi_slave_base + reg);
-> > > +       u32 val;
-> > > +
-> > > +       val = readl(pcie->csr_axi_slave_base + PAB_CTRL);
-> > > +       val &= ~(PAGE_SEL_MASK << PAGE_SEL_SHIFT);
-> > > +       val |= (pg_idx & PAGE_SEL_MASK) << PAGE_SEL_SHIFT;
-> > > +
-> > > +       writel(val, pcie->csr_axi_slave_base + PAB_CTRL);
-> > >  }
-> > >
-> > > -static inline u32 csr_readl(struct mobiveil_pcie *pcie, const u32 reg)
-> > > +static void *mobiveil_pcie_comp_addr(struct mobiveil_pcie *pcie, u32 off)
-> > >  {
-> > > -       return readl_relaxed(pcie->csr_axi_slave_base + reg);
-> > > +       if (off < PAGED_ADDR_BNDRY) {
-> > > +               /* For directly accessed registers, clear the pg_sel field */
-> > > +               mobiveil_pcie_sel_page(pcie, 0);
-> > > +               return pcie->csr_axi_slave_base + off;
-> > > +       }
-> > > +
-> > > +       mobiveil_pcie_sel_page(pcie, OFFSET_TO_PAGE_IDX(off));
-> > > +       return pcie->csr_axi_slave_base + OFFSET_TO_PAGE_ADDR(off);
-> > > +}
-> > > +
-> > > +static int mobiveil_pcie_read(void __iomem *addr, int size, u32 *val)
-> > > +{
-> > > +       if ((uintptr_t)addr & (size - 1)) {
-> > > +               *val = 0;
-> > > +               return PCIBIOS_BAD_REGISTER_NUMBER;
-> > > +       }
-> > > +
-> > > +       switch (size) {
-> > > +       case 4:
-> > > +               *val = readl(addr);
-> > > +               break;
-> > > +       case 2:
-> > > +               *val = readw(addr);
-> > > +               break;
-> > > +       case 1:
-> > > +               *val = readb(addr);
-> > > +               break;
-> > > +       default:
-> > > +               *val = 0;
-> > > +               return PCIBIOS_BAD_REGISTER_NUMBER;
-> > > +       }
-> > > +
-> > > +       return PCIBIOS_SUCCESSFUL;
-> > > +}
-> > > +
-> > > +static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
-> > > +{
-> > > +       if ((uintptr_t)addr & (size - 1))
-> > > +               return PCIBIOS_BAD_REGISTER_NUMBER;
-> > > +
-> > > +       switch (size) {
-> > > +       case 4:
-> > > +               writel(val, addr);
-> > > +               break;
-> > > +       case 2:
-> > > +               writew(val, addr);
-> > > +               break;
-> > > +       case 1:
-> > > +               writeb(val, addr);
-> > > +               break;
-> > > +       default:
-> > > +               return PCIBIOS_BAD_REGISTER_NUMBER;
-> > > +       }
-> > > +
-> > > +       return PCIBIOS_SUCCESSFUL;
-> > > +}
-> > > +
-> > > +static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
-> > > +{
-> > > +       void *addr;
-> > > +       u32 val;
-> > > +       int ret;
-> > > +
-> > > +       addr = mobiveil_pcie_comp_addr(pcie, off);
-> > > +
-> > > +       ret = mobiveil_pcie_read(addr, size, &val);
-> > > +       if (ret)
-> > > +               dev_err(&pcie->pdev->dev, "read CSR address failed\n");
-> > > +
-> > > +       return val;
-> > > +}
-> > > +
-> > > +static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
-> > > +{
-> > > +       void *addr;
-> > > +       int ret;
-> > > +
-> > > +       addr = mobiveil_pcie_comp_addr(pcie, off);
-> > > +
-> > > +       ret = mobiveil_pcie_write(addr, size, val);
-> > > +       if (ret)
-> > > +               dev_err(&pcie->pdev->dev, "write CSR address failed\n");
-> > > +}
-> > > +
-> > > +static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
-> > > +{
-> > > +       return csr_read(pcie, off, 0x4);
-> > > +}
-> > > +
-> > > +static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
-> > > +{
-> > > +       csr_write(pcie, val, off, 0x4);
-> > >  }
-> > >
-> > >  static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
-> > > @@ -342,45 +451,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
-> > >         return 0;
-> > >  }
-> > >
-> > > -/*
-> > > - * select_paged_register - routine to access paged register of root complex
-> > > - *
-> > > - * registers of RC are paged, for this scheme to work
-> > > - * extracted higher 6 bits of the offset will be written to pg_sel
-> > > - * field of PAB_CTRL register and rest of the lower 10 bits enabled with
-> > > - * PAGE_SEL_EN are used as offset of the register.
-> > > - */
-> > > -static void select_paged_register(struct mobiveil_pcie *pcie, u32 offset)
-> > > -{
-> > > -       int pab_ctrl_dw, pg_sel;
-> > > -
-> > > -       /* clear pg_sel field */
-> > > -       pab_ctrl_dw = csr_readl(pcie, PAB_CTRL);
-> > > -       pab_ctrl_dw = (pab_ctrl_dw & ~(PAGE_SEL_MASK << PAGE_SEL_SHIFT));
-> > > -
-> > > -       /* set pg_sel field */
-> > > -       pg_sel = (offset >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK;
-> > > -       pab_ctrl_dw |= ((pg_sel << PAGE_SEL_SHIFT));
-> > > -       csr_writel(pcie, pab_ctrl_dw, PAB_CTRL);
-> > > -}
-> > > -
-> > > -static void write_paged_register(struct mobiveil_pcie *pcie,
-> > > -               u32 val, u32 offset)
-> > > -{
-> > > -       u32 off = (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
-> > > -
-> > > -       select_paged_register(pcie, offset);
-> > > -       csr_writel(pcie, val, off);
-> > > -}
-> > > -
-> > > -static u32 read_paged_register(struct mobiveil_pcie *pcie, u32 offset)
-> > > -{
-> > > -       u32 off = (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
-> > > -
-> > > -       select_paged_register(pcie, offset);
-> > > -       return csr_readl(pcie, off);
-> > > -}
-> > > -
-> > >  static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
-> > >                 int pci_addr, u32 type, u64 size)
-> > >  {
-> > > @@ -397,19 +467,19 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
-> > >         pio_ctrl_val = csr_readl(pcie, PAB_PEX_PIO_CTRL);
-> > >         csr_writel(pcie,
-> > >                 pio_ctrl_val | (1 << PIO_ENABLE_SHIFT), PAB_PEX_PIO_CTRL);
-> > > -       amap_ctrl_dw = read_paged_register(pcie, PAB_PEX_AMAP_CTRL(win_num));
-> > > +       amap_ctrl_dw = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
-> > >         amap_ctrl_dw = (amap_ctrl_dw | (type << AMAP_CTRL_TYPE_SHIFT));
-> > >         amap_ctrl_dw = (amap_ctrl_dw | (1 << AMAP_CTRL_EN_SHIFT));
-> > >
-> > > -       write_paged_register(pcie, amap_ctrl_dw | lower_32_bits(size64),
-> > > -                               PAB_PEX_AMAP_CTRL(win_num));
-> > > +       csr_writel(pcie, amap_ctrl_dw | lower_32_bits(size64),
-> > > +                  PAB_PEX_AMAP_CTRL(win_num));
-> > >
-> > > -       write_paged_register(pcie, upper_32_bits(size64),
-> > > -                               PAB_EXT_PEX_AMAP_SIZEN(win_num));
-> > > +       csr_writel(pcie, upper_32_bits(size64),
-> > > +                  PAB_EXT_PEX_AMAP_SIZEN(win_num));
-> > >
-> > > -       write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
-> > > -       write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
-> > > -       write_paged_register(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
-> > > +       csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
-> > > +       csr_writel(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
-> > > +       csr_writel(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
-> > >  }
-> > >
-> > >  /*
-> > > @@ -437,8 +507,7 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
-> > >         csr_writel(pcie, 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
-> > >                         lower_32_bits(size64), PAB_AXI_AMAP_CTRL(win_num));
-> > >
-> > > -       write_paged_register(pcie, upper_32_bits(size64),
-> > > -                               PAB_EXT_AXI_AMAP_SIZE(win_num));
-> > > +       csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
-> > >
-> > >         /*
-> > >          * program AXI window base with appropriate value in
-> > > --
-> > > 2.17.1
-> > >
+> > > +Unlike most other PWM controllers, the SiFive PWM controller current=
+ly only
+> > > +supports one period for all channels in the PWM. This is set globall=
+y in DTS.
+> >
+> > You can simply drop this if the first user can set this using the usual
+> > interface. Don't you like this suggestion that I already made a few
+> > times now?
+> >
+> > Did you consider to make the driver support only a single output with a
+> > more flexible period setting?
+> =
+
+> We cannot consider supporting only single output since we have boards that
+> use the additional PWM channels to control individual LED brightness
+> of a tri-color LED.
+> If we go down to one channel, then we can't control the brightness of
+> the individual LEDs.
+> It will break the use case.
+
+OK.
+
+> I am considering the below approach, let me know if it's fine by you.
+> =
+
+> - Drop the global period property and allow the only first user to change=
+ period
+> using the usual interface.
+> - A note in the binding that all PWMs need to run at the same
+> period. If the driver already refuses to apply incompatible periods,
+> the users are going to notice that they've got the DT wrong.
+> - In driver code, count the users using the .request and .free callbacks.
+> Based on this, allow changes to period iff the user count is one.
+
+Not sure you need to point this limitation in the binding doc. Other
+than that this is fine.
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
