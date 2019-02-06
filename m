@@ -1,132 +1,255 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 5/5] input: misc: bma150: Register input device after
- setting private data
-Date: Wed, 6 Feb 2019 10:53:07 -0800
-Message-ID: <20190206185307.GD174258@dtor-ws>
-References: <20190202151806.9064-1-pawel.mikolaj.chmiel@gmail.com>
- <20190202151806.9064-6-pawel.mikolaj.chmiel@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 2/3] clk: loongson1: add of support
+Date: Wed, 06 Feb 2019 11:16:45 -0800
+Message-ID: <154948060595.115909.8140700244360302816@swboyd.mtv.corp.google.com>
+References: <20190128152052.3047-1-jiaxun.yang@flygoat.com> <20190201063540.19636-1-jiaxun.yang@flygoat.com> <20190201063540.19636-3-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190202151806.9064-6-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <20190201063540.19636-3-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, xc-racer2@live.ca, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-mips@vger.kernel.org
+Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 02, 2019 at 04:18:06PM +0100, Paweł Chmiel wrote:
-> From: Jonathan Bakker <xc-racer2@live.ca>
-> 
-> Otherwise we introduce a race condition where userspace can request input
-> before we're ready leading to null pointer dereference such as
-> 
-> input: bma150 as /devices/platform/i2c-gpio-2/i2c-5/5-0038/input/input3
-> Unable to handle kernel NULL pointer dereference at virtual address 00000018
-> pgd = (ptrval)
-> [00000018] *pgd=55dac831, *pte=00000000, *ppte=00000000
-> Internal error: Oops: 17 [#1] PREEMPT ARM
-> Modules linked in: bma150 input_polldev [last unloaded: bma150]
-> CPU: 0 PID: 2870 Comm: accelerometer Not tainted 5.0.0-rc3-dirty #46
-> Hardware name: Samsung S5PC110/S5PV210-based board
-> PC is at input_event+0x8/0x60
-> LR is at bma150_report_xyz+0x9c/0xe0 [bma150]
-> pc : [<80450f70>]    lr : [<7f0a614c>]    psr: 800d0013
-> sp : a4c1fd78  ip : 00000081  fp : 00020000
-> r10: 00000000  r9 : a5e2944c  r8 : a7455000
-> r7 : 00000016  r6 : 00000101  r5 : a7617940  r4 : 80909048
-> r3 : fffffff2  r2 : 00000000  r1 : 00000003  r0 : 00000000
-> Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> Control: 10c5387d  Table: 54e34019  DAC: 00000051
-> Process accelerometer (pid: 2870, stack limit = 0x(ptrval))
-> Stackck: (0xa4c1fd78 to 0xa4c20000)
-> fd60:                                                       fffffff3 fc813f6c
-> fd80: 40410581 d7530ce3 a5e2817c a7617f00 a5e29404 a5e2817c 00000000 7f008324
-> fda0: a5e28000 8044f59c a5fdd9d0 a5e2945c a46a4a00 a5e29668 a7455000 80454f10
-> fdc0: 80909048 a5e29668 a5fdd9d0 a46a4a00 806316d0 00000000 a46a4a00 801df5f0
-> fde0: 00000000 d7530ce3 a4c1fec0 a46a4a00 00000000 a5fdd9d0 a46a4a08 801df53c
-> fe00: 00000000 801d74bc a4c1fec0 00000000 a4c1ff70 00000000 a7038da8 00000000
-> fe20: a46a4a00 801e91fc a411bbe0 801f2e88 00000004 00000000 80909048 00000041
-> fe40: 00000000 00020000 00000000 dead4ead a6a88da0 00000000 ffffe000 806fcae8
-> fe60: a4c1fec8 00000000 80909048 00000002 a5fdd9d0 a7660110 a411bab0 00000001
-> fe80: dead4ead ffffffff ffffffff a4c1fe8c a4c1fe8c d7530ce3 20000013 80909048
-> fea0: 80909048 a4c1ff70 00000001 fffff000 a4c1e000 00000005 00026038 801eabd8
-> fec0: a7660110 a411bab0 b9394901 00000006 a696201b 76fb3000 00000000 a7039720
-> fee0: a5fdd9d0 00000101 00000002 00000096 00000000 00000000 00000000 a4c1ff00
-> ff00: a6b310f4 805cb174 a6b310f4 00000010 00000fe0 00000010 a4c1e000 d7530ce3
-> ff20: 00000003 a5f41400 a5f41424 00000000 a6962000 00000000 00000003 00000002
-> ff40: ffffff9c 000a0000 80909048 d7530ce3 a6962000 00000003 80909048 ffffff9c
-> ff60: a6962000 801d890c 00000000 00000000 00020000 a7590000 00000004 00000100
-> ff80: 00000001 d7530ce3 000288b8 00026320 000288b8 00000005 80101204 a4c1e000
-> ffa0: 00000005 80101000 000288b8 00026320 000288b8 000a0000 00000000 00000000
-> ffc0: 000288b8 00026320 000288b8 00000005 7eef3bac 000264e8 00028ad8 00026038
-> ffe0: 00000005 7eef3300 76f76e91 76f78546 800d0030 000288b8 00000000 00000000
-> [<80450f70>] (input_event) from [<a5e2817c>] (0xa5e2817c)
-> Code: e1a08148 eaffffa8 e351001f 812fff1e (e590c018)
-> ---[ end trace 1c691ee85f2ff243 ]---
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Quoting Jiaxun Yang (2019-01-31 22:35:39)
+> This patch add of support by split the clk_hw register and
+> clkdev register, then handle the of clk_hw via
+> of_clk_hw_onecell_get.
+>=20
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-Applied, thank you.
+Why though? There isn't any motivation here.
 
 > ---
->  drivers/input/misc/bma150.c | 15 +++------------
->  1 file changed, 3 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/input/misc/bma150.c b/drivers/input/misc/bma150.c
-> index 1cdc8ce97968..64caf43e5bca 100644
-> --- a/drivers/input/misc/bma150.c
-> +++ b/drivers/input/misc/bma150.c
-> @@ -470,7 +470,6 @@ static void bma150_init_input_device(struct bma150_data *bma150,
->  static int bma150_register_input_device(struct bma150_data *bma150)
->  {
->  	struct input_dev *idev;
-> -	int error;
->  
->  	idev = devm_input_allocate_device(&bma150->client->dev);
->  	if (!idev)
-> @@ -482,18 +481,14 @@ static int bma150_register_input_device(struct bma150_data *bma150)
->  	idev->close = bma150_irq_close;
->  	input_set_drvdata(idev, bma150);
->  
-> -	error = input_register_device(idev);
-> -	if (error)
-> -		return error;
-> -
->  	bma150->input = idev;
-> -	return 0;
-> +
-> +	return input_register_device(idev);
->  }
->  
->  static int bma150_register_polled_device(struct bma150_data *bma150)
->  {
->  	struct input_polled_dev *ipoll_dev;
-> -	int error;
->  
->  	ipoll_dev = devm_input_allocate_polled_device(&bma150->client->dev);
->  	if (!ipoll_dev)
-> @@ -509,14 +504,10 @@ static int bma150_register_polled_device(struct bma150_data *bma150)
->  
->  	bma150_init_input_device(bma150, ipoll_dev->input);
->  
-> -	error = input_register_polled_device(ipoll_dev);
-> -	if (error)
-> -		return error;
-> -
->  	bma150->input_polled = ipoll_dev;
->  	bma150->input = ipoll_dev->input;
->  
-> -	return 0;
-> +	return input_register_polled_device(ipoll_dev);
->  }
->  
->  int bma150_cfg_from_of(struct device_node *np)
-> -- 
-> 2.17.1
-> 
+>  drivers/clk/loongson1/clk-loongson1b.c | 197 ++++++++++++++++++++-----
+>  drivers/clk/loongson1/clk-loongson1c.c | 164 +++++++++++++++-----
+>  drivers/clk/loongson1/clk.c            |  47 +++++-
+>  drivers/clk/loongson1/clk.h            |  18 ++-
+>  4 files changed, 343 insertions(+), 83 deletions(-)
 
--- 
-Dmitry
+It just looks like more lines are added.
+
+>=20
+> diff --git a/drivers/clk/loongson1/clk-loongson1b.c b/drivers/clk/loongso=
+n1/clk-loongson1b.c
+> index f36a97e993c0..2148df31db15 100644
+> --- a/drivers/clk/loongson1/clk-loongson1b.c
+> +++ b/drivers/clk/loongson1/clk-loongson1b.c
+> @@ -1,10 +1,7 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Copyright (c) 2012-2016 Zhang, Keguang <keguang.zhang@gmail.com>
+> - *
+> - * This program is free software; you can redistribute  it and/or modify=
+ it
+> - * under  the terms of  the GNU General  Public License as published by =
+the
+> - * Free Software Foundation;  either version 2 of the  License, or (at y=
+our
+> - * option) any later version.
+
+Please make SPDX change in another patch.
+
+> + * Copyright (c) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
+>   */
+> =20
+>  #include <linux/clkdev.h>
+> @@ -12,11 +9,41 @@
+>  #include <linux/io.h>
+>  #include <linux/err.h>
+> =20
+> -#include <loongson1.h>
+>  #include "clk.h"
+> +#include <dt-bindings/clock/ls1b-clock.h>
+> +
+> +#define LS1B_CLK_COUNT 9
+> =20
+> -#define OSC            (33 * 1000000)
+>  #define DIV_APB                2
+> +/* Clock PLL Divisor Register Bits */
+> +#define DIV_DC_EN                      BIT(31)
+> +#define DIV_DC_RST                     BIT(30)
+> +#define DIV_CPU_EN                     BIT(25)
+> +#define DIV_CPU_RST                    BIT(24)
+> +#define DIV_DDR_EN                     BIT(19)
+> +#define DIV_DDR_RST                    BIT(18)
+> +#define RST_DC_EN                      BIT(5)
+> +#define RST_DC                         BIT(4)
+> +#define RST_DDR_EN                     BIT(3)
+> +#define RST_DDR                                BIT(2)
+> +#define RST_CPU_EN                     BIT(1)
+> +#define RST_CPU                                BIT(0)
+> +
+> +#define DIV_DC_SHIFT                   26
+> +#define DIV_CPU_SHIFT                  20
+> +#define DIV_DDR_SHIFT                  14
+> +
+> +#define DIV_DC_WIDTH                   4
+> +#define DIV_CPU_WIDTH                  4
+> +#define DIV_DDR_WIDTH                  4
+> +
+> +#define BYPASS_DC_SHIFT                        12
+> +#define BYPASS_DDR_SHIFT               10
+> +#define BYPASS_CPU_SHIFT               8
+> +
+> +#define BYPASS_DC_WIDTH                        1
+> +#define BYPASS_DDR_WIDTH               1
+> +#define BYPASS_CPU_WIDTH               1
+> =20
+>  static DEFINE_SPINLOCK(_lock);
+> =20
+> @@ -25,9 +52,9 @@ static unsigned long ls1x_pll_recalc_rate(struct clk_hw=
+ *hw,
+>  {
+>         u32 pll, rate;
+> =20
+> -       pll =3D __raw_readl(LS1X_CLK_PLL_FREQ);
+> +       pll =3D __raw_readl(CLK_PLL_FREQ_ADDR);
+>         rate =3D 12 + (pll & GENMASK(5, 0));
+> -       rate *=3D OSC;
+> +       rate *=3D parent_rate;
+>         rate >>=3D 1;
+> =20
+>         return rate;
+
+IS this change related? Maybe think about splitting this out too and
+just have a patch that re-does all the registration calls in one patch.
+
+> @@ -120,3 +220,24 @@ void __init ls1x_clk_init(void)
+>         clk_hw_register_clkdev(hw, "ls1x-wdt", NULL);
+>         clk_hw_register_clkdev(hw, "serial8250", NULL);
+>  }
+> +
+> +static void __init ls1b_clk_of_setup(struct device_node *np)
+> +{
+> +       struct clk_hw_onecell_data *onecell;
+> +       int err;
+> +       const char *parent =3D of_clk_get_parent_name(np, 0);
+> +
+> +       clk_base =3D of_iomap(np, 0);
+> +
+> +       onecell =3D ls1b_clk_init_hw(parent);
+> +       if (!onecell)
+> +               pr_err("ls1b-clk: unable to register clk_hw");
+> +
+> +       err =3D of_clk_add_hw_provider(np, of_clk_hw_onecell_get, onecell=
+);
+> +       if (err)
+> +               pr_err("ls1b-clk: failed to add DT provider: %d\n", err);
+> +
+> +       pr_info("ls1b-clk: driver registered");
+
+Please no "I'm alive!" messages (plus it's missing a newline at the
+end). At the least, make them pr_debug() level.
+
+> +}
+> +
+> +CLK_OF_DECLARE(clk_ls1b, "loongson,ls1b-clock", ls1b_clk_of_setup);
+> diff --git a/drivers/clk/loongson1/clk.c b/drivers/clk/loongson1/clk.c
+> index 983ce9f6edbb..b4dc7dd8e0cd 100644
+> --- a/drivers/clk/loongson1/clk.c
+> +++ b/drivers/clk/loongson1/clk.c
+> @@ -1,14 +1,24 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Copyright (c) 2012-2016 Zhang, Keguang <keguang.zhang@gmail.com>
+> - *
+> - * This program is free software; you can redistribute  it and/or modify=
+ it
+> - * under  the terms of  the GNU General  Public License as published by =
+the
+> - * Free Software Foundation;  either version 2 of the  License, or (at y=
+our
+> - * option) any later version.
+> + * Copyright (c) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
+>   */
+> =20
+> +#include <linux/clkdev.h>
+> +
+>  #include <linux/clk-provider.h>
+>  #include <linux/slab.h>
+> +#include <linux/io.h>
+> +#include <linux/of_address.h>
+> +
+> +#include <asm/mach-loongson32/platform.h>
+> +
+> +void __iomem *clk_base;
+> +
+> +#define LS1C_OSC               (24 * 1000000)
+> +#define LS1B_OSC               (33 * 1000000)
+> +
+> +#define LS1X_CLK_BASE  0x1fe78030
+> =20
+>  #include "clk.h"
+> =20
+> @@ -43,3 +53,30 @@ struct clk_hw *__init clk_hw_register_pll(struct devic=
+e *dev,
+> =20
+>         return hw;
+>  }
+> +
+> +void __init ls1x_clk_init(void)
+> +{
+> +       struct clk_hw *hw;
+> +       struct clk_hw_onecell_data *onecell;
+> +
+> +       clk_base =3D (void __iomem *)KSEG1ADDR(LS1X_CLK_BASE);
+> +#ifdef CONFIG_LOONGSON1_LS1B
+> +       hw =3D clk_hw_register_fixed_rate(NULL, "osc_clk", NULL, 0, LS1B_=
+OSC);
+> +       clk_hw_register_clkdev(hw, "osc_clk", NULL);
+> +       onecell =3D ls1c_clk_init_hw("osc_clk");
+> +       if (!onecell)
+> +               panic("ls1x-clk: unable to register clk_hw");
+> +
+> +       ls1c_register_clkdev(onecell);
+
+Should be ls1b_register_clkdev?
+
+> +#elif defined(CONFIG_LOONGSON1_LS1C)
+> +       hw =3D clk_hw_register_fixed_rate(NULL, "osc_clk", NULL, 0, LS1C_=
+OSC);
+> +       clk_hw_register_clkdev(hw, "osc_clk", NULL);
+> +       onecell =3D ls1c_clk_init_hw("osc_clk");
+> +       if (!onecell)
+> +               panic("ls1x-clk: unable to register clk_hw");
+> +
+> +       ls1c_register_clkdev(onecell);
+> +#else
+> +       panic("ls1x-clk: not loongson platform");
+> +#endif
+
+Can this be implemented with if (IS_ENABLED(CONFIG_LOONGSON1_LS1B))
+else-if, etc.? That would make the maybe unused attribute unnecessary and
+provide more compile time coverage.
+
+Also, a lot of the code is duplicated twice so that could all be
+collapsed together and then the only difference is the fixed rate and
+the registration function at the end?=20
+
+Or can this just be implemented in the 1b and 1c files instead of in
+some common place here?
+
+> +}
+> diff --git a/drivers/clk/loongson1/clk.h b/drivers/clk/loongson1/clk.h
+> index 085d74b5d496..be7cc72c0ea3 100644
+> --- a/drivers/clk/loongson1/clk.h
+> +++ b/drivers/clk/loongson1/clk.h
+> @@ -16,4 +13,15 @@ struct clk_hw *clk_hw_register_pll(struct device *dev,
+>                                    const struct clk_ops *ops,
+>                                    unsigned long flags);
+> =20
+> +struct clk_hw_onecell_data __init *ls1c_clk_init_hw(const char *osc_name=
+);
+> +struct clk_hw_onecell_data __init *ls1b_clk_init_hw(const char *osc_name=
+);
+> +
+> +void __maybe_unused __init ls1c_register_clkdev(struct clk_hw_onecell_da=
+ta *onecell);
+> +void __maybe_unused __init ls1b_register_clkdev(struct clk_hw_onecell_da=
+ta *onecell);
+
+I doubt that __maybe_unused and __init are needed here in the header
+file. Just on the actual implementation of the function.
