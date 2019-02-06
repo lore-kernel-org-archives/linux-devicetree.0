@@ -1,7 +1,8 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v14 06/13] ARM: dts: imx7s: add mipi phy power domain
-Date: Wed,  6 Feb 2019 15:13:21 +0000
-Message-ID: <20190206151328.21629-7-rui.silva@linaro.org>
+Subject: [PATCH v14 13/13] media: MAINTAINERS: add entry for Freescale i.MX7
+ media driver
+Date: Wed,  6 Feb 2019 15:13:28 +0000
+Message-ID: <20190206151328.21629-14-rui.silva@linaro.org>
 References: <20190206151328.21629-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,33 +22,36 @@ To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add power domain index 0 related with mipi-phy to imx7s.
-
-While at it rename pcie power-domain node to remove pgc prefix.
+Add maintainer entry for the imx7 media csi, mipi csis driver,
+dt-bindings and documentation.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index e88f53a4c7f4..9a680d3d6424 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -606,7 +606,13 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3e211916d2bc..d8e0c9040736 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9348,6 +9348,17 @@ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
+ F:	drivers/media/platform/imx-pxp.[ch]
  
--					pgc_pcie_phy: pgc-power-domain@1 {
-+					pgc_mipi_phy: power-domain@0 {
-+						#power-domain-cells = <0>;
-+						reg = <0>;
-+						power-supply = <&reg_1p0d>;
-+					};
++MEDIA DRIVERS FOR FREESCALE IMX7
++M:	Rui Miguel Silva <rmfrfs@gmail.com>
++L:	linux-media@vger.kernel.org
++T:	git git://linuxtv.org/media_tree.git
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/imx7-csi.txt
++F:	Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
++F:	Documentation/media/v4l-drivers/imx7.rst
++F:	drivers/staging/media/imx/imx7-media-csi.c
++F:	drivers/staging/media/imx/imx7-mipi-csis.c
 +
-+					pgc_pcie_phy: power-domain@1 {
- 						#power-domain-cells = <0>;
- 						reg = <1>;
- 						power-supply = <&reg_1p0d>;
+ MEDIA DRIVERS FOR HELENE
+ M:	Abylay Ospan <aospan@netup.ru>
+ L:	linux-media@vger.kernel.org
 -- 
 2.20.1
