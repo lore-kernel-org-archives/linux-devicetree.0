@@ -1,39 +1,50 @@
 From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH v2 3/3] net: macb: add sam9x60-macb compatibility string
-Date: Wed, 6 Feb 2019 18:56:10 +0100
-Message-ID: <20190206175610.26773-3-nicolas.ferre@microchip.com>
-References: <20190206175610.26773-1-nicolas.ferre@microchip.com>
+Subject: [RESEND PATCH] dt-bindings: arm: atmel: add new sam9x60 SFR binding
+Date: Wed, 6 Feb 2019 19:04:25 +0100
+Message-ID: <20190206180425.27324-1-nicolas.ferre@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190206175610.26773-1-nicolas.ferre@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a new compatibility string for this product. It's using
-at91sam9260-macb layout but has a newer hardware revision: it's safer
-to use its own string.
+Add this SFR compatible definition for the sam9x60 SoC. Will be needed
+in OHCI driver: ohci-at91.c.
 
 Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 ---
-v2: applies on top of next-20190206
+Hi Rob,
+It seems that this patch was lost in my series "[PATCH 0/8] ARM: at91/dt:
+update to existing drivers for the sam9x60 SoC". I split it and resend it only
+for USB tree.
 
- drivers/net/ethernet/cadence/macb_main.c | 1 +
+Hi Greg,
+
+This DT bindind goes with the patch already queued in your usb-next tree "USB:
+host: ohci-at91: add sam9x60-sfr definition for ohci".
+
+Once Rob added his tag, can you please queue it in your tree as I reviewed my
+first idea of adding it to the arm-soc tree?
+
+Best regards,
+  Nicolas
+
+ Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 2b2882615e8b..eaabe8c278ec 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3943,6 +3943,7 @@ static const struct of_device_id macb_dt_ids[] = {
- 	{ .compatible = "cdns,np4-macb", .data = &np4_config },
- 	{ .compatible = "cdns,pc302-gem", .data = &pc302gem_config },
- 	{ .compatible = "cdns,gem", .data = &pc302gem_config },
-+	{ .compatible = "cdns,sam9x60-macb", .data = &at91sam9260_config },
- 	{ .compatible = "atmel,sama5d2-gem", .data = &sama5d2_config },
- 	{ .compatible = "atmel,sama5d3-gem", .data = &sama5d3_config },
- 	{ .compatible = "atmel,sama5d3-macb", .data = &sama5d3macb_config },
+diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+index badce6ef3ab3..dfc91bc02b97 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+@@ -148,6 +148,7 @@ required properties:
+ - compatible: Should be "atmel,<chip>-sfr", "syscon" or
+ 	"atmel,<chip>-sfrbu", "syscon"
+   <chip> can be "sama5d3", "sama5d4" or "sama5d2".
++  It also can be "microchip,sam9x60-sfr", "syscon".
+ - reg: Should contain registers location and length
+ 
+ 	sfr@f0038000 {
 -- 
 2.17.1
