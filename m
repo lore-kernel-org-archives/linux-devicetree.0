@@ -1,235 +1,299 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v13 10/13] media: imx7.rst: add documentation for i.MX7
- media driver
-Date: Wed, 6 Feb 2019 11:54:39 +0100
-Message-ID: <20a5f044-9ce6-1ead-9bc4-3e6008706928@xs4all.nl>
-References: <20190206102522.29212-1-rui.silva@linaro.org>
- <20190206102522.29212-11-rui.silva@linaro.org>
+From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Subject: Re: [PATCHv3 01/27] PCI: mobiveil: uniform the register accessors
+Date: Wed, 6 Feb 2019 16:29:06 +0530
+Message-ID: <CAFZiPx3v3-L4h83-hjSq5eeHd_c2vdwx3cyjqeTuRiPeMsRzFQ@mail.gmail.com>
+References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com> <20190129080926.36773-2-Zhiqiang.Hou@nxp.com>
+ <CAFZiPx0wA5=juO0PnuMKY_mJSPD12W09Vy+buW_EyQAKzZkjKw@mail.gmail.com> <20190205174316.GA12956@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20190206102522.29212-11-rui.silva@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190205174316.GA12956@e107981-ln.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/6/19 11:25 AM, Rui Miguel Silva wrote:
-> Add rst document to describe the i.MX7 media driver and also a working
-> example from the Warp7 board usage with a OV2680 sensor.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Lorenzo,
 
-Checkpatch gives me:
+On Tue, Feb 5, 2019 at 11:13 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Tue, Feb 05, 2019 at 11:09:19AM +0530, Subrahmanya Lingappa wrote:
+> > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+>
+> I have a feeling you do not read what I write.
 
-Applying: media: imx7.rst: add documentation for i.MX7 media driver
-WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
-#2:
-new file mode 100644
+My apologies, I do read. I am new to reviewing process and trying to learn here.
+>
+> Please never top-post.
+>
+I'll make sure not to top-post now on-wards.
+>
+> Read this, especially the email etiquette section:
+>
+> https://kernelnewbies.org/PatchCulture
+>
+I read it.
 
-WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-#7: FILE: Documentation/media/v4l-drivers/imx7.rst:1:
-+i.MX7 Video Capture Driver
-
-total: 0 errors, 2 warnings, 164 lines checked
-
-Both warnings are valid, so can you make a v13.1 for this patch only?
-Just include the MAINTAINERS change in this patch.
-
-Regards,
-
-	Hans
-
-> ---
->  Documentation/media/v4l-drivers/imx7.rst  | 157 ++++++++++++++++++++++
->  Documentation/media/v4l-drivers/index.rst |   1 +
->  2 files changed, 158 insertions(+)
->  create mode 100644 Documentation/media/v4l-drivers/imx7.rst
-> 
-> diff --git a/Documentation/media/v4l-drivers/imx7.rst b/Documentation/media/v4l-drivers/imx7.rst
-> new file mode 100644
-> index 000000000000..cd1195d391c5
-> --- /dev/null
-> +++ b/Documentation/media/v4l-drivers/imx7.rst
-> @@ -0,0 +1,157 @@
-> +i.MX7 Video Capture Driver
-> +==========================
-> +
-> +Introduction
-> +------------
-> +
-> +The i.MX7 contrary to the i.MX5/6 family does not contain an Image Processing
-> +Unit (IPU); because of that the capabilities to perform operations or
-> +manipulation of the capture frames are less feature rich.
-> +
-> +For image capture the i.MX7 has three units:
-> +- CMOS Sensor Interface (CSI)
-> +- Video Multiplexer
-> +- MIPI CSI-2 Receiver
-> +
-> +::
-> +                                           |\
-> +   MIPI Camera Input ---> MIPI CSI-2 --- > | \
-> +                                           |  \
-> +                                           | M |
-> +                                           | U | ------>  CSI ---> Capture
-> +                                           | X |
-> +                                           |  /
-> +   Parallel Camera Input ----------------> | /
-> +                                           |/
-> +
-> +For additional information, please refer to the latest versions of the i.MX7
-> +reference manual [#f1]_.
-> +
-> +Entities
-> +--------
-> +
-> +imx7-mipi-csi2
-> +--------------
-> +
-> +This is the MIPI CSI-2 receiver entity. It has one sink pad to receive the pixel
-> +data from MIPI CSI-2 camera sensor. It has one source pad, corresponding to the
-> +virtual channel 0. This module is compliant to previous version of Samsung
-> +D-phy, and supports two D-PHY Rx Data lanes.
-> +
-> +csi_mux
-> +-------
-> +
-> +This is the video multiplexer. It has two sink pads to select from either camera
-> +sensor with a parallel interface or from MIPI CSI-2 virtual channel 0.  It has
-> +a single source pad that routes to the CSI.
-> +
-> +csi
-> +---
-> +
-> +The CSI enables the chip to connect directly to external CMOS image sensor. CSI
-> +can interface directly with Parallel and MIPI CSI-2 buses. It has 256 x 64 FIFO
-> +to store received image pixel data and embedded DMA controllers to transfer data
-> +from the FIFO through AHB bus.
-> +
-> +This entity has one sink pad that receives from the csi_mux entity and a single
-> +source pad that routes video frames directly to memory buffers. This pad is
-> +routed to a capture device node.
-> +
-> +Usage Notes
-> +-----------
-> +
-> +To aid in configuration and for backward compatibility with V4L2 applications
-> +that access controls only from video device nodes, the capture device interfaces
-> +inherit controls from the active entities in the current pipeline, so controls
-> +can be accessed either directly from the subdev or from the active capture
-> +device interface. For example, the sensor controls are available either from the
-> +sensor subdevs or from the active capture device.
-> +
-> +Warp7 with OV2680
-> +-----------------
-> +
-> +On this platform an OV2680 MIPI CSI-2 module is connected to the internal MIPI
-> +CSI-2 receiver. The following example configures a video capture pipeline with
-> +an output of 800x600, and BGGR 10 bit bayer format:
-> +
-> +.. code-block:: none
-> +   # Setup links
-> +   media-ctl -l "'ov2680 1-0036':0 -> 'imx7-mipi-csis.0':0[1]"
-> +   media-ctl -l "'imx7-mipi-csis.0':1 -> 'csi_mux':1[1]"
-> +   media-ctl -l "'csi_mux':2 -> 'csi':0[1]"
-> +   media-ctl -l "'csi':1 -> 'csi capture':0[1]"
-> +
-> +   # Configure pads for pipeline
-> +   media-ctl -V "'ov2680 1-0036':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-> +   media-ctl -V "'csi_mux':1 [fmt:SBGGR10_1X10/800x600 field:none]"
-> +   media-ctl -V "'csi_mux':2 [fmt:SBGGR10_1X10/800x600 field:none]"
-> +   media-ctl -V "'imx7-mipi-csis.0':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-> +   media-ctl -V "'csi':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-> +
-> +After this streaming can start. The v4l2-ctl tool can be used to select any of
-> +the resolutions supported by the sensor.
-> +
-> +.. code-block:: none
-> +    root@imx7s-warp:~# media-ctl -p
-> +    Media controller API version 4.17.0
-> +
-> +    Media device information
-> +    ------------------------
-> +    driver          imx-media
-> +    model           imx-media
-> +    serial
-> +    bus info
-> +    hw revision     0x0
-> +    driver version  4.17.0
-> +
-> +    Device topology
-> +    - entity 1: csi (2 pads, 2 links)
-> +		type V4L2 subdev subtype Unknown flags 0
-> +		device node name /dev/v4l-subdev0
-> +	    pad0: Sink
-> +		    [fmt:SBGGR10_1X10/800x600 field:none]
-> +		    <- "csi_mux":2 [ENABLED]
-> +	    pad1: Source
-> +		    [fmt:SBGGR10_1X10/800x600 field:none]
-> +		    -> "csi capture":0 [ENABLED]
-> +
-> +    - entity 4: csi capture (1 pad, 1 link)
-> +		type Node subtype V4L flags 0
-> +		device node name /dev/video0
-> +	    pad0: Sink
-> +		    <- "csi":1 [ENABLED]
-> +
-> +    - entity 10: csi_mux (3 pads, 2 links)
-> +		type V4L2 subdev subtype Unknown flags 0
-> +		device node name /dev/v4l-subdev1
-> +	    pad0: Sink
-> +		    [fmt:unknown/0x0]
-> +	    pad1: Sink
-> +		    [fmt:unknown/800x600 field:none]
-> +		    <- "imx7-mipi-csis.0":1 [ENABLED]
-> +	    pad2: Source
-> +		    [fmt:unknown/800x600 field:none]
-> +		    -> "csi":0 [ENABLED]
-> +
-> +    - entity 14: imx7-mipi-csis.0 (2 pads, 2 links)
-> +		type V4L2 subdev subtype Unknown flags 0
-> +		device node name /dev/v4l-subdev2
-> +	    pad0: Sink
-> +		    [fmt:SBGGR10_1X10/800x600 field:none]
-> +		    <- "ov2680 1-0036":0 [ENABLED]
-> +	    pad1: Source
-> +		    [fmt:SBGGR10_1X10/800x600 field:none]
-> +		    -> "csi_mux":1 [ENABLED]
-> +
-> +    - entity 17: ov2680 1-0036 (1 pad, 1 link)
-> +		type V4L2 subdev subtype Sensor flags 0
-> +		device node name /dev/v4l-subdev3
-> +	    pad0: Source
-> +		    [fmt:SBGGR10_1X10/800x600 field:none]
-> +		    -> "imx7-mipi-csis.0":0 [ENABLED]
-> +
-> +
-> +References
-> +----------
-> +
-> +.. [#f1] https://www.nxp.com/docs/en/reference-manual/IMX7SRM.pdf
-> diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-> index f28570ec9e42..dfd4b205937c 100644
-> --- a/Documentation/media/v4l-drivers/index.rst
-> +++ b/Documentation/media/v4l-drivers/index.rst
-> @@ -44,6 +44,7 @@ For more details see the file COPYING in the source distribution of Linux.
->  	davinci-vpbe
->  	fimc
->  	imx
-> +	imx7
->  	ipu3
->  	ivtv
->  	max2175
-> 
+Thank you.
+> >
+> >
+> >
+> > On Tue, Jan 29, 2019 at 1:38 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> > >
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > It's confused that R/W some registers by csr_readl()/csr_writel(),
+> > > while others by read_paged_register()/write_paged_register().
+> > > Actually the low 3KB of 4KB PCIe configure space can be accessed
+> > > directly and high 1KB is paging area. So this patch uniformed the
+> > > register accessors to csr_readl() and csr_writel() by comparing
+> > > the register offset with page access boundary 3KB in the accessor
+> > > internal.
+> > >
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > > ---
+> > > V3:
+> > >  - No change
+> > >
+> > >  drivers/pci/controller/pcie-mobiveil.c | 179 +++++++++++++++++--------
+> > >  1 file changed, 124 insertions(+), 55 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> > > index 77052a0712d0..d55c7e780c6e 100644
+> > > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > > @@ -47,7 +47,6 @@
+> > >  #define  PAGE_SEL_SHIFT        13
+> > >  #define  PAGE_SEL_MASK         0x3f
+> > >  #define  PAGE_LO_MASK          0x3ff
+> > > -#define  PAGE_SEL_EN           0xc00
+> > >  #define  PAGE_SEL_OFFSET_SHIFT 10
+> > >
+> > >  #define PAB_AXI_PIO_CTRL       0x0840
+> > > @@ -117,6 +116,12 @@
+> > >  #define LINK_WAIT_MIN  90000
+> > >  #define LINK_WAIT_MAX  100000
+> > >
+> > > +#define PAGED_ADDR_BNDRY                       0xc00
+> > > +#define OFFSET_TO_PAGE_ADDR(off)               \
+> > > +       ((off & PAGE_LO_MASK) | PAGED_ADDR_BNDRY)
+> > > +#define OFFSET_TO_PAGE_IDX(off)                        \
+> > > +       ((off >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK)
+> > > +
+> > >  struct mobiveil_msi {                  /* MSI information */
+> > >         struct mutex lock;              /* protect bitmap variable */
+> > >         struct irq_domain *msi_domain;
+> > > @@ -145,15 +150,119 @@ struct mobiveil_pcie {
+> > >         struct mobiveil_msi msi;
+> > >  };
+> > >
+> > > -static inline void csr_writel(struct mobiveil_pcie *pcie, const u32 value,
+> > > -               const u32 reg)
+> > > +/*
+> > > + * mobiveil_pcie_sel_page - routine to access paged register
+> > > + *
+> > > + * Registers whose address greater than PAGED_ADDR_BNDRY (0xc00) are paged,
+> > > + * for this scheme to work extracted higher 6 bits of the offset will be
+> > > + * written to pg_sel field of PAB_CTRL register and rest of the lower 10
+> > > + * bits enabled with PAGED_ADDR_BNDRY are used as offset of the register.
+> > > + */
+> > > +static void mobiveil_pcie_sel_page(struct mobiveil_pcie *pcie, u8 pg_idx)
+> > >  {
+> > > -       writel_relaxed(value, pcie->csr_axi_slave_base + reg);
+> > > +       u32 val;
+> > > +
+> > > +       val = readl(pcie->csr_axi_slave_base + PAB_CTRL);
+> > > +       val &= ~(PAGE_SEL_MASK << PAGE_SEL_SHIFT);
+> > > +       val |= (pg_idx & PAGE_SEL_MASK) << PAGE_SEL_SHIFT;
+> > > +
+> > > +       writel(val, pcie->csr_axi_slave_base + PAB_CTRL);
+> > >  }
+> > >
+> > > -static inline u32 csr_readl(struct mobiveil_pcie *pcie, const u32 reg)
+> > > +static void *mobiveil_pcie_comp_addr(struct mobiveil_pcie *pcie, u32 off)
+> > >  {
+> > > -       return readl_relaxed(pcie->csr_axi_slave_base + reg);
+> > > +       if (off < PAGED_ADDR_BNDRY) {
+> > > +               /* For directly accessed registers, clear the pg_sel field */
+> > > +               mobiveil_pcie_sel_page(pcie, 0);
+> > > +               return pcie->csr_axi_slave_base + off;
+> > > +       }
+> > > +
+> > > +       mobiveil_pcie_sel_page(pcie, OFFSET_TO_PAGE_IDX(off));
+> > > +       return pcie->csr_axi_slave_base + OFFSET_TO_PAGE_ADDR(off);
+> > > +}
+> > > +
+> > > +static int mobiveil_pcie_read(void __iomem *addr, int size, u32 *val)
+> > > +{
+> > > +       if ((uintptr_t)addr & (size - 1)) {
+> > > +               *val = 0;
+> > > +               return PCIBIOS_BAD_REGISTER_NUMBER;
+> > > +       }
+> > > +
+> > > +       switch (size) {
+> > > +       case 4:
+> > > +               *val = readl(addr);
+> > > +               break;
+> > > +       case 2:
+> > > +               *val = readw(addr);
+> > > +               break;
+> > > +       case 1:
+> > > +               *val = readb(addr);
+> > > +               break;
+> > > +       default:
+> > > +               *val = 0;
+> > > +               return PCIBIOS_BAD_REGISTER_NUMBER;
+> > > +       }
+> > > +
+> > > +       return PCIBIOS_SUCCESSFUL;
+> > > +}
+> > > +
+> > > +static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
+> > > +{
+> > > +       if ((uintptr_t)addr & (size - 1))
+> > > +               return PCIBIOS_BAD_REGISTER_NUMBER;
+> > > +
+> > > +       switch (size) {
+> > > +       case 4:
+> > > +               writel(val, addr);
+> > > +               break;
+> > > +       case 2:
+> > > +               writew(val, addr);
+> > > +               break;
+> > > +       case 1:
+> > > +               writeb(val, addr);
+> > > +               break;
+> > > +       default:
+> > > +               return PCIBIOS_BAD_REGISTER_NUMBER;
+> > > +       }
+> > > +
+> > > +       return PCIBIOS_SUCCESSFUL;
+> > > +}
+> > > +
+> > > +static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+> > > +{
+> > > +       void *addr;
+> > > +       u32 val;
+> > > +       int ret;
+> > > +
+> > > +       addr = mobiveil_pcie_comp_addr(pcie, off);
+> > > +
+> > > +       ret = mobiveil_pcie_read(addr, size, &val);
+> > > +       if (ret)
+> > > +               dev_err(&pcie->pdev->dev, "read CSR address failed\n");
+> > > +
+> > > +       return val;
+> > > +}
+> > > +
+> > > +static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+> > > +{
+> > > +       void *addr;
+> > > +       int ret;
+> > > +
+> > > +       addr = mobiveil_pcie_comp_addr(pcie, off);
+> > > +
+> > > +       ret = mobiveil_pcie_write(addr, size, val);
+> > > +       if (ret)
+> > > +               dev_err(&pcie->pdev->dev, "write CSR address failed\n");
+> > > +}
+> > > +
+> > > +static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
+> > > +{
+> > > +       return csr_read(pcie, off, 0x4);
+> > > +}
+> > > +
+> > > +static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+> > > +{
+> > > +       csr_write(pcie, val, off, 0x4);
+> > >  }
+> > >
+> > >  static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+> > > @@ -342,45 +451,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+> > >         return 0;
+> > >  }
+> > >
+> > > -/*
+> > > - * select_paged_register - routine to access paged register of root complex
+> > > - *
+> > > - * registers of RC are paged, for this scheme to work
+> > > - * extracted higher 6 bits of the offset will be written to pg_sel
+> > > - * field of PAB_CTRL register and rest of the lower 10 bits enabled with
+> > > - * PAGE_SEL_EN are used as offset of the register.
+> > > - */
+> > > -static void select_paged_register(struct mobiveil_pcie *pcie, u32 offset)
+> > > -{
+> > > -       int pab_ctrl_dw, pg_sel;
+> > > -
+> > > -       /* clear pg_sel field */
+> > > -       pab_ctrl_dw = csr_readl(pcie, PAB_CTRL);
+> > > -       pab_ctrl_dw = (pab_ctrl_dw & ~(PAGE_SEL_MASK << PAGE_SEL_SHIFT));
+> > > -
+> > > -       /* set pg_sel field */
+> > > -       pg_sel = (offset >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK;
+> > > -       pab_ctrl_dw |= ((pg_sel << PAGE_SEL_SHIFT));
+> > > -       csr_writel(pcie, pab_ctrl_dw, PAB_CTRL);
+> > > -}
+> > > -
+> > > -static void write_paged_register(struct mobiveil_pcie *pcie,
+> > > -               u32 val, u32 offset)
+> > > -{
+> > > -       u32 off = (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
+> > > -
+> > > -       select_paged_register(pcie, offset);
+> > > -       csr_writel(pcie, val, off);
+> > > -}
+> > > -
+> > > -static u32 read_paged_register(struct mobiveil_pcie *pcie, u32 offset)
+> > > -{
+> > > -       u32 off = (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
+> > > -
+> > > -       select_paged_register(pcie, offset);
+> > > -       return csr_readl(pcie, off);
+> > > -}
+> > > -
+> > >  static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+> > >                 int pci_addr, u32 type, u64 size)
+> > >  {
+> > > @@ -397,19 +467,19 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+> > >         pio_ctrl_val = csr_readl(pcie, PAB_PEX_PIO_CTRL);
+> > >         csr_writel(pcie,
+> > >                 pio_ctrl_val | (1 << PIO_ENABLE_SHIFT), PAB_PEX_PIO_CTRL);
+> > > -       amap_ctrl_dw = read_paged_register(pcie, PAB_PEX_AMAP_CTRL(win_num));
+> > > +       amap_ctrl_dw = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+> > >         amap_ctrl_dw = (amap_ctrl_dw | (type << AMAP_CTRL_TYPE_SHIFT));
+> > >         amap_ctrl_dw = (amap_ctrl_dw | (1 << AMAP_CTRL_EN_SHIFT));
+> > >
+> > > -       write_paged_register(pcie, amap_ctrl_dw | lower_32_bits(size64),
+> > > -                               PAB_PEX_AMAP_CTRL(win_num));
+> > > +       csr_writel(pcie, amap_ctrl_dw | lower_32_bits(size64),
+> > > +                  PAB_PEX_AMAP_CTRL(win_num));
+> > >
+> > > -       write_paged_register(pcie, upper_32_bits(size64),
+> > > -                               PAB_EXT_PEX_AMAP_SIZEN(win_num));
+> > > +       csr_writel(pcie, upper_32_bits(size64),
+> > > +                  PAB_EXT_PEX_AMAP_SIZEN(win_num));
+> > >
+> > > -       write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
+> > > -       write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> > > -       write_paged_register(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
+> > > +       csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
+> > > +       csr_writel(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> > > +       csr_writel(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
+> > >  }
+> > >
+> > >  /*
+> > > @@ -437,8 +507,7 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
+> > >         csr_writel(pcie, 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
+> > >                         lower_32_bits(size64), PAB_AXI_AMAP_CTRL(win_num));
+> > >
+> > > -       write_paged_register(pcie, upper_32_bits(size64),
+> > > -                               PAB_EXT_AXI_AMAP_SIZE(win_num));
+> > > +       csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
+> > >
+> > >         /*
+> > >          * program AXI window base with appropriate value in
+> > > --
+> > > 2.17.1
+> > >
