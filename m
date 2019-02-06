@@ -1,82 +1,64 @@
-Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 23/33] ARM: davinci: cp-intc: add the new config structures for da8xx SoCs
-Date: Fri,  8 Feb 2019 18:31:44 +0100
-Message-Id: <20190208173154.4665-24-brgl@bgdev.pl>
-In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
-References: <20190208173154.4665-1-brgl@bgdev.pl>
+Return-Path: <SRS0=CDwP=QN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40460 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730467AbfBFNUB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Feb 2019 08:20:01 -0500
+Date: Wed, 6 Feb 2019 14:19:57 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] dt-bindings: firmware: tegra186-bpmp: Remove name
+ property
+Message-ID: <20190206131957.GM21676@ulmo>
+References: <20190125145202.2982-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wAI/bQb0EMvlZCHl"
+Content-Disposition: inline
+In-Reply-To: <20190125145202.2982-1-thierry.reding@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add the new-style config structures for da8xx SoCs. They will be used
-once we make the cp-intc driver stop using davinci_soc_info.
+--wAI/bQb0EMvlZCHl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/mach-davinci/da830.c | 10 ++++++++++
- arch/arm/mach-davinci/da850.c | 10 ++++++++++
- 2 files changed, 20 insertions(+)
+On Fri, Jan 25, 2019 at 03:52:02PM +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+>=20
+> This property is not used by device trees and was likely supposed to be
+> a hint as to what the BPMP node should be named, rather than describing
+> a property of the BPMP node.
+>=20
+> Suggested-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  .../devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt        | 1 -
+>  1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index 5cfd30c57429..38af72be1a85 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -12,6 +12,7 @@
- #include <linux/clk/davinci.h>
- #include <linux/gpio.h>
- #include <linux/init.h>
-+#include <linux/irqchip/irq-davinci-cp-intc.h>
- #include <linux/platform_data/gpio-davinci.h>
- 
- #include <asm/mach/map.h>
-@@ -821,6 +822,15 @@ void __init da830_init(void)
- 	WARN(!da8xx_syscfg0_base, "Unable to map syscfg0 module");
- }
- 
-+static const struct davinci_cp_intc_config da830_cp_intc_config = {
-+	.reg = {
-+		.start		= DA8XX_CP_INTC_BASE,
-+		.end		= DA8XX_CP_INTC_BASE + SZ_8K - 1,
-+		.flags		= IORESOURCE_MEM,
-+	},
-+	.num_irqs		= DA830_N_CP_INTC_IRQ,
-+};
-+
- void __init da830_init_irq(void)
- {
- 	cp_intc_init();
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index 6df6994c0f26..9a3ce68c0de4 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -18,6 +18,7 @@
- #include <linux/cpufreq.h>
- #include <linux/gpio.h>
- #include <linux/init.h>
-+#include <linux/irqchip/irq-davinci-cp-intc.h>
- #include <linux/mfd/da8xx-cfgchip.h>
- #include <linux/platform_data/clk-da8xx-cfgchip.h>
- #include <linux/platform_data/clk-davinci-pll.h>
-@@ -759,6 +760,15 @@ void __init da850_init(void)
- 	WARN(!da8xx_syscfg1_base, "Unable to map syscfg1 module");
- }
- 
-+static const struct davinci_cp_intc_config da850_cp_intc_config = {
-+	.reg = {
-+		.start		= DA8XX_CP_INTC_BASE,
-+		.end		= DA8XX_CP_INTC_BASE + SZ_8K - 1,
-+		.flags		= IORESOURCE_MEM,
-+	},
-+	.num_irqs		= DA850_N_CP_INTC_IRQ,
-+};
-+
- void __init da850_init_irq(void)
- {
- 	cp_intc_init();
--- 
-2.20.1
+Applied to for-5.1/dt-bindings.
+
+Thierry
+
+--wAI/bQb0EMvlZCHl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxa3v0ACgkQ3SOs138+
+s6HfzQ//Zy41D3hYlfKPGeXMsoZWN9qrQEkg8TvbURjuCJ3ACIaHa70oZEdgxXmP
+eG0VWuQ4V5+7NFxjEULurjqqTCckQ41pzM+2eIbz1uDMjCrwbESq4Mud+KfJLkXc
+sgu+SiiSkf1vhCbfKpnNOhEEdFgigVkldJb8gbmjqBkEWXhP2xasy+QMm5GO9LxI
+5VSfiImeK1EFFi/3r91SX3WYYFbnPHnSvLDQLDbn6hRD42rAQaI0s4xywBCqJoIE
+sE8p7GxQgnh6rYYCYnemlM3ruLXG3Vmzs/Mqr6/OXIf2AK1IEE0uPGl031uTZrAV
+B/YUTg/vtH0+HGX/n+ouSyKX9GuNNtTBHJbM+g300aCoKNgTC0/Zx0GHDz9T/tgn
+odHq8gUN/s8DE9kWRmYwy+ChZHoBSVRucuGE6AfGWHiY5EE2Ahw+AT86F5OsQ+e3
+j+FpwklQegA/Z2NiSgvv43+K9wjrzxzXH7gqxemVYursRStmzEMQqGA2yI5JiXvV
+FlLQ3wJY4TozKg/153ADS/UKiVg4sGDkdJsdvjLBhhJ4cPSbobz38Eh9AhPnL2W7
+nvV3Qgymk8uQu6XesnwCJ+jVEuyGKrstaIcE0nCEdj4VGPdLUoX06nm/s3IPQ+vy
+9x7e3g87idiJTxvj3wu4ByOwMhYTa3XJ5Mp7Fso+2K0LAI2hCA8=
+=vi34
+-----END PGP SIGNATURE-----
+
+--wAI/bQb0EMvlZCHl--
