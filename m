@@ -1,151 +1,58 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v3 1/1] arm64: dts: sdm845: wireup the thermal trip
- points to cpufreq
-Date: Wed, 6 Feb 2019 11:34:41 -0800
-Message-ID: <20190206193441.GJ117604@google.com>
-References: <cover.1548093127.git.amit.kucheria@linaro.org>
- <6a21a9ee7663e1b32d8ea81ac5e51d187aed25fb.1548093127.git.amit.kucheria@linaro.org>
- <20190123021251.GJ261387@google.com>
- <20190124233528.GA81583@google.com>
- <20190125222051.GF81583@google.com>
- <CAP245DUy5pe9KQrEX_5iiHg9RtLPHyZcygy6fkrLgsJQYak-_g@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v2 0/7] sunxi: Add DT representation for the MBUS controller
+Date: Wed,  6 Feb 2019 20:41:17 +0100
+Message-ID: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP245DUy5pe9KQrEX_5iiHg9RtLPHyZcygy6fkrLgsJQYak-_g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Doug Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 06, 2019 at 04:05:41PM +0530, Amit Kucheria wrote:
-> On Sat, Jan 26, 2019 at 3:50 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > > >                   trips {
-> > > > > -                         cpu_alert0: trip0 {
-> > > > > +                         cpu0_alert1: trip-point@0 {
-> > > > >                                   temperature = <75000>;
-> > > >
-> > > > In my observations a 'switch on/threshold' temperature of 75 degrees
-> > > > leads to aggressive throttling with IPA when the temperature is above
-> > > > this threshold:
-> > > >
-> > > > [  716.760804] cpu_cooling_ratelimit: 31 callbacks suppressed
-> > > > [  716.760836] cpu cpu4: Cooling state set to 10. New max freq = 1920000
-> > > > [  716.773390] power_allocator_ratelimit: 15 callbacks suppressed
-> > > > [  716.773405] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=73500, curr_temp=75200 total_requested_power=39025 total_granted_power=18654
-> > > > [  749.609336] cpu_cooling_ratelimit: 45 callbacks suppressed
-> > > > [  749.609371] cpu cpu4: Cooling state set to 11. New max freq = 1843200
-> > > > [  749.624300] power_allocator_ratelimit: 24 callbacks suppressed
-> > > > [  749.624323] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=70800, curr_temp=77200 total_requested_power=40136 total_granted_power=17402
-> > > > [  780.152633] cpu_cooling_ratelimit: 41 callbacks suppressed
-> > > > [  780.152666] cpu cpu4: Cooling state set to 11. New max freq = 1843200
-> > > > [  780.165247] power_allocator_ratelimit: 21 callbacks suppressed
-> > > > [  780.165261] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=64800, curr_temp=76900 total_requested_power=39719 total_granted_power=1759
-> > > >
-> > > > (the logs come from a local patch in our tree:
-> > > > https://chromium.googlesource.com/chromiumos/third_party/kernel/+/ec1c501a8093fed44a6697a5913ef2765f518e1f)
-> > > >
-> > > > At this point I don't have a clear idea what would be a reasonable
-> > > > value for the 'switch on/threshold' temperature, but probably it
-> > > > should to be higher than 75 degrees, at least with IPA. If there is
-> > > > no reasonable common configuration for different thermal governors I
-> > > > guess we'll have to target a commonly used governor and systems
-> > > > using other 'incompatible' governors need to override the config in
-> > > > their <board>.dtsi.
-> > >
-> 
-> Thanks for the elaborate testing and for sharing the numbers. This is
-> very useful information.
-> 
-> > > On my system I don't see a significant delta in core temperatures for
-> > > 'threshold' temperatures of 80, 85 or 90°C. However Dhrystone
-> > > performance goes up by ~8% when changing the trip point from 80 to
-> > > 85°C. For a switch from 85 to 90°C I see a ~2% performance delta. For
-> > > all trip points the average core temperatures are ~80°C (silver) and
-> > > ~85°C (gold). Interestingly I observed the highest average
-> > > temperatures with the trip point at 80°C (repeated measurements were
-> > > taken for different temperatures).
-> > >
-> > > Supposedly LMH throttling is disabled in the firmware I used for
-> > > these tests, however data suggests that it is still active
-> > > (temperature doesn't rise beyond 95°C, even without throttling in
-> > > Linux; Dhrystone performance drops when raising the temperature beyond
-> > > 95°C with a heat gun. I will do some more testing when I get my hands
-> > > on a FW that effectively disables LMH (or raises the threshold to
-> > > something like 105°C).
-> > >
-> > > From the data collected so far I'd suggest a 'threshold' temperature
-> > > of 90°C or if that seems to high 85°C. Behavior might be different
-> > > with other thermal governors or without LMH throttling..
-> >
-> > Some more data from measurements with different trips points, for the
-> > IPA and the Fair Share governors, LMH throttling was enabled:
-> >
-> >                         IPA
-> >         Dhrystone       Temp Silver     Temp Gold
-> > 75      6M              78.4            84.9
-> > 80      6.21M           81.4            89.8
-> > 85      6.74M           81.7            88.2
-> > 90      6.88M           79.4            84.6
-> >
-> >                         Fair Share
-> >         Dhrystone       Temp Silver     Temp Gold
-> > 75      6.63M           80.1            88.5
-> > 80      6.71M           80.1            88.5
-> > 85      6.77M           81.1            87.8
-> > 90      7.12M           81.2            87.8
-> 
-> Interesting that you get more MIPs out of fair share governor when
-> compared to IPA across the board. What devices were providing energy
-> cost information (dynamic-power-coefficient) to the IPA engine? Just
-> CPU and GPU? Can you point me to those patches in gerrit?
-
-Only the CPUs provide energy cost information, the GPU isn't fully
-hooked up in our tree yet. The cause of the delta could be that for
-temperatures < 'target' Fair Share only uses the performance states
-specified in 'threshold' for throttling (currently only the boost
-frequency), while IPA may use the full range of states  of the
-'target' trip point.
-
-You can find the patches/configuration here:
-
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+log/refs/sandbox/dianders/190130-wip-tree
-
-arch/arm64/boot/dts/qcom/sdm845.dtsi
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-
-> > Within this range the 'threshold' temperature doesn't seem to have a
-> > large impact on the average CPU temperature. There is a bit of
-> > fluctuation between individual measurements, I wouldn't be surprised
-> > if the outliers of Temp Gold for 75 and 90°C converged more with the
-> > other values with some more measurements.
-> >
-> > I learned how to effectively disable LMH throttling, however with that
-> > it was fairly easy to have the CPUs overheat, even with throttling in
-> > Linux. If it is feasible at all to run with LMH disabled some more
-> > actions will be needed (e.g. attaching a heatsink or interrupt support
-> > for thermal sensors instead of polling, ...).
-> 
-> Given that LMH kicks in at 95 and IPA manages to maintain temperatures
-> in the ballpark of 80-90 regardless of the trip point value, I agree
-> that we should move the 1st trip point to 90. This will give maximum
-> performance. So in "threshold" and "target" terms 90 becomes the
-> threshold. And since LMH kicks in at 95, I've left it as the target
-> trip.
-> 
-> These should be sane defaults for upstream and any device can override
-> those numbers in their board file.
-
-Sounds good, thanks!
-
-FYI, since I mentioned this earlier: a small heatsink on the SoC
-makes a huge difference, with that I didn't encounter thermal
-shutdowns during my (limited) tests with LMH disabled. Temperatures
-were only slightly higher than with LMH throttling, so it might be
-feasible to raise the LMH threshold and only use it as last resort.
-
-Cheers
-
-Matthias
+SGksCgpXZSd2ZSBoYWQgZm9yIHF1aXRlIHNvbWUgdGltZSB0byBoYWNrIGFyb3VuZCBpbiBvdXIg
+ZHJpdmVycyB0byB0YWtlIGludG8KYWNjb3VudCB0aGUgZmFjdCB0aGF0IG91ciBETUEgYWNjZXNz
+ZXMgYXJlIG5vdCBkb25lIHRocm91Z2ggdGhlIHBhcmVudApub2RlLCBidXQgdGhyb3VnaCBhbm90
+aGVyIGJ1cyB3aXRoIGEgZGlmZmVyZW50IG1hcHBpbmcgdGhhbiB0aGUgQ1BVIGZvciB0aGUKUkFN
+ICgwIGluc3RlYWQgb2YgMHg0MDAwMDAwMCBmb3IgbW9zdCBTb0NzKS4KCkFmdGVyIHNvbWUgZGlz
+Y3Vzc2lvbiBhZnRlciB0aGUgc3VibWlzc2lvbiBvZiBhIGNhbWVyYSBkZXZpY2Ugc3VmZmVyaW5n
+IG9mCnRoZSBzYW1lIGhhY2tzLCBJJ3ZlIGRlY2lkZWQgdG8gcHV0IHRvZ2V0aGVyIGEgc2VyaWUg
+dGhhdCBpbnRyb2R1Y2UgYQpzcGVjaWFsIGludGVyY29ubmVjdCBuYW1lIGNhbGxlZCAiZG1hIiB0
+aGF0IHRoYXQgYWxsb3dzIHRvIGV4cHJlc3MgdGhlIERNQQpyZWxhdGlvbnNoaXAgYmV0d2VlbiBh
+IG1hc3RlciBhbmQgaXRzIGJ1cywgZXZlbiBpZiB0aGV5IGFyZSBub3QgZGlyZWN0CnBhcmVudHMg
+aW4gdGhlIERULgoKTGV0IG1lIGtub3cgd2hhdCB5b3UgdGhpbmssCk1heGltZQoKQ2hhbmdlcyBm
+cm9tIHYxOgogIC0gQ2hhbmdlIHRvIHVzZSB0aGUgbm93IG1lcmdlZCBpbnRlcmNvbm5lY3QgYmlu
+ZGluZ3MKICAtIE1vdmUgdGhlIERNQSBwYXJlbnQgcmV0cmlldmFsIGxvZ2ljIHRvIGl0cyBvd24g
+ZnVuY3Rpb24KICAtIFJlYmFzZSBvbiB0b3Agb2YgNS4wCgpNYXhpbWUgUmlwYXJkICg3KToKICBk
+dC1iaW5kaW5nczogaW50ZXJjb25uZWN0OiBBZGQgYSBkbWEgaW50ZXJjb25uZWN0IG5hbWUKICBk
+dC1iaW5kaW5nczogYnVzOiBBZGQgYmluZGluZyBmb3IgdGhlIEFsbHdpbm5lciBNQlVTIGNvbnRy
+b2xsZXIKICBvZjogYWRkcmVzczogQWRkIHBhcmVudCBwb2ludGVyIHRvIHRoZSBfX29mX3RyYW5z
+bGF0ZV9hZGRyZXNzIGFyZ3MKICBvZjogYWRkcmVzczogQWRkIHN1cHBvcnQgZm9yIHRoZSBkbWEt
+cGFyZW50IHByb3BlcnR5CiAgZHJtL3N1bjRpOiBSZWx5IG9uIGRtYS1wYXJlbnQgZm9yIG91ciBS
+QU0gb2Zmc2V0CiAgY2xrOiBzdW54aS1uZzogc3VuNWk6IEV4cG9ydCB0aGUgTUJVUyBjbG9jawog
+IEFSTTogZHRzOiBzdW41aTogQWRkIHRoZSBNQlVTIGNvbnRyb2xsZXIKCiBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3N1bnhpL3N1bnhpLW1idXMudHh0ICAgICAgfCAzNiAr
+KysrKy0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcmNvbm5lY3QvaW50
+ZXJjb25uZWN0LnR4dCB8ICAzICstCiBhcmNoL2FybS9ib290L2R0cy9zdW41aS5kdHNpICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMyArKy0KIGRyaXZlcnMvY2xrL3N1bnhp
+LW5nL2NjdS1zdW41aS5oICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA0ICstCiBk
+cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAyOCArKystCiBkcml2ZXJzL29mL2FkZHJlc3MuYyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfCA0OSArKysrKy0tCiBpbmNsdWRlL2R0LWJpbmRpbmdz
+L2Nsb2NrL3N1bjVpLWNjdS5oICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogNyBm
+aWxlcyBjaGFuZ2VkLCAxMTQgaW5zZXJ0aW9ucygrKSwgMjEgZGVsZXRpb25zKC0pCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zdW54aS9z
+dW54aS1tYnVzLnR4dAoKYmFzZS1jb21taXQ6IDg3ZTg3YzdiMGVlYjNjOWUwOGNkZmUyOGZkNTQw
+MjQ3YmRmMzFlZjUKLS0gCmdpdC1zZXJpZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
