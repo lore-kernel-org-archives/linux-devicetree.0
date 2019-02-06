@@ -1,66 +1,86 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v1 1/4] clk: qcom: smd: Add XO clock for MSM8998
-Date: Wed, 6 Feb 2019 15:55:08 +0200
-Message-ID: <40ae31ba-7464-22c2-5782-a225d0f17b3b@linaro.org>
-References: <1548866102-30224-1-git-send-email-jhugo@codeaurora.org>
- <1548866144-30265-1-git-send-email-jhugo@codeaurora.org>
- <154940408967.169292.15276398799323074789@swboyd.mtv.corp.google.com>
- <6e62a49a-fdb1-a087-fe83-e86aed969ae7@codeaurora.org>
- <154940592132.169292.15811923452101983358@swboyd.mtv.corp.google.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v5 7/7] ARM64: dts: marvell: armada-37xx: declare the COMPHY node
+Date: Wed, 06 Feb 2019 15:00:20 +0100
+Message-ID: <87ef8l6mq3.fsf@FE-laptop>
+References: <20190108163124.6409-1-miquel.raynal@bootlin.com> <20190108163124.6409-8-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154940592132.169292.15811923452101983358@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <20190108163124.6409-8-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, bjorn.andersson@linaro.org, mturquette@baylibre.com
-Cc: marc.w.gonzalez@free.fr, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jeffrey,
+Hi Miquel,
+ 
+ On mar., janv. 08 2019, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-On 2/6/19 00:32, Stephen Boyd wrote:
-> Quoting Jeffrey Hugo (2019-02-05 14:15:16)
->> On 2/5/2019 3:01 PM, Stephen Boyd wrote:
->>> Quoting Jeffrey Hugo (2019-01-30 08:35:44)
->>>> The XO clock generally feeds into other clock controllers as the parent
->>>> for a lot of clock generators.
->>>>
->>>> Fixes: 6131dc81211c (clk: qcom: smd: Add support for MSM8998 rpm clocks)
->>>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->>>
->>> We've historically left out the XO clk because it causes problems where
->>> the XO vote goes away during late init because nobody references it from
->>> the rest of the clk tree and also because RPM defers probe of the system
->>> and then the console blows up when it gets a clk that can't change rate.
->>> See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
->>> clocks") for some more info on why we removed all the workarounds and
->>> stuff around here too.
->>>
->>> So are you sure this is OK to do?
->>>   
->>>
->>
->> So, I've got pretty much everything as modules, and I haven't seen any 
->> issues.  However let me take a look at the commit you point out and see.
->>
-> 
-> Is the name of the clk "xo_clk_src"? That isn't the name that we were
-> expecting the XO clk from RPM to be called. You might have to look back
-> at the history of the rpm clk driver on the list and see when Georgi
-> dropped the XO clk from it and if there was anything wrong with that. I
-> can't recall if this was discussed on the list or if he just told me in
-> some hallway conversation at Connect.
+> Describe the A3700 COMPHY node. It has three PHYs that can be
+> configured as follow:
+> * PCIe or GbE
+> * USB3 or GbE
+> * SATA or USB3
+> Each of them has its own memory area.
+>
+> Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-The problem back then was the following: The RPM clock driver has
-various dependencies on other drivers (hwspinlock, smem, smd, rpmsg etc)
-and may probe defer multiple times during boot. Meanwhile the GCC clocks
-are registered as orphans, as their parent clock (RPM XO) is not there
-yet. And when some driver calls clk_get_rate() on an orphan clock, a
-bogus rate is returned. The consequence of this was that the serial
-console was broken, because of the baud rate being calculated based on
-this bogus clock rate.
+Applied to mvebu/dt64
 
 Thanks,
-Georgi
+
+Gregory
+
+> ---
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 29 ++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> index e7405931f381..036d6fd6c9ef 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> @@ -242,6 +242,35 @@
+>  				reg = <0x14000 0x60>;
+>  			};
+>  
+> +			comphy: phy@18300 {
+> +				compatible = "marvell,comphy-a3700";
+> +				reg = <0x18300 0x300>,
+> +				      <0x1F000 0x400>,
+> +				      <0x5C000 0x400>,
+> +				      <0xe0178 0x8>;
+> +				reg-names = "comphy",
+> +					    "lane1_pcie_gbe",
+> +					    "lane0_usb3_gbe",
+> +					    "lane2_sata_usb3";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				comphy0: phy@0 {
+> +					reg = <0>;
+> +					#phy-cells = <1>;
+> +				};
+> +
+> +				comphy1: phy@1 {
+> +					reg = <1>;
+> +					#phy-cells = <1>;
+> +				};
+> +
+> +				comphy2: phy@2 {
+> +					reg = <2>;
+> +					#phy-cells = <1>;
+> +				};
+> +			};
+> +
+>  			pinctrl_sb: pinctrl@18800 {
+>  				compatible = "marvell,armada3710-sb-pinctrl",
+>  					     "syscon", "simple-mfd";
+> -- 
+> 2.19.1
+>
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
