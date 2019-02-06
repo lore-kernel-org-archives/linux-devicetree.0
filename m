@@ -1,14 +1,14 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 13/17 v1] gpio: ixp4xx: Add DT bindings
-Date: Wed, 6 Feb 2019 17:05:25 +0100
-Message-ID: <CAMpxmJUNf9WBAaNTdmkps5fMSUbTm3Jzw=NeELim5PFZ-zb0yQ@mail.gmail.com>
-References: <20190203214205.13594-1-linus.walleij@linaro.org>
- <20190203214205.13594-14-linus.walleij@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 01/13] spi: atmel-quadspi: cache MR value to avoid a
+ write access
+Date: Wed, 6 Feb 2019 16:08:16 +0000
+Message-ID: <20190206160816.GD17630@sirena.org.uk>
+References: <20190205173254.16388-1-tudor.ambarus@microchip.com>
+ <20190205173254.16388-2-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============8955665559743187489=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190203214205.13594-14-linus.walleij@linaro.org>
+In-Reply-To: <20190205173254.16388-2-tudor.ambarus@microchip.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,64 +18,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, Krzysztof Halasa <khalasa@piap.pl>, Olof Johansson <olof@lixom.net>, Imre Kaloz <kaloz@openwrt.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+To: Tudor.Ambarus@microchip.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, bbrezillon@kernel.org, linux-kernel@vger.kernel.org, Cyrille.Pitchen@microchip.com, linux-spi@vger.kernel.org, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, bugalski.piotr@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-bmllZHouLCAzIGx1dCAyMDE5IG8gMjI6NDIgTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBs
-aW5hcm8ub3JnPiBuYXBpc2HFgihhKToKPgo+IFRoaXMgYWRkcyBEVCBiaW5kaW5ncyBmb3IgdGhl
-IElYUDR4eCBHUElPIGNvbnRyb2xsZXIuCj4KPiBDYzogQmFydG9zeiBHb2xhc3pld3NraSA8Ymdv
-bGFzemV3c2tpQGJheWxpYnJlLmNvbT4KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcK
-PiBTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+
-Cj4gLS0tCj4gQmFydG9zejogbG9va2luZyBmb3IgeW91ciBBQ0sgb24gdGhpcywgaXQnZCBiZSBn
-b29kIGlmCj4gdGhlIG90aGVyIEdQSU8gbWFpbnRhaW5lciBpcyBhbGlnbmVkIHdpdGggbXkgaWRl
-YXMgaGVyZS4KPiBJIGludGVuZCB0byBtZXJnZSB0aGlzIHRocm91Z2ggdGhlIEFSTSBTb0MgdHJl
-ZS4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2dwaW8vaW50ZWwsaXhwNHh4LWdwaW8udHh0ICAgICAg
-IHwgMzggKysrKysrKysrKysrKysrKysrKwo+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfCAgMSArCj4gIDIgZmlsZXMgY2hhbmdlZCwgMzkgaW5zZXJ0aW9u
-cygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2dwaW8vaW50ZWwsaXhwNHh4LWdwaW8udHh0Cj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vaW50ZWwsaXhwNHh4LWdwaW8udHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vaW50ZWwsaXhwNHh4LWdwaW8udHh0
-Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjhkYzQxZWQ5OTY4
-NQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZ3Bpby9pbnRlbCxpeHA0eHgtZ3Bpby50eHQKPiBAQCAtMCwwICsxLDM4IEBACj4gK0ludGVs
-IElYUDR4eCBYU2NhbGUgTmV0d29ya2luZyBQcm9jZXNzb3JzIEdQSU8KPiArCj4gK1RoaXMgR1BJ
-TyBjb250cm9sbGVyIGlzIGZvdW5kIGluIHRoZSBJbnRlbCBJWFA0eHggcHJvY2Vzc29ycy4KPiAr
-SXQgc3VwcG9ydHMgMTYgR1BJTyBsaW5lcy4KPiArCj4gK1RoZSBpbnRlcnJ1cHQgcG9ydGlvbnMg
-b2YgdGhlIEdQSU8gY29udHJvbGxlciBpcyBoaWVyYXJjaGljYWw6Cj4gK3RoZSBzeW5jaHJvbm91
-cyBlZGdlIGRldGVjdG9yIGlzIHBhcnQgb2YgdGhlIEdQSU8gYmxvY2ssIGJ1dCB0aGUKPiArYWN0
-dWFsIGVuYWJsaW5nL2Rpc2FibGluZyBvZiB0aGUgaW50ZXJydXB0IGxpbmUgaXMgZG9uZSBpbiB0
-aGUKPiArbWFpbiBJWFA0eHggaW50ZXJydXB0IGNvbnRyb2xsZXIgd2hpY2ggaGFzIGEgMToxIG1h
-cHBpbmcgZm9yCj4gK3RoZSBmaXJzdCAxMiBHUElPIGxpbmVzIHRvIDEyIHN5c3RlbSBpbnRlcnJ1
-cHRzLgo+ICsKPiArVGhlIHJlbWFpbmluZyA0IEdQSU8gbGluZXMgY2FuIG5vdCBiZSB1c2VkIGZv
-ciByZWNlaXZpbmcKPiAraW50ZXJydXB0cy4KPiArCj4gK1RoZSBpbnRlcnJ1cHQgcGFyZW50IG9m
-IHRoaXMgR1BJTyBjb250cm9sbGVyIG11c3QgYmUgdGhlCj4gK0lYUDR4eCBpbnRlcnJ1cHQgY29u
-dHJvbGxlci4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGUg
-OiBTaG91bGQgYmUKPiArICAiaW50ZWwsaXhwNHh4LWdwaW8iCj4gKy0gcmVnIDogU2hvdWxkIGNv
-bnRhaW4gcmVnaXN0ZXJzIGxvY2F0aW9uIGFuZCBsZW5ndGgKPiArLSBncGlvLWNvbnRyb2xsZXIg
-OiBtYXJrcyB0aGlzIGFzIGEgR1BJTyBjb250cm9sbGVyCj4gKy0gI2dwaW8tY2VsbHMgOiBTaG91
-bGQgYmUgMiwgc2VlIGdwaW8vZ3Bpby50eHQKPiArLSBpbnRlcnJ1cHQtY29udHJvbGxlciA6IG1h
-cmtzIHRoaXMgYXMgYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIKPiArLSAjaW50ZXJydXB0LWNlbGxz
-IDogYSBzdGFuZGFyZCB0d28tY2VsbCBpbnRlcnJ1cHQsIHNlZQo+ICsgIGludGVycnVwdC1jb250
-cm9sbGVyL2ludGVycnVwdHMudHh0Cj4gKwo+ICtFeGFtcGxlOgo+ICsKPiArZ3BpbzA6IGdwaW9A
-YzgwMDQwMDAgewo+ICsgICAgICAgY29tcGF0aWJsZSA9ICJpbnRlbCxpeHA0eHgtZ3BpbyI7Cj4g
-KyAgICAgICByZWcgPSA8MHhjODAwNDAwMCAweDEwMDA+Owo+ICsgICAgICAgZ3Bpby1jb250cm9s
-bGVyOwo+ICsgICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47Cj4gKyAgICAgICBpbnRlcnJ1cHQtY29u
-dHJvbGxlcjsKPiArICAgICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8Mj47Cj4gK307Cj4gZGlmZiAt
-LWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKPiBpbmRleCA3NzVhNjIzZGM5MWQuLjU3
-ZDA5OGI4NTUyMyAxMDA2NDQKPiAtLS0gYS9NQUlOVEFJTkVSUwo+ICsrKyBiL01BSU5UQUlORVJT
-Cj4gQEAgLTE2NTAsNiArMTY1MCw3IEBAIE06ICAgICAgICBJbXJlIEthbG96IDxrYWxvekBvcGVu
-d3J0Lm9yZz4KPiAgTTogICAgIEtyenlzenRvZiBIYWxhc2EgPGtoYWxhc2FAcGlhcC5wbD4KPiAg
-TDogICAgIGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZyAobW9kZXJhdGVkIGZv
-ciBub24tc3Vic2NyaWJlcnMpCj4gIFM6ICAgICBNYWludGFpbmVkCj4gK0Y6ICAgICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9pbnRlbCxpeHA0eHgtZ3Bpby50eHQKPiAg
-RjogICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJv
-bGxlci9pbnRlbCxpeHA0eHgtaW50ZXJydXB0LnR4dAo+ICBGOiAgICAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL2ludGVsLGl4cDR4eC10aW1lci50eHQKPiAgRjogICAg
-IGFyY2gvYXJtL21hY2gtaXhwNHh4Lwo+IC0tCj4gMi4yMC4xCj4KCkxvb2tzIGdvb2QgdG8gbWUu
-CgpSZXZpZXdlZC1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJl
-LmNvbT4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+
+--===============8955665559743187489==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="osDK9TLjxFScVI/L"
+Content-Disposition: inline
+
+
+--osDK9TLjxFScVI/L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 05, 2019 at 05:33:06PM +0000, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+>=20
+> Set the controller by default in Serial Memory Mode (SMM) at probe.
+> Cache Mode Register (MR) value to avoid write access when setting
+> the controller in serial memory mode at exec_op().
+>=20
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
+> v6: no change
+> v5: collect R-b
+
+You say you've collected a reviewed-by for this but there's no
+reviewed-by on the patch?
+
+--osDK9TLjxFScVI/L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxbBm8ACgkQJNaLcl1U
+h9DUSwf/SwsNZqQQTTU5XFciBiMdWRRBaxg3WW4hWjTWIrLVYjcB21QsuvC9Sxds
+4yfqRnDD0VNgpxnNN2UhQ+RuDXjwpvZasc3goyrR432ilG/+GdRRNWLMGkxxRC8u
+kcEG3E6TSA2WdXRahvhepBK53R7lnnYD8GdZIrOMNKu0c3mJdX3Ksy3aYZ9XD0Rf
+k+uTgCHDekLYThyaxeWc52Npo12yh8oOJt4VzA4+olU5ZQ/mqptZM5hDNc0b5VrJ
+YXeLvvSkog3krfdK5mpDrcFp0/zg2vAqat8d5TxqR3dR8z3LRyxykfTOH5ZAjdP/
+kYJ5nrbTOz0QV1Ato4twWY63x3rKkg==
+=Ij/B
+-----END PGP SIGNATURE-----
+
+--osDK9TLjxFScVI/L--
+
+
+--===============8955665559743187489==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8955665559743187489==--
