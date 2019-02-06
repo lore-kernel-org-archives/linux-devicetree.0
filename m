@@ -1,96 +1,268 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH v4 1/2] dt-bindings: soc: fsl: Document Qixis FPGA usage
-Date: Wed, 6 Feb 2019 22:26:39 +0000
-Message-ID: <AM6PR04MB5863F3BE0D7C560F3DFECD618F6F0@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <20190205153924.7204-1-pankaj.bansal@nxp.com>
- <20190205153924.7204-2-pankaj.bansal@nxp.com>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v2 3/5] media: sunxi: Add A10 CSI driver
+Date: Wed, 6 Feb 2019 19:59:43 -0300
+Message-ID: <CAAEAJfAxWBvj6E1fJ8fy=F2xDXLHwRq7-2BT3tQqbPvbZxseyg@mail.gmail.com>
+References: <cover.ba7411f0c7155d0292b38d3dec698e26b5cc813b.1548687041.git-series.maxime.ripard@bootlin.com>
+ <c1a7d46f8504decb58ff224b0b5f2f0733282cc6.1548687041.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190205153924.7204-2-pankaj.bansal@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pankaj Bansal <pankaj.bansal@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "open list : OPEN FIRMWARE AND
- FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c1a7d46f8504decb58ff224b0b5f2f0733282cc6.1548687041.git-series.maxime.ripard@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFua2FqIEJhbnNhbA0K
-PiBTZW50OiBUdWVzZGF5LCBGZWJydWFyeSA1LCAyMDE5IDQ6MTUgQU0NCj4gVG86IExlbyBMaSA8
-bGVveWFuZy5saUBueHAuY29tPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1h
-cmsNCj4gUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+DQo+IENjOiBsaW51eHBwYy1kZXZA
-bGlzdHMub3psYWJzLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
-PiBvcGVuIGxpc3QgOiBPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFIFRSRUUgQklO
-RElOR1MNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgUGFua2FqIEJhbnNhbCA8cGFu
-a2FqLmJhbnNhbEBueHAuY29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjQgMS8yXSBkdC1iaW5kaW5n
-czogc29jOiBmc2w6IERvY3VtZW50IFFpeGlzIEZQR0EgdXNhZ2UNCj4gDQo+IGFuIEZQR0EtYmFz
-ZWQgc3lzdGVtIGNvbnRyb2xsZXIsIGNhbGxlZCDigJxRaXhpc+KAnSwgd2hpY2gNCj4gbWFuYWdl
-cyBzZXZlcmFsIGNyaXRpY2FsIHN5c3RlbSBmZWF0dXJlcywgaW5jbHVkaW5nOg0KPiDigKIgUmVz
-ZXQgc2VxdWVuY2luZw0KPiDigKIgUG93ZXIgc3VwcGx5IGNvbmZpZ3VyYXRpb24NCj4g4oCiIEJv
-YXJkIGNvbmZpZ3VyYXRpb24NCj4g4oCiIGhhcmR3YXJlIGNvbmZpZ3VyYXRpb24NCj4gDQo+IFRo
-ZSBxaXhpcyByZWdpc3RlcnMgYXJlIGFjY2Vzc2libGUgb3ZlciBvbmUgb3IgbW9yZSBzeXN0ZW0t
-c3BlY2lmaWMNCj4gaW50ZXJmYWNlcywgdHlwaWNhbGx5IEkyQywgSlRBRyBvciBhbiBlbWJlZGRl
-ZCBwcm9jZXNzb3IuDQoNCkluIHRoZW9yeSB0aGUgb24tYm9hcmQgRlBHQSBpcyBub3QgcGFydCBv
-ZiB0aGUgU29DLiAgVGhlIFFpeGlzIGRldmljZSBoYXMgYmVlbiBkZWZpbmVkIHByZXZpb3VzbHkg
-aW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2JvYXJkL2ZzbC1ib2FyZC50eHQg
-ZmlsZS4gIEFsdGhvdWdoIG5vcm1hbGx5IGJvYXJkIGJpbmRpbmdzIGFyZSBkZWZpbmVkIGluIGFy
-Y2hpdGVjdHVyZSBzcGVjaWZpYyBiaW5kaW5nIGZvbGRlcnMsIHRoaXMgaXMgYSBnb29kIHBsYWNl
-IGZvciBib2FyZCByZWxhdGVkIHN0dWZmIHVzZWQgYWNyb3NzIG11bHRpcGxlIGFyY2hpdGVjdHVy
-ZXMuICBZb3UgY2FuIHVwZGF0ZSB0aGUgZXhpc3RpbmcgYmluZGluZyBpZiBuZWVkZWQuDQoNCj4g
-DQo+IFNpZ25lZC1vZmYtYnk6IFBhbmthaiBCYW5zYWwgPHBhbmthai5iYW5zYWxAbnhwLmNvbT4N
-Cj4gLS0tDQo+IA0KPiBOb3RlczoNCj4gICAgIFY0Og0KPiAgICAgLSBObyBDaGFuZ2UNCj4gICAg
-IFYzOg0KPiAgICAgLSBBZGRlZCBib2FyZG5hbWUgYmFzZWQgY29tcGF0aWJsZSBmaWVsZCBpbiBi
-aW5kaW5ncw0KPiAgICAgLSBBZGRlZCBiaW5kaW5ncyBmb3IgTU1JTyBiYXNlZCBGUEdBDQo+ICAg
-ICBWMjoNCj4gICAgIC0gTm8gY2hhbmdlDQo+IA0KPiAgLi4uL2JpbmRpbmdzL3NvYy9mc2wvcWl4
-aXNfY3RybC50eHQgICAgICAgICAgfCA1MyArKysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA1MyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcWl4aXNfY3RybC50eHQNCj4gYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9xaXhpc19jdHJsLnR4dA0KPiBuZXcg
-ZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLjVkNTEwZGYxNGJlOA0KPiAt
-LS0gL2Rldi9udWxsDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-b2MvZnNsL3FpeGlzX2N0cmwudHh0DQo+IEBAIC0wLDAgKzEsNTMgQEANCj4gKyogUUlYSVMgRlBH
-QSBibG9jaw0KPiArDQo+ICthbiBGUEdBLWJhc2VkIHN5c3RlbSBjb250cm9sbGVyLCBjYWxsZWQg
-4oCcUWl4aXPigJ0sIHdoaWNoDQo+ICttYW5hZ2VzIHNldmVyYWwgY3JpdGljYWwgc3lzdGVtIGZl
-YXR1cmVzLCBpbmNsdWRpbmc6DQo+ICvigKIgQ29uZmlndXJhdGlvbiBzd2l0Y2ggbW9uaXRvcmlu
-Zw0KPiAr4oCiIFBvd2VyIG9uL29mZiBzZXF1ZW5jaW5nDQo+ICvigKIgUmVzZXQgc2VxdWVuY2lu
-Zw0KPiAr4oCiIFBvd2VyIHN1cHBseSBjb25maWd1cmF0aW9uDQo+ICvigKIgQm9hcmQgY29uZmln
-dXJhdGlvbg0KPiAr4oCiIGhhcmR3YXJlIGNvbmZpZ3VyYXRpb24NCj4gK+KAoiBCYWNrZ3JvdW5k
-IHBvd2VyIGRhdGEgY29sbGVjdGlvbiAoRENNKQ0KPiAr4oCiIEZhdWx0IG1vbml0b3JpbmcNCj4g
-K+KAoiBSQ1cgYnlwYXNzIFNSQU0gKHJlcGxhY2UgZmxhc2ggUkNXIHdpdGggaW50ZXJuYWwgUkNX
-KSAoTk9SIG9ubHkpDQo+ICvigKIgRGVkaWNhdGVkIGZ1bmN0aW9uYWwgdmFsaWRhdGlvbiBibG9j
-a3MgKFBPU3QvSVJTLCB0cmlnZ2VyZWQgZXZlbnQsIGFuZCBzbw0KPiBvbikNCj4gK+KAoiBJMkMg
-bWFzdGVyIGZvciByZW1vdGUgYm9hcmQgY29udHJvbCBldmVuIHdpdGggbm8gRFVUIGF2YWlsYWJs
-ZQ0KPiArDQo+ICtUaGUgcWl4aXMgcmVnaXN0ZXJzIGFyZSBhY2Nlc3NpYmxlIG92ZXIgb25lIG9y
-IG1vcmUgc3lzdGVtLXNwZWNpZmljDQo+IGludGVyZmFjZXMsDQo+ICt0eXBpY2FsbHkgSTJDLCBK
-VEFHIG9yIGFuIGVtYmVkZGVkIHByb2Nlc3Nvci4NCj4gKw0KPiArRlBHQSBjb25uZWN0ZWQgdG8g
-STJDOg0KPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKw0KPiArIC0gY29tcGF0aWJsZTogc2hv
-dWxkIGJlIGEgYm9hcmQtc3BlY2lmaWMgc3RyaW5nIGZvbGxvd2VkIGJ5IGEgc3RyaW5nDQo+ICsg
-ICBpbmRpY2F0aW5nIHRoZSB0eXBlIG9mIEZQR0EuICBFeGFtcGxlOg0KPiArCSJmc2wsPGJvYXJk
-Pi1mcGdhIiwgImZzbCxmcGdhLXFpeGlzLWkyYyINCj4gKyAtIHJlZyA6IGkyYyBhZGRyZXNzIG9m
-IHRoZSBxaXhpcyBkZXZpY2UuDQo+ICsNCj4gK0V4YW1wbGUgKExYMjE2MEEtUURTKToNCj4gKwkv
-KiBUaGUgRlBHQSBub2RlICovDQo+ICsgICAgICAgIGZwZ2FANjYgew0KPiArCQljb21wYXRpYmxl
-ID0gImZzbCxseDIxNjBhcWRzLWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMtaTJjIjsNCj4gKwkJcmVn
-ID0gPDB4NjY+Ow0KPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMg
-PSA8MD47DQo+ICsJfQ0KPiArDQo+ICsqIEZyZWVzY2FsZSBvbi1ib2FyZCBGUEdBDQo+ICsNCj4g
-K1RoaXMgaXMgdGhlIG1lbW9yeS1tYXBwZWQgcmVnaXN0ZXJzIGZvciBvbiBib2FyZCBGUEdBLg0K
-PiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUg
-YSBib2FyZC1zcGVjaWZpYyBzdHJpbmcgZm9sbG93ZWQgYnkgYSBzdHJpbmcNCj4gKyAgaW5kaWNh
-dGluZyB0aGUgdHlwZSBvZiBGUEdBLiAgRXhhbXBsZToNCj4gKwkiZnNsLDxib2FyZD4tZnBnYSIs
-ICJmc2wsZnBnYS1xaXhpcyINCj4gKy0gcmVnOiBzaG91bGQgY29udGFpbiB0aGUgYWRkcmVzcyBh
-bmQgdGhlIGxlbmd0aCBvZiB0aGUgRlBHQSByZWdpc3RlciBzZXQuDQo+ICsNCj4gK0V4YW1wbGUg
-KExTMjA4MEEtUkRCKToNCj4gKw0KPiArICAgICAgICBjcGxkQDMsMCB7DQo+ICsgICAgICAgICAg
-ICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMyMDgwYXJkYi1mcGdhIiwgImZzbCxmcGdhLXFpeGlz
-IjsNCj4gKyAgICAgICAgICAgICAgICByZWcgPSA8MHgzIDAgMHgxMDAwMD47DQo+ICsgICAgICAg
-IH07DQo+ICsNCj4gLS0NCj4gMi4xNy4xDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Mon, 28 Jan 2019 at 11:53, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The older CSI drivers have camera capture interface different from the one
+> in the newer ones.
+>
+> This IP is pretty simple. Some variants (one controller out of two
+> instances on some SoCs) have an ISP embedded, but there's no code that make
+> use of it, so we ignored that part for now.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  MAINTAINERS                                         |   8 +-
+>  drivers/media/platform/sunxi/Kconfig                |   1 +-
+>  drivers/media/platform/sunxi/Makefile               |   1 +-
+>  drivers/media/platform/sunxi/sun4i-csi/Kconfig      |  12 +-
+>  drivers/media/platform/sunxi/sun4i-csi/Makefile     |   5 +-
+>  drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c  | 261 ++++++++-
+>  drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h  | 142 ++++-
+>  drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c  | 435 +++++++++++++-
+>  drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c | 305 +++++++++-
+>  9 files changed, 1170 insertions(+)
+>  create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Kconfig
+>  create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Makefile
+>  create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
+>  create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+>  create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+>  create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32d444476a90..5f703ed9adb1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1295,6 +1295,14 @@ F:       drivers/pinctrl/sunxi/
+>  F:     drivers/soc/sunxi/
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git
+>
+> +Allwinner A10 CSI driver
+> +M:     Maxime Ripard <maxime.ripard@bootlin.com>
+> +L:     linux-media@vger.kernel.org
+> +T:     git git://linuxtv.org/media_tree.git
+> +S:     Maintained
+> +F:     drivers/media/platform/sunxi/sun4i-csi/
+> +F:     Documentation/devicetree/bindings/media/sun4i-csi.txt
+> +
+>  ARM/Amlogic Meson SoC CLOCK FRAMEWORK
+>  M:     Neil Armstrong <narmstrong@baylibre.com>
+>  M:     Jerome Brunet <jbrunet@baylibre.com>
+> diff --git a/drivers/media/platform/sunxi/Kconfig b/drivers/media/platform/sunxi/Kconfig
+> index 1b6e89cb78b2..71808e93ac2e 100644
+> --- a/drivers/media/platform/sunxi/Kconfig
+> +++ b/drivers/media/platform/sunxi/Kconfig
+> @@ -1 +1,2 @@
+> +source "drivers/media/platform/sunxi/sun4i-csi/Kconfig"
+>  source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
+> diff --git a/drivers/media/platform/sunxi/Makefile b/drivers/media/platform/sunxi/Makefile
+> index 8d06f98500ee..a05127529006 100644
+> --- a/drivers/media/platform/sunxi/Makefile
+> +++ b/drivers/media/platform/sunxi/Makefile
+> @@ -1 +1,2 @@
+> +obj-y          += sun4i-csi/
+>  obj-y          += sun6i-csi/
+> diff --git a/drivers/media/platform/sunxi/sun4i-csi/Kconfig b/drivers/media/platform/sunxi/sun4i-csi/Kconfig
+> new file mode 100644
+> index 000000000000..841a6f4d9c99
+> --- /dev/null
+> +++ b/drivers/media/platform/sunxi/sun4i-csi/Kconfig
+> @@ -0,0 +1,12 @@
+> +config VIDEO_SUN4I_CSI
+> +       tristate "Allwinner A10 CMOS Sensor Interface Support"
+> +       depends on VIDEO_DEV && VIDEO_V4L2 && HAS_DMA
+> +       depends on ARCH_SUNXI || COMPILE_TEST
+> +       select VIDEOBUF2_DMA_CONTIG
+> +       select V4L2_FWNODE
+> +       select V4L2_MEM2MEM_DEV
+> +       help
+> +         This is a V4L2 driver for the Allwinner A10 CSI
+> +
+> +         To compile this driver as a module, choose M here: the module
+> +         will be called sun4i_csi.
+> diff --git a/drivers/media/platform/sunxi/sun4i-csi/Makefile b/drivers/media/platform/sunxi/sun4i-csi/Makefile
+> new file mode 100644
+> index 000000000000..7c790a57f5ee
+> --- /dev/null
+> +++ b/drivers/media/platform/sunxi/sun4i-csi/Makefile
+> @@ -0,0 +1,5 @@
+> +sun4i-csi-y += sun4i_csi.o
+> +sun4i-csi-y += sun4i_dma.o
+> +sun4i-csi-y += sun4i_v4l2.o
+> +
+> +obj-$(CONFIG_VIDEO_SUN4I_CSI)  += sun4i-csi.o
+> diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
+> new file mode 100644
+> index 000000000000..9b58b42c0043
+> --- /dev/null
+> +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
+> @@ -0,0 +1,261 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2016 NextThing Co
+> + * Copyright (C) 2016-2018 Bootlin
+> + *
+> + * Author: Maxime Ripard <maxime.ripard@bootlin.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/reset.h>
+> +#include <linux/videodev2.h>
+> +
+> +#include <media/v4l2-dev.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-fwnode.h>
+> +#include <media/v4l2-ioctl.h>
+> +#include <media/v4l2-mediabus.h>
+> +
+> +#include <media/videobuf2-core.h>
+> +#include <media/videobuf2-dma-contig.h>
+> +
+> +#include "sun4i_csi.h"
+> +
+> +static int csi_notify_bound(struct v4l2_async_notifier *notifier,
+> +                           struct v4l2_subdev *subdev,
+> +                           struct v4l2_async_subdev *asd)
+> +{
+> +       struct sun4i_csi *csi = container_of(notifier, struct sun4i_csi,
+> +                                            notifier);
+> +
+> +       csi->src_subdev = subdev;
+> +       csi->src_pad = media_entity_get_fwnode_pad(&subdev->entity,
+> +                                                  subdev->fwnode,
+> +                                                  MEDIA_PAD_FL_SOURCE);
+> +       if (csi->src_pad < 0) {
+> +               dev_err(csi->dev, "Couldn't find output pad for subdev %s\n",
+> +                       subdev->name);
+> +               return csi->src_pad;
+> +       }
+> +
+> +       dev_dbg(csi->dev, "Bound %s pad: %d\n", subdev->name, csi->src_pad);
+> +       return 0;
+> +}
+> +
+> +static int csi_notify_complete(struct v4l2_async_notifier *notifier)
+> +{
+> +       struct sun4i_csi *csi = container_of(notifier, struct sun4i_csi,
+> +                                            notifier);
+> +       int ret;
+> +
+> +       ret = v4l2_device_register_subdev_nodes(&csi->v4l);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = sun4i_csi_v4l2_register(csi);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return media_create_pad_link(&csi->src_subdev->entity, csi->src_pad,
+> +                                    &csi->vdev.entity, 0,
+> +                                    MEDIA_LNK_FL_ENABLED |
+> +                                    MEDIA_LNK_FL_IMMUTABLE);
+> +}
+> +
+> +static const struct v4l2_async_notifier_operations csi_notify_ops = {
+> +       .bound          = csi_notify_bound,
+> +       .complete       = csi_notify_complete,
+> +};
+> +
+> +static int sun4i_csi_async_parse(struct device *dev,
+> +                                struct v4l2_fwnode_endpoint *vep,
+> +                                struct v4l2_async_subdev *asd)
+> +{
+> +       struct sun4i_csi *csi = dev_get_drvdata(dev);
+> +
+> +       if (vep->base.port || vep->base.id)
+> +               return -EINVAL;
+> +
+> +       if (vep->bus_type != V4L2_MBUS_PARALLEL)
+> +               return -EINVAL;
+> +
+> +       csi->bus = vep->bus.parallel;
+> +
+> +       return 0;
+> +}
+> +
+> +static int csi_probe(struct platform_device *pdev)
+> +{
+> +       struct sun4i_csi *csi;
+> +       struct resource *res;
+> +       int ret;
+> +       int irq;
+> +
+> +       csi = devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
+> +       if (!csi)
+> +               return -ENOMEM;
+> +       platform_set_drvdata(pdev, csi);
+> +       csi->dev = &pdev->dev;
+> +
+> +       csi->mdev.dev = csi->dev;
+> +       strscpy(csi->mdev.model, "Allwinner Video Capture Device",
+> +               sizeof(csi->mdev.model));
+> +       csi->mdev.hw_revision = 0;
+> +       media_device_init(&csi->mdev);
+> +       v4l2_async_notifier_init(&csi->notifier);
+> +
+> +       csi->pad.flags = MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_MUST_CONNECT;
+> +       ret = media_entity_pads_init(&csi->vdev.entity, 1, &csi->pad);
+> +       if (ret < 0)
+> +               return 0;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       csi->regs = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(csi->regs))
+> +               return PTR_ERR(csi->regs);
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +       if (irq < 0)
+> +               return irq;
+> +
+> +       csi->bus_clk = devm_clk_get(&pdev->dev, "bus");
+> +       if (IS_ERR(csi->bus_clk)) {
+> +               dev_err(&pdev->dev, "Couldn't get our bus clock\n");
+> +               return PTR_ERR(csi->bus_clk);
+> +       }
+> +
+> +       csi->isp_clk = devm_clk_get(&pdev->dev, "isp");
+> +       if (IS_ERR(csi->isp_clk)) {
+> +               dev_err(&pdev->dev, "Couldn't get our ISP clock\n");
+> +               return PTR_ERR(csi->isp_clk);
+> +       }
+> +
+> +       csi->mod_clk = devm_clk_get(&pdev->dev, "mod");
+> +       if (IS_ERR(csi->mod_clk)) {
+> +               dev_err(&pdev->dev, "Couldn't get our mod clock\n");
+> +               return PTR_ERR(csi->mod_clk);
+> +       }
+> +
+> +       csi->ram_clk = devm_clk_get(&pdev->dev, "ram");
+> +       if (IS_ERR(csi->ram_clk)) {
+> +               dev_err(&pdev->dev, "Couldn't get our ram clock\n");
+> +               return PTR_ERR(csi->ram_clk);
+> +       }
+> +
+
+Minor comment: perhaps you can take advantage
+of the clock bulk API and simplify the clock management.
+
+Regards,
+Ezequiel
