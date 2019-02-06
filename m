@@ -1,54 +1,100 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/9] mfd: pm8xxx: convert to v2 irq interfaces to support
- hierarchical IRQ chips
-Date: Wed, 6 Feb 2019 14:07:52 +0100
-Message-ID: <CACRpkdZMe+JEQOa1yBfOoAErrC41Q9rggwxNb=_uwq1m2QKWyw@mail.gmail.com>
-References: <20190125162302.14036-1-masneyb@onstation.org> <20190125162302.14036-4-masneyb@onstation.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 5/5] arm: dts: axpxx: add charge led node
+Date: Wed, 6 Feb 2019 21:10:33 +0800
+Message-ID: <CAGb2v65Pj4Xd9+faBZ7d9OorWrDFZmtUaH8MFq5WO29x+OhYXA@mail.gmail.com>
+References: <20190131082308.22522-1-stefan@olimex.com> <20190131082308.22522-5-stefan@olimex.com>
+ <CAGb2v66B3X=hyCCanUv6yGziVcu3WrRcKODBp266ODL+yQ4m1w@mail.gmail.com> <4493d1cb-d1bb-bcc9-c37d-68c79f33e762@olimex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125162302.14036-4-masneyb@onstation.org>
+In-Reply-To: <4493d1cb-d1bb-bcc9-c37d-68c79f33e762@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+To: Stefan Mavrodiev <stefan@olimex.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian!
+On Wed, Feb 6, 2019 at 2:06 PM Stefan Mavrodiev <stefan@olimex.com> wrote:
+>
+>
+> On 2/5/19 6:16 PM, Chen-Yu Tsai wrote:
+> > On Thu, Jan 31, 2019 at 4:25 PM Stefan Mavrodiev <stefan@olimex.com> wrote:
+> >> Add dt node for axp20x-led driver controlling CHGLED.
+> >> Default status is disabled, since it may be not used.
+> >>
+> >> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+> > Please include a cover letter for such a patch series.
+> Sorry, I will.
+> >
+> > Also, do any boards actually use this? I know the Pine64 does, but the
+> > LED is left to the user to populate. I would really like to have an in
+> > kernel user of this function, so that we can verify it.
+>
+> All boards made by Olimex has this led populated. The development and the
+> testing of the driver was done on A64-OLinuXino board.
+>
+> Should I make another patch, enabling the LED for the mention board?
 
-I found one more bug in this patch, still not the last bug but I'm still
-digging around:
+Yes please. I'll dig out my A33-OLinuXino next week to try it out.
 
-On Fri, Jan 25, 2019 at 5:23 PM Brian Masney <masneyb@onstation.org> wrote:
+ChenYu
 
-> +struct pm_irq_data {
-> +       int num_irqs;
-> +       struct irq_chip *irq_chip;
-> +       void (*irq_handler)(struct irq_desc *desc);
-> +};
-> +
->  struct pm_irq_chip {
->         struct regmap           *regmap;
->         spinlock_t              pm_irq_lock;
->         struct irq_domain       *irqdomain;
-> -       unsigned int            num_irqs;
->         unsigned int            num_blocks;
->         unsigned int            num_masters;
->         u8                      config[0];
-> -};
-> -
-> -struct pm_irq_data {
-> -       int num_irqs;
-> -       const struct irq_domain_ops  *irq_domain_ops;
-> -       void (*irq_handler)(struct irq_desc *desc);
-> +       const struct pm_irq_data *pm_irq_data;
->  };
-
-This doesn't work: the config[0] must be the tail element
-of the struct since we allocate dynamically the trailing
-config[] bytes.
-
-As it looks now, the *pm_irq_data gets overwritten by
-the configs and it crashes.
-
-Yours,
-Linus Walleij
+> >
+> > ChenYu
+> >
+> >> ---
+> >>   arch/arm/boot/dts/axp209.dtsi | 5 +++++
+> >>   arch/arm/boot/dts/axp22x.dtsi | 5 +++++
+> >>   arch/arm/boot/dts/axp81x.dtsi | 5 +++++
+> >>   3 files changed, 15 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
+> >> index 0d9ff12bdf28..f972b6f3ecd0 100644
+> >> --- a/arch/arm/boot/dts/axp209.dtsi
+> >> +++ b/arch/arm/boot/dts/axp209.dtsi
+> >> @@ -69,6 +69,11 @@
+> >>                  #gpio-cells = <2>;
+> >>          };
+> >>
+> >> +       axp_led: led {
+> >> +               compatible = "x-powers,axp20x-led";
+> >> +               status = "disabled";
+> >> +       };
+> >> +
+> >>          battery_power_supply: battery-power-supply {
+> >>                  compatible = "x-powers,axp209-battery-power-supply";
+> >>                  status = "disabled";
+> >> diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
+> >> index 65a07a67aca9..92a0b64252b1 100644
+> >> --- a/arch/arm/boot/dts/axp22x.dtsi
+> >> +++ b/arch/arm/boot/dts/axp22x.dtsi
+> >> @@ -62,6 +62,11 @@
+> >>                  #io-channel-cells = <1>;
+> >>          };
+> >>
+> >> +       axp_led: led {
+> >> +               compatible = "x-powers,axp20x-led";
+> >> +               status = "disabled";
+> >> +       };
+> >> +
+> >>          battery_power_supply: battery-power-supply {
+> >>                  compatible = "x-powers,axp221-battery-power-supply";
+> >>                  status = "disabled";
+> >> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
+> >> index bd83962d3627..22e243cc40d5 100644
+> >> --- a/arch/arm/boot/dts/axp81x.dtsi
+> >> +++ b/arch/arm/boot/dts/axp81x.dtsi
+> >> @@ -74,6 +74,11 @@
+> >>                  };
+> >>          };
+> >>
+> >> +       axp_led: led {
+> >> +               compatible = "x-powers,axp20x-led";
+> >> +               status = "disabled";
+> >> +       };
+> >> +
+> >>          battery_power_supply: battery-power-supply {
+> >>                  compatible = "x-powers,axp813-battery-power-supply";
+> >>                  status = "disabled";
+> >> --
+> >> 2.17.1
+> >>
