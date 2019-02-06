@@ -1,58 +1,52 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 0/7] sunxi: Add DT representation for the MBUS controller
-Date: Wed,  6 Feb 2019 20:41:17 +0100
-Message-ID: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 1/7] dt-bindings: interconnect: Add a dma interconnect name
+Date: Wed,  6 Feb 2019 20:41:18 +0100
+Message-ID: <43eeca13733faefe62f9facc25b8e88f7e593f61.1549482066.git-series.maxime.ripard@bootlin.com>
+References: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpXZSd2ZSBoYWQgZm9yIHF1aXRlIHNvbWUgdGltZSB0byBoYWNrIGFyb3VuZCBpbiBvdXIg
-ZHJpdmVycyB0byB0YWtlIGludG8KYWNjb3VudCB0aGUgZmFjdCB0aGF0IG91ciBETUEgYWNjZXNz
-ZXMgYXJlIG5vdCBkb25lIHRocm91Z2ggdGhlIHBhcmVudApub2RlLCBidXQgdGhyb3VnaCBhbm90
-aGVyIGJ1cyB3aXRoIGEgZGlmZmVyZW50IG1hcHBpbmcgdGhhbiB0aGUgQ1BVIGZvciB0aGUKUkFN
-ICgwIGluc3RlYWQgb2YgMHg0MDAwMDAwMCBmb3IgbW9zdCBTb0NzKS4KCkFmdGVyIHNvbWUgZGlz
-Y3Vzc2lvbiBhZnRlciB0aGUgc3VibWlzc2lvbiBvZiBhIGNhbWVyYSBkZXZpY2Ugc3VmZmVyaW5n
-IG9mCnRoZSBzYW1lIGhhY2tzLCBJJ3ZlIGRlY2lkZWQgdG8gcHV0IHRvZ2V0aGVyIGEgc2VyaWUg
-dGhhdCBpbnRyb2R1Y2UgYQpzcGVjaWFsIGludGVyY29ubmVjdCBuYW1lIGNhbGxlZCAiZG1hIiB0
-aGF0IHRoYXQgYWxsb3dzIHRvIGV4cHJlc3MgdGhlIERNQQpyZWxhdGlvbnNoaXAgYmV0d2VlbiBh
-IG1hc3RlciBhbmQgaXRzIGJ1cywgZXZlbiBpZiB0aGV5IGFyZSBub3QgZGlyZWN0CnBhcmVudHMg
-aW4gdGhlIERULgoKTGV0IG1lIGtub3cgd2hhdCB5b3UgdGhpbmssCk1heGltZQoKQ2hhbmdlcyBm
-cm9tIHYxOgogIC0gQ2hhbmdlIHRvIHVzZSB0aGUgbm93IG1lcmdlZCBpbnRlcmNvbm5lY3QgYmlu
-ZGluZ3MKICAtIE1vdmUgdGhlIERNQSBwYXJlbnQgcmV0cmlldmFsIGxvZ2ljIHRvIGl0cyBvd24g
-ZnVuY3Rpb24KICAtIFJlYmFzZSBvbiB0b3Agb2YgNS4wCgpNYXhpbWUgUmlwYXJkICg3KToKICBk
-dC1iaW5kaW5nczogaW50ZXJjb25uZWN0OiBBZGQgYSBkbWEgaW50ZXJjb25uZWN0IG5hbWUKICBk
-dC1iaW5kaW5nczogYnVzOiBBZGQgYmluZGluZyBmb3IgdGhlIEFsbHdpbm5lciBNQlVTIGNvbnRy
-b2xsZXIKICBvZjogYWRkcmVzczogQWRkIHBhcmVudCBwb2ludGVyIHRvIHRoZSBfX29mX3RyYW5z
-bGF0ZV9hZGRyZXNzIGFyZ3MKICBvZjogYWRkcmVzczogQWRkIHN1cHBvcnQgZm9yIHRoZSBkbWEt
-cGFyZW50IHByb3BlcnR5CiAgZHJtL3N1bjRpOiBSZWx5IG9uIGRtYS1wYXJlbnQgZm9yIG91ciBS
-QU0gb2Zmc2V0CiAgY2xrOiBzdW54aS1uZzogc3VuNWk6IEV4cG9ydCB0aGUgTUJVUyBjbG9jawog
-IEFSTTogZHRzOiBzdW41aTogQWRkIHRoZSBNQlVTIGNvbnRyb2xsZXIKCiBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3N1bnhpL3N1bnhpLW1idXMudHh0ICAgICAgfCAzNiAr
-KysrKy0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcmNvbm5lY3QvaW50
-ZXJjb25uZWN0LnR4dCB8ICAzICstCiBhcmNoL2FybS9ib290L2R0cy9zdW41aS5kdHNpICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMyArKy0KIGRyaXZlcnMvY2xrL3N1bnhp
-LW5nL2NjdS1zdW41aS5oICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA0ICstCiBk
-cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAyOCArKystCiBkcml2ZXJzL29mL2FkZHJlc3MuYyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgfCA0OSArKysrKy0tCiBpbmNsdWRlL2R0LWJpbmRpbmdz
-L2Nsb2NrL3N1bjVpLWNjdS5oICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogNyBm
-aWxlcyBjaGFuZ2VkLCAxMTQgaW5zZXJ0aW9ucygrKSwgMjEgZGVsZXRpb25zKC0pCiBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zdW54aS9z
-dW54aS1tYnVzLnR4dAoKYmFzZS1jb21taXQ6IDg3ZTg3YzdiMGVlYjNjOWUwOGNkZmUyOGZkNTQw
-MjQ3YmRmMzFlZjUKLS0gCmdpdC1zZXJpZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The current DT bindings assume that the DMA will be performed by the
+devices through their parent DT node, and rely on that assumption for the
+address translation using dma-ranges.
+
+However, some SoCs have devices that will perform DMA through another bus,
+with separate address translation rules. We therefore need to express that
+relationship, through the special interconnect name "dma".
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ Documentation/devicetree/bindings/interconnect/interconnect.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+index 5a3c575b387a..e69fc2d992c3 100644
+--- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
++++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+@@ -51,6 +51,9 @@ interconnect-names : List of interconnect path name strings sorted in the same
+ 		     interconnect-names to match interconnect paths with interconnect
+ 		     specifier pairs.
+ 
++                     Reserved interconnect names:
++                         * dma: Path from the device to the main memory of the system
++
+ Example:
+ 
+ 	sdhci@7864000 {
+-- 
+git-series 0.9.1
