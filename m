@@ -1,385 +1,106 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v14 01/13] media: staging/imx: refactor imx media device
- probe
-Date: Wed, 6 Feb 2019 16:36:03 +0100
-Message-ID: <50cb0aad-0aa4-620e-2e3c-bd08a8c9cec7@xs4all.nl>
-References: <20190206151328.21629-1-rui.silva@linaro.org>
- <20190206151328.21629-2-rui.silva@linaro.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v5 1/2] pwm: sifive: Add DT documentation for SiFive PWM
+ Controller
+Date: Wed, 6 Feb 2019 16:38:54 +0100
+Message-ID: <20190206153854.52bqbwf2ty2j7rvj@pengutronix.de>
+References: <1548762199-7065-1-git-send-email-yash.shah@sifive.com>
+ <1548762199-7065-2-git-send-email-yash.shah@sifive.com>
+ <20190130081411.5rva7cpwoy2l5qjd@pengutronix.de>
+ <CAJ2_jOHiJ3X5VYZMCNk2bpvUdDOsrqHJna3HPvtdNQpJB9fxjg@mail.gmail.com>
+ <20190206110730.ogqxncrnblyazgjw@pengutronix.de>
+ <20190206124055.GF21676@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20190206151328.21629-2-rui.silva@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190206124055.GF21676@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Yash Shah <yash.shah@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/6/19 4:13 PM, Rui Miguel Silva wrote:
-> Refactor and move media device initialization code to a new common
-> module, so it can be used by other devices, this will allow for example
-> a near to introduce imx7 CSI driver, to use this media device.
+On Wed, Feb 06, 2019 at 01:40:55PM +0100, Thierry Reding wrote:
+> On Wed, Feb 06, 2019 at 12:07:30PM +0100, Uwe Kleine-König wrote:
+> > On Wed, Feb 06, 2019 at 04:18:47PM +0530, Yash Shah wrote:
+> > > On Wed, Jan 30, 2019 at 1:44 PM Uwe Kleine-König
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > >
+> > > > On Tue, Jan 29, 2019 at 05:13:18PM +0530, Yash Shah wrote:
+> > > > > DT documentation for PWM controller added.
+> > > > >
+> > > > > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> > > > > [Atish: Compatible string update]
+> > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > > > > ---
+> > > > >  .../devicetree/bindings/pwm/pwm-sifive.txt         | 33 ++++++++++++++++++++++
+> > > > >  1 file changed, 33 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > > > > new file mode 100644
+> > > > > index 0000000..8dcb40d
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > > > > @@ -0,0 +1,33 @@
+> > > > > +SiFive PWM controller
+> > > > > +
+> > > > > +Unlike most other PWM controllers, the SiFive PWM controller currently only
+> > > > > +supports one period for all channels in the PWM. This is set globally in DTS.
+> > > >
+> > > > You can simply drop this if the first user can set this using the usual
+> > > > interface. Don't you like this suggestion that I already made a few
+> > > > times now?
+> > > >
+> > > > Did you consider to make the driver support only a single output with a
+> > > > more flexible period setting?
+> > > 
+> > > We cannot consider supporting only single output since we have boards that
+> > > use the additional PWM channels to control individual LED brightness
+> > > of a tri-color LED.
+> > > If we go down to one channel, then we can't control the brightness of
+> > > the individual LEDs.
+> > > It will break the use case.
+> > 
+> > OK.
+> > 
+> > > I am considering the below approach, let me know if it's fine by you.
+> > > 
+> > > - Drop the global period property and allow the only first user to change period
+> > > using the usual interface.
+> > > - A note in the binding that all PWMs need to run at the same
+> > > period. If the driver already refuses to apply incompatible periods,
+> > > the users are going to notice that they've got the DT wrong.
+> > > - In driver code, count the users using the .request and .free callbacks.
+> > > Based on this, allow changes to period iff the user count is one.
+> > 
+> > Not sure you need to point this limitation in the binding doc. Other
+> > than that this is fine.
 > 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  drivers/staging/media/imx/Makefile            |  1 +
->  .../staging/media/imx/imx-media-dev-common.c  | 90 +++++++++++++++++++
->  drivers/staging/media/imx/imx-media-dev.c     | 86 ++++--------------
->  drivers/staging/media/imx/imx-media-of.c      |  6 +-
->  drivers/staging/media/imx/imx-media.h         | 14 +++
->  5 files changed, 127 insertions(+), 70 deletions(-)
->  create mode 100644 drivers/staging/media/imx/imx-media-dev-common.c
-> 
-> diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
-> index 698a4210316e..a30b3033f9a3 100644
-> --- a/drivers/staging/media/imx/Makefile
-> +++ b/drivers/staging/media/imx/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  imx-media-objs := imx-media-dev.o imx-media-internal-sd.o imx-media-of.o
-> +imx-media-objs += imx-media-dev-common.o
->  imx-media-common-objs := imx-media-utils.o imx-media-fim.o
->  imx-media-ic-objs := imx-ic-common.o imx-ic-prp.o imx-ic-prpencvf.o
->  
-> diff --git a/drivers/staging/media/imx/imx-media-dev-common.c b/drivers/staging/media/imx/imx-media-dev-common.c
-> new file mode 100644
-> index 000000000000..28bcb31cf6ca
-> --- /dev/null
-> +++ b/drivers/staging/media/imx/imx-media-dev-common.c
-> @@ -0,0 +1,90 @@
-> +// SPDX-License-Identifier: GPL
+> I think it's useful to point this out in the binding documentation since
+> it's something that device tree writers will want to know.
 
-WARNING: 'SPDX-License-Identifier: GPL' is not supported in LICENSES/...
-#18: FILE: drivers/staging/media/imx/imx-media-dev-common.c:1:
-+// SPDX-License-Identifier: GPL
+OK, we're talking about an FPGA implementation but I still think if the
+dt-author is the first to know about this limitation this is too late.
+The hardware designer must know about that, and they don't look into the
+bindind documentation. The binding documentation should IMHO only
+describe the binding and functional limitiations of the device are out
+of scope.
 
-You no doubt mean GPL-2.0. Just repost this patch with this change.
+The binding for the Freescale network interface doesn't describe that it
+only supports 480 MBit/s in its GHz mode, and that's good. The binding
+for i2c devices doesn't describe that a reboot in the middle of a
+transfer might block the bus.
 
-Regards,
+The target for the binding documentation is to document how a given
+device is described in a device tree. It's not there to duplicate
+information that belongs in the reference manual.
 
-	Hans
+Best regards
+Uwe
 
-> +/*
-> + * V4L2 Media Controller Driver for Freescale common i.MX5/6/7 SOC
-> + *
-> + * Copyright (c) 2019 Linaro Ltd
-> + * Copyright (c) 2016 Mentor Graphics Inc.
-> + */
-> +
-> +#include <linux/of_graph.h>
-> +#include <linux/of_platform.h>
-> +#include "imx-media.h"
-> +
-> +static const struct v4l2_async_notifier_operations imx_media_subdev_ops = {
-> +	.bound = imx_media_subdev_bound,
-> +	.complete = imx_media_probe_complete,
-> +};
-> +
-> +static const struct media_device_ops imx_media_md_ops = {
-> +	.link_notify = imx_media_link_notify,
-> +};
-> +
-> +struct imx_media_dev *imx_media_dev_init(struct device *dev)
-> +{
-> +	struct imx_media_dev *imxmd;
-> +	int ret;
-> +
-> +	imxmd = devm_kzalloc(dev, sizeof(*imxmd), GFP_KERNEL);
-> +	if (!imxmd)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	dev_set_drvdata(dev, imxmd);
-> +
-> +	strlcpy(imxmd->md.model, "imx-media", sizeof(imxmd->md.model));
-> +	imxmd->md.ops = &imx_media_md_ops;
-> +	imxmd->md.dev = dev;
-> +
-> +	mutex_init(&imxmd->mutex);
-> +
-> +	imxmd->v4l2_dev.mdev = &imxmd->md;
-> +	imxmd->v4l2_dev.notify = imx_media_notify;
-> +	strlcpy(imxmd->v4l2_dev.name, "imx-media",
-> +		sizeof(imxmd->v4l2_dev.name));
-> +
-> +	media_device_init(&imxmd->md);
-> +
-> +	ret = v4l2_device_register(dev, &imxmd->v4l2_dev);
-> +	if (ret < 0) {
-> +		v4l2_err(&imxmd->v4l2_dev,
-> +			 "Failed to register v4l2_device: %d\n", ret);
-> +		goto cleanup;
-> +	}
-> +
-> +	dev_set_drvdata(imxmd->v4l2_dev.dev, imxmd);
-> +
-> +	INIT_LIST_HEAD(&imxmd->vdev_list);
-> +
-> +	v4l2_async_notifier_init(&imxmd->notifier);
-> +
-> +	return imxmd;
-> +
-> +cleanup:
-> +	media_device_cleanup(&imxmd->md);
-> +
-> +	return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(imx_media_dev_init);
-> +
-> +int imx_media_dev_notifier_register(struct imx_media_dev *imxmd)
-> +{
-> +	int ret;
-> +
-> +	/* no subdevs? just bail */
-> +	if (list_empty(&imxmd->notifier.asd_list)) {
-> +		v4l2_err(&imxmd->v4l2_dev, "no subdevs\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* prepare the async subdev notifier and register it */
-> +	imxmd->notifier.ops = &imx_media_subdev_ops;
-> +	ret = v4l2_async_notifier_register(&imxmd->v4l2_dev,
-> +					   &imxmd->notifier);
-> +	if (ret) {
-> +		v4l2_err(&imxmd->v4l2_dev,
-> +			 "v4l2_async_notifier_register failed with %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(imx_media_dev_notifier_register);
-> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-> index 25e916562c66..c42bddd78906 100644
-> --- a/drivers/staging/media/imx/imx-media-dev.c
-> +++ b/drivers/staging/media/imx/imx-media-dev.c
-> @@ -116,9 +116,9 @@ static int imx_media_get_ipu(struct imx_media_dev *imxmd,
->  }
->  
->  /* async subdev bound notifier */
-> -static int imx_media_subdev_bound(struct v4l2_async_notifier *notifier,
-> -				  struct v4l2_subdev *sd,
-> -				  struct v4l2_async_subdev *asd)
-> +int imx_media_subdev_bound(struct v4l2_async_notifier *notifier,
-> +			   struct v4l2_subdev *sd,
-> +			   struct v4l2_async_subdev *asd)
->  {
->  	struct imx_media_dev *imxmd = notifier2dev(notifier);
->  	int ret = 0;
-> @@ -302,7 +302,7 @@ static int imx_media_create_pad_vdev_lists(struct imx_media_dev *imxmd)
->  }
->  
->  /* async subdev complete notifier */
-> -static int imx_media_probe_complete(struct v4l2_async_notifier *notifier)
-> +int imx_media_probe_complete(struct v4l2_async_notifier *notifier)
->  {
->  	struct imx_media_dev *imxmd = notifier2dev(notifier);
->  	int ret;
-> @@ -326,11 +326,6 @@ static int imx_media_probe_complete(struct v4l2_async_notifier *notifier)
->  	return media_device_register(&imxmd->md);
->  }
->  
-> -static const struct v4l2_async_notifier_operations imx_media_subdev_ops = {
-> -	.bound = imx_media_subdev_bound,
-> -	.complete = imx_media_probe_complete,
-> -};
-> -
->  /*
->   * adds controls to a video device from an entity subdevice.
->   * Continues upstream from the entity's sink pads.
-> @@ -374,8 +369,8 @@ static int imx_media_inherit_controls(struct imx_media_dev *imxmd,
->  	return ret;
->  }
->  
-> -static int imx_media_link_notify(struct media_link *link, u32 flags,
-> -				 unsigned int notification)
-> +int imx_media_link_notify(struct media_link *link, u32 flags,
-> +			  unsigned int notification)
->  {
->  	struct media_entity *source = link->source->entity;
->  	struct imx_media_pad_vdev *pad_vdev;
-> @@ -438,13 +433,8 @@ static int imx_media_link_notify(struct media_link *link, u32 flags,
->  	return ret;
->  }
->  
-> -static const struct media_device_ops imx_media_md_ops = {
-> -	.link_notify = imx_media_link_notify,
-> -};
-> -
-> -static void imx_media_notify(struct v4l2_subdev *sd,
-> -			     unsigned int notification,
-> -			     void *arg)
-> +void imx_media_notify(struct v4l2_subdev *sd, unsigned int notification,
-> +		      void *arg)
->  {
->  	struct media_entity *entity = &sd->entity;
->  	int i;
-> @@ -472,77 +462,37 @@ static int imx_media_probe(struct platform_device *pdev)
->  	struct imx_media_dev *imxmd;
->  	int ret;
->  
-> -	imxmd = devm_kzalloc(dev, sizeof(*imxmd), GFP_KERNEL);
-> -	if (!imxmd)
-> -		return -ENOMEM;
-> -
-> -	dev_set_drvdata(dev, imxmd);
-> -
-> -	strscpy(imxmd->md.model, "imx-media", sizeof(imxmd->md.model));
-> -	imxmd->md.ops = &imx_media_md_ops;
-> -	imxmd->md.dev = dev;
-> -
-> -	mutex_init(&imxmd->mutex);
-> -
-> -	imxmd->v4l2_dev.mdev = &imxmd->md;
-> -	imxmd->v4l2_dev.notify = imx_media_notify;
-> -	strscpy(imxmd->v4l2_dev.name, "imx-media",
-> -		sizeof(imxmd->v4l2_dev.name));
-> -
-> -	media_device_init(&imxmd->md);
-> -
-> -	ret = v4l2_device_register(dev, &imxmd->v4l2_dev);
-> -	if (ret < 0) {
-> -		v4l2_err(&imxmd->v4l2_dev,
-> -			 "Failed to register v4l2_device: %d\n", ret);
-> -		goto cleanup;
-> -	}
-> -
-> -	dev_set_drvdata(imxmd->v4l2_dev.dev, imxmd);
-> -
-> -	INIT_LIST_HEAD(&imxmd->vdev_list);
-> -
-> -	v4l2_async_notifier_init(&imxmd->notifier);
-> +	imxmd = imx_media_dev_init(dev);
-> +	if (IS_ERR(imxmd))
-> +		return PTR_ERR(imxmd);
->  
->  	ret = imx_media_add_of_subdevs(imxmd, node);
->  	if (ret) {
->  		v4l2_err(&imxmd->v4l2_dev,
->  			 "add_of_subdevs failed with %d\n", ret);
-> -		goto notifier_cleanup;
-> +		goto cleanup;
->  	}
->  
->  	ret = imx_media_add_internal_subdevs(imxmd);
->  	if (ret) {
->  		v4l2_err(&imxmd->v4l2_dev,
->  			 "add_internal_subdevs failed with %d\n", ret);
-> -		goto notifier_cleanup;
-> -	}
-> -
-> -	/* no subdevs? just bail */
-> -	if (list_empty(&imxmd->notifier.asd_list)) {
-> -		ret = -ENODEV;
-> -		goto notifier_cleanup;
-> +		goto cleanup;
->  	}
->  
-> -	/* prepare the async subdev notifier and register it */
-> -	imxmd->notifier.ops = &imx_media_subdev_ops;
-> -	ret = v4l2_async_notifier_register(&imxmd->v4l2_dev,
-> -					   &imxmd->notifier);
-> -	if (ret) {
-> -		v4l2_err(&imxmd->v4l2_dev,
-> -			 "v4l2_async_notifier_register failed with %d\n", ret);
-> +	ret = imx_media_dev_notifier_register(imxmd);
-> +	if (ret)
->  		goto del_int;
-> -	}
->  
->  	return 0;
->  
->  del_int:
->  	imx_media_remove_internal_subdevs(imxmd);
-> -notifier_cleanup:
-> +cleanup:
->  	v4l2_async_notifier_cleanup(&imxmd->notifier);
->  	v4l2_device_unregister(&imxmd->v4l2_dev);
-> -cleanup:
->  	media_device_cleanup(&imxmd->md);
-> +
->  	return ret;
->  }
->  
-> @@ -556,8 +506,8 @@ static int imx_media_remove(struct platform_device *pdev)
->  	v4l2_async_notifier_unregister(&imxmd->notifier);
->  	imx_media_remove_internal_subdevs(imxmd);
->  	v4l2_async_notifier_cleanup(&imxmd->notifier);
-> -	v4l2_device_unregister(&imxmd->v4l2_dev);
->  	media_device_unregister(&imxmd->md);
-> +	v4l2_device_unregister(&imxmd->v4l2_dev);
->  	media_device_cleanup(&imxmd->md);
->  
->  	return 0;
-> diff --git a/drivers/staging/media/imx/imx-media-of.c b/drivers/staging/media/imx/imx-media-of.c
-> index a01327f6e045..03446335ac03 100644
-> --- a/drivers/staging/media/imx/imx-media-of.c
-> +++ b/drivers/staging/media/imx/imx-media-of.c
-> @@ -20,7 +20,8 @@
->  #include <video/imx-ipu-v3.h>
->  #include "imx-media.h"
->  
-> -static int of_add_csi(struct imx_media_dev *imxmd, struct device_node *csi_np)
-> +int imx_media_of_add_csi(struct imx_media_dev *imxmd,
-> +			 struct device_node *csi_np)
->  {
->  	int ret;
->  
-> @@ -45,6 +46,7 @@ static int of_add_csi(struct imx_media_dev *imxmd, struct device_node *csi_np)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(imx_media_of_add_csi);
->  
->  int imx_media_add_of_subdevs(struct imx_media_dev *imxmd,
->  			     struct device_node *np)
-> @@ -57,7 +59,7 @@ int imx_media_add_of_subdevs(struct imx_media_dev *imxmd,
->  		if (!csi_np)
->  			break;
->  
-> -		ret = of_add_csi(imxmd, csi_np);
-> +		ret = imx_media_of_add_csi(imxmd, csi_np);
->  		of_node_put(csi_np);
->  		if (ret)
->  			return ret;
-> diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
-> index 7a0e658753f0..0d1c6bbf1109 100644
-> --- a/drivers/staging/media/imx/imx-media.h
-> +++ b/drivers/staging/media/imx/imx-media.h
-> @@ -228,6 +228,18 @@ int imx_media_add_async_subdev(struct imx_media_dev *imxmd,
->  			       struct fwnode_handle *fwnode,
->  			       struct platform_device *pdev);
->  
-> +int imx_media_subdev_bound(struct v4l2_async_notifier *notifier,
-> +			   struct v4l2_subdev *sd,
-> +			   struct v4l2_async_subdev *asd);
-> +int imx_media_link_notify(struct media_link *link, u32 flags,
-> +			  unsigned int notification);
-> +void imx_media_notify(struct v4l2_subdev *sd, unsigned int notification,
-> +		      void *arg);
-> +int imx_media_probe_complete(struct v4l2_async_notifier *notifier);
-> +
-> +struct imx_media_dev *imx_media_dev_init(struct device *dev);
-> +int imx_media_dev_notifier_register(struct imx_media_dev *imxmd);
-> +
->  /* imx-media-fim.c */
->  struct imx_media_fim;
->  void imx_media_fim_eof_monitor(struct imx_media_fim *fim, ktime_t timestamp);
-> @@ -251,6 +263,8 @@ int imx_media_create_of_links(struct imx_media_dev *imxmd,
->  			      struct v4l2_subdev *sd);
->  int imx_media_create_csi_of_links(struct imx_media_dev *imxmd,
->  				  struct v4l2_subdev *csi);
-> +int imx_media_of_add_csi(struct imx_media_dev *imxmd,
-> +			 struct device_node *csi_np);
->  
->  /* imx-media-capture.c */
->  struct imx_media_video_dev *
-> 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
