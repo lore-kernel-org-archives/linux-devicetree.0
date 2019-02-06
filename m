@@ -1,140 +1,151 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 5/5] input: misc: bma150: Register input device after
- setting private data
-Date: Wed, 6 Feb 2019 11:23:31 -0800
-Message-ID: <20190206192331.GE174258@dtor-ws>
-References: <20190202151806.9064-1-pawel.mikolaj.chmiel@gmail.com>
- <20190202151806.9064-6-pawel.mikolaj.chmiel@gmail.com>
- <20190206185307.GD174258@dtor-ws>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v3 1/1] arm64: dts: sdm845: wireup the thermal trip
+ points to cpufreq
+Date: Wed, 6 Feb 2019 11:34:41 -0800
+Message-ID: <20190206193441.GJ117604@google.com>
+References: <cover.1548093127.git.amit.kucheria@linaro.org>
+ <6a21a9ee7663e1b32d8ea81ac5e51d187aed25fb.1548093127.git.amit.kucheria@linaro.org>
+ <20190123021251.GJ261387@google.com>
+ <20190124233528.GA81583@google.com>
+ <20190125222051.GF81583@google.com>
+ <CAP245DUy5pe9KQrEX_5iiHg9RtLPHyZcygy6fkrLgsJQYak-_g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190206185307.GD174258@dtor-ws>
+In-Reply-To: <CAP245DUy5pe9KQrEX_5iiHg9RtLPHyZcygy6fkrLgsJQYak-_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, xc-racer2@live.ca, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Doug Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 06, 2019 at 10:53:07AM -0800, Dmitry Torokhov wrote:
-> On Sat, Feb 02, 2019 at 04:18:06PM +0100, Paweł Chmiel wrote:
-> > From: Jonathan Bakker <xc-racer2@live.ca>
-> > 
-> > Otherwise we introduce a race condition where userspace can request input
-> > before we're ready leading to null pointer dereference such as
-> > 
-> > input: bma150 as /devices/platform/i2c-gpio-2/i2c-5/5-0038/input/input3
-> > Unable to handle kernel NULL pointer dereference at virtual address 00000018
-> > pgd = (ptrval)
-> > [00000018] *pgd=55dac831, *pte=00000000, *ppte=00000000
-> > Internal error: Oops: 17 [#1] PREEMPT ARM
-> > Modules linked in: bma150 input_polldev [last unloaded: bma150]
-> > CPU: 0 PID: 2870 Comm: accelerometer Not tainted 5.0.0-rc3-dirty #46
-> > Hardware name: Samsung S5PC110/S5PV210-based board
-> > PC is at input_event+0x8/0x60
-> > LR is at bma150_report_xyz+0x9c/0xe0 [bma150]
-> > pc : [<80450f70>]    lr : [<7f0a614c>]    psr: 800d0013
-> > sp : a4c1fd78  ip : 00000081  fp : 00020000
-> > r10: 00000000  r9 : a5e2944c  r8 : a7455000
-> > r7 : 00000016  r6 : 00000101  r5 : a7617940  r4 : 80909048
-> > r3 : fffffff2  r2 : 00000000  r1 : 00000003  r0 : 00000000
-> > Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> > Control: 10c5387d  Table: 54e34019  DAC: 00000051
-> > Process accelerometer (pid: 2870, stack limit = 0x(ptrval))
-> > Stackck: (0xa4c1fd78 to 0xa4c20000)
-> > fd60:                                                       fffffff3 fc813f6c
-> > fd80: 40410581 d7530ce3 a5e2817c a7617f00 a5e29404 a5e2817c 00000000 7f008324
-> > fda0: a5e28000 8044f59c a5fdd9d0 a5e2945c a46a4a00 a5e29668 a7455000 80454f10
-> > fdc0: 80909048 a5e29668 a5fdd9d0 a46a4a00 806316d0 00000000 a46a4a00 801df5f0
-> > fde0: 00000000 d7530ce3 a4c1fec0 a46a4a00 00000000 a5fdd9d0 a46a4a08 801df53c
-> > fe00: 00000000 801d74bc a4c1fec0 00000000 a4c1ff70 00000000 a7038da8 00000000
-> > fe20: a46a4a00 801e91fc a411bbe0 801f2e88 00000004 00000000 80909048 00000041
-> > fe40: 00000000 00020000 00000000 dead4ead a6a88da0 00000000 ffffe000 806fcae8
-> > fe60: a4c1fec8 00000000 80909048 00000002 a5fdd9d0 a7660110 a411bab0 00000001
-> > fe80: dead4ead ffffffff ffffffff a4c1fe8c a4c1fe8c d7530ce3 20000013 80909048
-> > fea0: 80909048 a4c1ff70 00000001 fffff000 a4c1e000 00000005 00026038 801eabd8
-> > fec0: a7660110 a411bab0 b9394901 00000006 a696201b 76fb3000 00000000 a7039720
-> > fee0: a5fdd9d0 00000101 00000002 00000096 00000000 00000000 00000000 a4c1ff00
-> > ff00: a6b310f4 805cb174 a6b310f4 00000010 00000fe0 00000010 a4c1e000 d7530ce3
-> > ff20: 00000003 a5f41400 a5f41424 00000000 a6962000 00000000 00000003 00000002
-> > ff40: ffffff9c 000a0000 80909048 d7530ce3 a6962000 00000003 80909048 ffffff9c
-> > ff60: a6962000 801d890c 00000000 00000000 00020000 a7590000 00000004 00000100
-> > ff80: 00000001 d7530ce3 000288b8 00026320 000288b8 00000005 80101204 a4c1e000
-> > ffa0: 00000005 80101000 000288b8 00026320 000288b8 000a0000 00000000 00000000
-> > ffc0: 000288b8 00026320 000288b8 00000005 7eef3bac 000264e8 00028ad8 00026038
-> > ffe0: 00000005 7eef3300 76f76e91 76f78546 800d0030 000288b8 00000000 00000000
-> > [<80450f70>] (input_event) from [<a5e2817c>] (0xa5e2817c)
-> > Code: e1a08148 eaffffa8 e351001f 812fff1e (e590c018)
-> > ---[ end trace 1c691ee85f2ff243 ]---
-> > 
-> > Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> > Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+On Wed, Feb 06, 2019 at 04:05:41PM +0530, Amit Kucheria wrote:
+> On Sat, Jan 26, 2019 at 3:50 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > > >                   trips {
+> > > > > -                         cpu_alert0: trip0 {
+> > > > > +                         cpu0_alert1: trip-point@0 {
+> > > > >                                   temperature = <75000>;
+> > > >
+> > > > In my observations a 'switch on/threshold' temperature of 75 degrees
+> > > > leads to aggressive throttling with IPA when the temperature is above
+> > > > this threshold:
+> > > >
+> > > > [  716.760804] cpu_cooling_ratelimit: 31 callbacks suppressed
+> > > > [  716.760836] cpu cpu4: Cooling state set to 10. New max freq = 1920000
+> > > > [  716.773390] power_allocator_ratelimit: 15 callbacks suppressed
+> > > > [  716.773405] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=73500, curr_temp=75200 total_requested_power=39025 total_granted_power=18654
+> > > > [  749.609336] cpu_cooling_ratelimit: 45 callbacks suppressed
+> > > > [  749.609371] cpu cpu4: Cooling state set to 11. New max freq = 1843200
+> > > > [  749.624300] power_allocator_ratelimit: 24 callbacks suppressed
+> > > > [  749.624323] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=70800, curr_temp=77200 total_requested_power=40136 total_granted_power=17402
+> > > > [  780.152633] cpu_cooling_ratelimit: 41 callbacks suppressed
+> > > > [  780.152666] cpu cpu4: Cooling state set to 11. New max freq = 1843200
+> > > > [  780.165247] power_allocator_ratelimit: 21 callbacks suppressed
+> > > > [  780.165261] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=64800, curr_temp=76900 total_requested_power=39719 total_granted_power=1759
+> > > >
+> > > > (the logs come from a local patch in our tree:
+> > > > https://chromium.googlesource.com/chromiumos/third_party/kernel/+/ec1c501a8093fed44a6697a5913ef2765f518e1f)
+> > > >
+> > > > At this point I don't have a clear idea what would be a reasonable
+> > > > value for the 'switch on/threshold' temperature, but probably it
+> > > > should to be higher than 75 degrees, at least with IPA. If there is
+> > > > no reasonable common configuration for different thermal governors I
+> > > > guess we'll have to target a commonly used governor and systems
+> > > > using other 'incompatible' governors need to override the config in
+> > > > their <board>.dtsi.
+> > >
 > 
-> Applied, thank you.
-
-Actually I'll move it to the current release and mark for sable.
-
+> Thanks for the elaborate testing and for sharing the numbers. This is
+> very useful information.
 > 
-> > ---
-> >  drivers/input/misc/bma150.c | 15 +++------------
-> >  1 file changed, 3 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/input/misc/bma150.c b/drivers/input/misc/bma150.c
-> > index 1cdc8ce97968..64caf43e5bca 100644
-> > --- a/drivers/input/misc/bma150.c
-> > +++ b/drivers/input/misc/bma150.c
-> > @@ -470,7 +470,6 @@ static void bma150_init_input_device(struct bma150_data *bma150,
-> >  static int bma150_register_input_device(struct bma150_data *bma150)
-> >  {
-> >  	struct input_dev *idev;
-> > -	int error;
-> >  
-> >  	idev = devm_input_allocate_device(&bma150->client->dev);
-> >  	if (!idev)
-> > @@ -482,18 +481,14 @@ static int bma150_register_input_device(struct bma150_data *bma150)
-> >  	idev->close = bma150_irq_close;
-> >  	input_set_drvdata(idev, bma150);
-> >  
-> > -	error = input_register_device(idev);
-> > -	if (error)
-> > -		return error;
-> > -
-> >  	bma150->input = idev;
-> > -	return 0;
-> > +
-> > +	return input_register_device(idev);
-> >  }
-> >  
-> >  static int bma150_register_polled_device(struct bma150_data *bma150)
-> >  {
-> >  	struct input_polled_dev *ipoll_dev;
-> > -	int error;
-> >  
-> >  	ipoll_dev = devm_input_allocate_polled_device(&bma150->client->dev);
-> >  	if (!ipoll_dev)
-> > @@ -509,14 +504,10 @@ static int bma150_register_polled_device(struct bma150_data *bma150)
-> >  
-> >  	bma150_init_input_device(bma150, ipoll_dev->input);
-> >  
-> > -	error = input_register_polled_device(ipoll_dev);
-> > -	if (error)
-> > -		return error;
-> > -
-> >  	bma150->input_polled = ipoll_dev;
-> >  	bma150->input = ipoll_dev->input;
-> >  
-> > -	return 0;
-> > +	return input_register_polled_device(ipoll_dev);
-> >  }
-> >  
-> >  int bma150_cfg_from_of(struct device_node *np)
-> > -- 
-> > 2.17.1
-> > 
+> > > On my system I don't see a significant delta in core temperatures for
+> > > 'threshold' temperatures of 80, 85 or 90°C. However Dhrystone
+> > > performance goes up by ~8% when changing the trip point from 80 to
+> > > 85°C. For a switch from 85 to 90°C I see a ~2% performance delta. For
+> > > all trip points the average core temperatures are ~80°C (silver) and
+> > > ~85°C (gold). Interestingly I observed the highest average
+> > > temperatures with the trip point at 80°C (repeated measurements were
+> > > taken for different temperatures).
+> > >
+> > > Supposedly LMH throttling is disabled in the firmware I used for
+> > > these tests, however data suggests that it is still active
+> > > (temperature doesn't rise beyond 95°C, even without throttling in
+> > > Linux; Dhrystone performance drops when raising the temperature beyond
+> > > 95°C with a heat gun. I will do some more testing when I get my hands
+> > > on a FW that effectively disables LMH (or raises the threshold to
+> > > something like 105°C).
+> > >
+> > > From the data collected so far I'd suggest a 'threshold' temperature
+> > > of 90°C or if that seems to high 85°C. Behavior might be different
+> > > with other thermal governors or without LMH throttling..
+> >
+> > Some more data from measurements with different trips points, for the
+> > IPA and the Fair Share governors, LMH throttling was enabled:
+> >
+> >                         IPA
+> >         Dhrystone       Temp Silver     Temp Gold
+> > 75      6M              78.4            84.9
+> > 80      6.21M           81.4            89.8
+> > 85      6.74M           81.7            88.2
+> > 90      6.88M           79.4            84.6
+> >
+> >                         Fair Share
+> >         Dhrystone       Temp Silver     Temp Gold
+> > 75      6.63M           80.1            88.5
+> > 80      6.71M           80.1            88.5
+> > 85      6.77M           81.1            87.8
+> > 90      7.12M           81.2            87.8
 > 
-> -- 
-> Dmitry
+> Interesting that you get more MIPs out of fair share governor when
+> compared to IPA across the board. What devices were providing energy
+> cost information (dynamic-power-coefficient) to the IPA engine? Just
+> CPU and GPU? Can you point me to those patches in gerrit?
 
--- 
-Dmitry
+Only the CPUs provide energy cost information, the GPU isn't fully
+hooked up in our tree yet. The cause of the delta could be that for
+temperatures < 'target' Fair Share only uses the performance states
+specified in 'threshold' for throttling (currently only the boost
+frequency), while IPA may use the full range of states  of the
+'target' trip point.
+
+You can find the patches/configuration here:
+
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+log/refs/sandbox/dianders/190130-wip-tree
+
+arch/arm64/boot/dts/qcom/sdm845.dtsi
+arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+
+> > Within this range the 'threshold' temperature doesn't seem to have a
+> > large impact on the average CPU temperature. There is a bit of
+> > fluctuation between individual measurements, I wouldn't be surprised
+> > if the outliers of Temp Gold for 75 and 90°C converged more with the
+> > other values with some more measurements.
+> >
+> > I learned how to effectively disable LMH throttling, however with that
+> > it was fairly easy to have the CPUs overheat, even with throttling in
+> > Linux. If it is feasible at all to run with LMH disabled some more
+> > actions will be needed (e.g. attaching a heatsink or interrupt support
+> > for thermal sensors instead of polling, ...).
+> 
+> Given that LMH kicks in at 95 and IPA manages to maintain temperatures
+> in the ballpark of 80-90 regardless of the trip point value, I agree
+> that we should move the 1st trip point to 90. This will give maximum
+> performance. So in "threshold" and "target" terms 90 becomes the
+> threshold. And since LMH kicks in at 95, I've left it as the target
+> trip.
+> 
+> These should be sane defaults for upstream and any device can override
+> those numbers in their board file.
+
+Sounds good, thanks!
+
+FYI, since I mentioned this earlier: a small heatsink on the SoC
+makes a huge difference, with that I didn't encounter thermal
+shutdowns during my (limited) tests with LMH disabled. Temperatures
+were only slightly higher than with LMH throttling, so it might be
+feasible to raise the LMH threshold and only use it as last resort.
+
+Cheers
+
+Matthias
