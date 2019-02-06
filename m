@@ -1,16 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM: sun9i: a80: Enable GMAC
-Date: Wed, 6 Feb 2019 13:16:54 +0100
-Message-ID: <20190206121654.im6j45g5ihbap44p@flea>
+Subject: Re: [PATCH 1/9] pinctrl: sunxi: Support I/O bias
+ voltage setting on A80
+Date: Wed, 6 Feb 2019 13:17:18 +0100
+Message-ID: <20190206121718.3yqbirt5l3qwneco@flea>
 References: <20190206033239.3619-1-wens@csie.org>
+ <20190206033239.3619-2-wens@csie.org>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ipgdex6jfl7dhk4a"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOFA5PRAKGQETDVTOPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="p6xjb2ugcpauju6t"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUFA5PRAKGQEDYWZ5VQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190206033239.3619-1-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20190206033239.3619-2-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,31 +24,40 @@ Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux
 List-Id: devicetree@vger.kernel.org
 
 
---ipgdex6jfl7dhk4a
+--p6xjb2ugcpauju6t
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Feb 06, 2019 at 11:32:30AM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
+On Wed, Feb 06, 2019 at 11:32:31AM +0800, Chen-Yu Tsai wrote:
+> The A80 SoC has configuration registers for I/O bias voltage. Incorrect
+> settings would make the affected peripherals inoperable in some cases,
+> such as Ethernet RGMII signals biased at 2.5V with the settings still
+> at 3.3V. However low speed signals such as MDIO on the same group of
+> pins seem to be unaffected.
 > 
-> On the Allwinner A80, the PIO pin controller includes configuration
-> registers to set the I/O voltage. These must match the actual voltage
-> provided externally. A mismatch results in signals not being passed
-> through.
+> Previously there was no way to know what the actual voltage used was,
+> short of hard-coding a value in the device tree. With the new pin bank
+> regulator supply support in place, the driver can now query the
+> regulator for its voltage, and if it's valid (as opposed to being the
+> dummy regulator), set the bias voltage setting accordingly.
 > 
-> With the new PIO pin-bank regulator supply support in place, we can
-> tack on support for setting up these registers.
+> Add a quirk to denote the presence of the configuration registers, and
+> a function to set the correct setting based on the voltage read back
+> from the regulator.
 > 
-> This in turn allows us to enable the GMAC, which runs at a reduced
-> 2.5V for RGMII, instead of the standard 3.0V or 3.3V.
+> This is only done when the regulator is first acquired and enabled.
+> While it would be nice to have a notifier on the regulator so that when
+> the voltage changes, the driver can update the setting, in practice no
+> board currently supports dynamic changing of the I/O voltages.
 > 
-> Please have a look.
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Applied the patches 2-9, thanks!
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+
 Maxime
 
 -- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---ipgdex6jfl7dhk4a--
+--p6xjb2ugcpauju6t--
