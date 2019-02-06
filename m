@@ -1,56 +1,145 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 1/9] pinctrl: sunxi: Support I/O bias
- voltage setting on A80
-Date: Wed, 6 Feb 2019 18:22:43 +0800
-Message-ID: <CAGb2v67m_yO42VrivTf9x3JvAE3DL4nUZzzXt2BMU_Xb=ZHDtg@mail.gmail.com>
-References: <20190206033239.3619-1-wens@csie.org> <20190206033239.3619-2-wens@csie.org>
- <CACRpkda45Zhopkk+P9-poDut-gJdJg5POPGSa_Rt_wqE24GGqg@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH v2 1/7] pinctrl: at91: add option to use drive strength
+ bits
+Date: Wed, 6 Feb 2019 11:24:06 +0100
+Message-ID: <20190206102406.r45rb5bfjk2j45dr@M43218.corp.atmel.com>
+References: <1548951466-26297-1-git-send-email-claudiu.beznea@microchip.com>
+ <1548951466-26297-2-git-send-email-claudiu.beznea@microchip.com>
+ <20190206081304.cv344rjzvz7wzih5@M43218.corp.atmel.com>
+ <f0022bfc-6deb-de77-857c-c70d41f4fc78@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda45Zhopkk+P9-poDut-gJdJg5POPGSa_Rt_wqE24GGqg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <f0022bfc-6deb-de77-857c-c70d41f4fc78@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Claudiu.Beznea@microchip.com
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 6, 2019 at 4:14 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Wed, Feb 6, 2019 at 4:32 AM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> > The A80 SoC has configuration registers for I/O bias voltage. Incorrect
-> > settings would make the affected peripherals inoperable in some cases,
-> > such as Ethernet RGMII signals biased at 2.5V with the settings still
-> > at 3.3V. However low speed signals such as MDIO on the same group of
-> > pins seem to be unaffected.
-> >
-> > Previously there was no way to know what the actual voltage used was,
-> > short of hard-coding a value in the device tree. With the new pin bank
-> > regulator supply support in place, the driver can now query the
-> > regulator for its voltage, and if it's valid (as opposed to being the
-> > dummy regulator), set the bias voltage setting accordingly.
-> >
-> > Add a quirk to denote the presence of the configuration registers, and
-> > a function to set the correct setting based on the voltage read back
-> > from the regulator.
-> >
-> > This is only done when the regulator is first acquired and enabled.
-> > While it would be nice to have a notifier on the regulator so that when
-> > the voltage changes, the driver can update the setting, in practice no
-> > board currently supports dynamic changing of the I/O voltages.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->
-> Hi Chen-Yu,
->
-> thanks for the patch! I tried to apply it on the pinctrl devel branch
-> (for v5.1) but it failed to apply, I assume because it depends on
-> the fixes that I just sent to Torvalds.
->
-> Shall we proceed like this that I merge v5.0-rc6 as soon as it is
-> out and then try to apply this on top of that instead, so we get
-> rid of this conflict?
+On Wed, Feb 06, 2019 at 09:46:28AM +0000, Claudiu.Beznea@microchip.com wrote:
+> 
+> 
+> On 06.02.2019 10:13, Ludovic Desroches wrote:
+> > On Thu, Jan 31, 2019 at 05:18:04PM +0100, Claudiu Beznea - M18063 wrote:
+> >> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> >>
+> >> SAM9X60 uses high and low drive strengths. To implement this, in
+> >> at91_pinctrl_mux_ops::set_drivestrength and
+> >> at91_pinctrl_mux_ops::get_drivestrength we need bit numbers of
+> >> drive strengths (1 for low, 2 for high), thus change the code to
+> >> allow the usage of drive strength bit numbers.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> >> ---
+> >>  drivers/pinctrl/pinctrl-at91.c | 32 ++++++++++++++++++++------------
+> >>  1 file changed, 20 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> >> index 3d49bbbcdbc7..31f06dafca2e 100644
+> >> --- a/drivers/pinctrl/pinctrl-at91.c
+> >> +++ b/drivers/pinctrl/pinctrl-at91.c
+> >> @@ -72,10 +72,15 @@ static int gpio_banks;
+> >>   * DRIVE_STRENGTH_DEFAULT is just a placeholder to avoid changing the drive
+> >>   * strength when there is no dt config for it.
+> >>   */
+> >> -#define DRIVE_STRENGTH_DEFAULT		(0 << DRIVE_STRENGTH_SHIFT)
+> >> -#define DRIVE_STRENGTH_LOW          (1 << DRIVE_STRENGTH_SHIFT)
+> >> -#define DRIVE_STRENGTH_MED          (2 << DRIVE_STRENGTH_SHIFT)
+> >> -#define DRIVE_STRENGTH_HI           (3 << DRIVE_STRENGTH_SHIFT)
+> >> +enum drive_strength_bit {
+> >> +	DRIVE_STRENGTH_BIT_DEF,
+> >> +	DRIVE_STRENGTH_BIT_LOW,
+> >> +	DRIVE_STRENGTH_BIT_MED,
+> >> +	DRIVE_STRENGTH_BIT_HI,
+> >> +};
+> >> +
+> >> +#define DRIVE_STRENGTH_BIT_MSK(name)	(DRIVE_STRENGTH_BIT_##name << \
+> >> +					 DRIVE_STRENGTH_SHIFT)
+> >>  
+> >>  /**
+> >>   * struct at91_pmx_func - describes AT91 pinmux functions
+> >> @@ -551,7 +556,7 @@ static unsigned at91_mux_sama5d3_get_drivestrength(void __iomem *pio,
+> >>  	/* SAMA5 strength is 1:1 with our defines,
+> >>  	 * except 0 is equivalent to low per datasheet */
+> >>  	if (!tmp)
+> >> -		tmp = DRIVE_STRENGTH_LOW;
+> >> +		tmp = DRIVE_STRENGTH_BIT_MSK(LOW);
+> >>  
+> >>  	return tmp;
+> >>  }
+> >> @@ -564,7 +569,7 @@ static unsigned at91_mux_sam9x5_get_drivestrength(void __iomem *pio,
+> >>  
+> >>  	/* strength is inverse in SAM9x5s hardware with the pinctrl defines
+> >>  	 * hardware: 0 = hi, 1 = med, 2 = low, 3 = rsvd */
+> >> -	tmp = DRIVE_STRENGTH_HI - tmp;
+> >> +	tmp = DRIVE_STRENGTH_BIT_MSK(HI) - tmp;
+> >>  
+> >>  	return tmp;
+> >>  }
+> >> @@ -600,7 +605,7 @@ static void at91_mux_sam9x5_set_drivestrength(void __iomem *pio, unsigned pin,
+> >>  
+> >>  	/* strength is inverse on SAM9x5s with our defines
+> >>  	 * 0 = hi, 1 = med, 2 = low, 3 = rsvd */
+> >> -	setting = DRIVE_STRENGTH_HI - setting;
+> >> +	setting = DRIVE_STRENGTH_BIT_MSK(HI) - setting;
+> >>  
+> >>  	set_drive_strength(pio + at91sam9x5_get_drive_register(pin), pin,
+> >>  				setting);
+> >> @@ -959,11 +964,11 @@ static int at91_pinconf_set(struct pinctrl_dev *pctldev,
+> >>  	}					\
+> >>  } while (0)
+> >>  
+> >> -#define DBG_SHOW_FLAG_MASKED(mask,flag) do {	\
+> >> +#define DBG_SHOW_FLAG_MASKED(mask,flag,name) do {	\
+> > 
+> > checkpatch error: space required
+> 
+> I'm aware of that but I added it in the way it was previously (were the
+> checkpatch error was still present). Please let me know if you want me to
+> send a new version fixing this.
 
-Sure. That sounds like a good plan.
+I think it's the opportunity to fix it. If you can resend a new version
+including my ack.
 
-ChenYu
+Regards
+
+Ludovic
+
+> 
+> Thank you,
+> Claudiu Beznea
+> 
+> > 
+> >>  	if ((config & mask) == flag) {		\
+> >>  		if (num_conf)			\
+> >>  			seq_puts(s, "|");	\
+> >> -		seq_puts(s, #flag);		\
+> >> +		seq_puts(s, #name);		\
+> >>  		num_conf++;			\
+> >>  	}					\
+> >>  } while (0)
+> >> @@ -981,9 +986,12 @@ static void at91_pinconf_dbg_show(struct pinctrl_dev *pctldev,
+> >>  	DBG_SHOW_FLAG(PULL_DOWN);
+> >>  	DBG_SHOW_FLAG(DIS_SCHMIT);
+> >>  	DBG_SHOW_FLAG(DEGLITCH);
+> >> -	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_LOW);
+> >> -	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_MED);
+> >> -	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_HI);
+> >> +	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_BIT_MSK(LOW),
+> >> +			     DRIVE_STRENGTH_LOW);
+> >> +	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_BIT_MSK(MED),
+> >> +			     DRIVE_STRENGTH_MED);
+> >> +	DBG_SHOW_FLAG_MASKED(DRIVE_STRENGTH, DRIVE_STRENGTH_BIT_MSK(HI),
+> >> +			     DRIVE_STRENGTH_HI);
+> >>  	DBG_SHOW_FLAG(DEBOUNCE);
+> >>  	if (config & DEBOUNCE) {
+> >>  		val = config >> DEBOUNCE_VAL_SHIFT;
+> >> -- 
+> >> 2.7.4
+> >>
+> > 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
