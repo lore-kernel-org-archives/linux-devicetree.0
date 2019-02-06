@@ -1,86 +1,60 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v5 7/7] ARM64: dts: marvell: armada-37xx: declare the COMPHY node
-Date: Wed, 06 Feb 2019 15:00:20 +0100
-Message-ID: <87ef8l6mq3.fsf@FE-laptop>
-References: <20190108163124.6409-1-miquel.raynal@bootlin.com> <20190108163124.6409-8-miquel.raynal@bootlin.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 3/9] mfd: pm8xxx: convert to v2 irq interfaces to support
+ hierarchical IRQ chips
+Date: Wed, 6 Feb 2019 09:10:34 -0500
+Message-ID: <20190206141034.GA5833@basecamp>
+References: <20190125162302.14036-1-masneyb@onstation.org>
+ <20190125162302.14036-4-masneyb@onstation.org>
+ <CACRpkdZMe+JEQOa1yBfOoAErrC41Q9rggwxNb=_uwq1m2QKWyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108163124.6409-8-miquel.raynal@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZMe+JEQOa1yBfOoAErrC41Q9rggwxNb=_uwq1m2QKWyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On mar., janv. 08 2019, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+Hi Linus,
 
-> Describe the A3700 COMPHY node. It has three PHYs that can be
-> configured as follow:
-> * PCIe or GbE
-> * USB3 or GbE
-> * SATA or USB3
-> Each of them has its own memory area.
->
-> Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+On Wed, Feb 06, 2019 at 02:07:52PM +0100, Linus Walleij wrote:
+> > +struct pm_irq_data {
+> > +       int num_irqs;
+> > +       struct irq_chip *irq_chip;
+> > +       void (*irq_handler)(struct irq_desc *desc);
+> > +};
+> > +
+> >  struct pm_irq_chip {
+> >         struct regmap           *regmap;
+> >         spinlock_t              pm_irq_lock;
+> >         struct irq_domain       *irqdomain;
+> > -       unsigned int            num_irqs;
+> >         unsigned int            num_blocks;
+> >         unsigned int            num_masters;
+> >         u8                      config[0];
+> > -};
+> > -
+> > -struct pm_irq_data {
+> > -       int num_irqs;
+> > -       const struct irq_domain_ops  *irq_domain_ops;
+> > -       void (*irq_handler)(struct irq_desc *desc);
+> > +       const struct pm_irq_data *pm_irq_data;
+> >  };
+> 
+> This doesn't work: the config[0] must be the tail element
+> of the struct since we allocate dynamically the trailing
+> config[] bytes.
+> 
+> As it looks now, the *pm_irq_data gets overwritten by
+> the configs and it crashes.
 
-Applied to mvebu/dt64
+Thank you for testing all of this on actual hardware. You can either
+send out the little issues like this that need corrected and I'll
+collect everything up, and send out a V2 once you are done with testing.
+Or, you can just take my patches, incorporate the fixes, and add me
+with a Co-developed-by tag to the relevant patches. Whatever is easier
+for you. I assume that the latter approach may be easier since you're
+already making the changes in your tree for testing.
 
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 29 ++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> index e7405931f381..036d6fd6c9ef 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> @@ -242,6 +242,35 @@
->  				reg = <0x14000 0x60>;
->  			};
->  
-> +			comphy: phy@18300 {
-> +				compatible = "marvell,comphy-a3700";
-> +				reg = <0x18300 0x300>,
-> +				      <0x1F000 0x400>,
-> +				      <0x5C000 0x400>,
-> +				      <0xe0178 0x8>;
-> +				reg-names = "comphy",
-> +					    "lane1_pcie_gbe",
-> +					    "lane0_usb3_gbe",
-> +					    "lane2_sata_usb3";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				comphy0: phy@0 {
-> +					reg = <0>;
-> +					#phy-cells = <1>;
-> +				};
-> +
-> +				comphy1: phy@1 {
-> +					reg = <1>;
-> +					#phy-cells = <1>;
-> +				};
-> +
-> +				comphy2: phy@2 {
-> +					reg = <2>;
-> +					#phy-cells = <1>;
-> +				};
-> +			};
-> +
->  			pinctrl_sb: pinctrl@18800 {
->  				compatible = "marvell,armada3710-sb-pinctrl",
->  					     "syscon", "simple-mfd";
-> -- 
-> 2.19.1
->
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Brian
