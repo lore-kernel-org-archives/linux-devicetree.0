@@ -1,77 +1,72 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 0/6] A3700 USB UTMI PHY support
-Date: Wed, 6 Feb 2019 17:04:02 +0530
-Message-ID: <058b1b83-255f-5301-29f2-b32d69043260@ti.com>
-References: <20190129093635.4321-1-miquel.raynal@bootlin.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH net-next 1/6] dt-bindings: phy: Armada 38x common phy bindings
+Date: Wed, 06 Feb 2019 11:34:47 +0000
+Message-ID: <E1grLTb-00060v-Dk@rmk-PC.armlinux.org.uk>
+References: <20190206113409.ko7lwuv5kb7l7rjo@shell.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190129093635.4321-1-miquel.raynal@bootlin.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190206113409.ko7lwuv5kb7l7rjo@shell.armlinux.org.uk>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyOS8wMS8xOSAzOjA2IFBNLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+IFVTQjIgb24gQTM3
-MDAgb25seSB3b3JrcyBiZWNhdXNlIFUtQm9vdCBpbml0aWFsaXplcyB0aGUgVVRNSSBQSFlzIChv
-bmUKPiB3aXJlZCB0byBlYWNoIFVTQiBjb250cm9sbGVyKS4gV2hpbGUgdGhlcmUgaXMgbm8gaXNz
-dWUgd2l0aCByZWd1bGFyCj4gdXNlLCB0aGlzIGFyY2hpdGVjdHVyZSBkb2VzIG5vdCBhbGxvdyBz
-dXNwZW5kIHRvIFJBTSB0byB3b3JrIGFzIHRoZQo+IFBIWXMgbXVzdCBiZSByZS1pbml0aWFsaXpl
-ZCBhdCByZXN1bWUuIEluIG9yZGVyIHRvIHN1cHBvcnQgdGhpcwo+IGZlYXR1cmUsIHRoaXMgc2Vy
-aWVzIGFkZHMgYSBVVE1JIFBIWSBkcml2ZXIgZm9yIHRoZSBBMzcwMCBTb0MuCj4gCj4gVGhlIEEz
-NzAwIGRldmljZSB0cmVlIGlzIHVwZGF0ZWQgdG8gcmVmZXJlbmNlIHRoZSBQSFlzLgoKbWVyZ2Vk
-IHRoZSBQSFkgcGF0Y2hlcy4KClRoYW5rcwpLaXNob24KPiAKPiBUaGFua3MsCj4gTWlxdcOobAo+
-IAo+IENoYW5nZXMgc2luY2UgdjQ6Cj4gPT09PT09PT09PT09PT09PT0KPiAqIERyb3AgVVNCIHBh
-dGNoZXMgYXMgdGhleSBoYXZlIGJlZW4gc2VudCBpbiBhIHNlcGFyYXRlIHNlcmllcy4gTm8KPiAg
-IHJlYWwgZnVuY3Rpb25hbCBjaGFuZ2VzIHNpbmNlIHRoZSB2NCB0aG91Z2gsIGtpbmQgb2YgYSBy
-ZXNlbmQgb2YgdGhlCj4gICBQSFkgcGF0Y2hlcyBmcm9tIHRoZSAiQTM3MDAgVVNCIFMyUkFNIHN1
-cHBvcnQiIHNlcmllcy4KPiAKPiBDaGFuZ2VzIHNpbmNlIHYzOgo+ID09PT09PT09PT09PT09PT09
-Cj4gKiBCaW5kaW5nczogYXMgc3VnZ2VzdGVkIGJ5IEdyZWdvcnkgYW5kIFJvYiwgdXNlZCB0aGUg
-Ii1taXNjIiBzdWZmaXgKPiAgIGluc3RlYWQgb2YgIi1taXNjZWxsYW5lb3VzIiBhbmQgcHJlZml4
-ZWQgdGhlIGNvbXBhdGlibGUgd2l0aAo+ICAgImFybWFkYS0zNzAwIiB0byBmb2xsb3cgd2hhdCBo
-YXMgYmVlbiB1c2VkIGZvciB0aGUgb3RoZXIgSVBzIG9mIHRoZQo+ICAgc2FtZSBTb0MgKGFuZCBh
-ZGRlZCBSb2IncyBhY2spLgo+IAo+IENoYW5nZXMgc2luY2UgdjI6Cj4gPT09PT09PT09PT09PT09
-PT0KPiAqIFR5cG9zCj4gKiBVVE1JIFBIWSBiaW5kaW5nczoKPiAgID4gTmV3IG5hbWUgZm9yIHRo
-ZSBVU0IyIGhvc3QvUEhZIHN5c2NvbnMgKCsgY2hhbmdlcyBpbiB0aGUgRFQpLgo+ICAgPiBDbGVh
-cmx5IHN0YXRlIHRoYXQgdGhlIFBIWXMgYXJlIGRpZmZlcmVudCBiZXR3ZWVuIE9URyBhbmQKPiAg
-ICAgaG9zdC1vbmx5IGNvbnRyb2xsZXJzLgo+ICogVVRNSSBQSFkgZHJpdmVyOgo+ICAgPiBVc2Ug
-R0VOTUFTSyBtYWNyby4KPiAgID4gUmVtb3ZlZCB1c2VsZXNzIGNoZWNrcyBvbiBkcml2ZXIgZGF0
-YSByZXRyaWV2YWwuCj4gICA+IERyb3BwZWQgdGhlIGVtcHR5IC0+cmVtb3ZlKCkgaG9vay4KPiAg
-ID4gVXBkYXRlZCB0aGUgbGljZW5jZSBtYWNybyB0byBtYXRjaCB0aGUgU1BEWCB0YWcuCj4gICA+
-IFVzZWQgdGhlIG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgpIGhlbHBlci4KPiAgID4gUmVtb3Zl
-ZCB0aGUgdXNlIG9mIGEgbG9jYWwgdmFyaWFibGUgaW4gdGhlIC0+cHJvYmUoKSBmb3IgdGhlCj4g
-ICAgIGRyaXZlcidzIG9wZXJhdGlvbnMuCj4gICA+IEZpeGVkIHRoZSBkcml2ZXIgY28tYXV0aG9y
-OiBJZ2FsLCBub3QgRXZhbi4KPiAKPiBDaGFuZ2VzIHNpbmNlIHYxOgo+ID09PT09PT09PT09PT09
-PT09Cj4gKiBBZGQgVVRNSSBQSFkgZHJpdmVyL2JpbmRpbmdzL0RUIGNoYW5nZXMgdG8gYnJpbmcg
-UzJSQU0gc3VwcG9ydCB0bwo+ICAgYm90aCBVU0IgcG9ydHMgYXZhaWxhYmxlIG9uIHRoZSBBMzcw
-MCBTb0MuCj4gKiBSZWJhc2VkIG9uIHRvcCBvZiB2NS4wLXJjMS4KPiAKPiAKPiBNaXF1ZWwgUmF5
-bmFsICg2KToKPiAgIHBoeTogYWRkIEEzNzAwIFVUTUkgUEhZIGRyaXZlcgo+ICAgZHQtYmluZGlu
-Z3M6IHBoeTogbXZlYnUtdXRtaTogYWRkIFVUTUkgUEhZIGJpbmRpbmdzCj4gICBNQUlOVEFJTkVS
-UzogcGh5OiBmaWxsIEFybWFkYSAzNzAwIFBIWSBkcml2ZXJzIGVudHJ5Cj4gICBBUk02NDogZHRz
-OiBtYXJ2ZWxsOiBhcm1hZGEtMzd4eDogZml4IFVTQjIgbWVtb3J5IHJlZ2lvbgo+ICAgQVJNNjQ6
-IGR0czogbWFydmVsbDogYXJtYWRhLTM3eHg6IGRlY2xhcmUgVVNCMiBVVE1JIFBIWXMKPiAgIEFS
-TTY0OiBkdHM6IG1hcnZlbGw6IGFybWFkYS0zN3h4OiBsaW5rIFVTQiBob3N0cyB3aXRoIHRoZWly
-IFBIWXMKPiAKPiAgLi4uL2JpbmRpbmdzL3BoeS9waHktbXZlYnUtdXRtaS50eHQgICAgICAgICAg
-IHwgIDM4ICsrKwo+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDQgKy0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS0zN3h4LmR0
-c2kgIHwgIDM0ICsrLQo+ICBkcml2ZXJzL3BoeS9tYXJ2ZWxsL0tjb25maWcgICAgICAgICAgICAg
-ICAgICAgfCAgIDkgKwo+ICBkcml2ZXJzL3BoeS9tYXJ2ZWxsL01ha2VmaWxlICAgICAgICAgICAg
-ICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL3BoeS9tYXJ2ZWxsL3BoeS1tdmVidS1hMzcwMC11dG1p
-LmMgICAgfCAyNzggKysrKysrKysrKysrKysrKysrCj4gIDYgZmlsZXMgY2hhbmdlZCwgMzYyIGlu
-c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1tdmVidS11dG1pLnR4dAo+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUtYTM3MDAtdXRtaS5j
-Cj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+Add the Marvell Armada 38x common phy bindings.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ .../bindings/phy/phy-armada38x-comphy.txt          | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-armada38x-comphy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-armada38x-comphy.txt b/Documentation/devicetree/bindings/phy/phy-armada38x-comphy.txt
+new file mode 100644
+index 000000000000..ad49e5c01334
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-armada38x-comphy.txt
+@@ -0,0 +1,40 @@
++mvebu armada 38x comphy driver
++------------------------------
++
++This comphy controller can be found on Marvell Armada 38x. It provides a
++number of shared PHYs used by various interfaces (network, sata, usb,
++PCIe...).
++
++Required properties:
++
++- compatible: should be "marvell,armada-380-comphy"
++- reg: should contain the comphy register location and length.
++- #address-cells: should be 1.
++- #size-cells: should be 0.
++
++A sub-node is required for each comphy lane provided by the comphy.
++
++Required properties (child nodes):
++
++- reg: comphy lane number.
++- #phy-cells : from the generic phy bindings, must be 1. Defines the
++               input port to use for a given comphy lane.
++
++Example:
++
++	comphy: phy@18300 {
++		compatible = "marvell,armada-380-comphy";
++		reg = <0x18300 0x100>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpm_comphy0: phy@0 {
++			reg = <0>;
++			#phy-cells = <1>;
++		};
++
++		cpm_comphy1: phy@1 {
++			reg = <1>;
++			#phy-cells = <1>;
++		};
++	};
+-- 
+2.7.4
