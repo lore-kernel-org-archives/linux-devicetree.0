@@ -1,302 +1,270 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH 4/7] thermal: mediatek: add thermal controller offset
-Date: Tue, 5 Feb 2019 16:53:03 -0800
-Message-ID: <20190206005300.GD19687@localhost.localdomain>
-References: <1549006693-11659-1-git-send-email-michael.kao@mediatek.com>
- <1549006693-11659-5-git-send-email-michael.kao@mediatek.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 05/10] soc: qcom: Add AOSS QMP communication driver
+Date: Tue, 5 Feb 2019 17:33:22 -0800
+Message-ID: <20190206013322.GA24861@tuxbook-pro>
+References: <20190131003933.11436-1-bjorn.andersson@linaro.org>
+ <20190131003933.11436-6-bjorn.andersson@linaro.org>
+ <CAD=FV=U617Q6RFPnJaRoNEf=hr1ag9qqon2M-msbQD483tmicg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1549006693-11659-5-git-send-email-michael.kao@mediatek.com>
+In-Reply-To: <CAD=FV=U617Q6RFPnJaRoNEf=hr1ag9qqon2M-msbQD483tmicg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: michael.kao@mediatek.com
-Cc: =Zhang Rui <rui.zhang@intel.com>, =Daniel Lezcano <daniel.lezcano@linaro.org>, =Rob Herring <robh+dt@kernel.org>, =Mark Rutland <mark.rutland@arm.com>, =Matthias Brugger <matthias.bgg@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 01, 2019 at 03:38:10PM +0800, michael.kao@mediatek.com wrote:
-> From: Michael Kao <michael.kao@mediatek.com>
-> 
-> One thermal controller can read four sensors at most,
-> so we need to add controller_offset for the project with
-> more than four sensors to reuse the same register settings.
-> 
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> ---
->  drivers/thermal/mtk_thermal.c | 79 +++++++++++++++++++++++++++++--------------
->  1 file changed, 54 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-> index 45c6587..e5cf3f4 100644
-> --- a/drivers/thermal/mtk_thermal.c
-> +++ b/drivers/thermal/mtk_thermal.c
-> @@ -105,6 +105,9 @@
->  /* The number of sensing points per bank */
->  #define MT8173_NUM_SENSORS_PER_ZONE	4
->  
-> +/* The number of controller in the MT8173 */
-> +#define MT8173_NUM_CONTROLLER		1
-> +
->  /* The calibration coefficient of sensor  */
->  #define MT8173_CALIBRATION	165
->  
-> @@ -150,6 +153,9 @@ enum {
->  /* The number of sensing points per bank */
->  #define MT2701_NUM_SENSORS_PER_ZONE	3
->  
-> +/* The number of controller in the MT2701 */
-> +#define MT2701_NUM_CONTROLLER		1
-> +
->  /* The calibration coefficient of sensor  */
->  #define MT2701_CALIBRATION	165
->  
-> @@ -168,6 +174,9 @@ enum {
->  /* The number of sensing points per bank */
->  #define MT2712_NUM_SENSORS_PER_ZONE	4
->  
-> +/* The number of controller in the MT2712 */
-> +#define MT2712_NUM_CONTROLLER		1
-> +
->  /* The calibration coefficient of sensor  */
->  #define MT2712_CALIBRATION	165
->  
-> @@ -176,6 +185,7 @@ enum {
->  #define MT7622_NUM_ZONES		1
->  #define MT7622_NUM_SENSORS_PER_ZONE	1
->  #define MT7622_TS1	0
-> +#define MT7622_NUM_CONTROLLER		1
->  
->  /* The calibration coefficient of sensor  */
->  #define MT7622_CALIBRATION	165
-> @@ -201,6 +211,8 @@ struct mtk_thermal_data {
->  	const int *msr;
->  	const int *adcpnp;
->  	const int cali_val;
-> +	const int num_controller;
-> +	const int *controller_offset;
->  	struct thermal_bank_cfg bank_data[];
->  };
->  
-> @@ -240,6 +252,7 @@ struct mtk_thermal {
->  };
->  
->  static const int mt8173_mux_values[MT8173_NUM_SENSORS] = { 0, 1, 2, 3, 16 };
-> +static const int mt8173_tc_offset[MT8173_NUM_CONTROLLER] = { 0x0, };
->  
->  static const int mt8173_vts_index[MT8173_NUM_SENSORS] = {
->  	VTS1, VTS2, VTS3, VTS4, VTSABB
-> @@ -259,6 +272,7 @@ struct mtk_thermal {
->  };
->  
->  static const int mt2701_mux_values[MT2701_NUM_SENSORS] = { 0, 1, 16 };
-> +static const int mt2701_tc_offset[MT2701_NUM_CONTROLLER] = { 0x0, };
->  
->  static const int mt2701_vts_index[MT2701_NUM_SENSORS] = {
->  	VTS1, VTS2, VTS3
-> @@ -278,6 +292,7 @@ struct mtk_thermal {
->  };
->  
->  static const int mt2712_mux_values[MT2712_NUM_SENSORS] = { 0, 1, 2, 3 };
-> +static const int mt2712_tc_offset[MT2712_NUM_CONTROLLER] = { 0x0, };
->  
->  static const int mt2712_vts_index[MT2712_NUM_SENSORS] = {
->  	VTS1, VTS2, VTS3, VTS4
-> @@ -289,6 +304,7 @@ struct mtk_thermal {
->  static const int mt7622_adcpnp[MT7622_NUM_SENSORS_PER_ZONE] = { TEMP_ADCPNP0, };
->  static const int mt7622_mux_values[MT7622_NUM_SENSORS] = { 0, };
->  static const int mt7622_vts_index[MT7622_NUM_SENSORS] = { VTS1 };
-> +static const int mt7622_tc_offset[MT7622_NUM_CONTROLLER] = { 0x0, };
->  
->  /**
->   * The MT8173 thermal controller has four banks. Each bank can read up to
-> @@ -309,6 +325,8 @@ struct mtk_thermal {
->  	.num_sensors = MT8173_NUM_SENSORS,
->  	.vts_index = mt8173_vts_index,
->  	.cali_val = MT8173_CALIBRATION,
-> +	.num_controller = MT8173_NUM_CONTROLLER,
-> +	.controller_offset = mt8173_tc_offset,
->  	.bank_data = {
->  		{
->  			.num_sensors = 2,
-> @@ -345,6 +363,8 @@ struct mtk_thermal {
->  	.num_sensors = MT2701_NUM_SENSORS,
->  	.vts_index = mt2701_vts_index,
->  	.cali_val = MT2701_CALIBRATION,
-> +	.num_controller = MT2701_NUM_CONTROLLER,
-> +	.controller_offset = mt2701_tc_offset,
->  	.bank_data = {
->  		{
->  			.num_sensors = 3,
-> @@ -372,6 +392,8 @@ struct mtk_thermal {
->  	.num_sensors = MT2712_NUM_SENSORS,
->  	.vts_index = mt2712_vts_index,
->  	.cali_val = MT2712_CALIBRATION,
-> +	.num_controller = MT2712_NUM_CONTROLLER,
-> +	.controller_offset = mt2712_tc_offset,
->  	.bank_data = {
->  		{
->  			.num_sensors = 4,
-> @@ -393,6 +415,8 @@ struct mtk_thermal {
->  	.num_sensors = MT7622_NUM_SENSORS,
->  	.vts_index = mt7622_vts_index,
->  	.cali_val = MT7622_CALIBRATION,
-> +	.num_controller = MT7622_NUM_CONTROLLER,
-> +	.controller_offset = mt7622_tc_offset,
->  	.bank_data = {
->  		{
->  			.num_sensors = 1,
-> @@ -523,19 +547,23 @@ static int mtk_read_temp(void *data, int *temperature)
->  };
->  
->  static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
-> -				  u32 apmixed_phys_base, u32 auxadc_phys_base)
-> +				  u32 apmixed_phys_base, u32 auxadc_phys_base,
-> +				  int ctrl_id)
->  {
->  	struct mtk_thermal_bank *bank = &mt->banks[num];
->  	const struct mtk_thermal_data *conf = mt->conf;
->  	int i;
->  
-> +	int offset = mt->conf->controller_offset[ctrl_id];
-> +	void *controller_base = mt->thermal_base + offset;
+On Fri 01 Feb 15:36 PST 2019, Doug Anderson wrote:
 
-This void * has to be at least __iomem, right?
-
-See the report of kbuild bot, fix it and send it back.
-
-> +
->  	bank->id = num;
->  	bank->mt = mt;
->  
->  	mtk_thermal_get_bank(bank);
->  
->  	/* bus clock 66M counting unit is 12 * 15.15ns * 256 = 46.540us */
-> -	writel(TEMP_MONCTL1_PERIOD_UNIT(12), mt->thermal_base + TEMP_MONCTL1);
-> +	writel(TEMP_MONCTL1_PERIOD_UNIT(12), controller_base + TEMP_MONCTL1);
->  
->  	/*
->  	 * filt interval is 1 * 46.540us = 46.54us,
-> @@ -543,21 +571,21 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
->  	 */
->  	writel(TEMP_MONCTL2_FILTER_INTERVAL(1) |
->  			TEMP_MONCTL2_SENSOR_INTERVAL(429),
-> -			mt->thermal_base + TEMP_MONCTL2);
-> +			controller_base + TEMP_MONCTL2);
->  
->  	/* poll is set to 10u */
->  	writel(TEMP_AHBPOLL_ADC_POLL_INTERVAL(768),
-> -	       mt->thermal_base + TEMP_AHBPOLL);
-> +	       controller_base + TEMP_AHBPOLL);
->  
->  	/* temperature sampling control, 1 sample */
-> -	writel(0x0, mt->thermal_base + TEMP_MSRCTL0);
-> +	writel(0x0, controller_base + TEMP_MSRCTL0);
->  
->  	/* exceed this polling time, IRQ would be inserted */
-> -	writel(0xffffffff, mt->thermal_base + TEMP_AHBTO);
-> +	writel(0xffffffff, controller_base + TEMP_AHBTO);
->  
->  	/* number of interrupts per event, 1 is enough */
-> -	writel(0x0, mt->thermal_base + TEMP_MONIDET0);
-> -	writel(0x0, mt->thermal_base + TEMP_MONIDET1);
-> +	writel(0x0, controller_base + TEMP_MONIDET0);
-> +	writel(0x0, controller_base + TEMP_MONIDET1);
->  
->  	/*
->  	 * The MT8173 thermal controller does not have its own ADC. Instead it
-> @@ -572,44 +600,44 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
->  	 * this value will be stored to TEMP_PNPMUXADDR (TEMP_SPARE0)
->  	 * automatically by hw
->  	 */
-> -	writel(BIT(conf->auxadc_channel), mt->thermal_base + TEMP_ADCMUX);
-> +	writel(BIT(conf->auxadc_channel), controller_base + TEMP_ADCMUX);
->  
->  	/* AHB address for auxadc mux selection */
->  	writel(auxadc_phys_base + AUXADC_CON1_CLR_V,
-> -	       mt->thermal_base + TEMP_ADCMUXADDR);
-> +	       controller_base + TEMP_ADCMUXADDR);
->  
->  	/* AHB address for pnp sensor mux selection */
->  	writel(apmixed_phys_base + APMIXED_SYS_TS_CON1,
-> -	       mt->thermal_base + TEMP_PNPMUXADDR);
-> +	       controller_base + TEMP_PNPMUXADDR);
->  
->  	/* AHB value for auxadc enable */
-> -	writel(BIT(conf->auxadc_channel), mt->thermal_base + TEMP_ADCEN);
-> +	writel(BIT(conf->auxadc_channel), controller_base + TEMP_ADCEN);
->  
->  	/* AHB address for auxadc enable (channel 0 immediate mode selected) */
->  	writel(auxadc_phys_base + AUXADC_CON1_SET_V,
-> -	       mt->thermal_base + TEMP_ADCENADDR);
-> +	       controller_base + TEMP_ADCENADDR);
->  
->  	/* AHB address for auxadc valid bit */
->  	writel(auxadc_phys_base + AUXADC_DATA(conf->auxadc_channel),
-> -	       mt->thermal_base + TEMP_ADCVALIDADDR);
-> +	       controller_base + TEMP_ADCVALIDADDR);
->  
->  	/* AHB address for auxadc voltage output */
->  	writel(auxadc_phys_base + AUXADC_DATA(conf->auxadc_channel),
-> -	       mt->thermal_base + TEMP_ADCVOLTADDR);
-> +	       controller_base + TEMP_ADCVOLTADDR);
->  
->  	/* read valid & voltage are at the same register */
-> -	writel(0x0, mt->thermal_base + TEMP_RDCTRL);
-> +	writel(0x0, controller_base + TEMP_RDCTRL);
->  
->  	/* indicate where the valid bit is */
->  	writel(TEMP_ADCVALIDMASK_VALID_HIGH | TEMP_ADCVALIDMASK_VALID_POS(12),
-> -	       mt->thermal_base + TEMP_ADCVALIDMASK);
-> +	       controller_base + TEMP_ADCVALIDMASK);
->  
->  	/* no shift */
-> -	writel(0x0, mt->thermal_base + TEMP_ADCVOLTAGESHIFT);
-> +	writel(0x0, controller_base + TEMP_ADCVOLTAGESHIFT);
->  
->  	/* enable auxadc mux write transaction */
->  	writel(TEMP_ADCWRITECTRL_ADC_MUX_WRITE,
-> -	       mt->thermal_base + TEMP_ADCWRITECTRL);
-> +		controller_base + TEMP_ADCWRITECTRL);
->  
->  	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
->  		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
-> @@ -617,11 +645,11 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
->  		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
->  
->  	writel((1 << conf->bank_data[num].num_sensors) - 1,
-> -	       mt->thermal_base + TEMP_MONCTL0);
-> +	       controller_base + TEMP_MONCTL0);
->  
->  	writel(TEMP_ADCWRITECTRL_ADC_PNP_WRITE |
->  	       TEMP_ADCWRITECTRL_ADC_MUX_WRITE,
-> -	       mt->thermal_base + TEMP_ADCWRITECTRL);
-> +	       controller_base + TEMP_ADCWRITECTRL);
->  
->  	mtk_thermal_put_bank(bank);
->  }
-> @@ -737,7 +765,7 @@ static int mtk_thermal_get_calibration_data(struct device *dev,
->  
->  static int mtk_thermal_probe(struct platform_device *pdev)
->  {
-> -	int ret, i;
-> +	int ret, i, ctrl_id;
->  	struct device_node *auxadc, *apmixedsys, *np = pdev->dev.of_node;
->  	struct mtk_thermal *mt;
->  	struct resource *res;
-> @@ -817,9 +845,10 @@ static int mtk_thermal_probe(struct platform_device *pdev)
->  		goto err_disable_clk_auxadc;
->  	}
->  
-> -	for (i = 0; i < mt->conf->num_banks; i++)
-> -		mtk_thermal_init_bank(mt, i, apmixed_phys_base,
-> -				      auxadc_phys_base);
-> +	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
-> +		for (i = 0; i < mt->conf->num_banks; i++)
-> +			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
-> +					      auxadc_phys_base, ctrl_id);
->  
->  	platform_set_drvdata(pdev, mt);
->  
-> -- 
-> 1.9.1
+> Hi,
 > 
+> On Wed, Jan 30, 2019 at 4:40 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > +++ b/drivers/soc/qcom/aoss-qmp.c
+> > @@ -0,0 +1,317 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2018, Linaro Ltd
+> > + */
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/mailbox_client.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/soc/qcom/aoss-qmp.h>
+> > +
+> > +#define QMP_DESC_MAGIC                 0x0
+> > +#define QMP_DESC_VERSION               0x4
+> > +#define QMP_DESC_FEATURES              0x8
+> > +
+> > +#define QMP_DESC_UCORE_LINK_STATE      0xc
+> > +#define QMP_DESC_UCORE_LINK_STATE_ACK  0x10
+> > +#define QMP_DESC_UCORE_CH_STATE                0x14
+> > +#define QMP_DESC_UCORE_CH_STATE_ACK    0x18
+> > +#define QMP_DESC_UCORE_MBOX_SIZE       0x1c
+> > +#define QMP_DESC_UCORE_MBOX_OFFSET     0x20
+> > +
+> > +#define QMP_DESC_MCORE_LINK_STATE      0x24
+> > +#define QMP_DESC_MCORE_LINK_STATE_ACK  0x28
+> > +#define QMP_DESC_MCORE_CH_STATE                0x2c
+> > +#define QMP_DESC_MCORE_CH_STATE_ACK    0x30
+> > +#define QMP_DESC_MCORE_MBOX_SIZE       0x34
+> > +#define QMP_DESC_MCORE_MBOX_OFFSET     0x38
+> 
+> I sure wish something in this file told me what a mcore and a ucore
+> were.  The only thing I can think of is that an "m" core is two "u"
+> cores flipped upside down and placed really close to each other.
+> ...if we had 6 upside down "u" cores we'd have an "mmm" core.  Mmm,
+> core.
+> 
+
+I had to look at the code again to figure out which side was which, so
+I'll add a comment here to indicate which is which.
+
+> 
+> > +static int qmp_open(struct qmp *qmp)
+> > +{
+> > +       int ret;
+> > +       u32 val;
+> > +
+> > +       ret = wait_event_timeout(qmp->event, qmp_magic_valid(qmp), HZ);
+> 
+> I'm a totally noob here, but I'm curious: what kicks this event?  Do
+> we just assume that an IRQ is pending already when the probe()
+> function is called?  Maybe you could add a comment?
+> 
+> ...or maybe you never actually get an IRQ here and just rely on the
+> magic value being right at boot in which case we should just check
+> qmp_magic_valid()
+> 
+> ...or maybe you never actually get an IRQ here and this is equivalent
+> to msleep(1000) followed by a check of qmp_magic_valid()?
+> 
+
+This must be me misinterpreting the downstream driver, the magic is
+already in place when we enter here.
+
+> 
+> > +       if (!ret) {
+> > +               dev_err(qmp->dev, "QMP magic doesn't match\n");
+> > +               return -ETIMEDOUT;
+> > +       }
+> > +
+> > +       val = readl(qmp->msgram + QMP_DESC_VERSION);
+> > +       if (val != QMP_VERSION) {
+> > +               dev_err(qmp->dev, "unsupported QMP version %d\n", val);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       qmp->offset = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_OFFSET);
+> > +       qmp->size = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_SIZE);
+> > +       if (!qmp->size) {
+> > +               dev_err(qmp->dev, "invalid mailbox size 0x%zx\n", qmp->size);
+> 
+> nitty nit: Can you do "%#zx" to avoid the need for the 0x?
+> 
+
+Didn't know I could do that, but that said this is conditional on
+!qmp->size, so I'm dropping the 0x0 from the error...
+> 
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       /* Ack remote core's link state */
+> > +       val = readl(qmp->msgram + QMP_DESC_UCORE_LINK_STATE);
+> > +       writel(val, qmp->msgram + QMP_DESC_UCORE_LINK_STATE_ACK);
+> > +
+> > +       /* Set local core's link state to up */
+> > +       writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
+> > +
+> > +       qmp_kick(qmp);
+> > +
+> > +       ret = wait_event_timeout(qmp->event, qmp_link_acked(qmp), HZ);
+> > +       if (!ret) {
+> > +               dev_err(qmp->dev, "ucore didn't ack link\n");
+> > +               goto timeout_close_link;
+> > +       }
+> > +
+> > +       writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
+> > +
+> > +       ret = wait_event_timeout(qmp->event, qmp_ucore_channel_up(qmp), HZ);
+> 
+> Again maybe a noob question, but what kicks the interrupt here?  Is
+> the other side looping waiting to see us write "QMP_STATE_UP" into
+> "QMP_DESC_MCORE_CH_STATE" and then it sends us another interrupt?
+> ...or are we just getting lucky that the condition is right to begin
+> with?
+> 
+
+I guess it does, but I think there is a kick inbetween here in the
+downstream driver, I'll add one for good measure.
+
+> 
+> > +       if (!ret) {
+> > +               dev_err(qmp->dev, "ucore didn't open channel\n");
+> > +               goto timeout_close_channel;
+> > +       }
+> > +
+> > +       /* Ack remote core's channel state */
+> > +       val = readl(qmp->msgram + QMP_DESC_UCORE_CH_STATE);
+> > +       writel(val, qmp->msgram + QMP_DESC_UCORE_CH_STATE_ACK);
+> 
+> nit: the readl() is silly here.  Just before this you called
+> qmp_ucore_channel_up() and that confirmed that the value you're
+> getting here is exactly equal to "QMP_STATE_UP".  Just write that.
+> 
+
+Right
+
+> 
+> > +static int qmp_probe(struct platform_device *pdev)
+> > +{
+> > +       struct resource *res;
+> > +       struct qmp *qmp;
+> > +       int irq;
+> > +       int ret;
+> > +
+> > +       qmp = devm_kzalloc(&pdev->dev, sizeof(*qmp), GFP_KERNEL);
+> > +       if (!qmp)
+> > +               return -ENOMEM;
+> > +
+> > +       qmp->dev = &pdev->dev;
+> > +       init_waitqueue_head(&qmp->event);
+> > +       mutex_init(&qmp->tx_lock);
+> > +
+> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       qmp->msgram = devm_ioremap_resource(&pdev->dev, res);
+> > +       if (IS_ERR(qmp->msgram))
+> > +               return PTR_ERR(qmp->msgram);
+> > +
+> > +       qmp->mbox_client.dev = &pdev->dev;
+> > +       qmp->mbox_client.knows_txdone = true;
+> > +       qmp->mbox_chan = mbox_request_channel(&qmp->mbox_client, 0);
+> 
+> nit: your code would be simplified a bit if you created
+> devm_mbox_request_channel() in a prior patch.
+> 
+> 
+> > +       if (IS_ERR(qmp->mbox_chan)) {
+> > +               dev_err(&pdev->dev, "failed to acquire ipc mailbox\n");
+> > +               return PTR_ERR(qmp->mbox_chan);
+> > +       }
+> > +
+> > +       irq = platform_get_irq(pdev, 0);
+> > +       ret = devm_request_irq(&pdev->dev, irq, qmp_intr, IRQF_ONESHOT,
+> > +                              "aoss-qmp", qmp);
+> > +       if (ret < 0) {
+> > +               dev_err(&pdev->dev, "failed to request interrupt\n");
+> > +               mbox_free_channel(qmp->mbox_chan);
+> > +               return ret;
+> > +       }
+> > +
+> > +       ret = qmp_open(qmp);
+> > +       if (ret < 0) {
+> > +               mbox_free_channel(qmp->mbox_chan);
+> > +               return ret;
+> > +       }
+> > +
+> > +       platform_set_drvdata(pdev, qmp);
+> > +
+> > +       if (of_property_read_bool(pdev->dev.of_node, "#power-domain-cells")) {
+> > +               qmp->pd_pdev = platform_device_register_data(&pdev->dev,
+> > +                                                            "aoss_qmp_pd",
+> > +                                                            PLATFORM_DEVID_NONE,
+> > +                                                            NULL, 0);
+> > +               if (IS_ERR(qmp->pd_pdev))
+> > +                       dev_err(&pdev->dev, "failed to register AOSS PD\n");
+> 
+> nit: I'd prefer dev_warn() for serious but non-fatal errors.  This
+> appears to be non-fatal since it doesn't cause you to return an error.
+> 
+> ...ideally the error message should indicate that the error is being ignored.
+> 
+
+I think it makes more sense to keep this as dev_err() and actually
+fail probe on this. Will update.
+
+> 
+> I'm also not 100% sure why the "aoss_qmp_pd" needs to be broken up as
+> a separate driver.  I guess there is expectation that there will be
+> more sub-drivers that use qmp_send() and that stuffing them all in the
+> same driver would be too much?  It sure seems like your life would be
+> simplified if they were just one driver though unless you think
+> someone would want to enable "AOSS_QMP" without enabling
+> "AOSS_QMP_PD".
+> 
+
+I think splitting them in different files makes a lot of sense, whether
+they should be separate drivers or just linked to one chunk that's food
+for thought.
+
+> 
+> > +static int qmp_remove(struct platform_device *pdev)
+> > +{
+> > +       struct qmp *qmp = platform_get_drvdata(pdev);
+> > +
+> > +       platform_device_unregister(qmp->pd_pdev);
+> 
+> Presumably the above should be prefixed with:
+> 
+> if (!IS_ERR(qmp->pd_pdev))
+> 
+> ...since it appears that the probe will return with no error if you
+> fail to register the pd_pdev and thus you need to handle it being an
+> error in remove.
+> 
+
+Let's just make sure this doesn't happen.
+
+> 
+> > +       mbox_free_channel(qmp->mbox_chan);
+> > +       qmp_close(qmp);
+> 
+> nit: I always expect that remove should be in the opposite order of
+> probe.  That means qmp_close() should be before mbox_free_channel().
+
+You're right.
+
+Thanks,
+Bjorn
