@@ -1,50 +1,72 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [RESEND PATCH] dt-bindings: arm: atmel: add new sam9x60 SFR binding
-Date: Wed, 6 Feb 2019 19:04:25 +0100
-Message-ID: <20190206180425.27324-1-nicolas.ferre@microchip.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/6] ASoC: codecs: jz4740: Use SPDX license
+	notifier
+Date: Wed, 6 Feb 2019 18:10:54 +0000
+Message-ID: <20190206181054.GF17630@sirena.org.uk>
+References: <20190205031108.26171-1-paul@crapouillou.net>
+ <20190205031108.26171-3-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Nicolas Ferre <nicolas.ferre@microchip.com>
+Content-Type: multipart/mixed; boundary="===============5790208995100347258=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190205031108.26171-3-paul@crapouillou.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add this SFR compatible definition for the sam9x60 SoC. Will be needed
-in OHCI driver: ohci-at91.c.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
-Hi Rob,
-It seems that this patch was lost in my series "[PATCH 0/8] ARM: at91/dt:
-update to existing drivers for the sam9x60 SoC". I split it and resend it only
-for USB tree.
+--===============5790208995100347258==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="aPdhxNJGSeOG9wFI"
+Content-Disposition: inline
 
-Hi Greg,
 
-This DT bindind goes with the patch already queued in your usb-next tree "USB:
-host: ohci-at91: add sam9x60-sfr definition for ohci".
+--aPdhxNJGSeOG9wFI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Once Rob added his tag, can you please queue it in your tree as I reviewed my
-first idea of adding it to the arm-soc tree?
+On Tue, Feb 05, 2019 at 12:11:05AM -0300, Paul Cercueil wrote:
 
-Best regards,
-  Nicolas
+> +++ b/sound/soc/codecs/jz4740.c
+> @@ -1,14 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
+> - *
 
- Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 1 +
- 1 file changed, 1 insertion(+)
+Please convert the whole comment to C++ style so it looks more
+consistent with the rest of ASoC (and itself).
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-index badce6ef3ab3..dfc91bc02b97 100644
---- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-@@ -148,6 +148,7 @@ required properties:
- - compatible: Should be "atmel,<chip>-sfr", "syscon" or
- 	"atmel,<chip>-sfrbu", "syscon"
-   <chip> can be "sama5d3", "sama5d4" or "sama5d2".
-+  It also can be "microchip,sam9x60-sfr", "syscon".
- - reg: Should contain registers location and length
- 
- 	sfr@f0038000 {
--- 
-2.17.1
+--aPdhxNJGSeOG9wFI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxbIy0ACgkQJNaLcl1U
+h9C9ygf+JHkT2svpsqkGAQ0zFVpciiYkmRlqFlvGQOo0Uyb57bINoJCazjYc4WLv
+xoTLbn56dDNWyi8Sn0N69v5qTiAlE9lCHAi/OrkcCQBncggpXiYAdVxWYn/AYBU4
+UmK7Vb6RdEiwD140Q51SX2fh7DVVo/YSRPEgCB4QLPRfZiGKkzscIqsmxV/mOqio
+pNtIY5XReEQ1nBmFk0Kyf14C/q7nK89SYzhu+Frdruy7GnJ4gB3PooUWLUvmEEzh
+S3zGvLqEDynPaIyCjKOCS9QegWOz1TPOPDQSYVjjMpBgB4liera/dU+ehaC17TDW
+sgysn4Y6m1a9F5ffhyx3Tt5JFNvsyg==
+=/XhK
+-----END PGP SIGNATURE-----
+
+--aPdhxNJGSeOG9wFI--
+
+--===============5790208995100347258==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5790208995100347258==--
