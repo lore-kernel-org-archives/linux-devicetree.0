@@ -1,87 +1,235 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH v5 1/2] pwm: sifive: Add DT documentation for SiFive PWM Controller
-Date: Wed, 6 Feb 2019 16:18:47 +0530
-Message-ID: <CAJ2_jOHiJ3X5VYZMCNk2bpvUdDOsrqHJna3HPvtdNQpJB9fxjg@mail.gmail.com>
-References: <1548762199-7065-1-git-send-email-yash.shah@sifive.com>
- <1548762199-7065-2-git-send-email-yash.shah@sifive.com> <20190130081411.5rva7cpwoy2l5qjd@pengutronix.de>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v13 10/13] media: imx7.rst: add documentation for i.MX7
+ media driver
+Date: Wed, 6 Feb 2019 11:54:39 +0100
+Message-ID: <20a5f044-9ce6-1ead-9bc4-3e6008706928@xs4all.nl>
+References: <20190206102522.29212-1-rui.silva@linaro.org>
+ <20190206102522.29212-11-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130081411.5rva7cpwoy2l5qjd@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20190206102522.29212-11-rui.silva@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 1:44 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Tue, Jan 29, 2019 at 05:13:18PM +0530, Yash Shah wrote:
-> > DT documentation for PWM controller added.
-> >
-> > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> > [Atish: Compatible string update]
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> > ---
-> >  .../devicetree/bindings/pwm/pwm-sifive.txt         | 33 ++++++++++++++=
-++++++++
-> >  1 file changed, 33 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.tx=
-t
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Doc=
-umentation/devicetree/bindings/pwm/pwm-sifive.txt
-> > new file mode 100644
-> > index 0000000..8dcb40d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-> > @@ -0,0 +1,33 @@
-> > +SiFive PWM controller
-> > +
-> > +Unlike most other PWM controllers, the SiFive PWM controller currently=
- only
-> > +supports one period for all channels in the PWM. This is set globally =
-in DTS.
->
-> You can simply drop this if the first user can set this using the usual
-> interface. Don't you like this suggestion that I already made a few
-> times now?
->
-> Did you consider to make the driver support only a single output with a
-> more flexible period setting?
+On 2/6/19 11:25 AM, Rui Miguel Silva wrote:
+> Add rst document to describe the i.MX7 media driver and also a working
+> example from the Warp7 board usage with a OV2680 sensor.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-We cannot consider supporting only single output since we have boards that
-use the additional PWM channels to control individual LED brightness
-of a tri-color LED.
-If we go down to one channel, then we can't control the brightness of
-the individual LEDs.
-It will break the use case.
+Checkpatch gives me:
 
-I am considering the below approach, let me know if it's fine by you.
+Applying: media: imx7.rst: add documentation for i.MX7 media driver
+WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+#2:
+new file mode 100644
 
-- Drop the global period property and allow the only first user to change p=
-eriod
-using the usual interface.
-- A note in the binding that all PWMs need to run at the same
-period. If the driver already refuses to apply incompatible periods,
-the users are going to notice that they've got the DT wrong.
-- In driver code, count the users using the .request and .free callbacks.
-Based on this, allow changes to period iff the user count is one.
+WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+#7: FILE: Documentation/media/v4l-drivers/imx7.rst:1:
++i.MX7 Video Capture Driver
 
->
-> > +The period also has significant restrictions on the values it can achi=
-eve,
-> > +which the driver rounds to the nearest achievable frequency.
->
-> Rounding a period to a frequency sounds wrong.
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
-|
+total: 0 errors, 2 warnings, 164 lines checked
+
+Both warnings are valid, so can you make a v13.1 for this patch only?
+Just include the MAINTAINERS change in this patch.
+
+Regards,
+
+	Hans
+
+> ---
+>  Documentation/media/v4l-drivers/imx7.rst  | 157 ++++++++++++++++++++++
+>  Documentation/media/v4l-drivers/index.rst |   1 +
+>  2 files changed, 158 insertions(+)
+>  create mode 100644 Documentation/media/v4l-drivers/imx7.rst
+> 
+> diff --git a/Documentation/media/v4l-drivers/imx7.rst b/Documentation/media/v4l-drivers/imx7.rst
+> new file mode 100644
+> index 000000000000..cd1195d391c5
+> --- /dev/null
+> +++ b/Documentation/media/v4l-drivers/imx7.rst
+> @@ -0,0 +1,157 @@
+> +i.MX7 Video Capture Driver
+> +==========================
+> +
+> +Introduction
+> +------------
+> +
+> +The i.MX7 contrary to the i.MX5/6 family does not contain an Image Processing
+> +Unit (IPU); because of that the capabilities to perform operations or
+> +manipulation of the capture frames are less feature rich.
+> +
+> +For image capture the i.MX7 has three units:
+> +- CMOS Sensor Interface (CSI)
+> +- Video Multiplexer
+> +- MIPI CSI-2 Receiver
+> +
+> +::
+> +                                           |\
+> +   MIPI Camera Input ---> MIPI CSI-2 --- > | \
+> +                                           |  \
+> +                                           | M |
+> +                                           | U | ------>  CSI ---> Capture
+> +                                           | X |
+> +                                           |  /
+> +   Parallel Camera Input ----------------> | /
+> +                                           |/
+> +
+> +For additional information, please refer to the latest versions of the i.MX7
+> +reference manual [#f1]_.
+> +
+> +Entities
+> +--------
+> +
+> +imx7-mipi-csi2
+> +--------------
+> +
+> +This is the MIPI CSI-2 receiver entity. It has one sink pad to receive the pixel
+> +data from MIPI CSI-2 camera sensor. It has one source pad, corresponding to the
+> +virtual channel 0. This module is compliant to previous version of Samsung
+> +D-phy, and supports two D-PHY Rx Data lanes.
+> +
+> +csi_mux
+> +-------
+> +
+> +This is the video multiplexer. It has two sink pads to select from either camera
+> +sensor with a parallel interface or from MIPI CSI-2 virtual channel 0.  It has
+> +a single source pad that routes to the CSI.
+> +
+> +csi
+> +---
+> +
+> +The CSI enables the chip to connect directly to external CMOS image sensor. CSI
+> +can interface directly with Parallel and MIPI CSI-2 buses. It has 256 x 64 FIFO
+> +to store received image pixel data and embedded DMA controllers to transfer data
+> +from the FIFO through AHB bus.
+> +
+> +This entity has one sink pad that receives from the csi_mux entity and a single
+> +source pad that routes video frames directly to memory buffers. This pad is
+> +routed to a capture device node.
+> +
+> +Usage Notes
+> +-----------
+> +
+> +To aid in configuration and for backward compatibility with V4L2 applications
+> +that access controls only from video device nodes, the capture device interfaces
+> +inherit controls from the active entities in the current pipeline, so controls
+> +can be accessed either directly from the subdev or from the active capture
+> +device interface. For example, the sensor controls are available either from the
+> +sensor subdevs or from the active capture device.
+> +
+> +Warp7 with OV2680
+> +-----------------
+> +
+> +On this platform an OV2680 MIPI CSI-2 module is connected to the internal MIPI
+> +CSI-2 receiver. The following example configures a video capture pipeline with
+> +an output of 800x600, and BGGR 10 bit bayer format:
+> +
+> +.. code-block:: none
+> +   # Setup links
+> +   media-ctl -l "'ov2680 1-0036':0 -> 'imx7-mipi-csis.0':0[1]"
+> +   media-ctl -l "'imx7-mipi-csis.0':1 -> 'csi_mux':1[1]"
+> +   media-ctl -l "'csi_mux':2 -> 'csi':0[1]"
+> +   media-ctl -l "'csi':1 -> 'csi capture':0[1]"
+> +
+> +   # Configure pads for pipeline
+> +   media-ctl -V "'ov2680 1-0036':0 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +   media-ctl -V "'csi_mux':1 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +   media-ctl -V "'csi_mux':2 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +   media-ctl -V "'imx7-mipi-csis.0':0 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +   media-ctl -V "'csi':0 [fmt:SBGGR10_1X10/800x600 field:none]"
+> +
+> +After this streaming can start. The v4l2-ctl tool can be used to select any of
+> +the resolutions supported by the sensor.
+> +
+> +.. code-block:: none
+> +    root@imx7s-warp:~# media-ctl -p
+> +    Media controller API version 4.17.0
+> +
+> +    Media device information
+> +    ------------------------
+> +    driver          imx-media
+> +    model           imx-media
+> +    serial
+> +    bus info
+> +    hw revision     0x0
+> +    driver version  4.17.0
+> +
+> +    Device topology
+> +    - entity 1: csi (2 pads, 2 links)
+> +		type V4L2 subdev subtype Unknown flags 0
+> +		device node name /dev/v4l-subdev0
+> +	    pad0: Sink
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    <- "csi_mux":2 [ENABLED]
+> +	    pad1: Source
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    -> "csi capture":0 [ENABLED]
+> +
+> +    - entity 4: csi capture (1 pad, 1 link)
+> +		type Node subtype V4L flags 0
+> +		device node name /dev/video0
+> +	    pad0: Sink
+> +		    <- "csi":1 [ENABLED]
+> +
+> +    - entity 10: csi_mux (3 pads, 2 links)
+> +		type V4L2 subdev subtype Unknown flags 0
+> +		device node name /dev/v4l-subdev1
+> +	    pad0: Sink
+> +		    [fmt:unknown/0x0]
+> +	    pad1: Sink
+> +		    [fmt:unknown/800x600 field:none]
+> +		    <- "imx7-mipi-csis.0":1 [ENABLED]
+> +	    pad2: Source
+> +		    [fmt:unknown/800x600 field:none]
+> +		    -> "csi":0 [ENABLED]
+> +
+> +    - entity 14: imx7-mipi-csis.0 (2 pads, 2 links)
+> +		type V4L2 subdev subtype Unknown flags 0
+> +		device node name /dev/v4l-subdev2
+> +	    pad0: Sink
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    <- "ov2680 1-0036":0 [ENABLED]
+> +	    pad1: Source
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    -> "csi_mux":1 [ENABLED]
+> +
+> +    - entity 17: ov2680 1-0036 (1 pad, 1 link)
+> +		type V4L2 subdev subtype Sensor flags 0
+> +		device node name /dev/v4l-subdev3
+> +	    pad0: Source
+> +		    [fmt:SBGGR10_1X10/800x600 field:none]
+> +		    -> "imx7-mipi-csis.0":0 [ENABLED]
+> +
+> +
+> +References
+> +----------
+> +
+> +.. [#f1] https://www.nxp.com/docs/en/reference-manual/IMX7SRM.pdf
+> diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
+> index f28570ec9e42..dfd4b205937c 100644
+> --- a/Documentation/media/v4l-drivers/index.rst
+> +++ b/Documentation/media/v4l-drivers/index.rst
+> @@ -44,6 +44,7 @@ For more details see the file COPYING in the source distribution of Linux.
+>  	davinci-vpbe
+>  	fimc
+>  	imx
+> +	imx7
+>  	ipu3
+>  	ivtv
+>  	max2175
+> 
