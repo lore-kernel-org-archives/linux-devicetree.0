@@ -1,151 +1,72 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v3 3/3] arm64: dts: Add USB DT nodes for Stingray SoC
-Date: Wed,  6 Feb 2019 23:02:27 +0530
-Message-ID: <1549474347-7224-4-git-send-email-srinath.mannam@broadcom.com>
-References: <1549474347-7224-1-git-send-email-srinath.mannam@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549474347-7224-1-git-send-email-srinath.mannam@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: ti,
+ sci-clk: Add support for parsing clock info from DT
+Date: Wed, 06 Feb 2019 09:47:18 -0800
+Message-ID: <154947523891.74891.8214442349263473281@swboyd.mtv.corp.google.com>
+References: <1546954223-9738-1-git-send-email-t-kristo@ti.com>
+ <1546954223-9738-2-git-send-email-t-kristo@ti.com>
+ <20190121210449.GB7851@bogus> <7ce7bd25-b5c4-f99d-fda6-0f21376f2204@ti.com>
+ <ab8707fb-e632-5be9-9fdb-4b1fb3cb26ba@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <ab8707fb-e632-5be9-9fdb-4b1fb3cb26ba@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>
+Cc: devicetree@vger.kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ssantosh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT nodes for
-  - Two xHCI host controllers
-  - Two BDC Broadcom USB device controller
-  - Five USB PHY controllers
+Quoting Tero Kristo (2019-02-05 00:25:40)
+> On 22/01/2019 09:33, Tero Kristo wrote:
+> > On 21/01/2019 23:04, Rob Herring wrote:
+> >> At first, I thought this was an either/or thing. Use firmware or use DT,
+> >> but it is really only get the clocks used in the DT from firmware.
+> >>
+> >> Why wouldn't you just always do that? I can think of 3 cases:
+> >> reparenting, debug and overlays. This breaks reparenting and overlays,
+> >> right? Debug could be handled with some userspace trigger to get all the
+> >> clocks.
+> > 
+> > Re-parenting this does not break, as the scan still checks every 
+> > possible parent of a clock scanned. Overlays are broken for sure, as we 
+> > don't know which overlays we would be applying, and what clocks would be 
+> > in them. Debug is kind of broken as we only scan a small portion of the 
+> > clocks.
+> > 
+> >>
+> >> Why scan any of the clocks up front? Why not just create the clocks on
+> >> demand? If an unknown clock id is requested, then create the clock and
+> >> query the firmware at that point. That would avoid the DT scan too.
+> >> Maybe there's some issues in the clk framework preventing that, but
+> >> that's not really a DT problem.
+> > 
+> > The very initial version I did a couple of years back, did scan the 
+> > clocks based on need, and registered them dynamically. Stephen shot down 
+> > this based on the assessment that there might be locking issues with the 
+> > common clock framework with this approach leading into potential 
+> > deadlock situations.
 
-[xHCI0]      [BDC0]            [xHCI1]            [BDC1]
-   |           |                  |                 |
-  ---------------               -----------------------
-   |           |                 |         |         |
-[SS-PHY0]   [HS-PHY0]        [SS-PHY1] [HS-PHY2] [HS-PHY1]
+It's an interesting idea to limit the scope of clks that are registered
+to only the leaf and whatever up to the root of the tree is involved in
+the working set of the kernel.
 
-[SS-PHY0/HS-PHY0] and [SS-PHY1/HS-PHY1] are combo PHYs of
-version1 category has both SS and HS PHYs..
-[HS-PHY2] is HS PHY of version2 category.
+> 
+> So Rob, what is the final call on this binding? Ack/NAK? If NAK, shall I 
+> implement a kernel cmdline param to select the parsing method or what is 
+> preferred? Doing it build time with a simple Kconfig seems too limiting.
+> 
 
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
----
- .../boot/dts/broadcom/stingray/stingray-usb.dtsi   | 95 ++++++++++++++++++++++
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  1 +
- 2 files changed, 96 insertions(+)
- create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
-
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
-new file mode 100644
-index 0000000..164a1de
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: (GPL-2.0 or BSD-3-Clause)
-+/*
-+ *Copyright(c) 2018 Broadcom
-+ */
-+	usb {
-+		compatible = "simple-bus";
-+		dma-ranges;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x68500000 0x00400000>;
-+
-+		usbphy0: usb-phy@0 {
-+			compatible = "brcm,sr-usb-phy";
-+			reg = <0x00000000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+
-+			usb0_phy0: phy@0 {
-+				reg = <0>;
-+				#phy-cells = <0>;
-+			};
-+			usb0_phy1: phy@1 {
-+				reg = <1>;
-+				#phy-cells = <0>;
-+			};
-+
-+		};
-+
-+		xhci0: usb@1000 {
-+			compatible = "generic-xhci";
-+			reg = <0x00001000 0x1000>;
-+			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usb0_phy1>, <&usb0_phy0>;
-+			phy-names = "phy0", "phy1";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		bdc0: usb@2000 {
-+			compatible = "brcm,bdc-v0.16";
-+			reg = <0x00002000 0x1000>;
-+			interrupts = <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usb0_phy1>, <&usb0_phy0>;
-+			phy-names = "phy0", "phy1";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		usbphy1: usb-phy@10000 {
-+			compatible = "brcm,sr-usb-phy";
-+			reg = <0x00010000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+
-+			usb1_phy0: phy@0 {
-+				reg = <0>;
-+				#phy-cells = <0>;
-+			};
-+			usb1_phy1: phy@1 {
-+				reg = <1>;
-+				#phy-cells = <0>;
-+			};
-+		};
-+
-+		usbphy2: usb-phy@20000 {
-+			compatible = "brcm,sr-usb-phy-v2";
-+			reg = <0x00020000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		xhci1: usb@11000 {
-+			compatible = "generic-xhci";
-+			reg = <0x00011000 0x1000>;
-+			interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usb1_phy1>, <&usbphy2>, <&usb1_phy0>;
-+			phy-names = "phy0", "phy1", "phy2";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		bdc1: usb@21000 {
-+			compatible = "brcm,bdc-v0.16";
-+			reg = <0x00021000 0x1000>;
-+			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy2>;
-+			phy-names = "phy0";
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+	};
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index cfeaa85..21dbb12 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -287,6 +287,7 @@
- 	#include "stingray-fs4.dtsi"
- 	#include "stingray-sata.dtsi"
- 	#include "stingray-pcie.dtsi"
-+	#include "stingray-usb.dtsi"
- 
- 	hsls {
- 		compatible = "simple-bus";
--- 
-2.7.4
+Is the problem a performance problem where probing the firmware for all
+the clks is costly and time intensive? So instead of doing that we're
+describing some of the details in DT? Why can't we describe the clk tree
+in C code with some data structure that indicates parent child linkages?
+This is how every other SoC is doing this so far.
