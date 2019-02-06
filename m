@@ -1,111 +1,83 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [linux-sunxi] Re: [PATCH RESEND v2 06/12] drm/sun4i: rgb: Add 1%
- tolerance to dclk frequency check when bridge is connected
-Date: Wed, 6 Feb 2019 10:16:08 +0100
-Message-ID: <20190206091608.yvws7iyjuhw3xsdk@flea>
-References: <20190203185501.8958-1-anarsoul@gmail.com>
- <20190203185501.8958-7-anarsoul@gmail.com>
- <20190204142036.vd42nvyjnjr5yeoi@flea>
- <CA+E=qVfTfJ9E29gz83tdVGx5_KGWSQVJOAxKTzC+-n7=gdj0cA@mail.gmail.com>
- <0F6CBEA4-6DB6-40F1-A2FD-65101AF64F1F@aosc.io>
- <CA+E=qVd7yh=JNZSvrfY4Diu+VJWFK6yLUJ5MavBcZ8Cftn6f-Q@mail.gmail.com>
- <20190205154156.o3aa4cy6uxenkwol@flea>
- <CA+E=qVePKnQLwObfu=ya7-GcUiUkjyFg2p-rmg=FiJJUhQBvxw@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v4 0/6] Add hw overheat IRQ support to Marvell thermal
+ driver
+Date: Wed, 06 Feb 2019 10:25:37 +0100
+Message-ID: <87bm3p8e0e.fsf@FE-laptop>
+References: <20181212093645.14752-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2086806998=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CA+E=qVePKnQLwObfu=ya7-GcUiUkjyFg2p-rmg=FiJJUhQBvxw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sean Paul <seanpaul@chromium.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181212093645.14752-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marc Zyngier <marc.zyngier@arm.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============2086806998==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6mbqqqmv7k77dcll"
-Content-Disposition: inline
-
-
---6mbqqqmv7k77dcll
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Feb 05, 2019 at 09:49:17AM -0800, Vasily Khoruzhick wrote:
-> On Tue, Feb 5, 2019 at 7:42 AM Maxime Ripard <maxime.ripard@bootlin.com> =
-wrote:
-> >
-> > On Mon, Feb 04, 2019 at 10:50:17AM -0800, Vasily Khoruzhick wrote:
-> > > On Mon, Feb 4, 2019 at 8:29 AM Icenowy Zheng <icenowy@aosc.io> wrote:
-> > > > >> IIRC, from the previous discussion, HDMI had a tolerancy require=
-ment
-> > > > >> in the standard. Do you know if there's such a thing for eDP? Th=
-at
-> > > > >> would solve the issue for all the eDP displays at once.
-> > > > >
-> > > > >I don't have access to eDP standard - vesa.org says it's available=
- to
-> > > > >members only.
-> > > >
-> > > > Try out to grab an old version?
-> > > >
-> > > > I remember 1.0 is open.
-> > >
-> > > I can't find anything regarding dot clock tolerance in DisplayPort
-> > > specification.
-> >
-> > I guess since the DP is a VESA spec, it's probably .5%, just like on
-> > the EDID (well, CVT).
->=20
-> Unfortunately that's not enough for Pinebook. It needs 1% for 768p
-> panel.
-
-And that mode is stored in the EDID as a standard (or established)
-timing, or a detailed timing?
-
-If the latter, then it should also provide the tolerancies as part of
-the panel timing description.
-
-If the former, then what would be the advertised pixel clock and the
-one we can compute? Maybe we have a bug somewhere.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---6mbqqqmv7k77dcll
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXFql0gAKCRDj7w1vZxhR
-xWGpAP9D/c/QkTM7RkEmYqX278PgTsD6DZQS9V3WGIvI9bLJXgEAm3+HDc3qJQPA
-0HQwnjxRf6y79VXPkZBpd2H0cw1tdQY=
-=vBLL
------END PGP SIGNATURE-----
-
---6mbqqqmv7k77dcll--
-
---===============2086806998==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============2086806998==--
+SGkgTWlxdWVsLAogCiBPbiBtZXIuLCBkw6ljLiAxMiAyMDE4LCBNaXF1ZWwgUmF5bmFsIDxtaXF1
+ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZToKCj4gSGVsbG8sCj4KPiBUaGlzIGlzIHRoZSBs
+YXN0IGJhdGNoIG9mIHBhdGNoZXMgYWJvdXQgdGhlIHRoZXJtYWwgZHJpdmVyIHRoYXQgd2FzCj4g
+c3VzcGVuZGVkLCB3YWl0aW5nIGZvciB0aGUgSUNVL1NFSSBzZXJpZXMgdG8gYmUgbWVyZ2VkLiBO
+b3cgdGhhdAo+IGV2ZXJ5dGhpbmcgaXMgcmVhZHkgaW4gbWFpbmxpbmUsIGxldCdzIGFkZCBoYXJk
+d2FyZSBvdmVyaGVhdCBpbnRlcnJ1cHQKPiBzdXBwb3J0IHRvIHRoaXMgZHJpdmVyLgo+Cj4gQmlu
+ZGluZ3MgYW5kIERUIGFyZSB1cGRhdGVkIGFjY29yZGluZ2x5LiBUaGUgaW50ZXJydXB0IHdpbGwg
+b25seSBiZQo+IHRyaWdnZXJlZCBpZiB0aGUgcGxhdGZvcm0gZ29lcyBhYm92ZSB+MTAywrBDICh0
+aHJlc2hvbGQgc2V0IHRvIDEwMMKwQywKPiBoeXN0ZXJlc2lzIHRvID4gMsKwQykuIFRoZSBpbnRl
+cnJ1cHQgcHJvcGVydHkgaXMgb2YgY291cnNlIG5vdAo+IG1hbmRhdG9yeS4KPgo+IEluIHRoZSBt
+ZWFuIHRpbWUsIEkgYWRkIG15c2VsZiB0byB0aGUgTUFJTlRBSU5FUlMgZmlsZSB0byByZWNlaXZl
+IGFuZAo+IHJldmlldyBwb3NzaWJsZSBmaXhlcy9uZXcgZmVhdHVyZXMuCj4KPiBUaGFua3MsCj4g
+TWlxdcOobAo+Cj4gQ2hhbmdlcyBzaW5jZSB2MzoKPiA9PT09PT09PT09PT09PT09PQo+ICogQWRk
+ZWQgUm9iJ3MgUmV2aWV3ZWQtYnkgb24gY3AxMTAgYmluZGluZ3MuCj4gKiBBZGRyZXNzZWQgUm9i
+IGNvbW1lbnQgb24gYXA4MDYgYmluZGluZ3MgYnkgcmVtb3ZpbmcgdGhlIHJlZmVyZW5jZSB0bwo+
+ICAgdGhlIGludGVycnVwdCBwYXJlbnQuCj4KPiBDaGFuZ2VzIHNpbmNlIHYyOgo+ID09PT09PT09
+PT09PT09PT09Cj4gKiBSZW1vdmUgdXNlbGVzcyBnb3RvIHN0YXRlbWVudC4KPiAqIE1vdmUgdGhl
+IGh5c3RlcmVzaXMgYXJyYXkgb3V0IG9mIHRoZSBmdW5jdGlvbiB1c2luZyBpdCBhbmQgZGVjbGFy
+ZQo+ICAgdGhlIGFycmF5IHN0YXRpY2FsbHkgaW5zdGVhZCB0aGF0IGRvaW5nIHNvIG9uIHRoZSBz
+dGFjay4KPiAqIFJlbW92ZSB1bm5lY2Vzc2FyeSBjYXN0Lgo+ICogT24gZXJyb3IsIGF2b2lkIHJl
+dHVybmluZyBhIHZhbHVlIG5vdCBjb21wYXRpYmxlIHdpdGggaXJxcmV0dXJuX3QgaW4KPiAgIHRo
+ZSBJUlEgaGFuZGxlciAoYW5kIHdoZW4gZG9pbmcgc28sIHJlLWVuYWJsZSBpbnRlcnJ1cHRzCj4g
+ICBmaXJzdCkuIFRoaXMgaXMgc2ltcGx5IGhhbmRsZWQgd2l0aCBhIGdvdG8gc3RhdGVtZW50Lgo+
+ICogMCBpcyBub3QgYSB2YWxpZCBpbnRlcnJ1cHQsIHRha2UgdGhpcyBpbnRvIGFjY291bnQgZHVy
+aW5nIHZhcmlhYmxlcwo+ICAgdmFsaWRhdGlvbi4KPgo+IENoYW5nZXMgKm5vdCogYWRkcmVzc2Vk
+IHNpbmNlIHYyOgo+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKiBPdmVyaGVh
+dCBpbnRlcnJ1cHQgY29uZmlndXJhdGlvbiBoYXMgY2VydGFpbiBsaW1pdGF0aW9ucyBvbiB3aGlj
+aAo+ICAgTWFyYyBhc2tlZCBxdWVzdGlvbnMuIEkgZG9uJ3Qga25vdyBpZi93aGF0IEkgbmVlZCB0
+byBjaGFuZ2Ugc28KPiAgIGtlZXBpbmcgaXQgbGlrZSB0aGlzIGZvciB0aGlzIHZlcnNpb24uCj4g
+KiBFZHVhcmRvIHBvaW50ZWQgdGhhdCBvbmNlIGEgY3JpdGljYWwgbGV2ZWwgaGFzIGJlZW4gcmVh
+Y2hlZCwgdGhlcmUKPiAgIGlzIG5vIHdheSBiYWNrLCB0aGUgc3lzdGVtIHdpbGwgc2h1dGRvd24u
+IEkgZGVzaWduZWQgdGhlIGhhbmRsZXIgdG8KPiAgIHJlY292ZXIgZnJvbSB0aGF0IGFuZCB0byBl
+bmFibGUgdGhlIElSUSBhZ2FpbiBpZiBuZWVkZWQsIGJ1dCBtYXliZQo+ICAgdGhpcyBpcyB1c2Vs
+ZXNzIGFuZCBzaG91bGQgYmUgcmVtb3ZlZC4gV2hpbGUgd2FpdGluZyBmb3IgaGlzIGFuc3dlciwK
+PiAgIEkgYW0gc2VuZGluZyBhbm90aGVyIHZlcnNpb24gYW5kIHdpbGwgY29ycmVjdCBpbiBhIHY0
+IGlmIG5lZWRlZC4KPgo+IENoYW5nZXMgc2luY2UgdjE6Cj4gPT09PT09PT09PT09PT09PT0KPiAq
+IFVzZSBhIHRocmVhZGVkIElSUSBoYW5kbGVyIHRvIGF2b2lkIGEgcG90ZW50aWFsIGxvY2sgZGVw
+ZW5jeSB3aGVuCj4gICBub3RpZnlpbmcgdGhlIGNvcmUgb2YgYW4gb3ZlcmhlYXQgc2l0dWF0aW9u
+Lgo+Cj4KPiBNaXF1ZWwgUmF5bmFsICg2KToKPiAgIHRoZXJtYWw6IGFybWFkYTogYWRkIG92ZXJo
+ZWF0IGludGVycnVwdCBzdXBwb3J0Cj4gICBNQUlOVEFJTkVSUzogdGhlcm1hbDogYWRkIGVudHJ5
+IGZvciBNYXJ2ZWxsIE1WRUJVIHRoZXJtYWwgZHJpdmVyCj4gICBkdC1iaW5kaW5nczogYXA4MDY6
+IGRvY3VtZW50IHRoZSB0aGVybWFsIGludGVycnVwdCBjYXBhYmlsaXRpZXMKPiAgIGR0LWJpbmRp
+bmdzOiBjcDExMDogZG9jdW1lbnQgdGhlIHRoZXJtYWwgaW50ZXJydXB0IGNhcGFiaWxpdGllcwoK
+Cj4gICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBhZGQgaW50ZXJydXB0IHN1cHBvcnQgdG8gYXA4MDYg
+dGhlcm1hbCBub2RlCj4gICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBhZGQgaW50ZXJydXB0IHN1cHBv
+cnQgdG8gY3AxMTAgdGhlcm1hbCBub2RlCkJvdGggcGF0Y2hlcyBhcHBsaWVkIHRvIG12ZWJ1L2R0
+NjQKClRoYW5rcywKCkdyZWdvcnkKCgo+Cj4gIC4uLi9hcm0vbWFydmVsbC9hcDgwNi1zeXN0ZW0t
+Y29udHJvbGxlci50eHQgICB8ICAgNyArCj4gIC4uLi9hcm0vbWFydmVsbC9jcDExMC1zeXN0ZW0t
+Y29udHJvbGxlci50eHQgICB8ICAgOSArCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgNSArCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9h
+cm1hZGEtYXA4MDYuZHRzaSB8ICAxOCArLQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwv
+YXJtYWRhLWNwMTEwLmR0c2kgfCAgMTUgKy0KPiAgZHJpdmVycy90aGVybWFsL2FybWFkYV90aGVy
+bWFsLmMgICAgICAgICAgICAgIHwgMjcwICsrKysrKysrKysrKysrKysrLQo+ICA2IGZpbGVzIGNo
+YW5nZWQsIDMxNyBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQo+Cj4gLS0gCj4gMi4xOS4x
+Cj4KCi0tIApHcmVnb3J5IENsZW1lbnQsIEJvb3RsaW4KRW1iZWRkZWQgTGludXggYW5kIEtlcm5l
+bCBlbmdpbmVlcmluZwpodHRwOi8vYm9vdGxpbi5jb20KCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
