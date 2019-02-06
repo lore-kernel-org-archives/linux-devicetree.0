@@ -1,52 +1,61 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 1/7] dt-bindings: interconnect: Add a dma interconnect name
-Date: Wed,  6 Feb 2019 20:41:18 +0100
-Message-ID: <43eeca13733faefe62f9facc25b8e88f7e593f61.1549482066.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 2/7] dt-bindings: bus: Add binding for the Allwinner MBUS
+ controller
+Date: Wed,  6 Feb 2019 20:41:19 +0100
+Message-ID: <e0b7321cd02716dc2ce1d0ec373ad81980e5be33.1549482066.git-series.maxime.ripard@bootlin.com>
 References: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The current DT bindings assume that the DMA will be performed by the
-devices through their parent DT node, and rely on that assumption for the
-address translation using dma-ranges.
-
-However, some SoCs have devices that will perform DMA through another bus,
-with separate address translation rules. We therefore need to express that
-relationship, through the special interconnect name "dma".
-
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- Documentation/devicetree/bindings/interconnect/interconnect.txt | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-index 5a3c575b387a..e69fc2d992c3 100644
---- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-+++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-@@ -51,6 +51,9 @@ interconnect-names : List of interconnect path name strings sorted in the same
- 		     interconnect-names to match interconnect paths with interconnect
- 		     specifier pairs.
- 
-+                     Reserved interconnect names:
-+                         * dma: Path from the device to the main memory of the system
-+
- Example:
- 
- 	sdhci@7864000 {
--- 
-git-series 0.9.1
+VGhlIE1CVVMgY29udHJvbGxlciBkcml2ZXMgdGhlIE1CVVMgdGhhdCBvdGhlciBkZXZpY2VzIGlu
+IHRoZSBTb0Mgd2lsbAp1c2UgdG8gcGVyZm9ybSBETUEuIEl0IGFsc28gaGFzIGEgcmVnaXN0ZXIg
+aW50ZXJmYWNlIHRoYXQgYWxsb3dzIHRvCm1vbml0b3IgYW5kIGNvbnRyb2wgdGhlIGJhbmR3aWR0
+aCBhbmQgcHJpb3JpdGllcyBmb3IgbWFzdGVycyBvbiB0aGF0CmJ1cy4KClNpZ25lZC1vZmYtYnk6
+IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+Ci0tLQogRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zdW54aS9zdW54aS1tYnVzLnR4dCB8IDM2ICsr
+KysrKystCiAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vc3VueGkvc3VueGktbWJ1
+cy50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
+L3N1bnhpL3N1bnhpLW1idXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2FybS9zdW54aS9zdW54aS1tYnVzLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAw
+MDAwMDAwMDAuLmJkNGI5MDQ3NzYxMAotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vc3VueGkvc3VueGktbWJ1cy50eHQKQEAgLTAsMCArMSwz
+NiBAQAorQWxsd2lubmVyIE1lbW9yeSBCdXMgKE1CVVMpIGNvbnRyb2xsZXIKKworVGhlIE1CVVMg
+Y29udHJvbGxlciBkcml2ZXMgdGhlIE1CVVMgdGhhdCBvdGhlciBkZXZpY2VzIGluIHRoZSBTb0Mg
+d2lsbAordXNlIHRvIHBlcmZvcm0gRE1BLiBJdCBhbHNvIGhhcyBhIHJlZ2lzdGVyIGludGVyZmFj
+ZSB0aGF0IGFsbG93cyB0bworbW9uaXRvciBhbmQgY29udHJvbCB0aGUgYmFuZHdpZHRoIGFuZCBw
+cmlvcml0aWVzIGZvciBtYXN0ZXJzIG9uIHRoYXQKK2J1cy4KKworUmVxdWlyZWQgcHJvcGVydGll
+czoKKyAtIGNvbXBhdGlibGU6IE11c3QgYmUgb25lIG9mOgorCS0gYWxsd2lubmVyLHN1bjVpLWEx
+My1tYnVzCisgLSByZWc6IE9mZnNldCBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9y
+IHRoZSBjb250cm9sbGVyCisgLSBjbG9ja3M6IHBoYW5kbGUgdG8gdGhlIGNsb2NrIGRyaXZpbmcg
+dGhlIGNvbnRyb2xsZXIKKyAtIGRtYS1yYW5nZXM6IHNlZSBib290aW5nLXdpdGhvdXQtb2YudHh0
+CisgLSAjaW50ZXJjb25uZWN0LWNlbGxzOiBNdXN0IGJlIG9uZSwgd2l0aCB0aGUgYXJndW1lbnQg
+YmVpbmcgdGhlIE1CVVMKKyAgIHBvcnQgSUQKKworRWFjaCBkZXZpY2UgaGF2aW5nIHRvIHBlcmZv
+cm0gdGhlaXIgRE1BIHRocm91Z2ggdGhlIE1CVVMgbXVzdCBoYXZlIHRoZQoraW50ZXJjb25uZWN0
+cyBhbmQgaW50ZXJjb25uZWN0LW5hbWVzIHByb3BlcnRpZXMgc2V0IHRvIHRoZSBNQlVTCitjb250
+cm9sbGVyIGFuZCB3aXRoICJkbWEiIGFzIHRoZSBpbnRlcmNvbm5lY3QgbmFtZS4KKworRXhhbXBs
+ZToKKworbWJ1czogZHJhbS1jb250cm9sbGVyQDFjMDEwMDAgeworCWNvbXBhdGlibGUgPSAiYWxs
+d2lubmVyLHN1bjVpLWExMy1tYnVzIjsKKwlyZWcgPSA8MHgwMWMwMTAwMCAweDEwMDA+OworCWNs
+b2NrcyA9IDwmY2N1IENMS19NQlVTPjsKKwlkbWEtcmFuZ2VzID0gPDB4MDAwMDAwMDAgMHg0MDAw
+MDAwMCAweDIwMDAwMDAwPjsKKwkjZG1hLXBhcmVudC1jZWxscyA9IDwxPjsKK307CisKK2ZlMDog
+ZGlzcGxheS1mcm9udGVuZEAxZTAwMDAwIHsKKwljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW41
+aS1hMTMtZGlzcGxheS1mcm9udGVuZCI7CisJLi4uCisJaW50ZXJjb25uZWN0cyA9IDwmbWJ1cyAx
+OT47CisJaW50ZXJjb25uZWN0LW5hbWVzID0gImRtYSI7Cit9OwotLSAKZ2l0LXNlcmllcyAwLjku
+MQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
