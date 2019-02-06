@@ -1,85 +1,143 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] mmc: sunxi: Filter out unsupported
- modes declared in the device tree
-Date: Wed, 6 Feb 2019 16:14:33 +0100
-Message-ID: <CAPDyKFoZYY4O_eXExvZQvJcnyHLc+JfQMbDmUe9mxJwR6QtchA@mail.gmail.com>
-References: <20190205154225.14264-1-wens@csie.org> <20190205154225.14264-3-wens@csie.org>
-Reply-To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/9] qcom: ssbi-gpio: add support for hierarchical IRQ chip
+Date: Wed, 6 Feb 2019 16:21:20 +0100
+Message-ID: <CACRpkdbKGfupo6uWukYQ-+zsfyS8rbU4v96HBxCgbJi5OhA83g@mail.gmail.com>
+References: <20190125162302.14036-1-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDF57NG2XIHRB7XT5PRAKGQEPD4TGSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190205154225.14264-3-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chris Blake <chrisrblake93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "# 4.0+" <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190125162302.14036-1-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 5 Feb 2019 at 16:42, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> The MMC device tree bindings include properties used to signal various
-> signalling speed modes. Until now the sunxi driver was accepting them
-> without any further filtering, while the sunxi device trees were not
-> actually using them.
->
-> Since some of the H5 boards can not run at higher speed modes stably,
-> we are resorting to declaring the higher speed modes per-board.
->
-> Regardless, having boards declare modes and blindly following them,
-> even without proper support in the driver, is generally a bad thing.
->
-> Filter out all unsupported modes from the capabilities mask after
-> the device tree properties have been parsed.
->
-> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
+On Fri, Jan 25, 2019 at 5:23 PM Brian Masney <masneyb@onstation.org> wrote:
 
-Applied for fixes, thanks!
+> This patch series adds hierarchical IRQ chip support to ssbi-gpio so
+> that device tree consumers can request an IRQ directly from the GPIO
+> block rather than having to request an IRQ from the underlying PMIC.
 
-Kind regards
-Uffe
+I had to apply the patch I just sent out:
+"genirq: introduce irq_chip_mask_ack_parent()"
+and then the following diff to make things work. But after that:
+Tested-by: Linus Walleij <linus.walleij@linaro.org>
+It works like a charm on the APQ8060 DragonBoard!
+
+I would recommend you just fold the below into your series
+and add the extra patch for genirq to your patch stack.
+
+>From 14569f7901cfe84221ed775ba63b09b32277de62 Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 6 Feb 2019 16:19:32 +0100
+Subject: [PATCH] qcom hierarchy: fixup hacks
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/mfd/qcom-pm8xxx.c                | 19 ++++---------------
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c |  8 ++++----
+ 2 files changed, 8 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+index a976890c4019..2ee3b075cd0e 100644
+--- a/drivers/mfd/qcom-pm8xxx.c
++++ b/drivers/mfd/qcom-pm8xxx.c
+@@ -82,8 +82,9 @@ struct pm_irq_chip {
+  struct irq_domain *irqdomain;
+  unsigned int num_blocks;
+  unsigned int num_masters;
+- u8 config[0];
+  const struct pm_irq_data *pm_irq_data;
++ /* MUST BE AT THE END OF THIS STRUCT */
++ u8 config[0];
+ };
+
+ static int pm8xxx_read_block_irq(struct pm_irq_chip *chip, unsigned int bp,
+@@ -303,7 +304,6 @@ static int pm8xxx_irq_set_type(struct irq_data *d,
+unsigned int flow_type)
+ {
+  struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
+  unsigned int pmirq = irqd_to_hwirq(d);
+- irq_flow_handler_t flow_handler;
+  int irq_bit;
+  u8 block, config;
+
+@@ -317,8 +317,6 @@ static int pm8xxx_irq_set_type(struct irq_data *d,
+unsigned int flow_type)
+  chip->config[pmirq] &= ~PM_IRQF_MASK_RE;
+  if (flow_type & IRQF_TRIGGER_FALLING)
+  chip->config[pmirq] &= ~PM_IRQF_MASK_FE;
+-
+- flow_handler = handle_edge_irq;
+  } else {
+  chip->config[pmirq] |= PM_IRQF_LVL_SEL;
+
+@@ -326,11 +324,9 @@ static int pm8xxx_irq_set_type(struct irq_data
+*d, unsigned int flow_type)
+  chip->config[pmirq] &= ~PM_IRQF_MASK_RE;
+  else
+  chip->config[pmirq] &= ~PM_IRQF_MASK_FE;
+-
+- flow_handler = handle_level_irq;
+  }
+
+- irq_set_handler_locked(d, flow_handler);
++ irq_set_handler_locked(d, handle_level_irq);
+
+  config = chip->config[pmirq] | PM_IRQF_CLR;
+  return pm8xxx_config_irq(chip, block, config);
+@@ -386,15 +382,8 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip *chip,
+    struct irq_domain *domain, unsigned int irq,
+    irq_hw_number_t hwirq, unsigned int type)
+ {
+- irq_flow_handler_t handler;
+-
+- if (type & IRQ_TYPE_EDGE_BOTH)
+- handler = handle_edge_irq;
+- else
+- handler = handle_level_irq;
+-
+  irq_domain_set_info(domain, irq, hwirq, chip->pm_irq_data->irq_chip,
+-     chip, handler, NULL, NULL);
++     chip, handle_level_irq, NULL, NULL);
+  irq_set_noprobe(irq);
+ }
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+index d4847f42f52f..e2509f26be4c 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+@@ -696,8 +696,7 @@ static int pm8xxx_pin_populate(struct pm8xxx_gpio *pctrl,
+
+ static struct irq_chip pm8xxx_irq_chip = {
+  .name = "ssbi-gpio",
+- .irq_mask = irq_chip_mask_parent,
+- .irq_ack = irq_chip_ack_parent,
++ .irq_mask_ack = irq_chip_mask_ack_parent,
+  .irq_unmask = irq_chip_unmask_parent,
+  .irq_set_type = irq_chip_set_type_parent,
+  .flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE,
+@@ -781,13 +780,14 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
+  struct pinctrl_pin_desc *pins;
+  struct pm8xxx_gpio *pctrl;
+  int ret;
+- int i, npins;
++ int i;
+
+  pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
+  if (!pctrl)
+  return -ENOMEM;
+
+- npins = (uintptr_t) device_get_match_data(&pdev->dev);
++ pctrl->dev = &pdev->dev;
++ pctrl->npins = (uintptr_t) device_get_match_data(&pdev->dev);
+
+  pctrl->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+  if (!pctrl->regmap) {
+-- 
+2.20.1
 
 
-> ---
->
-> This should be backported to stable kernels in case people try to run
-> new device trees (that declare newly supported modes) with old kernels.
-> ---
->  drivers/mmc/host/sunxi-mmc.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
-> index 7415af8c8ff6..70fadc976795 100644
-> --- a/drivers/mmc/host/sunxi-mmc.c
-> +++ b/drivers/mmc/host/sunxi-mmc.c
-> @@ -1415,6 +1415,21 @@ static int sunxi_mmc_probe(struct platform_device *pdev)
->         if (ret)
->                 goto error_free_dma;
->
-> +       /*
-> +        * If we don't support delay chains in the SoC, we can't use any
-> +        * of the higher speed modes. Mask them out in case the device
-> +        * tree specifies the properties for them, which gets added to
-> +        * the caps by mmc_of_parse() above.
-> +        */
-> +       if (!(host->cfg->clk_delays || host->use_new_timings)) {
-> +               mmc->caps &= ~(MMC_CAP_3_3V_DDR | MMC_CAP_1_8V_DDR |
-> +                              MMC_CAP_1_2V_DDR | MMC_CAP_UHS);
-> +               mmc->caps2 &= ~MMC_CAP2_HS200;
-> +       }
-> +
-> +       /* TODO: This driver doesn't support HS400 mode yet */
-> +       mmc->caps2 &= ~MMC_CAP2_HS400;
-> +
->         ret = sunxi_mmc_init_host(host);
->         if (ret)
->                 goto error_free_dma;
-> --
-> 2.20.1
->
+Yours,
+Linus Walleij
