@@ -1,57 +1,38 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v13 13/13] media: MAINTAINERS: add entry for Freescale i.MX7
- media driver
-Date: Wed,  6 Feb 2019 10:25:22 +0000
-Message-ID: <20190206102522.29212-14-rui.silva@linaro.org>
-References: <20190206102522.29212-1-rui.silva@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20190206102522.29212-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH v4 0/1] Thermal throttling for SDM845
+Date: Wed,  6 Feb 2019 16:04:48 +0530
+Message-ID: <cover.1549448839.git.amit.kucheria@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add maintainer entry for the imx7 media csi, mipi csis driver,
-dt-bindings and documentation.
+Only one patch left in this series. This patch depends on [1] and [2] which have been merged through by Rafael through the power tree.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Changes since v3:
+ - first trip point increased to 90 degrees based on Matthias' testing
+ - Added Acks
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e211916d2bc..d8e0c9040736 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9348,6 +9348,17 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/platform/imx-pxp.[ch]
- 
-+MEDIA DRIVERS FOR FREESCALE IMX7
-+M:	Rui Miguel Silva <rmfrfs@gmail.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/imx7-csi.txt
-+F:	Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
-+F:	Documentation/media/v4l-drivers/imx7.rst
-+F:	drivers/staging/media/imx/imx7-media-csi.c
-+F:	drivers/staging/media/imx/imx7-mipi-csis.c
-+
- MEDIA DRIVERS FOR HELENE
- M:	Abylay Ospan <aospan@netup.ru>
- L:	linux-media@vger.kernel.org
+Changes since v2:
+ - Split up the series into auto-register series for cpufreq[1] and
+   miscellaneous patches[2][3]. [1] and [2] are needed for this patch to
+   work.
+ - Merged the two DT patches into one. We end up with 2 passive and 1
+   critical trip point.
+ - Remove unncessary cooling map for critical trip point, we're shutting down at
+   that trip, duh!
+
+ [1] https://lore.kernel.org/lkml/cover.1548084260.git.amit.kucheria@linaro.org/
+ [2] https://lore.kernel.org/patchwork/patch/1033953/
+ [3] https://lore.kernel.org/patchwork/cover/1033970/
+
+Amit Kucheria (1):
+  arm64: dts: sdm845: wireup the thermal trip points to cpufreq
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 241 ++++++++++++++++++++++++---
+ 1 file changed, 217 insertions(+), 24 deletions(-)
+
 -- 
-2.20.1
+2.17.1
