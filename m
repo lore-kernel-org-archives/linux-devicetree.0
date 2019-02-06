@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v14 11/13] media: staging/imx: add i.MX7 entries to TODO file
-Date: Wed,  6 Feb 2019 15:13:26 +0000
-Message-ID: <20190206151328.21629-12-rui.silva@linaro.org>
+Subject: [PATCH v14 06/13] ARM: dts: imx7s: add mipi phy power domain
+Date: Wed,  6 Feb 2019 15:13:21 +0000
+Message-ID: <20190206151328.21629-7-rui.silva@linaro.org>
 References: <20190206151328.21629-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,30 +21,33 @@ To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add some i.MX7 related entries to TODO file.
+Add power domain index 0 related with mipi-phy to imx7s.
+
+While at it rename pcie power-domain node to remove pgc prefix.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/staging/media/imx/TODO | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/imx/TODO b/drivers/staging/media/imx/TODO
-index aeeb15494a49..6f29b5ca5324 100644
---- a/drivers/staging/media/imx/TODO
-+++ b/drivers/staging/media/imx/TODO
-@@ -45,3 +45,12 @@
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index e88f53a4c7f4..9a680d3d6424 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -606,7 +606,13 @@
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
  
-      Which means a port must not contain mixed-use endpoints, they
-      must all refer to media links between V4L2 subdevices.
+-					pgc_pcie_phy: pgc-power-domain@1 {
++					pgc_mipi_phy: power-domain@0 {
++						#power-domain-cells = <0>;
++						reg = <0>;
++						power-supply = <&reg_1p0d>;
++					};
 +
-+- i.MX7: all of the above, since it uses the imx media core
-+
-+- i.MX7: use Frame Interval Monitor
-+
-+- i.MX7: runtime testing with parallel sensor, links setup and streaming
-+
-+- i.MX7: runtime testing with different formats, for the time only 10-bit bayer
-+  is tested
++					pgc_pcie_phy: power-domain@1 {
+ 						#power-domain-cells = <0>;
+ 						reg = <1>;
+ 						power-supply = <&reg_1p0d>;
 -- 
 2.20.1
