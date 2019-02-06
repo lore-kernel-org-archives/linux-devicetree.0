@@ -1,45 +1,77 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v3 6/7] ARM64: dts: marvell: armada-37xx: declare SATA
- clock
-Date: Wed, 06 Feb 2019 10:46:32 +0100
-Message-ID: <8736p18d1j.fsf@FE-laptop>
-References: <20181204192831.12440-1-miquel.raynal@bootlin.com>
- <20181204192831.12440-7-miquel.raynal@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/9] mfd: pm8xxx: convert to v2 irq interfaces to support
+ hierarchical IRQ chips
+Date: Wed, 6 Feb 2019 11:02:08 +0100
+Message-ID: <CACRpkdYuH6QnumRnAUbzJCwrj58mog68FJu6Tvi_48bLzsBbZg@mail.gmail.com>
+References: <20190125162302.14036-1-masneyb@onstation.org> <20190125162302.14036-4-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204192831.12440-7-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190125162302.14036-4-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlxdWVsLAogCiBPbiBtYXIuLCBkw6ljLiAwNCAyMDE4LCBNaXF1ZWwgUmF5bmFsIDxtaXF1
-ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZToKCj4gVGhlIFNBVEEgSVAgZ2V0IGl0cyBjbG9j
-ayBmcm9tIHRoZSBub3J0aC1icmlkZ2UuCj4KPiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFs
-IDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgoKQXBwbGllZCB0byBtdmVidS9kdDY0CgpUaGFu
-a3MsCgpHcmVnb3J5Cj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEt
-Mzd4eC5kdHNpIHwgMSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+Cj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtMzd4eC5kdHNpIGIv
-YXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS0zN3h4LmR0c2kKPiBpbmRleCAwMzZk
-NmZkNmM5ZWYuLjY1YmY3NzQ1MTZlYyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L21hcnZlbGwvYXJtYWRhLTM3eHguZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFy
-dmVsbC9hcm1hZGEtMzd4eC5kdHNpCj4gQEAgLTM4OSw2ICszODksNyBAQAo+ICAJCQkJY29tcGF0
-aWJsZSA9ICJtYXJ2ZWxsLGFybWFkYS0zNzAwLWFoY2kiOwo+ICAJCQkJcmVnID0gPDB4ZTAwMDAg
-MHgxNzg+Owo+ICAJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI3IElSUV9UWVBFX0xFVkVMX0hJ
-R0g+Owo+ICsJCQkJY2xvY2tzID0gPCZuYl9wZXJpcGhfY2xrIDE+Owo+ICAJCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsKPiAgCQkJfTsKPiAgCj4gLS0gCj4gMi4xOS4xCj4KCi0tIApHcmVnb3J5IENs
-ZW1lbnQsIEJvb3RsaW4KRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRw
-Oi8vYm9vdGxpbi5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Brian!
+
+Thanks for this patch!
+
+On Fri, Jan 25, 2019 at 5:23 PM Brian Masney <masneyb@onstation.org> wrote:
+
+> The IRQ handler was hardcoded as handle_level_irq and this patch
+> properly sets the handler to either handle_edge_irq or handle_level_irq
+> depending on the IRQ type.
+
+Done like so:
+
+> +               flow_handler = handle_edge_irq;
+
+This creates a problem and makes my kernel crash, because
+handle_edge_irq() *unconditionally* calls chip->irq_ack(),
+and since this chip does not implement .irq_ack(), it crashes.
+
+I tried to just add a void .irq_ack(). That instead made the
+kernel hang.
+
+If I just assign handle_level_irq() as before (just replaced
+all assignments of handle_edge_irq with handle_level_irq)
+it boots nicely, AND the interrupts are working fine on the
+ADC calibration path, and further readings of the ADC
+generates new IRQs, as expected!
+
+The handle_edge_irq and .irq_ack() call path is for hardware
+that require an explicit ACK (such as writing a bit in some
+register) when handling edge IRQs. This is necessary in some
+hardware because of the transient nature of edge IRQs.
+This is not necessary on some hardware that will simply
+clear the flag when something is reading the status register.
+I think this is the case with PM8xxx and you can safely use
+handle_level_irq with all IRQs. It looks counterintuitive and
+maybe the function handle_edge_irq() has a stupid name.
+Just drop this handle_edge_irq() business for now.
+
+This was tested on the APQ8060 DragonBoard.
+
+However this happens:
+
+[    3.007727] mmci-pl18x 12180000.sdcc: ignoring dependency for
+device, assuming no driver
+[    3.007970] mmci-pl18x 12200000.sdcc: ignoring dependency for
+device, assuming no driver
+[    3.014984] mpu3050-i2c 1-0068: ignoring dependency for device,
+assuming no driver
+[    3.023543] cm3605 cm3605: ignoring dependency for device, assuming no driver
+[    3.030532] ak8975 1-000c: ignoring dependency for device, assuming no driver
+[    3.037729] bmp280 1-0077: ignoring dependency for device, assuming no driver
+[    3.044789] reg-fixed-voltage regulators:xc622a331mrg: ignoring
+dependency for device, assuming no driver
+[    3.052485] smsc911x 1b800000.ethernet-ebi2: ignoring dependency
+for device, assuming no driver
+
+But I think that is because these all use ssbi-gpio interrupts and
+these are now handled properly so I will try to fix the device
+tree and send a separate patch that you can include.
+
+Yours,
+Linus Walleij
