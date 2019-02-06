@@ -1,110 +1,66 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v2 1/7] pinctrl: at91: add option to use drive strength
- bits
-Date: Wed, 6 Feb 2019 13:46:01 +0000
-Message-ID: <8880dfa2-4bbd-d3c8-b692-180555636926@microchip.com>
-References: <1548951466-26297-1-git-send-email-claudiu.beznea@microchip.com>
- <1548951466-26297-2-git-send-email-claudiu.beznea@microchip.com>
- <20190206081304.cv344rjzvz7wzih5@M43218.corp.atmel.com>
- <f0022bfc-6deb-de77-857c-c70d41f4fc78@microchip.com>
- <20190206102406.r45rb5bfjk2j45dr@M43218.corp.atmel.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v1 1/4] clk: qcom: smd: Add XO clock for MSM8998
+Date: Wed, 6 Feb 2019 15:55:08 +0200
+Message-ID: <40ae31ba-7464-22c2-5782-a225d0f17b3b@linaro.org>
+References: <1548866102-30224-1-git-send-email-jhugo@codeaurora.org>
+ <1548866144-30265-1-git-send-email-jhugo@codeaurora.org>
+ <154940408967.169292.15276398799323074789@swboyd.mtv.corp.google.com>
+ <6e62a49a-fdb1-a087-fe83-e86aed969ae7@codeaurora.org>
+ <154940592132.169292.15811923452101983358@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190206102406.r45rb5bfjk2j45dr@M43218.corp.atmel.com>
+In-Reply-To: <154940592132.169292.15811923452101983358@swboyd.mtv.corp.google.com>
 Content-Language: en-US
-Content-ID: <85B05BE69312EF4B81D66117CB99F4F1@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, bjorn.andersson@linaro.org, mturquette@baylibre.com
+Cc: marc.w.gonzalez@free.fr, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA2LjAyLjIwMTkgMTI6MjQsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPiBPbiBX
-ZWQsIEZlYiAwNiwgMjAxOSBhdCAwOTo0NjoyOEFNICswMDAwLCBDbGF1ZGl1LkJlem5lYUBtaWNy
-b2NoaXAuY29tIHdyb3RlOg0KPj4NCj4+DQo+PiBPbiAwNi4wMi4yMDE5IDEwOjEzLCBMdWRvdmlj
-IERlc3JvY2hlcyB3cm90ZToNCj4+PiBPbiBUaHUsIEphbiAzMSwgMjAxOSBhdCAwNToxODowNFBN
-ICswMTAwLCBDbGF1ZGl1IEJlem5lYSAtIE0xODA2MyB3cm90ZToNCj4+Pj4gRnJvbTogQ2xhdWRp
-dSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+Pj4+DQo+Pj4+IFNBTTlY
-NjAgdXNlcyBoaWdoIGFuZCBsb3cgZHJpdmUgc3RyZW5ndGhzLiBUbyBpbXBsZW1lbnQgdGhpcywg
-aW4NCj4+Pj4gYXQ5MV9waW5jdHJsX211eF9vcHM6OnNldF9kcml2ZXN0cmVuZ3RoIGFuZA0KPj4+
-PiBhdDkxX3BpbmN0cmxfbXV4X29wczo6Z2V0X2RyaXZlc3RyZW5ndGggd2UgbmVlZCBiaXQgbnVt
-YmVycyBvZg0KPj4+PiBkcml2ZSBzdHJlbmd0aHMgKDEgZm9yIGxvdywgMiBmb3IgaGlnaCksIHRo
-dXMgY2hhbmdlIHRoZSBjb2RlIHRvDQo+Pj4+IGFsbG93IHRoZSB1c2FnZSBvZiBkcml2ZSBzdHJl
-bmd0aCBiaXQgbnVtYmVycy4NCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpu
-ZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+Pj4+IC0tLQ0KPj4+PiAgZHJpdmVy
-cy9waW5jdHJsL3BpbmN0cmwtYXQ5MS5jIHwgMzIgKysrKysrKysrKysrKysrKysrKystLS0tLS0t
-LS0tLS0NCj4+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlv
-bnMoLSkNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLWF0
-OTEuYyBiL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLWF0OTEuYw0KPj4+PiBpbmRleCAzZDQ5YmJi
-Y2RiYzcuLjMxZjA2ZGFmY2EyZSAxMDA2NDQNCj4+Pj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3Bp
-bmN0cmwtYXQ5MS5jDQo+Pj4+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLWF0OTEuYw0K
-Pj4+PiBAQCAtNzIsMTAgKzcyLDE1IEBAIHN0YXRpYyBpbnQgZ3Bpb19iYW5rczsNCj4+Pj4gICAq
-IERSSVZFX1NUUkVOR1RIX0RFRkFVTFQgaXMganVzdCBhIHBsYWNlaG9sZGVyIHRvIGF2b2lkIGNo
-YW5naW5nIHRoZSBkcml2ZQ0KPj4+PiAgICogc3RyZW5ndGggd2hlbiB0aGVyZSBpcyBubyBkdCBj
-b25maWcgZm9yIGl0Lg0KPj4+PiAgICovDQo+Pj4+IC0jZGVmaW5lIERSSVZFX1NUUkVOR1RIX0RF
-RkFVTFQJCSgwIDw8IERSSVZFX1NUUkVOR1RIX1NISUZUKQ0KPj4+PiAtI2RlZmluZSBEUklWRV9T
-VFJFTkdUSF9MT1cgICAgICAgICAgKDEgPDwgRFJJVkVfU1RSRU5HVEhfU0hJRlQpDQo+Pj4+IC0j
-ZGVmaW5lIERSSVZFX1NUUkVOR1RIX01FRCAgICAgICAgICAoMiA8PCBEUklWRV9TVFJFTkdUSF9T
-SElGVCkNCj4+Pj4gLSNkZWZpbmUgRFJJVkVfU1RSRU5HVEhfSEkgICAgICAgICAgICgzIDw8IERS
-SVZFX1NUUkVOR1RIX1NISUZUKQ0KPj4+PiArZW51bSBkcml2ZV9zdHJlbmd0aF9iaXQgew0KPj4+
-PiArCURSSVZFX1NUUkVOR1RIX0JJVF9ERUYsDQo+Pj4+ICsJRFJJVkVfU1RSRU5HVEhfQklUX0xP
-VywNCj4+Pj4gKwlEUklWRV9TVFJFTkdUSF9CSVRfTUVELA0KPj4+PiArCURSSVZFX1NUUkVOR1RI
-X0JJVF9ISSwNCj4+Pj4gK307DQo+Pj4+ICsNCj4+Pj4gKyNkZWZpbmUgRFJJVkVfU1RSRU5HVEhf
-QklUX01TSyhuYW1lKQkoRFJJVkVfU1RSRU5HVEhfQklUXyMjbmFtZSA8PCBcDQo+Pj4+ICsJCQkJ
-CSBEUklWRV9TVFJFTkdUSF9TSElGVCkNCj4+Pj4gIA0KPj4+PiAgLyoqDQo+Pj4+ICAgKiBzdHJ1
-Y3QgYXQ5MV9wbXhfZnVuYyAtIGRlc2NyaWJlcyBBVDkxIHBpbm11eCBmdW5jdGlvbnMNCj4+Pj4g
-QEAgLTU1MSw3ICs1NTYsNyBAQCBzdGF0aWMgdW5zaWduZWQgYXQ5MV9tdXhfc2FtYTVkM19nZXRf
-ZHJpdmVzdHJlbmd0aCh2b2lkIF9faW9tZW0gKnBpbywNCj4+Pj4gIAkvKiBTQU1BNSBzdHJlbmd0
-aCBpcyAxOjEgd2l0aCBvdXIgZGVmaW5lcywNCj4+Pj4gIAkgKiBleGNlcHQgMCBpcyBlcXVpdmFs
-ZW50IHRvIGxvdyBwZXIgZGF0YXNoZWV0ICovDQo+Pj4+ICAJaWYgKCF0bXApDQo+Pj4+IC0JCXRt
-cCA9IERSSVZFX1NUUkVOR1RIX0xPVzsNCj4+Pj4gKwkJdG1wID0gRFJJVkVfU1RSRU5HVEhfQklU
-X01TSyhMT1cpOw0KPj4+PiAgDQo+Pj4+ICAJcmV0dXJuIHRtcDsNCj4+Pj4gIH0NCj4+Pj4gQEAg
-LTU2NCw3ICs1NjksNyBAQCBzdGF0aWMgdW5zaWduZWQgYXQ5MV9tdXhfc2FtOXg1X2dldF9kcml2
-ZXN0cmVuZ3RoKHZvaWQgX19pb21lbSAqcGlvLA0KPj4+PiAgDQo+Pj4+ICAJLyogc3RyZW5ndGgg
-aXMgaW52ZXJzZSBpbiBTQU05eDVzIGhhcmR3YXJlIHdpdGggdGhlIHBpbmN0cmwgZGVmaW5lcw0K
-Pj4+PiAgCSAqIGhhcmR3YXJlOiAwID0gaGksIDEgPSBtZWQsIDIgPSBsb3csIDMgPSByc3ZkICov
-DQo+Pj4+IC0JdG1wID0gRFJJVkVfU1RSRU5HVEhfSEkgLSB0bXA7DQo+Pj4+ICsJdG1wID0gRFJJ
-VkVfU1RSRU5HVEhfQklUX01TSyhISSkgLSB0bXA7DQo+Pj4+ICANCj4+Pj4gIAlyZXR1cm4gdG1w
-Ow0KPj4+PiAgfQ0KPj4+PiBAQCAtNjAwLDcgKzYwNSw3IEBAIHN0YXRpYyB2b2lkIGF0OTFfbXV4
-X3NhbTl4NV9zZXRfZHJpdmVzdHJlbmd0aCh2b2lkIF9faW9tZW0gKnBpbywgdW5zaWduZWQgcGlu
-LA0KPj4+PiAgDQo+Pj4+ICAJLyogc3RyZW5ndGggaXMgaW52ZXJzZSBvbiBTQU05eDVzIHdpdGgg
-b3VyIGRlZmluZXMNCj4+Pj4gIAkgKiAwID0gaGksIDEgPSBtZWQsIDIgPSBsb3csIDMgPSByc3Zk
-ICovDQo+Pj4+IC0Jc2V0dGluZyA9IERSSVZFX1NUUkVOR1RIX0hJIC0gc2V0dGluZzsNCj4+Pj4g
-KwlzZXR0aW5nID0gRFJJVkVfU1RSRU5HVEhfQklUX01TSyhISSkgLSBzZXR0aW5nOw0KPj4+PiAg
-DQo+Pj4+ICAJc2V0X2RyaXZlX3N0cmVuZ3RoKHBpbyArIGF0OTFzYW05eDVfZ2V0X2RyaXZlX3Jl
-Z2lzdGVyKHBpbiksIHBpbiwNCj4+Pj4gIAkJCQlzZXR0aW5nKTsNCj4+Pj4gQEAgLTk1OSwxMSAr
-OTY0LDExIEBAIHN0YXRpYyBpbnQgYXQ5MV9waW5jb25mX3NldChzdHJ1Y3QgcGluY3RybF9kZXYg
-KnBjdGxkZXYsDQo+Pj4+ICAJfQkJCQkJXA0KPj4+PiAgfSB3aGlsZSAoMCkNCj4+Pj4gIA0KPj4+
-PiAtI2RlZmluZSBEQkdfU0hPV19GTEFHX01BU0tFRChtYXNrLGZsYWcpIGRvIHsJXA0KPj4+PiAr
-I2RlZmluZSBEQkdfU0hPV19GTEFHX01BU0tFRChtYXNrLGZsYWcsbmFtZSkgZG8gewlcDQo+Pj4N
-Cj4+PiBjaGVja3BhdGNoIGVycm9yOiBzcGFjZSByZXF1aXJlZA0KPj4NCj4+IEknbSBhd2FyZSBv
-ZiB0aGF0IGJ1dCBJIGFkZGVkIGl0IGluIHRoZSB3YXkgaXQgd2FzIHByZXZpb3VzbHkgKHdlcmUg
-dGhlDQo+PiBjaGVja3BhdGNoIGVycm9yIHdhcyBzdGlsbCBwcmVzZW50KS4gUGxlYXNlIGxldCBt
-ZSBrbm93IGlmIHlvdSB3YW50IG1lIHRvDQo+PiBzZW5kIGEgbmV3IHZlcnNpb24gZml4aW5nIHRo
-aXMuDQo+IA0KPiBJIHRoaW5rIGl0J3MgdGhlIG9wcG9ydHVuaXR5IHRvIGZpeCBpdC4gSWYgeW91
-IGNhbiByZXNlbmQgYSBuZXcgdmVyc2lvbg0KPiBpbmNsdWRpbmcgbXkgYWNrLg0KDQpTdXJlIQ0K
-DQpUaGFua3MsDQpDbGF1ZGl1DQoNCj4gDQo+IFJlZ2FyZHMNCj4gDQo+IEx1ZG92aWMNCj4gDQo+
-Pg0KPj4gVGhhbmsgeW91LA0KPj4gQ2xhdWRpdSBCZXpuZWENCj4+DQo+Pj4NCj4+Pj4gIAlpZiAo
-KGNvbmZpZyAmIG1hc2spID09IGZsYWcpIHsJCVwNCj4+Pj4gIAkJaWYgKG51bV9jb25mKQkJCVwN
-Cj4+Pj4gIAkJCXNlcV9wdXRzKHMsICJ8Iik7CVwNCj4+Pj4gLQkJc2VxX3B1dHMocywgI2ZsYWcp
-OwkJXA0KPj4+PiArCQlzZXFfcHV0cyhzLCAjbmFtZSk7CQlcDQo+Pj4+ICAJCW51bV9jb25mKys7
-CQkJXA0KPj4+PiAgCX0JCQkJCVwNCj4+Pj4gIH0gd2hpbGUgKDApDQo+Pj4+IEBAIC05ODEsOSAr
-OTg2LDEyIEBAIHN0YXRpYyB2b2lkIGF0OTFfcGluY29uZl9kYmdfc2hvdyhzdHJ1Y3QgcGluY3Ry
-bF9kZXYgKnBjdGxkZXYsDQo+Pj4+ICAJREJHX1NIT1dfRkxBRyhQVUxMX0RPV04pOw0KPj4+PiAg
-CURCR19TSE9XX0ZMQUcoRElTX1NDSE1JVCk7DQo+Pj4+ICAJREJHX1NIT1dfRkxBRyhERUdMSVRD
-SCk7DQo+Pj4+IC0JREJHX1NIT1dfRkxBR19NQVNLRUQoRFJJVkVfU1RSRU5HVEgsIERSSVZFX1NU
-UkVOR1RIX0xPVyk7DQo+Pj4+IC0JREJHX1NIT1dfRkxBR19NQVNLRUQoRFJJVkVfU1RSRU5HVEgs
-IERSSVZFX1NUUkVOR1RIX01FRCk7DQo+Pj4+IC0JREJHX1NIT1dfRkxBR19NQVNLRUQoRFJJVkVf
-U1RSRU5HVEgsIERSSVZFX1NUUkVOR1RIX0hJKTsNCj4+Pj4gKwlEQkdfU0hPV19GTEFHX01BU0tF
-RChEUklWRV9TVFJFTkdUSCwgRFJJVkVfU1RSRU5HVEhfQklUX01TSyhMT1cpLA0KPj4+PiArCQkJ
-ICAgICBEUklWRV9TVFJFTkdUSF9MT1cpOw0KPj4+PiArCURCR19TSE9XX0ZMQUdfTUFTS0VEKERS
-SVZFX1NUUkVOR1RILCBEUklWRV9TVFJFTkdUSF9CSVRfTVNLKE1FRCksDQo+Pj4+ICsJCQkgICAg
-IERSSVZFX1NUUkVOR1RIX01FRCk7DQo+Pj4+ICsJREJHX1NIT1dfRkxBR19NQVNLRUQoRFJJVkVf
-U1RSRU5HVEgsIERSSVZFX1NUUkVOR1RIX0JJVF9NU0soSEkpLA0KPj4+PiArCQkJICAgICBEUklW
-RV9TVFJFTkdUSF9ISSk7DQo+Pj4+ICAJREJHX1NIT1dfRkxBRyhERUJPVU5DRSk7DQo+Pj4+ICAJ
-aWYgKGNvbmZpZyAmIERFQk9VTkNFKSB7DQo+Pj4+ICAJCXZhbCA9IGNvbmZpZyA+PiBERUJPVU5D
-RV9WQUxfU0hJRlQ7DQo+Pj4+IC0tIA0KPj4+PiAyLjcuNA0KPj4+Pg0KPj4+DQo+PiBfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPj4gbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QNCj4+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-Zw0KPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsDQo+IA0K
+Hi Jeffrey,
+
+On 2/6/19 00:32, Stephen Boyd wrote:
+> Quoting Jeffrey Hugo (2019-02-05 14:15:16)
+>> On 2/5/2019 3:01 PM, Stephen Boyd wrote:
+>>> Quoting Jeffrey Hugo (2019-01-30 08:35:44)
+>>>> The XO clock generally feeds into other clock controllers as the parent
+>>>> for a lot of clock generators.
+>>>>
+>>>> Fixes: 6131dc81211c (clk: qcom: smd: Add support for MSM8998 rpm clocks)
+>>>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>>>
+>>> We've historically left out the XO clk because it causes problems where
+>>> the XO vote goes away during late init because nobody references it from
+>>> the rest of the clk tree and also because RPM defers probe of the system
+>>> and then the console blows up when it gets a clk that can't change rate.
+>>> See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
+>>> clocks") for some more info on why we removed all the workarounds and
+>>> stuff around here too.
+>>>
+>>> So are you sure this is OK to do?
+>>>   
+>>>
+>>
+>> So, I've got pretty much everything as modules, and I haven't seen any 
+>> issues.  However let me take a look at the commit you point out and see.
+>>
+> 
+> Is the name of the clk "xo_clk_src"? That isn't the name that we were
+> expecting the XO clk from RPM to be called. You might have to look back
+> at the history of the rpm clk driver on the list and see when Georgi
+> dropped the XO clk from it and if there was anything wrong with that. I
+> can't recall if this was discussed on the list or if he just told me in
+> some hallway conversation at Connect.
+
+The problem back then was the following: The RPM clock driver has
+various dependencies on other drivers (hwspinlock, smem, smd, rpmsg etc)
+and may probe defer multiple times during boot. Meanwhile the GCC clocks
+are registered as orphans, as their parent clock (RPM XO) is not there
+yet. And when some driver calls clk_get_rate() on an orphan clock, a
+bogus rate is returned. The consequence of this was that the serial
+console was broken, because of the baud rate being calculated based on
+this bogus clock rate.
+
+Thanks,
+Georgi
