@@ -1,100 +1,96 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 3/5] media: sunxi: Add A10 CSI driver
-Date: Wed, 6 Feb 2019 22:16:05 +0100
-Message-ID: <20190206211605.27cq2lxuv3gtyyux@flea>
-References: <cover.ba7411f0c7155d0292b38d3dec698e26b5cc813b.1548687041.git-series.maxime.ripard@bootlin.com>
- <c1a7d46f8504decb58ff224b0b5f2f0733282cc6.1548687041.git-series.maxime.ripard@bootlin.com>
- <20190129123949.qdmqnfaym3y42dvj@paasikivi.fi.intel.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH v4 1/2] dt-bindings: soc: fsl: Document Qixis FPGA usage
+Date: Wed, 6 Feb 2019 22:26:39 +0000
+Message-ID: <AM6PR04MB5863F3BE0D7C560F3DFECD618F6F0@AM6PR04MB5863.eurprd04.prod.outlook.com>
+References: <20190205153924.7204-1-pankaj.bansal@nxp.com>
+ <20190205153924.7204-2-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190129123949.qdmqnfaym3y42dvj@paasikivi.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190205153924.7204-2-pankaj.bansal@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pankaj Bansal <pankaj.bansal@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "open list : OPEN FIRMWARE AND
+ FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-Thanks for your review, I have a few questions though, and the rest
-will be addressed in the next version.
-
-On Tue, Jan 29, 2019 at 02:39:49PM +0200, Sakari Ailus wrote:
-> > +static int csi_notify_complete(struct v4l2_async_notifier *notifier)
-> > +{
-> > +	struct sun4i_csi *csi = container_of(notifier, struct sun4i_csi,
-> > +					     notifier);
-> > +	int ret;
-> > +
-> > +	ret = v4l2_device_register_subdev_nodes(&csi->v4l);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = sun4i_csi_v4l2_register(csi);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return media_create_pad_link(&csi->src_subdev->entity, csi->src_pad,
-> > +				     &csi->vdev.entity, 0,
-> > +				     MEDIA_LNK_FL_ENABLED |
-> > +				     MEDIA_LNK_FL_IMMUTABLE);
-> 
-> This appears to create a link directly from the sensor entity to the video
-> device entity. Is that intentional? I'd expect to see a CSI-2 receiver
-> sub-device as well, which I don't see being created by the driver.
-> 
-> This is indeed a novel proposal. I have some concerns though.
-> 
-> The user doesn't have access to the configured media bus format (reflecting
-> the format on the CSI-2 bus on receiver's side). It's thus difficult to
-> figure out whether the V4L2 pixel format configured on the video node
-> matches what the sensor outputs. Admittedly, we don't have a perfect
-> solution to that whenever the DMA hardware supports multiple V4L2 pixel
-> formats on a single media bus format. We might need to have a different
-> solution for this one, should it be without that receiver sub-device.
-> 
-> Could you add the CSI-2 receiver sub-device, please?
-
-Even though the name of the controller is *very* confusing, this isn't
-a MIPI-CSI receiver, but a parallel one that supports RGB and BT656
-buses.
-
-> > +	csi->pad.flags = MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_MUST_CONNECT;
-> 
-> Could you make it IMMUTABLE and ENABLED? If there is no need to disable it,
-> that is.
-
-The link is already created with those flags, and as far as I know it
-doesn't exist for the pads
-
-> > +static int csi_release(struct file *file)
-> > +{
-> > +	struct sun4i_csi *csi = video_drvdata(file);
-> > +	int ret;
-> > +
-> > +	mutex_lock(&csi->lock);
-> > +
-> > +	ret = v4l2_fh_release(file);
-> 
-> v4l2_fh_release() always returns 0. I guess it could be changed to return
-> void. The reason it has int is that it could be used as the release
-> callback as such.
-> 
-> > +	v4l2_pipeline_pm_use(&csi->vdev.entity, 0);
-> > +	pm_runtime_put(csi->dev);
-> > +
-> > +	mutex_unlock(&csi->lock);
-> > +
-> > +	return ret;
-> > +}
-
-Do you want me to change the construct then?
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFua2FqIEJhbnNhbA0K
+PiBTZW50OiBUdWVzZGF5LCBGZWJydWFyeSA1LCAyMDE5IDQ6MTUgQU0NCj4gVG86IExlbyBMaSA8
+bGVveWFuZy5saUBueHAuY29tPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1h
+cmsNCj4gUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+DQo+IENjOiBsaW51eHBwYy1kZXZA
+bGlzdHMub3psYWJzLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
+PiBvcGVuIGxpc3QgOiBPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFIFRSRUUgQklO
+RElOR1MNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgUGFua2FqIEJhbnNhbCA8cGFu
+a2FqLmJhbnNhbEBueHAuY29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjQgMS8yXSBkdC1iaW5kaW5n
+czogc29jOiBmc2w6IERvY3VtZW50IFFpeGlzIEZQR0EgdXNhZ2UNCj4gDQo+IGFuIEZQR0EtYmFz
+ZWQgc3lzdGVtIGNvbnRyb2xsZXIsIGNhbGxlZCDigJxRaXhpc+KAnSwgd2hpY2gNCj4gbWFuYWdl
+cyBzZXZlcmFsIGNyaXRpY2FsIHN5c3RlbSBmZWF0dXJlcywgaW5jbHVkaW5nOg0KPiDigKIgUmVz
+ZXQgc2VxdWVuY2luZw0KPiDigKIgUG93ZXIgc3VwcGx5IGNvbmZpZ3VyYXRpb24NCj4g4oCiIEJv
+YXJkIGNvbmZpZ3VyYXRpb24NCj4g4oCiIGhhcmR3YXJlIGNvbmZpZ3VyYXRpb24NCj4gDQo+IFRo
+ZSBxaXhpcyByZWdpc3RlcnMgYXJlIGFjY2Vzc2libGUgb3ZlciBvbmUgb3IgbW9yZSBzeXN0ZW0t
+c3BlY2lmaWMNCj4gaW50ZXJmYWNlcywgdHlwaWNhbGx5IEkyQywgSlRBRyBvciBhbiBlbWJlZGRl
+ZCBwcm9jZXNzb3IuDQoNCkluIHRoZW9yeSB0aGUgb24tYm9hcmQgRlBHQSBpcyBub3QgcGFydCBv
+ZiB0aGUgU29DLiAgVGhlIFFpeGlzIGRldmljZSBoYXMgYmVlbiBkZWZpbmVkIHByZXZpb3VzbHkg
+aW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2JvYXJkL2ZzbC1ib2FyZC50eHQg
+ZmlsZS4gIEFsdGhvdWdoIG5vcm1hbGx5IGJvYXJkIGJpbmRpbmdzIGFyZSBkZWZpbmVkIGluIGFy
+Y2hpdGVjdHVyZSBzcGVjaWZpYyBiaW5kaW5nIGZvbGRlcnMsIHRoaXMgaXMgYSBnb29kIHBsYWNl
+IGZvciBib2FyZCByZWxhdGVkIHN0dWZmIHVzZWQgYWNyb3NzIG11bHRpcGxlIGFyY2hpdGVjdHVy
+ZXMuICBZb3UgY2FuIHVwZGF0ZSB0aGUgZXhpc3RpbmcgYmluZGluZyBpZiBuZWVkZWQuDQoNCj4g
+DQo+IFNpZ25lZC1vZmYtYnk6IFBhbmthaiBCYW5zYWwgPHBhbmthai5iYW5zYWxAbnhwLmNvbT4N
+Cj4gLS0tDQo+IA0KPiBOb3RlczoNCj4gICAgIFY0Og0KPiAgICAgLSBObyBDaGFuZ2UNCj4gICAg
+IFYzOg0KPiAgICAgLSBBZGRlZCBib2FyZG5hbWUgYmFzZWQgY29tcGF0aWJsZSBmaWVsZCBpbiBi
+aW5kaW5ncw0KPiAgICAgLSBBZGRlZCBiaW5kaW5ncyBmb3IgTU1JTyBiYXNlZCBGUEdBDQo+ICAg
+ICBWMjoNCj4gICAgIC0gTm8gY2hhbmdlDQo+IA0KPiAgLi4uL2JpbmRpbmdzL3NvYy9mc2wvcWl4
+aXNfY3RybC50eHQgICAgICAgICAgfCA1MyArKysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA1MyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcWl4aXNfY3RybC50eHQNCj4gYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9xaXhpc19jdHJsLnR4dA0KPiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLjVkNTEwZGYxNGJlOA0KPiAt
+LS0gL2Rldi9udWxsDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b2MvZnNsL3FpeGlzX2N0cmwudHh0DQo+IEBAIC0wLDAgKzEsNTMgQEANCj4gKyogUUlYSVMgRlBH
+QSBibG9jaw0KPiArDQo+ICthbiBGUEdBLWJhc2VkIHN5c3RlbSBjb250cm9sbGVyLCBjYWxsZWQg
+4oCcUWl4aXPigJ0sIHdoaWNoDQo+ICttYW5hZ2VzIHNldmVyYWwgY3JpdGljYWwgc3lzdGVtIGZl
+YXR1cmVzLCBpbmNsdWRpbmc6DQo+ICvigKIgQ29uZmlndXJhdGlvbiBzd2l0Y2ggbW9uaXRvcmlu
+Zw0KPiAr4oCiIFBvd2VyIG9uL29mZiBzZXF1ZW5jaW5nDQo+ICvigKIgUmVzZXQgc2VxdWVuY2lu
+Zw0KPiAr4oCiIFBvd2VyIHN1cHBseSBjb25maWd1cmF0aW9uDQo+ICvigKIgQm9hcmQgY29uZmln
+dXJhdGlvbg0KPiAr4oCiIGhhcmR3YXJlIGNvbmZpZ3VyYXRpb24NCj4gK+KAoiBCYWNrZ3JvdW5k
+IHBvd2VyIGRhdGEgY29sbGVjdGlvbiAoRENNKQ0KPiAr4oCiIEZhdWx0IG1vbml0b3JpbmcNCj4g
+K+KAoiBSQ1cgYnlwYXNzIFNSQU0gKHJlcGxhY2UgZmxhc2ggUkNXIHdpdGggaW50ZXJuYWwgUkNX
+KSAoTk9SIG9ubHkpDQo+ICvigKIgRGVkaWNhdGVkIGZ1bmN0aW9uYWwgdmFsaWRhdGlvbiBibG9j
+a3MgKFBPU3QvSVJTLCB0cmlnZ2VyZWQgZXZlbnQsIGFuZCBzbw0KPiBvbikNCj4gK+KAoiBJMkMg
+bWFzdGVyIGZvciByZW1vdGUgYm9hcmQgY29udHJvbCBldmVuIHdpdGggbm8gRFVUIGF2YWlsYWJs
+ZQ0KPiArDQo+ICtUaGUgcWl4aXMgcmVnaXN0ZXJzIGFyZSBhY2Nlc3NpYmxlIG92ZXIgb25lIG9y
+IG1vcmUgc3lzdGVtLXNwZWNpZmljDQo+IGludGVyZmFjZXMsDQo+ICt0eXBpY2FsbHkgSTJDLCBK
+VEFHIG9yIGFuIGVtYmVkZGVkIHByb2Nlc3Nvci4NCj4gKw0KPiArRlBHQSBjb25uZWN0ZWQgdG8g
+STJDOg0KPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKw0KPiArIC0gY29tcGF0aWJsZTogc2hv
+dWxkIGJlIGEgYm9hcmQtc3BlY2lmaWMgc3RyaW5nIGZvbGxvd2VkIGJ5IGEgc3RyaW5nDQo+ICsg
+ICBpbmRpY2F0aW5nIHRoZSB0eXBlIG9mIEZQR0EuICBFeGFtcGxlOg0KPiArCSJmc2wsPGJvYXJk
+Pi1mcGdhIiwgImZzbCxmcGdhLXFpeGlzLWkyYyINCj4gKyAtIHJlZyA6IGkyYyBhZGRyZXNzIG9m
+IHRoZSBxaXhpcyBkZXZpY2UuDQo+ICsNCj4gK0V4YW1wbGUgKExYMjE2MEEtUURTKToNCj4gKwkv
+KiBUaGUgRlBHQSBub2RlICovDQo+ICsgICAgICAgIGZwZ2FANjYgew0KPiArCQljb21wYXRpYmxl
+ID0gImZzbCxseDIxNjBhcWRzLWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMtaTJjIjsNCj4gKwkJcmVn
+ID0gPDB4NjY+Ow0KPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMg
+PSA8MD47DQo+ICsJfQ0KPiArDQo+ICsqIEZyZWVzY2FsZSBvbi1ib2FyZCBGUEdBDQo+ICsNCj4g
+K1RoaXMgaXMgdGhlIG1lbW9yeS1tYXBwZWQgcmVnaXN0ZXJzIGZvciBvbiBib2FyZCBGUEdBLg0K
+PiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUg
+YSBib2FyZC1zcGVjaWZpYyBzdHJpbmcgZm9sbG93ZWQgYnkgYSBzdHJpbmcNCj4gKyAgaW5kaWNh
+dGluZyB0aGUgdHlwZSBvZiBGUEdBLiAgRXhhbXBsZToNCj4gKwkiZnNsLDxib2FyZD4tZnBnYSIs
+ICJmc2wsZnBnYS1xaXhpcyINCj4gKy0gcmVnOiBzaG91bGQgY29udGFpbiB0aGUgYWRkcmVzcyBh
+bmQgdGhlIGxlbmd0aCBvZiB0aGUgRlBHQSByZWdpc3RlciBzZXQuDQo+ICsNCj4gK0V4YW1wbGUg
+KExTMjA4MEEtUkRCKToNCj4gKw0KPiArICAgICAgICBjcGxkQDMsMCB7DQo+ICsgICAgICAgICAg
+ICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMyMDgwYXJkYi1mcGdhIiwgImZzbCxmcGdhLXFpeGlz
+IjsNCj4gKyAgICAgICAgICAgICAgICByZWcgPSA8MHgzIDAgMHgxMDAwMD47DQo+ICsgICAgICAg
+IH07DQo+ICsNCj4gLS0NCj4gMi4xNy4xDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
