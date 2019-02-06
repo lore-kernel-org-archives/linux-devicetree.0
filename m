@@ -1,47 +1,47 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 0/4] PHY: Add support for SERDES in TI's AM654 platform
-Date: Wed, 6 Feb 2019 16:37:49 +0530
-Message-ID: <20190206110753.28738-1-kishon@ti.com>
+Subject: [PATCH v2 2/4] phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking reset callback
+Date: Wed, 6 Feb 2019 16:37:51 +0530
+Message-ID: <20190206110753.28738-3-kishon@ti.com>
+References: <20190206110753.28738-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190206110753.28738-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
 Cc: Roger Quadros <rogerq@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series
-  *) adds support for SERDES module in am654
-  *) modifies phy_reset API to invoke pm_runtime_get/pm_runtime_put since
-the reset callback can access registers.
-  *) Add *release* phy_ops to be invoked when the consumer relinquishes
-PHY
+PHY drivers may try to access PHY registers in the ->reset() callback.
+Invoke phy_pm_runtime_get_sync() before invoking the ->reset() callback
+so that the PHY drivers don't have to enable clocks by themselves before
+accessing PHY registers.
 
-Changes from v1:
-  *) Add *release* phy ops
-  *) Populate release phy_ops in phy-am654-serdes to cleanup
-initializations done in of_xlate
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/phy/phy-core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Kishon Vijay Abraham I (4):
-  phy: core: Add *release* phy_ops invoked when the consumer
-    relinquishes PHY
-  phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking
-    reset callback
-  dt-bindings: phy: ti: Add dt binding documentation for SERDES in
-    AM654x SoC
-  phy: ti: Add a new SERDES driver for TI's AM654x SoC
-
- .../devicetree/bindings/phy/ti-phy.txt        |  77 +++
- drivers/phy/phy-core.c                        |  11 +
- drivers/phy/ti/Kconfig                        |  11 +
- drivers/phy/ti/Makefile                       |   1 +
- drivers/phy/ti/phy-am654-serdes.c             | 539 ++++++++++++++++++
- include/dt-bindings/phy/phy-am654-serdes.h    |  13 +
- include/linux/phy/phy.h                       |   2 +
- 7 files changed, 654 insertions(+)
- create mode 100644 drivers/phy/ti/phy-am654-serdes.c
- create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
-
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index d4bd85afdc91..fb66f93cd61c 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -384,10 +384,16 @@ int phy_reset(struct phy *phy)
+ 	if (!phy || !phy->ops->reset)
+ 		return 0;
+ 
++	ret = phy_pm_runtime_get_sync(phy);
++	if (ret < 0 && ret != -ENOTSUPP)
++		return ret;
++
+ 	mutex_lock(&phy->mutex);
+ 	ret = phy->ops->reset(phy);
+ 	mutex_unlock(&phy->mutex);
+ 
++	phy_pm_runtime_put(phy);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(phy_reset);
 -- 
 2.17.1
