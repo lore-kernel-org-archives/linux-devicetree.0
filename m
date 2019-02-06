@@ -1,26 +1,18 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 3/9] ARM: dts: sun9i: a80-optimus: Add GPIO
- pin-bank regulator supplies
-Date: Wed,  6 Feb 2019 11:32:33 +0800
-Message-ID: <20190206033239.3619-4-wens@csie.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 4/9] ARM: dts: sun9i: cubieboard4: Add GPIO pin-bank regulator supplies
+Date: Wed,  6 Feb 2019 11:32:34 +0800
+Message-ID: <20190206033239.3619-5-wens@csie.org>
 References: <20190206033239.3619-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBYNK5HRAKGQELHBSDQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190206033239.3619-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190206033239.3619-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-The A80 Optimus has the PMIC providing voltage to all the pin-bank
+The Cubieboard 4 has the PMIC providing voltage to all the pin-bank
 supply rails from its various regulator outputs. All pin-banks that
 have supply rails are accounted for. PN pin-bank does not have a
 supply rail.
@@ -28,16 +20,16 @@ supply rail.
 Also remove any "regulator-always-on" properties from regulators that
 were only marked to provide pin-bank power.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun9i-a80-optimus.dts | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 23 ++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-index 1ee2792b3a27..9c25176e69dc 100644
---- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-@@ -172,10 +172,26 @@
+diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+index 85da85faf869..0daab9b374e6 100644
+--- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
++++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+@@ -183,10 +183,26 @@
  	clocks = <&ac100_rtc 0>;
  };
  
@@ -45,7 +37,7 @@ index 1ee2792b3a27..9c25176e69dc 100644
 +	vcc-pa-supply = <&reg_ldo_io1>;
 +	vcc-pb-supply = <&reg_aldo2>;
 +	vcc-pc-supply = <&reg_dcdc1>;
-+	vcc-pd-supply = <&reg_dcdc1>;
++	vcc-pd-supply = <&reg_dc1sw>;
 +	vcc-pe-supply = <&reg_eldo2>;
 +	vcc-pf-supply = <&reg_dcdc1>;
 +	vcc-pg-supply = <&reg_ldo_io0>;
@@ -64,7 +56,18 @@ index 1ee2792b3a27..9c25176e69dc 100644
  &r_rsb {
  	status = "okay";
  
-@@ -264,7 +280,6 @@
+@@ -217,6 +233,10 @@
+ 				/* unused */
+ 			};
+ 
++			reg_dc1sw: dc1sw {
++				regulator-name = "vcc-pd";
++			};
++
+ 			reg_dc5ldo: dc5ldo {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <800000>;
+@@ -271,7 +291,6 @@
  			};
  
  			reg_dldo2: dldo2 {
@@ -72,7 +75,7 @@ index 1ee2792b3a27..9c25176e69dc 100644
  				regulator-min-microvolt = <3000000>;
  				regulator-max-microvolt = <3000000>;
  				regulator-name = "vcc-pl";
-@@ -283,14 +298,12 @@
+@@ -290,14 +309,12 @@
  			};
  
  			reg_eldo3: eldo3 {
