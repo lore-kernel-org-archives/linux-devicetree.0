@@ -1,70 +1,52 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 2/4] pwm: stm32-lp: Add power management support
-Date: Wed, 6 Feb 2019 15:54:50 +0100
-Message-ID: <ddb93754-2734-e4c2-a209-517984c6d814@st.com>
-References: <1549370429-19116-1-git-send-email-fabrice.gasnier@st.com>
- <1549370429-19116-3-git-send-email-fabrice.gasnier@st.com>
- <20190205204732.zrbhgyxnvjbwfyw4@pengutronix.de>
- <20190205222522.GB1372@mithrandir>
- <6584a59b-657d-adc9-fab2-eb1a9baba05d@st.com>
- <20190206085405.pdiwd3c6wjog5hl7@pengutronix.de>
- <20190206125545.GI21676@ulmo>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Wed, 6 Feb 2019 17:04:29 +0200
+Message-ID: <5C5AF77D.8020007@ti.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com>
+ <20190204163312.GI5720@atomide.com> <5C5959DB.2090608@ti.com>
+ <f1b689cc-5d1b-0333-7a1c-cb6d58169e12@ti.com> <5C59AEA3.1080400@ti.com>
+ <124e9f09-fb60-071d-e2ba-ec6f7fb3955c@ti.com>
+ <20190205161945.GS5720@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190206125545.GI21676@ulmo>
-Content-Language: en-US
+In-Reply-To: <20190205161945.GS5720@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vilhelm.gray@gmail.com, linux-stm32@st-md-mailman.stormreply.com, Tomasz Duszynski <tduszyns@gmail.com>
+To: Tony Lindgren <tony@atomide.com>, Murali Karicheri <m-karicheri2@ti.com>
+Cc: s-anna@ti.com, ohad@wizery.com, bjorn.andersson@linaro.org, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/6/19 1:55 PM, Thierry Reding wrote:
-> On Wed, Feb 06, 2019 at 09:54:05AM +0100, Uwe Kleine-König wrote:
->> On Wed, Feb 06, 2019 at 09:42:48AM +0100, Fabrice Gasnier wrote:
->>> If you agree with the current approach, I can send a V2 with Tomasz's
->>> suggestion to remove the ifdefs and use __maybe_unused instead.
->>
->> I think the suspend callback should have something like:
->>
->> 	if (is_still_enabled) {
->> 		/*
->> 		 * The consumer didn't stop us, so refuse to suspend.
->> 		 */
->> 		dev_err(dev, "The consumer didn't stop us, so refuse to suspend.\n");
->> 		return -EBUSY;
->> 	}
->>
->> This way there are no bad surprises if the pwm is suspended before its
->> consumer and it's obvious what is missing.
 
-Thierry, Uwe,
 
-When the pwm is suspended before its consumer, the bad surprise is the
-suspend request will fail... I'm not sure a new attempt may be better.
-So, it looks like the only way to have this clean is by implementing the
-device link e.g. via pwm_get() ?
-
+On 05/02/19 18:19, Tony Lindgren wrote:
+> * Murali Karicheri <m-karicheri2@ti.com> [190205 16:13]:
+>> On 02/05/2019 10:41 AM, Roger Quadros wrote:
+>>> What I'm suggesting here is that kernel remoteproc driver should have nothing to do
+>>> with the other PRU's data RAM.
+>>>
+>>> The application driver if needs both PRUs then it can obviously access both DRAMs
+>>> as it has a phandle to both PRUs.
+>>>
+>> That should be fine.
 > 
-> Something that just occurred to me: perhaps as part of pwm_get() we
-> should track where we were being requested from so that we could give
-> hints in situations like this as to where the consumer is that forgot
-> to suspend the PWM.
-
-The current approach handles the situation where the consumer forgot to
-suspend the PWM... I can add some warning about that in the suspend
-routine, incl the label.
-
-What do you think? What's the best approach ?
-
-Please advise,
-BR,
-Fabrice
+> That sounds good to me too.
 > 
-> I suppose we already have pwm_device.label to help with this, but
-> perhaps we could improve things if we stored __builtin_return_address
-> during pwm_get() to help users pinpoint where they need to look.
-> 
-> Thierry
-> 
+> For dts, yeah please allocate the resources for the modules
+> where the resources belong to on the PRUSS internal interconnect :)
+> Devices can move around on the interconnect between SoCs and the
+> modules can get swapped or added.
+
+If you take a look at "Figure 30-1. PRU-ICSS Overview" in 
+http://www.tij.co.jp/jp/lit/ug/spruhz7h/spruhz7h.pdf
+
+You can see that DRAM0 and DRAM1 are not part of PRU. That means
+they shouldn't be in the PRU node then.
+
+cheers,
+-roger
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
