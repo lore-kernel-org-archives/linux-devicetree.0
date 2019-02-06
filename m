@@ -1,100 +1,110 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 5/5] arm: dts: axpxx: add charge led node
-Date: Wed, 6 Feb 2019 21:10:33 +0800
-Message-ID: <CAGb2v65Pj4Xd9+faBZ7d9OorWrDFZmtUaH8MFq5WO29x+OhYXA@mail.gmail.com>
-References: <20190131082308.22522-1-stefan@olimex.com> <20190131082308.22522-5-stefan@olimex.com>
- <CAGb2v66B3X=hyCCanUv6yGziVcu3WrRcKODBp266ODL+yQ4m1w@mail.gmail.com> <4493d1cb-d1bb-bcc9-c37d-68c79f33e762@olimex.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH v2 1/7] pinctrl: at91: add option to use drive strength
+ bits
+Date: Wed, 6 Feb 2019 13:46:01 +0000
+Message-ID: <8880dfa2-4bbd-d3c8-b692-180555636926@microchip.com>
+References: <1548951466-26297-1-git-send-email-claudiu.beznea@microchip.com>
+ <1548951466-26297-2-git-send-email-claudiu.beznea@microchip.com>
+ <20190206081304.cv344rjzvz7wzih5@M43218.corp.atmel.com>
+ <f0022bfc-6deb-de77-857c-c70d41f4fc78@microchip.com>
+ <20190206102406.r45rb5bfjk2j45dr@M43218.corp.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4493d1cb-d1bb-bcc9-c37d-68c79f33e762@olimex.com>
+In-Reply-To: <20190206102406.r45rb5bfjk2j45dr@M43218.corp.atmel.com>
+Content-Language: en-US
+Content-ID: <85B05BE69312EF4B81D66117CB99F4F1@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Mavrodiev <stefan@olimex.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 6, 2019 at 2:06 PM Stefan Mavrodiev <stefan@olimex.com> wrote:
->
->
-> On 2/5/19 6:16 PM, Chen-Yu Tsai wrote:
-> > On Thu, Jan 31, 2019 at 4:25 PM Stefan Mavrodiev <stefan@olimex.com> wrote:
-> >> Add dt node for axp20x-led driver controlling CHGLED.
-> >> Default status is disabled, since it may be not used.
-> >>
-> >> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> > Please include a cover letter for such a patch series.
-> Sorry, I will.
-> >
-> > Also, do any boards actually use this? I know the Pine64 does, but the
-> > LED is left to the user to populate. I would really like to have an in
-> > kernel user of this function, so that we can verify it.
->
-> All boards made by Olimex has this led populated. The development and the
-> testing of the driver was done on A64-OLinuXino board.
->
-> Should I make another patch, enabling the LED for the mention board?
-
-Yes please. I'll dig out my A33-OLinuXino next week to try it out.
-
-ChenYu
-
-> >
-> > ChenYu
-> >
-> >> ---
-> >>   arch/arm/boot/dts/axp209.dtsi | 5 +++++
-> >>   arch/arm/boot/dts/axp22x.dtsi | 5 +++++
-> >>   arch/arm/boot/dts/axp81x.dtsi | 5 +++++
-> >>   3 files changed, 15 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
-> >> index 0d9ff12bdf28..f972b6f3ecd0 100644
-> >> --- a/arch/arm/boot/dts/axp209.dtsi
-> >> +++ b/arch/arm/boot/dts/axp209.dtsi
-> >> @@ -69,6 +69,11 @@
-> >>                  #gpio-cells = <2>;
-> >>          };
-> >>
-> >> +       axp_led: led {
-> >> +               compatible = "x-powers,axp20x-led";
-> >> +               status = "disabled";
-> >> +       };
-> >> +
-> >>          battery_power_supply: battery-power-supply {
-> >>                  compatible = "x-powers,axp209-battery-power-supply";
-> >>                  status = "disabled";
-> >> diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
-> >> index 65a07a67aca9..92a0b64252b1 100644
-> >> --- a/arch/arm/boot/dts/axp22x.dtsi
-> >> +++ b/arch/arm/boot/dts/axp22x.dtsi
-> >> @@ -62,6 +62,11 @@
-> >>                  #io-channel-cells = <1>;
-> >>          };
-> >>
-> >> +       axp_led: led {
-> >> +               compatible = "x-powers,axp20x-led";
-> >> +               status = "disabled";
-> >> +       };
-> >> +
-> >>          battery_power_supply: battery-power-supply {
-> >>                  compatible = "x-powers,axp221-battery-power-supply";
-> >>                  status = "disabled";
-> >> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-> >> index bd83962d3627..22e243cc40d5 100644
-> >> --- a/arch/arm/boot/dts/axp81x.dtsi
-> >> +++ b/arch/arm/boot/dts/axp81x.dtsi
-> >> @@ -74,6 +74,11 @@
-> >>                  };
-> >>          };
-> >>
-> >> +       axp_led: led {
-> >> +               compatible = "x-powers,axp20x-led";
-> >> +               status = "disabled";
-> >> +       };
-> >> +
-> >>          battery_power_supply: battery-power-supply {
-> >>                  compatible = "x-powers,axp813-battery-power-supply";
-> >>                  status = "disabled";
-> >> --
-> >> 2.17.1
-> >>
+DQoNCk9uIDA2LjAyLjIwMTkgMTI6MjQsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPiBPbiBX
+ZWQsIEZlYiAwNiwgMjAxOSBhdCAwOTo0NjoyOEFNICswMDAwLCBDbGF1ZGl1LkJlem5lYUBtaWNy
+b2NoaXAuY29tIHdyb3RlOg0KPj4NCj4+DQo+PiBPbiAwNi4wMi4yMDE5IDEwOjEzLCBMdWRvdmlj
+IERlc3JvY2hlcyB3cm90ZToNCj4+PiBPbiBUaHUsIEphbiAzMSwgMjAxOSBhdCAwNToxODowNFBN
+ICswMTAwLCBDbGF1ZGl1IEJlem5lYSAtIE0xODA2MyB3cm90ZToNCj4+Pj4gRnJvbTogQ2xhdWRp
+dSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+Pj4+DQo+Pj4+IFNBTTlY
+NjAgdXNlcyBoaWdoIGFuZCBsb3cgZHJpdmUgc3RyZW5ndGhzLiBUbyBpbXBsZW1lbnQgdGhpcywg
+aW4NCj4+Pj4gYXQ5MV9waW5jdHJsX211eF9vcHM6OnNldF9kcml2ZXN0cmVuZ3RoIGFuZA0KPj4+
+PiBhdDkxX3BpbmN0cmxfbXV4X29wczo6Z2V0X2RyaXZlc3RyZW5ndGggd2UgbmVlZCBiaXQgbnVt
+YmVycyBvZg0KPj4+PiBkcml2ZSBzdHJlbmd0aHMgKDEgZm9yIGxvdywgMiBmb3IgaGlnaCksIHRo
+dXMgY2hhbmdlIHRoZSBjb2RlIHRvDQo+Pj4+IGFsbG93IHRoZSB1c2FnZSBvZiBkcml2ZSBzdHJl
+bmd0aCBiaXQgbnVtYmVycy4NCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpu
+ZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+Pj4+IC0tLQ0KPj4+PiAgZHJpdmVy
+cy9waW5jdHJsL3BpbmN0cmwtYXQ5MS5jIHwgMzIgKysrKysrKysrKysrKysrKysrKystLS0tLS0t
+LS0tLS0NCj4+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlv
+bnMoLSkNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLWF0
+OTEuYyBiL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLWF0OTEuYw0KPj4+PiBpbmRleCAzZDQ5YmJi
+Y2RiYzcuLjMxZjA2ZGFmY2EyZSAxMDA2NDQNCj4+Pj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3Bp
+bmN0cmwtYXQ5MS5jDQo+Pj4+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLWF0OTEuYw0K
+Pj4+PiBAQCAtNzIsMTAgKzcyLDE1IEBAIHN0YXRpYyBpbnQgZ3Bpb19iYW5rczsNCj4+Pj4gICAq
+IERSSVZFX1NUUkVOR1RIX0RFRkFVTFQgaXMganVzdCBhIHBsYWNlaG9sZGVyIHRvIGF2b2lkIGNo
+YW5naW5nIHRoZSBkcml2ZQ0KPj4+PiAgICogc3RyZW5ndGggd2hlbiB0aGVyZSBpcyBubyBkdCBj
+b25maWcgZm9yIGl0Lg0KPj4+PiAgICovDQo+Pj4+IC0jZGVmaW5lIERSSVZFX1NUUkVOR1RIX0RF
+RkFVTFQJCSgwIDw8IERSSVZFX1NUUkVOR1RIX1NISUZUKQ0KPj4+PiAtI2RlZmluZSBEUklWRV9T
+VFJFTkdUSF9MT1cgICAgICAgICAgKDEgPDwgRFJJVkVfU1RSRU5HVEhfU0hJRlQpDQo+Pj4+IC0j
+ZGVmaW5lIERSSVZFX1NUUkVOR1RIX01FRCAgICAgICAgICAoMiA8PCBEUklWRV9TVFJFTkdUSF9T
+SElGVCkNCj4+Pj4gLSNkZWZpbmUgRFJJVkVfU1RSRU5HVEhfSEkgICAgICAgICAgICgzIDw8IERS
+SVZFX1NUUkVOR1RIX1NISUZUKQ0KPj4+PiArZW51bSBkcml2ZV9zdHJlbmd0aF9iaXQgew0KPj4+
+PiArCURSSVZFX1NUUkVOR1RIX0JJVF9ERUYsDQo+Pj4+ICsJRFJJVkVfU1RSRU5HVEhfQklUX0xP
+VywNCj4+Pj4gKwlEUklWRV9TVFJFTkdUSF9CSVRfTUVELA0KPj4+PiArCURSSVZFX1NUUkVOR1RI
+X0JJVF9ISSwNCj4+Pj4gK307DQo+Pj4+ICsNCj4+Pj4gKyNkZWZpbmUgRFJJVkVfU1RSRU5HVEhf
+QklUX01TSyhuYW1lKQkoRFJJVkVfU1RSRU5HVEhfQklUXyMjbmFtZSA8PCBcDQo+Pj4+ICsJCQkJ
+CSBEUklWRV9TVFJFTkdUSF9TSElGVCkNCj4+Pj4gIA0KPj4+PiAgLyoqDQo+Pj4+ICAgKiBzdHJ1
+Y3QgYXQ5MV9wbXhfZnVuYyAtIGRlc2NyaWJlcyBBVDkxIHBpbm11eCBmdW5jdGlvbnMNCj4+Pj4g
+QEAgLTU1MSw3ICs1NTYsNyBAQCBzdGF0aWMgdW5zaWduZWQgYXQ5MV9tdXhfc2FtYTVkM19nZXRf
+ZHJpdmVzdHJlbmd0aCh2b2lkIF9faW9tZW0gKnBpbywNCj4+Pj4gIAkvKiBTQU1BNSBzdHJlbmd0
+aCBpcyAxOjEgd2l0aCBvdXIgZGVmaW5lcywNCj4+Pj4gIAkgKiBleGNlcHQgMCBpcyBlcXVpdmFs
+ZW50IHRvIGxvdyBwZXIgZGF0YXNoZWV0ICovDQo+Pj4+ICAJaWYgKCF0bXApDQo+Pj4+IC0JCXRt
+cCA9IERSSVZFX1NUUkVOR1RIX0xPVzsNCj4+Pj4gKwkJdG1wID0gRFJJVkVfU1RSRU5HVEhfQklU
+X01TSyhMT1cpOw0KPj4+PiAgDQo+Pj4+ICAJcmV0dXJuIHRtcDsNCj4+Pj4gIH0NCj4+Pj4gQEAg
+LTU2NCw3ICs1NjksNyBAQCBzdGF0aWMgdW5zaWduZWQgYXQ5MV9tdXhfc2FtOXg1X2dldF9kcml2
+ZXN0cmVuZ3RoKHZvaWQgX19pb21lbSAqcGlvLA0KPj4+PiAgDQo+Pj4+ICAJLyogc3RyZW5ndGgg
+aXMgaW52ZXJzZSBpbiBTQU05eDVzIGhhcmR3YXJlIHdpdGggdGhlIHBpbmN0cmwgZGVmaW5lcw0K
+Pj4+PiAgCSAqIGhhcmR3YXJlOiAwID0gaGksIDEgPSBtZWQsIDIgPSBsb3csIDMgPSByc3ZkICov
+DQo+Pj4+IC0JdG1wID0gRFJJVkVfU1RSRU5HVEhfSEkgLSB0bXA7DQo+Pj4+ICsJdG1wID0gRFJJ
+VkVfU1RSRU5HVEhfQklUX01TSyhISSkgLSB0bXA7DQo+Pj4+ICANCj4+Pj4gIAlyZXR1cm4gdG1w
+Ow0KPj4+PiAgfQ0KPj4+PiBAQCAtNjAwLDcgKzYwNSw3IEBAIHN0YXRpYyB2b2lkIGF0OTFfbXV4
+X3NhbTl4NV9zZXRfZHJpdmVzdHJlbmd0aCh2b2lkIF9faW9tZW0gKnBpbywgdW5zaWduZWQgcGlu
+LA0KPj4+PiAgDQo+Pj4+ICAJLyogc3RyZW5ndGggaXMgaW52ZXJzZSBvbiBTQU05eDVzIHdpdGgg
+b3VyIGRlZmluZXMNCj4+Pj4gIAkgKiAwID0gaGksIDEgPSBtZWQsIDIgPSBsb3csIDMgPSByc3Zk
+ICovDQo+Pj4+IC0Jc2V0dGluZyA9IERSSVZFX1NUUkVOR1RIX0hJIC0gc2V0dGluZzsNCj4+Pj4g
+KwlzZXR0aW5nID0gRFJJVkVfU1RSRU5HVEhfQklUX01TSyhISSkgLSBzZXR0aW5nOw0KPj4+PiAg
+DQo+Pj4+ICAJc2V0X2RyaXZlX3N0cmVuZ3RoKHBpbyArIGF0OTFzYW05eDVfZ2V0X2RyaXZlX3Jl
+Z2lzdGVyKHBpbiksIHBpbiwNCj4+Pj4gIAkJCQlzZXR0aW5nKTsNCj4+Pj4gQEAgLTk1OSwxMSAr
+OTY0LDExIEBAIHN0YXRpYyBpbnQgYXQ5MV9waW5jb25mX3NldChzdHJ1Y3QgcGluY3RybF9kZXYg
+KnBjdGxkZXYsDQo+Pj4+ICAJfQkJCQkJXA0KPj4+PiAgfSB3aGlsZSAoMCkNCj4+Pj4gIA0KPj4+
+PiAtI2RlZmluZSBEQkdfU0hPV19GTEFHX01BU0tFRChtYXNrLGZsYWcpIGRvIHsJXA0KPj4+PiAr
+I2RlZmluZSBEQkdfU0hPV19GTEFHX01BU0tFRChtYXNrLGZsYWcsbmFtZSkgZG8gewlcDQo+Pj4N
+Cj4+PiBjaGVja3BhdGNoIGVycm9yOiBzcGFjZSByZXF1aXJlZA0KPj4NCj4+IEknbSBhd2FyZSBv
+ZiB0aGF0IGJ1dCBJIGFkZGVkIGl0IGluIHRoZSB3YXkgaXQgd2FzIHByZXZpb3VzbHkgKHdlcmUg
+dGhlDQo+PiBjaGVja3BhdGNoIGVycm9yIHdhcyBzdGlsbCBwcmVzZW50KS4gUGxlYXNlIGxldCBt
+ZSBrbm93IGlmIHlvdSB3YW50IG1lIHRvDQo+PiBzZW5kIGEgbmV3IHZlcnNpb24gZml4aW5nIHRo
+aXMuDQo+IA0KPiBJIHRoaW5rIGl0J3MgdGhlIG9wcG9ydHVuaXR5IHRvIGZpeCBpdC4gSWYgeW91
+IGNhbiByZXNlbmQgYSBuZXcgdmVyc2lvbg0KPiBpbmNsdWRpbmcgbXkgYWNrLg0KDQpTdXJlIQ0K
+DQpUaGFua3MsDQpDbGF1ZGl1DQoNCj4gDQo+IFJlZ2FyZHMNCj4gDQo+IEx1ZG92aWMNCj4gDQo+
+Pg0KPj4gVGhhbmsgeW91LA0KPj4gQ2xhdWRpdSBCZXpuZWENCj4+DQo+Pj4NCj4+Pj4gIAlpZiAo
+KGNvbmZpZyAmIG1hc2spID09IGZsYWcpIHsJCVwNCj4+Pj4gIAkJaWYgKG51bV9jb25mKQkJCVwN
+Cj4+Pj4gIAkJCXNlcV9wdXRzKHMsICJ8Iik7CVwNCj4+Pj4gLQkJc2VxX3B1dHMocywgI2ZsYWcp
+OwkJXA0KPj4+PiArCQlzZXFfcHV0cyhzLCAjbmFtZSk7CQlcDQo+Pj4+ICAJCW51bV9jb25mKys7
+CQkJXA0KPj4+PiAgCX0JCQkJCVwNCj4+Pj4gIH0gd2hpbGUgKDApDQo+Pj4+IEBAIC05ODEsOSAr
+OTg2LDEyIEBAIHN0YXRpYyB2b2lkIGF0OTFfcGluY29uZl9kYmdfc2hvdyhzdHJ1Y3QgcGluY3Ry
+bF9kZXYgKnBjdGxkZXYsDQo+Pj4+ICAJREJHX1NIT1dfRkxBRyhQVUxMX0RPV04pOw0KPj4+PiAg
+CURCR19TSE9XX0ZMQUcoRElTX1NDSE1JVCk7DQo+Pj4+ICAJREJHX1NIT1dfRkxBRyhERUdMSVRD
+SCk7DQo+Pj4+IC0JREJHX1NIT1dfRkxBR19NQVNLRUQoRFJJVkVfU1RSRU5HVEgsIERSSVZFX1NU
+UkVOR1RIX0xPVyk7DQo+Pj4+IC0JREJHX1NIT1dfRkxBR19NQVNLRUQoRFJJVkVfU1RSRU5HVEgs
+IERSSVZFX1NUUkVOR1RIX01FRCk7DQo+Pj4+IC0JREJHX1NIT1dfRkxBR19NQVNLRUQoRFJJVkVf
+U1RSRU5HVEgsIERSSVZFX1NUUkVOR1RIX0hJKTsNCj4+Pj4gKwlEQkdfU0hPV19GTEFHX01BU0tF
+RChEUklWRV9TVFJFTkdUSCwgRFJJVkVfU1RSRU5HVEhfQklUX01TSyhMT1cpLA0KPj4+PiArCQkJ
+ICAgICBEUklWRV9TVFJFTkdUSF9MT1cpOw0KPj4+PiArCURCR19TSE9XX0ZMQUdfTUFTS0VEKERS
+SVZFX1NUUkVOR1RILCBEUklWRV9TVFJFTkdUSF9CSVRfTVNLKE1FRCksDQo+Pj4+ICsJCQkgICAg
+IERSSVZFX1NUUkVOR1RIX01FRCk7DQo+Pj4+ICsJREJHX1NIT1dfRkxBR19NQVNLRUQoRFJJVkVf
+U1RSRU5HVEgsIERSSVZFX1NUUkVOR1RIX0JJVF9NU0soSEkpLA0KPj4+PiArCQkJICAgICBEUklW
+RV9TVFJFTkdUSF9ISSk7DQo+Pj4+ICAJREJHX1NIT1dfRkxBRyhERUJPVU5DRSk7DQo+Pj4+ICAJ
+aWYgKGNvbmZpZyAmIERFQk9VTkNFKSB7DQo+Pj4+ICAJCXZhbCA9IGNvbmZpZyA+PiBERUJPVU5D
+RV9WQUxfU0hJRlQ7DQo+Pj4+IC0tIA0KPj4+PiAyLjcuNA0KPj4+Pg0KPj4+DQo+PiBfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPj4gbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QNCj4+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+Zw0KPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsDQo+IA0K
