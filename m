@@ -1,7 +1,7 @@
 From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH v2 2/3] net/macb: bindings doc: add sam9x60 binding
-Date: Wed, 6 Feb 2019 18:56:09 +0100
-Message-ID: <20190206175610.26773-2-nicolas.ferre@microchip.com>
+Subject: [PATCH v2 3/3] net: macb: add sam9x60-macb compatibility string
+Date: Wed, 6 Feb 2019 18:56:10 +0100
+Message-ID: <20190206175610.26773-3-nicolas.ferre@microchip.com>
 References: <20190206175610.26773-1-nicolas.ferre@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,28 +12,28 @@ To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovi
 Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the compatibility sting documentation for sam9x60 10/100 interface.
+Add a new compatibility string for this product. It's using
+at91sam9260-macb layout but has a newer hardware revision: it's safer
+to use its own string.
 
 Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 ---
-Hi Rob,
+v2: applies on top of next-20190206
 
-Your tag is missing for this patch.
-
- Documentation/devicetree/bindings/net/macb.txt | 1 +
+ drivers/net/ethernet/cadence/macb_main.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index f5c414b10e27..174f292d8a3e 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible: Should be "cdns,[<chip>-]{macb|gem}"
-   Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
-   Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs.
-+  Use "cdns,sam9x60-macb" for Microchip sam9x60 SoC.
-   Use "cdns,np4-macb" for NP4 SoC devices.
-   Use "cdns,at32ap7000-macb" for other 10/100 usage or use the generic form: "cdns,macb".
-   Use "cdns,pc302-gem" for Picochip picoXcell pc302 and later devices based on
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 2b2882615e8b..eaabe8c278ec 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3943,6 +3943,7 @@ static const struct of_device_id macb_dt_ids[] = {
+ 	{ .compatible = "cdns,np4-macb", .data = &np4_config },
+ 	{ .compatible = "cdns,pc302-gem", .data = &pc302gem_config },
+ 	{ .compatible = "cdns,gem", .data = &pc302gem_config },
++	{ .compatible = "cdns,sam9x60-macb", .data = &at91sam9260_config },
+ 	{ .compatible = "atmel,sama5d2-gem", .data = &sama5d2_config },
+ 	{ .compatible = "atmel,sama5d3-gem", .data = &sama5d3_config },
+ 	{ .compatible = "atmel,sama5d3-macb", .data = &sama5d3macb_config },
 -- 
 2.17.1
