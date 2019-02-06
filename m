@@ -1,59 +1,95 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] pinctrl: sunxi: Support I/O bias
- voltage setting on A80
-Date: Wed, 6 Feb 2019 09:14:11 +0100
-Message-ID: <CACRpkda45Zhopkk+P9-poDut-gJdJg5POPGSa_Rt_wqE24GGqg@mail.gmail.com>
-References: <20190206033239.3619-1-wens@csie.org> <20190206033239.3619-2-wens@csie.org>
-Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 2/4] pwm: stm32-lp: Add power management support
+Date: Wed, 6 Feb 2019 09:42:48 +0100
+Message-ID: <6584a59b-657d-adc9-fab2-eb1a9baba05d@st.com>
+References: <1549370429-19116-1-git-send-email-fabrice.gasnier@st.com>
+ <1549370429-19116-3-git-send-email-fabrice.gasnier@st.com>
+ <20190205204732.zrbhgyxnvjbwfyw4@pengutronix.de>
+ <20190205222522.GB1372@mithrandir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBYFO5LRAKGQEL2E5NLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190206033239.3619-2-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190205222522.GB1372@mithrandir>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Tomasz Duszynski <tduszyns@gmail.com>, linux-kernel@vger.kernel.org, vilhelm.gray@gmail.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 6, 2019 at 4:32 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-
-> The A80 SoC has configuration registers for I/O bias voltage. Incorrect
-> settings would make the affected peripherals inoperable in some cases,
-> such as Ethernet RGMII signals biased at 2.5V with the settings still
-> at 3.3V. However low speed signals such as MDIO on the same group of
-> pins seem to be unaffected.
->
-> Previously there was no way to know what the actual voltage used was,
-> short of hard-coding a value in the device tree. With the new pin bank
-> regulator supply support in place, the driver can now query the
-> regulator for its voltage, and if it's valid (as opposed to being the
-> dummy regulator), set the bias voltage setting accordingly.
->
-> Add a quirk to denote the presence of the configuration registers, and
-> a function to set the correct setting based on the voltage read back
-> from the regulator.
->
-> This is only done when the regulator is first acquired and enabled.
-> While it would be nice to have a notifier on the regulator so that when
-> the voltage changes, the driver can update the setting, in practice no
-> board currently supports dynamic changing of the I/O voltages.
->
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-Hi Chen-Yu,
-
-thanks for the patch! I tried to apply it on the pinctrl devel branch
-(for v5.1) but it failed to apply, I assume because it depends on
-the fixes that I just sent to Torvalds.
-
-Shall we proceed like this that I merge v5.0-rc6 as soon as it is
-out and then try to apply this on top of that instead, so we get
-rid of this conflict?
-
-Yours,
-Linus Walleij
+T24gMi81LzE5IDExOjI1IFBNLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiBPbiBUdWUsIEZlYiAw
+NSwgMjAxOSBhdCAwOTo0NzozMlBNICswMTAwLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToKPj4g
+SGVsbG8sCj4+Cj4+IE9uIFR1ZSwgRmViIDA1LCAyMDE5IGF0IDAxOjQwOjI3UE0gKzAxMDAsIEZh
+YnJpY2UgR2FzbmllciB3cm90ZToKPj4+IEFkZCBzdXNwZW5kL3Jlc3VtZSBQTSBzbGVlcCBvcHMu
+IFdoZW4gZ29pbmcgdG8gbG93IHBvd2VyLCBkaXNhYmxlCj4+PiBhY3RpdmUgUFdNIGNoYW5uZWwu
+IEFjdGl2ZSBQV00gY2hhbm5lbCBpcyByZXN1bWVkLCBieSBjYWxsaW5nCj4+PiBwd21fYXBwbHlf
+c3RhdGUoKS4gVGhpcyBpcyBpbnNwaXJlZCBieSBUaGllcnJ5J3MgY29tbWVudCBpbiBbMV0uCj4+
+PiBEb24ndCB0b3VjaCBpbmFjdGl2ZSBjaGFubmVscywgYXMgaXQgbWF5IGJlIHVzZWQgYnkgb3Ro
+ZXIgTFBUaW1lciBNRkQKPj4+IGNoaWxkIGRyaXZlci4KPj4+IFsxXWh0dHBzOi8vbGttbC5vcmcv
+bGttbC8yMDE3LzEyLzUvMTc1Cj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogRmFicmljZSBHYXNuaWVy
+IDxmYWJyaWNlLmdhc25pZXJAc3QuY29tPgo+Pj4gLS0tCj4+PiAgZHJpdmVycy9wd20vcHdtLXN0
+bTMyLWxwLmMgfCAzOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4g
+IDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvcHdtL3B3bS1zdG0zMi1scC5jIGIvZHJpdmVycy9wd20vcHdtLXN0bTMyLWxwLmMKPj4+
+IGluZGV4IDAwNTliMjRjLi4wYzQwZDQ4IDEwMDY0NAo+Pj4gLS0tIGEvZHJpdmVycy9wd20vcHdt
+LXN0bTMyLWxwLmMKPj4+ICsrKyBiL2RyaXZlcnMvcHdtL3B3bS1zdG0zMi1scC5jCj4+PiBAQCAt
+MTMsNiArMTMsNyBAQAo+Pj4gICNpbmNsdWRlIDxsaW51eC9tZmQvc3RtMzItbHB0aW1lci5oPgo+
+Pj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPj4+ICAjaW5jbHVkZSA8bGludXgvb2YuaD4K
+Pj4+ICsjaW5jbHVkZSA8bGludXgvcGluY3RybC9jb25zdW1lci5oPgo+Pj4gICNpbmNsdWRlIDxs
+aW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPj4+ICAjaW5jbHVkZSA8bGludXgvcHdtLmg+Cj4+PiAg
+Cj4+PiBAQCAtMjAsNiArMjEsOCBAQCBzdHJ1Y3Qgc3RtMzJfcHdtX2xwIHsKPj4+ICAJc3RydWN0
+IHB3bV9jaGlwIGNoaXA7Cj4+PiAgCXN0cnVjdCBjbGsgKmNsazsKPj4+ICAJc3RydWN0IHJlZ21h
+cCAqcmVnbWFwOwo+Pj4gKwlzdHJ1Y3QgcHdtX3N0YXRlIHN1c3BlbmQ7Cj4+PiArCWJvb2wgc3Vz
+cGVuZGVkOwo+Pj4gIH07Cj4+PiAgCj4+PiAgc3RhdGljIGlubGluZSBzdHJ1Y3Qgc3RtMzJfcHdt
+X2xwICp0b19zdG0zMl9wd21fbHAoc3RydWN0IHB3bV9jaGlwICpjaGlwKQo+Pj4gQEAgLTIyMyw2
+ICsyMjYsNDAgQEAgc3RhdGljIGludCBzdG0zMl9wd21fbHBfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9y
+bV9kZXZpY2UgKnBkZXYpCj4+PiAgCXJldHVybiBwd21jaGlwX3JlbW92ZSgmcHJpdi0+Y2hpcCk7
+Cj4+PiAgfQo+Pj4gIAo+Pj4gKyNpZmRlZiBDT05GSUdfUE1fU0xFRVAKPj4+ICtzdGF0aWMgaW50
+IHN0bTMyX3B3bV9scF9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPj4+ICt7Cj4+PiArCXN0
+cnVjdCBzdG0zMl9wd21fbHAgKnByaXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPj4+ICsKPj4+
+ICsJcHdtX2dldF9zdGF0ZSgmcHJpdi0+Y2hpcC5wd21zWzBdLCAmcHJpdi0+c3VzcGVuZCk7Cj4+
+PiArCXByaXYtPnN1c3BlbmRlZCA9IHByaXYtPnN1c3BlbmQuZW5hYmxlZDsKPj4+ICsKPj4+ICsJ
+Lyogc2FmZSB0byBjYWxsIHB3bV9kaXNhYmxlKCkgZm9yIGFscmVhZHkgZGlzYWJsZWQgcHdtICov
+Cj4+PiArCXB3bV9kaXNhYmxlKCZwcml2LT5jaGlwLnB3bXNbMF0pOwo+Pj4gKwo+Pj4gKwlyZXR1
+cm4gcGluY3RybF9wbV9zZWxlY3Rfc2xlZXBfc3RhdGUoZGV2KTsKPj4KPj4gSU1ITyBhIFBXTSBz
+aG91bGQgbm90IHN0b3AgaWYgdGhlIFBXTSB1c2VyIGRpZG4ndCBjYWxsIHB3bV9kaXNhYmxlKCkg
+KG9yCj4+IHB3bV9hcHBseV9zdGF0ZSgpIHdpdGggLmVuYWJsZWQgPSBmYWxzZSkuCj4+Cj4+IEkg
+ZG9uJ3QgdW5kZXJzdGFuZCBhbGwgdGhlIFBNIGRldGFpbHMsIGJ1dCBJIHRoaW5rIHRoZXJlIGlz
+IG5vIGRlZmluZWQKPj4gb3JkZXIgaW4gd2hpY2ggZGV2aWNlcyBhcmUgc2lnbmFsbGVkIHRvIHN1
+c3BlbmQuIElmIHNvIHRoZSBQV00gbWlnaHQgYmUKPj4gc3RvcHBlZCBiZWZvcmUgaXRzIGNvbnN1
+bWVyLiBUaGVuIHRoZSBQV00gY2hhbmdlcyBzdGF0ZSB3aXRob3V0IHRoZQo+PiBjb25zdW1lciBi
+ZWluZyBhd2FyZSBvZiB0aGF0Lgo+Pgo+PiBJIHVuZGVyc3RhbmQgVGhpZXJyeSdzIHBvc2l0aW9u
+IGluIHRoZSBsaW5rIHlvdSBwcm92aWRlZCBpbiB0aGUgY29tbWl0Cj4+IGxvZyBjb25zaXN0YW50
+IHdpdGggbXkgcG9zaXRpb24gaGVyZS4KPiAKPiBBZ3JlZWQsIHdlIHNob3VsZCBsZXQgdXNlcnMg
+b2YgdGhlIFBXTSB0YWtlIGNhcmUgb2YgcmVzdW1pbmcgdGhlIFBXTSBpbgo+IHRoZSBzdGF0ZSBh
+bmQgYXQgdGhlIHBvaW50IGluIHRpbWUgdGhhdCB0aGV5IHJlcXVpcmUgc28uIFBXTSB1c2VycyB3
+aWxsCj4gYWxzbyBsaWtlbHkgZG8gYSBwd21fZGlzYWJsZSgpIGR1cmluZyB0aGVpciBzdXNwZW5k
+IGltcGxlbWVudGF0aW9uLCBzbwo+IGRvaW5nIHRoaXMgYWdhaW4gaW4gYSBQV00gLT5zdXNwZW5k
+KCkgaXMgbm90IG5lY2Vzc2FyeSwgZXZlbiBpZiBwZXJoYXBzCj4gaGFybWxlc3MuCj4gCj4gU28g
+dGhpcyBsZWF2ZXMgb25seSB0aGUgcGluY3RybF9wbV9zZWxlY3Rfc2xlZXBfc3RhdGUoKSBjYWxs
+LiBUaGF0IHNlZW1zCj4gZmluZSwgYnV0IEknbSBub3Qgc3VyZSB0aGF0IHRoYXQncyBjdXJyZW50
+bHkgZ3VhcmFudGVlZCB0byB3b3JrLiBJIHRoaW5rCj4gd2UgbWF5IG5lZWQgdG8gaW1wbGVtZW50
+IGRldmljZSBsaW5rIHN1cHBvcnQgaW4gdGhlIFBXTSBmcmFtZXdvcmsgdG8KPiBndWFyYW50ZWUg
+dGhlIHByb3BlciBzdXNwZW5kL3Jlc3VtZSBzZXF1ZW5jaW5nLiBPdGhlcndpc2UgeW91IG1heSBl
+bmQgdXAKPiBpbiBhIHNpdHVhdGlvbiB3aGVyZSB0aGUgUFdNIGlzIGFjdHVhbGx5IHN1c3BlbmRl
+ZCBiZWZvcmUgdGhlIHVzZXIgYW5kCj4gZ2xpdGNoIHRoZSBwaW5zIGJlZm9yZSB0aGUgdXNlciBo
+YXMgYSBjaGFuY2UgdG8gZGlzYWJsZSB0aGUgUFdNLgoKSGkgVXdlLCBUaGllcnJ5LAoKSSBhZ3Jl
+ZSB3aXRoIGJvdGggb2YgeW91IG9uIHRoZSBhbmFseXNpcy4KCj4gCj4gSSB0aGluayBpdCdkIGJl
+IGZpbmUgdG8gbWVyZ2UgdGhlIGRyaXZlciBjaGFuZ2UgaGVyZSBmaXJzdCBiZWZvcmUgd2UgYWRk
+Cj4gZGV2aWNlIGxpbmsgc3VwcG9ydCBpZiB0aGlzIHdvcmtzIGZvciB5b3UuIEp1c3QgbWVudGlv
+bmluZyB0aGUgaXNzdWUKPiBoZXJlIGluIGNhc2UgeW91IGV2ZXIgcnVuIGludG8gaXQuCgpJZiB5
+b3UgYWdyZWUgd2l0aCB0aGUgY3VycmVudCBhcHByb2FjaCwgSSBjYW4gc2VuZCBhIFYyIHdpdGgg
+VG9tYXN6J3MKc3VnZ2VzdGlvbiB0byByZW1vdmUgdGhlIGlmZGVmcyBhbmQgdXNlIF9fbWF5YmVf
+dW51c2VkIGluc3RlYWQuCgpUaGFua3MgZm9yIHJldmlld2luZywKQmVzdCBSZWdhcmRzLApGYWJy
+aWNlCj4gCj4gVGhpZXJyeQo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
