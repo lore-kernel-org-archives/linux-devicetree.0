@@ -1,69 +1,33 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFCv1 1/3] phy: meson8b-usb2: Enable otg phy controller on
- Meson8b SoCs
-Date: Wed, 6 Feb 2019 12:48:40 +0100
-Message-ID: <CAFBinCAhjo4ueh6UDE+TKiF8Vc2Pz2JsjzcVsrsPQMU=ZEiLwQ@mail.gmail.com>
-References: <20190123151209.2080-1-linux.amoon@gmail.com>
- <20190123151209.2080-2-linux.amoon@gmail.com>
- <CAFBinCCOQ_GqHZuYf6n8ba_ZMbOwKmUzc4EJAuXRpn4tTTCUKA@mail.gmail.com>
- <CANAwSgSQH2zta+tOcqnM3JPZ45XkqWEJAWOL3Do0Mnrbam8VSw@mail.gmail.com>
- <CAFBinCD_O7FEX5iLyo2BzqE1KcrmATaZMMq5pFr-Q7wnRBPziw@mail.gmail.com>
- <CANAwSgSh--pom9kmVBWejHwVHJNv2o4Ta93wabR3Ak=f3V4JbQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/9] pinctrl: qcom: ssbi-gpio: hardcode IRQ counts
+Date: Wed, 6 Feb 2019 13:01:15 +0100
+Message-ID: <CACRpkdb=xsWG+x6pQZYrnpubAiOEx7Bs-puhKMZcQPuvxjX5gw@mail.gmail.com>
+References: <20190125162302.14036-1-masneyb@onstation.org> <20190125162302.14036-2-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANAwSgSh--pom9kmVBWejHwVHJNv2o4Ta93wabR3Ak=f3V4JbQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190125162302.14036-2-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
+Hi Brian!
 
-On Tue, Feb 5, 2019 at 8:52 PM Anand Moon <linux.amoon@gmail.com> wrote:
-[...]
-> > personally I would start with getting device / peripheral mode working for usb0.
-> > if you're lucky the PHY driver will work without any changes and you
-> > only need to set the correct dr_mode along with the g-* properties.
-> >
->
-> Yes that should be the goal on getting working usb0 phy and otg port.
-> So for now we will drop this patch and disable the usb_phy0 mode in
-> dts for Odroid c2
-> in order to get ride of the power failed WARNING.
-I checked Kevin's Odroid-C2 (GXBB) on Kernel CI and I can't see any
-power failed warning: [0]
+I found a second bug in this patch:
 
-> When we get the usb0 node to work again with good phy configuration and
-> tuning we can re-enable the nodes. I will try to look into this in the future.
->
-> Can you share your thought on this.
-sounds good to me! especially because it would give us OTG support on
-Meson8, Meson8b, Meson8m2 and GXBB (because these SoCs are sharing the
-same USB implementation)!
+On Fri, Jan 25, 2019 at 5:23 PM Brian Masney <masneyb@onstation.org> wrote:
 
-I see four challenges:
-1. getting host mode working on the micro USB port. you have already
-proven that you can do this :)
-2. getting peripheral mode working on the micro USB port. my hope is
-that it's only about setting the right dr_mode and the g-* properties
-on the usb0 node (but I haven't tried this)
-3. make OTG detection work and integrate it with dwc2. I would consult
-the dwc2 maintainers to see what can be done
-4. bring everything together, making sure that one feature doesn't break another
+> -       npins = platform_irq_count(pdev);
+(...)
+> -       pctrl->npins = npins;
 
+Do not lose this assignment of pctrl->npins.
 
-Regards
-Martin
+pctrl->npins is used further down in the code and the gpiochip
+does not probe because of zero pins. You could
+get rid of the local variable npins and just use pctrl->npins
+everywhere though.
 
-
-[0] https://storage.kernelci.org/next/master/next-20190130/arm64/defconfig/lab-baylibre-seattle/boot-meson-gxbb-odroidc2.html
+Yours,
+Linus Walleij
