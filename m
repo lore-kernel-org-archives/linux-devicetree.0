@@ -1,15 +1,19 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 0/7] Add Armada 3700 COMPHY support
-Date: Wed, 6 Feb 2019 16:47:39 +0530
-Message-ID: <300b86e7-1d00-da92-2203-a7cfeb2d7aa8@ti.com>
-References: <20190108163124.6409-1-miquel.raynal@bootlin.com>
- <20190206095743.5eed3584@xps13>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [RFCv1 2/3] ARM: dts: meson8b: odroidc1: fix USB power supplies
+ for phy
+Date: Wed, 6 Feb 2019 12:28:31 +0100
+Message-ID: <CAFBinCCFoBkbf-HvEoMk7mTYTBV27nJ9TF1X-DrLuHR9qDVDSA@mail.gmail.com>
+References: <20190123151209.2080-1-linux.amoon@gmail.com>
+ <20190123151209.2080-3-linux.amoon@gmail.com>
+ <CAFBinCAdf0rtt-7tON_LRNH_cpvGJXX3LX8g-i4xsC3wahZSVA@mail.gmail.com>
+ <CANAwSgQ4=Vn6RM4Kpd20UWkQNW81=mfg-qB0G73dsRem3qwjcA@mail.gmail.com>
+ <CAFBinCB=3kmuFb_xXzhW+m8dTasVrCHQp2wti+=5UjrAHk5TTg@mail.gmail.com>
+ <CANAwSgQnMkXECkCVjFKwNKB+2JoiPtVPQbateppmtgfPYCutZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190206095743.5eed3584@xps13>
-Content-Language: en-US
+In-Reply-To: <CANAwSgQnMkXECkCVjFKwNKB+2JoiPtVPQbateppmtgfPYCutZg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,66 +23,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAwNi8wMi8xOSAyOjI3IFBNLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+IEhpIEtpc2hv
-biwKPiAKPiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZSBv
-biBUdWUsICA4IEphbiAyMDE5Cj4gMTc6MzE6MTcgKzAxMDA6Cj4gCj4+IEhlbGxvLAo+Pgo+PiBU
-aGlzIHNlcmllcyBhZGRzIGEgbmV3IGRyaXZlciB0byBzdXBwb3J0IEFybWFkYSAzNzAwIENPTVBI
-WSBJUC4KPj4gVGhlIHNlcmllcyBoYXMgYmVlbiB0ZXN0ZWQgb24gYW4gRVNQUkVTU09iaW4gd2l0
-aCBTQVRBLCBQQ0llCj4+IGFuZCBVU0IzIGhvc3QuIEZvciB0aGlzIHB1cnBvc2UsIHBhdGNoIDEg
-ZW51bWVyYXRlcyB0aGUgU0FUQSBQSFkKPj4gbW9kZS4gVGhlIFNHTUlJIFBIWSBtb2RlIHRoYXQg
-aXMgc3VwcG9ydGVkIGJ5IHRoZSBJUCBoYXMgYmVlbiB3cml0dGVuCj4+ICh1c2VzIFNNQyBjYWxs
-cyBhbnl3YXkpIGJ1dCBjb3VsZCBub3QgYmUgdGVzdGVkIG9uIHRoaXMgcGxhdGZvcm0uCj4+Cj4+
-IFRocmVlIHNlcmllcyB3aWxsIGZvbGxvdyB0byBhZGQgUEhZIHN1cHBvcnQgKG9yIGF0IGxlYXN0
-IGEgUEhZIG5vZGVzCj4+IGluIHRoZSBBMzcwMC9FU1BSRVNTT2JpbiBkZXZpY2UgdHJlZXMpIHRv
-IHRoZSBNVkVCVSBBSENJIGRyaXZlciwgdGhlCj4+IEFhcmR2YXJrIFBDSSBjb250cm9sbGVyIGRy
-aXZlciBhbmQgdGhlIE1WRUJVIHhIQ0kgZHJpdmVyLiBBbGwgdGhpcyBpcwo+PiBuZWVkZWQgaW4g
-b3JkZXIgdG8gYWNoaWV2ZSBzdXNwZW5kIHRvIFJBTSBvbiB0aGlzIHBsYXRmb3JtLgo+Pgo+PiBU
-aGFua3MsCj4+IE1pcXXDqGwKPj4KPiAKPiBBbnkgaW5wdXRzIG9uIHRoaXMgc2VyaWVzPyBJdCBp
-cyBpbXBvcnRhbnQgZm9yIG1lIGJlY2F1c2UgaXQgaW1wYWN0cwo+IFNBVEEsIFBDSWUgYW5kIFVT
-QiBjaGFuZ2VzIEkgcGxhbiB0byBnZXQgbWVyZ2UuCgptZXJnZWQgbm93LCB0aGFua3MuCgotS2lz
-aG9uCj4gCj4gVGhhbmtzLAo+IE1pcXXDqGwKPiAKPj4KPj4gQ2hhbmdlcyBzaW5jZSB2NDoKPj4g
-PT09PT09PT09PT09PT09PT0KPj4gKiBGaXhlZCBlcnJvciBpbiB0aGUgZHJpdmVyIHByb2JlIHdo
-ZXJlIFBIWV9JTlRFUkZBQ0VfTU9ERV9OQSB3YXMKPj4gICBhc3NpZ25lZCB0byBsYW5lLT5tb2Rl
-IGluc3RlYWQgb2YgbGFuZS0+c3VibW9kZS4KPj4gKiBDb21waWxlLWluIHRoZSBkcml2ZXIgYnkg
-ZGVmYXVsdCAoZGVwZW5kcyBvbiBBUkNIX01WRUJVKS4KPj4gKiBBZGQgZGVwZW5kZW5jeSBvbiBI
-QVZFX0FSTV9TTUNDIGluIEtjb25maWcuCj4+Cj4+IENoYW5nZXMgc2luY2UgdjM6Cj4+ID09PT09
-PT09PT09PT09PT09Cj4+ICogQWRkZWQgUm9iJ3MgUmV2aWV3ZWQtYnkgdGFnIG9uIGJpbmRpbmdz
-Lgo+PiAqIFJlYmFzZWQgb24gdG9wIG9mIHBoeSAtbmV4dCBhcyBvZiB0aGUgMTJ0aCBvZiBEZWNl
-bWJlciwgMjAxOC4KPj4gKiBBZGFwdGVkIHRoZSBkcml2ZXIgdG8gc3VwcG9ydCBTR01JSS8xMDAw
-QkFTRVggYW5kCj4+ICAgSFNfU0dNSUkvMjUwMEJBU0VYLgo+Pgo+PiBDaGFuZ2VzIHNpbmNlIHYy
-Ogo+PiA9PT09PT09PT09PT09PT09PQo+PiAqIFJlbW92ZSByZWR1bmRhbnQgY2hlY2sgb24gbGFu
-ZS0+cG9ydC9hcmdzLT5hcmdbMF0gYXQgdGhlIGVuZCBvZiB0aGUKPj4gICAtPnhsYXRlKCkgY2Fs
-bGJhY2suIERvIGl0IG9uIGJvdGggYXJtYWRhLWNwMTEwIGFuZCBhcm1hZGEtYTM3MDAgIAo+PiAg
-IENPTVBIWSBkcml2ZXJzLgo+PiAqIFB1dCBteSBTb0IgYXMgYXV0aG9yIG9mIHRoZSBwYXRjaCBm
-aXJzdCB3aGVuIGEgcGF0Y2ggaXMgY28tZGV2ZWxvcGVkLgo+Pgo+PiBDaGFuZ2VzIHNpbmNlIHYx
-Ogo+PiA9PT09PT09PT09PT09PT09PQo+PiAqIEZpeCB3cm9uZyBjaGVjayBpbiAtPnhsYXRlKCku
-Cj4+ICogQXBwbHkgdGhlIHNhbWUgZml4IHRvIHRoZSBjcDExMCBjb21waHkgZHJpdmVyIGZyb20g
-d2hpY2ggdGhlIGEzNzAwCj4+ICAgZHJpdmVyIGlzIGJhc2VkLgo+PiAqIEFkZGVkIGNyZWRpdCB0
-byBHcmVnb3J6IEphc3pjenlrIGZvciBoaXMgd29yay4KPj4gKiBBZGRlZCBTdWdnZXN0ZWQtYnkg
-dGFnIHRvIHRoZSBwYXRjaCBhZGRpbmcgdGhlIENPTVBIWSBEVCBub2RlLgo+Pgo+Pgo+PiBHcnpl
-Z29yeiBKYXN6Y3p5ayAoMSk6Cj4+ICAgcGh5OiBlbnVtZXJhdGUgU0FUQSBQSFkgbW9kZQo+Pgo+
-PiBNaXF1ZWwgUmF5bmFsICg2KToKPj4gICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogZml4IHBv
-cnQgY2hlY2sgaW4gLT54bGF0ZSgpCj4+ICAgcGh5OiBhZGQgQTM3MDAgQ09NUEhZIHN1cHBvcnQK
-Pj4gICBkdC1iaW5kaW5nczogcGh5OiBtdmVidS1jb21waHk6IGV4dGVuZCB0aGUgZmlsZSB0byBk
-ZXNjcmliZSBhMzcwMAo+PiAgICAgYmluZGluZ3MKPj4gICBNQUlOVEFJTkVSUzogcGh5OiBhZGQg
-ZW50cnkgZm9yIEFybWFkYSAzNzAwIENPTVBIWSBkcml2ZXIKPj4gICBBUk02NDogZHRzOiBtYXJ2
-ZWxsOiBhcm1hZGEtMzd4eDogZml4IFNBVEEgbm9kZSBzY29wZQo+PiAgIEFSTTY0OiBkdHM6IG1h
-cnZlbGw6IGFybWFkYS0zN3h4OiBkZWNsYXJlIHRoZSBDT01QSFkgbm9kZQo+Pgo+PiAgLi4uL2Jp
-bmRpbmdzL3BoeS9waHktbXZlYnUtY29tcGh5LnR4dCAgICAgICAgIHwgIDY1ICsrKy0KPj4gIE1B
-SU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNiArCj4+ICBh
-cmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTM3eHguZHRzaSAgfCAgMzEgKy0KPj4g
-IGRyaXZlcnMvcGh5L21hcnZlbGwvS2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAxMiArCj4+
-ICBkcml2ZXJzL3BoeS9tYXJ2ZWxsL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+
-PiAgZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUtYTM3MDAtY29tcGh5LmMgIHwgMzE4ICsr
-KysrKysrKysrKysrKysrKwo+PiAgZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUtY3AxMTAt
-Y29tcGh5LmMgIHwgICAyIC0KPj4gIGluY2x1ZGUvbGludXgvcGh5L3BoeS5oICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgMSArCj4+ICA4IGZpbGVzIGNoYW5nZWQsIDQyMSBpbnNlcnRpb25zKCsp
-LCAxNSBkZWxldGlvbnMoLSkKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BoeS9tYXJ2
-ZWxsL3BoeS1tdmVidS1hMzcwMC1jb21waHkuYwo+PgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Anand,
+
+On Tue, Feb 5, 2019 at 8:53 PM Anand Moon <linux.amoon@gmail.com> wrote:
+[...]
+> > my interpretationfor the Amlogic SoCs is:
+> > - vusb_a and vusb_d are generated internally, not sure if there's an
+> > external fixed regulator
+> > - there is no phy-supply (the PHY itself is powered by clock-gating
+> > using the CLKID_USB clock)
+> > - usb0 VBUS is controlled by GPIOAO_5
+> >
+>
+> But as per the device tree binding
+>
+> [0] https://elixir.bootlin.com/linux/v5.0-rc5/source/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
+> [1] https://elixir.bootlin.com/linux/v5.0-rc5/source/Documentation/devicetree/bindings/phy/phy-bindings.txt
+>
+> its uses phy-supply to enable power to usb phy which seem to be correct option.
+phy-bindings.txt states that "phy-supply" is a "Phandle to a regulator
+that provides power to the PHY".
+I have written the example in meson8b-usb2-phy.txt and I think it's
+wrong (back when I wrote it I didn't know about the "vbus-supply"
+property on the controller and I didn't know about the VBUS
+constraints).
+
+I believe that the phy-supply property is intended for PHYs which need
+an external power supply (for example because they are not embedded
+into a SoC or if the SoC has separate voltage inputs for the PHY).
+I'm not aware of any PHY supply voltage on the Amlogic SoCs (I believe
+this is done internally within the SoC). instead they use clock gating
+to power down the PHY.
+
+as far as I understand the VBUS signal it depends on the USB mode:
+- host provides VBUS
+- peripheral devices are powered using this voltage
+- with OTG VBUS needs to be turned on or off depending on the current
+mode (host or peripheral)
+with the "phy-supply" property there's no way to manage the regulator
+depending on the USB mode (host or peripheral), it will always be
+"on".
+
+
+Regards
+Martin
