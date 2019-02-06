@@ -1,15 +1,15 @@
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v3 7/7] ARM64: dts: marvell: armada-3720-espressobin:
- declare SATA PHY property
-Date: Wed, 06 Feb 2019 15:19:41 +0100
-Message-ID: <878syt6ltu.fsf@FE-laptop>
-References: <20181204192831.12440-1-miquel.raynal@bootlin.com>
- <20181204192831.12440-8-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v5 6/6] ARM64: dts: marvell: armada-37xx: link USB hosts
+ with their PHYs
+Date: Wed, 06 Feb 2019 15:30:16 +0100
+Message-ID: <875ztx6lc7.fsf@FE-laptop>
+References: <20190129093635.4321-1-miquel.raynal@bootlin.com>
+ <20190129093635.4321-7-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204192831.12440-8-miquel.raynal@bootlin.com>
+In-Reply-To: <20190129093635.4321-7-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,27 +19,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlxdWVsLAogCiBPbiBtYXIuLCBkw6ljLiAwNCAyMDE4LCBNaXF1ZWwgUmF5bmFsIDxtaXF1
-ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZToKCj4gVGhlIFNBVEEgbm9kZSBpcyB3aXJlZCB0
-byB0aGUgdGhpcmQgUEhZIG9mIHRoZSBDT01QSFkgSVAuCj4KPiBTdWdnZXN0ZWQtYnk6IEdyemVn
-b3J6IEphc3pjenlrIDxqYXpAc2VtaWhhbGYuY29tPgo+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBS
-YXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+CgpBcHBsaWVkIHRvIG12ZWJ1L2R0NjQK
-ClRoYW5rcywKCkdyZWdvcnkKCj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9h
-cm1hZGEtMzcyMC1lc3ByZXNzb2Jpbi5kdHMgfCAyICsrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
-c2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwv
-YXJtYWRhLTM3MjAtZXNwcmVzc29iaW4uZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxs
-L2FybWFkYS0zNzIwLWVzcHJlc3NvYmluLmR0cwo+IGluZGV4IDNhYjI1YWQ0MDJiOS4uZTk0N2Vm
-NjFkOTQ2IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEt
-MzcyMC1lc3ByZXNzb2Jpbi5kdHMKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwv
-YXJtYWRhLTM3MjAtZXNwcmVzc29iaW4uZHRzCj4gQEAgLTUxLDYgKzUxLDggQEAKPiAgLyogSjYg
-Ki8KPiAgJnNhdGEgewo+ICAJc3RhdHVzID0gIm9rYXkiOwo+ICsJcGh5cyA9IDwmY29tcGh5MiAw
-PjsKPiArCXBoeS1uYW1lcyA9ICJzYXRhLXBoeSI7Cj4gIH07Cj4gIAo+ICAvKiBKMSAqLwo+IC0t
-IAo+IDIuMTkuMQo+CgotLSAKR3JlZ29yeSBDbGVtZW50LCBCb290bGluCkVtYmVkZGVkIExpbnV4
-IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2Jvb3RsaW4uY29tCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Miquel,
+ 
+ On mar., janv. 29 2019, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+
+> Reference the PHY nodes from the USB controller nodes.
+>
+> The USB3 host controller is wired to:
+>   * the first PHY of the COMPHY IP
+>   * the OTG-capable UTMI PHY
+>
+> The USB2 host controller is wired to:
+>   * the host-only UTMI PHY
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Applied to mvebu/dt64
+
+Thanks,
+
+Gregory
+
+
+> ---
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> index d2d8ef00c592..c0b1c9146525 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> @@ -347,6 +347,8 @@
+>  				marvell,usb-misc-reg = <&usb32_syscon>;
+>  				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks = <&sb_periph_clk 12>;
+> +				phys = <&comphy0 0>, <&usb2_utmi_otg_phy>;
+> +				phy-names = "usb3-phy", "usb2-utmi-otg-phy";
+>  				status = "disabled";
+>  			};
+>  
+> @@ -368,6 +370,8 @@
+>  				reg = <0x5e000 0x1000>;
+>  				marvell,usb-misc-reg = <&usb2_syscon>;
+>  				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> +				phys = <&usb2_utmi_host_phy>;
+> +				phy-names = "usb2-utmi-host-phy";
+>  				status = "disabled";
+>  			};
+>  
+> -- 
+> 2.19.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
