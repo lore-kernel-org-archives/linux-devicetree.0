@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v6 1/8] arm64: dts: qcom: sdm845: Update reserved memory map
-Date: Tue,  5 Feb 2019 21:13:28 -0800
-Message-ID: <20190206051335.23799-2-bjorn.andersson@linaro.org>
+Subject: [PATCH v6 4/8] dt-bindings: soc: qcom: Add AOSS QMP binding
+Date: Tue,  5 Feb 2019 21:13:31 -0800
+Message-ID: <20190206051335.23799-5-bjorn.andersson@linaro.org>
 References: <20190206051335.23799-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190206051335.23799-1-bjorn.andersson@linaro.org>
@@ -10,131 +10,126 @@ To: Andy Gross <andy.gross@linaro.org>
 Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update existing and add missing regions to the reserved memory map, as
-described in version 10.
+Add binding for the QMP based side-channel communication mechanism to
+the AOSS, which is used to control resources not exposed through the
+RPMh interface.
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v5:
-- Replaced a few 0x0 with 0
-- Corrected size of tz_mem
+- None
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 74 +++++++++++++++++++++++++---
- 1 file changed, 67 insertions(+), 7 deletions(-)
+ .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 76 +++++++++++++++++++
+ include/dt-bindings/power/qcom-aoss-qmp.h     | 15 ++++
+ 2 files changed, 91 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+ create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index ade2f385507c..16a060063882 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -72,29 +72,69 @@
- 		#size-cells = <2>;
- 		ranges;
- 
--		memory@85fc0000 {
-+		hyp_mem: memory@85700000 {
-+			reg = <0 0x85700000 0 0x600000>;
-+			no-map;
-+		};
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+new file mode 100644
+index 000000000000..9ce6c42192ad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+@@ -0,0 +1,76 @@
++Qualcomm Always-On Subsystem side channel binding
 +
-+		xbl_mem: memory@85e00000 {
-+			reg = <0 0x85e00000 0 0x100000>;
-+			no-map;
-+		};
++This binding describes the hardware component responsible for side channel
++requests to the always-on subsystem (AOSS), used for certain power management
++requests that is not handled by the standard RPMh interface. Each client in the
++SoC has it's own block of message RAM and IRQ for communication with the AOSS.
++The protocol used to communicate in the message RAM is known as Qualcomm
++Messagin Protocol (QMP)
 +
-+		aop_mem: memory@85fc0000 {
- 			reg = <0 0x85fc0000 0 0x20000>;
- 			no-map;
- 		};
- 
--		memory@85fe0000 {
-+		aop_cmd_db_mem: memory@85fe0000 {
- 			compatible = "qcom,cmd-db";
--			reg = <0x0 0x85fe0000 0x0 0x20000>;
-+			reg = <0x0 0x85fe0000 0 0x20000>;
- 			no-map;
- 		};
- 
- 		smem_mem: memory@86000000 {
--			reg = <0x0 0x86000000 0x0 0x200000>;
-+			reg = <0x0 0x86000000 0 0x200000>;
- 			no-map;
- 		};
- 
--		memory@86200000 {
-+		tz_mem: memory@86200000 {
- 			reg = <0 0x86200000 0 0x2d00000>;
- 			no-map;
- 		};
- 
--		wlan_msa_mem: memory@96700000 {
--			reg = <0 0x96700000 0 0x100000>;
-+		qseecom_mem: memory@8ab00000 {
-+			reg = <0 0x8ab00000 0 0x1400000>;
-+			no-map;
-+		};
++The AOSS side channel exposes control over a set of resources, used to control
++a set of debug related clocks and to affect the low power state of resources
++related to the secondary subsystems. These resources are exposed as a set of
++power-domains.
 +
-+		camera_mem: memory@8bf00000 {
-+			reg = <0 0x8bf00000 0 0x500000>;
-+			no-map;
-+		};
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be "qcom,sdm845-aoss-qmp"
 +
-+		ipa_fw_mem: memory@8c400000 {
-+			reg = <0 0x8c400000 0 0x10000>;
-+			no-map;
-+		};
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of the message RAM for this
++		    client's communication with the AOSS
 +
-+		ipa_gsi_mem: memory@8c410000 {
-+			reg = <0 0x8c410000 0 0x5000>;
-+			no-map;
-+		};
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the AOSS message IRQ for this client
 +
-+		gpu_mem: memory@8c415000 {
-+			reg = <0 0x8c415000 0 0x2000>;
-+			no-map;
-+		};
++- mboxes:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: reference to the mailbox representing the outgoing doorbell
++		    in APCS for this client, as described in mailbox/mailbox.txt
 +
-+		adsp_mem: memory@8c500000 {
-+			reg = <0 0x8c500000 0 0x1a00000>;
-+			no-map;
-+		};
++- #power-domain-cells:
++	Usage: optional
++	Value type: <u32>
++	Definition: must be 1
++		    The provided power-domains are:
++		    QDSS clock-domain (0), CDSP state (1), LPASS state (2),
++		    modem state (3), SLPI state (4), SPSS state (5) and Venus
++		    state (6).
 +
-+		wlan_msa_mem: memory@8df00000 {
-+			reg = <0 0x8df00000 0 0x100000>;
- 			no-map;
- 		};
- 
-@@ -103,10 +143,30 @@
- 			no-map;
- 		};
- 
-+		venus_mem: memory@95800000 {
-+			reg = <0 0x95800000 0 0x500000>;
-+			no-map;
-+		};
++= SUBNODES
++The AOSS side channel also provides the controls for three cooling devices,
++these are expressed as subnodes of the QMP node. The name of the node is used
++to identify the resource and must therefor be "cx", "mx" or "ebi".
 +
-+		cdsp_mem: memory@95d00000 {
-+			reg = <0 0x95d00000 0 0x800000>;
-+			no-map;
-+		};
++- #cooling-cells:
++	Usage: optional
++	Value type: <u32>
++	Definition: must be 2
 +
- 		mba_region: memory@96500000 {
- 			reg = <0 0x96500000 0 0x200000>;
- 			no-map;
- 		};
++= EXAMPLE
 +
-+		slpi_mem: memory@96700000 {
-+			reg = <0 0x96700000 0 0x1400000>;
-+			no-map;
-+		};
++The following example represents the AOSS side-channel message RAM and the
++mechanism exposing the power-domains, as found in SDM845.
 +
-+		spss_mem: memory@97b00000 {
-+			reg = <0 0x97b00000 0 0x100000>;
-+			no-map;
-+		};
- 	};
- 
- 	cpus {
++  aoss_qmp: qmp@c300000 {
++	  compatible = "qcom,sdm845-aoss-qmp";
++	  reg = <0x0c300000 0x100000>;
++	  interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
++	  mboxes = <&apss_shared 0>;
++
++	  #power-domain-cells = <1>;
++
++	  cx_cdev: cx {
++		#cooling-cells = <2>;
++	  };
++
++	  mx_cdev: mx {
++		#cooling-cells = <2>;
++	  };
++  };
+diff --git a/include/dt-bindings/power/qcom-aoss-qmp.h b/include/dt-bindings/power/qcom-aoss-qmp.h
+new file mode 100644
+index 000000000000..7d8ac1a4f90c
+--- /dev/null
++++ b/include/dt-bindings/power/qcom-aoss-qmp.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2018, Linaro Ltd. */
++
++#ifndef __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
++#define __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
++
++#define AOSS_QMP_QDSS_CLK	0
++#define AOSS_QMP_LS_CDSP		1
++#define AOSS_QMP_LS_LPASS	2
++#define AOSS_QMP_LS_MODEM	3
++#define AOSS_QMP_LS_SLPI		4
++#define AOSS_QMP_LS_SPSS		5
++#define AOSS_QMP_LS_VENUS	6
++
++#endif
 -- 
 2.18.0
