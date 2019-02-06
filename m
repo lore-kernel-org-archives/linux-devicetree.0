@@ -1,77 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/9] mfd: pm8xxx: convert to v2 irq interfaces to support
- hierarchical IRQ chips
-Date: Wed, 6 Feb 2019 11:02:08 +0100
-Message-ID: <CACRpkdYuH6QnumRnAUbzJCwrj58mog68FJu6Tvi_48bLzsBbZg@mail.gmail.com>
-References: <20190125162302.14036-1-masneyb@onstation.org> <20190125162302.14036-4-masneyb@onstation.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 1/9] pinctrl: sunxi: Support I/O bias
+ voltage setting on A80
+Date: Wed, 6 Feb 2019 18:22:43 +0800
+Message-ID: <CAGb2v67m_yO42VrivTf9x3JvAE3DL4nUZzzXt2BMU_Xb=ZHDtg@mail.gmail.com>
+References: <20190206033239.3619-1-wens@csie.org> <20190206033239.3619-2-wens@csie.org>
+ <CACRpkda45Zhopkk+P9-poDut-gJdJg5POPGSa_Rt_wqE24GGqg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125162302.14036-4-masneyb@onstation.org>
+In-Reply-To: <CACRpkda45Zhopkk+P9-poDut-gJdJg5POPGSa_Rt_wqE24GGqg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian!
+On Wed, Feb 6, 2019 at 4:14 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Wed, Feb 6, 2019 at 4:32 AM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> > The A80 SoC has configuration registers for I/O bias voltage. Incorrect
+> > settings would make the affected peripherals inoperable in some cases,
+> > such as Ethernet RGMII signals biased at 2.5V with the settings still
+> > at 3.3V. However low speed signals such as MDIO on the same group of
+> > pins seem to be unaffected.
+> >
+> > Previously there was no way to know what the actual voltage used was,
+> > short of hard-coding a value in the device tree. With the new pin bank
+> > regulator supply support in place, the driver can now query the
+> > regulator for its voltage, and if it's valid (as opposed to being the
+> > dummy regulator), set the bias voltage setting accordingly.
+> >
+> > Add a quirk to denote the presence of the configuration registers, and
+> > a function to set the correct setting based on the voltage read back
+> > from the regulator.
+> >
+> > This is only done when the regulator is first acquired and enabled.
+> > While it would be nice to have a notifier on the regulator so that when
+> > the voltage changes, the driver can update the setting, in practice no
+> > board currently supports dynamic changing of the I/O voltages.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>
+> Hi Chen-Yu,
+>
+> thanks for the patch! I tried to apply it on the pinctrl devel branch
+> (for v5.1) but it failed to apply, I assume because it depends on
+> the fixes that I just sent to Torvalds.
+>
+> Shall we proceed like this that I merge v5.0-rc6 as soon as it is
+> out and then try to apply this on top of that instead, so we get
+> rid of this conflict?
 
-Thanks for this patch!
+Sure. That sounds like a good plan.
 
-On Fri, Jan 25, 2019 at 5:23 PM Brian Masney <masneyb@onstation.org> wrote:
-
-> The IRQ handler was hardcoded as handle_level_irq and this patch
-> properly sets the handler to either handle_edge_irq or handle_level_irq
-> depending on the IRQ type.
-
-Done like so:
-
-> +               flow_handler = handle_edge_irq;
-
-This creates a problem and makes my kernel crash, because
-handle_edge_irq() *unconditionally* calls chip->irq_ack(),
-and since this chip does not implement .irq_ack(), it crashes.
-
-I tried to just add a void .irq_ack(). That instead made the
-kernel hang.
-
-If I just assign handle_level_irq() as before (just replaced
-all assignments of handle_edge_irq with handle_level_irq)
-it boots nicely, AND the interrupts are working fine on the
-ADC calibration path, and further readings of the ADC
-generates new IRQs, as expected!
-
-The handle_edge_irq and .irq_ack() call path is for hardware
-that require an explicit ACK (such as writing a bit in some
-register) when handling edge IRQs. This is necessary in some
-hardware because of the transient nature of edge IRQs.
-This is not necessary on some hardware that will simply
-clear the flag when something is reading the status register.
-I think this is the case with PM8xxx and you can safely use
-handle_level_irq with all IRQs. It looks counterintuitive and
-maybe the function handle_edge_irq() has a stupid name.
-Just drop this handle_edge_irq() business for now.
-
-This was tested on the APQ8060 DragonBoard.
-
-However this happens:
-
-[    3.007727] mmci-pl18x 12180000.sdcc: ignoring dependency for
-device, assuming no driver
-[    3.007970] mmci-pl18x 12200000.sdcc: ignoring dependency for
-device, assuming no driver
-[    3.014984] mpu3050-i2c 1-0068: ignoring dependency for device,
-assuming no driver
-[    3.023543] cm3605 cm3605: ignoring dependency for device, assuming no driver
-[    3.030532] ak8975 1-000c: ignoring dependency for device, assuming no driver
-[    3.037729] bmp280 1-0077: ignoring dependency for device, assuming no driver
-[    3.044789] reg-fixed-voltage regulators:xc622a331mrg: ignoring
-dependency for device, assuming no driver
-[    3.052485] smsc911x 1b800000.ethernet-ebi2: ignoring dependency
-for device, assuming no driver
-
-But I think that is because these all use ssbi-gpio interrupts and
-these are now handled properly so I will try to fix the device
-tree and send a separate patch that you can include.
-
-Yours,
-Linus Walleij
+ChenYu
