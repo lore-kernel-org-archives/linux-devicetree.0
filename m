@@ -1,60 +1,122 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: usb: xhci-tegra: Add Tegra186 support
-Date: Thu, 7 Feb 2019 12:14:32 +0100
-Message-ID: <20190207111432.GC18518@ulmo>
-References: <20190125113013.11447-1-thierry.reding@gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 4/4] phy: ti: Add a new SERDES driver for TI's AM654x
+ SoC
+Date: Thu, 7 Feb 2019 13:16:12 +0200
+Message-ID: <5C5C137C.2040109@ti.com>
+References: <20190206110753.28738-1-kishon@ti.com>
+ <20190206110753.28738-5-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0vzXIDBeUiKkjNJl"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125113013.11447-1-thierry.reding@gmail.com>
+In-Reply-To: <20190206110753.28738-5-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, JC Kuo <jckuo@nvidia.com>, linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---0vzXIDBeUiKkjNJl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jan 25, 2019 at 12:30:08PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
->=20
-> Extend the bindings to cover the set of features found in Tegra186.
->=20
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+On 06/02/19 13:07, Kishon Vijay Abraham I wrote:
+> Add a new SERDES driver for TI's AM654x SoC which configures
+> the SERDES only for PCIe. Support fo USB3 will be added later.
+> 
+> SERDES in am654x has three input clocks (left input, externel reference
+> clock and right input) and two output clocks (left output and right
+> output) in addition to a PLL mux clock which the SERDES uses for Clock
+> Multiplier Unit (CMU refclock).
+> 
+> The PLL mux clock can select from one of the three input clocks.
+> The right output can select between left input and external reference
+> clock while the left output can select between the right input and
+> external reference clock.
+> 
+> The driver has support to select PLL mux and left/right output mux as
+> specified in device tree.
+> 
+> [rogerq@ti.com: Fix boot lockup caused by accessing a structure member
+> (hw->init) allocated in stack of probe() and accessed in get_parent]
+> [rogerq@ti.com: Fix "Failed to find the parent" warnings]
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  .../devicetree/bindings/usb/nvidia,tegra124-xusb.txt          | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/phy/ti/Kconfig            |  11 +
+>  drivers/phy/ti/Makefile           |   1 +
+>  drivers/phy/ti/phy-am654-serdes.c | 539 ++++++++++++++++++++++++++++++
+>  3 files changed, 551 insertions(+)
+>  create mode 100644 drivers/phy/ti/phy-am654-serdes.c
+> 
+> diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
+> index f137e0107764..6357c32de115 100644
+> --- a/drivers/phy/ti/Kconfig
+> +++ b/drivers/phy/ti/Kconfig
+> @@ -20,6 +20,17 @@ config PHY_DM816X_USB
+>  	help
+>  	  Enable this for dm816x USB to work.
+>  
+> +config PHY_AM654_SERDES
+> +	tristate "TI AM654 SERDES support"
+> +	depends on OF && ARCH_K3 || COMPILE_TEST
+> +	select GENERIC_PHY
+> +	select MULTIPLEXER
+> +	select REGMAP_MMIO
+> +	select MUX_MMIO
+> +	help
+> +	  This option enables support for TI AM654 SerDes PHY used for
+> +	  PCIe.
+> +
+>  config OMAP_CONTROL_PHY
+>  	tristate "OMAP CONTROL PHY Driver"
+>  	depends on ARCH_OMAP2PLUS || COMPILE_TEST
+> diff --git a/drivers/phy/ti/Makefile b/drivers/phy/ti/Makefile
+> index bea8f25a137a..bff901eb0ecc 100644
+> --- a/drivers/phy/ti/Makefile
+> +++ b/drivers/phy/ti/Makefile
+> @@ -6,4 +6,5 @@ obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+>  obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
+>  obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
+>  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+> +obj-$(CONFIG_PHY_AM654_SERDES)		+= phy-am654-serdes.o
+>  obj-$(CONFIG_PHY_TI_GMII_SEL)		+= phy-gmii-sel.o
+> diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
+> new file mode 100644
+> index 000000000000..dfbd2d48503d
+> --- /dev/null
+> +++ b/drivers/phy/ti/phy-am654-serdes.c
+> @@ -0,0 +1,539 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/**
+> + * PCIe SERDES driver for AM654x SoC
+> + *
+> + * Copyright (C) 2018 Texas Instruments
 
-Hi Greg, Mathias,
+2018-2019.
 
-do you have any comments on this series or is it good to go into v5.1?
+> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> + */
+> +
+> +#include <dt-bindings/phy/phy.h>
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/mux/consumer.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/mfd/syscon.h>
+> +
 
-Thanks,
-Thierry
+<snip>
 
---0vzXIDBeUiKkjNJl
-Content-Type: application/pgp-signature; name="signature.asc"
+cheers,
+-roger
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxcExgACgkQ3SOs138+
-s6GkcA/6AzSaIZc6unkYsm7c9Y6sOF4aTYASqwfQ6d8yHown2e5wY9Cb7K8AkRDk
-N3+s/7j9C+axj9f8peXVhO4D+FbuXZOCOE5hZ+A7M9yKEyxHyuBMc71IlAFGMLUi
-Jw5WTYScFoDSsub5Z/zHU7ZYWj7alwzXTiCncarn+rZx5Snt91S908+RfbYDck8W
-iNhmshS16zxT8L5z2sASLr4Q/tLmNTzEZ88xI0t/FVuaN6g1fbg1cJXOy8rxVQy8
-hgkw3JEHDeMt8XfS6LRfy0bkQyk3ElZ67P2BlDIMBt47cVNvv0t4NbLQ6DgtBCaP
-RJu6VlSR1iZHOw/HORDu41oG95w6lHgnWqlv8ZVB9Tr0ENW429TIW3e4Y6zRoCRS
-+zwLVftk7q/H0bjkR9H/lfFvPx2MGo0iE3EwrofNs1ORtjSvXO+ygl7MLvYU28+j
-exAjBPEE+X8V1bhpU6n5p4QXWWZlhofYiRc8oyC1PCjRWqBUVnNNn2OHEXa3LElL
-XheIjLjFCo3rOckVp8yvuvyZneZky+WBM0fuQ2pbk76fFZE77thwaauLsAxNu8AX
-uLrXdR1PCWONffsgE70FXyEtLKKt6buaSmWKss2qxhNS/Aw4iviyOTghAuW4Hj/n
-Jv1KwLAh9LewRmaSz1ayMjnt509jYclm9oAXT7cZMoH9RkxIU9o=
-=r9Ex
------END PGP SIGNATURE-----
-
---0vzXIDBeUiKkjNJl--
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
