@@ -1,40 +1,182 @@
-Return-Path: <SRS0=6Dnf=QM=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 5/5] ARM: dts: imx7s-warp: add fxas21002 gyroscope
-Date: Tue,  5 Feb 2019 17:43:33 +0000
-Message-Id: <20190205174333.17672-6-rui.silva@linaro.org>
-In-Reply-To: <20190205174333.17672-1-rui.silva@linaro.org>
-References: <20190205174333.17672-1-rui.silva@linaro.org>
+Return-Path: <SRS0=rfZI=QO=opensource.cirrus.com=ckeepax@kernel.org>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH v8 1/2] pinctrl: lochnagar: Add initial binding documentation
+Date: Thu, 7 Feb 2019 11:38:24 +0000
+Message-ID: <20190207113825.22032-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Content-Type: text/plain
+To: linus.walleij@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.cirrus.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add entry to enable the fxas21002 in the warp7 board
+Lochnagar is an evaluation and development board for Cirrus
+Logic Smart CODEC and Amp devices. It allows the connection of
+most Cirrus Logic devices on mini-cards, as well as allowing
+connection of various application processor systems to provide a
+full evaluation platform. This driver supports the board
+controller chip on the Lochnagar board.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/imx7s-warp.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index 58d1a89ee3e3..233ff2b68488 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -238,6 +238,13 @@
- 		compatible = "fsl,mpl3115";
- 		reg = <0x60>;
- 	};
+Changes since v7:
+ - Corrected typo fgpa -> fpga
+
+Thanks,
+Charles
+
+ .../bindings/pinctrl/cirrus,lochnagar.txt          | 141 +++++++++++++++++++++
+ 1 file changed, 141 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+new file mode 100644
+index 0000000000000..a87447180e838
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+@@ -0,0 +1,141 @@
++Cirrus Logic Lochnagar Audio Development Board
 +
-+	fxas21002@20 {
-+		compatible = "nxp,fxas21002";
-+		reg = <0x20>;
-+		vdd-supply = <&reg_peri_3p15v>;
-+		vddio-supply = <&reg_peri_3p15v>;
++Lochnagar is an evaluation and development board for Cirrus Logic
++Smart CODEC and Amp devices. It allows the connection of most Cirrus
++Logic devices on mini-cards, as well as allowing connection of
++various application processor systems to provide a full evaluation
++platform.  Audio system topology, clocking and power can all be
++controlled through the Lochnagar, allowing the device under test
++to be used in a variety of possible use cases.
++
++This binding document describes the binding for the pinctrl portion
++of the driver.
++
++Also see these documents for generic binding information:
++  [1] GPIO : ../gpio/gpio.txt
++  [2] Pinctrl: ../pinctrl/pinctrl-bindings.txt
++
++And these for relevant defines:
++  [3] include/dt-bindings/pinctrl/lochnagar.h
++
++This binding must be part of the Lochnagar MFD binding:
++  [4] ../mfd/cirrus,lochnagar.txt
++
++Required properties:
++
++  - compatible : One of the following strings:
++                 "cirrus,lochnagar-pinctrl"
++
++  - gpio-controller : Indicates this device is a GPIO controller.
++  - #gpio-cells : Must be 2. The first cell is the pin number, see
++    [3] for available pins and the second cell is used to specify
++    optional parameters, see [1].
++  - gpio-ranges : Range of pins managed by the GPIO controller, see
++    [1]. Both the GPIO and Pinctrl base should be set to zero and the
++    count to the appropriate of the LOCHNAGARx_PIN_NUM_GPIOS define,
++    see [3].
++
++  - pinctrl-names : A pinctrl state named "default" must be defined.
++  - pinctrl-0 : A phandle to the default pinctrl state.
++
++Required sub-nodes:
++
++The pin configurations are defined as a child of the pinctrl states
++node, see [2]. Each sub-node can have the following properties:
++  - groups : A list of groups to select (either this or "pins" must be
++    specified), available groups:
++      codec-aif1, codec-aif2, codec-aif3, dsp-aif1, dsp-aif2, psia1,
++      psia2, gf-aif1, gf-aif2, gf-aif3, gf-aif4, spdif-aif, usb-aif1,
++      usb-aif2, adat-aif, soundcard-aif
++  - pins : A list of pin names to select (either this or "groups" must
++    be specified), available pins:
++      fpga-gpio1, fpga-gpio2, fpga-gpio3, fpga-gpio4, fpga-gpio5,
++      fpga-gpio6, codec-gpio1, codec-gpio2, codec-gpio3, codec-gpio4,
++      codec-gpio5, codec-gpio6, codec-gpio7, codec-gpio8, dsp-gpio1,
++      dsp-gpio2, dsp-gpio3, dsp-gpio4, dsp-gpio5, dsp-gpio6, gf-gpio2,
++      gf-gpio3, gf-gpio7, codec-aif1-bclk, codec-aif1-rxdat,
++      codec-aif1-lrclk, codec-aif1-txdat, codec-aif2-bclk,
++      codec-aif2-rxdat, codec-aif2-lrclk, codec-aif2-txdat,
++      codec-aif3-bclk, codec-aif3-rxdat, codec-aif3-lrclk,
++      codec-aif3-txdat, dsp-aif1-bclk, dsp-aif1-rxdat, dsp-aif1-lrclk,
++      dsp-aif1-txdat, dsp-aif2-bclk, dsp-aif2-rxdat,
++      dsp-aif2-lrclk, dsp-aif2-txdat, psia1-bclk, psia1-rxdat,
++      psia1-lrclk, psia1-txdat, psia2-bclk, psia2-rxdat, psia2-lrclk,
++      psia2-txdat, gf-aif3-bclk, gf-aif3-rxdat, gf-aif3-lrclk,
++      gf-aif3-txdat, gf-aif4-bclk, gf-aif4-rxdat, gf-aif4-lrclk,
++      gf-aif4-txdat, gf-aif1-bclk, gf-aif1-rxdat, gf-aif1-lrclk,
++      gf-aif1-txdat, gf-aif2-bclk, gf-aif2-rxdat, gf-aif2-lrclk,
++      gf-aif2-txdat, dsp-uart1-rx, dsp-uart1-tx, dsp-uart2-rx,
++      dsp-uart2-tx, gf-uart2-rx, gf-uart2-tx, usb-uart-rx,
++      codec-pdmclk1, codec-pdmdat1, codec-pdmclk2, codec-pdmdat2,
++      codec-dmicclk1, codec-dmicdat1, codec-dmicclk2, codec-dmicdat2,
++      codec-dmicclk3, codec-dmicdat3, codec-dmicclk4, codec-dmicdat4,
++      dsp-dmicclk1, dsp-dmicdat1, dsp-dmicclk2, dsp-dmicdat2, i2c2-scl,
++      i2c2-sda, i2c3-scl, i2c3-sda, i2c4-scl, i2c4-sda, dsp-standby,
++      codec-mclk1, codec-mclk2, dsp-clkin, psia1-mclk, psia2-mclk,
++      gf-gpio1, gf-gpio5, dsp-gpio20, led1, led2
++  - function : The mux function to select, available functions:
++      aif, fpga-gpio1, fpga-gpio2, fpga-gpio3, fpga-gpio4, fpga-gpio5,
++      fpga-gpio6, codec-gpio1, codec-gpio2, codec-gpio3, codec-gpio4,
++      codec-gpio5, codec-gpio6, codec-gpio7, codec-gpio8, dsp-gpio1,
++      dsp-gpio2, dsp-gpio3, dsp-gpio4, dsp-gpio5, dsp-gpio6, gf-gpio2,
++      gf-gpio3, gf-gpio7, gf-gpio1, gf-gpio5, dsp-gpio20, codec-clkout,
++      dsp-clkout, pmic-32k, spdif-clkout, clk-12m288, clk-11m2986,
++      clk-24m576, clk-22m5792, xmos-mclk, gf-clkout1, gf-mclk1,
++      gf-mclk3, gf-mclk2, gf-clkout2, codec-mclk1, codec-mclk2,
++      dsp-clkin, psia1-mclk, psia2-mclk, spdif-mclk, codec-irq,
++      codec-reset, dsp-reset, dsp-irq, dsp-standby, codec-pdmclk1,
++      codec-pdmdat1, codec-pdmclk2, codec-pdmdat2, codec-dmicclk1,
++      codec-dmicdat1, codec-dmicclk2, codec-dmicdat2, codec-dmicclk3,
++      codec-dmicdat3, codec-dmicclk4, codec-dmicdat4, dsp-dmicclk1,
++      dsp-dmicdat1, dsp-dmicclk2, dsp-dmicdat2, dsp-uart1-rx,
++      dsp-uart1-tx, dsp-uart2-rx, dsp-uart2-tx, gf-uart2-rx,
++      gf-uart2-tx, usb-uart-rx, usb-uart-tx, i2c2-scl, i2c2-sda,
++      i2c3-scl, i2c3-sda, i2c4-scl, i2c4-sda, spdif-aif, psia1,
++      psia1-bclk, psia1-lrclk, psia1-rxdat, psia1-txdat, psia2,
++      psia2-bclk, psia2-lrclk, psia2-rxdat, psia2-txdat, codec-aif1,
++      codec-aif1-bclk, codec-aif1-lrclk, codec-aif1-rxdat,
++      codec-aif1-txdat, codec-aif2, codec-aif2-bclk, codec-aif2-lrclk,
++      codec-aif2-rxdat, codec-aif2-txdat, codec-aif3, codec-aif3-bclk,
++      codec-aif3-lrclk, codec-aif3-rxdat, codec-aif3-txdat, dsp-aif1,
++      dsp-aif1-bclk, dsp-aif1-lrclk, dsp-aif1-rxdat, dsp-aif1-txdat,
++      dsp-aif2, dsp-aif2-bclk, dsp-aif2-lrclk, dsp-aif2-rxdat,
++      dsp-aif2-txdat, gf-aif3, gf-aif3-bclk, gf-aif3-lrclk,
++      gf-aif3-rxdat, gf-aif3-txdat, gf-aif4, gf-aif4-bclk,
++      gf-aif4-lrclk, gf-aif4-rxdat, gf-aif4-txdat, gf-aif1,
++      gf-aif1-bclk, gf-aif1-lrclk, gf-aif1-rxdat, gf-aif1-txdat,
++      gf-aif2, gf-aif2-bclk, gf-aif2-lrclk, gf-aif2-rxdat,
++      gf-aif2-txdat, usb-aif1, usb-aif2, adat-aif, soundcard-aif,
++
++  - output-enable : Specifies that an AIF group will be used as a master
++    interface (either this or input-enable is required if a group is
++    being muxed to an AIF)
++  - input-enable : Specifies that an AIF group will be used as a slave
++    interface (either this or output-enable is required if a group is
++    being muxed to an AIF)
++
++Example:
++
++lochnagar-pinctrl {
++	compatible = "cirrus,lochnagar-pinctrl";
++
++	gpio-controller;
++	#gpio-cells = <2>;
++	gpio-ranges = <&lochnagar 0 0 LOCHNAGAR2_PIN_NUM_GPIOS>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pin-settings>;
++
++	pin-settings: pin-settings {
++		ap-aif {
++			input-enable;
++			groups = "gf-aif1";
++			function = "codec-aif3";
++		};
++		codec-aif {
++			output-enable;
++			groups = "codec-aif3";
++			function = "gf-aif1";
++		};
 +	};
- };
- 
- &sai1 {
++};
 -- 
-2.20.1
+2.11.0
