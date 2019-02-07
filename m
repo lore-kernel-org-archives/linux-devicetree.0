@@ -1,44 +1,176 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 0/4] soc: amlogic: clk-measure: add axg and g12a support
-Date: Wed, 06 Feb 2019 19:38:16 -0800
-Message-ID: <7hwomcgtef.fsf@baylibre.com>
-References: <20190118103423.15075-1-jbrunet@baylibre.com> <bc1aa147-e08a-5bb2-9a3b-cf3dad3c0235@baylibre.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v3 1/1] arm64: dts: sdm845: wireup the thermal trip points
+ to cpufreq
+Date: Thu, 7 Feb 2019 10:09:29 +0530
+Message-ID: <CAHLCerP+ao3perRN7_ttr0Qkx81oOAxufpYBvWRUJ04zG2Fisg@mail.gmail.com>
+References: <cover.1548093127.git.amit.kucheria@linaro.org>
+ <6a21a9ee7663e1b32d8ea81ac5e51d187aed25fb.1548093127.git.amit.kucheria@linaro.org>
+ <20190123021251.GJ261387@google.com> <20190124233528.GA81583@google.com>
+ <20190125222051.GF81583@google.com> <CAP245DUy5pe9KQrEX_5iiHg9RtLPHyZcygy6fkrLgsJQYak-_g@mail.gmail.com>
+ <20190206193441.GJ117604@google.com> <20190207015727.GK117604@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bc1aa147-e08a-5bb2-9a3b-cf3dad3c0235@baylibre.com>
+In-Reply-To: <20190207015727.GK117604@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, patchwork-bot+notify@kernel.org, linux-kernel@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Doug Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-
-> On 18/01/2019 11:34, Jerome Brunet wrote:
->> This patchset adds support for the axg and g12a SoC family in amlogic's
->> clock measure driver and enable it on the related devices
->> 
->> Changes since v1 [0]:
->> * re-order node in the g12a.dtsi
->> * change node name
->> 
->> [0]: https://lkml.kernel.org/r/20190117164838.8008-1-jbrunet@baylibre.com
->> 
->> Jerome Brunet (4):
->>   dt-bindings: amlogic: add new compatible devices to clk_measure
->>   soc: amlogic: clk-measure: add axg and g12a support
->>   arm64: dts: meson: axg: add clk measure support
->>   arm64: dts: meson: g12a: add clk measure support
->> 
->>  .../bindings/soc/amlogic/clk-measure.txt      |   2 +
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   5 +
->>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |   5 +
->>  drivers/soc/amlogic/meson-clk-measure.c       | 194 ++++++++++++++++++
->>  4 files changed, 206 insertions(+)
->> 
+On Thu, Feb 7, 2019 at 7:27 AM Matthias Kaehlcke <mka@chromium.org> wrote:
 >
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> On Wed, Feb 06, 2019 at 11:34:41AM -0800, Matthias Kaehlcke wrote:
+> > On Wed, Feb 06, 2019 at 04:05:41PM +0530, Amit Kucheria wrote:
+> > > On Sat, Jan 26, 2019 at 3:50 AM Matthias Kaehlcke <mka@chromium.org> =
+wrote:
+> > > > > > >                   trips {
+> > > > > > > -                         cpu_alert0: trip0 {
+> > > > > > > +                         cpu0_alert1: trip-point@0 {
+> > > > > > >                                   temperature =3D <75000>;
+> > > > > >
+> > > > > > In my observations a 'switch on/threshold' temperature of 75 de=
+grees
+> > > > > > leads to aggressive throttling with IPA when the temperature is=
+ above
+> > > > > > this threshold:
+> > > > > >
+> > > > > > [  716.760804] cpu_cooling_ratelimit: 31 callbacks suppressed
+> > > > > > [  716.760836] cpu cpu4: Cooling state set to 10. New max freq =
+=3D 1920000
+> > > > > > [  716.773390] power_allocator_ratelimit: 15 callbacks suppress=
+ed
+> > > > > > [  716.773405] thermal thermal_zone5: Controlling power: contro=
+l_temp=3D95000 last_temp=3D73500, curr_temp=3D75200 total_requested_power=
+=3D39025 total_granted_power=3D18654
+> > > > > > [  749.609336] cpu_cooling_ratelimit: 45 callbacks suppressed
+> > > > > > [  749.609371] cpu cpu4: Cooling state set to 11. New max freq =
+=3D 1843200
+> > > > > > [  749.624300] power_allocator_ratelimit: 24 callbacks suppress=
+ed
+> > > > > > [  749.624323] thermal thermal_zone5: Controlling power: contro=
+l_temp=3D95000 last_temp=3D70800, curr_temp=3D77200 total_requested_power=
+=3D40136 total_granted_power=3D17402
+> > > > > > [  780.152633] cpu_cooling_ratelimit: 41 callbacks suppressed
+> > > > > > [  780.152666] cpu cpu4: Cooling state set to 11. New max freq =
+=3D 1843200
+> > > > > > [  780.165247] power_allocator_ratelimit: 21 callbacks suppress=
+ed
+> > > > > > [  780.165261] thermal thermal_zone5: Controlling power: contro=
+l_temp=3D95000 last_temp=3D64800, curr_temp=3D76900 total_requested_power=
+=3D39719 total_granted_power=3D1759
+> > > > > >
+> > > > > > (the logs come from a local patch in our tree:
+> > > > > > https://chromium.googlesource.com/chromiumos/third_party/kernel=
+/+/ec1c501a8093fed44a6697a5913ef2765f518e1f)
+> > > > > >
+> > > > > > At this point I don't have a clear idea what would be a reasona=
+ble
+> > > > > > value for the 'switch on/threshold' temperature, but probably i=
+t
+> > > > > > should to be higher than 75 degrees, at least with IPA. If ther=
+e is
+> > > > > > no reasonable common configuration for different thermal govern=
+ors I
+> > > > > > guess we'll have to target a commonly used governor and systems
+> > > > > > using other 'incompatible' governors need to override the confi=
+g in
+> > > > > > their <board>.dtsi.
+> > > > >
+> > >
+> > > Thanks for the elaborate testing and for sharing the numbers. This is
+> > > very useful information.
+> > >
+> > > > > On my system I don't see a significant delta in core temperatures=
+ for
+> > > > > 'threshold' temperatures of 80, 85 or 90=C2=B0C. However Dhryston=
+e
+> > > > > performance goes up by ~8% when changing the trip point from 80 t=
+o
+> > > > > 85=C2=B0C. For a switch from 85 to 90=C2=B0C I see a ~2% performa=
+nce delta. For
+> > > > > all trip points the average core temperatures are ~80=C2=B0C (sil=
+ver) and
+> > > > > ~85=C2=B0C (gold). Interestingly I observed the highest average
+> > > > > temperatures with the trip point at 80=C2=B0C (repeated measureme=
+nts were
+> > > > > taken for different temperatures).
+> > > > >
+> > > > > Supposedly LMH throttling is disabled in the firmware I used for
+> > > > > these tests, however data suggests that it is still active
+> > > > > (temperature doesn't rise beyond 95=C2=B0C, even without throttli=
+ng in
+> > > > > Linux; Dhrystone performance drops when raising the temperature b=
+eyond
+> > > > > 95=C2=B0C with a heat gun. I will do some more testing when I get=
+ my hands
+> > > > > on a FW that effectively disables LMH (or raises the threshold to
+> > > > > something like 105=C2=B0C).
+> > > > >
+> > > > > From the data collected so far I'd suggest a 'threshold' temperat=
+ure
+> > > > > of 90=C2=B0C or if that seems to high 85=C2=B0C. Behavior might b=
+e different
+> > > > > with other thermal governors or without LMH throttling..
+> > > >
+> > > > Some more data from measurements with different trips points, for t=
+he
+> > > > IPA and the Fair Share governors, LMH throttling was enabled:
+> > > >
+> > > >                         IPA
+> > > >         Dhrystone       Temp Silver     Temp Gold
+> > > > 75      6M              78.4            84.9
+> > > > 80      6.21M           81.4            89.8
+> > > > 85      6.74M           81.7            88.2
+> > > > 90      6.88M           79.4            84.6
+> > > >
+> > > >                         Fair Share
+> > > >         Dhrystone       Temp Silver     Temp Gold
+> > > > 75      6.63M           80.1            88.5
+> > > > 80      6.71M           80.1            88.5
+> > > > 85      6.77M           81.1            87.8
+> > > > 90      7.12M           81.2            87.8
+> > >
+> > > Interesting that you get more MIPs out of fair share governor when
+> > > compared to IPA across the board. What devices were providing energy
+> > > cost information (dynamic-power-coefficient) to the IPA engine? Just
+> > > CPU and GPU? Can you point me to those patches in gerrit?
+> >
+> > Only the CPUs provide energy cost information, the GPU isn't fully
+> > hooked up in our tree yet. The cause of the delta could be that for
+> > temperatures < 'target' Fair Share only uses the performance states
+> > specified in 'threshold' for throttling (currently only the boost
+> > frequency), while IPA may use the full range of states  of the
+> > 'target' trip point.
+>
+> I saw that in v4 you allow all performance state to be used for
 
-Queued for v5.1 (branch v5.1/dt64)
+Yes, I found during my testing that I got better convergence at the
+threshold temperature when I allowed the entire range of operating
+points with almost no decrease in MIPs.
 
-Kevin
+> throttling at the 'threshold' temperature. With this configuration
+> I get:
+>
+>                Dhrystone      Temp Silver    Temp Gold
+>
+> Fair Share     7.29M          81.4           87.7
+>
+> IPA            7.14M          81.7           88.3
+>
+>
+> I have no good sense why we are seeing more MIPs for IPA than with the
+> previous configuration. As for earlier tests the values are the
+> average from 4 runs.
+
+I suspect that EAS task placement might be at work here. Were your
+test threads locked to CPUs or were they free to be scheduled around?
+
+> In any case it seems like a reasonable default configuration with the
+> data we have at this point.
+
+Thanks for your thorough reviews to get this point. Will you send out
+the patches to add support for IPA at some point?
+
+Regards,
+Amit
