@@ -1,48 +1,34 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/3] pinctrl: meson: g12a fixes
-Date: Wed, 06 Feb 2019 19:11:23 -0800
-Message-ID: <7h36p0i97o.fsf@baylibre.com>
-References: <20190117102315.1833-1-jbrunet@baylibre.com> <CACRpkdb7pje9mrgOQoiWTRxGQC8xsOvJ9a8PCguM807unPtpCg@mail.gmail.com> <a434c3b1c55a1b5a1485adc29cfe26b45131a936.camel@baylibre.com>
+Subject: Re: [PATCH v2] arm64: dts: meson: fix g12a buses
+Date: Wed, 06 Feb 2019 19:23:31 -0800
+Message-ID: <7h5ztwi8ng.fsf@baylibre.com>
+References: <20190201133732.32169-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a434c3b1c55a1b5a1485adc29cfe26b45131a936.camel@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190201133732.32169-1-jbrunet@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Jianxin Pan <jianxin.pan@amlogic.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> On Mon, 2019-01-21 at 14:53 +0100, Linus Walleij wrote:
->> On Thu, Jan 17, 2019 at 11:23 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
->> 
->> > This patchset fixes the initial pinctrl support added for th g12a SoC
->> > family, which is mainly around the register regions claimed by the
->> > driver.
->> > 
->> > Linus, would it possible for you to provide a tag with these changes to
->> > Kevin ?
->> 
->> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-meson-fixes
->> 
->> > ATM, we can only use the devices for which the pinmux is already set by
->> > the bootloader. Enabling the broken pinctrl driver could cause regressions
->> > in kernelCI. Having a tag, would allow us to start using pinctrl on this
->> > SoC in this cycle, w/o regression. It would be nice :)
->> 
->> When you say "this cycle" do you mean I should target fixes (v5.0-rcN)
->> or next (v5.1) with these patches?
+> Fix apb, cbus, hiu and periph regions which are not aligned
+> with the documentation and the information provided by Amlogic
 >
-> I was referring to the 5.1 release but it is a good question, I did not really
-> think about 5.0.
->
-> Those changes are mainly fixes, so guess it could go in the 5.0 but support
-> for this SoC is still in its early stages, so either way is fine by me. 
->
-> Whatever is simpler for you I guess ;)
+> Fixes: 9c8c52f7cb4f ("arm64: dts: meson-g12a: add initial g12a s905d2 SoC DT support")
+> Cc: Jianxin Pan <jianxin.pan@amlogic.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
-If it's not too late, v5.0-rc is simpler for me as it means not having
-to deal with this as a dependency branch/tag.
+Queued for v5.1 (branch: v5.1/dt64)
 
 Kevin
