@@ -1,54 +1,47 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 2/3] ASoC: msm8916-wcd-digital: convert license
-	header to SPDX
-Date: Thu,  7 Feb 2019 17:57:54 +0100
-Message-ID: <20190207165755.1548-3-johan@kernel.org>
-References: <20190207165755.1548-1-johan@kernel.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 5/7] dt-bindings: interrupt-controller: update bindings
+ for MT7623
+Date: Thu, 7 Feb 2019 18:11:47 +0100
+Message-ID: <4c79bb2b-abb1-0306-2eff-884c2d8bbb47@gmail.com>
+References: <d1ab6c89b115ad0582815816490fa0c13ea83178.1548735271.git.ryder.lee@mediatek.com>
+ <5f226695c861fa9fc641488364f0c19c0a5eb425.1548735271.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190207165755.1548-1-johan@kernel.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Johan Hovold <johan@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5f226695c861fa9fc641488364f0c19c0a5eb425.1548735271.git.ryder.lee@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <roychl666@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Convert the GPLv2-only license header to SPDX.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- sound/soc/codecs/msm8916-wcd-digital.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
-index 3063dedd21cf..5273996b40d5 100644
---- a/sound/soc/codecs/msm8916-wcd-digital.c
-+++ b/sound/soc/codecs/msm8916-wcd-digital.c
-@@ -1,13 +1,6 @@
--/* Copyright (c) 2016, The Linux Foundation. All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 and
-- * only version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-  */
- 
- #include <linux/module.h>
--- 
-2.20.1
+On 29/01/2019 05:31, Ryder Lee wrote:
+> This adds missing bindings for MT7623 sysirq.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+
+Marc, if you don't have any objections, I'll take this through my tree.
+
+Regards,
+Matthias
+
+> ---
+>  .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt         | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> index 8da481c..e8b3688 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>  	"mediatek,mt8135-sysirq", "mediatek,mt6577-sysirq": for MT8135
+>  	"mediatek,mt8127-sysirq", "mediatek,mt6577-sysirq": for MT8127
+>  	"mediatek,mt7622-sysirq", "mediatek,mt6577-sysirq": for MT7622
+> +	"mediatek,mt7623-sysirq", "mediatek,mt6577-sysirq": for MT7623
+>  	"mediatek,mt7629-sysirq", "mediatek,mt6577-sysirq": for MT7629
+>  	"mediatek,mt6795-sysirq", "mediatek,mt6577-sysirq": for MT6795
+>  	"mediatek,mt6797-sysirq", "mediatek,mt6577-sysirq": for MT6797
+> 
