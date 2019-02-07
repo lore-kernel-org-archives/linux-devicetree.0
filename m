@@ -1,182 +1,54 @@
-Return-Path: <SRS0=rfZI=QO=opensource.cirrus.com=ckeepax@kernel.org>
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v8 1/2] pinctrl: lochnagar: Add initial binding documentation
-Date: Thu, 7 Feb 2019 11:38:24 +0000
-Message-ID: <20190207113825.22032-1-ckeepax@opensource.cirrus.com>
+Return-Path: <SRS0=K5hT=QO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55123 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfBGOoN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Feb 2019 09:44:13 -0500
+Date: Thu, 7 Feb 2019 15:44:09 +0100
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 4/4] gpio: pca953x: add ->set_config implementation
+Message-ID: <20190207154409.7ed02a1d@windsurf>
+In-Reply-To: <CACRpkdY4A_Yvv3cKmvYio_9w2HMw9retG-4feydn47sDQY62ig@mail.gmail.com>
+References: <20190103164102.31437-1-thomas.petazzoni@bootlin.com>
+        <20190103164102.31437-5-thomas.petazzoni@bootlin.com>
+        <CACRpkdY4A_Yvv3cKmvYio_9w2HMw9retG-4feydn47sDQY62ig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: linus.walleij@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.cirrus.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Lochnagar is an evaluation and development board for Cirrus
-Logic Smart CODEC and Amp devices. It allows the connection of
-most Cirrus Logic devices on mini-cards, as well as allowing
-connection of various application processor systems to provide a
-full evaluation platform. This driver supports the board
-controller chip on the Lochnagar board.
+Hello Linus,
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
+On Fri, 11 Jan 2019 11:14:49 +0100
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
-Changes since v7:
- - Corrected typo fgpa -> fpga
+> > This commit adds a minimal implementation of the ->set_config() hook,
+> > with support for the PIN_CONFIG_BIAS_PULL_UP and
+> > PIN_CONFIG_BIAS_PULL_DOWN configurations.
+> >
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>  
+> 
+> This looks OK to me, but IIUC not all versions of the PCA953x supports
+> this?
+> 
+> So we need to make sure that you return -ENOTSUPP if the device
+> does not support setting pull up/down.
 
-Thanks,
-Charles
+Indeed, I've added a check for this.
 
- .../bindings/pinctrl/cirrus,lochnagar.txt          | 141 +++++++++++++++++++++
- 1 file changed, 141 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+> Also there are configs for debounce too, right? I suggested to add
+> that first but I have no strong opinion on it.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
-new file mode 100644
-index 0000000000000..a87447180e838
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
-@@ -0,0 +1,141 @@
-+Cirrus Logic Lochnagar Audio Development Board
-+
-+Lochnagar is an evaluation and development board for Cirrus Logic
-+Smart CODEC and Amp devices. It allows the connection of most Cirrus
-+Logic devices on mini-cards, as well as allowing connection of
-+various application processor systems to provide a full evaluation
-+platform.  Audio system topology, clocking and power can all be
-+controlled through the Lochnagar, allowing the device under test
-+to be used in a variety of possible use cases.
-+
-+This binding document describes the binding for the pinctrl portion
-+of the driver.
-+
-+Also see these documents for generic binding information:
-+  [1] GPIO : ../gpio/gpio.txt
-+  [2] Pinctrl: ../pinctrl/pinctrl-bindings.txt
-+
-+And these for relevant defines:
-+  [3] include/dt-bindings/pinctrl/lochnagar.h
-+
-+This binding must be part of the Lochnagar MFD binding:
-+  [4] ../mfd/cirrus,lochnagar.txt
-+
-+Required properties:
-+
-+  - compatible : One of the following strings:
-+                 "cirrus,lochnagar-pinctrl"
-+
-+  - gpio-controller : Indicates this device is a GPIO controller.
-+  - #gpio-cells : Must be 2. The first cell is the pin number, see
-+    [3] for available pins and the second cell is used to specify
-+    optional parameters, see [1].
-+  - gpio-ranges : Range of pins managed by the GPIO controller, see
-+    [1]. Both the GPIO and Pinctrl base should be set to zero and the
-+    count to the appropriate of the LOCHNAGARx_PIN_NUM_GPIOS define,
-+    see [3].
-+
-+  - pinctrl-names : A pinctrl state named "default" must be defined.
-+  - pinctrl-0 : A phandle to the default pinctrl state.
-+
-+Required sub-nodes:
-+
-+The pin configurations are defined as a child of the pinctrl states
-+node, see [2]. Each sub-node can have the following properties:
-+  - groups : A list of groups to select (either this or "pins" must be
-+    specified), available groups:
-+      codec-aif1, codec-aif2, codec-aif3, dsp-aif1, dsp-aif2, psia1,
-+      psia2, gf-aif1, gf-aif2, gf-aif3, gf-aif4, spdif-aif, usb-aif1,
-+      usb-aif2, adat-aif, soundcard-aif
-+  - pins : A list of pin names to select (either this or "groups" must
-+    be specified), available pins:
-+      fpga-gpio1, fpga-gpio2, fpga-gpio3, fpga-gpio4, fpga-gpio5,
-+      fpga-gpio6, codec-gpio1, codec-gpio2, codec-gpio3, codec-gpio4,
-+      codec-gpio5, codec-gpio6, codec-gpio7, codec-gpio8, dsp-gpio1,
-+      dsp-gpio2, dsp-gpio3, dsp-gpio4, dsp-gpio5, dsp-gpio6, gf-gpio2,
-+      gf-gpio3, gf-gpio7, codec-aif1-bclk, codec-aif1-rxdat,
-+      codec-aif1-lrclk, codec-aif1-txdat, codec-aif2-bclk,
-+      codec-aif2-rxdat, codec-aif2-lrclk, codec-aif2-txdat,
-+      codec-aif3-bclk, codec-aif3-rxdat, codec-aif3-lrclk,
-+      codec-aif3-txdat, dsp-aif1-bclk, dsp-aif1-rxdat, dsp-aif1-lrclk,
-+      dsp-aif1-txdat, dsp-aif2-bclk, dsp-aif2-rxdat,
-+      dsp-aif2-lrclk, dsp-aif2-txdat, psia1-bclk, psia1-rxdat,
-+      psia1-lrclk, psia1-txdat, psia2-bclk, psia2-rxdat, psia2-lrclk,
-+      psia2-txdat, gf-aif3-bclk, gf-aif3-rxdat, gf-aif3-lrclk,
-+      gf-aif3-txdat, gf-aif4-bclk, gf-aif4-rxdat, gf-aif4-lrclk,
-+      gf-aif4-txdat, gf-aif1-bclk, gf-aif1-rxdat, gf-aif1-lrclk,
-+      gf-aif1-txdat, gf-aif2-bclk, gf-aif2-rxdat, gf-aif2-lrclk,
-+      gf-aif2-txdat, dsp-uart1-rx, dsp-uart1-tx, dsp-uart2-rx,
-+      dsp-uart2-tx, gf-uart2-rx, gf-uart2-tx, usb-uart-rx,
-+      codec-pdmclk1, codec-pdmdat1, codec-pdmclk2, codec-pdmdat2,
-+      codec-dmicclk1, codec-dmicdat1, codec-dmicclk2, codec-dmicdat2,
-+      codec-dmicclk3, codec-dmicdat3, codec-dmicclk4, codec-dmicdat4,
-+      dsp-dmicclk1, dsp-dmicdat1, dsp-dmicclk2, dsp-dmicdat2, i2c2-scl,
-+      i2c2-sda, i2c3-scl, i2c3-sda, i2c4-scl, i2c4-sda, dsp-standby,
-+      codec-mclk1, codec-mclk2, dsp-clkin, psia1-mclk, psia2-mclk,
-+      gf-gpio1, gf-gpio5, dsp-gpio20, led1, led2
-+  - function : The mux function to select, available functions:
-+      aif, fpga-gpio1, fpga-gpio2, fpga-gpio3, fpga-gpio4, fpga-gpio5,
-+      fpga-gpio6, codec-gpio1, codec-gpio2, codec-gpio3, codec-gpio4,
-+      codec-gpio5, codec-gpio6, codec-gpio7, codec-gpio8, dsp-gpio1,
-+      dsp-gpio2, dsp-gpio3, dsp-gpio4, dsp-gpio5, dsp-gpio6, gf-gpio2,
-+      gf-gpio3, gf-gpio7, gf-gpio1, gf-gpio5, dsp-gpio20, codec-clkout,
-+      dsp-clkout, pmic-32k, spdif-clkout, clk-12m288, clk-11m2986,
-+      clk-24m576, clk-22m5792, xmos-mclk, gf-clkout1, gf-mclk1,
-+      gf-mclk3, gf-mclk2, gf-clkout2, codec-mclk1, codec-mclk2,
-+      dsp-clkin, psia1-mclk, psia2-mclk, spdif-mclk, codec-irq,
-+      codec-reset, dsp-reset, dsp-irq, dsp-standby, codec-pdmclk1,
-+      codec-pdmdat1, codec-pdmclk2, codec-pdmdat2, codec-dmicclk1,
-+      codec-dmicdat1, codec-dmicclk2, codec-dmicdat2, codec-dmicclk3,
-+      codec-dmicdat3, codec-dmicclk4, codec-dmicdat4, dsp-dmicclk1,
-+      dsp-dmicdat1, dsp-dmicclk2, dsp-dmicdat2, dsp-uart1-rx,
-+      dsp-uart1-tx, dsp-uart2-rx, dsp-uart2-tx, gf-uart2-rx,
-+      gf-uart2-tx, usb-uart-rx, usb-uart-tx, i2c2-scl, i2c2-sda,
-+      i2c3-scl, i2c3-sda, i2c4-scl, i2c4-sda, spdif-aif, psia1,
-+      psia1-bclk, psia1-lrclk, psia1-rxdat, psia1-txdat, psia2,
-+      psia2-bclk, psia2-lrclk, psia2-rxdat, psia2-txdat, codec-aif1,
-+      codec-aif1-bclk, codec-aif1-lrclk, codec-aif1-rxdat,
-+      codec-aif1-txdat, codec-aif2, codec-aif2-bclk, codec-aif2-lrclk,
-+      codec-aif2-rxdat, codec-aif2-txdat, codec-aif3, codec-aif3-bclk,
-+      codec-aif3-lrclk, codec-aif3-rxdat, codec-aif3-txdat, dsp-aif1,
-+      dsp-aif1-bclk, dsp-aif1-lrclk, dsp-aif1-rxdat, dsp-aif1-txdat,
-+      dsp-aif2, dsp-aif2-bclk, dsp-aif2-lrclk, dsp-aif2-rxdat,
-+      dsp-aif2-txdat, gf-aif3, gf-aif3-bclk, gf-aif3-lrclk,
-+      gf-aif3-rxdat, gf-aif3-txdat, gf-aif4, gf-aif4-bclk,
-+      gf-aif4-lrclk, gf-aif4-rxdat, gf-aif4-txdat, gf-aif1,
-+      gf-aif1-bclk, gf-aif1-lrclk, gf-aif1-rxdat, gf-aif1-txdat,
-+      gf-aif2, gf-aif2-bclk, gf-aif2-lrclk, gf-aif2-rxdat,
-+      gf-aif2-txdat, usb-aif1, usb-aif2, adat-aif, soundcard-aif,
-+
-+  - output-enable : Specifies that an AIF group will be used as a master
-+    interface (either this or input-enable is required if a group is
-+    being muxed to an AIF)
-+  - input-enable : Specifies that an AIF group will be used as a slave
-+    interface (either this or output-enable is required if a group is
-+    being muxed to an AIF)
-+
-+Example:
-+
-+lochnagar-pinctrl {
-+	compatible = "cirrus,lochnagar-pinctrl";
-+
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	gpio-ranges = <&lochnagar 0 0 LOCHNAGAR2_PIN_NUM_GPIOS>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pin-settings>;
-+
-+	pin-settings: pin-settings {
-+		ap-aif {
-+			input-enable;
-+			groups = "gf-aif1";
-+			function = "codec-aif3";
-+		};
-+		codec-aif {
-+			output-enable;
-+			groups = "codec-aif3";
-+			function = "gf-aif1";
-+		};
-+	};
-+};
+The particular PCA variant that I have does not have any debounce
+related capability it seems, so I won't be able to implement this
+aspect.
+
+Best regards,
+
+Thomas
 -- 
-2.11.0
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
