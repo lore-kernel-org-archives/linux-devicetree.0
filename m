@@ -1,80 +1,163 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: codecs: jz4740: Use SPDX license notifier" to the asoc tree
-Date: Thu,  7 Feb 2019 15:22:35 +0000 (GMT)
-Message-ID: <20190207152235.9A3251127EF9@debutante.sirena.org.uk>
-References: <20190207133143.5232-3-paul@crapouillou.net>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v6 5/6] dt-bindings: pinctrl: mt8183: add binding document
+Date: Thu, 7 Feb 2019 16:28:27 +0100
+Message-ID: <d76bb2e8-5285-15ce-b850-6cf3065e0777@gmail.com>
+References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
+ <1548317240-44682-6-git-send-email-erin.lo@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190207133143.5232-3-paul@crapouillou.net>
+In-Reply-To: <1548317240-44682-6-git-send-email-erin.lo@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
+To: Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Zhiyong Tao <zhiyong.tao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: codecs: jz4740: Use SPDX license notifier
 
-has been applied to the asoc tree at
+On 24/01/2019 09:07, Erin Lo wrote:
+> From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> 
+> The commit adds mt8183 compatible node in binding document.
+> 
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> ---
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+I'm missing Linus Walleij on the recipient list.
+Pleas make sure to add all persons from the get_maintainers script.
+IMHO it's a bit unfortunate that we got the driver merged, but no binding
+description. Please try to send driver + binding documentation together, that
+makes things easier to discuss.
 
 Thanks,
-Mark
+Matthias
 
->From 06a334ae98d15c3e32ae4ef8ce18a241a12f3dff Mon Sep 17 00:00:00 2001
-From: Paul Cercueil <paul@crapouillou.net>
-Date: Thu, 7 Feb 2019 10:31:40 -0300
-Subject: [PATCH] ASoC: codecs: jz4740: Use SPDX license notifier
-
-Add license information as a standard SPDX license notifier instead of
-custom text.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/jz4740.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
-
-diff --git a/sound/soc/codecs/jz4740.c b/sound/soc/codecs/jz4740.c
-index 9395b583432c..9b3e1227a971 100644
---- a/sound/soc/codecs/jz4740.c
-+++ b/sound/soc/codecs/jz4740.c
-@@ -1,15 +1,8 @@
--/*
-- * Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- *  You should have received a copy of the  GNU General Public License along
-- *  with this program; if not, write  to the Free Software Foundation, Inc.,
-- *  675 Mass Ave, Cambridge, MA 02139, USA.
-- *
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// JZ4740 CODEC driver
-+//
-+// Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
--- 
-2.20.1
+>  .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt | 115 +++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> new file mode 100644
+> index 0000000..364e673
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> @@ -0,0 +1,115 @@
+> +* Mediatek MT8183 Pin Controller
+> +
+> +The Mediatek's Pin controller is used to control SoC pins.
+> +
+> +Required properties:
+> +- compatible: value should be one of the following.
+> +	"mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
+> +- gpio-controller : Marks the device node as a gpio controller.
+> +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+> +  binding is used, the amount of cells must be specified as 2. See the below
+> +  mentioned gpio binding representation for description of particular cells.
+> +- gpio-ranges : gpio valid number range.
+> +- reg: physicall address base for gpio base registers. There are nine
+> +  physicall address base in mt8183. They are 0x10005000, 0x11F20000,
+> +  0x11E80000, 0x11E70000, 0x11E90000, 0x11D30000, 0x11D20000, 0x11C50000,
+> +  0x11F30000.
+> +
+> +	Eg: <&pio 6 0>
+> +	<[phandle of the gpio controller node]
+> +	[line number within the gpio controller]
+> +	[flags]>
+> +
+> +	Values for gpio specifier:
+> +	- Line number: is a value between 0 to 202.
+> +	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
+> +            Only the following flags are supported:
+> +            0 - GPIO_ACTIVE_HIGH
+> +            1 - GPIO_ACTIVE_LOW
+> +
+> +Optional properties:
+> +- reg-names: gpio base register names. There are nine gpio base register
+> +  names in mt8183. They are "iocfg0", "iocfg1", "iocfg2", "iocfg3", "iocfg4",
+> +  "iocfg5", "iocfg6", "iocfg7", "iocfg8".
+> +- interrupt-controller: Marks the device node as an interrupt controller
+> +- #interrupt-cells: Should be two.
+> +- interrupts : The interrupt outputs from the controller.
+> +
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices.
+> +
+> +Subnode format
+> +A pinctrl node should contain at least one subnodes representing the
+> +pinctrl groups available on the machine. Each subnode will list the
+> +pins it needs, and how they should be configured, with regard to muxer
+> +configuration, pullups, drive strength, input enable/disable and input schmitt.
+> +
+> +    node {
+> +	pinmux = <PIN_NUMBER_PINMUX>;
+> +	GENERIC_PINCONFIG;
+> +    };
+> +
+> +Required properties:
+> +- pinmux: integer array, represents gpio pin number and mux setting.
+> +    Supported pin number and mux varies for different SoCs, and are defined
+> +    as macros in boot/dts/<soc>-pinfunc.h directly.
+> +
+> +Optional properties:
+> +- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
+> +    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
+> +    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
+> +
+> +    Some special pins have extra pull up strength, there are R0 and R1 pull-up
+> +    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
+> +    So when config mediatek,pull-up-adv or mediatek,pull-down-adv,
+> +    it support arguments for those special pins.
+> +
+> +    When config drive-strength, it can support some arguments, such as
+> +    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
+> +
+> +Examples:
+> +
+> +#include "mt8183-pinfunc.h"
+> +
+> +...
+> +{
+> +	pio: pinctrl@10005000 {
+> +		compatible = "mediatek,mt8183-pinctrl";
+> +		reg = <0 0x10005000 0 0x1000>,
+> +		      <0 0x11F20000 0 0x1000>,
+> +		      <0 0x11E80000 0 0x1000>,
+> +		      <0 0x11E70000 0 0x1000>,
+> +		      <0 0x11E90000 0 0x1000>,
+> +		      <0 0x11D30000 0 0x1000>,
+> +		      <0 0x11D20000 0 0x1000>,
+> +		      <0 0x11C50000 0 0x1000>,
+> +		      <0 0x11F30000 0 0x1000>;
+> +		reg-names = "iocfg0", "iocfg1", "iocfg2",
+> +			    "iocfg3", "iocfg4", "iocfg5",
+> +			    "iocfg6", "iocfg7", "iocfg8";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		gpio-ranges = <&pio 0 0 192>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-parent = <&gic>;
+> +		#interrupt-cells = <2>;
+> +
+> +		i2c0_pins_a: i2c0 {
+> +			pins1 {
+> +				pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
+> +					 <PINMUX_GPIO49__FUNC_SDA5>;
+> +				mediatek,pull-up-adv = <11>;
+> +			};
+> +		};
+> +
+> +		i2c1_pins_a: i2c1 {
+> +			pins {
+> +				pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
+> +					 <PINMUX_GPIO51__FUNC_SDA3>;
+> +				mediatek,pull-down-adv = <10>;
+> +			};
+> +		};
+> +		...
+> +	};
+> +};
+> 
