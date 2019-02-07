@@ -1,59 +1,86 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [RFT PATCH 7/9] mfd: axp20x: add USB power supply mfd cell to AXP813
-Date: Thu, 7 Feb 2019 22:28:12 +0800
-Message-ID: <CAGb2v66uC=ZUj3S3ceVHABg68WMuyfHPcG77CV1DjCNn9ff71A@mail.gmail.com>
-References: <20190207064535.9226-1-wens@csie.org> <20190207064535.9226-8-wens@csie.org>
- <20190207110247.GE20638@dell>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH 2/2] drivers: xhci: Add quirk to reset xHCI port PHY
+Date: Thu, 7 Feb 2019 17:06:53 +0200
+Message-ID: <6392f206-9db2-5506-9e5d-cdf2b784d32e@linux.intel.com>
+References: <1549347534-11320-1-git-send-email-srinath.mannam@broadcom.com>
+ <1549347534-11320-3-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190207110247.GE20638@dell>
+In-Reply-To: <1549347534-11320-3-git-send-email-srinath.mannam@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Quentin Schulz <quentin.schulz@bootlin.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Hans de Goede <hdegoede@redhat.com>
+To: Srinath Mannam <srinath.mannam@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 7, 2019 at 7:02 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Thu, 07 Feb 2019, Chen-Yu Tsai wrote:
->
-> > From: Quentin Schulz <quentin.schulz@bootlin.com>
-> >
-> > The AXP813 has a VBUS power input. Now that the axp20x_usb_power driver
-> > supports this variant, we can add an mfd cell for it to use it.
-> >
-> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> > [wens@csie.org: add commit message]
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  drivers/mfd/axp20x.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> > index 3c97f2c0fdfe..17b115845993 100644
-> > --- a/drivers/mfd/axp20x.c
-> > +++ b/drivers/mfd/axp20x.c
-> > @@ -198,6 +198,12 @@ static const struct resource axp22x_usb_power_supply_resources[] = {
-> >       DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
-> >  };
-> >
-> > +/* AXP803 and AXP813/AXP818 share the same interrupts */
-> > +static struct resource axp803_usb_power_supply_resources[] = {
-> > +     DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
-> > +     DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
->
-> Nit: Why 2 spaces here?                              ^
+On 05.02.2019 08:18, Srinath Mannam wrote:
+> Add a quirk to reset xHCI port PHY on port disconnect event.
+> Stingray USB HS PHY has an issue, that USB High Speed device detected
+> at Full Speed after the same port has connected to Full speed device.
+> This problem can be resolved with that port PHY reset on disconnect.
+> 
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> ---
+>   drivers/usb/core/hcd.c       |  6 ++++++
+>   drivers/usb/core/phy.c       | 21 +++++++++++++++++++++
+>   drivers/usb/core/phy.h       |  1 +
+>   drivers/usb/host/xhci-plat.c |  3 +++
+>   drivers/usb/host/xhci-ring.c |  9 ++++++---
+>   drivers/usb/host/xhci.h      |  1 +
+>   include/linux/usb/hcd.h      |  1 +
+>   7 files changed, 39 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> index 015b126..e2b87a6 100644
+> --- a/drivers/usb/core/hcd.c
+> +++ b/drivers/usb/core/hcd.c
+> @@ -2663,6 +2663,12 @@ int usb_hcd_find_raw_port_number(struct usb_hcd *hcd, int port1)
+>   	return hcd->driver->find_raw_port_number(hcd, port1);
+>   }
+>   
+> +int usb_hcd_phy_port_reset(struct usb_hcd *hcd, int port)
+> +{
+> +	return usb_phy_roothub_port_reset(hcd->phy_roothub, port);
+> +}
+> +EXPORT_SYMBOL_GPL(usb_hcd_phy_port_reset);
+> +
+>   static int usb_hcd_request_irqs(struct usb_hcd *hcd,
+>   		unsigned int irqnum, unsigned long irqflags)
+>   {
+> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+> index 38b2c77..c64767d 100644
+> --- a/drivers/usb/core/phy.c
+> +++ b/drivers/usb/core/phy.c
+> @@ -162,6 +162,27 @@ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub)
+>   }
+>   EXPORT_SYMBOL_GPL(usb_phy_roothub_power_off);
+>   
+> +int usb_phy_roothub_port_reset(struct usb_phy_roothub *phy_roothub, int port)
+> +{
+> +	struct usb_phy_roothub *roothub_entry;
+> +	struct list_head *head;
+> +	int i = 0;
+> +
+> +	if (!phy_roothub)
+> +		return -EINVAL;
+> +
+> +	head = &phy_roothub->list;
+> +
+> +	list_for_each_entry(roothub_entry, head, list) {
+> +		if (i == port)
+> +			return phy_reset(roothub_entry->phy);
+> +		i++;
+> +	}
 
-2 spaces? I'm only seeing one.
+I'm not that familiar with SoC's that have several PHYs per controller,
+but this looks odd.
 
-> With that fixed, you can add my:
->
-> For my own reference:
->   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
->
-> --
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+For the above code to work wouldn't it require that each port has their own PHY,
+and the PHYs are added to the list of usb_phy_roothub is in the same order as usb ports?
+
+Or is there something I don't understand here?
+
+-Mathias
