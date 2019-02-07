@@ -1,105 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/6] mfd: mt6397: extract irq related code from core
- driver
-Date: Thu, 7 Feb 2019 09:08:30 +0000
-Message-ID: <20190207090830.GG4672@dell>
-References: <1548839891-20932-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1548839891-20932-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH v3 0/7] add support for SAM9X60 pin controller
+Date: Thu, 7 Feb 2019 09:24:42 +0000
+Message-ID: <1549531468-1676-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548839891-20932-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Jan 2019, Hsin-Hsiung Wang wrote:
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-> In order to support different types of irq design,
-> we decide to add separate irq drivers for different
-> design and keep mt6397 mfd core simple and reusable
-> to all generations of PMICs so far.
+This series adds drive strenght and slew rate support for SAMX60's pin
+controller. For drive strenght we could have 2 values: low, high.
+For slew rate we could have 2 values: enable, disabled.
 
-Why have you cut these lines so short?
+Besides this I took the chance and adapt the documentation for at91 pinctrl
+driver.
 
-In all cases:
+Changes in v3:
+- fix checkpatch.pl warning on DBG_SHOW_FLAG_MASKED() macro in patch 1/7
+- add Ack-by tag
 
- s/irq/IRQ/
- s/mfd/MFD
- s/mt6397/MT6397/
+Changes in v2:
+- s/microchip,sam9x60-pictrl/microchip,sam9x60-pinctrl in patches 3/7, 5/7
 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/mfd/Makefile            |   2 +-
->  drivers/mfd/mt6397-core.c       | 235 +++++++---------------------------------
->  drivers/mfd/mt6397-irq.c        | 214 ++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6397/core.h |  12 ++
->  4 files changed, 265 insertions(+), 198 deletions(-)
->  create mode 100644 drivers/mfd/mt6397-irq.c
-> 
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 12980a4..088e249 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -230,7 +230,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
-> -obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
-> +obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o mt6397-irq.o
->  
->  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
->  obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
-> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> index 77b64bd..a72524d 100644
-> --- a/drivers/mfd/mt6397-core.c
-> +++ b/drivers/mfd/mt6397-core.c
-> @@ -12,23 +12,19 @@
->   * GNU General Public License for more details.
->   */
->  
-> -#include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/regmap.h>
->  #include <linux/mfd/core.h>
+Claudiu Beznea (7):
+  pinctrl: at91: add option to use drive strength bits
+  pinctrl: at91: add drive strength support for SAM9X60
+  pinctrl: at91: add compatibles for SAM9X60 pin controller
+  dt-bindings: add documentation for banks
+  dt-bindings: add bindings for SAM9X60
+  pinctrl: at91: add slewrate support for SAM9X60
+  dt-bindings: add documentation for slew rate
 
-> -#include <linux/mfd/mt6397/core.h>
->  #include <linux/mfd/mt6323/core.h>
-> -#include <linux/mfd/mt6397/registers.h>
-> +#include <linux/mfd/mt6397/core.h>
->  #include <linux/mfd/mt6323/registers.h>
-> +#include <linux/mfd/mt6397/registers.h>
+ .../bindings/pinctrl/atmel,at91-pinctrl.txt        |  27 ++++-
+ drivers/pinctrl/pinctrl-at91.c                     | 134 +++++++++++++++++=
+++--
+ drivers/pinctrl/pinctrl-at91.h                     |   3 +
+ include/dt-bindings/pinctrl/at91.h                 |   4 +
+ 4 files changed, 155 insertions(+), 13 deletions(-)
 
-I will ignore these unrelated changes!
-
->  #define MT6397_RTC_BASE		0xe000
->  #define MT6397_RTC_SIZE		0x3e
->  
-> -#define MT6323_CID_CODE		0x23
-> -#define MT6391_CID_CODE		0x91
-> -#define MT6397_CID_CODE		0x97
-
-CID_CODE is a bit cryptic.
-
-Why not use *_CHIP_ID instead?
-
-[...]
-
-> +static const struct chip_data mt6323_core = {
-> +	.cid_addr = MT6323_CID,
-> +};
-
-Does the chip ID address change from device to device?
-
-If not, you can get rid of all of this hoop jumping.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--=20
+2.7.4
