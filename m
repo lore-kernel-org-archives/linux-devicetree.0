@@ -1,46 +1,73 @@
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH net-next v2 6/6] ARM: dts: clearfog: add comphy settings for
- Ethernet interfaces
-Date: Thu, 07 Feb 2019 16:19:31 +0000
-Message-ID: <E1grmOh-0000Nt-MV@rmk-PC.armlinux.org.uk>
-References: <20190207161825.ueinmyf6ygjiqzzy@shell.armlinux.org.uk>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v2 0/5] gpio: add support for pull-up/pull-down configuration
+Date: Thu,  7 Feb 2019 17:28:54 +0100
+Message-ID: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190207161825.ueinmyf6ygjiqzzy@shell.armlinux.org.uk>
-Content-Disposition: inline
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the comphy settings for the Ethernet interfaces.
+Hello,
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- arch/arm/boot/dts/armada-388-clearfog.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+As we started discussing in [1], it would be useful to have a way to
+configure pull-up/pull-down resistors for simple GPIO controllers that
+don't have any pinmuxing capability, and therefore no interaction with
+the pinctrl subsystem.
 
-diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-index 1b0d0680c8b6..0d81600ca247 100644
---- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
-+++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-@@ -93,6 +93,7 @@
- 	bm,pool-long = <2>;
- 	bm,pool-short = <1>;
- 	buffer-manager = <&bm>;
-+	phys = <&comphy1 1>;
- 	phy-mode = "sgmii";
- 	status = "okay";
- };
-@@ -103,6 +104,7 @@
- 	bm,pool-short = <1>;
- 	buffer-manager = <&bm>;
- 	managed = "in-band-status";
-+	phys = <&comphy5 2>;
- 	phy-mode = "sgmii";
- 	sfp = <&sfp>;
- 	status = "okay";
+This is a second iteration of the patches (the v1 was posted at
+https://patchwork.ozlabs.org/cover/1020392/).
+
+Changes since v1:
+
+ - Add a comment in the binding that explicitly states that the new
+   bit 4 and 5 should only be used for HW with a simple on/off
+   pull-up/pull-down configuration. More complex HW should use a pin
+   control binding. Suggested by Linus Walleij.
+
+ - Change gpiod_set_debounce() and gpiod_set_transitory() to use the
+   new gpio_set_config() helper. This is done in a new, separate
+   patch. Suggested by Linus Walleij.
+
+ - Add error checking in gpiod_configure_flags() to make sure pull-up
+   and pull-down are not both enabled on the same GPIO. Suggested by
+   Jan Kundrát. Jan suggested to put this in the code converting from
+   DT properties to internal flags, but it actually makes more sense
+   to do it in gpiod_configure_flags(), independently from DT parsing.
+
+ - Add a check in gpio-pca953x driver that pull-up/pull-down is indeed
+   supported by the underlying HW in the
+   pca953x_gpio_set_pull_up_down() function. Noticed by Linus Walleij.
+
+ - Move the changes in include/dt-bindings/gpio/gpio.h to the
+   dt-bindings patch, as suggested by Rob Herring.
+
+Rob: due to the changes in the dt-bindings patch, I have not kept your
+Acked-by.
+
+Thomas
+
+[1] https://marc.info/?l=linux-gpio&m=154491873506701&w=2
+
+Thomas Petazzoni (5):
+  dt-bindings: gpio: document the new pull-up/pull-down flags
+  gpio: rename gpio_set_drive_single_ended() to gpio_set_config()
+  gpio: use new gpio_set_config() helper in more places
+  gpio: add core support for pull-up/pull-down configuration
+  gpio: pca953x: add ->set_config implementation
+
+ .../devicetree/bindings/gpio/gpio.txt         | 12 ++++
+ drivers/gpio/gpio-pca953x.c                   | 66 ++++++++++++++++++-
+ drivers/gpio/gpiolib-of.c                     |  5 ++
+ drivers/gpio/gpiolib.c                        | 50 +++++++++-----
+ drivers/gpio/gpiolib.h                        |  2 +
+ include/dt-bindings/gpio/gpio.h               |  6 ++
+ include/linux/gpio/machine.h                  |  2 +
+ include/linux/of_gpio.h                       |  2 +
+ 8 files changed, 127 insertions(+), 18 deletions(-)
+
 -- 
-2.7.4
+2.20.1
