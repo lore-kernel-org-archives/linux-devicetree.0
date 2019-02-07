@@ -1,8 +1,7 @@
 From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH net-next v2 3/6] ARM: dts: add description for Armada 38x
- common phy
-Date: Thu, 07 Feb 2019 16:19:15 +0000
-Message-ID: <E1grmOR-0000MV-Te@rmk-PC.armlinux.org.uk>
+Subject: [PATCH net-next v2 4/6] dt-bindings: net: mvneta: add phys property
+Date: Thu, 07 Feb 2019 16:19:21 +0000
+Message-ID: <E1grmOX-0000N4-1N@rmk-PC.armlinux.org.uk>
 References: <20190207161825.ueinmyf6ygjiqzzy@shell.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -12,63 +11,30 @@ In-Reply-To: <20190207161825.ueinmyf6ygjiqzzy@shell.armlinux.org.uk>
 Content-Disposition: inline
 Sender: netdev-owner@vger.kernel.org
 To: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the DT description for the Armada 38x common phy.
+Add an optional phys property to the mvneta binding documentation for
+the common phy.
 
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 ---
- arch/arm/boot/dts/armada-38x.dtsi | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 929459c42760..7b2e2bd6479b 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -335,6 +335,43 @@
- 				#clock-cells = <1>;
- 			};
+diff --git a/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt b/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
+index bedcfd5a52cd..691f886cfc4a 100644
+--- a/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
++++ b/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
+@@ -19,7 +19,7 @@
+   "marvell,armada-370-neta" and 9800B for others.
+ - clock-names: List of names corresponding to clocks property; shall be
+   "core" for core clock and "bus" for the optional bus clock.
+-
++- phys: comphy for the ethernet port, see ../phy/phy-bindings.txt
  
-+			comphy: phy@18300 {
-+				compatible = "marvell,armada-380-comphy";
-+				reg = <0x18300 0x100>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				comphy0: phy@0 {
-+					reg = <0>;
-+					#phy-cells = <1>;
-+				};
-+
-+				comphy1: phy@1 {
-+					reg = <1>;
-+					#phy-cells = <1>;
-+				};
-+
-+				comphy2: phy@2 {
-+					reg = <2>;
-+					#phy-cells = <1>;
-+				};
-+
-+				comphy3: phy@3 {
-+					reg = <3>;
-+					#phy-cells = <1>;
-+				};
-+
-+				comphy4: phy@4 {
-+					reg = <4>;
-+					#phy-cells = <1>;
-+				};
-+
-+				comphy5: phy@5 {
-+					reg = <5>;
-+					#phy-cells = <1>;
-+				};
-+			};
-+
- 			coreclk: mvebu-sar@18600 {
- 				compatible = "marvell,armada-380-core-clock";
- 				reg = <0x18600 0x04>;
+ Optional properties (valid only for Armada XP/38x):
+ 
 -- 
 2.7.4
