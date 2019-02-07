@@ -1,67 +1,41 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/7] Revert "ARM: mediatek: add MT7623a smp bringup code"
-Date: Thu, 7 Feb 2019 17:47:38 +0100
-Message-ID: <c9d64405-975a-a7d7-9a1a-19094f1974db@gmail.com>
-References: <d1ab6c89b115ad0582815816490fa0c13ea83178.1548735271.git.ryder.lee@mediatek.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: [PATCH 1/3] ASoC: msm8916-wcd-analog: add missing license information
+Date: Thu,  7 Feb 2019 17:57:53 +0100
+Message-ID: <20190207165755.1548-2-johan@kernel.org>
+References: <20190207165755.1548-1-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d1ab6c89b115ad0582815816490fa0c13ea83178.1548735271.git.ryder.lee@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <20190207165755.1548-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <roychl666@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Add the missing license and copyright information which never made it
+into the analog driver when the original driver was split in two as part
+of the review process.
 
+Link: https://lkml.kernel.org/r/1465582725-30183-3-git-send-email-srinivas.kandagatla@linaro.org
+Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ sound/soc/codecs/msm8916-wcd-analog.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On 29/01/2019 05:28, Ryder Lee wrote:
-> This reverts commit 3b99ab7deca1e5f4229b4bdecd005d71e22cfc60.
-> 
-> The compatible "mediatek,mt7623a" is useless, so remove it.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-
-pushed to v5.0-next/soc
-
-Thanks!
-
-> ---
->  arch/arm/mach-mediatek/mediatek.c | 2 --
->  arch/arm/mach-mediatek/platsmp.c  | 1 -
->  2 files changed, 3 deletions(-)
-> 
-> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-> index 6910b4e..c3cf215 100644
-> --- a/arch/arm/mach-mediatek/mediatek.c
-> +++ b/arch/arm/mach-mediatek/mediatek.c
-> @@ -30,7 +30,6 @@ static void __init mediatek_timer_init(void)
->  
->  	if (of_machine_is_compatible("mediatek,mt6589") ||
->  	    of_machine_is_compatible("mediatek,mt7623") ||
-> -	    of_machine_is_compatible("mediatek,mt7623a") ||
->  	    of_machine_is_compatible("mediatek,mt8135") ||
->  	    of_machine_is_compatible("mediatek,mt8127")) {
->  		/* turn on GPT6 which ungates arch timer clocks */
-> @@ -50,7 +49,6 @@ static void __init mediatek_timer_init(void)
->  	"mediatek,mt6589",
->  	"mediatek,mt6592",
->  	"mediatek,mt7623",
-> -	"mediatek,mt7623a",
->  	"mediatek,mt8127",
->  	"mediatek,mt8135",
->  	NULL,
-> diff --git a/arch/arm/mach-mediatek/platsmp.c b/arch/arm/mach-mediatek/platsmp.c
-> index 6882ff0..51e8556 100644
-> --- a/arch/arm/mach-mediatek/platsmp.c
-> +++ b/arch/arm/mach-mediatek/platsmp.c
-> @@ -60,7 +60,6 @@ struct mtk_smp_boot_info {
->  static const struct of_device_id mtk_smp_boot_infos[] __initconst = {
->  	{ .compatible   = "mediatek,mt6589", .data = &mtk_mt6589_boot },
->  	{ .compatible   = "mediatek,mt7623", .data = &mtk_mt7623_boot },
-> -	{ .compatible   = "mediatek,mt7623a", .data = &mtk_mt7623_boot },
->  	{},
->  };
->  
-> 
+diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
+index b7cf7cce95fe..1261ddff75eb 100644
+--- a/sound/soc/codecs/msm8916-wcd-analog.c
++++ b/sound/soc/codecs/msm8916-wcd-analog.c
+@@ -1,3 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
++ */
++
+ #include <linux/module.h>
+ #include <linux/err.h>
+ #include <linux/kernel.h>
+-- 
+2.20.1
