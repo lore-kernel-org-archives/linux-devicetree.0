@@ -1,72 +1,60 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFT PATCH 7/9] mfd: axp20x: add USB power supply
- mfd cell to AXP813
-Date: Thu, 7 Feb 2019 11:02:47 +0000
-Message-ID: <20190207110247.GE20638@dell>
-References: <20190207064535.9226-1-wens@csie.org>
- <20190207064535.9226-8-wens@csie.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: usb: xhci-tegra: Add Tegra186 support
+Date: Thu, 7 Feb 2019 12:14:32 +0100
+Message-ID: <20190207111432.GC18518@ulmo>
+References: <20190125113013.11447-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBWVA6DRAKGQEPK3QGEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0vzXIDBeUiKkjNJl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190207064535.9226-8-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20190125113013.11447-1-thierry.reding@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, JC Kuo <jckuo@nvidia.com>, linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 07 Feb 2019, Chen-Yu Tsai wrote:
 
-> From: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+--0vzXIDBeUiKkjNJl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 25, 2019 at 12:30:08PM +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 >=20
-> The AXP813 has a VBUS power input. Now that the axp20x_usb_power driver
-> supports this variant, we can add an mfd cell for it to use it.
+> Extend the bindings to cover the set of features found in Tegra186.
 >=20
-> Signed-off-by: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> [wens-jdAy2FN1RRM@public.gmane.org: add commit message]
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->  drivers/mfd/axp20x.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 3c97f2c0fdfe..17b115845993 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -198,6 +198,12 @@ static const struct resource axp22x_usb_power_supply=
-_resources[] =3D {
->  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
->  };
-> =20
-> +/* AXP803 and AXP813/AXP818 share the same interrupts */
-> +static struct resource axp803_usb_power_supply_resources[] =3D {
-> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
-> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+>  .../devicetree/bindings/usb/nvidia,tegra124-xusb.txt          | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Nit: Why 2 spaces here?                              ^
+Hi Greg, Mathias,
 
-With that fixed, you can add my:
+do you have any comments on this series or is it good to go into v5.1?
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Thanks,
+Thierry
 
---=20
-Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-Linaro Services Technical Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--0vzXIDBeUiKkjNJl
+Content-Type: application/pgp-signature; name="signature.asc"
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxcExgACgkQ3SOs138+
+s6GkcA/6AzSaIZc6unkYsm7c9Y6sOF4aTYASqwfQ6d8yHown2e5wY9Cb7K8AkRDk
+N3+s/7j9C+axj9f8peXVhO4D+FbuXZOCOE5hZ+A7M9yKEyxHyuBMc71IlAFGMLUi
+Jw5WTYScFoDSsub5Z/zHU7ZYWj7alwzXTiCncarn+rZx5Snt91S908+RfbYDck8W
+iNhmshS16zxT8L5z2sASLr4Q/tLmNTzEZ88xI0t/FVuaN6g1fbg1cJXOy8rxVQy8
+hgkw3JEHDeMt8XfS6LRfy0bkQyk3ElZ67P2BlDIMBt47cVNvv0t4NbLQ6DgtBCaP
+RJu6VlSR1iZHOw/HORDu41oG95w6lHgnWqlv8ZVB9Tr0ENW429TIW3e4Y6zRoCRS
++zwLVftk7q/H0bjkR9H/lfFvPx2MGo0iE3EwrofNs1ORtjSvXO+ygl7MLvYU28+j
+exAjBPEE+X8V1bhpU6n5p4QXWWZlhofYiRc8oyC1PCjRWqBUVnNNn2OHEXa3LElL
+XheIjLjFCo3rOckVp8yvuvyZneZky+WBM0fuQ2pbk76fFZE77thwaauLsAxNu8AX
+uLrXdR1PCWONffsgE70FXyEtLKKt6buaSmWKss2qxhNS/Aw4iviyOTghAuW4Hj/n
+Jv1KwLAh9LewRmaSz1ayMjnt509jYclm9oAXT7cZMoH9RkxIU9o=
+=r9Ex
+-----END PGP SIGNATURE-----
+
+--0vzXIDBeUiKkjNJl--
