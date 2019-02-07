@@ -1,135 +1,491 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: clk: add G12A AO Clock and Reset Bindings
-Date: Thu, 07 Feb 2019 21:10:50 +0100
-Message-ID: <5C5C90CA.8050409@baylibre.com>
-References: <20190204091331.9298-1-narmstrong@baylibre.com>      <20190204091331.9298-2-narmstrong@baylibre.com> <2f03298e4d1ca0aa08d683d6db14bc194607b974.camel@baylibre.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCHv7 1/6] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Thu, 7 Feb 2019 13:19:48 -0700
+Message-ID: <CANLsYkyu=mPwJh2RzTYiZgfEV+MXgGpEvUKLwXgVdsvBf3nqqQ@mail.gmail.com>
+References: <cover.1548981329.git.saiprakash.ranjan@codeaurora.org> <b672119cd1ffb5cba9da27ab5974fd5978e55b31.1548981329.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2f03298e4d1ca0aa08d683d6db14bc194607b974.camel@baylibre.com>
+In-Reply-To: <b672119cd1ffb5cba9da27ab5974fd5978e55b31.1548981329.git.saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 31 Jan 2019 at 17:53, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Add coresight components found on Qualcomm SDM845 SoC.
+>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>
+> ---
+> For testing, all dependent patches are in below tree:
+>  * https://github.com/saiprakash-ranjan/linux/tree/coresight-next
+>
+> - Depends on AOSS QMP side channel patches by Bjorn Andersson [1] - [4].
+> - AMBA bus pclk change [5].
+> - Also depends on patch ("arm64: dts: qcom: sdm845: Increase address
+>   and size cells for soc") [6].
+>
+> [1] https://lore.kernel.org/lkml/20190131003933.11436-5-bjorn.andersson@linaro.org/
+> [2] https://lore.kernel.org/lkml/20190131003933.11436-6-bjorn.andersson@linaro.org/
+> [3] https://lore.kernel.org/lkml/20190131003933.11436-7-bjorn.andersson@linaro.org/
+> [4] https://lore.kernel.org/lkml/20190131003933.11436-10-bjorn.andersson@linaro.org/
+> [5] https://lore.kernel.org/lkml/20190131020141.28352-1-bjorn.andersson@linaro.org/
+> [6] https://lore.kernel.org/lkml/20190117042940.25487-2-bjorn.andersson@linaro.org/
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 434 +++++++++++++++++++++++++++
+>  1 file changed, 434 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index e2aaaa233e45..4121aac6d086 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -1349,6 +1349,440 @@
+>                         };
+>                 };
+>
+> +               stm@6002000 {
+> +                       compatible = "arm,coresight-stm", "arm,primecell";
+> +                       reg = <0 0x06002000 0 0x1000>,
+> +                             <0 0x16280000 0 0x180000>;
+> +                       reg-names = "stm-base", "stm-stimulus-base";
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       stm_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&funnel0_in7>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@6041000 {
+> +                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       reg = <0 0x06041000 0 0x1000>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       funnel0_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&merge_funnel_in0>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       in-ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@7 {
+> +                                       reg = <7>;
+> +                                       funnel0_in7: endpoint {
+> +                                               remote-endpoint = <&stm_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@6043000 {
+> +                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       reg = <0 0x06043000 0 0x1000>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       funnel2_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&merge_funnel_in2>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       in-ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@5 {
+> +                                       reg = <5>;
+> +                                       funnel2_in5: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_merge_funnel_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@6045000 {
+> +                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       reg = <0 0x06045000 0 0x1000>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       merge_funnel_out: endpoint {
+> +                                               remote-endpoint = <&etf_in>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       in-ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       merge_funnel_in0: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&funnel0_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg = <2>;
+> +                                       merge_funnel_in2: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&funnel2_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               replicator@6046000 {
+> +                       compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
+> +                       reg = <0 0x06046000 0 0x1000>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       replicator_out: endpoint {
+> +                                               remote-endpoint = <&etr_in>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       in-ports {
+> +                               port {
+> +                                       replicator_in: endpoint {
+> +                                               remote-endpoint = <&etf_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etf@6047000 {
+> +                       compatible = "arm,coresight-tmc", "arm,primecell";
+> +                       reg = <0 0x06047000 0 0x1000>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       etf_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&replicator_in>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       in-ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@1 {
+> +                                       reg = <1>;
+> +                                       etf_in: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&merge_funnel_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etr@6048000 {
+> +                       compatible = "arm,coresight-tmc", "arm,primecell";
+> +                       reg = <0 0x06048000 0 0x1000>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +                       arm,scatter-gather;
+> +
+> +                       in-ports {
+> +                               port {
+> +                                       etr_in: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&replicator_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@7040000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x07040000 0 0x1000>;
+> +
+> +                       cpu = <&CPU0>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       etm0_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_funnel_in0>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@7140000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x07140000 0 0x1000>;
+> +
+> +                       cpu = <&CPU1>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       etm1_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_funnel_in1>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@7240000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x07240000 0 0x1000>;
+> +
+> +                       cpu = <&CPU2>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       etm2_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_funnel_in2>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@7340000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x07340000 0 0x1000>;
+> +
+> +                       cpu = <&CPU3>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       etm3_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_funnel_in3>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@7440000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x07440000 0 0x1000>;
+> +
+> +                       cpu = <&CPU4>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       etm4_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_funnel_in4>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@7540000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x07540000 0 0x1000>;
+> +
+> +                       cpu = <&CPU5>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       etm5_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_funnel_in5>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@7640000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x07640000 0 0x1000>;
+> +
+> +                       cpu = <&CPU6>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       etm6_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_funnel_in6>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@7740000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x07740000 0 0x1000>;
+> +
+> +                       cpu = <&CPU7>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       etm7_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_funnel_in7>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@7800000 { /* APSS Funnel */
+> +                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       reg = <0 0x07800000 0 0x1000>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       apss_funnel_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_merge_funnel_in>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       in-ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       apss_funnel_in0: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&etm0_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <1>;
+> +                                       apss_funnel_in1: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&etm1_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg = <2>;
+> +                                       apss_funnel_in2: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&etm2_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@3 {
+> +                                       reg = <3>;
+> +                                       apss_funnel_in3: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&etm3_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@4 {
+> +                                       reg = <4>;
+> +                                       apss_funnel_in4: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&etm4_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@5 {
+> +                                       reg = <5>;
+> +                                       apss_funnel_in5: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&etm5_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@6 {
+> +                                       reg = <6>;
+> +                                       apss_funnel_in6: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&etm6_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@7 {
+> +                                       reg = <7>;
+> +                                       apss_funnel_in7: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&etm7_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@7810000 {
+> +                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       reg = <0 0x07810000 0 0x1000>;
+> +
+> +                       power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +                       out-ports {
+> +                               port {
+> +                                       apss_merge_funnel_out: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&funnel2_in5>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       in-ports {
+> +                               port {
+> +                                       apss_merge_funnel_in: endpoint {
+> +                                               remote-endpoint =
+> +                                                 <&apss_funnel_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+>                 usb_1_hsphy: phy@88e2000 {
+>                         compatible = "qcom,sdm845-qusb2-phy";
+>                         reg = <0 0x088e2000 0 0x400>;
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
 
-
-Le 07/02/2019 16:10, Jerome Brunet a écrit :
-> On Mon, 2019-02-04 at 10:13 +0100, Neil Armstrong wrote:
->> Add bindings for the Amlogic G12A AO Clock and Reset controllers.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  .../bindings/clock/amlogic,gxbb-aoclkc.txt    |  1 +
->>  include/dt-bindings/clock/g12a-aoclkc.h       | 43 +++++++++++++++++++
->>  include/dt-bindings/reset/g12a-aoclkc.h       | 18 ++++++++
->>  3 files changed, 62 insertions(+)
->>  create mode 100644 include/dt-bindings/clock/g12a-aoclkc.h
->>  create mode 100644 include/dt-bindings/reset/g12a-aoclkc.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt 
->> b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
->> index 79511d7bb321..c41f0be5d438 100644
->> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
->> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
->> @@ -10,6 +10,7 @@ Required Properties:
->>  	- GXL (S905X, S905D) : "amlogic,meson-gxl-aoclkc"
->>  	- GXM (S912) : "amlogic,meson-gxm-aoclkc"
->>  	- AXG (A113D, A113X) : "amlogic,meson-axg-aoclkc"
->> +	- G12A (S905X2, S905D2, S905Y2) : "amlogic,meson-g12a-aoclkc"
->>  	followed by the common "amlogic,meson-gx-aoclkc"
->>  - clocks: list of clock phandle, one for each entry clock-names.
->>  - clock-names: should contain the following:
->> diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-
->> bindings/clock/g12a-aoclkc.h
->> new file mode 100644
->> index 000000000000..997aca16c94f
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/g12a-aoclkc.h
->> @@ -0,0 +1,43 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
->> +/*
->> + * Copyright (c) 2016 BayLibre, SAS
->> + * Author: Neil Armstrong <narmstrong@baylibre.com>
->> + *
->> + * Copyright (c) 2018 Amlogic, inc.
->> + * Author: Qiufang Dai <qiufang.dai@amlogic.com>
->> + */
->> +
->> +#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
->> +#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
->> +
->> +#define CLKID_AO_AHB		0
->> +#define CLKID_AO_IR_IN		1
->> +#define CLKID_AO_I2C_M0		2
->> +#define CLKID_AO_I2C_S0		3
->> +#define CLKID_AO_UART		4
->> +#define CLKID_AO_PROD_I2C	5
->> +#define CLKID_AO_UART2		6
->> +#define CLKID_AO_IR_OUT		7
->> +#define CLKID_AO_SAR_ADC	8
->> +#define CLKID_AO_MAILBOX	9
->> +#define CLKID_AO_M3		10
->> +#define CLKID_AO_AHB_SRAM	11
->> +#define CLKID_AO_RTI		12
->> +#define CLKID_AO_M4_FCLK	13
->> +#define CLKID_AO_M4_HCLK	14
->> +#define CLKID_AO_CLK81		15
->> +#define CLKID_AO_SAR_ADC_SEL	16
->> +#define CLKID_AO_SAR_ADC_DIV	17
-> 
-> Do we need to export the internal part of these composite clock ?
-> I know the other AO controller do it but it would be nice to avoid it, like
-> for the EE controllers ... unless there is good reason of course.
-
-Historically, we exposed everything for the AO controller,
-we can follow the same scheme as the EE controller starting
-from this one.
-There is no strong reason to expose everything...
-
-I'll res-pin a v2 with both issues fixed.
-
-> 
-> Same for the others below.
-> 
->> +#define CLKID_AO_SAR_ADC_CLK	18
->> +#define CLKID_AO_CTS_OSCIN	19
->> +#define CLKID_AO_32K_PRE	20
->> +#define CLKID_AO_32K_DIV	21
->> +#define CLKID_AO_32K_SEL	22
->> +#define CLKID_AO_32K		23
->> +#define CLKID_AO_CEC_PRE	24
->> +#define CLKID_AO_CEC_DIV	25
->> +#define CLKID_AO_CEC_SEL	26
->> +#define CLKID_AO_CEC		27
->> +#define CLKID_AO_CTS_RTC_OSCIN	28
->> +
->> +#endif
->> diff --git a/include/dt-bindings/reset/g12a-aoclkc.h b/include/dt-
->> bindings/reset/g12a-aoclkc.h
->> new file mode 100644
->> index 000000000000..bd2e2337135c
->> --- /dev/null
->> +++ b/include/dt-bindings/reset/g12a-aoclkc.h
->> @@ -0,0 +1,18 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
->> +/*
->> + * Copyright (c) 2016 BayLibre, SAS
->> + * Author: Neil Armstrong <narmstrong@baylibre.com>
->> + */
->> +
->> +#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
->> +#define DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
->> +
->> +#define RESET_AO_IR_IN		0
->> +#define RESET_AO_UART		1
->> +#define RESET_AO_I2C_M		2
->> +#define RESET_AO_I2C_S		3
->> +#define RESET_AO_SAR_ADC	4
->> +#define RESET_AO_UART2		5
->> +#define RESET_AO_IR_OUT		6
->> +
->> +#endif
-> 
-> 
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
