@@ -1,40 +1,27 @@
-Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 18/33] ARM: davinci: aintc: remove unnecessary includes
-Date: Fri,  8 Feb 2019 18:31:39 +0100
-Message-Id: <20190208173154.4665-19-brgl@bgdev.pl>
-In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
-References: <20190208173154.4665-1-brgl@bgdev.pl>
+Return-Path: <SRS0=V24m=QO=verge.net.au=horms@kernel.org>
+Date: Thu, 7 Feb 2019 11:43:06 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a774c0-cat874: Add pciec0
+ support
+Message-ID: <20190207104305.tchwfqwqxysum4la@verge.net.au>
+References: <1549528310-54436-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVeVV9d4Sf=iPQ2UCrGqrnsh2Y9QCWaupwKc7QmRhCebw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVeVV9d4Sf=iPQ2UCrGqrnsh2Y9QCWaupwKc7QmRhCebw@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, Feb 07, 2019 at 11:13:03AM +0100, Geert Uytterhoeven wrote:
+> On Thu, Feb 7, 2019 at 9:37 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> > Silicon Linux CAT 874 board has 2GB DDR memory. Update the dma-ranges
+> > mapping for pciec0 node. Also declare pcie bus clock, since it is
+> > generated on the CAT874 main board.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-These includes are no longer required. Remove them.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: David Lechner <david@lechnology.com>
----
- arch/arm/mach-davinci/irq.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/arm/mach-davinci/irq.c b/arch/arm/mach-davinci/irq.c
-index 0f469c59acfb..0768edfc3b66 100644
---- a/arch/arm/mach-davinci/irq.c
-+++ b/arch/arm/mach-davinci/irq.c
-@@ -12,10 +12,6 @@
- #include <linux/io.h>
- #include <linux/irqdomain.h>
- 
--#include <mach/hardware.h>
--#include <mach/cputype.h>
--#include <mach/common.h>
--#include <asm/mach/irq.h>
- #include <asm/exception.h>
- 
- #define DAVINCI_AINTC_FIQ_REG0		0x00
--- 
-2.20.1
+Thanks, applied for v5.1.
