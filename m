@@ -1,41 +1,61 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 4/4] ARM: dts: imx6qdl-sabresd: remove reg_sensors'
- regulator-always-on
-Date: Thu, 7 Feb 2019 15:18:42 +0000
-Message-ID: <1549552397-22798-4-git-send-email-Anson.Huang@nxp.com>
-References: <1549552397-22798-1-git-send-email-Anson.Huang@nxp.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v6 1/6] irqchip/mtk-sysirq: support 4 interrupt parameters
+ for sysirq
+Date: Thu, 7 Feb 2019 16:20:21 +0100
+Message-ID: <898ca3d9-002b-e28e-fc97-86bc2538e9de@gmail.com>
+References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
+ <1548317240-44682-2-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549552397-22798-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1548317240-44682-2-git-send-email-erin.lo@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Seiya Wang <seiya.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that all sensors supplied by reg_sensors have supported
-regulator control, reg_sensors does NOT need to be always ON,
-remove "regulator-always-on" to save power.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx=
-6qdl-sabresd.dtsi
-index 80b9901..a070506 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -64,7 +64,6 @@
- 		regulator-max-microvolt =3D <3300000>;
- 		gpio =3D <&gpio2 31 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
--		regulator-always-on;
- 	};
-=20
- 	gpio-keys {
---=20
-2.7.4
+On 24/01/2019 09:07, Erin Lo wrote:
+> From: Seiya Wang <seiya.wang@mediatek.com>
+> 
+> To support partitioned PPIs, 4 interrupt parameters should be valid
+> for sysirq.
+> 
+> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> ---
+>  drivers/irqchip/irq-mtk-sysirq.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+> index 90aaf19..282736a 100644
+> --- a/drivers/irqchip/irq-mtk-sysirq.c
+> +++ b/drivers/irqchip/irq-mtk-sysirq.c
+> @@ -81,7 +81,7 @@ static int mtk_sysirq_domain_translate(struct irq_domain *d,
+>  				       unsigned int *type)
+>  {
+>  	if (is_of_node(fwspec->fwnode)) {
+> -		if (fwspec->param_count != 3)
+> +		if (fwspec->param_count != 3 && fwspec->param_count != 4)
+
+Where is this 4th parameter used?
+
+Regards,
+Matthias
+
+>  			return -EINVAL;
+>  
+>  		/* No PPI should point to this domain */
+> @@ -104,7 +104,7 @@ static int mtk_sysirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  	struct irq_fwspec *fwspec = arg;
+>  	struct irq_fwspec gic_fwspec = *fwspec;
+>  
+> -	if (fwspec->param_count != 3)
+> +	if (fwspec->param_count != 3 && fwspec->param_count != 4)
+>  		return -EINVAL;
+>  
+>  	/* sysirq doesn't support PPI */
+> 
