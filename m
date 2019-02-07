@@ -1,112 +1,38 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH 2/2] drivers: xhci: Add quirk to reset xHCI port PHY
-Date: Thu, 7 Feb 2019 20:47:34 +0530
-Message-ID: <CABe79T4wLea8hBML4Xejv3YH3eAFfXqgnB8+udr-Xo_ZdTn0xA@mail.gmail.com>
-References: <1549347534-11320-1-git-send-email-srinath.mannam@broadcom.com>
- <1549347534-11320-3-git-send-email-srinath.mannam@broadcom.com> <6392f206-9db2-5506-9e5d-cdf2b784d32e@linux.intel.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH 1/4] ARM: dts: imx6qdl-sabresd: add regulator control for
+ isl29023 sensor
+Date: Thu, 7 Feb 2019 15:18:30 +0000
+Message-ID: <1549552397-22798-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6392f206-9db2-5506-9e5d-cdf2b784d32e@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathias,
+The isl29023 light sensor driver has supported regulator control,
+assign the power supply for isl29023 to enable the control.
 
-Thanks for review, please see my comments below inline.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Thu, Feb 7, 2019 at 8:32 PM Mathias Nyman
-<mathias.nyman@linux.intel.com> wrote:
->
-> On 05.02.2019 08:18, Srinath Mannam wrote:
-> > Add a quirk to reset xHCI port PHY on port disconnect event.
-> > Stingray USB HS PHY has an issue, that USB High Speed device detected
-> > at Full Speed after the same port has connected to Full speed device.
-> > This problem can be resolved with that port PHY reset on disconnect.
-> >
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > ---
-> >   drivers/usb/core/hcd.c       |  6 ++++++
-> >   drivers/usb/core/phy.c       | 21 +++++++++++++++++++++
-> >   drivers/usb/core/phy.h       |  1 +
-> >   drivers/usb/host/xhci-plat.c |  3 +++
-> >   drivers/usb/host/xhci-ring.c |  9 ++++++---
-> >   drivers/usb/host/xhci.h      |  1 +
-> >   include/linux/usb/hcd.h      |  1 +
-> >   7 files changed, 39 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> > index 015b126..e2b87a6 100644
-> > --- a/drivers/usb/core/hcd.c
-> > +++ b/drivers/usb/core/hcd.c
-> > @@ -2663,6 +2663,12 @@ int usb_hcd_find_raw_port_number(struct usb_hcd *hcd, int port1)
-> >       return hcd->driver->find_raw_port_number(hcd, port1);
-> >   }
-> >
-> > +int usb_hcd_phy_port_reset(struct usb_hcd *hcd, int port)
-> > +{
-> > +     return usb_phy_roothub_port_reset(hcd->phy_roothub, port);
-> > +}
-> > +EXPORT_SYMBOL_GPL(usb_hcd_phy_port_reset);
-> > +
-> >   static int usb_hcd_request_irqs(struct usb_hcd *hcd,
-> >               unsigned int irqnum, unsigned long irqflags)
-> >   {
-> > diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-> > index 38b2c77..c64767d 100644
-> > --- a/drivers/usb/core/phy.c
-> > +++ b/drivers/usb/core/phy.c
-> > @@ -162,6 +162,27 @@ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub)
-> >   }
-> >   EXPORT_SYMBOL_GPL(usb_phy_roothub_power_off);
-> >
-> > +int usb_phy_roothub_port_reset(struct usb_phy_roothub *phy_roothub, int port)
-> > +{
-> > +     struct usb_phy_roothub *roothub_entry;
-> > +     struct list_head *head;
-> > +     int i = 0;
-> > +
-> > +     if (!phy_roothub)
-> > +             return -EINVAL;
-> > +
-> > +     head = &phy_roothub->list;
-> > +
-> > +     list_for_each_entry(roothub_entry, head, list) {
-> > +             if (i == port)
-> > +                     return phy_reset(roothub_entry->phy);
-> > +             i++;
-> > +     }
->
-> I'm not that familiar with SoC's that have several PHYs per controller,
-> but this looks odd.
->
-> For the above code to work wouldn't it require that each port has their own PHY,
-> and the PHYs are added to the list of usb_phy_roothub is in the same order as usb ports?
->
-> Or is there something I don't understand here?
->
-In our SOC (Stingray), xHCI controller has three ports and each port
-connected to separate PHY.
-Stingray xHCI controller supports both SS and HS ports and connected
-separate PHYs.
-We passed PHY phandlers in xHCI DT node in the order of port numbers.
-as shown below xHCI DT node.
-So that all PHYs added to usb_phy_roothub are in order of port numbers.
- xhci1: usb@11000 {
-                        compatible = "generic-xhci";
-                        reg = <0x00011000 0x1000>;
-                        interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
-                        phys = <&usb1_phy1>, <&usbphy2>, <&usb1_phy0>;
-                        phy-names = "phy0", "phy1", "phy2";
-                        dma-coherent;
-                        status = "disabled";
-};
-But we have issue with HS PHYs, so that those PHYs are required to reset.
-
-Regards,
-Srinath.
-> -Mathias
->
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx=
+6qdl-sabresd.dtsi
+index 8930aec..21e03b1 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -449,6 +449,7 @@
+ 		pinctrl-0 =3D <&pinctrl_i2c3_isl29023_int>;
+ 		interrupt-parent =3D <&gpio3>;
+ 		interrupts =3D <9 IRQ_TYPE_EDGE_FALLING>;
++		vcc-supply =3D <&reg_sensors>;
+ 	};
+ };
+=20
+--=20
+2.7.4
