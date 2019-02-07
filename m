@@ -1,92 +1,105 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 1/3] dt-bindings: clock: ti,sci-clk: Add support for
- parsing clock info from DT
-Date: Thu, 7 Feb 2019 10:59:59 +0200
-Message-ID: <2a22b7f4-8ac4-184e-6c69-f324488614ee@ti.com>
-References: <1546954223-9738-1-git-send-email-t-kristo@ti.com>
- <1546954223-9738-2-git-send-email-t-kristo@ti.com>
- <20190121210449.GB7851@bogus> <7ce7bd25-b5c4-f99d-fda6-0f21376f2204@ti.com>
- <ab8707fb-e632-5be9-9fdb-4b1fb3cb26ba@ti.com>
- <154947523891.74891.8214442349263473281@swboyd.mtv.corp.google.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/6] mfd: mt6397: extract irq related code from core
+ driver
+Date: Thu, 7 Feb 2019 09:08:30 +0000
+Message-ID: <20190207090830.GG4672@dell>
+References: <1548839891-20932-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1548839891-20932-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <154947523891.74891.8214442349263473281@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ssantosh@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1548839891-20932-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2019 19:47, Stephen Boyd wrote:
-> Quoting Tero Kristo (2019-02-05 00:25:40)
->> On 22/01/2019 09:33, Tero Kristo wrote:
->>> On 21/01/2019 23:04, Rob Herring wrote:
->>>> At first, I thought this was an either/or thing. Use firmware or use DT,
->>>> but it is really only get the clocks used in the DT from firmware.
->>>>
->>>> Why wouldn't you just always do that? I can think of 3 cases:
->>>> reparenting, debug and overlays. This breaks reparenting and overlays,
->>>> right? Debug could be handled with some userspace trigger to get all the
->>>> clocks.
->>>
->>> Re-parenting this does not break, as the scan still checks every
->>> possible parent of a clock scanned. Overlays are broken for sure, as we
->>> don't know which overlays we would be applying, and what clocks would be
->>> in them. Debug is kind of broken as we only scan a small portion of the
->>> clocks.
->>>
->>>>
->>>> Why scan any of the clocks up front? Why not just create the clocks on
->>>> demand? If an unknown clock id is requested, then create the clock and
->>>> query the firmware at that point. That would avoid the DT scan too.
->>>> Maybe there's some issues in the clk framework preventing that, but
->>>> that's not really a DT problem.
->>>
->>> The very initial version I did a couple of years back, did scan the
->>> clocks based on need, and registered them dynamically. Stephen shot down
->>> this based on the assessment that there might be locking issues with the
->>> common clock framework with this approach leading into potential
->>> deadlock situations.
+On Wed, 30 Jan 2019, Hsin-Hsiung Wang wrote:
+
+> In order to support different types of irq design,
+> we decide to add separate irq drivers for different
+> design and keep mt6397 mfd core simple and reusable
+> to all generations of PMICs so far.
+
+Why have you cut these lines so short?
+
+In all cases:
+
+ s/irq/IRQ/
+ s/mfd/MFD
+ s/mt6397/MT6397/
+
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/Makefile            |   2 +-
+>  drivers/mfd/mt6397-core.c       | 235 +++++++---------------------------------
+>  drivers/mfd/mt6397-irq.c        | 214 ++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h |  12 ++
+>  4 files changed, 265 insertions(+), 198 deletions(-)
+>  create mode 100644 drivers/mfd/mt6397-irq.c
 > 
-> It's an interesting idea to limit the scope of clks that are registered
-> to only the leaf and whatever up to the root of the tree is involved in
-> the working set of the kernel.
-> 
->>
->> So Rob, what is the final call on this binding? Ack/NAK? If NAK, shall I
->> implement a kernel cmdline param to select the parsing method or what is
->> preferred? Doing it build time with a simple Kconfig seems too limiting.
->>
-> 
-> Is the problem a performance problem where probing the firmware for all
-> the clks is costly and time intensive?
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 12980a4..088e249 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -230,7 +230,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
+> -obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
+> +obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o mt6397-irq.o
+>  
+>  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+>  obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
+> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> index 77b64bd..a72524d 100644
+> --- a/drivers/mfd/mt6397-core.c
+> +++ b/drivers/mfd/mt6397-core.c
+> @@ -12,23 +12,19 @@
+>   * GNU General Public License for more details.
+>   */
+>  
+> -#include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/regmap.h>
+>  #include <linux/mfd/core.h>
 
-Yes this is pretty expensive, as there can be quite a large amount of 
-clocks on a SoC, and each clock must be probed separately.
+> -#include <linux/mfd/mt6397/core.h>
+>  #include <linux/mfd/mt6323/core.h>
+> -#include <linux/mfd/mt6397/registers.h>
+> +#include <linux/mfd/mt6397/core.h>
+>  #include <linux/mfd/mt6323/registers.h>
+> +#include <linux/mfd/mt6397/registers.h>
 
-> So instead of doing that we're
-> describing some of the details in DT? Why can't we describe the clk tree
-> in C code with some data structure that indicates parent child linkages?
-> This is how every other SoC is doing this so far.
+I will ignore these unrelated changes!
 
-We can obviously do that also, however it is "neat" that we can probe 
-the available clocks from the device, and don't need to hardcode 
-anything kernel side... and neither maintain the clock data. If we want 
-to go the hardcoded way, I can create tools to autogenerate the kernel 
-side clock data from the clock dump of a running system though, and use 
-the built-in clock data if it is available, retaining the existing probe 
-method basically for new devices.
+>  #define MT6397_RTC_BASE		0xe000
+>  #define MT6397_RTC_SIZE		0x3e
+>  
+> -#define MT6323_CID_CODE		0x23
+> -#define MT6391_CID_CODE		0x91
+> -#define MT6397_CID_CODE		0x97
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+CID_CODE is a bit cryptic.
+
+Why not use *_CHIP_ID instead?
+
+[...]
+
+> +static const struct chip_data mt6323_core = {
+> +	.cid_addr = MT6323_CID,
+> +};
+
+Does the chip ID address change from device to device?
+
+If not, you can get rid of all of this hoop jumping.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
