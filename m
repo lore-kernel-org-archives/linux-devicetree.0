@@ -1,104 +1,58 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: phy: ti: Add dt binding documentation
- for SERDES in AM654x SoC
-Date: Thu, 7 Feb 2019 17:49:02 +0530
-Message-ID: <1eb6eee3-da8a-7400-c419-a60929b78904@ti.com>
-References: <20190206110753.28738-1-kishon@ti.com>
- <20190206110753.28738-4-kishon@ti.com> <5C5C15E4.8010601@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH v1 20/24] dt: thermal: tsens: Add bindings for qcs404
+Date: Thu,  7 Feb 2019 16:19:38 +0530
+Message-ID: <3f5a9282e815d2244b633a65e126494d23c16a7a.1549525708.git.amit.kucheria@linaro.org>
+References: <cover.1549525708.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C5C15E4.8010601@ti.com>
-Content-Language: en-US
+In-Reply-To: <cover.1549525708.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1549525708.git.amit.kucheria@linaro.org>
+References: <cover.1549525708.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Zhang Rui <rui.zhang@intel.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+qcs404 uses v1 of the TSENS IP block. Create a fallback DT property
+"qcom,tsens-v1" to gather common code
 
-On 07/02/19 4:56 PM, Roger Quadros wrote:
-> 
-> 
-> On 06/02/19 13:07, Kishon Vijay Abraham I wrote:
->> AM654x has two SERDES instances. Each instance has three input clocks
->> (left input, externel reference clock and right input) and two output
->> clocks (left output and right output) in addition to a PLL mux clock
->> which the SERDES uses for Clock Multiplier Unit (CMU refclock).
->> The PLL mux clock can select from one of the three input clocks.
->> The right output can select between left input and external reference
->> clock while the left output can select between the right input and
->> external reference clock.
->>
->> The left and right input reference clock of SERDES0 and SERDES1
->> respectively are connected to the SoC clock. In the case of two lane
->> SERDES personality card, the left input of SERDES1 is connected to
->> the right output of SERDES0 in a chained fashion.
->>
->> See section "Reference Clock Distribution" of AM65x Sitara Processors
->> TRM (SPRUID7 – April 2018) for more details.
->>
->> Add dt-binding documentation in order to represent all these different
->> configurations in device tree.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../devicetree/bindings/phy/ti-phy.txt        | 77 +++++++++++++++++++
->>  include/dt-bindings/phy/phy-am654-serdes.h    | 13 ++++
->>  2 files changed, 90 insertions(+)
->>  create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
->>
->> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
->> index 57dfda8a7a1d..fc2fff6b2c37 100644
->> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
->> @@ -132,3 +132,80 @@ sata_phy: phy@4a096000 {
->>  	syscon-pllreset = <&scm_conf 0x3fc>;
->>  	#phy-cells = <0>;
->>  };
->> +
->> +
->> +TI AM654 SERDES
->> +
->> +Required properties:
->> + - compatible: Should be "ti,phy-am654-serdes"
->> + - reg : Address and length of the register set for the device.
->> + - reg-names: Should be "serdes" which corresponds to the register space
->> +	populated in "reg".
->> + - #phy-cells: determine the number of cells that should be given in the
->> +	phandle while referencing this phy. Should be "2". The 1st cell
->> +	corresponds to the phy type (should be one of the types specified in
->> +	include/dt-bindings/phy/phy.h) and the 2nd cell should be the serdes
->> +	lane function.
->> +	If SERDES0 is referenced 2nd cell should be:
->> +		0 - USB3
->> +		1 - PCIe0 Lane0
->> +		2 - ICSS2 SGMII Lane0
->> +	If SERDES1 is referenced 2nd cell should be:
->> +		0 - PCIe1 Lane0
->> +		1 - PCIe0 Lane1
->> +		2 - ICSS2 SGMII Lane1
-> 
-> Instead of these magic numbers and expecting a human to decipher this
-> which is prone to error, is it better to create the following defines and
-> check for valid configuration in the driver?
-> 
-> AM654_SERDES_LANE_USB3,
-> AM654_SERDES_LANE_PCIE_LANE0,
-> AM654_SERDES_LANE_PCIE_LANE1,
-> AM654_SERDES_LANE_SGMII,
-> 
-> So if you pass AM654_SERDES_LANE_PCIE_LANE0 to SERDES1, driver can easily
-> figure out that it should be 1 if it is serdes0 and 0 if serdes1
-> 
-> Which means the DT must contain something so that you can identify
-> if it is serdes0 or serdes1.
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ .../devicetree/bindings/thermal/qcom-tsens.txt     | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Generally I'd like to avoid drivers having to know instance numbers. That gets
-more complicated to handle when the same IP is used in different platforms.
-
-Rob, what's your opinion?
-
-Thanks
-Kishon
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+index 1d9e8cf61018..673cc1831ee9 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+@@ -6,11 +6,14 @@ Required properties:
+     - "qcom,msm8916-tsens" (MSM8916)
+     - "qcom,msm8974-tsens" (MSM8974)
+     - "qcom,msm8996-tsens" (MSM8996)
++    - "qcom,qcs404-tsens", "qcom,tsens-v1" (QCS404)
+     - "qcom,msm8998-tsens", "qcom,tsens-v2" (MSM8998)
+     - "qcom,sdm845-tsens", "qcom,tsens-v2" (SDM845)
+   The generic "qcom,tsens-v2" property must be used as a fallback for any SoC
+   with version 2 of the TSENS IP. MSM8996 is the only exception because the
+   generic property did not exist when support was added.
++  Similarly, the generic "qcom,tsens-v1" property must be used as a fallback for
++  any SoC with version 1 of the TSENS IP.
+ 
+ - reg: Address range of the thermal registers.
+   New platforms containing v2.x.y of the TSENS IP must specify the SROT and TM
+@@ -39,3 +42,14 @@ tsens0: thermal-sensor@c263000 {
+ 		#qcom,sensors = <13>;
+ 		#thermal-sensor-cells = <1>;
+ 	};
++
++Example 3 (for any platform containing v1 of the TSENS IP):
++tsens: thermal-sensor@4a9000 {
++		compatible = "qcom,qcs404-tsens", "qcom,tsens-v1";
++		reg = <0x004a9000 0x1000>, /* TM */
++		      <0x004a8000 0x1000>; /* SROT */
++		nvmem-cells = <&tsens_caldata>;
++		nvmem-cell-names = "calib";
++		#qcom,sensors = <10>;
++		#thermal-sensor-cells = <1>;
++	};
+-- 
+2.17.1
