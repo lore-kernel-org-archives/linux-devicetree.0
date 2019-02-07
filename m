@@ -1,70 +1,144 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 2/2] arm: dts: gta04: add gps support
-Date: Thu, 7 Feb 2019 09:31:31 -0800
-Message-ID: <20190207173131.GF5720@atomide.com>
-References: <20190131180640.14480-1-andreas@kemnade.info>
- <20190131180640.14480-3-andreas@kemnade.info>
- <20190201100416.GD3691@localhost>
- <20190201200630.2efc9eef@kemnade.info>
- <20190204083032.GB4686@localhost>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V2 2/2] hwmon: pwm-fan: Add optional regulator support
+Date: Thu, 7 Feb 2019 10:18:26 -0800
+Message-ID: <20190207181826.GA27492@roeck-us.net>
+References: <1549557480-14436-1-git-send-email-stefan.wahren@i2se.com>
+ <1549557480-14436-3-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190204083032.GB4686@localhost>
+In-Reply-To: <1549557480-14436-3-git-send-email-stefan.wahren@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Andreas Kemnade <andreas@kemnade.info>, mark.rutland@arm.com, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Johan Hovold <johan@kernel.org> [190204 08:30]:
-> On Fri, Feb 01, 2019 at 08:06:30PM +0100, Andreas Kemnade wrote:
-> > On Fri, 1 Feb 2019 11:04:16 +0100
-> > Johan Hovold <johan@kernel.org> wrote:
-> > 
-> > > On Thu, Jan 31, 2019 at 07:06:40PM +0100, Andreas Kemnade wrote:
-> > > > The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
-> > > > which one is mounted so use the compatibility entry for w2sg0004
-> > > > for all which will work for both.
-> > > > 
-> > > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > > ---
-> > > > Changes in v3:
-> > > > - converted to a patchset
-> > > > - added vcc-supply
-> > > > 
-> > > > Changes in v2:
-> > > > - some s/gps/gnss/
-> > > > - not added vcc-supply because the regulator is not modelled
-> > > >   in dts at all
-> > > > 
-> > > > w2sg0004 bindings are in next-20190129
-> > > > 
-> > > >  arch/arm/boot/dts/omap3-gta04.dtsi | 14 ++++++++++++++
-> > > >  1 file changed, 14 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-> > > > index 02d8274a2f47..4ea0f7dc37c6 100644
-> > > > --- a/arch/arm/boot/dts/omap3-gta04.dtsi
-> > > > +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-> > > > @@ -320,6 +320,12 @@  
-> > > >  		>;  
-> > > >         };
-> > > >  
-> > > > +	gps_pins: pinmux_gps_pins {  
-> > > 
-> > > s/gps/gnss/ would be more consistent, but whatever.
-> > > 
-> > well, gps is already in the file at another place. So it is a bit
-> > inconsistent in any case, without further cleanup. If someone comes
-> > up with a strong opinion here I would of course change it.
+On Thu, Feb 07, 2019 at 05:38:00PM +0100, Stefan Wahren wrote:
+> This adds optional regulator support to the pwm-fan driver. This is
+> necessary for pwm fans which are powered by a switchable supply.
 > 
-> Up to you. As long as the gnss node is named "gnss" I don't have a
-> strong opinion on the other names (as long as they follow the spec of
-> course).
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  drivers/hwmon/pwm-fan.c | 39 ++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 38 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 2c94482..344915c 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/thermal.h>
+>  
+> @@ -31,6 +32,7 @@
+>  struct pwm_fan_ctx {
+>  	struct mutex lock;
+>  	struct pwm_device *pwm;
+> +	struct regulator *reg_en;
+>  	unsigned int pwm_value;
+>  	unsigned int pwm_fan_state;
+>  	unsigned int pwm_fan_max_state;
+> @@ -231,6 +233,21 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, ctx);
+>  
+> +	ctx->reg_en = devm_regulator_get_optional(&pdev->dev, "fan");
+> +	if (IS_ERR(ctx->reg_en)) {
+> +		if (PTR_ERR(ctx->reg_en) == -ENODEV)
+> +			ctx->reg_en = NULL;
+> +		else
+> +			return PTR_ERR(ctx->reg_en);
 
-OK so I'm applying these two patches into omap-for-v5.1/dt.
+		if PTR_ERR(ctx->reg_en) != -ENODEV)
+			return PTR_ERR(ctx->reg_en);
+		ctx->reg_en = NULL;
 
-Thanks,
+would be a bit easier to read and avoid an else.
 
-Tony
+> +	} else {
+> +		ret = regulator_enable(ctx->reg_en);
+> +		if (ret) {
+> +			dev_err(&pdev->dev,
+> +				"Failed to enable fan supply: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	ctx->pwm_value = MAX_PWM;
+>  
+>  	/* Set duty cycle to maximum allowed and enable PWM output */
+> @@ -241,7 +258,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  	ret = pwm_apply_state(ctx->pwm, &state);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to configure PWM\n");
+> -		return ret;
+> +		goto err_reg_disable;
+>  	}
+>  
+>  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
+> @@ -277,6 +294,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  	state.enabled = false;
+>  	pwm_apply_state(ctx->pwm, &state);
+>  
+> +err_reg_disable:
+> +	if (ctx->reg_en)
+> +		regulator_disable(ctx->reg_en);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -287,6 +308,10 @@ static int pwm_fan_remove(struct platform_device *pdev)
+>  	thermal_cooling_device_unregister(ctx->cdev);
+>  	if (ctx->pwm_value)
+>  		pwm_disable(ctx->pwm);
+> +
+> +	if (ctx->reg_en)
+> +		regulator_disable(ctx->reg_en);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -299,6 +324,12 @@ static int pwm_fan_suspend(struct device *dev)
+>  
+>  	pwm_get_args(ctx->pwm, &args);
+>  
+> +	if (ctx->reg_en) {
+> +		ret = regulator_disable(ctx->reg_en);
+> +		if (ret)
+> +			dev_err(dev, "Failed to disable fan supply: %d\n", ret);
+
+This is a bit weird. The error is returned to the caller, but only if
+ctx->pwm_value is 0. Otherwise it is ignored. This warrants an explanation
+(and some selling) if it is on purpose.
+
+> +	}
+> +
+>  	if (ctx->pwm_value) {
+>  		ret = pwm_config(ctx->pwm, 0, args.period);
+>  		if (ret < 0)
+> @@ -317,6 +348,12 @@ static int pwm_fan_resume(struct device *dev)
+>  	unsigned long duty;
+>  	int ret;
+>  
+> +	if (ctx->reg_en) {
+> +		ret = regulator_enable(ctx->reg_en);
+> +		if (ret)
+> +			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
+
+Does it really make sense here to ignore this error ? After all,
+the fan will likely not work if that error really happens. Doesn't
+that count as resume failure ?
+
+> +	}
+> +
+>  	if (ctx->pwm_value == 0)
+>  		return 0;
+>  
+> -- 
+> 2.7.4
+> 
