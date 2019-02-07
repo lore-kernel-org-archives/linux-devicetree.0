@@ -1,107 +1,62 @@
-Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 32/33] irqchip: davinci-cp-intc: move the driver to drivers/irqchip
-Date: Fri,  8 Feb 2019 18:31:53 +0100
-Message-Id: <20190208173154.4665-33-brgl@bgdev.pl>
-In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
-References: <20190208173154.4665-1-brgl@bgdev.pl>
+Return-Path: <SRS0=K5hT=QO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:42541 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbfBGUmR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Feb 2019 15:42:17 -0500
+Date: Thu, 7 Feb 2019 21:42:14 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 1/2] rtx: x1205: Add DT bindings
+Message-ID: <20190207204214.GI4719@piout.net>
+References: <20190131150642.26289-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190131150642.26289-1-linus.walleij@linaro.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi,
 
-The cp-intc driver has now been cleaned up. Move it to drivers/irqchip
-where it belongs.
+On 31/01/2019 16:06:41+0100, Linus Walleij wrote:
+> This adds device tree bindings for the Xircom X1205 RTC found
+> in the Linksys NSLU2.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../devicetree/bindings/rtc/xircom,x1205.txt         | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/xircom,x1205.txt
+> 
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: David Lechner <david@lechnology.com>
----
- arch/arm/mach-davinci/Kconfig                             | 8 ++------
- arch/arm/mach-davinci/Makefile                            | 2 --
- drivers/irqchip/Kconfig                                   | 5 +++++
- drivers/irqchip/Makefile                                  | 1 +
- .../cp_intc.c => drivers/irqchip/irq-davinci-cp-intc.c    | 0
- 5 files changed, 8 insertions(+), 8 deletions(-)
- rename arch/arm/mach-davinci/cp_intc.c => drivers/irqchip/irq-davinci-cp-intc.c (100%)
+I chose to not apply that one and instead amend your following patch to
+add the compatible with the trivial RTCs in rtc.txt
 
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index 71a4d875dd39..5a59cebc7d0a 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -1,10 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- if ARCH_DAVINCI
- 
--config CP_INTC
--	bool
--	select IRQ_DOMAIN
--
- config ARCH_DAVINCI_DMx
- 	bool
- 
-@@ -33,13 +29,13 @@ config ARCH_DAVINCI_DA830
- 	select ARCH_DAVINCI_DA8XX
- 	# needed on silicon revs 1.0, 1.1:
- 	select CPU_DCACHE_WRITETHROUGH if !CPU_DCACHE_DISABLE
--	select CP_INTC
-+	select DAVINCI_CP_INTC
- 
- config ARCH_DAVINCI_DA850
- 	bool "DA850/OMAP-L138/AM18x based system"
- 	depends on !ARCH_DAVINCI_DMx || (AUTO_ZRELADDR && ARM_PATCH_PHYS_VIRT)
- 	select ARCH_DAVINCI_DA8XX
--	select CP_INTC
-+	select DAVINCI_CP_INTC
- 
- config ARCH_DAVINCI_DA8XX
- 	bool
-diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
-index 983865a99616..f76a8482784f 100644
---- a/arch/arm/mach-davinci/Makefile
-+++ b/arch/arm/mach-davinci/Makefile
-@@ -18,8 +18,6 @@ obj-$(CONFIG_ARCH_DAVINCI_DM365)	+= dm365.o devices.o
- obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= da830.o devices-da8xx.o usb-da8xx.o
- obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= da850.o devices-da8xx.o usb-da8xx.o
- 
--obj-$(CONFIG_CP_INTC)			+= cp_intc.o
--
- # Board specific
- obj-$(CONFIG_MACH_DA8XX_DT)		+= da8xx-dt.o pdata-quirks.o
- obj-$(CONFIG_MACH_DAVINCI_EVM)  	+= board-dm644x-evm.o
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index ea0eb82bf1d2..48fc5024c073 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -134,6 +134,11 @@ config DAVINCI_AINTC
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN
- 
-+config DAVINCI_CP_INTC
-+	bool
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+
- config DW_APB_ICTL
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 623e0ec5f9d0..e6cd0c98eff2 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
- obj-$(CONFIG_DAVINCI_AINTC)		+= irq-davinci-aintc.o
-+obj-$(CONFIG_DAVINCI_CP_INTC)		+= irq-davinci-cp-intc.o
- obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
- obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
- obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
-diff --git a/arch/arm/mach-davinci/cp_intc.c b/drivers/irqchip/irq-davinci-cp-intc.c
-similarity index 100%
-rename from arch/arm/mach-davinci/cp_intc.c
-rename to drivers/irqchip/irq-davinci-cp-intc.c
+> diff --git a/Documentation/devicetree/bindings/rtc/xircom,x1205.txt b/Documentation/devicetree/bindings/rtc/xircom,x1205.txt
+> new file mode 100644
+> index 000000000000..3e3102a32728
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/xircom,x1205.txt
+> @@ -0,0 +1,12 @@
+> +* Xircom X1205 I2C RTC
+> +
+> +Required properties:
+> +- compatible: Should be "xircom,x1205"
+> +- reg: I2C address
+> +
+> +Example:
+> +
+> +rtc@6f {
+> +	compatible = "xicor,x1205";
+> +	reg = <0x6f>;
+> +};
+> -- 
+> 2.20.1
+> 
+
 -- 
-2.20.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
