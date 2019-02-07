@@ -1,76 +1,63 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [RFT PATCH 7/9] mfd: axp20x: add USB power supply
- mfd cell to AXP813
-Date: Thu, 7 Feb 2019 15:13:06 +0000
-Message-ID: <20190207151306.lyjcwyllshwm4o6q@plaes.org>
-References: <20190207064535.9226-1-wens@csie.org>
- <20190207064535.9226-8-wens@csie.org>
-Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v6 2/6] dt-bindings: arm: Add bindings for Mediatek MT8183
+ SoC Platform
+Date: Thu, 7 Feb 2019 16:15:16 +0100
+Message-ID: <4ece8d53-e803-97d3-6f5e-5c3002a31cf1@gmail.com>
+References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
+ <1548317240-44682-3-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDB4J47M7YERBBMW6HRAKGQE7SI6FJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190207064535.9226-8-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1548317240-44682-3-git-send-email-erin.lo@mediatek.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, mars.cheng@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 07, 2019 at 02:45:33PM +0800, Chen-Yu Tsai wrote:
-> From: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+
+
+On 24/01/2019 09:07, Erin Lo wrote:
+> This adds dt-binding documentation of cpu for Mediatek MT8183.
 > 
-> The AXP813 has a VBUS power input. Now that the axp20x_usb_power driver
-> supports this variant, we can add an mfd cell for it to use it.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> [wens-jdAy2FN1RRM@public.gmane.org: add commit message]
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+pushed to v5.0-next/dts64
+
+Thanks,
+Matthias
+
 > ---
->  drivers/mfd/axp20x.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  Documentation/devicetree/bindings/arm/mediatek.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 3c97f2c0fdfe..17b115845993 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -198,6 +198,12 @@ static const struct resource axp22x_usb_power_supply_resources[] = {
->  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
->  };
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+> index 8f260e5..f6d6ed3 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+> @@ -20,6 +20,7 @@ compatible: Must contain one of
+>     "mediatek,mt8127"
+>     "mediatek,mt8135"
+>     "mediatek,mt8173"
+> +   "mediatek,mt8183"
 >  
-> +/* AXP803 and AXP813/AXP818 share the same interrupts */
-> +static struct resource axp803_usb_power_supply_resources[] = {
-
-const, if possible?
-
-> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
-> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
-> +};
-> +
->  static const struct resource axp22x_pek_resources[] = {
->  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_RIS_EDGE, "PEK_DBR"),
->  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_FAL_EDGE, "PEK_DBF"),
-> @@ -793,6 +799,11 @@ static const struct mfd_cell axp813_cells[] = {
->  		.of_compatible	= "x-powers,axp813-ac-power-supply",
->  		.num_resources	= ARRAY_SIZE(axp20x_ac_power_supply_resources),
->  		.resources	= axp20x_ac_power_supply_resources,
-> +	}, {
-> +		.name		= "axp20x-usb-power-supply",
-> +		.num_resources	= ARRAY_SIZE(axp803_usb_power_supply_resources),
-> +		.resources	= axp803_usb_power_supply_resources,
-> +		.of_compatible	= "x-powers,axp813-usb-power-supply",
->  	},
->  };
 >  
-> -- 
-> 2.20.1
+>  Supported boards:
+> @@ -77,3 +78,6 @@ Supported boards:
+>  - MTK mt8173 tablet EVB:
+>      Required root node properties:
+>        - compatible = "mediatek,mt8173-evb", "mediatek,mt8173";
+> +- Evaluation board for MT8183:
+> +    Required root node properties:
+> +      - compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
 > 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
