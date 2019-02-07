@@ -1,107 +1,94 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCHv7 6/6] coresight: cpu-debug: Add support for Qualcomm Kryo
-Date: Thu, 7 Feb 2019 13:28:56 -0700
-Message-ID: <CANLsYky9ujRyftg3WoeSWK37=3_k5hw9x=DV34P_YrUXCLApXw@mail.gmail.com>
-References: <cover.1548981329.git.saiprakash.ranjan@codeaurora.org> <53cf9d9d3b14f503a6c842754f3c55413f5a3392.1548981329.git.saiprakash.ranjan@codeaurora.org>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCH 2/2] ARM: dts: imx7: add DMA properties for ECSPI
+Date: Thu, 7 Feb 2019 21:00:44 +0000
+Message-ID: <1549573243.3075.72.camel@impinj.com>
+References: <20190107132226.16216-1-stefan@agner.ch>
+         <20190107132226.16216-2-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53cf9d9d3b14f503a6c842754f3c55413f5a3392.1548981329.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20190107132226.16216-2-stefan@agner.ch>
+Content-Language: en-US
+Content-ID: <78B3DAFA5E28EF4EAFD719015854BE6B@namprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: "stefan@agner.ch" <stefan@agner.ch>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "linux-imx@nxp.com" <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Jan 2019 at 17:55, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Add support for coresight CPU debug module on Qualcomm
-> Kryo CPUs. This patch adds the UCI entries for Kryo CPUs
-> found on MSM8996 which shares the same PIDs as ETMs.
->
-> Without this, below error is observed on MSM8996:
->
-> [    5.429867] OF: graph: no port node found in /soc/debug@3810000
-> [    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
-> [    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
-> [    5.446474] OF: graph: no port node found in /soc/debug@3910000
-> [    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
-> [    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
-> [    5.487765] OF: graph: no port node found in /soc/debug@3a10000
-> [    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
-> [    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
-> [    5.501802] OF: graph: no port node found in /soc/debug@3b10000
-> [    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
-> [    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
->
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->
-> ---
-> For testing, all dependent patches are in below tree:
->  * https://github.com/saiprakash-ranjan/linux/tree/coresight-next
->
-> This patch depends on UCI support by Mike Leach in below link:
->  * https://lore.kernel.org/lkml/20190130234051.2294-1-mike.leach@linaro.org/
-> ---
->  .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
->  1 file changed, 16 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> index e8819d750938..50ebf5b7fa4f 100644
-> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> @@ -655,24 +655,23 @@ static int debug_remove(struct amba_device *adev)
->         return 0;
->  }
->
-> +static const struct amba_cs_uci_id uci_id_debug[] = {
-> +       {
-> +               /*  CPU Debug UCI data */
-> +               .devarch        = 0x47706a15,
-> +               .devarch_mask   = 0xfff0ffff,
-> +               .devtype        = 0x00000015,
-> +       }
-> +};
-> +
-
-Thank you for adding that.
-
->  static const struct amba_id debug_ids[] = {
-> -       {       /* Debug for Cortex-A53 */
-> -               .id     = 0x000bbd03,
-> -               .mask   = 0x000fffff,
-> -       },
-> -       {       /* Debug for Cortex-A57 */
-> -               .id     = 0x000bbd07,
-> -               .mask   = 0x000fffff,
-> -       },
-> -       {       /* Debug for Cortex-A72 */
-> -               .id     = 0x000bbd08,
-> -               .mask   = 0x000fffff,
-> -       },
-> -       {       /* Debug for Cortex-A73 */
-> -               .id     = 0x000bbd09,
-> -               .mask   = 0x000fffff,
-> -       },
-> -       { 0, 0 },
-> +       CS_AMBA_ID(0x000bbd03),                         /* Cortex-A53 */
-> +       CS_AMBA_ID(0x000bbd07),                         /* Cortex-A57 */
-> +       CS_AMBA_ID(0x000bbd08),                         /* Cortex-A72 */
-> +       CS_AMBA_ID(0x000bbd09),                         /* Cortex-A73 */
-> +       CS_AMBA_UCI_ID(0x000f0205, uci_id_debug),       /* Qualcomm Kryo */
-> +       CS_AMBA_UCI_ID(0x000f0211, uci_id_debug),       /* Qualcomm Kryo */
-> +       {},
-
-I have reviewed your work and things look good to me.  Once again
-there isn't much I can do with it right now.  Please re-submit when
-Mike's set has been merged.
-
-Mathieu
-
->  };
->
->  static struct amba_driver debug_driver = {
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+T24gTW9uLCAyMDE5LTAxLTA3IGF0IDE0OjIyICswMTAwLCBTdGVmYW4gQWduZXIgd3JvdGU6DQo+
+IEFsbG93IHRvIHVzZSBETUEgZm9yIFNQSSBieSBhZGRpbmcgdGhlIGFwcHJvcHJpYXRlIERNQSBw
+cm9wZXJpdGVzDQo+IHRvIHRoZSBlY3NwaSBub2Rlcy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFN0
+ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPg0KPiAtLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRz
+L2lteDdzLmR0c2kgfCA4ICsrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25z
+KCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaSBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2lteDdzLmR0c2kNCj4gaW5kZXggYTA1MjE5OGY2ZTk2Li5iOTMzMDE3
+NmMzYWYgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdzLmR0c2kNCj4gKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaQ0KPiBAQCAtNjUzLDYgKzY1Myw4IEBADQo+
+ICAJCQkJY2xvY2tzID0gPCZjbGtzIElNWDdEX0VDU1BJNF9ST09UX0NMSz4sDQo+ICAJCQkJCTwm
+Y2xrcyBJTVg3RF9FQ1NQSTRfUk9PVF9DTEs+Ow0KPiAgCQkJCWNsb2NrLW5hbWVzID0gImlwZyIs
+ICJwZXIiOw0KPiArCQkJCWRtYXMgPSA8JnNkbWEgNiA3IDE+LCA8JnNkbWEgNyA3IDI+Ow0KPiAr
+CQkJCWRtYS1uYW1lcyA9ICJyeCIsICJ0eCI7DQo+ICAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsN
+Cj4gIAkJCX07DQoNCkFmdGVyIHVwZGF0aW5nIG15IGtlcm5lbCB0byBsaW51eC1uZXh0IG9uIG15
+IElNWDdkIGJhc2VkIGRldmljZSwgSQ0KZm91bmQgdGhhdCBhbiBGUEdBLCB3aGljaCBpcyBwcm9n
+cmFtbWVkIHZpYSB0aGUgRUNTUEkgaW50ZXJmYWNlLCB3YXMgbm8NCmxvbmdlciBhY2NlcHRpbmcg
+aXRzIGltYWdlLg0KDQpJIHRyYWNrZWQgdGhlIHByb2JsZW0gdG8gdGhpcyBjaGFuZ2UuICBJZiBJ
+IHR1cm4gb2ZmIERNQSwgaXQgd29ya3MuDQoNClRoZXJlJ3MgYW4gaW50ZXJlc3RpbmcgdGhpbmcg
+dGhhdCBoYXBwZW5zIHdoZW4gRE1BIGlzIHVzZWQuICBUaGUgU1BJDQpjbG9jayBjaGFuZ2VzLiAg
+SW5zdGVhZCBvZiBjeWNsaW5nIGNvbnRpbnVvdXNseSBmb3IgdGhlIGVudGlyZQ0KdHJhbnNmZXIs
+IGl0IGluc3RlYWQgY2xvY2tzIG91dCA4IGJpdHMsIHRoZW4gcGF1c2VzIGZvciA0IGJpdCB0aW1l
+cywNCnRoZW4gdGhlIG5leHQgYnl0ZSwgZXRjLiAgU28gaXQncyBhIG5ldCBvZiBhYm91dCA1MCUg
+c2xvd2VyLiAgVGhlIHBhdXNlDQpiZXR3ZWVuIGJ5dGVzIHNjYWxlcyB3aXRoIHNwaSBmcmVxdWVu
+Y3kgdG8gYWx3YXlzIGJlIGFib3V0IDQgYml0cy4NCg0KSGVyZSdzIGEgdHJhY2Ugd2l0aCBETUE6
+IGh0dHBzOi8vaW1hZ2ViaW4uY2Evdi80V0VrRW52c1ZTa3ENCg0KSGVyZSdzIHdoYXQgaXQgbG9v
+a3MgbGlrZSB3aXRob3V0IERNQToNCmh0dHBzOi8vaW1hZ2ViaW4uY2Evdi80V0VrVmZFcXBRMTIN
+Cg0KSXQgc2VlbXMgbGlrZSB0aGVyZSBhcmUgb3RoZXIgcHJvYmxlbXMgd2l0aCBETUEgdG9vLiAg
+SGVyZSdzIGFuIGVycm9yDQpJJ2xsIHJhbmRvbSBnZXQgZXZlcnkgc28gb2Z0ZW4uDQoNClsgIDE0
+Mi4wODIzMjVdIHNwaV9tYXN0ZXIgc3BpMTogSS9PIEVycm9yIGluIERNQSBSWA0KWyAgMTQyLjA4
+NTY3OF0gc3BpZGV2IHNwaTEuMDogU1BJIHRyYW5zZmVyIGZhaWxlZDogLTExMA0KWyAgMTQyLjA4
+OTM4OV0gc3BpX21hc3RlciBzcGkxOiBmYWlsZWQgdG8gdHJhbnNmZXIgb25lIG1lc3NhZ2UgZnJv
+bSBxdWV1ZQ0KDQpOb3Qgc3VyZSBpZiB0aGUgdGltZW91dCBpcyBvdmVybHkgYWdncmVzc2l2ZSBv
+ciBpZiB0aGVyZSBpcyBzb21lIG90aGVyIGZhaWx1cmUuDQoNClRoZW4gc29tZXRpbWVzIHRoZXJl
+IGVycm9ycyBhcmUgd29yc2U6DQoNCkludGVybmFsIGVycm9yOiBPb3BzIC0gdW5kZWZpbmVkIGlu
+c3RydWN0aW9uOiAwIFsjMV0gUFJFRU1QVCBTTVAgQVJNDQpNb2R1bGVzIGxpbmtlZCBpbjoNCkNQ
+VTogMCBQSUQ6IDEwMDYgQ29tbTogZnBnYS1sb2FkZXIgTm90IHRhaW50ZWQgNS4wLjAtcmM0LW5l
+eHQtMjAxOTAyMDEgIzENCkhhcmR3YXJlIG5hbWU6IEZyZWVzY2FsZSBpLk1YNyBEdWFsIChEZXZp
+Y2UgVHJlZSkNClBDIGlzIGF0IHNnX2xhc3QrMHg0Yy8weDY4DQpMUiBpcyBhdCAgIChudWxsKQ0K
+cGMgOiBbPDgwNDk0ODAwPl0gICAgbHIgOiBbPDAwMDAwMDAwPl0gICAgcHNyOiA2MDAxMDAxMw0K
+c3AgOiBiZjBhZGQ1YyAgaXAgOiBiZWE5NDU5OCAgZnAgOiBiZjM3MTIxOA0KcjEwOiBiZjA5NDlm
+MCAgcjkgOiAwMDAwMDAwMCAgcjggOiBiZjA5NDgwMA0KcjcgOiBiZGMzOTMwMCAgcjYgOiBiZjM3
+MTAwMCAgcjUgOiBiZGMzOTMwMCAgcjQgOiBiZjA5NGI2OA0KcjMgOiAwMDAwMDAwMCAgcjIgOiAw
+MDAwMDAwMSAgcjEgOiAwMDAwMDAwMSAgcjAgOiBiZWE5NDU4MA0KRmxhZ3M6IG5aQ3YgIElSUXMg
+b24gIEZJUXMgb24gIE1vZGUgU1ZDXzMyICBJU0EgQVJNICBTZWdtZW50IHVzZXINCkNvbnRyb2w6
+IDMwYzUzODdkICBUYWJsZTogYmVhOTQwMDAgIERBQzogZmZmZmZmZmQNClByb2Nlc3MgZnBnYS1s
+b2FkZXIgKHBpZDogMTAwNiwgc3RhY2sgbGltaXQgPSAweDYxYmM4YjczKQ0KU3RhY2s6ICgweGJm
+MGFkZDVjIHRvIDB4YmYwYWUwMDApDQpkZDQwOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA4MDU2Y2RiMA0KZGQ2MDogODA1NmM5
+YWMgMDAwMDEwMDAgMDAwMDAwMDAgYmRjMzkzMDAgYmYwOTQ4MDAgYmYwOTRiNjggYmYzNzEwMDAg
+MDAwMDAwMDANCmRkODA6IGJmMDk0OWYwIDgwNTZiYzAwIGJmMDk0ODAwIGJkYzM5MzAwIGJmMGFk
+ZWFjIGJmMDk0ODAwIGJmMDk0YWQwIDgwNTY5ZWRjDQouLi4NCmRmYzA6IDAwMjE3MzAxIDAwMTUw
+MDAwIDAwMDAxMDAwIDAwMDAwMDM2IDAwZGYyMDEwIDAwMDAwMDAzIDAwMDAxMDAwIDAwZGYxMDA4
+DQpkZmUwOiAwMDAyMmY3MCA3ZTllYmIxNCAwMDAxMTNiOCA3NmYyYTdmOCAyMDAxMDAzMCAwMDAw
+MDAwMyAwMDAwMDAwMCAwMDAwMDAwMA0KWzw4MDQ5NDgwMD5dIChzZ19sYXN0KSBmcm9tIFs8ODA1
+NmNkYjA+XSAoc3BpX2lteF90cmFuc2ZlcisweGQ4LzB4NDQ4KQ0KWzw4MDU2Y2RiMD5dIChzcGlf
+aW14X3RyYW5zZmVyKSBmcm9tIFs8ODA1NmJjMDA+XSAoc3BpX2JpdGJhbmdfdHJhbnNmZXJfb25l
+KzB4NTAvMHhhMCkNCls8ODA1NmJjMDA+XSAoc3BpX2JpdGJhbmdfdHJhbnNmZXJfb25lKSBmcm9t
+IFs8ODA1NjllZGM+XSAoc3BpX3RyYW5zZmVyX29uZV9tZXNzYWdlKzB4MThjLzB4M2UwKQ0KWzw4
+MDU2OWVkYz5dIChzcGlfdHJhbnNmZXJfb25lX21lc3NhZ2UpIGZyb20gWzw4MDU2YTQ5OD5dIChf
+X3NwaV9wdW1wX21lc3NhZ2VzKzB4MzY4LzB4NTE4KQ0KWzw4MDU2YTQ5OD5dIChfX3NwaV9wdW1w
+X21lc3NhZ2VzKSBmcm9tIFs8ODA1NmE3ZWM+XSAoX19zcGlfc3luYysweDE5OC8weDFhMCkNCls8
+ODA1NmE3ZWM+XSAoX19zcGlfc3luYykgZnJvbSBbPDgwNTZhODE4Pl0gKHNwaV9zeW5jKzB4MjQv
+MHgzYykNCls8ODA1NmE4MTg+XSAoc3BpX3N5bmMpIGZyb20gWzw4MDU2YWUxND5dIChzcGlkZXZf
+c3luYysweDM4LzB4NGMpDQpbPDgwNTZhZTE0Pl0gKHNwaWRldl9zeW5jKSBmcm9tIFs8ODA1NmI2
+ZjQ+XSAoc3BpZGV2X2lvY3RsKzB4NjYwLzB4NzA0KQ0KWzw4MDU2YjZmND5dIChzcGlkZXZfaW9j
+dGwpIGZyb20gWzw4MDMzNWY5Yz5dIChkb192ZnNfaW9jdGwrMHhhYy8weDc5YykNCls8ODAzMzVm
+OWM+XSAoZG9fdmZzX2lvY3RsKSBmcm9tIFs8ODAzMzY2YzA+XSAoa3N5c19pb2N0bCsweDM0LzB4
+NTgpDQpbPDgwMzM2NmMwPl0gKGtzeXNfaW9jdGwpIGZyb20gWzw4MDIwMTEyMD5dIChyZXRfZmFz
+dF9zeXNjYWxsKzB4MC8weDRjKQ0KRXhjZXB0aW9uIHN0YWNrKDB4YmYwYWRmYTggdG8gMHhiZjBh
+ZGZmMCkNCmRmYTA6ICAgICAgICAgICAgICAgICAgIDAwMjE3MzAxIDAwMTUwMDAwIDAwMDAwMDAz
+IDQwMjA2YjAwIDdlOWViYjgwIDAzOTM4NzAwDQpkZmMwOiAwMDIxNzMwMSAwMDE1MDAwMCAwMDAw
+MTAwMCAwMDAwMDAzNiAwMGRmMjAxMCAwMDAwMDAwMyAwMDAwMTAwMCAwMGRmMTAwOA0KZGZlMDog
+MDAwMjJmNzAgN2U5ZWJiMTQgMDAwMTEzYjggNzZmMmE3ZjgNCkNvZGU6IGUxNTEwMDAyIDFhZmZm
+ZmYzIGUzNTMwMDAwIDE0OWRmMDA0IChlN2YwMDFmMikNCi0tLVsgZW5kIHRyYWNlIDE1ODgyMjlm
+Yzc1NDE2NjkgXS0tLQ0KDQpJIHRoaW5rIERNQSBvbiBpbXggbm90IGJlIHJlYWR5IGZvciBwcmlt
+ZSB0aW1lIHlldC4=
