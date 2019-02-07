@@ -1,47 +1,31 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 5/7] dt-bindings: interrupt-controller: update bindings
- for MT7623
-Date: Thu, 7 Feb 2019 18:11:47 +0100
-Message-ID: <4c79bb2b-abb1-0306-2eff-884c2d8bbb47@gmail.com>
-References: <d1ab6c89b115ad0582815816490fa0c13ea83178.1548735271.git.ryder.lee@mediatek.com>
- <5f226695c861fa9fc641488364f0c19c0a5eb425.1548735271.git.ryder.lee@mediatek.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: omap3-gta04a5: Replace LXR reference with a
+ local one
+Date: Thu, 7 Feb 2019 09:27:24 -0800
+Message-ID: <20190207172724.GD5720@atomide.com>
+References: <20190129144518.9744-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5f226695c861fa9fc641488364f0c19c0a5eb425.1548735271.git.ryder.lee@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190129144518.9744-1-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <roychl666@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc: linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 29/01/2019 05:31, Ryder Lee wrote:
-> This adds missing bindings for MT7623 sysirq.
+* Jonathan Neuschäfer <j.neuschaefer@gmx.net> [190129 06:46]:
+> There's no need to use an external link when the file is already here.
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-
-Marc, if you don't have any objections, I'll take this through my tree.
-
-Regards,
-Matthias
-
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 > ---
->  .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt         | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> index 8da481c..e8b3688 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> @@ -9,6 +9,7 @@ Required properties:
->  	"mediatek,mt8135-sysirq", "mediatek,mt6577-sysirq": for MT8135
->  	"mediatek,mt8127-sysirq", "mediatek,mt6577-sysirq": for MT8127
->  	"mediatek,mt7622-sysirq", "mediatek,mt6577-sysirq": for MT7622
-> +	"mediatek,mt7623-sysirq", "mediatek,mt6577-sysirq": for MT7623
->  	"mediatek,mt7629-sysirq", "mediatek,mt6577-sysirq": for MT7629
->  	"mediatek,mt6795-sysirq", "mediatek,mt6577-sysirq": for MT6795
->  	"mediatek,mt6797-sysirq", "mediatek,mt6577-sysirq": for MT6797
-> 
+> Alternatively, I could change the link to https://elixir.bootlin.com
+> (the successor of lxr.free-electrons.com), but this solution seemed
+> simpler.
+
+Yeah makes sense to me. Applying into omap-for-v5.1/dt
+thanks.
+
+Tony
