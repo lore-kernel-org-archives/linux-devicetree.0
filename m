@@ -1,100 +1,44 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/4] drm/mcde: Add device tree bindings
-Date: Thu,  7 Feb 2019 09:36:45 +0100
-Message-ID: <20190207083647.20615-3-linus.walleij@linaro.org>
-References: <20190207083647.20615-1-linus.walleij@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 0/4] Add max77620 charging & low battery support
+Date: Thu, 7 Feb 2019 08:48:36 +0000
+Message-ID: <20190207084836.GF4672@dell>
+References: <20190129085531.32364-1-markz@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190207083647.20615-1-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190129085531.32364-1-markz@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Zhang <markz@nvidia.com>
+Cc: blaws05@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgdGhlIFNULUVyaWNzc29uCk11
-bHRpIENoYW5uZWwgRGlzcGxheSBFbmdpbmUgTUNERSBhcyBmb3VuZCBpbiB0aGUgVTg1MDAKU29D
-cy4KCkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpTaWduZWQtb2ZmLWJ5OiBMaW51cyBX
-YWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Ci0tLQogLi4uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9zdGUsbWNkZS50eHQgIHwgMTEwICsrKysrKysrKysrKysrKysrKwogMSBm
-aWxlIGNoYW5nZWQsIDExMCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3RlLG1jZGUudHh0CgpkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3RlLG1jZGUu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3RlLG1jZGUu
-dHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uZmM1OGFhNWVmZmI1
-Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvc3RlLG1jZGUudHh0CkBAIC0wLDAgKzEsMTEwIEBACitTVC1Fcmljc3NvbiBNdWx0aSBD
-aGFubmVsIERpc3BsYXkgRW5naW5lIE1DREUKKworVGhlIFNULUVyaWNzc29uIE1DREUgaXMgYSBk
-aXNwbGF5IGNvbnRyb2xsZXIgd2l0aCBzdXBwb3J0IGZvciBjb21wb3NpdGluZworYW5kIGRpc3Bs
-YXlpbmcgc2V2ZXJhbCBjaGFubmVscyBtZW1vcnkgcmVzaWRlbnQgZ3JhcGhpY3MgZGF0YSBvbiBE
-U0kgb3IKK0xDRCBkaXNwbGF5cyBvciBicmlkZ2VzLiBJdCBpcyB1c2VkIGluIHRoZSBTVC1Fcmlj
-c3NvbiBVODUwMCBwbGF0Zm9ybS4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKworLSBjb21wYXRp
-YmxlOiBtdXN0IGJlOgorICAic3RlLG1jZGUiCistIHJlZzogcmVnaXN0ZXIgYmFzZSBmb3IgdGhl
-IG1haW4gTUNERSBjb250cm9sIHJlZ2lzdGVycywgc2hvdWxkIGJlCisgIDB4MTAwMCBpbiBzaXpl
-CistIGludGVycnVwdHM6IHRoZSBpbnRlcnJ1cHQgbGluZSBmb3IgdGhlIE1DREUKKy0gZXBvZC1z
-dXBwbHk6IGEgcGhhbmRsZSB0byB0aGUgRVBPRCByZWd1bGF0b3IKKy0gdmFuYS1zdXBwbHk6IGEg
-cGhhbmRsZSB0byB0aGUgYW5hbG9nIHZvbHRhZ2UgcmVndWxhdG9yCistIGNsb2NrczogYW4gYXJy
-YXkgb2YgdGhlIE1DREUgY2xvY2tzIGluIHRoaXMgc3RyaWN0IG9yZGVyOgorICBNQ0RFQ0xLICht
-YWluIE1DREUgY2xvY2spLCBMQ0RDTEsgKExDRCBjbG9jayksIFBMTERTSQorICAoSERNSSBjbG9j
-ayksIERTSTBFU0NMSyAoRFNJMCBlbmVyZ3kgc2F2ZSBjbG9jayksCisgIERTSTFFU0NMSyAoRFNJ
-MSBlbmVyZ3kgc2F2ZSBjbG9jayksIERTSTJFU0NMSyAoRFNJMiBlbmVyZ3kKKyAgc2F2ZSBjbG9j
-aykKKy0gY2xvY2stbmFtZXM6IG11c3QgYmUgdGhlIGZvbGxvd2luZyBhcnJheToKKyAgIm1jZGUi
-LCAibGNkIiwgImhkbWkiLCAiZHNpMCIsICJkc2kxIiwgImRzaTBlcyIsICJkc2kxZXMiLCAiZHNp
-MmVzIgorICB0byBtYXRjaCB0aGUgcmVxdWlyZWQgY2xvY2sgaW5wdXRzIGFib3ZlLgorLSAjYWRk
-cmVzcy1jZWxsczogc2hvdWxkIGJlIDwxPiAoZm9yIHRoZSBEU0kgaG9zdHMgdGhhdCB3aWxsIGJl
-IGNoaWxkcmVuKQorLSAjc2l6ZS1jZWxsczogc2hvdWxkIGJlIDwxPiAoZm9yIHRoZSBEU0kgaG9z
-dHMgdGhhdCB3aWxsIGJlIGNoaWxkcmVuKQorLSByYW5nZXM6IHRoaXMgc2hvdWxkIGFsd2F5cyBi
-ZSBzdGF0ZWQKKworUmVxdWlyZWQgc3Vibm9kZXM6CisKK1RoZSBkZXZpY2V0cmVlIG11c3Qgc3Bl
-Y2lmeSBzdWJub2RlcyBmb3IgdGhlIERTSSBob3N0IGFkYXB0ZXJzLgorVGhlc2UgbXVzdCBoYXZl
-IHRoZSBmb2xsb3dpbmcgY2hhcmFjdGVyaXN0aWNzOgorCistIGNvbXBhdGlibGU6IG11c3QgYmU6
-CisgICJzdGUsbWNkZS1kc2kiCistIHJlZzogbXVzdCBzcGVjaWZ5IHRoZSByZWdpc3RlciByYW5n
-ZSBmb3IgdGhlIERTSSBob3N0CistIHZhbmEtc3VwcGx5OiBwaGFuZGxlIHRvIHRoZSBWQU5BIHZv
-bHRhZ2UgcmVndWxhdG9yCistICNhZGRyZXNzLWNlbGxzOiBzaG91bGQgYmUgPDE+CistICNzaXpl
-LWNlbGxzOiBzaG91bGQgYmUgPDA+CisKK0Rpc3BsYXkgcGFuZWxzIGFuZCBicmlkZ2VzIHdpbGwg
-YXBwZWFyIGFzIGNoaWxkcmVuIG9uIHRoZSBEU0kgaG9zdHMsIGFuZAordGhlIGRpc3BsYXlzIGFy
-ZSBjb25uZWN0ZWQgdG8gdGhlIERTSSBob3N0cyB1c2luZyB0aGUgY29tbW9uIGJpbmRpbmcKK2Zv
-ciB2aWRlbyB0cmFuc21pdHRlciBpbnRlcmZhY2VzOyBzZWUKK0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAorCitJZiBhIERTSSBob3N0
-IGlzIHVudXNlZCAobm90IGNvbm5lY3RlZCkgaXQgd2lsbCBoYXZlIG5vIGNoaWxkcmVuIG9yIHBv
-cnRzCitkZWZpbmVkLgorCitFeGFtcGxlOgorCittY2RlQGEwMzUwMDAwIHsKKwljb21wYXRpYmxl
-ID0gInN0ZSxtY2RlIjsKKwlyZWcgPSA8MHhhMDM1MDAwMCAweDEwMDA+OworCWludGVycnVwdHMg
-PSA8R0lDX1NQSSA0OCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwllcG9kLXN1cHBseSA9IDwmZGI4
-NTAwX2IycjJfbWNkZV9yZWc+OworCXZhbmEtc3VwcGx5ID0gPCZhYjg1MDBfbGRvX2FuYV9yZWc+
-OworCWNsb2NrcyA9IDwmcHJjbXVfY2xrIFBSQ01VX01DREVDTEs+LCAvKiBNYWluIE1DREUgY2xv
-Y2sgKi8KKwkJIDwmcHJjbXVfY2xrIFBSQ01VX0xDRENMSz4sIC8qIExDRCBjbG9jayAqLworCQkg
-PCZwcmNtdV9jbGsgUFJDTVVfUExMRFNJPiwgLyogSERNSSBjbG9jayAqLworCQkgPCZwcmNtdV9j
-bGsgUFJDTVVfRFNJMENMSz4sIC8qIERTSSAwICovCisJCSA8JnByY211X2NsayBQUkNNVV9EU0kx
-Q0xLPiwgLyogRFNJIDEgKi8KKwkJIDwmcHJjbXVfY2xrIFBSQ01VX0RTSTBFU0NDTEs+LCAvKiBU
-Vm91dCBjbG9jayAwICovCisJCSA8JnByY211X2NsayBQUkNNVV9EU0kxRVNDQ0xLPiwgLyogVFZv
-dXQgY2xvY2sgMSAqLworCQkgPCZwcmNtdV9jbGsgUFJDTVVfRFNJMkVTQ0NMSz47IC8qIFRWb3V0
-IGNsb2NrIDIgKi8KKwljbG9jay1uYW1lcyA9ICJtY2RlIiwgImxjZCIsICJoZG1pIiwgImRzaTAi
-LCAiZHNpMSIsCisJCSAgICAiZHNpMGVzIiwgImRzaTFlcyIsICJkc2kyZXMiOworCSNhZGRyZXNz
-LWNlbGxzID0gPDE+OworCSNzaXplLWNlbGxzID0gPDE+OworCXJhbmdlczsKKworCWRzaTA6IGRz
-aUBhMDM1MTAwMCB7CisJCWNvbXBhdGlibGUgPSAic3RlLG1jZGUtZHNpIjsKKwkJcmVnID0gPDB4
-YTAzNTEwMDAgMHgxMDAwPjsKKwkJdmFuYS1zdXBwbHkgPSA8JmFiODUwMF9sZG9fYW5hX3JlZz47
-CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwkJcG9ydCB7
-CisJCQlkc2kwX291dDogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxf
-aW4+OworCQkJfTsKKwkJfTsKKworCQlwYW5lbDogZGlzcGxheSB7CisJCQljb21wYXRpYmxlID0g
-InNhbXN1bmcsczZkMTZkMCI7CisJCQlyZWcgPSA8MD47CisJCQl2ZGQxLXN1cHBseSA9IDwmYWI4
-NTAwX2xkb19hdXgxX3JlZz47CisJCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzIgMSBHUElPX0FDVElW
-RV9MT1c+OworCisJCQlwb3J0IHsKKwkJCQlwYW5lbF9pbjogZW5kcG9pbnQgeworCQkJCQlyZW1v
-dGUtZW5kcG9pbnQgPSA8JmRzaTBfb3V0PjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKworCX07CisJ
-ZHNpMTogZHNpQGEwMzUyMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJzdGUsbWNkZS1kc2kiOworCQly
-ZWcgPSA8MHhhMDM1MjAwMCAweDEwMDA+OworCQl2YW5hLXN1cHBseSA9IDwmYWI4NTAwX2xkb19h
-bmFfcmVnPjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+Owor
-CX07CisJZHNpMjogZHNpQGEwMzUzMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJzdGUsbWNkZS1kc2ki
-OworCQlyZWcgPSA8MHhhMDM1MzAwMCAweDEwMDA+OworCQl2YW5hLXN1cHBseSA9IDwmYWI4NTAw
-X2xkb19hbmFfcmVnPjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0g
-PDA+OworCX07Cit9OwotLSAKMi4yMC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+On Tue, 29 Jan 2019, Mark Zhang wrote:
+
+> This patch set adds support for max77620 backup battery charging and
+> low battery monitoring.
+> 
+> Changes in v2:
+> - Add devicetree binding documentation
+> 
+> Mark Zhang (4):
+>   mfd: max77620: Add backup battery charger support
+>   mfd: max77620: add documentation for backup battery charging
+>   mfd: max77620: Add low battery monitor support
+>   mfd: max77620: add documentation for low battery monitoring
+> 
+>  .../devicetree/bindings/mfd/max77620.txt      |  34 +++++
+>  drivers/mfd/max77620.c                        | 137 +++++++++++++++++-
+
+All of this needs moving out to the correct subsystem.
+
+drivers/power/supply/max77620-battery.c looks right.
+
+>  2 files changed, 170 insertions(+), 1 deletion(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
