@@ -1,30 +1,37 @@
-Return-Path: <SRS0=sYsD=QO=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1549528310-54436-1-git-send-email-biju.das@bp.renesas.com> <1549528310-54436-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1549528310-54436-2-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 7 Feb 2019 11:13:21 +0100
-Message-ID: <CAMuHMdVzg3TqqPzknvpd9ONDdqgsM_fVe8LzbO_MjNdLvmCLXg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: cat875: Enable PCIe support
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=USrl=QO=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 2/2] arm64: dts: renesas: cat875: Enable PCIe support
+Date: Thu,  7 Feb 2019 08:31:50 +0000
+Message-Id: <1549528310-54436-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1549528310-54436-1-git-send-email-biju.das@bp.renesas.com>
+References: <1549528310-54436-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Feb 7, 2019 at 9:37 AM Biju Das <biju.das@bp.renesas.com> wrote:
-> This patch enables PCIEC0 PCI express controller on the sub board.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+This patch enables PCIEC0 PCI express controller on the sub board.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+This patch is tested against renesas-dev
+---
+ arch/arm64/boot/dts/renesas/cat875.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/renesas/cat875.dtsi b/arch/arm64/boot/dts/renesas/cat875.dtsi
+index 805ffa7..14db667 100644
+--- a/arch/arm64/boot/dts/renesas/cat875.dtsi
++++ b/arch/arm64/boot/dts/renesas/cat875.dtsi
+@@ -30,6 +30,10 @@
+ 	};
+ };
+ 
++&pciec0 {
++	status = "okay";
++};
++
+ &pfc {
+ 	avb_pins: avb {
+ 		mux {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
