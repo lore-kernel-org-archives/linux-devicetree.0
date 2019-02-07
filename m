@@ -1,65 +1,54 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v8 4/8] devicetree: bindings: Document first ROHM BD70528
- bindings
-Date: Thu, 7 Feb 2019 07:42:29 -0800
-Message-ID: <20190207154229.GA19277@roeck-us.net>
-References: <cover.1549523718.git.matti.vaittinen@fi.rohmeurope.com>
- <52b17ed2599b21f4b93665ac689113ce3f8816b7.1549523718.git.matti.vaittinen@fi.rohmeurope.com>
- <20190207140418.GH20638@dell>
- <20190207153600.GA1920@localhost.localdomain>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v6 1/6] irqchip/mtk-sysirq: support 4 interrupt parameters
+ for sysirq
+Date: Thu, 7 Feb 2019 15:47:05 +0000
+Message-ID: <626b5b46-aac7-1532-386e-2fed85bf4ad9@arm.com>
+References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
+ <1548317240-44682-2-git-send-email-erin.lo@mediatek.com>
+ <898ca3d9-002b-e28e-fc97-86bc2538e9de@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190207153600.GA1920@localhost.localdomain>
+In-Reply-To: <898ca3d9-002b-e28e-fc97-86bc2538e9de@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Matti Vaittinen <mazziesaccount@gmail.com>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Seiya Wang <seiya.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 07, 2019 at 05:36:00PM +0200, Matti Vaittinen wrote:
-> Hello Lee,
+On 07/02/2019 15:20, Matthias Brugger wrote:
 > 
-> Thanks for the reviews!
 > 
-> On Thu, Feb 07, 2019 at 02:04:18PM +0000, Lee Jones wrote:
-> > On Thu, 07 Feb 2019, Matti Vaittinen wrote:
-> > 
-> > > Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
-> > > drivers) and 4 GPIO pins which can be configured for I/O or
-> > > as interrupt sources withe configurable trigger levels.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > > ---
-> > >  .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 102 +++++++++++++++++++++
-> > >  1 file changed, 102 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > > new file mode 100644
-> > > index 000000000000..f80be7e40184
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > > @@ -0,0 +1,102 @@
-> > > +* ROHM BD70528 Power Management Integrated Circuit bindings
-> > > +
-> > > +BD70528MWV is an ultra-low Iq general purpose single-chip power management IC
-> > 
-> > What's an Iq?
+> On 24/01/2019 09:07, Erin Lo wrote:
+>> From: Seiya Wang <seiya.wang@mediatek.com>
+>>
+>> To support partitioned PPIs, 4 interrupt parameters should be valid
+>> for sysirq.
+>>
+>> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+>> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+>> ---
+>>  drivers/irqchip/irq-mtk-sysirq.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+>> index 90aaf19..282736a 100644
+>> --- a/drivers/irqchip/irq-mtk-sysirq.c
+>> +++ b/drivers/irqchip/irq-mtk-sysirq.c
+>> @@ -81,7 +81,7 @@ static int mtk_sysirq_domain_translate(struct irq_domain *d,
+>>  				       unsigned int *type)
+>>  {
+>>  	if (is_of_node(fwspec->fwnode)) {
+>> -		if (fwspec->param_count != 3)
+>> +		if (fwspec->param_count != 3 && fwspec->param_count != 4)
 > 
-> http://www.ti.com/lit/an/slyt412/slyt412.pdf
-> Iq is an abbreviation of quiescet current. Do you think it's worth
-> writing the whole words instead of an abbreviation?
-> 
-https://acronyms.thefreedictionary.com/IQ lists 23 definitions.
-This one is not listed. Yes, I think it would be beneficial to use
-the whole word.
+> Where is this 4th parameter used?
 
-Guenter
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt#n14
 
-> Thanks for the rest of the corrections, I'll fix them in next version.
-> 
-> Br,
-> 	Matti Vaittinen
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
