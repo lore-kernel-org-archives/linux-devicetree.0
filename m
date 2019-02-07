@@ -1,131 +1,76 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: clk: add G12A AO Clock and Reset Bindings
-Date: Thu, 07 Feb 2019 16:10:12 +0100
-Message-ID: <2f03298e4d1ca0aa08d683d6db14bc194607b974.camel@baylibre.com>
-References: <20190204091331.9298-1-narmstrong@baylibre.com>
- <20190204091331.9298-2-narmstrong@baylibre.com>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [RFT PATCH 7/9] mfd: axp20x: add USB power supply
+ mfd cell to AXP813
+Date: Thu, 7 Feb 2019 15:13:06 +0000
+Message-ID: <20190207151306.lyjcwyllshwm4o6q@plaes.org>
+References: <20190207064535.9226-1-wens@csie.org>
+ <20190207064535.9226-8-wens@csie.org>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190204091331.9298-2-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDB4J47M7YERBBMW6HRAKGQE7SI6FJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190207064535.9226-8-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-02-04 at 10:13 +0100, Neil Armstrong wrote:
-> Add bindings for the Amlogic G12A AO Clock and Reset controllers.
+On Thu, Feb 07, 2019 at 02:45:33PM +0800, Chen-Yu Tsai wrote:
+> From: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> The AXP813 has a VBUS power input. Now that the axp20x_usb_power driver
+> supports this variant, we can add an mfd cell for it to use it.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> [wens-jdAy2FN1RRM@public.gmane.org: add commit message]
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > ---
->  .../bindings/clock/amlogic,gxbb-aoclkc.txt    |  1 +
->  include/dt-bindings/clock/g12a-aoclkc.h       | 43 +++++++++++++++++++
->  include/dt-bindings/reset/g12a-aoclkc.h       | 18 ++++++++
->  3 files changed, 62 insertions(+)
->  create mode 100644 include/dt-bindings/clock/g12a-aoclkc.h
->  create mode 100644 include/dt-bindings/reset/g12a-aoclkc.h
+>  drivers/mfd/axp20x.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt 
-> b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-> index 79511d7bb321..c41f0be5d438 100644
-> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-> @@ -10,6 +10,7 @@ Required Properties:
->  	- GXL (S905X, S905D) : "amlogic,meson-gxl-aoclkc"
->  	- GXM (S912) : "amlogic,meson-gxm-aoclkc"
->  	- AXG (A113D, A113X) : "amlogic,meson-axg-aoclkc"
-> +	- G12A (S905X2, S905D2, S905Y2) : "amlogic,meson-g12a-aoclkc"
->  	followed by the common "amlogic,meson-gx-aoclkc"
->  - clocks: list of clock phandle, one for each entry clock-names.
->  - clock-names: should contain the following:
-> diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-
-> bindings/clock/g12a-aoclkc.h
-> new file mode 100644
-> index 000000000000..997aca16c94f
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/g12a-aoclkc.h
-> @@ -0,0 +1,43 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
-> +/*
-> + * Copyright (c) 2016 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + *
-> + * Copyright (c) 2018 Amlogic, inc.
-> + * Author: Qiufang Dai <qiufang.dai@amlogic.com>
-> + */
-> +
-> +#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
-> +#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
-> +
-> +#define CLKID_AO_AHB		0
-> +#define CLKID_AO_IR_IN		1
-> +#define CLKID_AO_I2C_M0		2
-> +#define CLKID_AO_I2C_S0		3
-> +#define CLKID_AO_UART		4
-> +#define CLKID_AO_PROD_I2C	5
-> +#define CLKID_AO_UART2		6
-> +#define CLKID_AO_IR_OUT		7
-> +#define CLKID_AO_SAR_ADC	8
-> +#define CLKID_AO_MAILBOX	9
-> +#define CLKID_AO_M3		10
-> +#define CLKID_AO_AHB_SRAM	11
-> +#define CLKID_AO_RTI		12
-> +#define CLKID_AO_M4_FCLK	13
-> +#define CLKID_AO_M4_HCLK	14
-> +#define CLKID_AO_CLK81		15
-> +#define CLKID_AO_SAR_ADC_SEL	16
-> +#define CLKID_AO_SAR_ADC_DIV	17
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 3c97f2c0fdfe..17b115845993 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -198,6 +198,12 @@ static const struct resource axp22x_usb_power_supply_resources[] = {
+>  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+>  };
+>  
+> +/* AXP803 and AXP813/AXP818 share the same interrupts */
+> +static struct resource axp803_usb_power_supply_resources[] = {
 
-Do we need to export the internal part of these composite clock ?
-I know the other AO controller do it but it would be nice to avoid it, like
-for the EE controllers ... unless there is good reason of course.
+const, if possible?
 
-Same for the others below.
-
-> +#define CLKID_AO_SAR_ADC_CLK	18
-> +#define CLKID_AO_CTS_OSCIN	19
-> +#define CLKID_AO_32K_PRE	20
-> +#define CLKID_AO_32K_DIV	21
-> +#define CLKID_AO_32K_SEL	22
-> +#define CLKID_AO_32K		23
-> +#define CLKID_AO_CEC_PRE	24
-> +#define CLKID_AO_CEC_DIV	25
-> +#define CLKID_AO_CEC_SEL	26
-> +#define CLKID_AO_CEC		27
-> +#define CLKID_AO_CTS_RTC_OSCIN	28
+> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
+> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+> +};
 > +
-> +#endif
-> diff --git a/include/dt-bindings/reset/g12a-aoclkc.h b/include/dt-
-> bindings/reset/g12a-aoclkc.h
-> new file mode 100644
-> index 000000000000..bd2e2337135c
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/g12a-aoclkc.h
-> @@ -0,0 +1,18 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
-> +/*
-> + * Copyright (c) 2016 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
-> +#define DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
-> +
-> +#define RESET_AO_IR_IN		0
-> +#define RESET_AO_UART		1
-> +#define RESET_AO_I2C_M		2
-> +#define RESET_AO_I2C_S		3
-> +#define RESET_AO_SAR_ADC	4
-> +#define RESET_AO_UART2		5
-> +#define RESET_AO_IR_OUT		6
-> +
-> +#endif
+>  static const struct resource axp22x_pek_resources[] = {
+>  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_RIS_EDGE, "PEK_DBR"),
+>  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_FAL_EDGE, "PEK_DBF"),
+> @@ -793,6 +799,11 @@ static const struct mfd_cell axp813_cells[] = {
+>  		.of_compatible	= "x-powers,axp813-ac-power-supply",
+>  		.num_resources	= ARRAY_SIZE(axp20x_ac_power_supply_resources),
+>  		.resources	= axp20x_ac_power_supply_resources,
+> +	}, {
+> +		.name		= "axp20x-usb-power-supply",
+> +		.num_resources	= ARRAY_SIZE(axp803_usb_power_supply_resources),
+> +		.resources	= axp803_usb_power_supply_resources,
+> +		.of_compatible	= "x-powers,axp813-usb-power-supply",
+>  	},
+>  };
+>  
+> -- 
+> 2.20.1
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
