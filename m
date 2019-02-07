@@ -1,42 +1,43 @@
-Return-Path: <SRS0=USrl=QO=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/2] arm64: dts: renesas: r8a774c0-cat874: Add pciec0 support
-Date: Thu,  7 Feb 2019 08:31:49 +0000
-Message-Id: <1549528310-54436-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=K5hT=QO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr10059.outbound.protection.outlook.com ([40.107.1.59]:54848
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726939AbfBGJx0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Feb 2019 04:53:26 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V6 3/4] defconfig: arm64: add i.MX system controller thermal
+ support
+Date: Thu, 7 Feb 2019 09:52:56 +0000
+Message-ID: <1549532838-27025-3-git-send-email-Anson.Huang@nxp.com>
+References: <1549532838-27025-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1549532838-27025-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Silicon Linux CAT 874 board has 2GB DDR memory. Update the dma-ranges
-mapping for pciec0 node. Also declare pcie bus clock, since it is
-generated on the CAT874 main board.
+This patch enables CONFIG_IMX_SC_THERMAL as module.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-This patch is tested against renesas-dev
----
- arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-index 477a56b..96ee0d2c 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
-@@ -56,6 +56,15 @@
- 	clock-frequency = <48000000>;
- };
- 
-+&pcie_bus_clk {
-+	clock-frequency = <100000000>;
-+};
-+
-+&pciec0 {
-+	/* Map all possible DDR as inbound ranges */
-+	dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x80000000>;
-+};
-+
- &pfc {
- 	scif2_pins: scif2 {
- 		groups = "scif2_data_a";
--- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 709e8f1..4c79832 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -413,6 +413,7 @@ CONFIG_SENSORS_INA2XX=3Dm
+ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3Dy
+ CONFIG_CPU_THERMAL=3Dy
+ CONFIG_THERMAL_EMULATION=3Dy
++CONFIG_IMX_SC_THERMAL=3Dm
+ CONFIG_ROCKCHIP_THERMAL=3Dm
+ CONFIG_RCAR_THERMAL=3Dy
+ CONFIG_RCAR_GEN3_THERMAL=3Dy
+--=20
 2.7.4
