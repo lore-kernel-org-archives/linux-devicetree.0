@@ -1,30 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: codecs: Kconfig: Show knob,
-	and depend on MIPS || COMPILE_TEST" to the asoc tree
-Date: Thu,  7 Feb 2019 15:22:31 +0000 (GMT)
-Message-ID: <20190207152231.68AC11127EF9@debutante.sirena.org.uk>
-References: <20190207133143.5232-5-paul@crapouillou.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190207133143.5232-5-paul@crapouillou.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
+Subject: Applied "ASoC: codecs: jz4740: Use SPDX license notifier" to the asoc tree
+Date: Thu,  7 Feb 2019 15:22:35 +0000 (GMT)
+Message-ID: <20190207152235.9A3251127EF9@debutante.sirena.org.uk>
+References: <20190207133143.5232-3-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190207133143.5232-3-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: codecs: Kconfig: Show knob, and depend on MIPS || COMPILE_TEST
+   ASoC: codecs: jz4740: Use SPDX license notifier
 
 has been applied to the asoc tree at
 
@@ -49,42 +37,44 @@ to this mail.
 Thanks,
 Mark
 
->From edcd3ed182f804ebec71b063bab32c424ddd8b6a Mon Sep 17 00:00:00 2001
+>From 06a334ae98d15c3e32ae4ef8ce18a241a12f3dff Mon Sep 17 00:00:00 2001
 From: Paul Cercueil <paul@crapouillou.net>
-Date: Thu, 7 Feb 2019 10:31:42 -0300
-Subject: [PATCH] ASoC: codecs: Kconfig: Show knob, and depend on MIPS ||
- COMPILE_TEST
+Date: Thu, 7 Feb 2019 10:31:40 -0300
+Subject: [PATCH] ASoC: codecs: jz4740: Use SPDX license notifier
 
-Show the knob to enable or disable the jz4740-codec driver, add a
-proper description, and add a dependency on MIPS || COMPILE_TEST, as
-this driver is only useful on MIPS.
+Add license information as a standard SPDX license notifier instead of
+custom text.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/Kconfig | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ sound/soc/codecs/jz4740.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index fec894c725d3..e6ce18c21b98 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -579,8 +579,15 @@ config SND_SOC_CX20442
- 	depends on TTY
+diff --git a/sound/soc/codecs/jz4740.c b/sound/soc/codecs/jz4740.c
+index 9395b583432c..9b3e1227a971 100644
+--- a/sound/soc/codecs/jz4740.c
++++ b/sound/soc/codecs/jz4740.c
+@@ -1,15 +1,8 @@
+-/*
+- * Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- *  You should have received a copy of the  GNU General Public License along
+- *  with this program; if not, write  to the Free Software Foundation, Inc.,
+- *  675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// JZ4740 CODEC driver
++//
++// Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
  
- config SND_SOC_JZ4740_CODEC
-+	depends on MIPS || COMPILE_TEST
- 	select REGMAP_MMIO
--	tristate
-+	tristate "Ingenic JZ4740 internal CODEC"
-+	help
-+	  Enable support for the internal CODEC found in the JZ4740 SoC
-+	  from Ingenic.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called snd-soc-jz4740-codec.
- 
- config SND_SOC_JZ4725B_CODEC
- 	depends on MIPS || COMPILE_TEST
+ #include <linux/kernel.h>
+ #include <linux/module.h>
 -- 
 2.20.1
