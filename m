@@ -1,59 +1,52 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] soc: amlogic: clk-measure: fix-up some clock definitions
-Date: Thu,  7 Feb 2019 14:26:03 +0100
-Message-ID: <20190207132603.694-3-jbrunet@baylibre.com>
-References: <20190207132603.694-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/6] dt-bindings: sound: Document jz4740-codec bindings
+Date: Thu,  7 Feb 2019 10:31:38 -0300
+Message-ID: <20190207133143.5232-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190207132603.694-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-As pointed out in review, a few clock are not properly defined.
+Add documentation about how to probe the jz4740-codec driver from
+devicetree.
 
-Reported-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Fixes: 2a4c63e080cd ("soc: amlogic: clk-measure: add axg and g12a support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
- drivers/soc/amlogic/meson-clk-measure.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Changes:
 
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index 5570180b94a1..19d4cbc93a17 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -202,7 +202,7 @@ static struct meson_msr_id clk_msr_axg[CLK_MSR_MAX] = {
- 	CLK_MSR_ID(71, "audio_slv_sclk_a"),
- 	CLK_MSR_ID(72, "pwm_d"),
- 	CLK_MSR_ID(73, "pwm_c"),
--	CLK_MSR_ID(73, "wifi_beacon"),
-+	CLK_MSR_ID(74, "wifi_beacon"),
- 	CLK_MSR_ID(75, "tdmin_lb_lrcl"),
- 	CLK_MSR_ID(76, "tdmin_lb_sclk"),
- 	CLK_MSR_ID(77, "rng_ring_osc_0"),
-@@ -268,6 +268,8 @@ static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
- 	CLK_MSR_ID(26, "sc_int"),
- 	CLK_MSR_ID(27, "in_mac"),
- 	CLK_MSR_ID(28, "sar_adc"),
-+	CLK_MSR_ID(29, "pcie_inp"),
-+	CLK_MSR_ID(30, "pcie_inn"),
- 	CLK_MSR_ID(31, "mpll_test_out"),
- 	CLK_MSR_ID(32, "vdec"),
- 	CLK_MSR_ID(33, "sys_cpu_ring_osc_1"),
-@@ -303,8 +305,8 @@ static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
- 	CLK_MSR_ID(65, "spicc_0"),
- 	CLK_MSR_ID(66, "vid_lock"),
- 	CLK_MSR_ID(67, "dsi_phy"),
--	CLK_MSR_ID(68, "hdcp22_skp"),
--	CLK_MSR_ID(69, "hdcp22_esm"),
-+	CLK_MSR_ID(68, "hdcp22_esm"),
-+	CLK_MSR_ID(69, "hdcp22_skp"),
- 	CLK_MSR_ID(70, "pwm_f"),
- 	CLK_MSR_ID(71, "pwm_e"),
- 	CLK_MSR_ID(72, "pwm_d"),
+v2: No change
+
+ .../bindings/sound/ingenic,jz4740-codec.txt          | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
+new file mode 100644
+index 000000000000..1ffcade87e7b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
+@@ -0,0 +1,20 @@
++Ingenic JZ4740 codec controller
++
++Required properties:
++- compatible : "ingenic,jz4740-codec"
++- reg : codec registers location and length
++- clocks : phandle to the AIC clock.
++- clock-names: must be set to "aic".
++- #sound-dai-cells: Must be set to 0.
++
++Example:
++
++codec: audio-codec@10020080 {
++	compatible = "ingenic,jz4740-codec";
++	reg = <0x10020080 0x8>;
++
++	#sound-dai-cells = <0>;
++
++	clocks = <&cgu JZ4740_CLK_AIC>;
++	clock-names = "aic";
++};
 -- 
-2.20.1
+2.11.0
