@@ -1,87 +1,154 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFCv1 1/3] phy: meson8b-usb2: Enable otg phy controller on
- Meson8b SoCs
-Date: Thu, 7 Feb 2019 12:11:15 +0530
-Message-ID: <CANAwSgRVypZ2CyendeOGJ9MZ6X951EwPW3x8K=0mru_Pj1qMLg@mail.gmail.com>
-References: <20190123151209.2080-1-linux.amoon@gmail.com>
- <20190123151209.2080-2-linux.amoon@gmail.com>
- <CAFBinCCOQ_GqHZuYf6n8ba_ZMbOwKmUzc4EJAuXRpn4tTTCUKA@mail.gmail.com>
- <CANAwSgSQH2zta+tOcqnM3JPZ45XkqWEJAWOL3Do0Mnrbam8VSw@mail.gmail.com>
- <CAFBinCD_O7FEX5iLyo2BzqE1KcrmATaZMMq5pFr-Q7wnRBPziw@mail.gmail.com>
- <CANAwSgSh--pom9kmVBWejHwVHJNv2o4Ta93wabR3Ak=f3V4JbQ@mail.gmail.com>
- <CAFBinCAhjo4ueh6UDE+TKiF8Vc2Pz2JsjzcVsrsPQMU=ZEiLwQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [RFT PATCH 4/9] power: supply: axp20x_usb_power: use
+ polling to detect vbus status change
+Date: Thu,  7 Feb 2019 14:45:30 +0800
+Message-ID: <20190207064535.9226-5-wens@csie.org>
+References: <20190207064535.9226-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCAhjo4ueh6UDE+TKiF8Vc2Pz2JsjzcVsrsPQMU=ZEiLwQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBFVI57RAKGQETPKGCHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190207064535.9226-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+On AXP221 and later AXP PMICs that have the N_VBUSEN pin, when this pin
+is high, either due to the PMIC driving it high or as an input, the VBUS
+detection related interrupt mechanisms are disabled.
 
-On Wed, 6 Feb 2019 at 17:18, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Anand,
->
-> On Tue, Feb 5, 2019 at 8:52 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> [...]
-> > > personally I would start with getting device / peripheral mode working for usb0.
-> > > if you're lucky the PHY driver will work without any changes and you
-> > > only need to set the correct dr_mode along with the g-* properties.
-> > >
-> >
-> > Yes that should be the goal on getting working usb0 phy and otg port.
-> > So for now we will drop this patch and disable the usb_phy0 mode in
-> > dts for Odroid c2
-> > in order to get ride of the power failed WARNING.
-> I checked Kevin's Odroid-C2 (GXBB) on Kernel CI and I can't see any
-> power failed warning: [0]
->
-> > When we get the usb0 node to work again with good phy configuration and
-> > tuning we can re-enable the nodes. I will try to look into this in the future.
-> >
-> > Can you share your thought on this.
-> sounds good to me! especially because it would give us OTG support on
-> Meson8, Meson8b, Meson8m2 and GXBB (because these SoCs are sharing the
-> same USB implementation)!
->
-> I see four challenges:
-> 1. getting host mode working on the micro USB port. you have already
-> proven that you can do this :)
-> 2. getting peripheral mode working on the micro USB port. my hope is
-> that it's only about setting the right dr_mode and the g-* properties
-> on the usb0 node (but I haven't tried this)
-> 3. make OTG detection work and integrate it with dwc2. I would consult
-> the dwc2 maintainers to see what can be done
-> 4. bring everything together, making sure that one feature doesn't break another
->
+Previously this was worked around in the phy-sun4i-usb driver, which
+needed to sense VBUS changes and report them to the musb driver in a
+timely matter. However this workaround was only for the A31 and A33 type
+USB PHYs. To support newer platforms we would have to enable it for
+almost all the post-A31 SoCs.
 
-Thanks for the feedback!
-I will give this a try, In case I am stuck I will ask to you help.
+However, since this is actually the result of the PMIC's behavior, the
+workaround would be better if done in the PMIC driver, in this case the
+VBUS power supply driver.
 
->
-> Regards
-> Martin
->
->
-> [0] https://storage.kernelci.org/next/master/next-20190130/arm64/defconfig/lab-baylibre-seattle/boot-meson-gxbb-odroidc2.html
+Add the same workqueue-based polling to the VBUS power supply driver.
+The polling interval is chosen to be the debounce interval from the USB
+PHY driver, as this short interval is needed in some cases, but the
+power supply driver would not know when.
 
-Not a issue If I could reproduce my  kernel warning consistently again
-I will share the boot log and the step I followed.
-I will be dropping my patch for the initialization of usb0_phy untill
-correct solution is-found.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/power/supply/axp20x_usb_power.c | 53 +++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-Best Regards
--Anand
+diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+index e2f353906bb1..ac061bcdc056 100644
+--- a/drivers/power/supply/axp20x_usb_power.c
++++ b/drivers/power/supply/axp20x_usb_power.c
+@@ -24,6 +24,7 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ #include <linux/iio/consumer.h>
++#include <linux/workqueue.h>
+ 
+ #define DRVNAME "axp20x-usb-power-supply"
+ 
+@@ -46,6 +47,12 @@
+ 
+ #define AXP20X_VBUS_MON_VBUS_VALID	BIT(3)
+ 
++/*
++ * Note do not raise the debounce time, we must report Vusb high within
++ * 100ms otherwise we get Vbus errors in musb.
++ */
++#define DEBOUNCE_TIME			msecs_to_jiffies(50)
++
+ struct axp20x_usb_power {
+ 	struct device_node *np;
+ 	struct regmap *regmap;
+@@ -53,6 +60,8 @@ struct axp20x_usb_power {
+ 	enum axp20x_variants axp20x_id;
+ 	struct iio_channel *vbus_v;
+ 	struct iio_channel *vbus_i;
++	struct delayed_work vbus_detect;
++	unsigned int old_status;
+ };
+ 
+ static irqreturn_t axp20x_usb_power_irq(int irq, void *devid)
+@@ -64,6 +73,35 @@ static irqreturn_t axp20x_usb_power_irq(int irq, void *devid)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void axp20x_usb_power_poll_vbus(struct work_struct *work)
++{
++	struct axp20x_usb_power *power =
++		container_of(work, struct axp20x_usb_power, vbus_detect.work);
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(power->regmap, AXP20X_PWR_INPUT_STATUS, &val);
++	if (ret)
++		goto out;
++
++	val &= (AXP20X_PWR_STATUS_VBUS_PRESENT | AXP20X_PWR_STATUS_VBUS_USED);
++	if (val != power->old_status)
++		power_supply_changed(power->supply);
++
++	power->old_status = val;
++
++out:
++	mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
++}
++
++static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
++{
++	if (power->axp20x_id >= AXP221_ID)
++		return true;
++
++	return false;
++}
++
+ static int axp20x_usb_power_get_property(struct power_supply *psy,
+ 	enum power_supply_property psp, union power_supply_propval *val)
+ {
+@@ -362,6 +400,7 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+ 	if (!power)
+ 		return -ENOMEM;
+ 
++	platform_set_drvdata(pdev, power);
+ 	power->axp20x_id = (enum axp20x_variants)of_device_get_match_data(
+ 								&pdev->dev);
+ 
+@@ -420,6 +459,19 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+ 				 irq_names[i], ret);
+ 	}
+ 
++	INIT_DELAYED_WORK(&power->vbus_detect, axp20x_usb_power_poll_vbus);
++	if (axp20x_usb_vbus_needs_polling(power))
++		queue_delayed_work(system_wq, &power->vbus_detect, 0);
++
++	return 0;
++}
++
++static int axp20x_usb_power_remove(struct platform_device *pdev)
++{
++	struct axp20x_usb_power *power = platform_get_drvdata(pdev);
++
++	cancel_delayed_work_sync(&power->vbus_detect);
++
+ 	return 0;
+ }
+ 
+@@ -439,6 +491,7 @@ MODULE_DEVICE_TABLE(of, axp20x_usb_power_match);
+ 
+ static struct platform_driver axp20x_usb_power_driver = {
+ 	.probe = axp20x_usb_power_probe,
++	.remove = axp20x_usb_power_remove,
+ 	.driver = {
+ 		.name = DRVNAME,
+ 		.of_match_table = axp20x_usb_power_match,
+-- 
+2.20.1
