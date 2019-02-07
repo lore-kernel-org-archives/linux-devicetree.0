@@ -1,144 +1,157 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V2 2/2] hwmon: pwm-fan: Add optional regulator support
-Date: Thu, 7 Feb 2019 10:18:26 -0800
-Message-ID: <20190207181826.GA27492@roeck-us.net>
-References: <1549557480-14436-1-git-send-email-stefan.wahren@i2se.com>
- <1549557480-14436-3-git-send-email-stefan.wahren@i2se.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v3 1/1] arm64: dts: sdm845: wireup the thermal trip
+ points to cpufreq
+Date: Thu, 7 Feb 2019 11:10:13 -0800
+Message-ID: <20190207191013.GM117604@google.com>
+References: <cover.1548093127.git.amit.kucheria@linaro.org>
+ <6a21a9ee7663e1b32d8ea81ac5e51d187aed25fb.1548093127.git.amit.kucheria@linaro.org>
+ <20190123021251.GJ261387@google.com>
+ <20190124233528.GA81583@google.com>
+ <20190125222051.GF81583@google.com>
+ <CAP245DUy5pe9KQrEX_5iiHg9RtLPHyZcygy6fkrLgsJQYak-_g@mail.gmail.com>
+ <20190206193441.GJ117604@google.com>
+ <20190207015727.GK117604@google.com>
+ <CAHLCerP+ao3perRN7_ttr0Qkx81oOAxufpYBvWRUJ04zG2Fisg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1549557480-14436-3-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <CAHLCerP+ao3perRN7_ttr0Qkx81oOAxufpYBvWRUJ04zG2Fisg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Doug Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Quentin Perret <quentin.perret@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 07, 2019 at 05:38:00PM +0100, Stefan Wahren wrote:
-> This adds optional regulator support to the pwm-fan driver. This is
-> necessary for pwm fans which are powered by a switchable supply.
+On Thu, Feb 07, 2019 at 10:09:29AM +0530, Amit Kucheria wrote:
+> On Thu, Feb 7, 2019 at 7:27 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > On Wed, Feb 06, 2019 at 11:34:41AM -0800, Matthias Kaehlcke wrote:
+> > > On Wed, Feb 06, 2019 at 04:05:41PM +0530, Amit Kucheria wrote:
+> > > > On Sat, Jan 26, 2019 at 3:50 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > > > > > >                   trips {
+> > > > > > > > -                         cpu_alert0: trip0 {
+> > > > > > > > +                         cpu0_alert1: trip-point@0 {
+> > > > > > > >                                   temperature = <75000>;
+> > > > > > >
+> > > > > > > In my observations a 'switch on/threshold' temperature of 75 degrees
+> > > > > > > leads to aggressive throttling with IPA when the temperature is above
+> > > > > > > this threshold:
+> > > > > > >
+> > > > > > > [  716.760804] cpu_cooling_ratelimit: 31 callbacks suppressed
+> > > > > > > [  716.760836] cpu cpu4: Cooling state set to 10. New max freq = 1920000
+> > > > > > > [  716.773390] power_allocator_ratelimit: 15 callbacks suppressed
+> > > > > > > [  716.773405] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=73500, curr_temp=75200 total_requested_power=39025 total_granted_power=18654
+> > > > > > > [  749.609336] cpu_cooling_ratelimit: 45 callbacks suppressed
+> > > > > > > [  749.609371] cpu cpu4: Cooling state set to 11. New max freq = 1843200
+> > > > > > > [  749.624300] power_allocator_ratelimit: 24 callbacks suppressed
+> > > > > > > [  749.624323] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=70800, curr_temp=77200 total_requested_power=40136 total_granted_power=17402
+> > > > > > > [  780.152633] cpu_cooling_ratelimit: 41 callbacks suppressed
+> > > > > > > [  780.152666] cpu cpu4: Cooling state set to 11. New max freq = 1843200
+> > > > > > > [  780.165247] power_allocator_ratelimit: 21 callbacks suppressed
+> > > > > > > [  780.165261] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=64800, curr_temp=76900 total_requested_power=39719 total_granted_power=1759
+> > > > > > >
+> > > > > > > (the logs come from a local patch in our tree:
+> > > > > > > https://chromium.googlesource.com/chromiumos/third_party/kernel/+/ec1c501a8093fed44a6697a5913ef2765f518e1f)
+> > > > > > >
+> > > > > > > At this point I don't have a clear idea what would be a reasonable
+> > > > > > > value for the 'switch on/threshold' temperature, but probably it
+> > > > > > > should to be higher than 75 degrees, at least with IPA. If there is
+> > > > > > > no reasonable common configuration for different thermal governors I
+> > > > > > > guess we'll have to target a commonly used governor and systems
+> > > > > > > using other 'incompatible' governors need to override the config in
+> > > > > > > their <board>.dtsi.
+> > > > > >
+> > > >
+> > > > Thanks for the elaborate testing and for sharing the numbers. This is
+> > > > very useful information.
+> > > >
+> > > > > > On my system I don't see a significant delta in core temperatures for
+> > > > > > 'threshold' temperatures of 80, 85 or 90°C. However Dhrystone
+> > > > > > performance goes up by ~8% when changing the trip point from 80 to
+> > > > > > 85°C. For a switch from 85 to 90°C I see a ~2% performance delta. For
+> > > > > > all trip points the average core temperatures are ~80°C (silver) and
+> > > > > > ~85°C (gold). Interestingly I observed the highest average
+> > > > > > temperatures with the trip point at 80°C (repeated measurements were
+> > > > > > taken for different temperatures).
+> > > > > >
+> > > > > > Supposedly LMH throttling is disabled in the firmware I used for
+> > > > > > these tests, however data suggests that it is still active
+> > > > > > (temperature doesn't rise beyond 95°C, even without throttling in
+> > > > > > Linux; Dhrystone performance drops when raising the temperature beyond
+> > > > > > 95°C with a heat gun. I will do some more testing when I get my hands
+> > > > > > on a FW that effectively disables LMH (or raises the threshold to
+> > > > > > something like 105°C).
+> > > > > >
+> > > > > > From the data collected so far I'd suggest a 'threshold' temperature
+> > > > > > of 90°C or if that seems to high 85°C. Behavior might be different
+> > > > > > with other thermal governors or without LMH throttling..
+> > > > >
+> > > > > Some more data from measurements with different trips points, for the
+> > > > > IPA and the Fair Share governors, LMH throttling was enabled:
+> > > > >
+> > > > >                         IPA
+> > > > >         Dhrystone       Temp Silver     Temp Gold
+> > > > > 75      6M              78.4            84.9
+> > > > > 80      6.21M           81.4            89.8
+> > > > > 85      6.74M           81.7            88.2
+> > > > > 90      6.88M           79.4            84.6
+> > > > >
+> > > > >                         Fair Share
+> > > > >         Dhrystone       Temp Silver     Temp Gold
+> > > > > 75      6.63M           80.1            88.5
+> > > > > 80      6.71M           80.1            88.5
+> > > > > 85      6.77M           81.1            87.8
+> > > > > 90      7.12M           81.2            87.8
+> > > >
+> > > > Interesting that you get more MIPs out of fair share governor when
+> > > > compared to IPA across the board. What devices were providing energy
+> > > > cost information (dynamic-power-coefficient) to the IPA engine? Just
+> > > > CPU and GPU? Can you point me to those patches in gerrit?
+> > >
+> > > Only the CPUs provide energy cost information, the GPU isn't fully
+> > > hooked up in our tree yet. The cause of the delta could be that for
+> > > temperatures < 'target' Fair Share only uses the performance states
+> > > specified in 'threshold' for throttling (currently only the boost
+> > > frequency), while IPA may use the full range of states  of the
+> > > 'target' trip point.
+> >
+> > I saw that in v4 you allow all performance state to be used for
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  drivers/hwmon/pwm-fan.c | 39 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 38 insertions(+), 1 deletion(-)
+> Yes, I found during my testing that I got better convergence at the
+> threshold temperature when I allowed the entire range of operating
+> points with almost no decrease in MIPs.
 > 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 2c94482..344915c 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -23,6 +23,7 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwm.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/sysfs.h>
->  #include <linux/thermal.h>
->  
-> @@ -31,6 +32,7 @@
->  struct pwm_fan_ctx {
->  	struct mutex lock;
->  	struct pwm_device *pwm;
-> +	struct regulator *reg_en;
->  	unsigned int pwm_value;
->  	unsigned int pwm_fan_state;
->  	unsigned int pwm_fan_max_state;
-> @@ -231,6 +233,21 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, ctx);
->  
-> +	ctx->reg_en = devm_regulator_get_optional(&pdev->dev, "fan");
-> +	if (IS_ERR(ctx->reg_en)) {
-> +		if (PTR_ERR(ctx->reg_en) == -ENODEV)
-> +			ctx->reg_en = NULL;
-> +		else
-> +			return PTR_ERR(ctx->reg_en);
-
-		if PTR_ERR(ctx->reg_en) != -ENODEV)
-			return PTR_ERR(ctx->reg_en);
-		ctx->reg_en = NULL;
-
-would be a bit easier to read and avoid an else.
-
-> +	} else {
-> +		ret = regulator_enable(ctx->reg_en);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"Failed to enable fan supply: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	ctx->pwm_value = MAX_PWM;
->  
->  	/* Set duty cycle to maximum allowed and enable PWM output */
-> @@ -241,7 +258,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  	ret = pwm_apply_state(ctx->pwm, &state);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to configure PWM\n");
-> -		return ret;
-> +		goto err_reg_disable;
->  	}
->  
->  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
-> @@ -277,6 +294,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  	state.enabled = false;
->  	pwm_apply_state(ctx->pwm, &state);
->  
-> +err_reg_disable:
-> +	if (ctx->reg_en)
-> +		regulator_disable(ctx->reg_en);
-> +
->  	return ret;
->  }
->  
-> @@ -287,6 +308,10 @@ static int pwm_fan_remove(struct platform_device *pdev)
->  	thermal_cooling_device_unregister(ctx->cdev);
->  	if (ctx->pwm_value)
->  		pwm_disable(ctx->pwm);
-> +
-> +	if (ctx->reg_en)
-> +		regulator_disable(ctx->reg_en);
-> +
->  	return 0;
->  }
->  
-> @@ -299,6 +324,12 @@ static int pwm_fan_suspend(struct device *dev)
->  
->  	pwm_get_args(ctx->pwm, &args);
->  
-> +	if (ctx->reg_en) {
-> +		ret = regulator_disable(ctx->reg_en);
-> +		if (ret)
-> +			dev_err(dev, "Failed to disable fan supply: %d\n", ret);
-
-This is a bit weird. The error is returned to the caller, but only if
-ctx->pwm_value is 0. Otherwise it is ignored. This warrants an explanation
-(and some selling) if it is on purpose.
-
-> +	}
-> +
->  	if (ctx->pwm_value) {
->  		ret = pwm_config(ctx->pwm, 0, args.period);
->  		if (ret < 0)
-> @@ -317,6 +348,12 @@ static int pwm_fan_resume(struct device *dev)
->  	unsigned long duty;
->  	int ret;
->  
-> +	if (ctx->reg_en) {
-> +		ret = regulator_enable(ctx->reg_en);
-> +		if (ret)
-> +			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
-
-Does it really make sense here to ignore this error ? After all,
-the fan will likely not work if that error really happens. Doesn't
-that count as resume failure ?
-
-> +	}
-> +
->  	if (ctx->pwm_value == 0)
->  		return 0;
->  
-> -- 
-> 2.7.4
+> > throttling at the 'threshold' temperature. With this configuration
+> > I get:
+> >
+> >                Dhrystone      Temp Silver    Temp Gold
+> >
+> > Fair Share     7.29M          81.4           87.7
+> >
+> > IPA            7.14M          81.7           88.3
+> >
+> >
+> > I have no good sense why we are seeing more MIPs for IPA than with the
+> > previous configuration. As for earlier tests the values are the
+> > average from 4 runs.
 > 
+> I suspect that EAS task placement might be at work here. Were your
+> test threads locked to CPUs or were they free to be scheduled around?
+
+The tasks where pinned to CPUs.
+
+It could also be that my previous tests just hit a series of lower
+performance runs, there is some level of fluctuation. Temperatures
+for both clusters were also lower than with lower 'threshold'
+temperatures, which a priori isn't expected.
+
+> > In any case it seems like a reasonable default configuration with the
+> > data we have at this point.
+> 
+> Thanks for your thorough reviews to get this point. Will you send out
+> the patches to add support for IPA at some point?
+
+I currently don't have plans to work on this personally, I believe
+Quentin Perret has this on his radar. Quentin, please correct me if
+I'm wrong, I'm not intending to 'volunteer' you ;-)
