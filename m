@@ -1,69 +1,68 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: reset: Add HI3670 reset controller
- binding
-Date: Thu, 7 Feb 2019 16:47:26 +0530
-Message-ID: <20190207111726.GA30269@Mani-XPS-13-9360>
-References: <20190201153841.21903-1-manivannan.sadhasivam@linaro.org>
- <20190201153841.21903-2-manivannan.sadhasivam@linaro.org>
- <1549536094.4557.8.camel@pengutronix.de>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v4 0/4] USB SS PHY for Qualcomm's QCS404
+Date: Thu,  7 Feb 2019 12:17:30 +0100
+Message-ID: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1549536094.4557.8.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: xuwei5@hisilicon.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, guodong.xu@linaro.org
+To: jorge.ramirez-ortiz@linaro.org, robh@kernel.org, bjorn.andersson@linaro.org
+Cc: swboyd@chromium.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+This set adds USB SS PHY support to Qualcomm's QCS404 SoC
+The PHY is implemented using Synopsys' SS PHY IP
 
-On Thu, Feb 07, 2019 at 11:41:34AM +0100, Philipp Zabel wrote:
-> Hi Manivannan,
-> 
-> On Fri, 2019-02-01 at 21:08 +0530, Manivannan Sadhasivam wrote:
-> > HI3670 SoC is architecturally same as the HI3660 SoC. Hence, the same
-> > driver is reused for HI3670 SoC and the binding is documented here.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../devicetree/bindings/reset/hisilicon,hi3660-reset.txt     | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> > index 2bf3344b2a02..5d60ec541331 100644
-> > --- a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> > +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> > @@ -5,11 +5,12 @@ Please also refer to reset.txt in this directory for common reset
-> >  controller binding usage.
-> >  
-> >  The reset controller registers are part of the system-ctl block on
-> > -hi3660 SoC.
-> > +hi3660 and hi3670 SoCs.
-> >  
-> >  Required properties:
-> > -- compatible: should be
-> > +- compatible: should be one of the following:
-> >  		 "hisilicon,hi3660-reset"
-> > +		 "hisilicon,hi3670-reset"
-> 
-> If the HI3670 reset controller is compatible to the HI3660 reset
-> controller, this could be:
-> 
-> - compatible: should be one of the following:
->               "hisilicon,hi3660-reset" for HI3660
->               "hisilicon,hi3670-reset", "hisilicon,hi3660-reset" for HI3670
-> 
-> That way there would be no need to change the driver and it would be
-> documented that the two reset controllers are compatible.
-> 
+The code is losely based on Sriharsha Allenki's
+<sallenki@codeaurora.org> original implementation.
 
-Yeah, I thought about the fallback approach initially but was unsure
-about which method to adopt. Will use fallback compatible in next
-revision.
+v2:
+  enable OTG mode detection
+  move vdd voltage levels to driver
+  use bulk_ control interfaces
+  ss-phy-bindings [1]
 
-Thanks,
-Mani
+v3:
+  remove clk/regulator counters
+  vdd constrains in device tree
+  update error labels
+  fix get_optional vbus
+  allocate arrays statically
+  fix typos in bindings
 
-> regards
-> Philipp
+v4:
+ dts:
+   make compatible tag more specific to the driver
+   define a connector node to contain the vbus regulator
+   fix the resets definition
+   fix example node
+   remove unused binding (qcom-dwc3-usb-phy)
+   connector: add optional property vbus-supply
+ driver:
+   vbus regulator is no longer optional
+   
+[1] ss-phy-binding discussion:
+ - qcom,dwc3-ss-usb-phy exist for a generic usb2/usb3 phy driver that
+ was never merged. Rather than trying to re-use these bindings I chose
+ to delete them for simplicity
+ 
+
+Jorge Ramirez-Ortiz (4):
+  dt-bindings: phy: remove qcom-dwc3-usb-phy
+  dt-bindings: connector: Add vbus-supply property
+  dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
+  phy: qualcomm: usb: Add SuperSpeed PHY driver
+
+ .../bindings/connector/usb-connector.txt      |   4 +
+ .../bindings/phy/qcom,snps-usb-ssphy.txt      |  79 +++++
+ .../bindings/phy/qcom-dwc3-usb-phy.txt        |  37 --
+ drivers/phy/qualcomm/Kconfig                  |  11 +
+ drivers/phy/qualcomm/Makefile                 |   1 +
+ drivers/phy/qualcomm/phy-qcom-usb-ss.c        | 322 ++++++++++++++++++
+ 6 files changed, 417 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-usb-ssphy.txt
+ delete mode 100644 Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-ss.c
+
+-- 
+2.20.1
