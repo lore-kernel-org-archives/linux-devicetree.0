@@ -1,61 +1,68 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v6 1/6] irqchip/mtk-sysirq: support 4 interrupt parameters
- for sysirq
-Date: Thu, 7 Feb 2019 16:20:21 +0100
-Message-ID: <898ca3d9-002b-e28e-fc97-86bc2538e9de@gmail.com>
-References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
- <1548317240-44682-2-git-send-email-erin.lo@mediatek.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/6] dt-bindings: sound: Document
+	jz4740-codec bindings
+Date: Thu, 7 Feb 2019 15:22:12 +0000
+Message-ID: <20190207152212.GE6190@sirena.org.uk>
+References: <20190207133143.5232-1-paul@crapouillou.net>
+ <20190207140031.GB6190@sirena.org.uk>
+ <1549549058.24598.0@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548317240-44682-2-git-send-email-erin.lo@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Seiya Wang <seiya.wang@mediatek.com>
+Content-Type: multipart/mixed; boundary="===============5508213443108725171=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1549549058.24598.0@crapouillou.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--===============5508213443108725171==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UnaWdueM1EBWVRzC"
+Content-Disposition: inline
 
-On 24/01/2019 09:07, Erin Lo wrote:
-> From: Seiya Wang <seiya.wang@mediatek.com>
-> 
-> To support partitioned PPIs, 4 interrupt parameters should be valid
-> for sysirq.
-> 
-> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> ---
->  drivers/irqchip/irq-mtk-sysirq.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-> index 90aaf19..282736a 100644
-> --- a/drivers/irqchip/irq-mtk-sysirq.c
-> +++ b/drivers/irqchip/irq-mtk-sysirq.c
-> @@ -81,7 +81,7 @@ static int mtk_sysirq_domain_translate(struct irq_domain *d,
->  				       unsigned int *type)
->  {
->  	if (is_of_node(fwspec->fwnode)) {
-> -		if (fwspec->param_count != 3)
-> +		if (fwspec->param_count != 3 && fwspec->param_count != 4)
 
-Where is this 4th parameter used?
+--UnaWdueM1EBWVRzC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-Matthias
+On Thu, Feb 07, 2019 at 11:17:37AM -0300, Paul Cercueil wrote:
 
->  			return -EINVAL;
->  
->  		/* No PPI should point to this domain */
-> @@ -104,7 +104,7 @@ static int mtk_sysirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->  	struct irq_fwspec *fwspec = arg;
->  	struct irq_fwspec gic_fwspec = *fwspec;
->  
-> -	if (fwspec->param_count != 3)
-> +	if (fwspec->param_count != 3 && fwspec->param_count != 4)
->  		return -EINVAL;
->  
->  	/* sysirq doesn't support PPI */
-> 
+> Well you only applied patch 6/6, didn't you? I only see this one in your
+> tree.
+
+Hrm, yeah.  Wonder what happened there...
+
+--UnaWdueM1EBWVRzC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxcTSMACgkQJNaLcl1U
+h9AVBwf/XcNRXVJiLvl2kUf/fvAw58lzjnm/DVNQ8TfmAVVPX1W+Z6K7OI5mRN53
+gZGVCjoYrXtQFmPl/EqxHUWbJQhOzSYx6zmTcfseRtnAYydILR2o4lvwsCeQtVtu
+yEooUYy347HhdY+kO1MpoZcBKQqNxxkDAu8m3a7oBBTsrRbB0yNwNZmtXzCeCDRM
+kOA0Mak40tROFxnWaw+ityHbmb5avQql04aI3WY9SW3KJ6VdLIiRqapiK61dLo1r
+ZKv0MguweBCXTe73yHT+LZy8mPQBpIQzbpdVd+Qbfeb/VHtX0K2WJa0jxkYA6RJ7
+jsiuR/EMLoyftspAFl9uwYlJN4K7qQ==
+=ZC7V
+-----END PGP SIGNATURE-----
+
+--UnaWdueM1EBWVRzC--
+
+--===============5508213443108725171==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5508213443108725171==--
