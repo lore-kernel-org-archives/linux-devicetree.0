@@ -1,73 +1,94 @@
 From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 0/5] gpio: add support for pull-up/pull-down configuration
-Date: Thu,  7 Feb 2019 17:28:54 +0100
-Message-ID: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
+Subject: [PATCH v2 2/5] gpio: rename gpio_set_drive_single_ended() to gpio_set_config()
+Date: Thu,  7 Feb 2019 17:28:56 +0100
+Message-ID: <20190207162859.26252-3-thomas.petazzoni@bootlin.com>
+References: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This commit simply renames gpio_set_drive_single_ended() to
+gpio_set_config(), as the function is not specific to setting the GPIO
+drive type, and will be used for other purposes in followup commits.
 
-As we started discussing in [1], it would be useful to have a way to
-configure pull-up/pull-down resistors for simple GPIO controllers that
-don't have any pinmuxing capability, and therefore no interaction with
-the pinctrl subsystem.
+In addition, it moves the function above gpiod_direction_input(), as
+it will be used from gpiod_direction_input().
 
-This is a second iteration of the patches (the v1 was posted at
-https://patchwork.ozlabs.org/cover/1020392/).
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+---
+ drivers/gpio/gpiolib.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-Changes since v1:
-
- - Add a comment in the binding that explicitly states that the new
-   bit 4 and 5 should only be used for HW with a simple on/off
-   pull-up/pull-down configuration. More complex HW should use a pin
-   control binding. Suggested by Linus Walleij.
-
- - Change gpiod_set_debounce() and gpiod_set_transitory() to use the
-   new gpio_set_config() helper. This is done in a new, separate
-   patch. Suggested by Linus Walleij.
-
- - Add error checking in gpiod_configure_flags() to make sure pull-up
-   and pull-down are not both enabled on the same GPIO. Suggested by
-   Jan Kundrát. Jan suggested to put this in the code converting from
-   DT properties to internal flags, but it actually makes more sense
-   to do it in gpiod_configure_flags(), independently from DT parsing.
-
- - Add a check in gpio-pca953x driver that pull-up/pull-down is indeed
-   supported by the underlying HW in the
-   pca953x_gpio_set_pull_up_down() function. Noticed by Linus Walleij.
-
- - Move the changes in include/dt-bindings/gpio/gpio.h to the
-   dt-bindings patch, as suggested by Rob Herring.
-
-Rob: due to the changes in the dt-bindings patch, I have not kept your
-Acked-by.
-
-Thomas
-
-[1] https://marc.info/?l=linux-gpio&m=154491873506701&w=2
-
-Thomas Petazzoni (5):
-  dt-bindings: gpio: document the new pull-up/pull-down flags
-  gpio: rename gpio_set_drive_single_ended() to gpio_set_config()
-  gpio: use new gpio_set_config() helper in more places
-  gpio: add core support for pull-up/pull-down configuration
-  gpio: pca953x: add ->set_config implementation
-
- .../devicetree/bindings/gpio/gpio.txt         | 12 ++++
- drivers/gpio/gpio-pca953x.c                   | 66 ++++++++++++++++++-
- drivers/gpio/gpiolib-of.c                     |  5 ++
- drivers/gpio/gpiolib.c                        | 50 +++++++++-----
- drivers/gpio/gpiolib.h                        |  2 +
- include/dt-bindings/gpio/gpio.h               |  6 ++
- include/linux/gpio/machine.h                  |  2 +
- include/linux/of_gpio.h                       |  2 +
- 8 files changed, 127 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 361a09c8138a..cf8a4402fef1 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2555,6 +2555,14 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
+  * rely on gpio_request() having been called beforehand.
+  */
+ 
++static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
++			   enum pin_config_param mode)
++{
++	unsigned long config = { PIN_CONF_PACKED(mode, 0) };
++
++	return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
++}
++
+ /**
+  * gpiod_direction_input - set the GPIO direction to input
+  * @desc:	GPIO to set to input
+@@ -2608,14 +2616,6 @@ int gpiod_direction_input(struct gpio_desc *desc)
+ }
+ EXPORT_SYMBOL_GPL(gpiod_direction_input);
+ 
+-static int gpio_set_drive_single_ended(struct gpio_chip *gc, unsigned offset,
+-				       enum pin_config_param mode)
+-{
+-	unsigned long config = { PIN_CONF_PACKED(mode, 0) };
+-
+-	return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
+-}
+-
+ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
+ {
+ 	struct gpio_chip *gc = desc->gdev->chip;
+@@ -2712,8 +2712,8 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 	gc = desc->gdev->chip;
+ 	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags)) {
+ 		/* First see if we can enable open drain in hardware */
+-		ret = gpio_set_drive_single_ended(gc, gpio_chip_hwgpio(desc),
+-						  PIN_CONFIG_DRIVE_OPEN_DRAIN);
++		ret = gpio_set_config(gc, gpio_chip_hwgpio(desc),
++				      PIN_CONFIG_DRIVE_OPEN_DRAIN);
+ 		if (!ret)
+ 			goto set_output_value;
+ 		/* Emulate open drain by not actively driving the line high */
+@@ -2721,16 +2721,16 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 			return gpiod_direction_input(desc);
+ 	}
+ 	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
+-		ret = gpio_set_drive_single_ended(gc, gpio_chip_hwgpio(desc),
+-						  PIN_CONFIG_DRIVE_OPEN_SOURCE);
++		ret = gpio_set_config(gc, gpio_chip_hwgpio(desc),
++				      PIN_CONFIG_DRIVE_OPEN_SOURCE);
+ 		if (!ret)
+ 			goto set_output_value;
+ 		/* Emulate open source by not actively driving the line low */
+ 		if (!value)
+ 			return gpiod_direction_input(desc);
+ 	} else {
+-		gpio_set_drive_single_ended(gc, gpio_chip_hwgpio(desc),
+-					    PIN_CONFIG_DRIVE_PUSH_PULL);
++		gpio_set_config(gc, gpio_chip_hwgpio(desc),
++				PIN_CONFIG_DRIVE_PUSH_PULL);
+ 	}
+ 
+ set_output_value:
 -- 
 2.20.1
