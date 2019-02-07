@@ -1,189 +1,65 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3] dt-bindings: reset: meson: add g12a bindings
-Date: Thu, 07 Feb 2019 11:35:46 +0100
-Message-ID: <1549535746.4557.3.camel@pengutronix.de>
-References: <20190201125003.25022-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH 1/3] dt-bindings: reset: Add HI3670 reset controller
+ binding
+Date: Thu, 07 Feb 2019 11:41:34 +0100
+Message-ID: <1549536094.4557.8.camel@pengutronix.de>
+References: <20190201153841.21903-1-manivannan.sadhasivam@linaro.org>
+ <20190201153841.21903-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190201125003.25022-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190201153841.21903-2-manivannan.sadhasivam@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, xuwei5@hisilicon.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, guodong.xu@linaro.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
+Hi Manivannan,
 
-is there any public documentation for the G12A reset controller?
-
-On Fri, 2019-02-01 at 13:50 +0100, Jerome Brunet wrote:
-> Add device tree bindings for the reset controller of g12a SoC family.
+On Fri, 2019-02-01 at 21:08 +0530, Manivannan Sadhasivam wrote:
+> HI3670 SoC is architecturally same as the HI3660 SoC. Hence, the same
+> driver is reused for HI3670 SoC and the binding is documented here.
 > 
-> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
+>  .../devicetree/bindings/reset/hisilicon,hi3660-reset.txt     | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> Changes since v2 [0]:
-> * Dropped useless g12a compatible
+> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+> index 2bf3344b2a02..5d60ec541331 100644
+> --- a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+> @@ -5,11 +5,12 @@ Please also refer to reset.txt in this directory for common reset
+>  controller binding usage.
+>  
+>  The reset controller registers are part of the system-ctl block on
+> -hi3660 SoC.
+> +hi3660 and hi3670 SoCs.
+>  
+>  Required properties:
+> -- compatible: should be
+> +- compatible: should be one of the following:
+>  		 "hisilicon,hi3660-reset"
+> +		 "hisilicon,hi3670-reset"
 
-What if in the future somebody notices that a g12a specific workaround
-needs to be added to the driver? I agree that we don't have to list all
-compatibles in the driver, but unless you are certain that the reset
-controller is identical to the one from another SoC, it would be better
-to have a SoC specific compatible in the device tree, even if the driver
-only matches to a more generic compatible. For example:
+If the HI3670 reset controller is compatible to the HI3660 reset
+controller, this could be:
 
-	compatible = "amlogic,meson-g12a-reset", "amlogic,meson8b-reset";
+- compatible: should be one of the following:
+              "hisilicon,hi3660-reset" for HI3660
+              "hisilicon,hi3670-reset", "hisilicon,hi3660-reset" for HI3670
 
-if the reset controller behaves identical to the one in meson8b.
-
-> [0]: https://lkml.kernel.org/r/20190128181316.30814-1-jbrunet@baylibre.com
-> 
->  .../reset/amlogic,meson-g12a-reset.h          | 134 ++++++++++++++++++
->  1 file changed, 134 insertions(+)
->  create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-> 
-> diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-> new file mode 100644
-> index 000000000000..8063e8314eef
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-> @@ -0,0 +1,134 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause */
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS.
-> + * Author: Jerome Brunet <jbrunet@baylibre.com>
-> + *
-> + */
-> +
-> +#ifndef _DT_BINDINGS_AMLOGIC_MESON_G12A_RESET_H
-> +#define _DT_BINDINGS_AMLOGIC_MESON_G12A_RESET_H
-> +
-> +/*	RESET0					*/
-> +#define RESET_HIU			0
-> +/*					1	*/
-> +#define RESET_DOS			2
-> +/*					3-4	*/
-> +#define RESET_VIU			5
-> +#define RESET_AFIFO			6
-> +#define RESET_VID_PLL_DIV		7
-> +/*					8-9	*/
-> +#define RESET_VENC			10
-> +#define RESET_ASSIST			11
-> +#define RESET_PCIE_CTRL_A		12
-> +#define RESET_VCBUS			13
-> +#define RESET_PCIE_PHY			14
-> +#define RESET_PCIE_APB			15
-> +#define RESET_GIC			16
-> +#define RESET_CAPB3_DECODE		17
-> +/*					18	*/
-> +#define RESET_HDMITX_CAPB3		19
-> +#define RESET_DVALIN_CAPB3		20
-> +#define RESET_DOS_CAPB3			21
-> +/*					22	*/
-> +#define RESET_CBUS_CAPB3		23
-> +#define RESET_AHB_CNTL			24
-> +#define RESET_AHB_DATA			25
-> +#define RESET_VCBUS_CLK81		26
-> +/*					27-31	*/
-> +/*	RESET1					*/
-> +/*					32	*/
-> +#define RESET_DEMUX			33
-> +#define RESET_USB			34
-> +#define RESET_DDR			35
-> +/*					36	*/
-> +#define RESET_BT656			37
-> +#define RESET_AHB_SRAM			38
-> +/*					39	*/
-> +#define RESET_PARSER			40
-> +/*					41	*/
-> +#define RESET_ISA			42
-> +#define RESET_ETHERNET			43
-> +#define RESET_SD_EMMC_A			44
-> +#define RESET_SD_EMMC_B			45
-> +#define RESET_SD_EMMC_C			46
-> +/*					47-60 */
-> +#define RESET_AUDIO_CODEC		61
-> +/*					62-63	*/
-> +/*	RESET2					*/
-> +/*					64	*/
-> +#define RESET_AUDIO			65
-> +#define RESET_HDMITX_PHY		66
-> +/*					67	*/
-> +#define RESET_MIPI_DSI_HOST		68
-> +#define RESET_ALOCKER			69
-> +#define RESET_GE2D			70
-> +#define RESET_PARSER_REG		71
-> +#define RESET_PARSER_FETCH		72
-> +#define RESET_CTL			73
-> +#define RESET_PARSER_TOP		74
-> +/*					75-77	*/
-> +#define RESET_DVALIN			78
-> +#define RESET_HDMITX			79
-> +/*					80-95	*/
-> +/*	RESET3					*/
-> +/*					96-95	*/
-> +#define RESET_DEMUX_TOP			105
-> +#define RESET_DEMUX_DES_PL		106
-> +#define RESET_DEMUX_S2P_0		107
-> +#define RESET_DEMUX_S2P_1		108
-> +#define RESET_DEMUX_0			109
-> +#define RESET_DEMUX_1			110
-> +#define RESET_DEMUX_2			111
-> +/*					112-127	*/
-> +/*	RESET4					*/
-> +/*					128-129	*/
-> +#define RESET_MIPI_DSI_PHY		130
-> +/*					131-132	*/
-> +#define RESET_RDMA			133
-> +#define RESET_VENCI			134
-> +#define RESET_VENCP			135
-> +/*					136	*/
-> +#define RESET_VDAC			137
-> +/*					138-139 */
-> +#define RESET_VDI6			140
-> +#define RESET_VENCL			141
-> +#define RESET_I2C_M1			142
-> +#define RESET_I2C_M2			143
-> +/*					144-159	*/
-> +/*	RESET5					*/
-> +/*					160-191	*/
-> +/*	RESET6					*/
-> +#define RESET_GEN			192
-> +#define RESET_SPICC0			193
-> +#define RESET_SC			194
-> +#define RESET_SANA_3			195
-> +#define RESET_I2C_M0			196
-> +#define RESET_TS_PLL			197
-> +#define RESET_SPICC1			198
-> +#define RESET_STREAM			199
-> +#define RESET_TS_CPU			200
-> +#define RESET_UART0			201
-> +#define RESET_UART1_2			202
-> +#define RESET_ASYNC0			203
-> +#define RESET_ASYNC1			204
-> +#define RESET_SPIFC0			205
-> +#define RESET_I2C_M3			206
-> +/*					207-223	*/
-> +/*	RESET7					*/
-> +#define RESET_USB_DDR_0			224
-> +#define RESET_USB_DDR_1			225
-> +#define RESET_USB_DDR_2			226
-> +#define RESET_USB_DDR_3			227
-> +#define RESET_TS_GPU			228
-> +#define RESET_DEVICE_MMC_ARB		229
-> +#define RESET_DVALIN_DMC_PIPL		230
-> +#define RESET_VID_LOCK			231
-> +#define RESET_NIC_DMC_PIPL		232
-> +#define RESET_DMC_VPU_PIPL		233
-> +#define RESET_GE2D_DMC_PIPL		234
-> +#define RESET_HCODEC_DMC_PIPL		235
-> +#define RESET_WAVE420_DMC_PIPL		236
-> +#define RESET_HEVCF_DMC_PIPL		237
-> +/*					238-255	*/
-> +
-> +#endif
+That way there would be no need to change the driver and it would be
+documented that the two reset controllers are compatible.
 
 regards
 Philipp
