@@ -1,72 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3] ASoC: msm8916-wcd-analog: add missing
- license information
-Date: Fri, 8 Feb 2019 11:53:41 +0000
-Message-ID: <20190208115341.GB6695@sirena.org.uk>
-References: <20190207165755.1548-1-johan@kernel.org>
- <20190207165755.1548-2-johan@kernel.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Document the i.MX50 IOMUXC binding
+Date: Fri, 8 Feb 2019 09:57:04 -0200
+Message-ID: <CAOMZO5ABy+uDXMhQy95vuY8Yz2a8Wr0Q0+fUq=2Xkm2NSCdQGQ@mail.gmail.com>
+References: <20190129165530.7606-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8627580662443696500=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190207165755.1548-2-johan@kernel.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190129165530.7606-1-j.neuschaefer@gmx.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Dong Aisheng <dong.aisheng@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jonathan,
 
---===============8627580662443696500==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
-Content-Disposition: inline
+On Tue, Jan 29, 2019 at 2:55 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
+>
+> AFAICS from the i.MX50 Reference Manual, the i.MX50 IOMUXC works the
+> same as the one in i.MX51, so I copied fsl,imx51-pinctrl.txt and changed
+> the text to imx50.
+>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> Cc: Dong Aisheng <dong.aisheng@linaro.org>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
 
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
---dc+cDN39EJAMEtIO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +Required properties:
+> +- compatible: "fsl,imx50-iomuxc"
+> +- fsl,pins: two integers array, represents a group of pins mux and confi=
+g
+> +  setting. The format is fsl,pins =3D <PIN_FUNC_ID CONFIG>, PIN_FUNC_ID =
+is a
+> +  pin working on a specific function, CONFIG is the pad setting value li=
+ke
+> +  pull-up for this pin. Please refer to imx50 datasheet for the valid pa=
+d
 
-On Thu, Feb 07, 2019 at 05:57:53PM +0100, Johan Hovold wrote:
+Nit: It is the i.MX50 Reference Manual, not its datasheet that
+describes the pad settings values.
 
-> +++ b/sound/soc/codecs/msm8916-wcd-analog.c
-> @@ -1,3 +1,8 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> + */
-
-Please use a C++ comment for the whole thing so it looks more consistent
-with the rest of ASoC (and a bit neater in general).
-
---dc+cDN39EJAMEtIO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxdbcQACgkQJNaLcl1U
-h9Be0gf/QKPELmLG6FLa7UU3wNmtZtk2U+HBGyrAbim9AINmmojTCIvjVnwng7w5
-8CVUVLC3gWlQ7U1OR3E9nvhrl9Ximk1rqsWFLwI754LJgmkTLjrh925lFf4LVd+q
-PpAjJP/IN5YQa5ZX5A3XcNcsvwJI6ASCE8I0WBS6g/OHQ/3IKrpH7ghaiTgD4kiB
-JqiOVTrGHDJWl1VneZRHTT35Bgwnods9tyUUQewKnL9bm/F0zXNZFNK+cA7AyZNi
-k/Ldkd98RjS2aottEQoxBSwO02f8GT83zWmH3XKZcQ/4pBYYF7JLjHjed/QDxFFh
-hTJQ3nHmR5IUtANcGssJtVpmn/JZXg==
-=4nTm
------END PGP SIGNATURE-----
-
---dc+cDN39EJAMEtIO--
-
---===============8627580662443696500==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8627580662443696500==--
+I noticed that all the bindings say datasheet though, so I will send a
+patch to fix this.
