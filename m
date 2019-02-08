@@ -1,43 +1,82 @@
-Return-Path: <SRS0=K5hT=QO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10059.outbound.protection.outlook.com ([40.107.1.59]:54848
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726939AbfBGJx0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Feb 2019 04:53:26 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V6 3/4] defconfig: arm64: add i.MX system controller thermal
- support
-Date: Thu, 7 Feb 2019 09:52:56 +0000
-Message-ID: <1549532838-27025-3-git-send-email-Anson.Huang@nxp.com>
-References: <1549532838-27025-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1549532838-27025-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 23/33] ARM: davinci: cp-intc: add the new config structures for da8xx SoCs
+Date: Fri,  8 Feb 2019 18:31:44 +0100
+Message-Id: <20190208173154.4665-24-brgl@bgdev.pl>
+In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
+References: <20190208173154.4665-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: 8bit
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables CONFIG_IMX_SC_THERMAL as module.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Add the new-style config structures for da8xx SoCs. They will be used
+once we make the cp-intc driver stop using davinci_soc_info.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-davinci/da830.c | 10 ++++++++++
+ arch/arm/mach-davinci/da850.c | 10 ++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 709e8f1..4c79832 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -413,6 +413,7 @@ CONFIG_SENSORS_INA2XX=3Dm
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3Dy
- CONFIG_CPU_THERMAL=3Dy
- CONFIG_THERMAL_EMULATION=3Dy
-+CONFIG_IMX_SC_THERMAL=3Dm
- CONFIG_ROCKCHIP_THERMAL=3Dm
- CONFIG_RCAR_THERMAL=3Dy
- CONFIG_RCAR_GEN3_THERMAL=3Dy
---=20
-2.7.4
+diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
+index 5cfd30c57429..38af72be1a85 100644
+--- a/arch/arm/mach-davinci/da830.c
++++ b/arch/arm/mach-davinci/da830.c
+@@ -12,6 +12,7 @@
+ #include <linux/clk/davinci.h>
+ #include <linux/gpio.h>
+ #include <linux/init.h>
++#include <linux/irqchip/irq-davinci-cp-intc.h>
+ #include <linux/platform_data/gpio-davinci.h>
+ 
+ #include <asm/mach/map.h>
+@@ -821,6 +822,15 @@ void __init da830_init(void)
+ 	WARN(!da8xx_syscfg0_base, "Unable to map syscfg0 module");
+ }
+ 
++static const struct davinci_cp_intc_config da830_cp_intc_config = {
++	.reg = {
++		.start		= DA8XX_CP_INTC_BASE,
++		.end		= DA8XX_CP_INTC_BASE + SZ_8K - 1,
++		.flags		= IORESOURCE_MEM,
++	},
++	.num_irqs		= DA830_N_CP_INTC_IRQ,
++};
++
+ void __init da830_init_irq(void)
+ {
+ 	cp_intc_init();
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index 6df6994c0f26..9a3ce68c0de4 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -18,6 +18,7 @@
+ #include <linux/cpufreq.h>
+ #include <linux/gpio.h>
+ #include <linux/init.h>
++#include <linux/irqchip/irq-davinci-cp-intc.h>
+ #include <linux/mfd/da8xx-cfgchip.h>
+ #include <linux/platform_data/clk-da8xx-cfgchip.h>
+ #include <linux/platform_data/clk-davinci-pll.h>
+@@ -759,6 +760,15 @@ void __init da850_init(void)
+ 	WARN(!da8xx_syscfg1_base, "Unable to map syscfg1 module");
+ }
+ 
++static const struct davinci_cp_intc_config da850_cp_intc_config = {
++	.reg = {
++		.start		= DA8XX_CP_INTC_BASE,
++		.end		= DA8XX_CP_INTC_BASE + SZ_8K - 1,
++		.flags		= IORESOURCE_MEM,
++	},
++	.num_irqs		= DA850_N_CP_INTC_IRQ,
++};
++
+ void __init da850_init_irq(void)
+ {
+ 	cp_intc_init();
+-- 
+2.20.1
