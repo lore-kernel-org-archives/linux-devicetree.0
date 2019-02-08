@@ -1,46 +1,45 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH] dt-bindings: regulator: update fixed-regulator example
-Date: Fri,  8 Feb 2019 15:04:25 +0100
-Message-ID: <20190208140425.12917-1-johan@kernel.org>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 3/5] misc: fastrpc: Add support for context Invoke
+ method
+Date: Fri, 8 Feb 2019 15:11:20 +0100
+Message-ID: <20190208141120.GA9516@kroah.com>
+References: <20190208132306.12571-1-srinivas.kandagatla@linaro.org>
+ <20190208132306.12571-4-srinivas.kandagatla@linaro.org>
+ <20190208135514.GA23406@kroah.com>
+ <b60a0c35-6e5a-4166-9dd8-3891fce1cd0b@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b60a0c35-6e5a-4166-9dd8-3891fce1cd0b@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: arnd@arndb.de, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixed regulators do not have associated bus addresses and are typically
-placed directly under the root node where their names must still be
-unique despite not having a unit address.
+On Fri, Feb 08, 2019 at 02:01:33PM +0000, Srinivas Kandagatla wrote:
+> Thanks for the review,
+> 
+> On 08/02/2019 13:55, Greg KH wrote:
+> > > +
+> > > +		/* Make sure reserved field is set to 0 */
+> > > +		if (args->reserved) {
+> > > +			kfree(args);
+> > > +			return -EINVAL;
+> > Am I wrong in that you are only checking the first reserved field in
+> > this array of args?  Don't you have a whole bunch of them here (nscalars
+> > of them)?  Don't you need to check them all and not just the first one?
+> My Bad, there should be a loop here!
+> I will fix this in next version!
 
-Fix the malformed example node which had a unit address but no "reg"
-property by dropping the unit address.
+No, you don't need to loop it here, check it in the call that evaluates
+the individual args, which will catch the issue when people send
+"internal" commands.
 
-Also, try to make the example more useful by using the recommended
-generic node name "regulator", but with a suffix reflecting the
-regulator name in order to make it unique.
+Which reminds me, what happens if a sequence has problems half way
+through the list of args?  Do you "roll back" to the beginning, or just
+abort?  What happens to the internal device state then?
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- .../devicetree/bindings/regulator/fixed-regulator.yaml        | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+thanks,
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-index a7607b0baab7..d289c2f7455a 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-@@ -52,9 +52,9 @@ required:
- 
- examples:
-   - |
--    abc: fixedregulator@0 {
-+    reg_1v8: regulator-1v8 {
-       compatible = "regulator-fixed";
--      regulator-name = "fixed-supply";
-+      regulator-name = "1v8";
-       regulator-min-microvolt = <1800000>;
-       regulator-max-microvolt = <1800000>;
-       gpio = <&gpio1 16 0>;
--- 
-2.20.1
+greg k-h
