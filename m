@@ -1,135 +1,73 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 07/33] ARM: davinci: select SPARSE_IRQ
-Date: Fri,  8 Feb 2019 18:34:32 +0100
-Message-ID: <20190208173458.4801-8-brgl@bgdev.pl>
+Subject: [PATCH v2 01/33] ARM: davinci: remove intc_host_map from
+ davinci_soc_info struct
+Date: Fri,  8 Feb 2019 18:34:26 +0100
+Message-ID: <20190208173458.4801-2-brgl@bgdev.pl>
 References: <20190208173458.4801-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190208173458.4801-1-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, David Lechner <david@lechnology.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Everything is in place now for SPARSE_IRQ. Select it and set
-DAVINCI_INTC_START to NR_IRQS.
-
-We now need to include mach/irqs.h in a couple places as it is no
-longer indirectly included after selecting SPARSE_IRQ.
+The intc_host_map field in struct davinci_soc_info is not used by any
+board. Remove it as part of the interrupt support cleanup.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Reviewed-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/Kconfig                            | 1 +
- arch/arm/mach-davinci/board-da830-evm.c     | 1 +
- arch/arm/mach-davinci/board-da850-evm.c     | 1 +
- arch/arm/mach-davinci/board-dm644x-evm.c    | 1 +
- arch/arm/mach-davinci/devices-da8xx.c       | 1 +
- arch/arm/mach-davinci/include/mach/common.h | 4 +++-
- arch/arm/mach-davinci/include/mach/irqs.h   | 1 -
- arch/arm/mach-davinci/irq.c                 | 1 +
- 8 files changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/mach-davinci/cp_intc.c             | 5 -----
+ arch/arm/mach-davinci/include/mach/common.h | 1 -
+ 2 files changed, 6 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index f7770fdcad68..1037f49e050f 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -595,6 +595,7 @@ config ARCH_DAVINCI
- 	select PM_GENERIC_DOMAINS if PM
- 	select PM_GENERIC_DOMAINS_OF if PM && OF
- 	select RESET_CONTROLLER
-+	select SPARSE_IRQ
- 	select USE_OF
- 	select ZONE_DMA
- 	help
-diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
-index c4da635ee4ce..41f5a51fee9a 100644
---- a/arch/arm/mach-davinci/board-da830-evm.c
-+++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -36,6 +36,7 @@
- #include <asm/mach/arch.h>
+diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
+index 94085d21018e..67805ca74ff8 100644
+--- a/arch/arm/mach-davinci/cp_intc.c
++++ b/arch/arm/mach-davinci/cp_intc.c
+@@ -117,7 +117,6 @@ int __init cp_intc_of_init(struct device_node *node, struct device_node *parent)
+ {
+ 	u32 num_irq		= davinci_soc_info.intc_irq_num;
+ 	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
+-	u32 *host_map		= davinci_soc_info.intc_host_map;
+ 	unsigned num_reg	= BITS_TO_LONGS(num_irq);
+ 	int i, irq_base;
  
- #include <mach/common.h>
-+#include <mach/irqs.h>
- #include "cp_intc.h"
- #include <mach/mux.h>
- #include <mach/da8xx.h>
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 44bca048dfd0..317f48560534 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -46,6 +46,7 @@
- #include "cp_intc.h"
- #include <mach/da8xx.h>
- #include <mach/mux.h>
-+#include <mach/irqs.h>
- #include "sram.h"
+@@ -182,10 +181,6 @@ int __init cp_intc_of_init(struct device_node *node, struct device_node *parent)
+ 			cp_intc_write(0x0f0f0f0f, CP_INTC_CHAN_MAP(i));
+ 	}
  
- #include <asm/mach-types.h>
-diff --git a/arch/arm/mach-davinci/board-dm644x-evm.c b/arch/arm/mach-davinci/board-dm644x-evm.c
-index b80c4ee76217..16ffed2525e6 100644
---- a/arch/arm/mach-davinci/board-dm644x-evm.c
-+++ b/arch/arm/mach-davinci/board-dm644x-evm.c
-@@ -36,6 +36,7 @@
- #include <asm/mach/arch.h>
- 
- #include <mach/common.h>
-+#include <mach/irqs.h>
- #include <linux/platform_data/i2c-davinci.h>
- #include <mach/serial.h>
- #include <mach/mux.h>
-diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-index 298165095d31..3104a3eb2ddf 100644
---- a/arch/arm/mach-davinci/devices-da8xx.c
-+++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -25,6 +25,7 @@
- #include <mach/cputype.h>
- #include <mach/da8xx.h>
- #include <mach/time.h>
-+#include <mach/irqs.h>
- 
- #include "asp.h"
- #include "cpuidle.h"
+-	if (host_map)
+-		for (i = 0; host_map[i] != -1; i++)
+-			cp_intc_write(host_map[i], CP_INTC_HOST_MAP(i));
+-
+ 	irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
+ 	if (irq_base < 0) {
+ 		pr_warn("Couldn't allocate IRQ numbers\n");
 diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
-index d840023eaaac..1ceed0345988 100644
+index b577e13a9c23..944afd57ee38 100644
 --- a/arch/arm/mach-davinci/include/mach/common.h
 +++ b/arch/arm/mach-davinci/include/mach/common.h
-@@ -17,7 +17,9 @@
- #include <linux/types.h>
- #include <linux/reboot.h>
- 
--#define DAVINCI_INTC_START		0
-+#include <asm/irq.h>
-+
-+#define DAVINCI_INTC_START		NR_IRQS
- #define DAVINCI_INTC_IRQ(_irqnum)	(DAVINCI_INTC_START + (_irqnum))
- 
- void davinci_timer_init(struct clk *clk);
-diff --git a/arch/arm/mach-davinci/include/mach/irqs.h b/arch/arm/mach-davinci/include/mach/irqs.h
-index 03c446635301..8f9fc7a56ce8 100644
---- a/arch/arm/mach-davinci/include/mach/irqs.h
-+++ b/arch/arm/mach-davinci/include/mach/irqs.h
-@@ -401,6 +401,5 @@
- /* da850 currently has the most gpio pins (144) */
- #define DAVINCI_N_GPIO			144
- /* da850 currently has the most irqs so use DA850_N_CP_INTC_IRQ */
--#define NR_IRQS				(DA850_N_CP_INTC_IRQ + DAVINCI_N_GPIO)
- 
- #endif /* __ASM_ARCH_IRQS_H */
-diff --git a/arch/arm/mach-davinci/irq.c b/arch/arm/mach-davinci/irq.c
-index de31be42a394..16ac28833eb4 100644
---- a/arch/arm/mach-davinci/irq.c
-+++ b/arch/arm/mach-davinci/irq.c
-@@ -28,6 +28,7 @@
- #include <mach/hardware.h>
- #include <mach/cputype.h>
- #include <mach/common.h>
-+#include <mach/irqs.h>
- #include <asm/mach/irq.h>
- #include <asm/exception.h>
- 
+@@ -61,7 +61,6 @@ struct davinci_soc_info {
+ 	int				intc_type;
+ 	u8				*intc_irq_prios;
+ 	unsigned long			intc_irq_num;
+-	u32				*intc_host_map;
+ 	struct davinci_timer_info	*timer_info;
+ 	int				gpio_type;
+ 	u32				gpio_base;
 -- 
 2.20.1
