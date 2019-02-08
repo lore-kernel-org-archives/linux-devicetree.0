@@ -1,56 +1,57 @@
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: Re: [PATCHv3 13/27] PCI: mobiveil: move irq chained handler setup out
- of DT parse
-Date: Fri, 8 Feb 2019 18:00:57 +0530
-Message-ID: <CAFZiPx165X4AQqxFW4r_zZDNjB29-OQD46xce2Lhh4=n-qYHxw@mail.gmail.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com> <20190129080926.36773-14-Zhiqiang.Hou@nxp.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 1/5] misc: dt-bindings: Add Qualcomm Fastrpc bindings
+Date: Fri, 8 Feb 2019 12:28:58 +0000
+Message-ID: <6d3b6d2f-8ba1-fe87-ffbe-7a82c4a680db@linaro.org>
+References: <20190201130925.27066-1-srinivas.kandagatla@linaro.org>
+ <20190201130925.27066-2-srinivas.kandagatla@linaro.org>
+ <20190208122113.GG23483@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129080926.36773-14-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190208122113.GG23483@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: arnd@arndb.de, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 1:39 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
->
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->
-> Move irq_set_chained_handler_and_data() out of DT parse function.
->
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> ---
-> V3:
->  - No change
->
->  drivers/pci/controller/pcie-mobiveil.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index c2848c22b466..db7ecb021c63 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -460,8 +460,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
->                 return -ENODEV;
->         }
->
-> -       irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
-> -
->         return 0;
->  }
->
-> @@ -902,6 +900,8 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->                 goto error;
->         }
->
-> +       irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
-> +
->         ret = devm_request_pci_bus_resources(dev, &pcie->resources);
->         if (ret)
->                 goto error;
-> --
-> 2.17.1
->
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+
+
+On 08/02/2019 12:21, Greg KH wrote:
+> On Fri, Feb 01, 2019 at 01:09:21PM +0000, Srinivas Kandagatla wrote:
+>> The FastRPC driver implements an IPC (Inter-Processor Communication)
+>> mechanism that allows for clients to transparently make remote method
+>> invocations across DSP and APPS boundaries. This enables developers
+>> to offload tasks to the DSP and free up the application processor for
+>> other tasks.
+>>
+>> Co-developed-by: Thierry Escande<thierry.escande@linaro.org>
+>> Signed-off-by: Thierry Escande<thierry.escande@linaro.org>
+>> Signed-off-by: Srinivas Kandagatla<srinivas.kandagatla@linaro.org>
+>> Reviewed-by: Rob Herring<robh@kernel.org>
+>> ---
+>>   .../devicetree/bindings/misc/qcom,fastrpc.txt | 78 +++++++++++++++++++
+>>   1 file changed, 78 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
+> What changed from v4?  v2?  v3?
+> 
+I have done that in cover letter w.r.t previous versions,
+
+Changes since v4(https://patchwork.kernel.org/cover/10779341/) :
+- collected acks for DT from Rob.
+- Removed unnecessary list safe iteration spotted by Greg KH.
+- Removed unnecessary syslog spams.
+- Added more checks to input validity.
+
+
+> That needs to be somewhere in here, below the --- line or in the 00
+> email at the least to give us some idea of what is different.
+> 
+> v6 please?
+Sure, I can send v6 with full change log from RFC in cover letter along 
+with some minor fixes.
+
+
+thanks,
+srini
