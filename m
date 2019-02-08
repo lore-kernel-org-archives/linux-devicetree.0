@@ -1,29 +1,42 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 01/10] dt-bindings: mfd: add DT bindings for max77650
-Date: Fri, 8 Feb 2019 13:15:26 +0100
-Message-ID: <CACRpkdaERR=jBf-mchuEEyRu_vb8vr8CoZ5uL6apPGD9gOgw=w@mail.gmail.com>
-References: <20190205091237.6448-1-brgl@bgdev.pl> <20190205091237.6448-2-brgl@bgdev.pl>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 1/5] misc: dt-bindings: Add Qualcomm Fastrpc bindings
+Date: Fri, 8 Feb 2019 13:21:13 +0100
+Message-ID: <20190208122113.GG23483@kroah.com>
+References: <20190201130925.27066-1-srinivas.kandagatla@linaro.org>
+ <20190201130925.27066-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205091237.6448-2-brgl@bgdev.pl>
+Content-Disposition: inline
+In-Reply-To: <20190201130925.27066-2-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: arnd@arndb.de, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 5, 2019 at 10:12 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Fri, Feb 01, 2019 at 01:09:21PM +0000, Srinivas Kandagatla wrote:
+> The FastRPC driver implements an IPC (Inter-Processor Communication)
+> mechanism that allows for clients to transparently make remote method
+> invocations across DSP and APPS boundaries. This enables developers
+> to offload tasks to the DSP and free up the application processor for
+> other tasks.
+> 
+> Co-developed-by: Thierry Escande <thierry.escande@linaro.org>
+> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/misc/qcom,fastrpc.txt | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Add a DT binding document for max77650 ultra-low power PMIC. This
-> describes the core mfd device and the GPIO module.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+What changed from v4?  v2?  v3?
 
-This is a good solution!
+That needs to be somewhere in here, below the --- line or in the 00
+email at the least to give us some idea of what is different.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+v6 please?
 
-Yours,
-Linus Walleij
+thanks,
+
+greg k-h
