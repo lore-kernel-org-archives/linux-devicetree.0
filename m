@@ -1,45 +1,81 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 3/5] misc: fastrpc: Add support for context Invoke
- method
-Date: Fri, 8 Feb 2019 15:11:20 +0100
-Message-ID: <20190208141120.GA9516@kroah.com>
-References: <20190208132306.12571-1-srinivas.kandagatla@linaro.org>
- <20190208132306.12571-4-srinivas.kandagatla@linaro.org>
- <20190208135514.GA23406@kroah.com>
- <b60a0c35-6e5a-4166-9dd8-3891fce1cd0b@linaro.org>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH 1/7] clk: gcc-qcs404: Add PCIe resets
+Date: Fri, 8 Feb 2019 15:11:50 +0100
+Message-ID: <20190208141150.GA773@centauri.lan>
+References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
+ <20190125234509.26419-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b60a0c35-6e5a-4166-9dd8-3891fce1cd0b@linaro.org>
+In-Reply-To: <20190125234509.26419-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: arnd@arndb.de, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 08, 2019 at 02:01:33PM +0000, Srinivas Kandagatla wrote:
-> Thanks for the review,
+On Fri, Jan 25, 2019 at 03:45:03PM -0800, Bjorn Andersson wrote:
+> Enabling PCIe requires several of the PCIe related resets from GCC, so
+> add them all.
 > 
-> On 08/02/2019 13:55, Greg KH wrote:
-> > > +
-> > > +		/* Make sure reserved field is set to 0 */
-> > > +		if (args->reserved) {
-> > > +			kfree(args);
-> > > +			return -EINVAL;
-> > Am I wrong in that you are only checking the first reserved field in
-> > this array of args?  Don't you have a whole bunch of them here (nscalars
-> > of them)?  Don't you need to check them all and not just the first one?
-> My Bad, there should be a loop here!
-> I will fix this in next version!
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Stephen, I suggest that we merge this patch through Andy's devicetree branch,
+> together with the DT patch in the end of this series.
+> 
+>  drivers/clk/qcom/gcc-qcs404.c               | 7 +++++++
+>  include/dt-bindings/clock/qcom,gcc-qcs404.h | 7 +++++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
+> index 64da032bb9ed..cfb8789ff706 100644
+> --- a/drivers/clk/qcom/gcc-qcs404.c
+> +++ b/drivers/clk/qcom/gcc-qcs404.c
+> @@ -2675,6 +2675,13 @@ static const struct qcom_reset_map gcc_qcs404_resets[] = {
+>  	[GCC_PCIE_0_PHY_BCR] = { 0x3e004 },
+>  	[GCC_PCIE_0_LINK_DOWN_BCR] = { 0x3e038 },
+>  	[GCC_PCIEPHY_0_PHY_BCR] = { 0x3e03c },
+> +	[GCC_PCIE_0_AXI_MASTER_STICKY_ARES] = {0x3e040, 6},
+> +	[GCC_PCIE_0_AHB_ARES] = {0x3e040, 5},
+> +	[GCC_PCIE_0_AXI_SLAVE_ARES] = {0x3e040, 4},
+> +	[GCC_PCIE_0_AXI_MASTER_ARES] = {0x3e040, 3},
+> +	[GCC_PCIE_0_CORE_STICKY_ARES] = {0x3e040, 2},
+> +	[GCC_PCIE_0_SLEEP_ARES] = {0x3e040, 1},
+> +	[GCC_PCIE_0_PIPE_ARES] = {0x3e040, 0},
 
-No, you don't need to loop it here, check it in the call that evaluates
-the individual args, which will catch the issue when people send
-"internal" commands.
+Hello Bjorn,
 
-Which reminds me, what happens if a sequence has problems half way
-through the list of args?  Do you "roll back" to the beginning, or just
-abort?  What happens to the internal device state then?
+please add spaces before and after the braces, to match the
+syntax of the existing lines.
 
-thanks,
+With that,
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
 
-greg k-h
+
+Kind regards,
+Niklas
+
+>  	[GCC_EMAC_BCR] = { 0x4e000 },
+>  };
+>  
+> diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+> index 6ceb55ed72c6..00ab0d77b38a 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+> @@ -161,5 +161,12 @@
+>  #define GCC_PCIE_0_LINK_DOWN_BCR			11
+>  #define GCC_PCIEPHY_0_PHY_BCR				12
+>  #define GCC_EMAC_BCR					13
+> +#define GCC_PCIE_0_AXI_MASTER_STICKY_ARES		14
+> +#define GCC_PCIE_0_AHB_ARES				15
+> +#define GCC_PCIE_0_AXI_SLAVE_ARES			16
+> +#define GCC_PCIE_0_AXI_MASTER_ARES			17
+> +#define GCC_PCIE_0_CORE_STICKY_ARES			18
+> +#define GCC_PCIE_0_SLEEP_ARES				19
+> +#define GCC_PCIE_0_PIPE_ARES				20
+>  
+>  #endif
+> -- 
+> 2.18.0
+> 
