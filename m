@@ -1,87 +1,50 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] drm/omap: panel-tpo-td028ttec1: add backlight
- support
-Date: Fri, 8 Feb 2019 03:05:42 +0200
-Message-ID: <20190208010542.GI10386@pendragon.ideasonboard.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: panel: td028ttec1: add backlight
+ property
+Date: Fri, 8 Feb 2019 03:06:13 +0200
+Message-ID: <20190208010613.GJ10386@pendragon.ideasonboard.com>
 References: <20190205063813.14873-1-andreas@kemnade.info>
- <20190205063813.14873-2-andreas@kemnade.info>
+ <20190205063813.14873-3-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190205063813.14873-2-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20190205063813.14873-3-andreas@kemnade.info>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Andreas Kemnade <andreas@kemnade.info>
-Cc: tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch, sre@kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, tomi.valkeinen@ti.com, sre@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-
-Thank you for the patch.
-
-On Tue, Feb 05, 2019 at 07:38:12AM +0100, Andreas Kemnade wrote:
-> This panel has a backlight, so fetch it from devicetree using the
-> corresponding property as documented in panel-common.txt. It is
-> implemented the same way as in panel-dpi.c
-> This ensures the backlight is also disabled when the display is
-> turned off like when doing xset dpms force off.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> Changes in v2: 
->  - do not reorder initialisation
->  - fix commit message
-> 
->  drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c b/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c
-> index 7ddc8c574a61..1db8740f3c21 100644
-> --- a/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c
-> +++ b/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c
-> @@ -35,6 +35,8 @@ struct panel_drv_data {
->  
->  	struct videomode vm;
->  
-> +	struct backlight_device *backlight;
-> +
->  	struct spi_device *spi_dev;
->  };
->  
-> @@ -268,6 +270,8 @@ static int td028ttec1_panel_enable(struct omap_dss_device *dssdev)
->  
->  	r |= jbt_ret_write_0(ddata, JBT_REG_DISPLAY_ON);
->  
-> +	backlight_enable(ddata->backlight);
-> +
->  	dssdev->state = OMAP_DSS_DISPLAY_ACTIVE;
->  
->  transfer_err:
-> @@ -283,6 +287,8 @@ static void td028ttec1_panel_disable(struct omap_dss_device *dssdev)
->  	if (!omapdss_device_is_enabled(dssdev))
->  		return;
->  
-> +	backlight_disable(ddata->backlight);
-> +
->  	dev_dbg(dssdev->dev, "td028ttec1_panel_disable()\n");
->  
->  	jbt_ret_write_0(ddata, JBT_REG_DISPLAY_OFF);
-> @@ -334,6 +340,10 @@ static int td028ttec1_panel_probe(struct spi_device *spi)
->  	if (ddata == NULL)
->  		return -ENOMEM;
->  
-> +	ddata->backlight = devm_of_find_backlight(&spi->dev);
-> +	if (IS_ERR(ddata->backlight))
-> +		return PTR_ERR(ddata->backlight);
-> +
->  	dev_set_drvdata(&spi->dev, ddata);
->  
->  	ddata->spi_dev = spi;
-
--- 
-Regards,
-
-Laurent Pinchart
+SGkgQW5kcmVhcywKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVHVlLCBGZWIgMDUsIDIw
+MTkgYXQgMDc6Mzg6MTNBTSArMDEwMCwgQW5kcmVhcyBLZW1uYWRlIHdyb3RlOgo+IFRoaXMgYWRk
+cyBhbiBhZGRpdGlvbmFsIGJhY2tsaWdodCBwcm9wZXJ0eSBhcyBkZXNjcmliZWQKPiBpbiBwYW5l
+bC1jb21tb24udHh0Cj4gCj4gU2lnbmVkLW9mZi1ieTogQW5kcmVhcyBLZW1uYWRlIDxhbmRyZWFz
+QGtlbW5hZGUuaW5mbz4KClJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBp
+bmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdGQwMjh0dGVjMS50eHQgfCAyICsrCj4gIDEg
+ZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdHBvLHRkMDI4dHRlYzEudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdHBvLHRk
+MDI4dHRlYzEudHh0Cj4gaW5kZXggZWQzNDI1M2Q5ZmIxLi44OThlMDZlY2Y0ZWYgMTAwNjQ0Cj4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdHBv
+LHRkMDI4dHRlYzEudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvdHBvLHRkMDI4dHRlYzEudHh0Cj4gQEAgLTYsNiArNiw3IEBAIFJlcXVp
+cmVkIHByb3BlcnRpZXM6Cj4gIAo+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIGxhYmVsOiBh
+IHN5bWJvbGljIG5hbWUgZm9yIHRoZSBwYW5lbAo+ICstIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0
+aGUgYmFja2xpZ2h0IGRldmljZQo+ICAKPiAgUmVxdWlyZWQgbm9kZXM6Cj4gIC0gVmlkZW8gcG9y
+dCBmb3IgRFBJIGlucHV0Cj4gQEAgLTIxLDYgKzIyLDcgQEAgbGNkLXBhbmVsOiB0ZDAyOHR0ZWMx
+QDAgewo+ICAJc3BpLWNwaGE7Cj4gIAo+ICAJbGFiZWwgPSAibGNkIjsKPiArCWJhY2tsaWdodCA9
+IDwmYmFja2xpZ2h0PjsKPiAgCXBvcnQgewo+ICAJCWxjZF9pbjogZW5kcG9pbnQgewo+ICAJCQly
+ZW1vdGUtZW5kcG9pbnQgPSA8JmRwaV9vdXQ+OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNo
+YXJ0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
