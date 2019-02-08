@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v7 3/5] misc: fastrpc: Add support for context Invoke method
-Date: Fri,  8 Feb 2019 17:11:25 +0000
-Message-ID: <20190208171127.24168-4-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v7 5/5] misc: fastrpc: Add support for dmabuf exporter
+Date: Fri,  8 Feb 2019 17:11:27 +0000
+Message-ID: <20190208171127.24168-6-srinivas.kandagatla@linaro.org>
 References: <20190208171127.24168-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,895 +12,271 @@ To: gregkh@linuxfoundation.org, arnd@arndb.de
 Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Thierry Escande <thierry.escande@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to compute context invoke method on the
-remote processor (DSP).
-This involves setting up the functions input and output arguments,
-input and output handles and mapping the dmabuf fd for the
-argument/handle buffers.
+User process can involve dealing with big buffer sizes, and also passing
+buffers from one compute context bank to other compute context bank for
+complex dsp algorithms.
 
-The below diagram depicts invocation of a single method where the
-client and objects reside on different processors. An object could
-expose multiple methods which can be grouped together and referred
-to as an interface.
-
-,--------,        ,------,  ,-----------,  ,------,        ,--------,
-|        | method |      |  |           |  |      | method |        |
-| Client |------->| Stub |->| Transport |->| Skel |------->| Object |
-|        |        |      |  |           |  |      |        |        |
-`--------`        `------`  `-----------`  `------`        `--------`
-
-Client:    Linux user mode process that initiates the remote invocation
-Stub:      Auto generated code linked in with the user mode process that
-           takes care of marshaling parameters
-Transport: Involved in carrying an invocation from a client to an
-           object. This involves two portions: 1) FastRPC Linux
-           kernel driver that receives the remote invocation, queues
-           them up and then waits for the response after signaling the
-           remote side. 2) Service running on the remote side that
-           dequeues the messages from the queue and dispatches them for
-           processing.
-Skel:      Auto generated code that takes care of un-marshaling
-           parameters
-Object:    Method implementation
-
-Most of the work is derived from various downstream Qualcomm kernels.
-Credits to various Qualcomm authors who have contributed to this code.
-Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
+This patch adds support to fastrpc to make it a proper dmabuf exporter
+to avoid making copies of buffers.
 
 Co-developed-by: Thierry Escande <thierry.escande@linaro.org>
 Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/misc/fastrpc.c      | 730 ++++++++++++++++++++++++++++++++++++
- include/uapi/misc/fastrpc.h |  23 ++
- 2 files changed, 753 insertions(+)
- create mode 100644 include/uapi/misc/fastrpc.h
+ drivers/misc/fastrpc.c      | 184 ++++++++++++++++++++++++++++++++++++
+ include/uapi/misc/fastrpc.h |   8 ++
+ 2 files changed, 192 insertions(+)
 
 diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 10b93fd5659a..cd69f8b308f6 100644
+index ceb498487569..4b0db33896df 100644
 --- a/drivers/misc/fastrpc.c
 +++ b/drivers/misc/fastrpc.c
-@@ -2,7 +2,9 @@
- // Copyright (c) 2011-2018, The Linux Foundation. All rights reserved.
- // Copyright (c) 2018, Linaro Limited
+@@ -106,10 +106,20 @@ struct fastrpc_invoke_rsp {
  
-+#include <linux/completion.h>
- #include <linux/device.h>
-+#include <linux/dma-buf.h>
- #include <linux/dma-mapping.h>
- #include <linux/idr.h>
- #include <linux/list.h>
-@@ -14,6 +16,7 @@
- #include <linux/rpmsg.h>
- #include <linux/scatterlist.h>
- #include <linux/slab.h>
-+#include <uapi/misc/fastrpc.h>
- 
- #define ADSP_DOMAIN_ID (0)
- #define MDSP_DOMAIN_ID (1)
-@@ -21,14 +24,118 @@
- #define CDSP_DOMAIN_ID (3)
- #define FASTRPC_DEV_MAX		4 /* adsp, mdsp, slpi, cdsp*/
- #define FASTRPC_MAX_SESSIONS	9 /*8 compute, 1 cpz*/
-+#define FASTRPC_ALIGN		128
-+#define FASTRPC_MAX_FDLIST	16
-+#define FASTRPC_MAX_CRCLIST	64
-+#define FASTRPC_PHYS(p)	((p) & 0xffffffff)
- #define FASTRPC_CTX_MAX (256)
- #define FASTRPC_CTXID_MASK (0xFF0)
- #define FASTRPC_DEVICE_NAME	"fastrpc"
- 
-+/* Retrives number of input buffers from the scalars parameter */
-+#define REMOTE_SCALARS_INBUFS(sc)	(((sc) >> 16) & 0x0ff)
-+
-+/* Retrives number of output buffers from the scalars parameter */
-+#define REMOTE_SCALARS_OUTBUFS(sc)	(((sc) >> 8) & 0x0ff)
-+
-+/* Retrives number of input handles from the scalars parameter */
-+#define REMOTE_SCALARS_INHANDLES(sc)	(((sc) >> 4) & 0x0f)
-+
-+/* Retrives number of output handles from the scalars parameter */
-+#define REMOTE_SCALARS_OUTHANDLES(sc)	((sc) & 0x0f)
-+
-+#define REMOTE_SCALARS_LENGTH(sc)	(REMOTE_SCALARS_INBUFS(sc) +   \
-+					 REMOTE_SCALARS_OUTBUFS(sc) +  \
-+					 REMOTE_SCALARS_INHANDLES(sc)+ \
-+					 REMOTE_SCALARS_OUTHANDLES(sc))
-+#define FASTRPC_BUILD_SCALARS(attr, method, in, out, oin, oout)  \
-+				(((attr & 0x07) << 29) |		\
-+				((method & 0x1f) << 24) |	\
-+				((in & 0xff) << 16) |		\
-+				((out & 0xff) <<  8) |		\
-+				((oin & 0x0f) <<  4) |		\
-+				(oout & 0x0f))
-+
-+#define FASTRPC_SCALARS(method, in, out) \
-+		FASTRPC_BUILD_SCALARS(0, method, in, out, 0, 0)
-+
- #define miscdev_to_cctx(d) container_of(d, struct fastrpc_channel_ctx, miscdev)
- 
- static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
- 						"sdsp", "cdsp"};
-+struct fastrpc_phy_page {
-+	u64 addr;		/* physical address */
-+	u64 size;		/* size of contiguous region */
-+};
-+
-+struct fastrpc_invoke_buf {
-+	u32 num;		/* number of contiguous regions */
-+	u32 pgidx;		/* index to start of contiguous region */
-+};
-+
-+struct fastrpc_remote_arg {
-+	u64 pv;
-+	u64 len;
-+};
-+
-+struct fastrpc_msg {
-+	int pid;		/* process group id */
-+	int tid;		/* thread id */
-+	u64 ctx;		/* invoke caller context */
-+	u32 handle;	/* handle to invoke */
-+	u32 sc;		/* scalars structure describing the data */
-+	u64 addr;		/* physical address */
-+	u64 size;		/* size of contiguous region */
-+};
-+
-+struct fastrpc_invoke_rsp {
-+	u64 ctx;		/* invoke caller context */
-+	int retval;		/* invoke return value */
-+};
-+
-+struct fastrpc_buf {
-+	struct fastrpc_user *fl;
-+	struct device *dev;
-+	void *virt;
-+	u64 phys;
-+	u64 size;
-+};
-+
-+struct fastrpc_map {
-+	struct list_head node;
-+	struct fastrpc_user *fl;
-+	int fd;
-+	struct dma_buf *buf;
-+	struct sg_table *table;
-+	struct dma_buf_attachment *attach;
-+	u64 phys;
-+	u64 size;
-+	void *va;
-+	u64 len;
-+	struct kref refcount;
-+};
-+
-+struct fastrpc_invoke_ctx {
-+	int nscalars;
-+	int nbufs;
-+	int retval;
-+	int pid;
-+	int tgid;
-+	u32 sc;
-+	u32 *crc;
-+	u64 ctxid;
-+	u64 msg_sz;
-+	struct kref refcount;
-+	struct list_head node; /* list of ctxs */
-+	struct completion work;
-+	struct fastrpc_msg msg;
-+	struct fastrpc_user *fl;
-+	struct fastrpc_remote_arg *rpra;
-+	struct fastrpc_map **maps;
-+	struct fastrpc_buf *buf;
-+	struct fastrpc_invoke_args *args;
-+	struct fastrpc_channel_ctx *cctx;
-+};
- 
- struct fastrpc_session_ctx {
+ struct fastrpc_buf {
+ 	struct fastrpc_user *fl;
++	struct dma_buf *dmabuf;
  	struct device *dev;
-@@ -55,6 +162,7 @@ struct fastrpc_user {
- 
- 	struct fastrpc_channel_ctx *cctx;
- 	struct fastrpc_session_ctx *sctx;
-+	struct fastrpc_buf *init_mem;
- 
- 	int tgid;
- 	int pd;
-@@ -64,6 +172,522 @@ struct fastrpc_user {
- 	struct mutex mutex;
+ 	void *virt;
+ 	u64 phys;
+ 	u64 size;
++	/* Lock for dma buf attachments */
++	struct mutex lock;
++	struct list_head attachments;
++};
++
++struct fastrpc_dma_buf_attachment {
++	struct device *dev;
++	struct sg_table sgt;
++	struct list_head node;
  };
  
-+static void fastrpc_free_map(struct kref *ref)
+ struct fastrpc_map {
+@@ -246,6 +256,9 @@ static int fastrpc_buf_alloc(struct fastrpc_user *fl, struct device *dev,
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
++	INIT_LIST_HEAD(&buf->attachments);
++	mutex_init(&buf->lock);
++
+ 	buf->fl = fl;
+ 	buf->virt = NULL;
+ 	buf->phys = 0;
+@@ -360,6 +373,111 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
+ 	return ERR_PTR(ret);
+ }
+ 
++static struct sg_table *
++fastrpc_map_dma_buf(struct dma_buf_attachment *attachment,
++		    enum dma_data_direction dir)
 +{
-+	struct fastrpc_map *map;
++	struct fastrpc_dma_buf_attachment *a = attachment->priv;
++	struct sg_table *table;
 +
-+	map = container_of(ref, struct fastrpc_map, refcount);
++	table = &a->sgt;
 +
-+	if (map->table) {
-+		dma_buf_unmap_attachment(map->attach, map->table,
-+					 DMA_BIDIRECTIONAL);
-+		dma_buf_detach(map->buf, map->attach);
-+		dma_buf_put(map->buf);
-+	}
-+
-+	kfree(map);
-+}
-+
-+static void fastrpc_map_put(struct fastrpc_map *map)
-+{
-+	if (map)
-+		kref_put(&map->refcount, fastrpc_free_map);
-+}
-+
-+static void fastrpc_map_get(struct fastrpc_map *map)
-+{
-+	if (map)
-+		kref_get(&map->refcount);
-+}
-+
-+static int fastrpc_map_find(struct fastrpc_user *fl, int fd,
-+			    struct fastrpc_map **ppmap)
-+{
-+	struct fastrpc_map *map = NULL;
-+
-+	mutex_lock(&fl->mutex);
-+	list_for_each_entry(map, &fl->maps, node) {
-+		if (map->fd == fd) {
-+			fastrpc_map_get(map);
-+			*ppmap = map;
-+			mutex_unlock(&fl->mutex);
-+			return 0;
-+		}
-+	}
-+	mutex_unlock(&fl->mutex);
-+
-+	return -ENOENT;
-+}
-+
-+static void fastrpc_buf_free(struct fastrpc_buf *buf)
-+{
-+	dma_free_coherent(buf->dev, buf->size, buf->virt,
-+			  FASTRPC_PHYS(buf->phys));
-+	kfree(buf);
-+}
-+
-+static int fastrpc_buf_alloc(struct fastrpc_user *fl, struct device *dev,
-+			     u64 size, struct fastrpc_buf **obuf)
-+{
-+	struct fastrpc_buf *buf;
-+
-+	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	buf->fl = fl;
-+	buf->virt = NULL;
-+	buf->phys = 0;
-+	buf->size = size;
-+	buf->dev = dev;
-+
-+	buf->virt = dma_alloc_coherent(dev, buf->size, (dma_addr_t *)&buf->phys,
-+				       GFP_KERNEL);
-+	if (!buf->virt)
-+		return -ENOMEM;
-+
-+	if (fl->sctx && fl->sctx->sid)
-+		buf->phys += ((u64)fl->sctx->sid << 32);
-+
-+	*obuf = buf;
-+
-+	return 0;
-+}
-+
-+static void fastrpc_context_free(struct kref *ref)
-+{
-+	struct fastrpc_invoke_ctx *ctx;
-+	struct fastrpc_channel_ctx *cctx;
-+	int i;
-+
-+	ctx = container_of(ref, struct fastrpc_invoke_ctx, refcount);
-+	cctx = ctx->cctx;
-+
-+	for (i = 0; i < ctx->nscalars; i++)
-+		fastrpc_map_put(ctx->maps[i]);
-+
-+	if (ctx->buf)
-+		fastrpc_buf_free(ctx->buf);
-+
-+	spin_lock(&cctx->lock);
-+	idr_remove(&cctx->ctx_idr, ctx->ctxid >> 4);
-+	spin_unlock(&cctx->lock);
-+
-+	kfree(ctx->maps);
-+	kfree(ctx);
-+}
-+
-+static void fastrpc_context_get(struct fastrpc_invoke_ctx *ctx)
-+{
-+	kref_get(&ctx->refcount);
-+}
-+
-+static void fastrpc_context_put(struct fastrpc_invoke_ctx *ctx)
-+{
-+	kref_put(&ctx->refcount, fastrpc_context_free);
-+}
-+
-+static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
-+			struct fastrpc_user *user, u32 kernel, u32 sc,
-+			struct fastrpc_invoke_args *args)
-+{
-+	struct fastrpc_channel_ctx *cctx = user->cctx;
-+	struct fastrpc_invoke_ctx *ctx = NULL;
-+	int ret;
-+
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
++	if (!dma_map_sg(attachment->dev, table->sgl, table->nents, dir))
 +		return ERR_PTR(-ENOMEM);
 +
-+	INIT_LIST_HEAD(&ctx->node);
-+	ctx->fl = user;
-+	ctx->nscalars = REMOTE_SCALARS_LENGTH(sc);
-+	ctx->nbufs = REMOTE_SCALARS_INBUFS(sc) +
-+		     REMOTE_SCALARS_OUTBUFS(sc);
-+
-+	if (ctx->nscalars) {
-+		ctx->maps = kcalloc(ctx->nscalars,
-+				    sizeof(*ctx->maps), GFP_KERNEL);
-+		if (!ctx->maps) {
-+			kfree(ctx);
-+			return ERR_PTR(-ENOMEM);
-+		}
-+		ctx->args = args;
-+	}
-+
-+	ctx->sc = sc;
-+	ctx->retval = -1;
-+	ctx->pid = current->pid;
-+	ctx->tgid = user->tgid;
-+	ctx->cctx = cctx;
-+	init_completion(&ctx->work);
-+
-+	spin_lock(&user->lock);
-+	list_add_tail(&ctx->node, &user->pending);
-+	spin_unlock(&user->lock);
-+
-+	spin_lock(&cctx->lock);
-+	ret = idr_alloc_cyclic(&cctx->ctx_idr, ctx, 1,
-+			       FASTRPC_CTX_MAX, GFP_ATOMIC);
-+	if (ret < 0) {
-+		spin_unlock(&cctx->lock);
-+		goto err_idr;
-+	}
-+	ctx->ctxid = ret << 4;
-+	spin_unlock(&cctx->lock);
-+
-+	kref_init(&ctx->refcount);
-+
-+	return ctx;
-+err_idr:
-+	spin_lock(&user->lock);
-+	list_del(&ctx->node);
-+	spin_unlock(&user->lock);
-+	kfree(ctx->maps);
-+	kfree(ctx);
-+
-+	return ERR_PTR(ret);
++	return table;
 +}
 +
-+static int fastrpc_map_create(struct fastrpc_user *fl, int fd,
-+			      u64 len, struct fastrpc_map **ppmap)
++static void fastrpc_unmap_dma_buf(struct dma_buf_attachment *attach,
++				  struct sg_table *table,
++				  enum dma_data_direction dir)
 +{
-+	struct fastrpc_session_ctx *sess = fl->sctx;
-+	struct fastrpc_map *map = NULL;
-+	int err = 0;
++	dma_unmap_sg(attach->dev, table->sgl, table->nents, dir);
++}
 +
-+	if (!fastrpc_map_find(fl, fd, ppmap))
-+		return 0;
++static void fastrpc_release(struct dma_buf *dmabuf)
++{
++	struct fastrpc_buf *buffer = dmabuf->priv;
 +
-+	map = kzalloc(sizeof(*map), GFP_KERNEL);
-+	if (!map)
++	fastrpc_buf_free(buffer);
++}
++
++static int fastrpc_dma_buf_attach(struct dma_buf *dmabuf,
++				  struct dma_buf_attachment *attachment)
++{
++	struct fastrpc_dma_buf_attachment *a;
++	struct fastrpc_buf *buffer = dmabuf->priv;
++	int ret;
++
++	a = kzalloc(sizeof(*a), GFP_KERNEL);
++	if (!a)
 +		return -ENOMEM;
 +
-+	INIT_LIST_HEAD(&map->node);
-+	map->fl = fl;
-+	map->fd = fd;
-+	map->buf = dma_buf_get(fd);
-+	if (!map->buf) {
-+		err = -EINVAL;
-+		goto get_err;
-+	}
-+
-+	map->attach = dma_buf_attach(map->buf, sess->dev);
-+	if (IS_ERR(map->attach)) {
-+		dev_err(sess->dev, "Failed to attach dmabuf\n");
-+		err = PTR_ERR(map->attach);
-+		goto attach_err;
-+	}
-+
-+	map->table = dma_buf_map_attachment(map->attach, DMA_BIDIRECTIONAL);
-+	if (IS_ERR(map->table)) {
-+		err = PTR_ERR(map->table);
-+		goto map_err;
-+	}
-+
-+	map->phys = sg_dma_address(map->table->sgl);
-+	map->phys += ((u64)fl->sctx->sid << 32);
-+	map->size = len;
-+	map->va = sg_virt(map->table->sgl);
-+	map->len = len;
-+	kref_init(&map->refcount);
-+
-+	spin_lock(&fl->lock);
-+	list_add_tail(&map->node, &fl->maps);
-+	spin_unlock(&fl->lock);
-+	*ppmap = map;
-+
-+	return 0;
-+
-+map_err:
-+	dma_buf_detach(map->buf, map->attach);
-+attach_err:
-+	dma_buf_put(map->buf);
-+get_err:
-+	kfree(map);
-+
-+	return err;
-+}
-+
-+/*
-+ * Fastrpc payload buffer with metadata looks like:
-+ *
-+ * >>>>>>  START of METADATA <<<<<<<<<
-+ * +---------------------------------+
-+ * |           Arguments             |
-+ * | type:(struct fastrpc_remote_arg)|
-+ * |             (0 - N)             |
-+ * +---------------------------------+
-+ * |         Invoke Buffer list      |
-+ * | type:(struct fastrpc_invoke_buf)|
-+ * |           (0 - N)               |
-+ * +---------------------------------+
-+ * |         Page info list          |
-+ * | type:(struct fastrpc_phy_page)  |
-+ * |             (0 - N)             |
-+ * +---------------------------------+
-+ * |         Optional info           |
-+ * |(can be specific to SoC/Firmware)|
-+ * +---------------------------------+
-+ * >>>>>>>>  END of METADATA <<<<<<<<<
-+ * +---------------------------------+
-+ * |         Inline ARGS             |
-+ * |            (0-N)                |
-+ * +---------------------------------+
-+ */
-+
-+static int fastrpc_get_meta_size(struct fastrpc_invoke_ctx *ctx)
-+{
-+	int size = 0;
-+
-+	size = (sizeof(struct fastrpc_remote_arg) +
-+		sizeof(struct fastrpc_invoke_buf) +
-+		sizeof(struct fastrpc_phy_page)) * ctx->nscalars +
-+		sizeof(u64) * FASTRPC_MAX_FDLIST +
-+		sizeof(u32) * FASTRPC_MAX_CRCLIST;
-+
-+	return size;
-+}
-+
-+static u64 fastrpc_get_payload_size(struct fastrpc_invoke_ctx *ctx, int metalen)
-+{
-+	u64 size = 0;
-+	int i;
-+
-+	size = ALIGN(metalen, FASTRPC_ALIGN);
-+	for (i = 0; i < ctx->nscalars; i++) {
-+		if (ctx->args[i].fd == 0 || ctx->args[i].fd == -1) {
-+			size = ALIGN(size, FASTRPC_ALIGN);
-+			size += ctx->args[i].length;
-+		}
-+	}
-+
-+	return size;
-+}
-+
-+static int fastrpc_create_maps(struct fastrpc_invoke_ctx *ctx)
-+{
-+	struct device *dev = ctx->fl->sctx->dev;
-+	int i, err;
-+
-+	for (i = 0; i < ctx->nscalars; ++i) {
-+		/* Make sure reserved field is set to 0 */
-+		if (ctx->args[i].reserved)
-+			return -EINVAL;
-+
-+		if (ctx->args[i].fd == 0 || ctx->args[i].fd == -1 ||
-+		    ctx->args[i].length == 0)
-+			continue;
-+
-+		err = fastrpc_map_create(ctx->fl, ctx->args[i].fd,
-+					 ctx->args[i].length, &ctx->maps[i]);
-+		if (err) {
-+			dev_err(dev, "Error Creating map %d\n", err);
-+			return -EINVAL;
-+		}
-+
-+	}
-+	return 0;
-+}
-+
-+static int fastrpc_get_args(u32 kernel, struct fastrpc_invoke_ctx *ctx)
-+{
-+	struct device *dev = ctx->fl->sctx->dev;
-+	struct fastrpc_remote_arg *rpra;
-+	struct fastrpc_invoke_buf *list;
-+	struct fastrpc_phy_page *pages;
-+	int inbufs, i, err = 0;
-+	u64 rlen, pkt_size;
-+	uintptr_t args;
-+	int metalen;
-+
-+
-+	inbufs = REMOTE_SCALARS_INBUFS(ctx->sc);
-+	metalen = fastrpc_get_meta_size(ctx);
-+	pkt_size = fastrpc_get_payload_size(ctx, metalen);
-+
-+	err = fastrpc_create_maps(ctx);
-+	if (err)
-+		return err;
-+
-+	ctx->msg_sz = pkt_size;
-+
-+	err = fastrpc_buf_alloc(ctx->fl, dev, pkt_size, &ctx->buf);
-+	if (err)
-+		return err;
-+
-+	rpra = ctx->buf->virt;
-+	list = ctx->buf->virt + ctx->nscalars * sizeof(*rpra);
-+	pages = ctx->buf->virt + ctx->nscalars * (sizeof(*list) +
-+		sizeof(*rpra));
-+	args = (uintptr_t)ctx->buf->virt + metalen;
-+	rlen = pkt_size - metalen;
-+	ctx->rpra = rpra;
-+
-+	for (i = 0; i < ctx->nbufs; ++i) {
-+		u64 len = ctx->args[i].length;
-+
-+		rpra[i].pv = 0;
-+		rpra[i].len = len;
-+		list[i].num = len ? 1 : 0;
-+		list[i].pgidx = i;
-+
-+		if (!len)
-+			continue;
-+
-+		pages[i].size = roundup(len, PAGE_SIZE);
-+
-+		if (ctx->maps[i]) {
-+			rpra[i].pv = (u64) ctx->args[i].ptr;
-+			pages[i].addr = ctx->maps[i]->phys;
-+		} else {
-+			rlen -= ALIGN(args, FASTRPC_ALIGN) - args;
-+			args = ALIGN(args, FASTRPC_ALIGN);
-+			if (rlen < len)
-+				goto bail;
-+
-+			rpra[i].pv = args;
-+			pages[i].addr = ctx->buf->phys + (pkt_size - rlen);
-+			pages[i].addr = pages[i].addr &	PAGE_MASK;
-+			args = args + len;
-+			rlen -= len;
-+		}
-+
-+		if (i < inbufs && !ctx->maps[i]) {
-+			void *dst = (void *)(uintptr_t)rpra[i].pv;
-+			void *src = (void *)(uintptr_t)ctx->args[i].ptr;
-+
-+			if (!kernel) {
-+				if (copy_from_user(dst, (void __user *)src,
-+						   len)) {
-+					err = -EFAULT;
-+					goto bail;
-+				}
-+			} else {
-+				memcpy(dst, src, len);
-+			}
-+		}
-+	}
-+
-+	for (i = ctx->nbufs; i < ctx->nscalars; ++i) {
-+		rpra[i].pv = (u64) ctx->args[i].ptr;
-+		rpra[i].len = ctx->args[i].length;
-+		list[i].num = ctx->args[i].length ? 1 : 0;
-+		list[i].pgidx = i;
-+		pages[i].addr = ctx->maps[i]->phys;
-+		pages[i].size = ctx->maps[i]->size;
-+	}
-+
-+bail:
-+	if (err)
-+		dev_err(dev, "Error: get invoke args failed:%d\n", err);
-+
-+	return err;
-+}
-+
-+static int fastrpc_put_args(struct fastrpc_invoke_ctx *ctx,
-+			    u32 kernel)
-+{
-+	struct fastrpc_remote_arg *rpra = ctx->rpra;
-+	int i, inbufs;
-+
-+	inbufs = REMOTE_SCALARS_INBUFS(ctx->sc);
-+
-+	for (i = inbufs; i < ctx->nbufs; ++i) {
-+		void *src = (void *)(uintptr_t)rpra[i].pv;
-+		void *dst = (void *)(uintptr_t)ctx->args[i].ptr;
-+		u64 len = rpra[i].len;
-+
-+		if (!kernel) {
-+			if (copy_to_user((void __user *)dst, src, len))
-+				return -EFAULT;
-+		} else {
-+			memcpy(dst, src, len);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
-+			       struct fastrpc_invoke_ctx *ctx,
-+			       u32 kernel, uint32_t handle)
-+{
-+	struct fastrpc_channel_ctx *cctx;
-+	struct fastrpc_user *fl = ctx->fl;
-+	struct fastrpc_msg *msg = &ctx->msg;
-+
-+	cctx = fl->cctx;
-+	msg->pid = fl->tgid;
-+	msg->tid = current->pid;
-+
-+	if (kernel)
-+		msg->pid = 0;
-+
-+	msg->ctx = ctx->ctxid | fl->pd;
-+	msg->handle = handle;
-+	msg->sc = ctx->sc;
-+	msg->addr = ctx->buf ? ctx->buf->phys : 0;
-+	msg->size = roundup(ctx->msg_sz, PAGE_SIZE);
-+	fastrpc_context_get(ctx);
-+
-+	return rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
-+}
-+
-+static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
-+				   u32 handle, u32 sc,
-+				   struct fastrpc_invoke_args *args)
-+{
-+	struct fastrpc_invoke_ctx *ctx = NULL;
-+	int err = 0;
-+
-+	if (!fl->sctx)
++	ret = dma_get_sgtable(buffer->dev, &a->sgt, buffer->virt,
++			      FASTRPC_PHYS(buffer->phys), buffer->size);
++	if (ret < 0) {
++		dev_err(buffer->dev, "failed to get scatterlist from DMA API\n");
 +		return -EINVAL;
-+
-+	ctx = fastrpc_context_alloc(fl, kernel, sc, args);
-+	if (IS_ERR(ctx))
-+		return PTR_ERR(ctx);
-+
-+	if (ctx->nscalars) {
-+		err = fastrpc_get_args(kernel, ctx);
-+		if (err)
-+			goto bail;
-+	}
-+	/* Send invoke buffer to remote dsp */
-+	err = fastrpc_invoke_send(fl->sctx, ctx, kernel, handle);
-+	if (err)
-+		goto bail;
-+
-+	/* Wait for remote dsp to respond or time out */
-+	err = wait_for_completion_interruptible(&ctx->work);
-+	if (err)
-+		goto bail;
-+
-+	/* Check the response from remote dsp */
-+	err = ctx->retval;
-+	if (err)
-+		goto bail;
-+
-+	if (ctx->nscalars) {
-+		/* populate all the output buffers with results */
-+		err = fastrpc_put_args(ctx, kernel);
-+		if (err)
-+			goto bail;
 +	}
 +
-+bail:
-+	/* We are done with this compute context, remove it from pending list */
-+	spin_lock(&fl->lock);
-+	list_del(&ctx->node);
-+	spin_unlock(&fl->lock);
-+	fastrpc_context_put(ctx);
++	a->dev = attachment->dev;
++	INIT_LIST_HEAD(&a->node);
++	attachment->priv = a;
 +
-+	if (err)
-+		dev_dbg(fl->sctx->dev, "Error: Invoke Failed %d\n", err);
++	mutex_lock(&buffer->lock);
++	list_add(&a->node, &buffer->attachments);
++	mutex_unlock(&buffer->lock);
 +
-+	return err;
++	return 0;
 +}
 +
- static struct fastrpc_session_ctx *fastrpc_session_alloc(
- 					struct fastrpc_channel_ctx *cctx)
++static void fastrpc_dma_buf_detatch(struct dma_buf *dmabuf,
++				    struct dma_buf_attachment *attachment)
++{
++	struct fastrpc_dma_buf_attachment *a = attachment->priv;
++	struct fastrpc_buf *buffer = dmabuf->priv;
++
++	mutex_lock(&buffer->lock);
++	list_del(&a->node);
++	mutex_unlock(&buffer->lock);
++	kfree(a);
++}
++
++static void *fastrpc_kmap(struct dma_buf *dmabuf, unsigned long pgnum)
++{
++	struct fastrpc_buf *buf = dmabuf->priv;
++
++	return buf->virt ? buf->virt + pgnum * PAGE_SIZE : NULL;
++}
++
++static void *fastrpc_vmap(struct dma_buf *dmabuf)
++{
++	struct fastrpc_buf *buf = dmabuf->priv;
++
++	return buf->virt;
++}
++
++static int fastrpc_mmap(struct dma_buf *dmabuf,
++			struct vm_area_struct *vma)
++{
++	struct fastrpc_buf *buf = dmabuf->priv;
++	size_t size = vma->vm_end - vma->vm_start;
++
++	return dma_mmap_coherent(buf->dev, vma, buf->virt,
++				 FASTRPC_PHYS(buf->phys), size);
++}
++
++static const struct dma_buf_ops fastrpc_dma_buf_ops = {
++	.attach = fastrpc_dma_buf_attach,
++	.detach = fastrpc_dma_buf_detatch,
++	.map_dma_buf = fastrpc_map_dma_buf,
++	.unmap_dma_buf = fastrpc_unmap_dma_buf,
++	.mmap = fastrpc_mmap,
++	.map = fastrpc_kmap,
++	.vmap = fastrpc_vmap,
++	.release = fastrpc_release,
++};
++
+ static int fastrpc_map_create(struct fastrpc_user *fl, int fd,
+ 			      u64 len, struct fastrpc_map **ppmap)
  {
-@@ -95,11 +719,26 @@ static int fastrpc_device_release(struct inode *inode, struct file *file)
- {
- 	struct fastrpc_user *fl = (struct fastrpc_user *)file->private_data;
- 	struct fastrpc_channel_ctx *cctx = fl->cctx;
-+	struct fastrpc_invoke_ctx *ctx, *n;
-+	struct fastrpc_map *map, *m;
- 
- 	spin_lock(&cctx->lock);
- 	list_del(&fl->user);
- 	spin_unlock(&cctx->lock);
- 
-+	if (fl->init_mem)
-+		fastrpc_buf_free(fl->init_mem);
-+
-+	list_for_each_entry_safe(ctx, n, &fl->pending, node) {
-+		list_del(&ctx->node);
-+		fastrpc_context_put(ctx);
-+	}
-+
-+	list_for_each_entry_safe(map, m, &fl->maps, node) {
-+		list_del(&map->node);
-+		fastrpc_map_put(map);
-+	}
-+
- 	fastrpc_session_free(cctx, fl->sctx);
- 
- 	mutex_destroy(&fl->mutex);
-@@ -134,9 +773,60 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
+@@ -906,6 +1024,66 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
  	return 0;
  }
  
-+static int fastrpc_invoke(struct fastrpc_user *fl, char __user *argp)
++static int fastrpc_dmabuf_free(struct fastrpc_user *fl, char __user *argp)
 +{
-+	struct fastrpc_invoke_args *args = NULL;
-+	struct fastrpc_invoke inv;
-+	u32 nscalars;
-+	int err;
++	struct dma_buf *buf;
++	int info;
 +
-+	if (copy_from_user(&inv, argp, sizeof(inv)))
++	if (copy_from_user(&info, argp, sizeof(info)))
 +		return -EFAULT;
 +
-+	/* nscalars is truncated here to max supported value */
-+	nscalars = REMOTE_SCALARS_LENGTH(inv.sc);
-+	if (nscalars) {
-+		args = kcalloc(nscalars, sizeof(*args), GFP_KERNEL);
-+		if (!args)
-+			return -ENOMEM;
++	buf = dma_buf_get(info);
++	if (IS_ERR_OR_NULL(buf))
++		return -EINVAL;
++	/*
++	 * one for the last get and other for the ALLOC_DMA_BUFF ioctl
++	 */
++	dma_buf_put(buf);
++	dma_buf_put(buf);
 +
-+		if (copy_from_user(args, (void __user *)(uintptr_t)inv.args,
-+				   nscalars * sizeof(*args))) {
-+			kfree(args);
-+			return -EFAULT;
-+		}
-+	}
-+
-+	err = fastrpc_internal_invoke(fl, false, inv.handle, inv.sc, args);
-+	kfree(args);
-+
-+	return err;
++	return 0;
 +}
 +
-+static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
-+				 unsigned long arg)
++static int fastrpc_dmabuf_alloc(struct fastrpc_user *fl, char __user *argp)
 +{
-+	struct fastrpc_user *fl = (struct fastrpc_user *)file->private_data;
-+	char __user *argp = (char __user *)arg;
++	struct fastrpc_alloc_dma_buf bp;
++	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
++	struct fastrpc_buf *buf = NULL;
 +	int err;
 +
-+	switch (cmd) {
-+	case FASTRPC_IOCTL_INVOKE:
-+		err = fastrpc_invoke(fl, argp);
-+		break;
-+	default:
-+		err = -ENOTTY;
-+		break;
++	if (copy_from_user(&bp, argp, sizeof(bp)))
++		return -EFAULT;
++
++	err = fastrpc_buf_alloc(fl, fl->sctx->dev, bp.size, &buf);
++	if (err)
++		return err;
++	exp_info.ops = &fastrpc_dma_buf_ops;
++	exp_info.size = bp.size;
++	exp_info.flags = O_RDWR;
++	exp_info.priv = buf;
++	buf->dmabuf = dma_buf_export(&exp_info);
++	if (IS_ERR(buf->dmabuf)) {
++		err = PTR_ERR(buf->dmabuf);
++		fastrpc_buf_free(buf);
++		return err;
 +	}
 +
-+	return err;
++	bp.fd = dma_buf_fd(buf->dmabuf, O_ACCMODE);
++	if (bp.fd < 0) {
++		dma_buf_put(buf->dmabuf);
++		return -EINVAL;
++	}
++
++	if (copy_to_user(argp, &bp, sizeof(bp))) {
++		dma_buf_put(buf->dmabuf);
++		return -EFAULT;
++	}
++
++	get_dma_buf(buf->dmabuf);
++
++	return 0;
 +}
 +
- static const struct file_operations fastrpc_fops = {
- 	.open = fastrpc_device_open,
- 	.release = fastrpc_device_release,
-+	.unlocked_ioctl = fastrpc_device_ioctl,
-+	.compat_ioctl = fastrpc_device_ioctl,
+ static int fastrpc_init_attach(struct fastrpc_user *fl)
+ {
+ 	struct fastrpc_invoke_args args[1];
+@@ -970,6 +1148,12 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
+ 	case FASTRPC_IOCTL_INIT_CREATE:
+ 		err = fastrpc_init_create_process(fl, argp);
+ 		break;
++	case FASTRPC_IOCTL_FREE_DMA_BUFF:
++		err = fastrpc_dmabuf_free(fl, argp);
++		break;
++	case FASTRPC_IOCTL_ALLOC_DMA_BUFF:
++		err = fastrpc_dmabuf_alloc(fl, argp);
++		break;
+ 	default:
+ 		err = -ENOTTY;
+ 		break;
+diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
+index 32d191c3b7bc..6d701af9fc42 100644
+--- a/include/uapi/misc/fastrpc.h
++++ b/include/uapi/misc/fastrpc.h
+@@ -5,6 +5,8 @@
+ 
+ #include <linux/types.h>
+ 
++#define FASTRPC_IOCTL_ALLOC_DMA_BUFF	_IOWR('R', 1, struct fastrpc_alloc_dma_buf)
++#define FASTRPC_IOCTL_FREE_DMA_BUFF	_IOWR('R', 2, __u32)
+ #define FASTRPC_IOCTL_INVOKE		_IOWR('R', 3, struct fastrpc_invoke)
+ #define FASTRPC_IOCTL_INIT_ATTACH	_IO('R', 4)
+ #define FASTRPC_IOCTL_INIT_CREATE	_IOWR('R', 5, struct fastrpc_init_create)
+@@ -30,4 +32,10 @@ struct fastrpc_init_create {
+ 	__u64 file;	/* pointer to elf file */
  };
  
- static int fastrpc_cb_probe(struct platform_device *pdev)
-@@ -260,9 +950,25 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
- 	return of_platform_populate(rdev->of_node, NULL, NULL, rdev);
- }
- 
-+static void fastrpc_notify_users(struct fastrpc_user *user)
-+{
-+	struct fastrpc_invoke_ctx *ctx;
-+
-+	spin_lock(&user->lock);
-+	list_for_each_entry(ctx, &user->pending, node)
-+		complete(&ctx->work);
-+	spin_unlock(&user->lock);
-+}
-+
- static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
- {
- 	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(&rpdev->dev);
-+	struct fastrpc_user *user;
-+
-+	spin_lock(&cctx->lock);
-+	list_for_each_entry(user, &cctx->users, user)
-+		fastrpc_notify_users(user);
-+	spin_unlock(&cctx->lock);
- 
- 	misc_deregister(&cctx->miscdev);
- 	of_platform_depopulate(&rpdev->dev);
-@@ -272,6 +978,30 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
- static int fastrpc_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
- 				  int len, void *priv, u32 addr)
- {
-+	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(&rpdev->dev);
-+	struct fastrpc_invoke_rsp *rsp = data;
-+	struct fastrpc_invoke_ctx *ctx;
-+	unsigned long flags;
-+	unsigned long ctxid;
-+
-+	if (len < sizeof(*rsp))
-+		return -EINVAL;
-+
-+	ctxid = ((rsp->ctx & FASTRPC_CTXID_MASK) >> 4);
-+
-+	spin_lock_irqsave(&cctx->lock, flags);
-+	ctx = idr_find(&cctx->ctx_idr, ctxid);
-+	spin_unlock_irqrestore(&cctx->lock, flags);
-+
-+	if (!ctx) {
-+		dev_err(&rpdev->dev, "No context ID matches response\n");
-+		return -ENOENT;
-+	}
-+
-+	ctx->retval = rsp->retval;
-+	complete(&ctx->work);
-+	fastrpc_context_put(ctx);
-+
- 	return 0;
- }
- 
-diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
-new file mode 100644
-index 000000000000..a69ef33dc37e
---- /dev/null
-+++ b/include/uapi/misc/fastrpc.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __QCOM_FASTRPC_H__
-+#define __QCOM_FASTRPC_H__
-+
-+#include <linux/types.h>
-+
-+#define FASTRPC_IOCTL_INVOKE		_IOWR('R', 3, struct fastrpc_invoke)
-+
-+struct fastrpc_invoke_args {
-+	__u64 ptr;
-+	__u64 length;
-+	__s32 fd;
-+	__u32 reserved;
++struct fastrpc_alloc_dma_buf {
++	__s32 fd;	/* fd */
++	__u32 flags;	/* flags to map with */
++	__u64 size;	/* size */
 +};
 +
-+struct fastrpc_invoke {
-+	__u32 handle;
-+	__u32 sc;
-+	__u64 args;
-+};
-+
-+#endif /* __QCOM_FASTRPC_H__ */
+ #endif /* __QCOM_FASTRPC_H__ */
 -- 
 2.20.1
