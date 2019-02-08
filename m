@@ -1,46 +1,54 @@
-Return-Path: <SRS0=1YNY=QL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from icicles.com ([185.53.169.21]:58676 "EHLO homeydesign.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727691AbfBDRx7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Feb 2019 12:53:59 -0500
-Subject: Need to retouch your photos?
-Message-ID: <632eca6741e87c4c9f188fd57039d267@coroflot.com>
-Date: Mon, 04 Feb 2019 12:41:42 +0100
-From: "Stacy" <tuenkaznzsat@verizon.net>
-Reply-To: foshzhian@sina.com
+Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 25/33] ARM: davinci: cp-intc: convert all hex numbers to lowercase
+Date: Fri,  8 Feb 2019 18:31:46 +0100
+Message-Id: <20190208173154.4665-26-brgl@bgdev.pl>
+In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
+References: <20190208173154.4665-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Need to retouch your photos?  Deep etching or masking for your photos?
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We are the studio who can do those service for your photos.
+Use lowercase letters in hexadecimal numbers in the cp-intc driver as
+is done in most of the kernel code base.
 
-Please send photos to start
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: David Lechner <david@lechnology.com>
+---
+ arch/arm/mach-davinci/cp_intc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
-Stacy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Neudwied
-
-
-Leddmgo
+diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
+index bf77b6950273..dcd43b067a6a 100644
+--- a/arch/arm/mach-davinci/cp_intc.c
++++ b/arch/arm/mach-davinci/cp_intc.c
+@@ -23,19 +23,19 @@
+ #include <mach/common.h>
+ 
+ #define DAVINCI_CP_INTC_CTRL			0x04
+-#define DAVINCI_CP_INTC_HOST_CTRL		0x0C
++#define DAVINCI_CP_INTC_HOST_CTRL		0x0c
+ #define DAVINCI_CP_INTC_GLOBAL_ENABLE		0x10
+ #define DAVINCI_CP_INTC_SYS_STAT_IDX_CLR	0x24
+ #define DAVINCI_CP_INTC_SYS_ENABLE_IDX_SET	0x28
+-#define DAVINCI_CP_INTC_SYS_ENABLE_IDX_CLR	0x2C
++#define DAVINCI_CP_INTC_SYS_ENABLE_IDX_CLR	0x2c
+ #define DAVINCI_CP_INTC_HOST_ENABLE_IDX_SET	0x34
+ #define DAVINCI_CP_INTC_HOST_ENABLE_IDX_CLR	0x38
+ #define DAVINCI_CP_INTC_PRIO_IDX		0x80
+ #define DAVINCI_CP_INTC_SYS_STAT_CLR(n)		(0x0280 + (n << 2))
+ #define DAVINCI_CP_INTC_SYS_ENABLE_CLR(n)	(0x0380 + (n << 2))
+ #define DAVINCI_CP_INTC_CHAN_MAP(n)		(0x0400 + (n << 2))
+-#define DAVINCI_CP_INTC_SYS_POLARITY(n)		(0x0D00 + (n << 2))
+-#define DAVINCI_CP_INTC_SYS_TYPE(n)		(0x0D80 + (n << 2))
++#define DAVINCI_CP_INTC_SYS_POLARITY(n)		(0x0d00 + (n << 2))
++#define DAVINCI_CP_INTC_SYS_TYPE(n)		(0x0d80 + (n << 2))
+ #define DAVINCI_CP_INTC_HOST_ENABLE(n)		(0x1500 + (n << 2))
+ #define DAVINCI_CP_INTC_PRI_INDX_MASK		GENMASK(9, 0)
+ #define DAVINCI_CP_INTC_GPIR_NONE		BIT(31)
+-- 
+2.20.1
