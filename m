@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 15/33] ARM: davinci: aintc: use the new irqchip config structure in dm* SoCs
-Date: Fri,  8 Feb 2019 18:34:40 +0100
-Message-ID: <20190208173458.4801-16-brgl@bgdev.pl>
+Subject: [PATCH v2 14/33] irqchip: davinci-aintc: add a new config structure
+Date: Fri,  8 Feb 2019 18:34:39 +0100
+Message-ID: <20190208173458.4801-15-brgl@bgdev.pl>
 References: <20190208173458.4801-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,132 +14,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add the new-style config structures for dm* SoCs. They will be used
-once we make the aintc driver stop using davinci_soc_info.
+Add a config structure that will be used by aintc-based platforms.
+It contains the register range resource, number of interrupts and
+a list of priorities.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/dm355.c  | 11 +++++++++++
- arch/arm/mach-davinci/dm365.c  | 11 +++++++++++
- arch/arm/mach-davinci/dm644x.c | 11 +++++++++++
- arch/arm/mach-davinci/dm646x.c | 11 +++++++++++
- 4 files changed, 44 insertions(+)
+ include/linux/irqchip/irq-davinci-aintc.h | 25 +++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 include/linux/irqchip/irq-davinci-aintc.h
 
-diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
-index e2b680e9944b..ff79c1a17fae 100644
---- a/arch/arm/mach-davinci/dm355.c
-+++ b/arch/arm/mach-davinci/dm355.c
-@@ -15,6 +15,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/init.h>
-+#include <linux/irqchip/irq-davinci-aintc.h>
- #include <linux/platform_data/edma.h>
- #include <linux/platform_data/gpio-davinci.h>
- #include <linux/platform_data/spi-davinci.h>
-@@ -792,6 +793,16 @@ int __init dm355_init_video(struct vpfe_config *vpfe_cfg,
- 	return 0;
- }
- 
-+static const struct davinci_aintc_config dm355_aintc_config = {
-+	.reg = {
-+		.start		= DAVINCI_ARM_INTC_BASE,
-+		.end		= DAVINCI_ARM_INTC_BASE + SZ_4K - 1,
-+		.flags		= IORESOURCE_MEM,
-+	},
-+	.num_irqs		= 64,
-+	.prios			= dm355_default_priorities,
+diff --git a/include/linux/irqchip/irq-davinci-aintc.h b/include/linux/irqchip/irq-davinci-aintc.h
+new file mode 100644
+index 000000000000..2b2ace3c1b22
+--- /dev/null
++++ b/include/linux/irqchip/irq-davinci-aintc.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Copyright (C) 2019 Texas Instruments
++ */
++
++#ifndef _LINUX_IRQ_DAVINCI_AINTC_
++#define _LINUX_IRQ_DAVINCI_AINTC_
++
++#include <linux/ioport.h>
++
++/**
++ * struct davinci_aintc_config - configuration data for davinci-aintc driver.
++ *
++ * @reg: register range to map
++ * @num_irqs: number of HW interrupts supported by the controller
++ * @prios: an array of size num_irqs containing priority settings for
++ *         each interrupt
++ */
++struct davinci_aintc_config {
++	struct resource reg;
++	unsigned int num_irqs;
++	u8 *prios;
 +};
 +
- void __init dm355_init_irq(void)
- {
- 	davinci_aintc_init();
-diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
-index 76507dcbcb3a..44dc3ca94dd3 100644
---- a/arch/arm/mach-davinci/dm365.c
-+++ b/arch/arm/mach-davinci/dm365.c
-@@ -19,6 +19,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/init.h>
-+#include <linux/irqchip/irq-davinci-aintc.h>
- #include <linux/platform_data/edma.h>
- #include <linux/platform_data/gpio-davinci.h>
- #include <linux/platform_data/keyscan-davinci.h>
-@@ -1051,6 +1052,16 @@ int __init dm365_init_video(struct vpfe_config *vpfe_cfg,
- 	return 0;
- }
- 
-+static const struct davinci_aintc_config dm365_aintc_config = {
-+	.reg = {
-+		.start		= DAVINCI_ARM_INTC_BASE,
-+		.end		= DAVINCI_ARM_INTC_BASE + SZ_4K - 1,
-+		.flags		= IORESOURCE_MEM,
-+	},
-+	.num_irqs		= 64,
-+	.prios			= dm365_default_priorities,
-+};
-+
- void __init dm365_init_irq(void)
- {
- 	davinci_aintc_init();
-diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
-index 27c73bc54069..0b0ecac36486 100644
---- a/arch/arm/mach-davinci/dm644x.c
-+++ b/arch/arm/mach-davinci/dm644x.c
-@@ -14,6 +14,7 @@
- #include <linux/clkdev.h>
- #include <linux/dmaengine.h>
- #include <linux/init.h>
-+#include <linux/irqchip/irq-davinci-aintc.h>
- #include <linux/platform_data/edma.h>
- #include <linux/platform_data/gpio-davinci.h>
- #include <linux/platform_device.h>
-@@ -728,6 +729,16 @@ int __init dm644x_init_video(struct vpfe_config *vpfe_cfg,
- 	return 0;
- }
- 
-+static const struct davinci_aintc_config dm644x_aintc_config = {
-+	.reg = {
-+		.start		= DAVINCI_ARM_INTC_BASE,
-+		.end		= DAVINCI_ARM_INTC_BASE + SZ_4K - 1,
-+		.flags		= IORESOURCE_MEM,
-+	},
-+	.num_irqs		= 64,
-+	.prios			= dm644x_default_priorities,
-+};
-+
- void __init dm644x_init_irq(void)
- {
- 	davinci_aintc_init();
-diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
-index 98fc5e3815b9..4e871d00e4e9 100644
---- a/arch/arm/mach-davinci/dm646x.c
-+++ b/arch/arm/mach-davinci/dm646x.c
-@@ -15,6 +15,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/init.h>
-+#include <linux/irqchip/irq-davinci-aintc.h>
- #include <linux/platform_data/edma.h>
- #include <linux/platform_data/gpio-davinci.h>
- #include <linux/platform_device.h>
-@@ -689,6 +690,16 @@ void __init dm646x_register_clocks(void)
- 	platform_device_register(&dm646x_pll2_device);
- }
- 
-+static const struct davinci_aintc_config dm646x_aintc_config = {
-+	.reg = {
-+		.start		= DAVINCI_ARM_INTC_BASE,
-+		.end		= DAVINCI_ARM_INTC_BASE + SZ_4K - 1,
-+		.flags		= IORESOURCE_MEM,
-+	},
-+	.num_irqs		= 64,
-+	.prios			= dm646x_default_priorities,
-+};
-+
- void __init dm646x_init_irq(void)
- {
- 	davinci_aintc_init();
++#endif /* _LINUX_IRQ_DAVINCI_AINTC_ */
 -- 
 2.20.1
