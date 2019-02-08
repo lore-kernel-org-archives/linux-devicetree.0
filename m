@@ -1,123 +1,61 @@
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH 2/2] drivers: xhci: Add quirk to reset xHCI port PHY
-Date: Fri, 8 Feb 2019 14:35:02 +0200
-Message-ID: <d176e6bf-10b8-374c-1739-47bc98d12f09@linux.intel.com>
-References: <1549347534-11320-1-git-send-email-srinath.mannam@broadcom.com>
- <1549347534-11320-3-git-send-email-srinath.mannam@broadcom.com>
- <6392f206-9db2-5506-9e5d-cdf2b784d32e@linux.intel.com>
- <CABe79T4wLea8hBML4Xejv3YH3eAFfXqgnB8+udr-Xo_ZdTn0xA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Sugaya Taichi <sugaya.taichi@socionext.com>
+Subject: [PATCH v2 11/15] dt-bindings: pinctrl: milbeaut: Add Milbeaut M10V pinctrl description
+Date: Fri,  8 Feb 2019 21:33:07 +0900
+Message-ID: <1549629187-3177-1-git-send-email-sugaya.taichi@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABe79T4wLea8hBML4Xejv3YH3eAFfXqgnB8+udr-Xo_ZdTn0xA@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinath Mannam <srinath.mannam@broadcom.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07.02.2019 17:17, Srinath Mannam wrote:
-> Hi Mathias,
-> 
-> Thanks for review, please see my comments below inline.
-> 
-> On Thu, Feb 7, 2019 at 8:32 PM Mathias Nyman
-> <mathias.nyman@linux.intel.com> wrote:
->>
->> On 05.02.2019 08:18, Srinath Mannam wrote:
->>> Add a quirk to reset xHCI port PHY on port disconnect event.
->>> Stingray USB HS PHY has an issue, that USB High Speed device detected
->>> at Full Speed after the same port has connected to Full speed device.
->>> This problem can be resolved with that port PHY reset on disconnect.
->>>
->>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
->>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->>> ---
->>>    drivers/usb/core/hcd.c       |  6 ++++++
->>>    drivers/usb/core/phy.c       | 21 +++++++++++++++++++++
->>>    drivers/usb/core/phy.h       |  1 +
->>>    drivers/usb/host/xhci-plat.c |  3 +++
->>>    drivers/usb/host/xhci-ring.c |  9 ++++++---
->>>    drivers/usb/host/xhci.h      |  1 +
->>>    include/linux/usb/hcd.h      |  1 +
->>>    7 files changed, 39 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
->>> index 015b126..e2b87a6 100644
->>> --- a/drivers/usb/core/hcd.c
->>> +++ b/drivers/usb/core/hcd.c
->>> @@ -2663,6 +2663,12 @@ int usb_hcd_find_raw_port_number(struct usb_hcd *hcd, int port1)
->>>        return hcd->driver->find_raw_port_number(hcd, port1);
->>>    }
->>>
->>> +int usb_hcd_phy_port_reset(struct usb_hcd *hcd, int port)
->>> +{
->>> +     return usb_phy_roothub_port_reset(hcd->phy_roothub, port);
->>> +}
->>> +EXPORT_SYMBOL_GPL(usb_hcd_phy_port_reset);
->>> +
->>>    static int usb_hcd_request_irqs(struct usb_hcd *hcd,
->>>                unsigned int irqnum, unsigned long irqflags)
->>>    {
->>> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
->>> index 38b2c77..c64767d 100644
->>> --- a/drivers/usb/core/phy.c
->>> +++ b/drivers/usb/core/phy.c
->>> @@ -162,6 +162,27 @@ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub)
->>>    }
->>>    EXPORT_SYMBOL_GPL(usb_phy_roothub_power_off);
->>>
->>> +int usb_phy_roothub_port_reset(struct usb_phy_roothub *phy_roothub, int port)
->>> +{
->>> +     struct usb_phy_roothub *roothub_entry;
->>> +     struct list_head *head;
->>> +     int i = 0;
->>> +
->>> +     if (!phy_roothub)
->>> +             return -EINVAL;
->>> +
->>> +     head = &phy_roothub->list;
->>> +
->>> +     list_for_each_entry(roothub_entry, head, list) {
->>> +             if (i == port)
->>> +                     return phy_reset(roothub_entry->phy);
->>> +             i++;
->>> +     }
->>
->> I'm not that familiar with SoC's that have several PHYs per controller,
->> but this looks odd.
->>
->> For the above code to work wouldn't it require that each port has their own PHY,
->> and the PHYs are added to the list of usb_phy_roothub is in the same order as usb ports?
->>
->> Or is there something I don't understand here?
->>
-> In our SOC (Stingray), xHCI controller has three ports and each port
-> connected to separate PHY.
-> Stingray xHCI controller supports both SS and HS ports and connected
-> separate PHYs.
-> We passed PHY phandlers in xHCI DT node in the order of port numbers.
-> as shown below xHCI DT node.
-> So that all PHYs added to usb_phy_roothub are in order of port numbers.
->   xhci1: usb@11000 {
->                          compatible = "generic-xhci";
->                          reg = <0x00011000 0x1000>;
->                          interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
->                          phys = <&usb1_phy1>, <&usbphy2>, <&usb1_phy0>;
->                          phy-names = "phy0", "phy1", "phy2";
->                          dma-coherent;
->                          status = "disabled";
-> };
-> But we have issue with HS PHYs, so that those PHYs are required to reset.
+Add DT bindings document for Milbeaut M10V pinctrl.
 
-This is very specific to your SOC.
-A quick grep shows most xhci controllers have one or two PHYs in total.
+Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+---
+ .../pinctrl/socionext,milbeaut-pinctrl.txt         | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
 
-The suggested usb_phy_roothub_port_reset() above will only work for your SOC.
-I think it would be better to have a stingray specific quirk/workaround where you
-can find the right PHY to reset based on somthing like port number and PHY name.
-
-For a generic solution we would need a better way to map usb ports to the PHY it uses.
-
--Mathias
+diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
+new file mode 100644
+index 0000000..6b54191
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
+@@ -0,0 +1,35 @@
++Milbeaut SoCs pin controller
++
++Required properties:
++- compatible: should be one of the following:
++    "socionext,milbeaut-m10v-pinctrl"  - for m10v SoC
++- reg: offset and length of the register set.
++- reg-names: should be "pinctrl", "exiu".
++- gpio-controller: marks the device node as a gpio controller.
++- gpio-cells: should be 2.
++- interrupt-controller: marks the device node as a interrupt controller.
++- interrupt-cells: should be 2.
++- clocks: phandle to the input clock.
++- interrupts: three interrupts specifer.
++- interrupt-names: corresponds "interrupts" factor.
++
++Example:
++	pinctrl: pinctrl@1d022000 {
++		compatible = "socionext,milbeaut-m10v-pinctrl";
++		reg = <0x1d022000 0x1000>,
++			<0x1c26f000 0x1000>;
++		reg-names = "pinctrl", "exiu";
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		clocks = <&clk 2>;
++		interrupts = <0 54 4>, <0 55 4>, <0 56 4>, <0 57 4>,
++				<0 58 4>, <0 59 4>, <0 60 4>, <0 61 4>,
++				<0 62 4>, <0 63 4>, <0 64 4>, <0 65 4>,
++				<0 66 4>, <0 67 4>, <0 68 4>, <0 69 4>;
++		interrupt-names = "pin-48", "pin-49", "pin-50", "pin-51",
++				"pin-52", "pin-53", "pin-54", "pin-55",
++				"pin-56", "pin-57", "pin-58", "pin-59",
++				"pin-60", "pin-61", "pin-62", "pin-63";
++	}
+-- 
+1.9.1
