@@ -1,27 +1,80 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] ARM: dts: add description of Netgear RN NV+v2 LCD
-Date: Fri, 8 Feb 2019 14:56:50 +0100
-Message-ID: <20190208135650.GD26594@lunn.ch>
-References: <20190208045305.8759-1-coles.david@gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 4/5] misc: fastrpc: Add support for create remote init
+ process
+Date: Fri, 8 Feb 2019 14:56:56 +0100
+Message-ID: <20190208135656.GB23406@kroah.com>
+References: <20190208132306.12571-1-srinivas.kandagatla@linaro.org>
+ <20190208132306.12571-5-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190208045305.8759-1-coles.david@gmail.com>
+In-Reply-To: <20190208132306.12571-5-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Coles <coles.david@gmail.com>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: arnd@arndb.de, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 07, 2019 at 08:53:05PM -0800, David Coles wrote:
-> GPIO pin mapping taken from NetGear NV+ v2 5.3.13 kernel sources[1]
-> (see arch/arm/plat-feroceon/mv_hal/rtc/ext_rtc/usiLCD.c).
+On Fri, Feb 08, 2019 at 01:23:05PM +0000, Srinivas Kandagatla wrote:
+> +static int fastrpc_init_create_process(struct fastrpc_user *fl,
+> +					char __user *argp)
+> +{
+> +	struct fastrpc_init_create init;
+> +	struct fastrpc_invoke_args args[6];
 
-Kirkwood! It has been a while since we had a kirkwood patch. Some NAS
-boxes seem to never die. Nice to see somebody still hacking on them.
+All on the stack?  Ok, but:
 
-> Signed-off-by: David Coles <coles.david@gmail.com>
+> +	struct fastrpc_phy_page pages[1];
+> +	struct fastrpc_map *map = NULL;
+> +	struct fastrpc_buf *imem = NULL;
+> +	int memlen;
+> +	int err;
+> +	struct {
+> +		int pgid;
+> +		u32 namelen;
+> +		u32 filelen;
+> +		u32 pageslen;
+> +		u32 attrs;
+> +		u32 siglen;
+> +	} inbuf;
+> +	u32 sc;
+> +
+> +	if (copy_from_user(&init, argp, sizeof(init)))
+> +		return -EFAULT;
+> +
+> +	if (init.filelen > INIT_FILELEN_MAX)
+> +		return -EINVAL;
+> +
+> +	inbuf.pgid = fl->tgid;
+> +	inbuf.namelen = strlen(current->comm) + 1;
+> +	inbuf.filelen = init.filelen;
+> +	inbuf.pageslen = 1;
+> +	inbuf.attrs = init.attrs;
+> +	inbuf.siglen = init.siglen;
+> +	fl->pd = 1;
+> +
+> +	if (init.filelen && init.filefd) {
+> +		err = fastrpc_map_create(fl, init.filefd, init.filelen, &map);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	memlen = ALIGN(max(INIT_FILELEN_MAX, (int)init.filelen * 4),
+> +		       1024 * 1024);
+> +	err = fastrpc_buf_alloc(fl, fl->sctx->dev, memlen,
+> +				&imem);
+> +	if (err) {
+> +		fastrpc_map_put(map);
+> +		return err;
+> +	}
+> +
+> +	fl->init_mem = imem;
+> +	args[0].ptr = (u64)(uintptr_t)&inbuf;
+> +	args[0].length = sizeof(inbuf);
+> +	args[0].fd = -1;
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+You never clear the reserved field :(
 
-    Andrew
+thanks,
+
+greg k-h
