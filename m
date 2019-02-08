@@ -1,61 +1,52 @@
-From: Sugaya Taichi <sugaya.taichi@socionext.com>
-Subject: [PATCH v2 11/15] dt-bindings: pinctrl: milbeaut: Add Milbeaut M10V pinctrl description
-Date: Fri,  8 Feb 2019 21:33:07 +0900
-Message-ID: <1549629187-3177-1-git-send-email-sugaya.taichi@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 08/12] ARM: davinci: dm355: switch to using the
+ clocksource driver
+Date: Fri, 8 Feb 2019 18:04:43 +0530
+Message-ID: <bb0bc61a-8c2b-affa-c58a-1e7c14f9390d@ti.com>
+References: <20190204171757.32073-1-brgl@bgdev.pl>
+ <20190204171757.32073-9-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190204171757.32073-9-brgl@bgdev.pl>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings document for Milbeaut M10V pinctrl.
+On 04/02/19 10:47 PM, Bartosz Golaszewski wrote:
+> -/*
+> - * T0_BOT: Timer 0, bottom:  clockevent source for hrtimers
+> - * T0_TOP: Timer 0, top   :  clocksource for generic timekeeping
+> - * T1_BOT: Timer 1, bottom:  (used by DSP in TI DSPLink code)
+> - * T1_TOP: Timer 1, top   :  <unused>
 
-Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
----
- .../pinctrl/socionext,milbeaut-pinctrl.txt         | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
+Documenting this timer division is important because DSP usage and
+unused timers are not immediately clear from kernel code alone. Can you
+retain these comments in all patches of this series (I guess T0_BOT etc.
+terminology is changed, so feel free to adjust the comment text).
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
-new file mode 100644
-index 0000000..6b54191
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
-@@ -0,0 +1,35 @@
-+Milbeaut SoCs pin controller
-+
-+Required properties:
-+- compatible: should be one of the following:
-+    "socionext,milbeaut-m10v-pinctrl"  - for m10v SoC
-+- reg: offset and length of the register set.
-+- reg-names: should be "pinctrl", "exiu".
-+- gpio-controller: marks the device node as a gpio controller.
-+- gpio-cells: should be 2.
-+- interrupt-controller: marks the device node as a interrupt controller.
-+- interrupt-cells: should be 2.
-+- clocks: phandle to the input clock.
-+- interrupts: three interrupts specifer.
-+- interrupt-names: corresponds "interrupts" factor.
-+
-+Example:
-+	pinctrl: pinctrl@1d022000 {
-+		compatible = "socionext,milbeaut-m10v-pinctrl";
-+		reg = <0x1d022000 0x1000>,
-+			<0x1c26f000 0x1000>;
-+		reg-names = "pinctrl", "exiu";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&clk 2>;
-+		interrupts = <0 54 4>, <0 55 4>, <0 56 4>, <0 57 4>,
-+				<0 58 4>, <0 59 4>, <0 60 4>, <0 61 4>,
-+				<0 62 4>, <0 63 4>, <0 64 4>, <0 65 4>,
-+				<0 66 4>, <0 67 4>, <0 68 4>, <0 69 4>;
-+		interrupt-names = "pin-48", "pin-49", "pin-50", "pin-51",
-+				"pin-52", "pin-53", "pin-54", "pin-55",
-+				"pin-56", "pin-57", "pin-58", "pin-59",
-+				"pin-60", "pin-61", "pin-62", "pin-63";
-+	}
--- 
-1.9.1
+> - */
+> -static struct davinci_timer_info dm355_timer_info = {
+> -	.timers		= davinci_timer_instance,
+> -	.clockevent_id	= T0_BOT,
+> -	.clocksource_id	= T0_TOP,
+> +static const struct davinci_timer_cfg dm355_timer_cfg = {
+> +	.reg = {
+> +		.start		= DAVINCI_TIMER0_BASE,
+> +		.end		= DAVINCI_TIMER0_BASE + SZ_4K,
+
+Here and other places too, SZ_4K - 1
+
+Thanks,
+Sekhar
