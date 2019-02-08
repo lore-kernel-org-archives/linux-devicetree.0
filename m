@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v2 01/11] pinctrl: qcom: ssbi-gpio: hardcode IRQ counts
-Date: Thu,  7 Feb 2019 21:16:21 -0500
-Message-ID: <20190208021631.30252-2-masneyb@onstation.org>
+Subject: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq mapping already exists
+Date: Thu,  7 Feb 2019 21:16:25 -0500
+Message-ID: <20190208021631.30252-6-masneyb@onstation.org>
 References: <20190208021631.30252-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190208021631.30252-1-masneyb@onstation.org>
@@ -10,18 +10,24 @@ To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy
 Cc: tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The probing of this driver calls platform_irq_count, which will
-setup all of the IRQs that are configured in device tree. In
-preparation for converting this driver to be a hierarchical IRQ
-chip, hardcode the IRQ count based on the hardware type so that all
-the IRQs are not configured immediately and are configured on an
-as-needed basis later in the boot process. This change will also
-allow for the removal of the interrupts property later in this
-patch series once the hierarchical IRQ chip support is in.
+Check to see if the hwirq is already associated with another virq on
+this IRQ domain. If so, then disassociate it before associating the
+hwirq with the new virq.
 
-This patch also removes the generic qcom,ssbi-gpio OF match since we
-don't know the number of pins. All of the existing upstream bindings
-already include the more-specific binding.
+This is a temporary hack that is needed in order to not break git
+bisect for existing boards. The next patch in this series converts
+ssbi-gpio to be a hierarchical IRQ chip, then there are several patches
+to update all of the device tree files, and finally this patch will be
+reverted within the same patch series.
+
+IRQs for ssbi-gpio are all initially setup without an IRQ hierarchy
+this driver is probed due to the interrupts property in device tree.
+Once ssbi-gpio is converted to be a hierarchical IRQ chip in the next
+patch, existing users of gpio[d]_to_irq() will call pmic_gpio_to_irq(),
+and that will use the new IRQ chip code in ssbi-gpio that sets up the
+IRQ in an IRQ hierarchy. The hwirq is now associated with two Linux
+virqs and interrupts will not work as expected. This patch corrects
+that issue.
 
 This change was tested on an APQ8060 DragonBoard.
 
@@ -29,57 +35,27 @@ Signed-off-by: Brian Masney <masneyb@onstation.org>
 Tested-by: Linus Walleij <linus.walleij@linaro.org>
 ---
 Changes since v1:
-- Added pctrl->dev back that was mistakenly removed
-- Removed npins local variable from _probe(); populate pctrl->npins
-  directly.
+- None
 
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ drivers/mfd/qcom-pm8xxx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-index ded7d765af2e..23641e4d4521 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-@@ -665,12 +665,11 @@ static int pm8xxx_pin_populate(struct pm8xxx_gpio *pctrl,
- }
- 
- static const struct of_device_id pm8xxx_gpio_of_match[] = {
--	{ .compatible = "qcom,pm8018-gpio" },
--	{ .compatible = "qcom,pm8038-gpio" },
--	{ .compatible = "qcom,pm8058-gpio" },
--	{ .compatible = "qcom,pm8917-gpio" },
--	{ .compatible = "qcom,pm8921-gpio" },
--	{ .compatible = "qcom,ssbi-gpio" },
-+	{ .compatible = "qcom,pm8018-gpio", .data = (void *) 6 },
-+	{ .compatible = "qcom,pm8038-gpio", .data = (void *) 12 },
-+	{ .compatible = "qcom,pm8058-gpio", .data = (void *) 44 },
-+	{ .compatible = "qcom,pm8917-gpio", .data = (void *) 38 },
-+	{ .compatible = "qcom,pm8921-gpio", .data = (void *) 44 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, pm8xxx_gpio_of_match);
-@@ -680,20 +679,14 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
- 	struct pm8xxx_pin_data *pin_data;
- 	struct pinctrl_pin_desc *pins;
- 	struct pm8xxx_gpio *pctrl;
--	int ret;
--	int i, npins;
-+	int ret, i;
- 
- 	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
- 	if (!pctrl)
- 		return -ENOMEM;
- 
- 	pctrl->dev = &pdev->dev;
--	npins = platform_irq_count(pdev);
--	if (!npins)
--		return -EINVAL;
--	if (npins < 0)
--		return npins;
--	pctrl->npins = npins;
-+	pctrl->npins = (uintptr_t) device_get_match_data(&pdev->dev);
- 
- 	pctrl->regmap = dev_get_regmap(pdev->dev.parent, NULL);
- 	if (!pctrl->regmap) {
+diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+index 8eb2528793f9..2f99a98ccee5 100644
+--- a/drivers/mfd/qcom-pm8xxx.c
++++ b/drivers/mfd/qcom-pm8xxx.c
+@@ -380,6 +380,12 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip *chip,
+ 				  struct irq_domain *domain, unsigned int irq,
+ 				  irq_hw_number_t hwirq, unsigned int type)
+ {
++	unsigned int old_virq;
++
++	old_virq = irq_find_mapping(domain, hwirq);
++	if (old_virq)
++		irq_domain_disassociate(domain, old_virq);
++
+ 	irq_domain_set_info(domain, irq, hwirq, chip->pm_irq_data->irq_chip,
+ 			    chip, handle_level_irq, NULL, NULL);
+ 	irq_set_noprobe(irq);
 -- 
 2.17.2
