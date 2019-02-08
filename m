@@ -1,94 +1,122 @@
-From: Harald Geyer <harald@ccbib.org>
-Subject: [PATCHv3] arm64: dts: allwinner: a64: teres-i: enable backlight
-Date: Fri,  8 Feb 2019 14:16:29 +0000
-Message-ID: <20190208141629.14323-1-harald@ccbib.org>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH 4/7] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+Date: Fri, 8 Feb 2019 15:17:38 +0100
+Message-ID: <20190208141738.GC773@centauri.lan>
+References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
+ <20190125234509.26419-5-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Harald Geyer <harald@ccbib.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190125234509.26419-5-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable pwm and add a pretty standard backlight node.
+On Fri, Jan 25, 2019 at 03:45:06PM -0800, Bjorn Andersson wrote:
+> Before introducing the QCS404 platform, which uses the same PCIe
+> controller as IPQ4019, migrate this to use the bulk clock API, in order
+> to make the error paths slighly cleaner.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 48 +++++++-------------------
+>  1 file changed, 13 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index a7f703556790..9d366fad2b7f 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -113,9 +113,8 @@ struct qcom_pcie_resources_2_3_2 {
+>  };
+>  
+>  struct qcom_pcie_resources_2_4_0 {
+> -	struct clk *aux_clk;
+> -	struct clk *master_clk;
+> -	struct clk *slave_clk;
+> +	struct clk_bulk_data clks[3];
+> +	int num_clks;
+>  	struct reset_control *axi_m_reset;
+>  	struct reset_control *axi_s_reset;
+>  	struct reset_control *pipe_reset;
+> @@ -638,18 +637,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+> +	int ret;
+>  
+> -	res->aux_clk = devm_clk_get(dev, "aux");
+> -	if (IS_ERR(res->aux_clk))
+> -		return PTR_ERR(res->aux_clk);
+> +	res->clks[0].id = "aux";
+> +	res->clks[1].id = "master_bus";
+> +	res->clks[2].id = "slave_bus";
+>  
+> -	res->master_clk = devm_clk_get(dev, "master_bus");
+> -	if (IS_ERR(res->master_clk))
+> -		return PTR_ERR(res->master_clk);
+> +	res->num_clks = 3;
+>  
+> -	res->slave_clk = devm_clk_get(dev, "slave_bus");
+> -	if (IS_ERR(res->slave_clk))
+> -		return PTR_ERR(res->slave_clk);
+> +	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
+>  	if (IS_ERR(res->axi_m_reset))
+> @@ -719,9 +717,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
+>  	reset_control_assert(res->axi_m_sticky_reset);
+>  	reset_control_assert(res->pwr_reset);
+>  	reset_control_assert(res->ahb_reset);
+> -	clk_disable_unprepare(res->aux_clk);
+> -	clk_disable_unprepare(res->master_clk);
+> -	clk_disable_unprepare(res->slave_clk);
+> +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+>  }
+>  
+>  static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> @@ -850,23 +846,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>  
+>  	usleep_range(10000, 12000);
+>  
+> -	ret = clk_prepare_enable(res->aux_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable iface clock\n");
+> +	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+> +	if (ret)
+>  		goto err_clk_aux;
+> -	}
+> -
+> -	ret = clk_prepare_enable(res->master_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable core clock\n");
+> -		goto err_clk_axi_m;
+> -	}
+> -
+> -	ret = clk_prepare_enable(res->slave_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable phy clock\n");
+> -		goto err_clk_axi_s;
+> -	}
+>  
+>  	/* enable PCIe clocks and resets */
+>  	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> @@ -891,10 +873,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>  
+>  	return 0;
+>  
+> -err_clk_axi_s:
+> -	clk_disable_unprepare(res->master_clk);
+> -err_clk_axi_m:
+> -	clk_disable_unprepare(res->aux_clk);
+>  err_clk_aux:
+>  	reset_control_assert(res->ahb_reset);
+>  err_rst_ahb:
+> -- 
+> 2.18.0
+> 
 
-The regulator is always on, but we include it anyway, because it is
-required by the binding document.
-
-Signed-off-by: Harald Geyer <harald@ccbib.org>
----
-The backlight node got dropped from the initial submission of the
-teres-i DT, because PWM support wasn't available in time, and I
-kind of forgot to resubmit once PWM was in. Sorry about that.
-
-While testing this patch I noticed, that sometimes on boot the
-brightness is set to max_brightness instead of the default specified
-in DT. I couldn't reproduce it reliably, but it seems to be related
-to changing the pwm period. I guess the logic trying to detect
-the brightness set by the boot loader gets confused in some corner
-case if the pwm periods don't match. However unbinding and rebinding
-the device to the driver always made it go to the proper default
-brightness, so the problem is clearly not in the DT.
-
-If the theory above is true, then it implies that the version of
-u-boot running on my laptop doesn't completely overwrite all pwm
-parameters. As this might be specific to my installation, I didn't
-mention the issue in the commit message.
-
-Changes since v2:
- * Drop all the other stuff that got merged a year ago.
- * Rebased on current sunxi/for-next branch
- * Add power-supply property (just to conform to the binding)
- * Use slightly different brightness-levels
-
-Actually I tried omitting brightness-levels completely, as it is now
-optional. However automatic calculation gives unreasonable results
-(depending on the exact value of pwm period). A report has been sent
-to the author of the code.
-
-
- .../arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index 7b7b14ba58e6..2a78932d5d3b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -21,6 +21,15 @@
- 		serial0 = &uart0;
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 0>;
-+		power-supply = <&reg_dcdc1>;
-+		brightness-levels = <0 5 10 15 20 30 40 55 70 85 100>;
-+		default-brightness-level = <4>;
-+		enable-gpios = <&pio 3 23 GPIO_ACTIVE_HIGH>; /* PD23 */
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 
-@@ -131,6 +140,10 @@
- 	status = "okay";
- };
- 
-+&pwm {
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
--- 
-2.20.1
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
