@@ -1,213 +1,239 @@
-Return-Path: <SRS0=xTTO=QL=xilinx.com=navam@kernel.org>
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [PATCH v2 3/3] nvmem: zynqmp: Added zynqmp nvmem firmware driver
-Date: Mon, 4 Feb 2019 05:49:54 +0000
-Message-ID: 
- <BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <20190204070951.6933-1-nava.manne@xilinx.com>
- <20190204070951.6933-4-nava.manne@xilinx.com>
- <67e2af69-10bc-655c-e730-4c02a6375381@linaro.org>
-In-Reply-To: <67e2af69-10bc-655c-e730-4c02a6375381@linaro.org>
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0BYAPR02MB4710namp_"
+Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 26/33] ARM: davinci: cp-intc: use the new-style config structure
+Date: Fri,  8 Feb 2019 18:31:47 +0100
+Message-Id: <20190208173154.4665-27-brgl@bgdev.pl>
+In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
+References: <20190208173154.4665-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-ID: <devicetree@vger.kernel.org>
 
---_000_BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0BYAPR02MB4710namp_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-SGkgU3Jpbml2YXMsDQoNCg0KDQogICAgICAgICAgICAgICBUaGFua3MgZm9yIHByb3ZpZGluZyB0
-aGUgcmV2aWV3IGNvbW1lbnRzLi4NCg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
-Cg0KPiBGcm9tOiBTcmluaXZhcyBLYW5kYWdhdGxhIFttYWlsdG86c3Jpbml2YXMua2FuZGFnYXRs
-YUBsaW5hcm8ub3JnXQ0KDQo+IFNlbnQ6IFN1bmRheSwgRmVicnVhcnkgMywgMjAxOSAzOjA4IFBN
-DQoNCj4gVG86IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT47IHJvYmgrZHRA
-a2VybmVsLm9yZzsNCg0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgTWljaGFsIFNpbWVrIDxtaWNo
-YWxzQHhpbGlueC5jb20+OyBKb2xseSBTaGFoDQoNCj4gPEpPTExZU0B4aWxpbnguY29tPjsgUmFq
-YW4gVmFqYSA8UkFKQU5WQHhpbGlueC5jb20+Ow0KDQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KDQo+IGtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDMvM10gbnZt
-ZW06IHp5bnFtcDogQWRkZWQgenlucW1wIG52bWVtIGZpcm13YXJlDQoNCj4gZHJpdmVyDQoNCj4N
-Cg0KPg0KDQo+DQoNCj4gT24gMDQvMDIvMjAxOSAwNzowOSwgTmF2YSBraXNob3JlIE1hbm5lIHdy
-b3RlOg0KDQo+ID4NCg0KPiA+IC1jb25maWcgU0MyN1hYX0VGVVNFDQoNCj4gPiAtICAgICAgIHRy
-aXN0YXRlICJTcHJlYWR0cnVtIFNDMjdYWCBlRnVzZSBTdXBwb3J0Ig0KDQo+ID4gLSAgICAgICBk
-ZXBlbmRzIG9uIE1GRF9TQzI3WFhfUE1JQyB8fCBDT01QSUxFX1RFU1QNCg0KPiA+IC0gICAgICAg
-ZGVwZW5kcyBvbiBIQVNfSU9NRU0NCg0KPg0KDQo+IFdoeSBhcmUgeW91IHJlbW92aW5nIFNDMjdY
-WF9FRlVTRSBzdXBwb3J0IGhlcmU/DQoNCj4NCg0KPiBJdCBkb2VzIG5vdCBsb29rIHJpZ2h0IQ0K
-DQo+DQoNCg0KDQpUaGFua3MgZm9yIHBvaW50aW5nIGl0Li4uDQoNClllcywgd2Ugc2hvdWxkIG5v
-dCByZW1vdmUgdGhpcyBzdXBwb3J0Lg0KDQpCeSBtaXN0YWtlLCBJIGhhdmUgZG9uZSB0aGlzIGNo
-YW5nZXMuLiB3aWxsIGZpeCBpbiB0aGUgbmV4dCB2ZXJzaW9uLi4uDQoNCg0KDQo+ID4gK2NvbmZp
-ZyBOVk1FTV9aWU5RTVANCg0KPiA+ICsgICAgICBib29sICJYaWxpbnggWllOUU1QIFNvQyBudm1l
-bSBmaXJtd2FyZSBzdXBwb3J0Ig0KDQo+ID4gKyAgICAgIGRlcGVuZHMgb24gQVJDSF9aWU5RTVAN
-Cg0KPiA+ICAgICAgICAgIGhlbHANCg0KPiA+IC0gICAgICAgICBUaGlzIGlzIGEgc2ltcGxlIGRy
-aXZlciB0byBkdW1wIHNwZWNpZmllZCB2YWx1ZXMgb2YgU3ByZWFkdHJ1bQ0KDQo+ID4gLSAgICAg
-ICAgIFNDMjdYWCBQTUlDcyBmcm9tIGVGdXNlLg0KDQo+ID4gKyAgICAgICAgVGhpcyBpcyBhIGRy
-aXZlciB0byBhY2Nlc3MgaGFyZHdhcmUgcmVsYXRlZCBkYXRhIGxpa2UNCg0KPiA+ICsgICAgICAg
-IHNvYyByZXZpc2lvbiwgSURDT0RFLi4uIGV0YyBieSB1c2luZyB0aGUgZmlybXdhcmUNCg0KPiA+
-ICsgICAgICAgIGludGVyZmFjZS4NCg0KPiA+DQoNCj4gPiAtICAgICAgICAgVGhpcyBkcml2ZXIg
-Y2FuIGFsc28gYmUgYnVpbHQgYXMgYSBtb2R1bGUuIElmIHNvLCB0aGUgbW9kdWxlDQoNCj4gPiAt
-ICAgICAgICAgd2lsbCBiZSBjYWxsZWQgbnZtZW0tc2MyN3h4LWVmdXNlLg0KDQo+ID4gKyAgICAg
-ICAgSWYgc3VyZSwgc2F5IHllcy4gSWYgdW5zdXJlLCBzYXkgbm8uDQoNCj4gPg0KDQo+ID4gICBl
-bmRpZg0KDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZtZW0vTWFrZWZpbGUgYi9kcml2ZXJz
-L252bWVtL01ha2VmaWxlIGluZGV4DQoNCj4gPiA0ZThjNjE2MjhmMWEuLjBiM2FiZDdmNWQwMiAx
-MDA2NDQNCg0KPiA+IC0tLSBhL2RyaXZlcnMvbnZtZW0vTWFrZWZpbGUNCg0KPiA+ICsrKyBiL2Ry
-aXZlcnMvbnZtZW0vTWFrZWZpbGUNCg0KPiA+IEBAIC0zOSw1ICszOSw2IEBAIG9iai0kKENPTkZJ
-R19OVk1FTV9TTlZTX0xQR1BSKSAgICArPQ0KDQo+IG52bWVtX3NudnNfbHBncHIubw0KDQo+ID4g
-ICBudm1lbV9zbnZzX2xwZ3ByLXkgICAgICAgICAgICAgICAgICAgICAgICAgICAgOj0gc252c19s
-cGdwci5vDQoNCj4gPiAgIG9iai0kKENPTkZJR19SQVZFX1NQX0VFUFJPTSkgICArPSBudm1lbS1y
-YXZlLXNwLWVlcHJvbS5vDQoNCj4gPiAgIG52bWVtLXJhdmUtc3AtZWVwcm9tLXkgICAgICAgICAg
-ICAgICAgICAgOj0gcmF2ZS1zcC1lZXByb20ubw0KDQo+ID4gLW9iai0kKENPTkZJR19TQzI3WFhf
-RUZVU0UpICAgICAgICAgICArPSBudm1lbS1zYzI3eHgtZWZ1c2Uubw0KDQo+ID4gLW52bWVtLXNj
-Mjd4eC1lZnVzZS15ICAgICAgICAgICAgICAgICAgICAgICAgIDo9IHNjMjd4eC1lZnVzZS5vDQoN
-Cj4NCg0KPiBzYW1lIGhlcmU/DQoNCj4NCg0KDQoNCldpbGwgZml4IGluIHRoZSBuZXh0IHZlcnNp
-b24uLi4NCg0KDQoNClJlZ2FyZHMsDQoNCk5hdmFraXNob3JlLg0K
+Modify the cp-intc driver to take all its configuration from the new
+config structure. Stop referencing davinci_soc_info in any way.
+Move the declaration for davinci_cp_intc_init() to
+irq-davinci-cp-intc.h and make it take the new config structure as
+parameter. Convert all users to the new version.
 
---_000_BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0BYAPR02MB4710namp_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+Also: since the two da8xx SoCs default all irq priorities to 7, just
+drop the priority configuration at all and hardcode the channels to 7.
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
-OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
-cjojMDU2M0MxOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
-Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjoj
-OTU0RjcyOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KcC5Nc29QbGFpblRleHQsIGxp
-Lk1zb1BsYWluVGV4dCwgZGl2Lk1zb1BsYWluVGV4dA0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7
-DQoJbXNvLXN0eWxlLWxpbms6IlBsYWluIFRleHQgQ2hhciI7DQoJbWFyZ2luOjBpbjsNCgltYXJn
-aW4tYm90dG9tOi4wMDAxcHQ7DQoJZm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2Fs
-aWJyaSIsc2Fucy1zZXJpZjt9DQpzcGFuLlBsYWluVGV4dENoYXINCgl7bXNvLXN0eWxlLW5hbWU6
-IlBsYWluIFRleHQgQ2hhciI7DQoJbXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCW1zby1zdHlsZS1s
-aW5rOiJQbGFpbiBUZXh0IjsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQou
-TXNvQ2hwRGVmYXVsdA0KCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsNCglmb250LWZhbWls
-eToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQpAcGFnZSBXb3JkU2VjdGlvbjENCgl7c2l6ZTo4LjVp
-biAxMS4waW47DQoJbWFyZ2luOjEuMGluIDEyOS43NXB0IDEuMGluIDEyOS43cHQ7fQ0KZGl2Lldv
-cmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0eWxlPjwhLS1baWYgZ3Rl
-IG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAy
-NiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hh
-cGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+
-DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+DQo8L2hlYWQ+DQo8Ym9keSBsYW5n
-PSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPg0KPGRpdiBjbGFzcz0iV29y
-ZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPkhpIFNyaW5pdmFzLDxvOnA+PC9v
-OnA+PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8
-cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgVGhhbmtz
-IGZvciBwcm92aWRpbmcgdGhlIHJldmlldyBjb21tZW50cy4uPG86cD48L286cD48L3A+DQo8cCBj
-bGFzcz0iTXNvUGxhaW5UZXh0Ij48YSBuYW1lPSJfTWFpbEVuZENvbXBvc2UiPjxvOnA+Jm5ic3A7
-PC9vOnA+PC9hPjwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS08L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7IEZyb206IFNy
-aW5pdmFzIEthbmRhZ2F0bGEgW21haWx0bzpzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFyby5vcmdd
-PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBTZW50OiBTdW5kYXksIEZlYnJ1YXJ5
-IDMsIDIwMTkgMzowOCBQTTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgVG86IE5h
-dmEga2lzaG9yZSBNYW5uZSAmbHQ7bmF2YW1AeGlsaW54LmNvbSZndDs7IHJvYmgmIzQzO2R0QGtl
-cm5lbC5vcmc7PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBtYXJrLnJ1dGxhbmRA
-YXJtLmNvbTsgTWljaGFsIFNpbWVrICZsdDttaWNoYWxzQHhpbGlueC5jb20mZ3Q7OyBKb2xseSBT
-aGFoPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmbHQ7Sk9MTFlTQHhpbGlueC5j
-b20mZ3Q7OyBSYWphbiBWYWphICZsdDtSQUpBTlZAeGlsaW54LmNvbSZndDs7PC9wPg0KPHAgY2xh
-c3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC08L3A+DQo8cCBjbGFzcz0iTXNv
-UGxhaW5UZXh0Ij4mZ3Q7IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc8L3A+DQo8cCBjbGFzcz0iTXNv
-UGxhaW5UZXh0Ij4mZ3Q7IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMy8zXSBudm1lbTogenlucW1w
-OiBBZGRlZCB6eW5xbXAgbnZtZW0gZmlybXdhcmU8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0
-Ij4mZ3Q7IGRyaXZlcjwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgPC9wPg0KPHAg
-Y2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyA8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4m
-Z3Q7IDwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgT24gMDQvMDIvMjAxOSAwNzow
-OSwgTmF2YSBraXNob3JlIE1hbm5lIHdyb3RlOjwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQi
-PiZndDsgJmd0OzwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyAtY29uZmln
-IFNDMjdYWF9FRlVTRTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyAtJm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHRyaXN0YXRlICZxdW90O1NwcmVhZHRy
-dW0gU0MyN1hYIGVGdXNlIFN1cHBvcnQmcXVvdDs8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0
-Ij4mZ3Q7ICZndDsgLSZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBkZXBlbmRz
-IG9uIE1GRF9TQzI3WFhfUE1JQyB8fCBDT01QSUxFX1RFU1Q8L3A+DQo8cCBjbGFzcz0iTXNvUGxh
-aW5UZXh0Ij4mZ3Q7ICZndDsgLSZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBk
-ZXBlbmRzIG9uIEhBU19JT01FTTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgPC9w
-Pg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBXaHkgYXJlIHlvdSByZW1vdmluZyBTQzI3
-WFhfRUZVU0Ugc3VwcG9ydCBoZXJlPzwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsg
-PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyBJdCBkb2VzIG5vdCBsb29rIHJpZ2h0
-ITwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgPC9wPg0KPHAgY2xhc3M9Ik1zb1Bs
-YWluVGV4dCI+PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNrIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bh
-bj48L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2si
-PlRoYW5rcyBmb3IgcG9pbnRpbmcgaXQuLi48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFz
-cz0iTXNvUGxhaW5UZXh0Ij48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2siPlllcywgd2Ugc2hvdWxk
-IG5vdCByZW1vdmUgdGhpcyBzdXBwb3J0LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNz
-PSJNc29QbGFpblRleHQiPjxzcGFuIHN0eWxlPSJjb2xvcjpibGFjayI+QnkgbWlzdGFrZSwgSSBo
-YXZlIGRvbmUgdGhpcyBjaGFuZ2VzLi4gd2lsbCBmaXggaW4gdGhlIG5leHQgdmVyc2lvbi4uLjxv
-OnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPjxzcGFuIHN0eWxl
-PSJjb2xvcjpibGFjayI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1z
-b1BsYWluVGV4dCI+Jmd0OyAmZ3Q7ICYjNDM7Y29uZmlnIE5WTUVNX1pZTlFNUDwvcD4NCjxwIGNs
-YXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyAmIzQzOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyBib29sICZxdW90O1hpbGlueCBaWU5RTVAgU29DIG52bWVtIGZpcm13YXJlIHN1cHBv
-cnQmcXVvdDs8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDsgJiM0MzsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgZGVwZW5kcyBvbiBBUkNIX1pZTlFNUDwvcD4NCjxw
-IGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyZuYnNwOyZuYnNwOyAmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgaGVscDwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQi
-PiZndDsgJmd0OyAtJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyBU
-aGlzIGlzIGEgc2ltcGxlIGRyaXZlciB0byBkdW1wIHNwZWNpZmllZCB2YWx1ZXMgb2YgU3ByZWFk
-dHJ1bTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyAtJm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyBTQzI3WFggUE1JQ3MgZnJvbSBlRnVzZS48
-L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDsgJiM0MzsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsgJm5ic3A7IFRoaXMgaXMgYSBkcml2ZXIgdG8gYWNjZXNzIGhhcmR3
-YXJlIHJlbGF0ZWQgZGF0YSBsaWtlPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAm
-Z3Q7ICYjNDM7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyBzb2MgcmV2aXNp
-b24sIElEQ09ERS4uLiBldGMgYnkgdXNpbmcgdGhlIGZpcm13YXJlPC9wPg0KPHAgY2xhc3M9Ik1z
-b1BsYWluVGV4dCI+Jmd0OyAmZ3Q7ICYjNDM7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-ICZuYnNwOyBpbnRlcmZhY2UuPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7
-PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7IC0mbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsgJm5ic3A7IFRoaXMgZHJpdmVyIGNhbiBhbHNvIGJlIGJ1aWx0
-IGFzIGEgbW9kdWxlLiBJZiBzbywgdGhlIG1vZHVsZTwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRl
-eHQiPiZndDsgJmd0OyAtJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNw
-OyB3aWxsIGJlIGNhbGxlZCBudm1lbS1zYzI3eHgtZWZ1c2UuPC9wPg0KPHAgY2xhc3M9Ik1zb1Bs
-YWluVGV4dCI+Jmd0OyAmZ3Q7ICYjNDM7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZu
-YnNwOyBJZiBzdXJlLCBzYXkgeWVzLiBJZiB1bnN1cmUsIHNheSBuby48L3A+DQo8cCBjbGFzcz0i
-TXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDs8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7
-ICZndDsmbmJzcDsmbmJzcDsgZW5kaWY8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7
-ICZndDsgZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZtZW0vTWFrZWZpbGUgYi9kcml2ZXJzL252bWVt
-L01ha2VmaWxlIGluZGV4PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7IDRl
-OGM2MTYyOGYxYS4uMGIzYWJkN2Y1ZDAyIDEwMDY0NDwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRl
-eHQiPiZndDsgJmd0OyAtLS0gYS9kcml2ZXJzL252bWVtL01ha2VmaWxlPC9wPg0KPHAgY2xhc3M9
-Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7ICYjNDM7JiM0MzsmIzQzOyBiL2RyaXZlcnMvbnZtZW0v
-TWFrZWZpbGU8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDsgQEAgLTM5LDUg
-JiM0MzszOSw2IEBAIG9iai0kKENPTkZJR19OVk1FTV9TTlZTX0xQR1BSKSZuYnNwOyZuYnNwOyZu
-YnNwOyAmIzQzOz08L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7IG52bWVtX3NudnNf
-bHBncHIubzwvcD4NCjxwIGNsYXNzPSJNc29QbGFpblRleHQiPiZndDsgJmd0OyZuYnNwOyZuYnNw
-OyBudm1lbV9zbnZzX2xwZ3ByLXkmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsgOj0gc252c19scGdwci5vPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+
-Jmd0OyAmZ3Q7Jm5ic3A7Jm5ic3A7IG9iai0kKENPTkZJR19SQVZFX1NQX0VFUFJPTSkmbmJzcDsm
-bmJzcDsgJiM0Mzs9IG52bWVtLXJhdmUtc3AtZWVwcm9tLm88L3A+DQo8cCBjbGFzcz0iTXNvUGxh
-aW5UZXh0Ij4mZ3Q7ICZndDsmbmJzcDsmbmJzcDsgbnZtZW0tcmF2ZS1zcC1lZXByb20teSZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyA6PSByYXZlLXNw
-LWVlcHJvbS5vPC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyAmZ3Q7IC1vYmotJChD
-T05GSUdfU0MyN1hYX0VGVVNFKSZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAmIzQzOz0gbnZtZW0tc2MyN3h4LWVmdXNlLm88L3A+DQo8
-cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7ICZndDsgLW52bWVtLXNjMjd4eC1lZnVzZS15Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDo9IHNjMjd4eC1lZnVzZS5vPC9wPg0KPHAgY2xh
-c3M9Ik1zb1BsYWluVGV4dCI+Jmd0OyA8L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7
-IHNhbWUgaGVyZT88L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij4mZ3Q7IDwvcD4NCjxwIGNs
-YXNzPSJNc29QbGFpblRleHQiPjxzcGFuIHN0eWxlPSJjb2xvcjpibGFjayI+PG86cD4mbmJzcDs8
-L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PHNwYW4gc3R5bGU9ImNv
-bG9yOmJsYWNrIj5XaWxsIGZpeCBpbiB0aGUgbmV4dCB2ZXJzaW9uLi4uPG86cD48L286cD48L3Nw
-YW4+PC9wPg0KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNr
-Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij48
-c3BhbiBzdHlsZT0iY29sb3I6YmxhY2siPlJlZ2FyZHMsPG86cD48L286cD48L3NwYW4+PC9wPg0K
-PHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNrIj5OYXZha2lz
-aG9yZTwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2siPi48bzpwPjwvbzpwPjwvc3Bhbj48
-L3A+DQo8L2Rpdj4NCjwvYm9keT4NCjwvaHRtbD4NCg==
+It will simplify the driver code and make our lives easier when it
+comes to device-tree support.
 
---_000_BYAPR02MB4710A25B2EB5DEDB78523F0EC26D0BYAPR02MB4710namp_--
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/mach-davinci/cp_intc.c             | 93 +++++++++------------
+ arch/arm/mach-davinci/da830.c               |  2 +-
+ arch/arm/mach-davinci/da850.c               |  2 +-
+ arch/arm/mach-davinci/include/mach/common.h |  1 -
+ include/linux/irqchip/irq-davinci-cp-intc.h |  2 +
+ 5 files changed, 44 insertions(+), 56 deletions(-)
+
+diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
+index dcd43b067a6a..faf3d74d3719 100644
+--- a/arch/arm/mach-davinci/cp_intc.c
++++ b/arch/arm/mach-davinci/cp_intc.c
+@@ -13,6 +13,7 @@
+ #include <linux/init.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
++#include <linux/irqchip/irq-davinci-cp-intc.h>
+ #include <linux/irqdomain.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+@@ -20,7 +21,6 @@
+ #include <linux/of_irq.h>
+ 
+ #include <asm/exception.h>
+-#include <mach/common.h>
+ 
+ #define DAVINCI_CP_INTC_CTRL			0x04
+ #define DAVINCI_CP_INTC_HOST_CTRL		0x0c
+@@ -158,22 +158,15 @@ static const struct irq_domain_ops davinci_cp_intc_irq_domain_ops = {
+ 	.xlate = irq_domain_xlate_onetwocell,
+ };
+ 
+-static int __init davinci_cp_intc_of_init(struct device_node *node,
+-					  struct device_node *parent)
++static int __init
++davinci_cp_intc_do_init(const struct davinci_cp_intc_config *config,
++			struct device_node *node)
+ {
+-	u32 num_irq		= davinci_soc_info.intc_irq_num;
+-	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
+-	unsigned num_reg	= BITS_TO_LONGS(num_irq);
+-	int i, irq_base;
+-
+-	if (node) {
+-		davinci_cp_intc_base = of_iomap(node, 0);
+-		if (of_property_read_u32(node, "ti,intc-size", &num_irq))
+-			pr_warn("unable to get intc-size, default to %d\n",
+-				num_irq);
+-	} else {
+-		davinci_cp_intc_base = ioremap(davinci_soc_info.intc_base, SZ_8K);
+-	}
++	unsigned int num_regs = BITS_TO_LONGS(config->num_irqs);
++	int offset, irq_base;
++
++	davinci_cp_intc_base = ioremap(config->reg.start,
++				       resource_size(&config->reg));
+ 	if (WARN_ON(!davinci_cp_intc_base))
+ 		return -EINVAL;
+ 
+@@ -183,51 +176,29 @@ static int __init davinci_cp_intc_of_init(struct device_node *node,
+ 	davinci_cp_intc_write(0, DAVINCI_CP_INTC_HOST_ENABLE(0));
+ 
+ 	/* Disable system interrupts */
+-	for (i = 0; i < num_reg; i++)
+-		davinci_cp_intc_write(~0, DAVINCI_CP_INTC_SYS_ENABLE_CLR(i));
++	for (offset = 0; offset < num_regs; offset++)
++		davinci_cp_intc_write(~0,
++			DAVINCI_CP_INTC_SYS_ENABLE_CLR(offset));
+ 
+ 	/* Set to normal mode, no nesting, no priority hold */
+ 	davinci_cp_intc_write(0, DAVINCI_CP_INTC_CTRL);
+ 	davinci_cp_intc_write(0, DAVINCI_CP_INTC_HOST_CTRL);
+ 
+ 	/* Clear system interrupt status */
+-	for (i = 0; i < num_reg; i++)
+-		davinci_cp_intc_write(~0, DAVINCI_CP_INTC_SYS_STAT_CLR(i));
++	for (offset = 0; offset < num_regs; offset++)
++		davinci_cp_intc_write(~0,
++			DAVINCI_CP_INTC_SYS_STAT_CLR(offset));
+ 
+ 	/* Enable nIRQ (what about nFIQ?) */
+ 	davinci_cp_intc_write(1, DAVINCI_CP_INTC_HOST_ENABLE_IDX_SET);
+ 
+-	/*
+-	 * Priority is determined by host channel: lower channel number has
+-	 * higher priority i.e. channel 0 has highest priority and channel 31
+-	 * had the lowest priority.
+-	 */
+-	num_reg = (num_irq + 3) >> 2;	/* 4 channels per register */
+-	if (irq_prio) {
+-		unsigned j, k;
+-		u32 val;
+-
+-		for (k = i = 0; i < num_reg; i++) {
+-			for (val = j = 0; j < 4; j++, k++) {
+-				val >>= 8;
+-				if (k < num_irq)
+-					val |= irq_prio[k] << 24;
+-			}
+-
+-			davinci_cp_intc_write(val, DAVINCI_CP_INTC_CHAN_MAP(i));
+-		}
+-	} else	{
+-		/*
+-		 * Default everything to channel 15 if priority not specified.
+-		 * Note that channel 0-1 are mapped to nFIQ and channels 2-31
+-		 * are mapped to nIRQ.
+-		 */
+-		for (i = 0; i < num_reg; i++)
+-			davinci_cp_intc_write(0x0f0f0f0f,
+-					      DAVINCI_CP_INTC_CHAN_MAP(i));
+-	}
++	/* Default all priorities to channel 7. */
++	num_regs = (config->num_irqs + 3) >> 2;	/* 4 channels per register */
++	for (offset = 0; offset < num_regs; offset++)
++		davinci_cp_intc_write(0x07070707,
++			DAVINCI_CP_INTC_CHAN_MAP(offset));
+ 
+-	irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
++	irq_base = irq_alloc_descs(-1, 0, config->num_irqs, 0);
+ 	if (irq_base < 0) {
+ 		pr_warn("Couldn't allocate IRQ numbers\n");
+ 		irq_base = 0;
+@@ -235,7 +206,7 @@ static int __init davinci_cp_intc_of_init(struct device_node *node,
+ 
+ 	/* create a legacy host */
+ 	davinci_cp_intc_irq_domain = irq_domain_add_legacy(
+-					node, num_irq, irq_base, 0,
++					node, config->num_irqs, irq_base, 0,
+ 					&davinci_cp_intc_irq_domain_ops, NULL);
+ 
+ 	if (!davinci_cp_intc_irq_domain) {
+@@ -251,9 +222,25 @@ static int __init davinci_cp_intc_of_init(struct device_node *node,
+ 	return 0;
+ }
+ 
+-void __init davinci_cp_intc_init(void)
++int __init davinci_cp_intc_init(const struct davinci_cp_intc_config *config)
+ {
+-	davinci_cp_intc_of_init(NULL, NULL);
++	return davinci_cp_intc_do_init(config, NULL);
+ }
+ 
++static int __init davinci_cp_intc_of_init(struct device_node *node,
++					  struct device_node *parent)
++{
++	struct davinci_cp_intc_config config = { };
++	int ret;
++
++	ret = of_address_to_resource(node, 0, &config.reg);
++	if (WARN_ON(ret))
++		return ret;
++
++	ret = of_property_read_u32(node, "ti,intc-size", &config.num_irqs);
++	if (WARN_ON(ret))
++		return ret;
++
++	return davinci_cp_intc_do_init(&config, node);
++}
+ IRQCHIP_DECLARE(cp_intc, "ti,cp-intc", davinci_cp_intc_of_init);
+diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
+index 0eb48ed2d423..7ce0b5f1200d 100644
+--- a/arch/arm/mach-davinci/da830.c
++++ b/arch/arm/mach-davinci/da830.c
+@@ -833,7 +833,7 @@ static const struct davinci_cp_intc_config da830_cp_intc_config = {
+ 
+ void __init da830_init_irq(void)
+ {
+-	davinci_cp_intc_init();
++	davinci_cp_intc_init(&da830_cp_intc_config);
+ }
+ 
+ void __init da830_init_time(void)
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index fe274ab63fc8..62a00fa94696 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -771,7 +771,7 @@ static const struct davinci_cp_intc_config da850_cp_intc_config = {
+ 
+ void __init da850_init_irq(void)
+ {
+-	davinci_cp_intc_init();
++	davinci_cp_intc_init(&da850_cp_intc_config);
+ }
+ 
+ void __init da850_init_time(void)
+diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
+index 7ad79171b4b5..14e0e1c40611 100644
+--- a/arch/arm/mach-davinci/include/mach/common.h
++++ b/arch/arm/mach-davinci/include/mach/common.h
+@@ -22,7 +22,6 @@
+ #define DAVINCI_INTC_START		NR_IRQS
+ #define DAVINCI_INTC_IRQ(_irqnum)	(DAVINCI_INTC_START + (_irqnum))
+ 
+-void davinci_cp_intc_init(void);
+ void davinci_timer_init(struct clk *clk);
+ 
+ struct davinci_timer_instance {
+diff --git a/include/linux/irqchip/irq-davinci-cp-intc.h b/include/linux/irqchip/irq-davinci-cp-intc.h
+index 2270a6167b98..8d71ed5b5a61 100644
+--- a/include/linux/irqchip/irq-davinci-cp-intc.h
++++ b/include/linux/irqchip/irq-davinci-cp-intc.h
+@@ -20,4 +20,6 @@ struct davinci_cp_intc_config {
+ 	unsigned int num_irqs;
+ };
+ 
++int davinci_cp_intc_init(const struct davinci_cp_intc_config *config);
++
+ #endif /* _LINUX_IRQ_DAVINCI_CP_INTC_ */
+-- 
+2.20.1
