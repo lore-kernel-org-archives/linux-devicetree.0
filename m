@@ -1,80 +1,49 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 4/5] misc: fastrpc: Add support for create remote init
- process
-Date: Fri, 8 Feb 2019 14:56:56 +0100
-Message-ID: <20190208135656.GB23406@kroah.com>
-References: <20190208132306.12571-1-srinivas.kandagatla@linaro.org>
- <20190208132306.12571-5-srinivas.kandagatla@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/3] pinctrl: meson: g12a fixes
+Date: Fri, 8 Feb 2019 14:57:33 +0100
+Message-ID: <CACRpkdb4105RwXhiyVd1dz5mjYO_u6CxTbCySbqUWBv=yhF1qg@mail.gmail.com>
+References: <20190117102315.1833-1-jbrunet@baylibre.com> <CACRpkdb7pje9mrgOQoiWTRxGQC8xsOvJ9a8PCguM807unPtpCg@mail.gmail.com>
+ <a434c3b1c55a1b5a1485adc29cfe26b45131a936.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190208132306.12571-5-srinivas.kandagatla@linaro.org>
+In-Reply-To: <a434c3b1c55a1b5a1485adc29cfe26b45131a936.camel@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: arnd@arndb.de, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 08, 2019 at 01:23:05PM +0000, Srinivas Kandagatla wrote:
-> +static int fastrpc_init_create_process(struct fastrpc_user *fl,
-> +					char __user *argp)
-> +{
-> +	struct fastrpc_init_create init;
-> +	struct fastrpc_invoke_args args[6];
+On Mon, Jan 21, 2019 at 4:36 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> On Mon, 2019-01-21 at 14:53 +0100, Linus Walleij wrote:
+> > On Thu, Jan 17, 2019 at 11:23 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> >
+> > > This patchset fixes the initial pinctrl support added for th g12a SoC
+> > > family, which is mainly around the register regions claimed by the
+> > > driver.
+> > >
+> > > Linus, would it possible for you to provide a tag with these changes to
+> > > Kevin ?
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-meson-fixes
+> >
+> > > ATM, we can only use the devices for which the pinmux is already set by
+> > > the bootloader. Enabling the broken pinctrl driver could cause regressions
+> > > in kernelCI. Having a tag, would allow us to start using pinctrl on this
+> > > SoC in this cycle, w/o regression. It would be nice :)
+> >
+> > When you say "this cycle" do you mean I should target fixes (v5.0-rcN)
+> > or next (v5.1) with these patches?
+>
+> I was referring to the 5.1 release but it is a good question, I did not really
+> think about 5.0.
+>
+> Those changes are mainly fixes, so guess it could go in the 5.0 but support
+> for this SoC is still in its early stages, so either way is fine by me.
+>
+> Whatever is simpler for you I guess ;)
 
-All on the stack?  Ok, but:
+I already merged it for devel and other stuff on top so it will be for v5.1
+as it looks now.
 
-> +	struct fastrpc_phy_page pages[1];
-> +	struct fastrpc_map *map = NULL;
-> +	struct fastrpc_buf *imem = NULL;
-> +	int memlen;
-> +	int err;
-> +	struct {
-> +		int pgid;
-> +		u32 namelen;
-> +		u32 filelen;
-> +		u32 pageslen;
-> +		u32 attrs;
-> +		u32 siglen;
-> +	} inbuf;
-> +	u32 sc;
-> +
-> +	if (copy_from_user(&init, argp, sizeof(init)))
-> +		return -EFAULT;
-> +
-> +	if (init.filelen > INIT_FILELEN_MAX)
-> +		return -EINVAL;
-> +
-> +	inbuf.pgid = fl->tgid;
-> +	inbuf.namelen = strlen(current->comm) + 1;
-> +	inbuf.filelen = init.filelen;
-> +	inbuf.pageslen = 1;
-> +	inbuf.attrs = init.attrs;
-> +	inbuf.siglen = init.siglen;
-> +	fl->pd = 1;
-> +
-> +	if (init.filelen && init.filefd) {
-> +		err = fastrpc_map_create(fl, init.filefd, init.filelen, &map);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	memlen = ALIGN(max(INIT_FILELEN_MAX, (int)init.filelen * 4),
-> +		       1024 * 1024);
-> +	err = fastrpc_buf_alloc(fl, fl->sctx->dev, memlen,
-> +				&imem);
-> +	if (err) {
-> +		fastrpc_map_put(map);
-> +		return err;
-> +	}
-> +
-> +	fl->init_mem = imem;
-> +	args[0].ptr = (u64)(uintptr_t)&inbuf;
-> +	args[0].length = sizeof(inbuf);
-> +	args[0].fd = -1;
-
-You never clear the reserved field :(
-
-thanks,
-
-greg k-h
+Yours,
+Linus Walleij
