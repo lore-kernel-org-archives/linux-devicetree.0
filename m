@@ -1,43 +1,96 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 01/12] ARM: dts: da850: fix interrupt numbers for
- clocksource
-Date: Fri, 8 Feb 2019 18:39:07 +0530
-Message-ID: <4325c375-0519-7775-e4a9-8bd70aa59f94@ti.com>
-References: <20190204171757.32073-1-brgl@bgdev.pl>
- <20190204171757.32073-2-brgl@bgdev.pl>
- <ce4c305e-7d76-6028-07e4-4922f3c700bf@lechnology.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: sound: msm8916-wcd-analog: fix
+	example regulator names" to the asoc tree
+Date: Fri,  8 Feb 2019 13:11:05 +0000 (GMT)
+Message-ID: <20190208131105.5FAE01127F30@debutante.sirena.org.uk>
+References: <20190207165755.1548-4-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ce4c305e-7d76-6028-07e4-4922f3c700bf@lechnology.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, stable@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190207165755.1548-4-johan@kernel.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/19 6:48 AM, David Lechner wrote:
-> On 2/4/19 11:17 AM, Bartosz Golaszewski wrote:
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> The timer interrupts specified in commit 3652e2741f42 ("ARM: dts:
->> da850: Add clocks") are wrong but since the current timer code
->> hard-codes them, the bug was never spotted.
->>
->> This patch must go into stable since, once we introduce a proper
->> clocksource driver, devices with buggy device tree will stop booting.
->>
->> Fixes: 3652e2741f42 ("ARM: dts: da850: Add clocks")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->> ---
-> 
-> Reviewed-by: David Lechner <david@lechnology.com>
+The patch
 
-This patch is already in ARM SoC. Should be soon in Linus's tree too.
+   dt-bindings: sound: msm8916-wcd-analog: fix example regulator names
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/?h=fixes&id=e3966a766865da7ced1dece663697861dd5cf103
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Sekhar
+Mark
+
+>From 510135535382db7f5ee8727818172e42c9c9cbd5 Mon Sep 17 00:00:00 2001
+From: Johan Hovold <johan@kernel.org>
+Date: Thu, 7 Feb 2019 17:57:55 +0100
+Subject: [PATCH] dt-bindings: sound: msm8916-wcd-analog: fix example regulator
+ names
+
+Fix upper-case regulator names in the binding example which do not match
+the corresponding required properties.
+
+While at it, add a blank line after the required-properties section to
+improve readability.
+
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt  | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt
+index fdcea3d12ee5..e7d17dda55db 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt
+@@ -30,6 +30,7 @@ Required properties
+  - vdd-cdc-io-supply: phandle to VDD_CDC_IO regulator DT node.
+  - vdd-cdc-tx-rx-cx-supply: phandle to VDD_CDC_TX/RX/CX regulator DT node.
+  - vdd-micbias-supply: phandle of VDD_MICBIAS supply's regulator DT node.
++
+ Optional Properties:
+  - qcom,mbhc-vthreshold-low: Array of 5 threshold voltages in mV for 5 buttons
+ 			     detection on headset when the mbhc is powered up
+@@ -92,9 +93,9 @@ spmi_bus {
+ 				  "cdc_ear_cnp_int",
+ 				  "cdc_hphr_cnp_int",
+ 				  "cdc_hphl_cnp_int";
+-	               VDD-CDC-IO-supply = <&pm8916_l5>;
+-	               VDD-CDC-TX-RX-CX-supply = <&pm8916_l5>;
+-	               VDD-MICBIAS-supply = <&pm8916_l13>;
++	               vdd-cdc-io-supply = <&pm8916_l5>;
++	               vdd-cdc-tx-rx-cx-supply = <&pm8916_l5>;
++	               vdd-micbias-supply = <&pm8916_l13>;
+ 	               #sound-dai-cells = <1>;
+ 	};
+ };
+-- 
+2.20.1
