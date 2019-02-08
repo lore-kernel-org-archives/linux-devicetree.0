@@ -1,103 +1,147 @@
-Return-Path: <SRS0=TIRm=Q4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr50077.outbound.protection.outlook.com ([40.107.5.77]:14792
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725986AbfBUGjD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Feb 2019 01:39:03 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V8 4/4] arm64: dts: imx: add i.MX8QXP thermal support
-Date: Thu, 21 Feb 2019 06:38:57 +0000
-Message-ID: <1550730831-14995-4-git-send-email-Anson.Huang@nxp.com>
-References: <1550730831-14995-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1550730831-14995-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 00/33] ARM: davinci: modernize the irq support
+Date: Fri,  8 Feb 2019 18:31:21 +0100
+Message-Id: <20190208173154.4665-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: 8bit
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add i.MX8QXP CPU thermal zone support.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V7:
-	- move the "imx,sensor-resource-id" to scu tsens node;
-	- correct #thermal-sensor-cells value to be 0 as there is ONLY one thermal=
- zone now;
-	- add cooling map for passive mode.
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 35 ++++++++++++++++++++++++++=
-++++
- 1 file changed, 35 insertions(+)
+This series ports the davinci platform to using SPARSE_IRQ, cleans up
+the irqchip drivers and moves them over to drivers/irqchip.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 4c3dd95..eccdf28 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/pads-imx8qxp.h>
-+#include <dt-bindings/thermal/thermal.h>
-=20
- / {
- 	interrupt-parent =3D <&gic>;
-@@ -34,6 +35,7 @@
- 			reg =3D <0x0 0x0>;
- 			enable-method =3D "psci";
- 			next-level-cache =3D <&A35_L2>;
-+			#cooling-cells =3D <2>;
- 		};
-=20
- 		A35_1: cpu@1 {
-@@ -116,6 +118,12 @@
- 		rtc: rtc {
- 			compatible =3D "fsl,imx8qxp-sc-rtc";
- 		};
-+
-+		tsens: thermal-sensor {
-+			compatible =3D "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
-+			#thermal-sensor-cells =3D <0>;
-+			imx,sensor-resource-id =3D <IMX_SC_R_SYSTEM>;
-+		};
- 	};
-=20
- 	timer {
-@@ -443,4 +451,31 @@
- 			power-domains =3D <&pd IMX_SC_R_GPIO_7>;
- 		};
- 	};
-+
-+	thermal_zones: thermal-zones {
-+		cpu-thermal0 {
-+			polling-delay-passive =3D <250>;
-+			polling-delay =3D <2000>;
-+			thermal-sensors =3D <&tsens 0>;
-+			trips {
-+				cpu_alert0: trip0 {
-+					temperature =3D <107000>;
-+					hysteresis =3D <2000>;
-+					type =3D "passive";
-+				};
-+				cpu_crit0: trip1 {
-+					temperature =3D <127000>;
-+					hysteresis =3D <2000>;
-+					type =3D "critical";
-+				};
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip =3D <&cpu_alert0>;
-+					cooling-device =3D
-+						<&A35_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+	};
- };
---=20
-2.7.4
+The series can be logically split into four parts. The first (1-8) aims
+at introducing support for SPARSE_IRQ. It contains a couple changes
+required for that functionality and the final patch actually selecting
+it.
+
+Second part (9-19) makes the aintc driver suitable for drivers/irqchip
+and eventually moves it over there.
+
+Part 3 (20-32) does the same for the cp-intc driver.
+
+Last patch removes unnecessary code.
+
+The series has been tested on da850-lcdk (for cp-intc) and
+dm365-evm (for aintc).
+
+v1 -> v2:
+- made commit messages readable without reading the subject line first
+- collected David's Reviewed-by tags for patches that haven been
+  significantly modified since v1
+- added handling of spurious interrupts in cp-intc
+- added comments explaining the irq handlers (C versions translated from
+  assembly)
+- dropped the patches removing the hardware interrupt numbers from
+  the priority tables
+- don't remove irqs.h, make it a local header instead
+- rearranged the patches in order not to remove the code added
+  by earlier ones
+- renamed d*_init_irqs to d*_init_irq to fit the name of the relevant
+  callback in machine info struct
+- fixed license identifiers where needed
+- added comments to config structures for irqchip drivers
+- fixed all off-by-one errors in resource sizes
+- clarified the comments on the weird handling of IRQ_TINT1_TINT34 as level
+  irq and added missing calls to irq_set_handler() to dm3* SoCs
+- fixed one function that was missing a correct prefix in cp_intc
+- return value variables should be called ret not rv
+- added a patch converting calls to _raw_readl/writel() to their _relaxed
+  counterparts
+- fixed the commit message prefix in patches that belong to the irqchip
+  subsystem
+- other minor tweaks
+
+Bartosz Golaszewski (33):
+  ARM: davinci: remove intc_host_map from davinci_soc_info struct
+  ARM: davinci: aintc: use irq domain
+  ARM: davinci: select GENERIC_IRQ_MULTI_HANDLER
+  ARM: davinci: remove davinci_intc_type
+  ARM: davinci: pull davinci_intc_base into the respective intc drivers
+  ARM: davinci: wrap HW interrupt numbers with a macro
+  ARM: davinci: select SPARSE_IRQ
+  ARM: davinci: make irqs.h a local header
+  ARM: davinci: aintc: drop GPL license boilerplate
+  ARM: davinci: aintc: wrap davinci_irq_init() with a helper
+  ARM: davinci: aintc: use a common prefix for symbols in the driver
+  ARM: davinci: aintc: drop the 00 prefix from register offsets
+  ARM: davinci: aintc: use readl/writel_relaxed()
+  irqchip: davinci-aintc: add a new config structure
+  ARM: davinci: aintc: use the new irqchip config structure in dm* SoCs
+  ARM: davinci: aintc: use the new config structure
+  ARM: davinci: aintc: move timer-specific irq_set_handler() out of
+    irq.c
+  ARM: davinci: aintc: remove unnecessary includes
+  irqchip: davinci-aintc: move the driver to drivers/irqchip
+  ARM: davinci: cp-intc: remove cp_intc.h
+  ARM: davinci: cp-intc: add a wrapper around cp_intc_init()
+  irqchip: davinci-cp-intc: add a new config structure
+  ARM: davinci: cp-intc: add the new config structures for da8xx SoCs
+  ARM: davinci: cp-intc: use a common prefix for all symbols
+  ARM: davinci: cp-intc: convert all hex numbers to lowercase
+  ARM: davinci: cp-intc: use the new-style config structure
+  ARM: davinci: cp-intc: improve coding style
+  ARM: davinci: cp-intc: unify error handling
+  ARM: davinci: cp-intc: use readl/writel_relaxed()
+  ARM: davinci: cp-intc: drop GPL license boilerplate
+  ARM: davinci: cp-intc: remove redundant comments
+  irqchip: davinci-cp-intc: move the driver to drivers/irqchip
+  ARM: davinci: remove intc related fields from davinci_soc_info
+
+ arch/arm/Kconfig                              |   2 +
+ arch/arm/mach-davinci/Kconfig                 |  19 +-
+ arch/arm/mach-davinci/Makefile                |   3 -
+ arch/arm/mach-davinci/asp.h                   |   8 +-
+ arch/arm/mach-davinci/board-da830-evm.c       |   5 +-
+ arch/arm/mach-davinci/board-da850-evm.c       |   5 +-
+ arch/arm/mach-davinci/board-dm355-evm.c       |   2 +-
+ arch/arm/mach-davinci/board-dm355-leopard.c   |   2 +-
+ arch/arm/mach-davinci/board-dm365-evm.c       |   2 +-
+ arch/arm/mach-davinci/board-dm644x-evm.c      |   8 +-
+ arch/arm/mach-davinci/board-dm646x-evm.c      |   7 +-
+ arch/arm/mach-davinci/board-mityomapl138.c    |   3 +-
+ arch/arm/mach-davinci/board-neuros-osd2.c     |   2 +-
+ arch/arm/mach-davinci/board-omapl138-hawk.c   |   3 +-
+ arch/arm/mach-davinci/board-sffsdr.c          |   2 +-
+ arch/arm/mach-davinci/common.c                |   3 -
+ arch/arm/mach-davinci/cp_intc.c               | 215 ----------------
+ arch/arm/mach-davinci/cp_intc.h               |  57 -----
+ arch/arm/mach-davinci/da830.c                 | 128 ++--------
+ arch/arm/mach-davinci/da850.c                 | 154 +++---------
+ arch/arm/mach-davinci/davinci.h               |   4 +
+ arch/arm/mach-davinci/devices-da8xx.c         | 147 +++++------
+ arch/arm/mach-davinci/devices.c               |  40 +--
+ arch/arm/mach-davinci/dm355.c                 |  86 ++++---
+ arch/arm/mach-davinci/dm365.c                 | 110 ++++----
+ arch/arm/mach-davinci/dm644x.c                |  76 +++---
+ arch/arm/mach-davinci/dm646x.c                |  90 ++++---
+ arch/arm/mach-davinci/include/mach/common.h   |  14 +-
+ arch/arm/mach-davinci/include/mach/da8xx.h    |   2 +
+ .../mach-davinci/include/mach/entry-macro.S   |  39 ---
+ arch/arm/mach-davinci/irq.c                   | 117 ---------
+ .../mach-davinci/{include/mach => }/irqs.h    |   4 -
+ arch/arm/mach-davinci/usb-da8xx.c             |   9 +-
+ arch/arm/mach-davinci/usb.c                   |  14 +-
+ drivers/irqchip/Kconfig                       |  10 +
+ drivers/irqchip/Makefile                      |   2 +
+ drivers/irqchip/irq-davinci-aintc.c           | 144 +++++++++++
+ drivers/irqchip/irq-davinci-cp-intc.c         | 238 ++++++++++++++++++
+ include/linux/irqchip/irq-davinci-aintc.h     |  27 ++
+ include/linux/irqchip/irq-davinci-cp-intc.h   |  25 ++
+ 40 files changed, 872 insertions(+), 956 deletions(-)
+ delete mode 100644 arch/arm/mach-davinci/cp_intc.c
+ delete mode 100644 arch/arm/mach-davinci/cp_intc.h
+ delete mode 100644 arch/arm/mach-davinci/include/mach/entry-macro.S
+ delete mode 100644 arch/arm/mach-davinci/irq.c
+ rename arch/arm/mach-davinci/{include/mach => }/irqs.h (98%)
+ create mode 100644 drivers/irqchip/irq-davinci-aintc.c
+ create mode 100644 drivers/irqchip/irq-davinci-cp-intc.c
+ create mode 100644 include/linux/irqchip/irq-davinci-aintc.h
+ create mode 100644 include/linux/irqchip/irq-davinci-cp-intc.h
+
+-- 
+2.20.1
