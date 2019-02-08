@@ -1,317 +1,284 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH net-next v2 2/6] phy: armada38x: add common phy support
-Date: Fri, 8 Feb 2019 15:54:17 +0530
-Message-ID: <638c9c62-6b26-e1d8-1e05-50d5367c7c40@ti.com>
-References: <20190207161825.ueinmyf6ygjiqzzy@shell.armlinux.org.uk>
- <E1grmOM-0000MF-PS@rmk-PC.armlinux.org.uk>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC PATCH v4 08/13] genirq/msi: Add support for allocating
+ single MSI for a device
+Date: Fri, 8 Feb 2019 10:39:46 +0000
+Message-ID: <af78e6df-4ef4-78ec-aeb2-549643d56e70@arm.com>
+References: <20181227060829.5080-1-lokeshvutla@ti.com>
+ <20181227061313.5451-1-lokeshvutla@ti.com>
+ <20181227061313.5451-8-lokeshvutla@ti.com>
+ <5be38277-3348-a6d9-4b67-3ead308c009a@arm.com>
+ <faad8e90-2f97-1dbb-fb98-e0f1462e29c5@ti.com>
+ <523c4a23-b5b9-ff10-051d-c90e6e8341d4@arm.com>
+ <69699155-49f8-ce1e-3eb4-5b63ab032a94@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <E1grmOM-0000MF-PS@rmk-PC.armlinux.org.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <69699155-49f8-ce1e-3eb4-5b63ab032a94@ti.com>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Russell King <rmk+kernel@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>
+Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 07/02/19 9:49 PM, Russell King wrote:
-> Add support for the Armada 38x common phy to allow us to change the
-> speed of the Ethernet serdes lane.  This driver only supports
-> manipulation of the speed, it does not support configuration of the
-> common phy.
+On 05/02/2019 13:42, Lokesh Vutla wrote:
+> Hi Marc,
 > 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-
-This patch will conflict with PHY pull request (in the marvell Kconfig and
-Makefile). But the resolution should be trivial and should be okay to go via
--net tree.
-
-FWIW
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/phy/marvell/Kconfig                |  10 ++
->  drivers/phy/marvell/Makefile               |   1 +
->  drivers/phy/marvell/phy-armada38x-comphy.c | 237 +++++++++++++++++++++++++++++
->  3 files changed, 248 insertions(+)
->  create mode 100644 drivers/phy/marvell/phy-armada38x-comphy.c
+> On 04/02/19 4:03 PM, Marc Zyngier wrote:
+>> On 24/01/2019 10:19, Lokesh Vutla wrote:
+>>> Hi Marc,
+>>> 	Sorry for the delayed response. Just back from vacation.
+>>>
+>>> On 17/01/19 12:00 AM, Marc Zyngier wrote:
+>>>> On 27/12/2018 06:13, Lokesh Vutla wrote:
+>>>>> Previously all msi for a device are allocated in one go
+>>>>> by calling msi_domain_alloc_irq() from a bus layer. This might
+>>>>> not be the case when a device is trying to allocate interrupts
+>>>>> dynamically based on a request to it.
+>>>>>
+>>>>> So introduce msi_domain_alloc/free_irq() apis to allocate a single
+>>>>> msi. prepare and activate operations to be handled by bus layer
+>>>>> calling msi_domain_alloc/free_irq() apis.
+>>>>>
+>>>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>>>>> ---
+>>>>>  include/linux/msi.h |  3 +++
+>>>>>  kernel/irq/msi.c    | 62 +++++++++++++++++++++++++++++----------------
+>>>>>  2 files changed, 43 insertions(+), 22 deletions(-)
+>>>>>
+>>>>> diff --git a/include/linux/msi.h b/include/linux/msi.h
+>>>>> index 784fb52b9900..474490826f8c 100644
+>>>>> --- a/include/linux/msi.h
+>>>>> +++ b/include/linux/msi.h
+>>>>> @@ -301,8 +301,11 @@ int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
+>>>>>  struct irq_domain *msi_create_irq_domain(struct fwnode_handle *fwnode,
+>>>>>   struct msi_domain_info *info,
+>>>>>   struct irq_domain *parent);
+>>>>> +int msi_domain_alloc_irq(struct irq_domain *domain, struct device *dev,
+>>>>> + struct msi_desc *desc,  msi_alloc_info_t *arg);
+>>>>>  int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+>>>>>    int nvec);
+>>>>> +void msi_domain_free_irq(struct msi_desc *desc);
+>>>>>  void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
+>>>>>  struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain);
+>>>>>
+>>>>> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+>>>>> index ad26fbcfbfc8..eb7459324113 100644
+>>>>> --- a/kernel/irq/msi.c
+>>>>> +++ b/kernel/irq/msi.c
+>>>>> @@ -387,6 +387,35 @@ static bool msi_check_reservation_mode(struct irq_domain *domain,
+>>>>>  return desc->msi_attrib.is_msix || desc->msi_attrib.maskbit;
+>>>>>  }
+>>>>>
+>>>>> +int msi_domain_alloc_irq(struct irq_domain *domain, struct device *dev,
+>>>>> + struct msi_desc *desc,  msi_alloc_info_t *arg)
+>>>>> +{
+>>>>> +struct msi_domain_info *info = domain->host_data;
+>>>>> +struct msi_domain_ops *ops = info->ops;
+>>>>> +int i, ret, virq;
+>>>>> +
+>>>>> +ops->set_desc(arg, desc);
+>>>>> +
+>>>>> +virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
+>>>>> +       dev_to_node(dev), arg, false,
+>>>>> +       desc->affinity);
+>>>>> +if (virq < 0) {
+>>>>> +ret = -ENOSPC;
+>>>>> +if (ops->handle_error)
+>>>>> +ret = ops->handle_error(domain, desc, ret);
+>>>>> +if (ops->msi_finish)
+>>>>> +ops->msi_finish(arg, ret);
+>>>>> +return ret;
+>>>>> +}
+>>>>> +
+>>>>> +for (i = 0; i < desc->nvec_used; i++) {
+>>>>> +irq_set_msi_desc_off(virq, i, desc);
+>>>>> +irq_debugfs_copy_devname(virq + i, dev);
+>>>>> +}
+>>>>> +
+>>>>> +return 0;
+>>>>> +}
+>>>>> +
+>>>>>  /**
+>>>>>   * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
+>>>>>   * @domain:The domain to allocate from
+>>>>> @@ -404,7 +433,7 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+>>>>>  struct irq_data *irq_data;
+>>>>>  struct msi_desc *desc;
+>>>>>  msi_alloc_info_t arg;
+>>>>> -int i, ret, virq;
+>>>>> +int ret, virq;
+>>>>>  bool can_reserve;
+>>>>>
+>>>>>  ret = msi_domain_prepare_irqs(domain, dev, nvec, &arg);
+>>>>> @@ -412,24 +441,9 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+>>>>>  return ret;
+>>>>>
+>>>>>  for_each_msi_entry(desc, dev) {
+>>>>> -ops->set_desc(&arg, desc);
+>>>>> -
+>>>>> -virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
+>>>>> -       dev_to_node(dev), &arg, false,
+>>>>> -       desc->affinity);
+>>>>> -if (virq < 0) {
+>>>>> -ret = -ENOSPC;
+>>>>> -if (ops->handle_error)
+>>>>> -ret = ops->handle_error(domain, desc, ret);
+>>>>> -if (ops->msi_finish)
+>>>>> -ops->msi_finish(&arg, ret);
+>>>>> +ret = msi_domain_alloc_irq(domain, dev, desc, &arg);
+>>>>> +if (ret)
+>>>>>  return ret;
+>>>>> -}
+>>>>> -
+>>>>> -for (i = 0; i < desc->nvec_used; i++) {
+>>>>> -irq_set_msi_desc_off(virq, i, desc);
+>>>>> -irq_debugfs_copy_devname(virq + i, dev);
+>>>>> -}
+>>>>>  }
+>>>>>
+>>>>>  if (ops->msi_finish)
+>>>>> @@ -487,6 +501,12 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+>>>>>  return ret;
+>>>>>  }
+>>>>>
+>>>>> +void msi_domain_free_irq(struct msi_desc *desc)
+>>>>> +{
+>>>>> +irq_domain_free_irqs(desc->irq, desc->nvec_used);
+>>>>> +desc->irq = 0;
+>>>>> +}
+>>>>> +
+>>>>>  /**
+>>>>>   * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
+>>>>>   * @domain:The domain to managing the interrupts
+>>>>> @@ -503,10 +523,8 @@ void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+>>>>>   * enough that there is no IRQ associated to this
+>>>>>   * entry. If that's the case, don't do anything.
+>>>>>   */
+>>>>> -if (desc->irq) {
+>>>>> -irq_domain_free_irqs(desc->irq, desc->nvec_used);
+>>>>> -desc->irq = 0;
+>>>>> -}
+>>>>> +if (desc->irq)
+>>>>> +msi_domain_free_irq(desc);
+>>>>>  }
+>>>>>  }
+>>>>>
+>>>>>
+>>>>
+>>>> I can see some interesting issues with this API.
+>>>>
+>>>> At the moment, MSIs are allocated upfront, and that's usually done
+>>>> before the driver can do anything else. With what you're suggesting
+>>>> here, MSIs can now be allocated at any time, which sounds great. But how
+>>>> does it work when MSIs get added/freed in parallel? I can't see any
+>>>> locking here...
+>>>>
+>>>> It is also pretty nasty that the user of this API has to know about the
+>>>> MSI descriptor. Really, nobody should have to deal with this outside of
+>>>> the MSI layer.
+>>>>
+>>>> The real question is why you need to need to allocate MSIs on demand for
+>>>> a given device. Usually, you allocate them because this is a per-CPU
+>>>> resource, or something similar. What makes it so variable that you need
+>>>> to resort to fine grained MSI allocation?
+>>>
+>>> I added this after the discussion we had in the previous version[1] of this
+>>> series. Let me provide the details again:
+>>>
+>>> As you must be aware INTR is interrupt re-director and INTA is the interrupt
+>>> multiplexer is the SoC. Here we are trying to address the interrupt connection
+>>> route as below:
+>>> Device(Global event) --> INTA --> INTR --> GIC
+>>>
+>>> For the above case you suggested to have the following sw IRQ domain hierarchy:
+>>> INTA multi MSI --> INTA  -->  INTR  --> GIC
+>>>
+>>> The problem here with the INTA MSI is that all the interrupts for a device
+>>> should be pre-allocated during the device probe time. But this is not what we
+>>> wanted especially for the DMA case.
+>>>
+>>> An example DMA ring connection would look like below[2]:
+>>>
+>>>                       +---------------------+
+>>>                        |         IA                |
+>>> +--------+        |            +------+   |        +--------+         +------+
+>>> | ring 1 +----->evtA+->VintX+-------->+   IR   +-- --->  GIC +-->
+>>> +--------+       |             +------+   |        +--------+         +------+
+>>> Linux IRQ Y
+>>>    evtA            |                             |
+>>>                        |                             |
+>>>                       +----------------------+
+>>>
+>>> So when a DMA client driver requests a dma channel during probe, the DMA driver
+>>> gets a free ring in its allocated range. Then DMA driver requests MSI layer for
+>>> an IRQ. This is why I had to introduce on demand allocation of MSIs for a device.
+>>>
+>>> The reason why we avoided DMA driver to allocate interrupts during its probe as
+>>> it is not aware of the exact no of channels that are going to be used. Also max
+>>> allocation of interrupts will overrun the gic IRQs available to this INTA and
+>>> the IPs that are connected to INTR directly will not get any interrupts.
+>>
+>> But surely there is an upper bound that does exist for a given system,
+>> right?  DMA rings are not allocated out of nowhere. Or are you saying
 > 
-> diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
-> index 6fb4b56e4c14..224ea4e6a46d 100644
-> --- a/drivers/phy/marvell/Kconfig
-> +++ b/drivers/phy/marvell/Kconfig
-> @@ -21,6 +21,16 @@ config PHY_BERLIN_USB
->  	help
->  	  Enable this to support the USB PHY on Marvell Berlin SoCs.
->  
-> +config PHY_MVEBU_A38X_COMPHY
-> +	tristate "Marvell Armada 38x comphy driver"
-> +	depends on ARCH_MVEBU || COMPILE_TEST
-> +	depends on OF
-> +	select GENERIC_PHY
-> +	help
-> +	  This driver allows to control the comphy, an hardware block providing
-> +	  shared serdes PHYs on Marvell Armada 38x. Its serdes lanes can be
-> +	  used by various controllers (Ethernet, sata, usb, PCIe...).
-> +
->  config PHY_MVEBU_CP110_COMPHY
->  	tristate "Marvell CP110 comphy driver"
->  	depends on ARCH_MVEBU || COMPILE_TEST
-> diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
-> index 3975b144f8ec..59b6c03ef756 100644
-> --- a/drivers/phy/marvell/Makefile
-> +++ b/drivers/phy/marvell/Makefile
-> @@ -2,6 +2,7 @@
->  obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
->  obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
->  obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
-> +obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+= phy-armada38x-comphy.o
->  obj-$(CONFIG_PHY_MVEBU_CP110_COMPHY)	+= phy-mvebu-cp110-comphy.o
->  obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
->  obj-$(CONFIG_PHY_PXA_28NM_HSIC)		+= phy-pxa-28nm-hsic.o
-> diff --git a/drivers/phy/marvell/phy-armada38x-comphy.c b/drivers/phy/marvell/phy-armada38x-comphy.c
-> new file mode 100644
-> index 000000000000..3e00bc679d4e
-> --- /dev/null
-> +++ b/drivers/phy/marvell/phy-armada38x-comphy.c
-> @@ -0,0 +1,237 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Russell King, Deep Blue Solutions Ltd.
-> + *
-> + * Partly derived from CP110 comphy driver by Antoine Tenart
-> + * <antoine.tenart@bootlin.com>
-> + */
-> +#include <linux/delay.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define MAX_A38X_COMPHY	6
-> +#define MAX_A38X_PORTS	3
-> +
-> +#define COMPHY_CFG1		0x00
-> +#define  COMPHY_CFG1_GEN_TX(x)		((x) << 26)
-> +#define  COMPHY_CFG1_GEN_TX_MSK		COMPHY_CFG1_GEN_TX(15)
-> +#define  COMPHY_CFG1_GEN_RX(x)		((x) << 22)
-> +#define  COMPHY_CFG1_GEN_RX_MSK		COMPHY_CFG1_GEN_RX(15)
-> +#define  GEN_SGMII_1_25GBPS		6
-> +#define  GEN_SGMII_3_125GBPS		8
-> +
-> +#define COMPHY_STAT1		0x18
-> +#define  COMPHY_STAT1_PLL_RDY_TX	BIT(3)
-> +#define  COMPHY_STAT1_PLL_RDY_RX	BIT(2)
-> +
-> +#define COMPHY_SELECTOR		0xfc
-> +
-> +struct a38x_comphy;
-> +
-> +struct a38x_comphy_lane {
-> +	void __iomem *base;
-> +	struct a38x_comphy *priv;
-> +	unsigned int n;
-> +
-> +	int port;
-> +};
-> +
-> +struct a38x_comphy {
-> +	void __iomem *base;
-> +	struct device *dev;
-> +	struct a38x_comphy_lane lane[MAX_A38X_COMPHY];
-> +};
-> +
-> +static const u8 gbe_mux[MAX_A38X_COMPHY][MAX_A38X_PORTS] = {
-> +	{ 0, 0, 0 },
-> +	{ 4, 5, 0 },
-> +	{ 0, 4, 0 },
-> +	{ 0, 0, 4 },
-> +	{ 0, 3, 0 },
-> +	{ 0, 0, 3 },
-> +};
-> +
-> +static void a38x_comphy_set_reg(struct a38x_comphy_lane *lane,
-> +				unsigned int offset, u32 mask, u32 value)
-> +{
-> +	u32 val;
-> +
-> +	val = readl_relaxed(lane->base + offset) & ~mask;
-> +	writel(val | value, lane->base + offset);
-> +}
-> +
-> +static void a38x_comphy_set_speed(struct a38x_comphy_lane *lane,
-> +				  unsigned int gen_tx, unsigned int gen_rx)
-> +{
-> +	a38x_comphy_set_reg(lane, COMPHY_CFG1,
-> +			    COMPHY_CFG1_GEN_TX_MSK | COMPHY_CFG1_GEN_RX_MSK,
-> +			    COMPHY_CFG1_GEN_TX(gen_tx) |
-> +		            COMPHY_CFG1_GEN_RX(gen_rx));
-> +}
-> +
-> +static int a38x_comphy_poll(struct a38x_comphy_lane *lane,
-> +			    unsigned int offset, u32 mask, u32 value)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = readl_relaxed_poll_timeout_atomic(lane->base + offset, val,
-> +						(val & mask) == value,
-> +						1000, 150000);
-> +
-> +	if (ret)
-> +		dev_err(lane->priv->dev,
-> +			"comphy%u: timed out waiting for status\n", lane->n);
-> +
-> +	return ret;
-> +}
-> +
-> +/*
-> + * We only support changing the speed for comphys configured for GBE.
-> + * Since that is all we do, we only poll for PLL ready status.
-> + */
-> +static int a38x_comphy_set_mode(struct phy *phy, enum phy_mode mode, int sub)
-> +{
-> +	struct a38x_comphy_lane *lane = phy_get_drvdata(phy);
-> +	unsigned int gen;
-> +
-> +	if (mode != PHY_MODE_ETHERNET)
-> +		return -EINVAL;
-> +
-> +	switch (sub) {
-> +	case PHY_INTERFACE_MODE_SGMII:
-> +	case PHY_INTERFACE_MODE_1000BASEX:
-> +		gen = GEN_SGMII_1_25GBPS;
-> +		break;
-> +
-> +	case PHY_INTERFACE_MODE_2500BASEX:
-> +		gen = GEN_SGMII_3_125GBPS;
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	a38x_comphy_set_speed(lane, gen, gen);
-> +
-> +	return a38x_comphy_poll(lane, COMPHY_STAT1,
-> +				COMPHY_STAT1_PLL_RDY_TX |
-> +				COMPHY_STAT1_PLL_RDY_RX,
-> +				COMPHY_STAT1_PLL_RDY_TX |
-> +				COMPHY_STAT1_PLL_RDY_RX);
-> +}
-> +
-> +static const struct phy_ops a38x_comphy_ops = {
-> +	.set_mode	= a38x_comphy_set_mode,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static struct phy *a38x_comphy_xlate(struct device *dev,
-> +				     struct of_phandle_args *args)
-> +{
-> +	struct a38x_comphy_lane *lane;
-> +	struct phy *phy;
-> +	u32 val;
-> +
-> +	if (WARN_ON(args->args[0] >= MAX_A38X_PORTS))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	phy = of_phy_simple_xlate(dev, args);
-> +	if (IS_ERR(phy))
-> +		return phy;
-> +
-> +	lane = phy_get_drvdata(phy);
-> +	if (lane->port >= 0)
-> +		return ERR_PTR(-EBUSY);
-> +
-> +	lane->port = args->args[0];
-> +
-> +	val = readl_relaxed(lane->priv->base + COMPHY_SELECTOR);
-> +	val = (val >> (4 * lane->n)) & 0xf;
-> +
-> +	if (!gbe_mux[lane->n][lane->port] ||
-> +	    val != gbe_mux[lane->n][lane->port]) {
-> +		dev_warn(lane->priv->dev,
-> +			 "comphy%u: not configured for GBE\n", lane->n);
-> +		phy = ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	return phy;
-> +}
-> +
-> +static int a38x_comphy_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *provider;
-> +	struct device_node *child;
-> +	struct a38x_comphy *priv;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	priv->dev = &pdev->dev;
-> +	priv->base = base;
-> +
-> +	for_each_available_child_of_node(pdev->dev.of_node, child) {
-> +		struct phy *phy;
-> +		int ret;
-> +		u32 val;
-> +
-> +		ret = of_property_read_u32(child, "reg", &val);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "missing 'reg' property (%d)\n",
-> +				ret);
-> +			continue;
-> +		}
-> +
-> +		if (val >= MAX_A38X_COMPHY || priv->lane[val].base) {
-> +			dev_err(&pdev->dev, "invalid 'reg' property\n");
-> +			continue;
-> +		}
-> +
-> +		phy = devm_phy_create(&pdev->dev, child, &a38x_comphy_ops);
-> +		if (IS_ERR(phy))
-> +			return PTR_ERR(phy);
-> +
-> +		priv->lane[val].base = base + 0x28 * val;
-> +		priv->lane[val].priv = priv;
-> +		priv->lane[val].n = val;
-> +		priv->lane[val].port = -1;
-> +		phy_set_drvdata(phy, &priv->lane[val]);
-> +	}
-> +
-> +	dev_set_drvdata(&pdev->dev, priv);
-> +
-> +	provider = devm_of_phy_provider_register(&pdev->dev, a38x_comphy_xlate);
-> +
-> +	return PTR_ERR_OR_ZERO(provider);
-> +}
-> +
-> +static const struct of_device_id a38x_comphy_of_match_table[] = {
-> +	{ .compatible = "marvell,armada-380-comphy" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, a38x_comphy_of_match_table);
-> +
-> +static struct platform_driver a38x_comphy_driver = {
-> +	.probe	= a38x_comphy_probe,
-> +	.driver	= {
-> +		.name = "armada-38x-comphy",
-> +		.of_match_table = a38x_comphy_of_match_table,
-> +	},
-> +};
-> +module_platform_driver(a38x_comphy_driver);
-> +
-> +MODULE_AUTHOR("Russell King <rmk+kernel@armlinux.org.uk>");
-> +MODULE_DESCRIPTION("Common PHY driver for Armada 38x SoCs");
-> +MODULE_LICENSE("GPL v2");
+> Right, there is an upper limit on the DMA rings and DMA driver knows it. But
+> when an MSI is requested for each ring then the global events allocated for the
+> IA gets exhausted and MSI allocation gets failed.
 > 
+> Either I did not explain the the complete picture properly or I must be missing
+> something very badly here. Sorry for being dumb here. Let me give a pure
+> software perspective:
+> 
+> In the IRQ route we have the following variables:
+> 1) source id
+> 2) source index.
+> 3) global events
+> 4) vint
+> 5) vint status bit(global event mapping to vint)
+> 6) gic_irqs
+> 
+> - Source id and source index are managed by MSI client driver.
+> - Global event, vint and vint_status_bit allocation is managed by INTA driver
+> - Grouping of global event and mapping to vint is handled by INTA driver(chained
+> IRQ)
+> - gic_irqs allocation is managed by INTR driver.
+> 
+> When MSI client tries to allocate MSI for each source_index(rings for eg.)
+> available in a source, msi domain tries to allocate parent IRQs. Then INTA
+> driver will try to allocate a global event to each source index and fails when
+> the global events are exhausted. What am I missing here?
+
+Surely this is something you can change by letting the underlying driver
+know when to coalesce this things and when not to? Frankly, this looks a
+lot like what the GICv3 ITS does when you have device aliasing. It knows
+you're using the same global identifier for a different purpose because:
+
+- the upper layer tells it what ID to use
+- the lower layer tracks what IDs are already in use
+
+This involves tracking, refcounting, but I don't think that's out of the
+realm of possible things.
+
+> keeping in mind the above scenario, I started with single MSI allocations. I
+> agree there are issues with $patch. But before doing that I was hoping if the
+> above problem can be solved easily.
+
+If problems were solved easily, they wouldn't be problems... :-/
+
+> Also the same problem occurs for INTA parent IRQ allocation. INTA probe cannot
+> do a irq_create_fwspec_mapping() for all the available vints as gic_irqs will be
+> exhausted. Where do you think is the best place to create parent IRQs for INTA?
+> In the current implementation I am allocating it during msi_prepare(). So I had
+> to introduce msi_unprepare for freeing parent IRQs.
+
+And I'll continue saying that this isn't a practical option. You're
+breaking so many existing assumption it is not even funny. I'm not going
+to prevent you from doing so, but if you do, the API has to be robust
+for the existing use cases. What you've proposed so far isn't.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
