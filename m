@@ -1,59 +1,49 @@
-Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 12/33] ARM: davinci: aintc: drop the 00 prefix from register offsets
-Date: Fri,  8 Feb 2019 18:31:33 +0100
-Message-Id: <20190208173154.4665-13-brgl@bgdev.pl>
-In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
-References: <20190208173154.4665-1-brgl@bgdev.pl>
+Return-Path: <SRS0=bjk3=QP=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr50070.outbound.protection.outlook.com ([40.107.5.70]:14256
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727641AbfBHScz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Feb 2019 13:32:55 -0500
+From: Frank Li <frank.li@nxp.com>
+Subject: [PATCH 4/4] MAINTAINERS: Added imx DDR performonitor driver
+ maintainer information
+Date: Fri, 8 Feb 2019 18:32:47 +0000
+Message-ID: <1549650743-27581-4-git-send-email-Frank.Li@nxp.com>
+References: <1549650743-27581-1-git-send-email-Frank.Li@nxp.com>
+In-Reply-To: <1549650743-27581-1-git-send-email-Frank.Li@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>
+Sender: devicetree-owner@vger.kernel.org
+To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>
+Cc: Frank Li <frank.li@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Add DDR perf counter driver maintainer information
 
-Since no offset goes past 0xff - let's drop the 00 prefix for better
-readability. While we're at it: convert all hex numbers to lower-case.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: David Lechner <david@lechnology.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- arch/arm/mach-davinci/irq.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/mach-davinci/irq.c b/arch/arm/mach-davinci/irq.c
-index 145fda7e5a35..148c23728bdb 100644
---- a/arch/arm/mach-davinci/irq.c
-+++ b/arch/arm/mach-davinci/irq.c
-@@ -19,17 +19,17 @@
- 
- #include "irqs.h"
- 
--#define DAVINCI_AINTC_FIQ_REG0		0x0000
--#define DAVINCI_AINTC_FIQ_REG1		0x0004
--#define DAVINCI_AINTC_IRQ_REG0		0x0008
--#define DAVINCI_AINTC_IRQ_REG1		0x000C
--#define DAVINCI_AINTC_IRQ_IRQENTRY	0x0014
--#define DAVINCI_AINTC_IRQ_ENT_REG0	0x0018
--#define DAVINCI_AINTC_IRQ_ENT_REG1	0x001C
--#define DAVINCI_AINTC_IRQ_INCTL_REG	0x0020
--#define DAVINCI_AINTC_IRQ_EABASE_REG	0x0024
--#define DAVINCI_AINTC_IRQ_INTPRI0_REG	0x0030
--#define DAVINCI_AINTC_IRQ_INTPRI7_REG	0x004C
-+#define DAVINCI_AINTC_FIQ_REG0		0x00
-+#define DAVINCI_AINTC_FIQ_REG1		0x04
-+#define DAVINCI_AINTC_IRQ_REG0		0x08
-+#define DAVINCI_AINTC_IRQ_REG1		0x0c
-+#define DAVINCI_AINTC_IRQ_IRQENTRY	0x14
-+#define DAVINCI_AINTC_IRQ_ENT_REG0	0x18
-+#define DAVINCI_AINTC_IRQ_ENT_REG1	0x1c
-+#define DAVINCI_AINTC_IRQ_INCTL_REG	0x20
-+#define DAVINCI_AINTC_IRQ_EABASE_REG	0x24
-+#define DAVINCI_AINTC_IRQ_INTPRI0_REG	0x30
-+#define DAVINCI_AINTC_IRQ_INTPRI7_REG	0x4c
- 
- static void __iomem *davinci_aintc_base;
- static struct irq_domain *davinci_aintc_irq_domain;
--- 
-2.20.1
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6ba068e..687be0f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6163,6 +6163,13 @@ L:	linux-i2c@vger.kernel.org
+ S:	Maintained
+ F:	drivers/i2c/busses/i2c-cpm.c
+=20
++FREESCALE IMX DDR Performance Monitor DRIVER
++M:	Frank Li <Frank.li@nxp.com>
++L:	linux-arm-kernel@lists.infradead.org
++S:	Maintained
++F:	drivers/perf/fsl_imx8_ddr_perf.c
++F:	Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
++
+ FREESCALE IMX LPI2C DRIVER
+ M:	Dong Aisheng <aisheng.dong@nxp.com>
+ L:	linux-i2c@vger.kernel.org
+--=20
+2.5.2
