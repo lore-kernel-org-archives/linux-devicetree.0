@@ -1,59 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
-Date: Fri, 8 Feb 2019 14:51:20 +0100
-Message-ID: <CACRpkdamWQUW_O+gageB4Q6XuBg+t-h+eW1gpor7_DHvx41j=A@mail.gmail.com>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com> <1549290167-876-2-git-send-email-rogerq@ti.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 3/5] misc: fastrpc: Add support for context Invoke
+ method
+Date: Fri, 8 Feb 2019 14:55:14 +0100
+Message-ID: <20190208135514.GA23406@kroah.com>
+References: <20190208132306.12571-1-srinivas.kandagatla@linaro.org>
+ <20190208132306.12571-4-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549290167-876-2-git-send-email-rogerq@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20190208132306.12571-4-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: ext Tony Lindgren <tony@atomide.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Suman Anna <s-anna@ti.com>, David Lechner <david@lechnology.com>, "Nori, Sekhar" <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, nsaulnier@ti.com, jreeder@ti.com, Murali Karicheri <m-karicheri2@ti.com>, woods.technical@gmail.com, Linux-OMAP <linux-omap@vger.kernel.org>, linux-remoteproc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: arnd@arndb.de, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 4, 2019 at 3:24 PM Roger Quadros <rogerq@ti.com> wrote:
+On Fri, Feb 08, 2019 at 01:23:04PM +0000, Srinivas Kandagatla wrote:
+> +static int fastrpc_invoke(struct fastrpc_user *fl, char __user *argp)
+> +{
+> +	struct fastrpc_invoke_args *args = NULL;
+> +	struct fastrpc_invoke inv;
+> +	u32 nscalars;
+> +	int err;
+> +
+> +	if (copy_from_user(&inv, argp, sizeof(inv)))
+> +		return -EFAULT;
+> +
+> +	nscalars = REMOTE_SCALARS_LENGTH(inv.sc);
+> +
+> +	if (nscalars > MAX_REMOTE_SCALARS)
+> +		return -EINVAL;
+> +
+> +	if (nscalars) {
+> +		args = kcalloc(nscalars, sizeof(*args), GFP_KERNEL);
+> +		if (!args)
+> +			return -ENOMEM;
+> +
+> +		if (copy_from_user(args, (void __user *)(uintptr_t)inv.args,
+> +				   nscalars * sizeof(*args))) {
+> +			kfree(args);
+> +			return -EFAULT;
+> +		}
+> +
+> +		/* Make sure reserved field is set to 0 */
+> +		if (args->reserved) {
+> +			kfree(args);
+> +			return -EINVAL;
 
-> From: Suman Anna <s-anna@ti.com>
->
-> This patch adds the bindings for the Programmable Real-Time Unit
-> and Industrial Communication Subsystem (PRU-ICSS) present on various
-> SoCs such as AM33xx, AM437x, AM57xx, Keystone 66AK2G SoC, etc. It is
-> present on the Davinci based OMAPL138 SoCs and K3 architecture
-> based AM65x SoCs as well (not covered for now).
->
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+Am I wrong in that you are only checking the first reserved field in
+this array of args?  Don't you have a whole bunch of them here (nscalars
+of them)?  Don't you need to check them all and not just the first one?
 
-(...)
-> +               pruss_intc: intc@20000 {
-> +                       compatible = "ti,am3356-pruss-intc";
-> +                       reg = <0x20000 0x2000>;
-> +                       reg-names = "intc";
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +                       interrupts = <20 21 22 23 24 25 26 27>;
-> +                       interrupt-names = "host2", "host3", "host4",
-> +                                         "host5", "host6", "host7",
-> +                                         "host8", "host9";
+thanks,
 
-If thsese interrupts are mapped 1-to-1 to a parent interrupt controller
-then this is a hierarchical interrupt domain and then these should
-be handled locally in the driver as offset from child to parent
-statically encoded in the driver.
-
-Several old drivers and old device tree bindings make this kind
-of maps, but it is not how we do it anymore, if we can avoid it.
-
-To be able to use hierarchical interrupt domain in the kernel, the top
-interrupt controller must use the hierarchical (v2) irqdomain, so
-if this is anything else than the ARM GIC it will be an interesting
-undertaking to handle this.
-
-The more I understand of hierarchical irqdomains, the more of
-workarounds where we should be using it I see, we really need
-to spread this knowledge. Using it requires a lot of upfront work
-sometimes, sorry about that but the end result is so much better.
-
-Yours,
-Linus Walleij
+greg k-h
