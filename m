@@ -1,101 +1,58 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCHv3] arm64: dts: allwinner: a64: teres-i: enable backlight
-Date: Fri, 8 Feb 2019 21:17:11 +0100
-Message-ID: <20190208201711.fqqvhqd7gbqnoefp@flea>
-References: <20190208141629.14323-1-harald@ccbib.org>
+Subject: Re: [PATCH v2 3/5] media: sunxi: Add A10 CSI driver
+Date: Fri, 8 Feb 2019 21:19:08 +0100
+Message-ID: <20190208201908.t5easf5uurvax7re@flea>
+References: <cover.ba7411f0c7155d0292b38d3dec698e26b5cc813b.1548687041.git-series.maxime.ripard@bootlin.com>
+ <c1a7d46f8504decb58ff224b0b5f2f0733282cc6.1548687041.git-series.maxime.ripard@bootlin.com>
+ <CAAEAJfAxWBvj6E1fJ8fy=F2xDXLHwRq7-2BT3tQqbPvbZxseyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8062259145461660037=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190208141629.14323-1-harald@ccbib.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Harald Geyer <harald@ccbib.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hsnrvmpmpg5r7wb2"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAEAJfAxWBvj6E1fJ8fy=F2xDXLHwRq7-2BT3tQqbPvbZxseyg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
---===============8062259145461660037==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n3ufijtwuazhhq7b"
-Content-Disposition: inline
-
-
---n3ufijtwuazhhq7b
+--hsnrvmpmpg5r7wb2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Harald,
+Hi Ezequiel,
 
-On Fri, Feb 08, 2019 at 02:16:29PM +0000, Harald Geyer wrote:
-> Enable pwm and add a pretty standard backlight node.
+On Wed, Feb 06, 2019 at 07:59:43PM -0300, Ezequiel Garcia wrote:
+> > +       csi->isp_clk =3D devm_clk_get(&pdev->dev, "isp");
+> > +       if (IS_ERR(csi->isp_clk)) {
+> > +               dev_err(&pdev->dev, "Couldn't get our ISP clock\n");
+> > +               return PTR_ERR(csi->isp_clk);
+> > +       }
+> > +
+> > +       csi->mod_clk =3D devm_clk_get(&pdev->dev, "mod");
+> > +       if (IS_ERR(csi->mod_clk)) {
+> > +               dev_err(&pdev->dev, "Couldn't get our mod clock\n");
+> > +               return PTR_ERR(csi->mod_clk);
+> > +       }
+> > +
+> > +       csi->ram_clk =3D devm_clk_get(&pdev->dev, "ram");
+> > +       if (IS_ERR(csi->ram_clk)) {
+> > +               dev_err(&pdev->dev, "Couldn't get our ram clock\n");
+> > +               return PTR_ERR(csi->ram_clk);
+> > +       }
+> > +
 >=20
-> The regulator is always on, but we include it anyway, because it is
-> required by the binding document.
->=20
-> Signed-off-by: Harald Geyer <harald@ccbib.org>
-> ---
-> The backlight node got dropped from the initial submission of the
-> teres-i DT, because PWM support wasn't available in time, and I
-> kind of forgot to resubmit once PWM was in. Sorry about that.
->=20
-> While testing this patch I noticed, that sometimes on boot the
-> brightness is set to max_brightness instead of the default specified
-> in DT. I couldn't reproduce it reliably, but it seems to be related
-> to changing the pwm period. I guess the logic trying to detect
-> the brightness set by the boot loader gets confused in some corner
-> case if the pwm periods don't match. However unbinding and rebinding
-> the device to the driver always made it go to the proper default
-> brightness, so the problem is clearly not in the DT.
->=20
-> If the theory above is true, then it implies that the version of
-> u-boot running on my laptop doesn't completely overwrite all pwm
-> parameters. As this might be specific to my installation, I didn't
-> mention the issue in the commit message.
->=20
-> Changes since v2:
->  * Drop all the other stuff that got merged a year ago.
->  * Rebased on current sunxi/for-next branch
->  * Add power-supply property (just to conform to the binding)
->  * Use slightly different brightness-levels
->=20
-> Actually I tried omitting brightness-levels completely, as it is now
-> optional. However automatic calculation gives unreasonable results
-> (depending on the exact value of pwm period). A report has been sent
-> to the author of the code.
->=20
->=20
->  .../arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/=
-arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> index 7b7b14ba58e6..2a78932d5d3b 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> @@ -21,6 +21,15 @@
->  		serial0 =3D &uart0;
->  	};
-> =20
-> +	backlight: backlight {
-> +		compatible =3D "pwm-backlight";
-> +		pwms =3D <&pwm 0 50000 0>;
-> +		power-supply =3D <&reg_dcdc1>;
-> +		brightness-levels =3D <0 5 10 15 20 30 40 55 70 85 100>;
+> Minor comment: perhaps you can take advantage
+> of the clock bulk API and simplify the clock management.
 
-The backlight perceived brightness should increase lineary with each
-step, which means that if you have ten steps, each step should
-increase the perceived brightness by 10%. The eye being what it is, a
-exponential sequence is usually a much better approximation.
+Our clocks have usually very different usages for each IP (the RAM
+controls the DMA side of the IP, the mod one controls the "logic" part
+of it, the bus one the register, etc.) so they needed to be handled
+quite differently. I'd rather stick with the current API.
 
-It looks good otherwise, thanks!
+Thanks!
 Maxime
 
 --=20
@@ -103,29 +60,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---n3ufijtwuazhhq7b
+--hsnrvmpmpg5r7wb2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXF3jxwAKCRDj7w1vZxhR
-xd9PAQDfIXB78qZpCvPrEnHhSPEk/+05+/hn9JH47upZR3ZpOAEAsOgI4hEfo5dU
-/cNQ7sqdeDyZNY1GCGUFfIRDYRQx5AI=
-=raX6
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXF3kPAAKCRDj7w1vZxhR
+xX7rAQDZ8SvZeMCDfXgbukEy4JMwmoZozb1nisAxIhaBIKTsAQD6A3Cj6WVtN5dP
+uR0AiYb1Sg3joHZ9DfaysXHNhYUXvA8=
+=uUw3
 -----END PGP SIGNATURE-----
 
---n3ufijtwuazhhq7b--
-
-
---===============8062259145461660037==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8062259145461660037==--
+--hsnrvmpmpg5r7wb2--
