@@ -1,64 +1,54 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFT PATCH 7/9] mfd: axp20x: add USB power supply mfd cell to
- AXP813
-Date: Fri, 8 Feb 2019 11:03:23 +0000
-Message-ID: <20190208110323.GK20638@dell>
-References: <20190207064535.9226-1-wens@csie.org>
- <20190207064535.9226-8-wens@csie.org>
- <20190207110247.GE20638@dell>
- <CAGb2v66uC=ZUj3S3ceVHABg68WMuyfHPcG77CV1DjCNn9ff71A@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v2.1 43/49] dt-bindings: display: Add OSD Displays
+ OSD070T1718-19TS panel binding
+Date: Fri, 8 Feb 2019 13:19:49 +0200
+Message-ID: <20190208111949.GC4562@pendragon.ideasonboard.com>
+References: <20190111035120.20668-1-laurent.pinchart@ideasonboard.com>
+ <20190111035120.20668-44-laurent.pinchart@ideasonboard.com>
+ <20190115213905.GA17873@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v66uC=ZUj3S3ceVHABg68WMuyfHPcG77CV1DjCNn9ff71A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Quentin Schulz <quentin.schulz@bootlin.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20190115213905.GA17873@bogus>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 07 Feb 2019, Chen-Yu Tsai wrote:
-
-> On Thu, Feb 7, 2019 at 7:02 PM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Thu, 07 Feb 2019, Chen-Yu Tsai wrote:
-> >
-> > > From: Quentin Schulz <quentin.schulz@bootlin.com>
-> > >
-> > > The AXP813 has a VBUS power input. Now that the axp20x_usb_power driver
-> > > supports this variant, we can add an mfd cell for it to use it.
-> > >
-> > > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> > > [wens@csie.org: add commit message]
-> > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > > ---
-> > >  drivers/mfd/axp20x.c | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > >
-> > > diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> > > index 3c97f2c0fdfe..17b115845993 100644
-> > > --- a/drivers/mfd/axp20x.c
-> > > +++ b/drivers/mfd/axp20x.c
-> > > @@ -198,6 +198,12 @@ static const struct resource axp22x_usb_power_supply_resources[] = {
-> > >       DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
-> > >  };
-> > >
-> > > +/* AXP803 and AXP813/AXP818 share the same interrupts */
-> > > +static struct resource axp803_usb_power_supply_resources[] = {
-> > > +     DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
-> > > +     DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
-> >
-> > Nit: Why 2 spaces here?                              ^
-> 
-> 2 spaces? I'm only seeing one.
-
-Eh, that's odd.  My eyes must be failing me.
-
-Just add my Ack then. :)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+VGhlIE9TRCBEaXNwbGF5cyBPU0QwNzBUMTcxOC0xOVRTIGlzIGEgNyIgV1ZHQSAoODAweDQ4MCkg
+MjRiaXQgUkdCIHBhbmVsCmFuZCBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBi
+aW5kaW5ncy4KClNpZ25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
+cnRAaWRlYXNvbmJvYXJkLmNvbT4KUmV2aWV3ZWQtYnk6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZh
+bGtlaW5lbkB0aS5jb20+Ci0tLQpDaGFuZ2VzIHNpbmNlIHYyOgoKLSBTcGVjaWZ5IHdoaWNoIG9m
+IHRoZSBzaW1wbGUtcGFuZWwgcHJvcGVydGllcyBhcmUgdmFsaWQKLS0tCiAuLi4vZGlzcGxheS9w
+YW5lbC9vc2RkaXNwbGF5cyxvc2QwNzB0MTcxOC0xOXRzLnR4dCAgIHwgMTIgKysrKysrKysrKysr
+CiAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29zZGRpc3BsYXlz
+LG9zZDA3MHQxNzE4LTE5dHMudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3NkZGlzcGxheXMsb3NkMDcwdDE3MTgtMTl0cy50
+eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9vc2Rk
+aXNwbGF5cyxvc2QwNzB0MTcxOC0xOXRzLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAw
+MDAwMDAwMDAwMDAuLmU1Nzg4M2NjZGYyZgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29zZGRpc3BsYXlzLG9zZDA3MHQx
+NzE4LTE5dHMudHh0CkBAIC0wLDAgKzEsMTIgQEAKK09TRCBEaXNwbGF5cyBPU0QwNzBUMTcxOC0x
+OVRTIDciIFdWR0EgVEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21w
+YXRpYmxlOiBzaGFsbCBiZSAib3NkZGlzcGxheXMsb3NkMDcwdDE3MTgtMTl0cyIKKy0gcG93ZXIt
+c3VwcGx5OiBzZWUgc2ltcGxlLXBhbmVsLnR4dAorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBi
+YWNrbGlnaHQ6IHNlZSBzaW1wbGUtcGFuZWwudHh0CisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRp
+YmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2lu
+IHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuIE5vIG90aGVyIHNpbXBsZS1wYW5l
+bCBwcm9wZXJ0aWVzIHRoYW4KK3RoZSBvbmVzIHNwZWNpZmllZCBoZXJlaW4gYXJlIHZhbGlkLgoK
+LS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
