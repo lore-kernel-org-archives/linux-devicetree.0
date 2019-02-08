@@ -1,13 +1,13 @@
 From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: Re: [PATCHv3 20/27] PCI: mobiveil: add Byte and Half-Word width
- register accessors
-Date: Fri, 8 Feb 2019 18:14:57 +0530
-Message-ID: <CAFZiPx1esvy7uqAymR7oU+hXSAUwLbKgUo3dK3CoHSajsD41-A@mail.gmail.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com> <20190129080926.36773-21-Zhiqiang.Hou@nxp.com>
+Subject: Re: [PATCHv3 21/27] PCI: mobiveil: make mobiveil_host_init can be
+ used to re-init host
+Date: Fri, 8 Feb 2019 18:16:11 +0530
+Message-ID: <CAFZiPx0SUBd_ad-P2yyOA_==PbXN58YamT1-kQVTuz27+8Q+bw@mail.gmail.com>
+References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com> <20190129080926.36773-22-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129080926.36773-21-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190129080926.36773-22-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
 Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
@@ -17,53 +17,154 @@ On Tue, Jan 29, 2019 at 1:40 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
 >
 > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 >
-> As there are some Byte and Half-Work width registers in PCIe
-> configuration space, add Byte and Half-Word width register
-> accessors.
+> Make the mobiveil_host_init function can be used to re-init
+> host controller's PAB and GPEX CSR register block, as NXP
+> integrated Mobiveil IP has to reset and then re-init the PAB
+> and GPEX CSR registers upon Hot-reset.
 >
 > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 > ---
 > V3:
->  - No change
+>  - Removed the duplicated free opteration of pcie->resources.
 >
->  .../pci/controller/mobiveil/pcie-mobiveil.h   | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
+>  .../controller/mobiveil/pcie-mobiveil-host.c  | 41 ++++++++++---------
+>  .../pci/controller/mobiveil/pcie-mobiveil.h   |  3 +-
+>  2 files changed, 23 insertions(+), 21 deletions(-)
 >
+> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> index d028cdf31d0e..e8d0c4989013 100644
+> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> @@ -217,7 +217,7 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
+>         writel_relaxed(1, pcie->apb_csr_base + MSI_ENABLE_OFFSET);
+>  }
+>
+> -static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+> +int mobiveil_host_init(struct mobiveil_pcie *pcie, bool reinit)
+>  {
+>         u32 value, pab_ctrl, type;
+>         struct resource_entry *win;
+> @@ -229,11 +229,16 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>         for (i = 0; i < pcie->ppio_wins; i++)
+>                 mobiveil_pcie_disable_ib_win(pcie, i);
+>
+> -       /* setup bus numbers */
+> -       value = csr_readl(pcie, PCI_PRIMARY_BUS);
+> -       value &= 0xff000000;
+> -       value |= 0x00ff0100;
+> -       csr_writel(pcie, value, PCI_PRIMARY_BUS);
+> +       pcie->ib_wins_configured = 0;
+> +       pcie->ob_wins_configured = 0;
+> +
+> +       if (!reinit) {
+> +               /* setup bus numbers */
+> +               value = csr_readl(pcie, PCI_PRIMARY_BUS);
+> +               value &= 0xff000000;
+> +               value |= 0x00ff0100;
+> +               csr_writel(pcie, value, PCI_PRIMARY_BUS);
+> +       }
+>
+>         /*
+>          * program Bus Master Enable Bit in Command Register in PAB Config
+> @@ -279,7 +284,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>         program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+>
+>         /* Get the I/O and memory ranges from DT */
+> -       resource_list_for_each_entry(win, &pcie->resources) {
+> +       resource_list_for_each_entry(win, pcie->resources) {
+>                 if (resource_type(win->res) == IORESOURCE_MEM) {
+>                         type = MEM_WINDOW_TYPE;
+>                 } else if (resource_type(win->res) == IORESOURCE_IO) {
+> @@ -550,8 +555,6 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>         resource_size_t iobase;
+>         int ret;
+>
+> -       INIT_LIST_HEAD(&pcie->resources);
+> -
+>         ret = mobiveil_pcie_parse_dt(pcie);
+>         if (ret) {
+>                 dev_err(dev, "Parsing DT failed, ret: %x\n", ret);
+> @@ -565,34 +568,35 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>
+>         /* parse the host bridge base addresses from the device tree file */
+>         ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
+> -                                                   &pcie->resources, &iobase);
+> +                                                   &bridge->windows, &iobase);
+>         if (ret) {
+>                 dev_err(dev, "Getting bridge resources failed\n");
+>                 return ret;
+>         }
+>
+> +       pcie->resources = &bridge->windows;
+> +
+>         /*
+>          * configure all inbound and outbound windows and prepare the RC for
+>          * config access
+>          */
+> -       ret = mobiveil_host_init(pcie);
+> +       ret = mobiveil_host_init(pcie, false);
+>         if (ret) {
+>                 dev_err(dev, "Failed to initialize host\n");
+> -               goto error;
+> +               return ret;
+>         }
+>
+>         ret = mobiveil_pcie_interrupt_init(pcie);
+>         if (ret) {
+>                 dev_err(dev, "Interrupt init failed\n");
+> -               goto error;
+> +               return ret;
+>         }
+>
+> -       ret = devm_request_pci_bus_resources(dev, &pcie->resources);
+> +       ret = devm_request_pci_bus_resources(dev, pcie->resources);
+>         if (ret)
+> -               goto error;
+> +               return ret;
+>
+>         /* Initialize bridge */
+> -       list_splice_init(&pcie->resources, &bridge->windows);
+>         bridge->dev.parent = dev;
+>         bridge->sysdata = pcie;
+>         bridge->busnr = pcie->rp.root_bus_nr;
+> @@ -608,7 +612,7 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>         /* setup the kernel resources for the newly added PCIe root bus */
+>         ret = pci_scan_root_bus_bridge(bridge);
+>         if (ret)
+> -               goto error;
+> +               return ret;
+>
+>         bus = bridge->bus;
+>
+> @@ -618,7 +622,4 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>         pci_bus_add_devices(bus);
+>
+>         return 0;
+> -error:
+> -       pci_free_resource_list(&pcie->resources);
+> -       return ret;
+>  }
 > diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> index 81685840b378..933c2f34bc52 100644
+> index 933c2f34bc52..0f5303962e88 100644
 > --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
 > +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> @@ -181,9 +181,29 @@ static inline u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
->         return csr_read(pcie, off, 0x4);
->  }
+> @@ -152,7 +152,7 @@ struct mobiveil_pab_ops {
 >
-> +static inline u32 csr_readw(struct mobiveil_pcie *pcie, u32 off)
-> +{
-> +       return csr_read(pcie, off, 0x2);
-> +}
-> +
-> +static inline u32 csr_readb(struct mobiveil_pcie *pcie, u32 off)
-> +{
-> +       return csr_read(pcie, off, 0x1);
-> +}
-> +
->  static inline void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
->  {
->         csr_write(pcie, val, off, 0x4);
->  }
+>  struct mobiveil_pcie {
+>         struct platform_device *pdev;
+> -       struct list_head resources;
+> +       struct list_head *resources;
+>         void __iomem *csr_axi_slave_base;       /* PAB registers base */
+>         phys_addr_t pcie_reg_base;      /* Physical PCIe Controller Base */
+>         void __iomem *apb_csr_base;     /* MSI register base */
+> @@ -165,6 +165,7 @@ struct mobiveil_pcie {
+>  };
 >
-> +static inline void csr_writew(struct mobiveil_pcie *pcie, u32 val, u32 off)
-> +{
-> +       csr_write(pcie, val, off, 0x2);
-> +}
-> +
-> +static inline void csr_writeb(struct mobiveil_pcie *pcie, u32 val, u32 off)
-> +{
-> +       csr_write(pcie, val, off, 0x1);
-> +}
-> +
->  #endif /* _PCIE_MOBIVEIL_H */
+>  int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie);
+> +int mobiveil_host_init(struct mobiveil_pcie *pcie, bool reinit);
+>  bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie);
+>  int mobiveil_bringup_link(struct mobiveil_pcie *pcie);
+>  void program_ob_windows(struct mobiveil_pcie *pcie, int win_num, u64 cpu_addr,
 > --
 > 2.17.1
 >
