@@ -1,75 +1,107 @@
-Return-Path: <SRS0=vN6s=Q3=zte.com.cn=wen.yang99@kernel.org>
-Date: Wed, 20 Feb 2019 10:41:06 +0800 (CST)
-Message-ID: <201902201041061130247@zte.com.cn>
-In-Reply-To: <alpine.DEB.2.20.1902191824410.27989@hadrien>
-References: 1550071969-86286-1-git-send-email-peng.hao2@zte.com.cn,20190219170516.GL15711@atomide.com,alpine.DEB.2.20.1902191824410.27989@hadrien
-Mime-Version: 1.0
-From: <wen.yang99@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gYXJtL21hY2gtb21hcDIvZGlzcGxheTogZml4IHBvc3NpYmxlIG9iamVjdCByZWZlcmVuY2VsZWFr?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-To: julia.lawall@lip6.fr
-Cc: tony@atomide.com, peng.hao2@zte.com.cn, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, tomi.valkeinen@ti.com, robh@kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 32/33] irqchip: davinci-cp-intc: move the driver to drivers/irqchip
+Date: Fri,  8 Feb 2019 18:31:53 +0100
+Message-Id: <20190208173154.4665-33-brgl@bgdev.pl>
+In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
+References: <20190208173154.4665-1-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>
 List-ID: <devicetree@vger.kernel.org>
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
+The cp-intc driver has now been cleaned up. Move it to drivers/irqchip
+where it belongs.
 
---=====_001_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: David Lechner <david@lechnology.com>
+---
+ arch/arm/mach-davinci/Kconfig                             | 8 ++------
+ arch/arm/mach-davinci/Makefile                            | 2 --
+ drivers/irqchip/Kconfig                                   | 5 +++++
+ drivers/irqchip/Makefile                                  | 1 +
+ .../cp_intc.c => drivers/irqchip/irq-davinci-cp-intc.c    | 0
+ 5 files changed, 8 insertions(+), 8 deletions(-)
+ rename arch/arm/mach-davinci/cp_intc.c => drivers/irqchip/irq-davinci-cp-intc.c (100%)
 
-
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-SGksCj4gPiBBZGRpbmcgZGV2aWNldHJlZSBsaXN0LCBKdWxpYSwgUm9iIGFuZCBUb21pIHRvIENj
-Lgo+ID4KPiA+ICogUGVuZyBIYW8gPHBlbmcuaGFvMkB6dGUuY29tLmNuPiBbMTkwMjEyIDIzOjEx
-XToKPiA+ID4gb2ZfZmluZF9kZXZpY2VfYnlfbm9kZSgpIHRha2VzIGEgcmVmZXJlbmNlIHRvIHRo
-ZSBzdHJ1Y3QgZGV2aWNlCj4gPiA+IHdoZW4gaXQgZmluZHMgYSBtYXRjaCB2aWEgZ2V0X2Rldmlj
-ZS5XaGVuIHJldHVybmluZyBlcnJvciB3ZSBzaG91bGQKPiA+ID4gY2FsbCBwdXRfZGV2aWNlLgo+
-ID4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEhhbyA8cGVuZy5oYW8yQHp0ZS5jb20uY24+
-Cj4gPiA+IC0tLQo+ID4gPiAgYXJjaC9hcm0vbWFjaC1vbWFwMi9kaXNwbGF5LmMgfCAxICsKPiA+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+ID4gPgo+ID4gPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vbWFjaC1vbWFwMi9kaXNwbGF5LmMgYi9hcmNoL2FybS9tYWNoLW9tYXAyL2Rp
-c3BsYXkuYwo+ID4gPiBpbmRleCBmODZiNzJkLi5jNmFhOWVkIDEwMDY0NAo+ID4gPiAtLS0gYS9h
-cmNoL2FybS9tYWNoLW9tYXAyL2Rpc3BsYXkuYwo+ID4gPiArKysgYi9hcmNoL2FybS9tYWNoLW9t
-YXAyL2Rpc3BsYXkuYwo+ID4gPiBAQCAtMjU4LDYgKzI1OCw3IEBAIHN0YXRpYyBpbnQgX19pbml0
-IG9tYXBkc3NfaW5pdF9vZih2b2lkKQo+ID4gPiAgICAgIHIgPSBvZl9wbGF0Zm9ybV9wb3B1bGF0
-ZShub2RlLCBOVUxMLCBOVUxMLCAmcGRldi0+ZGV2KTsKPiA+ID4gICAgICBpZiAocikgewo+ID4g
-PiAgICAgICAgICBwcl9lcnIoIlVuYWJsZSB0byBwb3B1bGF0ZSBEU1Mgc3VibW9kdWxlIGRldmlj
-ZXNcbiIpOwo+ID4gPiArICAgICAgICBwdXRfZGV2aWNlKCZwZGV2LT5kZXYpOwo+ID4gPiAgICAg
-ICAgICByZXR1cm4gcjsKPiA+ID4gICAgICB9Cj4gPgo+ID4gSW4gZ2VuZXJhbCwgaWYgdGhlIGRl
-dmljZSB0cmVlIG5vZGUgaXMgbmV2ZXIgdXNlZCBhZnRlcndhcmRzLAo+ID4gc2hvdWxkIHRoaXMg
-YmUganVzdDoKPiA+Cj4gPiAgICAgciA9IG9mX3BsYXRmb3JtX3BvcHVsYXRlKG5vZGUsIE5VTEws
-IE5VTEwsICZwZGV2LT5kZXYpOwo+ID4gICAgIG9mX25vZGVfcHV0KGRldl9ub2RlKTsKPiAKPiBB
-cmUgdGhlc2Ugc29sdmluZyB0aGUgc2FtZSBwcm9ibGVtcz8gIFRoZSBvZl9ub2RlX3B1dCBsb29r
-cyBjbGVhcmx5Cj4gbmVjZXNzYXJ5LCB3aGV0aGVyIHRoZXJlIGlzIGEgc3VjY2VzcyBvciBmYWls
-dXJlLiAgSSdtIG5vdCBmYW1pbGlhciB3aXRoCj4gcHV0X2RldmljZS4gIEkgc2VlIHRoYXQgaXQg
-ZG9lcyBhIGtvYmplY3RfcHV0LCBidXQgSSBkb24ndCBrbm93IHdoYXQKPiBoYXBwZW5zIGJlY2F1
-c2Ugb2YgdGhhdC4gIEJ1dCBpdCBsb29rcyBsaWtlIGFuIGluY29uc2lzdGVuY3kgdGhhdCBQZW5n
-J3MKPiBwYXRjaCBvbmx5IGNvbnNpZGVycyB0aGUgZmFpbHVyZSBjYXNlLCB3aGlsZSB5b3VyIHN1
-Z2dlc3Rpb24gaGFwcGVucwo+IGFsd2F5cy4KPgo+IEkgZ3Vlc3MgUGVuZydzIHBhdGNoIGlzIG1v
-dGl2YXRlZCBieSBhIENvY2NpbmVsbGUgc2NyaXB0IHRoYXQgV2VuIFlhbmcKPiAoYWxzbyBmcm9t
-IFpURSkgaGFzIGJlZW4gd29ya2luZyBvbi4gIFBlcmhhcHMgdGhlcmUgaXMgYSBuZWVkIHRvIGFk
-anVzdAo+IHdoYXQgaXMgc3VnZ2VzdGVkIGJ5IHRoYXQgc2NyaXB0LgoKWWVzLCBQZW5nIEhhbyBh
-bmQgSSBiZWxvbmcgdG8gdGhlIHNhbWUgY29tcGFueS4KSSBmb3VuZCBzb21lIGNvZGUgaXNzdWVz
-IHdpdGggdGhpcyBDb2NjaW5lbGxlIHNjcmlwdDoKSHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkv
-Mi8xNi8xMDcKT3VyIG90aGVyIGNvbGxlYWd1ZXMgYXJlIHN1Ym1pdHRpbmcgc29tZSBwYXRjaGVz
-IHRvIGZpeCB0aGVzZSBkaXNjb3ZlcmVkIHByb2JsZW1zLgoKRm9yIHRoaXMgY29kZShhcmNoL2Fy
-bS9tYWNoLW9tYXAyL2Rpc3BsYXkuYyksIHRoZXJlIG1heSBiZSB0d28gaXNzdWVzOgoxLCB0aGUg
-b2ZfZmluZF9kZXZpY2VfYnlfbm9kZSgpIHRha2VzIGEgcmVmZXJlbmNlIHRvIHRoZSB1bmRlcmx5
-aW5nIGRldmljZQpzdHJ1Y3R1cmUsIHdlIHNob3VsZCBjYWxsIHB1dF9kZXZpY2UoKSAgcmVsZWFz
-ZSB0aGF0IHJlZmVyZW5jZS4KMiwgb2ZfZmluZF9jb21wYXRpYmxlX25vZGUvb2ZfZmluZF9ub2Rl
-X2J5X25hbWUvb2ZfcGFyc2VfcGhhbmRsZS4uLiAgd2lsbCAKaW5jcmVhc2UgdGhlIHJlZmNvdW50
-IG9mIGRldmljZV9ub2RlLCAgd2Ugc2hvdWxkIGNhbGwgb2Zfbm9kZV9wdXQoKSB0byByZWxlYXNl
-CnRoZSByZWZjb3VudC4KClRoZSBmaXJzdCBpc3N1ZSBjYW4gYWxyZWFkeSBiZSBkZXRlY3RlZCBi
-eSB0aGUgQ29jY2luZWxsZSBzY3JpcHQgZGVzY3JpYmVkIGFib3ZlOwpUaGUgc2Vjb25kIGlzc3Vl
-LCB3ZSBhcmUgc3RpbGwgbG9va2luZyBmb3Igd2F5cyB0byBkZXZlbG9wIHRoZSBjb3JyZXNwb25k
-aW5nIENvY2NpbmVsbGUgc2NyaXB0LgoKUmVnYXJkcywKICBXZW4=
-
-
---=====_003_next=====--
-
---=====_001_next=====--
+diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
+index 71a4d875dd39..5a59cebc7d0a 100644
+--- a/arch/arm/mach-davinci/Kconfig
++++ b/arch/arm/mach-davinci/Kconfig
+@@ -1,10 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ if ARCH_DAVINCI
+ 
+-config CP_INTC
+-	bool
+-	select IRQ_DOMAIN
+-
+ config ARCH_DAVINCI_DMx
+ 	bool
+ 
+@@ -33,13 +29,13 @@ config ARCH_DAVINCI_DA830
+ 	select ARCH_DAVINCI_DA8XX
+ 	# needed on silicon revs 1.0, 1.1:
+ 	select CPU_DCACHE_WRITETHROUGH if !CPU_DCACHE_DISABLE
+-	select CP_INTC
++	select DAVINCI_CP_INTC
+ 
+ config ARCH_DAVINCI_DA850
+ 	bool "DA850/OMAP-L138/AM18x based system"
+ 	depends on !ARCH_DAVINCI_DMx || (AUTO_ZRELADDR && ARM_PATCH_PHYS_VIRT)
+ 	select ARCH_DAVINCI_DA8XX
+-	select CP_INTC
++	select DAVINCI_CP_INTC
+ 
+ config ARCH_DAVINCI_DA8XX
+ 	bool
+diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
+index 983865a99616..f76a8482784f 100644
+--- a/arch/arm/mach-davinci/Makefile
++++ b/arch/arm/mach-davinci/Makefile
+@@ -18,8 +18,6 @@ obj-$(CONFIG_ARCH_DAVINCI_DM365)	+= dm365.o devices.o
+ obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= da830.o devices-da8xx.o usb-da8xx.o
+ obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= da850.o devices-da8xx.o usb-da8xx.o
+ 
+-obj-$(CONFIG_CP_INTC)			+= cp_intc.o
+-
+ # Board specific
+ obj-$(CONFIG_MACH_DA8XX_DT)		+= da8xx-dt.o pdata-quirks.o
+ obj-$(CONFIG_MACH_DAVINCI_EVM)  	+= board-dm644x-evm.o
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index ea0eb82bf1d2..48fc5024c073 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -134,6 +134,11 @@ config DAVINCI_AINTC
+ 	select GENERIC_IRQ_CHIP
+ 	select IRQ_DOMAIN
+ 
++config DAVINCI_CP_INTC
++	bool
++	select GENERIC_IRQ_CHIP
++	select IRQ_DOMAIN
++
+ config DW_APB_ICTL
+ 	bool
+ 	select GENERIC_IRQ_CHIP
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 623e0ec5f9d0..e6cd0c98eff2 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
+ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
+ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
+ obj-$(CONFIG_DAVINCI_AINTC)		+= irq-davinci-aintc.o
++obj-$(CONFIG_DAVINCI_CP_INTC)		+= irq-davinci-cp-intc.o
+ obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
+ obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
+ obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
+diff --git a/arch/arm/mach-davinci/cp_intc.c b/drivers/irqchip/irq-davinci-cp-intc.c
+similarity index 100%
+rename from arch/arm/mach-davinci/cp_intc.c
+rename to drivers/irqchip/irq-davinci-cp-intc.c
+-- 
+2.20.1
