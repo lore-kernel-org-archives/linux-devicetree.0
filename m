@@ -1,284 +1,161 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RFC PATCH v4 08/13] genirq/msi: Add support for allocating
- single MSI for a device
-Date: Fri, 8 Feb 2019 10:39:46 +0000
-Message-ID: <af78e6df-4ef4-78ec-aeb2-549643d56e70@arm.com>
-References: <20181227060829.5080-1-lokeshvutla@ti.com>
- <20181227061313.5451-1-lokeshvutla@ti.com>
- <20181227061313.5451-8-lokeshvutla@ti.com>
- <5be38277-3348-a6d9-4b67-3ead308c009a@arm.com>
- <faad8e90-2f97-1dbb-fb98-e0f1462e29c5@ti.com>
- <523c4a23-b5b9-ff10-051d-c90e6e8341d4@arm.com>
- <69699155-49f8-ce1e-3eb4-5b63ab032a94@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
+Date: Fri, 8 Feb 2019 10:57:43 +0000
+Message-ID: <20190208105743.GI20638@dell>
+References: <cover.1549523718.git.matti.vaittinen@fi.rohmeurope.com>
+ <50d1debf03bbd07f49b2c5a85cf9672439cbd0ac.1549523718.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190207140053.GG20638@dell>
+ <20190207162807.GB1920@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <69699155-49f8-ce1e-3eb4-5b63ab032a94@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190207162807.GB1920@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>
-Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/2019 13:42, Lokesh Vutla wrote:
-> Hi Marc,
+Mark,
+
+Something for you:
+
+> > > +/* bit [0] - Shutdown register */
+> > > +unsigned int bit0_offsets[] = {0};
+> > > +/* bit [1] - Power failure register */
+> > > +unsigned int bit1_offsets[] = {1};
+> > > +/* bit [2] - VR FAULT register */
+> > > +unsigned int bit2_offsets[] = {2};
+> > > +/* bit [3] - PMU register interrupts */
+> > > +unsigned int bit3_offsets[] = {3};
+> > > +/* bit [4] - Charger 1 and Charger 2 registers */
+> > > +unsigned int bit4_offsets[] = {4, 5};
+> > > +/* bit [5] - RTC register */
+> > > +unsigned int bit5_offsets[] = {6};
+> > > +/* bit [6] - GPIO register */
+> > > +unsigned int bit6_offsets[] = {7};
+> > > +/* bit [7] - Invalid operation register */
+> > > +unsigned int bit7_offsets[] = {8};
+> > 
+> > What on earth is this?
 > 
-> On 04/02/19 4:03 PM, Marc Zyngier wrote:
->> On 24/01/2019 10:19, Lokesh Vutla wrote:
->>> Hi Marc,
->>> 	Sorry for the delayed response. Just back from vacation.
->>>
->>> On 17/01/19 12:00 AM, Marc Zyngier wrote:
->>>> On 27/12/2018 06:13, Lokesh Vutla wrote:
->>>>> Previously all msi for a device are allocated in one go
->>>>> by calling msi_domain_alloc_irq() from a bus layer. This might
->>>>> not be the case when a device is trying to allocate interrupts
->>>>> dynamically based on a request to it.
->>>>>
->>>>> So introduce msi_domain_alloc/free_irq() apis to allocate a single
->>>>> msi. prepare and activate operations to be handled by bus layer
->>>>> calling msi_domain_alloc/free_irq() apis.
->>>>>
->>>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>>>> ---
->>>>>  include/linux/msi.h |  3 +++
->>>>>  kernel/irq/msi.c    | 62 +++++++++++++++++++++++++++++----------------
->>>>>  2 files changed, 43 insertions(+), 22 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/msi.h b/include/linux/msi.h
->>>>> index 784fb52b9900..474490826f8c 100644
->>>>> --- a/include/linux/msi.h
->>>>> +++ b/include/linux/msi.h
->>>>> @@ -301,8 +301,11 @@ int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
->>>>>  struct irq_domain *msi_create_irq_domain(struct fwnode_handle *fwnode,
->>>>>   struct msi_domain_info *info,
->>>>>   struct irq_domain *parent);
->>>>> +int msi_domain_alloc_irq(struct irq_domain *domain, struct device *dev,
->>>>> + struct msi_desc *desc,  msi_alloc_info_t *arg);
->>>>>  int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
->>>>>    int nvec);
->>>>> +void msi_domain_free_irq(struct msi_desc *desc);
->>>>>  void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
->>>>>  struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain);
->>>>>
->>>>> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
->>>>> index ad26fbcfbfc8..eb7459324113 100644
->>>>> --- a/kernel/irq/msi.c
->>>>> +++ b/kernel/irq/msi.c
->>>>> @@ -387,6 +387,35 @@ static bool msi_check_reservation_mode(struct irq_domain *domain,
->>>>>  return desc->msi_attrib.is_msix || desc->msi_attrib.maskbit;
->>>>>  }
->>>>>
->>>>> +int msi_domain_alloc_irq(struct irq_domain *domain, struct device *dev,
->>>>> + struct msi_desc *desc,  msi_alloc_info_t *arg)
->>>>> +{
->>>>> +struct msi_domain_info *info = domain->host_data;
->>>>> +struct msi_domain_ops *ops = info->ops;
->>>>> +int i, ret, virq;
->>>>> +
->>>>> +ops->set_desc(arg, desc);
->>>>> +
->>>>> +virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
->>>>> +       dev_to_node(dev), arg, false,
->>>>> +       desc->affinity);
->>>>> +if (virq < 0) {
->>>>> +ret = -ENOSPC;
->>>>> +if (ops->handle_error)
->>>>> +ret = ops->handle_error(domain, desc, ret);
->>>>> +if (ops->msi_finish)
->>>>> +ops->msi_finish(arg, ret);
->>>>> +return ret;
->>>>> +}
->>>>> +
->>>>> +for (i = 0; i < desc->nvec_used; i++) {
->>>>> +irq_set_msi_desc_off(virq, i, desc);
->>>>> +irq_debugfs_copy_devname(virq + i, dev);
->>>>> +}
->>>>> +
->>>>> +return 0;
->>>>> +}
->>>>> +
->>>>>  /**
->>>>>   * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
->>>>>   * @domain:The domain to allocate from
->>>>> @@ -404,7 +433,7 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
->>>>>  struct irq_data *irq_data;
->>>>>  struct msi_desc *desc;
->>>>>  msi_alloc_info_t arg;
->>>>> -int i, ret, virq;
->>>>> +int ret, virq;
->>>>>  bool can_reserve;
->>>>>
->>>>>  ret = msi_domain_prepare_irqs(domain, dev, nvec, &arg);
->>>>> @@ -412,24 +441,9 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
->>>>>  return ret;
->>>>>
->>>>>  for_each_msi_entry(desc, dev) {
->>>>> -ops->set_desc(&arg, desc);
->>>>> -
->>>>> -virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
->>>>> -       dev_to_node(dev), &arg, false,
->>>>> -       desc->affinity);
->>>>> -if (virq < 0) {
->>>>> -ret = -ENOSPC;
->>>>> -if (ops->handle_error)
->>>>> -ret = ops->handle_error(domain, desc, ret);
->>>>> -if (ops->msi_finish)
->>>>> -ops->msi_finish(&arg, ret);
->>>>> +ret = msi_domain_alloc_irq(domain, dev, desc, &arg);
->>>>> +if (ret)
->>>>>  return ret;
->>>>> -}
->>>>> -
->>>>> -for (i = 0; i < desc->nvec_used; i++) {
->>>>> -irq_set_msi_desc_off(virq, i, desc);
->>>>> -irq_debugfs_copy_devname(virq + i, dev);
->>>>> -}
->>>>>  }
->>>>>
->>>>>  if (ops->msi_finish)
->>>>> @@ -487,6 +501,12 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
->>>>>  return ret;
->>>>>  }
->>>>>
->>>>> +void msi_domain_free_irq(struct msi_desc *desc)
->>>>> +{
->>>>> +irq_domain_free_irqs(desc->irq, desc->nvec_used);
->>>>> +desc->irq = 0;
->>>>> +}
->>>>> +
->>>>>  /**
->>>>>   * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
->>>>>   * @domain:The domain to managing the interrupts
->>>>> @@ -503,10 +523,8 @@ void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
->>>>>   * enough that there is no IRQ associated to this
->>>>>   * entry. If that's the case, don't do anything.
->>>>>   */
->>>>> -if (desc->irq) {
->>>>> -irq_domain_free_irqs(desc->irq, desc->nvec_used);
->>>>> -desc->irq = 0;
->>>>> -}
->>>>> +if (desc->irq)
->>>>> +msi_domain_free_irq(desc);
->>>>>  }
->>>>>  }
->>>>>
->>>>>
->>>>
->>>> I can see some interesting issues with this API.
->>>>
->>>> At the moment, MSIs are allocated upfront, and that's usually done
->>>> before the driver can do anything else. With what you're suggesting
->>>> here, MSIs can now be allocated at any time, which sounds great. But how
->>>> does it work when MSIs get added/freed in parallel? I can't see any
->>>> locking here...
->>>>
->>>> It is also pretty nasty that the user of this API has to know about the
->>>> MSI descriptor. Really, nobody should have to deal with this outside of
->>>> the MSI layer.
->>>>
->>>> The real question is why you need to need to allocate MSIs on demand for
->>>> a given device. Usually, you allocate them because this is a per-CPU
->>>> resource, or something similar. What makes it so variable that you need
->>>> to resort to fine grained MSI allocation?
->>>
->>> I added this after the discussion we had in the previous version[1] of this
->>> series. Let me provide the details again:
->>>
->>> As you must be aware INTR is interrupt re-director and INTA is the interrupt
->>> multiplexer is the SoC. Here we are trying to address the interrupt connection
->>> route as below:
->>> Device(Global event) --> INTA --> INTR --> GIC
->>>
->>> For the above case you suggested to have the following sw IRQ domain hierarchy:
->>> INTA multi MSI --> INTA  -->  INTR  --> GIC
->>>
->>> The problem here with the INTA MSI is that all the interrupts for a device
->>> should be pre-allocated during the device probe time. But this is not what we
->>> wanted especially for the DMA case.
->>>
->>> An example DMA ring connection would look like below[2]:
->>>
->>>                       +---------------------+
->>>                        |         IA                |
->>> +--------+        |            +------+   |        +--------+         +------+
->>> | ring 1 +----->evtA+->VintX+-------->+   IR   +-- --->  GIC +-->
->>> +--------+       |             +------+   |        +--------+         +------+
->>> Linux IRQ Y
->>>    evtA            |                             |
->>>                        |                             |
->>>                       +----------------------+
->>>
->>> So when a DMA client driver requests a dma channel during probe, the DMA driver
->>> gets a free ring in its allocated range. Then DMA driver requests MSI layer for
->>> an IRQ. This is why I had to introduce on demand allocation of MSIs for a device.
->>>
->>> The reason why we avoided DMA driver to allocate interrupts during its probe as
->>> it is not aware of the exact no of channels that are going to be used. Also max
->>> allocation of interrupts will overrun the gic IRQs available to this INTA and
->>> the IPs that are connected to INTR directly will not get any interrupts.
->>
->> But surely there is an upper bound that does exist for a given system,
->> right?  DMA rings are not allocated out of nowhere. Or are you saying
+> That's the mapping from main IRQ register bits to sub IRQ registers. The
+> RFC version 1 had the patch which brough main irq register support. But
+> good that you asked as I missed the fact that this commit is now only at
+> the regmap tree - and this one depends on that.
+>  
+> > > +static struct regmap_irq_sub_irq_map bd70528_sub_irq_offsets[] = {
+> > > +	REGMAP_IRQ_MAIN_REG_OFFSET(bit0_offsets),
+> > > +	REGMAP_IRQ_MAIN_REG_OFFSET(bit1_offsets),
+> > > +	REGMAP_IRQ_MAIN_REG_OFFSET(bit2_offsets),
+> > > +	REGMAP_IRQ_MAIN_REG_OFFSET(bit3_offsets),
+> > > +	REGMAP_IRQ_MAIN_REG_OFFSET(bit4_offsets),
+> > > +	REGMAP_IRQ_MAIN_REG_OFFSET(bit5_offsets),
+> > > +	REGMAP_IRQ_MAIN_REG_OFFSET(bit6_offsets),
+> > > +	REGMAP_IRQ_MAIN_REG_OFFSET(bit7_offsets),
+> > > +};
+> > 
+> > This looks totally hairy.  What is it mean to look like?
 > 
-> Right, there is an upper limit on the DMA rings and DMA driver knows it. But
-> when an MSI is requested for each ring then the global events allocated for the
-> IA gets exhausted and MSI allocation gets failed.
+> Yes. Sorry. As explained above - this requires commit from regmap tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/commit/include/linux/regmap.h?h=for-next&id=66fb181d6f824f7695417e8c19560c5b57dc8c2d
+
+Mark, is this how this should be implemented?
+
+The global arrays are hideous!
+
+> > Shouldn't this be one in the WDT driver?
 > 
-> Either I did not explain the the complete picture properly or I must be missing
-> something very badly here. Sorry for being dumb here. Let me give a pure
-> software perspective:
+> This is needed by both RTC and WDT drivers as RTC driver must stop the
+> WDT when it sets RTC. WDT HW is using RTC counter and might trigger
+> timeout/reset when RTC is set. Options are to dublicate the
+> enable/disable to both drivers or to export a function or share a
+> function pointer. I didn't want dublication or dependency between RTC
+> and WDT drivers. Thus I thought that MFD is best place for this code as
+> both RTC and WDT require it anyways. Perhaps this should be commented
+> here?
+
+I think an exported function with comments would be better.
+
+[...]
+
+> > > +	irqs[BD70528_INT_GPIO3].type.type_reg_offset = 6;
+> > > +	irqs[BD70528_INT_GPIO3].type.type_rising_val = 0x20;
+> > > +	irqs[BD70528_INT_GPIO3].type.type_falling_val = 0x10;
+> > > +	irqs[BD70528_INT_GPIO3].type.type_level_high_val = 0x40;
+> > > +	irqs[BD70528_INT_GPIO3].type.type_level_low_val = 0x50;
+> > > +	irqs[BD70528_INT_GPIO3].type.types_supported = (IRQ_TYPE_EDGE_BOTH |
+> > > +				IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW);
+> > 
+> > Could you please explain:
+> > 
+> > a) what you're doing here
 > 
-> In the IRQ route we have the following variables:
-> 1) source id
-> 2) source index.
-> 3) global events
-> 4) vint
-> 5) vint status bit(global event mapping to vint)
-> 6) gic_irqs
+> Regmap-irq gained support for type-setting. On bd70528 the type setting
+> makes sense only for GPIO interrupts - so we must not populate type
+> setting information for the rest of the IRQs. The macro REGMAP_IRQ_REG
+> is nice and makes the irq struct initialization cleaner. Thus it is used.
+> It does not allow populating the type information - hence we do it here.
 > 
-> - Source id and source index are managed by MSI client driver.
-> - Global event, vint and vint_status_bit allocation is managed by INTA driver
-> - Grouping of global event and mapping to vint is handled by INTA driver(chained
-> IRQ)
-> - gic_irqs allocation is managed by INTR driver.
+> I can change this if you think some other way would be cleaner?
+
+It's pretty fugly.  Can the REGMAP_IRQ_REG be expanded upon?
+
+> > b) why you don't mass assign them
+> >     - seeing as most of the data is identical.
 > 
-> When MSI client tries to allocate MSI for each source_index(rings for eg.)
-> available in a source, msi domain tries to allocate parent IRQs. Then INTA
-> driver will try to allocate a global event to each source index and fails when
-> the global events are exhausted. What am I missing here?
+> Maybe I am a bit slow today - but I don't know how the 'mass assignment'
+> should be done?
 
-Surely this is something you can change by letting the underlying driver
-know when to coalesce this things and when not to? Frankly, this looks a
-lot like what the GICv3 ITS does when you have device aliasing. It knows
-you're using the same global identifier for a different purpose because:
+Something like (completely untested):
 
-- the upper layer tells it what ID to use
-- the lower layer tracks what IDs are already in use
+unsigned int type_reg_offset_inc = 0;
+for (i = BD70528_INT_GPIO0; i <=  BD70528_INT_GPIO3; i++) {
+	irqs[i].type.type_reg_offset     = type_reg_offset_inc;
+	irqs[i].type.type_rising_val     = 0x20;
+	irqs[i].type.type_falling_val    = 0x10;
+	irqs[i].type.type_level_high_val = 0x40;
+	irqs[i].type.type_level_low_val  = 0x50;
+	irqs[i].type.types_supported =
+		(IRQ_TYPE_EDGE_BOTH | IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW);
+	type_reg_offset_inc += 2;
+}
 
-This involves tracking, refcounting, but I don't think that's out of the
-realm of possible things.
+It's still fugly though.
 
-> keeping in mind the above scenario, I started with single MSI allocations. I
-> agree there are issues with $patch. But before doing that I was hoping if the
-> above problem can be solved easily.
+If we can do this via MACROs, it would be better.
 
-If problems were solved easily, they wouldn't be problems... :-/
+[...]
 
-> Also the same problem occurs for INTA parent IRQ allocation. INTA probe cannot
-> do a irq_create_fwspec_mapping() for all the available vints as gic_irqs will be
-> exhausted. Where do you think is the best place to create parent IRQs for INTA?
-> In the current implementation I am allocating it during msi_prepare(). So I had
-> to introduce msi_unprepare for freeing parent IRQs.
+> > > +subsys_initcall(bd70528_init);
+> > 
+> > Does it need to be initialised this early?
+> 
+> I think it may be required on some board(s). Is it a problem? I guess I
+> can change this for my purposes but guess it may become a problem later.
 
-And I'll continue saying that this isn't a practical option. You're
-breaking so many existing assumption it is not even funny. I'm not going
-to prevent you from doing so, but if you do, the API has to be robust
-for the existing use cases. What you've proposed so far isn't.
+If you do this normally, you can use MACROs (see other drivers) and
+remove the boilerplate init code you have here.
 
-Thanks,
+> > > +struct bd70528 {
+> > > +	/*
+> > > +	 * Please keep this as the first member here as some
+> > > +	 * drivers (clk) supporting more than one chip may only know this
+> > > +	 * generic struct 'struct rohm_regmap_dev' and assume it is
+> > > +	 * the first chunk of parent device's private data.
+> > > +	 */
+> > > +	struct rohm_regmap_dev chip;
+> > > +	/* wdt_set must be called rtc_timer_lock held */
+> > 
+> > This doesn't make sense.
+> 
+> Umm.. The comment does not make sense? Maybe I can explain it further.
 
-	M.
+"wdt_set must be called when the rtc_timer_lock is held"
+
 -- 
-Jazz is not dead. It just smells funny...
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
