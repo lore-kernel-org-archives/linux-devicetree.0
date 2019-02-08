@@ -1,81 +1,81 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH 1/7] clk: gcc-qcs404: Add PCIe resets
-Date: Fri, 8 Feb 2019 15:11:50 +0100
-Message-ID: <20190208141150.GA773@centauri.lan>
-References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
- <20190125234509.26419-2-bjorn.andersson@linaro.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCHv3 17/27] PCI: mobiveil: fix the checking of valid device
+Date: Fri, 8 Feb 2019 08:13:15 -0600
+Message-ID: <20190208141315.GU7268@google.com>
+References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
+ <20190129080926.36773-18-Zhiqiang.Hou@nxp.com>
+ <CAFZiPx0faPHN1mqPV28XTZfOxA2GgDPuc=RVdXEiGGNAUe=Fxw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190125234509.26419-2-bjorn.andersson@linaro.org>
+In-Reply-To: <CAFZiPx0faPHN1mqPV28XTZfOxA2GgDPuc=RVdXEiGGNAUe=Fxw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 03:45:03PM -0800, Bjorn Andersson wrote:
-> Enabling PCIe requires several of the PCIe related resets from GCC, so
-> add them all.
+[+cc Thomas]
+
+On Fri, Feb 08, 2019 at 06:11:15PM +0530, Subrahmanya Lingappa wrote:
+> On Tue, Jan 29, 2019 at 1:40 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> >
+> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> >
+> > Avoid to issue CFG transactions to link partner when the PCIe
+> > link is not up. And allow CFG transactions to all functions of
+> > Endpoint implemented multiple functions.
+> >
+> > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host
+> > Bridge IP driver")
+> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > ---
+> > V3:
+> >  - No change
+> >
+> >  drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> > index dc5324d94466..1ae82e790562 100644
+> > --- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> > +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> > @@ -29,6 +29,10 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+> >  {
+> >         struct mobiveil_pcie *pcie = bus->sysdata;
+> >
+> > +       /* If there is no link, then there is no device */
+> > +       if (bus->number > pcie->rp.root_bus_nr && !mobiveil_pcie_link_up(pcie))
+> > +               return false;
+> > +
+> >         /* Only one device down on each root port */
+> >         if ((bus->number == pcie->rp.root_bus_nr) && (devfn > 0))
+> >                 return false;
+> > @@ -37,7 +41,7 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+> >          * Do not read more than one device on the bus directly
+> >          * attached to RC
+> >          */
+> > -       if ((bus->primary == pcie->rp.root_bus_nr) && (devfn > 0))
+> > +       if ((bus->primary == pcie->rp.root_bus_nr) && (PCI_SLOT(devfn) > 0))
+
+> here change "primary" to "number", as it's a bug in the original driver too.
+
+This looks like it should be split into two patches: (1) checking for
+link up, and (2) checking root_bus_nr.
+
+And if you mean "bus->primary == pcie->rp.root_bus_nr" is a bug in
+pci-aardvark.c, too, it is imperative to fix that bug also (with a
+separate patch).
+
+> >                 return false;
+> >
+> >         return true;
+> > --
+> > 2.17.1
+> >
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Stephen, I suggest that we merge this patch through Andy's devicetree branch,
-> together with the DT patch in the end of this series.
-> 
->  drivers/clk/qcom/gcc-qcs404.c               | 7 +++++++
->  include/dt-bindings/clock/qcom,gcc-qcs404.h | 7 +++++++
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
-> index 64da032bb9ed..cfb8789ff706 100644
-> --- a/drivers/clk/qcom/gcc-qcs404.c
-> +++ b/drivers/clk/qcom/gcc-qcs404.c
-> @@ -2675,6 +2675,13 @@ static const struct qcom_reset_map gcc_qcs404_resets[] = {
->  	[GCC_PCIE_0_PHY_BCR] = { 0x3e004 },
->  	[GCC_PCIE_0_LINK_DOWN_BCR] = { 0x3e038 },
->  	[GCC_PCIEPHY_0_PHY_BCR] = { 0x3e03c },
-> +	[GCC_PCIE_0_AXI_MASTER_STICKY_ARES] = {0x3e040, 6},
-> +	[GCC_PCIE_0_AHB_ARES] = {0x3e040, 5},
-> +	[GCC_PCIE_0_AXI_SLAVE_ARES] = {0x3e040, 4},
-> +	[GCC_PCIE_0_AXI_MASTER_ARES] = {0x3e040, 3},
-> +	[GCC_PCIE_0_CORE_STICKY_ARES] = {0x3e040, 2},
-> +	[GCC_PCIE_0_SLEEP_ARES] = {0x3e040, 1},
-> +	[GCC_PCIE_0_PIPE_ARES] = {0x3e040, 0},
-
-Hello Bjorn,
-
-please add spaces before and after the braces, to match the
-syntax of the existing lines.
-
-With that,
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-
-
-Kind regards,
-Niklas
-
->  	[GCC_EMAC_BCR] = { 0x4e000 },
->  };
->  
-> diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> index 6ceb55ed72c6..00ab0d77b38a 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> @@ -161,5 +161,12 @@
->  #define GCC_PCIE_0_LINK_DOWN_BCR			11
->  #define GCC_PCIEPHY_0_PHY_BCR				12
->  #define GCC_EMAC_BCR					13
-> +#define GCC_PCIE_0_AXI_MASTER_STICKY_ARES		14
-> +#define GCC_PCIE_0_AHB_ARES				15
-> +#define GCC_PCIE_0_AXI_SLAVE_ARES			16
-> +#define GCC_PCIE_0_AXI_MASTER_ARES			17
-> +#define GCC_PCIE_0_CORE_STICKY_ARES			18
-> +#define GCC_PCIE_0_SLEEP_ARES				19
-> +#define GCC_PCIE_0_PIPE_ARES				20
->  
->  #endif
-> -- 
-> 2.18.0
-> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
