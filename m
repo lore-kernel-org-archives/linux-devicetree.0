@@ -1,73 +1,137 @@
-Return-Path: <SRS0=6Dnf=QM=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 0/5] iio: gyro: add fxas2100x driver
-Date: Tue,  5 Feb 2019 17:43:28 +0000
-Message-Id: <20190205174333.17672-1-rui.silva@linaro.org>
+Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 21/33] ARM: davinci: cp-intc: add a wrapper around cp_intc_init()
+Date: Fri,  8 Feb 2019 18:31:42 +0100
+Message-Id: <20190208173154.4665-22-brgl@bgdev.pl>
+In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
+References: <20190208173154.4665-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-This series introduce a NXP fxas2100x family tri axis gyroscope driver [0]
-It add a core implementaiton plus an i2c and spi.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This device can be found in the warp7 board [1], where it was tested.
+We're going to extend the cp_intc_init() function with a config
+structure so we can drop the intc-related fields from davinci_soc_info.
 
+Once we do it, we won't be able to use this routine directly as the
+init_irq callback. Wrap the calls in additional helpers that don't
+take parameters and can be assigned to init_irq.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: David Lechner <david@lechnology.com>
 ---
-Cheers,
-   Rui
+ arch/arm/mach-davinci/board-da830-evm.c     | 2 +-
+ arch/arm/mach-davinci/board-da850-evm.c     | 2 +-
+ arch/arm/mach-davinci/board-mityomapl138.c  | 2 +-
+ arch/arm/mach-davinci/board-omapl138-hawk.c | 2 +-
+ arch/arm/mach-davinci/da830.c               | 5 +++++
+ arch/arm/mach-davinci/da850.c               | 5 +++++
+ arch/arm/mach-davinci/include/mach/da8xx.h  | 2 ++
+ 7 files changed, 16 insertions(+), 4 deletions(-)
 
-v1->v2:
-Peter Meerwal-Stadler:
-  - changed (c) to current year
-  - add regmap include file in .h
-  - fix comments s/cuttof/cutoff/
-  - add more info in mutex comment
-  - check value in range_fs_from_value
-  - ret not checked in range_value_from_fs
-  - move mode to enum type
-  - remove line between value get and validation of value in all file
-  - pre-write, regmap_field_write, post_write refactoring
-  - check val2 and val == 0 in write raw
-  - check in_anglvel_scale: 7.8125?
-  - trigger_handler: 2 => sizeof(s16)
-  - check buffer size
-  - print %02% to output chip id
-  - remove !! as state is bool
-  - trigger probe return devm_iio_trigger_register
-  - remove error msg in case of devm_iio_device_register
-Fabio Estebam:
-  - rename FXAS2100X to FXAS21002
-  - change compatible nxp,fxas2100x to the exact support
-  - add VDD and VDDIO regulators in bindings and driver
-
-
-[0]: https://www.nxp.com/docs/en/data-sheet/FXAS21002.pdf
-[1]: https://www.element14.com/community/community/designcenter/single-board-computers/warp7/overview
-
-Rui Miguel Silva (5):
-  iio: gyro: add DT bindings to fxas21002
-  iio: gyro: fxas2100x: add core driver for fxas2100x gyroscope
-  iio: gyro: fxas2100x: add i2c driver
-  iio: gyro: fxas2100x: add spi driver
-  ARM: dts: imx7s-warp: add fxas21002 gyroscope
-
- .../bindings/iio/gyroscope/fxas2100x.txt      |  18 +
- arch/arm/boot/dts/imx7s-warp.dts              |   7 +
- drivers/iio/gyro/Kconfig                      |  22 +
- drivers/iio/gyro/Makefile                     |   3 +
- drivers/iio/gyro/fxas2100x.h                  | 151 +++
- drivers/iio/gyro/fxas2100x_core.c             | 931 ++++++++++++++++++
- drivers/iio/gyro/fxas2100x_i2c.c              |  73 ++
- drivers/iio/gyro/fxas2100x_spi.c              |  70 ++
- 8 files changed, 1275 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/fxas2100x.txt
- create mode 100644 drivers/iio/gyro/fxas2100x.h
- create mode 100644 drivers/iio/gyro/fxas2100x_core.c
- create mode 100644 drivers/iio/gyro/fxas2100x_i2c.c
- create mode 100644 drivers/iio/gyro/fxas2100x_spi.c
-
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index f81c92b9cf07..1ae7dcb8f59d 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -694,7 +694,7 @@ static void __init da830_evm_map_io(void)
+ MACHINE_START(DAVINCI_DA830_EVM, "DaVinci DA830/OMAP-L137/AM17x EVM")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= da830_evm_map_io,
+-	.init_irq	= cp_intc_init,
++	.init_irq	= da830_init_irq,
+ 	.init_time	= da830_init_time,
+ 	.init_machine	= da830_evm_init,
+ 	.init_late	= davinci_init_late,
+diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+index 1cc49e7bf128..8022ca8ac4ef 100644
+--- a/arch/arm/mach-davinci/board-da850-evm.c
++++ b/arch/arm/mach-davinci/board-da850-evm.c
+@@ -1522,7 +1522,7 @@ static void __init da850_evm_map_io(void)
+ MACHINE_START(DAVINCI_DA850_EVM, "DaVinci DA850/OMAP-L138/AM18x EVM")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= da850_evm_map_io,
+-	.init_irq	= cp_intc_init,
++	.init_irq	= da850_init_irq,
+ 	.init_time	= da850_init_time,
+ 	.init_machine	= da850_evm_init,
+ 	.init_late	= davinci_init_late,
+diff --git a/arch/arm/mach-davinci/board-mityomapl138.c b/arch/arm/mach-davinci/board-mityomapl138.c
+index eb6a9465f229..815f155eb349 100644
+--- a/arch/arm/mach-davinci/board-mityomapl138.c
++++ b/arch/arm/mach-davinci/board-mityomapl138.c
+@@ -623,7 +623,7 @@ static void __init mityomapl138_map_io(void)
+ MACHINE_START(MITYOMAPL138, "MityDSP-L138/MityARM-1808")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= mityomapl138_map_io,
+-	.init_irq	= cp_intc_init,
++	.init_irq	= da850_init_irq,
+ 	.init_time	= da850_init_time,
+ 	.init_machine	= mityomapl138_init,
+ 	.init_late	= davinci_init_late,
+diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
+index 7f852722ff08..673d890c2e3e 100644
+--- a/arch/arm/mach-davinci/board-omapl138-hawk.c
++++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
+@@ -461,7 +461,7 @@ static void __init omapl138_hawk_map_io(void)
+ MACHINE_START(OMAPL138_HAWKBOARD, "AM18x/OMAP-L138 Hawkboard")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= omapl138_hawk_map_io,
+-	.init_irq	= cp_intc_init,
++	.init_irq	= da850_init_irq,
+ 	.init_time	= da850_init_time,
+ 	.init_machine	= omapl138_hawk_init,
+ 	.init_late	= davinci_init_late,
+diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
+index ca903c9105e4..5cfd30c57429 100644
+--- a/arch/arm/mach-davinci/da830.c
++++ b/arch/arm/mach-davinci/da830.c
+@@ -821,6 +821,11 @@ void __init da830_init(void)
+ 	WARN(!da8xx_syscfg0_base, "Unable to map syscfg0 module");
+ }
+ 
++void __init da830_init_irq(void)
++{
++	cp_intc_init();
++}
++
+ void __init da830_init_time(void)
+ {
+ 	void __iomem *pll;
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index 486d53481636..6df6994c0f26 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -759,6 +759,11 @@ void __init da850_init(void)
+ 	WARN(!da8xx_syscfg1_base, "Unable to map syscfg1 module");
+ }
+ 
++void __init da850_init_irq(void)
++{
++	cp_intc_init();
++}
++
+ void __init da850_init_time(void)
+ {
+ 	void __iomem *pll0;
+diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
+index ab4a57f433f4..1618b30661a9 100644
+--- a/arch/arm/mach-davinci/include/mach/da8xx.h
++++ b/arch/arm/mach-davinci/include/mach/da8xx.h
+@@ -88,10 +88,12 @@ extern unsigned int da850_max_speed;
+ #define DA8XX_ARM_RAM_BASE	0xffff0000
+ 
+ void da830_init(void);
++void da830_init_irq(void);
+ void da830_init_time(void);
+ void da830_register_clocks(void);
+ 
+ void da850_init(void);
++void da850_init_irq(void);
+ void da850_init_time(void);
+ void da850_register_clocks(void);
+ 
 -- 
 2.20.1
