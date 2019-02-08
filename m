@@ -1,122 +1,42 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH 4/7] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
-Date: Fri, 8 Feb 2019 15:17:38 +0100
-Message-ID: <20190208141738.GC773@centauri.lan>
-References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
- <20190125234509.26419-5-bjorn.andersson@linaro.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCHv7 6/6] coresight: cpu-debug: Add support for Qualcomm Kryo
+Date: Fri, 8 Feb 2019 14:19:15 +0000
+Message-ID: <624b472e-f662-581a-5fc3-45943c4143a9@arm.com>
+References: <cover.1548981329.git.saiprakash.ranjan@codeaurora.org>
+ <53cf9d9d3b14f503a6c842754f3c55413f5a3392.1548981329.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125234509.26419-5-bjorn.andersson@linaro.org>
+In-Reply-To: <53cf9d9d3b14f503a6c842754f3c55413f5a3392.1548981329.git.saiprakash.ranjan@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, jhugo@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com, marc.w.gonzalez@free.fr
+Cc: rnayak@codeaurora.org, sibis@codeaurora.org, tingwei@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 03:45:06PM -0800, Bjorn Andersson wrote:
-> Before introducing the QCS404 platform, which uses the same PCIe
-> controller as IPQ4019, migrate this to use the bulk clock API, in order
-> to make the error paths slighly cleaner.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 48 +++++++-------------------
->  1 file changed, 13 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index a7f703556790..9d366fad2b7f 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -113,9 +113,8 @@ struct qcom_pcie_resources_2_3_2 {
->  };
->  
->  struct qcom_pcie_resources_2_4_0 {
-> -	struct clk *aux_clk;
-> -	struct clk *master_clk;
-> -	struct clk *slave_clk;
-> +	struct clk_bulk_data clks[3];
-> +	int num_clks;
->  	struct reset_control *axi_m_reset;
->  	struct reset_control *axi_s_reset;
->  	struct reset_control *pipe_reset;
-> @@ -638,18 +637,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
->  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
->  	struct dw_pcie *pci = pcie->pci;
->  	struct device *dev = pci->dev;
-> +	int ret;
->  
-> -	res->aux_clk = devm_clk_get(dev, "aux");
-> -	if (IS_ERR(res->aux_clk))
-> -		return PTR_ERR(res->aux_clk);
-> +	res->clks[0].id = "aux";
-> +	res->clks[1].id = "master_bus";
-> +	res->clks[2].id = "slave_bus";
->  
-> -	res->master_clk = devm_clk_get(dev, "master_bus");
-> -	if (IS_ERR(res->master_clk))
-> -		return PTR_ERR(res->master_clk);
-> +	res->num_clks = 3;
->  
-> -	res->slave_clk = devm_clk_get(dev, "slave_bus");
-> -	if (IS_ERR(res->slave_clk))
-> -		return PTR_ERR(res->slave_clk);
-> +	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
-> +	if (ret < 0)
-> +		return ret;
->  
->  	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
->  	if (IS_ERR(res->axi_m_reset))
-> @@ -719,9 +717,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
->  	reset_control_assert(res->axi_m_sticky_reset);
->  	reset_control_assert(res->pwr_reset);
->  	reset_control_assert(res->ahb_reset);
-> -	clk_disable_unprepare(res->aux_clk);
-> -	clk_disable_unprepare(res->master_clk);
-> -	clk_disable_unprepare(res->slave_clk);
-> +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
->  }
->  
->  static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
-> @@ -850,23 +846,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
->  
->  	usleep_range(10000, 12000);
->  
-> -	ret = clk_prepare_enable(res->aux_clk);
-> -	if (ret) {
-> -		dev_err(dev, "cannot prepare/enable iface clock\n");
-> +	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
-> +	if (ret)
->  		goto err_clk_aux;
-> -	}
-> -
-> -	ret = clk_prepare_enable(res->master_clk);
-> -	if (ret) {
-> -		dev_err(dev, "cannot prepare/enable core clock\n");
-> -		goto err_clk_axi_m;
-> -	}
-> -
-> -	ret = clk_prepare_enable(res->slave_clk);
-> -	if (ret) {
-> -		dev_err(dev, "cannot prepare/enable phy clock\n");
-> -		goto err_clk_axi_s;
-> -	}
->  
->  	/* enable PCIe clocks and resets */
->  	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> @@ -891,10 +873,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
->  
->  	return 0;
->  
-> -err_clk_axi_s:
-> -	clk_disable_unprepare(res->master_clk);
-> -err_clk_axi_m:
-> -	clk_disable_unprepare(res->aux_clk);
->  err_clk_aux:
->  	reset_control_assert(res->ahb_reset);
->  err_rst_ahb:
-> -- 
-> 2.18.0
-> 
 
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+
+On 01/02/2019 00:53, Sai Prakash Ranjan wrote:
+> Add support for coresight CPU debug module on Qualcomm
+> Kryo CPUs. This patch adds the UCI entries for Kryo CPUs
+> found on MSM8996 which shares the same PIDs as ETMs.
+> 
+> Without this, below error is observed on MSM8996:
+> 
+> [    5.429867] OF: graph: no port node found in /soc/debug@3810000
+> [    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
+> [    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
+> [    5.446474] OF: graph: no port node found in /soc/debug@3910000
+> [    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
+> [    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
+> [    5.487765] OF: graph: no port node found in /soc/debug@3a10000
+> [    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
+> [    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
+> [    5.501802] OF: graph: no port node found in /soc/debug@3b10000
+> [    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
+> [    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
