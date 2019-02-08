@@ -1,115 +1,51 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v7 1/5] misc: dt-bindings: Add Qualcomm Fastrpc bindings
-Date: Fri,  8 Feb 2019 17:11:23 +0000
-Message-ID: <20190208171127.24168-2-srinivas.kandagatla@linaro.org>
-References: <20190208171127.24168-1-srinivas.kandagatla@linaro.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/3] pinctrl: meson: g12a fixes
+Date: Fri, 08 Feb 2019 09:27:07 -0800
+Message-ID: <7ho97mgphw.fsf@baylibre.com>
+References: <20190117102315.1833-1-jbrunet@baylibre.com> <CACRpkdb7pje9mrgOQoiWTRxGQC8xsOvJ9a8PCguM807unPtpCg@mail.gmail.com> <a434c3b1c55a1b5a1485adc29cfe26b45131a936.camel@baylibre.com> <CACRpkdb4105RwXhiyVd1dz5mjYO_u6CxTbCySbqUWBv=yhF1qg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190208171127.24168-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <CACRpkdb4105RwXhiyVd1dz5mjYO_u6CxTbCySbqUWBv=yhF1qg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, arnd@arndb.de
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Thierry Escande <thierry.escande@linaro.org>, Rob Herring <robh@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The FastRPC driver implements an IPC (Inter-Processor Communication)
-mechanism that allows for clients to transparently make remote method
-invocations across DSP and APPS boundaries. This enables developers
-to offload tasks to the DSP and free up the application processor for
-other tasks.
+Linus Walleij <linus.walleij@linaro.org> writes:
 
-Co-developed-by: Thierry Escande <thierry.escande@linaro.org>
-Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/misc/qcom,fastrpc.txt | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
+> On Mon, Jan 21, 2019 at 4:36 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>> On Mon, 2019-01-21 at 14:53 +0100, Linus Walleij wrote:
+>> > On Thu, Jan 17, 2019 at 11:23 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>> >
+>> > > This patchset fixes the initial pinctrl support added for th g12a SoC
+>> > > family, which is mainly around the register regions claimed by the
+>> > > driver.
+>> > >
+>> > > Linus, would it possible for you to provide a tag with these changes to
+>> > > Kevin ?
+>> >
+>> > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-meson-fixes
+>> >
+>> > > ATM, we can only use the devices for which the pinmux is already set by
+>> > > the bootloader. Enabling the broken pinctrl driver could cause regressions
+>> > > in kernelCI. Having a tag, would allow us to start using pinctrl on this
+>> > > SoC in this cycle, w/o regression. It would be nice :)
+>> >
+>> > When you say "this cycle" do you mean I should target fixes (v5.0-rcN)
+>> > or next (v5.1) with these patches?
+>>
+>> I was referring to the 5.1 release but it is a good question, I did not really
+>> think about 5.0.
+>>
+>> Those changes are mainly fixes, so guess it could go in the 5.0 but support
+>> for this SoC is still in its early stages, so either way is fine by me.
+>>
+>> Whatever is simpler for you I guess ;)
+>
+> I already merged it for devel and other stuff on top so it will be for v5.1
+> as it looks now.
 
-diff --git a/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt b/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
-new file mode 100644
-index 000000000000..2a1827ab50d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
-@@ -0,0 +1,78 @@
-+Qualcomm Technologies, Inc. FastRPC Driver
-+
-+The FastRPC implements an IPC (Inter-Processor Communication)
-+mechanism that allows for clients to transparently make remote method
-+invocations across DSP and APPS boundaries. This enables developers
-+to offload tasks to the DSP and free up the application processor for
-+other tasks.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "qcom,fastrpc"
-+
-+- label
-+	Usage: required
-+	Value type: <string>
-+	Definition: should specify the dsp domain name this fastrpc
-+	corresponds to. must be one of this: "adsp", "mdsp", "sdsp", "cdsp"
-+
-+- #address-cells
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Must be 1
-+
-+- #size-cells
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Must be 0
-+
-+= COMPUTE BANKS
-+Each subnode of the Fastrpc represents compute context banks available
-+on the dsp.
-+- All Compute context banks MUST contain the following properties:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "qcom,fastrpc-compute-cb"
-+
-+- reg
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Context Bank ID.
-+
-+- qcom,nsessions:
-+	Usage: Optional
-+	Value type: <u32>
-+	Defination: A value indicating how many sessions can share this
-+		    context bank. Defaults to 1 when this property
-+		    is not specified.
-+
-+Example:
-+
-+adsp-pil {
-+	compatible = "qcom,msm8996-adsp-pil";
-+	...
-+	smd-edge {
-+		label = "lpass";
-+		fastrpc {
-+			compatible = "qcom,fastrpc";
-+			qcom,smd-channels = "fastrpcsmd-apps-dsp";
-+			label = "adsp";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			cb@1 {
-+				compatible = "qcom,fastrpc-compute-cb";
-+				reg = <1>;
-+			};
-+
-+			cb@2 {
-+				compatible = "qcom,fastrpc-compute-cb";
-+				reg = <2>;
-+			};
-+			...
-+		};
-+	};
-+};
--- 
-2.20.1
+OK, assuming that tag is still valid (and immutable), that works for me.
+
+Kevin
