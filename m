@@ -1,60 +1,39 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 1/1] arm64: dts: mt8173: add pmu nodes for mt8173
-Date: Fri, 8 Feb 2019 16:04:52 +0100
-Message-ID: <38a56fc1-09fa-a35a-fcef-e265f1608b83@gmail.com>
-References: <20190109082143.26468-1-seiya.wang@mediatek.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 1/3] ASoC: msm8916-wcd-analog: add missing license
+ information
+Date: Fri, 8 Feb 2019 16:15:02 +0100
+Message-ID: <20190208151502.GP4686@localhost>
+References: <20190207165755.1548-1-johan@kernel.org>
+ <20190207165755.1548-2-johan@kernel.org>
+ <20190208115341.GB6695@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190109082143.26468-1-seiya.wang@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190208115341.GB6695@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Seiya Wang <seiya.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+To: Mark Brown <broonie@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 09/01/2019 09:21, Seiya Wang wrote:
-> This patch adds the device nodes of ARM Performance Monitor Uint
-> for mt8173.
+On Fri, Feb 08, 2019 at 11:53:41AM +0000, Mark Brown wrote:
+> On Thu, Feb 07, 2019 at 05:57:53PM +0100, Johan Hovold wrote:
 > 
-> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> > +++ b/sound/soc/codecs/msm8916-wcd-analog.c
+> > @@ -1,3 +1,8 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+> > + */
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 412ffd4d426b..44374c506a1c 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -216,6 +216,20 @@
->  		};
->  	};
->  
-> +	pmu_a53 {
-> +		compatible = "arm,cortex-a53-pmu";
-> +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-affinity = <&cpu0>, <&cpu1>;
-> +	};
-> +
-> +	pmu_a72 {
-> +		compatible = "arm,cortex-a72-pmu";
-> +		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 13 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-affinity = <&cpu2>, <&cpu3>;
-> +	};
+> Please use a C++ comment for the whole thing so it looks more consistent
+> with the rest of ASoC (and a bit neater in general).
 
-There is no a72 but a a57 CPU present.
-Typo?
+Ah, yes, that makes sense for consistency since you've already enforced
+that style. And while I don't think the all-c++-comment headers look
+better in general, for the single copyright statement case it's not too
+bad.
 
-Regards,
-Matthias
+v2 under way.
 
-> +
->  	psci {
->  		compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
->  		method = "smc";
-> 
+Johan
