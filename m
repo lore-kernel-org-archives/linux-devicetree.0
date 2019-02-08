@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 21/33] ARM: davinci: cp-intc: add a wrapper around cp_intc_init()
-Date: Fri,  8 Feb 2019 18:34:46 +0100
-Message-ID: <20190208173458.4801-22-brgl@bgdev.pl>
+Subject: [PATCH v2 20/33] ARM: davinci: cp-intc: remove cp_intc.h
+Date: Fri,  8 Feb 2019 18:34:45 +0100
+Message-ID: <20190208173458.4801-21-brgl@bgdev.pl>
 References: <20190208173458.4801-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,125 +14,184 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We're going to extend the cp_intc_init() function with a config
-structure so we can drop the intc-related fields from davinci_soc_info.
-
-Once we do it, we won't be able to use this routine directly as the
-init_irq callback. Wrap the calls in additional helpers that don't
-take parameters and can be assigned to init_irq.
+There's no need to have a local header for cp-intc. Move the only
+declaration for a public function to common.h. Move all register
+offsets into the driver source file and drop all unused defines.
+Make cp_intc_of_init() static.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Reviewed-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/mach-davinci/board-da830-evm.c     | 2 +-
- arch/arm/mach-davinci/board-da850-evm.c     | 2 +-
- arch/arm/mach-davinci/board-mityomapl138.c  | 2 +-
- arch/arm/mach-davinci/board-omapl138-hawk.c | 2 +-
- arch/arm/mach-davinci/da830.c               | 5 +++++
- arch/arm/mach-davinci/da850.c               | 5 +++++
- arch/arm/mach-davinci/include/mach/da8xx.h  | 2 ++
- 7 files changed, 16 insertions(+), 4 deletions(-)
+ arch/arm/mach-davinci/board-da830-evm.c     |  1 -
+ arch/arm/mach-davinci/board-da850-evm.c     |  1 -
+ arch/arm/mach-davinci/board-mityomapl138.c  |  1 -
+ arch/arm/mach-davinci/board-omapl138-hawk.c |  1 -
+ arch/arm/mach-davinci/cp_intc.c             | 20 +++++++-
+ arch/arm/mach-davinci/cp_intc.h             | 57 ---------------------
+ arch/arm/mach-davinci/include/mach/common.h |  1 +
+ 7 files changed, 19 insertions(+), 63 deletions(-)
+ delete mode 100644 arch/arm/mach-davinci/cp_intc.h
 
 diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
-index f81c92b9cf07..1ae7dcb8f59d 100644
+index 7b8c4aeca096..f81c92b9cf07 100644
 --- a/arch/arm/mach-davinci/board-da830-evm.c
 +++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -694,7 +694,7 @@ static void __init da830_evm_map_io(void)
- MACHINE_START(DAVINCI_DA830_EVM, "DaVinci DA830/OMAP-L137/AM17x EVM")
- 	.atag_offset	= 0x100,
- 	.map_io		= da830_evm_map_io,
--	.init_irq	= cp_intc_init,
-+	.init_irq	= da830_init_irq,
- 	.init_time	= da830_init_time,
- 	.init_machine	= da830_evm_init,
- 	.init_late	= davinci_init_late,
+@@ -39,7 +39,6 @@
+ #include <mach/mux.h>
+ #include <mach/da8xx.h>
+ 
+-#include "cp_intc.h"
+ #include "irqs.h"
+ 
+ #define DA830_EVM_PHY_ID		""
 diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 1cc49e7bf128..8022ca8ac4ef 100644
+index b0814bd30a1f..1cc49e7bf128 100644
 --- a/arch/arm/mach-davinci/board-da850-evm.c
 +++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -1522,7 +1522,7 @@ static void __init da850_evm_map_io(void)
- MACHINE_START(DAVINCI_DA850_EVM, "DaVinci DA850/OMAP-L138/AM18x EVM")
- 	.atag_offset	= 0x100,
- 	.map_io		= da850_evm_map_io,
--	.init_irq	= cp_intc_init,
-+	.init_irq	= da850_init_irq,
- 	.init_time	= da850_init_time,
- 	.init_machine	= da850_evm_init,
- 	.init_late	= davinci_init_late,
+@@ -46,7 +46,6 @@
+ #include <mach/da8xx.h>
+ #include <mach/mux.h>
+ 
+-#include "cp_intc.h"
+ #include "irqs.h"
+ #include "sram.h"
+ 
 diff --git a/arch/arm/mach-davinci/board-mityomapl138.c b/arch/arm/mach-davinci/board-mityomapl138.c
-index eb6a9465f229..815f155eb349 100644
+index 8df16e81b69e..eb6a9465f229 100644
 --- a/arch/arm/mach-davinci/board-mityomapl138.c
 +++ b/arch/arm/mach-davinci/board-mityomapl138.c
-@@ -623,7 +623,7 @@ static void __init mityomapl138_map_io(void)
- MACHINE_START(MITYOMAPL138, "MityDSP-L138/MityARM-1808")
- 	.atag_offset	= 0x100,
- 	.map_io		= mityomapl138_map_io,
--	.init_irq	= cp_intc_init,
-+	.init_irq	= da850_init_irq,
- 	.init_time	= da850_init_time,
- 	.init_machine	= mityomapl138_init,
- 	.init_late	= davinci_init_late,
+@@ -27,7 +27,6 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <mach/common.h>
+-#include "cp_intc.h"
+ #include <mach/da8xx.h>
+ #include <linux/platform_data/mtd-davinci.h>
+ #include <linux/platform_data/mtd-davinci-aemif.h>
 diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
-index 7f852722ff08..673d890c2e3e 100644
+index 94c4f126ef86..7f852722ff08 100644
 --- a/arch/arm/mach-davinci/board-omapl138-hawk.c
 +++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
-@@ -461,7 +461,7 @@ static void __init omapl138_hawk_map_io(void)
- MACHINE_START(OMAPL138_HAWKBOARD, "AM18x/OMAP-L138 Hawkboard")
- 	.atag_offset	= 0x100,
- 	.map_io		= omapl138_hawk_map_io,
--	.init_irq	= cp_intc_init,
-+	.init_irq	= da850_init_irq,
- 	.init_time	= da850_init_time,
- 	.init_machine	= omapl138_hawk_init,
- 	.init_late	= davinci_init_late,
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index ca903c9105e4..5cfd30c57429 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -821,6 +821,11 @@ void __init da830_init(void)
- 	WARN(!da8xx_syscfg0_base, "Unable to map syscfg0 module");
- }
+@@ -27,7 +27,6 @@
+ #include <asm/mach/arch.h>
  
-+void __init da830_init_irq(void)
-+{
-+	cp_intc_init();
-+}
+ #include <mach/common.h>
+-#include "cp_intc.h"
+ #include <mach/da8xx.h>
+ #include <mach/mux.h>
+ 
+diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
+index 4e293cde20fb..82110d332c82 100644
+--- a/arch/arm/mach-davinci/cp_intc.c
++++ b/arch/arm/mach-davinci/cp_intc.c
+@@ -21,7 +21,22 @@
+ 
+ #include <asm/exception.h>
+ #include <mach/common.h>
+-#include "cp_intc.h"
 +
- void __init da830_init_time(void)
++#define CP_INTC_CTRL			0x04
++#define CP_INTC_HOST_CTRL		0x0C
++#define CP_INTC_GLOBAL_ENABLE		0x10
++#define CP_INTC_SYS_STAT_IDX_CLR	0x24
++#define CP_INTC_SYS_ENABLE_IDX_SET	0x28
++#define CP_INTC_SYS_ENABLE_IDX_CLR	0x2C
++#define CP_INTC_HOST_ENABLE_IDX_SET	0x34
++#define CP_INTC_HOST_ENABLE_IDX_CLR	0x38
++#define CP_INTC_PRIO_IDX		0x80
++#define CP_INTC_SYS_STAT_CLR(n)		(0x0280 + (n << 2))
++#define CP_INTC_SYS_ENABLE_CLR(n)	(0x0380 + (n << 2))
++#define CP_INTC_CHAN_MAP(n)		(0x0400 + (n << 2))
++#define CP_INTC_SYS_POLARITY(n)		(0x0D00 + (n << 2))
++#define CP_INTC_SYS_TYPE(n)		(0x0D80 + (n << 2))
++#define CP_INTC_HOST_ENABLE(n)		(0x1500 + (n << 2))
+ 
+ #define DAVINCI_CP_INTC_PRI_INDX_MASK		GENMASK(9, 0)
+ #define DAVINCI_CP_INTC_GPIR_NONE		BIT(31)
+@@ -141,7 +156,8 @@ static const struct irq_domain_ops cp_intc_host_ops = {
+ 	.xlate = irq_domain_xlate_onetwocell,
+ };
+ 
+-int __init cp_intc_of_init(struct device_node *node, struct device_node *parent)
++static int __init cp_intc_of_init(struct device_node *node,
++				  struct device_node *parent)
  {
- 	void __iomem *pll;
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index 486d53481636..6df6994c0f26 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -759,6 +759,11 @@ void __init da850_init(void)
- 	WARN(!da8xx_syscfg1_base, "Unable to map syscfg1 module");
- }
+ 	u32 num_irq		= davinci_soc_info.intc_irq_num;
+ 	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
+diff --git a/arch/arm/mach-davinci/cp_intc.h b/arch/arm/mach-davinci/cp_intc.h
+deleted file mode 100644
+index 827bbe9baed4..000000000000
+--- a/arch/arm/mach-davinci/cp_intc.h
++++ /dev/null
+@@ -1,57 +0,0 @@
+-/*
+- * TI Common Platform Interrupt Controller (cp_intc) definitions
+- *
+- * Author: Steve Chen <schen@mvista.com>
+- * Copyright (C) 2008-2009, MontaVista Software, Inc. <source@mvista.com>
+- *
+- * This file is licensed under the terms of the GNU General Public License
+- * version 2. This program is licensed "as is" without any warranty of any
+- * kind, whether express or implied.
+- */
+-#ifndef __ASM_HARDWARE_CP_INTC_H
+-#define __ASM_HARDWARE_CP_INTC_H
+-
+-#define CP_INTC_REV			0x00
+-#define CP_INTC_CTRL			0x04
+-#define CP_INTC_HOST_CTRL		0x0C
+-#define CP_INTC_GLOBAL_ENABLE		0x10
+-#define CP_INTC_GLOBAL_NESTING_LEVEL	0x1C
+-#define CP_INTC_SYS_STAT_IDX_SET	0x20
+-#define CP_INTC_SYS_STAT_IDX_CLR	0x24
+-#define CP_INTC_SYS_ENABLE_IDX_SET	0x28
+-#define CP_INTC_SYS_ENABLE_IDX_CLR	0x2C
+-#define CP_INTC_GLOBAL_WAKEUP_ENABLE	0x30
+-#define CP_INTC_HOST_ENABLE_IDX_SET	0x34
+-#define CP_INTC_HOST_ENABLE_IDX_CLR	0x38
+-#define CP_INTC_PACING_PRESCALE 	0x40
+-#define CP_INTC_VECTOR_BASE		0x50
+-#define CP_INTC_VECTOR_SIZE		0x54
+-#define CP_INTC_VECTOR_NULL		0x58
+-#define CP_INTC_PRIO_IDX		0x80
+-#define CP_INTC_PRIO_VECTOR		0x84
+-#define CP_INTC_SECURE_ENABLE		0x90
+-#define CP_INTC_SECURE_PRIO_IDX 	0x94
+-#define CP_INTC_PACING_PARAM(n) 	(0x0100 + (n << 4))
+-#define CP_INTC_PACING_DEC(n)		(0x0104 + (n << 4))
+-#define CP_INTC_PACING_MAP(n)		(0x0108 + (n << 4))
+-#define CP_INTC_SYS_RAW_STAT(n) 	(0x0200 + (n << 2))
+-#define CP_INTC_SYS_STAT_CLR(n) 	(0x0280 + (n << 2))
+-#define CP_INTC_SYS_ENABLE_SET(n)	(0x0300 + (n << 2))
+-#define CP_INTC_SYS_ENABLE_CLR(n)	(0x0380 + (n << 2))
+-#define CP_INTC_CHAN_MAP(n)		(0x0400 + (n << 2))
+-#define CP_INTC_HOST_MAP(n)		(0x0800 + (n << 2))
+-#define CP_INTC_HOST_PRIO_IDX(n)	(0x0900 + (n << 2))
+-#define CP_INTC_SYS_POLARITY(n) 	(0x0D00 + (n << 2))
+-#define CP_INTC_SYS_TYPE(n)		(0x0D80 + (n << 2))
+-#define CP_INTC_WAKEUP_ENABLE(n)	(0x0E00 + (n << 2))
+-#define CP_INTC_DEBUG_SELECT(n) 	(0x0F00 + (n << 2))
+-#define CP_INTC_SYS_SECURE_ENABLE(n)	(0x1000 + (n << 2))
+-#define CP_INTC_HOST_NESTING_LEVEL(n)	(0x1100 + (n << 2))
+-#define CP_INTC_HOST_ENABLE(n)		(0x1500 + (n << 2))
+-#define CP_INTC_HOST_PRIO_VECTOR(n)	(0x1600 + (n << 2))
+-#define CP_INTC_VECTOR_ADDR(n)		(0x2000 + (n << 2))
+-
+-void cp_intc_init(void);
+-int cp_intc_of_init(struct device_node *, struct device_node *);
+-
+-#endif	/* __ASM_HARDWARE_CP_INTC_H */
+diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
+index 14e0e1c40611..3f3f1169d47e 100644
+--- a/arch/arm/mach-davinci/include/mach/common.h
++++ b/arch/arm/mach-davinci/include/mach/common.h
+@@ -22,6 +22,7 @@
+ #define DAVINCI_INTC_START		NR_IRQS
+ #define DAVINCI_INTC_IRQ(_irqnum)	(DAVINCI_INTC_START + (_irqnum))
  
-+void __init da850_init_irq(void)
-+{
-+	cp_intc_init();
-+}
-+
- void __init da850_init_time(void)
- {
- 	void __iomem *pll0;
-diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
-index ab4a57f433f4..1618b30661a9 100644
---- a/arch/arm/mach-davinci/include/mach/da8xx.h
-+++ b/arch/arm/mach-davinci/include/mach/da8xx.h
-@@ -88,10 +88,12 @@ extern unsigned int da850_max_speed;
- #define DA8XX_ARM_RAM_BASE	0xffff0000
++void cp_intc_init(void);
+ void davinci_timer_init(struct clk *clk);
  
- void da830_init(void);
-+void da830_init_irq(void);
- void da830_init_time(void);
- void da830_register_clocks(void);
- 
- void da850_init(void);
-+void da850_init_irq(void);
- void da850_init_time(void);
- void da850_register_clocks(void);
- 
+ struct davinci_timer_instance {
 -- 
 2.20.1
