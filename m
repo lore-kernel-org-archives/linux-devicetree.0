@@ -1,45 +1,37 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCHv7 1/6] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Fri, 8 Feb 2019 14:20:39 +0000
-Message-ID: <81dc97e6-2640-d600-9373-30518ed59792@arm.com>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [PATCHv7 2/6] arm64: dts: qcom: msm8998: Add Coresight support
+Date: Fri, 8 Feb 2019 14:23:43 +0000
+Message-ID: <20190208142343.GA9649@en101>
 References: <cover.1548981329.git.saiprakash.ranjan@codeaurora.org>
- <b672119cd1ffb5cba9da27ab5974fd5978e55b31.1548981329.git.saiprakash.ranjan@codeaurora.org>
+ <bcff6cd655c565568caa2d5a9b20d95e619afb1e.1548981329.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b672119cd1ffb5cba9da27ab5974fd5978e55b31.1548981329.git.saiprakash.ranjan@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <bcff6cd655c565568caa2d5a9b20d95e619afb1e.1548981329.git.saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, jhugo@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com, marc.w.gonzalez@free.fr
-Cc: rnayak@codeaurora.org, sibis@codeaurora.org, tingwei@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/02/2019 00:53, Sai Prakash Ranjan wrote:
-> Add coresight components found on Qualcomm SDM845 SoC.
+On Fri, Feb 01, 2019 at 06:23:10AM +0530, Sai Prakash Ranjan wrote:
+> Enable coresight support by adding device nodes for the
+> available source, sinks and channel blocks on MSM8998.
 > 
 > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > 
 > ---
 > For testing, all dependent patches are in below tree:
->   * https://github.com/saiprakash-ranjan/linux/tree/coresight-next
+>  * https://github.com/saiprakash-ranjan/linux/tree/coresight-next
 > 
-> - Depends on AOSS QMP side channel patches by Bjorn Andersson [1] - [4].
-> - AMBA bus pclk change [5].
-> - Also depends on patch ("arm64: dts: qcom: sdm845: Increase address
->    and size cells for soc") [6].
+> This depends on MSM8998 rpm clocks and rpmcc node by Jeffrey Hugo
+> and Marc Gonzalez [1][2][3].
 > 
-> [1] https://lore.kernel.org/lkml/20190131003933.11436-5-bjorn.andersson@linaro.org/
-> [2] https://lore.kernel.org/lkml/20190131003933.11436-6-bjorn.andersson@linaro.org/
-> [3] https://lore.kernel.org/lkml/20190131003933.11436-7-bjorn.andersson@linaro.org/
-> [4] https://lore.kernel.org/lkml/20190131003933.11436-10-bjorn.andersson@linaro.org/
-> [5] https://lore.kernel.org/lkml/20190131020141.28352-1-bjorn.andersson@linaro.org/
-> [6] https://lore.kernel.org/lkml/20190117042940.25487-2-bjorn.andersson@linaro.org/
+> [1] https://lore.kernel.org/lkml/1545099336-5615-1-git-send-email-jhugo@codeaurora.org/
+> [2] https://lore.kernel.org/lkml/1548866144-30265-1-git-send-email-jhugo@codeaurora.org/
+> [3] https://lore.kernel.org/lkml/6da00186-e7c9-c93d-a80a-65eda2516451@free.fr/
 > ---
->   arch/arm64/boot/dts/qcom/sdm845.dtsi | 434 +++++++++++++++++++++++++++
->   1 file changed, 434 insertions(+)
-> 
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi | 435 ++++++++++++++++++++++++++
+>  1 file changed, 435 insertions(+)
 
 Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
