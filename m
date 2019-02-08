@@ -1,56 +1,27 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 3/5] misc: fastrpc: Add support for context Invoke
- method
-Date: Fri, 8 Feb 2019 14:55:14 +0100
-Message-ID: <20190208135514.GA23406@kroah.com>
-References: <20190208132306.12571-1-srinivas.kandagatla@linaro.org>
- <20190208132306.12571-4-srinivas.kandagatla@linaro.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: dts: add description of Netgear RN NV+v2 LCD
+Date: Fri, 8 Feb 2019 14:56:50 +0100
+Message-ID: <20190208135650.GD26594@lunn.ch>
+References: <20190208045305.8759-1-coles.david@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190208132306.12571-4-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20190208045305.8759-1-coles.david@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: arnd@arndb.de, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>
+To: David Coles <coles.david@gmail.com>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 08, 2019 at 01:23:04PM +0000, Srinivas Kandagatla wrote:
-> +static int fastrpc_invoke(struct fastrpc_user *fl, char __user *argp)
-> +{
-> +	struct fastrpc_invoke_args *args = NULL;
-> +	struct fastrpc_invoke inv;
-> +	u32 nscalars;
-> +	int err;
-> +
-> +	if (copy_from_user(&inv, argp, sizeof(inv)))
-> +		return -EFAULT;
-> +
-> +	nscalars = REMOTE_SCALARS_LENGTH(inv.sc);
-> +
-> +	if (nscalars > MAX_REMOTE_SCALARS)
-> +		return -EINVAL;
-> +
-> +	if (nscalars) {
-> +		args = kcalloc(nscalars, sizeof(*args), GFP_KERNEL);
-> +		if (!args)
-> +			return -ENOMEM;
-> +
-> +		if (copy_from_user(args, (void __user *)(uintptr_t)inv.args,
-> +				   nscalars * sizeof(*args))) {
-> +			kfree(args);
-> +			return -EFAULT;
-> +		}
-> +
-> +		/* Make sure reserved field is set to 0 */
-> +		if (args->reserved) {
-> +			kfree(args);
-> +			return -EINVAL;
+On Thu, Feb 07, 2019 at 08:53:05PM -0800, David Coles wrote:
+> GPIO pin mapping taken from NetGear NV+ v2 5.3.13 kernel sources[1]
+> (see arch/arm/plat-feroceon/mv_hal/rtc/ext_rtc/usiLCD.c).
 
-Am I wrong in that you are only checking the first reserved field in
-this array of args?  Don't you have a whole bunch of them here (nscalars
-of them)?  Don't you need to check them all and not just the first one?
+Kirkwood! It has been a while since we had a kirkwood patch. Some NAS
+boxes seem to never die. Nice to see somebody still hacking on them.
 
-thanks,
+> Signed-off-by: David Coles <coles.david@gmail.com>
 
-greg k-h
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
