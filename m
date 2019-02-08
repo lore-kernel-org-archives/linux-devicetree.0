@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH 4/5] iio:adc:lpc32xx Cleanup headers
-Date: Fri,  8 Feb 2019 17:09:43 +0100
-Message-ID: <20190208160944.13281-5-gregory.clement@bootlin.com>
+Subject: [PATCH 1/5] dt-bindings: iio: adc: move lpc32xx-adc out of staging
+Date: Fri,  8 Feb 2019 17:09:40 +0100
+Message-ID: <20190208160944.13281-2-gregory.clement@bootlin.com>
 References: <20190208160944.13281-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,42 +21,19 @@ To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-
 Cc: devicetree@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-A few headers was useless: remove them, and also sort them in alphabetic
-order.
+The drivers has been moved out since
+0097e20e7771 ("staging:iio:adc:lpc32xx Move out of staging.") in v4.10,
+so let's align the binding documentation.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- drivers/iio/adc/lpc32xx_adc.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ .../devicetree/bindings/{staging => }/iio/adc/lpc32xx-adc.txt     | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/{staging => }/iio/adc/lpc32xx-adc.txt (100%)
 
-diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
-index e361c1532a75..f391c1e10136 100644
---- a/drivers/iio/adc/lpc32xx_adc.c
-+++ b/drivers/iio/adc/lpc32xx_adc.c
-@@ -7,20 +7,13 @@
-  *  Copyright (C) 2011, 2012 Roland Stigge <stigge@antcom.de>
-  */
- 
--#include <linux/module.h>
--#include <linux/platform_device.h>
--#include <linux/interrupt.h>
--#include <linux/device.h>
--#include <linux/kernel.h>
--#include <linux/slab.h>
--#include <linux/io.h>
- #include <linux/clk.h>
--#include <linux/err.h>
- #include <linux/completion.h>
--#include <linux/of.h>
--
- #include <linux/iio/iio.h>
--#include <linux/iio/sysfs.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
- 
- /*
-  * LPC32XX registers definitions
+diff --git a/Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt
+rename to Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
 -- 
 2.20.1
