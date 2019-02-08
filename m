@@ -1,86 +1,64 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH] dt-bindings: pinctrl: Document the i.MX50 IOMUXC binding
-Date: Fri, 8 Feb 2019 16:47:48 +0100
-Message-ID: <20190208154748.GA2061@latitude>
-References: <20190129165530.7606-1-j.neuschaefer@gmx.net>
- <CAOMZO5ABy+uDXMhQy95vuY8Yz2a8Wr0Q0+fUq=2Xkm2NSCdQGQ@mail.gmail.com>
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH] clk: at91: fix masterck name
+Date: Fri, 8 Feb 2019 15:53:47 +0000
+Message-ID: <db6b542f-add1-af4c-e3f1-ce293042f375@microchip.com>
+References: <20190208144059.29861-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5ABy+uDXMhQy95vuY8Yz2a8Wr0Q0+fUq=2Xkm2NSCdQGQ@mail.gmail.com>
+In-Reply-To: <20190208144059.29861-1-alexandre.belloni@bootlin.com>
+Content-Language: en-US
+Content-ID: <2E1277669F1FE342A03D64FA37C336CB@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Dong Aisheng <dong.aisheng@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: alexandre.belloni@bootlin.com, sboyd@kernel.org
+Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Feb 08, 2019 at 09:57:04AM -0200, Fabio Estevam wrote:
-> Hi Jonathan,
->=20
-> On Tue, Jan 29, 2019 at 2:55 PM Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
-> >
-> > AFAICS from the i.MX50 Reference Manual, the i.MX50 IOMUXC works the
-> > same as the one in i.MX51, so I copied fsl,imx51-pinctrl.txt and changed
-> > the text to imx50.
-> >
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> > Cc: Dong Aisheng <dong.aisheng@linaro.org>
-> > Cc: Shawn Guo <shawn.guo@linaro.org>
->=20
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-
-Thanks!
-
-> > +Required properties:
-> > +- compatible: "fsl,imx50-iomuxc"
-> > +- fsl,pins: two integers array, represents a group of pins mux and con=
-fig
-> > +  setting. The format is fsl,pins =3D <PIN_FUNC_ID CONFIG>, PIN_FUNC_I=
-D is a
-> > +  pin working on a specific function, CONFIG is the pad setting value =
-like
-> > +  pull-up for this pin. Please refer to imx50 datasheet for the valid =
-pad
->=20
-> Nit: It is the i.MX50 Reference Manual, not its datasheet that
-> describes the pad settings values.
-
-Indeed, good catch.
-
-> I noticed that all the bindings say datasheet though, so I will send a
-> patch to fix this.
-
-Thanks!
-
-
-Jonathan Neusch=C3=A4fer
-
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlxdpJwACgkQCDBEmo7z
-X9uHfBAAqJchn+W1yJ7iqKTAb0yWuwNzGIpW7u2RQoY89GyT+YHWfcYm4+v10ph1
-KGYdJ6xARGyOZGYS6NTS6kokjST5/aZNND00UXmhnK7T2TFU/G0w/ULkPtjpSgvI
-dPTKvssIS6XnxJPO41y6LO+IZOzFk5s5d5osvsvLnzky5DHivkPEYyi3Od+cC5J9
-m3u71BOIOPJAdph///p504Skk9LYd0GGgCNXaXfEN4RdZ/6Mtx8M/YLagOaPpU09
-EIcqXhln2TWF3rEAFTUtOhbJLdOblmCe1ybEF2RN2dNAbsHZPps0Nusip70aMoDw
-EiYR9e/hWB897SIhbRAhofsDw73fvzTzwD4e1R1iigwOkMFLuRkDuhBCebU6QTOz
-CHebJ98WQaq5d0z7La91XvLrGGjLQPMcngUKPAYCoFN03HQY8WvxZeMu+J2MVFGQ
-hI9teS3o06khZIB/ELOzO0q6zWBbU2Ngl3b9roj/OBjdXitl0fTVwh0lmipsMMz2
-IoOdgM4GAtYyCneYin17LHEzMA59ffv43qh8zkOIL2Rz/V3kqy/Omu3OVP2DI7Xv
-sA3Kjan12S2KZ5X267/jw7/gU/7dE4ZocBzWD4SH1Fw9E1OPb6QXZB/EOrCaCZGy
-n0ZcgB/p+/BpzNgNdzd/6kKyzYhpXhYf3G3X6bZZ22vDXmGDQ1Y=
-=oF7H
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
+T24gMDgvMDIvMjAxOSBhdCAxNTo0MCwgQWxleGFuZHJlIEJlbGxvbmkgd3JvdGU6DQo+IFRoZSBt
+YXN0ZXIgY2xvY2sgaXMgYWN0dWFsbHkgbmFtZWQgbWFzdGVyY2sgZWFybGllciBpbiB0aGUgZHJp
+dmVyLiBIYXZpbmcNCj4gIm1jayIgaW4gdGhlIHBhcmVudCBsaXN0IG1lYW5zIHRoYXQgaXQgY2Fu
+IG5ldmVyIGJlIHNlbGVjdGVkLg0KPiANCj4gRml4ZXM6IDFlYWJkYzJmOWRkOCAoImNsazogYXQ5
+MTogYWRkIGF0OTFzYW05eDUgUE1DcyBkcml2ZXIiKQ0KPiBGaXhlczogYTIwMzgwNzdkZTlhICgi
+Y2xrOiBhdDkxOiBhZGQgc2FtYTVkMiBQTUMgZHJpdmVyIikNCj4gRml4ZXM6IDA4NGI2OTZiYjUw
+OSAoImNsazogYXQ5MTogYWRkIHNhbWE1ZDQgcG1jIGRyaXZlciIpDQo+IA0KPiBTaWduZWQtb2Zm
+LWJ5OiBBbGV4YW5kcmUgQmVsbG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+DQoN
+CkFja2VkLWJ5OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQoN
+Cj4gLS0tDQo+ICAgZHJpdmVycy9jbGsvYXQ5MS9hdDkxc2FtOXg1LmMgfCAyICstDQo+ICAgZHJp
+dmVycy9jbGsvYXQ5MS9zYW1hNWQyLmMgICAgfCA0ICsrLS0NCj4gICBkcml2ZXJzL2Nsay9hdDkx
+L3NhbWE1ZDQuYyAgICB8IDIgKy0NCj4gICAzIGZpbGVzIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
+KSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9hdDkxL2F0
+OTFzYW05eDUuYyBiL2RyaXZlcnMvY2xrL2F0OTEvYXQ5MXNhbTl4NS5jDQo+IGluZGV4IDJmZTIy
+NWE2OTdkZi4uZDU1YTE1MWNiN2Y1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9hdDkxL2F0
+OTFzYW05eDUuYw0KPiArKysgYi9kcml2ZXJzL2Nsay9hdDkxL2F0OTFzYW05eDUuYw0KPiBAQCAt
+MjEwLDcgKzIxMCw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBhdDkxc2FtOXg1X3BtY19zZXR1cChz
+dHJ1Y3QgZGV2aWNlX25vZGUgKm5wLA0KPiAgIAlwYXJlbnRfbmFtZXNbMV0gPSAibWFpbmNrIjsN
+Cj4gICAJcGFyZW50X25hbWVzWzJdID0gInBsbGFkaXZjayI7DQo+ICAgCXBhcmVudF9uYW1lc1sz
+XSA9ICJ1dG1pY2siOw0KPiAtCXBhcmVudF9uYW1lc1s0XSA9ICJtY2siOw0KPiArCXBhcmVudF9u
+YW1lc1s0XSA9ICJtYXN0ZXJjayI7DQo+ICAgCWZvciAoaSA9IDA7IGkgPCAyOyBpKyspIHsNCj4g
+ICAJCWNoYXIgbmFtZVs2XTsNCj4gICANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2F0OTEv
+c2FtYTVkMi5jIGIvZHJpdmVycy9jbGsvYXQ5MS9zYW1hNWQyLmMNCj4gaW5kZXggZDY5YWQ5NmZl
+OTg4Li5jZDBlZjcyNzRmZGIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY2xrL2F0OTEvc2FtYTVk
+Mi5jDQo+ICsrKyBiL2RyaXZlcnMvY2xrL2F0OTEvc2FtYTVkMi5jDQo+IEBAIC0yNDAsNyArMjQw
+LDcgQEAgc3RhdGljIHZvaWQgX19pbml0IHNhbWE1ZDJfcG1jX3NldHVwKHN0cnVjdCBkZXZpY2Vf
+bm9kZSAqbnApDQo+ICAgCXBhcmVudF9uYW1lc1sxXSA9ICJtYWluY2siOw0KPiAgIAlwYXJlbnRf
+bmFtZXNbMl0gPSAicGxsYWRpdmNrIjsNCj4gICAJcGFyZW50X25hbWVzWzNdID0gInV0bWljayI7
+DQo+IC0JcGFyZW50X25hbWVzWzRdID0gIm1jayI7DQo+ICsJcGFyZW50X25hbWVzWzRdID0gIm1h
+c3RlcmNrIjsNCj4gICAJZm9yIChpID0gMDsgaSA8IDM7IGkrKykgew0KPiAgIAkJY2hhciBuYW1l
+WzZdOw0KPiAgIA0KPiBAQCAtMjkxLDcgKzI5MSw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBzYW1h
+NWQyX3BtY19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiAgIAlwYXJlbnRfbmFtZXNb
+MV0gPSAibWFpbmNrIjsNCj4gICAJcGFyZW50X25hbWVzWzJdID0gInBsbGFkaXZjayI7DQo+ICAg
+CXBhcmVudF9uYW1lc1szXSA9ICJ1dG1pY2siOw0KPiAtCXBhcmVudF9uYW1lc1s0XSA9ICJtY2si
+Ow0KPiArCXBhcmVudF9uYW1lc1s0XSA9ICJtYXN0ZXJjayI7DQo+ICAgCXBhcmVudF9uYW1lc1s1
+XSA9ICJhdWRpb3BsbF9wbWNjayI7DQo+ICAgCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKHNh
+bWE1ZDJfZ2NrKTsgaSsrKSB7DQo+ICAgCQlodyA9IGF0OTFfY2xrX3JlZ2lzdGVyX2dlbmVyYXRl
+ZChyZWdtYXAsICZwbWNfcGNyX2xvY2ssDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9hdDkx
+L3NhbWE1ZDQuYyBiL2RyaXZlcnMvY2xrL2F0OTEvc2FtYTVkNC5jDQo+IGluZGV4IGUzNThiZTdm
+NmM4ZC4uYjY0NWE5ZDU5Y2RiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9hdDkxL3NhbWE1
+ZDQuYw0KPiArKysgYi9kcml2ZXJzL2Nsay9hdDkxL3NhbWE1ZDQuYw0KPiBAQCAtMjA3LDcgKzIw
+Nyw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBzYW1hNWQ0X3BtY19zZXR1cChzdHJ1Y3QgZGV2aWNl
+X25vZGUgKm5wKQ0KPiAgIAlwYXJlbnRfbmFtZXNbMV0gPSAibWFpbmNrIjsNCj4gICAJcGFyZW50
+X25hbWVzWzJdID0gInBsbGFkaXZjayI7DQo+ICAgCXBhcmVudF9uYW1lc1szXSA9ICJ1dG1pY2si
+Ow0KPiAtCXBhcmVudF9uYW1lc1s0XSA9ICJtY2siOw0KPiArCXBhcmVudF9uYW1lc1s0XSA9ICJt
+YXN0ZXJjayI7DQo+ICAgCWZvciAoaSA9IDA7IGkgPCAzOyBpKyspIHsNCj4gICAJCWNoYXIgbmFt
+ZVs2XTsNCj4gICANCj4gDQoNCg0KLS0gDQpOaWNvbGFzIEZlcnJlDQo=
