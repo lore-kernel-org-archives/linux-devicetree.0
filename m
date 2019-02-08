@@ -1,29 +1,30 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 07/10] gpio: max77650: add GPIO support
-Date: Fri, 8 Feb 2019 12:22:10 +0100
-Message-ID: <CACRpkdYKLeKA7CPFvoBPHB-K+X_n80YvFyYS_SHxuTTyGLNZ4g@mail.gmail.com>
-References: <20190205091237.6448-1-brgl@bgdev.pl> <20190205091237.6448-8-brgl@bgdev.pl>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Document the i.MX50 IOMUXC binding
+Date: Fri, 8 Feb 2019 12:35:56 +0100
+Message-ID: <CACRpkdYdmtA_O-NVCBV7=j+A+u5piRUULiV-HLEnu0dtkT0yyw@mail.gmail.com>
+References: <20190129165530.7606-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205091237.6448-8-brgl@bgdev.pl>
+In-Reply-To: <20190129165530.7606-1-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Dong Aisheng <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 5, 2019 at 10:12 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Tue, Jan 29, 2019 at 5:55 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> AFAICS from the i.MX50 Reference Manual, the i.MX50 IOMUXC works the
+> same as the one in i.MX51, so I copied fsl,imx51-pinctrl.txt and changed
+> the text to imx50.
 >
-> Add GPIO support for max77650 mfd device. This PMIC exposes a single
-> GPIO line.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> Cc: Dong Aisheng <dong.aisheng@linaro.org>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+i.MX people. can you please look at this patch?
 
-Please merge this with the rest of the stuff through MFD!
-
-Thanks,
+Yours,
 Linus Walleij
