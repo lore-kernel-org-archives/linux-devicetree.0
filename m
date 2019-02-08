@@ -1,46 +1,30 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: Document the i.MX50 IOMUXC binding
-Date: Fri, 8 Feb 2019 09:57:04 -0200
-Message-ID: <CAOMZO5ABy+uDXMhQy95vuY8Yz2a8Wr0Q0+fUq=2Xkm2NSCdQGQ@mail.gmail.com>
-References: <20190129165530.7606-1-j.neuschaefer@gmx.net>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 05/12] ARM: davinci: da850: switch to using the
+ clocksource driver
+Date: Fri, 8 Feb 2019 17:36:22 +0530
+Message-ID: <9d423e18-8c85-731b-388a-1843067db242@ti.com>
+References: <20190204171757.32073-1-brgl@bgdev.pl>
+ <20190204171757.32073-6-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190129165530.7606-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20190204171757.32073-6-brgl@bgdev.pl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Dong Aisheng <dong.aisheng@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+On 04/02/19 10:47 PM, Bartosz Golaszewski wrote:
+> +static const struct davinci_timer_cfg da850_timer_cfg = {
+> +	.reg = {
+> +		.start		= DA8XX_TIMER64P0_BASE,
+> +		.end		= DA8XX_TIMER64P0_BASE + SZ_4K,
 
-On Tue, Jan 29, 2019 at 2:55 PM Jonathan Neusch=C3=A4fer
-<j.neuschaefer@gmx.net> wrote:
->
-> AFAICS from the i.MX50 Reference Manual, the i.MX50 IOMUXC works the
-> same as the one in i.MX51, so I copied fsl,imx51-pinctrl.txt and changed
-> the text to imx50.
->
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> Cc: Dong Aisheng <dong.aisheng@linaro.org>
-> Cc: Shawn Guo <shawn.guo@linaro.org>
+SZ_4K - 1
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+This should have prevented watchdog timer from getting registered.
 
-> +Required properties:
-> +- compatible: "fsl,imx50-iomuxc"
-> +- fsl,pins: two integers array, represents a group of pins mux and confi=
-g
-> +  setting. The format is fsl,pins =3D <PIN_FUNC_ID CONFIG>, PIN_FUNC_ID =
-is a
-> +  pin working on a specific function, CONFIG is the pad setting value li=
-ke
-> +  pull-up for this pin. Please refer to imx50 datasheet for the valid pa=
-d
-
-Nit: It is the i.MX50 Reference Manual, not its datasheet that
-describes the pad settings values.
-
-I noticed that all the bindings say datasheet though, so I will send a
-patch to fix this.
+Thanks,
+Sekhar
