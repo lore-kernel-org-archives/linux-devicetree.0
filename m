@@ -1,42 +1,30 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 1/5] misc: dt-bindings: Add Qualcomm Fastrpc bindings
-Date: Fri, 8 Feb 2019 13:21:13 +0100
-Message-ID: <20190208122113.GG23483@kroah.com>
-References: <20190201130925.27066-1-srinivas.kandagatla@linaro.org>
- <20190201130925.27066-2-srinivas.kandagatla@linaro.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 06/12] ARM: davinci: da830: switch to using the
+ clocksource driver
+Date: Fri, 8 Feb 2019 17:53:17 +0530
+Message-ID: <3e80e485-10f0-1bf6-72eb-69d69a571cb6@ti.com>
+References: <20190204171757.32073-1-brgl@bgdev.pl>
+ <20190204171757.32073-7-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190201130925.27066-2-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20190204171757.32073-7-brgl@bgdev.pl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: arnd@arndb.de, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Thierry Escande <thierry.escande@linaro.org>, Rob Herring <robh@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 01, 2019 at 01:09:21PM +0000, Srinivas Kandagatla wrote:
-> The FastRPC driver implements an IPC (Inter-Processor Communication)
-> mechanism that allows for clients to transparently make remote method
-> invocations across DSP and APPS boundaries. This enables developers
-> to offload tasks to the DSP and free up the application processor for
-> other tasks.
-> 
-> Co-developed-by: Thierry Escande <thierry.escande@linaro.org>
-> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/misc/qcom,fastrpc.txt | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
+On 04/02/19 10:47 PM, Bartosz Golaszewski wrote:
+> -/*
+> - * T0_BOT: Timer 0, bottom		: Used for clock_event & clocksource
+> - * T0_TOP: Timer 0, top			: Used by DSP
+> - * T1_BOT, T1_TOP: Timer 1, bottom & top: Used for watchdog timer
 
-What changed from v4?  v2?  v3?
+Aren't we changing this usage model for DA830 now, leaving no clock for
+use by DSP? It seems to me that after these patches clockevent is always
+T0_BOT and clocksource is always T0_TOP.
 
-That needs to be somewhere in here, below the --- line or in the 00
-email at the least to give us some idea of what is different.
-
-v6 please?
-
-thanks,
-
-greg k-h
+Thanks,
+Sekhar
