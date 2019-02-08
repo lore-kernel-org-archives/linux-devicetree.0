@@ -1,37 +1,54 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 00/11] mtd: rawnand: denali: exec_op(), controller/chip
- separation, and cleanups
-Date: Fri, 8 Feb 2019 22:55:20 +0100
-Message-ID: <20190208225520.2f19d2de@xps13>
-References: <1549613335-30319-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] ARM: dts: exynos: Enable ADC on Odroid HC1
+Date: Sat,  9 Feb 2019 00:05:57 +0100
+Message-ID: <20190208230557.9292-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549613335-30319-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-mtd@lists.infradead.org, Boris Brezillon <bbrezillon@kernel.org>, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
+Odroid HC1 uses the exynos5422-odroid-core.dtsi file as a base.  All
+other Exynos5422 Odroids use the "common".  The ADC node was defined
+only in the latter.
 
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Fri,  8 Feb
-2019 17:08:44 +0900:
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi      | 5 +++++
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 5 -----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-> I took time for the Denali driver to catch up with the latest framework.
-> 
->  - switch over to exec_op() and remove legacy hooks
-> 
->  - separate controller/chips
-> 
->  - various cleanups
-> 
-
-What you do is very much appreciated. Thanks for keeping this driver
-up-to-date! A few reviews are coming, I'll do another pass for the most
-complex patches later.
-
-
-Thanks,
-Miquèl
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index bf09eab90f8a..9b0bccb77be5 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -36,6 +36,11 @@
+ 	};
+ };
+ 
++&adc {
++	vdd-supply = <&ldo4_reg>;
++	status = "okay";
++};
++
+ &bus_wcore {
+ 	devfreq-events = <&nocp_mem0_0>, <&nocp_mem0_1>,
+ 			<&nocp_mem1_0>, <&nocp_mem1_1>;
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+index b299e541cac0..5f195ad7e467 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+@@ -362,11 +362,6 @@
+ 	};
+ };
+ 
+-&adc {
+-	vdd-supply = <&ldo4_reg>;
+-	status = "okay";
+-};
+-
+ &hdmi {
+ 	status = "okay";
+ 	ddc = <&i2c_2>;
+-- 
+2.17.1
