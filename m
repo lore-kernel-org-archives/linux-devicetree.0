@@ -1,76 +1,180 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH] clk: at91: fix masterck name
-Date: Fri,  8 Feb 2019 15:40:59 +0100
-Message-ID: <20190208144059.29861-1-alexandre.belloni@bootlin.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH 7/7] arm64: dts: qcom: qcs404: Add PCIe related nodes
+Date: Fri, 8 Feb 2019 15:50:28 +0100
+Message-ID: <20190208145028.GD773@centauri.lan>
+References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
+ <20190125234509.26419-8-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190125234509.26419-8-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The master clock is actually named masterck earlier in the driver. Having
-"mck" in the parent list means that it can never be selected.
+On Fri, Jan 25, 2019 at 03:45:09PM -0800, Bjorn Andersson wrote:
+> The QCS404 has a PCIe2 PHY and a Qualcomm PCIe controller, add these to
+> the platform dtsi and enable them for the EVB with the perst gpio
+> and analog supplies defined.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 25 +++++++++
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi     | 67 ++++++++++++++++++++++++
+>  2 files changed, 92 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> index 50b3589c7f15..579ddaf4f5fa 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> @@ -21,6 +21,22 @@
+>  	};
+>  };
+>  
+> +&pcie {
+> +	status = "ok";
+> +
+> +	perst-gpio = <&tlmm 43 GPIO_ACTIVE_LOW>;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&perst_state>;
+> +};
+> +
+> +&pcie_phy {
+> +	status = "ok";
+> +
+> +	vdda-vp-supply = <&vreg_l3_1p05>;
+> +	vdda-vph-supply = <&vreg_l5_1p8>;
+> +};
+> +
+>  &remoteproc_adsp {
+>  	status = "ok";
+>  };
+> @@ -137,6 +153,15 @@
+>  };
+>  
+>  &tlmm {
+> +	perst_state: perst {
+> +		pins = "gpio43";
+> +		function = "gpio";
+> +
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +		output-low;
+> +	};
+> +
+>  	sdc1_on: sdc1-on {
+>  		clk {
+>  			pins = "sdc1_clk";
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> index 76699435c8bd..7b219865ba7e 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -3,6 +3,7 @@
+>  
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-qcs404.h>
+> +#include <dt-bindings/gpio/gpio.h>
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -377,6 +378,7 @@
+>  			compatible = "qcom,gcc-qcs404";
+>  			reg = <0x01800000 0x80000>;
+>  			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+>  
+>  			assigned-clocks = <&gcc GCC_APSS_AHB_CLK_SRC>;
+>  			assigned-clock-rates = <19200000>;
+> @@ -405,6 +407,21 @@
+>  			#interrupt-cells = <4>;
+>  		};
+>  
+> +		pcie_phy: phy@7786000 {
+> +			compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
+> +			reg = <0x07786000 0xb8>;
+> +
+> +			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+> +			resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
+> +				 <&gcc GCC_PCIE_0_PIPE_ARES>;
+> +			reset-names = "phy", "pipe";
+> +
+> +			clock-output-names = "pcie_0_pipe_clk";
+> +			#phy-cells = <0>;
+> +
+> +			status = "disabled";
+> +		};
+> +
+>  		sdcc1: sdcc@7804000 {
+>  			compatible = "qcom,sdhci-msm-v5";
+>  			reg = <0x07804000 0x1000>, <0x7805000 0x1000>;
+> @@ -771,6 +788,56 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		pcie: pci@10000000 {
+> +			compatible = "qcom,pcie-qcs404", "snps,dw-pcie";
+> +			reg =  <0x10000000 0xf1d
+> +				0x10000f20 0xa8
+> +				0x07780000 0x2000
+> +				0x10001000 0x2000>;
+> +			reg-names = "dbi", "elbi", "parf", "config";
+> +			device_type = "pci";
+> +			linux,pci-domain = <0>;
 
-Fixes: 1eabdc2f9dd8 ("clk: at91: add at91sam9x5 PMCs driver")
-Fixes: a2038077de9a ("clk: at91: add sama5d2 PMC driver")
-Fixes: 084b696bb509 ("clk: at91: add sama5d4 pmc driver")
+Since we only have single PCIe controller,
+I don't think we need to specify a pci-domain.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/clk/at91/at91sam9x5.c | 2 +-
- drivers/clk/at91/sama5d2.c    | 4 ++--
- drivers/clk/at91/sama5d4.c    | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+With that:
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
 
-diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-index 2fe225a697df..d55a151cb7f5 100644
---- a/drivers/clk/at91/at91sam9x5.c
-+++ b/drivers/clk/at91/at91sam9x5.c
-@@ -210,7 +210,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "plladivck";
- 	parent_names[3] = "utmick";
--	parent_names[4] = "mck";
-+	parent_names[4] = "masterck";
- 	for (i = 0; i < 2; i++) {
- 		char name[6];
- 
-diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-index d69ad96fe988..cd0ef7274fdb 100644
---- a/drivers/clk/at91/sama5d2.c
-+++ b/drivers/clk/at91/sama5d2.c
-@@ -240,7 +240,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "plladivck";
- 	parent_names[3] = "utmick";
--	parent_names[4] = "mck";
-+	parent_names[4] = "masterck";
- 	for (i = 0; i < 3; i++) {
- 		char name[6];
- 
-@@ -291,7 +291,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "plladivck";
- 	parent_names[3] = "utmick";
--	parent_names[4] = "mck";
-+	parent_names[4] = "masterck";
- 	parent_names[5] = "audiopll_pmcck";
- 	for (i = 0; i < ARRAY_SIZE(sama5d2_gck); i++) {
- 		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock,
-diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-index e358be7f6c8d..b645a9d59cdb 100644
---- a/drivers/clk/at91/sama5d4.c
-+++ b/drivers/clk/at91/sama5d4.c
-@@ -207,7 +207,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "plladivck";
- 	parent_names[3] = "utmick";
--	parent_names[4] = "mck";
-+	parent_names[4] = "masterck";
- 	for (i = 0; i < 3; i++) {
- 		char name[6];
- 
--- 
-2.20.1
+
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <1>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			ranges = <0x81000000 0 0          0x10003000 0 0x00010000   /* I/O */
+> +				  0x82000000 0 0x10013000 0x10013000 0 0x007ed000>; /* memory */
+> +
+> +			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi";
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +					<0 0 0 2 &intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +					<0 0 0 3 &intc GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +					<0 0 0 4 &intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +			clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+> +				 <&gcc GCC_PCIE_0_AUX_CLK>,
+> +				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+> +				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
+> +			clock-names = "iface", "aux", "master_bus", "slave_bus";
+> +
+> +			resets = <&gcc GCC_PCIE_0_AXI_MASTER_ARES>,
+> +				 <&gcc GCC_PCIE_0_AXI_SLAVE_ARES>,
+> +				 <&gcc GCC_PCIE_0_AXI_MASTER_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE_0_CORE_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE_0_BCR>,
+> +				 <&gcc GCC_PCIE_0_AHB_ARES>;
+> +			reset-names = "axi_m",
+> +				      "axi_s",
+> +				      "axi_m_sticky",
+> +				      "pipe_sticky",
+> +				      "pwr",
+> +				      "ahb";
+> +
+> +			phys = <&pcie_phy>;
+> +			phy-names = "pciephy";
+> +
+> +			status = "disabled";
+> +		};
+>  	};
+>  
+>  	timer {
+> -- 
+> 2.18.0
+> 
