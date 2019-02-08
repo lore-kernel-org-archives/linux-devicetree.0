@@ -1,413 +1,94 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH 3/7] phy: qcom: Add Qualcomm PCIe2 PHY driver
-Date: Fri, 8 Feb 2019 15:14:13 +0100
-Message-ID: <20190208141413.GB773@centauri.lan>
-References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
- <20190125234509.26419-4-bjorn.andersson@linaro.org>
+From: Harald Geyer <harald@ccbib.org>
+Subject: [PATCHv3] arm64: dts: allwinner: a64: teres-i: enable backlight
+Date: Fri,  8 Feb 2019 14:16:29 +0000
+Message-ID: <20190208141629.14323-1-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125234509.26419-4-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Harald Geyer <harald@ccbib.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 03:45:05PM -0800, Bjorn Andersson wrote:
-> The Qualcomm PCIe2 PHY is based on design from Synopsys and found in
-> several different platforms where the QMP PHY isn't used.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/phy/qualcomm/Kconfig          |   8 +
->  drivers/phy/qualcomm/Makefile         |   1 +
->  drivers/phy/qualcomm/phy-qcom-pcie2.c | 331 ++++++++++++++++++++++++++
->  3 files changed, 340 insertions(+)
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie2.c
-> 
-> diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
-> index 32f7d34eb784..0edb5316972f 100644
-> --- a/drivers/phy/qualcomm/Kconfig
-> +++ b/drivers/phy/qualcomm/Kconfig
-> @@ -24,6 +24,14 @@ config PHY_QCOM_IPQ806X_SATA
->  	depends on OF
->  	select GENERIC_PHY
->  
-> +config PHY_QCOM_PCIE2
-> +	tristate "Qualcomm PCIe PHY Driver"
+Enable pwm and add a pretty standard backlight node.
 
-Perhaps "Qualcomm PCIe2 PHY Driver" or "Qualcomm PCIe Gen2 PHY Driver"
-as that is more descriptive.
+The regulator is always on, but we include it anyway, because it is
+required by the binding document.
 
-> +	depends on OF && COMMON_CLK && (ARCH_QCOM || COMPILE_TEST)
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support the Qualcomm PCIe PHY, used with the Synopsys
-> +	  based PCIe controller.
-> +
->  config PHY_QCOM_QMP
->  	tristate "Qualcomm QMP PHY Driver"
->  	depends on OF && COMMON_CLK && (ARCH_QCOM || COMPILE_TEST)
-> diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
-> index c56efd3af205..283251d6a5d9 100644
-> --- a/drivers/phy/qualcomm/Makefile
-> +++ b/drivers/phy/qualcomm/Makefile
-> @@ -2,6 +2,7 @@
->  obj-$(CONFIG_PHY_ATH79_USB)		+= phy-ath79-usb.o
->  obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
->  obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
-> +obj-$(CONFIG_PHY_QCOM_PCIE2)		+= phy-qcom-pcie2.o
->  obj-$(CONFIG_PHY_QCOM_QMP)		+= phy-qcom-qmp.o
->  obj-$(CONFIG_PHY_QCOM_QUSB2)		+= phy-qcom-qusb2.o
->  obj-$(CONFIG_PHY_QCOM_UFS)		+= phy-qcom-ufs.o
-> diff --git a/drivers/phy/qualcomm/phy-qcom-pcie2.c b/drivers/phy/qualcomm/phy-qcom-pcie2.c
-> new file mode 100644
-> index 000000000000..2fa891c18b6f
-> --- /dev/null
-> +++ b/drivers/phy/qualcomm/phy-qcom-pcie2.c
-> @@ -0,0 +1,331 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2019, Linaro Ltd.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/clk.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset.h>
-> +#include <linux/slab.h>
-> +
-> +#include <dt-bindings/phy/phy.h>
-> +
-> +#define PCIE20_PARF_PHY_STTS         0x3c
-> +#define PCIE2_PHY_RESET_CTRL         0x44
-> +#define PCIE20_PARF_PHY_REFCLK_CTRL2 0xa0
-> +#define PCIE20_PARF_PHY_REFCLK_CTRL3 0xa4
-> +#define PCIE20_PARF_PCS_SWING_CTRL1  0x88
-> +#define PCIE20_PARF_PCS_SWING_CTRL2  0x8c
-> +#define PCIE20_PARF_PCS_DEEMPH1      0x74
-> +#define PCIE20_PARF_PCS_DEEMPH2      0x78
-> +#define PCIE20_PARF_PCS_DEEMPH3      0x7c
-> +#define PCIE20_PARF_CONFIGBITS       0x84
-> +#define PCIE20_PARF_PHY_CTRL3        0x94
-> +#define PCIE20_PARF_PCS_CTRL         0x80
-> +
-> +#define TX_AMP_VAL                   120
-> +#define PHY_RX0_EQ_GEN1_VAL          0
-> +#define PHY_RX0_EQ_GEN2_VAL          4
-> +#define TX_DEEMPH_GEN1_VAL           24
-> +#define TX_DEEMPH_GEN2_3_5DB_VAL     26
-> +#define TX_DEEMPH_GEN2_6DB_VAL       36
-> +#define PHY_TX0_TERM_OFFST_VAL       0
-> +
-> +struct qcom_phy {
-> +	struct device *dev;
-> +	void __iomem *base;
-> +
-> +	struct regulator_bulk_data vregs[2];
-> +
-> +	struct reset_control *phy_reset;
-> +	struct reset_control *pipe_reset;
-> +	struct clk *pipe_clk;
-> +};
-> +
-> +static int qcom_pcie2_phy_init(struct phy *phy)
-> +{
-> +	struct qcom_phy *qphy = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = reset_control_deassert(qphy->phy_reset);
-> +	if (ret) {
-> +		dev_err(qphy->dev, "cannot deassert pipe reset\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(qphy->vregs), qphy->vregs);
-> +	if (ret)
-> +		reset_control_assert(qphy->phy_reset);
-> +
-> +	return ret;
-> +}
-> +
-> +static int qcom_pcie2_phy_power_on(struct phy *phy)
-> +{
-> +	struct qcom_phy *qphy = phy_get_drvdata(phy);
-> +	int ret;
-> +	u32 val;
-> +
-> +	/* Program REF_CLK source */
-> +	val = readl(qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL2);
-> +	val &= ~BIT(1);
-> +	writel(val, qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL2);
-> +
-> +	usleep_range(1000, 2000);
-> +
-> +	/* Don't use PAD for refclock */
-> +	val = readl(qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL2);
-> +	val &= ~BIT(0);
-> +	writel(val, qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL2);
-> +
-> +	/* Program SSP ENABLE */
-> +	val = readl(qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL3);
-> +	val |= BIT(0);
-> +	writel(val, qphy->base + PCIE20_PARF_PHY_REFCLK_CTRL3);
-> +
-> +	usleep_range(1000, 2000);
-> +
-> +	/* Assert Phy SW Reset */
-> +	val = readl(qphy->base + PCIE2_PHY_RESET_CTRL);
-> +	val |= BIT(0);
-> +	writel(val, qphy->base + PCIE2_PHY_RESET_CTRL);
-> +
-> +	/* Program Tx Amplitude */
-> +	val = readl(qphy->base + PCIE20_PARF_PCS_SWING_CTRL1);
-> +	val &= ~0x7f;
-> +	val |= TX_AMP_VAL;
-> +	writel(val, qphy->base + PCIE20_PARF_PCS_SWING_CTRL1);
-> +
-> +	val = readl(qphy->base + PCIE20_PARF_PCS_SWING_CTRL2);
-> +	val &= ~0x7f;
-> +	val |= TX_AMP_VAL;
-> +	writel(val, qphy->base + PCIE20_PARF_PCS_SWING_CTRL2);
-> +
-> +	/* Program De-Emphasis */
-> +	val = readl(qphy->base + PCIE20_PARF_PCS_DEEMPH1);
-> +	val &= ~0x3f;
-> +	val |= TX_DEEMPH_GEN2_6DB_VAL;
-> +	writel(val, qphy->base + PCIE20_PARF_PCS_DEEMPH1);
-> +
-> +	val = readl(qphy->base + PCIE20_PARF_PCS_DEEMPH2);
-> +	val &= ~0x3f;
-> +	val |= TX_DEEMPH_GEN2_3_5DB_VAL;
-> +	writel(val, qphy->base + PCIE20_PARF_PCS_DEEMPH2);
-> +
-> +	val = readl(qphy->base + PCIE20_PARF_PCS_DEEMPH3);
-> +	val &= ~0x3f;
-> +	val |= TX_DEEMPH_GEN1_VAL;
-> +	writel(val, qphy->base + PCIE20_PARF_PCS_DEEMPH3);
-> +
-> +	/* Program Rx_Eq */
-> +	val = readl(qphy->base + PCIE20_PARF_CONFIGBITS);
-> +	val &= ~0x7;
-> +	val |= PHY_RX0_EQ_GEN2_VAL;
-> +	writel(val, qphy->base + PCIE20_PARF_CONFIGBITS);
-> +
-> +	/* Program Tx0_term_offset */
-> +	val = readl(qphy->base + PCIE20_PARF_PHY_CTRL3);
-> +	val &= ~0x1f;
-> +	val |= PHY_TX0_TERM_OFFST_VAL;
-> +	writel(val, qphy->base + PCIE20_PARF_PHY_CTRL3);
-> +
-> +	/* disable Tx2Rx Loopback */
-> +	val = readl(qphy->base + PCIE20_PARF_PCS_CTRL);
-> +	val &= ~BIT(1);
-> +	writel(val, qphy->base + PCIE20_PARF_PCS_CTRL);
-> +
-> +	/* De-assert Phy SW Reset */
-> +	val = readl(qphy->base + PCIE2_PHY_RESET_CTRL);
-> +	val &= ~BIT(0);
-> +	writel(val, qphy->base + PCIE2_PHY_RESET_CTRL);
-> +
-> +	usleep_range(1000, 2000);
-> +
-> +	ret = reset_control_deassert(qphy->pipe_reset);
-> +	if (ret) {
-> +		dev_err(qphy->dev, "cannot deassert pipe reset\n");
-> +		goto out;
-> +	}
-> +
-> +	clk_set_rate(qphy->pipe_clk, 250000000);
-> +
-> +	ret = clk_prepare_enable(qphy->pipe_clk);
-> +	if (ret) {
-> +		dev_err(qphy->dev, "failed to enable pipe clock\n");
-> +		goto out;
-> +	}
-> +
-> +	ret = readl_poll_timeout(qphy->base + PCIE20_PARF_PHY_STTS, val,
-> +				 !(val & BIT(0)), 1000, 10);
-> +	if (ret)
-> +		dev_err(qphy->dev, "phy initialization failed\n");
-> +
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int qcom_pcie2_phy_power_off(struct phy *phy)
-> +{
-> +	struct qcom_phy *qphy = phy_get_drvdata(phy);
-> +	u32 val;
-> +
-> +	val = readl(qphy->base + PCIE2_PHY_RESET_CTRL);
-> +	val |= BIT(0);
-> +	writel(val, qphy->base + PCIE2_PHY_RESET_CTRL);
-> +
-> +	clk_disable_unprepare(qphy->pipe_clk);
-> +	reset_control_assert(qphy->pipe_reset);
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_pcie2_phy_exit(struct phy *phy)
-> +{
-> +	struct qcom_phy *qphy = phy_get_drvdata(phy);
-> +
-> +	regulator_bulk_disable(ARRAY_SIZE(qphy->vregs), qphy->vregs);
-> +	reset_control_assert(qphy->phy_reset);
-> +
-> +	return 0;
-> +}
-<> +
-> +static const struct phy_ops qcom_pcie2_ops = {
-> +	.init = qcom_pcie2_phy_init,
-> +	.power_on = qcom_pcie2_phy_power_on,
-> +	.power_off = qcom_pcie2_phy_power_off,
-> +	.exit = qcom_pcie2_phy_exit,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +/*
-> + * Register a fixed rate pipe clock.
-> + *
-> + * The <s>_pipe_clksrc generated by PHY goes to the GCC that gate
-> + * controls it. The <s>_pipe_clk coming out of the GCC is requested
-> + * by the PHY driver for its operations.
-> + * We register the <s>_pipe_clksrc here. The gcc driver takes care
-> + * of assigning this <s>_pipe_clksrc as parent to <s>_pipe_clk.
-> + * Below picture shows this relationship.
-> + *
-> + *         +---------------+
-> + *         |   PHY block   |<<---------------------------------------+
-> + *         |               |                                         |
-> + *         |   +-------+   |                   +-----+               |
-> + *   I/P---^-->|  PLL  |---^--->pipe_clksrc--->| GCC |--->pipe_clk---+
-> + *    clk  |   +-------+   |                   +-----+
-> + *         +---------------+
-> + */
-> +static int phy_pipe_clk_register(struct qcom_phy *qphy)
+Signed-off-by: Harald Geyer <harald@ccbib.org>
+---
+The backlight node got dropped from the initial submission of the
+teres-i DT, because PWM support wasn't available in time, and I
+kind of forgot to resubmit once PWM was in. Sorry about that.
 
-Perhaps rename this function to
+While testing this patch I noticed, that sometimes on boot the
+brightness is set to max_brightness instead of the default specified
+in DT. I couldn't reproduce it reliably, but it seems to be related
+to changing the pwm period. I guess the logic trying to detect
+the brightness set by the boot loader gets confused in some corner
+case if the pwm periods don't match. However unbinding and rebinding
+the device to the driver always made it go to the proper default
+brightness, so the problem is clearly not in the DT.
 
-phy_pipe_clksrc_register()
+If the theory above is true, then it implies that the version of
+u-boot running on my laptop doesn't completely overwrite all pwm
+parameters. As this might be specific to my installation, I didn't
+mention the issue in the commit message.
 
-since it is that clock that we register here.
+Changes since v2:
+ * Drop all the other stuff that got merged a year ago.
+ * Rebased on current sunxi/for-next branch
+ * Add power-supply property (just to conform to the binding)
+ * Use slightly different brightness-levels
 
-With those two minor nits:
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Actually I tried omitting brightness-levels completely, as it is now
+optional. However automatic calculation gives unreasonable results
+(depending on the exact value of pwm period). A report has been sent
+to the author of the code.
 
-> +{
-> +	struct device_node *np = qphy->dev->of_node;
-> +	struct clk_fixed_rate *fixed;
-> +	struct clk_init_data init = { };
-> +	int ret;
-> +
-> +	ret = of_property_read_string(np, "clock-output-names", &init.name);
-> +	if (ret) {
-> +		dev_err(qphy->dev, "%s: No clock-output-names\n", np->name);
-> +		return ret;
-> +	}
-> +
-> +	fixed = devm_kzalloc(qphy->dev, sizeof(*fixed), GFP_KERNEL);
-> +	if (!fixed)
-> +		return -ENOMEM;
-> +
-> +	init.ops = &clk_fixed_rate_ops;
-> +
-> +	/* controllers using QMP phys use 250MHz pipe clock interface */
-> +	fixed->fixed_rate = 250000000;
-> +	fixed->hw.init = &init;
-> +
-> +	return devm_clk_hw_register(qphy->dev, &fixed->hw);
-> +}
-> +
-> +static int qcom_pcie2_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *phy_provider;
-> +	struct qcom_phy *qphy;
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	struct phy *phy;
-> +	int ret;
-> +
-> +	qphy = devm_kzalloc(dev, sizeof(*qphy), GFP_KERNEL);
-> +	if (!qphy)
-> +		return -ENOMEM;
-> +
-> +	qphy->dev = dev;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	qphy->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(qphy->base))
-> +		return PTR_ERR(qphy->base);
-> +
-> +	ret = phy_pipe_clk_register(qphy);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register pipe_clk\n");
-> +		return ret;
-> +	}
-> +
-> +	qphy->vregs[0].supply = "vdda-vp";
-> +	qphy->vregs[1].supply = "vdda-vph";
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(qphy->vregs), qphy->vregs);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	qphy->pipe_clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(qphy->pipe_clk)) {
-> +		dev_err(dev, "failed to acquire pipe clock\n");
-> +		return PTR_ERR(qphy->pipe_clk);
-> +	}
-> +
-> +	qphy->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
-> +	if (IS_ERR(qphy->phy_reset)) {
-> +		dev_err(dev, "failed to acquire phy reset\n");
-> +		return PTR_ERR(qphy->phy_reset);
-> +	}
-> +
-> +	qphy->pipe_reset = devm_reset_control_get_exclusive(dev, "pipe");
-> +	if (IS_ERR(qphy->pipe_reset)) {
-> +		dev_err(dev, "failed to acquire pipe reset\n");
-> +		return PTR_ERR(qphy->pipe_reset);
-> +	}
-> +
-> +	phy = devm_phy_create(dev, dev->of_node, &qcom_pcie2_ops);
-> +	if (IS_ERR(phy)) {
-> +		dev_err(dev, "failed to create phy\n");
-> +		return PTR_ERR(phy);
-> +	}
-> +
-> +	phy_set_drvdata(phy, qphy);
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider))
-> +		dev_err(dev, "failed to register phy provider\n");
-> +
-> +	return PTR_ERR_OR_ZERO(phy_provider);
-> +}
-> +
-> +static const struct of_device_id qcom_pcie2_phy_match_table[] = {
-> +	{ .compatible = "qcom,pcie2-phy" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, qcom_pcie2_phy_match_table);
-> +
-> +static struct platform_driver qcom_pcie2_phy_driver = {
-> +	.probe = qcom_pcie2_phy_probe,
-> +	.driver = {
-> +		.name = "qcom-pcie2-phy",
-> +		.of_match_table = qcom_pcie2_phy_match_table,
-> +	},
-> +};
-> +
-> +module_platform_driver(qcom_pcie2_phy_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm PCIe PHY driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.18.0
-> 
+
+ .../arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index 7b7b14ba58e6..2a78932d5d3b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -21,6 +21,15 @@
+ 		serial0 = &uart0;
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000 0>;
++		power-supply = <&reg_dcdc1>;
++		brightness-levels = <0 5 10 15 20 30 40 55 70 85 100>;
++		default-brightness-level = <4>;
++		enable-gpios = <&pio 3 23 GPIO_ACTIVE_HIGH>; /* PD23 */
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 
+@@ -131,6 +140,10 @@
+ 	status = "okay";
+ };
+ 
++&pwm {
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+-- 
+2.20.1
