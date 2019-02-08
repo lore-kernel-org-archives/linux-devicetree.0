@@ -1,267 +1,336 @@
-Return-Path: <SRS0=m20R=QU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40082.outbound.protection.outlook.com ([40.107.4.82]:58720
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732110AbfBMDJ2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Feb 2019 22:09:28 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 3/3] cpufreq: imx-sc: add i.mx system controller cpufreq
- support
-Date: Wed, 13 Feb 2019 03:09:15 +0000
-Message-ID: <1550027011-7884-3-git-send-email-Anson.Huang@nxp.com>
-References: <1550027011-7884-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1550027011-7884-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 08/33] ARM: davinci: make irqs.h a local header
+Date: Fri,  8 Feb 2019 18:31:29 +0100
+Message-Id: <20190208173154.4665-9-brgl@bgdev.pl>
+In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
+References: <20190208173154.4665-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: 8bit
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On NXP's i.MX SoCs with system controller inside, CPU frequency
-scaling can ONLY be done by system controller firmware, and it
-can ONLY be requested from secure mode, so Linux cpufreq driver has
-to call ARM SMC to trap to ARM-Trusted-Firmware to request system
-controller firmware to do CPU frequency scaling.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This patch adds i.MX system controller cpufreq driver support,
-when doing CPU frequency scaling, cpufreq driver will do ARM SMC
-call and trap to ARM-Trusted-Firmware, then SIP(silicon provider)
-service will communicate with system controller for CPU frequenct
-scaling.
+The existence of irqs.h in mach-davinci/include/mach only makes sense
+without SPARSE_IRQ as it's then expected to define NR_IRQS and is
+included from asm/irq.h. As we now support SPARSE_IRQ, this header can
+be moved to mach-davinci and used as the source of HW interrupt numbers.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+While updating the includes in various files - also rearrange the
+headers by directory (linux/asm/mach).
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/cpufreq/Kconfig.arm      |   9 ++
- drivers/cpufreq/Makefile         |   1 +
- drivers/cpufreq/imx-sc-cpufreq.c | 183 +++++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 193 insertions(+)
- create mode 100644 drivers/cpufreq/imx-sc-cpufreq.c
+ arch/arm/mach-davinci/board-da830-evm.c         | 5 +++--
+ arch/arm/mach-davinci/board-da850-evm.c         | 5 +++--
+ arch/arm/mach-davinci/board-dm644x-evm.c        | 7 ++++---
+ arch/arm/mach-davinci/board-dm646x-evm.c        | 3 ++-
+ arch/arm/mach-davinci/da830.c                   | 2 +-
+ arch/arm/mach-davinci/da850.c                   | 2 +-
+ arch/arm/mach-davinci/devices-da8xx.c           | 2 +-
+ arch/arm/mach-davinci/devices.c                 | 9 ++++-----
+ arch/arm/mach-davinci/dm355.c                   | 2 +-
+ arch/arm/mach-davinci/dm365.c                   | 2 +-
+ arch/arm/mach-davinci/dm644x.c                  | 2 +-
+ arch/arm/mach-davinci/dm646x.c                  | 2 +-
+ arch/arm/mach-davinci/irq.c                     | 3 ++-
+ arch/arm/mach-davinci/{include/mach => }/irqs.h | 0
+ arch/arm/mach-davinci/usb-da8xx.c               | 3 ++-
+ arch/arm/mach-davinci/usb.c                     | 7 ++++---
+ 16 files changed, 31 insertions(+), 25 deletions(-)
+ rename arch/arm/mach-davinci/{include/mach => }/irqs.h (100%)
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 179a1d3..6d76465 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -92,6 +92,15 @@ config ARM_IMX6Q_CPUFREQ
-=20
- 	  If in doubt, say N.
-=20
-+config ARM_IMX_SC_CPUFREQ
-+	tristate "NXP i.MX SoC system controller cpufreq support"
-+	select PM_OPP
-+	help
-+	  This adds cpufreq driver support for NXP i.MX series SoCs with system
-+	  controller inside.
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index 41f5a51fee9a..7b8c4aeca096 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -36,11 +36,12 @@
+ #include <asm/mach/arch.h>
+ 
+ #include <mach/common.h>
+-#include <mach/irqs.h>
+-#include "cp_intc.h"
+ #include <mach/mux.h>
+ #include <mach/da8xx.h>
+ 
++#include "cp_intc.h"
++#include "irqs.h"
 +
-+	  If in doubt, say N.
+ #define DA830_EVM_PHY_ID		""
+ /*
+  * USB1 VBUS is controlled by GPIO1[15], over-current is reported on GPIO2[4].
+diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+index 317f48560534..b0814bd30a1f 100644
+--- a/arch/arm/mach-davinci/board-da850-evm.c
++++ b/arch/arm/mach-davinci/board-da850-evm.c
+@@ -43,10 +43,11 @@
+ #include <linux/spi/flash.h>
+ 
+ #include <mach/common.h>
+-#include "cp_intc.h"
+ #include <mach/da8xx.h>
+ #include <mach/mux.h>
+-#include <mach/irqs.h>
 +
- config ARM_KIRKWOOD_CPUFREQ
- 	def_bool MACH_KIRKWOOD
- 	help
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index 689b26c..28ab9fb 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -56,6 +56,7 @@ obj-$(CONFIG_ACPI_CPPC_CPUFREQ)		+=3D cppc_cpufreq.o
- obj-$(CONFIG_ARCH_DAVINCI)		+=3D davinci-cpufreq.o
- obj-$(CONFIG_ARM_HIGHBANK_CPUFREQ)	+=3D highbank-cpufreq.o
- obj-$(CONFIG_ARM_IMX6Q_CPUFREQ)		+=3D imx6q-cpufreq.o
-+obj-$(CONFIG_ARM_IMX_SC_CPUFREQ)	+=3D imx-sc-cpufreq.o
- obj-$(CONFIG_ARM_KIRKWOOD_CPUFREQ)	+=3D kirkwood-cpufreq.o
- obj-$(CONFIG_ARM_MEDIATEK_CPUFREQ)	+=3D mediatek-cpufreq.o
- obj-$(CONFIG_MACH_MVEBU_V7)		+=3D mvebu-cpufreq.o
-diff --git a/drivers/cpufreq/imx-sc-cpufreq.c b/drivers/cpufreq/imx-sc-cpuf=
-req.c
-new file mode 100644
-index 0000000..dfc89abe
---- /dev/null
-+++ b/drivers/cpufreq/imx-sc-cpufreq.c
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2017-2019 NXP.
-+ */
++#include "cp_intc.h"
++#include "irqs.h"
+ #include "sram.h"
+ 
+ #include <asm/mach-types.h>
+diff --git a/arch/arm/mach-davinci/board-dm644x-evm.c b/arch/arm/mach-davinci/board-dm644x-evm.c
+index 16ffed2525e6..a6bc48c9ecd9 100644
+--- a/arch/arm/mach-davinci/board-dm644x-evm.c
++++ b/arch/arm/mach-davinci/board-dm644x-evm.c
+@@ -36,10 +36,10 @@
+ #include <asm/mach/arch.h>
+ 
+ #include <mach/common.h>
+-#include <mach/irqs.h>
+-#include <linux/platform_data/i2c-davinci.h>
+-#include <mach/serial.h>
+ #include <mach/mux.h>
++#include <mach/serial.h>
 +
-+#include <linux/arm-smccc.h>
-+#include <linux/clk.h>
-+#include <linux/cpu.h>
-+#include <linux/cpufreq.h>
-+#include <linux/err.h>
-+#include <linux/firmware/imx/sci.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/pm_opp.h>
-+#include <linux/platform_device.h>
-+#include <linux/syscalls.h>
++#include <linux/platform_data/i2c-davinci.h>
+ #include <linux/platform_data/mtd-davinci.h>
+ #include <linux/platform_data/mmc-davinci.h>
+ #include <linux/platform_data/usb-davinci.h>
+@@ -47,6 +47,7 @@
+ #include <linux/platform_data/ti-aemif.h>
+ 
+ #include "davinci.h"
++#include "irqs.h"
+ 
+ #define DM644X_EVM_PHY_ID		"davinci_mdio-0:01"
+ #define LXT971_PHY_ID	(0x001378e2)
+diff --git a/arch/arm/mach-davinci/board-dm646x-evm.c b/arch/arm/mach-davinci/board-dm646x-evm.c
+index 8d5be6dd2019..26c123f35350 100644
+--- a/arch/arm/mach-davinci/board-dm646x-evm.c
++++ b/arch/arm/mach-davinci/board-dm646x-evm.c
+@@ -44,10 +44,11 @@
+ #include <asm/mach/arch.h>
+ 
+ #include <mach/common.h>
+-#include <mach/irqs.h>
 +
-+#define MAX_CLUSTER		1
+ #include <mach/serial.h>
+ 
+ #include "davinci.h"
++#include "irqs.h"
+ 
+ #define NAND_BLOCK_SIZE		SZ_128K
+ 
+diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
+index aa8da725a325..ca903c9105e4 100644
+--- a/arch/arm/mach-davinci/da830.c
++++ b/arch/arm/mach-davinci/da830.c
+@@ -19,9 +19,9 @@
+ #include <mach/common.h>
+ #include <mach/cputype.h>
+ #include <mach/da8xx.h>
+-#include <mach/irqs.h>
+ #include <mach/time.h>
+ 
++#include "irqs.h"
+ #include "mux.h"
+ 
+ /* Offsets of the 8 compare registers on the da830 */
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index d22b19833326..486d53481636 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -32,10 +32,10 @@
+ #include <mach/cpufreq.h>
+ #include <mach/cputype.h>
+ #include <mach/da8xx.h>
+-#include <mach/irqs.h>
+ #include <mach/pm.h>
+ #include <mach/time.h>
+ 
++#include "irqs.h"
+ #include "mux.h"
+ 
+ #define DA850_PLL1_BASE		0x01e1a000
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index 3104a3eb2ddf..b8dc674e06bc 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -25,10 +25,10 @@
+ #include <mach/cputype.h>
+ #include <mach/da8xx.h>
+ #include <mach/time.h>
+-#include <mach/irqs.h>
+ 
+ #include "asp.h"
+ #include "cpuidle.h"
++#include "irqs.h"
+ #include "sram.h"
+ 
+ #define DA8XX_TPCC_BASE			0x01c00000
+diff --git a/arch/arm/mach-davinci/devices.c b/arch/arm/mach-davinci/devices.c
+index 722c463f9b18..40bd8029e457 100644
+--- a/arch/arm/mach-davinci/devices.c
++++ b/arch/arm/mach-davinci/devices.c
+@@ -11,21 +11,20 @@
+ 
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
++#include <linux/platform_data/i2c-davinci.h>
++#include <linux/platform_data/mmc-davinci.h>
++#include <linux/platform_data/edma.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/io.h>
+ #include <linux/reboot.h>
+ 
+ #include <mach/hardware.h>
+-#include <linux/platform_data/i2c-davinci.h>
+-#include <mach/irqs.h>
+ #include <mach/cputype.h>
+ #include <mach/mux.h>
+-#include <linux/platform_data/mmc-davinci.h>
+ #include <mach/time.h>
+-#include <linux/platform_data/edma.h>
+-
+ 
+ #include "davinci.h"
++#include "irqs.h"
+ 
+ #define DAVINCI_I2C_BASE	     0x01C21000
+ #define DAVINCI_ATA_BASE	     0x01C66000
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index cb725244fa13..b27ea4fc1d51 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -26,13 +26,13 @@
+ 
+ #include <mach/common.h>
+ #include <mach/cputype.h>
+-#include <mach/irqs.h>
+ #include <mach/mux.h>
+ #include <mach/serial.h>
+ #include <mach/time.h>
+ 
+ #include "asp.h"
+ #include "davinci.h"
++#include "irqs.h"
+ #include "mux.h"
+ 
+ #define DM355_UART2_BASE	(IO_PHYS + 0x206000)
+diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
+index ae1b53ea956a..d9c6ab9215a6 100644
+--- a/arch/arm/mach-davinci/dm365.c
++++ b/arch/arm/mach-davinci/dm365.c
+@@ -31,13 +31,13 @@
+ 
+ #include <mach/common.h>
+ #include <mach/cputype.h>
+-#include <mach/irqs.h>
+ #include <mach/mux.h>
+ #include <mach/serial.h>
+ #include <mach/time.h>
+ 
+ #include "asp.h"
+ #include "davinci.h"
++#include "irqs.h"
+ #include "mux.h"
+ 
+ #define DM365_REF_FREQ		24000000	/* 24 MHz on the DM365 EVM */
+diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
+index 5ccb49196a71..b2748c82b747 100644
+--- a/arch/arm/mach-davinci/dm644x.c
++++ b/arch/arm/mach-davinci/dm644x.c
+@@ -23,13 +23,13 @@
+ 
+ #include <mach/common.h>
+ #include <mach/cputype.h>
+-#include <mach/irqs.h>
+ #include <mach/mux.h>
+ #include <mach/serial.h>
+ #include <mach/time.h>
+ 
+ #include "asp.h"
+ #include "davinci.h"
++#include "irqs.h"
+ #include "mux.h"
+ 
+ /*
+diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
+index 2b55625e8fb5..cf210741dfe5 100644
+--- a/arch/arm/mach-davinci/dm646x.c
++++ b/arch/arm/mach-davinci/dm646x.c
+@@ -24,13 +24,13 @@
+ 
+ #include <mach/common.h>
+ #include <mach/cputype.h>
+-#include <mach/irqs.h>
+ #include <mach/mux.h>
+ #include <mach/serial.h>
+ #include <mach/time.h>
+ 
+ #include "asp.h"
+ #include "davinci.h"
++#include "irqs.h"
+ #include "mux.h"
+ 
+ #define DAVINCI_VPIF_BASE       (0x01C12000)
+diff --git a/arch/arm/mach-davinci/irq.c b/arch/arm/mach-davinci/irq.c
+index 16ac28833eb4..88c30759d1c5 100644
+--- a/arch/arm/mach-davinci/irq.c
++++ b/arch/arm/mach-davinci/irq.c
+@@ -28,10 +28,11 @@
+ #include <mach/hardware.h>
+ #include <mach/cputype.h>
+ #include <mach/common.h>
+-#include <mach/irqs.h>
+ #include <asm/mach/irq.h>
+ #include <asm/exception.h>
+ 
++#include "irqs.h"
 +
-+#define IMX_SIP_CPUFREQ			0xC2000001
-+#define IMX_SIP_SET_CPUFREQ		0x00
+ #define FIQ_REG0_OFFSET		0x0000
+ #define FIQ_REG1_OFFSET		0x0004
+ #define IRQ_REG0_OFFSET		0x0008
+diff --git a/arch/arm/mach-davinci/include/mach/irqs.h b/arch/arm/mach-davinci/irqs.h
+similarity index 100%
+rename from arch/arm/mach-davinci/include/mach/irqs.h
+rename to arch/arm/mach-davinci/irqs.h
+diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
+index 2de5a04ffc24..25f21ee86f1a 100644
+--- a/arch/arm/mach-davinci/usb-da8xx.c
++++ b/arch/arm/mach-davinci/usb-da8xx.c
+@@ -18,7 +18,8 @@
+ #include <mach/common.h>
+ #include <mach/cputype.h>
+ #include <mach/da8xx.h>
+-#include <mach/irqs.h>
 +
-+struct imx_sc_cpufreq {
-+	struct device *cpu_dev;
-+	struct clk *cpu_clk;
-+};
++#include "irqs.h"
+ 
+ #define DA8XX_USB0_BASE		0x01e00000
+ #define DA8XX_USB1_BASE		0x01e25000
+diff --git a/arch/arm/mach-davinci/usb.c b/arch/arm/mach-davinci/usb.c
+index 9d4a58a3113a..cde72ba35dc3 100644
+--- a/arch/arm/mach-davinci/usb.c
++++ b/arch/arm/mach-davinci/usb.c
+@@ -5,13 +5,14 @@
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+-
++#include <linux/platform_data/usb-davinci.h>
+ #include <linux/usb/musb.h>
+ 
+ #include <mach/common.h>
+-#include <mach/irqs.h>
+ #include <mach/cputype.h>
+-#include <linux/platform_data/usb-davinci.h>
 +
-+static struct cpufreq_frequency_table *freq_table[MAX_CLUSTER];
-+static struct imx_sc_cpufreq cluster_freq[MAX_CLUSTER];
-+static unsigned int transition_latency[MAX_CLUSTER];
-+static DEFINE_SPINLOCK(cpufreq_psci_lock);
 +
-+static int imx_sc_cpufreq_set_target(struct cpufreq_policy *policy,
-+				     unsigned int index)
-+{
-+	unsigned int cluster_id =3D topology_physical_package_id(policy->cpu);
-+	unsigned int old_freq, new_freq;
-+	struct arm_smccc_res res;
-+
-+	new_freq =3D freq_table[cluster_id][index].frequency;
-+	old_freq =3D policy->cur;
-+
-+	dev_dbg(cluster_freq[cluster_id].cpu_dev, "%u MHz --> %u MHz\n",
-+		old_freq / 1000, new_freq / 1000);
-+
-+	spin_lock(&cpufreq_psci_lock);
-+	arm_smccc_smc(IMX_SIP_CPUFREQ, IMX_SIP_SET_CPUFREQ,
-+		cluster_id, new_freq * 1000, 0, 0, 0, 0, &res);
-+	spin_unlock(&cpufreq_psci_lock);
-+
-+	return 0;
-+}
-+
-+static int imx_sc_cpufreq_init(struct cpufreq_policy *policy)
-+{
-+	int cluster_id =3D topology_physical_package_id(policy->cpu);
-+	int opp_num, ret =3D 0;
-+
-+	policy->clk =3D cluster_freq[cluster_id].cpu_clk;
-+	policy->cur =3D clk_get_rate(cluster_freq[cluster_id].cpu_clk) / 1000;
-+	cpumask_copy(policy->cpus, topology_core_cpumask(policy->cpu));
-+
-+	policy->freq_table =3D freq_table[cluster_id];
-+	policy->cpuinfo.transition_latency =3D transition_latency[cluster_id];
-+	opp_num =3D dev_pm_opp_get_opp_count(cluster_freq[cluster_id].cpu_dev);
-+	policy->suspend_freq =3D freq_table[cluster_id][opp_num - 1].frequency;
-+
-+	dev_info(cluster_freq[cluster_id].cpu_dev,
-+		"cluster %d running at freq %d MHz, suspend freq %d MHz\n",
-+		cluster_id, policy->cur / 1000, policy->suspend_freq / 1000);
-+
-+	return ret;
-+}
-+
-+static struct cpufreq_driver imx_sc_cpufreq_driver =3D {
-+	.flags =3D CPUFREQ_NEED_INITIAL_FREQ_CHECK |
-+		 CPUFREQ_IS_COOLING_DEV,
-+	.verify =3D cpufreq_generic_frequency_table_verify,
-+	.target_index =3D imx_sc_cpufreq_set_target,
-+	.get =3D cpufreq_generic_get,
-+	.init =3D imx_sc_cpufreq_init,
-+	.name =3D "imx-sc-cpufreq",
-+	.attr =3D cpufreq_generic_attr,
-+#ifdef CONFIG_PM
-+	.suspend =3D cpufreq_generic_suspend,
-+#endif
-+};
-+
-+static int imx_sc_cpufreq_probe(struct platform_device *pdev)
-+{
-+	struct imx_sc_ipc *cpufreq_ipc_handle;
-+	struct device *cpu_dev;
-+	struct device_node *np;
-+	int cluster_id, ret =3D 0;
-+
-+	/* wait mailbox driver ready */
-+	ret =3D imx_scu_get_handle(&cpufreq_ipc_handle);
-+	if (ret)
-+		return ret;
-+
-+	cpu_dev =3D get_cpu_device(0);
-+	if (!cpu_dev) {
-+		pr_err("failed to get cpu device 0\n");
-+		return -ENODEV;
-+	}
-+
-+	np =3D of_node_get(cpu_dev->of_node);
-+	if (!np) {
-+		pr_warn("failed to find cpu 0 node\n");
-+		return -ENODEV;
-+	}
-+
-+	ret =3D dev_pm_opp_of_add_table(cpu_dev);
-+	if (ret < 0) {
-+		dev_err(cpu_dev, "failed to init OPP table: %d\n", ret);
-+		goto put_node;
-+	}
-+
-+	cluster_id =3D topology_physical_package_id(0);
-+	cluster_freq[cluster_id].cpu_dev =3D cpu_dev;
-+	cluster_freq[cluster_id].cpu_clk =3D devm_clk_get(cpu_dev, NULL);
-+	if (IS_ERR(cluster_freq[cluster_id].cpu_clk)) {
-+		dev_err(cpu_dev, "failed to get cluster %d clock\n",
-+			cluster_id);
-+		ret =3D -ENOENT;
-+		goto put_node;
-+	}
-+
-+	ret =3D dev_pm_opp_init_cpufreq_table(cpu_dev, &freq_table[cluster_id]);
-+	if (ret) {
-+		dev_err(cpu_dev, "failed to init cpufreq table: %d\n", ret);
-+		goto out_free_opp;
-+	}
-+
-+	if (of_property_read_u32(np, "clock-latency",
-+		&transition_latency[cluster_id]))
-+		transition_latency[cluster_id] =3D CPUFREQ_ETERNAL;
-+
-+	ret =3D cpufreq_register_driver(&imx_sc_cpufreq_driver);
-+	if (ret) {
-+		dev_err(cpu_dev, "failed to register cpufreq driver: %d\n",
-+			ret);
-+		goto free_freq_table;
-+	}
-+
-+	goto put_node;
-+
-+free_freq_table:
-+	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table[cluster_id]);
-+out_free_opp:
-+	dev_pm_opp_of_remove_table(cpu_dev);
-+put_node:
-+	of_node_put(np);
-+	return ret;
-+}
-+
-+static int imx_sc_cpufreq_remove(struct platform_device *pdev)
-+{
-+	cpufreq_unregister_driver(&imx_sc_cpufreq_driver);
-+
-+	return 0;
-+}
-+
-+static int __init imx_sc_register_cpufreq(void)
-+{
-+	platform_device_register_simple("imx-sc-cpufreq", -1, NULL, 0);
-+
-+	return 0;
-+}
-+device_initcall(imx_sc_register_cpufreq);
-+
-+static struct platform_driver imx_sc_cpufreq_platdrv =3D {
-+	.driver =3D {
-+		.name	=3D "imx-sc-cpufreq",
-+	},
-+	.probe		=3D imx_sc_cpufreq_probe,
-+	.remove		=3D imx_sc_cpufreq_remove,
-+};
-+module_platform_driver(imx_sc_cpufreq_platdrv);
-+
-+MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-+MODULE_DESCRIPTION("NXP i.MX system controller cpufreq driver");
-+MODULE_LICENSE("GPL");
---=20
-2.7.4
++#include "irqs.h"
+ 
+ #define DAVINCI_USB_OTG_BASE	0x01c64000
+ 
+-- 
+2.20.1
