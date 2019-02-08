@@ -1,64 +1,62 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH] clk: at91: fix masterck name
-Date: Fri, 8 Feb 2019 15:53:47 +0000
-Message-ID: <db6b542f-add1-af4c-e3f1-ce293042f375@microchip.com>
-References: <20190208144059.29861-1-alexandre.belloni@bootlin.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH 4/5] iio:adc:lpc32xx Cleanup headers
+Date: Fri,  8 Feb 2019 17:09:43 +0100
+Message-ID: <20190208160944.13281-5-gregory.clement@bootlin.com>
+References: <20190208160944.13281-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190208144059.29861-1-alexandre.belloni@bootlin.com>
-Content-Language: en-US
-Content-ID: <2E1277669F1FE342A03D64FA37C336CB@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, sboyd@kernel.org
-Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190208160944.13281-1-gregory.clement@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: devicetree@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMDIvMjAxOSBhdCAxNTo0MCwgQWxleGFuZHJlIEJlbGxvbmkgd3JvdGU6DQo+IFRoZSBt
-YXN0ZXIgY2xvY2sgaXMgYWN0dWFsbHkgbmFtZWQgbWFzdGVyY2sgZWFybGllciBpbiB0aGUgZHJp
-dmVyLiBIYXZpbmcNCj4gIm1jayIgaW4gdGhlIHBhcmVudCBsaXN0IG1lYW5zIHRoYXQgaXQgY2Fu
-IG5ldmVyIGJlIHNlbGVjdGVkLg0KPiANCj4gRml4ZXM6IDFlYWJkYzJmOWRkOCAoImNsazogYXQ5
-MTogYWRkIGF0OTFzYW05eDUgUE1DcyBkcml2ZXIiKQ0KPiBGaXhlczogYTIwMzgwNzdkZTlhICgi
-Y2xrOiBhdDkxOiBhZGQgc2FtYTVkMiBQTUMgZHJpdmVyIikNCj4gRml4ZXM6IDA4NGI2OTZiYjUw
-OSAoImNsazogYXQ5MTogYWRkIHNhbWE1ZDQgcG1jIGRyaXZlciIpDQo+IA0KPiBTaWduZWQtb2Zm
-LWJ5OiBBbGV4YW5kcmUgQmVsbG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+DQoN
-CkFja2VkLWJ5OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQoN
-Cj4gLS0tDQo+ICAgZHJpdmVycy9jbGsvYXQ5MS9hdDkxc2FtOXg1LmMgfCAyICstDQo+ICAgZHJp
-dmVycy9jbGsvYXQ5MS9zYW1hNWQyLmMgICAgfCA0ICsrLS0NCj4gICBkcml2ZXJzL2Nsay9hdDkx
-L3NhbWE1ZDQuYyAgICB8IDIgKy0NCj4gICAzIGZpbGVzIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
-KSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9hdDkxL2F0
-OTFzYW05eDUuYyBiL2RyaXZlcnMvY2xrL2F0OTEvYXQ5MXNhbTl4NS5jDQo+IGluZGV4IDJmZTIy
-NWE2OTdkZi4uZDU1YTE1MWNiN2Y1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9hdDkxL2F0
-OTFzYW05eDUuYw0KPiArKysgYi9kcml2ZXJzL2Nsay9hdDkxL2F0OTFzYW05eDUuYw0KPiBAQCAt
-MjEwLDcgKzIxMCw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBhdDkxc2FtOXg1X3BtY19zZXR1cChz
-dHJ1Y3QgZGV2aWNlX25vZGUgKm5wLA0KPiAgIAlwYXJlbnRfbmFtZXNbMV0gPSAibWFpbmNrIjsN
-Cj4gICAJcGFyZW50X25hbWVzWzJdID0gInBsbGFkaXZjayI7DQo+ICAgCXBhcmVudF9uYW1lc1sz
-XSA9ICJ1dG1pY2siOw0KPiAtCXBhcmVudF9uYW1lc1s0XSA9ICJtY2siOw0KPiArCXBhcmVudF9u
-YW1lc1s0XSA9ICJtYXN0ZXJjayI7DQo+ICAgCWZvciAoaSA9IDA7IGkgPCAyOyBpKyspIHsNCj4g
-ICAJCWNoYXIgbmFtZVs2XTsNCj4gICANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2F0OTEv
-c2FtYTVkMi5jIGIvZHJpdmVycy9jbGsvYXQ5MS9zYW1hNWQyLmMNCj4gaW5kZXggZDY5YWQ5NmZl
-OTg4Li5jZDBlZjcyNzRmZGIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY2xrL2F0OTEvc2FtYTVk
-Mi5jDQo+ICsrKyBiL2RyaXZlcnMvY2xrL2F0OTEvc2FtYTVkMi5jDQo+IEBAIC0yNDAsNyArMjQw
-LDcgQEAgc3RhdGljIHZvaWQgX19pbml0IHNhbWE1ZDJfcG1jX3NldHVwKHN0cnVjdCBkZXZpY2Vf
-bm9kZSAqbnApDQo+ICAgCXBhcmVudF9uYW1lc1sxXSA9ICJtYWluY2siOw0KPiAgIAlwYXJlbnRf
-bmFtZXNbMl0gPSAicGxsYWRpdmNrIjsNCj4gICAJcGFyZW50X25hbWVzWzNdID0gInV0bWljayI7
-DQo+IC0JcGFyZW50X25hbWVzWzRdID0gIm1jayI7DQo+ICsJcGFyZW50X25hbWVzWzRdID0gIm1h
-c3RlcmNrIjsNCj4gICAJZm9yIChpID0gMDsgaSA8IDM7IGkrKykgew0KPiAgIAkJY2hhciBuYW1l
-WzZdOw0KPiAgIA0KPiBAQCAtMjkxLDcgKzI5MSw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBzYW1h
-NWQyX3BtY19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiAgIAlwYXJlbnRfbmFtZXNb
-MV0gPSAibWFpbmNrIjsNCj4gICAJcGFyZW50X25hbWVzWzJdID0gInBsbGFkaXZjayI7DQo+ICAg
-CXBhcmVudF9uYW1lc1szXSA9ICJ1dG1pY2siOw0KPiAtCXBhcmVudF9uYW1lc1s0XSA9ICJtY2si
-Ow0KPiArCXBhcmVudF9uYW1lc1s0XSA9ICJtYXN0ZXJjayI7DQo+ICAgCXBhcmVudF9uYW1lc1s1
-XSA9ICJhdWRpb3BsbF9wbWNjayI7DQo+ICAgCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKHNh
-bWE1ZDJfZ2NrKTsgaSsrKSB7DQo+ICAgCQlodyA9IGF0OTFfY2xrX3JlZ2lzdGVyX2dlbmVyYXRl
-ZChyZWdtYXAsICZwbWNfcGNyX2xvY2ssDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9hdDkx
-L3NhbWE1ZDQuYyBiL2RyaXZlcnMvY2xrL2F0OTEvc2FtYTVkNC5jDQo+IGluZGV4IGUzNThiZTdm
-NmM4ZC4uYjY0NWE5ZDU5Y2RiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9hdDkxL3NhbWE1
-ZDQuYw0KPiArKysgYi9kcml2ZXJzL2Nsay9hdDkxL3NhbWE1ZDQuYw0KPiBAQCAtMjA3LDcgKzIw
-Nyw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBzYW1hNWQ0X3BtY19zZXR1cChzdHJ1Y3QgZGV2aWNl
-X25vZGUgKm5wKQ0KPiAgIAlwYXJlbnRfbmFtZXNbMV0gPSAibWFpbmNrIjsNCj4gICAJcGFyZW50
-X25hbWVzWzJdID0gInBsbGFkaXZjayI7DQo+ICAgCXBhcmVudF9uYW1lc1szXSA9ICJ1dG1pY2si
-Ow0KPiAtCXBhcmVudF9uYW1lc1s0XSA9ICJtY2siOw0KPiArCXBhcmVudF9uYW1lc1s0XSA9ICJt
-YXN0ZXJjayI7DQo+ICAgCWZvciAoaSA9IDA7IGkgPCAzOyBpKyspIHsNCj4gICAJCWNoYXIgbmFt
-ZVs2XTsNCj4gICANCj4gDQoNCg0KLS0gDQpOaWNvbGFzIEZlcnJlDQo=
+A few headers was useless: remove them, and also sort them in alphabetic
+order.
+
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+ drivers/iio/adc/lpc32xx_adc.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
+index e361c1532a75..f391c1e10136 100644
+--- a/drivers/iio/adc/lpc32xx_adc.c
++++ b/drivers/iio/adc/lpc32xx_adc.c
+@@ -7,20 +7,13 @@
+  *  Copyright (C) 2011, 2012 Roland Stigge <stigge@antcom.de>
+  */
+ 
+-#include <linux/module.h>
+-#include <linux/platform_device.h>
+-#include <linux/interrupt.h>
+-#include <linux/device.h>
+-#include <linux/kernel.h>
+-#include <linux/slab.h>
+-#include <linux/io.h>
+ #include <linux/clk.h>
+-#include <linux/err.h>
+ #include <linux/completion.h>
+-#include <linux/of.h>
+-
+ #include <linux/iio/iio.h>
+-#include <linux/iio/sysfs.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
+ 
+ /*
+  * LPC32XX registers definitions
+-- 
+2.20.1
