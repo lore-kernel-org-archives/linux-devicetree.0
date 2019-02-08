@@ -1,66 +1,30 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH net-next v2 0/6] Add comphy support for Armada 38x
-Date: Fri, 8 Feb 2019 10:06:45 +0000
-Message-ID: <20190208100645.pkv6dwy5p3nepq6s@shell.armlinux.org.uk>
-References: <20190207161825.ueinmyf6ygjiqzzy@shell.armlinux.org.uk>
- <20190207.181049.1229639710283404215.davem@davemloft.net>
- <20190208085821.7556a18d@windsurf>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/2] arm64: meson: g12a: enable peripheral clock controller
+Date: Fri,  8 Feb 2019 11:14:03 +0100
+Message-ID: <20190208101405.25699-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190208085821.7556a18d@windsurf>
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: David Miller <davem@davemloft.net>, andrew@lunn.ch, gregory.clement@bootlin.com, jason@lakedaemon.net, kishon@ti.com, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 08, 2019 at 08:58:21AM +0100, Thomas Petazzoni wrote:
-> Hello David,
-> 
-> On Thu, 07 Feb 2019 18:10:49 -0800 (PST)
-> David Miller <davem@davemloft.net> wrote:
-> 
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Date: Thu, 7 Feb 2019 16:18:25 +0000
-> > 
-> > > This series adds support for the comphy for Armada 38x, which allows
-> > > these SoCs to use 2500BASE-X mode with appropriate SFP modules.
-> > > 
-> > > Tested on SolidRun Clearfog after updating for the 5.0 merge window
-> > > changes.  
-> > 
-> > Series applied, thanks Russell.
-> 
-> This series contained:
-> 
->  - Device Tree bindings that had not been ACKed by the DT bindings
->    maintainers, one of which should have been merged through the
->    drivers/phy maintainer tree.
+This patchset selects the required configuration flag and adds the
+DT node of the main clock controller for g12a SoC family.
 
-Actually, it was reviewed by Rob on 3rd December, but I omitted to
-add the attributation he sent.  So that point is false.
+FYI, the configuration flag and DT bindings have been introduced by
+this series [0].
 
-> 
->  - A brand new drivers/phy driver that had not been ACKed by the
->    drivers/phy maintainer.
-> 
->  - Changes to platform Device Tree that should have been merged through
->    the platform tree.
-> 
-> Only patches 4/6 and 5/6 should go through the net-next tree, all the
-> other patches should have gone through other trees.
-> 
-> Best regards,
-> 
-> Thomas
-> -- 
-> Thomas Petazzoni, CTO, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
+[0]: https://lkml.kernel.org/r/20190201145345.6795-1-jbrunet@baylibre.com
+
+Jerome Brunet (2):
+  arm64: meson: enable g12a clock controller
+  arm64: dts: meson: g12a: add peripheral clock controller
+
+ arch/arm64/Kconfig.platforms                |  4 +++-
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 13 +++++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.20.1
