@@ -1,220 +1,131 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 4/6] mfd: Add support for the MediaTek MT6358 PMIC
-Date: Fri, 8 Feb 2019 12:09:36 -0800
-Message-ID: <20190208200936.GN117604@google.com>
-References: <1548839891-20932-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1548839891-20932-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCHv3] arm64: dts: allwinner: a64: teres-i: enable backlight
+Date: Fri, 8 Feb 2019 21:17:11 +0100
+Message-ID: <20190208201711.fqqvhqd7gbqnoefp@flea>
+References: <20190208141629.14323-1-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548839891-20932-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: multipart/mixed; boundary="===============8062259145461660037=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190208141629.14323-1-harald@ccbib.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Harald Geyer <harald@ccbib.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-A few comments inline.
+--===============8062259145461660037==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n3ufijtwuazhhq7b"
+Content-Disposition: inline
 
-On a general note I agree with others that this code would benefit
-from more comments.
 
-On Wed, Jan 30, 2019 at 05:18:09PM +0800, Hsin-Hsiung Wang wrote:
-> This adds support for the MediaTek MT6358 PMIC. This is a
-> multifunction device with the following sub modules:
-> 
-> - Regulator
-> - RTC
-> - Codec
-> - Interrupt
-> 
-> It is interfaced to the host controller using SPI interface
-> by a proprietary hardware called PMIC wrapper or pwrap.
-> MT6358 MFD is a child device of the pwrap.
-> 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+--n3ufijtwuazhhq7b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Harald,
+
+On Fri, Feb 08, 2019 at 02:16:29PM +0000, Harald Geyer wrote:
+> Enable pwm and add a pretty standard backlight node.
+>=20
+> The regulator is always on, but we include it anyway, because it is
+> required by the binding document.
+>=20
+> Signed-off-by: Harald Geyer <harald@ccbib.org>
 > ---
->  drivers/mfd/Makefile                 |    2 +-
->  drivers/mfd/mt6358-irq.c             |  236 +++++
->  drivers/mfd/mt6397-core.c            |   62 +-
->  include/linux/mfd/mt6358/core.h      |  158 +++
->  include/linux/mfd/mt6358/registers.h | 1926 ++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6397/core.h      |    3 +
->  6 files changed, 2385 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/mfd/mt6358-irq.c
->  create mode 100644 include/linux/mfd/mt6358/core.h
->  create mode 100644 include/linux/mfd/mt6358/registers.h
-> 
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 088e249..50be021 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -230,7 +230,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
-> -obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o mt6397-irq.o
-> +obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o mt6397-irq.o mt6358-irq.o
->  
->  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
->  obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
-> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> new file mode 100644
-> index 0000000..b29fdc1
-> --- /dev/null
-> +++ b/drivers/mfd/mt6358-irq.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2019 MediaTek Inc.
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/mt6358/core.h>
-> +#include <linux/mfd/mt6358/registers.h>
-> +#include <linux/mfd/mt6397/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +static struct irq_top_t mt6358_ints[] = {
-> +	MT6358_TOP_GEN(BUCK),
-> +	MT6358_TOP_GEN(LDO),
-> +	MT6358_TOP_GEN(PSC),
-> +	MT6358_TOP_GEN(SCK),
-> +	MT6358_TOP_GEN(BM),
-> +	MT6358_TOP_GEN(HK),
-> +	MT6358_TOP_GEN(AUD),
-> +	MT6358_TOP_GEN(MISC),
-> +};
-> +
-> +static int parsing_hwirq_to_top_group(unsigned int hwirq)
+> The backlight node got dropped from the initial submission of the
+> teres-i DT, because PWM support wasn't available in time, and I
+> kind of forgot to resubmit once PWM was in. Sorry about that.
+>=20
+> While testing this patch I noticed, that sometimes on boot the
+> brightness is set to max_brightness instead of the default specified
+> in DT. I couldn't reproduce it reliably, but it seems to be related
+> to changing the pwm period. I guess the logic trying to detect
+> the brightness set by the boot loader gets confused in some corner
+> case if the pwm periods don't match. However unbinding and rebinding
+> the device to the driver always made it go to the proper default
+> brightness, so the problem is clearly not in the DT.
+>=20
+> If the theory above is true, then it implies that the version of
+> u-boot running on my laptop doesn't completely overwrite all pwm
+> parameters. As this might be specific to my installation, I didn't
+> mention the issue in the commit message.
+>=20
+> Changes since v2:
+>  * Drop all the other stuff that got merged a year ago.
+>  * Rebased on current sunxi/for-next branch
+>  * Add power-supply property (just to conform to the binding)
+>  * Use slightly different brightness-levels
+>=20
+> Actually I tried omitting brightness-levels completely, as it is now
+> optional. However automatic calculation gives unreasonable results
+> (depending on the exact value of pwm period). A report has been sent
+> to the author of the code.
+>=20
+>=20
+>  .../arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/=
+arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> index 7b7b14ba58e6..2a78932d5d3b 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> @@ -21,6 +21,15 @@
+>  		serial0 =3D &uart0;
+>  	};
+> =20
+> +	backlight: backlight {
+> +		compatible =3D "pwm-backlight";
+> +		pwms =3D <&pwm 0 50000 0>;
+> +		power-supply =3D <&reg_dcdc1>;
+> +		brightness-levels =3D <0 5 10 15 20 30 40 55 70 85 100>;
 
-why 'parsing'?
+The backlight perceived brightness should increase lineary with each
+step, which means that if you have ten steps, each step should
+increase the perceived brightness by 10%. The eye being what it is, a
+exponential sequence is usually a much better approximation.
 
-IIUC the 'top's are interrupt groups for different functionalities.
-Could we get rid of the 'top' terminology in most of the code and just
-call it irq_grp or similar? Would be less obfuscated IMO.
+It looks good otherwise, thanks!
+Maxime
 
-> +{
-> +	int top_group;
-> +
-> +	for (top_group = 1; top_group < ARRAY_SIZE(mt6358_ints); top_group++) {
-> +		if (mt6358_ints[top_group].hwirq_base > hwirq) {
-> +			top_group--;
-> +			break;
-> +		}
-> +	}
-> +	return top_group;
-> +}
-> +
-> +static void pmic_irq_enable(struct irq_data *data)
-> +{
-> +	unsigned int hwirq = irqd_to_hwirq(data);
-> +	struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +	struct pmic_irq_data *irq_data = chip->irq_data;
-> +
-> +	irq_data->enable_hwirq[hwirq] = 1;
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-enable_hwirq should be boolean or - probably better - a bitmap
-(less memory usage and no need for dynamic allocation).
+--n3ufijtwuazhhq7b
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +static void pmic_irq_sync_unlock(struct irq_data *data)
-> +{
-> +	unsigned int i, top_gp, en_reg, int_regs, shift;
-> +	struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +	struct pmic_irq_data *irq_data = chip->irq_data;
-> +
-> +	for (i = 0; i < irq_data->num_pmic_irqs; i++) {
-> +		if (irq_data->enable_hwirq[i] ==
-> +				irq_data->cache_hwirq[i])
-> +			continue;
-> +
-> +		top_gp = parsing_hwirq_to_top_group(i);
-> +		int_regs = mt6358_ints[top_gp].num_int_bits / MT6358_REG_WIDTH;
-> +		en_reg = mt6358_ints[top_gp].en_reg +
-> +			mt6358_ints[top_gp].en_reg_shift * int_regs;
-> +		shift = (i - mt6358_ints[top_gp].hwirq_base) % MT6358_REG_WIDTH;
-> +		regmap_update_bits(chip->regmap, en_reg, 0x1 << shift,
+-----BEGIN PGP SIGNATURE-----
 
-use BIT()
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXF3jxwAKCRDj7w1vZxhR
+xd9PAQDfIXB78qZpCvPrEnHhSPEk/+05+/hn9JH47upZR3ZpOAEAsOgI4hEfo5dU
+/cNQ7sqdeDyZNY1GCGUFfIRDYRQx5AI=
+=raX6
+-----END PGP SIGNATURE-----
 
-> +static void mt6358_irq_sp_handler(struct mt6397_chip *chip,
-> +				  unsigned int top_gp)
-> +{
-> +	unsigned int sta_reg, int_status = 0;
+--n3ufijtwuazhhq7b--
 
-initialization of int_status not needed.
 
-nit: consider changing 'int_status' to just 'status' or 'irq_status'
+--===============8062259145461660037==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-> +	unsigned int hwirq, virq;
-> +	int ret, i, j;
-> +
-> +	for (i = 0; i < mt6358_ints[top_gp].num_int_regs; i++) {
-> +		sta_reg = mt6358_ints[top_gp].sta_reg +
-> +			mt6358_ints[top_gp].sta_reg_shift * i;
-> +		ret = regmap_read(chip->regmap, sta_reg, &int_status);
-> +		if (ret) {
-> +			dev_err(chip->dev,
-> +				"Failed to read irq status: %d\n", ret);
-> +			return;
-> +		}
-> +
-> +		if (!int_status)
-> +			continue;
-> +
-> +		for (j = 0; j < 16 ; j++) {
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-s/16/MT6358_REG_WIDTH/
-
-> +			if ((int_status & BIT(j)) == 0)
-
-  			if (!(int_status & BIT(j)))
-
-> +				continue;
-> +			hwirq = mt6358_ints[top_gp].hwirq_base +
-> +				MT6358_REG_WIDTH * i + j;
-> +			virq = irq_find_mapping(chip->irq_domain, hwirq);
-> +			if (virq)
-> +				handle_nested_irq(virq);
-> +		}
-> +
-> +		regmap_write(chip->regmap, sta_reg, int_status);
-> +	}
-> +}
-> +
-> +static irqreturn_t mt6358_irq_handler(int irq, void *data)
-> +{
-> +	struct mt6397_chip *chip = data;
-> +	struct pmic_irq_data *mt6358_irq_data = chip->irq_data;
-> +	unsigned int top_int_status = 0;
-
-initialization not needed
-
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	ret = regmap_read(chip->regmap,
-> +			  mt6358_irq_data->top_int_status_reg,
-> +			  &top_int_status);
-> +	if (ret) {
-> +		dev_err(chip->dev, "Can't read TOP_INT_STATUS ret=%d\n", ret);
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	for (i = 0; i < mt6358_irq_data->num_top; i++) {
-> +		if (top_int_status & BIT(mt6358_ints[i].top_offset))
-> +			mt6358_irq_sp_handler(chip, i);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-Cheers
-
-Matthias
+--===============8062259145461660037==--
