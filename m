@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 28/33] ARM: davinci: cp-intc: unify error handling
-Date: Fri,  8 Feb 2019 18:34:53 +0100
-Message-ID: <20190208173458.4801-29-brgl@bgdev.pl>
+Subject: [PATCH v2 29/33] ARM: davinci: cp-intc: use readl/writel_relaxed()
+Date: Fri,  8 Feb 2019 18:34:54 +0100
+Message-ID: <20190208173458.4801-30-brgl@bgdev.pl>
 References: <20190208173458.4801-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,42 +14,34 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Use WARN_ON() on eny error in cp-intc initialization and drop all
-custom error messages.
+Raplace all calls to __raw_readl() & __raw_writel() with readl_relaxed()
+and writel_relaxed() respectively. It's safe to do as there's no
+endianness conversion being done in the code.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/mach-davinci/cp_intc.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/arm/mach-davinci/cp_intc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
-index f3787ae4cdbd..c1efb9390655 100644
+index c1efb9390655..4bbf0eba1920 100644
 --- a/arch/arm/mach-davinci/cp_intc.c
 +++ b/arch/arm/mach-davinci/cp_intc.c
-@@ -200,20 +200,16 @@ davinci_cp_intc_do_init(const struct davinci_cp_intc_config *config,
- 			DAVINCI_CP_INTC_CHAN_MAP(offset));
+@@ -45,13 +45,13 @@ static struct irq_domain *davinci_cp_intc_irq_domain;
  
- 	irq_base = irq_alloc_descs(-1, 0, config->num_irqs, 0);
--	if (irq_base < 0) {
--		pr_warn("Couldn't allocate IRQ numbers\n");
--		irq_base = 0;
--	}
-+	if (WARN_ON(irq_base < 0))
-+		return irq_base;
+ static inline unsigned int davinci_cp_intc_read(unsigned int offset)
+ {
+-	return __raw_readl(davinci_cp_intc_base + offset);
++	return readl_relaxed(davinci_cp_intc_base + offset);
+ }
  
- 	/* create a legacy host */
- 	davinci_cp_intc_irq_domain = irq_domain_add_legacy(
- 					node, config->num_irqs, irq_base, 0,
- 					&davinci_cp_intc_irq_domain_ops, NULL);
+ static inline void davinci_cp_intc_write(unsigned long value,
+ 					 unsigned int offset)
+ {
+-	__raw_writel(value, davinci_cp_intc_base + offset);
++	writel_relaxed(value, davinci_cp_intc_base + offset);
+ }
  
--	if (!davinci_cp_intc_irq_domain) {
--		pr_err("cp_intc: failed to allocate irq host!\n");
-+	if (WARN_ON(!davinci_cp_intc_irq_domain))
- 		return -EINVAL;
--	}
- 
- 	set_handle_irq(davinci_cp_intc_handle_irq);
- 
+ static void davinci_cp_intc_ack_irq(struct irq_data *d)
 -- 
 2.20.1
