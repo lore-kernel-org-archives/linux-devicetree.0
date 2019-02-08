@@ -1,215 +1,58 @@
-Return-Path: <SRS0=m20R=QU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:46187 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728112AbfBMR5T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Feb 2019 12:57:19 -0500
-Date: Wed, 13 Feb 2019 18:57:33 +0100
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 1/3] media: dt-bindings: add bindings for Toshiba TC358746
-Message-ID: <20190213175648.l3x2zeych4qj7km7@uno.localdomain>
-References: <20181218141240.3056-1-m.felsch@pengutronix.de>
- <20181218141240.3056-2-m.felsch@pengutronix.de>
+Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 09/33] ARM: davinci: aintc: drop GPL license boilerplate
+Date: Fri,  8 Feb 2019 18:31:30 +0100
+Message-Id: <20190208173154.4665-10-brgl@bgdev.pl>
+In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
+References: <20190208173154.4665-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3oollfukbtvf3f2v"
-Content-Disposition: inline
-In-Reply-To: <20181218141240.3056-2-m.felsch@pengutronix.de>
-Sender: devicetree-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
+Content-Transfer-Encoding: 8bit
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-ID: <devicetree@vger.kernel.org>
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
---3oollfukbtvf3f2v
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Replace the GPLv2 or later license boilerplate with an SPDX identifier.
 
-Hi Marco,
-    thanks for the patch.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/mach-davinci/irq.c | 26 ++++++--------------------
+ 1 file changed, 6 insertions(+), 20 deletions(-)
 
-I have some comments, which I hope might get the ball rolling...
-
-On Tue, Dec 18, 2018 at 03:12:38PM +0100, Marco Felsch wrote:
-> Add corresponding dt-bindings for the Toshiba tc358746 device.
->
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  .../bindings/media/i2c/toshiba,tc358746.txt   | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,t=
-c358746.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746=
-=2Etxt b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
-> new file mode 100644
-> index 000000000000..499733df744a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
-> @@ -0,0 +1,80 @@
-> +* Toshiba TC358746 Parallel to MIPI CSI2-TX or MIPI CSI2-RX to Parallel =
-Bridge
-> +
-> +The Toshiba TC358746 is a bridge that converts a Parallel-in stream to M=
-IPI CSI-2 TX
-
-nit:
-s/is a bridge that/is a bridge device that/
-or drop is a bridge completely?
-
-> +or a MIPI CSI-2 RX stream into a Parallel-out. It is programmable throug=
-h I2C.
-
-=46rom the thin public available datasheet, it seems to support SPI as
-programming interface, but only when doing Parallel->CSI-2. I would
-mention that.
-
-> +
-> +Required Properties:
-> +
-> +- compatible: should be "toshiba,tc358746"
-> +- reg: should be <0x0e>
-
-nit: s/should/shall
-
-> +- clocks: should contain a phandle link to the reference clock source
-
-just "phandle to the reference clock source" ?
-
-> +- clock-names: the clock input is named "refclk".
-
-According to the clock bindings this is optional, and since you have
-a single clock I would drop it.
-
-> +
-> +Optional Properties:
-> +
-> +- reset-gpios: gpio phandle GPIO connected to the reset pin
-
-would you drop one of the two "gpio" here. Like ": phandle to the GPIO
-connected to the reset input pin"
-
-> +
-> +Parallel Endpoint:
-
-Here I got confused. The chip supports 2 inputs (parallel and CSI-2)
-and two outputs (parallel and CSI-2 again). You mention endpoints
-propery only here, but it seems from the example you want two ports,
-with one endpoint child-node each.
-
-Even if the driver does not support CSI-2->Parallel at the moment,
-bindings should be future-proof, so I would reserve the first two
-ports for the inputs, and the last two for the output, or, considering
-that the two input-output combinations are mutually exclusive, provide
-one "input" port with two optional endpoints, and one "output" port with
-two optional endpoints.
-
-In both cases only one input and one output at the time could be
-described in DT. Up to you, maybe others have different ideas as
-well...
-
-> +
-> +Required Properties:
-> +
-> +- reg: should be <0>
-> +- bus-width: the data bus width e.g. <8> for eight bit bus, or <16>
-> +	     for sixteen bit wide bus.
-
-The chip seems to support up to 24 bits of data bus width
-
-> +
-> +MIPI CSI-2 Endpoint:
-> +
-> +Required Properties:
-> +
-> +- reg: should be <1>
-> +- data-lanes: should be <1 2 3 4> for four-lane operation,
-> +	      or <1 2> for two-lane operation
-> +- clock-lanes: should be <0>
-
-Can this be changed? If the chip does not allow lane re-ordering you
-could drop this.
-
-> +- link-frequencies: List of allowed link frequencies in Hz. Each frequen=
-cy is
-> +		    expressed as a 64-bit big-endian integer. The frequency
-> +		    is half of the bps per lane due to DDR transmission.
-
-Does the chip supports a limited set of bus frequencies, or are this
-"hints" ? I admit this property actually puzzles me, so I might got it
-wrong..
-
-Thanks
-   j
-
-> +
-> +Optional Properties:
-> +
-> +- clock-noncontinuous: Presence of this boolean property decides whether=
- the
-> +		       MIPI CSI-2 clock is continuous or non-continuous.
-> +
-> +For further information on the endpoint node properties, see
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +
-> +&i2c {
-> +	tc358746: tc358746@0e {
-> +		reg =3D <0x0e>;
-> +		compatible =3D "toshiba,tc358746";
-> +		pinctrl-names =3D "default";
-> +		clocks =3D <&clk_cam_ref>;
-> +		clock-names =3D "refclk";
-> +		reset-gpios =3D <&gpio3 2 GPIO_ACTIVE_LOW>;
-> +
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		port@0 {
-> +			reg =3D <0>;
-> +
-> +			tc358746_parallel_in: endpoint {
-> +				bus-width =3D <8>;
-> +				remote-endpoint =3D <&micron_parallel_out>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg =3D <1>;
-> +
-> +			tc358746_mipi2_out: endpoint {
-> +				remote-endpoint =3D <&mipi_csi2_in>;
-> +				data-lanes =3D <1 2>;
-> +				clock-lanes =3D <0>;
-> +				clock-noncontinuous;
-> +				link-frequencies =3D /bits/ 64 <216000000>;
-> +			};
-> +		};
-> +	};
-> +};
-> --
-> 2.19.1
->
-
---3oollfukbtvf3f2v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlxkWo0ACgkQcjQGjxah
-VjyBshAAn69sZKIcuxVmBLm426ATkBswl82ihT8sbuoOZnHOMaI74lmhy4VcJIBn
-uWOY6WTmmg/1QI2LuuiOrIv5lo3A8s5tGdrNBOhDh6Nvh7e4OrK1FfmVe4SnQKn1
-d8h9RACxH5EG2cv7YWTzP3ceesbBarRovE2nHM0vDklAavIsvQ2cTgiBbMF97LaD
-sDYlkWz75QMaIyluRyPrSz6bf+Ytr5zMottogC/alfU20C7cpu/pHJR1rTmPE7Gp
-P++0/X0ODu01p5d2GtGFwbLfOdlgp/BiFtkieLHvej2W8Cb4OGYxU+AX4OLVpuP0
-liZ10viO70FxLXKpT8D30RtcZqnoSHQsdFpuCzh6aBbenp8nXAEOpL+3Ol5qnM9s
-slWmjfA0HAGuRq29RtlekhaoWW/oX/5v+7Zi+YEw++T+HMSwvh8jSjKayNp0wgjI
-xcHVpUd6+2pcSvn6VH7NhSOAj9SpYVnXd5OWGkHFMUaKqGkTU9oTA+FpA8oBjpCa
-jLJ4jVwuwi5rvwG4826iEj1Hk6uie+ocz68mJTCH+9sS5wQ6C+Psgbkgct6SznA9
-25LNJaDXjbdpPE+K4BS9AtalNog4cuIjvLeLbDT2kdj+DmtrPnWZFhCU54bEGhYd
-cHT/FFdoXXHY0MVfxgl01s7YLwDEUYrocwDkSzRvnWe7ONcKVgQ=
-=7Jx7
------END PGP SIGNATURE-----
-
---3oollfukbtvf3f2v--
+diff --git a/arch/arm/mach-davinci/irq.c b/arch/arm/mach-davinci/irq.c
+index 88c30759d1c5..1301adc569e2 100644
+--- a/arch/arm/mach-davinci/irq.c
++++ b/arch/arm/mach-davinci/irq.c
+@@ -1,23 +1,9 @@
+-/*
+- * Interrupt handler for DaVinci boards.
+- *
+- * Copyright (C) 2006 Texas Instruments.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- */
++// SPDX-License-Identifier: GPL-2.0-or-later
++//
++// Copyright (C) 2006, 2019 Texas Instruments.
++//
++// Interrupt handler for DaVinci boards.
++
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+-- 
+2.20.1
