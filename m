@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 27/33] ARM: davinci: cp-intc: improve coding style
-Date: Fri,  8 Feb 2019 18:34:52 +0100
-Message-ID: <20190208173458.4801-28-brgl@bgdev.pl>
+Subject: [PATCH v2 22/33] irqchip: davinci-cp-intc: add a new config structure
+Date: Fri,  8 Feb 2019 18:34:47 +0100
+Message-ID: <20190208173458.4801-23-brgl@bgdev.pl>
 References: <20190208173458.4801-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,44 +14,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Drop tabs from variable initialization. Arrange variables in reverse
-christmas-tree order. Add a newline before a return.
+Add a config structure that will be used by cp-intc-based platforms.
+It contains the register range resource and the number of interrupts.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/cp_intc.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ include/linux/irqchip/irq-davinci-cp-intc.h | 23 +++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 include/linux/irqchip/irq-davinci-cp-intc.h
 
-diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
-index faf3d74d3719..f3787ae4cdbd 100644
---- a/arch/arm/mach-davinci/cp_intc.c
-+++ b/arch/arm/mach-davinci/cp_intc.c
-@@ -77,12 +77,12 @@ static void davinci_cp_intc_unmask_irq(struct irq_data *d)
- static int davinci_cp_intc_set_irq_type(struct irq_data *d,
- 					unsigned int flow_type)
- {
--	unsigned reg		= BIT_WORD(d->hwirq);
--	unsigned mask		= BIT_MASK(d->hwirq);
--	unsigned polarity	= davinci_cp_intc_read(
--					DAVINCI_CP_INTC_SYS_POLARITY(reg));
--	unsigned type		= davinci_cp_intc_read(
--					DAVINCI_CP_INTC_SYS_TYPE(reg));
-+	unsigned int reg, mask, polarity, type;
+diff --git a/include/linux/irqchip/irq-davinci-cp-intc.h b/include/linux/irqchip/irq-davinci-cp-intc.h
+new file mode 100644
+index 000000000000..2270a6167b98
+--- /dev/null
++++ b/include/linux/irqchip/irq-davinci-cp-intc.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Copyright (C) 2019 Texas Instruments
++ */
 +
-+	reg = BIT_WORD(d->hwirq);
-+	mask = BIT_MASK(d->hwirq);
-+	polarity = davinci_cp_intc_read(DAVINCI_CP_INTC_SYS_POLARITY(reg));
-+	type = davinci_cp_intc_read(DAVINCI_CP_INTC_SYS_TYPE(reg));
- 
- 	switch (flow_type) {
- 	case IRQ_TYPE_EDGE_RISING:
-@@ -150,6 +150,7 @@ static int davinci_cp_intc_host_map(struct irq_domain *h, unsigned int virq,
- 	irq_set_chip(virq, &davinci_cp_intc_irq_chip);
- 	irq_set_probe(virq);
- 	irq_set_handler(virq, handle_edge_irq);
++#ifndef _LINUX_IRQ_DAVINCI_CP_INTC_
++#define _LINUX_IRQ_DAVINCI_CP_INTC_
 +
- 	return 0;
- }
- 
++#include <linux/ioport.h>
++
++/**
++ * struct davinci_cp_intc_config - configuration data for davinci-cp-intc
++ *                                 driver.
++ *
++ * @reg: register range to map
++ * @num_irqs: number of HW interrupts supported by the controller
++ */
++struct davinci_cp_intc_config {
++	struct resource reg;
++	unsigned int num_irqs;
++};
++
++#endif /* _LINUX_IRQ_DAVINCI_CP_INTC_ */
 -- 
 2.20.1
