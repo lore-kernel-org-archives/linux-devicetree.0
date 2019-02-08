@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v2 08/11] arm: dts: qcom: msm8660: add interrupt controller properties
-Date: Thu,  7 Feb 2019 21:16:28 -0500
-Message-ID: <20190208021631.30252-9-masneyb@onstation.org>
+Subject: [PATCH v2 03/11] genirq: introduce irq_chip_mask_ack_parent()
+Date: Thu,  7 Feb 2019 21:16:23 -0500
+Message-ID: <20190208021631.30252-4-masneyb@onstation.org>
 References: <20190208021631.30252-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190208021631.30252-1-masneyb@onstation.org>
@@ -10,78 +10,63 @@ To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy
 Cc: tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt controller properties now that ssbi-gpio is a proper
-hierarchical IRQ chip. The interrupts property is no longer needed so
-remove it.
+From: Linus Walleij <linus.walleij@linaro.org>
 
-This change was tested on an APQ8060 DragonBoard.
+The hierarchical irqchip never before ran into a situation
+where the parent is not "simple", i.e. does not implement
+.irq_ack() and .irq_mask() like most, but the qcom-pm8xxx.c
+happens to implement only .irq_mask_ack().
 
+Since we want to make ssbi-gpio a hierarchical child of this
+irqchip, it must *also* only implement .irq_mask_ack()
+and call down to the parent, and for this we of course
+need irq_chip_mask_ack_parent().
+
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Brian Masney <masneyb@onstation.org>
-Tested-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-Changes since v1:
-- None
+This is a new patch introduced in v2.
 
- arch/arm/boot/dts/qcom-msm8660.dtsi | 47 ++---------------------------
- 1 file changed, 2 insertions(+), 45 deletions(-)
+ include/linux/irq.h |  1 +
+ kernel/irq/chip.c   | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8660.dtsi b/arch/arm/boot/dts/qcom-msm8660.dtsi
-index 993107ed1476..65a994f0e09b 100644
---- a/arch/arm/boot/dts/qcom-msm8660.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8660.dtsi
-@@ -292,51 +292,8 @@
- 					compatible = "qcom,pm8058-gpio",
- 						     "qcom,ssbi-gpio";
- 					reg = <0x150>;
--					interrupt-parent = <&pm8058>;
--					interrupts = <192 IRQ_TYPE_NONE>,
--						     <193 IRQ_TYPE_NONE>,
--						     <194 IRQ_TYPE_NONE>,
--						     <195 IRQ_TYPE_NONE>,
--						     <196 IRQ_TYPE_NONE>,
--						     <197 IRQ_TYPE_NONE>,
--						     <198 IRQ_TYPE_NONE>,
--						     <199 IRQ_TYPE_NONE>,
--						     <200 IRQ_TYPE_NONE>,
--						     <201 IRQ_TYPE_NONE>,
--						     <202 IRQ_TYPE_NONE>,
--						     <203 IRQ_TYPE_NONE>,
--						     <204 IRQ_TYPE_NONE>,
--						     <205 IRQ_TYPE_NONE>,
--						     <206 IRQ_TYPE_NONE>,
--						     <207 IRQ_TYPE_NONE>,
--						     <208 IRQ_TYPE_NONE>,
--						     <209 IRQ_TYPE_NONE>,
--						     <210 IRQ_TYPE_NONE>,
--						     <211 IRQ_TYPE_NONE>,
--						     <212 IRQ_TYPE_NONE>,
--						     <213 IRQ_TYPE_NONE>,
--						     <214 IRQ_TYPE_NONE>,
--						     <215 IRQ_TYPE_NONE>,
--						     <216 IRQ_TYPE_NONE>,
--						     <217 IRQ_TYPE_NONE>,
--						     <218 IRQ_TYPE_NONE>,
--						     <219 IRQ_TYPE_NONE>,
--						     <220 IRQ_TYPE_NONE>,
--						     <221 IRQ_TYPE_NONE>,
--						     <222 IRQ_TYPE_NONE>,
--						     <223 IRQ_TYPE_NONE>,
--						     <224 IRQ_TYPE_NONE>,
--						     <225 IRQ_TYPE_NONE>,
--						     <226 IRQ_TYPE_NONE>,
--						     <227 IRQ_TYPE_NONE>,
--						     <228 IRQ_TYPE_NONE>,
--						     <229 IRQ_TYPE_NONE>,
--						     <230 IRQ_TYPE_NONE>,
--						     <231 IRQ_TYPE_NONE>,
--						     <232 IRQ_TYPE_NONE>,
--						     <233 IRQ_TYPE_NONE>,
--						     <234 IRQ_TYPE_NONE>,
--						     <235 IRQ_TYPE_NONE>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index def2b2aac8b1..9a1a67d2e07d 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -605,6 +605,7 @@ extern void irq_chip_disable_parent(struct irq_data *data);
+ extern void irq_chip_ack_parent(struct irq_data *data);
+ extern int irq_chip_retrigger_hierarchy(struct irq_data *data);
+ extern void irq_chip_mask_parent(struct irq_data *data);
++extern void irq_chip_mask_ack_parent(struct irq_data *data);
+ extern void irq_chip_unmask_parent(struct irq_data *data);
+ extern void irq_chip_eoi_parent(struct irq_data *data);
+ extern int irq_chip_set_affinity_parent(struct irq_data *data,
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 086d5a34b5a0..0aefc2e69cf5 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -1277,6 +1277,17 @@ void irq_chip_mask_parent(struct irq_data *data)
+ }
+ EXPORT_SYMBOL_GPL(irq_chip_mask_parent);
  
++/**
++ * irq_chip_mask_ack_parent - Mask and acknowledge the parent interrupt
++ * @data:	Pointer to interrupt specific data
++ */
++void irq_chip_mask_ack_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_mask_ack(data);
++}
++EXPORT_SYMBOL_GPL(irq_chip_mask_ack_parent);
++
+ /**
+  * irq_chip_unmask_parent - Unmask the parent interrupt
+  * @data:	Pointer to interrupt specific data
 -- 
 2.17.2
