@@ -1,180 +1,65 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH 7/7] arm64: dts: qcom: qcs404: Add PCIe related nodes
-Date: Fri, 8 Feb 2019 15:50:28 +0100
-Message-ID: <20190208145028.GD773@centauri.lan>
-References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
- <20190125234509.26419-8-bjorn.andersson@linaro.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv7 1/6] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Fri, 8 Feb 2019 20:23:00 +0530
+Message-ID: <3922a74f-3607-fb9f-2b50-bb9b2f45b1cf@codeaurora.org>
+References: <cover.1548981329.git.saiprakash.ranjan@codeaurora.org>
+ <b672119cd1ffb5cba9da27ab5974fd5978e55b31.1548981329.git.saiprakash.ranjan@codeaurora.org>
+ <81dc97e6-2640-d600-9373-30518ed59792@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125234509.26419-8-bjorn.andersson@linaro.org>
+In-Reply-To: <81dc97e6-2640-d600-9373-30518ed59792@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, robh+dt@kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, jhugo@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com, marc.w.gonzalez@free.fr
+Cc: rnayak@codeaurora.org, sibis@codeaurora.org, tingwei@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 03:45:09PM -0800, Bjorn Andersson wrote:
-> The QCS404 has a PCIe2 PHY and a Qualcomm PCIe controller, add these to
-> the platform dtsi and enable them for the EVB with the perst gpio
-> and analog supplies defined.
+On 2/8/2019 7:50 PM, Suzuki K Poulose wrote:
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 25 +++++++++
->  arch/arm64/boot/dts/qcom/qcs404.dtsi     | 67 ++++++++++++++++++++++++
->  2 files changed, 92 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> index 50b3589c7f15..579ddaf4f5fa 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> @@ -21,6 +21,22 @@
->  	};
->  };
->  
-> +&pcie {
-> +	status = "ok";
-> +
-> +	perst-gpio = <&tlmm 43 GPIO_ACTIVE_LOW>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&perst_state>;
-> +};
-> +
-> +&pcie_phy {
-> +	status = "ok";
-> +
-> +	vdda-vp-supply = <&vreg_l3_1p05>;
-> +	vdda-vph-supply = <&vreg_l5_1p8>;
-> +};
-> +
->  &remoteproc_adsp {
->  	status = "ok";
->  };
-> @@ -137,6 +153,15 @@
->  };
->  
->  &tlmm {
-> +	perst_state: perst {
-> +		pins = "gpio43";
-> +		function = "gpio";
-> +
-> +		drive-strength = <2>;
-> +		bias-disable;
-> +		output-low;
-> +	};
-> +
->  	sdc1_on: sdc1-on {
->  		clk {
->  			pins = "sdc1_clk";
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index 76699435c8bd..7b219865ba7e 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -3,6 +3,7 @@
->  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/clock/qcom,gcc-qcs404.h>
-> +#include <dt-bindings/gpio/gpio.h>
->  
->  / {
->  	interrupt-parent = <&intc>;
-> @@ -377,6 +378,7 @@
->  			compatible = "qcom,gcc-qcs404";
->  			reg = <0x01800000 0x80000>;
->  			#clock-cells = <1>;
-> +			#reset-cells = <1>;
->  
->  			assigned-clocks = <&gcc GCC_APSS_AHB_CLK_SRC>;
->  			assigned-clock-rates = <19200000>;
-> @@ -405,6 +407,21 @@
->  			#interrupt-cells = <4>;
->  		};
->  
-> +		pcie_phy: phy@7786000 {
-> +			compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
-> +			reg = <0x07786000 0xb8>;
-> +
-> +			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-> +			resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
-> +				 <&gcc GCC_PCIE_0_PIPE_ARES>;
-> +			reset-names = "phy", "pipe";
-> +
-> +			clock-output-names = "pcie_0_pipe_clk";
-> +			#phy-cells = <0>;
-> +
-> +			status = "disabled";
-> +		};
-> +
->  		sdcc1: sdcc@7804000 {
->  			compatible = "qcom,sdhci-msm-v5";
->  			reg = <0x07804000 0x1000>, <0x7805000 0x1000>;
-> @@ -771,6 +788,56 @@
->  				status = "disabled";
->  			};
->  		};
-> +
-> +		pcie: pci@10000000 {
-> +			compatible = "qcom,pcie-qcs404", "snps,dw-pcie";
-> +			reg =  <0x10000000 0xf1d
-> +				0x10000f20 0xa8
-> +				0x07780000 0x2000
-> +				0x10001000 0x2000>;
-> +			reg-names = "dbi", "elbi", "parf", "config";
-> +			device_type = "pci";
-> +			linux,pci-domain = <0>;
-
-Since we only have single PCIe controller,
-I don't think we need to specify a pci-domain.
-
-With that:
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-
-
-> +			bus-range = <0x00 0xff>;
-> +			num-lanes = <1>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			ranges = <0x81000000 0 0          0x10003000 0 0x00010000   /* I/O */
-> +				  0x82000000 0 0x10013000 0x10013000 0 0x007ed000>; /* memory */
-> +
-> +			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "msi";
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &intc GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> +					<0 0 0 2 &intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> +					<0 0 0 3 &intc GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> +					<0 0 0 4 &intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> +			clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_0_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
-> +			clock-names = "iface", "aux", "master_bus", "slave_bus";
-> +
-> +			resets = <&gcc GCC_PCIE_0_AXI_MASTER_ARES>,
-> +				 <&gcc GCC_PCIE_0_AXI_SLAVE_ARES>,
-> +				 <&gcc GCC_PCIE_0_AXI_MASTER_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE_0_CORE_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE_0_BCR>,
-> +				 <&gcc GCC_PCIE_0_AHB_ARES>;
-> +			reset-names = "axi_m",
-> +				      "axi_s",
-> +				      "axi_m_sticky",
-> +				      "pipe_sticky",
-> +				      "pwr",
-> +				      "ahb";
-> +
-> +			phys = <&pcie_phy>;
-> +			phy-names = "pciephy";
-> +
-> +			status = "disabled";
-> +		};
->  	};
->  
->  	timer {
-> -- 
-> 2.18.0
+> On 01/02/2019 00:53, Sai Prakash Ranjan wrote:
+>> Add coresight components found on Qualcomm SDM845 SoC.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>
+>> ---
+>> For testing, all dependent patches are in below tree:
+>>   * https://github.com/saiprakash-ranjan/linux/tree/coresight-next
+>>
+>> - Depends on AOSS QMP side channel patches by Bjorn Andersson [1] - [4].
+>> - AMBA bus pclk change [5].
+>> - Also depends on patch ("arm64: dts: qcom: sdm845: Increase address
+>>    and size cells for soc") [6].
+>>
+>> [1] 
+>> https://lore.kernel.org/lkml/20190131003933.11436-5-bjorn.andersson@linaro.org/ 
+>>
+>> [2] 
+>> https://lore.kernel.org/lkml/20190131003933.11436-6-bjorn.andersson@linaro.org/ 
+>>
+>> [3] 
+>> https://lore.kernel.org/lkml/20190131003933.11436-7-bjorn.andersson@linaro.org/ 
+>>
+>> [4] 
+>> https://lore.kernel.org/lkml/20190131003933.11436-10-bjorn.andersson@linaro.org/ 
+>>
+>> [5] 
+>> https://lore.kernel.org/lkml/20190131020141.28352-1-bjorn.andersson@linaro.org/ 
+>>
+>> [6] 
+>> https://lore.kernel.org/lkml/20190117042940.25487-2-bjorn.andersson@linaro.org/ 
+>>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 434 +++++++++++++++++++++++++++
+>>   1 file changed, 434 insertions(+)
+>>
 > 
+> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
+Thanks!
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
