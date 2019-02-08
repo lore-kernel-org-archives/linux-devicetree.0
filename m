@@ -1,121 +1,114 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 19/33] irqchip: davinci-aintc: move the driver to drivers/irqchip
-Date: Fri,  8 Feb 2019 18:34:44 +0100
-Message-ID: <20190208173458.4801-20-brgl@bgdev.pl>
+Subject: [PATCH v2 02/33] ARM: davinci: aintc: use irq domain
+Date: Fri,  8 Feb 2019 18:34:27 +0100
+Message-ID: <20190208173458.4801-3-brgl@bgdev.pl>
 References: <20190208173458.4801-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190208173458.4801-1-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, David Lechner <david@lechnology.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The aintc driver has now been cleaned up. Move it to drivers/irqchip
-where it belongs. There's no device-tree support for any dm* board so
-there's no IRQCHIP_OF_DECLARE() - there's only the exported init
-function called from machine code.
+We need to create an irq domain if we want to select SPARSE_IRQ. The
+cp-intc driver already supports it, but aintc doesn't. Use the helpers
+provided by the generic irq chip abstraction.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/Kconfig                         | 11 ++++-------
- arch/arm/mach-davinci/Makefile                        |  1 -
- drivers/irqchip/Kconfig                               |  5 +++++
- drivers/irqchip/Makefile                              |  1 +
- .../irq.c => drivers/irqchip/irq-davinci-aintc.c      |  0
- 5 files changed, 10 insertions(+), 8 deletions(-)
- rename arch/arm/mach-davinci/irq.c => drivers/irqchip/irq-davinci-aintc.c (100%)
+ arch/arm/mach-davinci/irq.c | 35 +++++++++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index da8a039d65f9..71a4d875dd39 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -1,9 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- if ARCH_DAVINCI
+diff --git a/arch/arm/mach-davinci/irq.c b/arch/arm/mach-davinci/irq.c
+index 952dc126c390..07d8ef8037e4 100644
+--- a/arch/arm/mach-davinci/irq.c
++++ b/arch/arm/mach-davinci/irq.c
+@@ -23,6 +23,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/io.h>
++#include <linux/irqdomain.h>
  
--config AINTC
--	bool
--
- config CP_INTC
- 	bool
- 	select IRQ_DOMAIN
-@@ -17,17 +14,17 @@ comment "DaVinci Core Type"
+ #include <mach/hardware.h>
+ #include <mach/cputype.h>
+@@ -40,23 +41,23 @@
+ #define IRQ_INTPRI0_REG_OFFSET	0x0030
+ #define IRQ_INTPRI7_REG_OFFSET	0x004C
  
- config ARCH_DAVINCI_DM644x
- 	bool "DaVinci 644x based system"
--	select AINTC
-+	select DAVINCI_AINTC
- 	select ARCH_DAVINCI_DMx
- 
- config ARCH_DAVINCI_DM355
- 	bool "DaVinci 355 based system"
--	select AINTC
-+	select DAVINCI_AINTC
- 	select ARCH_DAVINCI_DMx
- 
- config ARCH_DAVINCI_DM646x
- 	bool "DaVinci 646x based system"
--	select AINTC
-+	select DAVINCI_AINTC
- 	select ARCH_DAVINCI_DMx
- 
- config ARCH_DAVINCI_DA830
-@@ -49,7 +46,7 @@ config ARCH_DAVINCI_DA8XX
- 
- config ARCH_DAVINCI_DM365
- 	bool "DaVinci 365 based system"
--	select AINTC
-+	select DAVINCI_AINTC
- 	select ARCH_DAVINCI_DMx
- 
- comment "DaVinci Board Type"
-diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
-index 93d271b4d84b..983865a99616 100644
---- a/arch/arm/mach-davinci/Makefile
-+++ b/arch/arm/mach-davinci/Makefile
-@@ -18,7 +18,6 @@ obj-$(CONFIG_ARCH_DAVINCI_DM365)	+= dm365.o devices.o
- obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= da830.o devices-da8xx.o usb-da8xx.o
- obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= da850.o devices-da8xx.o usb-da8xx.o
- 
--obj-$(CONFIG_AINTC)			+= irq.o
- obj-$(CONFIG_CP_INTC)			+= cp_intc.o
- 
- # Board specific
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3d1e60779078..ea0eb82bf1d2 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -129,6 +129,11 @@ config BRCMSTB_L2_IRQ
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN
- 
-+config DAVINCI_AINTC
-+	bool
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
++static struct irq_domain *davinci_irq_domain;
 +
- config DW_APB_ICTL
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index c93713d24b86..623e0ec5f9d0 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
-+obj-$(CONFIG_DAVINCI_AINTC)		+= irq-davinci-aintc.o
- obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
- obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
- obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
-diff --git a/arch/arm/mach-davinci/irq.c b/drivers/irqchip/irq-davinci-aintc.c
-similarity index 100%
-rename from arch/arm/mach-davinci/irq.c
-rename to drivers/irqchip/irq-davinci-aintc.c
+ static inline void davinci_irq_writel(unsigned long value, int offset)
+ {
+ 	__raw_writel(value, davinci_intc_base + offset);
+ }
+ 
+ static __init void
+-davinci_alloc_gc(void __iomem *base, unsigned int irq_start, unsigned int num)
++davinci_irq_setup_gc(void __iomem *base,
++		     unsigned int irq_start, unsigned int num)
+ {
+ 	struct irq_chip_generic *gc;
+ 	struct irq_chip_type *ct;
+ 
+-	gc = irq_alloc_generic_chip("AINTC", 1, irq_start, base, handle_edge_irq);
+-	if (!gc) {
+-		pr_err("%s: irq_alloc_generic_chip for IRQ %u failed\n",
+-		       __func__, irq_start);
+-		return;
+-	}
++	gc = irq_get_domain_generic_chip(davinci_irq_domain, irq_start);
++	gc->reg_base = base;
++	gc->irq_base = irq_start;
+ 
+ 	ct = gc->chip_types;
+ 	ct->chip.irq_ack = irq_gc_ack_set_bit;
+@@ -74,6 +75,7 @@ void __init davinci_irq_init(void)
+ {
+ 	unsigned i, j;
+ 	const u8 *davinci_def_priorities = davinci_soc_info.intc_irq_prios;
++	int rv, irq_base;
+ 
+ 	davinci_intc_type = DAVINCI_INTC_TYPE_AINTC;
+ 	davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_4K);
+@@ -110,8 +112,25 @@ void __init davinci_irq_init(void)
+ 		davinci_irq_writel(pri, i);
+ 	}
+ 
++	irq_base = irq_alloc_descs(-1, 0, davinci_soc_info.intc_irq_num, 0);
++	if (WARN_ON(irq_base < 0))
++		return;
++
++	davinci_irq_domain = irq_domain_add_legacy(NULL,
++					davinci_soc_info.intc_irq_num,
++					irq_base, 0, &irq_domain_simple_ops,
++					NULL);
++	if (WARN_ON(!davinci_irq_domain))
++		return;
++
++	rv = irq_alloc_domain_generic_chips(davinci_irq_domain, 32, 1,
++					    "AINTC", handle_edge_irq,
++					    IRQ_NOREQUEST | IRQ_NOPROBE, 0, 0);
++	if (WARN_ON(rv))
++		return;
++
+ 	for (i = 0, j = 0; i < davinci_soc_info.intc_irq_num; i += 32, j += 0x04)
+-		davinci_alloc_gc(davinci_intc_base + j, i, 32);
++		davinci_irq_setup_gc(davinci_intc_base + j, irq_base + i, 32);
+ 
+ 	irq_set_handler(IRQ_TINT1_TINT34, handle_level_irq);
+ }
 -- 
 2.20.1
