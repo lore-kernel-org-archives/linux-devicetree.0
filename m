@@ -1,54 +1,29 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v2.1 43/49] dt-bindings: display: Add OSD Displays
- OSD070T1718-19TS panel binding
-Date: Fri, 8 Feb 2019 13:19:49 +0200
-Message-ID: <20190208111949.GC4562@pendragon.ideasonboard.com>
-References: <20190111035120.20668-1-laurent.pinchart@ideasonboard.com>
- <20190111035120.20668-44-laurent.pinchart@ideasonboard.com>
- <20190115213905.GA17873@bogus>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 07/10] gpio: max77650: add GPIO support
+Date: Fri, 8 Feb 2019 12:22:10 +0100
+Message-ID: <CACRpkdYKLeKA7CPFvoBPHB-K+X_n80YvFyYS_SHxuTTyGLNZ4g@mail.gmail.com>
+References: <20190205091237.6448-1-brgl@bgdev.pl> <20190205091237.6448-8-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190115213905.GA17873@bogus>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190205091237.6448-8-brgl@bgdev.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE9TRCBEaXNwbGF5cyBPU0QwNzBUMTcxOC0xOVRTIGlzIGEgNyIgV1ZHQSAoODAweDQ4MCkg
-MjRiaXQgUkdCIHBhbmVsCmFuZCBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBi
-aW5kaW5ncy4KClNpZ25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
-cnRAaWRlYXNvbmJvYXJkLmNvbT4KUmV2aWV3ZWQtYnk6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZh
-bGtlaW5lbkB0aS5jb20+Ci0tLQpDaGFuZ2VzIHNpbmNlIHYyOgoKLSBTcGVjaWZ5IHdoaWNoIG9m
-IHRoZSBzaW1wbGUtcGFuZWwgcHJvcGVydGllcyBhcmUgdmFsaWQKLS0tCiAuLi4vZGlzcGxheS9w
-YW5lbC9vc2RkaXNwbGF5cyxvc2QwNzB0MTcxOC0xOXRzLnR4dCAgIHwgMTIgKysrKysrKysrKysr
-CiAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29zZGRpc3BsYXlz
-LG9zZDA3MHQxNzE4LTE5dHMudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3NkZGlzcGxheXMsb3NkMDcwdDE3MTgtMTl0cy50
-eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9vc2Rk
-aXNwbGF5cyxvc2QwNzB0MTcxOC0xOXRzLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAw
-MDAwMDAwMDAwMDAuLmU1Nzg4M2NjZGYyZgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29zZGRpc3BsYXlzLG9zZDA3MHQx
-NzE4LTE5dHMudHh0CkBAIC0wLDAgKzEsMTIgQEAKK09TRCBEaXNwbGF5cyBPU0QwNzBUMTcxOC0x
-OVRTIDciIFdWR0EgVEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21w
-YXRpYmxlOiBzaGFsbCBiZSAib3NkZGlzcGxheXMsb3NkMDcwdDE3MTgtMTl0cyIKKy0gcG93ZXIt
-c3VwcGx5OiBzZWUgc2ltcGxlLXBhbmVsLnR4dAorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBi
-YWNrbGlnaHQ6IHNlZSBzaW1wbGUtcGFuZWwudHh0CisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRp
-YmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2lu
-IHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuIE5vIG90aGVyIHNpbXBsZS1wYW5l
-bCBwcm9wZXJ0aWVzIHRoYW4KK3RoZSBvbmVzIHNwZWNpZmllZCBoZXJlaW4gYXJlIHZhbGlkLgoK
-LS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Feb 5, 2019 at 10:12 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Add GPIO support for max77650 mfd device. This PMIC exposes a single
+> GPIO line.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Please merge this with the rest of the stuff through MFD!
+
+Thanks,
+Linus Walleij
