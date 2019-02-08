@@ -1,30 +1,33 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 05/12] ARM: davinci: da850: switch to using the
- clocksource driver
-Date: Fri, 8 Feb 2019 17:36:22 +0530
-Message-ID: <9d423e18-8c85-731b-388a-1843067db242@ti.com>
-References: <20190204171757.32073-1-brgl@bgdev.pl>
- <20190204171757.32073-6-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 0/7] add support for SAM9X60 pin controller
+Date: Fri, 8 Feb 2019 13:07:56 +0100
+Message-ID: <CACRpkdasSzX8gxW1dDjkeTyT6RAYFhrwSPGdwmrKEaabEFgG4Q@mail.gmail.com>
+References: <1549531468-1676-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204171757.32073-6-brgl@bgdev.pl>
-Content-Language: en-US
+In-Reply-To: <1549531468-1676-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Claudiu.Beznea@microchip.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <Nicolas.Ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <Ludovic.Desroches@microchip.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/19 10:47 PM, Bartosz Golaszewski wrote:
-> +static const struct davinci_timer_cfg da850_timer_cfg = {
-> +	.reg = {
-> +		.start		= DA8XX_TIMER64P0_BASE,
-> +		.end		= DA8XX_TIMER64P0_BASE + SZ_4K,
+On Thu, Feb 7, 2019 at 10:24 AM <Claudiu.Beznea@microchip.com> wrote:
 
-SZ_4K - 1
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+>
+> This series adds drive strenght and slew rate support for SAMX60's pin
+> controller. For drive strenght we could have 2 values: low, high.
+> For slew rate we could have 2 values: enable, disabled.
+>
+> Besides this I took the chance and adapt the documentation for at91 pinctrl
+> driver.
+>
+> Changes in v3:
+> - fix checkpatch.pl warning on DBG_SHOW_FLAG_MASKED() macro in patch 1/7
+> - add Ack-by tag
 
-This should have prevented watchdog timer from getting registered.
+All 7 patches applied for kernel v5.1.
 
-Thanks,
-Sekhar
+Yours,
+Linus Walleij
