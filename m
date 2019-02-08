@@ -1,96 +1,102 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "dt-bindings: sound: msm8916-wcd-analog: fix
-	example regulator names" to the asoc tree
-Date: Fri,  8 Feb 2019 13:11:05 +0000 (GMT)
-Message-ID: <20190208131105.5FAE01127F30@debutante.sirena.org.uk>
-References: <20190207165755.1548-4-johan@kernel.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v6 0/5] misc: Add support to Qualcomm FastRPC driver
+Date: Fri,  8 Feb 2019 13:23:01 +0000
+Message-ID: <20190208132306.12571-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190207165755.1548-4-johan@kernel.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Thanks for reviewing the v5 here is new version addressing the
+comments from v6.
+This patchset adds support to Qualcomm FastRPC driver which implements
+an IPC (Inter-Processor Communication) mechanism that allows for clients
+to transparently make remote method invocations across processor boundaries.
 
-   dt-bindings: sound: msm8916-wcd-analog: fix example regulator names
+The below diagram depicts invocation of a single method where the client
+and objects reside on different processors. An object could expose
+multiple methods which can be grouped together and referred to as an
+interface.
 
-has been applied to the asoc tree at
+: ,--------,        ,------,  ,-----------,  ,------,        ,--------,
+: |        | method |      |  |           |  |      | method |        |
+: | Client |------->| Stub |->| Transport |->| Skel |------->| Object |
+: |        |        |      |  |           |  |      |        |        |
+: `--------`        `------`  `-----------`  `------`        `--------`
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Client:    Linux user mode process that initiates the remote invocation
+Stub:      Auto generated code linked in with the user mode process that
+           takes care of marshaling parameters
+Transport: Involved in carrying an invocation from a client to an
+           object. This involves two portions: 1) FastRPC Linux
+           kernel driver that receives the remote invocation, queues
+           them up and then waits for the response after signaling the
+           remote side. 2) Service running on the remote side that
+           dequeues the messages from the queue and dispatches them for
+           processing.
+Skel:      Auto generated code that takes care of un-marshaling
+           parameters
+Object:    Method implementation
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Most of the work is derived from various downstream Qualcomm kernels.
+Credits to various Qualcomm authors who have contributed to this code.
+Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+TODO:
+ - Support INIT_STATIC process
+ - Support remote mmap/unmap methods.
+ - Handling secure compute context banks.
+ - Add secure buffer support
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Change since v5 (https://patchwork.kernel.org/cover/10792749/) :
+- Fix domain id range check spotted by Thierry
+- Add missing dma_unmap_sg spotted by Thierry
+- Add refcounting to invoke context, to make sure that we do not free/unmap 
+	buffers when dsp is actively using it.
+- Rebased on top of char-misc-next branch
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Changes since v4(https://patchwork.kernel.org/cover/10779341/) :
+- collected acks for DT from Rob.
+- Removed unnecessary list safe iteration spotted by Greg KH.
+- Removed unnecessary syslog spams.
+- Added more checks to input validity.
 
-Thanks,
-Mark
+Changes since v3(https://patchwork.kernel.org/cover/10763343/) :
+- removed secured property from dt binding, defer it till we add
+	support to secure buffers.
+- reword various bits in bindings suggested by Rob Herring
 
->From 510135535382db7f5ee8727818172e42c9c9cbd5 Mon Sep 17 00:00:00 2001
-From: Johan Hovold <johan@kernel.org>
-Date: Thu, 7 Feb 2019 17:57:55 +0100
-Subject: [PATCH] dt-bindings: sound: msm8916-wcd-analog: fix example regulator
- names
+Changes since v2 (https://lkml.org/lkml/2018/12/7/550) :
+- removed compat_ioctl specific structures and various cleanups as
+  suggested by Greg KH
+- replace reg property with label property as suggested by Bjorn
+- minor content cleanup in bindings as suggested by Mark Rutland
 
-Fix upper-case regulator names in the binding example which do not match
-the corresponding required properties.
+Changes since RFC:
+- moved from char to misc driver as suggested by Greg KH
+- updated ioctl data structures as suggested by Arnd.
+- cleaned up and reorganized most of the code from RFC review comments.
 
-While at it, add a blank line after the required-properties section to
-improve readability.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt  | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Srinivas Kandagatla (5):
+  misc: dt-bindings: Add Qualcomm Fastrpc bindings
+  misc: fastrpc: Add Qualcomm fastrpc basic driver model
+  misc: fastrpc: Add support for context Invoke method
+  misc: fastrpc: Add support for create remote init process
+  misc: fastrpc: Add support for dmabuf exporter
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt
-index fdcea3d12ee5..e7d17dda55db 100644
---- a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt
-+++ b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt
-@@ -30,6 +30,7 @@ Required properties
-  - vdd-cdc-io-supply: phandle to VDD_CDC_IO regulator DT node.
-  - vdd-cdc-tx-rx-cx-supply: phandle to VDD_CDC_TX/RX/CX regulator DT node.
-  - vdd-micbias-supply: phandle of VDD_MICBIAS supply's regulator DT node.
-+
- Optional Properties:
-  - qcom,mbhc-vthreshold-low: Array of 5 threshold voltages in mV for 5 buttons
- 			     detection on headset when the mbhc is powered up
-@@ -92,9 +93,9 @@ spmi_bus {
- 				  "cdc_ear_cnp_int",
- 				  "cdc_hphr_cnp_int",
- 				  "cdc_hphl_cnp_int";
--	               VDD-CDC-IO-supply = <&pm8916_l5>;
--	               VDD-CDC-TX-RX-CX-supply = <&pm8916_l5>;
--	               VDD-MICBIAS-supply = <&pm8916_l13>;
-+	               vdd-cdc-io-supply = <&pm8916_l5>;
-+	               vdd-cdc-tx-rx-cx-supply = <&pm8916_l5>;
-+	               vdd-micbias-supply = <&pm8916_l13>;
- 	               #sound-dai-cells = <1>;
- 	};
- };
+ .../devicetree/bindings/misc/qcom,fastrpc.txt |   78 +
+ drivers/misc/Kconfig                          |   10 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/fastrpc.c                        | 1386 +++++++++++++++++
+ include/uapi/misc/fastrpc.h                   |   41 +
+ 5 files changed, 1516 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
+ create mode 100644 drivers/misc/fastrpc.c
+ create mode 100644 include/uapi/misc/fastrpc.h
+
 -- 
 2.20.1
