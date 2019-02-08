@@ -1,48 +1,44 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 2/2] Input: st1232 - switch to gpiod API
-Date: Fri, 8 Feb 2019 00:05:55 -0800
-Message-ID: <20190208080555.GD31622@dtor-ws>
-References: <20190129102347.27754-1-martink@posteo.de>
- <20190129102347.27754-2-martink@posteo.de>
- <83a86244-f40b-44b1-d7be-1fcbeb4c359e@ginzinger.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 00/11] mtd: rawnand: denali: exec_op(), controller/chip separation, and cleanups
+Date: Fri,  8 Feb 2019 17:08:44 +0900
+Message-ID: <1549613335-30319-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <83a86244-f40b-44b1-d7be-1fcbeb4c359e@ginzinger.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Cc: Martin Kepplinger <martink@posteo.de>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org
+To: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+I took time for the Denali driver to catch up with the latest framework.
 
-On Tue, Feb 05, 2019 at 11:20:16AM +0100, Martin Kepplinger wrote:
-> On 29.01.19 11:23, Martin Kepplinger wrote:
-> > From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-> > 
-> > Use devm_gpiod_get_optional() and gpiod_set_value_cansleep() instead
-> > of the old API. The st1232_ts_power() now passes on the inverted "poweron"
-> > value to reflect the correct logical value.
-> > 
-> > Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-> > ---
-> > 
-> > Tested and works. thanks for your help Dmitry,
-> > 
-> 
-> is this what you had in mind? any problems or questions?
+ - switch over to exec_op() and remove legacy hooks
 
-Yes, that is what I wanted, with one exception:
+ - separate controller/chips
 
-> > +	ts->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> > +						 GPIOD_OUT_HIGH);
+ - various cleanups
 
-This breaks compatibility with old DTSes, please try changing to:
 
-	devm_gpiod_get_optional(&client->dev, NULL, GPIOD_OUT_HIGH);
 
-Thanks.
+Masahiro Yamada (11):
+  mtd: rawnand: denali: use nand_chip pointer more for internal
+    functions
+  mtd: rawnand: denali: refactor syndrome layout handling for raw access
+  mtd: rawnand: denali: remove unneeded casts in denali_{read,write}_pio
+  mtd: rawnand: denali: switch over to ->exec_op() from legacy hooks
+  mtd: rawnand: denali: rename irq_status to irq_stat
+  mtd: rawnand: denali: use more precise timeout for
+    NAND_OP_WAITRDT_INSTR
+  mtd: rawnand: denali: use bool type instead of int where appropriate
+  mtd: rawnand: denali_pci: rename goto labels
+  mtd: rawnand: denali: decouple controller and NAND chips
+  mtd: rawnand: denali: remove DENALI_NR_BANKS macro
+  mtd: rawnand: denali: clean up coding style
+
+ .../devicetree/bindings/mtd/denali-nand.txt        |   39 +-
+ drivers/mtd/nand/raw/denali.c                      | 1182 ++++++++++----------
+ drivers/mtd/nand/raw/denali.h                      |  119 +-
+ drivers/mtd/nand/raw/denali_dt.c                   |   98 +-
+ drivers/mtd/nand/raw/denali_pci.c                  |   38 +-
+ 5 files changed, 867 insertions(+), 609 deletions(-)
 
 -- 
-Dmitry
+2.7.4
