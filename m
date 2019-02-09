@@ -1,44 +1,58 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 1/4] ARM: dts: da850-evm: Correct the sound card name
-Date: Sat,  9 Feb 2019 13:50:11 -0500
-Message-ID: <20190209185014.127264-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 3.18 2/4] ARM: dts: kirkwood: Fix polarity of GPIO fan lines
+Date: Sat,  9 Feb 2019 13:50:12 -0500
+Message-ID: <20190209185014.127264-2-sashal@kernel.org>
+References: <20190209185014.127264-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190209185014.127264-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jamie Lentin <jm@lentin.co.uk>, Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Julien D'Ascenzio <jdascenzio@posteo.net>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 7fca69d4e43fa1ae9cb4f652772c132dc5a659c6 ]
+[ Upstream commit b5f034845e70916fd33e172fad5ad530a29c10ab ]
 
-To avoid  the following error:
-asoc-simple-card sound: ASoC: Failed to create card debugfs directory
+These two lines are active high, not active low. The bug was
+found when we changed the kernel to respect the polarity defined
+in the device tree.
 
-Which is because the card name contains '/' character, which can not be
-used in file or directory names.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Fixes: 1b90e06b1429 ("ARM: kirkwood: Use devicetree to define DNS-32[05] fan")
+Cc: Jamie Lentin <jm@lentin.co.uk>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Julien D'Ascenzio <jdascenzio@posteo.net>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Tested-by: Jamie Lentin <jm@lentin.co.uk>
+Reported-by: Julien D'Ascenzio <jdascenzio@posteo.net>
+Tested-by: Julien D'Ascenzio <jdascenzio@posteo.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/da850-evm.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/kirkwood-dnskw.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 4f935ad9f27b..505ea30c9cb2 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -146,7 +146,7 @@
- 
- 	sound {
- 		compatible = "simple-audio-card";
--		simple-audio-card,name = "DA850/OMAP-L138 EVM";
-+		simple-audio-card,name = "DA850-OMAPL138 EVM";
- 		simple-audio-card,widgets =
- 			"Line", "Line In",
- 			"Line", "Line Out";
+diff --git a/arch/arm/boot/dts/kirkwood-dnskw.dtsi b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
+index 113dcf056dcf..1b2dacfa6132 100644
+--- a/arch/arm/boot/dts/kirkwood-dnskw.dtsi
++++ b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
+@@ -35,8 +35,8 @@
+ 		compatible = "gpio-fan";
+ 		pinctrl-0 = <&pmx_fan_high_speed &pmx_fan_low_speed>;
+ 		pinctrl-names = "default";
+-		gpios = <&gpio1 14 GPIO_ACTIVE_LOW
+-			 &gpio1 13 GPIO_ACTIVE_LOW>;
++		gpios = <&gpio1 14 GPIO_ACTIVE_HIGH
++			 &gpio1 13 GPIO_ACTIVE_HIGH>;
+ 		gpio-fan,speed-map = <0    0
+ 				      3000 1
+ 				      6000 2>;
 -- 
 2.19.1
