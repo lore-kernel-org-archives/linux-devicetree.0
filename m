@@ -1,66 +1,90 @@
-Return-Path: <SRS0=n0G4=QW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:34603 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726396AbfBOIhk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Feb 2019 03:37:40 -0500
-Subject: Re: [PATCH 3/3] media: mx2-emmaprp: Add DT bindings documentation
-References: <20181216034907.15787-1-shc_work@mail.ru>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <799b49d0-0bea-7029-0259-baeacd06e105@xs4all.nl>
-Date: Fri, 15 Feb 2019 09:37:34 +0100
+Return-Path: <jic23@kernel.org>
+Date: Sat, 9 Feb 2019 14:49:01 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 1/6] iio:bmi160: add SPDX identifiers
+Message-ID: <20190209144901.4c3f42ea@archlinux>
+In-Reply-To: <20190202215601.20275-2-martin@martingkelly.com>
+References: <20190202215601.20275-1-martin@martingkelly.com>
+	<20190202215601.20275-2-martin@martingkelly.com>
 MIME-Version: 1.0
-In-Reply-To: <20181216034907.15787-1-shc_work@mail.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Alexander Shiyan <shc_work@mail.ru>, linux-media@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: Martin Kelly <martin@martingkelly.com>
+Cc: linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Rob,
+On Sat,  2 Feb 2019 13:55:56 -0800
+Martin Kelly <martin@martingkelly.com> wrote:
 
-Can you take a look at this?
-
-Thanks!
-
-	Hans
-
-On 12/16/18 4:49 AM, Alexander Shiyan wrote:
-> This patch adds DT binding documentation for the Freescale enhanced
-> Multimedia Accelerator (eMMA) video Pre-processor (PrP).
+> From: Martin Kelly <martin@martingkelly.com>
 > 
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> Add SPDX identifiers (GPL 2) for the BMI160 driver. bmi160.h had an
+> identifier, but the other files did not.
+> 
+> Signed-off-by: Martin Kelly <martin@martingkelly.com>
+Applied to the togreg branch of iio.git and pushed out as
+testing to hopefully be ignored.
+
+Thanks,
+
+Jonathan
+
 > ---
->  .../devicetree/bindings/media/fsl-emmaprp.txt        | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/fsl-emmaprp.txt
+>  drivers/iio/imu/bmi160/bmi160_core.c | 5 +----
+>  drivers/iio/imu/bmi160/bmi160_i2c.c  | 5 +----
+>  drivers/iio/imu/bmi160/bmi160_spi.c  | 4 +---
+>  3 files changed, 3 insertions(+), 11 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/fsl-emmaprp.txt b/Documentation/devicetree/bindings/media/fsl-emmaprp.txt
-> new file mode 100644
-> index 0000000..9dd7cc6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/fsl-emmaprp.txt
-> @@ -0,0 +1,20 @@
-> +* Freescale enhanced Multimedia Accelerator (eMMA) video Pre-processor (PrP)
-> +  for i.MX21 & i.MX27 SoCs.
-> +
-> +Required properties:
-> +- compatible : Shall contain "fsl,imx21-emmaprp" for compatible with
-> +               the one integrated on i.MX21 SoC.
-> +- reg        : Offset and length of the register set for the device.
-> +- interrupts : Should contain eMMA PrP interrupt number.
-> +- clocks     : Should contain the ahb and ipg clocks, in the order
-> +               determined by the clock-names property.
-> +- clock-names: Should be "ahb", "ipg".
-> +
-> +Example:
-> +	emmaprp: emmaprp@10026400 {
-> +		compatible = "fsl,imx21-emmaprp";
-> +		reg = <0x10026400 0x100>;
-> +		interrupts = <51>;
-> +		clocks = <&clks 49>, <&clks 68>;
-> +		clock-names = "ipg", "ahb";
-> +	};
-> 
+> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
+> index b10330b0f93f..ce61026d84c3 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_core.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
+> @@ -1,12 +1,9 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * BMI160 - Bosch IMU (accel, gyro plus external magnetometer)
+>   *
+>   * Copyright (c) 2016, Intel Corporation.
+>   *
+> - * This file is subject to the terms and conditions of version 2 of
+> - * the GNU General Public License.  See the file COPYING in the main
+> - * directory of this archive for more details.
+> - *
+>   * IIO core driver for BMI160, with support for I2C/SPI busses
+>   *
+>   * TODO: magnetometer, interrupts, hardware FIFO
+> diff --git a/drivers/iio/imu/bmi160/bmi160_i2c.c b/drivers/iio/imu/bmi160/bmi160_i2c.c
+> index 5b1f7e6af651..e36f5e82d400 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_i2c.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_i2c.c
+> @@ -1,12 +1,9 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * BMI160 - Bosch IMU, I2C bits
+>   *
+>   * Copyright (c) 2016, Intel Corporation.
+>   *
+> - * This file is subject to the terms and conditions of version 2 of
+> - * the GNU General Public License.  See the file COPYING in the main
+> - * directory of this archive for more details.
+> - *
+>   * 7-bit I2C slave address is:
+>   *      - 0x68 if SDO is pulled to GND
+>   *      - 0x69 if SDO is pulled to VDDIO
+> diff --git a/drivers/iio/imu/bmi160/bmi160_spi.c b/drivers/iio/imu/bmi160/bmi160_spi.c
+> index e521ad14eeac..c19e3df35559 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_spi.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_spi.c
+> @@ -1,11 +1,9 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * BMI160 - Bosch IMU, SPI bits
+>   *
+>   * Copyright (c) 2016, Intel Corporation.
+>   *
+> - * This file is subject to the terms and conditions of version 2 of
+> - * the GNU General Public License.  See the file COPYING in the main
+> - * directory of this archive for more details.
+>   */
+>  #include <linux/acpi.h>
+>  #include <linux/module.h>
