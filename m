@@ -1,99 +1,78 @@
-Return-Path: <SRS0=ieoU=QL=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 5/5] arm64: dts: renesas: r8a774c0: Add TMU device nodes
-Date: Mon,  4 Feb 2019 09:20:07 +0000
-Message-Id: <1549272007-33471-6-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1549272007-33471-1-git-send-email-biju.das@bp.renesas.com>
-References: <1549272007-33471-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <jic23@kernel.org>
+Date: Sat, 9 Feb 2019 15:24:16 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 5/6] iio:bmi160: use iio_pollfunc_store_time
+Message-ID: <20190209152416.535cb74b@archlinux>
+In-Reply-To: <20190202215601.20275-6-martin@martingkelly.com>
+References: <20190202215601.20275-1-martin@martingkelly.com>
+	<20190202215601.20275-6-martin@martingkelly.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Martin Kelly <martin@martingkelly.com>
+Cc: linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds TMU{0|1|2|3|4} device nodes for r8a774c0 SoC.
+On Sat,  2 Feb 2019 13:56:00 -0800
+Martin Kelly <martin@martingkelly.com> wrote:
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V1-->V2 No change
----
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 65 +++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+> From: Martin Kelly <martin@martingkelly.com>
+> 
+> Currently, we snap the timestamp after reading from the buffer and
+> processing the event. When the IIO poll function is triggered by an
+> interrupt,  we can get a slightly more accurate timestamp by snapping it
+> prior to reading the data, since the data was already generated prior to
+> entering the trigger handler. This is not going to make a huge difference,
+> but we might as well improve slightly.
+> 
+> Do this by using iio_pollfunc_store_time as other drivers do.
+> 
+> Signed-off-by: Martin Kelly <martin@martingkelly.com>
+There is one small quirk here I'd forgotten about, but seems unlikely to
+cause too many problems.  There are triggers that only call
+iio_trigger_poll_chained (which is badly named) and as a result
+only end up calling the thread part.  That would result in no
+timestamp.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index bb31585..1f72f76 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -353,6 +353,71 @@
- 			resets = <&cpg 407>;
- 		};
- 
-+		tmu0: timer@e61e0000 {
-+			compatible = "renesas,tmu-r8a774c0", "renesas,tmu";
-+			reg = <0 0xe61e0000 0 0x30>;
-+			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 125>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 125>;
-+			status = "disabled";
-+		};
-+
-+		tmu1: timer@e6fc0000 {
-+			compatible = "renesas,tmu-r8a774c0", "renesas,tmu";
-+			reg = <0 0xe6fc0000 0 0x30>;
-+			interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 124>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 124>;
-+			status = "disabled";
-+		};
-+
-+		tmu2: timer@e6fd0000 {
-+			compatible = "renesas,tmu-r8a774c0", "renesas,tmu";
-+			reg = <0 0xe6fd0000 0 0x30>;
-+			interrupts = <GIC_SPI 303 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 123>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 123>;
-+			status = "disabled";
-+		};
-+
-+		tmu3: timer@e6fe0000 {
-+			compatible = "renesas,tmu-r8a774c0", "renesas,tmu";
-+			reg = <0 0xe6fe0000 0 0x30>;
-+			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 122>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 122>;
-+			status = "disabled";
-+		};
-+
-+		tmu4: timer@ffc00000 {
-+			compatible = "renesas,tmu-r8a774c0", "renesas,tmu";
-+			reg = <0 0xffc00000 0 0x30>;
-+			interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 121>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 121>;
-+			status = "disabled";
-+		};
-+
- 		i2c0: i2c@e6500000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.7.4
+It's a hole we really ought to figure out a reliable fix for that
+effects lots of drivers.
+
+Anyhow, I doubt anyone is using this device with that set of triggers
+so should be fine whilst we think about a more general solution.
+
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+
+> ---
+>  drivers/iio/imu/bmi160/bmi160_core.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
+> index 007f7c532ac4..f3c5b86a281e 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_core.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
+> @@ -425,8 +425,7 @@ static irqreturn_t bmi160_trigger_handler(int irq, void *p)
+>  		buf[j++] = sample;
+>  	}
+>  
+> -	iio_push_to_buffers_with_timestamp(indio_dev, buf,
+> -					   iio_get_time_ns(indio_dev));
+> +	iio_push_to_buffers_with_timestamp(indio_dev, buf, pf->timestamp);
+>  done:
+>  	iio_trigger_notify_done(indio_dev->trig);
+>  	return IRQ_HANDLED;
+> @@ -834,7 +833,8 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->info = &bmi160_info;
+>  
+> -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
+> +					      iio_pollfunc_store_time,
+>  					      bmi160_trigger_handler, NULL);
+>  	if (ret < 0)
+>  		return ret;
