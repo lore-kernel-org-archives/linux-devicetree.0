@@ -1,82 +1,83 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 2/5] dt-bindings: iio: adc: lpc32xx-adc: Document
- vref-supply
-Date: Sat, 9 Feb 2019 20:07:36 +0200
-Message-ID: <8bc7bfcf-ad04-0615-1735-c2bbf20b7861@mleia.com>
-References: <20190208160944.13281-1-gregory.clement@bootlin.com>
- <20190208160944.13281-3-gregory.clement@bootlin.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 29/42] ARM: dts: da850-evm: Correct the audio codec regulators
+Date: Sat,  9 Feb 2019 13:47:21 -0500
+Message-ID: <20190209184734.125935-29-sashal@kernel.org>
+References: <20190209184734.125935-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190208160944.13281-3-gregory.clement@bootlin.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190209184734.125935-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-On 02/08/2019 06:09 PM, Gregory CLEMENT wrote:
-> As most of the other ADC the lpc32xx one use a vref-supply property:
-> document it.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
-> index b3629d3a9adf..3a1bc669bd51 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
-> @@ -6,6 +6,10 @@ Required properties:
->    region.
->  - interrupts: The ADC interrupt
->  
-> +Optional:
-> + - vref-supply: The regulator supply ADC reference voltage, optional
-> +   for legacy reason, but highly encouraging to us in new device tree
-> +
+[ Upstream commit 706edaa88835e3d8de8920584ad5da76dd3d6666 ]
 
-here vref-supply voltage is 3.3v only, I think that might be a reason why
-the property is omitted.
+Add the board level fixed regulators for 3.3V and 1.8V which is used to
+power - among other things - the tlv320aic3106 codec.
 
-My concern is that the documentation shall not contain sections with
-description of properties found in the past for 'legacy reasons', if you
-like to support the backward compatibility in the driver, please update
-the documentation to the expected state and add a stub to care about
-legacy DTBs in the driver only.
+Apart from removing the following warning during boot:
+tlv320aic3x-codec 0-0018: Too high supply voltage(s) AVDD: 5000000, DVDD: 5000000
 
-FWIW I personally don't mind about breaking the backward compatibility
-for NXP LPC32xx, it might be a concern when CONFIG_ARM_ATAG_DTB_COMPAT=y
-is removed from the lpc32xx_defconfig though.
+With the correct voltages the driver can select correct OCMV value to
+reduce pop noise.
 
->  Example:
->  
->  	adc@40048000 {
-> @@ -13,4 +17,5 @@ Example:
->  		reg = <0x40048000 0x1000>;
->  		interrupt-parent = <&mic>;
->  		interrupts = <39 0>;
-> +		vref-supply = <&vcc>;
->  	};
-> 
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/da850-evm.dts | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
 
-I kindly ask you to include me to To: list, if you send another changes for
-NXP LPC32xx platform.
-
-Thank you.
-
---
-Best wishes,
-Vladimir
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index a3c9b346721d..482a54587b44 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -94,6 +94,28 @@
+ 		regulator-boot-on;
+ 	};
+ 
++	baseboard_3v3: fixedregulator-3v3 {
++		/* TPS73701DCQ */
++		compatible = "regulator-fixed";
++		regulator-name = "baseboard_3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vbat>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	baseboard_1v8: fixedregulator-1v8 {
++		/* TPS73701DCQ */
++		compatible = "regulator-fixed";
++		regulator-name = "baseboard_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vbat>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	backlight_lcd: backlight-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "lcd_backlight_pwr";
+@@ -210,10 +232,9 @@
+ 
+ 		/* Regulators */
+ 		IOVDD-supply = <&vdcdc2_reg>;
+-		/* Derived from VBAT: Baseboard 3.3V / 1.8V */
+-		AVDD-supply = <&vbat>;
+-		DRVDD-supply = <&vbat>;
+-		DVDD-supply = <&vbat>;
++		AVDD-supply = <&baseboard_3v3>;
++		DRVDD-supply = <&baseboard_3v3>;
++		DVDD-supply = <&baseboard_1v8>;
+ 	};
+ 	tca6416: gpio@20 {
+ 		compatible = "ti,tca6416";
+-- 
+2.19.1
