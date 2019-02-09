@@ -1,79 +1,52 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: Re: [PATCH v3 3/3] dt-bindings: iio: chemical: pms7003: add device
- tree support
-Date: Sat, 9 Feb 2019 17:49:12 +0100
-Message-ID: <20190209164908.GA2888@arch>
-References: <20190201215759.14569-1-tduszyns@gmail.com>
- <20190201215759.14569-4-tduszyns@gmail.com>
- <20190202171247.0d0fc122@archlinux>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/5] dt-bindings: iio: adc: move lpc32xx-adc out of staging
+Date: Sat, 9 Feb 2019 17:05:51 +0000
+Message-ID: <20190209170551.38a8e3de@archlinux>
+References: <20190208160944.13281-1-gregory.clement@bootlin.com>
+ <20190208160944.13281-2-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190202171247.0d0fc122@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, johan@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190208160944.13281-2-gregory.clement@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Hartmut Knaack <knaack.h@gmx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 02, 2019 at 05:12:47PM +0000, Jonathan Cameron wrote:
-> On Fri,  1 Feb 2019 22:57:59 +0100
-> Tomasz Duszynski <tduszyns@gmail.com> wrote:
->
-> > Add device tree support for Plantower PMS7003 particulate matter sensor.
-> >
-> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> Hi Tomasz,
->
-> Sorry, I clearly didn't look at this in enough detail on earlier versions.
-> I think the set gpio is rather device specific so should have a vendor
-> prefix.
->
-> I would also like to get an opinion on the generic name from the devicetree
-> maintainers before we start to standardise on it.
->
-> Thanks,
->
-> Jonathan
->
-> > ---
-> >  .../iio/chemical/plantower,pms7003.txt        | 20 +++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > new file mode 100644
-> > index 000000000000..cbad95480e04
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> > @@ -0,0 +1,20 @@
-> > +* Plantower PMS7003 particulate matter sensor
-> > +
-> > +Required properties:
-> > +- compatible: must be "plantower,pms7003"
-> > +- vcc-supply: phandle to the regulator that provides power to the sensor
-> > +
-> > +Optional properties:
-> > +- set-gpios: phandle to the GPIO connected to the SET line
->
-> Hmm. This is a somewhat 'unusual' one so should probably have a vendor prefix.
->
+On Fri,  8 Feb 2019 17:09:40 +0100
+Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 
-Makes sense. I'll respin the series with this extra change you're
-suggesting.
+> The drivers has been moved out since
+> 0097e20e7771 ("staging:iio:adc:lpc32xx Move out of staging.") in v4.10,
+> so let's align the binding documentation.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Oops. My fault.
 
-> > +- reset-gpios: phandle to the GPIO connected to the RESET line
->
-> reset is common and clear in meaning, so vendor prefix probably not appropriate.
-> > +
-> > +Refer to serial/slave-device.txt for generic serial attached device bindings.
-> > +
-> > +Example:
-> > +
-> > +&uart0 {
-> > +	air-pollution-sensor {
-> > +		vcc-supply = <&reg_vcc5v0>;
-> > +		compatible = "plantower,pms7003";
-> > +	};
-> > +};
->
+You forgot the iio list on these so +cc
+
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  .../devicetree/bindings/{staging => }/iio/adc/lpc32xx-adc.txt     | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/{staging => }/iio/adc/lpc32xx-adc.txt (100%)
+> 
+> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/staging/iio/adc/lpc32xx-adc.txt
+> rename to Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
