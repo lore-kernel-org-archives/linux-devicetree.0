@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/2] ARM: dts: meson8b: add the internal clock measurer
-Date: Sat,  9 Feb 2019 01:26:41 +0100
-Message-ID: <20190209002641.9105-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/2] ARM: dts: meson8: add the internal clock measurer
+Date: Sat,  9 Feb 2019 01:26:40 +0100
+Message-ID: <20190209002641.9105-2-martin.blumenstingl@googlemail.com>
 References: <20190209002641.9105-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,30 +21,30 @@ To: linux-amlogic@lists.infradead.org, khilman@baylibre.com
 Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic Meson8b SoC has an internal clock measurer IP which allows
+The Amlogic Meson8 SoC has an internal clock measurer IP which allows
 measuring frequencies of various clock paths.
-Enable it on meson8b.dtsi so we can use it.
+Enable it on meson8.dtsi so we can use it.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 5 +++++
+ arch/arm/boot/dts/meson8.dtsi | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 7cec76158856..e7d5512c0608 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -294,6 +294,11 @@
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index c9bd46120cb5..d83c6e96ace8 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -345,6 +345,11 @@
  		status = "disabled";
  	};
  
 +	clock-measure@8758 {
-+		compatible = "amlogic,meson8b-clk-measure";
++		compatible = "amlogic,meson8-clk-measure";
 +		reg = <0x8758 0x1c>;
 +	};
 +
  	pinctrl_cbus: pinctrl@9880 {
- 		compatible = "amlogic,meson8b-cbus-pinctrl";
+ 		compatible = "amlogic,meson8-cbus-pinctrl";
  		reg = <0x9880 0x10>;
 -- 
 2.20.1
