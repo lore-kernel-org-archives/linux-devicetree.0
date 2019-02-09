@@ -1,12 +1,10 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 08/12] ARM: dts: da850-evm: Correct the sound card name
-Date: Sat,  9 Feb 2019 13:49:48 -0500
-Message-ID: <20190209184952.127009-8-sashal@kernel.org>
-References: <20190209184952.127009-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 1/4] ARM: dts: da850-evm: Correct the sound card name
+Date: Sat,  9 Feb 2019 13:50:04 -0500
+Message-ID: <20190209185007.127176-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190209184952.127009-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
@@ -30,10 +28,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 78492a0bbbab..3c58ec707ea9 100644
+index 6881757b03e8..67369f284b91 100644
 --- a/arch/arm/boot/dts/da850-evm.dts
 +++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -156,7 +156,7 @@
+@@ -147,7 +147,7 @@
  
  	sound {
  		compatible = "simple-audio-card";
