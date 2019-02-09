@@ -1,252 +1,400 @@
-Return-Path: <SRS0=K5hT=QO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40051.outbound.protection.outlook.com ([40.107.4.51]:42153
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726727AbfBGJww (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Feb 2019 04:52:52 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V6 2/4] thermal: imx_sc: add i.MX system controller thermal
- support
-Date: Thu, 7 Feb 2019 09:52:46 +0000
-Message-ID: <1549532838-27025-2-git-send-email-Anson.Huang@nxp.com>
-References: <1549532838-27025-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1549532838-27025-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <jic23@kernel.org>
+Date: Sat, 9 Feb 2019 15:15:25 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 2/6] iio:bmi160: add drdy interrupt support
+Message-ID: <20190209151525.74bd5d7b@archlinux>
+In-Reply-To: <20190202215601.20275-3-martin@martingkelly.com>
+References: <20190202215601.20275-1-martin@martingkelly.com>
+	<20190202215601.20275-3-martin@martingkelly.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Martin Kelly <martin@martingkelly.com>
+Cc: linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-inside, the system controller is in charge of controlling power,
-clock and thermal sensors etc..
+On Sat,  2 Feb 2019 13:55:57 -0800
+Martin Kelly <martin@martingkelly.com> wrote:
 
-This patch adds i.MX system controller thermal driver support,
-Linux kernel has to communicate with system controller via MU
-(message unit) IPC to get each thermal sensor's temperature,
-it supports multiple sensors which are passed from device tree,
-please see the binding doc for details.
+> From: Martin Kelly <martin@martingkelly.com>
+> 
+> Add interrupt support for the data ready signal on the BMI160, which fires
+> an interrupt whenever new accelerometer/gyroscope data is ready to read.
+> 
+> Signed-off-by: Martin Kelly <martin@martingkelly.com>
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-ChangeLog since V5:
-	- instead of abusing common thermal sensor ID, add a property in each ther=
-mal zone to pass
-	  resource id to thermal driver.
----
- drivers/thermal/Kconfig          |  11 +++
- drivers/thermal/Makefile         |   1 +
- drivers/thermal/imx_sc_thermal.c | 161 +++++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 173 insertions(+)
- create mode 100644 drivers/thermal/imx_sc_thermal.c
+Thanks,
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 58bb7d7..fec0ef5 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -223,6 +223,17 @@ config IMX_THERMAL
- 	  cpufreq is used as the cooling device to throttle CPUs when the
- 	  passive trip is crossed.
-=20
-+config IMX_SC_THERMAL
-+	tristate "Temperature sensor driver for NXP i.MX SoCs with System Control=
-ler"
-+	depends on (ARCH_MXC && IMX_SCU) || COMPILE_TEST
-+	depends on OF
-+	help
-+	  Support for Temperature Monitor (TEMPMON) found on NXP i.MX SoCs with
-+	  system controller inside, Linux kernel has to communicate with system
-+	  controller via MU (message unit) IPC to get temperature from thermal
-+	  sensor. It supports one critical trip point and one
-+	  passive trip point for each thermal sensor.
-+
- config MAX77620_THERMAL
- 	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
- 	depends on MFD_MAX77620
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 486d682..4062627 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+=3D db8500_thermal.o
- obj-$(CONFIG_ARMADA_THERMAL)	+=3D armada_thermal.o
- obj-$(CONFIG_TANGO_THERMAL)	+=3D tango_thermal.o
- obj-$(CONFIG_IMX_THERMAL)	+=3D imx_thermal.o
-+obj-$(CONFIG_IMX_SC_THERMAL)	+=3D imx_sc_thermal.o
- obj-$(CONFIG_MAX77620_THERMAL)	+=3D max77620_thermal.o
- obj-$(CONFIG_QORIQ_THERMAL)	+=3D qoriq_thermal.o
- obj-$(CONFIG_DA9062_THERMAL)	+=3D da9062-thermal.o
-diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_ther=
-mal.c
-new file mode 100644
-index 0000000..fc0bb7e
---- /dev/null
-+++ b/drivers/thermal/imx_sc_thermal.c
-@@ -0,0 +1,161 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018-2019 NXP.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/firmware/imx/sci.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/thermal.h>
-+
-+#include "thermal_core.h"
-+
-+#define IMX_SC_MISC_FUNC_GET_TEMP	13
-+#define IMX_SC_C_TEMP			0
-+
-+static struct imx_sc_ipc *thermal_ipc_handle;
-+
-+struct imx_sc_sensor {
-+	struct thermal_zone_device *tzd;
-+	u32 resource_id;
-+};
-+
-+struct imx_sc_thermal_data {
-+	struct imx_sc_sensor *sensor;
-+};
-+
-+struct req_get_temp {
-+	u16 resource_id;
-+	u8 type;
-+} __packed;
-+
-+struct resp_get_temp {
-+	u16 celsius;
-+	u8 tenths;
-+} __packed;
-+
-+struct imx_sc_msg_misc_get_temp {
-+	struct imx_sc_rpc_msg hdr;
-+	union {
-+		struct req_get_temp req;
-+		struct resp_get_temp resp;
-+	} data;
-+} __packed;
-+
-+static int imx_sc_thermal_get_temp(void *data, int *temp)
-+{
-+	struct imx_sc_msg_misc_get_temp msg;
-+	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
-+	struct imx_sc_sensor *sensor =3D data;
-+	int ret;
-+
-+	msg.data.req.resource_id =3D sensor->resource_id;
-+	msg.data.req.type =3D IMX_SC_C_TEMP;
-+
-+	hdr->ver =3D IMX_SC_RPC_VERSION;
-+	hdr->svc =3D IMX_SC_RPC_SVC_MISC;
-+	hdr->func =3D IMX_SC_MISC_FUNC_GET_TEMP;
-+	hdr->size =3D 2;
-+
-+	ret =3D imx_scu_call_rpc(thermal_ipc_handle, &msg, true);
-+	if (ret) {
-+		pr_err("read temp sensor %d failed, ret %d\n",
-+			sensor->resource_id, ret);
-+		return ret;
-+	}
-+
-+	*temp =3D msg.data.resp.celsius * 1000 + msg.data.resp.tenths * 100;
-+
-+	return 0;
-+}
-+
-+static const struct thermal_zone_of_device_ops imx_sc_thermal_ops =3D {
-+	.get_temp =3D imx_sc_thermal_get_temp,
-+};
-+
-+static int imx_sc_thermal_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	struct device_node *sensor_np =3D NULL;
-+	struct imx_sc_thermal_data *data;
-+	struct imx_sc_sensor *sensors;
-+	u32 sensor_num;
-+	int ret, i;
-+
-+	ret =3D imx_scu_get_handle(&thermal_ipc_handle);
-+	if (ret)
-+		return ret;
-+
-+	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	ret =3D of_property_read_u32(np, "tsens-num", &sensor_num);
-+	if (ret || !sensor_num) {
-+		dev_err(&pdev->dev, "failed to get valid temp sensor number!\n");
-+		return -EINVAL;
-+	}
-+
-+	sensors =3D devm_kzalloc(&pdev->dev, sizeof(*data->sensor) * sensor_num,
-+			       GFP_KERNEL);
-+	if (!sensors)
-+		return -ENOMEM;
-+
-+	data->sensor =3D sensors;
-+
-+	np =3D of_find_node_by_name(NULL, "thermal-zones");
-+	if (!np)
-+		return -ENODEV;
-+
-+	for (i =3D 0; i < sensor_num; i++) {
-+		struct imx_sc_sensor *sensor =3D &data->sensor[i];
-+
-+		sensor_np =3D of_get_next_child(np, sensor_np);
-+		ret =3D of_property_read_u32(sensor_np, "imx,sensor-resource-id",
-+			&sensor->resource_id);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"failed to get valid sensor resource id: %d\n",
-+				ret);
-+			break;
-+		}
-+
-+		sensor->tzd =3D devm_thermal_zone_of_sensor_register(&pdev->dev,
-+								   i,
-+								   sensor,
-+								   &imx_sc_thermal_ops);
-+		if (IS_ERR(sensor->tzd)) {
-+			dev_err(&pdev->dev, "failed to register thermal zone\n");
-+			ret =3D PTR_ERR(sensor->tzd);
-+			break;
-+		}
-+	}
-+
-+	of_node_put(np);
-+	of_node_put(sensor_np);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id imx_sc_thermal_table[] =3D {
-+	{ .compatible =3D "fsl,imx8qxp-sc-thermal", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, imx_sc_thermal_table);
-+
-+static struct platform_driver imx_sc_thermal_driver =3D {
-+		.probe =3D imx_sc_thermal_probe,
-+		.driver =3D {
-+			.name =3D "imx-sc-thermal",
-+			.of_match_table =3D imx_sc_thermal_table,
-+		},
-+};
-+module_platform_driver(imx_sc_thermal_driver);
-+
-+MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-+MODULE_DESCRIPTION("Thermal driver for NXP i.MX SoCs with system controlle=
-r");
-+MODULE_LICENSE("GPL v2");
---=20
-2.7.4
+Jonathan
+
+> ---
+>  drivers/iio/imu/bmi160/bmi160.h      |  11 ++
+>  drivers/iio/imu/bmi160/bmi160_core.c | 270 ++++++++++++++++++++++++++++++++++-
+>  2 files changed, 278 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
+> index 2351049d930b..621f5309d735 100644
+> --- a/drivers/iio/imu/bmi160/bmi160.h
+> +++ b/drivers/iio/imu/bmi160/bmi160.h
+> @@ -2,9 +2,20 @@
+>  #ifndef BMI160_H_
+>  #define BMI160_H_
+>  
+> +#include <linux/iio/iio.h>
+> +
+> +struct bmi160_data {
+> +	struct regmap *regmap;
+> +	struct iio_trigger *trig;
+> +};
+> +
+>  extern const struct regmap_config bmi160_regmap_config;
+>  
+>  int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+>  		      const char *name, bool use_spi);
+>  
+> +int bmi160_enable_irq(struct regmap *regmap, bool enable);
+> +
+> +int bmi160_probe_trigger(struct iio_dev *indio_dev, int irq, u32 irq_type);
+> +
+>  #endif  /* BMI160_H_ */
+> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
+> index ce61026d84c3..007f7c532ac4 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_core.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
+> @@ -3,21 +3,25 @@
+>   * BMI160 - Bosch IMU (accel, gyro plus external magnetometer)
+>   *
+>   * Copyright (c) 2016, Intel Corporation.
+> + * Copyright (c) 2019, Martin Kelly.
+>   *
+>   * IIO core driver for BMI160, with support for I2C/SPI busses
+>   *
+> - * TODO: magnetometer, interrupts, hardware FIFO
+> + * TODO: magnetometer, hardware FIFO
+>   */
+>  #include <linux/module.h>
+>  #include <linux/regmap.h>
+>  #include <linux/acpi.h>
+>  #include <linux/delay.h>
+> +#include <linux/irq.h>
+> +#include <linux/of_irq.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/iio/buffer.h>
+>  #include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+>  
+>  #include "bmi160.h"
+>  
+> @@ -61,8 +65,32 @@
+>  #define BMI160_CMD_GYRO_PM_FAST_STARTUP	0x17
+>  #define BMI160_CMD_SOFTRESET		0xB6
+>  
+> +#define BMI160_REG_INT_EN		0x51
+> +#define BMI160_DRDY_INT_EN		BIT(4)
+> +
+> +#define BMI160_REG_INT_OUT_CTRL		0x53
+> +#define BMI160_INT_OUT_CTRL_MASK	0x0f
+> +#define BMI160_INT1_OUT_CTRL_SHIFT	0
+> +#define BMI160_INT2_OUT_CTRL_SHIFT	4
+> +#define BMI160_EDGE_TRIGGERED		BIT(0)
+> +#define BMI160_ACTIVE_HIGH		BIT(1)
+> +#define BMI160_OPEN_DRAIN		BIT(2)
+> +#define BMI160_OUTPUT_EN		BIT(3)
+> +
+> +#define BMI160_REG_INT_LATCH		0x54
+> +#define BMI160_INT1_LATCH_MASK		BIT(4)
+> +#define BMI160_INT2_LATCH_MASK		BIT(5)
+> +
+> +/* INT1 and INT2 are in the opposite order as in INT_OUT_CTRL! */
+> +#define BMI160_REG_INT_MAP		0x56
+> +#define BMI160_INT1_MAP_DRDY_EN		0x80
+> +#define BMI160_INT2_MAP_DRDY_EN		0x08
+> +
+>  #define BMI160_REG_DUMMY		0x7F
+>  
+> +#define BMI160_NORMAL_WRITE_USLEEP	2
+> +#define BMI160_SUSPENDED_WRITE_USLEEP	450
+> +
+>  #define BMI160_ACCEL_PMU_MIN_USLEEP	3800
+>  #define BMI160_GYRO_PMU_MIN_USLEEP	80000
+>  #define BMI160_SOFTRESET_USLEEP		1000
+> @@ -105,8 +133,9 @@ enum bmi160_sensor_type {
+>  	BMI160_NUM_SENSORS /* must be last */
+>  };
+>  
+> -struct bmi160_data {
+> -	struct regmap *regmap;
+> +enum bmi160_int_pin {
+> +	BMI160_PIN_INT1,
+> +	BMI160_PIN_INT2
+>  };
+>  
+>  const struct regmap_config bmi160_regmap_config = {
+> @@ -495,6 +524,186 @@ static const char *bmi160_match_acpi_device(struct device *dev)
+>  	return dev_name(dev);
+>  }
+>  
+> +static int bmi160_write_conf_reg(struct regmap *regmap, unsigned int reg,
+> +				 unsigned int mask, unsigned int bits,
+> +				 unsigned int write_usleep)
+> +{
+> +	int ret;
+> +	unsigned int val;
+> +
+> +	ret = regmap_read(regmap, reg, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = (val & ~mask) | bits;
+> +
+> +	ret = regmap_write(regmap, reg, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * We need to wait after writing before we can write again. See the
+> +	 * datasheet, page 93.
+> +	 */
+> +	usleep_range(write_usleep, write_usleep + 1000);
+> +
+> +	return 0;
+> +}
+> +
+> +static int bmi160_config_pin(struct regmap *regmap, enum bmi160_int_pin pin,
+> +			     bool open_drain, u8 irq_mask,
+> +			     unsigned long write_usleep)
+> +{
+> +	int ret;
+> +	struct device *dev = regmap_get_device(regmap);
+> +	u8 int_out_ctrl_shift;
+> +	u8 int_latch_mask;
+> +	u8 int_map_mask;
+> +	u8 int_out_ctrl_mask;
+> +	u8 int_out_ctrl_bits;
+> +	const char *pin_name;
+> +
+> +	switch (pin) {
+> +	case BMI160_PIN_INT1:
+> +		int_out_ctrl_shift = BMI160_INT1_OUT_CTRL_SHIFT;
+> +		int_latch_mask = BMI160_INT1_LATCH_MASK;
+> +		int_map_mask = BMI160_INT1_MAP_DRDY_EN;
+> +		break;
+> +	case BMI160_PIN_INT2:
+> +		int_out_ctrl_shift = BMI160_INT2_OUT_CTRL_SHIFT;
+> +		int_latch_mask = BMI160_INT2_LATCH_MASK;
+> +		int_map_mask = BMI160_INT2_MAP_DRDY_EN;
+> +		break;
+> +	}
+> +	int_out_ctrl_mask = BMI160_INT_OUT_CTRL_MASK << int_out_ctrl_shift;
+> +
+> +	/*
+> +	 * Enable the requested pin with the right settings:
+> +	 * - Push-pull/open-drain
+> +	 * - Active low/high
+> +	 * - Edge/level triggered
+> +	 */
+> +	int_out_ctrl_bits = BMI160_OUTPUT_EN;
+> +	if (open_drain)
+> +		/* Default is push-pull. */
+> +		int_out_ctrl_bits |= BMI160_OPEN_DRAIN;
+> +	int_out_ctrl_bits |= irq_mask;
+> +	int_out_ctrl_bits <<= int_out_ctrl_shift;
+> +
+> +	ret = bmi160_write_conf_reg(regmap, BMI160_REG_INT_OUT_CTRL,
+> +				    int_out_ctrl_mask, int_out_ctrl_bits,
+> +				    write_usleep);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set the pin to input mode with no latching. */
+> +	ret = bmi160_write_conf_reg(regmap, BMI160_REG_INT_LATCH,
+> +				    int_latch_mask, int_latch_mask,
+> +				    write_usleep);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Map interrupts to the requested pin. */
+> +	ret = bmi160_write_conf_reg(regmap, BMI160_REG_INT_MAP,
+> +				    int_map_mask, int_map_mask,
+> +				    write_usleep);
+> +	if (ret) {
+> +		switch (pin) {
+> +		case BMI160_PIN_INT1:
+> +			pin_name = "INT1";
+> +			break;
+> +		case BMI160_PIN_INT2:
+> +			pin_name = "INT2";
+> +			break;
+> +		}
+> +		dev_err(dev, "Failed to configure %s IRQ pin", pin_name);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +int bmi160_enable_irq(struct regmap *regmap, bool enable)
+> +{
+> +	unsigned int enable_bit = 0;
+> +
+> +	if (enable)
+> +		enable_bit = BMI160_DRDY_INT_EN;
+> +
+> +	return bmi160_write_conf_reg(regmap, BMI160_REG_INT_EN,
+> +				     BMI160_DRDY_INT_EN, enable_bit,
+> +				     BMI160_NORMAL_WRITE_USLEEP);
+> +}
+> +EXPORT_SYMBOL(bmi160_enable_irq);
+> +
+> +static int bmi160_get_irq(struct device_node *of_node, enum bmi160_int_pin *pin)
+> +{
+> +	int irq;
+> +
+> +	/* Use INT1 if possible, otherwise fall back to INT2. */
+> +	irq = of_irq_get_byname(of_node, "INT1");
+> +	if (irq > 0) {
+> +		*pin = BMI160_PIN_INT1;
+> +		return irq;
+> +	}
+> +
+> +	irq = of_irq_get_byname(of_node, "INT2");
+> +	if (irq > 0)
+> +		*pin = BMI160_PIN_INT2;
+> +
+> +	return irq;
+> +}
+> +
+> +static int bmi160_config_device_irq(struct iio_dev *indio_dev, int irq_type,
+> +				    enum bmi160_int_pin pin)
+> +{
+> +	bool open_drain;
+> +	u8 irq_mask;
+> +	struct bmi160_data *data = iio_priv(indio_dev);
+> +	struct device *dev = regmap_get_device(data->regmap);
+> +
+> +	/* Level-triggered, active-low is the default if we set all zeroes. */
+> +	if (irq_type == IRQF_TRIGGER_RISING)
+> +		irq_mask = BMI160_ACTIVE_HIGH | BMI160_EDGE_TRIGGERED;
+> +	else if (irq_type == IRQF_TRIGGER_FALLING)
+> +		irq_mask = BMI160_EDGE_TRIGGERED;
+> +	else if (irq_type == IRQF_TRIGGER_HIGH)
+> +		irq_mask = BMI160_ACTIVE_HIGH;
+> +	else if (irq_type == IRQF_TRIGGER_LOW)
+> +		irq_mask = 0;
+> +	else {
+> +		dev_err(&indio_dev->dev,
+> +			"Invalid interrupt type 0x%x specified\n", irq_type);
+> +		return -EINVAL;
+> +	}
+> +
+> +	open_drain = of_property_read_bool(dev->of_node, "drive-open-drain");
+> +
+> +	return bmi160_config_pin(data->regmap, pin, open_drain, irq_mask,
+> +				 BMI160_NORMAL_WRITE_USLEEP);
+> +}
+> +
+> +static int bmi160_setup_irq(struct iio_dev *indio_dev, int irq,
+> +			    enum bmi160_int_pin pin)
+> +{
+> +	struct irq_data *desc;
+> +	u32 irq_type;
+> +	int ret;
+> +
+> +	desc = irq_get_irq_data(irq);
+> +	if (!desc) {
+> +		dev_err(&indio_dev->dev, "Could not find IRQ %d\n", irq);
+> +		return -EINVAL;
+> +	}
+> +
+> +	irq_type = irqd_get_trigger_type(desc);
+> +
+> +	ret = bmi160_config_device_irq(indio_dev, irq_type, pin);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return bmi160_probe_trigger(indio_dev, irq, irq_type);
+> +}
+> +
+>  static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
+>  {
+>  	int ret;
+> @@ -539,6 +748,49 @@ static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
+>  	return 0;
+>  }
+>  
+> +static int bmi160_data_rdy_trigger_set_state(struct iio_trigger *trig,
+> +					     bool enable)
+> +{
+> +	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
+> +	struct bmi160_data *data = iio_priv(indio_dev);
+> +
+> +	return bmi160_enable_irq(data->regmap, enable);
+> +}
+> +
+> +static const struct iio_trigger_ops bmi160_trigger_ops = {
+> +	.set_trigger_state = &bmi160_data_rdy_trigger_set_state,
+> +};
+> +
+> +int bmi160_probe_trigger(struct iio_dev *indio_dev, int irq, u32 irq_type)
+> +{
+> +	struct bmi160_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	data->trig = devm_iio_trigger_alloc(&indio_dev->dev, "%s-dev%d",
+> +					    indio_dev->name, indio_dev->id);
+> +
+> +	if (data->trig == NULL)
+> +		return -ENOMEM;
+> +
+> +	ret = devm_request_irq(&indio_dev->dev, irq,
+> +			       &iio_trigger_generic_data_rdy_poll,
+> +			       irq_type, "bmi160", data->trig);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	data->trig->dev.parent = regmap_get_device(data->regmap);
+> +	data->trig->ops = &bmi160_trigger_ops;
+> +	iio_trigger_set_drvdata(data->trig, indio_dev);
+> +
+> +	ret = devm_iio_trigger_register(&indio_dev->dev, data->trig);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->trig = iio_trigger_get(data->trig);
+> +
+> +	return 0;
+> +}
+> +
+>  static void bmi160_chip_uninit(void *data)
+>  {
+>  	struct bmi160_data *bmi_data = data;
+> @@ -552,6 +804,8 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+>  {
+>  	struct iio_dev *indio_dev;
+>  	struct bmi160_data *data;
+> +	int irq;
+> +	enum bmi160_int_pin int_pin;
+>  	int ret;
+>  
+>  	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> @@ -585,6 +839,16 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	irq = bmi160_get_irq(dev->of_node, &int_pin);
+> +	if (irq > 0) {
+> +		ret = bmi160_setup_irq(indio_dev, irq, int_pin);
+> +		if (ret)
+> +			dev_err(&indio_dev->dev, "Failed to setup IRQ %d\n",
+> +				irq);
+> +	} else {
+> +		dev_info(&indio_dev->dev, "Not setting up IRQ trigger\n");
+> +	}
+> +
+>  	ret = devm_iio_device_register(dev, indio_dev);
+>  	if (ret < 0)
+>  		return ret;
