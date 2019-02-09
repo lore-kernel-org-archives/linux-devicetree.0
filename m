@@ -1,61 +1,76 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 1/9] dt-bindings: mtd: ingenic: Add compatible strings for JZ4740 and JZ4725B
-Date: Sat,  9 Feb 2019 16:22:57 -0300
-Message-ID: <20190209192305.4434-1-paul@crapouillou.net>
+Subject: [PATCH v4 2/9] dt-bindings: mtd: ingenic: Change 'BCH' to 'ECC' in documentation
+Date: Sat,  9 Feb 2019 16:22:58 -0300
+Message-ID: <20190209192305.4434-2-paul@crapouillou.net>
+References: <20190209192305.4434-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190209192305.4434-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Miquel Raynal <miquel.raynal@bootlin.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
 Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible strings to probe the jz4780-nand and jz4780-bch drivers
-from devicetree on the JZ4725B and JZ4740 SoCs from Ingenic.
+The JZ4740 ECC hardware is not BCH but Reed-Solomon, so it makes more
+sense to use the more generic ECC term.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
 Changes:
 
-v2: - Change 'ingenic,jz4725b-nand' compatible string to
-      'ingenic,jz4740-nand' to reflect driver change
-    - Add 'ingenic,jz4740-bch' compatible string
-    - Document 'ingenic,oob-layout' property
-
-v3: - Removed 'ingenic,oob-layout' property
-    - Update compatible strings to what the driver supports
+v3: New patch
 
 v4: No change
 
- Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt    | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-index 29ea5853ca91..a5b940f18bf6 100644
+index a5b940f18bf6..5a45cc54f46d 100644
 --- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
 +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-@@ -6,7 +6,10 @@ memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
- be children of the NEMC node.
+@@ -1,4 +1,4 @@
+-* Ingenic JZ4780 NAND/BCH
++* Ingenic JZ4780 NAND/ECC
  
- Required NAND controller device properties:
--- compatible: Should be set to "ingenic,jz4780-nand".
-+- compatible: Should be one of:
-+  * ingenic,jz4740-nand
-+  * ingenic,jz4725b-nand
-+  * ingenic,jz4780-nand
- - reg: For each bank with a NAND chip attached, should specify a bank number,
+ This file documents the device tree bindings for NAND flash devices on the
+ JZ4780. NAND devices are connected to the NEMC controller (described in
+@@ -14,10 +14,10 @@ Required NAND controller device properties:
    an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
  
-@@ -72,7 +75,10 @@ NAND devices. The following is a description of the device properties for a
- BCH controller.
+ Optional NAND controller device properties:
+-- ingenic,bch-controller: To make use of the hardware BCH controller, this
+-  property must contain a phandle for the BCH controller node. The required
++- ingenic,bch-controller: To make use of the hardware ECC controller, this
++  property must contain a phandle for the ECC controller node. The required
+   properties for this node are described below. If this is not specified,
+-  software BCH will be used instead.
++  software ECC will be used instead.
  
- Required BCH properties:
--- compatible: Should be set to "ingenic,jz4780-bch".
-+- compatible: Should be one of:
-+  * ingenic,jz4740-ecc
-+  * ingenic,jz4725b-bch
-+  * ingenic,jz4780-bch
- - reg: Should specify the BCH controller registers location and length.
- - clocks: Clock for the BCH controller.
+ Optional children nodes:
+ - Individual NAND chips are children of the NAND controller node.
+@@ -70,17 +70,17 @@ nemc: nemc@13410000 {
+ 	};
+ };
+ 
+-The BCH controller is a separate SoC component used for error correction on
++The ECC controller is a separate SoC component used for error correction on
+ NAND devices. The following is a description of the device properties for a
+-BCH controller.
++ECC controller.
+ 
+-Required BCH properties:
++Required ECC properties:
+ - compatible: Should be one of:
+   * ingenic,jz4740-ecc
+   * ingenic,jz4725b-bch
+   * ingenic,jz4780-bch
+-- reg: Should specify the BCH controller registers location and length.
+-- clocks: Clock for the BCH controller.
++- reg: Should specify the ECC controller registers location and length.
++- clocks: Clock for the ECC controller.
+ 
+ Example:
  
 -- 
 2.11.0
