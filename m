@@ -1,138 +1,79 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 4/4] iio: counter: stm32-lptimer: Add power management
- support
-Date: Sat, 9 Feb 2019 16:21:33 +0000
-Message-ID: <20190209162133.65e6fd93@archlinux>
-References: <1549370429-19116-1-git-send-email-fabrice.gasnier@st.com>
-        <1549370429-19116-5-git-send-email-fabrice.gasnier@st.com>
+From: Tomasz Duszynski <tduszyns@gmail.com>
+Subject: Re: [PATCH v3 3/3] dt-bindings: iio: chemical: pms7003: add device
+ tree support
+Date: Sat, 9 Feb 2019 17:49:12 +0100
+Message-ID: <20190209164908.GA2888@arch>
+References: <20190201215759.14569-1-tduszyns@gmail.com>
+ <20190201215759.14569-4-tduszyns@gmail.com>
+ <20190202171247.0d0fc122@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549370429-19116-5-git-send-email-fabrice.gasnier@st.com>
+Content-Disposition: inline
+In-Reply-To: <20190202171247.0d0fc122@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vilhelm.gray@gmail.com, linux-stm32@st-md-mailman.stormreply.com
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, johan@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 5 Feb 2019 13:40:29 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+On Sat, Feb 02, 2019 at 05:12:47PM +0000, Jonathan Cameron wrote:
+> On Fri,  1 Feb 2019 22:57:59 +0100
+> Tomasz Duszynski <tduszyns@gmail.com> wrote:
+>
+> > Add device tree support for Plantower PMS7003 particulate matter sensor.
+> >
+> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+> Hi Tomasz,
+>
+> Sorry, I clearly didn't look at this in enough detail on earlier versions.
+> I think the set gpio is rather device specific so should have a vendor
+> prefix.
+>
+> I would also like to get an opinion on the generic name from the devicetree
+> maintainers before we start to standardise on it.
+>
+> Thanks,
+>
+> Jonathan
+>
+> > ---
+> >  .../iio/chemical/plantower,pms7003.txt        | 20 +++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+> > new file mode 100644
+> > index 000000000000..cbad95480e04
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+> > @@ -0,0 +1,20 @@
+> > +* Plantower PMS7003 particulate matter sensor
+> > +
+> > +Required properties:
+> > +- compatible: must be "plantower,pms7003"
+> > +- vcc-supply: phandle to the regulator that provides power to the sensor
+> > +
+> > +Optional properties:
+> > +- set-gpios: phandle to the GPIO connected to the SET line
+>
+> Hmm. This is a somewhat 'unusual' one so should probably have a vendor prefix.
+>
 
-> Add suspend/resume PM sleep ops. When going to low power, disable
-> active counter. Only active counter should be resumed: don't touch
-> disabled counter, as it may be used by other LPTimer MFD child driver.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-I think this looks fine.  I'm not totally sure if patches 3,4 are
-separable from 1,2 though so please let me know whether I should take
-these now, or let all 4 go in together via some path?
+Makes sense. I'll respin the series with this extra change you're
+suggesting.
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/counter/stm32-lptimer-cnt.c | 55 +++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/drivers/iio/counter/stm32-lptimer-cnt.c b/drivers/iio/counter/stm32-lptimer-cnt.c
-> index 42fb8ba..2a49cce 100644
-> --- a/drivers/iio/counter/stm32-lptimer-cnt.c
-> +++ b/drivers/iio/counter/stm32-lptimer-cnt.c
-> @@ -14,6 +14,7 @@
->  #include <linux/iio/iio.h>
->  #include <linux/mfd/stm32-lptimer.h>
->  #include <linux/module.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  
->  struct stm32_lptim_cnt {
-> @@ -23,6 +24,7 @@ struct stm32_lptim_cnt {
->  	u32 preset;
->  	u32 polarity;
->  	u32 quadrature_mode;
-> +	bool enabled;
->  };
->  
->  static int stm32_lptim_is_enabled(struct stm32_lptim_cnt *priv)
-> @@ -50,6 +52,7 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
->  
->  	if (!enable) {
->  		clk_disable(priv->clk);
-> +		priv->enabled = false;
->  		return 0;
->  	}
->  
-> @@ -79,6 +82,7 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
->  		regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
->  		return ret;
->  	}
-> +	priv->enabled = true;
->  
->  	/* Start LP timer in continuous mode */
->  	return regmap_update_bits(priv->regmap, STM32_LPTIM_CR,
-> @@ -361,6 +365,56 @@ static int stm32_lptim_cnt_probe(struct platform_device *pdev)
->  	return devm_iio_device_register(&pdev->dev, indio_dev);
->  }
->  
-> +#ifdef CONFIG_PM_SLEEP
-> +static int stm32_lptim_cnt_suspend(struct device *dev)
-> +{
-> +	struct stm32_lptim_cnt *priv = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	/* Only take care of enabled counter: don't disturb other MFD child */
-> +	if (priv->enabled) {
-> +		ret = stm32_lptim_setup(priv, 0);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = stm32_lptim_set_enable_state(priv, 0);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Force enable state for later resume */
-> +		priv->enabled = true;
-> +	}
-> +
-> +	return pinctrl_pm_select_sleep_state(dev);
-> +}
-> +
-> +static int stm32_lptim_cnt_resume(struct device *dev)
-> +{
-> +	struct stm32_lptim_cnt *priv = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = pinctrl_pm_select_default_state(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (priv->enabled) {
-> +		priv->enabled = false;
-> +		ret = stm32_lptim_setup(priv, 1);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = stm32_lptim_set_enable_state(priv, 1);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(stm32_lptim_cnt_pm_ops, stm32_lptim_cnt_suspend,
-> +			 stm32_lptim_cnt_resume);
-> +
->  static const struct of_device_id stm32_lptim_cnt_of_match[] = {
->  	{ .compatible = "st,stm32-lptimer-counter", },
->  	{},
-> @@ -372,6 +426,7 @@ static int stm32_lptim_cnt_probe(struct platform_device *pdev)
->  	.driver = {
->  		.name = "stm32-lptimer-counter",
->  		.of_match_table = stm32_lptim_cnt_of_match,
-> +		.pm = &stm32_lptim_cnt_pm_ops,
->  	},
->  };
->  module_platform_driver(stm32_lptim_cnt_driver);
+> > +- reset-gpios: phandle to the GPIO connected to the RESET line
+>
+> reset is common and clear in meaning, so vendor prefix probably not appropriate.
+> > +
+> > +Refer to serial/slave-device.txt for generic serial attached device bindings.
+> > +
+> > +Example:
+> > +
+> > +&uart0 {
+> > +	air-pollution-sensor {
+> > +		vcc-supply = <&reg_vcc5v0>;
+> > +		compatible = "plantower,pms7003";
+> > +	};
+> > +};
+>
