@@ -1,11 +1,13 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/2] ARM: dts: add the clock measurer on Meson8/Meson8b
-Date: Sat,  9 Feb 2019 01:26:39 +0100
-Message-ID: <20190209002641.9105-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/2] ARM: dts: meson8b: add the internal clock measurer
+Date: Sat,  9 Feb 2019 01:26:41 +0100
+Message-ID: <20190209002641.9105-3-martin.blumenstingl@googlemail.com>
+References: <20190209002641.9105-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190209002641.9105-1-martin.blumenstingl@googlemail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,21 +21,30 @@ To: linux-amlogic@lists.infradead.org, khilman@baylibre.com
 Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The 32-bit Amlogic Meson SoCs also have a "clock measurer", just like
-the newer 64-bit ones.
+The Amlogic Meson8b SoC has an internal clock measurer IP which allows
+measuring frequencies of various clock paths.
+Enable it on meson8b.dtsi so we can use it.
 
-Add the node of the clock measurer to meson8.dtsi and meson8b.dtsi
-so we can see the measured clock frequencies in:
-/sys/kernel/debug/meson-clk-msr/
-
-
-Martin Blumenstingl (2):
-  ARM: dts: meson8: add the internal clock measurer
-  ARM: dts: meson8b: add the internal clock measurer
-
- arch/arm/boot/dts/meson8.dtsi  | 5 +++++
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
  arch/arm/boot/dts/meson8b.dtsi | 5 +++++
- 2 files changed, 10 insertions(+)
+ 1 file changed, 5 insertions(+)
 
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 7cec76158856..e7d5512c0608 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -294,6 +294,11 @@
+ 		status = "disabled";
+ 	};
+ 
++	clock-measure@8758 {
++		compatible = "amlogic,meson8b-clk-measure";
++		reg = <0x8758 0x1c>;
++	};
++
+ 	pinctrl_cbus: pinctrl@9880 {
+ 		compatible = "amlogic,meson8b-cbus-pinctrl";
+ 		reg = <0x9880 0x10>;
 -- 
 2.20.1
