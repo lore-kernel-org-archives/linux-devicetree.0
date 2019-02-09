@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 19/28] ARM: dts: da850-evm: Correct the audio codec regulators
-Date: Sat,  9 Feb 2019 13:48:27 -0500
-Message-ID: <20190209184840.126418-19-sashal@kernel.org>
-References: <20190209184840.126418-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 32/42] ARM: dts: da850-lcdk: Correct the sound card name
+Date: Sat,  9 Feb 2019 13:47:24 -0500
+Message-ID: <20190209184734.125935-32-sashal@kernel.org>
+References: <20190209184734.125935-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190209184840.126418-1-sashal@kernel.org>
+In-Reply-To: <20190209184734.125935-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
@@ -14,70 +14,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 706edaa88835e3d8de8920584ad5da76dd3d6666 ]
+[ Upstream commit c25748acc5c20786ecb7518bfeae8fcef93472d6 ]
 
-Add the board level fixed regulators for 3.3V and 1.8V which is used to
-power - among other things - the tlv320aic3106 codec.
+To avoid  the following error:
+asoc-simple-card sound: ASoC: Failed to create card debugfs directory
 
-Apart from removing the following warning during boot:
-tlv320aic3x-codec 0-0018: Too high supply voltage(s) AVDD: 5000000, DVDD: 5000000
-
-With the correct voltages the driver can select correct OCMV value to
-reduce pop noise.
+Which is because the card name contains '/' character, which can not be
+used in file or directory names.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/da850-evm.dts | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/da850-lcdk.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index f9b757905845..e0ac195950b1 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -94,6 +94,28 @@
- 		regulator-boot-on;
- 	};
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index c196e37606c4..3a2fa6e035a3 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -71,7 +71,7 @@
  
-+	baseboard_3v3: fixedregulator-3v3 {
-+		/* TPS73701DCQ */
-+		compatible = "regulator-fixed";
-+		regulator-name = "baseboard_3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vbat>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	baseboard_1v8: fixedregulator-1v8 {
-+		/* TPS73701DCQ */
-+		compatible = "regulator-fixed";
-+		regulator-name = "baseboard_1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vbat>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	backlight_lcd: backlight-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "lcd_backlight_pwr";
-@@ -210,10 +232,9 @@
- 
- 		/* Regulators */
- 		IOVDD-supply = <&vdcdc2_reg>;
--		/* Derived from VBAT: Baseboard 3.3V / 1.8V */
--		AVDD-supply = <&vbat>;
--		DRVDD-supply = <&vbat>;
--		DVDD-supply = <&vbat>;
-+		AVDD-supply = <&baseboard_3v3>;
-+		DRVDD-supply = <&baseboard_3v3>;
-+		DVDD-supply = <&baseboard_1v8>;
- 	};
- 	tca6416: gpio@20 {
- 		compatible = "ti,tca6416";
+ 	sound {
+ 		compatible = "simple-audio-card";
+-		simple-audio-card,name = "DA850/OMAP-L138 LCDK";
++		simple-audio-card,name = "DA850-OMAPL138 LCDK";
+ 		simple-audio-card,widgets =
+ 			"Line", "Line In",
+ 			"Line", "Line Out";
 -- 
 2.19.1
