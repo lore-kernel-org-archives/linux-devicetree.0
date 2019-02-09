@@ -1,14 +1,22 @@
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv2 1/1] ARM: dts: meson8b: odroidc1: fix USB power supplies for
- phy
-Date: Sat,  9 Feb 2019 17:54:28 +0000
-Message-ID: <20190209175428.1199-2-linux.amoon@gmail.com>
-References: <20190209175428.1199-1-linux.amoon@gmail.com>
+Subject: Re: [RFCv1 2/3] ARM: dts: meson8b: odroidc1: fix USB power supplies
+ for phy
+Date: Sat, 9 Feb 2019 23:25:47 +0530
+Message-ID: <CANAwSgSQRwF+_VR1jJFg=Q9wSdanEH0GmnFaeegt=hRMXiHX3Q@mail.gmail.com>
+References: <20190123151209.2080-1-linux.amoon@gmail.com>
+ <20190123151209.2080-3-linux.amoon@gmail.com>
+ <CAFBinCAdf0rtt-7tON_LRNH_cpvGJXX3LX8g-i4xsC3wahZSVA@mail.gmail.com>
+ <CANAwSgQ4=Vn6RM4Kpd20UWkQNW81=mfg-qB0G73dsRem3qwjcA@mail.gmail.com>
+ <CAFBinCB=3kmuFb_xXzhW+m8dTasVrCHQp2wti+=5UjrAHk5TTg@mail.gmail.com>
+ <CANAwSgQnMkXECkCVjFKwNKB+2JoiPtVPQbateppmtgfPYCutZg@mail.gmail.com>
+ <CAFBinCCFoBkbf-HvEoMk7mTYTBV27nJ9TF1X-DrLuHR9qDVDSA@mail.gmail.com>
+ <CANAwSgRtBWzKiFLUV6twxv+TnvjLdHXv=U8+ppQ7=9uBBLEH+Q@mail.gmail.com>
+ <CAFBinCD_Pddu+pBEKwMS6467J5nxKF4T5-LxVo06nFvyUSLpew@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190209175428.1199-1-linux.amoon@gmail.com>
+In-Reply-To: <CAFBinCD_Pddu+pBEKwMS6467J5nxKF4T5-LxVo06nFvyUSLpew@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,81 +26,135 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
->From the shematics GPIOAO.BIT5 gpio input for the PWREN signal of the
-USB_HOST controller (usb1), add missing phy-supply link for USB1 phy
-controller this changes fixed the power issue on usb ports.
-Changes help fix usb reset warning.
+Hi Martin,
 
-[   59.693078] usb 1-1.3: reset high-speed USB device number 6 using dwc2
-[   62.703039] usb 1-1.3: reset high-speed USB device number 6 using dwc2
-[   65.693073] usb 1-1.3: reset high-speed USB device number 6 using dwc2
-[   68.703030] usb 1-1.3: reset high-speed USB device number 6 using dwc2
-[   72.080440] usb 1-1.3: USB disconnect, device number 6
+On Sat, 9 Feb 2019 at 06:06, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Anand,
+>
+> On Thu, Feb 7, 2019 at 7:33 AM Anand Moon <linux.amoon@gmail.com> wrote:
+> >
+> > Hi Martin,
+> >
+> > On Wed, 6 Feb 2019 at 16:58, Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
+> > >
+> > > Hi Anand,
+> > >
+> > > On Tue, Feb 5, 2019 at 8:53 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> > > [...]
+> > > > > my interpretationfor the Amlogic SoCs is:
+> > > > > - vusb_a and vusb_d are generated internally, not sure if there's an
+> > > > > external fixed regulator
+> > > > > - there is no phy-supply (the PHY itself is powered by clock-gating
+> > > > > using the CLKID_USB clock)
+> > > > > - usb0 VBUS is controlled by GPIOAO_5
+> > > > >
+> > > >
+> > > > But as per the device tree binding
+> > > >
+> > > > [0] https://elixir.bootlin.com/linux/v5.0-rc5/source/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
+> > > > [1] https://elixir.bootlin.com/linux/v5.0-rc5/source/Documentation/devicetree/bindings/phy/phy-bindings.txt
+> > > >
+> > > > its uses phy-supply to enable power to usb phy which seem to be correct option.
+> > > phy-bindings.txt states that "phy-supply" is a "Phandle to a regulator
+> > > that provides power to the PHY".
+> > > I have written the example in meson8b-usb2-phy.txt and I think it's
+> > > wrong (back when I wrote it I didn't know about the "vbus-supply"
+> > > property on the controller and I didn't know about the VBUS
+> > > constraints).
+> > >
+> > > I believe that the phy-supply property is intended for PHYs which need
+> > > an external power supply (for example because they are not embedded
+> > > into a SoC or if the SoC has separate voltage inputs for the PHY).
+> > > I'm not aware of any PHY supply voltage on the Amlogic SoCs (I believe
+> > > this is done internally within the SoC). instead they use clock gating
+> > > to power down the PHY.
+> > >
+> > > as far as I understand the VBUS signal it depends on the USB mode:
+> > > - host provides VBUS
+> > > - peripheral devices are powered using this voltage
+> > > - with OTG VBUS needs to be turned on or off depending on the current
+> > > mode (host or peripheral)
+> > > with the "phy-supply" property there's no way to manage the regulator
+> > > depending on the USB mode (host or peripheral), it will always be
+> > > "on".
+> > >
+> > >
+> > > Regards
+> > > Martin
+> >
+> > Thanks for the clarification.
+> > But this dose not work setting the usb1_phy to use vbus-supply.
+> >
+> >  &usb1_phy {
+> >         status = "okay";
+> > +       vbus-supply = <&usb_vbus>;
+> >  };
+> >
+> > I am attaching a small patch for testing.
+> > [0] usbvbus.patch
+> indeed, this is not working for me either.
+> I checked my old notes at [0] -> it works for me when setting
+> "vbus-supply" at the usb controller (not the PHY).
+>
+> with the following snippet:
+>   &usb1 {
+>     status = "okay";
+>     vbus-supply = <&usb_vbus>;
+>   };
+> I get:
+> # cat /sys/kernel/debug/regulator/regulator_summary | grep -i usb
+>    c90c0000.usb                  1                                 0mA
+>     0mV     0mV
+>    c90c0000.usb                  1                                 0mA
+>     0mV     0mV
+>    USB_VBUS                      1    1      0 unknown  5000mV     0mA
+>  5000mV  5000mV
+>       c90c0000.usb               1                                 0mA
+>     0mV     0mV
+>
+> can you please try this on your board as well?
+>
+> > Here is the summary of the above patch.
+> >
+> > 1. hot-plugins of usb device is not working.
+> > 2. only cold/warm boot let the device come up.
+> > 3. not power is supplied to the usb ports.
+> > 4. no power module is registered with the regulator summary.
+> with "vbus-supply" moved to the usb1 node I get the following result:
+> 1. same: hot-plugins of usb device is not working
+> 2. different: a reboot doesn't make devices come up
+> 3. same: no power is supplied to the USB ports (in my case this causes
+> #2, but it's not clear why there's no power...)
+> 4. different: the regulator is registered with the USB controller in debugfs
+>
+Here the the logs after I applied the above changes
 
-Fixes: 2eb79a4d15ff ("ARM: dts: meson: enabling the USB Host controller on Odroid-C1/C1+ board")
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- regulator                      use open bypass  opmode voltage current     min     max
----------------------------------------------------------------------------------------
- regulator-dummy                  4    3      0 unknown     0mV     0mA     0mV     0mV
-    c90c0000.usb                  1                                 0mA     0mV     0mV
-    c90c0000.usb                  1                                 0mA     0mV     0mV
-    VCCK                          1    1      0 unknown   860mV     0mA   860mV  1140mV
-       cpu0                       0                                 0mA   860mV   860mV
- P5V0                             3    4      0 unknown  5000mV     0mA  5000mV  5000mV
-    VCC1V8                        1    1      0 unknown  1800mV     0mA  1800mV  1800mV
-       c1108680.adc               1                                 0mA     0mV     0mV
-    VCC3V3                        1    2      0 unknown  3300mV     0mA  3300mV  3300mV
-       VDD_RTC                    0    0      0 unknown   900mV     0mA   900mV   900mV
-       TFLASH_VDD                 1    1      0 unknown  3300mV     0mA  3300mV  3300mV
-          c1108c20.mmc:slot@1     1                                 0mA  3300mV  3400mV
-    DDR_VDDC                      0    0      0 unknown  1500mV     0mA  1500mV  1500mV
-    USB_VBUS                      2    1      0 unknown  5000mV     0mA  5000mV  5000mV
-       phy-c1108820.phy.0         2                                 0mA     0mV     0mV
----
- arch/arm/boot/dts/meson8b-odroidc1.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+[1] https://pastebin.com/rVa8gxNG
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index 0f0a46ddf3ff..00f2bb1a68f4 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -83,6 +83,20 @@
- 		regulator-max-microvolt = <5000000>;
- 	};
- 
-+	usb_vbus: regulator-usb-vbus {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "USB_VBUS";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		/*
-+		 * signal name from schematics: PWREN
-+		 */
-+		gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		vin-supply = <&p5v0>;
-+	};
-+
- 	tflash_vdd: regulator-tflash_vdd {
- 		/*
- 		 * signal name from schematics: TFLASH_VDD_EN
-@@ -295,6 +309,7 @@
- 
- &usb1_phy {
- 	status = "okay";
-+	phy-supply = <&usb_vbus>;
- };
- 
- &usb1 {
--- 
-2.20.1
+with below message.
+
+[   14.793044] usb 1-1.3: reset high-speed USB device number 3 using dwc2
+[   18.253011] usb 1-1.3: reset high-speed USB device number 3 using dwc2
+[   21.643017] usb 1-1.3: reset high-speed USB device number 3 using dwc2
+[   25.033012] usb 1-1.3: reset high-speed USB device number 3 using dwc2
+[   28.412995] usb 1-1.3: reset high-speed USB device number 3 using dwc2
+
+So this is not correct solution to the problem.
+
+>
+> Regards
+> Martin
+>
+>
+> [0] https://lkml.org/lkml/2019/1/18/960
+
+Best Regards
+
+-Anand
