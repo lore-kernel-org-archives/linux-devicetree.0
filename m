@@ -1,14 +1,14 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/5] iio:adc:lpc32xx use SPDX-License-Identifier
-Date: Sat, 9 Feb 2019 17:10:18 +0000
-Message-ID: <20190209171004.0741f68e@archlinux>
+Subject: Re: [PATCH 4/5] iio:adc:lpc32xx Cleanup headers
+Date: Sat, 9 Feb 2019 17:16:46 +0000
+Message-ID: <20190209171646.49c75afc@archlinux>
 References: <20190208160944.13281-1-gregory.clement@bootlin.com>
- <20190208160944.13281-4-gregory.clement@bootlin.com>
+ <20190208160944.13281-5-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190208160944.13281-4-gregory.clement@bootlin.com>
+In-Reply-To: <20190208160944.13281-5-gregory.clement@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,52 +19,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Hartmut Knaack <knaack.h@gmx.de>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Hartmut Knaack <knaack.h@gmx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  8 Feb 2019 17:09:42 +0100
+On Fri,  8 Feb 2019 17:09:43 +0100
 Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 
-> Convert the driver to SPDX license description which allow removing
-> several lines in the file.
+> A few headers was useless: remove them, and also sort them in alphabetic
+> order.
 > 
 > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Applied to the togreg branch of iio.git and pushed out as testing.
+Hmm. Given the headers in question are mostly only useless (I think)
+in the sense they are always included by something else, I'm
+not sure this patch is worth the churn.
 
-Thanks,
+It's also tricky to see which ones were actually removed
+given the combination with sorting.
+I think it's just kernel.h, device.h, err.h all of which
+are used in various ways and often directly included.
+
+The other one is the iio/sysfs.h file.  That one we could
+do to eventually kill off entirely, so happy to see that
+one alone go.
 
 Jonathan
 
 > ---
->  drivers/iio/adc/lpc32xx_adc.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
+>  drivers/iio/adc/lpc32xx_adc.c | 15 ++++-----------
+>  1 file changed, 4 insertions(+), 11 deletions(-)
 > 
 > diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
-> index 20b36690fa4f..e361c1532a75 100644
+> index e361c1532a75..f391c1e10136 100644
 > --- a/drivers/iio/adc/lpc32xx_adc.c
 > +++ b/drivers/iio/adc/lpc32xx_adc.c
-> @@ -1,23 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0+
->  /*
->   *  lpc32xx_adc.c - Support for ADC in LPC32XX
->   *
->   *  3-channel, 10-bit ADC
->   *
+> @@ -7,20 +7,13 @@
 >   *  Copyright (C) 2011, 2012 Roland Stigge <stigge@antcom.de>
-> - *
-> - *  This program is free software; you can redistribute it and/or modify
-> - *  it under the terms of the GNU General Public License as published by
-> - *  the Free Software Foundation; either version 2 of the License, or
-> - *  (at your option) any later version.
-> - *
-> - *  This program is distributed in the hope that it will be useful,
-> - *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - *  GNU General Public License for more details.
-> - *
-> - *  You should have received a copy of the GNU General Public License
-> - *  along with this program; if not, write to the Free Software
-> - *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 >   */
 >  
->  #include <linux/module.h>
+> -#include <linux/module.h>
+> -#include <linux/platform_device.h>
+> -#include <linux/interrupt.h>
+> -#include <linux/device.h>
+> -#include <linux/kernel.h>
+> -#include <linux/slab.h>
+> -#include <linux/io.h>
+>  #include <linux/clk.h>
+> -#include <linux/err.h>
+>  #include <linux/completion.h>
+> -#include <linux/of.h>
+> -
+>  #include <linux/iio/iio.h>
+> -#include <linux/iio/sysfs.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+>  
+>  /*
+>   * LPC32XX registers definitions
