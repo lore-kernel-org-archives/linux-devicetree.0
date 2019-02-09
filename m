@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 2/4] ARM: dts: kirkwood: Fix polarity of GPIO fan lines
-Date: Sat,  9 Feb 2019 13:50:12 -0500
-Message-ID: <20190209185014.127264-2-sashal@kernel.org>
-References: <20190209185014.127264-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 10/12] ARM: dts: kirkwood: Fix polarity of GPIO fan lines
+Date: Sat,  9 Feb 2019 13:49:50 -0500
+Message-ID: <20190209184952.127009-10-sashal@kernel.org>
+References: <20190209184952.127009-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190209185014.127264-1-sashal@kernel.org>
+In-Reply-To: <20190209184952.127009-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>, Jamie Lentin <jm@lentin.co.uk>, Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Julien D'Ascenzio <jdascenzio@posteo.net>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
@@ -40,7 +40,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/kirkwood-dnskw.dtsi b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-index 113dcf056dcf..1b2dacfa6132 100644
+index d8fca9db46d0..dddbc0d03da5 100644
 --- a/arch/arm/boot/dts/kirkwood-dnskw.dtsi
 +++ b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
 @@ -35,8 +35,8 @@
