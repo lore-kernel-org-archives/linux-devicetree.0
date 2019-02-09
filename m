@@ -1,22 +1,16 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFCv1 2/3] ARM: dts: meson8b: odroidc1: fix USB power supplies
- for phy
-Date: Sat, 9 Feb 2019 23:25:47 +0530
-Message-ID: <CANAwSgSQRwF+_VR1jJFg=Q9wSdanEH0GmnFaeegt=hRMXiHX3Q@mail.gmail.com>
-References: <20190123151209.2080-1-linux.amoon@gmail.com>
- <20190123151209.2080-3-linux.amoon@gmail.com>
- <CAFBinCAdf0rtt-7tON_LRNH_cpvGJXX3LX8g-i4xsC3wahZSVA@mail.gmail.com>
- <CANAwSgQ4=Vn6RM4Kpd20UWkQNW81=mfg-qB0G73dsRem3qwjcA@mail.gmail.com>
- <CAFBinCB=3kmuFb_xXzhW+m8dTasVrCHQp2wti+=5UjrAHk5TTg@mail.gmail.com>
- <CANAwSgQnMkXECkCVjFKwNKB+2JoiPtVPQbateppmtgfPYCutZg@mail.gmail.com>
- <CAFBinCCFoBkbf-HvEoMk7mTYTBV27nJ9TF1X-DrLuHR9qDVDSA@mail.gmail.com>
- <CANAwSgRtBWzKiFLUV6twxv+TnvjLdHXv=U8+ppQ7=9uBBLEH+Q@mail.gmail.com>
- <CAFBinCD_Pddu+pBEKwMS6467J5nxKF4T5-LxVo06nFvyUSLpew@mail.gmail.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 2/5] dt-bindings: iio: adc: lpc32xx-adc: Document
+ vref-supply
+Date: Sat, 9 Feb 2019 20:07:36 +0200
+Message-ID: <8bc7bfcf-ad04-0615-1735-c2bbf20b7861@mleia.com>
+References: <20190208160944.13281-1-gregory.clement@bootlin.com>
+ <20190208160944.13281-3-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCD_Pddu+pBEKwMS6467J5nxKF4T5-LxVo06nFvyUSLpew@mail.gmail.com>
+In-Reply-To: <20190208160944.13281-3-gregory.clement@bootlin.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,135 +20,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Hi Gregory,
 
-On Sat, 9 Feb 2019 at 06:06, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Anand,
->
-> On Thu, Feb 7, 2019 at 7:33 AM Anand Moon <linux.amoon@gmail.com> wrote:
-> >
-> > Hi Martin,
-> >
-> > On Wed, 6 Feb 2019 at 16:58, Martin Blumenstingl
-> > <martin.blumenstingl@googlemail.com> wrote:
-> > >
-> > > Hi Anand,
-> > >
-> > > On Tue, Feb 5, 2019 at 8:53 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> > > [...]
-> > > > > my interpretationfor the Amlogic SoCs is:
-> > > > > - vusb_a and vusb_d are generated internally, not sure if there's an
-> > > > > external fixed regulator
-> > > > > - there is no phy-supply (the PHY itself is powered by clock-gating
-> > > > > using the CLKID_USB clock)
-> > > > > - usb0 VBUS is controlled by GPIOAO_5
-> > > > >
-> > > >
-> > > > But as per the device tree binding
-> > > >
-> > > > [0] https://elixir.bootlin.com/linux/v5.0-rc5/source/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
-> > > > [1] https://elixir.bootlin.com/linux/v5.0-rc5/source/Documentation/devicetree/bindings/phy/phy-bindings.txt
-> > > >
-> > > > its uses phy-supply to enable power to usb phy which seem to be correct option.
-> > > phy-bindings.txt states that "phy-supply" is a "Phandle to a regulator
-> > > that provides power to the PHY".
-> > > I have written the example in meson8b-usb2-phy.txt and I think it's
-> > > wrong (back when I wrote it I didn't know about the "vbus-supply"
-> > > property on the controller and I didn't know about the VBUS
-> > > constraints).
-> > >
-> > > I believe that the phy-supply property is intended for PHYs which need
-> > > an external power supply (for example because they are not embedded
-> > > into a SoC or if the SoC has separate voltage inputs for the PHY).
-> > > I'm not aware of any PHY supply voltage on the Amlogic SoCs (I believe
-> > > this is done internally within the SoC). instead they use clock gating
-> > > to power down the PHY.
-> > >
-> > > as far as I understand the VBUS signal it depends on the USB mode:
-> > > - host provides VBUS
-> > > - peripheral devices are powered using this voltage
-> > > - with OTG VBUS needs to be turned on or off depending on the current
-> > > mode (host or peripheral)
-> > > with the "phy-supply" property there's no way to manage the regulator
-> > > depending on the USB mode (host or peripheral), it will always be
-> > > "on".
-> > >
-> > >
-> > > Regards
-> > > Martin
-> >
-> > Thanks for the clarification.
-> > But this dose not work setting the usb1_phy to use vbus-supply.
-> >
-> >  &usb1_phy {
-> >         status = "okay";
-> > +       vbus-supply = <&usb_vbus>;
-> >  };
-> >
-> > I am attaching a small patch for testing.
-> > [0] usbvbus.patch
-> indeed, this is not working for me either.
-> I checked my old notes at [0] -> it works for me when setting
-> "vbus-supply" at the usb controller (not the PHY).
->
-> with the following snippet:
->   &usb1 {
->     status = "okay";
->     vbus-supply = <&usb_vbus>;
->   };
-> I get:
-> # cat /sys/kernel/debug/regulator/regulator_summary | grep -i usb
->    c90c0000.usb                  1                                 0mA
->     0mV     0mV
->    c90c0000.usb                  1                                 0mA
->     0mV     0mV
->    USB_VBUS                      1    1      0 unknown  5000mV     0mA
->  5000mV  5000mV
->       c90c0000.usb               1                                 0mA
->     0mV     0mV
->
-> can you please try this on your board as well?
->
-> > Here is the summary of the above patch.
-> >
-> > 1. hot-plugins of usb device is not working.
-> > 2. only cold/warm boot let the device come up.
-> > 3. not power is supplied to the usb ports.
-> > 4. no power module is registered with the regulator summary.
-> with "vbus-supply" moved to the usb1 node I get the following result:
-> 1. same: hot-plugins of usb device is not working
-> 2. different: a reboot doesn't make devices come up
-> 3. same: no power is supplied to the USB ports (in my case this causes
-> #2, but it's not clear why there's no power...)
-> 4. different: the regulator is registered with the USB controller in debugfs
->
-Here the the logs after I applied the above changes
+On 02/08/2019 06:09 PM, Gregory CLEMENT wrote:
+> As most of the other ADC the lpc32xx one use a vref-supply property:
+> document it.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
+> index b3629d3a9adf..3a1bc669bd51 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/lpc32xx-adc.txt
+> @@ -6,6 +6,10 @@ Required properties:
+>    region.
+>  - interrupts: The ADC interrupt
+>  
+> +Optional:
+> + - vref-supply: The regulator supply ADC reference voltage, optional
+> +   for legacy reason, but highly encouraging to us in new device tree
+> +
 
-[1] https://pastebin.com/rVa8gxNG
+here vref-supply voltage is 3.3v only, I think that might be a reason why
+the property is omitted.
 
-with below message.
+My concern is that the documentation shall not contain sections with
+description of properties found in the past for 'legacy reasons', if you
+like to support the backward compatibility in the driver, please update
+the documentation to the expected state and add a stub to care about
+legacy DTBs in the driver only.
 
-[   14.793044] usb 1-1.3: reset high-speed USB device number 3 using dwc2
-[   18.253011] usb 1-1.3: reset high-speed USB device number 3 using dwc2
-[   21.643017] usb 1-1.3: reset high-speed USB device number 3 using dwc2
-[   25.033012] usb 1-1.3: reset high-speed USB device number 3 using dwc2
-[   28.412995] usb 1-1.3: reset high-speed USB device number 3 using dwc2
+FWIW I personally don't mind about breaking the backward compatibility
+for NXP LPC32xx, it might be a concern when CONFIG_ARM_ATAG_DTB_COMPAT=y
+is removed from the lpc32xx_defconfig though.
 
-So this is not correct solution to the problem.
+>  Example:
+>  
+>  	adc@40048000 {
+> @@ -13,4 +17,5 @@ Example:
+>  		reg = <0x40048000 0x1000>;
+>  		interrupt-parent = <&mic>;
+>  		interrupts = <39 0>;
+> +		vref-supply = <&vcc>;
+>  	};
+> 
 
->
-> Regards
-> Martin
->
->
-> [0] https://lkml.org/lkml/2019/1/18/960
+I kindly ask you to include me to To: list, if you send another changes for
+NXP LPC32xx platform.
 
-Best Regards
+Thank you.
 
--Anand
+--
+Best wishes,
+Vladimir
