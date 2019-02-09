@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 32/42] ARM: dts: da850-lcdk: Correct the sound card name
-Date: Sat,  9 Feb 2019 13:47:24 -0500
-Message-ID: <20190209184734.125935-32-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 30/42] ARM: dts: da850-evm: Correct the sound card name
+Date: Sat,  9 Feb 2019 13:47:22 -0500
+Message-ID: <20190209184734.125935-30-sashal@kernel.org>
 References: <20190209184734.125935-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,7 +14,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit c25748acc5c20786ecb7518bfeae8fcef93472d6 ]
+[ Upstream commit 7fca69d4e43fa1ae9cb4f652772c132dc5a659c6 ]
 
 To avoid  the following error:
 asoc-simple-card sound: ASoC: Failed to create card debugfs directory
@@ -26,19 +26,19 @@ Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/da850-lcdk.dts | 2 +-
+ arch/arm/boot/dts/da850-evm.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index c196e37606c4..3a2fa6e035a3 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -71,7 +71,7 @@
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index 482a54587b44..f04bc3e15332 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -127,7 +127,7 @@
  
  	sound {
  		compatible = "simple-audio-card";
--		simple-audio-card,name = "DA850/OMAP-L138 LCDK";
-+		simple-audio-card,name = "DA850-OMAPL138 LCDK";
+-		simple-audio-card,name = "DA850/OMAP-L138 EVM";
++		simple-audio-card,name = "DA850-OMAPL138 EVM";
  		simple-audio-card,widgets =
  			"Line", "Line In",
  			"Line", "Line Out";
