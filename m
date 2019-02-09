@@ -1,46 +1,61 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 30/42] ARM: dts: da850-evm: Correct the sound card name
-Date: Sat,  9 Feb 2019 13:47:22 -0500
-Message-ID: <20190209184734.125935-30-sashal@kernel.org>
-References: <20190209184734.125935-1-sashal@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v4 1/9] dt-bindings: mtd: ingenic: Add compatible strings for JZ4740 and JZ4725B
+Date: Sat,  9 Feb 2019 16:22:57 -0300
+Message-ID: <20190209192305.4434-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190209184734.125935-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Harvey Hunt <harveyhuntnexus@gmail.com>
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Add compatible strings to probe the jz4780-nand and jz4780-bch drivers
+from devicetree on the JZ4725B and JZ4740 SoCs from Ingenic.
 
-[ Upstream commit 7fca69d4e43fa1ae9cb4f652772c132dc5a659c6 ]
-
-To avoid  the following error:
-asoc-simple-card sound: ASoC: Failed to create card debugfs directory
-
-Which is because the card name contains '/' character, which can not be
-used in file or directory names.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/arm/boot/dts/da850-evm.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 482a54587b44..f04bc3e15332 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -127,7 +127,7 @@
+Changes:
+
+v2: - Change 'ingenic,jz4725b-nand' compatible string to
+      'ingenic,jz4740-nand' to reflect driver change
+    - Add 'ingenic,jz4740-bch' compatible string
+    - Document 'ingenic,oob-layout' property
+
+v3: - Removed 'ingenic,oob-layout' property
+    - Update compatible strings to what the driver supports
+
+v4: No change
+
+ Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+index 29ea5853ca91..a5b940f18bf6 100644
+--- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+@@ -6,7 +6,10 @@ memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
+ be children of the NEMC node.
  
- 	sound {
- 		compatible = "simple-audio-card";
--		simple-audio-card,name = "DA850/OMAP-L138 EVM";
-+		simple-audio-card,name = "DA850-OMAPL138 EVM";
- 		simple-audio-card,widgets =
- 			"Line", "Line In",
- 			"Line", "Line Out";
+ Required NAND controller device properties:
+-- compatible: Should be set to "ingenic,jz4780-nand".
++- compatible: Should be one of:
++  * ingenic,jz4740-nand
++  * ingenic,jz4725b-nand
++  * ingenic,jz4780-nand
+ - reg: For each bank with a NAND chip attached, should specify a bank number,
+   an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+ 
+@@ -72,7 +75,10 @@ NAND devices. The following is a description of the device properties for a
+ BCH controller.
+ 
+ Required BCH properties:
+-- compatible: Should be set to "ingenic,jz4780-bch".
++- compatible: Should be one of:
++  * ingenic,jz4740-ecc
++  * ingenic,jz4725b-bch
++  * ingenic,jz4780-bch
+ - reg: Should specify the BCH controller registers location and length.
+ - clocks: Clock for the BCH controller.
+ 
 -- 
-2.19.1
+2.11.0
