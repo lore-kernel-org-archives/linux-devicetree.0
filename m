@@ -1,13 +1,15 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] arm64: dts: meson-gxbb-odroidc2: enable I2C bus B
-Date: Sun, 10 Feb 2019 11:56:14 +0100
-Message-ID: <5C60034E.5030706@baylibre.com>
-References: <20190209155005.18458-1-stijn@linux-ipv6.be>
+Subject: Re: [PATCH v2 0/2] clk: meson8b: fix typo "ABP" -> "APB"
+Date: Sun, 10 Feb 2019 11:58:33 +0100
+Message-ID: <5C6003D9.9090304@baylibre.com>
+References: <20190119205121.9621-1-martin.blumenstingl@googlemail.com>
+ <095d0dca-f8d5-df7c-dbd0-7c2c50fcab82@baylibre.com>
+ <CAFBinCCrYrxnb6Dk-0kGwbk0ttwe+je+wKZqxe6GUASnNdAckQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190209155005.18458-1-stijn@linux-ipv6.be>
+In-Reply-To: <CAFBinCCrYrxnb6Dk-0kGwbk0ttwe+je+wKZqxe6GUASnNdAckQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,55 +19,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stijn Tintel <stijn@linux-ipv6.be>, khilman@baylibre.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Le 09/02/2019 16:50, Stijn Tintel a =E9crit :
-> The ODROID C2 has 2 I2C buses, so enable both of them.
-
-Thanks for the change, but this I2C bus is on the 40-pin header,
-until we have a way to add support for HATs/CAPEs/<whatever hooks on the he=
-ader>
-upstream, we prefer not enabling any functions on these pins by default.
-
-You can, if you want add support for most functions, but "disabled" with a
-proper description of pins used by these functions.
-
-You can also maintain a set of overlay files like it's done for the
-libretech-cc boards https://github.com/libre-computer-project/libretech-ove=
-rlays/tree/for-4.13.y/overlays
-and use them with the Armbian mainline based latest image for example.
-
-Neil
-
-> =
-
-> Signed-off-by: Stijn Tintel <stijn@linux-ipv6.be>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
-> =
-
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/a=
-rm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> index 1cc9dc68ef00..ee666471a580 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> @@ -180,6 +180,12 @@
->  	pinctrl-names =3D "default";
->  };
->  =
-
-> +&i2c_B {
-> +	status =3D "okay";
-> +	pinctrl-0 =3D <&i2c_b_pins>;
-> +	pinctrl-names =3D "default";
-> +};
-> +
->  &ir {
->  	status =3D "okay";
->  	pinctrl-0 =3D <&remote_input_ao_pins>;
-> =
+SGkgTWFydGluLAoKTGUgMDkvMDIvMjAxOSAwMToyNCwgTWFydGluIEJsdW1lbnN0aW5nbCBhIMOp
+Y3JpdCA6Cj4gSGkgTmVpbCwKPiAKPiBPbiBNb24sIEphbiAyMSwgMjAxOSBhdCAxMTo0MCBBTSBO
+ZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+IHdyb3RlOgo+Pgo+PiBPbiAx
+OS8wMS8yMDE5IDIxOjUxLCBNYXJ0aW4gQmx1bWVuc3RpbmdsIHdyb3RlOgo+Pj4gSXQgdHVybnMg
+b3V0IHRoYXQgSSdtIG5vdCBnb29kIGF0IHNwZWxsaW5nICJBUEIiLiBVbmZvcnR1bmF0ZWx5IGFu
+IEFCUAo+Pj4gKGluc3RlYWQgb2YgQVBCKSB0eXBvIHNudWcgaW50byB0d28gY2xvY2tzIGluIHY1
+LjAuCj4+Pgo+Pj4gQ3VycmVudGx5IHRoZXJlIGFyZSBubyB1c2VycyBvZiB0aGF0IGNsb2NrIHll
+dCwgc28gZml4IGl0IG5vdwo+Pj4gYmVmb3JlIGl0J3MgdG9vIGxhdGUgKG1lYW5pbmcgYmVmb3Jl
+IGl0J3MgdXNlZCBieSA8c29tZXRoaW5nPikuCj4+Pgo+Pj4gSSBkZWNpZGVkIHRvIGdvIHRoZSAi
+bm9ybWFsIiByb3V0ZSB3aGVyZSB3ZSBjYW4gaGF2ZSBzZXBhcmF0ZQo+Pj4gYnJhbmNoZXMgZm9y
+IHRoZSBkdC1iaW5kaW5ncyBhbmQgdGhlIGRyaXZlcnMgaW4gdGhlIGNsay1tZXNvbgo+Pj4gcmVw
+by4gVGhpcyBtZWFuczoKPj4+IC0gbmV3ICh0eXBvLWZyZWUpIGNsb2NrICNkZWZpbmUKPj4+IC0g
+Y2hhbmdlIHRoZSBjbG9jayBjb250cm9sbGVyIHRvIHVzZSB0aGUgbmV3ICNkZWZpbmUKPj4+IC0g
+KG5leHQgZGV2ZWxvcG1lbnQgY3ljbGUpIGRyb3AgdGhlIG9sZCAjZGVmaW5lCj4+Pgo+Pj4KPj4+
+IENoYW5nZXMgc2luY2UgdjEgYXQgWzBdOgo+Pj4gLSBzcGxpdCBpbnRvIGEgZHQtYmluZGluZ3Mg
+YW5kIGNsb2NrIGNvbnRyb2xsZXIgZHJpdmVyIHBhdGNoCj4+Pgo+Pj4KPj4+IFswXSBodHRwczov
+L3BhdGNod29yay5rZXJuZWwub3JnL2NvdmVyLzEwNzQyMDAxLwo+Pj4KPj4+Cj4+PiBNYXJ0aW4g
+Qmx1bWVuc3RpbmdsICgyKToKPj4+ICAgZHQtYmluZGluZ3M6IGNsb2NrOiBtZXNvbjhiOiBhZGQg
+QVBCIGNsb2NrIGRlZmluaXRpb24KPj4+ICAgY2xrOiBtZXNvbjogbWVzb244YjogZml4IHRoZSBu
+YW1pbmcgb2YgdGhlIEFQQiBjbG9ja3MKPj4+Cj4+PiAgZHJpdmVycy9jbGsvbWVzb24vbWVzb244
+Yi5jICAgICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKy0tLS0tLS0tLS0tLQo+Pj4gIGRyaXZl
+cnMvY2xrL21lc29uL21lc29uOGIuaCAgICAgICAgICAgICAgfCAgMiArLQo+Pj4gIGluY2x1ZGUv
+ZHQtYmluZGluZ3MvY2xvY2svbWVzb244Yi1jbGtjLmggfCAgMSArCj4+PiAgMyBmaWxlcyBjaGFu
+Z2VkLCAxNSBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkKPj4+Cj4+Cj4+IE9uY2Ugcm9i
+IGFja3MgaXQsIEknbGwgYXBwbHkgYm90aCB0byBuZXh0L2RyaXZlcnMgc2luY2UgaXQncyBub3Qg
+dXNlZCAoeWV0ID8pCj4+IGFuZCBub3QgYSBjcml0aWNhbCBmaXguCj4gSSBoYXZlIGp1c3Qgbm90
+aWNlZCB0aGF0IEkgZm9yZ290IHRvIENDIFJvYiBhbmQgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmcuCj4gZG8geW91IHdhbnQgbWUgdG8gcmUtc2VuZCB0aGlzIHNlcmllcz8KClllcyBwbGVhc2Ug
+cmUtc2VuZCAhCgpOZWlsCgo+IAo+IGFzIHlvdSBhbHJlYWR5IG5vdGljZWQgdGhpcyBpcyBub3Qg
+Y3JpdGljYWwsIHNvIHRha2luZyB0aGlzIHRocm91Z2gKPiBuZXh0L2RyaXZlcnMgaXMgZmluZSBm
+b3IgbWUuCj4gCj4gCj4gUmVnYXJkcwo+IE1hcnRpbgo+IAoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
