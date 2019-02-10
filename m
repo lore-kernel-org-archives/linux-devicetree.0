@@ -1,59 +1,57 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 0/2] clk: meson8b: fix typo "ABP" -> "APB"
-Date: Sun, 10 Feb 2019 11:58:33 +0100
-Message-ID: <5C6003D9.9090304@baylibre.com>
-References: <20190119205121.9621-1-martin.blumenstingl@googlemail.com>
- <095d0dca-f8d5-df7c-dbd0-7c2c50fcab82@baylibre.com>
- <CAFBinCCrYrxnb6Dk-0kGwbk0ttwe+je+wKZqxe6GUASnNdAckQ@mail.gmail.com>
+From: Boris Brezillon <bbrezillon@kernel.org>
+Subject: Re: [PATCH v5 2/2] mtd: spi-nor: cadence-quadspi: Add support for
+ Octal SPI controller
+Date: Sun, 10 Feb 2019 14:19:12 +0100
+Message-ID: <20190210141912.1da19db6@kernel.org>
+References: <20190128054935.4972-1-vigneshr@ti.com>
+        <20190128054935.4972-3-vigneshr@ti.com>
+        <2efbca08-c4ab-34ea-0e34-05aed7168df8@microchip.com>
+        <daa35c21-195e-eeb5-8aa2-cf42eff6a554@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCCrYrxnb6Dk-0kGwbk0ttwe+je+wKZqxe6GUASnNdAckQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <daa35c21-195e-eeb5-8aa2-cf42eff6a554@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFydGluLAoKTGUgMDkvMDIvMjAxOSAwMToyNCwgTWFydGluIEJsdW1lbnN0aW5nbCBhIMOp
-Y3JpdCA6Cj4gSGkgTmVpbCwKPiAKPiBPbiBNb24sIEphbiAyMSwgMjAxOSBhdCAxMTo0MCBBTSBO
-ZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+IHdyb3RlOgo+Pgo+PiBPbiAx
-OS8wMS8yMDE5IDIxOjUxLCBNYXJ0aW4gQmx1bWVuc3RpbmdsIHdyb3RlOgo+Pj4gSXQgdHVybnMg
-b3V0IHRoYXQgSSdtIG5vdCBnb29kIGF0IHNwZWxsaW5nICJBUEIiLiBVbmZvcnR1bmF0ZWx5IGFu
-IEFCUAo+Pj4gKGluc3RlYWQgb2YgQVBCKSB0eXBvIHNudWcgaW50byB0d28gY2xvY2tzIGluIHY1
-LjAuCj4+Pgo+Pj4gQ3VycmVudGx5IHRoZXJlIGFyZSBubyB1c2VycyBvZiB0aGF0IGNsb2NrIHll
-dCwgc28gZml4IGl0IG5vdwo+Pj4gYmVmb3JlIGl0J3MgdG9vIGxhdGUgKG1lYW5pbmcgYmVmb3Jl
-IGl0J3MgdXNlZCBieSA8c29tZXRoaW5nPikuCj4+Pgo+Pj4gSSBkZWNpZGVkIHRvIGdvIHRoZSAi
-bm9ybWFsIiByb3V0ZSB3aGVyZSB3ZSBjYW4gaGF2ZSBzZXBhcmF0ZQo+Pj4gYnJhbmNoZXMgZm9y
-IHRoZSBkdC1iaW5kaW5ncyBhbmQgdGhlIGRyaXZlcnMgaW4gdGhlIGNsay1tZXNvbgo+Pj4gcmVw
-by4gVGhpcyBtZWFuczoKPj4+IC0gbmV3ICh0eXBvLWZyZWUpIGNsb2NrICNkZWZpbmUKPj4+IC0g
-Y2hhbmdlIHRoZSBjbG9jayBjb250cm9sbGVyIHRvIHVzZSB0aGUgbmV3ICNkZWZpbmUKPj4+IC0g
-KG5leHQgZGV2ZWxvcG1lbnQgY3ljbGUpIGRyb3AgdGhlIG9sZCAjZGVmaW5lCj4+Pgo+Pj4KPj4+
-IENoYW5nZXMgc2luY2UgdjEgYXQgWzBdOgo+Pj4gLSBzcGxpdCBpbnRvIGEgZHQtYmluZGluZ3Mg
-YW5kIGNsb2NrIGNvbnRyb2xsZXIgZHJpdmVyIHBhdGNoCj4+Pgo+Pj4KPj4+IFswXSBodHRwczov
-L3BhdGNod29yay5rZXJuZWwub3JnL2NvdmVyLzEwNzQyMDAxLwo+Pj4KPj4+Cj4+PiBNYXJ0aW4g
-Qmx1bWVuc3RpbmdsICgyKToKPj4+ICAgZHQtYmluZGluZ3M6IGNsb2NrOiBtZXNvbjhiOiBhZGQg
-QVBCIGNsb2NrIGRlZmluaXRpb24KPj4+ICAgY2xrOiBtZXNvbjogbWVzb244YjogZml4IHRoZSBu
-YW1pbmcgb2YgdGhlIEFQQiBjbG9ja3MKPj4+Cj4+PiAgZHJpdmVycy9jbGsvbWVzb24vbWVzb244
-Yi5jICAgICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKy0tLS0tLS0tLS0tLQo+Pj4gIGRyaXZl
-cnMvY2xrL21lc29uL21lc29uOGIuaCAgICAgICAgICAgICAgfCAgMiArLQo+Pj4gIGluY2x1ZGUv
-ZHQtYmluZGluZ3MvY2xvY2svbWVzb244Yi1jbGtjLmggfCAgMSArCj4+PiAgMyBmaWxlcyBjaGFu
-Z2VkLCAxNSBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkKPj4+Cj4+Cj4+IE9uY2Ugcm9i
-IGFja3MgaXQsIEknbGwgYXBwbHkgYm90aCB0byBuZXh0L2RyaXZlcnMgc2luY2UgaXQncyBub3Qg
-dXNlZCAoeWV0ID8pCj4+IGFuZCBub3QgYSBjcml0aWNhbCBmaXguCj4gSSBoYXZlIGp1c3Qgbm90
-aWNlZCB0aGF0IEkgZm9yZ290IHRvIENDIFJvYiBhbmQgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmcuCj4gZG8geW91IHdhbnQgbWUgdG8gcmUtc2VuZCB0aGlzIHNlcmllcz8KClllcyBwbGVhc2Ug
-cmUtc2VuZCAhCgpOZWlsCgo+IAo+IGFzIHlvdSBhbHJlYWR5IG5vdGljZWQgdGhpcyBpcyBub3Qg
-Y3JpdGljYWwsIHNvIHRha2luZyB0aGlzIHRocm91Z2gKPiBuZXh0L2RyaXZlcnMgaXMgZmluZSBm
-b3IgbWUuCj4gCj4gCj4gUmVnYXJkcwo+IE1hcnRpbgo+IAoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, 5 Feb 2019 11:43:46 +0530
+Vignesh R <vigneshr@ti.com> wrote:
+
+> >>  static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
+> >>  {
+> >> -	const struct spi_nor_hwcaps hwcaps = {
+> >> -		.mask = SNOR_HWCAPS_READ |
+> >> -			SNOR_HWCAPS_READ_FAST |
+> >> -			SNOR_HWCAPS_READ_1_1_2 |
+> >> -			SNOR_HWCAPS_READ_1_1_4 |
+> >> -			SNOR_HWCAPS_PP,
+> >> -	};
+> >>  	struct platform_device *pdev = cqspi->pdev;
+> >>  	struct device *dev = &pdev->dev;
+> >> +	const struct cqspi_driver_platdata *ddata;
+> >> +	struct spi_nor_hwcaps hwcaps;
+> >>  	struct cqspi_flash_pdata *f_pdata;
+> >>  	struct spi_nor *nor;
+> >>  	struct mtd_info *mtd;
+> >>  	unsigned int cs;
+> >>  	int i, ret;
+> >>  
+> >> +	ddata = of_device_get_match_data(dev);
+> >> +	if (!ddata)
+> >> +		hwcaps.mask = CQSPI_BASE_HWCAPS_MASK;  
+> > 
+> > Now that .data is set in all cqspi_dt_ids[], maybe it's better to print a
+> > message and return an error here. But I guess it's a matter of taste, so not a
+> > show stopper.  
+> 
+> Since, driver data is kernel internal field, I guess there is little
+> help in printing out the error to the user when its missing. I prefer to
+> keep this as is, as basic Quad mode is supported by all versions of the IP.
+
+Well, if all compat entries have an associated platdata instance we
+don't need to support the !ddata case, right? I think enforcing the
+presence of such a platdata is actually is a sane thing to do (which
+implies returning an error when ddata is NULL).
