@@ -1,14 +1,11 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RESEND PATCH v2 1/2] dt-bindings: clock: meson8b: add APB clock
- definition
-Date: Sun, 10 Feb 2019 23:26:02 +0100
-Message-ID: <20190210222603.6404-2-martin.blumenstingl@googlemail.com>
-References: <20190210222603.6404-1-martin.blumenstingl@googlemail.com>
+Subject: [RESEND PATCH v2 0/2] clk: meson8b: fix typo "ABP" -> "APB"
+Date: Sun, 10 Feb 2019 23:26:01 +0100
+Message-ID: <20190210222603.6404-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190210222603.6404-1-martin.blumenstingl@googlemail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,32 +19,38 @@ To: linux-amlogic@lists.infradead.org, narmstrong@baylibre.com, robh+dt@kernel.o
 Cc: mark.rutland@arm.com, sboyd@kernel.org, mturquette@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Commit 8e1dd17c8b0e3f ("dt-bindings: clock: meson8b: export the CPU
-post dividers") added a clock with the name "ABP". The actual name of
-this clock is "APB".
+It turns out that I'm not good at spelling "APB". Unfortunately an ABP
+(instead of APB) typo snug into two clocks in v5.0.
 
-Add a new #define with the same ID but the correct name. The old #define
-will be dropped in a follow-up patch because each commit in the tree
-must compile on it's own (the old #define is still used by the clock
-controller driver).
+Currently there are no users of that clock yet, so fix it now
+before it's too late (meaning before it's used by <something>).
 
-Fixes: 8e1dd17c8b0e3f ("dt-bindings: clock: meson8b: export the CPU post dividers")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- include/dt-bindings/clock/meson8b-clkc.h | 1 +
- 1 file changed, 1 insertion(+)
+I decided to go the "normal" route where we can have separate
+branches for the dt-bindings and the drivers in the clk-meson
+repo. This means:
+- new (typo-free) clock #define
+- change the clock controller to use the new #define
+- (next development cycle) drop the old #define
 
-diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
-index 5fe2923382d0..8067077a62ca 100644
---- a/include/dt-bindings/clock/meson8b-clkc.h
-+++ b/include/dt-bindings/clock/meson8b-clkc.h
-@@ -104,6 +104,7 @@
- #define CLKID_MPLL2		95
- #define CLKID_NAND_CLK		112
- #define CLKID_ABP		124
-+#define CLKID_APB		124
- #define CLKID_PERIPH		126
- #define CLKID_AXI		128
- #define CLKID_L2_DRAM		130
+resend - changes since v2 at [1]:
+- include the device-tree maintainers / mailing list
+
+Changes since v1 at [0]:
+- split into a dt-bindings and clock controller driver patch
+
+
+[0] https://patchwork.kernel.org/cover/10742001/
+[1] https://patchwork.kernel.org/cover/10772199/
+
+
+Martin Blumenstingl (2):
+  dt-bindings: clock: meson8b: add APB clock definition
+  clk: meson: meson8b: fix the naming of the APB clocks
+
+ drivers/clk/meson/meson8b.c              | 26 ++++++++++++------------
+ drivers/clk/meson/meson8b.h              |  2 +-
+ include/dt-bindings/clock/meson8b-clkc.h |  1 +
+ 3 files changed, 15 insertions(+), 14 deletions(-)
+
 -- 
 2.20.1
