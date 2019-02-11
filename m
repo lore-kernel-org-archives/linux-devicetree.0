@@ -1,44 +1,27 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v3 2/6] usb:common Separated decoding functions from dwc3
- driver.
-Date: Mon, 11 Feb 2019 13:30:41 +0000
-Message-ID: <BYAPR07MB4709469C2D0EBC2D3D7DDF1ADD640@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1548935553-452-1-git-send-email-pawell@cadence.com>
- <1548935553-452-3-git-send-email-pawell@cadence.com>
- <20190204114502.GA28608@kroah.com> <87y36vmyeb.fsf@linux.intel.com>
- <BYAPR07MB4709A40204EF528F8A04E1EDDD640@BYAPR07MB4709.namprd07.prod.outlook.com>
- <87sgwu5unv.fsf@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 00/11] qcom: ssbi-gpio: add support for hierarchical
+ IRQ chip
+Date: Mon, 11 Feb 2019 14:33:21 +0100
+Message-ID: <CACRpkdbJJ-cCVDYf-Rkna=y1Yf6DsAP4AEN9RA0qpFXdCt+J=w@mail.gmail.com>
+References: <20190208021631.30252-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87sgwu5unv.fsf@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <20190208021631.30252-1-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Brian Masney <masneyb@onstation.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
->
->Pawel Laszczak <pawell@cadence.com> writes:
->>>>> +/**
->>>>> + * usb_decode_ctrl - Returns human readable representation of contro=
-l request.
->>>>> + * @str: buffer to return a human-readable representation of control=
- request.
->>>>> + *       This buffer should have about 200 bytes.
->>>>
->>>> "about 200 bytes" is not very specific.
->>>>
->>>> Pass in the length so we know we don't overflow it.
->>>
->>>agree.
->> I also agree and I will add such parameter.
->
->https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commit/?h=3D=
-next&id=3D7790b3556fccc555ae422f1576e97bf34c8ab8b6
+On Fri, Feb 8, 2019 at 3:16 AM Brian Masney <masneyb@onstation.org> wrote:
 
-Cool :). Thanks.=20
+> This patch series adds hierarchical IRQ chip support to ssbi-gpio so
+> that device tree consumers can request an IRQ directly from the GPIO
+> block rather than having to request an IRQ from the underlying PMIC.
 
---
-Pawel
+This looks good and work for me, I'd like to get a nod from one of the
+Qualcomm maintainers if possible, then I can merge the whole
+thing through the GPIO tree like with the previous patch set.
+
+Yours,
+Linus Walleij
