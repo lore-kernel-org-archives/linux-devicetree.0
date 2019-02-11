@@ -1,128 +1,65 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCHv12 3/3] ARM:drm ivip Intel FPGA Video and Image
- Processing Suite
-Date: Mon, 11 Feb 2019 07:55:52 +0100
-Message-ID: <20190211065552.GA7010@ravnborg.org>
-References: <20190211060926.3433-1-hean.loong.ong@intel.com>
- <20190211060926.3433-4-hean.loong.ong@intel.com>
+From: Seiya Wang <seiya.wang@mediatek.com>
+Subject: [PATCH v1 1/2] arm64: dts: mt8173: correct cpu type of cpu2 and cpu3
+ to cortex-a72
+Date: Mon, 11 Feb 2019 15:15:54 +0800
+Message-ID: <20190211071555.31430-1-seiya.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190211060926.3433-4-hean.loong.ong@intel.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
-Cc: devicetree@vger.kernel.org, Rienk de Jong <rienk.dejong@quest-innovations.com>, yves.vandervennet@intel.com, chin.liang.see@intel.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org, Ong@freedesktop.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, Seiya Wang <seiya.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVhbi1Mb29uZywgT25nCgpQYXRjaCBsb29rcyBnb29kIHRvIG1lLCBidXQgdGhlcmUgaXMg
-YSBmZXcgdHJpdmlhbAp0aGluZ3MgSSBzcG90dGVkIHdoaWxlIGJyb3dzaW5nIHRoZSBjb2RlLgpT
-ZWUgYmVsb3cuCgoJU2FtCgo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9pdmlwL01ha2VmaWxlCj4g
-QEAgLTAsMCArMSw3IEBACj4gKyMKPiArIyBNYWtlZmlsZSBmb3IgdGhlIGRybSBkZXZpY2UgZHJp
-dmVyLiAgVGhpcyBkcml2ZXIgcHJvdmlkZXMgc3VwcG9ydCBmb3IgdGhlCj4gKyMgRGlyZWN0IFJl
-bmRlcmluZyBJbmZyYXN0cnVjdHVyZSAoRFJJKSBpbiBYRnJlZTg2IDQuMS4wIGFuZCBoaWdoZXIu
-Cj4gKwo+ICtvYmotJChDT05GSUdfRFJNX0lWSVApICs9IGl2aXAubwo+ICtpdmlwLW9ianMgOj0g
-aW50ZWxfdmlwX29mLm8gaW50ZWxfdmlwX2NvcmUubyBcCj4gKwlpbnRlbF92aXBfY29ubi5vCgpZ
-b3UgY291bGQgdXNlOgppdmlwLXkgOj0gaW50ZWxfdmlwX29mLm8gaW50ZWxfdmlwX2NvcmUubwpp
-dmlwLXkgKz0gaW50ZWxfdmlwX2Nvbm4ubwoKClVzaW5nICJpdmlwLXkiIGlzIHRoZSByZWNvbW1l
-bmQgc3ludGF4IHRvZGF5LgpBbmQgdXNpbmcgIis9IiB5b3UgZ2V0IHJpZCBvZiB0aGUgdWdseSAi
-XCIgdG8gY29udGludWUgYSBsaW5lLgooU29tZSBwZW9wbGUgcHJlZmVyICJcIiBpbiBtYWtlZmls
-ZXMsIGJ1dCB0aGVyZSBhcmUgbm90IG5lZWRlZCkKCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2l2
-aXAvaW50ZWxfdmlwX2NvcmUuYwo+IEBAIC0wLDAgKzEsMTg5IEBACj4gKy8vIFNQRFgtTGljZW5z
-ZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gKy8qCj4gKyAqIENvcHlyaWdodCAoQykgMjAxOSBJbnRl
-bCBDb3Jwb3JhdGlvbi4KPiArICoKPiArICogaW50ZWxfdmlwX2NvcmUuYyAtLSBJbnRlbCBWaWRl
-byBhbmQgSW1hZ2UgUHJvY2Vzc2luZyhWSVApCj4gKyAqIEZyYW1lIEJ1ZmZlciBJSSBkcml2ZXIK
-PiArICoKPiArICogVGhpcyBkcml2ZXIgc3VwcG9ydHMgdGhlIEludGVsIFZJUCBGcmFtZSBSZWFk
-ZXIgY29tcG9uZW50Lgo+ICsgKiBNb3JlIGluZm8gb24gdGhlIGhhcmR3YXJlIGNhbiBiZSBmb3Vu
-ZCBpbiB0aGUgSW50ZWwgVmlkZW8KPiArICogYW5kIEltYWdlIFByb2Nlc3NpbmcgU3VpdGUgVXNl
-ciBHdWlkZSBhdCB0aGlzIGFkZHJlc3MKPiArICogaHR0cDovL3d3dy5hbHRlcmEuY29tL2xpdGVy
-YXR1cmUvdWcvdWdfdmlwLnBkZi4KPiArICoKPiArICogQXV0aG9yczoKPiArICogV2FsdGVyIEdv
-b3NzZW5zIDx3YWx0ZXJnb29zc2Vuc0Bob21lLm5sPgo+ICsgKiBUaG9tYXMgQ2hvdSA8dGhvbWFz
-QHd5dHJvbi5jb20udHc+Cj4gKyAqIENocmlzIFJhdWVyIDxjcmF1ZXJAYWx0ZXJhLmNvbT4KPiAr
-ICogT25nLCBIZWFuLUxvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+Cj4gKyAqCj4gKyAq
-Lwo+ICsKPiArI2luY2x1ZGUgPGRybS9kcm1QLmg+ClBsZWFzZSBkbyBub3QgdXNlIGRybVAuaCBp
-biBuZXcgZHJpdmVycywgd2UgdHJ5IHRvIGdldCByaWQgb2YgdGhpcyBmaWxlLgoKPiArI2luY2x1
-ZGUgPGRybS9kcm1fYXRvbWljLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX2F0b21pY19oZWxwZXIu
-aD4KPiArI2luY2x1ZGUgPGRybS9kcm1fY3J0Y19oZWxwZXIuaD4KPiArI2luY2x1ZGUgPGRybS9k
-cm1fZmJfaGVscGVyLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX2ZiX2NtYV9oZWxwZXIuaD4KPiAr
-I2luY2x1ZGUgPGRybS9kcm1fZ2VtX2NtYV9oZWxwZXIuaD4KPiArI2luY2x1ZGUgPGRybS9kcm1f
-cGxhbmVfaGVscGVyLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX3NpbXBsZV9rbXNfaGVscGVyLmg+
-Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX2dlbV9mcmFtZWJ1ZmZlcl9oZWxwZXIuaD4KU29ydCB0aGUg
-bGlzdCBvZiBpbmNsdWRlIGZpbGVzLgooTG9va3MgbGlrZSB0aGlzIHdhcyBwcm9wZXJseSBkb25l
-IGJlZm9yZSwgYW5kIG9ubHkgb25lIGZpbGUgaXMgb3V0IG9mIHBhbGNlKQoKCj4gK3N0YXRpYyB2
-b2lkIGludGVsdmlwZmJfZW5hYmxlKHN0cnVjdCBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZSAqcGlw
-ZSwKPiArCSAgICAgICBzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKmNydGNfc3RhdGUsIHN0cnVjdCBk
-cm1fcGxhbmVfc3RhdGUgKgo+ICsJICAgICAgIHBsYW5lX3N0YXRlKQpGaXggaW5kZW50LiBUaGUg
-cGFyYW1ldGVycyBvbiBzZWNvbmQgbGluZSBhbmQgZm9sbG93aW5nIHNob3VsZCBiZSBhbGlnbmVk
-CmJlbG93IHRoZSBvcGVuaW5nIHBhcmFudGhlc2lzLgpVc2UgdGFiKHMpICsgc3BhY2VzIHRvIGFs
-aWduIHByb3Blcmx5LgoKPiArdm9pZCBpbnRlbHZpcGZiX2Rpc3BsYXlfcGlwZV91cGRhdGUoc3Ry
-dWN0IGRybV9zaW1wbGVfZGlzcGxheV9waXBlICpwaXBlLAo+ICsJCQkJIHN0cnVjdCBkcm1fcGxh
-bmVfc3RhdGUgKm9sZF9zdGF0ZSkKQWxpZ24gcGFyYW1ldGVyCgo+ICt9Cj4gK0VYUE9SVF9TWU1C
-T0woaW50ZWx2aXBmYl9kaXNwbGF5X3BpcGVfdXBkYXRlKTsKPiArCj4gK3N0YXRpYyBzdHJ1Y3Qg
-ZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfZnVuY3MgZmJwcml2X2Z1bmNzID0gewo+ICsJLnByZXBh
-cmVfZmIgPSBkcm1fZ2VtX2ZiX3NpbXBsZV9kaXNwbGF5X3BpcGVfcHJlcGFyZV9mYiwKPiArCS51
-cGRhdGUgPSBpbnRlbHZpcGZiX2Rpc3BsYXlfcGlwZV91cGRhdGUsCj4gKwkuZW5hYmxlID0gaW50
-ZWx2aXBmYl9lbmFibGUsCj4gKwkuZGlzYWJsZSA9IGludGVsdmlwZmJfZGlzYWJsZSwKPiArfTsK
-PiArCj4gKwo+ICtpbnQgaW50ZWx2aXBmYl9wcm9iZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gK3sK
-PiArCWludCByZXR2YWw7Cj4gKwlzdHJ1Y3QgZHJtX2RldmljZSAqZHJtOwo+ICsJc3RydWN0IGlu
-dGVsdmlwZmJfcHJpdiAqZmJwcml2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gKwo+ICsJc3Ry
-dWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcjsKPiArCXUzMiBmb3JtYXRzW10gPSB7RFJNX0ZP
-Uk1BVF9YUkdCODg4OH07Cj4gKwo+ICsJZHJtID0gZmJwcml2LT5kcm07Cj4gKwo+ICsJZHJtLT5k
-ZXZfcHJpdmF0ZSA9IGZicHJpdjsKCkl0IHdvdWxkIGJlIHNpbXBsZXIgdG8ganVzdCBwYXNzIGZi
-cHJpdiBhcyBhIHBhcmFtZXRlci4KVGhlcmUgaXMgb25seSBvbmUgdXNlciBvZiBpbnRlbHZpcGZi
-X3Byb2JlKCkgc28gbm8gbmVlZAp0byBhdm9pZCBpdC4KCkFsc28gaXQgd291bGQgYmUgbW9yZSBs
-b2dpY2FsIHRvIHNldCBkcm0gPSBmYnByaXYtPmRybTsgd2hlcmUgbWVtb3J5IGFyZSBhbGxvY2F0
-ZWQuCgo+ICsKPiArCWludGVsdmlwZmJfc2V0dXBfbW9kZV9jb25maWcoZHJtKTsKPiArCj4gKwlj
-b25uZWN0b3IgPSBpbnRlbHZpcGZiX2Nvbm5fc2V0dXAoZHJtKTsKPiArCWlmICghY29ubmVjdG9y
-KSB7Cj4gKwkJZGV2X2Vycihkcm0tPmRldiwgIkNvbm5lY3RvciBzZXR1cCBmYWlsZWRcbiIpOwo+
-ICsJCWdvdG8gZXJyX21vZGVfY29uZmlnOwo+ICsJfQo+ICsKPiArCXJldHZhbCA9IGRybV9zaW1w
-bGVfZGlzcGxheV9waXBlX2luaXQoZHJtLAo+ICsJCQkmZmJwcml2LT5waXBlLAo+ICsJCQkmZmJw
-cml2X2Z1bmNzLAo+ICsJCQlmb3JtYXRzLAo+ICsJCQlBUlJBWV9TSVpFKGZvcm1hdHMpLAo+ICsJ
-CQlOVUxMLCBjb25uZWN0b3IpOwpDb25zaWRlciBpbmRlbnQsIHdoZXJlIHN1YnNlcXVlbnQgcGFy
-YW1ldGVycyBhcmUgYWxpZ25lZCByaWdodCBhZnRlciB0aGUKb3BlbmluZyAnKCcuCgo+ICsKPiAr
-CWlmIChyZXR2YWwgPCAwKSB7Cj4gKwkJZGV2X2Vycihkcm0tPmRldiwgIkNhbm5vdCBzZXR1cCBz
-aW1wbGUgZGlzcGxheSBwaXBlXG4iKTsKPiArCQlnb3RvIGVycl9tb2RlX2NvbmZpZzsKPiArCX0K
-PiArCj4gKwlkcm1fbW9kZV9jb25maWdfcmVzZXQoZHJtKTsKPiArCj4gKwlkcm1fZGV2X3JlZ2lz
-dGVyKGRybSwgMCk7Cj4gKwo+ICsJZHJtX2ZiZGV2X2dlbmVyaWNfc2V0dXAoZHJtLCAzMik7Cj4g
-Kwo+ICsJZGV2X2luZm8oZHJtLT5kZXYsICJpdmlwOiBTdWNjZXNzZnVsbHkgY3JlYXRlZCBmYlxu
-Iik7Cj4gKwo+ICsJcmV0dXJuIHJldHZhbDsKPiArCj4gK2Vycl9tb2RlX2NvbmZpZzoKPiArCj4g
-Kwlkcm1fbW9kZV9jb25maWdfY2xlYW51cChkcm0pOwo+ICsJcmV0dXJuIC1FTk9ERVY7Cj4gK30K
-PiArCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaXZpcC9pbnRlbF92aXBfb2YuYyBi
-L2RyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9vZi5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2
-NDQKPiBpbmRleCAwMDAwMDAwLi5jODk5ZTMwCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9vZi5jCj4gQEAgLTAsMCArMSwxODEgQEAKPiArLy8g
-U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKPiArLyoKPiArICogQ29weXJpZ2h0IChD
-KSAyMDE5IEludGVsIENvcnBvcmF0aW9uLgo+ICsgKgo+ICsgKiBpbnRlbF92aXBfb2YuYyAtLSBJ
-bnRlbCBWaWRlbyBhbmQgSW1hZ2UgUHJvY2Vzc2luZyhWSVApCj4gKyAqIEZyYW1lIEJ1ZmZlciBJ
-SSBkcml2ZXIKClRoZSBuZWVkIGZvciB0aGlzIGZpbGUgY29uZnVzZXMgbWUuCkl0IGRvZXMgbm90
-IGluY2x1ZGUgb25seSAib2YiIHJlbGF0ZWQgc3R1ZmYsIGJ1dCBhbHNvIGdlbmVyaWMgZGV2aWNl
-IGRyaXZlciBzdHVmZi4KCk1heWJlIG1lcmdlIHdpdGggaW50ZWxfdmlwX2NvcmUuYz8KQW5kIHJl
-bmFtZSB0aGF0IGZpbGUgdG8gaW50ZWxfdmlwX2Rydi5jPwoKPiArICoKPiArICogVGhpcyBkcml2
-ZXIgc3VwcG9ydHMgdGhlIEludGVsIFZJUCBGcmFtZSBSZWFkZXIgY29tcG9uZW50Lgo+ICsgKiBN
-b3JlIGluZm8gb24gdGhlIGhhcmR3YXJlIGNhbiBiZSBmb3VuZCBpbiB0aGUgSW50ZWwgVmlkZW8K
-PiArICogYW5kIEltYWdlIFByb2Nlc3NpbmcgU3VpdGUgVXNlciBHdWlkZSBhdCB0aGlzIGFkZHJl
-c3MKPiArICogaHR0cDovL3d3dy5hbHRlcmEuY29tL2xpdGVyYXR1cmUvdWcvdWdfdmlwLnBkZi4K
-PiArICoKPiArICogQXV0aG9yczoKPiArICogT25nLCBIZWFuLUxvb25nIDxoZWFuLmxvb25nLm9u
-Z0BpbnRlbC5jb20+Cj4gKyAqCj4gKyAqLwo+ICsjaW5jbHVkZSA8ZHJtL2RybVAuaD4KRHJvcCB1
-c2Ugb2YgZHJtUC5oCgo+ICtzdGF0aWMgaW50IGludGVsdmlwZmJfb2ZfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikKPiArewo+ICsJaW50IHJldHZhbDsKPiArCXN0cnVjdCByZXNv
-dXJjZSAqcmVnX3JlczsKPiArCXN0cnVjdCBpbnRlbHZpcGZiX3ByaXYgKmZicHJpdjsKPiArCXN0
-cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7Cj4gKwlzdHJ1Y3QgZHJtX2RldmljZSAqZHJt
-Owo+ICsKPiArCWZicHJpdiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqZmJwcml2KSwgR0ZQ
-X0tFUk5FTCk7Cj4gKwlpZiAoIWZicHJpdikKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwkv
-KnNldHVwIERSTSAqLwpTcGFjZSBiZWZvcmUgInNldHVwIgoKPiArCj4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGludGVsdmlwZmJfb2ZfbWF0Y2hbXSA9IHsKPiArCXsgLmNvbXBh
-dGlibGUgPSAiYWx0cix2aXAtZnJhbWUtYnVmZmVyLTIuMCIgfSwKPiArCXt9LApNYXliZSBhZGQg
-Ii8qIHNlbnRpbmVsICovIiBjb21tZW50PwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+The cpu type of cpu2 and cpu3 should be cortex-a72, not cortex-a57.
+
+Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 44374c506a1c..99675c51577a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -178,12 +178,12 @@
+ 
+ 		cpu2: cpu@100 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a57";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x100>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			#cooling-cells = <2>;
+-			clocks = <&infracfg CLK_INFRA_CA57SEL>,
++			clocks = <&infracfg CLK_INFRA_CA72SEL>,
+ 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+ 			clock-names = "cpu", "intermediate";
+ 			operating-points-v2 = <&cluster1_opp>;
+@@ -191,12 +191,12 @@
+ 
+ 		cpu3: cpu@101 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a57";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x101>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			#cooling-cells = <2>;
+-			clocks = <&infracfg CLK_INFRA_CA57SEL>,
++			clocks = <&infracfg CLK_INFRA_CA72SEL>,
+ 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+ 			clock-names = "cpu", "intermediate";
+ 			operating-points-v2 = <&cluster1_opp>;
+-- 
+2.14.1
