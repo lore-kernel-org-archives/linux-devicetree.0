@@ -1,52 +1,41 @@
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
- early memory reservation
-Date: Mon, 11 Feb 2019 17:47:34 +0100
-Message-ID: <617e0d57-342d-4162-bd21-ece18e481d87@free.fr>
-References: <d4facdc2-0581-929f-caa2-b9efa9bd8f97@arm.com>
- <CAL_JsqKFT8J6g02gxeBiTfBb_XHhp2-ZNB6DgaLPK85kNZGRig@mail.gmail.com>
- <20190121143704.GE29504@arrakis.emea.arm.com>
- <CAL_JsqKQb34zVNTzo9DLNiDwmWGxkrKezSOjwCUPAvgzUoLYjg@mail.gmail.com>
- <20190121174234.GC26461@rapoport-lnx>
- <2bb30550-435a-046c-4f45-21dd594aa695@free.fr>
- <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
- <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
- <20190123055414.GA4747@rapoport-lnx>
- <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
- <20190123123143.GE4747@rapoport-lnx>
- <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 3/3] nvmem: imx-ocotp: broaden Kconfig dependency
+Date: Mon, 11 Feb 2019 17:50:11 +0100
+Message-ID: <20190211165011.5114-3-l.stach@pengutronix.de>
+References: <20190211165011.5114-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
-Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190211165011.5114-1-l.stach@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Carlo Caione <ccaione@baylibre.com>, linux-imx@nxp.com, kernel@pengutronix.de, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/2019 15:37, Marc Gonzalez wrote:
+The i.MX OCOTP controller is used in numerous Freescale/NXP
+SoCs from the MXC family, so the strict dependency on the
+i.MX6 SoC is too narrow. Broaden it to cover all the MXC
+familiy members.
 
-> Cc: stable@vger.kernel.org # 3.15+
-> Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
-> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Acked-by: Prateek Patel <prpatel@nvidia.com>
-> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
-> Resend with DT CCed to reach robh's patch queue
-> I added CC: stable, Fixes, and Prateek's ack
-> Trim recipients list to minimize inconvenience
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ drivers/nvmem/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Mike, Stephen,
-
-I'm confused over commit 3532b3b554a216f30edb841d29eef48521bdc592 in linux-next
-"memblock: drop __memblock_alloc_base()"
-
-It's definitely going to conflict with the proposed patch
-over drivers/of/of_reserved_mem.c
-
-Rob, what's the next step then?
-
-Regards.
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index 0a7a470ee859..665f2494095a 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -25,8 +25,8 @@ config NVMEM_IMX_IIM
+ 	  will be called nvmem-imx-iim.
+ 
+ config NVMEM_IMX_OCOTP
+-	tristate "i.MX6 On-Chip OTP Controller support"
+-	depends on SOC_IMX6 || COMPILE_TEST
++	tristate "i.MX 6/7/8 On-Chip OTP Controller support"
++	depends on ARCH_MXC || COMPILE_TEST
+ 	depends on HAS_IOMEM
+ 	help
+ 	  This is a driver for the On-Chip OTP Controller (OCOTP) available on
+-- 
+2.20.1
