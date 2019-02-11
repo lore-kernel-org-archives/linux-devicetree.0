@@ -1,240 +1,474 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v4 2/8] clk: samsung: add new clocks for DMC for
- Exynos5422 SoC
-Date: Mon, 11 Feb 2019 12:11:47 +0100
-Message-ID: <ae5a3ed8-a075-5ee4-e50a-dc4d2a9c5485@partner.samsung.com>
-References: <CGME20190201164719eucas1p2091c6d41a6cc21a3d36081daf4bc8267@eucas1p2.samsung.com>
-        <1549039612-28905-1-git-send-email-l.luba@partner.samsung.com>
-        <1549039612-28905-3-git-send-email-l.luba@partner.samsung.com>
-        <CAGTfZH0VOSCfp8u416S45Tv9BgNcr_O_i88x6aY68Q7a7+=o4Q@mail.gmail.com>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH v5 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Mon, 11 Feb 2019 16:56:27 +0530
+Message-ID: <CAJ2_jOGYkwb2QSUH1UU_QoGXE5LFoR0XGJmuYfNtYcZXHXyfaA@mail.gmail.com>
+References: <1548762199-7065-1-git-send-email-yash.shah@sifive.com>
+ <1548762199-7065-3-git-send-email-yash.shah@sifive.com> <20190207101657.rfzcq6xdv6ocvubg@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGTfZH0VOSCfp8u416S45Tv9BgNcr_O_i88x6aY68Q7a7+=o4Q@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190207101657.rfzcq6xdv6ocvubg@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: cwchoi00@gmail.com
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+On Thu, Feb 7, 2019 at 3:47 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello,
+>
+> On Tue, Jan 29, 2019 at 05:13:19PM +0530, Yash Shah wrote:
+> > Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC=
+.
+> >
+> > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> > [Atish: Various fixes and code cleanup]
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > ---
+> >  drivers/pwm/Kconfig      |  11 ++
+> >  drivers/pwm/Makefile     |   1 +
+> >  drivers/pwm/pwm-sifive.c | 261 +++++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 273 insertions(+)
+> >  create mode 100644 drivers/pwm/pwm-sifive.c
+> >
+> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > index a8f47df..4a61d1a 100644
+> > --- a/drivers/pwm/Kconfig
+> > +++ b/drivers/pwm/Kconfig
+> > @@ -380,6 +380,17 @@ config PWM_SAMSUNG
+> >         To compile this driver as a module, choose M here: the module
+> >         will be called pwm-samsung.
+> >
+> > +config PWM_SIFIVE
+> > +     tristate "SiFive PWM support"
+> > +     depends on OF
+> > +     depends on COMMON_CLK
+> > +     depends on RISCV || COMPILE_TEST
+> > +     help
+> > +       Generic PWM framework driver for SiFive SoCs.
+> > +
+> > +       To compile this driver as a module, choose M here: the module
+> > +       will be called pwm-sifive.
+> > +
+> >  config PWM_SPEAR
+> >       tristate "STMicroelectronics SPEAr PWM support"
+> >       depends on PLAT_SPEAR
+> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> > index 9c676a0..30089ca 100644
+> > --- a/drivers/pwm/Makefile
+> > +++ b/drivers/pwm/Makefile
+> > @@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)              +=3D pwm-rcar.o
+> >  obj-$(CONFIG_PWM_RENESAS_TPU)        +=3D pwm-renesas-tpu.o
+> >  obj-$(CONFIG_PWM_ROCKCHIP)   +=3D pwm-rockchip.o
+> >  obj-$(CONFIG_PWM_SAMSUNG)    +=3D pwm-samsung.o
+> > +obj-$(CONFIG_PWM_SIFIVE)     +=3D pwm-sifive.o
+> >  obj-$(CONFIG_PWM_SPEAR)              +=3D pwm-spear.o
+> >  obj-$(CONFIG_PWM_STI)                +=3D pwm-sti.o
+> >  obj-$(CONFIG_PWM_STM32)              +=3D pwm-stm32.o
+> > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> > new file mode 100644
+> > index 0000000..2b516f7
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-sifive.c
+> > @@ -0,0 +1,261 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2017-2018 SiFive
+> > + * For SiFive's PWM IP block documentation please refer Chapter 14 of
+> > + * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pd=
+f
+> > + */
+> > +#include <linux/clk.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pwm.h>
+> > +#include <linux/slab.h>
+> > +
+> > +/* Register offsets */
+> > +#define PWM_SIFIVE_PWMCFG            0x0
+> > +#define PWM_SIFIVE_PWMCOUNT          0x8
+> > +#define PWM_SIFIVE_PWMS                      0x10
+> > +#define PWM_SIFIVE_PWMCMP0           0x20
+> > +
+> > +/* PWMCFG fields */
+> > +#define PWM_SIFIVE_PWMCFG_SCALE              0
+> > +#define PWM_SIFIVE_PWMCFG_STICKY     8
+> > +#define PWM_SIFIVE_PWMCFG_ZERO_CMP   9
+> > +#define PWM_SIFIVE_PWMCFG_DEGLITCH   10
+> > +#define PWM_SIFIVE_PWMCFG_EN_ALWAYS  12
+> > +#define PWM_SIFIVE_PWMCFG_EN_ONCE    13
+> > +#define PWM_SIFIVE_PWMCFG_CENTER     16
+> > +#define PWM_SIFIVE_PWMCFG_GANG               24
+> > +#define PWM_SIFIVE_PWMCFG_IP         28
+> > +
+> > +/* SIZE_PWMCMP is used to calculate the offset for pwmcmpX registers *=
+/
+> > +#define SIZE_PWMCMP          4
+> > +#define CMPWIDTH             16
+>
+> Please add a PWM_SIFIVE_ prefix to these two.
 
-On 2/3/19 10:56 AM, Chanwoo Choi wrote:
-> Hi Lukasz,
-> 
-> I recommend that please don't send the version up patchset before
-> finishing the discussion.
-> 
-> 2019년 2월 2일 (토) 오전 2:47, Lukasz Luba <l.luba@partner.samsung.com>님이 작성:
->>
->> This patch provides support for clocks needed for Dynamic Memory Controller
->> in Exynos5422 SoC. It adds CDREX base register addresses, new DIV, MUX and
->> GATE entries.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   drivers/clk/samsung/clk-exynos5420.c | 46 ++++++++++++++++++++++++++++++++----
->>   1 file changed, 42 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
->> index 34cce3c..f1a4f56 100644
->> --- a/drivers/clk/samsung/clk-exynos5420.c
->> +++ b/drivers/clk/samsung/clk-exynos5420.c
->> @@ -132,6 +132,8 @@
->>   #define BPLL_LOCK              0x20010
->>   #define BPLL_CON0              0x20110
->>   #define SRC_CDREX              0x20200
->> +#define GATE_BUS_CDREX0                0x20700
->> +#define GATE_BUS_CDREX1                0x20704
->>   #define DIV_CDREX0             0x20500
->>   #define DIV_CDREX1             0x20504
->>   #define KPLL_LOCK              0x28000
->> @@ -248,6 +250,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
->>          DIV_CDREX1,
->>          SRC_KFC,
->>          DIV_KFC0,
->> +       GATE_BUS_CDREX0,
->> +       GATE_BUS_CDREX1,
->>   };
->>
->>   static const unsigned long exynos5800_clk_regs[] __initconst = {
->> @@ -425,6 +429,10 @@ PNAME(mout_group13_5800_p) = { "dout_osc_div", "mout_sw_aclkfl1_550_cam" };
->>   PNAME(mout_group14_5800_p)     = { "dout_aclk550_cam", "dout_sclk_sw" };
->>   PNAME(mout_group15_5800_p)     = { "dout_osc_div", "mout_sw_aclk550_cam" };
->>   PNAME(mout_group16_5800_p)     = { "dout_osc_div", "mout_mau_epll_clk" };
->> +PNAME(mout_mx_mspll_ccore_phy_p) = { "sclk_bpll", "mout_sclk_dpll",
->> +                                       "mout_sclk_mpll", "ff_dout_spll2",
->> +                                       "mout_sclk_spll", "mout_sclk_epll"};
->> +
-> 
-> Remove unneeded extra blank line.
-OK
-> 
->>
->>   /* fixed rate clocks generated outside the soc */
->>   static struct samsung_fixed_rate_clock
->> @@ -450,7 +458,7 @@ static const struct samsung_fixed_factor_clock
->>   static const struct samsung_fixed_factor_clock
->>                  exynos5800_fixed_factor_clks[] __initconst = {
->>          FFACTOR(0, "ff_dout_epll2", "mout_sclk_epll", 1, 2, 0),
->> -       FFACTOR(0, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
->> +       FFACTOR(CLK_FF_DOUT_SPLL2, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
->>   };
->>
->>   static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
->> @@ -472,11 +480,14 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
->>          MUX(0, "mout_aclk300_disp1", mout_group5_5800_p, SRC_TOP2, 24, 2),
->>          MUX(0, "mout_aclk300_gscl", mout_group5_5800_p, SRC_TOP2, 28, 2),
->>
->> +       MUX(CLK_MOUT_MX_MSPLL_CCORE_PHY, "mout_mx_mspll_ccore_phy",
->> +               mout_mx_mspll_ccore_phy_p, SRC_TOP7, 0, 3),
->> +
->>          MUX(CLK_MOUT_MX_MSPLL_CCORE, "mout_mx_mspll_ccore",
->> -                       mout_mx_mspll_ccore_p, SRC_TOP7, 16, 2),
->> +                       mout_mx_mspll_ccore_p, SRC_TOP7, 16, 3),
->>          MUX_F(CLK_MOUT_MAU_EPLL, "mout_mau_epll_clk", mout_mau_epll_clk_5800_p,
->>                          SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
->> -       MUX(0, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
->> +       MUX(CLK_SCLK_BPLL, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
->>          MUX(0, "mout_epll2", mout_epll2_5800_p, SRC_TOP7, 28, 1),
->>
->>          MUX(0, "mout_aclk550_cam", mout_group3_5800_p, SRC_TOP8, 16, 3),
->> @@ -648,7 +659,7 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
-> 
-> The newly added clocks by this patch are supported on all Exynos5420/5422/5800?
-The clocks are the same for Exynos5420/5422/5800 DMCs.
+Sure
 
-> I'm not sure because on the patch description, you only mentioned the
-> Exynos5422 without Exynos5420/Exynos5800.
-The driver code supports currently only Exynos5422 due to specific
-timings inside, but the clocks are for all three Exynos SoCs.
-It does not harm the Exynos5420/5800.
-> 
-> As for now, I can't check the Exynos TRM because I'm in holiday until
-> next Wednesday. I will check them with Exynos542-/5422/5800 TRM on
-> next Thursday.
-OK, please add me to the communication thread with them. We will speed
-up the process (I can test something for them if needed).
-> 
->>
->>          MUX(0, "mout_sclk_mpll", mout_mpll_p, SRC_TOP6, 0, 1),
->>          MUX(CLK_MOUT_VPLL, "mout_sclk_vpll", mout_vpll_p, SRC_TOP6, 4, 1),
->> -       MUX(0, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
->> +       MUX(CLK_MOUT_SCLK_SPLL, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
->>          MUX(0, "mout_sclk_ipll", mout_ipll_p, SRC_TOP6, 12, 1),
->>          MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
->>          MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
->> @@ -817,6 +828,8 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
->>          DIV(CLK_DOUT_CLK2X_PHY0, "dout_clk2x_phy0", "dout_sclk_cdrex",
->>                          DIV_CDREX0, 3, 5),
->>
->> +       DIV(0, "dout_pclk_drex0", "dout_cclk_drex0", DIV_CDREX0, 28, 3),
-> 
-> Before applied this patch, on line 809, DIV_CDREX0[28:30] was already
-> defined with "dout_pclk_cdrex" gate clock name.
-In my previous email, I have mentioned that the same bits
-(8 combinations) are controlling 3 dividers, which re-branch to 3 edges
-in the clock tree named:
-CLKDIV_PCLK_CDREX, CLKDIV_PCLK_DREX0, CLKDIV_PCLK_DREX1.
-It is in the Exynos5422_UM_REV0.10 documentation section:
-7.9.6.7 CLK_DIV_CDREX0
+>
+> > +struct pwm_sifive_ddata {
+> > +     struct pwm_chip chip;
+> > +     struct notifier_block notifier;
+> > +     struct clk *clk;
+> > +     void __iomem *regs;
+> > +     unsigned int approx_period;
+> > +     unsigned int real_period;
+> > +};
+> > +
+> > +static inline struct pwm_sifive_ddata *to_pwm_sifive_chip(struct pwm_c=
+hip *c)
+>
+> even though this is inlined I would like this to have use the
+> pwm_sifive_ prefix, too.
 
-They are put into one because there is a need of synchronization between
-the BUS and DREXs (two external memory interfaces).
-That's why it looks good in the clock information summary when an
-SW engineer can see these HW assumptions.
+Not sure what exactly you want me to do here.
 
-If you disagree and would like to see only minimal clock definition
-which makes the HW working, please write it on LKML.
-The clock summary would not be reflecting the actual hierarchy and
-someone who is looking for a specific clock details will not find it.
+>
+> > +{
+> > +     return container_of(c, struct pwm_sifive_ddata, chip);
+> > +}
+> > +
+> > +static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_dev=
+ice *dev,
+> > +                              struct pwm_state *state)
+> > +{
+> > +     struct pwm_sifive_ddata *pwm =3D to_pwm_sifive_chip(chip);
+> > +     u32 duty;
+> > +
+> > +     duty =3D readl(pwm->regs + PWM_SIFIVE_PWMCMP0 + dev->hwpwm * SIZE=
+_PWMCMP);
+> > +
+> > +     state->period =3D pwm->real_period;
+> > +     state->duty_cycle =3D ((u64)duty * pwm->real_period) >> CMPWIDTH;
+> > +     state->polarity =3D PWM_POLARITY_INVERSED;
+> > +     state->enabled =3D duty > 0;
+> > +}
+> > +
+> > +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *=
+dev,
+> > +                         struct pwm_state *state)
+> > +{
+> > +     struct pwm_sifive_ddata *pwm =3D to_pwm_sifive_chip(chip);
+> > +     unsigned int duty_cycle;
+> > +     u32 frac, val;
+> > +
+> > +     if (state->polarity !=3D PWM_POLARITY_INVERSED)
+> > +             return -EINVAL;
+> > +
+> > +     if (state->period !=3D pwm->real_period)
+> > +             return -EINVAL;
+> > +
+> > +     duty_cycle =3D state->duty_cycle;
+> > +     if (!state->enabled)
+> > +             duty_cycle =3D 0;
+> > +
+> > +     frac =3D div_u64((u64)duty_cycle * 0xFFFF, state->period);
+> > +     frac =3D min(frac, 0xFFFFU);
+>
+> If CMPWIDTH was only 8, we'd need 0xff here instead of 0xffff, right? So
+> better use
+>
+>         (1 << PWM_SIFIVE_CMPWIDTH) - 1
+>
+> here, maybe "hidden" behind a cpp define.
 
-  Why do you redefine it
-> with same register/same bit with the different clock name?
-The clock is added for information purpose. I can remove it if you like,
-but then the clock summary would not reflect the actual HW implementation.
+Yes, right. I will make this change.
 
-> driver have to get only unique clock for the same register/same bit
-> information.
-True, driver gets the clocks which have exported IDs.
-This one has '0' as you can see and is only for the clk_summary
-information output.
+>
+> In a previous review round I had doubts about the calculation of frac
+> and I think they were addressed wrongly.
+> Looking at the figure at the start of chapter 14.9 in the reference
+> manual: They use (different than the driver here) pwmcmp0=3D6 and
+> pwmzerocmp=3D1. Then a period is 7 clock cycles long and pwmcmpX must be =
+7
+> (for X > 0) to yield a 100% signal. So pwmcmpX must be greater than or
+> equal to the period (in clock cycles).
+>
+> Here we're using pwmzerocmp=3D0, still the constraint
+>
+>         pwmcmpX >=3D period
+>
+> must be true for a 100% cycle. (Right?) With pwmzerocmp=3D0 the period is
+> 0x10000 clock cycles, so pwmcmpX must be >=3D 0x10000 to yield a 100%
+> signal. As this is not possible (pwmcmpX is a 16 bit value that can only
+> hold up to 0xffff) the output cannot yield 100%.
+>
+> So I think the most correct implementation here is:
+>
+>         frac =3D (duty_cycle * (1 << PWM_SIFIVE_CMPWIDTH) + (1 << PWM_SIF=
+IVE_CMPWIDTH) / 2) / period;
+>         /* Sorry, we cannot do 100% :-( */
+>         frac =3D min(frac, (1 << PWM_SIFIVE_CMPWIDTH) - 1);
+>
 
+I will once again go through the specs, if it seems correct I will
+implement the above.
 
-The purpose of the patch with detailed clock tree related to DMC was
-information, not the driver usage. That's why some clocks they did
-no have IDs so drivers would not take them (without a hack).
+> Thierry: What is the correct rounding strategy? I assumed "round to
+> nearest" (with round half up). If we want something like clk_round_rate
+> for PWMs in the future rounding down might be easier to handle.
+>
+> Note that pwm_sifive_get_state is already (well, or still) using this as
+> it has:
+>
+>         state->duty_cycle =3D ((u64)duty * pwm->real_period) >> CMPWIDTH;
+>
+> which always yields something smaller than read_period as duty is
+> smaller than 1 << PWM_SIFIVE_CMPWIDTH.
+>
+> I tried to understand the IP source at
+> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/device=
+s/pwm/PWM.scala
+> to confirm (or disprove) this theory, but I failed.
+>
+> Assuming my analysis is true, I'd like to have it documented
+> prominently in the driver that the hardware cannot generate a 100% duty
+> cycle.
+>
+> > +     val =3D readl(pwm->regs + PWM_SIFIVE_PWMCFG);
+> > +     val |=3D (1 << PWM_SIFIVE_PWMCFG_DEGLITCH);
+>
+> No parenthesis necessary. You might want to consider using the BIT macro
+> here, maybe already in the definition of PWM_SIFIVE_PWMCFG_DEGLITCH.
 
-> 
->     808         /* CDREX Block */
->     809         DIV(CLK_DOUT_PCLK_CDREX, "dout_pclk_cdrex",
-> "dout_aclk_cdrex1",
->     810                         DIV_CDREX0, 28, 3),
-> 
-> And also, you don't use "dout_pclk_drex0" defined by you for
-> CLK_ACLK_PPMU_DREX* gate clock on below. Instead, you use the already
-> defined 'dout_pclk_cdrex' as I commented.
-True
-> 
->> +
->>          DIV(CLK_DOUT_PCLK_CORE_MEM, "dout_pclk_core_mem", "mout_mclk_cdrex",
->>                          DIV_CDREX1, 8, 3),
->>
->> @@ -1170,6 +1183,31 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
->>                          GATE_TOP_SCLK_ISP, 12, CLK_SET_RATE_PARENT, 0),
->>
->>          GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
->> +
-> 
-> Add the following comment for the readability in order to sustain the
-> consistency of this driver.
-> /* CDREX Block */ or /* CDREX */
-OK
-> 
->> +       GATE(CLK_CLKM_PHY0, "clkm_phy0", "dout_sclk_cdrex",
->> +                       GATE_BUS_CDREX0, 0, 0, 0),
->> +       GATE(CLK_CLKM_PHY1, "clkm_phy1", "dout_sclk_cdrex",
->> +                       GATE_BUS_CDREX0, 1, 0, 0),
->> +       GATE(0, "mx_mspll_ccore_phy", "mout_mx_mspll_ccore_phy",
->> +                       SRC_MASK_TOP7, 0, CLK_IGNORE_UNUSED, 0),
->> +
->> +       GATE(CLK_ACLK_PPMU_DREX0_0, "aclk_ppmu_drex0_0", "dout_aclk_cdrex1",
->> +                       GATE_BUS_CDREX1, 15, CLK_IGNORE_UNUSED, 0),
->> +       GATE(CLK_ACLK_PPMU_DREX0_1, "aclk_ppmu_drex0_1", "dout_aclk_cdrex1",
->> +                       GATE_BUS_CDREX1, 14, CLK_IGNORE_UNUSED, 0),
->> +       GATE(CLK_ACLK_PPMU_DREX1_0, "aclk_ppmu_drex1_0", "dout_aclk_cdrex1",
->> +                       GATE_BUS_CDREX1, 13, CLK_IGNORE_UNUSED, 0),
->> +       GATE(CLK_ACLK_PPMU_DREX1_1, "aclk_ppmu_drex1_1", "dout_aclk_cdrex1",
->> +                       GATE_BUS_CDREX1, 12, CLK_IGNORE_UNUSED, 0),
-> 
-> You better to move the gate clock of GATE_BUS_CDREX[15:12] under the
-> gate clock of GATE_BUS_CDREX[29:26]
-> for the decending order because you defined them as the decending order.
-Make sense, I will change it.
+Sure, will use BIT macro.
 
-Regards,
-Lukasz
-> 
->> +
->> +       GATE(CLK_PCLK_PPMU_DREX0_0, "pclk_ppmu_drex0_0", "dout_pclk_cdrex",
->> +                       GATE_BUS_CDREX1, 29, CLK_IGNORE_UNUSED, 0),
->> +       GATE(CLK_PCLK_PPMU_DREX0_1, "pclk_ppmu_drex0_1", "dout_pclk_cdrex",
->> +                       GATE_BUS_CDREX1, 28, CLK_IGNORE_UNUSED, 0),
->> +       GATE(CLK_PCLK_PPMU_DREX1_0, "pclk_ppmu_drex1_0", "dout_pclk_cdrex",
->> +                       GATE_BUS_CDREX1, 27, CLK_IGNORE_UNUSED, 0),
->> +       GATE(CLK_PCLK_PPMU_DREX1_1, "pclk_ppmu_drex1_1", "dout_pclk_cdrex",
->> +                       GATE_BUS_CDREX1, 26, CLK_IGNORE_UNUSED, 0),
->>   };
->>
->>   static const struct samsung_div_clock exynos5x_disp_div_clks[] __initconst = {
->> --
->> 2.7.4
->>
-> 
-> 
+>
+> > +     writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
+> > +
+> > +     writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 + dev->hwpwm * SIZE_P=
+WMCMP);
+> > +
+> > +     val &=3D ~(1 << PWM_SIFIVE_PWMCFG_DEGLITCH);
+> > +     writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
+> > +
+> > +     pwm_sifive_get_state(chip, dev, state);
+>
+> Thierry: This changes the pwm_state. Is this how this should be done?
+
+I am removing this 'pwm_sifive_get_state' call (No state correction in any =
+case)
+
+>
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct pwm_ops pwm_sifive_ops =3D {
+> > +     .get_state =3D pwm_sifive_get_state,
+> > +     .apply =3D pwm_sifive_apply,
+> > +     .owner =3D THIS_MODULE,
+> > +};
+> > +
+> > +static struct pwm_device *pwm_sifive_xlate(struct pwm_chip *chip,
+> > +                                        const struct of_phandle_args *=
+args)
+> > +{
+> > +     struct pwm_sifive_ddata *pwm =3D to_pwm_sifive_chip(chip);
+> > +     struct pwm_device *dev;
+> > +
+> > +     if (args->args[0] >=3D chip->npwm)
+> > +             return ERR_PTR(-EINVAL);
+> > +
+> > +     dev =3D pwm_request_from_chip(chip, args->args[0], NULL);
+> > +     if (IS_ERR(dev))
+> > +             return dev;
+> > +
+> > +     /* The period cannot be changed on a per-PWM basis */
+> > +     dev->args.period =3D pwm->real_period;
+> > +     dev->args.polarity =3D PWM_POLARITY_NORMAL;
+> > +     if (args->args[1] & PWM_POLARITY_INVERSED)
+> > +             dev->args.polarity =3D PWM_POLARITY_INVERSED;
+>
+> The driver does only support PWM_POLARITY_INVERSED. So I guess this
+> should be:
+>
+>         dev->args.polarity =3D PWM_POLARITY_INVERSED;
+>         if (!(args->args[1] & PWM_POLARITY_INVERSED))
+>                 dev_warn(dev, "...");
+
+Ok, will make this change.
+
+>
+> > +
+> > +     return dev;
+> > +}
+> > +
+> > +static void pwm_sifive_update_clock(struct pwm_sifive_ddata *pwm,
+> > +                                 unsigned long rate)
+> > +{
+> > +     /* (1 << (16+scale)) * 10^9/rate =3D real_period */
+> > +     unsigned long scale_pow =3D
+> > +                     (pwm->approx_period * (u64)rate) / NSEC_PER_SEC;
+> > +     int scale =3D clamp(ilog2(scale_pow) - 16, 0, 0xf);
+>
+> is this 16 in reality PWM_SIFIVE_CMPWIDTH?
+
+Yes, it seems so. I will replace it with the macro.
+
+>
+> > +     writel((1 << PWM_SIFIVE_PWMCFG_EN_ALWAYS) | (scale <<
+> > +            PWM_SIFIVE_PWMCFG_SCALE), pwm->regs + PWM_SIFIVE_PWMCFG);
+> > +
+> > +     /* As scale <=3D 15 the shift operation cannot overflow. */
+> > +     pwm->real_period =3D div64_ul(1000000000ULL << (16 + scale), rate=
+);
+> > +     dev_dbg(pwm->chip.dev, "New real_period =3D %u ns\n", pwm->real_p=
+eriod);
+> > +}
+> > +
+> > +static int pwm_sifive_clock_notifier(struct notifier_block *nb,
+> > +                                  unsigned long event, void *data)
+> > +{
+> > +     struct clk_notifier_data *ndata =3D data;
+> > +     struct pwm_sifive_ddata *pwm =3D
+> > +             container_of(nb, struct pwm_sifive_ddata, notifier);
+> > +
+> > +     if (event =3D=3D POST_RATE_CHANGE)
+> > +             pwm_sifive_update_clock(pwm, ndata->new_rate);
+> > +
+> > +     return NOTIFY_OK;
+> > +}
+> > +
+> > +static int pwm_sifive_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev =3D &pdev->dev;
+> > +     struct device_node *node =3D pdev->dev.of_node;
+> > +     struct pwm_sifive_ddata *pwm;
+> > +     struct pwm_chip *chip;
+> > +     struct resource *res;
+> > +     int ret;
+> > +
+> > +     pwm =3D devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
+> > +     if (!pwm)
+> > +             return -ENOMEM;
+> > +
+> > +     chip =3D &pwm->chip;
+> > +     chip->dev =3D dev;
+> > +     chip->ops =3D &pwm_sifive_ops;
+> > +     chip->of_xlate =3D pwm_sifive_xlate;
+> > +     chip->of_pwm_n_cells =3D 2;
+> > +     chip->base =3D -1;
+> > +     chip->npwm =3D 4;
+> > +
+> > +     ret =3D of_property_read_u32(node, "sifive,period-ns",
+> > +                                &pwm->approx_period);
+> > +
+> > +     if (ret < 0) {
+> > +             dev_err(dev, "Unable to read sifive,period-ns from DTS\n"=
+);
+> > +             return ret;
+> > +     }
+> > +
+> > +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +     pwm->regs =3D devm_ioremap_resource(dev, res);
+> > +     if (IS_ERR(pwm->regs)) {
+> > +             dev_err(dev, "Unable to map IO resources\n");
+> > +             return PTR_ERR(pwm->regs);
+> > +     }
+> > +
+> > +     pwm->clk =3D devm_clk_get(dev, NULL);
+> > +     if (IS_ERR(pwm->clk)) {
+> > +             if (PTR_ERR(pwm->clk) !=3D -EPROBE_DEFER)
+> > +                     dev_err(dev, "Unable to find controller clock\n")=
+;
+> > +             return PTR_ERR(pwm->clk);
+> > +     }
+> > +
+> > +     ret =3D clk_prepare_enable(pwm->clk);
+> > +     if (ret) {
+> > +             dev_err(dev, "failed to enable clock for pwm: %d\n", ret)=
+;
+> > +             return ret;
+> > +     }
+> > +
+> > +     /* Watch for changes to underlying clock frequency */
+> > +     pwm->notifier.notifier_call =3D pwm_sifive_clock_notifier;
+> > +     ret =3D clk_notifier_register(pwm->clk, &pwm->notifier);
+> > +     if (ret) {
+> > +             dev_err(dev, "failed to register clock notifier: %d\n", r=
+et);
+> > +             goto disable_clk;
+> > +     }
+>
+> Would it make sense to only enable the clock when the pwm is enabled?
+> (If yes, how does the output behave if the clock is disabled while the
+> hardware is enabled? I assume the output just freezes at the state where
+> it happens to be?)
+
+Yes. Not sure about the behaviour of hardware when the clock is disabled.
+The behaviour should be like you said. If there is no strong reason
+then we can keep it as it is right now
+or else if you want I can make the necessary change.
+
+>
+> > +     /* Initialize PWM config */
+> > +     pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
+> > +
+> > +     ret =3D pwmchip_add(chip);
+> > +     if (ret < 0) {
+> > +             dev_err(dev, "cannot register PWM: %d\n", ret);
+> > +             goto unregister_clk;
+> > +     }
+> > +
+> > +     platform_set_drvdata(pdev, pwm);
+> > +     dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
+> > +
+> > +     return 0;
+> > +
+> > +unregister_clk:
+> > +     clk_notifier_unregister(pwm->clk, &pwm->notifier);
+> > +disable_clk:
+> > +     clk_disable_unprepare(pwm->clk);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int pwm_sifive_remove(struct platform_device *dev)
+> > +{
+> > +     struct pwm_sifive_ddata *pwm =3D platform_get_drvdata(dev);
+> > +     int ret;
+> > +
+> > +     ret =3D pwmchip_remove(&pwm->chip);
+> > +     clk_notifier_unregister(pwm->clk, &pwm->notifier);
+> > +     clk_disable_unprepare(pwm->clk);
+> > +     return ret;
+> > +}
+> > +
+> > +static const struct of_device_id pwm_sifive_of_match[] =3D {
+> > +     { .compatible =3D "sifive,pwm0" },
+> > +     {},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, pwm_sifive_of_match);
+> > +
+> > +static struct platform_driver pwm_sifive_driver =3D {
+> > +     .probe =3D pwm_sifive_probe,
+> > +     .remove =3D pwm_sifive_remove,
+> > +     .driver =3D {
+> > +             .name =3D "pwm-sifive",
+> > +             .of_match_table =3D pwm_sifive_of_match,
+> > +     },
+> > +};
+> > +module_platform_driver(pwm_sifive_driver);
+> > +
+> > +MODULE_DESCRIPTION("SiFive PWM driver");
+> > +MODULE_LICENSE("GPL v2");
+>
+> Best regards
+> Uwe
+>
 > --
-> Best Regards,
-> Chanwoo Choi
-> 
-> 
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
