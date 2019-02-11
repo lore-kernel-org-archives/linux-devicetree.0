@@ -1,31 +1,48 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 0/10] Add support for OLPC XO 1.75 Embedded Controller
-Date: Mon, 11 Feb 2019 13:49:55 +0200
-Message-ID: <CAHp75VdUCxx=Hybv8nyd9nTUJ4+8FLeaRM3bCxezAFvdSN0EkQ@mail.gmail.com>
-References: <20190110175845.1203986-1-lkundrak@v3.sk> <16ce7d18e3b9a2232bd30c7d7741873d0d2d855a.camel@v3.sk>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 00/33] ARM: davinci: modernize the irq support
+Date: Mon, 11 Feb 2019 17:24:44 +0530
+Message-ID: <50671542-c055-1796-c58e-276ba3d414d0@ti.com>
+References: <20190208173458.4801-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <16ce7d18e3b9a2232bd30c7d7741873d0d2d855a.camel@v3.sk>
+In-Reply-To: <20190208173458.4801-1-brgl@bgdev.pl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, David Lechner <david@lechnology.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 1:46 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
++ Jason, Marc
 
-> Hello Andy & Darren,
->
-> I'm wondering if there's anything more I need to do in order for the
-> patches 01-07 to be queued for 5.1? I believe I addressed the issues
-> that were pointed out and I believe the patch set is already in a good
-> shape.
+Thomas, Jason, Marc,
 
-I remember Darren did some review and according to patch work he is in charge.
+On 08/02/19 11:04 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> This series ports the davinci platform to using SPARSE_IRQ, cleans up
+> the irqchip drivers and moves them over to drivers/irqchip.
+> 
+> The series can be logically split into four parts. The first (1-8) aims
+> at introducing support for SPARSE_IRQ. It contains a couple changes
+> required for that functionality and the final patch actually selecting
+> it.
+> 
+> Second part (9-19) makes the aintc driver suitable for drivers/irqchip
+> and eventually moves it over there.
+> 
+> Part 3 (20-32) does the same for the cp-intc driver.
+> 
+> Last patch removes unnecessary code.
+> 
+> The series has been tested on da850-lcdk (for cp-intc) and
+> dm365-evm (for aintc).
 
-I dunno what Darren's plans are, but if I need to look at this series,
-it will require some time and may miss v5.1.
+With your ack, I would like to try get it merged to v5.1 via ARM SoC tree.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Bartosz, I noticed that Jason and Marc were not originally CCed. You may
+have to resend if they don't have the series in their inbox.
+
+Thanks,
+Sekhar
