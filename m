@@ -1,103 +1,69 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 089/313] ARM: dts: aspeed: add missing memory unit-address
-Date: Mon, 11 Feb 2019 15:16:09 +0100
-Message-ID: <20190211141859.802233380@linuxfoundation.org>
-References: <20190211141852.749630980@linuxfoundation.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v3 0/7] sunxi: Add DT representation for the MBUS controller
+Date: Mon, 11 Feb 2019 16:02:48 +0100
+Message-ID: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211141852.749630980@linuxfoundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, Rob Herring <robh@kernel.org>, Olof Johansson <olof@lixom.net>, Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+Hi,
 
-------------------
+We've had for quite some time to hack around in our drivers to take into
+account the fact that our DMA accesses are not done through the parent
+node, but through another bus with a different mapping than the CPU for the
+RAM (0 instead of 0x40000000 for most SoCs).
 
-[ Upstream commit 8ef86955fe59f7912a40d57ae4c6d511f0187b4d ]
+After some discussion after the submission of a camera device suffering of
+the same hacks, I've decided to put together a serie that introduce a
+special interconnect name called "dma" that that allows to express the DMA
+relationship between a master and its bus, even if they are not direct
+parents in the DT.
 
-The base aspeed-g5.dtsi already defines a '/memory@80000000' node, so
-'/memory' in the board files create a duplicate node. We're probably
-getting lucky that the bootloader fixes up the memory node that the
-kernel ends up using. Add the unit-address so it's merged with the base
-node.
+Let me know what you think,
+Maxime
 
-Found with DT json-schema checks.
+Changes from v2:
+  - Rewrite commit logs still mentionning dma-parent
+  - Removed dma-parent-cells left over in the binding example
+  - Removed dma-parent still being mentionned in comments
 
-Cc: Joel Stanley <joel@jms.id.au>
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-aspeed@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts | 2 +-
- arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts       | 2 +-
- arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts         | 3 +--
- arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts    | 2 +-
- 4 files changed, 4 insertions(+), 5 deletions(-)
+Changes from v1:
+  - Change to use the now merged interconnect bindings
+  - Move the DMA parent retrieval logic to its own function
+  - Rebase on top of 5.0
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
-index df1227613d48..c2ece0b91885 100644
---- a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
-@@ -13,7 +13,7 @@
- 		bootargs = "console=ttyS4,115200 earlyprintk";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts b/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
-index 7a291de02543..22dade6393d0 100644
---- a/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
-@@ -13,7 +13,7 @@
- 		bootargs = "earlyprintk";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x80000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
-index d598b6391362..024e52a6cd0f 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
-@@ -14,7 +14,7 @@
- 		bootargs = "console=ttyS4,115200 earlyprintk";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
-@@ -322,4 +322,3 @@
- &adc {
- 	status = "okay";
- };
--
-diff --git a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-index 43ed13963d35..33d704541de6 100644
---- a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-@@ -17,7 +17,7 @@
- 		bootargs = "console=ttyS4,115200 earlyprintk";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x80000000 0x20000000>;
- 	};
- 
+Maxime Ripard (7):
+  dt-bindings: interconnect: Add a dma interconnect name
+  dt-bindings: bus: Add binding for the Allwinner MBUS controller
+  of: address: Add parent pointer to the __of_translate_address args
+  of: address: Add support for the parent DMA bus
+  drm/sun4i: Rely on dma interconnect for our RAM offset
+  clk: sunxi-ng: sun5i: Export the MBUS clock
+  ARM: dts: sun5i: Add the MBUS controller
+
+ Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt      | 36 +++++-
+ Documentation/devicetree/bindings/interconnect/interconnect.txt |  3 +-
+ arch/arm/boot/dts/sun5i.dtsi                                    | 13 ++-
+ drivers/clk/sunxi-ng/ccu-sun5i.h                                |  4 +-
+ drivers/gpu/drm/sun4i/sun4i_backend.c                           | 28 +++-
+ drivers/of/address.c                                            | 49 +++++--
+ include/dt-bindings/clock/sun5i-ccu.h                           |  2 +-
+ 7 files changed, 114 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
+
+base-commit: 87e87c7b0eeb3c9e08cdfe28fd540247bdf31ef5
 -- 
-2.19.1
+git-series 0.9.1
