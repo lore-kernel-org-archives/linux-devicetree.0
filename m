@@ -1,111 +1,169 @@
-From: Loys Ollivier <lollivier@baylibre.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: gnss: add mediatek binding
-Date: Mon, 11 Feb 2019 15:06:50 +0100
-Message-ID: <86o97iv2px.fsf@baylibre.com>
-References: <1548693481-1162-1-git-send-email-lollivier@baylibre.com> <1548693481-1162-3-git-send-email-lollivier@baylibre.com> <20190130155016.GA26536@bogus> <20190211092251.GV4686@localhost>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
+ rate for PLL_MIPI
+Date: Mon, 11 Feb 2019 19:37:57 +0530
+Message-ID: <CAMty3ZAgJMy+qOW0eO5U_MDUPw0Zaq7tLDi8zwUxw=B6UiFS9w@mail.gmail.com>
+References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+ <20190124195900.22620-12-jagan@amarulasolutions.com> <20190125212433.ni2jg3wvpyjazlxf@flea>
+ <CAMty3ZAsH2iZ+JEqTE3D58aXfGuhMSg9YoO56ZhhOeE4c4yQHQ@mail.gmail.com>
+ <20190129151348.mh27btttsqcmeban@flea> <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
+ <20190201143102.rcvrxstc365mezvx@flea>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20190211092251.GV4686@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Loys Ollivier <lollivier@baylibre.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBSUDQ3RQKGQESHOFY4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190201143102.rcvrxstc365mezvx@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Maxime,
 
-On Mon 11 Feb 2019 at 09:22, Johan Hovold <johan@kernel.org> wrote:
-
-> On Wed, Jan 30, 2019 at 09:50:16AM -0600, Rob Herring wrote:
->> On Mon, Jan 28, 2019 at 05:37:59PM +0100, Loys Ollivier wrote:
->> > Add binding for Mediatek-based GNSS receivers.
->> > 
->> > Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
->> > ---
->> > 
->> > v3:
->> > Removed the I2C and SPI interfaces references.
->> > Removed the "mediatek,mt3339" compatible line.
->> > Added the optional propertied (reset, fix)
->> > Added the pin names for the optional properties.
->> > 
->> > v2:
->> > Renamed bindings from Globaltop/gtop to Mediatek/mtk.
->> > Moved current-speed as an optional propertie.
->> > Removed the status line in the example.
->> > Added "mediatek,mt3339" compatible.
->> > 
->> >  .../devicetree/bindings/gnss/mediatek.txt          | 37 ++++++++++++++++++++++
->> >  1 file changed, 37 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
->> > 
->> > diff --git a/Documentation/devicetree/bindings/gnss/mediatek.txt b/Documentation/devicetree/bindings/gnss/mediatek.txt
->> > new file mode 100644
->> > index 000000000000..00650d81c5c8
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
->> > @@ -0,0 +1,37 @@
->> > +Mediatek-based GNSS Receiver DT binding
->> > +
->> > +Mediatek chipsets are used in GNSS-receiver modules produced by several
->> > +vendors and can use an UART interface.
+On Fri, Feb 1, 2019 at 8:01 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
 >
-> s/an/a/
+> On Tue, Jan 29, 2019 at 11:01:31PM +0530, Jagan Teki wrote:
+> > On Tue, Jan 29, 2019 at 8:43 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > >
+> > > On Mon, Jan 28, 2019 at 03:06:10PM +0530, Jagan Teki wrote:
+> > > > On Sat, Jan 26, 2019 at 2:54 AM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > > >
+> > > > > On Fri, Jan 25, 2019 at 01:28:49AM +0530, Jagan Teki wrote:
+> > > > > > Minimum PLL used for MIPI is 500MHz, as per manual, but
+> > > > > > lowering the min rate by 300MHz can result proper working
+> > > > > > nkms divider with the help of desired dclock rate from
+> > > > > > panel driver.
+> > > > > >
+> > > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > > > > Acked-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > > >
+> > > > > Going 200MHz below the minimum doesn't seem really reasonable. What
+> > > > > is the issue that you are trying to fix here?
+> > > > >
+> > > > > It looks like it's picking bad dividers, but if that's the case, this
+> > > > > isn't the proper fix.
+> > > >
+> > > > As I stated in earlier patches, the whole idea is pick the desired
+> > > > dclk divider based dclk rate. So the dotclock, sun4i_dclk_round_rate
+> > > > is unable to get the proper dclk divider at the end, so it eventually
+> > > > picking up wrong divider value and fired vblank timeout.
+> > > >
+> > > > So, we come-up with optimal and working min_rate 300MHz in pll-mipi to
+> > > > get the desired clock something like below.
+> > > > [    2.415773] [drm] No driver support for vblank timestamp query.
+> > > > [    2.424116] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > > [    2.424172] ideal = 220000000, rounded = 0
+> > > > [    2.424176] ideal = 275000000, rounded = 0
+> > > > [    2.424194] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424197] ideal = 330000000, rounded = 330000000
+> > > > [    2.424201] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > > [    2.424205] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > > [    2.424209] ideal = 220000000, rounded = 0
+> > > > [    2.424213] ideal = 275000000, rounded = 0
+> > > > [    2.424230] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424233] ideal = 330000000, rounded = 330000000
+> > > > [    2.424236] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > > [    2.424253] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424270] ccu_nkm_round_rate: rate = 330000000
+> > > > [    2.424278] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > > [    2.424281] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > > [    2.424306] ccu_nkm_set_rate: rate = 330000000, parent_rate = 297000000
+> > > > [    2.424309] ccu_nkm_set_rate: _nkm.n = 5
+> > > > [    2.424311] ccu_nkm_set_rate: _nkm.k = 2
+> > > > [    2.424313] ccu_nkm_set_rate: _nkm.m = 9
+> > > > [    2.424661] sun4i_dclk_set_rate div 6
+> > > > [    2.424668] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
+> > > >
+> > > > But look like this wouldn't valid for all other dclock rates, say BPI
+> > > > panel has 30MHz clock that would failed with this logic.
+> > > >
+> > > > On the other side Allwinner BSP calculating dclk divider based on the
+> > > > SoC's. for A33 [1] it is fixed dclk divider of 4 and for A64 is is
+> > > > calculated based on the bpp/lanes.
+> > >
+> > > It looks like the A64 has the same divider of 4:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
+> > >
+> > > I think you're confusing it with the ratio between the pixel clock and
+> > > the dotclock, called dsi_div:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L198
+> >
+> > Ahh.. I thought this initially but as far as DSI clock computation is
+> > concern, the L12 tcon_div is local variable which is used for edge0
+> > computation in burst mode and not for the dsi clock computation. Since
+> > the BSP is unable to get the tcon_div during edge0 computation, they
+> > defined it locally I think.
+> >
+> > You can see the lcd_clk_config() code [2], where we can see DSI clock
+> > computation using dsi_div value.
+> >
+> > Here is dump after the in Line 792 which is after computation[3]
+> > [   10.800737] lcd_clk_config: dsi_div = 6, tcon_div = 4, lcd_div = 1
+> > [   10.800743] lcd_clk_config: lcd_dclk_freq = 55, dclk_rate = 55000000
+> > [   10.800749] lcd_clk_config: lcd_rate = 330000000, pll_rate = 330000000
+> >
+> > The above dump the lcd_rate 330MHz is computed with panel clock, 55MHz
+> > into dsi_div 6. So this can be our actual divider values dclk_min_div,
+> > dclk_max_div in sun4i_dclk_round_rate (from
+> > drivers/gpu/drm/sun4i/sun4i_dotclock.c)
 >
-ok
-
->> > +
->> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
->> > +properties.
->> > +
->> > +Required properties:
->> > +
->> > +- compatible	: Must be
->> > +
->> > +			"globaltop,pa6h"
->> > +
->> > +- vcc-supply	: Main voltage regulator (pin name: VCC)
->> > +
->> > +Optional properties:
->> > +
->> > +- gtop,reset-gpios	: GPIO used to reset the device
->> > +  			  (pin name: RESET, NRESET)
->> 
->> reset-gpios is the standard name.
->> 
->> > +- gtop,fix-gpios	: GPIO used to determine device position fix state
->> > +			  (pin name: FIX, 3D_FIX)
+> I wish it was in your commit log in the first place, instead of having
+> to exchange multiple mails over this.
 >
-> I'm thinking we might need a standard name for fix-gpios as well. This
-> isn't a feature that is globaltop (or mediatek) specific, and other
-> manufacturers provide similar functionality through pins named UI_FIX,
-> or even LCKIND (lock indicator).
+> However, I don't think that's quite true, and it might be a bug in
+> Allwinner's implementation (or rather something quite confusing).
 >
-> The pin is typically used to drive an indicator LED AFAIU, but the
-> characteristics of the signal varies from device to device (fw to fw),
-> for example, pulse when no lock and low otherwise, or pulse when a 2d or
-> 3d-fix is acquired, etc.
+> You're right that the lcd_rate and pll_rate seem to be generated from
+> the pixel clock, and it indeed looks like the ratio between the pixel
+> clock and the TCON dotclock is defined through the number of bits per
+> lanes.
 >
-
-Yes most GNSS recevivers provide a similar feature even if behavior of
-the line differs.
-
-> I'm not sure how useful the pulsing would be for software, but someone
-> might find a use for it in some form.
+> However, in this case, dsi_rate is actually the same than lcd_rate,
+> since pll_rate is going to be divided by dsi_div:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L791
 >
-
-Well it is useful to know when you start acquiring "valid" positionning
-data. I'm using this as a trigger to start recording position.
-
-> Rob, is this something we want to keep in the binding, and if so, how
-> about using a generic name such as "gnss-fix-gpios"?
+> Since lcd_div is 1, it also means that in this case, dsi_rate ==
+> dclk_rate.
 >
+> The DSI module clock however, is always set to 148.5 MHz. Indeed, if
+> we look at:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L804
+>
+> We can see that the rate in clk_info is used if it's different than
+> 0. This is filled by disp_al_lcd_get_clk_info, which, in the case of a
+> DSI panel, will hardcode it to 148.5 MHz:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L164
+>
+> So, the DSI clock is set to this here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L805
+>
+> The TCON *module* clock (the one in the clock controller) has been set
+> to lcd_rate (so the pixel clock times the number of bits per lane) here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L800
+>
+> And the PLL has been set to the same rate here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L794
+>
+> Let's take a step back now: that function we were looking at,
+> lcd_clk_config, is called by lcd_clk_enable, which is in turn called
+> by disp_lcd_enable here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1328
+>
+> The next function being called is disp_al_lcd_cfg, and that function
+> will hardcode the TCON dotclock divider to 4, here:
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L240
+>
+> So, in the end, the dotclock divider is always 4, the DSI module clock
+> is set to 148.5 MHz, and the TCON module clock is set to 330MHz. Since
+> the TCON module clock doesn't have a divider, the PLL is set at that
+> same value but this is redundant.
+>
+> I'll experiment with this and try to see how it works on the A33.
 
-Name "gnss-fix-gpios" sounds good to me.
-
-Loys
-
-> Johan
-
-
--- 
--L
+How is it with A33?
