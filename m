@@ -1,54 +1,54 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 3/3] dt-bindings: spi: Document imx8mq binding
-Date: Mon, 11 Feb 2019 09:59:33 +0800
-Message-ID: <20190211015931.GC22487@dragon>
-References: <20190130120511.11555-1-ccaione@baylibre.com>
- <20190130120511.11555-4-ccaione@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190130120511.11555-4-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
+Subject: [PATCHv11 0/3] Intel FPGA Video and Image Processing Suite
+Date: Mon, 11 Feb 2019 10:11:07 +0800
+Message-ID: <20190211021110.2717-1-hean.loong.ong@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Rienk de Jong <rienk.dejong@quest-innovations.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com, chin.liang.see@intel.com, Ong@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 12:05:11PM +0000, Carlo Caione wrote:
-> Add the "fsl,imx8mq-qspi" binding to the spi-fsl-qspi documentation.
-> 
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+From: Ong, Hean Loong <hean.loong.ong@intel.com>
 
-It doesn't apply to my tree, so you may need to send via spi tree.
+The FPGA FrameBuffer Soft IP could be seen  as the GPU and the DRM driver 
+patch here is allocating memory for information to be streamed from the 
+ARM/Linux to the display port. 
 
-Shawn
+Basically the driver just wraps the information such as the pixels 
+to be drawn by the FPGA FrameBuffer 2.
 
-> ---
->  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-> index e8f1d627d288..3fd1b8baf5ca 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-> @@ -5,6 +5,8 @@ Required properties:
->  		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
->  		 "fsl,ls1021a-qspi"
->  		 or
-> +		 "fsl,imx8mq-qspi" followed by "fsl,imx7d-qspi"
-> +		 or
->  		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
->  		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
->    - reg : the first contains the register location and length,
-> -- 
-> 2.19.1
-> 
+The piece of hardware in discussion is the SoC FPGA where Linux runs on 
+the ARM chip and the FGPA is driven by its NIOS soft core with its own 
+proprietary firmware.
+
+For example the application from the ARM Linux would have to write 
+information on the /dev/fb0 with the information stored in the 
+SDRAM to be fetched by the FPGA framebuffer IP and displayed 
+on the Display Port Monitor.
+
+
+Ong Hean Loong (2):
+  ARM:socfpga-defconfig Intel FPGA Video and Image Processing Suite
+  ARM:drm ivip Intel FPGA Video and Image Processing Suite
+
+Ong, Hean Loong (1):
+  ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
+
+ .../devicetree/bindings/display/altr,vip-fb2.txt   |   63 +++++++
+ arch/arm/configs/socfpga_defconfig                 |    5 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/ivip/Kconfig                       |   14 ++
+ drivers/gpu/drm/ivip/Makefile                      |    7 +
+ drivers/gpu/drm/ivip/intel_vip_conn.c              |   87 ++++++++++
+ drivers/gpu/drm/ivip/intel_vip_core.c              |  152 +++++++++++++++++
+ drivers/gpu/drm/ivip/intel_vip_drv.h               |   40 +++++
+ drivers/gpu/drm/ivip/intel_vip_of.c                |  177 ++++++++++++++++++++
+ 10 files changed, 548 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+ create mode 100644 drivers/gpu/drm/ivip/Kconfig
+ create mode 100644 drivers/gpu/drm/ivip/Makefile
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_core.c
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_of.c
