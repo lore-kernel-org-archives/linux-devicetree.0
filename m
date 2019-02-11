@@ -1,57 +1,165 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 00/33] ARM: davinci: modernize the irq support
-Date: Mon, 11 Feb 2019 13:11:11 +0100
-Message-ID: <CAMpxmJV34X=C4HMGNiAUxoVkPP+1nY3186QHOisqQtwT9pNtyg@mail.gmail.com>
-References: <20190208173458.4801-1-brgl@bgdev.pl> <50671542-c055-1796-c58e-276ba3d414d0@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 2/4] bus: ti-sysc: Add support for PRUSS SYSC type
+Date: Mon, 11 Feb 2019 14:11:25 +0200
+Message-ID: <5C61666D.3030308@ti.com>
+References: <1549295637-24890-1-git-send-email-rogerq@ti.com>
+ <1549295637-24890-3-git-send-email-rogerq@ti.com>
+ <20190204180031.GL5720@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50671542-c055-1796-c58e-276ba3d414d0@ti.com>
+In-Reply-To: <20190204180031.GL5720@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, David Lechner <david@lechnology.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: s-anna@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, david@lechnology.com, woods.technical@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-pon., 11 lut 2019 o 12:54 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
->
-> + Jason, Marc
->
-> Thomas, Jason, Marc,
->
-> On 08/02/19 11:04 PM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This series ports the davinci platform to using SPARSE_IRQ, cleans up
-> > the irqchip drivers and moves them over to drivers/irqchip.
-> >
-> > The series can be logically split into four parts. The first (1-8) aims
-> > at introducing support for SPARSE_IRQ. It contains a couple changes
-> > required for that functionality and the final patch actually selecting
-> > it.
-> >
-> > Second part (9-19) makes the aintc driver suitable for drivers/irqchip
-> > and eventually moves it over there.
-> >
-> > Part 3 (20-32) does the same for the cp-intc driver.
-> >
-> > Last patch removes unnecessary code.
-> >
-> > The series has been tested on da850-lcdk (for cp-intc) and
-> > dm365-evm (for aintc).
->
-> With your ack, I would like to try get it merged to v5.1 via ARM SoC tree=
-.
->
-> Bartosz, I noticed that Jason and Marc were not originally CCed. You may
-> have to resend if they don't have the series in their inbox.
->
-> Thanks,
-> Sekhar
+Tony,
 
-Sorry for that, I'm not sure how this happened, since they do pop up
-in get_maintainer.pl output for that series.
+On 04/02/19 20:00, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [190204 15:54]:
+>> +static int sysc_enable_pruss(struct sysc *sysc)
+>> +{
+>> +	int i;
+>> +	u32 reg;
+>> +	bool ready;
+>> +
+>> +	/* configure for Smart Idle & Smart Standby */
+>> +	reg = sysc_read(sysc, sysc->offsets[SYSC_SYSCONFIG]);
+>> +	reg &= ~(SYSC_PRUSS_STANDBY_MASK | SYSC_PRUSS_IDLE_MASK);
+>> +	reg |= SYSC_PRUSS_STANDBY_SMART | SYSC_IDLE_SMART;
+>> +	sysc_write(sysc, sysc->offsets[SYSC_SYSCONFIG], reg);
+> 
+> I think you can get rid of the SYSC_PRUSS_ defines here
+> if you define the bits for it in struct sysc_regbits. The
+> idle modes are SYSC_IDLE_* defines we already have in
+> include/dt-bindings/bus/ti-sysc.h.
+> 
+> My guess is these will just become generic sysc_enable()
+> and sysc_disable() functions :)
+> 
+> If you need module specific handling, you could add function
+> pointers for enable and disable to struct sysc_capabilities.
 
-I'll resend it.
+OK. I'll move all this to a generic handler then.
+> 
+>> @@ -649,6 +693,9 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
+>>  		goto idled;
+>>  	}
+>>  
+>> +	if (ddata->cap->type == TI_SYSC_PRUSS)
+>> +		sysc_disable_pruss(ddata);
+>> +
+>>  	for (i = 0; i < ddata->nr_clocks; i++) {
+>>  		if (IS_ERR_OR_NULL(ddata->clocks[i]))
+>>  			continue;
+> 
+> Ideally this would be just unconditional call to generic
+> sysc_disable() here for non-legacy mode. Then if module
+> specific enable and disable are there, sysc_enable() and
+> disable() can call them.
 
-Bart
+OK.
+
+> 
+>> +static const struct sysc_regbits sysc_regbits_pruss = {
+>> +	.midle_shift = -ENODEV,
+>> +	.clkact_shift = -ENODEV,
+>> +	.sidle_shift = -ENODEV,
+>> +	.enwkup_shift = -ENODEV,
+>> +	.srst_shift = -ENODEV,
+>> +	.autoidle_shift = -ENODEV,
+>> +	.dmadisable_shift = -ENODEV,
+>> +	.emufree_shift = -ENODEV,
+>> +};
+> 
+> So it seems you should populate at least midle_shift and sidle_shift
+> bits here as in PRUSS_SYSCFG. I think STANDBY_MODE offset should go
+> into the .midle_shift as it mentions initiator in TRM, and IDLE_MODE
+> offset should go into .sidle_shift. So this might be really just using
+> sysc_regbits_omap4_simple except it has an additional STANDBY_INIT
+> bit which you could add for struct sysc_regbits if we don't have
+> something similar already.
+
+Got it.
+
+> 
+>> @@ -1702,6 +1772,10 @@ static int sysc_probe(struct platform_device *pdev)
+>>  
+>>  	INIT_DELAYED_WORK(&ddata->idle_work, ti_sysc_idle);
+>>  
+>> +	/* FIXME: how to ensure PRUSS stays enabled? */
+>> +	if (ddata->cap->type == TI_SYSC_PRUSS)
+>> +		goto skip_pm_put;
+>> +
+
+This was my bad. I forgot to move the pm_runtime_enable/get from the old
+pruss_soc_bus.c to pruss.c :). It work after than and this hack is not required.
+
+>>  	/* At least earlycon won't survive without deferred idle */
+>>  	if (ddata->cfg.quirks & (SYSC_QUIRK_NO_IDLE_ON_INIT |
+>>  				 SYSC_QUIRK_NO_RESET_ON_INIT)) {
+> 
+> Hmm so do you need to specify ti,no-idle-on-init or what's
+> the logic needed here?
+
+I was using "ti,no-reset-on-init" but that was because sysc_reset() was returning error
+due to missing syss mask. That can be fixed like so.
+
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index 5b9c81a..f5f2000 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -941,6 +941,7 @@ static int sysc_reset(struct sysc *ddata)
+ 	int val;
+ 
+ 	if (ddata->legacy_mode || offset < 0 ||
++	    ddata->cap->regbits->srst_shift == -ENODEV ||
+ 	    ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
+ 		return 0;
+
+
+> 
+>> diff --git a/include/dt-bindings/bus/ti-sysc.h b/include/dt-bindings/bus/ti-sysc.h
+>> index 8ec78e8..7138384 100644
+>> --- a/include/dt-bindings/bus/ti-sysc.h
+>> +++ b/include/dt-bindings/bus/ti-sysc.h
+>> @@ -17,17 +17,6 @@
+>>  
+>>  #define SYSC_DRA7_MCAN_ENAWAKEUP	(1 << 4)
+>>  
+>> -/* SYSCONFIG specific to PRUSS */
+>> -#define SYSC_PRUSS_SUB_MWAIT		(1 << 5)
+>> -#define SYSC_PRUSS_STANDBY_INIT		(1 << 4)
+>> -
+>> -#define SYSC_PRUSS_STANDBY_FORCE	(0 << 2)
+>> -#define SYSC_PRUSS_STANDBY_NO		(1 << 2)
+>> -#define SYSC_PRUSS_STANDBY_SMART	(2 << 2)
+>> -#define SYSC_PRUSS_STANDBY_MASK		(3 << 2)
+>> -
+>> -#define SYSC_PRUSS_IDLE_MASK		3
+>> -
+>>  /* SYSCONFIG STANDBYMODE/MIDLEMODE/SIDLEMODE supported by hardware */
+>>  #define SYSC_IDLE_FORCE			0
+>>  #define SYSC_IDLE_NO			1
+> 
+> I suggest you make this series independent of the
+> rest of the PRUSS patches as we can add this
+> separately. So no need to define these bits at all
+> AFAIK.
+
+OK. Thanks.
+
+cheers,
+-roger
+
+> 
+> Regards,
+> 
+> Tony
+> 
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
