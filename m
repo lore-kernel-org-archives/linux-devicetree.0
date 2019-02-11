@@ -1,49 +1,96 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] arm64: dts: imx8mq: Add on-chip OTP controller node
-Date: Mon, 11 Feb 2019 14:01:10 +0100
-Message-ID: <1549890070.2546.7.camel@pengutronix.de>
-References: <20190202150638.13672-1-ccaione@baylibre.com>
- <20190202150638.13672-2-ccaione@baylibre.com>
- <1549886597.2546.5.camel@pengutronix.de>
+From: Seiya Wang <seiya.wang@mediatek.com>
+Subject: Re: [PATCH v6 1/6] irqchip/mtk-sysirq: support 4 interrupt
+ parameters for sysirq
+Date: Mon, 11 Feb 2019 21:01:20 +0800
+Message-ID: <1549890080.22817.24.camel@mtksdccf07>
+References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
+         <1548317240-44682-2-git-send-email-erin.lo@mediatek.com>
+         <898ca3d9-002b-e28e-fc97-86bc2538e9de@gmail.com>
+         <626b5b46-aac7-1532-386e-2fed85bf4ad9@arm.com>
+         <c0187acf-bd8c-2d41-d84d-d35fc63b2beb@arm.com>
+         <1549866929.22817.20.camel@mtksdccf07> <868symu2ss.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1549886597.2546.5.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <868symu2ss.wl-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 11.02.2019, 13:03 +0100 schrieb Lucas Stach:
-> Am Samstag, den 02.02.2019, 15:06 +0000 schrieb Carlo Caione:
-> > Add the node for the OTP controller. The IP is the same as on the
-> > imx7d.
+On Mon, 2019-02-11 at 08:50 +0000, Marc Zyngier wrote:
+> On Mon, 11 Feb 2019 06:35:29 +0000,
+> Seiya Wang <seiya.wang@mediatek.com> wrote:
+> > 
+> > On Thu, 2019-02-07 at 15:52 +0000, Marc Zyngier wrote:
+> > > On 07/02/2019 15:47, Marc Zyngier wrote:
+> > > > On 07/02/2019 15:20, Matthias Brugger wrote:
+> > > >>
+> > > >>
+> > > >> On 24/01/2019 09:07, Erin Lo wrote:
+> > > >>> From: Seiya Wang <seiya.wang@mediatek.com>
+> > > >>>
+> > > >>> To support partitioned PPIs, 4 interrupt parameters should be valid
+> > > >>> for sysirq.
+> > > >>>
+> > > >>> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> > > >>> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > > >>> ---
+> > > >>>  drivers/irqchip/irq-mtk-sysirq.c | 4 ++--
+> > > >>>  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >>>
+> > > >>> diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+> > > >>> index 90aaf19..282736a 100644
+> > > >>> --- a/drivers/irqchip/irq-mtk-sysirq.c
+> > > >>> +++ b/drivers/irqchip/irq-mtk-sysirq.c
+> > > >>> @@ -81,7 +81,7 @@ static int mtk_sysirq_domain_translate(struct irq_domain *d,
+> > > >>>  				       unsigned int *type)
+> > > >>>  {
+> > > >>>  	if (is_of_node(fwspec->fwnode)) {
+> > > >>> -		if (fwspec->param_count != 3)
+> > > >>> +		if (fwspec->param_count != 3 && fwspec->param_count != 4)
+> > > >>
+> > > >> Where is this 4th parameter used?
+> > > > 
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt#n14
+> > > Sorry, I fired Send way too early.
+> > > 
+> > > What I wanted to add is that it is not clear to me why this change would
+> > > be required here, as this driver only supports SPIs. It could be fixed
+> > > by just relaxing the binding itself.
+> > > 
+> > > Thanks,
+> > > 
+> > > 	M.
+> > 
+> > Do you mean that we should change #interrupt-cells back to 3 for sysirq
+> > and remove the 4th parameters of every spi interrupts in mt8183.dtsi
+> > (i.e. 3 parameters for spi, 4 for ppi) such that we can discard this
+> > patch?
 > 
-> This is not true. According to the reference manual, the OCOTP
-> controller on i.MX8MQ uses the non-banked write mode, same as i.MX6.
-> Thus it is incompatible to the i.MX7 OCOTP.
-
-Actually I need to correct myself here. While the programming sequence
-description is the same as on i.MX6, the register layout looks like the
-i.MX7 one, so likely someone copy and pasted the wrong documentation
-snippet. This means the controller is in fact compatible to the i.MX7
-write sequence.
-
-> Also the number of fuses is different, so we really need some driver
-> support for the imx8mq compatible and can't declare the controller
-> compatible to some older instance.
-
-But then I think this is still true. The changed number of fuses means
-we need some driver support and should not claim backward compatibility
-with the i.MX7 controller.
-
-regards,
-Lucas
+> It is more subtle than that:
+> 
+> - PPIs must have the affinity parameter in their int-spec (since you
+>   need that for the PMU)
+> 
+> - SPIs that are directly routed to the GIC must also have the affinity
+>   parameter (although set to zero).
+> 
+> - SPIs that are routed via the sysirq block (or any other) can use the
+>   3 parameter variant, as they are not resolved in the context of the
+>   GIC, but in that of the sysirq.
+> 
+> But in short, yes. You should be able to drop this patch altogether.
+> 
+> > If yes, we may need some time to verify the change before resending the
+> > patch.
+> 
+> That's absolutely fine.
+> 
+> Thanks,
+> 
+> 	M.
+> 
+Thanks for the detailed descriptions.
+We will remove this patch and resend again.
