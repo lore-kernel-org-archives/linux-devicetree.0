@@ -1,69 +1,65 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v5 2/2] mtd: spi-nor: cadence-quadspi: Add support for
- Octal SPI controller
-Date: Mon, 11 Feb 2019 10:23:42 +0530
-Message-ID: <fd245dc9-6d3c-8075-a684-d4fe6cb85849@ti.com>
-References: <20190128054935.4972-1-vigneshr@ti.com>
- <20190128054935.4972-3-vigneshr@ti.com>
- <2efbca08-c4ab-34ea-0e34-05aed7168df8@microchip.com>
- <daa35c21-195e-eeb5-8aa2-cf42eff6a554@ti.com>
- <20190210141912.1da19db6@kernel.org>
+From: Seiya Wang <seiya.wang@mediatek.com>
+Subject: Re: [PATCH v1 1/1] arm64: dts: mt8173: add pmu nodes for mt8173
+Date: Mon, 11 Feb 2019 13:20:03 +0800
+Message-ID: <1549862403.22817.11.camel@mtksdccf07>
+References: <20190109082143.26468-1-seiya.wang@mediatek.com>
+         <38a56fc1-09fa-a35a-fcef-e265f1608b83@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190210141912.1da19db6@kernel.org>
-Content-Language: en-US
+In-Reply-To: <38a56fc1-09fa-a35a-fcef-e265f1608b83@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <bbrezillon@kernel.org>
-Cc: "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/02/19 6:49 PM, Boris Brezillon wrote:
-> On Tue, 5 Feb 2019 11:43:46 +0530
-> Vignesh R <vigneshr@ti.com> wrote:
+On Fri, 2019-02-08 at 16:04 +0100, Matthias Brugger wrote:
 > 
->>>>  static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
->>>>  {
->>>> -	const struct spi_nor_hwcaps hwcaps = {
->>>> -		.mask = SNOR_HWCAPS_READ |
->>>> -			SNOR_HWCAPS_READ_FAST |
->>>> -			SNOR_HWCAPS_READ_1_1_2 |
->>>> -			SNOR_HWCAPS_READ_1_1_4 |
->>>> -			SNOR_HWCAPS_PP,
->>>> -	};
->>>>  	struct platform_device *pdev = cqspi->pdev;
->>>>  	struct device *dev = &pdev->dev;
->>>> +	const struct cqspi_driver_platdata *ddata;
->>>> +	struct spi_nor_hwcaps hwcaps;
->>>>  	struct cqspi_flash_pdata *f_pdata;
->>>>  	struct spi_nor *nor;
->>>>  	struct mtd_info *mtd;
->>>>  	unsigned int cs;
->>>>  	int i, ret;
->>>>  
->>>> +	ddata = of_device_get_match_data(dev);
->>>> +	if (!ddata)
->>>> +		hwcaps.mask = CQSPI_BASE_HWCAPS_MASK;  
->>>
->>> Now that .data is set in all cqspi_dt_ids[], maybe it's better to print a
->>> message and return an error here. But I guess it's a matter of taste, so not a
->>> show stopper.  
->>
->> Since, driver data is kernel internal field, I guess there is little
->> help in printing out the error to the user when its missing. I prefer to
->> keep this as is, as basic Quad mode is supported by all versions of the IP.
+> On 09/01/2019 09:21, Seiya Wang wrote:
+> > This patch adds the device nodes of ARM Performance Monitor Uint
+> > for mt8173.
+> > 
+> > Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index 412ffd4d426b..44374c506a1c 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -216,6 +216,20 @@
+> >  		};
+> >  	};
+> >  
+> > +	pmu_a53 {
+> > +		compatible = "arm,cortex-a53-pmu";
+> > +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
+> > +		interrupt-affinity = <&cpu0>, <&cpu1>;
+> > +	};
+> > +
+> > +	pmu_a72 {
+> > +		compatible = "arm,cortex-a72-pmu";
+> > +		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_SPI 13 IRQ_TYPE_LEVEL_LOW>;
+> > +		interrupt-affinity = <&cpu2>, <&cpu3>;
+> > +	};
 > 
-> Well, if all compat entries have an associated platdata instance we
-> don't need to support the !ddata case, right? I think enforcing the
-> presence of such a platdata is actually is a sane thing to do (which
-> implies returning an error when ddata is NULL).
+> There is no a72 but a a57 CPU present.
+> Typo?
 > 
+> Regards,
+> Matthias
 
-Ok, will respin with a dev_err() and return -EINVAL when ddata is NULL.
+MT8173 is actually using a72, not a57.
+I will submit another patch for fixing it.
 
--- 
-Regards
-Vignesh
+Thanks.
+
+> > +
+> >  	psci {
+> >  		compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
+> >  		method = "smc";
+> > 
