@@ -1,65 +1,135 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 2/2] clk: mmp2: separate LCDC peripheral clk form the display clock
-Date: Mon, 11 Feb 2019 11:20:50 +0100
-Message-ID: <20190211102050.24422-2-lkundrak@v3.sk>
-References: <20190211102050.24422-1-lkundrak@v3.sk>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v3 3/8] clk: samsung: add BPLL rate table for Exynos
+ 5422 SoC
+Date: Mon, 11 Feb 2019 11:21:16 +0100
+Message-ID: <59a5e9bc-a5de-9f98-5710-4cd48cb5b239@partner.samsung.com>
+References: <1548924594-19084-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190131085007eucas1p2f16107042b8ce5638811840618bcf017@eucas1p2.samsung.com>
+        <1548924594-19084-4-git-send-email-l.luba@partner.samsung.com>
+        <d5b8d165-564e-b776-77de-31a069118067@samsung.com>
+        <0ca15b4c-ddaa-1be5-35be-e76b008b28a8@partner.samsung.com>
+        <CAGTfZH05zn_FiNt3zSHZJfspvo4RXWPrAtWLUq5xsqKoB3qxBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211102050.24422-1-lkundrak@v3.sk>
+In-Reply-To: <CAGTfZH05zn_FiNt3zSHZJfspvo4RXWPrAtWLUq5xsqKoB3qxBA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+To: cwchoi00@gmail.com
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-These are in fact two clocks, they shouldn't be exposed as one. One is
-required for accessing LCD controller registers (peripheral clock), while
-other (AXI clock) can be optionally used as a pixel clock source for the
-panel.
+Hi Chanwoo,
 
-LCDC can alternatively use different clocks than the Display 1 AXI clock
-for generating the pixel clock: the second AXI clock (fixed in this
-commit too), the HDMI PLL, or the AXI bus clock.
+On 2/3/19 8:54 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
+> 
+> 2019년 2월 1일 (금) 오후 11:22, Lukasz Luba <l.luba@partner.samsung.com>님이 작성:
+> 
+>>
+>> Hi Chanwoo,
+>>
+>> On 2/1/19 9:44 AM, Chanwoo Choi wrote:
+>>> Hi,
+>>>
+>>> On 19. 1. 31. 오후 5:49, Lukasz Luba wrote:
+>>>> Add new table rate for BPLL for Exynos5422 SoC supporting Dynamic Memory
+>>>> Controller frequencies for driver's DRAM timings.
+>>>>
+>>>> CC: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>>>> CC: Chanwoo Choi <cw00.choi@samsung.com>
+>>>> CC: Michael Turquette <mturquette@baylibre.com>
+>>>> CC: Stephen Boyd <sboyd@kernel.org>
+>>>> CC: Kukjin Kim <kgene@kernel.org>
+>>>> CC: Krzysztof Kozlowski <krzk@kernel.org>
+>>>> CC: linux-samsung-soc@vger.kernel.org
+>>>> CC: linux-clk@vger.kernel.org
+>>>> CC: linux-arm-kernel@lists.infradead.org
+>>>> CC: linux-kernel@vger.kernel.org
+>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>> ---
+>>>>    drivers/clk/samsung/clk-exynos5420.c | 15 ++++++++++++++-
+>>>>    1 file changed, 14 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+>>>> index 3e87421..8bf9579 100644
+>>>> --- a/drivers/clk/samsung/clk-exynos5420.c
+>>>> +++ b/drivers/clk/samsung/clk-exynos5420.c
+>>>> @@ -1325,6 +1325,19 @@ static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __ini
+>>>>       PLL_35XX_RATE(24 * MHZ, 200000000,  200, 3, 3),
+>>>>    };
+>>>>
+>>>> +static const struct samsung_pll_rate_table exynos5422_bpll_rate_table[] = {
+>>>> +    PLL_35XX_RATE(24 * MHZ, 933000000, 311, 4, 1),
+>>>> +    PLL_35XX_RATE(24 * MHZ, 825000000, 275, 4, 1),
+>>>> +    PLL_35XX_RATE(24 * MHZ, 728000000, 182, 3, 1),
+>>>> +    PLL_35XX_RATE(24 * MHZ, 633000000, 211, 4, 1),
+>>>> +    PLL_35XX_RATE(24 * MHZ, 543000000, 181, 2, 2),
+>>>> +    PLL_35XX_RATE(24 * MHZ, 413000000, 413, 6, 2),
+>>>> +    PLL_35XX_RATE(24 * MHZ, 275000000, 275, 3, 3),
+>>>> +    PLL_35XX_RATE(24 * MHZ, 206000000, 206, 3, 3),
+>>>> +    PLL_35XX_RATE(24 * MHZ, 165000000, 110, 2, 3),
+>>>> +    PLL_35XX_RATE(24 * MHZ, 138000000, 184, 2, 4),
+>>>
+>>> Except for 825Mhz, I can't find the target frequency
+>>> on Exynos5422 TRM document. Usually, Exynos TRM specified
+>>> the supported stable clocks. It means that undefined clocks
+>>> are not stable as I knew. Where do you find them?
+>>>
+>>> When I calculated the PLL frequency with PMS value, it is correct.
+>>> But, just we need to check the reference of undefined clocks on TRM
+>>> in order to guarantee the stable operation.
+>> They values live in vendor code for Android.
+>> I have tested the DMC & DDR with these ratios in stress scenarios
+>> for a few days and it was stable.
+> 
+> If possible, please share the url of original vendor code.
+Here is the vendor code for the BPLL values:
+https://github.com/hardkernel/linux/blob/odroidxu3-3.10.y-android/drivers/clk/samsung/clk-exynos5422.c#L2026
 
-They should really be controlled independently.
-
-Link: https://lists.freedesktop.org/archives/dri-devel/2019-January/20397=
-5.html
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/clk/mmp/clk-of-mmp2.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.=
-c
-index d083b860f083..a60a1be937ad 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -229,9 +229,10 @@ static struct mmp_param_gate_clk apmu_gate_clks[] =3D=
- {
- 	{MMP2_CLK_SDH1, "sdh1_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SD=
-H1, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
- 	{MMP2_CLK_SDH2, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SD=
-H2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
- 	{MMP2_CLK_SDH3, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SD=
-H3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
--	{MMP2_CLK_DISP0, "disp0_clk", "disp0_div", CLK_SET_RATE_PARENT, APMU_DI=
-SP0, 0x1b, 0x1b, 0x0, 0, &disp0_lock},
-+	{MMP2_CLK_DISP0, "disp0_clk", "disp0_div", CLK_SET_RATE_PARENT, APMU_DI=
-SP0, 0x09, 0x09, 0x0, 0, &disp0_lock},
-+	{MMP2_CLK_DISP0_LCDC, "disp0_lcdc_clk", "disp0_mux", CLK_SET_RATE_PAREN=
-T, APMU_DISP0, 0x12, 0x12, 0x0, 0, &disp0_lock},
- 	{MMP2_CLK_DISP0_SPHY, "disp0_sphy_clk", "disp0_sphy_div", CLK_SET_RATE_=
-PARENT, APMU_DISP0, 0x1024, 0x1024, 0x0, 0, &disp0_lock},
--	{MMP2_CLK_DISP1, "disp1_clk", "disp1_div", CLK_SET_RATE_PARENT, APMU_DI=
-SP1, 0x1b, 0x1b, 0x0, 0, &disp1_lock},
-+	{MMP2_CLK_DISP1, "disp1_clk", "disp1_div", CLK_SET_RATE_PARENT, APMU_DI=
-SP1, 0x09, 0x09, 0x0, 0, &disp1_lock},
- 	{MMP2_CLK_CCIC_ARBITER, "ccic_arbiter", "vctcxo", CLK_SET_RATE_PARENT, =
-APMU_CCIC0, 0x1800, 0x1800, 0x0, 0, &ccic0_lock},
- 	{MMP2_CLK_CCIC0, "ccic0_clk", "ccic0_mix_clk", CLK_SET_RATE_PARENT, APM=
-U_CCIC0, 0x1b, 0x1b, 0x0, 0, &ccic0_lock},
- 	{MMP2_CLK_CCIC0_PHY, "ccic0_phy_clk", "ccic0_mix_clk", CLK_SET_RATE_PAR=
-ENT, APMU_CCIC0, 0x24, 0x24, 0x0, 0, &ccic0_lock},
---=20
-2.20.1
+Regards,
+Lukasz
+> 
+>>
+>>>
+>>> Remove 933/138Mhz because exynos5433-dmc.c doesn't use 933Mhz and 138Mhz
+>>> and also Exynos5422 TRM doesn't define 933/138Mhz on pll table.
+>> OK, I will remove them.
+>>>
+>>>> +};
+>>>> +
+>>>>    static const struct samsung_pll_rate_table exynos5420_epll_24mhz_tbl[] = {
+>>>>       PLL_36XX_RATE(24 * MHZ, 600000000U, 100, 2, 1, 0),
+>>>>       PLL_36XX_RATE(24 * MHZ, 400000000U, 200, 3, 2, 0),
+>>>> @@ -1467,7 +1480,7 @@ static void __init exynos5x_clk_init(struct device_node *np,
+>>>>               exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+>>>>               exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
+>>>>               exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+>>>> -            exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+>>>> +            exynos5x_plls[bpll].rate_table = exynos5422_bpll_rate_table;
+>>>
+>>> Exynos5422 used the same PLL table for apll, kpll, bpll and so on.
+>>> You don't need to make the separate pll table. Just add new entries
+>>> to exynos5420_pll2550x_24mhz_tbl table.
+>> OK, I will extend the exynos5420_pll2550x_24mhz_tbl table.
+>>
+>> In v4 patch set, it will be fixed.
+>>
+>> Regards,
+>> Lukasz
+>>>
+>>>>       }
+>>>>
+>>>>       samsung_clk_register_pll(ctx, exynos5x_plls, ARRAY_SIZE(exynos5x_plls),
+>>>>
+>>>
+> 
+> 
+> 
+> --
+> Best Regards,
+> Chanwoo Choi
+> Samsung Electronics
+> 
+> 
