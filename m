@@ -1,44 +1,65 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 1/3] dt-bindings: imx-ocotp: Add i.MX8MQ compatible
-Date: Mon, 11 Feb 2019 17:50:09 +0100
-Message-ID: <20190211165011.5114-1-l.stach@pengutronix.de>
+From: Alexander Syring <alex@asyring.de>
+Subject: [PATCH 1/2] arm64: dts: marvell: mcbin: Adding SPI-NOR Flash Config
+Date: Mon, 11 Feb 2019 18:14:01 +0100
+Message-ID: <20190211171401.434-1-alex@asyring.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Carlo Caione <ccaione@baylibre.com>, linux-imx@nxp.com, kernel@pengutronix.de, patchwork-lst@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, linux-kernel@vger.kernel.org, Alexander Syring <alex@asyring.de>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible for i.MX8MQ and add both i.MX7D/S and i.M8MQ
-to the description.
+According to U-Boot dts file enabling the SPI-NOR flash for use in
+Linux
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Alexander Syring <alex@asyring.de>
 ---
- Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../boot/dts/marvell/armada-8040-mcbin.dtsi   | 23 +++++++++++++++----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-index 792bc5fafeb9..bb8fb8fc6217 100644
---- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-+++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-@@ -1,7 +1,8 @@
- Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+index 329f8ceeebea..83994ff46e2d 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+@@ -333,11 +333,24 @@
+ 	status = "okay";
  
- This binding represents the on-chip eFuse OTP controller found on
--i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL and i.MX6SLL SoCs.
-+i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6SLL, i.MX7D/S
-+and i.MX8MQ SoCs.
+ 	spi-flash@0 {
+-		compatible = "st,w25q32";
+-		spi-max-frequency = <50000000>;
+-		reg = <0>;
+-	};
+-};
++		compatible = "st,w25q32", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++
++			partition@0 {
++				label = "U-Boot";
++				reg = <0 0x200000>;
++			};
++			partition@400000 {
++				label = "U-Boot Env";
++				reg = <0x200000 0xce0000>;
++			};
++		};
++	};
++};
  
- Required properties:
- - compatible: should be one of
-@@ -11,6 +12,7 @@ Required properties:
- 	"fsl,imx6ul-ocotp" (i.MX6UL),
- 	"fsl,imx7d-ocotp" (i.MX7D/S),
- 	"fsl,imx6sll-ocotp" (i.MX6SLL),
-+	"fsl,imx8mq-ocotp" (i.MX8MQ),
- 	followed by "syscon".
- - #address-cells : Should be 1
- - #size-cells : Should be 1
+ &cp1_usb3_0 {
+ 	/* CPS Lane 2 - CON7 */
 -- 
 2.20.1
