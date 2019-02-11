@@ -1,14 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add RTC support
-Date: Mon, 11 Feb 2019 10:19:23 +0800
-Message-ID: <20190211021921.GE22487@dragon>
-References: <1548946870-29037-1-git-send-email-abel.vesa@nxp.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-phytec-pfla02: add missing
+ interrupt-controller property
+Date: Mon, 11 Feb 2019 10:34:07 +0800
+Message-ID: <20190211023405.GF22487@dragon>
+References: <20190204133333.13338-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1548946870-29037-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <20190204133333.13338-1-m.felsch@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,13 +19,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Baruch Siach <baruch@tkos.co.il>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abelvesa@linux.com>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, c.hemp@phytec.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2019 at 03:01:22PM +0000, Abel Vesa wrote:
-> Add RTC support for i.MX8MQ.
+On Mon, Feb 04, 2019 at 02:33:33PM +0100, Marco Felsch wrote:
+> The DA9063 device need the required "interrupt-controller" property as
+> documented by the bindings [1].
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> [1] Documentation/devicetree/bindings/mfd/da9063.txt
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
 Applied, thanks.
