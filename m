@@ -1,85 +1,166 @@
-From: Vishal Sagar <vsagar@xilinx.com>
-Subject: RE: [PATCH v3 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem
-Date: Mon, 11 Feb 2019 12:43:08 +0000
-Message-ID: <CY4PR02MB2709000898D5E290B5EE99F4A7640@CY4PR02MB2709.namprd02.prod.outlook.com>
-References: <1549025766-135037-1-git-send-email-vishal.sagar@xilinx.com>
- <1549025766-135037-3-git-send-email-vishal.sagar@xilinx.com>
- <3923069f-7c69-c601-0ded-f7629696ef9b@lucaceresoli.net>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v3 2/6] usb:common Separated decoding functions from dwc3
+ driver.
+Date: Mon, 11 Feb 2019 12:56:25 +0000
+Message-ID: <BYAPR07MB4709A40204EF528F8A04E1EDDD640@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1548935553-452-1-git-send-email-pawell@cadence.com>
+ <1548935553-452-3-git-send-email-pawell@cadence.com>
+ <20190204114502.GA28608@kroah.com> <87y36vmyeb.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3923069f-7c69-c601-0ded-f7629696ef9b@lucaceresoli.net>
+In-Reply-To: <87y36vmyeb.fsf@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>, Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTHVjYSwNCg0KVGhhbmtzIGZvciByZXZpZXdpbmcgdGhpcy4gDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTHVjYSBDZXJlc29saSBbbWFpbHRvOmx1Y2FAbHVjYWNl
-cmVzb2xpLm5ldF0NCj4gU2VudDogTW9uZGF5LCBGZWJydWFyeSAxMSwgMjAxOSA0OjEyIFBNDQo+
-IFRvOiBWaXNoYWwgU2FnYXIgPHZpc2hhbC5zYWdhckB4aWxpbnguY29tPjsgSHl1biBLd29uIDxo
-eXVua0B4aWxpbnguY29tPjsNCj4gbGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tOyBt
-Y2hlaGFiQGtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFy
-bS5jb207IE1pY2hhbCBTaW1law0KPiA8bWljaGFsc0B4aWxpbnguY29tPjsgbGludXgtbWVkaWFA
-dmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgc2FrYXJpLmFp
-bHVzQGxpbnV4LmludGVsLmNvbTsNCj4gaGFucy52ZXJrdWlsQGNpc2NvLmNvbTsgbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsgRGluZXNoIEt1bWFyIDxkaW5lc2hrQHhpbGlueC5jb20+OyBTYW5kaXAgS290aGFyaQ0K
-PiA8c2FuZGlwa0B4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDIvMl0gbWVk
-aWE6IHY0bDogeGlsaW54OiBBZGQgWGlsaW54IE1JUEkgQ1NJLTIgUngNCj4gU3Vic3lzdGVtDQo+
-IA0KPiBFWFRFUk5BTCBFTUFJTA0KPiANCj4gSGkgVmlzaGFsLA0KPiANCj4gT24gMDEvMDIvMTkg
-MTM6NTYsIFZpc2hhbCBTYWdhciB3cm90ZToNCj4gPiBUaGUgWGlsaW54IE1JUEkgQ1NJLTIgUngg
-U3Vic3lzdGVtIHNvZnQgSVAgaXMgdXNlZCB0byBjYXB0dXJlIGltYWdlcw0KPiA+IGZyb20gTUlQ
-SSBDU0ktMiBjYW1lcmEgc2Vuc29ycyBhbmQgb3V0cHV0IEFYSTQtU3RyZWFtIHZpZGVvIGRhdGEg
-cmVhZHkNCj4gPiBmb3IgaW1hZ2UgcHJvY2Vzc2luZy4gUGxlYXNlIHJlZmVyIHRvIFBHMjMyIGZv
-ciBkZXRhaWxzLg0KPiANCj4gRm9yIHRob3NlIHVudXNlZCB0byBYaWxpbnggZG9jdW1lbnRhdGlv
-biBJJ2QgdXNlIHRoZSBmdWxsIGRvY3VtZW50IG5hbWUNCj4gKCJNSVBJIENTSS0yIFJlY2VpdmVy
-IFN1YnN5c3RlbSB2NC4wIikgb3IsIGV2ZW4gYmV0dGVyLCBhIHN0YWJsZSBVUkwgaWYNCj4gYXZh
-aWxhYmxlLg0KPiANCg0KT2suIEkgd2lsbCBhZGQgdGhlIGZ1bGwgZG9jdW1lbnRhdGlvbiBuYW1l
-IGhlcmUgYW5kIFVSTC4NCg0KPiA+IFRoZSBkcml2ZXIgaXMgdXNlZCB0byBzZXQgdGhlIG51bWJl
-ciBvZiBhY3RpdmUgbGFuZXMsIGlmIGVuYWJsZWQNCj4gPiBpbiBoYXJkd2FyZS4gVGhlIENTSTIg
-UnggY29udHJvbGxlciBmaWx0ZXJzIG91dCBhbGwgcGFja2V0cyBleGNlcHQgZm9yDQo+ID4gdGhl
-IHBhY2tldHMgd2l0aCBkYXRhIHR5cGUgZml4ZWQgaW4gaGFyZHdhcmUuIFJBVzggcGFja2V0cyBh
-cmUgYWx3YXlzDQo+ID4gYWxsb3dlZCB0byBwYXNzIHRocm91Z2guDQo+ID4NCj4gPiBJdCBpcyBh
-bHNvIHVzZWQgdG8gc2V0dXAgYW5kIGhhbmRsZSBpbnRlcnJ1cHRzIGFuZCBlbmFibGUgdGhlIGNv
-cmUuIEl0DQo+ID4gbG9ncyBhbGwgdGhlIGV2ZW50cyBpbiByZXNwZWN0aXZlIGNvdW50ZXJzIGJl
-dHdlZW4gc3RyZWFtaW5nIG9uIGFuZCBvZmYuDQo+ID4gVGhlIGdlbmVyaWMgc2hvcnQgcGFja2V0
-cyByZWNlaXZlZCBhcmUgbm90aWZpZWQgdG8gYXBwbGljYXRpb24gdmlhDQo+ID4gdjRsMl9ldmVu
-dHMuDQo+ID4NCj4gPiBUaGUgZHJpdmVyIHN1cHBvcnRzIG9ubHkgdGhlIHZpZGVvIGZvcm1hdCBi
-cmlkZ2UgZW5hYmxlZCBjb25maWd1cmF0aW9uLg0KPiA+IFNvbWUgZGF0YSB0eXBlcyBsaWtlIFlV
-ViA0MjIgMTBicGMsIFJBVzE2LCBSQVcyMCBhcmUgc3VwcG9ydGVkIHdoZW4NCj4gdGhlDQo+ID4g
-Q1NJIHYyLjAgZmVhdHVyZSBpcyBlbmFibGVkIGluIGRlc2lnbi4gV2hlbiB0aGUgVkNYIGZlYXR1
-cmUgaXMgZW5hYmxlZCwNCj4gPiB0aGUgbWF4aW11bSBudW1iZXIgb2YgdmlydHVhbCBjaGFubmVs
-cyBiZWNvbWVzIDE2IGZyb20gNC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFZpc2hhbCBTYWdh
-ciA8dmlzaGFsLnNhZ2FyQHhpbGlueC5jb20+DQo+IA0KPiAuLi4NCj4gDQo+ID4gKy8qKg0KPiA+
-ICsgKiB4Y3NpMnJ4c3NfcmVzZXQgLSBEb2VzIGEgc29mdCByZXNldCBvZiB0aGUgTUlQSSBDU0ky
-IFJ4IFN1YnN5c3RlbQ0KPiA+ICsgKiBAY29yZTogQ29yZSBYaWxpbnggQ1NJMiBSeCBTdWJzeXN0
-ZW0gc3RydWN0dXJlIHBvaW50ZXINCj4gPiArICoNCj4gPiArICogQ29yZSB0YWtlcyBsZXNzIHRo
-YW4gMTAwIHZpZGVvIGNsb2NrIGN5Y2xlcyB0byByZXNldC4NCj4gPiArICogU28gYSBsYXJnZXIg
-dGltZW91dCB2YWx1ZSBpcyBjaG9zZW4gZm9yIG1hcmdpbi4NCj4gPiArICoNCj4gPiArICogUmV0
-dXJuOiAwIC0gb24gc3VjY2VzcyBPUiAtRVRJTUUgaWYgcmVzZXQgdGltZXMgb3V0DQo+ID4gKyAq
-Lw0KPiA+ICtzdGF0aWMgaW50IHhjc2kycnhzc19yZXNldChzdHJ1Y3QgeGNzaTJyeHNzX2NvcmUg
-KmNvcmUpDQo+ID4gK3sNCj4gPiArICAgICB1MzIgdGltZW91dCA9IFhDU0lfVElNRU9VVF9WQUw7
-DQo+IA0KPiBUaGUgY29tbWVudCBhYm91dCB0aGUgdGltZW91dCBpcyBkdXBsaWNhdGVkIGhlcmUg
-YW5kIGF0IHRoZSAjZGVmaW5lDQo+IGxpbmUuIFdoeSBub3QgcmVtb3ZpbmcgdGhlIGRlZmluZSBh
-Ym92ZSBhbmQganVzdCBwdXR0aW5nDQo+IA0KPiAgIHUzMiB0aW1lb3V0ID0gMTAwMDsgLyogdXMg
-Ki8NCj4gDQo+IGhlcmU/IEl0IHdvdWxkIG1ha2UgdGhlIGVudGlyZSB0aW1lb3V0IGxvZ2ljIGFw
-cGVhciBpbiBhIHVuaXF1ZSBwbGFjZS4NCj4gDQoNCkFncmVlLiBJdCB3YXMga2VwdCBsaWtlIHRo
-YXQgYXMgdGhlIHRpbWVvdXQgdmFsdWUgd2FzIGJlaW5nIHVzZWQgaW4gc29tZSBvdGhlciBwbGFj
-ZSBpbiBlYXJsaWVyIHBhdGNoIHZlcnNpb25zLg0KSSB3aWxsIGRvIGFzIHN1Z2dlc3RlZCBpbiBu
-ZXh0IHZlcnNpb24uDQoNCj4gPiArc3RhdGljIGludCB4Y3NpMnJ4c3Nfc3RhcnRfc3RyZWFtKHN0
-cnVjdCB4Y3NpMnJ4c3Nfc3RhdGUgKnN0YXRlKQ0KPiA+ICt7DQo+ID4gKyAgICAgc3RydWN0IHhj
-c2kycnhzc19jb3JlICpjb3JlID0gJnN0YXRlLT5jb3JlOw0KPiA+ICsgICAgIGludCByZXQgPSAw
-Ow0KPiA+ICsNCj4gPiArICAgICB4Y3NpMnJ4c3NfZW5hYmxlKGNvcmUpOw0KPiA+ICsNCj4gPiAr
-ICAgICByZXQgPSB4Y3NpMnJ4c3NfcmVzZXQoY29yZSk7DQo+ID4gKyAgICAgaWYgKHJldCA8IDAp
-IHsNCj4gPiArICAgICAgICAgICAgIHN0YXRlLT5zdHJlYW1pbmcgPSBmYWxzZTsNCj4gPiArICAg
-ICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgfQ0KPiA+ICsNCj4gPiArICAgICB4Y3Np
-MnJ4c3NfaW50cl9lbmFibGUoY29yZSk7DQo+ID4gKyAgICAgc3RhdGUtPnN0cmVhbWluZyA9IHRy
-dWU7DQo+IA0KPiBTaG91bGRuJ3QgeW91IHByb3BhZ2F0ZSBzX3N0cmVhbSB0byB0aGUgdXBzdHJl
-YW0gc3ViZGV2IGhlcmUgY2FsbGluZw0KPiB2NGwyX3N1YmRldl9jYWxsKC4uLiwgLi4uLCBzX3N0
-cmVhbSwgMSk/DQo+IA0KDQpUaGlzIGlzIGRvbmUgYnkgdGhlIHh2aXBfcGlwZWxpbmVfc3RhcnRf
-c3RvcCgpIGluIHhpbGlueC1kbWEuYyBmb3IgWGlsaW54IFZpZGVvIHBpcGVsaW5lLg0KDQo+ID4g
-KyAgICAgcmV0dXJuIHJldDsNCj4gPiArfQ0KPiANCj4gDQo+IC0tDQo+IEx1Y2ENCg0KUmVnYXJk
-cw0KVmlzaGFsIFNhZ2FyDQo=
+Hi,
+
+>
+>Greg KH <gregkh@linuxfoundation.org> writes:
+>> On Thu, Jan 31, 2019 at 11:52:29AM +0000, Pawel Laszczak wrote:
+>>> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
+>>> to driver/usb/common/debug.c file. These moved functions include:
+>>>     dwc3_decode_get_status
+>>>     dwc3_decode_set_clear_feature
+>>>     dwc3_decode_set_address
+>>>     dwc3_decode_get_set_descriptor
+>>>     dwc3_decode_get_configuration
+>>>     dwc3_decode_set_configuration
+>>>     dwc3_decode_get_intf
+>>>     dwc3_decode_set_intf
+>>>     dwc3_decode_synch_frame
+>>>     dwc3_decode_set_sel
+>>>     dwc3_decode_set_isoch_delay
+>>>     dwc3_decode_ctrl
+>>>
+>>> These functions are used also in inroduced cdns3 driver.
+>>>
+>>> All functions prefixes were changed from dwc3 to usb.
+>>
+>> Ick, why?
+>
+>moving dwc3-specific code into generic code.
+>
+>>> Also, function's parameters has been extended according to the name
+>>> of fields in standard SETUP packet.
+>>> Additionally, patch adds usb_decode_ctrl function to
+>>> include/linux/usb/ch9.h file.
+>>
+>> Why ch9.h?  It's not something that is specified in the spec, it's a
+>> usb-specific thing :)
+>
+>agree.
+
+Similar as usb_state_string function from include/linux/usb/ch9.h which=20
+"Returns human readable name for the state", the usb_decode_ctrl function=20
+make the same but for standard USB request.
+USB Request is usb-specifing thing.=20
+
+If my idea is not correct, can you suggest where this function declaration =
+should be moved.   =20
+>
+>>> +/**
+>>> + * usb_decode_ctrl - Returns human readable representation of control =
+request.
+>>> + * @str: buffer to return a human-readable representation of control r=
+equest.
+>>> + *       This buffer should have about 200 bytes.
+>>
+>> "about 200 bytes" is not very specific.
+>>
+>> Pass in the length so we know we don't overflow it.
+>
+>agree.
+I also agree and I will add such parameter.=20
+>
+>>> + * @bRequestType: matches the USB bmRequestType field
+>>> + * @bRequest: matches the USB bRequest field
+>>> + * @wValue: matches the USB wValue field (CPU byte order)
+>>> + * @wIndex: matches the USB wIndex field (CPU byte order)
+>>> + * @wLength: matches the USB wLength field (CPU byte order)
+>>> + *
+>>> + * Function returns decoded, formatted and human-readable description =
+of
+>>> + * control request packet.
+>>> + *
+>>> + * Important: wValue, wIndex, wLength parameters before invoking this =
+function
+>>> + * should be processed by le16_to_cpu macro.
+>>> + */
+>>> +const char *usb_decode_ctrl(char *str, __u8 bRequestType, __u8 bReques=
+t,
+>>> +			    __u16 wValue,  __u16 wIndex, __u16 wLength);
+>>
+>> Why are you returning a value, isn't the data stored in str?  Why not
+>> just return an int saying if the call succeeded or not?
+>
+>There is one detail here. The usage scenario for this is for
+>tracepoints. When dealing with tracepoints we want to delay decoding of
+>the data into strings until print-time. I guess it's best to illustrate
+>with an example:
+>
+>DECLARE_EVENT_CLASS(dwc3_log_ctrl,
+>	TP_PROTO(struct usb_ctrlrequest *ctrl),
+>	TP_ARGS(ctrl),
+>	TP_STRUCT__entry(
+>		__field(__u8, bRequestType)
+>		__field(__u8, bRequest)
+>		__field(__u16, wValue)
+>		__field(__u16, wIndex)
+>		__field(__u16, wLength)
+>		__dynamic_array(char, str, DWC3_MSG_MAX)
+>	),
+>	TP_fast_assign(
+>		__entry->bRequestType =3D ctrl->bRequestType;
+>		__entry->bRequest =3D ctrl->bRequest;
+>		__entry->wValue =3D le16_to_cpu(ctrl->wValue);
+>		__entry->wIndex =3D le16_to_cpu(ctrl->wIndex);
+>		__entry->wLength =3D le16_to_cpu(ctrl->wLength);
+>	),
+>	TP_printk("%s", dwc3_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
+>					__entry->bRequestType,
+>					__entry->bRequest, __entry->wValue,
+>					__entry->wIndex, __entry->wLength)
+>	)
+>);
+>
+>The above is the code is today (well, I've added buffer size as an
+>argument). If I make dwc3_decode_ctrl() return an integer, I can't call
+>it from TP_printk() time. I'd have to move it to TP_fast_assign() time
+>which is supposed to be, simply, a copy of the necessary data. IOW, I
+>would have this:
+>
+>DECLARE_EVENT_CLASS(dwc3_log_ctrl,
+>	TP_PROTO(struct usb_ctrlrequest *ctrl),
+>	TP_ARGS(ctrl),
+>	TP_STRUCT__entry(
+>		__dynamic_array(char, str, DWC3_MSG_MAX)
+>	),
+>	TP_fast_assign(
+>		dwc3_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
+>				ctrl->bRequestType,
+>				ctrl->bRequest,
+>                                le16_to_cpu(ctrl->wValue),
+>				le16_to_cpu(ctrl->wIndex),
+>                                le16_to_cpu(ctrl->wLength));
+>	),
+>	TP_printk("%s", __get_str(str)
+>	)
+>);
+>
+>Essentially, we end up moving decoding of the tracepoint to the time it
+>is captured; IOW, we reintroduce regular latency of string formatting.
+>
+>What we could do, is move all functions called by dwc3_decode_ctrl() to
+>return int, but leave dwc3_decode_ctrl() returning a pointer to str just
+>so we continue decoding the data at printing time.
+
+I will try to change these functions in this way.=20
+>
+>--
+Thanks=20
+Pawel
