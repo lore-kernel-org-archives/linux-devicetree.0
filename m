@@ -1,45 +1,26 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH] ARM: dts: omap3-gta04: declare backlight in lcd node
-Date: Mon, 11 Feb 2019 17:20:07 +0100
-Message-ID: <20190211162007.15626-1-andreas@kemnade.info>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 02/15] dt-bindings: arm: Add SMP enable-method for Milbeaut
+Date: Mon, 11 Feb 2019 11:37:28 -0600
+Message-ID: <CAL_JsqKofn_H0GE5JR8VEKdbf30iCK_QOyiaR1W=JxcCW7XJxA@mail.gmail.com>
+References: <1549628749-30379-1-git-send-email-sugaya.taichi@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1549628749-30379-1-git-send-email-sugaya.taichi@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
-Cc: Andreas Kemnade <andreas@kemnade.info>
+To: Sugaya Taichi <sugaya.taichi@socionext.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The lcd display of the gta04 has a backlight but the backlight
-was not referenced in the lcd node, so screen blanking did
-not turn off the backlight. Fix that.
+On Fri, Feb 8, 2019 at 6:25 AM Sugaya Taichi
+<sugaya.taichi@socionext.com> wrote:
+>
+> This adds a compatible string "socionext,milbeaut-m10v-smp"
+> for Milbeaut M10V to the 32 bit ARM CPU device tree binding.
+>
+> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-the backlight property for the driver was accepted here:
-https://lore.kernel.org/lkml/a54e7427-ff84-d105-aab7-c5eab42e6df9@ti.com/
-
- arch/arm/boot/dts/omap3-gta04.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 8c55d33ff694..3b88eb5f1a72 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -142,6 +142,7 @@
- 			spi-cpol;
- 			spi-cpha;
- 
-+			backlight= <&backlight>;
- 			label = "lcd";
- 			port {
- 				lcd_in: endpoint {
-@@ -151,7 +152,7 @@
- 		};
- 	};
- 
--	backlight {
-+	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm11 0 12000000 0>;
- 		pwm-names = "backlight";
--- 
-2.11.0
+Reviewed-by: Rob Herring <robh@kernel.org>
