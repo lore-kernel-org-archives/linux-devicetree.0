@@ -1,8 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 3/7] of: address: Add parent pointer to the
- __of_translate_address args
-Date: Mon, 11 Feb 2019 16:02:51 +0100
-Message-ID: <57fa05909120919f33590fed11bd4041467a09f5.1549897336.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v3 4/7] of: address: Add support for the parent DMA bus
+Date: Mon, 11 Feb 2019 16:02:52 +0100
+Message-ID: <fc76568f10be15b0dfc7515d6affecb20de3e479.1549897336.git-series.maxime.ripard@bootlin.com>
 References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,83 +21,87 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The __of_translate_address function is used to translate the device tree
-addresses to physical addresses using the various ranges property to create
-the offset.
+Some SoCs have devices that are using a separate bus from the main bus to
+perform DMA.
 
-However, it's shared between the CPU addresses (based on the ranges
-property) and the DMA addresses (based on dma-ranges). Since we're going to
-add support for a DMA parent node that is not the DT parent node, we need
-to change the logic a bit to have an optional parent node that we should
-use.
+These buses might have some restrictions and/or different mapping than from
+the CPU side, so we'd need to express those using the usual dma-ranges, but
+using a different DT node than the node's parent.
+
+Now that the generic interconnect bindings are available, we can model an
+interconnect with the reserved name "dma" for those use-cases.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/of/address.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/of/address.c | 34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 2270373b30ab..4c5dc21c71ca 100644
+index 4c5dc21c71ca..0e9d87a664f5 100644
 --- a/drivers/of/address.c
 +++ b/drivers/of/address.c
-@@ -569,10 +569,10 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
-  * relative to that node.
-  */
- static u64 __of_translate_address(struct device_node *dev,
-+				  struct device_node *parent,
- 				  const __be32 *in_addr, const char *rprop,
- 				  struct device_node **host)
- {
--	struct device_node *parent = NULL;
- 	struct of_bus *bus, *pbus;
- 	__be32 addr[OF_MAX_ADDR_CELLS];
- 	int na, ns, pna, pns;
-@@ -583,11 +583,14 @@ static u64 __of_translate_address(struct device_node *dev,
+@@ -583,8 +583,8 @@ static u64 __of_translate_address(struct device_node *dev,
  	/* Increase refcount at current level */
  	of_node_get(dev);
  
--	*host = NULL;
--	/* Get parent & match bus type */
--	parent = of_get_parent(dev);
--	if (parent == NULL)
--		goto bail;
-+	if (!parent) {
-+		*host = NULL;
-+		/* Get parent & match bus type */
-+		parent = of_get_parent(dev);
-+		if (parent == NULL)
-+			goto bail;
-+	}
++	*host = NULL;
+ 	if (!parent) {
+-		*host = NULL;
+ 		/* Get parent & match bus type */
+ 		parent = of_get_parent(dev);
+ 		if (parent == NULL)
+@@ -678,12 +678,34 @@ u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
+ }
+ EXPORT_SYMBOL(of_translate_address);
+ 
++static struct device_node *__of_get_dma_parent(struct device_node *np)
++{
++	struct of_phandle_args args;
++	unsigned int index;
++	int ret;
 +
- 	bus = of_match_bus(parent);
- 
- 	/* Count address cells & copy address locally */
-@@ -665,7 +668,7 @@ u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
++	ret = of_property_match_string(np, "interconnect-names", "dma");
++	if (ret < 0)
++		return of_get_parent(np);
++
++	ret = of_parse_phandle_with_args(np, "interconnects",
++					 "#interconnect-cells",
++					 index, &args);
++	if (ret < 0)
++		return of_get_parent(np);
++
++	return of_node_get(args.np);
++}
++
+ u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
+ {
++	struct device_node *parent;
  	struct device_node *host;
  	u64 ret;
  
--	ret = __of_translate_address(dev, in_addr, "ranges", &host);
-+	ret = __of_translate_address(dev, NULL, in_addr, "ranges", &host);
- 	if (host) {
- 		of_node_put(host);
- 		return OF_BAD_ADDR;
-@@ -680,7 +683,7 @@ u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
- 	struct device_node *host;
- 	u64 ret;
- 
--	ret = __of_translate_address(dev, in_addr, "dma-ranges", &host);
-+	ret = __of_translate_address(dev, NULL, in_addr, "dma-ranges", &host);
+-	ret = __of_translate_address(dev, NULL, in_addr, "dma-ranges", &host);
++	parent = __of_get_dma_parent(dev);
++	ret = __of_translate_address(dev, parent, in_addr, "dma-ranges", &host);
++	of_node_put(parent);
  
  	if (host) {
  		of_node_put(host);
-@@ -736,7 +739,7 @@ static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr,
- 	unsigned long port;
- 	struct device_node *host;
+@@ -911,9 +933,15 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 		return -EINVAL;
  
--	taddr = __of_translate_address(dev, in_addr, "ranges", &host);
-+	taddr = __of_translate_address(dev, NULL, in_addr, "ranges", &host);
- 	if (host) {
- 		/* host-specific port access */
- 		port = logic_pio_trans_hwaddr(&host->fwnode, taddr, size);
+ 	while (1) {
++		struct device_node *parent;
++
+ 		naddr = of_n_addr_cells(node);
+ 		nsize = of_n_size_cells(node);
+-		node = of_get_next_parent(node);
++
++		parent = __of_get_dma_parent(node);
++		of_node_put(node);
++
++		node = parent;
+ 		if (!node)
+ 			break;
+ 
 -- 
 git-series 0.9.1
