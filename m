@@ -1,54 +1,89 @@
 From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
-Subject: [PATCHv11 0/3] Intel FPGA Video and Image Processing Suite
-Date: Mon, 11 Feb 2019 10:11:07 +0800
-Message-ID: <20190211021110.2717-1-hean.loong.ong@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCHv11 1/3] ARM:dt-bindings:display Intel FPGA Video and Image
+ Processing Suite
+Date: Mon, 11 Feb 2019 10:11:08 +0800
+Message-ID: <20190211021110.2717-2-hean.loong.ong@intel.com>
+References: <20190211021110.2717-1-hean.loong.ong@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190211021110.2717-1-hean.loong.ong@intel.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Rienk de Jong <rienk.dejong@quest-innovations.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com, chin.liang.see@intel.com, Ong@vger.kernel.org
+Cc: devicetree@vger.kernel.org, hean.loong.ong@intel.com, chin.liang.see@intel.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Ong@freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ong, Hean Loong <hean.loong.ong@intel.com>
-
-The FPGA FrameBuffer Soft IP could be seen  as the GPU and the DRM driver 
-patch here is allocating memory for information to be streamed from the 
-ARM/Linux to the display port. 
-
-Basically the driver just wraps the information such as the pixels 
-to be drawn by the FPGA FrameBuffer 2.
-
-The piece of hardware in discussion is the SoC FPGA where Linux runs on 
-the ARM chip and the FGPA is driven by its NIOS soft core with its own 
-proprietary firmware.
-
-For example the application from the ARM Linux would have to write 
-information on the /dev/fb0 with the information stored in the 
-SDRAM to be fetched by the FPGA framebuffer IP and displayed 
-on the Display Port Monitor.
-
-
-Ong Hean Loong (2):
-  ARM:socfpga-defconfig Intel FPGA Video and Image Processing Suite
-  ARM:drm ivip Intel FPGA Video and Image Processing Suite
-
-Ong, Hean Loong (1):
-  ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
-
- .../devicetree/bindings/display/altr,vip-fb2.txt   |   63 +++++++
- arch/arm/configs/socfpga_defconfig                 |    5 +
- drivers/gpu/drm/Kconfig                            |    2 +
- drivers/gpu/drm/Makefile                           |    1 +
- drivers/gpu/drm/ivip/Kconfig                       |   14 ++
- drivers/gpu/drm/ivip/Makefile                      |    7 +
- drivers/gpu/drm/ivip/intel_vip_conn.c              |   87 ++++++++++
- drivers/gpu/drm/ivip/intel_vip_core.c              |  152 +++++++++++++++++
- drivers/gpu/drm/ivip/intel_vip_drv.h               |   40 +++++
- drivers/gpu/drm/ivip/intel_vip_of.c                |  177 ++++++++++++++++++++
- 10 files changed, 548 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
- create mode 100644 drivers/gpu/drm/ivip/Kconfig
- create mode 100644 drivers/gpu/drm/ivip/Makefile
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_core.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_of.c
+RnJvbTogT25nLCBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+CgpEZXZpY2Ug
+dHJlZSBiaW5kaW5nIGZvciBJbnRlbCBGUEdBIFZpZGVvIGFuZCBJbWFnZSBQcm9jZXNzaW5nIFN1
+aXRlLiBUaGUgYmluZGluZyBpbnZvbHZlZCB3b3VsZCBiZSBnZW5lcmF0ZWQgZnJvbSB0aGUgQWx0
+ZXJhIChJbnRlbCkgUXN5cyBzeXN0ZW0uIFRoZSBiaW5kaW5ncyB3b3VsZCBzZXQgdGhlIG1heCB3
+aWR0aCwgbWF4IGhlaWdodCwgYnV0cyBwZXIgcGl4ZWwgYW5kIG1lbW9yeSBwb3J0IHdpZHRoLiBU
+aGUgZGV2aWNlIHRyZWUgYmluZGluZyBvbmx5IHN1cHBvcnRzIHRoZSBJbnRlbApBcnJpYTEwIGRl
+dmtpdCBhbmQgaXRzIHZhcmlhbnRzLiBWZW5kb3IgbmFtZSByZXRhaW5lZCBhcyBhbHRyLgoKVjg6
+CipBZGQgcG9ydCB0byBEaXNwbGF5IHBvcnQgZGVjb2RlcgoKVjc6CipGaXggT0YgZ3JhcGggZm9y
+IGJldHRlciBkZXNjcmlwdGlvbgoqQWRkIGRlc2NyaXB0aW9uIGZvciBlbmNvZGVyCgpWNjoKKkRl
+c2NyaXB0aW9uIGhhdmUgbm90IGRlc2NyaWJlIERUIGRldmljZSBpbiBnZW5lcmFsCgpWNToKKnJl
+bW92ZSBiaW5kaW5ncyBmb3IgYml0cyBwZXIgc3ltYm9sIGFzIGl0IGhhcyBvbmx5IG9uZSB2YWx1
+ZSB3aGljaCBpcyA4CgpWNDoKKmZpeCBwcm9wZXJ0aWVzIHRoYXQgZG9lcyBub3QgZGVzY3JpYmUg
+dGhlIHZhbHVlcwoKVjM6CipPRiBncmFwaCBub3QgaW4gYWNjb3JkYW5jZSB0byBncmFwaC50eHQK
+ClYyOgoqUmVtb3ZlIExpbnV4IGRyaXZlciBkZXNjcmlwdGlvbgoKVjE6CipNaXNzaW5nIHZlbmRv
+ciBwcmVmaXgKClNpZ25lZC1vZmYtYnk6IE9uZywgSGVhbiBMb29uZyA8aGVhbi5sb29uZy5vbmdA
+aW50ZWwuY29tPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYWx0cix2aXAt
+ZmIyLnR4dCAgIHwgICA2MyArKysrKysrKysrKysrKysrKysrKwogMSBmaWxlcyBjaGFuZ2VkLCA2
+MyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZiMi50eHQKCmRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRy
+LHZpcC1mYjIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+YWx0cix2aXAtZmIyLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi44OWEz
+YjllCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYWx0cix2aXAtZmIyLnR4dApAQCAtMCwwICsxLDYzIEBACitJbnRlbCBWaWRlbyBh
+bmQgSW1hZ2UgUHJvY2Vzc2luZyhWSVApIEZyYW1lIEJ1ZmZlciBJSSBiaW5kaW5ncworCitTdXBw
+b3J0ZWQgaGFyZHdhcmU6IEludGVsIEZQR0EgU29DIEFycmlhMTAgYW5kIGFib3ZlIHdpdGggZGlz
+cGxheSBwb3J0IElQCisKK1RoZSBWaWRlbyBGcmFtZSBCdWZmZXIgSUkgaW4gVmlkZW8gSW1hZ2Ug
+UHJvY2Vzc2luZyAoVklQKSBzdWl0ZSBpcyBhbiBJUCBjb3JlCit0aGF0IGludGVyZmFjZXMgYmV0
+d2VlbiBzeXN0ZW0gbWVtb3J5IGFuZCBBdmFsb24tU1QgdmlkZW8gcG9ydHMuIFRoZSBJUCBjb3Jl
+CitjYW4gYmUgY29uZmlndXJlZCB0byBzdXBwb3J0IHRoZSBtZW1vcnkgcmVhZGVyIChmcm9tIG1l
+bW9yeSB0byBBdmFsb24tU1QpCithbmQvb3IgbWVtb3J5IHdyaXRlciAoZnJvbSBBdmFsb24tU1Qg
+dG8gbWVtb3J5KSBpbnRlcmZhY2VzLgorCitNb3JlIGluZm9ybWF0aW9uIHRoZSBGUEdBIHZpZGVv
+IElQIGNvbXBvbmVudCBjYW4gYmUgYWNxdWlyZWQgZnJvbQoraHR0cHM6Ly93d3cuYWx0ZXJhLmNv
+bS9jb250ZW50L2RhbS9hbHRlcmEtd3d3L2dsb2JhbC9lbl9VUy9wZGZzXAorL2xpdGVyYXR1cmUv
+dWcvdWdfdmlwLnBkZgorCitEVC1CaW5kaW5nczoKKz09PT09PT09PT09PT0KK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6CistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCistIGNvbXBhdGlibGU6ICJh
+bHRyLHZpcC1mcmFtZS1idWZmZXItMi4wIgorLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBh
+bmQgbGVuZ3RoIG9mIHRoZSBmcmFtZWJ1ZmZlciBjb250cm9sbGVyJ3MKKwlyZWdpc3RlcnMuCist
+IGFsdHIsbWF4LXdpZHRoOiBUaGUgbWF4aW11bSB3aWR0aCBvZiB0aGUgZnJhbWVidWZmZXIgaW4g
+cGl4ZWxzLgorLSBhbHRyLG1heC1oZWlnaHQ6IFRoZSBtYXhpbXVtIGhlaWdodCBvZiB0aGUgZnJh
+bWVidWZmZXIgaW4gcGl4ZWxzLgorLSBhbHRyLG1lbS1wb3J0LXdpZHRoID0gdGhlIGJ1cyB3aWR0
+aCBvZiB0aGUgYXZhbG9uIG1hc3RlciBwb3J0CisJb24gdGhlIGZyYW1lIHJlYWRlcgorCitPcHRp
+b25hbCBzdWItbm9kZXM6CistIHBvcnRzOiBUaGUgY29ubmVjdGlvbiB0byB0aGUgZW5jb2Rlcgor
+CitDb25uZWN0aW9ucyBiZXR3ZWVuIHRoZSBGcmFtZSBCdWZmZXIgSUkgYW5kIG90aGVyIHZpZGVv
+IElQIGNvcmVzIGluIHRoZSBzeXN0ZW0KK2FyZSBtb2RlbGxlZCB1c2luZyB0aGUgT0YgZ3JhcGgg
+RFQgYmluZGluZ3MuIFRoZSBGcmFtZSBCdWZmZXIgSUkgbm9kZSBoYXMgdXAKK3RvIHR3byBPRiBn
+cmFwaCBwb3J0cy4gV2hlbiB0aGUgbWVtb3J5IHdyaXRlciBpbnRlcmZhY2UgaXMgZW5hYmxlZCwg
+cG9ydCAwCittYXBzIHRvIHRoZSBBdmFsb24tU1QgSW5wdXQgKGRpbikgcG9ydC4gV2hlbiB0aGUg
+bWVtb3J5IHJlYWRlciBpbnRlcmZhY2UgaXMKK2VuYWJsZWQsIHBvcnQgMSBtYXBzIHRvIHRoZSBB
+dmFsb24tU1QgT3V0cHV0IChkb3V0KSBwb3J0LgorCitUaGUgZW5jb2RlciBpcyBidWlsdCBpbnRv
+IHRoZSBGUEdBIEhXIGRlc2lnbiBhbmQgdGhlcmVmb3JlIHdvdWxkIG5vdAorYmUgYWNjZXNzaWJs
+ZSBmcm9tIHRoZSBERFIuCisKKwkJUG9ydCAwCQkJCVBvcnQxCistLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KK0FSUklBMTAgQVZBTE9OX1NU
+IChESU4pCQlBVkFMT05fU1QgKERPVVQpCisKK1JlcXVpcmVkIFByb3BlcnRpZXMgRXhhbXBsZToK
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KKworZnJhbWVidWZmZXJAMTAwMDAwMjgwIHsK
+KwkJY29tcGF0aWJsZSA9ICJhbHRyLHZpcC1mcmFtZS1idWZmZXItMi4wIjsKKwkJcmVnID0gPDB4
+MDAwMDAwMDEgMHgwMDAwMDI4MCAweDAwMDAwMDQwPjsKKwkJYWx0cixtYXgtd2lkdGggPSA8MTI4
+MD47CisJCWFsdHIsbWF4LWhlaWdodCA9IDw3MjA+OworCQlhbHRyLG1lbS1wb3J0LXdpZHRoID0g
+PDEyOD47CisKKwkJcG9ydHMgeworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXpl
+LWNlbGxzID0gPDA+OworCisJCQlwb3J0QDEgeworCQkJCXJlZyA9IDwxPjsKKwkJCQkJZmJfb3V0
+cHV0OiBlbmRwb2ludCB7CisJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRwX2VuY29kZXJfaW5w
+dXQ+OworCQkJCQl9OworCQkJfTsKKwkJfTsKK307Ci0tIAoxLjcuMQoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
