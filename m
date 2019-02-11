@@ -1,66 +1,92 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [Letux-kernel] [PATCH] ARM: dts: omap3-gta04: declare backlight in lcd node
-Date: Mon, 11 Feb 2019 19:14:12 +0100
-Message-ID: <E556C766-1B1D-4352-9D64-D18B631ADB7D@goldelico.com>
-References: <20190211162007.15626-1-andreas@kemnade.info>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [GIT PULL] of: overlay: validation checks, subsequent fixes for
+ v20 -- correction: v4.20
+Date: Mon, 11 Feb 2019 12:41:40 -0600
+Message-ID: <CANk1AXS=4fT6LbOHqK4DYhSMcO9Q60mDcQsFFnwoJLHj8wRsTA@mail.gmail.com>
+References: <262419e9-5c9f-1193-f119-33f373d81e43@gmail.com> <b113e03d-95f9-96bc-2a50-bc61307e780e@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211162007.15626-1-andreas@kemnade.info>
+In-Reply-To: <b113e03d-95f9-96bc-2a50-bc61307e780e@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 9, 2018 at 12:58 AM Frank Rowand <frowand.list@gmail.com> wrote:
 
-> Am 11.02.2019 um 17:20 schrieb Andreas Kemnade <andreas@kemnade.info>:
->=20
-> The lcd display of the gta04 has a backlight but the backlight
-> was not referenced in the lcd node, so screen blanking did
-> not turn off the backlight. Fix that.
->=20
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+What LTSI's are these patches likely to end up in?  Just to be clear,
+I'm not pushing for any specific answer, I just want to know what to
+expect.
 
-Works fine.
+Thanks,
+Alan
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-
-> ---
-> the backlight property for the driver was accepted here:
-> =
-https://lore.kernel.org/lkml/a54e7427-ff84-d105-aab7-c5eab42e6df9@ti.com/
->=20
-> arch/arm/boot/dts/omap3-gta04.dtsi | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi =
-b/arch/arm/boot/dts/omap3-gta04.dtsi
-> index 8c55d33ff694..3b88eb5f1a72 100644
-> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
-> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-> @@ -142,6 +142,7 @@
-> 			spi-cpol;
-> 			spi-cpha;
->=20
-> +			backlight=3D <&backlight>;
-> 			label =3D "lcd";
-> 			port {
-> 				lcd_in: endpoint {
-> @@ -151,7 +152,7 @@
-> 		};
-> 	};
->=20
-> -	backlight {
-> +	backlight: backlight {
-> 		compatible =3D "pwm-backlight";
-> 		pwms =3D <&pwm11 0 12000000 0>;
-> 		pwm-names =3D "backlight";
-> --=20
-> 2.11.0
->=20
-> _______________________________________________
-> http://projects.goldelico.com/p/gta04-kernel/
-> Letux-kernel mailing list
-> Letux-kernel@openphoenux.org
-> http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
+>
+> On 11/8/18 10:56 PM, Frank Rowand wrote:
+> > Hi Rob,
+> >
+> > Please pull the changes to add the overlay validation checks.
+> >
+> > This is the v7 version of the patch series.
+> >
+> > -Frank
+> >
+> >
+> > The following changes since commit 651022382c7f8da46cb4872a545ee1da6d097d2a:
+> >
+> >   Linux 4.20-rc1 (2018-11-04 15:37:52 -0800)
+> >
+> > are available in the git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/frowand/linux.git tags/kfree_validate_v7-for-4.20
+> >
+> > for you to fetch changes up to eeb07c573ec307c53fe2f6ac6d8d11c261f64006:
+> >
+> >   of: unittest: initialize args before calling of_*parse_*() (2018-11-08 22:12:37 -0800)
+> >
+> > ----------------------------------------------------------------
+> > Add checks to (1) overlay apply process and (2) memory freeing
+> > triggered by overlay release.  The checks are intended to detect
+> > possible memory leaks and invalid overlays.
+> >
+> > The checks revealed bugs in existing code.  Fixed the bugs.
+> >
+> > While fixing bugs, noted other issues, which are fixed in
+> > separate patches.
+> >
+> > ----------------------------------------------------------------
+> > Frank Rowand (17):
+> >       of: overlay: add tests to validate kfrees from overlay removal
+> >       of: overlay: add missing of_node_put() after add new node to changeset
+> >       of: overlay: add missing of_node_get() in __of_attach_node_sysfs
+> >       powerpc/pseries: add of_node_put() in dlpar_detach_node()
+> >       of: overlay: use prop add changeset entry for property in new nodes
+> >       of: overlay: do not duplicate properties from overlay for new nodes
+> >       of: overlay: reorder fields in struct fragment
+> >       of: overlay: validate overlay properties #address-cells and #size-cells
+> >       of: overlay: make all pr_debug() and pr_err() messages unique
+> >       of: overlay: test case of two fragments adding same node
+> >       of: overlay: check prevents multiple fragments add or delete same node
+> >       of: overlay: check prevents multiple fragments touching same property
+> >       of: unittest: remove unused of_unittest_apply_overlay() argument
+> >       of: overlay: set node fields from properties when add new overlay node
+> >       of: unittest: allow base devicetree to have symbol metadata
+> >       of: unittest: find overlays[] entry by name instead of index
+> >       of: unittest: initialize args before calling of_*parse_*()
+> >
+> >  arch/powerpc/platforms/pseries/dlpar.c             |   2 +
+> >  drivers/of/dynamic.c                               |  59 ++++-
+> >  drivers/of/kobj.c                                  |   4 +-
+> >  drivers/of/overlay.c                               | 292 ++++++++++++++++-----
+> >  drivers/of/unittest-data/Makefile                  |   2 +
+> >  .../of/unittest-data/overlay_bad_add_dup_node.dts  |  28 ++
+> >  .../of/unittest-data/overlay_bad_add_dup_prop.dts  |  24 ++
+> >  drivers/of/unittest-data/overlay_base.dts          |   1 +
+> >  drivers/of/unittest.c                              |  96 +++++--
+> >  include/linux/of.h                                 |  21 +-
+> >  10 files changed, 432 insertions(+), 97 deletions(-)
+> >  create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_node.dts
+> >  create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
+> >
+>
