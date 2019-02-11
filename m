@@ -1,563 +1,109 @@
-From: Martyn Welch <martyn.welch@collabora.com>
-Subject: [PATCH] ARM: dts: am335x: Add support for Bosch Guardian
-Date: Mon, 11 Feb 2019 12:27:27 +0000
-Message-ID: <20190211122727.5582-1-martyn.welch@collabora.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v5 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Mon, 11 Feb 2019 13:29:54 +0100
+Message-ID: <20190211122954.33thpip3yhtdw5x6@pengutronix.de>
+References: <1548762199-7065-1-git-send-email-yash.shah@sifive.com>
+ <1548762199-7065-3-git-send-email-yash.shah@sifive.com>
+ <20190207101657.rfzcq6xdv6ocvubg@pengutronix.de>
+ <CAJ2_jOGYkwb2QSUH1UU_QoGXE5LFoR0XGJmuYfNtYcZXHXyfaA@mail.gmail.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ2_jOGYkwb2QSUH1UU_QoGXE5LFoR0XGJmuYfNtYcZXHXyfaA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: Martyn Welch <martyn.welch@collabora.com>, devicetree@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-The Bosch Guardian is a TI am335x based device.
+Hello,
 
-It's hardware specifications are as follows:
+On Mon, Feb 11, 2019 at 04:56:27PM +0530, Yash Shah wrote:
+> On Thu, Feb 7, 2019 at 3:47 PM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Tue, Jan 29, 2019 at 05:13:19PM +0530, Yash Shah wrote:
+> > > +struct pwm_sifive_ddata {
+> > > +     struct pwm_chip chip;
+> > > +     struct notifier_block notifier;
+> > > +     struct clk *clk;
+> > > +     void __iomem *regs;
+> > > +     unsigned int approx_period;
+> > > +     unsigned int real_period;
+> > > +};
+> > > +
+> > > +static inline struct pwm_sifive_ddata *to_pwm_sifive_chip(struct pwm_chip *c)
+> >
+> > even though this is inlined I would like this to have use the
+> > pwm_sifive_ prefix, too.
+> 
+> Not sure what exactly you want me to do here.
 
- * 256 MB DDR3 memory
- * 512 MB NAND Flash
- * USB OTG
- * RS232
- * MicroSD external storage
- * LCD Display interface
+I want this function to be named something like pwm_sifive_chip_to_ddata.
+This way it has the common prefix (and is less confusing because
+to..chip suggests that is converts something to a chip, but the outcome
+is ...ddata).
+ 
+> > In a previous review round I had doubts about the calculation of frac
+> > and I think they were addressed wrongly.
+> > Looking at the figure at the start of chapter 14.9 in the reference
+> > manual: They use (different than the driver here) pwmcmp0=6 and
+> > pwmzerocmp=1. Then a period is 7 clock cycles long and pwmcmpX must be 7
+> > (for X > 0) to yield a 100% signal. So pwmcmpX must be greater than or
+> > equal to the period (in clock cycles).
+> >
+> > Here we're using pwmzerocmp=0, still the constraint
+> >
+> >         pwmcmpX >= period
+> >
+> > must be true for a 100% cycle. (Right?) With pwmzerocmp=0 the period is
+> > 0x10000 clock cycles, so pwmcmpX must be >= 0x10000 to yield a 100%
+> > signal. As this is not possible (pwmcmpX is a 16 bit value that can only
+> > hold up to 0xffff) the output cannot yield 100%.
+> >
+> > So I think the most correct implementation here is:
+> >
+> >         frac = (duty_cycle * (1 << PWM_SIFIVE_CMPWIDTH) + (1 << PWM_SIFIVE_CMPWIDTH) / 2) / period;
+> >         /* Sorry, we cannot do 100% :-( */
+> >         frac = min(frac, (1 << PWM_SIFIVE_CMPWIDTH) - 1);
+> >
+> 
+> I will once again go through the specs, if it seems correct I will
+> implement the above.
 
-Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+I would just test this at runtime. Configure for 100% and check the wave
+form if it is constant.
 
----
+> > > +static int pwm_sifive_probe(struct platform_device *pdev)
+> > > +{
+> > > [...]
+> > > +     /* Watch for changes to underlying clock frequency */
+> > > +     pwm->notifier.notifier_call = pwm_sifive_clock_notifier;
+> > > +     ret = clk_notifier_register(pwm->clk, &pwm->notifier);
+> > > +     if (ret) {
+> > > +             dev_err(dev, "failed to register clock notifier: %d\n", ret);
+> > > +             goto disable_clk;
+> > > +     }
+> >
+> > Would it make sense to only enable the clock when the pwm is enabled?
+> > (If yes, how does the output behave if the clock is disabled while the
+> > hardware is enabled? I assume the output just freezes at the state where
+> > it happens to be?)
+> 
+> Yes. Not sure about the behaviour of hardware when the clock is disabled.
+> The behaviour should be like you said. If there is no strong reason
+> then we can keep it as it is right now
+> or else if you want I can make the necessary change.
 
- arch/arm/boot/dts/Makefile            |   1 +
- arch/arm/boot/dts/am335x-guardian.dts | 511 ++++++++++++++++++++++++++
- 2 files changed, 512 insertions(+)
- create mode 100644 arch/arm/boot/dts/am335x-guardian.dts
+I would prefer to only have the clock enabled when it is actually used.
+Note the common pitfall that you cannot disable the clk immediately
+after configureing the duty cycle to 100% or 0% though because you must
+only stop the clock when the newly configured parameters are active.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bd40148a15b2..1ad9a6307b0a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -719,6 +719,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
- 	am335x-cm-t335.dtb \
- 	am335x-evm.dtb \
- 	am335x-evmsk.dtb \
-+	am335x-guardian.dtb \
- 	am335x-icev2.dtb \
- 	am335x-lxm.dtb \
- 	am335x-moxa-uc-2101.dtb \
-diff --git a/arch/arm/boot/dts/am335x-guardian.dts b/arch/arm/boot/dts/am335x-guardian.dts
-new file mode 100644
-index 000000000000..d8652ab014b2
---- /dev/null
-+++ b/arch/arm/boot/dts/am335x-guardian.dts
-@@ -0,0 +1,511 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Robert Bosch Power Tools GmbH
-+ */
-+/dts-v1/;
-+
-+#include "am33xx.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	model = "Bosch AM335x Guardian";
-+	compatible = "bosch,am335x-guardian", "ti,am33xx";
-+
-+	chosen {
-+		stdout-path = &uart0;
-+		tick-timer = &timer2;
-+	};
-+
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&dcdc2_reg>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x10000000>; /* 256 MB */
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_keys_pins>;
-+
-+		button21 {
-+			label = "guardian-power-button";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio2 21 0>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&leds_pins>;
-+
-+		led1 {
-+			label = "green:heartbeat";
-+			gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		led2 {
-+			label = "green:mmc0";
-+			gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+			default-state = "off";
-+		};
-+	};
-+
-+	panel {
-+		compatible = "ti,tilcdc,panel";
-+		pinctrl-names = "default", "sleep";
-+		pinctrl-0 = <&lcd_pins_default &lcd_disen_pins>;
-+		pinctrl-1 = <&lcd_pins_sleep>;
-+
-+		display-timings {
-+			320x240 {
-+				hactive         = <320>;
-+				vactive         = <240>;
-+				hback-porch     = <68>;
-+				hfront-porch    = <20>;
-+				hsync-len       = <1>;
-+				vback-porch     = <18>;
-+				vfront-porch    = <4>;
-+				vsync-len       = <1>;
-+				clock-frequency = <9000000>;
-+				hsync-active    = <0>;
-+				vsync-active    = <0>;
-+			};
-+		};
-+		panel-info {
-+			ac-bias           = <255>;
-+			ac-bias-intrpt    = <0>;
-+			dma-burst-sz      = <16>;
-+			bpp               = <24>;
-+			bus-width         = <16>;
-+			fdd               = <0x80>;
-+			sync-edge         = <0>;
-+			sync-ctrl         = <1>;
-+			raster-order      = <0>;
-+			fifo-th           = <0>;
-+		};
-+
-+	};
-+
-+	pwm7: dmtimer-pwm {
-+		compatible = "ti,omap-dmtimer-pwm";
-+		ti,timers = <&timer7>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&dmtimer7_pins>;
-+	};
-+
-+	vmmcsd_fixed: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vmmcsd_fixed";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&cppi41dma  {
-+	status = "okay";
-+};
-+
-+&elm {
-+	status = "okay";
-+};
-+
-+&gpmc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nandflash_pins>;
-+	ranges = <0 0 0x08000000 0x1000000>;  /* CS0: 16MB for NAND */
-+	status = "okay";
-+
-+	nand@0,0 {
-+		compatible = "ti,omap2-nand";
-+		reg = <0 0 4>; /* CS0, offset 0, IO size 4 */
-+		interrupt-parent = <&gpmc>;
-+		interrupts = <0 IRQ_TYPE_NONE>, /* fifoevent */
-+			     <1 IRQ_TYPE_NONE>; /* termcount */
-+		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
-+		ti,nand-ecc-opt = "bch16";
-+		ti,elm-id = <&elm>;
-+		nand-bus-width = <8>;
-+		gpmc,device-width = <1>;
-+		gpmc,sync-clk-ps = <0>;
-+		gpmc,cs-on-ns = <0>;
-+		gpmc,cs-rd-off-ns = <44>;
-+		gpmc,cs-wr-off-ns = <44>;
-+		gpmc,adv-on-ns = <6>;
-+		gpmc,adv-rd-off-ns = <34>;
-+		gpmc,adv-wr-off-ns = <44>;
-+		gpmc,we-on-ns = <0>;
-+		gpmc,we-off-ns = <40>;
-+		gpmc,oe-on-ns = <0>;
-+		gpmc,oe-off-ns = <54>;
-+		gpmc,access-ns = <64>;
-+		gpmc,rd-cycle-ns = <82>;
-+		gpmc,wr-cycle-ns = <82>;
-+		gpmc,bus-turnaround-ns = <0>;
-+		gpmc,cycle2cycle-delay-ns = <0>;
-+		gpmc,clk-activation-ns = <0>;
-+		gpmc,wr-access-ns = <40>;
-+		gpmc,wr-data-mux-bus-ns = <0>;
-+
-+		/*
-+		 * MTD partition table
-+		 *
-+		 * All SPL-* partitions are sized to minimal length which can
-+		 * be independently programmable. For NAND flash this is equal
-+		 * to size of erase-block.
-+		 */
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "SPL";
-+			reg = <0x0 0x40000>;
-+		};
-+
-+		partition@1 {
-+			label = "SPL.backup1";
-+			reg = <0x40000  0x40000>;
-+		};
-+
-+		partition@2 {
-+			label = "SPL.backup2";
-+			reg = <0x80000  0x40000>;
-+		};
-+
-+		partition@3 {
-+			label = "SPL.backup3";
-+			reg = <0xc0000  0x40000>;
-+		};
-+
-+		partition@4 {
-+			label = "u-boot";
-+			reg = <0x100000 0x100000>;
-+		};
-+
-+		partition@5 {
-+			label = "u-boot.backup1";
-+			reg = <0x200000 0x100000>;
-+		};
-+
-+		partition@6 {
-+			label = "u-boot-env";
-+			reg = <0x300000 0x40000>;
-+		};
-+
-+		partition@7 {
-+			label = "u-boot-env.backup1";
-+			reg = <0x340000 0x40000>;
-+		};
-+
-+		partition@8 {
-+			label = "UBI";
-+			reg = <0x380000 0x1fc80000>;
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	tps: tps@24 {
-+		reg = <0x24>;
-+	};
-+};
-+
-+&lcdc {
-+	blue-and-red-wiring = "crossed";
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	bus-width = <0x4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&vmmcsd_fixed>;
-+	status = "okay";
-+};
-+
-+&rtc {
-+	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
-+	clock-names = "ext-clk", "int-clk";
-+	system-power-controller;
-+};
-+
-+&spi0 {
-+	ti,pindir-d0-out-d1-in;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins>;
-+	status = "okay";
-+};
-+
-+/include/ "tps65217.dtsi"
-+
-+&tps {
-+	ti,pmic-shutdown-controller;
-+	interrupt-parent = <&intc>;
-+	interrupts = <7>; /* NMI */
-+
-+	backlight {
-+		isel = <1>;  /* 1 - ISET1, 2 ISET2 */
-+		fdim = <100>; /* TPS65217_BL_FDIM_100HZ */
-+		default-brightness = <100>;
-+	};
-+
-+	regulators {
-+		dcdc1_reg: regulator@0 {
-+			regulator-name = "vdds_dpr";
-+			regulator-always-on;
-+		};
-+
-+		dcdc2_reg: regulator@1 {
-+			regulator-name = "vdd_mpu";
-+			regulator-min-microvolt = <925000>;
-+			regulator-max-microvolt = <1351500>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		dcdc3_reg: regulator@2 {
-+			regulator-name = "vdd_core";
-+			regulator-min-microvolt = <925000>;
-+			regulator-max-microvolt = <1150000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		ldo1_reg: regulator@3 {
-+			regulator-name = "vio,vrtc,vdds";
-+			regulator-always-on;
-+		};
-+
-+		ldo2_reg: regulator@4 {
-+			regulator-name = "vdd_3v3aux";
-+			regulator-always-on;
-+		};
-+
-+		ldo3_reg: regulator@5 {
-+			regulator-name = "vdd_1v8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		ldo4_reg: regulator@6 {
-+			regulator-name = "vdd_3v3a";
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+&tscadc {
-+	status = "okay";
-+
-+	adc {
-+		ti,adc-channels = <0 1 2 3 4 5 6>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
-+	status = "okay";
-+};
-+
-+&usb {
-+	status = "okay";
-+};
-+
-+&usb_ctrl_mod {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&am33xx_pinmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&clkout2_pin &gpio_pins>;
-+
-+	clkout2_pin: pinmux_clkout2_pin {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x9b4, PIN_OUTPUT_PULLDOWN | MUX_MODE3)
-+		>;
-+	};
-+
-+	dmtimer7_pins: pinmux_dmtimer7_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x968, PIN_OUTPUT | MUX_MODE5)
-+		>;
-+	};
-+
-+	gpio_keys_pins: pinmux_gpio_keys_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x940, PIN_INPUT | MUX_MODE7)
-+		>;
-+	};
-+
-+	gpio_pins: pinmux_gpio_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x928, PIN_OUTPUT | MUX_MODE7)
-+			AM33XX_IOPAD(0x990, PIN_OUTPUT | MUX_MODE7)
-+		>;
-+	};
-+
-+	i2c0_pins: pinmux_i2c0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)
-+		>;
-+	};
-+
-+	lcd_disen_pins: pinmux_lcd_disen_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x9a4, PIN_OUTPUT_PULLUP | SLEWCTRL_SLOW | MUX_MODE7)
-+		>;
-+	};
-+
-+	lcd_pins_default: pinmux_lcd_pins_default {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x820, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE1)
-+			AM33XX_IOPAD(0x824, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE1)
-+			AM33XX_IOPAD(0x828, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE1)
-+			AM33XX_IOPAD(0x82c, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE1)
-+			AM33XX_IOPAD(0x830, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE1)
-+			AM33XX_IOPAD(0x834, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE1)
-+			AM33XX_IOPAD(0x838, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE1)
-+			AM33XX_IOPAD(0x83c, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE1)
-+			AM33XX_IOPAD(0x8a0, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8a4, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8a8, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8ac, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8b0, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8b4, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8b8, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8bc, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8c0, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8c4, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8c8, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8cc, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8d0, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8d4, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8d8, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8dc, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8e0, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8e4, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8e8, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+			AM33XX_IOPAD(0x8ec, PIN_OUTPUT | SLEWCTRL_SLOW | MUX_MODE0)
-+		>;
-+	};
-+
-+	lcd_pins_sleep: pinmux_lcd_pins_sleep {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x8a0, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8a4, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8a8, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8ac, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8b0, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8b4, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8b8, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8bc, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8c0, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8c4, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8c8, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8cc, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8d0, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8d4, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8d8, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8dc, PULL_DISABLE | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8e0, PIN_INPUT_PULLDOWN | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8e4, PIN_INPUT_PULLDOWN | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8e8, PIN_INPUT_PULLDOWN | SLEWCTRL_SLOW | MUX_MODE7)
-+			AM33XX_IOPAD(0x8ec, PIN_INPUT_PULLDOWN | SLEWCTRL_SLOW | MUX_MODE7)
-+		>;
-+	};
-+
-+	leds_pins: pinmux_leds_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x868, PIN_OUTPUT | MUX_MODE7)
-+			AM33XX_IOPAD(0x86c, PIN_OUTPUT | MUX_MODE7)
-+		>;
-+	};
-+
-+	mmc1_pins: pinmux_mmc1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x960, PIN_INPUT | MUX_MODE7)
-+		>;
-+	};
-+
-+	spi0_pins: pinmux_spi0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x950, PIN_OUTPUT_PULLDOWN | MUX_MODE0)
-+			AM33XX_IOPAD(0x954, PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x95c, PIN_OUTPUT_PULLUP | MUX_MODE0)
-+		>;
-+	};
-+
-+	uart0_pins: pinmux_uart0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)
-+			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)
-+		>;
-+	};
-+
-+	nandflash_pins: pinmux_nandflash_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x800, PIN_INPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x804, PIN_INPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x808, PIN_INPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x80c, PIN_INPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x810, PIN_INPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x814, PIN_INPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x818, PIN_INPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x81c, PIN_INPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x870, PIN_INPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x874, PIN_OUTPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x87c, PIN_OUTPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x890, PIN_OUTPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x894, PIN_OUTPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x898, PIN_OUTPUT | MUX_MODE0)
-+			AM33XX_IOPAD(0x89c, PIN_OUTPUT | MUX_MODE0)
-+		>;
-+	};
-+};
+Best regards
+Uwe
+
 -- 
-2.20.1
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
