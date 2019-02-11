@@ -1,40 +1,60 @@
-From: Mesih Kilinc <mesihkilinc@gmail.com>
-Subject: [PATCH 0/7] Timer & SPI support for Allwinner suniv F1C100s
-Date: Mon, 11 Feb 2019 12:21:06 +0300
-Message-ID: <cover.1549875778.git.mesihkilinc@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>
+From: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/7] clocksource: sun4i: add a compatible for suniv
+Date: Mon, 11 Feb 2019 12:21:08 +0300
+Message-ID: <3de720ad1d2b47bf987fa56076d570de8043ed35.1549875778.git.mesihkilinc@gmail.com>
+References: <cover.1549875778.git.mesihkilinc@gmail.com>
+Reply-To: mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDI4VHO5SYLBBLP5QTRQKGQETEREXTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.1549875778.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is followup series for F1C100s initial support patchset. 
-All patches merged except patch 1 ~ 2 which is related to timer.
-I am resending those since they are already have Acked tags.
+The suniv (new F-series) chip has a timer with less functionality than
+the A10 timer, e.g. it has only 3 channels.
 
-Our dt-bindings for F1C100s are merged, we can now use them at our 
-device tree source - patch 3.
+Add a new compatible for it. As we didn't use the extra channels on A10
+either now, the code needn't to be changed.
 
-Also this series add spi support and enables spi flash at Lichee-pi Nano
-in patch 4 ~ 7. This patches are based on Icenowy's work.
+The suniv chip is based on ARM926EJ-S CPU, thus it has no architecture timer.
 
-Thanks!
+Register sun4i_timer as sched_clock on it.
 
-Mesih Kilinc (7):
-  dt-bindings: timer: Add Allwinner suniv timer
-  clocksource: sun4i: add a compatible for suniv
-  ARM: dts: suniv: Add dt-binding headers for F1C100s
-  dt-bindings: spi: Add Support for Allwinner F1C100s
-  ARM: dts: suniv: Add SPI device-tree nodes
-  ARM: dts: suniv: Add pinmux for SPI0 and SPI1 of F1C100s
-  ARM: dts: f1c100s: Activate SPI flash on Lichee Pi Nano
+Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/clocksource/timer-sun4i.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/spi/spi-sun6i.txt          |  5 +-
- .../bindings/timer/allwinner,sun4i-timer.txt       |  4 +-
- arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts  | 13 ++++++
- arch/arm/boot/dts/suniv-f1c100s.dtsi               | 53 +++++++++++++++++++---
- drivers/clocksource/timer-sun4i.c                  |  5 +-
- 5 files changed, 70 insertions(+), 10 deletions(-)
-
+diff --git a/drivers/clocksource/timer-sun4i.c b/drivers/clocksource/timer-sun4i.c
+index 6e0180a..65f38f6 100644
+--- a/drivers/clocksource/timer-sun4i.c
++++ b/drivers/clocksource/timer-sun4i.c
+@@ -186,7 +186,8 @@ static int __init sun4i_timer_init(struct device_node *node)
+ 	 */
+ 	if (of_machine_is_compatible("allwinner,sun4i-a10") ||
+ 	    of_machine_is_compatible("allwinner,sun5i-a13") ||
+-	    of_machine_is_compatible("allwinner,sun5i-a10s"))
++	    of_machine_is_compatible("allwinner,sun5i-a10s") ||
++	    of_machine_is_compatible("allwinner,suniv-f1c100s"))
+ 		sched_clock_register(sun4i_timer_sched_read, 32,
+ 				     timer_of_rate(&to));
+ 
+@@ -218,3 +219,5 @@ static int __init sun4i_timer_init(struct device_node *node)
+ }
+ TIMER_OF_DECLARE(sun4i, "allwinner,sun4i-a10-timer",
+ 		       sun4i_timer_init);
++TIMER_OF_DECLARE(suniv, "allwinner,suniv-f1c100s-timer",
++		       sun4i_timer_init);
 -- 
 2.7.4
