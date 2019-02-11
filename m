@@ -1,81 +1,48 @@
-Return-Path: <SRS0=ylgW=Q7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr130080.outbound.protection.outlook.com ([40.107.13.80]:5698
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726405AbfBXCuL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 23 Feb 2019 21:50:11 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V9 1/4] dt-bindings: fsl: scu: add thermal binding
-Date: Sun, 24 Feb 2019 02:50:03 +0000
-Message-ID: <1550976319-20216-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=0E4C=QS=sigxcpu.org=agx@kernel.org>
+Date: Mon, 11 Feb 2019 11:43:50 +0100
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: [PATCH] dt-bindings: input: Refer to touchscreen.txt for goodix ts
+Message-ID: <20190211104350.GA1330@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>
 List-ID: <devicetree@vger.kernel.org>
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and thermal sensors etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to get temperature from thermal sensors, this patch adds
-binding doc for i.MX system controller thermal driver.
+Refer to touchscreen.txt for generic touch properties. This avoids
+duplication and we're using the generic code to parse these in the
+driver. While at that add touchscreen-size-{x,y} which are respected by
+the driver as well.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Guido G�nther <agx@sigxcpu.org>
 ---
-Changes since V8:
-	- improve "imx,sensor-resource-id" description to cover single and multipl=
-e thermal zones.
----
- .../devicetree/bindings/arm/freescale/fsl,scu.txt   | 21 +++++++++++++++++=
-++++
- 1 file changed, 21 insertions(+)
+ .../bindings/input/touchscreen/goodix.txt           | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
-Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 72d481c..2e310ac 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -122,6 +122,21 @@ RTC bindings based on SCU Message Protocol
- Required properties:
- - compatible: should be "fsl,imx8qxp-sc-rtc";
-=20
-+Thermal bindings based on SCU Message Protocol
-+------------------------------------------------------------
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+index f7e95c52f3c7..bc7796b98a00 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+@@ -18,11 +18,14 @@ Optional properties:
+  - irq-gpios		: GPIO pin used for IRQ. The driver uses the
+ 			  interrupt gpio pin as output to reset the device.
+  - reset-gpios		: GPIO pin used for reset
+-
+- - touchscreen-inverted-x  : X axis is inverted (boolean)
+- - touchscreen-inverted-y  : Y axis is inverted (boolean)
+- - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
+-                             (swapping is done after inverting the axis)
++ - touchscreen-inverted-x
++ - touchscreen-inverted-y
++ - touchscreen-size-x
++ - touchscreen-size-y
++ - touchscreen-swapped-x-y
 +
-+Required properties:
-+- compatible:			Should be :
-+				  "fsl,imx8qxp-sc-thermal"
-+				followed by "fsl,imx-sc-thermal";
-+
-+- #thermal-sensor-cells:	See Documentation/devicetree/bindings/thermal/the=
-rmal.txt
-+				for a description.
-+
-+- imx,sensor-resource-id: 	A single integer for single thermal zone's reso=
-urce ID or
-+				an array of integers to specify each thermal zone's sensor
-+				resource ID.
-+
- Example (imx8qxp):
- -------------
- lsio_mu1: mailbox@5d1c0000 {
-@@ -168,6 +183,12 @@ firmware {
- 		rtc: rtc {
- 			compatible =3D "fsl,imx8qxp-sc-rtc";
- 		};
-+
-+		tsens: thermal-sensor {
-+			compatible =3D "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
-+			#thermal-sensor-cells =3D <0>;
-+			imx,sensor-resource-id =3D <IMX_SC_R_SYSTEM>;
-+		};
- 	};
- };
-=20
---=20
-2.7.4
++The touchscreen-* properties are documented in
++Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+ 
+ Example:
+ 
+-- 
+2.20.1
