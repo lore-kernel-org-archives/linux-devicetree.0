@@ -1,75 +1,61 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2] dt-bindings: input: ti-tsc-adc: Add new compatible for
- AM654 SoCs
-Date: Mon, 11 Feb 2019 11:10:59 +0530
-Message-ID: <3623af02-063d-9077-1e59-99d8cfe93ddd@ti.com>
-References: <20190108052631.4169-1-vigneshr@ti.com>
+From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
+Subject: [PATCHv12 0/3] Intel FPGA Video and Image Processing Suite
+Date: Mon, 11 Feb 2019 14:09:23 +0800
+Message-ID: <20190211060926.3433-1-hean.loong.ong@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108052631.4169-1-vigneshr@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Rienk de Jong <rienk.dejong@quest-innovations.com>
+Cc: devicetree@vger.kernel.org, yves.vandervennet@intel.com, hean.loong.ong@intel.com, chin.liang.see@intel.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Ong@freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
-
-On 08/01/19 10:56 AM, Vignesh R wrote:
-> AM654 SoCs has ADC IP which is similar to AM335x, but without the
-> touchscreen part. Add new compatible to handle AM654 SoCs. Also, it
-> seems that existing compatible strings used in the kernel DTs were never
-> documented. So, document them now.
-> 
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-
-If there are no comments, could you queue this bindings patch? This will
-help me in getting ADC DT nodes to be merged into ARM SoC tree.
-
-Regards
-Vignesh
-
-> v2:
-> Fix subject line to include subsystem name
-> Rebase onto v5.0-rc1
-> v1: https://lkml.org/lkml/2018/11/19/313
-> 
->  .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt  | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> index b1163bf97146..aad5e34965eb 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> @@ -2,7 +2,12 @@
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  
->  Required properties:
-> +- mfd
-> +	compatible: Should be
-> +		"ti,am3359-tscadc" for AM335x/AM437x SoCs
-> +		"ti,am654-tscadc", "ti,am3359-tscadc" for AM654 SoCs
->  - child "tsc"
-> +	compatible: Should be "ti,am3359-tsc".
->  	ti,wires: Wires refer to application modes i.e. 4/5/8 wire touchscreen
->  		  support on the platform.
->  	ti,x-plate-resistance: X plate resistance
-> @@ -25,6 +30,9 @@ Required properties:
->  			AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
->  			XP  = 0, XN = 1, YP = 2, YN = 3.
->  - child "adc"
-> +	compatible: Should be
-> +		    "ti,am3359-adc" for AM335x/AM437x SoCs
-> +		    "ti,am654-adc", "ti,am3359-adc" for AM654 SoCs
->  	ti,adc-channels: List of analog inputs available for ADC.
->  			 AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
->  
-> 
-
--- 
-Regards
-Vignesh
+RnJvbTogT25nLCBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+CgpUaGUgRlBH
+QSBGcmFtZUJ1ZmZlciBTb2Z0IElQIGNvdWxkIGJlIHNlZW4gIGFzIHRoZSBHUFUgYW5kIHRoZSBE
+Uk0gZHJpdmVyIHBhdGNoIGhlcmUgaXMgCmFsbG9jYXRpbmcgbWVtb3J5IGZvciBpbmZvcm1hdGlv
+biB0byBiZSBzdHJlYW1lZCBmcm9tIHRoZSBBUk0vTGludXggdG8gdGhlIGRpc3BsYXkgcG9ydC4g
+CgpCYXNpY2FsbHkgdGhlIGRyaXZlciBqdXN0IHdyYXBzIHRoZSBpbmZvcm1hdGlvbiBzdWNoIGFz
+IHRoZSBwaXhlbHMgdG8gYmUgZHJhd24gYnkgCnRoZSBTb2R0IElQIEZyYW1lQnVmZmVyIDIuCgpU
+aGUgcGllY2Ugb2YgaGFyZHdhcmUgaW4gZGlzY3Vzc2lvbiBpcyB0aGUgU29DIEZQR0Egd2hlcmUg
+TGludXggcnVucyBvbiB0aGUgQVJNIGNoaXAgCmFuZCB0aGUgRkdQQSBpcyBkcml2ZW4gYnkgaXRz
+IE5JT1Mgc29mdCBjb3JlIHdpdGggaXRzIG93biBwcm9wcmlldGFyeSBmaXJtd2FyZS4KCkZvciBl
+eGFtcGxlIHRoZSBhcHBsaWNhdGlvbiBmcm9tIHRoZSBBUk0gTGludXggd291bGQgaGF2ZSB0byB3
+cml0ZSBpbmZvcm1hdGlvbiAKb24gdGhlIC9kZXYvZmIwIHdpdGggdGhlIGluZm9ybWF0aW9uIHN0
+b3JlZCBpbiB0aGUgU0RSQU0gdG8gYmUgZmV0Y2hlZCBieSB0aGUgCkZyYW1lYnVmZmVyIDIgU29m
+dCBJUCBhbmQgZGlzcGxheWVkIG9uIHRoZSBEaXNwbGF5IFBvcnQgTW9uaXRvci4KCgpPbmcgSGVh
+biBMb29uZyAoMSk6CiAgQVJNOnNvY2ZwZ2EtZGVmY29uZmlnIEludGVsIEZQR0EgVmlkZW8gYW5k
+IEltYWdlIFByb2Nlc3NpbmcgU3VpdGUKCk9uZywgSGVhbiBMb29uZyAoMik6CiAgQVJNOmR0LWJp
+bmRpbmdzOmRpc3BsYXkgSW50ZWwgRlBHQSBWaWRlbyBhbmQgSW1hZ2UgUHJvY2Vzc2luZyBTdWl0
+ZQogIEFSTTpkcm0gaXZpcCBJbnRlbCBGUEdBIFZpZGVvIGFuZCBJbWFnZSBQcm9jZXNzaW5nIFN1
+aXRlCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1mYjIudHh0ICAg
+fCAgIDYzICsrKysrKysKIGFyY2gvYXJtL2NvbmZpZ3Mvc29jZnBnYV9kZWZjb25maWcgICAgICAg
+ICAgICAgICAgIHwgICAgNSArCiBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgIDIgKwogZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9pdmlwL0tjb25maWcg
+ICAgICAgICAgICAgICAgICAgICAgIHwgICAxNCArKwogZHJpdmVycy9ncHUvZHJtL2l2aXAvTWFr
+ZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgICA3ICsKIGRyaXZlcnMvZ3B1L2RybS9pdmlw
+L2ludGVsX3ZpcF9jb25uLmMgICAgICAgICAgICAgIHwgICA5MSArKysrKysrKysrCiBkcml2ZXJz
+L2dwdS9kcm0vaXZpcC9pbnRlbF92aXBfY29yZS5jICAgICAgICAgICAgICB8ICAxODkgKysrKysr
+KysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9kcnYuaCAgICAg
+ICAgICAgICAgIHwgICA3MyArKysrKysrKwogZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlw
+X29mLmMgICAgICAgICAgICAgICAgfCAgMTgxICsrKysrKysrKysrKysrKysrKysKIDEwIGZpbGVz
+IGNoYW5nZWQsIDYyNiBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlw
+LWZiMi50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaXZpcC9LY29uZmln
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAvTWFrZWZpbGUKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaXZpcC9pbnRlbF92aXBfY29ubi5jCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX2NvcmUuYwogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9kcnYuaAogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9vZi5jCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
