@@ -1,61 +1,103 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [PATCH v3 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem
-Date: Mon, 11 Feb 2019 15:30:47 +0100
-Message-ID: <7fc3bd7b-4537-3df5-12ee-55ebec17a8bd@lucaceresoli.net>
-References: <1549025766-135037-1-git-send-email-vishal.sagar@xilinx.com>
- <1549025766-135037-3-git-send-email-vishal.sagar@xilinx.com>
- <3923069f-7c69-c601-0ded-f7629696ef9b@lucaceresoli.net>
- <CY4PR02MB2709000898D5E290B5EE99F4A7640@CY4PR02MB2709.namprd02.prod.outlook.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 089/313] ARM: dts: aspeed: add missing memory unit-address
+Date: Mon, 11 Feb 2019 15:16:09 +0100
+Message-ID: <20190211141859.802233380@linuxfoundation.org>
+References: <20190211141852.749630980@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CY4PR02MB2709000898D5E290B5EE99F4A7640@CY4PR02MB2709.namprd02.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <20190211141852.749630980@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vishal Sagar <vsagar@xilinx.com>, Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>Sa
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, Rob Herring <robh@kernel.org>, Olof Johansson <olof@lixom.net>, Sasha Levin <sashal@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-thanks for the quick reply.
+------------------
 
-On 11/02/19 13:43, Vishal Sagar wrote:
->>> +static int xcsi2rxss_start_stream(struct xcsi2rxss_state *state)
->>> +{
->>> +     struct xcsi2rxss_core *core = &state->core;
->>> +     int ret = 0;
->>> +
->>> +     xcsi2rxss_enable(core);
->>> +
->>> +     ret = xcsi2rxss_reset(core);
->>> +     if (ret < 0) {
->>> +             state->streaming = false;
->>> +             return ret;
->>> +     }
->>> +
->>> +     xcsi2rxss_intr_enable(core);
->>> +     state->streaming = true;
->>
->> Shouldn't you propagate s_stream to the upstream subdev here calling
->> v4l2_subdev_call(..., ..., s_stream, 1)?
->>
-> 
-> This is done by the xvip_pipeline_start_stop() in xilinx-dma.c for Xilinx Video pipeline.
+[ Upstream commit 8ef86955fe59f7912a40d57ae4c6d511f0187b4d ]
 
-Indeed it does, however other CSI2 RX drivers do propagate s_stream in
-their own s_stream. Not strictly related to this driver, but what's the
-logic for having these two different behaviors?
+The base aspeed-g5.dtsi already defines a '/memory@80000000' node, so
+'/memory' in the board files create a duplicate node. We're probably
+getting lucky that the bootloader fixes up the memory node that the
+kernel ends up using. Add the unit-address so it's merged with the base
+node.
 
-Also xvip_pipeline_start_stop() only follows the graph through
-entity->pads[0], so it looks like it cannot handle entities with
-multiple sink pads. How would it be able to handle e.g. the AXI4-Stream
-Switch [0], which has 2+ sink pads?
+Found with DT json-schema checks.
 
-[0]
-https://www.xilinx.com/support/documentation/ip_documentation/axis_infrastructure_ip_suite/v1_1/pg085-axi4stream-infrastructure.pdf
-(page 16).
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: Andrew Jeffery <andrew@aj.id.au>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-aspeed@lists.ozlabs.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts | 2 +-
+ arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts       | 2 +-
+ arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts         | 3 +--
+ arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts    | 2 +-
+ 4 files changed, 4 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
+index df1227613d48..c2ece0b91885 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
+@@ -13,7 +13,7 @@
+ 		bootargs = "console=ttyS4,115200 earlyprintk";
+ 	};
+ 
+-	memory {
++	memory@80000000 {
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts b/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
+index 7a291de02543..22dade6393d0 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
+@@ -13,7 +13,7 @@
+ 		bootargs = "earlyprintk";
+ 	};
+ 
+-	memory {
++	memory@80000000 {
+ 		reg = <0x80000000 0x20000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+index d598b6391362..024e52a6cd0f 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+@@ -14,7 +14,7 @@
+ 		bootargs = "console=ttyS4,115200 earlyprintk";
+ 	};
+ 
+-	memory {
++	memory@80000000 {
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ 
+@@ -322,4 +322,3 @@
+ &adc {
+ 	status = "okay";
+ };
+-
+diff --git a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
+index 43ed13963d35..33d704541de6 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
+@@ -17,7 +17,7 @@
+ 		bootargs = "console=ttyS4,115200 earlyprintk";
+ 	};
+ 
+-	memory {
++	memory@80000000 {
+ 		reg = <0x80000000 0x20000000>;
+ 	};
+ 
 -- 
-Luca
+2.19.1
