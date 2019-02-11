@@ -1,27 +1,39 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH] arm64: dts: msm8996: fix blsp2_uart1 4-pin pinconfig
-Date: Mon, 11 Feb 2019 10:37:01 +0100
-Message-ID: <20190211093701.GX4686@localhost>
-References: <20181220161750.12587-1-johan@kernel.org>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 1/2] dt-bindings: marvell,mmp2: Add clock id for the LCDC clock
+Date: Mon, 11 Feb 2019 11:20:49 +0100
+Message-ID: <20190211102050.24422-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181220161750.12587-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 20, 2018 at 05:17:50PM +0100, Johan Hovold wrote:
-> Fix "gpiio5" typo in the (currently unused) blsp2_uart1 4-pin sleep
-> config.
-> 
-> Fixes: 22e6789f9493 ("arm64: dts: msm8996: add blsp2_uart1 pinctrl")
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+The peripheral clock is required for access the the LCDC registers. It
+is in fact separate from the "AXI clock" that is optionally used to gener=
+ate
+the pixel clock and as such requires a separate clock id.
 
-I can't seem to find this one in your tree (or linux-next), Andy. Lost
-or simply not applied yet?
+Link: https://lists.freedesktop.org/archives/dri-devel/2019-January/20397=
+5.html
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ include/dt-bindings/clock/marvell,mmp2.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Johan
+diff --git a/include/dt-bindings/clock/marvell,mmp2.h b/include/dt-bindin=
+gs/clock/marvell,mmp2.h
+index 228a5e234af0..e785c6eb3561 100644
+--- a/include/dt-bindings/clock/marvell,mmp2.h
++++ b/include/dt-bindings/clock/marvell,mmp2.h
+@@ -71,6 +71,7 @@
+ #define MMP2_CLK_CCIC1_MIX		117
+ #define MMP2_CLK_CCIC1_PHY		118
+ #define MMP2_CLK_CCIC1_SPHY		119
++#define MMP2_CLK_DISP0_LCDC		120
+=20
+ #define MMP2_NR_CLKS			200
+ #endif
+--=20
+2.20.1
