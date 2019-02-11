@@ -1,49 +1,44 @@
 From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 2/3] nvmem: imx-ocotp: add support for imx8mq
-Date: Mon, 11 Feb 2019 17:50:10 +0100
-Message-ID: <20190211165011.5114-2-l.stach@pengutronix.de>
-References: <20190211165011.5114-1-l.stach@pengutronix.de>
+Subject: [PATCH 1/3] dt-bindings: imx-ocotp: Add i.MX8MQ compatible
+Date: Mon, 11 Feb 2019 17:50:09 +0100
+Message-ID: <20190211165011.5114-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211165011.5114-1-l.stach@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Carlo Caione <ccaione@baylibre.com>, linux-imx@nxp.com, kernel@pengutronix.de, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-The i.MX8MQ uses the same OCOTP block as the i.MX7D, but with
-fourfold increase in fuse banks.
+Add compatible for i.MX8MQ and add both i.MX7D/S and i.M8MQ
+to the description.
 
 Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 ---
- drivers/nvmem/imx-ocotp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index afb429a417fe..bcae2aed75ad 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -433,6 +433,12 @@ static const struct ocotp_params imx7d_params = {
- 	.set_timing = imx_ocotp_set_imx7_timing,
- };
+diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+index 792bc5fafeb9..bb8fb8fc6217 100644
+--- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
++++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+@@ -1,7 +1,8 @@
+ Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
  
-+static const struct ocotp_params imx8mq_params = {
-+	.nregs = 256,
-+	.bank_address_words = 4,
-+	.set_timing = imx_ocotp_set_imx7_timing,
-+};
-+
- static const struct of_device_id imx_ocotp_dt_ids[] = {
- 	{ .compatible = "fsl,imx6q-ocotp",  .data = &imx6q_params },
- 	{ .compatible = "fsl,imx6sl-ocotp", .data = &imx6sl_params },
-@@ -440,6 +446,7 @@ static const struct of_device_id imx_ocotp_dt_ids[] = {
- 	{ .compatible = "fsl,imx6ul-ocotp", .data = &imx6ul_params },
- 	{ .compatible = "fsl,imx7d-ocotp",  .data = &imx7d_params },
- 	{ .compatible = "fsl,imx6sll-ocotp", .data = &imx6sll_params },
-+	{ .compatible = "fsl,imx8mq-ocotp", .data = &imx8mq_params },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, imx_ocotp_dt_ids);
+ This binding represents the on-chip eFuse OTP controller found on
+-i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL and i.MX6SLL SoCs.
++i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6SLL, i.MX7D/S
++and i.MX8MQ SoCs.
+ 
+ Required properties:
+ - compatible: should be one of
+@@ -11,6 +12,7 @@ Required properties:
+ 	"fsl,imx6ul-ocotp" (i.MX6UL),
+ 	"fsl,imx7d-ocotp" (i.MX7D/S),
+ 	"fsl,imx6sll-ocotp" (i.MX6SLL),
++	"fsl,imx8mq-ocotp" (i.MX8MQ),
+ 	followed by "syscon".
+ - #address-cells : Should be 1
+ - #size-cells : Should be 1
 -- 
 2.20.1
