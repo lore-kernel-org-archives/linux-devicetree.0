@@ -1,51 +1,77 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 5/8] soc: qcom: Add AOSS QMP communication driver
-Date: Mon, 11 Feb 2019 14:30:26 -0800
-Message-ID: <CAD=FV=WDnKgiqP7Ta0xJtm5COTApYQ2DPTcUXH95O7S_vUJBCA@mail.gmail.com>
-References: <20190206051335.23799-1-bjorn.andersson@linaro.org> <20190206051335.23799-6-bjorn.andersson@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/3] Input: lpc32xx-key - add clocks property and fix DT
+ binding example
+Date: Mon, 11 Feb 2019 14:52:29 -0800
+Message-ID: <20190211225229.GF149505@dtor-ws>
+References: <20190126142921.16041-1-vz@mleia.com>
+ <20190126142921.16041-2-vz@mleia.com>
+ <bd0b4bf2-dc14-2f9d-1350-25996a46760d@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190206051335.23799-6-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <bd0b4bf2-dc14-2f9d-1350-25996a46760d@mleia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sylvain Lemieux <slemieux.tyco@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Jan 30, 2019 at 11:22:40PM +0200, Vladimir Zapolskiy wrote:
+> Hi Rob, Dmitry,
+> 
+> On 01/26/2019 04:29 PM, Vladimir Zapolskiy wrote:
+> > The keypad controller on NXP LPC32xx requires its clock gate to be open,
+> > therefore add description of the requires 'clocks' property.
+> > 
+> > In addition adjust the example by adding description of required 'clocks'
+> > property and by fixing 'interrupts' property.
+> > 
+> > Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> > ---
+> >  Documentation/devicetree/bindings/input/lpc32xx-key.txt | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/lpc32xx-key.txt b/Documentation/devicetree/bindings/input/lpc32xx-key.txt
+> > index bcf62f856358..2b075a080d30 100644
+> > --- a/Documentation/devicetree/bindings/input/lpc32xx-key.txt
+> > +++ b/Documentation/devicetree/bindings/input/lpc32xx-key.txt
+> > @@ -8,6 +8,7 @@ Required Properties:
+> >  - reg: Physical base address of the controller and length of memory mapped
+> >    region.
+> >  - interrupts: The interrupt number to the cpu.
+> > +- clocks: phandle to clock controller plus clock-specifier pair
+> >  - nxp,debounce-delay-ms: Debounce delay in ms
+> >  - nxp,scan-delay-ms: Repeated scan period in ms
+> >  - linux,keymap: the key-code to be reported when the key is pressed
+> > @@ -22,7 +23,9 @@ Example:
+> >  	key@40050000 {
+> >  		compatible = "nxp,lpc3220-key";
+> >  		reg = <0x40050000 0x1000>;
+> > -		interrupts = <54 0>;
+> > +		clocks = <&clk LPC32XX_CLK_KEY>;
+> > +		interrupt-parent = <&sic1>;
+> > +		interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+> >  		keypad,num-rows = <1>;
+> >  		keypad,num-columns = <1>;
+> >  		nxp,debounce-delay-ms = <3>;
+> > 
+> 
+> if you find time, please review/ack this change before 5.0-rc5 to give
+> me a chance to push it through ARM tree, thank you in advance.
 
-On Tue, Feb 5, 2019 at 9:13 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> +       if (of_property_read_bool(pdev->dev.of_node, "#power-domain-cells")) {
-> +               qmp->pd_pdev = platform_device_register_data(&pdev->dev,
-> +                                                            "aoss_qmp_pd",
-> +                                                            PLATFORM_DEVID_NONE,
-> +                                                            NULL, 0);
-> +               if (IS_ERR(qmp->pd_pdev)) {
-> +                       dev_err(&pdev->dev, "failed to register AOSS PD\n");
+Sorry, I guess am a bit late, still, the binding is already used by the
+driver so we should acknowledge it.
 
-nit: not worth spinning just for this, but if you happen to spin you
-could print the error number in your message.
+Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-
-> +                       ret = PTR_ERR(qmp->pd_pdev);
-> +                       goto err_close_qmp;
-> +               }
-> +       }
-
-As discussed in v5 I wonder if the complexity of a separate driver is
-really worth it or if everything would be a lot easier to just link
-the two ".c" files together.  Now that it's a full error case if
-"aoss_qmp_pd" doesn't probe I'd vote for linking the two ".c" files
-together, but part of that is because I don't really want to dig into
-all the details of how you're supposed to call
-platform_device_register_data() for sub-devices and double-checking
-that you've got all the corner cases correct.
-
-...NOTE: presumably if you just change it to a straight-up function
-call then you can also get rid of the above "dev_err" since
-(presumably) you'll know that the init code of aoss_qmp_pd will print
-any relevant errors?
-
-
--Doug
+-- 
+Dmitry
