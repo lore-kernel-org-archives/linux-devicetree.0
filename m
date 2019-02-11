@@ -1,97 +1,103 @@
-From: Loys Ollivier <lollivier@baylibre.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: gnss: add mediatek binding
-Date: Mon, 11 Feb 2019 15:17:44 +0100
-Message-ID: <86mun2v27r.fsf@baylibre.com>
-References: <1547744074-28308-1-git-send-email-lollivier@baylibre.com> <1547744074-28308-3-git-send-email-lollivier@baylibre.com> <20190125090755.GB3691@localhost> <867eeo7pjm.fsf@baylibre.com> <20190211083349.GU4686@localhost>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.20 102/352] ARM: dts: aspeed: add missing memory unit-address
+Date: Mon, 11 Feb 2019 15:15:29 +0100
+Message-ID: <20190211141852.287329265@linuxfoundation.org>
+References: <20190211141846.543045703@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20190211083349.GU4686@localhost>
+In-Reply-To: <20190211141846.543045703@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Loys Ollivier <lollivier@baylibre.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, Rob Herring <robh@kernel.org>, Olof Johansson <olof@lixom.net>, Sasha Levin <sashal@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
-On Mon 11 Feb 2019 at 08:33, Johan Hovold <johan@kernel.org> wrote:
+------------------
 
-> On Mon, Jan 28, 2019 at 04:46:53PM +0100, Loys Ollivier wrote:
->> 
->> On Fri 25 Jan 2019 at 09:07, Johan Hovold wrote:
->> 
->> > On Thu, Jan 17, 2019 at 05:54:32PM +0100, Loys Ollivier wrote:
->> >> Add binding for Mediatek-based GNSS receivers.
->> >> 
->> >> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
->> >> ---
->> >> 
->> >> v2:
->> >> Renamed bindings from Globaltop/gtop to Mediatek/mtk.
->> >> Moved current-speed as an optional propertie.
->> >> Removed the status line in the example.
->> >> Added "mediatek,mt3339" compatible.
->
->> >> +++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
->> >> @@ -0,0 +1,39 @@
->> >> +Mediatek-based GNSS Receiver DT binding
->> >> +
->> >> +Mediatek chipsets are used in GNSS-receiver modules produced by several
->> >> +vendors and can use UART, SPI or I2C interfaces.
->> >> +
->> >> +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
->> >> +properties.
->> >> +
->> >> +Required properties:
->> >> +
->> >> +- compatible	: Must be one of
->> >> +
->> >> +			"globaltop,pa6h"
->> >> +			"mediatek,mt3339"
->> >
->> > I'm not sure it makes sense to add the GPS chip itself as it cannot be
->> > used stand-alone AFAIU, and either not way would require a lot more
->> > resources to be defined than what you add to this binding.
->> 
->> OK, I find it a bit confusing to have Mediatek bindings but no
->> compatible Mediatek SoCs.
->> But it is true that it can't be used stand-alone. I will remove this
->> reference and also remove it from the mtk.c driver code from this patch
->> serie.
->
->> >> +Required properties (I2C):
->> >> +- reg		: I2C slave address
->> >> +
->> >> +Required properties (SPI):
->> >> +- reg		: SPI chip select address
->> >
->> > While the mt3339 appears to support these interfaces, the globaltop one
->> > does not.
->> >
->> > Have you looked around for a small sample of mt3339-based receivers, to
->> > see whether anyone actually provides these?
->> 
->> Again I'm confused by the fact that it is the Mediatek bindings.
->> Hence why I have added it and why it was not present in the v1 that was
->> only for Globaltop.
->
-> This is no different from the sirfstar driver for receivers based on
-> those chipsets but manufactured by various other vendors.
->
-Indeed.
+[ Upstream commit 8ef86955fe59f7912a40d57ae4c6d511f0187b4d ]
 
->> I find it odd mentionning the chipset but not all its interfaces.
->> I will remove these sections and only list supported interfaces (i.e.
->> UART). Other interfaces can be added afterward if one finds a board that
->> provides them.
->
-> Right, but please do look around for other receivers using this chipset
-> so that we can make the binding generic enough to cover those as well
-> (e.g. by choosing representative resource names).
->
-OK will have a look.
+The base aspeed-g5.dtsi already defines a '/memory@80000000' node, so
+'/memory' in the board files create a duplicate node. We're probably
+getting lucky that the bootloader fixes up the memory node that the
+kernel ends up using. Add the unit-address so it's merged with the base
+node.
 
-> Johan
+Found with DT json-schema checks.
 
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: Andrew Jeffery <andrew@aj.id.au>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-aspeed@lists.ozlabs.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts | 2 +-
+ arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts       | 2 +-
+ arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts         | 3 +--
+ arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts    | 2 +-
+ 4 files changed, 4 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
+index df1227613d48..c2ece0b91885 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dts
+@@ -13,7 +13,7 @@
+ 		bootargs = "console=ttyS4,115200 earlyprintk";
+ 	};
+ 
+-	memory {
++	memory@80000000 {
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts b/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
+index 7a291de02543..22dade6393d0 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dts
+@@ -13,7 +13,7 @@
+ 		bootargs = "earlyprintk";
+ 	};
+ 
+-	memory {
++	memory@80000000 {
+ 		reg = <0x80000000 0x20000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+index d598b6391362..024e52a6cd0f 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+@@ -14,7 +14,7 @@
+ 		bootargs = "console=ttyS4,115200 earlyprintk";
+ 	};
+ 
+-	memory {
++	memory@80000000 {
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ 
+@@ -322,4 +322,3 @@
+ &adc {
+ 	status = "okay";
+ };
+-
+diff --git a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
+index 43ed13963d35..33d704541de6 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
+@@ -17,7 +17,7 @@
+ 		bootargs = "console=ttyS4,115200 earlyprintk";
+ 	};
+ 
+-	memory {
++	memory@80000000 {
+ 		reg = <0x80000000 0x20000000>;
+ 	};
+ 
 -- 
--L
+2.19.1
