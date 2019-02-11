@@ -1,56 +1,92 @@
-From: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 7/7] ARM: dts: f1c100s: Activate SPI flash on
- Lichee Pi Nano
-Date: Mon, 11 Feb 2019 12:21:13 +0300
-Message-ID: <02be41b6187d4d1fe09bff24cb93c2400a166803.1549875778.git.mesihkilinc@gmail.com>
-References: <cover.1549875778.git.mesihkilinc@gmail.com>
-Reply-To: mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: gnss: add mediatek binding
+Date: Mon, 11 Feb 2019 10:22:51 +0100
+Message-ID: <20190211092251.GV4686@localhost>
+References: <1548693481-1162-1-git-send-email-lollivier@baylibre.com>
+ <1548693481-1162-3-git-send-email-lollivier@baylibre.com>
+ <20190130155016.GA26536@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDI4VHO5SYLBBNP5QTRQKGQEGTWN6HA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.1549875778.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190130155016.GA26536@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Loys Ollivier <lollivier@baylibre.com>, devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Lichee Pi Nano board has a Winbond W25Q128FVSIQ 128Mbit SPI NOR flash
-connected to the SPI0 controller of F1C100s SoC, via the pinmux group at
-PC bank; so it's bootable.
+On Wed, Jan 30, 2019 at 09:50:16AM -0600, Rob Herring wrote:
+> On Mon, Jan 28, 2019 at 05:37:59PM +0100, Loys Ollivier wrote:
+> > Add binding for Mediatek-based GNSS receivers.
+> > 
+> > Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+> > ---
+> > 
+> > v3:
+> > Removed the I2C and SPI interfaces references.
+> > Removed the "mediatek,mt3339" compatible line.
+> > Added the optional propertied (reset, fix)
+> > Added the pin names for the optional properties.
+> > 
+> > v2:
+> > Renamed bindings from Globaltop/gtop to Mediatek/mtk.
+> > Moved current-speed as an optional propertie.
+> > Removed the status line in the example.
+> > Added "mediatek,mt3339" compatible.
+> > 
+> >  .../devicetree/bindings/gnss/mediatek.txt          | 37 ++++++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gnss/mediatek.txt b/Documentation/devicetree/bindings/gnss/mediatek.txt
+> > new file mode 100644
+> > index 000000000000..00650d81c5c8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
+> > @@ -0,0 +1,37 @@
+> > +Mediatek-based GNSS Receiver DT binding
+> > +
+> > +Mediatek chipsets are used in GNSS-receiver modules produced by several
+> > +vendors and can use an UART interface.
 
-Enable this SPI flash.
+s/an/a/
 
-Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> > +
+> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
+> > +properties.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible	: Must be
+> > +
+> > +			"globaltop,pa6h"
+> > +
+> > +- vcc-supply	: Main voltage regulator (pin name: VCC)
+> > +
+> > +Optional properties:
+> > +
+> > +- gtop,reset-gpios	: GPIO used to reset the device
+> > +  			  (pin name: RESET, NRESET)
+> 
+> reset-gpios is the standard name.
+> 
+> > +- gtop,fix-gpios	: GPIO used to determine device position fix state
+> > +			  (pin name: FIX, 3D_FIX)
 
-diff --git a/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts b/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts
-index a1154e6..52a29be 100644
---- a/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts
-+++ b/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts
-@@ -24,3 +24,16 @@
- 	pinctrl-0 = <&uart0_pe_pins>;
- 	status = "okay";
- };
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pc_pins>;
-+	status = "okay";
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "winbond,w25q128", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+	};
-+};
--- 
-2.7.4
+I'm thinking we might need a standard name for fix-gpios as well. This
+isn't a feature that is globaltop (or mediatek) specific, and other
+manufacturers provide similar functionality through pins named UI_FIX,
+or even LCKIND (lock indicator).
+
+The pin is typically used to drive an indicator LED AFAIU, but the
+characteristics of the signal varies from device to device (fw to fw),
+for example, pulse when no lock and low otherwise, or pulse when a 2d or
+3d-fix is acquired, etc.
+
+I'm not sure how useful the pulsing would be for software, but someone
+might find a use for it in some form.
+
+Rob, is this something we want to keep in the binding, and if so, how
+about using a generic name such as "gnss-fix-gpios"?
+
+Johan
