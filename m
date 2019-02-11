@@ -1,69 +1,33 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] libfdt: prefix header search paths with $(srctree)/
-Date: Mon, 11 Feb 2019 10:43:05 +0900
-Message-ID: <CAK7LNAQ6bRxhXuSgVS0DqZ_izMyKuujmQe9TVV8pDXve-gs90g@mail.gmail.com>
-References: <1548387699-9222-1-git-send-email-yamada.masahiro@socionext.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 1/3] arm64: dts: imx8mq: Add QuadSPI controller
+Date: Mon, 11 Feb 2019 09:57:17 +0800
+Message-ID: <20190211015715.GA22487@dragon>
+References: <20190130120511.11555-1-ccaione@baylibre.com>
+ <20190130120511.11555-2-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548387699-9222-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190130120511.11555-2-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, Jan 30, 2019 at 12:05:09PM +0000, Carlo Caione wrote:
+> Add a node for the Freescale/NXP QuadSPI controller and extend the AIPS3
+> memory range to accommodate the QuadSPI-memory region.
+> 
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-
-On Fri, Jan 25, 2019 at 12:42 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Currently, the Kbuild core manipulates header search paths in a crazy
-> way [1].
->
-> To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
-> the search paths in the srctree. Some Makefiles are already written in
-> that way, but not all. The goal of this work is to make the notation
-> consistent, and finally get rid of the gross hacks.
->
-> Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
-> ("kbuild: do not drop -I without parameter").
->
-> [1]: https://patchwork.kernel.org/patch/9632347/
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-
-Could you apply this to your tree?
-
-Thanks.
-
-Masahiro
-
-
-> ---
->
->  lib/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/Makefile b/lib/Makefile
-> index e1b59da..05973c1 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -208,7 +208,7 @@ KCOV_INSTRUMENT_stackdepot.o := n
->  libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
->                fdt_empty_tree.o
->  $(foreach file, $(libfdt_files), \
-> -       $(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
-> +       $(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
->  lib-$(CONFIG_LIBFDT) += $(libfdt_files)
->
->  obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
-> --
-> 2.7.4
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+Applied, thanks.
