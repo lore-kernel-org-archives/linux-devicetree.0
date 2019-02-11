@@ -1,109 +1,85 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v5 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Mon, 11 Feb 2019 13:29:54 +0100
-Message-ID: <20190211122954.33thpip3yhtdw5x6@pengutronix.de>
-References: <1548762199-7065-1-git-send-email-yash.shah@sifive.com>
- <1548762199-7065-3-git-send-email-yash.shah@sifive.com>
- <20190207101657.rfzcq6xdv6ocvubg@pengutronix.de>
- <CAJ2_jOGYkwb2QSUH1UU_QoGXE5LFoR0XGJmuYfNtYcZXHXyfaA@mail.gmail.com>
+From: Vishal Sagar <vsagar@xilinx.com>
+Subject: RE: [PATCH v3 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem
+Date: Mon, 11 Feb 2019 12:43:08 +0000
+Message-ID: <CY4PR02MB2709000898D5E290B5EE99F4A7640@CY4PR02MB2709.namprd02.prod.outlook.com>
+References: <1549025766-135037-1-git-send-email-vishal.sagar@xilinx.com>
+ <1549025766-135037-3-git-send-email-vishal.sagar@xilinx.com>
+ <3923069f-7c69-c601-0ded-f7629696ef9b@lucaceresoli.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ2_jOGYkwb2QSUH1UU_QoGXE5LFoR0XGJmuYfNtYcZXHXyfaA@mail.gmail.com>
+In-Reply-To: <3923069f-7c69-c601-0ded-f7629696ef9b@lucaceresoli.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
+To: Luca Ceresoli <luca@lucaceresoli.net>, Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Mon, Feb 11, 2019 at 04:56:27PM +0530, Yash Shah wrote:
-> On Thu, Feb 7, 2019 at 3:47 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Jan 29, 2019 at 05:13:19PM +0530, Yash Shah wrote:
-> > > +struct pwm_sifive_ddata {
-> > > +     struct pwm_chip chip;
-> > > +     struct notifier_block notifier;
-> > > +     struct clk *clk;
-> > > +     void __iomem *regs;
-> > > +     unsigned int approx_period;
-> > > +     unsigned int real_period;
-> > > +};
-> > > +
-> > > +static inline struct pwm_sifive_ddata *to_pwm_sifive_chip(struct pwm_chip *c)
-> >
-> > even though this is inlined I would like this to have use the
-> > pwm_sifive_ prefix, too.
-> 
-> Not sure what exactly you want me to do here.
-
-I want this function to be named something like pwm_sifive_chip_to_ddata.
-This way it has the common prefix (and is less confusing because
-to..chip suggests that is converts something to a chip, but the outcome
-is ...ddata).
- 
-> > In a previous review round I had doubts about the calculation of frac
-> > and I think they were addressed wrongly.
-> > Looking at the figure at the start of chapter 14.9 in the reference
-> > manual: They use (different than the driver here) pwmcmp0=6 and
-> > pwmzerocmp=1. Then a period is 7 clock cycles long and pwmcmpX must be 7
-> > (for X > 0) to yield a 100% signal. So pwmcmpX must be greater than or
-> > equal to the period (in clock cycles).
-> >
-> > Here we're using pwmzerocmp=0, still the constraint
-> >
-> >         pwmcmpX >= period
-> >
-> > must be true for a 100% cycle. (Right?) With pwmzerocmp=0 the period is
-> > 0x10000 clock cycles, so pwmcmpX must be >= 0x10000 to yield a 100%
-> > signal. As this is not possible (pwmcmpX is a 16 bit value that can only
-> > hold up to 0xffff) the output cannot yield 100%.
-> >
-> > So I think the most correct implementation here is:
-> >
-> >         frac = (duty_cycle * (1 << PWM_SIFIVE_CMPWIDTH) + (1 << PWM_SIFIVE_CMPWIDTH) / 2) / period;
-> >         /* Sorry, we cannot do 100% :-( */
-> >         frac = min(frac, (1 << PWM_SIFIVE_CMPWIDTH) - 1);
-> >
-> 
-> I will once again go through the specs, if it seems correct I will
-> implement the above.
-
-I would just test this at runtime. Configure for 100% and check the wave
-form if it is constant.
-
-> > > +static int pwm_sifive_probe(struct platform_device *pdev)
-> > > +{
-> > > [...]
-> > > +     /* Watch for changes to underlying clock frequency */
-> > > +     pwm->notifier.notifier_call = pwm_sifive_clock_notifier;
-> > > +     ret = clk_notifier_register(pwm->clk, &pwm->notifier);
-> > > +     if (ret) {
-> > > +             dev_err(dev, "failed to register clock notifier: %d\n", ret);
-> > > +             goto disable_clk;
-> > > +     }
-> >
-> > Would it make sense to only enable the clock when the pwm is enabled?
-> > (If yes, how does the output behave if the clock is disabled while the
-> > hardware is enabled? I assume the output just freezes at the state where
-> > it happens to be?)
-> 
-> Yes. Not sure about the behaviour of hardware when the clock is disabled.
-> The behaviour should be like you said. If there is no strong reason
-> then we can keep it as it is right now
-> or else if you want I can make the necessary change.
-
-I would prefer to only have the clock enabled when it is actually used.
-Note the common pitfall that you cannot disable the clk immediately
-after configureing the duty cycle to 100% or 0% though because you must
-only stop the clock when the newly configured parameters are active.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+SGkgTHVjYSwNCg0KVGhhbmtzIGZvciByZXZpZXdpbmcgdGhpcy4gDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTHVjYSBDZXJlc29saSBbbWFpbHRvOmx1Y2FAbHVjYWNl
+cmVzb2xpLm5ldF0NCj4gU2VudDogTW9uZGF5LCBGZWJydWFyeSAxMSwgMjAxOSA0OjEyIFBNDQo+
+IFRvOiBWaXNoYWwgU2FnYXIgPHZpc2hhbC5zYWdhckB4aWxpbnguY29tPjsgSHl1biBLd29uIDxo
+eXVua0B4aWxpbnguY29tPjsNCj4gbGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tOyBt
+Y2hlaGFiQGtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFy
+bS5jb207IE1pY2hhbCBTaW1law0KPiA8bWljaGFsc0B4aWxpbnguY29tPjsgbGludXgtbWVkaWFA
+dmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgc2FrYXJpLmFp
+bHVzQGxpbnV4LmludGVsLmNvbTsNCj4gaGFucy52ZXJrdWlsQGNpc2NvLmNvbTsgbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsgRGluZXNoIEt1bWFyIDxkaW5lc2hrQHhpbGlueC5jb20+OyBTYW5kaXAgS290aGFyaQ0K
+PiA8c2FuZGlwa0B4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDIvMl0gbWVk
+aWE6IHY0bDogeGlsaW54OiBBZGQgWGlsaW54IE1JUEkgQ1NJLTIgUngNCj4gU3Vic3lzdGVtDQo+
+IA0KPiBFWFRFUk5BTCBFTUFJTA0KPiANCj4gSGkgVmlzaGFsLA0KPiANCj4gT24gMDEvMDIvMTkg
+MTM6NTYsIFZpc2hhbCBTYWdhciB3cm90ZToNCj4gPiBUaGUgWGlsaW54IE1JUEkgQ1NJLTIgUngg
+U3Vic3lzdGVtIHNvZnQgSVAgaXMgdXNlZCB0byBjYXB0dXJlIGltYWdlcw0KPiA+IGZyb20gTUlQ
+SSBDU0ktMiBjYW1lcmEgc2Vuc29ycyBhbmQgb3V0cHV0IEFYSTQtU3RyZWFtIHZpZGVvIGRhdGEg
+cmVhZHkNCj4gPiBmb3IgaW1hZ2UgcHJvY2Vzc2luZy4gUGxlYXNlIHJlZmVyIHRvIFBHMjMyIGZv
+ciBkZXRhaWxzLg0KPiANCj4gRm9yIHRob3NlIHVudXNlZCB0byBYaWxpbnggZG9jdW1lbnRhdGlv
+biBJJ2QgdXNlIHRoZSBmdWxsIGRvY3VtZW50IG5hbWUNCj4gKCJNSVBJIENTSS0yIFJlY2VpdmVy
+IFN1YnN5c3RlbSB2NC4wIikgb3IsIGV2ZW4gYmV0dGVyLCBhIHN0YWJsZSBVUkwgaWYNCj4gYXZh
+aWxhYmxlLg0KPiANCg0KT2suIEkgd2lsbCBhZGQgdGhlIGZ1bGwgZG9jdW1lbnRhdGlvbiBuYW1l
+IGhlcmUgYW5kIFVSTC4NCg0KPiA+IFRoZSBkcml2ZXIgaXMgdXNlZCB0byBzZXQgdGhlIG51bWJl
+ciBvZiBhY3RpdmUgbGFuZXMsIGlmIGVuYWJsZWQNCj4gPiBpbiBoYXJkd2FyZS4gVGhlIENTSTIg
+UnggY29udHJvbGxlciBmaWx0ZXJzIG91dCBhbGwgcGFja2V0cyBleGNlcHQgZm9yDQo+ID4gdGhl
+IHBhY2tldHMgd2l0aCBkYXRhIHR5cGUgZml4ZWQgaW4gaGFyZHdhcmUuIFJBVzggcGFja2V0cyBh
+cmUgYWx3YXlzDQo+ID4gYWxsb3dlZCB0byBwYXNzIHRocm91Z2guDQo+ID4NCj4gPiBJdCBpcyBh
+bHNvIHVzZWQgdG8gc2V0dXAgYW5kIGhhbmRsZSBpbnRlcnJ1cHRzIGFuZCBlbmFibGUgdGhlIGNv
+cmUuIEl0DQo+ID4gbG9ncyBhbGwgdGhlIGV2ZW50cyBpbiByZXNwZWN0aXZlIGNvdW50ZXJzIGJl
+dHdlZW4gc3RyZWFtaW5nIG9uIGFuZCBvZmYuDQo+ID4gVGhlIGdlbmVyaWMgc2hvcnQgcGFja2V0
+cyByZWNlaXZlZCBhcmUgbm90aWZpZWQgdG8gYXBwbGljYXRpb24gdmlhDQo+ID4gdjRsMl9ldmVu
+dHMuDQo+ID4NCj4gPiBUaGUgZHJpdmVyIHN1cHBvcnRzIG9ubHkgdGhlIHZpZGVvIGZvcm1hdCBi
+cmlkZ2UgZW5hYmxlZCBjb25maWd1cmF0aW9uLg0KPiA+IFNvbWUgZGF0YSB0eXBlcyBsaWtlIFlV
+ViA0MjIgMTBicGMsIFJBVzE2LCBSQVcyMCBhcmUgc3VwcG9ydGVkIHdoZW4NCj4gdGhlDQo+ID4g
+Q1NJIHYyLjAgZmVhdHVyZSBpcyBlbmFibGVkIGluIGRlc2lnbi4gV2hlbiB0aGUgVkNYIGZlYXR1
+cmUgaXMgZW5hYmxlZCwNCj4gPiB0aGUgbWF4aW11bSBudW1iZXIgb2YgdmlydHVhbCBjaGFubmVs
+cyBiZWNvbWVzIDE2IGZyb20gNC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFZpc2hhbCBTYWdh
+ciA8dmlzaGFsLnNhZ2FyQHhpbGlueC5jb20+DQo+IA0KPiAuLi4NCj4gDQo+ID4gKy8qKg0KPiA+
+ICsgKiB4Y3NpMnJ4c3NfcmVzZXQgLSBEb2VzIGEgc29mdCByZXNldCBvZiB0aGUgTUlQSSBDU0ky
+IFJ4IFN1YnN5c3RlbQ0KPiA+ICsgKiBAY29yZTogQ29yZSBYaWxpbnggQ1NJMiBSeCBTdWJzeXN0
+ZW0gc3RydWN0dXJlIHBvaW50ZXINCj4gPiArICoNCj4gPiArICogQ29yZSB0YWtlcyBsZXNzIHRo
+YW4gMTAwIHZpZGVvIGNsb2NrIGN5Y2xlcyB0byByZXNldC4NCj4gPiArICogU28gYSBsYXJnZXIg
+dGltZW91dCB2YWx1ZSBpcyBjaG9zZW4gZm9yIG1hcmdpbi4NCj4gPiArICoNCj4gPiArICogUmV0
+dXJuOiAwIC0gb24gc3VjY2VzcyBPUiAtRVRJTUUgaWYgcmVzZXQgdGltZXMgb3V0DQo+ID4gKyAq
+Lw0KPiA+ICtzdGF0aWMgaW50IHhjc2kycnhzc19yZXNldChzdHJ1Y3QgeGNzaTJyeHNzX2NvcmUg
+KmNvcmUpDQo+ID4gK3sNCj4gPiArICAgICB1MzIgdGltZW91dCA9IFhDU0lfVElNRU9VVF9WQUw7
+DQo+IA0KPiBUaGUgY29tbWVudCBhYm91dCB0aGUgdGltZW91dCBpcyBkdXBsaWNhdGVkIGhlcmUg
+YW5kIGF0IHRoZSAjZGVmaW5lDQo+IGxpbmUuIFdoeSBub3QgcmVtb3ZpbmcgdGhlIGRlZmluZSBh
+Ym92ZSBhbmQganVzdCBwdXR0aW5nDQo+IA0KPiAgIHUzMiB0aW1lb3V0ID0gMTAwMDsgLyogdXMg
+Ki8NCj4gDQo+IGhlcmU/IEl0IHdvdWxkIG1ha2UgdGhlIGVudGlyZSB0aW1lb3V0IGxvZ2ljIGFw
+cGVhciBpbiBhIHVuaXF1ZSBwbGFjZS4NCj4gDQoNCkFncmVlLiBJdCB3YXMga2VwdCBsaWtlIHRo
+YXQgYXMgdGhlIHRpbWVvdXQgdmFsdWUgd2FzIGJlaW5nIHVzZWQgaW4gc29tZSBvdGhlciBwbGFj
+ZSBpbiBlYXJsaWVyIHBhdGNoIHZlcnNpb25zLg0KSSB3aWxsIGRvIGFzIHN1Z2dlc3RlZCBpbiBu
+ZXh0IHZlcnNpb24uDQoNCj4gPiArc3RhdGljIGludCB4Y3NpMnJ4c3Nfc3RhcnRfc3RyZWFtKHN0
+cnVjdCB4Y3NpMnJ4c3Nfc3RhdGUgKnN0YXRlKQ0KPiA+ICt7DQo+ID4gKyAgICAgc3RydWN0IHhj
+c2kycnhzc19jb3JlICpjb3JlID0gJnN0YXRlLT5jb3JlOw0KPiA+ICsgICAgIGludCByZXQgPSAw
+Ow0KPiA+ICsNCj4gPiArICAgICB4Y3NpMnJ4c3NfZW5hYmxlKGNvcmUpOw0KPiA+ICsNCj4gPiAr
+ICAgICByZXQgPSB4Y3NpMnJ4c3NfcmVzZXQoY29yZSk7DQo+ID4gKyAgICAgaWYgKHJldCA8IDAp
+IHsNCj4gPiArICAgICAgICAgICAgIHN0YXRlLT5zdHJlYW1pbmcgPSBmYWxzZTsNCj4gPiArICAg
+ICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgfQ0KPiA+ICsNCj4gPiArICAgICB4Y3Np
+MnJ4c3NfaW50cl9lbmFibGUoY29yZSk7DQo+ID4gKyAgICAgc3RhdGUtPnN0cmVhbWluZyA9IHRy
+dWU7DQo+IA0KPiBTaG91bGRuJ3QgeW91IHByb3BhZ2F0ZSBzX3N0cmVhbSB0byB0aGUgdXBzdHJl
+YW0gc3ViZGV2IGhlcmUgY2FsbGluZw0KPiB2NGwyX3N1YmRldl9jYWxsKC4uLiwgLi4uLCBzX3N0
+cmVhbSwgMSk/DQo+IA0KDQpUaGlzIGlzIGRvbmUgYnkgdGhlIHh2aXBfcGlwZWxpbmVfc3RhcnRf
+c3RvcCgpIGluIHhpbGlueC1kbWEuYyBmb3IgWGlsaW54IFZpZGVvIHBpcGVsaW5lLg0KDQo+ID4g
+KyAgICAgcmV0dXJuIHJldDsNCj4gPiArfQ0KPiANCj4gDQo+IC0tDQo+IEx1Y2ENCg0KUmVnYXJk
+cw0KVmlzaGFsIFNhZ2FyDQo=
