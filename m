@@ -1,129 +1,111 @@
-From: Harald Geyer <harald@ccbib.org>
-Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
-Date: Mon, 11 Feb 2019 14:36:53 +0100
-Message-ID: <E1gtBlV-0000Wl-Cv@stardust.g4.wien.funkfeuer.at>
-References: <20190211111245.GA18147@lst.de>
+From: Loys Ollivier <lollivier@baylibre.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: gnss: add mediatek binding
+Date: Mon, 11 Feb 2019 15:06:50 +0100
+Message-ID: <86o97iv2px.fsf@baylibre.com>
+References: <1548693481-1162-1-git-send-email-lollivier@baylibre.com> <1548693481-1162-3-git-send-email-lollivier@baylibre.com> <20190130155016.GA26536@bogus> <20190211092251.GV4686@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20190211111245.GA18147@lst.de>
-Content-ID: <2029.1549892212.1@stardust.g4.wien.funkfeuer.at>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: 20190201113743.10058-1-harald@ccbib.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20190211092251.GV4686@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Loys Ollivier <lollivier@baylibre.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Torsten!
 
-Torsten Duwe writes:
-> > hpvcc-supply vs. cpvdd-supply:
-> > On the A64 manual the pin is called CPVDD and the binding documents
-> > requires a cpvdd-supply property. However in the actual driver and
-> > devicetrees so far hpvcc-supply is used. This is a very new binding,
-> > so we have the luxury to decide either way, I think. Any input from
-> > the devicetree maintainers would be appreciated.
-> 
-> I don't really have a strong opinion here, besides settling this ASAP,
-> to minimise confusion.
+On Mon 11 Feb 2019 at 09:22, Johan Hovold <johan@kernel.org> wrote:
 
-Yeah, given that this issue was introduced only in 5.0 and 5.0 is
-almost out of the door, I'd have believed people to be more eager to
-get this fixed soon.
+> On Wed, Jan 30, 2019 at 09:50:16AM -0600, Rob Herring wrote:
+>> On Mon, Jan 28, 2019 at 05:37:59PM +0100, Loys Ollivier wrote:
+>> > Add binding for Mediatek-based GNSS receivers.
+>> > 
+>> > Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+>> > ---
+>> > 
+>> > v3:
+>> > Removed the I2C and SPI interfaces references.
+>> > Removed the "mediatek,mt3339" compatible line.
+>> > Added the optional propertied (reset, fix)
+>> > Added the pin names for the optional properties.
+>> > 
+>> > v2:
+>> > Renamed bindings from Globaltop/gtop to Mediatek/mtk.
+>> > Moved current-speed as an optional propertie.
+>> > Removed the status line in the example.
+>> > Added "mediatek,mt3339" compatible.
+>> > 
+>> >  .../devicetree/bindings/gnss/mediatek.txt          | 37 ++++++++++++++++++++++
+>> >  1 file changed, 37 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
+>> > 
+>> > diff --git a/Documentation/devicetree/bindings/gnss/mediatek.txt b/Documentation/devicetree/bindings/gnss/mediatek.txt
+>> > new file mode 100644
+>> > index 000000000000..00650d81c5c8
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
+>> > @@ -0,0 +1,37 @@
+>> > +Mediatek-based GNSS Receiver DT binding
+>> > +
+>> > +Mediatek chipsets are used in GNSS-receiver modules produced by several
+>> > +vendors and can use an UART interface.
+>
+> s/an/a/
+>
+ok
 
-Well, if nobody speaks up, I'll just include a patch to change the
-binding to match the source in the next version of my submission.
+>> > +
+>> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
+>> > +properties.
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible	: Must be
+>> > +
+>> > +			"globaltop,pa6h"
+>> > +
+>> > +- vcc-supply	: Main voltage regulator (pin name: VCC)
+>> > +
+>> > +Optional properties:
+>> > +
+>> > +- gtop,reset-gpios	: GPIO used to reset the device
+>> > +  			  (pin name: RESET, NRESET)
+>> 
+>> reset-gpios is the standard name.
+>> 
+>> > +- gtop,fix-gpios	: GPIO used to determine device position fix state
+>> > +			  (pin name: FIX, 3D_FIX)
+>
+> I'm thinking we might need a standard name for fix-gpios as well. This
+> isn't a feature that is globaltop (or mediatek) specific, and other
+> manufacturers provide similar functionality through pins named UI_FIX,
+> or even LCKIND (lock indicator).
+>
+> The pin is typically used to drive an indicator LED AFAIU, but the
+> characteristics of the signal varies from device to device (fw to fw),
+> for example, pulse when no lock and low otherwise, or pulse when a 2d or
+> 3d-fix is acquired, etc.
+>
 
-> > debug console multiplexing:
-> > Olimex have a userspace script that controls gpio PL9 during boot,
-> > to select between HP and serial console. I guess this is not acceptable
-> > for mainline.
-> 
-> > The best solution I can see is to switch the HP jack from serial console
-> > to audio once the audio drivers load. With this people can still capture
-> > the bootlogs but everybody gets audio once the system is up and
-> > switching back to console output is as simple as unloading the audio
-> > drivers.
-> 
-> IMO it is really not the audio driver's business to mess with this switch.
-> You could argue as well that the serial driver should get a flag to claim
-> the HP jack, which would be similarily unjustified.
+Yes most GNSS recevivers provide a similar feature even if behavior of
+the line differs.
 
-Not the audio driver's business, but perheps the audio card's DT node.
-Which is why I came up with the pinctrl idea.
+> I'm not sure how useful the pulsing would be for software, but someone
+> might find a use for it in some form.
+>
 
-> My solution is to confine this choice inside U-Boot:
-> in sun50i-a64-teres-i-u-boot.dtsi I put
-> 
-> / {
->         leds {
->                 compatible = "gpio-leds";
->                 /* Not really a LED, but the least intrusive workaround */
->                 audioconsole {
->                         label = "teres-i:audio:console";
->                         gpio = <&r_pio 0 9 GPIO_ACTIVE_LOW>; /* PL9 */
->                         default-state = "on";
->                 };
->         };
-> [...]
-> 
-> and place a "gpio set PL9;" somewhere in the bootcmd_* logic. Otherwise there's
-> a *lot* of chirping on the right ear during boot ;-)
-> The switch is for early boot debugging, so it's best to have U-Boot enable it
-> when required, and keep it off by default.
+Well it is useful to know when you start acquiring "valid" positionning
+data. I'm using this as a trigger to start recording position.
 
-I agree that some quirk in u-boot will be required for those who want
-to boot with headphones plugged in.
+> Rob, is this something we want to keep in the binding, and if so, how
+> about using a generic name such as "gnss-fix-gpios"?
+>
 
-But I still think we need a proper description of the HW in the linux DT:
-* When linux doesn't know about the pin at all, there are no guarantees
-  that it won't accidentally touch the pin during some operations like
-  suspend/resume, etc.
-* There is the usecase where somebody puts the system console on ttyS1
-  and uses ttyS0 to connect to some other board. (Actually I believe this
-  is a quite likely usecase given Olimex' usual target market.) I'd like
-  to support this.
+Name "gnss-fix-gpios" sounds good to me.
 
-Using something like your leds hack in the linux DT would be fine for
-me, if the maintainers are willing to accept it.
+Loys
 
-As it is, I'm currently working on supporting "output-high" property
-in pinctrl-sunxi.
- 
-> > Testing:
-> > I don't have a headset with combo connector, so I could only test the
-> > headphones output, but not the headset mic. If somebody happens to
-> > have a TERES-I and a suitable headset, testing this would be nice.
-> 
-> The pinout required is the "CTIA" one, *not* OMTP (standards are great...) see
-> https://source.android.com/devices/accessories/headset/plug-headset-spec#mechanical
-> 
-> I do have a compatible headset, but was neither able to record from the HS mic
-> nor from the internal mic, so I have to try harder, I guess ;-) I could hear
-> both mics when choosing the mixer as output source though. Mute and boost
-> worked for both mics, in alsamixer.
+> Johan
 
-Probably you need to enable more controls in alsamixer.
-"AIF1 Data Digital ADC" comes to mind as a plausible candidate.
-
-> Kernel is 4.20.6, so ca0412a05756cd0b
-> is missing; which shouldn't make a difference in this respect, right?
-
-I suppose not, but I didn't actually test audio on 4.20.
-
-Thanks,
-Harald
 
 -- 
-If you want to support my work:
-see http://friends.ccbib.org/harald/supporting/
-or donate via CLAM to xASPBtezLNqj4cUe8MT5nZjthRSEjrRQXN
-or via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
+-L
