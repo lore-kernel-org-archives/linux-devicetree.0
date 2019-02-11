@@ -1,55 +1,54 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] pinctrl: sunxi: Support I/O bias
- voltage setting on A80
-Date: Mon, 11 Feb 2019 09:20:52 +0100
-Message-ID: <CACRpkdZFwG9-ap3jMe+eGDCgzG9+fKRXVEb4Q=pWasd5GUs9tQ@mail.gmail.com>
-References: <20190206033239.3619-1-wens@csie.org> <20190206033239.3619-2-wens@csie.org>
-Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v8 0/5] media/sun6i: Allwinner A64 CSI support
+Date: Mon, 11 Feb 2019 13:52:39 +0530
+Message-ID: <CAMty3ZCdm_RoVxoHy9u2-Xhg4_tf7Mr0Gedcrz-jVhc5ceL0CQ@mail.gmail.com>
+References: <20190128085847.7217-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARB4PAQTRQKGQEAWD6J4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190206033239.3619-2-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190128085847.7217-1-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 6, 2019 at 4:32 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+Mauro and Maxime,
 
-> The A80 SoC has configuration registers for I/O bias voltage. Incorrect
-> settings would make the affected peripherals inoperable in some cases,
-> such as Ethernet RGMII signals biased at 2.5V with the settings still
-> at 3.3V. However low speed signals such as MDIO on the same group of
-> pins seem to be unaffected.
+On Mon, Jan 28, 2019 at 2:29 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
-> Previously there was no way to know what the actual voltage used was,
-> short of hard-coding a value in the device tree. With the new pin bank
-> regulator supply support in place, the driver can now query the
-> regulator for its voltage, and if it's valid (as opposed to being the
-> dummy regulator), set the bias voltage setting accordingly.
+> Add CSI support for Allwinner A64. Here is previous series[1]
 >
-> Add a quirk to denote the presence of the configuration registers, and
-> a function to set the correct setting based on the voltage read back
-> from the regulator.
+> Changes for v8:
+> - update proper enable and disable sequnce for clk_mod
+> - fix warning for patch "media: sun6i: Add A64 CSI block support"
+> - collect Maxime Acked-by
+> Changes for v7:
+> - Drop quirk change, and add as suggusted by Maxime
+> - Use csi instead csi0 in pinctrl function
+> Changes for v6:
+> - set the mod rate in seett_power instead of probe
+> Changes for v5:
+> - Add mod_rate quirk for better handling clk_set code
+> Changes for v4:
+> - update the compatible string order
+> - add proper commit message
+> - included BPI-M64 patch
+> - skipped amarula-a64 patch
+> Changes for v3:
+> - update dt-bindings for A64
+> - set mod clock via csi driver
+> - remove assign clocks from dtsi
+> - remove i2c-gpio opendrian
+> - fix avdd and dovdd supplies
+> - remove vcc-csi pin group supply
 >
-> This is only done when the regulator is first acquired and enabled.
-> While it would be nice to have a notifier on the regulator so that when
-> the voltage changes, the driver can update the setting, in practice no
-> board currently supports dynamic changing of the I/O voltages.
+> [1] https://patchwork.kernel.org/cover/10779831/
 >
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Jagan Teki (5):
+>   dt-bindings: media: sun6i: Add A64 CSI compatible
+>   media: sun6i: Add A64 CSI block support
+>   arm64: dts: allwinner: a64: Add A64 CSI controller
+>   arm64: dts: allwinner: a64: Add pinmux setting for CSI MCLK on PE1
 
-I merged the v5.0-rc6 into my devel branch and applied this patch on
-top now.
-
-All the DTS file changes should be merged through ARM SoC, and
-they should work fine now.
-
-Yours,
-Linus Walleij
+Any chance to apply this patches? dtsi patch is already been merged
+and all been Acked as well.
