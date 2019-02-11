@@ -1,61 +1,68 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v1 1/1] dt-binding: iio: remove rst node from NPCM ADC
- document
-Date: Mon, 11 Feb 2019 20:25:11 +0000
-Message-ID: <20190211202511.622d4c48@archlinux>
-References: <20190210204749.381445-1-tmaimon77@gmail.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [GIT PULL] of: overlay: validation checks, subsequent fixes for
+ v20 -- correction: v4.20
+Date: Mon, 11 Feb 2019 14:43:48 -0600
+Message-ID: <CANk1AXRnX+=v+7g-_rM3TwNmM3aVcOqRknv9BR+hBOeCtT24Fg@mail.gmail.com>
+References: <262419e9-5c9f-1193-f119-33f373d81e43@gmail.com>
+ <b113e03d-95f9-96bc-2a50-bc61307e780e@gmail.com> <CANk1AXS=4fT6LbOHqK4DYhSMcO9Q60mDcQsFFnwoJLHj8wRsTA@mail.gmail.com>
+ <20190211191341.GA13134@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190210204749.381445-1-tmaimon77@gmail.com>
+In-Reply-To: <20190211191341.GA13134@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: gregkh@linuxfoundation.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, linux-iio@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 10 Feb 2019 22:47:49 +0200
-Tomer Maimon <tmaimon77@gmail.com> wrote:
+On Mon, Feb 11, 2019 at 1:13 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Feb 11, 2019 at 12:41:40PM -0600, Alan Tull wrote:
+> > On Fri, Nov 9, 2018 at 12:58 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> >
+> > What LTSI's are these patches likely to end up in?  Just to be clear,
+> > I'm not pushing for any specific answer, I just want to know what to
+> > expect.
+>
+> I have no idea what you are asking here.
+>
+> What patches?
 
-> Remove NPCM7xx rst node for preparing the NPCM ADC
-> document to describe ADC reset binding.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it. Hopefully just in time
-for this cycle as I'll do a final pull request in a day or two.
+I probably should have asked my question *below* the pertinent context
+of the the 17 patches listed in the pull request, which was:
 
-Thanks,
+>       of: overlay: add tests to validate kfrees from overlay removal
+>       of: overlay: add missing of_node_put() after add new node to changeset
+>       of: overlay: add missing of_node_get() in __of_attach_node_sysfs
+>       powerpc/pseries: add of_node_put() in dlpar_detach_node()
+>       of: overlay: use prop add changeset entry for property in new nodes
+>       of: overlay: do not duplicate properties from overlay for new nodes
+>       of: overlay: reorder fields in struct fragment
+>       of: overlay: validate overlay properties #address-cells and #size-cells
+>       of: overlay: make all pr_debug() and pr_err() messages unique
+>       of: overlay: test case of two fragments adding same node
+>       of: overlay: check prevents multiple fragments add or delete same node
+>       of: overlay: check prevents multiple fragments touching same property
+>       of: unittest: remove unused of_unittest_apply_overlay() argument
+>       of: overlay: set node fields from properties when add new overlay node
+>       of: unittest: allow base devicetree to have symbol metadata
+>       of: unittest: find overlays[] entry by name instead of index
+>       of: unittest: initialize args before calling of_*parse_*()
 
-Jonathan
+> What is "LTSI's"?
 
-> ---
->  .../devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt          | 11 -----------
->  1 file changed, 11 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
-> index 1b8132cd9060..eb939fe77836 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
-> @@ -14,11 +14,6 @@ Optional properties:
->  			   vref-supply is not added the ADC will use internal voltage
->  			   reference.
->  
-> -Required Node in the NPCM7xx BMC:
-> -An additional register is present in the NPCM7xx SOC which is
-> -assumed to be in the same device tree, with and marked as
-> -compatible with "nuvoton,npcm750-rst".
-> -
->  Example:
->  
->  adc: adc@f000c000 {
-> @@ -27,9 +22,3 @@ adc: adc@f000c000 {
->  	interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->  	clocks = <&clk NPCM7XX_CLK_ADC>;
->  };
-> -
-> -rst: rst@f0801000 {
-> -	compatible = "nuvoton,npcm750-rst", "syscon",
-> -	"simple-mfd";
-> -	reg = <0xf0801000 0x6C>;
-> -};
+I have recently seen some of devicetree patches being picked up for
+the 4.20 stable-queue.  That seemed to suggest that some, but not all
+of these will end up in the next LTS release.  Also I was wondering if
+any of this is likely to get backported to LTSI-4.14.
+
+>
+> confused,
+
+Yes, and now I'm confused about the confusion.  Sorry for spreading confusion.
+
+Alan
+
+>
+> greg k-h
