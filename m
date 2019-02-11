@@ -1,8 +1,8 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 2/7] dt-bindings: bus: Add binding for the Allwinner MBUS
- controller
-Date: Mon, 11 Feb 2019 16:02:50 +0100
-Message-ID: <43f965dae8b0ba8dffd3af478c2836c17feaa18b.1549897336.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v3 3/7] of: address: Add parent pointer to the
+ __of_translate_address args
+Date: Mon, 11 Feb 2019 16:02:51 +0100
+Message-ID: <57fa05909120919f33590fed11bd4041467a09f5.1549897336.git-series.maxime.ripard@bootlin.com>
 References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,58 +22,83 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The MBUS controller drives the MBUS that other devices in the SoC will
-use to perform DMA. It also has a register interface that allows to
-monitor and control the bandwidth and priorities for masters on that
-bus.
+The __of_translate_address function is used to translate the device tree
+addresses to physical addresses using the various ranges property to create
+the offset.
+
+However, it's shared between the CPU addresses (based on the ranges
+property) and the DMA addresses (based on dma-ranges). Since we're going to
+add support for a DMA parent node that is not the DT parent node, we need
+to change the logic a bit to have an optional parent node that we should
+use.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt | 36 +++++++-
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
+ drivers/of/address.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt b/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
-new file mode 100644
-index 000000000000..e72b7ac9e359
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
-@@ -0,0 +1,36 @@
-+Allwinner Memory Bus (MBUS) controller
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 2270373b30ab..4c5dc21c71ca 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -569,10 +569,10 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+  * relative to that node.
+  */
+ static u64 __of_translate_address(struct device_node *dev,
++				  struct device_node *parent,
+ 				  const __be32 *in_addr, const char *rprop,
+ 				  struct device_node **host)
+ {
+-	struct device_node *parent = NULL;
+ 	struct of_bus *bus, *pbus;
+ 	__be32 addr[OF_MAX_ADDR_CELLS];
+ 	int na, ns, pna, pns;
+@@ -583,11 +583,14 @@ static u64 __of_translate_address(struct device_node *dev,
+ 	/* Increase refcount at current level */
+ 	of_node_get(dev);
+ 
+-	*host = NULL;
+-	/* Get parent & match bus type */
+-	parent = of_get_parent(dev);
+-	if (parent == NULL)
+-		goto bail;
++	if (!parent) {
++		*host = NULL;
++		/* Get parent & match bus type */
++		parent = of_get_parent(dev);
++		if (parent == NULL)
++			goto bail;
++	}
 +
-+The MBUS controller drives the MBUS that other devices in the SoC will
-+use to perform DMA. It also has a register interface that allows to
-+monitor and control the bandwidth and priorities for masters on that
-+bus.
-+
-+Required properties:
-+ - compatible: Must be one of:
-+	- allwinner,sun5i-a13-mbus
-+ - reg: Offset and length of the register set for the controller
-+ - clocks: phandle to the clock driving the controller
-+ - dma-ranges: see booting-without-of.txt
-+ - #interconnect-cells: Must be one, with the argument being the MBUS
-+   port ID
-+
-+Each device having to perform their DMA through the MBUS must have the
-+interconnects and interconnect-names properties set to the MBUS
-+controller and with "dma" as the interconnect name.
-+
-+Example:
-+
-+mbus: dram-controller@1c01000 {
-+	compatible = "allwinner,sun5i-a13-mbus";
-+	reg = <0x01c01000 0x1000>;
-+	clocks = <&ccu CLK_MBUS>;
-+	dma-ranges = <0x00000000 0x40000000 0x20000000>;
-+	#interconnect-cells = <1>;
-+};
-+
-+fe0: display-frontend@1e00000 {
-+	compatible = "allwinner,sun5i-a13-display-frontend";
-+	...
-+	interconnects = <&mbus 19>;
-+	interconnect-names = "dma";
-+};
+ 	bus = of_match_bus(parent);
+ 
+ 	/* Count address cells & copy address locally */
+@@ -665,7 +668,7 @@ u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
+ 	struct device_node *host;
+ 	u64 ret;
+ 
+-	ret = __of_translate_address(dev, in_addr, "ranges", &host);
++	ret = __of_translate_address(dev, NULL, in_addr, "ranges", &host);
+ 	if (host) {
+ 		of_node_put(host);
+ 		return OF_BAD_ADDR;
+@@ -680,7 +683,7 @@ u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
+ 	struct device_node *host;
+ 	u64 ret;
+ 
+-	ret = __of_translate_address(dev, in_addr, "dma-ranges", &host);
++	ret = __of_translate_address(dev, NULL, in_addr, "dma-ranges", &host);
+ 
+ 	if (host) {
+ 		of_node_put(host);
+@@ -736,7 +739,7 @@ static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr,
+ 	unsigned long port;
+ 	struct device_node *host;
+ 
+-	taddr = __of_translate_address(dev, in_addr, "ranges", &host);
++	taddr = __of_translate_address(dev, NULL, in_addr, "ranges", &host);
+ 	if (host) {
+ 		/* host-specific port access */
+ 		port = logic_pio_trans_hwaddr(&host->fwnode, taddr, size);
 -- 
 git-series 0.9.1
