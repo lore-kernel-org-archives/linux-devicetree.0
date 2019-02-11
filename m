@@ -1,123 +1,52 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v2 2/3] mfd: syscon: Add optional clock support
-Date: Mon, 11 Feb 2019 17:32:30 +0100
-Message-ID: <01d49f11-a68e-1674-e6b7-d1b87aa973c9@st.com>
-References: <1544604495-4082-1-git-send-email-fabrice.gasnier@st.com>
- <1544604495-4082-3-git-send-email-fabrice.gasnier@st.com>
- <CAK8P3a1MucNG86=bXwVVsasGBOLJ67kuRSpoeneF6M5aB6GmQA@mail.gmail.com>
- <9e0ee154-a399-9bff-3beb-adfd9d6c6fee@st.com>
- <CAK8P3a0kV4-OF7JPwM9cEqxaPvNM9dFZdyZetc47t+D5izkFwQ@mail.gmail.com>
- <47a3fe9f-8adb-8f47-e7c1-342f8fc318aa@st.com>
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
+ early memory reservation
+Date: Mon, 11 Feb 2019 17:47:34 +0100
+Message-ID: <617e0d57-342d-4162-bd21-ece18e481d87@free.fr>
+References: <d4facdc2-0581-929f-caa2-b9efa9bd8f97@arm.com>
+ <CAL_JsqKFT8J6g02gxeBiTfBb_XHhp2-ZNB6DgaLPK85kNZGRig@mail.gmail.com>
+ <20190121143704.GE29504@arrakis.emea.arm.com>
+ <CAL_JsqKQb34zVNTzo9DLNiDwmWGxkrKezSOjwCUPAvgzUoLYjg@mail.gmail.com>
+ <20190121174234.GC26461@rapoport-lnx>
+ <2bb30550-435a-046c-4f45-21dd594aa695@free.fr>
+ <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
+ <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
+ <20190123055414.GA4747@rapoport-lnx>
+ <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
+ <20190123123143.GE4747@rapoport-lnx>
+ <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <47a3fe9f-8adb-8f47-e7c1-342f8fc318aa@st.com>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Sender: stable-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/28/19 2:20 PM, Fabrice Gasnier wrote:
-> On 1/16/19 4:11 PM, Arnd Bergmann wrote:
->> On Wed, Jan 16, 2019 at 3:10 PM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
->>>
->>> On 1/16/19 1:14 PM, Arnd Bergmann wrote:
->>>> (sorry for the late reply, I just realized that I had never sent out the
->>>> mail after Lee asked me for a review last year and I had drafted
->>>> my reply).
->>>
->>> Hi Arnd,
->>>
->>> Many thanks for reviewing, no worries :-)
->>>
->>>>
->>>> On Wed, Dec 12, 2018 at 9:48 AM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
->>>>>
->>>>> Some system control registers need to be clocked, so the registers can
->>>>> be accessed. Add an optional clock and attach it to regmap.
->>>>>
->>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->>>>
->>>> This looks ok to me in principle, but I have one question: When we
->>>> do a clk_get() and clk_prepare() as part of regmap_mmio_attach_clk(),
->>>> does that change the behavior of syscon nodes that are otherwise
->>>> unused?
->>>
->>> I'm not sure I correctly understand this question. I don't think it will
->>> change the behavior for "unused" nodes. These should remain unused with
->>> this patch.
->>
->> What I mean is that nodes that listed as 'compatible="syscon"' get
->> probed by the syscon driver even when no other driver references
->> them, and that in turn would acquire the clock, right?
-> 
-> Hi Arnd,
-> 
-> Sorry for the late reply.
-> 
-> When no other driver references them, nothing happens at probe time on
-> the clock: no calls to get/prepare... the clock.
-> 
-> => The clock will remain unrequested & unused until another driver calls
-> one of "of_syscon_register()" variants:
-> - syscon_node_to_regmap
-> - syscon_regmap_lookup_by_compatible
-> - syscon_regmap_lookup_by_phandle
-> 
-> When another driver references them (e.g. one of the above calls), then
-> it will acquire the optional clock and use it, e.g.:
-> - clk_prepare() upon of_syscon_register() variants
-> - clk_enable & clk_disable when accessing the registers
-> 
-> I hope this clarifies.
-> 
-> Please advise,
-> Best Regards,
-> Fabrice
+On 04/02/2019 15:37, Marc Gonzalez wrote:
 
-Hi Arnd,
+> Cc: stable@vger.kernel.org # 3.15+
+> Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
+> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Acked-by: Prateek Patel <prpatel@nvidia.com>
+> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+> Resend with DT CCed to reach robh's patch queue
+> I added CC: stable, Fixes, and Prateek's ack
+> Trim recipients list to minimize inconvenience
 
-Gentlemen reminder for this. I would appreciate to have your
-feedback.
+Mike, Stephen,
 
-Many thanks,
-Fabrice
+I'm confused over commit 3532b3b554a216f30edb841d29eef48521bdc592 in linux-next
+"memblock: drop __memblock_alloc_base()"
 
-> 
->>
->>>> I think we have a bunch of devices that started out as a syscon but
->>>> then we added a proper driver for them, which would handle the
->>>> clocks explicitly. Is it guaranteed that this will keep working (including
->>>> shutting down the clocks when they are unused) if we have two drivers
->>>> that call clk_get() on the same device node?
->>>
->>> I'd expect nothing wrong happens when two drivers call clk_get() for the
->>> same clock.
->>> Are there some case where two drivers are bind (e.g. syscon driver +
->>> another driver) for the same piece of hardware ?
->>
->> You won't actually have two drivers binding to the same device, but you
->> could have a driver and a syscon user that does relies on the
->> syscon_regmap_lookup_by_*() functions.
->>
->> I think we've had a couple of cases where we started out representing
->> a device as syscon, and then later decided that a high-level abstraction
->> would be needed because syscon didn't quite support all the needed
->> features.
->>
->> Since each syscon node should also have a more specific
->> compatible value, you can then have another driver that binds
->> to that compatible string.
->>
->>       Arnd
->>
+It's definitely going to conflict with the proposed patch
+over drivers/of/of_reserved_mem.c
+
+Rob, what's the next step then?
+
+Regards.
