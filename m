@@ -1,281 +1,129 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 06/12] dma-mapping: improve selection of dma_declare_coherent availability
-Date: Mon, 11 Feb 2019 14:35:48 +0100
-Message-ID: <20190211133554.30055-7-hch@lst.de>
-References: <20190211133554.30055-1-hch@lst.de>
+From: Harald Geyer <harald@ccbib.org>
+Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
+Date: Mon, 11 Feb 2019 14:36:53 +0100
+Message-ID: <E1gtBlV-0000Wl-Cv@stardust.g4.wien.funkfeuer.at>
+References: <20190211111245.GA18147@lst.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211133554.30055-1-hch@lst.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: iommu@lists.linux-foundation.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, x86@kernel.org, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20190211111245.GA18147@lst.de>
+Content-ID: <2029.1549892212.1@stardust.g4.wien.funkfeuer.at>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: 20190201113743.10058-1-harald@ccbib.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This API is primarily used through DT entries, but two architectures
-and two drivers call it directly.  So instead of selecting the config
-symbol for random architectures pull it in implicitly for the actual
-users.  Also rename the Kconfig option to describe the feature better.
+Hi Torsten!
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/arc/Kconfig            | 1 -
- arch/arm/Kconfig            | 2 +-
- arch/arm64/Kconfig          | 1 -
- arch/csky/Kconfig           | 1 -
- arch/mips/Kconfig           | 1 -
- arch/riscv/Kconfig          | 1 -
- arch/sh/Kconfig             | 2 +-
- arch/unicore32/Kconfig      | 1 -
- arch/x86/Kconfig            | 1 -
- drivers/mfd/Kconfig         | 2 ++
- drivers/of/Kconfig          | 3 ++-
- include/linux/device.h      | 2 +-
- include/linux/dma-mapping.h | 8 ++++----
- kernel/dma/Kconfig          | 2 +-
- kernel/dma/Makefile         | 2 +-
- 15 files changed, 13 insertions(+), 17 deletions(-)
+Torsten Duwe writes:
+> > hpvcc-supply vs. cpvdd-supply:
+> > On the A64 manual the pin is called CPVDD and the binding documents
+> > requires a cpvdd-supply property. However in the actual driver and
+> > devicetrees so far hpvcc-supply is used. This is a very new binding,
+> > so we have the luxury to decide either way, I think. Any input from
+> > the devicetree maintainers would be appreciated.
+> 
+> I don't really have a strong opinion here, besides settling this ASAP,
+> to minimise confusion.
 
-diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index 4103f23b6cea..56e9397542e0 100644
---- a/arch/arc/Kconfig
-+++ b/arch/arc/Kconfig
-@@ -30,7 +30,6 @@ config ARC
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_DEBUG_STACKOVERFLOW
- 	select HAVE_FUTEX_CMPXCHG if FUTEX
--	select HAVE_GENERIC_DMA_COHERENT
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_KERNEL_GZIP
- 	select HAVE_KERNEL_LZMA
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 9395f138301a..25fbbd3cb91d 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -30,6 +30,7 @@ config ARM
- 	select CLONE_BACKWARDS
- 	select CPU_PM if SUSPEND || CPU_IDLE
- 	select DCACHE_WORD_ACCESS if HAVE_EFFICIENT_UNALIGNED_ACCESS
-+	select DMA_DECLARE_COHERENT
- 	select DMA_REMAP if MMU
- 	select EDAC_SUPPORT
- 	select EDAC_ATOMIC_SCRUB
-@@ -72,7 +73,6 @@ config ARM
- 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL
- 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
- 	select HAVE_GCC_PLUGINS
--	select HAVE_GENERIC_DMA_COHERENT
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
- 	select HAVE_IDE if PCI || ISA || PCMCIA
- 	select HAVE_IRQ_TIME_ACCOUNTING
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1d22e969bdcb..d558461a5107 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -137,7 +137,6 @@ config ARM64
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_GCC_PLUGINS
--	select HAVE_GENERIC_DMA_COHERENT
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS
- 	select HAVE_IRQ_TIME_ACCOUNTING
- 	select HAVE_MEMBLOCK_NODE_MAP if NUMA
-diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-index 0a9595afe9be..c009a8c63946 100644
---- a/arch/csky/Kconfig
-+++ b/arch/csky/Kconfig
-@@ -30,7 +30,6 @@ config CSKY
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER
--	select HAVE_GENERIC_DMA_COHERENT
- 	select HAVE_KERNEL_GZIP
- 	select HAVE_KERNEL_LZO
- 	select HAVE_KERNEL_LZMA
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 0d14f51d0002..ba50dc2d37dc 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -56,7 +56,6 @@ config MIPS
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER
--	select HAVE_GENERIC_DMA_COHERENT
- 	select HAVE_IDE
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index feeeaa60697c..51b9c97751bf 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -32,7 +32,6 @@ config RISCV
- 	select HAVE_MEMBLOCK_NODE_MAP
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_FUTEX_CMPXCHG if FUTEX
--	select HAVE_GENERIC_DMA_COHERENT
- 	select HAVE_PERF_EVENTS
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select IRQ_DOMAIN
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index a9c36f95744a..a3d2a24e75c7 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -7,11 +7,11 @@ config SUPERH
- 	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
- 	select HAVE_PATA_PLATFORM
- 	select CLKDEV_LOOKUP
-+	select DMA_DECLARE_COHERENT
- 	select HAVE_IDE if HAS_IOPORT_MAP
- 	select HAVE_MEMBLOCK_NODE_MAP
- 	select ARCH_DISCARD_MEMBLOCK
- 	select HAVE_OPROFILE
--	select HAVE_GENERIC_DMA_COHERENT
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_PERF_EVENTS
- 	select HAVE_DEBUG_BUGVERBOSE
-diff --git a/arch/unicore32/Kconfig b/arch/unicore32/Kconfig
-index c3a41bfe161b..6d2891d37e32 100644
---- a/arch/unicore32/Kconfig
-+++ b/arch/unicore32/Kconfig
-@@ -4,7 +4,6 @@ config UNICORE32
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
- 	select ARCH_MIGHT_HAVE_PC_SERIO
--	select HAVE_GENERIC_DMA_COHERENT
- 	select HAVE_KERNEL_GZIP
- 	select HAVE_KERNEL_BZIP2
- 	select GENERIC_ATOMIC64
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 26387c7bf305..0e33dede053e 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -15,7 +15,6 @@ config X86_32
- 	select CLKSRC_I8253
- 	select CLONE_BACKWARDS
- 	select HAVE_AOUT
--	select HAVE_GENERIC_DMA_COHERENT
- 	select MODULES_USE_ELF_REL
- 	select OLD_SIGACTION
+Yeah, given that this issue was introduced only in 5.0 and 5.0 is
+almost out of the door, I'd have believed people to be more eager to
+get this fixed soon.
+
+Well, if nobody speaks up, I'll just include a patch to change the
+binding to match the source in the next version of my submission.
+
+> > debug console multiplexing:
+> > Olimex have a userspace script that controls gpio PL9 during boot,
+> > to select between HP and serial console. I guess this is not acceptable
+> > for mainline.
+> 
+> > The best solution I can see is to switch the HP jack from serial console
+> > to audio once the audio drivers load. With this people can still capture
+> > the bootlogs but everybody gets audio once the system is up and
+> > switching back to console output is as simple as unloading the audio
+> > drivers.
+> 
+> IMO it is really not the audio driver's business to mess with this switch.
+> You could argue as well that the serial driver should get a flag to claim
+> the HP jack, which would be similarily unjustified.
+
+Not the audio driver's business, but perheps the audio card's DT node.
+Which is why I came up with the pinctrl idea.
+
+> My solution is to confine this choice inside U-Boot:
+> in sun50i-a64-teres-i-u-boot.dtsi I put
+> 
+> / {
+>         leds {
+>                 compatible = "gpio-leds";
+>                 /* Not really a LED, but the least intrusive workaround */
+>                 audioconsole {
+>                         label = "teres-i:audio:console";
+>                         gpio = <&r_pio 0 9 GPIO_ACTIVE_LOW>; /* PL9 */
+>                         default-state = "on";
+>                 };
+>         };
+> [...]
+> 
+> and place a "gpio set PL9;" somewhere in the bootcmd_* logic. Otherwise there's
+> a *lot* of chirping on the right ear during boot ;-)
+> The switch is for early boot debugging, so it's best to have U-Boot enable it
+> when required, and keep it off by default.
+
+I agree that some quirk in u-boot will be required for those who want
+to boot with headphones plugged in.
+
+But I still think we need a proper description of the HW in the linux DT:
+* When linux doesn't know about the pin at all, there are no guarantees
+  that it won't accidentally touch the pin during some operations like
+  suspend/resume, etc.
+* There is the usecase where somebody puts the system console on ttyS1
+  and uses ttyS0 to connect to some other board. (Actually I believe this
+  is a quite likely usecase given Olimex' usual target market.) I'd like
+  to support this.
+
+Using something like your leds hack in the linux DT would be fine for
+me, if the maintainers are willing to accept it.
+
+As it is, I'm currently working on supporting "output-high" property
+in pinctrl-sunxi.
  
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index f15f6489803d..c3ccf2c7b3ef 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1067,6 +1067,7 @@ config MFD_SI476X_CORE
- config MFD_SM501
- 	tristate "Silicon Motion SM501"
- 	depends on HAS_DMA
-+	select DMA_DECLARE_COHERENT
- 	 ---help---
- 	  This is the core driver for the Silicon Motion SM501 multimedia
- 	  companion chip. This device is a multifunction device which may
-@@ -1675,6 +1676,7 @@ config MFD_TC6393XB
- 	select GPIOLIB
- 	select MFD_CORE
- 	select MFD_TMIO
-+	select DMA_DECLARE_COHERENT
- 	help
- 	  Support for Toshiba Mobile IO Controller TC6393XB
- 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 3607fd2810e4..f8c66a9472a4 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -43,6 +43,7 @@ config OF_FLATTREE
- 
- config OF_EARLY_FLATTREE
- 	bool
-+	select DMA_DECLARE_COHERENT
- 	select OF_FLATTREE
- 
- config OF_PROMTREE
-@@ -83,7 +84,7 @@ config OF_MDIO
- config OF_RESERVED_MEM
- 	bool
- 	depends on OF_EARLY_FLATTREE
--	default y if HAVE_GENERIC_DMA_COHERENT || DMA_CMA
-+	default y if DMA_DECLARE_COHERENT || DMA_CMA
- 
- config OF_RESOLVE
- 	bool
-diff --git a/include/linux/device.h b/include/linux/device.h
-index be544400acdd..c52d90348cef 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -1017,7 +1017,7 @@ struct device {
- 
- 	struct list_head	dma_pools;	/* dma pools (if dma'ble) */
- 
--#ifdef CONFIG_HAVE_GENERIC_DMA_COHERENT
-+#ifdef CONFIG_DMA_DECLARE_COHERENT
- 	struct dma_coherent_mem	*dma_mem; /* internal for coherent mem
- 					     override */
- #endif
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index b904d55247ab..fde0cfc71824 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -153,7 +153,7 @@ static inline int is_device_dma_capable(struct device *dev)
- 	return dev->dma_mask != NULL && *dev->dma_mask != DMA_MASK_NONE;
- }
- 
--#ifdef CONFIG_HAVE_GENERIC_DMA_COHERENT
-+#ifdef CONFIG_DMA_DECLARE_COHERENT
- /*
-  * These three functions are only for dma allocator.
-  * Don't use them in device drivers.
-@@ -192,7 +192,7 @@ static inline int dma_mmap_from_global_coherent(struct vm_area_struct *vma,
- {
- 	return 0;
- }
--#endif /* CONFIG_HAVE_GENERIC_DMA_COHERENT */
-+#endif /* CONFIG_DMA_DECLARE_COHERENT */
- 
- static inline bool dma_is_direct(const struct dma_map_ops *ops)
- {
-@@ -731,7 +731,7 @@ static inline int dma_get_cache_alignment(void)
- /* flags for the coherent memory api */
- #define DMA_MEMORY_EXCLUSIVE		0x01
- 
--#ifdef CONFIG_HAVE_GENERIC_DMA_COHERENT
-+#ifdef CONFIG_DMA_DECLARE_COHERENT
- int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
- 				dma_addr_t device_addr, size_t size, int flags);
- void dma_release_declared_memory(struct device *dev);
-@@ -756,7 +756,7 @@ dma_mark_declared_memory_occupied(struct device *dev,
- {
- 	return ERR_PTR(-EBUSY);
- }
--#endif /* CONFIG_HAVE_GENERIC_DMA_COHERENT */
-+#endif /* CONFIG_DMA_DECLARE_COHERENT */
- 
- static inline void *dmam_alloc_coherent(struct device *dev, size_t size,
- 		dma_addr_t *dma_handle, gfp_t gfp)
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-index ca88b867e7fe..b122ab100d66 100644
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -16,7 +16,7 @@ config ARCH_DMA_ADDR_T_64BIT
- config ARCH_HAS_DMA_COHERENCE_H
- 	bool
- 
--config HAVE_GENERIC_DMA_COHERENT
-+config DMA_DECLARE_COHERENT
- 	bool
- 
- config ARCH_HAS_SYNC_DMA_FOR_DEVICE
-diff --git a/kernel/dma/Makefile b/kernel/dma/Makefile
-index 72ff6e46aa86..d237cf3dc181 100644
---- a/kernel/dma/Makefile
-+++ b/kernel/dma/Makefile
-@@ -2,7 +2,7 @@
- 
- obj-$(CONFIG_HAS_DMA)			+= mapping.o direct.o dummy.o
- obj-$(CONFIG_DMA_CMA)			+= contiguous.o
--obj-$(CONFIG_HAVE_GENERIC_DMA_COHERENT) += coherent.o
-+obj-$(CONFIG_DMA_DECLARE_COHERENT)	+= coherent.o
- obj-$(CONFIG_DMA_VIRT_OPS)		+= virt.o
- obj-$(CONFIG_DMA_API_DEBUG)		+= debug.o
- obj-$(CONFIG_SWIOTLB)			+= swiotlb.o
+> > Testing:
+> > I don't have a headset with combo connector, so I could only test the
+> > headphones output, but not the headset mic. If somebody happens to
+> > have a TERES-I and a suitable headset, testing this would be nice.
+> 
+> The pinout required is the "CTIA" one, *not* OMTP (standards are great...) see
+> https://source.android.com/devices/accessories/headset/plug-headset-spec#mechanical
+> 
+> I do have a compatible headset, but was neither able to record from the HS mic
+> nor from the internal mic, so I have to try harder, I guess ;-) I could hear
+> both mics when choosing the mixer as output source though. Mute and boost
+> worked for both mics, in alsamixer.
+
+Probably you need to enable more controls in alsamixer.
+"AIF1 Data Digital ADC" comes to mind as a plausible candidate.
+
+> Kernel is 4.20.6, so ca0412a05756cd0b
+> is missing; which shouldn't make a difference in this respect, right?
+
+I suppose not, but I didn't actually test audio on 4.20.
+
+Thanks,
+Harald
+
 -- 
-2.20.1
+If you want to support my work:
+see http://friends.ccbib.org/harald/supporting/
+or donate via CLAM to xASPBtezLNqj4cUe8MT5nZjthRSEjrRQXN
+or via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
