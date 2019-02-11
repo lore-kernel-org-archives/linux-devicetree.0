@@ -1,96 +1,44 @@
-From: Seiya Wang <seiya.wang@mediatek.com>
-Subject: Re: [PATCH v6 1/6] irqchip/mtk-sysirq: support 4 interrupt
- parameters for sysirq
-Date: Mon, 11 Feb 2019 21:01:20 +0800
-Message-ID: <1549890080.22817.24.camel@mtksdccf07>
-References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
-         <1548317240-44682-2-git-send-email-erin.lo@mediatek.com>
-         <898ca3d9-002b-e28e-fc97-86bc2538e9de@gmail.com>
-         <626b5b46-aac7-1532-386e-2fed85bf4ad9@arm.com>
-         <c0187acf-bd8c-2d41-d84d-d35fc63b2beb@arm.com>
-         <1549866929.22817.20.camel@mtksdccf07> <868symu2ss.wl-marc.zyngier@arm.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 4/7] of: address: Add support for the dma-parent
+ property
+Date: Mon, 11 Feb 2019 14:09:15 +0100
+Message-ID: <20190211130915.6lgenqziixecik5p@flea>
+References: <cover.ddd928eab0069d426b711e69940918eaf85625ce.1549482066.git-series.maxime.ripard@bootlin.com>
+ <824396752ee40c8e4222fddb4a80408646989c17.1549482066.git-series.maxime.ripard@bootlin.com>
+ <CAL_Jsq+y++qMkCNehPxZ3J8bfU7Atgppy4uMtTEdPdkt9Xv_jQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <868symu2ss.wl-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+y++qMkCNehPxZ3J8bfU7Atgppy4uMtTEdPdkt9Xv_jQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-02-11 at 08:50 +0000, Marc Zyngier wrote:
-> On Mon, 11 Feb 2019 06:35:29 +0000,
-> Seiya Wang <seiya.wang@mediatek.com> wrote:
-> > 
-> > On Thu, 2019-02-07 at 15:52 +0000, Marc Zyngier wrote:
-> > > On 07/02/2019 15:47, Marc Zyngier wrote:
-> > > > On 07/02/2019 15:20, Matthias Brugger wrote:
-> > > >>
-> > > >>
-> > > >> On 24/01/2019 09:07, Erin Lo wrote:
-> > > >>> From: Seiya Wang <seiya.wang@mediatek.com>
-> > > >>>
-> > > >>> To support partitioned PPIs, 4 interrupt parameters should be valid
-> > > >>> for sysirq.
-> > > >>>
-> > > >>> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
-> > > >>> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > > >>> ---
-> > > >>>  drivers/irqchip/irq-mtk-sysirq.c | 4 ++--
-> > > >>>  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >>>
-> > > >>> diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-> > > >>> index 90aaf19..282736a 100644
-> > > >>> --- a/drivers/irqchip/irq-mtk-sysirq.c
-> > > >>> +++ b/drivers/irqchip/irq-mtk-sysirq.c
-> > > >>> @@ -81,7 +81,7 @@ static int mtk_sysirq_domain_translate(struct irq_domain *d,
-> > > >>>  				       unsigned int *type)
-> > > >>>  {
-> > > >>>  	if (is_of_node(fwspec->fwnode)) {
-> > > >>> -		if (fwspec->param_count != 3)
-> > > >>> +		if (fwspec->param_count != 3 && fwspec->param_count != 4)
-> > > >>
-> > > >> Where is this 4th parameter used?
-> > > > 
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt#n14
-> > > Sorry, I fired Send way too early.
-> > > 
-> > > What I wanted to add is that it is not clear to me why this change would
-> > > be required here, as this driver only supports SPIs. It could be fixed
-> > > by just relaxing the binding itself.
-> > > 
-> > > Thanks,
-> > > 
-> > > 	M.
-> > 
-> > Do you mean that we should change #interrupt-cells back to 3 for sysirq
-> > and remove the 4th parameters of every spi interrupts in mt8183.dtsi
-> > (i.e. 3 parameters for spi, 4 for ppi) such that we can discard this
-> > patch?
-> 
-> It is more subtle than that:
-> 
-> - PPIs must have the affinity parameter in their int-spec (since you
->   need that for the PMU)
-> 
-> - SPIs that are directly routed to the GIC must also have the affinity
->   parameter (although set to zero).
-> 
-> - SPIs that are routed via the sysirq block (or any other) can use the
->   3 parameter variant, as they are not resolved in the context of the
->   GIC, but in that of the sysirq.
-> 
-> But in short, yes. You should be able to drop this patch altogether.
-> 
-> > If yes, we may need some time to verify the change before resending the
-> > patch.
-> 
-> That's absolutely fine.
-> 
-> Thanks,
-> 
-> 	M.
-> 
-Thanks for the detailed descriptions.
-We will remove this patch and resend again.
+T24gV2VkLCBGZWIgMDYsIDIwMTkgYXQgMDI6NTc6NTFQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gV2VkLCBGZWIgNiwgMjAxOSBhdCAxOjQyIFBNIE1heGltZSBSaXBhcmQgPG1heGlt
+ZS5yaXBhcmRAYm9vdGxpbi5jb20+IHdyb3RlOgo+ID4KPiA+IFNvbWUgU29DcyBoYXZlIGRldmlj
+ZXMgdGhhdCBhcmUgdXNpbmcgYSBzZXBhcmF0ZSBidXMgZnJvbSB0aGUgbWFpbiBidXMgdG8KPiA+
+IHBlcmZvcm0gRE1BLgo+ID4KPiA+IFRoZXNlIGJ1c2VzIG1pZ2h0IGhhdmUgc29tZSByZXN0cmlj
+dGlvbnMgYW5kL29yIGRpZmZlcmVudCBtYXBwaW5nIHRoYW4gZnJvbQo+ID4gdGhlIENQVSBzaWRl
+LCBzbyB3ZSdkIG5lZWQgdG8gZXhwcmVzcyB0aG9zZSB1c2luZyB0aGUgdXN1YWwgZG1hLXJhbmdl
+cywgYnV0Cj4gPiB1c2luZyBhIGRpZmZlcmVudCBEVCBub2RlIHRoYW4gdGhlIG5vZGUncyBwYXJl
+bnQuCj4gPgo+ID4gQWRkIHN1cHBvcnQgZm9yIGEgZG1hLXBhcmVudCBwcm9wZXJ0eSB0aGF0IGxp
+bmtzIHRvIHRoZSBETUEgYnVzIHVzZWQgYnkgdGhlCj4gPiBkZXZpY2UgaW4gc3VjaCBhIGNhc2Uu
+Cj4gCj4gPz8gZG1hLXBhcmVudCBpcyBnb25lIG5vdywgcmlnaHQ/IEFuZCBJIHNlZSAjZG1hLXBh
+cmVudC1jZWxscz8KClVyZ2gsIHJpZ2h0Li4uIEkgZm9yZ290IHRvIHVwZGF0ZSB0aGUgY29tbWl0
+IGxvZywgSSdsbCByZXNlbmQgaXQuCgpNYXhpbWUKCi0tIApNYXhpbWUgUmlwYXJkLCBCb290bGlu
+CkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cHM6Ly9ib290bGluLmNv
+bQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
