@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 6/7] clk: sunxi-ng: sun5i: Export the MBUS clock
-Date: Mon, 11 Feb 2019 16:02:54 +0100
-Message-ID: <d757579f12e0f7701442794dc39500fea464ca56.1549897336.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v3 7/7] ARM: dts: sun5i: Add the MBUS controller
+Date: Mon, 11 Feb 2019 16:02:55 +0100
+Message-ID: <edf5e68d0dbb25877d2867554a5a19de1bf01236.1549897336.git-series.maxime.ripard@bootlin.com>
 References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,46 +18,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Georgi Djakov <georgi.djakov@linaro.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The MBUS clock is used by the MBUS controller, so let's export it so that
-we can use it in our DT node.
+The MBUS (and its associated controller) is the bus in the Allwinner SoCs
+that DMA devices use in the system to access the memory.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Among other things (and depending on the SoC generation), it can also
+enforce priorities or report bandwidth usages on a per-master basis.
+
+One of the most notable thing is that instead of having the same mapping
+for the RAM than the CPU, it maps it at address 0, which means we'll have
+to do address translation thanks to the dma-ranges property.
+
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/clk/sunxi-ng/ccu-sun5i.h      | 4 ----
- include/dt-bindings/clock/sun5i-ccu.h | 2 +-
- 2 files changed, 1 insertion(+), 5 deletions(-)
+ arch/arm/boot/dts/sun5i.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun5i.h b/drivers/clk/sunxi-ng/ccu-sun5i.h
-index 93a275fbd9a9..b66abd4fd0bf 100644
---- a/drivers/clk/sunxi-ng/ccu-sun5i.h
-+++ b/drivers/clk/sunxi-ng/ccu-sun5i.h
-@@ -60,10 +60,6 @@
+diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
+index 5497d985c54a..a29203b7661d 100644
+--- a/arch/arm/boot/dts/sun5i.dtsi
++++ b/arch/arm/boot/dts/sun5i.dtsi
+@@ -127,6 +127,7 @@
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
++		dma-ranges;
+ 		ranges;
  
- /* The rest of the module clocks are exported */
+ 		system-control@1c00000 {
+@@ -181,6 +182,14 @@
+ 			};
+ 		};
  
--#define CLK_MBUS		99
--
--/* And finally the IEP clock */
--
- #define CLK_NUMBER		(CLK_IEP + 1)
++		mbus: dram-controller@1c01000 {
++			compatible = "allwinner,sun5i-a13-mbus";
++			reg = <0x01c01000 0x1000>;
++			clocks = <&ccu CLK_MBUS>;
++			dma-ranges = <0x00000000 0x40000000 0x20000000>;
++			#interconnect-cells = <1>;
++		};
++
+ 		dma: dma-controller@1c02000 {
+ 			compatible = "allwinner,sun4i-a10-dma";
+ 			reg = <0x01c02000 0x1000>;
+@@ -727,6 +736,8 @@
+ 			clock-names = "ahb", "mod",
+ 				      "ram";
+ 			resets = <&ccu RST_DE_FE>;
++			interconnects = <&mbus 19>;
++			interconnect-names = "dma";
+ 			status = "disabled";
  
- #endif /* _CCU_SUN5I_H_ */
-diff --git a/include/dt-bindings/clock/sun5i-ccu.h b/include/dt-bindings/clock/sun5i-ccu.h
-index 81f34d477aeb..2e6b9ddcc24e 100644
---- a/include/dt-bindings/clock/sun5i-ccu.h
-+++ b/include/dt-bindings/clock/sun5i-ccu.h
-@@ -100,7 +100,7 @@
- #define CLK_AVS			96
- #define CLK_HDMI		97
- #define CLK_GPU			98
--
-+#define CLK_MBUS		99
- #define CLK_IEP			100
+ 			ports {
+@@ -755,6 +766,8 @@
+ 			clock-names = "ahb", "mod",
+ 				      "ram";
+ 			resets = <&ccu RST_DE_BE>;
++			interconnects = <&mbus 18>;
++			interconnect-names = "dma";
+ 			status = "disabled";
  
- #endif /* _DT_BINDINGS_CLK_SUN5I_H_ */
+ 			assigned-clocks = <&ccu CLK_DE_BE>;
 -- 
 git-series 0.9.1
