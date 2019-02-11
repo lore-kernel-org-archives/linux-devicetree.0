@@ -1,65 +1,83 @@
-From: Seiya Wang <seiya.wang@mediatek.com>
-Subject: Re: [PATCH v1 1/1] arm64: dts: mt8173: add pmu nodes for mt8173
-Date: Mon, 11 Feb 2019 13:20:03 +0800
-Message-ID: <1549862403.22817.11.camel@mtksdccf07>
-References: <20190109082143.26468-1-seiya.wang@mediatek.com>
-         <38a56fc1-09fa-a35a-fcef-e265f1608b83@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [v5 2/2] arm64: dts: lx2160a: add sata node support
+Date: Mon, 11 Feb 2019 13:39:22 +0800
+Message-ID: <20190211053920.GM22487@dragon>
+References: <20190125081013.21663-1-peng.ma@nxp.com>
+ <20190125081013.21663-2-peng.ma@nxp.com>
+ <20190201063011.GL19882@dragon>
+ <VI1PR04MB44313B08539AA7081DC53BAFED640@VI1PR04MB4431.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <38a56fc1-09fa-a35a-fcef-e265f1608b83@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB44313B08539AA7081DC53BAFED640@VI1PR04MB4431.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peng Ma <peng.ma@nxp.com>
+Cc: "axboe@kernel.dk" <axboe@kernel.dk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Andy Tang <andy.tang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-02-08 at 16:04 +0100, Matthias Brugger wrote:
-> 
-> On 09/01/2019 09:21, Seiya Wang wrote:
-> > This patch adds the device nodes of ARM Performance Monitor Uint
-> > for mt8173.
-> > 
-> > Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index 412ffd4d426b..44374c506a1c 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -216,6 +216,20 @@
-> >  		};
-> >  	};
-> >  
-> > +	pmu_a53 {
-> > +		compatible = "arm,cortex-a53-pmu";
-> > +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
-> > +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
-> > +		interrupt-affinity = <&cpu0>, <&cpu1>;
-> > +	};
-> > +
-> > +	pmu_a72 {
-> > +		compatible = "arm,cortex-a72-pmu";
-> > +		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_LOW>,
-> > +			     <GIC_SPI 13 IRQ_TYPE_LEVEL_LOW>;
-> > +		interrupt-affinity = <&cpu2>, <&cpu3>;
-> > +	};
-> 
-> There is no a72 but a a57 CPU present.
-> Typo?
-> 
-> Regards,
-> Matthias
-
-MT8173 is actually using a72, not a57.
-I will submit another patch for fixing it.
-
-Thanks.
-
-> > +
-> >  	psci {
-> >  		compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
-> >  		method = "smc";
-> > 
+T24gTW9uLCBGZWIgMTEsIDIwMTkgYXQgMDI6NTM6MThBTSArMDAwMCwgUGVuZyBNYSB3cm90ZToK
+PiAKPiAKPiA+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiA+RnJvbTogU2hhd24gR3VvIDxz
+aGF3bmd1b0BrZXJuZWwub3JnPgo+ID5TZW50OiAyMDE55bm0MuaciDHml6UgMTQ6MzAKPiA+VG86
+IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT4KPiA+Q2M6IGF4Ym9lQGtlcm5lbC5kazsgcm9iaCtk
+dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgTGVvIExpCj4gPjxsZW95YW5nLmxp
+QG54cC5jb20+OyBsaW51eC1pZGVAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsKPiA+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnOyBBbmR5IFRhbmcKPiA+PGFuZHkudGFuZ0BueHAuY29tPgo+
+ID5TdWJqZWN0OiBSZTogW3Y1IDIvMl0gYXJtNjQ6IGR0czogbHgyMTYwYTogYWRkIHNhdGEgbm9k
+ZSBzdXBwb3J0Cj4gPgo+ID5PbiBGcmksIEphbiAyNSwgMjAxOSBhdCAwODoxMDoxM0FNICswMDAw
+LCBQZW5nIE1hIHdyb3RlOgo+ID4+IEFkZCBTQVRBIGRldmljZSBub2RlcyBmb3IgZnNsLWx4MjE2
+MGEgYW5kIGVuYWJsZSBzdXBwb3J0IGZvciBRRFMgYW5kCj4gPj4gUkRCIGJvYXJkcy4KPiA+Pgo+
+ID4+IFNpZ25lZC1vZmYtYnk6IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT4KPiA+PiAtLS0KPiA+
+PiBjaGFuZ2VkIGZvciBWNToKPiA+PiAJLSBubyBjaGFuZ2UKPiA+Pgo+ID4+ICBhcmNoL2FybTY0
+L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHgyMTYwYS1xZHMuZHRzIHwgICAxNiArKysrKysrCj4g
+Pj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1seDIxNjBhLXJkYi5kdHMgfCAg
+IDE2ICsrKysrKysKPiA+PiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2
+MGEuZHRzaSAgICB8ICAgNDQKPiA+KysrKysrKysrKysrKysrKysrKysrCj4gPj4gIDMgZmlsZXMg
+Y2hhbmdlZCwgNzYgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPiA+Pgo+ID4+IGRpZmYg
+LS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHgyMTYwYS1xZHMuZHRz
+Cj4gPj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHgyMTYwYS1xZHMuZHRz
+Cj4gPj4gaW5kZXggOTlhMjJhYi4uMWE1YWNmNiAxMDA2NDQKPiA+PiAtLS0gYS9hcmNoL2FybTY0
+L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHgyMTYwYS1xZHMuZHRzCj4gPj4gKysrIGIvYXJjaC9h
+cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEtcWRzLmR0cwo+ID4+IEBAIC05NSw2
+ICs5NSwyMiBAQAo+ID4+ICAJfTsKPiA+PiAgfTsKPiA+Pgo+ID4+ICsmc2F0YTAgewo+ID4+ICsJ
+c3RhdHVzID0gIm9rYXkiOwo+ID4+ICt9Owo+ID4+ICsKPiA+PiArJnNhdGExIHsKPiA+PiArCXN0
+YXR1cyA9ICJva2F5IjsKPiA+PiArfTsKPiA+PiArCj4gPj4gKyZzYXRhMiB7Cj4gPj4gKwlzdGF0
+dXMgPSAib2theSI7Cj4gPj4gK307Cj4gPj4gKwo+ID4+ICsmc2F0YTMgewo+ID4+ICsJc3RhdHVz
+ID0gIm9rYXkiOwo+ID4+ICt9Owo+ID4+ICsKPiA+PiAgJnVhcnQwIHsKPiA+PiAgCXN0YXR1cyA9
+ICJva2F5IjsKPiA+PiAgfTsKPiA+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWx4MjE2MGEtcmRiLmR0cwo+ID4+IGIvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWx4MjE2MGEtcmRiLmR0cwo+ID4+IGluZGV4IDY0ODFlNWYuLjViNjc5OWUg
+MTAwNjQ0Cj4gPj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2
+MGEtcmRiLmR0cwo+ID4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
+eDIxNjBhLXJkYi5kdHMKPiA+PiBAQCAtMTAyLDYgKzEwMiwyMiBAQAo+ID4+ICAJfTsKPiA+PiAg
+fTsKPiA+Pgo+ID4+ICsmc2F0YTAgewo+ID4+ICsJc3RhdHVzID0gIm9rYXkiOwo+ID4+ICt9Owo+
+ID4+ICsKPiA+PiArJnNhdGExIHsKPiA+PiArCXN0YXR1cyA9ICJva2F5IjsKPiA+PiArfTsKPiA+
+PiArCj4gPj4gKyZzYXRhMiB7Cj4gPj4gKwlzdGF0dXMgPSAib2theSI7Cj4gPj4gK307Cj4gPj4g
+Kwo+ID4+ICsmc2F0YTMgewo+ID4+ICsJc3RhdHVzID0gIm9rYXkiOwo+ID4+ICt9Owo+ID4+ICsK
+PiA+PiAgJnVhcnQwIHsKPiA+PiAgCXN0YXR1cyA9ICJva2F5IjsKPiA+PiAgfTsKPiA+PiBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaQo+
+ID4+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaQo+ID4+
+IGluZGV4IGE3OWY1YzEuLjU5MjAzNGIgMTAwNjQ0Cj4gPj4gLS0tIGEvYXJjaC9hcm02NC9ib290
+L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaQo+ID4+ICsrKyBiL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvZnJlZXNjYWxlL2ZzbC1seDIxNjBhLmR0c2kKPiA+PiBAQCAtNjcxLDYgKzY3MSw1MCBA
+QAo+ID4+ICAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4+ICAJCX07Cj4gPj4KPiA+PiArCQlz
+YXRhMDogc2F0YUAzMjAwMDAwIHsKPiA+PiArCQkJY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1h
+aGNpIjsKPiA+Cj4gPkhhcyB0aGUga2VybmVsIGRyaXZlciBiZWVuIHBhdGNoZWQgdG8gcHJvYmUg
+dGhlIGNvbXBhdGlibGU/Cj4gPgo+ID5TaGF3bgo+IFllcywgdGhlIGRyaXZlciBwYXRjaCBpcyBo
+dHRwOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTAzNDA4My8KClBpbmcgbWUgd2hlbiB0
+aGUgZHJpdmVyIHBhdGNoIGlzIGFjY2VwdGVkLiAgSWRlYWxseSwgd2Ugb25seSBhY2NlcHQgZHRz
+CmNoYW5nZXMgYWZ0ZXIgdGhlIGRyaXZlciBjb3VudGVycGFydCBsYW5kcyBvbiBtYWlubGluZS4K
+ClNoYXduCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
