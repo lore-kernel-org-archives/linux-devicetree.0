@@ -1,68 +1,40 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [GIT PULL] of: overlay: validation checks, subsequent fixes for
- v20 -- correction: v4.20
-Date: Mon, 11 Feb 2019 14:43:48 -0600
-Message-ID: <CANk1AXRnX+=v+7g-_rM3TwNmM3aVcOqRknv9BR+hBOeCtT24Fg@mail.gmail.com>
-References: <262419e9-5c9f-1193-f119-33f373d81e43@gmail.com>
- <b113e03d-95f9-96bc-2a50-bc61307e780e@gmail.com> <CANk1AXS=4fT6LbOHqK4DYhSMcO9Q60mDcQsFFnwoJLHj8wRsTA@mail.gmail.com>
- <20190211191341.GA13134@kroah.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: imx7: add DMA properties for ECSPI
+Date: Mon, 11 Feb 2019 19:34:19 -0200
+Message-ID: <CAOMZO5BrTLyg7Q51tPcHbN8S2VmA4HAENOVzNhw+Yx7Nniz3Gg@mail.gmail.com>
+References: <20190107132226.16216-1-stefan@agner.ch> <20190107132226.16216-2-stefan@agner.ch>
+ <1549573243.3075.72.camel@impinj.com> <20190211012305.GA21496@dragon> <1549916056.3075.102.camel@impinj.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211191341.GA13134@kroah.com>
+In-Reply-To: <1549916056.3075.102.camel@impinj.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-fpga@vger.kernel.org
+To: Trent Piepho <tpiepho@impinj.com>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 1:13 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Hi Trent,
+
+On Mon, Feb 11, 2019 at 6:44 PM Trent Piepho <tpiepho@impinj.com> wrote:
+
+> I've had more time to test.
 >
-> On Mon, Feb 11, 2019 at 12:41:40PM -0600, Alan Tull wrote:
-> > On Fri, Nov 9, 2018 at 12:58 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> >
-> > What LTSI's are these patches likely to end up in?  Just to be clear,
-> > I'm not pushing for any specific answer, I just want to know what to
-> > expect.
+> Without DMA, I can reload my FPGA hundreds of times and get days of
+> uptime using linux-next.
 >
-> I have no idea what you are asking here.
+> With DMA, loading is unreliable.  The higher the SPI speed, the less
+> reliable it is.  Unfortunately, it's hard to duplicate the problem with
+> a small amount of data, and with a large amount of data I can't examine
+> it in depth enough to determine if the problem is related to SPI bus
+> timing or IMX sDMA sending the wrong bytes to the spi controller.
 >
-> What patches?
+> Using DMA with SPI causes kernel panics.  Not always immediately, but
+> after using DMA it's a smaller of minutes before something crashes.
+> The backtraces are all over the place and don't usually point back into
+> SPI.  It does seem like they usually hit something has allocated or is
+> allocating DMA memory.
 
-I probably should have asked my question *below* the pertinent context
-of the the 17 patches listed in the pull request, which was:
+Did you test with an external SDMA firmware or with the ROM SDMA firmware?
 
->       of: overlay: add tests to validate kfrees from overlay removal
->       of: overlay: add missing of_node_put() after add new node to changeset
->       of: overlay: add missing of_node_get() in __of_attach_node_sysfs
->       powerpc/pseries: add of_node_put() in dlpar_detach_node()
->       of: overlay: use prop add changeset entry for property in new nodes
->       of: overlay: do not duplicate properties from overlay for new nodes
->       of: overlay: reorder fields in struct fragment
->       of: overlay: validate overlay properties #address-cells and #size-cells
->       of: overlay: make all pr_debug() and pr_err() messages unique
->       of: overlay: test case of two fragments adding same node
->       of: overlay: check prevents multiple fragments add or delete same node
->       of: overlay: check prevents multiple fragments touching same property
->       of: unittest: remove unused of_unittest_apply_overlay() argument
->       of: overlay: set node fields from properties when add new overlay node
->       of: unittest: allow base devicetree to have symbol metadata
->       of: unittest: find overlays[] entry by name instead of index
->       of: unittest: initialize args before calling of_*parse_*()
-
-> What is "LTSI's"?
-
-I have recently seen some of devicetree patches being picked up for
-the 4.20 stable-queue.  That seemed to suggest that some, but not all
-of these will end up in the next LTS release.  Also I was wondering if
-any of this is likely to get backported to LTSI-4.14.
-
->
-> confused,
-
-Yes, and now I'm confused about the confusion.  Sorry for spreading confusion.
-
-Alan
-
->
-> greg k-h
+Just trying to understand if the SDMA firmware plays a role on this
+behavior or not.
