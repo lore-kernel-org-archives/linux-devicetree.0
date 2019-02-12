@@ -1,15 +1,15 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 2/4] arm64: dts: imx8qxp: added ddr performance monitor
- nodes
-Date: Tue, 12 Feb 2019 19:04:13 -0200
-Message-ID: <CAOMZO5AtXz8Gyh6yBzVWWiKfSVVtSAArd52LbW=a3kszZ27iOQ@mail.gmail.com>
+Subject: Re: [PATCH V2 3/4] dt-bindings: perf: imx8-ddr: add imx8qxp ddr
+ performance monitor
+Date: Tue, 12 Feb 2019 19:05:07 -0200
+Message-ID: <CAOMZO5BK6JqS+3PTDQDcALqvZQhv0jh2_nPRLGnVk8KryFCVMQ@mail.gmail.com>
 References: <1550005119-25750-1-git-send-email-Frank.Li@nxp.com>
- <1550005119-25750-2-git-send-email-Frank.Li@nxp.com>
+ <1550005119-25750-3-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550005119-25750-2-git-send-email-Frank.Li@nxp.com>
+In-Reply-To: <1550005119-25750-3-git-send-email-Frank.Li@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,19 +25,8 @@ List-Id: devicetree@vger.kernel.org
 
 On Tue, Feb 12, 2019 at 6:59 PM Frank Li <frank.li@nxp.com> wrote:
 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> index 4c3dd95..243d7b3 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> @@ -79,6 +79,13 @@
->                 interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
->         };
->
+> +Example:
+> +
 > +       ddr_pmu0: ddr_pmu@5c020000 {
 
-It seems you ignored the commend I made in the previous version.
-
-Here it goes again:
-
-Underscores should not be used in node names. You could use
-pmu@5c020000 instead.
+Same comments about underscore in node names.
