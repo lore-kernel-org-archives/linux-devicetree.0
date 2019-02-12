@@ -1,42 +1,61 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 0/2] eeprom: at24: new property
-Date: Tue, 12 Feb 2019 15:12:05 +0100
-Message-ID: <CAMRc=MdRgmOwcaytv83pOHGYGwsskCVx3gRqaatg8sMDShmnLw@mail.gmail.com>
-References: <20190205135934.18841-1-brgl@bgdev.pl>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [RFC PATCH v1 0/3] bd718x7: Support SNVS low power state
+Date: Tue, 12 Feb 2019 16:16:35 +0200
+Message-ID: <cover.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205135934.18841-1-brgl@bgdev.pl>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong =?utf-8?B?4oCO?= <yibin.gong@nxp.com>, Elven Wang =?utf-8?B?4oCO?= <elven.wang@nxp.com>, Anson Huang =?utf-8?B?4oCO?= <anson.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-wt., 5 lut 2019 o 15:00 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a)=
-:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Microchip 24aa02t EEPROM is compatible with Atmel 24c02 except that
-> it's visible on 8 i2c slave addresses. We already support such a
-> use case with hard-coded config for 'atmel,24c00'. Let's add a more
-> flexible device tree property - 'num-addresses' - to the binding
-> document and support it in the driver.
->
-> Bartosz Golaszewski (2):
->   dt-bindings: at24: add the 'num-addresses' property
->   eeprom: at24: implement support for 'num-addresses' property
->
->  Documentation/devicetree/bindings/eeprom/at24.txt |  3 +++
->  drivers/misc/eeprom/at24.c                        | 13 ++++++++-----
->  2 files changed, 11 insertions(+), 5 deletions(-)
->
-> --
-> 2.20.1
->
+Patch series adding SNVS power state support to ROHM bd718x7 driver.
 
-If there are no objections, I will apply these in 2 days and include
-them in the PR for v5.1.
+The SNVS is a low power state used by i.MX family of SoCs. In SNVS
+state processor and most of the peripherials are shut off in order
+to minimize power consumption.
 
-Bart
+BD71837 and BD71847 can be configured to use the SNVS state as a
+reset/shutdown target state. There is some HW limitations though.
+Main limitation is that regulators which have been under SW control
+(regarding enable/disable state) will stay shut down after such reset.
+Thus if SNVS is used as reset target the control of boot crucial
+regulators must be left to HW state machine.
+
+This patch seris allows one to describe the boot crucial regulators
+and reset/shutdown target state as well as the default HW state
+voltages from device-tree. I am unsure if the device-tree is the
+correct way to bring this information and hence I send this initial
+patch set as an RFC. Please comment and I will generate properly tested
+patch series on top of this idea if this is seen as a reasonable
+approach.
+
+---
+
+Matti Vaittinen (3):
+  devicetree: bindings: bd718x7: document HW state related ROHM specific
+    properties
+  regulator: add regulator_desc_list_voltage_linear_range
+  regulator: bd718x7: Support SNVS low power state
+
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |  17 +++
+ .../bindings/regulator/rohm,bd71837-regulator.txt  |  36 ++++++
+ drivers/regulator/bd718x7-regulator.c              | 135 +++++++++++++++++++++
+ drivers/regulator/helpers.c                        |  39 ++++--
+ include/linux/regulator/driver.h                   |   6 +
+ 5 files changed, 223 insertions(+), 10 deletions(-)
+
+-- 
+2.14.3
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
