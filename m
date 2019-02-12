@@ -1,156 +1,76 @@
 From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 3/7] of: address: Add parent pointer to the
- __of_translate_address args
-Date: Tue, 12 Feb 2019 18:02:27 +0000
-Message-ID: <fbac5719-5d76-e7f4-5e5e-2d5167783106@arm.com>
+Subject: Re: [PATCH v3 4/7] of: address: Add support for the parent DMA bus
+Date: Tue, 12 Feb 2019 18:15:13 +0000
+Message-ID: <25d076ef-60a9-b424-878b-d8066e907b35@arm.com>
 References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
- <57fa05909120919f33590fed11bd4041467a09f5.1549897336.git-series.maxime.ripard@bootlin.com>
+ <fc76568f10be15b0dfc7515d6affecb20de3e479.1549897336.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <57fa05909120919f33590fed11bd4041467a09f5.1549897336.git-series.maxime.ripard@bootlin.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <fc76568f10be15b0dfc7515d6affecb20de3e479.1549897336.git-series.maxime.ripard@bootlin.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>
 Cc: devicetree@vger.kernel.org, Yong Deng <yong.deng@magewell.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Dave Martin <dave.martin@arm.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Georgi Djakov <georgi.djakov@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2019 15:02, Maxime Ripard wrote:
-> The __of_translate_address function is used to translate the device tree
-> addresses to physical addresses using the various ranges property to create
-> the offset.
-> 
-> However, it's shared between the CPU addresses (based on the ranges
-> property) and the DMA addresses (based on dma-ranges). Since we're going to
-> add support for a DMA parent node that is not the DT parent node, we need
-> to change the logic a bit to have an optional parent node that we should
-> use.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->   drivers/of/address.c | 21 ++++++++++++---------
->   1 file changed, 12 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 2270373b30ab..4c5dc21c71ca 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -569,10 +569,10 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
->    * relative to that node.
->    */
->   static u64 __of_translate_address(struct device_node *dev,
-> +				  struct device_node *parent,
->   				  const __be32 *in_addr, const char *rprop,
->   				  struct device_node **host)
->   {
-> -	struct device_node *parent = NULL;
->   	struct of_bus *bus, *pbus;
->   	__be32 addr[OF_MAX_ADDR_CELLS];
->   	int na, ns, pna, pns;
-> @@ -583,11 +583,14 @@ static u64 __of_translate_address(struct device_node *dev,
->   	/* Increase refcount at current level */
->   	of_node_get(dev);
->   
-> -	*host = NULL;
-> -	/* Get parent & match bus type */
-> -	parent = of_get_parent(dev);
-> -	if (parent == NULL)
-> -		goto bail;
-> +	if (!parent) {
-
-I would have suggested having the callers make the of_get_parent() call 
-themselves, but having pulled up the code for a look at the whole 
-function, there's a bigger issue at play. The parent traversal happens 
-within the main translation loop as well, and topologies could quite 
-feasibly exist where that makes a difference, e.g.:
-
-	icc {
-		#interconnect-cells = <0>;
-		dma-ranges = <...>;
-	};
-
-	subsystem {
-		interconnects = <&icc>;
-		interconnect-names = "dma";
-
-		intermediate-bus {
-			dma-ranges;
-
-			device {
-				...
-			};
-		};
-	};
-
-or:
-
-	icc2 {
-		#interconnect-cells = <0>;
-		dma-ranges = <...>;
-	};
-
-	icc1 {
-		#interconnect-cells = <0>;
-		dma-ranges = <...>;
-		interconnects = <&icc2>;
-		interconnect-names = "dma";
-	};
-
-	device {
-		interconnects = <&icc1>;
-		interconnect-names = "dma";
-		...
-	};
-
-So I guess the answer is to switch this over to using a callback and 
-have the callers pass of_get_parent/of_get_dma_parent in as appropriate.
-
-Robin.
-
-> +		*host = NULL;
-> +		/* Get parent & match bus type */
-> +		parent = of_get_parent(dev);
-> +		if (parent == NULL)
-> +			goto bail;
-> +	}
-> +
->   	bus = of_match_bus(parent);
->   
->   	/* Count address cells & copy address locally */
-> @@ -665,7 +668,7 @@ u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
->   	struct device_node *host;
->   	u64 ret;
->   
-> -	ret = __of_translate_address(dev, in_addr, "ranges", &host);
-> +	ret = __of_translate_address(dev, NULL, in_addr, "ranges", &host);
->   	if (host) {
->   		of_node_put(host);
->   		return OF_BAD_ADDR;
-> @@ -680,7 +683,7 @@ u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
->   	struct device_node *host;
->   	u64 ret;
->   
-> -	ret = __of_translate_address(dev, in_addr, "dma-ranges", &host);
-> +	ret = __of_translate_address(dev, NULL, in_addr, "dma-ranges", &host);
->   
->   	if (host) {
->   		of_node_put(host);
-> @@ -736,7 +739,7 @@ static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr,
->   	unsigned long port;
->   	struct device_node *host;
->   
-> -	taddr = __of_translate_address(dev, in_addr, "ranges", &host);
-> +	taddr = __of_translate_address(dev, NULL, in_addr, "ranges", &host);
->   	if (host) {
->   		/* host-specific port access */
->   		port = logic_pio_trans_hwaddr(&host->fwnode, taddr, size);
-> 
+T24gMTEvMDIvMjAxOSAxNTowMiwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBTb21lIFNvQ3MgaGF2
+ZSBkZXZpY2VzIHRoYXQgYXJlIHVzaW5nIGEgc2VwYXJhdGUgYnVzIGZyb20gdGhlIG1haW4gYnVz
+IHRvCj4gcGVyZm9ybSBETUEuCj4gCj4gVGhlc2UgYnVzZXMgbWlnaHQgaGF2ZSBzb21lIHJlc3Ry
+aWN0aW9ucyBhbmQvb3IgZGlmZmVyZW50IG1hcHBpbmcgdGhhbiBmcm9tCj4gdGhlIENQVSBzaWRl
+LCBzbyB3ZSdkIG5lZWQgdG8gZXhwcmVzcyB0aG9zZSB1c2luZyB0aGUgdXN1YWwgZG1hLXJhbmdl
+cywgYnV0Cj4gdXNpbmcgYSBkaWZmZXJlbnQgRFQgbm9kZSB0aGFuIHRoZSBub2RlJ3MgcGFyZW50
+Lgo+IAo+IE5vdyB0aGF0IHRoZSBnZW5lcmljIGludGVyY29ubmVjdCBiaW5kaW5ncyBhcmUgYXZh
+aWxhYmxlLCB3ZSBjYW4gbW9kZWwgYW4KPiBpbnRlcmNvbm5lY3Qgd2l0aCB0aGUgcmVzZXJ2ZWQg
+bmFtZSAiZG1hIiBmb3IgdGhvc2UgdXNlLWNhc2VzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1heGlt
+ZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+Cj4gLS0tCj4gICBkcml2ZXJzL29m
+L2FkZHJlc3MuYyB8IDM0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0KPiAgIDEg
+ZmlsZSBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL29mL2FkZHJlc3MuYyBiL2RyaXZlcnMvb2YvYWRkcmVzcy5jCj4gaW5k
+ZXggNGM1ZGMyMWM3MWNhLi4wZTlkODdhNjY0ZjUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9vZi9h
+ZGRyZXNzLmMKPiArKysgYi9kcml2ZXJzL29mL2FkZHJlc3MuYwo+IEBAIC01ODMsOCArNTgzLDgg
+QEAgc3RhdGljIHU2NCBfX29mX3RyYW5zbGF0ZV9hZGRyZXNzKHN0cnVjdCBkZXZpY2Vfbm9kZSAq
+ZGV2LAo+ICAgCS8qIEluY3JlYXNlIHJlZmNvdW50IGF0IGN1cnJlbnQgbGV2ZWwgKi8KPiAgIAlv
+Zl9ub2RlX2dldChkZXYpOwo+ICAgCj4gKwkqaG9zdCA9IE5VTEw7Cj4gICAJaWYgKCFwYXJlbnQp
+IHsKPiAtCQkqaG9zdCA9IE5VTEw7Cj4gICAJCS8qIEdldCBwYXJlbnQgJiBtYXRjaCBidXMgdHlw
+ZSAqLwo+ICAgCQlwYXJlbnQgPSBvZl9nZXRfcGFyZW50KGRldik7Cj4gICAJCWlmIChwYXJlbnQg
+PT0gTlVMTCkKPiBAQCAtNjc4LDEyICs2NzgsMzQgQEAgdTY0IG9mX3RyYW5zbGF0ZV9hZGRyZXNz
+KHN0cnVjdCBkZXZpY2Vfbm9kZSAqZGV2LCBjb25zdCBfX2JlMzIgKmluX2FkZHIpCj4gICB9Cj4g
+ICBFWFBPUlRfU1lNQk9MKG9mX3RyYW5zbGF0ZV9hZGRyZXNzKTsKPiAgIAo+ICtzdGF0aWMgc3Ry
+dWN0IGRldmljZV9ub2RlICpfX29mX2dldF9kbWFfcGFyZW50KHN0cnVjdCBkZXZpY2Vfbm9kZSAq
+bnApCj4gK3sKPiArCXN0cnVjdCBvZl9waGFuZGxlX2FyZ3MgYXJnczsKPiArCXVuc2lnbmVkIGlu
+dCBpbmRleDsKPiArCWludCByZXQ7Cj4gKwo+ICsJcmV0ID0gb2ZfcHJvcGVydHlfbWF0Y2hfc3Ry
+aW5nKG5wLCAiaW50ZXJjb25uZWN0LW5hbWVzIiwgImRtYSIpOwo+ICsJaWYgKHJldCA8IDApCj4g
+KwkJcmV0dXJuIG9mX2dldF9wYXJlbnQobnApOwoKRG9uJ3QgeW91IG5lZWQgdG8gcHJvcGFnYXRl
+IHJldCB0byBpbmRleCBoZXJlPwoKUm9iaW4uCgo+ICsKPiArCXJldCA9IG9mX3BhcnNlX3BoYW5k
+bGVfd2l0aF9hcmdzKG5wLCAiaW50ZXJjb25uZWN0cyIsCj4gKwkJCQkJICIjaW50ZXJjb25uZWN0
+LWNlbGxzIiwKPiArCQkJCQkgaW5kZXgsICZhcmdzKTsKPiArCWlmIChyZXQgPCAwKQo+ICsJCXJl
+dHVybiBvZl9nZXRfcGFyZW50KG5wKTsKPiArCj4gKwlyZXR1cm4gb2Zfbm9kZV9nZXQoYXJncy5u
+cCk7Cj4gK30KPiArCj4gICB1NjQgb2ZfdHJhbnNsYXRlX2RtYV9hZGRyZXNzKHN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqZGV2LCBjb25zdCBfX2JlMzIgKmluX2FkZHIpCj4gICB7Cj4gKwlzdHJ1Y3QgZGV2
+aWNlX25vZGUgKnBhcmVudDsKPiAgIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKmhvc3Q7Cj4gICAJdTY0
+IHJldDsKPiAgIAo+IC0JcmV0ID0gX19vZl90cmFuc2xhdGVfYWRkcmVzcyhkZXYsIE5VTEwsIGlu
+X2FkZHIsICJkbWEtcmFuZ2VzIiwgJmhvc3QpOwo+ICsJcGFyZW50ID0gX19vZl9nZXRfZG1hX3Bh
+cmVudChkZXYpOwo+ICsJcmV0ID0gX19vZl90cmFuc2xhdGVfYWRkcmVzcyhkZXYsIHBhcmVudCwg
+aW5fYWRkciwgImRtYS1yYW5nZXMiLCAmaG9zdCk7Cj4gKwlvZl9ub2RlX3B1dChwYXJlbnQpOwo+
+ICAgCj4gICAJaWYgKGhvc3QpIHsKPiAgIAkJb2Zfbm9kZV9wdXQoaG9zdCk7Cj4gQEAgLTkxMSw5
+ICs5MzMsMTUgQEAgaW50IG9mX2RtYV9nZXRfcmFuZ2Uoc3RydWN0IGRldmljZV9ub2RlICpucCwg
+dTY0ICpkbWFfYWRkciwgdTY0ICpwYWRkciwgdTY0ICpzaXoKPiAgIAkJcmV0dXJuIC1FSU5WQUw7
+Cj4gICAKPiAgIAl3aGlsZSAoMSkgewo+ICsJCXN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50Owo+
+ICsKPiAgIAkJbmFkZHIgPSBvZl9uX2FkZHJfY2VsbHMobm9kZSk7Cj4gICAJCW5zaXplID0gb2Zf
+bl9zaXplX2NlbGxzKG5vZGUpOwo+IC0JCW5vZGUgPSBvZl9nZXRfbmV4dF9wYXJlbnQobm9kZSk7
+Cj4gKwo+ICsJCXBhcmVudCA9IF9fb2ZfZ2V0X2RtYV9wYXJlbnQobm9kZSk7Cj4gKwkJb2Zfbm9k
+ZV9wdXQobm9kZSk7Cj4gKwo+ICsJCW5vZGUgPSBwYXJlbnQ7Cj4gICAJCWlmICghbm9kZSkKPiAg
+IAkJCWJyZWFrOwo+ICAgCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbA==
