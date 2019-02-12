@@ -1,63 +1,66 @@
-Return-Path: <SRS0=+1U8=QV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:12208
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725975AbfBNLpv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Feb 2019 06:45:51 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 1/4] dt-bindings: fsl: scu: add watchdog binding
-Date: Thu, 14 Feb 2019 11:44:47 +0000
-Message-ID: <1550144346-1187-2-git-send-email-Anson.Huang@nxp.com>
-References: <1550144346-1187-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1550144346-1187-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Return-Path: <SRS0=nY8h=QT=sirena.org.uk=broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: spi: imx: Add an entry for the i.MX8QM compatible" to the spi tree
+In-Reply-To: <20190126213011.15738-1-festevam@gmail.com>
+Message-Id: <20190212165905.96D781128113@debutante.sirena.org.uk>
+Date: Tue, 12 Feb 2019 16:59:05 +0000 (GMT)
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, kernel@pengutronix.de, linux-imx@nxp.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.orglinux-spi@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add i.MX8QXP system controller watchdog binding.
+The patch
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Note: this patch is based on my thermal patch series: https://patchwork.ker=
-nel.org/patch/10800699/
----
- Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 10 +++++++++=
-+
- 1 file changed, 10 insertions(+)
+   dt-bindings: spi: imx: Add an entry for the i.MX8QM compatible
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
-Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 42120cb..a3ef861 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -140,6 +140,12 @@ Required properties:
- 			   resource id for thermal driver to get temperature via
- 			   SCU IPC.
-=20
-+WatchDog bindings based on SCU Message Protocol
-+------------------------------------------------------------
-+
-+Required properties:
-+- compatible: should be "fsl,imx8qxp-sc-wdt";
-+
- Example (imx8qxp):
- -------------
- lsio_mu1: mailbox@5d1c0000 {
-@@ -194,6 +200,10 @@ firmware {
- 			tsens-num =3D <1>;
- 			#thermal-sensor-cells =3D <1>;
- 		};
-+
-+		wdog: wdog {
-+			compatible =3D "fsl,imx8qxp-sc-wdt";
-+		};
- 	};
- };
-=20
---=20
-2.7.4
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 97a6a2ddc2ea684fadd1021dd350c27d03113397 Mon Sep 17 00:00:00 2001
+From: Fabio Estevam <festevam@gmail.com>
+Date: Sat, 26 Jan 2019 19:30:11 -0200
+Subject: [PATCH] dt-bindings: spi: imx: Add an entry for the i.MX8QM
+ compatible
+
+Add an entry for the "fsl,imx8mq-ecspi" compatible to describe
+the ECSPI version present on i.MX8M.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+index e3c48b20b1a6..2d3264140cc5 100644
+--- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
++++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+@@ -10,6 +10,7 @@ Required properties:
+   - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
+   - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
+   - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
++  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8M
+ - reg : Offset and length of the register set for the device
+ - interrupts : Should contain CSPI/eCSPI interrupt
+ - clocks : Clock specifiers for both ipg and per clocks.
+-- 
+2.20.1
