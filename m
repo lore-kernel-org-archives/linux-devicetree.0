@@ -1,59 +1,104 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v6 0/3] drivers: soc: xilinx: Add support for ZynqMP PM
- driver
-Date: Tue, 12 Feb 2019 13:44:03 +0100
-Message-ID: <be838b02-1fc1-ae9b-9a7b-d63e11d7068e@xilinx.com>
-References: <1548794301-30483-1-git-send-email-jollys@xilinx.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 05/10] mfd: max77650: new core mfd driver
+Date: Tue, 12 Feb 2019 13:20:16 +0000
+Message-ID: <20190212132016.GA4781@dell>
+References: <20190205091237.6448-1-brgl@bgdev.pl>
+ <20190205091237.6448-6-brgl@bgdev.pl>
+ <20190212083642.GT20638@dell>
+ <CAMRc=MderQf20_8aG4-otBkCv60FSNSSqV3NVALPkFL-MqmJbg@mail.gmail.com>
+ <20190212095457.GA20638@dell>
+ <CAMRc=MdyT7nMJ7dUTf6M3PvRdynaCurb_TftMyA4eCwzpR9fVA@mail.gmail.com>
+ <20190212101835.GB20638@dell>
+ <CAMRc=MfYeVbvY6O03xq4eLN9TVpAKWCAXPk0eP5LSBCU7VU9fA@mail.gmail.com>
+ <20190212111403.GC20638@dell>
+ <CAMpxmJWXOb1HW4QiEn8gMp3Nh05ahE0CMLXkac+hEKRjtGxTHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548794301-30483-1-git-send-email-jollys@xilinx.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJWXOb1HW4QiEn8gMp3Nh05ahE0CMLXkac+hEKRjtGxTHQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <jolly.shah@xilinx.com>, matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29. 01. 19 21:38, Jolly Shah wrote:
-> Add ZynqMP PM driver. PM driver provides power management
-> support for ZynqMP.
-> 
-> v6:
->  - Rebased on top of 
-> 	https://github.com/Xilinx/linux-xlnx/commits/zynqmp/soc
-> v5:
->  - Added Reviewed tag for dt bindings
-> 
-> v4:
->  - Minor fixes to address v3 review comments
->  
-> v3:
->  - Updated DT bindings as per v2 review comments
->  
-> v2:
->  - Rebased on top of latest firmware driver patch series
->  - Updated driver to use shared interrupt instead of mailbox
-> 
-> Jolly Shah (1):
->   firmware: xilinx: Implement ZynqMP power management APIs
-> 
-> Rajan Vaja (2):
->   dt-bindings: soc: Add ZynqMP PM bindings
->   drivers: soc: xilinx: Add ZynqMP PM driver
-> 
->  .../bindings/power/reset/xlnx,zynqmp-power.txt     |  25 +++
->  drivers/firmware/xilinx/zynqmp.c                   |  29 ++++
->  drivers/soc/xilinx/Kconfig                         |  11 ++
->  drivers/soc/xilinx/Makefile                        |   1 +
->  drivers/soc/xilinx/zynqmp_power.c                  | 178 +++++++++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h               |  20 +++
->  6 files changed, 264 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
->  create mode 100644 drivers/soc/xilinx/zynqmp_power.c
-> 
+On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
 
-Applied.
+> wt., 12 lut 2019 o 12:14 Lee Jones <lee.jones@linaro.org> napisał(a):
+> >
+> > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
+> >
+> > > wt., 12 lut 2019 o 11:18 Lee Jones <lee.jones@linaro.org> napisał(a):
+> > > >
+> > > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
+> > > >
+> > > > > wt., 12 lut 2019 o 10:55 Lee Jones <lee.jones@linaro.org> napisał(a):
+> > > > > >
+> > > > > >  * The declaration of a superfluous struct
+> > > > > >  * 100 lines of additional/avoidable code
+> > > > > >  * Hacky hoop jumping trying to fudge VIRQs into resources
+> > > > > >  * Resources were designed for HWIRQs (unless a domain is present)
+> > > > > >  * Loads of additional/avoidable CPU cycles setting all this up
+> > > > >
+> > > > > While the above may be right, this one is negligible and you know it. :)
+> > > >
+> > > > You have nested for() loops.  You *are* wasting lots of cycles.
+> > > >
+> > > > > > Need I go on? :)
+> > > > > >
+> > > > > > Surely the fact that you are using both sides of an API
+> > > > > > (devm_regmap_init_i2c and regmap_irq_get_*) in the same driver, must
+> > > > > > set some alarm bells ringing?
+> > > > > >
+> > > > > > This whole HWIRQ setting, VIRQ getting, resource hacking is a mess.
+> > > > > >
+> > > > > > And for what?  To avoid passing IRQ data to a child driver?
+> > > > >
+> > > > > What do you propose? Should I go back to the approach in v1 and pass
+> > > > > the regmap_irq_chip_data to child drivers?
+> > > >
+> > > > I'm saying you should remove all of this hackery and pass IRQs as they
+> > > > are supposed to be passed (like everyone else does).
+> > >
+> > > I'm not sure what you mean by "like everyone else does" - different
+> > > mfd drivers seem to be doing different things. Is a simple struct
+> > > containing virtual irq numbers passed to sub-drivers fine?
+> >
+> > How do you plan on deriving the VIRQs to place into the struct?
+> 
+> Exampe:
+> 
+> struct max77650_gpio_pdata {
+>     int gpi_irq;
+> };
+> 
+> In MFD driver:
+> 
+> struct max77650_gpio_pdata *gpio_data = devm_kmalloc(dev, sizeof(*gpio_data));
+> 
+> gpio_data->gpi_irq = regmap_irq_get_virq(irqchip_data, GPI_NUM);
+> 
+> gpio_cell.platform_data = gpio_data;
+> 
+> In GPIO driver:
+> 
+> struct max77650_gpio_pdata *gpio_data = pdev->dev.platform_data;
+> 
+> int irq = gpio_data->gpi_irq;
 
-Thanks,
-Michal
+Definitely not.  What you're trying to do is a hack.
+
+If you're using Regmap to handle your IRQs, then you should use Regmap
+in the client to pull them out.  Setting them via Regmap, then pulling
+them out again in the *same driver*, only to store them in platform
+data to be passed to a child device is bonkers.
+
+*Either* use the MFD provided platform-data helpers *or* pass and
+handle them via the Regmap APIs, *not* both.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
