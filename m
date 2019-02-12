@@ -1,256 +1,68 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH v3 3/3] fpga manager: Adding FPGA Manager support for
- Xilinx zynqmp
-Date: Tue, 12 Feb 2019 03:06:38 -0800
-Message-ID: <CAAtXAHfXaerVYzfdnA_09rK5AgLVJAiRcE2KEqosfrMZBuO3xQ@mail.gmail.com>
-References: <20190211161754.23902-1-nava.manne@xilinx.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 05/10] mfd: max77650: new core mfd driver
+Date: Tue, 12 Feb 2019 11:14:03 +0000
+Message-ID: <20190212111403.GC20638@dell>
+References: <20190205091237.6448-1-brgl@bgdev.pl>
+ <20190205091237.6448-6-brgl@bgdev.pl>
+ <20190212083642.GT20638@dell>
+ <CAMRc=MderQf20_8aG4-otBkCv60FSNSSqV3NVALPkFL-MqmJbg@mail.gmail.com>
+ <20190212095457.GA20638@dell>
+ <CAMRc=MdyT7nMJ7dUTf6M3PvRdynaCurb_TftMyA4eCwzpR9fVA@mail.gmail.com>
+ <20190212101835.GB20638@dell>
+ <CAMRc=MfYeVbvY6O03xq4eLN9TVpAKWCAXPk0eP5LSBCU7VU9fA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211161754.23902-1-nava.manne@xilinx.com>
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MfYeVbvY6O03xq4eLN9TVpAKWCAXPk0eP5LSBCU7VU9fA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>
-Cc: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rajan Vaja <rajanv@xilinx.com>, Jolly Shah <jollys@xilinx.com>, linux-fpga@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nava,
+On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
 
-On Sun, Feb 10, 2019 at 8:17 AM Nava kishore Manne
-<nava.manne@xilinx.com> wrote:
->
-> This patch adds FPGA Manager support for the Xilinx
-> ZynqMP chip.
->
-> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> ---
-> Changes for v3:
->                 -Created patches on top of 5.0-rc5.
->                  No functional changes.
-> Changes for v2:
->                 -Fixed some minor coding issues as suggested by
->                  Moritz
->
-> Changes for v1:
->                 -None.
->
-> Changes for RFC-V2:
->                 -Updated the Fpga Mgr registrations call's
->                  to 4.18
->
->  drivers/fpga/Kconfig       |   9 +++
->  drivers/fpga/Makefile      |   1 +
->  drivers/fpga/zynqmp-fpga.c | 165 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 175 insertions(+)
->  create mode 100644 drivers/fpga/zynqmp-fpga.c
->
-> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> index 0bb7b5c..9f17203 100644
-> --- a/drivers/fpga/Kconfig
-> +++ b/drivers/fpga/Kconfig
-> @@ -204,4 +204,13 @@ config FPGA_DFL_PCI
->
->           To compile this as a module, choose M here.
->
-> +config FPGA_MGR_ZYNQMP_FPGA
-> +       tristate "Xilinx ZynqMP FPGA"
-> +       depends on ARCH_ZYNQMP || COMPILE_TEST
-> +       help
-> +         FPGA manager driver support for Xilinx ZynqMP FPGAs.
-> +         This driver uses the processor configuration port(PCAP)
-> +         to configure the programmable logic(PL) through PS
-> +         on ZynqMP SoC.
-> +
->  endif # FPGA
-> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> index c0dd4c8..312b937 100644
-> --- a/drivers/fpga/Makefile
-> +++ b/drivers/fpga/Makefile
-> @@ -17,6 +17,7 @@ obj-$(CONFIG_FPGA_MGR_STRATIX10_SOC)  += stratix10-soc.o
->  obj-$(CONFIG_FPGA_MGR_TS73XX)          += ts73xx-fpga.o
->  obj-$(CONFIG_FPGA_MGR_XILINX_SPI)      += xilinx-spi.o
->  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)       += zynq-fpga.o
-> +obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)     += zynqmp-fpga.o
->  obj-$(CONFIG_ALTERA_PR_IP_CORE)         += altera-pr-ip-core.o
->  obj-$(CONFIG_ALTERA_PR_IP_CORE_PLAT)    += altera-pr-ip-core-plat.o
->
-> diff --git a/drivers/fpga/zynqmp-fpga.c b/drivers/fpga/zynqmp-fpga.c
-> new file mode 100644
-> index 0000000..f40c3bb
-> --- /dev/null
-> +++ b/drivers/fpga/zynqmp-fpga.c
-> @@ -0,0 +1,165 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2019 Xilinx, Inc.
-> + */
-> +
-> +#include <linux/dma-mapping.h>
-> +#include <linux/fpga/fpga-mgr.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/string.h>
-> +#include <linux/firmware/xlnx-zynqmp.h>
-> +
-> +/* Constant Definitions */
-> +#define IXR_FPGA_DONE_MASK     0X00000008U
-> +
-> +/**
-> + * struct zynqmp_fpga_priv - Private data structure
-> + * @dev:       Device data structure
-> + * @flags:     flags which is used to identify the bitfile type
-> + */
-> +struct zynqmp_fpga_priv {
-> +       struct device *dev;
-> +       u32 flags;
-> +};
-> +
-> +static int zynqmp_fpga_ops_write_init(struct fpga_manager *mgr,
-> +                                     struct fpga_image_info *info,
-> +                                     const char *buf, size_t size)
-> +{
-> +       struct zynqmp_fpga_priv *priv;
-> +
-> +       priv = mgr->priv;
-> +       priv->flags = info->flags;
-> +
-> +       return 0;
-> +}
-> +
-> +static int zynqmp_fpga_ops_write(struct fpga_manager *mgr,
-> +                                const char *buf, size_t size)
-> +{
-> +       const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +       struct zynqmp_fpga_priv *priv;
-> +       dma_addr_t dma_addr;
-> +       u32 eemi_flags = 0;
-> +       char *kbuf;
-> +       int ret;
-> +
-> +       if (!eemi_ops || !eemi_ops->fpga_load)
-> +               return -ENXIO;
-> +
-> +       priv = mgr->priv;
-> +
-> +       kbuf = dma_alloc_coherent(priv->dev, size, &dma_addr, GFP_KERNEL);
-> +       if (!kbuf)
-> +               return -ENOMEM;
-> +
-> +       memcpy(kbuf, buf, size);
-> +
-> +       wmb(); /* ensure all writes are done before initiate FW call */
-> +
-> +       if (priv->flags & FPGA_MGR_PARTIAL_RECONFIG)
-> +               eemi_flags |= XILINX_ZYNQMP_PM_FPGA_PARTIAL;
-> +
-> +       ret = eemi_ops->fpga_load(dma_addr, size, eemi_flags);
-> +
-> +       dma_free_coherent(priv->dev, size, kbuf, dma_addr);
-> +
-> +       return ret;
-> +}
-> +
-> +static int zynqmp_fpga_ops_write_complete(struct fpga_manager *mgr,
-> +                                         struct fpga_image_info *info)
-> +{
-> +       return 0;
-> +}
-> +
-> +static enum fpga_mgr_states zynqmp_fpga_ops_state(struct fpga_manager *mgr)
-> +{
-> +       const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +       u32 status;
-> +
-> +       if (!eemi_ops || !eemi_ops->fpga_get_status)
-> +               return FPGA_MGR_STATE_UNKNOWN;
-> +
-> +       eemi_ops->fpga_get_status(&status);
-> +       if (status & IXR_FPGA_DONE_MASK)
-> +               return FPGA_MGR_STATE_OPERATING;
-> +
-> +       return FPGA_MGR_STATE_UNKNOWN;
-> +}
-> +
-> +static const struct fpga_manager_ops zynqmp_fpga_ops = {
-> +       .state = zynqmp_fpga_ops_state,
-> +       .write_init = zynqmp_fpga_ops_write_init,
-> +       .write = zynqmp_fpga_ops_write,
-> +       .write_complete = zynqmp_fpga_ops_write_complete,
-> +};
-> +
-> +static int zynqmp_fpga_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct zynqmp_fpga_priv *priv;
-> +       struct fpga_manager *mgr;
-> +       int err, ret;
+> wt., 12 lut 2019 o 11:18 Lee Jones <lee.jones@linaro.org> napisał(a):
+> >
+> > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
+> >
+> > > wt., 12 lut 2019 o 10:55 Lee Jones <lee.jones@linaro.org> napisał(a):
+> > > >
+> > > >  * The declaration of a superfluous struct
+> > > >  * 100 lines of additional/avoidable code
+> > > >  * Hacky hoop jumping trying to fudge VIRQs into resources
+> > > >  * Resources were designed for HWIRQs (unless a domain is present)
+> > > >  * Loads of additional/avoidable CPU cycles setting all this up
+> > >
+> > > While the above may be right, this one is negligible and you know it. :)
+> >
+> > You have nested for() loops.  You *are* wasting lots of cycles.
+> >
+> > > > Need I go on? :)
+> > > >
+> > > > Surely the fact that you are using both sides of an API
+> > > > (devm_regmap_init_i2c and regmap_irq_get_*) in the same driver, must
+> > > > set some alarm bells ringing?
+> > > >
+> > > > This whole HWIRQ setting, VIRQ getting, resource hacking is a mess.
+> > > >
+> > > > And for what?  To avoid passing IRQ data to a child driver?
+> > >
+> > > What do you propose? Should I go back to the approach in v1 and pass
+> > > the regmap_irq_chip_data to child drivers?
+> >
+> > I'm saying you should remove all of this hackery and pass IRQs as they
+> > are supposed to be passed (like everyone else does).
+> 
+> I'm not sure what you mean by "like everyone else does" - different
+> mfd drivers seem to be doing different things. Is a simple struct
+> containing virtual irq numbers passed to sub-drivers fine?
 
-Just use err everywhere, or ret, your choice.
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       priv->dev = dev;
-> +       ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(44));
-Here?
-> +       if (ret < 0) {
-> +               dev_err(dev, "no usable DMA configuration");
-> +               return ret;
-> +       }
-> +
-> +       mgr = fpga_mgr_create(dev, "Xilinx ZynqMP FPGA Manager",
-> +                             &zynqmp_fpga_ops, priv);
-> +       if (!mgr)
-> +               return -ENOMEM;
-> +
-> +       platform_set_drvdata(pdev, mgr);
-> +
-> +       err = fpga_mgr_register(mgr);
-vs here.
-> +       if (err) {
-> +               dev_err(dev, "unable to register FPGA manager");
-> +               fpga_mgr_free(mgr);
-> +               return err;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int zynqmp_fpga_remove(struct platform_device *pdev)
-> +{
-> +       struct fpga_manager *mgr = platform_get_drvdata(pdev);
-> +
-> +       fpga_mgr_unregister(mgr);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id zynqmp_fpga_of_match[] = {
-> +       { .compatible = "xlnx,zynqmp-pcap-fpga", },
-> +       {},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, zynqmp_fpga_of_match);
-> +
-> +static struct platform_driver zynqmp_fpga_driver = {
-> +       .probe = zynqmp_fpga_probe,
-> +       .remove = zynqmp_fpga_remove,
-> +       .driver = {
-> +               .name = "zynqmp_fpga_manager",
-> +               .of_match_table = of_match_ptr(zynqmp_fpga_of_match),
-> +       },
-> +};
-> +
-> +module_platform_driver(zynqmp_fpga_driver);
-> +
-> +MODULE_AUTHOR("Nava kishore Manne <navam@xilinx.com>");
-> +MODULE_DESCRIPTION("Xilinx ZynqMp FPGA Manager");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.7.4
->
+How do you plan on deriving the VIRQs to place into the struct?
 
-Thanks,
-Moritz
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
