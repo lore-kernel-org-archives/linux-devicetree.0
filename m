@@ -1,91 +1,70 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v4 05/10] mfd: max77650: new core mfd driver
-Date: Tue, 12 Feb 2019 13:29:39 +0100
-Message-ID: <CAMpxmJWXOb1HW4QiEn8gMp3Nh05ahE0CMLXkac+hEKRjtGxTHQ@mail.gmail.com>
-References: <20190205091237.6448-1-brgl@bgdev.pl> <20190205091237.6448-6-brgl@bgdev.pl>
- <20190212083642.GT20638@dell> <CAMRc=MderQf20_8aG4-otBkCv60FSNSSqV3NVALPkFL-MqmJbg@mail.gmail.com>
- <20190212095457.GA20638@dell> <CAMRc=MdyT7nMJ7dUTf6M3PvRdynaCurb_TftMyA4eCwzpR9fVA@mail.gmail.com>
- <20190212101835.GB20638@dell> <CAMRc=MfYeVbvY6O03xq4eLN9TVpAKWCAXPk0eP5LSBCU7VU9fA@mail.gmail.com>
- <20190212111403.GC20638@dell>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/3] dt-bindings: fsl: scu: add general interrupt support
+Date: Tue, 12 Feb 2019 12:38:54 +0000
+Message-ID: <DB3PR0402MB3916FECAC4645C2B12FAB65EF5650@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1548230179-26076-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212111403.GC20638@dell>
+In-Reply-To: <1548230179-26076-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-wt., 12 lut 2019 o 12:14 Lee Jones <lee.jones@linaro.org> napisa=C5=82(a):
->
-> On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
->
-> > wt., 12 lut 2019 o 11:18 Lee Jones <lee.jones@linaro.org> napisa=C5=82(=
-a):
-> > >
-> > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> > >
-> > > > wt., 12 lut 2019 o 10:55 Lee Jones <lee.jones@linaro.org> napisa=C5=
-=82(a):
-> > > > >
-> > > > >  * The declaration of a superfluous struct
-> > > > >  * 100 lines of additional/avoidable code
-> > > > >  * Hacky hoop jumping trying to fudge VIRQs into resources
-> > > > >  * Resources were designed for HWIRQs (unless a domain is present=
-)
-> > > > >  * Loads of additional/avoidable CPU cycles setting all this up
-> > > >
-> > > > While the above may be right, this one is negligible and you know i=
-t. :)
-> > >
-> > > You have nested for() loops.  You *are* wasting lots of cycles.
-> > >
-> > > > > Need I go on? :)
-> > > > >
-> > > > > Surely the fact that you are using both sides of an API
-> > > > > (devm_regmap_init_i2c and regmap_irq_get_*) in the same driver, m=
-ust
-> > > > > set some alarm bells ringing?
-> > > > >
-> > > > > This whole HWIRQ setting, VIRQ getting, resource hacking is a mes=
-s.
-> > > > >
-> > > > > And for what?  To avoid passing IRQ data to a child driver?
-> > > >
-> > > > What do you propose? Should I go back to the approach in v1 and pas=
-s
-> > > > the regmap_irq_chip_data to child drivers?
-> > >
-> > > I'm saying you should remove all of this hackery and pass IRQs as the=
-y
-> > > are supposed to be passed (like everyone else does).
-> >
-> > I'm not sure what you mean by "like everyone else does" - different
-> > mfd drivers seem to be doing different things. Is a simple struct
-> > containing virtual irq numbers passed to sub-drivers fine?
->
-> How do you plan on deriving the VIRQs to place into the struct?
-
-Exampe:
-
-struct max77650_gpio_pdata {
-    int gpi_irq;
-};
-
-In MFD driver:
-
-struct max77650_gpio_pdata *gpio_data =3D devm_kmalloc(dev, sizeof(*gpio_da=
-ta));
-
-gpio_data->gpi_irq =3D regmap_irq_get_virq(irqchip_data, GPI_NUM);
-
-gpio_cell.platform_data =3D gpio_data;
-
-In GPIO driver:
-
-struct max77650_gpio_pdata *gpio_data =3D pdev->dev.platform_data;
-
-int irq =3D gpio_data->gpi_irq;
-
-Bart
+R2VudGxlIHBpbmcuLi4NCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiAyMDE5xOox
+1MIyM8jVIDE2OjAxDQo+IFRvOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
+Y29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJu
+ZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gQWlzaGVuZyBEb25nIDxh
+aXNoZW5nLmRvbmdAbnhwLmNvbT47IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7IERhbmllbA0KPiBC
+YWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0K
+PiBTdWJqZWN0OiBbUEFUQ0ggMS8zXSBkdC1iaW5kaW5nczogZnNsOiBzY3U6IGFkZCBnZW5lcmFs
+IGludGVycnVwdCBzdXBwb3J0DQo+IA0KPiBBZGQgc2N1IGdlbmVyYWwgaW50ZXJydXB0IGZ1bmN0
+aW9uIHN1cHBvcnQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVh
+bmdAbnhwLmNvbT4NCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNj
+YWxlL2ZzbCxzY3UudHh0ICAgICAgfCAxOCArKysrKysrKysrKystLS0tLS0NCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxz
+Y3UudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2Nh
+bGUvZnNsLHNjdS50eHQNCj4gaW5kZXggZmQyYmVkMi4uM2M5NzZhYyAxMDA2NDQNCj4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50
+eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2Nh
+bGUvZnNsLHNjdS50eHQNCj4gQEAgLTIyLDkgKzIyLDExIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
+DQo+ICAtLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAtIGNvbXBhdGlibGU6CXNob3VsZCBiZSAiZnNs
+LGlteC1zY3UiLg0KPiAgLSBtYm94LW5hbWVzOglzaG91bGQgaW5jbHVkZSAidHgwIiwgInR4MSIs
+ICJ0eDIiLCAidHgzIiwNCj4gLQkJCSAgICAgICAicngwIiwgInJ4MSIsICJyeDIiLCAicngzIi4N
+Cj4gLS0gbWJveGVzOglMaXN0IG9mIHBoYW5kbGUgb2YgNCBNVSBjaGFubmVscyBmb3IgdHggYW5k
+IDQgTVUgY2hhbm5lbHMNCj4gLQkJZm9yIHJ4LiBBbGwgOCBNVSBjaGFubmVscyBtdXN0IGJlIGlu
+IHRoZSBzYW1lIE1VIGluc3RhbmNlLg0KPiArCQkJICAgICAgICJyeDAiLCAicngxIiwgInJ4MiIs
+ICJyeDMiLA0KPiArCQkJICAgICAgICJnaTMiLg0KPiArLSBtYm94ZXM6CUxpc3Qgb2YgcGhhbmRs
+ZSBvZiA0IE1VIGNoYW5uZWxzIGZvciB0eCwgNCBNVSBjaGFubmVscyBmb3INCj4gKwkJcngsIGFu
+ZCAxIE1VIGNoYW5uZWwgZm9yIGdlbmVyYWwgaW50ZXJydXB0LiBBbGwgOSBNVSBjaGFubmVscw0K
+PiArCQltdXN0IGJlIGluIHRoZSBzYW1lIE1VIGluc3RhbmNlLg0KPiAgCQlDcm9zcyBpbnN0YW5j
+ZXMgYXJlIG5vdCBhbGxvd2VkLiBUaGUgTVUgaW5zdGFuY2UgY2FuIG9ubHkNCj4gIAkJYmUgb25l
+IG9mIExTSU8gTVUwfk00IGZvciBpbXg4cXhwIGFuZCBpbXg4cW0uIFVzZXJzDQo+IG5lZWQNCj4g
+IAkJdG8gbWFrZSBzdXJlIHVzZSB0aGUgb25lIHdoaWNoIGlzIG5vdCBjb25mbGljdCB3aXRoIG90
+aGVyIEBADQo+IC0zNCw2ICszNiw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAJCUNoYW5u
+ZWwgMSBtdXN0IGJlICJ0eDEiIG9yICJyeDEiLg0KPiAgCQlDaGFubmVsIDIgbXVzdCBiZSAidHgy
+IiBvciAicngyIi4NCj4gIAkJQ2hhbm5lbCAzIG11c3QgYmUgInR4MyIgb3IgInJ4MyIuDQo+ICsJ
+CUdlbmVyYWwgaW50ZXJydXB0IGNoYW5uZWwgbXVzdCBiZSAiZ2kzIi4NCj4gIAkJZS5nLg0KPiAg
+CQltYm94ZXMgPSA8JmxzaW9fbXUxIDAgMA0KPiAgCQkJICAmbHNpb19tdTEgMCAxDQo+IEBAIC00
+Miw3ICs0NSw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAJCQkgICZsc2lvX211MSAxIDAN
+Cj4gIAkJCSAgJmxzaW9fbXUxIDEgMQ0KPiAgCQkJICAmbHNpb19tdTEgMSAyDQo+IC0JCQkgICZs
+c2lvX211MSAxIDM+Ow0KPiArCQkJICAmbHNpb19tdTEgMSAzDQo+ICsJCQkgICZsc2lvX211MSAz
+IDM+Ow0KPiAgCQlTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gv
+ZnNsLG11LnR4dA0KPiAgCQlmb3IgZGV0YWlsZWQgbWFpbGJveCBiaW5kaW5nLg0KPiANCj4gQEAg
+LTEzMCw3ICsxMzQsOCBAQCBmaXJtd2FyZSB7DQo+ICAJc2N1IHsNCj4gIAkJY29tcGF0aWJsZSA9
+ICJmc2wsaW14LXNjdSI7DQo+ICAJCW1ib3gtbmFtZXMgPSAidHgwIiwgInR4MSIsICJ0eDIiLCAi
+dHgzIiwNCj4gLQkJCSAgICAgInJ4MCIsICJyeDEiLCAicngyIiwgInJ4MyI7DQo+ICsJCQkgICAg
+ICJyeDAiLCAicngxIiwgInJ4MiIsICJyeDMiLA0KPiArCQkJICAgICAiZ2kzIjsNCj4gIAkJbWJv
+eGVzID0gPCZsc2lvX211MSAwIDANCj4gIAkJCSAgJmxzaW9fbXUxIDAgMQ0KPiAgCQkJICAmbHNp
+b19tdTEgMCAyDQo+IEBAIC0xMzgsNyArMTQzLDggQEAgZmlybXdhcmUgew0KPiAgCQkJICAmbHNp
+b19tdTEgMSAwDQo+ICAJCQkgICZsc2lvX211MSAxIDENCj4gIAkJCSAgJmxzaW9fbXUxIDEgMg0K
+PiAtCQkJICAmbHNpb19tdTEgMSAzPjsNCj4gKwkJCSAgJmxzaW9fbXUxIDEgMw0KPiArCQkJICAm
+bHNpb19tdTEgMyAzPjsNCj4gDQo+ICAJCWNsazogY2xrIHsNCj4gIAkJCWNvbXBhdGlibGUgPSAi
+ZnNsLGlteDhxeHAtY2xrIjsNCj4gLS0NCj4gMi43LjQNCg0K
