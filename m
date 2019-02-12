@@ -1,59 +1,77 @@
 From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [RFC 1/6] mfd: Support for Ettus Research E31x devices PMU
-Date: Tue, 12 Feb 2019 02:51:51 -0800
-Message-ID: <CAAtXAHd=-8H7AYpApe1B+WRWCv54GhxJBv1BD4bc-C9rnScU+w@mail.gmail.com>
-References: <20190212010143.3729-1-virendra.kakade@ni.com> <20190212010143.3729-2-virendra.kakade@ni.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+Date: Tue, 12 Feb 2019 03:02:32 -0800
+Message-ID: <CAAtXAHfUih0fWh6GhkRLKHb9epqhY_BnVzD-wBZ28rK+QY82LA@mail.gmail.com>
+References: <20190211161736.23844-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212010143.3729-2-virendra.kakade@ni.com>
+In-Reply-To: <20190211161736.23844-1-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Virendra Kakade <virendra.kakade@ni.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rajan Vaja <rajanv@xilinx.com>, Jolly Shah <jollys@xilinx.com>, linux-fpga@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kishore m <chinnikishore369@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Virendra,
+Hi Nava,
 
-On Mon, Feb 11, 2019 at 5:02 PM Virendra Kakade <virendra.kakade@ni.com> wrote:
+a couple of nits inline. otherwise looks fine to me.
+
+On Sun, Feb 10, 2019 at 8:17 AM Nava kishore Manne
+<nava.manne@xilinx.com> wrote:
 >
-> Document bindings for E31x device PMU MFD driver.
+> Add documentation to describe Xilinx ZynqMP fpga driver
+> bindings.
 >
-> Signed-off-by: Virendra Kakade <virendra.kakade@ni.com>
+> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 > ---
->  Documentation/devicetree/bindings/mfd/e31x-pmu.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/e31x-pmu.txt
+> Changes for v3:
+>                 -Created patches on top of 5.0-rc5.
+>                  No functional changes.
+> Changes for v2:
+>                 -Removed "----" separators.
+> Changes for v1:
+>                 -Created a Seperate(New) DT binding file as
+>                  suggested by Rob.
 >
-> diff --git a/Documentation/devicetree/bindings/mfd/e31x-pmu.txt b/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
+> Changes for RFC-V2:
+>                 -Moved pcap node as a child to firwmare
+>                  node as suggested by Rob.
+>
+>  .../devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt      | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+>
+> diff --git a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
 > new file mode 100644
-> index 000000000000..ebb5625f6c74
+> index 0000000..1f6f588
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
-> @@ -0,0 +1,14 @@
-> +Ettus Research/National Instruments E31x PMU MFD driver
+> +++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+> @@ -0,0 +1,13 @@
+> +Device Tree zynqmp-fpga bindings for the Zynq Ultrascale+ MPSoC controlled
+> +using ZynqMP SoC firmware interface
+
+How about:
+Devicetree bindings for Zynq Ultrascale MPSoC FPGA Manager.
+
+> +For Bitstream configuration on ZynqMp Soc uses processor configuration
+> +port(PCAP) to configure the programmable logic(PL) through PS by using
+> +FW interface.
+ZynqMP or ZynqMp, let's stay consistent here.
+
+How about:
+The ZynqMP SoC uses the PCAP (Processor configuration Port) to configure the
+Programmable Logic (PL). The configuration uses  the firmware interface.
 > +
 > +Required properties:
-> +- compatible : Must be "ni,e31x-pmu"
-> +- regmap     : Must be <&regmapnode>
+> +- compatible: should contain "xlnx,zynqmp-pcap-fpga"
 > +
 > +Example:
-> +
-> +pmu {
-> +       compatible = "ni,e31x-pmu";
-> +       regmap = <&devctrl>;
-> +       status = "okay";
-
-Please drop this.
->
-> +};
-> +
+> +       zynqmp_pcap: pcap {
+> +               compatible = "xlnx,zynqmp-pcap-fpga";
+> +       };
 > --
-> 2.17.1
+> 2.7.4
 >
 
-Your binding patches should have "dt-bindings: ... " in the commit message.
-
-Please fix that when you resubmit your series.
-
-Cheers,
+Thanks,
 Moritz
