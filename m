@@ -1,69 +1,35 @@
-From: Virendra Kakade <virendra.kakade@ni.com>
-Subject: [RFC 3/6] power: supply: Ettus Research E31x charger driver
-Date: Mon, 11 Feb 2019 19:01:40 -0600
-Message-ID: <20190212010143.3729-4-virendra.kakade@ni.com>
-References: <20190212010143.3729-1-virendra.kakade@ni.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH 0/2] "pcie_aux" clock for i.MX8MQ
+Date: Mon, 11 Feb 2019 17:51:06 -0800
+Message-ID: <20190212015108.16952-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212010143.3729-1-virendra.kakade@ni.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, moritz.fischer@ettus.com, Virendra Kakade <virendra.kakade@ni.com>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document bindings for the E31x devices charger.
+Lorenzo:
 
-Signed-off-by: Virendra Kakade <virendra.kakade@ni.com>
----
- Documentation/devicetree/bindings/mfd/e31x-pmu.txt |  8 ++++++++
- .../bindings/power/supply/e31x-charger.txt         | 14 ++++++++++++++
- 2 files changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/e31x-charger.txt
+This small series adds code to control "pcie_aux" clock. This is an
+oversight from original submission [pcie-imx8mq-v7], which was only
+discovered once I submitted an RFC for corresponding DT changes going
+via i.MX tree [imx-dt-rfc].
 
-diff --git a/Documentation/devicetree/bindings/mfd/e31x-pmu.txt b/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
-index ebb5625f6c74..3798886578ba 100644
---- a/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
-+++ b/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
-@@ -4,11 +4,19 @@ Required properties:
- - compatible : Must be "ni,e31x-pmu"
- - regmap     : Must be <&regmapnode>
- 
-+e31x-pmu has a sub-device called e31x-charger.
-+
-+For the e31x-charger properties please refer to:
-+Documentation/device-tree/bindings/power/supply/e31x-charger.txt
-+
- Example:
- 
- pmu {
- 	compatible = "ni,e31x-pmu";
- 	regmap = <&devctrl>;
- 	status = "okay";
-+	charger: charger@0{
-+		compatible = "ni,e31x-charger";
-+	};
- };
- 
-diff --git a/Documentation/devicetree/bindings/power/supply/e31x-charger.txt b/Documentation/devicetree/bindings/power/supply/e31x-charger.txt
-new file mode 100644
-index 000000000000..ae9fedcbf1b2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/e31x-charger.txt
-@@ -0,0 +1,14 @@
-+Ettus Research/National Instruments  E31x Devices Charger
-+
-+All E31x devices have to be connected to an external power supply
-+charger to charge the in-built battery or supply power.
-+Some capability is provided to monitor this charger.
-+
-+Required properties:
-+- compatible: Must be "ni,e31x-charger"
-+
-+Example:
-+
-+charger: charger@0{
-+	compatible = "ni,e31x-charger";
-+};
+Thanks,
+Andrey Smirnov
+
+[imx-dt-rfc] https://lore.kernel.org/lkml/20190131204333.31846-1-andrew.smirnov@gmail.com
+[pcie-imx8mq-v7] https://lore.kernel.org/lkml/20190202001523.12517-1-andrew.smirnov@gmail.com
+
+Andrey Smirnov (2):
+  dt-bindings: imx6q-pcie: Add "pcie_aux" clock for imx8mq
+  PCI: imx6: Add code to request/control "pcie_aux" clock for i.MX8MQ
+
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.txt   |  4 ++++
+ drivers/pci/controller/dwc/pci-imx6.c            | 16 ++++++++++++++++
+ 2 files changed, 20 insertions(+)
+
 -- 
-2.17.1
+2.20.1
