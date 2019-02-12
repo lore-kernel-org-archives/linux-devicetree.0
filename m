@@ -1,37 +1,84 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH] dt-bindings: Add vendor prefix for feiyang
-Date: Tue, 12 Feb 2019 17:22:32 +0530
-Message-ID: <20190212115232.4532-1-jagan@amarulasolutions.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 02/11] dt-bindings: power: supply: add DT bindings for
+ max77650
+Date: Tue, 12 Feb 2019 12:54:20 +0100
+Message-ID: <20190212115420.GA24296@amd>
+References: <20190201094736.32057-1-brgl@bgdev.pl>
+ <20190201094736.32057-3-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190201094736.32057-3-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jagan Teki <jagan@amarulasolutions.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add vendor prefix for feiyang, known as
-Shenzhen Fly Young Technology Co.,LTD. a known producer for LCD modules.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Note: notation about using 'feiyang' is based on the datasheet 
-http://files.pine64.org/doc/datasheet/pine64/FY07024DI26A30-D_feiyang_LCD_panel.pdf
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Hi!
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index a5ad57eaee20..f42e12eb9d64 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -140,6 +140,7 @@ fairphone	Fairphone B.V.
- faraday	Faraday Technology Corporation
- fastrax	Fastrax Oy
- fcs	Fairchild Semiconductor
-+feiyang	Shenzhen Fly Young Technology Co.,LTD.
- firefly	Firefly
- focaltech	FocalTech Systems Co.,Ltd
- friendlyarm	Guangzhou FriendlyARM Computer Tech Co., Ltd
--- 
-2.18.0.321.gffc6fa0e3
+> diff --git a/Documentation/devicetree/bindings/power/supply/max77650-char=
+ger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger.t=
+xt
+> new file mode 100644
+> index 000000000000..f3e00d41e299
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+> @@ -0,0 +1,27 @@
+> +Battery charger driver for MAX77650 PMIC from Maxim Integrated.
+> +
+> +This module is part of the MAX77650 MFD device. For more details
+> +see Documentation/devicetree/bindings/mfd/max77650.txt.
+> +
+> +The charger is represented as a sub-node of the PMIC node on the device =
+tree.
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:		Must be "maxim,max77650-charger"
+> +
+> +Optional properties:
+> +--------------------
+> +- maxim,vchgin-min:	Minimum CHGIN regulation voltage (in microvolts). Mu=
+st be
+> +			one of: 4000000, 4100000, 4200000, 4300000, 4400000,
+> +			4500000, 4600000, 4700000.
+> +- maxim,ichgin-lim:	CHGIN input current limit (in microamps). Must be on=
+e of:
+> +			95000, 190000, 285000, 380000, 475000.
+
+We already have richtek,min-input-voltage-regulation and
+ti,minimum-sys-voltage and ti,in-dpm-voltage.
+
+This is not too consistent with with the rest.. and perhaps common
+name should be used for those?
+
+See also ti,current-limit. That seems to be direct match.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlxis+wACgkQMOfwapXb+vKIhACeIPSWDImPg0l/iknWEe1ACf1K
+vXQAoL3d0cJ0+UOQ1AuSYm/A8jYVz8XN
+=gprt
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
