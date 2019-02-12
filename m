@@ -1,30 +1,89 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 03/12] of: mark early_init_dt_alloc_reserved_memory_arch static
-Date: Tue, 12 Feb 2019 14:24:19 -0600
-Message-ID: <CAL_JsqJ2Qt6=TTD250C9qW7Kv8rZn5PyB_C78FUhWwfgOnjPHg@mail.gmail.com>
-References: <20190211133554.30055-1-hch@lst.de> <20190211133554.30055-4-hch@lst.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 12/13] input: max77650: add onkey support
+Date: Tue, 12 Feb 2019 20:34:08 +0000
+Message-ID: <20190212203408.GA1863@dell>
+References: <20190118134244.22253-1-brgl@bgdev.pl>
+ <20190118134244.22253-13-brgl@bgdev.pl>
+ <20190119090318.GB187380@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211133554.30055-4-hch@lst.de>
+Content-Disposition: inline
+In-Reply-To: <20190119090318.GB187380@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: Linux IOMMU <iommu@lists.linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, x86@kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mips@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-riscv@lists.infradead.org, SH-Linux <linux-sh@vger.kernel.org>, linux-xtensa@linux-xtensa.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 7:36 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> This function is only used in of_reserved_mem.c, and never overridden
-> despite the __weak marker.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/of/of_reserved_mem.c    | 2 +-
->  include/linux/of_reserved_mem.h | 7 -------
->  2 files changed, 1 insertion(+), 8 deletions(-)
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > 
+> > Add support for the push- and slide-button events for max77650.
+> > 
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  drivers/input/misc/Kconfig          |   9 ++
+> >  drivers/input/misc/Makefile         |   1 +
+> >  drivers/input/misc/max77650-onkey.c | 135 ++++++++++++++++++++++++++++
+> >  3 files changed, 145 insertions(+)
+> >  create mode 100644 drivers/input/misc/max77650-onkey.c
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[...]
 
-Looks like this one isn't a dependency, so I can take it if you want.
+Moving things around a bit:
 
-Rob
+> > +static int max77650_onkey_probe(struct platform_device *pdev)
+> > +{
+
+> > +	irq_f = regmap_irq_get_virq(irq_data, MAX77650_INT_nEN_F);
+> > +	if (irq_f <= 0)
+> > +		return -EINVAL;
+> > +
+> > +	irq_r = regmap_irq_get_virq(irq_data, MAX77650_INT_nEN_R);
+> > +	if (irq_r <= 0)
+> > +		return -EINVAL;
+> 
+> Ugh, it would be better if you handled IRQ mapping in the MFD piece and
+> passed it as resources of platform device. Then you'd simply call
+> platform_get_irq() here and did not have to reach into parent device for
+> "irq_dara".
+
+These device IRQs were defined and registered with the Regmap *set*
+(actually init()) APIs and thus should be pulled out using the
+appropriate reverse Regmap *get* APIs here in the device.
+
+Registering them with Regmap *and* pulling them back out again in the
+same (MFD in this case) driver, only to register them as platform data
+is certainly not how I see the API being designed/used.
+
+> > +	struct regmap_irq_chip_data *irq_data;
+> > +	struct device *dev, *parent;
+
+> > +	dev = &pdev->dev;
+> > +	parent = dev->parent;
+> > +	i2c = to_i2c_client(parent);
+> > +	irq_data = i2c_get_clientdata(i2c);
+> > +
+> > +	map = dev_get_regmap(parent, NULL);
+> > +	if (!map)
+> > +		return -ENODEV;
+
+However, this hoop jumping is a bit crazy and for the most part
+superfluous.  Instead, create a struct of attributes you wish to share
+with the child devices (containing both regmap (which you should call
+regmap and not map by the way) and irq_data) and pass it as either
+platform data (preferred) or as device data.
+
+If you choose the latter, you do not need to convert from 'device' to
+'i2c' to do the look-up.  Since this function (probe()) is provided
+with a platform_device, you can just use platform_get_drvdata() to
+achieve the same as above.
+
+If you go the preferred (platform data) route, then you should use
+dev_get_platdata() instead.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
