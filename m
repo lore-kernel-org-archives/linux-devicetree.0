@@ -1,117 +1,60 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt
- parent for GPIO
-Date: Tue, 12 Feb 2019 09:05:31 -0700
-Message-ID: <20190212160531.GA17102@codeaurora.org>
-References: <20181219221105.3004-1-ilina@codeaurora.org>
- <20181219221105.3004-5-ilina@codeaurora.org>
- <20181229000714.GA3654@bogus>
- <20190107185113.GH14960@codeaurora.org>
- <CAL_Jsq+McuN5F9_a2bmECegR65vziNATpUqt4hysKL7FT=b9RA@mail.gmail.com>
- <20190109173111.GB22547@codeaurora.org>
- <CAL_JsqL1z-iOewqBeE43n1cVSGiQyOPHBGbRmEm9zcVLJkoLEA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH v1 3/3] regulator: bd718x7: Support SNVS low power
+ state
+Date: Tue, 12 Feb 2019 16:08:31 +0000
+Message-ID: <20190212160831.GF20635@sirena.org.uk>
+References: <cover.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
+ <06c2f2f730b07caeb1f2fb86be60c02b21d7bea9.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4VrXvz3cwkc87Wze"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL1z-iOewqBeE43n1cVSGiQyOPHBGbRmEm9zcVLJkoLEA@mail.gmail.com>
+In-Reply-To: <06c2f2f730b07caeb1f2fb86be60c02b21d7bea9.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 09 2019 at 12:37 -0700, Rob Herring wrote:
->On Wed, Jan 9, 2019 at 11:31 AM Lina Iyer <ilina@codeaurora.org> wrote:
->>
->> On Tue, Jan 08 2019 at 07:49 -0700, Rob Herring wrote:
->> >On Mon, Jan 7, 2019 at 12:51 PM Lina Iyer <ilina@codeaurora.org> wrote:
->> >>
->> >> On Fri, Dec 28 2018 at 17:07 -0700, Rob Herring wrote:
->> >> >On Wed, Dec 19, 2018 at 03:11:02PM -0700, Lina Iyer wrote:
->> >> >> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
->> >> >> routed to the PDC as interrupts that can be used to wake the system up
->> >> >> from deep low power modes and suspend.
->> >> >>
->> >> >> Cc: devicetree@vger.kernel.org
->> >> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> >> >> ---
->> >> >>  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
->> >> >>  1 file changed, 6 insertions(+), 1 deletion(-)
->> >> >>
->> >> >> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
->> >> >> index 665aadb5ea28..a522ca46667d 100644
->> >> >> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
->> >> >> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
->> >> >> @@ -29,6 +29,11 @@ SDM845 platform.
->> >> >>      Definition: must be 2. Specifying the pin number and flags, as defined
->> >> >>                  in <dt-bindings/interrupt-controller/irq.h>
->> >> >>
->> >> >> +- wakeup-parent:
->> >> >> +    Usage: optional
->> >> >> +    Value type: <phandle>
->> >> >> +    Definition: A phandle to the wakeup interrupt controller for the SoC.
->> >> >
->> >> >Is this really necessary? Is there more than one possible wakeup-parent
->> >> >node?
->> >> >
->> >> No.  There is only one but depending on the architecture, the wakeup
->> >> interrupt controller could be different device like PDC on SDM845 or MPM
->> >> on SDM820.
->> >>
->> >> What do you have in mind? Let me know if you have a better idea than
->> >> referencing in DT.
->> >
->> >If there's only one possibility for a given platform, then you can
->> >just use of_find_compatible_node(). I don't think it matters that
->> >different platforms have a different device here. It's not going to be
->> >a large table and you may need to know the differences if there's not
->> >an abstracted interface to it (seems there is in your case).
->> The GPIO irqchip would be in hierarchy with the wakeup-parent
->> irqchip and no device specific functions would be called directly.
->> We could achieve this with compatible strings to the irqchip.
->>
->> >Alternatively, if the PDC/MPM code knows what interrupt controller it
->> >is associated with, then it could setup that relationship and the
->> >interrupt controller code could retrieve that. Maybe the stacked
->> >domain support doesn't work in that direction (I haven't looked at the
->> >irq code much since that was added).
->> >
->> The PDC/MPM do not know about the association.
->
->Neither does the main interrupt controller. The association is part of
->SoC integration. You can describe that association in either direction
->and that is sufficient from a DT standpoint. You've probably picked
->putting this in the GIC(?) based on what works more easily with the
->Linux irqdomain code.
->
->> >However, my main concern is documenting something genericish in a
->> >device specific binding. It looks like Tegra is trying to add the same
->> >thing, so this needs to be documented in a common place. One question
->> >is whether wakeup is the only use or if this should be more generally
->> >a secondary interrupt parent?
->> >
->> Yes, wakeup is the only use of this interrupt parent.
->
->Maybe for you, but I was wondering about this more generally. Should
->we encode what the function (e.g. wakeup) is in the property name or
->have something like aux-interrupt-controller? Maybe some platforms
->have some need for a secondary interrupt-controller which is not
->wakeup. Routing interrupts to other cores perhaps?
->
-Rob,
 
-Would like to know your opinion on Stephen's idea. Could you take a look
-at this thread again please?
+--4VrXvz3cwkc87Wze
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Lina
+On Tue, Feb 12, 2019 at 04:19:38PM +0200, Matti Vaittinen wrote:
+> read ROHM BD71837 / BD71847 specific device tree bindings for
+> controlling the PMIC shutdown/reset states and voltages for
+> different HW states. The PMIC was designed to be used with NXP
+> i.MX8 SoC and it supports SNVS low power state which seems to
+> be typical for NXP i.MX SoCs. However, when SNVS is used we must
+> not allow SW to control enabling/disabling those regulators which
+> are crucial for system to boot as there is a HW limitation which
+> causes SW controlled regulators to be kept shut down after SNVS
+> reset.
+>=20
+> Allow setting the SNVS to be used as reset target state and allow
+> marking those regulators which are critical for boot.
 
->> It is powered by
->> an always-on rail and therefore can detect some interrupts that are
->> routed to it even when the GIC is powered off. Though Tegra's
->> implementation of the irqchip is a bit different from QCOM, the idea is
->> generally the same. It would be helpful, if we could make this a
->> generic enough binding.
->>
->> -- Lina
->>
+The general idea seems fine but I'm wondering if we should use the
+existing bindings and just prevent any change with fixed configurations
+- that *should* just be a case of picking appropriate constraints I
+think.  Why does this need completely new properties other than
+preventing the user from shooting themselves in the foot?
+
+--4VrXvz3cwkc87Wze
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxi734ACgkQJNaLcl1U
+h9BE0wf+IsU3kjTSY5iiT3YXDg+KundiTwhux+oTM9c75jAnup5dtcw/KsU3HNCy
+eomCAcL6wQQNqAque3hAuDPATOIiecZCru1zun0BMRypT5/LLwUZGgu/rSRRPR0M
+/RaZcIM07939e4T453bJNR0iutqKAwsHWxto02PhO3Wf5AfzlWnlUQiV+lv9VOsH
+P/SovBL/8lDwZTr/hOQDBQf7q3ax/fbt0Vvxvk7pLoHUEzHtABUx1/ab+2pKpaaq
+7yqPtGPWia0HPuryC70Pi3fF+/hW2VmEa7ZqPEjIqQQ8OxgRsX2UeW1d1kxeU7Fd
+ahsE765BWOzkmUvNaJxlCnu4TA+QiA==
+=KLTb
+-----END PGP SIGNATURE-----
+
+--4VrXvz3cwkc87Wze--
