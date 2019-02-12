@@ -1,59 +1,62 @@
-Return-Path: <SRS0=UrBd=QU=linaro.org=daniel.lezcano@kernel.org>
-Subject: Re: [PATCH v2 0/5] Add CMT/TMU support for RZ/G2E
+Return-Path: <SRS0=4Lph=QT=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1410090.outbound.protection.outlook.com ([40.107.141.90]:36799
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726003AbfBLKRX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Feb 2019 05:17:23 -0500
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH v2 0/5] Add CMT/TMU support for RZ/G2E
+Date: Tue, 12 Feb 2019 10:17:14 +0000
+Message-ID: <OSBPR01MB210392463D9EB86AE0BE8C36B8650@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 References: <1549272007-33471-1-git-send-email-biju.das@bp.renesas.com>
  <86c16302-8f7e-52b6-d183-5a90c8a0fc85@linaro.org>
- <OSBPR01MB210392463D9EB86AE0BE8C36B8650@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <ea8a581f-56ce-bea0-86d6-7688741c3fca@linaro.org>
-Date: Wed, 13 Feb 2019 09:44:18 +0100
-MIME-Version: 1.0
-In-Reply-To: <OSBPR01MB210392463D9EB86AE0BE8C36B8650@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <86c16302-8f7e-52b6-d183-5a90c8a0fc85@linaro.org>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 12/02/2019 11:17, Biju Das wrote:
-> Hi Daniel,
-> 
-> Thanks  for  the feedback.
-> 
->> -----Original Message-----
->> From: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Sent: 12 February 2019 10:03
->> To: Biju Das <biju.das@bp.renesas.com>; Rob Herring
->> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>; devicetree@vger.kernel.org;
->> Simon Horman <horms@verge.net.au>; Geert Uytterhoeven
->> <geert+renesas@glider.be>; Chris Paterson
->> <Chris.Paterson2@renesas.com>; Fabrizio Castro
->> <fabrizio.castro@bp.renesas.com>; linux-renesas-soc@vger.kernel.org
->> Subject: Re: [PATCH v2 0/5] Add CMT/TMU support for RZ/G2E
->>
->> On 04/02/2019 10:20, Biju Das wrote:
->>> This patch series aims to add CMT/TMU timer support for RZ/G2E SoC.
->>>
->>> This patch series is tested against renesas-dev and linux-next.
->>
->> Do you want me to take the patch 1/5 and 4/5 through my tree ?
-> 
-> Yes, please.
-> 
-
-Both applied for 5.1.
-
-Thanks
-
-  -- Daniel
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+SGkgRGFuaWVsLA0KDQpUaGFua3MgIGZvciAgdGhlIGZlZWRiYWNrLg0KDQo+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IERhbmllbCBMZXpjYW5vIDxkYW5pZWwubGV6Y2Fub0Bs
+aW5hcm8ub3JnPg0KPiBTZW50OiAxMiBGZWJydWFyeSAyMDE5IDEwOjAzDQo+IFRvOiBCaWp1IERh
+cyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+OyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJu
+ZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4gQ2M6IFRob21h
+cyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7DQo+IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1PjsgR2VlcnQgVXl0dGVyaG9l
+dmVuDQo+IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IENocmlzIFBhdGVyc29uDQo+IDxDaHJp
+cy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNh
+c3Ryb0BicC5yZW5lc2FzLmNvbT47IGxpbnV4LXJlbmVzYXMtc29jQHZnZXIua2VybmVsLm9yZw0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDAvNV0gQWRkIENNVC9UTVUgc3VwcG9ydCBmb3IgUlov
+RzJFDQo+DQo+IE9uIDA0LzAyLzIwMTkgMTA6MjAsIEJpanUgRGFzIHdyb3RlOg0KPiA+IFRoaXMg
+cGF0Y2ggc2VyaWVzIGFpbXMgdG8gYWRkIENNVC9UTVUgdGltZXIgc3VwcG9ydCBmb3IgUlovRzJF
+IFNvQy4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggc2VyaWVzIGlzIHRlc3RlZCBhZ2FpbnN0IHJlbmVz
+YXMtZGV2IGFuZCBsaW51eC1uZXh0Lg0KPg0KPiBEbyB5b3Ugd2FudCBtZSB0byB0YWtlIHRoZSBw
+YXRjaCAxLzUgYW5kIDQvNSB0aHJvdWdoIG15IHRyZWUgPw0KDQpZZXMsIHBsZWFzZS4NCg0KPiA+
+IC0tLS0tDQo+ID4gVjEgLS0+VjIgSW5jb3BvcmF0ZWQgR2VlcnQncyByZXZpZXcgY29tbWVudCBm
+b3IgVE1VIGNsb2NrDQo+ID4NCj4gPiBCaWp1IERhcyAoNSk6DQo+ID4gICBkdC1iaW5kaW5nczog
+dGltZXI6IHJlbmVzYXMsIGNtdDogRG9jdW1lbnQgcjhhNzc0YzAgQ01UIHN1cHBvcnQNCj4gPiAg
+IGFybTY0OiBkdHM6IHJlbmVzYXM6IHI4YTc3NGMwOiBBZGQgQ01UIGRldmljZSBub2Rlcw0KPiA+
+ICAgY2xrOiByZW5lc2FzOiByOGE3NzRjMDogQWRkIFRNVSBjbG9jaw0KPiA+ICAgZHQtYmluZGlu
+Z3M6IHRpbWVyOiByZW5lc2FzOiB0bXU6IERvY3VtZW50IHI4YTc3NGMwIGJpbmRpbmdzDQo+ID4g
+ICBhcm02NDogZHRzOiByZW5lc2FzOiByOGE3NzRjMDogQWRkIFRNVSBkZXZpY2Ugbm9kZXMNCj4g
+Pg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9yZW5lc2FzLGNtdC50eHQgICAg
+ICB8ICAgMiArDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL3JlbmVzYXMsdG11
+LnR4dCAgICAgIHwgICAxICsNCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3
+NGMwLmR0c2kgICAgICAgICAgfCAxMzUNCj4gKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGRy
+aXZlcnMvY2xrL3JlbmVzYXMvcjhhNzc0YzAtY3BnLW1zc3IuYyAgICAgICAgICAgIHwgICA1ICsN
+Cj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAxNDMgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+DQo+DQo+IC0t
+DQo+ICA8aHR0cDovL3d3dy5saW5hcm8ub3JnLz4gTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ug
+c29mdHdhcmUgZm9yIEFSTSBTb0NzDQo+DQo+IEZvbGxvdyBMaW5hcm86ICA8aHR0cDovL3d3dy5m
+YWNlYm9vay5jb20vcGFnZXMvTGluYXJvPiBGYWNlYm9vayB8DQo+IDxodHRwOi8vdHdpdHRlci5j
+b20vIyEvbGluYXJvb3JnPiBUd2l0dGVyIHwgPGh0dHA6Ly93d3cubGluYXJvLm9yZy9saW5hcm8t
+DQo+IGJsb2cvPiBCbG9nDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBHbWJILEdl
+c2NoYWVmdHNmdWVocmVyL1ByZXNpZGVudCA6IE1pY2hhZWwgSGFubmF3YWxkLCBTaXR6IGRlciBH
+ZXNlbGxzY2hhZnQvUmVnaXN0ZXJlZCBvZmZpY2U6IER1ZXNzZWxkb3JmLCBBcmNhZGlhc3RyYXNz
+ZSAxMCwgNDA0NzIgRHVlc3NlbGRvcmYsIEdlcm1hbnksSGFuZGVsc3JlZ2lzdGVyL0NvbW1lcmNp
+YWwgUmVnaXN0ZXI6IER1ZXNzZWxkb3JmLCBIUkIgMzcwOCBVU3QtSUROci4vVGF4IGlkZW50aWZp
+Y2F0aW9uIG5vLjogREUgMTE5MzUzNDA2IFdFRUUtUmVnLi1Oci4vV0VFRSByZWcuIG5vLjogREUg
+MTQ5Nzg2NDcNCg==
