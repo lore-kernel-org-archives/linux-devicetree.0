@@ -1,42 +1,68 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: am335x: Add support for Bosch Guardian
-Date: Tue, 12 Feb 2019 10:49:15 -0800
-Message-ID: <20190212184915.GN5720@atomide.com>
-References: <20190211122727.5582-1-martyn.welch@collabora.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 2/7] dt-bindings: bus: Add binding for the Allwinner
+ MBUS controller
+Date: Tue, 12 Feb 2019 18:53:11 +0000
+Message-ID: <76a7fe92-6847-b668-2d0e-1eee1d291fc3@arm.com>
+References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
+ <43f965dae8b0ba8dffd3af478c2836c17feaa18b.1549897336.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190211122727.5582-1-martyn.welch@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martyn Welch <martyn.welch@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <43f965dae8b0ba8dffd3af478c2836c17feaa18b.1549897336.git-series.maxime.ripard@bootlin.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, Yong Deng <yong.deng@magewell.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Dave Martin <dave.martin@arm.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Georgi Djakov <georgi.djakov@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-* Martyn Welch <martyn.welch@collabora.com> [190211 04:27]:
-> The Bosch Guardian is a TI am335x based device.
-> 
-> It's hardware specifications are as follows:
-> 
->  * 256 MB DDR3 memory
->  * 512 MB NAND Flash
->  * USB OTG
->  * RS232
->  * MicroSD external storage
->  * LCD Display interface
-
-Thanks applying into omap-for-v5.1/dt.
-
-Do you have some link for this device for more
-information?
-
-> +/include/ "tps65217.dtsi"
-
-I'll update this to use #include "tps65217.dtsi"
-while applying.
-
-Regards,
-
-Tony
+T24gMTEvMDIvMjAxOSAxNTowMiwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBUaGUgTUJVUyBjb250
+cm9sbGVyIGRyaXZlcyB0aGUgTUJVUyB0aGF0IG90aGVyIGRldmljZXMgaW4gdGhlIFNvQyB3aWxs
+Cj4gdXNlIHRvIHBlcmZvcm0gRE1BLiBJdCBhbHNvIGhhcyBhIHJlZ2lzdGVyIGludGVyZmFjZSB0
+aGF0IGFsbG93cyB0bwo+IG1vbml0b3IgYW5kIGNvbnRyb2wgdGhlIGJhbmR3aWR0aCBhbmQgcHJp
+b3JpdGllcyBmb3IgbWFzdGVycyBvbiB0aGF0Cj4gYnVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1h
+eGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+Cj4gLS0tCj4gICBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3N1bnhpL3N1bnhpLW1idXMudHh0IHwgMzYg
+KysrKysrKy0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspCj4gICBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zdW54aS9z
+dW54aS1tYnVzLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvYXJtL3N1bnhpL3N1bnhpLW1idXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9zdW54aS9zdW54aS1tYnVzLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5lNzJiN2FjOWUzNTkKPiAtLS0gL2Rldi9udWxsCj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zdW54aS9zdW54aS1t
+YnVzLnR4dAo+IEBAIC0wLDAgKzEsMzYgQEAKPiArQWxsd2lubmVyIE1lbW9yeSBCdXMgKE1CVVMp
+IGNvbnRyb2xsZXIKPiArCj4gK1RoZSBNQlVTIGNvbnRyb2xsZXIgZHJpdmVzIHRoZSBNQlVTIHRo
+YXQgb3RoZXIgZGV2aWNlcyBpbiB0aGUgU29DIHdpbGwKPiArdXNlIHRvIHBlcmZvcm0gRE1BLiBJ
+dCBhbHNvIGhhcyBhIHJlZ2lzdGVyIGludGVyZmFjZSB0aGF0IGFsbG93cyB0bwo+ICttb25pdG9y
+IGFuZCBjb250cm9sIHRoZSBiYW5kd2lkdGggYW5kIHByaW9yaXRpZXMgZm9yIG1hc3RlcnMgb24g
+dGhhdAo+ICtidXMuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsgLSBjb21wYXRpYmxl
+OiBNdXN0IGJlIG9uZSBvZjoKPiArCS0gYWxsd2lubmVyLHN1bjVpLWExMy1tYnVzCj4gKyAtIHJl
+ZzogT2Zmc2V0IGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVyIHNldCBmb3IgdGhlIGNvbnRyb2xs
+ZXIKPiArIC0gY2xvY2tzOiBwaGFuZGxlIHRvIHRoZSBjbG9jayBkcml2aW5nIHRoZSBjb250cm9s
+bGVyCj4gKyAtIGRtYS1yYW5nZXM6IHNlZSBib290aW5nLXdpdGhvdXQtb2YudHh0CgpOaXQ6IHRo
+aXMgaXMgYSBzdGFuZGFyZCBwcm9wZXJ0eSBpbiBEVFNwZWMsIHNvIGl0J3MgcHJvYmFibHkgYmV0
+dGVyIHRvIApyZWZlciB0byB0aGF0IHJhdGhlciB0aGFuIExpbnV4LXNwZWNpZmljIGRvY3VtZW50
+YXRpb24uCgpSb2Jpbi4KCj4gKyAtICNpbnRlcmNvbm5lY3QtY2VsbHM6IE11c3QgYmUgb25lLCB3
+aXRoIHRoZSBhcmd1bWVudCBiZWluZyB0aGUgTUJVUwo+ICsgICBwb3J0IElECj4gKwo+ICtFYWNo
+IGRldmljZSBoYXZpbmcgdG8gcGVyZm9ybSB0aGVpciBETUEgdGhyb3VnaCB0aGUgTUJVUyBtdXN0
+IGhhdmUgdGhlCj4gK2ludGVyY29ubmVjdHMgYW5kIGludGVyY29ubmVjdC1uYW1lcyBwcm9wZXJ0
+aWVzIHNldCB0byB0aGUgTUJVUwo+ICtjb250cm9sbGVyIGFuZCB3aXRoICJkbWEiIGFzIHRoZSBp
+bnRlcmNvbm5lY3QgbmFtZS4KPiArCj4gK0V4YW1wbGU6Cj4gKwo+ICttYnVzOiBkcmFtLWNvbnRy
+b2xsZXJAMWMwMTAwMCB7Cj4gKwljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW41aS1hMTMtbWJ1
+cyI7Cj4gKwlyZWcgPSA8MHgwMWMwMTAwMCAweDEwMDA+Owo+ICsJY2xvY2tzID0gPCZjY3UgQ0xL
+X01CVVM+Owo+ICsJZG1hLXJhbmdlcyA9IDwweDAwMDAwMDAwIDB4NDAwMDAwMDAgMHgyMDAwMDAw
+MD47Cj4gKwkjaW50ZXJjb25uZWN0LWNlbGxzID0gPDE+Owo+ICt9Owo+ICsKPiArZmUwOiBkaXNw
+bGF5LWZyb250ZW5kQDFlMDAwMDAgewo+ICsJY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuNWkt
+YTEzLWRpc3BsYXktZnJvbnRlbmQiOwo+ICsJLi4uCj4gKwlpbnRlcmNvbm5lY3RzID0gPCZtYnVz
+IDE5PjsKPiArCWludGVyY29ubmVjdC1uYW1lcyA9ICJkbWEiOwo+ICt9Owo+IApfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
