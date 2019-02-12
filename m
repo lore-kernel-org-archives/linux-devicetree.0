@@ -1,52 +1,41 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v3, 0/9] Add ENETC PTP clock driver
-Date: Tue, 12 Feb 2019 12:23:55 +0800
-Message-ID: <20190212042404.15575-1-yangbo.lu@nxp.com>
+Subject: [v3, 5/9] dt-binding: ptp_qoriq: add little-endian support
+Date: Tue, 12 Feb 2019 12:24:00 +0800
+Message-ID: <20190212042404.15575-6-yangbo.lu@nxp.com>
+References: <20190212042404.15575-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190212042404.15575-1-yangbo.lu@nxp.com>
 Sender: netdev-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org
 Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Claudiu Manoil <claudiu.manoil@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-There is same QorIQ 1588 timer IP block on the new ENETC Ethernet
-controller with eTSEC/DPAA Ethernet controllers. However it's
-different endianness (little-endian) and using PCI driver.
+Specify "little-endian" property if the 1588 timer IP block
+is little-endian mode. The default endian mode is big-endian.
 
-To support ENETC PTP driver, ptp_qoriq driver needed to be
-reworked to make functions global for reusing, to add little-
-endian support, to add ENETC memory map support, and to add
-ENETC dependency for ptp_qoriq driver.
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+---
+Changes for v2:
+	- None.
+Changes for v3:
+	- None.
+---
+ .../devicetree/bindings/ptp/ptp-qoriq.txt          |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-In addition, although ENETC PTP driver is a PCI driver, the dts
-node still could be used. Currently the ls1028a dtsi which is
-the only platform by now using ENETC is not complete, so there
-is still dependency for ENETC PTP node upstreaming. This will
-be done in the near future. The hardware timestamping support
-for ENETC is done but needs to be reworked with new method in
-internal git tree, and will be sent out soon.
-
-Yangbo Lu (9):
-  ptp_qoriq: make structure/function names more consistent
-  ptp_qoriq: make ptp operations global
-  ptp_qoriq: convert to use ptp_qoriq_init/free
-  ptp_qoriq: add little enadian support
-  dt-binding: ptp_qoriq: add little-endian support
-  ptp_qoriq: fix register memory map
-  ptp: add QorIQ PTP support for ENETC
-  enetc: add PTP clock driver
-  MAINTAINERS: add enetc_ptp driver into QorIQ PTP list
-
- .../devicetree/bindings/ptp/ptp-qoriq.txt          |    3 +
- MAINTAINERS                                        |    1 +
- drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c |    2 +-
- drivers/net/ethernet/freescale/enetc/Kconfig       |   12 +
- drivers/net/ethernet/freescale/enetc/Makefile      |    3 +
- drivers/net/ethernet/freescale/enetc/enetc_hw.h    |    5 +-
- drivers/net/ethernet/freescale/enetc/enetc_ptp.c   |  144 +++++++
- drivers/net/ethernet/freescale/gianfar_ethtool.c   |    2 +-
- drivers/ptp/Kconfig                                |    2 +-
- drivers/ptp/ptp_qoriq.c                            |  437 +++++++++++---------
- drivers/ptp/ptp_qoriq_debugfs.c                    |   48 ++--
- include/linux/fsl/ptp_qoriq.h                      |   63 ++-
- 12 files changed, 466 insertions(+), 256 deletions(-)
- create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_ptp.c
+diff --git a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+index 8e7f855..454c937 100644
+--- a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
++++ b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+@@ -19,6 +19,9 @@ Clock Properties:
+   - fsl,max-adj      Maximum frequency adjustment in parts per billion.
+   - fsl,extts-fifo   The presence of this property indicates hardware
+ 		     support for the external trigger stamp FIFO.
++  - little-endian    The presence of this property indicates the 1588 timer
++		     IP block is little-endian mode. The default endian mode
++		     is big-endian.
+ 
+   These properties set the operational parameters for the PTP
+   clock. You must choose these carefully for the clock to work right.
+-- 
+1.7.1
