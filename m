@@ -1,47 +1,59 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 1/2] ARM: dts: pfla02: prepare storage devices to add
- paritions
-Date: Tue, 12 Feb 2019 08:12:03 +0100
-Message-ID: <20190212071202.52ctrzbr4uoi634x@pengutronix.de>
-References: <20190204152956.13471-1-m.felsch@pengutronix.de>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 00/10] mtd: rawnand: denali: exec_op(),
+ controller/chip separation, and cleanups
+Date: Tue, 12 Feb 2019 16:12:52 +0900
+Message-ID: <1549955582-30346-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190204152956.13471-1-m.felsch@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, c.hemp@phytec.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Richard Weinberger <richard@nod.at>, Boris Brezillon <bbrezillon@kernel.org>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+I took time for the Denali driver to catch up with the latest framework.
 
-On Mon, Feb 04, 2019 at 04:29:55PM +0100, Marco Felsch wrote:
-> Partitions in the NOR and EEPROM are application specific. Prepare the
-> SoM device tree so platform device tree's can add partitions.
+ - switch over to exec_op() and remove legacy hooks
 
-Even though there is no in-tree user (and maybe there will never be) I
-would like to see this kind of patch applied.
+ - separate controller/chips
 
-Our usecase is that the paritioning is defined in the bootloader (here:
-barebox) and before jumping into Linux the (maybe) provided dts is fixed
-up to contain the right partitioning. So the Linux device tree doesn't
-usually include the partitioning, but as barebox contains a copy of the
-the device tree files from Linux it helps here to simplify the board
-specific device tree. So:
+ - various cleanups
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
--- =
+Masahiro Yamada (10):
+  mtd: rawnand: denali: use nand_chip pointer more for internal
+    functions
+  mtd: rawnand: denali: refactor syndrome layout handling for raw access
+  mtd: rawnand: denali: remove unneeded casts in denali_{read,write}_pio
+  mtd: rawnand: denali: switch over to ->exec_op() from legacy hooks
+  mtd: rawnand: denali: use more precise timeout for
+    NAND_OP_WAITRDT_INSTR
+  mtd: rawnand: denali: use bool type instead of int where appropriate
+  mtd: rawnand: denali_pci: rename goto labels
+  mtd: rawnand: denali: decouple controller and NAND chips
+  mtd: rawnand: denali: remove DENALI_NR_BANKS macro
+  mtd: rawnand: denali: clean up coding style
 
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+ .../devicetree/bindings/mtd/denali-nand.txt        |   39 +-
+ drivers/mtd/nand/raw/denali.c                      | 1144 +++++++++++---------
+ drivers/mtd/nand/raw/denali.h                      |  119 +-
+ drivers/mtd/nand/raw/denali_dt.c                   |   98 +-
+ drivers/mtd/nand/raw/denali_pci.c                  |   38 +-
+ 5 files changed, 850 insertions(+), 588 deletions(-)
+
+-- 
+2.7.4
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
