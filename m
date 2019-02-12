@@ -1,63 +1,140 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Tue, 12 Feb 2019 08:30:18 -0800
-Message-ID: <20190212163018.GL5720@atomide.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
- <20190212074237.2875-6-lokeshvutla@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2] dt-bindings: gpu: add bindings for the ARM Mali Bifrost GPU
+Date: Tue, 12 Feb 2019 17:38:38 +0100
+Message-ID: <20190212163838.22644-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212074237.2875-6-lokeshvutla@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: daniel@ffwll.ch
+Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add the bindings for the Bifrost family of ARM Mali GPUs.
 
-* Lokesh Vutla <lokeshvutla@ti.com> [190212 07:43]:
-> +The Interrupt Router (INTR) module provides a mechanism to route M
-> +interrupt inputs to N interrupt outputs, where all M inputs are selectable
-> +to be driven per N output. There is one register per output (MUXCNTL_N) that
-> +controls the selection.
-> +
-> +
-> +                                 Interrupt Router
-> +                             +----------------------+
-> +                             |  Inputs     Outputs  |
-> +        +-------+            | +------+             |
-> +        | GPIO  |----------->| | irq0 |             |       Host IRQ
-> +        +-------+            | +------+             |      controller
-> +                             |    .        +-----+  |      +-------+
-> +        +-------+            |    .        |  0  |  |----->|  IRQ  |
-> +        | INTA  |----------->|    .        +-----+  |      +-------+
-> +        +-------+            |    .          .      |
-> +                             | +------+      .      |
-> +                             | | irqM |    +-----+  |
-> +                             | +------+    |  N  |  |
-> +                             |             +-----+  |
-> +                             +----------------------+
+The Bifrost GPU architecture is similar to the Midgard family,
+but with a different Shader Core & Execution Engine structures.
 
-Is this always one-to-one mapping or can the same interrupt be routed to
-multiple targets like to the SoC and some coprocessor?
+Bindings are based on the Midgard family bindings, but the inner
+architectural changes makes it a separate family needing separate
+bindings.
 
-> +Configuration of these MUXCNTL_N registers is done by a system controller
-> +(like the Device Memory and Security Controller on K3 AM654 SoC). System
-> +controller will keep track of the used and unused registers within the Router.
-> +Driver should request the system controller to get the range of GIC IRQs
-> +assigned to the requesting hosts. It is the drivers responsibility to keep
-> +track of Host IRQs.
-> +
-> +Communication between the host processor running an OS and the system
-> +controller happens through a protocol called TI System Control Interface
-> +(TISCI protocol). For more details refer:
-> +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+The Bifrost GPUs are present in a number of recent SoCs, like the
+Amlogic G12A Family, and many other vendors.
+The Amlogic vendor specific compatible is added to handle the
+specific IP integration differences and dependencies.
 
-Care to describe a bit why the interrupts need to be routed by a system
-controller?
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+Changes since v1:
+- adding missing G31 and G52
+- fixed example
 
-Regards,
+ .../bindings/gpu/arm,mali-bifrost.txt         | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
 
-Tony
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+new file mode 100644
+index 000000000000..04a1d63ee578
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+@@ -0,0 +1,96 @@
++ARM Mali Bifrost GPU
++====================
++
++Required properties:
++
++- compatible :
++  * Must contain one of the following:
++    + "arm,mali-g31"
++    + "arm,mali-g51"
++    + "arm,mali-g52"
++    + "arm,mali-g71"
++    + "arm,mali-g72"
++    + "arm,mali-g76"
++  * which must be preceded by one of the following vendor specifics:
++    + "amlogic,meson-g12a-mali"
++
++- reg : Physical base address of the device and length of the register area.
++
++- interrupts : Contains the three IRQ lines required by Mali Bifrost devices.
++
++- interrupt-names : Contains the names of IRQ resources in the order they were
++  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
++
++
++Optional properties:
++
++- clocks : Phandle to clock for the Mali Bifrost device.
++
++- mali-supply : Phandle to regulator for the Mali device. Refer to
++  Documentation/devicetree/bindings/regulator/regulator.txt for details.
++
++- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
++  for details.
++
++- resets : Phandle of the GPU reset line.
++
++Vendor-specific bindings
++------------------------
++
++The Mali GPU is integrated very differently from one SoC to
++another. In order to accomodate those differences, you have the option
++to specify one more vendor-specific compatible, among:
++
++- "amlogic,meson-g12a-mali"
++  Required properties:
++  - resets : Should contain phandles of :
++    + GPU reset line
++    + GPU APB glue reset line
++
++Example for a Mali-G31:
++
++gpu@ffa30000 {
++	compatible = "amlogic,meson-g12a-mali", "arm,mali-g31";
++	reg = <0xffe40000 0x10000>;
++	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "job", "mmu", "gpu";
++	clocks = <&clk CLKID_MALI>;
++	mali-supply = <&vdd_gpu>;
++	operating-points-v2 = <&gpu_opp_table>;
++	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
++};
++
++gpu_opp_table: opp_table0 {
++	compatible = "operating-points-v2";
++
++	opp@533000000 {
++		opp-hz = /bits/ 64 <533000000>;
++		opp-microvolt = <1250000>;
++	};
++	opp@450000000 {
++		opp-hz = /bits/ 64 <450000000>;
++		opp-microvolt = <1150000>;
++	};
++	opp@400000000 {
++		opp-hz = /bits/ 64 <400000000>;
++		opp-microvolt = <1125000>;
++	};
++	opp@350000000 {
++		opp-hz = /bits/ 64 <350000000>;
++		opp-microvolt = <1075000>;
++	};
++	opp@266000000 {
++		opp-hz = /bits/ 64 <266000000>;
++		opp-microvolt = <1025000>;
++	};
++	opp@160000000 {
++		opp-hz = /bits/ 64 <160000000>;
++		opp-microvolt = <925000>;
++	};
++	opp@100000000 {
++		opp-hz = /bits/ 64 <100000000>;
++		opp-microvolt = <912500>;
++	};
++};
+-- 
+2.20.1
