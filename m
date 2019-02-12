@@ -1,101 +1,86 @@
-From: Mathieu Othacehe <m.othacehe@gmail.com>
-Subject: [PATCH 2/2] pwm: hibvt: Add hi3559v100 support
-Date: Tue, 12 Feb 2019 10:49:27 +0100
-Message-ID: <20190212094927.5900-2-m.othacehe@gmail.com>
-References: <20190212094927.5900-1-m.othacehe@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212094927.5900-1-m.othacehe@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mathieu Othacehe <m.othacehe@gmail.com>
+From: Frederic Chen <frederic.chen@mediatek.com>
+Subject: Re: [RFC PATCH V0 3/7] [media] dt-bindings: mt8183: Added DIP-SMEM
+ dt-bindings
+Date: Tue, 12 Feb 2019 17:50:00 +0800
+Message-ID: <1549965000.29488.4.camel@mtksdccf07>
+References: <1549020091-42064-1-git-send-email-frederic.chen@mediatek.com>
+ <1549020091-42064-4-git-send-email-frederic.chen@mediatek.com>
+ <20190209155935.afrrtf3twjmj23sm@valkosipuli.retiisi.org.uk>
+ <20190209182034.GC4505@pendragon.ideasonboard.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190209182034.GC4505@pendragon.ideasonboard.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, hans.verkuil@cisco.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for hi3559v100-shub-pwm and hisilicon,hi3559v100-pwm
-platforms. They require a special quirk: pwm has to be enabled again
-to force duty_cycle refresh.
-
-Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
----
- drivers/pwm/pwm-hibvt.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pwm/pwm-hibvt.c b/drivers/pwm/pwm-hibvt.c
-index 27c107e78d59..bf33aa24433c 100644
---- a/drivers/pwm/pwm-hibvt.c
-+++ b/drivers/pwm/pwm-hibvt.c
-@@ -49,6 +49,7 @@ struct hibvt_pwm_chip {
- 	struct clk *clk;
- 	void __iomem *base;
- 	struct reset_control *rstc;
-+	bool quirk_force_enable;
- };
- 
- struct hibvt_pwm_soc {
-@@ -56,6 +57,7 @@ struct hibvt_pwm_soc {
- };
- 
- static const struct hibvt_pwm_soc pwm_soc[2] = {
-+	{ .num_pwms = 2 },
- 	{ .num_pwms = 4 },
- 	{ .num_pwms = 8 },
- };
-@@ -148,13 +150,19 @@ static void hibvt_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- static int hibvt_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 				struct pwm_state *state)
- {
-+	struct hibvt_pwm_chip *hi_pwm_chip = to_hibvt_pwm_chip(chip);
-+
- 	if (state->polarity != pwm->state.polarity)
- 		hibvt_pwm_set_polarity(chip, pwm, state->polarity);
- 
- 	if (state->period != pwm->state.period ||
--		state->duty_cycle != pwm->state.duty_cycle)
-+		state->duty_cycle != pwm->state.duty_cycle) {
- 		hibvt_pwm_config(chip, pwm, state->duty_cycle, state->period);
- 
-+		if (hi_pwm_chip->quirk_force_enable && state->enabled)
-+			hibvt_pwm_enable(chip, pwm);
-+	}
-+
- 	if (state->enabled != pwm->state.enabled) {
- 		if (state->enabled)
- 			hibvt_pwm_enable(chip, pwm);
-@@ -176,6 +184,7 @@ static int hibvt_pwm_probe(struct platform_device *pdev)
- {
- 	const struct hibvt_pwm_soc *soc =
- 				of_device_get_match_data(&pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
- 	struct hibvt_pwm_chip *pwm_chip;
- 	struct resource *res;
- 	int ret;
-@@ -199,6 +208,15 @@ static int hibvt_pwm_probe(struct platform_device *pdev)
- 	pwm_chip->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pwm_chip->chip.of_pwm_n_cells = 3;
- 
-+	/*
-+	 * On those platforms, it is required to enable the
-+	 * pwm again each time we want to refresh the duty
-+	 * cycle.
-+	 */
-+	if (of_device_is_compatible(np, "hisilicon,hi3559v100-shub-pwm") ||
-+		of_device_is_compatible(np, "hisilicon,hi3559v100-pwm"))
-+		pwm_chip->quirk_force_enable = true;
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pwm_chip->base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(pwm_chip->base))
-@@ -250,8 +268,10 @@ static int hibvt_pwm_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id hibvt_pwm_of_match[] = {
--	{ .compatible = "hisilicon,hi3516cv300-pwm", .data = &pwm_soc[0] },
--	{ .compatible = "hisilicon,hi3519v100-pwm", .data = &pwm_soc[1] },
-+	{ .compatible = "hisilicon,hi3516cv300-pwm", .data = &pwm_soc[1] },
-+	{ .compatible = "hisilicon,hi3519v100-pwm", .data = &pwm_soc[2] },
-+	{ .compatible = "hisilicon,hi3559v100-shub-pwm", .data = &pwm_soc[2] },
-+	{ .compatible = "hisilicon,hi3559v100-pwm", .data = &pwm_soc[0] },
- 	{  }
- };
- MODULE_DEVICE_TABLE(of, hibvt_pwm_of_match);
--- 
-2.17.1
+RGVhciBMYXVyZW50IGFuZCBTYWthcmksCgoKT24gU2F0LCAyMDE5LTAyLTA5IGF0IDIwOjIwICsw
+MjAwLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+IEhlbGxvIEZyZWRlcmljLAo+IAo+IE9uIFNh
+dCwgRmViIDA5LCAyMDE5IGF0IDA1OjU5OjM1UE0gKzAyMDAsIFNha2FyaSBBaWx1cyB3cm90ZToK
+PiA+IEhpIEZyZWRlcmljLAo+ID4gCj4gPiBUaGFua3MgZm9yIHRoZSBwYXRjaHNldC4KPiA+IAo+
+ID4gQ291bGQgeW91IGFsc28gY2MgdGhlIGRldmljZXRyZWUgbGlzdCwgcGxlYXNlPwo+ID4gCj4g
+PiBPbiBGcmksIEZlYiAwMSwgMjAxOSBhdCAwNzoyMToyN1BNICswODAwLCBGcmVkZXJpYyBDaGVu
+IHdyb3RlOgo+ID4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIERUIGJpbmRpbmcgZG9jdW1lbnRhdGlv
+biBmb3IgdGhlIHNoYXJlZCBtZW1vcnkKPiA+ID4gYmV0d2VlbiBESVAgKERpZ2l0YWwgSW1hZ2Ug
+UHJvY2Vzc2luZykgdW5pdCBvZiB0aGUgY2FtZXJhIElTUCBzeXN0ZW0KPiA+ID4gYW5kIHRoZSBj
+by1wcm9jZXNzb3IgaW4gTWVkaWF0ZWsgU29Dcy4KPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6
+IEZyZWRlcmljIENoZW4gPGZyZWRlcmljLmNoZW5AbWVkaWF0ZWsuY29tPgo+ID4gPiAtLS0KPiA+
+ID4gIC4uLi9iaW5kaW5ncy9tZWRpYS9tZWRpYXRlayxkaXBfc21lbS50eHQgICAgICAgICAgIHwg
+MjkgKysrKysrKysrKysrKysrKysrKysrKwo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDI5IGluc2Vy
+dGlvbnMoKykKPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWVkaWEvbWVkaWF0ZWssZGlwX3NtZW0udHh0Cj4gPiA+IAo+ID4gPiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL21lZGlhdGVr
+LGRpcF9zbWVtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9t
+ZWRpYXRlayxkaXBfc21lbS50eHQKPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+ID4gaW5k
+ZXggMDAwMDAwMC4uNTUzMzcyMQo+ID4gPiAtLS0gL2Rldi9udWxsCj4gPiA+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9tZWRpYXRlayxkaXBfc21lbS50eHQK
+PiA+ID4gQEAgLTAsMCArMSwyOSBAQAo+ID4gPiArTWVkaWF0ZWsgSVNQIFNoYXJlZCBNZW1vcnkg
+RGV2aWNlCj4gPiA+ICsKPiA+ID4gK01lZGlhdGVrIElTUCBTaGFyZWQgTWVtb3J5IERldmljZSBp
+cyB1c2VkIHRvIG1hbmFnZSBzaGFyZWQgbWVtb3J5Cj4gPiA+ICthbW9uZyBDUFUsIElTUCBJUHMg
+YW5kIGNvcHJvY2Vzc29yLiBJdCBpcyBhc3NvY2lhdGVkIHdpdGggYSByZXNlcnZlZAo+ID4gPiAr
+bWVtb3J5IHJlZ2lvbiAoUGxlYXNlIHNlZSBEb2N1bWVudGF0aW9uXGRldmljZXRyZWVcYmluZGlu
+Z3NcCj4gPiA+ICtyZXNlcnZlZC1tZW1vcnlcbWVkaWF0ZWsscmVzZXJ2ZS1tZW1vcnktaXNwX3Nt
+ZW0udHh0KSBhbmQKPiA+IAo+ID4gcy9cXC9cLy9nOwo+ID4gCj4gPiA+ICthbmQgcHJvdmlkZSB0
+aGUgY29udGV4dCB0byBhbGxvY2F0ZSBtZW1vcnkgd2l0aCBkbWEgYWRkcmVzc2VzLgo+IAo+IERv
+ZXMgdGhpcyByZXByZXNlbnQgYSByZWFsIGRldmljZSAoYXMgaW4gSVAgY29yZSkgaW4gdGhlIFNv
+QyA/IFRoZXJlCj4gc2VlbXMgdG8gYmUgbm8gZHJpdmVyIGFzc29jaWF0ZWQgd2l0aCB0aGUgY29t
+cGF0aWJsZSBzdHJpbmcgZGVmaW5lZAo+IGhlcmVpbiBpbiB0aGlzIHBhdGNoIHNlcmllcywgd2hh
+dCBpcyB0aGlzIG5vZGUgdXNlZCBmb3IgPwoKSXQgZG9lcyBub3QgcmVwcmVzZW50IGEgcmVhbCBk
+ZXZpY2UuIEl0IGlzIHVzZWQgZm9yIGNyZWF0aW5nIHRoZQpESVAtc3BlY2lmaWMgdmIyIGJ1ZmZl
+ciBhbGxvY2F0aW9uIGNvbnRleHQgKGltcGxlbWVudGVkCmluIC9kcml2ZXJzL21lZGlhL3BsYXRm
+b3JtL210ay1pc3AvaXNwXzUwL2RpcC9tdGtfZGlwLXNtZW0tZHJ2LmMpLgpUaGUgY29tcGF0aWJs
+ZSBzdHJpbmcgaGFzIGJlZW4gcmVuYW1lZCBhcyDigJxtZWRpYXRlayxkaXBfc21lbeKAnSBpbiB0
+aGlzCnBhdGNoIHNlcmllcyBhbmQgSSB3aWxsIGNvcnJlY3QgaXQgaW4gdGhpcyBiaW5kaW5nIGRv
+Y3VtZW50LgoKPiAKPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+ICstIGNvbXBhdGli
+bGU6IFNob3VsZCBiZSAibWVkaWF0ZWssaXNwX3NtZW0iCj4gPiAKPiA+IHMvU2hvdWxkL1NoYWxs
+Lwo+ID4gCj4gPiA+ICsKPiA+ID4gKy0gaW9tbXVzOiBzaG91bGQgcG9pbnQgdG8gdGhlIHJlc3Bl
+Y3RpdmUgSU9NTVUgYmxvY2sgd2l0aCBtYXN0ZXIgcG9ydAo+ID4gCj4gPiBzL3Nob3VsZC9zaGFs
+bC8KPiA+IAo+ID4gPiArICBhcyBhcmd1bWVudC4gUGxlYXNlIHNldCB0aGUgcG9ydHMgd2hpY2gg
+bWF5IGJlIGFjY2Vzc2VkCj4gPiA+ICsgIHRocm91Z2ggdGhlIGNvbW1vbiBwYXRoLiBZb3UgY2Fu
+IHNlZQo+ID4gPiArICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvbWVk
+aWF0ZWssaW9tbXUudHh0Cj4gPiA+ICsgIGZvciB0aGUgZGV0YWlsLgo+ID4gPiArCj4gPiA+ICst
+IG1lZGlhdGVrLGxhcmI6IG11c3QgY29udGFpbiB0aGUgbG9jYWwgYXJiaXRlcnMgaW4gdGhlIGN1
+cnJlbnQgU29jcy4KPiA+IAo+ID4gUGVyaGFwcyAiU29DcyI/Cj4gPiAKPiA+ID4gKyAgUGxlYXNl
+IHNldCB0aGUgbGFyYiBvZiBjYW1zeXMgZm9yIFBhc3MgMSBhbmQgaW1nc3lzIGZvciBESVAsIG9y
+IGJvdGgKPiA+ID4gKyAgaWYgeW91IGFyZSB1c2luZyBhbGwgdGhlIGNhbWVyYSBmdW5jdGlvbi4g
+WW91IGNhbiBzZWUKPiA+ID4gKyAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
+bW9yeS1jb250cm9sbGVycy8KPiA+ID4gKyAgbWVkaWF0ZWssc21pLWxhcmIudHh0IGZvciB0aGUg
+ZGV0YWlsLgo+ID4gPiArCj4gPiA+ICtFeGFtcGxlOgo+ID4gPiArCWlzcF9zbWVtOiBpc3Bfc21l
+bSB7Cj4gPiA+ICsJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssaXNwX3NtZW0iOwo+ID4gPiArCQlt
+ZWRpYXRlayxsYXJiID0gPCZsYXJiNT47Cj4gPiA+ICsJCWlvbW11cyA9IDwmaW9tbXUgTTRVX1BP
+UlRfQ0FNX0lNR0k+Owo+ID4gPiArCX07Cj4gCgoKU2luY2VyZWx5LAoKRnJlZGVyaWMgQ2hlbgoK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
