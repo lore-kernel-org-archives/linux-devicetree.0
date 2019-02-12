@@ -1,97 +1,313 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/4] dt-bindings: gnss: add mediatek binding
-Date: Tue, 12 Feb 2019 15:18:46 -0600
-Message-ID: <CAL_JsqJPhuDDsEMvpVizewTuehOZTc84d+8Hq7o8C+O4UrBjYw@mail.gmail.com>
-References: <1548693481-1162-1-git-send-email-lollivier@baylibre.com>
- <1548693481-1162-3-git-send-email-lollivier@baylibre.com> <20190130155016.GA26536@bogus>
- <20190211092251.GV4686@localhost>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [RFC 4/6] power: supply: Ettus Research E31x charger driver
+Date: Tue, 12 Feb 2019 22:46:48 +0100
+Message-ID: <20190212214648.77lzvexfs2v46ejn@earth.universe>
+References: <20190212010143.3729-1-virendra.kakade@ni.com>
+ <20190212010143.3729-5-virendra.kakade@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zju52o37iaea74zq"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211092251.GV4686@localhost>
+Content-Disposition: inline
+In-Reply-To: <20190212010143.3729-5-virendra.kakade@ni.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Loys Ollivier <lollivier@baylibre.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Virendra Kakade <virendra.kakade@ni.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, moritz.fischer@ettus.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 3:23 AM Johan Hovold <johan@kernel.org> wrote:
->
-> On Wed, Jan 30, 2019 at 09:50:16AM -0600, Rob Herring wrote:
-> > On Mon, Jan 28, 2019 at 05:37:59PM +0100, Loys Ollivier wrote:
-> > > Add binding for Mediatek-based GNSS receivers.
-> > >
-> > > Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-> > > ---
-> > >
-> > > v3:
-> > > Removed the I2C and SPI interfaces references.
-> > > Removed the "mediatek,mt3339" compatible line.
-> > > Added the optional propertied (reset, fix)
-> > > Added the pin names for the optional properties.
-> > >
-> > > v2:
-> > > Renamed bindings from Globaltop/gtop to Mediatek/mtk.
-> > > Moved current-speed as an optional propertie.
-> > > Removed the status line in the example.
-> > > Added "mediatek,mt3339" compatible.
-> > >
-> > >  .../devicetree/bindings/gnss/mediatek.txt          | 37 ++++++++++++++++++++++
-> > >  1 file changed, 37 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/gnss/mediatek.txt b/Documentation/devicetree/bindings/gnss/mediatek.txt
-> > > new file mode 100644
-> > > index 000000000000..00650d81c5c8
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
-> > > @@ -0,0 +1,37 @@
-> > > +Mediatek-based GNSS Receiver DT binding
-> > > +
-> > > +Mediatek chipsets are used in GNSS-receiver modules produced by several
-> > > +vendors and can use an UART interface.
->
-> s/an/a/
->
-> > > +
-> > > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-> > > +properties.
-> > > +
-> > > +Required properties:
-> > > +
-> > > +- compatible       : Must be
-> > > +
-> > > +                   "globaltop,pa6h"
-> > > +
-> > > +- vcc-supply       : Main voltage regulator (pin name: VCC)
-> > > +
-> > > +Optional properties:
-> > > +
-> > > +- gtop,reset-gpios : GPIO used to reset the device
-> > > +                     (pin name: RESET, NRESET)
-> >
-> > reset-gpios is the standard name.
-> >
-> > > +- gtop,fix-gpios   : GPIO used to determine device position fix state
-> > > +                     (pin name: FIX, 3D_FIX)
->
-> I'm thinking we might need a standard name for fix-gpios as well. This
-> isn't a feature that is globaltop (or mediatek) specific, and other
-> manufacturers provide similar functionality through pins named UI_FIX,
-> or even LCKIND (lock indicator).
->
-> The pin is typically used to drive an indicator LED AFAIU, but the
-> characteristics of the signal varies from device to device (fw to fw),
-> for example, pulse when no lock and low otherwise, or pulse when a 2d or
-> 3d-fix is acquired, etc.
->
-> I'm not sure how useful the pulsing would be for software, but someone
-> might find a use for it in some form.
->
-> Rob, is this something we want to keep in the binding, and if so, how
-> about using a generic name such as "gnss-fix-gpios"?
 
-Sure. As long as details like being a pulse and when the pulse occurs
-are implied by compatible string. So we don't get an endless addition
-of properties to describe those.
+--zju52o37iaea74zq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+Hi,
+
+On Mon, Feb 11, 2019 at 07:01:41PM -0600, Virendra Kakade wrote:
+> Add support for E31x devices charger which is a sub-device of E31X-PMU.
+> Enables query of charger properties from device tree.
+>=20
+> Signed-off-by: Virendra Kakade <virendra.kakade@ni.com>
+> ---
+>  drivers/power/supply/Kconfig        |   6 +
+>  drivers/power/supply/Makefile       |   1 +
+>  drivers/power/supply/e31x-charger.c | 190 ++++++++++++++++++++++++++++
+>  include/linux/mfd/e31x-pmu.h        |   4 +
+>  4 files changed, 201 insertions(+)
+>  create mode 100644 drivers/power/supply/e31x-charger.c
+>=20
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index e901b9879e7e..3d043b8fd49c 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -660,4 +660,10 @@ config FUEL_GAUGE_SC27XX
+>  	 Say Y here to enable support for fuel gauge with SC27XX
+>  	 PMIC chips.
+> =20
+> +config E31X_CHARGER
+> +	tristate "Ettus Research E31x charger support"
+> +	depends on MFD_E31X_PMU
+> +	help
+> +	 This adds support for the battery charger in Ettus Research E31x PMU.
+> +
+>  endif # POWER_SUPPLY
+> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+> index b731c2a9b695..6f4f8ca5484e 100644
+> --- a/drivers/power/supply/Makefile
+> +++ b/drivers/power/supply/Makefile
+> @@ -87,3 +87,4 @@ obj-$(CONFIG_AXP288_CHARGER)	+=3D axp288_charger.o
+>  obj-$(CONFIG_CHARGER_CROS_USBPD)	+=3D cros_usbpd-charger.o
+>  obj-$(CONFIG_CHARGER_SC2731)	+=3D sc2731_charger.o
+>  obj-$(CONFIG_FUEL_GAUGE_SC27XX)	+=3D sc27xx_fuel_gauge.o
+> +obj-$(CONFIG_E31X_CHARGER)	+=3D e31x-charger.o
+> diff --git a/drivers/power/supply/e31x-charger.c b/drivers/power/supply/e=
+31x-charger.c
+> new file mode 100644
+> index 000000000000..f154482bf95e
+> --- /dev/null
+> +++ b/drivers/power/supply/e31x-charger.c
+> @@ -0,0 +1,190 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+This specifies GPLv2 only, but MODULE_LICENSE("GPL") specifies GPL2
+or later. Please fix one of them.
+
+> +/*
+> + * Copyright (c) 2018 National Instruments Corp
+> + * Author: Virendra Kakade <virendra.kakade@ni.com>
+> + *
+> + * Ettus Research E31x charger driver
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regmap.h>
+> +#include <linux/string.h>
+> +#include <linux/slab.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/delay.h>
+> +#include <linux/mfd/e31x-pmu.h>
+
+Please check the includes. Quite a few seem to be unused.
+
+> +
+> +#define E31X_PMU_CHARGER_HEALTH_MASK		GENMASK(1, 0)
+> +#define E31X_PMU_CHARGER_HEALTH_SHIFT		0
+> +#define E31X_PMU_CHARGER_CHARGE_TYPE_MASK	GENMASK(4, 3)
+> +#define E31X_PMU_CHARGER_CHARGE_TYPE_SHIFT	3
+> +
+> +struct e31x_charger_dev {
+> +	struct regmap *regmap;
+> +	struct power_supply *supply;
+> +};
+> +
+> +static int e31x_charger_get_health(struct e31x_charger_dev *charger,
+> +				   union power_supply_propval *val)
+> +{
+> +	u32 value;
+> +	int err;
+> +
+> +	err =3D regmap_read(charger->regmap, E31X_PMU_REG_CHARGER, &value);
+> +	if (err)
+> +		return err;
+> +
+> +	value =3D E31X_PMU_GET_FIELD(CHARGER_HEALTH, value);
+> +	switch (value) {
+> +	case 0x0:
+> +		val->intval =3D POWER_SUPPLY_HEALTH_GOOD;
+> +		break;
+> +	case 0x1:
+> +		val->intval =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
+> +		break;
+> +	case 0x2:
+> +		val->intval =3D POWER_SUPPLY_HEALTH_OVERVOLTAGE;
+> +		break;
+> +	case 0x3:
+> +		val->intval =3D POWER_SUPPLY_HEALTH_OVERHEAT;
+> +		break;
+> +	default:
+> +		val->intval =3D POWER_SUPPLY_HEALTH_UNKNOWN;
+> +		break;
+> +	};
+> +
+> +	return 0;
+> +}
+> +
+> +static int e31x_charger_get_type(struct e31x_charger_dev *charger,
+> +				 union power_supply_propval *val)
+> +{
+> +	u32 value;
+> +	int err;
+> +
+> +	err =3D regmap_read(charger->regmap, E31X_PMU_REG_CHARGER, &value);
+> +	if (err)
+> +		return err;
+> +
+> +	value =3D E31X_PMU_GET_FIELD(CHARGER_CHARGE_TYPE, value);
+> +	switch (value) {
+> +	case 0x0:
+> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_NONE;
+> +		break;
+> +	case 0x1:
+> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
+> +		break;
+> +	case 0x2:
+> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_FAST;
+> +		break;
+> +	default:
+> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_NONE;
+> +		break;
+> +	};
+> +	return 0;
+> +}
+> +
+> +static int e31x_charger_get_online(struct e31x_charger_dev *charger,
+> +				   union power_supply_propval *val)
+> +{
+> +	u32 value;
+> +	int err;
+> +
+> +	err =3D regmap_read(charger->regmap, E31X_PMU_REG_CHARGER, &value);
+> +	if (err)
+> +		return err;
+> +
+> +	value =3D E31X_PMU_GET_FIELD(CHARGER_ONLINE, value);
+> +	val->intval =3D !!value;
+> +
+> +	return 0;
+> +}
+> +
+> +static int e31x_charger_get_property(struct power_supply *psy,
+> +				     enum power_supply_property psp,
+> +				     union power_supply_propval *val)
+> +{
+> +	struct e31x_charger_dev *charger =3D power_supply_get_drvdata(psy);
+> +	int err =3D -EINVAL;
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_HEALTH:
+> +		return e31x_charger_get_health(charger, val);
+> +	case POWER_SUPPLY_PROP_CHARGE_TYPE:
+> +		return e31x_charger_get_type(charger, val);
+> +	case POWER_SUPPLY_PROP_ONLINE:
+> +		return e31x_charger_get_online(charger, val);
+> +	case POWER_SUPPLY_PROP_SCOPE:
+> +		val->intval =3D POWER_SUPPLY_SCOPE_SYSTEM;
+> +		return 0;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +static enum power_supply_property e31x_charger_properties[] =3D {
+> +	POWER_SUPPLY_PROP_HEALTH,
+> +	POWER_SUPPLY_PROP_CHARGE_TYPE,
+> +	POWER_SUPPLY_PROP_ONLINE,
+> +	POWER_SUPPLY_PROP_SCOPE,
+> +};
+> +
+> +static const struct power_supply_desc e31x_charger_desc =3D {
+> +	.name =3D "e31x-charger",
+> +	.type =3D POWER_SUPPLY_TYPE_MAINS,
+> +	.properties =3D e31x_charger_properties,
+> +	.num_properties =3D ARRAY_SIZE(e31x_charger_properties),
+> +	.get_property =3D e31x_charger_get_property,
+> +};
+> +
+> +static const struct of_device_id e31x_charger_id[] =3D {
+> +	{ .compatible =3D "ni,e31x-charger" },
+> +	{ },
+> +};
+> +
+> +static int e31x_charger_probe(struct platform_device *pdev)
+> +{
+> +	struct power_supply_config psy_cfg =3D {};
+> +	struct e31x_charger_dev *charger;
+> +
+> +	if (!of_device_is_available(pdev->dev.of_node))
+> +		return -ENODEV;
+> +
+> +	charger =3D devm_kzalloc(&pdev->dev, sizeof(*charger), GFP_KERNEL);
+> +	if (!charger)
+> +		return -ENOMEM;
+> +
+> +	charger->regmap =3D syscon_regmap_lookup_by_phandle(\
+
+useless \
+
+> +			pdev->dev.parent->of_node, "regmap");
+> +
+> +	psy_cfg.of_node =3D pdev->dev.of_node;
+> +	psy_cfg.drv_data =3D charger;
+> +
+> +	charger->supply =3D devm_power_supply_register(&pdev->dev,
+> +						     &e31x_charger_desc,
+> +						     &psy_cfg);
+> +
+> +	if (IS_ERR(charger->supply))
+> +		return PTR_ERR(charger->supply);
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver e31x_charger_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "e31x-charger",
+> +		.of_match_table =3D e31x_charger_id,
+> +	},
+> +	.probe =3D e31x_charger_probe,
+> +};
+> +module_platform_driver(e31x_charger_driver);
+> +
+> +MODULE_AUTHOR("Virendra Kakade <virendra.kakade@ni.com>");
+> +MODULE_DESCRIPTION("E31x charger driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/e31x-pmu.h b/include/linux/mfd/e31x-pmu.h
+> index c57d5a8c1aad..e0649845fe4d 100644
+> --- a/include/linux/mfd/e31x-pmu.h
+> +++ b/include/linux/mfd/e31x-pmu.h
+> @@ -12,9 +12,13 @@
+>  #include <linux/bitops.h>
+> =20
+>  #define E31X_PMU_REG_MISC      0x04
+> +#define E31X_PMU_REG_CHARGER   0x0c
+> =20
+>  #define E31X_PMU_GET_FIELD(name, reg) \
+>  	(((reg) & E31X_PMU_## name ##_MASK) >> \
+>  	E31X_PMU_## name ##_SHIFT)
+> =20
+> +#define E31X_PMU_CHARGER_ONLINE_MASK	BIT(2)
+> +#define E31X_PMU_CHARGER_ONLINE_SHIFT	2
+> +
+>  #endif /* MFD_E31X_PMU_H */
+
+Otherwise this looks good.
+
+-- Sebastian
+
+--zju52o37iaea74zq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlxjPsUACgkQ2O7X88g7
++pqPdA//UlODPX4uiVWGpoOU2iAxdEDSTzGHW+dHAc/LZ5/v2NeXP588CHR+Zltp
+cF1S//KK7Si/59b6xig2/yIi5mr2XKLHZRc6FPGASUBXhg7LbhFbZb5wFmLz9w2V
+yyi1DOAiLA1dNVAul1dJMDzOVcGHtLehjMtblvdtIx0MYi8DNcHGXT5r/f3MHeCX
+gqgD+4V3QATAXtGCZiKjPX5oVUzsss8+Dy4qVAARRWT70rnWvddhQXAfXMLgH0yb
+oyH74eCIhNMIgpVy7tgJeRRwtp6MQn5LCSPyW+Eobxma3IMhWziT94xbhB0LFa7n
+swycRFtbFpMDJx/XGE5GFL3UP6PUGTSHqmfL5wrcgT/AheS7Ij8L+DMPptvSGb9h
+LxzHOpDHXTugwGUwdUnhOgF1+Lc/+C8dSEmznRjP++RdqSxbHk275hE89RGBcGJ5
+SWLzbzVJFpewnTO6CDlm7GBvvw5uMPDKQGnWA0hkoO/Bq5j4lHugGOZ17e5LDB3Q
+Un9gvdeiG7bdBzMomK4qfy/1BG8DU7VAVaQPRQmhxWl9xCydQ+8gP1VoU8nYLbCk
+bnhSm6mI9rSE5LehoDAV8K9p8D7fiC9O6NVz3VxxTBflIMOoD3qy1HKcL9rkqrd5
+3Kt1WdVaCseQO4y31mopMtouS+nOYSprzxlGStVgIdTYjDG7vaY=
+=+osu
+-----END PGP SIGNATURE-----
+
+--zju52o37iaea74zq--
