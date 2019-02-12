@@ -1,63 +1,65 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 10/11] input: max77650: add onkey support
-Date: Tue, 12 Feb 2019 13:17:46 +0100
-Message-ID: <20190212121745.GE25613@amd>
-References: <20190201094736.32057-1-brgl@bgdev.pl>
- <20190201094736.32057-11-brgl@bgdev.pl>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 0/4] Add new device nodes for Spreadtrum SC9860 platform
+Date: Tue, 12 Feb 2019 12:20:35 +0000
+Message-ID: <20190212122035.GA20635@sirena.org.uk>
+References: <cover.1548052878.git.baolin.wang@linaro.org>
+ <CAK8P3a3UROFLTtEcNXKtMUN283UQ6auQUOXCR=6e3BdLu5K8Nw@mail.gmail.com>
+ <CAMz4kuLotnNom9kx2EmdfVEb+gvWfEbxoh6+hiqk87EjmtYJwA@mail.gmail.com>
+ <20190201130519.GH20797@sirena.org.uk>
+ <CAMz4kuJdPts31Ak-H=VAivvoqqPtxO5M1RdqrNPwTLT5d1h_7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZInfyf7laFu/Kiw7"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190201094736.32057-11-brgl@bgdev.pl>
+In-Reply-To: <CAMz4kuJdPts31Ak-H=VAivvoqqPtxO5M1RdqrNPwTLT5d1h_7w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ZInfyf7laFu/Kiw7
+--ZPt4rx8FFjLCG7dd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Tue, Feb 12, 2019 at 04:40:10PM +0800, Baolin Wang wrote:
+> On Fri, 1 Feb 2019 at 21:05, Mark Brown <broonie@kernel.org> wrote:
 
-> +	error =3D device_property_read_string(dev,
-> +					    "maxim,onkey-mode", &mode_prop);
-> +	if (error)
-> +		mode_prop =3D "push";
-> +
-> +	if (strcmp(mode_prop, "push") =3D=3D 0)
-> +		mode =3D MAX77650_ONKEY_MODE_PUSH;
-> +	else if (strcmp(mode_prop, "slide") =3D=3D 0)
-> +		mode =3D MAX77650_ONKEY_MODE_SLIDE;
-> +	else
-> +		return -EINVAL;
-=2E..
-> +	onkey->input->name =3D "max77650_onkey";
-> +	onkey->input->phys =3D "max77650_onkey/input0";
-> +	onkey->input->id.bustype =3D BUS_I2C;
-> +	input_set_capability(onkey->input, EV_KEY, onkey->code);
+> > You can just list all the individual device names in the of_match_table
+> > for the MFD and then it can bind to any of them.  You can always map
+> > them onto the same behaviour in the MFD driver if they are identical
+> > from a software point of view.
 
-Is EV_KEY correct for mode=3D=3Dslide?
+> If I understood correctly, as you suggested, we should add new
+> mfd_cell groups to list all different PMICs' device names. Something
+> like:
 
+I do think this is a good idea (registering the components of the MFD
+using mfd_cell), though it wasn't quite the point I was making.  Having
+individual device names matters less for Linux-internal names like this.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> But from my point, they are just some meaningless duplication, and
+> will waste lots of code there.
 
---ZInfyf7laFu/Kiw7
+I was more thinking of the of_match table that has the IDs that appear
+in DT - they're the one that's the ABI.  Look at something like wm8994
+where the driver has several IDs listed in the main table then selects
+function drivers based on that.
+
+--ZPt4rx8FFjLCG7dd
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlxiuWkACgkQMOfwapXb+vL97gCfeIC+c5OV205NgupxrKvuj5CO
-0kQAoI+IbZw8GC/aKAaDgtbl6y75BUXl
-=skQG
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxiuhAACgkQJNaLcl1U
+h9AIrwf/duaHeW8vd49sPs90dsantq17G7uAI3r2j6QKJdcp6vMTcKRvlq0qahnh
+ekHZkwL66Xqn+T0Hy58zRp2HKMmXOgTZAomEYQiLeZ1fAulq92j8jUROqQY5bNAh
+V8/55At5oa/BmfWu75pwqMahTHThP5F82XXtaE9jCSJmYwg19Fmy69WkoIm2uMUG
+2aSSqZI2kmELBUxWoErbVhqq0V0+BrgkLNxBtOZ1vmGqecV7eduAJqVls8jztS0k
+N4knC7ebvKAhQ8B/HvbbpCrg65jyZa59y/BdJ0eAGsyiVczLeL2PoO9dz+pG+04E
+/tGLg0VNm8KDei4/kDw2P6FtY/uZag==
+=QmcW
 -----END PGP SIGNATURE-----
 
---ZInfyf7laFu/Kiw7--
+--ZPt4rx8FFjLCG7dd--
