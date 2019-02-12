@@ -1,46 +1,103 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Tue, 12 Feb 2019 08:22:47 -0800
-Message-ID: <20190212162247.GK5720@atomide.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
- <20190212074237.2875-6-lokeshvutla@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/2] dt-bindings: clk: add G12A AO Clock and Reset Bindings
+Date: Tue, 12 Feb 2019 17:28:58 +0100
+Message-ID: <20190212162859.20743-2-narmstrong@baylibre.com>
+References: <20190212162859.20743-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212074237.2875-6-lokeshvutla@ti.com>
+In-Reply-To: <20190212162859.20743-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: jbrunet@baylibre.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add bindings for the Amlogic G12A AO Clock and Reset controllers.
 
-* Lokesh Vutla <lokeshvutla@ti.com> [190212 07:43]:
-> +Example:
-> +--------
-> +The following example demonstrates both interrupt router node and the consumer
-> +node(main gpio) on the AM654 SoC:
-> +
-> +main_intr: interrupt-controller0 {
-> +	compatible = "ti,sci-intr";
-> +	interrupt-controller;
-> +	interrupt-parent = <&gic500>;
-> +	#interrupt-cells = <4>;
-> +	ti,sci = <&dmsc>;
-> +	ti,sci-dst-id = <56>;
-> +	ti,sci-rm-range-girq = <0x1>;
-> +};
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/clock/amlogic,gxbb-aoclkc.txt    |  1 +
+ include/dt-bindings/clock/g12a-aoclkc.h       | 34 +++++++++++++++++++
+ include/dt-bindings/reset/g12a-aoclkc.h       | 18 ++++++++++
+ 3 files changed, 53 insertions(+)
+ create mode 100644 include/dt-bindings/clock/g12a-aoclkc.h
+ create mode 100644 include/dt-bindings/reset/g12a-aoclkc.h
 
-Can you describe a bit what the "ti,sci-dst-id" is above?
-
-These IDs seem to be listed at at [0] below, but is it really a property
-of the hardware? Or is it some enumeration of SoC devices in the firmware?
-
-Regards,
-
-Tony
-
-
-[0] http://downloads.ti.com/tisci/esd/latest/5_soc_doc/am6x/irq_dsts.html
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+index 79511d7bb321..c41f0be5d438 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
++++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+@@ -10,6 +10,7 @@ Required Properties:
+ 	- GXL (S905X, S905D) : "amlogic,meson-gxl-aoclkc"
+ 	- GXM (S912) : "amlogic,meson-gxm-aoclkc"
+ 	- AXG (A113D, A113X) : "amlogic,meson-axg-aoclkc"
++	- G12A (S905X2, S905D2, S905Y2) : "amlogic,meson-g12a-aoclkc"
+ 	followed by the common "amlogic,meson-gx-aoclkc"
+ - clocks: list of clock phandle, one for each entry clock-names.
+ - clock-names: should contain the following:
+diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-bindings/clock/g12a-aoclkc.h
+new file mode 100644
+index 000000000000..8db01ffbeb06
+--- /dev/null
++++ b/include/dt-bindings/clock/g12a-aoclkc.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (c) 2016 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * Copyright (c) 2018 Amlogic, inc.
++ * Author: Qiufang Dai <qiufang.dai@amlogic.com>
++ */
++
++#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
++#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
++
++#define CLKID_AO_AHB		0
++#define CLKID_AO_IR_IN		1
++#define CLKID_AO_I2C_M0		2
++#define CLKID_AO_I2C_S0		3
++#define CLKID_AO_UART		4
++#define CLKID_AO_PROD_I2C	5
++#define CLKID_AO_UART2		6
++#define CLKID_AO_IR_OUT		7
++#define CLKID_AO_SAR_ADC	8
++#define CLKID_AO_MAILBOX	9
++#define CLKID_AO_M3		10
++#define CLKID_AO_AHB_SRAM	11
++#define CLKID_AO_RTI		12
++#define CLKID_AO_M4_FCLK	13
++#define CLKID_AO_M4_HCLK	14
++#define CLKID_AO_CLK81		15
++#define CLKID_AO_SAR_ADC_CLK	18
++#define CLKID_AO_32K		23
++#define CLKID_AO_CEC		27
++#define CLKID_AO_CTS_RTC_OSCIN	28
++
++#endif
+diff --git a/include/dt-bindings/reset/g12a-aoclkc.h b/include/dt-bindings/reset/g12a-aoclkc.h
+new file mode 100644
+index 000000000000..bd2e2337135c
+--- /dev/null
++++ b/include/dt-bindings/reset/g12a-aoclkc.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (c) 2016 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
++#define DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
++
++#define RESET_AO_IR_IN		0
++#define RESET_AO_UART		1
++#define RESET_AO_I2C_M		2
++#define RESET_AO_I2C_S		3
++#define RESET_AO_SAR_ADC	4
++#define RESET_AO_UART2		5
++#define RESET_AO_IR_OUT		6
++
++#endif
+-- 
+2.20.1
