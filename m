@@ -2,8 +2,8 @@ Return-Path: <SRS0=nY8h=QT=sirena.org.uk=broonie@kernel.org>
 From: Mark Brown <broonie@kernel.org>
 Subject: Applied "dt-bindings: spi: imx: Add an entry for the i.MX8QM compatible" to the spi tree
 In-Reply-To: <20190126213011.15738-1-festevam@gmail.com>
-Message-Id: <20190212165905.96D781128113@debutante.sirena.org.uk>
-Date: Tue, 12 Feb 2019 16:59:05 +0000 (GMT)
+Message-Id: <20190212142227.91E1C1128113@debutante.sirena.org.uk>
+Date: Tue, 12 Feb 2019 14:22:27 +0000 (GMT)
 To: Fabio Estevam <festevam@gmail.com>
 Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, kernel@pengutronix.de, linux-imx@nxp.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.orglinux-spi@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
@@ -35,7 +35,7 @@ to this mail.
 Thanks,
 Mark
 
->From 97a6a2ddc2ea684fadd1021dd350c27d03113397 Mon Sep 17 00:00:00 2001
+>From 6b99a3f047a172d01a9681937a9e19fdf48114d3 Mon Sep 17 00:00:00 2001
 From: Fabio Estevam <festevam@gmail.com>
 Date: Sat, 26 Jan 2019 19:30:11 -0200
 Subject: [PATCH] dt-bindings: spi: imx: Add an entry for the i.MX8QM
