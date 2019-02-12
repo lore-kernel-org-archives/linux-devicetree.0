@@ -1,69 +1,61 @@
-From: Michael Kao <michael.kao@mediatek.com>
-Subject: Re: [PATCH 1/7] thermal: mediatek: fix register index error
-Date: Tue, 12 Feb 2019 16:20:13 +0800
-Message-ID: <1549959613.22716.6.camel@mtksdccf07>
-References: <1549006693-11659-1-git-send-email-michael.kao@mediatek.com>
-         <1549006693-11659-2-git-send-email-michael.kao@mediatek.com>
-         <6496b13f-57e4-af86-bb59-91a4705d91b0@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 11/11] mfd: pm8xxx: revert "disassociate old virq if
+ hwirq mapping already exists"
+Date: Tue, 12 Feb 2019 08:20:35 +0000
+Message-ID: <20190212082035.GQ20638@dell>
+References: <20190208021631.30252-1-masneyb@onstation.org>
+ <20190208021631.30252-12-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6496b13f-57e4-af86-bb59-91a4705d91b0@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190208021631.30252-12-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: =Zhang Rui <rui.zhang@intel.com>, =Eduardo Valentin <edubezval@gmail.com>, =Daniel Lezcano <daniel.lezcano@linaro.org>, =Rob Herring <robh+dt@kernel.org>, =Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+To: Brian Masney <masneyb@onstation.org>
+Cc: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, marc.zyngier@arm.com, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-02-04 at 18:24 +0100, Matthias Brugger wrote:
-> 
-> On 01/02/2019 08:38, michael.kao@mediatek.com wrote:
-> > From: Michael Kao <michael.kao@mediatek.com>
-> > 
-> > The index of msr and adcpnp should match the sensor
-> > which belongs to the selected bank in the for loop.
-> > 
-> 
-> If I get that right, this fixes
-> b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
-> 
-> So please add a fixes tag to the commit.
+On Thu, 07 Feb 2019, Brian Masney wrote:
 
-It is true that the patch is fix b7cf0053738c.
-I will add 
-Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
-to the commit message of next version.
-
-> Thanks,
-> Matthias
+> Now that ssbi-gpio is a proper hierarchical IRQ chip, and all in-tree
+> users of device tree have been updated, we can now drop the hack that
+> was introduced to disassociate the old Linux virq if a hwirq mapping
+> already exists. That patch was introduced to not break git bisect for
+> any existing boards.
 > 
-> > Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> > ---
-> >  drivers/thermal/mtk_thermal.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-> > index 0691f26..f646436 100644
-> > --- a/drivers/thermal/mtk_thermal.c
-> > +++ b/drivers/thermal/mtk_thermal.c
-> > @@ -431,7 +431,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
-> >  	u32 raw;
-> >  
-> >  	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
-> > -		raw = readl(mt->thermal_base + conf->msr[i]);
-> > +		raw = readl(mt->thermal_base +
-> > +			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
-> >  
-> >  		temp = raw_to_mcelsius(mt,
-> >  				       conf->bank_data[bank->id].sensors[i],
-> > @@ -568,7 +569,8 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
-> >  
-> >  	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
-> >  		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
-> > -		       mt->thermal_base + conf->adcpnp[i]);
-> > +		       mt->thermal_base +
-> > +		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
-> >  
-> >  	writel((1 << conf->bank_data[num].num_sensors) - 1,
-> >  	       mt->thermal_base + TEMP_MONCTL0);
-> > 
+> This change was tested on an APQ8060 DragonBoard.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Tested-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Changes since v1:
+> - None
+> 
+>  drivers/mfd/qcom-pm8xxx.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+> index 2f99a98ccee5..8eb2528793f9 100644
+> --- a/drivers/mfd/qcom-pm8xxx.c
+> +++ b/drivers/mfd/qcom-pm8xxx.c
+> @@ -380,12 +380,6 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip *chip,
+>  				  struct irq_domain *domain, unsigned int irq,
+>  				  irq_hw_number_t hwirq, unsigned int type)
+>  {
+> -	unsigned int old_virq;
+> -
+> -	old_virq = irq_find_mapping(domain, hwirq);
+> -	if (old_virq)
+> -		irq_domain_disassociate(domain, old_virq);
+> -
+
+For Linus:
+  
+  Acked-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
