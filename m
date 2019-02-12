@@ -1,55 +1,35 @@
-From: Martyn Welch <martyn.welch@collabora.com>
-Subject: Re: [PATCH] ARM: dts: am335x: Add support for Bosch Guardian
-Date: Tue, 12 Feb 2019 19:52:36 +0000
-Message-ID: <c227cc363297e7d0d9bd22a096e9b5f89fca8f5c.camel@collabora.com>
-References: <20190211122727.5582-1-martyn.welch@collabora.com>
-         <20190212184915.GN5720@atomide.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 04/12] of: select OF_RESERVED_MEM automatically
+Date: Tue, 12 Feb 2019 14:11:25 -0600
+Message-ID: <CAL_JsqJFGhTa+izRTeUxjtbyOek-zynZofOJGDK+xZbD4r5H0Q@mail.gmail.com>
+References: <20190211133554.30055-1-hch@lst.de> <20190211133554.30055-5-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212184915.GN5720@atomide.com>
+In-Reply-To: <20190211133554.30055-5-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: Linux IOMMU <iommu@lists.linux-foundation.org>, linux-xtensa@linux-xtensa.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, SH-Linux <linux-sh@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, x86@kernel.org, linux-mips@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, arcml <linux-snps-arc@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-02-12 at 10:49 -0800, Tony Lindgren wrote:
-> Hi,
-> 
-> * Martyn Welch <martyn.welch@collabora.com> [190211 04:27]:
-> > The Bosch Guardian is a TI am335x based device.
-> > 
-> > It's hardware specifications are as follows:
-> > 
-> >  * 256 MB DDR3 memory
-> >  * 512 MB NAND Flash
-> >  * USB OTG
-> >  * RS232
-> >  * MicroSD external storage
-> >  * LCD Display interface
-> 
-> Thanks applying into omap-for-v5.1/dt.
-> 
+On Mon, Feb 11, 2019 at 7:37 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> The OF_RESERVED_MEM can be used if we have either CMA or the generic
+> declare coherent code built and we support the early flattened DT.
+>
+> So don't bother making it a user visible options that is selected
+> by most configs that fit the above category, but just select it when
+> the requirements are met.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/arc/Kconfig     | 1 -
+>  arch/arm/Kconfig     | 1 -
+>  arch/arm64/Kconfig   | 1 -
+>  arch/csky/Kconfig    | 1 -
+>  arch/powerpc/Kconfig | 1 -
+>  arch/xtensa/Kconfig  | 1 -
+>  drivers/of/Kconfig   | 5 ++---
+>  7 files changed, 2 insertions(+), 9 deletions(-)
 
-Thanks Tony.
-
-> Do you have some link for this device for more
-> information?
-> 
-
-I'm not aware of any publicly available documentation at this time.
-
-> > +/include/ "tps65217.dtsi"
-> 
-> I'll update this to use #include "tps65217.dtsi"
-> while applying.
-> 
-
-OK, I found examples of both, guess I picked the wrong one :-)
-
-Martyn
-
-> Regards,
-> 
-> Tony
+Reviewed-by: Rob Herring <robh@kernel.org>
