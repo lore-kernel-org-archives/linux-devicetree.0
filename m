@@ -1,35 +1,47 @@
-From: Mark Zhang <markz@nvidia.com>
-Subject: [PATCH v3 0/4] Add max77620 charging & low battery support
-Date: Tue, 12 Feb 2019 14:43:49 +0800
-Message-ID: <20190212064353.7451-1-markz@nvidia.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 1/2] ARM: dts: pfla02: prepare storage devices to add
+ paritions
+Date: Tue, 12 Feb 2019 08:12:03 +0100
+Message-ID: <20190212071202.52ctrzbr4uoi634x@pengutronix.de>
+References: <20190204152956.13471-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org, Mark Zhang <markz@nvidia.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190204152956.13471-1-m.felsch@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, c.hemp@phytec.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds support for max77620 backup battery charging and
-low battery monitoring.
+Hello,
 
-Changes in v3:
-- Add unit suffix to backup battery charging dts properties
-- Reduce/optimize the low battery monitoring dts properties
+On Mon, Feb 04, 2019 at 04:29:55PM +0100, Marco Felsch wrote:
+> Partitions in the NOR and EEPROM are application specific. Prepare the
+> SoM device tree so platform device tree's can add partitions.
 
-Changes in v2:
-- Add devicetree binding documentation
+Even though there is no in-tree user (and maybe there will never be) I
+would like to see this kind of patch applied.
 
-Mark Zhang (4):
-  mfd: max77620: Add backup battery charger support
-  mfd: max77620: add documentation for backup battery charging
-  mfd: max77620: Add low battery monitor support
-  mfd: max77620: add documentation for low battery monitoring
+Our usecase is that the paritioning is defined in the bootloader (here:
+barebox) and before jumping into Linux the (maybe) provided dts is fixed
+up to contain the right partitioning. So the Linux device tree doesn't
+usually include the partitioning, but as barebox contains a copy of the
+the device tree files from Linux it helps here to simplify the board
+specific device tree. So:
 
- .../devicetree/bindings/mfd/max77620.txt      |  34 ++++++
- drivers/mfd/max77620.c                        | 115 +++++++++++++++++-
- 2 files changed, 148 insertions(+), 1 deletion(-)
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
---=20
-2.19.2
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
