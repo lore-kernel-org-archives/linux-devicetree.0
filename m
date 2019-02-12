@@ -1,78 +1,42 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 5/7] drm/sun4i: Rely on dma interconnect for our RAM
- offset
-Date: Tue, 12 Feb 2019 18:46:40 +0000
-Message-ID: <16cb9f67-6b10-fbc3-6222-5364e718721b@arm.com>
-References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
- <dfbdedf89c6a36f6fe5564e7c518664fa9e828c0.1549897336.git-series.maxime.ripard@bootlin.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am335x: Add support for Bosch Guardian
+Date: Tue, 12 Feb 2019 10:49:15 -0800
+Message-ID: <20190212184915.GN5720@atomide.com>
+References: <20190211122727.5582-1-martyn.welch@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <dfbdedf89c6a36f6fe5564e7c518664fa9e828c0.1549897336.git-series.maxime.ripard@bootlin.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, Yong Deng <yong.deng@magewell.com>, Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, Dave Martin <dave.martin@arm.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Georgi Djakov <georgi.djakov@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190211122727.5582-1-martyn.welch@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martyn Welch <martyn.welch@collabora.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMDIvMjAxOSAxNTowMiwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBOb3cgdGhhdCB3ZSBj
-YW4gZXhwcmVzcyBvdXIgRE1BIHRvcG9sb2d5LCByZWx5IG9uIHRob3NlIHByb3BlcnR5IGluc3Rl
-YWQgb2YKPiBoYXJkY29kaW5nIGFuIG9mZnNldCBmcm9tIHRoZSBkbWFfYWRkcl90IHdoaWNoIHdh
-c24ndCByZWFsbHkgZ3JlYXQuCj4gCj4gV2Ugc3RpbGwgbmVlZCB0byBhZGQgc29tZSBjb2RlIHRv
-IGRlYWwgd2l0aCB0aGUgb2xkIERUIHRoYXQgd291bGQgbGFjayB0aGF0Cj4gcHJvcGVydHksIGJ1
-dCB3ZSBtb3ZlIHRoZSBvZmZzZXQgdG8gdGhlIERSTSBkZXZpY2UgZG1hX3Bmbl9vZmZzZXQgdG8g
-YmUKPiBhYmxlIHRvIHJlbHkgb24ganVzdCB0aGUgZG1hX2FkZHJfdCBhc3NvY2lhdGVkIHRvIHRo
-ZSBHRU0gb2JqZWN0Lgo+IAo+IEFja2VkLWJ5OiBEYW5pZWwgVmV0dGVyIDxkYW5pZWwudmV0dGVy
-QGZmd2xsLmNoPgo+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRA
-Ym9vdGxpbi5jb20+Cj4gLS0tCj4gICBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2Vu
-ZC5jIHwgMjggKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLQo+ICAgMSBmaWxlIGNoYW5nZWQs
-IDIxIGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9zdW40aS9zdW40aV9iYWNrZW5kLmMgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkv
-c3VuNGlfYmFja2VuZC5jCj4gaW5kZXggOWU5MjU1ZWU1OWNkLi4xODQ2YTFiMzBmZWEgMTAwNjQ0
-Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2JhY2tlbmQuYwo+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9iYWNrZW5kLmMKPiBAQCAtMzgzLDEzICszODMsNiBA
-QCBpbnQgc3VuNGlfYmFja2VuZF91cGRhdGVfbGF5ZXJfYnVmZmVyKHN0cnVjdCBzdW40aV9iYWNr
-ZW5kICpiYWNrZW5kLAo+ICAgCXBhZGRyID0gZHJtX2ZiX2NtYV9nZXRfZ2VtX2FkZHIoZmIsIHN0
-YXRlLCAwKTsKPiAgIAlEUk1fREVCVUdfRFJJVkVSKCJTZXR0aW5nIGJ1ZmZlciBhZGRyZXNzIHRv
-ICVwYWRcbiIsICZwYWRkcik7Cj4gICAKPiAtCS8qCj4gLQkgKiBiYWNrZW5kIERNQSBhY2Nlc3Nl
-cyBEUkFNIGRpcmVjdGx5LCBieXBhc3NpbmcgdGhlIHN5c3RlbQo+IC0JICogYnVzLiBBcyBzdWNo
-LCB0aGUgYWRkcmVzcyByYW5nZSBpcyBkaWZmZXJlbnQgYW5kIHRoZSBidWZmZXIKPiAtCSAqIGFk
-ZHJlc3MgbmVlZHMgdG8gYmUgY29ycmVjdGVkLgo+IC0JICovCj4gLQlwYWRkciAtPSBQSFlTX09G
-RlNFVDsKPiAtCj4gICAJaWYgKGZiLT5mb3JtYXQtPmlzX3l1dikKPiAgIAkJcmV0dXJuIHN1bjRp
-X2JhY2tlbmRfdXBkYXRlX3l1dl9idWZmZXIoYmFja2VuZCwgZmIsIHBhZGRyKTsKPiAgIAo+IEBA
-IC04MzUsNiArODI4LDI3IEBAIHN0YXRpYyBpbnQgc3VuNGlfYmFja2VuZF9iaW5kKHN0cnVjdCBk
-ZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+ICAgCWRldl9zZXRfZHJ2ZGF0YShk
-ZXYsIGJhY2tlbmQpOwo+ICAgCXNwaW5fbG9ja19pbml0KCZiYWNrZW5kLT5mcm9udGVuZF9sb2Nr
-KTsKPiAgIAo+ICsJaWYgKG9mX2ZpbmRfcHJvcGVydHkoZGV2LT5vZl9ub2RlLCAiaW50ZXJjb25u
-ZWN0cyIsIE5VTEwpKSB7Cj4gKwkJLyoKPiArCQkgKiBUaGlzIGFzc3VtZSB3ZSBoYXZlIHRoZSBz
-YW1lIERNQSBjb25zdHJhaW50cyBmb3IgYWxsIG91ciB0aGUKPiArCQkgKiBkZXZpY2VzIGluIG91
-ciBwaXBlbGluZSAoYWxsIHRoZSBiYWNrZW5kcywgYnV0IGFsc28gdGhlCj4gKwkJICogZnJvbnRl
-bmRzKS4gVGhpcyBzb3VuZHMgYmFkLCBidXQgaXQgaGFzIGFsd2F5cyBiZWVuIHRoZSBjYXNlCj4g
-KwkJICogZm9yIHVzLCBhbmQgRFJNIGRvZXNuJ3QgZG8gcGVyLWRldmljZSBhbGxvY2F0aW9uIGVp
-dGhlciwgc28KPiArCQkgKiB3ZSB3b3VsZCBuZWVkIHRvIGZpeCBEUk0gZmlyc3QuLi4KPiArCQkg
-Ki8KPiArCQlyZXQgPSBvZl9kbWFfY29uZmlndXJlKGRybS0+ZGV2LCBkZXYtPm9mX25vZGUsIHRy
-dWUpOwoKSXQgd291bGQgYmUgZXZlbiBuaWNlciBpZiB3ZSBjb3VsZCBlbnN1cmUgdGhhdCBkcm0t
-PmRldiBvcmlnaW5hdGVzIGZyb20gCmEgRFQgbm9kZSB3aGljaCBoYXMgdGhlIGFwcHJvcHJpYXRl
-IGludGVyY29ubmVjdHMgcHJvcGVydHkgaXRzZWxmLCBzdWNoIAp0aGF0IHdlIGNhbiBhc3N1bWUg
-aXQncyBhbHJlYWR5IGNvbmZpZ3VyZWQgY29ycmVjdGx5LgoKUm9iaW4uCgo+ICsJCWlmIChyZXQp
-Cj4gKwkJCXJldHVybiByZXQ7Cj4gKwl9IGVsc2Ugewo+ICsJCS8qCj4gKwkJICogSWYgd2UgZG9u
-J3QgaGF2ZSB0aGUgaW50ZXJjb25uZWN0IHByb3BlcnR5LCBtb3N0IGxpa2VseQo+ICsJCSAqIGJl
-Y2F1c2Ugb2YgYW4gb2xkIERULCB3ZSBuZWVkIHRvIHNldCB0aGUgRE1BIG9mZnNldCBieSBoYW5k
-Cj4gKwkJICogb24gb3VyIGRldmljZSBzaW5jZSB0aGUgUkFNIG1hcHBpbmcgaXMgYXQgMCBmb3Ig
-dGhlIERNQSBidXMsCj4gKwkJICogdW5saWtlIHRoZSBDUFUuCj4gKwkJICovCj4gKwkJZHJtLT5k
-ZXYtPmRtYV9wZm5fb2Zmc2V0ID0gUEhZU19QRk5fT0ZGU0VUOwo+ICsJfQo+ICsKPiAgIAliYWNr
-ZW5kLT5lbmdpbmUubm9kZSA9IGRldi0+b2Zfbm9kZTsKPiAgIAliYWNrZW5kLT5lbmdpbmUub3Bz
-ID0gJnN1bjRpX2JhY2tlbmRfZW5naW5lX29wczsKPiAgIAliYWNrZW5kLT5lbmdpbmUuaWQgPSBz
-dW40aV9iYWNrZW5kX29mX2dldF9pZChkZXYtPm9mX25vZGUpOwo+IApfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi,
+
+* Martyn Welch <martyn.welch@collabora.com> [190211 04:27]:
+> The Bosch Guardian is a TI am335x based device.
+> 
+> It's hardware specifications are as follows:
+> 
+>  * 256 MB DDR3 memory
+>  * 512 MB NAND Flash
+>  * USB OTG
+>  * RS232
+>  * MicroSD external storage
+>  * LCD Display interface
+
+Thanks applying into omap-for-v5.1/dt.
+
+Do you have some link for this device for more
+information?
+
+> +/include/ "tps65217.dtsi"
+
+I'll update this to use #include "tps65217.dtsi"
+while applying.
+
+Regards,
+
+Tony
