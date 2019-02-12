@@ -1,238 +1,84 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [RFC PATCH v1 3/3] regulator: bd718x7: Support SNVS low power state
-Date: Tue, 12 Feb 2019 16:19:38 +0200
-Message-ID: <06c2f2f730b07caeb1f2fb86be60c02b21d7bea9.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 2/2] pwm: hibvt: Add hi3559v100 support
+Date: Tue, 12 Feb 2019 15:28:50 +0100
+Message-ID: <20190212142850.iwgi4n6v6oep4oin@pengutronix.de>
+References: <20190212094927.5900-1-m.othacehe@gmail.com>
+ <20190212094927.5900-2-m.othacehe@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20190212094927.5900-2-m.othacehe@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong =?utf-8?B?4oCO?= <yibin.gong@nxp.com>, Elven Wang =?utf-8?B?4oCO?= <elven.wang@nxp.com>, Anson Huang =?utf-8?B?4oCO?= <anson.huang@nxp.com>
+To: Mathieu Othacehe <m.othacehe@gmail.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-read ROHM BD71837 / BD71847 specific device tree bindings for
-controlling the PMIC shutdown/reset states and voltages for
-different HW states. The PMIC was designed to be used with NXP
-i.MX8 SoC and it supports SNVS low power state which seems to
-be typical for NXP i.MX SoCs. However, when SNVS is used we must
-not allow SW to control enabling/disabling those regulators which
-are crucial for system to boot as there is a HW limitation which
-causes SW controlled regulators to be kept shut down after SNVS
-reset.
+On Tue, Feb 12, 2019 at 10:49:27AM +0100, Mathieu Othacehe wrote:
+> Add support for hi3559v100-shub-pwm and hisilicon,hi3559v100-pwm
+> platforms. They require a special quirk: pwm has to be enabled again
+> to force duty_cycle refresh.
+> 
+> Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
+> ---
+>  drivers/pwm/pwm-hibvt.c | 26 +++++++++++++++++++++++---
+>  1 file changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-hibvt.c b/drivers/pwm/pwm-hibvt.c
+> index 27c107e78d59..bf33aa24433c 100644
+> --- a/drivers/pwm/pwm-hibvt.c
+> +++ b/drivers/pwm/pwm-hibvt.c
+> @@ -49,6 +49,7 @@ struct hibvt_pwm_chip {
+>  	struct clk *clk;
+>  	void __iomem *base;
+>  	struct reset_control *rstc;
+> +	bool quirk_force_enable;
+>  };
+>  
+>  struct hibvt_pwm_soc {
+> @@ -56,6 +57,7 @@ struct hibvt_pwm_soc {
+>  };
+>  
+>  static const struct hibvt_pwm_soc pwm_soc[2] = {
+> +	{ .num_pwms = 2 },
+>  	{ .num_pwms = 4 },
+>  	{ .num_pwms = 8 },
 
-Allow setting the SNVS to be used as reset target state and allow
-marking those regulators which are critical for boot.
+The members of this struct are used as of-data (in struct
+of_device_id::data below). When looking at the usage:
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
+	{ .compatible = "hisilicon,hi3516cv300-pwm", .data = &pwm_soc[1] },
+	{ .compatible = "hisilicon,hi3519v100-pwm", .data = &pwm_soc[2] },
+	{ .compatible = "hisilicon,hi3559v100-shub-pwm", .data = &pwm_soc[2] },
+	{ .compatible = "hisilicon,hi3559v100-pwm", .data = &pwm_soc[0] },
 
-Please not apply as such. This is compile-tested only and sent
-for collecting feedback. If idea is Ok I will do proper testing
-and send a non RFC patch.
+this isn't exactly easy to understand. I would prefer to do it as
+follows:
 
- drivers/regulator/bd718x7-regulator.c | 135 ++++++++++++++++++++++++++++++++++
- 1 file changed, 135 insertions(+)
+	static const struct hibvt_pwm_soc hi3516cv300_soc_info = {
+		.num_pwms = 2,
+	};
+	...
 
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index ccea133778c8..327ef9223cb0 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -350,6 +350,135 @@ static const struct reg_init bd71837_ldo6_inits[] = {
- 	},
- };
- 
-+#define NUM_DVS_BUCKS 4
-+
-+struct of_dvs_setting {
-+	const char *prop;
-+	unsigned int reg;
-+};
-+
-+static int set_dvs_levels(const struct of_dvs_setting *dvs,
-+			  struct device_node *np,
-+			  const struct regulator_desc *desc,
-+			  struct regmap *regmap)
-+{
-+	int ret, i;
-+	unsigned int uv;
-+
-+	ret = of_property_read_u32(np, dvs->prop, &uv);
-+	if (ret) {
-+		if (ret != -EINVAL)
-+			return ret;
-+		return 0;
-+	}
-+
-+	for (i = 0; i < desc->n_voltages; i++) {
-+		ret = regulator_desc_list_voltage_linear_range(desc, i);
-+		if (ret < 0)
-+			continue;
-+		if (ret == uv) {
-+			i <<= ffs(desc->vsel_mask) - 1;
-+			ret = regmap_update_bits(regmap, dvs->reg,
-+						 DVS_BUCK_RUN_MASK, i);
-+			break;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static int buck4_set_hw_dvs_levels(struct device_node *np,
-+			    const struct regulator_desc *desc,
-+			    struct regulator_config *cfg)
-+{
-+	int ret, i;
-+	const struct of_dvs_setting dvs[] = {
-+		{
-+			.prop = "rohm,dvs-run-voltage",
-+			.reg = BD71837_REG_BUCK4_VOLT_RUN,
-+		},
-+	};
-+
-+	for (i = 0; i < ARRAY_SIZE(dvs); i++) {
-+		ret = set_dvs_levels(&dvs[i], np, desc, cfg->regmap);
-+		if (ret)
-+			break;
-+	}
-+	return ret;
-+}
-+static int buck3_set_hw_dvs_levels(struct device_node *np,
-+			    const struct regulator_desc *desc,
-+			    struct regulator_config *cfg)
-+{
-+	int ret, i;
-+	const struct of_dvs_setting dvs[] = {
-+		{
-+			.prop = "rohm,dvs-run-voltage",
-+			.reg = BD71837_REG_BUCK3_VOLT_RUN,
-+		},
-+	};
-+
-+	for (i = 0; i < ARRAY_SIZE(dvs); i++) {
-+		ret = set_dvs_levels(&dvs[i], np, desc, cfg->regmap);
-+		if (ret)
-+			break;
-+	}
-+	return ret;
-+}
-+
-+static int buck2_set_hw_dvs_levels(struct device_node *np,
-+			    const struct regulator_desc *desc,
-+			    struct regulator_config *cfg)
-+{
-+	int ret, i;
-+	const struct of_dvs_setting dvs[] = {
-+		{
-+			.prop = "rohm,dvs-run-voltage",
-+			.reg = BD718XX_REG_BUCK2_VOLT_RUN,
-+		},
-+		{
-+			.prop = "rohm,dvs-idle-voltage",
-+			.reg = BD718XX_REG_BUCK2_VOLT_IDLE,
-+		},
-+	};
-+
-+
-+
-+	for (i = 0; i < ARRAY_SIZE(dvs); i++) {
-+		ret = set_dvs_levels(&dvs[i], np, desc, cfg->regmap);
-+		if (ret)
-+			break;
-+	}
-+	return ret;
-+}
-+
-+static int buck1_set_hw_dvs_levels(struct device_node *np,
-+			    const struct regulator_desc *desc,
-+			    struct regulator_config *cfg)
-+{
-+	int ret, i;
-+	const struct of_dvs_setting dvs[] = {
-+		{
-+			.prop = "rohm,dvs-run-voltage",
-+			.reg = BD718XX_REG_BUCK1_VOLT_RUN,
-+		},
-+		{
-+			.prop = "rohm,dvs-idle-voltage",
-+			.reg = BD718XX_REG_BUCK1_VOLT_IDLE,
-+		},
-+		{
-+			.prop = "rohm,dvs-suspend-voltage",
-+			.reg = BD718XX_REG_BUCK1_VOLT_SUSP,
-+		},
-+	};
-+
-+	for (i = 0; i < ARRAY_SIZE(dvs); i++) {
-+		ret = set_dvs_levels(&dvs[i], np, desc, cfg->regmap);
-+		if (ret)
-+			break;
-+	}
-+	return ret;
-+}
-+
- static const struct bd718xx_regulator_data bd71847_regulators[] = {
- 	{
- 		.desc = {
-@@ -368,6 +497,7 @@ static const struct bd718xx_regulator_data bd71847_regulators[] = {
- 			.enable_reg = BD718XX_REG_BUCK1_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
-+			.of_parse_cb = buck1_set_hw_dvs_levels,
- 		},
- 		.init = {
- 			.reg = BD718XX_REG_BUCK1_CTRL,
-@@ -391,6 +521,7 @@ static const struct bd718xx_regulator_data bd71847_regulators[] = {
- 			.enable_reg = BD718XX_REG_BUCK2_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
-+			.of_parse_cb = buck2_set_hw_dvs_levels,
- 		},
- 		.init = {
- 			.reg = BD718XX_REG_BUCK2_CTRL,
-@@ -662,6 +793,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.enable_reg = BD718XX_REG_BUCK1_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
-+			.of_parse_cb = buck1_set_hw_dvs_levels,
- 		},
- 		.init = {
- 			.reg = BD718XX_REG_BUCK1_CTRL,
-@@ -685,6 +817,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.enable_reg = BD718XX_REG_BUCK2_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
-+			.of_parse_cb = buck1_set_hw_dvs_levels,
- 		},
- 		.init = {
- 			.reg = BD718XX_REG_BUCK2_CTRL,
-@@ -708,6 +841,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.enable_reg = BD71837_REG_BUCK3_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
-+			.of_parse_cb = buck3_set_hw_dvs_levels,
- 		},
- 		.init = {
- 			.reg = BD71837_REG_BUCK3_CTRL,
-@@ -731,6 +865,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.enable_reg = BD71837_REG_BUCK4_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
-+			.of_parse_cb = buck4_set_hw_dvs_levels,
- 		},
- 		.init = {
- 			.reg = BD71837_REG_BUCK4_CTRL,
--- 
-2.14.3
+	static const struct of_device_id hibvt_pwm_of_match[] = {
+		{ .compatible = "hisilicon,hi3516cv300-pwm", .data = &hi3516cv300_soc_info },
+		...
+	};
 
+Then you could also add a member to hibvt_pwm_soc to signal if that
+force_enable quirk is necessary and would not need to use
+of_device_is_compatible() to determine this. The result is that you have
+a description of all relevant differences in a single place.
+
+@Thierry: Also this is yet another driver instance where a num-pwms
+property would simplify the driver because up to before this patch this
+was the only difference between the different variants.
+
+Best regards
+Uwe
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
