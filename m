@@ -1,267 +1,1052 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v4 2/8] clk: samsung: add new clocks for DMC for
- Exynos5422 SoC
-Date: Tue, 12 Feb 2019 15:04:08 +0900
-Message-ID: <f8ed6d63-1513-54fa-616b-57977d4f403e@samsung.com>
-References: <CGME20190201164719eucas1p2091c6d41a6cc21a3d36081daf4bc8267@eucas1p2.samsung.com>
-        <1549039612-28905-1-git-send-email-l.luba@partner.samsung.com>
-        <1549039612-28905-3-git-send-email-l.luba@partner.samsung.com>
-        <CAGTfZH0VOSCfp8u416S45Tv9BgNcr_O_i88x6aY68Q7a7+=o4Q@mail.gmail.com>
-        <ae5a3ed8-a075-5ee4-e50a-dc4d2a9c5485@partner.samsung.com>
+From: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] drm/mediatek: add mipi_tx driver for mt8183
+Date: Tue, 12 Feb 2019 14:19:01 +0800
+Message-ID: <20190212061901.116564-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae5a3ed8-a075-5ee4-e50a-dc4d2a9c5485@partner.samsung.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, cwchoi00@gmail.com
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark
+ Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: stonea168-9Onoh4P/yGk@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+This patch adds mipi tx driver support for mt8183.
 
-On 19. 2. 11. 오후 8:11, Lukasz Luba wrote:
-> Hi Chanwoo,
-> 
-> On 2/3/19 10:56 AM, Chanwoo Choi wrote:
->> Hi Lukasz,
->>
->> I recommend that please don't send the version up patchset before
->> finishing the discussion.
->>
->> 2019년 2월 2일 (토) 오전 2:47, Lukasz Luba <l.luba@partner.samsung.com>님이 작성:
->>>
->>> This patch provides support for clocks needed for Dynamic Memory Controller
->>> in Exynos5422 SoC. It adds CDREX base register addresses, new DIV, MUX and
->>> GATE entries.
->>>
->>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->>> ---
->>>   drivers/clk/samsung/clk-exynos5420.c | 46 ++++++++++++++++++++++++++++++++----
->>>   1 file changed, 42 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
->>> index 34cce3c..f1a4f56 100644
->>> --- a/drivers/clk/samsung/clk-exynos5420.c
->>> +++ b/drivers/clk/samsung/clk-exynos5420.c
->>> @@ -132,6 +132,8 @@
->>>   #define BPLL_LOCK              0x20010
->>>   #define BPLL_CON0              0x20110
->>>   #define SRC_CDREX              0x20200
->>> +#define GATE_BUS_CDREX0                0x20700
->>> +#define GATE_BUS_CDREX1                0x20704
->>>   #define DIV_CDREX0             0x20500
->>>   #define DIV_CDREX1             0x20504
->>>   #define KPLL_LOCK              0x28000
->>> @@ -248,6 +250,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
->>>          DIV_CDREX1,
->>>          SRC_KFC,
->>>          DIV_KFC0,
->>> +       GATE_BUS_CDREX0,
->>> +       GATE_BUS_CDREX1,
->>>   };
->>>
->>>   static const unsigned long exynos5800_clk_regs[] __initconst = {
->>> @@ -425,6 +429,10 @@ PNAME(mout_group13_5800_p) = { "dout_osc_div", "mout_sw_aclkfl1_550_cam" };
->>>   PNAME(mout_group14_5800_p)     = { "dout_aclk550_cam", "dout_sclk_sw" };
->>>   PNAME(mout_group15_5800_p)     = { "dout_osc_div", "mout_sw_aclk550_cam" };
->>>   PNAME(mout_group16_5800_p)     = { "dout_osc_div", "mout_mau_epll_clk" };
->>> +PNAME(mout_mx_mspll_ccore_phy_p) = { "sclk_bpll", "mout_sclk_dpll",
->>> +                                       "mout_sclk_mpll", "ff_dout_spll2",
->>> +                                       "mout_sclk_spll", "mout_sclk_epll"};
->>> +
->>
->> Remove unneeded extra blank line.
-> OK
->>
->>>
->>>   /* fixed rate clocks generated outside the soc */
->>>   static struct samsung_fixed_rate_clock
->>> @@ -450,7 +458,7 @@ static const struct samsung_fixed_factor_clock
->>>   static const struct samsung_fixed_factor_clock
->>>                  exynos5800_fixed_factor_clks[] __initconst = {
->>>          FFACTOR(0, "ff_dout_epll2", "mout_sclk_epll", 1, 2, 0),
->>> -       FFACTOR(0, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
->>> +       FFACTOR(CLK_FF_DOUT_SPLL2, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
->>>   };
->>>
->>>   static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
->>> @@ -472,11 +480,14 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
->>>          MUX(0, "mout_aclk300_disp1", mout_group5_5800_p, SRC_TOP2, 24, 2),
->>>          MUX(0, "mout_aclk300_gscl", mout_group5_5800_p, SRC_TOP2, 28, 2),
->>>
->>> +       MUX(CLK_MOUT_MX_MSPLL_CCORE_PHY, "mout_mx_mspll_ccore_phy",
->>> +               mout_mx_mspll_ccore_phy_p, SRC_TOP7, 0, 3),
->>> +
->>>          MUX(CLK_MOUT_MX_MSPLL_CCORE, "mout_mx_mspll_ccore",
->>> -                       mout_mx_mspll_ccore_p, SRC_TOP7, 16, 2),
->>> +                       mout_mx_mspll_ccore_p, SRC_TOP7, 16, 3),
->>>          MUX_F(CLK_MOUT_MAU_EPLL, "mout_mau_epll_clk", mout_mau_epll_clk_5800_p,
->>>                          SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
->>> -       MUX(0, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
->>> +       MUX(CLK_SCLK_BPLL, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
->>>          MUX(0, "mout_epll2", mout_epll2_5800_p, SRC_TOP7, 28, 1),
->>>
->>>          MUX(0, "mout_aclk550_cam", mout_group3_5800_p, SRC_TOP8, 16, 3),
->>> @@ -648,7 +659,7 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
->>
->> The newly added clocks by this patch are supported on all Exynos5420/5422/5800?
-> The clocks are the same for Exynos5420/5422/5800 DMCs.
-> 
->> I'm not sure because on the patch description, you only mentioned the
->> Exynos5422 without Exynos5420/Exynos5800.
-> The driver code supports currently only Exynos5422 due to specific
-> timings inside, but the clocks are for all three Exynos SoCs.
-> It does not harm the Exynos5420/5800.
->>
->> As for now, I can't check the Exynos TRM because I'm in holiday until
->> next Wednesday. I will check them with Exynos542-/5422/5800 TRM on
->> next Thursday.
-> OK, please add me to the communication thread with them. We will speed
-> up the process (I can test something for them if needed).
->>
->>>
->>>          MUX(0, "mout_sclk_mpll", mout_mpll_p, SRC_TOP6, 0, 1),
->>>          MUX(CLK_MOUT_VPLL, "mout_sclk_vpll", mout_vpll_p, SRC_TOP6, 4, 1),
->>> -       MUX(0, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
->>> +       MUX(CLK_MOUT_SCLK_SPLL, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
->>>          MUX(0, "mout_sclk_ipll", mout_ipll_p, SRC_TOP6, 12, 1),
->>>          MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
->>>          MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
->>> @@ -817,6 +828,8 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
->>>          DIV(CLK_DOUT_CLK2X_PHY0, "dout_clk2x_phy0", "dout_sclk_cdrex",
->>>                          DIV_CDREX0, 3, 5),
->>>
->>> +       DIV(0, "dout_pclk_drex0", "dout_cclk_drex0", DIV_CDREX0, 28, 3),
->>
->> Before applied this patch, on line 809, DIV_CDREX0[28:30] was already
->> defined with "dout_pclk_cdrex" gate clock name.
-> In my previous email, I have mentioned that the same bits
-> (8 combinations) are controlling 3 dividers, which re-branch to 3 edges
-> in the clock tree named:
-> CLKDIV_PCLK_CDREX, CLKDIV_PCLK_DREX0, CLKDIV_PCLK_DREX1.
-> It is in the Exynos5422_UM_REV0.10 documentation section:
-> 7.9.6.7 CLK_DIV_CDREX0
+Mipi_tx of mt8183 is very different to mt8173.
+1.Separate mipi tx setting to mtk_mt8173_mipi_tx.c for mt8173
+2.Separate mipi tx setting to mtk_mt8183_mipi_tx.c for mt8183
+3.To reuse the common code, make the common functions in mtk_mipi_tx.c
 
-It is my missing point. I checked it on Exynos5422 TRM.
-I want to develop the clocks according to H/W clock.
-Please keep it without removal.
+Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/gpu/drm/mediatek/Makefile             |   2 +
+ drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 352 ++----------------
+ drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  52 +++
+ drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c | 290 +++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 168 +++++++++
+ 5 files changed, 549 insertions(+), 315 deletions(-)
+ create mode 100644 drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+ create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
+ create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
 
-Instead,
-It is very strange case. So, you need to add
-the detailed comment when defining the multiple clocks
-with same register/same bits. Also, in order to reduce
-the confusion of this strange case, IMO you better to
-define the three clocks at the nearby in this driver.
-(CLKDIV_PCLK_CDREX, CLKDIV_PCLK_DREX0, CLKDIV_PCLK_DREX1)
-If they are scattered, it is difficult for understanding
-why they are developed like this.
-
-> 
-> They are put into one because there is a need of synchronization between
-> the BUS and DREXs (two external memory interfaces).
-> That's why it looks good in the clock information summary when an
-> SW engineer can see these HW assumptions.
-> 
-> If you disagree and would like to see only minimal clock definition
-> which makes the HW working, please write it on LKML.
-> The clock summary would not be reflecting the actual hierarchy and
-> someone who is looking for a specific clock details will not find it.
-> 
->   Why do you redefine it
->> with same register/same bit with the different clock name?
-> The clock is added for information purpose. I can remove it if you like,
-> but then the clock summary would not reflect the actual HW implementation.
-> 
->> driver have to get only unique clock for the same register/same bit
->> information.
-> True, driver gets the clocks which have exported IDs.
-> This one has '0' as you can see and is only for the clk_summary
-> information output.
-> 
-> 
-> The purpose of the patch with detailed clock tree related to DMC was
-> information, not the driver usage. That's why some clocks they did
-> no have IDs so drivers would not take them (without a hack).
-> 
->>
->>     808         /* CDREX Block */
->>     809         DIV(CLK_DOUT_PCLK_CDREX, "dout_pclk_cdrex",
->> "dout_aclk_cdrex1",
->>     810                         DIV_CDREX0, 28, 3),
->>
->> And also, you don't use "dout_pclk_drex0" defined by you for
->> CLK_ACLK_PPMU_DREX* gate clock on below. Instead, you use the already
->> defined 'dout_pclk_cdrex' as I commented.
-> True
->>
->>> +
->>>          DIV(CLK_DOUT_PCLK_CORE_MEM, "dout_pclk_core_mem", "mout_mclk_cdrex",
->>>                          DIV_CDREX1, 8, 3),
->>>
->>> @@ -1170,6 +1183,31 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
->>>                          GATE_TOP_SCLK_ISP, 12, CLK_SET_RATE_PARENT, 0),
->>>
->>>          GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
->>> +
->>
->> Add the following comment for the readability in order to sustain the
->> consistency of this driver.
->> /* CDREX Block */ or /* CDREX */
-> OK
->>
->>> +       GATE(CLK_CLKM_PHY0, "clkm_phy0", "dout_sclk_cdrex",
->>> +                       GATE_BUS_CDREX0, 0, 0, 0),
->>> +       GATE(CLK_CLKM_PHY1, "clkm_phy1", "dout_sclk_cdrex",
->>> +                       GATE_BUS_CDREX0, 1, 0, 0),
->>> +       GATE(0, "mx_mspll_ccore_phy", "mout_mx_mspll_ccore_phy",
->>> +                       SRC_MASK_TOP7, 0, CLK_IGNORE_UNUSED, 0),
->>> +
->>> +       GATE(CLK_ACLK_PPMU_DREX0_0, "aclk_ppmu_drex0_0", "dout_aclk_cdrex1",
->>> +                       GATE_BUS_CDREX1, 15, CLK_IGNORE_UNUSED, 0),
->>> +       GATE(CLK_ACLK_PPMU_DREX0_1, "aclk_ppmu_drex0_1", "dout_aclk_cdrex1",
->>> +                       GATE_BUS_CDREX1, 14, CLK_IGNORE_UNUSED, 0),
->>> +       GATE(CLK_ACLK_PPMU_DREX1_0, "aclk_ppmu_drex1_0", "dout_aclk_cdrex1",
->>> +                       GATE_BUS_CDREX1, 13, CLK_IGNORE_UNUSED, 0),
->>> +       GATE(CLK_ACLK_PPMU_DREX1_1, "aclk_ppmu_drex1_1", "dout_aclk_cdrex1",
->>> +                       GATE_BUS_CDREX1, 12, CLK_IGNORE_UNUSED, 0),
->>
->> You better to move the gate clock of GATE_BUS_CDREX[15:12] under the
->> gate clock of GATE_BUS_CDREX[29:26]
->> for the decending order because you defined them as the decending order.
-> Make sense, I will change it.
-> 
-> Regards,
-> Lukasz
->>
->>> +
->>> +       GATE(CLK_PCLK_PPMU_DREX0_0, "pclk_ppmu_drex0_0", "dout_pclk_cdrex",
->>> +                       GATE_BUS_CDREX1, 29, CLK_IGNORE_UNUSED, 0),
->>> +       GATE(CLK_PCLK_PPMU_DREX0_1, "pclk_ppmu_drex0_1", "dout_pclk_cdrex",
->>> +                       GATE_BUS_CDREX1, 28, CLK_IGNORE_UNUSED, 0),
->>> +       GATE(CLK_PCLK_PPMU_DREX1_0, "pclk_ppmu_drex1_0", "dout_pclk_cdrex",
->>> +                       GATE_BUS_CDREX1, 27, CLK_IGNORE_UNUSED, 0),
->>> +       GATE(CLK_PCLK_PPMU_DREX1_1, "pclk_ppmu_drex1_1", "dout_pclk_cdrex",
->>> +                       GATE_BUS_CDREX1, 26, CLK_IGNORE_UNUSED, 0),
->>>   };
->>>
->>>   static const struct samsung_div_clock exynos5x_disp_div_clks[] __initconst = {
->>> --
->>> 2.7.4
->>>
->>
->>
->> --
->> Best Regards,
->> Chanwoo Choi
->>
->>
-> 
-> 
-
-
+diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
+index 82ae49c64221..8067a4be8311 100644
+--- a/drivers/gpu/drm/mediatek/Makefile
++++ b/drivers/gpu/drm/mediatek/Makefile
+@@ -12,6 +12,8 @@ mediatek-drm-y := mtk_disp_color.o \
+ 		  mtk_drm_plane.o \
+ 		  mtk_dsi.o \
+ 		  mtk_mipi_tx.o \
++		  mtk_mt8173_mipi_tx.o \
++		  mtk_mt8183_mipi_tx.o \
+ 		  mtk_dpi.o
+ 
+ obj-$(CONFIG_DRM_MEDIATEK) += mediatek-drm.o
+diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+index 90e913108950..7591a38ca565 100644
+--- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
++++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+@@ -11,292 +11,45 @@
+  * GNU General Public License for more details.
+  */
+ 
+-#include <linux/clk.h>
+-#include <linux/clk-provider.h>
+-#include <linux/delay.h>
+-#include <linux/io.h>
+-#include <linux/module.h>
+-#include <linux/of_device.h>
+-#include <linux/platform_device.h>
+-#include <linux/phy/phy.h>
+-
+-#define MIPITX_DSI_CON		0x00
+-#define RG_DSI_LDOCORE_EN		BIT(0)
+-#define RG_DSI_CKG_LDOOUT_EN		BIT(1)
+-#define RG_DSI_BCLK_SEL			(3 << 2)
+-#define RG_DSI_LD_IDX_SEL		(7 << 4)
+-#define RG_DSI_PHYCLK_SEL		(2 << 8)
+-#define RG_DSI_DSICLK_FREQ_SEL		BIT(10)
+-#define RG_DSI_LPTX_CLMP_EN		BIT(11)
+-
+-#define MIPITX_DSI_CLOCK_LANE	0x04
+-#define MIPITX_DSI_DATA_LANE0	0x08
+-#define MIPITX_DSI_DATA_LANE1	0x0c
+-#define MIPITX_DSI_DATA_LANE2	0x10
+-#define MIPITX_DSI_DATA_LANE3	0x14
+-#define RG_DSI_LNTx_LDOOUT_EN		BIT(0)
+-#define RG_DSI_LNTx_CKLANE_EN		BIT(1)
+-#define RG_DSI_LNTx_LPTX_IPLUS1		BIT(2)
+-#define RG_DSI_LNTx_LPTX_IPLUS2		BIT(3)
+-#define RG_DSI_LNTx_LPTX_IMINUS		BIT(4)
+-#define RG_DSI_LNTx_LPCD_IPLUS		BIT(5)
+-#define RG_DSI_LNTx_LPCD_IMINUS		BIT(6)
+-#define RG_DSI_LNTx_RT_CODE		(0xf << 8)
+-
+-#define MIPITX_DSI_TOP_CON	0x40
+-#define RG_DSI_LNT_INTR_EN		BIT(0)
+-#define RG_DSI_LNT_HS_BIAS_EN		BIT(1)
+-#define RG_DSI_LNT_IMP_CAL_EN		BIT(2)
+-#define RG_DSI_LNT_TESTMODE_EN		BIT(3)
+-#define RG_DSI_LNT_IMP_CAL_CODE		(0xf << 4)
+-#define RG_DSI_LNT_AIO_SEL		(7 << 8)
+-#define RG_DSI_PAD_TIE_LOW_EN		BIT(11)
+-#define RG_DSI_DEBUG_INPUT_EN		BIT(12)
+-#define RG_DSI_PRESERVE			(7 << 13)
+-
+-#define MIPITX_DSI_BG_CON	0x44
+-#define RG_DSI_BG_CORE_EN		BIT(0)
+-#define RG_DSI_BG_CKEN			BIT(1)
+-#define RG_DSI_BG_DIV			(0x3 << 2)
+-#define RG_DSI_BG_FAST_CHARGE		BIT(4)
+-#define RG_DSI_VOUT_MSK			(0x3ffff << 5)
+-#define RG_DSI_V12_SEL			(7 << 5)
+-#define RG_DSI_V10_SEL			(7 << 8)
+-#define RG_DSI_V072_SEL			(7 << 11)
+-#define RG_DSI_V04_SEL			(7 << 14)
+-#define RG_DSI_V032_SEL			(7 << 17)
+-#define RG_DSI_V02_SEL			(7 << 20)
+-#define RG_DSI_BG_R1_TRIM		(0xf << 24)
+-#define RG_DSI_BG_R2_TRIM		(0xf << 28)
+-
+-#define MIPITX_DSI_PLL_CON0	0x50
+-#define RG_DSI_MPPLL_PLL_EN		BIT(0)
+-#define RG_DSI_MPPLL_DIV_MSK		(0x1ff << 1)
+-#define RG_DSI_MPPLL_PREDIV		(3 << 1)
+-#define RG_DSI_MPPLL_TXDIV0		(3 << 3)
+-#define RG_DSI_MPPLL_TXDIV1		(3 << 5)
+-#define RG_DSI_MPPLL_POSDIV		(7 << 7)
+-#define RG_DSI_MPPLL_MONVC_EN		BIT(10)
+-#define RG_DSI_MPPLL_MONREF_EN		BIT(11)
+-#define RG_DSI_MPPLL_VOD_EN		BIT(12)
+-
+-#define MIPITX_DSI_PLL_CON1	0x54
+-#define RG_DSI_MPPLL_SDM_FRA_EN		BIT(0)
+-#define RG_DSI_MPPLL_SDM_SSC_PH_INIT	BIT(1)
+-#define RG_DSI_MPPLL_SDM_SSC_EN		BIT(2)
+-#define RG_DSI_MPPLL_SDM_SSC_PRD	(0xffff << 16)
+-
+-#define MIPITX_DSI_PLL_CON2	0x58
+-
+-#define MIPITX_DSI_PLL_TOP	0x64
+-#define RG_DSI_MPPLL_PRESERVE		(0xff << 8)
+-
+-#define MIPITX_DSI_PLL_PWR	0x68
+-#define RG_DSI_MPPLL_SDM_PWR_ON		BIT(0)
+-#define RG_DSI_MPPLL_SDM_ISO_EN		BIT(1)
+-#define RG_DSI_MPPLL_SDM_PWR_ACK	BIT(8)
+-
+-#define MIPITX_DSI_SW_CTRL	0x80
+-#define SW_CTRL_EN			BIT(0)
+-
+-#define MIPITX_DSI_SW_CTRL_CON0	0x84
+-#define SW_LNTC_LPTX_PRE_OE		BIT(0)
+-#define SW_LNTC_LPTX_OE			BIT(1)
+-#define SW_LNTC_LPTX_P			BIT(2)
+-#define SW_LNTC_LPTX_N			BIT(3)
+-#define SW_LNTC_HSTX_PRE_OE		BIT(4)
+-#define SW_LNTC_HSTX_OE			BIT(5)
+-#define SW_LNTC_HSTX_ZEROCLK		BIT(6)
+-#define SW_LNT0_LPTX_PRE_OE		BIT(7)
+-#define SW_LNT0_LPTX_OE			BIT(8)
+-#define SW_LNT0_LPTX_P			BIT(9)
+-#define SW_LNT0_LPTX_N			BIT(10)
+-#define SW_LNT0_HSTX_PRE_OE		BIT(11)
+-#define SW_LNT0_HSTX_OE			BIT(12)
+-#define SW_LNT0_LPRX_EN			BIT(13)
+-#define SW_LNT1_LPTX_PRE_OE		BIT(14)
+-#define SW_LNT1_LPTX_OE			BIT(15)
+-#define SW_LNT1_LPTX_P			BIT(16)
+-#define SW_LNT1_LPTX_N			BIT(17)
+-#define SW_LNT1_HSTX_PRE_OE		BIT(18)
+-#define SW_LNT1_HSTX_OE			BIT(19)
+-#define SW_LNT2_LPTX_PRE_OE		BIT(20)
+-#define SW_LNT2_LPTX_OE			BIT(21)
+-#define SW_LNT2_LPTX_P			BIT(22)
+-#define SW_LNT2_LPTX_N			BIT(23)
+-#define SW_LNT2_HSTX_PRE_OE		BIT(24)
+-#define SW_LNT2_HSTX_OE			BIT(25)
+-
+-struct mtk_mipitx_data {
+-	const u32 mppll_preserve;
+-};
+-
+-struct mtk_mipi_tx {
+-	struct device *dev;
+-	void __iomem *regs;
+-	u32 data_rate;
+-	const struct mtk_mipitx_data *driver_data;
+-	struct clk_hw pll_hw;
+-	struct clk *pll;
+-};
++#include "mtk_mipi_tx.h"
+ 
+-static inline struct mtk_mipi_tx *mtk_mipi_tx_from_clk_hw(struct clk_hw *hw)
++inline struct mtk_mipi_tx *mtk_mipi_tx_from_clk_hw(struct clk_hw *hw)
+ {
+ 	return container_of(hw, struct mtk_mipi_tx, pll_hw);
+ }
+ 
+-static void mtk_mipi_tx_clear_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
+-				   u32 bits)
++void mtk_mipi_tx_clear_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
++			    u32 bits)
+ {
+ 	u32 temp = readl(mipi_tx->regs + offset);
+ 
+ 	writel(temp & ~bits, mipi_tx->regs + offset);
+ }
+ 
+-static void mtk_mipi_tx_set_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
+-				 u32 bits)
++void mtk_mipi_tx_set_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
++			  u32 bits)
+ {
+ 	u32 temp = readl(mipi_tx->regs + offset);
+ 
+ 	writel(temp | bits, mipi_tx->regs + offset);
+ }
+ 
+-static void mtk_mipi_tx_update_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
+-				    u32 mask, u32 data)
++void mtk_mipi_tx_update_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
++			     u32 mask, u32 data)
+ {
+ 	u32 temp = readl(mipi_tx->regs + offset);
+ 
+ 	writel((temp & ~mask) | (data & mask), mipi_tx->regs + offset);
+ }
+ 
+-static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
+-{
+-	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+-	u8 txdiv, txdiv0, txdiv1;
+-	u64 pcw;
+-
+-	dev_dbg(mipi_tx->dev, "prepare: %u Hz\n", mipi_tx->data_rate);
+-
+-	if (mipi_tx->data_rate >= 500000000) {
+-		txdiv = 1;
+-		txdiv0 = 0;
+-		txdiv1 = 0;
+-	} else if (mipi_tx->data_rate >= 250000000) {
+-		txdiv = 2;
+-		txdiv0 = 1;
+-		txdiv1 = 0;
+-	} else if (mipi_tx->data_rate >= 125000000) {
+-		txdiv = 4;
+-		txdiv0 = 2;
+-		txdiv1 = 0;
+-	} else if (mipi_tx->data_rate > 62000000) {
+-		txdiv = 8;
+-		txdiv0 = 2;
+-		txdiv1 = 1;
+-	} else if (mipi_tx->data_rate >= 50000000) {
+-		txdiv = 16;
+-		txdiv0 = 2;
+-		txdiv1 = 2;
+-	} else {
+-		return -EINVAL;
+-	}
+-
+-	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_BG_CON,
+-				RG_DSI_VOUT_MSK |
+-				RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN,
+-				(4 << 20) | (4 << 17) | (4 << 14) |
+-				(4 << 11) | (4 << 8) | (4 << 5) |
+-				RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN);
+-
+-	usleep_range(30, 100);
+-
+-	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_TOP_CON,
+-				RG_DSI_LNT_IMP_CAL_CODE | RG_DSI_LNT_HS_BIAS_EN,
+-				(8 << 4) | RG_DSI_LNT_HS_BIAS_EN);
+-
+-	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_CON,
+-			     RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
+-
+-	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
+-				RG_DSI_MPPLL_SDM_PWR_ON |
+-				RG_DSI_MPPLL_SDM_ISO_EN,
+-				RG_DSI_MPPLL_SDM_PWR_ON);
+-
+-	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
+-			       RG_DSI_MPPLL_PLL_EN);
+-
+-	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
+-				RG_DSI_MPPLL_TXDIV0 | RG_DSI_MPPLL_TXDIV1 |
+-				RG_DSI_MPPLL_PREDIV,
+-				(txdiv0 << 3) | (txdiv1 << 5));
+-
+-	/*
+-	 * PLL PCW config
+-	 * PCW bit 24~30 = integer part of pcw
+-	 * PCW bit 0~23 = fractional part of pcw
+-	 * pcw = data_Rate*4*txdiv/(Ref_clk*2);
+-	 * Post DIV =4, so need data_Rate*4
+-	 * Ref_clk is 26MHz
+-	 */
+-	pcw = div_u64(((u64)mipi_tx->data_rate * 2 * txdiv) << 24,
+-		      26000000);
+-	writel(pcw, mipi_tx->regs + MIPITX_DSI_PLL_CON2);
+-
+-	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
+-			     RG_DSI_MPPLL_SDM_FRA_EN);
+-
+-	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON0, RG_DSI_MPPLL_PLL_EN);
+-
+-	usleep_range(20, 100);
+-
+-	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
+-			       RG_DSI_MPPLL_SDM_SSC_EN);
+-
+-	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
+-				RG_DSI_MPPLL_PRESERVE,
+-				mipi_tx->driver_data->mppll_preserve);
+-
+-	return 0;
+-}
+-
+-static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
+-{
+-	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+-
+-	dev_dbg(mipi_tx->dev, "unprepare\n");
+-
+-	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
+-			       RG_DSI_MPPLL_PLL_EN);
+-
+-	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
+-				RG_DSI_MPPLL_PRESERVE, 0);
+-
+-	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
+-				RG_DSI_MPPLL_SDM_ISO_EN |
+-				RG_DSI_MPPLL_SDM_PWR_ON,
+-				RG_DSI_MPPLL_SDM_ISO_EN);
+-
+-	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_TOP_CON,
+-			       RG_DSI_LNT_HS_BIAS_EN);
+-
+-	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_CON,
+-			       RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
+-
+-	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_BG_CON,
+-			       RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN);
+-
+-	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
+-			       RG_DSI_MPPLL_DIV_MSK);
+-}
+-
+-static long mtk_mipi_tx_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+-				       unsigned long *prate)
++long mtk_mipi_tx_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++				unsigned long *prate)
+ {
+ 	return clamp_val(rate, 50000000, 1250000000);
+ }
+ 
+-static int mtk_mipi_tx_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+-				    unsigned long parent_rate)
++int mtk_mipi_tx_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++			     unsigned long parent_rate)
+ {
+ 	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+ 
+@@ -307,37 +60,14 @@ static int mtk_mipi_tx_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	return 0;
+ }
+ 
+-static unsigned long mtk_mipi_tx_pll_recalc_rate(struct clk_hw *hw,
+-						 unsigned long parent_rate)
++unsigned long mtk_mipi_tx_pll_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
+ {
+ 	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+ 
+ 	return mipi_tx->data_rate;
+ }
+ 
+-static const struct clk_ops mtk_mipi_tx_pll_ops = {
+-	.prepare = mtk_mipi_tx_pll_prepare,
+-	.unprepare = mtk_mipi_tx_pll_unprepare,
+-	.round_rate = mtk_mipi_tx_pll_round_rate,
+-	.set_rate = mtk_mipi_tx_pll_set_rate,
+-	.recalc_rate = mtk_mipi_tx_pll_recalc_rate,
+-};
+-
+-static int mtk_mipi_tx_power_on_signal(struct phy *phy)
+-{
+-	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
+-	u32 reg;
+-
+-	for (reg = MIPITX_DSI_CLOCK_LANE;
+-	     reg <= MIPITX_DSI_DATA_LANE3; reg += 4)
+-		mtk_mipi_tx_set_bits(mipi_tx, reg, RG_DSI_LNTx_LDOOUT_EN);
+-
+-	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_TOP_CON,
+-			       RG_DSI_PAD_TIE_LOW_EN);
+-
+-	return 0;
+-}
+-
+ static int mtk_mipi_tx_power_on(struct phy *phy)
+ {
+ 	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
+@@ -349,30 +79,16 @@ static int mtk_mipi_tx_power_on(struct phy *phy)
+ 		return ret;
+ 
+ 	/* Enable DSI Lane LDO outputs, disable pad tie low */
+-	mtk_mipi_tx_power_on_signal(phy);
+-
++	mipi_tx->driver_data->mipi_tx_enable_signal(phy);
+ 	return 0;
+ }
+ 
+-static void mtk_mipi_tx_power_off_signal(struct phy *phy)
+-{
+-	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
+-	u32 reg;
+-
+-	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_TOP_CON,
+-			     RG_DSI_PAD_TIE_LOW_EN);
+-
+-	for (reg = MIPITX_DSI_CLOCK_LANE;
+-	     reg <= MIPITX_DSI_DATA_LANE3; reg += 4)
+-		mtk_mipi_tx_clear_bits(mipi_tx, reg, RG_DSI_LNTx_LDOOUT_EN);
+-}
+-
+ static int mtk_mipi_tx_power_off(struct phy *phy)
+ {
+ 	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
+ 
+ 	/* Enable pad tie low, disable DSI Lane LDO outputs */
+-	mtk_mipi_tx_power_off_signal(phy);
++	mipi_tx->driver_data->mipi_tx_disable_signal(phy);
+ 
+ 	/* Disable PLL and power down core */
+ 	clk_disable_unprepare(mipi_tx->pll);
+@@ -386,15 +102,23 @@ static const struct phy_ops mtk_mipi_tx_ops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static void mtk_mipi_tx_clk_get_ops(struct mtk_mipi_tx *mipi_tx,
++				    const struct clk_ops **ops)
++{
++	if (mipi_tx && mipi_tx->driver_data &&
++	    mipi_tx->driver_data->mipi_tx_clk_ops)
++		*ops = mipi_tx->driver_data->mipi_tx_clk_ops;
++	else
++		dev_err(mipi_tx->dev, "Failed to get clk ops of phy\n");
++}
++
+ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct mtk_mipi_tx *mipi_tx;
+ 	struct resource *mem;
+-	struct clk *ref_clk;
+ 	const char *ref_clk_name;
+ 	struct clk_init_data clk_init = {
+-		.ops = &mtk_mipi_tx_pll_ops,
+ 		.num_parents = 1,
+ 		.parent_names = (const char * const *)&ref_clk_name,
+ 		.flags = CLK_SET_RATE_GATE,
+@@ -408,6 +132,7 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	mipi_tx->driver_data = of_device_get_match_data(dev);
++
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	mipi_tx->regs = devm_ioremap_resource(dev, mem);
+ 	if (IS_ERR(mipi_tx->regs)) {
+@@ -416,13 +141,14 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ref_clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(ref_clk)) {
+-		ret = PTR_ERR(ref_clk);
++	mipi_tx->ref_clk = devm_clk_get(dev, "ref_clk");
++	if (IS_ERR(mipi_tx->ref_clk)) {
++		ret = PTR_ERR(mipi_tx->ref_clk);
+ 		dev_err(dev, "Failed to get reference clock: %d\n", ret);
+ 		return ret;
+ 	}
+-	ref_clk_name = __clk_get_name(ref_clk);
++
++	ref_clk_name = __clk_get_name(mipi_tx->ref_clk);
+ 
+ 	ret = of_property_read_string(dev->of_node, "clock-output-names",
+ 				      &clk_init.name);
+@@ -431,6 +157,8 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	mtk_mipi_tx_clk_get_ops(mipi_tx, &clk_init.ops);
++
+ 	mipi_tx->pll_hw.init = &clk_init;
+ 	mipi_tx->pll = devm_clk_register(dev, &mipi_tx->pll_hw);
+ 	if (IS_ERR(mipi_tx->pll)) {
+@@ -465,20 +193,14 @@ static int mtk_mipi_tx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct mtk_mipitx_data mt2701_mipitx_data = {
+-	.mppll_preserve = (3 << 8)
+-};
+-
+-static const struct mtk_mipitx_data mt8173_mipitx_data = {
+-	.mppll_preserve = (0 << 8)
+-};
+-
+ static const struct of_device_id mtk_mipi_tx_match[] = {
+ 	{ .compatible = "mediatek,mt2701-mipi-tx",
+ 	  .data = &mt2701_mipitx_data },
+ 	{ .compatible = "mediatek,mt8173-mipi-tx",
+ 	  .data = &mt8173_mipitx_data },
+-	{},
++	{ .compatible = "mediatek,mt8183-mipi-tx",
++	  .data = &mt8183_mipitx_data },
++	{ },
+ };
+ 
+ struct platform_driver mtk_mipi_tx_driver = {
+diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+new file mode 100644
+index 000000000000..af83023e81cf
+--- /dev/null
++++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+@@ -0,0 +1,52 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ * Author: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ */
++
++#ifndef _MTK_MIPI_TX_H
++#define _MTK_MIPI_TX_H
++
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/phy/phy.h>
++
++struct mtk_mipitx_data {
++	const u32 mppll_preserve;
++	const struct clk_ops *mipi_tx_clk_ops;
++	void (*mipi_tx_enable_signal)(struct phy *phy);
++	void (*mipi_tx_disable_signal)(struct phy *phy);
++};
++
++struct mtk_mipi_tx {
++	struct device *dev;
++	void __iomem *regs;
++	u32 data_rate;
++	struct clk *ref_clk;
++	const struct mtk_mipitx_data *driver_data;
++	struct clk_hw pll_hw;
++	struct clk *pll;
++};
++
++struct mtk_mipi_tx *mtk_mipi_tx_from_clk_hw(struct clk_hw *hw);
++void mtk_mipi_tx_clear_bits(struct mtk_mipi_tx *mipi_tx, u32 offset, u32 bits);
++void mtk_mipi_tx_set_bits(struct mtk_mipi_tx *mipi_tx, u32 offset, u32 bits);
++void mtk_mipi_tx_update_bits(struct mtk_mipi_tx *mipi_tx, u32 offset, u32 mask,
++			     u32 data);
++long mtk_mipi_tx_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++				unsigned long *prate);
++int mtk_mipi_tx_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++			     unsigned long parent_rate);
++unsigned long mtk_mipi_tx_pll_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate);
++
++extern const struct mtk_mipitx_data mt2701_mipitx_data;
++extern const struct mtk_mipitx_data mt8173_mipitx_data;
++extern const struct mtk_mipitx_data mt8183_mipitx_data;
++
++#endif
+diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
+new file mode 100644
+index 000000000000..8e57cdf85b06
+--- /dev/null
++++ b/drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
+@@ -0,0 +1,290 @@
++/*
++ * Copyright (c) 2015 MediaTek Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include "mtk_mipi_tx.h"
++
++#define MIPITX_DSI_CON		0x00
++#define RG_DSI_LDOCORE_EN		BIT(0)
++#define RG_DSI_CKG_LDOOUT_EN		BIT(1)
++#define RG_DSI_BCLK_SEL			(3 << 2)
++#define RG_DSI_LD_IDX_SEL		(7 << 4)
++#define RG_DSI_PHYCLK_SEL		(2 << 8)
++#define RG_DSI_DSICLK_FREQ_SEL		BIT(10)
++#define RG_DSI_LPTX_CLMP_EN		BIT(11)
++
++#define MIPITX_DSI_CLOCK_LANE	0x04
++#define MIPITX_DSI_DATA_LANE0	0x08
++#define MIPITX_DSI_DATA_LANE1	0x0c
++#define MIPITX_DSI_DATA_LANE2	0x10
++#define MIPITX_DSI_DATA_LANE3	0x14
++#define RG_DSI_LNTx_LDOOUT_EN		BIT(0)
++#define RG_DSI_LNTx_CKLANE_EN		BIT(1)
++#define RG_DSI_LNTx_LPTX_IPLUS1		BIT(2)
++#define RG_DSI_LNTx_LPTX_IPLUS2		BIT(3)
++#define RG_DSI_LNTx_LPTX_IMINUS		BIT(4)
++#define RG_DSI_LNTx_LPCD_IPLUS		BIT(5)
++#define RG_DSI_LNTx_LPCD_IMINUS		BIT(6)
++#define RG_DSI_LNTx_RT_CODE		(0xf << 8)
++
++#define MIPITX_DSI_TOP_CON	0x40
++#define RG_DSI_LNT_INTR_EN		BIT(0)
++#define RG_DSI_LNT_HS_BIAS_EN		BIT(1)
++#define RG_DSI_LNT_IMP_CAL_EN		BIT(2)
++#define RG_DSI_LNT_TESTMODE_EN		BIT(3)
++#define RG_DSI_LNT_IMP_CAL_CODE		(0xf << 4)
++#define RG_DSI_LNT_AIO_SEL		(7 << 8)
++#define RG_DSI_PAD_TIE_LOW_EN		BIT(11)
++#define RG_DSI_DEBUG_INPUT_EN		BIT(12)
++#define RG_DSI_PRESERVE			(7 << 13)
++
++#define MIPITX_DSI_BG_CON	0x44
++#define RG_DSI_BG_CORE_EN		BIT(0)
++#define RG_DSI_BG_CKEN			BIT(1)
++#define RG_DSI_BG_DIV			(0x3 << 2)
++#define RG_DSI_BG_FAST_CHARGE		BIT(4)
++#define RG_DSI_VOUT_MSK			(0x3ffff << 5)
++#define RG_DSI_V12_SEL			(7 << 5)
++#define RG_DSI_V10_SEL			(7 << 8)
++#define RG_DSI_V072_SEL			(7 << 11)
++#define RG_DSI_V04_SEL			(7 << 14)
++#define RG_DSI_V032_SEL			(7 << 17)
++#define RG_DSI_V02_SEL			(7 << 20)
++#define RG_DSI_BG_R1_TRIM		(0xf << 24)
++#define RG_DSI_BG_R2_TRIM		(0xf << 28)
++
++#define MIPITX_DSI_PLL_CON0	0x50
++#define RG_DSI_MPPLL_PLL_EN		BIT(0)
++#define RG_DSI_MPPLL_DIV_MSK		(0x1ff << 1)
++#define RG_DSI_MPPLL_PREDIV		(3 << 1)
++#define RG_DSI_MPPLL_TXDIV0		(3 << 3)
++#define RG_DSI_MPPLL_TXDIV1		(3 << 5)
++#define RG_DSI_MPPLL_POSDIV		(7 << 7)
++#define RG_DSI_MPPLL_MONVC_EN		BIT(10)
++#define RG_DSI_MPPLL_MONREF_EN		BIT(11)
++#define RG_DSI_MPPLL_VOD_EN		BIT(12)
++
++#define MIPITX_DSI_PLL_CON1	0x54
++#define RG_DSI_MPPLL_SDM_FRA_EN		BIT(0)
++#define RG_DSI_MPPLL_SDM_SSC_PH_INIT	BIT(1)
++#define RG_DSI_MPPLL_SDM_SSC_EN		BIT(2)
++#define RG_DSI_MPPLL_SDM_SSC_PRD	(0xffff << 16)
++
++#define MIPITX_DSI_PLL_CON2	0x58
++
++#define MIPITX_DSI_PLL_TOP	0x64
++#define RG_DSI_MPPLL_PRESERVE		(0xff << 8)
++
++#define MIPITX_DSI_PLL_PWR	0x68
++#define RG_DSI_MPPLL_SDM_PWR_ON		BIT(0)
++#define RG_DSI_MPPLL_SDM_ISO_EN		BIT(1)
++#define RG_DSI_MPPLL_SDM_PWR_ACK	BIT(8)
++
++#define MIPITX_DSI_SW_CTRL	0x80
++#define SW_CTRL_EN			BIT(0)
++
++#define MIPITX_DSI_SW_CTRL_CON0	0x84
++#define SW_LNTC_LPTX_PRE_OE		BIT(0)
++#define SW_LNTC_LPTX_OE			BIT(1)
++#define SW_LNTC_LPTX_P			BIT(2)
++#define SW_LNTC_LPTX_N			BIT(3)
++#define SW_LNTC_HSTX_PRE_OE		BIT(4)
++#define SW_LNTC_HSTX_OE			BIT(5)
++#define SW_LNTC_HSTX_ZEROCLK		BIT(6)
++#define SW_LNT0_LPTX_PRE_OE		BIT(7)
++#define SW_LNT0_LPTX_OE			BIT(8)
++#define SW_LNT0_LPTX_P			BIT(9)
++#define SW_LNT0_LPTX_N			BIT(10)
++#define SW_LNT0_HSTX_PRE_OE		BIT(11)
++#define SW_LNT0_HSTX_OE			BIT(12)
++#define SW_LNT0_LPRX_EN			BIT(13)
++#define SW_LNT1_LPTX_PRE_OE		BIT(14)
++#define SW_LNT1_LPTX_OE			BIT(15)
++#define SW_LNT1_LPTX_P			BIT(16)
++#define SW_LNT1_LPTX_N			BIT(17)
++#define SW_LNT1_HSTX_PRE_OE		BIT(18)
++#define SW_LNT1_HSTX_OE			BIT(19)
++#define SW_LNT2_LPTX_PRE_OE		BIT(20)
++#define SW_LNT2_LPTX_OE			BIT(21)
++#define SW_LNT2_LPTX_P			BIT(22)
++#define SW_LNT2_LPTX_N			BIT(23)
++#define SW_LNT2_HSTX_PRE_OE		BIT(24)
++#define SW_LNT2_HSTX_OE			BIT(25)
++
++static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
++{
++	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
++	u8 txdiv, txdiv0, txdiv1;
++	u64 pcw;
++
++	dev_dbg(mipi_tx->dev, "prepare: %u Hz\n", mipi_tx->data_rate);
++
++	if (mipi_tx->data_rate >= 500000000) {
++		txdiv = 1;
++		txdiv0 = 0;
++		txdiv1 = 0;
++	} else if (mipi_tx->data_rate >= 250000000) {
++		txdiv = 2;
++		txdiv0 = 1;
++		txdiv1 = 0;
++	} else if (mipi_tx->data_rate >= 125000000) {
++		txdiv = 4;
++		txdiv0 = 2;
++		txdiv1 = 0;
++	} else if (mipi_tx->data_rate > 62000000) {
++		txdiv = 8;
++		txdiv0 = 2;
++		txdiv1 = 1;
++	} else if (mipi_tx->data_rate >= 50000000) {
++		txdiv = 16;
++		txdiv0 = 2;
++		txdiv1 = 2;
++	} else {
++		return -EINVAL;
++	}
++
++	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_BG_CON,
++				RG_DSI_VOUT_MSK |
++				RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN,
++				(4 << 20) | (4 << 17) | (4 << 14) |
++				(4 << 11) | (4 << 8) | (4 << 5) |
++				RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN);
++
++	usleep_range(30, 100);
++
++	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_TOP_CON,
++				RG_DSI_LNT_IMP_CAL_CODE | RG_DSI_LNT_HS_BIAS_EN,
++				(8 << 4) | RG_DSI_LNT_HS_BIAS_EN);
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_CON,
++			     RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
++
++	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
++				RG_DSI_MPPLL_SDM_PWR_ON |
++				RG_DSI_MPPLL_SDM_ISO_EN,
++				RG_DSI_MPPLL_SDM_PWR_ON);
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
++			       RG_DSI_MPPLL_PLL_EN);
++
++	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
++				RG_DSI_MPPLL_TXDIV0 | RG_DSI_MPPLL_TXDIV1 |
++				RG_DSI_MPPLL_PREDIV,
++				(txdiv0 << 3) | (txdiv1 << 5));
++
++	/*
++	 * PLL PCW config
++	 * PCW bit 24~30 = integer part of pcw
++	 * PCW bit 0~23 = fractional part of pcw
++	 * pcw = data_Rate*4*txdiv/(Ref_clk*2);
++	 * Post DIV =4, so need data_Rate*4
++	 * Ref_clk is 26MHz
++	 */
++	pcw = div_u64(((u64)mipi_tx->data_rate * 2 * txdiv) << 24,
++		      26000000);
++	writel(pcw, mipi_tx->regs + MIPITX_DSI_PLL_CON2);
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
++			     RG_DSI_MPPLL_SDM_FRA_EN);
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON0, RG_DSI_MPPLL_PLL_EN);
++
++	usleep_range(20, 100);
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
++			       RG_DSI_MPPLL_SDM_SSC_EN);
++
++	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
++				RG_DSI_MPPLL_PRESERVE,
++				mipi_tx->driver_data->mppll_preserve);
++
++	return 0;
++}
++
++static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
++{
++	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
++
++	dev_dbg(mipi_tx->dev, "unprepare\n");
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
++			       RG_DSI_MPPLL_PLL_EN);
++
++	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
++				RG_DSI_MPPLL_PRESERVE, 0);
++
++	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
++				RG_DSI_MPPLL_SDM_ISO_EN |
++				RG_DSI_MPPLL_SDM_PWR_ON,
++				RG_DSI_MPPLL_SDM_ISO_EN);
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_TOP_CON,
++			       RG_DSI_LNT_HS_BIAS_EN);
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_CON,
++			       RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_BG_CON,
++			       RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN);
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
++			       RG_DSI_MPPLL_DIV_MSK);
++}
++
++static const struct clk_ops mtk_mipi_tx_pll_ops = {
++	.prepare = mtk_mipi_tx_pll_prepare,
++	.unprepare = mtk_mipi_tx_pll_unprepare,
++	.round_rate = mtk_mipi_tx_pll_round_rate,
++	.set_rate = mtk_mipi_tx_pll_set_rate,
++	.recalc_rate = mtk_mipi_tx_pll_recalc_rate,
++};
++
++static void mtk_mipi_tx_power_on_signal(struct phy *phy)
++{
++	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
++	u32 reg;
++
++	for (reg = MIPITX_DSI_CLOCK_LANE;
++	     reg <= MIPITX_DSI_DATA_LANE3; reg += 4)
++		mtk_mipi_tx_set_bits(mipi_tx, reg, RG_DSI_LNTx_LDOOUT_EN);
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_TOP_CON,
++			       RG_DSI_PAD_TIE_LOW_EN);
++}
++
++static void mtk_mipi_tx_power_off_signal(struct phy *phy)
++{
++	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
++	u32 reg;
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_TOP_CON,
++			     RG_DSI_PAD_TIE_LOW_EN);
++
++	for (reg = MIPITX_DSI_CLOCK_LANE;
++	     reg <= MIPITX_DSI_DATA_LANE3; reg += 4)
++		mtk_mipi_tx_clear_bits(mipi_tx, reg, RG_DSI_LNTx_LDOOUT_EN);
++}
++
++const struct mtk_mipitx_data mt2701_mipitx_data = {
++	.mppll_preserve = (3 << 8),
++	.mipi_tx_clk_ops = &mtk_mipi_tx_pll_ops,
++	.mipi_tx_enable_signal = mtk_mipi_tx_power_on_signal,
++	.mipi_tx_disable_signal = mtk_mipi_tx_power_off_signal,
++};
++
++const struct mtk_mipitx_data mt8173_mipitx_data = {
++	.mppll_preserve = (0 << 8),
++	.mipi_tx_clk_ops = &mtk_mipi_tx_pll_ops,
++	.mipi_tx_enable_signal = mtk_mipi_tx_power_on_signal,
++	.mipi_tx_disable_signal = mtk_mipi_tx_power_off_signal,
++};
++
+diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+new file mode 100644
+index 000000000000..07f70a3cad13
+--- /dev/null
++++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+@@ -0,0 +1,168 @@
++/*
++ * Copyright (c) 2015 MediaTek Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include "mtk_mipi_tx.h"
++
++#define MIPITX_LANE_CON		0x000c
++#define RG_DSI_CPHY_T1DRV_EN	BIT(0)
++#define RG_DSI_ANA_CK_SEL	BIT(1)
++#define RG_DSI_PHY_CK_SEL	BIT(2)
++#define RG_DSI_CPHY_EN	BIT(3)
++#define RG_DSI_PHYCK_INV_EN	BIT(4)
++#define RG_DSI_PWR04_EN	BIT(5)
++#define RG_DSI_BG_LPF_EN	BIT(6)
++#define RG_DSI_BG_CORE_EN	BIT(7)
++#define RG_DSI_PAD_TIEL_SEL	BIT(8)
++
++#define MIPITX_PLL_PWR		0x0028
++#define MIPITX_PLL_CON0		0x002c
++#define MIPITX_PLL_CON1		0x0030
++#define MIPITX_PLL_CON2		0x0034
++#define MIPITX_PLL_CON3		0x0038
++#define MIPITX_PLL_CON4		0x003c
++#define RG_DSI_PLL_IBIAS	(3 << 10)
++
++#define MIPITX_D2_SW_CTL_EN	0x0144
++#define MIPITX_D0_SW_CTL_EN	0x0244
++#define MIPITX_CK_CKMODE_EN	0x0328
++#define DSI_CK_CKMODE_EN	BIT(0)
++#define MIPITX_CK_SW_CTL_EN	0x0344
++#define MIPITX_D1_SW_CTL_EN	0x0444
++#define MIPITX_D3_SW_CTL_EN	0x0544
++#define DSI_SW_CTL_EN		BIT(0)
++#define AD_DSI_PLL_SDM_PWR_ON	BIT(0)
++#define AD_DSI_PLL_SDM_ISO_EN	BIT(1)
++
++#define RG_DSI_PLL_EN		BIT(4)
++#define RG_DSI_PLL_POSDIV	(0x7 << 8)
++
++static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
++{
++	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
++	unsigned int txdiv, txdiv0, txdiv1;
++	u64 pcw;
++	int ret;
++
++	dev_dbg(mipi_tx->dev, "prepare: %u bps\n", mipi_tx->data_rate);
++
++	if (mipi_tx->data_rate >= 2000000000) {
++		txdiv = 1;
++		txdiv0 = 0;
++		txdiv1 = 0;
++	} else if (mipi_tx->data_rate >= 1000000000) {
++		txdiv = 2;
++		txdiv0 = 1;
++		txdiv1 = 0;
++	} else if (mipi_tx->data_rate >= 500000000) {
++		txdiv = 4;
++		txdiv0 = 2;
++		txdiv1 = 0;
++	} else if (mipi_tx->data_rate > 250000000) {
++		txdiv = 8;
++		txdiv0 = 3;
++		txdiv1 = 0;
++	} else if (mipi_tx->data_rate >= 125000000) {
++		txdiv = 16;
++		txdiv0 = 4;
++		txdiv1 = 0;
++	} else {
++		return -EINVAL;
++	}
++
++	ret = clk_prepare_enable(mipi_tx->ref_clk);
++	if (ret < 0) {
++		dev_err(mipi_tx->dev, "can't mipi_tx ref_clk %d\n", ret);
++		return ret;
++	}
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON4, RG_DSI_PLL_IBIAS);
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
++	usleep_range(30, 100);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
++	pcw = div_u64(((u64)mipi_tx->data_rate * txdiv) << 24, 26000000);
++	writel(pcw, mipi_tx->regs + MIPITX_PLL_CON0);
++	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_POSDIV,
++				txdiv0 << 8);
++	usleep_range(1000, 2000);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
++
++	return 0;
++}
++
++static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
++{
++	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
++
++	dev_dbg(mipi_tx->dev, "unprepare\n");
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
++	/* step 1: SDM_RWR_ON / SDM_ISO_EN */
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
++	clk_disable_unprepare(mipi_tx->ref_clk);
++}
++
++static const struct clk_ops mtk_mipi_tx_pll_ops = {
++	.prepare = mtk_mipi_tx_pll_prepare,
++	.unprepare = mtk_mipi_tx_pll_unprepare,
++	.round_rate = mtk_mipi_tx_pll_round_rate,
++	.set_rate = mtk_mipi_tx_pll_set_rate,
++	.recalc_rate = mtk_mipi_tx_pll_recalc_rate,
++};
++
++static void mtk_mipi_tx_power_on_signal(struct phy *phy)
++{
++	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
++
++	/* BG_LPF_EN / BG_CORE_EN */
++	writel(RG_DSI_PAD_TIEL_SEL | RG_DSI_BG_CORE_EN,
++	       mipi_tx->regs + MIPITX_LANE_CON);
++	usleep_range(30, 100);
++	writel(RG_DSI_BG_CORE_EN | RG_DSI_BG_LPF_EN,
++	       mipi_tx->regs + MIPITX_LANE_CON);
++
++	/* Switch OFF each Lane */
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D0_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D1_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D2_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_EN);
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKMODE_EN);
++}
++
++static void mtk_mipi_tx_power_off_signal(struct phy *phy)
++{
++	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
++
++	/* Switch ON each Lane */
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D0_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D1_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D2_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_EN);
++
++	/* step 2 */
++	writel(RG_DSI_PAD_TIEL_SEL | RG_DSI_BG_CORE_EN,
++	       mipi_tx->regs + MIPITX_LANE_CON);
++	writel(RG_DSI_PAD_TIEL_SEL, mipi_tx->regs + MIPITX_LANE_CON);
++}
++
++const struct mtk_mipitx_data mt8183_mipitx_data = {
++	.mipi_tx_clk_ops = &mtk_mipi_tx_pll_ops,
++	.mipi_tx_enable_signal = mtk_mipi_tx_power_on_signal,
++	.mipi_tx_disable_signal = mtk_mipi_tx_power_off_signal,
++};
++
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.20.1
