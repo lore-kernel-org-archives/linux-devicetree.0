@@ -1,29 +1,61 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 07/12] dma-mapping: move CONFIG_DMA_CMA to
- kernel/dma/Kconfig
-Date: Tue, 12 Feb 2019 08:50:46 +0100
-Message-ID: <20190212075046.GD5924@kroah.com>
-References: <20190211133554.30055-1-hch@lst.de>
- <20190211133554.30055-8-hch@lst.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 0/4] Add max77620 charging & low battery support
+Date: Tue, 12 Feb 2019 08:04:57 +0000
+Message-ID: <20190212080457.GL20638@dell>
+References: <20190129085531.32364-1-markz@nvidia.com>
+ <20190207084836.GF4672@dell>
+ <a43eb007-c984-a209-2b4e-6672807029aa@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190211133554.30055-8-hch@lst.de>
+In-Reply-To: <a43eb007-c984-a209-2b4e-6672807029aa@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: iommu@lists.linux-foundation.org, Lee Jones <lee.jones@linaro.org>, x86@kernel.org, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Zhang <markz@nvidia.com>
+Cc: blaws05@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 02:35:49PM +0100, Christoph Hellwig wrote:
-> This is where all the related code already lives.
+On Tue, 12 Feb 2019, Mark Zhang wrote:
+
+> On 2/7/2019 4:48 PM, Lee Jones wrote:
+> > On Tue, 29 Jan 2019, Mark Zhang wrote:
+> > 
+> >> This patch set adds support for max77620 backup battery charging and
+> >> low battery monitoring.
+> >>
+> >> Changes in v2:
+> >> - Add devicetree binding documentation
+> >>
+> >> Mark Zhang (4):
+> >>   mfd: max77620: Add backup battery charger support
+> >>   mfd: max77620: add documentation for backup battery charging
+> >>   mfd: max77620: Add low battery monitor support
+> >>   mfd: max77620: add documentation for low battery monitoring
+> >>
+> >>  .../devicetree/bindings/mfd/max77620.txt      |  34 +++++
+> >>  drivers/mfd/max77620.c                        | 137 +++++++++++++++++-
+> > 
+> > All of this needs moving out to the correct subsystem.
+> > 
+> > drivers/power/supply/max77620-battery.c looks right.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/base/Kconfig | 77 --------------------------------------------
->  kernel/dma/Kconfig   | 77 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 77 insertions(+), 77 deletions(-)
+> Actually max77620 is not a power supply device. This patch set adds 2
+> features:
+> - Backup battery charger. The RTC in max77620 is supplied from a backup
+> battery and consumes 2.0uA when no other power sources are available. So
+> basically this is not a system battery charger, it's just for RTC.
+> - Low battery monitoring. This is for monitoring the system main battery
+> voltage, so max77620 can shutdown or reset the SoC accordingly. But I
+> think this doesn't conform the idea of "power supply" driver as well.
 
-Much nicer, thanks!
+Most other battery handling seems to happen in
+drivers/power/supply/*.battery*.  If that's not the right location,
+then you need to find a place for it to go.  MFDs do not provide
+useful functionality per say - that is the role of the child devices.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
