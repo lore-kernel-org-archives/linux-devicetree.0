@@ -1,106 +1,198 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH v6 2/2] mtd: spi-nor: cadence-quadspi: Add support for
- Octal SPI controller
-Date: Tue, 12 Feb 2019 09:12:12 +0000
-Message-ID: <f6df1931-1243-d112-fdc1-8184b561bce9@microchip.com>
-References: <20190212083809.6534-1-vigneshr@ti.com>
- <20190212083809.6534-3-vigneshr@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
+Date: Tue, 12 Feb 2019 09:17:23 +0000
+Message-ID: <20190212091723.GZ20638@dell>
+References: <cover.1549523718.git.matti.vaittinen@fi.rohmeurope.com>
+ <50d1debf03bbd07f49b2c5a85cf9672439cbd0ac.1549523718.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190207140053.GG20638@dell>
+ <20190207162807.GB1920@localhost.localdomain>
+ <20190208105743.GI20638@dell>
+ <20190208124111.GB3012@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212083809.6534-3-vigneshr@ti.com>
-Content-Language: en-US
-Content-ID: <5870068622B13F48A383633C690E53A4@namprd11.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20190208124111.GB3012@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vigneshr@ti.com, bbrezillon@kernel.org
-Cc: marek.vasut@gmail.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDAyLzEyLzIwMTkgMTA6MzggQU0sIFZpZ25lc2ggUiB3cm90ZToNCj4gQ2FkZW5jZSBP
-U1BJIGNvbnRyb2xsZXIgSVAgc3VwcG9ydHMgT2N0YWwgSU8gKHg4IElPIGxpbmVzKSwNCj4gSXQg
-YWxzbyBoYXMgYW4gaW50ZWdyYXRlZCBQSFkuIElQIHJlZ2lzdGVyIGxheW91dCBpcyB2ZXJ5DQo+
-IHNpbWlsYXIgdG8gZXhpc3RpbmcgUVNQSSBJUCBleGNlcHQgZm9yIGFkZGl0aW9uYWwgYml0cyB0
-byBzdXBwb3J0IE9jdGFsDQo+IGFuZCBPY3RhbCBERFIgbW9kZS4gVGhlcmVmb3JlLCBleHRlbmQg
-Y3VycmVudCBkcml2ZXIgdG8gc3VwcG9ydCBPY3RhbA0KPiBtb2RlLiBPbmx5IE9jdGFsIFNEUiBy
-ZWFkICgxLTEtOCltb2RlIGlzIHN1cHBvcnRlZCBmb3Igbm93Lg0KPiANCj4gVGVzdGVkIHdpdGgg
-bXQzNXh1NTEyYWJhIE9jdGFsIGZsYXNoIG9uIFRJJ3MgQU02NTQgRVZNLg0KPiANCj4gU2lnbmVk
-LW9mZi1ieTogVmlnbmVzaCBSIDx2aWduZXNockB0aS5jb20+DQoNClJldmlld2VkLWJ5OiBUdWRv
-ciBBbWJhcnVzIDx0dWRvci5hbWJhcnVzQG1pY3JvY2hpcC5jb20+DQoNCj4gLS0tDQo+IHY2OiBS
-ZXR1cm4gZXJyb3Igd2hlbiBkcml2ZXIgZGF0YSBpcyBub3QgZm91bmQNCj4gDQo+ICBkcml2ZXJz
-L210ZC9zcGktbm9yL2NhZGVuY2UtcXVhZHNwaS5jIHwgNTkgKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25z
-KC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvc3BpLW5vci9jYWRlbmNlLXF1YWRz
-cGkuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gaW5kZXggMDRj
-ZWRkM2EyYmY2Li5jOGI4MWUwYTc2Y2MgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbXRkL3NwaS1u
-b3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gKysrIGIvZHJpdmVycy9tdGQvc3BpLW5vci9jYWRlbmNl
-LXF1YWRzcGkuYw0KPiBAQCAtNDQsNiArNDQsMTIgQEANCj4gIC8qIFF1aXJrcyAqLw0KPiAgI2Rl
-ZmluZSBDUVNQSV9ORUVEU19XUl9ERUxBWQkJQklUKDApDQo+ICANCj4gKy8qIENhcGFiaWxpdGll
-cyBtYXNrICovDQo+ICsjZGVmaW5lIENRU1BJX0JBU0VfSFdDQVBTX01BU0sJCQkJCVwNCj4gKwko
-U05PUl9IV0NBUFNfUkVBRCB8IFNOT1JfSFdDQVBTX1JFQURfRkFTVCB8CQlcDQo+ICsJU05PUl9I
-V0NBUFNfUkVBRF8xXzFfMiB8IFNOT1JfSFdDQVBTX1JFQURfMV8xXzQgfAlcDQo+ICsJU05PUl9I
-V0NBUFNfUFApDQo+ICsNCj4gIHN0cnVjdCBjcXNwaV9zdDsNCj4gIA0KPiAgc3RydWN0IGNxc3Bp
-X2ZsYXNoX3BkYXRhIHsNCj4gQEAgLTkzLDYgKzk5LDExIEBAIHN0cnVjdCBjcXNwaV9zdCB7DQo+
-ICAJc3RydWN0IGNxc3BpX2ZsYXNoX3BkYXRhIGZfcGRhdGFbQ1FTUElfTUFYX0NISVBTRUxFQ1Rd
-Ow0KPiAgfTsNCj4gIA0KPiArc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSB7DQo+ICsJdTMy
-IGh3Y2Fwc19tYXNrOw0KPiArCXU4IHF1aXJrczsNCj4gK307DQo+ICsNCj4gIC8qIE9wZXJhdGlv
-biB0aW1lb3V0IHZhbHVlICovDQo+ICAjZGVmaW5lIENRU1BJX1RJTUVPVVRfTVMJCQk1MDANCj4g
-ICNkZWZpbmUgQ1FTUElfUkVBRF9USU1FT1VUX01TCQkJMTANCj4gQEAgLTEwMSw2ICsxMTIsNyBA
-QCBzdHJ1Y3QgY3FzcGlfc3Qgew0KPiAgI2RlZmluZSBDUVNQSV9JTlNUX1RZUEVfU0lOR0xFCQkJ
-MA0KPiAgI2RlZmluZSBDUVNQSV9JTlNUX1RZUEVfRFVBTAkJCTENCj4gICNkZWZpbmUgQ1FTUElf
-SU5TVF9UWVBFX1FVQUQJCQkyDQo+ICsjZGVmaW5lIENRU1BJX0lOU1RfVFlQRV9PQ1RBTAkJCTMN
-Cj4gIA0KPiAgI2RlZmluZSBDUVNQSV9EVU1NWV9DTEtTX1BFUl9CWVRFCQk4DQo+ICAjZGVmaW5l
-IENRU1BJX0RVTU1ZX0JZVEVTX01BWAkJCTQNCj4gQEAgLTkxMSw2ICs5MjMsOSBAQCBzdGF0aWMg
-aW50IGNxc3BpX3NldF9wcm90b2NvbChzdHJ1Y3Qgc3BpX25vciAqbm9yLCBjb25zdCBpbnQgcmVh
-ZCkNCj4gIAkJY2FzZSBTTk9SX1BST1RPXzFfMV80Og0KPiAgCQkJZl9wZGF0YS0+ZGF0YV93aWR0
-aCA9IENRU1BJX0lOU1RfVFlQRV9RVUFEOw0KPiAgCQkJYnJlYWs7DQo+ICsJCWNhc2UgU05PUl9Q
-Uk9UT18xXzFfODoNCj4gKwkJCWZfcGRhdGEtPmRhdGFfd2lkdGggPSBDUVNQSV9JTlNUX1RZUEVf
-T0NUQUw7DQo+ICsJCQlicmVhazsNCj4gIAkJZGVmYXVsdDoNCj4gIAkJCXJldHVybiAtRUlOVkFM
-Ow0KPiAgCQl9DQo+IEBAIC0xMjEzLDIxICsxMjI4LDIzIEBAIHN0YXRpYyB2b2lkIGNxc3BpX3Jl
-cXVlc3RfbW1hcF9kbWEoc3RydWN0IGNxc3BpX3N0ICpjcXNwaSkNCj4gIA0KPiAgc3RhdGljIGlu
-dCBjcXNwaV9zZXR1cF9mbGFzaChzdHJ1Y3QgY3FzcGlfc3QgKmNxc3BpLCBzdHJ1Y3QgZGV2aWNl
-X25vZGUgKm5wKQ0KPiAgew0KPiAtCWNvbnN0IHN0cnVjdCBzcGlfbm9yX2h3Y2FwcyBod2NhcHMg
-PSB7DQo+IC0JCS5tYXNrID0gU05PUl9IV0NBUFNfUkVBRCB8DQo+IC0JCQlTTk9SX0hXQ0FQU19S
-RUFEX0ZBU1QgfA0KPiAtCQkJU05PUl9IV0NBUFNfUkVBRF8xXzFfMiB8DQo+IC0JCQlTTk9SX0hX
-Q0FQU19SRUFEXzFfMV80IHwNCj4gLQkJCVNOT1JfSFdDQVBTX1BQLA0KPiAtCX07DQo+ICAJc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IGNxc3BpLT5wZGV2Ow0KPiAgCXN0cnVjdCBkZXZp
-Y2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ICsJY29uc3Qgc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0
-ZGF0YSAqZGRhdGE7DQo+ICsJc3RydWN0IHNwaV9ub3JfaHdjYXBzIGh3Y2FwczsNCj4gIAlzdHJ1
-Y3QgY3FzcGlfZmxhc2hfcGRhdGEgKmZfcGRhdGE7DQo+ICAJc3RydWN0IHNwaV9ub3IgKm5vcjsN
-Cj4gIAlzdHJ1Y3QgbXRkX2luZm8gKm10ZDsNCj4gIAl1bnNpZ25lZCBpbnQgY3M7DQo+ICAJaW50
-IGksIHJldDsNCj4gIA0KPiArCWRkYXRhID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRldik7
-DQo+ICsJaWYgKCFkZGF0YSkgew0KPiArCQlkZXZfZXJyKGRldiwgIkNvdWxkbnQndCBmaW5kIGRy
-aXZlciBkYXRhXG4iKTsNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsJfQ0KPiArCWh3Y2Fwcy5t
-YXNrID0gZGRhdGEtPmh3Y2Fwc19tYXNrOw0KPiArDQo+ICAJLyogR2V0IGZsYXNoIGRldmljZSBk
-YXRhICovDQo+ICAJZm9yX2VhY2hfYXZhaWxhYmxlX2NoaWxkX29mX25vZGUoZGV2LT5vZl9ub2Rl
-LCBucCkgew0KPiAgCQlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgInJlZyIsICZjcyk7
-DQo+IEBAIC0xMzEwLDcgKzEzMjcsNyBAQCBzdGF0aWMgaW50IGNxc3BpX3Byb2JlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJc3RydWN0IGNxc3BpX3N0ICpjcXNwaTsNCj4gIAlz
-dHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJlc19haGI7DQo+IC0J
-dW5zaWduZWQgbG9uZyBkYXRhOw0KPiArCWNvbnN0IHN0cnVjdCBjcXNwaV9kcml2ZXJfcGxhdGRh
-dGEgKmRkYXRhOw0KPiAgCWludCByZXQ7DQo+ICAJaW50IGlycTsNCj4gIA0KPiBAQCAtMTM3Nyw4
-ICsxMzk0LDggQEAgc3RhdGljIGludCBjcXNwaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KPiAgCX0NCj4gIA0KPiAgCWNxc3BpLT5tYXN0ZXJfcmVmX2Nsa19oeiA9IGNsa19n
-ZXRfcmF0ZShjcXNwaS0+Y2xrKTsNCj4gLQlkYXRhICA9ICh1bnNpZ25lZCBsb25nKW9mX2Rldmlj
-ZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiAtCWlmIChkYXRhICYgQ1FTUElfTkVFRFNfV1JfREVM
-QVkpDQo+ICsJZGRhdGEgID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRldik7DQo+ICsJaWYg
-KGRkYXRhICYmIChkZGF0YS0+cXVpcmtzICYgQ1FTUElfTkVFRFNfV1JfREVMQVkpKQ0KPiAgCQlj
-cXNwaS0+d3JfZGVsYXkgPSA1ICogRElWX1JPVU5EX1VQKE5TRUNfUEVSX1NFQywNCj4gIAkJCQkJ
-CSAgIGNxc3BpLT5tYXN0ZXJfcmVmX2Nsa19oeik7DQo+ICANCj4gQEAgLTE0NjAsMTQgKzE0Nzcs
-MzIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGNxc3BpX19kZXZfcG1fb3BzID0g
-ew0KPiAgI2RlZmluZSBDUVNQSV9ERVZfUE1fT1BTCU5VTEwNCj4gICNlbmRpZg0KPiAgDQo+ICtz
-dGF0aWMgY29uc3Qgc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSBjZG5zX3FzcGkgPSB7DQo+
-ICsJLmh3Y2Fwc19tYXNrID0gQ1FTUElfQkFTRV9IV0NBUFNfTUFTSywNCj4gK307DQo+ICsNCj4g
-K3N0YXRpYyBjb25zdCBzdHJ1Y3QgY3FzcGlfZHJpdmVyX3BsYXRkYXRhIGsyZ19xc3BpID0gew0K
-PiArCS5od2NhcHNfbWFzayA9IENRU1BJX0JBU0VfSFdDQVBTX01BU0ssDQo+ICsJLnF1aXJrcyA9
-IENRU1BJX05FRURTX1dSX0RFTEFZLA0KPiArfTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVj
-dCBjcXNwaV9kcml2ZXJfcGxhdGRhdGEgYW02NTRfb3NwaSA9IHsNCj4gKwkuaHdjYXBzX21hc2sg
-PSBDUVNQSV9CQVNFX0hXQ0FQU19NQVNLIHwgU05PUl9IV0NBUFNfUkVBRF8xXzFfOCwNCj4gKwku
-cXVpcmtzID0gQ1FTUElfTkVFRFNfV1JfREVMQVksDQo+ICt9Ow0KPiArDQo+ICBzdGF0aWMgY29u
-c3Qgc3RydWN0IG9mX2RldmljZV9pZCBjcXNwaV9kdF9pZHNbXSA9IHsNCj4gIAl7DQo+ICAJCS5j
-b21wYXRpYmxlID0gImNkbnMscXNwaS1ub3IiLA0KPiAtCQkuZGF0YSA9ICh2b2lkICopMCwNCj4g
-KwkJLmRhdGEgPSAmY2Ruc19xc3BpLA0KPiAgCX0sDQo+ICAJew0KPiAgCQkuY29tcGF0aWJsZSA9
-ICJ0aSxrMmctcXNwaSIsDQo+IC0JCS5kYXRhID0gKHZvaWQgKilDUVNQSV9ORUVEU19XUl9ERUxB
-WSwNCj4gKwkJLmRhdGEgPSAmazJnX3FzcGksDQo+ICsJfSwNCj4gKwl7DQo+ICsJCS5jb21wYXRp
-YmxlID0gInRpLGFtNjU0LW9zcGkiLA0KPiArCQkuZGF0YSA9ICZhbTY1NF9vc3BpLA0KPiAgCX0s
-DQo+ICAJeyAvKiBlbmQgb2YgdGFibGUgKi8gfQ0KPiAgfTsNCj4gDQo=
+On Fri, 08 Feb 2019, Matti Vaittinen wrote:
+
+> Hello Lee,
+> 
+> On Fri, Feb 08, 2019 at 10:57:43AM +0000, Lee Jones wrote:
+> > > 
+> > > This is needed by both RTC and WDT drivers as RTC driver must stop the
+> > > WDT when it sets RTC. WDT HW is using RTC counter and might trigger
+> > > timeout/reset when RTC is set. Options are to dublicate the
+> > > enable/disable to both drivers or to export a function or share a
+> > > function pointer. I didn't want dublication or dependency between RTC
+> > > and WDT drivers. Thus I thought that MFD is best place for this code as
+> > > both RTC and WDT require it anyways. Perhaps this should be commented
+> > > here?
+> > 
+> > I think an exported function with comments would be better.
+> 
+> So do you mean you would prefer exported function over the pointer from
+
+Yes please.  Call-back pointers for non-subsystem level actions are a
+bit messy IMHO.
+
+> MFD? I guess I can do it but I would still like to keep the code in the
+> MFD as I would rather not introduce dependency from WDT driver to RTC or
+> other way around. I can easily think of cases where WDT or RTC drivers
+> would be unnecessary and user might want to drop one of them out of
+
+Sounds fine.
+
+> configuration. And I wonder if export actually makes any real
+> improvement as we need to share the mutex between RTC and WDT anyways.
+
+They all (parent (MFD), RTC and WDT) have shared data anyway.
+
+> > [...]
+> > 
+> > > > > +	irqs[BD70528_INT_GPIO3].type.type_reg_offset = 6;
+> > > > > +	irqs[BD70528_INT_GPIO3].type.type_rising_val = 0x20;
+> > > > > +	irqs[BD70528_INT_GPIO3].type.type_falling_val = 0x10;
+> > > > > +	irqs[BD70528_INT_GPIO3].type.type_level_high_val = 0x40;
+> > > > > +	irqs[BD70528_INT_GPIO3].type.type_level_low_val = 0x50;
+> > > > > +	irqs[BD70528_INT_GPIO3].type.types_supported = (IRQ_TYPE_EDGE_BOTH |
+> > > > > +				IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW);
+> > > > 
+> > > > Could you please explain:
+> > > > 
+> > > > a) what you're doing here
+> > > 
+> > > Regmap-irq gained support for type-setting. On bd70528 the type setting
+> > > makes sense only for GPIO interrupts - so we must not populate type
+> > > setting information for the rest of the IRQs. The macro REGMAP_IRQ_REG
+> > > is nice and makes the irq struct initialization cleaner. Thus it is used.
+> > > It does not allow populating the type information - hence we do it here.
+> > > 
+> > > I can change this if you think some other way would be cleaner?
+> > 
+> > It's pretty fugly.  Can the REGMAP_IRQ_REG be expanded upon?
+> 
+> I was thinking of that but for vast majority of REGMAP_IRQ_REG users
+> initializing type regs would be just unnecessary burden (giving 6
+> zeroes for unsupported fields for each IRQ gets dull quite soon) I
+
+No, I don't mean edit REGMAP_IRQ_REG directly.  I'm proposing to
+create another, separate MACRO based on REGMAP_IRQ_REG.
+
+> was also thinking of adding another macro to be used in cases where
+> we have type setting supported - but macros with 9 parameters won't fit
+> on a line and (in my opinion) will not bring much improvement over
+> plain assignment.
+
+I think a 2 line MACRO is better than the current imp.
+
+> > > > b) why you don't mass assign them
+> > > >     - seeing as most of the data is identical.
+> > > 
+> > > Maybe I am a bit slow today - but I don't know how the 'mass assignment'
+> > > should be done?
+> > 
+> > Something like (completely untested):
+> > 
+> > unsigned int type_reg_offset_inc = 0;
+> > for (i = BD70528_INT_GPIO0; i <=  BD70528_INT_GPIO3; i++) {
+> > 	irqs[i].type.type_reg_offset     = type_reg_offset_inc;
+> > 	irqs[i].type.type_rising_val     = 0x20;
+> > 	irqs[i].type.type_falling_val    = 0x10;
+> > 	irqs[i].type.type_level_high_val = 0x40;
+> > 	irqs[i].type.type_level_low_val  = 0x50;
+> > 	irqs[i].type.types_supported =
+> > 		(IRQ_TYPE_EDGE_BOTH | IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW);
+> > 	type_reg_offset_inc += 2;
+> > }
+> 
+> Right. I did this this morning =)
+> 
+> > It's still fugly though.
+> 
+> Agree.
+> 
+> > If we can do this via MACROs, it would be better.
+> 
+> I just dont see how to do a nice macro for this. Truth is that there is
+> 6 fields to initialize - and the values can't be guessed so each value
+> needs to be given. In best case the macro can somewhat shorten the
+> assignment (but no way it'd still fit nicely on one row) - in worst
+
+Don't get hung up on MACROS existing on a single line.
+
+> case it just hides the meaning of values we are passing as arguments.
+> With raw assignment we at least have some idea what the 0x40 or 0x20 are
+> referring to =)
+
+Well I do agree with your last comment.
+
+Maybe doing the following would help with the ugliness (i.e. the shear
+number of chars):
+
+ unsigned int type_reg_offset_inc = 0;
+ for (i = BD70528_INT_GPIO0; i <=  BD70528_INT_GPIO3; i++) {
+        <blar> *t = irqs[i].type;
+        t->type_reg_offset     = type_reg_offset_inc;
+ 	t->type_rising_val     = 0x20;
+ 	t->type_falling_val    = 0x10;
+ 	t->type_level_high_val = 0x40;
+ 	t->type_level_low_val  = 0x50;
+ 	t->types_supported =
+ 		(IRQ_TYPE_EDGE_BOTH | IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW);
+ 	type_reg_offset_inc += 2;
+ }
+
+> > > > > +struct bd70528 {
+> > > > > +	/*
+> > > > > +	 * Please keep this as the first member here as some
+> > > > > +	 * drivers (clk) supporting more than one chip may only know this
+> > > > > +	 * generic struct 'struct rohm_regmap_dev' and assume it is
+> > > > > +	 * the first chunk of parent device's private data.
+> > > > > +	 */
+> > > > > +	struct rohm_regmap_dev chip;
+> > > > > +	/* wdt_set must be called rtc_timer_lock held */
+> > > > 
+> > > > This doesn't make sense.
+> > > 
+> > > Umm.. The comment does not make sense? Maybe I can explain it further.
+> > 
+> > "wdt_set must be called when the rtc_timer_lock is held"
+> 
+> Yes. I wanted to say that who-ever is calling the wdt_set function
+> below, should have locked the rtc_timer_lock mutex (last in this
+> struct). The function does not do locking inside because we want the RTC
+> to be able to perform:
+> 
+> lock
+> disable wdt (store original state)
+> set RTC
+> return wdt original state
+> unlock
+> 
+> Locking is needed so that we can exclude the watchdog enabling or
+> disabling the WDT timer between moments when RTC is getting the original
+> WDT state and re-turning back the old state. Without the lock we have a
+> risk that WDT-driver enables or disables the timer when RTC is being
+> set, and RTC overwrites the watchdog driver changes when writing back
+> the old state. I hope this makes sense now... Any suggestions how to
+> explain this nicely in english?
+
+I think I did already:
+
+ "wdt_set must be called when the rtc_timer_lock is held"
+
+Actually, this is a little ambiguous.  A better sentence could read:
+
+ "rtc_timer_lock must be taken before calling wdt_set()"
+ 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
