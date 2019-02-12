@@ -1,16 +1,12 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v2 3/3] pwm: core: add consumer device link
-Date: Tue, 12 Feb 2019 09:31:37 +0100
-Message-ID: <b9f1bb5c-36cd-f6e6-e6c6-a0257cf38b7e@st.com>
-References: <1549901522-15071-1-git-send-email-fabrice.gasnier@st.com>
- <1549901522-15071-4-git-send-email-fabrice.gasnier@st.com>
- <20190211190628.eisyi6wjus4ltrrn@pengutronix.de>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCHv4] arm64: dts: allwinner: a64: teres-i: enable backlight
+Date: Tue, 12 Feb 2019 09:34:02 +0100
+Message-ID: <20190212083402.tb43rxa6pkq3ctok@flea>
+References: <20190209104018.6765-1-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============8969224904763226706=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190211190628.eisyi6wjus4ltrrn@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <20190209104018.6765-1-harald@ccbib.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,57 +16,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, tduszyns@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+To: Harald Geyer <harald@ccbib.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMi8xMS8xOSA4OjA2IFBNLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToKPiBIZWxsbyBGYWJy
-aWNlLAo+IAo+IE9uIE1vbiwgRmViIDExLCAyMDE5IGF0IDA1OjEyOjAyUE0gKzAxMDAsIEZhYnJp
-Y2UgR2FzbmllciB3cm90ZToKPj4gQWRkIGEgZGV2aWNlIGxpbmsgYmV0d2VlbiB0aGUgUFdNIGNv
-bnN1bWVyIGFuZCB0aGUgUFdNIHByb3ZpZGVyLiBUaGlzCj4+IGVuZm9yY2VzIHRoZSBQV00gdXNl
-ciB0byBnZXQgc3VzcGVuZGVkIGJlZm9yZSB0aGUgUFdNIHByb3ZpZGVyLiBJdAo+PiBhbGxvd3Mg
-cHJvcGVyIHN5bmNocm9uaXphdGlvbiBvZiBzdXNwZW5kL3Jlc3VtZSBzZXF1ZW5jZXM6IHRoZSBQ
-V00gdXNlcgo+PiBpcyByZXNwb25zaWJsZSBmb3IgcHJvcGVybHkgc3RvcHBpbmcgUFdNLCBiZWZv
-cmUgdGhlIHByb3ZpZGVyIGdldHMKPj4gc3VzcGVuZGVkOiBzZWUgWzFdLiBBZGQgdGhlIGRldmlj
-ZSBsaW5rIGluOgo+PiAtIHB3bV9nZXQoKQo+PiAtIGRldm1fcHdtX2dldCgpCj4+IC0gZGV2bV9v
-Zl9wd21fZ2V0KCkKPj4gYXMgaXQgcmVxdWlyZXMgYSByZWZlcmVuY2UgdG8gdGhlIGRldmljZSBm
-b3IgdGhlIFBXTSBjb25zdW1lci4KPj4KPj4gWzFdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5
-LzIvNS83NzAKPj4KPj4gU3VnZ2VzdGVkLWJ5OiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRp
-bmdAZ21haWwuY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBGYWJyaWNlIEdhc25pZXIgPGZhYnJpY2Uu
-Z2FzbmllckBzdC5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9wd20vY29yZS5jIHwgMTMgKysrKysr
-KysrKystLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
-KC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9jb3JlLmMgYi9kcml2ZXJzL3B3bS9j
-b3JlLmMKPj4gaW5kZXggMTU4MWY2YS4uMjgzNWUyNyAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9w
-d20vY29yZS5jCj4+ICsrKyBiL2RyaXZlcnMvcHdtL2NvcmUuYwo+PiBAQCAtNzcwLDggKzc3MCwx
-MyBAQCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtX2dldChzdHJ1Y3QgZGV2aWNlICpkZXYsIGNvbnN0
-IGNoYXIgKmNvbl9pZCkKPj4gIAlpbnQgZXJyOwo+PiAgCj4+ICAJLyogbG9vayB1cCB2aWEgRFQg
-Zmlyc3QgKi8KPj4gLQlpZiAoSVNfRU5BQkxFRChDT05GSUdfT0YpICYmIGRldiAmJiBkZXYtPm9m
-X25vZGUpCj4+IC0JCXJldHVybiBvZl9wd21fZ2V0KGRldi0+b2Zfbm9kZSwgY29uX2lkKTsKPj4g
-KwlpZiAoSVNfRU5BQkxFRChDT05GSUdfT0YpICYmIGRldiAmJiBkZXYtPm9mX25vZGUpIHsKPj4g
-KwkJcHdtID0gb2ZfcHdtX2dldChkZXYtPm9mX25vZGUsIGNvbl9pZCk7Cj4+ICsJCWlmICghSVNf
-RVJSKHB3bSkpCj4+ICsJCQlkZXZpY2VfbGlua19hZGQoZGV2LCBwd20tPmNoaXAtPmRldiwKPj4g
-KwkJCQkJRExfRkxBR19BVVRPUkVNT1ZFX0NPTlNVTUVSKTsKPj4gKwkJcmV0dXJuIHB3bTsKPj4g
-Kwl9Cj4+ICAKPj4gIAkvKgo+PiAgCSAqIFdlIGxvb2sgdXAgdGhlIHByb3ZpZGVyIGluIHRoZSBz
-dGF0aWMgdGFibGUgdHlwaWNhbGx5IHByb3ZpZGVkIGJ5Cj4+IEBAIC04NTEsNiArODU2LDggQEAg
-c3RydWN0IHB3bV9kZXZpY2UgKnB3bV9nZXQoc3RydWN0IGRldmljZSAqZGV2LCBjb25zdCBjaGFy
-ICpjb25faWQpCj4+ICAJcHdtLT5hcmdzLnBlcmlvZCA9IGNob3Nlbi0+cGVyaW9kOwo+PiAgCXB3
-bS0+YXJncy5wb2xhcml0eSA9IGNob3Nlbi0+cG9sYXJpdHk7Cj4+ICAKPj4gKwlkZXZpY2VfbGlu
-a19hZGQoZGV2LCBwd20tPmNoaXAtPmRldiwgRExfRkxBR19BVVRPUkVNT1ZFX0NPTlNVTUVSKTsK
-Pj4gKwo+PiAgCXJldHVybiBwd207Cj4+ICB9Cj4+ICBFWFBPUlRfU1lNQk9MX0dQTChwd21fZ2V0
-KTsKPj4gQEAgLTk0Myw2ICs5NTAsOCBAQCBzdHJ1Y3QgcHdtX2RldmljZSAqZGV2bV9vZl9wd21f
-Z2V0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpucCwKPj4gIAlpZiAo
-IUlTX0VSUihwd20pKSB7Cj4+ICAJCSpwdHIgPSBwd207Cj4+ICAJCWRldnJlc19hZGQoZGV2LCBw
-dHIpOwo+PiArCQlkZXZpY2VfbGlua19hZGQoZGV2LCBwd20tPmNoaXAtPmRldiwKPj4gKwkJCQlE
-TF9GTEFHX0FVVE9SRU1PVkVfQ09OU1VNRVIpOwo+IAo+IElNSE8gaXQncyBzdXJwcmlzaW5nIHRo
-YXQgZGV2bV9vZl9wd21fZ2V0KCkgZG9lcyBtb3JlIHRoYW4gb2ZfcHdtX2dldCgpCj4gKyBkZXZy
-ZXMgc3R1ZmYuIEknZCBwdXQgZGV2aWNlX2xpbmtfYWRkKCkgaW50byBvZl9wd21fZ2V0KCkuCgpI
-aSBVd2UsCgpJIGFsc28gYWdyZWUgd2l0aCB0aGlzLiBCdXQgSSB0aGluayB0aGlzIGltcGxpZXMg
-bW9kaWZ5aW5nIHRoZSBBUEkgZm9yCm9mX3B3bV9nZXQoKToKIC8qKgogICogb2ZfcHdtX2dldCgp
-IC0gcmVxdWVzdCBhIFBXTSB2aWEgdGhlIFBXTSBmcmFtZXdvcmsKKyAqIEBkZXY6IGRldmljZSBm
-b3IgUFdNIGNvbnN1bWVyCiAgKiBAbnA6IGRldmljZSBub2RlIHRvIGdldCB0aGUgUFdNIGZyb20K
-ICAqIEBjb25faWQ6IGNvbnN1bWVyIG5hbWUKCkl0IHNlZW1zIHRoZXJlIGFyZW4ndCBtdWNoIG9m
-X3B3bV9nZXQoKSB1c2VycyBjdXJyZW50bHkuCkRvZXMgdGhpcyBsb29rIHNlbnNpYmxlID8KCkJl
-c3QgcmVnYXJkcywKRmFicmljZQoKPiAKPiBCZXN0IHJlZ2FyZHMKPiBVd2UKPiAKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+--===============8969224904763226706==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7kjgubf4vlob5jm6"
+Content-Disposition: inline
+
+
+--7kjgubf4vlob5jm6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Feb 09, 2019 at 10:40:18AM +0000, Harald Geyer wrote:
+> Enable pwm and add a pretty standard backlight node.
+>=20
+> The regulator is always on, but we include it anyway, because it is
+> required by the binding document.
+>=20
+> Signed-off-by: Harald Geyer <harald@ccbib.org>
+
+Applied, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--7kjgubf4vlob5jm6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXGKE+gAKCRDj7w1vZxhR
+xcCDAQC47v1EPuWItskGR2u5Yl+vpn+uibN/ON1cWU5Bz+KL+AEAor2oGLUEtih2
+AnUW1uqSNSaQJfuXJNncZaFydybfGQk=
+=TMlC
+-----END PGP SIGNATURE-----
+
+--7kjgubf4vlob5jm6--
+
+
+--===============8969224904763226706==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8969224904763226706==--
