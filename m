@@ -1,33 +1,51 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 06/12] dma-mapping: improve selection of
- dma_declare_coherent availability
-Date: Tue, 12 Feb 2019 02:17:26 +0000
-Message-ID: <20190212021724.cp4snlcqbm3kqtzu@pburton-laptop>
-References: <20190211133554.30055-1-hch@lst.de>
- <20190211133554.30055-7-hch@lst.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
+Subject: [PATCHv13 0/3] Intel FPGA Video and Image Processing Suite
+Date: Tue, 12 Feb 2019 10:36:20 +0800
+Message-ID: <20190212023623.2646-1-hean.loong.ong@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211133554.30055-7-hch@lst.de>
-Content-Language: en-US
-Content-ID: <101BE7318D87D541944405D342ACE1DB@namprd22.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, "x86@kernel.org" <x86@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Sam Ravnborg <sam@ravnborg.org>, Daniel Vetter <daniel.vetter@intel.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Rienk de Jong <rienk.dejong@quest-innovations.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com, chin.liang.see@intel.com, Ong@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christoph,
+From: Ong, Hean Loong <hean.loong.ong@intel.com>
 
-On Mon, Feb 11, 2019 at 02:35:48PM +0100, Christoph Hellwig wrote:
-> This API is primarily used through DT entries, but two architectures
-> and two drivers call it directly.  So instead of selecting the config
-> symbol for random architectures pull it in implicitly for the actual
-> users.  Also rename the Kconfig option to describe the feature better.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+The FPGA FrameBuffer Soft IP could be seen  as the GPU and the DRM driver
+patch here is allocating memory for information to be streamed from the
+ARM/Linux to the display port.
 
-Acked-by: Paul Burton <paul.burton@mips.com> # MIPS
+Basically the driver just wraps the information such as the pixels to be
+drawn by the Sodt IP FrameBuffer 2.
 
-Thanks,
-    Paul
+The piece of hardware in discussion is the SoC FPGA where Linux runs on
+the ARM chip and the FGPA is driven by its NIOS soft core with its own
+proprietary firmware.
+
+For example the application from the ARM Linux would have to write
+information on the /dev/fb0 with the information stored in the
+SDRAM to be fetched by the Framebuffer 2 Soft IP and displayed
+on the Display Port Monitor.
+
+Ong Hean Loong (1):
+  ARM:socfpga-defconfig Intel FPGA Video and Image Processing Suite
+
+Ong, Hean Loong (2):
+  ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
+  ARM:drm ivip Intel FPGA Video and Image Processing Suite
+
+ .../devicetree/bindings/display/altr,vip-fb2.txt   |   63 ++++
+ arch/arm/configs/socfpga_defconfig                 |    5 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/ivip/Kconfig                       |   14 +
+ drivers/gpu/drm/ivip/Makefile                      |    6 +
+ drivers/gpu/drm/ivip/intel_vip_conn.c              |   91 ++++++
+ drivers/gpu/drm/ivip/intel_vip_drv.c               |  335 ++++++++++++++++++++
+ drivers/gpu/drm/ivip/intel_vip_drv.h               |   73 +++++
+ 9 files changed, 590 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+ create mode 100644 drivers/gpu/drm/ivip/Kconfig
+ create mode 100644 drivers/gpu/drm/ivip/Makefile
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.c
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
