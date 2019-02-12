@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v3, 3/9] ptp_qoriq: convert to use ptp_qoriq_init/free
-Date: Tue, 12 Feb 2019 12:23:58 +0800
-Message-ID: <20190212042404.15575-4-yangbo.lu@nxp.com>
+Subject: [v3, 8/9] enetc: add PTP clock driver
+Date: Tue, 12 Feb 2019 12:24:03 +0800
+Message-ID: <20190212042404.15575-9-yangbo.lu@nxp.com>
 References: <20190212042404.15575-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190212042404.15575-1-yangbo.lu@nxp.com>
@@ -10,238 +10,219 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org
 Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Claudiu Manoil <claudiu.manoil@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Moved QorIQ PTP clock initialization/free into new functions
-ptp_qoriq_init()/ptp_qoriq_free(). These functions could also
-be reused by ENETC PTP drvier which is a PCI driver for same
-1588 timer IP block.
+This patch is to add PTP clock driver for ENETC.
+The driver reused QorIQ PTP clock driver.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
 Changes for v2:
 	- None.
 Changes for v3:
-	- Added ptp_qoriq_free().
+	- Converted to use ptp_qoriq_free().
 ---
- drivers/ptp/ptp_qoriq.c       |  144 ++++++++++++++++++++++-------------------
- include/linux/fsl/ptp_qoriq.h |    3 +
- 2 files changed, 80 insertions(+), 67 deletions(-)
+ drivers/net/ethernet/freescale/enetc/Kconfig     |   12 ++
+ drivers/net/ethernet/freescale/enetc/Makefile    |    3 +
+ drivers/net/ethernet/freescale/enetc/enetc_hw.h  |    5 +-
+ drivers/net/ethernet/freescale/enetc/enetc_ptp.c |  144 ++++++++++++++++++++++
+ 4 files changed, 162 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_ptp.c
 
-diff --git a/drivers/ptp/ptp_qoriq.c b/drivers/ptp/ptp_qoriq.c
-index 1f3e73e..db4f929 100644
---- a/drivers/ptp/ptp_qoriq.c
-+++ b/drivers/ptp/ptp_qoriq.c
-@@ -458,25 +458,17 @@ static int ptp_qoriq_auto_config(struct ptp_qoriq *ptp_qoriq,
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig b/drivers/net/ethernet/freescale/enetc/Kconfig
+index f9dd26f..8429f5c 100644
+--- a/drivers/net/ethernet/freescale/enetc/Kconfig
++++ b/drivers/net/ethernet/freescale/enetc/Kconfig
+@@ -17,3 +17,15 @@ config FSL_ENETC_VF
+ 	  virtual function (VF) devices enabled by the ENETC PF driver.
  
--static int ptp_qoriq_probe(struct platform_device *dev)
-+int ptp_qoriq_init(struct ptp_qoriq *ptp_qoriq, void __iomem *base,
-+		   const struct ptp_clock_info caps)
- {
--	struct device_node *node = dev->dev.of_node;
--	struct ptp_qoriq *ptp_qoriq;
-+	struct device_node *node = ptp_qoriq->dev->of_node;
- 	struct ptp_qoriq_registers *regs;
- 	struct timespec64 now;
--	int err = -ENOMEM;
--	u32 tmr_ctrl;
- 	unsigned long flags;
--	void __iomem *base;
--
--	ptp_qoriq = kzalloc(sizeof(*ptp_qoriq), GFP_KERNEL);
--	if (!ptp_qoriq)
--		goto no_memory;
--
--	err = -EINVAL;
-+	u32 tmr_ctrl;
- 
--	ptp_qoriq->dev = &dev->dev;
--	ptp_qoriq->caps = ptp_qoriq_caps;
-+	ptp_qoriq->base = base;
-+	ptp_qoriq->caps = caps;
- 
- 	if (of_property_read_u32(node, "fsl,cksel", &ptp_qoriq->cksel))
- 		ptp_qoriq->cksel = DEFAULT_CKSEL;
-@@ -501,44 +493,9 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 		pr_warn("device tree node missing required elements, try automatic configuration\n");
- 
- 		if (ptp_qoriq_auto_config(ptp_qoriq, node))
--			goto no_config;
-+			return -ENODEV;
- 	}
- 
--	err = -ENODEV;
--
--	ptp_qoriq->irq = platform_get_irq(dev, 0);
--
--	if (ptp_qoriq->irq < 0) {
--		pr_err("irq not in device tree\n");
--		goto no_node;
--	}
--	if (request_irq(ptp_qoriq->irq, ptp_qoriq_isr, IRQF_SHARED,
--			DRIVER, ptp_qoriq)) {
--		pr_err("request_irq failed\n");
--		goto no_node;
--	}
--
--	ptp_qoriq->rsrc = platform_get_resource(dev, IORESOURCE_MEM, 0);
--	if (!ptp_qoriq->rsrc) {
--		pr_err("no resource\n");
--		goto no_resource;
--	}
--	if (request_resource(&iomem_resource, ptp_qoriq->rsrc)) {
--		pr_err("resource busy\n");
--		goto no_resource;
--	}
--
--	spin_lock_init(&ptp_qoriq->lock);
--
--	base = ioremap(ptp_qoriq->rsrc->start,
--		       resource_size(ptp_qoriq->rsrc));
--	if (!base) {
--		pr_err("ioremap ptp registers failed\n");
--		goto no_ioremap;
--	}
--
--	ptp_qoriq->base = base;
--
- 	if (of_device_is_compatible(node, "fsl,fman-ptp-timer")) {
- 		ptp_qoriq->regs.ctrl_regs = base + FMAN_CTRL_REGS_OFFSET;
- 		ptp_qoriq->regs.alarm_regs = base + FMAN_ALARM_REGS_OFFSET;
-@@ -558,6 +515,7 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 	  (ptp_qoriq->tclk_period & TCLK_PERIOD_MASK) << TCLK_PERIOD_SHIFT |
- 	  (ptp_qoriq->cksel & CKSEL_MASK) << CKSEL_SHIFT;
- 
-+	spin_lock_init(&ptp_qoriq->lock);
- 	spin_lock_irqsave(&ptp_qoriq->lock, flags);
- 
- 	regs = &ptp_qoriq->regs;
-@@ -571,16 +529,77 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 
- 	spin_unlock_irqrestore(&ptp_qoriq->lock, flags);
- 
--	ptp_qoriq->clock = ptp_clock_register(&ptp_qoriq->caps, &dev->dev);
--	if (IS_ERR(ptp_qoriq->clock)) {
--		err = PTR_ERR(ptp_qoriq->clock);
--		goto no_clock;
--	}
--	ptp_qoriq->phc_index = ptp_clock_index(ptp_qoriq->clock);
-+	ptp_qoriq->clock = ptp_clock_register(&ptp_qoriq->caps, ptp_qoriq->dev);
-+	if (IS_ERR(ptp_qoriq->clock))
-+		return PTR_ERR(ptp_qoriq->clock);
- 
-+	ptp_qoriq->phc_index = ptp_clock_index(ptp_qoriq->clock);
- 	ptp_qoriq_create_debugfs(ptp_qoriq);
--	platform_set_drvdata(dev, ptp_qoriq);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(ptp_qoriq_init);
+ 	  If compiled as module (M), the module name is fsl-enetc-vf.
 +
-+void ptp_qoriq_free(struct ptp_qoriq *ptp_qoriq)
-+{
-+	struct ptp_qoriq_registers *regs = &ptp_qoriq->regs;
++config FSL_ENETC_PTP_CLOCK
++	tristate "ENETC PTP clock driver"
++	depends on PTP_1588_CLOCK_QORIQ && (FSL_ENETC || FSL_ENETC_VF)
++	default y
++	help
++	  This driver adds support for using the ENETC 1588 timer
++	  as a PTP clock. This clock is only useful if your PTP
++	  programs are getting hardware time stamps on the PTP Ethernet
++	  packets using the SO_TIMESTAMPING API.
 +
-+	qoriq_write(&regs->ctrl_regs->tmr_temask, 0);
-+	qoriq_write(&regs->ctrl_regs->tmr_ctrl,   0);
++	  If compiled as module (M), the module name is fsl-enetc-ptp.
+diff --git a/drivers/net/ethernet/freescale/enetc/Makefile b/drivers/net/ethernet/freescale/enetc/Makefile
+index 9529b01..6976602 100644
+--- a/drivers/net/ethernet/freescale/enetc/Makefile
++++ b/drivers/net/ethernet/freescale/enetc/Makefile
+@@ -13,3 +13,6 @@ fsl-enetc-vf-$(CONFIG_FSL_ENETC_VF) += enetc.o enetc_cbdr.o \
+ 				       enetc_ethtool.o
+ fsl-enetc-vf-objs := enetc_vf.o $(fsl-enetc-vf-y)
+ endif
 +
-+	ptp_qoriq_remove_debugfs(ptp_qoriq);
-+	ptp_clock_unregister(ptp_qoriq->clock);
-+	iounmap(ptp_qoriq->base);
-+	free_irq(ptp_qoriq->irq, ptp_qoriq);
-+}
-+EXPORT_SYMBOL_GPL(ptp_qoriq_free);
++obj-$(CONFIG_FSL_ENETC_PTP_CLOCK) += fsl-enetc-ptp.o
++fsl-enetc-ptp-$(CONFIG_FSL_ENETC_PTP_CLOCK) += enetc_ptp.o
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+index efa0b1a..df8eb88 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+@@ -4,8 +4,9 @@
+ #include <linux/bitops.h>
+ 
+ /* ENETC device IDs */
+-#define ENETC_DEV_ID_PF	0xe100
+-#define ENETC_DEV_ID_VF	0xef00
++#define ENETC_DEV_ID_PF		0xe100
++#define ENETC_DEV_ID_VF		0xef00
++#define ENETC_DEV_ID_PTP	0xee02
+ 
+ /* ENETC register block BAR */
+ #define ENETC_BAR_REGS	0
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_ptp.c b/drivers/net/ethernet/freescale/enetc/enetc_ptp.c
+new file mode 100644
+index 0000000..dc2f58a
+--- /dev/null
++++ b/drivers/net/ethernet/freescale/enetc/enetc_ptp.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/* Copyright 2019 NXP */
 +
-+static int ptp_qoriq_probe(struct platform_device *dev)
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/fsl/ptp_qoriq.h>
++
++#include "enetc.h"
++
++static struct ptp_clock_info enetc_ptp_caps = {
++	.owner		= THIS_MODULE,
++	.name		= "ENETC PTP clock",
++	.max_adj	= 512000,
++	.n_alarm	= 0,
++	.n_ext_ts	= 2,
++	.n_per_out	= 0,
++	.n_pins		= 0,
++	.pps		= 1,
++	.adjfine	= ptp_qoriq_adjfine,
++	.adjtime	= ptp_qoriq_adjtime,
++	.gettime64	= ptp_qoriq_gettime,
++	.settime64	= ptp_qoriq_settime,
++	.enable		= ptp_qoriq_enable,
++};
++
++static int enetc_ptp_probe(struct pci_dev *pdev,
++			   const struct pci_device_id *ent)
 +{
 +	struct ptp_qoriq *ptp_qoriq;
-+	int err = -ENOMEM;
 +	void __iomem *base;
- 
++	int err, len, n;
++
++	if (pdev->dev.of_node && !of_device_is_available(pdev->dev.of_node)) {
++		dev_info(&pdev->dev, "device is disabled, skipping\n");
++		return -ENODEV;
++	}
++
++	err = pci_enable_device_mem(pdev);
++	if (err) {
++		dev_err(&pdev->dev, "device enable failed\n");
++		return err;
++	}
++
++	/* set up for high or low dma */
++	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	if (err) {
++		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++		if (err) {
++			dev_err(&pdev->dev,
++				"DMA configuration failed: 0x%x\n", err);
++			goto err_dma;
++		}
++	}
++
++	err = pci_request_mem_regions(pdev, KBUILD_MODNAME);
++	if (err) {
++		dev_err(&pdev->dev, "pci_request_regions failed err=%d\n", err);
++		goto err_pci_mem_reg;
++	}
++
++	pci_set_master(pdev);
++
 +	ptp_qoriq = kzalloc(sizeof(*ptp_qoriq), GFP_KERNEL);
-+	if (!ptp_qoriq)
-+		goto no_memory;
-+
-+	ptp_qoriq->dev = &dev->dev;
-+
-+	err = -ENODEV;
-+
-+	ptp_qoriq->irq = platform_get_irq(dev, 0);
-+	if (ptp_qoriq->irq < 0) {
-+		pr_err("irq not in device tree\n");
-+		goto no_node;
-+	}
-+	if (request_irq(ptp_qoriq->irq, ptp_qoriq_isr, IRQF_SHARED,
-+			DRIVER, ptp_qoriq)) {
-+		pr_err("request_irq failed\n");
-+		goto no_node;
++	if (!ptp_qoriq) {
++		err = -ENOMEM;
++		goto err_alloc_ptp;
 +	}
 +
-+	ptp_qoriq->rsrc = platform_get_resource(dev, IORESOURCE_MEM, 0);
-+	if (!ptp_qoriq->rsrc) {
-+		pr_err("no resource\n");
-+		goto no_resource;
-+	}
-+	if (request_resource(&iomem_resource, ptp_qoriq->rsrc)) {
-+		pr_err("resource busy\n");
-+		goto no_resource;
-+	}
++	len = pci_resource_len(pdev, ENETC_BAR_REGS);
 +
-+	base = ioremap(ptp_qoriq->rsrc->start,
-+		       resource_size(ptp_qoriq->rsrc));
++	base = ioremap(pci_resource_start(pdev, ENETC_BAR_REGS), len);
 +	if (!base) {
-+		pr_err("ioremap ptp registers failed\n");
-+		goto no_ioremap;
++		err = -ENXIO;
++		dev_err(&pdev->dev, "ioremap() failed\n");
++		goto err_ioremap;
 +	}
 +
-+	err = ptp_qoriq_init(ptp_qoriq, base, ptp_qoriq_caps);
-+	if (err)
-+		goto no_clock;
++	/* Allocate 1 interrupt */
++	n = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSIX);
++	if (n != 1) {
++		err = -EPERM;
++		goto err_irq;
++	}
 +
-+	platform_set_drvdata(dev, ptp_qoriq);
- 	return 0;
- 
- no_clock:
-@@ -589,7 +608,6 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- 	release_resource(ptp_qoriq->rsrc);
- no_resource:
- 	free_irq(ptp_qoriq->irq, ptp_qoriq);
--no_config:
- no_node:
- 	kfree(ptp_qoriq);
- no_memory:
-@@ -599,18 +617,10 @@ static int ptp_qoriq_probe(struct platform_device *dev)
- static int ptp_qoriq_remove(struct platform_device *dev)
- {
- 	struct ptp_qoriq *ptp_qoriq = platform_get_drvdata(dev);
--	struct ptp_qoriq_registers *regs = &ptp_qoriq->regs;
- 
--	qoriq_write(&regs->ctrl_regs->tmr_temask, 0);
--	qoriq_write(&regs->ctrl_regs->tmr_ctrl,   0);
--
--	ptp_qoriq_remove_debugfs(ptp_qoriq);
--	ptp_clock_unregister(ptp_qoriq->clock);
--	iounmap(ptp_qoriq->base);
++	ptp_qoriq->irq = pci_irq_vector(pdev, 0);
++
++	err = request_irq(ptp_qoriq->irq, ptp_qoriq_isr, 0, DRIVER, ptp_qoriq);
++	if (err) {
++		dev_err(&pdev->dev, "request_irq() failed!\n");
++		goto err_irq;
++	}
++
++	ptp_qoriq->dev = &pdev->dev;
++
++	err = ptp_qoriq_init(ptp_qoriq, base, enetc_ptp_caps);
++	if (err)
++		goto err_no_clock;
++
++	pci_set_drvdata(pdev, ptp_qoriq);
++
++	return 0;
++
++err_no_clock:
++	free_irq(ptp_qoriq->irq, ptp_qoriq);
++err_irq:
++	iounmap(base);
++err_ioremap:
++	kfree(ptp_qoriq);
++err_alloc_ptp:
++	pci_release_mem_regions(pdev);
++err_pci_mem_reg:
++err_dma:
++	pci_disable_device(pdev);
++
++	return err;
++}
++
++static void enetc_ptp_remove(struct pci_dev *pdev)
++{
++	struct ptp_qoriq *ptp_qoriq = pci_get_drvdata(pdev);
++
 +	ptp_qoriq_free(ptp_qoriq);
- 	release_resource(ptp_qoriq->rsrc);
--	free_irq(ptp_qoriq->irq, ptp_qoriq);
- 	kfree(ptp_qoriq);
--
- 	return 0;
- }
- 
-diff --git a/include/linux/fsl/ptp_qoriq.h b/include/linux/fsl/ptp_qoriq.h
-index 75e6f05..757aec3 100644
---- a/include/linux/fsl/ptp_qoriq.h
-+++ b/include/linux/fsl/ptp_qoriq.h
-@@ -173,6 +173,9 @@ static inline void qoriq_write(unsigned __iomem *addr, u32 val)
- }
- 
- irqreturn_t ptp_qoriq_isr(int irq, void *priv);
-+int ptp_qoriq_init(struct ptp_qoriq *ptp_qoriq, void __iomem *base,
-+		   const struct ptp_clock_info caps);
-+void ptp_qoriq_free(struct ptp_qoriq *ptp_qoriq);
- int ptp_qoriq_adjfine(struct ptp_clock_info *ptp, long scaled_ppm);
- int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta);
- int ptp_qoriq_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts);
++	kfree(ptp_qoriq);
++
++	pci_release_mem_regions(pdev);
++	pci_disable_device(pdev);
++}
++
++static const struct pci_device_id enetc_ptp_id_table[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, ENETC_DEV_ID_PTP) },
++	{ 0, } /* End of table. */
++};
++MODULE_DEVICE_TABLE(pci, enetc_ptp_id_table);
++
++static struct pci_driver enetc_ptp_driver = {
++	.name = KBUILD_MODNAME,
++	.id_table = enetc_ptp_id_table,
++	.probe = enetc_ptp_probe,
++	.remove = enetc_ptp_remove,
++};
++module_pci_driver(enetc_ptp_driver);
++
++MODULE_DESCRIPTION("ENETC PTP clock driver");
++MODULE_LICENSE("Dual BSD/GPL");
 -- 
 1.7.1
