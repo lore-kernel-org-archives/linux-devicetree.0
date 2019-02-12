@@ -1,58 +1,59 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v4 05/10] mfd: max77650: new core mfd driver
-Date: Tue, 12 Feb 2019 11:24:32 +0100
-Message-ID: <CAMRc=MfYeVbvY6O03xq4eLN9TVpAKWCAXPk0eP5LSBCU7VU9fA@mail.gmail.com>
-References: <20190205091237.6448-1-brgl@bgdev.pl> <20190205091237.6448-6-brgl@bgdev.pl>
- <20190212083642.GT20638@dell> <CAMRc=MderQf20_8aG4-otBkCv60FSNSSqV3NVALPkFL-MqmJbg@mail.gmail.com>
- <20190212095457.GA20638@dell> <CAMRc=MdyT7nMJ7dUTf6M3PvRdynaCurb_TftMyA4eCwzpR9fVA@mail.gmail.com>
- <20190212101835.GB20638@dell>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [RFC 1/6] mfd: Support for Ettus Research E31x devices PMU
+Date: Tue, 12 Feb 2019 02:51:51 -0800
+Message-ID: <CAAtXAHd=-8H7AYpApe1B+WRWCv54GhxJBv1BD4bc-C9rnScU+w@mail.gmail.com>
+References: <20190212010143.3729-1-virendra.kakade@ni.com> <20190212010143.3729-2-virendra.kakade@ni.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212101835.GB20638@dell>
+In-Reply-To: <20190212010143.3729-2-virendra.kakade@ni.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Virendra Kakade <virendra.kakade@ni.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-wt., 12 lut 2019 o 11:18 Lee Jones <lee.jones@linaro.org> napisa=C5=82(a):
+Hi Virendra,
+
+On Mon, Feb 11, 2019 at 5:02 PM Virendra Kakade <virendra.kakade@ni.com> wrote:
 >
-> On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
+> Document bindings for E31x device PMU MFD driver.
 >
-> > wt., 12 lut 2019 o 10:55 Lee Jones <lee.jones@linaro.org> napisa=C5=82(=
-a):
-> > >
-> > >  * The declaration of a superfluous struct
-> > >  * 100 lines of additional/avoidable code
-> > >  * Hacky hoop jumping trying to fudge VIRQs into resources
-> > >  * Resources were designed for HWIRQs (unless a domain is present)
-> > >  * Loads of additional/avoidable CPU cycles setting all this up
-> >
-> > While the above may be right, this one is negligible and you know it. :=
-)
+> Signed-off-by: Virendra Kakade <virendra.kakade@ni.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/e31x-pmu.txt | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/e31x-pmu.txt
 >
-> You have nested for() loops.  You *are* wasting lots of cycles.
+> diff --git a/Documentation/devicetree/bindings/mfd/e31x-pmu.txt b/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
+> new file mode 100644
+> index 000000000000..ebb5625f6c74
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
+> @@ -0,0 +1,14 @@
+> +Ettus Research/National Instruments E31x PMU MFD driver
+> +
+> +Required properties:
+> +- compatible : Must be "ni,e31x-pmu"
+> +- regmap     : Must be <&regmapnode>
+> +
+> +Example:
+> +
+> +pmu {
+> +       compatible = "ni,e31x-pmu";
+> +       regmap = <&devctrl>;
+> +       status = "okay";
+
+Please drop this.
 >
-> > > Need I go on? :)
-> > >
-> > > Surely the fact that you are using both sides of an API
-> > > (devm_regmap_init_i2c and regmap_irq_get_*) in the same driver, must
-> > > set some alarm bells ringing?
-> > >
-> > > This whole HWIRQ setting, VIRQ getting, resource hacking is a mess.
-> > >
-> > > And for what?  To avoid passing IRQ data to a child driver?
-> >
-> > What do you propose? Should I go back to the approach in v1 and pass
-> > the regmap_irq_chip_data to child drivers?
->
-> I'm saying you should remove all of this hackery and pass IRQs as they
-> are supposed to be passed (like everyone else does).
+> +};
+> +
+> --
+> 2.17.1
 >
 
-I'm not sure what you mean by "like everyone else does" - different
-mfd drivers seem to be doing different things. Is a simple struct
-containing virtual irq numbers passed to sub-drivers fine?
+Your binding patches should have "dt-bindings: ... " in the commit message.
 
-Bart
+Please fix that when you resubmit your series.
+
+Cheers,
+Moritz
