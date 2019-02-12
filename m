@@ -1,67 +1,47 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/8] dt-bindings: phy: Add Amlogic G12A USB3+PCIE Combo PHY
- Bindings
-Date: Tue, 12 Feb 2019 16:14:07 +0100
-Message-ID: <20190212151413.24632-3-narmstrong@baylibre.com>
-References: <20190212151413.24632-1-narmstrong@baylibre.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH v1 2/3] regulator: add
+ regulator_desc_list_voltage_linear_range
+Date: Tue, 12 Feb 2019 15:34:08 +0000
+Message-ID: <20190212153408.GE20635@sirena.org.uk>
+References: <b07e501c84c77c59f0a2a67c43576373a140f10f.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190212151413.24632-1-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="19uQFt6ulqmgNgg1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b07e501c84c77c59f0a2a67c43576373a140f10f.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the Amlogic G12A Family USB3 + PCIE Combo PHY Bindings.
 
-This PHY can provide exclusively USB3 or PCIE support on shared I/Os.
+--19uQFt6ulqmgNgg1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+On Tue, Feb 12, 2019 at 04:18:46PM +0200, Matti Vaittinen wrote:
 
-diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-new file mode 100644
-index 000000000000..714d751091f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-@@ -0,0 +1,25 @@
-+* Amlogic G12A USB3 + PCIE Combo PHY binding
-+
-+Required properties:
-+- compatible:	Should be "amlogic,meson-g12a-usb3-pcie-phy"
-+- #phys-cells:	must be 1. The cell number is used to select the phy mode
-+  as defined in <dt-bindings/phy/phy.h> between PHY_TYPE_USB3 and PHY_TYPE_PCIE
-+- reg:		The base address and length of the registers
-+- clocks:	a phandle to the 100MHz reference clock of this PHY
-+- clock-names:	must be "ref_clk"
-+- resets:	phandle to the reset lines for:
-+		- the PHY control
-+		- the USB3+PCIE PHY
-+		- the PHY registers
-+
-+Example:
-+	usb3_pcie_phy: phy@46000 {
-+		compatible = "amlogic,g12a-usb3-pcie-phy";
-+		reg = <0x0 0x46000 0x0 0x2000>;
-+		clocks = <&clkc CLKID_PCIE_PLL>;
-+		clock-names = "ref_clk";
-+		resets = <&reset RESET_PCIE_CTRL_A>,
-+			 <&reset RESET_PCIE_PHY>,
-+			 <&reset RESET_PCIE_APB>;
-+		#phy-cells = <1>;
-+	};
--- 
-2.20.1
+> Add regulator_desc_list_voltage_linear_range which can be used
+> by drivers for getting the voltages before regulator is registered.
+> This may be useful for drivers which need to fetch the voltage
+> selectors at device-tree parsing callback.
+
+This seems fine.
+
+--19uQFt6ulqmgNgg1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxi528ACgkQJNaLcl1U
+h9A2Wgf/WiSjmwLgHQTPyCGf1Sbz8vbqTBhUHH54wARjgAV284XgiCShR+gN36Yy
+SgqwuDospXsR2ieWwDSIGaSWGP2ZszxI9IMO+ln7g46IbwEQcfjG6vpehRft05Fp
+A3ScY61nkouQttCGUvrZSwnMZLUs4NXm4lQ/9QFZDvt69N3uzZpuOGiieRUfcKPx
+EMNiYCmEyOyesYzcyTySRarE6OdIdnCMuGZx8xSWLUf6lAWgUiQzbg1DadB+yjBk
+m2kFKmmHl+bHOPTUOKHYJEnXzHZBV4gbFPdnCqaO0+OGxQLFKbGHMrutU/9/sWuc
+ikXke/wV8Ta9uTnhnNmaakdDxtR9mg==
+=KZNW
+-----END PGP SIGNATURE-----
+
+--19uQFt6ulqmgNgg1--
