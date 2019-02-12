@@ -1,30 +1,64 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add cpu opp table
-Date: Tue, 12 Feb 2019 12:41:45 +0000
-Message-ID: <20190212124144.gxxecxqu5xk2ts2m@fsr-ub1664-175>
-References: <1549973439-26706-1-git-send-email-abel.vesa@nxp.com>
- <CAOMZO5BgWYKv_sJ=pmknEs+CdOasdK47H32xbwtHub6s0yi=rQ@mail.gmail.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v4 0/3] drivers: soc: xilinx: Add support for ZynqMP power
+ domain driver
+Date: Tue, 12 Feb 2019 13:43:41 +0100
+Message-ID: <260f1225-882f-d49c-8a6b-6d40730081ae@xilinx.com>
+References: <1549058930-18644-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5BgWYKv_sJ=pmknEs+CdOasdK47H32xbwtHub6s0yi=rQ@mail.gmail.com>
+In-Reply-To: <1549058930-18644-1-git-send-email-jollys@xilinx.com>
 Content-Language: en-US
-Content-ID: <7AA8AB28B3E6654E827C7A2C090881EF@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Anson Huang <anson.huang@nxp.com>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jolly Shah <jolly.shah@xilinx.com>, matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19-02-12 10:14:55, Fabio Estevam wrote:
-> Hi Abel,
->=20
-> On Tue, Feb 12, 2019 at 10:13 AM Abel Vesa <abel.vesa@nxp.com> wrote:
-> >
-> > From: Anson Huang <Anson.Huang@nxp.com>
-> >
-> > Add i.MX8MQ cpu OPP table info for cpu-freq driver.
->=20
-> Has the imx8m cpufreq driver already been submitted?
+On 01. 02. 19 23:08, Jolly Shah wrote:
+> The zynqmp power domain driver communicates the usage requirements
+> for logical power domains / devices to the platform FW.
+> FW is responsible for choosing appropriate power states,
+> taking Linux' usage information into account.
+> 
+> v4:
+>  - Added reviewed tag for dt bindings
+>  - Remove local device list for each domain and use list maintained in core genpd structure
+>  - Remove hardcoded pd-id to node ID mapping. Instead use argument passed in peripheral node as node ID. 
+>    Firmware would validate node ID when APIs requested from genpd ops.
+> 
+> v3:
+>  - Changed binding to have FW node as a power controller as suggested by Rob
+>  - Updated FW driver to register it as mfd child devices from firmware probe
+>  - Move bindings location as suggested
+> 
+> v2:
+>  - Rebased on top of latest firmware driver patch series
+>  - Updated driver name from zynqmp-genpd to zynqmp-power-controller
+>  - Updated device tree bindings to move power controller node under firmware node
+> 
+> Jolly Shah (1):
+>   drivers: soc: xilinx: Add ZynqMP power domain driver
+> 
+> Rajan Vaja (2):
+>   dt-bindings: power: Add ZynqMP power domain bindings
+>   firmware: xilinx: Add APIs to control node status/power
+> 
+>  .../bindings/power/xlnx,zynqmp-genpd.txt           |  34 +++
+>  drivers/firmware/xilinx/Kconfig                    |   1 +
+>  drivers/firmware/xilinx/zynqmp.c                   |  73 +++++
+>  drivers/soc/xilinx/Kconfig                         |   9 +
+>  drivers/soc/xilinx/Makefile                        |   1 +
+>  drivers/soc/xilinx/zynqmp_pm_domains.c             | 321 +++++++++++++++++++++
+>  include/dt-bindings/power/xlnx-zynqmp-power.h      |  39 +++
+>  include/linux/firmware/xlnx-zynqmp.h               |  26 ++
+>  8 files changed, 504 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+>  create mode 100644 drivers/soc/xilinx/zynqmp_pm_domains.c
+>  create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+> 
 
-I just sent the cpufreq driver along with the device registering.=
+Applied.
+
+Thanks,
+Michal
