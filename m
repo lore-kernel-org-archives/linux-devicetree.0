@@ -1,85 +1,33 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 2/2] PCI: imx6: Add code to request/control "pcie_aux" clock for i.MX8MQ
-Date: Mon, 11 Feb 2019 17:51:08 -0800
-Message-ID: <20190212015108.16952-3-andrew.smirnov@gmail.com>
-References: <20190212015108.16952-1-andrew.smirnov@gmail.com>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH 06/12] dma-mapping: improve selection of
+ dma_declare_coherent availability
+Date: Tue, 12 Feb 2019 02:17:26 +0000
+Message-ID: <20190212021724.cp4snlcqbm3kqtzu@pburton-laptop>
+References: <20190211133554.30055-1-hch@lst.de>
+ <20190211133554.30055-7-hch@lst.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212015108.16952-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190211133554.30055-7-hch@lst.de>
+Content-Language: en-US
+Content-ID: <101BE7318D87D541944405D342ACE1DB@namprd22.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, "x86@kernel.org" <x86@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PCIe IP block has additional clock, "pcie_aux", that needs to be
-controlled by the driver. Add code to support that.
+Hi Christoph,
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: linux-imx@nxp.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
----
- drivers/pci/controller/dwc/pci-imx6.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On Mon, Feb 11, 2019 at 02:35:48PM +0100, Christoph Hellwig wrote:
+> This API is primarily used through DT entries, but two architectures
+> and two drivers call it directly.  So instead of selecting the config
+> symbol for random architectures pull it in implicitly for the actual
+> users.  Also rename the Kconfig option to describe the feature better.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 7cdf8f9ab244..1a7031782846 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -65,6 +65,7 @@ struct imx6_pcie {
- 	struct clk		*pcie_phy;
- 	struct clk		*pcie_inbound_axi;
- 	struct clk		*pcie;
-+	struct clk		*pcie_aux;
- 	struct regmap		*iomuxc_gpr;
- 	u32			controller_id;
- 	struct reset_control	*pciephy_reset;
-@@ -421,6 +422,12 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 	case IMX7D:
- 		break;
- 	case IMX8MQ:
-+		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
-+		if (ret) {
-+			dev_err(dev, "unable to enable pcie_aux clock\n");
-+			break;
-+		}
-+
- 		offset = imx6_pcie_grp_offset(imx6_pcie);
- 		/*
- 		 * Set the over ride low and enabled
-@@ -904,6 +911,9 @@ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
- 				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
- 				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
- 		break;
-+	case IMX8MQ:
-+		clk_disable_unprepare(imx6_pcie->pcie_aux);
-+		break;
- 	default:
- 		break;
- 	}
-@@ -1049,6 +1059,12 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 			dev_err(dev, "Failed to get PCIE APPS reset control\n");
- 			return PTR_ERR(imx6_pcie->apps_reset);
- 		}
-+
-+		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
-+		if (IS_ERR(imx6_pcie->pcie_aux)) {
-+			dev_err(dev, "pcie_aux clock source missing or invalid\n");
-+			return PTR_ERR(imx6_pcie->pcie_aux);
-+		}
- 		break;
- 	default:
- 		break;
--- 
-2.20.1
+Acked-by: Paul Burton <paul.burton@mips.com> # MIPS
+
+Thanks,
+    Paul
