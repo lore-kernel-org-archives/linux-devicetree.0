@@ -1,84 +1,67 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Add one new cell to present
- hardware slave id
-Date: Tue, 12 Feb 2019 16:24:51 +0800
-Message-ID: <CAMz4kuLEut0LqZ4bSAGJDufE8xHr6DgZ3Z1RCLQ10q_k6MUesw@mail.gmail.com>
-References: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
- <CAK8P3a2zkhrZLMi5KZ5=fGJCt85dad3_pZC0o7GqcwJkk4es9w@mail.gmail.com> <CAMz4ku+PR4bHtcPu2uT2f974+FWJVi8Tp3WzmuqE1TS-M-QawQ@mail.gmail.com>
+From: Mark Zhang <markz@nvidia.com>
+Subject: Re: [PATCH v2 0/4] Add max77620 charging & low battery support
+Date: Tue, 12 Feb 2019 16:29:51 +0800
+Message-ID: <4d0a1e3c-becd-70a8-920f-a37ee1ee48cc@nvidia.com>
+References: <20190129085531.32364-1-markz@nvidia.com>
+ <20190207084836.GF4672@dell>
+ <a43eb007-c984-a209-2b4e-6672807029aa@nvidia.com>
+ <20190212080457.GL20638@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMz4ku+PR4bHtcPu2uT2f974+FWJVi8Tp3WzmuqE1TS-M-QawQ@mail.gmail.com>
+In-Reply-To: <20190212080457.GL20638@dell>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Dan Williams <dan.j.williams@intel.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, eric.long@unisoc.com, Mark Brown <broonie@kernel.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: blaws05@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 2/12/2019 4:04 PM, Lee Jones wrote:
+> On Tue, 12 Feb 2019, Mark Zhang wrote:
+> 
+>> On 2/7/2019 4:48 PM, Lee Jones wrote:
+>>> On Tue, 29 Jan 2019, Mark Zhang wrote:
+>>>
+>>>> This patch set adds support for max77620 backup battery charging and
+>>>> low battery monitoring.
+>>>>
+>>>> Changes in v2:
+>>>> - Add devicetree binding documentation
+>>>>
+>>>> Mark Zhang (4):
+>>>>   mfd: max77620: Add backup battery charger support
+>>>>   mfd: max77620: add documentation for backup battery charging
+>>>>   mfd: max77620: Add low battery monitor support
+>>>>   mfd: max77620: add documentation for low battery monitoring
+>>>>
+>>>>  .../devicetree/bindings/mfd/max77620.txt      |  34 +++++
+>>>>  drivers/mfd/max77620.c                        | 137 +++++++++++++++++-
+>>>
+>>> All of this needs moving out to the correct subsystem.
+>>>
+>>> drivers/power/supply/max77620-battery.c looks right.
+>>
+>> Actually max77620 is not a power supply device. This patch set adds 2
+>> features:
+>> - Backup battery charger. The RTC in max77620 is supplied from a backup
+>> battery and consumes 2.0uA when no other power sources are available. So
+>> basically this is not a system battery charger, it's just for RTC.
+>> - Low battery monitoring. This is for monitoring the system main battery
+>> voltage, so max77620 can shutdown or reset the SoC accordingly. But I
+>> think this doesn't conform the idea of "power supply" driver as well.
+> 
+> Most other battery handling seems to happen in
+> drivers/power/supply/*.battery*.  If that's not the right location,
+> then you need to find a place for it to go.  MFDs do not provide
+> useful functionality per say - that is the role of the child devices.
+> 
 
-On Fri, 1 Feb 2019 at 19:53, Baolin Wang <baolin.wang@linaro.org> wrote:
->
-> Hi Arnd,
-> On Thu, 31 Jan 2019 at 00:52, Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Tue, Jan 22, 2019 at 2:21 PM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > >
-> > > The DMA engine clients can trigger DMA engine automatically by setting
-> > > the corresponding hardware slave id for the DMA engine. Thus add one
-> > > cell to present the hardware slave id for DMA clients.
-> > >
-> > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/dma/sprd-dma.txt |   12 +++++++-----
-> > >  1 file changed, 7 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/dma/sprd-dma.txt b/Documentation/devicetree/bindings/dma/sprd-dma.txt
-> > > index 7a10fea..7812cf0 100644
-> > > --- a/Documentation/devicetree/bindings/dma/sprd-dma.txt
-> > > +++ b/Documentation/devicetree/bindings/dma/sprd-dma.txt
-> > > @@ -6,8 +6,8 @@ Required properties:
-> > >  - compatible: Should be "sprd,sc9860-dma".
-> > >  - reg: Should contain DMA registers location and length.
-> > >  - interrupts: Should contain one interrupt shared by all channel.
-> > > -- #dma-cells: must be <1>. Used to represent the number of integer
-> > > -       cells in the dmas property of client device.
-> > > +- #dma-cells: must be <2>. Used to represent the channel id and slave id
-> > > +       of integer cells in the dmas property of client device.
-> > >  - #dma-channels : Number of DMA channels supported. Should be 32.
-> > >  - clock-names: Should contain the clock of the DMA controller.
-> > >  - clocks: Should contain a clock specifier for each entry in clock-names.
-> > > @@ -28,14 +28,16 @@ apdma: dma-controller@20100000 {
-> > >
-> > >  Client:
-> > >  DMA clients connected to the Spreadtrum DMA controller must use the format
-> > > -described in the dma.txt file, using a two-cell specifier for each channel.
-> > > -The two cells in order are:
-> > > +described in the dma.txt file, using a three-cell specifier for each channel.
-> > > +The three cells in order are:
-> > >  1. A phandle pointing to the DMA controller.
-> > >  2. The channel id.
-> > > +3. The hardware slave id which is used for clients to trigger DMA engine
-> > > +automatically.
-> >
-> > I notice that this is an incompatible binding change. Is that necessary?
-> > If the current code works, I'd suggest allowing both #dma-cells=<2>
-> > and <3>, and then implementing both in the driver.
->
-> Yes, this is necessary.
->
-> Yes, current code can work, but the problem is that the DMA clients
-> must add one property (something like "sprd,slave-id") to specify the
-> slave id. So considering this, we want to change the dma-cells to 2,
-> including dma channel and dma slave id, which can avoid introducing
-> some similar properties for DMA clients.
->
-> Now there are no DMA clients in mainline for Spreadtrum platform, and
-> we want to upstream our first DMA clients: SPI controller. So no other
-> drivers need to change when we changing dma cells. Thanks.
+Understood. Looking at "enum power_supply_property", battery handling
+drivers are able to get battery capacity/current
+voltage/temperature/status/... and etc, which is making sense. But my
+patch set doesn't do this kind of things at all so I think the power
+supply framework doesn't fit here. Let me check other similar device
+drivers... hope to get inspired. Thanks Lee.
 
-Do you have any other concerns about this patch set? If not, I think
-Vinod can apply this patch set. Thanks.
-
--- 
-Baolin Wang
-Best Regards
+Mark
