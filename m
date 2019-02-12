@@ -1,81 +1,106 @@
-From: Harald Geyer <harald@ccbib.org>
-Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
-Date: Tue, 12 Feb 2019 10:42:03 +0100
-Message-ID: <E1gtUZn-0000NW-MA@stardust.g4.wien.funkfeuer.at>
-References: <20190211111245.GA18147@lst.de>
- <E1gtBlV-0000Wl-Cv@stardust.g4.wien.funkfeuer.at>
- <20190211153945.e34fpwkuk67l7lc6@flea>
- <E1gtHJj-0000iY-G8@stardust.g4.wien.funkfeuer.at>
- <20190212083850.7genwc6ipnxtl7eo@flea>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v7 00/23] drm/sun4i: Allwinner A64 MIPI-DSI support
+Date: Tue, 12 Feb 2019 15:16:02 +0530
+Message-ID: <CAMty3ZBspvP=qZEK9vaowVq4f5W3Qx2qHkwcuAnCOOjV29=Y_Q@mail.gmail.com>
+References: <20190201154232.10505-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20190212083850.7genwc6ipnxtl7eo@flea>
-Content-ID: <1456.1549964523.1@stardust.g4.wien.funkfeuer.at>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBZ5LRLRQKGQEXDY77BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190201154232.10505-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard writes:
-> On Mon, Feb 11, 2019 at 08:32:35PM +0100, Harald Geyer wrote:
-> > > We want to model this properly. I guess using a pinctrl driver
-> > > controlled through GPIO (similar to what regulator-gpio is) would be a
-> > > good first step.
-> > 
-> > I considered this too, but didn't like it:
-> > 
-> > 1) Seems like a bit of overkill.
-> >
-> > 2) The HW at hand is a rather different kind of multiplexer than
-> > what pinctrl assumes. We don't want two mutually exclusive devices,
-> > (Ie don't make the kernel unbind /dev/console for the sake of audio.)
-> > but we want switch the jack between two devices, that might both be
-> > active at the same time. This looks more like the channel multiplexers
-> > used with many ADCs and such. I guess, I could start a new subsystem
-> > around this. Seems like even more overkill.
-> 
-> I'm not quite sure about how that's different from what pinctrl
-> assumes. pinctrl assumes to handle devices that have multiple signals
-> as input, and one as output. Isn't that exactly what you have?
+On Fri, Feb 1, 2019 at 9:12 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> Here is next version changes for Allwinner A64 MIPI-DSI support
+>
+> This series grouped the changes like previous version[1] with different
+> sets to support three different panels types that can fit into the DSI
+> controller.
+>
+> set:1, for 4-lane, burst mode support
+> - patch 0001: 0009, DSI controller changes that support burst mode.
+>
+> set:2, for A64 DSI support
+> - patch 0010: tcon dclk divider computation based on A64 BSP.
+> - patch 0011: 0017, Allwinner A64 DSI controller changes.
+>
+> set:3, enable 4-lane burst mode panel:
+> - patch 0018: Overlay patch that enable Feiyang FY07024DI26A30-D
+>   burst mode panel on Pine64-LTS
+>
+> set:4, enable 4-lane video mode panel:
+> - patch 0019: msg type MIPI_DSI_GENERIC_SHORT_WRITE_2_PARAM support
+> - patch 0020: Overlay patch that enable Bananapi S070WV20-CT16 ICN6211
+>   panel on Bananapi M64
+>
+> set:5, enable 2-lane video mode panel:
+> - patch 0021, 0022: DSI hfp and hbp timings fixes
+> - patch 0023: Enable Techstar TS8550B panel on Amarula A64-Relic
+>
+> Changes for v7:
+> - moved vcc-dsi binding to required filed.
+> - drop quotes on fallback dphy bindings.
+> - drop min_rate clock pll-mipi patches.
+> - introduce dclk divider computation as like A64 BSP.
+> - add A64 DSI quark patches.
+> - fixed A64 DSI pipeline.
+> - add proper commit messages.
+> - collect Merlijn Wajer Tested-by credits.
+> Changes for v6:
+> - dropped unneeded changes, patches
+> - fixed all burst mode patches as per previous version comments
+> - rebase on master
+> - update proper commit message
+> - dropped unneeded comments
+> - order the patches that make review easy
+> Changes for v5:
+> - collect Rob, Acked-by
+> - droped "Fix VBP size calculation" patch
+> - updated vblk timing calculation.
+> - droped techstar, bananapi dsi panel drivers which may require
+>   bridge or other setup. it's under discussion.
+> Changes for v4:
+> - droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
+>   nkm min, max rate patches
+> - create two patches for "Add Allwinner A64 MIPI DSI support"
+>   one for has_mod_clk quirk and other one for A64 support
+> - use existing driver code construct for hblk computation
+> - dropped "Increase hfp packet overhead" patch [2], though BSP added
+>   this but we have no issues as of now.
+>   (no issues on panel side w/o this change)
+> - create separate function for vblk computation
+> - enable vcc-dsi regulator in dsi_runtime_resume
+> - collect Rob, Acked-by
+> - update MAINTAINERS file for panel drivers
+> - cleanup commit messages
+> - fixed checkpatch warnings/errors
+>
+> [1] https://patchwork.kernel.org/cover/10779893/
+>
+> Any inputs?
+> Jagan.
+>
+> Jagan Teki (23):
+>   drm/sun4i: sun6i_mipi_dsi: Compute burst mode loop N1 instruction
+>     delay
+>   drm/sun4i: sun6i_mipi_dsi: Support instruction loop selection
+>   drm/sun4i: sun6i_mipi_dsi: Setup burst mode timings
+>   drm/sun4i: sun6i_mipi_dsi: Simplify drq to support all modes
+>   drm/sun4i: tcon: Export get tcon0 routine
+>   drm/sun4i: sun6i_mipi_dsi: Probe tcon0 during dsi_bind
+>   drm/sun4i: sun6i_mipi_dsi: Setup burst mode
+>   drm/sun4i: sun6i_mipi_dsi: Enable trail_inv and trail_fill controls
+>   drm/sun4i: sun6i_mipi_dsi: Enable HBP, HSA_HSE for burst mode
 
-I think the pinctrl way would be to have the audio card device
-request the HP jack and the uart node request the HP jack and only
-once device could probe successfully. Ie it is about ressource
-allocation, not true multiplexing where both devices can use the
-ressource at the same time. Am I wrong?
-
-Or course we don't actually want true multiplexing for audio quality
-reasons, but I don't see how we could use pinctrl without doing nasty
-things to /dev/console ...
- 
-> And pinctrl can be used dynamically as well if you need to
-
-Can you explain or point me to the relevant explanation in the docs?
-I don't seem to know about it.
-
-> > Instead I just got the original patch working, by implementing
-> > "output-high" DT property in sunxi-pinctrl. I'll send a patch for
-> > review soon.
-> 
-> What do you want to do with output-high exactly?
-
-Exactly what I do in the patch that started this thread.
-(I'll resend when wens' cpvdd patch is available for me to rebase onto.)
-
-Harald
-
--- 
-If you want to support my work:
-see http://friends.ccbib.org/harald/supporting/
-or donate via CLAM to xASPBtezLNqj4cUe8MT5nZjthRSEjrRQXN
-or via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
+Can you pick these burst changes which are generic to all SoCs. and
+reset will send once we decide the tcon clock.
