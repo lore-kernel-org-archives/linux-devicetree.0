@@ -1,86 +1,179 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [GIT PULL] of: overlay: validation checks, subsequent fixes for
- v20 -- correction: v4.20
-Date: Tue, 12 Feb 2019 08:28:21 +0100
-Message-ID: <20190212072821.GA2940@kroah.com>
-References: <262419e9-5c9f-1193-f119-33f373d81e43@gmail.com>
- <b113e03d-95f9-96bc-2a50-bc61307e780e@gmail.com>
- <CANk1AXS=4fT6LbOHqK4DYhSMcO9Q60mDcQsFFnwoJLHj8wRsTA@mail.gmail.com>
- <20190211191341.GA13134@kroah.com>
- <CANk1AXRnX+=v+7g-_rM3TwNmM3aVcOqRknv9BR+hBOeCtT24Fg@mail.gmail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v5 01/10] firmware: ti_sci: Add support to get TISCI handle
+ using of_phandle
+Date: Tue, 12 Feb 2019 13:12:28 +0530
+Message-ID: <20190212074237.2875-2-lokeshvutla@ti.com>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANk1AXRnX+=v+7g-_rM3TwNmM3aVcOqRknv9BR+hBOeCtT24Fg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-fpga@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190212074237.2875-1-lokeshvutla@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: marc.zyngier@arm.com, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 02:43:48PM -0600, Alan Tull wrote:
-> On Mon, Feb 11, 2019 at 1:13 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Feb 11, 2019 at 12:41:40PM -0600, Alan Tull wrote:
-> > > On Fri, Nov 9, 2018 at 12:58 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> > >
-> > > What LTSI's are these patches likely to end up in?  Just to be clear,
-> > > I'm not pushing for any specific answer, I just want to know what to
-> > > expect.
-> >
-> > I have no idea what you are asking here.
-> >
-> > What patches?
-> 
-> I probably should have asked my question *below* the pertinent context
-> of the the 17 patches listed in the pull request, which was:
-> 
-> >       of: overlay: add tests to validate kfrees from overlay removal
-> >       of: overlay: add missing of_node_put() after add new node to changeset
-> >       of: overlay: add missing of_node_get() in __of_attach_node_sysfs
-> >       powerpc/pseries: add of_node_put() in dlpar_detach_node()
-> >       of: overlay: use prop add changeset entry for property in new nodes
-> >       of: overlay: do not duplicate properties from overlay for new nodes
-> >       of: overlay: reorder fields in struct fragment
-> >       of: overlay: validate overlay properties #address-cells and #size-cells
-> >       of: overlay: make all pr_debug() and pr_err() messages unique
-> >       of: overlay: test case of two fragments adding same node
-> >       of: overlay: check prevents multiple fragments add or delete same node
-> >       of: overlay: check prevents multiple fragments touching same property
-> >       of: unittest: remove unused of_unittest_apply_overlay() argument
-> >       of: overlay: set node fields from properties when add new overlay node
-> >       of: unittest: allow base devicetree to have symbol metadata
-> >       of: unittest: find overlays[] entry by name instead of index
-> >       of: unittest: initialize args before calling of_*parse_*()
-> 
-> > What is "LTSI's"?
-> 
-> I have recently seen some of devicetree patches being picked up for
-> the 4.20 stable-queue.  That seemed to suggest that some, but not all
-> of these will end up in the next LTS release.
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-If the git commit has the "cc: stable@" marking in it, yes, it will be
-picked up.  Without the actual git ids, it's hard to know what did, and
-what did not, get backported :)
+TISCI has been updated to have support for Resource management(likes
+interrupts etc..). And there can be multiple device instances of a
+resource type in a SoC. So every driver corresponding to a resource type
+should get a TISCI handle so that it can make TISCI calls. And each
+DT node corresponding to a device should exist under its corresponding
+bus node as per the SoC architecture.
 
-> Also I was wondering if any of this is likely to get backported to
-> LTSI-4.14.
+But existing apis in TISCI library assumes that all TISCI users are
+child nodes of TISCI. Which is not true in the above case. So introduce
+(devm_)ti_sci_get_by_phandle() apis that can be used by TISCI users
+to get TISCI handle using of phandle property.
 
-Note, "LTSI" and "LTS" are two different things.  "LTSI" is a project
-run by some LF member companies, and "LTS" are the normal long term
-kernels that I release on kernel.org.  They have vastly different
-requirements for inclusion in them.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+Changes since v4:
+- None
 
-If you have questions about LTSI, I recommend go asking on their mailing
-list.
+ drivers/firmware/ti_sci.c              | 83 ++++++++++++++++++++++++++
+ include/linux/soc/ti/ti_sci_protocol.h | 17 ++++++
+ 2 files changed, 100 insertions(+)
 
-As for showing up in the 4.14 "LTS" kernel, again, I need git commit ids
-to know for sure.
-
-Also, as these are now in Linus's tree, you should be able to look at
-the stable releases yourself to see if they are present there, right?
-
-thanks,
-
-greg k-h
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 69ed1464175c..f0cafa8a2ee9 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -1781,6 +1781,89 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(devm_ti_sci_get_handle);
+ 
++/**
++ * ti_sci_get_by_phandle() - Get the TI SCI handle using DT phandle
++ * @np:		device node
++ * @propname:	property name containing phandle on TISCI node
++ *
++ * NOTE: The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ * ti_sci_put_handle must be balanced with successful ti_sci_get_by_phandle
++ * Return: pointer to handle if successful, else:
++ * -EPROBE_DEFER if the instance is not ready
++ * -ENODEV if the required node handler is missing
++ * -EINVAL if invalid conditions are encountered.
++ */
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	struct ti_sci_handle *handle = NULL;
++	struct device_node *ti_sci_np;
++	struct ti_sci_info *info;
++	struct list_head *p;
++
++	if (!np) {
++		pr_err("I need a device pointer\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	ti_sci_np = of_parse_phandle(np, property, 0);
++	if (!ti_sci_np)
++		return ERR_PTR(-ENODEV);
++
++	mutex_lock(&ti_sci_list_mutex);
++	list_for_each(p, &ti_sci_list) {
++		info = list_entry(p, struct ti_sci_info, node);
++		if (ti_sci_np == info->dev->of_node) {
++			handle = &info->handle;
++			info->users++;
++			break;
++		}
++	}
++	mutex_unlock(&ti_sci_list_mutex);
++	of_node_put(ti_sci_np);
++
++	if (!handle)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(ti_sci_get_by_phandle);
++
++/**
++ * devm_ti_sci_get_by_phandle() - Managed get handle using phandle
++ * @dev:	Device pointer requesting TISCI handle
++ * @propname:	property name containing phandle on TISCI node
++ *
++ * NOTE: This releases the handle once the device resources are
++ * no longer needed. MUST NOT BE released with ti_sci_put_handle.
++ * The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ *
++ * Return: 0 if all went fine, else corresponding error.
++ */
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	const struct ti_sci_handle *handle;
++	const struct ti_sci_handle **ptr;
++
++	ptr = devres_alloc(devm_ti_sci_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++	handle = ti_sci_get_by_phandle(dev_of_node(dev), property);
++
++	if (!IS_ERR(handle)) {
++		*ptr = handle;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
++
+ static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
+ 				void *cmd)
+ {
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 18435e5c6364..515587e9d373 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -217,6 +217,10 @@ struct ti_sci_handle {
+ const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
+ int ti_sci_put_handle(const struct ti_sci_handle *handle);
+ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev);
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property);
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property);
+ 
+ #else	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+@@ -236,6 +240,19 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static inline
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
++
++static inline
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
+ #endif	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+ #endif	/* __TISCI_PROTOCOL_H */
+-- 
+2.19.2
