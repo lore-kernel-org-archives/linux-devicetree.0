@@ -1,190 +1,90 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
- rate for PLL_MIPI
-Date: Tue, 12 Feb 2019 10:30:28 +0100
-Message-ID: <20190212093028.kulsqiai7dsnmbu2@flea>
-References: <20190124195900.22620-1-jagan@amarulasolutions.com>
- <20190124195900.22620-12-jagan@amarulasolutions.com>
- <20190125212433.ni2jg3wvpyjazlxf@flea>
- <CAMty3ZAsH2iZ+JEqTE3D58aXfGuhMSg9YoO56ZhhOeE4c4yQHQ@mail.gmail.com>
- <20190129151348.mh27btttsqcmeban@flea>
- <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
- <20190201143102.rcvrxstc365mezvx@flea>
- <CAMty3ZAgJMy+qOW0eO5U_MDUPw0Zaq7tLDi8zwUxw=B6UiFS9w@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 2/2] PCI: imx6: Add code to request/control "pcie_aux"
+ clock for i.MX8MQ
+Date: Tue, 12 Feb 2019 10:36:06 +0100
+Message-ID: <1549964166.2546.21.camel@pengutronix.de>
+References: <20190212015108.16952-1-andrew.smirnov@gmail.com>
+         <20190212015108.16952-3-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n5t2jrkvjgtlny2z"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBO5ERLRQKGQEUXR4LFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZAgJMy+qOW0eO5U_MDUPw0Zaq7tLDi8zwUxw=B6UiFS9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190212015108.16952-3-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---n5t2jrkvjgtlny2z
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Feb 11, 2019 at 07:37:57PM +0530, Jagan Teki wrote:
-> Hi Maxime,
+Am Montag, den 11.02.2019, 17:51 -0800 schrieb Andrey Smirnov:
+> PCIe IP block has additional clock, "pcie_aux", that needs to be
+> controlled by the driver. Add code to support that.
 > 
-> On Fri, Feb 1, 2019 at 8:01 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Tue, Jan 29, 2019 at 11:01:31PM +0530, Jagan Teki wrote:
-> > > On Tue, Jan 29, 2019 at 8:43 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > >
-> > > > On Mon, Jan 28, 2019 at 03:06:10PM +0530, Jagan Teki wrote:
-> > > > > On Sat, Jan 26, 2019 at 2:54 AM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > > >
-> > > > > > On Fri, Jan 25, 2019 at 01:28:49AM +0530, Jagan Teki wrote:
-> > > > > > > Minimum PLL used for MIPI is 500MHz, as per manual, but
-> > > > > > > lowering the min rate by 300MHz can result proper working
-> > > > > > > nkms divider with the help of desired dclock rate from
-> > > > > > > panel driver.
-> > > > > > >
-> > > > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > > > > > Acked-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > > > >
-> > > > > > Going 200MHz below the minimum doesn't seem really reasonable. What
-> > > > > > is the issue that you are trying to fix here?
-> > > > > >
-> > > > > > It looks like it's picking bad dividers, but if that's the case, this
-> > > > > > isn't the proper fix.
-> > > > >
-> > > > > As I stated in earlier patches, the whole idea is pick the desired
-> > > > > dclk divider based dclk rate. So the dotclock, sun4i_dclk_round_rate
-> > > > > is unable to get the proper dclk divider at the end, so it eventually
-> > > > > picking up wrong divider value and fired vblank timeout.
-> > > > >
-> > > > > So, we come-up with optimal and working min_rate 300MHz in pll-mipi to
-> > > > > get the desired clock something like below.
-> > > > > [    2.415773] [drm] No driver support for vblank timestamp query.
-> > > > > [    2.424116] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> > > > > [    2.424172] ideal = 220000000, rounded = 0
-> > > > > [    2.424176] ideal = 275000000, rounded = 0
-> > > > > [    2.424194] ccu_nkm_round_rate: rate = 330000000
-> > > > > [    2.424197] ideal = 330000000, rounded = 330000000
-> > > > > [    2.424201] sun4i_dclk_round_rate: div = 6 rate = 55000000
-> > > > > [    2.424205] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
-> > > > > [    2.424209] ideal = 220000000, rounded = 0
-> > > > > [    2.424213] ideal = 275000000, rounded = 0
-> > > > > [    2.424230] ccu_nkm_round_rate: rate = 330000000
-> > > > > [    2.424233] ideal = 330000000, rounded = 330000000
-> > > > > [    2.424236] sun4i_dclk_round_rate: div = 6 rate = 55000000
-> > > > > [    2.424253] ccu_nkm_round_rate: rate = 330000000
-> > > > > [    2.424270] ccu_nkm_round_rate: rate = 330000000
-> > > > > [    2.424278] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-> > > > > [    2.424281] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
-> > > > > [    2.424306] ccu_nkm_set_rate: rate = 330000000, parent_rate = 297000000
-> > > > > [    2.424309] ccu_nkm_set_rate: _nkm.n = 5
-> > > > > [    2.424311] ccu_nkm_set_rate: _nkm.k = 2
-> > > > > [    2.424313] ccu_nkm_set_rate: _nkm.m = 9
-> > > > > [    2.424661] sun4i_dclk_set_rate div 6
-> > > > > [    2.424668] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
-> > > > >
-> > > > > But look like this wouldn't valid for all other dclock rates, say BPI
-> > > > > panel has 30MHz clock that would failed with this logic.
-> > > > >
-> > > > > On the other side Allwinner BSP calculating dclk divider based on the
-> > > > > SoC's. for A33 [1] it is fixed dclk divider of 4 and for A64 is is
-> > > > > calculated based on the bpp/lanes.
-> > > >
-> > > > It looks like the A64 has the same divider of 4:
-> > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
-> > > >
-> > > > I think you're confusing it with the ratio between the pixel clock and
-> > > > the dotclock, called dsi_div:
-> > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L198
-> > >
-> > > Ahh.. I thought this initially but as far as DSI clock computation is
-> > > concern, the L12 tcon_div is local variable which is used for edge0
-> > > computation in burst mode and not for the dsi clock computation. Since
-> > > the BSP is unable to get the tcon_div during edge0 computation, they
-> > > defined it locally I think.
-> > >
-> > > You can see the lcd_clk_config() code [2], where we can see DSI clock
-> > > computation using dsi_div value.
-> > >
-> > > Here is dump after the in Line 792 which is after computation[3]
-> > > [   10.800737] lcd_clk_config: dsi_div = 6, tcon_div = 4, lcd_div = 1
-> > > [   10.800743] lcd_clk_config: lcd_dclk_freq = 55, dclk_rate = 55000000
-> > > [   10.800749] lcd_clk_config: lcd_rate = 330000000, pll_rate = 330000000
-> > >
-> > > The above dump the lcd_rate 330MHz is computed with panel clock, 55MHz
-> > > into dsi_div 6. So this can be our actual divider values dclk_min_div,
-> > > dclk_max_div in sun4i_dclk_round_rate (from
-> > > drivers/gpu/drm/sun4i/sun4i_dotclock.c)
-> >
-> > I wish it was in your commit log in the first place, instead of having
-> > to exchange multiple mails over this.
-> >
-> > However, I don't think that's quite true, and it might be a bug in
-> > Allwinner's implementation (or rather something quite confusing).
-> >
-> > You're right that the lcd_rate and pll_rate seem to be generated from
-> > the pixel clock, and it indeed looks like the ratio between the pixel
-> > clock and the TCON dotclock is defined through the number of bits per
-> > lanes.
-> >
-> > However, in this case, dsi_rate is actually the same than lcd_rate,
-> > since pll_rate is going to be divided by dsi_div:
-> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L791
-> >
-> > Since lcd_div is 1, it also means that in this case, dsi_rate ==
-> > dclk_rate.
-> >
-> > The DSI module clock however, is always set to 148.5 MHz. Indeed, if
-> > we look at:
-> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L804
-> >
-> > We can see that the rate in clk_info is used if it's different than
-> > 0. This is filled by disp_al_lcd_get_clk_info, which, in the case of a
-> > DSI panel, will hardcode it to 148.5 MHz:
-> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L164
-> >
-> > So, the DSI clock is set to this here:
-> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L805
-> >
-> > The TCON *module* clock (the one in the clock controller) has been set
-> > to lcd_rate (so the pixel clock times the number of bits per lane) here:
-> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L800
-> >
-> > And the PLL has been set to the same rate here:
-> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L794
-> >
-> > Let's take a step back now: that function we were looking at,
-> > lcd_clk_config, is called by lcd_clk_enable, which is in turn called
-> > by disp_lcd_enable here:
-> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1328
-> >
-> > The next function being called is disp_al_lcd_cfg, and that function
-> > will hardcode the TCON dotclock divider to 4, here:
-> > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L240
-> >
-> > So, in the end, the dotclock divider is always 4, the DSI module clock
-> > is set to 148.5 MHz, and the TCON module clock is set to 330MHz. Since
-> > the TCON module clock doesn't have a divider, the PLL is set at that
-> > same value but this is redundant.
-> >
-> > I'll experiment with this and try to see how it works on the A33.
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: linux-imx@nxp.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-> How is it with A33?
-
-The conclusions are the one I sent in my last series
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---n5t2jrkvjgtlny2z--
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 7cdf8f9ab244..1a7031782846 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -65,6 +65,7 @@ struct imx6_pcie {
+>  	struct clk		*pcie_phy;
+>  	struct clk		*pcie_inbound_axi;
+>  	struct clk		*pcie;
+> +	struct clk		*pcie_aux;
+>  	struct regmap		*iomuxc_gpr;
+>  	u32			controller_id;
+>  	struct reset_control	*pciephy_reset;
+> @@ -421,6 +422,12 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  	case IMX7D:
+>  		break;
+>  	case IMX8MQ:
+> +		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
+> +		if (ret) {
+> +			dev_err(dev, "unable to enable pcie_aux clock\n");
+> +			break;
+> +		}
+> +
+>  		offset = imx6_pcie_grp_offset(imx6_pcie);
+>  		/*
+>  		 * Set the over ride low and enabled
+> @@ -904,6 +911,9 @@ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
+>  				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
+>  				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
+>  		break;
+> +	case IMX8MQ:
+> +		clk_disable_unprepare(imx6_pcie->pcie_aux);
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> @@ -1049,6 +1059,12 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  			dev_err(dev, "Failed to get PCIE APPS reset control\n");
+>  			return PTR_ERR(imx6_pcie->apps_reset);
+>  		}
+> +
+> +		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
+> +		if (IS_ERR(imx6_pcie->pcie_aux)) {
+> +			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+> +			return PTR_ERR(imx6_pcie->pcie_aux);
+> +		}
+>  		break;
+>  	default:
+>  		break;
