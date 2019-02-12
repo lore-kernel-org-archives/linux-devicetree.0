@@ -1,179 +1,132 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v5 01/10] firmware: ti_sci: Add support to get TISCI handle
- using of_phandle
-Date: Tue, 12 Feb 2019 13:12:28 +0530
-Message-ID: <20190212074237.2875-2-lokeshvutla@ti.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
+Subject: [PATCH v5 00/10] Add support for TISCI irqchip drivers
+Date: Tue, 12 Feb 2019 13:12:27 +0530
+Message-ID: <20190212074237.2875-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190212074237.2875-1-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: marc.zyngier@arm.com, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+TI AM65x SoC based on K3 architecture introduced support for Events
+which are message based interrupts with minimal latency. These events
+are not compatible with regular interrupts and are valid only through
+an event transport lane. An Interrupt Aggregator(INTA) is introduced
+to convert these events to interrupts. INTA can also group 64 events
+into a single interrupt. Now the SoC has many peripherals and a large
+number of event sources (time sync or DMA), the use of events is
+completely dependent on a user's specific application, which drives a
+need for maximum flexibility in which event sources are used in the
+system. It is also completely up to software control as to how the
+events are serviced.
 
-TISCI has been updated to have support for Resource management(likes
-interrupts etc..). And there can be multiple device instances of a
-resource type in a SoC. So every driver corresponding to a resource type
-should get a TISCI handle so that it can make TISCI calls. And each
-DT node corresponding to a device should exist under its corresponding
-bus node as per the SoC architecture.
+Because of the huge flexibility there are certain standard peripherals
+(like GPIO etc)where all interrupts cannot be directly corrected to host
+interrupt controller. For this purpose, Interrupt Router(INTR) is
+introduced in the SoC. INTR just does a classic interrupt redirection.
 
-But existing apis in TISCI library assumes that all TISCI users are
-child nodes of TISCI. Which is not true in the above case. So introduce
-(devm_)ti_sci_get_by_phandle() apis that can be used by TISCI users
-to get TISCI handle using of phandle property.
+So the SoC has 3 types of interrupt controllers:
+- GIC500
+- Interrupt Router
+- Interrupt Aggregator
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
+Below is a diagrammatic view of how SoC integration of these interrupt
+controllers:(https://pastebin.ubuntu.com/p/9ngV3jdGj2/)
+
+Device Index-x               Device Index-y
+           |                         |
+           |                         |
+                      ....
+            \                       /
+             \                     /
+              \  (global events)  /
+          +---------------------------+   +---------+
+          |                           |   |         |
+          |             INTA          |   |  GPIO   |
+          |                           |   |         |
+          +---------------------------+   +---------+
+                         |   (vint)            |
+                         |                     |
+                        \|/                    |
+          +---------------------------+        |
+          |                           |<-------+
+          |           INTR            |
+          |                           |
+          +---------------------------+
+                         |
+                         |
+                        \|/ (gic irq)
+          +---------------------------+
+          |                           |
+          |             GIC           |
+          |                           |
+          +---------------------------+
+
+While at it, TISCI abstracts the handling of all above IRQ routes where
+interrupt sources are not directly connected to host interrupt controller.
+That would be configuration of Interrupt Aggregator and Interrupt Router.
+
+This series adds support for:
+- TISCI commands needed for IRQ configuration
+- Interrupt Router(INTR) and Interrupt Aggregator(INTA) drivers
+
 Changes since v4:
-- None
+- Mentioned the changes in each patch
 
- drivers/firmware/ti_sci.c              | 83 ++++++++++++++++++++++++++
- include/linux/soc/ti/ti_sci_protocol.h | 17 ++++++
- 2 files changed, 100 insertions(+)
+Changes since v3:
+- Fix documentation for Interrupt Router driver
+- Rebased on top of latest next.
+- Fully tested with DMA(using out of tree patches)
+- Fixed a build error with allmodconfig
 
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 69ed1464175c..f0cafa8a2ee9 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -1781,6 +1781,89 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(devm_ti_sci_get_handle);
- 
-+/**
-+ * ti_sci_get_by_phandle() - Get the TI SCI handle using DT phandle
-+ * @np:		device node
-+ * @propname:	property name containing phandle on TISCI node
-+ *
-+ * NOTE: The function does not track individual clients of the framework
-+ * and is expected to be maintained by caller of TI SCI protocol library.
-+ * ti_sci_put_handle must be balanced with successful ti_sci_get_by_phandle
-+ * Return: pointer to handle if successful, else:
-+ * -EPROBE_DEFER if the instance is not ready
-+ * -ENODEV if the required node handler is missing
-+ * -EINVAL if invalid conditions are encountered.
-+ */
-+const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
-+						  const char *property)
-+{
-+	struct ti_sci_handle *handle = NULL;
-+	struct device_node *ti_sci_np;
-+	struct ti_sci_info *info;
-+	struct list_head *p;
-+
-+	if (!np) {
-+		pr_err("I need a device pointer\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	ti_sci_np = of_parse_phandle(np, property, 0);
-+	if (!ti_sci_np)
-+		return ERR_PTR(-ENODEV);
-+
-+	mutex_lock(&ti_sci_list_mutex);
-+	list_for_each(p, &ti_sci_list) {
-+		info = list_entry(p, struct ti_sci_info, node);
-+		if (ti_sci_np == info->dev->of_node) {
-+			handle = &info->handle;
-+			info->users++;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&ti_sci_list_mutex);
-+	of_node_put(ti_sci_np);
-+
-+	if (!handle)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	return handle;
-+}
-+EXPORT_SYMBOL_GPL(ti_sci_get_by_phandle);
-+
-+/**
-+ * devm_ti_sci_get_by_phandle() - Managed get handle using phandle
-+ * @dev:	Device pointer requesting TISCI handle
-+ * @propname:	property name containing phandle on TISCI node
-+ *
-+ * NOTE: This releases the handle once the device resources are
-+ * no longer needed. MUST NOT BE released with ti_sci_put_handle.
-+ * The function does not track individual clients of the framework
-+ * and is expected to be maintained by caller of TI SCI protocol library.
-+ *
-+ * Return: 0 if all went fine, else corresponding error.
-+ */
-+const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
-+						       const char *property)
-+{
-+	const struct ti_sci_handle *handle;
-+	const struct ti_sci_handle **ptr;
-+
-+	ptr = devres_alloc(devm_ti_sci_release, sizeof(*ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return ERR_PTR(-ENOMEM);
-+	handle = ti_sci_get_by_phandle(dev_of_node(dev), property);
-+
-+	if (!IS_ERR(handle)) {
-+		*ptr = handle;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
-+	}
-+
-+	return handle;
-+}
-+EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
-+
- static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
- 				void *cmd)
- {
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index 18435e5c6364..515587e9d373 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -217,6 +217,10 @@ struct ti_sci_handle {
- const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
- int ti_sci_put_handle(const struct ti_sci_handle *handle);
- const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev);
-+const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
-+						  const char *property);
-+const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
-+						       const char *property);
- 
- #else	/* CONFIG_TI_SCI_PROTOCOL */
- 
-@@ -236,6 +240,19 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
- 	return ERR_PTR(-EINVAL);
- }
- 
-+static inline
-+const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
-+						  const char *property)
-+{
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+static inline
-+const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
-+						       const char *property)
-+{
-+	return ERR_PTR(-EINVAL);
-+}
- #endif	/* CONFIG_TI_SCI_PROTOCOL */
- 
- #endif	/* __TISCI_PROTOCOL_H */
+
+Grygorii Strashko (1):
+  firmware: ti_sci: Add support to get TISCI handle using of_phandle
+
+Lokesh Vutla (8):
+  firmware: ti_sci: Add support for RM core ops
+  firmware: ti_sci: Add support for IRQ management
+  dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
+  irqchip: ti-sci-intr: Add support for Interrupt Router driver
+  dt-bindings: irqchip: Introduce TISCI Interrupt Aggregator bindings
+  irqchip: ti-sci-inta: Add support for Interrupt Aggregator driver
+  soc: ti: Add MSI domain support for K3 Interrupt Aggregator
+  soc: ti: am6: Enable interrupt controller drivers
+
+Peter Ujfalusi (1):
+  firmware: ti_sci: Add RM mapping table for am654
+
+ .../bindings/arm/keystone/ti,sci.txt          |   3 +-
+ .../interrupt-controller/ti,sci-inta.txt      |  74 +++
+ .../interrupt-controller/ti,sci-intr.txt      |  85 +++
+ MAINTAINERS                                   |   6 +
+ drivers/firmware/ti_sci.c                     | 536 ++++++++++++++++++
+ drivers/firmware/ti_sci.h                     | 102 ++++
+ drivers/irqchip/Kconfig                       |  23 +
+ drivers/irqchip/Makefile                      |   2 +
+ drivers/irqchip/irq-ti-sci-common.c           | 131 +++++
+ drivers/irqchip/irq-ti-sci-common.h           |  59 ++
+ drivers/irqchip/irq-ti-sci-inta.c             | 531 +++++++++++++++++
+ drivers/irqchip/irq-ti-sci-intr.c             | 315 ++++++++++
+ drivers/soc/ti/Kconfig                        |  11 +
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/k3_inta_msi.c                  | 143 +++++
+ include/linux/irqdomain.h                     |   1 +
+ include/linux/msi.h                           |   7 +
+ include/linux/soc/ti/k3_inta_msi.h            |  21 +
+ include/linux/soc/ti/ti_sci_protocol.h        |  72 +++
+ 19 files changed, 2122 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+ create mode 100644 drivers/irqchip/irq-ti-sci-common.c
+ create mode 100644 drivers/irqchip/irq-ti-sci-common.h
+ create mode 100644 drivers/irqchip/irq-ti-sci-inta.c
+ create mode 100644 drivers/irqchip/irq-ti-sci-intr.c
+ create mode 100644 drivers/soc/ti/k3_inta_msi.c
+ create mode 100644 include/linux/soc/ti/k3_inta_msi.h
+
 -- 
 2.19.2
