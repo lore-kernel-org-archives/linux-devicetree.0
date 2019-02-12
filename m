@@ -1,51 +1,38 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/4] dt-bindings: clock: exynos: Put CLK_UART3 in order
-Date: Tue, 12 Feb 2019 18:50:49 +0100
-Message-ID: <20190212175052.6310-2-krzk@kernel.org>
-References: <20190212175052.6310-1-krzk@kernel.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [v3, 0/9] Add ENETC PTP clock driver
+Date: Tue, 12 Feb 2019 09:59:09 -0800 (PST)
+Message-ID: <20190212.095909.1333426954618427221.davem@davemloft.net>
+References: <20190212042404.15575-1-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190212175052.6310-1-krzk@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190212042404.15575-1-yangbo.lu@nxp.com>
+Sender: netdev-owner@vger.kernel.org
+To: yangbo.lu@nxp.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, richardcochran@gmail.com, robh+dt@kernel.org, claudiu.manoil@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Order the CLK_UART3 by ID.  No change in functionality.
+From: Yangbo Lu <yangbo.lu@nxp.com>
+Date: Tue, 12 Feb 2019 12:23:55 +0800
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- include/dt-bindings/clock/exynos5410.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> There is same QorIQ 1588 timer IP block on the new ENETC Ethernet
+> controller with eTSEC/DPAA Ethernet controllers. However it's
+> different endianness (little-endian) and using PCI driver.
+> 
+> To support ENETC PTP driver, ptp_qoriq driver needed to be
+> reworked to make functions global for reusing, to add little-
+> endian support, to add ENETC memory map support, and to add
+> ENETC dependency for ptp_qoriq driver.
+> 
+> In addition, although ENETC PTP driver is a PCI driver, the dts
+> node still could be used. Currently the ls1028a dtsi which is
+> the only platform by now using ENETC is not complete, so there
+> is still dependency for ENETC PTP node upstreaming. This will
+> be done in the near future. The hardware timestamping support
+> for ENETC is done but needs to be reworked with new method in
+> internal git tree, and will be sent out soon.
 
-diff --git a/include/dt-bindings/clock/exynos5410.h b/include/dt-bindings/clock/exynos5410.h
-index f179eabbcdb7..5b911ede0534 100644
---- a/include/dt-bindings/clock/exynos5410.h
-+++ b/include/dt-bindings/clock/exynos5410.h
-@@ -36,6 +36,7 @@
- #define CLK_UART0		257
- #define CLK_UART1		258
- #define CLK_UART2		259
-+#define CLK_UART3		260
- #define CLK_I2C0		261
- #define CLK_I2C1		262
- #define CLK_I2C2		263
-@@ -44,7 +45,6 @@
- #define CLK_USI1		266
- #define CLK_USI2		267
- #define CLK_USI3		268
--#define CLK_UART3		260
- #define CLK_PWM			279
- #define CLK_MCT			315
- #define CLK_WDT			316
--- 
-2.17.1
+Series applied.
+
+I'll push this out after my build tests pass.
