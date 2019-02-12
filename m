@@ -1,95 +1,178 @@
-From: Frederic Chen <frederic.chen@mediatek.com>
-Subject: Re: [RFC PATCH V0 1/7] [media] dt-bindings: mt8183: Add binding for
- DIP shared memory
-Date: Tue, 12 Feb 2019 17:37:22 +0800
-Message-ID: <1549964242.27207.11.camel@mtksdccf07>
-References: <1549020091-42064-1-git-send-email-frederic.chen@mediatek.com>
- <1549020091-42064-2-git-send-email-frederic.chen@mediatek.com>
- <20190209155907.rbgwbdablndcesid@valkosipuli.retiisi.org.uk>
- <20190209181705.GB4505@pendragon.ideasonboard.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
+ rate for PLL_MIPI
+Date: Tue, 12 Feb 2019 15:08:49 +0530
+Message-ID: <CAMty3ZCqBLyYqdYG+WPErYpM6yZEnwAtg_ocztqRahywVqVjaw@mail.gmail.com>
+References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+ <20190124195900.22620-12-jagan@amarulasolutions.com> <20190125212433.ni2jg3wvpyjazlxf@flea>
+ <CAMty3ZAsH2iZ+JEqTE3D58aXfGuhMSg9YoO56ZhhOeE4c4yQHQ@mail.gmail.com>
+ <20190129151348.mh27btttsqcmeban@flea> <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
+ <20190201143102.rcvrxstc365mezvx@flea> <CAMty3ZAgJMy+qOW0eO5U_MDUPw0Zaq7tLDi8zwUxw=B6UiFS9w@mail.gmail.com>
+ <20190212093028.kulsqiai7dsnmbu2@flea>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190209181705.GB4505@pendragon.ideasonboard.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, linux-mediatek@lists.infradead.org, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, hans.verkuil@cisco.com, matthias.bgg@gmail.com, Sakari Ailus <sakari.ailus@iki.fi>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBNVIRLRQKGQEEUQFWBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190212093028.kulsqiai7dsnmbu2@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBMYXVyZW50IGFuZCBTYWthcmksCgpJIGFwcHJlY2lhdGUgeW91ciBtZXNzYWdlcy4KCk9u
-IFNhdCwgMjAxOS0wMi0wOSBhdCAyMDoxNyArMDIwMCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
-PiBPbiBTYXQsIEZlYiAwOSwgMjAxOSBhdCAwNTo1OTowN1BNICswMjAwLCBTYWthcmkgQWlsdXMg
-d3JvdGU6Cj4gPiBIaSBGcmVkZXJpYywKPiA+IAo+ID4gQ291bGQgeW91IGNjIHRoZSBkZXZpY2V0
-cmVlIGxpc3QsIHBsZWFzZT8KPiA+IAo+ID4gT24gRnJpLCBGZWIgMDEsIDIwMTkgYXQgMDc6MjE6
-MjVQTSArMDgwMCwgRnJlZGVyaWMgQ2hlbiB3cm90ZToKPiA+ID4gVGhpcyBwYXRjaCBhZGRzIHRo
-ZSBiaW5kaW5nIGZvciBkZXNjcmliaW5nIHRoZSBzaGFyZWQgbWVtb3J5Cj4gPiA+IHVzZWQgdG8g
-ZXhjaGFuZ2UgY29uZmlndXJhdGlvbiBhbmQgdHVuaW5nIGRhdGEgYmV0d2VlbiB0aGUKPiA+ID4g
-Y28tcHJvY2Vzc29yIGFuZCBEaWdpdGFsIEltYWdlIFByb2Nlc3NpbmcgKERJUCkgdW5pdCBvZiB0
-aGUKPiA+ID4gY2FtZXJhIElTUCBzeXN0ZW0gb24gTWVkaWF0ZWsgU29Dcy4KPiA+ID4gCj4gPiA+
-IFNpZ25lZC1vZmYtYnk6IEZyZWRlcmljIENoZW4gPGZyZWRlcmljLmNoZW5AbWVkaWF0ZWsuY29t
-Pgo+ID4gPiAtLS0KPiA+ID4gIC4uLi9tZWRpYXRlayxyZXNlcnZlLW1lbW9yeS1kaXBfc21lbS50
-eHQgICAgICAgICAgIHwgNDUgKysrKysrKysrKysrKysrKysrKysrKwo+ID4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDQ1IGluc2VydGlvbnMoKykKPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L21lZGlhdGVrLHJlc2Vy
-dmUtbWVtb3J5LWRpcF9zbWVtLnR4dAo+ID4gPiAKPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkvbWVkaWF0ZWsscmVzZXJ2
-ZS1tZW1vcnktZGlwX3NtZW0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3Jlc2VydmVkLW1lbW9yeS9tZWRpYXRlayxyZXNlcnZlLW1lbW9yeS1kaXBfc21lbS50eHQKPiA+
-ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+ID4gaW5kZXggMDAwMDAwMC4uMGRlZDQ3OAo+ID4g
-PiAtLS0gL2Rldi9udWxsCj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9yZXNlcnZlZC1tZW1vcnkvbWVkaWF0ZWsscmVzZXJ2ZS1tZW1vcnktZGlwX3NtZW0udHh0
-Cj4gPiA+IEBAIC0wLDAgKzEsNDUgQEAKPiA+ID4gK01lZGlhdGVrIERJUCBTaGFyZWQgTWVtb3J5
-IGJpbmRpbmcKPiA+ID4gKwo+ID4gPiArVGhpcyBiaW5kaW5nIGRlc2NyaWJlcyB0aGUgc2hhcmVk
-IG1lbW9yeSwgd2hpY2ggc2VydmVzIHRoZSBwdXJwb3NlIG9mCj4gPiA+ICtkZXNjcmliaW5nIHRo
-ZSBzaGFyZWQgbWVtb3J5IHJlZ2lvbiB1c2VkIHRvIGV4Y2hhbmdlIGRhdGEgYmV0d2VlbiBEaWdp
-dGFsCj4gPiA+ICtJbWFnZSBQcm9jZXNzaW5nIChESVApIGFuZCBjby1wcm9jZXNzb3IgaW4gTWVk
-aWF0ZWsgU29Dcy4KPiA+ID4gKwo+ID4gPiArVGhlIGNvLXByb2Nlc3NvciBkb2Vzbid0IGhhdmUg
-dGhlIGlvbW11IHNvIHdlIG5lZWQgdG8gdXNlIHRoZSBwaHlzaWNhbAo+ID4gPiArYWRkcmVzcyB0
-byBhY2Nlc3MgdGhlIHNoYXJlZCBidWZmZXIgaW4gdGhlIGZpcm13YXJlLgo+ID4gPiArCj4gPiA+
-ICtUaGUgRGlnaXRhbCBJbWFnZSBQcm9jZXNzaW5nIChESVApIGNhbiBhY2Nlc3MgbWVtb3J5IHRo
-cm91Z2ggbXQ4MTgzIElPTU1VIHNvCj4gPiA+ICtpdCBjYW4gdXNlIGRtYSBhZGRyZXNzIHRvIGFj
-Y2VzcyB0aGUgbWVtb3J5IHJlZ2lvbi4KPiA+ID4gKyhTZWUgaW9tbXUvbWVkaWF0ZWssaW9tbXUu
-dHh0IGZvciB0aGUgZGV0YWlsZWQgZGVzY3JpcHRpb24gb2YgTWVkaWF0ZWsgSU9NTVUpCj4gPiAK
-PiA+IFdoYXQga2luZCBvZiBwdXJwb3NlIGlzIHRoZSBtZW1vcnkgdXNlZCBmb3I/IEJ1ZmZlcnMg
-Y29udGFpbmluZyB2aWRlbyBkYXRhLAo+ID4gb3Igc29tZXRoaW5nIGVsc2U/IENvdWxkIHRoZSBi
-dWZmZXIgb2JqZWN0cyBiZSBtYXBwZWQgb24gdGhlIGRldmljZXMKPiA+IGJhc2VkIG9uIHRoZSBu
-ZWVkIGluc3RlYWQ/CgpUaGUgbWVtb3J5IGJ1ZmZlcnMgY29udGFpbiBjYW1lcmEgM0EgdHVuaW5n
-IGRhdGEsIHdoaWNoIGFyZSB1c2VkIGJ5IHRoZQpjby1wcm9jZXNzb3IgYW5kIERJUCBJUC4gQWJv
-dXQgbWFwcGluZyB0aGUgYnVmZmVyIGJhc2VkIG9uIHRoZSBuZWVkCmluc3RlYWQsIEnigJltIG5v
-dCBzdXJlIEkgdW5kZXJzdGFuZCB0aGlzIHBvaW50LiBEbyB5b3UgbWVhbiB0aGF0CmFsbG9jYXRp
-bmcgYW5kIG1hcHBpbmcgdGhlIG1lbW9yeSBkeW5hbWljYWxseT8KCj4gCj4gQW5kIGNvdWxkIENN
-QSBiZSB1c2VkIHdoZW4gcGh5c2ljYWxseSBjb250aWd1b3VzIG1lbW9yeSBpcyBuZWVkZWQgPwoK
-RElQIGRyaXZlciBkb2VzIG5vdCB1c2UgQ01BIG5vdywgYmVjYXVzZSB0aGUgZmlyc3QgdmVyc2lv
-biB3aWxsIGJlIHVzZWQKYnkgQ3JPUyBidXQgQ3JPUyB3b27igJl0IGVuYWJsZSBDTUEuCgo+IAo+
-ID4gPiArCj4gPiA+ICsKPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+ICsKPiA+ID4g
-Ky0gY29tcGF0aWJsZTogbXVzdCBiZSAibWVkaWF0ZWsscmVzZXJ2ZS1tZW1vcnktZGlwX3NtZW0i
-Cj4gPiA+ICsKPiA+ID4gKy0gcmVnOiByZXF1aXJlZCBmb3Igc3RhdGljIGFsbG9jYXRpb24gKHNl
-ZSByZXNlcnZlZC1tZW1vcnkudHh0IGZvcgo+ID4gPiArICB0aGUgZGV0YWlsZWQgdXNhZ2UpCj4g
-PiA+ICsKPiA+ID4gKy0gYWxsb2MtcmFuZ2U6IHJlcXVpcmVkIGZvciBkeW5hbWljIGFsbG9jYXRp
-b24uIFRoZSByYW5nZSBtdXN0Cj4gPiA+ICsgIGJldHdlZW4gMHgwMDAwMDQwMCBhbmQgMHgxMDAw
-MDAwMDAgZHVlIHRvIHRoZSBjby1wcm9jZXNzZXIncwo+ID4gPiArICBhZGRyZXNzaW5nIGxpbWl0
-YXRpb24KPiA+ID4gKwo+ID4gPiArLSBzaXplOiByZXF1aXJlZCBmb3IgZHluYW1pYyBhbGxvY2F0
-aW9uLiBUaGUgdW5pdCBpcyBieXRlcy4KPiA+ID4gKyAgSWYgeW91IHdhbnQgdG8gZW5hYmxlIHRo
-ZSBmdWxsIGZlYXR1cmUgb2YgRGlnaXRhbCBQcm9jZXNzaW5nIFVuaXQsCj4gPiA+ICsgIHlvdSBu
-ZWVkIDIwIE1CIGF0IGxlYXN0Lgo+ID4gPiArCj4gPiA+ICsKPiA+ID4gK0V4YW1wbGU6Cj4gPiA+
-ICsKPiA+ID4gK1RoZSBmb2xsb3dpbmcgZXhhbXBsZSBzaG93cyB0aGUgRElQIHNoYXJlZCBtZW1v
-cnkgc2V0dXAgZm9yIE1UODE4My4KPiA+ID4gKwo+ID4gPiArCXJlc2VydmVkLW1lbW9yeSB7Cj4g
-PiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ID4gPiArCQkjc2l6ZS1jZWxscyA9IDwyPjsK
-PiA+ID4gKwkJcmFuZ2VzOwo+ID4gPiArCQlyZXNlcnZlLW1lbW9yeS1pc3Bfc21lbSB7Cj4gPiA+
-ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLHJlc2VydmUtbWVtb3J5LWRpcF9zbWVtIjsKPiA+
-ID4gKwkJCXNpemUgPSA8MCAweDE0MDAwMDA+Owo+ID4gPiArCQkJYWxpZ25tZW50ID0gPDAgMHgx
-MDAwPjsKPiA+ID4gKwkJCWFsbG9jLXJhbmdlcyA9IDwwIDB4NDAwMDAwMDAgMCAweDUwMDAwMDAw
-PjsKPiA+ID4gKwkJfTsKPiA+ID4gKwl9Owo+IAoKU2luY2VyZWx5LAoKRnJlZGVyaWMgQ2hlbgoK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+On Tue, Feb 12, 2019 at 3:00 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+> On Mon, Feb 11, 2019 at 07:37:57PM +0530, Jagan Teki wrote:
+> > Hi Maxime,
+> >
+> > On Fri, Feb 1, 2019 at 8:01 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > >
+> > > On Tue, Jan 29, 2019 at 11:01:31PM +0530, Jagan Teki wrote:
+> > > > On Tue, Jan 29, 2019 at 8:43 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > > >
+> > > > > On Mon, Jan 28, 2019 at 03:06:10PM +0530, Jagan Teki wrote:
+> > > > > > On Sat, Jan 26, 2019 at 2:54 AM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > > > > >
+> > > > > > > On Fri, Jan 25, 2019 at 01:28:49AM +0530, Jagan Teki wrote:
+> > > > > > > > Minimum PLL used for MIPI is 500MHz, as per manual, but
+> > > > > > > > lowering the min rate by 300MHz can result proper working
+> > > > > > > > nkms divider with the help of desired dclock rate from
+> > > > > > > > panel driver.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > > > > > > Acked-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > > > > >
+> > > > > > > Going 200MHz below the minimum doesn't seem really reasonable. What
+> > > > > > > is the issue that you are trying to fix here?
+> > > > > > >
+> > > > > > > It looks like it's picking bad dividers, but if that's the case, this
+> > > > > > > isn't the proper fix.
+> > > > > >
+> > > > > > As I stated in earlier patches, the whole idea is pick the desired
+> > > > > > dclk divider based dclk rate. So the dotclock, sun4i_dclk_round_rate
+> > > > > > is unable to get the proper dclk divider at the end, so it eventually
+> > > > > > picking up wrong divider value and fired vblank timeout.
+> > > > > >
+> > > > > > So, we come-up with optimal and working min_rate 300MHz in pll-mipi to
+> > > > > > get the desired clock something like below.
+> > > > > > [    2.415773] [drm] No driver support for vblank timestamp query.
+> > > > > > [    2.424116] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > > > > [    2.424172] ideal = 220000000, rounded = 0
+> > > > > > [    2.424176] ideal = 275000000, rounded = 0
+> > > > > > [    2.424194] ccu_nkm_round_rate: rate = 330000000
+> > > > > > [    2.424197] ideal = 330000000, rounded = 330000000
+> > > > > > [    2.424201] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > > > > [    2.424205] sun4i_dclk_round_rate: min_div = 4 max_div = 127, rate = 55000000
+> > > > > > [    2.424209] ideal = 220000000, rounded = 0
+> > > > > > [    2.424213] ideal = 275000000, rounded = 0
+> > > > > > [    2.424230] ccu_nkm_round_rate: rate = 330000000
+> > > > > > [    2.424233] ideal = 330000000, rounded = 330000000
+> > > > > > [    2.424236] sun4i_dclk_round_rate: div = 6 rate = 55000000
+> > > > > > [    2.424253] ccu_nkm_round_rate: rate = 330000000
+> > > > > > [    2.424270] ccu_nkm_round_rate: rate = 330000000
+> > > > > > [    2.424278] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > > > > [    2.424281] sun4i_dclk_recalc_rate: val = 1, rate = 330000000
+> > > > > > [    2.424306] ccu_nkm_set_rate: rate = 330000000, parent_rate = 297000000
+> > > > > > [    2.424309] ccu_nkm_set_rate: _nkm.n = 5
+> > > > > > [    2.424311] ccu_nkm_set_rate: _nkm.k = 2
+> > > > > > [    2.424313] ccu_nkm_set_rate: _nkm.m = 9
+> > > > > > [    2.424661] sun4i_dclk_set_rate div 6
+> > > > > > [    2.424668] sun4i_dclk_recalc_rate: val = 6, rate = 55000000
+> > > > > >
+> > > > > > But look like this wouldn't valid for all other dclock rates, say BPI
+> > > > > > panel has 30MHz clock that would failed with this logic.
+> > > > > >
+> > > > > > On the other side Allwinner BSP calculating dclk divider based on the
+> > > > > > SoC's. for A33 [1] it is fixed dclk divider of 4 and for A64 is is
+> > > > > > calculated based on the bpp/lanes.
+> > > > >
+> > > > > It looks like the A64 has the same divider of 4:
+> > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
+> > > > >
+> > > > > I think you're confusing it with the ratio between the pixel clock and
+> > > > > the dotclock, called dsi_div:
+> > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L198
+> > > >
+> > > > Ahh.. I thought this initially but as far as DSI clock computation is
+> > > > concern, the L12 tcon_div is local variable which is used for edge0
+> > > > computation in burst mode and not for the dsi clock computation. Since
+> > > > the BSP is unable to get the tcon_div during edge0 computation, they
+> > > > defined it locally I think.
+> > > >
+> > > > You can see the lcd_clk_config() code [2], where we can see DSI clock
+> > > > computation using dsi_div value.
+> > > >
+> > > > Here is dump after the in Line 792 which is after computation[3]
+> > > > [   10.800737] lcd_clk_config: dsi_div = 6, tcon_div = 4, lcd_div = 1
+> > > > [   10.800743] lcd_clk_config: lcd_dclk_freq = 55, dclk_rate = 55000000
+> > > > [   10.800749] lcd_clk_config: lcd_rate = 330000000, pll_rate = 330000000
+> > > >
+> > > > The above dump the lcd_rate 330MHz is computed with panel clock, 55MHz
+> > > > into dsi_div 6. So this can be our actual divider values dclk_min_div,
+> > > > dclk_max_div in sun4i_dclk_round_rate (from
+> > > > drivers/gpu/drm/sun4i/sun4i_dotclock.c)
+> > >
+> > > I wish it was in your commit log in the first place, instead of having
+> > > to exchange multiple mails over this.
+> > >
+> > > However, I don't think that's quite true, and it might be a bug in
+> > > Allwinner's implementation (or rather something quite confusing).
+> > >
+> > > You're right that the lcd_rate and pll_rate seem to be generated from
+> > > the pixel clock, and it indeed looks like the ratio between the pixel
+> > > clock and the TCON dotclock is defined through the number of bits per
+> > > lanes.
+> > >
+> > > However, in this case, dsi_rate is actually the same than lcd_rate,
+> > > since pll_rate is going to be divided by dsi_div:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L791
+> > >
+> > > Since lcd_div is 1, it also means that in this case, dsi_rate ==
+> > > dclk_rate.
+> > >
+> > > The DSI module clock however, is always set to 148.5 MHz. Indeed, if
+> > > we look at:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L804
+> > >
+> > > We can see that the rate in clk_info is used if it's different than
+> > > 0. This is filled by disp_al_lcd_get_clk_info, which, in the case of a
+> > > DSI panel, will hardcode it to 148.5 MHz:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L164
+> > >
+> > > So, the DSI clock is set to this here:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L805
+> > >
+> > > The TCON *module* clock (the one in the clock controller) has been set
+> > > to lcd_rate (so the pixel clock times the number of bits per lane) here:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L800
+> > >
+> > > And the PLL has been set to the same rate here:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L794
+> > >
+> > > Let's take a step back now: that function we were looking at,
+> > > lcd_clk_config, is called by lcd_clk_enable, which is in turn called
+> > > by disp_lcd_enable here:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1328
+> > >
+> > > The next function being called is disp_al_lcd_cfg, and that function
+> > > will hardcode the TCON dotclock divider to 4, here:
+> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L240
+> > >
+> > > So, in the end, the dotclock divider is always 4, the DSI module clock
+> > > is set to 148.5 MHz, and the TCON module clock is set to 330MHz. Since
+> > > the TCON module clock doesn't have a divider, the PLL is set at that
+> > > same value but this is redundant.
+> > >
+> > > I'll experiment with this and try to see how it works on the A33.
+> >
+> > How is it with A33?
+>
+> The conclusions are the one I sent in my last series
+
+In this series?
+[PATCH v3 0/8] drm/sun4i: dsi: Add burst mode support
