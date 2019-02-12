@@ -1,32 +1,60 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 3/4] dt-bindings: perf: imx8-ddr: add imx8qxp ddr
- performance monitor
-Date: Tue, 12 Feb 2019 19:05:07 -0200
-Message-ID: <CAOMZO5BK6JqS+3PTDQDcALqvZQhv0jh2_nPRLGnVk8KryFCVMQ@mail.gmail.com>
-References: <1550005119-25750-1-git-send-email-Frank.Li@nxp.com>
- <1550005119-25750-3-git-send-email-Frank.Li@nxp.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH] arm64: dts: msm8996: fix blsp2_uart1 4-pin pinconfig
+Date: Tue, 12 Feb 2019 15:06:56 -0600
+Message-ID: <20190212210656.GA6642@hector.attlocal.net>
+References: <20181220161750.12587-1-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550005119-25750-3-git-send-email-Frank.Li@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Li <frank.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181220161750.12587-1-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 6:59 PM Frank Li <frank.li@nxp.com> wrote:
+On Thu, Dec 20, 2018 at 05:17:50PM +0100, Johan Hovold wrote:
+> Fix "gpiio5" typo in the (currently unused) blsp2_uart1 4-pin sleep
+> config.
+> 
+> Fixes: 22e6789f9493 ("arm64: dts: msm8996: add blsp2_uart1 pinctrl")
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996-pins.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+> index c5c42e94f387..1d1f7f91739a 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+> @@ -139,7 +139,7 @@
+>  		};
+>  
+>  		pinconf {
+> -			pins = "gpio4", "gpiio5", "gpio6", "gpio7";
+> +			pins = "gpio4", "gpio5", "gpio6", "gpio7";
+>  			drive-strength = <2>;
+>  			bias-disable;
+>  		};
 
-> +Example:
-> +
-> +       ddr_pmu0: ddr_pmu@5c020000 {
+I took one in slightly older than this one.  However, it doesn't have the fixes
+line.
 
-Same comments about underscore in node names.
+
+commit ff10032fb309d0baa0b79e28009bf154de08d341
+Author: Jakob Wuhrer <jakobwuhrer@airmail.cc>
+Date:   Fri Dec 14 18:01:30 2018 +0100
+
+    arm64: dts: qcom: Correct "gpiio" typo in msm8996-pins
+
+    gpiio5 is missspelt in msm8996-pins.dtsi, fix that.
+
+    Signed-off-by: Jakob Wuhrer <jakobwuhrer@airmail.cc>
+    Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+    Signed-off-by: Andy Gross <andy.gross@linaro.org>
+
+
+Regards,
+
+Andy
