@@ -1,90 +1,95 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 2/2] PCI: imx6: Add code to request/control "pcie_aux"
- clock for i.MX8MQ
-Date: Tue, 12 Feb 2019 10:36:06 +0100
-Message-ID: <1549964166.2546.21.camel@pengutronix.de>
-References: <20190212015108.16952-1-andrew.smirnov@gmail.com>
-         <20190212015108.16952-3-andrew.smirnov@gmail.com>
+From: Frederic Chen <frederic.chen@mediatek.com>
+Subject: Re: [RFC PATCH V0 1/7] [media] dt-bindings: mt8183: Add binding for
+ DIP shared memory
+Date: Tue, 12 Feb 2019 17:37:22 +0800
+Message-ID: <1549964242.27207.11.camel@mtksdccf07>
+References: <1549020091-42064-1-git-send-email-frederic.chen@mediatek.com>
+ <1549020091-42064-2-git-send-email-frederic.chen@mediatek.com>
+ <20190209155907.rbgwbdablndcesid@valkosipuli.retiisi.org.uk>
+ <20190209181705.GB4505@pendragon.ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212015108.16952-3-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190209181705.GB4505@pendragon.ideasonboard.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, linux-mediatek@lists.infradead.org, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, hans.verkuil@cisco.com, matthias.bgg@gmail.com, Sakari Ailus <sakari.ailus@iki.fi>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 11.02.2019, 17:51 -0800 schrieb Andrey Smirnov:
-> PCIe IP block has additional clock, "pcie_aux", that needs to be
-> controlled by the driver. Add code to support that.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-> Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> Cc: linux-imx@nxp.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 7cdf8f9ab244..1a7031782846 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -65,6 +65,7 @@ struct imx6_pcie {
->  	struct clk		*pcie_phy;
->  	struct clk		*pcie_inbound_axi;
->  	struct clk		*pcie;
-> +	struct clk		*pcie_aux;
->  	struct regmap		*iomuxc_gpr;
->  	u32			controller_id;
->  	struct reset_control	*pciephy_reset;
-> @@ -421,6 +422,12 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  	case IMX7D:
->  		break;
->  	case IMX8MQ:
-> +		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
-> +		if (ret) {
-> +			dev_err(dev, "unable to enable pcie_aux clock\n");
-> +			break;
-> +		}
-> +
->  		offset = imx6_pcie_grp_offset(imx6_pcie);
->  		/*
->  		 * Set the over ride low and enabled
-> @@ -904,6 +911,9 @@ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
->  				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
->  				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
->  		break;
-> +	case IMX8MQ:
-> +		clk_disable_unprepare(imx6_pcie->pcie_aux);
-> +		break;
->  	default:
->  		break;
->  	}
-> @@ -1049,6 +1059,12 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  			dev_err(dev, "Failed to get PCIE APPS reset control\n");
->  			return PTR_ERR(imx6_pcie->apps_reset);
->  		}
-> +
-> +		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
-> +		if (IS_ERR(imx6_pcie->pcie_aux)) {
-> +			dev_err(dev, "pcie_aux clock source missing or invalid\n");
-> +			return PTR_ERR(imx6_pcie->pcie_aux);
-> +		}
->  		break;
->  	default:
->  		break;
+RGVhciBMYXVyZW50IGFuZCBTYWthcmksCgpJIGFwcHJlY2lhdGUgeW91ciBtZXNzYWdlcy4KCk9u
+IFNhdCwgMjAxOS0wMi0wOSBhdCAyMDoxNyArMDIwMCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
+PiBPbiBTYXQsIEZlYiAwOSwgMjAxOSBhdCAwNTo1OTowN1BNICswMjAwLCBTYWthcmkgQWlsdXMg
+d3JvdGU6Cj4gPiBIaSBGcmVkZXJpYywKPiA+IAo+ID4gQ291bGQgeW91IGNjIHRoZSBkZXZpY2V0
+cmVlIGxpc3QsIHBsZWFzZT8KPiA+IAo+ID4gT24gRnJpLCBGZWIgMDEsIDIwMTkgYXQgMDc6MjE6
+MjVQTSArMDgwMCwgRnJlZGVyaWMgQ2hlbiB3cm90ZToKPiA+ID4gVGhpcyBwYXRjaCBhZGRzIHRo
+ZSBiaW5kaW5nIGZvciBkZXNjcmliaW5nIHRoZSBzaGFyZWQgbWVtb3J5Cj4gPiA+IHVzZWQgdG8g
+ZXhjaGFuZ2UgY29uZmlndXJhdGlvbiBhbmQgdHVuaW5nIGRhdGEgYmV0d2VlbiB0aGUKPiA+ID4g
+Y28tcHJvY2Vzc29yIGFuZCBEaWdpdGFsIEltYWdlIFByb2Nlc3NpbmcgKERJUCkgdW5pdCBvZiB0
+aGUKPiA+ID4gY2FtZXJhIElTUCBzeXN0ZW0gb24gTWVkaWF0ZWsgU29Dcy4KPiA+ID4gCj4gPiA+
+IFNpZ25lZC1vZmYtYnk6IEZyZWRlcmljIENoZW4gPGZyZWRlcmljLmNoZW5AbWVkaWF0ZWsuY29t
+Pgo+ID4gPiAtLS0KPiA+ID4gIC4uLi9tZWRpYXRlayxyZXNlcnZlLW1lbW9yeS1kaXBfc21lbS50
+eHQgICAgICAgICAgIHwgNDUgKysrKysrKysrKysrKysrKysrKysrKwo+ID4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDQ1IGluc2VydGlvbnMoKykKPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L21lZGlhdGVrLHJlc2Vy
+dmUtbWVtb3J5LWRpcF9zbWVtLnR4dAo+ID4gPiAKPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkvbWVkaWF0ZWsscmVzZXJ2
+ZS1tZW1vcnktZGlwX3NtZW0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3Jlc2VydmVkLW1lbW9yeS9tZWRpYXRlayxyZXNlcnZlLW1lbW9yeS1kaXBfc21lbS50eHQKPiA+
+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+ID4gaW5kZXggMDAwMDAwMC4uMGRlZDQ3OAo+ID4g
+PiAtLS0gL2Rldi9udWxsCj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9yZXNlcnZlZC1tZW1vcnkvbWVkaWF0ZWsscmVzZXJ2ZS1tZW1vcnktZGlwX3NtZW0udHh0
+Cj4gPiA+IEBAIC0wLDAgKzEsNDUgQEAKPiA+ID4gK01lZGlhdGVrIERJUCBTaGFyZWQgTWVtb3J5
+IGJpbmRpbmcKPiA+ID4gKwo+ID4gPiArVGhpcyBiaW5kaW5nIGRlc2NyaWJlcyB0aGUgc2hhcmVk
+IG1lbW9yeSwgd2hpY2ggc2VydmVzIHRoZSBwdXJwb3NlIG9mCj4gPiA+ICtkZXNjcmliaW5nIHRo
+ZSBzaGFyZWQgbWVtb3J5IHJlZ2lvbiB1c2VkIHRvIGV4Y2hhbmdlIGRhdGEgYmV0d2VlbiBEaWdp
+dGFsCj4gPiA+ICtJbWFnZSBQcm9jZXNzaW5nIChESVApIGFuZCBjby1wcm9jZXNzb3IgaW4gTWVk
+aWF0ZWsgU29Dcy4KPiA+ID4gKwo+ID4gPiArVGhlIGNvLXByb2Nlc3NvciBkb2Vzbid0IGhhdmUg
+dGhlIGlvbW11IHNvIHdlIG5lZWQgdG8gdXNlIHRoZSBwaHlzaWNhbAo+ID4gPiArYWRkcmVzcyB0
+byBhY2Nlc3MgdGhlIHNoYXJlZCBidWZmZXIgaW4gdGhlIGZpcm13YXJlLgo+ID4gPiArCj4gPiA+
+ICtUaGUgRGlnaXRhbCBJbWFnZSBQcm9jZXNzaW5nIChESVApIGNhbiBhY2Nlc3MgbWVtb3J5IHRo
+cm91Z2ggbXQ4MTgzIElPTU1VIHNvCj4gPiA+ICtpdCBjYW4gdXNlIGRtYSBhZGRyZXNzIHRvIGFj
+Y2VzcyB0aGUgbWVtb3J5IHJlZ2lvbi4KPiA+ID4gKyhTZWUgaW9tbXUvbWVkaWF0ZWssaW9tbXUu
+dHh0IGZvciB0aGUgZGV0YWlsZWQgZGVzY3JpcHRpb24gb2YgTWVkaWF0ZWsgSU9NTVUpCj4gPiAK
+PiA+IFdoYXQga2luZCBvZiBwdXJwb3NlIGlzIHRoZSBtZW1vcnkgdXNlZCBmb3I/IEJ1ZmZlcnMg
+Y29udGFpbmluZyB2aWRlbyBkYXRhLAo+ID4gb3Igc29tZXRoaW5nIGVsc2U/IENvdWxkIHRoZSBi
+dWZmZXIgb2JqZWN0cyBiZSBtYXBwZWQgb24gdGhlIGRldmljZXMKPiA+IGJhc2VkIG9uIHRoZSBu
+ZWVkIGluc3RlYWQ/CgpUaGUgbWVtb3J5IGJ1ZmZlcnMgY29udGFpbiBjYW1lcmEgM0EgdHVuaW5n
+IGRhdGEsIHdoaWNoIGFyZSB1c2VkIGJ5IHRoZQpjby1wcm9jZXNzb3IgYW5kIERJUCBJUC4gQWJv
+dXQgbWFwcGluZyB0aGUgYnVmZmVyIGJhc2VkIG9uIHRoZSBuZWVkCmluc3RlYWQsIEnigJltIG5v
+dCBzdXJlIEkgdW5kZXJzdGFuZCB0aGlzIHBvaW50LiBEbyB5b3UgbWVhbiB0aGF0CmFsbG9jYXRp
+bmcgYW5kIG1hcHBpbmcgdGhlIG1lbW9yeSBkeW5hbWljYWxseT8KCj4gCj4gQW5kIGNvdWxkIENN
+QSBiZSB1c2VkIHdoZW4gcGh5c2ljYWxseSBjb250aWd1b3VzIG1lbW9yeSBpcyBuZWVkZWQgPwoK
+RElQIGRyaXZlciBkb2VzIG5vdCB1c2UgQ01BIG5vdywgYmVjYXVzZSB0aGUgZmlyc3QgdmVyc2lv
+biB3aWxsIGJlIHVzZWQKYnkgQ3JPUyBidXQgQ3JPUyB3b27igJl0IGVuYWJsZSBDTUEuCgo+IAo+
+ID4gPiArCj4gPiA+ICsKPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+ICsKPiA+ID4g
+Ky0gY29tcGF0aWJsZTogbXVzdCBiZSAibWVkaWF0ZWsscmVzZXJ2ZS1tZW1vcnktZGlwX3NtZW0i
+Cj4gPiA+ICsKPiA+ID4gKy0gcmVnOiByZXF1aXJlZCBmb3Igc3RhdGljIGFsbG9jYXRpb24gKHNl
+ZSByZXNlcnZlZC1tZW1vcnkudHh0IGZvcgo+ID4gPiArICB0aGUgZGV0YWlsZWQgdXNhZ2UpCj4g
+PiA+ICsKPiA+ID4gKy0gYWxsb2MtcmFuZ2U6IHJlcXVpcmVkIGZvciBkeW5hbWljIGFsbG9jYXRp
+b24uIFRoZSByYW5nZSBtdXN0Cj4gPiA+ICsgIGJldHdlZW4gMHgwMDAwMDQwMCBhbmQgMHgxMDAw
+MDAwMDAgZHVlIHRvIHRoZSBjby1wcm9jZXNzZXIncwo+ID4gPiArICBhZGRyZXNzaW5nIGxpbWl0
+YXRpb24KPiA+ID4gKwo+ID4gPiArLSBzaXplOiByZXF1aXJlZCBmb3IgZHluYW1pYyBhbGxvY2F0
+aW9uLiBUaGUgdW5pdCBpcyBieXRlcy4KPiA+ID4gKyAgSWYgeW91IHdhbnQgdG8gZW5hYmxlIHRo
+ZSBmdWxsIGZlYXR1cmUgb2YgRGlnaXRhbCBQcm9jZXNzaW5nIFVuaXQsCj4gPiA+ICsgIHlvdSBu
+ZWVkIDIwIE1CIGF0IGxlYXN0Lgo+ID4gPiArCj4gPiA+ICsKPiA+ID4gK0V4YW1wbGU6Cj4gPiA+
+ICsKPiA+ID4gK1RoZSBmb2xsb3dpbmcgZXhhbXBsZSBzaG93cyB0aGUgRElQIHNoYXJlZCBtZW1v
+cnkgc2V0dXAgZm9yIE1UODE4My4KPiA+ID4gKwo+ID4gPiArCXJlc2VydmVkLW1lbW9yeSB7Cj4g
+PiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ID4gPiArCQkjc2l6ZS1jZWxscyA9IDwyPjsK
+PiA+ID4gKwkJcmFuZ2VzOwo+ID4gPiArCQlyZXNlcnZlLW1lbW9yeS1pc3Bfc21lbSB7Cj4gPiA+
+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLHJlc2VydmUtbWVtb3J5LWRpcF9zbWVtIjsKPiA+
+ID4gKwkJCXNpemUgPSA8MCAweDE0MDAwMDA+Owo+ID4gPiArCQkJYWxpZ25tZW50ID0gPDAgMHgx
+MDAwPjsKPiA+ID4gKwkJCWFsbG9jLXJhbmdlcyA9IDwwIDB4NDAwMDAwMDAgMCAweDUwMDAwMDAw
+PjsKPiA+ID4gKwkJfTsKPiA+ID4gKwl9Owo+IAoKU2luY2VyZWx5LAoKRnJlZGVyaWMgQ2hlbgoK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
