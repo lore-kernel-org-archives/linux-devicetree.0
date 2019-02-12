@@ -1,59 +1,96 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq
- mapping already exists
-Date: Tue, 12 Feb 2019 08:39:16 +0000
-Message-ID: <20190212083916.GV20638@dell>
-References: <20190208021631.30252-1-masneyb@onstation.org>
- <20190208021631.30252-6-masneyb@onstation.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 0/4] Add new device nodes for Spreadtrum SC9860 platform
+Date: Tue, 12 Feb 2019 16:40:10 +0800
+Message-ID: <CAMz4kuJdPts31Ak-H=VAivvoqqPtxO5M1RdqrNPwTLT5d1h_7w@mail.gmail.com>
+References: <cover.1548052878.git.baolin.wang@linaro.org> <CAK8P3a3UROFLTtEcNXKtMUN283UQ6auQUOXCR=6e3BdLu5K8Nw@mail.gmail.com>
+ <CAMz4kuLotnNom9kx2EmdfVEb+gvWfEbxoh6+hiqk87EjmtYJwA@mail.gmail.com> <20190201130519.GH20797@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190208021631.30252-6-masneyb@onstation.org>
+In-Reply-To: <20190201130519.GH20797@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, marc.zyngier@arm.com, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 07 Feb 2019, Brian Masney wrote:
+Hi Mark,
 
-> Check to see if the hwirq is already associated with another virq on
-> this IRQ domain. If so, then disassociate it before associating the
-> hwirq with the new virq.
-> 
-> This is a temporary hack that is needed in order to not break git
-> bisect for existing boards. The next patch in this series converts
-> ssbi-gpio to be a hierarchical IRQ chip, then there are several patches
-> to update all of the device tree files, and finally this patch will be
-> reverted within the same patch series.
-> 
-> IRQs for ssbi-gpio are all initially setup without an IRQ hierarchy
-> this driver is probed due to the interrupts property in device tree.
-> Once ssbi-gpio is converted to be a hierarchical IRQ chip in the next
-> patch, existing users of gpio[d]_to_irq() will call pmic_gpio_to_irq(),
-> and that will use the new IRQ chip code in ssbi-gpio that sets up the
-> IRQ in an IRQ hierarchy. The hwirq is now associated with two Linux
-> virqs and interrupts will not work as expected. This patch corrects
-> that issue.
-> 
-> This change was tested on an APQ8060 DragonBoard.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Tested-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes since v1:
-> - None
-> 
->  drivers/mfd/qcom-pm8xxx.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+Sorry for late reply.
 
-For Linus:
-  
-  Acked-by: Lee Jones <lee.jones@linaro.org>
+On Fri, 1 Feb 2019 at 21:05, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, Feb 01, 2019 at 08:05:30PM +0800, Baolin Wang wrote:
+>
+> > On Spreadtrum platform, we use one mfd driver [1] to populate the
+> > SC27XX series PMICs including SC2731, SC2721, SC2720 and SC2730. So we
+> > use sc27xx to be compatible with different PMICs' devices, otherwise
+> > it will be difficult to define the mfd cell arrays in mfd driver. Do
+> > you have any good suggestion? Thanks.
+>
+> You can just list all the individual device names in the of_match_table
+> for the MFD and then it can bind to any of them.  You can always map
+> them onto the same behaviour in the MFD driver if they are identical
+> from a software point of view.
+
+If I understood correctly, as you suggested, we should add new
+mfd_cell groups to list all different PMICs' device names. Something
+like:
+
+static const struct mfd_cell sprd_pmic_sc2731_devs[] = {
+{
+.name = "sc27xx-wdt",
+.of_compatible = "sprd,sc2731-wdt",
+}, {
+.name = "sc27xx-rtc",
+.of_compatible = "sprd,sc2731-rtc",
+}, {
+.name = "sc27xx-charger",
+.of_compatible = "sprd,sc2731-charger",
+},  {
+.name = "sc27xx-fast-chg",
+.of_compatible = "sprd,sc2731-fast-chg",
+}, {
+.name = "sc27xx-typec",
+.of_compatible = "sprd,sc2731-typec",
+}, {
+.name = "sc27xx-eic",
+.of_compatible = "sprd,sc2731-eic",
+},
+
+.......
+
+};
+
+static const struct mfd_cell sprd_pmic_sc2730_devs[] = {
+{
+.name = "sc27xx-wdt",
+.of_compatible = "sprd,sc2730-wdt",
+}, {
+.name = "sc27xx-rtc",
+.of_compatible = "sprd,sc2730-rtc",
+}, {
+.name = "sc27xx-charger",
+.of_compatible = "sprd,sc2730-charger",
+},  {
+.name = "sc27xx-fast-chg",
+.of_compatible = "sprd,sc2730-fast-chg",
+}, {
+.name = "sc27xx-typec",
+.of_compatible = "sprd,sc2730-typec",
+}, {
+.name = "sc27xx-eic",
+.of_compatible = "sprd,sc2730-eic",
+},
+
+.......
+
+};
+
+......
+
+But from my point, they are just some meaningless duplication, and
+will waste lots of code there.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Baolin Wang
+Best Regards
