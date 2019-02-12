@@ -1,70 +1,30 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/3] dt-bindings: fsl: scu: add general interrupt support
-Date: Tue, 12 Feb 2019 12:38:54 +0000
-Message-ID: <DB3PR0402MB3916FECAC4645C2B12FAB65EF5650@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1548230179-26076-1-git-send-email-Anson.Huang@nxp.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH] arm64: dts: imx8mq: Add cpu opp table
+Date: Tue, 12 Feb 2019 12:41:45 +0000
+Message-ID: <20190212124144.gxxecxqu5xk2ts2m@fsr-ub1664-175>
+References: <1549973439-26706-1-git-send-email-abel.vesa@nxp.com>
+ <CAOMZO5BgWYKv_sJ=pmknEs+CdOasdK47H32xbwtHub6s0yi=rQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548230179-26076-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <CAOMZO5BgWYKv_sJ=pmknEs+CdOasdK47H32xbwtHub6s0yi=rQ@mail.gmail.com>
 Content-Language: en-US
+Content-ID: <7AA8AB28B3E6654E827C7A2C090881EF@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Anson Huang <anson.huang@nxp.com>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-R2VudGxlIHBpbmcuLi4NCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiAyMDE5xOox
-1MIyM8jVIDE2OjAxDQo+IFRvOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
-Y29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJu
-ZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gQWlzaGVuZyBEb25nIDxh
-aXNoZW5nLmRvbmdAbnhwLmNvbT47IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7IERhbmllbA0KPiBC
-YWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0K
-PiBTdWJqZWN0OiBbUEFUQ0ggMS8zXSBkdC1iaW5kaW5nczogZnNsOiBzY3U6IGFkZCBnZW5lcmFs
-IGludGVycnVwdCBzdXBwb3J0DQo+IA0KPiBBZGQgc2N1IGdlbmVyYWwgaW50ZXJydXB0IGZ1bmN0
-aW9uIHN1cHBvcnQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVh
-bmdAbnhwLmNvbT4NCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNj
-YWxlL2ZzbCxzY3UudHh0ICAgICAgfCAxOCArKysrKysrKysrKystLS0tLS0NCj4gIDEgZmlsZSBj
-aGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxz
-Y3UudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2Nh
-bGUvZnNsLHNjdS50eHQNCj4gaW5kZXggZmQyYmVkMi4uM2M5NzZhYyAxMDA2NDQNCj4gLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50
-eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2Nh
-bGUvZnNsLHNjdS50eHQNCj4gQEAgLTIyLDkgKzIyLDExIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
-DQo+ICAtLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAtIGNvbXBhdGlibGU6CXNob3VsZCBiZSAiZnNs
-LGlteC1zY3UiLg0KPiAgLSBtYm94LW5hbWVzOglzaG91bGQgaW5jbHVkZSAidHgwIiwgInR4MSIs
-ICJ0eDIiLCAidHgzIiwNCj4gLQkJCSAgICAgICAicngwIiwgInJ4MSIsICJyeDIiLCAicngzIi4N
-Cj4gLS0gbWJveGVzOglMaXN0IG9mIHBoYW5kbGUgb2YgNCBNVSBjaGFubmVscyBmb3IgdHggYW5k
-IDQgTVUgY2hhbm5lbHMNCj4gLQkJZm9yIHJ4LiBBbGwgOCBNVSBjaGFubmVscyBtdXN0IGJlIGlu
-IHRoZSBzYW1lIE1VIGluc3RhbmNlLg0KPiArCQkJICAgICAgICJyeDAiLCAicngxIiwgInJ4MiIs
-ICJyeDMiLA0KPiArCQkJICAgICAgICJnaTMiLg0KPiArLSBtYm94ZXM6CUxpc3Qgb2YgcGhhbmRs
-ZSBvZiA0IE1VIGNoYW5uZWxzIGZvciB0eCwgNCBNVSBjaGFubmVscyBmb3INCj4gKwkJcngsIGFu
-ZCAxIE1VIGNoYW5uZWwgZm9yIGdlbmVyYWwgaW50ZXJydXB0LiBBbGwgOSBNVSBjaGFubmVscw0K
-PiArCQltdXN0IGJlIGluIHRoZSBzYW1lIE1VIGluc3RhbmNlLg0KPiAgCQlDcm9zcyBpbnN0YW5j
-ZXMgYXJlIG5vdCBhbGxvd2VkLiBUaGUgTVUgaW5zdGFuY2UgY2FuIG9ubHkNCj4gIAkJYmUgb25l
-IG9mIExTSU8gTVUwfk00IGZvciBpbXg4cXhwIGFuZCBpbXg4cW0uIFVzZXJzDQo+IG5lZWQNCj4g
-IAkJdG8gbWFrZSBzdXJlIHVzZSB0aGUgb25lIHdoaWNoIGlzIG5vdCBjb25mbGljdCB3aXRoIG90
-aGVyIEBADQo+IC0zNCw2ICszNiw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAJCUNoYW5u
-ZWwgMSBtdXN0IGJlICJ0eDEiIG9yICJyeDEiLg0KPiAgCQlDaGFubmVsIDIgbXVzdCBiZSAidHgy
-IiBvciAicngyIi4NCj4gIAkJQ2hhbm5lbCAzIG11c3QgYmUgInR4MyIgb3IgInJ4MyIuDQo+ICsJ
-CUdlbmVyYWwgaW50ZXJydXB0IGNoYW5uZWwgbXVzdCBiZSAiZ2kzIi4NCj4gIAkJZS5nLg0KPiAg
-CQltYm94ZXMgPSA8JmxzaW9fbXUxIDAgMA0KPiAgCQkJICAmbHNpb19tdTEgMCAxDQo+IEBAIC00
-Miw3ICs0NSw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAJCQkgICZsc2lvX211MSAxIDAN
-Cj4gIAkJCSAgJmxzaW9fbXUxIDEgMQ0KPiAgCQkJICAmbHNpb19tdTEgMSAyDQo+IC0JCQkgICZs
-c2lvX211MSAxIDM+Ow0KPiArCQkJICAmbHNpb19tdTEgMSAzDQo+ICsJCQkgICZsc2lvX211MSAz
-IDM+Ow0KPiAgCQlTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gv
-ZnNsLG11LnR4dA0KPiAgCQlmb3IgZGV0YWlsZWQgbWFpbGJveCBiaW5kaW5nLg0KPiANCj4gQEAg
-LTEzMCw3ICsxMzQsOCBAQCBmaXJtd2FyZSB7DQo+ICAJc2N1IHsNCj4gIAkJY29tcGF0aWJsZSA9
-ICJmc2wsaW14LXNjdSI7DQo+ICAJCW1ib3gtbmFtZXMgPSAidHgwIiwgInR4MSIsICJ0eDIiLCAi
-dHgzIiwNCj4gLQkJCSAgICAgInJ4MCIsICJyeDEiLCAicngyIiwgInJ4MyI7DQo+ICsJCQkgICAg
-ICJyeDAiLCAicngxIiwgInJ4MiIsICJyeDMiLA0KPiArCQkJICAgICAiZ2kzIjsNCj4gIAkJbWJv
-eGVzID0gPCZsc2lvX211MSAwIDANCj4gIAkJCSAgJmxzaW9fbXUxIDAgMQ0KPiAgCQkJICAmbHNp
-b19tdTEgMCAyDQo+IEBAIC0xMzgsNyArMTQzLDggQEAgZmlybXdhcmUgew0KPiAgCQkJICAmbHNp
-b19tdTEgMSAwDQo+ICAJCQkgICZsc2lvX211MSAxIDENCj4gIAkJCSAgJmxzaW9fbXUxIDEgMg0K
-PiAtCQkJICAmbHNpb19tdTEgMSAzPjsNCj4gKwkJCSAgJmxzaW9fbXUxIDEgMw0KPiArCQkJICAm
-bHNpb19tdTEgMyAzPjsNCj4gDQo+ICAJCWNsazogY2xrIHsNCj4gIAkJCWNvbXBhdGlibGUgPSAi
-ZnNsLGlteDhxeHAtY2xrIjsNCj4gLS0NCj4gMi43LjQNCg0K
+On 19-02-12 10:14:55, Fabio Estevam wrote:
+> Hi Abel,
+>=20
+> On Tue, Feb 12, 2019 at 10:13 AM Abel Vesa <abel.vesa@nxp.com> wrote:
+> >
+> > From: Anson Huang <Anson.Huang@nxp.com>
+> >
+> > Add i.MX8MQ cpu OPP table info for cpu-freq driver.
+>=20
+> Has the imx8m cpufreq driver already been submitted?
+
+I just sent the cpufreq driver along with the device registering.=
