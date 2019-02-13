@@ -1,65 +1,54 @@
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
- early memory reservation
-Date: Wed, 13 Feb 2019 10:27:48 +0100
-Message-ID: <5c9184f3-71c1-7875-52f7-616d299a9549@free.fr>
-References: <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
- <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
- <20190123055414.GA4747@rapoport-lnx>
- <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
- <20190123123143.GE4747@rapoport-lnx>
- <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
- <617e0d57-342d-4162-bd21-ece18e481d87@free.fr>
- <CAL_JsqKbCg-rGmLoA3mPv54=LMuQBfevfzL8f2QPVyjN-sNk8w@mail.gmail.com>
- <20190213085028.6199594b@canb.auug.org.au>
- <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
- <20190213065734.GA14425@rapoport-lnx>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: gnss: add mediatek binding
+Date: Wed, 13 Feb 2019 10:31:21 +0100
+Message-ID: <20190213093121.GG28278@localhost>
+References: <1548693481-1162-1-git-send-email-lollivier@baylibre.com>
+ <1548693481-1162-3-git-send-email-lollivier@baylibre.com>
+ <20190130155016.GA26536@bogus>
+ <20190211092251.GV4686@localhost>
+ <CAL_JsqJPhuDDsEMvpVizewTuehOZTc84d+8Hq7o8C+O4UrBjYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190213065734.GA14425@rapoport-lnx>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJPhuDDsEMvpVizewTuehOZTc84d+8Hq7o8C+O4UrBjYw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Frank Rowand <frowand.list@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Loys Ollivier <lollivier@baylibre.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13/02/2019 07:57, Mike Rapoport wrote:
+On Tue, Feb 12, 2019 at 03:18:46PM -0600, Rob Herring wrote:
+> On Mon, Feb 11, 2019 at 3:23 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Wed, Jan 30, 2019 at 09:50:16AM -0600, Rob Herring wrote:
+> > > On Mon, Jan 28, 2019 at 05:37:59PM +0100, Loys Ollivier wrote:
+> > > > Add binding for Mediatek-based GNSS receivers.
+> > > >
+> > > > Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
 
-> Below is the version vs. current mmotm.
+> > > > +- gtop,fix-gpios   : GPIO used to determine device position fix state
+> > > > +                     (pin name: FIX, 3D_FIX)
+> >
+> > I'm thinking we might need a standard name for fix-gpios as well. This
+> > isn't a feature that is globaltop (or mediatek) specific, and other
+> > manufacturers provide similar functionality through pins named UI_FIX,
+> > or even LCKIND (lock indicator).
+> >
+> > The pin is typically used to drive an indicator LED AFAIU, but the
+> > characteristics of the signal varies from device to device (fw to fw),
+> > for example, pulse when no lock and low otherwise, or pulse when a 2d or
+> > 3d-fix is acquired, etc.
+> >
+> > I'm not sure how useful the pulsing would be for software, but someone
+> > might find a use for it in some form.
+> >
+> > Rob, is this something we want to keep in the binding, and if so, how
+> > about using a generic name such as "gnss-fix-gpios"?
 > 
-> From 9ea6dceb46067d4f1cbbdbec1189c8496aa0a4bc Mon Sep 17 00:00:00 2001
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> Date: Mon, 4 Feb 2019 15:37:21 +0100
-> Subject: [PATCH] of: fix kmemleak crash caused by imbalance in early memory reservation
+> Sure. As long as details like being a pulse and when the pulse occurs
+> are implied by compatible string. So we don't get an endless addition
+> of properties to describe those.
 
-Out of curiosity, why don't you send as a proper v3?
+Agreed, thanks.
 
-> Marc Gonzalez reported the following kmemleak crash:
-> 
-> [...]
-> 
-> The crash happens when a no-map area is allocated in
-> early_init_dt_alloc_reserved_memory_arch(). The allocated region is
-> registered with kmemleak, but it is then removed from memblock using
-> memblock_remove() that is not kmemleak-aware.
-> 
-> Replacing __memblock_alloc_base() with memblock_find_in_range()
-
-Nit: in this new version, you're replacing memblock_phys_alloc_range()
-with memblock_find_in_range() so I don't know if the comment still
-applies.
-
-> makes sure that the allocated memory is not added to kmemleak and then
-> memblock_remove()'ing this memory is safe.
-> 
-> As a bonus, since memblock_find_in_range() ensures the allocation in the
-> specified range, the bounds check can be removed.
-> 
-> Cc: stable@vger.kernel.org # 3.15+
-> Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
-> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Acked-by: Prateek Patel <prpatel@nvidia.com>
-> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Johan
