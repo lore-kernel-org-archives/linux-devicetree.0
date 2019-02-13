@@ -1,97 +1,126 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 12/13] input: max77650: add onkey support
-Date: Tue, 12 Feb 2019 23:30:17 -0800
-Message-ID: <CAKdAkRQZ+ug7tpkE4x_8iTbUm9JnyF5wWrUnPRASi98t25LTbA@mail.gmail.com>
-References: <20190118134244.22253-1-brgl@bgdev.pl> <20190118134244.22253-13-brgl@bgdev.pl>
- <20190119090318.GB187380@dtor-ws> <20190212203408.GA1863@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v2 1/3] spi: sprd: Add the SPI irq function for the SPI DMA mode
+Date: Wed, 13 Feb 2019 15:36:09 +0800
+Message-ID: <11e55b5f9b0d83649a5b81c7e3fdb667cd3ddc5b.1550043082.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212203408.GA1863@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, lkml <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@unisoc.com, baolin.wang@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+From: Lanqing Liu <lanqing.liu@unisoc.com>
 
-On Tue, Feb 12, 2019 at 12:34 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Add support for the push- and slide-button events for max77650.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > ---
-> > >  drivers/input/misc/Kconfig          |   9 ++
-> > >  drivers/input/misc/Makefile         |   1 +
-> > >  drivers/input/misc/max77650-onkey.c | 135 ++++++++++++++++++++++++++++
-> > >  3 files changed, 145 insertions(+)
-> > >  create mode 100644 drivers/input/misc/max77650-onkey.c
->
-> [...]
->
-> Moving things around a bit:
->
-> > > +static int max77650_onkey_probe(struct platform_device *pdev)
-> > > +{
->
-> > > +   irq_f = regmap_irq_get_virq(irq_data, MAX77650_INT_nEN_F);
-> > > +   if (irq_f <= 0)
-> > > +           return -EINVAL;
-> > > +
-> > > +   irq_r = regmap_irq_get_virq(irq_data, MAX77650_INT_nEN_R);
-> > > +   if (irq_r <= 0)
-> > > +           return -EINVAL;
-> >
-> > Ugh, it would be better if you handled IRQ mapping in the MFD piece and
-> > passed it as resources of platform device. Then you'd simply call
-> > platform_get_irq() here and did not have to reach into parent device for
-> > "irq_dara".
->
-> These device IRQs were defined and registered with the Regmap *set*
-> (actually init()) APIs and thus should be pulled out using the
-> appropriate reverse Regmap *get* APIs here in the device.
->
-> Registering them with Regmap *and* pulling them back out again in the
-> same (MFD in this case) driver, only to register them as platform data
-> is certainly not how I see the API being designed/used.
->
-> > > +   struct regmap_irq_chip_data *irq_data;
-> > > +   struct device *dev, *parent;
->
-> > > +   dev = &pdev->dev;
-> > > +   parent = dev->parent;
-> > > +   i2c = to_i2c_client(parent);
-> > > +   irq_data = i2c_get_clientdata(i2c);
-> > > +
-> > > +   map = dev_get_regmap(parent, NULL);
-> > > +   if (!map)
-> > > +           return -ENODEV;
->
-> However, this hoop jumping is a bit crazy and for the most part
-> superfluous.  Instead, create a struct of attributes you wish to share
-> with the child devices (containing both regmap (which you should call
-> regmap and not map by the way) and irq_data) and pass it as either
-> platform data (preferred) or as device data.
->
-> If you choose the latter, you do not need to convert from 'device' to
-> 'i2c' to do the look-up.  Since this function (probe()) is provided
-> with a platform_device, you can just use platform_get_drvdata() to
-> achieve the same as above.
->
-> If you go the preferred (platform data) route, then you should use
-> dev_get_platdata() instead.
+The SPI irq event will use to complete the SPI work in the SPI DMA mode,
+so this patch is a preparation for the following DMA mode support.
 
-By doing what you are suggesting (introducing platform data) you
-introducing strong dependency between MFD and input piece for no
-different reason. With the current implementation the parent can be
-reworked completely without involving onkey driver.
+Moreover the SPI interrupt can be fired when removing the SPI controller,
+so we should make sure the SPI controller has stopped the queue in
+remove function before freeing the SPI irq.
 
-I find such clean separation desirable. We are trying to move away
-form platform data where it makes sense.
+Signed-off-by: Lanqing Liu <lanqing.liu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes from v1:
+ - Return IRQ_NONE if detecting incorrect interrupt status.
+ - Add spi_controller_suspend in remove function.
+---
+ drivers/spi/spi-sprd.c |   51 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-Thanks.
-
+diff --git a/drivers/spi/spi-sprd.c b/drivers/spi/spi-sprd.c
+index fa324ce..d1ddeee 100644
+--- a/drivers/spi/spi-sprd.c
++++ b/drivers/spi/spi-sprd.c
+@@ -133,6 +133,7 @@ struct sprd_spi {
+ 	void __iomem *base;
+ 	struct device *dev;
+ 	struct clk *clk;
++	int irq;
+ 	u32 src_clk;
+ 	u32 hw_mode;
+ 	u32 trans_len;
+@@ -141,6 +142,7 @@ struct sprd_spi {
+ 	u32 hw_speed_hz;
+ 	u32 len;
+ 	int status;
++	struct completion xfer_completion;
+ 	const void *tx_buf;
+ 	void *rx_buf;
+ 	int (*read_bufs)(struct sprd_spi *ss, u32 len);
+@@ -575,6 +577,48 @@ static int sprd_spi_transfer_one(struct spi_controller *sctlr,
+ 	return ret;
+ }
+ 
++static irqreturn_t sprd_spi_handle_irq(int irq, void *data)
++{
++	struct sprd_spi *ss = (struct sprd_spi *)data;
++	u32 val = readl_relaxed(ss->base + SPRD_SPI_INT_MASK_STS);
++
++	if (val & SPRD_SPI_MASK_TX_END) {
++		writel_relaxed(SPRD_SPI_TX_END_CLR, ss->base + SPRD_SPI_INT_CLR);
++		if (!(ss->trans_mode & SPRD_SPI_RX_MODE))
++			complete(&ss->xfer_completion);
++
++		return IRQ_HANDLED;
++	}
++
++	if (val & SPRD_SPI_MASK_RX_END) {
++		writel_relaxed(SPRD_SPI_RX_END_CLR, ss->base + SPRD_SPI_INT_CLR);
++		complete(&ss->xfer_completion);
++
++		return IRQ_HANDLED;
++	}
++
++	return IRQ_NONE;
++}
++
++static int sprd_spi_irq_init(struct platform_device *pdev, struct sprd_spi *ss)
++{
++	int ret;
++
++	ss->irq = platform_get_irq(pdev, 0);
++	if (ss->irq < 0) {
++		dev_err(&pdev->dev, "failed to get irq resource\n");
++		return ss->irq;
++	}
++
++	ret = devm_request_irq(&pdev->dev, ss->irq, sprd_spi_handle_irq,
++				0, pdev->name, ss);
++	if (ret)
++		dev_err(&pdev->dev, "failed to request spi irq %d, ret = %d\n",
++			ss->irq, ret);
++
++	return ret;
++}
++
+ static int sprd_spi_clk_init(struct platform_device *pdev, struct sprd_spi *ss)
+ {
+ 	struct clk *clk_spi, *clk_parent;
+@@ -635,11 +679,16 @@ static int sprd_spi_probe(struct platform_device *pdev)
+ 	sctlr->max_speed_hz = min_t(u32, ss->src_clk >> 1,
+ 				    SPRD_SPI_MAX_SPEED_HZ);
+ 
++	init_completion(&ss->xfer_completion);
+ 	platform_set_drvdata(pdev, sctlr);
+ 	ret = sprd_spi_clk_init(pdev, ss);
+ 	if (ret)
+ 		goto free_controller;
+ 
++	ret = sprd_spi_irq_init(pdev, ss);
++	if (ret)
++		goto free_controller;
++
+ 	ret = clk_prepare_enable(ss->clk);
+ 	if (ret)
+ 		goto free_controller;
+@@ -690,6 +739,8 @@ static int sprd_spi_remove(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	spi_controller_suspend(sctlr);
++
+ 	clk_disable_unprepare(ss->clk);
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
 -- 
-Dmitry
+1.7.9.5
