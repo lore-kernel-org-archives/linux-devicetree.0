@@ -1,73 +1,38 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v1 3/3] regulator: bd718x7: Support SNVS low power
- state
-Date: Wed, 13 Feb 2019 10:33:43 +0200
-Message-ID: <20190213083343.GC12247@localhost.localdomain>
-References: <cover.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
- <06c2f2f730b07caeb1f2fb86be60c02b21d7bea9.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
- <20190212160831.GF20635@sirena.org.uk>
- <20190213073827.GB12247@localhost.localdomain>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 00/11] qcom: ssbi-gpio: add support for hierarchical
+ IRQ chip
+Date: Wed, 13 Feb 2019 09:38:23 +0100
+Message-ID: <CACRpkdYHK1qwcy3AzRjwC1A_FB3ns9T7O_UnCgbtk30Nx=S8+A@mail.gmail.com>
+References: <20190208021631.30252-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190213073827.GB12247@localhost.localdomain>
+In-Reply-To: <20190208021631.30252-1-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>
+To: Brian Masney <masneyb@onstation.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
 List-Id: devicetree@vger.kernel.org
 
-Hello peeps,
+On Fri, Feb 8, 2019 at 3:16 AM Brian Masney <masneyb@onstation.org> wrote:
 
-And my apologies! I was in a hurry yesterday. I had to pick up kid kid
-from kindegarden and I wanted to send the RFC before that - bad mistake.
-Should've learnd by now.
+> This patch series adds hierarchical IRQ chip support to ssbi-gpio so
+> that device tree consumers can request an IRQ directly from the GPIO
+> block rather than having to request an IRQ from the underlying PMIC.
+>
+> For more background information, see the email thread with Linus
+> Walleij's excellent description of the problem at
+> https://www.spinics.net/lists/linux-gpio/msg34655.html.
+>
+> These changes were tested by Linus Walleij on an APQ8060 DragonBoard.
+>
+> See the notes on the individual patches for the changelog.
 
-Today I decided to continue work and use combination of
-regulator-always-on and regulator-boot-on instead of
-rohm,regulator-crucial-for-boot. I was ashtonished by the fact that I
-didn't find my latest work from my git. After a while I found unsaved
-buffer from another editor instance with changes concerning handling of
-"rohm,regulator-crucial-for-boot"...
+SInce we have definitive ACKs from the irqchip and
+MFD maintainers I have queued this series on an immutable branch
+that I will merge for v5.1 and offer to the MFD and ARM SoC
+once it builds fine on the test servers.
 
-On Wed, Feb 13, 2019 at 09:38:27AM +0200, Matti Vaittinen wrote:
-> Hello Mark,
-> 
-> On Tue, Feb 12, 2019 at 04:08:31PM +0000, Mark Brown wrote:
-> 
-> So with current driver design, even if constrains prevented the
-> regulator core from touching the regulators, the driver still changes
-> the control to SW. So we need to parse some attribute in the BD718x7
-> driver side. Besides, I did not spot a 'do not touch me' property from
-> the bindings :)
+I don't think the Qcom maintainers will complain.
 
-So no wonder it was not clear that the core constrains were not enough.
-Previous patch did not contain the part of change that skipped turning
-the regulator control to SW if regulator was marked crucial.
-
-> But after writing all this - I think you are correct. We do not need the
-> rohm,regulator-crucial-for-boot. I guess we can check for the
-> combination of:
-> 
-> regulator-always-on and regulator-boot-on
-> 
-> and interpret this as "rohm,regulator-crucial-for-boot".
-> 
-> I just think I need to document that those flags are required
-> for critical regulators if SNVS is used as reset target even if there
-> should be no one touching those regulators.
-
-Anyways, this is still valid - I'll prepare next version with all
-intended changes included... :/
-
-Br,
-	Matti Vaittinen
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+Yours,
+Linus Walleij
