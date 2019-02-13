@@ -1,64 +1,40 @@
 From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 00/11] add support for sam9x60 nand controller
-Date: Wed, 13 Feb 2019 08:59:41 +0000
-Message-ID: <20190213085930.31578-1-tudor.ambarus@microchip.com>
+Subject: [PATCH 03/11] dt-bindings: memory: atmel-ebi: add sam9x60 compatible
+Date: Wed, 13 Feb 2019 08:59:52 +0000
+Message-ID: <20190213085930.31578-4-tudor.ambarus@microchip.com>
+References: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Content-Language: en-US
-Content-ID: <53771A0CC529EC419819DE0424FC4221@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, dwmw2@infradead.org, computersforpeace@gmail.com, bbrezillon@kernel.org, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tudor.Ambarus@microchip.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Tudor.Ambarus@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0KDQpUaGUg
-c2FtOXg2MCBib2FyZCBkZWZpbmVzIHRoZSBDQ0ZHX0VCSUNTQSByZWdpc3RlciB1bmRlciBTRlIs
-DQphbmQgbm90IGFzIGEgTUFUUklYIHJlZ2lzdGVyLCBhcyBwcmV2aW91cyBib2FyZHMgZG8uDQpO
-QU5EIEZsYXNoIEkvT3MgYXJlIGNvbm5lY3RlZCB0byBEMTbigJNEMjMsIHRodXMNClNGUl9DQ0ZH
-X0VCSUNTQS5ORkQwX09OX0QxNiBpcyBzZXQgdG8gMS4NCg0KVGVzdGVkIHVzaW5nIG10ZC11dGls
-cy4NCg0KLSBwYXRjaGVzIFsxLCA3XSBhZGQgc3VwcG9ydCBmb3IgdGhlIHNhbTl4NjAgbmFuZCBj
-b250cm9sbGVyLiBJIHdvdWxkDQogIHN1Z2dlc3QgdG8gZ2V0IHRoZW0gdGhyb3VnaCBsaW51eC1t
-dGQgdHJlZSwgaWYgYWxsIGFncmVlLg0KLSBwYXRjaCA4IGNhbiBiZSB0YWtlbiBieSBBbGV4YW5k
-cmUNCi0gcGF0Y2ggOSAtIFNQRFggY2hhbmdlLCBjYW4gYmUgdGFrZW4gYnkgTGVlDQotIHBhdGNo
-IDEwIC0gU1BEWCBjaGFuZ2UsIGNhbiBiZSB0YWtlbiBieSBBbGV4YW5kcmUNCi0gcGF0Y2ggMTEg
-LSBTUERYIGNoYW5nZSwgc2hvdWxkIGdvIHRocm91Z2ggbGludXgtbXRkDQoNCmR0IGNvbXBhdGli
-bGUgc3RyaW5nIGZvciAibWljcm9jaGlwLHNhbTl4NjAtc2ZyIiBoYXMgYWxyZWFkeSBiZWVuDQpz
-dWJtaXRlZCBhdCBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzk5ODMxLw0K
-DQpUdWRvciBBbWJhcnVzICgxMSk6DQogIEFSTTogYXQ5MTogYWRkIHNhbTl4NjAgU0ZSIGRlZmlu
-aXRpb25zDQogIG1lbW9yeTogYXRtZWwtZWJpOiBhZGQgZ2VuZXJpYyBuYW1lIGZvciBlYmkgcmVn
-bWFwDQogIGR0LWJpbmRpbmdzOiBtZW1vcnk6IGF0bWVsLWViaTogYWRkIHNhbTl4NjAgY29tcGF0
-aWJsZQ0KICBtZW1vcnk6IGF0bWVsLWViaTogYWRkIHNhbTl4NjAgRUJJIHN1cHBvcnQNCiAgbXRk
-OiByYXduYW5kOiBhdG1lbDogYWRkIGdlbmVyaWMgbmFtZSBmb3IgRUJJQ1NBIHJlZ21hcA0KICBk
-dC1iaW5kaW5nczogbXRkOiBhdG1lbC1uYW5kOiBhZGQgc2FtOXg2MCBjb21wYXRpYmxlDQogIG10
-ZDogcmF3bmFuZDogYXRtZWw6IGFkZCBzYW05eDYwIG5hbmQgY29udHJvbGxlciBzdXBwb3J0DQog
-IG1lbW9yeTogYXRtZWwtZWJpOiBtb3ZlIE5VTV9DUyBkZWZpbml0aW9uIGluc2lkZSBhdG1lbC1l
-YmkNCiAgbWZkOiBzeXNjb246IGF0bWVsOiBzd2l0Y2ggdG8gU1BEWCBsaWNlbnNlIGlkZW50aWZp
-ZXJzDQogIG1lbW9yeTogYXRtZWwtZWJpOiBzd2l0Y2ggdG8gU1BEWCBsaWNlbnNlIGlkZW50aWZp
-ZXJzDQogIG10ZDogcmF3bmFuZDogYXRtZWw6IHN3aXRjaCB0byBTUERYIGxpY2Vuc2UgaWRlbnRp
-ZmllcnMNCg0KIC4uLi9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvYXRtZWwsZWJpLnR4dCAg
-ICAgIHwgICAxICsNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvYXRtZWwtbmFuZC50eHQg
-ICAgICAgICB8ICAgMSArDQogZHJpdmVycy9tZW1vcnkvYXRtZWwtZWJpLmMgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgNDggKysrKysrLS0tDQogZHJpdmVycy9tdGQvbmFuZC9yYXcvYXRtZWwv
-bmFuZC1jb250cm9sbGVyLmMgICAgICAgfCAxMTcgKysrKysrKysrKysrKysrKy0tLS0tDQogZHJp
-dmVycy9tdGQvbmFuZC9yYXcvYXRtZWwvcG1lY2MuYyAgICAgICAgICAgICAgICAgfCAgIDUgKy0N
-CiBkcml2ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9wbWVjYy5oICAgICAgICAgICAgICAgICB8ICAg
-NiArLQ0KIGluY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9hdG1lbC1tYXRyaXguaCAgICAgICAgICAg
-IHwgICA3ICstDQogaW5jbHVkZS9saW51eC9tZmQvc3lzY29uL2F0bWVsLW1jLmggICAgICAgICAg
-ICAgICAgfCAgIDYgKy0NCiBpbmNsdWRlL2xpbnV4L21mZC9zeXNjb24vYXRtZWwtc21jLmggICAg
-ICAgICAgICAgICB8ICAgNSArLQ0KIGluY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9hdG1lbC1zdC5o
-ICAgICAgICAgICAgICAgIHwgICA2ICstDQogaW5jbHVkZS9zb2MvYXQ5MS9hdG1lbC1zZnIuaCAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgMzQgKysrKy0tDQogMTEgZmlsZXMgY2hhbmdlZCwgMTYx
-IGluc2VydGlvbnMoKyksIDc1IGRlbGV0aW9ucygtKQ0KDQotLSANCjIuOS41DQoNCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQg
-ZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1tdGQvCg==
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
+
+Add compatibility string for the sam9x60 EBI.
+
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+---
+ Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi=
+.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+index 9bb5f57e2066..94bf7896a688 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+@@ -15,6 +15,7 @@ Required properties:
+ 			"atmel,at91sam9g45-ebi"
+ 			"atmel,at91sam9x5-ebi"
+ 			"atmel,sama5d3-ebi"
++			"microchip,sam9x60-ebi"
+=20
+ - reg:			Contains offset/length value for EBI memory mapping.
+ 			This property might contain several entries if the EBI
+--=20
+2.9.5
