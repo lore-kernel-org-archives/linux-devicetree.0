@@ -1,59 +1,119 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v5 02/11] dt-bindings: power: supply: add DT bindings for max77650
-Date: Wed, 13 Feb 2019 14:43:26 +0100
-Message-ID: <20190213134335.10838-3-brgl@bgdev.pl>
-References: <20190213134335.10838-1-brgl@bgdev.pl>
+From: liaoweixiong <liaoweixiong@allwinnertech.com>
+Subject: Re: [RFC v7 2/5] dt-bindings: pstore-block: new support for blkoops
+Date: Wed, 13 Feb 2019 21:52:02 +0800
+Message-ID: <ab72f73d-b7ea-4688-f768-509d55964be0@allwinnertech.com>
+References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
+ <20190130160707.GA31844@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190213134335.10838-1-brgl@bgdev.pl>
+In-Reply-To: <20190130160707.GA31844@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add the DT binding document for the battery charger module of max77650.
+On 2019-01-31 00:07, Rob Herring wrote:> On Wed, Jan 23, 2019 at
+08:05:13PM +0800, liaoweixiong wrote:
+>> Create DT binding document for blkoops.
+>>
+>> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+>> ---
+>>  .../devicetree/bindings/pstore-block/blkoops.txt   | 32 ++++++++++++++++++++++
+> 
+> /bindings/pstore/...
+> 
+> I wouldn't call it blkoops either. I believe ramoops is called that to 
+> maintain compatibility keeping the same kernel module name that 
+> preceeded pstore.
+> 
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../power/supply/max77650-charger.txt         | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+Fixed.
 
-diff --git a/Documentation/devicetree/bindings/power/supply/max77650-charger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-new file mode 100644
-index 000000000000..16e24173c80e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-@@ -0,0 +1,27 @@
-+Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-+
-+This module is part of the MAX77650 MFD device. For more details
-+see Documentation/devicetree/bindings/mfd/max77650.txt.
-+
-+The charger is represented as a sub-node of the PMIC node on the device tree.
-+
-+Required properties:
-+--------------------
-+- compatible:		Must be "maxim,max77650-charger"
-+
-+Optional properties:
-+--------------------
-+- min-input-voltage:	Minimum CHGIN regulation voltage (in microvolts). Must be
-+			one of: 4000000, 4100000, 4200000, 4300000, 4400000,
-+			4500000, 4600000, 4700000.
-+- current-limit:	CHGIN input current limit (in microamps). Must be one of:
-+			95000, 190000, 285000, 380000, 475000.
-+
-+Example:
-+--------
-+
-+	charger {
-+		compatible = "maxim,max77650-charger";
-+		maxim,vchgin-min = <4200000>;
-+		maxim,ichgin-lim = <285000>;
-+	};
+In addition, I don't known whether should we move
+ramreserved-memory/ooos.txt to /bindings/pstore. This is for maintainer
+to decide, and do it on other patch.
+
+>>  MAINTAINERS                                        |  1 +
+>>  2 files changed, 33 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pstore-block/blkoops.txt b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
+>> new file mode 100644
+>> index 0000000..a25835b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
+>> @@ -0,0 +1,32 @@
+>> +Blkoops oops logger
+>> +===================
+>> +
+>> +Blkoops provides a block partition for oops, excluding panics now, so they can
+>> +be recovered after a reboot.
+>> +
+>> +Any space of block partition will be used for a circular buffer of oops records.
+>> +These records have a configurable size, with a size of 0 indicating that they
+>> +should be disabled.
+>> +
+>> +"partition-size" and at least one of "dmesg-size" or "pmsg-size" must be set
+>> +non-zero, but are otherwise optional as listed below.
+>> +
+>> +Blkoops will take value from Kconfig if device tree do not set, but settings
+>> +from module parameters can also overwrite them.
+> 
+> That's all kernel details not relevant to the binidng.
+> 
+
+Deleted.
+
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: must be "blkoops".
+>> +
+>> +- partition-size: size in kbytes, must be a multiple of 4.
+> 
+> This seems unnecessary given a partition has a known size.
+> 
+
+partition-size is necessary for psotre/blk. User should tell pstore/blk
+how large space can it use.
+
+>> +
+>> +Optional properties:
+>> +
+>> +- partition-path: strings must begin with "/dev", tell blkoops which partition
+>> +  it can used. If it is not set, blkoops will drop all data when reboot.
+> 
+> No. '/dev/...' is a Linux thing and doesn't belong in DT.
+> 
+> You should define a partition UUID and/or label and the kernel can find 
+> the right partition to use.
+> 
+
+pstore/blk do general read/write by filp_open/kernel_read/kernel_write,
+which need device path.
+In addition, i have no idea how to use UUID and/or label to do general
+read/write on kernel layer, can you give me a tip?
+
+>> +
+>> +- dmesg-size: maximum size in kbytes of each dump done on oops, which must be a
+>> +  multiple of 4.
+>> +
+>> +- pmsg-size: maximum size in kbytes for userspace messages, which must be a
+>> +  multiple of 4.
+> 
+> Common properties shared with ramoops should be in a common doc.
+> 
+
+The size limit are different. Size for ramoops must be power of 2, but
+be a multiple of 4k for pstore/blk.
+
+> Rob
+> 
+
 -- 
-2.20.1
+liaoweixiong
