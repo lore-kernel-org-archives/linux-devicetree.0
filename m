@@ -1,76 +1,54 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 05/10] mfd: max77650: new core mfd driver
-Date: Wed, 13 Feb 2019 12:02:38 +0100
-Message-ID: <20190213110238.GA30507@amd>
-References: <CAMRc=MderQf20_8aG4-otBkCv60FSNSSqV3NVALPkFL-MqmJbg@mail.gmail.com>
- <20190212095457.GA20638@dell>
- <CAMRc=MdyT7nMJ7dUTf6M3PvRdynaCurb_TftMyA4eCwzpR9fVA@mail.gmail.com>
- <20190212101835.GB20638@dell>
- <CAMRc=MfYeVbvY6O03xq4eLN9TVpAKWCAXPk0eP5LSBCU7VU9fA@mail.gmail.com>
- <20190212111403.GC20638@dell>
- <CAMpxmJWXOb1HW4QiEn8gMp3Nh05ahE0CMLXkac+hEKRjtGxTHQ@mail.gmail.com>
- <20190212132016.GA4781@dell>
- <20190213092553.GE1863@dell>
- <CAMRc=MeTMq_GWzQB6LBvts1csMftj=On5sB22jsJZzQzONxbNg@mail.gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/9] pinctrl: sunxi: Support I/O bias voltage setting on A80
+Date: Wed, 13 Feb 2019 19:31:58 +0800
+Message-ID: <CAGb2v64VSvr9x8N3nXrtz5QYLf95K0BA8+VEqiVoXfmxVnFsJg@mail.gmail.com>
+References: <20190206033239.3619-1-wens@csie.org> <20190206033239.3619-2-wens@csie.org>
+ <CACRpkdZFwG9-ap3jMe+eGDCgzG9+fKRXVEb4Q=pWasd5GUs9tQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MeTMq_GWzQB6LBvts1csMftj=On5sB22jsJZzQzONxbNg@mail.gmail.com>
+In-Reply-To: <CACRpkdZFwG9-ap3jMe+eGDCgzG9+fKRXVEb4Q=pWasd5GUs9tQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Lee Jones <lee.jones@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > As you can see, it will return the IRQ Domain for the chip.
+On Mon, Feb 11, 2019 at 4:21 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Wed, Feb 6, 2019 at 4:32 AM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> > The A80 SoC has configuration registers for I/O bias voltage. Incorrect
+> > settings would make the affected peripherals inoperable in some cases,
+> > such as Ethernet RGMII signals biased at 2.5V with the settings still
+> > at 3.3V. However low speed signals such as MDIO on the same group of
+> > pins seem to be unaffected.
 > >
-> > You can then pass this IRQ domain to mfd_add_devices() and it will do
-> > the HWIRQ =3D> VIRQ mapping for you on the fly.  Meaning that you can
-> > remove all the nastiness in max77650_setup_irqs() and have the Input
-> > device use the standard (e.g. platform_get_irq()) APIs.
+> > Previously there was no way to know what the actual voltage used was,
+> > short of hard-coding a value in the device tree. With the new pin bank
+> > regulator supply support in place, the driver can now query the
+> > regulator for its voltage, and if it's valid (as opposed to being the
+> > dummy regulator), set the bias voltage setting accordingly.
 > >
-> > How does that Sound?
->=20
-> This does sound better! Why didn't you lead with that in the first
->place?
+> > Add a quirk to denote the presence of the configuration registers, and
+> > a function to set the correct setting based on the voltage read back
+> > from the regulator.
+> >
+> > This is only done when the regulator is first acquired and enabled.
+> > While it would be nice to have a notifier on the regulator so that when
+> > the voltage changes, the driver can update the setting, in practice no
+> > board currently supports dynamic changing of the I/O voltages.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>
+> I merged the v5.0-rc6 into my devel branch and applied this patch on
+> top now.
+>
+> All the DTS file changes should be merged through ARM SoC, and
+> they should work fine now.
 
-TBH, this can be considered rude and I'm not surprised Lee reacted the
-way he did.
+Thanks. Maxime actually merged them last week.
 
-> It's a pity it's not documented, I had to look at the code to find out
-> irq resources would get translated in mfd_add_devices() if a domain is
-> present.
+It seems this isn't in -next yet. I'm not seeing it in your git.kernel.org
+repo either. Might be confusing for others that want to try it out.
 
-I guess documentation patch would be welcome.
-
-Best regards,
-									Pavel
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlxj+U4ACgkQMOfwapXb+vL/BQCdEGkaJPfLbI+tEuJVF0ANhxsc
-5acAn2oCVZb7slwa63nJgPYYkBk4vrzA
-=8OAJ
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+ChenYu
