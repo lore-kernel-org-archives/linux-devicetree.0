@@ -1,127 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 05/10] mfd: max77650: new core mfd driver
-Date: Wed, 13 Feb 2019 09:25:53 +0000
-Message-ID: <20190213092553.GE1863@dell>
-References: <20190205091237.6448-6-brgl@bgdev.pl>
- <20190212083642.GT20638@dell>
- <CAMRc=MderQf20_8aG4-otBkCv60FSNSSqV3NVALPkFL-MqmJbg@mail.gmail.com>
- <20190212095457.GA20638@dell>
- <CAMRc=MdyT7nMJ7dUTf6M3PvRdynaCurb_TftMyA4eCwzpR9fVA@mail.gmail.com>
- <20190212101835.GB20638@dell>
- <CAMRc=MfYeVbvY6O03xq4eLN9TVpAKWCAXPk0eP5LSBCU7VU9fA@mail.gmail.com>
- <20190212111403.GC20638@dell>
- <CAMpxmJWXOb1HW4QiEn8gMp3Nh05ahE0CMLXkac+hEKRjtGxTHQ@mail.gmail.com>
- <20190212132016.GA4781@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v6 0/2] PWM support for HiFive Unleashed
+Date: Wed, 13 Feb 2019 14:56:16 +0530
+Message-ID: <1550049978-20705-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212132016.GA4781@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, broonie@kernel.org
+To: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Feb 2019, Lee Jones wrote:
+This patch series adds a PWM driver and DT documentation
+for HiFive Unleashed board. The patches are mostly based on
+Wesley's patch.
 
-> On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> 
-> > wt., 12 lut 2019 o 12:14 Lee Jones <lee.jones@linaro.org> napisał(a):
-> > >
-> > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> > >
-> > > > wt., 12 lut 2019 o 11:18 Lee Jones <lee.jones@linaro.org> napisał(a):
-> > > > >
-> > > > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> > > > >
-> > > > > > wt., 12 lut 2019 o 10:55 Lee Jones <lee.jones@linaro.org> napisał(a):
-> > > > > > >
-> > > > > > >  * The declaration of a superfluous struct
-> > > > > > >  * 100 lines of additional/avoidable code
-> > > > > > >  * Hacky hoop jumping trying to fudge VIRQs into resources
-> > > > > > >  * Resources were designed for HWIRQs (unless a domain is present)
-> > > > > > >  * Loads of additional/avoidable CPU cycles setting all this up
-> > > > > >
-> > > > > > While the above may be right, this one is negligible and you know it. :)
-> > > > >
-> > > > > You have nested for() loops.  You *are* wasting lots of cycles.
-> > > > >
-> > > > > > > Need I go on? :)
-> > > > > > >
-> > > > > > > Surely the fact that you are using both sides of an API
-> > > > > > > (devm_regmap_init_i2c and regmap_irq_get_*) in the same driver, must
-> > > > > > > set some alarm bells ringing?
-> > > > > > >
-> > > > > > > This whole HWIRQ setting, VIRQ getting, resource hacking is a mess.
-> > > > > > >
-> > > > > > > And for what?  To avoid passing IRQ data to a child driver?
-> > > > > >
-> > > > > > What do you propose? Should I go back to the approach in v1 and pass
-> > > > > > the regmap_irq_chip_data to child drivers?
-> > > > >
-> > > > > I'm saying you should remove all of this hackery and pass IRQs as they
-> > > > > are supposed to be passed (like everyone else does).
-> > > >
-> > > > I'm not sure what you mean by "like everyone else does" - different
-> > > > mfd drivers seem to be doing different things. Is a simple struct
-> > > > containing virtual irq numbers passed to sub-drivers fine?
-> > >
-> > > How do you plan on deriving the VIRQs to place into the struct?
-> > 
-> > Exampe:
-> > 
-> > struct max77650_gpio_pdata {
-> >     int gpi_irq;
-> > };
-> > 
-> > In MFD driver:
-> > 
-> > struct max77650_gpio_pdata *gpio_data = devm_kmalloc(dev, sizeof(*gpio_data));
-> > 
-> > gpio_data->gpi_irq = regmap_irq_get_virq(irqchip_data, GPI_NUM);
-> > 
-> > gpio_cell.platform_data = gpio_data;
-> > 
-> > In GPIO driver:
-> > 
-> > struct max77650_gpio_pdata *gpio_data = pdev->dev.platform_data;
-> > 
-> > int irq = gpio_data->gpi_irq;
-> 
-> Definitely not.  What you're trying to do is a hack.
-> 
-> If you're using Regmap to handle your IRQs, then you should use Regmap
-> in the client to pull them out.  Setting them via Regmap, then pulling
-> them out again in the *same driver*, only to store them in platform
-> data to be passed to a child device is bonkers.
-> 
-> *Either* use the MFD provided platform-data helpers *or* pass and
-> handle them via the Regmap APIs, *not* both.
+v6
+- Remove the global property 'sifive,period-ns'
+- Implement free and request callbacks to maintain user counts.
+- Add user_count member to struct pwm_sifive_ddata
+- Allow period change only if user_count is one
+- Add pwm_sifive_enable function to enable/disable PWM
+- Change calculation logic of frac (in pwm_sifive_apply)
+- Remove state correction
+- Remove pwm_sifive_xlate function
+- Clock to be enabled only when PWM is enabled
+- Other minor fixes
 
-Right, a plan has been formed.
+v5
+- Correct the order of compatible string properties
+- PWM state correction to be done always
+- Other minor fixes based upon feedback on v4
 
-Hopefully this works and you can avoid all this dancing around.
+v4
+- Rename the property sifive,approx-period-ns to sifive,period-ns
+- Rename macros with appropriate names
+- Remove unused macros
+- Rename struct sifive_pwm_device to struct pwm_sifive_ddata
+- Rename function prefix as per driver name
+- Set deglitch bit before changing output waveform.
+- Other minor fixes based upon feedback on v3
 
-Firstly, you need to make a small change to:
+v3
+- Add a link to the reference manaul
+- Use appropriate apis for division operation
+- Add check for polarity
+- Enable clk before calling clk_get_rate
+- Other minor fixes based upon feedback on v2
 
-  drivers/base/regmap/regmap-irq.c
+V2 changed from V1:
+- Remove inclusion of dt-bindings/pwm/pwm.h
+- Remove artificial alignments
+- Replace ioread32/iowrite32 with readl/writel
+- Remove camelcase
+- Change dev_info to dev_dbg for unnecessary log
+- Correct typo in driver name
+- Remove use of of_match_ptr macro
+- Update the DT compatible strings and Add reference to a common
+  versioning document
 
-Add the following function:
+Yash Shah (2):
+  pwm: sifive: Add DT documentation for SiFive PWM Controller
+  pwm: sifive: Add a driver for SiFive SoC PWM
 
-  struct irq_domain *regmap_irq_get_domain(struct regmap *map)
-
-As you can see, it will return the IRQ Domain for the chip.
-
-You can then pass this IRQ domain to mfd_add_devices() and it will do
-the HWIRQ => VIRQ mapping for you on the fly.  Meaning that you can
-remove all the nastiness in max77650_setup_irqs() and have the Input
-device use the standard (e.g. platform_get_irq()) APIs.
-
-How does that Sound?
+ .../devicetree/bindings/pwm/pwm-sifive.txt         |  30 ++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sifive.c                           | 311 +++++++++++++++++++++
+ 4 files changed, 353 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+ create mode 100644 drivers/pwm/pwm-sifive.c
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.9.1
