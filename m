@@ -1,7 +1,7 @@
 From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [RFC 1/5] clk: imx: imx8mq: Fix the rate propagation for arm pll
-Date: Wed, 13 Feb 2019 19:05:12 +0000
-Message-ID: <1550084693-9797-2-git-send-email-abel.vesa@nxp.com>
+Subject: [RFC 3/5] clk: imx8mq: Add the missing ARM clock
+Date: Wed, 13 Feb 2019 19:05:15 +0000
+Message-ID: <1550084693-9797-4-git-send-email-abel.vesa@nxp.com>
 References: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,35 +14,33 @@ To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland
 Cc: dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The arm pll bypass needs to propagate the rate upwards
-in order for the cpufreq to work.
+Add the ARM clock as imx_clk_cpu type.
+Will be used by cpufreq.
 
-Fixes: b80522040cd3f ("clk: imx: Add clock driver for i.MX8MQ CCM")
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- drivers/clk/imx/clk-imx8mq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/imx/clk-imx8mq.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-index 398ab0b..57499ed 100644
+index 57499ed..8a283cb 100644
 --- a/drivers/clk/imx/clk-imx8mq.c
 +++ b/drivers/clk/imx/clk-imx8mq.c
-@@ -340,7 +340,7 @@ static int imx8mq_clocks_probe(struct platform_device *=
-pdev)
- 	clks[IMX8MQ_DRAM_PLL2_DIV] =3D imx_clk_divider("dram_pll2_div", "dram_pll=
-2", base + 0x68, 1, 6);
+@@ -558,6 +558,12 @@ static int imx8mq_clocks_probe(struct platform_device =
+*pdev)
+ 	clks[IMX8MQ_GPT_3M_CLK] =3D imx_clk_fixed_factor("gpt_3m", "osc_25m", 1, =
+8);
+ 	clks[IMX8MQ_CLK_DRAM_ALT_ROOT] =3D imx_clk_fixed_factor("dram_alt_root", =
+"dram_alt", 1, 4);
 =20
- 	/* PLL bypass out */
--	clks[IMX8MQ_ARM_PLL_BYPASS] =3D imx_clk_mux("arm_pll_bypass", base + 0x28=
-, 14, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels));
-+	clks[IMX8MQ_ARM_PLL_BYPASS] =3D imx_clk_mux_flags("arm_pll_bypass", base =
-+ 0x28, 14, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels), CLK_SE=
-T_RATE_PARENT);
- 	clks[IMX8MQ_GPU_PLL_BYPASS] =3D imx_clk_mux("gpu_pll_bypass", base + 0x18=
-, 14, 1, gpu_pll_bypass_sels, ARRAY_SIZE(gpu_pll_bypass_sels));
- 	clks[IMX8MQ_VPU_PLL_BYPASS] =3D imx_clk_mux("vpu_pll_bypass", base + 0x20=
-, 14, 1, vpu_pll_bypass_sels, ARRAY_SIZE(vpu_pll_bypass_sels));
- 	clks[IMX8MQ_AUDIO_PLL1_BYPASS] =3D imx_clk_mux("audio_pll1_bypass", base =
-+ 0x0, 14, 1, audio_pll1_bypass_sels, ARRAY_SIZE(audio_pll1_bypass_sels));
++	clks[IMX8MQ_CLK_ARM] =3D imx_clk_cpu("arm", "arm_a53_div",
++					   clks[IMX8MQ_CLK_A53_DIV],
++					   clks[IMX8MQ_CLK_A53_SRC],
++					   clks[IMX8MQ_ARM_PLL_OUT],
++					   clks[IMX8MQ_SYS1_PLL_800M]);
++
+ 	for (i =3D 0; i < IMX8MQ_CLK_END; i++)
+ 		if (IS_ERR(clks[i]))
+ 			pr_err("i.MX8mq clk %u register failed with %ld\n",
 --=20
 2.7.4
