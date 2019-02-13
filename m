@@ -1,119 +1,49 @@
-From: liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: Re: [RFC v7 2/5] dt-bindings: pstore-block: new support for blkoops
-Date: Wed, 13 Feb 2019 21:52:02 +0800
-Message-ID: <ab72f73d-b7ea-4688-f768-509d55964be0@allwinnertech.com>
-References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
- <20190130160707.GA31844@bogus>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH V2 2/2] clk: imx: scu: add cpu frequency scaling support
+Date: Wed, 13 Feb 2019 13:53:04 +0000
+Message-ID: <59b181b77605f516b0e3a896ddce0224b4504b30.camel@nxp.com>
+References: <1550064410-28417-1-git-send-email-Anson.Huang@nxp.com>
+         <1550064410-28417-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190130160707.GA31844@bogus>
+In-Reply-To: <1550064410-28417-2-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
+Content-ID: <DFFAC317CCAA5545B90CE2DCE255FAB8@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>"viresh.kumar@linaro.org" <vi>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2019-01-31 00:07, Rob Herring wrote:> On Wed, Jan 23, 2019 at
-08:05:13PM +0800, liaoweixiong wrote:
->> Create DT binding document for blkoops.
->>
->> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
->> ---
->>  .../devicetree/bindings/pstore-block/blkoops.txt   | 32 ++++++++++++++++++++++
-> 
-> /bindings/pstore/...
-> 
-> I wouldn't call it blkoops either. I believe ramoops is called that to 
-> maintain compatibility keeping the same kernel module name that 
-> preceeded pstore.
-> 
-
-Fixed.
-
-In addition, I don't known whether should we move
-ramreserved-memory/ooos.txt to /bindings/pstore. This is for maintainer
-to decide, and do it on other patch.
-
->>  MAINTAINERS                                        |  1 +
->>  2 files changed, 33 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pstore-block/blkoops.txt b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
->> new file mode 100644
->> index 0000000..a25835b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
->> @@ -0,0 +1,32 @@
->> +Blkoops oops logger
->> +===================
->> +
->> +Blkoops provides a block partition for oops, excluding panics now, so they can
->> +be recovered after a reboot.
->> +
->> +Any space of block partition will be used for a circular buffer of oops records.
->> +These records have a configurable size, with a size of 0 indicating that they
->> +should be disabled.
->> +
->> +"partition-size" and at least one of "dmesg-size" or "pmsg-size" must be set
->> +non-zero, but are otherwise optional as listed below.
->> +
->> +Blkoops will take value from Kconfig if device tree do not set, but settings
->> +from module parameters can also overwrite them.
-> 
-> That's all kernel details not relevant to the binidng.
-> 
-
-Deleted.
-
->> +
->> +Required properties:
->> +
->> +- compatible: must be "blkoops".
->> +
->> +- partition-size: size in kbytes, must be a multiple of 4.
-> 
-> This seems unnecessary given a partition has a known size.
-> 
-
-partition-size is necessary for psotre/blk. User should tell pstore/blk
-how large space can it use.
-
->> +
->> +Optional properties:
->> +
->> +- partition-path: strings must begin with "/dev", tell blkoops which partition
->> +  it can used. If it is not set, blkoops will drop all data when reboot.
-> 
-> No. '/dev/...' is a Linux thing and doesn't belong in DT.
-> 
-> You should define a partition UUID and/or label and the kernel can find 
-> the right partition to use.
-> 
-
-pstore/blk do general read/write by filp_open/kernel_read/kernel_write,
-which need device path.
-In addition, i have no idea how to use UUID and/or label to do general
-read/write on kernel layer, can you give me a tip?
-
->> +
->> +- dmesg-size: maximum size in kbytes of each dump done on oops, which must be a
->> +  multiple of 4.
->> +
->> +- pmsg-size: maximum size in kbytes for userspace messages, which must be a
->> +  multiple of 4.
-> 
-> Common properties shared with ramoops should be in a common doc.
-> 
-
-The size limit are different. Size for ramoops must be power of 2, but
-be a multiple of 4k for pstore/blk.
-
-> Rob
-> 
-
--- 
-liaoweixiong
+T24gV2VkLCAyMDE5LTAyLTEzIGF0IDEzOjMyICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4g
+T24gTlhQJ3MgaS5NWCBTb0NzIHdpdGggc3lzdGVtIGNvbnRyb2xsZXIgaW5zaWRlLCBDUFUgZnJl
+cXVlbmN5DQo+IHNjYWxpbmcgY2FuIE9OTFkgYmUgZG9uZSBieSBzeXN0ZW0gY29udHJvbGxlciBm
+aXJtd2FyZSwgYW5kIGl0DQo+IGNhbiBPTkxZIGJlIHJlcXVlc3RlZCBmcm9tIHNlY3VyZSBtb2Rl
+LCBzbyBMaW51eCBrZXJuZWwgaGFzIHRvDQo+IGNhbGwgQVJNIFNNQyB0byB0cmFwIHRvIEFSTS1U
+cnVzdGVkLUZpcm13YXJlIHRvIHJlcXVlc3Qgc3lzdGVtDQo+IGNvbnRyb2xsZXIgZmlybXdhcmUg
+dG8gZG8gQ1BVIGZyZXF1ZW5jeSBzY2FsaW5nLg0KDQo+ICsjaWZkZWYgQ09ORklHX0NQVUZSRVFf
+RFQNCj4gKyNkZWZpbmUgSU1YX1NJUF9DUFVGUkVRCQkJMHhDMjAwMDAwMQ0KPiArI2RlZmluZSBJ
+TVhfU0lQX1NFVF9DUFVGUkVRCQkweDAwDQo+ICsNCj4gIHN0YXRpYyBzdHJ1Y3QgaW14X3NjX2lw
+YyAqY2NtX2lwY19oYW5kbGU7DQoNCldpdGhvdXQgQ09ORklHX0NQVUZSRVFfRFQgdGhlIGNjbV9p
+cGNfaGFuZGxlIHdvbid0IGJlIGRlZmluZWQgYW5kIGJ1aWxkDQp3aWxsIGJyZWFrLg0KDQpCdXQg
+aXMgdGhlcmUgYSBnb29kIHJlYXNvbiBmb3IgaWZkZWY/IEluIGdlbmVyYWwgY2xvY2sgZnVuY3Rp
+b24gYXJlDQpjb21waWxlZCBldmVuIGlmIG5vIGRyaXZlciBpcyBjYWxsaW5nIHRoZW0uDQoNCj4g
+KyNpZmRlZiBDT05GSUdfQ1BVRlJFUV9EVA0KPiArCS8qIENQVSBjbG9jayBjYW4gT05MWSBiZSBk
+b25lIGJ5IFRGLUEgKi8NCj4gKwlpZiAoY2xrLT5jbGtfdHlwZSA9PSBJTVhfU0NfUE1fQ0xLX0NQ
+VSkgew0KPiArCQlzdHJ1Y3QgYXJtX3NtY2NjX3JlcyByZXM7DQo+ICsJCXVuc2lnbmVkIGludCBj
+bHVzdGVyX2lkOw0KPiArCQlpbnQgaTsNCj4gKw0KPiArCQlmb3IgKGkgPSAwOyBpIDwgQVJSQVlf
+U0laRShpbXhfc2NfY3B1ZnJlcV9kYXRhKTsgaSsrKSB7DQo+ICsJCQlpZiAoIXN0cmNtcChjbGtf
+aHdfZ2V0X25hbWUoaHcpLA0KPiArCQkJCWlteF9zY19jcHVmcmVxX2RhdGFbaV0uY2xrX25hbWUp
+KSB7DQo+ICsJCQkJY2x1c3Rlcl9pZCA9IGlteF9zY19jcHVmcmVxX2RhdGFbaV0uY2x1c3Rlcl9p
+ZDsNCj4gKwkJCQlicmVhazsNCj4gKwkJCX0NCj4gKwkJfQ0KPiArDQo+ICsJCS8qDQo+ICsJCSAq
+IEFzIHNvbWUgb3RoZXIgY2xvY2sgdHlwZXMgaGF2ZSBzYW1lIHZhbHVlIGFzDQo+ICsJCSAqIElN
+WF9TQ19QTV9DTEtfQ1BVLCBzbyB3ZSBuZWVkIHRvIGRvdWJsZSBjaGVjaw0KPiArCQkgKiB0aGUg
+Y2xvY2sgYmVpbmcgc2NhbGVkIGlzIGluZGVlZCBDUFUgY2xvY2sgd2hpY2gNCj4gKwkJICogbWF0
+Y2hlcyB0aGUgdGFibGUgd2UgZGVmaW5lLg0KPiArCQkgKi8NCj4gKwkJaWYgKGkgPCBBUlJBWV9T
+SVpFKGlteF9zY19jcHVmcmVxX2RhdGEpKSB7DQo+ICsJCQlhcm1fc21jY2Nfc21jKElNWF9TSVBf
+Q1BVRlJFUSwgSU1YX1NJUF9TRVRfQ1BVRlJFUSwNCj4gKwkJCQljbHVzdGVyX2lkLCByYXRlLCAw
+LCAwLCAwLCAwLCAmcmVzKTsNCj4gKwkJCXJldHVybiAwOw0KPiArCQl9DQo+ICsJfQ0KPiArI2Vu
+ZGlmDQoNClRoZSBjb2RlIGluc2lkZSB0aGUgaWZkZWYgd291bGQgbG9vayBiZXR0ZXIgaW4gYSBz
+ZXBhcmF0ZQ0KaW14X2Nsa19hdGZfc2V0X3JhdGUgZnVuY3Rpb24uIE1heWJlIGV2ZW4gc2VwYXJh
+dGUgY2xrX29wcz8NCg0K
