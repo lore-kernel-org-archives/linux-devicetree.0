@@ -1,50 +1,42 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 2/4] dt-bindings: clock: exynos: Add ADC clock ID to
- Exynos5410
-Date: Wed, 13 Feb 2019 16:07:58 +0900
-Message-ID: <a8e1ab3f-83f7-0d35-a943-df6600d6c3cd@samsung.com>
-References: <20190212175052.6310-1-krzk@kernel.org>
-        <CGME20190212175204epcas1p1bf2eb348293554593eabb561c5dcf6c1@epcas1p1.samsung.com>
-        <20190212175052.6310-3-krzk@kernel.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 3/3] cpufreq: imx-sc: add i.mx system controller cpufreq
+ support
+Date: Wed, 13 Feb 2019 12:39:04 +0530
+Message-ID: <20190213070904.3oswrjafy6cqedsr@vireshk-i7>
+References: <1550027011-7884-1-git-send-email-Anson.Huang@nxp.com>
+ <1550027011-7884-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212175052.6310-3-krzk@kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1550027011-7884-3-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolution>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 19. 2. 13. 오전 2:50, Krzysztof Kozlowski wrote:
-> Add ID for TSADC clock to Exynos5410.  Choose the same value of ID as in
-> Exynos5420 to make it simpler/compatible in future (although clock
-> driver code is not shared).
+On 13-02-19, 03:09, Anson Huang wrote:
+> On NXP's i.MX SoCs with system controller inside, CPU frequency
+> scaling can ONLY be done by system controller firmware, and it
+> can ONLY be requested from secure mode, so Linux cpufreq driver has
+> to call ARM SMC to trap to ARM-Trusted-Firmware to request system
+> controller firmware to do CPU frequency scaling.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> This patch adds i.MX system controller cpufreq driver support,
+> when doing CPU frequency scaling, cpufreq driver will do ARM SMC
+> call and trap to ARM-Trusted-Firmware, then SIP(silicon provider)
+> service will communicate with system controller for CPU frequenct
+> scaling.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  include/dt-bindings/clock/exynos5410.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/dt-bindings/clock/exynos5410.h b/include/dt-bindings/clock/exynos5410.h
-> index 5b911ede0534..86c2ad56c5ef 100644
-> --- a/include/dt-bindings/clock/exynos5410.h
-> +++ b/include/dt-bindings/clock/exynos5410.h
-> @@ -45,6 +45,7 @@
->  #define CLK_USI1		266
->  #define CLK_USI2		267
->  #define CLK_USI3		268
-> +#define CLK_TSADC		270
->  #define CLK_PWM			279
->  #define CLK_MCT			315
->  #define CLK_WDT			316
-> 
+>  drivers/cpufreq/Kconfig.arm      |   9 ++
+>  drivers/cpufreq/Makefile         |   1 +
+>  drivers/cpufreq/imx-sc-cpufreq.c | 183 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 193 insertions(+)
+>  create mode 100644 drivers/cpufreq/imx-sc-cpufreq.c
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Why can't you use cpufreq-dt driver like everyone else ?
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+viresh
