@@ -1,54 +1,109 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 1/9] pinctrl: sunxi: Support I/O bias voltage setting on A80
-Date: Wed, 13 Feb 2019 19:31:58 +0800
-Message-ID: <CAGb2v64VSvr9x8N3nXrtz5QYLf95K0BA8+VEqiVoXfmxVnFsJg@mail.gmail.com>
-References: <20190206033239.3619-1-wens@csie.org> <20190206033239.3619-2-wens@csie.org>
- <CACRpkdZFwG9-ap3jMe+eGDCgzG9+fKRXVEb4Q=pWasd5GUs9tQ@mail.gmail.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH] dt-bindings: clock: axg-audio: unexpose controller inputs
+Date: Wed, 13 Feb 2019 12:40:50 +0100
+Message-ID: <CAMO6nay=xXnxks==Zj_uPAE6o9_V=DsLkJOkkLRR1duPxg324Q@mail.gmail.com>
+References: <20190213095835.17448-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZFwG9-ap3jMe+eGDCgzG9+fKRXVEb4Q=pWasd5GUs9tQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Corentin Labbe <clabbe@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190213095835.17448-1-jbrunet@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 4:21 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Wed, Feb 13, 2019 at 10:59 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
-> On Wed, Feb 6, 2019 at 4:32 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> Remove the bindings ID of the clock input of the controller. These
+> clocks are purely internal to the controller, exposing them was a
+> mistake. Actually, these should not even be in the provider and have
+> IDs to begin with.
 >
-> > The A80 SoC has configuration registers for I/O bias voltage. Incorrect
-> > settings would make the affected peripherals inoperable in some cases,
-> > such as Ethernet RGMII signals biased at 2.5V with the settings still
-> > at 3.3V. However low speed signals such as MDIO on the same group of
-> > pins seem to be unaffected.
-> >
-> > Previously there was no way to know what the actual voltage used was,
-> > short of hard-coding a value in the device tree. With the new pin bank
-> > regulator supply support in place, the driver can now query the
-> > regulator for its voltage, and if it's valid (as opposed to being the
-> > dummy regulator), set the bias voltage setting accordingly.
-> >
-> > Add a quirk to denote the presence of the configuration registers, and
-> > a function to set the correct setting based on the voltage read back
-> > from the regulator.
-> >
-> > This is only done when the regulator is first acquired and enabled.
-> > While it would be nice to have a notifier on the regulator so that when
-> > the voltage changes, the driver can update the setting, in practice no
-> > board currently supports dynamic changing of the I/O voltages.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Unexpose these IDs before:
+>  * someone starts using them (even if there no valid reason to do so)
+>  * the actual clocks are removed. The fact that they exist is just the
+>    result of an ugly hack. This will be resolved in CCF when we can
+>    reference DT directly in parent table.
 >
-> I merged the v5.0-rc6 into my devel branch and applied this patch on
-> top now.
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/clk/meson/axg-audio.h              | 20 ++++++++++++++++++++
+>  include/dt-bindings/clock/axg-audio-clkc.h | 20 --------------------
+>  2 files changed, 20 insertions(+), 20 deletions(-)
 >
-> All the DTS file changes should be merged through ARM SoC, and
-> they should work fine now.
+> diff --git a/drivers/clk/meson/axg-audio.h b/drivers/clk/meson/axg-audio.h
+> index 7191b39c9d65..644f0b0fddf2 100644
+> --- a/drivers/clk/meson/axg-audio.h
+> +++ b/drivers/clk/meson/axg-audio.h
+> @@ -60,6 +60,26 @@
+>  #define AUD_CLKID_MST5                 6
+>  #define AUD_CLKID_MST6                 7
+>  #define AUD_CLKID_MST7                 8
+> +#define AUD_CLKID_SLV_SCLK0            9
+> +#define AUD_CLKID_SLV_SCLK1            10
+> +#define AUD_CLKID_SLV_SCLK2            11
+> +#define AUD_CLKID_SLV_SCLK3            12
+> +#define AUD_CLKID_SLV_SCLK4            13
+> +#define AUD_CLKID_SLV_SCLK5            14
+> +#define AUD_CLKID_SLV_SCLK6            15
+> +#define AUD_CLKID_SLV_SCLK7            16
+> +#define AUD_CLKID_SLV_SCLK8            17
+> +#define AUD_CLKID_SLV_SCLK9            18
+> +#define AUD_CLKID_SLV_LRCLK0           19
+> +#define AUD_CLKID_SLV_LRCLK1           20
+> +#define AUD_CLKID_SLV_LRCLK2           21
+> +#define AUD_CLKID_SLV_LRCLK3           22
+> +#define AUD_CLKID_SLV_LRCLK4           23
+> +#define AUD_CLKID_SLV_LRCLK5           24
+> +#define AUD_CLKID_SLV_LRCLK6           25
+> +#define AUD_CLKID_SLV_LRCLK7           26
+> +#define AUD_CLKID_SLV_LRCLK8           27
+> +#define AUD_CLKID_SLV_LRCLK9           28
+>  #define AUD_CLKID_MST_A_MCLK_SEL       59
+>  #define AUD_CLKID_MST_B_MCLK_SEL       60
+>  #define AUD_CLKID_MST_C_MCLK_SEL       61
+> diff --git a/include/dt-bindings/clock/axg-audio-clkc.h b/include/dt-bindings/clock/axg-audio-clkc.h
+> index fd9c362099d9..eafb0de8466b 100644
+> --- a/include/dt-bindings/clock/axg-audio-clkc.h
+> +++ b/include/dt-bindings/clock/axg-audio-clkc.h
+> @@ -7,26 +7,6 @@
+>  #ifndef __AXG_AUDIO_CLKC_BINDINGS_H
+>  #define __AXG_AUDIO_CLKC_BINDINGS_H
+>
+> -#define AUD_CLKID_SLV_SCLK0            9
+> -#define AUD_CLKID_SLV_SCLK1            10
+> -#define AUD_CLKID_SLV_SCLK2            11
+> -#define AUD_CLKID_SLV_SCLK3            12
+> -#define AUD_CLKID_SLV_SCLK4            13
+> -#define AUD_CLKID_SLV_SCLK5            14
+> -#define AUD_CLKID_SLV_SCLK6            15
+> -#define AUD_CLKID_SLV_SCLK7            16
+> -#define AUD_CLKID_SLV_SCLK8            17
+> -#define AUD_CLKID_SLV_SCLK9            18
+> -#define AUD_CLKID_SLV_LRCLK0           19
+> -#define AUD_CLKID_SLV_LRCLK1           20
+> -#define AUD_CLKID_SLV_LRCLK2           21
+> -#define AUD_CLKID_SLV_LRCLK3           22
+> -#define AUD_CLKID_SLV_LRCLK4           23
+> -#define AUD_CLKID_SLV_LRCLK5           24
+> -#define AUD_CLKID_SLV_LRCLK6           25
+> -#define AUD_CLKID_SLV_LRCLK7           26
+> -#define AUD_CLKID_SLV_LRCLK8           27
+> -#define AUD_CLKID_SLV_LRCLK9           28
+>  #define AUD_CLKID_DDR_ARB              29
+>  #define AUD_CLKID_PDM                  30
+>  #define AUD_CLKID_TDMIN_A              31
+> --
+> 2.20.1
+>
 
-Thanks. Maxime actually merged them last week.
-
-It seems this isn't in -next yet. I'm not seeing it in your git.kernel.org
-repo either. Might be confusing for others that want to try it out.
-
-ChenYu
+Acked-by: Maxime Jourdan <mjourdan@baylibre.com>
