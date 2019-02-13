@@ -1,82 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: soc: fsl: Document Qixis FPGA usage
-Date: Wed, 13 Feb 2019 15:23:47 -0600
-Message-ID: <20190213212347.GA26140@bogus>
-References: <20190205153924.7204-1-pankaj.bansal@nxp.com>
- <20190205153924.7204-2-pankaj.bansal@nxp.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [RFC 0/2] Add support for Suspend and Resume for Exynos4412 on
+Date: Wed, 13 Feb 2019 21:40:50 +0000
+Message-ID: <20190213214052.2427-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190205153924.7204-2-pankaj.bansal@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list : OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBGZWIgMDUsIDIwMTkgYXQgMTA6MTQ6NDBBTSArMDAwMCwgUGFua2FqIEJhbnNhbCB3
-cm90ZToKPiBhbiBGUEdBLWJhc2VkIHN5c3RlbSBjb250cm9sbGVyLCBjYWxsZWQg4oCcUWl4aXPi
-gJ0sIHdoaWNoCj4gbWFuYWdlcyBzZXZlcmFsIGNyaXRpY2FsIHN5c3RlbSBmZWF0dXJlcywgaW5j
-bHVkaW5nOgo+IOKAoiBSZXNldCBzZXF1ZW5jaW5nCj4g4oCiIFBvd2VyIHN1cHBseSBjb25maWd1
-cmF0aW9uCj4g4oCiIEJvYXJkIGNvbmZpZ3VyYXRpb24KPiDigKIgaGFyZHdhcmUgY29uZmlndXJh
-dGlvbgo+IAo+IFRoZSBxaXhpcyByZWdpc3RlcnMgYXJlIGFjY2Vzc2libGUgb3ZlciBvbmUgb3Ig
-bW9yZSBzeXN0ZW0tc3BlY2lmaWMKPiBpbnRlcmZhY2VzLCB0eXBpY2FsbHkgSTJDLCBKVEFHIG9y
-IGFuIGVtYmVkZGVkIHByb2Nlc3Nvci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQYW5rYWogQmFuc2Fs
-IDxwYW5rYWouYmFuc2FsQG54cC5jb20+Cj4gLS0tCj4gCj4gTm90ZXM6Cj4gICAgIFY0Ogo+ICAg
-ICAtIE5vIENoYW5nZQo+ICAgICBWMzoKPiAgICAgLSBBZGRlZCBib2FyZG5hbWUgYmFzZWQgY29t
-cGF0aWJsZSBmaWVsZCBpbiBiaW5kaW5ncwo+ICAgICAtIEFkZGVkIGJpbmRpbmdzIGZvciBNTUlP
-IGJhc2VkIEZQR0EKPiAgICAgVjI6Cj4gICAgIC0gTm8gY2hhbmdlCj4gCj4gIC4uLi9iaW5kaW5n
-cy9zb2MvZnNsL3FpeGlzX2N0cmwudHh0ICAgICAgICAgIHwgNTMgKysrKysrKysrKysrKysrKysr
-Cj4gIDEgZmlsZSBjaGFuZ2VkLCA1MyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL3FpeGlzX2N0cmwudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcWl4aXNfY3RybC50eHQK
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uNWQ1MTBkZjE0YmU4
-Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9zb2MvZnNsL3FpeGlzX2N0cmwudHh0Cj4gQEAgLTAsMCArMSw1MyBAQAo+ICsqIFFJWElTIEZQ
-R0EgYmxvY2sKPiArCj4gK2FuIEZQR0EtYmFzZWQgc3lzdGVtIGNvbnRyb2xsZXIsIGNhbGxlZCDi
-gJxRaXhpc+KAnSwgd2hpY2gKPiArbWFuYWdlcyBzZXZlcmFsIGNyaXRpY2FsIHN5c3RlbSBmZWF0
-dXJlcywgaW5jbHVkaW5nOgo+ICvigKIgQ29uZmlndXJhdGlvbiBzd2l0Y2ggbW9uaXRvcmluZwo+
-ICvigKIgUG93ZXIgb24vb2ZmIHNlcXVlbmNpbmcKPiAr4oCiIFJlc2V0IHNlcXVlbmNpbmcKPiAr
-4oCiIFBvd2VyIHN1cHBseSBjb25maWd1cmF0aW9uCj4gK+KAoiBCb2FyZCBjb25maWd1cmF0aW9u
-Cj4gK+KAoiBoYXJkd2FyZSBjb25maWd1cmF0aW9uCj4gK+KAoiBCYWNrZ3JvdW5kIHBvd2VyIGRh
-dGEgY29sbGVjdGlvbiAoRENNKQo+ICvigKIgRmF1bHQgbW9uaXRvcmluZwo+ICvigKIgUkNXIGJ5
-cGFzcyBTUkFNIChyZXBsYWNlIGZsYXNoIFJDVyB3aXRoIGludGVybmFsIFJDVykgKE5PUiBvbmx5
-KQo+ICvigKIgRGVkaWNhdGVkIGZ1bmN0aW9uYWwgdmFsaWRhdGlvbiBibG9ja3MgKFBPU3QvSVJT
-LCB0cmlnZ2VyZWQgZXZlbnQsIGFuZCBzbyBvbikKPiAr4oCiIEkyQyBtYXN0ZXIgZm9yIHJlbW90
-ZSBib2FyZCBjb250cm9sIGV2ZW4gd2l0aCBubyBEVVQgYXZhaWxhYmxlCj4gKwo+ICtUaGUgcWl4
-aXMgcmVnaXN0ZXJzIGFyZSBhY2Nlc3NpYmxlIG92ZXIgb25lIG9yIG1vcmUgc3lzdGVtLXNwZWNp
-ZmljIGludGVyZmFjZXMsCj4gK3R5cGljYWxseSBJMkMsIEpUQUcgb3IgYW4gZW1iZWRkZWQgcHJv
-Y2Vzc29yLgo+ICsKPiArRlBHQSBjb25uZWN0ZWQgdG8gSTJDOgo+ICtSZXF1aXJlZCBwcm9wZXJ0
-aWVzOgo+ICsKPiArIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlIGEgYm9hcmQtc3BlY2lmaWMgc3Ry
-aW5nIGZvbGxvd2VkIGJ5IGEgc3RyaW5nCj4gKyAgIGluZGljYXRpbmcgdGhlIHR5cGUgb2YgRlBH
-QS4gIEV4YW1wbGU6Cj4gKwkiZnNsLDxib2FyZD4tZnBnYSIsICJmc2wsZnBnYS1xaXhpcy1pMmMi
-CgpZb3UgZG9uJ3QgcmVhbGx5IG5lZWQgdGhlICctaTJjJyBwYXJ0IGJlY2F1c2UgaXQgd2lsbCBv
-bmx5IGdldCBib3VuZCB0byAKYW4gaTJjIGJhc2VkIGRyaXZlciB3aGVuIGEgY2hpbGQgb2YgYW4g
-aTJjIGNvbnRyb2xsZXIuCgo+ICsgLSByZWcgOiBpMmMgYWRkcmVzcyBvZiB0aGUgcWl4aXMgZGV2
-aWNlLgo+ICsKPiArRXhhbXBsZSAoTFgyMTYwQS1RRFMpOgo+ICsJLyogVGhlIEZQR0Egbm9kZSAq
-Lwo+ICsgICAgICAgIGZwZ2FANjYgewo+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGx4MjE2MGFxZHMt
-ZnBnYSIsICJmc2wsZnBnYS1xaXhpcy1pMmMiOwo+ICsJCXJlZyA9IDwweDY2PjsKCj4gKwkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47CgpZb3UgZG9uJ3QgbmVl
-ZCB0aGlzIHVubGVzcyB5b3UgaGF2ZSBjaGlsZCBub2RlcyB3aXRoICdyZWcnLgoKPiArCX0KPiAr
-Cj4gKyogRnJlZXNjYWxlIG9uLWJvYXJkIEZQR0EKPiArCj4gK1RoaXMgaXMgdGhlIG1lbW9yeS1t
-YXBwZWQgcmVnaXN0ZXJzIGZvciBvbiBib2FyZCBGUEdBLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVy
-dGllczoKPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgYSBib2FyZC1zcGVjaWZpYyBzdHJpbmcg
-Zm9sbG93ZWQgYnkgYSBzdHJpbmcKPiArICBpbmRpY2F0aW5nIHRoZSB0eXBlIG9mIEZQR0EuICBF
-eGFtcGxlOgo+ICsJImZzbCw8Ym9hcmQ+LWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMiCj4gKy0gcmVn
-OiBzaG91bGQgY29udGFpbiB0aGUgYWRkcmVzcyBhbmQgdGhlIGxlbmd0aCBvZiB0aGUgRlBHQSBy
-ZWdpc3RlciBzZXQuCj4gKwo+ICtFeGFtcGxlIChMUzIwODBBLVJEQik6Cj4gKwo+ICsgICAgICAg
-IGNwbGRAMywwIHsKPiArICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMjA4MGFy
-ZGItZnBnYSIsICJmc2wsZnBnYS1xaXhpcyI7Cj4gKyAgICAgICAgICAgICAgICByZWcgPSA8MHgz
-IDAgMHgxMDAwMD47Cj4gKyAgICAgICAgfTsKPiArCj4gLS0gCj4gMi4xNy4xCj4gCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Add support to set the Odroid U3+ device into DEEP sleep mode
+and is able to resume from suspend state.
+
+Changes base on Krxk/next/dt and worked on 5.0.0-rc6+
+TODO: fix the eMMC failuer.
+
+Any input are welcome.
+
+Best Regards
+-Anand
+
+Anand Moon (2):
+  ARM: dts: exynos: Add proper regulator states for suspend-to-mem for
+    odroid-u3
+  soc: samsung: pmu: Add the PMU data of exynos4412 to support low-power
+    state
+
+ .../boot/dts/exynos4412-odroid-common.dtsi    | 63 ++++++++++++++
+ arch/arm/boot/dts/exynos4412-odroidu3.dts     |  3 +
+ drivers/soc/samsung/exynos4-pmu.c             | 83 +++++++++++++++++++
+ include/linux/soc/samsung/exynos-regs-pmu.h   | 21 +++++
+ 4 files changed, 170 insertions(+)
+
+-- 
+2.20.1
