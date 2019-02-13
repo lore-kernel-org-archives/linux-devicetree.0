@@ -1,131 +1,63 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V3 2/2] clk: imx: scu: add cpu frequency scaling support
-Date: Wed, 13 Feb 2019 15:59:32 +0000
-Message-ID: <1550073243-11242-2-git-send-email-Anson.Huang@nxp.com>
-References: <1550073243-11242-1-git-send-email-Anson.Huang@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] scsi: qlogicpti: Use of_node_name_eq for node name comparisons
+Date: Wed, 13 Feb 2019 10:08:29 -0600
+Message-ID: <20190213160829.3923-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550073243-11242-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "James E.J. Bottomley" <jejb@linux.ibm.com>, linux-scsi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On NXP's i.MX SoCs with system controller inside, CPU frequency
-scaling can ONLY be done by system controller firmware, and it
-can ONLY be requested from secure mode, so Linux kernel has to
-call ARM SMC to trap to ARM-Trusted-Firmware to request system
-controller firmware to do CPU frequency scaling.
+Convert string compares of DT node names to use of_node_name_eq helper
+instead. This removes direct access to the node name pointer.
 
-This patch adds i.MX system controller CPU frequency scaling support,
-it reuses cpufreq-dt driver and implement the CPU frequency scaling
-inside SCU clock driver.
+As prom_name is not used for anything else, remove it.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-Changes since V2:
-	- remove ifdef CONFIG_CPUFREQ_DT as it is NOT that critical and has mistake in V2;
-	- put the CPU clock check and SMC call in a separate function.
---
- drivers/clk/imx/clk-scu.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ drivers/scsi/qlogicpti.c | 3 +--
+ drivers/scsi/qlogicpti.h | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
-index 7ccf7ed..885bf33 100644
---- a/drivers/clk/imx/clk-scu.c
-+++ b/drivers/clk/imx/clk-scu.c
-@@ -4,14 +4,30 @@
-  *   Dong Aisheng <aisheng.dong@nxp.com>
-  */
+diff --git a/drivers/scsi/qlogicpti.c b/drivers/scsi/qlogicpti.c
+index e35ce762d454..0e22512bd3e4 100644
+--- a/drivers/scsi/qlogicpti.c
++++ b/drivers/scsi/qlogicpti.c
+@@ -1314,8 +1314,7 @@ static int qpti_sbus_probe(struct platform_device *op)
+ 	qpti->qhost = host;
+ 	qpti->op = op;
+ 	qpti->qpti_id = nqptis;
+-	strcpy(qpti->prom_name, op->dev.of_node->name);
+-	qpti->is_pti = strcmp(qpti->prom_name, "QLGC,isp");
++	qpti->is_pti = !of_node_name_eq(op->dev.of_node, "QLGC,isp");
  
-+#include <linux/arm-smccc.h>
- #include <linux/clk-provider.h>
- #include <linux/err.h>
- #include <linux/slab.h>
- 
- #include "clk-scu.h"
- 
-+#define IMX_SIP_CPUFREQ			0xC2000001
-+#define IMX_SIP_SET_CPUFREQ		0x00
-+
- static struct imx_sc_ipc *ccm_ipc_handle;
- 
-+struct imx_sc_cpufreq {
-+	const char *clk_name;
-+	u32 cluster_id;
-+};
-+
-+static const struct imx_sc_cpufreq imx_sc_cpufreq_data[] = {
-+	{
-+		.clk_name = "a35_clk",
-+		.cluster_id = 0,
-+	},
-+};
-+
- /*
-  * struct clk_scu - Description of one SCU clock
-  * @hw: the common clk_hw
-@@ -145,6 +161,39 @@ static long clk_scu_round_rate(struct clk_hw *hw, unsigned long rate,
- 	return rate;
- }
- 
-+static bool clk_scu_atf_set_cpu_rate(struct clk_hw *hw, unsigned long rate)
-+{
-+	struct clk_scu *clk = to_clk_scu(hw);
-+	struct arm_smccc_res res;
-+	unsigned int cluster_id;
-+	int i;
-+
-+	/* CPU frequency scaling can ONLY be done by ARM-Trusted-Firmware */
-+	if (clk->clk_type == IMX_SC_PM_CLK_CPU) {
-+		for (i = 0; i < ARRAY_SIZE(imx_sc_cpufreq_data); i++) {
-+			if (!strcmp(clk_hw_get_name(hw),
-+				imx_sc_cpufreq_data[i].clk_name)) {
-+				cluster_id = imx_sc_cpufreq_data[i].cluster_id;
-+				break;
-+			}
-+		}
-+
-+		/*
-+		 * As some other clock types have same value as
-+		 * IMX_SC_PM_CLK_CPU, so we need to double check
-+		 * the clock being scaled is indeed CPU clock which
-+		 * matches the table we define.
-+		 */
-+		if (i < ARRAY_SIZE(imx_sc_cpufreq_data)) {
-+			arm_smccc_smc(IMX_SIP_CPUFREQ, IMX_SIP_SET_CPUFREQ,
-+				cluster_id, rate, 0, 0, 0, 0, &res);
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
- /*
-  * clk_scu_set_rate - Set rate for a SCU clock
-  * @hw: clock to change rate for
-@@ -161,6 +210,10 @@ static int clk_scu_set_rate(struct clk_hw *hw, unsigned long rate,
- 	struct imx_sc_msg_req_set_clock_rate msg;
- 	struct imx_sc_rpc_msg *hdr = &msg.hdr;
- 
-+	/* check if it is CPU frequency scaling */
-+	if (clk_scu_atf_set_cpu_rate(hw, rate))
-+		return 0;
-+
- 	hdr->ver = IMX_SC_RPC_VERSION;
- 	hdr->svc = IMX_SC_RPC_SVC_PM;
- 	hdr->func = IMX_SC_PM_FUNC_SET_CLOCK_RATE;
+ 	if (qpti_map_regs(qpti) < 0)
+ 		goto fail_unlink;
+diff --git a/drivers/scsi/qlogicpti.h b/drivers/scsi/qlogicpti.h
+index 884ad72ade57..2b6374e08a7d 100644
+--- a/drivers/scsi/qlogicpti.h
++++ b/drivers/scsi/qlogicpti.h
+@@ -364,7 +364,6 @@ struct qlogicpti {
+ 	int                       qpti_id;
+ 	int                       scsi_id;
+ 	int                       prom_node;
+-	char                      prom_name[64];
+ 	int                       irq;
+ 	char                      differential, ultra, clock;
+ 	unsigned char             bursts;
+@@ -379,7 +378,7 @@ struct qlogicpti {
+ #define SREG_IMASK                0x0c   /* Interrupt level            */
+ #define SREG_SPMASK               0x03   /* Mask for switch pack       */
+ 	unsigned char             swsreg;
+-	unsigned int	
++	unsigned int
+ 		gotirq	:	1,	/* this instance got an irq */
+ 		is_pti	: 	1;	/* Non-zero if this is a PTI board. */
+ };
 -- 
-2.7.4
+2.19.1
