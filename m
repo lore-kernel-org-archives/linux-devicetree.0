@@ -1,7 +1,7 @@
 From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v4 2/8] dt-bindings: phy-qcom-qmp: Add UFS PHY reset
-Date: Wed, 13 Feb 2019 15:25:20 -0800
-Message-ID: <20190213232526.26995-3-evgreen@chromium.org>
+Subject: [PATCH v4 4/8] arm64: dts: sdm845: Add UFS PHY reset
+Date: Wed, 13 Feb 2019 15:25:22 -0800
+Message-ID: <20190213232526.26995-5-evgreen@chromium.org>
 References: <20190213232526.26995-1-evgreen@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,64 +9,47 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190213232526.26995-1-evgreen@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Stephen Boyd <swboyd@chromium.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a required reset to the SDM845 UFS phy to express the PHY reset
-bit inside the UFS controller register space. Before this change, this
-reset was not expressed in the DT, and the driver utilized two different
-callbacks (phy_init and phy_poweron) to implement a two-phase
-initialization procedure that involved deasserting this reset between
-init and poweron. This abused the two callbacks and diluted their
-purpose.
-
-That scheme does not work as regulators cannot be turned off in
-phy_poweroff because they were turned on in init, rather than poweron.
-The net result is that regulators are left on in suspend that shouldn't
-be.
-
-This new scheme gives the UFS reset to the PHY, so that it can fully
-initialize itself in a single callback. We can then turn regulators on
-during poweron and off during poweroff.
+Wire up the reset controller in the Qcom UFS controller for the PHY.
+This will be used to toggle PHY reset during initialization of the PHY.
 
 Signed-off-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
-I realize I'm not supposed to add a required property after the fact,
-but given that the UFS DT nodes that would use this binding are not
-yet upstream (and this would be the first), I was hoping to squeak by.
+This commit is based atop the series at [1]. Patches 1 and 2 of that
+series have landed, but 3, 4, and 5 are still outstanding.
+
+[1] https://lore.kernel.org/lkml/20181210192826.241350-1-evgreen@chromium.org/
 
 Changes in v4: None
 Changes in v3: None
 Changes in v2: None
 
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index 5d181fc3cc18..4a78ba8b85bc 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -59,7 +59,8 @@ Required properties:
- 	   one for each entry in reset-names.
-  - reset-names: "phy" for reset of phy block,
- 		"common" for phy common block reset,
--		"cfg" for phy's ahb cfg block reset.
-+		"cfg" for phy's ahb cfg block reset,
-+		"ufsphy" for the PHY reset in the UFS controller.
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index b29332b265d9..029ab66405cf 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -990,6 +990,7 @@
+ 			phy-names = "ufsphy";
+ 			lanes-per-direction = <2>;
+ 			power-domains = <&gcc UFS_PHY_GDSC>;
++			#reset-cells = <1>;
  
- 		For "qcom,ipq8074-qmp-pcie-phy" must contain:
- 			"phy", "common".
-@@ -74,7 +75,8 @@ Required properties:
- 			"phy", "common".
- 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
- 			"phy", "common".
--		For "qcom,sdm845-qmp-ufs-phy": no resets are listed.
-+		For "qcom,sdm845-qmp-ufs-phy": must contain:
-+			"ufsphy".
+ 			clock-names =
+ 				"core_clk",
+@@ -1033,6 +1034,8 @@
+ 			clocks = <&gcc GCC_UFS_MEM_CLKREF_CLK>,
+ 				 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
  
-  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
++			resets = <&ufs_mem_hc 0>;
++			reset-names = "ufsphy";
+ 			status = "disabled";
+ 
+ 			ufs_mem_phy_lanes: lanes@1d87400 {
 -- 
 2.20.1
