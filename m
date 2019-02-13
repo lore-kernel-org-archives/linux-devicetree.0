@@ -1,7 +1,7 @@
 From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 03/11] dt-bindings: memory: atmel-ebi: add sam9x60 compatible
-Date: Wed, 13 Feb 2019 08:59:52 +0000
-Message-ID: <20190213085930.31578-4-tudor.ambarus@microchip.com>
+Subject: [PATCH 06/11] dt-bindings: mtd: atmel-nand: add sam9x60 compatible
+Date: Wed, 13 Feb 2019 09:00:01 +0000
+Message-ID: <20190213085930.31578-7-tudor.ambarus@microchip.com>
 References: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,25 +16,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Add compatibility string for the sam9x60 EBI.
+Add compatibility string for the sam9x60 nand controller.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt | 1 +
+ Documentation/devicetree/bindings/mtd/atmel-nand.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi=
-.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-index 9bb5f57e2066..94bf7896a688 100644
---- a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-@@ -15,6 +15,7 @@ Required properties:
- 			"atmel,at91sam9g45-ebi"
- 			"atmel,at91sam9x5-ebi"
- 			"atmel,sama5d3-ebi"
-+			"microchip,sam9x60-ebi"
-=20
- - reg:			Contains offset/length value for EBI memory mapping.
- 			This property might contain several entries if the EBI
+diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documen=
+tation/devicetree/bindings/mtd/atmel-nand.txt
+index 9bb66e476672..68b51dc58816 100644
+--- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+@@ -14,6 +14,7 @@ Required properties:
+ 	"atmel,at91sam9261-nand-controller"
+ 	"atmel,at91sam9g45-nand-controller"
+ 	"atmel,sama5d3-nand-controller"
++	"microchip,sam9x60-nand-controller"
+ - ranges: empty ranges property to forward EBI ranges definitions.
+ - #address-cells: should be set to 2.
+ - #size-cells: should be set to 1.
 --=20
 2.9.5
