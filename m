@@ -1,144 +1,119 @@
 From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 02/11] memory: atmel-ebi: add generic name for ebi regmap
-Date: Wed, 13 Feb 2019 08:59:48 +0000
-Message-ID: <20190213085930.31578-3-tudor.ambarus@microchip.com>
+Subject: [PATCH 07/11] mtd: rawnand: atmel: add sam9x60 nand controller
+ support
+Date: Wed, 13 Feb 2019 09:00:05 +0000
+Message-ID: <20190213085930.31578-8-tudor.ambarus@microchip.com>
 References: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-ID: <2279D3538051D24EA42976561F3BD224@namprd11.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, dwmw2@infradead.org, computersforpeace@gmail.com, bbrezillon@kernel.org, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tudor.Ambarus@microchip.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Tudor.Ambarus@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
-
-The sam9x60 board defines the CCFG_EBICSA register under SFR,
-and not as a MATRIX register, as previous boards do. Add a
-more generic name for the EBI regmap as a prerequisite for
-sam9x60 ebi support.
-
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
----
- drivers/memory/atmel-ebi.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/memory/atmel-ebi.c b/drivers/memory/atmel-ebi.c
-index c3748b414c27..b45914cfa212 100644
---- a/drivers/memory/atmel-ebi.c
-+++ b/drivers/memory/atmel-ebi.c
-@@ -36,6 +36,7 @@ struct atmel_ebi_dev {
- struct atmel_ebi_caps {
- 	unsigned int available_cs;
- 	unsigned int ebi_csa_offs;
-+	const char *regmap_name;
- 	void (*get_config)(struct atmel_ebi_dev *ebid,
- 			   struct atmel_ebi_dev_config *conf);
- 	int (*xlate_config)(struct atmel_ebi_dev *ebid,
-@@ -47,7 +48,7 @@ struct atmel_ebi_caps {
- 
- struct atmel_ebi {
- 	struct clk *clk;
--	struct regmap *matrix;
-+	struct regmap *regmap;
- 	struct  {
- 		struct regmap *regmap;
- 		struct clk *clk;
-@@ -357,7 +358,7 @@ static int atmel_ebi_dev_setup(struct atmel_ebi *ebi, struct device_node *np,
- 		 * one "atmel,smc-" property is present.
- 		 */
- 		if (ebi->caps->ebi_csa_offs && apply)
--			regmap_update_bits(ebi->matrix,
-+			regmap_update_bits(ebi->regmap,
- 					   ebi->caps->ebi_csa_offs,
- 					   BIT(cs), 0);
- 
-@@ -372,6 +373,7 @@ static int atmel_ebi_dev_setup(struct atmel_ebi *ebi, struct device_node *np,
- static const struct atmel_ebi_caps at91sam9260_ebi_caps = {
- 	.available_cs = 0xff,
- 	.ebi_csa_offs = AT91SAM9260_MATRIX_EBICSA,
-+	.regmap_name = "atmel,matrix",
- 	.get_config = at91sam9_ebi_get_config,
- 	.xlate_config = atmel_ebi_xslate_smc_config,
- 	.apply_config = at91sam9_ebi_apply_config,
-@@ -380,6 +382,7 @@ static const struct atmel_ebi_caps at91sam9260_ebi_caps = {
- static const struct atmel_ebi_caps at91sam9261_ebi_caps = {
- 	.available_cs = 0xff,
- 	.ebi_csa_offs = AT91SAM9261_MATRIX_EBICSA,
-+	.regmap_name = "atmel,matrix",
- 	.get_config = at91sam9_ebi_get_config,
- 	.xlate_config = atmel_ebi_xslate_smc_config,
- 	.apply_config = at91sam9_ebi_apply_config,
-@@ -388,6 +391,7 @@ static const struct atmel_ebi_caps at91sam9261_ebi_caps = {
- static const struct atmel_ebi_caps at91sam9263_ebi0_caps = {
- 	.available_cs = 0x3f,
- 	.ebi_csa_offs = AT91SAM9263_MATRIX_EBI0CSA,
-+	.regmap_name = "atmel,matrix",
- 	.get_config = at91sam9_ebi_get_config,
- 	.xlate_config = atmel_ebi_xslate_smc_config,
- 	.apply_config = at91sam9_ebi_apply_config,
-@@ -396,6 +400,7 @@ static const struct atmel_ebi_caps at91sam9263_ebi0_caps = {
- static const struct atmel_ebi_caps at91sam9263_ebi1_caps = {
- 	.available_cs = 0x7,
- 	.ebi_csa_offs = AT91SAM9263_MATRIX_EBI1CSA,
-+	.regmap_name = "atmel,matrix",
- 	.get_config = at91sam9_ebi_get_config,
- 	.xlate_config = atmel_ebi_xslate_smc_config,
- 	.apply_config = at91sam9_ebi_apply_config,
-@@ -404,6 +409,7 @@ static const struct atmel_ebi_caps at91sam9263_ebi1_caps = {
- static const struct atmel_ebi_caps at91sam9rl_ebi_caps = {
- 	.available_cs = 0x3f,
- 	.ebi_csa_offs = AT91SAM9RL_MATRIX_EBICSA,
-+	.regmap_name = "atmel,matrix",
- 	.get_config = at91sam9_ebi_get_config,
- 	.xlate_config = atmel_ebi_xslate_smc_config,
- 	.apply_config = at91sam9_ebi_apply_config,
-@@ -412,6 +418,7 @@ static const struct atmel_ebi_caps at91sam9rl_ebi_caps = {
- static const struct atmel_ebi_caps at91sam9g45_ebi_caps = {
- 	.available_cs = 0x3f,
- 	.ebi_csa_offs = AT91SAM9G45_MATRIX_EBICSA,
-+	.regmap_name = "atmel,matrix",
- 	.get_config = at91sam9_ebi_get_config,
- 	.xlate_config = atmel_ebi_xslate_smc_config,
- 	.apply_config = at91sam9_ebi_apply_config,
-@@ -420,6 +427,7 @@ static const struct atmel_ebi_caps at91sam9g45_ebi_caps = {
- static const struct atmel_ebi_caps at91sam9x5_ebi_caps = {
- 	.available_cs = 0x3f,
- 	.ebi_csa_offs = AT91SAM9X5_MATRIX_EBICSA,
-+	.regmap_name = "atmel,matrix",
- 	.get_config = at91sam9_ebi_get_config,
- 	.xlate_config = atmel_ebi_xslate_smc_config,
- 	.apply_config = at91sam9_ebi_apply_config,
-@@ -543,13 +551,14 @@ static int atmel_ebi_probe(struct platform_device *pdev)
- 
- 	/*
- 	 * The sama5d3 does not provide an EBICSA register and thus does need
--	 * to access the matrix registers.
-+	 * to access it.
- 	 */
- 	if (ebi->caps->ebi_csa_offs) {
--		ebi->matrix =
--			syscon_regmap_lookup_by_phandle(np, "atmel,matrix");
--		if (IS_ERR(ebi->matrix))
--			return PTR_ERR(ebi->matrix);
-+		ebi->regmap =
-+			syscon_regmap_lookup_by_phandle(np,
-+							ebi->caps->regmap_name);
-+		if (IS_ERR(ebi->regmap))
-+			return PTR_ERR(ebi->regmap);
- 	}
- 
- 	ret = of_property_read_u32(np, "#address-cells", &val);
--- 
-2.9.5
+RnJvbTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0KDQpUaGUg
+c2FtOXg2MCBib2FyZCBkZWZpbmVzIHRoZSBDQ0ZHX0VCSUNTQSByZWdpc3RlciB1bmRlciBTRlIs
+DQphbmQgbm90IGFzIGEgTUFUUklYIHJlZ2lzdGVyLCBhcyBwcmV2aW91cyBib2FyZHMgZG8uDQoN
+Ck5BTkQgRmxhc2ggSS9PcyBhcmUgY29ubmVjdGVkIHRvIEQxNuKAk0QyMywgdGh1cw0KU0ZSX0ND
+RkdfRUJJQ1NBLk5GRDBfT05fRDE2IGlzIHNldCB0byAxLg0KDQpTaWduZWQtb2ZmLWJ5OiBUdWRv
+ciBBbWJhcnVzIDx0dWRvci5hbWJhcnVzQG1pY3JvY2hpcC5jb20+DQotLS0NCiBkcml2ZXJzL210
+ZC9uYW5kL3Jhdy9hdG1lbC9uYW5kLWNvbnRyb2xsZXIuYyB8IDg2ICsrKysrKysrKysrKysrKysr
+KysrKysrKy0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgNzQgaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRp
+b25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9uYW5kLWNv
+bnRyb2xsZXIuYyBiL2RyaXZlcnMvbXRkL25hbmQvcmF3L2F0bWVsL25hbmQtY29udHJvbGxlci5j
+DQppbmRleCA2YWVmOThiNzMzOGEuLmZmODViZTBlMmRlMyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
+bXRkL25hbmQvcmF3L2F0bWVsL25hbmQtY29udHJvbGxlci5jDQorKysgYi9kcml2ZXJzL210ZC9u
+YW5kL3Jhdy9hdG1lbC9uYW5kLWNvbnRyb2xsZXIuYw0KQEAgLTY1LDYgKzY1LDcgQEANCiAjaW5j
+bHVkZSA8bGludXgvaW9wb2xsLmg+DQogI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5o
+Pg0KICNpbmNsdWRlIDxsaW51eC9yZWdtYXAuaD4NCisjaW5jbHVkZSA8c29jL2F0OTEvYXRtZWwt
+c2ZyLmg+DQogDQogI2luY2x1ZGUgInBtZWNjLmgiDQogDQpAQCAtMjMyLDEwICsyMzMsMTUgQEAg
+dG9fbmFuZF9jb250cm9sbGVyKHN0cnVjdCBuYW5kX2NvbnRyb2xsZXIgKmN0bCkNCiAJcmV0dXJu
+IGNvbnRhaW5lcl9vZihjdGwsIHN0cnVjdCBhdG1lbF9uYW5kX2NvbnRyb2xsZXIsIGJhc2UpOw0K
+IH0NCiANCitzdHJ1Y3QgYXRtZWxfc21jX25hbmRfZWJpX2NzYV9jZmcgew0KKwl1MzIgb2ZmczsN
+CisJdTMyIG5mZDBfb25fZDE2Ow0KK307DQorDQogc3RydWN0IGF0bWVsX3NtY19uYW5kX2NvbnRy
+b2xsZXIgew0KIAlzdHJ1Y3QgYXRtZWxfbmFuZF9jb250cm9sbGVyIGJhc2U7DQogCXN0cnVjdCBy
+ZWdtYXAgKmViaV9jc2FfcmVnbWFwOw0KLQl1bnNpZ25lZCBpbnQgZWJpX2NzYV9vZmZzOw0KKwlz
+dHJ1Y3QgYXRtZWxfc21jX25hbmRfZWJpX2NzYV9jZmcgKmViaV9jc2E7DQogfTsNCiANCiBzdGF0
+aWMgaW5saW5lIHN0cnVjdCBhdG1lbF9zbWNfbmFuZF9jb250cm9sbGVyICoNCkBAIC0xNTEzLDgg
+KzE1MTksMTUgQEAgc3RhdGljIHZvaWQgYXRtZWxfc21jX25hbmRfaW5pdChzdHJ1Y3QgYXRtZWxf
+bmFuZF9jb250cm9sbGVyICpuYywNCiANCiAJLyogQXR0YWNoIHRoZSBDUyB0byB0aGUgTkFORCBG
+bGFzaCBsb2dpYy4gKi8NCiAJZm9yIChpID0gMDsgaSA8IG5hbmQtPm51bWNzOyBpKyspDQotCQly
+ZWdtYXBfdXBkYXRlX2JpdHMoc21jX25jLT5lYmlfY3NhX3JlZ21hcCwgc21jX25jLT5lYmlfY3Nh
+X29mZnMsDQorCQlyZWdtYXBfdXBkYXRlX2JpdHMoc21jX25jLT5lYmlfY3NhX3JlZ21hcCwNCisJ
+CQkJICAgc21jX25jLT5lYmlfY3NhLT5vZmZzLA0KIAkJCQkgICBCSVQobmFuZC0+Y3NbaV0uaWQp
+LCBCSVQobmFuZC0+Y3NbaV0uaWQpKTsNCisNCisJaWYgKHNtY19uYy0+ZWJpX2NzYS0+bmZkMF9v
+bl9kMTYpDQorCQlyZWdtYXBfdXBkYXRlX2JpdHMoc21jX25jLT5lYmlfY3NhX3JlZ21hcCwNCisJ
+CQkJICAgc21jX25jLT5lYmlfY3NhLT5vZmZzLA0KKwkJCQkgICBzbWNfbmMtPmViaV9jc2EtPm5m
+ZDBfb25fZDE2LA0KKwkJCQkgICBzbWNfbmMtPmViaV9jc2EtPm5mZDBfb25fZDE2KTsNCiB9DQog
+DQogc3RhdGljIHZvaWQgYXRtZWxfaHNtY19uYW5kX2luaXQoc3RydWN0IGF0bWVsX25hbmRfY29u
+dHJvbGxlciAqbmMsDQpAQCAtMTgzNCwzNCArMTg0Nyw3MSBAQCBzdGF0aWMgdm9pZCBhdG1lbF9u
+YW5kX2NvbnRyb2xsZXJfY2xlYW51cChzdHJ1Y3QgYXRtZWxfbmFuZF9jb250cm9sbGVyICpuYykN
+CiAJY2xrX3B1dChuYy0+bWNrKTsNCiB9DQogDQorc3RhdGljIGNvbnN0IHN0cnVjdCBhdG1lbF9z
+bWNfbmFuZF9lYmlfY3NhX2NmZyBhdDkxc2FtOTI2MF9lYmlfY3NhID0gew0KKwkub2ZmcyA9IEFU
+OTFTQU05MjYwX01BVFJJWF9FQklDU0EsDQorfTsNCisNCitzdGF0aWMgY29uc3Qgc3RydWN0IGF0
+bWVsX3NtY19uYW5kX2ViaV9jc2FfY2ZnIGF0OTFzYW05MjYxX2ViaV9jc2EgPSB7DQorCS5vZmZz
+ID0gQVQ5MVNBTTkyNjFfTUFUUklYX0VCSUNTQSwNCit9Ow0KKw0KK3N0YXRpYyBjb25zdCBzdHJ1
+Y3QgYXRtZWxfc21jX25hbmRfZWJpX2NzYV9jZmcgYXQ5MXNhbTkyNjNfZWJpX2NzYSA9IHsNCisJ
+Lm9mZnMgPSBBVDkxU0FNOTI2M19NQVRSSVhfRUJJMENTQSwNCit9Ow0KKw0KK3N0YXRpYyBjb25z
+dCBzdHJ1Y3QgYXRtZWxfc21jX25hbmRfZWJpX2NzYV9jZmcgYXQ5MXNhbTlybF9lYmlfY3NhID0g
+ew0KKwkub2ZmcyA9IEFUOTFTQU05UkxfTUFUUklYX0VCSUNTQSwNCit9Ow0KKw0KK3N0YXRpYyBj
+b25zdCBzdHJ1Y3QgYXRtZWxfc21jX25hbmRfZWJpX2NzYV9jZmcgYXQ5MXNhbTlnNDVfZWJpX2Nz
+YSA9IHsNCisJLm9mZnMgPSBBVDkxU0FNOUc0NV9NQVRSSVhfRUJJQ1NBLA0KK307DQorDQorc3Rh
+dGljIGNvbnN0IHN0cnVjdCBhdG1lbF9zbWNfbmFuZF9lYmlfY3NhX2NmZyBhdDkxc2FtOW4xMl9l
+YmlfY3NhID0gew0KKwkub2ZmcyA9IEFUOTFTQU05TjEyX01BVFJJWF9FQklDU0EsDQorfTsNCisN
+CitzdGF0aWMgY29uc3Qgc3RydWN0IGF0bWVsX3NtY19uYW5kX2ViaV9jc2FfY2ZnIGF0OTFzYW05
+eDVfZWJpX2NzYSA9IHsNCisJLm9mZnMgPSBBVDkxU0FNOVg1X01BVFJJWF9FQklDU0EsDQorfTsN
+CisNCitzdGF0aWMgY29uc3Qgc3RydWN0IGF0bWVsX3NtY19uYW5kX2ViaV9jc2FfY2ZnIHNhbTl4
+NjBfZWJpX2NzYSA9IHsNCisJLm9mZnMgPSBBVDkxX1NGUl9DQ0ZHX0VCSUNTQSwNCisJLm5mZDBf
+b25fZDE2ID0gQVQ5MV9TRlJfQ0NGR19ORkQwX09OX0QxNiwNCit9Ow0KKw0KIHN0YXRpYyBjb25z
+dCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGF0bWVsX2ViaV9jc2FfcmVnbWFwX29mX2lkc1tdID0gew0K
+IAl7DQogCQkuY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkxc2FtOTI2MC1tYXRyaXgiLA0KLQkJLmRh
+dGEgPSAodm9pZCAqKUFUOTFTQU05MjYwX01BVFJJWF9FQklDU0EsDQorCQkuZGF0YSA9ICZhdDkx
+c2FtOTI2MF9lYmlfY3NhLA0KIAl9LA0KIAl7DQogCQkuY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkx
+c2FtOTI2MS1tYXRyaXgiLA0KLQkJLmRhdGEgPSAodm9pZCAqKUFUOTFTQU05MjYxX01BVFJJWF9F
+QklDU0EsDQorCQkuZGF0YSA9ICZhdDkxc2FtOTI2MV9lYmlfY3NhLA0KIAl9LA0KIAl7DQogCQku
+Y29tcGF0aWJsZSA9ICJhdG1lbCxhdDkxc2FtOTI2My1tYXRyaXgiLA0KLQkJLmRhdGEgPSAodm9p
+ZCAqKUFUOTFTQU05MjYzX01BVFJJWF9FQkkwQ1NBLA0KKwkJLmRhdGEgPSAmYXQ5MXNhbTkyNjNf
+ZWJpX2NzYSwNCiAJfSwNCiAJew0KIAkJLmNvbXBhdGlibGUgPSAiYXRtZWwsYXQ5MXNhbTlybC1t
+YXRyaXgiLA0KLQkJLmRhdGEgPSAodm9pZCAqKUFUOTFTQU05UkxfTUFUUklYX0VCSUNTQSwNCisJ
+CS5kYXRhID0gJmF0OTFzYW05cmxfZWJpX2NzYSwNCiAJfSwNCiAJew0KIAkJLmNvbXBhdGlibGUg
+PSAiYXRtZWwsYXQ5MXNhbTlnNDUtbWF0cml4IiwNCi0JCS5kYXRhID0gKHZvaWQgKilBVDkxU0FN
+OUc0NV9NQVRSSVhfRUJJQ1NBLA0KKwkJLmRhdGEgPSAmYXQ5MXNhbTlnNDVfZWJpX2NzYSwNCiAJ
+fSwNCiAJew0KIAkJLmNvbXBhdGlibGUgPSAiYXRtZWwsYXQ5MXNhbTluMTItbWF0cml4IiwNCi0J
+CS5kYXRhID0gKHZvaWQgKilBVDkxU0FNOU4xMl9NQVRSSVhfRUJJQ1NBLA0KKwkJLmRhdGEgPSAm
+YXQ5MXNhbTluMTJfZWJpX2NzYSwNCiAJfSwNCiAJew0KIAkJLmNvbXBhdGlibGUgPSAiYXRtZWws
+YXQ5MXNhbTl4NS1tYXRyaXgiLA0KLQkJLmRhdGEgPSAodm9pZCAqKUFUOTFTQU05WDVfTUFUUklY
+X0VCSUNTQSwNCisJCS5kYXRhID0gJmF0OTFzYW05eDVfZWJpX2NzYSwNCisJfSwNCisJew0KKwkJ
+LmNvbXBhdGlibGUgPSAibWljcm9jaGlwLHNhbTl4NjAtc2ZyIiwNCisJCS5kYXRhID0gJnNhbTl4
+NjBfZWJpX2NzYSwNCiAJfSwNCiAJeyAvKiBzZW50aW5lbCAqLyB9LA0KIH07DQpAQCAtMjAwNiwx
+NSArMjA1NiwxNSBAQCBhdG1lbF9zbWNfbmFuZF9jb250cm9sbGVyX2luaXQoc3RydWN0IGF0bWVs
+X3NtY19uYW5kX2NvbnRyb2xsZXIgKm5jKQ0KIAkJcmV0dXJuIHJldDsNCiAJfQ0KIA0KLQluYy0+
+ZWJpX2NzYV9vZmZzID0gKHVpbnRwdHJfdCltYXRjaC0+ZGF0YTsNCisJbmMtPmViaV9jc2EgPSAo
+c3RydWN0IGF0bWVsX3NtY19uYW5kX2ViaV9jc2FfY2ZnICopbWF0Y2gtPmRhdGE7DQogDQogCS8q
+DQogCSAqIFRoZSBhdDkxc2FtOTI2MyBoYXMgMiBFQklzLCBpZiB0aGUgTkFORCBjb250cm9sbGVy
+IGlzIHVuZGVyIEVCSTENCi0JICogYWRkIDQgdG8gLT5lYmlfY3NhX29mZnMuDQorCSAqIGFkZCA0
+IHRvIC0+ZWJpX2NzYS0+b2Zmcy4NCiAJICovDQogCWlmIChvZl9kZXZpY2VfaXNfY29tcGF0aWJs
+ZShkZXYtPnBhcmVudC0+b2Zfbm9kZSwNCiAJCQkJICAgICJhdG1lbCxhdDkxc2FtOTI2My1lYmkx
+IikpDQotCQluYy0+ZWJpX2NzYV9vZmZzICs9IDQ7DQorCQluYy0+ZWJpX2NzYS0+b2ZmcyArPSA0
+Ow0KIA0KIAlyZXR1cm4gMDsNCiB9DQpAQCAtMjM3Nyw2ICsyNDI3LDE0IEBAIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgYXRtZWxfbmFuZF9jb250cm9sbGVyX2NhcHMgYXRtZWxfc2FtOWc0NV9uY19jYXBz
+ID0gew0KIAkub3BzID0gJmF0bWVsX3NtY19uY19vcHMsDQogfTsNCiANCitzdGF0aWMgY29uc3Qg
+c3RydWN0IGF0bWVsX25hbmRfY29udHJvbGxlcl9jYXBzIG1pY3JvY2hpcF9zYW05eDYwX25jX2Nh
+cHMgPSB7DQorCS5oYXNfZG1hID0gdHJ1ZSwNCisJLmFsZV9vZmZzID0gQklUKDIxKSwNCisJLmNs
+ZV9vZmZzID0gQklUKDIyKSwNCisJLmViaV9jc2FfcmVnbWFwX25hbWUgPSAibWljcm9jaGlwLHNm
+ciIsDQorCS5vcHMgPSAmYXRtZWxfc21jX25jX29wcywNCit9Ow0KKw0KIC8qIE9ubHkgdXNlZCB0
+byBwYXJzZSBvbGQgYmluZGluZ3MuICovDQogc3RhdGljIGNvbnN0IHN0cnVjdCBhdG1lbF9uYW5k
+X2NvbnRyb2xsZXJfY2FwcyBhdG1lbF9ybTkyMDBfbmFuZF9jYXBzID0gew0KIAkuYWxlX29mZnMg
+PSBCSVQoMjEpLA0KQEAgLTI0MjEsNiArMjQ3OSwxMCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9m
+X2RldmljZV9pZCBhdG1lbF9uYW5kX2NvbnRyb2xsZXJfb2ZfaWRzW10gPSB7DQogCQkuY29tcGF0
+aWJsZSA9ICJhdG1lbCxzYW1hNWQzLW5hbmQtY29udHJvbGxlciIsDQogCQkuZGF0YSA9ICZhdG1l
+bF9zYW1hNV9uY19jYXBzLA0KIAl9LA0KKwl7DQorCQkuY29tcGF0aWJsZSA9ICJtaWNyb2NoaXAs
+c2FtOXg2MC1uYW5kLWNvbnRyb2xsZXIiLA0KKwkJLmRhdGEgPSAmbWljcm9jaGlwX3NhbTl4NjBf
+bmNfY2FwcywNCisJfSwNCiAJLyogU3VwcG9ydCBmb3Igb2xkL2RlcHJlY2F0ZWQgYmluZGluZ3M6
+ICovDQogCXsNCiAJCS5jb21wYXRpYmxlID0gImF0bWVsLGF0OTFybTkyMDAtbmFuZCIsDQotLSAN
+CjIuOS41DQoNCg==
