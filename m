@@ -1,67 +1,20 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 2/3] arm64: dts: fsl: ls1028a-rdb: Add ENETC
- external eth ports for the LS1028A RDB board
-Date: Wed, 13 Feb 2019 19:15:54 +0100
-Message-ID: <20190213181554.GB708@lunn.ch>
-References: <1550055743-15542-1-git-send-email-claudiu.manoil@nxp.com>
- <1550055743-15542-3-git-send-email-claudiu.manoil@nxp.com>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 03/12] of: mark
+ early_init_dt_alloc_reserved_memory_arch static
+Date: Wed, 13 Feb 2019 19:16:41 +0100
+Message-ID: <20190213181641.GA19706@lst.de>
+References: <20190211133554.30055-1-hch@lst.de> <20190211133554.30055-4-hch@lst.de> <CAL_JsqJ2Qt6=TTD250C9qW7Kv8rZn5PyB_C78FUhWwfgOnjPHg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1550055743-15542-3-git-send-email-claudiu.manoil@nxp.com>
+In-Reply-To: <CAL_JsqJ2Qt6=TTD250C9qW7Kv8rZn5PyB_C78FUhWwfgOnjPHg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, alexandru.marginean@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Linux IOMMU <iommu@lists.linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, x86@kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mips@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-riscv@lists.infradead.org, SH-Linux <linux-sh@vger.kernel.org>, linux-xtensa@linux-xtensa.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2019 at 01:02:22PM +0200, Claudiu Manoil wrote:
-> The LS1028A RDB board features an Atheros PHY connected over
-> SGMII to the ENETC PF0 (or Port0).  ENETC Port1 (PF1) has no
-> external connection on this board, so it can be disabled for now.
-> 
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> index fdeb417..c8487893 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> @@ -71,3 +71,18 @@
->  &duart1 {
->  	status = "okay";
->  };
-> +
-> +&enetc_port0 {
-> +	phy-handle = <&sgmii_phy0>;
-> +	phy-connection-type = "sgmii";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	sgmii_phy0: ethernet-phy@2 {
-> +		reg = <0x2>;
-> +	};
-> +};
-> +
+On Tue, Feb 12, 2019 at 02:24:19PM -0600, Rob Herring wrote:
+> Looks like this one isn't a dependency, so I can take it if you want.
 
-Hi Claudiu
-
-It is better to use:
-
-&enetc_port0 {
-	phy-handle = <&sgmii_phy0>;
-	phy-connection-type = "sgmii";
-	#address-cells = <1>;
-	#size-cells = <0>;
-
-	mdio {
-		sgmii_phy0: ethernet-phy@2 {
-			reg = <0x2>;
-		};
-	};
-};
-
-	Andrew
+Sure, please go ahead.
