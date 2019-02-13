@@ -1,378 +1,65 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v6 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Wed, 13 Feb 2019 14:56:18 +0530
-Message-ID: <1550049978-20705-3-git-send-email-yash.shah@sifive.com>
-References: <1550049978-20705-1-git-send-email-yash.shah@sifive.com>
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
+ early memory reservation
+Date: Wed, 13 Feb 2019 10:27:48 +0100
+Message-ID: <5c9184f3-71c1-7875-52f7-616d299a9549@free.fr>
+References: <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
+ <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
+ <20190123055414.GA4747@rapoport-lnx>
+ <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
+ <20190123123143.GE4747@rapoport-lnx>
+ <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
+ <617e0d57-342d-4162-bd21-ece18e481d87@free.fr>
+ <CAL_JsqKbCg-rGmLoA3mPv54=LMuQBfevfzL8f2QPVyjN-sNk8w@mail.gmail.com>
+ <20190213085028.6199594b@canb.auug.org.au>
+ <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
+ <20190213065734.GA14425@rapoport-lnx>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550049978-20705-1-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <20190213065734.GA14425@rapoport-lnx>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com, Yash Shah <yash.shah@sifive.com>
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Frank Rowand <frowand.list@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC.
+On 13/02/2019 07:57, Mike Rapoport wrote:
 
-Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-[Atish: Various fixes and code cleanup]
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- drivers/pwm/Kconfig      |  11 ++
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-sifive.c | 311 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 323 insertions(+)
- create mode 100644 drivers/pwm/pwm-sifive.c
+> Below is the version vs. current mmotm.
+> 
+> From 9ea6dceb46067d4f1cbbdbec1189c8496aa0a4bc Mon Sep 17 00:00:00 2001
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> Date: Mon, 4 Feb 2019 15:37:21 +0100
+> Subject: [PATCH] of: fix kmemleak crash caused by imbalance in early memory reservation
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a8f47df..4a61d1a 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -380,6 +380,17 @@ config PWM_SAMSUNG
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-samsung.
- 
-+config PWM_SIFIVE
-+	tristate "SiFive PWM support"
-+	depends on OF
-+	depends on COMMON_CLK
-+	depends on RISCV || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for SiFive SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-sifive.
-+
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
- 	depends on PLAT_SPEAR
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9c676a0..30089ca 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
-+obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
- obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-new file mode 100644
-index 0000000..c0eb90e
---- /dev/null
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -0,0 +1,311 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017-2018 SiFive
-+ * For SiFive's PWM IP block documentation please refer Chapter 14 of
-+ * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+
-+/* Register offsets */
-+#define PWM_SIFIVE_PWMCFG		0x0
-+#define PWM_SIFIVE_PWMCOUNT		0x8
-+#define PWM_SIFIVE_PWMS			0x10
-+#define PWM_SIFIVE_PWMCMP0		0x20
-+
-+/* PWMCFG fields */
-+#define PWM_SIFIVE_PWMCFG_SCALE		0
-+#define PWM_SIFIVE_PWMCFG_STICKY	8
-+#define PWM_SIFIVE_PWMCFG_ZERO_CMP	9
-+#define PWM_SIFIVE_PWMCFG_DEGLITCH	10
-+#define PWM_SIFIVE_PWMCFG_EN_ALWAYS	12
-+#define PWM_SIFIVE_PWMCFG_EN_ONCE	13
-+#define PWM_SIFIVE_PWMCFG_CENTER	16
-+#define PWM_SIFIVE_PWMCFG_GANG		24
-+#define PWM_SIFIVE_PWMCFG_IP		28
-+
-+/* PWM_SIFIVE_SIZE_PWMCMP is used to calculate offset for pwmcmpX registers */
-+#define PWM_SIFIVE_SIZE_PWMCMP		4
-+#define PWM_SIFIVE_CMPWIDTH		16
-+
-+struct pwm_sifive_ddata {
-+	struct pwm_chip	chip;
-+	struct notifier_block notifier;
-+	struct clk *clk;
-+	void __iomem *regs;
-+	unsigned int real_period;
-+	int user_count;
-+};
-+
-+static inline
-+struct pwm_sifive_ddata *pwm_sifive_chip_to_ddata(struct pwm_chip *c)
-+{
-+	return container_of(c, struct pwm_sifive_ddata, chip);
-+}
-+
-+static int pwm_sifive_request(struct pwm_chip *chip, struct pwm_device *dev)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+
-+	pwm->user_count++;
-+
-+	return 0;
-+}
-+
-+static void pwm_sifive_free(struct pwm_chip *chip, struct pwm_device *dev)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+
-+	pwm->user_count--;
-+}
-+
-+static void pwm_sifive_update_clock(struct pwm_sifive_ddata *pwm,
-+				    unsigned long rate)
-+{
-+	/* (1 << (16+scale)) * 10^9/rate = real_period */
-+	unsigned long scale_pow =
-+			div64_ul(pwm->real_period * (u64)rate, NSEC_PER_SEC);
-+	int scale = clamp(ilog2(scale_pow) - PWM_SIFIVE_CMPWIDTH, 0, 0xf);
-+
-+	writel((1 << PWM_SIFIVE_PWMCFG_EN_ALWAYS) | (scale <<
-+	       PWM_SIFIVE_PWMCFG_SCALE), pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	/* As scale <= 15 the shift operation cannot overflow. */
-+	pwm->real_period = div64_ul(1000000000ULL << (PWM_SIFIVE_CMPWIDTH +
-+				    scale), rate);
-+	dev_dbg(pwm->chip.dev, "New real_period = %u ns\n", pwm->real_period);
-+}
-+
-+static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *dev,
-+				 struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+	u32 duty;
-+	int val;
-+
-+	duty = readl(pwm->regs + PWM_SIFIVE_PWMCMP0 + dev->hwpwm *
-+		     PWM_SIFIVE_SIZE_PWMCMP);
-+
-+	val = readl(pwm->regs + PWM_SIFIVE_PWMCFG);
-+	state->enabled = (val & BIT(PWM_SIFIVE_PWMCFG_EN_ALWAYS)) > 0;
-+
-+	val &= 0x0F;
-+	pwm->real_period = div64_ul(1000000000ULL << (PWM_SIFIVE_CMPWIDTH +
-+				    val), clk_get_rate(pwm->clk));
-+
-+	state->period = pwm->real_period;
-+	state->duty_cycle = ((u64)duty * pwm->real_period) >>
-+			    PWM_SIFIVE_CMPWIDTH;
-+	state->polarity = PWM_POLARITY_INVERSED;
-+}
-+
-+static int pwm_sifive_enable(struct pwm_chip *chip, struct pwm_device *dev,
-+			     bool enable)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+	u32 val;
-+	int ret;
-+
-+	if (enable) {
-+		ret = clk_enable(pwm->clk);
-+		if (ret) {
-+			dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	val = readl(pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	if (enable)
-+		val |= BIT(PWM_SIFIVE_PWMCFG_EN_ALWAYS);
-+	else
-+		val &= ~BIT(PWM_SIFIVE_PWMCFG_EN_ALWAYS);
-+
-+	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	if (!enable)
-+		clk_disable(pwm->clk);
-+
-+	return 0;
-+}
-+
-+static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *dev,
-+			    struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+	unsigned int duty_cycle;
-+	u32 frac, val;
-+	struct pwm_state cur_state;
-+	bool enabled;
-+	int ret;
-+
-+	pwm_get_state(dev, &cur_state);
-+	enabled = cur_state.enabled;
-+
-+	if (state->polarity != PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	if (state->period != cur_state.period) {
-+		if (pwm->user_count != 1)
-+			return -EINVAL;
-+		pwm->real_period = state->period;
-+		pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
-+	}
-+
-+	if (!state->enabled && enabled) {
-+		ret = pwm_sifive_enable(chip, dev, false);
-+		if (ret)
-+			return ret;
-+		enabled = false;
-+	}
-+
-+	duty_cycle = state->duty_cycle;
-+	frac = div_u64((u64)duty_cycle * (1 << PWM_SIFIVE_CMPWIDTH) +
-+		       (1 << PWM_SIFIVE_CMPWIDTH) / 2, state->period);
-+	/* The hardware cannot generate a 100% duty cycle */
-+	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-+
-+	val = readl(pwm->regs + PWM_SIFIVE_PWMCFG);
-+	val |= BIT(PWM_SIFIVE_PWMCFG_DEGLITCH);
-+	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 + dev->hwpwm *
-+	       PWM_SIFIVE_SIZE_PWMCMP);
-+
-+	val &= ~BIT(PWM_SIFIVE_PWMCFG_DEGLITCH);
-+	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	if (state->enabled != enabled) {
-+		ret = pwm_sifive_enable(chip, dev, state->enabled);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops pwm_sifive_ops = {
-+	.request = pwm_sifive_request,
-+	.free = pwm_sifive_free,
-+	.get_state = pwm_sifive_get_state,
-+	.apply = pwm_sifive_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int pwm_sifive_clock_notifier(struct notifier_block *nb,
-+				     unsigned long event, void *data)
-+{
-+	struct clk_notifier_data *ndata = data;
-+	struct pwm_sifive_ddata *pwm =
-+		container_of(nb, struct pwm_sifive_ddata, notifier);
-+
-+	if (event == POST_RATE_CHANGE)
-+		pwm_sifive_update_clock(pwm, ndata->new_rate);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int pwm_sifive_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pwm_sifive_ddata *pwm;
-+	struct pwm_chip *chip;
-+	struct resource *res;
-+	int ret;
-+
-+	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-+	if (!pwm)
-+		return -ENOMEM;
-+
-+	chip = &pwm->chip;
-+	chip->dev = dev;
-+	chip->ops = &pwm_sifive_ops;
-+	chip->of_pwm_n_cells = 3;
-+	chip->base = -1;
-+	chip->npwm = 4;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pwm->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pwm->regs)) {
-+		dev_err(dev, "Unable to map IO resources\n");
-+		return PTR_ERR(pwm->regs);
-+	}
-+
-+	pwm->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pwm->clk)) {
-+		if (PTR_ERR(pwm->clk) != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to find controller clock\n");
-+		return PTR_ERR(pwm->clk);
-+	}
-+
-+	ret = clk_prepare_enable(pwm->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock for pwm: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Watch for changes to underlying clock frequency */
-+	pwm->notifier.notifier_call = pwm_sifive_clock_notifier;
-+	ret = clk_notifier_register(pwm->clk, &pwm->notifier);
-+	if (ret) {
-+		dev_err(dev, "failed to register clock notifier: %d\n", ret);
-+		goto disable_clk;
-+	}
-+
-+	ret = pwmchip_add(chip);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot register PWM: %d\n", ret);
-+		goto unregister_clk;
-+	}
-+
-+	if (!pwm_is_enabled(pwm->chip.pwms))
-+		clk_disable(pwm->clk);
-+
-+	platform_set_drvdata(pdev, pwm);
-+	dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
-+
-+	return 0;
-+
-+unregister_clk:
-+	clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+disable_clk:
-+	clk_disable_unprepare(pwm->clk);
-+
-+	return ret;
-+}
-+
-+static int pwm_sifive_remove(struct platform_device *dev)
-+{
-+	struct pwm_sifive_ddata *pwm = platform_get_drvdata(dev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pwm->chip);
-+	clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+	if (!pwm_is_enabled(pwm->chip.pwms))
-+		clk_disable(pwm->clk);
-+	clk_unprepare(pwm->clk);
-+	return ret;
-+}
-+
-+static const struct of_device_id pwm_sifive_of_match[] = {
-+	{ .compatible = "sifive,pwm0" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, pwm_sifive_of_match);
-+
-+static struct platform_driver pwm_sifive_driver = {
-+	.probe = pwm_sifive_probe,
-+	.remove = pwm_sifive_remove,
-+	.driver = {
-+		.name = "pwm-sifive",
-+		.of_match_table = pwm_sifive_of_match,
-+	},
-+};
-+module_platform_driver(pwm_sifive_driver);
-+
-+MODULE_DESCRIPTION("SiFive PWM driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+Out of curiosity, why don't you send as a proper v3?
+
+> Marc Gonzalez reported the following kmemleak crash:
+> 
+> [...]
+> 
+> The crash happens when a no-map area is allocated in
+> early_init_dt_alloc_reserved_memory_arch(). The allocated region is
+> registered with kmemleak, but it is then removed from memblock using
+> memblock_remove() that is not kmemleak-aware.
+> 
+> Replacing __memblock_alloc_base() with memblock_find_in_range()
+
+Nit: in this new version, you're replacing memblock_phys_alloc_range()
+with memblock_find_in_range() so I don't know if the comment still
+applies.
+
+> makes sure that the allocated memory is not added to kmemleak and then
+> memblock_remove()'ing this memory is safe.
+> 
+> As a bonus, since memblock_find_in_range() ensures the allocation in the
+> specified range, the bounds check can be removed.
+> 
+> Cc: stable@vger.kernel.org # 3.15+
+> Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
+> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Acked-by: Prateek Patel <prpatel@nvidia.com>
+> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
