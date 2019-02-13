@@ -1,89 +1,50 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 5/7] drm/sun4i: Rely on dma interconnect for our RAM
- offset
-Date: Wed, 13 Feb 2019 16:40:11 +0000
-Message-ID: <5540eb65-d33c-ddca-8636-f567e84fb24a@arm.com>
-References: <cover.f2e5fbb4d21384168973fa32377a33d627768146.1549897336.git-series.maxime.ripard@bootlin.com>
- <dfbdedf89c6a36f6fe5564e7c518664fa9e828c0.1549897336.git-series.maxime.ripard@bootlin.com>
- <16cb9f67-6b10-fbc3-6222-5364e718721b@arm.com>
- <20190213154144.5m5qxbfh2qmzwatn@flea>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 09/10] soc: ti: Add MSI domain support for K3
+ Interrupt Aggregator
+Date: Wed, 13 Feb 2019 08:41:12 -0800
+Message-ID: <20190213164112.GW5720@atomide.com>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
+ <20190212074237.2875-10-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190213154144.5m5qxbfh2qmzwatn@flea>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yong Deng <yong.deng@magewell.com>, Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, Dave Martin <dave.martin@arm.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, Georgi Djakov <georgi.djakov@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190212074237.2875-10-lokeshvutla@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTMvMDIvMjAxOSAxNTo0MSwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBIaSBSb2JpbiwKPiAK
-PiBUaGFua3MgZm9yIHlvdXIgZmVlZGJhY2shCj4gCj4gT24gVHVlLCBGZWIgMTIsIDIwMTkgYXQg
-MDY6NDY6NDBQTSArMDAwMCwgUm9iaW4gTXVycGh5IHdyb3RlOgo+PiBPbiAxMS8wMi8yMDE5IDE1
-OjAyLCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+Pj4gTm93IHRoYXQgd2UgY2FuIGV4cHJlc3Mgb3Vy
-IERNQSB0b3BvbG9neSwgcmVseSBvbiB0aG9zZSBwcm9wZXJ0eSBpbnN0ZWFkIG9mCj4+PiBoYXJk
-Y29kaW5nIGFuIG9mZnNldCBmcm9tIHRoZSBkbWFfYWRkcl90IHdoaWNoIHdhc24ndCByZWFsbHkg
-Z3JlYXQuCj4+Pgo+Pj4gV2Ugc3RpbGwgbmVlZCB0byBhZGQgc29tZSBjb2RlIHRvIGRlYWwgd2l0
-aCB0aGUgb2xkIERUIHRoYXQgd291bGQgbGFjayB0aGF0Cj4+PiBwcm9wZXJ0eSwgYnV0IHdlIG1v
-dmUgdGhlIG9mZnNldCB0byB0aGUgRFJNIGRldmljZSBkbWFfcGZuX29mZnNldCB0byBiZQo+Pj4g
-YWJsZSB0byByZWx5IG9uIGp1c3QgdGhlIGRtYV9hZGRyX3QgYXNzb2NpYXRlZCB0byB0aGUgR0VN
-IG9iamVjdC4KPj4+Cj4+PiBBY2tlZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBm
-ZndsbC5jaD4KPj4+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRA
-Ym9vdGxpbi5jb20+Cj4+PiAtLS0KPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9i
-YWNrZW5kLmMgfCAyOCArKysrKysrKysrKysrKysrKysrKystLS0tLS0tCj4+PiAgICAxIGZpbGUg
-Y2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPj4+Cj4+PiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2JhY2tlbmQuYyBiL2RyaXZlcnMvZ3B1
-L2RybS9zdW40aS9zdW40aV9iYWNrZW5kLmMKPj4+IGluZGV4IDllOTI1NWVlNTljZC4uMTg0NmEx
-YjMwZmVhIDEwMDY0NAo+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2JhY2tl
-bmQuYwo+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2JhY2tlbmQuYwo+Pj4g
-QEAgLTM4MywxMyArMzgzLDYgQEAgaW50IHN1bjRpX2JhY2tlbmRfdXBkYXRlX2xheWVyX2J1ZmZl
-cihzdHJ1Y3Qgc3VuNGlfYmFja2VuZCAqYmFja2VuZCwKPj4+ICAgIAlwYWRkciA9IGRybV9mYl9j
-bWFfZ2V0X2dlbV9hZGRyKGZiLCBzdGF0ZSwgMCk7Cj4+PiAgICAJRFJNX0RFQlVHX0RSSVZFUigi
-U2V0dGluZyBidWZmZXIgYWRkcmVzcyB0byAlcGFkXG4iLCAmcGFkZHIpOwo+Pj4gLQkvKgo+Pj4g
-LQkgKiBiYWNrZW5kIERNQSBhY2Nlc3NlcyBEUkFNIGRpcmVjdGx5LCBieXBhc3NpbmcgdGhlIHN5
-c3RlbQo+Pj4gLQkgKiBidXMuIEFzIHN1Y2gsIHRoZSBhZGRyZXNzIHJhbmdlIGlzIGRpZmZlcmVu
-dCBhbmQgdGhlIGJ1ZmZlcgo+Pj4gLQkgKiBhZGRyZXNzIG5lZWRzIHRvIGJlIGNvcnJlY3RlZC4K
-Pj4+IC0JICovCj4+PiAtCXBhZGRyIC09IFBIWVNfT0ZGU0VUOwo+Pj4gLQo+Pj4gICAgCWlmIChm
-Yi0+Zm9ybWF0LT5pc195dXYpCj4+PiAgICAJCXJldHVybiBzdW40aV9iYWNrZW5kX3VwZGF0ZV95
-dXZfYnVmZmVyKGJhY2tlbmQsIGZiLCBwYWRkcik7Cj4+PiBAQCAtODM1LDYgKzgyOCwyNyBAQCBz
-dGF0aWMgaW50IHN1bjRpX2JhY2tlbmRfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBk
-ZXZpY2UgKm1hc3RlciwKPj4+ICAgIAlkZXZfc2V0X2RydmRhdGEoZGV2LCBiYWNrZW5kKTsKPj4+
-ICAgIAlzcGluX2xvY2tfaW5pdCgmYmFja2VuZC0+ZnJvbnRlbmRfbG9jayk7Cj4+PiArCWlmIChv
-Zl9maW5kX3Byb3BlcnR5KGRldi0+b2Zfbm9kZSwgImludGVyY29ubmVjdHMiLCBOVUxMKSkgewo+
-Pj4gKwkJLyoKPj4+ICsJCSAqIFRoaXMgYXNzdW1lIHdlIGhhdmUgdGhlIHNhbWUgRE1BIGNvbnN0
-cmFpbnRzIGZvciBhbGwgb3VyIHRoZQo+Pj4gKwkJICogZGV2aWNlcyBpbiBvdXIgcGlwZWxpbmUg
-KGFsbCB0aGUgYmFja2VuZHMsIGJ1dCBhbHNvIHRoZQo+Pj4gKwkJICogZnJvbnRlbmRzKS4gVGhp
-cyBzb3VuZHMgYmFkLCBidXQgaXQgaGFzIGFsd2F5cyBiZWVuIHRoZSBjYXNlCj4+PiArCQkgKiBm
-b3IgdXMsIGFuZCBEUk0gZG9lc24ndCBkbyBwZXItZGV2aWNlIGFsbG9jYXRpb24gZWl0aGVyLCBz
-bwo+Pj4gKwkJICogd2Ugd291bGQgbmVlZCB0byBmaXggRFJNIGZpcnN0Li4uCj4+PiArCQkgKi8K
-Pj4+ICsJCXJldCA9IG9mX2RtYV9jb25maWd1cmUoZHJtLT5kZXYsIGRldi0+b2Zfbm9kZSwgdHJ1
-ZSk7Cj4+Cj4+IEl0IHdvdWxkIGJlIGV2ZW4gbmljZXIgaWYgd2UgY291bGQgZW5zdXJlIHRoYXQg
-ZHJtLT5kZXYgb3JpZ2luYXRlcyBmcm9tIGEgRFQKPj4gbm9kZSB3aGljaCBoYXMgdGhlIGFwcHJv
-cHJpYXRlIGludGVyY29ubmVjdHMgcHJvcGVydHkgaXRzZWxmLCBzdWNoIHRoYXQgd2UKPj4gY2Fu
-IGFzc3VtZSBpdCdzIGFscmVhZHkgY29uZmlndXJlZCBjb3JyZWN0bHkuCj4gCj4gVGhlIHRoaW5n
-IGlzIGRybS0+ZGV2IGNvbWVzIGZyb20gYSBub2RlIGluIHRoZSBEVCB0aGF0IGlzIGEgdmlydHVh
-bAo+IG5vZGUsIGFuZCB0aGVyZWZvcmUgZG9lc24ndCBoYXZlIGFueSByZXNvdXJjZXMgYXR0YWNo
-ZWQsIHNvIEknbSBub3QKPiBzdXJlIHdlIGhhdmUgYW55IG90aGVyIHdheSwgdW5mb3J0dW5hdGVs
-eS4KClJpZ2h0LCBJIGFwcHJlY2lhdGUgdGhhdCBpdCBtYXkgbm90IGJlIGZlYXNpYmxlIHRvIHN3
-aXp6bGUgZHJtLT5kZXYgZm9yIApvbmUgb2YgdGhlICdyZWFsJyBjb21wb25lbnQgZGV2aWNlcywg
-YnV0IHdoYXQgSSB3YXMgYWxzbyB0aGlua2luZyB3YXMgCnRoYXQgc2luY2UgdGhlIHZpcnR1YWwg
-ZGV2aWNlIG5vZGUgZWZmZWN0aXZlbHkgcmVwcmVzZW50cyB0aGUgCmFnZ3JlZ2F0aW9uIG9mIHRo
-ZSBvdGhlciBjb21wb25lbnQgZGV2aWNlcywgd2UgY291bGQganVzdCBzYXkgdGhhdCBpdCAKYWxz
-byBoYXMgdG8gaGF2ZSBpdHMgb3duIGxpbmsgdG8gdGhlIE1CVVMgaW50ZXJjb25uZWN0ICh3aXRo
-IHRoZSBJRCBvZiAKdGhlIHBpcGVsaW5lIGVudHJ5cG9pbnQgaXQncyBhc3NvY2lhdGVkIHdpdGgs
-IEkgZ3Vlc3MpLiBUaGF0IG91Z2h0IHRvIGJlIAplbm91Z2ggdG8gZ2V0IGRtYV9jb25maWd1cmUo
-KSB0byBkbyB0aGUgam9iLCBhbmQgaW4gZmFpcm5lc3MgaXMgbm8gCipsZXNzKiBhY2N1cmF0ZSBh
-IGRlc2NyaXB0aW9uIG9mIHRoZSBoYXJkd2FyZSwgZXZlbiBpZiBtaWdodCBsb29rIGEgCmxpdHRs
-ZSBmdW5reSB0byBzb21lLgoKUm9iaW4uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbA==
+* Lokesh Vutla <lokeshvutla@ti.com> [190212 07:43]:
+> With the system coprocessor managing the range allocation of the
+> inputs to Interrupt Aggregator, it is difficult to represent
+> the device IRQs from DT.
+> 
+> The suggestion is to use MSI in such cases where devices wants
+> to allocate and group interrupts dynamically.
+> 
+> Create a MSI domain bus layer that allocates and frees MSIs for
+> a device.
+> 
+> APIs that are implemented are:
+> - inta_msi_create_irq_domain() that creates a MSI domain
+> - inta_msi_domain_alloc_irqs() that creates MSIs for the
+>   specified device and source indexes.
+> - inta_msi_domain_free_irqs() frees the grouped irqs.
+
+Can you please describe what all code will be calling these
+functions?
+
+If the callers are limited to drivers/soc/ti, then you
+can can maybe make it local and get rid of the exported
+custom functions as it's all built-in anyways.
+
+Or does the dma ring accelerator for example need to call
+these?
+
+If various subsystems will be calling these I'd assume
+we'd have some generic API.. Marc, any comments on that?
+
+Regards,
+
+Tony
