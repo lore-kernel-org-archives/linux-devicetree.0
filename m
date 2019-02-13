@@ -1,16 +1,16 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
 Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
  router bindings
-Date: Wed, 13 Feb 2019 09:52:51 +0530
-Message-ID: <5b5d86b9-2aa7-718c-c1da-70bbf9bf589e@ti.com>
+Date: Wed, 13 Feb 2019 09:55:22 +0530
+Message-ID: <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
 References: <20190212074237.2875-1-lokeshvutla@ti.com>
  <20190212074237.2875-6-lokeshvutla@ti.com>
- <20190212163018.GL5720@atomide.com>
+ <20190212162247.GK5720@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212163018.GL5720@atomide.com>
+In-Reply-To: <20190212162247.GK5720@atomide.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Tony Lindgren <tony@atomide.com>
@@ -19,65 +19,32 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Tony,
 
-On 12/02/19 10:00 PM, Tony Lindgren wrote:
+On 12/02/19 9:52 PM, Tony Lindgren wrote:
 > Hi,
 > 
 > * Lokesh Vutla <lokeshvutla@ti.com> [190212 07:43]:
->> +The Interrupt Router (INTR) module provides a mechanism to route M
->> +interrupt inputs to N interrupt outputs, where all M inputs are selectable
->> +to be driven per N output. There is one register per output (MUXCNTL_N) that
->> +controls the selection.
+>> +Example:
+>> +--------
+>> +The following example demonstrates both interrupt router node and the consumer
+>> +node(main gpio) on the AM654 SoC:
 >> +
->> +
->> +                                 Interrupt Router
->> +                             +----------------------+
->> +                             |  Inputs     Outputs  |
->> +        +-------+            | +------+             |
->> +        | GPIO  |----------->| | irq0 |             |       Host IRQ
->> +        +-------+            | +------+             |      controller
->> +                             |    .        +-----+  |      +-------+
->> +        +-------+            |    .        |  0  |  |----->|  IRQ  |
->> +        | INTA  |----------->|    .        +-----+  |      +-------+
->> +        +-------+            |    .          .      |
->> +                             | +------+      .      |
->> +                             | | irqM |    +-----+  |
->> +                             | +------+    |  N  |  |
->> +                             |             +-----+  |
->> +                             +----------------------+
+>> +main_intr: interrupt-controller0 {
+>> +	compatible = "ti,sci-intr";
+>> +	interrupt-controller;
+>> +	interrupt-parent = <&gic500>;
+>> +	#interrupt-cells = <4>;
+>> +	ti,sci = <&dmsc>;
+>> +	ti,sci-dst-id = <56>;
+>> +	ti,sci-rm-range-girq = <0x1>;
+>> +};
 > 
-> Is this always one-to-one mapping or can the same interrupt be routed to
-> multiple targets like to the SoC and some coprocessor?
-
-Yes, it is always one-to-one. Output of INTR can only be attached to one of the
-processor.
-
+> Can you describe a bit what the "ti,sci-dst-id" is above?
 > 
->> +Configuration of these MUXCNTL_N registers is done by a system controller
->> +(like the Device Memory and Security Controller on K3 AM654 SoC). System
->> +controller will keep track of the used and unused registers within the Router.
->> +Driver should request the system controller to get the range of GIC IRQs
->> +assigned to the requesting hosts. It is the drivers responsibility to keep
->> +track of Host IRQs.
->> +
->> +Communication between the host processor running an OS and the system
->> +controller happens through a protocol called TI System Control Interface
->> +(TISCI protocol). For more details refer:
->> +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> 
-> Care to describe a bit why the interrupts need to be routed by a system
-> controller?
+> These IDs seem to be listed at at [0] below, but is it really a property
+> of the hardware? Or is it some enumeration of SoC devices in the firmware?
 
-K3 architecture defines a heterogeneous system where multiple heterogeneous
-cores are serving its own usecases. Given that there are multiple ways in which
-a device IRQ can be routed using INTR, like either it can be routed to HLOS
-core(A53 int this case) or it can be routed to any other coprocessor available
-in the system(like R5). If every sw running in each co-processor is allowed to
-program this INTR then there is a high probability that one sw executing on one
-core can damage other heterogeneous core.  Mainly to avoid this damage the
-configuration of all the INTRs and INTAs are done in a centralized place(sysfw).
-Any user for programming its IRQ route should send a message to sysfw with the
-parameters. These parameters are policed by sysfw and does the configuration.
-
+This is the way that sysfw describes the hardware. In this case it is GIC and it
+is identified by this ID.
 
 Thanks and regards,
 Lokesh
