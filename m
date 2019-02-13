@@ -1,38 +1,59 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 00/11] qcom: ssbi-gpio: add support for hierarchical
- IRQ chip
-Date: Wed, 13 Feb 2019 09:38:23 +0100
-Message-ID: <CACRpkdYHK1qwcy3AzRjwC1A_FB3ns9T7O_UnCgbtk30Nx=S8+A@mail.gmail.com>
-References: <20190208021631.30252-1-masneyb@onstation.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [RESEND PATCH v2 0/2] clk: meson8b: fix typo "ABP" -> "APB"
+Date: Wed, 13 Feb 2019 09:40:33 +0100
+Message-ID: <fc50a3a7f1efc8d2f6054a944848897ed8baf536.camel@baylibre.com>
+References: <20190210222603.6404-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190208021631.30252-1-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190210222603.6404-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, narmstrong@baylibre.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: sboyd@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 8, 2019 at 3:16 AM Brian Masney <masneyb@onstation.org> wrote:
+On Sun, 2019-02-10 at 23:26 +0100, Martin Blumenstingl wrote:
+> It turns out that I'm not good at spelling "APB". Unfortunately an ABP
+> (instead of APB) typo snug into two clocks in v5.0.
+> 
+> Currently there are no users of that clock yet, so fix it now
+> before it's too late (meaning before it's used by <something>).
+> 
+> I decided to go the "normal" route where we can have separate
+> branches for the dt-bindings and the drivers in the clk-meson
+> repo. This means:
+> - new (typo-free) clock #define
+> - change the clock controller to use the new #define
+> - (next development cycle) drop the old #define
+> 
+> resend - changes since v2 at [1]:
+> - include the device-tree maintainers / mailing list
+> 
+> Changes since v1 at [0]:
+> - split into a dt-bindings and clock controller driver patch
+> 
+> 
+> [0] https://patchwork.kernel.org/cover/10742001/
+> [1] https://patchwork.kernel.org/cover/10772199/
+> 
+> 
+> Martin Blumenstingl (2):
+>   dt-bindings: clock: meson8b: add APB clock definition
+>   clk: meson: meson8b: fix the naming of the APB clocks
+> 
+>  drivers/clk/meson/meson8b.c              | 26 ++++++++++++------------
+>  drivers/clk/meson/meson8b.h              |  2 +-
+>  include/dt-bindings/clock/meson8b-clkc.h |  1 +
+>  3 files changed, 15 insertions(+), 14 deletions(-)
+> 
 
-> This patch series adds hierarchical IRQ chip support to ssbi-gpio so
-> that device tree consumers can request an IRQ directly from the GPIO
-> block rather than having to request an IRQ from the underlying PMIC.
->
-> For more background information, see the email thread with Linus
-> Walleij's excellent description of the problem at
-> https://www.spinics.net/lists/linux-gpio/msg34655.html.
->
-> These changes were tested by Linus Walleij on an APQ8060 DragonBoard.
->
-> See the notes on the individual patches for the changelog.
-
-SInce we have definitive ACKs from the irqchip and
-MFD maintainers I have queued this series on an immutable branch
-that I will merge for v5.1 and offer to the MFD and ARM SoC
-once it builds fine on the test servers.
-
-I don't think the Qcom maintainers will complain.
-
-Yours,
-Linus Walleij
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
