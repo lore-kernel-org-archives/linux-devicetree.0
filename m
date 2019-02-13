@@ -1,30 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: input: touchscreen: goodix: Add
- GT5663 compatible
-Date: Wed, 13 Feb 2019 15:52:14 -0600
-Message-ID: <20190213215214.GA12927@bogus>
-References: <20190212112439.2025-1-jagan@amarulasolutions.com>
- <20190212112439.2025-4-jagan@amarulasolutions.com>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v4 3/8] dt-bindings: i2c: iproc: make 'interrupts'
+ optional
+Date: Wed, 13 Feb 2019 14:06:38 -0800
+Message-ID: <796d9a96-f3f9-cb9a-faa3-4baf0e72da65@broadcom.com>
+References: <20190204231554.87666-1-ray.jui@broadcom.com>
+ <20190204231554.87666-4-ray.jui@broadcom.com> <20190213211651.GA10705@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212112439.2025-4-jagan@amarulasolutions.com>
+In-Reply-To: <20190213211651.GA10705@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jagan Teki <jagan@amarulasolutions.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Feb 2019 16:54:38 +0530, Jagan Teki wrote:
-> GT5663 is capacitive touch controller with customized smart
-> wakeup gestures, it support chipdata which is similar to
-> existing GT1151 and require AVDD28 supply for some boards.
-> 
-> Document the compatible for the same.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hi Rob,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 2/13/2019 1:16 PM, Rob Herring wrote:
+> On Mon, Feb 04, 2019 at 03:15:49PM -0800, Ray Jui wrote:
+>> In prep for the introduction of polling mode into the driver, update the
+>> binding document to make the 'interrupts' property optional
+>>
+>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+>> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+>> ---
+>>  .../devicetree/bindings/i2c/brcm,iproc-i2c.txt         | 10 +++++++---
+>>  1 file changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+>> index 81f982ccca31..d3a3620b1f06 100644
+>> --- a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+>> +++ b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+>> @@ -9,9 +9,6 @@ Required properties:
+>>      Define the base and range of the I/O address space that contain the iProc
+>>      I2C controller registers
+>>  
+>> -- interrupts:
+>> -    Should contain the I2C interrupt
+>> -
+>>  - clock-frequency:
+>>      This is the I2C bus clock. Need to be either 100000 or 400000
+>>  
+>> @@ -21,6 +18,13 @@ Required properties:
+>>  - #size-cells:
+>>      Always 0
+>>  
+>> +Optional properties:
+>> +
+>> +- interrupts:
+>> +    Should contain the I2C interrupt. If unspecified, driver will fall back to
+>> +    polling mode
+> 
+> What determines when you want to use polling mode? I'm not sure DT 
+> is the best way to control this unless it's really a property of 
+> the h/w. Driver behavior is really outside the scope of the DT. u-boot 
+> would use polling even if an interrupt is specified, for example.
+> 
+It's tied to the particular revision of the I2C controller, i.e., the
+iProc NIC i2c controller does not have interrupt line wired. In this
+case, the behavior is determined by the DT compatible string of the
+iProc I2C device. I thought that it makes sense to now move the
+'interrupts' property to be under "Optional" than "Required" which is
+basically what this change is.
+
+> Rob
+> 
