@@ -1,94 +1,50 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: allwinner: a64: Rename
- hpvcc-supply to cpvdd-supply
-Date: Wed, 13 Feb 2019 15:04:57 +0800
-Message-ID: <20190213070457.26049-3-wens@csie.org>
-References: <20190213070457.26049-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 2/4] dt-bindings: clock: exynos: Add ADC clock ID to
+ Exynos5410
+Date: Wed, 13 Feb 2019 16:07:58 +0900
+Message-ID: <a8e1ab3f-83f7-0d35-a943-df6600d6c3cd@samsung.com>
+References: <20190212175052.6310-1-krzk@kernel.org>
+        <CGME20190212175204epcas1p1bf2eb348293554593eabb561c5dcf6c1@epcas1p1.samsung.com>
+        <20190212175052.6310-3-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBIUDR7RQKGQEY4SIY5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190213070457.26049-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190212175052.6310-3-krzk@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The A64 datasheet lists the supply rail for the headphone amp's charge
-pump as "CPVDD". cpvdd-supply is the name of the property for this power
-rail specified in the device tree bindings. "HPVCC" was the name used in
-the A33 datasheet for the same function.
+Hi,
 
-Rename the supply so it matches the datasheet and bindings.
+On 19. 2. 13. 오전 2:50, Krzysztof Kozlowski wrote:
+> Add ID for TSADC clock to Exynos5410.  Choose the same value of ID as in
+> Exynos5420 to make it simpler/compatible in future (although clock
+> driver code is not shared).
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  include/dt-bindings/clock/exynos5410.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/dt-bindings/clock/exynos5410.h b/include/dt-bindings/clock/exynos5410.h
+> index 5b911ede0534..86c2ad56c5ef 100644
+> --- a/include/dt-bindings/clock/exynos5410.h
+> +++ b/include/dt-bindings/clock/exynos5410.h
+> @@ -45,6 +45,7 @@
+>  #define CLK_USI1		266
+>  #define CLK_USI2		267
+>  #define CLK_USI3		268
+> +#define CLK_TSADC		270
+>  #define CLK_PWM			279
+>  #define CLK_MCT			315
+>  #define CLK_WDT			316
+> 
 
-Fixes: c56689e6f2fb ("arm64: dts: allwinner: a64: bananapi-m64: Enable audio codec")
-Fixes: 6de8e717848f ("arm64: dts: allwinner: a64: enable sound on Pinebook")
-Fixes: 498c21f233ed ("arm64: dts: allwinner: a64: enable sound on Pine64 and SoPine")
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts       | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts     | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi      | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 7793ebb5d2b8..0a56c0c23ba1 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -104,7 +104,7 @@
- };
- 
- &codec_analog {
--	hpvcc-supply = <&reg_eldo1>;
-+	cpvdd-supply = <&reg_eldo1>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index c0b9cc7a6b3a..b7ac6374b178 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -80,7 +80,7 @@
- };
- 
- &codec_analog {
--	hpvcc-supply = <&reg_eldo1>;
-+	cpvdd-supply = <&reg_eldo1>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index d22736a62481..78c82a665c84 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -94,7 +94,7 @@
- };
- 
- &codec_analog {
--	hpvcc-supply = <&reg_eldo1>;
-+	cpvdd-supply = <&reg_eldo1>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-index d2651f284aa0..9d20e13f0c02 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-@@ -48,7 +48,7 @@
- #include <dt-bindings/gpio/gpio.h>
- 
- &codec_analog {
--	hpvcc-supply = <&reg_eldo1>;
-+	cpvdd-supply = <&reg_eldo1>;
- };
- 
- &mmc0 {
 -- 
-2.20.1
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
