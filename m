@@ -1,85 +1,42 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3] of: fix kmemleak crash caused by imbalance in early
- memory reservation
-Date: Wed, 13 Feb 2019 12:12:37 -0800
-Message-ID: <20190213121237.b6df41e4fb6317e58c0716a3@linux-foundation.org>
-References: <20190213181921.GB15270@rapoport-lnx>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/4] dt-bindings: gnss: add mediatek binding
+Date: Wed, 13 Feb 2019 14:19:29 -0600
+Message-ID: <20190213201929.GA21948@bogus>
+References: <1550070569-18588-1-git-send-email-lollivier@baylibre.com>
+ <1550070569-18588-3-git-send-email-lollivier@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190213181921.GB15270@rapoport-lnx>
+Content-Disposition: inline
+In-Reply-To: <1550070569-18588-3-git-send-email-lollivier@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Frank Rowand <frowand.list@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Prateek Patel <prpatel@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Loys Ollivier <lollivier@baylibre.com>
+Cc: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Feb 2019 20:19:22 +0200 Mike Rapoport <rppt@linux.ibm.com> wrote:
+On Wed, Feb 13, 2019 at 04:09:27PM +0100, Loys Ollivier wrote:
+> Add binding for Mediatek-based GNSS receivers.
+> 
+> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+> ---
+> v4:
+> Use standard names for reset-gpios and gnss-fix-gpios
+> s/an/a UART
+> 
+> v3:
+> Removed the I2C and SPI interfaces references.
+> Removed the "mediatek,mt3339" compatible line.
+> Added the optional propertied (reset, fix)
+> Added the pin names for the optional properties.
+> 
+> v2:
+> Renamed bindings from Globaltop/gtop to Mediatek/mtk.
+> Moved current-speed as an optional propertie.
+> Removed the status line in the example.
+> Added "mediatek,mt3339" compatible.
+> 
+>  .../devicetree/bindings/gnss/mediatek.txt          | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
 
-> 
-> Marc Gonzalez reported the following kmemleak crash:
-> 
-> Unable to handle kernel paging request at virtual address ffffffc021e00000
-> Mem abort info:
->   ESR = 0x96000006
->   Exception class = DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
-> Data abort info:
->   ISV = 0, ISS = 0x00000006
->   CM = 0, WnR = 0
-> swapper pgtable: 4k pages, 39-bit VAs, pgdp = (____ptrval____)
-> [ffffffc021e00000] pgd=000000017e3ba803, pud=000000017e3ba803,
-> pmd=0000000000000000
-> Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> Modules linked in:
-> CPU: 6 PID: 523 Comm: kmemleak Tainted: G S      W         5.0.0-rc1 #13
-> Hardware name: Qualcomm Technologies, Inc. MSM8998 v1 MTP (DT)
-> pstate: 80000085 (Nzcv daIf -PAN -UAO)
-> pc : scan_block+0x70/0x190
-> lr : scan_block+0x6c/0x190
-> sp : ffffff8012e8bd20
-> x29: ffffff8012e8bd20 x28: ffffffc0fdbaf018
-> x27: ffffffc022000000 x26: 0000000000000080
-> x25: ffffff8011aadf70 x24: ffffffc0f8cc8000
-> x23: ffffff8010dc8000 x22: ffffff8010dc8830
-> x21: ffffffc021e00ff9 x20: ffffffc0f8cc8050
-> x19: ffffffc021e00000 x18: 0000000000002409
-> x17: 0000000000000200 x16: 0000000000000000
-> x15: ffffff8010e14dd8 x14: 0000000000002406
-> x13: 000000004c4dd0c6 x12: ffffffc0f77dad58
-> x11: 0000000000000001 x10: ffffff8010d9e688
-> x9 : ffffff8010d9f000 x8 : ffffff8010d9e688
-> x7 : 0000000000000002 x6 : 0000000000000000
-> x5 : ffffff8011511c20 x4 : 00000000000026d1
-> x3 : ffffff8010e14d88 x2 : 5b36396f4e7d4000
-> x1 : 0000000000208040 x0 : 0000000000000000
-> Process kmemleak (pid: 523, stack limit = 0x(____ptrval____))
-> Call trace:
->  scan_block+0x70/0x190
->  scan_gray_list+0x108/0x1c0
->  kmemleak_scan+0x33c/0x7c0
->  kmemleak_scan_thread+0x98/0xf0
->  kthread+0x11c/0x120
->  ret_from_fork+0x10/0x1c
-> Code: f9000fb4 d503201f 97ffffd2 35000580 (f9400260)
-> ---[ end trace 176d6ed9d86a0c33 ]---
-> note: kmemleak[523] exited with preempt_count 2
-> 
-> The crash happens when a no-map area is allocated in
-> early_init_dt_alloc_reserved_memory_arch(). The allocated region is
-> registered with kmemleak, but it is then removed from memblock using
-> memblock_remove() that is not kmemleak-aware.
-> 
-> Replacing memblock_phys_alloc_range() with memblock_find_in_range() makes
-> sure that the allocated memory is not added to kmemleak and then
-> memblock_remove()'ing this memory is safe.
-> 
-> As a bonus, since memblock_find_in_range() ensures the allocation in the
-> specified range, the bounds check can be removed.
-
-hm, why is this against -mm rather than against mainline?
-
-Do the OF maintainers intend to merge the fix?
-
-Thanks.
+Reviewed-by: Rob Herring <robh@kernel.org>
