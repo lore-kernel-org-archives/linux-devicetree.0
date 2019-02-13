@@ -1,24 +1,47 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v9 3/8] clk: bd718x7: Support ROHM BD70528 clk block
-Date: Wed, 13 Feb 2019 09:43:41 -0800
-Message-ID: <155007982166.115909.16929990408175018819@swboyd.mtv.corp.google.com>
-References: <cover.1550063882.git.matti.vaittinen@fi.rohmeurope.com> <f3d5163067e97426a9bb00991d200f04bcd0058b.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v2 07/15] ndings: clock: milbeaut: add Milbeaut clock description
+Date: Wed, 13 Feb 2019 09:55:34 -0800
+Message-ID: <155008053444.115909.15767350529461671558@swboyd.mtv.corp.google.com>
+References: <1549628823-31388-1-git-send-email-sugaya.taichi@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f3d5163067e97426a9bb00991d200f04bcd0058b.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <1549628823-31388-1-git-send-email-sugaya.taichi@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc: Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Matti Vaittinen (2019-02-13 05:29:55)
-> ROHM BD70528 is an ultra low power PMIC with similar 32K clk as
-> bd718x7. Only difference (from clk perspective) is register address.
-> Add support for controlling BD70528 clk using bd718x7 driver.
->=20
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
+The subject seems to have been cut off? "ndings"?
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Quoting Sugaya Taichi (2019-02-08 04:27:03)
+> diff --git a/Documentation/devicetree/bindings/clock/milbeaut-clock.txt b=
+/Documentation/devicetree/bindings/clock/milbeaut-clock.txt
+> new file mode 100644
+> index 0000000..bcfc5df
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/milbeaut-clock.txt
+> @@ -0,0 +1,49 @@
+> +Milbeaut SoCs Clock Controller Binding
+> +----------------------------------------
+> +Milbeaut SoCs Clock controller is an integrated clock controller, which
+> +generates and supplies to all modules.
+> +
+> +This binding uses common clock bindings
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible: should be one of the following:
+> +    "socionext,milbeaut-m10v-ccu" - for M10V SoC
+> +- reg: shall contain base address and length of clock registers
+> +- #clock-cells: shall be 1
+> +- clocks: shall be an external clock
+> +
+> +Example: Clock controller node:
+> +
+> +       clk: m10v-clk-ctrl@1d021000 {
+> +               compatible =3D "socionext,milbeaut-m10v-clk-ccu";
+
+I thought there was some length limit on compatible string names. 32
+bytes? Just barely under!
