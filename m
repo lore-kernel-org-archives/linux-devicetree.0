@@ -1,112 +1,63 @@
-From: Loys Ollivier <lollivier@baylibre.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: gnss: add mediatek binding
-Date: Wed, 13 Feb 2019 16:24:00 +0100
-Message-ID: <CALZWD59e356Of+R4H2ZNHJyQcPCQNNdS+1DTc8qNDYp9ZnUpXA@mail.gmail.com>
-References: <1547744074-28308-1-git-send-email-lollivier@baylibre.com>
- <1547744074-28308-3-git-send-email-lollivier@baylibre.com>
- <20190125090755.GB3691@localhost> <867eeo7pjm.fsf@baylibre.com>
- <20190211083349.GU4686@localhost> <86mun2v27r.fsf@baylibre.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Wed, 13 Feb 2019 07:26:20 -0800
+Message-ID: <20190213152620.GS5720@atomide.com>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
+ <20190212074237.2875-6-lokeshvutla@ti.com>
+ <20190212162247.GK5720@atomide.com>
+ <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <86mun2v27r.fsf@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Loys Ollivier <lollivier@baylibre.com>
-Cc: Johan Hovold <johan@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 11 Feb 2019 at 14:17, Loys Ollivier <lollivier@baylibre.com> wrote:
+* Lokesh Vutla <lokeshvutla@ti.com> [190213 04:26]:
+> Hi Tony,
+> 
+> On 12/02/19 9:52 PM, Tony Lindgren wrote:
+> > Hi,
+> > 
+> > * Lokesh Vutla <lokeshvutla@ti.com> [190212 07:43]:
+> >> +Example:
+> >> +--------
+> >> +The following example demonstrates both interrupt router node and the consumer
+> >> +node(main gpio) on the AM654 SoC:
+> >> +
+> >> +main_intr: interrupt-controller0 {
+> >> +	compatible = "ti,sci-intr";
+> >> +	interrupt-controller;
+> >> +	interrupt-parent = <&gic500>;
+> >> +	#interrupt-cells = <4>;
+> >> +	ti,sci = <&dmsc>;
+> >> +	ti,sci-dst-id = <56>;
+> >> +	ti,sci-rm-range-girq = <0x1>;
+> >> +};
+> > 
+> > Can you describe a bit what the "ti,sci-dst-id" is above?
+> > 
+> > These IDs seem to be listed at at [0] below, but is it really a property
+> > of the hardware? Or is it some enumeration of SoC devices in the firmware?
+> 
+> This is the way that sysfw describes the hardware. In this case it is GIC and it
+> is identified by this ID.
 
-> On Mon 11 Feb 2019 at 08:33, Johan Hovold <johan@kernel.org> wrote:
->
->> On Mon, Jan 28, 2019 at 04:46:53PM +0100, Loys Ollivier wrote:
->>>
->>> On Fri 25 Jan 2019 at 09:07, Johan Hovold wrote:
->>>
->>> > On Thu, Jan 17, 2019 at 05:54:32PM +0100, Loys Ollivier wrote:
->>> >> Add binding for Mediatek-based GNSS receivers.
->>> >>
->>> >> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
->>> >> ---
->>> >>
->>> >> v2:
->>> >> Renamed bindings from Globaltop/gtop to Mediatek/mtk.
->>> >> Moved current-speed as an optional propertie.
->>> >> Removed the status line in the example.
->>> >> Added "mediatek,mt3339" compatible.
->>
->>> >> +++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
->>> >> @@ -0,0 +1,39 @@
->>> >> +Mediatek-based GNSS Receiver DT binding
->>> >> +
->>> >> +Mediatek chipsets are used in GNSS-receiver modules produced by several
->>> >> +vendors and can use UART, SPI or I2C interfaces.
->>> >> +
->>> >> +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
->>> >> +properties.
->>> >> +
->>> >> +Required properties:
->>> >> +
->>> >> +- compatible    : Must be one of
->>> >> +
->>> >> +                        "globaltop,pa6h"
->>> >> +                        "mediatek,mt3339"
->>> >
->>> > I'm not sure it makes sense to add the GPS chip itself as it cannot be
->>> > used stand-alone AFAIU, and either not way would require a lot more
->>> > resources to be defined than what you add to this binding.
->>>
->>> OK, I find it a bit confusing to have Mediatek bindings but no
->>> compatible Mediatek SoCs.
->>> But it is true that it can't be used stand-alone. I will remove this
->>> reference and also remove it from the mtk.c driver code from this patch
->>> serie.
->>
->>> >> +Required properties (I2C):
->>> >> +- reg           : I2C slave address
->>> >> +
->>> >> +Required properties (SPI):
->>> >> +- reg           : SPI chip select address
->>> >
->>> > While the mt3339 appears to support these interfaces, the globaltop one
->>> > does not.
->>> >
->>> > Have you looked around for a small sample of mt3339-based receivers, to
->>> > see whether anyone actually provides these?
->>>
->>> Again I'm confused by the fact that it is the Mediatek bindings.
->>> Hence why I have added it and why it was not present in the v1 that was
->>> only for Globaltop.
->>
->> This is no different from the sirfstar driver for receivers based on
->> those chipsets but manufactured by various other vendors.
->>
-> Indeed.
->
->>> I find it odd mentionning the chipset but not all its interfaces.
->>> I will remove these sections and only list supported interfaces (i.e.
->>> UART). Other interfaces can be added afterward if one finds a board that
->>> provides them.
->>
->> Right, but please do look around for other receivers using this chipset
->> so that we can make the binding generic enough to cover those as well
->> (e.g. by choosing representative resource names).
->>
-> OK will have a look.
+If this ID is an enumeration in the sysfw rather than an actual
+hardware property it should not be in the device tree. If so,
+the device driver should request the id from the sysfw based
+on a name. That is, if no struct device or device phandle can
+be used.
 
-The only mt3339-based receivers I have found are:
-- [0] Globaltop
-- [1] Locosys / Pololu
-They both only provide the UART interface and do not list the I2C/SPI
-interfaces.
+The problem with using enumeration in the dts is that it
+requires maintaining the dts, driver(s) and possibly firmware
+in sync. And that might change between SoCs variants when new
+devices get added and removed.
 
-[0] https://cdn-shop.adafruit.com/datasheets/GlobalTop-FGPMMOPA6H-Datasheet-V0A.pdf
-[1] https://www.pololu.com/file/0J641/LS20030~3_datasheet_v1.3.pdf
+Regards,
 
->
->> Johan
-
-
-
---
--L
+Tony
