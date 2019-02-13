@@ -1,68 +1,98 @@
 From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 11/11] mtd: rawnand: atmel: switch to SPDX license identifiers
-Date: Wed, 13 Feb 2019 09:00:17 +0000
-Message-ID: <20190213085930.31578-12-tudor.ambarus@microchip.com>
+Subject: [PATCH 01/11] ARM: at91: add sam9x60 SFR definitions
+Date: Wed, 13 Feb 2019 08:59:44 +0000
+Message-ID: <20190213085930.31578-2-tudor.ambarus@microchip.com>
 References: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 In-Reply-To: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Content-Language: en-US
-Content-ID: <33943D080C7E87409BEBE9682EA68C0E@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, dwmw2@infradead.org, computersforpeace@gmail.com, bbrezillon@kernel.org, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Tudor.Ambarus@microchip.com
+Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tudor.Ambarus@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0KDQpBZG9w
-dCB0aGUgU1BEWCBsaWNlbnNlIGlkZW50aWZpZXJzIHRvIGVhc2UgbGljZW5zZSBjb21wbGlhbmNl
-DQptYW5hZ2VtZW50Lg0KDQpTaWduZWQtb2ZmLWJ5OiBUdWRvciBBbWJhcnVzIDx0dWRvci5hbWJh
-cnVzQG1pY3JvY2hpcC5jb20+DQotLS0NCiBkcml2ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9uYW5k
-LWNvbnRyb2xsZXIuYyB8IDUgKy0tLS0NCiBkcml2ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9wbWVj
-Yy5jICAgICAgICAgICB8IDUgKy0tLS0NCiBkcml2ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9wbWVj
-Yy5oICAgICAgICAgICB8IDYgKy0tLS0tDQogMyBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlvbnMo
-KyksIDEzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvbmFuZC9yYXcv
-YXRtZWwvbmFuZC1jb250cm9sbGVyLmMgYi9kcml2ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9uYW5k
-LWNvbnRyb2xsZXIuYw0KaW5kZXggZmY4NWJlMGUyZGUzLi4zMjA1YjcwNWQ3MzQgMTAwNjQ0DQot
-LS0gYS9kcml2ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9uYW5kLWNvbnRyb2xsZXIuYw0KKysrIGIv
-ZHJpdmVycy9tdGQvbmFuZC9yYXcvYXRtZWwvbmFuZC1jb250cm9sbGVyLmMNCkBAIC0xLDMgKzEs
-NCBAQA0KKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQogLyoNCiAgKiBDb3B5
-cmlnaHQgMjAxNyBBVE1FTA0KICAqIENvcHlyaWdodCAyMDE3IEZyZWUgRWxlY3Ryb25zDQpAQCAt
-MjksMTAgKzMwLDYgQEANCiAgKiAgIEFkZCBOYW5kIEZsYXNoIENvbnRyb2xsZXIgc3VwcG9ydCBm
-b3IgU0FNQTUgU29DDQogICoJQ29weXJpZ2h0IDIwMTMgQVRNRUwsIEpvc2ggV3UgKGpvc2gud3VA
-YXRtZWwuY29tKQ0KICAqDQotICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBj
-YW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkNCi0gKiBpdCB1bmRlciB0aGUgdGVybXMg
-b2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcw0KLSAqIHB1Ymxp
-c2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KLSAqDQogICogQSBmZXcgd29y
-ZHMgYWJvdXQgdGhlIG5hbWluZyBjb252ZW50aW9uIGluIHRoaXMgZmlsZS4gVGhpcyBjb252ZW50
-aW9uDQogICogYXBwbGllcyB0byBzdHJ1Y3R1cmUgYW5kIGZ1bmN0aW9uIG5hbWVzLg0KICAqDQpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvbmFuZC9yYXcvYXRtZWwvcG1lY2MuYyBiL2RyaXZlcnMv
-bXRkL25hbmQvcmF3L2F0bWVsL3BtZWNjLmMNCmluZGV4IDlkMzk5Nzg0MDg4OS4uY2JiMDIzYmYw
-MGY3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9yYXcvYXRtZWwvcG1lY2MuYw0KKysr
-IGIvZHJpdmVycy9tdGQvbmFuZC9yYXcvYXRtZWwvcG1lY2MuYw0KQEAgLTEsMyArMSw0IEBADQor
-Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCiAvKg0KICAqIENvcHlyaWdodCAy
-MDE3IEFUTUVMDQogICogQ29weXJpZ2h0IDIwMTcgRnJlZSBFbGVjdHJvbnMNCkBAIC0yOCwxMCAr
-MjksNiBAQA0KICAqICAgQWRkIE5hbmQgRmxhc2ggQ29udHJvbGxlciBzdXBwb3J0IGZvciBTQU1B
-NSBTb0MNCiAgKglDb3B5cmlnaHQgMjAxMyBBVE1FTCwgSm9zaCBXdSAoam9zaC53dUBhdG1lbC5j
-b20pDQogICoNCi0gKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRp
-c3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQ0KLSAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUg
-R05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzDQotICogcHVibGlzaGVkIGJ5
-IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uDQotICoNCiAgKiBUaGUgUE1FQ0MgaXMgYW4g
-aGFyZHdhcmUgYXNzaXN0ZWQgQkNIIGVuZ2luZSwgd2hpY2ggbWVhbnMgcGFydCBvZiB0aGUNCiAg
-KiBFQ0MgYWxnb3JpdGhtIGlzIGxlZnQgdG8gdGhlIHNvZnR3YXJlLiBUaGUgaGFyZHdhcmUvc29m
-dHdhcmUgcmVwYXJ0aXRpb24NCiAgKiBpcyBleHBsYWluZWQgaW4gdGhlICJQTUVDQyBDb250cm9s
-bGVyIEZ1bmN0aW9uYWwgRGVzY3JpcHRpb24iIGNoYXB0ZXIgaW4NCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9wbWVjYy5oIGIvZHJpdmVycy9tdGQvbmFuZC9yYXcvYXRt
-ZWwvcG1lY2MuaA0KaW5kZXggODA4ZjFiZTBkNmFkLi43ODUxYzA1MTI2Y2YgMTAwNjQ0DQotLS0g
-YS9kcml2ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9wbWVjYy5oDQorKysgYi9kcml2ZXJzL210ZC9u
-YW5kL3Jhdy9hdG1lbC9wbWVjYy5oDQpAQCAtMSwzICsxLDQgQEANCisvKiBTUERYLUxpY2Vuc2Ut
-SWRlbnRpZmllcjogR1BMLTIuMCAqLw0KIC8qDQogICogwqkgQ29weXJpZ2h0IDIwMTYgQVRNRUwN
-CiAgKiDCqSBDb3B5cmlnaHQgMjAxNiBGcmVlIEVsZWN0cm9ucw0KQEAgLTI4LDExICsyOSw2IEBA
-DQogICoNCiAgKiAgICBBZGQgTmFuZCBGbGFzaCBDb250cm9sbGVyIHN1cHBvcnQgZm9yIFNBTUE1
-IFNvQw0KICAqICAgICAgICDCqSBDb3B5cmlnaHQgMjAxMyBBVE1FTCwgSm9zaCBXdSAoam9zaC53
-dUBhdG1lbC5jb20pDQotICoNCi0gKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91
-IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQ0KLSAqIGl0IHVuZGVyIHRoZSB0ZXJt
-cyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzDQotICogcHVi
-bGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uDQotICoNCiAgKi8NCiANCiAj
-aWZuZGVmIEFUTUVMX1BNRUNDX0gNCi0tIA0KMi45LjUNCg0K
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
+
+Keep generic names, as there are no conflicts with previous
+SFR definitions.
+
+While touching bits, update AT91_OHCIICR_USB_SUSPEND to use
+GENMASK, replace unused AT91_OHCIICR_SUSPEND_A/B/C with a more
+generic macro, align values on tab-width.
+
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+---
+ include/soc/at91/atmel-sfr.h | 34 +++++++++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
+
+diff --git a/include/soc/at91/atmel-sfr.h b/include/soc/at91/atmel-sfr.h
+index 482337af06b8..532fd784e86c 100644
+--- a/include/soc/at91/atmel-sfr.h
++++ b/include/soc/at91/atmel-sfr.h
+@@ -14,21 +14,41 @@
+ #define _LINUX_MFD_SYSCON_ATMEL_SFR_H
+ 
+ #define AT91_SFR_DDRCFG		0x04	/* DDR Configuration Register */
++#define AT91_SFR_CCFG_EBICSA	0x04	/* EBI Chip Select Register */
+ /* 0x08 ~ 0x0c: Reserved */
+ #define AT91_SFR_OHCIICR	0x10	/* OHCI INT Configuration Register */
+ #define AT91_SFR_OHCIISR	0x14	/* OHCI INT Status Register */
+ #define AT91_SFR_UTMICKTRIM	0x30	/* UTMI Clock Trimming Register */
++#define AT91_SFR_UTMISWAP	0x3c	/* UTMI DP/DM Pin Swapping Register */
++#define AT91_SFR_LS		0x7c	/* Light Sleep Register */
+ #define AT91_SFR_I2SCLKSEL	0x90	/* I2SC Register */
++#define AT91_SFR_WPMR		0xe4	/* Write Protection Mode Register */
+ 
+ /* Field definitions */
+-#define AT91_OHCIICR_SUSPEND_A	BIT(8)
+-#define AT91_OHCIICR_SUSPEND_B	BIT(9)
+-#define AT91_OHCIICR_SUSPEND_C	BIT(10)
++#define AT91_SFR_CCFG_EBI_CSA(cs, val)		((val) << (cs))
++#define AT91_SFR_CCFG_EBI_DBPUC			BIT(8)
++#define AT91_SFR_CCFG_EBI_DBPDC			BIT(9)
++#define AT91_SFR_CCFG_EBI_DRIVE			BIT(17)
++#define AT91_SFR_CCFG_NFD0_ON_D16		BIT(24)
++#define AT91_SFR_CCFG_DDR_MP_EN			BIT(25)
+ 
+-#define AT91_OHCIICR_USB_SUSPEND	(AT91_OHCIICR_SUSPEND_A | \
+-					 AT91_OHCIICR_SUSPEND_B | \
+-					 AT91_OHCIICR_SUSPEND_C)
++#define AT91_SFR_OHCIICR_RES(x)			BIT(x)
++#define AT91_SFR_OHCIICR_ARIE			BIT(4)
++#define AT91_SFR_OHCIICR_APPSTART		BIT(5)
++#define AT91_SFR_OHCIICR_USB_SUSP(x)		BIT(8 + (x))
++#define AT91_SFR_OHCIICR_UDPPUDIS		BIT(23)
++#define AT91_OHCIICR_USB_SUSPEND		GENMASK(10, 8)
+ 
+-#define AT91_UTMICKTRIM_FREQ	GENMASK(1, 0)
++#define AT91_SFR_OHCIISR_RIS(x)			BIT(x)
++
++#define AT91_UTMICKTRIM_FREQ			GENMASK(1, 0)
++
++#define AT91_SFR_UTMISWAP_PORT(x)		BIT(x)
++
++#define AT91_SFR_LS_VALUE(x)			BIT(x)
++#define AT91_SFR_LS_MEM_POWER_GATING_ULP1_EN	BIT(16)
++
++#define AT91_SFR_WPMR_WPEN			BIT(0)
++#define AT91_SFR_WPMR_WPKEY_MASK		GENMASK(31, 8)
+ 
+ #endif /* _LINUX_MFD_SYSCON_ATMEL_SFR_H */
+-- 
+2.9.5
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
