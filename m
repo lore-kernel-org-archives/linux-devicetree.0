@@ -1,50 +1,49 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Wed, 13 Feb 2019 09:55:22 +0530
-Message-ID: <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
- <20190212074237.2875-6-lokeshvutla@ti.com>
- <20190212162247.GK5720@atomide.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH] ARM: dts: BCM5301X: Change Ethernet switch management port
+Date: Tue, 12 Feb 2019 20:25:59 -0800
+Message-ID: <20190213042600.27729-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212162247.GK5720@atomide.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, "maintainer:BROADCOM BCM5301X ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+BCM5301X has 3 Ethernet controllers: GMAC0, 1, 2 which map to ports 5, 7
+and 8 respectively of the internal switch. Future changes will turn on
+management mode in the Ethernet switch driver (b53) which will require
+us to use port 8.
 
-On 12/02/19 9:52 PM, Tony Lindgren wrote:
-> Hi,
-> 
-> * Lokesh Vutla <lokeshvutla@ti.com> [190212 07:43]:
->> +Example:
->> +--------
->> +The following example demonstrates both interrupt router node and the consumer
->> +node(main gpio) on the AM654 SoC:
->> +
->> +main_intr: interrupt-controller0 {
->> +	compatible = "ti,sci-intr";
->> +	interrupt-controller;
->> +	interrupt-parent = <&gic500>;
->> +	#interrupt-cells = <4>;
->> +	ti,sci = <&dmsc>;
->> +	ti,sci-dst-id = <56>;
->> +	ti,sci-rm-range-girq = <0x1>;
->> +};
-> 
-> Can you describe a bit what the "ti,sci-dst-id" is above?
-> 
-> These IDs seem to be listed at at [0] below, but is it really a property
-> of the hardware? Or is it some enumeration of SoC devices in the firmware?
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-This is the way that sysfw describes the hardware. In this case it is GIC and it
-is identified by this ID.
-
-Thanks and regards,
-Lokesh
+diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+index 3fced3b7f1a8..affa9cc7422d 100644
+--- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
++++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+@@ -150,10 +150,15 @@
+ 			label = "wan";
+ 		};
+ 
+-		port@5 {
+-			reg = <5>;
++		port@8 {
++			reg = <8>;
+ 			label = "cpu";
+-			ethernet = <&gmac0>;
++			ethernet = <&gmac2>;
++
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++			};
+ 		};
+ 	};
+ };
+-- 
+2.19.1
