@@ -1,37 +1,73 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 0/5] gpio: add support for pull-up/pull-down configuration
-Date: Wed, 13 Feb 2019 09:15:49 +0100
-Message-ID: <CACRpkdbcuERqOvR-5gknTKcq0BeQU2r2U12zFyVXZXWwDMAWAA@mail.gmail.com>
-References: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH v1 3/3] regulator: bd718x7: Support SNVS low power
+ state
+Date: Wed, 13 Feb 2019 10:33:43 +0200
+Message-ID: <20190213083343.GC12247@localhost.localdomain>
+References: <cover.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
+ <06c2f2f730b07caeb1f2fb86be60c02b21d7bea9.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190212160831.GF20635@sirena.org.uk>
+ <20190213073827.GB12247@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <20190213073827.GB12247@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
+To: Mark Brown <broonie@kernel.org>
+Cc: mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 7, 2019 at 5:29 PM Thomas Petazzoni
-<thomas.petazzoni@bootlin.com> wrote:
+Hello peeps,
 
-> As we started discussing in [1], it would be useful to have a way to
-> configure pull-up/pull-down resistors for simple GPIO controllers that
-> don't have any pinmuxing capability, and therefore no interaction with
-> the pinctrl subsystem.
->
-> This is a second iteration of the patches (the v1 was posted at
-> https://patchwork.ozlabs.org/cover/1020392/).
+And my apologies! I was in a hurry yesterday. I had to pick up kid kid
+from kindegarden and I wanted to send the RFC before that - bad mistake.
+Should've learnd by now.
 
-I don't see any problem with this patch set so I have merged it
-into an immutable branch in my GPIO tree, and if it builds fine
-I will merge it for devel (for-v5.1).
+Today I decided to continue work and use combination of
+regulator-always-on and regulator-boot-on instead of
+rohm,regulator-crucial-for-boot. I was ashtonished by the fact that I
+didn't find my latest work from my git. After a while I found unsaved
+buffer from another editor instance with changes concerning handling of
+"rohm,regulator-crucial-for-boot"...
 
-Notably we do not add a userspace ABI in this patch series.
+On Wed, Feb 13, 2019 at 09:38:27AM +0200, Matti Vaittinen wrote:
+> Hello Mark,
+> 
+> On Tue, Feb 12, 2019 at 04:08:31PM +0000, Mark Brown wrote:
+> 
+> So with current driver design, even if constrains prevented the
+> regulator core from touching the regulators, the driver still changes
+> the control to SW. So we need to parse some attribute in the BD718x7
+> driver side. Besides, I did not spot a 'do not touch me' property from
+> the bindings :)
 
-I guess that is fine for now, but I think we might see userspace
-support requests soon. But that can be a different patch
-and should be driven by actual need for that.
+So no wonder it was not clear that the core constrains were not enough.
+Previous patch did not contain the part of change that skipped turning
+the regulator control to SW if regulator was marked crucial.
 
-Yours,
-Linus Walleij
+> But after writing all this - I think you are correct. We do not need the
+> rohm,regulator-crucial-for-boot. I guess we can check for the
+> combination of:
+> 
+> regulator-always-on and regulator-boot-on
+> 
+> and interpret this as "rohm,regulator-crucial-for-boot".
+> 
+> I just think I need to document that those flags are required
+> for critical regulators if SNVS is used as reset target even if there
+> should be no one touching those regulators.
+
+Anyways, this is still valid - I'll prepare next version with all
+intended changes included... :/
+
+Br,
+	Matti Vaittinen
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
