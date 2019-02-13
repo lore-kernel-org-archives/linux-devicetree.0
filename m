@@ -1,58 +1,37 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Change Ethernet switch management
- port
-Date: Wed, 13 Feb 2019 09:07:29 +0100
-Message-ID: <43f75739-b592-35d3-e711-13f05218133d@gmail.com>
-References: <20190213042600.27729-1-f.fainelli@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 0/5] gpio: add support for pull-up/pull-down configuration
+Date: Wed, 13 Feb 2019 09:15:49 +0100
+Message-ID: <CACRpkdbcuERqOvR-5gknTKcq0BeQU2r2U12zFyVXZXWwDMAWAA@mail.gmail.com>
+References: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190213042600.27729-1-f.fainelli@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, "maintainer:BROADCOM BCM5301X ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
 List-Id: devicetree@vger.kernel.org
 
-On 13.02.2019 05:25, Florian Fainelli wrote:
-> BCM5301X has 3 Ethernet controllers: GMAC0, 1, 2 which map to ports 5, 7
-> and 8 respectively of the internal switch. Future changes will turn on
-> management mode in the Ethernet switch driver (b53) which will require
-> us to use port 8.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->   arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts | 11 ++++++++---
->   1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-> index 3fced3b7f1a8..affa9cc7422d 100644
-> --- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-> +++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-> @@ -150,10 +150,15 @@
->   			label = "wan";
->   		};
->   
-> -		port@5 {
-> -			reg = <5>;
-> +		port@8 {
-> +			reg = <8>;
->   			label = "cpu";
-> -			ethernet = <&gmac0>;
-> +			ethernet = <&gmac2>;
-> +
-> +			fixed-link {
-> +				speed = <1000>;
-> +				full-duplex;
-> +			};
->   		};
->   	};
->   };
+On Thu, Feb 7, 2019 at 5:29 PM Thomas Petazzoni
+<thomas.petazzoni@bootlin.com> wrote:
 
-I'm not exactly sure how Linux switch driver works, but from DT
-perspective I think we should rather have *hardware* described instead
-of a common Linux case.
+> As we started discussing in [1], it would be useful to have a way to
+> configure pull-up/pull-down resistors for simple GPIO controllers that
+> don't have any pinmuxing capability, and therefore no interaction with
+> the pinctrl subsystem.
+>
+> This is a second iteration of the patches (the v1 was posted at
+> https://patchwork.ozlabs.org/cover/1020392/).
 
-If I'm right, we should rather have all 3 switch ports described (5, 7,
-8) and have Linux just use the one it needs.
+I don't see any problem with this patch set so I have merged it
+into an immutable branch in my GPIO tree, and if it builds fine
+I will merge it for devel (for-v5.1).
+
+Notably we do not add a userspace ABI in this patch series.
+
+I guess that is fine for now, but I think we might see userspace
+support requests soon. But that can be a different patch
+and should be driven by actual need for that.
+
+Yours,
+Linus Walleij
