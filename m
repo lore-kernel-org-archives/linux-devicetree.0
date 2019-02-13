@@ -1,92 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] Input: i8042 - Rework DT node name comparisons
-Date: Wed, 13 Feb 2019 10:16:31 -0600
-Message-ID: <20190213161631.17028-1-robh@kernel.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 2/2] gpio: sprd: Change to use SoC compatible string
+Date: Wed, 13 Feb 2019 17:10:11 +0100
+Message-ID: <CAMpxmJXbuOuMvxe+bXqjaCrVU5WXxQ=fZTU9iA8Opnqrx25eMQ@mail.gmail.com>
+References: <b8101fd6d303c1993ee294eeee8bce4d24b9547f.1550061925.git.baolin.wang@linaro.org>
+ <0438b78c7f9f9bc3f0e7bcbcef3873fd2dd7e259.1550061925.git.baolin.wang@linaro.org>
+ <CAMpxmJWuMWBSPjoJWkfagAAopYjohA0rhxUacNPXhhiTFZJorA@mail.gmail.com> <CAMz4kuJRvYo699J5SiG9mhjy5pt1hke8yXwoj9KfmZBTKkkKzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMz4kuJRvYo699J5SiG9mhjy5pt1hke8yXwoj9KfmZBTKkkKzw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Mark Brown <broonie@kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, linux-gpio <linux-gpio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert string compares of DT node names to use of_node_name_eq helper
-instead. For the root node on SUN DT, we need to retrieve the 'name'
-property as it is the rare case where the 'name' property and node name
-differ. With both changes, it removes direct access to the node name
-pointer.
+=C5=9Br., 13 lut 2019 o 14:15 Baolin Wang <baolin.wang@linaro.org> napisa=
+=C5=82(a):
+>
+> On Wed, 13 Feb 2019 at 20:59, Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> >
+> > =C5=9Br., 13 lut 2019 o 13:49 Baolin Wang <baolin.wang@linaro.org> napi=
+sa=C5=82(a):
+> > >
+> > > Change to use SoC compatible string instead of wildcard string.
+> > >
+> > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > > ---
+> > >  drivers/gpio/gpio-pmic-eic-sprd.c |    2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pm=
+ic-eic-sprd.c
+> > > index ac573da..24228cf 100644
+> > > --- a/drivers/gpio/gpio-pmic-eic-sprd.c
+> > > +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
+> > > @@ -364,7 +364,7 @@ static int sprd_pmic_eic_probe(struct platform_de=
+vice *pdev)
+> > >  }
+> > >
+> > >  static const struct of_device_id sprd_pmic_eic_of_match[] =3D {
+> > > -       { .compatible =3D "sprd,sc27xx-eic", },
+> > > +       { .compatible =3D "sprd,sc2731-eic", },
+> > >         { /* end of list */ }
+> > >  };
+> > >  MODULE_DEVICE_TABLE(of, sprd_pmic_eic_of_match);
+> > > --
+> > > 1.7.9.5
+> > >
+> >
+> > We guarantee to make older device-trees to work with new kernel so you
+> > can add the new compatible, but you can't remove the old one.
+>
+> But the old one is incorrect, and we still keep it?
+>
 
-While at it, comvert the open coded loop to use
-for_each_child_of_node().
+Well in theory the device-tree is supposed to be a stable ABI so once
+it's released, it should work with any following kernel version.
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/input/serio/i8042-sparcio.h | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+In practice changes are sometimes allowed and there are also bugs in DT fil=
+es.
 
-diff --git a/drivers/input/serio/i8042-sparcio.h b/drivers/input/serio/i8042-sparcio.h
-index 796289846204..fce76812843b 100644
---- a/drivers/input/serio/i8042-sparcio.h
-+++ b/drivers/input/serio/i8042-sparcio.h
-@@ -53,12 +53,11 @@ static struct resource *kbd_res;
- 
- static int sparc_i8042_probe(struct platform_device *op)
- {
--	struct device_node *dp = op->dev.of_node;
-+	struct device_node *dp;
- 
--	dp = dp->child;
--	while (dp) {
--		if (!strcmp(dp->name, OBP_PS2KBD_NAME1) ||
--		    !strcmp(dp->name, OBP_PS2KBD_NAME2)) {
-+	for_each_child_of_node(op->dev.of_node, dp) {
-+		if (of_node_name_eq(dp, OBP_PS2KBD_NAME1) ||
-+		    of_node_name_eq(dp, OBP_PS2KBD_NAME2)) {
- 			struct platform_device *kbd = of_find_device_by_node(dp);
- 			unsigned int irq = kbd->archdata.irqs[0];
- 			if (irq == 0xffffffff)
-@@ -67,16 +66,14 @@ static int sparc_i8042_probe(struct platform_device *op)
- 			kbd_iobase = of_ioremap(&kbd->resource[0],
- 						0, 8, "kbd");
- 			kbd_res = &kbd->resource[0];
--		} else if (!strcmp(dp->name, OBP_PS2MS_NAME1) ||
--			   !strcmp(dp->name, OBP_PS2MS_NAME2)) {
-+		} else if (of_node_name_eq(dp, OBP_PS2MS_NAME1) ||
-+			   of_node_name_eq(dp, OBP_PS2MS_NAME2)) {
- 			struct platform_device *ms = of_find_device_by_node(dp);
- 			unsigned int irq = ms->archdata.irqs[0];
- 			if (irq == 0xffffffff)
- 				irq = op->archdata.irqs[0];
- 			i8042_aux_irq = irq;
- 		}
--
--		dp = dp->sibling;
- 	}
- 
- 	return 0;
-@@ -109,8 +106,9 @@ static struct platform_driver sparc_i8042_driver = {
- static int __init i8042_platform_init(void)
- {
- 	struct device_node *root = of_find_node_by_path("/");
-+	const char *name = of_get_property(root, "name", NULL);
- 
--	if (!strcmp(root->name, "SUNW,JavaStation-1")) {
-+	if (name && !strcmp(name, "SUNW,JavaStation-1")) {
- 		/* Hardcoded values for MrCoffee.  */
- 		i8042_kbd_irq = i8042_aux_irq = 13 | 0x20;
- 		kbd_iobase = ioremap(0x71300060, 8);
-@@ -139,8 +137,9 @@ static int __init i8042_platform_init(void)
- static inline void i8042_platform_exit(void)
- {
- 	struct device_node *root = of_find_node_by_path("/");
-+	const char *name = of_get_property(root, "name", NULL);
- 
--	if (strcmp(root->name, "SUNW,JavaStation-1"))
-+	if (!name || strcmp(name, "SUNW,JavaStation-1"))
- 		platform_driver_unregister(&sparc_i8042_driver);
- }
- 
--- 
-2.19.1
+Linus: what do you think?
+
+Bart
