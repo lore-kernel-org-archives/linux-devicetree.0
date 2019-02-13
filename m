@@ -1,7 +1,7 @@
 From: Loys Ollivier <lollivier@baylibre.com>
-Subject: [PATCH v4 1/4] dt-bindings: Add vendor prefix for "GlobalTop Technology, Inc."
-Date: Wed, 13 Feb 2019 16:09:26 +0100
-Message-ID: <1550070569-18588-2-git-send-email-lollivier@baylibre.com>
+Subject: [PATCH v4 3/4] gnss: add mtk receiver type support
+Date: Wed, 13 Feb 2019 16:09:28 +0100
+Message-ID: <1550070569-18588-4-git-send-email-lollivier@baylibre.com>
 References: <1550070569-18588-1-git-send-email-lollivier@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1550070569-18588-1-git-send-email-lollivier@baylibre.com>
@@ -10,31 +10,50 @@ To: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
 Cc: Loys Ollivier <lollivier@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add globaltop vendor definition.
+Add an MTK (Mediatek) type to the "GNSS_TYPE" attribute.
+
+Note that MTK receivers support a subset of NMEA 0183 with vendor
+extensions.
 
 Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v4: No changes (Reviewed-by tag added)
+v4:
+No changes
 
-v3: No changes
+v3:
+Moved the gnss_type_names string addition to this patch.
+Edited the commit message to remove the reference to a vendor protocol.
 
-v2: Alphabetical order
+v2:
+Renamed from GTOP to MTK.
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gnss/core.c  | 1 +
+ include/linux/gnss.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389508584f48..d80a70343b36 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -150,6 +150,7 @@ geniatech	Geniatech, Inc.
- giantec	Giantec Semiconductor, Inc.
- giantplus	Giantplus Technology Co., Ltd.
- globalscale	Globalscale Technologies, Inc.
-+globaltop	GlobalTop Technology, Inc.
- gmt	Global Mixed-mode Technology, Inc.
- goodix	Shenzhen Huiding Technology Co., Ltd.
- google	Google, Inc.
+diff --git a/drivers/gnss/core.c b/drivers/gnss/core.c
+index 4291a0dd22aa..320cfca80d5f 100644
+--- a/drivers/gnss/core.c
++++ b/drivers/gnss/core.c
+@@ -334,6 +334,7 @@ static const char * const gnss_type_names[GNSS_TYPE_COUNT] = {
+ 	[GNSS_TYPE_NMEA]	= "NMEA",
+ 	[GNSS_TYPE_SIRF]	= "SiRF",
+ 	[GNSS_TYPE_UBX]		= "UBX",
++	[GNSS_TYPE_MTK]		= "MTK",
+ };
+ 
+ static const char *gnss_type_name(struct gnss_device *gdev)
+diff --git a/include/linux/gnss.h b/include/linux/gnss.h
+index 43546977098c..36968a0f33e8 100644
+--- a/include/linux/gnss.h
++++ b/include/linux/gnss.h
+@@ -22,6 +22,7 @@ enum gnss_type {
+ 	GNSS_TYPE_NMEA = 0,
+ 	GNSS_TYPE_SIRF,
+ 	GNSS_TYPE_UBX,
++	GNSS_TYPE_MTK,
+ 
+ 	GNSS_TYPE_COUNT
+ };
 -- 
 2.7.4
