@@ -1,60 +1,82 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 6/8] dt-bindings: i2c: iproc: add "brcm,iproc-nic-i2c"
- compatible string
-Date: Wed, 13 Feb 2019 15:18:08 -0600
-Message-ID: <20190213211807.GA20560@bogus>
-References: <20190204231554.87666-1-ray.jui@broadcom.com>
- <20190204231554.87666-7-ray.jui@broadcom.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: soc: fsl: Document Qixis FPGA usage
+Date: Wed, 13 Feb 2019 15:23:47 -0600
+Message-ID: <20190213212347.GA26140@bogus>
+References: <20190205153924.7204-1-pankaj.bansal@nxp.com>
+ <20190205153924.7204-2-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190204231554.87666-7-ray.jui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <20190205153924.7204-2-pankaj.bansal@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pankaj Bansal <pankaj.bansal@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list : OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2019 at 03:15:52PM -0800, Ray Jui wrote:
-> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> 
-> Update iProc I2C binding document to add new compatible string
-> "brcm,iproc-nic-i2c". Optional property "brcm,ape-hsls-addr-mask" is
-> also added that allows configuration of the host view into the APE's
-> address for "brcm,iproc-nic-i2c"
-> 
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> ---
->  Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
-> index d3a3620b1f06..02e82d20239e 100644
-> --- a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
-> +++ b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
-> @@ -3,7 +3,7 @@ Broadcom iProc I2C controller
->  Required properties:
->  
->  - compatible:
-> -    Must be "brcm,iproc-i2c"
-> +    Must be "brcm,iproc-i2c" or "brcm,iproc-nic-i2c"
->  
->  - reg:
->      Define the base and range of the I/O address space that contain the iProc
-> @@ -24,6 +24,9 @@ Optional properties:
->      Should contain the I2C interrupt. If unspecified, driver will fall back to
->      polling mode
->  
-> +- brcm,ape-hsls-addr-mask:
-> +    Required for "brcm,iproc-nic-i2c". Host view of address mask into the
-> +    'APE' co-processor
-
-What's the data type and size? What are valid values?
-
->  
->  Example:
->  	i2c0: i2c@18008000 {
-> -- 
-> 2.17.1
-> 
+T24gVHVlLCBGZWIgMDUsIDIwMTkgYXQgMTA6MTQ6NDBBTSArMDAwMCwgUGFua2FqIEJhbnNhbCB3
+cm90ZToKPiBhbiBGUEdBLWJhc2VkIHN5c3RlbSBjb250cm9sbGVyLCBjYWxsZWQg4oCcUWl4aXPi
+gJ0sIHdoaWNoCj4gbWFuYWdlcyBzZXZlcmFsIGNyaXRpY2FsIHN5c3RlbSBmZWF0dXJlcywgaW5j
+bHVkaW5nOgo+IOKAoiBSZXNldCBzZXF1ZW5jaW5nCj4g4oCiIFBvd2VyIHN1cHBseSBjb25maWd1
+cmF0aW9uCj4g4oCiIEJvYXJkIGNvbmZpZ3VyYXRpb24KPiDigKIgaGFyZHdhcmUgY29uZmlndXJh
+dGlvbgo+IAo+IFRoZSBxaXhpcyByZWdpc3RlcnMgYXJlIGFjY2Vzc2libGUgb3ZlciBvbmUgb3Ig
+bW9yZSBzeXN0ZW0tc3BlY2lmaWMKPiBpbnRlcmZhY2VzLCB0eXBpY2FsbHkgSTJDLCBKVEFHIG9y
+IGFuIGVtYmVkZGVkIHByb2Nlc3Nvci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQYW5rYWogQmFuc2Fs
+IDxwYW5rYWouYmFuc2FsQG54cC5jb20+Cj4gLS0tCj4gCj4gTm90ZXM6Cj4gICAgIFY0Ogo+ICAg
+ICAtIE5vIENoYW5nZQo+ICAgICBWMzoKPiAgICAgLSBBZGRlZCBib2FyZG5hbWUgYmFzZWQgY29t
+cGF0aWJsZSBmaWVsZCBpbiBiaW5kaW5ncwo+ICAgICAtIEFkZGVkIGJpbmRpbmdzIGZvciBNTUlP
+IGJhc2VkIEZQR0EKPiAgICAgVjI6Cj4gICAgIC0gTm8gY2hhbmdlCj4gCj4gIC4uLi9iaW5kaW5n
+cy9zb2MvZnNsL3FpeGlzX2N0cmwudHh0ICAgICAgICAgIHwgNTMgKysrKysrKysrKysrKysrKysr
+Cj4gIDEgZmlsZSBjaGFuZ2VkLCA1MyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL3FpeGlzX2N0cmwudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcWl4aXNfY3RybC50eHQK
+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uNWQ1MTBkZjE0YmU4
+Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9zb2MvZnNsL3FpeGlzX2N0cmwudHh0Cj4gQEAgLTAsMCArMSw1MyBAQAo+ICsqIFFJWElTIEZQ
+R0EgYmxvY2sKPiArCj4gK2FuIEZQR0EtYmFzZWQgc3lzdGVtIGNvbnRyb2xsZXIsIGNhbGxlZCDi
+gJxRaXhpc+KAnSwgd2hpY2gKPiArbWFuYWdlcyBzZXZlcmFsIGNyaXRpY2FsIHN5c3RlbSBmZWF0
+dXJlcywgaW5jbHVkaW5nOgo+ICvigKIgQ29uZmlndXJhdGlvbiBzd2l0Y2ggbW9uaXRvcmluZwo+
+ICvigKIgUG93ZXIgb24vb2ZmIHNlcXVlbmNpbmcKPiAr4oCiIFJlc2V0IHNlcXVlbmNpbmcKPiAr
+4oCiIFBvd2VyIHN1cHBseSBjb25maWd1cmF0aW9uCj4gK+KAoiBCb2FyZCBjb25maWd1cmF0aW9u
+Cj4gK+KAoiBoYXJkd2FyZSBjb25maWd1cmF0aW9uCj4gK+KAoiBCYWNrZ3JvdW5kIHBvd2VyIGRh
+dGEgY29sbGVjdGlvbiAoRENNKQo+ICvigKIgRmF1bHQgbW9uaXRvcmluZwo+ICvigKIgUkNXIGJ5
+cGFzcyBTUkFNIChyZXBsYWNlIGZsYXNoIFJDVyB3aXRoIGludGVybmFsIFJDVykgKE5PUiBvbmx5
+KQo+ICvigKIgRGVkaWNhdGVkIGZ1bmN0aW9uYWwgdmFsaWRhdGlvbiBibG9ja3MgKFBPU3QvSVJT
+LCB0cmlnZ2VyZWQgZXZlbnQsIGFuZCBzbyBvbikKPiAr4oCiIEkyQyBtYXN0ZXIgZm9yIHJlbW90
+ZSBib2FyZCBjb250cm9sIGV2ZW4gd2l0aCBubyBEVVQgYXZhaWxhYmxlCj4gKwo+ICtUaGUgcWl4
+aXMgcmVnaXN0ZXJzIGFyZSBhY2Nlc3NpYmxlIG92ZXIgb25lIG9yIG1vcmUgc3lzdGVtLXNwZWNp
+ZmljIGludGVyZmFjZXMsCj4gK3R5cGljYWxseSBJMkMsIEpUQUcgb3IgYW4gZW1iZWRkZWQgcHJv
+Y2Vzc29yLgo+ICsKPiArRlBHQSBjb25uZWN0ZWQgdG8gSTJDOgo+ICtSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgo+ICsKPiArIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlIGEgYm9hcmQtc3BlY2lmaWMgc3Ry
+aW5nIGZvbGxvd2VkIGJ5IGEgc3RyaW5nCj4gKyAgIGluZGljYXRpbmcgdGhlIHR5cGUgb2YgRlBH
+QS4gIEV4YW1wbGU6Cj4gKwkiZnNsLDxib2FyZD4tZnBnYSIsICJmc2wsZnBnYS1xaXhpcy1pMmMi
+CgpZb3UgZG9uJ3QgcmVhbGx5IG5lZWQgdGhlICctaTJjJyBwYXJ0IGJlY2F1c2UgaXQgd2lsbCBv
+bmx5IGdldCBib3VuZCB0byAKYW4gaTJjIGJhc2VkIGRyaXZlciB3aGVuIGEgY2hpbGQgb2YgYW4g
+aTJjIGNvbnRyb2xsZXIuCgo+ICsgLSByZWcgOiBpMmMgYWRkcmVzcyBvZiB0aGUgcWl4aXMgZGV2
+aWNlLgo+ICsKPiArRXhhbXBsZSAoTFgyMTYwQS1RRFMpOgo+ICsJLyogVGhlIEZQR0Egbm9kZSAq
+Lwo+ICsgICAgICAgIGZwZ2FANjYgewo+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGx4MjE2MGFxZHMt
+ZnBnYSIsICJmc2wsZnBnYS1xaXhpcy1pMmMiOwo+ICsJCXJlZyA9IDwweDY2PjsKCj4gKwkJI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47CgpZb3UgZG9uJ3QgbmVl
+ZCB0aGlzIHVubGVzcyB5b3UgaGF2ZSBjaGlsZCBub2RlcyB3aXRoICdyZWcnLgoKPiArCX0KPiAr
+Cj4gKyogRnJlZXNjYWxlIG9uLWJvYXJkIEZQR0EKPiArCj4gK1RoaXMgaXMgdGhlIG1lbW9yeS1t
+YXBwZWQgcmVnaXN0ZXJzIGZvciBvbiBib2FyZCBGUEdBLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVy
+dGllczoKPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgYSBib2FyZC1zcGVjaWZpYyBzdHJpbmcg
+Zm9sbG93ZWQgYnkgYSBzdHJpbmcKPiArICBpbmRpY2F0aW5nIHRoZSB0eXBlIG9mIEZQR0EuICBF
+eGFtcGxlOgo+ICsJImZzbCw8Ym9hcmQ+LWZwZ2EiLCAiZnNsLGZwZ2EtcWl4aXMiCj4gKy0gcmVn
+OiBzaG91bGQgY29udGFpbiB0aGUgYWRkcmVzcyBhbmQgdGhlIGxlbmd0aCBvZiB0aGUgRlBHQSBy
+ZWdpc3RlciBzZXQuCj4gKwo+ICtFeGFtcGxlIChMUzIwODBBLVJEQik6Cj4gKwo+ICsgICAgICAg
+IGNwbGRAMywwIHsKPiArICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMjA4MGFy
+ZGItZnBnYSIsICJmc2wsZnBnYS1xaXhpcyI7Cj4gKyAgICAgICAgICAgICAgICByZWcgPSA8MHgz
+IDAgMHgxMDAwMD47Cj4gKyAgICAgICAgfTsKPiArCj4gLS0gCj4gMi4xNy4xCj4gCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
