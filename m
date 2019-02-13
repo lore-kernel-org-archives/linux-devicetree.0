@@ -1,160 +1,160 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 05/10] mfd: max77650: new core mfd driver
-Date: Wed, 13 Feb 2019 09:53:30 +0000
-Message-ID: <20190213095330.GF1863@dell>
-References: <CAMRc=MderQf20_8aG4-otBkCv60FSNSSqV3NVALPkFL-MqmJbg@mail.gmail.com>
- <20190212095457.GA20638@dell>
- <CAMRc=MdyT7nMJ7dUTf6M3PvRdynaCurb_TftMyA4eCwzpR9fVA@mail.gmail.com>
- <20190212101835.GB20638@dell>
- <CAMRc=MfYeVbvY6O03xq4eLN9TVpAKWCAXPk0eP5LSBCU7VU9fA@mail.gmail.com>
- <20190212111403.GC20638@dell>
- <CAMpxmJWXOb1HW4QiEn8gMp3Nh05ahE0CMLXkac+hEKRjtGxTHQ@mail.gmail.com>
- <20190212132016.GA4781@dell>
- <20190213092553.GE1863@dell>
- <CAMRc=MeTMq_GWzQB6LBvts1csMftj=On5sB22jsJZzQzONxbNg@mail.gmail.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH] of: reserved_mem: disable kmemleak scan on removed memory blocks
+Date: Wed, 13 Feb 2019 17:56:36 +0800
+Message-ID: <CANMq1KDU=rTbwBdej+E0=RaWGQCOJrtKo_0W6kc=EdomNrKzog@mail.gmail.com>
+References: <1541747389-28544-1-git-send-email-prpatel@nvidia.com>
+ <CAL_JsqKOH0SQRXuRW5Y5dmWeUTSxhf2Nmn_0uNLeKXFPRc549Q@mail.gmail.com> <39d4161b-bcc0-0f1c-e7a3-5ad552fae724@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MeTMq_GWzQB6LBvts1csMftj=On5sB22jsJZzQzONxbNg@mail.gmail.com>
+In-Reply-To: <39d4161b-bcc0-0f1c-e7a3-5ad552fae724@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+To: Prateek Patel <prpatel@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, matt@codeblueprint.co.uk, Catalin Marinas <catalin.marinas@arm.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-tegra@vger.kernel.org, talho@nvidia.com, Stephen Warren <swarren@nvidia.com>, vdumpa@nvidia.com, snikam@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Feb 2019, Bartosz Golaszewski wrote:
-
-> śr., 13 lut 2019 o 10:25 Lee Jones <lee.jones@linaro.org> napisał(a):
+On Tue, Jan 22, 2019 at 4:46 PM Prateek Patel <prpatel@nvidia.com> wrote:
+>
+>
+> On 11/10/2018 2:58 AM, Rob Herring wrote:
+> > On Fri, Nov 9, 2018 at 1:09 AM Prateek Patel <prpatel@nvidia.com> wrote=
+:
+> >> From: Sri Krishna chowdary <schowdary@nvidia.com>
+> >>
+> >> Memory reserved with "nomap" DT property in of_reserved_mem.c
+> >> removes the memory block. The removed memory blocks don't have
+> >> VA to PA mapping created in kernel page table. Kmemleak scan on
+> >> removed memory blocks is causing page faults and leading to
+> >> kernel panic. So, Disable kmemleak scan on the removed memory
+> >> blocks.
+> >>
+> >> Following is the observed crash log:
+> >> [  154.846370] Unable to handle kernel paging request at virtual addre=
+ss ffffffc070a00000
+> >> <1>[  154.846576] Mem abort info:
+> >> <1>[  154.846635]   Exception class =3D DABT (current EL), IL =3D 32 b=
+its
+> >> <1>[  154.846737]   SET =3D 0, FnV =3D 0
+> >> <1>[  154.846796]   EA =3D 0, S1PTW =3D 0
+> >> <1>[  154.846859] Data abort info:
+> >> <1>[  154.846913]   ISV =3D 0, ISS =3D 0x00000006
+> >> <1>[  154.846983]   CM =3D 0, WnR =3D 0
+> >> <1>[  154.847053] swapper pgtable: 4k pages, 39-bit VAs, pgd =3D fffff=
+f8009df7000
+> >> <1>[  154.847228] [ffffffc070a00000] *pgd=3D000000087fff5803, *pud=3D0=
+00000087fff5803, *pmd=3D0000000000000000
+> >> <0>[  154.847408] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+> >> <4>[  154.847511] Modules linked in: nvs_led_test nvs_bmi160 nvs_cm321=
+8 nvs_bh1730fvc nvi_bmpX80 nvi_ak89xx nvi_mpu cdc_acm uas lr388k7_ts imx268=
+ imx318 imx204 imx274 imx185 lc898212 ov23850 ov10823 ov9281 ov5693 tc35884=
+0 pca9570 nvs snd_soc_tegra_machine_driver_mobile lp855x_bl spidev input_cf=
+boost pwm_tegra tegra_cryptodev tegra_se_nvhost tegra_se_elp tegra_se ghash=
+_ce sha2_ce sha1_ce aes_ce_ccm cryptd nvgpu cpufreq_userspace snd_soc_tegra=
+186_alt_dspk snd_soc_tegra186_alt_asrc snd_soc_tegra186_alt_arad snd_soc_te=
+gra210_alt_ope snd_soc_tegra210_alt_mvc snd_soc_tegra210_alt_dmic snd_soc_t=
+egra210_alt_amx snd_soc_tegra210_alt_adx snd_soc_tegra210_alt_afc snd_soc_t=
+egra210_alt_mixer snd_soc_tegra210_alt_i2s snd_soc_tegra210_alt_sfc snd_soc=
+_tegra210_alt_adsp snd_soc_tegra210_alt_admaif snd_soc_tegra210_alt_xbar
+> >> <4>[  154.882606]  snd_soc_tegra_alt_utils snd_hda_tegra
+> >> <4>[  154.888133] CPU: 2 PID: 8079 Comm: sh Not tainted 4.14.53-tegra-=
+05132-g9c33465 #2
+> >> <4>[  154.895983] Hardware name: e3360_1099 (DT)
+> >> <4>[  154.900447] task: ffffffc7d62dda00 task.stack: ffffff800e2b0000
+> >> <4>[  154.906502] PC is at scan_block+0x7c/0x148
+> >> <4>[  154.911234] LR is at scan_block+0x78/0x148
+> >> <4>[  154.915689] pc : [<ffffff8008271724>] lr : [<ffffff8008271720>] =
+pstate: 804000c9
+> >> <4>[  154.923290] sp : ffffff800e2b3b80
+> >> <4>[  154.927228] x29: ffffff800e2b3b80 x28: ffffffc7d62dda00
+> >> <4>[  154.932999] x27: ffffff8009aaa000 x26: ffffffc070c00000
+> >> <4>[  154.938769] x25: 00000000000000c0 x24: ffffff8009d90608
+> >> <4>[  154.944287] x23: ffffffc7dc6c6000 x22: ffffff8009d90000
+> >> <4>[  154.950320] x21: ffffff8009aeb320 x20: ffffffc070a00ff9
+> >> <4>[  154.955919] x19: ffffffc070a00000 x18: 00000000bec4c3f2
+> >> <4>[  154.961438] x17: 0000002224777924 x16: ffffff80080bb0e0
+> >> <4>[  154.967124] x15: 0000000000000000 x14: 0000000000000f75
+> >> <4>[  154.973069] x13: 000fffffffffffff x12: ffffffbf1e9f4240
+> >> <4>[  154.978670] x11: 0000000000000040 x10: 0000000000000ad0
+> >> <4>[  154.984107] x9 : ffffff800e2b3ab0 x8 : ffffffc7d62de530
+> >> <4>[  154.989958] x7 : 0000000780000000 x6 : 0000000000000018
+> >> <4>[  154.995645] x5 : 0000000000000000 x4 : 0000000000000000
+> >> <4>[  155.001245] x3 : ffffff8009aaa000 x2 : 00000047f6712000
+> >> <4>[  155.006846] x1 : ffffffc7d1ae6900 x0 : 0000000000000000
+> >>
+> >> Signed-off-by: Sri Krishna chowdary <schowdary@nvidia.com>
+> >> Signed-off-by: Prateek <prpatel@nvidia.com>
+> >> ---
+> >>   drivers/of/of_reserved_mem.c | 5 ++++-
+> >>   1 file changed, 4 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem=
+.c
+> >> index 1977ee0..ac8f377 100644
+> >> --- a/drivers/of/of_reserved_mem.c
+> >> +++ b/drivers/of/of_reserved_mem.c
+> >> @@ -21,6 +21,7 @@
+> >>   #include <linux/sort.h>
+> >>   #include <linux/slab.h>
+> >>   #include <linux/memblock.h>
+> >> +#include <linux/kmemleak.h>
+> >>
+> >>   #define MAX_RESERVED_REGIONS   32
+> >>   static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+> >> @@ -50,8 +51,10 @@ int __init __weak early_init_dt_alloc_reserved_memo=
+ry_arch(phys_addr_t size,
+> >>          }
+> >>
+> >>          *res_base =3D base;
+> >> -       if (nomap)
+> >> +       if (nomap) {
+> >> +               kmemleak_no_scan(__va(base));
+> >>                  return memblock_remove(base, size);
+> > I'm curious how I can't find any other similar example in the kernel.
+> > Please Cc some kmemleak folks.
 > >
-> > On Tue, 12 Feb 2019, Lee Jones wrote:
+> > Perhaps we should be using memblock_mark_nomap() for nomap areas?
 > >
-> > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> > >
-> > > > wt., 12 lut 2019 o 12:14 Lee Jones <lee.jones@linaro.org> napisał(a):
-> > > > >
-> > > > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> > > > >
-> > > > > > wt., 12 lut 2019 o 11:18 Lee Jones <lee.jones@linaro.org> napisał(a):
-> > > > > > >
-> > > > > > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> > > > > > >
-> > > > > > > > wt., 12 lut 2019 o 10:55 Lee Jones <lee.jones@linaro.org> napisał(a):
-> > > > > > > > >
-> > > > > > > > >  * The declaration of a superfluous struct
-> > > > > > > > >  * 100 lines of additional/avoidable code
-> > > > > > > > >  * Hacky hoop jumping trying to fudge VIRQs into resources
-> > > > > > > > >  * Resources were designed for HWIRQs (unless a domain is present)
-> > > > > > > > >  * Loads of additional/avoidable CPU cycles setting all this up
-> > > > > > > >
-> > > > > > > > While the above may be right, this one is negligible and you know it. :)
-> > > > > > >
-> > > > > > > You have nested for() loops.  You *are* wasting lots of cycles.
-> > > > > > >
-> > > > > > > > > Need I go on? :)
-> > > > > > > > >
-> > > > > > > > > Surely the fact that you are using both sides of an API
-> > > > > > > > > (devm_regmap_init_i2c and regmap_irq_get_*) in the same driver, must
-> > > > > > > > > set some alarm bells ringing?
-> > > > > > > > >
-> > > > > > > > > This whole HWIRQ setting, VIRQ getting, resource hacking is a mess.
-> > > > > > > > >
-> > > > > > > > > And for what?  To avoid passing IRQ data to a child driver?
-> > > > > > > >
-> > > > > > > > What do you propose? Should I go back to the approach in v1 and pass
-> > > > > > > > the regmap_irq_chip_data to child drivers?
-> > > > > > >
-> > > > > > > I'm saying you should remove all of this hackery and pass IRQs as they
-> > > > > > > are supposed to be passed (like everyone else does).
-> > > > > >
-> > > > > > I'm not sure what you mean by "like everyone else does" - different
-> > > > > > mfd drivers seem to be doing different things. Is a simple struct
-> > > > > > containing virtual irq numbers passed to sub-drivers fine?
-> > > > >
-> > > > > How do you plan on deriving the VIRQs to place into the struct?
-> > > >
-> > > > Exampe:
-> > > >
-> > > > struct max77650_gpio_pdata {
-> > > >     int gpi_irq;
-> > > > };
-> > > >
-> > > > In MFD driver:
-> > > >
-> > > > struct max77650_gpio_pdata *gpio_data = devm_kmalloc(dev, sizeof(*gpio_data));
-> > > >
-> > > > gpio_data->gpi_irq = regmap_irq_get_virq(irqchip_data, GPI_NUM);
-> > > >
-> > > > gpio_cell.platform_data = gpio_data;
-> > > >
-> > > > In GPIO driver:
-> > > >
-> > > > struct max77650_gpio_pdata *gpio_data = pdev->dev.platform_data;
-> > > >
-> > > > int irq = gpio_data->gpi_irq;
-> > >
-> > > Definitely not.  What you're trying to do is a hack.
-> > >
-> > > If you're using Regmap to handle your IRQs, then you should use Regmap
-> > > in the client to pull them out.  Setting them via Regmap, then pulling
-> > > them out again in the *same driver*, only to store them in platform
-> > > data to be passed to a child device is bonkers.
-> > >
-> > > *Either* use the MFD provided platform-data helpers *or* pass and
-> > > handle them via the Regmap APIs, *not* both.
-> >
-> > Right, a plan has been formed.
-> >
-> > Hopefully this works and you can avoid all this dancing around.
-> >
-> > Firstly, you need to make a small change to:
-> >
-> >   drivers/base/regmap/regmap-irq.c
-> >
-> > Add the following function:
-> >
-> >   struct irq_domain *regmap_irq_get_domain(struct regmap *map)
-> 
-> We already do have such function and a lot of mfd drivers actually use it.
+> > Rob
+>
+> Sorry for this late reply.
+>
+> Yes, memblock_mark_nomap() can be used here but if I understand
+> correctly, memblock_mark_nomap() is used to indicate marked parts of
+> memory should not be covered by the kernel direct mapping and
+> memblock_remove() here is doing that by removing a given memory from the
+> "memblock.memory" list to prevent the memory from CPU accessing by the
+> linear address. I am not 100% sure what will be the side effects of
+> using memblock_mark_nomap(). Adding folks to help me here on
+> MEMBLOCK_NOMAP and kmemleak.
 
-Even better.
+I have no idea about your question: memblock_mark_nomap seems
+reasonable though, but I think this is orthogonal to this patch, whose
+main purpose is to add kmemleak_no_scan?
 
-> > As you can see, it will return the IRQ Domain for the chip.
-> >
-> > You can then pass this IRQ domain to mfd_add_devices() and it will do
-> > the HWIRQ => VIRQ mapping for you on the fly.  Meaning that you can
-> > remove all the nastiness in max77650_setup_irqs() and have the Input
-> > device use the standard (e.g. platform_get_irq()) APIs.
-> >
-> > How does that Sound?
-> 
-> This does sound better! Why didn't you lead with that in the first place?
+In any case, I tested both the original patch, and the hunk below on a
+different platform (with some no-map reserved_memory as well), and
+they fix the issue.
 
-I'm not even going to dignify that stupid question with a response.
+Tested-by: Nicolas Boichat <drinkcat@chromium.org>
 
-> It's a pity it's not documented, I had to look at the code to find out
-> irq resources would get translated in mfd_add_devices() if a domain is
-> present.
-
-Where is it likely to be documented?  MFD is pretty simple and seldom
-needs explanation.  A 3 second look at the API you're trying to use
-(instead of blind copy & paste) would have told you that it's possible
-to take an IRQ domain as an argument.
-
-It's only the craziness in this patch which forced me to look into how
-Regmap handles IRQs and come up with a subsequent solution which fits
-your use-case.
-
-> In that case - I really don't see a reason to create a superfluous
-> structure to only hold the main regmap - we can very well get it from
-> the parent device in sub-drivers as I do now.
-
-The whole point of this solution is that you don't need to pass
-anything non-standard (i.e. not provided by the current APIs) to the
-child device.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> I checked and verified with following and I didn't find any errors on my
+> local setup:
+>
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index 1977ee0..f77cde0 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -50,8 +50,10 @@ int __init __weak
+> early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+>          }
+>
+>          *res_base =3D base;
+> -       if (nomap)
+> -               return memblock_remove(base, size);
+> +       if (nomap) {
+> +               kmemleak_no_scan(__va(base));
+> +               return memblock_mark_nomap(base, size);
+> +       }
+>          return 0;
+>   }
