@@ -1,36 +1,118 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 1/4] drivers/perf: imx_ddr: Add ddr performance counter
- support
-Date: Wed, 13 Feb 2019 00:03:18 -0200
-Message-ID: <CAOMZO5Ad-T5tB=n6AhMG-f3Lp36gqHBVDs+NZiqWvL4VdVgEQw@mail.gmail.com>
-References: <1550005119-25750-1-git-send-email-Frank.Li@nxp.com>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC PATCH V0 1/7] [media] dt-bindings: mt8183: Add binding for
+ DIP shared memory
+Date: Wed, 13 Feb 2019 12:41:00 +0900
+Message-ID: <CAAFQd5AuvvgGO3t2bUk345QM6zSWo5LSq-j-=H_-qNchWKPPWg@mail.gmail.com>
+References: <1549020091-42064-1-git-send-email-frederic.chen@mediatek.com>
+ <1549020091-42064-2-git-send-email-frederic.chen@mediatek.com>
+ <20190209155907.rbgwbdablndcesid@valkosipuli.retiisi.org.uk>
+ <20190209181705.GB4505@pendragon.ideasonboard.com>
+ <1549964242.27207.11.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550005119-25750-1-git-send-email-Frank.Li@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Li <frank.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1549964242.27207.11.camel@mtksdccf07>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= <christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, =?UTF-8?B?SG9sbWVzIENoaW91ICjpgrHmjLop?= <holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 6:58 PM Frank Li <frank.li@nxp.com> wrote:
-
-> +static int ddr_perf_remove(struct platform_device *pdev)
-> +{
-> +       struct ddr_pmu *pmu = platform_get_drvdata(pdev);
-> +
-> +       cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
-> +       perf_pmu_unregister(&pmu->pmu);
-> +       kfree(pmu);
-
-Since you allocated pmu via devm_kzalloc(), there is no need to call
-kfree() here.
+T24gVHVlLCBGZWIgMTIsIDIwMTkgYXQgNjozNyBQTSBGcmVkZXJpYyBDaGVuCjxmcmVkZXJpYy5j
+aGVuQG1lZGlhdGVrLmNvbT4gd3JvdGU6Cj4KPiBEZWFyIExhdXJlbnQgYW5kIFNha2FyaSwKPgo+
+IEkgYXBwcmVjaWF0ZSB5b3VyIG1lc3NhZ2VzLgo+Cj4gT24gU2F0LCAyMDE5LTAyLTA5IGF0IDIw
+OjE3ICswMjAwLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4gT24gU2F0LCBGZWIgMDksIDIw
+MTkgYXQgMDU6NTk6MDdQTSArMDIwMCwgU2FrYXJpIEFpbHVzIHdyb3RlOgo+ID4gPiBIaSBGcmVk
+ZXJpYywKPiA+ID4KPiA+ID4gQ291bGQgeW91IGNjIHRoZSBkZXZpY2V0cmVlIGxpc3QsIHBsZWFz
+ZT8KPiA+ID4KPiA+ID4gT24gRnJpLCBGZWIgMDEsIDIwMTkgYXQgMDc6MjE6MjVQTSArMDgwMCwg
+RnJlZGVyaWMgQ2hlbiB3cm90ZToKPiA+ID4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIGJpbmRpbmcg
+Zm9yIGRlc2NyaWJpbmcgdGhlIHNoYXJlZCBtZW1vcnkKPiA+ID4gPiB1c2VkIHRvIGV4Y2hhbmdl
+IGNvbmZpZ3VyYXRpb24gYW5kIHR1bmluZyBkYXRhIGJldHdlZW4gdGhlCj4gPiA+ID4gY28tcHJv
+Y2Vzc29yIGFuZCBEaWdpdGFsIEltYWdlIFByb2Nlc3NpbmcgKERJUCkgdW5pdCBvZiB0aGUKPiA+
+ID4gPiBjYW1lcmEgSVNQIHN5c3RlbSBvbiBNZWRpYXRlayBTb0NzLgo+ID4gPiA+Cj4gPiA+ID4g
+U2lnbmVkLW9mZi1ieTogRnJlZGVyaWMgQ2hlbiA8ZnJlZGVyaWMuY2hlbkBtZWRpYXRlay5jb20+
+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIC4uLi9tZWRpYXRlayxyZXNlcnZlLW1lbW9yeS1kaXBfc21l
+bS50eHQgICAgICAgICAgIHwgNDUgKysrKysrKysrKysrKysrKysrKysrKwo+ID4gPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS9tZWRpYXRl
+ayxyZXNlcnZlLW1lbW9yeS1kaXBfc21lbS50eHQKPiA+ID4gPgo+ID4gPiA+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L21lZGlh
+dGVrLHJlc2VydmUtbWVtb3J5LWRpcF9zbWVtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkvbWVkaWF0ZWsscmVzZXJ2ZS1tZW1vcnktZGlwX3Nt
+ZW0udHh0Cj4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+ID4gPiBpbmRleCAwMDAwMDAw
+Li4wZGVkNDc4Cj4gPiA+ID4gLS0tIC9kZXYvbnVsbAo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkvbWVkaWF0ZWsscmVzZXJ2ZS1t
+ZW1vcnktZGlwX3NtZW0udHh0Cj4gPiA+ID4gQEAgLTAsMCArMSw0NSBAQAo+ID4gPiA+ICtNZWRp
+YXRlayBESVAgU2hhcmVkIE1lbW9yeSBiaW5kaW5nCj4gPiA+ID4gKwo+ID4gPiA+ICtUaGlzIGJp
+bmRpbmcgZGVzY3JpYmVzIHRoZSBzaGFyZWQgbWVtb3J5LCB3aGljaCBzZXJ2ZXMgdGhlIHB1cnBv
+c2Ugb2YKPiA+ID4gPiArZGVzY3JpYmluZyB0aGUgc2hhcmVkIG1lbW9yeSByZWdpb24gdXNlZCB0
+byBleGNoYW5nZSBkYXRhIGJldHdlZW4gRGlnaXRhbAo+ID4gPiA+ICtJbWFnZSBQcm9jZXNzaW5n
+IChESVApIGFuZCBjby1wcm9jZXNzb3IgaW4gTWVkaWF0ZWsgU29Dcy4KPiA+ID4gPiArCj4gPiA+
+ID4gK1RoZSBjby1wcm9jZXNzb3IgZG9lc24ndCBoYXZlIHRoZSBpb21tdSBzbyB3ZSBuZWVkIHRv
+IHVzZSB0aGUgcGh5c2ljYWwKPiA+ID4gPiArYWRkcmVzcyB0byBhY2Nlc3MgdGhlIHNoYXJlZCBi
+dWZmZXIgaW4gdGhlIGZpcm13YXJlLgo+ID4gPiA+ICsKPiA+ID4gPiArVGhlIERpZ2l0YWwgSW1h
+Z2UgUHJvY2Vzc2luZyAoRElQKSBjYW4gYWNjZXNzIG1lbW9yeSB0aHJvdWdoIG10ODE4MyBJT01N
+VSBzbwo+ID4gPiA+ICtpdCBjYW4gdXNlIGRtYSBhZGRyZXNzIHRvIGFjY2VzcyB0aGUgbWVtb3J5
+IHJlZ2lvbi4KPiA+ID4gPiArKFNlZSBpb21tdS9tZWRpYXRlayxpb21tdS50eHQgZm9yIHRoZSBk
+ZXRhaWxlZCBkZXNjcmlwdGlvbiBvZiBNZWRpYXRlayBJT01NVSkKPiA+ID4KPiA+ID4gV2hhdCBr
+aW5kIG9mIHB1cnBvc2UgaXMgdGhlIG1lbW9yeSB1c2VkIGZvcj8gQnVmZmVycyBjb250YWluaW5n
+IHZpZGVvIGRhdGEsCj4gPiA+IG9yIHNvbWV0aGluZyBlbHNlPyBDb3VsZCB0aGUgYnVmZmVyIG9i
+amVjdHMgYmUgbWFwcGVkIG9uIHRoZSBkZXZpY2VzCj4gPiA+IGJhc2VkIG9uIHRoZSBuZWVkIGlu
+c3RlYWQ/Cj4KPiBUaGUgbWVtb3J5IGJ1ZmZlcnMgY29udGFpbiBjYW1lcmEgM0EgdHVuaW5nIGRh
+dGEsIHdoaWNoIGFyZSB1c2VkIGJ5IHRoZQo+IGNvLXByb2Nlc3NvciBhbmQgRElQIElQLiBBYm91
+dCBtYXBwaW5nIHRoZSBidWZmZXIgYmFzZWQgb24gdGhlIG5lZWQKPiBpbnN0ZWFkLCBJ4oCZbSBu
+b3Qgc3VyZSBJIHVuZGVyc3RhbmQgdGhpcyBwb2ludC4gRG8geW91IG1lYW4gdGhhdAo+IGFsbG9j
+YXRpbmcgYW5kIG1hcHBpbmcgdGhlIG1lbW9yeSBkeW5hbWljYWxseT8KPgo+ID4KPiA+IEFuZCBj
+b3VsZCBDTUEgYmUgdXNlZCB3aGVuIHBoeXNpY2FsbHkgY29udGlndW91cyBtZW1vcnkgaXMgbmVl
+ZGVkID8KPgo+IERJUCBkcml2ZXIgZG9lcyBub3QgdXNlIENNQSBub3csIGJlY2F1c2UgdGhlIGZp
+cnN0IHZlcnNpb24gd2lsbCBiZSB1c2VkCj4gYnkgQ3JPUyBidXQgQ3JPUyB3b27igJl0IGVuYWJs
+ZSBDTUEuCj4KClRoYW5rcyBGcmVkZXJpYyBmb3IgcmVwbHlpbmcuIExldCBtZSBmdXJ0aGVyIGNs
+YXJpZnkgd2hhdCdzIHRoZSBwcm9ibGVtIGhlcmUuCgpUaGUgY28tcHJvY2Vzc29yIGlzIGJlaGlu
+ZCBhIHNpbXBsZSBNUFUgKE1lbW9yeSBQcm90ZWN0aW9uIFVuaXQpLAp3aGljaCBkb2VzIG5vdCBo
+YXZlIGFueSBtYXBwaW5nIGNhcGFiaWxpdGllcywgYnV0IGNhbiBvbmx5IGFsbG93IG9yCmRlbnkg
+YWNjZXNzIHRvIHBhcnRpY3VsYXIgcGFydHMgb2YgdGhlIHBoeXNpY2FsIGFkZHJlc3Mgc3BhY2Uu
+IFRoYXQKbWVhbnMgdGhhdCB3ZSBoYXZlIHRvIGVpdGhlciBidWlsZCBzb21lIHNjYXR0ZXIgZ2F0
+aGVyIGNhcGFiaWxpdHkKaW5zaWRlIG9mIHRoZSBmaXJtd2FyZSBvciBqdXN0IGRvIHdpdGggY29u
+dGlndW91cyBhbGxvY2F0aW9uLgoKVGhlcmUgaXMgYWxzbyBhIHNlY3VyaXR5IGFzcGVjdCBoZXJl
+LiBUaGUgTVBVIGNhbiBiZSBhY2Nlc3NlZCBmcm9tCmJvdGggdGhlIGNvLXByb2Nlc3NvciBhbmQg
+Q1BVLCBidXQgaXQgaGFzIGEgbG9ja2Rvd24gbW9kZSwgd2hpY2ggbWFrZXMKaXQgcmVhZCBvbmx5
+IHVudGlsIHRoZSBTb0MgaXMgcmVzZXQuIElmIHdlIGFsbG9jYXRlIHRoZSBtZW1vcnkKZHluYW1p
+Y2FsbHksIHdlIG5lZWQgdG8ga2VlcCB0aGUgTVBVIHVubG9ja2VkLCB3aGljaCBhdXRvbWF0aWNh
+bGx5CmdyYW50cyB0aGUgZmlybXdhcmUgYWNjZXNzIHRvIGFsbCB0aGUgYWRkcmVzcyBzcGFjZS4K
+CkZvciBzZWN1cml0eSByZWFzb25zIHdlIGRlY2lkZWQgdG8gZ28gd2l0aCBwcmVhbGxvY2F0ZWQg
+bWVtb3J5IHBvb2wsCndoaWNoIGxldHMgdXMgcHJlLXByb2dyYW0gdGhlIE1QVSBhbmQgbG9jayBp
+dCBkb3duLgoKQmVzdCByZWdhcmRzLApUb21hc3oKCj4gPgo+ID4gPiA+ICsKPiA+ID4gPiArCj4g
+PiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+ID4gKwo+ID4gPiA+ICstIGNvbXBhdGli
+bGU6IG11c3QgYmUgIm1lZGlhdGVrLHJlc2VydmUtbWVtb3J5LWRpcF9zbWVtIgo+ID4gPiA+ICsK
+PiA+ID4gPiArLSByZWc6IHJlcXVpcmVkIGZvciBzdGF0aWMgYWxsb2NhdGlvbiAoc2VlIHJlc2Vy
+dmVkLW1lbW9yeS50eHQgZm9yCj4gPiA+ID4gKyAgdGhlIGRldGFpbGVkIHVzYWdlKQo+ID4gPiA+
+ICsKPiA+ID4gPiArLSBhbGxvYy1yYW5nZTogcmVxdWlyZWQgZm9yIGR5bmFtaWMgYWxsb2NhdGlv
+bi4gVGhlIHJhbmdlIG11c3QKPiA+ID4gPiArICBiZXR3ZWVuIDB4MDAwMDA0MDAgYW5kIDB4MTAw
+MDAwMDAwIGR1ZSB0byB0aGUgY28tcHJvY2Vzc2VyJ3MKPiA+ID4gPiArICBhZGRyZXNzaW5nIGxp
+bWl0YXRpb24KPiA+ID4gPiArCj4gPiA+ID4gKy0gc2l6ZTogcmVxdWlyZWQgZm9yIGR5bmFtaWMg
+YWxsb2NhdGlvbi4gVGhlIHVuaXQgaXMgYnl0ZXMuCj4gPiA+ID4gKyAgSWYgeW91IHdhbnQgdG8g
+ZW5hYmxlIHRoZSBmdWxsIGZlYXR1cmUgb2YgRGlnaXRhbCBQcm9jZXNzaW5nIFVuaXQsCj4gPiA+
+ID4gKyAgeW91IG5lZWQgMjAgTUIgYXQgbGVhc3QuCj4gPiA+ID4gKwo+ID4gPiA+ICsKPiA+ID4g
+PiArRXhhbXBsZToKPiA+ID4gPiArCj4gPiA+ID4gK1RoZSBmb2xsb3dpbmcgZXhhbXBsZSBzaG93
+cyB0aGUgRElQIHNoYXJlZCBtZW1vcnkgc2V0dXAgZm9yIE1UODE4My4KPiA+ID4gPiArCj4gPiA+
+ID4gKyByZXNlcnZlZC1tZW1vcnkgewo+ID4gPiA+ICsgICAgICAgICAjYWRkcmVzcy1jZWxscyA9
+IDwyPjsKPiA+ID4gPiArICAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47Cj4gPiA+ID4gKyAgICAg
+ICAgIHJhbmdlczsKPiA+ID4gPiArICAgICAgICAgcmVzZXJ2ZS1tZW1vcnktaXNwX3NtZW0gewo+
+ID4gPiA+ICsgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWsscmVzZXJ2ZS1t
+ZW1vcnktZGlwX3NtZW0iOwo+ID4gPiA+ICsgICAgICAgICAgICAgICAgIHNpemUgPSA8MCAweDE0
+MDAwMDA+Owo+ID4gPiA+ICsgICAgICAgICAgICAgICAgIGFsaWdubWVudCA9IDwwIDB4MTAwMD47
+Cj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgYWxsb2MtcmFuZ2VzID0gPDAgMHg0MDAwMDAwMCAw
+IDB4NTAwMDAwMDA+Owo+ID4gPiA+ICsgICAgICAgICB9Owo+ID4gPiA+ICsgfTsKPiA+Cj4KPiBT
+aW5jZXJlbHksCj4KPiBGcmVkZXJpYyBDaGVuCj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KTGludXgtbWVkaWF0ZWsgbWFpbGluZyBsaXN0CkxpbnV4
+LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1tZWRpYXRlawo=
