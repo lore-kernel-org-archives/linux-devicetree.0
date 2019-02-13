@@ -1,7 +1,7 @@
 From: Akash Gajjar <Akash_Gajjar@mentor.com>
-Subject: [PATCH 2/4] arm64: dts: rockchip: rockpro64 dts remove unused node
-Date: Wed, 13 Feb 2019 22:36:38 +0530
-Message-ID: <20190213170651.3210-3-Akash_Gajjar@mentor.com>
+Subject: [PATCH 3/4] arm64: dts: rockchip: rockpro64 dts rename LED labels and default trigger
+Date: Wed, 13 Feb 2019 22:36:39 +0530
+Message-ID: <20190213170651.3210-4-Akash_Gajjar@mentor.com>
 References: <20190213170651.3210-1-Akash_Gajjar@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,60 +9,58 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190213170651.3210-1-Akash_Gajjar@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Oskari Lemmela <oskari@lemmela.net>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Levin Du <djw@t-chip.com.cn>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Oskari Lemmela <oskari@lemmela.net>, Levin Du <djw@t-chip.com.cn>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-lcd panel pinmux and vcc1v8_s3 regulator is redundant and has a no impact, so
-removing it.
+rename white and red LEDs with status and heartbeat respectively.
+replace red LED default state off with default-trigger heartbeat.
 
 Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
 ---
- .../boot/dts/rockchip/rk3399-rockpro64.dts    | 19 +------------------
- 1 file changed, 1 insertion(+), 18 deletions(-)
+ .../arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index 49e83ba64045..c9a2b26d7cad 100644
+index c9a2b26d7cad..dab53d2eb676 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -83,17 +83,6 @@
- 		regulator-max-microvolt = <12000000>;
- 	};
+@@ -43,17 +43,17 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&work_led_gpio>, <&diy_led_gpio>;
++		pinctrl-0 = <&status_led_gpio>, <&heartbeat_led_gpio>;
  
--	/* switched by pmic_sleep */
--	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
--		compatible = "regulator-fixed";
--		regulator-name = "vcc1v8_s3";
--		regulator-always-on;
--		regulator-boot-on;
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--		vin-supply = <&vcc_1v8>;
--	};
--
- 	vcc3v3_pcie: vcc3v3-pcie-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -522,12 +511,6 @@
+-		work-led {
+-			label = "work";
++		status-led {
++			label = "rockpro64:white:status";
+ 			default-state = "on";
+ 			gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		diy-led {
+-			label = "diy";
+-			default-state = "off";
++		heartbeat-led {
++			label = "rockpor64:red:heartbeat";
++			linux,default-trigger = "heartbeat";
+ 			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
  		};
  	};
+@@ -502,11 +502,11 @@
+ 	};
  
--	lcd-panel {
--		lcd_panel_reset: lcd-panel-reset {
--			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
--		};
--	};
--
- 	pcie {
- 		pcie_pwr_en: pcie-pwr-en {
- 			rockchip,pins = <1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
-@@ -576,7 +559,7 @@
- };
+ 	leds {
+-		work_led_gpio: work_led-gpio {
++		status_led_gpio: status-led-gpio {
+ 			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
  
- &saradc {
--	vref-supply = <&vcca1v8_s3>;
-+	vref-supply = <&vcca_1v8>;
- 	status = "okay";
- };
- 
+-		diy_led_gpio: diy_led-gpio {
++		heartbeat_led_gpio: heartbeat-led-gpio {
+ 			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
 -- 
 2.17.1
