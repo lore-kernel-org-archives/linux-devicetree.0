@@ -1,75 +1,63 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 1/4] dt-binding: irq: imx-irqsteer: use irq number
- instead of group number
-Date: Wed, 13 Feb 2019 16:27:00 -0600
-Message-ID: <20190213222700.GA31052@bogus>
+Subject: Re: [PATCH V3 2/4] dt-bindings: irq: imx-irqsteer: add multi output
+ interrupts support
+Date: Wed, 13 Feb 2019 16:29:52 -0600
+Message-ID: <20190213222952.GA4814@bogus>
 References: <1548921464-28917-1-git-send-email-aisheng.dong@nxp.com>
- <1548921464-28917-2-git-send-email-aisheng.dong@nxp.com>
- <8db40cd7-7695-0267-c626-26ebe086b2b8@arm.com>
+ <1548921464-28917-3-git-send-email-aisheng.dong@nxp.com>
+ <23f5f2f0-79b8-b9f7-9f46-972966563596@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8db40cd7-7695-0267-c626-26ebe086b2b8@arm.com>
+In-Reply-To: <23f5f2f0-79b8-b9f7-9f46-972966563596@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Marc Zyngier <marc.zyngier@arm.com>
 Cc: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 03:35:40PM +0000, Marc Zyngier wrote:
+On Mon, Feb 11, 2019 at 03:34:23PM +0000, Marc Zyngier wrote:
 > On 31/01/2019 08:03, Aisheng Dong wrote:
-> > Not all 64 interrupts may be used in one group. e.g. most irqsteer in
-> > imx8qxp and imx8qm subsystems supports only 32 interrupts.
-> > 
-> > As the IP integration parameters are Channel number and interrupts number,
-> > let's use fsl,irqs-num to represents how many interrupts supported
-> > by this irqsteer channel.
+> > One irqsteer channel can support up to 8 output interrupts.
 > > 
 > > Cc: Marc Zyngier <marc.zyngier@arm.com>
 > > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
 > > Cc: Shawn Guo <shawnguo@kernel.org>
 > > Cc: devicetree@vger.kernel.org
-> > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 > > ---
 > > ChangeLog:
-> >  v1->v2:
-> >   * change property name fsl,irqs-per-chan to fsl,num-irqs.
+> > v2->v3:
+> >  * fix a typo
+> > v1->v2:
+> >  * remove one unnecessary note.
 > > ---
-> >  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt       | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt        | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
 > > 
 > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> > index 45790ce..6d0a41b 100644
+> > index 6d0a41b..582991c 100644
 > > --- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
 > > +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> > @@ -16,8 +16,8 @@ Required properties:
-> >  - #interrupt-cells: Specifies the number of cells needed to encode an
-> >    interrupt source. The value must be 1.
-> >  - fsl,channel: The output channel that all input IRQs should be steered into.
-> > -- fsl,irq-groups: Number of IRQ groups managed by this controller instance.
-> > -  Each group manages 64 input interrupts.
-> > +- fsl,num-irqs: Number of input interrupts of this channel.
-> > +  Should be multiple of 32 input interrupts and up to 512 interrupts.
-> >  
-> >  Example:
-> >  
-> > @@ -28,7 +28,7 @@ Example:
-> >  		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
-> >  		clock-names = "ipg";
-> >  		fsl,channel = <0>;
-> > -		fsl,irq-groups = <1>;
-> > +		fsl,num-irqs = <64>;
-> >  		interrupt-controller;
-> >  		#interrupt-cells = <1>;
-> >  	};
+> > @@ -6,8 +6,9 @@ Required properties:
+> >  	- "fsl,imx8m-irqsteer"
+> >  	- "fsl,imx-irqsteer"
+> >  - reg: Physical base address and size of registers.
+> > -- interrupts: Should contain the parent interrupt line used to multiplex the
+> > -  input interrupts.
+> > +- interrupts: Should contain the up to 8 parent interrupt lines used to
+> > +  multiplex the input interrupts. They should be specified sequentially
+> > +  from output 0 to 7.
+> >  - clocks: Should contain one clock for entry in clock-names
+> >    see Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >  - clock-names:
 > > 
 > 
-> This is a change to an existing binding, so I'd need the Ack from a DT
-> maintainer before I can queue this.
+> I'd like an Ack from a DT person, as this is a change to an existing
+> binding.
 
-The DT maintainer doesn't care as long as there's an explanation that 
-says it's breaking compatibility and why it is okay to do so. This one 
-doesn't do that.
+It's fine as long as old kernels ignore extra entries and new kernels 
+still support a single entry. Otherwise, it needs a explanation.
 
 Rob
