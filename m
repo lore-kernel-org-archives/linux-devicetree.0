@@ -1,25 +1,28 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: remove unused definition for stm32mp1
-Date: Wed, 13 Feb 2019 13:02:03 -0800
-Message-ID: <155009172384.115909.11842128085275839689@swboyd.mtv.corp.google.com>
-References: <20190213100714.15622-1-gabriel.fernandez@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/8] clk: samsung: add needed IDs for DMC clocks in
+ Exynos5420
+Date: Wed, 13 Feb 2019 15:07:46 -0600
+Message-ID: <20190213210746.GA2989@bogus>
+References: <1549039612-28905-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190201164718eucas1p1bca3a199d60e109e1da654d8afff2a47@eucas1p1.samsung.com>
+ <1549039612-28905-2-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190213100714.15622-1-gabriel.fernandez@st.com>
+Content-Disposition: inline
+In-Reply-To: <1549039612-28905-2-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting gabriel.fernandez@st.com (2019-02-13 02:07:14)
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->=20
-> LTDC_K and ETHMAC_K are not used.
+On Fri, Feb 01, 2019 at 05:46:45PM +0100, Lukasz Luba wrote:
+> Define new IDs for clocks used by Dynamic Memory Controller in
+> Exynos5422 SoC.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  include/dt-bindings/clock/exynos5420.h | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 
-Ok, but do they exist? It's part of the binding so I don't see how it
-hurts anything to describe what is there.
-
-Also, please send patches to the linux-clk mailing list so patch
-tracking can work.
+Acked-by: Rob Herring <robh@kernel.org>
