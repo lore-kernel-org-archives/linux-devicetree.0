@@ -1,7 +1,8 @@
 From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 04/11] memory: atmel-ebi: add sam9x60 EBI support
-Date: Wed, 13 Feb 2019 08:59:55 +0000
-Message-ID: <20190213085930.31578-5-tudor.ambarus@microchip.com>
+Subject: [PATCH 08/11] memory: atmel-ebi: move NUM_CS definition inside
+ atmel-ebi
+Date: Wed, 13 Feb 2019 09:00:08 +0000
+Message-ID: <20190213085930.31578-9-tudor.ambarus@microchip.com>
 References: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,54 +17,61 @@ List-Id: devicetree@vger.kernel.org
 
 From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-The sam9x60 board defines the CCFG_EBICSA register under SFR,
-and not as a MATRIX register, as previous boards do.
+The total number of cs lines is described by the EBI controller
+and not by the matrix. Move the definition for the number of cs
+inside ebi driver. Drop "matrix" from its name.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- drivers/memory/atmel-ebi.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/memory/atmel-ebi.c              | 6 ++++--
+ include/linux/mfd/syscon/atmel-matrix.h | 1 -
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/memory/atmel-ebi.c b/drivers/memory/atmel-ebi.c
-index b45914cfa212..0322df9dc249 100644
+index 0322df9dc249..8515196c2b03 100644
 --- a/drivers/memory/atmel-ebi.c
 +++ b/drivers/memory/atmel-ebi.c
-@@ -17,6 +17,7 @@
- #include <linux/init.h>
- #include <linux/of_device.h>
+@@ -19,6 +19,8 @@
  #include <linux/regmap.h>
-+#include <soc/at91/atmel-sfr.h>
+ #include <soc/at91/atmel-sfr.h>
 =20
++#define AT91_EBI_NUM_CS		8
++
  struct atmel_ebi_dev_config {
  	int cs;
-@@ -440,6 +441,15 @@ static const struct atmel_ebi_caps sama5d3_ebi_caps =
-=3D {
- 	.apply_config =3D sama5_ebi_apply_config,
- };
+ 	struct atmel_smc_cs_conf smcconf;
+@@ -314,7 +316,7 @@ static int atmel_ebi_dev_setup(struct atmel_ebi *ebi, s=
+truct device_node *np,
+ 		if (ret)
+ 			return ret;
 =20
-+static const struct atmel_ebi_caps sam9x60_ebi_caps =3D {
-+	.available_cs =3D 0x3f,
-+	.ebi_csa_offs =3D AT91_SFR_CCFG_EBICSA,
-+	.regmap_name =3D "microchip,sfr",
-+	.get_config =3D at91sam9_ebi_get_config,
-+	.xlate_config =3D atmel_ebi_xslate_smc_config,
-+	.apply_config =3D at91sam9_ebi_apply_config,
-+};
-+
- static const struct of_device_id atmel_ebi_id_table[] =3D {
- 	{
- 		.compatible =3D "atmel,at91sam9260-ebi",
-@@ -473,6 +483,10 @@ static const struct of_device_id atmel_ebi_id_table[] =
-=3D {
- 		.compatible =3D "atmel,sama5d3-ebi",
- 		.data =3D &sama5d3_ebi_caps,
- 	},
-+	{
-+		.compatible =3D "microchip,sam9x60-ebi",
-+		.data =3D &sam9x60_ebi_caps,
-+	},
- 	{ /* sentinel */ }
- };
+-		if (cs >=3D AT91_MATRIX_EBI_NUM_CS ||
++		if (cs >=3D AT91_EBI_NUM_CS ||
+ 		    !(ebi->caps->available_cs & BIT(cs))) {
+ 			dev_err(dev, "invalid reg property in %pOF\n", np);
+ 			return -EINVAL;
+@@ -344,7 +346,7 @@ static int atmel_ebi_dev_setup(struct atmel_ebi *ebi, s=
+truct device_node *np,
+ 		apply =3D true;
+=20
+ 	i =3D 0;
+-	for_each_set_bit(cs, &cslines, AT91_MATRIX_EBI_NUM_CS) {
++	for_each_set_bit(cs, &cslines, AT91_EBI_NUM_CS) {
+ 		ebid->configs[i].cs =3D cs;
+=20
+ 		if (apply) {
+diff --git a/include/linux/mfd/syscon/atmel-matrix.h b/include/linux/mfd/sy=
+scon/atmel-matrix.h
+index 8293c3e2a82a..1e2cd118e4e3 100644
+--- a/include/linux/mfd/syscon/atmel-matrix.h
++++ b/include/linux/mfd/syscon/atmel-matrix.h
+@@ -110,7 +110,6 @@
+ #define AT91_MATRIX_DDR_IOSR			BIT(18)
+ #define AT91_MATRIX_NFD0_SELECT			BIT(24)
+ #define AT91_MATRIX_DDR_MP_EN			BIT(25)
+-#define AT91_MATRIX_EBI_NUM_CS			8
+=20
+ #define AT91_MATRIX_USBPUCR_PUON		BIT(30)
 =20
 --=20
 2.9.5
