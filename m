@@ -1,113 +1,154 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/2] pwm: hibvt: Add hi3559v100 support
-Date: Wed, 13 Feb 2019 13:30:02 +0100
-Message-ID: <20190213123002.GC647@ulmo>
-References: <20190212094927.5900-1-m.othacehe@gmail.com>
- <20190212094927.5900-2-m.othacehe@gmail.com>
- <20190212142850.iwgi4n6v6oep4oin@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kVXhAStRUZ/+rrGn"
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: sprd: Add the SPI irq function for the SPI DMA mode" to the spi tree
+Date: Wed, 13 Feb 2019 12:31:56 +0000 (GMT)
+Message-ID: <20190213123156.8AC751128159@debutante.sirena.org.uk>
+References: <11e55b5f9b0d83649a5b81c7e3fdb667cd3ddc5b.1550043082.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212142850.iwgi4n6v6oep4oin@pengutronix.de>
+In-Reply-To: <11e55b5f9b0d83649a5b81c7e3fdb667cd3ddc5b.1550043082.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mathieu Othacehe <m.othacehe@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Baolin Wang <baolin.wang@linaro.org>, Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@unisoc.combaolin.wang@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---kVXhAStRUZ/+rrGn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   spi: sprd: Add the SPI irq function for the SPI DMA mode
 
-On Tue, Feb 12, 2019 at 03:28:50PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Tue, Feb 12, 2019 at 10:49:27AM +0100, Mathieu Othacehe wrote:
-> > Add support for hi3559v100-shub-pwm and hisilicon,hi3559v100-pwm
-> > platforms. They require a special quirk: pwm has to be enabled again
-> > to force duty_cycle refresh.
-> >=20
-> > Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
-> > ---
-> >  drivers/pwm/pwm-hibvt.c | 26 +++++++++++++++++++++++---
-> >  1 file changed, 23 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/pwm/pwm-hibvt.c b/drivers/pwm/pwm-hibvt.c
-> > index 27c107e78d59..bf33aa24433c 100644
-> > --- a/drivers/pwm/pwm-hibvt.c
-> > +++ b/drivers/pwm/pwm-hibvt.c
-> > @@ -49,6 +49,7 @@ struct hibvt_pwm_chip {
-> >  	struct clk *clk;
-> >  	void __iomem *base;
-> >  	struct reset_control *rstc;
-> > +	bool quirk_force_enable;
-> >  };
-> > =20
-> >  struct hibvt_pwm_soc {
-> > @@ -56,6 +57,7 @@ struct hibvt_pwm_soc {
-> >  };
-> > =20
-> >  static const struct hibvt_pwm_soc pwm_soc[2] =3D {
-> > +	{ .num_pwms =3D 2 },
-> >  	{ .num_pwms =3D 4 },
-> >  	{ .num_pwms =3D 8 },
->=20
-> The members of this struct are used as of-data (in struct
-> of_device_id::data below). When looking at the usage:
->=20
-> 	{ .compatible =3D "hisilicon,hi3516cv300-pwm", .data =3D &pwm_soc[1] },
-> 	{ .compatible =3D "hisilicon,hi3519v100-pwm", .data =3D &pwm_soc[2] },
-> 	{ .compatible =3D "hisilicon,hi3559v100-shub-pwm", .data =3D &pwm_soc[2]=
- },
-> 	{ .compatible =3D "hisilicon,hi3559v100-pwm", .data =3D &pwm_soc[0] },
->=20
-> this isn't exactly easy to understand. I would prefer to do it as
-> follows:
->=20
-> 	static const struct hibvt_pwm_soc hi3516cv300_soc_info =3D {
-> 		.num_pwms =3D 2,
-> 	};
-> 	...
->=20
-> 	static const struct of_device_id hibvt_pwm_of_match[] =3D {
-> 		{ .compatible =3D "hisilicon,hi3516cv300-pwm", .data =3D &hi3516cv300_s=
-oc_info },
-> 		...
-> 	};
->=20
-> Then you could also add a member to hibvt_pwm_soc to signal if that
-> force_enable quirk is necessary and would not need to use
-> of_device_is_compatible() to determine this. The result is that you have
-> a description of all relevant differences in a single place.
->=20
-> @Thierry: Also this is yet another driver instance where a num-pwms
-> property would simplify the driver because up to before this patch this
-> was the only difference between the different variants.
+has been applied to the spi tree at
 
-We don't need the num-pwms in device tree if it can be derived from the
-compatible string.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-Thierry
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---kVXhAStRUZ/+rrGn
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxkDcgACgkQ3SOs138+
-s6FumA//UXRbb4IpLIkxjoOLtrXebSP9Ky4IE3i9sgcBnKi9gOF5vYGNTzD+phlk
-nqyuxFjBZjQ0hEF7FFJYnpk2TdWta7YgNBn94L/rYP9mPWUmAiO2cZjgKrUsqcU5
-bMYYARdcP02FHPQdtyB/mM6cCcnrVCDx1UOI23U+C23dm3T/SwPEqlIFnKiayOeQ
-0HzXG7Gkbj6sSPG+NL+4pZVkFAMdNiAhyVwWWgCFKm09vLkbuzD4w+YMHnA/LAea
-SGUAlgkw2L79ytpDDiEVcqkfccBCrOQktqozG5v2EDjbyDb+aG7aAje0wfqaVKWu
-HeJW+I3TaPeM3I+k8uJ7akUXQAXBRPrjpfYzfavIdIg8j1/YmhZrLGs3tsY6ZDCF
-7SLqCrHa8QHQje+auoHJ1nN22WiHj2Nfrm6QEIIXuXz2FcwAXpvxecAAaheAUSDr
-R/1kHB5Bcf/XmMPv5ixbInHCg5rmDw3l9s+gCRmLzO9oPkFlL7/BZFqYBw7j5Tk5
-w/HVP8MUO2FjouJBbnCopozSyhKsmluI3t8lGxQIEDPU2x9poIB6wlwSuf3+nIUY
-83W4KDT9M9weSSUBv4EZyq7Y4H7m0QtLcVt46a0w2jk7SFqiOT38eOaR6N6ihaaA
-LUThRR9KasBfWMuoz6nvLrczNpkrFNiFh3j4b5TkKWuJYLEnST0=
-=2fgf
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---kVXhAStRUZ/+rrGn--
+Thanks,
+Mark
+
+>From de082d866cced9e172ca909b084f91df631ae7fe Mon Sep 17 00:00:00 2001
+From: Lanqing Liu <lanqing.liu@unisoc.com>
+Date: Wed, 13 Feb 2019 15:36:09 +0800
+Subject: [PATCH] spi: sprd: Add the SPI irq function for the SPI DMA mode
+
+The SPI irq event will use to complete the SPI work in the SPI DMA mode,
+so this patch is a preparation for the following DMA mode support.
+
+Moreover the SPI interrupt can be fired when removing the SPI controller,
+so we should make sure the SPI controller has stopped the queue in
+remove function before freeing the SPI irq.
+
+Signed-off-by: Lanqing Liu <lanqing.liu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-sprd.c | 51 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/drivers/spi/spi-sprd.c b/drivers/spi/spi-sprd.c
+index 8daa24eec624..06578412b04d 100644
+--- a/drivers/spi/spi-sprd.c
++++ b/drivers/spi/spi-sprd.c
+@@ -133,6 +133,7 @@ struct sprd_spi {
+ 	void __iomem *base;
+ 	struct device *dev;
+ 	struct clk *clk;
++	int irq;
+ 	u32 src_clk;
+ 	u32 hw_mode;
+ 	u32 trans_len;
+@@ -141,6 +142,7 @@ struct sprd_spi {
+ 	u32 hw_speed_hz;
+ 	u32 len;
+ 	int status;
++	struct completion xfer_completion;
+ 	const void *tx_buf;
+ 	void *rx_buf;
+ 	int (*read_bufs)(struct sprd_spi *ss, u32 len);
+@@ -573,6 +575,48 @@ static int sprd_spi_transfer_one(struct spi_controller *sctlr,
+ 	return ret;
+ }
+ 
++static irqreturn_t sprd_spi_handle_irq(int irq, void *data)
++{
++	struct sprd_spi *ss = (struct sprd_spi *)data;
++	u32 val = readl_relaxed(ss->base + SPRD_SPI_INT_MASK_STS);
++
++	if (val & SPRD_SPI_MASK_TX_END) {
++		writel_relaxed(SPRD_SPI_TX_END_CLR, ss->base + SPRD_SPI_INT_CLR);
++		if (!(ss->trans_mode & SPRD_SPI_RX_MODE))
++			complete(&ss->xfer_completion);
++
++		return IRQ_HANDLED;
++	}
++
++	if (val & SPRD_SPI_MASK_RX_END) {
++		writel_relaxed(SPRD_SPI_RX_END_CLR, ss->base + SPRD_SPI_INT_CLR);
++		complete(&ss->xfer_completion);
++
++		return IRQ_HANDLED;
++	}
++
++	return IRQ_NONE;
++}
++
++static int sprd_spi_irq_init(struct platform_device *pdev, struct sprd_spi *ss)
++{
++	int ret;
++
++	ss->irq = platform_get_irq(pdev, 0);
++	if (ss->irq < 0) {
++		dev_err(&pdev->dev, "failed to get irq resource\n");
++		return ss->irq;
++	}
++
++	ret = devm_request_irq(&pdev->dev, ss->irq, sprd_spi_handle_irq,
++				0, pdev->name, ss);
++	if (ret)
++		dev_err(&pdev->dev, "failed to request spi irq %d, ret = %d\n",
++			ss->irq, ret);
++
++	return ret;
++}
++
+ static int sprd_spi_clk_init(struct platform_device *pdev, struct sprd_spi *ss)
+ {
+ 	struct clk *clk_spi, *clk_parent;
+@@ -633,11 +677,16 @@ static int sprd_spi_probe(struct platform_device *pdev)
+ 	sctlr->max_speed_hz = min_t(u32, ss->src_clk >> 1,
+ 				    SPRD_SPI_MAX_SPEED_HZ);
+ 
++	init_completion(&ss->xfer_completion);
+ 	platform_set_drvdata(pdev, sctlr);
+ 	ret = sprd_spi_clk_init(pdev, ss);
+ 	if (ret)
+ 		goto free_controller;
+ 
++	ret = sprd_spi_irq_init(pdev, ss);
++	if (ret)
++		goto free_controller;
++
+ 	ret = clk_prepare_enable(ss->clk);
+ 	if (ret)
+ 		goto free_controller;
+@@ -688,6 +737,8 @@ static int sprd_spi_remove(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	spi_controller_suspend(sctlr);
++
+ 	clk_disable_unprepare(ss->clk);
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+-- 
+2.20.1
