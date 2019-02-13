@@ -1,35 +1,65 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH] dt-bindings: clock: remove unused definition for stm32mp1
-Date: Wed, 13 Feb 2019 11:07:14 +0100
-Message-ID: <20190213100714.15622-1-gabriel.fernandez@st.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [RESEND PATCH v2 0/2] clk: meson8b: fix typo "ABP" -> "APB"
+Date: Wed, 13 Feb 2019 10:00:47 +0100
+Message-ID: <de075384-8a64-b77f-6ae1-5fe174998d18@baylibre.com>
+References: <20190210222603.6404-1-martin.blumenstingl@googlemail.com>
+ <fc50a3a7f1efc8d2f6054a944848897ed8baf536.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <fc50a3a7f1efc8d2f6054a944848897ed8baf536.camel@baylibre.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: sboyd@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On 13/02/2019 09:40, Jerome Brunet wrote:
+> On Sun, 2019-02-10 at 23:26 +0100, Martin Blumenstingl wrote:
+>> It turns out that I'm not good at spelling "APB". Unfortunately an ABP
+>> (instead of APB) typo snug into two clocks in v5.0.
+>>
+>> Currently there are no users of that clock yet, so fix it now
+>> before it's too late (meaning before it's used by <something>).
+>>
+>> I decided to go the "normal" route where we can have separate
+>> branches for the dt-bindings and the drivers in the clk-meson
+>> repo. This means:
+>> - new (typo-free) clock #define
+>> - change the clock controller to use the new #define
+>> - (next development cycle) drop the old #define
+>>
+>> resend - changes since v2 at [1]:
+>> - include the device-tree maintainers / mailing list
+>>
+>> Changes since v1 at [0]:
+>> - split into a dt-bindings and clock controller driver patch
+>>
+>>
+>> [0] https://patchwork.kernel.org/cover/10742001/
+>> [1] https://patchwork.kernel.org/cover/10772199/
+>>
+>>
+>> Martin Blumenstingl (2):
+>>   dt-bindings: clock: meson8b: add APB clock definition
+>>   clk: meson: meson8b: fix the naming of the APB clocks
+>>
+>>  drivers/clk/meson/meson8b.c              | 26 ++++++++++++------------
+>>  drivers/clk/meson/meson8b.h              |  2 +-
+>>  include/dt-bindings/clock/meson8b-clkc.h |  1 +
+>>  3 files changed, 15 insertions(+), 14 deletions(-)
+>>
+> 
+> Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+> 
 
-LTDC_K and ETHMAC_K are not used.
-
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- include/dt-bindings/clock/stm32mp1-clks.h | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/include/dt-bindings/clock/stm32mp1-clks.h b/include/dt-bindings/clock/stm32mp1-clks.h
-index 90ec780bfc68..4cdaf135829c 100644
---- a/include/dt-bindings/clock/stm32mp1-clks.h
-+++ b/include/dt-bindings/clock/stm32mp1-clks.h
-@@ -248,7 +248,4 @@
- 
- #define STM32MP1_LAST_CLK 232
- 
--#define LTDC_K		LTDC_PX
--#define ETHMAC_K	ETHCK_K
--
- #endif /* _DT_BINDINGS_STM32MP1_CLKS_H_ */
--- 
-2.17.0
+Applied to next/drivers for Linux 5.1-rc1
