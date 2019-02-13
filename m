@@ -1,40 +1,48 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 06/12] dma-mapping: improve selection of
- dma_declare_coherent availability
-Date: Wed, 13 Feb 2019 19:24:35 +0100
-Message-ID: <20190213182435.GA19906@lst.de>
-References: <20190211133554.30055-1-hch@lst.de> <20190211133554.30055-7-hch@lst.de> <CAL_JsqL+LiJTF5kZz2hXGbQcH+D4U0jAQE376VSUVMQmdg=XFA@mail.gmail.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [RFC 1/5] clk: imx: imx8mq: Fix the rate propagation for arm pll
+Date: Wed, 13 Feb 2019 19:05:12 +0000
+Message-ID: <1550084693-9797-2-git-send-email-abel.vesa@nxp.com>
+References: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL+LiJTF5kZz2hXGbQcH+D4U0jAQE376VSUVMQmdg=XFA@mail.gmail.com>
+In-Reply-To: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Linux IOMMU <iommu@lists.linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, x86@kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mips@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-riscv@lists.infradead.org, SH-Linux <linux-sh@vger.kernel.org>, linux-xtensa@linux-xtensa.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>, Anson Huang <anson.huang@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 02:40:23PM -0600, Rob Herring wrote:
-> > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> > index 3607fd2810e4..f8c66a9472a4 100644
-> > --- a/drivers/of/Kconfig
-> > +++ b/drivers/of/Kconfig
-> > @@ -43,6 +43,7 @@ config OF_FLATTREE
-> >
-> >  config OF_EARLY_FLATTREE
-> >         bool
-> > +       select DMA_DECLARE_COHERENT
-> 
-> Is selecting DMA_DECLARE_COHERENT okay on UML? We run the unittests with UML.
+The arm pll bypass needs to propagate the rate upwards
+in order for the cpufreq to work.
 
-No, that will fail with undefined references to memunmap.
+Fixes: b80522040cd3f ("clk: imx: Add clock driver for i.MX8MQ CCM")
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ drivers/clk/imx/clk-imx8mq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I gues this needs to be
-
-	select DMA_DECLARE_COHERENT if HAS_DMA
-
-> Maybe we should just get rid of OF_RESERVED_MEM. If we support booting
-> from DT, then it should always be enabled anyways.
-
-Fine with me.  Do you want me to respin the series to just remove
-it?
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index 398ab0b..57499ed 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -340,7 +340,7 @@ static int imx8mq_clocks_probe(struct platform_device *=
+pdev)
+ 	clks[IMX8MQ_DRAM_PLL2_DIV] =3D imx_clk_divider("dram_pll2_div", "dram_pll=
+2", base + 0x68, 1, 6);
+=20
+ 	/* PLL bypass out */
+-	clks[IMX8MQ_ARM_PLL_BYPASS] =3D imx_clk_mux("arm_pll_bypass", base + 0x28=
+, 14, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels));
++	clks[IMX8MQ_ARM_PLL_BYPASS] =3D imx_clk_mux_flags("arm_pll_bypass", base =
++ 0x28, 14, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels), CLK_SE=
+T_RATE_PARENT);
+ 	clks[IMX8MQ_GPU_PLL_BYPASS] =3D imx_clk_mux("gpu_pll_bypass", base + 0x18=
+, 14, 1, gpu_pll_bypass_sels, ARRAY_SIZE(gpu_pll_bypass_sels));
+ 	clks[IMX8MQ_VPU_PLL_BYPASS] =3D imx_clk_mux("vpu_pll_bypass", base + 0x20=
+, 14, 1, vpu_pll_bypass_sels, ARRAY_SIZE(vpu_pll_bypass_sels));
+ 	clks[IMX8MQ_AUDIO_PLL1_BYPASS] =3D imx_clk_mux("audio_pll1_bypass", base =
++ 0x0, 14, 1, audio_pll1_bypass_sels, ARRAY_SIZE(audio_pll1_bypass_sels));
+--=20
+2.7.4
