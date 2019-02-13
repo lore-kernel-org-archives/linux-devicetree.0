@@ -1,7 +1,7 @@
 From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 06/11] dt-bindings: mtd: atmel-nand: add sam9x60 compatible
-Date: Wed, 13 Feb 2019 09:00:01 +0000
-Message-ID: <20190213085930.31578-7-tudor.ambarus@microchip.com>
+Subject: [PATCH 04/11] memory: atmel-ebi: add sam9x60 EBI support
+Date: Wed, 13 Feb 2019 08:59:55 +0000
+Message-ID: <20190213085930.31578-5-tudor.ambarus@microchip.com>
 References: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,25 +16,54 @@ List-Id: devicetree@vger.kernel.org
 
 From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Add compatibility string for the sam9x60 nand controller.
+The sam9x60 board defines the CCFG_EBICSA register under SFR,
+and not as a MATRIX register, as previous boards do.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- Documentation/devicetree/bindings/mtd/atmel-nand.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/memory/atmel-ebi.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documen=
-tation/devicetree/bindings/mtd/atmel-nand.txt
-index 9bb66e476672..68b51dc58816 100644
---- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-@@ -14,6 +14,7 @@ Required properties:
- 	"atmel,at91sam9261-nand-controller"
- 	"atmel,at91sam9g45-nand-controller"
- 	"atmel,sama5d3-nand-controller"
-+	"microchip,sam9x60-nand-controller"
- - ranges: empty ranges property to forward EBI ranges definitions.
- - #address-cells: should be set to 2.
- - #size-cells: should be set to 1.
+diff --git a/drivers/memory/atmel-ebi.c b/drivers/memory/atmel-ebi.c
+index b45914cfa212..0322df9dc249 100644
+--- a/drivers/memory/atmel-ebi.c
++++ b/drivers/memory/atmel-ebi.c
+@@ -17,6 +17,7 @@
+ #include <linux/init.h>
+ #include <linux/of_device.h>
+ #include <linux/regmap.h>
++#include <soc/at91/atmel-sfr.h>
+=20
+ struct atmel_ebi_dev_config {
+ 	int cs;
+@@ -440,6 +441,15 @@ static const struct atmel_ebi_caps sama5d3_ebi_caps =
+=3D {
+ 	.apply_config =3D sama5_ebi_apply_config,
+ };
+=20
++static const struct atmel_ebi_caps sam9x60_ebi_caps =3D {
++	.available_cs =3D 0x3f,
++	.ebi_csa_offs =3D AT91_SFR_CCFG_EBICSA,
++	.regmap_name =3D "microchip,sfr",
++	.get_config =3D at91sam9_ebi_get_config,
++	.xlate_config =3D atmel_ebi_xslate_smc_config,
++	.apply_config =3D at91sam9_ebi_apply_config,
++};
++
+ static const struct of_device_id atmel_ebi_id_table[] =3D {
+ 	{
+ 		.compatible =3D "atmel,at91sam9260-ebi",
+@@ -473,6 +483,10 @@ static const struct of_device_id atmel_ebi_id_table[] =
+=3D {
+ 		.compatible =3D "atmel,sama5d3-ebi",
+ 		.data =3D &sama5d3_ebi_caps,
+ 	},
++	{
++		.compatible =3D "microchip,sam9x60-ebi",
++		.data =3D &sam9x60_ebi_caps,
++	},
+ 	{ /* sentinel */ }
+ };
+=20
 --=20
 2.9.5
