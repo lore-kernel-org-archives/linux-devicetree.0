@@ -1,92 +1,58 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v1 3/3] regulator: bd718x7: Support SNVS low power
- state
-Date: Wed, 13 Feb 2019 09:38:27 +0200
-Message-ID: <20190213073827.GB12247@localhost.localdomain>
-References: <cover.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
- <06c2f2f730b07caeb1f2fb86be60c02b21d7bea9.1549980347.git.matti.vaittinen@fi.rohmeurope.com>
- <20190212160831.GF20635@sirena.org.uk>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Change Ethernet switch management
+ port
+Date: Wed, 13 Feb 2019 09:07:29 +0100
+Message-ID: <43f75739-b592-35d3-e711-13f05218133d@gmail.com>
+References: <20190213042600.27729-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212160831.GF20635@sirena.org.uk>
+In-Reply-To: <20190213042600.27729-1-f.fainelli@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, "maintainer:BROADCOM BCM5301X ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
-
-On Tue, Feb 12, 2019 at 04:08:31PM +0000, Mark Brown wrote:
-> On Tue, Feb 12, 2019 at 04:19:38PM +0200, Matti Vaittinen wrote:
-> > read ROHM BD71837 / BD71847 specific device tree bindings for
-> > controlling the PMIC shutdown/reset states and voltages for
-> > different HW states. The PMIC was designed to be used with NXP
-> > i.MX8 SoC and it supports SNVS low power state which seems to
-> > be typical for NXP i.MX SoCs. However, when SNVS is used we must
-> > not allow SW to control enabling/disabling those regulators which
-> > are crucial for system to boot as there is a HW limitation which
-> > causes SW controlled regulators to be kept shut down after SNVS
-> > reset.
-> > 
-> > Allow setting the SNVS to be used as reset target state and allow
-> > marking those regulators which are critical for boot.
+On 13.02.2019 05:25, Florian Fainelli wrote:
+> BCM5301X has 3 Ethernet controllers: GMAC0, 1, 2 which map to ports 5, 7
+> and 8 respectively of the internal switch. Future changes will turn on
+> management mode in the Ethernet switch driver (b53) which will require
+> us to use port 8.
 > 
-> The general idea seems fine but I'm wondering if we should use the
-> existing bindings and just prevent any change with fixed configurations
-> - that *should* just be a case of picking appropriate constraints I
-> think.  Why does this need completely new properties other than
-> preventing the user from shooting themselves in the foot?
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>   arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts | 11 ++++++++---
+>   1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+> index 3fced3b7f1a8..affa9cc7422d 100644
+> --- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+> +++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+> @@ -150,10 +150,15 @@
+>   			label = "wan";
+>   		};
+>   
+> -		port@5 {
+> -			reg = <5>;
+> +		port@8 {
+> +			reg = <8>;
+>   			label = "cpu";
+> -			ethernet = <&gmac0>;
+> +			ethernet = <&gmac2>;
+> +
+> +			fixed-link {
+> +				speed = <1000>;
+> +				full-duplex;
+> +			};
+>   		};
+>   	};
+>   };
 
-The BD71847 and BD71847 have 'HW state machine' in PMIC. It has READY,
-RUN, IDLE, SUSPEND, SNVS,.. states.
+I'm not exactly sure how Linux switch driver works, but from DT
+perspective I think we should rather have *hardware* described instead
+of a common Linux case.
 
-At RUN state, the enabling and disabling status can be either a
-predefined configuration - or controlled by SW. There is one bit for
-each regulator which can be used to switch the control to the SW.
-
-By default the BD718x7 driver turns this control bit so that all of the
-regulators are controlled by SW. This is done at driver probe, right
-after the regulators have been registered.
-
-Now when a reset occurs (SW reset or reset via power button press,
-external WDG, ...) the PMIC disables all power outputs no matter if they
-are controlled by SW or HW.
-
-Unfortunately there is this 'feature' in PMIC so that when PMIC starts
-up after reset, those regulators which were controlled by SW won't be
-powered again - no matter if they were enabled before reset. This
-happens only whn reset target state was SNVS state.
-
-So with current driver design, even if constrains prevented the
-regulator core from touching the regulators, the driver still changes
-the control to SW. So we need to parse some attribute in the BD718x7
-driver side. Besides, I did not spot a 'do not touch me' property from
-the bindings :)
-
-But after writing all this - I think you are correct. We do not need the
-rohm,regulator-crucial-for-boot. I guess we can check for the
-combination of:
-
-regulator-always-on and regulator-boot-on
-
-and interpret this as "rohm,regulator-crucial-for-boot".
-
-I just think I need to document that those flags are required
-for critical regulators if SNVS is used as reset target even if there
-should be no one touching those regulators.
-
-Thanks once again for the feedback Mark!
-
-Br,
-	Matti Vaittinen
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+If I'm right, we should rather have all 3 switch ports described (5, 7,
+8) and have Linux just use the one it needs.
