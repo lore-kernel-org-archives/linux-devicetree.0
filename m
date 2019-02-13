@@ -1,148 +1,127 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 05/11] mtd: rawnand: atmel: add generic name for EBICSA regmap
-Date: Wed, 13 Feb 2019 08:59:58 +0000
-Message-ID: <20190213085930.31578-6-tudor.ambarus@microchip.com>
-References: <20190213085930.31578-1-tudor.ambarus@microchip.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 00/23] drm/sun4i: Allwinner A64 MIPI-DSI support
+Date: Wed, 13 Feb 2019 10:03:08 +0100
+Message-ID: <20190213090308.dlcwgcrhg264k2cu@flea>
+References: <20190201154232.10505-1-jagan@amarulasolutions.com>
+ <CAMty3ZBspvP=qZEK9vaowVq4f5W3Qx2qHkwcuAnCOOjV29=Y_Q@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190213085930.31578-1-tudor.ambarus@microchip.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, dwmw2@infradead.org, computersforpeace@gmail.com, bbrezillon@kernel.org, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Tudor.Ambarus@microchip.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="v3n2rtb3eqrrumch"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUF2R7RQKGQEDRYB2PA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBspvP=qZEK9vaowVq4f5W3Qx2qHkwcuAnCOOjV29=Y_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-The sam9x60 board defines the CCFG_EBICSA register under SFR,
-and not as a MATRIX register, as previous boards do. Add a
-more generic name for the EBICSA regmap, as a prerequisite for
-sam9x60 nand controller support.
+--v3n2rtb3eqrrumch
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
----
- drivers/mtd/nand/raw/atmel/nand-controller.c | 28 +++++++++++++++++-------=
-----
- 1 file changed, 17 insertions(+), 11 deletions(-)
+On Tue, Feb 12, 2019 at 03:16:02PM +0530, Jagan Teki wrote:
+> On Fri, Feb 1, 2019 at 9:12 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> >
+> > Here is next version changes for Allwinner A64 MIPI-DSI support
+> >
+> > This series grouped the changes like previous version[1] with different
+> > sets to support three different panels types that can fit into the DSI
+> > controller.
+> >
+> > set:1, for 4-lane, burst mode support
+> > - patch 0001: 0009, DSI controller changes that support burst mode.
+> >
+> > set:2, for A64 DSI support
+> > - patch 0010: tcon dclk divider computation based on A64 BSP.
+> > - patch 0011: 0017, Allwinner A64 DSI controller changes.
+> >
+> > set:3, enable 4-lane burst mode panel:
+> > - patch 0018: Overlay patch that enable Feiyang FY07024DI26A30-D
+> >   burst mode panel on Pine64-LTS
+> >
+> > set:4, enable 4-lane video mode panel:
+> > - patch 0019: msg type MIPI_DSI_GENERIC_SHORT_WRITE_2_PARAM support
+> > - patch 0020: Overlay patch that enable Bananapi S070WV20-CT16 ICN6211
+> >   panel on Bananapi M64
+> >
+> > set:5, enable 2-lane video mode panel:
+> > - patch 0021, 0022: DSI hfp and hbp timings fixes
+> > - patch 0023: Enable Techstar TS8550B panel on Amarula A64-Relic
+> >
+> > Changes for v7:
+> > - moved vcc-dsi binding to required filed.
+> > - drop quotes on fallback dphy bindings.
+> > - drop min_rate clock pll-mipi patches.
+> > - introduce dclk divider computation as like A64 BSP.
+> > - add A64 DSI quark patches.
+> > - fixed A64 DSI pipeline.
+> > - add proper commit messages.
+> > - collect Merlijn Wajer Tested-by credits.
+> > Changes for v6:
+> > - dropped unneeded changes, patches
+> > - fixed all burst mode patches as per previous version comments
+> > - rebase on master
+> > - update proper commit message
+> > - dropped unneeded comments
+> > - order the patches that make review easy
+> > Changes for v5:
+> > - collect Rob, Acked-by
+> > - droped "Fix VBP size calculation" patch
+> > - updated vblk timing calculation.
+> > - droped techstar, bananapi dsi panel drivers which may require
+> >   bridge or other setup. it's under discussion.
+> > Changes for v4:
+> > - droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
+> >   nkm min, max rate patches
+> > - create two patches for "Add Allwinner A64 MIPI DSI support"
+> >   one for has_mod_clk quirk and other one for A64 support
+> > - use existing driver code construct for hblk computation
+> > - dropped "Increase hfp packet overhead" patch [2], though BSP added
+> >   this but we have no issues as of now.
+> >   (no issues on panel side w/o this change)
+> > - create separate function for vblk computation
+> > - enable vcc-dsi regulator in dsi_runtime_resume
+> > - collect Rob, Acked-by
+> > - update MAINTAINERS file for panel drivers
+> > - cleanup commit messages
+> > - fixed checkpatch warnings/errors
+> >
+> > [1] https://patchwork.kernel.org/cover/10779893/
+> >
+> > Any inputs?
+> > Jagan.
+> >
+> > Jagan Teki (23):
+> >   drm/sun4i: sun6i_mipi_dsi: Compute burst mode loop N1 instruction
+> >     delay
+> >   drm/sun4i: sun6i_mipi_dsi: Support instruction loop selection
+> >   drm/sun4i: sun6i_mipi_dsi: Setup burst mode timings
+> >   drm/sun4i: sun6i_mipi_dsi: Simplify drq to support all modes
+> >   drm/sun4i: tcon: Export get tcon0 routine
+> >   drm/sun4i: sun6i_mipi_dsi: Probe tcon0 during dsi_bind
+> >   drm/sun4i: sun6i_mipi_dsi: Setup burst mode
+> >   drm/sun4i: sun6i_mipi_dsi: Enable trail_inv and trail_fill controls
+> >   drm/sun4i: sun6i_mipi_dsi: Enable HBP, HSA_HSE for burst mode
+> 
+> Can you pick these burst changes which are generic to all SoCs. and
+> reset will send once we decide the tcon clock.
 
-diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nan=
-d/raw/atmel/nand-controller.c
-index 5781fcf6b76c..6aef98b7338a 100644
---- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-+++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-@@ -211,6 +211,7 @@ struct atmel_nand_controller_caps {
- 	bool legacy_of_bindings;
- 	u32 ale_offs;
- 	u32 cle_offs;
-+	const char *ebi_csa_regmap_name;
- 	const struct atmel_nand_controller_ops *ops;
- };
-=20
-@@ -233,7 +234,7 @@ to_nand_controller(struct nand_controller *ctl)
-=20
- struct atmel_smc_nand_controller {
- 	struct atmel_nand_controller base;
--	struct regmap *matrix;
-+	struct regmap *ebi_csa_regmap;
- 	unsigned int ebi_csa_offs;
- };
-=20
-@@ -1507,12 +1508,12 @@ static void atmel_smc_nand_init(struct atmel_nand_c=
-ontroller *nc,
- 	atmel_nand_init(nc, nand);
-=20
- 	smc_nc =3D to_smc_nand_controller(chip->controller);
--	if (!smc_nc->matrix)
-+	if (!smc_nc->ebi_csa_regmap)
- 		return;
-=20
- 	/* Attach the CS to the NAND Flash logic. */
- 	for (i =3D 0; i < nand->numcs; i++)
--		regmap_update_bits(smc_nc->matrix, smc_nc->ebi_csa_offs,
-+		regmap_update_bits(smc_nc->ebi_csa_regmap, smc_nc->ebi_csa_offs,
- 				   BIT(nand->cs[i].id), BIT(nand->cs[i].id));
- }
-=20
-@@ -1833,7 +1834,7 @@ static void atmel_nand_controller_cleanup(struct atme=
-l_nand_controller *nc)
- 	clk_put(nc->mck);
- }
-=20
--static const struct of_device_id atmel_matrix_of_ids[] =3D {
-+static const struct of_device_id atmel_ebi_csa_regmap_of_ids[] =3D {
- 	{
- 		.compatible =3D "atmel,at91sam9260-matrix",
- 		.data =3D (void *)AT91SAM9260_MATRIX_EBICSA,
-@@ -1982,25 +1983,26 @@ atmel_smc_nand_controller_init(struct atmel_smc_nan=
-d_controller *nc)
- 	struct device_node *np;
- 	int ret;
-=20
--	/* We do not retrieve the matrix syscon when parsing old DTs. */
-+	/* We do not retrieve the EBICSA regmap when parsing old DTs. */
- 	if (nc->base.caps->legacy_of_bindings)
- 		return 0;
-=20
--	np =3D of_parse_phandle(dev->parent->of_node, "atmel,matrix", 0);
-+	np =3D of_parse_phandle(dev->parent->of_node,
-+			      nc->base.caps->ebi_csa_regmap_name, 0);
- 	if (!np)
- 		return 0;
-=20
--	match =3D of_match_node(atmel_matrix_of_ids, np);
-+	match =3D of_match_node(atmel_ebi_csa_regmap_of_ids, np);
- 	if (!match) {
- 		of_node_put(np);
- 		return 0;
- 	}
-=20
--	nc->matrix =3D syscon_node_to_regmap(np);
-+	nc->ebi_csa_regmap =3D syscon_node_to_regmap(np);
- 	of_node_put(np);
--	if (IS_ERR(nc->matrix)) {
--		ret =3D PTR_ERR(nc->matrix);
--		dev_err(dev, "Could not get Matrix regmap (err =3D %d)\n", ret);
-+	if (IS_ERR(nc->ebi_csa_regmap)) {
-+		ret =3D PTR_ERR(nc->ebi_csa_regmap);
-+		dev_err(dev, "Could not get EBICSA regmap (err =3D %d)\n", ret);
- 		return ret;
- 	}
-=20
-@@ -2341,6 +2343,7 @@ static const struct atmel_nand_controller_ops at91rm9=
-200_nc_ops =3D {
- static const struct atmel_nand_controller_caps atmel_rm9200_nc_caps =3D {
- 	.ale_offs =3D BIT(21),
- 	.cle_offs =3D BIT(22),
-+	.ebi_csa_regmap_name =3D "atmel,matrix",
- 	.ops =3D &at91rm9200_nc_ops,
- };
-=20
-@@ -2355,12 +2358,14 @@ static const struct atmel_nand_controller_ops atmel=
-_smc_nc_ops =3D {
- static const struct atmel_nand_controller_caps atmel_sam9260_nc_caps =3D {
- 	.ale_offs =3D BIT(21),
- 	.cle_offs =3D BIT(22),
-+	.ebi_csa_regmap_name =3D "atmel,matrix",
- 	.ops =3D &atmel_smc_nc_ops,
- };
-=20
- static const struct atmel_nand_controller_caps atmel_sam9261_nc_caps =3D {
- 	.ale_offs =3D BIT(22),
- 	.cle_offs =3D BIT(21),
-+	.ebi_csa_regmap_name =3D "atmel,matrix",
- 	.ops =3D &atmel_smc_nc_ops,
- };
-=20
-@@ -2368,6 +2373,7 @@ static const struct atmel_nand_controller_caps atmel_=
-sam9g45_nc_caps =3D {
- 	.has_dma =3D true,
- 	.ale_offs =3D BIT(21),
- 	.cle_offs =3D BIT(22),
-+	.ebi_csa_regmap_name =3D "atmel,matrix",
- 	.ops =3D &atmel_smc_nc_ops,
- };
-=20
---=20
-2.9.5
+These patches don't implement what we discussed last week, and as I
+told you already, most of them really need some work on the commit log
+and their explanations.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--v3n2rtb3eqrrumch--
