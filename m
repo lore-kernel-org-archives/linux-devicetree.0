@@ -1,69 +1,117 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V2 2/2] clk: imx: scu: add cpu frequency scaling support
-Date: Wed, 13 Feb 2019 14:02:54 +0000
-Message-ID: <DB3PR0402MB39161D97A6D2B8DD0DD5D6ACF5660@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1550064410-28417-1-git-send-email-Anson.Huang@nxp.com>
-         <1550064410-28417-2-git-send-email-Anson.Huang@nxp.com>
- <59b181b77605f516b0e3a896ddce0224b4504b30.camel@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: liaoweixiong <liaoweixiong@allwinnertech.com>
+Subject: [RFC v8 0/5] pstore/block: new support logger for block devices
+Date: Wed, 13 Feb 2019 22:07:03 +0800
+Message-ID: <1550066828-18806-1-git-send-email-liaoweixiong@allwinnertech.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <59b181b77605f516b0e3a896ddce0224b4504b30.camel@nxp.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>"viresh.kumar@linaro.org" <vi>
+To: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, liaoweixiong <liaoweixiong@allwinnertech.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogTGVvbmFyZCBDcmVzdGV6DQo+IFNlbnQ6IDIwMTnlubQy5pyIMTPml6Ug
-MjE6NTMNCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogZGwt
-bGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFy
-ay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9u
-aXguZGU7DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOyBtdHVy
-cXVldHRlQGJheWxpYnJlLmNvbTsNCj4gc2JveWRAa2VybmVsLm9yZzsgQWlzaGVuZyBEb25nIDxh
-aXNoZW5nLmRvbmdAbnhwLmNvbT47IERhbmllbCBCYWx1dGENCj4gPGRhbmllbC5iYWx1dGFAbnhw
-LmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0N
-Cj4gY2xrQHZnZXIua2VybmVsLm9yZzsgdmlyZXNoLmt1bWFyQGxpbmFyby5vcmcNCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCBWMiAyLzJdIGNsazogaW14OiBzY3U6IGFkZCBjcHUgZnJlcXVlbmN5IHNj
-YWxpbmcgc3VwcG9ydA0KPiANCj4gT24gV2VkLCAyMDE5LTAyLTEzIGF0IDEzOjMyICswMDAwLCBB
-bnNvbiBIdWFuZyB3cm90ZToNCj4gPiBPbiBOWFAncyBpLk1YIFNvQ3Mgd2l0aCBzeXN0ZW0gY29u
-dHJvbGxlciBpbnNpZGUsIENQVSBmcmVxdWVuY3kNCj4gPiBzY2FsaW5nIGNhbiBPTkxZIGJlIGRv
-bmUgYnkgc3lzdGVtIGNvbnRyb2xsZXIgZmlybXdhcmUsIGFuZCBpdCBjYW4NCj4gPiBPTkxZIGJl
-IHJlcXVlc3RlZCBmcm9tIHNlY3VyZSBtb2RlLCBzbyBMaW51eCBrZXJuZWwgaGFzIHRvIGNhbGwg
-QVJNDQo+ID4gU01DIHRvIHRyYXAgdG8gQVJNLVRydXN0ZWQtRmlybXdhcmUgdG8gcmVxdWVzdCBz
-eXN0ZW0gY29udHJvbGxlcg0KPiA+IGZpcm13YXJlIHRvIGRvIENQVSBmcmVxdWVuY3kgc2NhbGlu
-Zy4NCj4gDQo+ID4gKyNpZmRlZiBDT05GSUdfQ1BVRlJFUV9EVA0KPiA+ICsjZGVmaW5lIElNWF9T
-SVBfQ1BVRlJFUQkJCTB4QzIwMDAwMDENCj4gPiArI2RlZmluZSBJTVhfU0lQX1NFVF9DUFVGUkVR
-CQkweDAwDQo+ID4gKw0KPiA+ICBzdGF0aWMgc3RydWN0IGlteF9zY19pcGMgKmNjbV9pcGNfaGFu
-ZGxlOw0KPiANCj4gV2l0aG91dCBDT05GSUdfQ1BVRlJFUV9EVCB0aGUgY2NtX2lwY19oYW5kbGUg
-d29uJ3QgYmUgZGVmaW5lZCBhbmQNCj4gYnVpbGQgd2lsbCBicmVhay4NCj4gDQo+IEJ1dCBpcyB0
-aGVyZSBhIGdvb2QgcmVhc29uIGZvciBpZmRlZj8gSW4gZ2VuZXJhbCBjbG9jayBmdW5jdGlvbiBh
-cmUgY29tcGlsZWQNCj4gZXZlbiBpZiBubyBkcml2ZXIgaXMgY2FsbGluZyB0aGVtLg0KDQpPb3Bz
-LCB0aGlzIGlzIG15IG1pc3Rha2UgdG8gcHV0IHRoZSBjY21faXBjX2hhbmRsZSBpbnNpZGUgdGhl
-IGlmZGVmLiBBZGRpbmcNCklmZGVmIGlzIGp1c3QgdG8gc2F2ZSBzb21lIGNvZGUgaWYgQ1BVRlJF
-UV9EVCBpcyBOT1QgZGVmaW5lZCwgYnV0IEkgY2FuIHJlbW92ZQ0KaXQgaW4gbmV4dCB2ZXJzaW9u
-Lg0KDQo+IA0KPiA+ICsjaWZkZWYgQ09ORklHX0NQVUZSRVFfRFQNCj4gPiArCS8qIENQVSBjbG9j
-ayBjYW4gT05MWSBiZSBkb25lIGJ5IFRGLUEgKi8NCj4gPiArCWlmIChjbGstPmNsa190eXBlID09
-IElNWF9TQ19QTV9DTEtfQ1BVKSB7DQo+ID4gKwkJc3RydWN0IGFybV9zbWNjY19yZXMgcmVzOw0K
-PiA+ICsJCXVuc2lnbmVkIGludCBjbHVzdGVyX2lkOw0KPiA+ICsJCWludCBpOw0KPiA+ICsNCj4g
-PiArCQlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShpbXhfc2NfY3B1ZnJlcV9kYXRhKTsgaSsr
-KSB7DQo+ID4gKwkJCWlmICghc3RyY21wKGNsa19od19nZXRfbmFtZShodyksDQo+ID4gKwkJCQlp
-bXhfc2NfY3B1ZnJlcV9kYXRhW2ldLmNsa19uYW1lKSkgew0KPiA+ICsJCQkJY2x1c3Rlcl9pZCA9
-DQo+IGlteF9zY19jcHVmcmVxX2RhdGFbaV0uY2x1c3Rlcl9pZDsNCj4gPiArCQkJCWJyZWFrOw0K
-PiA+ICsJCQl9DQo+ID4gKwkJfQ0KPiA+ICsNCj4gPiArCQkvKg0KPiA+ICsJCSAqIEFzIHNvbWUg
-b3RoZXIgY2xvY2sgdHlwZXMgaGF2ZSBzYW1lIHZhbHVlIGFzDQo+ID4gKwkJICogSU1YX1NDX1BN
-X0NMS19DUFUsIHNvIHdlIG5lZWQgdG8gZG91YmxlIGNoZWNrDQo+ID4gKwkJICogdGhlIGNsb2Nr
-IGJlaW5nIHNjYWxlZCBpcyBpbmRlZWQgQ1BVIGNsb2NrIHdoaWNoDQo+ID4gKwkJICogbWF0Y2hl
-cyB0aGUgdGFibGUgd2UgZGVmaW5lLg0KPiA+ICsJCSAqLw0KPiA+ICsJCWlmIChpIDwgQVJSQVlf
-U0laRShpbXhfc2NfY3B1ZnJlcV9kYXRhKSkgew0KPiA+ICsJCQlhcm1fc21jY2Nfc21jKElNWF9T
-SVBfQ1BVRlJFUSwNCj4gSU1YX1NJUF9TRVRfQ1BVRlJFUSwNCj4gPiArCQkJCWNsdXN0ZXJfaWQs
-IHJhdGUsIDAsIDAsIDAsIDAsICZyZXMpOw0KPiA+ICsJCQlyZXR1cm4gMDsNCj4gPiArCQl9DQo+
-ID4gKwl9DQo+ID4gKyNlbmRpZg0KPiANCj4gVGhlIGNvZGUgaW5zaWRlIHRoZSBpZmRlZiB3b3Vs
-ZCBsb29rIGJldHRlciBpbiBhIHNlcGFyYXRlDQo+IGlteF9jbGtfYXRmX3NldF9yYXRlIGZ1bmN0
-aW9uLiBNYXliZSBldmVuIHNlcGFyYXRlIGNsa19vcHM/DQpJIGNhbiBhZGQgYSBzZXBhcmF0ZSBm
-dW5jdGlvbiBmb3IgQ1BVIGNsb2NrIHNjYWxpbmcsIGFkZGluZyBuZXcgY2xrX29wcw0KY2hhbmdl
-cyB0b28gbXVjaCwgdXNpbmcgYSBzZXBhcmF0ZSBmdW5jdGlvbiBzaG91bGQgYmUgZ29vZCBmb3Ig
-bm93Pw0KDQpUaGFua3MuDQpBbnNvbi4gDQo=
+Why should we need pstore_block?
+1. Most embedded intelligent equipment have no persistent ram, which
+increases costs. We perfer to cheaper solutions, like block devices.
+In fast, there is already a sample for block device logger in driver
+MTD (drivers/mtd/mtdoops.c).
+2. Do not any equipment have battery, which means that it lost all data
+on general ram if power failure. Pstore has little to do for these
+equipments.
+
+[PATCH v8]
+On patch 2:
+1. move DT to /bindings/pstore
+2. Delete details for kernel.
+
+[PATCH v7]
+On patch 1:
+1. Fix line over 80 characters.
+On patch 2:
+1. Insert a separate patch for DT bindings.
+
+[PATCH v6]
+On patch 1:
+1. Fix according to email from Kees Cook, including spelling mistakes,
+   explicit overflow test, none of the zeroing etc.
+2. Do not recover data but metadata of dmesg when panic.
+3. No need to take recovery when do erase.
+4. Do not use "blkoops" for blkzone any more because "blkoops" is used for
+   other module now. (rename blkbuf to blkoops)
+On patch 2:
+1. Rename blkbuf to blkoops.
+2. Add Kconfig/device tree/module parameters settings for blkoops.
+3. Add document for device tree.
+On patch 3:
+1. Blkoops support pmsg.
+2. Fix description for new version patch.
+On patch 4:
+1. Fix description for new version patch.
+
+[PATCH v5]
+On patch 1:
+1. rename pstore/rom to pstore/blk
+2. Do not allocate any memory in the write path of panic. So, use local
+array instead in function romz_recover_dmesg_meta.
+3. Add C header file "linux/fs.h" to fix implicit declaration of function
+   'filp_open','kernel_read'...
+On patch 3:
+1. If panic, do not recover pmsg but flush if it is dirty.
+2. Fix erase pmsg failed.
+On patch 4:
+1. Create a document for pstore/blk
+
+[PATCH v4]
+On patch 1:
+1. Fix always true condition '(--i >= 0) => (0-u32max >= 0)' in function
+   romz_init_zones by defining variable i to 'int' rahter than
+   'unsigned int'.
+2. To make codes more easily to read, we use macro READ_NEXT_ZONE for
+   return value of romz_dmesg_read if it need to read next zone.
+   Moveover, we assign READ_NEXT_ZONE -1024 rather than 0.
+3. Add 'FLUSH_META' to 'enum romz_flush_mode' and rename 'NOT_FLUSH' to
+   'FLUSH_NONE'
+4. Function romz_zone_write work badly with FLUSH_PART mode as badly
+   address and offset to write.
+On patch 3:
+NEW SUPPORT psmg for pstore_rom.
+
+[PATCH v3]
+On patch 1:
+Fix build as module error for undefined 'vfs_read' and 'vfs_write'
+Both of 'vfs_read' and 'vfs_write' haven't be exproted yet, so we use
+'kernel_read' and 'kernel_write' instead.
+
+[PATCH v2]
+On patch 1:
+Fix build as module error for redefinition of 'romz_unregister' and
+'romz_register'
+
+[PATCH v1]
+On patch 1:
+Core codes of pstore_rom, which works well on allwinner(sunxi) platform.
+On patch 2:
+A sample for pstore_rom, using general ram rather than block device.
+
+liaoweixiong (5):
+  pstore/blk: new support logger for block devices
+  dt-bindings: pstore-block: new support for blkoops
+  pstore/blk: add blkoops for pstore_blk
+  pstore/blk: support pmsg for pstore block
+  Documentation: pstore/blk: create document for pstore_blk
+
+ Documentation/admin-guide/pstore-block.rst         |  227 ++++
+ .../devicetree/bindings/pstore/blkoops.txt         |   29 +
+ MAINTAINERS                                        |    4 +-
+ fs/pstore/Kconfig                                  |  128 +++
+ fs/pstore/Makefile                                 |    5 +
+ fs/pstore/blkoops.c                                |  250 +++++
+ fs/pstore/blkzone.c                                | 1164 ++++++++++++++++++++
+ include/linux/pstore_blk.h                         |   62 ++
+ 8 files changed, 1868 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/admin-guide/pstore-block.rst
+ create mode 100644 Documentation/devicetree/bindings/pstore/blkoops.txt
+ create mode 100644 fs/pstore/blkoops.c
+ create mode 100644 fs/pstore/blkzone.c
+ create mode 100644 include/linux/pstore_blk.h
+
+-- 
+1.9.1
