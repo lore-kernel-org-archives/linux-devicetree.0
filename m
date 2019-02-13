@@ -1,59 +1,62 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [RESEND PATCH v2 0/2] clk: meson8b: fix typo "ABP" -> "APB"
-Date: Wed, 13 Feb 2019 09:40:33 +0100
-Message-ID: <fc50a3a7f1efc8d2f6054a944848897ed8baf536.camel@baylibre.com>
-References: <20190210222603.6404-1-martin.blumenstingl@googlemail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 3/3] cpufreq: imx-sc: add i.mx system controller cpufreq
+ support
+Date: Wed, 13 Feb 2019 08:46:45 +0000
+Message-ID: <DB3PR0402MB3916203C35D82A7667DA3A16F5660@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550027011-7884-1-git-send-email-Anson.Huang@nxp.com>
+ <1550027011-7884-3-git-send-email-Anson.Huang@nxp.com>
+ <20190213070904.3oswrjafy6cqedsr@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190210222603.6404-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, narmstrong@baylibre.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: sboyd@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190213070904.3oswrjafy6cqedsr@vireshk-i7>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolution>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2019-02-10 at 23:26 +0100, Martin Blumenstingl wrote:
-> It turns out that I'm not good at spelling "APB". Unfortunately an ABP
-> (instead of APB) typo snug into two clocks in v5.0.
-> 
-> Currently there are no users of that clock yet, so fix it now
-> before it's too late (meaning before it's used by <something>).
-> 
-> I decided to go the "normal" route where we can have separate
-> branches for the dt-bindings and the drivers in the clk-meson
-> repo. This means:
-> - new (typo-free) clock #define
-> - change the clock controller to use the new #define
-> - (next development cycle) drop the old #define
-> 
-> resend - changes since v2 at [1]:
-> - include the device-tree maintainers / mailing list
-> 
-> Changes since v1 at [0]:
-> - split into a dt-bindings and clock controller driver patch
-> 
-> 
-> [0] https://patchwork.kernel.org/cover/10742001/
-> [1] https://patchwork.kernel.org/cover/10772199/
-> 
-> 
-> Martin Blumenstingl (2):
->   dt-bindings: clock: meson8b: add APB clock definition
->   clk: meson: meson8b: fix the naming of the APB clocks
-> 
->  drivers/clk/meson/meson8b.c              | 26 ++++++++++++------------
->  drivers/clk/meson/meson8b.h              |  2 +-
->  include/dt-bindings/clock/meson8b-clkc.h |  1 +
->  3 files changed, 15 insertions(+), 14 deletions(-)
-> 
-
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+SGksIFZpcmVzaA0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFZpcmVzaCBLdW1hciBbbWFpbHRvOnZpcmVzaC5rdW1h
+ckBsaW5hcm8ub3JnXQ0KPiBTZW50OiAyMDE5xOoy1MIxM8jVIDE1OjA5DQo+IFRvOiBBbnNvbiBI
+dWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFy
+ay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0
+cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiBj
+YXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsgcmp3QHJqd3lzb2Nr
+aS5uZXQ7DQo+IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBEYW5pZWwgQmFs
+dXRhDQo+IDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBBbmR5IEdyb3NzIDxhbmR5Lmdyb3NzQGxp
+bmFyby5vcmc+Ow0KPiBob3JtcytyZW5lc2FzQHZlcmdlLm5ldC5hdTsgaGVpa29Ac250ZWNoLmRl
+OyBhcm5kQGFybmRiLmRlOw0KPiBiam9ybi5hbmRlcnNzb25AbGluYXJvLm9yZzsgamFnYW5AYW1h
+cnVsYXNvbHV0aW9ucy5jb207DQo+IGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb207IG1hcmMu
+dy5nb256YWxlekBmcmVlLmZyOyBvbG9mQGxpeG9tLm5ldDsNCj4gZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+
+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZzsgZGwtbGlu
+dXgtaW14IDxsaW51eC0NCj4gaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMy8z
+XSBjcHVmcmVxOiBpbXgtc2M6IGFkZCBpLm14IHN5c3RlbSBjb250cm9sbGVyIGNwdWZyZXENCj4g
+c3VwcG9ydA0KPiANCj4gT24gMTMtMDItMTksIDAzOjA5LCBBbnNvbiBIdWFuZyB3cm90ZToNCj4g
+PiBPbiBOWFAncyBpLk1YIFNvQ3Mgd2l0aCBzeXN0ZW0gY29udHJvbGxlciBpbnNpZGUsIENQVSBm
+cmVxdWVuY3kNCj4gPiBzY2FsaW5nIGNhbiBPTkxZIGJlIGRvbmUgYnkgc3lzdGVtIGNvbnRyb2xs
+ZXIgZmlybXdhcmUsIGFuZCBpdCBjYW4NCj4gPiBPTkxZIGJlIHJlcXVlc3RlZCBmcm9tIHNlY3Vy
+ZSBtb2RlLCBzbyBMaW51eCBjcHVmcmVxIGRyaXZlciBoYXMgdG8NCj4gPiBjYWxsIEFSTSBTTUMg
+dG8gdHJhcCB0byBBUk0tVHJ1c3RlZC1GaXJtd2FyZSB0byByZXF1ZXN0IHN5c3RlbQ0KPiA+IGNv
+bnRyb2xsZXIgZmlybXdhcmUgdG8gZG8gQ1BVIGZyZXF1ZW5jeSBzY2FsaW5nLg0KPiA+DQo+ID4g
+VGhpcyBwYXRjaCBhZGRzIGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgY3B1ZnJlcSBkcml2ZXIgc3Vw
+cG9ydCwgd2hlbg0KPiA+IGRvaW5nIENQVSBmcmVxdWVuY3kgc2NhbGluZywgY3B1ZnJlcSBkcml2
+ZXIgd2lsbCBkbyBBUk0gU01DIGNhbGwgYW5kDQo+ID4gdHJhcCB0byBBUk0tVHJ1c3RlZC1GaXJt
+d2FyZSwgdGhlbiBTSVAoc2lsaWNvbiBwcm92aWRlcikgc2VydmljZSB3aWxsDQo+ID4gY29tbXVu
+aWNhdGUgd2l0aCBzeXN0ZW0gY29udHJvbGxlciBmb3IgQ1BVIGZyZXF1ZW5jdCBzY2FsaW5nLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvY3B1ZnJlcS9LY29uZmlnLmFybSAgICAgIHwgICA5ICsr
+DQo+ID4gIGRyaXZlcnMvY3B1ZnJlcS9NYWtlZmlsZSAgICAgICAgIHwgICAxICsNCj4gPiAgZHJp
+dmVycy9jcHVmcmVxL2lteC1zYy1jcHVmcmVxLmMgfCAxODMNCj4gPiArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxOTMgaW5zZXJ0
+aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jcHVmcmVxL2lteC1zYy1j
+cHVmcmVxLmMNCj4gDQo+IFdoeSBjYW4ndCB5b3UgdXNlIGNwdWZyZXEtZHQgZHJpdmVyIGxpa2Ug
+ZXZlcnlvbmUgZWxzZSA/DQoNCkp1c3Qgbm90aWNlIHRoYXQgd2UgY2FuIG92ZXJ3cml0ZSB0aGUg
+c2V0X3RhcmdldCBpZiB1c2luZyBjcHVmcmVxLWR0LCB0aGVuIHdlIHN0aWxsDQpuZWVkIGEgcGxh
+dGZvcm0gY3B1ZnJlcSBmaWxlIHRvIGltcGxlbWVudCBhcmNoX3NldF9mcmVxX3NjYWxlKCksIEkg
+Y2FuIHVzZSBpdCB0byBzYXZlDQp0aGUgY29kZSBvZiBpbXggc3lzdGVtIGNvbnRyb2xsZXIgY3B1
+ZnJlcSBkcml2ZXIsIGFuZCBCVFcsIGNhbiBjcHVmcmVxLWR0IHN1cHBvcnQNCm11bHRpIGNsdXN0
+ZXJzIGNwdWZyZXE/IEFzIGkuTVg4UU0gaGFzIDIgY2x1c3RlcnMgcnVubmluZyB3aXRoIGRpZmZl
+cmVudCBPUFBzLg0KDQpUaGFua3MsDQpBbnNvbi4NCg0KPiANCj4gLS0NCj4gdmlyZXNoDQo=
