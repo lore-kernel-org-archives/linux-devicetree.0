@@ -1,8 +1,8 @@
 From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [RFC 4/5] arm64: dts: imx8mq: Add the clocks and the latencies for
- the A53 cores
-Date: Wed, 13 Feb 2019 19:05:16 +0000
-Message-ID: <1550084693-9797-5-git-send-email-abel.vesa@nxp.com>
+Subject: [RFC 5/5] arm64: dts: imx8mq: Add the opp table and the cpu-supply
+ nodes
+Date: Wed, 13 Feb 2019 19:05:17 +0000
+Message-ID: <1550084693-9797-6-git-send-email-abel.vesa@nxp.com>
 References: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -15,53 +15,106 @@ To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland
 Cc: dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The clocks and their latencies will be used by cpufreq-dt.
+Add the opp table containing only non over drive opps.
+Also add the cpu-supply nodes for the A53 cores in the EVK board.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 17 +++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 23 +++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot=
+/dts/freescale/imx8mq-evk.dts
+index 54737bf..114359e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+@@ -31,6 +31,23 @@
+ 		gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++};
++
++&A53_0 {
++	cpu-supply =3D <&sw1a_reg>;
++};
++
++&A53_1 {
++	cpu-supply =3D <&sw1a_reg>;
++};
++
++&A53_2 {
++	cpu-supply =3D <&sw1a_reg>;
++};
++
++&A53_3 {
++	cpu-supply =3D <&sw1a_reg>;
+ };
+=20
+ &fec1 {
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
 s/freescale/imx8mq.dtsi
-index 9155bd4..1a89062 100644
+index 1a89062..89b2d5f 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -87,6 +87,8 @@
- 			device_type =3D "cpu";
- 			compatible =3D "arm,cortex-a53";
- 			reg =3D <0x0>;
-+			clock-latency =3D <61036>; /* two CLK32 periods */
-+			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+@@ -91,6 +91,7 @@
+ 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
  			enable-method =3D "psci";
  			next-level-cache =3D <&A53_L2>;
++			operating-points-v2 =3D <&a53_0_opp_table>;
  		};
-@@ -95,6 +97,8 @@
- 			device_type =3D "cpu";
- 			compatible =3D "arm,cortex-a53";
- 			reg =3D <0x1>;
-+			clock-latency =3D <61036>; /* two CLK32 periods */
-+			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+=20
+ 		A53_1: cpu@1 {
+@@ -101,6 +102,7 @@
+ 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
  			enable-method =3D "psci";
  			next-level-cache =3D <&A53_L2>;
++			operating-points-v2 =3D <&a53_0_opp_table>;
  		};
-@@ -103,6 +107,8 @@
- 			device_type =3D "cpu";
- 			compatible =3D "arm,cortex-a53";
- 			reg =3D <0x2>;
-+			clock-latency =3D <61036>; /* two CLK32 periods */
-+			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+=20
+ 		A53_2: cpu@2 {
+@@ -111,6 +113,7 @@
+ 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
  			enable-method =3D "psci";
  			next-level-cache =3D <&A53_L2>;
++			operating-points-v2 =3D <&a53_0_opp_table>;
  		};
-@@ -111,6 +117,8 @@
- 			device_type =3D "cpu";
- 			compatible =3D "arm,cortex-a53";
- 			reg =3D <0x3>;
-+			clock-latency =3D <61036>; /* two CLK32 periods */
-+			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+=20
+ 		A53_3: cpu@3 {
+@@ -121,6 +124,7 @@
+ 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
  			enable-method =3D "psci";
  			next-level-cache =3D <&A53_L2>;
++			operating-points-v2 =3D <&a53_0_opp_table>;
  		};
+=20
+ 		A53_L2: l2-cache0 {
+@@ -666,6 +670,25 @@
+ 			status =3D "disabled";
+ 		};
+=20
++
++		a53_0_opp_table: opp-table {
++			compatible =3D "operating-points-v2";
++			opp-shared;
++
++			opp-800000000 {
++				opp-hz =3D /bits/ 64 <800000000>;
++				opp-microvolt =3D <900000>;
++				clock-latency-ns =3D <150000>;
++			};
++
++			opp-1000000000 {
++				opp-hz =3D /bits/ 64 <1000000000>;
++				opp-microvolt =3D <900000>;
++				clock-latency-ns =3D <150000>;
++				opp-suspend;
++			};
++		};
++
+ 		gic: interrupt-controller@38800000 {
+ 			compatible =3D "arm,gic-v3";
+ 			reg =3D <0x38800000 0x10000>,	/* GIC Dist */
 --=20
 2.7.4
