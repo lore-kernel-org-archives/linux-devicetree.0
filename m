@@ -1,83 +1,64 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v3 0/6] Add CPU clock support for Armada 7K/8K
-Date: Wed, 13 Feb 2019 09:57:04 +0100
-Message-ID: <871s4c5an3.fsf@FE-laptop>
-References: <20181216094147.6468-1-gregory.clement@bootlin.com> <87a7k8o5d5.fsf@FE-laptop> <154713766177.15366.14948014236046606980@swboyd.mtv.corp.google.com> <875zuwo4fi.fsf@FE-laptop>
+From: <Tudor.Ambarus@microchip.com>
+Subject: [PATCH 00/11] add support for sam9x60 nand controller
+Date: Wed, 13 Feb 2019 08:59:41 +0000
+Message-ID: <20190213085930.31578-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <875zuwo4fi.fsf@FE-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Antoine Tenart <antoine.tenart@bootlin.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Language: en-US
+Content-ID: <53771A0CC529EC419819DE0424FC4221@namprd11.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, dwmw2@infradead.org, computersforpeace@gmail.com, bbrezillon@kernel.org, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tudor.Ambarus@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
- 
- On jeu., janv. 10 2019, Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
-
-> Hi Stephen,
->  
->  On jeu., janv. 10 2019, Stephen Boyd <sboyd@kernel.org> wrote:
->
->> Quoting Gregory CLEMENT (2019-01-10 08:16:22)
->>> Hi Stephen,
->>>  
->>>  On dim., déc. 16 2018, Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
->>> 
->>> > Hello,
->>> >
->>> > This is the third version of a series allowing to manage the cpu
->>> > clock for Armada 7K/8K. For these SoCs, the CPUs share the same clock
->>> > by cluster, so actually the clock management is done at cluster level.
->>> >
->>> > As for the other Armada 7K/8K clocks it is possible to have multiple
->>> > AP so here again we need to have unique name: the purpose of the second
->>> > patch is to share a common code which will be used in 3 drivers.
->>> >
->>> > The last 2 patch enable the driver at dt and platform level and will
->>> > be applied through the mvebu subsystem.
->>> 
->>> What is the status of this series?
->>> 
->>> The only comments I had was from Rob about the binding and I answered
->>> them 3 weeks ago. Do you have any other comments? Do you expect a rebase
->>> of this series on v5.0-rc1?
->>> 
->>
->> I'm waiting for Rob. I think the binding is not proper so presumably you
->> will figure out what Rob wants and then change the code accordingly and
->> resend?
->
-> Actually the binding describes properly the hardware we have and that
-> what I answered to Rob.
-
-I pinged you about this series more than one month ago, and answered Rob
-concerned 2 months ago! He didn't said anything about my comments so I
-really think that the binding is OK and described the hardware we have.
-
-So could you consider to apply this series?
-
-Thanks,
-
-Gregory
-
-
->
-> Gregory
->
-> -- 
-> Gregory Clement, Bootlin
-> Embedded Linux and Kernel engineering
-> http://bootlin.com
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+RnJvbTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0KDQpUaGUg
+c2FtOXg2MCBib2FyZCBkZWZpbmVzIHRoZSBDQ0ZHX0VCSUNTQSByZWdpc3RlciB1bmRlciBTRlIs
+DQphbmQgbm90IGFzIGEgTUFUUklYIHJlZ2lzdGVyLCBhcyBwcmV2aW91cyBib2FyZHMgZG8uDQpO
+QU5EIEZsYXNoIEkvT3MgYXJlIGNvbm5lY3RlZCB0byBEMTbigJNEMjMsIHRodXMNClNGUl9DQ0ZH
+X0VCSUNTQS5ORkQwX09OX0QxNiBpcyBzZXQgdG8gMS4NCg0KVGVzdGVkIHVzaW5nIG10ZC11dGls
+cy4NCg0KLSBwYXRjaGVzIFsxLCA3XSBhZGQgc3VwcG9ydCBmb3IgdGhlIHNhbTl4NjAgbmFuZCBj
+b250cm9sbGVyLiBJIHdvdWxkDQogIHN1Z2dlc3QgdG8gZ2V0IHRoZW0gdGhyb3VnaCBsaW51eC1t
+dGQgdHJlZSwgaWYgYWxsIGFncmVlLg0KLSBwYXRjaCA4IGNhbiBiZSB0YWtlbiBieSBBbGV4YW5k
+cmUNCi0gcGF0Y2ggOSAtIFNQRFggY2hhbmdlLCBjYW4gYmUgdGFrZW4gYnkgTGVlDQotIHBhdGNo
+IDEwIC0gU1BEWCBjaGFuZ2UsIGNhbiBiZSB0YWtlbiBieSBBbGV4YW5kcmUNCi0gcGF0Y2ggMTEg
+LSBTUERYIGNoYW5nZSwgc2hvdWxkIGdvIHRocm91Z2ggbGludXgtbXRkDQoNCmR0IGNvbXBhdGli
+bGUgc3RyaW5nIGZvciAibWljcm9jaGlwLHNhbTl4NjAtc2ZyIiBoYXMgYWxyZWFkeSBiZWVuDQpz
+dWJtaXRlZCBhdCBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzk5ODMxLw0K
+DQpUdWRvciBBbWJhcnVzICgxMSk6DQogIEFSTTogYXQ5MTogYWRkIHNhbTl4NjAgU0ZSIGRlZmlu
+aXRpb25zDQogIG1lbW9yeTogYXRtZWwtZWJpOiBhZGQgZ2VuZXJpYyBuYW1lIGZvciBlYmkgcmVn
+bWFwDQogIGR0LWJpbmRpbmdzOiBtZW1vcnk6IGF0bWVsLWViaTogYWRkIHNhbTl4NjAgY29tcGF0
+aWJsZQ0KICBtZW1vcnk6IGF0bWVsLWViaTogYWRkIHNhbTl4NjAgRUJJIHN1cHBvcnQNCiAgbXRk
+OiByYXduYW5kOiBhdG1lbDogYWRkIGdlbmVyaWMgbmFtZSBmb3IgRUJJQ1NBIHJlZ21hcA0KICBk
+dC1iaW5kaW5nczogbXRkOiBhdG1lbC1uYW5kOiBhZGQgc2FtOXg2MCBjb21wYXRpYmxlDQogIG10
+ZDogcmF3bmFuZDogYXRtZWw6IGFkZCBzYW05eDYwIG5hbmQgY29udHJvbGxlciBzdXBwb3J0DQog
+IG1lbW9yeTogYXRtZWwtZWJpOiBtb3ZlIE5VTV9DUyBkZWZpbml0aW9uIGluc2lkZSBhdG1lbC1l
+YmkNCiAgbWZkOiBzeXNjb246IGF0bWVsOiBzd2l0Y2ggdG8gU1BEWCBsaWNlbnNlIGlkZW50aWZp
+ZXJzDQogIG1lbW9yeTogYXRtZWwtZWJpOiBzd2l0Y2ggdG8gU1BEWCBsaWNlbnNlIGlkZW50aWZp
+ZXJzDQogIG10ZDogcmF3bmFuZDogYXRtZWw6IHN3aXRjaCB0byBTUERYIGxpY2Vuc2UgaWRlbnRp
+ZmllcnMNCg0KIC4uLi9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvYXRtZWwsZWJpLnR4dCAg
+ICAgIHwgICAxICsNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvYXRtZWwtbmFuZC50eHQg
+ICAgICAgICB8ICAgMSArDQogZHJpdmVycy9tZW1vcnkvYXRtZWwtZWJpLmMgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgNDggKysrKysrLS0tDQogZHJpdmVycy9tdGQvbmFuZC9yYXcvYXRtZWwv
+bmFuZC1jb250cm9sbGVyLmMgICAgICAgfCAxMTcgKysrKysrKysrKysrKysrKy0tLS0tDQogZHJp
+dmVycy9tdGQvbmFuZC9yYXcvYXRtZWwvcG1lY2MuYyAgICAgICAgICAgICAgICAgfCAgIDUgKy0N
+CiBkcml2ZXJzL210ZC9uYW5kL3Jhdy9hdG1lbC9wbWVjYy5oICAgICAgICAgICAgICAgICB8ICAg
+NiArLQ0KIGluY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9hdG1lbC1tYXRyaXguaCAgICAgICAgICAg
+IHwgICA3ICstDQogaW5jbHVkZS9saW51eC9tZmQvc3lzY29uL2F0bWVsLW1jLmggICAgICAgICAg
+ICAgICAgfCAgIDYgKy0NCiBpbmNsdWRlL2xpbnV4L21mZC9zeXNjb24vYXRtZWwtc21jLmggICAg
+ICAgICAgICAgICB8ICAgNSArLQ0KIGluY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9hdG1lbC1zdC5o
+ICAgICAgICAgICAgICAgIHwgICA2ICstDQogaW5jbHVkZS9zb2MvYXQ5MS9hdG1lbC1zZnIuaCAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgMzQgKysrKy0tDQogMTEgZmlsZXMgY2hhbmdlZCwgMTYx
+IGluc2VydGlvbnMoKyksIDc1IGRlbGV0aW9ucygtKQ0KDQotLSANCjIuOS41DQoNCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQg
+ZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1tdGQvCg==
