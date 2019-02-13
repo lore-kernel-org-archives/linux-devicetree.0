@@ -1,118 +1,153 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 2/2] clk: imx: scu: add cpu frequency scaling support
-Date: Wed, 13 Feb 2019 13:32:28 +0000
-Message-ID: <1550064410-28417-2-git-send-email-Anson.Huang@nxp.com>
-References: <1550064410-28417-1-git-send-email-Anson.Huang@nxp.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v9 4/8] devicetree: bindings: Document first ROHM BD70528
+ bindings
+Date: Wed, 13 Feb 2019 15:33:01 +0200
+Message-ID: <a604584183bd8913431b5dd2dc5f799cf0a87976.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550064410-28417-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc: Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On NXP's i.MX SoCs with system controller inside, CPU frequency
-scaling can ONLY be done by system controller firmware, and it
-can ONLY be requested from secure mode, so Linux kernel has to
-call ARM SMC to trap to ARM-Trusted-Firmware to request system
-controller firmware to do CPU frequency scaling.
+Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
+drivers) and 4 GPIO pins which can be configured for I/O or
+as interrupt sources withe configurable trigger levels.
 
-This patch adds i.MX system controller CPU frequency scaling support,
-it reuses cpufreq-dt driver and implement the CPU frequency scaling
-inside SCU clock driver.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-ChangeLog since V1:
-	- reuse cpufreq-dt driver for CPU frequency scaling and implement the CPU
-	  frequency scaling inside SCU clock driver.
----
- drivers/clk/imx/clk-scu.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
-index 7ccf7ed..65fb63c 100644
---- a/drivers/clk/imx/clk-scu.c
-+++ b/drivers/clk/imx/clk-scu.c
-@@ -4,14 +4,32 @@
-  *   Dong Aisheng <aisheng.dong@nxp.com>
-  */
- 
-+#include <linux/arm-smccc.h>
- #include <linux/clk-provider.h>
- #include <linux/err.h>
- #include <linux/slab.h>
- 
- #include "clk-scu.h"
- 
-+#ifdef CONFIG_CPUFREQ_DT
-+#define IMX_SIP_CPUFREQ			0xC2000001
-+#define IMX_SIP_SET_CPUFREQ		0x00
+I maintained reviewed-by and acked-by tags as modifictions to this
+version were only grammar fixes and using whole word instead
+of an abbreviation. Please let me know if there is any objections.
+
+ .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 102 +++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+new file mode 100644
+index 000000000000..120462c17904
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+@@ -0,0 +1,102 @@
++* ROHM BD70528 Power Management Integrated Circuit bindings
 +
- static struct imx_sc_ipc *ccm_ipc_handle;
- 
-+struct imx_sc_cpufreq {
-+	const char *clk_name;
-+	u32 cluster_id;
++BD70528MWV is an ultra-low quiescet current general purpose single-chip
++power management IC for battery-powered portable devices. The IC
++integrates 3 ultra-low current consumption buck converters, 3 LDOs and 2
++LED Drivers. Also included are 4 GPIOs, a real-time clock (RTC), a 32kHz
++clock gate, high-accuracy VREF for use with an external ADC, flexible
++dual-input power path, 10 bit SAR ADC for battery temperature monitor and
++1S battery charger with scalable charge currents.
++
++Required properties:
++ - compatible		: Should be "rohm,bd70528"
++ - reg			: I2C slave address.
++ - interrupts		: The interrupt line the device is connected to.
++ - interrupt-controller	: To indicate BD70528 acts as an interrupt controller.
++ - #interrupt-cells	: Should be 2. Usage is compliant to the 2 cells
++			  variant of ../interrupt-controller/interrupts.txt
++ - gpio-controller	: To indicate BD70528 acts as a GPIO controller.
++ - #gpio-cells		: Should be 2. The first cell is the pin number and
++			  the second cell is used to specify flags. See
++			  ../gpio/gpio.txt for more information.
++ - #clock-cells		: Should be 0.
++ - regulators:		: List of child nodes that specify the regulators.
++			  Please see ../regulator/rohm,bd70528-regulator.txt
++
++Optional properties:
++ - clock-output-names	: Should contain name for output clock.
++
++Example:
++/* external oscillator */
++osc: oscillator {
++	compatible = "fixed-clock";
++	#clock-cells = <1>;
++	clock-frequency  = <32768>;
++	clock-output-names = "osc";
 +};
 +
-+static const struct imx_sc_cpufreq imx_sc_cpufreq_data[] = {
-+	{
-+		.clk_name = "a35_clk",
-+		.cluster_id = 0,
-+	},
++pmic: pmic@4b {
++	compatible = "rohm,bd70528";
++	reg = <0x4b>;
++	interrupt-parent = <&gpio1>;
++	interrupts = <29 GPIO_ACTIVE_LOW>;
++	clocks = <&osc 0>;
++	#clock-cells = <0>;
++	clock-output-names = "bd70528-32k-out";
++	#gpio-cells = <2>;
++	gpio-controller;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++
++	regulators {
++		buck1: BUCK1 {
++			regulator-name = "buck1";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <3400000>;
++			regulator-boot-on;
++			regulator-ramp-delay = <125>;
++		};
++		buck2: BUCK2 {
++			regulator-name = "buck2";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-boot-on;
++			regulator-ramp-delay = <125>;
++		};
++		buck3: BUCK3 {
++			regulator-name = "buck3";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-boot-on;
++			regulator-ramp-delay = <250>;
++		};
++		ldo1: LDO1 {
++			regulator-name = "ldo1";
++			regulator-min-microvolt = <1650000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-boot-on;
++		};
++		ldo2: LDO2 {
++			regulator-name = "ldo2";
++			regulator-min-microvolt = <1650000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-boot-on;
++		};
++
++		ldo3: LDO3 {
++			regulator-name = "ldo3";
++			regulator-min-microvolt = <1650000>;
++			regulator-max-microvolt = <3300000>;
++		};
++		led_ldo1: LED_LDO1 {
++			regulator-name = "led_ldo1";
++			regulator-min-microvolt = <200000>;
++			regulator-max-microvolt = <300000>;
++		};
++		led_ldo2: LED_LDO2 {
++			regulator-name = "led_ldo2";
++			regulator-min-microvolt = <200000>;
++			regulator-max-microvolt = <300000>;
++		};
++	};
 +};
-+#endif
-+
- /*
-  * struct clk_scu - Description of one SCU clock
-  * @hw: the common clk_hw
-@@ -161,6 +179,35 @@ static int clk_scu_set_rate(struct clk_hw *hw, unsigned long rate,
- 	struct imx_sc_msg_req_set_clock_rate msg;
- 	struct imx_sc_rpc_msg *hdr = &msg.hdr;
- 
-+#ifdef CONFIG_CPUFREQ_DT
-+	/* CPU clock can ONLY be done by TF-A */
-+	if (clk->clk_type == IMX_SC_PM_CLK_CPU) {
-+		struct arm_smccc_res res;
-+		unsigned int cluster_id;
-+		int i;
-+
-+		for (i = 0; i < ARRAY_SIZE(imx_sc_cpufreq_data); i++) {
-+			if (!strcmp(clk_hw_get_name(hw),
-+				imx_sc_cpufreq_data[i].clk_name)) {
-+				cluster_id = imx_sc_cpufreq_data[i].cluster_id;
-+				break;
-+			}
-+		}
-+
-+		/*
-+		 * As some other clock types have same value as
-+		 * IMX_SC_PM_CLK_CPU, so we need to double check
-+		 * the clock being scaled is indeed CPU clock which
-+		 * matches the table we define.
-+		 */
-+		if (i < ARRAY_SIZE(imx_sc_cpufreq_data)) {
-+			arm_smccc_smc(IMX_SIP_CPUFREQ, IMX_SIP_SET_CPUFREQ,
-+				cluster_id, rate, 0, 0, 0, 0, &res);
-+			return 0;
-+		}
-+	}
-+#endif
-+
- 	hdr->ver = IMX_SC_RPC_VERSION;
- 	hdr->svc = IMX_SC_RPC_SVC_PM;
- 	hdr->func = IMX_SC_PM_FUNC_SET_CLOCK_RATE;
 -- 
-2.7.4
+2.14.3
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
