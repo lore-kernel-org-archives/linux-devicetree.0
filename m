@@ -1,47 +1,34 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 07/15] ndings: clock: milbeaut: add Milbeaut clock description
-Date: Wed, 13 Feb 2019 09:55:34 -0800
-Message-ID: <155008053444.115909.15767350529461671558@swboyd.mtv.corp.google.com>
-References: <1549628823-31388-1-git-send-email-sugaya.taichi@socionext.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drm: imx: Use of_node_name_eq for node name comparisons
+Date: Wed, 13 Feb 2019 12:07:33 -0600
+Message-ID: <CAL_JsqKPJet11X3pru1u5hEUVUH_SCcmncVAaesfDrzxtUEGEg@mail.gmail.com>
+References: <20181205195050.4759-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1549628823-31388-1-git-send-email-sugaya.taichi@socionext.com>
+In-Reply-To: <20181205195050.4759-7-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The subject seems to have been cut off? "ndings"?
+On Wed, Dec 5, 2018 at 1:50 PM Rob Herring <robh@kernel.org> wrote:
+>
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
+>
+> For instances using of_node_cmp, this has the side effect of now using
+> case sensitive comparisons. This should not matter for any FDT based
+> system which this is.
+>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/gpu/drm/imx/imx-drm-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Quoting Sugaya Taichi (2019-02-08 04:27:03)
-> diff --git a/Documentation/devicetree/bindings/clock/milbeaut-clock.txt b=
-/Documentation/devicetree/bindings/clock/milbeaut-clock.txt
-> new file mode 100644
-> index 0000000..bcfc5df
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/milbeaut-clock.txt
-> @@ -0,0 +1,49 @@
-> +Milbeaut SoCs Clock Controller Binding
-> +----------------------------------------
-> +Milbeaut SoCs Clock controller is an integrated clock controller, which
-> +generates and supplies to all modules.
-> +
-> +This binding uses common clock bindings
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible: should be one of the following:
-> +    "socionext,milbeaut-m10v-ccu" - for M10V SoC
-> +- reg: shall contain base address and length of clock registers
-> +- #clock-cells: shall be 1
-> +- clocks: shall be an external clock
-> +
-> +Example: Clock controller node:
-> +
-> +       clk: m10v-clk-ctrl@1d021000 {
-> +               compatible =3D "socionext,milbeaut-m10v-clk-ccu";
+Philipp, can I get an ack on this? I can commit it.
 
-I thought there was some length limit on compatible string names. 32
-bytes? Just barely under!
+Rob
