@@ -1,228 +1,54 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v4 05/10] mfd: max77650: new core mfd driver
-Date: Wed, 13 Feb 2019 11:46:30 +0100
-Message-ID: <CAMRc=Mctzwh7=gt43h3pra_SPoG8=RyKSVhe2zC3XgbjsaL56Q@mail.gmail.com>
-References: <CAMRc=MdyT7nMJ7dUTf6M3PvRdynaCurb_TftMyA4eCwzpR9fVA@mail.gmail.com>
- <20190212101835.GB20638@dell> <CAMRc=MfYeVbvY6O03xq4eLN9TVpAKWCAXPk0eP5LSBCU7VU9fA@mail.gmail.com>
- <20190212111403.GC20638@dell> <CAMpxmJWXOb1HW4QiEn8gMp3Nh05ahE0CMLXkac+hEKRjtGxTHQ@mail.gmail.com>
- <20190212132016.GA4781@dell> <20190213092553.GE1863@dell> <CAMRc=MeTMq_GWzQB6LBvts1csMftj=On5sB22jsJZzQzONxbNg@mail.gmail.com>
- <20190213095330.GF1863@dell> <CAMpxmJXqEwNtyT1ahmRd05QOjhdi0rT_-5S9Lk8O-PmV8BuA6w@mail.gmail.com>
- <20190213103946.GG1863@dell>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v3 0/3] Add PM support to STM32 LP Timer drivers
+Date: Wed, 13 Feb 2019 11:50:09 +0100
+Message-ID: <1550055012-23348-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190213103946.GG1863@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, tduszyns@gmail.com, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, mcoquelin.stm32@gmail.com, u.kleine-koenig@pengutronix.de, fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-=C5=9Br., 13 lut 2019 o 11:39 Lee Jones <lee.jones@linaro.org> napisa=C5=82=
-(a):
->
-> On Wed, 13 Feb 2019, Bartosz Golaszewski wrote:
->
-> > =C5=9Br., 13 lut 2019 o 10:53 Lee Jones <lee.jones@linaro.org> napisa=
-=C5=82(a):
-> > >
-> > > On Wed, 13 Feb 2019, Bartosz Golaszewski wrote:
-> > >
-> > > > =C5=9Br., 13 lut 2019 o 10:25 Lee Jones <lee.jones@linaro.org> napi=
-sa=C5=82(a):
-> > > > >
-> > > > > On Tue, 12 Feb 2019, Lee Jones wrote:
-> > > > >
-> > > > > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> > > > > >
-> > > > > > > wt., 12 lut 2019 o 12:14 Lee Jones <lee.jones@linaro.org> nap=
-isa=C5=82(a):
-> > > > > > > >
-> > > > > > > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> > > > > > > >
-> > > > > > > > > wt., 12 lut 2019 o 11:18 Lee Jones <lee.jones@linaro.org>=
- napisa=C5=82(a):
-> > > > > > > > > >
-> > > > > > > > > > On Tue, 12 Feb 2019, Bartosz Golaszewski wrote:
-> > > > > > > > > >
-> > > > > > > > > > > wt., 12 lut 2019 o 10:55 Lee Jones <lee.jones@linaro.=
-org> napisa=C5=82(a):
-> > > > > > > > > > > >
-> > > > > > > > > > > >  * The declaration of a superfluous struct
-> > > > > > > > > > > >  * 100 lines of additional/avoidable code
-> > > > > > > > > > > >  * Hacky hoop jumping trying to fudge VIRQs into re=
-sources
-> > > > > > > > > > > >  * Resources were designed for HWIRQs (unless a dom=
-ain is present)
-> > > > > > > > > > > >  * Loads of additional/avoidable CPU cycles setting=
- all this up
-> > > > > > > > > > >
-> > > > > > > > > > > While the above may be right, this one is negligible =
-and you know it. :)
-> > > > > > > > > >
-> > > > > > > > > > You have nested for() loops.  You *are* wasting lots of=
- cycles.
-> > > > > > > > > >
-> > > > > > > > > > > > Need I go on? :)
-> > > > > > > > > > > >
-> > > > > > > > > > > > Surely the fact that you are using both sides of an=
- API
-> > > > > > > > > > > > (devm_regmap_init_i2c and regmap_irq_get_*) in the =
-same driver, must
-> > > > > > > > > > > > set some alarm bells ringing?
-> > > > > > > > > > > >
-> > > > > > > > > > > > This whole HWIRQ setting, VIRQ getting, resource ha=
-cking is a mess.
-> > > > > > > > > > > >
-> > > > > > > > > > > > And for what?  To avoid passing IRQ data to a child=
- driver?
-> > > > > > > > > > >
-> > > > > > > > > > > What do you propose? Should I go back to the approach=
- in v1 and pass
-> > > > > > > > > > > the regmap_irq_chip_data to child drivers?
-> > > > > > > > > >
-> > > > > > > > > > I'm saying you should remove all of this hackery and pa=
-ss IRQs as they
-> > > > > > > > > > are supposed to be passed (like everyone else does).
-> > > > > > > > >
-> > > > > > > > > I'm not sure what you mean by "like everyone else does" -=
- different
-> > > > > > > > > mfd drivers seem to be doing different things. Is a simpl=
-e struct
-> > > > > > > > > containing virtual irq numbers passed to sub-drivers fine=
-?
-> > > > > > > >
-> > > > > > > > How do you plan on deriving the VIRQs to place into the str=
-uct?
-> > > > > > >
-> > > > > > > Exampe:
-> > > > > > >
-> > > > > > > struct max77650_gpio_pdata {
-> > > > > > >     int gpi_irq;
-> > > > > > > };
-> > > > > > >
-> > > > > > > In MFD driver:
-> > > > > > >
-> > > > > > > struct max77650_gpio_pdata *gpio_data =3D devm_kmalloc(dev, s=
-izeof(*gpio_data));
-> > > > > > >
-> > > > > > > gpio_data->gpi_irq =3D regmap_irq_get_virq(irqchip_data, GPI_=
-NUM);
-> > > > > > >
-> > > > > > > gpio_cell.platform_data =3D gpio_data;
-> > > > > > >
-> > > > > > > In GPIO driver:
-> > > > > > >
-> > > > > > > struct max77650_gpio_pdata *gpio_data =3D pdev->dev.platform_=
-data;
-> > > > > > >
-> > > > > > > int irq =3D gpio_data->gpi_irq;
-> > > > > >
-> > > > > > Definitely not.  What you're trying to do is a hack.
-> > > > > >
-> > > > > > If you're using Regmap to handle your IRQs, then you should use=
- Regmap
-> > > > > > in the client to pull them out.  Setting them via Regmap, then =
-pulling
-> > > > > > them out again in the *same driver*, only to store them in plat=
-form
-> > > > > > data to be passed to a child device is bonkers.
-> > > > > >
-> > > > > > *Either* use the MFD provided platform-data helpers *or* pass a=
-nd
-> > > > > > handle them via the Regmap APIs, *not* both.
-> > > > >
-> > > > > Right, a plan has been formed.
-> > > > >
-> > > > > Hopefully this works and you can avoid all this dancing around.
-> > > > >
-> > > > > Firstly, you need to make a small change to:
-> > > > >
-> > > > >   drivers/base/regmap/regmap-irq.c
-> > > > >
-> > > > > Add the following function:
-> > > > >
-> > > > >   struct irq_domain *regmap_irq_get_domain(struct regmap *map)
-> > > >
-> > > > We already do have such function and a lot of mfd drivers actually =
-use it.
-> > >
-> > > Even better.
-> > >
-> > > > > As you can see, it will return the IRQ Domain for the chip.
-> > > > >
-> > > > > You can then pass this IRQ domain to mfd_add_devices() and it wil=
-l do
-> > > > > the HWIRQ =3D> VIRQ mapping for you on the fly.  Meaning that you=
- can
-> > > > > remove all the nastiness in max77650_setup_irqs() and have the In=
-put
-> > > > > device use the standard (e.g. platform_get_irq()) APIs.
-> > > > >
-> > > > > How does that Sound?
-> > > >
-> > > > This does sound better! Why didn't you lead with that in the first =
-place?
-> > >
-> > > I'm not even going to dignify that stupid question with a response.
-> >
-> > It's not a stupid question and you're being unnecessarily rude. As an
-> > expert in the subsystem you maintain you could have answered simply
-> > with a "this is wrong, retrieve the irq domain from the regmap
-> > irq_chip and pass it over to mfd_add_devices, the mfd core will create
-> > appropriate mappings".
->
-> Could be culture clash, but I found the question offensive which is
-> why I chose not to answer it.  The reason is actually explained below:
->
+This patch series adds power management support for STM32 LP Timer:
+- PWM driver
+- Document the pinctrl states for sleep mode
 
-It wasn't meant to be offensive. I guess when dealing with non-native
-English speakers over e-mail it's best to assume good faith.
+It also adds device link between the PWM consumer and the PWM provider.
+This allows proper sequencing for suspend/resume (e.g. user will likely
+do a pwm_disable() before the PWM provider suspend executes), see [1].
 
->  "It's only the craziness in this patch which forced me to look into how
->   Regmap handles IRQs and come up with a subsequent solution which fits
->   your use-case."
->
-> Thus the fact that a) Regmap used IRQ domains and b) the IRQ domain
-> could be fetched and reused here didn't enter my thought process until
-> I delved into the inner workings of Regmap.
->
-> Yes, I know MFD pretty well, but I only tend to deep-dive into other
-> subsystems, particularly ones as complicated as Regmap, when it's
-> necessary to do so.  Now I know a little more about it, I can provide
-> the feedback you suggest going forward.
->
-> > > > It's a pity it's not documented, I had to look at the code to find =
-out
-> > > > irq resources would get translated in mfd_add_devices() if a domain=
- is
-> > > > present.
-> > >
-> > > Where is it likely to be documented?  MFD is pretty simple and seldom
-> > > needs explanation.  A 3 second look at the API you're trying to use
-> > > (instead of blind copy & paste) would have told you that it's possibl=
-e
-> > > to take an IRQ domain as an argument.
-> > >
-> > > It's only the craziness in this patch which forced me to look into ho=
-w
-> > > Regmap handles IRQs and come up with a subsequent solution which fits
-> > > your use-case.
-> > >
-> > > > In that case - I really don't see a reason to create a superfluous
-> > > > structure to only hold the main regmap - we can very well get it fr=
-om
-> > > > the parent device in sub-drivers as I do now.
-> > >
-> > > The whole point of this solution is that you don't need to pass
-> > > anything non-standard (i.e. not provided by the current APIs) to the
-> > > child device.
-> >
-> > I don't understand what you're saying here.
->
-> I'm saying that the structure you speak of is no longer required.
->
+[1] https://lkml.org/lkml/2019/2/5/770
 
-Thanks for clarifying.
+---
+Changes in v3:
+- Move the device_link_add() call to of_pwm_get() as discussed with Uwe.
 
-Bartosz
+Changes in v2:
+- Don't disable PWM channel in PWM provider: rather refuse to suspend
+  and report an error as suggested by Uwe and Thierry.
+- Add patch 3/3 to propose device link addition.
+- No updates for STM32 LP Timer IIO driver. Patches can be send separately.
+
+Fabrice Gasnier (3):
+  dt-bindings: pwm-stm32-lp: document pinctrl sleep state
+  pwm: stm32-lp: Add power management support
+  pwm: core: add consumer device link
+
+ .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  9 +++++---
+ drivers/pwm/core.c                                 | 14 +++++++++---
+ drivers/pwm/pwm-stm32-lp.c                         | 25 ++++++++++++++++++++++
+ include/linux/pwm.h                                |  6 ++++--
+ 4 files changed, 46 insertions(+), 8 deletions(-)
+
+-- 
+1.9.1
