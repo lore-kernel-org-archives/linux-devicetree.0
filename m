@@ -1,66 +1,58 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH v2 11/15] dt-bindings: pinctrl: milbeaut: Add Milbeaut
- M10V pinctrl description
-Date: Wed, 13 Feb 2019 14:10:51 +0900
-Message-ID: <00b70c95-362c-e286-a7cf-1b38d6de7993@socionext.com>
-References: <1549629187-3177-1-git-send-email-sugaya.taichi@socionext.com>
- <CACRpkdYgTWffL3RcW7Xs7ve=9HhYyndth7RDX7sedeXytCZC1g@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 0/4] Add new device nodes for Spreadtrum SC9860 platform
+Date: Wed, 13 Feb 2019 13:45:53 +0800
+Message-ID: <CAMz4kuLCA2d0aRf4r7-F6w7q58F4Do-z5weTXNHYVvvJ4Acegg@mail.gmail.com>
+References: <cover.1548052878.git.baolin.wang@linaro.org> <CAK8P3a3UROFLTtEcNXKtMUN283UQ6auQUOXCR=6e3BdLu5K8Nw@mail.gmail.com>
+ <CAMz4kuLotnNom9kx2EmdfVEb+gvWfEbxoh6+hiqk87EjmtYJwA@mail.gmail.com>
+ <20190201130519.GH20797@sirena.org.uk> <CAMz4kuJdPts31Ak-H=VAivvoqqPtxO5M1RdqrNPwTLT5d1h_7w@mail.gmail.com>
+ <20190212122035.GA20635@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYgTWffL3RcW7Xs7ve=9HhYyndth7RDX7sedeXytCZC1g@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190212122035.GA20635@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 12 Feb 2019 at 20:20, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Feb 12, 2019 at 04:40:10PM +0800, Baolin Wang wrote:
+> > On Fri, 1 Feb 2019 at 21:05, Mark Brown <broonie@kernel.org> wrote:
+>
+> > > You can just list all the individual device names in the of_match_table
+> > > for the MFD and then it can bind to any of them.  You can always map
+> > > them onto the same behaviour in the MFD driver if they are identical
+> > > from a software point of view.
+>
+> > If I understood correctly, as you suggested, we should add new
+> > mfd_cell groups to list all different PMICs' device names. Something
+> > like:
+>
+> I do think this is a good idea (registering the components of the MFD
+> using mfd_cell), though it wasn't quite the point I was making.  Having
+> individual device names matters less for Linux-internal names like this.
+>
+> > But from my point, they are just some meaningless duplication, and
+> > will waste lots of code there.
+>
+> I was more thinking of the of_match table that has the IDs that appear
+> in DT - they're the one that's the ABI.  Look at something like wm8994
+> where the driver has several IDs listed in the main table then selects
+> function drivers based on that.
 
-Thank you for your comments.
+Yes, we can use id_table to populate the PMIC child devices, but some
+child devices need use the device node to get some resources which are
+described in DT, so we must specify the of_compabible member of
+mfd_cell. That means we should use compatible string of the
+of_match_table to populate the child devices.
 
-On 2019/02/08 22:32, Linus Walleij wrote:
-> Hi Sugaya,
-> 
-> thanks for your patch!
-> 
-> On Fri, Feb 8, 2019 at 1:32 PM Sugaya Taichi
-> <sugaya.taichi@socionext.com> wrote:
-> 
->> Add DT bindings document for Milbeaut M10V pinctrl.
->>
->> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-> 
-> (...)
->> +- interrupts: three interrupts specifer.
->> +- interrupt-names: corresponds "interrupts" factor.
-> (...)
->> +               interrupts = <0 54 4>, <0 55 4>, <0 56 4>, <0 57 4>,
->> +                               <0 58 4>, <0 59 4>, <0 60 4>, <0 61 4>,
->> +                               <0 62 4>, <0 63 4>, <0 64 4>, <0 65 4>,
->> +                               <0 66 4>, <0 67 4>, <0 68 4>, <0 69 4>;
->> +               interrupt-names = "pin-48", "pin-49", "pin-50", "pin-51",
->> +                               "pin-52", "pin-53", "pin-54", "pin-55",
->> +                               "pin-56", "pin-57", "pin-58", "pin-59",
->> +                               "pin-60", "pin-61", "pin-62", "pin-63";
-> 
-> As mentioned in the review of the driver, don't do this.
-> 
-> This is a hierarchical interrupt controller, so these
-> GIC-offset-to-GPIO-interrupt-offests should be hardcoded in
-> the driver.
-> 
-> If these interrupt offsets differ between difference instances of
-> this pin controller, they should have different compatible strings.
-> 
-> Yours,
-> Linus Walleij
-> 
+So the problem is still there, we should expand the mfd_cell groups to
+list all device names, but just some meaningless duplication.
 
-I understand.
-I am sure the content of bindings will change as a whole as driver changes.
-Try it.
 
-Thanks,
-Sugaya Taichi
+
+
+--
+Baolin Wang
+Best Regards
