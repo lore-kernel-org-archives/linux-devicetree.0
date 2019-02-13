@@ -1,98 +1,98 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v9 3/8] clk: bd718x7: Support ROHM BD70528 clk block
-Date: Wed, 13 Feb 2019 15:29:55 +0200
-Message-ID: <f3d5163067e97426a9bb00991d200f04bcd0058b.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V2 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
+Date: Wed, 13 Feb 2019 13:32:22 +0000
+Message-ID: <1550064410-28417-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc: Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-ROHM BD70528 is an ultra low power PMIC with similar 32K clk as
-bd718x7. Only difference (from clk perspective) is register address.
-Add support for controlling BD70528 clk using bd718x7 driver.
+Add i.MX8QXP CPU opp table to support cpufreq.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/clk/Kconfig       |  6 +++---
- drivers/clk/clk-bd718x7.c | 20 ++++++++++++++++----
- 2 files changed, 19 insertions(+), 7 deletions(-)
+ChangeLog since V1:
+	use operating-points-v2 for OPP table to better fit cpufreq-dt driver;
+---
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index d2f0bb5ba47e..87f61a46cd5f 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -285,10 +285,10 @@ config COMMON_CLK_STM32H7
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 4c3dd95..1e08387 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -34,6 +34,10 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A35_L2>;
++			clocks = <&clk IMX_A35_CLK>;
++			clock-latency = <61036>;
++			#cooling-cells = <2>;
++			operating-points-v2 = <&a35_0_opp_table>;
+ 		};
  
- config COMMON_CLK_BD718XX
- 	tristate "Clock driver for ROHM BD718x7 PMIC"
--	depends on MFD_ROHM_BD718XX
-+	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
- 	help
--	  This driver supports ROHM BD71837 and ROHM BD71847
--	  PMICs clock gates.
-+	  This driver supports ROHM BD71837, ROHM BD71847 and
-+	  ROHM BD70528 PMICs clock gates.
+ 		A35_1: cpu@1 {
+@@ -42,6 +46,7 @@
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A35_L2>;
++			operating-points-v2 = <&a35_0_opp_table>;
+ 		};
  
- source "drivers/clk/actions/Kconfig"
- source "drivers/clk/bcm/Kconfig"
-diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
-index 461228ebf703..ae6e5baee330 100644
---- a/drivers/clk/clk-bd718x7.c
-+++ b/drivers/clk/clk-bd718x7.c
-@@ -8,6 +8,7 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/mfd/rohm-bd718x7.h>
-+#include <linux/mfd/rohm-bd70528.h>
- #include <linux/clk-provider.h>
- #include <linux/clkdev.h>
- #include <linux/regmap.h>
-@@ -86,9 +87,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "No parent clk found\n");
- 		return -EINVAL;
- 	}
--
--	c->reg = BD718XX_REG_OUT32K;
--	c->mask = BD718XX_OUT32K_EN;
-+	switch (mfd->chip_type) {
-+	case ROHM_CHIP_TYPE_BD71837:
-+	case ROHM_CHIP_TYPE_BD71847:
-+		c->reg = BD718XX_REG_OUT32K;
-+		c->mask = BD718XX_OUT32K_EN;
-+		break;
-+	case ROHM_CHIP_TYPE_BD70528:
-+		c->reg = BD70528_REG_CLK_OUT;
-+		c->mask = BD70528_CLK_OUT_EN_MASK;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "Unknown clk chip\n");
-+		return -EINVAL;
-+	}
- 	c->mfd = mfd;
- 	c->pdev = pdev;
- 	c->hw.init = &init;
-@@ -119,5 +131,5 @@ static struct platform_driver bd71837_clk = {
- module_platform_driver(bd71837_clk);
+ 		A35_2: cpu@2 {
+@@ -50,6 +55,7 @@
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A35_L2>;
++			operating-points-v2 = <&a35_0_opp_table>;
+ 		};
  
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
--MODULE_DESCRIPTION("BD71837/BD71847 chip clk driver");
-+MODULE_DESCRIPTION("BD71837/BD71847/BD70528 chip clk driver");
- MODULE_LICENSE("GPL");
+ 		A35_3: cpu@3 {
+@@ -58,6 +64,7 @@
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A35_L2>;
++			operating-points-v2 = <&a35_0_opp_table>;
+ 		};
+ 
+ 		A35_L2: l2-cache0 {
+@@ -65,6 +72,24 @@
+ 		};
+ 	};
+ 
++	a35_0_opp_table: opp-table {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-900000000 {
++			opp-hz = /bits/ 64 <900000000>;
++			opp-microvolt = <1000000>;
++			clock-latency-ns = <150000>;
++		};
++
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1100000>;
++			clock-latency-ns = <150000>;
++			opp-suspend;
++		};
++	};
++
+ 	gic: interrupt-controller@51a00000 {
+ 		compatible = "arm,gic-v3";
+ 		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
 -- 
-2.14.3
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+2.7.4
