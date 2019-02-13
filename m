@@ -1,50 +1,42 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 09/10] soc: ti: Add MSI domain support for K3
- Interrupt Aggregator
-Date: Wed, 13 Feb 2019 08:41:12 -0800
-Message-ID: <20190213164112.GW5720@atomide.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
- <20190212074237.2875-10-lokeshvutla@ti.com>
+From: Akash Gajjar <Akash_Gajjar@mentor.com>
+Subject: [PATCH 0/4] arm64: dts: rockchip: rk3399-rockpro64 dts cleanup
+Date: Wed, 13 Feb 2019 22:36:36 +0530
+Message-ID: <20190213170651.3210-1-Akash_Gajjar@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212074237.2875-10-lokeshvutla@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de
+Cc: Mark Rutland <mark.rutland@arm.com>, Shohei Maruyama <cheat.sc.linux@outlook.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Oskari Lemmela <oskari@lemmela.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [190212 07:43]:
-> With the system coprocessor managing the range allocation of the
-> inputs to Interrupt Aggregator, it is difficult to represent
-> the device IRQs from DT.
-> 
-> The suggestion is to use MSI in such cases where devices wants
-> to allocate and group interrupts dynamically.
-> 
-> Create a MSI domain bus layer that allocates and frees MSIs for
-> a device.
-> 
-> APIs that are implemented are:
-> - inta_msi_create_irq_domain() that creates a MSI domain
-> - inta_msi_domain_alloc_irqs() that creates MSIs for the
->   specified device and source indexes.
-> - inta_msi_domain_free_irqs() frees the grouped irqs.
+this patchset adds below various changes
+- rename regulators name according to rockpro64 schematic.
+- remove unused pinmux and regulator node
+- rename LED name and set heartbeat default-trigger.
+- add usb regulator.
 
-Can you please describe what all code will be calling these
-functions?
+schematic is available here:
+http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
 
-If the callers are limited to drivers/soc/ti, then you
-can can maybe make it local and get rid of the exported
-custom functions as it's all built-in anyways.
+Akash Gajjar (4):
+  arm64: dts: rockchip: rockpro64 dts make regulator more readable
+  arm64: dts: rockchip: rockpro64 dts remove unused node
+  arm64: dts: rockchip: rockpro64 dts rename LED labels and default
+    trigger
+  arm64: dts: rockchip: rockpro64 dts add usb regulator
 
-Or does the dma ring accelerator for example need to call
-these?
+ .../boot/dts/rockchip/rk3399-rockpro64.dts    | 93 +++++++++----------
+ 1 file changed, 43 insertions(+), 50 deletions(-)
 
-If various subsystems will be calling these I'd assume
-we'd have some generic API.. Marc, any comments on that?
-
-Regards,
-
-Tony
+-- 
+2.17.1
