@@ -1,34 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/1] of: unittest: unflatten device tree on UML when
- testing
-Date: Wed, 13 Feb 2019 13:12:02 -0600
-Message-ID: <20190213191202.GA3022@bogus>
-References: <20190212185305.112847-1-brendanhiggins@google.com>
- <20190212185305.112847-2-brendanhiggins@google.com>
+Subject: Re: [PATCH 06/12] dma-mapping: improve selection of
+ dma_declare_coherent availability
+Date: Wed, 13 Feb 2019 13:27:45 -0600
+Message-ID: <CAL_JsqLCr4Jk_-cWUFGs5zfk+NKksc+bs0bpiBeQHsZFthaM1Q@mail.gmail.com>
+References: <20190211133554.30055-1-hch@lst.de> <20190211133554.30055-7-hch@lst.de>
+ <CAL_JsqL+LiJTF5kZz2hXGbQcH+D4U0jAQE376VSUVMQmdg=XFA@mail.gmail.com> <20190213182435.GA19906@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212185305.112847-2-brendanhiggins@google.com>
+In-Reply-To: <20190213182435.GA19906@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: frowand.list@gmail.com, mcgrof@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: Linux IOMMU <iommu@lists.linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, x86@kernel.org, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mips@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-riscv@lists.infradead.org, SH-Linux <linux-sh@vger.kernel.org>, linux-xtensa@linux-xtensa.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 10:53:05AM -0800, Brendan Higgins wrote:
-> UML supports enabling OF, and is useful for running the device tree
-> tests, so add support for unflattening device tree blobs so we can
-> actually use it.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
+On Wed, Feb 13, 2019 at 12:24 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Tue, Feb 12, 2019 at 02:40:23PM -0600, Rob Herring wrote:
+> > > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> > > index 3607fd2810e4..f8c66a9472a4 100644
+> > > --- a/drivers/of/Kconfig
+> > > +++ b/drivers/of/Kconfig
+> > > @@ -43,6 +43,7 @@ config OF_FLATTREE
+> > >
+> > >  config OF_EARLY_FLATTREE
+> > >         bool
+> > > +       select DMA_DECLARE_COHERENT
+> >
+> > Is selecting DMA_DECLARE_COHERENT okay on UML? We run the unittests with UML.
+>
+> No, that will fail with undefined references to memunmap.
+>
+> I gues this needs to be
+>
+>         select DMA_DECLARE_COHERENT if HAS_DMA
+>
+> > Maybe we should just get rid of OF_RESERVED_MEM. If we support booting
+> > from DT, then it should always be enabled anyways.
+>
+> Fine with me.  Do you want me to respin the series to just remove
+> it?
 
-For a single patch, no need for a cover letter. Just add any commentary 
-here.
-
->  drivers/of/unittest.c | 3 +++
->  1 file changed, 3 insertions(+)
-
-Applied, thanks.
+Either now or it can wait. I don't want to hold this up any.
 
 Rob
