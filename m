@@ -1,50 +1,47 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 1/4] arm64: dts: allwinner: h6: orangepi: Add CPU supply regulator
-Date: Thu, 14 Feb 2019 08:09:07 -0500
-Message-ID: <20190214130910.9201-2-tiny.windzz@gmail.com>
-References: <20190214130910.9201-1-tiny.windzz@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190214130910.9201-1-tiny.windzz@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 0/4] arm64: dts: allwinner: h6: Enable CPU DVFS(cpufreq)
+Date: Thu, 14 Feb 2019 08:09:06 -0500
+Message-ID: <20190214130910.9201-1-tiny.windzz@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The original orangepi use the dcdca to supply the CPU cores. According
-to the axp805 spec, the range of dcdca is 0.6 to 1.1v, 1.12 to 1.52v.
-In order to support more CPU frequency, slightly increase the voltage
-maximum and minimum.
+Add the cpufreq support of h6, source of information is as follows.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+h6 cpu opp info:
+https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/arch/arm64/boot/dts/sunxi/sun50iw6p1.dtsi
+
+axp805 spec:
+http://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
+
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+The patchset is based on the sunxi source code and has not been tested on an
+actual board.
+---
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index b2526dac2fcf..e7aebaf91ede 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -159,8 +159,8 @@
- 
- 			reg_dcdca: dcdca {
- 				regulator-always-on;
--				regulator-min-microvolt = <810000>;
--				regulator-max-microvolt = <1080000>;
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1160000>;
- 				regulator-name = "vdd-cpu";
- 			};
- 
-@@ -191,6 +191,10 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdca>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_ph_pins>;
+Yangtao Li (4):
+  arm64: dts: allwinner: h6: orangepi: Add CPU supply regulator
+  arm64: dts: allwinner: h6: pine: Add CPU supply regulator
+  arm64: dts: allwinner: h6: Add clock to CPU cores
+  arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
+
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  8 ++-
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  8 ++-
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 69 +++++++++++++++++++
+ 3 files changed, 81 insertions(+), 4 deletions(-)
+
 -- 
 2.17.0
