@@ -1,7 +1,7 @@
 From: Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v4 2/6] usb:common Separated decoding functions from dwc3 driver.
-Date: Thu, 14 Feb 2019 19:45:10 +0000
-Message-ID: <1550173514-23573-3-git-send-email-pawell@cadence.com>
+Subject: [PATCH v4 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT buffer.
+Date: Thu, 14 Feb 2019 19:45:14 +0000
+Message-ID: <1550173514-23573-7-git-send-email-pawell@cadence.com>
 References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,634 +12,457 @@ To: devicetree@vger.kernel.org
 Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
-to driver/usb/common/debug.c file. These moved functions include:
-    dwc3_decode_get_status
-    dwc3_decode_set_clear_feature
-    dwc3_decode_set_address
-    dwc3_decode_get_set_descriptor
-    dwc3_decode_get_configuration
-    dwc3_decode_set_configuration
-    dwc3_decode_get_intf
-    dwc3_decode_set_intf
-    dwc3_decode_synch_frame
-    dwc3_decode_set_sel
-    dwc3_decode_set_isoch_delay
-    dwc3_decode_ctrl
+Controller for OUT endpoints has shared on-chip buffers for all incoming
+packets, including ep0out. It's FIFO buffer, so packets must be handle
+by DMA in correct order. If the first packet in the buffer will not be
+handled, then the following packets directed for other endpoints and
+functions will be blocked.
 
-These functions are used also in inroduced cdns3 driver.
+Additionally the packets directed to one endpoint can block entire on-chip
+buffers. In this case transfer to other endpoints also will blocked.
 
-All functions prefixes were changed from dwc3 to usb.
-Also, function's parameters has been extended according to the name
-of fields in standard SETUP packet.
-Additionally, patch adds usb_decode_ctrl function to
-include/linux/usb/ch9.h file.
+To resolve this issue after raising the descriptor missing interrupt
+driver prepares internal usb_request object and use it to arm DMA
+transfer.
+
+The problematic situation was observed in case when endpoint has
+been enabled but no usb_request were queued. Driver try detects
+such endpoints and will use this workaround only for these endpoint.
+
+Driver use limited number of buffer. This number can be set by macro
+CDNS_WA2_NUM_BUFFERS.
+
+Such blocking situation was observed on ACM gadget. For this function
+host send OUT data packet but ACM function is not prepared for
+this packet. It's cause that buffer placed in on chip memory block
+transfer to other endpoints.
+
+It's limitation of controller but maybe this issues should be fixed in
+function driver.
+
+This work around can be disabled/enabled by means of quirk_internal_buffer
+module parameter. By default feature is enabled. It can has impact to
+transfer performance and in most case this feature can be disabled.
 
 Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 ---
- drivers/usb/common/Makefile |   2 +-
- drivers/usb/common/debug.c  | 270 ++++++++++++++++++++++++++++++++++++
- drivers/usb/dwc3/debug.h    | 249 ---------------------------------
- drivers/usb/dwc3/trace.h    |   2 +-
- include/linux/usb/ch9.h     |  25 ++++
- 5 files changed, 297 insertions(+), 251 deletions(-)
- create mode 100644 drivers/usb/common/debug.c
+ drivers/usb/cdns3/gadget.c | 273 ++++++++++++++++++++++++++++++++++++-
+ drivers/usb/cdns3/gadget.h |   7 +
+ 2 files changed, 278 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
-index fb4d5ef4165c..3d3d2962ea4b 100644
---- a/drivers/usb/common/Makefile
-+++ b/drivers/usb/common/Makefile
-@@ -4,7 +4,7 @@
- #
- 
- obj-$(CONFIG_USB_COMMON)	  += usb-common.o
--usb-common-y			  += common.o
-+usb-common-y			  += common.o debug.o
- usb-common-$(CONFIG_USB_LED_TRIG) += led.o
- 
- obj-$(CONFIG_USB_OTG_FSM) += usb-otg-fsm.o
-diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
-new file mode 100644
-index 000000000000..3fdf116da909
---- /dev/null
-+++ b/drivers/usb/common/debug.c
-@@ -0,0 +1,270 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * Common USB debugging functions
+diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+index 7f7f24ee3c4b..5dfbe6e1421c 100644
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -27,6 +27,37 @@
+  * If (((Dequeue Ptr (i.e. EP_TRADDR) == Enqueue Ptr-1) or
+  *	(Dequeue Ptr (i.e. EP_TRADDR) == Enqueue Ptr))
+  *		and (DRBL==1 and (not EP0)))
 + *
-+ * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
++ * Work around 2:
++ * Controller for OUT endpoints has shared on-chip buffers for all incoming
++ * packets, including ep0out. It's FIFO buffer, so packets must be handle by DMA
++ * in correct order. If the first packet in the buffer will not be handled,
++ * then the following packets directed for other endpoints and  functions
++ * will be blocked.
++ * Additionally the packets directed to one endpoint can block entire on-chip
++ * buffers. In this case transfer to other endpoints also will blocked.
 + *
-+ * Authors: Felipe Balbi <balbi@ti.com>,
-+ *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
++ * To resolve this issue after raising the descriptor missing interrupt
++ * driver prepares internal usb_request object and use it to arm DMA transfer.
++ *
++ * The problematic situation was observed in case when endpoint has been enabled
++ * but no usb_request were queued. Driver try detects such endpoints and will
++ * use this workaround only for these endpoint.
++ *
++ * Driver use limited number of buffer. This number can be set by macro
++ * CDNS_WA2_NUM_BUFFERS.
++ *
++ * Such blocking situation was observed on ACM gadget. For this function
++ * host send OUT data packet but ACM function is not prepared for this packet.
++ * It's cause that buffer placed in on chip memory block transfer to other
++ * endpoints.
++ *
++ * It's limitation of controller but maybe this issues should be fixed in
++ * function driver.
++ *
++ * This work around can be disabled/enabled by means of quirk_internal_buffer
++ * module parameter. By default feature is enabled. It can has impact to
++ * transfer performance and in most case this feature can be disabled.
+  */
+ 
+ #include <linux/dma-mapping.h>
+@@ -42,6 +73,14 @@ static int __cdns3_gadget_ep_queue(struct usb_ep *ep,
+ 				   struct usb_request *request,
+ 				   gfp_t gfp_flags);
+ 
++/*
++ * Parameter allows to disable/enable handling of work around 2 feature.
++ * By default this value is enabled.
 + */
++static bool quirk_internal_buffer = 1;
++module_param(quirk_internal_buffer, bool, 0644);
++MODULE_PARM_DESC(quirk_internal_buffer, "Disable/enable WA2 algorithm");
 +
-+#ifndef __LINUX_USB_COMMON_DEBUG
-+#define __LINUX_USB_COMMON_DEBUG
-+
-+#include <linux/usb/ch9.h>
-+
-+static void usb_decode_get_status(__u8 bRequestType, __u16 wIndex,
-+				  __u16 wLength, char *str, size_t size)
-+{
-+	switch (bRequestType & USB_RECIP_MASK) {
-+	case USB_RECIP_INTERFACE:
-+		snprintf(str, size,
-+			 "Get Interface Status(Intf = %d, Length = %d)",
-+			 wIndex, wLength);
-+		break;
-+	case USB_RECIP_ENDPOINT:
-+		snprintf(str, size, "Get Endpoint Status(ep%d%s)",
-+			 wIndex & ~USB_DIR_IN,
-+			 wIndex & USB_DIR_IN ? "in" : "out");
-+		break;
-+	}
-+}
-+
-+static void usb_decode_set_clear_feature(__u8 bRequestType, __u8 bRequest,
-+					 __u16 wValue, __u16 wIndex,
-+					 char *str, size_t size)
-+{
-+	switch (bRequestType & USB_RECIP_MASK) {
-+	case USB_RECIP_DEVICE:
-+		snprintf(str, size, "%s Device Feature(%s%s)",
-+			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
-+			 ({char *s;
-+				switch (wValue) {
-+				case USB_DEVICE_SELF_POWERED:
-+					s = "Self Powered";
-+					break;
-+				case USB_DEVICE_REMOTE_WAKEUP:
-+					s = "Remote Wakeup";
-+					break;
-+				case USB_DEVICE_TEST_MODE:
-+					s = "Test Mode";
-+					break;
-+				case USB_DEVICE_U1_ENABLE:
-+					s = "U1 Enable";
-+					break;
-+				case USB_DEVICE_U2_ENABLE:
-+					s = "U2 Enable";
-+					break;
-+				case USB_DEVICE_LTM_ENABLE:
-+					s = "LTM Enable";
-+					break;
-+				default:
-+					s = "UNKNOWN";
-+				} s; }),
-+			 wValue == USB_DEVICE_TEST_MODE ?
-+			 ({ char *s;
-+				switch (wIndex) {
-+				case TEST_J:
-+					s = ": TEST_J";
-+					break;
-+				case TEST_K:
-+					s = ": TEST_K";
-+					break;
-+				case TEST_SE0_NAK:
-+					s = ": TEST_SE0_NAK";
-+					break;
-+				case TEST_PACKET:
-+					s = ": TEST_PACKET";
-+					break;
-+				case TEST_FORCE_EN:
-+					s = ": TEST_FORCE_EN";
-+					break;
-+				default:
-+					s = ": UNKNOWN";
-+				} s; }) : "");
-+		break;
-+	case USB_RECIP_INTERFACE:
-+		snprintf(str, size, "%s Interface Feature(%s)",
-+			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
-+			 wValue == USB_INTRF_FUNC_SUSPEND ?
-+			 "Function Suspend" : "UNKNOWN");
-+		break;
-+	case USB_RECIP_ENDPOINT:
-+		snprintf(str, size, "%s Endpoint Feature(%s ep%d%s)",
-+			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
-+			 wValue == USB_ENDPOINT_HALT ? "Halt" : "UNKNOWN",
-+			 wIndex & ~USB_DIR_IN,
-+			 wIndex & USB_DIR_IN ? "in" : "out");
-+		break;
-+	}
-+}
-+
-+static void usb_decode_set_address(__u16 wValue, char *str, size_t size)
-+{
-+	snprintf(str, size, "Set Address(Addr = %02x)", wValue);
-+}
-+
-+static void usb_decode_get_set_descriptor(__u8 bRequestType, __u8 bRequest,
-+					  __u16 wValue, __u16 wIndex,
-+					  __u16 wLength, char *str, size_t size)
-+{
-+	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
-+		 bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
-+		 ({ char *s;
-+			switch (wValue >> 8) {
-+			case USB_DT_DEVICE:
-+				s = "Device";
-+				break;
-+			case USB_DT_CONFIG:
-+				s = "Configuration";
-+				break;
-+			case USB_DT_STRING:
-+				s = "String";
-+				break;
-+			case USB_DT_INTERFACE:
-+				s = "Interface";
-+				break;
-+			case USB_DT_ENDPOINT:
-+				s = "Endpoint";
-+				break;
-+			case USB_DT_DEVICE_QUALIFIER:
-+				s = "Device Qualifier";
-+				break;
-+			case USB_DT_OTHER_SPEED_CONFIG:
-+				s = "Other Speed Config";
-+				break;
-+			case USB_DT_INTERFACE_POWER:
-+				s = "Interface Power";
-+				break;
-+			case USB_DT_OTG:
-+				s = "OTG";
-+				break;
-+			case USB_DT_DEBUG:
-+				s = "Debug";
-+				break;
-+			case USB_DT_INTERFACE_ASSOCIATION:
-+				s = "Interface Association";
-+				break;
-+			case USB_DT_BOS:
-+				s = "BOS";
-+				break;
-+			case USB_DT_DEVICE_CAPABILITY:
-+				s = "Device Capability";
-+				break;
-+			case USB_DT_PIPE_USAGE:
-+				s = "Pipe Usage";
-+				break;
-+			case USB_DT_SS_ENDPOINT_COMP:
-+				s = "SS Endpoint Companion";
-+				break;
-+			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
-+				s = "SSP Isochronous Endpoint Companion";
-+				break;
-+			default:
-+				s = "UNKNOWN";
-+				break;
-+			} s; }), wValue & 0xff, wLength);
-+}
-+
-+static void usb_decode_get_configuration(__u16 wLength, char *str, size_t size)
-+{
-+	snprintf(str, size, "Get Configuration(Length = %d)", wLength);
-+}
-+
-+static void usb_decode_set_configuration(__u8 wValue, char *str, size_t size)
-+{
-+	snprintf(str, size, "Set Configuration(Config = %d)", wValue);
-+}
-+
-+static void usb_decode_get_intf(__u16 wIndex, __u16 wLength, char *str,
-+				size_t size)
-+{
-+	snprintf(str, size, "Get Interface(Intf = %d, Length = %d)",
-+		 wIndex, wLength);
-+}
-+
-+static void usb_decode_set_intf(__u8 wValue, __u16 wIndex, char *str,
-+				size_t size)
-+{
-+	snprintf(str, size, "Set Interface(Intf = %d, Alt.Setting = %d)",
-+		 wIndex, wValue);
-+}
-+
-+static void usb_decode_synch_frame(__u16 wIndex, __u16 wLength,
-+				   char *str, size_t size)
-+{
-+	snprintf(str, size, "Synch Frame(Endpoint = %d, Length = %d)",
-+		 wIndex, wLength);
-+}
-+
-+static void usb_decode_set_sel(__u16 wLength, char *str, size_t size)
-+{
-+	snprintf(str, size, "Set SEL(Length = %d)", wLength);
-+}
-+
-+static void usb_decode_set_isoch_delay(__u8 wValue, char *str, size_t size)
-+{
-+	snprintf(str, size, "Set Isochronous Delay(Delay = %d ns)", wValue);
-+}
-+
-+/**
-+ * usb_decode_ctrl - returns a string representation of ctrl request
-+ */
-+const char *usb_decode_ctrl(char *str, size_t size, __u8 bRequestType,
-+			    __u8 bRequest, __u16 wValue, __u16 wIndex,
-+			    __u16 wLength)
-+{
-+	switch (bRequest) {
-+	case USB_REQ_GET_STATUS:
-+		usb_decode_get_status(bRequestType, wIndex, wLength, str, size);
-+		break;
-+	case USB_REQ_CLEAR_FEATURE:
-+	case USB_REQ_SET_FEATURE:
-+		usb_decode_set_clear_feature(bRequestType, bRequest, wValue,
-+					     wIndex, str, size);
-+		break;
-+	case USB_REQ_SET_ADDRESS:
-+		usb_decode_set_address(wValue, str, size);
-+		break;
-+	case USB_REQ_GET_DESCRIPTOR:
-+	case USB_REQ_SET_DESCRIPTOR:
-+		usb_decode_get_set_descriptor(bRequestType, bRequest, wValue,
-+					      wIndex, wLength, str, size);
-+		break;
-+	case USB_REQ_GET_CONFIGURATION:
-+		usb_decode_get_configuration(wLength, str, size);
-+		break;
-+	case USB_REQ_SET_CONFIGURATION:
-+		usb_decode_set_configuration(wValue, str, size);
-+		break;
-+	case USB_REQ_GET_INTERFACE:
-+		usb_decode_get_intf(wIndex, wLength, str, size);
-+		break;
-+	case USB_REQ_SET_INTERFACE:
-+		usb_decode_set_intf(wValue, wIndex, str, size);
-+		break;
-+	case USB_REQ_SYNCH_FRAME:
-+		usb_decode_synch_frame(wIndex, wLength, str, size);
-+		break;
-+	case USB_REQ_SET_SEL:
-+		usb_decode_set_sel(wLength, str, size);
-+		break;
-+	case USB_REQ_SET_ISOCH_DELAY:
-+		usb_decode_set_isoch_delay(wValue, str, size);
-+		break;
-+	default:
-+		snprintf(str, size, "%02x %02x %02x %02x %02x %02x %02x %02x",
-+			 bRequestType, bRequest,
-+			 (u8)(cpu_to_le16(wValue) & 0xff),
-+			 (u8)(cpu_to_le16(wValue) >> 8),
-+			 (u8)(cpu_to_le16(wIndex) & 0xff),
-+			 (u8)(cpu_to_le16(wIndex) >> 8),
-+			 (u8)(cpu_to_le16(wLength) & 0xff),
-+			 (u8)(cpu_to_le16(wLength) >> 8));
-+	}
-+
-+	return str;
-+}
-+EXPORT_SYMBOL_GPL(usb_decode_ctrl);
-+
-+#endif /* __LINUX_USB_COMMON_DEBUG */
-diff --git a/drivers/usb/dwc3/debug.h b/drivers/usb/dwc3/debug.h
-index 6ec4280fa40c..3cf84c0ba486 100644
---- a/drivers/usb/dwc3/debug.h
-+++ b/drivers/usb/dwc3/debug.h
-@@ -217,255 +217,6 @@ static inline const char *dwc3_gadget_event_string(char *str, size_t size,
- 	return str;
+ /**
+  * cdns3_handshake - spin reading  until handshake completes or fails
+  * @ptr: address of device controller register to be read
+@@ -105,6 +144,17 @@ struct usb_request *cdns3_next_request(struct list_head *list)
+ 	return list_first_entry_or_null(list, struct usb_request, list);
  }
  
--static inline void dwc3_decode_get_status(__u8 t, __u16 i, __u16 l, char *str,
--		size_t size)
--{
--	switch (t & USB_RECIP_MASK) {
--	case USB_RECIP_INTERFACE:
--		snprintf(str, size, "Get Interface Status(Intf = %d, Length = %d)",
--				i, l);
--		break;
--	case USB_RECIP_ENDPOINT:
--		snprintf(str, size, "Get Endpoint Status(ep%d%s)",
--			i & ~USB_DIR_IN,
--			i & USB_DIR_IN ? "in" : "out");
--		break;
--	}
--}
--
--static inline void dwc3_decode_set_clear_feature(__u8 t, __u8 b, __u16 v,
--		__u16 i, char *str, size_t size)
--{
--	switch (t & USB_RECIP_MASK) {
--	case USB_RECIP_DEVICE:
--		snprintf(str, size, "%s Device Feature(%s%s)",
--			b == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
--			({char *s;
--				switch (v) {
--				case USB_DEVICE_SELF_POWERED:
--					s = "Self Powered";
--					break;
--				case USB_DEVICE_REMOTE_WAKEUP:
--					s = "Remote Wakeup";
--					break;
--				case USB_DEVICE_TEST_MODE:
--					s = "Test Mode";
--					break;
--				case USB_DEVICE_U1_ENABLE:
--					s = "U1 Enable";
--					break;
--				case USB_DEVICE_U2_ENABLE:
--					s = "U2 Enable";
--					break;
--				case USB_DEVICE_LTM_ENABLE:
--					s = "LTM Enable";
--					break;
--				default:
--					s = "UNKNOWN";
--				} s; }),
--			v == USB_DEVICE_TEST_MODE ?
--			({ char *s;
--				switch (i) {
--				case TEST_J:
--					s = ": TEST_J";
--					break;
--				case TEST_K:
--					s = ": TEST_K";
--					break;
--				case TEST_SE0_NAK:
--					s = ": TEST_SE0_NAK";
--					break;
--				case TEST_PACKET:
--					s = ": TEST_PACKET";
--					break;
--				case TEST_FORCE_EN:
--					s = ": TEST_FORCE_EN";
--					break;
--				default:
--					s = ": UNKNOWN";
--				} s; }) : "");
--		break;
--	case USB_RECIP_INTERFACE:
--		snprintf(str, size, "%s Interface Feature(%s)",
--			b == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
--			v == USB_INTRF_FUNC_SUSPEND ?
--			"Function Suspend" : "UNKNOWN");
--		break;
--	case USB_RECIP_ENDPOINT:
--		snprintf(str, size, "%s Endpoint Feature(%s ep%d%s)",
--			b == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
--			v == USB_ENDPOINT_HALT ? "Halt" : "UNKNOWN",
--			i & ~USB_DIR_IN,
--			i & USB_DIR_IN ? "in" : "out");
--		break;
--	}
--}
--
--static inline void dwc3_decode_set_address(__u16 v, char *str, size_t size)
--{
--	snprintf(str, size, "Set Address(Addr = %02x)", v);
--}
--
--static inline void dwc3_decode_get_set_descriptor(__u8 t, __u8 b, __u16 v,
--		__u16 i, __u16 l, char *str, size_t size)
--{
--	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
--		b == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
--		({ char *s;
--			switch (v >> 8) {
--			case USB_DT_DEVICE:
--				s = "Device";
--				break;
--			case USB_DT_CONFIG:
--				s = "Configuration";
--				break;
--			case USB_DT_STRING:
--				s = "String";
--				break;
--			case USB_DT_INTERFACE:
--				s = "Interface";
--				break;
--			case USB_DT_ENDPOINT:
--				s = "Endpoint";
--				break;
--			case USB_DT_DEVICE_QUALIFIER:
--				s = "Device Qualifier";
--				break;
--			case USB_DT_OTHER_SPEED_CONFIG:
--				s = "Other Speed Config";
--				break;
--			case USB_DT_INTERFACE_POWER:
--				s = "Interface Power";
--				break;
--			case USB_DT_OTG:
--				s = "OTG";
--				break;
--			case USB_DT_DEBUG:
--				s = "Debug";
--				break;
--			case USB_DT_INTERFACE_ASSOCIATION:
--				s = "Interface Association";
--				break;
--			case USB_DT_BOS:
--				s = "BOS";
--				break;
--			case USB_DT_DEVICE_CAPABILITY:
--				s = "Device Capability";
--				break;
--			case USB_DT_PIPE_USAGE:
--				s = "Pipe Usage";
--				break;
--			case USB_DT_SS_ENDPOINT_COMP:
--				s = "SS Endpoint Companion";
--				break;
--			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
--				s = "SSP Isochronous Endpoint Companion";
--				break;
--			default:
--				s = "UNKNOWN";
--				break;
--			} s; }), v & 0xff, l);
--}
--
--
--static inline void dwc3_decode_get_configuration(__u16 l, char *str,
--		size_t size)
--{
--	snprintf(str, size, "Get Configuration(Length = %d)", l);
--}
--
--static inline void dwc3_decode_set_configuration(__u8 v, char *str, size_t size)
--{
--	snprintf(str, size, "Set Configuration(Config = %d)", v);
--}
--
--static inline void dwc3_decode_get_intf(__u16 i, __u16 l, char *str,
--		size_t size)
--{
--	snprintf(str, size, "Get Interface(Intf = %d, Length = %d)", i, l);
--}
--
--static inline void dwc3_decode_set_intf(__u8 v, __u16 i, char *str, size_t size)
--{
--	snprintf(str, size, "Set Interface(Intf = %d, Alt.Setting = %d)", i, v);
--}
--
--static inline void dwc3_decode_synch_frame(__u16 i, __u16 l, char *str,
--		size_t size)
--{
--	snprintf(str, size, "Synch Frame(Endpoint = %d, Length = %d)", i, l);
--}
--
--static inline void dwc3_decode_set_sel(__u16 l, char *str, size_t size)
--{
--	snprintf(str, size, "Set SEL(Length = %d)", l);
--}
--
--static inline void dwc3_decode_set_isoch_delay(__u8 v, char *str, size_t size)
--{
--	snprintf(str, size, "Set Isochronous Delay(Delay = %d ns)", v);
--}
--
--/**
-- * dwc3_decode_ctrl - returns a string represetion of ctrl request
-- */
--static inline const char *dwc3_decode_ctrl(char *str, size_t size,
--		__u8 bRequestType, __u8 bRequest, __u16 wValue, __u16 wIndex,
--		__u16 wLength)
--{
--	switch (bRequest) {
--	case USB_REQ_GET_STATUS:
--		dwc3_decode_get_status(bRequestType, wIndex, wLength, str,
--				size);
--		break;
--	case USB_REQ_CLEAR_FEATURE:
--	case USB_REQ_SET_FEATURE:
--		dwc3_decode_set_clear_feature(bRequestType, bRequest, wValue,
--				wIndex, str, size);
--		break;
--	case USB_REQ_SET_ADDRESS:
--		dwc3_decode_set_address(wValue, str, size);
--		break;
--	case USB_REQ_GET_DESCRIPTOR:
--	case USB_REQ_SET_DESCRIPTOR:
--		dwc3_decode_get_set_descriptor(bRequestType, bRequest, wValue,
--				wIndex, wLength, str, size);
--		break;
--	case USB_REQ_GET_CONFIGURATION:
--		dwc3_decode_get_configuration(wLength, str, size);
--		break;
--	case USB_REQ_SET_CONFIGURATION:
--		dwc3_decode_set_configuration(wValue, str, size);
--		break;
--	case USB_REQ_GET_INTERFACE:
--		dwc3_decode_get_intf(wIndex, wLength, str, size);
--		break;
--	case USB_REQ_SET_INTERFACE:
--		dwc3_decode_set_intf(wValue, wIndex, str, size);
--		break;
--	case USB_REQ_SYNCH_FRAME:
--		dwc3_decode_synch_frame(wIndex, wLength, str, size);
--		break;
--	case USB_REQ_SET_SEL:
--		dwc3_decode_set_sel(wLength, str, size);
--		break;
--	case USB_REQ_SET_ISOCH_DELAY:
--		dwc3_decode_set_isoch_delay(wValue, str, size);
--		break;
--	default:
--		snprintf(str, size, "%02x %02x %02x %02x %02x %02x %02x %02x",
--			bRequestType, bRequest,
--			cpu_to_le16(wValue) & 0xff,
--			cpu_to_le16(wValue) >> 8,
--			cpu_to_le16(wIndex) & 0xff,
--			cpu_to_le16(wIndex) >> 8,
--			cpu_to_le16(wLength) & 0xff,
--			cpu_to_le16(wLength) >> 8);
--	}
--
--	return str;
--}
--
++/**
++ * cdns3_next_priv_request - returns next request from list
++ * @list: list containing requests
++ *
++ * Returns request or NULL if no requests in list
++ */
++struct cdns3_request *cdns3_next_priv_request(struct list_head *list)
++{
++	return list_first_entry_or_null(list, struct cdns3_request, list);
++}
++
  /**
-  * dwc3_ep_event_string - returns event name
-  * @event: then event code
-diff --git a/drivers/usb/dwc3/trace.h b/drivers/usb/dwc3/trace.h
-index 5d479c508cb5..32196b9bc45b 100644
---- a/drivers/usb/dwc3/trace.h
-+++ b/drivers/usb/dwc3/trace.h
-@@ -86,7 +86,7 @@ DECLARE_EVENT_CLASS(dwc3_log_ctrl,
- 		__entry->wIndex = le16_to_cpu(ctrl->wIndex);
- 		__entry->wLength = le16_to_cpu(ctrl->wLength);
- 	),
--	TP_printk("%s", dwc3_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
-+	TP_printk("%s", usb_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
- 					__entry->bRequestType,
- 					__entry->bRequest, __entry->wValue,
- 					__entry->wIndex, __entry->wLength)
-diff --git a/include/linux/usb/ch9.h b/include/linux/usb/ch9.h
-index 523aa088f6ab..db21b11bec6e 100644
---- a/include/linux/usb/ch9.h
-+++ b/include/linux/usb/ch9.h
-@@ -62,4 +62,29 @@ extern enum usb_device_speed usb_get_maximum_speed(struct device *dev);
-  */
- extern const char *usb_state_string(enum usb_device_state state);
+  * select_ep - selects endpoint
+  * @priv_dev:  extended gadget object
+@@ -384,6 +434,53 @@ static int cdns3_start_all_request(struct cdns3_device *priv_dev,
+ 	return ret;
+ }
  
 +/**
-+ * usb_decode_ctrl - Returns human readable representation of control request.
-+ * @str: buffer to return a human-readable representation of control request.
-+ *       This buffer should have about 200 bytes.
-+ * @size: size of str buffer.
-+ * @bRequestType: matches the USB bmRequestType field
-+ * @bRequest: matches the USB bRequest field
-+ * @wValue: matches the USB wValue field (CPU byte order)
-+ * @wIndex: matches the USB wIndex field (CPU byte order)
-+ * @wLength: matches the USB wLength field (CPU byte order)
-+ *
-+ * Function returns decoded, formatted and human-readable description of
-+ * control request packet.
-+ *
-+ * The usage scenario for this is for tracepoints, so function as a return
-+ * use the same value as in parameters. This approach allows to use this
-+ * function in TP_printk
-+ *
-+ * Important: wValue, wIndex, wLength parameters before invoking this function
-+ * should be processed by le16_to_cpu macro.
++ * cdns3_descmiss_copy_data copy data from internal requests to request queued
++ * by class driver.
++ * @priv_ep: extended endpoint object
++ * @request: request object
 + */
-+const char *usb_decode_ctrl(char *str, size_t size, __u8 bRequestType,
-+			    __u8 bRequest, __u16 wValue, __u16 wIndex,
-+			    __u16 wLength);
++static void cdns3_descmiss_copy_data(struct cdns3_endpoint *priv_ep,
++				     struct usb_request *request)
++{
++	struct usb_request *descmiss_req;
++	struct cdns3_request *descmiss_priv_req;
 +
- #endif /* __LINUX_USB_CH9_H */
++	while (!list_empty(&priv_ep->descmiss_req_list)) {
++		int chunk_end;
++		int length;
++
++		descmiss_priv_req =
++			cdns3_next_priv_request(&priv_ep->descmiss_req_list);
++		descmiss_req = &descmiss_priv_req->request;
++
++		/* driver can't touch pending request */
++		if (descmiss_priv_req->flags & REQUEST_PENDING)
++			break;
++
++		chunk_end = descmiss_priv_req->flags & REQUEST_INTERNAL_CH;
++		length = request->actual + descmiss_req->actual;
++
++		if (length <= request->length) {
++			memcpy(&((u8 *)request->buf)[request->actual],
++			       descmiss_req->buf,
++			       descmiss_req->actual);
++			request->actual = length;
++		} else {
++			/* It should never occures */
++			request->status = -ENOMEM;
++		}
++
++		list_del_init(&descmiss_priv_req->list);
++
++		kfree(descmiss_req->buf);
++		cdns3_gadget_ep_free_request(&priv_ep->endpoint, descmiss_req);
++
++		if (!chunk_end)
++			break;
++	}
++}
++
+ /**
+  * cdns3_gadget_giveback - call struct usb_request's ->complete callback
+  * @priv_ep: The endpoint to whom the request belongs to
+@@ -412,6 +509,32 @@ void cdns3_gadget_giveback(struct cdns3_endpoint *priv_ep,
+ 	priv_req->flags &= ~REQUEST_PENDING;
+ 	trace_cdns3_gadget_giveback(priv_req);
+ 
++	/* WA2: */
++	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN &&
++	    priv_req->flags & REQUEST_INTERNAL) {
++		struct usb_request *req;
++
++		req = cdns3_next_request(&priv_ep->deferred_req_list);
++		request = req;
++		priv_ep->descmis_req = NULL;
++
++		if (!req)
++			return;
++
++		cdns3_descmiss_copy_data(priv_ep, req);
++		if (!(priv_ep->flags & EP_QUIRK_END_TRANSFER) &&
++		    req->length != req->actual) {
++			/* wait for next part of transfer */
++			return;
++		}
++
++		if (req->status == -EINPROGRESS)
++			req->status = 0;
++
++		list_del_init(&req->list);
++		cdns3_start_all_request(priv_dev, priv_ep);
++	}
++
+ 	/* Start all not pending request */
+ 	if (priv_ep->flags & EP_RING_FULL)
+ 		cdns3_start_all_request(priv_dev, priv_ep);
+@@ -774,6 +897,59 @@ void cdns3_rearm_transfer(struct cdns3_endpoint *priv_ep, u8 rearm)
+ 	}
+ }
+ 
++/**
++ * cdns3_descmissing_packet - handles descriptor missing event.
++ * @priv_dev: extended gadget object
++ *
++ * This function is used only for WA2. For more information see Work around 2
++ * description.
++ */
++static int cdns3_descmissing_packet(struct cdns3_endpoint *priv_ep)
++{
++	struct cdns3_request *priv_req;
++	struct usb_request *request;
++
++	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_DET) {
++		priv_ep->flags &= ~EP_QUIRK_EXTRA_BUF_DET;
++		priv_ep->flags |= EP_QUIRK_EXTRA_BUF_EN;
++	}
++
++	cdns3_dbg(priv_ep->cdns3_dev, "WA2: Description Missing detected\n");
++
++	request = cdns3_gadget_ep_alloc_request(&priv_ep->endpoint,
++						GFP_ATOMIC);
++	if (!request)
++		return -ENOMEM;
++
++	priv_req = to_cdns3_request(request);
++	priv_req->flags |= REQUEST_INTERNAL;
++
++	/* if this field is still assigned it indicate that transfer related
++	 * with this request has not been finished yet. Driver in this
++	 * case simply allocate next request and assign flag REQUEST_INTERNAL_CH
++	 * flag to previous one. It will indicate that current request is
++	 * part of the previous one.
++	 */
++	if (priv_ep->descmis_req)
++		priv_ep->descmis_req->flags |= REQUEST_INTERNAL_CH;
++
++	priv_req->request.buf = kzalloc(CDNS3_DESCMIS_BUF_SIZE,
++					GFP_ATOMIC);
++	if (!priv_req) {
++		cdns3_gadget_ep_free_request(&priv_ep->endpoint, request);
++		return -ENOMEM;
++	}
++
++	priv_req->request.length = CDNS3_DESCMIS_BUF_SIZE;
++	priv_ep->descmis_req = priv_req;
++
++	__cdns3_gadget_ep_queue(&priv_ep->endpoint,
++				&priv_ep->descmis_req->request,
++				GFP_ATOMIC);
++
++	return 0;
++}
++
+ /**
+  * cdns3_check_ep_interrupt_proceed - Processes interrupt related to endpoint
+  * @priv_ep: endpoint object
+@@ -807,8 +983,31 @@ static int cdns3_check_ep_interrupt_proceed(struct cdns3_endpoint *priv_ep)
+ 			cdns3_rearm_transfer(priv_ep, priv_ep->wa1_set);
+ 	}
+ 
+-	if ((ep_sts_reg & EP_STS_IOC) || (ep_sts_reg & EP_STS_ISP))
++	if ((ep_sts_reg & EP_STS_IOC) || (ep_sts_reg & EP_STS_ISP)) {
++		if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN) {
++			if (ep_sts_reg & EP_STS_ISP)
++				priv_ep->flags |= EP_QUIRK_END_TRANSFER;
++			else
++				priv_ep->flags &= ~EP_QUIRK_END_TRANSFER;
++		}
++
+ 		cdns3_transfer_completed(priv_dev, priv_ep);
++	}
++
++	/*
++	 * WA2: this condition should only be meet when
++	 * priv_ep->flags & EP_QUIRK_EXTRA_BUF_DET or
++	 * priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN.
++	 * In other cases this interrupt will be disabled/
++	 */
++	if (ep_sts_reg & EP_STS_DESCMIS) {
++		int err;
++
++		err = cdns3_descmissing_packet(priv_ep);
++		if (err)
++			dev_err(priv_dev->dev,
++				"Failed: No sufficient memory for DESCMIS\n");
++	}
+ 
+ 	return 0;
+ }
+@@ -1241,13 +1440,26 @@ static int cdns3_gadget_ep_enable(struct usb_ep *ep,
+ 	/* enable interrupt for selected endpoint */
+ 	cdns3_set_register_bit(&priv_dev->regs->ep_ien,
+ 			       BIT(cdns3_ep_addr_to_index(bEndpointAddress)));
++	/*
++	 * WA2: Set flag for all not ISOC OUT endpoints. If this flag is set
++	 * driver try to detect whether endpoint need additional internal
++	 * buffer for unblocking on-chip FIFO buffer. This flag will be cleared
++	 * if before first DESCMISS interrupt the DMA will be armed.
++	 */
++	if (quirk_internal_buffer) {
++		if (!priv_ep->dir && priv_ep->type != USB_ENDPOINT_XFER_ISOC) {
++			priv_ep->flags |= EP_QUIRK_EXTRA_BUF_DET;
++			reg |= EP_STS_EN_DESCMISEN;
++		}
++	}
+ 
+ 	writel(reg, &priv_dev->regs->ep_sts_en);
+ 
+ 	cdns3_set_register_bit(&priv_dev->regs->ep_cfg, EP_CFG_ENABLE);
+ 
+ 	ep->desc = desc;
+-	priv_ep->flags &= ~(EP_PENDING_REQUEST | EP_STALL);
++	priv_ep->flags &= ~(EP_PENDING_REQUEST | EP_STALL |
++			    EP_QUIRK_EXTRA_BUF_EN);
+ 	priv_ep->flags |= EP_ENABLED | EP_UPDATE_EP_TRBADDR;
+ 	priv_ep->wa1_set = 0;
+ 	priv_ep->enqueue = 0;
+@@ -1272,6 +1484,7 @@ static int cdns3_gadget_ep_enable(struct usb_ep *ep,
+ static int cdns3_gadget_ep_disable(struct usb_ep *ep)
+ {
+ 	struct cdns3_endpoint *priv_ep;
++	struct cdns3_request *priv_req;
+ 	struct cdns3_device *priv_dev;
+ 	struct usb_request *request;
+ 	unsigned long flags;
+@@ -1308,6 +1521,14 @@ static int cdns3_gadget_ep_disable(struct usb_ep *ep)
+ 				      -ESHUTDOWN);
+ 	}
+ 
++	while (!list_empty(&priv_ep->descmiss_req_list)) {
++		priv_req = cdns3_next_priv_request(&priv_ep->descmiss_req_list);
++
++		kfree(priv_req->request.buf);
++		cdns3_gadget_ep_free_request(&priv_ep->endpoint,
++					     &priv_req->request);
++	}
++
+ 	while (!list_empty(&priv_ep->deferred_req_list)) {
+ 		request = cdns3_next_request(&priv_ep->deferred_req_list);
+ 
+@@ -1348,6 +1569,53 @@ static int __cdns3_gadget_ep_queue(struct usb_ep *ep,
+ 	priv_req = to_cdns3_request(request);
+ 	trace_cdns3_ep_queue(priv_req);
+ 
++	/*
++	 * WA2: if transfer was queued before DESCMISS appear than we
++	 * can disable handling of DESCMISS interrupt. Driver assumes that it
++	 * can disable special treatment for this endpoint.
++	 */
++	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_DET) {
++		u32 reg;
++
++		cdns3_select_ep(priv_dev, priv_ep->num | priv_ep->dir);
++		priv_ep->flags &= ~EP_QUIRK_EXTRA_BUF_DET;
++		reg = readl(&priv_dev->regs->ep_sts_en);
++		reg &= ~EP_STS_EN_DESCMISEN;
++		writel(reg, &priv_dev->regs->ep_sts_en);
++	}
++
++	/* WA2 */
++	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN) {
++		u8 pending_empty = list_empty(&priv_ep->pending_req_list);
++		u8 descmiss_empty = list_empty(&priv_ep->descmiss_req_list);
++
++		/*
++		 *  DESCMISS transfer has been finished, so data will be
++		 *  directly copied from internal allocated usb_request
++		 *  objects.
++		 */
++		if (pending_empty && !descmiss_empty &&
++		    !(priv_req->flags & REQUEST_INTERNAL)) {
++			cdns3_descmiss_copy_data(priv_ep, request);
++			list_add_tail(&request->list,
++				      &priv_ep->pending_req_list);
++			cdns3_gadget_giveback(priv_ep, priv_req,
++					      request->status);
++			return ret;
++		}
++
++		/*
++		 * WA2 driver will wait for completion DESCMISS transfer,
++		 * before starts new, not DESCMISS transfer.
++		 */
++		if (!pending_empty && !descmiss_empty)
++			deferred = 1;
++
++		if (priv_req->flags & REQUEST_INTERNAL)
++			list_add_tail(&priv_req->list,
++				      &priv_ep->descmiss_req_list);
++	}
++
+ 	ret = usb_gadget_map_request_by_dev(priv_dev->sysdev, request,
+ 					    usb_endpoint_dir_in(ep->desc));
+ 	if (ret)
+@@ -1782,6 +2050,7 @@ static int cdns3_init_eps(struct cdns3_device *priv_dev)
+ 
+ 		INIT_LIST_HEAD(&priv_ep->pending_req_list);
+ 		INIT_LIST_HEAD(&priv_ep->deferred_req_list);
++		INIT_LIST_HEAD(&priv_ep->descmiss_req_list);
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/usb/cdns3/gadget.h b/drivers/usb/cdns3/gadget.h
+index 817f8ae7a4da..8de733b315e9 100644
+--- a/drivers/usb/cdns3/gadget.h
++++ b/drivers/usb/cdns3/gadget.h
+@@ -1000,6 +1000,7 @@ struct cdns3_device;
+  * @endpoint: usb endpoint
+  * @pending_req_list: list of requests queuing on transfer ring.
+  * @deferred_req_list: list of requests waiting for queuing on transfer ring.
++ * @descmiss_req_list: list of requests internally allocated by driver (WA2).
+  * @trb_pool: transfer ring - array of transaction buffers
+  * @trb_pool_dma: dma address of transfer ring
+  * @cdns3_dev: device associated with this endpoint
+@@ -1026,6 +1027,7 @@ struct cdns3_endpoint {
+ 	struct usb_ep		endpoint;
+ 	struct list_head	pending_req_list;
+ 	struct list_head	deferred_req_list;
++	struct list_head	descmiss_req_list;
+ 
+ 	struct cdns3_trb	*trb_pool;
+ 	dma_addr_t		trb_pool_dma;
+@@ -1041,6 +1043,9 @@ struct cdns3_endpoint {
+ #define EP_PENDING_REQUEST	BIT(5)
+ #define EP_RING_FULL		BIT(6)
+ #define EP_CLAIMED		BIT(7)
++#define EP_QUIRK_EXTRA_BUF_DET	BIT(8)
++#define EP_QUIRK_EXTRA_BUF_EN	BIT(9)
++#define EP_QUIRK_END_TRANSFER	BIT(10)
+ 
+ 	u32			flags;
+ 
+@@ -1074,6 +1079,7 @@ struct cdns3_endpoint {
+  * @start_trb: number of the first TRB in transfer ring
+  * @end_trb: number of the last TRB in transfer ring
+  * @flags: flag specifying special usage of request
++ * @list: used by internally allocated request to add to descmiss_req_list.
+  */
+ struct cdns3_request {
+ 	struct usb_request	request;
+@@ -1086,6 +1092,7 @@ struct cdns3_request {
+ #define REQUEST_INTERNAL_CH	BIT(2)
+ #define REQUEST_ZLP		BIT(3)
+ 	u32			flags;
++	struct list_head	list;
+ };
+ 
+ #define to_cdns3_request(r) (container_of(r, struct cdns3_request, request))
 -- 
 2.17.1
