@@ -1,88 +1,87 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v5 07/11] power: supply: max77650: add support for
- battery charger
-Date: Thu, 14 Feb 2019 11:51:15 +0100
-Message-ID: <20190214105115.GD6132@amd>
-References: <20190213134335.10838-1-brgl@bgdev.pl>
- <20190213134335.10838-8-brgl@bgdev.pl>
- <20190214103944.GC6132@amd>
- <CAMRc=MdR9j3pEw4SFU+SQyWF-jD3n-kp6Z7_6L-bH6J2zyeSZA@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Thu, 14 Feb 2019 12:55:10 +0200
+Message-ID: <5C65490E.6000800@ti.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com>
+ <CACRpkdamWQUW_O+gageB4Q6XuBg+t-h+eW1gpor7_DHvx41j=A@mail.gmail.com>
+ <9c58bc48-90bf-8ac5-7fbd-0f6443e3fc5e@ti.com>
+ <CACRpkdb4Q0efW5MaDmPTmewq-RFwXOTp15DCE1VpPf6g216iBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="NklN7DEeGtkPCoo3"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdR9j3pEw4SFU+SQyWF-jD3n-kp6Z7_6L-bH6J2zyeSZA@mail.gmail.com>
+In-Reply-To: <CACRpkdb4Q0efW5MaDmPTmewq-RFwXOTp15DCE1VpPf6g216iBw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, ext Tony Lindgren <tony@atomide.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Lechner <david@lechnology.com>, "Nori, Sekhar" <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, nsaulnier@ti.com, jreeder@ti.com, Murali Karicheri <m-karicheri2@ti.com>, woods.technical@gmail.com, Linux-OMAP <linux-omap@vger.kernel.org>, linux-remoteproc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---NklN7DEeGtkPCoo3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 14/02/19 10:37, Linus Walleij wrote:
+> On Thu, Feb 14, 2019 at 4:13 AM Suman Anna <s-anna@ti.com> wrote:
+>> [Me]
+> 
+>>> To be able to use hierarchical interrupt domain in the kernel, the top
+>>> interrupt controller must use the hierarchical (v2) irqdomain, so
+>>> if this is anything else than the ARM GIC it will be an interesting
+>>> undertaking to handle this.
+>>
+>> These are interrupt lines coming towards the host processor running
+>> Linux and are directly connected to the ARM GIC. This INTC module is
+>> actually an PRUSS internal interrupt controller that can take in 64 (on
+>> most SoCs) external events/interrupt sources and multiplexing them
+>> through two layers of many-to-one events-to-intr channels &
+>> intr-channels-to-host interrupts. Couple of the host interrupts go to
+>> the PRU cores themselves while the remaining ones come out of the IP to
+>> connect to other GICs in the SoC.
+> 
+> If the muxing is static (like set up once at probe) so that while the system is
+> running, there is one and one only event mapped to the GIC from
+> the component below it, then it is hierarchical.
 
-On Thu 2019-02-14 11:42:03, Bartosz Golaszewski wrote:
-> czw., 14 lut 2019 o 11:39 Pavel Machek <pavel@ucw.cz> napisa=C5=82(a):
-> >
-> > Hi!
-> >
-> > > +#define MAX77650_CHG_OFF                     0x00
-> > > +#define MAX77650_CHG_PREQ                    0x01
-> > > +
-> > > +#define MAX77650_CHGIN_UNDERVOLTAGE_LOCKOUT  0x00
-> > > +#define MAX77650_CHGIN_OVERVOLTAGE_LOCKOUT   0x01
-> > > +#define MAX77650_CHGIN_OKAY                  0x11
-> >
-> > Thanks for doing this.
-> >
-> > > +#define MAX77650_CHG_ON_CURR                 0x02
-> > > +#define MAX77650_CHG_ON_CURR_JEITA           0x03
-> > > +#define MAX77650_CHG_ON_VOLT                 0x04
-> > > +#define MAX77650_CHG_ON_VOLT_JEITA           0x05
-> > > +#define MAX77650_CHG_ON_TOPOFF                       0x06
-> > > +#define MAX77650_CHG_ON_TOPOFF_JEITA         0x07
-> > > +#define MAX77650_CHG_DONE                    0x08
-> > > +#define MAX77650_CHG_DONE_JEITA                      0x09
-> > > +#define MAX77650_CHG_SUSP_PREQ_TIM_FAULT     0x0a
-> > > +#define MAX77650_CHG_SUSP_FAST_CHG_TIM_FAULT 0x0b
-> > > +#define MAX77650_CHG_SUSP_BATT_TEMP_FAULT    0x0c
-> > > +
-> > > +#define MAX77650_CHARGER_CHGIN_DTLS_MASK     GENMASK(3, 2)
-> > > +#define MAX77650_CHARGER_CHGIN_DTLS_BITS(_reg) \
-> > > +             (((_reg) & MAX77650_CHARGER_CHGIN_DTLS_MASK) >> 2)
-> >
-> > But I guess these could use similar treatment?
-> >                                                         Pavel
-> >
->=20
-> These are already called the same as in the manual, so we can keep them r=
-ight?
+This is how it looks.
 
-Will the person fixing the driver in 5 years have the manual?
+[GIC]<---8---[INTC]<---64---[events from peripherals]
 
-Someone in the manual was leaving out letters, unfortunately the
-result is not readable without the manual. PREQ TIM? Adding the
-letters back would help, as would comments.
+The 8 interrupt lines from INTC to the GIC are 1:1 mapped and fixed per SoC.
+The muxing between 64 inputs to INTC and its 8 outputs are programmable
+and might not necessarily be static per boot/probe as it depends on what firmware
+is loaded on the PRU.
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+A typical PRUSS use case will usually use just one firmware per boot but if required it
+can switch at runtime and the muxing might change.
 
---NklN7DEeGtkPCoo3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 
+>> We have implemented this as an irqchip using chained interrupt handlers
+>> with the consumers using the event numbers on the Linux-side. The PRUs
+>> also access some of the associated registers for clearing an event source.
+> 
+> Chaining with cascading is when two or more interrupts fire the
+> same upper level (say GIC) IRQ. If there is a 1:1 mapping,
+> it is not chained/cascaded but hierarchical.
+> 
+> I understand you used old irqdomain/chip frameworks in the past,
+> because everyone was working around the fact that they didn't have
+> an abstraction for hierarchical IRQs. Using chained interrupts
+> and custom 1:1 maps and assigning a long list of IRQs like this
+> patch does was the most common workaround. But we should
+> step out of that habit now.
+> 
+> Different levels of the IRQ handling having to do different stuff is
+> what hierarchical irqdomains do best, so it sounds like a good fit.
+> 
+> We handle some stuff at our level of the hierarchy and then fall
+> up to the next higher level using calls such as
+> irq_chip_ack_parent(), irq_chip_mask_parent() and friends.
+> 
+> Yours,
+> Linus Walleij
+> 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEUEARECAAYFAlxlSCMACgkQMOfwapXb+vJ61QCYvQW22YY08iRs4fNS+4u78dHu
-uQCghDrKjjWbUqxyNHWG7qSN4Q3gzes=
-=vokJ
------END PGP SIGNATURE-----
-
---NklN7DEeGtkPCoo3--
+--
+cheers,
+-roger
+ 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
