@@ -1,50 +1,82 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v6 11/11] MAINTAINERS: add an entry for max77650 mfd driver
-Date: Thu, 14 Feb 2019 15:00:22 +0100
-Message-ID: <20190214140022.19201-12-brgl@bgdev.pl>
-References: <20190214140022.19201-1-brgl@bgdev.pl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: add binding for USBSS-DRD controller.
+Date: Thu, 14 Feb 2019 08:00:52 -0600
+Message-ID: <CAL_Jsq+wqtY=B1jKKxjFxnBMy_kiN9=MhHdMp=bEPa9wFo1NqQ@mail.gmail.com>
+References: <1548935553-452-1-git-send-email-pawell@cadence.com>
+ <1548935553-452-2-git-send-email-pawell@cadence.com> <20190213224841.GA9319@bogus>
+ <BYAPR07MB4709EA63F1374EA24E23C186DD670@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190214140022.19201-1-brgl@bgdev.pl>
+In-Reply-To: <BYAPR07MB4709EA63F1374EA24E23C186DD670@BYAPR07MB4709.namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Pawel Laszczak <pawell@cadence.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, Feb 14, 2019 at 12:08 AM Pawel Laszczak <pawell@cadence.com> wrote:
+>
+> Hi Rob,
+> >On Thu, Jan 31, 2019 at 11:52:28AM +0000, Pawel Laszczak wrote:
+> >> This patch aim at documenting USB related dt-bindings for the
+> >> Cadence USBSS-DRD controller.
+> >>
+> >> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> >> ---
+> >>  .../devicetree/bindings/usb/cdns-usb3.txt     | 33 +++++++++++++++++++
+> >>  1 file changed, 33 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> >> new file mode 100644
+> >> index 000000000000..6dc38be77f5c
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> >> @@ -0,0 +1,33 @@
+> >> +Binding for the Cadence USBSS-DRD controller
+> >> +
+> >> +Required properties:
+> >> +  - reg: Physical base address and size of the controller's register areas.
+> >> +     Controller has 3 different regions:
+> >> +     region 1 - HOST registers area
+> >> +     region 2 - DEVICE registers area
+> >> +     region 3 - OTG/DRD registers area
+> >> +  - reg-names - register memory area names:
+> >> +    "xhci" - for HOST registers space
+> >> +    "dev" - for DEVICE registers space
+> >> +    "otg" - for OTG/DRD registers space
+> >> +  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
+> >> +  - interrupts: Interrupt specifier. Refer to interrupt bindings.
+> >> +            Driver supports only single interrupt line.
+> >
+> >Driver supports or h/w only has 1 interrupt?
+>
+> h/w internally has 3 separate interrupt line, but in my testing board
+> they are ored. So physically driver sees only one h/w interrupt line and
+> assumes that h/w has single common interrupt line.
 
-I plan on extending this set of drivers so add myself as maintainer.
+If it is possible for others to have 3 separate lines then you should
+have 3. Just repeat the connection 3 times. Or the binding can support
+1 or 3 interrupts based on the h/w. Either way it's not about what the
+driver supports, but what the h/w looks like.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> >> +                This single interrupt is shared between Device,
+> >> +            host and OTG/DRD part of driver.
+> >> +
+> >> +Optional properties:
+> >> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
+> >> +                   "full-speed"; refer to usb/generic.txt
+> >> + - dr_mode: Should be one of "host", "peripheral" or "otg".
+> >> + - phys: reference to the USB PHY
+> >> +
+> >> +Example:
+> >> +    usb@f3000000 {
+> >> +            compatible = "cdns,usb3";
+> >
+> >Doesn't match above.
+> Right, should be:
+>                 Compatible = " cdns,usb3-1.0.0", "cdns,usb3-1.0.1";
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9919840d54cd..ac96659bcfe4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9226,6 +9226,20 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/sound/max9860.txt
- F:	sound/soc/codecs/max9860.*
- 
-+MAXIM MAX77650 PMIC MFD DRIVER
-+M:	Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/*/*max77650.txt
-+F:	Documentation/devicetree/bindings/*/max77650*.txt
-+F:	include/linux/mfd/max77650.h
-+F:	drivers/mfd/max77650.c
-+F:	drivers/regulator/max77650-regulator.c
-+F:	drivers/power/supply/max77650-charger.c
-+F:	drivers/input/misc/max77650-onkey.c
-+F:	drivers/leds/leds-max77650.c
-+F:	drivers/gpio/gpio-max77650.c
-+
- MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
- M:	Javier Martinez Canillas <javier@dowhile0.org>
- L:	linux-kernel@vger.kernel.org
--- 
-2.20.1
+No, that doesn't match either. Above you said "or".
+
+Rob
