@@ -1,57 +1,89 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 2/2] clk: imx: scu: add cpu frequency scaling support
-Date: Thu, 14 Feb 2019 01:58:30 +0000
-Message-ID: <DB3PR0402MB39161EBE454F4095C275CFF0F5670@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1550073243-11242-1-git-send-email-Anson.Huang@nxp.com>
- <1550073243-11242-2-git-send-email-Anson.Huang@nxp.com>
- <155007977634.115909.4465011219844819801@swboyd.mtv.corp.google.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2] sh: fix build error for invisible CONFIG_BUILTIN_DTB_SOURCE
+Date: Thu, 14 Feb 2019 11:07:56 +0900
+Message-ID: <CAK7LNASPPB-_yVa4+A+w2fqezPGc5GRSwesDebKXrB8m+6U8Eg@mail.gmail.com>
+References: <1549271455-19292-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155007977634.115909.4465011219844819801@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <1549271455-19292-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc: Linux-sh list <linux-sh@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rich Felker <dalias@libc.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIFttYWlsdG86c2JveWRAa2VybmVsLm9yZ10NCj4g
-U2VudDogMjAxOeW5tDLmnIgxNOaXpSAxOjQzDQo+IFRvOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGNsa0B2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29t
-Ow0KPiBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBzLmhhdWVy
-QHBlbmd1dHJvbml4LmRlOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyB2aXJlc2gua3VtYXJAbGlu
-YXJvLm9yZzsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IEFuc29uIEh1
-YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgRGFuaWVsDQo+IEJhbHV0YSA8ZGFuaWVsLmJhbHV0
-YUBueHAuY29tPg0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCBWMyAyLzJdIGNsazogaW14OiBzY3U6IGFkZCBjcHUgZnJlcXVlbmN5
-IHNjYWxpbmcgc3VwcG9ydA0KPiANCj4gUXVvdGluZyBBbnNvbiBIdWFuZyAoMjAxOS0wMi0xMyAw
-Nzo1OTozMikNCj4gPiBAQCAtMTQ1LDYgKzE2MSwzOSBAQCBzdGF0aWMgbG9uZyBjbGtfc2N1X3Jv
-dW5kX3JhdGUoc3RydWN0IGNsa19odyAqaHcsDQo+IHVuc2lnbmVkIGxvbmcgcmF0ZSwNCj4gPiAg
-ICAgICAgIHJldHVybiByYXRlOw0KPiA+ICB9DQo+ID4NCj4gPiArc3RhdGljIGJvb2wgY2xrX3Nj
-dV9hdGZfc2V0X2NwdV9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nDQo+ID4g
-K3JhdGUpIHsNCj4gPiArICAgICAgIHN0cnVjdCBjbGtfc2N1ICpjbGsgPSB0b19jbGtfc2N1KGh3
-KTsNCj4gPiArICAgICAgIHN0cnVjdCBhcm1fc21jY2NfcmVzIHJlczsNCj4gPiArICAgICAgIHVu
-c2lnbmVkIGludCBjbHVzdGVyX2lkOw0KPiA+ICsgICAgICAgaW50IGk7DQo+ID4gKw0KPiA+ICsg
-ICAgICAgLyogQ1BVIGZyZXF1ZW5jeSBzY2FsaW5nIGNhbiBPTkxZIGJlIGRvbmUgYnkgQVJNLVRy
-dXN0ZWQtRmlybXdhcmUNCj4gKi8NCj4gPiArICAgICAgIGlmIChjbGstPmNsa190eXBlID09IElN
-WF9TQ19QTV9DTEtfQ1BVKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGZvciAoaSA9IDA7IGkgPCBB
-UlJBWV9TSVpFKGlteF9zY19jcHVmcmVxX2RhdGEpOyBpKyspIHsNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICBpZiAoIXN0cmNtcChjbGtfaHdfZ2V0X25hbWUoaHcpLA0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgaW14X3NjX2NwdWZyZXFfZGF0YVtpXS5jbGtfbmFtZSkp
-IHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsdXN0ZXJfaWQgPSBpbXhf
-c2NfY3B1ZnJlcV9kYXRhW2ldLmNsdXN0ZXJfaWQ7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBicmVhazsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gKyAg
-ICAgICAgICAgICAgIH0NCj4gDQo+IElzIHRoZXJlIHNvbWUgcmVhc29uIHdoeSB0aGVzZSBjbGtz
-IGNhbid0IGJlIGRldGVybWluZWQgb25jZSBhdCBib290IHRpbWU/DQo+IEl0IHdvdWxkIGJlIGEg
-Z29vZCBpZGVhIHRvIGF2b2lkIGRvaW5nIGFueSBzb3J0IG9mIHN0cmluZyBjb21wYXJpc29uIGhl
-cmUsDQo+IGluc3RlYWQganVzdCBjYWxsaW5nIHRoZSByaWdodCBhcm1fc21jY2Nfc21jIHdpdGgg
-dGhlIHJpZ2h0IGFyZ3VtZW50cyBiYXNlZA0KPiBvbiBjb2RlIHRoYXQgcmVnaXN0ZXJzIHRob3Nl
-IHR5cGVzIG9mIGNsa3MuDQoNCkFncmVlLCBJIGNhbiBhdm9pZCBzdHJpbmcgY29tcGFyaXNvbiBp
-biBydW50aW1lLCBpbiBWNCBwYXRjaCBJIGp1c3Qgc2VudCwgSSBhZGQgYW5vdGhlcg0KY2xrIG9w
-cyBmb3IgQ1BVIGNsb2NrLCBhbmQgdXNlIHJlc291cmNlIElEIHRvIGRldGVybWluZSB0aGUgQ1BV
-IGNsayBvcHMgYW5kIGNsdXN0ZXIgaWQsDQp0aHVzIHdlIGNhbiBzYXZlIHRoZSBydW50aW1lIGNo
-ZWNrIGFuZCBzdHJpbmcgY29tcGFyaXNvbi4NCg0KVGhhbmtzLA0KQW5zb24uDQoNCg==
+On Mon, Feb 4, 2019 at 6:11 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> I fixed a similar build error in commit 1b1e4ee86e00 ("sh: fix build
+> error for empty CONFIG_BUILTIN_DTB_SOURCE"), but it came back again.
+>
+> Since commit 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb
+> build rules"), the combination of CONFIG_OF_EARLY_FLATTREE=y and
+> CONFIG_USE_BUILTIN_DTB=n results in the following build error:
+>
+> make[1]: *** No rule to make target 'arch/sh/boot/dts/.dtb.o', needed by 'arch/sh/boot/dts/built-in.a'.  Stop.
+> make: *** [Makefile;1727: arch/sh/boot/dts/] Error 2
+>
+> Prior to that commit, there was only one path to descend into
+> arch/sh/boot/dts/, and arch/sh/Makefile correctly guards it with
+> CONFIG_USE_BUILTIN_DTB:
+>
+>   core-$(CONFIG_USE_BUILTIN_DTB)  += arch/sh/boot/dts/
+>
+> Now, there is another path to descend there from the top Makefile
+> when CONFIG_OF_EARLY_FLATTREE=y. If CONFIG_USE_BUILTIN_DTB is disabled,
+> CONFIG_BUILTIN_DTB_SOURCE is invisible instead of defined as "".
+>
+> Add obj-$(CONFIG_USE_BUILTIN_DTB) guard to avoid the attempt to build
+> the non-existing file.
+>
+> Fixes: 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+Applied to linux-kbuild/fixes.
+
+
+
+> ---
+>
+> Observant reviewers may point out another problem.
+> There is a race condition when CONFIG_OF_EARLY_FLATTREE=y.
+>
+> Some architectures (sh, xtensa, etc.) embed a DTB in vmlinux,
+> so there are two paths to descend into arch/*/boot/dts/.
+> For parallel build with -j<N> option, two threads may build
+> under arch/*/boot/dts/ simultaneously.
+>
+> Yes, this is a problem, and it is in my TODO list.
+> For some reasons, I will postpone it by the next development cycle.
+>
+> For now, I want to fix this sh build error first because kbuild test
+> robot is still complaining about it.
+>
+>
+> Changes in v2:
+>   - Change the subject a bit because the cause of the error is different
+>
+>  arch/sh/boot/dts/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
+> index 01d0f7f..2563d1e 100644
+> --- a/arch/sh/boot/dts/Makefile
+> +++ b/arch/sh/boot/dts/Makefile
+> @@ -1,3 +1,3 @@
+>  ifneq ($(CONFIG_BUILTIN_DTB_SOURCE),"")
+> -obj-y += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
+> +obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
+>  endif
+> --
+> 2.7.4
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
