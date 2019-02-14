@@ -1,82 +1,53 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH 7/8] ARM: at91: pm: disable RC oscillator in ULP0
-Date: Thu, 14 Feb 2019 15:55:01 +0000
-Message-ID: <1550159642-26878-8-git-send-email-claudiu.beznea@microchip.com>
-References: <1550159642-26878-1-git-send-email-claudiu.beznea@microchip.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Thu, 14 Feb 2019 07:56:40 -0800
+Message-ID: <20190214155640.GD5720@atomide.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com>
+ <16001a6f-faed-ee14-5ade-79d5462f6d51@ti.com>
+ <5C654C39.2030308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550159642-26878-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <5C654C39.2030308@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Claudiu.Beznea@microchip.com
+To: Roger Quadros <rogerq@ti.com>
+Cc: Suman Anna <s-anna@ti.com>, ohad@wizery.com, bjorn.andersson@linaro.org, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, dan@kulp.com, Matthijs van Duin <matthijsvanduin@gmail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+* Roger Quadros <rogerq@ti.com> [190214 11:09]:
+> Suman is mainly concerned about the following changes in v2
+> 1) pruss node does not contain reg property representing entire ICSS.
+> 2) pruss node does not contain interrupts.
+> 
+> Both of these are required if drivers/uio/uio_pruss.c or in future if
+> VFIO is to be used.
+> 
+> The beagleboard community is a primary user of this driver and we need to
+> find a solution so that PRUSS is usable either via remoteproc or via UIO.
+> 
+> Ideal case should allow user to use either of the drivers by just doing
+> a unbind and bind.
+> 
+> I don't have a better idea than having a encapsulating node that has
+> the appropriate reg and interrupt properties.
 
-Disable RC oscillator in ULP0 as datasheet specifies.
+If there are existing use cases that need to be supported
+you should list them as non-standard usage in the binding
+and not recommended for future use. Rob may have some
+comments on how to deal with this.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/mach-at91/pm_suspend.S | 39 +++++++++++++++++++++++++++++++++++++=
---
- 1 file changed, 37 insertions(+), 2 deletions(-)
+Then you can have device driver that needs to pass them
+parse them from the PRUSS parent node. That does not mean
+there needs to be a top level device driver for PRUSS,
+the child control module can just parse the non-standard
+bindings for compability from the parent node.
 
-diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspen=
-d.S
-index 8b18cad1dcf5..5c33023f9129 100644
---- a/arch/arm/mach-at91/pm_suspend.S
-+++ b/arch/arm/mach-at91/pm_suspend.S
-@@ -178,11 +178,46 @@ ENDPROC(at91_backup_mode)
- 	orr	tmp1, tmp1, #AT91_PMC_KEY
- 	str	tmp1, [pmc, #AT91_CKGR_MOR]
-=20
-+	/* Save RC oscillator state */
-+	ldr	tmp1, [pmc, #AT91_PMC_SR]
-+	str	tmp1, .saved_osc_status
-+	tst	tmp1, #AT91_PMC_MOSCRCS
-+	bne	1f
-+
-+	/* Turn off RC oscillator */
-+	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
-+	bic	tmp1, tmp1, #AT91_PMC_MOSCRCEN
-+	bic	tmp1, tmp1, #AT91_PMC_KEY_MASK
-+	orr	tmp1, tmp1, #AT91_PMC_KEY
-+	str	tmp1, [pmc, #AT91_CKGR_MOR]
-+
-+	/* Wait main RC disabled done */
-+2:	ldr	tmp1, [pmc, #AT91_PMC_SR]
-+	tst	tmp1, #AT91_PMC_MOSCRCS
-+	bne	2b
-+
- 	/* Wait for interrupt */
--	at91_cpu_idle
-+1:	at91_cpu_idle
-=20
--	/* Turn on the crystal oscillator */
-+	/* Restore RC oscillator state */
-+	ldr	tmp1, .saved_osc_status
-+	tst	tmp1, #AT91_PMC_MOSCRCS
-+	beq	4f
-+
-+	/* Turn on RC oscillator */
- 	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
-+	orr	tmp1, tmp1, #AT91_PMC_MOSCRCEN
-+	bic	tmp1, tmp1, #AT91_PMC_KEY_MASK
-+	orr	tmp1, tmp1, #AT91_PMC_KEY
-+	str	tmp1, [pmc, #AT91_CKGR_MOR]
-+
-+	/* Wait main RC stabilization */
-+3:	ldr	tmp1, [pmc, #AT91_PMC_SR]
-+	tst	tmp1, #AT91_PMC_MOSCRCS
-+	beq	3b
-+
-+	/* Turn on the crystal oscillator */
-+4:	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
- 	orr	tmp1, tmp1, #AT91_PMC_MOSCEN
- 	orr	tmp1, tmp1, #AT91_PMC_KEY
- 	str	tmp1, [pmc, #AT91_CKGR_MOR]
---=20
-2.7.4
+And naturally in addition to handling the non-standard
+binding we need to have a proper standardized binding
+too :)
+
+Regards,
+
+Tony
