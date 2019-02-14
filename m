@@ -1,7 +1,7 @@
 From: Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v4 4/6] usb:common Simplify usb_decode_get_set_descriptor function.
-Date: Thu, 14 Feb 2019 19:45:12 +0000
-Message-ID: <1550173514-23573-5-git-send-email-pawell@cadence.com>
+Subject: [PATCH v4 3/6] usb:common Patch simplify usb_decode_set_clear_feature function.
+Date: Thu, 14 Feb 2019 19:45:11 +0000
+Message-ID: <1550173514-23573-4-git-send-email-pawell@cadence.com>
 References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,138 +12,120 @@ To: devicetree@vger.kernel.org
 Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Patch moves switch responsible for decoding descriptor type
-outside snprintf. It improves code readability a little.
+Patch adds usb_decode_test_mode and usb_decode_device_feature functions,
+which allow to make more readable and simplify the
+usb_decode_set_clear_feature function.
 
 Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 ---
- drivers/usb/common/debug.c | 113 +++++++++++++++++++------------------
- 1 file changed, 58 insertions(+), 55 deletions(-)
+ drivers/usb/common/debug.c | 89 ++++++++++++++++++--------------------
+ 1 file changed, 43 insertions(+), 46 deletions(-)
 
 diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
-index ad6c96aa45b0..8e2c81a40cf8 100644
+index 3fdf116da909..ad6c96aa45b0 100644
 --- a/drivers/usb/common/debug.c
 +++ b/drivers/usb/common/debug.c
-@@ -105,62 +105,65 @@ static void usb_decode_get_set_descriptor(__u8 bRequestType, __u8 bRequest,
- 					  __u16 wValue, __u16 wIndex,
- 					  __u16 wLength, char *str, size_t size)
- {
-+	char *s;
-+
-+	switch (wValue >> 8) {
-+	case USB_DT_DEVICE:
-+		s = "Device";
-+		break;
-+	case USB_DT_CONFIG:
-+		s = "Configuration";
-+		break;
-+	case USB_DT_STRING:
-+		s = "String";
-+		break;
-+	case USB_DT_INTERFACE:
-+		s = "Interface";
-+		break;
-+	case USB_DT_ENDPOINT:
-+		s = "Endpoint";
-+		break;
-+	case USB_DT_DEVICE_QUALIFIER:
-+		s = "Device Qualifier";
-+		break;
-+	case USB_DT_OTHER_SPEED_CONFIG:
-+		s = "Other Speed Config";
-+		break;
-+	case USB_DT_INTERFACE_POWER:
-+		s = "Interface Power";
-+		break;
-+	case USB_DT_OTG:
-+		s = "OTG";
-+		break;
-+	case USB_DT_DEBUG:
-+		s = "Debug";
-+		break;
-+	case USB_DT_INTERFACE_ASSOCIATION:
-+		s = "Interface Association";
-+		break;
-+	case USB_DT_BOS:
-+		s = "BOS";
-+		break;
-+	case USB_DT_DEVICE_CAPABILITY:
-+		s = "Device Capability";
-+		break;
-+	case USB_DT_PIPE_USAGE:
-+		s = "Pipe Usage";
-+		break;
-+	case USB_DT_SS_ENDPOINT_COMP:
-+		s = "SS Endpoint Companion";
-+		break;
-+	case USB_DT_SSP_ISOC_ENDPOINT_COMP:
-+		s = "SSP Isochronous Endpoint Companion";
-+		break;
-+	default:
-+		s = "UNKNOWN";
-+		break;
-+	}
-+
- 	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
--		 bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
--		 ({ char *s;
--			switch (wValue >> 8) {
--			case USB_DT_DEVICE:
--				s = "Device";
--				break;
--			case USB_DT_CONFIG:
--				s = "Configuration";
--				break;
--			case USB_DT_STRING:
--				s = "String";
--				break;
--			case USB_DT_INTERFACE:
--				s = "Interface";
--				break;
--			case USB_DT_ENDPOINT:
--				s = "Endpoint";
--				break;
--			case USB_DT_DEVICE_QUALIFIER:
--				s = "Device Qualifier";
--				break;
--			case USB_DT_OTHER_SPEED_CONFIG:
--				s = "Other Speed Config";
--				break;
--			case USB_DT_INTERFACE_POWER:
--				s = "Interface Power";
--				break;
--			case USB_DT_OTG:
--				s = "OTG";
--				break;
--			case USB_DT_DEBUG:
--				s = "Debug";
--				break;
--			case USB_DT_INTERFACE_ASSOCIATION:
--				s = "Interface Association";
--				break;
--			case USB_DT_BOS:
--				s = "BOS";
--				break;
--			case USB_DT_DEVICE_CAPABILITY:
--				s = "Device Capability";
--				break;
--			case USB_DT_PIPE_USAGE:
--				s = "Pipe Usage";
--				break;
--			case USB_DT_SS_ENDPOINT_COMP:
--				s = "SS Endpoint Companion";
--				break;
--			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
--				s = "SSP Isochronous Endpoint Companion";
--				break;
--			default:
--				s = "UNKNOWN";
--				break;
--			} s; }), wValue & 0xff, wLength);
-+		bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
-+		s, wValue & 0xff, wLength);
+@@ -30,58 +30,55 @@ static void usb_decode_get_status(__u8 bRequestType, __u16 wIndex,
+ 	}
  }
  
- static void usb_decode_get_configuration(__u16 wLength, char *str, size_t size)
+-static void usb_decode_set_clear_feature(__u8 bRequestType, __u8 bRequest,
+-					 __u16 wValue, __u16 wIndex,
+-					 char *str, size_t size)
++static const char *usb_decode_device_feature(u16 wValue)
++{
++	switch (wValue) {
++	case USB_DEVICE_SELF_POWERED:
++		return "Self Powered";
++	case USB_DEVICE_REMOTE_WAKEUP:
++		return "Remote Wakeup";
++	case USB_DEVICE_TEST_MODE:
++		return "Test Mode";
++	case USB_DEVICE_U1_ENABLE:
++		return "U1 Enable";
++	case USB_DEVICE_U2_ENABLE:
++		return "U2 Enable";
++	case USB_DEVICE_LTM_ENABLE:
++		return "LTM Enable";
++	default:
++		return "UNKNOWN";
++	}
++}
++
++static const char *usb_decode_test_mode(u16 wIndex)
++{
++	switch (wIndex) {
++	case TEST_J:
++		return ": TEST_J";
++	case TEST_K:
++		return ": TEST_K";
++	case TEST_SE0_NAK:
++		return ": TEST_SE0_NAK";
++	case TEST_PACKET:
++		return ": TEST_PACKET";
++	case TEST_FORCE_EN:
++		return ": TEST_FORCE_EN";
++	default:
++		return ": UNKNOWN";
++	}
++}
++
++static void usb_decode_set_clear_feature(__u8 bRequestType,
++					 __u8 bRequest, __u16 wValue,
++					 __u16 wIndex, char *str, size_t size)
+ {
+ 	switch (bRequestType & USB_RECIP_MASK) {
+ 	case USB_RECIP_DEVICE:
+ 		snprintf(str, size, "%s Device Feature(%s%s)",
+ 			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
+-			 ({char *s;
+-				switch (wValue) {
+-				case USB_DEVICE_SELF_POWERED:
+-					s = "Self Powered";
+-					break;
+-				case USB_DEVICE_REMOTE_WAKEUP:
+-					s = "Remote Wakeup";
+-					break;
+-				case USB_DEVICE_TEST_MODE:
+-					s = "Test Mode";
+-					break;
+-				case USB_DEVICE_U1_ENABLE:
+-					s = "U1 Enable";
+-					break;
+-				case USB_DEVICE_U2_ENABLE:
+-					s = "U2 Enable";
+-					break;
+-				case USB_DEVICE_LTM_ENABLE:
+-					s = "LTM Enable";
+-					break;
+-				default:
+-					s = "UNKNOWN";
+-				} s; }),
++			 usb_decode_device_feature(wValue),
+ 			 wValue == USB_DEVICE_TEST_MODE ?
+-			 ({ char *s;
+-				switch (wIndex) {
+-				case TEST_J:
+-					s = ": TEST_J";
+-					break;
+-				case TEST_K:
+-					s = ": TEST_K";
+-					break;
+-				case TEST_SE0_NAK:
+-					s = ": TEST_SE0_NAK";
+-					break;
+-				case TEST_PACKET:
+-					s = ": TEST_PACKET";
+-					break;
+-				case TEST_FORCE_EN:
+-					s = ": TEST_FORCE_EN";
+-					break;
+-				default:
+-					s = ": UNKNOWN";
+-				} s; }) : "");
++			 usb_decode_test_mode(wIndex) : "");
+ 		break;
+ 	case USB_RECIP_INTERFACE:
+ 		snprintf(str, size, "%s Interface Feature(%s)",
 -- 
 2.17.1
