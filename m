@@ -1,95 +1,57 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v3 1/6] dt-bindings: add binding for USBSS-DRD controller.
-Date: Thu, 14 Feb 2019 06:08:45 +0000
-Message-ID: <BYAPR07MB4709EA63F1374EA24E23C186DD670@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1548935553-452-1-git-send-email-pawell@cadence.com>
- <1548935553-452-2-git-send-email-pawell@cadence.com>
- <20190213224841.GA9319@bogus>
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIHYyIDEvM10gZHQtYmluZGluZ3M6IHVmczogQWRkIEhJ?=
+ =?gb2312?Q?3670_UFS_controller_binding?=
+Date: Thu, 14 Feb 2019 06:37:01 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140F0672AA0D@dggemm526-mbx.china.huawei.com>
+References: <20190105072859.9134-1-manivannan.sadhasivam@linaro.org>
+ <20190105072859.9134-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190213224841.GA9319@bogus>
-Content-Language: en-US
+In-Reply-To: <20190105072859.9134-2-manivannan.sadhasivam@linaro.org>
+Content-Language: zh-CN
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
->On Thu, Jan 31, 2019 at 11:52:28AM +0000, Pawel Laszczak wrote:
->> This patch aim at documenting USB related dt-bindings for the
->> Cadence USBSS-DRD controller.
->>
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->> ---
->>  .../devicetree/bindings/usb/cdns-usb3.txt     | 33 +++++++++++++++++++
->>  1 file changed, 33 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Docum=
-entation/devicetree/bindings/usb/cdns-usb3.txt
->> new file mode 100644
->> index 000000000000..6dc38be77f5c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
->> @@ -0,0 +1,33 @@
->> +Binding for the Cadence USBSS-DRD controller
->> +
->> +Required properties:
->> +  - reg: Physical base address and size of the controller's register ar=
-eas.
->> +	 Controller has 3 different regions:
->> +	 region 1 - HOST registers area
->> +	 region 2 - DEVICE registers area
->> +	 region 3 - OTG/DRD registers area
->> +  - reg-names - register memory area names:
->> +	"xhci" - for HOST registers space
->> +	"dev" - for DEVICE registers space
->> +	"otg" - for OTG/DRD registers space
->> +  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
->> +  - interrupts: Interrupt specifier. Refer to interrupt bindings.
->> +		Driver supports only single interrupt line.
->
->Driver supports or h/w only has 1 interrupt?
-
-h/w internally has 3 separate interrupt line, but in my testing board=20
-they are ored. So physically driver sees only one h/w interrupt line and=20
-assumes that h/w has single common interrupt line.=20
-
->
->> +                This single interrupt is shared between Device,
->> +		host and OTG/DRD part of driver.
->> +
->> +Optional properties:
->> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
->> +                   "full-speed"; refer to usb/generic.txt
->> + - dr_mode: Should be one of "host", "peripheral" or "otg".
->> + - phys: reference to the USB PHY
->> +
->> +Example:
->> +	usb@f3000000 {
->> +		compatible =3D "cdns,usb3";
->
->Doesn't match above.
-Right, should be:
-		Compatible =3D " cdns,usb3-1.0.0", "cdns,usb3-1.0.1";
->
->> +		interrupts =3D <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg =3D <0xf3000000 0x10000	/* memory area for HOST registers */
->> +			0xf3010000 0x10000	/* memory area for DEVICE registers */
->> +			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
->
->Are these really 64KB long? That wastes virtual address space on 32-bit
->systems if not.
-
-Yes, on my testing platform it takes 64KB. It's only example, and it could =
-be limited.=20
->
->> +		reg-names =3D "xhci", "dev", "otg";
->> +	};
->> --
->> 2.17.1
->>
-Thanks=20
-Pawel
+RmluZSB0byBtZS4gVGhhbmtzIQ0KQWNrZWQtYnk6IFdlaSBMaSA8bGl3ZWkyMTNAaHVhd2VpLmNv
+bT4NCg0KLS0tLS3Tyrz+1K28/i0tLS0tDQq3orz+yMs6IE1hbml2YW5uYW4gU2FkaGFzaXZhbSBb
+bWFpbHRvOm1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnXSANCreiy83KsbzkOiAyMDE5
+xOox1MI1yNUgMTU6MjkNCsrVvP7IyzogdmluaG9saWthdHRpQGdtYWlsLmNvbTsgamVqYkBsaW51
+eC52bmV0LmlibS5jb207IG1hcnRpbi5wZXRlcnNlbkBvcmFjbGUuY29tOyBsaXdlaSAoQ00pOyBy
+b2JoK2R0QGtlcm5lbC5vcmcNCrOty806IGxpbnV4LXNjc2lAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBqb2huLnN0dWx0ekBsaW5hcm8ub3Jn
+OyBhbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc7IGd1b2RvbmcueHVAbGluYXJvLm9yZzsgTWFuaXZh
+bm5hbiBTYWRoYXNpdmFtDQrW98ziOiBbUEFUQ0ggdjIgMS8zXSBkdC1iaW5kaW5nczogdWZzOiBB
+ZGQgSEkzNjcwIFVGUyBjb250cm9sbGVyIGJpbmRpbmcNCg0KQWRkIGRldmljZXRyZWUgYmluZGlu
+ZyBmb3IgSEkzNjcwIFVGUyBjb250cm9sbGVyLiBISTM3NjAgU29DIGlzIHZlcnkNCnNpbWlsYXIg
+dG8gSEkzNjYwIFNvQyB3aXRoIGFsbW9zdCBzYW1lIElQcy4gT25seSBtYWpvciBkaWZmZXJlbmNl
+IGluIHRlcm1zDQpvZiBVRlMgaXMgdGhlIFBIWS4gSEkzNjcwIGhhcyAxMG5tIFBIWS4gQnV0IHNp
+bmNlIHRoZSBvcmlnaW5hbCBkcml2ZXINCihISTM2NjAgVUZTKSBjYW5ub3QgbWFrZSBISTM2NzAg
+VUZTIGZ1bmN0aW9uYWwsIGEgc2VwYXJhdGUgY29tcGF0aWJsZQ0KaXMgYWRkZWQgZm9yIEhJMzY3
+MCB3aXRob3V0IGFueSBmYWxsYmFjay4NCg0KU2lnbmVkLW9mZi1ieTogTWFuaXZhbm5hbiBTYWRo
+YXNpdmFtIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZz4NCi0tLQ0KIERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZzLWhpc2kudHh0IHwgNSArKystLQ0KIDEg
+ZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmcy1oaXNpLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZzLWhpc2kudHh0DQppbmRl
+eCBhNDhjNDQ4MTczNjcuLjBiODNkZjFhNTQxOCAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZzLWhpc2kudHh0DQorKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmcy1oaXNpLnR4dA0KQEAgLTYsOSArNiwxMCBAQCBF
+YWNoIFVGUyBIb3N0IENvbnRyb2xsZXIgc2hvdWxkIGhhdmUgaXRzIG93biBub2RlLg0KIFJlcXVp
+cmVkIHByb3BlcnRpZXM6DQogLSBjb21wYXRpYmxlICAgICAgICA6IGNvbXBhdGlibGUgbGlzdCwg
+Y29udGFpbnMgb25lIG9mIHRoZSBmb2xsb3dpbmcgLQ0KIAkJCQkJImhpc2lsaWNvbixoaTM2NjAt
+dWZzIiwgImplZGVjLHVmcy0xLjEiIGZvciBoaXNpIHVmcw0KLQkJCQkJaG9zdCBjb250cm9sbGVy
+IHByZXNlbnQgb24gSGkzNnh4IGNoaXBzZXQuDQorCQkJCQlob3N0IGNvbnRyb2xsZXIgcHJlc2Vu
+dCBvbiBIaTM2NjAgY2hpcHNldC4NCisJCQkJCSJoaXNpbGljb24saGkzNjcwLXVmcyIsICJqZWRl
+Yyx1ZnMtMi4xIiBmb3IgaGlzaSB1ZnMNCisJCQkJCWhvc3QgY29udHJvbGxlciBwcmVzZW50IG9u
+IEhpMzY3MCBjaGlwc2V0Lg0KIC0gcmVnICAgICAgICAgICAgICAgOiBzaG91bGQgY29udGFpbiBV
+RlMgcmVnaXN0ZXIgYWRkcmVzcyBzcGFjZSAmIFVGUyBTWVMgQ1RSTCByZWdpc3RlciBhZGRyZXNz
+LA0KLS0gaW50ZXJydXB0LXBhcmVudCAgOiBpbnRlcnJ1cHQgZGV2aWNlDQogLSBpbnRlcnJ1cHRz
+ICAgICAgICA6IGludGVycnVwdCBudW1iZXINCiAtIGNsb2NrcwkgICAgICAgIDogTGlzdCBvZiBw
+aGFuZGxlIGFuZCBjbG9jayBzcGVjaWZpZXIgcGFpcnMNCiAtIGNsb2NrLW5hbWVzICAgICAgIDog
+TGlzdCBvZiBjbG9jayBpbnB1dCBuYW1lIHN0cmluZ3Mgc29ydGVkIGluIHRoZSBzYW1lDQotLSAN
+CjIuMTcuMQ0KDQo=
