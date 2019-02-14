@@ -1,7 +1,7 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 2/4] firmware: imx: enable imx scu general irq function
-Date: Thu, 14 Feb 2019 03:44:31 +0000
-Message-ID: <1550115535-14488-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 4/4] rtc: imx-sc: add rtc alarm support
+Date: Thu, 14 Feb 2019 03:44:48 +0000
+Message-ID: <1550115535-14488-5-git-send-email-Anson.Huang@nxp.com>
 References: <1550115535-14488-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,181 +14,182 @@ To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutl
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The System Controller Firmware (SCFW) controls RTC, thermal
-and WDOG etc., these resources' interrupt function are managed
-by SCU. When any IRQ pending, SCU will notify Linux via MU general
-interrupt channel #3, and Linux kernel needs to call SCU APIs
-to get IRQ status and notify each module to handle the interrupt.
-
-Since there is no data transmission for SCU IRQ notification, so
-doorbell mode is used for this MU channel, and SCU driver will
-use notifier mechanism to broadcast to every module which registers
-the SCU block notifier.
+Add i.MX system controller RTC alarm support, the RTC alarm
+is implemented via SIP(silicon provider) runtime service call
+and ARM-Trusted-Firmware will communicate with system controller
+via MU(message unit) IPC to set RTC alarm. When RTC alarm fires,
+system controller will generate a common MU irq event and notify
+system controller RTC driver to handle the irq event.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-No change since V1.
----
- drivers/firmware/imx/imx-scu.c   | 101 +++++++++++++++++++++++++++++++++++=
+No V1 patch, just add it into the i.MX SC general irq support patch series,
+to support system controller RTC's alarm function and also to provide an
+example of how to use general MU irq, this patch depends on the i.MX SC
+general irq support patch set, so add it into same patch series.
+--
+ drivers/rtc/rtc-imx-sc.c | 100 +++++++++++++++++++++++++++++++++++++++++++=
 ++++
- include/linux/firmware/imx/sci.h |   3 ++
- 2 files changed, 104 insertions(+)
+ 1 file changed, 100 insertions(+)
 
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.=
-c
-index 2bb1a19..e93bea5 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -7,6 +7,7 @@
-  *
+diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
+index 60570a2..147545e 100644
+--- a/drivers/rtc/rtc-imx-sc.c
++++ b/drivers/rtc/rtc-imx-sc.c
+@@ -3,6 +3,7 @@
+  * Copyright 2018 NXP.
   */
 =20
 +#include <dt-bindings/firmware/imx/rsrc.h>
- #include <linux/err.h>
- #include <linux/firmware/imx/types.h>
- #include <linux/firmware/imx/ipc.h>
-@@ -21,6 +22,8 @@
+ #include <linux/arm-smccc.h>
+ #include <linux/firmware/imx/sci.h>
+ #include <linux/module.h>
+@@ -11,11 +12,17 @@
+ #include <linux/rtc.h>
 =20
- #define SCU_MU_CHAN_NUM		8
- #define MAX_RX_TIMEOUT		(msecs_to_jiffies(30))
-+#define IMX_SC_IRQ_FUNC_STATUS	2
-+#define IMX_SC_IRQ_NUM_GROUP	6
+ #define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
++#define IMX_SC_TIMER_FUNC_SET_RTC_ALARM		8
+ #define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
 =20
- struct imx_sc_chan {
- 	struct imx_sc_ipc *sc_ipc;
-@@ -77,7 +80,23 @@ static int imx_sc_linux_errmap[IMX_SC_ERR_LAST] =3D {
- 	-EIO,	 /* IMX_SC_ERR_FAIL */
- };
++#define IMX_SC_IRQ_FUNC_ENABLE			1
++
+ #define IMX_SIP_SRTC			0xC2000002
+ #define IMX_SIP_SRTC_SET_TIME		0x0
 =20
-+struct imx_sc_msg_irq_get_status {
++#define SC_IRQ_GROUP_RTC    2
++#define SC_IRQ_RTC          1
++
+ static struct imx_sc_ipc *rtc_ipc_handle;
+ static struct rtc_device *imx_sc_rtc;
+=20
+@@ -24,6 +31,24 @@ struct imx_sc_msg_timer_get_rtc_time {
+ 	u32 time;
+ } __packed;
+=20
++struct imx_sc_msg_timer_enable_irq {
 +	struct imx_sc_rpc_msg hdr;
-+	union {
-+		struct {
-+			u16 resource;
-+			u8 group;
-+			u8 reserved;
-+		} send;
-+		struct {
-+			u32 status;
-+		} receive;
-+	} data;
++	u32 mask;
++	u16 resource;
++	u8 group;
++	u8 enable;
 +} __packed;
 +
- static struct imx_sc_ipc *imx_sc_ipc_handle;
-+static struct work_struct imx_sc_general_irq_work;
-+static BLOCKING_NOTIFIER_HEAD(imx_scu_notifier_chain);
-=20
- static inline int imx_sc_to_linux_errno(int errno)
++struct imx_sc_msg_timer_rtc_set_alarm {
++	struct imx_sc_rpc_msg hdr;
++	u16 year;
++	u8 mon;
++	u8 day;
++	u8 hour;
++	u8 min;
++	u8 sec;
++} __packed;
++
+ static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time *tm)
  {
-@@ -194,6 +213,86 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *=
-msg, bool have_resp)
+ 	struct imx_sc_msg_timer_get_rtc_time msg;
+@@ -60,9 +85,80 @@ static int imx_sc_rtc_set_time(struct device *dev, struc=
+t rtc_time *tm)
+ 	return res.a0;
  }
- EXPORT_SYMBOL(imx_scu_call_rpc);
 =20
-+int imx_scu_register_notifier(struct notifier_block *nb)
++static int imx_sc_rtc_alarm_irq_enable(struct device *dev, unsigned int en=
+able)
 +{
-+	return blocking_notifier_chain_register(&imx_scu_notifier_chain, nb);
-+}
-+EXPORT_SYMBOL(imx_scu_register_notifier);
-+
-+int imx_scu_unregister_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&imx_scu_notifier_chain, nb);
-+}
-+EXPORT_SYMBOL(imx_scu_unregister_notifier);
-+
-+static int imx_scu_notifier_call_chain(unsigned long status, u8 *group)
-+{
-+	return blocking_notifier_call_chain(&imx_scu_notifier_chain,
-+					    status, (void *)group);
-+}
-+
-+static void imx_scu_general_irq_work_handler(struct work_struct *work)
-+{
-+	struct imx_sc_msg_irq_get_status msg;
++	struct imx_sc_msg_timer_enable_irq msg;
 +	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
-+	u32 irq_status;
 +	int ret;
-+	u8 i;
 +
-+	for (i =3D 0; i < IMX_SC_IRQ_NUM_GROUP; i++) {
-+		hdr->ver =3D IMX_SC_RPC_VERSION;
-+		hdr->svc =3D IMX_SC_RPC_SVC_IRQ;
-+		hdr->func =3D IMX_SC_IRQ_FUNC_STATUS;
-+		hdr->size =3D 2;
++	hdr->ver =3D IMX_SC_RPC_VERSION;
++	hdr->svc =3D IMX_SC_RPC_SVC_IRQ;
++	hdr->func =3D IMX_SC_IRQ_FUNC_ENABLE;
++	hdr->size =3D 3;
 +
-+		msg.data.send.resource =3D IMX_SC_R_MU_1A;
-+		msg.data.send.group =3D i;
++	msg.resource =3D IMX_SC_R_MU_1A;
++	msg.group =3D SC_IRQ_GROUP_RTC;
++	msg.mask =3D SC_IRQ_RTC;
++	msg.enable =3D enable;
 +
-+		ret =3D imx_scu_call_rpc(imx_sc_ipc_handle, &msg, true);
-+		if (ret) {
-+			pr_err("get irq status failed, ret %d\n", ret);
-+			return;
-+		}
-+
-+		irq_status =3D msg.data.receive.status;
-+		if (!irq_status)
-+			continue;
-+
-+		imx_scu_notifier_call_chain(irq_status, &i);
-+	}
-+}
-+
-+static void imx_scu_rxdb_callback(struct mbox_client *c, void *msg)
-+{
-+	schedule_work(&imx_sc_general_irq_work);
-+}
-+
-+static int imx_scu_enable_general_irq_channel(struct device *dev)
-+{
-+	struct mbox_client *cl;
-+	struct mbox_chan *ch;
-+	int ret =3D 0;
-+
-+	cl =3D devm_kzalloc(dev, sizeof(*cl), GFP_KERNEL);
-+	if (!cl)
-+		return -ENOMEM;
-+
-+	cl->dev =3D dev;
-+	cl->rx_callback =3D imx_scu_rxdb_callback;
-+
-+	/* SCU general IRQ uses general interrupt channel 3 */
-+	ch =3D mbox_request_channel_byname(cl, "gi3");
-+	if (IS_ERR(ch)) {
-+		ret =3D PTR_ERR(ch);
-+		dev_err(dev, "failed to request mbox chan gi3, ret %d\n", ret);
++	ret =3D imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
++	if (ret) {
++		dev_err(dev, "enable rtc irq failed, ret %d\n", ret);
 +		return ret;
 +	}
 +
-+	INIT_WORK(&imx_sc_general_irq_work, imx_scu_general_irq_work_handler);
-+
-+	return ret;
++	return 0;
 +}
 +
- static int imx_scu_probe(struct platform_device *pdev)
- {
- 	struct device *dev =3D &pdev->dev;
-@@ -246,6 +345,8 @@ static int imx_scu_probe(struct platform_device *pdev)
-=20
- 	imx_sc_ipc_handle =3D sc_ipc;
-=20
-+	imx_scu_enable_general_irq_channel(dev);
++static int imx_sc_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alr=
+m)
++{
++	struct imx_sc_msg_timer_rtc_set_alarm msg;
++	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
++	int ret;
++	struct rtc_time *alrm_tm =3D &alrm->time;
 +
- 	dev_info(dev, "NXP i.MX SCU Initialized\n");
-=20
- 	return devm_of_platform_populate(dev);
-diff --git a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/=
-sci.h
-index ebc5509..9d608db 100644
---- a/include/linux/firmware/imx/sci.h
-+++ b/include/linux/firmware/imx/sci.h
-@@ -15,4 +15,7 @@
-=20
- #include <linux/firmware/imx/svc/misc.h>
- #include <linux/firmware/imx/svc/pm.h>
++	hdr->ver =3D IMX_SC_RPC_VERSION;
++	hdr->svc =3D IMX_SC_RPC_SVC_TIMER;
++	hdr->func =3D IMX_SC_TIMER_FUNC_SET_RTC_ALARM;
++	hdr->size =3D 3;
 +
-+int imx_scu_register_notifier(struct notifier_block *nb);
-+int imx_scu_unregister_notifier(struct notifier_block *nb);
- #endif /* _SC_SCI_H */
++	msg.year =3D alrm_tm->tm_year + 1900;
++	msg.mon =3D alrm_tm->tm_mon + 1;
++	msg.day =3D alrm_tm->tm_mday;
++	msg.hour =3D alrm_tm->tm_hour;
++	msg.min =3D alrm_tm->tm_min;
++	msg.sec =3D alrm_tm->tm_sec;
++
++	ret =3D imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
++	if (ret) {
++		dev_err(dev, "set rtc alarm failed, ret %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
+ static const struct rtc_class_ops imx_sc_rtc_ops =3D {
+ 	.read_time =3D imx_sc_rtc_read_time,
+ 	.set_time =3D imx_sc_rtc_set_time,
++	.set_alarm =3D imx_sc_rtc_set_alarm,
++	.alarm_irq_enable =3D imx_sc_rtc_alarm_irq_enable,
++};
++
++static int imx_sc_rtc_alarm_sc_notify(struct notifier_block *nb,
++					unsigned long event, void *group)
++{
++	/* ignore non-rtc irq */
++	if (!((event & SC_IRQ_RTC) && (*(u8 *)group =3D=3D SC_IRQ_GROUP_RTC)))
++		return 0;
++
++	rtc_update_irq(imx_sc_rtc, 1, RTC_IRQF | RTC_AF);
++
++	return 0;
++}
++
++static struct notifier_block imx_sc_rtc_alarm_sc_notifier =3D {
++	.notifier_call =3D imx_sc_rtc_alarm_sc_notify,
+ };
+=20
+ static int imx_sc_rtc_probe(struct platform_device *pdev)
+@@ -73,6 +169,8 @@ static int imx_sc_rtc_probe(struct platform_device *pdev=
+)
+ 	if (ret)
+ 		return ret;
+=20
++	device_init_wakeup(&pdev->dev, true);
++
+ 	imx_sc_rtc =3D devm_rtc_allocate_device(&pdev->dev);
+ 	if (IS_ERR(imx_sc_rtc))
+ 		return PTR_ERR(imx_sc_rtc);
+@@ -87,6 +185,8 @@ static int imx_sc_rtc_probe(struct platform_device *pdev=
+)
+ 		return ret;
+ 	}
+=20
++	imx_scu_register_notifier(&imx_sc_rtc_alarm_sc_notifier);
++
+ 	return 0;
+ }
+=20
 --=20
 2.7.4
