@@ -1,81 +1,65 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v4 3/8] dt-bindings: i2c: iproc: make 'interrupts'
- optional
-Date: Thu, 14 Feb 2019 09:36:42 -0800
-Message-ID: <e17b1cd0-8ffb-d014-bcce-57a3ca227506@broadcom.com>
-References: <20190204231554.87666-1-ray.jui@broadcom.com>
- <20190204231554.87666-4-ray.jui@broadcom.com> <20190213211651.GA10705@bogus>
- <796d9a96-f3f9-cb9a-faa3-4baf0e72da65@broadcom.com>
- <CAL_JsqK+QLRp7LqkMzQCXdLPaJU3fbiNWU_uyuPFJ4qDkP=siA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Thu, 14 Feb 2019 09:46:12 -0800
+Message-ID: <20190214174612.GF5720@atomide.com>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
+ <20190212074237.2875-6-lokeshvutla@ti.com>
+ <20190212162247.GK5720@atomide.com>
+ <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
+ <20190213152620.GS5720@atomide.com>
+ <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
+ <20190214154100.GB5720@atomide.com>
+ <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK+QLRp7LqkMzQCXdLPaJU3fbiNWU_uyuPFJ4qDkP=siA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2/14/2019 6:16 AM, Rob Herring wrote:
-> On Wed, Feb 13, 2019 at 4:06 PM Ray Jui <ray.jui@broadcom.com> wrote:
->>
->> Hi Rob,
->>
->> On 2/13/2019 1:16 PM, Rob Herring wrote:
->>> On Mon, Feb 04, 2019 at 03:15:49PM -0800, Ray Jui wrote:
->>>> In prep for the introduction of polling mode into the driver, update the
->>>> binding document to make the 'interrupts' property optional
->>>>
->>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->>>> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
->>>> ---
->>>>  .../devicetree/bindings/i2c/brcm,iproc-i2c.txt         | 10 +++++++---
->>>>  1 file changed, 7 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
->>>> index 81f982ccca31..d3a3620b1f06 100644
->>>> --- a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
->>>> +++ b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
->>>> @@ -9,9 +9,6 @@ Required properties:
->>>>      Define the base and range of the I/O address space that contain the iProc
->>>>      I2C controller registers
->>>>
->>>> -- interrupts:
->>>> -    Should contain the I2C interrupt
->>>> -
->>>>  - clock-frequency:
->>>>      This is the I2C bus clock. Need to be either 100000 or 400000
->>>>
->>>> @@ -21,6 +18,13 @@ Required properties:
->>>>  - #size-cells:
->>>>      Always 0
->>>>
->>>> +Optional properties:
->>>> +
->>>> +- interrupts:
->>>> +    Should contain the I2C interrupt. If unspecified, driver will fall back to
->>>> +    polling mode
->>>
->>> What determines when you want to use polling mode? I'm not sure DT
->>> is the best way to control this unless it's really a property of
->>> the h/w. Driver behavior is really outside the scope of the DT. u-boot
->>> would use polling even if an interrupt is specified, for example.
->>>
->> It's tied to the particular revision of the I2C controller, i.e., the
->> iProc NIC i2c controller does not have interrupt line wired. In this
->> case, the behavior is determined by the DT compatible string of the
->> iProc I2C device. I thought that it makes sense to now move the
->> 'interrupts' property to be under "Optional" than "Required" which is
->> basically what this change is.
+* Lokesh Vutla <lokeshvutla@ti.com> [190214 17:32]:
+> Hi Tony,
+> 	Please do not snip the on going discussion.
 > 
-> Okay, please put this detail into the commit msg.
-
-Will do! Thanks.
-
+> On 2/14/2019 9:11 PM, Tony Lindgren wrote:
+> > * Lokesh Vutla <lokeshvutla@ti.com> [190214 08:39]:
+> >> IMHO, device ids are something which can be used in DT. There are many other
+> >> things like the interrupt ranges etc.. which are discoverable from sysfw and we
+> >> are implementing it.
+> > 
+> > We need to describe hardware in the device tree, not firmware.
+> > 
+> > If you have something discoverable from the firmware, you should
+> > have the device driver query it from sysfw based on a hardware
+> > property, not based on some invented enumeration in the firmware.
 > 
-> Rob
+> Yes we are already querying sysfw for all the irq ranges that can be
+> discoverable. The topic of discussion here is about the parent interrupt
+> controller id. I am not sure how you are expecting an id be discoverable
+> from system firmware especially with a name.
+
+Well names are quite standard in dts (but should be used with
+the phandle + offset). Think for example interrupt-names and
+reg-names :)
+
+> > If there is some device to firmware translation needed, hide that
+> > into the device driver and keep it out of the device tree.
 > 
+> If preferred this can be moved to of_match_data attached to each
+> compatible property. Then for each SoC a new compatible needs to be created.
+
+Hiding the ID into the device driver and compatible property
+makes sense to me if the id is based on SoC + firmware.
+
+But I'd rather have a proper hardware based phandle + index
+type mapping in the dts if possible though.
+
+What does this id really consist of?
+
+Regards,
+
+Tony
