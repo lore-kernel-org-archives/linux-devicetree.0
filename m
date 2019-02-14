@@ -1,8 +1,8 @@
 From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v3 1/3] devicetree: bindings: bd718x7: document HW state
- related ROHM specific properties
-Date: Thu, 14 Feb 2019 11:34:50 +0200
-Message-ID: <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v3 2/3] regulator: add
+ regulator_desc_list_voltage_linear_range
+Date: Thu, 14 Feb 2019 11:38:05 +0200
+Message-ID: <82443305a32c1e4b8a1ae383f5291ff544bcaf45.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -14,147 +14,107 @@ To: matti.vaittinen@fi.rohmeurope.com, mazzisaccount@gmail.com
 Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, Angus Ainslie <angus.ainslie@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-Add ROHM BD71837 / BD71847 specific device tree bindings for
-controlling the PMIC shutdown/reset states and voltages for
-different HW states. The PMIC was designed to be used with NXP
-i.MX8 SoC and it supports SNVS low power state which seems to
-be typical for NXP i.MX SoCs. However, when SNVS is used we must
-not allow SW to control enabling/disabling those regulators which
-are crucial for system to boot as there is a HW limitation which
-causes SW controlled regulators to be kept shut down after SNVS
-reset.
-
-Allow setting the SNVS to be used as reset target state and allow
-marking those regulators which are critical for boot.
+Add regulator_desc_list_voltage_linear_range which can be used
+by drivers for getting the voltages before regulator is registered.
+This may be useful for drivers which need to fetch the voltage
+selectors at device-tree parsing callback.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 17 ++++++++++
- .../bindings/regulator/rohm,bd71837-regulator.txt  | 38 ++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-index a4b056761eaa..d5f68ac78d15 100644
---- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-@@ -23,6 +23,20 @@ Required properties:
+Mark, I converted your:
+"This seems fine." from RFC patch v1 into acked-by. This should
+be unchanged. Please let me know if that's not Ok.
+
+ drivers/regulator/helpers.c      | 39 +++++++++++++++++++++++++++++----------
+ include/linux/regulator/driver.h |  6 ++++++
+ 2 files changed, 35 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/regulator/helpers.c b/drivers/regulator/helpers.c
+index 5686a1335bd3..68ac6017ef28 100644
+--- a/drivers/regulator/helpers.c
++++ b/drivers/regulator/helpers.c
+@@ -594,28 +594,30 @@ int regulator_list_voltage_pickable_linear_range(struct regulator_dev *rdev,
+ EXPORT_SYMBOL_GPL(regulator_list_voltage_pickable_linear_range);
  
- Optional properties:
- - clock-output-names	: Should contain name for output clock.
-+- rohm,reset-snvs-powered : Transfer BD718x7 to SNVS state at reset.
+ /**
+- * regulator_list_voltage_linear_range - List voltages for linear ranges
++ * regulator_desc_list_voltage_linear_range - List voltages for linear ranges
+  *
+- * @rdev: Regulator device
++ * @desc: Regulator desc for regulator which volatges are to be listed
+  * @selector: Selector to convert into a voltage
+  *
+  * Regulators with a series of simple linear mappings between voltages
+- * and selectors can set linear_ranges in the regulator descriptor and
+- * then use this function as their list_voltage() operation,
++ * and selectors who have set linear_ranges in the regulator descriptor
++ * can use this function prior regulator registration to list voltages.
++ * This is useful when voltages need to be listed during device-tree
++ * parsing.
+  */
+-int regulator_list_voltage_linear_range(struct regulator_dev *rdev,
+-					unsigned int selector)
++int regulator_desc_list_voltage_linear_range(const struct regulator_desc *desc,
++					     unsigned int selector)
+ {
+ 	const struct regulator_linear_range *range;
+ 	int i;
+ 
+-	if (!rdev->desc->n_linear_ranges) {
+-		BUG_ON(!rdev->desc->n_linear_ranges);
++	if (!desc->n_linear_ranges) {
++		BUG_ON(!desc->n_linear_ranges);
+ 		return -EINVAL;
+ 	}
+ 
+-	for (i = 0; i < rdev->desc->n_linear_ranges; i++) {
+-		range = &rdev->desc->linear_ranges[i];
++	for (i = 0; i < desc->n_linear_ranges; i++) {
++		range = &desc->linear_ranges[i];
+ 
+ 		if (!(selector >= range->min_sel &&
+ 		      selector <= range->max_sel))
+@@ -628,6 +630,23 @@ int regulator_list_voltage_linear_range(struct regulator_dev *rdev,
+ 
+ 	return -EINVAL;
+ }
++EXPORT_SYMBOL_GPL(regulator_desc_list_voltage_linear_range);
 +
-+The BD718x7 supports two different HW states as reset target states. States
-+are called as SNVS and READY. At READY state all the PMIC power outputs go
-+down and OTP is reload. At the SNVS state all other logic and external
-+devices apart from the SNVS power domain are shut off. Please refer to NXP
-+i.MX8 documentation for further information regarding SNVS state. When a
-+reset is done via SNVS state the PMIC OTP data is not reload. This causes
-+power outputs that have been under SW control to stay down when reset has
-+switched power state to SNVS. If reset is done via READY state the power
-+outputs will be returned to HW control by OTP loading. Thus the reset
-+target state is set to READY by default. If SNVS state is used the boot
-+crucial regulators must have the regulator-always-on and regulator-boot-on
-+properties set in regulator node.
++/**
++ * regulator_list_voltage_linear_range - List voltages for linear ranges
++ *
++ * @rdev: Regulator device
++ * @selector: Selector to convert into a voltage
++ *
++ * Regulators with a series of simple linear mappings between voltages
++ * and selectors can set linear_ranges in the regulator descriptor and
++ * then use this function as their list_voltage() operation,
++ */
++int regulator_list_voltage_linear_range(struct regulator_dev *rdev,
++					unsigned int selector)
++{
++	return regulator_desc_list_voltage_linear_range(rdev->desc, selector);
++}
+ EXPORT_SYMBOL_GPL(regulator_list_voltage_linear_range);
  
- Example:
+ /**
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index 7f8345bff4e1..05efe2b057c1 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -539,4 +539,10 @@ void *regulator_get_init_drvdata(struct regulator_init_data *reg_init_data);
+ void regulator_lock(struct regulator_dev *rdev);
+ void regulator_unlock(struct regulator_dev *rdev);
  
-@@ -43,6 +57,7 @@ Example:
- 		#clock-cells = <0>;
- 		clocks = <&osc 0>;
- 		clock-output-names = "bd71837-32k-out";
-+		rohm,reset-snvs-powered;
- 
- 		regulators {
- 			buck1: BUCK1 {
-@@ -50,8 +65,10 @@ Example:
- 				regulator-min-microvolt = <700000>;
- 				regulator-max-microvolt = <1300000>;
- 				regulator-boot-on;
-+				regulator-always-on;
- 				regulator-ramp-delay = <1250>;
- 			};
-+			// [...]
- 		};
- 	};
- 
-diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-index 4b98ca26e61a..cbce62c22b60 100644
---- a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-@@ -27,8 +27,38 @@ BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
- LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
- 
- Optional properties:
-+- rohm,dvs-run-voltage		: PMIC default "RUN" state voltage in uV.
-+				  See below table for bucks which support this.
-+- rohm,dvs-idle-voltage		: PMIC default "IDLE" state voltage in uV.
-+				  See below table for bucks which support this.
-+- rohm,dvs-suspend-voltage	: PMIC default "SUSPEND" state voltage in uV.
-+				  See below table for bucks which support this.
- - Any optional property defined in bindings/regulator/regulator.txt
- 
-+Supported default DVS states:
-+
-+BD71837:
-+buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
-+-----------------------------------------------------------------------------
-+1	| supported		| supported		| supported
-+----------------------------------------------------------------------------
-+2	| supported		| supported		| not supported
-+----------------------------------------------------------------------------
-+3	| supported		| not supported		| not supported
-+----------------------------------------------------------------------------
-+4	| supported		| not supported		| not supported
-+----------------------------------------------------------------------------
-+rest	| not supported		| not supported		| not supported
-+
-+BD71847:
-+buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
-+-----------------------------------------------------------------------------
-+1	| supported		| supported		| supported
-+----------------------------------------------------------------------------
-+2	| supported		| supported		| not supported
-+----------------------------------------------------------------------------
-+rest	| not supported		| not supported		| not supported
-+
- Example:
- regulators {
- 	buck1: BUCK1 {
-@@ -36,7 +66,11 @@ regulators {
- 		regulator-min-microvolt = <700000>;
- 		regulator-max-microvolt = <1300000>;
- 		regulator-boot-on;
-+		regulator-always-on;
- 		regulator-ramp-delay = <1250>;
-+		rohm,dvs-run-voltage = <900000>;
-+		rohm,dvs-idle-voltage = <850000>;
-+		rohm,dvs-suspend-voltage = <800000>;
- 	};
- 	buck2: BUCK2 {
- 		regulator-name = "buck2";
-@@ -45,18 +79,22 @@ regulators {
- 		regulator-boot-on;
- 		regulator-always-on;
- 		regulator-ramp-delay = <1250>;
-+		rohm,dvs-run-voltage = <1000000>;
-+		rohm,dvs-idle-voltage = <900000>;
- 	};
- 	buck3: BUCK3 {
- 		regulator-name = "buck3";
- 		regulator-min-microvolt = <700000>;
- 		regulator-max-microvolt = <1300000>;
- 		regulator-boot-on;
-+		rohm,dvs-run-voltage = <1000000>;
- 	};
- 	buck4: BUCK4 {
- 		regulator-name = "buck4";
- 		regulator-min-microvolt = <700000>;
- 		regulator-max-microvolt = <1300000>;
- 		regulator-boot-on;
-+		rohm,dvs-run-voltage = <1000000>;
- 	};
- 	buck5: BUCK5 {
- 		regulator-name = "buck5";
++/*
++ * Helper functions intended to be used by regulator drivers prior registering
++ * their regulators.
++ */
++int regulator_desc_list_voltage_linear_range(const struct regulator_desc *desc,
++					     unsigned int selector);
+ #endif
 -- 
 2.14.3
 
