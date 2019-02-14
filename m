@@ -1,39 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: drm: panel: Add Samsung s6e63m0
- panel documentation
-Date: Thu, 14 Feb 2019 09:40:47 -0600
-Message-ID: <20190214154047.GA17978@bogus>
-References: <20190202142748.6830-1-pawel.mikolaj.chmiel@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Thu, 14 Feb 2019 07:41:00 -0800
+Message-ID: <20190214154100.GB5720@atomide.com>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
+ <20190212074237.2875-6-lokeshvutla@ti.com>
+ <20190212162247.GK5720@atomide.com>
+ <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
+ <20190213152620.GS5720@atomide.com>
+ <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190202142748.6830-1-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, m.szyprowski@samsung.com, krzk@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>, =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat,  2 Feb 2019 15:27:47 +0100, =?UTF-8?q?Pawe=C5=82=20Chmiel?= wrote:
-> From: Jonathan Bakker <xc-racer2@live.ca>
-> 
-> This commit adds documentation for Samsung s6e63m0 AMOLED LCD panel
-> driver.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
-> Changes from v1:
->   - Add missing subject prefix
->   - Rename reset-gpio to reset-gpios
->   - Add link to spi properites documentation. They're required
->     for driver to work
->   - Removed delay properties, which are now hardcoded in driver
->   - Removed display timings, which are now hardcoded in driver
-> ---
->  .../display/panel/samsung,s6e63m0.txt         | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
-> 
+* Lokesh Vutla <lokeshvutla@ti.com> [190214 08:39]:
+> IMHO, device ids are something which can be used in DT. There are many other
+> things like the interrupt ranges etc.. which are discoverable from sysfw and we
+> are implementing it.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+We need to describe hardware in the device tree, not firmware.
+
+If you have something discoverable from the firmware, you should
+have the device driver query it from sysfw based on a hardware
+property, not based on some invented enumeration in the firmware.
+If there is some device to firmware translation needed, hide that
+into the device driver and keep it out of the device tree.
+
+For example, look at the interrupt binding where the interrupt
+is phandle to the controller and the bit offset from the interrupt
+controller instance.
+
+You need to use device IO address + bit offset (or register
+offset) type indexing for device tree here. Something out of
+the TRM that makes sense to developers.
+
+Regards,
+
+Tony
