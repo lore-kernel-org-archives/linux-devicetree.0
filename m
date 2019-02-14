@@ -1,108 +1,47 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: sprd: Change to use SoC compatible string
-Date: Thu, 14 Feb 2019 18:42:21 +0800
-Message-ID: <CAMz4kuKeMgZNf-_kO8j=8xPPy3o3pfZ=asv5hZX=2DKUSQBOhg@mail.gmail.com>
-References: <b8101fd6d303c1993ee294eeee8bce4d24b9547f.1550061925.git.baolin.wang@linaro.org>
- <0438b78c7f9f9bc3f0e7bcbcef3873fd2dd7e259.1550061925.git.baolin.wang@linaro.org>
- <CAMpxmJWuMWBSPjoJWkfagAAopYjohA0rhxUacNPXhhiTFZJorA@mail.gmail.com>
- <CAMz4kuJRvYo699J5SiG9mhjy5pt1hke8yXwoj9KfmZBTKkkKzw@mail.gmail.com>
- <CAMpxmJXbuOuMvxe+bXqjaCrVU5WXxQ=fZTU9iA8Opnqrx25eMQ@mail.gmail.com> <CACRpkdZ8vrNjju=Lmqu5x7VqKB7C2GU-oiryCRpcpCf2rBo4UA@mail.gmail.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH v2] dt-bindings: clock: remove unused definition for stm32mp1
+Date: Thu, 14 Feb 2019 11:42:42 +0100
+Message-ID: <20190214104242.1491-1-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ8vrNjju=Lmqu5x7VqKB7C2GU-oiryCRpcpCf2rBo4UA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Mark Brown <broonie@kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, linux-gpio <linux-gpio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Feb 2019 at 15:56, Linus Walleij <linus.walleij@linaro.org> wrot=
-e:
->
-> On Wed, Feb 13, 2019 at 5:10 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > =C5=9Br., 13 lut 2019 o 14:15 Baolin Wang <baolin.wang@linaro.org> napi=
-sa=C5=82(a):
-> > >
-> > > On Wed, 13 Feb 2019 at 20:59, Bartosz Golaszewski
-> > > <bgolaszewski@baylibre.com> wrote:
-> > > >
-> > > > =C5=9Br., 13 lut 2019 o 13:49 Baolin Wang <baolin.wang@linaro.org> =
-napisa=C5=82(a):
-> > > > >
-> > > > > Change to use SoC compatible string instead of wildcard string.
-> > > > >
-> > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > > > > ---
-> > > > >  drivers/gpio/gpio-pmic-eic-sprd.c |    2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpi=
-o-pmic-eic-sprd.c
-> > > > > index ac573da..24228cf 100644
-> > > > > --- a/drivers/gpio/gpio-pmic-eic-sprd.c
-> > > > > +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
-> > > > > @@ -364,7 +364,7 @@ static int sprd_pmic_eic_probe(struct platfor=
-m_device *pdev)
-> > > > >  }
-> > > > >
-> > > > >  static const struct of_device_id sprd_pmic_eic_of_match[] =3D {
-> > > > > -       { .compatible =3D "sprd,sc27xx-eic", },
-> > > > > +       { .compatible =3D "sprd,sc2731-eic", },
-> > > > >         { /* end of list */ }
-> > > > >  };
-> > > > >  MODULE_DEVICE_TABLE(of, sprd_pmic_eic_of_match);
-> > > > > --
-> > > > > 1.7.9.5
-> > > > >
-> > > >
-> > > > We guarantee to make older device-trees to work with new kernel so =
-you
-> > > > can add the new compatible, but you can't remove the old one.
-> > >
-> > > But the old one is incorrect, and we still keep it?
-> > >
-> >
-> > Well in theory the device-tree is supposed to be a stable ABI so once
-> > it's released, it should work with any following kernel version.
-> >
-> > In practice changes are sometimes allowed and there are also bugs in DT=
- files.
-> >
-> > Linus: what do you think?
->
-> In this specific case I'd keep both strings, it doesn't hurt does it?
->
-> You could add a comment to the wildcard string saying it is only there
-> for compatibility with elder device trees.
->
-> In general as long as there are not (a lot of) products shipped with
-> a certain device tree, I don't care much whether we change the bindings
-> or contents.
->
-> The hard rule to keep the device trees backward-compatible comes
-> from SPARC SunOS where the DTB was burned into a BIOS ROM
-> that was hard or impossible to update, Linux just had to handle
-> whatever was in there. If the situation with the device tree we change
-> is not similiar, we should not care either.
->
-> In practice there are companies and developers that always
-> recompile and ship their device trees at the same time as they
-> compile and ship their kernel, and in that case we need not care
-> about backward compatibility.
->
-> While the device tree enablement on ARM started out with the
-> former (strict) assumption, the practice of using DTs has shown
-> that it is an unrealistic and inappropriate stance to have for all
-> device trees. (IMO!) So I don't mind if you break compatibility here.
->
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-Thanks for your explanation. Yes, as our dts and drivers development
-are still in progress, I do not think we need care about the backward
-compatibility issue. So I still intend to remove the incorrect
-wildcard string.
+A copy of LTDC_PX and ETHCK_K (LTDC_K and ETHMAC_K) was introduced in
+stm32mp1 dt-bindings file by mistake.
+These bindings are not used and shouldn't be use to be conform with
+convention name of the stm32mp1 clock IP.
 
---=20
-Baolin Wang
-Best Regards
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+---
+ include/dt-bindings/clock/stm32mp1-clks.h | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/include/dt-bindings/clock/stm32mp1-clks.h b/include/dt-bindings/clock/stm32mp1-clks.h
+index 90ec780bfc68..4cdaf135829c 100644
+--- a/include/dt-bindings/clock/stm32mp1-clks.h
++++ b/include/dt-bindings/clock/stm32mp1-clks.h
+@@ -248,7 +248,4 @@
+ 
+ #define STM32MP1_LAST_CLK 232
+ 
+-#define LTDC_K		LTDC_PX
+-#define ETHMAC_K	ETHCK_K
+-
+ #endif /* _DT_BINDINGS_STM32MP1_CLKS_H_ */
+-- 
+2.17.0
