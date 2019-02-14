@@ -1,8 +1,8 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
 Subject: Re: [PATCH v2 1/1] dt-bindings: dmaengine: Add MediaTek Command-Queue
  DMA controller bindings
-Date: Thu, 14 Feb 2019 10:18:52 +0100
-Message-ID: <e6e7ab27-257d-f0fc-f107-94bff92294cc@gmail.com>
+Date: Thu, 14 Feb 2019 10:19:38 +0100
+Message-ID: <17980f11-dcbf-b033-c525-613a3b3ed62c@gmail.com>
 References: <1550130892-19488-1-git-send-email-shun-chih.yu@mediatek.com>
  <1550130892-19488-2-git-send-email-shun-chih.yu@mediatek.com>
 Mime-Version: 1.0
@@ -69,7 +69,10 @@ MTK_CQDMA_NR_PCHANS in case the property is not present.
 
 Does this mean that you have to resources at base = 0x0 with different length?
 
-Regards,
+For the next time, please send driver and binding description in one series (two
+patches). That makes things easier to review.
+
+Thanks,
 Matthias
 
 > +		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
