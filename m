@@ -1,111 +1,73 @@
-From: Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH] drm/mediatek: add mt8183 dpi support
-Date: Thu, 14 Feb 2019 15:41:49 -0500
-Message-ID: <20190214204149.GO114153@art_vandelay>
-References: <20190211045059.11821-1-jitao.shi@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190211045059.11821-1-jitao.shi@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.or
+From: thor.thayer@linux.intel.com
+Subject: [PATCHv4 0/6] Add SOCFPGA System Manager
+Date: Thu, 14 Feb 2019 14:44:12 -0600
+Message-ID: <1550177058-1860-1-git-send-email-thor.thayer@linux.intel.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: lee.jones@linaro.org, arnd@arndb.de, dinguyen@kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, olof@lixom.net
+Cc: davem@davemloft.net, mcoquelin.stm32@gmail.com, mchehab+samsung@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 12:50:59PM +0800, Jitao Shi wrote:
-> MT8183 sample on rising and falling edge. It can reduce half data io.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index 62a9d47df948..610c23334047 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -117,6 +117,7 @@ struct mtk_dpi_conf {
->  	unsigned int (*cal_factor)(int clock);
->  	u32 reg_h_fre_con;
->  	bool edge_sel_en;
-> +	bool dual_edge;
->  };
->  
->  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
-> @@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
->  		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
->  }
->  
-> +static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
-> +{
-> +	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
-> +		     DDR_EN | DDR_4PHASE);
-> +	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
-> +}
-> +
->  static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
->  					enum mtk_dpi_out_color_format format)
->  {
-> @@ -509,6 +517,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
->  	mtk_dpi_config_color_format(dpi, dpi->color_format);
->  	mtk_dpi_config_2n_h_fre(dpi);
->  	mtk_dpi_config_disable_edge(dpi);
-> +	if (dpi->conf->dual_edge)
-> +		mtk_dpi_enable_dual_edge(dpi);
->  	mtk_dpi_sw_reset(dpi, false);
->  
->  	return 0;
-> @@ -671,6 +681,16 @@ static unsigned int mt2701_calculate_factor(int clock)
->  		return 2;
->  }
->  
-> +static unsigned int mt8183_calculate_factor(int clock)
-> +{
-> +	if (clock <= 27000)
-> +		return 8;
-> +	else if (clock <= 167000)
-> +		return 4;
-> +	else
-> +		return 2;
-> +}
-> +
->  static const struct mtk_dpi_conf mt8173_conf = {
->  	.cal_factor = mt8173_calculate_factor,
->  	.reg_h_fre_con = 0xe0,
-> @@ -682,6 +702,12 @@ static const struct mtk_dpi_conf mt2701_conf = {
->  	.edge_sel_en = true,
->  };
->  
-> +static const struct mtk_dpi_conf mt8183_conf = {
-> +	.cal_factor = mt8183_calculate_factor,
-> +	.reg_h_fre_con = 0xe0,
-> +	.dual_edge = true,
-> +};
-> +
->  static int mtk_dpi_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -777,6 +803,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
->  	{ .compatible = "mediatek,mt8173-dpi",
->  	  .data = &mt8173_conf,
->  	},
-> +	{ .compatible = "mediatek,mt8183-dpi",
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Do you need to add this compatible value to the dt binding? If you can do as CK
-suggested, maybe you don't need this at all (and mt8183 can use the mt8173
-compatible string in the dt).
+Add MFD driver for SOCFPGA System Manager to handle
+System Manager calls differently for ARM32 vs ARM64.
+The SOCFPGA System Manager includes registers from several
+SOC peripherals.
 
-Sean
+On ARM32, syscon handles this aggregated register grouping.
+Implement System Manager calls as regmap_mmio similar to syscon
+for ARM32 SOCFPGA systems.
 
-> +	  .data = &mt8183_conf,
-> +	},
->  	{ },
->  };
->  
-> -- 
-> 2.12.5
-> 
+The ARM64 System Manager can only be accessed from priority
+level EL3 so this new MFD driver handles the calls to EL3.
+
+v2 Changes:
+Change socfpga_is_s10() to check compatible string.
+Add new compatible string for Stratix10 in bindings
+    and add proper detection method.
+Replace base cast with resource_size_t member.
+Change s10_sysmgr_regmap_cfg to altr_sysmgr_regmap_cfg to
+    be generic.
+Always use 4 byte width.
+Initialize the .reg_read and .reg_write in S10 case only.
+Remove call to syscon in 32bit ARM case and handle both
+    ARM32 and ARM64 in of_sysmgr_register().
+Replace IS_ERR_OR_NULL() with IS_ERR().
+Remove compatible check functions except phandle function.
+
+v3 Changes:
+Create and register regmap in probe().
+Lookup functions find registered regmap.
+Cleanup of header file.
+Fix copyright dates.
+Replace global pointer with traditional probe() methodology.
+
+v4 Changes:
+Add missing of_node_put().
+Add Reviewed-by from v2.
+
+Thor Thayer (6):
+  mfd: altera-sysmgr: Add SOCFPGA System Manager
+  Documentation: dt: socfpga: Add S10 System Manager binding
+  ARM: socfpga_defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+  arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+  net: stmmac: socfpga: Use shared System Manager driver
+  arm64: dts: stratix10: New System Manager compatible
+
+ .../bindings/arm/altera/socfpga-system.txt         |  12 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/configs/socfpga_defconfig                 |   1 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   2 +-
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/altera-sysmgr.c                        | 211 +++++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |   5 +-
+ include/linux/mfd/altera-sysmgr.h                  |  29 +++
+ 10 files changed, 275 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/mfd/altera-sysmgr.c
+ create mode 100644 include/linux/mfd/altera-sysmgr.h
 
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+2.7.4
