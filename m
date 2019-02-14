@@ -1,26 +1,43 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH 4/4] arm64: dts: allwinner: h6: Add CPU Operating
- Performance Points table
-Date: Fri, 15 Feb 2019 00:56:03 +0800
-Message-ID: <CAEExFWv_K_07e30dgPbafVhDD_smwZkpi6Fqk6yzCahesdnrGg@mail.gmail.com>
-References: <20190214130910.9201-1-tiny.windzz@gmail.com> <20190214130910.9201-5-tiny.windzz@gmail.com>
- <20190214143842.nqsh6trwdjxq2ecd@flea> <CAEExFWuxrVC1J0g93R3ifaDxOGy-20B4jftoHw932V7+wqhtxw@mail.gmail.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: RE: [PATCH net-next 2/3] arm64: dts: fsl: ls1028a-rdb: Add ENETC
+ external eth ports for the LS1028A RDB board
+Date: Thu, 14 Feb 2019 17:00:44 +0000
+Message-ID: <VI1PR04MB48800F563F0C76412090459F96670@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <1550055743-15542-1-git-send-email-claudiu.manoil@nxp.com>
+ <1550055743-15542-3-git-send-email-claudiu.manoil@nxp.com>
+ <20190213181554.GB708@lunn.ch>
+ <VI1PR04MB4880C9EF6C9EBFCAA2209DD596670@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190214162746.GI708@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEExFWuxrVC1J0g93R3ifaDxOGy-20B4jftoHw932V7+wqhtxw@mail.gmail.com>
+In-Reply-To: <20190214162746.GI708@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, robh+dt@kernel.org, mark.rutland@arm.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-HI Maxime,
+>-----Original Message-----
+>From: Andrew Lunn <andrew@lunn.ch>
+>Sent: Thursday, February 14, 2019 6:28 PM
+>To: Claudiu Manoil <claudiu.manoil@nxp.com>
+>Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; David S =
+.
+>Miller <davem@davemloft.net>; devicetree@vger.kernel.org; Alexandru
+>Marginean <alexandru.marginean@nxp.com>; linux-kernel@vger.kernel.org;
+>linux-arm-kernel@lists.infradead.org; netdev@vger.kernel.org
+>Subject: Re: [PATCH net-next 2/3] arm64: dts: fsl: ls1028a-rdb: Add ENETC
+>external eth ports for the LS1028A RDB board
+>
+>> Hi Andrew,
+>>
+>> The extra node for mdio seems to complicate things somewhat.
+>> Just adding this node seems not enough.  How to find out easily if a
+>> child of a enetc port node is a mdio node?
+>
+>You copy somebody else code :-)
+>
 
-How about to implement a thermal driver that is not integrated with gpadc =
-=EF=BC=9F
-
-GPADC on soc is rarely used now.
-
-MBR,
-Yangtao
+Provided you find the right thing to copy : ) . Thanks for the hint.
