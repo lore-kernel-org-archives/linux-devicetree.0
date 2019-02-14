@@ -1,27 +1,50 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V5 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
-Date: Thu, 14 Feb 2019 15:50:47 +0530
-Message-ID: <20190214102047.giu5lwxw7dtyfdqy@vireshk-i7>
-References: <1550131046-2069-1-git-send-email-Anson.Huang@nxp.com>
- <20190214083419.slnuolyy5xhz4szy@vireshk-i7>
- <DB3PR0402MB39163EE75B512102C5FE19E9F5670@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v4 1/3] dt-bindings: pwm-stm32-lp: document pinctrl sleep state
+Date: Thu, 14 Feb 2019 11:25:49 +0100
+Message-ID: <1550139951-25788-2-git-send-email-fabrice.gasnier@st.com>
+References: <1550139951-25788-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39163EE75B512102C5FE19E9F5670@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <1550139951-25788-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: thierry.reding@gmail.com, robh+dt@kernel.org
+Cc: u.kleine-koenig@pengutronix.de, tduszyns@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On 14-02-19, 09:47, Anson Huang wrote:
-> Although all CPUs share same clock and opp table, but OK, I will add clock to
-> all CPUs.
+Add documentation for pinctrl sleep state on STM32 LPTimer PWM.
 
-Right, but still these must be present for all CPUs as on certain
-occasions a CPU other than CPU0 can be used to bring up the cupfreq
-policy.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+index bd23302..6521bc4 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+@@ -11,8 +11,10 @@ Required parameters:
+ 			bindings defined in pwm.txt.
+ 
+ Optional properties:
+-- pinctrl-names: 	Set to "default".
+-- pinctrl-0: 		Phandle pointing to pin configuration node for PWM.
++- pinctrl-names: 	Set to "default". An additional "sleep" state can be
++			defined to set pins in sleep state when in low power.
++- pinctrl-n: 		Phandle(s) pointing to pin configuration node for PWM,
++			respectively for "default" and "sleep" states.
+ 
+ Example:
+ 	timer@40002400 {
+@@ -21,7 +23,8 @@ Example:
+ 		pwm {
+ 			compatible = "st,stm32-pwm-lp";
+ 			#pwm-cells = <3>;
+-			pinctrl-names = "default";
++			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&lppwm1_pins>;
++			pinctrl-1 = <&lppwm1_sleep_pins>;
+ 		};
+ 	};
 -- 
-viresh
+1.9.1
