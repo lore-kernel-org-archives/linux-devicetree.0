@@ -1,268 +1,69 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v10 8/9] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Date: Thu, 14 Feb 2019 06:16:18 -0800
-Message-ID: <81412eeb-c6d2-2042-9d89-e5dd7b87dda3@roeck-us.net>
-References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
- <30eca0108663a382fd3bfceb04ba35577ec569bd.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 3/8] dt-bindings: i2c: iproc: make 'interrupts' optional
+Date: Thu, 14 Feb 2019 08:16:21 -0600
+Message-ID: <CAL_JsqK+QLRp7LqkMzQCXdLPaJU3fbiNWU_uyuPFJ4qDkP=siA@mail.gmail.com>
+References: <20190204231554.87666-1-ray.jui@broadcom.com> <20190204231554.87666-4-ray.jui@broadcom.com>
+ <20190213211651.GA10705@bogus> <796d9a96-f3f9-cb9a-faa3-4baf0e72da65@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <30eca0108663a382fd3bfceb04ba35577ec569bd.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
-Content-Language: en-US
+In-Reply-To: <796d9a96-f3f9-cb9a-faa3-4baf0e72da65@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
-Cc: heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/14/19 5:12 AM, Matti Vaittinen wrote:
-> Initial support for watchdog block included in ROHM BD70528
-> power management IC.
-> 
-> Configurations for low power states are still to be checked.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+On Wed, Feb 13, 2019 at 4:06 PM Ray Jui <ray.jui@broadcom.com> wrote:
+>
+> Hi Rob,
+>
+> On 2/13/2019 1:16 PM, Rob Herring wrote:
+> > On Mon, Feb 04, 2019 at 03:15:49PM -0800, Ray Jui wrote:
+> >> In prep for the introduction of polling mode into the driver, update the
+> >> binding document to make the 'interrupts' property optional
+> >>
+> >> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> >> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> >> ---
+> >>  .../devicetree/bindings/i2c/brcm,iproc-i2c.txt         | 10 +++++++---
+> >>  1 file changed, 7 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+> >> index 81f982ccca31..d3a3620b1f06 100644
+> >> --- a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+> >> +++ b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+> >> @@ -9,9 +9,6 @@ Required properties:
+> >>      Define the base and range of the I/O address space that contain the iProc
+> >>      I2C controller registers
+> >>
+> >> -- interrupts:
+> >> -    Should contain the I2C interrupt
+> >> -
+> >>  - clock-frequency:
+> >>      This is the I2C bus clock. Need to be either 100000 or 400000
+> >>
+> >> @@ -21,6 +18,13 @@ Required properties:
+> >>  - #size-cells:
+> >>      Always 0
+> >>
+> >> +Optional properties:
+> >> +
+> >> +- interrupts:
+> >> +    Should contain the I2C interrupt. If unspecified, driver will fall back to
+> >> +    polling mode
+> >
+> > What determines when you want to use polling mode? I'm not sure DT
+> > is the best way to control this unless it's really a property of
+> > the h/w. Driver behavior is really outside the scope of the DT. u-boot
+> > would use polling even if an interrupt is specified, for example.
+> >
+> It's tied to the particular revision of the I2C controller, i.e., the
+> iProc NIC i2c controller does not have interrupt line wired. In this
+> case, the behavior is determined by the DT compatible string of the
+> iProc I2C device. I thought that it makes sense to now move the
+> 'interrupts' property to be under "Optional" than "Required" which is
+> basically what this change is.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Okay, please put this detail into the commit msg.
 
-> ---
-> 
-> I dropped the Ack from Guenter as removal of struct bd70528
-> somewhat changed the code
-> 
->   drivers/watchdog/Kconfig       |  12 +++
->   drivers/watchdog/Makefile      |   1 +
->   drivers/watchdog/bd70528_wdt.c | 187 +++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 200 insertions(+)
->   create mode 100644 drivers/watchdog/bd70528_wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 57f017d74a97..f30e3a3e886e 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
->   	  watchdog. Be aware that governors might affect the watchdog because it
->   	  is purely software, e.g. the panic governor will stall it!
->   
-> +config BD70528_WATCHDOG
-> +	tristate "ROHM BD70528 PMIC Watchdog"
-> +	depends on MFD_ROHM_BD70528
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
-> +	  cause system reset.
-> +
-> +	  Say Y here to include support for the ROHM BD70528 watchdog.
-> +	  Alternatively say M to compile the driver as a module,
-> +	  which will be called bd70528_wdt.
-> +
->   config DA9052_WATCHDOG
->   	tristate "Dialog DA9052 Watchdog"
->   	depends on PMIC_DA9052 || COMPILE_TEST
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index a0917ef28e07..1ce87a3b1172 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -204,6 +204,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
->   obj-$(CONFIG_XEN_WDT) += xen_wdt.o
->   
->   # Architecture Independent
-> +obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
->   obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
->   obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
->   obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
-> diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-> new file mode 100644
-> index 000000000000..c014c915932a
-> --- /dev/null
-> +++ b/drivers/watchdog/bd70528_wdt.c
-> @@ -0,0 +1,187 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 ROHM Semiconductors
-> +// ROHM BD70528MWV watchdog driver
-> +
-> +#include <linux/bcd.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/rohm-bd70528.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/watchdog.h>
-> +
-> +/*
-> + * Max time we can set is 1 hour, 59 minutes and 59 seconds
-> + * and Minimum time is 1 second
-> + */
-> +#define WDT_MAX_MS	((2 * 60 * 60 - 1) * 1000)
-> +#define WDT_MIN_MS	1000
-> +#define DEFAULT_TIMEOUT	60
-> +
-> +struct wdtbd70528 {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	struct rohm_regmap_dev *mfd;
-> +	struct watchdog_device wdt;
-> +};
-> +
-> +static int bd70528_wdt_set_locked(struct wdtbd70528 *w, int enable)
-> +{
-> +	return bd70528_wdt_set(w->mfd, enable, NULL);
-> +}
-> +
-> +static int bd70528_wdt_change(struct wdtbd70528 *w, int enable)
-> +{
-> +	int ret;
-> +
-> +	bd70528_wdt_lock(w->mfd);
-> +	ret = bd70528_wdt_set_locked(w, enable);
-> +	bd70528_wdt_unlock(w->mfd);
-> +
-> +	return ret;
-> +}
-> +
-> +static int bd70528_wdt_start(struct watchdog_device *wdt)
-> +{
-> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-> +
-> +	dev_dbg(w->dev, "WDT ping...\n");
-> +	return bd70528_wdt_change(w, 1);
-> +}
-> +
-> +static int bd70528_wdt_stop(struct watchdog_device *wdt)
-> +{
-> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-> +
-> +	dev_dbg(w->dev, "WDT stopping...\n");
-> +	return bd70528_wdt_change(w, 0);
-> +}
-> +
-> +static int bd70528_wdt_set_timeout(struct watchdog_device *wdt,
-> +				    unsigned int timeout)
-> +{
-> +	unsigned int hours;
-> +	unsigned int minutes;
-> +	unsigned int seconds;
-> +	int ret;
-> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-> +
-> +	seconds = timeout;
-> +	hours = timeout / (60 * 60);
-> +	/* Maximum timeout is 1h 59m 59s => hours is 1 or 0 */
-> +	if (hours)
-> +		seconds -= (60 * 60);
-> +	minutes = seconds / 60;
-> +	seconds = seconds % 60;
-> +
-> +	bd70528_wdt_lock(w->mfd);
-> +
-> +	ret = bd70528_wdt_set_locked(w, 0);
-> +	if (ret)
-> +		goto out_unlock;
-> +
-> +	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_HOUR,
-> +				 BD70528_MASK_WDT_HOUR, hours);
-> +	if (ret) {
-> +		dev_err(w->dev, "Failed to set WDT hours\n");
-> +		goto out_en_unlock;
-> +	}
-> +	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_MINUTE,
-> +				 BD70528_MASK_WDT_MINUTE, bin2bcd(minutes));
-> +	if (ret) {
-> +		dev_err(w->dev, "Failed to set WDT minutes\n");
-> +		goto out_en_unlock;
-> +	}
-> +	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_SEC,
-> +				 BD70528_MASK_WDT_SEC, bin2bcd(seconds));
-> +	if (ret)
-> +		dev_err(w->dev, "Failed to set WDT seconds\n");
-> +	else
-> +		dev_dbg(w->dev, "WDT tmo set to %u\n", timeout);
-> +
-> +out_en_unlock:
-> +	ret = bd70528_wdt_set_locked(w, 1);
-> +out_unlock:
-> +	bd70528_wdt_unlock(w->mfd);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct watchdog_info bd70528_wdt_info = {
-> +	.identity = "bd70528-wdt",
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-> +};
-> +
-> +static const struct watchdog_ops bd70528_wdt_ops = {
-> +	.start		= bd70528_wdt_start,
-> +	.stop		= bd70528_wdt_stop,
-> +	.set_timeout	= bd70528_wdt_set_timeout,
-> +};
-> +
-> +static int bd70528_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct rohm_regmap_dev *bd70528;
-> +	struct wdtbd70528 *w;
-> +	int ret;
-> +	unsigned int reg;
-> +
-> +	bd70528 = dev_get_drvdata(pdev->dev.parent);
-> +	if (!bd70528) {
-> +		dev_err(&pdev->dev, "No MFD driver data\n");
-> +		return -EINVAL;
-> +	}
-> +	w = devm_kzalloc(&pdev->dev, sizeof(*w), GFP_KERNEL);
-> +	if (!w)
-> +		return -ENOMEM;
-> +
-> +	w->regmap = bd70528->regmap;
-> +	w->mfd = bd70528;
-> +	w->dev = &pdev->dev;
-> +
-> +	w->wdt.info = &bd70528_wdt_info;
-> +	w->wdt.ops =  &bd70528_wdt_ops;
-> +	w->wdt.min_hw_heartbeat_ms = WDT_MIN_MS;
-> +	w->wdt.max_hw_heartbeat_ms = WDT_MAX_MS;
-> +	w->wdt.parent = pdev->dev.parent;
-> +	w->wdt.timeout = DEFAULT_TIMEOUT;
-> +	watchdog_set_drvdata(&w->wdt, w);
-> +	watchdog_init_timeout(&w->wdt, 0, pdev->dev.parent);
-> +
-> +	ret = bd70528_wdt_set_timeout(&w->wdt, w->wdt.timeout);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to set the watchdog timeout\n");
-> +		return ret;
-> +	}
-> +
-> +	bd70528_wdt_lock(w->mfd);
-> +	ret = regmap_read(w->regmap, BD70528_REG_WDT_CTRL, &reg);
-> +	bd70528_wdt_unlock(w->mfd);
-> +
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to get the watchdog state\n");
-> +		return ret;
-> +	}
-> +	if (reg & BD70528_MASK_WDT_EN) {
-> +		dev_dbg(&pdev->dev, "watchdog was running during probe\n");
-> +		set_bit(WDOG_HW_RUNNING, &w->wdt.status);
-> +	}
-> +
-> +	ret = devm_watchdog_register_device(&pdev->dev, &w->wdt);
-> +	if (ret < 0)
-> +		dev_err(&pdev->dev, "watchdog registration failed: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +static struct platform_driver bd70528_wdt = {
-> +	.driver = {
-> +		.name = "bd70528-wdt"
-> +	},
-> +	.probe = bd70528_wdt_probe,
-> +};
-> +
-> +module_platform_driver(bd70528_wdt);
-> +
-> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-> +MODULE_DESCRIPTION("BD70528 watchdog driver");
-> +MODULE_LICENSE("GPL");
-> 
+Rob
