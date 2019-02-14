@@ -1,104 +1,89 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v2 10/14] remoteproc/pru: Add PRU remoteproc driver
-Date: Wed, 13 Feb 2019 21:44:26 -0600
-Message-ID: <448fc985-9822-54b1-c0aa-070d6dcaad1a@ti.com>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
- <1549290167-876-11-git-send-email-rogerq@ti.com>
- <acf08e5e-d65f-84cf-5d3f-a8e0977933f4@ti.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/3] dt-bindings: fsl: scu: add general interrupt support
+Date: Thu, 14 Feb 2019 03:47:19 +0000
+Message-ID: <DB3PR0402MB391645B7AF7B9F81EECABA18F5670@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1548230179-26076-1-git-send-email-Anson.Huang@nxp.com>
+ <DB3PR0402MB3916FECAC4645C2B12FAB65EF5650@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <acf08e5e-d65f-84cf-5d3f-a8e0977933f4@ti.com>
+In-Reply-To: <DB3PR0402MB3916FECAC4645C2B12FAB65EF5650@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, tony@atomide.com, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc: david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/13/19 8:35 PM, Suman Anna wrote:
-> Hi Roger,
-> 
-> On 2/4/19 8:22 AM, Roger Quadros wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> The Programmable Real-Time Unit Subsystem (PRUSS) consists of
->> dual 32-bit RISC cores (Programmable Real-Time Units, or PRUs)
->> for program execution. This patch adds a remoteproc platform
->> driver for managing the individual PRU RISC cores life cycle.
->>
->> This remoteproc driver does not have support for error recovery
->> and system suspend/resume features. Different compatibles are
->> used to allow providing scalability for instance-specific device
->> data if needed. The driver uses a default firmware-name retrieved
->> from device-tree, and the firmwares are expected to be present
->> in the standard Linux firmware search paths. They can also be
->> adjusted by userspace if required through the sysfs interface
->> provided by the remoteproc core.
->>
->> The PRU remoteproc driver uses a client-driven boot methodology
->> - it does _not_ support auto-boot so that the PRU load and boot
->> is dictated by the corresponding client drivers for achieving
->> various usecases. This allows flexibility for the client drivers
->> or applications to set a firmware name (if needed) based on their
->> desired functionality and boot the PRU. The sysfs bind and unbind
->> attributes have also been suppressed so that the PRU devices cannot
->> be unbound and thereby shutdown a PRU from underneath a PRU client
->> driver.
->>
->> A new entry 'single_step' is added to the remoteproc debugfs dir.
->> The 'single_step' utilizes the single-step execution of the PRU
->> cores. Writing a non-zero value performs a single step, and a
->> zero value restores the PRU to execute in the same mode as the
->> mode before the first single step. (note: if the PRU is halted
->> because of a halt instruction, then no change occurs).
->>
->> pru_rproc_get() and pru_rproc_put() functions allow client drivers
->> to acquire and release the remoteproc device associated with a PRU core.
->> The PRU cores are treated as resources with only one client owning
->> it at a time.
->>
->> PRU interrupt mapping can be provided via devicetree using
->> ti,pru-interrupt-map property or via the resource table in the
->> firmware blob. If both are provided, the config in DT takes precedence.
->> For interrupt map via resource table, pru-software-support-package [1]
->> has been historically using version 0 for this. However, the current
->> data structure is not scaleable and is not self sufficient.
->> 1) it hard codes number of channel to host mappings so is not
->> scaleable to newer SoCs than have more of these.
->> 2) it does not contain the event to channel mappings within
->> itself but relies on a pointer to point to another section
->> in data memory. This causes a weird complication that the
->> respective data section must be loaded before we can really
->> use the INTC map.
->>
->> With this patch we drop support for version 0 and support
->> version 1 which is a more robust and scalable data structure.
->> It should be able to support a sufficiently large number (255) of
->> sysevents, channels and host interrupts and is self contained
->> so it can be used without dependency on order of loading sections.
-> 
-> Hmm, looks like you squashed a whole bunch of patches into this. I would
-> prefer some of the logical ones to be separated out just like before,
-> makes it easier to review the interfaces.
-> 
-> Looks like you have also changed usage behavior on couple of things and
-> dropped some of my original changes. I was not able to test this series
-> either on AM335x or on AM57xx to comment more on the behavior (not even
-> seeing the pruss devices populated, not sure what pieces are missing still).
-
-Able to get the PRUSS devices show up on AM335x atleast after enabling
-the Reset Controller related configs, but no such luck on AM57xx.
-
-regards
-Suman
-
-> 
->>
->> [1]  git://git.ti.com/pru-software-support-package/pru-software-support-package.git
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
+SSBqdXN0IHVwZGF0ZSB0aGUgcGF0Y2ggc2VyaWVzIGFuZCBhbHNvIGFkZCBSVEMgYWxhcm0gc3Vw
+cG9ydCB0byB1c2UgaS5NWCBTQ1UgZ2VuZXJhbCBpbnRlcnJ1cHQgYXMgYW4gZXhhbXBsZSwgYmVj
+YXVzZSBSVEMgYWxhcm0gcGF0Y2ggZGVwZW5kcyBvbiBpdCwgc28gSSBzZW50IHRoZW0gdG9nZXRo
+ZXIgaW4gT05FIHBhdGggc2VyaWVzLCBwbGVhc2UganVzdCBoZWxwIHJldmlldyB0aGUgVjIgcGF0
+Y2ggc2VyaWVzLCB0aGFua3MuDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5zb24gSHVhbmcNCj4gU2VudDogMjAx
+OcTqMtTCMTLI1SAyMDozOQ0KPiBUbzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRA
+YXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gcy5oYXVlckBwZW5ndXRyb25peC5kZTsg
+a2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+IEFpc2hlbmcgRG9u
+ZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyB1bGYuaGFuc3NvbkBsaW5hcm8ub3JnOyBEYW5pZWwN
+Cj4gQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNv
+bT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCAxLzNdIGR0LWJpbmRpbmdzOiBmc2w6IHNjdTogYWRk
+IGdlbmVyYWwgaW50ZXJydXB0IHN1cHBvcnQNCj4gDQo+IEdlbnRsZSBwaW5nLi4uDQo+IA0KPiBC
+ZXN0IFJlZ2FyZHMhDQo+IEFuc29uIEh1YW5nDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQo+ID4gRnJvbTogQW5zb24gSHVhbmcNCj4gPiBTZW50OiAyMDE5xOox1MIyM8jVIDE2
+OjAxDQo+ID4gVG86IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNo
+YXduZ3VvQGtlcm5lbC5vcmc7DQo+ID4gcy5oYXVlckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBl
+bmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+ID4gQWlzaGVuZyBEb25nIDxhaXNo
+ZW5nLmRvbmdAbnhwLmNvbT47IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7IERhbmllbA0KPiA+IEJh
+bHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LQ0KPiA+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZw0KPiA+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29t
+Pg0KPiA+IFN1YmplY3Q6IFtQQVRDSCAxLzNdIGR0LWJpbmRpbmdzOiBmc2w6IHNjdTogYWRkIGdl
+bmVyYWwgaW50ZXJydXB0DQo+ID4gc3VwcG9ydA0KPiA+DQo+ID4gQWRkIHNjdSBnZW5lcmFsIGlu
+dGVycnVwdCBmdW5jdGlvbiBzdXBwb3J0Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24g
+SHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQgICAgICB8IDE4ICsrKysrKysrKysr
+Ky0tLS0tDQo+IC0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDYgZGVs
+ZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCj4gPiBp
+bmRleCBmZDJiZWQyLi4zYzk3NmFjIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+ID4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQN
+Cj4gPiBAQCAtMjIsOSArMjIsMTEgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgLS0tLS0t
+LS0tLS0tLS0tLS0tLQ0KPiA+ICAtIGNvbXBhdGlibGU6CXNob3VsZCBiZSAiZnNsLGlteC1zY3Ui
+Lg0KPiA+ICAtIG1ib3gtbmFtZXM6CXNob3VsZCBpbmNsdWRlICJ0eDAiLCAidHgxIiwgInR4MiIs
+ICJ0eDMiLA0KPiA+IC0JCQkgICAgICAgInJ4MCIsICJyeDEiLCAicngyIiwgInJ4MyIuDQo+ID4g
+LS0gbWJveGVzOglMaXN0IG9mIHBoYW5kbGUgb2YgNCBNVSBjaGFubmVscyBmb3IgdHggYW5kIDQg
+TVUgY2hhbm5lbHMNCj4gPiAtCQlmb3IgcnguIEFsbCA4IE1VIGNoYW5uZWxzIG11c3QgYmUgaW4g
+dGhlIHNhbWUgTVUgaW5zdGFuY2UuDQo+ID4gKwkJCSAgICAgICAicngwIiwgInJ4MSIsICJyeDIi
+LCAicngzIiwNCj4gPiArCQkJICAgICAgICJnaTMiLg0KPiA+ICstIG1ib3hlczoJTGlzdCBvZiBw
+aGFuZGxlIG9mIDQgTVUgY2hhbm5lbHMgZm9yIHR4LCA0IE1VIGNoYW5uZWxzIGZvcg0KPiA+ICsJ
+CXJ4LCBhbmQgMSBNVSBjaGFubmVsIGZvciBnZW5lcmFsIGludGVycnVwdC4gQWxsIDkgTVUgY2hh
+bm5lbHMNCj4gPiArCQltdXN0IGJlIGluIHRoZSBzYW1lIE1VIGluc3RhbmNlLg0KPiA+ICAJCUNy
+b3NzIGluc3RhbmNlcyBhcmUgbm90IGFsbG93ZWQuIFRoZSBNVSBpbnN0YW5jZSBjYW4gb25seQ0K
+PiA+ICAJCWJlIG9uZSBvZiBMU0lPIE1VMH5NNCBmb3IgaW14OHF4cCBhbmQgaW14OHFtLiBVc2Vy
+cw0KPiBuZWVkDQo+ID4gIAkJdG8gbWFrZSBzdXJlIHVzZSB0aGUgb25lIHdoaWNoIGlzIG5vdCBj
+b25mbGljdCB3aXRoIG90aGVyIEBADQo+ID4gLTM0LDYgKzM2LDcgQEAgUmVxdWlyZWQgcHJvcGVy
+dGllczoNCj4gPiAgCQlDaGFubmVsIDEgbXVzdCBiZSAidHgxIiBvciAicngxIi4NCj4gPiAgCQlD
+aGFubmVsIDIgbXVzdCBiZSAidHgyIiBvciAicngyIi4NCj4gPiAgCQlDaGFubmVsIDMgbXVzdCBi
+ZSAidHgzIiBvciAicngzIi4NCj4gPiArCQlHZW5lcmFsIGludGVycnVwdCBjaGFubmVsIG11c3Qg
+YmUgImdpMyIuDQo+ID4gIAkJZS5nLg0KPiA+ICAJCW1ib3hlcyA9IDwmbHNpb19tdTEgMCAwDQo+
+ID4gIAkJCSAgJmxzaW9fbXUxIDAgMQ0KPiA+IEBAIC00Miw3ICs0NSw4IEBAIFJlcXVpcmVkIHBy
+b3BlcnRpZXM6DQo+ID4gIAkJCSAgJmxzaW9fbXUxIDEgMA0KPiA+ICAJCQkgICZsc2lvX211MSAx
+IDENCj4gPiAgCQkJICAmbHNpb19tdTEgMSAyDQo+ID4gLQkJCSAgJmxzaW9fbXUxIDEgMz47DQo+
+ID4gKwkJCSAgJmxzaW9fbXUxIDEgMw0KPiA+ICsJCQkgICZsc2lvX211MSAzIDM+Ow0KPiA+ICAJ
+CVNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9mc2wsbXUudHh0
+DQo+ID4gIAkJZm9yIGRldGFpbGVkIG1haWxib3ggYmluZGluZy4NCj4gPg0KPiA+IEBAIC0xMzAs
+NyArMTM0LDggQEAgZmlybXdhcmUgew0KPiA+ICAJc2N1IHsNCj4gPiAgCQljb21wYXRpYmxlID0g
+ImZzbCxpbXgtc2N1IjsNCj4gPiAgCQltYm94LW5hbWVzID0gInR4MCIsICJ0eDEiLCAidHgyIiwg
+InR4MyIsDQo+ID4gLQkJCSAgICAgInJ4MCIsICJyeDEiLCAicngyIiwgInJ4MyI7DQo+ID4gKwkJ
+CSAgICAgInJ4MCIsICJyeDEiLCAicngyIiwgInJ4MyIsDQo+ID4gKwkJCSAgICAgImdpMyI7DQo+
+ID4gIAkJbWJveGVzID0gPCZsc2lvX211MSAwIDANCj4gPiAgCQkJICAmbHNpb19tdTEgMCAxDQo+
+ID4gIAkJCSAgJmxzaW9fbXUxIDAgMg0KPiA+IEBAIC0xMzgsNyArMTQzLDggQEAgZmlybXdhcmUg
+ew0KPiA+ICAJCQkgICZsc2lvX211MSAxIDANCj4gPiAgCQkJICAmbHNpb19tdTEgMSAxDQo+ID4g
+IAkJCSAgJmxzaW9fbXUxIDEgMg0KPiA+IC0JCQkgICZsc2lvX211MSAxIDM+Ow0KPiA+ICsJCQkg
+ICZsc2lvX211MSAxIDMNCj4gPiArCQkJICAmbHNpb19tdTEgMyAzPjsNCj4gPg0KPiA+ICAJCWNs
+azogY2xrIHsNCj4gPiAgCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1jbGsiOw0KPiA+IC0t
+DQo+ID4gMi43LjQNCg0K
