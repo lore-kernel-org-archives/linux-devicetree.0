@@ -1,41 +1,57 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 5/5] arm64: dts: sprd: Remove wildcard compatible string
-Date: Thu, 14 Feb 2019 09:56:26 +0800
-Message-ID: <CAMz4kuJ3-tjXUKk0Hcr3gJLRNmg1REe4NPm3AaXc=Nq21AKzZg@mail.gmail.com>
-References: <cover.1550060543.git.baolin.wang@linaro.org> <f34970a034946bacda19202e2ce9973ca732c925.1550060544.git.baolin.wang@linaro.org>
- <CAK8P3a38=4JZvqPi8f8Mpup2P70c+_xsM48-b35BVRYWGeHp9w@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V3 2/2] clk: imx: scu: add cpu frequency scaling support
+Date: Thu, 14 Feb 2019 01:58:30 +0000
+Message-ID: <DB3PR0402MB39161EBE454F4095C275CFF0F5670@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550073243-11242-1-git-send-email-Anson.Huang@nxp.com>
+ <1550073243-11242-2-git-send-email-Anson.Huang@nxp.com>
+ <155007977634.115909.4465011219844819801@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a38=4JZvqPi8f8Mpup2P70c+_xsM48-b35BVRYWGeHp9w@mail.gmail.com>
+In-Reply-To: <155007977634.115909.4465011219844819801@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Feb 2019 at 22:32, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, Feb 13, 2019 at 1:34 PM Baolin Wang <baolin.wang@linaro.org> wrote:
-> >
-> > Remove wildcard compatible string.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->
->
-> Looks good to me. It does break using the new dtb file on older kernels,
-> but I suppose this is not a case we care much about yet on your
-> platform, given that both the dts file sand the drivers in the
-> kernel are still  work in progress.
-
-Right. Thanks for your reviewing.
-
->
-> I had started the other reply I just sent before I saw this new mail.
->
->     Arnd
-
-
-
--- 
-Baolin Wang
-Best Regards
+DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIFttYWlsdG86c2JveWRAa2VybmVsLm9yZ10NCj4g
+U2VudDogMjAxOeW5tDLmnIgxNOaXpSAxOjQzDQo+IFRvOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGNsa0B2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29t
+Ow0KPiBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBzLmhhdWVy
+QHBlbmd1dHJvbml4LmRlOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyB2aXJlc2gua3VtYXJAbGlu
+YXJvLm9yZzsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IEFuc29uIEh1
+YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgRGFuaWVsDQo+IEJhbHV0YSA8ZGFuaWVsLmJhbHV0
+YUBueHAuY29tPg0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSCBWMyAyLzJdIGNsazogaW14OiBzY3U6IGFkZCBjcHUgZnJlcXVlbmN5
+IHNjYWxpbmcgc3VwcG9ydA0KPiANCj4gUXVvdGluZyBBbnNvbiBIdWFuZyAoMjAxOS0wMi0xMyAw
+Nzo1OTozMikNCj4gPiBAQCAtMTQ1LDYgKzE2MSwzOSBAQCBzdGF0aWMgbG9uZyBjbGtfc2N1X3Jv
+dW5kX3JhdGUoc3RydWN0IGNsa19odyAqaHcsDQo+IHVuc2lnbmVkIGxvbmcgcmF0ZSwNCj4gPiAg
+ICAgICAgIHJldHVybiByYXRlOw0KPiA+ICB9DQo+ID4NCj4gPiArc3RhdGljIGJvb2wgY2xrX3Nj
+dV9hdGZfc2V0X2NwdV9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nDQo+ID4g
+K3JhdGUpIHsNCj4gPiArICAgICAgIHN0cnVjdCBjbGtfc2N1ICpjbGsgPSB0b19jbGtfc2N1KGh3
+KTsNCj4gPiArICAgICAgIHN0cnVjdCBhcm1fc21jY2NfcmVzIHJlczsNCj4gPiArICAgICAgIHVu
+c2lnbmVkIGludCBjbHVzdGVyX2lkOw0KPiA+ICsgICAgICAgaW50IGk7DQo+ID4gKw0KPiA+ICsg
+ICAgICAgLyogQ1BVIGZyZXF1ZW5jeSBzY2FsaW5nIGNhbiBPTkxZIGJlIGRvbmUgYnkgQVJNLVRy
+dXN0ZWQtRmlybXdhcmUNCj4gKi8NCj4gPiArICAgICAgIGlmIChjbGstPmNsa190eXBlID09IElN
+WF9TQ19QTV9DTEtfQ1BVKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGZvciAoaSA9IDA7IGkgPCBB
+UlJBWV9TSVpFKGlteF9zY19jcHVmcmVxX2RhdGEpOyBpKyspIHsNCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICBpZiAoIXN0cmNtcChjbGtfaHdfZ2V0X25hbWUoaHcpLA0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgaW14X3NjX2NwdWZyZXFfZGF0YVtpXS5jbGtfbmFtZSkp
+IHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsdXN0ZXJfaWQgPSBpbXhf
+c2NfY3B1ZnJlcV9kYXRhW2ldLmNsdXN0ZXJfaWQ7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBicmVhazsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gKyAg
+ICAgICAgICAgICAgIH0NCj4gDQo+IElzIHRoZXJlIHNvbWUgcmVhc29uIHdoeSB0aGVzZSBjbGtz
+IGNhbid0IGJlIGRldGVybWluZWQgb25jZSBhdCBib290IHRpbWU/DQo+IEl0IHdvdWxkIGJlIGEg
+Z29vZCBpZGVhIHRvIGF2b2lkIGRvaW5nIGFueSBzb3J0IG9mIHN0cmluZyBjb21wYXJpc29uIGhl
+cmUsDQo+IGluc3RlYWQganVzdCBjYWxsaW5nIHRoZSByaWdodCBhcm1fc21jY2Nfc21jIHdpdGgg
+dGhlIHJpZ2h0IGFyZ3VtZW50cyBiYXNlZA0KPiBvbiBjb2RlIHRoYXQgcmVnaXN0ZXJzIHRob3Nl
+IHR5cGVzIG9mIGNsa3MuDQoNCkFncmVlLCBJIGNhbiBhdm9pZCBzdHJpbmcgY29tcGFyaXNvbiBp
+biBydW50aW1lLCBpbiBWNCBwYXRjaCBJIGp1c3Qgc2VudCwgSSBhZGQgYW5vdGhlcg0KY2xrIG9w
+cyBmb3IgQ1BVIGNsb2NrLCBhbmQgdXNlIHJlc291cmNlIElEIHRvIGRldGVybWluZSB0aGUgQ1BV
+IGNsayBvcHMgYW5kIGNsdXN0ZXIgaWQsDQp0aHVzIHdlIGNhbiBzYXZlIHRoZSBydW50aW1lIGNo
+ZWNrIGFuZCBzdHJpbmcgY29tcGFyaXNvbi4NCg0KVGhhbmtzLA0KQW5zb24uDQoNCg==
