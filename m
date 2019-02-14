@@ -1,98 +1,61 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH 1/6] dt-bindings: net: bluetooth: add support for MediaTek MT7663U and MT7668U UART devices
-Date: Fri, 15 Feb 2019 07:19:33 +0800
-Message-ID: <c31b9ed0f2c711f53ad88c96f2d0a1bd22d9de58.1550184473.git.sean.wang@mediatek.com>
-References: <cover.1550184473.git.sean.wang@mediatek.com>
+Subject: [PATCH 0/6]Bluetooth: mediatek: add support for MediaTek MT7663U and
+ MT7668U UART devices
+Date: Fri, 15 Feb 2019 07:19:32 +0800
+Message-ID: <cover.1550184473.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1550184473.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Cc: devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Update binding document with adding support of MT7663U and MT7668U UART
-devices to mediatek-bluetooth.
+This adds the support of enabling MT7668U and MT7663U UART based Bluetooth
+function running on the top of btmtkuart driver.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- .../bindings/net/mediatek-bluetooth.txt       | 64 +++++++++++++++++++
- 1 file changed, 64 insertions(+)
+We are through several patches to reach the goal and also wish applied
+the same flow in MediaTek btusb [1] for the transport independence.
+Once [1] and the series is being merged and then in next step I will
+consider to add a btmtk.c to hold these independent operations among
+various transport reused by MediaTek UART, USB and SDIO-based Bluetooth.
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
-index 14ceb2a5b4e8..41a7dcc80f5b 100644
---- a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
-@@ -33,3 +33,67 @@ Example:
- 			clock-names = "ref";
- 		};
- 	};
-+
-+MediaTek UART based Bluetooth Devices
-+==================================
-+
-+This device is a serial attached device to UART device and thus it must be a
-+child node of the serial node with UART.
-+
-+Please refer to the following documents for generic properties:
-+
-+	Documentation/devicetree/bindings/serial/slave-device.txt
-+
-+Required properties:
-+
-+- compatible:	Must be
-+		  "mediatek,mt7663u-bluetooth": for MT7663U device
-+		  "mediatek,mt7668u-bluetooth": for MT7668U device
-+- vcc-supply:	Main voltage regulator
-+- pinctrl-names: Should be "default", "runtime"
-+- pinctrl-0: Should contain UART RXD low when the device is powered up to
-+	     enter proper bootstrap mode.
-+- pinctrl-1: Should contain UART mode pin ctrl
-+
-+Optional properties:
-+
-+- reset-gpios:	GPIO used to reset the device whose initial state keeps low,
-+		if the GPIO is missing, then board-level design should be
-+		guaranteed.
-+- current-speed:  Current baud rate of the device whose defaults to 921600
-+
-+Example:
-+
-+	uart1_pins_boot: uart1-default {
-+		pins-dat {
-+			pinmux = <MT7623_PIN_81_URXD1_FUNC_GPIO81>;
-+			output-low;
-+		};
-+	};
-+
-+	uart1_pins_runtime: uart1-runtime {
-+		pins-dat {
-+			pinmux = <MT7623_PIN_81_URXD1_FUNC_URXD1>,
-+				 <MT7623_PIN_82_UTXD1_FUNC_UTXD1>;
-+		};
-+	};
-+
-+	uart1: serial@11003000 {
-+		compatible = "mediatek,mt7623-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11003000 0 0x400>;
-+		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_UART1_SEL>,
-+			 <&pericfg CLK_PERI_UART1>;
-+		clock-names = "baud", "bus";
-+
-+		bluetooth {
-+			compatible = "mediatek,mt7663u-bluetooth";
-+			vcc-supply = <&reg_5v>;
-+			reset-gpios = <&pio 24 GPIO_ACTIVE_LOW>;
-+			pinctrl-names = "default", "runtime";
-+			pinctrl-0 = <&uart1_pins_boot>;
-+			pinctrl-1 = <&uart1_pins_runtime>;
-+			current-speed = <921600>;
-+		};
-+	};
+Firstly,
+in patch 1/6 to update the dt-binding document for the kind of devices.
+in patch 2/6, 3/6 to fix the common error issues in the current code.
+in Patch 4/6, 5/6 to add the general flow which MT7622 and even MT7663U and
+MT7668U USB devices also utilize.
+
+Finally, in patch 6/6 to add the specific setups for MediaTek UART-based
+Bluetooth and enable MT7663U and MT7668U device.
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017074.html 
+
+Sean Wang (6):
+  dt-bindings: net: bluetooth: add support for MediaTek MT7663U and
+    MT7668U UART devices
+  Bluetooth: mediatek: trivial typo fix
+  Bluetooth: mediatek: fix up an error path to restore bdev->tx_state
+  Bluetooth: mediatek: pass a pointer to mtk_hci_wmt_sync
+  Bluetooth: mediatek: update the common setup between MT7622 and other
+    devices
+  Bluetooth: mediatek: add support for MediaTek MT7663U and MT7668U UART
+    devices
+
+ .../bindings/net/mediatek-bluetooth.txt       |  64 +++
+ drivers/bluetooth/btmtkuart.c                 | 538 ++++++++++++++++--
+ 2 files changed, 569 insertions(+), 33 deletions(-)
+
 -- 
 2.18.0
