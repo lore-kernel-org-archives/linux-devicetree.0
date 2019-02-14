@@ -1,51 +1,39 @@
 From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH  3/8] dt-bindings: net: stmmac: add phys config properties
-Date: Thu, 14 Feb 2019 07:45:58 +0100
-Message-ID: <1550126763-22669-4-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH  6/8] dt-bindings: net: stmmac: add syscfg clock property
+Date: Thu, 14 Feb 2019 07:46:01 +0100
+Message-ID: <1550126763-22669-7-git-send-email-christophe.roullier@st.com>
 References: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: netdev-owner@vger.kernel.org
 To: robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
-Cc: devicetree@vger.kernel.org, andrew@lunn.ch, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, christophe.roullier@st.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Add properties to support all Phy config
- PHY_MODE	(MII,GMII, RMII, RGMII) and in normal, PHY wo crystal (25Mhz),
- PHY wo crystal (50Mhz), No 125Mhz from PHY config.
+Need syscfg clock for MCU family in case bootloader does not
+activate it.
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- Documentation/devicetree/bindings/net/stm32-dwmac.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/net/stm32-dwmac.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-index 1341012..f42dc68 100644
+index f42dc68..524f8a0 100644
 --- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
 +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-@@ -24,9 +24,9 @@ Required properties:
- 	       encompases the glue register, and the offset of the control register.
- 
- Optional properties:
--- clock-names:     For MPU family "mac-clk-ck" for PHY without quartz
--- st,int-phyclk (boolean) :  valid only where PHY do not have quartz and need to be clock
--	           by RCC
-+- clock-names:     For MPU family "eth-ck" for PHY without quartz
-+- st,eth_clk_sel (boolean) : set this property in RGMII PHY when you do not want use 125Mhz
-+- st,eth_ref_clk_sel (boolean) :  set this property in RMII mode when you have PHY without crystal 50MHz
- 
- Example:
- 
+@@ -14,8 +14,8 @@ Required properties:
+ - clock-names: Should be "stmmaceth" for the host clock.
+ 	       Should be "mac-clk-tx" for the MAC TX clock.
+ 	       Should be "mac-clk-rx" for the MAC RX clock.
+-	       For MPU family need to add also "ethstp" for power mode clock and,
+-	                                       "syscfg-clk" for SYSCFG clock.
++	       Should be "syscfg-clk" for the SYSCFG clock.
++	       For MPU family need to add also "ethstp" for power mode clock
+ - interrupt-names: Should contain a list of interrupt names corresponding to
+            the interrupts in the interrupts property, if available.
+ 		   Should be "macirq" for the main MAC IRQ
 -- 
 2.7.4
