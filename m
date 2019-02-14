@@ -1,173 +1,124 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: Re: [PATCH v6 5/6] dt-bindings: pinctrl: mt8183: add binding
- document
-Date: Thu, 14 Feb 2019 11:29:41 +0800
-Message-ID: <1550114981.4262.3.camel@mtksdaap41>
-References: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
-         <1548317240-44682-6-git-send-email-erin.lo@mediatek.com>
-         <d76bb2e8-5285-15ce-b850-6cf3065e0777@gmail.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 01/16] remoteproc: Extend rproc_da_to_va() API with a
+ flags parameter
+Date: Wed, 13 Feb 2019 21:35:48 -0600
+Message-ID: <09c30d72-9d1c-9c96-a1ef-8d30fc8c5bfa@ti.com>
+References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
+ <1543218769-5507-2-git-send-email-rogerq@ti.com>
+ <d93c4c96-e0b9-59cd-6098-92684bc2360b@lechnology.com>
+ <5BFFBFA0.9000104@ti.com>
+ <ec83108c-1748-cec4-bebf-119d261fb229@lechnology.com>
+ <5C065107.8080600@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d76bb2e8-5285-15ce-b850-6cf3065e0777@gmail.com>
+In-Reply-To: <5C065107.8080600@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Zhiyong Tao <zhiyong.tao@mediatek.com>
+To: Roger Quadros <rogerq@ti.com>, David Lechner <david@lechnology.com>, ohad@wizery.com, bjorn.andersson@linaro.org
+Cc: tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-02-07 at 16:28 +0100, Matthias Brugger wrote:
-> 
-> On 24/01/2019 09:07, Erin Lo wrote:
-> > From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > 
-> > The commit adds mt8183 compatible node in binding document.
-> > 
-> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > ---
-> 
-> I'm missing Linus Walleij on the recipient list.
-> Pleas make sure to add all persons from the get_maintainers script.
-> IMHO it's a bit unfortunate that we got the driver merged, but no binding
-> description. Please try to send driver + binding documentation together, that
-> makes things easier to discuss.
-> 
-> Thanks,
-> Matthias
-> 
+Hi Roger,
 
-OK! I will add Linus Walleij on the recipient list.
-It's right..the binding should send together with driver code.
-We will pay more attention of this next time.
-Thank you for your reminder.
+On 12/4/18 4:03 AM, Roger Quadros wrote:
+> On 29/11/18 18:12, David Lechner wrote:
+>> On 11/29/18 4:29 AM, Roger Quadros wrote:
+>>> Bjorn, Suman,
+>>>
+>>> On 26/11/18 23:29, David Lechner wrote:
+>>>> On 11/26/18 1:52 AM, Roger Quadros wrote:
+>>>>> From: Suman Anna <s-anna@ti.com>
+>>>>>
+>>>>> The rproc_da_to_va() API is currently used to perform any device
+>>>>> to kernel address translations to meet the different needs of the
+>>>>> remoteproc core/platform drivers (eg: loading). The function also
+>>>>> invokes the da_to_va ops, if present, to allow the remoteproc
+>>>>> platform drivers to provide address translation. However, not all
+>>>>> platform implementations have linear address spaces, and may need
+>>>>> an additional parameter to be able to perform proper translations.
+>>>>>
+>>>>> The rproc_da_to_va() API and the rproc .da_to_va ops have therefore
+>>>>> been expanded to take in an additional flags field enabling some
+>>>>> remoteproc implementations (like the TI PRUSS remoteproc driver)
+>>>>> to use these flags. Also, define some semantics for this flags
+>>>>> argument as this can vary from one implementation to another. A
+>>>>> new flags type is encoded into the upper 16 bits along side the
+>>>>> actual value in the lower 16-bits for the flags argument, to
+>>>>> allow different individual implementations to have better
+>>>>> flexibility in interpreting the flags as per their needs.
+>>>>
+>>>> This seems like an overly complex solution for a rather simple
+>>>> problem. Instead of passing all sorts of flags, could we just add
+>>>> a parameter named "page" to da_to_va() that indicates the memory
+>>>> page of the address in the remote processor?
+>>>>
+>>>> Or perhaps there is some other use for all of these flags that I
+>>>> am not aware of?
+>>>
+>>> I'm not a big fan of this patch either.
+>>>
+>>> rproc_da_to_va() is used at the following places
+>>>
+>>> 2 qcom_q6v5_mss.c         qcom_q6v5_dump_segment           974 void *ptr = rproc_da_to_va(rproc, segment->da, segment->size,
+>>> 3 remoteproc_core.c       rproc_da_to_va                   197 void *rproc_da_to_va(struct rproc *rproc, u64 da, int len, u32 flags)
+>>> 4 remoteproc_core.c       rproc_handle_trace               582 ptr = rproc_da_to_va(rproc, rsc->da, rsc->len, RPROC_FLAGS_NONE);
+>>> 5 remoteproc_core.c       rproc_coredump                  1592 ptr = rproc_da_to_va(rproc, segment->da, segment->size,
+>>> 6 remoteproc_elf_loader.c rproc_elf_load_segments          185 ptr = rproc_da_to_va(rproc, da, memsz,
+>>> 7 remoteproc_elf_loader.c rproc_elf_find_loaded_rsc_table  337 return rproc_da_to_va(rproc, shdr->sh_addr, shdr->sh_size,
+>>>
+>>> At rproc_elf_load_segments() we need to pass enough information so that
+>>> the rproc driver can load the segment into proper area (IRAM vs DRAM).
+>>> So providing page should suffice.
+>>
+>> FYI, the PRU series I sent a while back has some patches to do
+>> something like this so feel free to use them if they are helpful.
+>>
+>> https://lore.kernel.org/lkml/20180623210810.21232-2-david@lechnology.com/
+>> https://lore.kernel.org/lkml/20180623210810.21232-3-david@lechnology.com/
+>>
+> 
+> Thanks. I think we need to do something like that. Too bad you had to reverse engineer
+> the TI specific headers. I'll check if we have this available somewhere internally.
 
-Best Regards,
-Erin
+I commented on this in your v2 series, but let's see if we can
+incorporate some of this custom logic within the PRU remoteproc driver
+else. The remoteproc core does allow you to use your own implementations
+for some firmware related ops.
 
-> >  .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt | 115 +++++++++++++++++++++
-> >  1 file changed, 115 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> > new file mode 100644
-> > index 0000000..364e673
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> > @@ -0,0 +1,115 @@
-> > +* Mediatek MT8183 Pin Controller
-> > +
-> > +The Mediatek's Pin controller is used to control SoC pins.
-> > +
-> > +Required properties:
-> > +- compatible: value should be one of the following.
-> > +	"mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
-> > +- gpio-controller : Marks the device node as a gpio controller.
-> > +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
-> > +  binding is used, the amount of cells must be specified as 2. See the below
-> > +  mentioned gpio binding representation for description of particular cells.
-> > +- gpio-ranges : gpio valid number range.
-> > +- reg: physicall address base for gpio base registers. There are nine
-> > +  physicall address base in mt8183. They are 0x10005000, 0x11F20000,
-> > +  0x11E80000, 0x11E70000, 0x11E90000, 0x11D30000, 0x11D20000, 0x11C50000,
-> > +  0x11F30000.
-> > +
-> > +	Eg: <&pio 6 0>
-> > +	<[phandle of the gpio controller node]
-> > +	[line number within the gpio controller]
-> > +	[flags]>
-> > +
-> > +	Values for gpio specifier:
-> > +	- Line number: is a value between 0 to 202.
-> > +	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
-> > +            Only the following flags are supported:
-> > +            0 - GPIO_ACTIVE_HIGH
-> > +            1 - GPIO_ACTIVE_LOW
-> > +
-> > +Optional properties:
-> > +- reg-names: gpio base register names. There are nine gpio base register
-> > +  names in mt8183. They are "iocfg0", "iocfg1", "iocfg2", "iocfg3", "iocfg4",
-> > +  "iocfg5", "iocfg6", "iocfg7", "iocfg8".
-> > +- interrupt-controller: Marks the device node as an interrupt controller
-> > +- #interrupt-cells: Should be two.
-> > +- interrupts : The interrupt outputs from the controller.
-> > +
-> > +Please refer to pinctrl-bindings.txt in this directory for details of the
-> > +common pinctrl bindings used by client devices.
-> > +
-> > +Subnode format
-> > +A pinctrl node should contain at least one subnodes representing the
-> > +pinctrl groups available on the machine. Each subnode will list the
-> > +pins it needs, and how they should be configured, with regard to muxer
-> > +configuration, pullups, drive strength, input enable/disable and input schmitt.
-> > +
-> > +    node {
-> > +	pinmux = <PIN_NUMBER_PINMUX>;
-> > +	GENERIC_PINCONFIG;
-> > +    };
-> > +
-> > +Required properties:
-> > +- pinmux: integer array, represents gpio pin number and mux setting.
-> > +    Supported pin number and mux varies for different SoCs, and are defined
-> > +    as macros in boot/dts/<soc>-pinfunc.h directly.
-> > +
-> > +Optional properties:
-> > +- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
-> > +    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
-> > +    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
-> > +
-> > +    Some special pins have extra pull up strength, there are R0 and R1 pull-up
-> > +    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
-> > +    So when config mediatek,pull-up-adv or mediatek,pull-down-adv,
-> > +    it support arguments for those special pins.
-> > +
-> > +    When config drive-strength, it can support some arguments, such as
-> > +    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
-> > +
-> > +Examples:
-> > +
-> > +#include "mt8183-pinfunc.h"
-> > +
-> > +...
-> > +{
-> > +	pio: pinctrl@10005000 {
-> > +		compatible = "mediatek,mt8183-pinctrl";
-> > +		reg = <0 0x10005000 0 0x1000>,
-> > +		      <0 0x11F20000 0 0x1000>,
-> > +		      <0 0x11E80000 0 0x1000>,
-> > +		      <0 0x11E70000 0 0x1000>,
-> > +		      <0 0x11E90000 0 0x1000>,
-> > +		      <0 0x11D30000 0 0x1000>,
-> > +		      <0 0x11D20000 0 0x1000>,
-> > +		      <0 0x11C50000 0 0x1000>,
-> > +		      <0 0x11F30000 0 0x1000>;
-> > +		reg-names = "iocfg0", "iocfg1", "iocfg2",
-> > +			    "iocfg3", "iocfg4", "iocfg5",
-> > +			    "iocfg6", "iocfg7", "iocfg8";
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		gpio-ranges = <&pio 0 0 192>;
-> > +		interrupt-controller;
-> > +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-parent = <&gic>;
-> > +		#interrupt-cells = <2>;
-> > +
-> > +		i2c0_pins_a: i2c0 {
-> > +			pins1 {
-> > +				pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
-> > +					 <PINMUX_GPIO49__FUNC_SDA5>;
-> > +				mediatek,pull-up-adv = <11>;
-> > +			};
-> > +		};
-> > +
-> > +		i2c1_pins_a: i2c1 {
-> > +			pins {
-> > +				pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
-> > +					 <PINMUX_GPIO51__FUNC_SDA3>;
-> > +				mediatek,pull-down-adv = <10>;
-> > +			};
-> > +		};
-> > +		...
-> > +	};
-> > +};
-> > 
+> 
+>>>
+>>> I want to understand more about rproc_elf_find_loaded_rsc_table() myself.
+>>> rproc_elf_find_loaded_rsc_table() is called only in rproc_start() in remoteproc_core.c
+>>> with the comment
+>>>
+>>>          /*
+>>>           * The starting device has been given the rproc->cached_table as the
+>>>           * resource table. The address of the vring along with the other
+>>>           * allocated resources (carveouts etc) is stored in cached_table.
+>>>           * In order to pass this information to the remote device we must copy
+>>>           * this information to device memory. We also update the table_ptr so
+>>>           * that any subsequent changes will be applied to the loaded version.
+>>>           */
+>>>          loaded_table = rproc_find_loaded_rsc_table(rproc, fw);
+>>>
+>>> Why isn't cached_table sufficient?
+>>> Why do we need to call rproc_find_loaded_rsc_table()?
+>>>
+>>> why do we need to load the resource table into remote processor memory at all.
+>>> As discussed earlier, some PRU systems have very little memory (512 bytes?)
+>>> and we want to avoid unnecessary loading.
+>>>
+> 
+> This question still holds.
+> Suman?
+
+The resource table is used for publishing back various allocated
+resource values to the remote processor, so this needs to be loaded into
+memory. For example, with RSC_CARVEOUTs, we fill in the address Linux
+kernel allocated. With VDEVs, the virtio config status is shared and
+used for synchronization between the Linux host and the remote processor.
+
+regards
+Suman
