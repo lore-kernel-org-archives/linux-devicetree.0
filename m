@@ -1,65 +1,55 @@
-From: <shun-chih.yu@mediatek.com>
-Subject: [PATCH 1/1] dt-bindings: dmaengine: Add MediaTek Command-Queue DMA controller bindings
-Date: Thu, 14 Feb 2019 15:40:58 +0800
-Message-ID: <1550130058-16566-2-git-send-email-shun-chih.yu@mediatek.com>
-References: <1550130058-16566-1-git-send-email-shun-chih.yu@mediatek.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v2 3/3] regulator: bd718x7: Support SNVS low power state
+Date: Thu, 14 Feb 2019 09:53:04 +0200
+Message-ID: <20190214075304.GE12247@localhost.localdomain>
+References: <cover.1550050645.git.matti.vaittinen@fi.rohmeurope.com>
+ <f8955e8d9a1ae10e369f24e02fc80a7f9ddc6f68.1550050645.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550130058-16566-1-git-send-email-shun-chih.yu@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <f8955e8d9a1ae10e369f24e02fc80a7f9ddc6f68.1550050645.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com, Shun-Chih Yu <shun-chih.yu@mediatek.com>
+To: mazziesaccount@gmail.com
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, angus.ainslie@puri.sm
 List-Id: devicetree@vger.kernel.org
 
-From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+Hello peeps,
 
-Document the devicetree bindings for MediaTek Command-Queue DMA controller
-which could be found on MT6765 SoC or other similar Mediatek SoCs.
+A bug found from patch.
 
-Change-Id: I9736c8cac9be160358feeab935fabaffc5730519
-Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
----
- .../devicetree/bindings/dma/mtk-cqdma.txt          |   31 ++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.txt
+On Wed, Feb 13, 2019 at 11:50:49AM +0200, Matti Vaittinen wrote:
+> read ROHM BD71837 / BD71847 specific device tree bindings for
+> controlling the PMIC shutdown/reset states and voltages for
+> different HW states. The PMIC was designed to be used with NXP
+> i.MX8 SoC and it supports SNVS low power state which seems to
+> be typical for NXP i.MX SoCs. However, when SNVS is used we must
+> not allow SW to control enabling/disabling those regulators which
+> are crucial for system to boot as there is a HW limitation which
+> causes SW controlled regulators to be kept shut down after SNVS
+> reset.
+> 
+> Allow setting the SNVS to be used as reset target state and allow
+> marking those regulators which are critical for boot.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> --- a/drivers/regulator/bd718x7-regulator.c
+> +++ b/drivers/regulator/bd718x7-regulator.c
+> @@ -685,6 +817,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
+>  			.enable_reg = BD718XX_REG_BUCK2_CTRL,
+>  			.enable_mask = BD718XX_BUCK_EN,
+>  			.owner = THIS_MODULE,
+> +			.of_parse_cb = buck1_set_hw_dvs_levels,
+This should be 
++			.of_parse_cb = buck2_set_hw_dvs_levels,
 
-diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.txt b/Documentation/devicetree/bindings/dma/mtk-cqdma.txt
-new file mode 100644
-index 0000000..fb12927
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.txt
-@@ -0,0 +1,31 @@
-+MediaTek Command-Queue DMA Controller
-+==================================
-+
-+Required properties:
-+
-+- compatible:	Must be "mediatek,mt6765-cqdma" for MT6765.
-+- reg:		Should contain the base address and length for each channel.
-+- interrupts:	Should contain references to the interrupts for each channel.
-+- clocks:	Should be the clock specifiers corresponding to the entry in
-+		clock-names property.
-+- clock-names:	Should contain "cqdma" entries.
-+- dma-channels: The number of DMA channels supported by the controller.
-+- dma-requests: The number of DMA request supported by the controller.
-+- #dma-cells: 	The length of the DMA specifier, must be <1>. This one cell
-+		in dmas property of a client device represents the channel
-+		number.
-+Example:
-+
-+        cqdma: dma-controller@10212000 {
-+		compatible = "mediatek,mt6765-cqdma";
-+		reg = <0 0x10212000 0 0x1000>;
-+		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
-+			<GIC_SPI 114 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_IFR_CQ_DMA>;
-+		clock-names = "cqdma";
-+		dma-channels = <2>;
-+		dma-requests = <32>;
-+		#dma-cells = <1>;
-+	};
-+
-+DMA clients must use the format described in dma/dma.txt file.
+Thanks to Angus for all the testing! I'll send v3 soonish.
+
 -- 
-1.7.9.5
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
