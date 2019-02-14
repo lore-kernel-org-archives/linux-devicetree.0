@@ -1,34 +1,48 @@
 From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 0/2] add slow clock support for SAM9X60
-Date: Thu, 14 Feb 2019 11:39:40 +0000
-Message-ID: <0d330ff8-e8f4-d157-299c-da181be4a0fd@microchip.com>
-References: <1550140748-21714-1-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 0/3] add slow clock support for SAM9X60
+Date: Thu, 14 Feb 2019 12:14:23 +0000
+Message-ID: <1550146447-1441-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550140748-21714-1-git-send-email-claudiu.beznea@microchip.com>
 Content-Language: en-US
-Content-ID: <9547A5A19A428E4DAC2C3B39CD29F5B4@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNClBsZWFzZSBpZ25vcmUgdGhpcyBzZXJpZXMuIEknbGwgcmVzZW5kIGEgbmV3IG9uZSBi
-ZXR0ZXIgZm9ybWF0aW5nIHRoZSBwYXRjaGVzLg0KDQpUaGFuayB5b3UsDQpDbGF1ZGl1IEJlem5l
-YQ0KDQpPbiAxNC4wMi4yMDE5IDEyOjM5LCBDbGF1ZGl1IEJlem5lYSAtIE0xODA2MyB3cm90ZToN
-Cj4gRnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+
-IA0KPiBIaSwNCj4gDQo+IFRoaXMgc2VyaWVzIGFkZCBzbG93IGNsb2NrIHN1cHBvcnQgZm9yIFNB
-TTlYNjAuIEFwYXJ0IGZyb20gcHJldmlvdXMgSVBzLCB0aGlzDQo+IG9uZSB1c2VzIGRpZmZlcmVu
-dCBvZmZzZXRzIGluIGNvbnRyb2wgcmVnaXN0ZXIgZm9yIGRpZmZlcmVudCBmdW5jdGlvbmFsaXRp
-ZXMuDQo+IFRoZSBzZXJpZXMgYWRhcHQgY3VycmVudCBkcml2ZXIgdG8gd29yayBmb3IgYWxsIElQ
-cyB1c2luZyBwZXIgSVANCj4gY29uZmlndXJhdGlvbnMgaW5pdGlhbGl6ZWQgYXQgcHJvYmUuDQo+
-IA0KPiBUaGFuayB5b3UsDQo+IENsYXVkaXUgQmV6bmVhDQo+IA0KPiBDbGF1ZGl1IEJlem5lYSAo
-Mik6DQo+ICAgY2xrOiBhdDkxOiBzY2tjOiBhZGFwdCBzY2tjIGRyaXZlciB0byB3b3JrIGZvciBT
-QU05WDYwDQo+ICAgZHQtYmluZGluZ3M6IGNsazogYXQ5MTogYWRkIGJpbmRpbmdzIGZvciBTQU05
-WDYwJ3Mgc2xvdyBjbG9jaw0KPiAgICAgY29udHJvbGxlcg0KPiANCj4gIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Nsb2NrL2F0OTEtY2xvY2sudHh0ICAgICAgIHwgICAzICstDQo+ICBkcml2ZXJz
-L2Nsay9hdDkxL3Nja2MuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDE0MiArKysrKysr
-KysrKysrKysrLS0tLS0NCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTA5IGluc2VydGlvbnMoKyksIDM2
-IGRlbGV0aW9ucygtKQ0KPiANCg==
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+
+Hi,
+
+This series add slow clock support for SAM9X60. Apart from previous IPs, th=
+is
+one uses different offsets in control register for different functionalitie=
+s.
+The series adapt current driver to work for all IPs using per IP
+configurations initialized at probe.
+
+Thank you,
+Claudiu Beznea
+
+Changes in v2:
+- split patch 1/1 from v1 in 2 patches: one adding register bit offsets
+  support (patch 1/3 from this series), one adding support for SAM9X60
+  (patch 2/3 from this series)
+- fix compatible string from "microchip,at91sam9x60-sckc" to
+  "microchip,sam9x60-sckc"
+
+Claudiu Beznea (3):
+  clk: at91: sckc: add support to specify registers bit offsets
+  clk: at91: sckc: add support for SAM9X60
+  dt-bindings: clk: at91: add bindings for SAM9X60's slow clock
+    controller
+
+ .../devicetree/bindings/clock/at91-clock.txt       |   3 +-
+ drivers/clk/at91/sckc.c                            | 142 ++++++++++++++++-=
+----
+ 2 files changed, 109 insertions(+), 36 deletions(-)
+
+--=20
+2.7.4
