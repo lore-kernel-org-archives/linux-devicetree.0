@@ -1,65 +1,40 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v5 02/11] dt-bindings: power: supply: add DT bindings for
- max77650
-Date: Thu, 14 Feb 2019 11:37:24 +0100
-Message-ID: <20190214103723.GB6132@amd>
-References: <20190213134335.10838-1-brgl@bgdev.pl>
- <20190213134335.10838-3-brgl@bgdev.pl>
- <20190213204834.GA31342@bogus>
- <CAMRc=MeyMnRMzmexgNBF5PkP-Hs2G2sS4hCP4mTZR5jxC=ej1w@mail.gmail.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH 0/2] add slow clock support for SAM9X60
+Date: Thu, 14 Feb 2019 10:39:36 +0000
+Message-ID: <1550140748-21714-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2B/JsCI69OhZNC5r"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MeyMnRMzmexgNBF5PkP-Hs2G2sS4hCP4mTZR5jxC=ej1w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
---2B/JsCI69OhZNC5r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-> > > +Optional properties:
-> > > +--------------------
-> > > +- min-input-voltage: Minimum CHGIN regulation voltage (in microvolts=
-). Must be
-> > > +                     one of: 4000000, 4100000, 4200000, 4300000, 440=
-0000,
-> > > +                     4500000, 4600000, 4700000.
-> > > +- current-limit:     CHGIN input current limit (in microamps). Must =
-be one of:
-> > > +                     95000, 190000, 285000, 380000, 475000.
-> >
-> > Unit suffix? Really, these should be common properties. We have
-> > some I think. Charger bindings are a mess though...
-> >
->=20
-> Do you mean a suffix like: ua for microamps and uv for microvolts? I'm
-> not seeing any other such properties.
+This series add slow clock support for SAM9X60. Apart from previous IPs, th=
+is
+one uses different offsets in control register for different functionalitie=
+s.
+The series adapt current driver to work for all IPs using per IP
+configurations initialized at probe.
 
-Documentation/devicetree$ grep -ri microvolt .
+Thank you,
+Claudiu Beznea
 
-									Pavel
+Claudiu Beznea (2):
+  clk: at91: sckc: adapt sckc driver to work for SAM9X60
+  dt-bindings: clk: at91: add bindings for SAM9X60's slow clock
+    controller
+
+ .../devicetree/bindings/clock/at91-clock.txt       |   3 +-
+ drivers/clk/at91/sckc.c                            | 142 ++++++++++++++++-=
+----
+ 2 files changed, 109 insertions(+), 36 deletions(-)
+
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2B/JsCI69OhZNC5r
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlxlROMACgkQMOfwapXb+vLNdQCaAo+4r83xaUgQipX/MRUY+nFR
-MjYAoJkeKxbdk5V1BQmqhzzCvblyyxwc
-=S9/A
------END PGP SIGNATURE-----
-
---2B/JsCI69OhZNC5r--
+2.7.4
