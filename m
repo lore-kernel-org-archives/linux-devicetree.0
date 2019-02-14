@@ -1,145 +1,31 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH 4/4] arm64: dts: allwinner: h6: Add CPU Operating
- Performance Points table
-Date: Thu, 14 Feb 2019 22:52:16 +0800
-Message-ID: <CAEExFWuxrVC1J0g93R3ifaDxOGy-20B4jftoHw932V7+wqhtxw@mail.gmail.com>
-References: <20190214130910.9201-1-tiny.windzz@gmail.com> <20190214130910.9201-5-tiny.windzz@gmail.com>
- <20190214143842.nqsh6trwdjxq2ecd@flea>
+From: Christophe ROULLIER <christophe.roullier@st.com>
+Subject: Re: [PATCH 7/8] ARM: dts: stm32: Add Ethernet support on stm32h7 SOC
+ and activate it for eval and disco boards
+Date: Thu, 14 Feb 2019 14:55:51 +0000
+Message-ID: <5c59f60a-2364-a4a8-117e-b485647fd88e@st.com>
+References: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
+ <1550126763-22669-8-git-send-email-christophe.roullier@st.com>
+ <20190214134414.GB5699@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190214143842.nqsh6trwdjxq2ecd@flea>
+In-Reply-To: <20190214134414.GB5699@lunn.ch>
+Content-Language: en-US
+Content-ID: <35B4D304070043499A7C310BE66315CA@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, robh+dt@kernel.org, mark.rutland@arm.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "robh@kernel.org" <robh@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "joabreu@synopsys.com" <joabreu@synopsys.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 10:38 PM Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> On Thu, Feb 14, 2019 at 08:09:10AM -0500, Yangtao Li wrote:
-> > Add an OPP (Operating Performance Points) table for the CPU cores to
-> > enable DVFS (Dynamic Voltage & Frequency Scaling) on the H6. This
-> > information comes from github.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 61 ++++++++++++++++++++
-> >  1 file changed, 61 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > index 57a1390ecdc2..46a4a69eb38f 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -28,6 +28,8 @@
-> >                       enable-method = "psci";
-> >                       clocks = <&ccu CLK_CPUX>;
-> >                       clock-latency-ns = <244144>; /* 8 32k periods */
-> > +                     operating-points-v2 = <&cpu_opp_table>;
-> > +                     #cooling-cells = <2>;
-> >               };
-> >
-> >               cpu1: cpu@1 {
-> > @@ -37,6 +39,8 @@
-> >                       enable-method = "psci";
-> >                       clocks = <&ccu CLK_CPUX>;
-> >                       clock-latency-ns = <244144>; /* 8 32k periods */
-> > +                     operating-points-v2 = <&cpu_opp_table>;
-> > +                     #cooling-cells = <2>;
-> >               };
-> >
-> >               cpu2: cpu@2 {
-> > @@ -46,6 +50,8 @@
-> >                       enable-method = "psci";
-> >                       clocks = <&ccu CLK_CPUX>;
-> >                       clock-latency-ns = <244144>; /* 8 32k periods */
-> > +                     operating-points-v2 = <&cpu_opp_table>;
-> > +                     #cooling-cells = <2>;
-> >               };
-> >
-> >               cpu3: cpu@3 {
-> > @@ -55,6 +61,61 @@
-> >                       enable-method = "psci";
-> >                       clocks = <&ccu CLK_CPUX>;
-> >                       clock-latency-ns = <244144>; /* 8 32k periods */
-> > +                     operating-points-v2 = <&cpu_opp_table>;
-> > +                     #cooling-cells = <2>;
-> > +             };
-> > +     };
-> > +
-> > +     cpu_opp_table: opp_table {
-> > +             compatible = "operating-points-v2";
-> > +             opp-shared;
-> > +
-> > +             opp@480000000 {
-> > +                     opp-hz = /bits/ 64 <480000000>;
-> > +                     opp-microvolt = <800000 800000 880000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +
-> > +             opp@720000000 {
-> > +                     opp-hz = /bits/ 64 <720000000>;
-> > +                     opp-microvolt = <800000 800000 880000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +
-> > +             opp@816000000 {
-> > +                     opp-hz = /bits/ 64 <816000000>;
-> > +                     opp-microvolt = <800000 800000 880000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +
-> > +             opp@888000000 {
-> > +                     opp-hz = /bits/ 64 <888000000>;
-> > +                     opp-microvolt = <800000 800000 940000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +
-> > +             opp@1080000000 {
-> > +                     opp-hz = /bits/ 64 <1080000000>;
-> > +                     opp-microvolt = <840000 840000 1060000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +
-> > +             opp@1320000000 {
-> > +                     opp-hz = /bits/ 64 <1320000000>;
-> > +                     opp-microvolt = <900000 900000 1160000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +
-> > +             opp@1488000000 {
-> > +                     opp-hz = /bits/ 64 <1488000000>;
-> > +                     opp-microvolt = <960000 960000 1160000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +
-> > +             opp@1800000000 {
-> > +                     opp-hz = /bits/ 64 <1800000000>;
-> > +                     opp-microvolt = <1060000 1060000 1160000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
->
-> So we definitely want to have that tested, especially since cpufreq
-> can lead to all kind of hard to debug errors (brown-outs, CPU lockups,
-> cache corruption, etc.). I good way to test that would be to use
-> cpufreq-ljt-stress-test here:
-> https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-stress-test
->
-> I'm especially worried about the higher frequencies that will probably
-> make the SoC heat too much
-Indeed, in order to avoid this situation, it is best to have cpu cooling
-support(But now it does not support thermal driver? ).
-
-
-In this case, perhaps we should remove the frequency beyond a certain
-range to avoid the CPU being too hot?
-
-Yangtao
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+T24gMi8xNC8xOSAyOjQ0IFBNLCBBbmRyZXcgTHVubiB3cm90ZToNCj4gT24gVGh1LCBGZWIgMTQs
+IDIwMTkgYXQgMDc6NDY6MDJBTSArMDEwMCwgQ2hyaXN0b3BoZSBSb3VsbGllciB3cm90ZToNCj4+
+ICsJbWRpbzAgew0KPj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+PiArCQkjc2l6ZS1jZWxs
+cyA9IDwwPjsNCj4+ICsJCWNvbXBhdGlibGUgPSAic25wcyxkd21hYy1tZGlvIjsNCj4+ICsJCXBo
+eTE6IGV0aGVybmV0LXBoeUAxIHsNCj4+ICsJCQlyZWcgPSA8MD47DQo+PiArCQl9Ow0KPiANCj4g
+VGhlIHJlZyB2YWx1ZSBzaG91bGQgYmUgdGhlIHNhbWUgYXMgZXRoZXJuZXQtcGh5QFguDQo+IA0K
+PiAgICAgIEFuZHJldw0KPj4gKwltZGlvMCB7DQo+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsN
+Cj4+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0KPj4gKwkJY29tcGF0aWJsZSA9ICJzbnBzLGR3bWFj
+LW1kaW8iOw0KPj4gKwkJcGh5MTogZXRoZXJuZXQtcGh5QDEgew0KPj4gKwkJCXJlZyA9IDwwPjsN
+Cj4+ICsJCX07DQo+IA0KPiBIZXJlIGFzIHdlbGwuDQo+IA0KPiAgICAgICBBbmRyZXcNCj4gDQoN
+CkhpIEFuZHJldywNCg0KT2sgSSB3aWxsIHVwZGF0ZS4NCg0KVGhhbmtzLg0KDQpDaHJpc3RvcGhl
