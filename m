@@ -1,45 +1,46 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [RFC 3/5] clk: imx8mq: Add the missing ARM clock
-Date: Thu, 14 Feb 2019 16:52:49 +0100
-Message-ID: <1550159569.2546.43.camel@pengutronix.de>
-References: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
-         <1550084693-9797-4-git-send-email-abel.vesa@nxp.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH 0/8] add power management support for SAM9X60
+Date: Thu, 14 Feb 2019 15:54:26 +0000
+Message-ID: <1550159642-26878-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550084693-9797-4-git-send-email-abel.vesa@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>, Anson Huang <anson.huang@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 13.02.2019, 19:05 +0000 schrieb Abel Vesa:
-> Add the ARM clock as imx_clk_cpu type.
-> Will be used by cpufreq.
-> 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Hi,
 
-> ---
->  drivers/clk/imx/clk-imx8mq.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-> index 57499ed..8a283cb 100644
-> --- a/drivers/clk/imx/clk-imx8mq.c
-> +++ b/drivers/clk/imx/clk-imx8mq.c
-> @@ -558,6 +558,12 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
->  	clks[IMX8MQ_GPT_3M_CLK] = imx_clk_fixed_factor("gpt_3m", "osc_25m", 1, 8);
->  	clks[IMX8MQ_CLK_DRAM_ALT_ROOT] = imx_clk_fixed_factor("dram_alt_root", "dram_alt", 1, 4);
->  
-> +	clks[IMX8MQ_CLK_ARM] = imx_clk_cpu("arm", "arm_a53_div",
-> +					   clks[IMX8MQ_CLK_A53_DIV],
-> +					   clks[IMX8MQ_CLK_A53_SRC],
-> +					   clks[IMX8MQ_ARM_PLL_OUT],
-> +					   clks[IMX8MQ_SYS1_PLL_800M]);
-> +
->  	for (i = 0; i < IMX8MQ_CLK_END; i++)
->  		if (IS_ERR(clks[i]))
->  			pr_err("i.MX8mq clk %u register failed with %ld\n",
+This series add power management support for SAM9X60. The following
+platform specific power management modes were enabled for it:
+Idle, ULP0 and ULP1.
+
+Thank you,
+Claudiu Beznea
+
+Claudiu Beznea (8):
+  ARM: at91: pm: introduce at91_soc_pm structure
+  dt-bindings: arm: atmel: add binding for SAM9X60 SoC
+  ARM: at91: pm: initial PM support for SAM9X60
+  ARM: at91: pm: keep at91_pm_backup_init() only for SAMA5D2 SoCs
+  ARM: at91: pm: add support for per SoC wakeup source configuration
+  ARM: at91: pm: add ULP1 support for SAM9X60
+  ARM: at91: pm: disable RC oscillator in ULP0
+  ARM: at91: pm: do not disable/enable PLLA for ULP modes
+
+ .../devicetree/bindings/arm/atmel-at91.txt         |   1 +
+ arch/arm/mach-at91/at91sam9.c                      |  18 ++
+ arch/arm/mach-at91/generic.h                       |   2 +
+ arch/arm/mach-at91/pm.c                            | 193 ++++++++++++++---=
+----
+ arch/arm/mach-at91/pm_suspend.S                    | 111 ++++++++----
+ include/linux/clk/at91_pmc.h                       |   1 +
+ 6 files changed, 232 insertions(+), 94 deletions(-)
+
+--=20
+2.7.4
