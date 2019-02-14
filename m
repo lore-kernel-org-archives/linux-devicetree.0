@@ -1,72 +1,50 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v5 07/11] power: supply: max77650: add support for
- battery charger
-Date: Thu, 14 Feb 2019 11:39:44 +0100
-Message-ID: <20190214103944.GC6132@amd>
-References: <20190213134335.10838-1-brgl@bgdev.pl>
- <20190213134335.10838-8-brgl@bgdev.pl>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH 2/2] dt-bindings: clk: at91: add bindings for SAM9X60's slow
+ clock controller
+Date: Thu, 14 Feb 2019 10:39:45 +0000
+Message-ID: <1550140748-21714-3-git-send-email-claudiu.beznea@microchip.com>
+References: <1550140748-21714-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="OBd5C1Lgu00Gd/Tn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190213134335.10838-8-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1550140748-21714-1-git-send-email-claudiu.beznea@microchip.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
+Cc: devicetree@vger.kernel.org, Claudiu.Beznea@microchip.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
---OBd5C1Lgu00Gd/Tn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add bindings for SAM9X60's slow clock controller.
 
-Hi!
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ Documentation/devicetree/bindings/clock/at91-clock.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> +#define MAX77650_CHG_OFF			0x00
-> +#define MAX77650_CHG_PREQ			0x01
-> +
-> +#define MAX77650_CHGIN_UNDERVOLTAGE_LOCKOUT	0x00
-> +#define MAX77650_CHGIN_OVERVOLTAGE_LOCKOUT	0x01
-> +#define MAX77650_CHGIN_OKAY			0x11
-
-Thanks for doing this.
-
-> +#define MAX77650_CHG_ON_CURR			0x02
-> +#define MAX77650_CHG_ON_CURR_JEITA		0x03
-> +#define MAX77650_CHG_ON_VOLT			0x04
-> +#define MAX77650_CHG_ON_VOLT_JEITA		0x05
-> +#define MAX77650_CHG_ON_TOPOFF			0x06
-> +#define MAX77650_CHG_ON_TOPOFF_JEITA		0x07
-> +#define MAX77650_CHG_DONE			0x08
-> +#define MAX77650_CHG_DONE_JEITA			0x09
-> +#define MAX77650_CHG_SUSP_PREQ_TIM_FAULT	0x0a
-> +#define MAX77650_CHG_SUSP_FAST_CHG_TIM_FAULT	0x0b
-> +#define MAX77650_CHG_SUSP_BATT_TEMP_FAULT	0x0c
-> +
-> +#define MAX77650_CHARGER_CHGIN_DTLS_MASK	GENMASK(3, 2)
-> +#define MAX77650_CHARGER_CHGIN_DTLS_BITS(_reg) \
-> +		(((_reg) & MAX77650_CHARGER_CHGIN_DTLS_MASK) >> 2)
-
-But I guess these could use similar treatment?
-							Pavel
-						=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---OBd5C1Lgu00Gd/Tn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlxlRXAACgkQMOfwapXb+vKeNACeKRfN7OVB4oFp8dOR9nRaQtxt
-RXEAni5CG3ToOk2cF9pUwPoHKM4lMFqB
-=61KM
------END PGP SIGNATURE-----
-
---OBd5C1Lgu00Gd/Tn--
+diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+index e9f70fcdfe80..154686a5f338 100644
+--- a/Documentation/devicetree/bindings/clock/at91-clock.txt
++++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+@@ -9,7 +9,8 @@ Slow Clock controller:
+ Required properties:
+ - compatible : shall be one of the following:
+ 	"atmel,at91sam9x5-sckc" or
+-	"atmel,sama5d4-sckc":
++	"atmel,sama5d4-sckc" or
++	"microchip,at91sam9x60-sckc":
+ 		at91 SCKC (Slow Clock Controller)
+ 		This node contains the slow clock definitions.
+ 
+-- 
+2.7.4
