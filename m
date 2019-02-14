@@ -1,68 +1,57 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [RESEND PATCH v4,2/3] arm64: dts: Using standard CCF interface to
- set vcodec clk
-Date: Thu, 14 Feb 2019 13:21:41 +0100
-Message-ID: <ad861017-14a3-4a67-8c56-96b379eeddec@gmail.com>
-References: <1550111093-7057-1-git-send-email-yunfei.dong@mediatek.com>
- <1550111093-7057-2-git-send-email-yunfei.dong@mediatek.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v9 5/8] gpio: Initial support for ROHM bd70528 GPIO block
+Date: Thu, 14 Feb 2019 14:38:06 +0200
+Message-ID: <20190214123806.GH12247@localhost.localdomain>
+References: <cover.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
+ <8334d6064575249e871e88aa6057b134795232e3.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
+ <CACRpkdYqSyWGSy6OKukE_SQWi1r0uOQD91JwpqUgrbJq28gbUQ@mail.gmail.com>
+ <20190214082901.GG12247@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550111093-7057-2-git-send-email-yunfei.dong@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190214082901.GG12247@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yunfei Dong <yunfei.dong@mediatek.com>, Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Qianqian Yan <qianqian.yan@mediatek.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
 List-Id: devicetree@vger.kernel.org
 
+Hello Linus,
 
-
-On 14/02/2019 03:24, Yunfei Dong wrote:
-> Using standard CCF interface to set vdec/venc parent clk
-> and clk rate.
+On Thu, Feb 14, 2019 at 10:29:01AM +0200, Matti Vaittinen wrote:
+> Thanks a bunch Linus,
 > 
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-> Signed-off-by: Qianqian Yan <qianqian.yan@mediatek.com>
-> ---
-
-now pushed to v5.1-next/dts64
-
-Thanks,
-Matthias
-
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> On Thu, Feb 14, 2019 at 09:00:33AM +0100, Linus Walleij wrote:
+> > On Wed, Feb 13, 2019 at 2:34 PM Matti Vaittinen
+> > <matti.vaittinen@fi.rohmeurope.com> wrote:
+> > 
+> > Just spotted this:
+> > 
+> > > +#include <linux/gpio/driver.h>
+> > > +#include <linux/gpio.h>
+> > 
+> > A driver should only need <linux/gpio/driver.h>
+> > the <linux/gpio.h> should not be used at all in new code,
+> > it is a legacy header.
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 412ffd4..126d11e 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -1305,6 +1305,15 @@
->  				      "vencpll",
->  				      "venc_lt_sel",
->  				      "vdec_bus_clk_src";
-> +			assigned-clocks = <&topckgen CLK_TOP_VENC_LT_SEL>,
-> +					  <&topckgen CLK_TOP_CCI400_SEL>,
-> +					  <&topckgen CLK_TOP_VDEC_SEL>,
-> +					  <&apmixedsys CLK_APMIXED_VCODECPLL>,
-> +					  <&apmixedsys CLK_APMIXED_VENCPLL>;
-> +			assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL_370P5>,
-> +						 <&topckgen CLK_TOP_UNIVPLL_D2>,
-> +						 <&topckgen CLK_TOP_VCODECPLL>;
-> +			assigned-clock-rates = <0>, <0>, <0>, <1482000000>, <800000000>;
->  		};
->  
->  		larb1: larb@16010000 {
-> @@ -1370,6 +1379,10 @@
->  				      "venc_sel",
->  				      "venc_lt_sel_src",
->  				      "venc_lt_sel";
-> +			assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
-> +					  <&topckgen CLK_TOP_VENC_LT_SEL>;
-> +			assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
-> +						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
->  		};
->  
->  		vencltsys: clock-controller@19000000 {
-> 
+> Allright. I'll do v10 and drop the header. Thanks for pointing this out
+
+It seems to me the GPIOF_DIR_XXX are defined in linux/gpio.h. It would
+be nice to refer to these flags when interpreting the return value
+from the bd70528_get_direction (used in bd70528_gpio_get) - and actually
+it might be nice to use those as a return value from bd70528_get_direction.
+
+But I'll go with raw values for now and leave possible definition
+moving/header refactoring to you who know the direction of code better :)
+
+Br,
+	Matti Vaittinen
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
