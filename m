@@ -1,61 +1,85 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
-Date: Thu, 14 Feb 2019 09:37:07 +0100
-Message-ID: <CACRpkdb4Q0efW5MaDmPTmewq-RFwXOTp15DCE1VpPf6g216iBw@mail.gmail.com>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
- <1549290167-876-2-git-send-email-rogerq@ti.com> <CACRpkdamWQUW_O+gageB4Q6XuBg+t-h+eW1gpor7_DHvx41j=A@mail.gmail.com>
- <9c58bc48-90bf-8ac5-7fbd-0f6443e3fc5e@ti.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Thu, 14 Feb 2019 14:08:54 +0530
+Message-ID: <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
+ <20190212074237.2875-6-lokeshvutla@ti.com>
+ <20190212162247.GK5720@atomide.com>
+ <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
+ <20190213152620.GS5720@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9c58bc48-90bf-8ac5-7fbd-0f6443e3fc5e@ti.com>
+In-Reply-To: <20190213152620.GS5720@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, ext Tony Lindgren <tony@atomide.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Lechner <david@lechnology.com>, "Nori, Sekhar" <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, nsaulnier@ti.com, jreeder@ti.com, Murali Karicheri <m-karicheri2@ti.com>, woods.technical@gmail.com, Linux-OMAP <linux-omap@vger.kernel.org>, linux-remoteproc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 4:13 AM Suman Anna <s-anna@ti.com> wrote:
-> [Me]
+Hi Tony,
 
-> > To be able to use hierarchical interrupt domain in the kernel, the top
-> > interrupt controller must use the hierarchical (v2) irqdomain, so
-> > if this is anything else than the ARM GIC it will be an interesting
-> > undertaking to handle this.
->
-> These are interrupt lines coming towards the host processor running
-> Linux and are directly connected to the ARM GIC. This INTC module is
-> actually an PRUSS internal interrupt controller that can take in 64 (on
-> most SoCs) external events/interrupt sources and multiplexing them
-> through two layers of many-to-one events-to-intr channels &
-> intr-channels-to-host interrupts. Couple of the host interrupts go to
-> the PRU cores themselves while the remaining ones come out of the IP to
-> connect to other GICs in the SoC.
+On 13/02/19 8:56 PM, Tony Lindgren wrote:
+> * Lokesh Vutla <lokeshvutla@ti.com> [190213 04:26]:
+>> Hi Tony,
+>> 
+>> On 12/02/19 9:52 PM, Tony Lindgren wrote:
+>>> Hi,
+>>> 
+>>> * Lokesh Vutla <lokeshvutla@ti.com> [190212 07:43]:
+>>>> +Example: +-------- +The following example demonstrates both interrupt 
+>>>> router node and the consumer +node(main gpio) on the AM654 SoC: + 
+>>>> +main_intr: interrupt-controller0 { +	compatible = "ti,sci-intr"; + 
+>>>> interrupt-controller; +	interrupt-parent = <&gic500>; + 
+>>>> #interrupt-cells = <4>; +	ti,sci = <&dmsc>; +	ti,sci-dst-id = <56>; + 
+>>>> ti,sci-rm-range-girq = <0x1>; +};
+>>> 
+>>> Can you describe a bit what the "ti,sci-dst-id" is above?
+>>> 
+>>> These IDs seem to be listed at at [0] below, but is it really a property
+>>>  of the hardware? Or is it some enumeration of SoC devices in the 
+>>> firmware?
+>> 
+>> This is the way that sysfw describes the hardware. In this case it is GIC 
+>> and it is identified by this ID.
+> 
+> If this ID is an enumeration in the sysfw rather than an actual hardware 
+> property it should not be in the device tree. If so,
 
-If the muxing is static (like set up once at probe) so that while the system is
-running, there is one and one only event mapped to the GIC from
-the component below it, then it is hierarchical.
+Devicetree-specification-v0.2[1] "Section 1.1 Purpose and Scope" mentions that
+devicetree specification provides a complete boot program to client program
+interface definition. Where boot program here is the sysfw and client program is
+Linux. In this case we are describing the id which is the destination interrupt
+controller to which the irqs are supposed to be attached.
 
-> We have implemented this as an irqchip using chained interrupt handlers
-> with the consumers using the event numbers on the Linux-side. The PRUs
-> also access some of the associated registers for clearing an event source.
+> the device driver should request the id from the sysfw based on a name. That 
+> is, if no struct device or device phandle can
 
-Chaining with cascading is when two or more interrupts fire the
-same upper level (say GIC) IRQ. If there is a 1:1 mapping,
-it is not chained/cascaded but hierarchical.
+>From a scalability perspective using a name to get a device id might worsen
+things.  There are hundreds of devices within the SoC and standardizing a name
+for each device and making sure using the same name across all future SoCs might
+be a bit pain. If there are more than one instance of the same device then name
+that should be requested is different with in the same driver.
 
-I understand you used old irqdomain/chip frameworks in the past,
-because everyone was working around the fact that they didn't have
-an abstraction for hierarchical IRQs. Using chained interrupts
-and custom 1:1 maps and assigning a long list of IRQs like this
-patch does was the most common workaround. But we should
-step out of that habit now.
+IMHO, device ids are something which can be used in DT. There are many other
+things like the interrupt ranges etc.. which are discoverable from sysfw and we
+are implementing it.
 
-Different levels of the IRQ handling having to do different stuff is
-what hierarchical irqdomains do best, so it sounds like a good fit.
+> be used.
+> > The problem with using enumeration in the dts is that it requires
+> maintaining the dts, driver(s) and possibly firmware in sync. And that might
 
-We handle some stuff at our level of the hierarchy and then fall
-up to the next higher level using calls such as
-irq_chip_ack_parent(), irq_chip_mask_parent() and friends.
+The idea here is device ids are not going to change for a SoC. For new SoCs
+within the same architecture ids will change and we will have new dts or this
+new SoC.
 
-Yours,
-Linus Walleij
+> change between SoCs variants when new devices get added and removed.
+> 
+
+[1]
+https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
+
+Thanks and regards,
+Lokesh
