@@ -1,31 +1,187 @@
-From: Christophe ROULLIER <christophe.roullier@st.com>
-Subject: Re: [PATCH 7/8] ARM: dts: stm32: Add Ethernet support on stm32h7 SOC
- and activate it for eval and disco boards
-Date: Thu, 14 Feb 2019 14:55:51 +0000
-Message-ID: <5c59f60a-2364-a4a8-117e-b485647fd88e@st.com>
-References: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
- <1550126763-22669-8-git-send-email-christophe.roullier@st.com>
- <20190214134414.GB5699@lunn.ch>
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH v3 1/3] devicetree: bindings: bd718x7: document HW state  related ROHM specific properties
+Date: Thu, 14 Feb 2019 06:58:35 -0800
+Message-ID: <b5d87fef13b16e8b5da8bd88958c6d74@www.akkea.ca>
+References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+ <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190214134414.GB5699@lunn.ch>
-Content-Language: en-US
-Content-ID: <35B4D304070043499A7C310BE66315CA@st.com>
+In-Reply-To: <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "robh@kernel.org" <robh@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "joabreu@synopsys.com" <joabreu@synopsys.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazzisaccount@gmail.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, Angus Ainslie <angus.ainslie@puri.sm>, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMi8xNC8xOSAyOjQ0IFBNLCBBbmRyZXcgTHVubiB3cm90ZToNCj4gT24gVGh1LCBGZWIgMTQs
-IDIwMTkgYXQgMDc6NDY6MDJBTSArMDEwMCwgQ2hyaXN0b3BoZSBSb3VsbGllciB3cm90ZToNCj4+
-ICsJbWRpbzAgew0KPj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+PiArCQkjc2l6ZS1jZWxs
-cyA9IDwwPjsNCj4+ICsJCWNvbXBhdGlibGUgPSAic25wcyxkd21hYy1tZGlvIjsNCj4+ICsJCXBo
-eTE6IGV0aGVybmV0LXBoeUAxIHsNCj4+ICsJCQlyZWcgPSA8MD47DQo+PiArCQl9Ow0KPiANCj4g
-VGhlIHJlZyB2YWx1ZSBzaG91bGQgYmUgdGhlIHNhbWUgYXMgZXRoZXJuZXQtcGh5QFguDQo+IA0K
-PiAgICAgIEFuZHJldw0KPj4gKwltZGlvMCB7DQo+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsN
-Cj4+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0KPj4gKwkJY29tcGF0aWJsZSA9ICJzbnBzLGR3bWFj
-LW1kaW8iOw0KPj4gKwkJcGh5MTogZXRoZXJuZXQtcGh5QDEgew0KPj4gKwkJCXJlZyA9IDwwPjsN
-Cj4+ICsJCX07DQo+IA0KPiBIZXJlIGFzIHdlbGwuDQo+IA0KPiAgICAgICBBbmRyZXcNCj4gDQoN
-CkhpIEFuZHJldywNCg0KT2sgSSB3aWxsIHVwZGF0ZS4NCg0KVGhhbmtzLg0KDQpDaHJpc3RvcGhl
+On 2019-02-14 01:34, Matti Vaittinen wrote:
+> Add ROHM BD71837 / BD71847 specific device tree bindings for
+> controlling the PMIC shutdown/reset states and voltages for
+> different HW states. The PMIC was designed to be used with NXP
+> i.MX8 SoC and it supports SNVS low power state which seems to
+> be typical for NXP i.MX SoCs. However, when SNVS is used we must
+> not allow SW to control enabling/disabling those regulators which
+> are crucial for system to boot as there is a HW limitation which
+> causes SW controlled regulators to be kept shut down after SNVS
+> reset.
+> 
+> Allow setting the SNVS to be used as reset target state and allow
+> marking those regulators which are critical for boot.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+
+One small nit below
+
+Tested-by: Angus Ainslie <angus@akkea.ca>
+Reviewed-by: Angus Ainslie <angus@akkea.ca>
+
+> ---
+>  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 17 ++++++++++
+>  .../bindings/regulator/rohm,bd71837-regulator.txt  | 38 
+> ++++++++++++++++++++++
+>  2 files changed, 55 insertions(+)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+> b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+> index a4b056761eaa..d5f68ac78d15 100644
+> --- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+> +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+> @@ -23,6 +23,20 @@ Required properties:
+> 
+>  Optional properties:
+>  - clock-output-names	: Should contain name for output clock.
+> +- rohm,reset-snvs-powered : Transfer BD718x7 to SNVS state at reset.
+> +
+> +The BD718x7 supports two different HW states as reset target states. 
+> States
+> +are called as SNVS and READY. At READY state all the PMIC power 
+> outputs go
+> +down and OTP is reload. At the SNVS state all other logic and external
+> +devices apart from the SNVS power domain are shut off. Please refer to 
+> NXP
+> +i.MX8 documentation for further information regarding SNVS state. When 
+> a
+> +reset is done via SNVS state the PMIC OTP data is not reload. This 
+> causes
+
+Typo s/reload/reloaded/
+
+> +power outputs that have been under SW control to stay down when reset 
+> has
+> +switched power state to SNVS. If reset is done via READY state the 
+> power
+> +outputs will be returned to HW control by OTP loading. Thus the reset
+> +target state is set to READY by default. If SNVS state is used the 
+> boot
+> +crucial regulators must have the regulator-always-on and 
+> regulator-boot-on
+> +properties set in regulator node.
+> 
+>  Example:
+> 
+> @@ -43,6 +57,7 @@ Example:
+>  		#clock-cells = <0>;
+>  		clocks = <&osc 0>;
+>  		clock-output-names = "bd71837-32k-out";
+> +		rohm,reset-snvs-powered;
+> 
+>  		regulators {
+>  			buck1: BUCK1 {
+> @@ -50,8 +65,10 @@ Example:
+>  				regulator-min-microvolt = <700000>;
+>  				regulator-max-microvolt = <1300000>;
+>  				regulator-boot-on;
+> +				regulator-always-on;
+>  				regulator-ramp-delay = <1250>;
+>  			};
+> +			// [...]
+>  		};
+>  	};
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+> b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+> index 4b98ca26e61a..cbce62c22b60 100644
+> --- 
+> a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+> +++ 
+> b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+> @@ -27,8 +27,38 @@ BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
+>  LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
+> 
+>  Optional properties:
+> +- rohm,dvs-run-voltage		: PMIC default "RUN" state voltage in uV.
+> +				  See below table for bucks which support this.
+> +- rohm,dvs-idle-voltage		: PMIC default "IDLE" state voltage in uV.
+> +				  See below table for bucks which support this.
+> +- rohm,dvs-suspend-voltage	: PMIC default "SUSPEND" state voltage in 
+> uV.
+> +				  See below table for bucks which support this.
+>  - Any optional property defined in bindings/regulator/regulator.txt
+> 
+> +Supported default DVS states:
+> +
+> +BD71837:
+> +buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
+> +-----------------------------------------------------------------------------
+> +1	| supported		| supported		| supported
+> +----------------------------------------------------------------------------
+> +2	| supported		| supported		| not supported
+> +----------------------------------------------------------------------------
+> +3	| supported		| not supported		| not supported
+> +----------------------------------------------------------------------------
+> +4	| supported		| not supported		| not supported
+> +----------------------------------------------------------------------------
+> +rest	| not supported		| not supported		| not supported
+> +
+> +BD71847:
+> +buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
+> +-----------------------------------------------------------------------------
+> +1	| supported		| supported		| supported
+> +----------------------------------------------------------------------------
+> +2	| supported		| supported		| not supported
+> +----------------------------------------------------------------------------
+> +rest	| not supported		| not supported		| not supported
+> +
+>  Example:
+>  regulators {
+>  	buck1: BUCK1 {
+> @@ -36,7 +66,11 @@ regulators {
+>  		regulator-min-microvolt = <700000>;
+>  		regulator-max-microvolt = <1300000>;
+>  		regulator-boot-on;
+> +		regulator-always-on;
+>  		regulator-ramp-delay = <1250>;
+> +		rohm,dvs-run-voltage = <900000>;
+> +		rohm,dvs-idle-voltage = <850000>;
+> +		rohm,dvs-suspend-voltage = <800000>;
+>  	};
+>  	buck2: BUCK2 {
+>  		regulator-name = "buck2";
+> @@ -45,18 +79,22 @@ regulators {
+>  		regulator-boot-on;
+>  		regulator-always-on;
+>  		regulator-ramp-delay = <1250>;
+> +		rohm,dvs-run-voltage = <1000000>;
+> +		rohm,dvs-idle-voltage = <900000>;
+>  	};
+>  	buck3: BUCK3 {
+>  		regulator-name = "buck3";
+>  		regulator-min-microvolt = <700000>;
+>  		regulator-max-microvolt = <1300000>;
+>  		regulator-boot-on;
+> +		rohm,dvs-run-voltage = <1000000>;
+>  	};
+>  	buck4: BUCK4 {
+>  		regulator-name = "buck4";
+>  		regulator-min-microvolt = <700000>;
+>  		regulator-max-microvolt = <1300000>;
+>  		regulator-boot-on;
+> +		rohm,dvs-run-voltage = <1000000>;
+>  	};
+>  	buck5: BUCK5 {
+>  		regulator-name = "buck5";
+> --
+> 2.14.3
