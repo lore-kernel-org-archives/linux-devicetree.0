@@ -1,88 +1,46 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
-Date: Thu, 14 Feb 2019 07:18:33 +0000
-Message-ID: <DB3PR0402MB3916351935518583A506364CF5670@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1550108915-574-1-git-send-email-Anson.Huang@nxp.com>
- <20190214071233.7uypqihkfasxqyw6@vireshk-i7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190214071233.7uypqihkfasxqyw6@vireshk-i7>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Ley Foon Tan <ley.foon.tan@intel.com>
+Subject: [PATCH v4 0/3] Add Stratix 10 PCIe Root Port support
+Date: Thu, 14 Feb 2019 23:20:35 +0800
+Message-ID: <1550157638-25112-1-git-send-email-ley.foon.tan@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, lftan.linux@gmail.com, Ley Foon Tan <ley.foon.tan@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFZpcmVzaA0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFZpcmVzaCBLdW1hciBbbWFpbHRvOnZpcmVzaC5rdW1h
-ckBsaW5hcm8ub3JnXQ0KPiBTZW50OiAyMDE5xOoy1MIxNMjVIDE1OjEzDQo+IFRvOiBBbnNvbiBI
-dWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFy
-ay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0
-cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiBt
-dHVycXVldHRlQGJheWxpYnJlLmNvbTsgc2JveWRAa2VybmVsLm9yZzsgQWlzaGVuZyBEb25nDQo+
-IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhw
-LmNvbT47DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1jbGtAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LQ0KPiBpbXhAbnhwLmNv
-bT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWNCAxLzJdIGFybTY0OiBkdHM6IGZyZWVzY2FsZTog
-aW14OHF4cDogYWRkIGNwdSBvcHANCj4gdGFibGUNCj4gDQo+IE9uIDE0LTAyLTE5LCAwMTo1NCwg
-QW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gQWRkIGkuTVg4UVhQIENQVSBvcHAgdGFibGUgdG8gc3Vw
-cG9ydCBjcHVmcmVxLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29u
-Lkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gTm8gY2hhbmdlIHNpbmNlIFYzLg0KPiA+IC0t
-LQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kgfCAyNQ0K
-PiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI1IGlu
-c2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2lteDhxeHAuZHRzaQ0KPiA+IGluZGV4IDQwMjFmMjUuLjU5M2UyZGIgMTAwNjQ0DQo+ID4gLS0t
-IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ID4gKysrIGIv
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ID4gQEAgLTM0LDYg
-KzM0LDEwIEBADQo+ID4gIAkJCXJlZyA9IDwweDAgMHgwPjsNCj4gPiAgCQkJZW5hYmxlLW1ldGhv
-ZCA9ICJwc2NpIjsNCj4gPiAgCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmQTM1X0wyPjsNCj4gPiAr
-CQkJY2xvY2tzID0gPCZjbGsgSU1YX0EzNV9DTEs+Ow0KPiA+ICsJCQljbG9jay1sYXRlbmN5ID0g
-PDYxMDM2PjsNCj4gDQo+IFdobyB1c2VzIHRoaXMgdmFsdWUgPyBBbmQgd2h5IGlzIGl0IGRpZmZl
-cmVudCBmcm9tIHRoZSBvbmUgbWVudGlvbmVkIGluIHRoZQ0KPiBPUFAgdGFibGUgPw0KDQpTb3Jy
-eSwgZm9yZ290IHRvIHJlbW92ZSBpdC4gV2lsbCByZW1vdmUgaXQgaW4gbmV4dCB2ZXJzaW9uLg0K
-DQo+IA0KPiA+ICsJCQkjY29vbGluZy1jZWxscyA9IDwyPjsNCj4gDQo+IGNsb2NrcyBhbmQgY29v
-bGluZy1jZWxscyBtdXN0IGJlIGRlZmluZWQgZm9yIGFsbCB0aGUgQ1BVcy4NCg0KT0suDQoNCj4g
-DQo+ID4gKwkJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmEzNV8wX29wcF90YWJsZT47DQo+ID4g
-IAkJfTsNCj4gPg0KPiA+ICAJCUEzNV8xOiBjcHVAMSB7DQo+ID4gQEAgLTQyLDYgKzQ2LDcgQEAN
-Cj4gPiAgCQkJcmVnID0gPDB4MCAweDE+Ow0KPiA+ICAJCQllbmFibGUtbWV0aG9kID0gInBzY2ki
-Ow0KPiA+ICAJCQluZXh0LWxldmVsLWNhY2hlID0gPCZBMzVfTDI+Ow0KPiA+ICsJCQlvcGVyYXRp
-bmctcG9pbnRzLXYyID0gPCZhMzVfMF9vcHBfdGFibGU+Ow0KPiA+ICAJCX07DQo+ID4NCj4gPiAg
-CQlBMzVfMjogY3B1QDIgew0KPiA+IEBAIC01MCw2ICs1NSw3IEBADQo+ID4gIAkJCXJlZyA9IDww
-eDAgMHgyPjsNCj4gPiAgCQkJZW5hYmxlLW1ldGhvZCA9ICJwc2NpIjsNCj4gPiAgCQkJbmV4dC1s
-ZXZlbC1jYWNoZSA9IDwmQTM1X0wyPjsNCj4gPiArCQkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwm
-YTM1XzBfb3BwX3RhYmxlPjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4gIAkJQTM1XzM6IGNwdUAzIHsN
-Cj4gPiBAQCAtNTgsNiArNjQsNyBAQA0KPiA+ICAJCQlyZWcgPSA8MHgwIDB4Mz47DQo+ID4gIAkJ
-CWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gIAkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JkEz
-NV9MMj47DQo+ID4gKwkJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmEzNV8wX29wcF90YWJsZT47
-DQo+ID4gIAkJfTsNCj4gPg0KPiA+ICAJCUEzNV9MMjogbDItY2FjaGUwIHsNCj4gPiBAQCAtNjUs
-NiArNzIsMjQgQEANCj4gPiAgCQl9Ow0KPiA+ICAJfTsNCj4gPg0KPiA+ICsJYTM1XzBfb3BwX3Rh
-YmxlOiBvcHAtdGFibGUgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12
-MiI7DQo+ID4gKwkJb3BwLXNoYXJlZDsNCj4gPiArDQo+ID4gKwkJb3BwLTkwMDAwMDAwMCB7DQo+
-ID4gKwkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8OTAwMDAwMDAwPjsNCj4gPiArCQkJb3BwLW1pY3Jv
-dm9sdCA9IDwxMDAwMDAwPjsNCj4gPiArCQkJY2xvY2stbGF0ZW5jeS1ucyA9IDwxNTAwMDA+Ow0K
-PiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCW9wcC0xMjAwMDAwMDAwIHsNCj4gPiArCQkJb3BwLWh6
-ID0gL2JpdHMvIDY0IDwxMjAwMDAwMDAwPjsNCj4gPiArCQkJb3BwLW1pY3Jvdm9sdCA9IDwxMTAw
-MDAwPjsNCj4gPiArCQkJY2xvY2stbGF0ZW5jeS1ucyA9IDwxNTAwMDA+Ow0KPiA+ICsJCQlvcHAt
-c3VzcGVuZDsNCj4gDQo+IFlvdSB3YW50IHRvIGdvIHRvIGEgaGlnaGVyIGZyZXF1ZW5jeSBvbiBz
-dXNwZW5kID8NCg0KWWVzLCBvbiBtb3N0IG9mIGkuTVggU29Dcywgd2UgYWx3YXlzIHVzZSBoaWdo
-ZXN0IGZyZXF1ZW5jeSBmb3Igc3VzcGVuZCB0byByZWR1Y2UNCnRoZSBzdXNwZW5kL3Jlc3VtZSBs
-YXRlbmN5Lg0KDQpUaGFua3MsDQpBbnNvbi4NCg0KPiANCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4g
-PiArDQo+ID4gIAlnaWM6IGludGVycnVwdC1jb250cm9sbGVyQDUxYTAwMDAwIHsNCj4gPiAgCQlj
-b21wYXRpYmxlID0gImFybSxnaWMtdjMiOw0KPiA+ICAJCXJlZyA9IDwweDAgMHg1MWEwMDAwMCAw
-IDB4MTAwMDA+LCAvKiBHSUMgRGlzdCAqLw0KPiA+IC0tDQo+ID4gMi43LjQNCj4gDQo+IC0tDQo+
-IHZpcmVzaA0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+Add PCIe Root Port support for Stratix 10 device and also update
+device tree binding documentation.
+
+v3 -> v4:
+---------
+- Separate Kconfig change to a patch
+- Change cast to mask
+
+v2 -> v3:
+---------
+- Rename Stratix10 to Stratix 10.
+- Change bool s10_flag to enum version.
+
+v1 -> v2:
+---------
+- Add define S10_TLP_FMTTYPE_* macros.
+- Remove initialize structure members to NULL/zero.
+- Rename *_funcs to *_data.
+- Update comment and fix coding style warning from checkpatch.pl.
+- Rename StratixXX to stratix10.
+
+History:
+--------
+[v1]: https://lkml.org/lkml/2018/12/26/68
+[v2]: https://lkml.org/lkml/2018/12/31/46
+[v3]: https://lkml.org/lkml/2019/1/2/16
+
+Ley Foon Tan (3):
+  PCI: altera: Add Stratix 10 PCIe support
+  PCI: altera: Enable driver on ARM64
+  dt-bindings: PCI: altera: Add altr,pcie-root-port-2.0
+
+ .../devicetree/bindings/pci/altera-pcie.txt        |    4 +-
+ drivers/pci/controller/Kconfig                     |    2 +-
+ drivers/pci/controller/pcie-altera.c               |  246 ++++++++++++++++++--
+ 3 files changed, 226 insertions(+), 26 deletions(-)
