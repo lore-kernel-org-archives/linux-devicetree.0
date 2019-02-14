@@ -1,53 +1,82 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [RFC 0/5] Add cpufreq-dt support i.MX8MQ
-Date: Thu, 14 Feb 2019 16:55:08 +0100
-Message-ID: <1550159708.2546.45.camel@pengutronix.de>
-References: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH 7/8] ARM: at91: pm: disable RC oscillator in ULP0
+Date: Thu, 14 Feb 2019 15:55:01 +0000
+Message-ID: <1550159642-26878-8-git-send-email-claudiu.beznea@microchip.com>
+References: <1550159642-26878-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1550159642-26878-1-git-send-email-claudiu.beznea@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>, Anson Huang <anson.huang@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 13.02.2019, 19:05 +0000 schrieb Abel Vesa:
-> I'm sending this as a patchseries (RFC) just to show all the changes
-> needed for this to work. I'll resend separately once I get some
-> feedback
-> on the entire thing.
-> 
-> One thing that is missing compared to the earlier work
-> (here: https://patchwork.kernel.org/patch/10807821/ )
-> is the speed grading. That can be done as a separate change 
-> once I figure out how to do it with cpufreq-dt.
-> 
-> Unfortumately, there is a need to update the dt-bindings
-> once again in order to add missing ARM clock from patches 1 and 2.
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Which isn't much of a problem as it's a backward compatible change. A
-new kernel with cpufreq support will not find the clock when started
-with an old DT and thus not expose cpufreq support. I.e. it's working
-with exactly the same functionality level as a kernel matching the old
-DT.
+Disable RC oscillator in ULP0 as datasheet specifies.
 
-Regards,
-Lucas
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ arch/arm/mach-at91/pm_suspend.S | 39 +++++++++++++++++++++++++++++++++++++=
+--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
 
-> Abel Vesa (5):
->   clk: imx: imx8mq: Fix the rate propagation for arm pll
->   dt-bindings: imx8mq-clock: Add the missing ARM clock
->   clk: imx8mq: Add the missing ARM clock
->   arm64: dts: imx8mq: Add the clocks and the latencies for the A53
-> cores
->   arm64: dts: imx8mq: Add the opp table and the cpu-supply nodes
-> 
->  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 17 +++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 31
-> ++++++++++++++++++++++++++++
->  drivers/clk/imx/clk-imx8mq.c                 |  8 ++++++-
->  include/dt-bindings/clock/imx8mq-clock.h     |  4 +++-
->  4 files changed, 58 insertions(+), 2 deletions(-)
-> 
+diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspen=
+d.S
+index 8b18cad1dcf5..5c33023f9129 100644
+--- a/arch/arm/mach-at91/pm_suspend.S
++++ b/arch/arm/mach-at91/pm_suspend.S
+@@ -178,11 +178,46 @@ ENDPROC(at91_backup_mode)
+ 	orr	tmp1, tmp1, #AT91_PMC_KEY
+ 	str	tmp1, [pmc, #AT91_CKGR_MOR]
+=20
++	/* Save RC oscillator state */
++	ldr	tmp1, [pmc, #AT91_PMC_SR]
++	str	tmp1, .saved_osc_status
++	tst	tmp1, #AT91_PMC_MOSCRCS
++	bne	1f
++
++	/* Turn off RC oscillator */
++	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
++	bic	tmp1, tmp1, #AT91_PMC_MOSCRCEN
++	bic	tmp1, tmp1, #AT91_PMC_KEY_MASK
++	orr	tmp1, tmp1, #AT91_PMC_KEY
++	str	tmp1, [pmc, #AT91_CKGR_MOR]
++
++	/* Wait main RC disabled done */
++2:	ldr	tmp1, [pmc, #AT91_PMC_SR]
++	tst	tmp1, #AT91_PMC_MOSCRCS
++	bne	2b
++
+ 	/* Wait for interrupt */
+-	at91_cpu_idle
++1:	at91_cpu_idle
+=20
+-	/* Turn on the crystal oscillator */
++	/* Restore RC oscillator state */
++	ldr	tmp1, .saved_osc_status
++	tst	tmp1, #AT91_PMC_MOSCRCS
++	beq	4f
++
++	/* Turn on RC oscillator */
+ 	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
++	orr	tmp1, tmp1, #AT91_PMC_MOSCRCEN
++	bic	tmp1, tmp1, #AT91_PMC_KEY_MASK
++	orr	tmp1, tmp1, #AT91_PMC_KEY
++	str	tmp1, [pmc, #AT91_CKGR_MOR]
++
++	/* Wait main RC stabilization */
++3:	ldr	tmp1, [pmc, #AT91_PMC_SR]
++	tst	tmp1, #AT91_PMC_MOSCRCS
++	beq	3b
++
++	/* Turn on the crystal oscillator */
++4:	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
+ 	orr	tmp1, tmp1, #AT91_PMC_MOSCEN
+ 	orr	tmp1, tmp1, #AT91_PMC_KEY
+ 	str	tmp1, [pmc, #AT91_CKGR_MOR]
+--=20
+2.7.4
