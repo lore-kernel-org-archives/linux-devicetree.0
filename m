@@ -1,124 +1,82 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v7 00/23] drm/sun4i: Allwinner A64 MIPI-DSI support
-Date: Thu, 14 Feb 2019 22:11:43 +0530
-Message-ID: <CAMty3ZAUL8TWOec=VpJvBzPL1LE13XVMCWj6t-Gycmny38st_A@mail.gmail.com>
-References: <20190201154232.10505-1-jagan@amarulasolutions.com>
- <CAMty3ZBspvP=qZEK9vaowVq4f5W3Qx2qHkwcuAnCOOjV29=Y_Q@mail.gmail.com>
- <20190213090308.dlcwgcrhg264k2cu@flea> <CAMty3ZCSMRm-0suApB4Zb+kE1M2sWn3F7ugPBFWaL4ap7cJejQ@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Thu, 14 Feb 2019 18:50:55 +0200
+Message-ID: <5C659C6F.5010000@ti.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com>
+ <CACRpkdamWQUW_O+gageB4Q6XuBg+t-h+eW1gpor7_DHvx41j=A@mail.gmail.com>
+ <9c58bc48-90bf-8ac5-7fbd-0f6443e3fc5e@ti.com>
+ <CACRpkdb4Q0efW5MaDmPTmewq-RFwXOTp15DCE1VpPf6g216iBw@mail.gmail.com>
+ <5C65490E.6000800@ti.com> <86ef8asfap.wl-marc.zyngier@arm.com>
+ <5C658CE4.5030307@ti.com> <aaff678a-820c-279e-632e-1ad25953029d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZCSMRm-0suApB4Zb+kE1M2sWn3F7ugPBFWaL4ap7cJejQ@mail.gmail.com>
+In-Reply-To: <aaff678a-820c-279e-632e-1ad25953029d@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Marc Zyngier <marc.zyngier@arm.com>, Suman Anna <s-anna@ti.com>, "Davis, Andrew" <afd@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, ext Tony Lindgren <tony@atomide.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Lechner <david@lechnology.com>, "Nori, Sekhar" <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, nsaulnier@ti.com, jreeder@ti.com, Murali Karicheri <m-karicheri2@ti.com>, woods.technical@gmail.com, Linux-OMAP <linux-omap@vger.kernel.org>, linux-remoteproc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2019 at 2:49 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Wed, Feb 13, 2019 at 2:33 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Tue, Feb 12, 2019 at 03:16:02PM +0530, Jagan Teki wrote:
-> > > On Fri, Feb 1, 2019 at 9:12 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > >
-> > > > Here is next version changes for Allwinner A64 MIPI-DSI support
-> > > >
-> > > > This series grouped the changes like previous version[1] with different
-> > > > sets to support three different panels types that can fit into the DSI
-> > > > controller.
-> > > >
-> > > > set:1, for 4-lane, burst mode support
-> > > > - patch 0001: 0009, DSI controller changes that support burst mode.
-> > > >
-> > > > set:2, for A64 DSI support
-> > > > - patch 0010: tcon dclk divider computation based on A64 BSP.
-> > > > - patch 0011: 0017, Allwinner A64 DSI controller changes.
-> > > >
-> > > > set:3, enable 4-lane burst mode panel:
-> > > > - patch 0018: Overlay patch that enable Feiyang FY07024DI26A30-D
-> > > >   burst mode panel on Pine64-LTS
-> > > >
-> > > > set:4, enable 4-lane video mode panel:
-> > > > - patch 0019: msg type MIPI_DSI_GENERIC_SHORT_WRITE_2_PARAM support
-> > > > - patch 0020: Overlay patch that enable Bananapi S070WV20-CT16 ICN6211
-> > > >   panel on Bananapi M64
-> > > >
-> > > > set:5, enable 2-lane video mode panel:
-> > > > - patch 0021, 0022: DSI hfp and hbp timings fixes
-> > > > - patch 0023: Enable Techstar TS8550B panel on Amarula A64-Relic
-> > > >
-> > > > Changes for v7:
-> > > > - moved vcc-dsi binding to required filed.
-> > > > - drop quotes on fallback dphy bindings.
-> > > > - drop min_rate clock pll-mipi patches.
-> > > > - introduce dclk divider computation as like A64 BSP.
-> > > > - add A64 DSI quark patches.
-> > > > - fixed A64 DSI pipeline.
-> > > > - add proper commit messages.
-> > > > - collect Merlijn Wajer Tested-by credits.
-> > > > Changes for v6:
-> > > > - dropped unneeded changes, patches
-> > > > - fixed all burst mode patches as per previous version comments
-> > > > - rebase on master
-> > > > - update proper commit message
-> > > > - dropped unneeded comments
-> > > > - order the patches that make review easy
-> > > > Changes for v5:
-> > > > - collect Rob, Acked-by
-> > > > - droped "Fix VBP size calculation" patch
-> > > > - updated vblk timing calculation.
-> > > > - droped techstar, bananapi dsi panel drivers which may require
-> > > >   bridge or other setup. it's under discussion.
-> > > > Changes for v4:
-> > > > - droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
-> > > >   nkm min, max rate patches
-> > > > - create two patches for "Add Allwinner A64 MIPI DSI support"
-> > > >   one for has_mod_clk quirk and other one for A64 support
-> > > > - use existing driver code construct for hblk computation
-> > > > - dropped "Increase hfp packet overhead" patch [2], though BSP added
-> > > >   this but we have no issues as of now.
-> > > >   (no issues on panel side w/o this change)
-> > > > - create separate function for vblk computation
-> > > > - enable vcc-dsi regulator in dsi_runtime_resume
-> > > > - collect Rob, Acked-by
-> > > > - update MAINTAINERS file for panel drivers
-> > > > - cleanup commit messages
-> > > > - fixed checkpatch warnings/errors
-> > > >
-> > > > [1] https://patchwork.kernel.org/cover/10779893/
-> > > >
-> > > > Any inputs?
-> > > > Jagan.
-> > > >
-> > > > Jagan Teki (23):
-> > > >   drm/sun4i: sun6i_mipi_dsi: Compute burst mode loop N1 instruction
-> > > >     delay
-> > > >   drm/sun4i: sun6i_mipi_dsi: Support instruction loop selection
-> > > >   drm/sun4i: sun6i_mipi_dsi: Setup burst mode timings
-> > > >   drm/sun4i: sun6i_mipi_dsi: Simplify drq to support all modes
-> > > >   drm/sun4i: tcon: Export get tcon0 routine
-> > > >   drm/sun4i: sun6i_mipi_dsi: Probe tcon0 during dsi_bind
-> > > >   drm/sun4i: sun6i_mipi_dsi: Setup burst mode
-> > > >   drm/sun4i: sun6i_mipi_dsi: Enable trail_inv and trail_fill controls
-> > > >   drm/sun4i: sun6i_mipi_dsi: Enable HBP, HSA_HSE for burst mode
-> > >
-> > > Can you pick these burst changes which are generic to all SoCs. and
-> > > reset will send once we decide the tcon clock.
-> >
-> > These patches don't implement what we discussed last week, and as I
-> > told you already, most of them really need some work on the commit log
-> > and their explanations.
->
-> If I'm not wrong, we discussed about tcon_dclk (PLL_MIPI) last week
-> [1] and these burst changes between 01/23 to 09/23 which are generic
-> changes to DSI and not related to clock. Apart from that I made few
-> changes on commit logs between the versions (which I was mentioned on
-> the cover-letter patch). If any issues issues on commit message,
-> please let me know so-that I can rework.
 
-Look like the same discussion rounding since from months. In fact I
-have grouped all changes by 'sets of patches' in this series which I
-was thinking of having more feasibility to review and merge, but seems
-like it ended-up fusing which patches are more prior and which are
-fixes. So, let me send it by breaking into different series based on
-the issues and generic changes.
+
+On 14/02/19 17:51, Marc Zyngier wrote:
+> On 14/02/2019 15:44, Roger Quadros wrote:
+>> On 14/02/19 14:52, Marc Zyngier wrote:
+>>> On Thu, 14 Feb 2019 10:55:10 +0000,
+>>> Roger Quadros <rogerq@ti.com> wrote:
+>>>>
+>>>>
+>>>> On 14/02/19 10:37, Linus Walleij wrote:
+>>>>> On Thu, Feb 14, 2019 at 4:13 AM Suman Anna <s-anna@ti.com> wrote:
+>>>>>> [Me]
+>>>>>
+>>>>>>> To be able to use hierarchical interrupt domain in the kernel, the top
+>>>>>>> interrupt controller must use the hierarchical (v2) irqdomain, so
+>>>>>>> if this is anything else than the ARM GIC it will be an interesting
+>>>>>>> undertaking to handle this.
+>>>>>>
+>>>>>> These are interrupt lines coming towards the host processor running
+>>>>>> Linux and are directly connected to the ARM GIC. This INTC module is
+>>>>>> actually an PRUSS internal interrupt controller that can take in 64 (on
+>>>>>> most SoCs) external events/interrupt sources and multiplexing them
+>>>>>> through two layers of many-to-one events-to-intr channels &
+>>>>>> intr-channels-to-host interrupts. Couple of the host interrupts go to
+>>>>>> the PRU cores themselves while the remaining ones come out of the IP to
+>>>>>> connect to other GICs in the SoC.
+>>>>>
+>>>>> If the muxing is static (like set up once at probe) so that while
+>>>>> the system is running, there is one and one only event mapped to
+>>>>> the GIC from the component below it, then it is hierarchical.
+>>>>
+>>>> This is how it looks.
+>>>>
+>>>> [GIC]<---8---[INTC]<---64---[events from peripherals]
+>>>>
+>>>> The 8 interrupt lines from INTC to the GIC are 1:1 mapped and fixed
+>>>> per SoC.  The muxing between 64 inputs to INTC and its 8 outputs are
+>>>> programmable and might not necessarily be static per boot/probe as
+>>>> it depends on what firmware is loaded on the PRU.
+>>>
+>>> But the point is that at any given time, there are at most 8 out of 64
+>>> inputs that are used, right? You *never* end-up with two (or more) of
+>>> these "events" being multiplexed on a single output line.
+>>>
+>>
+>> Since the INTC's internal logic allows assigning more than one event each outputs,
+>> at most all 64 events can be assigned to one output or distributed among the 8 outputs.
+> 
+> OK. Do you get individual masking and status bits for each input?
+
+Yes, we have individual enable/disable and status bits for each of the 64 events.
+
+In addition to that it is possible to determine priority if multiple events come to the same
+output by reading a register specific to that output.
+
+--
+cheers,
+-roger
+ 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
