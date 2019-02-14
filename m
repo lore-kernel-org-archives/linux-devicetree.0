@@ -1,11 +1,13 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V4 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
-Date: Thu, 14 Feb 2019 01:54:01 +0000
-Message-ID: <1550108915-574-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V4 2/2] clk: imx: scu: add cpu frequency scaling support
+Date: Thu, 14 Feb 2019 01:54:08 +0000
+Message-ID: <1550108915-574-2-git-send-email-Anson.Huang@nxp.com>
+References: <1550108915-574-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1550108915-574-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,78 +22,98 @@ To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutl
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX8QXP CPU opp table to support cpufreq.
+On NXP's i.MX SoCs with system controller inside, CPU frequency
+scaling can ONLY be done by system controller firmware, and it
+can ONLY be requested from secure mode, so Linux kernel has to
+call ARM SMC to trap to ARM-Trusted-Firmware to request system
+controller firmware to do CPU frequency scaling.
+
+This patch adds i.MX system controller CPU frequency scaling support,
+it reuses cpufreq-dt driver and implement the CPU frequency scaling
+inside SCU clock driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-No change since V3.
+Changes since V3:
+        - use different clk ops for CPU clock to avoid runtime check in clk_set_rate;
+        - use rsrc_id to determine whether it is CPU frequency change and also to get
+          cluster ID for SMC call.
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/clk/imx/clk-scu.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 4021f25..593e2db 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -34,6 +34,10 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&A35_L2>;
-+			clocks = <&clk IMX_A35_CLK>;
-+			clock-latency = <61036>;
-+			#cooling-cells = <2>;
-+			operating-points-v2 = <&a35_0_opp_table>;
- 		};
+diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
+index 7ccf7ed..c234a6e 100644
+--- a/drivers/clk/imx/clk-scu.c
++++ b/drivers/clk/imx/clk-scu.c
+@@ -4,12 +4,17 @@
+  *   Dong Aisheng <aisheng.dong@nxp.com>
+  */
  
- 		A35_1: cpu@1 {
-@@ -42,6 +46,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
- 			next-level-cache = <&A35_L2>;
-+			operating-points-v2 = <&a35_0_opp_table>;
- 		};
++#include <dt-bindings/firmware/imx/rsrc.h>
++#include <linux/arm-smccc.h>
+ #include <linux/clk-provider.h>
+ #include <linux/err.h>
+ #include <linux/slab.h>
  
- 		A35_2: cpu@2 {
-@@ -50,6 +55,7 @@
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
- 			next-level-cache = <&A35_L2>;
-+			operating-points-v2 = <&a35_0_opp_table>;
- 		};
+ #include "clk-scu.h"
  
- 		A35_3: cpu@3 {
-@@ -58,6 +64,7 @@
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
- 			next-level-cache = <&A35_L2>;
-+			operating-points-v2 = <&a35_0_opp_table>;
- 		};
- 
- 		A35_L2: l2-cache0 {
-@@ -65,6 +72,24 @@
- 		};
- 	};
- 
-+	a35_0_opp_table: opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
++#define IMX_SIP_CPUFREQ			0xC2000001
++#define IMX_SIP_SET_CPUFREQ		0x00
 +
-+		opp-900000000 {
-+			opp-hz = /bits/ 64 <900000000>;
-+			opp-microvolt = <1000000>;
-+			clock-latency-ns = <150000>;
-+		};
+ static struct imx_sc_ipc *ccm_ipc_handle;
+ 
+ /*
+@@ -145,6 +150,23 @@ static long clk_scu_round_rate(struct clk_hw *hw, unsigned long rate,
+ 	return rate;
+ }
+ 
++static int clk_scu_atf_set_cpu_rate(struct clk_hw *hw, unsigned long rate,
++				    unsigned long parent_rate)
++{
++	struct clk_scu *clk = to_clk_scu(hw);
++	struct arm_smccc_res res;
++	unsigned long cluster_id;
 +
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1100000>;
-+			clock-latency-ns = <150000>;
-+			opp-suspend;
-+		};
-+	};
++	if (clk->rsrc_id == IMX_SC_R_A35)
++		cluster_id = 0;
 +
- 	gic: interrupt-controller@51a00000 {
- 		compatible = "arm,gic-v3";
- 		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
++	/* CPU frequency scaling can ONLY be done by ARM-Trusted-Firmware */
++	arm_smccc_smc(IMX_SIP_CPUFREQ, IMX_SIP_SET_CPUFREQ,
++		      cluster_id, rate, 0, 0, 0, 0, &res);
++
++	return 0;
++}
++
+ /*
+  * clk_scu_set_rate - Set rate for a SCU clock
+  * @hw: clock to change rate for
+@@ -232,6 +254,14 @@ static const struct clk_ops clk_scu_ops = {
+ 	.unprepare = clk_scu_unprepare,
+ };
+ 
++static const struct clk_ops clk_scu_cpu_ops = {
++	.recalc_rate = clk_scu_recalc_rate,
++	.round_rate = clk_scu_round_rate,
++	.set_rate = clk_scu_atf_set_cpu_rate,
++	.prepare = clk_scu_prepare,
++	.unprepare = clk_scu_unprepare,
++};
++
+ struct clk_hw *imx_clk_scu(const char *name, u32 rsrc_id, u8 clk_type)
+ {
+ 	struct clk_init_data init;
+@@ -247,7 +277,10 @@ struct clk_hw *imx_clk_scu(const char *name, u32 rsrc_id, u8 clk_type)
+ 	clk->clk_type = clk_type;
+ 
+ 	init.name = name;
+-	init.ops = &clk_scu_ops;
++	if (rsrc_id == IMX_SC_R_A35)
++		init.ops = &clk_scu_cpu_ops;
++	else
++		init.ops = &clk_scu_ops;
+ 	init.num_parents = 0;
+ 	/*
+ 	 * Note on MX8, the clocks are tightly coupled with power domain
 -- 
 2.7.4
