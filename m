@@ -1,71 +1,95 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v9 5/8] gpio: Initial support for ROHM bd70528 GPIO block
-Date: Thu, 14 Feb 2019 09:00:33 +0100
-Message-ID: <CACRpkdYqSyWGSy6OKukE_SQWi1r0uOQD91JwpqUgrbJq28gbUQ@mail.gmail.com>
-References: <cover.1550063882.git.matti.vaittinen@fi.rohmeurope.com> <8334d6064575249e871e88aa6057b134795232e3.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V5 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
+Date: Thu, 14 Feb 2019 08:02:51 +0000
+Message-ID: <1550131046-2069-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8334d6064575249e871e88aa6057b134795232e3.1550063882.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2019 at 2:34 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+Add i.MX8QXP CPU opp table to support cpufreq.
 
-> ROHM BD70528 PMIC has 4 GPIO pins. Allow them to be
-> controlled by GPIO framework.
->
-> IRQs are handled by regmap-irq and GPIO driver is not
-> aware of the irq usage.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V4:
+	- remove redundant clock-latency property in A35_0;
+	- add #cooling-cells for all A35 core.
+---
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 27 ++++++++++++++++++++++++++=
++
+ 1 file changed, 27 insertions(+)
 
-(...)
-
-Just spotted this:
-
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio.h>
-
-A driver should only need <linux/gpio/driver.h>
-the <linux/gpio.h> should not be used at all in new code,
-it is a legacy header.
-
-> +static int bd70528_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
-> +                                  unsigned long config)
-> +{
-> +       struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
-> +
-> +       switch (pinconf_to_config_param(config)) {
-> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +               return regmap_update_bits(bdgpio->chip.regmap,
-> +                                         GPIO_OUT_REG(offset),
-> +                                         BD70528_GPIO_DRIVE_MASK,
-> +                                         BD70528_GPIO_OPEN_DRAIN);
-> +               break;
-> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +               return regmap_update_bits(bdgpio->chip.regmap,
-> +                                         GPIO_OUT_REG(offset),
-> +                                         BD70528_GPIO_DRIVE_MASK,
-> +                                         BD70528_GPIO_PUSH_PULL);
-> +               break;
-> +       case PIN_CONFIG_INPUT_DEBOUNCE:
-> +               return bd70528_set_debounce(bdgpio, offset,
-> +                                           pinconf_to_config_argument(config));
-> +               break;
-> +       default:
-> +               break;
-> +       }
-> +       return -ENOTSUPP;
-> +}
-
-BTW I just merged code from Thomas Petazzoni that make it possible to
-also support pull-up and pull-down from GPIO here if you want to enable
-it.
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
+ts/freescale/imx8qxp.dtsi
+index 4021f25..fad1259 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -34,6 +34,9 @@
+ 			reg =3D <0x0 0x0>;
+ 			enable-method =3D "psci";
+ 			next-level-cache =3D <&A35_L2>;
++			clocks =3D <&clk IMX_A35_CLK>;
++			operating-points-v2 =3D <&a35_0_opp_table>;
++			#cooling-cells =3D <2>;
+ 		};
+=20
+ 		A35_1: cpu@1 {
+@@ -42,6 +45,8 @@
+ 			reg =3D <0x0 0x1>;
+ 			enable-method =3D "psci";
+ 			next-level-cache =3D <&A35_L2>;
++			operating-points-v2 =3D <&a35_0_opp_table>;
++			#cooling-cells =3D <2>;
+ 		};
+=20
+ 		A35_2: cpu@2 {
+@@ -50,6 +55,8 @@
+ 			reg =3D <0x0 0x2>;
+ 			enable-method =3D "psci";
+ 			next-level-cache =3D <&A35_L2>;
++			operating-points-v2 =3D <&a35_0_opp_table>;
++			#cooling-cells =3D <2>;
+ 		};
+=20
+ 		A35_3: cpu@3 {
+@@ -58,6 +65,8 @@
+ 			reg =3D <0x0 0x3>;
+ 			enable-method =3D "psci";
+ 			next-level-cache =3D <&A35_L2>;
++			operating-points-v2 =3D <&a35_0_opp_table>;
++			#cooling-cells =3D <2>;
+ 		};
+=20
+ 		A35_L2: l2-cache0 {
+@@ -65,6 +74,24 @@
+ 		};
+ 	};
+=20
++	a35_0_opp_table: opp-table {
++		compatible =3D "operating-points-v2";
++		opp-shared;
++
++		opp-900000000 {
++			opp-hz =3D /bits/ 64 <900000000>;
++			opp-microvolt =3D <1000000>;
++			clock-latency-ns =3D <150000>;
++		};
++
++		opp-1200000000 {
++			opp-hz =3D /bits/ 64 <1200000000>;
++			opp-microvolt =3D <1100000>;
++			clock-latency-ns =3D <150000>;
++			opp-suspend;
++		};
++	};
++
+ 	gic: interrupt-controller@51a00000 {
+ 		compatible =3D "arm,gic-v3";
+ 		reg =3D <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
+--=20
+2.7.4
