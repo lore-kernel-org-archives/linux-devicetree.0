@@ -1,171 +1,87 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH v5 7/8] i2c: iproc: add NIC I2C support
-Date: Thu, 14 Feb 2019 09:57:24 -0800
-Message-ID: <20190214175725.60462-8-ray.jui@broadcom.com>
-References: <20190214175725.60462-1-ray.jui@broadcom.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Thu, 14 Feb 2019 23:32:41 +0530
+Message-ID: <171e8597-2156-747d-d024-7b4bfc6f9186@ti.com>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
+ <20190212074237.2875-6-lokeshvutla@ti.com>
+ <20190212162247.GK5720@atomide.com>
+ <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
+ <20190213152620.GS5720@atomide.com>
+ <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
+ <20190214154100.GB5720@atomide.com>
+ <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
+ <20190214174612.GF5720@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190214175725.60462-1-ray.jui@broadcom.com>
+In-Reply-To: <20190214174612.GF5720@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Ray Jui <ray.jui@broadcom.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Hi Tony,
 
-Add NIC I2C support to the iProc I2C driver. Access to the NIC I2C base
-registers requires going through the IDM wrapper to map into the NIC's
-address space
+On 2/14/2019 11:16 PM, Tony Lindgren wrote:
+> * Lokesh Vutla <lokeshvutla@ti.com> [190214 17:32]:
+>> Hi Tony,
+>> 	Please do not snip the on going discussion.
+>>
+>> On 2/14/2019 9:11 PM, Tony Lindgren wrote:
+>>> * Lokesh Vutla <lokeshvutla@ti.com> [190214 08:39]:
+>>>> IMHO, device ids are something which can be used in DT. There are many other
+>>>> things like the interrupt ranges etc.. which are discoverable from sysfw and we
+>>>> are implementing it.
+>>>
+>>> We need to describe hardware in the device tree, not firmware.
+>>>
+>>> If you have something discoverable from the firmware, you should
+>>> have the device driver query it from sysfw based on a hardware
+>>> property, not based on some invented enumeration in the firmware.
+>>
+>> Yes we are already querying sysfw for all the irq ranges that can be
+>> discoverable. The topic of discussion here is about the parent interrupt
+>> controller id. I am not sure how you are expecting an id be discoverable
+>> from system firmware especially with a name.
+> 
+> Well names are quite standard in dts (but should be used with
+> the phandle + offset). Think for example interrupt-names and
+> reg-names :)
+> 
+>>> If there is some device to firmware translation needed, hide that
+>>> into the device driver and keep it out of the device tree.
+>>
+>> If preferred this can be moved to of_match_data attached to each
+>> compatible property. Then for each SoC a new compatible needs to be created.
+> 
+> Hiding the ID into the device driver and compatible property
+> makes sense to me if the id is based on SoC + firmware.
+> 
+> But I'd rather have a proper hardware based phandle + index
+> type mapping in the dts if possible though.
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
----
- drivers/i2c/busses/i2c-bcm-iproc.c | 79 ++++++++++++++++++++++++++++--
- 1 file changed, 75 insertions(+), 4 deletions(-)
+The idea about sysfw here is that Linux is not aware of anything about
+this device(Interrupt Router). It cannot even access any of its
+registers. As a user Linux should know who is the parent to which the
+Interrut router output should be configured. Then query sysfw about the
+range of gic irqs allocated to it. Now for configuration, Linux should
+pass the the input to interrupt router, gic irq no, and gic id(by which
+sysfw uniquely identifies GIC interrupt controller with the SoC).  Based
+on these parameters Interrupt Router registers gets configured.
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index 5b9cbd7a3776..9598e1d0048e 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -17,9 +17,11 @@
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- 
-+#define IDM_CTRL_DIRECT_OFFSET       0x00
- #define CFG_OFFSET                   0x00
- #define CFG_RESET_SHIFT              31
- #define CFG_EN_SHIFT                 30
-@@ -174,11 +176,26 @@ enum bus_speed_index {
- 	I2C_SPD_400K,
- };
- 
-+enum bcm_iproc_i2c_type {
-+	IPROC_I2C,
-+	IPROC_I2C_NIC
-+};
-+
- struct bcm_iproc_i2c_dev {
- 	struct device *device;
-+	enum bcm_iproc_i2c_type type;
- 	int irq;
- 
- 	void __iomem *base;
-+	void __iomem *idm_base;
-+
-+	u32 ape_addr_mask;
-+
-+	/* lock for indirect access through IDM */
-+	spinlock_t idm_lock;
-+
-+	/* indicates no slave mode support */
-+	bool no_slave;
- 
- 	struct i2c_adapter adapter;
- 	unsigned int bus_speed;
-@@ -215,13 +232,33 @@ static void bcm_iproc_i2c_enable_disable(struct bcm_iproc_i2c_dev *iproc_i2c,
- static inline u32 iproc_i2c_rd_reg(struct bcm_iproc_i2c_dev *iproc_i2c,
- 				   u32 offset)
- {
--	return readl(iproc_i2c->base + offset);
-+	u32 val;
-+
-+	if (iproc_i2c->idm_base) {
-+		spin_lock(&iproc_i2c->idm_lock);
-+		writel(iproc_i2c->ape_addr_mask,
-+		       iproc_i2c->idm_base + IDM_CTRL_DIRECT_OFFSET);
-+		val = readl(iproc_i2c->base + offset);
-+		spin_unlock(&iproc_i2c->idm_lock);
-+	} else {
-+		val = readl(iproc_i2c->base + offset);
-+	}
-+
-+	return val;
- }
- 
- static inline void iproc_i2c_wr_reg(struct bcm_iproc_i2c_dev *iproc_i2c,
- 				    u32 offset, u32 val)
- {
--	writel(val, iproc_i2c->base + offset);
-+	if (iproc_i2c->idm_base) {
-+		spin_lock(&iproc_i2c->idm_lock);
-+		writel(iproc_i2c->ape_addr_mask,
-+		       iproc_i2c->idm_base + IDM_CTRL_DIRECT_OFFSET);
-+		writel(val, iproc_i2c->base + offset);
-+		spin_unlock(&iproc_i2c->idm_lock);
-+	} else {
-+		writel(val, iproc_i2c->base + offset);
-+	}
- }
- 
- static void bcm_iproc_i2c_slave_init(
-@@ -766,7 +803,13 @@ static int bcm_iproc_i2c_xfer(struct i2c_adapter *adapter,
- 
- static uint32_t bcm_iproc_i2c_functionality(struct i2c_adapter *adap)
- {
--	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL | I2C_FUNC_SLAVE;
-+	struct bcm_iproc_i2c_dev *iproc_i2c = i2c_get_adapdata(adap);
-+	u32 val = I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-+
-+	if (!iproc_i2c->no_slave)
-+		val |= I2C_FUNC_SLAVE;
-+
-+	return val;
- }
- 
- static const struct i2c_algorithm bcm_iproc_algo = {
-@@ -829,6 +872,8 @@ static int bcm_iproc_i2c_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, iproc_i2c);
- 	iproc_i2c->device = &pdev->dev;
-+	iproc_i2c->type =
-+		(enum bcm_iproc_i2c_type) of_device_get_match_data(&pdev->dev);
- 	init_completion(&iproc_i2c->done);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -836,6 +881,26 @@ static int bcm_iproc_i2c_probe(struct platform_device *pdev)
- 	if (IS_ERR(iproc_i2c->base))
- 		return PTR_ERR(iproc_i2c->base);
- 
-+	if (iproc_i2c->type == IPROC_I2C_NIC) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+		iproc_i2c->idm_base = devm_ioremap_resource(iproc_i2c->device,
-+							    res);
-+		if (IS_ERR(iproc_i2c->idm_base))
-+			return PTR_ERR(iproc_i2c->idm_base);
-+
-+		ret = of_property_read_u32(iproc_i2c->device->of_node,
-+					   "brcm,ape-hsls-addr-mask",
-+					   &iproc_i2c->ape_addr_mask);
-+		if (ret < 0) {
-+			dev_err(iproc_i2c->device,
-+				"'brcm,ape-hsls-addr-mask' missing\n");
-+			return -EINVAL;
-+		}
-+
-+		spin_lock_init(&iproc_i2c->idm_lock);
-+		iproc_i2c->no_slave = true;
-+	}
-+
- 	ret = bcm_iproc_i2c_init(iproc_i2c);
- 	if (ret)
- 		return ret;
-@@ -992,7 +1057,13 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
- }
- 
- static const struct of_device_id bcm_iproc_i2c_of_match[] = {
--	{ .compatible = "brcm,iproc-i2c" },
-+	{
-+		.compatible = "brcm,iproc-i2c",
-+		.data = (int *)IPROC_I2C,
-+	}, {
-+		.compatible = "brcm,iproc-nic-i2c",
-+		.data = (int *)IPROC_I2C_NIC,
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, bcm_iproc_i2c_of_match);
--- 
-2.17.1
+So for the above configuration we need the gic_id for which the dt
+property "ti,sci-dst-id" is used.
+
+Thanks and regards,
+Lokesh
+
+> 
+> What does this id really consist of?
+> 
+> Regards,
+> 
+> Tony
+> 
