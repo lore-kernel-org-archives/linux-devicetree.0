@@ -1,137 +1,222 @@
-From: Angus Ainslie <angus@akkea.ca>
-Subject: Re: [PATCH v2 1/3] devicetree: bindings: bd718x7: document HW state  related ROHM specific properties
-Date: Wed, 13 Feb 2019 15:38:40 -0800
-Message-ID: <044d28c6ea1f9dd58f4c1942411aaf58@www.akkea.ca>
-References: <cover.1550050645.git.matti.vaittinen@fi.rohmeurope.com>
- <501fe1a68a9ad0987ddc0d3f559b2bdd1f65a5b7.1550050645.git.matti.vaittinen@fi.rohmeurope.com>
+From: Harald Geyer <harald@ccbib.org>
+Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
+Date: Thu, 14 Feb 2019 01:12:44 +0100
+Message-ID: <E1gu4dx-0000Sy-2B@stardust.g4.wien.funkfeuer.at>
+References: <20190211111245.GA18147@lst.de>
+ <E1gtBlV-0000Wl-Cv@stardust.g4.wien.funkfeuer.at>
+ <20190211153945.e34fpwkuk67l7lc6@flea>
+ <E1gtHJj-0000iY-G8@stardust.g4.wien.funkfeuer.at>
+ <20190212083850.7genwc6ipnxtl7eo@flea>
+ <E1gtUZn-0000NW-MA@stardust.g4.wien.funkfeuer.at>
+ <20190212100929.iqsxu443qrkl6myf@flea>
+ <E1gtds8-0000NB-Re@stardust.g4.wien.funkfeuer.at>
+ <20190213094442.da2dy6d5bb527nft@flea>
+ <E1gtsx9-0000RP-08@stardust.g4.wien.funkfeuer.at>
+ <20190213155311.ovkpim3lxwyvuhhj@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <501fe1a68a9ad0987ddc0d3f559b2bdd1f65a5b7.1550050645.git.matti.vaittinen@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, =?UTF-8?Q?Robin_Gong_=E2=80=8E?= <yibin.gong@nxp.com>, =?UTF-8?Q?Elven?= =?UTF-8?Q?_Wang_=E2=80=8E?= <elven.wang@nxp.com>, =?UTF-8?Q?Anson_Huan?= =?UTF-8?Q?g_=E2=80=8E?= <anson.huang@nxp.com>, linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20190213155311.ovkpim3lxwyvuhhj@flea>
+Content-ID: <1794.1550103164.1@stardust.g4.wien.funkfeuer.at>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Torsten Duwe <duwe@lst.de>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matti,
-
-On 2019-02-13 01:50, Matti Vaittinen wrote:
-> Add ROHM BD71837 / BD71847 specific device tree bindings for
-> controlling the PMIC shutdown/reset states and voltages for
-> different HW states. The PMIC was designed to be used with NXP
-> i.MX8 SoC and it supports SNVS low power state which seems to
-> be typical for NXP i.MX SoCs. However, when SNVS is used we must
-> not allow SW to control enabling/disabling those regulators which
-> are crucial for system to boot as there is a HW limitation which
-> causes SW controlled regulators to be kept shut down after SNVS
-> reset.
-> 
-> Allow setting the SNVS to be used as reset target state and allow
-> marking those regulators which are critical for boot.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 15 +++++++++++
->  .../bindings/regulator/rohm,bd71837-regulator.txt  | 30 
-> ++++++++++++++++++++++
->  2 files changed, 45 insertions(+)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-> b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-> index a4b056761eaa..f07c32975315 100644
-> --- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-> +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-> @@ -23,6 +23,21 @@ Required properties:
-> 
->  Optional properties:
->  - clock-output-names	: Should contain name for output clock.
-> +- rohm,reset-snvs-powered : Transfer BD718x7 to SNVS state at reset.
-> +
-> +The BD718x7 supports two different HW states as reset target states. 
-> States
-> +are called as SNVS and READY. At READY state all the PMIC power 
-> outputs go
-> +down and OTP is reload. At the SNVS state all other logic and external
-> +devices apart from the SNVS power domain are shut off. Please refer to 
-> NXP
-> +i.MX8 documentation for further information regarding SNVS state. When 
-> a
-> +reset is done via SNVS state the PMIC OTP data is not reload. This 
-> cause
-> +
-
-It looks like there is some text missing here.
-
-> +There is a HW quirk in BD718x7 which causes power outputs that have 
-> been
-> +under SW control to stay down when reset has switched power state to 
-> SNVS.
-> +If reset is done via READY state the power outputs will be set to HW 
-> control
-> +by OTP loading. Thus the reset target state is set to READY by 
-> default. If
-> +SNVS state is used the boot crucial regulators must have the
-> +regulator-always-on and regulator-boot-on properties set in regulator 
-> node.
-> 
->  Example:
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-> b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-> index 4b98ca26e61a..4a05cbf915ee 100644
-> --- 
-> a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-> +++ 
-> b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-> @@ -27,8 +27,38 @@ BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
->  LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
-> 
->  Optional properties:
-> +- rohm,dvs-run-voltage		: PMIC default "RUN" state voltage in uV.
-> +				  See below table for bucks which support this.
-> +- rohm,dvs-idle-voltage		: PMIC default "IDLE" state voltage in uV.
-> +				  See below table for bucks which support this.
-> +- rohm,dvs-suspend-voltage	: PMIC default "SUSPEND" state voltage in 
-> uV.
-> +				  See below table for bucks which support this.
->  - Any optional property defined in bindings/regulator/regulator.txt
-> 
-> +Supported default DVS states:
-> +
-> +BD71837:
-> +buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
-> +-----------------------------------------------------------------------------
-> +1	| supported		| supported		| supported
-> +----------------------------------------------------------------------------
-> +2	| supported		| supported		| not supported
-> +----------------------------------------------------------------------------
-> +3	| supported		| not supported		| not supported
-> +----------------------------------------------------------------------------
-> +4	| supported		| not supported		| not supported
-> +----------------------------------------------------------------------------
-> +rest	| not supported		| not supported		| not supported
-> +
-> +BD71847:
-> +buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
-> +-----------------------------------------------------------------------------
-> +1	| supported		| supported		| supported
-> +----------------------------------------------------------------------------
-> +2	| supported		| supported		| not supported
-> +----------------------------------------------------------------------------
-> +rest	| not supported		| not supported		| not supported
-> +
->  Example:
-
-Could you add an example of the optional properties ?
-
-Thanks
-Angus
-
->  regulators {
->  	buck1: BUCK1 {
-> --
-> 2.14.3
+SGkgTWF4aW1lIQoKTWF4aW1lIFJpcGFyZCB3cml0ZXM6Cj4gT24gV2VkLCBGZWIgMTMsIDIwMTkg
+YXQgMTI6NDM6NDZQTSArMDEwMCwgSGFyYWxkIEdleWVyIHdyb3RlOgo+ID4gTWF4aW1lIFJpcGFy
+ZCB3cml0ZXM6Cj4gPiA+IE9uIFR1ZSwgRmViIDEyLCAyMDE5IGF0IDA4OjM3OjM2UE0gKzAxMDAs
+IEhhcmFsZCBHZXllciB3cm90ZToKPiA+ID4gPiA+IFRoZXJlJ3MgYSBmZXcgaXNzdWVzIHdpdGgg
+dGhhdCBhcHByb2FjaCBhcyB3ZWxsOgo+ID4gPiA+ID4gCj4gPiA+ID4gPiAgIC0gV2UncmUgYWN0
+aXZlbHkgdHJ5aW5nIHRvIHJlbW92ZSB0aGUgcGluY3RybCBub2RlcyBmb3IgdGhlIEdQSU9zCj4g
+PiA+ID4gCj4gPiA+ID4gRm9yIHdoYXQgcmVhc29uPyBNYXliZSBpdCBkb2Vzbid0IGFwcGx5IHRv
+IHRoaXMgdXNlY2FzZT8KPiA+ID4gCj4gPiA+IFRoaXMgaXMga2luZCBvZiBzZXBhcmF0ZS4gQXQg
+dGhlIG1vbWVudCwgb24gYWxsIG91ciBTb0NzIGJ1dCB0aGUgSDYsCj4gPiA+IHJlcXVlc3Rpbmcg
+YSBwaW4gdG8gYSBzZXBhcmF0ZSBzdGF0ZSB1c2luZyBwaW5jdHJsIGRvZXNuJ3QgbWFyayB0aGUK
+PiA+ID4gR1BJTyBtdXhlZCBvbiB0aGF0IHBpbiBhcyByZXNlcnZlZCwgc28gdGhyb3VnaCB0aGUg
+R1BJTyB1c2Vyc3BhY2UKPiA+ID4gaW50ZXJmYWNlIChvciBjYWxsaW5nIGdwaW9fcmVxdWVzdCBm
+cm9tIHdpdGhpbiB0aGUga2VybmVsLCBidXQgdGhhdAo+ID4gPiBzZWVtcyBsZXNzIG9mIGEgcmlz
+aykgYW55b25lIGlzIGZyZWUgdG8ganVzdCByZXF1ZXN0IGEgR1BJTyBvbiBhIHBpbgo+ID4gPiBh
+bHJlYWR5IHJlcXVlc3RlZCwgYmVoaW5kIHRoZSBjb25zdW1lciBkcml2ZXJzJyBiYWNrLiBXaGlj
+aCBpcyBwcmV0dHkKPiA+ID4gYmFkLgo+ID4gCj4gPiBSZWFsbHksIEknbSBzdXJwcmlzZWQuIFRo
+aXMgaXMgbm90IHRoZSBiZWhhdmlvdXIgSSByZW1lbWJlciBmcm9tIEEyMAo+ID4gYW5kIEE2NC4g
+SW5kZWVkLCB0ZXN0aW5nIHRoaXMgb24gdGVyZXMgd2l0aCB0aGUgZGVidWcgZGV0ZWN0IHBpbiBj
+bGFpbWVkCj4gPiBieSBhdWRpbywgSSBnZXQ6Cj4gPiAKPiA+IHJvb3RAdGVyZXM6L3N5cy9rZXJu
+ZWwvZGVidWcvcGluY3RybC8xZjAyYzAwLnBpbmN0cmwjIGNhdCBwaW5tdXgtcGlucwo+ID4gUGlu
+bXV4IHNldHRpbmdzIHBlciBwaW4KPiA+IEZvcm1hdDogcGluIChuYW1lKTogbXV4X293bmVyfGdw
+aW9fb3duZXIgKHN0cmljdCkgaG9nPwo+ID4gcGluIDM1MiAoUEwwKTogZGV2aWNlIDFmMDM0MDAu
+cnNiIGZ1bmN0aW9uIHNfcnNiIGdyb3VwIFBMMAo+ID4gcGluIDM1MyAoUEwxKTogZGV2aWNlIDFm
+MDM0MDAucnNiIGZ1bmN0aW9uIHNfcnNiIGdyb3VwIFBMMQo+ID4gcGluIDM1NCAoUEwyKTogR1BJ
+TyAxZjAyYzAwLnBpbmN0cmw6MzU0Cj4gPiBwaW4gMzU1IChQTDMpOiBVTkNMQUlNRUQKPiA+IHBp
+biAzNTYgKFBMNCk6IFVOQ0xBSU1FRAo+ID4gcGluIDM1NyAoUEw1KTogVU5DTEFJTUVECj4gPiBw
+aW4gMzU4IChQTDYpOiBVTkNMQUlNRUQKPiA+IHBpbiAzNTkgKFBMNyk6IEdQSU8gMWYwMmMwMC5w
+aW5jdHJsOjM1OQo+ID4gcGluIDM2MCAoUEw4KTogR1BJTyAxZjAyYzAwLnBpbmN0cmw6MzYwCj4g
+PiBwaW4gMzYxIChQTDkpOiBkZXZpY2Ugc291bmQgZnVuY3Rpb24gZ3Bpb19vdXQgZ3JvdXAgUEw5
+Cj4gPiBwaW4gMzYyIChQTDEwKTogVU5DTEFJTUVECj4gPiBwaW4gMzYzIChQTDExKTogVU5DTEFJ
+TUVECj4gPiBwaW4gMzY0IChQTDEyKTogR1BJTyAxZjAyYzAwLnBpbmN0cmw6MzY0Cj4gPiBbLi4u
+XQo+ID4gCj4gPiByb290QHRlcmVzOi9zeXMvY2xhc3MvZ3BpbyMgZWNobyAzNjEgPmV4cG9ydAo+
+ID4gYmFzaDogZWNobzogU2NocmVpYmZlaGxlcjogRGFzIEFyZ3VtZW50IGlzdCB1bmfDvGx0aWcu
+Cj4gPiAKPiA+IFNvIEkgY2FuJ3QgYWNjZXNzIHRoaXMgZnJvbSBzeXNmcywgZXZlbiB0aG91Z2gg
+dGhlIGVycm9yIGNvZGUgaXMgYQo+ID4gYml0IG9kZDogSSdkIGV4cGVjdCBFQlVTWSBpbnN0ZWFk
+IG9mIEVJTlZBTC4gSSBjYW4gZXhwb3J0IGFueSBvZiB0aGUKPiA+IFVOQ0xBSU1FRCBwaW5zL2dw
+aW9zLgo+ID4gCj4gPiBUcnlpbmcgd2l0aCBsaWJncGlvZCBhcyB3ZWxsLCBJIHNlZSB0aGF0IHRo
+ZSBzdGF0ZSBvZiB0aGUgcGluIGlzIHJlcG9ydGVkCj4gPiBpbmNvcnJldGx5LCBidXQgSSBzdGls
+bCBjYW4ndCBhY2Nlc3MgaXQ6Cj4gPiAKPiA+IGdwaW9jaGlwMCAtIDMyIGxpbmVzOgo+ID4gICAg
+ICAgICBsaW5lICAgMDogICAgICB1bm5hbWVkICAgICAgIHVudXNlZCAgIGlucHV0ICBhY3RpdmUt
+aGlnaAo+ID4gICAgICAgICBsaW5lICAgMTogICAgICB1bm5hbWVkICAgICAgIHVudXNlZCAgIGlu
+cHV0ICBhY3RpdmUtaGlnaAo+ID4gICAgICAgICBsaW5lICAgMjogICAgICB1bm5hbWVkICAgICAg
+InJlc2V0IiAgb3V0cHV0ICAgYWN0aXZlLWxvdyBbdXNlZF0KPiA+ICAgICAgICAgbGluZSAgIDM6
+ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gKPiA+ICAgICAg
+ICAgbGluZSAgIDQ6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhp
+Z2gKPiA+ICAgICAgICAgbGluZSAgIDU6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1
+dCAgYWN0aXZlLWhpZ2gKPiA+ICAgICAgICAgbGluZSAgIDY6ICAgICAgdW5uYW1lZCAgICAgICB1
+bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gKPiA+ICAgICAgICAgbGluZSAgIDc6ICAgICAgdW5u
+YW1lZCAgInVzYjEtdmJ1cyIgIG91dHB1dCAgYWN0aXZlLWhpZ2ggW3VzZWRdCj4gPiAgICAgICAg
+IGxpbmUgICA4OiAgICAgIHVubmFtZWQgIkxpZCBTd2l0Y2giICAgaW5wdXQgICBhY3RpdmUtbG93
+IFt1c2VkXQo+ID4gICAgICAgICBsaW5lICAgOTogICAgICB1bm5hbWVkICAgICAgIHVudXNlZCAg
+IGlucHV0ICBhY3RpdmUtaGlnaAo+ID4gICAgICAgICBsaW5lICAxMDogICAgICB1bm5hbWVkICAg
+ICAgInN5c2ZzIiAgIGlucHV0ICBhY3RpdmUtaGlnaCBbdXNlZF0KPiA+ICAgICAgICAgbGluZSAg
+MTE6ICAgICAgdW5uYW1lZCAgICAgICB1bnVzZWQgICBpbnB1dCAgYWN0aXZlLWhpZ2gKPiA+ICAg
+ICAgICAgbGluZSAgMTI6ICAgICAgdW5uYW1lZCAgICAgImVuYWJsZSIgIG91dHB1dCAgYWN0aXZl
+LWhpZ2ggW3VzZWRdCj4gPiAgICAgICAgIGxpbmUgIDEzOiAgICAgIHVubmFtZWQgICAgICAgdW51
+c2VkICAgaW5wdXQgIGFjdGl2ZS1oaWdoCj4gPiAKPiA+IHJvb3RAdGVyZXM6fiMgZ3Bpb2dldCAx
+ZjAyYzAwLnBpbmN0cmwgOQo+ID4gZ3Bpb2dldDogZXJyb3IgcmVhZGluZyBHUElPIHZhbHVlczog
+SW52YWxpZCBhcmd1bWVudAo+ID4gCj4gPiBPbiBhIHBpbiBleHBvcnRlZCB0byBzeXNmcyBJIGdl
+dCBFQlVTWSBhcyBleHBlY3RlZDoKPiA+IHJvb3RAdGVyZXM6fiMgZ3Bpb2dldCAxZjAyYzAwLnBp
+bmN0cmwgMTAKPiA+IGdwaW9nZXQ6IGVycm9yIHJlYWRpbmcgR1BJTyB2YWx1ZXM6IERldmljZSBv
+ciByZXNvdXJjZSBidXN5Cj4gPiAKPiA+IEFuZCByZWFkaW5nIGFuIHVuY2xhaW1lZCBwaW4gd29y
+a3MgYXMgZXhwZWN0ZWQgdG9vOgo+ID4gcm9vdEB0ZXJlczp+IyBncGlvZ2V0IDFmMDJjMDAucGlu
+Y3RybCAxMQo+ID4gMAo+ID4gCj4gPiBFaXRoZXIgSSBtaXN1bmRlcnN0b29kIHdoYXQgeW91IGhh
+dmUgd3JpdHRlbiBvciBpdCBpc24ndCB0cnVlLgo+IAo+IFRoaXMgaGFwcGVucyB3aGVuIHlvdSBo
+YXZlIGEgcGluIHJlcXVlc3RlZCBpbiBwaW5jdHJsLCBidXQgZm9yIGEKPiBmdW5jdGlvbiB0aGF0
+IGlzbid0IGEgR1BJTywgYW5kIHlvdSB0cnkgdG8gcmVxdWVzdCB0aGUgR1BJTyBvbiB0aGF0Cj4g
+cGluLgoKSXQncyB1bmNsZWFyIHdoYXQgeW91IG1lYW46IFRoZSBzb3VuZCBwaW4gaXMgcmVxdWVz
+dGVkIGZvciBmdW5jdGlvbgoiZ3Bpb19vdXQiLgoKPiBJbiB5b3UgZXhhbXBsZSwgc3VjaCBhIGNh
+c2UgY2FuIGhhcHBlbiBpZiB5b3UgZG8gc2VkCj4gcy8zNjQvMzYxLy4gU2luY2UgdGhpcyBpcyB0
+aGUgUE1JQywgeW91IHNob3VsZCBwcm9iYWJseSB0ZXN0IHRoaXMgb24KPiBzb21lIG90aGVyIGRl
+dmljZSB0aG91Z2ggOikKCk5vLCBJIGNhbid0IHZlcmlmeSB0aGF0IGVpdGhlcjoKcm9vdEB0ZXJl
+czovc3lzL2NsYXNzL2dwaW8jIGVjaG8gMzY0ID5leHBvcnQKYmFzaDogZWNobzogU2NocmVpYmZl
+aGxlcjogRGFzIEdlcsOkdCBvZGVyIGRpZSBSZXNzb3VyY2UgaXN0IGJlbGVndC4Kcm9vdEB0ZXJl
+czovc3lzL2NsYXNzL2dwaW8jIGdwaW9nZXQgMWYwMmMwMC5waW5jdHJsIDEyCmdwaW9nZXQ6IGVy
+cm9yIHJlYWRpbmcgR1BJTyB2YWx1ZXM6IERldmljZSBvciByZXNvdXJjZSBidXN5CgpCb3RoIGF0
+dGVtcHRzIGdpdmUgbWUgRUJVU1kuCgo+ID4gPiBUaGVyZSdzIHN1cHBvcnQgZm9yIHN1Y2ggYSBj
+aGVjayBpbiBwaW5jdHJsLCBhbmQgd2UgZGlkIGVuYWJsZSBpdCBmb3IKPiA+ID4gdGhlIEg2LiBI
+b3dldmVyLCBvbmUgb2YgaXRzIHNpZGUgZWZmZWN0IGlzIHRoYXQgeW91IGNhbid0IGhhdmUgYQo+
+ID4gPiBwaW5jdHJsIG5vZGUgZm9yIGEgR1BJTyBhbnltb3JlIChhdCBsZWFzdCB3aXRob3V0IHNp
+Z25pZmljYW50bHkKPiA+ID4gcmV3b3JraW5nIHRoZSBHUElPIEFQSSBpbiB0aGUga2VybmVsKS4K
+PiA+IAo+ID4gQ2FuIHlvdSBwb2ludCBtZSB0byBzb21lIGJhY2tncm91bmQgcmVhZGluZz8KPiAK
+PiBCYWNrZ3JvdW5kIHJlYWRpbmcgZm9yIHdoYXQ/CgpBbnl0aGluZyB0aGF0IGhlbHBzIG1lIGNv
+bXByZWhlbmQgdGhlIHNpdHVhdGlvbiByZWFsbHkuIE1heWJlIGEgcG9pbnRlcgp0byB0aGUgZG9j
+dW1lbnRhdGlvbiBvZiB0aGUgY2hlY2sgaW4gcGluY3RybCBhbmQgaXQncyBzaWRlIGVmZmVjdC4g
+TWF5YmUKYSBwb2ludGVyIHRvIHRoZSBkaXNjdXNzaW9uIG9mIHdoYXQgcmV3b3JraW5nIG9mIHRo
+ZSBHUElPIEFQSSB3b3VsZCBiZQpuZWNlc3NhcnkuIE1heWJlIGEgcG9pbnRlciB0byB0aGUgZGlz
+Y3Vzc2lvbiB3aGVyZSBpdCB3YXMgZGVjaWRlZCB0bwptb3ZlIGF3YXkgZnJvbSBwaW5jdHJsIG5v
+ZGVzIGZvciBncGlvcyBmb3Igc3VueGkgKG9yIHdoYXRldmVyIHdhcwpkZWNpZGVkKS4KCkFsc28g
+c2luY2UgdGhlIHByb2JsZW0sIGFzIHlvdSBleHBsYWluIGl0LCBzZWVtcyBnZW5lcmFsLCBJIHdv
+bmRlciBob3cKb3RoZXIgcGxhdGZvcm1zIGRlYWwgd2l0aCBpdC4KCj4gPiA+IFdlIGRpZCBlbmFi
+bGUgaXQgZm9yIHRoZSBINiwgc2luY2UgaXQgZGlkbid0IGhhdmUgYW55IGJhY2t3YXJkCj4gPiA+
+IGNvbXBhdGliaWxpdHkgdG8gdGFrZSBjYXJlIG9mLCBidXQgaXQncyBkaXNhYmxlZCBhdCB0aGUg
+bW9tZW50IGZvciBhbGwKPiA+ID4gdGhlIG90aGVyIFNvQ3MgdG8gYmUgYWJsZSB0byBmbGlwIHRo
+YXQgc3dpdGNoIGF0IHNvbWUgcG9pbnQuIEFuZAo+ID4gPiB0aGF0J3Mgd2h5IHdlJ3JlIG1vdmlu
+ZyBhd2F5IGZyb20gaXQgYXMgd2VsbC4KPiA+IAo+ID4gV2VsbCAuLi4gdGhhdCdzIGdvb2QgdG8g
+a25vdywgYmVjYXVzZSBJIGhhdmUgYSBjb3VwbGUgb2YgY3VzdG9tIERUcwo+ID4gd2l0aCBwaW5j
+dHJsIG5vZGVzIGZvciBhIEdQSU8uIEkgdGhpbmsgaXQgc2hvdWxkIGJlIGRvY3VtZW50ZWQgYXMK
+PiA+IGRlcHJlY2F0ZWQgaW4gdGhlIGJpbmRpbmcgdGhlbi4KPiAKPiBJdCdzIG5vdCBkb2N1bWVu
+dGVkIGFueXdoZXJlIHRoYXQgd2UgbmVlZCBpdC4KCkkgZG9uJ3QgcXVpdGUgdW5kZXJzdGFuZCB3
+aGF0IHlvdSBtZWFuIGhlcmUuCgpBcyBJIHNlZSBpdCwgdGhlIHBhdGNoIEkgcHJvcG9zZWQgKG1p
+bnVzIHRoZSBvdXRwdXQtaGlnaCBwcm9wZXJ0eSwgd2hpY2gKSSB0aGluayBpcyBvcnRob2dvbmFs
+IHRvIHRoaXMgZGlzY3Vzc2lvbikgY29uZm9ybXMgdG8gdGhlIGJpbmRpbmcgYXMKaXQgaXMgZG9j
+dW1lbnRlZCByaWdodCBub3cuIAoKQnV0IHlvdSB0ZWxsIG1lLCB0aGF0IGl0IGlzIHVzaW5nIGEg
+ZmVhdHVyZSwgdGhhdCBpcyBhY3R1YWxseSBraW5kIG9mCmRlcHJlY2F0ZWQuIAoKSSBiZWxpZXZl
+IGl0IHNob3VsZCBiZSBwb3NzaWJsZSB0byB0ZWxsIGlmIGEgRFQgaXMgdmFsaWQsIGp1c3QgYmUg
+bG9va2luZwphdCB0aGUgYmluZGluZyBkb2N1bWVudGF0aW9uLiBXaXRob3V0IGxvb2tpbmcgb24g
+dGhlIGxpbnV4IHNvdXJjZSBjb2RlCm9yIG90aGVyIHNpZGUgY2hhbm5lbCBpbmZvcm1hdGlvbi4K
+CkFzIHlvdSB3cml0ZSBiZWxvdywgcGVvcGxlIGFyZSBwdXR0aW5nIERUcyBpbnRvIFJPTS4gV2hp
+Y2ggbWVhbnMgdGhhdApJTU8gdGhlIERUcyBzaG91bGQgYWN0dWFsbHkgYmUgT1MgaW5kZXBlbmRl
+bnQsIHNvIHRoYXQgcGVvcGxlIGNhbiB1c2UKZGlmZmVyZW50IE9TZXMgb24gdGhlaXIgZXF1aXBt
+ZW50LiBUaGlzIGluIHR1cm4gcmVxdWlyZXMgdGhlIGJpbmRpbmcKZG9jdW1lbnRhdGlvbiB0byBi
+ZSBjb21wcmVoZW5zaXZlLgoKU28gcGxlYXNlIHVwZGF0ZSB0aGUgRFQgYmluZGluZ3Mgb2YgYWxs
+d2lubmVyLHBpbmN0cmwqIHRvIG1hcmsgYWxsCmZlYXR1cmVzIGFzIGRlcHJlY2F0ZWQgdGhhdCB3
+b24ndCBwYXNzIHlvdXIgcmV2aWV3LgoKPiA+IEFsc28gSSB3b25kZXIgaG93IEkgY2FuIHNlbGVj
+dCBkcml2ZSBzdHJlbmd0aCBvciBiaWFzIG9uIGEgZ3BpbyBsaW5lIHdoZW4KPiA+IEkgY2FuJ3Qg
+dXNlIHBpbmN0cmwgd2l0aCB0aGVtIGFueW1vcmUuCj4gCj4gVGhhdCdzIG9uZSBvZiB0aGUgaXRl
+bXMgd2UgbmVlZCB0byB0YWtlIGNhcmUgb2YgYXMgd2VsbCwgeWVzLCBidXQgdGhhdAo+IGNhbiBi
+ZSBoYW5kbGVkIHRocm91Z2ggYSBHUElPIGZsYWcgaW4gdGhlIGRlc2NyaXB0b3IuCj4gCj4gVGhl
+cmUncyBhIHNlcmllcyBjdXJyZW50bHkgdGFraW5nIGNhcmUgb2YgdGhlIGJpYXM6Cj4gaHR0cHM6
+Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtZ3Bpby9tc2czNjQ0NC5odG1sCgpUaGFua3Mg
+Zm9yIHRoZSBwb2ludGVyLCB0aGlzIHdhcyBpbnRlcmVzdGluZy4KCkhvd2V2ZXIgdGhlIGNvdmVy
+IGxldHRlciBjbGVhcmx5IHN0YXRlcyB0aGF0IHRoaXMgZmVhdHVyZSBpcyBvbmx5IGZvcgpzaW1w
+bGUgR1BJTyBjb250cm9sbGVycyB3aXRob3V0IGFueSBwaW5tdXggY2FwYWJpbGl0aWVzLgoKQWxz
+byB0aGUgbmV3bHkgaW50cm9kdWNlZCBiaW5kaW5nIHN0YXRlcyB0aGF0IHRoaXMgaXMgb25seSBm
+b3Igc2ltcGxlCmJpYXMgd2l0aG91dCBleHBsaWNpdCByZXNpc3RvciB2YWx1ZS4gV2hpY2ggSSBn
+dWVzcyBpcyB0cnVlIGZvciBzdW54aQpBVE0sIGJ1dCBkb2Vzbid0IHNlZW0gZnV0dXJlIHByb29m
+LgoKQW5kIGV2ZW4gaWYgeW91IGFkZCBhIHNpbWlsYXIgQUJJIGZvciBkcml2ZSBzdHJlbmd0aCwg
+eW91IHN0aWxsIGNvdWxkbid0CnN1cHBvcnQgZ3BpbyBjb25zdW1lcnMsIHRoYXQgd2FudCB0byBz
+ZXQgZGlmZmVyZW50IHBpbiBjb25maWd1cmF0aW9ucwpsaWtlICJkZWZhdWx0IiwgImlkbGUiLCAi
+c3VzcGVuZCIuCgpUaGlzIGhhcyBiZWNvbWUgcXVpdGUgdGFuZ2VudGlhbCB0byB0aGUgaXNzdWUg
+YXQgaGFuZCwgYnV0IEkgZG9uJ3Qgc2VlCmhvdyB0aGlzICJnZXQgcmlkIG9mIHBpbmN0cmwgZm9y
+IGdwaW9zIiBhZ2VuZGEgY2FuIGFjdHVhbGx5IHdvcmsgaW4gYQpnZW5lcmFsIGFuZCBwb3J0YWJs
+ZSB3YXkuCgo+ID4gPiA+IEJ1dCB3ZSBuZWVkIGEgd2F5IHRvIGNvbnRyb2wgdGhlIG11eCBmcm9t
+IHVzZXJzcGFjZSBhbmQgYXNpZGUgZnJvbQo+ID4gPiA+IHVuYmluZGluZyB0aGUgaWRlYXMgcHJv
+cG9zZWQgdGh1cyBmYXIgYXJlOgo+ID4gPiA+Cj4gPiA+ID4gYSkgY29udHJvbCB0aGUgZ3BpbyBk
+aXJlY3RseQo+ID4gPiA+IGIpIGNvbnRyb2wgdGhlIGdwaW8gdmlhIGxlZHMtZ3Bpbwo+ID4gPiA+
+IAo+ID4gPiA+IChhKSB3YXMgZGlzbWlzc2VkIGJlY2F1c2Ugd2UgY2FuJ3Qgc2V0IGEgZGVmYXVs
+dCBmcm9tIERUCj4gPiA+ID4gKGIpIHdhcyBkaXNtaXNzZWQgYmVjYXVzZSBzb21lIHJvZ3VlIGFw
+cCBtaWdodCB0cnkgdG8gYmxpbmsgaXQKPiA+ID4gPiAKPiA+ID4gPiBUaGUgY2xlYW4gc29sdXRp
+b24gbWlnaHQgYmUgdG8gd3JpdGUgbXV4LWdwaW8sIHdoaWNoIGlzIGFjdHVhbGx5Cj4gPiA+ID4g
+aWRlbnRpY2FsIHRvIGxlZHMtZ3BpbyBidXQgbGl2ZXMgaW4gL3N5cy9jbGFzcy9tdXhfc3dpdGNo
+ZXMvIGFuZAo+ID4gPiA+IHVzZXMgZGlmZmVyZW50IGZpbGVuYW1lcy4gQnV0IHRoYXQncyBnb2lu
+ZyBkb3duIHRoZSAiaW52ZW50IGEgbmV3Cj4gPiA+ID4gc3Vic3lzdGVtIHJvYWQiLCB3aGljaCBJ
+IGJlbGlldmUgaXMgb3ZlcmtpbGwgZm9yIHdoYXQgaXMgYSBkZWJ1Z2dpbmcKPiA+ID4gPiBmYWNp
+bGl0eSBmb3IgYSBzaW5nbGUgYm9hcmQuCj4gPiA+IAo+ID4gPiBJIHN0aWxsIGJlbGlldmUgd2Ug
+c2hvdWxkIGFpbSBhdCBzdXBwb3J0aW5nIHRoaXMgdGhyb3VnaCBwaW5jdHJsLCBhbmQKPiA+ID4g
+YWRkaW5nIGFuIHVzZXJzcGFjZSBBUEkgaXMgZGVmaW5pdGVseSBlYXNpZXIgdGhhbiBhIGZ1bGwg
+c3Vic3lzdGVtLgo+ID4gCj4gPiBHZXR0aW5nIGV2ZXJ5Ym9keSB0byBhZ3JlZSBvbiBhIG5ldyBB
+UEkgKGVzcGVjaWFsbHkgYSB1c2Vyc3BhY2UgQUJJKQo+ID4gaXMgYSBtYWpvciBoZWFkYWNoZSAo
+YW5kIHJpZ2h0bHkgc28sIHdlIHdhbnQgdG8gZ2V0IHNvbWV0aGluZyByaWdodCBvbgo+ID4gdGhl
+IGZpcnN0IGF0dGVtcHQgdGhhdCBpcyBnb2luZyB0byBzdGF5IGFyb3VuZCBmb3JldmVyKS4gSSBk
+b24ndCB0aGluawo+ID4gc29tZSBxdWlya3kgZGVidWdnaW5nIGZlYXR1cmUgaXMgd29ydGggdGhl
+IGVmZm9ydC4KPiA+IAo+ID4gQW5kIGZyYW5rbHkgSSBkb24ndCBjYXJlIG11Y2ggYWJvdXQgYXVk
+aW8gb24gdGhlIHRlcmVzLiBJIHN0YXJ0ZWQKPiA+IHdvcmtpbmcgb24gdGhpcyBiZWNhdXNlIEkg
+ZmVlbCBraW5kIG9mIHJlc3BvbnNpYmxlIGZvciBrZWVwaW5nIHRoZQo+ID4gdGVyZXMgRFQgdXAt
+dG8tZGF0ZSB3aXRoIHdoYXQgdGhlIGtlcm5lbCBjYW4gc3VwcG9ydC4gQnV0IGlmIHRoZQo+ID4g
+a2VybmVsIGNhbid0IHN1cHBvcnQgaXQgQVRNOiBzbyBiZSBpdC4KPiA+IAo+ID4gQXMgYSBjb21w
+cm9taXNlIEkgdGhpbmsgd2UgY291bGQgYWRkIGFsbCB0aGUgbm9kZXMgdG8gdGhlIERUIGJ1dCBt
+YXJrCj4gPiB0aGVpciBzdGF0dXMgYXMgImRpc2FibGVkIi4gVGhhdCB3b3VsZCBoZWxwIGV2ZXJ5
+Ym9keSB3YW50aW5nIHRvIGVuYWJsZQo+ID4gYXVkaW8gYnV0IHN0aWxsIGJlIHRlY2huaWNhbGx5
+IGNvcnJlY3QuCj4gCj4gSSB1bmRlcnN0YW5kIGlmIHlvdSBkb24ndCB3YW50IHRvIGdvIGFmdGVy
+IHRoYXQgZ29hbCB5b3Vyc2VsZiwgYnV0Cj4gdGhhdCBkb2Vzbid0IHNvdW5kIHByYWN0aWNhbCBl
+aXRoZXIuIEVzcGVjaWFsbHkgc2luY2UgdGhlIEE2NCwgbW9yZQo+IGFuZCBtb3JlIHBlb3BsZSBh
+cmUgcHV0dGluZyB0aGUgRFQgaW4gYSBST00sIHNvIHdlIGNhbid0IGp1c3QgY2hhbmdlCj4gaXQg
+YXMgd2Ugd2lzaC4KCkkgZG9uJ3QgZm9sbG93IHlvdSBoZXJlIGF0IGFsbDoKMSkgV2UgZG9uJ3Qg
+dGFsayBhYm91dCBnZW5lcmljIEE2NC4gV2Ugb25seSB0YWxrIGFib3V0IFRFUkVTIEksIGZvcgog
+ICB3aGljaCB3ZSBrbm93IHRoYXQgdGhlIERUIGNhbiBhbHdheXMgYmUgdXBkYXRlZC4KMikgRXZl
+biBpZiBURVJFUyBJIGhhZCBhIFJPTSwgaG93IGlzIGEgbm9kZSB3aXRoIHN0YXR1cyA9ICJkaXNh
+YmxlZCIKICAgd29yc2UgdGhlbiBubyBub2RlIGF0IGFsbC4gVGhlIE9TZXMgdHJlYXQgaXQgZXhh
+Y3RseSB0aGUgc2FtZSBhbmQKICAgcGVvcGxlIHdpbGwgbmV2ZXIgaGF2ZSBhdWRpbyBlaXRoZXIg
+d2F5LgozKSBBY3R1YWxseSB0aGUgbm9kZXMgYXJlIHRoZXJlIGFscmVhZHkgYW55d2F5IChiZWNh
+dXNlIHRoZSBzdHVicwogICBnZXQgcHJvdmlkZWQgYnkgdGhlIEE2NCBkdHNpKSwgd2Ugd291bGQg
+b25seSBwb3B1bGF0ZSB0aGVtIHdpdGgKICAgbW9yZSBhY2N1cmF0ZSBpbmZvcm1hdGlvbiByZWdh
+cmRpbmcgYXVkaW8gcm91dGluZyBhbmQgc3VjaC4KCkkgc3VzcGVjdCBzb21lIGRpc3RyaWJ1dGlv
+bnMgd2lsbCBwaWNrIHVwIHRoZSBwYXRjaCBJIHBvc3RlZCBhbnl3YXksIGlmCml0IGRvZXNuJ3Qg
+Z2V0IG1lcmdlZCBtYWlubGluZS4gKFRoaXMgaXMgaG93IEkgZm9yZ290IG1pc3NpbmcgYmFja2xp
+Z2h0CnN1cHBvcnQgLSBpdCBqdXN0IHdvcmtlZCBmb3IgdG9vIG1hbnkgcGVvcGxlIC4uLikgSWYg
+d2Ugc2hpcApzdW41MGktYTY0LXRlcmVzLWkuZHRzIHdpdGggdGhlIHByb3BlciBub2RlcyAoYnV0
+IGRpc2FibGVkKSwgdGhlaXIKcGF0Y2hlcyB3aWxsIGJlIG11Y2ggZWFzaWVyIHRvIG1haW50YWlu
+IGFzIHRoZSBvZmZpY2lhbCBEVCBldm9sdmVzLgoKSGFyYWxkCgotLSAKSWYgeW91IHdhbnQgdG8g
+c3VwcG9ydCBteSB3b3JrOgpzZWUgaHR0cDovL2ZyaWVuZHMuY2NiaWIub3JnL2hhcmFsZC9zdXBw
+b3J0aW5nLwpvciBkb25hdGUgdmlhIENMQU0gdG8geEFTUEJ0ZXpMTnFqNGNVZThNVDVuWmp0aFJT
+RWpyUlFYTgpvciB2aWEgcGVlcmNvaW4gdG8gUDk4TFJkaGl0M2daYkhEQmU3dGE1anRYck1KVW1z
+NHA3dwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
