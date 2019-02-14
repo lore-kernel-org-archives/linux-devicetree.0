@@ -1,110 +1,102 @@
-From: Min Guo <min.guo@mediatek.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Date: Thu, 14 Feb 2019 16:30:16 +0800
-Message-ID: <1550133016.12020.13.camel@mhfsdcap03>
-References: <1548073351-13739-1-git-send-email-min.guo@mediatek.com>
-         <1548073351-13739-2-git-send-email-min.guo@mediatek.com>
-         <20190121151417.GA19238@bogus> <1548149773.4433.284.camel@mhfsdcap03>
-         <20190122143348.GF30080@uda0271908> <1548382046.4433.304.camel@mhfsdcap03>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V5 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
+Date: Thu, 14 Feb 2019 14:04:19 +0530
+Message-ID: <20190214083419.slnuolyy5xhz4szy@vireshk-i7>
+References: <1550131046-2069-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548382046.4433.304.camel@mhfsdcap03>
+Content-Disposition: inline
+In-Reply-To: <1550131046-2069-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bin Liu <b-liu@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, hdegoede@redhat.com, tony@atomide.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 14-02-19, 08:02, Anson Huang wrote:
+> Add i.MX8QXP CPU opp table to support cpufreq.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V4:
+> 	- remove redundant clock-latency property in A35_0;
+> 	- add #cooling-cells for all A35 core.
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 4021f25..fad1259 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -34,6 +34,9 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			clocks = <&clk IMX_A35_CLK>;
 
-Sorry to bother you again.
-Can I describe usb-connector in usb node like this?
+As I said in my previous email, mentioning clocks is important too for
+other CPUs.
 
-usb2: usb@11200000 {
-   compatible = "mediatek,mt2701-musb";
-                "mediatek,mtk-musb";
-   reg = <0 0x11200000 0 0x1000>;
-   ...
-   usb_connector: musb_connector {
-       compatible = "usb-b-connector";
-       label = "micro-USB";
-       type = "micro";
-       extcon = <&extcon_usb>;
-       vbus-supply = <&usb_vbus>;
-   };
-};
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_1: cpu@1 {
+> @@ -42,6 +45,8 @@
+>  			reg = <0x0 0x1>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_2: cpu@2 {
+> @@ -50,6 +55,8 @@
+>  			reg = <0x0 0x2>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_3: cpu@3 {
+> @@ -58,6 +65,8 @@
+>  			reg = <0x0 0x3>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_L2: l2-cache0 {
+> @@ -65,6 +74,24 @@
+>  		};
+>  	};
+>  
+> +	a35_0_opp_table: opp-table {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp-900000000 {
+> +			opp-hz = /bits/ 64 <900000000>;
+> +			opp-microvolt = <1000000>;
+> +			clock-latency-ns = <150000>;
+> +		};
+> +
+> +		opp-1200000000 {
+> +			opp-hz = /bits/ 64 <1200000000>;
+> +			opp-microvolt = <1100000>;
+> +			clock-latency-ns = <150000>;
+> +			opp-suspend;
+> +		};
+> +	};
+> +
+>  	gic: interrupt-controller@51a00000 {
+>  		compatible = "arm,gic-v3";
+>  		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
+> -- 
+> 2.7.4
 
-Regards,
-Min.
-
-
-On Fri, 2019-01-25 at 10:07 +0800, Min Guo wrote:
-> Hi Bin,
-> 
-> Thanks for your help.
-> 
-> Hi Rob,
-> 
-> I find that Samsung describes the usb-connector attribute in DTS, and
-> uses a private driver.
-> And try to write DTS as following:
-> 
-> usb-connector node:
-> musb_con: musb_connector{
->     compatible = "linux,extcon-usb-gpio","usb-b-connector";
->     lable = "micro-USB";
->     type = "micro";
->     id-gpio = <&pio 44 GPIO_ACTIVE_HIGH>
->     vbus-supply = <&usb_vbus>;
->     port {
->         usb_to_connector: endpoint {
->             remote-endpoint = <&connector_to_usb>;
->         };
->     };
-> };
-> 
-> usb node:
-> &usb2{
->     status = "okay";
->     port {
->         connector_to_usb: endpoint {
->             remote-endpoint = <&usb_to_connector>;
->         };
->     };
-> }
-> 
-> Can I describe usb-connector like this? Or can you give me some advices?
-> 
-> Regards,
-> Min.
-> 
-> On Tue, 2019-01-22 at 08:33 -0600, Bin Liu wrote:
-> > Hi Min,
-> > 
-> > On Tue, Jan 22, 2019 at 05:36:13PM +0800, Min Guo wrote:
-> > > Hi Bin,
-> > > 
-> > > Sorry to bother you again, I encounter a problem about the extcon
-> > > property.
-> > > 
-> > > I don't find a common driver describing the usb-connector. Is
-> > > there any driver that I can refer to, specially the way to switch MUSB
-> > > controller between host and device mode? 
-> > > If it needs to implement by myself, is it possible to emulate an
-> > > usb-connector driver by extcon-usb-gpio, and also use the notifier
-> > > mechanism or can you give me some advices?
-> > 
-> > I am afraid I am unable to help you on this. I wasn't really pay
-> > attention when usb-connector was introduced and not sure how it can
-> > replace extcon. Now after read usb-connector.txt, it seems the binding
-> > only defines a/b/c-connector, but not ab-connector, and there is no
-> > enough information (at least for me) explaining how VBUS and ID fix into
-> > this usb-connector binding.
-> > 
-> > Maybe Rob can provide some hint.
-> > 
-> > Regards,
-> > -Bin.
-> 
+-- 
+viresh
