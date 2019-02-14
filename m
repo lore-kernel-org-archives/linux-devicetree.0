@@ -1,129 +1,93 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v3 2/3] regulator: add
- regulator_desc_list_voltage_linear_range
-Date: Thu, 14 Feb 2019 11:38:05 +0200
-Message-ID: <82443305a32c1e4b8a1ae383f5291ff544bcaf45.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC 3/6] power: supply: Ettus Research E31x charger driver
+Date: Thu, 14 Feb 2019 09:38:19 +0000
+Message-ID: <20190214093819.GG13737@dell>
+References: <20190212010143.3729-1-virendra.kakade@ni.com>
+ <20190212010143.3729-4-virendra.kakade@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20190212010143.3729-4-virendra.kakade@ni.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: matti.vaittinen@fi.rohmeurope.com, mazzisaccount@gmail.com
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, Angus Ainslie <angus.ainslie@puri.sm>
+To: Virendra Kakade <virendra.kakade@ni.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, moritz.fischer@ettus.com
 List-Id: devicetree@vger.kernel.org
 
-Add regulator_desc_list_voltage_linear_range which can be used
-by drivers for getting the voltages before regulator is registered.
-This may be useful for drivers which need to fetch the voltage
-selectors at device-tree parsing callback.
+On Mon, 11 Feb 2019, Virendra Kakade wrote:
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Mark Brown <broonie@kernel.org>
----
+> Document bindings for the E31x devices charger.
+> 
+> Signed-off-by: Virendra Kakade <virendra.kakade@ni.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/e31x-pmu.txt |  8 ++++++++
+>  .../bindings/power/supply/e31x-charger.txt         | 14 ++++++++++++++
+>  2 files changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/e31x-charger.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/e31x-pmu.txt b/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
+> index ebb5625f6c74..3798886578ba 100644
+> --- a/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
+> +++ b/Documentation/devicetree/bindings/mfd/e31x-pmu.txt
+> @@ -4,11 +4,19 @@ Required properties:
+>  - compatible : Must be "ni,e31x-pmu"
+>  - regmap     : Must be <&regmapnode>
+>  
+> +e31x-pmu has a sub-device called e31x-charger.
+> +
+> +For the e31x-charger properties please refer to:
+> +Documentation/device-tree/bindings/power/supply/e31x-charger.txt
 
-Mark, I converted your:
-"This seems fine." from RFC patch v1 into acked-by. This should
-be unchanged. Please let me know if that's not Ok.
+Use relative path, so:
 
- drivers/regulator/helpers.c      | 39 +++++++++++++++++++++++++++++----------
- include/linux/regulator/driver.h |  6 ++++++
- 2 files changed, 35 insertions(+), 10 deletions(-)
+  ../power/supply/e31x-charger.txt
 
-diff --git a/drivers/regulator/helpers.c b/drivers/regulator/helpers.c
-index 5686a1335bd3..68ac6017ef28 100644
---- a/drivers/regulator/helpers.c
-+++ b/drivers/regulator/helpers.c
-@@ -594,28 +594,30 @@ int regulator_list_voltage_pickable_linear_range(struct regulator_dev *rdev,
- EXPORT_SYMBOL_GPL(regulator_list_voltage_pickable_linear_range);
- 
- /**
-- * regulator_list_voltage_linear_range - List voltages for linear ranges
-+ * regulator_desc_list_voltage_linear_range - List voltages for linear ranges
-  *
-- * @rdev: Regulator device
-+ * @desc: Regulator desc for regulator which volatges are to be listed
-  * @selector: Selector to convert into a voltage
-  *
-  * Regulators with a series of simple linear mappings between voltages
-- * and selectors can set linear_ranges in the regulator descriptor and
-- * then use this function as their list_voltage() operation,
-+ * and selectors who have set linear_ranges in the regulator descriptor
-+ * can use this function prior regulator registration to list voltages.
-+ * This is useful when voltages need to be listed during device-tree
-+ * parsing.
-  */
--int regulator_list_voltage_linear_range(struct regulator_dev *rdev,
--					unsigned int selector)
-+int regulator_desc_list_voltage_linear_range(const struct regulator_desc *desc,
-+					     unsigned int selector)
- {
- 	const struct regulator_linear_range *range;
- 	int i;
- 
--	if (!rdev->desc->n_linear_ranges) {
--		BUG_ON(!rdev->desc->n_linear_ranges);
-+	if (!desc->n_linear_ranges) {
-+		BUG_ON(!desc->n_linear_ranges);
- 		return -EINVAL;
- 	}
- 
--	for (i = 0; i < rdev->desc->n_linear_ranges; i++) {
--		range = &rdev->desc->linear_ranges[i];
-+	for (i = 0; i < desc->n_linear_ranges; i++) {
-+		range = &desc->linear_ranges[i];
- 
- 		if (!(selector >= range->min_sel &&
- 		      selector <= range->max_sel))
-@@ -628,6 +630,23 @@ int regulator_list_voltage_linear_range(struct regulator_dev *rdev,
- 
- 	return -EINVAL;
- }
-+EXPORT_SYMBOL_GPL(regulator_desc_list_voltage_linear_range);
-+
-+/**
-+ * regulator_list_voltage_linear_range - List voltages for linear ranges
-+ *
-+ * @rdev: Regulator device
-+ * @selector: Selector to convert into a voltage
-+ *
-+ * Regulators with a series of simple linear mappings between voltages
-+ * and selectors can set linear_ranges in the regulator descriptor and
-+ * then use this function as their list_voltage() operation,
-+ */
-+int regulator_list_voltage_linear_range(struct regulator_dev *rdev,
-+					unsigned int selector)
-+{
-+	return regulator_desc_list_voltage_linear_range(rdev->desc, selector);
-+}
- EXPORT_SYMBOL_GPL(regulator_list_voltage_linear_range);
- 
- /**
-diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index 7f8345bff4e1..05efe2b057c1 100644
---- a/include/linux/regulator/driver.h
-+++ b/include/linux/regulator/driver.h
-@@ -539,4 +539,10 @@ void *regulator_get_init_drvdata(struct regulator_init_data *reg_init_data);
- void regulator_lock(struct regulator_dev *rdev);
- void regulator_unlock(struct regulator_dev *rdev);
- 
-+/*
-+ * Helper functions intended to be used by regulator drivers prior registering
-+ * their regulators.
-+ */
-+int regulator_desc_list_voltage_linear_range(const struct regulator_desc *desc,
-+					     unsigned int selector);
- #endif
--- 
-2.14.3
+>  Example:
+>  
+>  pmu {
+>  	compatible = "ni,e31x-pmu";
+>  	regmap = <&devctrl>;
+>  	status = "okay";
 
+'\n' here.
+
+> +	charger: charger@0{
+> +		compatible = "ni,e31x-charger";
+> +	};
+>  };
+>  
+> diff --git a/Documentation/devicetree/bindings/power/supply/e31x-charger.txt b/Documentation/devicetree/bindings/power/supply/e31x-charger.txt
+> new file mode 100644
+> index 000000000000..ae9fedcbf1b2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/e31x-charger.txt
+> @@ -0,0 +1,14 @@
+> +Ettus Research/National Instruments  E31x Devices Charger
+
+Too many spaces.
+
+> +All E31x devices have to be connected to an external power supply
+> +charger to charge the in-built battery or supply power.
+> +Some capability is provided to monitor this charger.
+
+Why the linefeed here?  Take "Some" up to the previous line.
+
+> +Required properties:
+> +- compatible: Must be "ni,e31x-charger"
+> +
+> +Example:
+> +
+> +charger: charger@0{
+> +	compatible = "ni,e31x-charger";
+> +};
+
+Not sure this really requires documentation.  Seems kinda simple.
+
+I'll leave that up to Rob et al.
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
