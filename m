@@ -1,65 +1,125 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v4 4/4] gnss: add driver for mediatek receivers
-Date: Thu, 14 Feb 2019 11:12:12 +0100
-Message-ID: <20190214101212.GJ28278@localhost>
-References: <1550070569-18588-1-git-send-email-lollivier@baylibre.com>
- <1550070569-18588-5-git-send-email-lollivier@baylibre.com>
- <20190214100019.GA4197@Red>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v10 3/3] dt-bindings: dma: uart: rename binding
+Date: Thu, 14 Feb 2019 11:13:09 +0100
+Message-ID: <f16c7833-71cd-c43f-392e-a18b9fef177d@gmail.com>
+References: <1547781016-890-1-git-send-email-long.cheng@mediatek.com>
+ <1547781016-890-4-git-send-email-long.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190214100019.GA4197@Red>
+In-Reply-To: <1547781016-890-4-git-send-email-long.cheng@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Loys Ollivier <lollivier@baylibre.com>, devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Long Cheng <long.cheng@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhenbao Liu <zhenbao.liu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 11:00:19AM +0100, Corentin Labbe wrote:
-> On Wed, Feb 13, 2019 at 04:09:29PM +0100, Loys Ollivier wrote:
-> > Add driver for serial-connected Mediatek-based GNSS receivers.
-> > 
-> > These devices typically boot transmitting vendor specific NMEA output
-> > sequences. The serial port bit rate is read from the device tree
-> > "current-speed".
-> > 
-> > Note that the driver uses the generic GNSS serial implementation and
-> > therefore essentially only manages power abstracted into three power
-> > states: ACTIVE, STANDBY, and OFF.
-> > 
-> > For mediatek receivers with a main supply and no enable-gpios, this simply
-> > means that the main supply is disabled in STANDBY and OFF (the optional
-> > backup supply is kept enabled while the driver is bound).
-> > 
-> > Note that the timepulse-support is left unimplemented.
-> > 
-> > Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
 
-> > +static int mtk_set_active(struct gnss_serial *gserial)
-> > +{
-> > +	struct mtk_data *data = gnss_serial_get_drvdata(gserial);
-> > +	int ret;
-> > +
-> > +	ret = regulator_enable(data->vcc);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
+
+On 18/01/2019 04:10, Long Cheng wrote:
+> The filename matches mtk-uart-apdma.c.
+> So using "mtk-uart-apdma.txt" should be better.
 > 
-> Hello
+> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> ---
+>  .../devicetree/bindings/dma/8250_mtk_dma.txt       |   33 --------------------
+>  .../devicetree/bindings/dma/mtk-uart-apdma.txt     |   33 ++++++++++++++++++++
+>  2 files changed, 33 insertions(+), 33 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
 > 
-> This could be simplified to return regulator_enable(data->vcc);
+> diff --git a/Documentation/devicetree/bindings/dma/8250_mtk_dma.txt b/Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
+> deleted file mode 100644
+> index 3fe0961..0000000
+> --- a/Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
+> +++ /dev/null
+> @@ -1,33 +0,0 @@
+> -* Mediatek UART APDMA Controller
+> -
+> -Required properties:
+> -- compatible should contain:
+> -  * "mediatek,mt2712-uart-dma" for MT2712 compatible APDMA
+> -  * "mediatek,mt6577-uart-dma" for MT6577 and all of the above
+> -
+> -- reg: The base address of the APDMA register bank.> -
+> -- interrupts: A single interrupt specifier.
 
-Indeed, but I prefer this style which clearly separates the error path
-from the success path while making the success return value explicit.
+One interrupt per dma-request, or 8 if no dma-requests property is present.
 
-> Furthermore, after this simplification, the function seems useless.
+> -
+> -- clocks : Must contain an entry for each entry in clock-names.
+> -  See ../clocks/clock-bindings.txt for details.
+> -- clock-names: The APDMA clock for register accesses> -
+> -Examples:
+> -
+> -	apdma: dma-controller@11000380 {
+> -		compatible = "mediatek,mt2712-uart-dma";
+> -		reg = <0 0x11000380 0 0x400>;
+> -		interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_LOW>,
+> -			     <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>,
+> -			     <GIC_SPI 65 IRQ_TYPE_LEVEL_LOW>,
+> -			     <GIC_SPI 66 IRQ_TYPE_LEVEL_LOW>,
+> -			     <GIC_SPI 67 IRQ_TYPE_LEVEL_LOW>,
+> -			     <GIC_SPI 68 IRQ_TYPE_LEVEL_LOW>,
+> -			     <GIC_SPI 69 IRQ_TYPE_LEVEL_LOW>,
+> -			     <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
+> -		clocks = <&pericfg CLK_PERI_AP_DMA>;
+> -		clock-names = "apdma";
+> -		#dma-cells = <1>;
+> -	};
+> -
+> diff --git a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> new file mode 100644
+> index 0000000..3fe0961
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> @@ -0,0 +1,33 @@
+> +* Mediatek UART APDMA Controller
+> +
+> +Required properties:
+> +- compatible should contain:
+> +  * "mediatek,mt2712-uart-dma" for MT2712 compatible APDMA
+> +  * "mediatek,mt6577-uart-dma" for MT6577 and all of the above
+> +
+> +- reg: The base address of the APDMA register bank.
+> +
 
-Why do you think so? You still need to retrieve the regulator from the
-driver data. Sure, this could be folded into mtk_set_power(), but that
-would be less ideal if there are more resources that need to be managed
-(e.g. an external lna supply).
+There is one address needed for every dma-request or 8 if dma-requests property
+is not present. As already mentioned in the driver review dma-requests property
+is missing.
 
-Thanks,
-Johan
+> +- interrupts: A single interrupt specifier.
+> +
+> +- clocks : Must contain an entry for each entry in clock-names.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- clock-names: The APDMA clock for register accesses
+> +
+
+Missing option property dma-33bits (should be mtk,dma-33bits?).
+
+> +Examples:
+> +
+> +	apdma: dma-controller@11000380 {
+> +		compatible = "mediatek,mt2712-uart-dma";
+> +		reg = <0 0x11000380 0 0x400>;
+
+We are missing the io mem areas here, right?
+
+Regards,
+Matthias
+
+> +		interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 65 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 66 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 67 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 68 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 69 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_AP_DMA>;
+> +		clock-names = "apdma";
+> +		#dma-cells = <1>;
+> +	};
+> +
+> 
