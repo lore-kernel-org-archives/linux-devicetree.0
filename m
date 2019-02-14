@@ -1,50 +1,139 @@
 From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH  0/8] stmmac: add some fixes for stm32
-Date: Thu, 14 Feb 2019 07:45:55 +0100
-Message-ID: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH  7/8] ARM: dts: stm32: Add Ethernet support on stm32h7 SOC and activate it for eval and disco boards
+Date: Thu, 14 Feb 2019 07:46:02 +0100
+Message-ID: <1550126763-22669-8-git-send-email-christophe.roullier@st.com>
+References: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
 Cc: linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-For common stmmac:
-	- Add support to set CSR Clock range selection in DT
-For stm32mpu:
-	- Glue codes to support magic packet
-	- Glue codes to support all PHY config :
-		PHY_MODE (MII,GMII, RMII, RGMII) and in normal,
-		PHY wo crystal (25Mhz),
-		PHY wo crystal (50Mhz), No 125Mhz from PHY config
-For stm32mcu:
-	- Add Ethernet support for stm32h7
-	- Add syscfg clk support for stm32f4
+Synopsys GMAC 4.10 is used. And Phy mode for eval and disco is RMII
+with PHY SMSC LAN8742
 
-Christophe Roullier (8):
-  net: ethernet: stmmac: manage Ethernet WoL for stm32mp157c.
-  net: ethernet: stmmac: update to support all PHY config for
-    stm32mp157c.
-  dt-bindings: net: stmmac: add phys config properties
-  net: ethernet: stmmac: add management of clk_csr property
-  net: ethernet: stmmac: update to be compatible with MCU family
-    (stm32f4, stm32h7)
-  dt-bindings: net: stmmac: add syscfg clock property
-  ARM: dts: stm32: Add Ethernet support on stm32h7 SOC and activate it
-    for eval and disco boards
-  ARM: dts: stm32: add syscfg clock support for Ethernet on STM32F429
-    SoC
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+---
+ arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 15 +++++++++++++++
+ arch/arm/boot/dts/stm32h743.dtsi         | 19 +++++++++++++++++++
+ arch/arm/boot/dts/stm32h743i-disco.dts   | 17 +++++++++++++++++
+ arch/arm/boot/dts/stm32h743i-eval.dts    | 17 +++++++++++++++++
+ 4 files changed, 68 insertions(+)
 
- .../devicetree/bindings/net/stm32-dwmac.txt        |  10 +-
- arch/arm/boot/dts/stm32f429.dtsi                   |   6 +-
- arch/arm/boot/dts/stm32h743-pinctrl.dtsi           |  15 ++
- arch/arm/boot/dts/stm32h743.dtsi                   |  19 +++
- arch/arm/boot/dts/stm32h743i-disco.dts             |  17 ++
- arch/arm/boot/dts/stm32h743i-eval.dts              |  17 ++
- drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c  | 179 +++++++++++++++++----
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   3 +
- 8 files changed, 230 insertions(+), 36 deletions(-)
-
+diff --git a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
+index 24be8e6..980b276 100644
+--- a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
+@@ -173,6 +173,21 @@
+ 				};
+ 			};
+ 
++			ethernet_rmii: rmii@0 {
++				pins {
++					pinmux = <STM32_PINMUX('G', 11, AF11)>,
++						 <STM32_PINMUX('G', 13, AF11)>,
++						 <STM32_PINMUX('G', 12, AF11)>,
++						 <STM32_PINMUX('C', 4, AF11)>,
++						 <STM32_PINMUX('C', 5, AF11)>,
++						 <STM32_PINMUX('A', 7, AF11)>,
++						 <STM32_PINMUX('C', 1, AF11)>,
++						 <STM32_PINMUX('A', 2, AF11)>,
++						 <STM32_PINMUX('A', 1, AF11)>;
++					slew-rate = <2>;
++				};
++			};
++
+ 			usart1_pins: usart1@0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('B', 14, AF4)>; /* USART1_TX */
+diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+index cbdd69c..f6384af 100644
+--- a/arch/arm/boot/dts/stm32h743.dtsi
++++ b/arch/arm/boot/dts/stm32h743.dtsi
+@@ -511,6 +511,25 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		syscfg: system-config@58000400 {
++			compatible = "syscon";
++			reg = <0x58000400 0x400>;
++		};
++
++		mac: ethernet@40028000 {
++			compatible = "st,stm32-dwmac", "snps,dwmac-4.10a";
++			reg = <0x40028000 0x8000>;
++			reg-names = "stmmaceth";
++			interrupts = <61>;
++			interrupt-names = "macirq";
++			clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx",
++			"syscfg-clk";
++			clocks = <&rcc ETH1MAC_CK>, <&rcc ETH1TX_CK>, <&rcc ETH1RX_CK>, <&rcc SYSCFG_CK>;
++			st,syscon = <&syscfg 0x4>;
++			snps,pbl = <8>;
++			status = "disabled";
++		};
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/stm32h743i-disco.dts b/arch/arm/boot/dts/stm32h743i-disco.dts
+index 45e088c..0f738d0 100644
+--- a/arch/arm/boot/dts/stm32h743i-disco.dts
++++ b/arch/arm/boot/dts/stm32h743i-disco.dts
+@@ -66,6 +66,23 @@
+ 	clock-frequency = <25000000>;
+ };
+ 
++&mac {
++	status = "okay";
++	pinctrl-0	= <&ethernet_rmii>;
++	pinctrl-names	= "default";
++	phy-mode	= "rmii";
++	phy-handle	= <&phy1>;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++		phy1: ethernet-phy@1 {
++			reg = <0>;
++		};
++	};
++};
++
+ &usart2 {
+ 	pinctrl-0 = <&usart2_pins>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
+index 3f8e0c4..44997ba 100644
+--- a/arch/arm/boot/dts/stm32h743i-eval.dts
++++ b/arch/arm/boot/dts/stm32h743i-eval.dts
+@@ -104,6 +104,23 @@
+ 	status = "okay";
+ };
+ 
++&mac {
++	status = "okay";
++	pinctrl-0	= <&ethernet_rmii>;
++	pinctrl-names	= "default";
++	phy-mode	= "rmii";
++	phy-handle	= <&phy1>;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++		phy1: ethernet-phy@1 {
++			reg = <0>;
++		};
++	};
++};
++
+ &usart1 {
+ 	pinctrl-0 = <&usart1_pins>;
+ 	pinctrl-names = "default";
 -- 
 2.7.4
