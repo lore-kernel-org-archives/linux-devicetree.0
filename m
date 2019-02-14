@@ -1,257 +1,169 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC 2/6] mfd: Support for Ettus Research E31x devices PMU
-Date: Thu, 14 Feb 2019 09:34:45 +0000
-Message-ID: <20190214093445.GF13737@dell>
-References: <20190212010143.3729-1-virendra.kakade@ni.com>
- <20190212010143.3729-3-virendra.kakade@ni.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v3 1/3] devicetree: bindings: bd718x7: document HW state
+ related ROHM specific properties
+Date: Thu, 14 Feb 2019 11:34:50 +0200
+Message-ID: <6ed4238fb083f52de0f5f013647b2334bad8ebe4.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190212010143.3729-3-virendra.kakade@ni.com>
+In-Reply-To: <cover.1550135853.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Virendra Kakade <virendra.kakade@ni.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, moritz.fischer@ettus.com
+To: matti.vaittinen@fi.rohmeurope.com, mazzisaccount@gmail.com
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, Angus Ainslie <angus.ainslie@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Feb 2019, Virendra Kakade wrote:
+Add ROHM BD71837 / BD71847 specific device tree bindings for
+controlling the PMIC shutdown/reset states and voltages for
+different HW states. The PMIC was designed to be used with NXP
+i.MX8 SoC and it supports SNVS low power state which seems to
+be typical for NXP i.MX SoCs. However, when SNVS is used we must
+not allow SW to control enabling/disabling those regulators which
+are crucial for system to boot as there is a HW limitation which
+causes SW controlled regulators to be kept shut down after SNVS
+reset.
 
-> Signed-off-by: Virendra Kakade <virendra.kakade@ni.com>
-> ---
->  drivers/mfd/Kconfig          |  7 +++
->  drivers/mfd/Makefile         |  2 +-
->  drivers/mfd/e31x-pmu.c       | 89 ++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/e31x-pmu.h | 20 ++++++++
->  4 files changed, 117 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/mfd/e31x-pmu.c
->  create mode 100644 include/linux/mfd/e31x-pmu.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 8c5dfdce4326..6c4c0747f2a5 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1916,4 +1916,11 @@ config RAVE_SP_CORE
->  	  device found on several devices in RAVE line of hardware.
->  
->  endmenu
-> +
-> +config MFD_E31X_PMU
-> +	tristate "E31X PMU driver"
-> +	select MFD_SYSCON
-> +	help
-> +	 Select this to get support for the Ettus Research E31x devices.
-> +
->  endif
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 12980a4ad460..e37c2057134b 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -241,4 +241,4 @@ obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
->  obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
->  obj-$(CONFIG_RAVE_SP_CORE)	+= rave-sp.o
->  obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
-> -
-> +obj-$(CONFIG_MFD_E31X_PMU)      += e31x-pmu.o
-> diff --git a/drivers/mfd/e31x-pmu.c b/drivers/mfd/e31x-pmu.c
-> new file mode 100644
-> index 000000000000..383df68a538f
-> --- /dev/null
-> +++ b/drivers/mfd/e31x-pmu.c
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 National Instruments Corp
+Allow setting the SNVS to be used as reset target state and allow
+marking those regulators which are critical for boot.
 
-This is out of date.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 17 ++++++++++
+ .../bindings/regulator/rohm,bd71837-regulator.txt  | 38 ++++++++++++++++++++++
+ 2 files changed, 55 insertions(+)
 
-'\n' here.
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+index a4b056761eaa..d5f68ac78d15 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+@@ -23,6 +23,20 @@ Required properties:
+ 
+ Optional properties:
+ - clock-output-names	: Should contain name for output clock.
++- rohm,reset-snvs-powered : Transfer BD718x7 to SNVS state at reset.
++
++The BD718x7 supports two different HW states as reset target states. States
++are called as SNVS and READY. At READY state all the PMIC power outputs go
++down and OTP is reload. At the SNVS state all other logic and external
++devices apart from the SNVS power domain are shut off. Please refer to NXP
++i.MX8 documentation for further information regarding SNVS state. When a
++reset is done via SNVS state the PMIC OTP data is not reload. This causes
++power outputs that have been under SW control to stay down when reset has
++switched power state to SNVS. If reset is done via READY state the power
++outputs will be returned to HW control by OTP loading. Thus the reset
++target state is set to READY by default. If SNVS state is used the boot
++crucial regulators must have the regulator-always-on and regulator-boot-on
++properties set in regulator node.
+ 
+ Example:
+ 
+@@ -43,6 +57,7 @@ Example:
+ 		#clock-cells = <0>;
+ 		clocks = <&osc 0>;
+ 		clock-output-names = "bd71837-32k-out";
++		rohm,reset-snvs-powered;
+ 
+ 		regulators {
+ 			buck1: BUCK1 {
+@@ -50,8 +65,10 @@ Example:
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <1300000>;
+ 				regulator-boot-on;
++				regulator-always-on;
+ 				regulator-ramp-delay = <1250>;
+ 			};
++			// [...]
+ 		};
+ 	};
+ 
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+index 4b98ca26e61a..cbce62c22b60 100644
+--- a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+@@ -27,8 +27,38 @@ BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
+ LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
+ 
+ Optional properties:
++- rohm,dvs-run-voltage		: PMIC default "RUN" state voltage in uV.
++				  See below table for bucks which support this.
++- rohm,dvs-idle-voltage		: PMIC default "IDLE" state voltage in uV.
++				  See below table for bucks which support this.
++- rohm,dvs-suspend-voltage	: PMIC default "SUSPEND" state voltage in uV.
++				  See below table for bucks which support this.
+ - Any optional property defined in bindings/regulator/regulator.txt
+ 
++Supported default DVS states:
++
++BD71837:
++buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
++-----------------------------------------------------------------------------
++1	| supported		| supported		| supported
++----------------------------------------------------------------------------
++2	| supported		| supported		| not supported
++----------------------------------------------------------------------------
++3	| supported		| not supported		| not supported
++----------------------------------------------------------------------------
++4	| supported		| not supported		| not supported
++----------------------------------------------------------------------------
++rest	| not supported		| not supported		| not supported
++
++BD71847:
++buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
++-----------------------------------------------------------------------------
++1	| supported		| supported		| supported
++----------------------------------------------------------------------------
++2	| supported		| supported		| not supported
++----------------------------------------------------------------------------
++rest	| not supported		| not supported		| not supported
++
+ Example:
+ regulators {
+ 	buck1: BUCK1 {
+@@ -36,7 +66,11 @@ regulators {
+ 		regulator-min-microvolt = <700000>;
+ 		regulator-max-microvolt = <1300000>;
+ 		regulator-boot-on;
++		regulator-always-on;
+ 		regulator-ramp-delay = <1250>;
++		rohm,dvs-run-voltage = <900000>;
++		rohm,dvs-idle-voltage = <850000>;
++		rohm,dvs-suspend-voltage = <800000>;
+ 	};
+ 	buck2: BUCK2 {
+ 		regulator-name = "buck2";
+@@ -45,18 +79,22 @@ regulators {
+ 		regulator-boot-on;
+ 		regulator-always-on;
+ 		regulator-ramp-delay = <1250>;
++		rohm,dvs-run-voltage = <1000000>;
++		rohm,dvs-idle-voltage = <900000>;
+ 	};
+ 	buck3: BUCK3 {
+ 		regulator-name = "buck3";
+ 		regulator-min-microvolt = <700000>;
+ 		regulator-max-microvolt = <1300000>;
+ 		regulator-boot-on;
++		rohm,dvs-run-voltage = <1000000>;
+ 	};
+ 	buck4: BUCK4 {
+ 		regulator-name = "buck4";
+ 		regulator-min-microvolt = <700000>;
+ 		regulator-max-microvolt = <1300000>;
+ 		regulator-boot-on;
++		rohm,dvs-run-voltage = <1000000>;
+ 	};
+ 	buck5: BUCK5 {
+ 		regulator-name = "buck5";
+-- 
+2.14.3
 
-> + * Author: Virendra Kakade<virendra.kakade@ni.com>
-
-You need a space after your name.
-
-> + * Ettus Research E31x PMU MFD driver
-
-Please expand PMU.
-
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/of_device.h>
-> +#include <linux/mfd/e31x-pmu.h>
-> +#include <linux/platform_device.h>
-
-Alphabetical.
-
-> +#define E31X_PMU_MISC_IRQ_MASK		BIT(8)
-> +#define E31X_PMU_MISC_IRQ_SHIFT		8
-> +#define E31X_PMU_MISC_VERSION_MIN_MASK	GENMASK(3, 0)
-> +#define E31X_PMU_MISC_VERSION_MIN_SHIFT	0
-> +#define E31X_PMU_MISC_VERSION_MAJ_MASK	GENMASK(7, 4)
-> +#define E31X_PMU_MISC_VERSION_MAJ_SHIFT	4
-> +
-> +struct e31x_pmu {
-> +	struct regmap *regmap;
-> +};
-
-A whole struct for one attribute?
-
-> +static int e31x_pmu_check_version(struct e31x_pmu *pmu)
-> +{
-> +	int timeout = 100;
-
-Where does 100 come from?
-
-> +	u32 misc, maj;
-> +	int err;
-
-'ret' is more common.
-
-> +	/* we need to wait a bit for firmware to populate the fields */
-
-"a bit" ?
-
-What does the datasheet say?
-
-Please use proper grammar.  Capital letters.
-
-> +	while (timeout--) {
-> +		err = regmap_read(pmu->regmap, E31X_PMU_REG_MISC, &misc);
-> +		if (err)
-> +			return err;
-> +		if (misc)
-> +			break;
-> +
-> +	usleep_range(2500, 5000);
-
-Formatting.
-
-> +	}
-> +
-> +	/* only firmware versions above 2.0 are supported */
-
-"Only supports firmware version 2.0 and above"
-
-> +	maj = E31X_PMU_GET_FIELD(MISC_VERSION_MAJ, misc);
-> +	if (maj < 2)
-> +		return -ENOTSUPP;
-
-'\n' here.
-
-> +	return 0;
-> +}
-> +
-> +static int e31x_pmu_probe(struct platform_device *pdev)
-> +{
-> +	struct e31x_pmu *pmu;
-> +
-> +	pmu = devm_kzalloc(&pdev->dev, sizeof(*pmu), GFP_KERNEL);
-> +	if (!pmu)
-> +		return -ENOMEM;
-
-'\n' here.
-
-> +	pmu->regmap = syscon_regmap_lookup_by_phandle(\
-
-Why are you storing regmap?
-
-Just pass it directly to e31x_pmu_check_version().
-
-> +			pdev->dev.of_node, "regmap");
-> +
-
-Remove this line.
-
-> +	if (IS_ERR(pmu->regmap))
-> +		return PTR_ERR(pmu->regmap);
-
-'\n' here.
-
-> +	if (e31x_pmu_check_version(pmu))
-
-Please split out the function from the if.
-
-Use a variable 'ret' to feed into and check that.
-
-> +		return -ENOTSUPP;
-
-'\n' here.
-
-> +	return devm_of_platform_populate(&pdev->dev);
-> +}
-> +
-> +static const struct of_device_id e31x_pmu_id[] = {
-> +	{ .compatible = "ni,e31x-pmu" },
-> +	{},
-> +};
-> +
-> +static struct platform_driver e31x_pmu_driver = {
-> +	.driver = {
-> +	.name = "e31x-pmu",
-> +	.of_match_table = e31x_pmu_id,
-
-These 2 lines need indenting.
-
-> +	},
-> +	.probe = e31x_pmu_probe,
-> +};
-> +module_platform_driver(e31x_pmu_driver);
-> +
-> +MODULE_DESCRIPTION("E31x PMU driver");
-> +MODULE_AUTHOR("Virendra Kakade <virendra.kakade@ni.com>");
-> +MODULE_LICENSE("GPL");
-
-So the whole purpose of this driver is to do a version check.
-
-Seems like over-kill!
-
-Probably better to do the version check in an inline function stored
-in a header file, then call it from each of the children's .probe()
-function.
-
-> diff --git a/include/linux/mfd/e31x-pmu.h b/include/linux/mfd/e31x-pmu.h
-> new file mode 100644
-> index 000000000000..c57d5a8c1aad
-> --- /dev/null
-> +++ b/include/linux/mfd/e31x-pmu.h
-> @@ -0,0 +1,20 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 National Instruments Corp
-
-Out of date.
-
-'\n' here.
-
-> + * Author: Virendra Kakade <virendra.kakade@ni.com>
-> + *
-> + * Ettus Research E31x PMU constants
-> + */
-> +
-> +#ifndef MFD_E31X_PMU_H
-> +#define MFD_E31X_PMU_H
-> +
-> +#include <linux/bitops.h>
-> +
-> +#define E31X_PMU_REG_MISC      0x04
-> +
-> +#define E31X_PMU_GET_FIELD(name, reg) \
-> +	(((reg) & E31X_PMU_## name ##_MASK) >> \
-> +	E31X_PMU_## name ##_SHIFT)
-> +
-> +#endif /* MFD_E31X_PMU_H */
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
