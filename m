@@ -1,91 +1,100 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] devfreq: Use of_node_name_eq for node name comparisons
-Date: Thu, 14 Feb 2019 12:49:38 +0900
-Message-ID: <5cc4b5a3-c4ad-46a9-2856-3ed67c6755d3@samsung.com>
-References: <20181205195050.4759-6-robh@kernel.org>
-        <CGME20190213161024epcas3p3acc5c074714ad1d44fb90ab3f21cfcff@epcas3p3.samsung.com>
-        <CAL_Jsq+xpRPvj=UcSo+jQKX1pB=9B3SV9jB5ZVhaVsKvOqtoOg@mail.gmail.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH 1/3] drm/mediatek: move mipi_dsi_host_register to probe
+Date: Thu, 14 Feb 2019 12:42:41 +0800
+Message-ID: <20190214044243.129920-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+xpRPvj=UcSo+jQKX1pB=9B3SV9jB5ZVhaVsKvOqtoOg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, drinkcat@chromium.org
+Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 19. 2. 14. 오전 1:09, Rob Herring wrote:
-> On Wed, Dec 5, 2018 at 1:50 PM Rob Herring <robh@kernel.org> wrote:
->>
->> Convert string compares of DT node names to use of_node_name_eq helper
->> instead. This removes direct access to the node name pointer.
->>
->> For instances using of_node_cmp, this has the side effect of now using
->> case sensitive comparisons. This should not matter for any FDT based
->> system which all of these are.
->>
->> Cc: Chanwoo Choi <cw00.choi@samsung.com>
->> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
->> Cc: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Kukjin Kim <kgene@kernel.org>
->> Cc: Krzysztof Kozlowski <krzk@kernel.org>
->> Cc: linux-pm@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-samsung-soc@vger.kernel.org
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->>  drivers/devfreq/devfreq-event.c     | 2 +-
->>  drivers/devfreq/event/exynos-ppmu.c | 2 +-
->>  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> Can someone apply this please.
-
-Myungjoo picked up this patch[1] on devfreq.git
-but has not yet sent the pull request.
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=0c1e8ce295acc3becc95e393e88a9a6da233074f
-
-> 
->>
->> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
->> index d67242d87744..87e93406d7cd 100644
->> --- a/drivers/devfreq/devfreq-event.c
->> +++ b/drivers/devfreq/devfreq-event.c
->> @@ -240,7 +240,7 @@ struct devfreq_event_dev *devfreq_event_get_edev_by_phandle(struct device *dev,
->>         }
->>
->>         list_for_each_entry(edev, &devfreq_event_list, node) {
->> -               if (!strcmp(edev->desc->name, node->name))
->> +               if (of_node_name_eq(node, edev->desc->name))
->>                         goto out;
->>         }
->>         edev = NULL;
->> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
->> index c61de0bdf053..c2ea94957501 100644
->> --- a/drivers/devfreq/event/exynos-ppmu.c
->> +++ b/drivers/devfreq/event/exynos-ppmu.c
->> @@ -529,7 +529,7 @@ static int of_get_devfreq_events(struct device_node *np,
->>                         if (!ppmu_events[i].name)
->>                                 continue;
->>
->> -                       if (!of_node_cmp(node->name, ppmu_events[i].name))
->> +                       if (of_node_name_eq(node, ppmu_events[i].name))
->>                                 break;
->>                 }
->>
->> --
->> 2.19.1
->>
-> 
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+RFNJIHBhbmVsIGRyaXZlciBuZWVkIGF0dGFjaCBmdW5jdGlvbiB3aGljaCBpcyBpbmN1bGRlIGlu
+Cm1pcGlfZHNpX2hvc3Rfb3BzLgoKSWYgbWlwaV9kc2lfaG9zdF9yZWdpc3RlciBpcyBub3QgaW4g
+cHJvYmUsIGRzaSBwYW5lbCB3aWxsCnByb2JlIGZhaWwgb3IgbW9yZSBkZWxheS4KClNvIG1vdmUg
+dGhlIG1pcGlfZHNpX2hvc3RfcmVnaXN0ZXIgdG8gcHJvYmUgZnJvbSBiaW5kLgoKU2lnbmVkLW9m
+Zi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPgotLS0KIGRyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgfCA0OSArKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
+LS0KIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkKCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIGIvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kc2kuYwppbmRleCAyN2I1MDdlYjRhOTkuLjkzZmEyNTViNGFh
+ZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYworKysgYi9k
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCkBAIC0xMDQ1LDEyICsxMDQ1LDYgQEAg
+c3RhdGljIGludCBtdGtfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNl
+ICptYXN0ZXIsIHZvaWQgKmRhdGEpCiAJCXJldHVybiByZXQ7CiAJfQogCi0JcmV0ID0gbWlwaV9k
+c2lfaG9zdF9yZWdpc3RlcigmZHNpLT5ob3N0KTsKLQlpZiAocmV0IDwgMCkgewotCQlkZXZfZXJy
+KGRldiwgImZhaWxlZCB0byByZWdpc3RlciBEU0kgaG9zdDogJWRcbiIsIHJldCk7Ci0JCWdvdG8g
+ZXJyX2RkcF9jb21wX3VucmVnaXN0ZXI7Ci0JfQotCiAJcmV0ID0gbXRrX2RzaV9jcmVhdGVfY29u
+bl9lbmMoZHJtLCBkc2kpOwogCWlmIChyZXQpIHsKIAkJRFJNX0VSUk9SKCJFbmNvZGVyIGNyZWF0
+ZSBmYWlsZWQgd2l0aCAlZFxuIiwgcmV0KTsKQEAgLTEwNjAsOCArMTA1NCw2IEBAIHN0YXRpYyBp
+bnQgbXRrX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVy
+LCB2b2lkICpkYXRhKQogCXJldHVybiAwOwogCiBlcnJfdW5yZWdpc3RlcjoKLQltaXBpX2RzaV9o
+b3N0X3VucmVnaXN0ZXIoJmRzaS0+aG9zdCk7Ci1lcnJfZGRwX2NvbXBfdW5yZWdpc3RlcjoKIAlt
+dGtfZGRwX2NvbXBfdW5yZWdpc3Rlcihkcm0sICZkc2ktPmRkcF9jb21wKTsKIAlyZXR1cm4gcmV0
+OwogfQpAQCAtMTA5NywzMSArMTA4OSwzNyBAQCBzdGF0aWMgaW50IG10a19kc2lfcHJvYmUoc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAogCWRzaS0+aG9zdC5vcHMgPSAmbXRrX2RzaV9v
+cHM7CiAJZHNpLT5ob3N0LmRldiA9IGRldjsKKwlkc2ktPmRldiA9IGRldjsKKwlyZXQgPSBtaXBp
+X2RzaV9ob3N0X3JlZ2lzdGVyKCZkc2ktPmhvc3QpOworCWlmIChyZXQgPCAwKSB7CisJCWRldl9l
+cnIoZGV2LCAiZmFpbGVkIHRvIHJlZ2lzdGVyIERTSSBob3N0OiAlZFxuIiwgcmV0KTsKKwkJcmV0
+dXJuIC1FUFJPQkVfREVGRVI7CisJfQogCiAJcmV0ID0gZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJp
+ZGdlKGRldi0+b2Zfbm9kZSwgMCwgMCwKIAkJCQkJICAmZHNpLT5wYW5lbCwgJmRzaS0+YnJpZGdl
+KTsKIAlpZiAocmV0KQotCQlyZXR1cm4gcmV0OworCQlnb3RvIGVycl91bnJlZ2lzdGVyX2hvc3Q7
+CiAKIAlkc2ktPmVuZ2luZV9jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAiZW5naW5lIik7CiAJaWYg
+KElTX0VSUihkc2ktPmVuZ2luZV9jbGspKSB7CiAJCXJldCA9IFBUUl9FUlIoZHNpLT5lbmdpbmVf
+Y2xrKTsKIAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IGVuZ2luZSBjbG9jazogJWRcbiIs
+IHJldCk7Ci0JCXJldHVybiByZXQ7CisJCWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKIAl9CiAK
+IAlkc2ktPmRpZ2l0YWxfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImRpZ2l0YWwiKTsKIAlpZiAo
+SVNfRVJSKGRzaS0+ZGlnaXRhbF9jbGspKSB7CiAJCXJldCA9IFBUUl9FUlIoZHNpLT5kaWdpdGFs
+X2Nsayk7CiAJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBkaWdpdGFsIGNsb2NrOiAlZFxu
+IiwgcmV0KTsKLQkJcmV0dXJuIHJldDsKKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0OwogCX0K
+IAogCWRzaS0+aHNfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImhzIik7CiAJaWYgKElTX0VSUihk
+c2ktPmhzX2NsaykpIHsKIAkJcmV0ID0gUFRSX0VSUihkc2ktPmhzX2Nsayk7CiAJCWRldl9lcnIo
+ZGV2LCAiRmFpbGVkIHRvIGdldCBocyBjbG9jazogJWRcbiIsIHJldCk7Ci0JCXJldHVybiByZXQ7
+CisJCWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKIAl9CiAKIAlyZWdzID0gcGxhdGZvcm1fZ2V0
+X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsKQEAgLTExMjksMzMgKzExMjcsMzUg
+QEAgc3RhdGljIGludCBtdGtfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
+CiAJaWYgKElTX0VSUihkc2ktPnJlZ3MpKSB7CiAJCXJldCA9IFBUUl9FUlIoZHNpLT5yZWdzKTsK
+IAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gaW9yZW1hcCBtZW1vcnk6ICVkXG4iLCByZXQpOwot
+CQlyZXR1cm4gcmV0OworCQlnb3RvIGVycl91bnJlZ2lzdGVyX2hvc3Q7CiAJfQogCiAJZHNpLT5w
+aHkgPSBkZXZtX3BoeV9nZXQoZGV2LCAiZHBoeSIpOwogCWlmIChJU19FUlIoZHNpLT5waHkpKSB7
+CiAJCXJldCA9IFBUUl9FUlIoZHNpLT5waHkpOwogCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBn
+ZXQgTUlQSS1EUEhZOiAlZFxuIiwgcmV0KTsKLQkJcmV0dXJuIHJldDsKKwkJZ290byBlcnJfdW5y
+ZWdpc3Rlcl9ob3N0OwogCX0KIAogCWNvbXBfaWQgPSBtdGtfZGRwX2NvbXBfZ2V0X2lkKGRldi0+
+b2Zfbm9kZSwgTVRLX0RTSSk7CiAJaWYgKGNvbXBfaWQgPCAwKSB7CiAJCWRldl9lcnIoZGV2LCAi
+RmFpbGVkIHRvIGlkZW50aWZ5IGJ5IGFsaWFzOiAlZFxuIiwgY29tcF9pZCk7Ci0JCXJldHVybiBj
+b21wX2lkOworCQlyZXQgPSBjb21wX2lkOworCQlnb3RvIGVycl91bnJlZ2lzdGVyX2hvc3Q7CiAJ
+fQogCiAJcmV0ID0gbXRrX2RkcF9jb21wX2luaXQoZGV2LCBkZXYtPm9mX25vZGUsICZkc2ktPmRk
+cF9jb21wLCBjb21wX2lkLAogCQkJCSZtdGtfZHNpX2Z1bmNzKTsKIAlpZiAocmV0KSB7CiAJCWRl
+dl9lcnIoZGV2LCAiRmFpbGVkIHRvIGluaXRpYWxpemUgY29tcG9uZW50OiAlZFxuIiwgcmV0KTsK
+LQkJcmV0dXJuIHJldDsKKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0OwogCX0KIAogCWlycV9u
+dW0gPSBwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApOwogCWlmIChpcnFfbnVtIDwgMCkgewogCQlk
+ZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBkc2kgaXJxIHJlc291cmNlXG4i
+KTsKLQkJcmV0dXJuIC1FUFJPQkVfREVGRVI7CisJCXJldCA9IC1FUFJPQkVfREVGRVI7CisJCWdv
+dG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKIAl9CiAKIAlpcnFfc2V0X3N0YXR1c19mbGFncyhpcnFf
+bnVtLCBJUlFfVFlQRV9MRVZFTF9MT1cpOwpAQCAtMTE2MywxNCArMTE2MywyNSBAQCBzdGF0aWMg
+aW50IG10a19kc2lfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAkJCSAgICAg
+ICBJUlFGX1RSSUdHRVJfTE9XLCBkZXZfbmFtZSgmcGRldi0+ZGV2KSwgZHNpKTsKIAlpZiAocmV0
+KSB7CiAJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZXF1ZXN0IG1lZGlhdGVrIGRz
+aSBpcnFcbiIpOwotCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKKwkJcmV0ID0gLUVQUk9CRV9ERUZF
+UjsKKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0OwogCX0KIAogCWluaXRfd2FpdHF1ZXVlX2hl
+YWQoJmRzaS0+aXJxX3dhaXRfcXVldWUpOwogCiAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwg
+ZHNpKTsKIAotCXJldHVybiBjb21wb25lbnRfYWRkKCZwZGV2LT5kZXYsICZtdGtfZHNpX2NvbXBv
+bmVudF9vcHMpOworCXJldCA9IGNvbXBvbmVudF9hZGQoJnBkZXYtPmRldiwgJm10a19kc2lfY29t
+cG9uZW50X29wcyk7CisJaWYgKHJldCkgeworCQlyZXQgPSAtRVBST0JFX0RFRkVSOworCQlnb3Rv
+IGVycl91bnJlZ2lzdGVyX2hvc3Q7CisJfQorCisJcmV0dXJuIDA7CisKK2Vycl91bnJlZ2lzdGVy
+X2hvc3Q6CisJbWlwaV9kc2lfaG9zdF91bnJlZ2lzdGVyKCZkc2ktPmhvc3QpOworCXJldHVybiBy
+ZXQ7CiB9CiAKIHN0YXRpYyBpbnQgbXRrX2RzaV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
+ZSAqcGRldikKLS0gCjIuMjAuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVs
