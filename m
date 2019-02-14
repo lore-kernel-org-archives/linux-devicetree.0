@@ -1,89 +1,91 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/3] dt-bindings: fsl: scu: add general interrupt support
-Date: Thu, 14 Feb 2019 03:47:19 +0000
-Message-ID: <DB3PR0402MB391645B7AF7B9F81EECABA18F5670@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1548230179-26076-1-git-send-email-Anson.Huang@nxp.com>
- <DB3PR0402MB3916FECAC4645C2B12FAB65EF5650@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] devfreq: Use of_node_name_eq for node name comparisons
+Date: Thu, 14 Feb 2019 12:49:38 +0900
+Message-ID: <5cc4b5a3-c4ad-46a9-2856-3ed67c6755d3@samsung.com>
+References: <20181205195050.4759-6-robh@kernel.org>
+        <CGME20190213161024epcas3p3acc5c074714ad1d44fb90ab3f21cfcff@epcas3p3.samsung.com>
+        <CAL_Jsq+xpRPvj=UcSo+jQKX1pB=9B3SV9jB5ZVhaVsKvOqtoOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB3916FECAC4645C2B12FAB65EF5650@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <CAL_Jsq+xpRPvj=UcSo+jQKX1pB=9B3SV9jB5ZVhaVsKvOqtoOg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SSBqdXN0IHVwZGF0ZSB0aGUgcGF0Y2ggc2VyaWVzIGFuZCBhbHNvIGFkZCBSVEMgYWxhcm0gc3Vw
-cG9ydCB0byB1c2UgaS5NWCBTQ1UgZ2VuZXJhbCBpbnRlcnJ1cHQgYXMgYW4gZXhhbXBsZSwgYmVj
-YXVzZSBSVEMgYWxhcm0gcGF0Y2ggZGVwZW5kcyBvbiBpdCwgc28gSSBzZW50IHRoZW0gdG9nZXRo
-ZXIgaW4gT05FIHBhdGggc2VyaWVzLCBwbGVhc2UganVzdCBoZWxwIHJldmlldyB0aGUgVjIgcGF0
-Y2ggc2VyaWVzLCB0aGFua3MuDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5zb24gSHVhbmcNCj4gU2VudDogMjAx
-OcTqMtTCMTLI1SAyMDozOQ0KPiBUbzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRA
-YXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gcy5oYXVlckBwZW5ndXRyb25peC5kZTsg
-a2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+IEFpc2hlbmcgRG9u
-ZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyB1bGYuaGFuc3NvbkBsaW5hcm8ub3JnOyBEYW5pZWwN
-Cj4gQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNv
-bT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCAxLzNdIGR0LWJpbmRpbmdzOiBmc2w6IHNjdTogYWRk
-IGdlbmVyYWwgaW50ZXJydXB0IHN1cHBvcnQNCj4gDQo+IEdlbnRsZSBwaW5nLi4uDQo+IA0KPiBC
-ZXN0IFJlZ2FyZHMhDQo+IEFuc29uIEh1YW5nDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+ID4gRnJvbTogQW5zb24gSHVhbmcNCj4gPiBTZW50OiAyMDE5xOox1MIyM8jVIDE2
-OjAxDQo+ID4gVG86IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNo
-YXduZ3VvQGtlcm5lbC5vcmc7DQo+ID4gcy5oYXVlckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBl
-bmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+ID4gQWlzaGVuZyBEb25nIDxhaXNo
-ZW5nLmRvbmdAbnhwLmNvbT47IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7IERhbmllbA0KPiA+IEJh
-bHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LQ0KPiA+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZw0KPiA+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29t
-Pg0KPiA+IFN1YmplY3Q6IFtQQVRDSCAxLzNdIGR0LWJpbmRpbmdzOiBmc2w6IHNjdTogYWRkIGdl
-bmVyYWwgaW50ZXJydXB0DQo+ID4gc3VwcG9ydA0KPiA+DQo+ID4gQWRkIHNjdSBnZW5lcmFsIGlu
-dGVycnVwdCBmdW5jdGlvbiBzdXBwb3J0Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24g
-SHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQgICAgICB8IDE4ICsrKysrKysrKysr
-Ky0tLS0tDQo+IC0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDYgZGVs
-ZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCj4gPiBp
-bmRleCBmZDJiZWQyLi4zYzk3NmFjIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+ID4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQN
-Cj4gPiBAQCAtMjIsOSArMjIsMTEgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgLS0tLS0t
-LS0tLS0tLS0tLS0tLQ0KPiA+ICAtIGNvbXBhdGlibGU6CXNob3VsZCBiZSAiZnNsLGlteC1zY3Ui
-Lg0KPiA+ICAtIG1ib3gtbmFtZXM6CXNob3VsZCBpbmNsdWRlICJ0eDAiLCAidHgxIiwgInR4MiIs
-ICJ0eDMiLA0KPiA+IC0JCQkgICAgICAgInJ4MCIsICJyeDEiLCAicngyIiwgInJ4MyIuDQo+ID4g
-LS0gbWJveGVzOglMaXN0IG9mIHBoYW5kbGUgb2YgNCBNVSBjaGFubmVscyBmb3IgdHggYW5kIDQg
-TVUgY2hhbm5lbHMNCj4gPiAtCQlmb3IgcnguIEFsbCA4IE1VIGNoYW5uZWxzIG11c3QgYmUgaW4g
-dGhlIHNhbWUgTVUgaW5zdGFuY2UuDQo+ID4gKwkJCSAgICAgICAicngwIiwgInJ4MSIsICJyeDIi
-LCAicngzIiwNCj4gPiArCQkJICAgICAgICJnaTMiLg0KPiA+ICstIG1ib3hlczoJTGlzdCBvZiBw
-aGFuZGxlIG9mIDQgTVUgY2hhbm5lbHMgZm9yIHR4LCA0IE1VIGNoYW5uZWxzIGZvcg0KPiA+ICsJ
-CXJ4LCBhbmQgMSBNVSBjaGFubmVsIGZvciBnZW5lcmFsIGludGVycnVwdC4gQWxsIDkgTVUgY2hh
-bm5lbHMNCj4gPiArCQltdXN0IGJlIGluIHRoZSBzYW1lIE1VIGluc3RhbmNlLg0KPiA+ICAJCUNy
-b3NzIGluc3RhbmNlcyBhcmUgbm90IGFsbG93ZWQuIFRoZSBNVSBpbnN0YW5jZSBjYW4gb25seQ0K
-PiA+ICAJCWJlIG9uZSBvZiBMU0lPIE1VMH5NNCBmb3IgaW14OHF4cCBhbmQgaW14OHFtLiBVc2Vy
-cw0KPiBuZWVkDQo+ID4gIAkJdG8gbWFrZSBzdXJlIHVzZSB0aGUgb25lIHdoaWNoIGlzIG5vdCBj
-b25mbGljdCB3aXRoIG90aGVyIEBADQo+ID4gLTM0LDYgKzM2LDcgQEAgUmVxdWlyZWQgcHJvcGVy
-dGllczoNCj4gPiAgCQlDaGFubmVsIDEgbXVzdCBiZSAidHgxIiBvciAicngxIi4NCj4gPiAgCQlD
-aGFubmVsIDIgbXVzdCBiZSAidHgyIiBvciAicngyIi4NCj4gPiAgCQlDaGFubmVsIDMgbXVzdCBi
-ZSAidHgzIiBvciAicngzIi4NCj4gPiArCQlHZW5lcmFsIGludGVycnVwdCBjaGFubmVsIG11c3Qg
-YmUgImdpMyIuDQo+ID4gIAkJZS5nLg0KPiA+ICAJCW1ib3hlcyA9IDwmbHNpb19tdTEgMCAwDQo+
-ID4gIAkJCSAgJmxzaW9fbXUxIDAgMQ0KPiA+IEBAIC00Miw3ICs0NSw4IEBAIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6DQo+ID4gIAkJCSAgJmxzaW9fbXUxIDEgMA0KPiA+ICAJCQkgICZsc2lvX211MSAx
-IDENCj4gPiAgCQkJICAmbHNpb19tdTEgMSAyDQo+ID4gLQkJCSAgJmxzaW9fbXUxIDEgMz47DQo+
-ID4gKwkJCSAgJmxzaW9fbXUxIDEgMw0KPiA+ICsJCQkgICZsc2lvX211MSAzIDM+Ow0KPiA+ICAJ
-CVNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9mc2wsbXUudHh0
-DQo+ID4gIAkJZm9yIGRldGFpbGVkIG1haWxib3ggYmluZGluZy4NCj4gPg0KPiA+IEBAIC0xMzAs
-NyArMTM0LDggQEAgZmlybXdhcmUgew0KPiA+ICAJc2N1IHsNCj4gPiAgCQljb21wYXRpYmxlID0g
-ImZzbCxpbXgtc2N1IjsNCj4gPiAgCQltYm94LW5hbWVzID0gInR4MCIsICJ0eDEiLCAidHgyIiwg
-InR4MyIsDQo+ID4gLQkJCSAgICAgInJ4MCIsICJyeDEiLCAicngyIiwgInJ4MyI7DQo+ID4gKwkJ
-CSAgICAgInJ4MCIsICJyeDEiLCAicngyIiwgInJ4MyIsDQo+ID4gKwkJCSAgICAgImdpMyI7DQo+
-ID4gIAkJbWJveGVzID0gPCZsc2lvX211MSAwIDANCj4gPiAgCQkJICAmbHNpb19tdTEgMCAxDQo+
-ID4gIAkJCSAgJmxzaW9fbXUxIDAgMg0KPiA+IEBAIC0xMzgsNyArMTQzLDggQEAgZmlybXdhcmUg
-ew0KPiA+ICAJCQkgICZsc2lvX211MSAxIDANCj4gPiAgCQkJICAmbHNpb19tdTEgMSAxDQo+ID4g
-IAkJCSAgJmxzaW9fbXUxIDEgMg0KPiA+IC0JCQkgICZsc2lvX211MSAxIDM+Ow0KPiA+ICsJCQkg
-ICZsc2lvX211MSAxIDMNCj4gPiArCQkJICAmbHNpb19tdTEgMyAzPjsNCj4gPg0KPiA+ICAJCWNs
-azogY2xrIHsNCj4gPiAgCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1jbGsiOw0KPiA+IC0t
-DQo+ID4gMi43LjQNCg0K
+Hi Rob,
+
+On 19. 2. 14. 오전 1:09, Rob Herring wrote:
+> On Wed, Dec 5, 2018 at 1:50 PM Rob Herring <robh@kernel.org> wrote:
+>>
+>> Convert string compares of DT node names to use of_node_name_eq helper
+>> instead. This removes direct access to the node name pointer.
+>>
+>> For instances using of_node_cmp, this has the side effect of now using
+>> case sensitive comparisons. This should not matter for any FDT based
+>> system which all of these are.
+>>
+>> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+>> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+>> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Kukjin Kim <kgene@kernel.org>
+>> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+>> Cc: linux-pm@vger.kernel.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-samsung-soc@vger.kernel.org
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  drivers/devfreq/devfreq-event.c     | 2 +-
+>>  drivers/devfreq/event/exynos-ppmu.c | 2 +-
+>>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> Can someone apply this please.
+
+Myungjoo picked up this patch[1] on devfreq.git
+but has not yet sent the pull request.
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=0c1e8ce295acc3becc95e393e88a9a6da233074f
+
+> 
+>>
+>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+>> index d67242d87744..87e93406d7cd 100644
+>> --- a/drivers/devfreq/devfreq-event.c
+>> +++ b/drivers/devfreq/devfreq-event.c
+>> @@ -240,7 +240,7 @@ struct devfreq_event_dev *devfreq_event_get_edev_by_phandle(struct device *dev,
+>>         }
+>>
+>>         list_for_each_entry(edev, &devfreq_event_list, node) {
+>> -               if (!strcmp(edev->desc->name, node->name))
+>> +               if (of_node_name_eq(node, edev->desc->name))
+>>                         goto out;
+>>         }
+>>         edev = NULL;
+>> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
+>> index c61de0bdf053..c2ea94957501 100644
+>> --- a/drivers/devfreq/event/exynos-ppmu.c
+>> +++ b/drivers/devfreq/event/exynos-ppmu.c
+>> @@ -529,7 +529,7 @@ static int of_get_devfreq_events(struct device_node *np,
+>>                         if (!ppmu_events[i].name)
+>>                                 continue;
+>>
+>> -                       if (!of_node_cmp(node->name, ppmu_events[i].name))
+>> +                       if (of_node_name_eq(node, ppmu_events[i].name))
+>>                                 break;
+>>                 }
+>>
+>> --
+>> 2.19.1
+>>
+> 
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
