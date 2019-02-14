@@ -1,41 +1,39 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 6/8] dt-bindings: i2c: iproc: add "brcm, iproc-nic-i2c"
- compatible string
-Date: Thu, 14 Feb 2019 16:26:21 -0600
-Message-ID: <CAL_JsqJ2sFc=K5tezmdcjLT9v7_5QFZ1F-azMdsXyjf=t7Zycw@mail.gmail.com>
-References: <20190214175725.60462-1-ray.jui@broadcom.com>
- <20190214175725.60462-7-ray.jui@broadcom.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH 2/6] Bluetooth: mediatek: trivial typo fix
+Date: Fri, 15 Feb 2019 07:19:34 +0800
+Message-ID: <fe55645efb173ef11cad6e43c194b400226b7a2f.1550184473.git.sean.wang@mediatek.com>
+References: <cover.1550184473.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190214175725.60462-7-ray.jui@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Linux I2C <linux-i2c@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1550184473.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 11:58 AM Ray Jui <ray.jui@broadcom.com> wrote:
->
-> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
->
-> Update iProc I2C binding document to add new compatible string
-> "brcm,iproc-nic-i2c". Optional property "brcm,ape-hsls-addr-mask" is
-> also added that allows configuration of the host view into the APE's
-> address for "brcm,iproc-nic-i2c"
->
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> ---
->  Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+From: Sean Wang <sean.wang@mediatek.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+add a trivial typo fix from speicfic to specific
+
+Fixes: 7237c4c9ec92 ("Bluetooth: mediatek: Add protocol support for MediaTek serial devices")
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ drivers/bluetooth/btmtkuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
+index 4593baff2bc9..b8ea011b82d8 100644
+--- a/drivers/bluetooth/btmtkuart.c
++++ b/drivers/bluetooth/btmtkuart.c
+@@ -107,7 +107,7 @@ static int mtk_hci_wmt_sync(struct hci_dev *hdev, u8 op, u8 flag, u16 plen,
+ 	 * Complete as with usual HCI command flow control.
+ 	 *
+ 	 * After sending the command, wait for BTMTKUART_TX_WAIT_VND_EVT
+-	 * state to be cleared. The driver speicfic event receive routine
++	 * state to be cleared. The driver specific event receive routine
+ 	 * will clear that state and with that indicate completion of the
+ 	 * WMT command.
+ 	 */
+-- 
+2.18.0
