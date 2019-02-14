@@ -1,81 +1,88 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v2 1/3] devicetree: bindings: bd718x7: document HW state
- related ROHM specific properties
-Date: Thu, 14 Feb 2019 09:15:47 +0200
-Message-ID: <20190214071547.GD12247@localhost.localdomain>
-References: <cover.1550050645.git.matti.vaittinen@fi.rohmeurope.com>
- <501fe1a68a9ad0987ddc0d3f559b2bdd1f65a5b7.1550050645.git.matti.vaittinen@fi.rohmeurope.com>
- <044d28c6ea1f9dd58f4c1942411aaf58@www.akkea.ca>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V4 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
+Date: Thu, 14 Feb 2019 07:18:33 +0000
+Message-ID: <DB3PR0402MB3916351935518583A506364CF5670@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550108915-574-1-git-send-email-Anson.Huang@nxp.com>
+ <20190214071233.7uypqihkfasxqyw6@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <044d28c6ea1f9dd58f4c1942411aaf58@www.akkea.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Angus Ainslie <angus@akkea.ca>
-Cc: mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, Robin Gong <yibin.gong@nxp.com>, Elven Wang <elven.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190214071233.7uypqihkfasxqyw6@vireshk-i7>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Angus,
-
-Glad to hear from you again =)
-
-On Wed, Feb 13, 2019 at 03:38:40PM -0800, Angus Ainslie wrote:
-> > 
-> >  Optional properties:
-> >  - clock-output-names	: Should contain name for output clock.
-> > +- rohm,reset-snvs-powered : Transfer BD718x7 to SNVS state at reset.
-> > +
-> > +The BD718x7 supports two different HW states as reset target states.
-> > States
-> > +are called as SNVS and READY. At READY state all the PMIC power outputs
-> > go
-> > +down and OTP is reload. At the SNVS state all other logic and external
-> > +devices apart from the SNVS power domain are shut off. Please refer to
-> > NXP
-> > +i.MX8 documentation for further information regarding SNVS state. When
-> > a
-> > +reset is done via SNVS state the PMIC OTP data is not reload. This
-> > cause
-> > +
-> 
-> It looks like there is some text missing here.
-
-Actually, the "This cause" is a leftover from previous version. So
-nothings missing, just something extra :D But well spotted. I'll clean
-this up for next version!
-
-> > diff --git
-> > a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-> > b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-> > index 4b98ca26e61a..4a05cbf915ee 100644
-> > ---
-> > a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-> > +++
-> > b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-> > @@ -27,8 +27,38 @@ BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
-> >  LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
-> > 
-
-[...]
-
-> > +----------------------------------------------------------------------------
-> > +rest	| not supported		| not supported		| not supported
-> > +
-> >  Example:
-> 
-> Could you add an example of the optional properties ?
-
-Sure. I'll do that for next version as well :)
-
-Br,
-	Matti Vaittinen
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+SGksIFZpcmVzaA0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFZpcmVzaCBLdW1hciBbbWFpbHRvOnZpcmVzaC5rdW1h
+ckBsaW5hcm8ub3JnXQ0KPiBTZW50OiAyMDE5xOoy1MIxNMjVIDE1OjEzDQo+IFRvOiBBbnNvbiBI
+dWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFy
+ay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0
+cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiBt
+dHVycXVldHRlQGJheWxpYnJlLmNvbTsgc2JveWRAa2VybmVsLm9yZzsgQWlzaGVuZyBEb25nDQo+
+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhw
+LmNvbT47DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1jbGtAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LQ0KPiBpbXhAbnhwLmNv
+bT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWNCAxLzJdIGFybTY0OiBkdHM6IGZyZWVzY2FsZTog
+aW14OHF4cDogYWRkIGNwdSBvcHANCj4gdGFibGUNCj4gDQo+IE9uIDE0LTAyLTE5LCAwMTo1NCwg
+QW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gQWRkIGkuTVg4UVhQIENQVSBvcHAgdGFibGUgdG8gc3Vw
+cG9ydCBjcHVmcmVxLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29u
+Lkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gTm8gY2hhbmdlIHNpbmNlIFYzLg0KPiA+IC0t
+LQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kgfCAyNQ0K
+PiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI1IGlu
+c2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
+L2lteDhxeHAuZHRzaQ0KPiA+IGluZGV4IDQwMjFmMjUuLjU5M2UyZGIgMTAwNjQ0DQo+ID4gLS0t
+IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ID4gKysrIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ID4gQEAgLTM0LDYg
+KzM0LDEwIEBADQo+ID4gIAkJCXJlZyA9IDwweDAgMHgwPjsNCj4gPiAgCQkJZW5hYmxlLW1ldGhv
+ZCA9ICJwc2NpIjsNCj4gPiAgCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmQTM1X0wyPjsNCj4gPiAr
+CQkJY2xvY2tzID0gPCZjbGsgSU1YX0EzNV9DTEs+Ow0KPiA+ICsJCQljbG9jay1sYXRlbmN5ID0g
+PDYxMDM2PjsNCj4gDQo+IFdobyB1c2VzIHRoaXMgdmFsdWUgPyBBbmQgd2h5IGlzIGl0IGRpZmZl
+cmVudCBmcm9tIHRoZSBvbmUgbWVudGlvbmVkIGluIHRoZQ0KPiBPUFAgdGFibGUgPw0KDQpTb3Jy
+eSwgZm9yZ290IHRvIHJlbW92ZSBpdC4gV2lsbCByZW1vdmUgaXQgaW4gbmV4dCB2ZXJzaW9uLg0K
+DQo+IA0KPiA+ICsJCQkjY29vbGluZy1jZWxscyA9IDwyPjsNCj4gDQo+IGNsb2NrcyBhbmQgY29v
+bGluZy1jZWxscyBtdXN0IGJlIGRlZmluZWQgZm9yIGFsbCB0aGUgQ1BVcy4NCg0KT0suDQoNCj4g
+DQo+ID4gKwkJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmEzNV8wX29wcF90YWJsZT47DQo+ID4g
+IAkJfTsNCj4gPg0KPiA+ICAJCUEzNV8xOiBjcHVAMSB7DQo+ID4gQEAgLTQyLDYgKzQ2LDcgQEAN
+Cj4gPiAgCQkJcmVnID0gPDB4MCAweDE+Ow0KPiA+ICAJCQllbmFibGUtbWV0aG9kID0gInBzY2ki
+Ow0KPiA+ICAJCQluZXh0LWxldmVsLWNhY2hlID0gPCZBMzVfTDI+Ow0KPiA+ICsJCQlvcGVyYXRp
+bmctcG9pbnRzLXYyID0gPCZhMzVfMF9vcHBfdGFibGU+Ow0KPiA+ICAJCX07DQo+ID4NCj4gPiAg
+CQlBMzVfMjogY3B1QDIgew0KPiA+IEBAIC01MCw2ICs1NSw3IEBADQo+ID4gIAkJCXJlZyA9IDww
+eDAgMHgyPjsNCj4gPiAgCQkJZW5hYmxlLW1ldGhvZCA9ICJwc2NpIjsNCj4gPiAgCQkJbmV4dC1s
+ZXZlbC1jYWNoZSA9IDwmQTM1X0wyPjsNCj4gPiArCQkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwm
+YTM1XzBfb3BwX3RhYmxlPjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4gIAkJQTM1XzM6IGNwdUAzIHsN
+Cj4gPiBAQCAtNTgsNiArNjQsNyBAQA0KPiA+ICAJCQlyZWcgPSA8MHgwIDB4Mz47DQo+ID4gIAkJ
+CWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gIAkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JkEz
+NV9MMj47DQo+ID4gKwkJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmEzNV8wX29wcF90YWJsZT47
+DQo+ID4gIAkJfTsNCj4gPg0KPiA+ICAJCUEzNV9MMjogbDItY2FjaGUwIHsNCj4gPiBAQCAtNjUs
+NiArNzIsMjQgQEANCj4gPiAgCQl9Ow0KPiA+ICAJfTsNCj4gPg0KPiA+ICsJYTM1XzBfb3BwX3Rh
+YmxlOiBvcHAtdGFibGUgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12
+MiI7DQo+ID4gKwkJb3BwLXNoYXJlZDsNCj4gPiArDQo+ID4gKwkJb3BwLTkwMDAwMDAwMCB7DQo+
+ID4gKwkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8OTAwMDAwMDAwPjsNCj4gPiArCQkJb3BwLW1pY3Jv
+dm9sdCA9IDwxMDAwMDAwPjsNCj4gPiArCQkJY2xvY2stbGF0ZW5jeS1ucyA9IDwxNTAwMDA+Ow0K
+PiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCW9wcC0xMjAwMDAwMDAwIHsNCj4gPiArCQkJb3BwLWh6
+ID0gL2JpdHMvIDY0IDwxMjAwMDAwMDAwPjsNCj4gPiArCQkJb3BwLW1pY3Jvdm9sdCA9IDwxMTAw
+MDAwPjsNCj4gPiArCQkJY2xvY2stbGF0ZW5jeS1ucyA9IDwxNTAwMDA+Ow0KPiA+ICsJCQlvcHAt
+c3VzcGVuZDsNCj4gDQo+IFlvdSB3YW50IHRvIGdvIHRvIGEgaGlnaGVyIGZyZXF1ZW5jeSBvbiBz
+dXNwZW5kID8NCg0KWWVzLCBvbiBtb3N0IG9mIGkuTVggU29Dcywgd2UgYWx3YXlzIHVzZSBoaWdo
+ZXN0IGZyZXF1ZW5jeSBmb3Igc3VzcGVuZCB0byByZWR1Y2UNCnRoZSBzdXNwZW5kL3Jlc3VtZSBs
+YXRlbmN5Lg0KDQpUaGFua3MsDQpBbnNvbi4NCg0KPiANCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4g
+PiArDQo+ID4gIAlnaWM6IGludGVycnVwdC1jb250cm9sbGVyQDUxYTAwMDAwIHsNCj4gPiAgCQlj
+b21wYXRpYmxlID0gImFybSxnaWMtdjMiOw0KPiA+ICAJCXJlZyA9IDwweDAgMHg1MWEwMDAwMCAw
+IDB4MTAwMDA+LCAvKiBHSUMgRGlzdCAqLw0KPiA+IC0tDQo+ID4gMi43LjQNCj4gDQo+IC0tDQo+
+IHZpcmVzaA0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
