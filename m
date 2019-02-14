@@ -1,37 +1,74 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Thu, 14 Feb 2019 07:42:59 -0800
-Message-ID: <20190214154259.GC5720@atomide.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
- <20190212074237.2875-6-lokeshvutla@ti.com>
- <20190212163018.GL5720@atomide.com>
- <5b5d86b9-2aa7-718c-c1da-70bbf9bf589e@ti.com>
- <20190213153215.GT5720@atomide.com>
- <821ab540-469a-2166-9346-9cc0dec8ffbe@ti.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: RE: [PATCH net-next 3/3] enetc: Add ENETC PF level external MDIO
+ support
+Date: Thu, 14 Feb 2019 15:48:44 +0000
+Message-ID: <VI1PR04MB4880C8E3E302C7D3856DB68396670@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <1550055743-15542-1-git-send-email-claudiu.manoil@nxp.com>
+ <1550055743-15542-4-git-send-email-claudiu.manoil@nxp.com>
+ <20190213181323.GA708@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <821ab540-469a-2166-9346-9cc0dec8ffbe@ti.com>
+In-Reply-To: <20190213181323.GA708@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [190214 08:40]:
-> On 13/02/19 9:02 PM, Tony Lindgren wrote:
-> > OK so maybe update the description along those lines saying it's
-> > a shared piece of hardware between various independent SoC
-> > clusters which may or may not be running Linux.
-> 
-> IMHO, SoC integration is out of scope of this document. If you insist I can add
-> the details.
+>-----Original Message-----
+>From: Andrew Lunn <andrew@lunn.ch>
+>Sent: Wednesday, February 13, 2019 8:13 PM
+>To: Claudiu Manoil <claudiu.manoil@nxp.com>
+>Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; David S =
+.
+>Miller <davem@davemloft.net>; devicetree@vger.kernel.org; Alexandru
+>Marginean <alexandru.marginean@nxp.com>; linux-kernel@vger.kernel.org;
+>linux-arm-kernel@lists.infradead.org; netdev@vger.kernel.org
+>Subject: Re: [PATCH net-next 3/3] enetc: Add ENETC PF level external MDIO
+>support
+>
+[...]
+>> +static int enetc_mdio_write(struct mii_bus *bus, int phy_id, int regnum=
+,
+>> +			    u16 value)
+>> +{
+>> +	struct enetc_mdio_regs __iomem *regs =3D bus_to_enetc_regs(bus);
+>> +	u32 mdio_ctl, mdio_cfg;
+>> +	u16 dev_addr;
+>> +	int ret;
+>> +
+>> +	mdio_cfg =3D MDIO_CFG_CLKDIV(ENETC_MDC_DIV) | MDIO_CFG_NEG;
+>
+>What does MDIO_CFG_NEG mean?
+>
 
-Certainly you need to justify how come such a critical piece
-of information as interrupt line routing is out of control
-of Linux here.
+I'll add a comment in the code to clarify this define.
+It means the MDIO is driven by master on MDC negative edge, which is how=20
+the external mdio busses work on this hardware. For internal MDIO CFG_NEG i=
+s 0.
 
-Regards,
+ [...]
+>
+>Maybe MDIO_CFG_ENC could be called MDIO_CFG_C45? Assuming that is what
+>it actually means?
+>
+You're right, in the hardware manual this bit is actually called "ENC45", s=
+o
+I'll change the define name to that.  Should be more clear like this.
 
-Tony
+[...]
+>
+>It is a good idea to have an mdio node which contains the list of
+>PHYs. You can get into odd situations if you don't do that.
+>
+
+Hopefully this doesn't complicate things since these are not platform devic=
+es.
+It's not as easy as adding new platform device driver for mdio...
+
+Ok for the rest of the comments too.
+Thanks for the review.
+
+Claudiu
