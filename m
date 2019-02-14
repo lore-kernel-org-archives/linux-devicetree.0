@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH 2/6] Bluetooth: mediatek: trivial typo fix
-Date: Fri, 15 Feb 2019 07:19:34 +0800
-Message-ID: <fe55645efb173ef11cad6e43c194b400226b7a2f.1550184473.git.sean.wang@mediatek.com>
+Subject: [PATCH 4/6] Bluetooth: mediatek: pass a pointer to mtk_hci_wmt_sync
+Date: Fri, 15 Feb 2019 07:19:36 +0800
+Message-ID: <614e7741328e835071099ddcd4f9c2afd9528534.1550184473.git.sean.wang@mediatek.com>
 References: <cover.1550184473.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,26 +14,158 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-add a trivial typo fix from speicfic to specific
+Pass a structure pointer to mtk_hci_wmt_sync rather than several arguments
+to avoid take up additional stack area and be better to read the code.
 
-Fixes: 7237c4c9ec92 ("Bluetooth: mediatek: Add protocol support for MediaTek serial devices")
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- drivers/bluetooth/btmtkuart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/btmtkuart.c | 63 ++++++++++++++++++++++++++---------
+ 1 file changed, 48 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
-index 4593baff2bc9..b8ea011b82d8 100644
+index 9f8177b216b6..4451b1db139a 100644
 --- a/drivers/bluetooth/btmtkuart.c
 +++ b/drivers/bluetooth/btmtkuart.c
-@@ -107,7 +107,7 @@ static int mtk_hci_wmt_sync(struct hci_dev *hdev, u8 op, u8 flag, u16 plen,
- 	 * Complete as with usual HCI command flow control.
- 	 *
- 	 * After sending the command, wait for BTMTKUART_TX_WAIT_VND_EVT
--	 * state to be cleared. The driver speicfic event receive routine
-+	 * state to be cleared. The driver specific event receive routine
- 	 * will clear that state and with that indicate completion of the
- 	 * WMT command.
- 	 */
+@@ -58,6 +58,14 @@ struct mtk_hci_wmt_cmd {
+ 	u8 data[256];
+ } __packed;
+ 
++struct btmtk_hci_wmt_params {
++	u8 op;
++	u8 flag;
++	u16 dlen;
++	const void *data;
++	u32 *status;
++};
++
+ struct btmtkuart_dev {
+ 	struct hci_dev *hdev;
+ 	struct serdev_device *serdev;
+@@ -74,8 +82,8 @@ struct btmtkuart_dev {
+ 	u16	stp_dlen;
+ };
+ 
+-static int mtk_hci_wmt_sync(struct hci_dev *hdev, u8 op, u8 flag, u16 plen,
+-			    const void *param)
++static int mtk_hci_wmt_sync(struct hci_dev *hdev,
++			    struct btmtk_hci_wmt_params *wmt_params)
+ {
+ 	struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
+ 	struct mtk_hci_wmt_cmd wc;
+@@ -83,16 +91,16 @@ static int mtk_hci_wmt_sync(struct hci_dev *hdev, u8 op, u8 flag, u16 plen,
+ 	u32 hlen;
+ 	int err;
+ 
+-	hlen = sizeof(*hdr) + plen;
++	hlen = sizeof(*hdr) + wmt_params->dlen;
+ 	if (hlen > 255)
+ 		return -EINVAL;
+ 
+ 	hdr = (struct mtk_wmt_hdr *)&wc;
+ 	hdr->dir = 1;
+-	hdr->op = op;
+-	hdr->dlen = cpu_to_le16(plen + 1);
+-	hdr->flag = flag;
+-	memcpy(wc.data, param, plen);
++	hdr->op = wmt_params->op;
++	hdr->dlen = cpu_to_le16(wmt_params->dlen + 1);
++	hdr->flag = wmt_params->flag;
++	memcpy(wc.data, wmt_params->data, wmt_params->dlen);
+ 
+ 	set_bit(BTMTKUART_TX_WAIT_VND_EVT, &bdev->tx_state);
+ 
+@@ -130,6 +138,7 @@ static int mtk_hci_wmt_sync(struct hci_dev *hdev, u8 op, u8 flag, u16 plen,
+ 
+ static int mtk_setup_fw(struct hci_dev *hdev)
+ {
++	struct btmtk_hci_wmt_params wmt_params;
+ 	const struct firmware *fw;
+ 	const u8 *fw_ptr;
+ 	size_t fw_size;
+@@ -155,6 +164,9 @@ static int mtk_setup_fw(struct hci_dev *hdev)
+ 	fw_ptr += 30;
+ 	flag = 1;
+ 
++	wmt_params.op = MTK_WMT_PATCH_DWNLD;
++	wmt_params.status = NULL;
++
+ 	while (fw_size > 0) {
+ 		dlen = min_t(int, 250, fw_size);
+ 
+@@ -164,8 +176,11 @@ static int mtk_setup_fw(struct hci_dev *hdev)
+ 		else if (fw_size < fw->size - 30)
+ 			flag = 2;
+ 
+-		err = mtk_hci_wmt_sync(hdev, MTK_WMT_PATCH_DWNLD, flag, dlen,
+-				       fw_ptr);
++		wmt_params.flag = flag;
++		wmt_params.dlen = dlen;
++		wmt_params.data = fw_ptr;
++
++		err = mtk_hci_wmt_sync(hdev, &wmt_params);
+ 		if (err < 0) {
+ 			bt_dev_err(hdev, "Failed to send wmt patch dwnld (%d)",
+ 				   err);
+@@ -469,6 +484,7 @@ static int btmtkuart_flush(struct hci_dev *hdev)
+ 
+ static int btmtkuart_setup(struct hci_dev *hdev)
+ {
++	struct btmtk_hci_wmt_params wmt_params;
+ 	u8 param = 0x1;
+ 	int err = 0;
+ 
+@@ -477,16 +493,27 @@ static int btmtkuart_setup(struct hci_dev *hdev)
+ 	if (err < 0)
+ 		return err;
+ 
+-	/* Activate function the firmware providing to */
+-	err = mtk_hci_wmt_sync(hdev, MTK_WMT_RST, 0x4, 0, 0);
++	wmt_params.op = MTK_WMT_RST;
++	wmt_params.flag = 4;
++	wmt_params.dlen = 0;
++	wmt_params.data = NULL;
++	wmt_params.status = NULL;
++
++	/* Activate funciton the firmware providing to */
++	err = mtk_hci_wmt_sync(hdev, &wmt_params);
+ 	if (err < 0) {
+ 		bt_dev_err(hdev, "Failed to send wmt rst (%d)", err);
+ 		return err;
+ 	}
+ 
+ 	/* Enable Bluetooth protocol */
+-	err = mtk_hci_wmt_sync(hdev, MTK_WMT_FUNC_CTRL, 0x0, sizeof(param),
+-			       &param);
++	wmt_params.op = MTK_WMT_FUNC_CTRL;
++	wmt_params.flag = 0;
++	wmt_params.dlen = sizeof(param);
++	wmt_params.data = &param;
++	wmt_params.status = NULL;
++
++	err = mtk_hci_wmt_sync(hdev, &wmt_params);
+ 	if (err < 0) {
+ 		bt_dev_err(hdev, "Failed to send wmt func ctrl (%d)", err);
+ 		return err;
+@@ -497,12 +524,18 @@ static int btmtkuart_setup(struct hci_dev *hdev)
+ 
+ static int btmtkuart_shutdown(struct hci_dev *hdev)
+ {
++	struct btmtk_hci_wmt_params wmt_params;
+ 	u8 param = 0x0;
+ 	int err;
+ 
+ 	/* Disable the device */
+-	err = mtk_hci_wmt_sync(hdev, MTK_WMT_FUNC_CTRL, 0x0, sizeof(param),
+-			       &param);
++	wmt_params.op = MTK_WMT_FUNC_CTRL;
++	wmt_params.flag = 0;
++	wmt_params.dlen = sizeof(param);
++	wmt_params.data = &param;
++	wmt_params.status = NULL;
++
++	err = mtk_hci_wmt_sync(hdev, &wmt_params);
+ 	if (err < 0) {
+ 		bt_dev_err(hdev, "Failed to send wmt func ctrl (%d)", err);
+ 		return err;
 -- 
 2.18.0
