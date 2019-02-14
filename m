@@ -1,39 +1,50 @@
 From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH  6/8] dt-bindings: net: stmmac: add syscfg clock property
-Date: Thu, 14 Feb 2019 07:46:01 +0100
-Message-ID: <1550126763-22669-7-git-send-email-christophe.roullier@st.com>
-References: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH  0/8] stmmac: add some fixes for stm32
+Date: Thu, 14 Feb 2019 07:45:55 +0100
+Message-ID: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
-Sender: netdev-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
 Cc: linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Need syscfg clock for MCU family in case bootloader does not
-activate it.
+For common stmmac:
+	- Add support to set CSR Clock range selection in DT
+For stm32mpu:
+	- Glue codes to support magic packet
+	- Glue codes to support all PHY config :
+		PHY_MODE (MII,GMII, RMII, RGMII) and in normal,
+		PHY wo crystal (25Mhz),
+		PHY wo crystal (50Mhz), No 125Mhz from PHY config
+For stm32mcu:
+	- Add Ethernet support for stm32h7
+	- Add syscfg clk support for stm32f4
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
----
- Documentation/devicetree/bindings/net/stm32-dwmac.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Christophe Roullier (8):
+  net: ethernet: stmmac: manage Ethernet WoL for stm32mp157c.
+  net: ethernet: stmmac: update to support all PHY config for
+    stm32mp157c.
+  dt-bindings: net: stmmac: add phys config properties
+  net: ethernet: stmmac: add management of clk_csr property
+  net: ethernet: stmmac: update to be compatible with MCU family
+    (stm32f4, stm32h7)
+  dt-bindings: net: stmmac: add syscfg clock property
+  ARM: dts: stm32: Add Ethernet support on stm32h7 SOC and activate it
+    for eval and disco boards
+  ARM: dts: stm32: add syscfg clock support for Ethernet on STM32F429
+    SoC
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-index f42dc68..524f8a0 100644
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-@@ -14,8 +14,8 @@ Required properties:
- - clock-names: Should be "stmmaceth" for the host clock.
- 	       Should be "mac-clk-tx" for the MAC TX clock.
- 	       Should be "mac-clk-rx" for the MAC RX clock.
--	       For MPU family need to add also "ethstp" for power mode clock and,
--	                                       "syscfg-clk" for SYSCFG clock.
-+	       Should be "syscfg-clk" for the SYSCFG clock.
-+	       For MPU family need to add also "ethstp" for power mode clock
- - interrupt-names: Should contain a list of interrupt names corresponding to
-            the interrupts in the interrupts property, if available.
- 		   Should be "macirq" for the main MAC IRQ
+ .../devicetree/bindings/net/stm32-dwmac.txt        |  10 +-
+ arch/arm/boot/dts/stm32f429.dtsi                   |   6 +-
+ arch/arm/boot/dts/stm32h743-pinctrl.dtsi           |  15 ++
+ arch/arm/boot/dts/stm32h743.dtsi                   |  19 +++
+ arch/arm/boot/dts/stm32h743i-disco.dts             |  17 ++
+ arch/arm/boot/dts/stm32h743i-eval.dts              |  17 ++
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c  | 179 +++++++++++++++++----
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   3 +
+ 8 files changed, 230 insertions(+), 36 deletions(-)
+
 -- 
 2.7.4
