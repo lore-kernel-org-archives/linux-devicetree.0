@@ -1,126 +1,43 @@
 From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH  5/8] net: ethernet: stmmac: update to be compatible with MCU family (stm32f4, stm32h7)
-Date: Thu, 14 Feb 2019 07:46:00 +0100
-Message-ID: <1550126763-22669-6-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH  8/8] ARM: dts: stm32: add syscfg clock support for Ethernet on STM32F429 SoC
+Date: Thu, 14 Feb 2019 07:46:03 +0100
+Message-ID: <1550126763-22669-9-git-send-email-christophe.roullier@st.com>
 References: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1550126763-22669-1-git-send-email-christophe.roullier@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
 Cc: linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Update glue codes to be compatible with MCU family.
+This patch add syscfg clock support for Ethernet of the STM32F429 SoC.
+Needed if bootloader do not manage it.
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 51 ++++++++++++++++++-----
- 1 file changed, 41 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/stm32f429.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index cee59e8..20a2daa 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -6,7 +6,6 @@
-  * License terms:  GNU General Public License (GPL), version 2
-  *
-  */
--
- #include <linux/clk.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
-@@ -119,12 +118,6 @@ static int stm32_dwmac_init(struct plat_stmmacenet_data *plat_dat)
- 	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
- 	int ret;
- 
--	if (dwmac->ops->set_mode) {
--		ret = dwmac->ops->set_mode(plat_dat);
--		if (ret)
--			return ret;
--	}
--
- 	ret = clk_prepare_enable(dwmac->clk_tx);
- 	if (ret)
- 		return ret;
-@@ -139,13 +132,26 @@ static int stm32_dwmac_init(struct plat_stmmacenet_data *plat_dat)
- 
- 	if (dwmac->ops->clk_prepare) {
- 		ret = dwmac->ops->clk_prepare(dwmac, true);
-+		if (ret)
-+			goto err_clk_disable;
-+	}
-+
-+	if (dwmac->ops->set_mode) {
-+		ret = dwmac->ops->set_mode(plat_dat);
- 		if (ret) {
--			clk_disable_unprepare(dwmac->clk_rx);
--			clk_disable_unprepare(dwmac->clk_tx);
-+			if (dwmac->ops->clk_prepare)
-+				dwmac->ops->clk_prepare(dwmac, false);
-+			goto err_clk_disable;
- 		}
- 	}
- 
- 	return ret;
-+
-+err_clk_disable:
-+	clk_disable_unprepare(dwmac->clk_rx);
-+	clk_disable_unprepare(dwmac->clk_tx);
-+
-+	return ret;
- }
- 
- static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
-@@ -240,7 +246,19 @@ static int stm32mcu_set_mode(struct plat_stmmacenet_data *plat_dat)
- 	}
- 
- 	return regmap_update_bits(dwmac->regmap, reg,
--				 dwmac->ops->syscfg_eth_mask, val);
-+				 dwmac->ops->syscfg_eth_mask, val << 23);
-+}
-+
-+static int stm32mcu_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
-+{
-+	int ret = 0;
-+
-+	if (prepare)
-+		ret = clk_prepare_enable(dwmac->syscfg_clk);
-+	else
-+		clk_disable_unprepare(dwmac->syscfg_clk);
-+
-+	return ret;
- }
- 
- static void stm32_dwmac_clk_disable(struct stm32_dwmac *dwmac)
-@@ -347,6 +365,17 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
- 	return err;
- }
- 
-+static int stm32mcu_parse_data(struct stm32_dwmac *dwmac,
-+			       struct device *dev)
-+{
-+	/*  Clock for sysconfig */
-+	dwmac->syscfg_clk = devm_clk_get(dev, "syscfg-clk");
-+	if (IS_ERR(dwmac->syscfg_clk))
-+		dev_warn(dev, "No syscfg clock provided...\n");
-+
-+	return 0;
-+}
-+
- static int stm32_dwmac_probe(struct platform_device *pdev)
- {
- 	struct plat_stmmacenet_data *plat_dat;
-@@ -493,7 +522,9 @@ static SIMPLE_DEV_PM_OPS(stm32_dwmac_pm_ops,
- 
- static struct stm32_ops stm32mcu_dwmac_data = {
- 	.set_mode = stm32mcu_set_mode,
-+	.clk_prepare = stm32mcu_clk_prepare,
- 	.suspend = stm32mcu_suspend,
-+	.parse_data = stm32mcu_parse_data,
- 	.syscfg_eth_mask = SYSCFG_MCU_ETH_MASK
- };
- 
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 8d6f028..6f78346 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -657,10 +657,12 @@
+ 			reg-names = "stmmaceth";
+ 			interrupts = <61>;
+ 			interrupt-names = "macirq";
+-			clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
++			clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx",
++			"syscfg-clk";
+ 			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(ETHMAC)>,
+ 					<&rcc 0 STM32F4_AHB1_CLOCK(ETHMACTX)>,
+-					<&rcc 0 STM32F4_AHB1_CLOCK(ETHMACRX)>;
++					<&rcc 0 STM32F4_AHB1_CLOCK(ETHMACRX)>,
++					<&rcc 0 STM32F4_APB2_CLOCK(SYSCFG)>;
+ 			st,syscon = <&syscfg 0x4>;
+ 			snps,pbl = <8>;
+ 			snps,mixed-burst;
 -- 
 2.7.4
