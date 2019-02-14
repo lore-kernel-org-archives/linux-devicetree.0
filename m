@@ -1,86 +1,65 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [RFC 5/5] arm64: dts: imx8mq: Add the opp table and the
- cpu-supply nodes
-Date: Thu, 14 Feb 2019 18:26:25 +0100
-Message-ID: <1550165185.2546.48.camel@pengutronix.de>
-References: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
-         <1550084693-9797-6-git-send-email-abel.vesa@nxp.com>
-         <1550159428.2546.40.camel@pengutronix.de>
-         <20190214171806.kufhw7ouguxt5jhq@fsr-ub1664-175>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Thu, 14 Feb 2019 23:02:15 +0530
+Message-ID: <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
+ <20190212074237.2875-6-lokeshvutla@ti.com>
+ <20190212162247.GK5720@atomide.com>
+ <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
+ <20190213152620.GS5720@atomide.com>
+ <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
+ <20190214154100.GB5720@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190214171806.kufhw7ouguxt5jhq@fsr-ub1664-175>
+In-Reply-To: <20190214154100.GB5720@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>, Anson Huang <anson.huang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 14.02.2019, 17:18 +0000 schrieb Abel Vesa:
-> On 19-02-14 16:50:28, Lucas Stach wrote:
-> > Hi Abel
-> > 
-> > Am Mittwoch, den 13.02.2019, 19:05 +0000 schrieb Abel Vesa:
-> > > Add the opp table containing only non over drive opps.
-> > > Also add the cpu-supply nodes for the A53 cores in the EVK board.
-> > > 
-> > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 17
-> > > +++++++++++++++++
-> > >  arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 23
-> > > +++++++++++++++++++++++
-> > >  2 files changed, 40 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> > > b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> > > index 54737bf..114359e 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> > > @@ -31,6 +31,23 @@
-> > >  		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-> > >  		enable-active-high;
-> > >  	};
-> > > +
-> > > +};
-> > > +
-> > > +&A53_0 {
-> > > +	cpu-supply = <&sw1a_reg>;
-> > > +};
-> > > +
-> > > +&A53_1 {
-> > > +	cpu-supply = <&sw1a_reg>;
-> > > +};
-> > > +
-> > > +&A53_2 {
-> > > +	cpu-supply = <&sw1a_reg>;
-> > > +};
-> > > +
-> > > +&A53_3 {
-> > > +	cpu-supply = <&sw1a_reg>;
-> > >  };
-> > 
-> > This should be a separate patch.
-> > 
-> 
-> OK, will send as separate patches in the next version.
-> 
-> > And AFAICS this is wrong, sw1a on the MX8M-EVK is the GPU supply,
-> > the
-> > CPU is supplied by a dedicated switcher that is controlled via a
-> > GPIO.
-> > 
-> 
-> Hmm, I think you're right. At least this is what the following
-> document says.
-> 
-> https://www.mouser.com/ds/2/302/IMX8MDQLQEVKHUG-1280333.pdf
-> 
-> So I guess this means there will not be any cpu-supply properties. 
+Hi Tony,
+	Please do not snip the on going discussion.
 
-There is a variable voltage CPU supply, but you need to model it as a
-gpio-regulator in the DT, it's not part of the PMIC provided rails.
+On 2/14/2019 9:11 PM, Tony Lindgren wrote:
+> * Lokesh Vutla <lokeshvutla@ti.com> [190214 08:39]:
+>> IMHO, device ids are something which can be used in DT. There are many other
+>> things like the interrupt ranges etc.. which are discoverable from sysfw and we
+>> are implementing it.
+> 
+> We need to describe hardware in the device tree, not firmware.
+> 
+> If you have something discoverable from the firmware, you should
+> have the device driver query it from sysfw based on a hardware
+> property, not based on some invented enumeration in the firmware.
 
-Regards,
-Lucas
+Yes we are already querying sysfw for all the irq ranges that can be
+discoverable. The topic of discussion here is about the parent interrupt
+controller id. I am not sure how you are expecting an id be discoverable
+from system firmware especially with a name.
+
+> If there is some device to firmware translation needed, hide that
+> into the device driver and keep it out of the device tree.
+
+If preferred this can be moved to of_match_data attached to each
+compatible property. Then for each SoC a new compatible needs to be created.
+
+> 
+> For example, look at the interrupt binding where the interrupt
+> is phandle to the controller and the bit offset from the interrupt
+> controller instance.
+> 
+> You need to use device IO address + bit offset (or register
+> offset) type indexing for device tree here. Something out of
+> the TRM that makes sense to developers.
+> 
+
+
+[1]
+https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
+
+Thanks and regards,
+Lokesh
