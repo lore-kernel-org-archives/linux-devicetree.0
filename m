@@ -1,89 +1,54 @@
-From: Long Cheng <long.cheng@mediatek.com>
-Subject: Re: [PATCH v10 1/3] dmaengine: 8250_mtk_dma: add MediaTek uart DMA
- support
-Date: Thu, 14 Feb 2019 10:44:56 +0800
-Message-ID: <1550112296.7678.5.camel@mhfsdcap03>
-References: <1547781016-890-1-git-send-email-long.cheng@mediatek.com>
-         <1547781016-890-2-git-send-email-long.cheng@mediatek.com>
-         <20190204072154.GJ4296@vkoul-mobl>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Wed, 13 Feb 2019 20:47:02 -0600
+Message-ID: <90c359d8-c899-cf99-3c82-9d39f2b7765c@ti.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com>
+ <20190204163312.GI5720@atomide.com> <5C5959DB.2090608@ti.com>
+ <f1b689cc-5d1b-0333-7a1c-cb6d58169e12@ti.com> <5C59AEA3.1080400@ti.com>
+ <124e9f09-fb60-071d-e2ba-ec6f7fb3955c@ti.com>
+ <20190205161945.GS5720@atomide.com> <5C5AF77D.8020007@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190204072154.GJ4296@vkoul-mobl>
+In-Reply-To: <5C5AF77D.8020007@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhenbao Liu <zhenbao.liu@me>
+To: Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>, Murali Karicheri <m-karicheri2@ti.com>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-02-04 at 12:51 +0530, Vinod Koul wrote:
+On 2/6/19 9:04 AM, Roger Quadros wrote:
+> 
+> 
+> On 05/02/19 18:19, Tony Lindgren wrote:
+>> * Murali Karicheri <m-karicheri2@ti.com> [190205 16:13]:
+>>> On 02/05/2019 10:41 AM, Roger Quadros wrote:
+>>>> What I'm suggesting here is that kernel remoteproc driver should have nothing to do
+>>>> with the other PRU's data RAM.
+>>>>
+>>>> The application driver if needs both PRUs then it can obviously access both DRAMs
+>>>> as it has a phandle to both PRUs.
+>>>>
+>>> That should be fine.
+>>
+>> That sounds good to me too.
+>>
+>> For dts, yeah please allocate the resources for the modules
+>> where the resources belong to on the PRUSS internal interconnect :)
+>> Devices can move around on the interconnect between SoCs and the
+>> modules can get swapped or added.
+> 
+> If you take a look at "Figure 30-1. PRU-ICSS Overview" in 
+> http://www.tij.co.jp/jp/lit/ug/spruhz7h/spruhz7h.pdf
+> 
+> You can see that DRAM0 and DRAM1 are not part of PRU. That means
+> they shouldn't be in the PRU node then.
 
-Hi Vinod sir,
+Yes, they do not belong to a PRU, and should not be defined underneath
+one. Both are accessible from both PRU cores, so it is upto the
+application on how they can partition the usage.
 
-> On 18-01-19, 11:10, Long Cheng wrote:
-> > +static enum dma_status mtk_uart_apdma_tx_status(struct dma_chan *chan,
-> > +					 dma_cookie_t cookie,
-> > +					 struct dma_tx_state *txstate)
-> > +{
-> > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
-> > +	enum dma_status ret;
-> > +	unsigned long flags;
-> > +
-> > +	if (!txstate)
-> > +		return DMA_ERROR;
-> 
-> Why, it is not a mandatory arg!
-
-Next version, I will remove it.
-> 
-> > +	ret = dma_cookie_status(chan, cookie, txstate);
-> > +	spin_lock_irqsave(&c->vc.lock, flags);
-> > +	if (ret == DMA_IN_PROGRESS) {
-> > +		c->rx_status = mtk_uart_apdma_read(c, VFF_RPT) & VFF_RING_SIZE;
-> > +		dma_set_residue(txstate, c->rx_status);
-> > +	} else if (ret == DMA_COMPLETE && c->dir == DMA_DEV_TO_MEM) {
-> > +		dma_set_residue(txstate, c->rx_status);
-> 
-> what is the point is setting residue to comleted txn, it is zero!
-> 
-> > +	} else {
-> > +		dma_set_residue(txstate, 0);
-> 
-> naah that doesnt sound correct!
-> 
-Next version, I will modify the function.
-
-> > +static void mtk_uart_apdma_config_write(struct dma_chan *chan,
-> > +			       struct dma_slave_config *cfg,
-> > +			       enum dma_transfer_direction dir)
-> > +{
-> > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
-> > +	struct mtk_uart_apdmadev *mtkd =
-> > +				to_mtk_uart_apdma_dev(c->vc.chan.device);
-> > +	unsigned int tmp;
-> > +
-> > +	if (mtk_uart_apdma_read(c, VFF_EN) == VFF_EN_B)
-> > +		return;
-> > +
-> > +	c->dir = dir;
-> > +
-> > +	if (dir == DMA_DEV_TO_MEM) {
-> > +		tmp = cfg->src_addr_width * 1024;
-> 
-> why multiply by 1024?
-> 
-Next version, I will modify the this, with 'src_port_window_size' &&
-'dst_port_window_size'.
-
-> > +static int mtk_uart_apdma_device_pause(struct dma_chan *chan)
-> > +{
-> > +	/* just for check caps pass */
-> > +	return 0;
-> > +}
-> 
-> please remove, this is not a mandatory fn
-
-Can't remove it. Before the mail, i had explained it. in 8250 uart
-framework, will check the function..
-
-thanks.
+regards
+Suman
