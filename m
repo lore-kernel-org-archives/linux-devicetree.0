@@ -1,71 +1,74 @@
 From: Loys Ollivier <lollivier@baylibre.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: gnss: add mediatek binding
-Date: Fri, 15 Feb 2019 13:10:35 +0100
-Message-ID: <86ef89fe10.fsf@baylibre.com>
-References: <1547744074-28308-1-git-send-email-lollivier@baylibre.com> <1547744074-28308-3-git-send-email-lollivier@baylibre.com> <20190125090755.GB3691@localhost> <867eeo7pjm.fsf@baylibre.com> <20190211083349.GU4686@localhost> <86mun2v27r.fsf@baylibre.com> <CALZWD59e356Of+R4H2ZNHJyQcPCQNNdS+1DTc8qNDYp9ZnUpXA@mail.gmail.com> <20190214091121.GI28278@localhost>
+Subject: Re: [PATCH v4 4/4] gnss: add driver for mediatek receivers
+Date: Fri, 15 Feb 2019 13:25:20 +0100
+Message-ID: <86d0ntfdcf.fsf@baylibre.com>
+References: <1550070569-18588-1-git-send-email-lollivier@baylibre.com> <1550070569-18588-5-git-send-email-lollivier@baylibre.com> <20190214100019.GA4197@Red> <20190214101212.GJ28278@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20190214091121.GI28278@localhost>
+In-reply-to: <20190214101212.GJ28278@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Johan Hovold <johan@kernel.org>
-Cc: Loys Ollivier <lollivier@baylibre.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, Loys Ollivier <lollivier@baylibre.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Thu 14 Feb 2019 at 09:11, Johan Hovold <johan@kernel.org> wrote:
+On Thu 14 Feb 2019 at 10:12, Johan Hovold <johan@kernel.org> wrote:
 
-> On Wed, Feb 13, 2019 at 04:24:00PM +0100, Loys Ollivier wrote:
->> On Mon 11 Feb 2019 at 14:17, Loys Ollivier <lollivier@baylibre.com> wrote:
->> > On Mon 11 Feb 2019 at 08:33, Johan Hovold <johan@kernel.org> wrote:
+> On Thu, Feb 14, 2019 at 11:00:19AM +0100, Corentin Labbe wrote:
+>> On Wed, Feb 13, 2019 at 04:09:29PM +0100, Loys Ollivier wrote:
+>> > Add driver for serial-connected Mediatek-based GNSS receivers.
+>> > 
+>> > These devices typically boot transmitting vendor specific NMEA output
+>> > sequences. The serial port bit rate is read from the device tree
+>> > "current-speed".
+>> > 
+>> > Note that the driver uses the generic GNSS serial implementation and
+>> > therefore essentially only manages power abstracted into three power
+>> > states: ACTIVE, STANDBY, and OFF.
+>> > 
+>> > For mediatek receivers with a main supply and no enable-gpios, this simply
+>> > means that the main supply is disabled in STANDBY and OFF (the optional
+>> > backup supply is kept enabled while the driver is bound).
+>> > 
+>> > Note that the timepulse-support is left unimplemented.
+>> > 
+>> > Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
 >
->> >> Right, but please do look around for other receivers using this chipset
->> >> so that we can make the binding generic enough to cover those as well
->> >> (e.g. by choosing representative resource names).
->> >>
->> > OK will have a look.
+>> > +static int mtk_set_active(struct gnss_serial *gserial)
+>> > +{
+>> > +	struct mtk_data *data = gnss_serial_get_drvdata(gserial);
+>> > +	int ret;
+>> > +
+>> > +	ret = regulator_enable(data->vcc);
+>> > +	if (ret)
+>> > +		return ret;
+>> > +
+>> > +	return 0;
+>> > +}
 >> 
->> The only mt3339-based receivers I have found are:
->> - [0] Globaltop
->> - [1] Locosys / Pololu
->> They both only provide the UART interface and do not list the I2C/SPI
->> interfaces.
+>> Hello
 >> 
->> [0] https://cdn-shop.adafruit.com/datasheets/GlobalTop-FGPMMOPA6H-Datasheet-V0A.pdf
->> [1] https://www.pololu.com/file/0J641/LS20030~3_datasheet_v1.3.pdf
+>> This could be simplified to return regulator_enable(data->vcc);
 >
-> I found tree more:
+> Indeed, but I prefer this style which clearly separates the error path
+> from the success path while making the success return value explicit.
 >
-Ah nice.
 
->  - Globaltop PA6C
->
->    - https://cdn-shop.adafruit.com/datasheets/GlobalTop-FGPMMOPA6C-Datasheet-V0A-Preliminary.pdf
->
->  - Linx RM series
->    - https://linxtechnologies.com/wp/wp-content/uploads/rxm-gps-rm.pdf
+It respects the coding style/standard and I prefer the original version.
+It's also easier to debug if you want to add extra code on error.
 
-This is a different chip: MT3337; Apparently this chip only provides an
-UART interface: https://labs.mediatek.com/en/chipset/MT3337
-However it looks interesting. I'll look for a sample to test it in the
-future :)
+>> Furthermore, after this simplification, the function seems useless.
 >
->  - ublox IT530
->    - https://www.u-blox.com/sites/default/files/products/documents/IT530_DataSheet_%28FTX-HW-12008%29.pdf
->
-> All with uart-interface only and similar pins names, although the ublox
-> device do have some additional features we can worry about later.
->
-> As all but the ublox device use VBACKUP for the backup supply, do you
-> mind if I change the binding to use "vbackup-supply" instead of
-> "v-bckp-supply" (which is a ublox-ism) when applying?
+> Why do you think so? You still need to retrieve the regulator from the
+> driver data. Sure, this could be folded into mtk_set_power(), but that
+> would be less ideal if there are more resources that need to be managed
+> (e.g. an external lna supply).
 
-I don't mind. You can go ahead and change the binding.
-For reference, the v4 patch serie:
-https://lkml.kernel.org/r/1550070569-18588-1-git-send-email-lollivier@baylibre.com
-
-Thanks,
-Loys
+I would be in favor to keep mtk_set_active. It clearly shows when the
+regulator is enabled.
+It also seems logic to have an enable/standby function in the driver.
+Even if those are trivial (for now).
 
 >
 > Thanks,
