@@ -1,15 +1,16 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 4/5] iio:adc:lpc32xx Cleanup headers
-Date: Fri, 15 Feb 2019 16:42:55 +0100
-Message-ID: <87r2c92h34.fsf@FE-laptop>
-References: <20190208160944.13281-1-gregory.clement@bootlin.com>
- <20190208160944.13281-5-gregory.clement@bootlin.com>
- <20190209171646.49c75afc@archlinux>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: Re: [PATCH V3 3/4] dt-bindings: perf: imx8-ddr: add imx8qxp ddr
+ performance monitor
+Date: Fri, 15 Feb 2019 09:45:04 -0600
+Message-ID: <CAHrpEqRGKeO2E15TFjgvBOug-nGc6UO3nkQrmvJL9TKzYp-T_A@mail.gmail.com>
+References: <1550081533-25000-1-git-send-email-Frank.Li@nxp.com>
+ <1550081533-25000-3-git-send-email-Frank.Li@nxp.com>
+ <20190215135834.GA55505@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190209171646.49c75afc@archlinux>
+In-Reply-To: <20190215135834.GA55505@lakrids.cambridge.arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,53 +20,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Hartmut Knaack <knaack.h@gmx.de>, linux-arm-kernel@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Li <frank.li@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9uYXRoYW4sCiAKIE9uIHNhbS4sIGbDqXZyLiAwOSAyMDE5LCBKb25hdGhhbiBDYW1lcm9u
-IDxqaWMyM0BrZXJuZWwub3JnPiB3cm90ZToKCj4gT24gRnJpLCAgOCBGZWIgMjAxOSAxNzowOTo0
-MyArMDEwMAo+IEdyZWdvcnkgQ0xFTUVOVCA8Z3JlZ29yeS5jbGVtZW50QGJvb3RsaW4uY29tPiB3
-cm90ZToKPgo+PiBBIGZldyBoZWFkZXJzIHdhcyB1c2VsZXNzOiByZW1vdmUgdGhlbSwgYW5kIGFs
-c28gc29ydCB0aGVtIGluIGFscGhhYmV0aWMKPj4gb3JkZXIuCj4+IAo+PiBTaWduZWQtb2ZmLWJ5
-OiBHcmVnb3J5IENMRU1FTlQgPGdyZWdvcnkuY2xlbWVudEBib290bGluLmNvbT4KPiBIbW0uIEdp
-dmVuIHRoZSBoZWFkZXJzIGluIHF1ZXN0aW9uIGFyZSBtb3N0bHkgb25seSB1c2VsZXNzIChJIHRo
-aW5rKQo+IGluIHRoZSBzZW5zZSB0aGV5IGFyZSBhbHdheXMgaW5jbHVkZWQgYnkgc29tZXRoaW5n
-IGVsc2UsIEknbQo+IG5vdCBzdXJlIHRoaXMgcGF0Y2ggaXMgd29ydGggdGhlIGNodXJuLgo+Cj4g
-SXQncyBhbHNvIHRyaWNreSB0byBzZWUgd2hpY2ggb25lcyB3ZXJlIGFjdHVhbGx5IHJlbW92ZWQK
-PiBnaXZlbiB0aGUgY29tYmluYXRpb24gd2l0aCBzb3J0aW5nLgo+IEkgdGhpbmsgaXQncyBqdXN0
-IGtlcm5lbC5oLCBkZXZpY2UuaCwgZXJyLmggYWxsIG9mIHdoaWNoCj4gYXJlIHVzZWQgaW4gdmFy
-aW91cyB3YXlzIGFuZCBvZnRlbiBkaXJlY3RseSBpbmNsdWRlZC4KCkFjdHVhbGx5LCBhcyBJIG5l
-ZWRlZCB0byBhZGQgYSBoZWFkZXIsIEkgd2FudGVkIHRvIHNvcnQgdGhlIGxpc3QgdG8gcHV0Cml0
-IGluIHRoZSByaWdodCBwbGFjZSBhbmQgdGhlbiBzb21lIG9mIHRoZSBoZWFkZXIgbG9va2VkIHN1
-cGVyZmx1b3VzCnRoYXQgd2h5IEkgcmVtb3ZlIHNvbWUgb2YgdGhlbS4gRm9yIGV4YW1wbGUgdGhl
-cmUgd2FzIG5vIHJlYXNvbiB0byB1c2UKc2xhYi5oIG9yIG9mLmguCgo+Cj4gVGhlIG90aGVyIG9u
-ZSBpcyB0aGUgaWlvL3N5c2ZzLmggZmlsZS4gIFRoYXQgb25lIHdlIGNvdWxkCj4gZG8gdG8gZXZl
-bnR1YWxseSBraWxsIG9mZiBlbnRpcmVseSwgc28gaGFwcHkgdG8gc2VlIHRoYXQKPiBvbmUgYWxv
-bmUgZ28uCgpJIGFtIG5pdCBzdXJlIHRvIGtub3cgd2hhdCBkbyB5b3Ugd2FudCB3aXRoIHRoaXMg
-cGF0Y2guCgpHcmVnb3J5CgoKPgo+IEpvbmF0aGFuCj4KPj4gLS0tCj4+ICBkcml2ZXJzL2lpby9h
-ZGMvbHBjMzJ4eF9hZGMuYyB8IDE1ICsrKystLS0tLS0tLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQs
-IDQgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pCj4+IAo+PiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9paW8vYWRjL2xwYzMyeHhfYWRjLmMgYi9kcml2ZXJzL2lpby9hZGMvbHBjMzJ4eF9hZGMu
-Ywo+PiBpbmRleCBlMzYxYzE1MzJhNzUuLmYzOTFjMWUxMDEzNiAxMDA2NDQKPj4gLS0tIGEvZHJp
-dmVycy9paW8vYWRjL2xwYzMyeHhfYWRjLmMKPj4gKysrIGIvZHJpdmVycy9paW8vYWRjL2xwYzMy
-eHhfYWRjLmMKPj4gQEAgLTcsMjAgKzcsMTMgQEAKPj4gICAqICBDb3B5cmlnaHQgKEMpIDIwMTEs
-IDIwMTIgUm9sYW5kIFN0aWdnZSA8c3RpZ2dlQGFudGNvbS5kZT4KPj4gICAqLwo+PiAgCj4+IC0j
-aW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4+IC0jaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2
-aWNlLmg+Cj4+IC0jaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+Cj4+IC0jaW5jbHVkZSA8bGlu
-dXgvZGV2aWNlLmg+Cj4+IC0jaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4+IC0jaW5jbHVkZSA8
-bGludXgvc2xhYi5oPgo+PiAtI2luY2x1ZGUgPGxpbnV4L2lvLmg+Cj4+ICAjaW5jbHVkZSA8bGlu
-dXgvY2xrLmg+Cj4+IC0jaW5jbHVkZSA8bGludXgvZXJyLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgv
-Y29tcGxldGlvbi5oPgo+PiAtI2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4+IC0KPj4gICNpbmNsdWRl
-IDxsaW51eC9paW8vaWlvLmg+Cj4+IC0jaW5jbHVkZSA8bGludXgvaWlvL3N5c2ZzLmg+Cj4+ICsj
-aW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvaW8uaD4KPj4g
-KyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9k
-ZXZpY2UuaD4KPj4gIAo+PiAgLyoKPj4gICAqIExQQzMyWFggcmVnaXN0ZXJzIGRlZmluaXRpb25z
-Cj4KPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4g
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwKCi0tIApHcmVnb3J5IENsZW1lbnQsIEJvb3RsaW4KRW1iZWRkZWQg
-TGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vYm9vdGxpbi5jb20KCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Feb 15, 2019 at 7:58 AM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Wed, Feb 13, 2019 at 06:12:33PM +0000, Frank Li wrote:
+> > Added binding doc for imx8qxp ddr performance monitor
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+>
+> As a general thing, please put the DT binding earlier in the series than
+> the code and/or DTs using it, as per:
+>
+>   Documentation/devicetree/bindings/submitting-patches.txt
+>
+> > ---
+> > Change from v2 to v3
+> > * ddr_pmu0 -> ddr-pmu
+> >
+> >  .../devicetree/bindings/perf/fsl-imx-ddr.txt       | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+> > new file mode 100644
+> > index 0000000..9d55182
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+> > @@ -0,0 +1,22 @@
+> > +* Freescale(NXP) IMX8 DDR performance monitor
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: (standard compatible string) should be one of:
+> > +     "fsl,imx8-ddr-pmu"
+> > +     "fsl,imx8m-ddr-pmu"
+>
+> Please remove the "(standard xxx)" bits, they're just noise.
+
+Okay.
+
+>
+> Otherwise, this generally looks OK.
+>
+> Are the DDR PMU registers part of the DDR controller register block?
+
+Not. It is additional module.
+
+>
+> Thanks,
+> Mark.
+>
+> > +
+> > +- reg: (standard registers property) physical address and size
+> > +
+> > +- interrupts: (standard interrupt property) single interrupt
+> > +     generated by the control block
+> > +
+> > +Example:
+> > +
+> > +     ddr-pmu@5c020000 {
+> > +             compatible = "fsl,imx8-ddr-pmu";
+> > +             reg = <0x0 0x5c020000 0x0 0x10000>;
+> > +             interrupt-parent = <&gic>;
+> > +             interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+> > +     };
+> > +
+> > --
+> > 2.5.2
+> >
