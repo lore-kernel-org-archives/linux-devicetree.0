@@ -1,74 +1,105 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 5/6] dt-bindings: i2c: Add Mediatek MT8183 i2c binding
-Date: Fri, 15 Feb 2019 10:02:57 +0100
-Message-ID: <20190215090257.geumssb2cucs7rzt@ninjato>
-References: <1548057574-8061-1-git-send-email-qii.wang@mediatek.com>
- <1548057574-8061-6-git-send-email-qii.wang@mediatek.com>
- <20190205131641.GF12401@kunai>
- <1550109268.30065.13.camel@mhfsdcap03>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
+Date: Fri, 15 Feb 2019 10:09:50 +0100
+Message-ID: <c2eb829b-96a7-20cb-913f-ce4214f2156c@suse.de>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TY1PR01MB1770A46D7FA45A8AFA923DADC0670@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190215075226.413d55dc@jawa>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pzwi6i3t3hyzmfbc"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550109268.30065.13.camel@mhfsdcap03>
+In-Reply-To: <20190215075226.413d55dc@jawa>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Qii Wang <qii.wang@mediatek.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, ryder.lee@mediatek.com, xinping.qian@mediatek.com, liguo.zhang@mediatek.com, Rob Herring <robh@kernel.org>
+To: Lukasz Majewski <lukma@denx.de>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Simon Horman <horms@verge.net.au>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ben Whitten <ben.wh>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lukasz and Fabrizio,
 
---pzwi6i3t3hyzmfbc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am 15.02.19 um 07:52 schrieb Lukasz Majewski:
+> The best approach is to run:
+> 
+> git format patch -1 <your patch sha>
+> 
+> And then 
+> 
+> scripts/get_maintainer.pl 0001-xxxxxxx
+> 
+> You shall see the the list of people to send the patch.
 
-On Thu, Feb 14, 2019 at 09:54:28AM +0800, Qii Wang wrote:
-> On Tue, 2019-02-05 at 14:16 +0100, Wolfram Sang wrote:
-> > > +  - mediatek,share-i3c: i3c controller can share i2c function.
-> >=20
-> > I am not happy with this binding. There must be a better way of using
-> > the I3C controller in I2C mode. I think it would be easier to tell if we
-> > had an I3C driver to see how it implements I2C fallback there. Is the
-> > I3C driver on the way?
-> >=20
->=20
-> I am very sorry for the late reply due to the Chinese New Year holiday.
+No, that does not answer his question. And please don't top-post.
 
-No worries. I hope you enjoyed the holidays!
+>> Who is the best person for taking this patch?
 
-> After confirmation, for I2C mode in I3C controller, we will push an I3C
-> driver to implement I2C fallback there later, and we will remove
-> "mediatek,share-i3c" for i2c controller driver in the next patch.
+The answer is: whomever is taking dt-bindings patches in the following
+10 patches that make use of this prefix, once you have a Reviewed-by
+from Rob. So, most likely the Renesas kernel maintainer(s), i.e. Simon,
+which differs from get_maintainers.pl of vendor-prefixes.txt.
 
-The problem with DT bindings is that you need to support them forever
-once you introduced them. Because there might be old device trees on
-boards out there which need the property. So, I don't like the idea of
-having a temporary binding which is meant to be removed anyway. My take
-is that you should just send out the I3C driver which will handle the
-I2C support then.
+Regards,
+Andreas
 
-Adding Rob to CC in case he has a different opinion.
+>>> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>>> Sent: 16 January 2019 18:38
+>>> Subject: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon
+>>> Linux.
+>>>
+>>> From: Biju Das <biju.das@bp.renesas.com>
+>>>
+>>> Add Silicon Linux to the list of devicetree vendor prefixes.
+>>>
+>>> Website: http://www.si-linux.co.jp
+>>>
+>>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+>>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>>> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>> b/Documentation/devicetree/bindings/vendor-prefixes.txt index
+>>> 4b1a2a8..02a7037 100644 ---
+>>> a/Documentation/devicetree/bindings/vendor-prefixes.txt +++
+>>> b/Documentation/devicetree/bindings/vendor-prefixes.txt @@ -344,6
+>>> +344,7 @@ sgxSGX Sensortech sharpSharp Corporation
+>>>  shimafujiShimafuji Electric, Inc.
+>>>  si-enSi-En Technology Ltd.
+>>> +si-linuxSilicon Linux Corporation
+>>>  sifiveSiFive, Inc.
+>>>  sigmaSigma Designs, Inc.
+>>>  siiSeiko Instruments, Inc.
+>>> --
+>>> 2.7.4  
+>>
+>>
+>>
+>> Renesas Electronics Europe GmbH,Geschaeftsfuehrer/President : Michael
+>> Hannawald, Sitz der Gesellschaft/Registered office: Duesseldorf,
+>> Arcadiastrasse 10, 40472 Duesseldorf,
+>> Germany,Handelsregister/Commercial Register: Duesseldorf, HRB 3708
+>> USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WEEE
+>> reg. no.: DE 14978647
+> 
+> 
+> 
+> 
+> Best regards,
+> 
+> Lukasz Majewski
+> 
+> --
+> 
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+> 
 
 
---pzwi6i3t3hyzmfbc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlxmgEEACgkQFA3kzBSg
-KbaYzQ/9GMVjiYKg0Awt5r1WZ23GftvsUaudHFYCqO3OuZ4iTC3cHFAvYIDxsUKh
-1L/HNEup5EICTXVUe6AoFPe6MFyC4w8e7/00n2Nsj9mfTUFjaR/2DcRWqrR0kv4T
-x48s/UmUVhe8PtRT7AbX3aKkA/Jm6puhFHPCjpaLaDX20mw35B/hLIJ7lkqmpce0
-fN1R2Vuo2xGHueDHv4MBbtsTC4wcOTfPVJwNVfd6nOoDOhQX+UyAqYJyoQ8exaJM
-QmCfPea170F4Ov6fLgrGilWqwiN9EQDbudmlZA8vt0dflDMG+Awt5rFgEpvfKlj0
-Zndw5Kwi1NCCH6b4P/GcUOaTKcrNwwA7b7/A4/dQTIVcAx/WXM+ibKY7ZQz3mfAg
-LgswXBgkDL3jx3gLjHWtYjc39KVzROIBed24BIX80F1G7tfvkkhshm9KJ7gi4yks
-NA2CSlS4Ufgqb0LVgRGK7e6LEFVoBL4kMlMutSToiWdrwB1tJAdWj8F986EB4v9t
-5BzNW9pjN922TqY0k2gtrhFcFGyeb1BP9rvobMaFHLLt31hCIp4gkuWln7TjMFtD
-LiHknLpKMjHUUd4jib/5RRnXtIAmSh7dag/5zM3m7m+Jx4T2k8E5MCQ9eI4ZlGfm
-Rw2Pno7LzRHIeS5oZBAVt2n4U2gfl/okiqdkP0d9kMF1z5vbduY=
-=A+6v
------END PGP SIGNATURE-----
-
---pzwi6i3t3hyzmfbc--
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
