@@ -1,55 +1,57 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add HI3670 reset controller
- binding
-Date: Fri, 15 Feb 2019 11:25:30 +0100
-Message-ID: <1550226330.4531.10.camel@pengutronix.de>
-References: <20190215054955.788-1-manivannan.sadhasivam@linaro.org>
-         <20190215054955.788-2-manivannan.sadhasivam@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Stefan Mavrodiev <stefan@olimex.com>
+Subject: [PATCH v2 0/8] leds: Add AXP20X CHGLED
+Date: Fri, 15 Feb 2019 13:50:05 +0200
+Message-ID: <20190215115013.11098-1-stefan@olimex.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190215054955.788-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, xuwei5@hisilicon.com, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, guodong.xu@linaro.org, john.stultz@linaro.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC
+        DEVICE DRIVERS" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner
+        sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
+Cc: Stefan Mavrodiev <stefan@olimex.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-02-15 at 11:19 +0530, Manivannan Sadhasivam wrote:
-> HI3670 SoC is architecturally same as the HI3660 SoC. Hence, the same
-> driver is reused for HI3670 SoC and the binding is documented here which
-> uses the fallback approach.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../devicetree/bindings/reset/hisilicon,hi3660-reset.txt   | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> index 2bf3344b2a02..2df4bddeb688 100644
-> --- a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> @@ -5,11 +5,12 @@ Please also refer to reset.txt in this directory for common reset
->  controller binding usage.
->  
->  The reset controller registers are part of the system-ctl block on
-> -hi3660 SoC.
-> +hi3660 and hi3670 SoCs.
->  
->  Required properties:
-> -- compatible: should be
-> -		 "hisilicon,hi3660-reset"
-> +- compatible: should be one of the following:
-> +		 "hisilicon,hi3660-reset" for HI3660
-> +		 "hisilicon,hi3670-reset", "hisilicon,hi3660-reset" for HI3670
->  - hisi,rst-syscon: phandle of the reset's syscon.
->  - #reset-cells : Specifies the number of cells needed to encode a
->    reset source.  The type shall be a <u32> and the value shall be 2.
+This series add support for CHGLED pin found on most of
+X-Powers PMICs.
 
-Thank you, I think it makes sense for this to be merged together with
-the other patch via the linux-hisi tree.
+Changes for v2:
+- use mutex when accessing hardware registers
+- fixed LED naming style
+- fixed some typos
+- fix variable types when showing attributes
+- remove useless private data
+- fix binding documentation
+- add device consumers
 
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+Stefan Mavrodiev (8):
+  leds: Add support for AXP20X CHGLED
+  mfd: axp20x: Add axp20x-led cell
+  dt-bindings: leds: Add binding for axp20x-led device driver
+  arm64: dts: allwinner: axp803: add charge led node
+  arm64: dts: allwinner: Enable AXP803 CHGLED for Olimex boards
+  arm: dts: axpxx: add charge led node
+  ARM: dts: sun7i: Enable AXP209 CHGLED for Olimex boards
+  ARM: dts: sun8i: a33: Enable AXP223 CHGLED for A33-OLinuXino
 
-regards
-Philipp
+ .../devicetree/bindings/leds/leds-axp20x.txt  |  74 +++++
+ arch/arm/boot/dts/axp209.dtsi                 |   5 +
+ arch/arm/boot/dts/axp22x.dtsi                 |   5 +
+ arch/arm/boot/dts/axp81x.dtsi                 |   5 +
+ .../arm/boot/dts/sun7i-a20-olimex-som-evb.dts |   6 +
+ .../boot/dts/sun7i-a20-olimex-som204-evb.dts  |   6 +
+ .../boot/dts/sun7i-a20-olinuxino-lime2.dts    |   6 +
+ .../boot/dts/sun7i-a20-olinuxino-micro.dts    |   6 +
+ arch/arm/boot/dts/sun8i-a33-olinuxino.dts     |   6 +
+ arch/arm64/boot/dts/allwinner/axp803.dtsi     |   5 +
+ .../dts/allwinner/sun50i-a64-olinuxino.dts    |   6 +
+ .../boot/dts/allwinner/sun50i-a64-teres-i.dts |   6 +
+ drivers/leds/Kconfig                          |  10 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-axp20x.c                    | 291 ++++++++++++++++++
+ drivers/mfd/axp20x.c                          |  24 +-
+ 16 files changed, 461 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.txt
+ create mode 100644 drivers/leds/leds-axp20x.c
+
+-- 
+2.17.1
