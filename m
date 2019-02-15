@@ -1,89 +1,57 @@
 From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v6 0/3] Stingray thermal driver support
-Date: Fri, 15 Feb 2019 09:50:51 +0530
-Message-ID: <CABe79T4bcNs9efLRt1OsTekT+9PHq837x0fngf0kGUdkC5mMsA@mail.gmail.com>
-References: <1546505734-24527-1-git-send-email-srinath.mannam@broadcom.com>
- <a6113115-453c-4606-f99d-c79263d8f4bb@broadcom.com> <20190205235811.GA19687@localhost.localdomain>
+Subject: Re: [PATCH v3 0/3] Stingray USB PHY driver support
+Date: Fri, 15 Feb 2019 10:00:22 +0530
+Message-ID: <CABe79T6BpN1FN5Q=f1TYkFDO-yitR_Zjd1vf669POho-wDQRKw@mail.gmail.com>
+References: <1549474347-7224-1-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205235811.GA19687@localhost.localdomain>
+In-Reply-To: <1549474347-7224-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Ray Jui <ray.jui@broadcom.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-pm@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+Hi Kishon,
 
-Could you please provide your review comments?
+Could you please help to review and provide your comments to this
+patch series when you have time?
 
 Regards,
 Srinath.
 
-On Wed, Feb 6, 2019 at 5:28 AM Eduardo Valentin <edubezval@gmail.com> wrote:
+On Wed, Feb 6, 2019 at 11:03 PM Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
 >
-> Hello,
+> These patches add Stingray USB PHY driver and its corresponding
+> DT nodes with documentation.
 >
-> On Mon, Feb 04, 2019 at 04:16:19PM -0800, Ray Jui wrote:
-> > Hi Zhang/Eduardo,
-> >
-> > Can this patch series be merged? It looks like Srinath has addressed all
-> > review comments?
+> This patch set is based on Linux-5.0-rc2.
 >
-> I will take a look. Side note, thermal patches are reviewed on
-> linux-pm@vger.kernel.org. Copying that list it does help because that
-> is how the patches get assigned in patchwork.kernel.org.
+> Changes from v2:
+>   - Addressed Kishon review comments
+>   - Updated patchset to Linux-5.0-rc2
 >
-> >
-> > The following tag should be added to the binding document patch:
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> >
-> > Thanks,
-> >
-> > Ray
-> >
-> > On 1/3/2019 12:55 AM, Srinath Mannam wrote:
-> > > These patches adds the stingray thermal driver and its
-> > > corresponding DT nodes with documentation.
-> > >
-> > > Changes from v5
-> > >   - Addressed Eduardo Valentin comments.
-> > >
-> > > Changes from v4
-> > >   - Addressed Rob Herring comments on DT parameters and
-> > >     thermal driver architecture.
-> > >   - Removed brcm,max-crit-temp DT parameter
-> > >   - Changed driver to thermal sensor registration model.
-> > >   - Added trip DT properties.
-> > >
-> > > Changes from v3
-> > >   - Addressed Daniel lezcano comments.
-> > >   - Elaborated commit description of thermal driver patch.
-> > >   - Added brcm,max-crit-temp DT parameter.
-> > >
-> > > Changes from v2:
-> > >   - All stingray TMON DT nodes are combine together into single.
-> > >     Temperature registers are combined into one mem resource.
-> > >     brcm,tmon-mask parameter has available TMONs mask value.
-> > >   - All available TMONs are initialized together in single
-> > >     instance of driver probe call.
-> > >
-> > > Changes from v1:
-> > >   - Fixed auto build sparce warning.
-> > >
-> > > Pramod Kumar (3):
-> > >   dt-bindings: thermal: Add binding document for SR thermal
-> > >   thermal: broadcom: Add Stingray thermal driver
-> > >   arm64: dts: stingray: Add Stingray Thermal DT support.
-> > >
-> > >  .../bindings/thermal/brcm,sr-thermal.txt           | 105 ++++++++++++++++++
-> > >  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89 +++++++++++++++
-> > >  drivers/thermal/Kconfig                            |   3 +-
-> > >  drivers/thermal/broadcom/Kconfig                   |   9 ++
-> > >  drivers/thermal/broadcom/Makefile                  |   1 +
-> > >  drivers/thermal/broadcom/sr-thermal.c              | 122 +++++++++++++++++++++
-> > >  6 files changed, 328 insertions(+), 1 deletion(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-> > >  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
-> > >
+> Changes from v1:
+>   - Addressed Kishon review comments
+>   - phy init call return value handle
+>
+> Srinath Mannam (3):
+>   dt-bindings: phy: Add Stingray USB PHY binding document
+>   phy: sr-usb: Add Stingray USB PHY driver
+>   arm64: dts: Add USB DT nodes for Stingray SoC
+>
+>  .../bindings/phy/brcm,stingray-usb-phy.txt         |  62 ++++
+>  .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  95 ++++++
+>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
+>  drivers/phy/broadcom/Kconfig                       |  11 +
+>  drivers/phy/broadcom/Makefile                      |   1 +
+>  drivers/phy/broadcom/phy-bcm-sr-usb.c              | 371 +++++++++++++++++++++
+>  6 files changed, 541 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
+>  create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
+>
+> --
+> 2.7.4
+>
