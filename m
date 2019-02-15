@@ -1,62 +1,38 @@
-From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH v2 5/8] arm64: dts: allwinner: Enable AXP803 CHGLED for Olimex boards
-Date: Fri, 15 Feb 2019 13:50:10 +0200
-Message-ID: <20190215115013.11098-6-stefan@olimex.com>
-References: <20190215115013.11098-1-stefan@olimex.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH] ARM: dts: rockchip: add chosen node on veyron chromebooks
+Date: Fri, 15 Feb 2019 12:51:50 +0100
+Message-ID: <20190215115150.32299-1-enric.balletbo@collabora.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190215115013.11098-1-stefan@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC
-        DEVICE DRIVERS" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner
-        sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
-Cc: Stefan Mavrodiev <stefan@olimex.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Teres-I and A64-OLinuXino commes with populated LED connected
-to AXP803. So to be used as battery indication, pass the LED control
-to the charger itself in mode 0 ( FULL while charging, OFF no battery
-or completed).
+In order to use earlycon, the stdout-path property needs to be set
+in the chosen node.
 
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 6 ++++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts   | 6 ++++++
- 2 files changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index f7a4bccaa5d4..7d6930319fba 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -177,6 +177,12 @@
+ arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+index b54746df3661..8890967ed572 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+@@ -62,6 +62,10 @@
+ 		pwm-off-delay-ms = <10>;
+ 	};
  
- #include "axp803.dtsi"
- 
-+&axp_led {
-+	label = "a64-olinuxino:yellow:chgled";
-+	status = "okay";
-+	x-powers,charger-mode = <0>;
-+};
++	chosen {
++		stdout-path = "serial2:115200n8";
++	};
 +
- &reg_aldo1 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <2800000>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index c455b24dd079..cdffdd4e4561 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -145,6 +145,12 @@
- 
- #include "axp803.dtsi"
- 
-+&axp_led {
-+	label = "teres-i:yellow:chgled";
-+	status = "okay";
-+	x-powers,charger-mode = <0>;
-+};
-+
- &reg_aldo1 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <2800000>;
+ 	gpio-charger {
+ 		compatible = "gpio-charger";
+ 		charger-type = "mains";
 -- 
-2.17.1
+2.20.1
