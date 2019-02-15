@@ -1,173 +1,124 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 3/6] dt-bindings: pinctrl: mt8183: add binding document
-Date: Fri, 15 Feb 2019 10:35:39 +0100
-Message-ID: <2b221339-3933-2a25-ab60-d4d772d2873a@gmail.com>
-References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
- <1550210558-30516-4-git-send-email-erin.lo@mediatek.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v1 1/1] of: unittest: unflatten device tree on UML when testing
+Date: Fri, 15 Feb 2019 01:49:45 -0800
+Message-ID: <CAFd5g44HkBLJmK8e4F+iaGPg1FEzubGtcUW-251GAOv1UmE5rg@mail.gmail.com>
+References: <20190212185305.112847-1-brendanhiggins@google.com>
+ <20190212185305.112847-2-brendanhiggins@google.com> <4cb7ca12-ce60-7516-b7eb-aef08f607acc@gmail.com>
+ <CAFd5g441+6ATUKcNz7OstAB6Qd2BqeDh77SNnGUpZGBNvgysmg@mail.gmail.com> <bfa00740-9b67-58f9-6273-3de98de952f6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550210558-30516-4-git-send-email-erin.lo@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <bfa00740-9b67-58f9-6273-3de98de952f6@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Zhiyong Tao <zhiyong.tao@mediatek.com>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 14, 2019 at 6:48 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 2/14/19 5:26 PM, Brendan Higgins wrote:
+> > On Thu, Feb 14, 2019 at 4:10 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> On 2/12/19 10:53 AM, Brendan Higgins wrote:
+> >>> UML supports enabling OF, and is useful for running the device tree
+> >>> tests, so add support for unflattening device tree blobs so we can
+> >>> actually use it.
+> >>>
+> >>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> >>> ---
+> >>>  drivers/of/unittest.c | 3 +++
+> >>>  1 file changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> >>> index 84427384654d5..effa4e2b9d992 100644
+> >>> --- a/drivers/of/unittest.c
+> >>> +++ b/drivers/of/unittest.c
+> >>> @@ -2527,6 +2527,9 @@ static int __init of_unittest(void)
+> >>>       }
+> >>>       of_node_put(np);
+> >>>
+> >>> +     if (IS_ENABLED(CONFIG_UML))
+> >>> +             unflatten_device_tree();
+> >>> +
+> >>>       pr_info("start of unittest - you will see error messages\n");
+> >>>       of_unittest_check_tree_linkage();
+> >>>       of_unittest_check_phandles();
+> >>>
+> >>
+> >> (Insert my usual disclaimer that I am clueless about UML, I still need to learn
+> >> about it...)
+> >>
+> >> This does not look correct to me.
+> >>
+> >> A few lines earlier in of_unittest(), the live devicetree needs to exist for
+> >> unittest_data_data() and a few of_*() functions to succeed.  So it seems
+> >> that the unflatten_device_tree() for uml should be at the beginning of
+> >> of_unittest().
+> >
+> > It is true that other functions ahead of it depend on the presence of
+> > a device tree, but an unflattened tree does get linked in somewhere
+> > else. Despite that, this is needed for overlay_base_root. I got
+> > similar behavior if you don't link in a flattened device tree on x86.
+> > Thus, the order in which you call them doesn't actually seem to
+> > matter. I found no difference from changing the order in UML myself.
+> >
+> > Without my patch we get the following error,
+> > ### dt-test ### FAIL of_unittest_overlay_high_level():2372
+> > overlay_base_root not initialized
+> > ### dt-test ### end of unittest - 219 passed, 1 failed
+> >
+> > With my patch we get:
+> > ### dt-test ### end of unittest - 224 passed, 0 failed
+>
+> Thanks for reporting both the failure and the success cases,
+> that helps me understand a little bit better.
+>
+> If instead of the above patch, if you add the following (untested,
+> not even compile tested) to the beginning of of_unittest():
+>
+>         if (IS_ENABLED(CONFIG_UML))
+>                 unittest_unflatten_overlay_base();
+>
+> does that also result in a good test result of:
+>
+>         ### dt-test ### end of unittest - 224 passed, 0 failed
 
+Yep, I just tried it. It works as you suspected.
 
-On 15/02/2019 07:02, Erin Lo wrote:
-> From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> 
-> The commit adds mt8183 compatible node in binding document.
-> 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> ---
->  .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt | 115 +++++++++++++++++++++
->  1 file changed, 115 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> new file mode 100644
-> index 0000000..364e673
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> @@ -0,0 +1,115 @@
-> +* Mediatek MT8183 Pin Controller
-> +
-> +The Mediatek's Pin controller is used to control SoC pins.
-> +
-> +Required properties:
-> +- compatible: value should be one of the following.
-> +	"mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
-> +- gpio-controller : Marks the device node as a gpio controller.
-> +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
-> +  binding is used, the amount of cells must be specified as 2. See the below
-> +  mentioned gpio binding representation for description of particular cells.
-> +- gpio-ranges : gpio valid number range.
-> +- reg: physicall address base for gpio base registers. There are nine
+>
+> I think I need to find some time to build and boot a UML kernel soon.
 
-s/physicall/physical
+It's really no big deal, just copy the .config I sent and build with
+`make ARCH=um` then you "boot" the kernel with `./linux` (note this
+will mess up your terminal settings); that's it! (Shameless plug: you
+can also try it out with the KUnit patchset with
+`./tools/testing/kunit/kunit.py --timeout=30 --jobs=12 --defconfig`,
+which builds the kernel with a pretty similar config, boots the
+kernel, and then parses the output for you. ;-) )
 
-> +  physicall address base in mt8183. They are 0x10005000, 0x11F20000,
-> +  0x11E80000, 0x11E70000, 0x11E90000, 0x11D30000, 0x11D20000, 0x11C50000,
-> +  0x11F30000.
-> +
-> +	Eg: <&pio 6 0>
-> +	<[phandle of the gpio controller node]
-> +	[line number within the gpio controller]
-> +	[flags]>
-> +
-> +	Values for gpio specifier:
-> +	- Line number: is a value between 0 to 202.
-> +	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
-> +            Only the following flags are supported:
-> +            0 - GPIO_ACTIVE_HIGH
-> +            1 - GPIO_ACTIVE_LOW
-> +
-> +Optional properties:
-> +- reg-names: gpio base register names. There are nine gpio base register
-> +  names in mt8183. They are "iocfg0", "iocfg1", "iocfg2", "iocfg3", "iocfg4",
-> +  "iocfg5", "iocfg6", "iocfg7", "iocfg8".
-> +- interrupt-controller: Marks the device node as an interrupt controller
-> +- #interrupt-cells: Should be two.
-> +- interrupts : The interrupt outputs from the controller.
+>
+> My current _guess_ is that the original problem was not a failure to
+> unflatten any present devicetree in UML but instead that the UML
+> kernel does not call unflatten_device_tree() and thus fails to
+> indirectly call unittest_unflatten_overlay_base(), which is
+> called by unflatten_device_tree().
 
-we are missing interrupt-parent here.
+I think you are right. Sorry for not noticing this before making my
+change. Since it was pretty much the only architecture (the only one I
+care about) that does not unflatten DT, I assumed that was the
+problem. I didn't put too much thought into it after that point beyond
+making sure that it did what I wanted.
 
-> +
-> +Please refer to pinctrl-bindings.txt in this directory for details of the
-> +common pinctrl bindings used by client devices.
-> +
-> +Subnode format
-> +A pinctrl node should contain at least one subnodes representing the
-> +pinctrl groups available on the machine. Each subnode will list the
-> +pins it needs, and how they should be configured, with regard to muxer
-> +configuration, pullups, drive strength, input enable/disable and input schmitt.
-> +
-> +    node {
-> +	pinmux = <PIN_NUMBER_PINMUX>;
-> +	GENERIC_PINCONFIG;
-> +    };
-> +
-> +Required properties:
-> +- pinmux: integer array, represents gpio pin number and mux setting.
-> +    Supported pin number and mux varies for different SoCs, and are defined
-> +    as macros in boot/dts/<soc>-pinfunc.h directly.
-> +
-> +Optional properties:
-> +- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
-> +    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
-> +    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
-> +
-> +    Some special pins have extra pull up strength, there are R0 and R1 pull-up
-> +    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
-> +    So when config mediatek,pull-up-adv or mediatek,pull-down-adv,
-> +    it support arguments for those special pins.
+>
+> unittest_unflatten_overlay_base() is an unfortunate wart that I
+> added, but I don't have a better alternative yet.
 
-I wonder if we should mention which this special pins are. A look at the driver
-told me that it is not possible to know that by reading the source code neither.
-Linus, what do you think?
+Hey, I get it. No worries.
 
-What about mediatek,tdsel and mediatek,rdsel? They are not supported?
+In any case, it seems like unittest_unflatten_overlay_base() is the
+right function to call there. I will send out patch. Do you want me to
+send a patch on top of this one, or do you want to revert this one and
+for me to send a v2 follow up to this patch? I don't care either way,
+whatever you guys prefer.
 
-Wouldn't it make sense to have one binding description for paris and then just
-create SoC specifics bindings?
-
-> +
-> +    When config drive-strength, it can support some arguments, such as
-> +    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
-
-It can support all drive strength defined in that header file, 2, 4, 6, 8, 10,
-12, 14, 16, 20, 24, 28 and 32 mA?
-
-> +
-> +Examples:
-> +
-> +#include "mt8183-pinfunc.h"
-> +
-> +...
-> +{
-> +	pio: pinctrl@10005000 {
-> +		compatible = "mediatek,mt8183-pinctrl";
-> +		reg = <0 0x10005000 0 0x1000>,
-> +		      <0 0x11F20000 0 0x1000>,
-> +		      <0 0x11E80000 0 0x1000>,
-> +		      <0 0x11E70000 0 0x1000>,
-> +		      <0 0x11E90000 0 0x1000>,
-> +		      <0 0x11D30000 0 0x1000>,
-> +		      <0 0x11D20000 0 0x1000>,
-> +		      <0 0x11C50000 0 0x1000>,
-> +		      <0 0x11F30000 0 0x1000>;
-> +		reg-names = "iocfg0", "iocfg1", "iocfg2",
-> +			    "iocfg3", "iocfg4", "iocfg5",
-> +			    "iocfg6", "iocfg7", "iocfg8";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		gpio-ranges = <&pio 0 0 192>;
-> +		interrupt-controller;
-> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-parent = <&gic>;
-> +		#interrupt-cells = <2>;
-> +
-> +		i2c0_pins_a: i2c0 {
-> +			pins1 {
-> +				pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
-> +					 <PINMUX_GPIO49__FUNC_SDA5>;
-> +				mediatek,pull-up-adv = <11>;
-> +			};
-> +		};
-> +
-> +		i2c1_pins_a: i2c1 {
-> +			pins {
-> +				pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
-> +					 <PINMUX_GPIO51__FUNC_SDA3>;
-> +				mediatek,pull-down-adv = <10>;
-> +			};
-> +		};
-> +		...
-> +	};
-> +};
-> 
+Cheers
