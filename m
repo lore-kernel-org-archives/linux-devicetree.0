@@ -1,86 +1,98 @@
 From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am65: Add MSMC RAM node
-Date: Fri, 15 Feb 2019 10:46:49 +0200
-Message-ID: <a2227e9f-dd47-cc33-b0f2-0be682462d36@ti.com>
-References: <1547199855-16374-1-git-send-email-rogerq@ti.com>
- <5C5980B6.4010502@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-am65-mcu: Add ADC nodes
+Date: Fri, 15 Feb 2019 10:47:37 +0200
+Message-ID: <53e9327d-e941-820e-d83c-d6c5ccf25e26@ti.com>
+References: <20190212122237.10976-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C5980B6.4010502@ti.com>
+In-Reply-To: <20190212122237.10976-1-vigneshr@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, "Andrew F . Davis" <afd@ti.com>
+To: Vignesh R <vigneshr@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/2019 14:25, Roger Quadros wrote:
+On 12/02/2019 14:22, Vignesh R wrote:
+> TI AM654 SoC has two ADC instances in the MCU domain. Add DT nodes for
+> the same.
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ---
 > Tero,
 > 
-> On 11/01/19 11:44, Roger Quadros wrote:
->> The AM65 SoC has 2MB MSMC RAM. Add this as a mmio-sram
->> node so drivers can use it via genpool API.
->>
->> Following areas are marked reserved:
->> - Lower 128KB for ATF
->> - 64KB@0xf0000 for SYSFW
->> - Upper 1MB for cache
->>
->> The reserved locations are subject to change at runtime by
->> the bootloader.
->>
->> Cc: Nishanth Menon <nm@ti.com>
->> Cc: Lokesh Vutla <lokeshvutla@ti.com>
->> Cc: Andrew F. Davis <afd@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> 
-> Is this patch good to pick for -next?
+> Could you also pick up DT bindings here: https://patchwork.kernel.org/patch/10751429/
+> All the Acks are in place.
 
-Queued for 5.1, thanks.
+Queued for 5.1, including the dt-binding.
 
--Tero
+Thanks, Tero
 
 > 
-> cheers,
-> -roger
+>   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 30 +++++++++++++++++++
+>   .../arm64/boot/dts/ti/k3-am654-base-board.dts | 12 ++++++++
+>   2 files changed, 42 insertions(+)
 > 
->> ---
->>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->> index 272cf8f..5a18150 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->> @@ -6,6 +6,26 @@
->>    */
->>   
->>   &cbass_main {
->> +	msmc_ram: sram@70000000 {
->> +		compatible = "mmio-sram";
->> +		reg = <0x0 0x70000000 0x0 0x200000>;
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges = <0x0 0x0 0x70000000 0x200000>;
->> +
->> +		atf-sram@0 {
->> +			reg = <0x0 0x20000>;
->> +		};
->> +
->> +		sysfw-sram@f0000 {
->> +			reg = <0xf0000 0x10000>;
->> +		};
->> +
->> +		l3cache-sram@100000 {
->> +			reg = <0x100000 0x100000>;
->> +		};
->> +	};
->> +
->>   	gic500: interrupt-controller@1800000 {
->>   		compatible = "arm,gic-v3";
->>   		#address-cells = <2>;
->>
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> index 593f718e8fb5..6f7d2b316ded 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> @@ -57,4 +57,34 @@
+>   		#address-cells = <1>;
+>   		#size-cells = <0>;
+>   	};
+> +
+> +	tscadc0: tscadc@40200000 {
+> +		compatible = "ti,am654-tscadc", "ti,am3359-tscadc";
+> +		reg = <0x0 0x40200000 0x0 0x1000>;
+> +		interrupts = <GIC_SPI 580 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&k3_clks 0 2>;
+> +		assigned-clocks = <&k3_clks 0 2>;
+> +		assigned-clock-rates = <60000000>;
+> +		clock-names = "adc_tsc_fck";
+> +
+> +		adc {
+> +			#io-channel-cells = <1>;
+> +			compatible = "ti,am654-adc", "ti,am3359-adc";
+> +		};
+> +	};
+> +
+> +	tscadc1: tscadc@40210000 {
+> +		compatible = "ti,am654-tscadc", "ti,am3359-tscadc";
+> +		reg = <0x0 0x40210000 0x0 0x1000>;
+> +		interrupts = <GIC_SPI 581 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&k3_clks 1 2>;
+> +		assigned-clocks = <&k3_clks 1 2>;
+> +		assigned-clock-rates = <60000000>;
+> +		clock-names = "adc_tsc_fck";
+> +
+> +		adc {
+> +			#io-channel-cells = <1>;
+> +			compatible = "ti,am654-adc", "ti,am3359-adc";
+> +		};
+> +	};
+>   };
+> diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> index e41fc3a5987b..fb6df5c8f85b 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> @@ -163,3 +163,15 @@
+>   		#size-cells= <1>;
+>   	};
+>   };
+> +
+> +&tscadc0 {
+> +	adc {
+> +		ti,adc-channels = <0 1 2 3 4 5 6 7>;
+> +	};
+> +};
+> +
+> +&tscadc1 {
+> +	adc {
+> +		ti,adc-channels = <0 1 2 3 4 5 6 7>;
+> +	};
+> +};
 > 
 
 --
