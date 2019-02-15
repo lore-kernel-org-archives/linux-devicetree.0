@@ -1,125 +1,86 @@
-From: Angus Ainslie <angus@akkea.ca>
-Subject: Re: [RFC 5/5] arm64: dts: imx8mq: Add the opp table and the  cpu-supply nodes
-Date: Thu, 14 Feb 2019 16:55:22 -0800
-Message-ID: <76b2c0e4a61d022f7f798990af4dfd8b@www.akkea.ca>
-References: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
- <1550084693-9797-6-git-send-email-abel.vesa@nxp.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Thu, 14 Feb 2019 18:59:24 -0600
+Message-ID: <61cf956c-77d7-2316-65a4-de5896e5c082@ti.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com>
+ <CACRpkdamWQUW_O+gageB4Q6XuBg+t-h+eW1gpor7_DHvx41j=A@mail.gmail.com>
+ <9c58bc48-90bf-8ac5-7fbd-0f6443e3fc5e@ti.com>
+ <CACRpkdb4Q0efW5MaDmPTmewq-RFwXOTp15DCE1VpPf6g216iBw@mail.gmail.com>
+ <5C65490E.6000800@ti.com> <86ef8asfap.wl-marc.zyngier@arm.com>
+ <5C658CE4.5030307@ti.com> <5C658DD6.8080309@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550084693-9797-6-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <5C658DD6.8080309@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>, Anson Huang <anson.huang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, "Davis, Andrew" <afd@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, ext Tony Lindgren <tony@atomide.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Lechner <david@lechnology.com>, "Nori, Sekhar" <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, nsaulnier@ti.com, jreeder@ti.com, Murali Karicheri <m-karicheri2@ti.com>, woods.technical@gmail.com, Linux-OMAP <linux-omap@vger.kernel.org>, linux-remoteproc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-02-13 11:05, Abel Vesa wrote:
-> Add the opp table containing only non over drive opps.
-> Also add the cpu-supply nodes for the A53 cores in the EVK board.
+On 2/14/19 9:48 AM, Roger Quadros wrote:
+> fixed DTML id.
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 17 +++++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 23 
-> +++++++++++++++++++++++
->  2 files changed, 40 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> index 54737bf..114359e 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> @@ -31,6 +31,23 @@
->  		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
->  		enable-active-high;
->  	};
-> +
-> +};
-> +
-> +&A53_0 {
-> +	cpu-supply = <&sw1a_reg>;
-> +};
-> +
-> +&A53_1 {
-> +	cpu-supply = <&sw1a_reg>;
-> +};
-> +
-> +&A53_2 {
-> +	cpu-supply = <&sw1a_reg>;
-> +};
-> +
-> +&A53_3 {
-> +	cpu-supply = <&sw1a_reg>;
->  };
-> 
->  &fec1 {
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 1a89062..89b2d5f 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -91,6 +91,7 @@
->  			clocks = <&clk IMX8MQ_CLK_ARM>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			operating-points-v2 = <&a53_0_opp_table>;
->  		};
-> 
->  		A53_1: cpu@1 {
-> @@ -101,6 +102,7 @@
->  			clocks = <&clk IMX8MQ_CLK_ARM>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			operating-points-v2 = <&a53_0_opp_table>;
->  		};
-> 
->  		A53_2: cpu@2 {
-> @@ -111,6 +113,7 @@
->  			clocks = <&clk IMX8MQ_CLK_ARM>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			operating-points-v2 = <&a53_0_opp_table>;
->  		};
-> 
->  		A53_3: cpu@3 {
-> @@ -121,6 +124,7 @@
->  			clocks = <&clk IMX8MQ_CLK_ARM>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			operating-points-v2 = <&a53_0_opp_table>;
->  		};
-> 
->  		A53_L2: l2-cache0 {
-> @@ -666,6 +670,25 @@
->  			status = "disabled";
->  		};
-> 
-> +
-> +		a53_0_opp_table: opp-table {
-> +			compatible = "operating-points-v2";
-> +			opp-shared;
-> +
-> +			opp-800000000 {
-> +				opp-hz = /bits/ 64 <800000000>;
-> +				opp-microvolt = <900000>;
-> +				clock-latency-ns = <150000>;
-> +			};
-> +
-> +			opp-1000000000 {
-> +				opp-hz = /bits/ 64 <1000000000>;
-> +				opp-microvolt = <900000>;
+> On 14/02/19 17:44, Roger Quadros wrote:
+>> On 14/02/19 14:52, Marc Zyngier wrote:
+>>> On Thu, 14 Feb 2019 10:55:10 +0000,
+>>> Roger Quadros <rogerq@ti.com> wrote:
+>>>>
+>>>>
+>>>> On 14/02/19 10:37, Linus Walleij wrote:
+>>>>> On Thu, Feb 14, 2019 at 4:13 AM Suman Anna <s-anna@ti.com> wrote:
+>>>>>> [Me]
+>>>>>
+>>>>>>> To be able to use hierarchical interrupt domain in the kernel, the top
+>>>>>>> interrupt controller must use the hierarchical (v2) irqdomain, so
+>>>>>>> if this is anything else than the ARM GIC it will be an interesting
+>>>>>>> undertaking to handle this.
+>>>>>>
+>>>>>> These are interrupt lines coming towards the host processor running
+>>>>>> Linux and are directly connected to the ARM GIC. This INTC module is
+>>>>>> actually an PRUSS internal interrupt controller that can take in 64 (on
+>>>>>> most SoCs) external events/interrupt sources and multiplexing them
+>>>>>> through two layers of many-to-one events-to-intr channels &
+>>>>>> intr-channels-to-host interrupts. Couple of the host interrupts go to
+>>>>>> the PRU cores themselves while the remaining ones come out of the IP to
+>>>>>> connect to other GICs in the SoC.
+>>>>>
+>>>>> If the muxing is static (like set up once at probe) so that while
+>>>>> the system is running, there is one and one only event mapped to
+>>>>> the GIC from the component below it, then it is hierarchical.
+>>>>
+>>>> This is how it looks.
+>>>>
+>>>> [GIC]<---8---[INTC]<---64---[events from peripherals]
+>>>>
+>>>> The 8 interrupt lines from INTC to the GIC are 1:1 mapped and fixed
+>>>> per SoC.  The muxing between 64 inputs to INTC and its 8 outputs are
+>>>> programmable and might not necessarily be static per boot/probe as
+>>>> it depends on what firmware is loaded on the PRU.
+>>>
+>>> But the point is that at any given time, there are at most 8 out of 64
+>>> inputs that are used, right? You *never* end-up with two (or more) of
+>>> these "events" being multiplexed on a single output line.
+>>>
+>>
+>> Since the INTC's internal logic allows assigning more than one event each outputs,
+>> at most all 64 events can be assigned to one output or distributed among the 8 outputs.
+>>
+>>> If these assertions do hold, then your design is typical of a
+>>> hierarchy, for which we have countless examples in the tree (including
+>>> for some TI HW).
+>>
+>> OK.
+>> Suman, Andrew, Lokesh, thoughts?
+>>
 
-Shouldn't this be
+Mark, Linus,
 
-opp-microvolt = <1000000>;
+So, I hope it is clear from Roger's responses that above assertions do
+not hold true to this INTC, and so want to confirm that we are good with
+the current non-hierarchical design.
 
-> +				clock-latency-ns = <150000>;
-> +				opp-suspend;
-> +			};
-> +		};
-> +
->  		gic: interrupt-controller@38800000 {
->  			compatible = "arm,gic-v3";
->  			reg = <0x38800000 0x10000>,	/* GIC Dist */
+regards
+Suman
