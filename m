@@ -1,69 +1,36 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH V4 4/4] MAINTAINERS: Added imx DDR performonitor driver
- maintainer information
-Date: Fri, 15 Feb 2019 21:01:41 +0100
-Message-ID: <20190215200141.pncrzp3oaoja2mnd@pengutronix.de>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
- <1550253761-26841-4-git-send-email-Frank.Li@nxp.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 0/8] Port am335 and am437 devices to sdhci-omap
+Date: Fri, 15 Feb 2019 12:02:44 -0800
+Message-ID: <20190215200244.GA15711@atomide.com>
+References: <20190215192033.24203-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1550253761-26841-4-git-send-email-Frank.Li@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Li <frank.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20190215192033.24203-1-faiz_abbas@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, kishon@ti.com, zhang.chunyan@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 06:03:16PM +0000, Frank Li wrote:
-> Add DDR perf counter driver maintainer information
-> =
+* Faiz Abbas <faiz_abbas@ti.com> [190215 19:17]:
+> The following add driver patches for porting TI's am335x and am437x
+> devices to the sdhci-omap driver.
+> 
+> This involves adding external DMA support to sdhci (first 3 patches from
+> Chunyan) plus some miscellaneous patches to take care of deviations of
+> the controllers from the sdhci model.
 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> No change from v1 to v4
-> =
+Good to see this happening :)
 
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
-> =
+I think am437x should have also the ADMA as it's mostly
+omap4 based? See the old omap4 ADMA series at [0] below.
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6ba068e..687be0f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6163,6 +6163,13 @@ L:	linux-i2c@vger.kernel.org
->  S:	Maintained
->  F:	drivers/i2c/busses/i2c-cpm.c
->  =
+Are you seeing any improvment in SDIO card read/write speeds
+between external DMA and ADM BTW?
 
-> +FREESCALE IMX DDR Performance Monitor DRIVER
-> +M:	Frank Li <Frank.li@nxp.com>
-> +L:	linux-arm-kernel@lists.infradead.org
-> +S:	Maintained
-> +F:	drivers/perf/fsl_imx8_ddr_perf.c
-> +F:	Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-> +
+Regards,
 
-With da8b7f0fb02b ("MAINTAINERS: add all files matching "imx" and "mxs"
-to the IMX entry") that sits currently in next the "ARM/FREESCALE IMX /
-MXC ARM ARCHITECTURE" also matches for these two files.
+Tony
 
-Is this good here or not?
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+[0] https://linux-omap.vger.kernel.narkive.com/H4EbLW96/patch-0-4-omap4-hsmmc-adding-adma-support
