@@ -1,51 +1,41 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH 4/4] arm64: dts: allwinner: h6: Add CPU Operating
- Performance Points table
-Date: Fri, 15 Feb 2019 22:09:51 +0800
-Message-ID: <CAEExFWt84MmpoWeibVf4bBJXOuPy9P7RrAFmEx304zz5z1GHwQ@mail.gmail.com>
-References: <20190214130910.9201-1-tiny.windzz@gmail.com> <20190214130910.9201-5-tiny.windzz@gmail.com>
- <20190214143842.nqsh6trwdjxq2ecd@flea> <CAEExFWuxrVC1J0g93R3ifaDxOGy-20B4jftoHw932V7+wqhtxw@mail.gmail.com>
- <CAEExFWv_K_07e30dgPbafVhDD_smwZkpi6Fqk6yzCahesdnrGg@mail.gmail.com> <20190215135613.sdz56vtiawqeryi5@flea>
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: [PATCH v3 0/3] input: goodix - support Goodix gt5688
+Date: Fri, 15 Feb 2019 15:11:50 +0100
+Message-ID: <cover.1550239328.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190215135613.sdz56vtiawqeryi5@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, robh+dt@kernel.org, mark.rutland@arm.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bastien Nocera <hadess@hadess.net>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 9:56 PM Maxime Ripard <maxime.ripard@bootlin.com> w=
-rote:
->
-> Hi
->
-> On Fri, Feb 15, 2019 at 12:56:03AM +0800, Frank Lee wrote:
-> > How about to implement a thermal driver that is not integrated with
-> > gpadc =EF=BC=9F
-> >
-> > GPADC on soc is rarely used now.
->
-> You mean GPADC in general, or the gpadc driver in particular?
-> Otherwise, yes, having a driver for the thermal sensor in the H6
-> sounds like a good plan for thermal throttling, but I don't see it as
-> a dependency for that whole series.
-At present, sunxi's thermal driver is integrated with the gpadc driver.
-I have a idea to implement the thermal driver alone. I haven't started yet,
-and it may take a while to do it.
+Besides the support for gt5688 two more minimal changes piled up so I'm
+folding these in here. One is a doc update for the goodix bindings, the
+other one makes it a bit simpler to figure out configuration problems
+(like lack of touchscreen-size-{x,y} in the device tree.
 
-How about the plan to implement a thermal drive alone and put i
-under drivers/thermal?
+I've kept the original subject to (hopefully) not break the series for
+patchwork. All patches can be applied independently. Series is based on
+next-20190208.
 
-In addition to the cpu dvfs of H6, patch v2 has been sent.
+Changes from v2
+* Add 'dt-bindings: input: Refer to touchscreen.txt for goodix ts'
+* Add 'input: goodix: Print values in case of inconsistencies'
+  (sent out separtely before, no comments so far)
+* Collect 'Reviewed-By' on 'input: goodix - support Goodix gt5688'
 
-Thanks,
-Yangtao
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Changes from v1
+* Add tested board to commit message
+
+Guido Günther (3):
+  input: goodix - support Goodix gt5688
+  dt-bindings: input: Refer to touchscreen.txt for goodix ts
+  input: goodix: Print values in case of inconsistencies
+
+ .../bindings/input/touchscreen/goodix.txt          | 14 +++++++++-----
+ drivers/input/touchscreen/goodix.c                 |  6 +++++-
+ 2 files changed, 14 insertions(+), 6 deletions(-)
+
+-- 
+2.20.1
