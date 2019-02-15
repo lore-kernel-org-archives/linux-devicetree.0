@@ -1,130 +1,69 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/1] of: unittest: unflatten device tree on UML when testing
-Date: Fri, 15 Feb 2019 13:44:26 -0600
-Message-ID: <CAL_JsqJ8967v0-1scuWY0nMngiO=TxNL_bxgsP=hzO9SU-n2NQ@mail.gmail.com>
-References: <20190212185305.112847-1-brendanhiggins@google.com>
- <20190212185305.112847-2-brendanhiggins@google.com> <4cb7ca12-ce60-7516-b7eb-aef08f607acc@gmail.com>
- <CAFd5g441+6ATUKcNz7OstAB6Qd2BqeDh77SNnGUpZGBNvgysmg@mail.gmail.com>
- <bfa00740-9b67-58f9-6273-3de98de952f6@gmail.com> <CAFd5g44HkBLJmK8e4F+iaGPg1FEzubGtcUW-251GAOv1UmE5rg@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH V4 4/4] MAINTAINERS: Added imx DDR performonitor driver
+ maintainer information
+Date: Fri, 15 Feb 2019 21:01:41 +0100
+Message-ID: <20190215200141.pncrzp3oaoja2mnd@pengutronix.de>
+References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+ <1550253761-26841-4-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g44HkBLJmK8e4F+iaGPg1FEzubGtcUW-251GAOv1UmE5rg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Luis Chamberlain <mcgrof@kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1550253761-26841-4-git-send-email-Frank.Li@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Li <frank.li@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 3:49 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Thu, Feb 14, 2019 at 6:48 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >
-> > On 2/14/19 5:26 PM, Brendan Higgins wrote:
-> > > On Thu, Feb 14, 2019 at 4:10 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> > >>
-> > >> On 2/12/19 10:53 AM, Brendan Higgins wrote:
-> > >>> UML supports enabling OF, and is useful for running the device tree
-> > >>> tests, so add support for unflattening device tree blobs so we can
-> > >>> actually use it.
-> > >>>
-> > >>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > >>> ---
-> > >>>  drivers/of/unittest.c | 3 +++
-> > >>>  1 file changed, 3 insertions(+)
-> > >>>
-> > >>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> > >>> index 84427384654d5..effa4e2b9d992 100644
-> > >>> --- a/drivers/of/unittest.c
-> > >>> +++ b/drivers/of/unittest.c
-> > >>> @@ -2527,6 +2527,9 @@ static int __init of_unittest(void)
-> > >>>       }
-> > >>>       of_node_put(np);
-> > >>>
-> > >>> +     if (IS_ENABLED(CONFIG_UML))
-> > >>> +             unflatten_device_tree();
-> > >>> +
-> > >>>       pr_info("start of unittest - you will see error messages\n");
-> > >>>       of_unittest_check_tree_linkage();
-> > >>>       of_unittest_check_phandles();
-> > >>>
-> > >>
-> > >> (Insert my usual disclaimer that I am clueless about UML, I still need to learn
-> > >> about it...)
-> > >>
-> > >> This does not look correct to me.
-> > >>
-> > >> A few lines earlier in of_unittest(), the live devicetree needs to exist for
-> > >> unittest_data_data() and a few of_*() functions to succeed.  So it seems
-> > >> that the unflatten_device_tree() for uml should be at the beginning of
-> > >> of_unittest().
-> > >
-> > > It is true that other functions ahead of it depend on the presence of
-> > > a device tree, but an unflattened tree does get linked in somewhere
-> > > else. Despite that, this is needed for overlay_base_root. I got
-> > > similar behavior if you don't link in a flattened device tree on x86.
-> > > Thus, the order in which you call them doesn't actually seem to
-> > > matter. I found no difference from changing the order in UML myself.
-> > >
-> > > Without my patch we get the following error,
-> > > ### dt-test ### FAIL of_unittest_overlay_high_level():2372
-> > > overlay_base_root not initialized
-> > > ### dt-test ### end of unittest - 219 passed, 1 failed
-> > >
-> > > With my patch we get:
-> > > ### dt-test ### end of unittest - 224 passed, 0 failed
-> >
-> > Thanks for reporting both the failure and the success cases,
-> > that helps me understand a little bit better.
-> >
-> > If instead of the above patch, if you add the following (untested,
-> > not even compile tested) to the beginning of of_unittest():
-> >
-> >         if (IS_ENABLED(CONFIG_UML))
-> >                 unittest_unflatten_overlay_base();
-> >
-> > does that also result in a good test result of:
-> >
-> >         ### dt-test ### end of unittest - 224 passed, 0 failed
->
-> Yep, I just tried it. It works as you suspected.
->
-> >
-> > I think I need to find some time to build and boot a UML kernel soon.
->
-> It's really no big deal, just copy the .config I sent and build with
-> `make ARCH=um` then you "boot" the kernel with `./linux` (note this
-> will mess up your terminal settings); that's it! (Shameless plug: you
-> can also try it out with the KUnit patchset with
-> `./tools/testing/kunit/kunit.py --timeout=30 --jobs=12 --defconfig`,
-> which builds the kernel with a pretty similar config, boots the
-> kernel, and then parses the output for you. ;-) )
->
-> >
-> > My current _guess_ is that the original problem was not a failure to
-> > unflatten any present devicetree in UML but instead that the UML
-> > kernel does not call unflatten_device_tree() and thus fails to
-> > indirectly call unittest_unflatten_overlay_base(), which is
-> > called by unflatten_device_tree().
->
-> I think you are right. Sorry for not noticing this before making my
-> change. Since it was pretty much the only architecture (the only one I
-> care about) that does not unflatten DT, I assumed that was the
-> problem. I didn't put too much thought into it after that point beyond
-> making sure that it did what I wanted.
->
-> >
-> > unittest_unflatten_overlay_base() is an unfortunate wart that I
-> > added, but I don't have a better alternative yet.
->
-> Hey, I get it. No worries.
->
-> In any case, it seems like unittest_unflatten_overlay_base() is the
-> right function to call there. I will send out patch. Do you want me to
-> send a patch on top of this one, or do you want to revert this one and
-> for me to send a v2 follow up to this patch? I don't care either way,
-> whatever you guys prefer.
+On Fri, Feb 15, 2019 at 06:03:16PM +0000, Frank Li wrote:
+> Add DDR perf counter driver maintainer information
+> =
 
-I'll drop or revert the existing one, so against mainline is good.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> No change from v1 to v4
+> =
 
-Rob
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> =
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6ba068e..687be0f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6163,6 +6163,13 @@ L:	linux-i2c@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/i2c/busses/i2c-cpm.c
+>  =
+
+> +FREESCALE IMX DDR Performance Monitor DRIVER
+> +M:	Frank Li <Frank.li@nxp.com>
+> +L:	linux-arm-kernel@lists.infradead.org
+> +S:	Maintained
+> +F:	drivers/perf/fsl_imx8_ddr_perf.c
+> +F:	Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+> +
+
+With da8b7f0fb02b ("MAINTAINERS: add all files matching "imx" and "mxs"
+to the IMX entry") that sits currently in next the "ARM/FREESCALE IMX /
+MXC ARM ARCHITECTURE" also matches for these two files.
+
+Is this good here or not?
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
