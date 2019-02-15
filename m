@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v3 3/4] arm64: dts: allwinner: h6: Add clock to CPU cores
-Date: Fri, 15 Feb 2019 10:53:37 -0500
-Message-ID: <20190215155338.10564-4-tiny.windzz@gmail.com>
+Subject: [PATCH v3 4/4] arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
+Date: Fri, 15 Feb 2019 10:53:38 -0500
+Message-ID: <20190215155338.10564-5-tiny.windzz@gmail.com>
 References: <20190215155338.10564-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190215155338.10564-1-tiny.windzz@gmail.com>
@@ -10,51 +10,106 @@ To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@a
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The ARM CPU cores are fed by the CPU clock from the CCU. Add a
-reference to the clock for each CPU core, along with the clock
-transition latency.
+Add an OPP (Operating Performance Points) table for the CPU cores to
+enable DVFS (Dynamic Voltage & Frequency Scaling) on the H6. This
+information comes from github.
+
+When the four CPUs are running at 1.8 GHz, 100% busy, it is easy to heat
+up and make the system restart. And currently H6 does not support the
+thermal driver, can not get the temperature information of the cpu to
+control the highest frequency. So temporarily remove the opp of 1.8GHz.
+
+When the four CPUs operate at 1.4 GHz, 100% busy, the temperature is
+stable at about 90 degrees, and the system can still operate normally.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 55 ++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index d93a7add67e7..723f5d991a74 100644
+index 723f5d991a74..84fb47062fe6 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -26,6 +26,8 @@
- 			device_type = "cpu";
- 			reg = <0>;
+@@ -28,6 +28,8 @@
  			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			operating-points-v2 = <&cpu_opp_table>;
++			#cooling-cells = <2>;
  		};
  
  		cpu1: cpu@1 {
-@@ -33,6 +35,8 @@
- 			device_type = "cpu";
- 			reg = <1>;
+@@ -37,6 +39,8 @@
  			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			operating-points-v2 = <&cpu_opp_table>;
++			#cooling-cells = <2>;
  		};
  
  		cpu2: cpu@2 {
-@@ -40,6 +44,8 @@
- 			device_type = "cpu";
- 			reg = <2>;
+@@ -46,6 +50,8 @@
  			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			operating-points-v2 = <&cpu_opp_table>;
++			#cooling-cells = <2>;
  		};
  
  		cpu3: cpu@3 {
-@@ -47,6 +53,8 @@
- 			device_type = "cpu";
- 			reg = <3>;
+@@ -55,6 +61,55 @@
  			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			operating-points-v2 = <&cpu_opp_table>;
++			#cooling-cells = <2>;
++		};
++	};
++
++	cpu_opp_table: opp_table {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@480000000 {
++			opp-hz = /bits/ 64 <480000000>;
++			opp-microvolt = <800000 800000 880000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@720000000 {
++			opp-hz = /bits/ 64 <720000000>;
++			opp-microvolt = <800000 800000 880000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@816000000 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <800000 800000 880000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@888000000 {
++			opp-hz = /bits/ 64 <888000000>;
++			opp-microvolt = <800000 800000 940000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@1080000000 {
++			opp-hz = /bits/ 64 <1080000000>;
++			opp-microvolt = <840000 840000 1060000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@1320000000 {
++			opp-hz = /bits/ 64 <1320000000>;
++			opp-microvolt = <900000 900000 1160000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@1488000000 {
++			opp-hz = /bits/ 64 <1488000000>;
++			opp-microvolt = <960000 960000 1160000>;
 +			clock-latency-ns = <244144>; /* 8 32k periods */
  		};
  	};
