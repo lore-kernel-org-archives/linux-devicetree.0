@@ -1,51 +1,114 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Fri, 15 Feb 2019 08:16:29 -0800
-Message-ID: <20190215161629.GK5720@atomide.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
- <20190212074237.2875-6-lokeshvutla@ti.com>
- <20190212162247.GK5720@atomide.com>
- <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
- <20190213152620.GS5720@atomide.com>
- <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
- <20190214154100.GB5720@atomide.com>
- <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
- <20190214174612.GF5720@atomide.com>
- <171e8597-2156-747d-d024-7b4bfc6f9186@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V3 1/4] drivers/perf: imx_ddr: Add ddr performance
+ counter support
+Date: Fri, 15 Feb 2019 17:02:38 +0000
+Message-ID: <20190215170238.GB10859@lakrids.cambridge.arm.com>
+References: <1550081533-25000-1-git-send-email-Frank.Li@nxp.com>
+ <20190215142241.GB55505@lakrids.cambridge.arm.com>
+ <CAHrpEqT9sS2gmvB9iSH6V2-B3iza05qMGGLYRwR2sR3ZjO4wqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <171e8597-2156-747d-d024-7b4bfc6f9186@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+In-Reply-To: <CAHrpEqT9sS2gmvB9iSH6V2-B3iza05qMGGLYRwR2sR3ZjO4wqA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhi Li <lznuaa@gmail.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Li <frank.li@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-* Lokesh Vutla <lokeshvutla@ti.com> [190214 18:03]:
-> On 2/14/2019 11:16 PM, Tony Lindgren wrote:
-> > But I'd rather have a proper hardware based phandle + index
-> > type mapping in the dts if possible though.
+On Fri, Feb 15, 2019 at 10:04:10AM -0600, Zhi Li wrote:
+> On Fri, Feb 15, 2019 at 8:22 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > On Wed, Feb 13, 2019 at 06:12:27PM +0000, Frank Li wrote:
+> > > +struct fsl_ddr_devtype_data {
+> > > +     unsigned int flags;
+> > > +};
+> > > +
+> > > +static const struct fsl_ddr_devtype_data imx8_data;
+> > > +static const struct fsl_ddr_devtype_data imx8m_data = {
+> > > +     .flags = DDR_CAP_AXI_ID,
+> > > +};
+> > > +
+> > > +static const struct of_device_id imx_ddr_pmu_dt_ids[] = {
+> > > +     { .compatible = "fsl,imx8-ddr-pmu", .data = (void *)&imx8_data},
+> > > +     { .compatible = "fsl,imx8m-ddr-pmu", .data = (void *)&imx8m_data},
+> > > +     { /* sentinel */ }
+> > > +};
+> >
+> > You could encode the flags directly in of_device_id::data, and avoid the
+> > need for this structure entirely.
 > 
-> The idea about sysfw here is that Linux is not aware of anything about
-> this device(Interrupt Router). It cannot even access any of its
-> registers. As a user Linux should know who is the parent to which the
-> Interrut router output should be configured. Then query sysfw about the
-> range of gic irqs allocated to it. Now for configuration, Linux should
-> pass the the input to interrupt router, gic irq no, and gic id(by which
-> sysfw uniquely identifies GIC interrupt controller with the SoC).  Based
-> on these parameters Interrupt Router registers gets configured.
+> I plan use fsl_ddr_devtype to save some friendly AXI ID name in future, such as
+> GPU  0x111122222
+> VPU  0x333344444
+> 
+> so user can use bus master name instead of to look ref manual to get hex number.
+> 
+> perf stat -e ddr0/axid_read, axid=GPU
+> 
+> But perf application can't pass string by config.
+> 
+> Any suggestion here ?
 
-If the interrupt router hardawre is hidden away from Linux,
-just leave it out of the device tree completely and have the
-interrupt controller driver request the routing.
+Remove it for now, and we can consider it if/when you add that
+functionality.
 
-The dts node for the interrupt controller should describe a
-proper Linux device, that is with reg entries and so on.
+However, I will say that in general I am not a fan of coding SoC-level
+details into individual drivers, and I would prefer to avoid hard coding
+the AXI IDs here regardless.
 
-Regards,
+> > > +static u32 ddr_perf_alloc_counter(struct ddr_pmu *pmu, int event)
+> > > +{
+> > > +     int i;
+> > > +
+> > > +     /* Always map cycle event to counter 0 */
+> > > +     if (event == EVENT_CYCLES_ID)
+> > > +             return EVENT_CYCLES_COUNTER;
+> >
+> > What if the cycle counter is already in use?
+> 
+> cycles counter is dedicated to cycles events.
+> Can't use for other event.
 
-Tony
+What I meant was if you have two cycles events, they'll both try to
+configure the cycle counter (e.g. when it overflows), which may not
+behave as you expect.
+
+I think that you should only allow one event to use the cycle counter at
+a time.
+
+> > > +static irqreturn_t ddr_perf_irq_handler(int irq, void *p)
+> > > +{
+> > > +     int i;
+> > > +     u8 reg;
+> > > +     int val;
+> > > +     int counter;
+> > > +     struct ddr_pmu *pmu = (struct ddr_pmu *) p;
+> > > +     struct perf_event *event;
+> > > +
+> > > +     /* Only cycles counter overflowed can issue irq. all counters will
+> > > +      * be stopped when cycles counter overflow. but other counter don't stop
+> > > +      * when overflow happen. Update all of the local counter values,
+> > > +      * then reset the cycles counter, so the others can continue
+> > > +      * counting.
+> > > +      */
+> >
+> > That is a rather unfortunate design decision.
+> >
+> > Can any of the counters count multiple events per cycle?
+> 
+> No,  other events always much less than cycle counters.
+
+Ok. Please describe that in the comment.
+
+Thanks,
+Mark.
