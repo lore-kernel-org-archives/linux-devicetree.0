@@ -1,314 +1,59 @@
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v2 3/3] enetc: Add ENETC PF level external MDIO support
-Date: Fri, 15 Feb 2019 12:10:14 +0200
-Message-ID: <1550225414-12125-4-git-send-email-claudiu.manoil@nxp.com>
-References: <1550225414-12125-1-git-send-email-claudiu.manoil@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1550225414-12125-1-git-send-email-claudiu.manoil@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>
-Cc: alexandru.marginean@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v2 0/2] Add STM32MP157 discovery boards support
+Date: Fri, 15 Feb 2019 11:16:47 +0100
+Message-ID: <243cc4f0-6910-82ea-9c0a-929faee168a5@st.com>
+References: <1549357625-7229-1-git-send-email-alexandre.torgue@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1549357625-7229-1-git-send-email-alexandre.torgue@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Each ENETC PF has its own MDIO interface, the corresponding
-MDIO registers are mapped in the ENETC's Port register block.
-The current patch adds a driver for these PF level MDIO buses,
-so that each PF can manage directly its own external link.
 
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
-v2 - used readx_poll_timeout()
-   - added mdio node child to the port node
-   - added code comments, removed redundant err messages,
-     minor code cleanup
 
- drivers/net/ethernet/freescale/enetc/Makefile     |   3 +-
- drivers/net/ethernet/freescale/enetc/enetc_mdio.c | 199 ++++++++++++++++++++++
- drivers/net/ethernet/freescale/enetc/enetc_pf.c   |  12 ++
- drivers/net/ethernet/freescale/enetc/enetc_pf.h   |   6 +
- 4 files changed, 219 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+On 2/5/19 10:07 AM, Alexandre Torgue wrote:
+> This patch series add support of two new discovery boards based on
+> STM32MP157 MPU: stm32mp157a-dk1 and stm32mp157c-dk2.
+> 
+> stm32mp157a-dk1 board embeds a STM32MP157a SOC with AC package (TFBGA361,
+> 148 ios) and 512MB of DDR3. Several connections are available on this boards:
+> 4*USB2.0, 1*USB2.0 typeC, SDcard, RJ45, HDMI, Arduino connector, ...
+> 
+> stm32mp157c-dk2 board complements stm32mp157a-dk1 board with a display panel
+> (otm8009a) and a Murata Wifi/BT combo. It embeds a STM32MP157c SOC with AC
+> package.
+> 
+> Those patches enable basic support for a kernel boot.
+> 
+> regards
+> Alex
+> 
+> Alexandre Torgue (2):
+>    ARM: dts: stm32: add initial support of stm32mp157a-dk1 board
+>    ARM: dts: stm32: add initial support of stm32mp157c-dk2 board
+> 
+>   arch/arm/boot/dts/Makefile            |  2 +
+>   arch/arm/boot/dts/stm32mp157a-dk1.dts | 77 +++++++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32mp157c-dk2.dts | 75 ++++++++++++++++++++++++++++++++++
+>   3 files changed, 154 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/stm32mp157a-dk1.dts
+>   create mode 100644 arch/arm/boot/dts/stm32mp157c-dk2.dts
+> 
 
-diff --git a/drivers/net/ethernet/freescale/enetc/Makefile b/drivers/net/ethernet/freescale/enetc/Makefile
-index 6976602..7139e41 100644
---- a/drivers/net/ethernet/freescale/enetc/Makefile
-+++ b/drivers/net/ethernet/freescale/enetc/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_FSL_ENETC) += fsl-enetc.o
--fsl-enetc-$(CONFIG_FSL_ENETC) += enetc.o enetc_cbdr.o enetc_ethtool.o
-+fsl-enetc-$(CONFIG_FSL_ENETC) += enetc.o enetc_cbdr.o enetc_ethtool.o \
-+				 enetc_mdio.o
- fsl-enetc-$(CONFIG_PCI_IOV) += enetc_msg.o
- fsl-enetc-objs := enetc_pf.o $(fsl-enetc-y)
- 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-new file mode 100644
-index 0000000..f715487
---- /dev/null
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-@@ -0,0 +1,199 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/* Copyright 2019 NXP */
-+
-+#include <linux/mdio.h>
-+#include <linux/of_mdio.h>
-+#include <linux/iopoll.h>
-+#include <linux/of.h>
-+
-+#include "enetc_pf.h"
-+
-+struct enetc_mdio_regs {
-+	u32	mdio_cfg;	/* MDIO configuration and status */
-+	u32	mdio_ctl;	/* MDIO control */
-+	u32	mdio_data;	/* MDIO data */
-+	u32	mdio_addr;	/* MDIO address */
-+};
-+
-+#define bus_to_enetc_regs(bus)	(struct enetc_mdio_regs __iomem *)((bus)->priv)
-+
-+#define ENETC_MDIO_REG_OFFSET	0x1c00
-+#define ENETC_MDC_DIV		258
-+
-+#define MDIO_CFG_CLKDIV(x)	((((x) >> 1) & 0xff) << 8)
-+#define MDIO_CFG_BSY		BIT(0)
-+#define MDIO_CFG_RD_ER		BIT(1)
-+#define MDIO_CFG_ENC45		BIT(6)
-+ /* external MDIO only - driven on neg MDC edge */
-+#define MDIO_CFG_NEG		BIT(23)
-+
-+#define MDIO_CTL_DEV_ADDR(x)	((x) & 0x1f)
-+#define MDIO_CTL_PORT_ADDR(x)	(((x) & 0x1f) << 5)
-+#define MDIO_CTL_READ		BIT(15)
-+#define MDIO_DATA(x)		((x) & 0xffff)
-+
-+#define TIMEOUT	1000
-+static int enetc_mdio_wait_complete(struct enetc_mdio_regs __iomem *regs)
-+{
-+	u32 val;
-+
-+	return readx_poll_timeout(enetc_rd_reg, &regs->mdio_cfg, val,
-+				  !(val & MDIO_CFG_BSY), 10, 10 * TIMEOUT);
-+}
-+
-+static int enetc_mdio_write(struct mii_bus *bus, int phy_id, int regnum,
-+			    u16 value)
-+{
-+	struct enetc_mdio_regs __iomem *regs = bus_to_enetc_regs(bus);
-+	u32 mdio_ctl, mdio_cfg;
-+	u16 dev_addr;
-+	int ret;
-+
-+	mdio_cfg = MDIO_CFG_CLKDIV(ENETC_MDC_DIV) | MDIO_CFG_NEG;
-+	if (regnum & MII_ADDR_C45) {
-+		dev_addr = (regnum >> 16) & 0x1f;
-+		mdio_cfg |= MDIO_CFG_ENC45;
-+	} else {
-+		/* clause 22 (ie 1G) */
-+		dev_addr = regnum & 0x1f;
-+		mdio_cfg &= ~MDIO_CFG_ENC45;
-+	}
-+
-+	enetc_wr_reg(&regs->mdio_cfg, mdio_cfg);
-+
-+	ret = enetc_mdio_wait_complete(regs);
-+	if (ret)
-+		return ret;
-+
-+	/* set port and dev addr */
-+	mdio_ctl = MDIO_CTL_PORT_ADDR(phy_id) | MDIO_CTL_DEV_ADDR(dev_addr);
-+	enetc_wr_reg(&regs->mdio_ctl, mdio_ctl);
-+
-+	/* set the register address */
-+	if (regnum & MII_ADDR_C45) {
-+		enetc_wr_reg(&regs->mdio_addr, regnum & 0xffff);
-+
-+		ret = enetc_mdio_wait_complete(regs);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* write the value */
-+	enetc_wr_reg(&regs->mdio_data, MDIO_DATA(value));
-+
-+	ret = enetc_mdio_wait_complete(regs);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int enetc_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
-+{
-+	struct enetc_mdio_regs __iomem *regs = bus_to_enetc_regs(bus);
-+	u32 mdio_ctl, mdio_cfg;
-+	u16 dev_addr, value;
-+	int ret;
-+
-+	mdio_cfg = MDIO_CFG_CLKDIV(ENETC_MDC_DIV) | MDIO_CFG_NEG;
-+	if (regnum & MII_ADDR_C45) {
-+		dev_addr = (regnum >> 16) & 0x1f;
-+		mdio_cfg |= MDIO_CFG_ENC45;
-+	} else {
-+		dev_addr = regnum & 0x1f;
-+		mdio_cfg &= ~MDIO_CFG_ENC45;
-+	}
-+
-+	enetc_wr_reg(&regs->mdio_cfg, mdio_cfg);
-+
-+	ret = enetc_mdio_wait_complete(regs);
-+	if (ret)
-+		return ret;
-+
-+	/* set port and device addr */
-+	mdio_ctl = MDIO_CTL_PORT_ADDR(phy_id) | MDIO_CTL_DEV_ADDR(dev_addr);
-+	enetc_wr_reg(&regs->mdio_ctl, mdio_ctl);
-+
-+	/* set the register address */
-+	if (regnum & MII_ADDR_C45) {
-+		enetc_wr_reg(&regs->mdio_addr, regnum & 0xffff);
-+
-+		ret = enetc_mdio_wait_complete(regs);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* initiate the read */
-+	enetc_wr_reg(&regs->mdio_ctl, mdio_ctl | MDIO_CTL_READ);
-+
-+	ret = enetc_mdio_wait_complete(regs);
-+	if (ret)
-+		return ret;
-+
-+	/* return all Fs if nothing was there */
-+	if (enetc_rd_reg(&regs->mdio_cfg) & MDIO_CFG_RD_ER) {
-+		dev_err(&bus->dev,
-+			"Error while reading PHY%d reg at %d.%hhu\n",
-+			phy_id, dev_addr, regnum);
-+		return 0xffff;
-+	}
-+
-+	value = enetc_rd_reg(&regs->mdio_data) & 0xffff;
-+
-+	return value;
-+}
-+
-+int enetc_mdio_probe(struct enetc_pf *pf)
-+{
-+	struct device *dev = &pf->si->pdev->dev;
-+	struct enetc_mdio_regs __iomem *regs;
-+	struct device_node *np;
-+	struct mii_bus *bus;
-+	int ret;
-+
-+	bus = mdiobus_alloc_size(sizeof(regs));
-+	if (!bus)
-+		return -ENOMEM;
-+
-+	bus->name = "Freescale ENETC MDIO Bus";
-+	bus->read = enetc_mdio_read;
-+	bus->write = enetc_mdio_write;
-+	bus->parent = dev;
-+	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
-+
-+	/* store the enetc mdio base address for this bus */
-+	regs = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
-+	bus->priv = regs;
-+
-+	np = of_get_child_by_name(dev->of_node, "mdio");
-+	if (!np) {
-+		dev_err(dev, "MDIO node missing\n");
-+		ret = -EINVAL;
-+		goto err_registration;
-+	}
-+
-+	ret = of_mdiobus_register(bus, np);
-+	if (ret) {
-+		of_node_put(np);
-+		dev_err(dev, "cannot register MDIO bus\n");
-+		goto err_registration;
-+	}
-+
-+	of_node_put(np);
-+	pf->mdio = bus;
-+
-+	return 0;
-+
-+err_registration:
-+	mdiobus_free(bus);
-+
-+	return ret;
-+}
-+
-+void enetc_mdio_remove(struct enetc_pf *pf)
-+{
-+	if (pf->mdio) {
-+		mdiobus_unregister(pf->mdio);
-+		mdiobus_free(pf->mdio);
-+	}
-+}
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-index 7d28f5e..15876a6 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-@@ -746,6 +746,7 @@ static void enetc_pf_netdev_setup(struct enetc_si *si, struct net_device *ndev,
- 
- static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
- {
-+	struct enetc_pf *pf = enetc_si_priv(priv->si);
- 	struct device_node *np = priv->dev->of_node;
- 	int err;
- 
-@@ -770,12 +771,22 @@ static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
- 		priv->phy_node = of_node_get(np);
- 	}
- 
-+	if (!of_phy_is_fixed_link(np)) {
-+		err = enetc_mdio_probe(pf);
-+		if (err) {
-+			of_node_put(priv->phy_node);
-+			return err;
-+		}
-+	}
-+
- 	priv->if_mode = of_get_phy_mode(np);
- 	if (priv->if_mode < 0) {
- 		dev_err(priv->dev, "missing phy type\n");
- 		of_node_put(priv->phy_node);
- 		if (of_phy_is_fixed_link(np))
- 			of_phy_deregister_fixed_link(np);
-+		else
-+			enetc_mdio_remove(pf);
- 
- 		return -EINVAL;
- 	}
-@@ -898,6 +909,7 @@ static void enetc_pf_remove(struct pci_dev *pdev)
- 
- 	unregister_netdev(si->ndev);
- 
-+	enetc_mdio_remove(pf);
- 	enetc_of_put_phy(priv);
- 
- 	enetc_free_msix(priv);
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.h b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-index 2061ae5..10dd1b5 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-@@ -42,8 +42,14 @@ struct enetc_pf {
- 	char vlan_promisc_simap; /* bitmap of SIs in VLAN promisc mode */
- 	DECLARE_BITMAP(vlan_ht_filter, ENETC_VLAN_HT_SIZE);
- 	DECLARE_BITMAP(active_vlans, VLAN_N_VID);
-+
-+	struct mii_bus *mdio; /* saved for cleanup */
- };
- 
- int enetc_msg_psi_init(struct enetc_pf *pf);
- void enetc_msg_psi_free(struct enetc_pf *pf);
- void enetc_msg_handle_rxmsg(struct enetc_pf *pf, int mbox_id, u16 *status);
-+
-+/* MDIO */
-+int enetc_mdio_probe(struct enetc_pf *pf);
-+void enetc_mdio_remove(struct enetc_pf *pf);
--- 
-2.7.4
+Series applied on stm32-next.
+
+Regards
+Alex
