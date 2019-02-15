@@ -1,43 +1,50 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 0/4] drm/panel: Support for OSD101T2045-53TS and OSD101T2587-53TS
-Date: Fri, 15 Feb 2019 16:03:11 +0200
-Message-ID: <20190215140315.18046-1-peter.ujfalusi@ti.com>
+Subject: [PATCH 3/4] dt-bindings: display: Add bindings for OSD101T2587-53TS panel
+Date: Fri, 15 Feb 2019 16:03:14 +0200
+Message-ID: <20190215140315.18046-4-peter.ujfalusi@ti.com>
+References: <20190215140315.18046-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190215140315.18046-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This adds the device-tree bindings for the OSD101T2587-53TS 10.1"
+1920x1200 panel from One Stop Displays.
 
-Add support for OSD101T2045-53TS and OSD101T2587-53TS from One Stop Displays.
+Note: the panel is similar to OSD101T2045-53TS, but it needs additional
+MIPI_DSI_TURN_ON_PERIPHERAL message from the host.
 
-The two panel is similar with one big difference: OSD101T2587-53TS requires the
-MIPI_DSI_TURN_ON_PERIPHERAL message, thus can not be handled by panel-simple.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Peter Ujfalusi (4):
-  dt-bindings: display: Add bindings for OSD101T2045-53TS
-  drm/panel: simple: Add support for OSD101T2045-53TS
-  dt-bindings: display: Add bindings for OSD101T2587-53TS panel
-  drm/panel: Add OSD101T2587-53TS driver
-
- .../display/panel/osd,osd101t2045-53ts.txt    |  11 +
- .../display/panel/osd,osd101t2587-53ts.txt    |  14 +
- drivers/gpu/drm/panel/Kconfig                 |   6 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../drm/panel/panel-osd-osd101t2587-53ts.c    | 284 ++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c          |  34 +++
- 6 files changed, 350 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/osd,osd101t2045-53ts.txt
+ .../display/panel/osd,osd101t2587-53ts.txt         | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/panel/osd,osd101t2587-53ts.txt
- create mode 100644 drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.c
 
+diff --git a/Documentation/devicetree/bindings/display/panel/osd,osd101t2587-53ts.txt b/Documentation/devicetree/bindings/display/panel/osd,osd101t2587-53ts.txt
+new file mode 100644
+index 000000000000..2082cae1a0e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/osd,osd101t2587-53ts.txt
+@@ -0,0 +1,14 @@
++One Stop Displays OSD101T2587-53TS 10.1" 1920x1200 panel
++
++The panel is similar to OSD101T2045-53TS, but it needs additional
++MIPI_DSI_TURN_ON_PERIPHERAL message from the host.
++
++Required properties:
++- compatible: should be "osd,osd101t2587-53ts"
++- power-supply: as specified in the base binding
++
++Optional properties:
++- backlight: as specified in the base binding
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
 -- 
 Peter
 
