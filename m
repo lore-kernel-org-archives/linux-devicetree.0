@@ -1,75 +1,53 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH v2 0/2] drm/omap: panel-tpo-td028ttec1: add backlight
- support
-Date: Fri, 15 Feb 2019 08:12:42 +0100
-Message-ID: <20190215081242.21cc9953@kemnade.info>
-References: <20190205063813.14873-1-andreas@kemnade.info>
-        <a54e7427-ff84-d105-aab7-c5eab42e6df9@ti.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: mtk-sysirq: Add compatible for
+ Mediatek MT8183
+Date: Fri, 15 Feb 2019 08:21:50 +0100
+Message-ID: <fe86572e-690b-0e11-cb00-4cfe3a33c5fa@gmail.com>
+References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
+ <1550210558-30516-2-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/CwJMaOvMR+688fpUkYv3koC"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a54e7427-ff84-d105-aab7-c5eab42e6df9@ti.com>
+In-Reply-To: <1550210558-30516-2-git-send-email-erin.lo@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com, sre@kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+To: Erin Lo <erin.lo@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/CwJMaOvMR+688fpUkYv3koC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
 
-On Fri, 8 Feb 2019 11:13:33 +0200
-Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-
-> On 05/02/2019 08:38, Andreas Kemnade wrote:
-> > This panel has a backlight, so add a property describing that and
-> > add the code to use that.
-> > This makes things like xset dpms force off
-> > also turn off the backlight, so we do not need to rely on additional
-> > userspace programs to do that.
-> >=20
-> > Andreas Kemnade (2):
-> >   drm/omap: panel-tpo-td028ttec1: add backlight support
-> >   dt-bindings: panel: td028ttec1: add backlight property
-> >=20
-> >  .../devicetree/bindings/display/panel/tpo,td028ttec1.txt       |  2 ++
-> >  drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c        | 10 ++=
-++++++++
-> >  2 files changed, 12 insertions(+)
-> >  =20
+On 2/15/19 7:02 AM, Erin Lo wrote:
+> This adds dt-binding documentation of SYSIRQ for Mediatek MT8183 SoC
+> Platform.
 >=20
-> Thanks, I'll pick these up.
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+Marc you want me to take it through my tree?
+
+>  .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt      =
+   | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
-
-hmm, that sounds like: patch accepted, will appear in linux-next soon.
-I have not seen it there, or is it just in some branch not merged into
-linux-next. Any new obstacles?
-
-Regards,
-Andreas
-
---Sig_/CwJMaOvMR+688fpUkYv3koC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlxmZmoACgkQl4jFM1s/
-ye9+8xAAqmwCufiIjNGhDbgZP4jQZyAq8wV/Mfq8XHJLGVThdnHzE/AoKrEwa1/Y
-snw2s4+AcBHwLwqPbKTzAyY+hZoWlzuTDmRUepnoKxusJerbsSe3DBH0brqb2NR5
-Wsjn7s0JHVv0XPo3cDQOw6igQ+ca/nJak8OweR9QZFs1raoqfDldUCVQH9zFGRkk
-Ec5sBfd+/YWxpdmDpREB5QCYeW4CJsWWcDTzMSp8uY69IpXv2+uU0+eao3HSjAli
-pdYaPMiaw52Rr31ERmG2icWiYkEQETH52xoPVe85yut5fIO9WjGd37UTW1QaeFLN
-j02Jc9YWmjPgXmxqoLC1gD0ODuVMEVwFvQmzejtTYRWJYaz4MrYuGi4EL+LYW3gU
-1w5FD0D80vxm55nRog/pWHD42IPPqQ+svj0SqKoUrjof3Pv13PnsvcGKV82dNPnP
-MFTre8QnxpAlP6YjHDJaRGVqtMEMM1Ny2c0u3euTDCtzeYINx77Q4j576Ichb6K7
-gi7zMBhPhvtVkcxnu1jYQYSTodjHD5aCkhxIqFkvxsN/oCZId7pekTOaalhdz97m
-3em2ct49+LyYJU9POAxyOwzNPg7Ikwm/uNLV/rspwJQL4z58SBq3Uxq8+bmFt4oX
-eWEOlH1NUhFcYTU19JJ+xeE9lJ6K98pxMntwgIHlvWX/LqGRL4g=
-=85hg
------END PGP SIGNATURE-----
-
---Sig_/CwJMaOvMR+688fpUkYv3koC--
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/med=
+iatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller=
+/mediatek,sysirq.txt
+> index 33a98eb..91aa9ab 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,s=
+ysirq.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,s=
+ysirq.txt
+> @@ -5,6 +5,7 @@ interrupt.
+> =20
+>  Required properties:
+>  - compatible: should be
+> +	"mediatek,mt8183-sysirq", "mediatek,mt6577-sysirq": for MT8183
+>  	"mediatek,mt8173-sysirq", "mediatek,mt6577-sysirq": for MT8173
+>  	"mediatek,mt8135-sysirq", "mediatek,mt6577-sysirq": for MT8135
+>  	"mediatek,mt8127-sysirq", "mediatek,mt6577-sysirq": for MT8127
+>=20
