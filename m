@@ -1,55 +1,30 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v2 3/3] enetc: Add ENETC PF level external MDIO
- support
-Date: Fri, 15 Feb 2019 14:34:59 +0100
-Message-ID: <20190215133459.GH5699@lunn.ch>
-References: <1550225414-12125-1-git-send-email-claudiu.manoil@nxp.com>
- <1550225414-12125-4-git-send-email-claudiu.manoil@nxp.com>
+From: Matthijs van Duin <matthijsvanduin@gmail.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Fri, 15 Feb 2019 14:43:13 +0100
+Message-ID: <CAALWOA_7QvtDeNZjXTwbT10MeWJ5wF776mENbX5w1DZHDNVVhA@mail.gmail.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com> <16001a6f-faed-ee14-5ade-79d5462f6d51@ti.com>
+ <5C654C39.2030308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1550225414-12125-4-git-send-email-claudiu.manoil@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, alexandru.marginean@nxp.com, linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5C654C39.2030308@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>, ohad@wizery.com, bjorn.andersson@linaro.org, David Lechner <david@lechnology.com>, nsekhar@ti.com, Tero Kristo <t-kristo@ti.com>, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Robert Nelson <robertcnelson@gmail.com>, dan@kulp.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 12:10:14PM +0200, Claudiu Manoil wrote:
-> Each ENETC PF has its own MDIO interface, the corresponding
-> MDIO registers are mapped in the ENETC's Port register block.
-> The current patch adds a driver for these PF level MDIO buses,
-> so that each PF can manage directly its own external link.
-> 
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> ---
-> v2 - used readx_poll_timeout()
->    - added mdio node child to the port node
+On Thu, 14 Feb 2019 at 12:08, Roger Quadros <rogerq@ti.com> wrote:
+> The beagleboard community is a primary user of this driver and we need to
+> find a solution so that PRUSS is usable either via remoteproc or via UIO.
 
-Hi Claudiu
+While being able to switch drivers without changing the DT by forcibly
+binding a different driver would definitely be a nice feature, and
+would have been possible with the older remoteproc-pru bindings, I
+think it's a stretch to say this "needs" a solution. Right now, in
+practice, selection between uio-pruss and remoteproc-pru is done
+simply by modifying the device tree appropriately (typically by having
+u-boot apply an overlay to the DT), and I don't think anyone views
+this as unduly burdensome?
 
-Please document this in the device tree binding.
-
-> +	/* return all Fs if nothing was there */
-> +	if (enetc_rd_reg(&regs->mdio_cfg) & MDIO_CFG_RD_ER) {
-> +		dev_err(&bus->dev,
-> +			"Error while reading PHY%d reg at %d.%hhu\n",
-> +			phy_id, dev_addr, regnum);
-> +		return 0xffff;
-
-I'm not sure you want a dev_err() here. The device tree binding allows
-you to have a phy node without a reg value. When that happens, the
-core code will scan all 32 addresses to find the PHY. This is going to
-spam the log. dev_dbg() might be better.
-
-     Andrew
+Matthijs
