@@ -1,59 +1,90 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2 0/2] Add STM32MP157 discovery boards support
-Date: Fri, 15 Feb 2019 11:16:47 +0100
-Message-ID: <243cc4f0-6910-82ea-9c0a-929faee168a5@st.com>
-References: <1549357625-7229-1-git-send-email-alexandre.torgue@st.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v3 3/3] pwm: core: add consumer device link
+Date: Fri, 15 Feb 2019 11:22:48 +0100
+Message-ID: <20190215102248.i2mggrw74lgs2owq@pengutronix.de>
+References: <1550055012-23348-1-git-send-email-fabrice.gasnier@st.com>
+ <1550055012-23348-4-git-send-email-fabrice.gasnier@st.com>
+ <f6fecafc-3946-9680-c58b-a20aa46e8e71@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1549357625-7229-1-git-send-email-alexandre.torgue@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f6fecafc-3946-9680-c58b-a20aa46e8e71@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu.Beznea@microchip.com
+Cc: fabrice.gasnier@st.com, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, tduszyns@gmail.com, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 15, 2019 at 09:23:48AM +0000, Claudiu.Beznea@microchip.com wrote:
+> 
+> 
+> On 13.02.2019 12:50, Fabrice Gasnier wrote:
+> > Add a device link between the PWM consumer and the PWM provider. This
+> > enforces the PWM user to get suspended before the PWM provider. It
+> > allows proper synchronization of suspend/resume sequences: the PWM user
+> > is responsible for properly stopping PWM, before the provider gets
+> > suspended: see [1]. Add the device link in:
+> > - of_pwm_get()
+> > - pwm_get()
+> > - devm_ variants
+> > as it requires a reference to the device for the PWM consumer.
+> > 
+> > [1] https://lkml.org/lkml/2019/2/5/770
+> > 
+> > Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> > ---
+> > Changes in v3:
+> > - add struct device to of_get_pwm() arguments to handle device link from
+> >   there.
+> > ---
+> >  drivers/pwm/core.c  | 14 +++++++++++---
+> >  include/linux/pwm.h |  6 ++++--
+> >  2 files changed, 15 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > index 1581f6a..8cb5d4bc 100644
+> > --- a/drivers/pwm/core.c
+> > +++ b/drivers/pwm/core.c
+> > @@ -638,6 +638,7 @@ static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
+> >  
+> >  /**
+> >   * of_pwm_get() - request a PWM via the PWM framework
+> > + * @dev: device for PWM consumer
+> >   * @np: device node to get the PWM from
+> >   * @con_id: consumer name
+> >   *
+> > @@ -655,7 +656,8 @@ static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
+> >   * Returns: A pointer to the requested PWM device or an ERR_PTR()-encoded
+> >   * error code on failure.
+> >   */
+> > -struct pwm_device *of_pwm_get(struct device_node *np, const char *con_id)
+> > +struct pwm_device *of_pwm_get(struct device *dev, struct device_node *np,
+> > +			      const char *con_id)
+> >  {
+> >  	struct pwm_device *pwm = NULL;
+> >  	struct of_phandle_args args;
+> > @@ -689,6 +691,9 @@ struct pwm_device *of_pwm_get(struct device_node *np, const char *con_id)
+> >  	if (IS_ERR(pwm))
+> >  		goto put;
+> >  
+> > +	if (!device_link_add(dev, pwm->chip->dev, DL_FLAG_AUTOREMOVE_CONSUMER))
+> > +		pr_debug("%s(): device link not added\n", __func__);
+> > +
+> 
+> Just asking... will this mechanism also be working for PWMs requested via
+> sysfs? At a first look it seems not.
 
+No, but I would not expect a problem because AFAIU userspace is
+suspended before kernel devices. However as userspace might not notice
+the suspend it probably fails to stop the pwm and so will likely prevent
+the suspend.
 
-On 2/5/19 10:07 AM, Alexandre Torgue wrote:
-> This patch series add support of two new discovery boards based on
-> STM32MP157 MPU: stm32mp157a-dk1 and stm32mp157c-dk2.
-> 
-> stm32mp157a-dk1 board embeds a STM32MP157a SOC with AC package (TFBGA361,
-> 148 ios) and 512MB of DDR3. Several connections are available on this boards:
-> 4*USB2.0, 1*USB2.0 typeC, SDcard, RJ45, HDMI, Arduino connector, ...
-> 
-> stm32mp157c-dk2 board complements stm32mp157a-dk1 board with a display panel
-> (otm8009a) and a Murata Wifi/BT combo. It embeds a STM32MP157c SOC with AC
-> package.
-> 
-> Those patches enable basic support for a kernel boot.
-> 
-> regards
-> Alex
-> 
-> Alexandre Torgue (2):
->    ARM: dts: stm32: add initial support of stm32mp157a-dk1 board
->    ARM: dts: stm32: add initial support of stm32mp157c-dk2 board
-> 
->   arch/arm/boot/dts/Makefile            |  2 +
->   arch/arm/boot/dts/stm32mp157a-dk1.dts | 77 +++++++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c-dk2.dts | 75 ++++++++++++++++++++++++++++++++++
->   3 files changed, 154 insertions(+)
->   create mode 100644 arch/arm/boot/dts/stm32mp157a-dk1.dts
->   create mode 100644 arch/arm/boot/dts/stm32mp157c-dk2.dts
-> 
+Best regards
+Uwe
 
-Series applied on stm32-next.
-
-Regards
-Alex
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
