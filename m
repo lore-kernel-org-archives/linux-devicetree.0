@@ -1,36 +1,57 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v2 3/3] enetc: Add ENETC PF level external MDIO
- support
-Date: Fri, 15 Feb 2019 15:56:21 +0100
-Message-ID: <20190215145621.GO708@lunn.ch>
-References: <1550225414-12125-1-git-send-email-claudiu.manoil@nxp.com>
- <1550225414-12125-4-git-send-email-claudiu.manoil@nxp.com>
- <20190215133459.GH5699@lunn.ch>
- <VI1PR04MB488080895C871B6B3ABA571D96600@VI1PR04MB4880.eurprd04.prod.outlook.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATVH v2 0/4] arm64: dts: allwinner: h6: Enable CPU
+Date: Fri, 15 Feb 2019 16:13:57 +0100
+Message-ID: <20190215151357.noovkx3r6ia4boag@flea>
+References: <20190215134937.10259-1-tiny.windzz@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="om2f4swtpe4optgl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB488080895C871B6B3ABA571D96600@VI1PR04MB4880.eurprd04.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20190215134937.10259-1-tiny.windzz@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Hi,
-> I don't really see what bindings would need to be documented, as the node
-> names and properties used so far are common.  Like, the "mdio" node name
-> is common, the enetc ports are "pci" nodes, nothing special for these.
-> What's missing?
 
-Hi Claudiu
+--om2f4swtpe4optgl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It is not well defined where to put phy nodes. Some drivers do allow
-them directly in the MAC node, some drivers optionally allow an mdio
-sub-node, others enforce an mdio sub-node. The name of the sub-node is
-also not well defined.
+On Fri, Feb 15, 2019 at 08:49:33AM -0500, Yangtao Li wrote:
+> Add the cpufreq support of h6, source of information is as follows.
+>=20
+> h6 cpu opp info:
+> https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/arch/arm6=
+4/boot/dts/sunxi/sun50iw6p1.dtsi
+>=20
+> axp805 spec:
+> http://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
 
-So just documenting that the mdio sub-node is mandatory will help
-people writing device trees for their boards.
+Was that tested on the two H6 boards this time?
 
-       Andrew
+Adding a changelog between version is nice as well so that we can see
+what you changed.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--om2f4swtpe4optgl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXGbXNQAKCRDj7w1vZxhR
+xYxkAP9kUMkZaTrK23zivcyuBxMBvnEttPQW5ZUNNelMTWvr5wD/Vg6TAuWXUOQ8
+6NQLJne5OBfdUYosfymIYyMamN2pMwY=
+=Uep5
+-----END PGP SIGNATURE-----
+
+--om2f4swtpe4optgl--
