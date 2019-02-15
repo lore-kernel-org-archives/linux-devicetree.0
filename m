@@ -1,112 +1,75 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
-Date: Fri, 15 Feb 2019 07:52:26 +0100
-Message-ID: <20190215075226.413d55dc@jawa>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
-        <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
-        <TY1PR01MB1770A46D7FA45A8AFA923DADC0670@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH v2 0/2] drm/omap: panel-tpo-td028ttec1: add backlight
+ support
+Date: Fri, 15 Feb 2019 08:12:42 +0100
+Message-ID: <20190215081242.21cc9953@kemnade.info>
+References: <20190205063813.14873-1-andreas@kemnade.info>
+        <a54e7427-ff84-d105-aab7-c5eab42e6df9@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/wj+P4vAPcNRdVV5g/G=RD.I"; protocol="application/pgp-signature"
+ boundary="Sig_/CwJMaOvMR+688fpUkYv3koC"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <TY1PR01MB1770A46D7FA45A8AFA923DADC0670@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <a54e7427-ff84-d105-aab7-c5eab42e6df9@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Simon Horman <horms@verge.net.au>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, Michal =?UTF-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <mart>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com, sre@kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/wj+P4vAPcNRdVV5g/G=RD.I
+--Sig_/CwJMaOvMR+688fpUkYv3koC
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi Fabrizio,
+Hi,
 
-The best approach is to run:
+On Fri, 8 Feb 2019 11:13:33 +0200
+Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
 
-git format patch -1 <your patch sha>
-
-And then=20
-
-scripts/get_maintainer.pl 0001-xxxxxxx
-
-You shall see the the list of people to send the patch.
-
-> Dear All,
+> On 05/02/2019 08:38, Andreas Kemnade wrote:
+> > This panel has a backlight, so add a property describing that and
+> > add the code to use that.
+> > This makes things like xset dpms force off
+> > also turn off the backlight, so we do not need to rely on additional
+> > userspace programs to do that.
+> >=20
+> > Andreas Kemnade (2):
+> >   drm/omap: panel-tpo-td028ttec1: add backlight support
+> >   dt-bindings: panel: td028ttec1: add backlight property
+> >=20
+> >  .../devicetree/bindings/display/panel/tpo,td028ttec1.txt       |  2 ++
+> >  drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c        | 10 ++=
+++++++++
+> >  2 files changed, 12 insertions(+)
+> >  =20
 >=20
-> Who is the best person for taking this patch?
+> Thanks, I'll pick these up.
 >=20
-> Thanks,
-> Fab
->=20
-> > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Sent: 16 January 2019 18:38
-> > Subject: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon
-> > Linux.
-> >
-> > From: Biju Das <biju.das@bp.renesas.com>
-> >
-> > Add Silicon Linux to the list of devicetree vendor prefixes.
-> >
-> > Website: http://www.si-linux.co.jp
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > b/Documentation/devicetree/bindings/vendor-prefixes.txt index
-> > 4b1a2a8..02a7037 100644 ---
-> > a/Documentation/devicetree/bindings/vendor-prefixes.txt +++
-> > b/Documentation/devicetree/bindings/vendor-prefixes.txt @@ -344,6
-> > +344,7 @@ sgxSGX Sensortech sharpSharp Corporation
-> >  shimafujiShimafuji Electric, Inc.
-> >  si-enSi-En Technology Ltd.
-> > +si-linuxSilicon Linux Corporation
-> >  sifiveSiFive, Inc.
-> >  sigmaSigma Designs, Inc.
-> >  siiSeiko Instruments, Inc.
-> > --
-> > 2.7.4 =20
->=20
->=20
->=20
-> Renesas Electronics Europe GmbH,Geschaeftsfuehrer/President : Michael
-> Hannawald, Sitz der Gesellschaft/Registered office: Duesseldorf,
-> Arcadiastrasse 10, 40472 Duesseldorf,
-> Germany,Handelsregister/Commercial Register: Duesseldorf, HRB 3708
-> USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WEEE
-> reg. no.: DE 14978647
 
+hmm, that sounds like: patch accepted, will appear in linux-next soon.
+I have not seen it there, or is it just in some branch not merged into
+linux-next. Any new obstacles?
 
+Regards,
+Andreas
 
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/wj+P4vAPcNRdVV5g/G=RD.I
+--Sig_/CwJMaOvMR+688fpUkYv3koC
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlxmYaoACgkQAR8vZIA0
-zr2TBQf9FXaGvyW4v5bMvAdUNoZNE+ofxBnDxKYg4GSPwr7GQ/A9uaCmjz0ULGJa
-jdmEvYzePHkM4dNgf4nfRWdoPmpgYxGANf3P8NrlVFAxKwFhrG2m5OyS9sfIPgYJ
-4BHBKTwfl+zECtrCkeELyYzN7rG9Ftg+hdfjZ+Nw0uLibKy82tYSRUlSLzIYPyI0
-J7MHBxuSDUejbZfCCkzDt6dSBTGqT7Z2qiy46v14XZUn1vztviV23Wv1y/0Sqopk
-pdysD0NkYQILSRn8oqId5CPo5egHuwb23lF9xZTstuUv+sc/25t15wEvFZfj8Lt4
-52IQuLZfwZV07TeE6+msv9vRFuEQgA==
-=JQsx
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlxmZmoACgkQl4jFM1s/
+ye9+8xAAqmwCufiIjNGhDbgZP4jQZyAq8wV/Mfq8XHJLGVThdnHzE/AoKrEwa1/Y
+snw2s4+AcBHwLwqPbKTzAyY+hZoWlzuTDmRUepnoKxusJerbsSe3DBH0brqb2NR5
+Wsjn7s0JHVv0XPo3cDQOw6igQ+ca/nJak8OweR9QZFs1raoqfDldUCVQH9zFGRkk
+Ec5sBfd+/YWxpdmDpREB5QCYeW4CJsWWcDTzMSp8uY69IpXv2+uU0+eao3HSjAli
+pdYaPMiaw52Rr31ERmG2icWiYkEQETH52xoPVe85yut5fIO9WjGd37UTW1QaeFLN
+j02Jc9YWmjPgXmxqoLC1gD0ODuVMEVwFvQmzejtTYRWJYaz4MrYuGi4EL+LYW3gU
+1w5FD0D80vxm55nRog/pWHD42IPPqQ+svj0SqKoUrjof3Pv13PnsvcGKV82dNPnP
+MFTre8QnxpAlP6YjHDJaRGVqtMEMM1Ny2c0u3euTDCtzeYINx77Q4j576Ichb6K7
+gi7zMBhPhvtVkcxnu1jYQYSTodjHD5aCkhxIqFkvxsN/oCZId7pekTOaalhdz97m
+3em2ct49+LyYJU9POAxyOwzNPg7Ikwm/uNLV/rspwJQL4z58SBq3Uxq8+bmFt4oX
+eWEOlH1NUhFcYTU19JJ+xeE9lJ6K98pxMntwgIHlvWX/LqGRL4g=
+=85hg
 -----END PGP SIGNATURE-----
 
---Sig_/wj+P4vAPcNRdVV5g/G=RD.I--
+--Sig_/CwJMaOvMR+688fpUkYv3koC--
