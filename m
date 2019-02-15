@@ -1,238 +1,112 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH v7 6/6] arm64: dts: mt8183: add spi node
-Date: Fri, 15 Feb 2019 14:02:38 +0800
-Message-ID: <1550210558-30516-7-git-send-email-erin.lo@mediatek.com>
-References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
+Date: Fri, 15 Feb 2019 07:52:26 +0100
+Message-ID: <20190215075226.413d55dc@jawa>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
+        <TY1PR01MB1770A46D7FA45A8AFA923DADC0670@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/wj+P4vAPcNRdVV5g/G=RD.I"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
+In-Reply-To: <TY1PR01MB1770A46D7FA45A8AFA923DADC0670@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, erin.lo@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Mengqi Zhang <Mengqi.Zhang@mediatek.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Simon Horman <horms@verge.net.au>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, Michal =?UTF-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <mart>
 List-Id: devicetree@vger.kernel.org
 
-Add spi DTS node to the mt8183 and mt8183-evb.
+--Sig_/wj+P4vAPcNRdVV5g/G=RD.I
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Mengqi Zhang <Mengqi.Zhang@mediatek.com>
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 105 ++++++++++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    |  79 +++++++++++++++++++++
- 2 files changed, 184 insertions(+)
+Hi Fabrizio,
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index 9b52559..b12c6ea 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -26,6 +26,111 @@
- 	};
- };
- 
-+&pio {
-+	spi_pins_0: spi0{
-+		pins_spi{
-+			pinmux = <PINMUX_GPIO85__FUNC_SPI0_MI>,
-+				 <PINMUX_GPIO86__FUNC_SPI0_CSB>,
-+				 <PINMUX_GPIO87__FUNC_SPI0_MO>,
-+				 <PINMUX_GPIO88__FUNC_SPI0_CLK>;
-+			bias-disable;
-+		};
-+	};
-+
-+	spi_pins_1: spi1{
-+		pins_spi{
-+			pinmux = <PINMUX_GPIO161__FUNC_SPI1_A_MI>,
-+				 <PINMUX_GPIO162__FUNC_SPI1_A_CSB>,
-+				 <PINMUX_GPIO163__FUNC_SPI1_A_MO>,
-+				 <PINMUX_GPIO164__FUNC_SPI1_A_CLK>;
-+			bias-disable;
-+		};
-+	};
-+
-+	spi_pins_2: spi2{
-+		pins_spi{
-+			pinmux = <PINMUX_GPIO0__FUNC_SPI2_CSB>,
-+				 <PINMUX_GPIO1__FUNC_SPI2_MO>,
-+				 <PINMUX_GPIO2__FUNC_SPI2_CLK>,
-+				 <PINMUX_GPIO94__FUNC_SPI2_MI>;
-+			bias-disable;
-+		};
-+	};
-+
-+	spi_pins_3: spi3{
-+		pins_spi{
-+			pinmux = <PINMUX_GPIO21__FUNC_SPI3_MI>,
-+				 <PINMUX_GPIO22__FUNC_SPI3_CSB>,
-+				 <PINMUX_GPIO23__FUNC_SPI3_MO>,
-+				 <PINMUX_GPIO24__FUNC_SPI3_CLK>;
-+			bias-disable;
-+		};
-+	};
-+
-+	spi_pins_4: spi4{
-+		pins_spi{
-+			pinmux = <PINMUX_GPIO17__FUNC_SPI4_MI>,
-+				 <PINMUX_GPIO18__FUNC_SPI4_CSB>,
-+				 <PINMUX_GPIO19__FUNC_SPI4_MO>,
-+				 <PINMUX_GPIO20__FUNC_SPI4_CLK>;
-+			bias-disable;
-+		};
-+	};
-+
-+	spi_pins_5: spi5{
-+		pins_spi{
-+			pinmux = <PINMUX_GPIO13__FUNC_SPI5_MI>,
-+				 <PINMUX_GPIO14__FUNC_SPI5_CSB>,
-+				 <PINMUX_GPIO15__FUNC_SPI5_MO>,
-+				 <PINMUX_GPIO16__FUNC_SPI5_CLK>;
-+			bias-disable;
-+		};
-+	};
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_pins_0>;
-+	mediatek,pad-select = <0>;
-+	status = "okay";
-+};
-+
-+&spi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_pins_1>;
-+	mediatek,pad-select = <0>;
-+	status = "okay";
-+};
-+
-+&spi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_pins_2>;
-+	mediatek,pad-select = <0>;
-+	status = "okay";
-+};
-+
-+&spi3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_pins_3>;
-+	mediatek,pad-select = <0>;
-+	status = "okay";
-+};
-+
-+&spi4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_pins_4>;
-+	mediatek,pad-select = <0>;
-+	status = "okay";
-+};
-+
-+&spi5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_pins_5>;
-+	mediatek,pad-select = <0>;
-+	status = "okay";
-+
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 1bd1399..165b859 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/mt8183-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include "mt8183-pinfunc.h"
- 
- / {
- 	compatible = "mediatek,mt8183";
-@@ -267,6 +268,84 @@
- 			status = "disabled";
- 		};
- 
-+		spi0: spi@1100a000 {
-+			compatible = "mediatek,mt8183-spi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0x1100a000 0 0x1000>;
-+			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_SYSPLL_D5_D2>,
-+				 <&topckgen CLK_TOP_MUX_SPI>,
-+				 <&infracfg CLK_INFRA_SPI0>;
-+			clock-names = "parent-clk", "sel-clk", "spi-clk";
-+			status = "disabled";
-+		};
-+
-+		spi1: spi@11010000 {
-+			compatible = "mediatek,mt8183-spi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0x11010000 0 0x1000>;
-+			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_SYSPLL_D5_D2>,
-+				 <&topckgen CLK_TOP_MUX_SPI>,
-+				 <&infracfg CLK_INFRA_SPI1>;
-+			clock-names = "parent-clk", "sel-clk", "spi-clk";
-+			status = "disabled";
-+		};
-+
-+		spi2: spi@11012000 {
-+			compatible = "mediatek,mt8183-spi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0x11012000 0 0x1000>;
-+			interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_SYSPLL_D5_D2>,
-+				 <&topckgen CLK_TOP_MUX_SPI>,
-+				 <&infracfg CLK_INFRA_SPI2>;
-+			clock-names = "parent-clk", "sel-clk", "spi-clk";
-+			status = "disabled";
-+		};
-+
-+		spi3: spi@11013000 {
-+			compatible = "mediatek,mt8183-spi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0x11013000 0 0x1000>;
-+			interrupts = <GIC_SPI 130 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_SYSPLL_D5_D2>,
-+				 <&topckgen CLK_TOP_MUX_SPI>,
-+				 <&infracfg CLK_INFRA_SPI3>;
-+			clock-names = "parent-clk", "sel-clk", "spi-clk";
-+			status = "disabled";
-+		};
-+
-+		spi4: spi@11018000 {
-+			compatible = "mediatek,mt8183-spi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0x11018000 0 0x1000>;
-+			interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_SYSPLL_D5_D2>,
-+				 <&topckgen CLK_TOP_MUX_SPI>,
-+				 <&infracfg CLK_INFRA_SPI4>;
-+			clock-names = "parent-clk", "sel-clk", "spi-clk";
-+			status = "disabled";
-+		};
-+
-+		spi5: spi@11019000 {
-+			compatible = "mediatek,mt8183-spi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0x11019000 0 0x1000>;
-+			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_SYSPLL_D5_D2>,
-+				 <&topckgen CLK_TOP_MUX_SPI>,
-+				 <&infracfg CLK_INFRA_SPI5>;
-+			clock-names = "parent-clk", "sel-clk", "spi-clk";
-+			status = "disabled";
-+		};
-+
- 		audiosys: syscon@11220000 {
- 			compatible = "mediatek,mt8183-audiosys", "syscon";
- 			reg = <0 0x11220000 0 0x1000>;
--- 
-1.9.1
+The best approach is to run:
+
+git format patch -1 <your patch sha>
+
+And then=20
+
+scripts/get_maintainer.pl 0001-xxxxxxx
+
+You shall see the the list of people to send the patch.
+
+> Dear All,
+>=20
+> Who is the best person for taking this patch?
+>=20
+> Thanks,
+> Fab
+>=20
+> > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Sent: 16 January 2019 18:38
+> > Subject: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon
+> > Linux.
+> >
+> > From: Biju Das <biju.das@bp.renesas.com>
+> >
+> > Add Silicon Linux to the list of devicetree vendor prefixes.
+> >
+> > Website: http://www.si-linux.co.jp
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > b/Documentation/devicetree/bindings/vendor-prefixes.txt index
+> > 4b1a2a8..02a7037 100644 ---
+> > a/Documentation/devicetree/bindings/vendor-prefixes.txt +++
+> > b/Documentation/devicetree/bindings/vendor-prefixes.txt @@ -344,6
+> > +344,7 @@ sgxSGX Sensortech sharpSharp Corporation
+> >  shimafujiShimafuji Electric, Inc.
+> >  si-enSi-En Technology Ltd.
+> > +si-linuxSilicon Linux Corporation
+> >  sifiveSiFive, Inc.
+> >  sigmaSigma Designs, Inc.
+> >  siiSeiko Instruments, Inc.
+> > --
+> > 2.7.4 =20
+>=20
+>=20
+>=20
+> Renesas Electronics Europe GmbH,Geschaeftsfuehrer/President : Michael
+> Hannawald, Sitz der Gesellschaft/Registered office: Duesseldorf,
+> Arcadiastrasse 10, 40472 Duesseldorf,
+> Germany,Handelsregister/Commercial Register: Duesseldorf, HRB 3708
+> USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WEEE
+> reg. no.: DE 14978647
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/wj+P4vAPcNRdVV5g/G=RD.I
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlxmYaoACgkQAR8vZIA0
+zr2TBQf9FXaGvyW4v5bMvAdUNoZNE+ofxBnDxKYg4GSPwr7GQ/A9uaCmjz0ULGJa
+jdmEvYzePHkM4dNgf4nfRWdoPmpgYxGANf3P8NrlVFAxKwFhrG2m5OyS9sfIPgYJ
+4BHBKTwfl+zECtrCkeELyYzN7rG9Ftg+hdfjZ+Nw0uLibKy82tYSRUlSLzIYPyI0
+J7MHBxuSDUejbZfCCkzDt6dSBTGqT7Z2qiy46v14XZUn1vztviV23Wv1y/0Sqopk
+pdysD0NkYQILSRn8oqId5CPo5egHuwb23lF9xZTstuUv+sc/25t15wEvFZfj8Lt4
+52IQuLZfwZV07TeE6+msv9vRFuEQgA==
+=JQsx
+-----END PGP SIGNATURE-----
+
+--Sig_/wj+P4vAPcNRdVV5g/G=RD.I--
