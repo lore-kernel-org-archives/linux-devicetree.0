@@ -1,372 +1,51 @@
-From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: Re: [PATCH v2 1/8] leds: Add support for AXP20X CHGLED
-Date: Fri, 15 Feb 2019 16:07:25 +0200
-Message-ID: <cfc49881-66a4-4c2f-4c18-7a4a2a62d956@olimex.com>
-References: <20190215115013.11098-1-stefan@olimex.com>
- <20190215115013.11098-2-stefan@olimex.com>
+From: Frank Lee <tiny.windzz@gmail.com>
+Subject: Re: [PATCH 4/4] arm64: dts: allwinner: h6: Add CPU Operating
+ Performance Points table
+Date: Fri, 15 Feb 2019 22:09:51 +0800
+Message-ID: <CAEExFWt84MmpoWeibVf4bBJXOuPy9P7RrAFmEx304zz5z1GHwQ@mail.gmail.com>
+References: <20190214130910.9201-1-tiny.windzz@gmail.com> <20190214130910.9201-5-tiny.windzz@gmail.com>
+ <20190214143842.nqsh6trwdjxq2ecd@flea> <CAEExFWuxrVC1J0g93R3ifaDxOGy-20B4jftoHw932V7+wqhtxw@mail.gmail.com>
+ <CAEExFWv_K_07e30dgPbafVhDD_smwZkpi6Fqk6yzCahesdnrGg@mail.gmail.com> <20190215135613.sdz56vtiawqeryi5@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190215115013.11098-2-stefan@olimex.com>
-Content-Language: en-US
+In-Reply-To: <20190215135613.sdz56vtiawqeryi5@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Mavrodiev <stefan@olimex.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, robh+dt@kernel.org, mark.rutland@arm.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2/15/19 1:50 PM, Stefan Mavrodiev wrote:
-> Most of AXP20x PMIC chips have built-in battery charger with LED indicator.
-> The LED can be controlled ether by the charger or manually by a register.
+On Fri, Feb 15, 2019 at 9:56 PM Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
 >
-> The default is (except for AXP209) manual control, which makes this LED
-> useless, since there is no device driver.
+> Hi
 >
-> The driver rely on AXP20X MFD driver.
+> On Fri, Feb 15, 2019 at 12:56:03AM +0800, Frank Lee wrote:
+> > How about to implement a thermal driver that is not integrated with
+> > gpadc =EF=BC=9F
+> >
+> > GPADC on soc is rarely used now.
 >
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> ---
->   drivers/leds/Kconfig       |  10 ++
->   drivers/leds/Makefile      |   1 +
->   drivers/leds/leds-axp20x.c | 291 +++++++++++++++++++++++++++++++++++++
->   3 files changed, 302 insertions(+)
->   create mode 100644 drivers/leds/leds-axp20x.c
+> You mean GPADC in general, or the gpadc driver in particular?
+> Otherwise, yes, having a driver for the thermal sensor in the H6
+> sounds like a good plan for thermal throttling, but I don't see it as
+> a dependency for that whole series.
+At present, sunxi's thermal driver is integrated with the gpadc driver.
+I have a idea to implement the thermal driver alone. I haven't started yet,
+and it may take a while to do it.
+
+How about the plan to implement a thermal drive alone and put i
+under drivers/thermal?
+
+In addition to the cpu dvfs of H6, patch v2 has been sent.
+
+Thanks,
+Yangtao
 >
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index a72f97fca57b..82dce9063d41 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -766,6 +766,16 @@ config LEDS_NIC78BX
->   	  To compile this driver as a module, choose M here: the module
->   	  will be called leds-nic78bx.
->   
-> +config LEDS_AXP20X
-> +	tristate "LED support for X-Powers PMICs"
-> +	depends on MFD_AXP20X
-> +	help
-> +	  This option enables support for CHGLED found on most of X-Powers
-> +	  PMICs.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called leds-axp20x.
-> +
->   comment "LED Triggers"
->   source "drivers/leds/trigger/Kconfig"
->   
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 4c1b0054f379..d3fb76e119d8 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -79,6 +79,7 @@ obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
->   obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
->   obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
->   obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
-> +obj-$(CONFIG_LEDS_AXP20X)		+= leds-axp20x.o
->   
->   # LED SPI Drivers
->   obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-> diff --git a/drivers/leds/leds-axp20x.c b/drivers/leds/leds-axp20x.c
-> new file mode 100644
-> index 000000000000..2d5ae1c085f0
-> --- /dev/null
-> +++ b/drivers/leds/leds-axp20x.c
-> @@ -0,0 +1,291 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +//
-> +// Copyright 2019 Stefan Mavrodiev <stefan@olimex.com>
-> +
-
-The copyright header is wrong. It should be "Copyright 2019 Olimex Ltd.".
-
-I'd like to fix it before the patchis merged (eventually).
-
-Regards,
-Stefan Mavrodiev
-
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/mfd/axp20x.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <uapi/linux/uleds.h>
-> +
-> +
-> +#define AXP20X_CHGLED_CTRL_REG		AXP20X_OFF_CTRL
-> +#define AXP20X_CHGLED_FUNC_MASK			GENMASK(5, 4)
-> +#define AXP20X_CHGLED_FUNC_OFF			(0 << 4)
-> +#define AXP20X_CHGLED_FUNC_1HZ			(1 << 4)
-> +#define AXP20X_CHGLED_FUNC_4HZ			(2 << 4)
-> +#define AXP20X_CHGLED_FUNC_FULL			(3 << 4)
-> +#define AXP20X_CHGLED_CTRL_MASK			BIT(3)
-> +#define AXP20X_CHGLED_CTRL_MANUAL		0
-> +#define AXP20X_CHGLED_CTRL_CHARGER		1
-> +#define AXP20X_CHGLED_CTRL(_ctrl)		(_ctrl << 3)
-> +
-> +#define AXP20X_CHGLED_MODE_REG		AXP20X_CHRG_CTRL2
-> +#define AXP20X_CHGLED_MODE_MASK			BIT(4)
-> +#define AXP20X_CHGLED_MODE_A			0
-> +#define AXP20X_CHGLED_MODE_B			1
-> +#define AXP20X_CHGLED_MODE(_mode)		(_mode << 4)
-> +
-> +struct axp20x_led {
-> +	char			name[LED_MAX_NAME_SIZE];
-> +	struct led_classdev	cdev;
-> +	struct mutex		lock;
-> +	u8			mode : 1;
-> +	u8			ctrl : 1;
-> +	u8			ctrl_inverted : 1;
-> +	struct axp20x_dev	*axp20x;
-> +};
-> +
-> +static inline struct axp20x_led *to_axp20x_led(struct led_classdev *cdev)
-> +{
-> +	return container_of(cdev, struct axp20x_led, cdev);
-> +}
-> +
-> +static int axp20x_led_setup(struct axp20x_led *priv)
-> +{
-> +	int ret;
-> +	u8 val;
-> +
-> +	/* Invert the logic, if necessary */
-> +	val = priv->ctrl ^ priv->ctrl_inverted;
-> +
-> +	mutex_lock(&priv->lock);
-> +	ret = regmap_update_bits(priv->axp20x->regmap, AXP20X_CHGLED_CTRL_REG,
-> +				 AXP20X_CHGLED_CTRL_MASK,
-> +				 AXP20X_CHGLED_CTRL(val));
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	ret = regmap_update_bits(priv->axp20x->regmap, AXP20X_CHGLED_MODE_REG,
-> +				 AXP20X_CHGLED_MODE_MASK,
-> +				 AXP20X_CHGLED_MODE(priv->mode));
-> +out:
-> +	mutex_unlock(&priv->lock);
-> +	return ret;
-> +}
-> +
-> +static ssize_t control_show(struct device *dev, struct device_attribute *attr,
-> +			    char *buf)
-> +{
-> +	struct led_classdev *cdev = dev_get_drvdata(dev);
-> +	struct axp20x_led *priv = to_axp20x_led(cdev);
-> +
-> +	return sprintf(buf, "%u\n", priv->ctrl);
-> +}
-> +
-> +static ssize_t control_store(struct device *dev, struct device_attribute *attr,
-> +			     const char *buf, size_t size)
-> +{
-> +	struct led_classdev *cdev = dev_get_drvdata(dev);
-> +	struct axp20x_led *priv = to_axp20x_led(cdev);
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	ret = kstrtoul(buf, 0, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/**
-> +	 * Supported values are:
-> +	 *   - 0 : Manual control
-> +	 *   - 1 : Charger control
-> +	 */
-> +	if (val > 1)
-> +		return -EINVAL;
-> +
-> +	priv->ctrl = val;
-> +
-> +	return axp20x_led_setup(priv) ? : size;
-> +}
-> +static DEVICE_ATTR_RW(control);
-> +
-> +static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct led_classdev *cdev = dev_get_drvdata(dev);
-> +	struct axp20x_led *priv = to_axp20x_led(cdev);
-> +
-> +	return sprintf(buf, "%u\n", priv->mode);
-> +}
-> +
-> +static ssize_t mode_store(struct device *dev, struct device_attribute *attr,
-> +			  const char *buf, size_t size)
-> +{
-> +	struct led_classdev *cdev = dev_get_drvdata(dev);
-> +	struct axp20x_led *priv = to_axp20x_led(cdev);
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	ret = kstrtoul(buf, 0, &val);
-> +	if (ret)
-> +		return ret;
-> +	/**
-> +	 * Supported values are:
-> +	 *   - 0 : Mode A
-> +	 *   - 1 : Mode B
-> +	 */
-> +	if (val > 1)
-> +		return -EINVAL;
-> +
-> +	priv->mode = val;
-> +
-> +	return axp20x_led_setup(priv) ? : size;
-> +}
-> +static DEVICE_ATTR_RW(mode);
-> +
-> +static struct attribute *axp20x_led_attrs[] = {
-> +	&dev_attr_control.attr,
-> +	&dev_attr_mode.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(axp20x_led);
-> +
-> +enum led_brightness axp20x_led_brightness_get(struct led_classdev *cdev)
-> +{
-> +	struct axp20x_led *priv = to_axp20x_led(cdev);
-> +	u32 val;
-> +	int ret;
-> +
-> +	mutex_lock(&priv->lock);
-> +	ret = regmap_read(priv->axp20x->regmap, AXP20X_CHGLED_CTRL_REG, &val);
-> +	mutex_unlock(&priv->lock);
-> +	if (ret < 0)
-> +		return LED_OFF;
-> +
-> +	return (val & AXP20X_CHGLED_FUNC_FULL) ? LED_FULL : LED_OFF;
-> +}
-> +
-> +static int axp20x_led_brightness_set_blocking(struct led_classdev *cdev,
-> +					      enum led_brightness brightness)
-> +{
-> +	struct axp20x_led *priv = to_axp20x_led(cdev);
-> +	int ret = 0;
-> +
-> +	mutex_lock(&priv->lock);
-> +	ret = regmap_update_bits(priv->axp20x->regmap,
-> +				 AXP20X_CHGLED_CTRL_REG,
-> +				 AXP20X_CHGLED_FUNC_MASK,
-> +				 (brightness) ?
-> +				 AXP20X_CHGLED_FUNC_FULL :
-> +				 AXP20X_CHGLED_FUNC_OFF);
-> +	mutex_unlock(&priv->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static int axp20x_led_parse_dt(struct axp20x_led *priv, struct device_node *np)
-> +{
-> +	const char *str;
-> +	u8 value;
-> +	int ret = 0;
-> +
-> +	str = of_get_property(np, "label", NULL);
-> +	if (!str)
-> +		snprintf(priv->name, sizeof(priv->name), "axp20x::");
-> +	else
-> +		snprintf(priv->name, sizeof(priv->name), "axp20x:%s", str);
-> +	priv->cdev.name = priv->name;
-> +
-> +	priv->cdev.default_trigger = of_get_property(np,
-> +						     "linux,default-trigger",
-> +						     NULL);
-> +
-> +	if (!of_property_read_u8(np, "x-powers,charger-mode", &value)) {
-> +		priv->ctrl = AXP20X_CHGLED_CTRL_CHARGER;
-> +		priv->mode = (value < 2) ? value : 0;
-> +	} else {
-> +		priv->ctrl = AXP20X_CHGLED_CTRL_MANUAL;
-> +	}
-> +
-> +	str = of_get_property(np, "default-state", NULL);
-> +	if (str) {
-> +		if (!strcmp(str, "keep")) {
-> +			ret = axp20x_led_brightness_get(&priv->cdev);
-> +			if (ret < 0)
-> +				return ret;
-> +			priv->cdev.brightness = ret;
-> +		} else if (!strcmp(str, "on")) {
-> +			ret = axp20x_led_brightness_set_blocking(&priv->cdev,
-> +								 LED_FULL);
-> +		} else  {
-> +			ret = axp20x_led_brightness_set_blocking(&priv->cdev,
-> +								 LED_OFF);
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id axp20x_led_of_match[] = {
-> +	{ .compatible = "x-powers,axp20x-led" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, axp20x_led_of_match);
-> +
-> +static int axp20x_led_probe(struct platform_device *pdev)
-> +{
-> +	struct axp20x_led *priv;
-> +	int ret;
-> +
-> +	if (!of_device_is_available(pdev->dev.of_node))
-> +		return -ENODEV;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(struct axp20x_led),
-> +			    GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->axp20x = dev_get_drvdata(pdev->dev.parent);
-> +	if (!priv->axp20x) {
-> +		dev_err(&pdev->dev, "Failed to get parent data\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	mutex_init(&priv->lock);
-> +
-> +	priv->cdev.brightness_set_blocking = axp20x_led_brightness_set_blocking;
-> +	priv->cdev.brightness_get = axp20x_led_brightness_get;
-> +	priv->cdev.groups = axp20x_led_groups;
-> +
-> +	ret = axp20x_led_parse_dt(priv, pdev->dev.of_node);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to set parameters\n");
-> +		return ret;
-> +	}
-> +
-> +	/**
-> +	 * For some reason in AXP209 the bit that controls CHGLED is with
-> +	 * inverted logic compared to all other PMICs.
-> +	 * If the PMIC is actually AXP209, set inverted flag and later use it
-> +	 * when configuring the LED.
-> +	 */
-> +	if (priv->axp20x->variant == AXP209_ID)
-> +		priv->ctrl_inverted = 1;
-> +
-> +	ret =  axp20x_led_setup(priv);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to configure led");
-> +		return ret;
-> +	}
-> +
-> +	return devm_led_classdev_register(&pdev->dev, &priv->cdev);
-> +}
-> +
-> +static struct platform_driver axp20x_led_driver = {
-> +	.driver = {
-> +		.name	= "axp20x-led",
-> +		.of_match_table = of_match_ptr(axp20x_led_of_match),
-> +	},
-> +	.probe = axp20x_led_probe,
-> +};
-> +
-> +module_platform_driver(axp20x_led_driver);
-> +
-> +MODULE_AUTHOR("Stefan Mavrodiev <stefan@olimex.com");
-> +MODULE_DESCRIPTION("X-Powers PMIC CHGLED driver");
-> +MODULE_LICENSE("GPL");
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
