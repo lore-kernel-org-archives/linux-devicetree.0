@@ -1,23 +1,15 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
-Date: Fri, 15 Feb 2019 15:20:29 +0100
-Message-ID: <20190215142029.GB32618@lst.de>
-References: <20190211153945.e34fpwkuk67l7lc6@flea>
- <E1gtHJj-0000iY-G8@stardust.g4.wien.funkfeuer.at>
- <20190212083850.7genwc6ipnxtl7eo@flea>
- <E1gtUZn-0000NW-MA@stardust.g4.wien.funkfeuer.at>
- <20190212100929.iqsxu443qrkl6myf@flea>
- <E1gtds8-0000NB-Re@stardust.g4.wien.funkfeuer.at>
- <20190213094442.da2dy6d5bb527nft@flea>
- <E1gtsx9-0000RP-08@stardust.g4.wien.funkfeuer.at>
- <20190213155311.ovkpim3lxwyvuhhj@flea>
- <E1gu4dx-0000Sy-2B@stardust.g4.wien.funkfeuer.at>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V3 1/4] drivers/perf: imx_ddr: Add ddr performance
+ counter support
+Date: Fri, 15 Feb 2019 14:22:41 +0000
+Message-ID: <20190215142241.GB55505@lakrids.cambridge.arm.com>
+References: <1550081533-25000-1-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <E1gu4dx-0000Sy-2B@stardust.g4.wien.funkfeuer.at>
+In-Reply-To: <1550081533-25000-1-git-send-email-Frank.Li@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -27,69 +19,254 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Harald Geyer <harald@ccbib.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
+To: Frank Li <frank.li@nxp.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is becoming big; can we please split this thread into 3 separate issues?
-AFAICS there's the original request to have DT audio nodes for Teres-I,
-then a discussion about gpio/pinctrl properties, and one about formal 
-device tree verification.
+On Wed, Feb 13, 2019 at 06:12:27PM +0000, Frank Li wrote:
+> event 41: axid-read and event 42: axi-write support count only
+> for special axi id. config1 is axi master id.
 
-Nonetheless I'll add to points 1 and 3 here :)
+These should be commented in the code, and shouldn't be the start of the
+commit message.
 
-On Thu, Feb 14, 2019 at 01:12:44AM +0100, Harald Geyer wrote:
-> Hi Maxime!
+> please refer chip manual to get axi master id information.
+
+... where can I find this manual?
+
 > 
-> Maxime Ripard writes:
-> > On Wed, Feb 13, 2019 at 12:43:46PM +0100, Harald Geyer wrote:
-> > > Maxime Ripard writes:
-> > > > On Tue, Feb 12, 2019 at 08:37:36PM +0100, Harald Geyer wrote:
+> event 'cycles' must be enabled because hardware requirement.
 
-[ GPIO discussion ]
+Can you please describe this requirement in more detail?
 
-> I believe it should be possible to tell if a DT is valid, just be looking
-> at the binding documentation. Without looking on the linux source code
-> or other side channel information.
-> 
-> As you write below, people are putting DTs into ROM. Which means that
-> IMO the DTs should actually be OS independent, so that people can use
-> different OSes on their equipment. This in turn requires the binding
-> documentation to be comprehensive.
+Do the other counters only count when this event is enabled, for
+example?
 
->From my view device trees are maintained in the linux kernel source just
-because it's the most active, vivid community, with established procedures
-on how to review and make changes. So yes, DTs should be OS agnostic, and
-ideally comply with a binding spec (sic!). It's simply pragmatic to do this
-on kernel.org.
+> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> index af9bc17..6e279e6 100644
+> --- a/drivers/perf/Kconfig
+> +++ b/drivers/perf/Kconfig
+> @@ -61,6 +61,13 @@ config ARM_DSU_PMU
+>  	  system, control logic. The PMU allows counting various events related
+>  	  to DSU.
+>  
+> +config FSL_IMX8_DDR_PERF
 
-And yes, some DT formal verification spinning off of this would be a really
-good idea, to take ARM (et al.), Linux, and U-Boot further.
+Please s/PERF/PMU/ here, matching the other PMU drivers.
+
+> +	tristate "Freescale i.MX8 DDR perf monitor"
+> +	depends on ARCH_MXC
+> +	  help
+> +	  Provides support for ddr perfomance monitor in i.MX8. Provide memory
+> +	  througput information.
+> +
+>  config HISI_PMU
+>         bool "HiSilicon SoC PMU"
+>         depends on ARM64 && ACPI
 
 [...]
 
-> > > > > But we need a way to control the mux from userspace and aside from
-> > > > > unbinding the ideas proposed thus far are:
-> > > > >
-> > > > > a) control the gpio directly
-> > > > > b) control the gpio via leds-gpio
-> > > > > 
-> > > > > (a) was dismissed because we can't set a default from DT
-> > > > > (b) was dismissed because some rogue app might try to blink it
+> diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+> new file mode 100644
+> index 0000000..a15bb46
+> --- /dev/null
+> +++ b/drivers/perf/fsl_imx8_ddr_perf.c
+> @@ -0,0 +1,570 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2017 NXP
+> + * Copyright 2016 Freescale Semiconductor, Inc.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/perf_event.h>
+> +#include <linux/slab.h>
+> +#include <linux/delay.h>
 
-Hey, this is a debugging hack. If some rogue app tries to blink it, so be it.
+Nit: please sort these in alphabetical order.
 
-> I suspect some distributions will pick up the patch I posted anyway, if
-> it doesn't get merged mainline. (This is how I forgot missing backlight
-> support - it just worked for too many people ...) If we ship
-> sun50i-a64-teres-i.dts with the proper nodes (but disabled), their
-> patches will be much easier to maintain as the official DT evolves.
+[...]
 
-As I wrote (held by the list admin), I consider the whole console mux
-GPIO an U-Boot hack, and would put it into sun50i-a64-teres-i-u-boot.dtsi.
-(As a LED, see above :-)
+> +struct fsl_ddr_devtype_data {
+> +	unsigned int flags;
+> +};
+> +
+> +static const struct fsl_ddr_devtype_data imx8_data;
+> +static const struct fsl_ddr_devtype_data imx8m_data = {
+> +	.flags = DDR_CAP_AXI_ID,
+> +};
+> +
+> +static const struct of_device_id imx_ddr_pmu_dt_ids[] = {
+> +	{ .compatible = "fsl,imx8-ddr-pmu", .data = (void *)&imx8_data},
+> +	{ .compatible = "fsl,imx8m-ddr-pmu", .data = (void *)&imx8m_data},
+> +	{ /* sentinel */ }
+> +};
 
-Would you care to submit a patch version without that GPIO handled?
-I think it's very useful and has the pontential to be agreed upon.
+You could encode the flags directly in of_device_id::data, and avoid the
+need for this structure entirely.
 
-	Torsten
+[...]
+
+> +static u32 ddr_perf_alloc_counter(struct ddr_pmu *pmu, int event)
+> +{
+> +	int i;
+> +
+> +	/* Always map cycle event to counter 0 */
+> +	if (event == EVENT_CYCLES_ID)
+> +		return EVENT_CYCLES_COUNTER;
+
+What if the cycle counter is already in use?
+
+I suspect that won't work correctly.
+
+[...]
+
+> +static void ddr_perf_event_enable(struct ddr_pmu *pmu, int config,
+> +				  int counter, bool enable)
+> +{
+> +	u8 reg = counter * 4 + COUNTER_CNTL;
+> +	int val;
+> +
+> +	if (enable) {
+> +		/* Clear counter, then enable it. */
+> +		writel(0, pmu->base + reg);
+
+Why is it necesary to clear the control register here?
+
+> +		val = CNTL_EN | CNTL_CLEAR;
+> +		val |= (config << CNTL_CSV_SHIFT) & CNTL_CSV_MASK;
+> +	} else {
+> +		/* Disable counter */
+> +		val = readl(pmu->base + reg) & CNTL_EN_MASK;
+> +	}
+> +
+> +	writel(val, pmu->base + reg);
+> +
+> +	if (config == EVENT_CYCLES_ID)
+> +		pmu->cycles_active = enable;
+> +}
+> +
+> +static void ddr_perf_event_start(struct perf_event *event, int flags)
+> +{
+> +	struct ddr_pmu *pmu = to_ddr_pmu(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	int counter = hwc->idx;
+> +
+> +	if (pmu->devtype->flags & DDR_CAP_AXI_ID) {
+> +		if (event->attr.config == 0x41 ||
+> +		    event->attr.config == 0x42) {
+
+Please add mnemonics for these values.
+
+e.g..
+
+#define EVENT_AXI_READ	0x41
+#define EVENT_AXI_WRITE	0x42
+
+... so that this code is easier to read, e.g.
+
+	if (pmu->devtype->flags & DDR_CAP_AXI_ID) {
+		if (event->attr.config == EVENT_AXI_READ ||
+		    event->attr.config == EVENT_AXI_WRITE) {
+			...
+		}
+	}
+
+> +			int val = event->attr.config1;
+> +
+> +			writel(val, pmu->base + COUNTER_DPCR1);
+> +		}
+> +	}
+> +
+> +	local64_set(&hwc->prev_count, 0);
+> +
+> +	ddr_perf_event_enable(pmu, event->attr.config, counter, true);
+> +	/*
+> +	 * If the cycles counter wasn't explicitly selected,
+> +	 * we will enable it now.
+> +	 */
+> +	if (counter > 0 && !pmu->cycles_active)
+> +		ddr_perf_event_enable(pmu, EVENT_CYCLES_ID,
+> +				      EVENT_CYCLES_COUNTER, true);
+
+Please explain *why* you need to enable the cycle counter. It's fine to
+refer to another comment.
+
+> +}
+
+[...]
+
+> +static void ddr_perf_event_del(struct perf_event *event, int flags)
+> +{
+> +	struct ddr_pmu *pmu = to_ddr_pmu(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	int counter = hwc->idx;
+> +
+> +	ddr_perf_event_stop(event, PERF_EF_UPDATE);
+> +
+> +	ddr_perf_free_counter(pmu, counter);
+> +	pmu->total_events--;
+> +	hwc->idx = -1;
+> +
+> +	/* If all events have stopped, stop the cycles counter as well */
+> +	if ((pmu->total_events == 0) && pmu->cycles_active)
+> +		ddr_perf_event_enable(pmu, EVENT_CYCLES_ID,
+> +				      EVENT_CYCLES_COUNTER, false);
+
+Again, please explain *why*. It's fine to refer to another comment.
+
+[...]
+
+> +static irqreturn_t ddr_perf_irq_handler(int irq, void *p)
+> +{
+> +	int i;
+> +	u8 reg;
+> +	int val;
+> +	int counter;
+> +	struct ddr_pmu *pmu = (struct ddr_pmu *) p;
+> +	struct perf_event *event;
+> +
+> +	/* Only cycles counter overflowed can issue irq. all counters will
+> +	 * be stopped when cycles counter overflow. but other counter don't stop
+> +	 * when overflow happen. Update all of the local counter values,
+> +	 * then reset the cycles counter, so the others can continue
+> +	 * counting.
+> +	 */
+
+That is a rather unfortunate design decision.
+
+Can any of the counters count multiple events per cycle?
+
+> +	for (i = 0; i < NUM_COUNTER; i++) {
+> +
+> +		if (!pmu->active_events[i])
+> +			continue;
+> +
+> +		event = pmu->active_events[i];
+> +		counter = event->hw.idx;
+> +		reg = counter * 4 + COUNTER_CNTL;
+> +		val = readl(pmu->base + reg);
+> +
+> +		ddr_perf_event_update(event);
+> +
+> +		if (counter == EVENT_CYCLES_COUNTER) {
+> +			ddr_perf_event_enable(pmu,
+> +					      EVENT_CYCLES_ID,
+> +					      EVENT_CYCLES_COUNTER,
+> +					      true);
+> +			ddr_perf_event_update(event);
+> +		}
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+Thanks,
+Mark.
