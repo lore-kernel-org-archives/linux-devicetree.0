@@ -1,12 +1,15 @@
 From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 00/11] Analogix ANX6345 RGB-(e)DP bridge support
-Date: Thu, 14 Feb 2019 21:09:46 -0800
-Message-ID: <20190215050957.20755-1-anarsoul@gmail.com>
+Subject: [PATCH v3 04/11] dt-bindings: Add ANX6345 DP/eDP
+ transmitter binding
+Date: Thu, 14 Feb 2019 21:09:50 -0800
+Message-ID: <20190215050957.20755-5-anarsoul@gmail.com>
+References: <20190215050957.20755-1-anarsoul@gmail.com>
 Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBP4TTHRQKGQEOPYS6GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDV3B667TUHBBQ4TTHRQKGQEX7534AA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190215050957.20755-1-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,81 +20,81 @@ To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/
 Cc: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset brings support for Analogix ANX6345 RGB-(e)DP bridge, which
-is used by some Allwinner A64 laptops, such as Pinebook and Olimex
-TERES-I.
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-It reuses some definitions from ANX78xx driver that already exists in the
-kernel tree, but the driver code itself is rewritten due to significant
-difference between ANX6345 and ANX78xx.
+The ANX6345 is an ultra-low power DisplayPort/eDP transmitter designed
+for portable devices.
 
-This patchset also adds support for LCD panels used in Pinebook, dt
-property to disable strict dot clock check in sun4i drm driver and adds
-nodes necessary for LCD support into Pinebook dts.
+Add a binding document for it.
 
-v2: - sort Kconfig and Makefile entries alphabetically
-    - remove panel supply from anx6345
-    - add support for panels into anx6345 driver
-    - add compatible and binding for generic eDP panel
-    - replace patch that adds 5% tolerance for dotclock check in sun4i
-      driver for panel and bridges with patch that adds 1% tolerance
-      in case if bridge is connected.
-v3: - replace 1% tolerance patch with patch that adds dt property to
-      disable strict dot clock check
-    - add support for LCD panels used in Pinebook
-    - drop generic eDP panel driver
-    - drop Teres-I changes, I don't have hardware to test them anyway.
-
-Icenowy Zheng (7):
-  drm/bridge: move ANA78xx driver to analogix subdirectory
-  drm/bridge: split some definitions of ANX78xx to dedicated headers
-  drm/bridge: extract some Analogix I2C DP common code
-  dt-bindings: Add ANX6345 DP/eDP transmitter binding
-  drm/bridge: Add Analogix anx6345 support
-  arm64: allwinner: a64: add pinmux for RGB666 LCD
-  arm64: allwinner: a64: enable LCD-related hardware for Pinebook
-
-Vasily Khoruzhick (4):
-  drm/sun4i: rgb: Add DT property to disable strict clock rate check
-  drm/panel: simple: Add BOE HB140WX1-501 panel support
-  dt-bindings: Add Guangdong Neweast Optoelectronics CO. LTD vendor
-    prefix
-  drm/panel: simple: Add NewEast Optoelectronics CO., LTD WJFH116008A
-    panel support
-
- .../bindings/display/bridge/anx6345.txt       |  56 ++
- .../display/panel/boe,hb140wx1-501.txt        |   7 +
- .../display/panel/neweast,wjfh116008a.txt     |   7 +
- .../bindings/display/sunxi/sun4i-drm.txt      |   2 +
- .../devicetree/bindings/vendor-prefixes.txt   |   1 +
- .../dts/allwinner/sun50i-a64-pinebook.dts     |  76 ++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |   9 +
- drivers/gpu/drm/bridge/Kconfig                |  10 -
- drivers/gpu/drm/bridge/Makefile               |   4 +-
- drivers/gpu/drm/bridge/analogix-anx78xx.h     | 719 ---------------
- drivers/gpu/drm/bridge/analogix/Kconfig       |  25 +
- drivers/gpu/drm/bridge/analogix/Makefile      |   4 +
- .../drm/bridge/analogix/analogix-anx6345.c    | 845 ++++++++++++++++++
- .../bridge/{ => analogix}/analogix-anx78xx.c  | 146 +--
- .../drm/bridge/analogix/analogix-anx78xx.h    | 265 ++++++
- .../drm/bridge/analogix/analogix-i2c-dptx.c   | 169 ++++
- .../drm/bridge/analogix/analogix-i2c-dptx.h   | 258 ++++++
- .../bridge/analogix/analogix-i2c-txcommon.h   | 240 +++++
- drivers/gpu/drm/panel/panel-simple.c          |  65 ++
- drivers/gpu/drm/sun4i/sun4i_rgb.c             |   5 +
- drivers/gpu/drm/sun4i/sun4i_tcon.c            |   3 +
- drivers/gpu/drm/sun4i/sun4i_tcon.h            |   1 +
- 22 files changed, 2041 insertions(+), 876 deletions(-)
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../bindings/display/bridge/anx6345.txt       | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/boe,hb140wx1-501.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/neweast,wjfh116008a.txt
- delete mode 100644 drivers/gpu/drm/bridge/analogix-anx78xx.h
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
- rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (90%)
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
- create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
 
+diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.txt b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+new file mode 100644
+index 000000000000..e79a11348d11
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+@@ -0,0 +1,56 @@
++Analogix ANX6345 eDP Transmitter
++--------------------------------
++
++The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
++portable devices.
++
++Required properties:
++
++ - compatible		: "analogix,anx6345"
++ - reg			: I2C address of the device
++ - reset-gpios		: Which GPIO to use for reset
++
++Optional properties:
++
++ - dvdd12-supply	: Regulator for 1.2V digital core power.
++ - dvdd25-supply	: Regulator for 2.5V digital core power.
++ - Video ports for RGB input and eDP output using the DT bindings
++   defined in [1]
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++anx6345: anx6345@38 {
++	compatible = "analogix,anx6345";
++	reg = <0x38>;
++	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
++	dvdd25-supply = <&reg_dldo2>;
++	dvdd12-supply = <&reg_fldo1>;
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		anx6345_in: port@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++			anx6345_in_tcon0: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&tcon0_out_anx6345>;
++			};
++		};
++
++		anx6345_out: port@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			anx6345_out_panel: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&panel_in_edp>;
++			};
++		};
++	};
++};
 -- 
 2.20.1
