@@ -1,54 +1,42 @@
-From: Frank Li <frank.li@nxp.com>
-Subject: [PATCH V4 4/4] MAINTAINERS: Added imx DDR performonitor driver
- maintainer information
-Date: Fri, 15 Feb 2019 18:03:16 +0000
-Message-ID: <1550253761-26841-4-git-send-email-Frank.Li@nxp.com>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v2 0/3] arm: dts: imx8mq: Add cpufreq support
+Date: Fri, 15 Feb 2019 18:07:21 +0000
+Message-ID: <1550254032-16451-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Frank Li <frank.li@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DDR perf counter driver maintainer information
+In order for this to not break the build, the following patchset will
+have to get in first:
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-No change from v1 to v4
+https://lkml.org/lkml/2019/2/15/695
 
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+This work is actually a second version of the cpufreq related part of the
+following RFC:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6ba068e..687be0f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6163,6 +6163,13 @@ L:	linux-i2c@vger.kernel.org
- S:	Maintained
- F:	drivers/i2c/busses/i2c-cpm.c
- 
-+FREESCALE IMX DDR Performance Monitor DRIVER
-+M:	Frank Li <Frank.li@nxp.com>
-+L:	linux-arm-kernel@lists.infradead.org
-+S:	Maintained
-+F:	drivers/perf/fsl_imx8_ddr_perf.c
-+F:	Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-+
- FREESCALE IMX LPI2C DRIVER
- M:	Dong Aisheng <aisheng.dong@nxp.com>
- L:	linux-i2c@vger.kernel.org
--- 
-2.5.2
+https://lkml.org/lkml/2019/2/13/1111
+
+Changes since RFC:
+ * added the gpio-regulator for cpu-supply as suggested by Lucas Stach
+ * split the patch for opp table and the cpu supply nodes in two
+   as suggested by Lucas Stach
+ * changed the voltage for 1GHz opp as suggested by Angus Ainslie
+
+Abel Vesa (3):
+  arm64: dts: imx8mq: Add the clocks and the latencies for the A53 cores
+  arm64: dts: imx8mq: Add the buck vdd_arm regulator
+  arm64: dts: imx8mq: Add the opp table and cores opp properties
+
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 36 ++++++++++++++++++++++++=
+++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 31 ++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
+
+--=20
+2.7.4
