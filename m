@@ -1,164 +1,130 @@
-From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 05/11] drm/bridge: Add Analogix anx6345 support
-Date: Fri, 15 Feb 2019 11:36:57 -0800
-Message-ID: <CA+E=qVe1UOxprkG+zm1OX87f9vOPyHom=hxhnzGxidBA54WxkA@mail.gmail.com>
-References: <20190215050957.20755-1-anarsoul@gmail.com> <CGME20190215051043epcas5p37cd953f0a76fb34e819b45c330dc6368@epcas5p3.samsung.com>
- <20190215050957.20755-6-anarsoul@gmail.com> <7d71654e-7169-2682-5655-0a9a9ea91c6d@samsung.com>
-Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v1 1/1] of: unittest: unflatten device tree on UML when testing
+Date: Fri, 15 Feb 2019 13:44:26 -0600
+Message-ID: <CAL_JsqJ8967v0-1scuWY0nMngiO=TxNL_bxgsP=hzO9SU-n2NQ@mail.gmail.com>
+References: <20190212185305.112847-1-brendanhiggins@google.com>
+ <20190212185305.112847-2-brendanhiggins@google.com> <4cb7ca12-ce60-7516-b7eb-aef08f607acc@gmail.com>
+ <CAFd5g441+6ATUKcNz7OstAB6Qd2BqeDh77SNnGUpZGBNvgysmg@mail.gmail.com>
+ <bfa00740-9b67-58f9-6273-3de98de952f6@gmail.com> <CAFd5g44HkBLJmK8e4F+iaGPg1FEzubGtcUW-251GAOv1UmE5rg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBRNJTTRQKGQELHFYLQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <7d71654e-7169-2682-5655-0a9a9ea91c6d-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFd5g44HkBLJmK8e4F+iaGPg1FEzubGtcUW-251GAOv1UmE5rg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Luis Chamberlain <mcgrof@kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 1:13 AM Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-
-Hi Andrzej,
-
-Thanks for review!
-
-> > +#include <linux/of_gpio.h>
-> Do you need this header?
-
-I'll drop it.
-
-> > +#include <drm/drmP.h>
+On Fri, Feb 15, 2019 at 3:49 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
 >
-> drmP.h is/should be deprecated.
-
-Same here
-
-> > +struct anx6345_platform_data {
-> > +     struct regulator *dvdd12;
-> > +     struct regulator *dvdd25;
-> > +     struct gpio_desc *gpiod_reset;
-> > +};
+> On Thu, Feb 14, 2019 at 6:48 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >
+> > On 2/14/19 5:26 PM, Brendan Higgins wrote:
+> > > On Thu, Feb 14, 2019 at 4:10 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> > >>
+> > >> On 2/12/19 10:53 AM, Brendan Higgins wrote:
+> > >>> UML supports enabling OF, and is useful for running the device tree
+> > >>> tests, so add support for unflattening device tree blobs so we can
+> > >>> actually use it.
+> > >>>
+> > >>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > >>> ---
+> > >>>  drivers/of/unittest.c | 3 +++
+> > >>>  1 file changed, 3 insertions(+)
+> > >>>
+> > >>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> > >>> index 84427384654d5..effa4e2b9d992 100644
+> > >>> --- a/drivers/of/unittest.c
+> > >>> +++ b/drivers/of/unittest.c
+> > >>> @@ -2527,6 +2527,9 @@ static int __init of_unittest(void)
+> > >>>       }
+> > >>>       of_node_put(np);
+> > >>>
+> > >>> +     if (IS_ENABLED(CONFIG_UML))
+> > >>> +             unflatten_device_tree();
+> > >>> +
+> > >>>       pr_info("start of unittest - you will see error messages\n");
+> > >>>       of_unittest_check_tree_linkage();
+> > >>>       of_unittest_check_phandles();
+> > >>>
+> > >>
+> > >> (Insert my usual disclaimer that I am clueless about UML, I still need to learn
+> > >> about it...)
+> > >>
+> > >> This does not look correct to me.
+> > >>
+> > >> A few lines earlier in of_unittest(), the live devicetree needs to exist for
+> > >> unittest_data_data() and a few of_*() functions to succeed.  So it seems
+> > >> that the unflatten_device_tree() for uml should be at the beginning of
+> > >> of_unittest().
+> > >
+> > > It is true that other functions ahead of it depend on the presence of
+> > > a device tree, but an unflattened tree does get linked in somewhere
+> > > else. Despite that, this is needed for overlay_base_root. I got
+> > > similar behavior if you don't link in a flattened device tree on x86.
+> > > Thus, the order in which you call them doesn't actually seem to
+> > > matter. I found no difference from changing the order in UML myself.
+> > >
+> > > Without my patch we get the following error,
+> > > ### dt-test ### FAIL of_unittest_overlay_high_level():2372
+> > > overlay_base_root not initialized
+> > > ### dt-test ### end of unittest - 219 passed, 1 failed
+> > >
+> > > With my patch we get:
+> > > ### dt-test ### end of unittest - 224 passed, 0 failed
+> >
+> > Thanks for reporting both the failure and the success cases,
+> > that helps me understand a little bit better.
+> >
+> > If instead of the above patch, if you add the following (untested,
+> > not even compile tested) to the beginning of of_unittest():
+> >
+> >         if (IS_ENABLED(CONFIG_UML))
+> >                 unittest_unflatten_overlay_base();
+> >
+> > does that also result in a good test result of:
+> >
+> >         ### dt-test ### end of unittest - 224 passed, 0 failed
 >
-> Why do you need this struct, why just do not embed it's fields directly
-> into struct anx6345 ?
-
-OK, I'll embed it into struct anx6345
-
-> > +     if (WARN_ON(anx6345->powered))
-> > +             return;
+> Yep, I just tried it. It works as you suspected.
 >
-> It should not happen, you can remove this warn.
-
-OK
-
-> > +     if (pdata->dvdd12) {
+> >
+> > I think I need to find some time to build and boot a UML kernel soon.
 >
-> If regulators are required this will be never null.
-
-Right, and regulator subsystem will return dummy regulator if it's
-missing in dts.
-I'll remove redundant checks.
-
-> > +
-> > +     if (pdata->dvdd25) {
+> It's really no big deal, just copy the .config I sent and build with
+> `make ARCH=um` then you "boot" the kernel with `./linux` (note this
+> will mess up your terminal settings); that's it! (Shameless plug: you
+> can also try it out with the KUnit patchset with
+> `./tools/testing/kunit/kunit.py --timeout=30 --jobs=12 --defconfig`,
+> which builds the kernel with a pretty similar config, boots the
+> kernel, and then parses the output for you. ;-) )
 >
-> ditto
-
-OK
-
-> > +
-> > +     if (anx6345->panel)
-> > +             drm_panel_prepare(anx6345->panel);
+> >
+> > My current _guess_ is that the original problem was not a failure to
+> > unflatten any present devicetree in UML but instead that the UML
+> > kernel does not call unflatten_device_tree() and thus fails to
+> > indirectly call unittest_unflatten_overlay_base(), which is
+> > called by unflatten_device_tree().
 >
-> again, here and below: panel is never null, check can be removed.
-
-That's not true, panel is optional. It can be DP connector, not a panel.
-
-> > +
-> > +     gpiod_set_value_cansleep(pdata->gpiod_reset, 0);
-> > +     usleep_range(1000, 2000);
-> > +
-> > +     gpiod_set_value_cansleep(pdata->gpiod_reset, 1);
+> I think you are right. Sorry for not noticing this before making my
+> change. Since it was pretty much the only architecture (the only one I
+> care about) that does not unflatten DT, I assumed that was the
+> problem. I didn't put too much thought into it after that point beyond
+> making sure that it did what I wanted.
 >
+> >
+> > unittest_unflatten_overlay_base() is an unfortunate wart that I
+> > added, but I don't have a better alternative yet.
 >
-> Start/stop sequence seems odd regarding reset gpio:
+> Hey, I get it. No worries.
 >
-> 1. In probe reset is set to low, in poweroff to high - incosistent.
->
-> 2. If in case of disabled device reset should be 0, there is no point to
-> set it again to 0 three lines above.
->
-> 3. I suspect in dts reset gpio should be declared as active_low, and the
-> logic in the driver should be reverted, in power off it should be set to
-> high, in power on it should be lowered (logically).
+> In any case, it seems like unittest_unflatten_overlay_base() is the
+> right function to call there. I will send out patch. Do you want me to
+> send a patch on top of this one, or do you want to revert this one and
+> for me to send a v2 follow up to this patch? I don't care either way,
+> whatever you guys prefer.
 
-OK, I'll look into it.
+I'll drop or revert the existing one, so against mainline is good.
 
-> > +err_poweroff:
-> > +     DRM_ERROR("Failed DisplayPort transmitter initialization: %d\n", err);
->
-> redundant message
-
-OK, will drop.
-
-> > +             DRM_ERROR("Get sink count failed %d\n", err);
->
-> The rule of thumb I heard is that if you start message capitalized you
-> should end with dot. Since I do not know if it is enforced in kernel I
-> leave the decision up to you.
-
-I grepped DRM_ERROR in driver/gpu/drm and they do exactly the same as here.
-So I'll just keep it as is for consistency.
-
-> > +static bool anx6345_bridge_mode_fixup(struct drm_bridge *bridge,
-> > +                                   const struct drm_display_mode *mode,
-> > +                                   struct drm_display_mode *adjusted_mode)
-> > +{
-> > +     if (mode->flags & DRM_MODE_FLAG_INTERLACE)
-> > +             return false;
-> > +
-> > +     /* Max 1200p at 5.4 Ghz, one lane */
-> > +     if (mode->clock > 154000)
-> > +             return false;
->
-> These checks should be in mode_valid callback.
-
-OK
-
-> > +     /* Map slave addresses of ANX6345 */
-> > +     for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
-> > +             if (anx6345_i2c_addresses[i] >> 1 != client->addr)
-> > +                     anx6345->i2c_clients[i] = i2c_new_dummy(client->adapter,
-> > +                                             anx6345_i2c_addresses[i] >> 1);
-> > +             else
-> > +                     anx6345->i2c_clients[i] = client;
->
->
-> I see this contredanse is copy/pasted from anx78*, but it looks quite
-> complicated. As I understand there are two i2c addresses, why we cannot
-> assume one address is for control interfaces and another  is dummy? It would
-> simplify the code here and in other places.
-
-Sorry, I don't get you, could you elaborate? Note that anx6345 uses
-both addresses,
-i2c_new_dummy() just registers new i2c device bound to a dummy driver and it's
-supposed to be used for devices that consume more than one i2c address.
-
-> > +     if (!found) {
-> > +             DRM_ERROR("ANX%x (ver. %d) not supported by this driver\n",
-> > +                       anx6345->chipid, version);
-> > +             err = -ENODEV;
-> > +             goto err_poweroff;
-> > +     }
->
->
-> As I see chip becomes powered forever, is it OK? Usually it should be
-> powered only when pipeline starts, and powered-off after pipeline stops.
-
-I'll look into how hard it would be to implement but personally I
-think it's OK for now.
-We can add more sophisticated power management once this driver is merged.
+Rob
