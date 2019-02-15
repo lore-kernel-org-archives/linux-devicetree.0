@@ -1,75 +1,144 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v2 0/3] arm64: ti: k3-am654: USB support
-Date: Fri, 15 Feb 2019 10:48:08 +0200
-Message-ID: <d67c23b7-bd1c-c7ae-e878-9437d41e26ff@ti.com>
-References: <1549370722-414-1-git-send-email-rogerq@ti.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [RFC 5/5] arm64: dts: imx8mq: Add the opp table and the
+  cpu-supply nodes
+Date: Fri, 15 Feb 2019 08:56:25 +0000
+Message-ID: <20190215085624.dtc5uyxch72l2q6g@fsr-ub1664-175>
+References: <1550084693-9797-1-git-send-email-abel.vesa@nxp.com>
+ <1550084693-9797-6-git-send-email-abel.vesa@nxp.com>
+ <76b2c0e4a61d022f7f798990af4dfd8b@www.akkea.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1549370722-414-1-git-send-email-rogerq@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <76b2c0e4a61d022f7f798990af4dfd8b@www.akkea.ca>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: nm@ti.com, devicetree@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-ID: <2998E0C023992748802F4B623D2C5B93@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Angus Ainslie <angus@akkea.ca>
+Cc: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>, Anson Huang <anson.huang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/2019 14:45, Roger Quadros wrote:
-> Hi,
-> 
-> The AM654 SoC supports 2 DWC3 USB controller instances. The
-> AM654 base board supports the 2nd (USB1) instance in high-speed.
-> 
-> This series enables support for USB1 instance on the AM654-base-board.
-> 
-> The series depends on [1] and [2]. Both are in the -next branch of their
-> respective maintainer trees.
-> 
-> To test you can apply on top of linux-next. As usb/next was just pushed
-> today, it might have not reached linux-next yet. If so please pull that from [3].
-> 
-> If using arm64 defconfig, you need to enable
-> 	CONFIG_USB_DWC3_KEYSTONE=y
-> 	CONFIG_OMAP_USB2=y
-> and the necessary USB drivers that you want to test. e.g. USB network adapter.
-> 
-> [1] AM654 USB2 PHY support https://lkml.org/lkml/2018/12/5/908
-> [2] AM654 DWC3 support https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1896101.html
-> [3] usb-next https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/log/?h=next
-> 
-> Changelog:
-> v2
-> - usb & phy nodes are not kept disabled in k3-am65-main.dtsi.
->    Unused ones are disabled in board dts instead.
+On 19-02-14 16:55:22, Angus Ainslie wrote:
+> On 2019-02-13 11:05, Abel Vesa wrote:
+> > Add the opp table containing only non over drive opps.
+> > Also add the cpu-supply nodes for the A53 cores in the EVK board.
+> >=20
+> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 17 +++++++++++++++++
+> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 23
+> > +++++++++++++++++++++++
+> >  2 files changed, 40 insertions(+)
+> >=20
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> > b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> > index 54737bf..114359e 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> > @@ -31,6 +31,23 @@
+> >  		gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
+> >  		enable-active-high;
+> >  	};
+> > +
+> > +};
+> > +
+> > +&A53_0 {
+> > +	cpu-supply =3D <&sw1a_reg>;
+> > +};
+> > +
+> > +&A53_1 {
+> > +	cpu-supply =3D <&sw1a_reg>;
+> > +};
+> > +
+> > +&A53_2 {
+> > +	cpu-supply =3D <&sw1a_reg>;
+> > +};
+> > +
+> > +&A53_3 {
+> > +	cpu-supply =3D <&sw1a_reg>;
+> >  };
+> >=20
+> >  &fec1 {
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > index 1a89062..89b2d5f 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > @@ -91,6 +91,7 @@
+> >  			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+> >  			enable-method =3D "psci";
+> >  			next-level-cache =3D <&A53_L2>;
+> > +			operating-points-v2 =3D <&a53_0_opp_table>;
+> >  		};
+> >=20
+> >  		A53_1: cpu@1 {
+> > @@ -101,6 +102,7 @@
+> >  			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+> >  			enable-method =3D "psci";
+> >  			next-level-cache =3D <&A53_L2>;
+> > +			operating-points-v2 =3D <&a53_0_opp_table>;
+> >  		};
+> >=20
+> >  		A53_2: cpu@2 {
+> > @@ -111,6 +113,7 @@
+> >  			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+> >  			enable-method =3D "psci";
+> >  			next-level-cache =3D <&A53_L2>;
+> > +			operating-points-v2 =3D <&a53_0_opp_table>;
+> >  		};
+> >=20
+> >  		A53_3: cpu@3 {
+> > @@ -121,6 +124,7 @@
+> >  			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+> >  			enable-method =3D "psci";
+> >  			next-level-cache =3D <&A53_L2>;
+> > +			operating-points-v2 =3D <&a53_0_opp_table>;
+> >  		};
+> >=20
+> >  		A53_L2: l2-cache0 {
+> > @@ -666,6 +670,25 @@
+> >  			status =3D "disabled";
+> >  		};
+> >=20
+> > +
+> > +		a53_0_opp_table: opp-table {
+> > +			compatible =3D "operating-points-v2";
+> > +			opp-shared;
+> > +
+> > +			opp-800000000 {
+> > +				opp-hz =3D /bits/ 64 <800000000>;
+> > +				opp-microvolt =3D <900000>;
+> > +				clock-latency-ns =3D <150000>;
+> > +			};
+> > +
+> > +			opp-1000000000 {
+> > +				opp-hz =3D /bits/ 64 <1000000000>;
+> > +				opp-microvolt =3D <900000>;
+>=20
+> Shouldn't this be
+>=20
+> opp-microvolt =3D <1000000>;
+>=20
 
-Series queued for 5.1, thanks.
+Hmm, I looked into some older datasheet which said the maximum non
+overdrive is 1GHz.
 
--Tero
+But the latest one I could find:
 
-> 
-> cheers,
-> -roger
-> 
-> 
-> Jyri Sarha (1):
->    arm64: dts: ti: am654: Add Main System Control Module node
-> 
-> Roger Quadros (2):
->    arm64: dts: ti: k3-am6: add USB support
->    arm64: dts: ti: k3-am654-base-board: enable USB1
-> 
->   arch/arm64/boot/dts/ti/k3-am65-main.dtsi       | 84 ++++++++++++++++++++++++++
->   arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 28 +++++++++
->   2 files changed, 112 insertions(+)
-> 
+https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+says it's 0.8GHz.=20
+
+So I'll fix it in the next version.
+
+Thanks.
+
+> > +				clock-latency-ns =3D <150000>;
+> > +				opp-suspend;
+> > +			};
+> > +		};
+> > +
+> >  		gic: interrupt-controller@38800000 {
+> >  			compatible =3D "arm,gic-v3";
+> >  			reg =3D <0x38800000 0x10000>,	/* GIC Dist */
+> =
