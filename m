@@ -1,13 +1,13 @@
 From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 11/11] arm64: allwinner: a64: enable
- LCD-related hardware for Pinebook
-Date: Thu, 14 Feb 2019 21:09:57 -0800
-Message-ID: <20190215050957.20755-12-anarsoul@gmail.com>
+Subject: [PATCH v3 10/11] drm/panel: simple: Add NewEast
+ Optoelectronics CO., LTD WJFH116008A panel support
+Date: Thu, 14 Feb 2019 21:09:56 -0800
+Message-ID: <20190215050957.20755-11-anarsoul@gmail.com>
 References: <20190215050957.20755-1-anarsoul@gmail.com>
 Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBSUTTHRQKGQEK5IKEFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDV3B667TUHBBSMTTHRQKGQEJ6SM27A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190215050957.20755-1-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,139 +20,85 @@ To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/
 Cc: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+This commit adds support for the NewEast Optoelectronics CO., LTD
+WJFH116008A 11.6" 1920x1080 TFT LCD panel.
 
-Pinebook has an ANX6345 bridge connected to the RGB666 LCD output and
-eDP panel input. The bridge is controlled via I2C that's connected to
-R_I2C bus.
-
-There're pinebooks with 3 different panels in the wild, all 3 with
-different timings. Add all the compatibles to panel node and hope that
-we can get correct timings from EDID. If reading EDID fails it's up to
-firmware to fixup compatible string.
-
-Enable all this hardware in device tree.
-
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../dts/allwinner/sun50i-a64-pinebook.dts     | 76 +++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ .../display/panel/neweast,wjfh116008a.txt     |  7 ++++
+ drivers/gpu/drm/panel/panel-simple.c          | 39 +++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/neweast,wjfh116008a.txt
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index d22736a62481..0d9280bafc12 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -63,6 +63,19 @@
- 		};
- 	};
- 
-+	edp_panel: edp-panel {
-+		compatible = "boe,hb140wx1-501", "innolux,n116bge",
-+			     "neweast,wjfh116008a", "simple-panel";
-+		backlight = <&backlight>;
-+		power-supply = <&reg_dc1sw>;
+diff --git a/Documentation/devicetree/bindings/display/panel/neweast,wjfh116008a.txt b/Documentation/devicetree/bindings/display/panel/neweast,wjfh116008a.txt
+new file mode 100644
+index 000000000000..d76579f9f55e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/neweast,wjfh116008a.txt
+@@ -0,0 +1,7 @@
++NewEast Optoelectronics CO., LTD WJFH116008A 11.6" 1920x1080 TFT LCD panel
 +
-+		port {
-+			panel_in_edp: endpoint {
-+				remote-endpoint = <&anx6345_out_panel>;
-+			};
-+		};
-+	};
++Required properties:
++- compatible: should be "neweast,wjfh116008a"
 +
- 	reg_vcc3v3: vcc3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3";
-@@ -102,6 +115,10 @@
- 	status = "okay";
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 9a4c9dd02c6c..3edc77e49d8f 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1843,6 +1843,42 @@ static const struct panel_desc netron_dy_e231732 = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
  };
  
-+&de {
-+	status = "okay";
++static const struct drm_display_mode neweast_wjfh116008a_modes[] = {
++{
++	.clock = 138500,
++	.hdisplay = 1920,
++	.hsync_start = 1920 + 48,
++	.hsync_end = 1920 + 48 + 32,
++	.htotal = 1920 + 48 + 32 + 80,
++	.vdisplay = 1080,
++	.vsync_start = 1080 + 3,
++	.vsync_end = 1080 + 3 + 5,
++	.vtotal = 1080 + 3 + 5 + 23,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++}, {
++	.clock = 110920,
++	.hdisplay = 1920,
++	.hsync_start = 1920 + 48,
++	.hsync_end = 1920 + 48 + 32,
++	.htotal = 1920 + 48 + 32 + 80,
++	.vdisplay = 1080,
++	.vsync_start = 1080 + 3,
++	.vsync_end = 1080 + 3 + 5,
++	.vtotal = 1080 + 3 + 5 + 23,
++	.vrefresh = 48,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++} };
++
++static const struct panel_desc neweast_wjfh116008a = {
++	.modes = neweast_wjfh116008a_modes,
++	.num_modes = 2,
++	.size = {
++		.width = 260,
++		.height = 150,
++	},
 +};
 +
- &ehci0 {
- 	phys = <&usbphy 0>;
- 	phy-names = "usb";
-@@ -112,6 +129,10 @@
- 	status = "okay";
- };
- 
-+&mixer0 {
-+	status = "okay";
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
-@@ -163,6 +184,46 @@
- 	status = "okay";
- };
- 
-+&r_i2c {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&r_i2c_pins_a>;
-+	status = "okay";
-+
-+	anx6345: anx6345@38 {
-+		compatible = "analogix,anx6345";
-+		reg = <0x38>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
-+		dvdd25-supply = <&reg_dldo2>;
-+		dvdd12-supply = <&reg_fldo1>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			anx6345_in: port@0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0>;
-+				anx6345_in_tcon0: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&tcon0_out_anx6345>;
-+				};
-+			};
-+
-+			anx6345_out: port@1 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <1>;
-+
-+				anx6345_out_panel: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&panel_in_edp>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
-@@ -334,6 +395,21 @@
- 			"MIC2", "Internal Microphone Right";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+	no-strict-clock-check;
-+
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_anx6345: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&anx6345_in_tcon0>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+ static const struct drm_display_mode newhaven_nhd_43_480272ef_atxl_mode = {
+ 	.clock = 9000,
+ 	.hdisplay = 480,
+@@ -2690,6 +2726,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "netron-dy,e231732",
+ 		.data = &netron_dy_e231732,
++	}, {
++		.compatible = "neweast,wjfh116008a",
++		.data = &neweast_wjfh116008a,
+ 	}, {
+ 		.compatible = "newhaven,nhd-4.3-480272ef-atxl",
+ 		.data = &newhaven_nhd_43_480272ef_atxl,
 -- 
 2.20.1
