@@ -1,51 +1,32 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: add chosen node on veyron chromebooks
-Date: Sat, 16 Feb 2019 00:08:50 +0100
-Message-ID: <22158501.cNvkU8jGDh@diego>
-References: <20190215115150.32299-1-enric.balletbo@collabora.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V4 2/2] clk: imx: scu: add cpu frequency scaling support
+Date: Fri, 15 Feb 2019 15:58:13 -0800
+Message-ID: <155027509324.115909.9001648696808985832@swboyd.mtv.corp.google.com>
+References: <1550108915-574-1-git-send-email-Anson.Huang@nxp.com> <1550108915-574-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190215115150.32299-1-enric.balletbo@collabora.com>
+In-Reply-To: <1550108915-574-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, dianders@chromium.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
-
-Am Freitag, 15. Februar 2019, 12:51:50 CET schrieb Enric Balletbo i Serra:
-> In order to use earlycon, the stdout-path property needs to be set
-> in the chosen node.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-What's the reason for adding this only for the Chromebook variants?
-Uart2 is pretty much the standard output for all devices, so I'd assume
-at least all veyron boards should use uart2 as well, making this ideally
-live in the rk3288-veyron.dtsi instead?
-
-Heiko
-
+Quoting Anson Huang (2019-02-13 17:54:08)
+> On NXP's i.MX SoCs with system controller inside, CPU frequency
+> scaling can ONLY be done by system controller firmware, and it
+> can ONLY be requested from secure mode, so Linux kernel has to
+> call ARM SMC to trap to ARM-Trusted-Firmware to request system
+> controller firmware to do CPU frequency scaling.
+>=20
+> This patch adds i.MX system controller CPU frequency scaling support,
+> it reuses cpufreq-dt driver and implement the CPU frequency scaling
+> inside SCU clock driver.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> 
->  arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-> b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi index
-> b54746df3661..8890967ed572 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-> @@ -62,6 +62,10 @@
->  		pwm-off-delay-ms = <10>;
->  	};
-> 
-> +	chosen {
-> +		stdout-path = "serial2:115200n8";
-> +	};
-> +
->  	gpio-charger {
->  		compatible = "gpio-charger";
->  		charger-type = "mains";
+
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+
+Unless you wanted me to pick this patch up into clk-next?
