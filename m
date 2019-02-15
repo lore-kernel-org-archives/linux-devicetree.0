@@ -1,72 +1,67 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 5/8] arm64: dts: allwinner: Enable AXP803 CHGLED for
- Olimex boards
-Date: Fri, 15 Feb 2019 19:49:16 +0100
-Message-ID: <20190215184916.GA17897@amd>
-References: <20190215115013.11098-1-stefan@olimex.com>
- <20190215115013.11098-6-stefan@olimex.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v5 0/3] Add NXP AUDMIX device and machine drivers
+Date: Fri, 15 Feb 2019 11:04:39 -0800
+Message-ID: <20190215190438.GB19299@Asurada-Nvidia.nvidia.com>
+References: <1550239285-12587-1-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190215115013.11098-6-stefan@olimex.com>
+In-Reply-To: <1550239285-12587-1-git-send-email-viorel.suman@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Mavrodiev <stefan@olimex.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
+To: Viorel Suman <viorel.suman@nxp.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 15, 2019 at 02:01:32PM +0000, Viorel Suman wrote:
+> The patchset adds NXP Audio Mixer (AUDMIX) device and machine
+> drivers and related DT bindings documentation.
 
---LQksG6bCIzRHxTLp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For this series,
 
-On Fri 2019-02-15 13:50:10, Stefan Mavrodiev wrote:
-> Teres-I and A64-OLinuXino commes with populated LED connected
-> to AXP803. So to be used as battery indication, pass the LED control
-> to the charger itself in mode 0 ( FULL while charging, OFF no battery
-> or completed).
->=20
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 6 ++++++
->  arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts   | 6 ++++++
->  2 files changed, 12 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arc=
-h/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> index f7a4bccaa5d4..7d6930319fba 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> @@ -177,6 +177,12 @@
-> =20
->  #include "axp803.dtsi"
-> =20
-> +&axp_led {
-> +	label =3D "a64-olinuxino:yellow:chgled";
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-There's little chance userspace will recognize this led.
+And Rob gave his at the previous version already.
 
-Can you make it "platform:yellow:charging" and fix it for other
-boards, too?
+Thanks.
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---LQksG6bCIzRHxTLp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlxnCawACgkQMOfwapXb+vLEAwCfUcSllFtWon2qQkW9JcK3hfq4
-aMsAoKwCglaZGvwLk+NVMgYjCe18FLZf
-=ftHA
------END PGP SIGNATURE-----
-
---LQksG6bCIzRHxTLp--
+> Changes since V4:
+> 1. Removed "model" attribute from device driver DT bindings documentation
+>    as suggested by Nicolin.
+> 
+> Changes since V3:
+> 1. Removed machine driver DT bindings documentation.
+> 2. Trigger machine driver probe from device driver as suggested by Nicolin.
+> 
+> Changes since V2:
+> 1. Moved "dais" node from machine driver DTS node to device driver DTS node
+>   as suggested by Rob.
+> 
+> Changes since V1:
+> 1. Original patch split into distinct patches for the device driver and
+>   DT binding documentation.
+> 2. Replaced AMIX with AUDMIX in both code and file names as it looks more
+>   RM-compliant.
+> 3. Removed polarity control from CPU DAI driver as suggested by Nicolin.
+> 4. Added machine driver and related DT binding documentation.
+> 
+> Viorel Suman (3):
+>   ASoC: fsl: Add Audio Mixer CPU DAI driver
+>   ASoC: add fsl_audmix DT binding documentation
+>   ASoC: fsl: Add Audio Mixer machine driver
+> 
+>  .../devicetree/bindings/sound/fsl,audmix.txt       |  50 ++
+>  sound/soc/fsl/Kconfig                              |  16 +
+>  sound/soc/fsl/Makefile                             |   5 +
+>  sound/soc/fsl/fsl_audmix.c                         | 578 +++++++++++++++++++++
+>  sound/soc/fsl/fsl_audmix.h                         | 102 ++++
+>  sound/soc/fsl/imx-audmix.c                         | 327 ++++++++++++
+>  6 files changed, 1078 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,audmix.txt
+>  create mode 100644 sound/soc/fsl/fsl_audmix.c
+>  create mode 100644 sound/soc/fsl/fsl_audmix.h
+>  create mode 100644 sound/soc/fsl/imx-audmix.c
+> 
+> -- 
+> 2.7.4
+> 
