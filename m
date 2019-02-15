@@ -1,67 +1,63 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v5 0/3] Add NXP AUDMIX device and machine drivers
-Date: Fri, 15 Feb 2019 11:04:39 -0800
-Message-ID: <20190215190438.GB19299@Asurada-Nvidia.nvidia.com>
-References: <1550239285-12587-1-git-send-email-viorel.suman@nxp.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH v2 0/8] Port am335 and am437 devices to sdhci-omap
+Date: Sat, 16 Feb 2019 00:50:25 +0530
+Message-ID: <20190215192033.24203-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550239285-12587-1-git-send-email-viorel.suman@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viorel Suman <viorel.suman@nxp.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, kishon@ti.com, zhang.chunyan@linaro.org, faiz_abbas@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 02:01:32PM +0000, Viorel Suman wrote:
-> The patchset adds NXP Audio Mixer (AUDMIX) device and machine
-> drivers and related DT bindings documentation.
+The following add driver patches for porting TI's am335x and am437x
+devices to the sdhci-omap driver.
 
-For this series,
+This involves adding external DMA support to sdhci (first 3 patches from
+Chunyan) plus some miscellaneous patches to take care of deviations of
+the controllers from the sdhci model.
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+DT changes will be posted in a separate series.
 
-And Rob gave his at the previous version already.
+Untested versions of Chunyan's patches were posted before[1].
 
-Thanks.
+Tested on: am335x-evm, am335x-boneblack, am335x-sk, am437x-gpevm,
+am43xx-gpevm, am437x-idk, dra7xx-evm, dra72x-evm
 
-> Changes since V4:
-> 1. Removed "model" attribute from device driver DT bindings documentation
->    as suggested by Nicolin.
-> 
-> Changes since V3:
-> 1. Removed machine driver DT bindings documentation.
-> 2. Trigger machine driver probe from device driver as suggested by Nicolin.
-> 
-> Changes since V2:
-> 1. Moved "dais" node from machine driver DTS node to device driver DTS node
->   as suggested by Rob.
-> 
-> Changes since V1:
-> 1. Original patch split into distinct patches for the device driver and
->   DT binding documentation.
-> 2. Replaced AMIX with AUDMIX in both code and file names as it looks more
->   RM-compliant.
-> 3. Removed polarity control from CPU DAI driver as suggested by Nicolin.
-> 4. Added machine driver and related DT binding documentation.
-> 
-> Viorel Suman (3):
->   ASoC: fsl: Add Audio Mixer CPU DAI driver
->   ASoC: add fsl_audmix DT binding documentation
->   ASoC: fsl: Add Audio Mixer machine driver
-> 
->  .../devicetree/bindings/sound/fsl,audmix.txt       |  50 ++
->  sound/soc/fsl/Kconfig                              |  16 +
->  sound/soc/fsl/Makefile                             |   5 +
->  sound/soc/fsl/fsl_audmix.c                         | 578 +++++++++++++++++++++
->  sound/soc/fsl/fsl_audmix.h                         | 102 ++++
->  sound/soc/fsl/imx-audmix.c                         | 327 ++++++++++++
->  6 files changed, 1078 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl,audmix.txt
->  create mode 100644 sound/soc/fsl/fsl_audmix.c
->  create mode 100644 sound/soc/fsl/fsl_audmix.h
->  create mode 100644 sound/soc/fsl/imx-audmix.c
-> 
-> -- 
-> 2.7.4
-> 
+v2:
+1. sdhci is using two bottom halves. One threaded_rq for card detect and a
+   tasklet for finishing mmc requests. Patch 1 removes the tasklet and
+   moves its function to the threaded_irq. This enables me to
+   terminate_sync() in sdhci_request_done()
+
+2. Factored out common code for between the normal adn external dma case
+
+3. Using existing API sdhci_data_timeout_irq for disabling DTO during
+   erase commands.
+
+4. Fixed subject line for dt-bindings patch.
+
+[1] https://patchwork.kernel.org/project/linux-mmc/list/?series=54897
+
+Chunyan Zhang (3):
+  mmc: sdhci: add support for using external DMA devices
+  dt-bindings: sdhci-omap: Add properties for using external dma
+  mmc: sdhci-omap: Add using external dma
+
+Faiz Abbas (5):
+  mmc: sdhci: Get rid of finish_tasklet
+  mmc: sdhci: Add quirk for disabling DTO during erase command
+  mmc: sdhci-omap: Add DISABLE_DTO_FOR_ERASE Quirk
+  dt-bindings: sdhci-omap: Add am335x and am437x specific bindings
+  mmc: sdhci-omap: Add am335x and am437x specific compatibles
+
+ .../devicetree/bindings/mmc/sdhci-omap.txt    |   9 +
+ drivers/mmc/host/Kconfig                      |   4 +
+ drivers/mmc/host/sdhci-omap.c                 |  27 +-
+ drivers/mmc/host/sdhci.c                      | 333 +++++++++++++++---
+ drivers/mmc/host/sdhci.h                      |  12 +-
+ 5 files changed, 328 insertions(+), 57 deletions(-)
+
+-- 
+2.19.2
