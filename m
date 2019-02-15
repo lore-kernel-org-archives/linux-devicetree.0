@@ -1,55 +1,35 @@
-Return-Path: <SRS0=unlQ=QZ=linux.intel.com=sakari.ailus@kernel.org>
-Date: Mon, 18 Feb 2019 13:46:09 +0200
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH 3/3] media: tc358746: update MAINTAINERS file
-Message-ID: <20190218114608.qvoeyxlaw4yjrnnh@paasikivi.fi.intel.com>
-References: <20181218141240.3056-1-m.felsch@pengutronix.de>
- <20181218141240.3056-4-m.felsch@pengutronix.de>
+Return-Path: <SRS0=/GZV=QW=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181218141240.3056-4-m.felsch@pengutronix.de>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
+References: <1550233589-13891-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1550233589-13891-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 15 Feb 2019 14:02:27 +0100
+Message-ID: <CAMuHMdXXovDP-Ss2UvnXPVNGx5Tp=z9pwuWLJedfhN1GjaoS_Q@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0: Fix cpu nodes style
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Marco,
+On Fri, Feb 15, 2019 at 1:26 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> We usually leave a space between "=" and the value of device
+> tree properties, but unfortunately that was overlooked for the
+> "clocks" property of cpu@0 and cpu@1.
+> This patch fixes the spacing with the "clocks" property of
+> cpu@0 and cpu@1.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-On Tue, Dec 18, 2018 at 03:12:40PM +0100, Marco Felsch wrote:
-> Add me as partial maintainer, others are welcome too.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 546f8d936589..f97dedbe545c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15230,6 +15230,13 @@ S:	Maintained
->  F:	drivers/media/i2c/tc358743*
->  F:	include/media/i2c/tc358743.h
->  
-> +TOSHIBA TC358746 DRIVER
-> +M:	Marco Felsch <kernel@pengutronix.de>
-> +L:	linux-media@vger.kernel.org
-> +S:	Odd Fixes
-> +F:	drivers/media/i2c/tc358746*
-> +F:	Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
-> +
->  TOSHIBA WMI HOTKEYS DRIVER
->  M:	Azael Avalos <coproscefalo@gmail.com>
->  L:	platform-driver-x86@vger.kernel.org
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This should go together with the DT bindings, in the same patch.
+Gr{oetje,eeting}s,
 
-I'd expect a new driver to be listed as "Maintained". "Odd Fixes" suggests
-no-one is particularly looking after it, and it's not nice if a new driver
-starts off like that. :-I
+                        Geert
 
 -- 
-Kind regards,
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
