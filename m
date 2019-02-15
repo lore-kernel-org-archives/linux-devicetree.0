@@ -1,82 +1,32 @@
 From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v2 1/3] arm64: dts: fsl: ls1028a: Add PCI IERC node and ENETC endpoints
-Date: Fri, 15 Feb 2019 12:10:12 +0200
-Message-ID: <1550225414-12125-2-git-send-email-claudiu.manoil@nxp.com>
-References: <1550225414-12125-1-git-send-email-claudiu.manoil@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1550225414-12125-1-git-send-email-claudiu.manoil@nxp.com>
-Sender: netdev-owner@vger.kernel.org
+Subject: [PATCH net-next v2 0/3] enetc: Add mdio support and device tree nodes
+Date: Fri, 15 Feb 2019 12:10:11 +0200
+Message-ID: <1550225414-12125-1-git-send-email-claudiu.manoil@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>
 Cc: alexandru.marginean@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The LS1028A SoC features a PCI Integrated Endpoint Root Complex
-(IERC) defining several integrated PCI devices, including the ENETC
-ethernet controller integrated endpoints (IEPs). The IERC implements
-ECAM (Enhanced Configuration Access Mechanism) to provide access
-to the PCIe config space of the IEPs. This means the the IEPs
-(including ENETC) do not support the standard PCIe BARs, instead
-the Enhanced Allocation (EA) capability structures in the ECAM space
-are used to fix the base addresses in the system, and the PCI
-subsystem uses these structures for device enumeration and discovery.
-The "ranges" entries contain basic information from these EA capabily
-structures required by the kernel for device enumeration.
+This is the missing part to enable PCI probing of the ENETC ethernet
+ports on the LS1028A SoC and external traffic on the LS1028A RDB board.
+It's one of the first items on the TODO list for the recently merged
+ENETC ethernet driver.
 
-The current patch also enables the first 2 ENETC PFs (Physiscal
-Functions) and the associated VFs (Virtual Functions), 2 VFs for
-each PF.  Each of these ENETC PFs has an external ethernet port
-on the LS1028A SoC.
+Claudiu Manoil (3):
+  arm64: dts: fsl: ls1028a: Add PCI IERC node and ENETC endpoints
+  arm64: dts: fsl: ls1028a-rdb: Add ENETC external eth ports for the
+    LS1028A RDB board
+  enetc: Add ENETC PF level external MDIO support
 
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
-v2 - none
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |  17 ++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |  33 ++++
+ drivers/net/ethernet/freescale/enetc/Makefile     |   3 +-
+ drivers/net/ethernet/freescale/enetc/enetc_mdio.c | 199 ++++++++++++++++++++++
+ drivers/net/ethernet/freescale/enetc/enetc_pf.c   |  12 ++
+ drivers/net/ethernet/freescale/enetc/enetc_pf.h   |   6 +
+ 6 files changed, 269 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_mdio.c
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 33 ++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index a8cf92a..7f5a8e6 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -335,5 +335,38 @@
- 				     <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-+
-+		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
-+			compatible = "pci-host-ecam-generic";
-+			reg = <0x01 0xf0000000 0x0 0x100000>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			msi-parent = <&its>;
-+			device_type = "pci";
-+			bus-range = <0x0 0x0>;
-+			dma-coherent;
-+			msi-map = <0 &its 0x17 0xe>;
-+			iommu-map = <0 &smmu 0x17 0xe>;
-+				  /* PF0-6 BAR0 - non-prefetchable memory */
-+			ranges = <0x82000000 0x0 0x00000000  0x1 0xf8000000  0x0 0x160000
-+				  /* PF0-6 BAR2 - prefetchable memory */
-+				  0xc2000000 0x0 0x00000000  0x1 0xf8160000  0x0 0x070000
-+				  /* PF0: VF0-1 BAR0 - non-prefetchable memory */
-+				  0x82000000 0x0 0x00000000  0x1 0xf81d0000  0x0 0x020000
-+				  /* PF0: VF0-1 BAR2 - prefetchable memory */
-+				  0xc2000000 0x0 0x00000000  0x1 0xf81f0000  0x0 0x020000
-+				  /* PF1: VF0-1 BAR0 - non-prefetchable memory */
-+				  0x82000000 0x0 0x00000000  0x1 0xf8210000  0x0 0x020000
-+				  /* PF1: VF0-1 BAR2 - prefetchable memory */
-+				  0xc2000000 0x0 0x00000000  0x1 0xf8230000  0x0 0x020000>;
-+
-+			enetc_port0: pci@0,0 {
-+				reg = <0x000000 0 0 0 0>;
-+			};
-+			enetc_port1: pci@0,1 {
-+				reg = <0x000100 0 0 0 0>;
-+			};
-+		};
- 	};
- };
 -- 
 2.7.4
