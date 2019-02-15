@@ -1,43 +1,31 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq
- mapping already exists
-Date: Fri, 15 Feb 2019 08:47:33 -0500
-Message-ID: <20190215134733.GA21208@basecamp>
-References: <20190208021631.30252-1-masneyb@onstation.org>
- <20190208021631.30252-6-masneyb@onstation.org>
- <155020988635.115909.8353948296231202388@swboyd.mtv.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATVH v2 0/4] arm64: dts: allwinner: h6: Enable CPU
+Date: Fri, 15 Feb 2019 08:49:33 -0500
+Message-ID: <20190215134937.10259-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <155020988635.115909.8353948296231202388@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 09:51:26PM -0800, Stephen Boyd wrote:
-> > diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
-> > index 8eb2528793f9..2f99a98ccee5 100644
-> > --- a/drivers/mfd/qcom-pm8xxx.c
-> > +++ b/drivers/mfd/qcom-pm8xxx.c
-> > @@ -380,6 +380,12 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip *chip,
-> >                                   struct irq_domain *domain, unsigned int irq,
-> >                                   irq_hw_number_t hwirq, unsigned int type)
-> >  {
-> > +       unsigned int old_virq;
-> > +
-> > +       old_virq = irq_find_mapping(domain, hwirq);
-> > +       if (old_virq)
-> > +               irq_domain_disassociate(domain, old_virq);
-> 
-> Is it possible to pass 'true' for the 'realloc' argument to
-> __irq_domain_alloc_irqs() and then this disassociate change isn't
-> needed?
+Add the cpufreq support of h6, source of information is as follows.
 
-The kernel doc for __irq_domain_alloc_irqs() says that the realloc
-parameter is mainly to support legacy IRQs. I don't think its a good
-idea to add new code that'll stay past the end of this patch series
-on top of that legacy interface.
+h6 cpu opp info:
+https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/arch/arm64/boot/dts/sunxi/sun50iw6p1.dtsi
 
-Brian
+axp805 spec:
+http://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
+
+Yangtao Li (4):
+  arm64: dts: allwinner: h6: orangepi: Add CPU supply regulator
+  arm64: dts: allwinner: h6: pine: Add CPU supply regulator
+  arm64: dts: allwinner: h6: Add clock to CPU cores
+  arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
+
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  8 ++-
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  8 ++-
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 63 +++++++++++++++++++
+ 3 files changed, 75 insertions(+), 4 deletions(-)
+
+-- 
+2.17.0
