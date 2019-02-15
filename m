@@ -1,145 +1,318 @@
-From: liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: Re: [RFC v7 2/5] dt-bindings: pstore-block: new support for blkoops
-Date: Fri, 15 Feb 2019 09:06:57 +0800
-Message-ID: <d94eb644-d99a-1f9d-af06-a6e9ec3e3959@allwinnertech.com>
-References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
- <20190130160707.GA31844@bogus>
- <ab72f73d-b7ea-4688-f768-509d55964be0@allwinnertech.com>
- <CAL_Jsq+qmBrXVLoD8FzgB589xET3isnqMsAxRiJJDvQyu+ZfiQ@mail.gmail.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Thu, 14 Feb 2019 19:08:59 -0600
+Message-ID: <9b8d98af-26fe-0591-c576-85c998535ad7@ti.com>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-2-git-send-email-rogerq@ti.com>
+ <16001a6f-faed-ee14-5ade-79d5462f6d51@ti.com> <5C654C39.2030308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+qmBrXVLoD8FzgB589xET3isnqMsAxRiJJDvQyu+ZfiQ@mail.gmail.com>
+In-Reply-To: <5C654C39.2030308@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, tony@atomide.com, ohad@wizery.com, bjorn.andersson@linaro.org
+Cc: david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, dan@kulp.com, Matthijs van Duin <matthijsvanduin@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-02-14 04:30, Rob Herring wrote:
-> On Wed, Feb 13, 2019 at 7:51 AM liaoweixiong
-> <liaoweixiong@allwinnertech.com> wrote:
->>
->>
->> On 2019-01-31 00:07, Rob Herring wrote:> On Wed, Jan 23, 2019 at
->> 08:05:13PM +0800, liaoweixiong wrote:
->>>> Create DT binding document for blkoops.
->>>>
->>>> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
->>>> ---
->>>>  .../devicetree/bindings/pstore-block/blkoops.txt   | 32 ++++++++++++++++++++++
->>>
->>> /bindings/pstore/...
->>>
->>> I wouldn't call it blkoops either. I believe ramoops is called that to
->>> maintain compatibility keeping the same kernel module name that
->>> preceeded pstore.
->>>
->>
->> Fixed.
->>
->> In addition, I don't known whether should we move
->> ramreserved-memory/ooos.txt to /bindings/pstore. This is for maintainer
->> to decide, and do it on other patch.
->>
->>>>  MAINTAINERS                                        |  1 +
->>>>  2 files changed, 33 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pstore-block/blkoops.txt b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
->>>> new file mode 100644
->>>> index 0000000..a25835b
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
->>>> @@ -0,0 +1,32 @@
->>>> +Blkoops oops logger
->>>> +===================
->>>> +
->>>> +Blkoops provides a block partition for oops, excluding panics now, so they can
->>>> +be recovered after a reboot.
->>>> +
->>>> +Any space of block partition will be used for a circular buffer of oops records.
->>>> +These records have a configurable size, with a size of 0 indicating that they
->>>> +should be disabled.
->>>> +
->>>> +"partition-size" and at least one of "dmesg-size" or "pmsg-size" must be set
->>>> +non-zero, but are otherwise optional as listed below.
->>>> +
->>>> +Blkoops will take value from Kconfig if device tree do not set, but settings
->>>> +from module parameters can also overwrite them.
->>>
->>> That's all kernel details not relevant to the binidng.
->>>
->>
->> Deleted.
->>
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- compatible: must be "blkoops".
->>>> +
->>>> +- partition-size: size in kbytes, must be a multiple of 4.
->>>
->>> This seems unnecessary given a partition has a known size.
->>>
->>
->> partition-size is necessary for psotre/blk. User should tell pstore/blk
->> how large space can it use.
-> 
-> The partition table says how big a partition is. If you only want to
-> use part of it, then make the partition smaller or use a file system.
-> This is a solved problem, so we don't need a new way in DT to handle
-> this.
-> 
+Hi Roger,
 
-You are right, partition size is known and pstore/blk can get it
-automatically from specified block device. I will try to do it on next
-version patch.
-But i prefer to rename partition-size to total-size and move it to
-optional properties. Total-size means how big space pstore/blk can use.
-It is not only about partition size as pstore/blk can use ram if no
-partition specified.
-So, I will process as follow logic:
-1. If specify total size, use total size.
-2. If no total size but specify partition, get size from partition.
+On 2/14/19 5:08 AM, Roger Quadros wrote:
+> +Robert, Dan, Matthijs
+> 
+> Hi Suman,
+> 
+> On 14/02/19 04:52, Suman Anna wrote:
+>> Hi Roger,
+>>
+>> On 2/4/19 8:22 AM, Roger Quadros wrote:
+>>> From: Suman Anna <s-anna@ti.com>
+>>>
+>>> This patch adds the bindings for the Programmable Real-Time Unit
+>>> and Industrial Communication Subsystem (PRU-ICSS) present on various
+>>> SoCs such as AM33xx, AM437x, AM57xx, Keystone 66AK2G SoC, etc. It is
+>>> present on the Davinci based OMAPL138 SoCs and K3 architecture
+>>> based AM65x SoCs as well (not covered for now).
+>>>
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>> ---
+>>>  .../devicetree/bindings/soc/ti/ti,pruss.txt        | 212 +++++++++++++++++++++
+>>>  1 file changed, 212 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>>> new file mode 100644
+>>> index 0000000..5ac76fd
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>>> @@ -0,0 +1,212 @@
+>>> +PRU-ICSS on TI SoCs
+>>> +===================
+>>> +
+>>> +The Programmable Real-Time Unit and Industrial Communication Subsystem
+>>> +(PRU-ICSS) is present on various TI SoCs such as AM335x, AM437x, Keystone
+>>> +66AK2G, etc. A PRUSS consists of dual 32-bit RISC cores (Programmable
+>>> +Real-Time Units, or PRUs) with program memory and data memory.
+>>> +
+>>> +The programmable nature of the PRUs provide flexibility to implement
+>>> +custom peripheral interfaces, fast real-time responses, or specialized
+>>> +data handling. The common peripheral modules include the following,
+>>> +
+>>> +  - Enhanced GPIO with async capture and serial support
+>>> +  - an Ethernet MII_RT module with two MII ports
+>>> +  - an MDIO port to control external Ethernet PHYs
+>>> +  - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
+>>> +    Ethernet functions
+>>> +  - an Enhanced Capture Module (eCAP)
+>>> +  - a 16550-compatible UART to support PROFIBUS
+>>> +  - Interrupt controller with 64 input events and 10 Host interrupts.
+>>> +
+>>> +A shared Data RAM, if present, can be accessed by both the PRU cores. The
+>>> +Interrupt Controller (INTC) and a CFG module are common to both the PRU
+>>> +cores.
+>>> +
+>>> +Various sub-modules within a PRU-ICSS subsystem are represented as individual
+>>> +nodes.
+>>> +
+>>> +PRUSS Node
+>>> +=============
+>>> +
+>>> +This node represents the entire ICSS instance and the various modules are
+>>> +contained as children. The PRUSS driver is responsible for managing the
+>>> +common resources i.e. DRAM0, DRAM1, SHARED_RAM and CFG space.
+>>> +
+>>> +Required Properties:
+>>> +--------------------
+>>> +- compatible     : should be one of,
+>>> +                       "ti,am3356-pruss" for AM335x family of SoCs
+>>> +                       "ti,am4376-pruss" for AM437x family of SoCs
+>>> +                       "ti,am5728-pruss" for AM57xx family of SoCs
+>>> +                       "ti,k2g-pruss" for 66AK2G family of SoCs
+>>> +- reg            : base address and size for each of the Data RAMs as
+>>> +                   mentioned in reg-names, and in the same order as the
+>>> +                   reg-names
+>>
+>> Hmm, not sure what prompted you to deviate from the design we had on TI
+>> SDK kernels. Your revised bindings does not allow us to use this device
+>> for the scalability with either UIO/VFIO.
+> 
+> My understanding was that the device tree node will have to be modified
+> in any case to support the current uio_pruss.c driver so we don't
+> need to add things that we don't need right away.
 
->>>> +Optional properties:
->>>> +
->>>> +- partition-path: strings must begin with "/dev", tell blkoops which partition
->>>> +  it can used. If it is not set, blkoops will drop all data when reboot.
->>>
->>> No. '/dev/...' is a Linux thing and doesn't belong in DT.
->>>
->>> You should define a partition UUID and/or label and the kernel can find
->>> the right partition to use.
+Well, the previous design allows it to scale (as in add new properties
+if needed to satisfy the UIO case) maintaining compatibility, but your
+current binding does not even allow that. The modification you are
+saying that can be done in the future cannot be done without breaking
+the binding ABI with your current design.
+
+> 
+>>
+>> Let's sort this out before you post the next series.
+> 
+> Let's discuss this here so I don't have to explain the whole thing again
+> in the next series.
+
+Yeah, thanks for the below summary.
+
+regards
+Suman
+
+> 
+> Tony,
+> 
+> Suman is mainly concerned about the following changes in v2
+> 1) pruss node does not contain reg property representing entire ICSS.
+> 2) pruss node does not contain interrupts.
+> 
+> Both of these are required if drivers/uio/uio_pruss.c or in future if
+> VFIO is to be used.
+> 
+> The beagleboard community is a primary user of this driver and we need to
+> find a solution so that PRUSS is usable either via remoteproc or via UIO.
+> 
+> Ideal case should allow user to use either of the drivers by just doing
+> a unbind and bind.
+> 
+> I don't have a better idea than having a encapsulating node that has
+> the appropriate reg and interrupt properties.
+> 
+> cheers,
+> -roger
+> 
+>>
+>> regards
+>> Suman
+>>
+>>> +- reg-names      : should contain a string(s) from among the following names,
+>>> +                   each representing a specific Data RAM region. Some PRU-ICSS
+>>> +		   instances on certain SoCs might not have Shared DRAM.
+>>> +                       "dram0" for Data RAM0,
+>>> +                       "dram1" for Data RAM1,
+>>> +                       "shrdram2" for Shared Data RAM,
+>>> +- #address-cells : should be 1
+>>> +- #size-cells    : should be 1
+>>> +- ranges         : no specific range translations required, child nodes have the
+>>> +                   same address view as the parent, so should be mentioned without
+>>> +                   any value for the property
+>>> +
+>>> +Optional Properties:
+>>> +--------------------
+>>> +- no-shared-ram	: Should be present if the instance doesn't have Shared RAM.
+>>> +		  e.g. AM4376 ICSS0 instance doesn't have Shared RAM.
+>>> +
+>>> +The PRUSS node will have one or more of the folowing child nodes.
+>>> +
+>>> +PRU CORES
+>>> +=========
+>>> +ICSS typically has 2 PRU cores. These should be represented as remoteproc devices.
+>>> +
+>>> +INTC node
+>>> +=========
+>>> +ICSS has one INTC interrupt controller module. This should be represented as
+>>> +a standard interrupt-controller node.
+>>> +
+>>> +CFG, IEP, MII_RT
+>>> +================
+>>> +The individual sub-modules CFG, IEP and MII_RT are represented as a syscon
+>>> +node each with specific node names as below:
+>>> +                  "cfg" for CFG sub-module,
+>>> +                  "iep" for IEP sub-module,
+>>> +                  "mii_rt" for MII-RT sub-module,
+>>> +
+>>> +See Documentation/devicetree/bindings/mfd/syscon.txt for details.
+>>> +
+>>> +MDIO
+>>> +====
+>>> +Each PRUSS has an MDIO module that can be used to control external PHYs. The
+>>> +MDIO module used within the PRU-ICSS is an instance of the MDIO Controller
+>>> +used in TI Davinci SoCs. Please refer to the corresponding binding document,
+>>> +Documentation/devicetree/bindings/net/davinci-mdio.txt for details.
+>>> +
+>>> +Application/User Nodes
+>>> +=======================
+>>> +A PRU application/user node typically uses one or more PRU device nodes to
+>>> +implement a PRU application/functionality. Each application/client node would
+>>> +need a reference to at least a PRU node, and optionally pass some configuration
+>>> +parameters.
+>>> +
+>>> +Required Properties:
+>>> +--------------------
+>>> +- prus                 : phandles to the PRU nodes used
+>>> +
+>>> +Optional Properties:
+>>> +--------------------
+>>> +- firmware-name        : firmwares for the PRU cores, the default firmware
+>>> +                         for the core from the PRU node will be used if not
+>>> +                         provided. The firmware names should correspond to
+>>> +                         the PRU cores listed in the 'prus' property
+>>> +- ti,pruss-gp-mux-sel  : array of values for the GP_MUX_SEL under PRUSS_GPCFG
+>>> +                         register for a PRU. This selects the internal muxing
+>>> +                         scheme for the PRU instance. If not provided, the
+>>> +                         default out-of-reset value (0) for the PRU core is
+>>> +                         used. Values should correspond to the PRU cores listed
+>>> +                         in the 'prus' property
+>>> +- ti,pru-interrupt-map : PRU interrupt mappings, containing an array of entries
+>>> +                         with each entry consisting of 4 cell-values. First one
+>>> +                         is an index towards the "prus" property to identify the
+>>> +                         PRU core for the interrupt map, second is the PRU
+>>> +                         System Event id, third is the PRU interrupt channel id
+>>> +                         and fourth is the PRU host interrupt id. If provided,
+>>> +                         this map will supercede any other configuration
+>>> +                         provided through firmware
+>>> +
+>>> +Example:
+>>> +========
+>>> +1.	/* AM33xx PRU-ICSS */
+>>> +
+>>> +	pruss: pruss@0 {
+>>> +		compatible = "ti,am3356-pruss";
+>>> +		reg = <0x0 0x2000>,
+>>> +		      <0x2000 0x2000>,
+>>> +		      <0x10000 0x3000>;
+>>> +		reg-names = "dram0", "dram1",
+>>> +			    "shrdram2";
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <1>;
+>>> +		ranges;
+>>> +
+>>> +		pruss_cfg: cfg@26000 {
+>>> +			compatible = "syscon";
+>>> +			reg = <0x26000 0x2000>;
+>>> +		};
+>>> +
+>>> +		pruss_iep: iep@2e000 {
+>>> +			compatible = "syscon";
+>>> +			reg = <0x2e000 0x31c>;
+>>> +		};
+>>> +
+>>> +		pruss_mii_rt: mii_rt@32000 {
+>>> +			compatible = "syscon";
+>>> +			reg = <0x32000 0x58>;
+>>> +		};
+>>> +
+>>> +		pruss_intc: intc@20000 {
+>>> +			compatible = "ti,am3356-pruss-intc";
+>>> +			reg = <0x20000 0x2000>;
+>>> +			reg-names = "intc";
+>>> +			interrupt-controller;
+>>> +			#interrupt-cells = <1>;
+>>> +			interrupts = <20 21 22 23 24 25 26 27>;
+>>> +			interrupt-names = "host2", "host3", "host4",
+>>> +					  "host5", "host6", "host7",
+>>> +					  "host8", "host9";
+>>> +		};
+>>> +
+>>> +		pru0: pru@34000 {
+>>> +			compatible = "ti,am3356-pru";
+>>> +			reg = <0x34000 0x2000>,
+>>> +			      <0x22000 0x400>,
+>>> +			      <0x22400 0x100>;
+>>> +			reg-names = "iram", "control", "debug";
+>>> +			gpcfg = <&pruss_cfg 0x8>;
+>>> +			firmware-name = "am335x-pru0-fw";
+>>> +			interrupt-parent = <&pruss_intc>;
+>>> +			interrupts = <16>, <17>;
+>>> +			interrupt-names = "vring", "kick";
+>>> +		};
+>>> +
+>>> +		pru1: pru@38000 {
+>>> +			compatible = "ti,am3356-pru";
+>>> +			reg = <0x38000 0x2000>,
+>>> +			      <0x24000 0x400>,
+>>> +			      <0x24400 0x100>;
+>>> +			reg-names = "iram", "control", "debug";
+>>> +			gpcfg = <&pruss_cfg 0xc>;
+>>> +			firmware-name = "am335x-pru1-fw";
+>>> +			interrupt-parent = <&pruss_intc>;
+>>> +			interrupts = <18>, <19>;
+>>> +			interrupt-names = "vring", "kick";
+>>> +		};
+>>> +
+>>> +		pruss_mdio: mdio@32400 {
+>>> +			compatible = "ti,davinci_mdio";
+>>> +			reg = <0x32400 0x90>;
+>>> +			clocks = <&dpll_core_m4_ck>;
+>>> +			clock-names = "fck";
+>>> +			bus_freq = <1000000>;
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <0>;
+>>> +			status = "disabled";
+>>> +		};
+>>> +	};
+>>> +
+>>> +2:	/* PRU application node example */
+>>> +	app_node: app_node {
+>>> +		prus = <&pru0>, <&pru1>;
+>>> +		firmware-name = "pruss-app-fw", "pruss-app-fw-2";
+>>> +		ti,pruss-gp-mux-sel = <2>, <1>;
+>>> +		/* setup interrupts for prus:
+>>> +		   prus[0] => pru1_0: ev=16, chnl=2, host-irq=7,
+>>> +		   prus[1] => pru1_1: ev=19, chnl=1, host-irq=3 */
+>>> +		ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
+>>> +	}
 >>>
 >>
->> pstore/blk do general read/write by filp_open/kernel_read/kernel_write,
->> which need device path.
->> In addition, i have no idea how to use UUID and/or label to do general
->> read/write on kernel layer, can you give me a tip?
 > 
-> The kernel can mount a filesystem by label or UUID though I think
-> those are filesystem UUID and label, not partition UUID and label. But
-> certainly bootloaders find the EFI system partition by UUID.
-> 
-
-As your words, those are file system UUID and label, not partition
-UUID/label. Pstore is a file system, there is no other file system any
-more for specified partition. Pstore/blk can't get specified partition
-by UUID or label.
-As far as i know, block device manager on user space scans each block
-device and matches file system table to get UUID and label. Not even all
-file systems have UUID/label.
-MTD device may has label, but it is not suitable for all block device.
-How if i cancel the prefix requirement for /dev and add it to the codes?
-Then rename partition-path to block-device, by this, DT property may be
-"mmcblk0p10" or "sda6" .
-
-> Rob
-> 
-
--- 
-liaoweixiong
