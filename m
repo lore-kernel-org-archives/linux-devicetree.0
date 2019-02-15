@@ -1,94 +1,357 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 3/3] arm64: dts: imx8mq: Add the opp table and cores opp
- properties
-Date: Fri, 15 Feb 2019 18:07:24 +0000
-Message-ID: <1550254032-16451-4-git-send-email-abel.vesa@nxp.com>
-References: <1550254032-16451-1-git-send-email-abel.vesa@nxp.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 4/4] drm/panel: Add OSD101T2587-53TS driver
+Date: Fri, 15 Feb 2019 19:07:59 +0100
+Message-ID: <20190215180759.GA26944@ravnborg.org>
+References: <20190215140315.18046-1-peter.ujfalusi@ti.com>
+ <20190215140315.18046-5-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550254032-16451-1-git-send-email-abel.vesa@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190215140315.18046-5-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abel Vesa <abel.vesa@nxp.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch, devicetree@vger.kernel.org, tomi.valkeinen@ti.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Add the 0.8GHz and 1GHz opps. According to the datasheet:
-https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
-section 3.1.3 Operating ranges.
+Hi Peter.
 
-The 0.8GHz opp runs in nominal mode with the regulator set to 0.9V.
-The 1GHz runs in overdrive mode with the regulator set to 1V.
+Good with more panel drivers.
+Some comments in the following, please do not blindly follow them but
+check that this is OK.
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+	Sam
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mq.dtsi
-index 1a89062..ebdec9e 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -91,6 +91,7 @@
- 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
- 			enable-method =3D "psci";
- 			next-level-cache =3D <&A53_L2>;
-+			operating-points-v2 =3D <&a53_0_opp_table>;
- 		};
-=20
- 		A53_1: cpu@1 {
-@@ -101,6 +102,7 @@
- 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
- 			enable-method =3D "psci";
- 			next-level-cache =3D <&A53_L2>;
-+			operating-points-v2 =3D <&a53_0_opp_table>;
- 		};
-=20
- 		A53_2: cpu@2 {
-@@ -111,6 +113,7 @@
- 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
- 			enable-method =3D "psci";
- 			next-level-cache =3D <&A53_L2>;
-+			operating-points-v2 =3D <&a53_0_opp_table>;
- 		};
-=20
- 		A53_3: cpu@3 {
-@@ -121,6 +124,7 @@
- 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
- 			enable-method =3D "psci";
- 			next-level-cache =3D <&A53_L2>;
-+			operating-points-v2 =3D <&a53_0_opp_table>;
- 		};
-=20
- 		A53_L2: l2-cache0 {
-@@ -666,6 +670,25 @@
- 			status =3D "disabled";
- 		};
-=20
-+
-+		a53_0_opp_table: opp-table {
-+			compatible =3D "operating-points-v2";
-+			opp-shared;
-+
-+			opp-800000000 {
-+				opp-hz =3D /bits/ 64 <800000000>;
-+				opp-microvolt =3D <900000>;
-+				clock-latency-ns =3D <150000>;
-+			};
-+
-+			opp-1000000000 {
-+				opp-hz =3D /bits/ 64 <1000000000>;
-+				opp-microvolt =3D <1000000>;
-+				clock-latency-ns =3D <150000>;
-+				opp-suspend;
-+			};
-+		};
-+
- 		gic: interrupt-controller@38800000 {
- 			compatible =3D "arm,gic-v3";
- 			reg =3D <0x38800000 0x10000>,	/* GIC Dist */
---=20
-2.7.4
+On Fri, Feb 15, 2019 at 04:03:15PM +0200, Peter Ujfalusi via dri-devel wrote:
+> The panel is similar to OSD101T2045-53TS (which is handled by panel-simple)
+> with one big difference: osd101t2587-53ts needs MIPI_DSI_TURN_ON_PERIPHERAL
+> message to be sent from the host to be operational and thus can not be
+> handled by panel-simple.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> +++ b/drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.c
+> @@ -0,0 +1,284 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com
+> + *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <drm/drmP.h>
+Please do not use drmP.h in new drivers - we try to get rid of this file.
+
+> +#include <drm/drm_crtc.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_panel.h>
+> +
+> +#include <video/mipi_display.h>
+> +
+> +struct osd101t2587_panel {
+> +	struct drm_panel base;
+> +	struct mipi_dsi_device *dsi;
+> +
+> +	struct backlight_device *backlight;
+> +	struct regulator *supply;
+> +
+> +	bool prepared;
+> +	bool enabled;
+> +
+> +	ktime_t earliest_wake;
+earliest_wake is not used, and can be deleted.
+
+> +
+> +	const struct drm_display_mode *default_mode;
+> +	const struct drm_display_mode *mode;
+Assigned but never used. Drop the assignment and the variable?
+
+> +};
+> +
+> +static inline struct osd101t2587_panel *to_osd101t2587_panel(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct osd101t2587_panel, base);
+> +}
+> +
+> +static int osd101t2587_panel_disable(struct drm_panel *panel)
+> +{
+> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
+> +	int ret;
+> +
+> +	if (!osd101t2587->enabled)
+> +		return 0;
+> +
+> +	if (osd101t2587->backlight) {
+> +		osd101t2587->backlight->props.power = FB_BLANK_POWERDOWN;
+> +		osd101t2587->backlight->props.state |= BL_CORE_FBBLANK;
+> +		backlight_update_status(osd101t2587->backlight);
+> +	}
+backlight_disable(osd101t2587->backlight);
+
+
+> +
+> +	ret = mipi_dsi_shutdown_peripheral(osd101t2587->dsi);
+> +
+> +	osd101t2587->enabled = false;
+> +
+> +	return ret;
+> +}
+> +
+> +static int osd101t2587_panel_unprepare(struct drm_panel *panel)
+> +{
+> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
+> +
+> +	if (!osd101t2587->prepared)
+> +		return 0;
+> +
+> +	regulator_disable(osd101t2587->supply);
+> +	osd101t2587->prepared = false;
+> +
+> +	return 0;
+> +}
+> +
+> +static int osd101t2587_panel_prepare(struct drm_panel *panel)
+> +{
+> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
+> +	int ret;
+> +
+> +	if (osd101t2587->prepared)
+> +		return 0;
+> +
+> +	ret = regulator_enable(osd101t2587->supply);
+> +	if (!ret)
+> +		osd101t2587->prepared = true;
+> +
+> +	return ret;
+> +}
+> +
+> +static int osd101t2587_panel_enable(struct drm_panel *panel)
+> +{
+> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
+> +	int ret;
+> +
+> +	if (osd101t2587->enabled)
+> +		return 0;
+> +
+> +	ret = mipi_dsi_turn_on_peripheral(osd101t2587->dsi);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (osd101t2587->backlight) {
+> +		osd101t2587->backlight->props.power = FB_BLANK_UNBLANK;
+> +		osd101t2587->backlight->props.state &= ~BL_CORE_FBBLANK;
+> +		backlight_update_status(osd101t2587->backlight);
+> +	}
+backlight_enable(osd101t2587->backlight);
+can be used here.
+
+> +
+> +	osd101t2587->enabled = true;
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct drm_display_mode default_mode_osd101t2587 = {
+> +	.clock = 164400,
+> +	.hdisplay = 1920,
+> +	.hsync_start = 1920 + 152,
+> +	.hsync_end = 1920 + 152 + 52,
+> +	.htotal = 1920 + 152 + 52 + 20,
+> +	.vdisplay = 1200,
+> +	.vsync_start = 1200 + 24,
+> +	.vsync_end = 1200 + 24 + 6,
+> +	.vtotal = 1200 + 24 + 6 + 48,
+> +	.vrefresh = 60,
+> +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> +};
+> +
+> +static int osd101t2587_panel_get_modes(struct drm_panel *panel)
+> +{
+> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
+> +	struct drm_display_mode *mode;
+> +
+> +	mode = drm_mode_duplicate(panel->drm, osd101t2587->default_mode);
+> +	if (!mode) {
+> +		dev_err(panel->drm->dev, "failed to add mode %ux%ux@%u\n",
+> +			osd101t2587->default_mode->hdisplay,
+> +			osd101t2587->default_mode->vdisplay,
+> +			osd101t2587->default_mode->vrefresh);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	drm_mode_set_name(mode);
+> +
+> +	drm_mode_probed_add(panel->connector, mode);
+> +
+> +	panel->connector->display_info.width_mm = 217;
+> +	panel->connector->display_info.height_mm = 136;
+> +
+> +	return 1;
+> +}
+> +
+> +static const struct drm_panel_funcs osd101t2587_panel_funcs = {
+> +	.disable = osd101t2587_panel_disable,
+> +	.unprepare = osd101t2587_panel_unprepare,
+> +	.prepare = osd101t2587_panel_prepare,
+> +	.enable = osd101t2587_panel_enable,
+> +	.get_modes = osd101t2587_panel_get_modes,
+> +};
+> +
+> +static const struct of_device_id osd101t2587_of_match[] = {
+> +	{
+> +		.compatible = "osd,osd101t2587-53ts",
+> +		.data = &default_mode_osd101t2587,
+> +	}, { }
+Move { } to a separate line and use { /* sentinel */ } to make it look like other drivers.
+ 
+
+> +};
+> +MODULE_DEVICE_TABLE(of, osd101t2587_of_match);
+> +
+> +static int osd101t2587_panel_add(struct osd101t2587_panel *osd101t2587)
+> +{
+> +	struct device *dev = &osd101t2587->dsi->dev;
+> +	struct device_node *np;
+> +	int ret;
+> +
+> +	osd101t2587->mode = osd101t2587->default_mode;
+> +
+> +	osd101t2587->supply = devm_regulator_get(dev, "power");
+> +	if (IS_ERR(osd101t2587->supply))
+> +		return PTR_ERR(osd101t2587->supply);
+> +
+> +	np = of_parse_phandle(dev->of_node, "backlight", 0);
+> +	if (np) {
+> +		osd101t2587->backlight = of_find_backlight_by_node(np);
+> +		of_node_put(np);
+> +
+> +		if (!osd101t2587->backlight)
+> +			return -EPROBE_DEFER;
+> +	}
+Use devm_of_find_backlight() - this results in simpler code.
+
+> +
+> +	drm_panel_init(&osd101t2587->base);
+> +	osd101t2587->base.funcs = &osd101t2587_panel_funcs;
+> +	osd101t2587->base.dev = &osd101t2587->dsi->dev;
+> +
+> +	ret = drm_panel_add(&osd101t2587->base);
+> +	if (ret < 0)
+> +		goto put_backlight;
+> +
+> +	return 0;
+> +
+> +put_backlight:
+> +	if (osd101t2587->backlight)
+> +		put_device(&osd101t2587->backlight->dev);
+When using devm_of_find_backlight() this is not needed.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static void osd101t2587_panel_del(struct osd101t2587_panel *osd101t2587)
+> +{
+> +	if (osd101t2587->base.dev)
+> +		drm_panel_remove(&osd101t2587->base);
+> +
+> +	if (osd101t2587->backlight)
+> +		put_device(&osd101t2587->backlight->dev);
+When you use devm_of_find_backlight() then this is done for you, so the above can be deleted.
+
+> +}
+> +
+> +static int osd101t2587_panel_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct osd101t2587_panel *osd101t2587;
+> +	const struct of_device_id *id;
+> +	int ret;
+> +
+> +	id = of_match_node(osd101t2587_of_match, dsi->dev.of_node);
+> +	if (!id)
+> +		return -ENODEV;
+> +
+> +	dsi->lanes = 4;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
+> +			  MIPI_DSI_MODE_VIDEO_BURST |
+> +			  MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+> +			  MIPI_DSI_MODE_EOT_PACKET;
+> +
+> +	osd101t2587 = devm_kzalloc(&dsi->dev, sizeof(*osd101t2587), GFP_KERNEL);
+> +	if (!osd101t2587)
+> +		return -ENOMEM;
+> +
+> +	mipi_dsi_set_drvdata(dsi, osd101t2587);
+> +
+> +	osd101t2587->dsi = dsi;
+> +	osd101t2587->default_mode = id->data;
+> +
+> +	ret = osd101t2587_panel_add(osd101t2587);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return mipi_dsi_attach(dsi);
+> +}
+> +
+> +static int osd101t2587_panel_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct osd101t2587_panel *osd101t2587 = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	ret = osd101t2587_panel_disable(&osd101t2587->base);
+> +	if (ret < 0)
+> +		dev_err(&dsi->dev, "failed to disable panel: %d\n", ret);
+> +
+To trun off power supply call osd101t2587_panel_unprepare() here?
+
+> +	ret = mipi_dsi_detach(dsi);
+> +	if (ret < 0)
+> +		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", ret);
+> +
+> +	osd101t2587_panel_del(osd101t2587);
+Replace this with
+	drm_panel_remove(osd101t2587->base);
+This should be fine and no need to disable backlight, this is done in osd101t2587_panel_disable()
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void osd101t2587_panel_shutdown(struct mipi_dsi_device *dsi)
+> +{
+> +	struct osd101t2587_panel *osd101t2587 = mipi_dsi_get_drvdata(dsi);
+> +
+Maybe call osd101t2587_panel_unprepare() here to turn off power supply?
+
+> +	osd101t2587_panel_disable(&osd101t2587->base);
+> +}
+> +
+> +static struct mipi_dsi_driver osd101t2587_panel_driver = {
+> +	.driver = {
+> +		.name = "panel-osd-osd101t2587-53ts",
+> +		.of_match_table = osd101t2587_of_match,
+> +	},
+> +	.probe = osd101t2587_panel_probe,
+> +	.remove = osd101t2587_panel_remove,
+> +	.shutdown = osd101t2587_panel_shutdown,
+> +};
+> +module_mipi_dsi_driver(osd101t2587_panel_driver);
+> +
+> +MODULE_AUTHOR("Peter Ujfalusi <peter.ujfalusi@ti.com>");
+> +MODULE_DESCRIPTION("OSD101T2587-53TS DSI panel");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
