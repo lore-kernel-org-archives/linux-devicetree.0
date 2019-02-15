@@ -1,90 +1,55 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v3 3/3] pwm: core: add consumer device link
-Date: Fri, 15 Feb 2019 11:22:48 +0100
-Message-ID: <20190215102248.i2mggrw74lgs2owq@pengutronix.de>
-References: <1550055012-23348-1-git-send-email-fabrice.gasnier@st.com>
- <1550055012-23348-4-git-send-email-fabrice.gasnier@st.com>
- <f6fecafc-3946-9680-c58b-a20aa46e8e71@microchip.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add HI3670 reset controller
+ binding
+Date: Fri, 15 Feb 2019 11:25:30 +0100
+Message-ID: <1550226330.4531.10.camel@pengutronix.de>
+References: <20190215054955.788-1-manivannan.sadhasivam@linaro.org>
+         <20190215054955.788-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f6fecafc-3946-9680-c58b-a20aa46e8e71@microchip.com>
+In-Reply-To: <20190215054955.788-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com
-Cc: fabrice.gasnier@st.com, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, tduszyns@gmail.com, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, xuwei5@hisilicon.com, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, guodong.xu@linaro.org, john.stultz@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 09:23:48AM +0000, Claudiu.Beznea@microchip.com wrote:
+On Fri, 2019-02-15 at 11:19 +0530, Manivannan Sadhasivam wrote:
+> HI3670 SoC is architecturally same as the HI3660 SoC. Hence, the same
+> driver is reused for HI3670 SoC and the binding is documented here which
+> uses the fallback approach.
 > 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/reset/hisilicon,hi3660-reset.txt   | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> On 13.02.2019 12:50, Fabrice Gasnier wrote:
-> > Add a device link between the PWM consumer and the PWM provider. This
-> > enforces the PWM user to get suspended before the PWM provider. It
-> > allows proper synchronization of suspend/resume sequences: the PWM user
-> > is responsible for properly stopping PWM, before the provider gets
-> > suspended: see [1]. Add the device link in:
-> > - of_pwm_get()
-> > - pwm_get()
-> > - devm_ variants
-> > as it requires a reference to the device for the PWM consumer.
-> > 
-> > [1] https://lkml.org/lkml/2019/2/5/770
-> > 
-> > Suggested-by: Thierry Reding <thierry.reding@gmail.com>
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > ---
-> > Changes in v3:
-> > - add struct device to of_get_pwm() arguments to handle device link from
-> >   there.
-> > ---
-> >  drivers/pwm/core.c  | 14 +++++++++++---
-> >  include/linux/pwm.h |  6 ++++--
-> >  2 files changed, 15 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> > index 1581f6a..8cb5d4bc 100644
-> > --- a/drivers/pwm/core.c
-> > +++ b/drivers/pwm/core.c
-> > @@ -638,6 +638,7 @@ static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
-> >  
-> >  /**
-> >   * of_pwm_get() - request a PWM via the PWM framework
-> > + * @dev: device for PWM consumer
-> >   * @np: device node to get the PWM from
-> >   * @con_id: consumer name
-> >   *
-> > @@ -655,7 +656,8 @@ static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
-> >   * Returns: A pointer to the requested PWM device or an ERR_PTR()-encoded
-> >   * error code on failure.
-> >   */
-> > -struct pwm_device *of_pwm_get(struct device_node *np, const char *con_id)
-> > +struct pwm_device *of_pwm_get(struct device *dev, struct device_node *np,
-> > +			      const char *con_id)
-> >  {
-> >  	struct pwm_device *pwm = NULL;
-> >  	struct of_phandle_args args;
-> > @@ -689,6 +691,9 @@ struct pwm_device *of_pwm_get(struct device_node *np, const char *con_id)
-> >  	if (IS_ERR(pwm))
-> >  		goto put;
-> >  
-> > +	if (!device_link_add(dev, pwm->chip->dev, DL_FLAG_AUTOREMOVE_CONSUMER))
-> > +		pr_debug("%s(): device link not added\n", __func__);
-> > +
-> 
-> Just asking... will this mechanism also be working for PWMs requested via
-> sysfs? At a first look it seems not.
+> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+> index 2bf3344b2a02..2df4bddeb688 100644
+> --- a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+> @@ -5,11 +5,12 @@ Please also refer to reset.txt in this directory for common reset
+>  controller binding usage.
+>  
+>  The reset controller registers are part of the system-ctl block on
+> -hi3660 SoC.
+> +hi3660 and hi3670 SoCs.
+>  
+>  Required properties:
+> -- compatible: should be
+> -		 "hisilicon,hi3660-reset"
+> +- compatible: should be one of the following:
+> +		 "hisilicon,hi3660-reset" for HI3660
+> +		 "hisilicon,hi3670-reset", "hisilicon,hi3660-reset" for HI3670
+>  - hisi,rst-syscon: phandle of the reset's syscon.
+>  - #reset-cells : Specifies the number of cells needed to encode a
+>    reset source.  The type shall be a <u32> and the value shall be 2.
 
-No, but I would not expect a problem because AFAIU userspace is
-suspended before kernel devices. However as userspace might not notice
-the suspend it probably fails to stop the pwm and so will likely prevent
-the suspend.
+Thank you, I think it makes sense for this to be merged together with
+the other patch via the linux-hisi tree.
 
-Best regards
-Uwe
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+regards
+Philipp
