@@ -1,85 +1,57 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V3 3/4] dt-bindings: perf: imx8-ddr: add imx8qxp ddr
- performance monitor
-Date: Fri, 15 Feb 2019 13:58:34 +0000
-Message-ID: <20190215135834.GA55505@lakrids.cambridge.arm.com>
-References: <1550081533-25000-1-git-send-email-Frank.Li@nxp.com>
- <1550081533-25000-3-git-send-email-Frank.Li@nxp.com>
+From: Viorel Suman <viorel.suman@nxp.com>
+Subject: [PATCH v5 0/3] Add NXP AUDMIX device and machine drivers
+Date: Fri, 15 Feb 2019 14:01:32 +0000
+Message-ID: <1550239285-12587-1-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1550081533-25000-3-git-send-email-Frank.Li@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Li <frank.li@nxp.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2019 at 06:12:33PM +0000, Frank Li wrote:
-> Added binding doc for imx8qxp ddr performance monitor
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+The patchset adds NXP Audio Mixer (AUDMIX) device and machine
+drivers and related DT bindings documentation.
 
-As a general thing, please put the DT binding earlier in the series than
-the code and/or DTs using it, as per:
+Changes since V4:
+1. Removed "model" attribute from device driver DT bindings documentation
+   as suggested by Nicolin.
 
-  Documentation/devicetree/bindings/submitting-patches.txt
+Changes since V3:
+1. Removed machine driver DT bindings documentation.
+2. Trigger machine driver probe from device driver as suggested by Nicolin.
 
-> ---
-> Change from v2 to v3
-> * ddr_pmu0 -> ddr-pmu
-> 
->  .../devicetree/bindings/perf/fsl-imx-ddr.txt       | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-> new file mode 100644
-> index 0000000..9d55182
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-> @@ -0,0 +1,22 @@
-> +* Freescale(NXP) IMX8 DDR performance monitor
-> +
-> +Required properties:
-> +
-> +- compatible: (standard compatible string) should be one of:
-> +	"fsl,imx8-ddr-pmu"
-> +	"fsl,imx8m-ddr-pmu"
+Changes since V2:
+1. Moved "dais" node from machine driver DTS node to device driver DTS node
+  as suggested by Rob.
 
-Please remove the "(standard xxx)" bits, they're just noise.
+Changes since V1:
+1. Original patch split into distinct patches for the device driver and
+  DT binding documentation.
+2. Replaced AMIX with AUDMIX in both code and file names as it looks more
+  RM-compliant.
+3. Removed polarity control from CPU DAI driver as suggested by Nicolin.
+4. Added machine driver and related DT binding documentation.
 
-Otherwise, this generally looks OK.
+Viorel Suman (3):
+  ASoC: fsl: Add Audio Mixer CPU DAI driver
+  ASoC: add fsl_audmix DT binding documentation
+  ASoC: fsl: Add Audio Mixer machine driver
 
-Are the DDR PMU registers part of the DDR controller register block?
+ .../devicetree/bindings/sound/fsl,audmix.txt       |  50 ++
+ sound/soc/fsl/Kconfig                              |  16 +
+ sound/soc/fsl/Makefile                             |   5 +
+ sound/soc/fsl/fsl_audmix.c                         | 578 +++++++++++++++++=
+++++
+ sound/soc/fsl/fsl_audmix.h                         | 102 ++++
+ sound/soc/fsl/imx-audmix.c                         | 327 ++++++++++++
+ 6 files changed, 1078 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,audmix.txt
+ create mode 100644 sound/soc/fsl/fsl_audmix.c
+ create mode 100644 sound/soc/fsl/fsl_audmix.h
+ create mode 100644 sound/soc/fsl/imx-audmix.c
 
-Thanks,
-Mark.
-
-> +
-> +- reg: (standard registers property) physical address and size
-> +
-> +- interrupts: (standard interrupt property) single interrupt
-> +	generated by the control block
-> +
-> +Example:
-> +
-> +	ddr-pmu@5c020000 {
-> +		compatible = "fsl,imx8-ddr-pmu";
-> +		reg = <0x0 0x5c020000 0x0 0x10000>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> -- 
-> 2.5.2
-> 
+--=20
+2.7.4
