@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATVH v2 2/4] arm64: dts: allwinner: h6: pine: Add CPU supply regulator
-Date: Fri, 15 Feb 2019 08:49:35 -0500
-Message-ID: <20190215134937.10259-3-tiny.windzz@gmail.com>
+Subject: [PATVH v2 4/4] arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
+Date: Fri, 15 Feb 2019 08:49:37 -0500
+Message-ID: <20190215134937.10259-5-tiny.windzz@gmail.com>
 References: <20190215134937.10259-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190215134937.10259-1-tiny.windzz@gmail.com>
@@ -10,48 +10,109 @@ To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@a
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The original pine use the dcdca to supply the CPU cores. According
-to the axp805 spec, the range of dcdca is 0.6 to 1.1v, 1.12 to 1.52v.
-In order to support more CPU frequency, slightly increase the voltage
-maximum and minimum.
+Add an OPP (Operating Performance Points) table for the CPU cores to
+enable DVFS (Dynamic Voltage & Frequency Scaling) on the H6. This
+information comes from github.
 
-In fact, in sunxi's sdk, the actual minimum and maximum voltage of the
-cpu is smaller or larger than the datasheet.
+When the four CPUs are running at 1.8 GHz, 100% busy, it is easy to heat
+up and make the system restart. And currently H6 does not support the
+thermal driver, can not get the temperature information of the cpu to
+control the highest frequency. So temporarily remove the opp of 1.8GHz.
 
-For some better quality ic, the minimum voltage can be smaller. For
-some poor quality ic, the maximum voltage needs to be increased a
-little.
+When the four CPUs operate at 1.4 GHz, 100% busy, the temperature is
+stable at about 90 degrees, and the system can still operate normally.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 55 ++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index bdb8470fc8dc..95c81250c2b3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -213,8 +213,8 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 723f5d991a74..84fb47062fe6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -28,6 +28,8 @@
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			operating-points-v2 = <&cpu_opp_table>;
++			#cooling-cells = <2>;
+ 		};
  
- 			reg_dcdca: dcdca {
- 				regulator-always-on;
--				regulator-min-microvolt = <810000>;
--				regulator-max-microvolt = <1080000>;
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1160000>;
- 				regulator-name = "vdd-cpu";
- 			};
+ 		cpu1: cpu@1 {
+@@ -37,6 +39,8 @@
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			operating-points-v2 = <&cpu_opp_table>;
++			#cooling-cells = <2>;
+ 		};
  
-@@ -251,6 +251,10 @@
- 	};
- };
+ 		cpu2: cpu@2 {
+@@ -46,6 +50,8 @@
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			operating-points-v2 = <&cpu_opp_table>;
++			#cooling-cells = <2>;
+ 		};
  
-+&cpu0 {
-+	cpu-supply = <&reg_dcdca>;
-+};
+ 		cpu3: cpu@3 {
+@@ -55,6 +61,55 @@
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			operating-points-v2 = <&cpu_opp_table>;
++			#cooling-cells = <2>;
++		};
++	};
 +
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_ph_pins>;
++	cpu_opp_table: opp_table {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@480000000 {
++			opp-hz = /bits/ 64 <480000000>;
++			opp-microvolt = <800000 800000 880000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@720000000 {
++			opp-hz = /bits/ 64 <720000000>;
++			opp-microvolt = <800000 800000 880000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@816000000 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <800000 800000 880000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@888000000 {
++			opp-hz = /bits/ 64 <888000000>;
++			opp-microvolt = <800000 800000 940000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@1080000000 {
++			opp-hz = /bits/ 64 <1080000000>;
++			opp-microvolt = <840000 840000 1060000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@1320000000 {
++			opp-hz = /bits/ 64 <1320000000>;
++			opp-microvolt = <900000 900000 1160000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@1488000000 {
++			opp-hz = /bits/ 64 <1488000000>;
++			opp-microvolt = <960000 960000 1160000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 	};
+ 
 -- 
 2.17.0
