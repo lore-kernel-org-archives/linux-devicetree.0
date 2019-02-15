@@ -1,77 +1,56 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 2/5] dt-bindings: iio: adc: lpc32xx-adc: Document
- vref-supply
-Date: Fri, 15 Feb 2019 17:07:19 +0100
-Message-ID: <87o97d2fyg.fsf@FE-laptop>
-References: <20190208160944.13281-1-gregory.clement@bootlin.com>
- <20190208160944.13281-3-gregory.clement@bootlin.com>
- <8bc7bfcf-ad04-0615-1735-c2bbf20b7861@mleia.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v1 1/3] ARM: dts: stm32: Add Vivante GPU support on
+ STM32MP157c
+Date: Fri, 15 Feb 2019 17:11:58 +0100
+Message-ID: <1550247118.2546.56.camel@pengutronix.de>
+References: <1550246316-9747-1-git-send-email-pierre-yves.mordret@st.com>
+         <1550246316-9747-2-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8bc7bfcf-ad04-0615-1735-c2bbf20b7861@mleia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vladimir Zapolskiy <vz@mleia.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550246316-9747-2-git-send-email-pierre-yves.mordret@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Cc: devicetree@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVmxhZGltaXIsCiAKIE9uIHNhbS4sIGbDqXZyLiAwOSAyMDE5LCBWbGFkaW1pciBaYXBvbHNr
-aXkgPHZ6QG1sZWlhLmNvbT4gd3JvdGU6Cgo+IEhpIEdyZWdvcnksCj4KPiBPbiAwMi8wOC8yMDE5
-IDA2OjA5IFBNLCBHcmVnb3J5IENMRU1FTlQgd3JvdGU6Cj4+IEFzIG1vc3Qgb2YgdGhlIG90aGVy
-IEFEQyB0aGUgbHBjMzJ4eCBvbmUgdXNlIGEgdnJlZi1zdXBwbHkgcHJvcGVydHk6Cj4+IGRvY3Vt
-ZW50IGl0Lgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogR3JlZ29yeSBDTEVNRU5UIDxncmVnb3J5LmNs
-ZW1lbnRAYm9vdGxpbi5jb20+Cj4+IC0tLQo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2lpby9hZGMvbHBjMzJ4eC1hZGMudHh0IHwgNSArKysrKwo+PiAgMSBmaWxlIGNoYW5n
-ZWQsIDUgaW5zZXJ0aW9ucygrKQo+PiAKPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2xwYzMyeHgtYWRjLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2xwYzMyeHgtYWRjLnR4dAo+PiBpbmRleCBiMzYy
-OWQzYTlhZGYuLjNhMWJjNjY5YmQ1MSAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvbHBjMzJ4eC1hZGMudHh0Cj4+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2xwYzMyeHgtYWRjLnR4dAo+PiBAQCAt
-Niw2ICs2LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICAgIHJlZ2lvbi4KPj4gIC0gaW50
-ZXJydXB0czogVGhlIEFEQyBpbnRlcnJ1cHQKPj4gIAo+PiArT3B0aW9uYWw6Cj4+ICsgLSB2cmVm
-LXN1cHBseTogVGhlIHJlZ3VsYXRvciBzdXBwbHkgQURDIHJlZmVyZW5jZSB2b2x0YWdlLCBvcHRp
-b25hbAo+PiArICAgZm9yIGxlZ2FjeSByZWFzb24sIGJ1dCBoaWdobHkgZW5jb3VyYWdpbmcgdG8g
-dXMgaW4gbmV3IGRldmljZSB0cmVlCj4+ICsKPgo+IGhlcmUgdnJlZi1zdXBwbHkgdm9sdGFnZSBp
-cyAzLjN2IG9ubHksIEkgdGhpbmsgdGhhdCBtaWdodCBiZSBhIHJlYXNvbiB3aHkKPiB0aGUgcHJv
-cGVydHkgaXMgb21pdHRlZC4KClZERF9BRCBpcyBhbiBleHRlcm5hbCBwaW4gc28gaW4gdGhlcm95
-IGl0IHdvdWxkIGJlIHBvc3NpYmxlIHRvIHVzZSBhCmRpZmZlcmVudCB2b2x0YWdlLCBidXQgaW5k
-ZWVkIHRoZSBkYXRhc2hlZXQgZGVzY3JpYmUgdGhpcyBwaW4gYXMgdGhlCjMuM1Ygc3VwcGx5IGZv
-ciBBREMuCgo+Cj4gTXkgY29uY2VybiBpcyB0aGF0IHRoZSBkb2N1bWVudGF0aW9uIHNoYWxsIG5v
-dCBjb250YWluIHNlY3Rpb25zIHdpdGgKPiBkZXNjcmlwdGlvbiBvZiBwcm9wZXJ0aWVzIGZvdW5k
-IGluIHRoZSBwYXN0IGZvciAnbGVnYWN5IHJlYXNvbnMnLCBpZiB5b3UKPiBsaWtlIHRvIHN1cHBv
-cnQgdGhlIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgaW4gdGhlIGRyaXZlciwgcGxlYXNlIHVwZGF0
-ZQo+IHRoZSBkb2N1bWVudGF0aW9uIHRvIHRoZSBleHBlY3RlZCBzdGF0ZSBhbmQgYWRkIGEgc3R1
-YiB0byBjYXJlIGFib3V0Cj4gbGVnYWN5IERUQnMgaW4gdGhlIGRyaXZlciBvbmx5LgoKSSBzYXcg
-YSBsb3Qgb2YgcmVmZXJlbmNlIGFib3V0IGxlZ2FjeSBwcm9wZXJ0aWVzIGluIHRoZSBiaW5kaW5n
-LCBhbmQgSQpmb3VuZCBpdCBxdWl0ZSB1c2VmdWxsIHdoZW4gSSByZWFkIG9sZCBkZXZpY2UgdHJl
-ZXMuCgo+Cj4gRldJVyBJIHBlcnNvbmFsbHkgZG9uJ3QgbWluZCBhYm91dCBicmVha2luZyB0aGUg
-YmFja3dhcmQgY29tcGF0aWJpbGl0eQo+IGZvciBOWFAgTFBDMzJ4eCwgaXQgbWlnaHQgYmUgYSBj
-b25jZXJuIHdoZW4gQ09ORklHX0FSTV9BVEFHX0RUQl9DT01QQVQ9eQo+IGlzIHJlbW92ZWQgZnJv
-bSB0aGUgbHBjMzJ4eF9kZWZjb25maWcgdGhvdWdoLgo+Cj4+ICBFeGFtcGxlOgo+PiAgCj4+ICAJ
-YWRjQDQwMDQ4MDAwIHsKPj4gQEAgLTEzLDQgKzE3LDUgQEAgRXhhbXBsZToKPj4gIAkJcmVnID0g
-PDB4NDAwNDgwMDAgMHgxMDAwPjsKPj4gIAkJaW50ZXJydXB0LXBhcmVudCA9IDwmbWljPjsKPj4g
-IAkJaW50ZXJydXB0cyA9IDwzOSAwPjsKPj4gKwkJdnJlZi1zdXBwbHkgPSA8JnZjYz47Cj4+ICAJ
-fTsKPj4gCj4KPiBJIGtpbmRseSBhc2sgeW91IHRvIGluY2x1ZGUgbWUgdG8gVG86IGxpc3QsIGlm
-IHlvdSBzZW5kIGFub3RoZXIgY2hhbmdlcyBmb3IKPiBOWFAgTFBDMzJ4eCBwbGF0Zm9ybS4KClll
-cyBzdXJlISBJIHdyb25nbHkgb25seSB1c2UgdGhlIGZpcnN0IGxpbmVzIHByb3ZpZGVkIGJ5Ci4v
-c2NyaXB0cy9nZXRfbWFpbnRhaW5lci5wbCwgSSB3aWxsIGluY2x1ZGUgeW91IGluIHRoZSBuZXh0
-IHZlcnNpb24uCgoKVGhhbmtzLAoKR3JlZ29yeQoKCgo+Cj4gVGhhbmsgeW91Lgo+Cj4gLS0KPiBC
-ZXN0IHdpc2hlcywKPiBWbGFkaW1pcgo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKLS0gCkdyZWdvcnkgQ2xlbWVu
-dCwgQm9vdGxpbgpFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCmh0dHA6Ly9i
-b290bGluLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtYXJtLWtlcm5lbAo=
+Hi Pierre-Yves,
+
+Am Freitag, den 15.02.2019, 16:58 +0100 schrieb Pierre-Yves MORDRET:
+> Append Vivante GPU DT configuration.
+> 
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> ---
+>  arch/arm/boot/dts/stm32mp157c.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index f8bbfff..29540bc 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+> @@ -1106,6 +1106,16 @@
+> >  			status = "disabled";
+> >  		};
+>  
+> +		gpu: gpu@59000000 {
+> +			compatible = "vivante,gc";
+> +			reg = <0x59000000 0x800>;
+> +			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&rcc GPU>, <&rcc GPU_K>;
+> +			clock-names = "bus" ,"core";
+
+Is this a 2D only core? If it is also 3D capable the binding says you
+need to specify the shader clock (may be the same clock feeding the
+core).
+
+Regards,
+Lucas
+
+> +			resets = <&rcc GPU_R>;
+> +			status = "disabled";
+> +		};
+> +
+>  		dsi: dsi@5a000000 {
+>  			compatible = "st,stm32-dsi";
+>  			reg = <0x5a000000 0x800>;
