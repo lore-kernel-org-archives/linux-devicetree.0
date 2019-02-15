@@ -1,72 +1,37 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq mapping already exists
-Date: Thu, 14 Feb 2019 21:51:26 -0800
-Message-ID: <155020988635.115909.8353948296231202388@swboyd.mtv.corp.google.com>
-References: <20190208021631.30252-1-masneyb@onstation.org> <20190208021631.30252-6-masneyb@onstation.org>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v7 1/6] dt-bindings: mtk-sysirq: Add compatible for Mediatek MT8183
+Date: Fri, 15 Feb 2019 14:02:33 +0800
+Message-ID: <1550210558-30516-2-git-send-email-erin.lo@mediatek.com>
+References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190208021631.30252-6-masneyb@onstation.org>
+In-Reply-To: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com
-Cc: tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, erin.lo@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brian Masney (2019-02-07 18:16:25)
-> Check to see if the hwirq is already associated with another virq on
-> this IRQ domain. If so, then disassociate it before associating the
-> hwirq with the new virq.
->=20
-> This is a temporary hack that is needed in order to not break git
-> bisect for existing boards. The next patch in this series converts
-> ssbi-gpio to be a hierarchical IRQ chip, then there are several patches
-> to update all of the device tree files, and finally this patch will be
-> reverted within the same patch series.
->=20
-> IRQs for ssbi-gpio are all initially setup without an IRQ hierarchy
-> this driver is probed due to the interrupts property in device tree.
-> Once ssbi-gpio is converted to be a hierarchical IRQ chip in the next
-> patch, existing users of gpio[d]_to_irq() will call pmic_gpio_to_irq(),
-> and that will use the new IRQ chip code in ssbi-gpio that sets up the
-> IRQ in an IRQ hierarchy. The hwirq is now associated with two Linux
-> virqs and interrupts will not work as expected. This patch corrects
-> that issue.
->=20
-> This change was tested on an APQ8060 DragonBoard.
->=20
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Tested-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes since v1:
-> - None
->=20
->  drivers/mfd/qcom-pm8xxx.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
-> index 8eb2528793f9..2f99a98ccee5 100644
-> --- a/drivers/mfd/qcom-pm8xxx.c
-> +++ b/drivers/mfd/qcom-pm8xxx.c
-> @@ -380,6 +380,12 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip=
- *chip,
->                                   struct irq_domain *domain, unsigned int=
- irq,
->                                   irq_hw_number_t hwirq, unsigned int typ=
-e)
->  {
-> +       unsigned int old_virq;
-> +
-> +       old_virq =3D irq_find_mapping(domain, hwirq);
-> +       if (old_virq)
-> +               irq_domain_disassociate(domain, old_virq);
+This adds dt-binding documentation of SYSIRQ for Mediatek MT8183 SoC
+Platform.
 
-Is it possible to pass 'true' for the 'realloc' argument to
-__irq_domain_alloc_irqs() and then this disassociate change isn't
-needed?
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt         | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +
->         irq_domain_set_info(domain, irq, hwirq, chip->pm_irq_data->irq_ch=
-ip,
->                             chip, handle_level_irq, NULL, NULL);
->         irq_set_noprobe(irq);
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+index 33a98eb..91aa9ab 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+@@ -5,6 +5,7 @@ interrupt.
+ 
+ Required properties:
+ - compatible: should be
++	"mediatek,mt8183-sysirq", "mediatek,mt6577-sysirq": for MT8183
+ 	"mediatek,mt8173-sysirq", "mediatek,mt6577-sysirq": for MT8173
+ 	"mediatek,mt8135-sysirq", "mediatek,mt6577-sysirq": for MT8135
+ 	"mediatek,mt8127-sysirq", "mediatek,mt6577-sysirq": for MT8127
+-- 
+1.9.1
