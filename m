@@ -1,357 +1,97 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 4/4] drm/panel: Add OSD101T2587-53TS driver
-Date: Fri, 15 Feb 2019 19:07:59 +0100
-Message-ID: <20190215180759.GA26944@ravnborg.org>
-References: <20190215140315.18046-1-peter.ujfalusi@ti.com>
- <20190215140315.18046-5-peter.ujfalusi@ti.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 1/8] leds: Add support for AXP20X CHGLED
+Date: Fri, 15 Feb 2019 19:32:40 +0100
+Message-ID: <20190215183239.GB3280@amd>
+References: <20190215115013.11098-1-stefan@olimex.com>
+ <20190215115013.11098-2-stefan@olimex.com>
+ <20190215155732.nmtshldcjk2qyhx4@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ADZbWkCsHQ7r3kzd"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190215140315.18046-5-peter.ujfalusi@ti.com>
+In-Reply-To: <20190215155732.nmtshldcjk2qyhx4@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch, devicetree@vger.kernel.org, tomi.valkeinen@ti.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Stefan Mavrodiev <stefan@olimex.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter.
 
-Good with more panel drivers.
-Some comments in the following, please do not blindly follow them but
-check that this is OK.
+--ADZbWkCsHQ7r3kzd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	Sam
+Hi!
 
-On Fri, Feb 15, 2019 at 04:03:15PM +0200, Peter Ujfalusi via dri-devel wrote:
-> The panel is similar to OSD101T2045-53TS (which is handled by panel-simple)
-> with one big difference: osd101t2587-53ts needs MIPI_DSI_TURN_ON_PERIPHERAL
-> message to be sent from the host to be operational and thus can not be
-> handled by panel-simple.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
-> +++ b/drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.c
-> @@ -0,0 +1,284 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com
-> + *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> + */
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include <drm/drmP.h>
-Please do not use drmP.h in new drivers - we try to get rid of this file.
+> On Fri, Feb 15, 2019 at 01:50:06PM +0200, Stefan Mavrodiev wrote:
 
-> +#include <drm/drm_crtc.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_panel.h>
-> +
-> +#include <video/mipi_display.h>
-> +
-> +struct osd101t2587_panel {
-> +	struct drm_panel base;
-> +	struct mipi_dsi_device *dsi;
-> +
-> +	struct backlight_device *backlight;
-> +	struct regulator *supply;
-> +
-> +	bool prepared;
-> +	bool enabled;
-> +
-> +	ktime_t earliest_wake;
-earliest_wake is not used, and can be deleted.
+> > +static ssize_t control_store(struct device *dev, struct device_attribu=
+te *attr,
+> > +			     const char *buf, size_t size)
+> > +{
+> > +	struct led_classdev *cdev =3D dev_get_drvdata(dev);
+> > +	struct axp20x_led *priv =3D to_axp20x_led(cdev);
+> > +	unsigned long val;
+> > +	int ret;
+> > +
+> > +	ret =3D kstrtoul(buf, 0, &val);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/**
+> > +	 * Supported values are:
+> > +	 *   - 0 : Manual control
+> > +	 *   - 1 : Charger control
+> > +	 */
+=2E..
+> > +static struct attribute *axp20x_led_attrs[] =3D {
+> > +	&dev_attr_control.attr,
+> > +	&dev_attr_mode.attr,
+> > +	NULL,
+> > +};
+> > +ATTRIBUTE_GROUPS(axp20x_led);
+>=20
+> I can't really say whether adding sysfs handles for this is the right
+> thing to do, but if it is you should document the interface.
 
-> +
-> +	const struct drm_display_mode *default_mode;
-> +	const struct drm_display_mode *mode;
-Assigned but never used. Drop the assignment and the variable?
+It is not. See "Add Intel Cherry Trail Whiskey Cove PMIC LEDs" thread
+in the last few days.
 
-> +};
-> +
-> +static inline struct osd101t2587_panel *to_osd101t2587_panel(struct drm_panel *panel)
-> +{
-> +	return container_of(panel, struct osd101t2587_panel, base);
-> +}
-> +
-> +static int osd101t2587_panel_disable(struct drm_panel *panel)
-> +{
-> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
-> +	int ret;
-> +
-> +	if (!osd101t2587->enabled)
-> +		return 0;
-> +
-> +	if (osd101t2587->backlight) {
-> +		osd101t2587->backlight->props.power = FB_BLANK_POWERDOWN;
-> +		osd101t2587->backlight->props.state |= BL_CORE_FBBLANK;
-> +		backlight_update_status(osd101t2587->backlight);
-> +	}
-backlight_disable(osd101t2587->backlight);
+> > +	if (!of_property_read_u8(np, "x-powers,charger-mode", &value)) {
+> > +		priv->ctrl =3D AXP20X_CHGLED_CTRL_CHARGER;
+> > +		priv->mode =3D (value < 2) ? value : 0;
+> > +	} else {
+> > +		priv->ctrl =3D AXP20X_CHGLED_CTRL_MANUAL;
+> > +	}
+>=20
+> I'm not sure we want to make this a property of the device
+> tree. Changing the device tree isn't an option for some users, so we
+> need to make sure we can change it even if we can't change the device
+> tree.
 
+We want this to be configurable at run time. It can get default from
+the device tree.
 
-> +
-> +	ret = mipi_dsi_shutdown_peripheral(osd101t2587->dsi);
-> +
-> +	osd101t2587->enabled = false;
-> +
-> +	return ret;
-> +}
-> +
-> +static int osd101t2587_panel_unprepare(struct drm_panel *panel)
-> +{
-> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
-> +
-> +	if (!osd101t2587->prepared)
-> +		return 0;
-> +
-> +	regulator_disable(osd101t2587->supply);
-> +	osd101t2587->prepared = false;
-> +
-> +	return 0;
-> +}
-> +
-> +static int osd101t2587_panel_prepare(struct drm_panel *panel)
-> +{
-> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
-> +	int ret;
-> +
-> +	if (osd101t2587->prepared)
-> +		return 0;
-> +
-> +	ret = regulator_enable(osd101t2587->supply);
-> +	if (!ret)
-> +		osd101t2587->prepared = true;
-> +
-> +	return ret;
-> +}
-> +
-> +static int osd101t2587_panel_enable(struct drm_panel *panel)
-> +{
-> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
-> +	int ret;
-> +
-> +	if (osd101t2587->enabled)
-> +		return 0;
-> +
-> +	ret = mipi_dsi_turn_on_peripheral(osd101t2587->dsi);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (osd101t2587->backlight) {
-> +		osd101t2587->backlight->props.power = FB_BLANK_UNBLANK;
-> +		osd101t2587->backlight->props.state &= ~BL_CORE_FBBLANK;
-> +		backlight_update_status(osd101t2587->backlight);
-> +	}
-backlight_enable(osd101t2587->backlight);
-can be used here.
+If we go for the "hardware" trigger, you'll get it for free.
 
-> +
-> +	osd101t2587->enabled = true;
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct drm_display_mode default_mode_osd101t2587 = {
-> +	.clock = 164400,
-> +	.hdisplay = 1920,
-> +	.hsync_start = 1920 + 152,
-> +	.hsync_end = 1920 + 152 + 52,
-> +	.htotal = 1920 + 152 + 52 + 20,
-> +	.vdisplay = 1200,
-> +	.vsync_start = 1200 + 24,
-> +	.vsync_end = 1200 + 24 + 6,
-> +	.vtotal = 1200 + 24 + 6 + 48,
-> +	.vrefresh = 60,
-> +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> +};
-> +
-> +static int osd101t2587_panel_get_modes(struct drm_panel *panel)
-> +{
-> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
-> +	struct drm_display_mode *mode;
-> +
-> +	mode = drm_mode_duplicate(panel->drm, osd101t2587->default_mode);
-> +	if (!mode) {
-> +		dev_err(panel->drm->dev, "failed to add mode %ux%ux@%u\n",
-> +			osd101t2587->default_mode->hdisplay,
-> +			osd101t2587->default_mode->vdisplay,
-> +			osd101t2587->default_mode->vrefresh);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	drm_mode_set_name(mode);
-> +
-> +	drm_mode_probed_add(panel->connector, mode);
-> +
-> +	panel->connector->display_info.width_mm = 217;
-> +	panel->connector->display_info.height_mm = 136;
-> +
-> +	return 1;
-> +}
-> +
-> +static const struct drm_panel_funcs osd101t2587_panel_funcs = {
-> +	.disable = osd101t2587_panel_disable,
-> +	.unprepare = osd101t2587_panel_unprepare,
-> +	.prepare = osd101t2587_panel_prepare,
-> +	.enable = osd101t2587_panel_enable,
-> +	.get_modes = osd101t2587_panel_get_modes,
-> +};
-> +
-> +static const struct of_device_id osd101t2587_of_match[] = {
-> +	{
-> +		.compatible = "osd,osd101t2587-53ts",
-> +		.data = &default_mode_osd101t2587,
-> +	}, { }
-Move { } to a separate line and use { /* sentinel */ } to make it look like other drivers.
- 
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> +};
-> +MODULE_DEVICE_TABLE(of, osd101t2587_of_match);
-> +
-> +static int osd101t2587_panel_add(struct osd101t2587_panel *osd101t2587)
-> +{
-> +	struct device *dev = &osd101t2587->dsi->dev;
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	osd101t2587->mode = osd101t2587->default_mode;
-> +
-> +	osd101t2587->supply = devm_regulator_get(dev, "power");
-> +	if (IS_ERR(osd101t2587->supply))
-> +		return PTR_ERR(osd101t2587->supply);
-> +
-> +	np = of_parse_phandle(dev->of_node, "backlight", 0);
-> +	if (np) {
-> +		osd101t2587->backlight = of_find_backlight_by_node(np);
-> +		of_node_put(np);
-> +
-> +		if (!osd101t2587->backlight)
-> +			return -EPROBE_DEFER;
-> +	}
-Use devm_of_find_backlight() - this results in simpler code.
+--ADZbWkCsHQ7r3kzd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +
-> +	drm_panel_init(&osd101t2587->base);
-> +	osd101t2587->base.funcs = &osd101t2587_panel_funcs;
-> +	osd101t2587->base.dev = &osd101t2587->dsi->dev;
-> +
-> +	ret = drm_panel_add(&osd101t2587->base);
-> +	if (ret < 0)
-> +		goto put_backlight;
-> +
-> +	return 0;
-> +
-> +put_backlight:
-> +	if (osd101t2587->backlight)
-> +		put_device(&osd101t2587->backlight->dev);
-When using devm_of_find_backlight() this is not needed.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> +
-> +	return ret;
-> +}
-> +
-> +static void osd101t2587_panel_del(struct osd101t2587_panel *osd101t2587)
-> +{
-> +	if (osd101t2587->base.dev)
-> +		drm_panel_remove(&osd101t2587->base);
-> +
-> +	if (osd101t2587->backlight)
-> +		put_device(&osd101t2587->backlight->dev);
-When you use devm_of_find_backlight() then this is done for you, so the above can be deleted.
+iEYEARECAAYFAlxnBccACgkQMOfwapXb+vKlTgCgwIfqaui3iA1stvAe0/CTXIh8
+KCIAn1R8vkC9KvroWOwgGcFWmxzzS7wT
+=5x+c
+-----END PGP SIGNATURE-----
 
-> +}
-> +
-> +static int osd101t2587_panel_probe(struct mipi_dsi_device *dsi)
-> +{
-> +	struct osd101t2587_panel *osd101t2587;
-> +	const struct of_device_id *id;
-> +	int ret;
-> +
-> +	id = of_match_node(osd101t2587_of_match, dsi->dev.of_node);
-> +	if (!id)
-> +		return -ENODEV;
-> +
-> +	dsi->lanes = 4;
-> +	dsi->format = MIPI_DSI_FMT_RGB888;
-> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
-> +			  MIPI_DSI_MODE_VIDEO_BURST |
-> +			  MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-> +			  MIPI_DSI_MODE_EOT_PACKET;
-> +
-> +	osd101t2587 = devm_kzalloc(&dsi->dev, sizeof(*osd101t2587), GFP_KERNEL);
-> +	if (!osd101t2587)
-> +		return -ENOMEM;
-> +
-> +	mipi_dsi_set_drvdata(dsi, osd101t2587);
-> +
-> +	osd101t2587->dsi = dsi;
-> +	osd101t2587->default_mode = id->data;
-> +
-> +	ret = osd101t2587_panel_add(osd101t2587);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return mipi_dsi_attach(dsi);
-> +}
-> +
-> +static int osd101t2587_panel_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct osd101t2587_panel *osd101t2587 = mipi_dsi_get_drvdata(dsi);
-> +	int ret;
-> +
-> +	ret = osd101t2587_panel_disable(&osd101t2587->base);
-> +	if (ret < 0)
-> +		dev_err(&dsi->dev, "failed to disable panel: %d\n", ret);
-> +
-To trun off power supply call osd101t2587_panel_unprepare() here?
-
-> +	ret = mipi_dsi_detach(dsi);
-> +	if (ret < 0)
-> +		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", ret);
-> +
-> +	osd101t2587_panel_del(osd101t2587);
-Replace this with
-	drm_panel_remove(osd101t2587->base);
-This should be fine and no need to disable backlight, this is done in osd101t2587_panel_disable()
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void osd101t2587_panel_shutdown(struct mipi_dsi_device *dsi)
-> +{
-> +	struct osd101t2587_panel *osd101t2587 = mipi_dsi_get_drvdata(dsi);
-> +
-Maybe call osd101t2587_panel_unprepare() here to turn off power supply?
-
-> +	osd101t2587_panel_disable(&osd101t2587->base);
-> +}
-> +
-> +static struct mipi_dsi_driver osd101t2587_panel_driver = {
-> +	.driver = {
-> +		.name = "panel-osd-osd101t2587-53ts",
-> +		.of_match_table = osd101t2587_of_match,
-> +	},
-> +	.probe = osd101t2587_panel_probe,
-> +	.remove = osd101t2587_panel_remove,
-> +	.shutdown = osd101t2587_panel_shutdown,
-> +};
-> +module_mipi_dsi_driver(osd101t2587_panel_driver);
-> +
-> +MODULE_AUTHOR("Peter Ujfalusi <peter.ujfalusi@ti.com>");
-> +MODULE_DESCRIPTION("OSD101T2587-53TS DSI panel");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> Peter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+--ADZbWkCsHQ7r3kzd--
