@@ -1,62 +1,114 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH v3 1/6] dt-bindings: add binding for USBSS-DRD controller.
-Date: Fri, 15 Feb 2019 01:56:00 +0000
-Message-ID: <VI1PR04MB5327FF74C68A00D84C337DD58B600@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <1548935553-452-1-git-send-email-pawell@cadence.com>
- <1548935553-452-2-git-send-email-pawell@cadence.com>
- <20190213224841.GA9319@bogus>
- <BYAPR07MB4709EA63F1374EA24E23C186DD670@BYAPR07MB4709.namprd07.prod.outlook.com>
- <CAL_Jsq+wqtY=B1jKKxjFxnBMy_kiN9=MhHdMp=bEPa9wFo1NqQ@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v1 1/1] of: unittest: unflatten device tree on UML when
+ testing
+Date: Thu, 14 Feb 2019 18:48:35 -0800
+Message-ID: <bfa00740-9b67-58f9-6273-3de98de952f6@gmail.com>
+References: <20190212185305.112847-1-brendanhiggins@google.com>
+ <20190212185305.112847-2-brendanhiggins@google.com>
+ <4cb7ca12-ce60-7516-b7eb-aef08f607acc@gmail.com>
+ <CAFd5g441+6ATUKcNz7OstAB6Qd2BqeDh77SNnGUpZGBNvgysmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+wqtY=B1jKKxjFxnBMy_kiN9=MhHdMp=bEPa9wFo1NqQ@mail.gmail.com>
+In-Reply-To: <CAFd5g441+6ATUKcNz7OstAB6Qd2BqeDh77SNnGUpZGBNvgysmg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Pawel Laszczak <pawell@cadence.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-IA0KPiA+DQo+ID4gSGkgUm9iLA0KPiA+ID5PbiBUaHUsIEphbiAzMSwgMjAxOSBhdCAxMTo1Mjoy
-OEFNICswMDAwLCBQYXdlbCBMYXN6Y3phayB3cm90ZToNCj4gPiA+PiBUaGlzIHBhdGNoIGFpbSBh
-dCBkb2N1bWVudGluZyBVU0IgcmVsYXRlZCBkdC1iaW5kaW5ncyBmb3IgdGhlDQo+ID4gPj4gQ2Fk
-ZW5jZSBVU0JTUy1EUkQgY29udHJvbGxlci4NCj4gPiA+Pg0KPiA+ID4+IFNpZ25lZC1vZmYtYnk6
-IFBhd2VsIExhc3pjemFrIDxwYXdlbGxAY2FkZW5jZS5jb20+DQo+ID4gPj4gLS0tDQo+ID4gPj4g
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jZG5zLXVzYjMudHh0ICAgICB8IDMzICsrKysr
-KysrKysrKysrKysrKysNCj4gPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDMzIGluc2VydGlvbnMoKykN
-Cj4gPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3VzYi9jZG5zLXVzYjMudHh0DQo+ID4gPj4NCj4gPiA+PiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jZG5zLXVzYjMudHh0DQo+
-ID4gPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NkbnMtdXNiMy50
-eHQNCj4gPiA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+ID4+IGluZGV4IDAwMDAwMDAwMDAw
-MC4uNmRjMzhiZTc3ZjVjDQo+ID4gPj4gLS0tIC9kZXYvbnVsbA0KPiA+ID4+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2Rucy11c2IzLnR4dA0KPiA+ID4+IEBA
-IC0wLDAgKzEsMzMgQEANCj4gPiA+PiArQmluZGluZyBmb3IgdGhlIENhZGVuY2UgVVNCU1MtRFJE
-IGNvbnRyb2xsZXINCj4gPiA+PiArDQo+ID4gPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4g
-Pj4gKyAgLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgY29udHJv
-bGxlcidzIHJlZ2lzdGVyIGFyZWFzLg0KPiA+ID4+ICsgICAgIENvbnRyb2xsZXIgaGFzIDMgZGlm
-ZmVyZW50IHJlZ2lvbnM6DQo+ID4gPj4gKyAgICAgcmVnaW9uIDEgLSBIT1NUIHJlZ2lzdGVycyBh
-cmVhDQo+ID4gPj4gKyAgICAgcmVnaW9uIDIgLSBERVZJQ0UgcmVnaXN0ZXJzIGFyZWENCj4gPiA+
-PiArICAgICByZWdpb24gMyAtIE9URy9EUkQgcmVnaXN0ZXJzIGFyZWENCj4gPiA+PiArICAtIHJl
-Zy1uYW1lcyAtIHJlZ2lzdGVyIG1lbW9yeSBhcmVhIG5hbWVzOg0KPiA+ID4+ICsgICAgInhoY2ki
-IC0gZm9yIEhPU1QgcmVnaXN0ZXJzIHNwYWNlDQo+ID4gPj4gKyAgICAiZGV2IiAtIGZvciBERVZJ
-Q0UgcmVnaXN0ZXJzIHNwYWNlDQo+ID4gPj4gKyAgICAib3RnIiAtIGZvciBPVEcvRFJEIHJlZ2lz
-dGVycyBzcGFjZQ0KPiA+ID4+ICsgIC0gY29tcGF0aWJsZTogU2hvdWxkIGNvbnRhaW46ICJjZG5z
-LHVzYjMtMS4wLjAiIG9yICJjZG5zLHVzYjMtMS4wLjEiDQo+ID4gPj4gKyAgLSBpbnRlcnJ1cHRz
-OiBJbnRlcnJ1cHQgc3BlY2lmaWVyLiBSZWZlciB0byBpbnRlcnJ1cHQgYmluZGluZ3MuDQo+ID4g
-Pj4gKyAgICAgICAgICAgIERyaXZlciBzdXBwb3J0cyBvbmx5IHNpbmdsZSBpbnRlcnJ1cHQgbGlu
-ZS4NCj4gPiA+DQo+ID4gPkRyaXZlciBzdXBwb3J0cyBvciBoL3cgb25seSBoYXMgMSBpbnRlcnJ1
-cHQ/DQo+ID4NCj4gPiBoL3cgaW50ZXJuYWxseSBoYXMgMyBzZXBhcmF0ZSBpbnRlcnJ1cHQgbGlu
-ZSwgYnV0IGluIG15IHRlc3RpbmcgYm9hcmQNCj4gPiB0aGV5IGFyZSBvcmVkLiBTbyBwaHlzaWNh
-bGx5IGRyaXZlciBzZWVzIG9ubHkgb25lIGgvdyBpbnRlcnJ1cHQgbGluZQ0KPiA+IGFuZCBhc3N1
-bWVzIHRoYXQgaC93IGhhcyBzaW5nbGUgY29tbW9uIGludGVycnVwdCBsaW5lLg0KPiANCj4gSWYg
-aXQgaXMgcG9zc2libGUgZm9yIG90aGVycyB0byBoYXZlIDMgc2VwYXJhdGUgbGluZXMgdGhlbiB5
-b3Ugc2hvdWxkIGhhdmUgMy4gSnVzdA0KPiByZXBlYXQgdGhlIGNvbm5lY3Rpb24gMyB0aW1lcy4g
-T3IgdGhlIGJpbmRpbmcgY2FuIHN1cHBvcnQNCj4gMSBvciAzIGludGVycnVwdHMgYmFzZWQgb24g
-dGhlIGgvdy4gRWl0aGVyIHdheSBpdCdzIG5vdCBhYm91dCB3aGF0IHRoZSBkcml2ZXINCj4gc3Vw
-cG9ydHMsIGJ1dCB3aGF0IHRoZSBoL3cgbG9va3MgbGlrZS4NCj4gDQogDQpGcm9tIElQIGxldmVs
-LCBpdCBoYXMgdGhyZWUgaW50ZXJydXB0IHNvdXJjZXMgZm9yICJvdGciLCAiaG9zdCIgYW5kICJk
-ZXZpY2UiLiBCdXQgZnJvbQ0KU29DIGxldmVsLCBpdCB1c3VhbGx5IG9ubHkgaGFzIG9uZSBVU0Ig
-aW50ZXJydXB0IGxpbmUsIHRoZSBkZXZpY2UgZHJpdmVyIGludGVybmFsIGNvbnRyb2xzDQphbmQg
-a25vd3Mgd2hpY2ggc291cmNlcyBmcm9tIFVTQiBjb250cm9sbGVyLg0KDQpQZXRlcg0K
+On 2/14/19 5:26 PM, Brendan Higgins wrote:
+> On Thu, Feb 14, 2019 at 4:10 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 2/12/19 10:53 AM, Brendan Higgins wrote:
+>>> UML supports enabling OF, and is useful for running the device tree
+>>> tests, so add support for unflattening device tree blobs so we can
+>>> actually use it.
+>>>
+>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>> ---
+>>>  drivers/of/unittest.c | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+>>> index 84427384654d5..effa4e2b9d992 100644
+>>> --- a/drivers/of/unittest.c
+>>> +++ b/drivers/of/unittest.c
+>>> @@ -2527,6 +2527,9 @@ static int __init of_unittest(void)
+>>>       }
+>>>       of_node_put(np);
+>>>
+>>> +     if (IS_ENABLED(CONFIG_UML))
+>>> +             unflatten_device_tree();
+>>> +
+>>>       pr_info("start of unittest - you will see error messages\n");
+>>>       of_unittest_check_tree_linkage();
+>>>       of_unittest_check_phandles();
+>>>
+>>
+>> (Insert my usual disclaimer that I am clueless about UML, I still need to learn
+>> about it...)
+>>
+>> This does not look correct to me.
+>>
+>> A few lines earlier in of_unittest(), the live devicetree needs to exist for
+>> unittest_data_data() and a few of_*() functions to succeed.  So it seems
+>> that the unflatten_device_tree() for uml should be at the beginning of
+>> of_unittest().
+> 
+> It is true that other functions ahead of it depend on the presence of
+> a device tree, but an unflattened tree does get linked in somewhere
+> else. Despite that, this is needed for overlay_base_root. I got
+> similar behavior if you don't link in a flattened device tree on x86.
+> Thus, the order in which you call them doesn't actually seem to
+> matter. I found no difference from changing the order in UML myself.
+> 
+> Without my patch we get the following error,
+> ### dt-test ### FAIL of_unittest_overlay_high_level():2372
+> overlay_base_root not initialized
+> ### dt-test ### end of unittest - 219 passed, 1 failed
+> 
+> With my patch we get:
+> ### dt-test ### end of unittest - 224 passed, 0 failed
+
+Thanks for reporting both the failure and the success cases,
+that helps me understand a little bit better.
+
+If instead of the above patch, if you add the following (untested,
+not even compile tested) to the beginning of of_unittest():
+
+	if (IS_ENABLED(CONFIG_UML))
+		unittest_unflatten_overlay_base();
+
+does that also result in a good test result of:
+
+	### dt-test ### end of unittest - 224 passed, 0 failed
+
+I think I need to find some time to build and boot a UML kernel soon.
+
+My current _guess_ is that the original problem was not a failure to
+unflatten any present devicetree in UML but instead that the UML
+kernel does not call unflatten_device_tree() and thus fails to
+indirectly call unittest_unflatten_overlay_base(), which is
+called by unflatten_device_tree().
+
+unittest_unflatten_overlay_base() is an unfortunate wart that I
+added, but I don't have a better alternative yet.
+
+-Frank
+
+> 
+> I used the following .config for these results:
+> CONFIG_OF=y
+> CONFIG_OF_UNITTEST=y
+> CONFIG_OF_OVERLAY=y
+> CONFIG_I2C=y
+> CONFIG_I2C_MUX=y
+> 
+>>
+>> Rob, if I am correct please revert this patch.
+>>
+> 
+> Cheers
+> 
