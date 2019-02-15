@@ -1,84 +1,77 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v4 2/4] dt-bindings: gnss: add mediatek binding
-Date: Fri, 15 Feb 2019 17:04:57 +0100
-Message-ID: <20190215160457.GO28278@localhost>
-References: <1550070569-18588-1-git-send-email-lollivier@baylibre.com>
- <1550070569-18588-3-git-send-email-lollivier@baylibre.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH 2/5] dt-bindings: iio: adc: lpc32xx-adc: Document
+ vref-supply
+Date: Fri, 15 Feb 2019 17:07:19 +0100
+Message-ID: <87o97d2fyg.fsf@FE-laptop>
+References: <20190208160944.13281-1-gregory.clement@bootlin.com>
+ <20190208160944.13281-3-gregory.clement@bootlin.com>
+ <8bc7bfcf-ad04-0615-1735-c2bbf20b7861@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550070569-18588-3-git-send-email-lollivier@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Loys Ollivier <lollivier@baylibre.com>
-Cc: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8bc7bfcf-ad04-0615-1735-c2bbf20b7861@mleia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vladimir Zapolskiy <vz@mleia.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2019 at 04:09:27PM +0100, Loys Ollivier wrote:
-> Add binding for Mediatek-based GNSS receivers.
-> 
-> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-> ---
-> v4:
-> Use standard names for reset-gpios and gnss-fix-gpios
-> s/an/a UART
-> 
-> v3:
-> Removed the I2C and SPI interfaces references.
-> Removed the "mediatek,mt3339" compatible line.
-> Added the optional propertied (reset, fix)
-> Added the pin names for the optional properties.
-> 
-> v2:
-> Renamed bindings from Globaltop/gtop to Mediatek/mtk.
-> Moved current-speed as an optional propertie.
-> Removed the status line in the example.
-> Added "mediatek,mt3339" compatible.
-> 
->  .../devicetree/bindings/gnss/mediatek.txt          | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gnss/mediatek.txt b/Documentation/devicetree/bindings/gnss/mediatek.txt
-> new file mode 100644
-> index 000000000000..12283d429baa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
-> @@ -0,0 +1,37 @@
-> +Mediatek-based GNSS Receiver DT binding
-> +
-> +Mediatek chipsets are used in GNSS-receiver modules produced by several
-> +vendors and can use a UART interface.
-> +
-> +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-> +properties.
-> +
-> +Required properties:
-> +
-> +- compatible	: Must be
-> +
-> +			"globaltop,pa6h"
-> +
-> +- vcc-supply	: Main voltage regulator (pin name: VCC)
-> +
-> +Optional properties:
-> +
-> +- current-speed		: Default UART baud rate
-> +- gnss-fix-gpios	: GPIO used to determine device position fix state
-> +			  (pin name: FIX, 3D_FIX)
-> +- reset-gpios		: GPIO used to reset the device
-> +  		  	  (pin name: RESET, NRESET)
-> +- timepulse-gpios	: Time pulse GPIO (pin name: PPS1, 1PPS)
-> +- v-bckp-supply		: Backup voltage regulator
-> +  			  (pin name: VBAT, VBACKUP)
-
-As we discussed, I changed this to "vbackup-supply" (here and in the
-driver) before applying.
-
-Note that git reported some whitespace errors above too (spaces before
-tabs) that I fixed up. Not sure why checkpatch doesn't complain.
-
-All now applied.
-
-Thanks,
-Johan
+SGkgVmxhZGltaXIsCiAKIE9uIHNhbS4sIGbDqXZyLiAwOSAyMDE5LCBWbGFkaW1pciBaYXBvbHNr
+aXkgPHZ6QG1sZWlhLmNvbT4gd3JvdGU6Cgo+IEhpIEdyZWdvcnksCj4KPiBPbiAwMi8wOC8yMDE5
+IDA2OjA5IFBNLCBHcmVnb3J5IENMRU1FTlQgd3JvdGU6Cj4+IEFzIG1vc3Qgb2YgdGhlIG90aGVy
+IEFEQyB0aGUgbHBjMzJ4eCBvbmUgdXNlIGEgdnJlZi1zdXBwbHkgcHJvcGVydHk6Cj4+IGRvY3Vt
+ZW50IGl0Lgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogR3JlZ29yeSBDTEVNRU5UIDxncmVnb3J5LmNs
+ZW1lbnRAYm9vdGxpbi5jb20+Cj4+IC0tLQo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2lpby9hZGMvbHBjMzJ4eC1hZGMudHh0IHwgNSArKysrKwo+PiAgMSBmaWxlIGNoYW5n
+ZWQsIDUgaW5zZXJ0aW9ucygrKQo+PiAKPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2xwYzMyeHgtYWRjLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2xwYzMyeHgtYWRjLnR4dAo+PiBpbmRleCBiMzYy
+OWQzYTlhZGYuLjNhMWJjNjY5YmQ1MSAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvbHBjMzJ4eC1hZGMudHh0Cj4+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2xwYzMyeHgtYWRjLnR4dAo+PiBAQCAt
+Niw2ICs2LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICAgIHJlZ2lvbi4KPj4gIC0gaW50
+ZXJydXB0czogVGhlIEFEQyBpbnRlcnJ1cHQKPj4gIAo+PiArT3B0aW9uYWw6Cj4+ICsgLSB2cmVm
+LXN1cHBseTogVGhlIHJlZ3VsYXRvciBzdXBwbHkgQURDIHJlZmVyZW5jZSB2b2x0YWdlLCBvcHRp
+b25hbAo+PiArICAgZm9yIGxlZ2FjeSByZWFzb24sIGJ1dCBoaWdobHkgZW5jb3VyYWdpbmcgdG8g
+dXMgaW4gbmV3IGRldmljZSB0cmVlCj4+ICsKPgo+IGhlcmUgdnJlZi1zdXBwbHkgdm9sdGFnZSBp
+cyAzLjN2IG9ubHksIEkgdGhpbmsgdGhhdCBtaWdodCBiZSBhIHJlYXNvbiB3aHkKPiB0aGUgcHJv
+cGVydHkgaXMgb21pdHRlZC4KClZERF9BRCBpcyBhbiBleHRlcm5hbCBwaW4gc28gaW4gdGhlcm95
+IGl0IHdvdWxkIGJlIHBvc3NpYmxlIHRvIHVzZSBhCmRpZmZlcmVudCB2b2x0YWdlLCBidXQgaW5k
+ZWVkIHRoZSBkYXRhc2hlZXQgZGVzY3JpYmUgdGhpcyBwaW4gYXMgdGhlCjMuM1Ygc3VwcGx5IGZv
+ciBBREMuCgo+Cj4gTXkgY29uY2VybiBpcyB0aGF0IHRoZSBkb2N1bWVudGF0aW9uIHNoYWxsIG5v
+dCBjb250YWluIHNlY3Rpb25zIHdpdGgKPiBkZXNjcmlwdGlvbiBvZiBwcm9wZXJ0aWVzIGZvdW5k
+IGluIHRoZSBwYXN0IGZvciAnbGVnYWN5IHJlYXNvbnMnLCBpZiB5b3UKPiBsaWtlIHRvIHN1cHBv
+cnQgdGhlIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgaW4gdGhlIGRyaXZlciwgcGxlYXNlIHVwZGF0
+ZQo+IHRoZSBkb2N1bWVudGF0aW9uIHRvIHRoZSBleHBlY3RlZCBzdGF0ZSBhbmQgYWRkIGEgc3R1
+YiB0byBjYXJlIGFib3V0Cj4gbGVnYWN5IERUQnMgaW4gdGhlIGRyaXZlciBvbmx5LgoKSSBzYXcg
+YSBsb3Qgb2YgcmVmZXJlbmNlIGFib3V0IGxlZ2FjeSBwcm9wZXJ0aWVzIGluIHRoZSBiaW5kaW5n
+LCBhbmQgSQpmb3VuZCBpdCBxdWl0ZSB1c2VmdWxsIHdoZW4gSSByZWFkIG9sZCBkZXZpY2UgdHJl
+ZXMuCgo+Cj4gRldJVyBJIHBlcnNvbmFsbHkgZG9uJ3QgbWluZCBhYm91dCBicmVha2luZyB0aGUg
+YmFja3dhcmQgY29tcGF0aWJpbGl0eQo+IGZvciBOWFAgTFBDMzJ4eCwgaXQgbWlnaHQgYmUgYSBj
+b25jZXJuIHdoZW4gQ09ORklHX0FSTV9BVEFHX0RUQl9DT01QQVQ9eQo+IGlzIHJlbW92ZWQgZnJv
+bSB0aGUgbHBjMzJ4eF9kZWZjb25maWcgdGhvdWdoLgo+Cj4+ICBFeGFtcGxlOgo+PiAgCj4+ICAJ
+YWRjQDQwMDQ4MDAwIHsKPj4gQEAgLTEzLDQgKzE3LDUgQEAgRXhhbXBsZToKPj4gIAkJcmVnID0g
+PDB4NDAwNDgwMDAgMHgxMDAwPjsKPj4gIAkJaW50ZXJydXB0LXBhcmVudCA9IDwmbWljPjsKPj4g
+IAkJaW50ZXJydXB0cyA9IDwzOSAwPjsKPj4gKwkJdnJlZi1zdXBwbHkgPSA8JnZjYz47Cj4+ICAJ
+fTsKPj4gCj4KPiBJIGtpbmRseSBhc2sgeW91IHRvIGluY2x1ZGUgbWUgdG8gVG86IGxpc3QsIGlm
+IHlvdSBzZW5kIGFub3RoZXIgY2hhbmdlcyBmb3IKPiBOWFAgTFBDMzJ4eCBwbGF0Zm9ybS4KClll
+cyBzdXJlISBJIHdyb25nbHkgb25seSB1c2UgdGhlIGZpcnN0IGxpbmVzIHByb3ZpZGVkIGJ5Ci4v
+c2NyaXB0cy9nZXRfbWFpbnRhaW5lci5wbCwgSSB3aWxsIGluY2x1ZGUgeW91IGluIHRoZSBuZXh0
+IHZlcnNpb24uCgoKVGhhbmtzLAoKR3JlZ29yeQoKCgo+Cj4gVGhhbmsgeW91Lgo+Cj4gLS0KPiBC
+ZXN0IHdpc2hlcywKPiBWbGFkaW1pcgo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKLS0gCkdyZWdvcnkgQ2xlbWVu
+dCwgQm9vdGxpbgpFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCmh0dHA6Ly9i
+b290bGluLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
