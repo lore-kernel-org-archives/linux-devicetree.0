@@ -1,48 +1,76 @@
-From: agajjar <Akash_Gajjar@mentor.com>
-Subject: Re: [PATCH 2/4] arm64: dts: rockchip: rockpro64 dts remove unused
- node
-Date: Fri, 15 Feb 2019 17:38:16 +0530
-Message-ID: <ac22440d-3b64-1cf2-205c-52ea7c1c23f9@mentor.com>
-References: <20190213170651.3210-1-Akash_Gajjar@mentor.com>
- <20190213170651.3210-3-Akash_Gajjar@mentor.com> <4653141.o6ZdamfZ6d@diego>
+From: Loys Ollivier <lollivier@baylibre.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: gnss: add mediatek binding
+Date: Fri, 15 Feb 2019 13:10:35 +0100
+Message-ID: <86ef89fe10.fsf@baylibre.com>
+References: <1547744074-28308-1-git-send-email-lollivier@baylibre.com> <1547744074-28308-3-git-send-email-lollivier@baylibre.com> <20190125090755.GB3691@localhost> <867eeo7pjm.fsf@baylibre.com> <20190211083349.GU4686@localhost> <86mun2v27r.fsf@baylibre.com> <CALZWD59e356Of+R4H2ZNHJyQcPCQNNdS+1DTc8qNDYp9ZnUpXA@mail.gmail.com> <20190214091121.GI28278@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4653141.o6ZdamfZ6d@diego>
-Content-Language: en-US
+In-reply-to: <20190214091121.GI28278@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Oskari Lemmela <oskari@lemmela.net>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Levin Du <djw@t-chip.com.cn>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Loys Ollivier <lollivier@baylibre.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On 2/15/2019 2:48 PM, Heiko Stübner wrote:
-> Am Mittwoch, 13. Februar 2019, 18:06:38 CET schrieb Akash Gajjar:
->> lcd panel pinmux and vcc1v8_s3 regulator is redundant and has a no impact,
->> so removing it.
->>
->> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
-Hi Heiko,
-> vcc1v8_s3 is actually also a emmc supply, so I'd like to keep it around
-> for completenes sake.
+On Thu 14 Feb 2019 at 09:11, Johan Hovold <johan@kernel.org> wrote:
 
-Emmc module is supplied by PMIC vcc3v3_s3 (SWITCH_REG1) and vcc_1v8 
-(DCD_REG4).
+> On Wed, Feb 13, 2019 at 04:24:00PM +0100, Loys Ollivier wrote:
+>> On Mon 11 Feb 2019 at 14:17, Loys Ollivier <lollivier@baylibre.com> wrote:
+>> > On Mon 11 Feb 2019 at 08:33, Johan Hovold <johan@kernel.org> wrote:
+>
+>> >> Right, but please do look around for other receivers using this chipset
+>> >> so that we can make the binding generic enough to cover those as well
+>> >> (e.g. by choosing representative resource names).
+>> >>
+>> > OK will have a look.
+>> 
+>> The only mt3339-based receivers I have found are:
+>> - [0] Globaltop
+>> - [1] Locosys / Pololu
+>> They both only provide the UART interface and do not list the I2C/SPI
+>> interfaces.
+>> 
+>> [0] https://cdn-shop.adafruit.com/datasheets/GlobalTop-FGPMMOPA6H-Datasheet-V0A.pdf
+>> [1] https://www.pololu.com/file/0J641/LS20030~3_datasheet_v1.3.pdf
+>
+> I found tree more:
+>
+Ah nice.
 
-So I believe removing vcc1v8_s3 has no impact on emmc supply line.
+>  - Globaltop PA6C
+>
+>    - https://cdn-shop.adafruit.com/datasheets/GlobalTop-FGPMMOPA6C-Datasheet-V0A-Preliminary.pdf
+>
+>  - Linx RM series
+>    - https://linxtechnologies.com/wp/wp-content/uploads/rxm-gps-rm.pdf
 
+This is a different chip: MT3337; Apparently this chip only provides an
+UART interface: https://labs.mediatek.com/en/chipset/MT3337
+However it looks interesting. I'll look for a sample to test it in the
+future :)
+>
+>  - ublox IT530
+>    - https://www.u-blox.com/sites/default/files/products/documents/IT530_DataSheet_%28FTX-HW-12008%29.pdf
+>
+> All with uart-interface only and similar pins names, although the ublox
+> device do have some additional features we can worry about later.
+>
+> As all but the ublox device use VBACKUP for the backup supply, do you
+> mind if I change the binding to use "vbackup-supply" instead of
+> "v-bckp-supply" (which is a ublox-ism) when applying?
+
+I don't mind. You can go ahead and change the binding.
+For reference, the v4 patch serie:
+https://lkml.kernel.org/r/1550070569-18588-1-git-send-email-lollivier@baylibre.com
 
 Thanks,
-Akash
+Loys
 
 >
-> I've now dropped the regulator portions so that only the lcd-pinmux
-> gets removed and reworded the commit message accordingly
-> and applied the result for 5.1
->
-> Thanks
-> Heiko
->
->
->
+> Thanks,
+> Johan
+
+
+-- 
+-L
