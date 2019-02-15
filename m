@@ -1,54 +1,62 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [PATCH V4 4/4] MAINTAINERS: Added imx DDR performonitor driver
- maintainer information
-Date: Fri, 15 Feb 2019 15:13:00 -0600
-Message-ID: <CAHrpEqTexakw-OXjUt3nTdroPxv2YVjT-8VmZTUpDeF6e_dZMw@mail.gmail.com>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
- <1550253761-26841-4-git-send-email-Frank.Li@nxp.com>
- <20190215200141.pncrzp3oaoja2mnd@pengutronix.de>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq mapping already exists
+Date: Fri, 15 Feb 2019 13:28:02 -0800
+Message-ID: <155026608236.115909.9007817366859489104@swboyd.mtv.corp.google.com>
+References: <20190208021631.30252-1-masneyb@onstation.org> <20190208021631.30252-6-masneyb@onstation.org> <155020988635.115909.8353948296231202388@swboyd.mtv.corp.google.com> <20190215134733.GA21208@basecamp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190215200141.pncrzp3oaoja2mnd@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Li <frank.li@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190215134733.GA21208@basecamp>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMTUsIDIwMTkgYXQgMjowMSBQTSBVd2UgS2xlaW5lLUvDtm5pZwo8dS5rbGVp
-bmUta29lbmlnQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPgo+IE9uIEZyaSwgRmViIDE1LCAyMDE5
-IGF0IDA2OjAzOjE2UE0gKzAwMDAsIEZyYW5rIExpIHdyb3RlOgo+ID4gQWRkIEREUiBwZXJmIGNv
-dW50ZXIgZHJpdmVyIG1haW50YWluZXIgaW5mb3JtYXRpb24KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5
-OiBGcmFuayBMaSA8RnJhbmsuTGlAbnhwLmNvbT4KPiA+IC0tLQo+ID4gTm8gY2hhbmdlIGZyb20g
-djEgdG8gdjQKPiA+Cj4gPiAgTUFJTlRBSU5FUlMgfCA3ICsrKysrKysKPiA+ICAxIGZpbGUgY2hh
-bmdlZCwgNyBpbnNlcnRpb25zKCspCj4gPgo+ID4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIv
-TUFJTlRBSU5FUlMKPiA+IGluZGV4IDZiYTA2OGUuLjY4N2JlMGYgMTAwNjQ0Cj4gPiAtLS0gYS9N
-QUlOVEFJTkVSUwo+ID4gKysrIGIvTUFJTlRBSU5FUlMKPiA+IEBAIC02MTYzLDYgKzYxNjMsMTMg
-QEAgTDogICAgIGxpbnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmcKPiA+ICBTOiAgIE1haW50YWluZWQK
-PiA+ICBGOiAgIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtY3BtLmMKPiA+Cj4gPiArRlJFRVNDQUxF
-IElNWCBERFIgUGVyZm9ybWFuY2UgTW9uaXRvciBEUklWRVIKPiA+ICtNOiAgIEZyYW5rIExpIDxG
-cmFuay5saUBueHAuY29tPgo+ID4gK0w6ICAgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCj4gPiArUzogICBNYWludGFpbmVkCj4gPiArRjogICBkcml2ZXJzL3BlcmYvZnNsX2lt
-eDhfZGRyX3BlcmYuYwo+ID4gK0Y6ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BlcmYvZnNsLWlteC1kZHIudHh0Cj4gPiArCj4KPiBXaXRoIGRhOGI3ZjBmYjAyYiAoIk1BSU5U
-QUlORVJTOiBhZGQgYWxsIGZpbGVzIG1hdGNoaW5nICJpbXgiIGFuZCAibXhzIgo+IHRvIHRoZSBJ
-TVggZW50cnkiKSB0aGF0IHNpdHMgY3VycmVudGx5IGluIG5leHQgdGhlICJBUk0vRlJFRVNDQUxF
-IElNWCAvCj4gTVhDIEFSTSBBUkNISVRFQ1RVUkUiIGFsc28gbWF0Y2hlcyBmb3IgdGhlc2UgdHdv
-IGZpbGVzLgo+Cj4gSXMgdGhpcyBnb29kIGhlcmUgb3Igbm90PwoKWWVzISB3aGF0J3MgZG8geW91
-IG1lYW5zPwpOZWVkbid0IHRoZXNlIGVudHJ5IGJlY2F1c2UgZGE4YjdmMGZiMDJiPwoKPgo+IEJl
-c3QgcmVnYXJkcwo+IFV3ZQo+Cj4gLS0KPiBQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCBVd2UgS2xlaW5lLUvDtm5pZyAgICAgICAgICAgIHwKPiBJbmR1c3RyaWFs
-IExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAgICAgICAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4
-LmRlLyAgfAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+Quoting Brian Masney (2019-02-15 05:47:33)
+> On Thu, Feb 14, 2019 at 09:51:26PM -0800, Stephen Boyd wrote:
+> > > diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+> > > index 8eb2528793f9..2f99a98ccee5 100644
+> > > --- a/drivers/mfd/qcom-pm8xxx.c
+> > > +++ b/drivers/mfd/qcom-pm8xxx.c
+> > > @@ -380,6 +380,12 @@ static void pm8xxx_irq_domain_map(struct pm_irq_=
+chip *chip,
+> > >                                   struct irq_domain *domain, unsigned=
+ int irq,
+> > >                                   irq_hw_number_t hwirq, unsigned int=
+ type)
+> > >  {
+> > > +       unsigned int old_virq;
+> > > +
+> > > +       old_virq =3D irq_find_mapping(domain, hwirq);
+> > > +       if (old_virq)
+> > > +               irq_domain_disassociate(domain, old_virq);
+> >=20
+> > Is it possible to pass 'true' for the 'realloc' argument to
+> > __irq_domain_alloc_irqs() and then this disassociate change isn't
+> > needed?
+>=20
+> The kernel doc for __irq_domain_alloc_irqs() says that the realloc
+> parameter is mainly to support legacy IRQs. I don't think its a good
+> idea to add new code that'll stay past the end of this patch series
+> on top of that legacy interface.
+>=20
+
+Ok. The other side of the argument is that this is the only user of
+irq_domain_disassociate(), which may also be some sort of legacy
+interface that isn't supposed to be used. Looking at the commit that
+exposed it, it seems to be that it's there for legacy reasons.
+
+commit 43a775916d63d1c822107b39987192ca5ced445c
+Author: Jiang Liu <jiang.liu@linux.intel.com>
+Date:   Mon Jun 9 16:20:05 2014 +0800
+
+    genirq: Export irq_domain_disassociate() to architecture interrupt driv=
+ers
+   =20
+    Export irq_domain_disassociate() to architecture interrupt drivers,
+    so it could be used to handle legacy IRQ descriptors on x86.
+
+So maybe we should just use the realloc argument and bury the
+disassociate API in irqdomain.c because it's not supposed to be used?
+Or does the realloc path not work for some reason?
