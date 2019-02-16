@@ -1,47 +1,50 @@
-From: Alexandru M Stan <amstan@chromium.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: add chosen node on veyron chromebooks
-Date: Fri, 15 Feb 2019 17:13:25 -0800
-Message-ID: <CAHNYxRzyVjLbT00ryBBkqK67JKFs7bvFR=G=rdvVa_o-q8zN9Q@mail.gmail.com>
-References: <20190215115150.32299-1-enric.balletbo@collabora.com> <22158501.cNvkU8jGDh@diego>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2] of: unittest: unflatten device tree on UML when
+ testing
+Date: Fri, 15 Feb 2019 18:18:09 -0800
+Message-ID: <eabdd156-62f4-fadb-bfa4-ecbb5ba65527@gmail.com>
+References: <20190216004647.206431-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <22158501.cNvkU8jGDh@diego>
+In-Reply-To: <20190216004647.206431-1-brendanhiggins@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@chromium.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
+To: Brendan Higgins <brendanhiggins@google.com>, robh+dt@kernel.org, mcgrof@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 3:09 PM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
->
-> Hi Enric,
->
-> Am Freitag, 15. Februar 2019, 12:51:50 CET schrieb Enric Balletbo i Serra=
-:
-> > In order to use earlycon, the stdout-path property needs to be set
-> > in the chosen node.
-> >
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->
-> What's the reason for adding this only for the Chromebook variants?
-> Uart2 is pretty much the standard output for all devices, so I'd assume
-> at least all veyron boards should use uart2 as well, making this ideally
-> live in the rk3288-veyron.dtsi instead?
+On 2/15/19 4:46 PM, Brendan Higgins wrote:
+> UML supports enabling OF, and is useful for running the device tree
+> tests, so add support for unflattening device tree blobs so we can
+> actually use it.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>  drivers/of/unittest.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 84427384654d5..6de34d5fa0e85 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -2527,6 +2527,9 @@ static int __init of_unittest(void)
+>  	}
+>  	of_node_put(np);
+>  
+> +	if (IS_ENABLED(CONFIG_UML))
+> +		unittest_unflatten_overlay_base();
+> +
 
-Yep, all veyriants use uart 2, even when they're not chromebooks.
-Feel free to put it in the other file instead.
+This is still the wrong location.  It should be at the top of the function.
 
-Otherwise it'll make things like the Asus Chromebit (mickey), AOpen
-Chromebox mini (fievel), and AOpen Chromebase (tiger) unhappy
-while debugging.
+I'll try moving it to the top and see if it still works -- should only
+take me a few minutes.
 
-The rk3288-veyron-chromebook.dtsi file is more for things that make
-a chromebook portable. Ex: built in display, lid switch, cros-ec.
+-Frank
 
-Note how we have no uart2 references either in our tree in the
-chromebook specific dtsi:
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-=
-3.14/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-
-Alexandru Stan (amstan)
+>  	pr_info("start of unittest - you will see error messages\n");
+>  	of_unittest_check_tree_linkage();
+>  	of_unittest_check_phandles();
+> 
