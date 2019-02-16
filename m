@@ -1,50 +1,110 @@
-From: agajjar <Akash_Gajjar-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/4] arm64: dts: rockchip: rockpro64 dts remove unused node
-Date: Sat, 16 Feb 2019 20:50:55 +0530
-Message-ID: <468cbdb5-954a-bb1b-106f-14e387f6781f@mentor.com>
-References: <20190213170651.3210-1-Akash_Gajjar@mentor.com>
- <4653141.o6ZdamfZ6d@diego> <ac22440d-3b64-1cf2-205c-52ea7c1c23f9@mentor.com>
- <7155828.jr86DZMtXN@diego>
+From: Mans Rullgard <mans@mansr.com>
+Subject: [PATCH] ARM: dts: sun7i: add pinctrl for missing uart mux options
+Date: Sat, 16 Feb 2019 18:21:32 +0000
+Message-ID: <20190216182132.12895-1-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <7155828.jr86DZMtXN@diego>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shohei Maruyama <cheat.sc.linux-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oskari Lemmela <oskari-fV/XPr6JiiHR7s880joybQ@public.gmane.org>, Levin Du <djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMi8xNi8yMDE5IDI6MTYgQU0sIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+IEFtIEZyZWl0YWcs
-IDE1LiBGZWJydWFyIDIwMTksIDEzOjA4OjE2IENFVCBzY2hyaWViIGFnYWpqYXI6Cj4+IE9uIDIv
-MTUvMjAxOSAyOjQ4IFBNLCBIZWlrbyBTdMO8Ym5lciB3cm90ZToKPj4+IEFtIE1pdHR3b2NoLCAx
-My4gRmVicnVhciAyMDE5LCAxODowNjozOCBDRVQgc2NocmllYiBBa2FzaCBHYWpqYXI6Cj4+Pj4g
-bGNkIHBhbmVsIHBpbm11eCBhbmQgdmNjMXY4X3MzIHJlZ3VsYXRvciBpcyByZWR1bmRhbnQgYW5k
-IGhhcyBhIG5vCj4+Pj4gaW1wYWN0LAo+Pj4+IHNvIHJlbW92aW5nIGl0Lgo+Pj4+Cj4+Pj4gU2ln
-bmVkLW9mZi1ieTogQWthc2ggR2FqamFyIDxBa2FzaF9HYWpqYXJAbWVudG9yLmNvbT4KPj4gSGkg
-SGVpa28sCj4+Cj4+PiB2Y2MxdjhfczMgaXMgYWN0dWFsbHkgYWxzbyBhIGVtbWMgc3VwcGx5LCBz
-byBJJ2QgbGlrZSB0byBrZWVwIGl0IGFyb3VuZAo+Pj4gZm9yIGNvbXBsZXRlbmVzIHNha2UuCj4+
-IEVtbWMgbW9kdWxlIGlzIHN1cHBsaWVkIGJ5IFBNSUMgdmNjM3YzX3MzIChTV0lUQ0hfUkVHMSkg
-YW5kIHZjY18xdjgKPj4gKERDRF9SRUc0KS4KPj4KPj4gU28gSSBiZWxpZXZlIHJlbW92aW5nIHZj
-YzF2OF9zMyBoYXMgbm8gaW1wYWN0IG9uIGVtbWMgc3VwcGx5IGxpbmUuCj4gbG9va2luZyBhdCB0
-aGUgcm9ja3BybzY0IHNjaGVtYXRpY3MgcGFnZSAxMCwgSSBzZWUgdmNjYTF2OF9zMyBsaW5rZWQK
-PiB0byB0aGUgZW1tY192ZGRfMXY4IGlucHV0IGFuZCBvYnZpb3VzbHkgYWxzbyBhcyByZWZlcmVu
-Y2UgZm9yIHRoZSBzYXJhZGMuCgpZb3UgYXJlIHJlZmVycmluZyBQaWxvdCBwcm9kdWN0aW9uIHJl
-bGVhc2UgKHJvY2twcm82NF92MjAtU0NILnBkZiksIApwbGVhc2UgcmVmZXIgU2Vjb25kIGJhdGNo
-IHByb2R1Y3Rpb24gcmVsZWFzZSAocm9ja3BybzY0X3YyMS1TQ0gucGRmKS4KCmJvdGggdGhlIHNj
-aGVtYXRpYyByZWxlYXNlIGlzIGF2YWlsYWJsZSBhdCAKaHR0cDovL3dpa2kucGluZTY0Lm9yZy9p
-bmRleC5waHAvUk9DS1BybzY0X01haW5fUGFnZQoKPgo+IFNvIEkgdGhpbmsgd2UgcmVhbGx5IGNv
-dWxkIGtlZXAgaXQgYXJvdW5kLCBzbyB0aGF0IHRoZSBwb3dlci10cmVlIHJlc2VtYmxlcwo+IHRo
-ZSBzY2hlbWF0aWNzIG1vcmUuCgpUaGFua3MsCgpBa2FzaAoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApM
-aW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+This adds pinctrl settings for various missing uart options.
+
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 45 ++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index af5b067a5f83..2295ff5adf48 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -944,6 +944,31 @@
+ 				function = "uart0";
+ 			};
+ 
++			uart0_pf_pins: uart0-pf-pins {
++				pins = "PF2", "PF4";
++				function = "uart0";
++			};
++
++			uart1_pa_pins: uart1-pa-pins {
++				pins = "PA10", "PA11";
++				function = "uart1";
++			};
++
++			uart1_cts_rts_pa_pins: uart1-cts-rts-pa-pins {
++				pins = "PA12", "PIA13";
++				function = "uart2";
++			};
++
++			uart2_pa_pins: uart2-pa-pins {
++				pins = "PIA2", "PIA3";
++				function = "uart2";
++			};
++
++			uart2_cts_rts_pa_pins: uart2-cts-rts-pa-pins {
++				pins = "PA0", "PIA1";
++				function = "uart2";
++			};
++
+ 			uart2_pi_pins: uart2-pi-pins {
+ 				pins = "PI18", "PI19";
+ 				function = "uart2";
+@@ -969,6 +994,11 @@
+ 				function = "uart3";
+ 			};
+ 
++			uart3_cts_rts_ph_pins: uart3-cts-rts-ph-pins {
++				pins = "PH2", "PH3";
++				function = "uart3";
++			};
++
+ 			uart4_pg_pins: uart4-pg-pins {
+ 				pins = "PG10", "PG11";
+ 				function = "uart4";
+@@ -979,16 +1009,31 @@
+ 				function = "uart4";
+ 			};
+ 
++			uart5_ph_pins: uart5-ph-pins {
++				pins = "PH6", "PH7";
++				function = "uart5";
++			};
++
+ 			uart5_pi_pins: uart5-pi-pins {
+ 				pins = "PI10", "PI11";
+ 				function = "uart5";
+ 			};
+ 
++			uart6_pa_pins: uart6-pa-pins {
++				pins = "PA12", "PA13";
++				function = "uart6";
++			};
++
+ 			uart6_pi_pins: uart6-pi-pins {
+ 				pins = "PI12", "PI13";
+ 				function = "uart6";
+ 			};
+ 
++			uart7_pa_pins: uart7-pa-pins {
++				pins = "PA14", "PA15";
++				function = "uart7";
++			};
++
+ 			uart7_pi_pins: uart7-pi-pins {
+ 				pins = "PI20", "PI21";
+ 				function = "uart7";
+-- 
+2.20.1
