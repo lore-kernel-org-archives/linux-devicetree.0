@@ -1,52 +1,40 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: add chosen node on veyron chromebooks
-Date: Sat, 16 Feb 2019 21:28:13 +0100
-Message-ID: <2105716.Hge0YL7z4n@phil>
-References: <20190215115150.32299-1-enric.balletbo@collabora.com> <22158501.cNvkU8jGDh@diego> <CAHNYxRzyVjLbT00ryBBkqK67JKFs7bvFR=G=rdvVa_o-q8zN9Q@mail.gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 3/3] drm/panel: simple: Add support for VXT
+ VL050-8048NT-C01 panel
+Date: Sat, 16 Feb 2019 21:30:06 +0100
+Message-ID: <20190216203006.GA22791@ravnborg.org>
+References: <1543942655-5942-1-git-send-email-festevam@gmail.com>
+ <1543942655-5942-3-git-send-email-festevam@gmail.com>
+ <CAP9ODKoLjpgtsC=C1_c_QwK4aY8kdFrzOQB9XXfbABuP7VVpmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHNYxRzyVjLbT00ryBBkqK67JKFs7bvFR=G=rdvVa_o-q8zN9Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru M Stan <amstan@chromium.org>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@chromium.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAP9ODKoLjpgtsC=C1_c_QwK4aY8kdFrzOQB9XXfbABuP7VVpmA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Otavio Salvador <otavio.salvador@ossystems.com.br>
+Cc: devicetree@vger.kernel.org, Otavio Salvador <otavio@ossystems.com.br>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, John Weber <john.weber@technexion.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 16. Februar 2019, 02:13:25 CET schrieb Alexandru M Stan:
-> On Fri, Feb 15, 2019 at 3:09 PM Heiko Stübner <heiko@sntech.de> wrote:
-> >
-> > Hi Enric,
-> >
-> > Am Freitag, 15. Februar 2019, 12:51:50 CET schrieb Enric Balletbo i Serra:
-> > > In order to use earlycon, the stdout-path property needs to be set
-> > > in the chosen node.
-> > >
-> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >
-> > What's the reason for adding this only for the Chromebook variants?
-> > Uart2 is pretty much the standard output for all devices, so I'd assume
-> > at least all veyron boards should use uart2 as well, making this ideally
-> > live in the rk3288-veyron.dtsi instead?
-> 
-> Yep, all veyriants use uart 2, even when they're not chromebooks.
-> Feel free to put it in the other file instead.
-> 
-> Otherwise it'll make things like the Asus Chromebit (mickey), AOpen
-> Chromebox mini (fievel), and AOpen Chromebase (tiger) unhappy
-> while debugging.
-> 
-> The rk3288-veyron-chromebook.dtsi file is more for things that make
-> a chromebook portable. Ex: built in display, lid switch, cros-ec.
-> 
-> Note how we have no uart2 references either in our tree in the
-> chromebook specific dtsi:
-> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-
-thanks for the confirmation :-) .
-
-I've moved the choosen node over to veyron.dtsi and applied the result
-for 5.1
-
-Thanks
-Heiko
+SGkgT3RhdmlvLgoKT24gVGh1LCBGZWIgMTQsIDIwMTkgYXQgMDQ6Mjg6NTJQTSAtMDIwMCwgT3Rh
+dmlvIFNhbHZhZG9yIHdyb3RlOgo+IE9uIFR1ZSwgRGVjIDQsIDIwMTggYXQgMjo1NyBQTSBGYWJp
+byBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+IHdyb3RlOgo+ID4KPiA+IEFkZCBzdXBwb3J0
+IGZvciB0aGUgVlhUIFZMMDUwLTgwNDhOVC1DMDEgODAweDQ4MCBwYW5lbCB0byB0aGUKPiA+IHBh
+bmVsLXNpbXBsZSBkcml2ZXIuCj4gPgo+ID4gVGhpcyBwYW5lbCBpcyB1c2VkIG9uIHNvbWUgYm9h
+cmRzIG1hbnVmYWN0dXJlZCBieSBUZWNoTmV4aW9uLCBzdWNoIGFzCj4gPiBpbXg3ZC1waWNvLgo+
+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IEZhYmlvIEVzdGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbT4K
+PiA+IC0tLQo+IAo+IENvdWxkIHRoaXMgdG8gYmUgcmV2aWV3ZWQ/IEl0J2QgYmUgaW1wb3J0YW50
+IGZvciBpdCB0byBiZSBtZXJnZWQgZm9yIDUuMS4KSSBsb3N0IHRoZSBvcmlnaW5hbCBtYWlsLiBJ
+ZiB5b3UgY2FuIHJlc2VuZCB0aGUgcGF0Y2hlcyBJIHdpbGwgcmV2aWV3IGl0L3RoZW0uCgoJU2Ft
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
