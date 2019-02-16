@@ -1,87 +1,50 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 5/6] dt-bindings: i2c: Add Mediatek MT8183 i2c binding
-Date: Sat, 16 Feb 2019 13:29:15 +0100
-Message-ID: <20190216122915.hchghozcn7ntdkbm@ninjato>
-References: <1548057574-8061-1-git-send-email-qii.wang@mediatek.com>
- <1548057574-8061-6-git-send-email-qii.wang@mediatek.com>
- <20190205131641.GF12401@kunai>
- <1550109268.30065.13.camel@mhfsdcap03>
- <20190215090257.geumssb2cucs7rzt@ninjato>
- <1550316723.30065.44.camel@mhfsdcap03>
+From: agajjar <Akash_Gajjar-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm64: dts: rockchip: rockpro64 dts remove unused node
+Date: Sat, 16 Feb 2019 20:50:55 +0530
+Message-ID: <468cbdb5-954a-bb1b-106f-14e387f6781f@mentor.com>
+References: <20190213170651.3210-1-Akash_Gajjar@mentor.com>
+ <4653141.o6ZdamfZ6d@diego> <ac22440d-3b64-1cf2-205c-52ea7c1c23f9@mentor.com>
+ <7155828.jr86DZMtXN@diego>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7180055415413143207=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550316723.30065.44.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Qii Wang <qii.wang@mediatek.com>
-Cc: devicetree@vger.kernel.org, ryder.lee@mediatek.com, srv_heupstream@mediatek.com, Rob Herring <robh@kernel.org>, leilk.liu@mediatek.com, xinping.qian@mediatek.com, linux-kernel@vger.kernel.org, liguo.zhang@mediatek.com, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <7155828.jr86DZMtXN@diego>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shohei Maruyama <cheat.sc.linux-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oskari Lemmela <oskari-fV/XPr6JiiHR7s880joybQ@public.gmane.org>, Levin Du <djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============7180055415413143207==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uvl5pgprc2c6iamr"
-Content-Disposition: inline
-
-
---uvl5pgprc2c6iamr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-
-> Maybe you think that MT8183 SoC only has the I3C controllers. Actually,
-> there are I2C and I3C controllers on MT8183 SoC. We will remove
-> "mediatek,share-i3c" for I2C controller driver, so these patches are
-> just to support the I2C controllers on MT8183 SoC. For the I3C
-> controller we will send some new patches which are based on i3c
-> framework directories(kernel/drivers/i3c), not based on
-> i2c-mt65xx.c.
-
-Sounds perfect to me. If it turns out that the I3C driver can share
-things with the I2C driver, we can discuss it then. But unless we have
-an I3C driver and know for sure, the above strategy seems good to me.
-
-
---uvl5pgprc2c6iamr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlxoAhcACgkQFA3kzBSg
-KbZX6Q//fbtn+bsK5KVjERP9EokrSE8Pn/Q8MsFHFKLxQm2ZQsc2yMzOu0YUYvnF
-X531Roh9TkDU3SkJL/xnERFtamDianlugO11qGRxvJnSGCjrUDogHdw8awM6BE1e
-G01y8agD7lRVmrZb3AidW9HAfgCBalucvrKovIQSkvvhvnCglVnZHBpwmQwFEZ/E
-NlB20w8KdvAKNXeT8GgxsjFBfanSHAHOTJKUcnkeO4Lg10TDlnh85c1FGcuOmbcE
-j0yvYzcFIUJ5Xdw1f0BVG12RDuN0pOSN/FuVDZRBb/FkOJx+CIb62jJiieCYVTMl
-/jwL6gkGbyZyo2YJJ/P6twDzxXE3JtjP1gtnN9FPBVFOeaWN3qoabOM/aO1iWlZM
-K2hsLVorxvdHedrDEqwNFawEFSF0Y2sdPCndwlgKRqRcdJRh4f5VzPNXTxDmPeQI
-5zubdYEA1dE8NfX3xM4/05/vBNK9JDwj+U5EczvGL7PI+q8n5X/QoQqu7x6tWMq8
-D9VMUWRpM6usbQ52gt/hQi08taNuaxP4BQJkDduDVZ/x09aAdKrKDStwtwhIABH1
-gnLt/3qJqEo6o2LM6fpK/hvhUgjiZ5KlTJ/RylosAcAbRkho4lFwI6AyzEGRFGHe
-lntFJiamVASorn7fg4GVdNNJAzVsNTIdVcSJfxij5TjtbqVjiBg=
-=2hOh
------END PGP SIGNATURE-----
-
---uvl5pgprc2c6iamr--
-
-
---===============7180055415413143207==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7180055415413143207==--
+T24gMi8xNi8yMDE5IDI6MTYgQU0sIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+IEFtIEZyZWl0YWcs
+IDE1LiBGZWJydWFyIDIwMTksIDEzOjA4OjE2IENFVCBzY2hyaWViIGFnYWpqYXI6Cj4+IE9uIDIv
+MTUvMjAxOSAyOjQ4IFBNLCBIZWlrbyBTdMO8Ym5lciB3cm90ZToKPj4+IEFtIE1pdHR3b2NoLCAx
+My4gRmVicnVhciAyMDE5LCAxODowNjozOCBDRVQgc2NocmllYiBBa2FzaCBHYWpqYXI6Cj4+Pj4g
+bGNkIHBhbmVsIHBpbm11eCBhbmQgdmNjMXY4X3MzIHJlZ3VsYXRvciBpcyByZWR1bmRhbnQgYW5k
+IGhhcyBhIG5vCj4+Pj4gaW1wYWN0LAo+Pj4+IHNvIHJlbW92aW5nIGl0Lgo+Pj4+Cj4+Pj4gU2ln
+bmVkLW9mZi1ieTogQWthc2ggR2FqamFyIDxBa2FzaF9HYWpqYXJAbWVudG9yLmNvbT4KPj4gSGkg
+SGVpa28sCj4+Cj4+PiB2Y2MxdjhfczMgaXMgYWN0dWFsbHkgYWxzbyBhIGVtbWMgc3VwcGx5LCBz
+byBJJ2QgbGlrZSB0byBrZWVwIGl0IGFyb3VuZAo+Pj4gZm9yIGNvbXBsZXRlbmVzIHNha2UuCj4+
+IEVtbWMgbW9kdWxlIGlzIHN1cHBsaWVkIGJ5IFBNSUMgdmNjM3YzX3MzIChTV0lUQ0hfUkVHMSkg
+YW5kIHZjY18xdjgKPj4gKERDRF9SRUc0KS4KPj4KPj4gU28gSSBiZWxpZXZlIHJlbW92aW5nIHZj
+YzF2OF9zMyBoYXMgbm8gaW1wYWN0IG9uIGVtbWMgc3VwcGx5IGxpbmUuCj4gbG9va2luZyBhdCB0
+aGUgcm9ja3BybzY0IHNjaGVtYXRpY3MgcGFnZSAxMCwgSSBzZWUgdmNjYTF2OF9zMyBsaW5rZWQK
+PiB0byB0aGUgZW1tY192ZGRfMXY4IGlucHV0IGFuZCBvYnZpb3VzbHkgYWxzbyBhcyByZWZlcmVu
+Y2UgZm9yIHRoZSBzYXJhZGMuCgpZb3UgYXJlIHJlZmVycmluZyBQaWxvdCBwcm9kdWN0aW9uIHJl
+bGVhc2UgKHJvY2twcm82NF92MjAtU0NILnBkZiksIApwbGVhc2UgcmVmZXIgU2Vjb25kIGJhdGNo
+IHByb2R1Y3Rpb24gcmVsZWFzZSAocm9ja3BybzY0X3YyMS1TQ0gucGRmKS4KCmJvdGggdGhlIHNj
+aGVtYXRpYyByZWxlYXNlIGlzIGF2YWlsYWJsZSBhdCAKaHR0cDovL3dpa2kucGluZTY0Lm9yZy9p
+bmRleC5waHAvUk9DS1BybzY0X01haW5fUGFnZQoKPgo+IFNvIEkgdGhpbmsgd2UgcmVhbGx5IGNv
+dWxkIGtlZXAgaXQgYXJvdW5kLCBzbyB0aGF0IHRoZSBwb3dlci10cmVlIHJlc2VtYmxlcwo+IHRo
+ZSBzY2hlbWF0aWNzIG1vcmUuCgpUaGFua3MsCgpBa2FzaAoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApM
+aW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
