@@ -1,82 +1,80 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 08/11] drm/panel: simple: Add BOE HB140WX1-501 panel
- support
-Date: Sat, 16 Feb 2019 21:43:27 +0100
-Message-ID: <20190216204327.GB22791@ravnborg.org>
-References: <20190215050957.20755-1-anarsoul@gmail.com>
- <20190215050957.20755-9-anarsoul@gmail.com>
+From: Harald Geyer <harald@ccbib.org>
+Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
+Date: Sat, 16 Feb 2019 21:47:13 +0100
+Message-ID: <E1gv6rh-0000Km-U8@stardust.g4.wien.funkfeuer.at>
+References: <20190211153945.e34fpwkuk67l7lc6@flea>
+ <E1gtHJj-0000iY-G8@stardust.g4.wien.funkfeuer.at>
+ <20190212083850.7genwc6ipnxtl7eo@flea>
+ <E1gtUZn-0000NW-MA@stardust.g4.wien.funkfeuer.at>
+ <20190212100929.iqsxu443qrkl6myf@flea>
+ <E1gtds8-0000NB-Re@stardust.g4.wien.funkfeuer.at>
+ <20190213094442.da2dy6d5bb527nft@flea>
+ <E1gtsx9-0000RP-08@stardust.g4.wien.funkfeuer.at>
+ <20190213155311.ovkpim3lxwyvuhhj@flea>
+ <E1gu4dx-0000Sy-2B@stardust.g4.wien.funkfeuer.at>
+ <20190215142029.GB32618@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190215050957.20755-9-anarsoul@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-sunxi@googlegroups.com, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sean Paul <seanpaul@chromium.org>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20190215142029.GB32618@lst.de>
+Content-ID: <1286.1550350033.1@stardust.g4.wien.funkfeuer.at>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Torsten Duwe <duwe@lst.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVmFzaWx5LgoKT24gVGh1LCBGZWIgMTQsIDIwMTkgYXQgMDk6MDk6NTRQTSAtMDgwMCwgVmFz
-aWx5IEtob3J1emhpY2sgdmlhIGRyaS1kZXZlbCB3cm90ZToKPiBUaGlzIGNvbW1pdCBhZGRzIHN1
-cHBvcnQgZm9yIHRoZSBCT0UgSEIxNDBXWDEtNTAxIDE0IiBXWEdBIFRGVCBMQ0QKPiBwYW5lbC4K
-PiAKPiBTaWduZWQtb2ZmLWJ5OiBWYXNpbHkgS2hvcnV6aGljayA8YW5hcnNvdWxAZ21haWwuY29t
-Pgo+IC0tLQo+ICAuLi4vZGlzcGxheS9wYW5lbC9ib2UsaGIxNDB3eDEtNTAxLnR4dCAgICAgICAg
-fCAgNyArKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAg
-ICAgfCAyNiArKysrKysrKysrKysrKysrKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgMzMgaW5zZXJ0
-aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvYm9lLGhiMTQwd3gxLTUwMS50eHQKPiAKPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYm9lLGhi
-MTQwd3gxLTUwMS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9wYW5lbC9ib2UsaGIxNDB3eDEtNTAxLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5k
-ZXggMDAwMDAwMDAwMDAwLi5mYzZmMDg1ZWI4ZDEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYm9lLGhiMTQwd3gx
-LTUwMS50eHQKPiBAQCAtMCwwICsxLDcgQEAKPiArQk9FIEhCMTQwV1gxLTUwMSAxNCIgV1hHQSAo
-MTM2Nng3NjgpIFRGVCBMQ0QgcGFuZWwKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0g
-Y29tcGF0aWJsZTogc2hvdWxkIGJlICJib2UsaGIxNDB3eDEtNTAxIgo+ICsKPiArVGhpcyBiaW5k
-aW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlz
-IHNwZWNpZmllZAo+ICtpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgoKYm9l
-IG11c3QgYmUgYWRkZWQgdG8gdmVuZG9yLXByZWZpeGVzLnR4dAooSXQgaXMgbm90IHByZXNlbnQg
-aW4gdGhlIGZpbGUgSSBjaGVja2VkLCBidXQgSSBtYXkgaGF2ZSBiZWVuIGFkZGVkIGxhdGVyKQoK
-Ckl0IGlzIHVzdWFsIHByYWN0aWNlIHRvIHNwbGl0IHRoZSBwYXRjaCBpbiBhIGR0LWJpbmRpbmdz
-OiBwYXRjaCBhbmQgYSBkcml2ZXIgcGF0Y2guCkFuZCBmb3IgdGhlIGR0LWJpbmRpbmdzIHBhdGNo
-IGZvbGxvdyB0aGUgc3VibWlzc2lvbiBydWxlcyBsYWlkIG91dAppbiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc3VibWl0dGluZy1wYXRjaGVzLnR4dAoKPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3Bh
-bmVsL3BhbmVsLXNpbXBsZS5jCj4gaW5kZXggOWM2OWU3MzlhNTI0Li45YTRjOWRkMDJjNmMgMTAw
-NjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gQEAgLTgyOCw2ICs4MjgsMjkg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGJhbmFuYXBpX3MwNzB3djIwX2N0MTYg
-PSB7Cj4gIAl9LAo+ICB9Owo+ICAKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9t
-b2RlIGJvZV9oYjE0MHd4MV9tb2RlID0gewo+ICsJLmNsb2NrID0gNzIzMDAsCj4gKwkuaGRpc3Bs
-YXkgPSAxMzY2LAo+ICsJLmhzeW5jX3N0YXJ0ID0gMTM2NiArIDQ4LAo+ICsJLmhzeW5jX2VuZCA9
-IDEzNjYgKyA0OCArIDMyLAo+ICsJLmh0b3RhbCA9IDEzNjYgKyA0OCArIDMyICsgODAsCj4gKwku
-dmRpc3BsYXkgPSA3NjgsCj4gKwkudnN5bmNfc3RhcnQgPSA3NjggKyAzLAo+ICsJLnZzeW5jX2Vu
-ZCA9IDc2OCArIDMgKyA2LAo+ICsJLnZ0b3RhbCA9IDc2OCArIDMgKyA2ICsgMTMsCj4gKwkudnJl
-ZnJlc2ggPSA2MCwKPiArCS5mbGFncyA9IERSTV9NT0RFX0ZMQUdfUEhTWU5DIHwgRFJNX01PREVf
-RkxBR19OVlNZTkMsCgorMSBmb3Igc3BlY2lmeWluZyAuZmxhZ3MuCgo+ICt9Owo+ICsKPiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGJvZV9oYjE0MHd4MSA9IHsKPiArCS5tb2RlcyA9
-ICZib2VfaGIxNDB3eDFfbW9kZSwKPiArCS5udW1fbW9kZXMgPSAxLAo+ICsJLnNpemUgPSB7Cj4g
-KwkJLndpZHRoID0gMzEwLAo+ICsJCS5oZWlnaHQgPSAxNzAsCj4gKwl9LAo+ICt9OwpObyAuYnVz
-X2Zvcm1hdCBhbmQgbm8gLmJ1c19mbGFncyBzcGVjaWZpZWQuCkFyZSB0aGV5IG5vdCB1c2VkIGJ5
-IHRoaXMgcGFuZWwgb3IgYXJlIHlvdSBsdWNreSBhbmQgdGhlIGRlZmF1bHQgd29ya3M/CgoKPiAr
-Cj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBib2VfaHYwNzB3c2FfbW9k
-ZSA9IHsKPiAgCS5jbG9jayA9IDQyMTA1LAo+ICAJLmhkaXNwbGF5ID0gMTAyNCwKPiBAQCAtMjU0
-MSw2ICsyNTY0LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1f
-b2ZfbWF0Y2hbXSA9IHsKPiAgCX0sIHsKPiAgCQkuY29tcGF0aWJsZSA9ICJiYW5hbmFwaSxzMDcw
-d3YyMC1jdDE2IiwKPiAgCQkuZGF0YSA9ICZiYW5hbmFwaV9zMDcwd3YyMF9jdDE2LAo+ICsJfSwg
-ewo+ICsJCS5jb21wYXRpYmxlID0gImJvZSxoYjE0MHd4MS01MDEiLAo+ICsJCS5kYXRhID0gJmJv
-ZV9oYjE0MHd4MQpJdCBpcyBjb21tb24gcHJhY3RpY2UgdG8gZW5kIHRoZSBsaW5lIHdpdGggYSAi
-LCIgc28gb25lIGRvIG5vdCBuZWVkIHRvIG1vZGlmeQp0aGlzIGxpbmUgaWYgYW4gZXh0cmEgbGlu
-ZSBpcyByZXF1aXJlZC4KCgpXaXRoIHRoZSBjb21tZW50cyBhZGRyZXNzZWQgeW91IGNhbiBhZGQg
-bXk6ClJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+CgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi Torsten!
+
+Torsten Duwe writes:
+
+> > > > > > But we need a way to control the mux from userspace and aside from
+> > > > > > unbinding the ideas proposed thus far are:
+> > > > > >
+> > > > > > a) control the gpio directly
+> > > > > > b) control the gpio via leds-gpio
+> > > > > > 
+> > > > > > (a) was dismissed because we can't set a default from DT
+> > > > > > (b) was dismissed because some rogue app might try to blink it
+> 
+> Hey, this is a debugging hack. If some rogue app tries to blink it, so be it.
+> 
+> > I suspect some distributions will pick up the patch I posted anyway, if
+> > it doesn't get merged mainline. (This is how I forgot missing backlight
+> > support - it just worked for too many people ...) If we ship
+> > sun50i-a64-teres-i.dts with the proper nodes (but disabled), their
+> > patches will be much easier to maintain as the official DT evolves.
+> 
+> As I wrote (held by the list admin), I consider the whole console mux
+> GPIO an U-Boot hack, and would put it into sun50i-a64-teres-i-u-boot.dtsi.
+> (As a LED, see above :-)
+
+The thing is, one of the quite strict rules in kernel development is:
+Never break userspace. That means: If we provide a way to userspace to
+do something (ie switch between debug and audio), we are expected to
+keep it around forever. So since there is a decent chance that someday
+somebody might write a driver that handles this situation properly, we
+don't want chain ourselves to some dirty hack.
+
+(I'm not totally against writing such a driver myself, if there are
+enough use cases. However, I think that TERES alone is not enough.)
+
+> Would you care to submit a patch version without that GPIO handled?
+> I think it's very useful and has the potential to be agreed upon.
+
+That would enable audio from the internal speakers but select debug
+output on the HP jack by default. I would be okay with that, despite
+still thinking that audio on the head phones should be the default.
+
+Maxime and Wens are the maintainers, so it's their call in the end.
+
+HTE,
+Harald
