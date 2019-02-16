@@ -1,14 +1,16 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v5 00/10] Add support for TISCI irqchip drivers
-Date: Sat, 16 Feb 2019 09:07:12 +0530
-Message-ID: <a14f77bd-63cf-adb2-39c4-a8f45070ee9a@ti.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: ufs: Add HI3670 UFS controller binding
+Date: Sat, 16 Feb 2019 09:38:55 +0530
+Message-ID: <20190216040855.GA3054@Mani-XPS-13-9360>
+References: <20190105072859.9134-1-manivannan.sadhasivam@linaro.org>
+ <20190105072859.9134-2-manivannan.sadhasivam@linaro.org>
+ <20190111213502.GA24538@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190212074237.2875-1-lokeshvutla@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190111213502.GA24538@bogus>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,77 +20,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: marc.zyngier@arm.com, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Cc: Rob Herring <robh@kernel.org>, jejb@linux.vnet.ibm.com, linux-scsi@vger.kernel.org, martin.petersen@oracle.com, devicetree@vger.kernel.org, guodong.xu@linaro.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, robh+dt@kernel.org, john.stultz@linaro.org, liwei213@huawei.com, vinholikatti@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+On Fri, Jan 11, 2019 at 03:35:02PM -0600, Rob Herring wrote:
+> On Sat,  5 Jan 2019 12:58:57 +0530, Manivannan Sadhasivam wrote:
+> > Add devicetree binding for HI3670 UFS controller. HI3760 SoC is very
+> > similar to HI3660 SoC with almost same IPs. Only major difference in terms
+> > of UFS is the PHY. HI3670 has 10nm PHY. But since the original driver
+> > (HI3660 UFS) cannot make HI3670 UFS functional, a separate compatible
+> > is added for HI3670 without any fallback.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/ufs/ufs-hisi.txt | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-On 2/12/2019 1:12 PM, Lokesh Vutla wrote:
-> TI AM65x SoC based on K3 architecture introduced support for Events
-> which are message based interrupts with minimal latency. These events
-> are not compatible with regular interrupts and are valid only through
-> an event transport lane. An Interrupt Aggregator(INTA) is introduced
-> to convert these events to interrupts. INTA can also group 64 events
-> into a single interrupt. Now the SoC has many peripherals and a large
-> number of event sources (time sync or DMA), the use of events is
-> completely dependent on a user's specific application, which drives a
-> need for maximum flexibility in which event sources are used in the
-> system. It is also completely up to software control as to how the
-> events are serviced.
-> 
-> Because of the huge flexibility there are certain standard peripherals
-> (like GPIO etc)where all interrupts cannot be directly corrected to host
-> interrupt controller. For this purpose, Interrupt Router(INTR) is
-> introduced in the SoC. INTR just does a classic interrupt redirection.
-> 
-> So the SoC has 3 types of interrupt controllers:
-> - GIC500
-> - Interrupt Router
-> - Interrupt Aggregator
-> 
-> Below is a diagrammatic view of how SoC integration of these interrupt
-> controllers:(https://pastebin.ubuntu.com/p/9ngV3jdGj2/)
-> 
-> Device Index-x               Device Index-y
->            |                         |
->            |                         |
->                       ....
->             \                       /
->              \                     /
->               \  (global events)  /
->           +---------------------------+   +---------+
->           |                           |   |         |
->           |             INTA          |   |  GPIO   |
->           |                           |   |         |
->           +---------------------------+   +---------+
->                          |   (vint)            |
->                          |                     |
->                         \|/                    |
->           +---------------------------+        |
->           |                           |<-------+
->           |           INTR            |
->           |                           |
->           +---------------------------+
->                          |
->                          |
->                         \|/ (gic irq)
->           +---------------------------+
->           |                           |
->           |             GIC           |
->           |                           |
->           +---------------------------+
-> 
-> While at it, TISCI abstracts the handling of all above IRQ routes where
-> interrupt sources are not directly connected to host interrupt controller.
-> That would be configuration of Interrupt Aggregator and Interrupt Router.
-> 
-> This series adds support for:
-> - TISCI commands needed for IRQ configuration
-> - Interrupt Router(INTR) and Interrupt Aggregator(INTA) drivers
+Martin,
 
-Sorry to bother you again. Any chance you can take a quick look at the
-series?
+Can you please take the bindings patch also? DT patch will go through
+HiSi tree.
 
-Thanks and regards,
-Lokesh
+Thanks,
+Mani
