@@ -1,47 +1,39 @@
-Return-Path: <SRS0=6Dnf=QM=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 1/5] iio: gyro: add DT bindings to fxas21002
-Date: Tue,  5 Feb 2019 17:43:29 +0000
-Message-Id: <20190205174333.17672-2-rui.silva@linaro.org>
-In-Reply-To: <20190205174333.17672-1-rui.silva@linaro.org>
-References: <20190205174333.17672-1-rui.silva@linaro.org>
+Return-Path: <SRS0=C7D/=QX=gmail.com=marek.vasut@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: can: rcar_canfd: document r8a77990
+ support
+References: <20181118173201.4645-1-marek.vasut+renesas@gmail.com>
+ <20181118173201.4645-2-marek.vasut+renesas@gmail.com>
+ <20181121102017.hza4czc3cnqtfyxn@verge.net.au>
+From: Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <168f18bc-d104-bc1d-980c-93a10c82c775@gmail.com>
+Date: Sat, 16 Feb 2019 15:00:17 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+In-Reply-To: <20181121102017.hza4czc3cnqtfyxn@verge.net.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Simon Horman <horms@verge.net.au>
+Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for the FXAS21002 gyroscope.
+On 11/21/18 11:20 AM, Simon Horman wrote:
+> On Sun, Nov 18, 2018 at 06:32:01PM +0100, Marek Vasut wrote:
+>> Document the support for rcar_canfd on R8A77990 SoC devices.
+>>
+>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+>> Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
+>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: Simon Horman <horms+renesas@verge.net.au>
+>> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>> Cc: linux-renesas-soc@vger.kernel.org
+>> To: devicetree@vger.kernel.org
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- .../bindings/iio/gyroscope/fxas2100x.txt       | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/fxas2100x.txt
+This patchset seems to be missing upstream.
 
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/fxas2100x.txt b/Documentation/devicetree/bindings/iio/gyroscope/fxas2100x.txt
-new file mode 100644
-index 000000000000..df10a60aa533
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/fxas2100x.txt
-@@ -0,0 +1,18 @@
-+* NXP FXAS2100X Gyroscope device tree bindings
-+
-+http://www.nxp.com/products/sensors/gyroscopes/3-axis-digital-gyroscope:FXAS21002C
-+
-+Required properties:
-+  - compatible : should be "nxp,fxas21002"
-+  - reg : the I2C address of the sensor
-+  - vdd-supply: phandle to the regulator that provides power to the sensor.
-+  - vddio-supply: phandle to the regulator that provides power to the bus.
-+
-+Example:
-+
-+fxas21002@20 {
-+	compatible = "nxp,fxas21002";
-+	reg = <0x20>;
-+	vdd-supply = <&reg_peri_3p15v>;
-+	vddio-supply = <&reg_peri_3p15v>;
-+};
 -- 
-2.20.1
+Best regards,
+Marek Vasut
