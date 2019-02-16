@@ -1,32 +1,75 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V4 2/2] clk: imx: scu: add cpu frequency scaling support
-Date: Fri, 15 Feb 2019 15:58:13 -0800
-Message-ID: <155027509324.115909.9001648696808985832@swboyd.mtv.corp.google.com>
-References: <1550108915-574-1-git-send-email-Anson.Huang@nxp.com> <1550108915-574-2-git-send-email-Anson.Huang@nxp.com>
+From: andrew-sh.cheng <andrew-sh.cheng@mediatek.com>
+Subject: Re: [PATCH 2/3] dt-bindings: devfreq: add compatible for mt8183 cci
+ devfreq
+Date: Sat, 16 Feb 2019 08:09:50 +0800
+Message-ID: <1550275790.23797.2.camel@mtksdaap41>
+References: <1548743704-16821-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <CGME20190129063540epcas2p2562f42dd248030292eb438259e54236b@epcas2p2.samsung.com>
+ <1548743704-16821-3-git-send-email-andrew-sh.cheng@mediatek.com>
+ <803eacf2-a3c7-a4d0-682a-837b7367bf2f@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550108915-574-2-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <803eacf2-a3c7-a4d0-682a-837b7367bf2f@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J.
+ Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, fan.chen@mediatek.com, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anson Huang (2019-02-13 17:54:08)
-> On NXP's i.MX SoCs with system controller inside, CPU frequency
-> scaling can ONLY be done by system controller firmware, and it
-> can ONLY be requested from secure mode, so Linux kernel has to
-> call ARM SMC to trap to ARM-Trusted-Firmware to request system
-> controller firmware to do CPU frequency scaling.
->=20
-> This patch adds i.MX system controller CPU frequency scaling support,
-> it reuses cpufreq-dt driver and implement the CPU frequency scaling
-> inside SCU clock driver.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-
-Unless you wanted me to pick this patch up into clk-next?
+T24gVHVlLCAyMDE5LTAyLTEyIGF0IDEwOjAwICswOTAwLCBDaGFud29vIENob2kgd3JvdGU6Cj4g
+SGkgQW5kcmV3LXNoLkNoZW5nLAo+IAo+IE9uIDE5LiAxLiAyOS4g7Jik7ZuEIDM6MzUsIEFuZHJl
+dy1zaCBDaGVuZyB3cm90ZToKPiA+IEZyb206ICJBbmRyZXctc2guQ2hlbmciIDxhbmRyZXctc2gu
+Y2hlbmdAbWVkaWF0ZWsuY29tPgo+ID4gCj4gPiBUaGlzIGFkZHMgZHQtYmluZGluZyBkb2N1bWVu
+dGF0aW9uIG9mIGNjaSBkZXZmcmVxCj4gPiBmb3IgTWVkaWF0ZWsgTVQ4MTgzIFNvQyBwbGF0Zm9y
+bS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogQW5kcmV3LXNoLkNoZW5nIDxhbmRyZXctc2guY2hl
+bmdAbWVkaWF0ZWsuY29tPgo+ID4gLS0tCj4gPiAgLi4uL2JpbmRpbmdzL2RldmZyZXEvbXQ4MTgz
+LWNjaS1kZXZmcmVxLnR4dCAgICAgICAgICAgfCAxOSArKysrKysrKysrKysrKysrKysrCj4gPiAg
+MSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RldmZyZXEvbXQ4MTgzLWNjaS1kZXZm
+cmVxLnR4dAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2RldmZyZXEvbXQ4MTgzLWNjaS1kZXZmcmVxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kZXZmcmVxL210ODE4My1jY2ktZGV2ZnJlcS50eHQKPiA+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi5lMmI2MWNmCj4gPiAtLS0gL2Rldi9u
+dWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGV2ZnJlcS9t
+dDgxODMtY2NpLWRldmZyZXEudHh0Cj4gPiBAQCAtMCwwICsxLDE5IEBACj4gPiArKiBNZWRpYXRl
+ayBDQ0kgZnJlcXVlbmN5IGRldmljZQo+IAo+IFlvdSBoYXZlIHRvIGFkZCBtb3JlIGRldGFpbGVk
+IHdoYXQgdG8gZG8gb24gdGhpcyBkcml2ZXIuCj4gQWxzbywgcGxlYXNlIGFkZCB0aGUgZnVsbCBh
+bHBoYWJldCBmb3IgQ0NJLgpJIHdpbGwgbW9kaWZ5IGluIG5leHQgcGF0Y2guCj4gCj4gPiArCj4g
+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICstIGNvbXBhdGlibGU6IHNob3VsZCBjb250YWlu
+ICJtZWRpYXRlayxtdDgxODMtY2NpIiBmb3IgY2NpIGRldmZyZXEKPiAKPiBVc3VhbGx5LCBkdC1i
+aW5kaW5nIGRvY3VtZW50IG9ubHkgc3BlY2lmaWVzIGgvdyBpbmZvcm1hdGlvbgo+IGFuZCBob3cg
+dG8gYmluZCBkZXZpY2UuICdkZXZmcmVxJyBpcyB0aGUgd29yZCBvZiBsaW51eC1zaWRlLgo+IEl0
+IG1lYW5zIHRoYXQgJ2RldmZyZXEnIGNhbm5vdCBpbmRpY2F0ZSB0aGUgYW55IGgvdyBkZXZpY2Uu
+Cj4gCj4gWW91IHNob3VsZCB1c2UgdGhlIGgvdyBkZXZpY2UgaW5mb3JtYXRpb24gYW5kIHdvcmQg
+b2YgQ0NJIGZvciB3cml0aW5nCj4gdGhlIGR0LWJpbmRpbmcgZG9jdW1lbnQgd2l0aG91dCBsaW51
+eC1zaWRlIHdvcmQgbGlrZSBkZXZmcmVxLgo+IAo+IEZvciBleGFtcGxlLCAKPiAtIGNjaSBkZXZm
+cmVxIC0+IGZyZXF1ZW5jeSBzY2FsaW5nIG9mIENDSQpUaGFuayB5b3UgZm9yIGFkdmljZS4KSSB3
+aWxsIG1vZGlmeSBpbiBuZXh0IHBhdGNoLgo+IAo+ID4gKwo+IAo+IFJlbW92ZSB1bm5lZWRlZCBi
+bGFuayBsaW5lLgpJIHdpbGwgbW9kaWZ5IGluIG5leHQgcGF0Y2guCj4gCj4gPiArLSBjbG9ja3M6
+IGZvciBjY2kgZGV2ZnJlcQo+IAo+IGRpdHRvIG9mICdkZXZmcmVxJyB3b3JkLgpJIHdpbGwgbW9k
+aWZ5IGluIG5leHQgcGF0Y2guCj4gCj4gPiArCj4gCj4gZGl0dG8gb2YgYmxhbmsgbGluZQpJIHdp
+bGwgbW9kaWZ5IGluIG5leHQgcGF0Y2guCj4gCj4gPiArLSBjbG9jay1uYW1lczogZm9yIGNjaSBk
+ZXZmcmVxIGRyaXZlciB0byByZWZlcmVuY2UKPiAKPiBkaXR0byBvZiAnZGV2ZnJlcScgd29yZC4K
+SSB3aWxsIG1vZGlmeSBpbiBuZXh0IHBhdGNoLgo+IAo+ID4gKwo+IAo+IGRpdHRvIG9mIGJsYW5r
+IGxpbmUKSSB3aWxsIG1vZGlmeSBpbiBuZXh0IHBhdGNoLgo+IAo+ID4gKy0gb3BlcmF0aW5nLXBv
+aW50cy12MjogZm9yIGNjaSBkZXZmcmVxIG9wcCB0YWJsZQo+IAo+IGRpdHRvIG9mICdkZXZmcmVx
+JyB3b3JkLgpJIHdpbGwgbW9kaWZ5IGluIG5leHQgcGF0Y2guCj4gCj4gPiArCj4gPiArRXhhbXBs
+ZToKPiA+ICsJY2NpOiBjY2kgewo+ID4gKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxjY2kiOwo+
+ID4gKwkJY2xvY2tzID0gPCZhcG1peGVkc3lzIENMS19BUE1JWEVEX0NDSVBMTD47Cj4gPiArCQlj
+bG9jay1uYW1lcyA9ICJjY2lfY2xvY2siOwo+ID4gKwkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwm
+Y2NpX29wcD47Cj4gPiArCX07Cj4gPiArCj4gPiAKPiAKPiBUaGlzIGRvY3VtZW50IGlzIG1pc3Np
+bmcgdGhlICdyZWd1bGF0b3InIHByb3BlcnR5LiBQbGVhc2UgYWRkIGl0Ckkgd2lsbCBhZGQgaXQg
+aW4gbmV4dCBwYXRjaAo+IAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
