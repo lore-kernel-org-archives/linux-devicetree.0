@@ -1,94 +1,35 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2] of: unittest: unflatten device tree on UML when
- testing
-Date: Fri, 15 Feb 2019 18:35:40 -0800
-Message-ID: <fcb92f73-f49b-03b8-32ca-ee89b962a765@gmail.com>
-References: <20190216004647.206431-1-brendanhiggins@google.com>
- <eabdd156-62f4-fadb-bfa4-ecbb5ba65527@gmail.com>
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH v2 3/3] scsi: ufs: Add HI3670 SoC UFS driver support
+Date: Fri, 15 Feb 2019 21:59:15 -0500
+Message-ID: <yq1lg2go2v0.fsf@oracle.com>
+References: <20190105072859.9134-1-manivannan.sadhasivam@linaro.org>
+ <20190105072859.9134-4-manivannan.sadhasivam@linaro.org>
+ <20190126144711.GA14260@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <eabdd156-62f4-fadb-bfa4-ecbb5ba65527@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>, robh+dt@kernel.org, mcgrof@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190126144711.GA14260@Mani-XPS-13-9360> (Manivannan
+ Sadhasivam's message of "Sat, 26 Jan 2019 20:17:11 +0530")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: devicetree@vger.kernel.org, jejb@linux.vnet.ibm.com, linux-scsi@vger.kernel.org, martin.petersen@oracle.com, guodong.xu@linaro.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, robh+dt@kernel.org, john.stultz@linaro.org, liwei213@huawei.com, vinholikatti@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/15/19 6:18 PM, Frank Rowand wrote:
-> On 2/15/19 4:46 PM, Brendan Higgins wrote:
->> UML supports enabling OF, and is useful for running the device tree
->> tests, so add support for unflattening device tree blobs so we can
->> actually use it.
->>
->> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->> ---
->>  drivers/of/unittest.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
->> index 84427384654d5..6de34d5fa0e85 100644
->> --- a/drivers/of/unittest.c
->> +++ b/drivers/of/unittest.c
->> @@ -2527,6 +2527,9 @@ static int __init of_unittest(void)
->>  	}
->>  	of_node_put(np);
->>  
->> +	if (IS_ENABLED(CONFIG_UML))
->> +		unittest_unflatten_overlay_base();
->> +
-> 
-> This is still the wrong location.  It should be at the top of the function.
-> 
-> I'll try moving it to the top and see if it still works -- should only
-> take me a few minutes.
 
-Yep, see below.
+Manivannan,
 
+> Ping on this patch!
 
-> -Frank
-> 
->>  	pr_info("start of unittest - you will see error messages\n");
->>  	of_unittest_check_tree_linkage();
->>  	of_unittest_check_phandles();
->>
-> 
-> 
+Applied to 5.1/scsi-queue, thanks!
 
-This is probably white space damaged because I used cut and paste,
-but this is what I meant above.
-
-Tested on 5.0-rc3.
-
-Applied patches 1-14 of series:
-
-   [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit testing framework
-
-booted uml, saw the expected 219 pass, 1 fail.
-
-Applied the following patch, saw the expected 224 pass, 0 fail.
-
-I did not apply patch 15 of the other series, but applying patch 15
-should still result in errors on boot, as I reported in the mail
-thread for that patch series.
-
----
- drivers/of/unittest.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
-Index: b/drivers/of/unittest.c
-===================================================================
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -2514,6 +2514,10 @@ static int __init of_unittest(void)
- 	int res;
- 
- 	/* adding data for unittest */
-+
-+	if (IS_ENABLED(CONFIG_UML))
-+		unittest_unflatten_overlay_base();
-+
- 	res = unittest_data_add();
- 	if (res)
- 		return res;
+-- 
+Martin K. Petersen	Oracle Linux Engineering
