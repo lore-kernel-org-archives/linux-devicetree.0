@@ -1,38 +1,52 @@
-From: Otavio Salvador <otavio.salvador@ossystems.com.br>
-Subject: Re: [PATCH 3/3] drm/panel: simple: Add support for VXT
- VL050-8048NT-C01 panel
-Date: Thu, 14 Feb 2019 16:28:52 -0200
-Message-ID: <CAP9ODKoLjpgtsC=C1_c_QwK4aY8kdFrzOQB9XXfbABuP7VVpmA@mail.gmail.com>
-References: <1543942655-5942-1-git-send-email-festevam@gmail.com>
- <1543942655-5942-3-git-send-email-festevam@gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: add chosen node on veyron chromebooks
+Date: Sat, 16 Feb 2019 21:28:13 +0100
+Message-ID: <2105716.Hge0YL7z4n@phil>
+References: <20190215115150.32299-1-enric.balletbo@collabora.com> <22158501.cNvkU8jGDh@diego> <CAHNYxRzyVjLbT00ryBBkqK67JKFs7bvFR=G=rdvVa_o-q8zN9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1543942655-5942-3-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, Otavio Salvador <otavio@ossystems.com.br>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, John Weber <john.weber@technexion.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHNYxRzyVjLbT00ryBBkqK67JKFs7bvFR=G=rdvVa_o-q8zN9Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru M Stan <amstan@chromium.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Doug Anderson <dianders@chromium.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgNCwgMjAxOCBhdCAyOjU3IFBNIEZhYmlvIEVzdGV2YW0gPGZlc3RldmFtQGdt
-YWlsLmNvbT4gd3JvdGU6Cj4KPiBBZGQgc3VwcG9ydCBmb3IgdGhlIFZYVCBWTDA1MC04MDQ4TlQt
-QzAxIDgwMHg0ODAgcGFuZWwgdG8gdGhlCj4gcGFuZWwtc2ltcGxlIGRyaXZlci4KPgo+IFRoaXMg
-cGFuZWwgaXMgdXNlZCBvbiBzb21lIGJvYXJkcyBtYW51ZmFjdHVyZWQgYnkgVGVjaE5leGlvbiwg
-c3VjaCBhcwo+IGlteDdkLXBpY28uCj4KPiBTaWduZWQtb2ZmLWJ5OiBGYWJpbyBFc3RldmFtIDxm
-ZXN0ZXZhbUBnbWFpbC5jb20+Cj4gLS0tCgpDb3VsZCB0aGlzIHRvIGJlIHJldmlld2VkPyBJdCdk
-IGJlIGltcG9ydGFudCBmb3IgaXQgdG8gYmUgbWVyZ2VkIGZvciA1LjEuCgotLSAKT3RhdmlvIFNh
-bHZhZG9yICAgICAgICAgICAgICAgICAgICAgICAgICAgICBPLlMuIFN5c3RlbXMKaHR0cDovL3d3
-dy5vc3N5c3RlbXMuY29tLmJyICAgICAgICBodHRwOi8vY29kZS5vc3N5c3RlbXMuY29tLmJyCk1v
-YmlsZTogKzU1ICg1MykgOSA5OTgxLTc4NTQgICAgICAgICAgTW9iaWxlOiArMSAoMzQ3KSA5MDMt
-OTc1MApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Am Samstag, 16. Februar 2019, 02:13:25 CET schrieb Alexandru M Stan:
+> On Fri, Feb 15, 2019 at 3:09 PM Heiko Stübner <heiko@sntech.de> wrote:
+> >
+> > Hi Enric,
+> >
+> > Am Freitag, 15. Februar 2019, 12:51:50 CET schrieb Enric Balletbo i Serra:
+> > > In order to use earlycon, the stdout-path property needs to be set
+> > > in the chosen node.
+> > >
+> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >
+> > What's the reason for adding this only for the Chromebook variants?
+> > Uart2 is pretty much the standard output for all devices, so I'd assume
+> > at least all veyron boards should use uart2 as well, making this ideally
+> > live in the rk3288-veyron.dtsi instead?
+> 
+> Yep, all veyriants use uart 2, even when they're not chromebooks.
+> Feel free to put it in the other file instead.
+> 
+> Otherwise it'll make things like the Asus Chromebit (mickey), AOpen
+> Chromebox mini (fievel), and AOpen Chromebase (tiger) unhappy
+> while debugging.
+> 
+> The rk3288-veyron-chromebook.dtsi file is more for things that make
+> a chromebook portable. Ex: built in display, lid switch, cros-ec.
+> 
+> Note how we have no uart2 references either in our tree in the
+> chromebook specific dtsi:
+> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
+
+thanks for the confirmation :-) .
+
+I've moved the choosen node over to veyron.dtsi and applied the result
+for 5.1
+
+Thanks
+Heiko
