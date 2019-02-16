@@ -1,27 +1,76 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 6/8] ARM: at91: pm: add ULP1 support for SAM9X60
-Date: Fri, 15 Feb 2019 16:23:17 -0800
-Message-ID: <155027659793.115909.12085192701261043595@swboyd.mtv.corp.google.com>
-References: <1550159642-26878-1-git-send-email-claudiu.beznea@microchip.com> <1550159642-26878-7-git-send-email-claudiu.beznea@microchip.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq
+ mapping already exists
+Date: Fri, 15 Feb 2019 19:23:59 -0500
+Message-ID: <20190216002359.GA24752@basecamp>
+References: <20190208021631.30252-1-masneyb@onstation.org>
+ <20190208021631.30252-6-masneyb@onstation.org>
+ <155020988635.115909.8353948296231202388@swboyd.mtv.corp.google.com>
+ <20190215134733.GA21208@basecamp>
+ <155026608236.115909.9007817366859489104@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550159642-26878-7-git-send-email-claudiu.beznea@microchip.com>
+Content-Disposition: inline
+In-Reply-To: <155026608236.115909.9007817366859489104@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Claudiu.Beznea@microchip.com
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Claudiu.Beznea@microchip.com (2019-02-14 07:54:57)
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
->=20
-> Add ULP1 support for SAM9X60. In pm_suspend.S enable RC oscillator in
-> PMC if it is not enabled. At resume the state before suspend is
-> restored.
->=20
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  include/linux/clk/at91_pmc.h    |  1 +
+On Fri, Feb 15, 2019 at 01:28:02PM -0800, Stephen Boyd wrote:
+> Quoting Brian Masney (2019-02-15 05:47:33)
+> > On Thu, Feb 14, 2019 at 09:51:26PM -0800, Stephen Boyd wrote:
+> > > > diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+> > > > index 8eb2528793f9..2f99a98ccee5 100644
+> > > > --- a/drivers/mfd/qcom-pm8xxx.c
+> > > > +++ b/drivers/mfd/qcom-pm8xxx.c
+> > > > @@ -380,6 +380,12 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip *chip,
+> > > >                                   struct irq_domain *domain, unsigned int irq,
+> > > >                                   irq_hw_number_t hwirq, unsigned int type)
+> > > >  {
+> > > > +       unsigned int old_virq;
+> > > > +
+> > > > +       old_virq = irq_find_mapping(domain, hwirq);
+> > > > +       if (old_virq)
+> > > > +               irq_domain_disassociate(domain, old_virq);
+> > > 
+> > > Is it possible to pass 'true' for the 'realloc' argument to
+> > > __irq_domain_alloc_irqs() and then this disassociate change isn't
+> > > needed?
+> > 
+> > The kernel doc for __irq_domain_alloc_irqs() says that the realloc
+> > parameter is mainly to support legacy IRQs. I don't think its a good
+> > idea to add new code that'll stay past the end of this patch series
+> > on top of that legacy interface.
+> > 
+> 
+> Ok. The other side of the argument is that this is the only user of
+> irq_domain_disassociate(), which may also be some sort of legacy
+> interface that isn't supposed to be used. Looking at the commit that
+> exposed it, it seems to be that it's there for legacy reasons.
+> 
+> commit 43a775916d63d1c822107b39987192ca5ced445c
+> Author: Jiang Liu <jiang.liu@linux.intel.com>
+> Date:   Mon Jun 9 16:20:05 2014 +0800
+> 
+>     genirq: Export irq_domain_disassociate() to architecture interrupt drivers
+>     
+>     Export irq_domain_disassociate() to architecture interrupt drivers,
+>     so it could be used to handle legacy IRQ descriptors on x86.
+> 
+> So maybe we should just use the realloc argument and bury the
+> disassociate API in irqdomain.c because it's not supposed to be used?
+> Or does the realloc path not work for some reason?
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+I haven't tried the realloc path yet. Let's back up further so that we
+are both starting with the same assumptions. Do you want to keep either
+your proposed change (realloc argument) or the existing
+irq_domain_disassociate change in mainline past the end of this patch
+series? If it is going to continue to be a temporary shim that will be
+reverted at the end of the patch series (like I did here), then I don't
+see the point in this extra work since this patch is only here to keep
+it bisectable and works. We're not using any legacy interfaces by the
+end of this patch series.
+
+Brian
