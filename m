@@ -1,83 +1,70 @@
-From: Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: rk3288 Tinker Board (S) add wi-fi
-Date: Sun, 17 Feb 2019 12:32:50 -0500
-Message-ID: <CAERgokksSKkFJx5rK16KoAUAz4qCzYEAAN6YrWKVNOcu5CfUJA@mail.gmail.com>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190217121513.22965-3-beagleboard@davidjohnsummers.uk>
- <CAERgokmpHQb2czJdx++qFoogFRmkvXZm=4BNOsVuCz-ZvgTEaw@mail.gmail.com>
- <4ef63671-f58d-3b16-9055-09e69314a0e6@davidjohnsummers.uk>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [v1] drm/msm: Remove clock and bandwidth votes in
+ mdss pm suspend
+Date: Sun, 17 Feb 2019 12:40:27 -0500
+Message-ID: <CAF6AEGs_SvZ=Ttu3pQgMGbQb=3K5Bqj2TOfqf-V4RjjVLJOCaA@mail.gmail.com>
+References: <1548241960-7412-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <4ef63671-f58d-3b16-9055-09e69314a0e6-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1548241960-7412-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello David,
-
-  I agree, of course coordination is not always so simple, I did not
-know Arch didn't have this configured yet.  As for patching, I agree,
-but the Tinker has some... peculiarities, I am a hardware guy,
-software is a passtime, so my code is not always perhaps up to
-standard.  And I wasn't 100% on submitting changes to the device tree
-based on a staging driver.  Most of my work has been absorbed into
-https://github.com/Miouyouyou/RockMyy .  As for your approach, as I
-said, the wifi is the same as I have except for the reset/enables and
-the DDR50, which I didn't know the rtl8723bs supported.  BT I have no
-in-kernel support for other than enabling the RTS pin to the device
-tree, I handle it in user space for now.  I've been watching the
-hci_h5 conversation, I'll look into testing these changes/options
-tonight perhaps once I make sure our rockchip-dev recipes are still
-valid with the newest RC, and can have them committed so others can
-test.
-
-Thank you,
--Tony
-
-On Sun, Feb 17, 2019 at 10:55 AM David Summers
-<beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org> wrote:
->
-> On 17/02/2019 14:32, Tony McKahan wrote:
-> > A similar configuration has been in use on Armbian images since kernel
-> > 4.14, but not in a clean enough format for submission. I will test
-> > this, but the only differences I see compared to ours are combination
-> > of the mystery "chip_h" power domain/reset with the Wifi one and the
-> > inclusion of sd_uhs_ddr50.
-> >
-> > -Tony
-> >
-> > On Sun, Feb 17, 2019 at 7:16 AM David Summers
-> > <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org> wrote:
-> >> This patch adds the wifi to the ASUS Tinker Board (S) machines.
-> >>
-> Tony, thanks for the interest in this and the Bluetooth RFC. To my mind
-> it would be good if we could mainline an agreed solution. As much as
-> anything doesn't make sense to me for Armbian and ArchLinux Arm to have
-> independent solutions.
->
-> In the ArchLinux Arm  camp I'm not a fan of applying many patches to
-> support a board, as much as anything it makes that board non generic -
-> and so has to have its own hand crafted kernel. This to me isn't a good
-> solution, so if possible prefer the pain of getting it mainlined.
->
-> Stefan Wahren has come up with a minimal patch to hci_h5 for bluetooth,
-> that says the relevant properties can be read from the device tree. This
-> means that acpi is no longer necessary. Thats currently out in testing.
->
-> Anyway would be good if Arch and Armbian could merge our efforts ...
->
-> Regards,
->
-> David.
->
+T24gV2VkLCBKYW4gMjMsIDIwMTkgYXQgNjoxMiBBTSBKYXlhbnQgU2hla2hhciA8anNoZWtoYXJA
+Y29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4gTURTUyBQTSBzdXNwZW5kIGlzIGRlcGVuZGVudCBv
+biBydW50aW1lIHN1c3BlbmQgZm9yIGRpc2FibGluZwo+IGNsb2NrcyBhbmQgcmVtb3ZpbmcgYmFu
+ZHdpZHRoIHZvdGVzLiBJbiBjYXNlIG9mIHBtX3N1c3BlbmQKPiB0cmlnZ2VyZWQsIGRwbV9wcmVw
+YXJlIGhvbGQgYSByZWZjb3VudCBvbiBwb3dlciB1c2FnZSBvZiBkZXZpY2UKPiBhbmQgaGVuY2Ug
+cnVudGltZSBzdXNwZW5kIGlzIG5ldmVyIHRyaWdnZXJlZCBkdXJpbmcgcG1fc3VzcGVuZC4KPiBB
+cyBydW50aW1lIHN1c3BlbmQgaXMgbm90IHRyaWdnZXJlZCwgY2xvY2tzIGFuZCBiYW5kd2lkdGgg
+dm90ZXMKPiByZW1haW4uIEhlbmNlIGV4cGxpY2l0bHkgdHJpZ2dlciBtZHNzIGRpc2FibGUgaW4g
+bXNtX3BtX3N1c3BlbmQKPiB0byBkaXNhYmxlIGNsb2NrcyBhbmQgcmVtb3ZlIHRoZSB2b3Rlcy4K
+Pgo+IFNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVraGFyIDxqc2hla2hhckBjb2RlYXVyb3JhLm9y
+Zz4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9tc21fZHJ2LmMgfCA4ICsrKysrKysrCj4g
+IDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L2dwdS9kcm0vbXNtL21zbV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCj4g
+aW5kZXggNWM2MGJiMy4uZmZlM2EyNSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNt
+L21zbV9kcnYuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCj4gQEAgLTEw
+NjgsMTIgKzEwNjgsMTYgQEAgc3RhdGljIGludCBtc21fcG1fc3VzcGVuZChzdHJ1Y3QgZGV2aWNl
+ICpkZXYpCj4gIHsKPiAgICAgICAgIHN0cnVjdCBkcm1fZGV2aWNlICpkZGV2ID0gZGV2X2dldF9k
+cnZkYXRhKGRldik7Cj4gICAgICAgICBzdHJ1Y3QgbXNtX2RybV9wcml2YXRlICpwcml2ID0gZGRl
+di0+ZGV2X3ByaXZhdGU7Cj4gKyAgICAgICBzdHJ1Y3QgbXNtX21kc3MgKm1kc3MgPSBwcml2LT5t
+ZHNzOwo+Cj4gICAgICAgICBpZiAoIUlTX0VSUl9PUl9OVUxMKHByaXYtPnBtX3N0YXRlKSkKPiAg
+ICAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4KPiAgICAgICAgIHByaXYtPnBtX3N0YXRlID0gZHJt
+X2F0b21pY19oZWxwZXJfc3VzcGVuZChkZGV2KTsKPgo+ICsgICAgICAgaWYgKG1kc3MgJiYgbWRz
+cy0+ZnVuY3MpCj4gKyAgICAgICAgICAgICAgIG1kc3MtPmZ1bmNzLT5kaXNhYmxlKG1kc3MpOwo+
+ICsKClRoaXMgcGF0Y2ggZG9lc24ndCBhY3R1YWxseSBzZWVtIHRvIGFwcGx5LCBJIGd1ZXNzIGl0
+IGhhcyBhIGRlcGVuZGVuY3kKb24gc29tZSBvdGhlciBtaXNzaW5nIHBhdGNoPwoKVGhhdCBzYWlk
+LCBzaG91bGRuJ3QgdGhlIHJlZmNvdW50IGFxdWlyZWQgaW4gX3ByZXBhcmUoKSBiZSBkcm9wcGVk
+CnNvbWV3aGVyZT8gIEl0IHNlZW1zIGxpa2UgaWYgYWxsIHBsYW5lcy9jcnRjcy9ldGMgYXJlIGRp
+c2FibGVkLCB3ZQpzaG91bGQgYWxzbyBkaXNhYmxlIHBvd2VyIChvciBhdCBsZWFzdCBhcyBtdWNo
+IGFzIHdlIGNhbiB3aGlsZSBzdGlsbApoYXZpbmcgaG90cGx1ZyB3b3JrKSwgc28gaWRlYWxseSBk
+cm1fYXRvbWljX2hlbHBlcl9zdXNwZW5kKCkgc2hvdWxkIGJlCmVub3VnaC4KCkJSLgotUgoKPiAg
+ICAgICAgIHJldHVybiBJU19FUlIocHJpdi0+cG1fc3RhdGUpID8gUFRSX0VSUihwcml2LT5wbV9z
+dGF0ZSkgOiAwOwo+ICB9Cj4KPiBAQCAtMTA4MSwxMSArMTA4NSwxNSBAQCBzdGF0aWMgaW50IG1z
+bV9wbV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQo+ICB7Cj4gICAgICAgICBzdHJ1Y3QgZHJt
+X2RldmljZSAqZGRldiA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwo+ICAgICAgICAgc3RydWN0IG1z
+bV9kcm1fcHJpdmF0ZSAqcHJpdiA9IGRkZXYtPmRldl9wcml2YXRlOwo+ICsgICAgICAgc3RydWN0
+IG1zbV9tZHNzICptZHNzID0gcHJpdi0+bWRzczsKPiAgICAgICAgIGludCByZXQ7Cj4KPiAgICAg
+ICAgIGlmIChJU19FUlJfT1JfTlVMTChwcml2LT5wbV9zdGF0ZSkpCj4gICAgICAgICAgICAgICAg
+IHJldHVybiAwOwo+Cj4gKyAgICAgICBpZiAobWRzcyAmJiBtZHNzLT5mdW5jcykKPiArICAgICAg
+ICAgICAgICAgbWRzcy0+ZnVuY3MtPmVuYWJsZShtZHNzKTsKPiArCj4gICAgICAgICByZXQgPSBk
+cm1fYXRvbWljX2hlbHBlcl9yZXN1bWUoZGRldiwgcHJpdi0+cG1fc3RhdGUpOwo+ICAgICAgICAg
+aWYgKHJldCA9PSAwKQo+ICAgICAgICAgICAgICAgICBwcml2LT5wbV9zdGF0ZSA9IE5VTEw7Cj4g
+LS0KPiBUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2Yg
+dGhlIENvZGUgQXVyb3JhIEZvcnVtLAo+IGEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZl
+IFByb2plY3QKPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
