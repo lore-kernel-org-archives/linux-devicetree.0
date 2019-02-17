@@ -1,121 +1,94 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: Re: [PATCH 1/3] drm/mediatek: move mipi_dsi_host_register to probe
-Date: Sun, 17 Feb 2019 22:33:01 +0800
-Message-ID: <1550413981.5194.8.camel@mszsdaap41>
-References: <20190214044243.129920-1-jitao.shi@mediatek.com>
- <20190214204821.GP114153@art_vandelay>
+From: Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH 1/7] iio: inkern: API for reading available iio channel
+ attribute values
+Date: Sun, 17 Feb 2019 15:37:58 +0100
+Message-ID: <0fb5a3fef7c4a790b208cf0f3651c059@artur-rojek.eu>
+References: <20190217142914.17433-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190214204821.GP114153@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <sean@poorly.run>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, Ajay Kumar <ajaykumar.rs@samsung.com>, drinkcat@chromium.org, Vincent Palatin <vpalatin@chromium.org>, linux-mediatek@lists.infradead.org, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, yingjoe.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Andy
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190217142914.17433-1-contact@artur-rojek.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTAyLTE0IGF0IDE1OjQ4IC0wNTAwLCBTZWFuIFBhdWwgd3JvdGU6Cj4gT24g
-VGh1LCBGZWIgMTQsIDIwMTkgYXQgMTI6NDI6NDFQTSArMDgwMCwgSml0YW8gU2hpIHdyb3RlOgo+
-ID4gRFNJIHBhbmVsIGRyaXZlciBuZWVkIGF0dGFjaCBmdW5jdGlvbiB3aGljaCBpcyBpbmN1bGRl
-IGluCj4gPiBtaXBpX2RzaV9ob3N0X29wcy4KPiAKPiBXaGljaCBmdW5jdGlvbiBpcyByZXF1aXJl
-ZCBmcm9tIGRzaV9ob3N0Pwo+IAo+IFNlYW4KPiAKCm1pcGlfZHNpX2F0dGFjaCByZXF1ZXN0IHRo
-ZSBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyIHJlYWR5LgoKZm9yIGV4YW1wbGUuCgptaXBpX2RzaV9h
-dHRhY2ggaXMgY2FsbGVkIGJ5IHBhbmVsX3NpbXBsZV9kc2lfcHJvYmUuIAoKaHR0cHM6Ly9naXQu
-a2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3Ry
-ZWUvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jP2g9djUuMC1yYzYjbjI5ODcK
-CmppdGFvCgo+ID4gCj4gPiBJZiBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyIGlzIG5vdCBpbiBwcm9i
-ZSwgZHNpIHBhbmVsIHdpbGwKPiA+IHByb2JlIGZhaWwgb3IgbW9yZSBkZWxheS4KPiA+IAo+ID4g
-U28gbW92ZSB0aGUgbWlwaV9kc2lfaG9zdF9yZWdpc3RlciB0byBwcm9iZSBmcm9tIGJpbmQuCj4g
-PiAKPiA+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4K
-PiA+IC0tLQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgfCA0OSArKysr
-KysrKysrKysrKysrKystLS0tLS0tLS0tLS0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0
-aW9ucygrKSwgMTkgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-c2kuYwo+ID4gaW5kZXggMjdiNTA3ZWI0YTk5Li45M2ZhMjU1YjRhYWQgMTAwNjQ0Cj4gPiAtLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gPiArKysgYi9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gPiBAQCAtMTA0NSwxMiArMTA0NSw2IEBAIHN0YXRp
-YyBpbnQgbXRrX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFz
-dGVyLCB2b2lkICpkYXRhKQo+ID4gIAkJcmV0dXJuIHJldDsKPiA+ICAJfQo+ID4gIAo+ID4gLQly
-ZXQgPSBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKCZkc2ktPmhvc3QpOwo+ID4gLQlpZiAocmV0IDwg
-MCkgewo+ID4gLQkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gcmVnaXN0ZXIgRFNJIGhvc3Q6ICVk
-XG4iLCByZXQpOwo+ID4gLQkJZ290byBlcnJfZGRwX2NvbXBfdW5yZWdpc3RlcjsKPiA+IC0JfQo+
-ID4gLQo+ID4gIAlyZXQgPSBtdGtfZHNpX2NyZWF0ZV9jb25uX2VuYyhkcm0sIGRzaSk7Cj4gPiAg
-CWlmIChyZXQpIHsKPiA+ICAJCURSTV9FUlJPUigiRW5jb2RlciBjcmVhdGUgZmFpbGVkIHdpdGgg
-JWRcbiIsIHJldCk7Cj4gPiBAQCAtMTA2MCw4ICsxMDU0LDYgQEAgc3RhdGljIGludCBtdGtfZHNp
-X2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRh
-dGEpCj4gPiAgCXJldHVybiAwOwo+ID4gIAo+ID4gIGVycl91bnJlZ2lzdGVyOgo+ID4gLQltaXBp
-X2RzaV9ob3N0X3VucmVnaXN0ZXIoJmRzaS0+aG9zdCk7Cj4gPiAtZXJyX2RkcF9jb21wX3VucmVn
-aXN0ZXI6Cj4gPiAgCW10a19kZHBfY29tcF91bnJlZ2lzdGVyKGRybSwgJmRzaS0+ZGRwX2NvbXAp
-Owo+ID4gIAlyZXR1cm4gcmV0Owo+ID4gIH0KPiA+IEBAIC0xMDk3LDMxICsxMDg5LDM3IEBAIHN0
-YXRpYyBpbnQgbXRrX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4g
-IAo+ID4gIAlkc2ktPmhvc3Qub3BzID0gJm10a19kc2lfb3BzOwo+ID4gIAlkc2ktPmhvc3QuZGV2
-ID0gZGV2Owo+ID4gKwlkc2ktPmRldiA9IGRldjsKPiA+ICsJcmV0ID0gbWlwaV9kc2lfaG9zdF9y
-ZWdpc3RlcigmZHNpLT5ob3N0KTsKPiA+ICsJaWYgKHJldCA8IDApIHsKPiA+ICsJCWRldl9lcnIo
-ZGV2LCAiZmFpbGVkIHRvIHJlZ2lzdGVyIERTSSBob3N0OiAlZFxuIiwgcmV0KTsKPiA+ICsJCXJl
-dHVybiAtRVBST0JFX0RFRkVSOwo+ID4gKwl9Cj4gPiAgCj4gPiAgCXJldCA9IGRybV9vZl9maW5k
-X3BhbmVsX29yX2JyaWRnZShkZXYtPm9mX25vZGUsIDAsIDAsCj4gPiAgCQkJCQkgICZkc2ktPnBh
-bmVsLCAmZHNpLT5icmlkZ2UpOwo+ID4gIAlpZiAocmV0KQo+ID4gLQkJcmV0dXJuIHJldDsKPiA+
-ICsJCWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiA+ICAKPiA+ICAJZHNpLT5lbmdpbmVfY2xr
-ID0gZGV2bV9jbGtfZ2V0KGRldiwgImVuZ2luZSIpOwo+ID4gIAlpZiAoSVNfRVJSKGRzaS0+ZW5n
-aW5lX2NsaykpIHsKPiA+ICAJCXJldCA9IFBUUl9FUlIoZHNpLT5lbmdpbmVfY2xrKTsKPiA+ICAJ
-CWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBlbmdpbmUgY2xvY2s6ICVkXG4iLCByZXQpOwo+
-ID4gLQkJcmV0dXJuIHJldDsKPiA+ICsJCWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiA+ICAJ
-fQo+ID4gIAo+ID4gIAlkc2ktPmRpZ2l0YWxfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImRpZ2l0
-YWwiKTsKPiA+ICAJaWYgKElTX0VSUihkc2ktPmRpZ2l0YWxfY2xrKSkgewo+ID4gIAkJcmV0ID0g
-UFRSX0VSUihkc2ktPmRpZ2l0YWxfY2xrKTsKPiA+ICAJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRv
-IGdldCBkaWdpdGFsIGNsb2NrOiAlZFxuIiwgcmV0KTsKPiA+IC0JCXJldHVybiByZXQ7Cj4gPiAr
-CQlnb3RvIGVycl91bnJlZ2lzdGVyX2hvc3Q7Cj4gPiAgCX0KPiA+ICAKPiA+ICAJZHNpLT5oc19j
-bGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAiaHMiKTsKPiA+ICAJaWYgKElTX0VSUihkc2ktPmhzX2Ns
-aykpIHsKPiA+ICAJCXJldCA9IFBUUl9FUlIoZHNpLT5oc19jbGspOwo+ID4gIAkJZGV2X2Vycihk
-ZXYsICJGYWlsZWQgdG8gZ2V0IGhzIGNsb2NrOiAlZFxuIiwgcmV0KTsKPiA+IC0JCXJldHVybiBy
-ZXQ7Cj4gPiArCQlnb3RvIGVycl91bnJlZ2lzdGVyX2hvc3Q7Cj4gPiAgCX0KPiA+ICAKPiA+ICAJ
-cmVncyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7Cj4g
-PiBAQCAtMTEyOSwzMyArMTEyNywzNSBAQCBzdGF0aWMgaW50IG10a19kc2lfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ICAJaWYgKElTX0VSUihkc2ktPnJlZ3MpKSB7Cj4g
-PiAgCQlyZXQgPSBQVFJfRVJSKGRzaS0+cmVncyk7Cj4gPiAgCQlkZXZfZXJyKGRldiwgIkZhaWxl
-ZCB0byBpb3JlbWFwIG1lbW9yeTogJWRcbiIsIHJldCk7Cj4gPiAtCQlyZXR1cm4gcmV0Owo+ID4g
-KwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0Owo+ID4gIAl9Cj4gPiAgCj4gPiAgCWRzaS0+cGh5
-ID0gZGV2bV9waHlfZ2V0KGRldiwgImRwaHkiKTsKPiA+ICAJaWYgKElTX0VSUihkc2ktPnBoeSkp
-IHsKPiA+ICAJCXJldCA9IFBUUl9FUlIoZHNpLT5waHkpOwo+ID4gIAkJZGV2X2VycihkZXYsICJG
-YWlsZWQgdG8gZ2V0IE1JUEktRFBIWTogJWRcbiIsIHJldCk7Cj4gPiAtCQlyZXR1cm4gcmV0Owo+
-ID4gKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0Owo+ID4gIAl9Cj4gPiAgCj4gPiAgCWNvbXBf
-aWQgPSBtdGtfZGRwX2NvbXBfZ2V0X2lkKGRldi0+b2Zfbm9kZSwgTVRLX0RTSSk7Cj4gPiAgCWlm
-IChjb21wX2lkIDwgMCkgewo+ID4gIAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gaWRlbnRpZnkg
-YnkgYWxpYXM6ICVkXG4iLCBjb21wX2lkKTsKPiA+IC0JCXJldHVybiBjb21wX2lkOwo+ID4gKwkJ
-cmV0ID0gY29tcF9pZDsKPiA+ICsJCWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiA+ICAJfQo+
-ID4gIAo+ID4gIAlyZXQgPSBtdGtfZGRwX2NvbXBfaW5pdChkZXYsIGRldi0+b2Zfbm9kZSwgJmRz
-aS0+ZGRwX2NvbXAsIGNvbXBfaWQsCj4gPiAgCQkJCSZtdGtfZHNpX2Z1bmNzKTsKPiA+ICAJaWYg
-KHJldCkgewo+ID4gIAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gaW5pdGlhbGl6ZSBjb21wb25l
-bnQ6ICVkXG4iLCByZXQpOwo+ID4gLQkJcmV0dXJuIHJldDsKPiA+ICsJCWdvdG8gZXJyX3VucmVn
-aXN0ZXJfaG9zdDsKPiA+ICAJfQo+ID4gIAo+ID4gIAlpcnFfbnVtID0gcGxhdGZvcm1fZ2V0X2ly
-cShwZGV2LCAwKTsKPiA+ICAJaWYgKGlycV9udW0gPCAwKSB7Cj4gPiAgCQlkZXZfZXJyKCZwZGV2
-LT5kZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBkc2kgaXJxIHJlc291cmNlXG4iKTsKPiA+IC0JCXJl
-dHVybiAtRVBST0JFX0RFRkVSOwo+ID4gKwkJcmV0ID0gLUVQUk9CRV9ERUZFUjsKPiA+ICsJCWdv
-dG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiA+ICAJfQo+ID4gIAo+ID4gIAlpcnFfc2V0X3N0YXR1
-c19mbGFncyhpcnFfbnVtLCBJUlFfVFlQRV9MRVZFTF9MT1cpOwo+ID4gQEAgLTExNjMsMTQgKzEx
-NjMsMjUgQEAgc3RhdGljIGludCBtdGtfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpCj4gPiAgCQkJICAgICAgIElSUUZfVFJJR0dFUl9MT1csIGRldl9uYW1lKCZwZGV2LT5k
-ZXYpLCBkc2kpOwo+ID4gIAlpZiAocmV0KSB7Cj4gPiAgCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJm
-YWlsZWQgdG8gcmVxdWVzdCBtZWRpYXRlayBkc2kgaXJxXG4iKTsKPiA+IC0JCXJldHVybiAtRVBS
-T0JFX0RFRkVSOwo+ID4gKwkJcmV0ID0gLUVQUk9CRV9ERUZFUjsKPiA+ICsJCWdvdG8gZXJyX3Vu
-cmVnaXN0ZXJfaG9zdDsKPiA+ICAJfQo+ID4gIAo+ID4gIAlpbml0X3dhaXRxdWV1ZV9oZWFkKCZk
-c2ktPmlycV93YWl0X3F1ZXVlKTsKPiA+ICAKPiA+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRl
-diwgZHNpKTsKPiA+ICAKPiA+IC0JcmV0dXJuIGNvbXBvbmVudF9hZGQoJnBkZXYtPmRldiwgJm10
-a19kc2lfY29tcG9uZW50X29wcyk7Cj4gPiArCXJldCA9IGNvbXBvbmVudF9hZGQoJnBkZXYtPmRl
-diwgJm10a19kc2lfY29tcG9uZW50X29wcyk7Cj4gPiArCWlmIChyZXQpIHsKPiA+ICsJCXJldCA9
-IC1FUFJPQkVfREVGRVI7Cj4gPiArCQlnb3RvIGVycl91bnJlZ2lzdGVyX2hvc3Q7Cj4gPiArCX0K
-PiA+ICsKPiA+ICsJcmV0dXJuIDA7Cj4gPiArCj4gPiArZXJyX3VucmVnaXN0ZXJfaG9zdDoKPiA+
-ICsJbWlwaV9kc2lfaG9zdF91bnJlZ2lzdGVyKCZkc2ktPmhvc3QpOwo+ID4gKwlyZXR1cm4gcmV0
-Owo+ID4gIH0KPiA+ICAKPiA+ICBzdGF0aWMgaW50IG10a19kc2lfcmVtb3ZlKHN0cnVjdCBwbGF0
-Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiAtLSAKPiA+IDIuMjAuMQo+ID4gCj4gCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Hi,
+
+This patchset is supposed to contain 5 patches, not 7. So this patch is 
+actually 1/5. My apologies for the mistake.
+
+Artur
+
+On 2019-02-17 15:29, Artur Rojek wrote:
+> Extend the inkern API with a function for reading available
+> attribute values of iio channels.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>  drivers/iio/inkern.c         | 20 ++++++++++++++++++++
+>  include/linux/iio/consumer.h | 14 ++++++++++++++
+>  2 files changed, 34 insertions(+)
+> 
+> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> index 06ca3f7fcc44..f19dbde3c945 100644
+> --- a/drivers/iio/inkern.c
+> +++ b/drivers/iio/inkern.c
+> @@ -733,6 +733,26 @@ static int iio_channel_read_avail(struct 
+> iio_channel *chan,
+>  						 vals, type, length, info);
+>  }
+> 
+> +int iio_read_avail_channel_attribute(struct iio_channel *chan,
+> +				     const int **vals, int *type, int *length,
+> +				     enum iio_chan_info_enum attribute)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&chan->indio_dev->info_exist_lock);
+> +	if (!chan->indio_dev->info) {
+> +		ret = -ENODEV;
+> +		goto err_unlock;
+> +	}
+> +
+> +	ret = iio_channel_read_avail(chan, vals, type, length, attribute);
+> +err_unlock:
+> +	mutex_unlock(&chan->indio_dev->info_exist_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iio_read_avail_channel_attribute);
+> +
+>  int iio_read_avail_channel_raw(struct iio_channel *chan,
+>  			       const int **vals, int *length)
+>  {
+> diff --git a/include/linux/iio/consumer.h 
+> b/include/linux/iio/consumer.h
+> index 9887f4f8e2a8..b2d34831ed7c 100644
+> --- a/include/linux/iio/consumer.h
+> +++ b/include/linux/iio/consumer.h
+> @@ -290,6 +290,20 @@ int iio_read_max_channel_raw(struct iio_channel
+> *chan, int *val);
+>  int iio_read_avail_channel_raw(struct iio_channel *chan,
+>  			       const int **vals, int *length);
+> 
+> +/**
+> + * iio_read_avail_channel_attribute() - read available channel 
+> attribute values
+> + * @chan:		The channel being queried.
+> + * @vals:		Available values read back.
+> + * @type:		Type of values read back.
+> + * @length:		Number of entries in vals.
+> + * @attribute:		info attribute to be read back.
+> + *
+> + * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
+> + */
+> +int iio_read_avail_channel_attribute(struct iio_channel *chan,
+> +				     const int **vals, int *type, int *length,
+> +				     enum iio_chan_info_enum attribute);
+> +
+>  /**
+>   * iio_get_channel_type() - get the type of a channel
+>   * @channel:		The channel being queried.
