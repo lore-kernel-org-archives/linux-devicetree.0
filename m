@@ -1,70 +1,31 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [v1] drm/msm: Remove clock and bandwidth votes in
- mdss pm suspend
-Date: Sun, 17 Feb 2019 12:40:27 -0500
-Message-ID: <CAF6AEGs_SvZ=Ttu3pQgMGbQb=3K5Bqj2TOfqf-V4RjjVLJOCaA@mail.gmail.com>
-References: <1548241960-7412-1-git-send-email-jshekhar@codeaurora.org>
+From: Artem Panfilov <panfilov.artyom@gmail.com>
+Subject: [PATCH v3 2/2] dt-bindings: rtc: add ABEOZ9 support
+Date: Sun, 17 Feb 2019 21:53:21 +0300
+Message-ID: <20190217185321.2189-1-panfilov.artyom@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1548241960-7412-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Artem Panfilov <panfilov.artyom@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKYW4gMjMsIDIwMTkgYXQgNjoxMiBBTSBKYXlhbnQgU2hla2hhciA8anNoZWtoYXJA
-Y29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4gTURTUyBQTSBzdXNwZW5kIGlzIGRlcGVuZGVudCBv
-biBydW50aW1lIHN1c3BlbmQgZm9yIGRpc2FibGluZwo+IGNsb2NrcyBhbmQgcmVtb3ZpbmcgYmFu
-ZHdpZHRoIHZvdGVzLiBJbiBjYXNlIG9mIHBtX3N1c3BlbmQKPiB0cmlnZ2VyZWQsIGRwbV9wcmVw
-YXJlIGhvbGQgYSByZWZjb3VudCBvbiBwb3dlciB1c2FnZSBvZiBkZXZpY2UKPiBhbmQgaGVuY2Ug
-cnVudGltZSBzdXNwZW5kIGlzIG5ldmVyIHRyaWdnZXJlZCBkdXJpbmcgcG1fc3VzcGVuZC4KPiBB
-cyBydW50aW1lIHN1c3BlbmQgaXMgbm90IHRyaWdnZXJlZCwgY2xvY2tzIGFuZCBiYW5kd2lkdGgg
-dm90ZXMKPiByZW1haW4uIEhlbmNlIGV4cGxpY2l0bHkgdHJpZ2dlciBtZHNzIGRpc2FibGUgaW4g
-bXNtX3BtX3N1c3BlbmQKPiB0byBkaXNhYmxlIGNsb2NrcyBhbmQgcmVtb3ZlIHRoZSB2b3Rlcy4K
-Pgo+IFNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVraGFyIDxqc2hla2hhckBjb2RlYXVyb3JhLm9y
-Zz4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9tc21fZHJ2LmMgfCA4ICsrKysrKysrCj4g
-IDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vbXNtL21zbV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCj4g
-aW5kZXggNWM2MGJiMy4uZmZlM2EyNSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNt
-L21zbV9kcnYuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCj4gQEAgLTEw
-NjgsMTIgKzEwNjgsMTYgQEAgc3RhdGljIGludCBtc21fcG1fc3VzcGVuZChzdHJ1Y3QgZGV2aWNl
-ICpkZXYpCj4gIHsKPiAgICAgICAgIHN0cnVjdCBkcm1fZGV2aWNlICpkZGV2ID0gZGV2X2dldF9k
-cnZkYXRhKGRldik7Cj4gICAgICAgICBzdHJ1Y3QgbXNtX2RybV9wcml2YXRlICpwcml2ID0gZGRl
-di0+ZGV2X3ByaXZhdGU7Cj4gKyAgICAgICBzdHJ1Y3QgbXNtX21kc3MgKm1kc3MgPSBwcml2LT5t
-ZHNzOwo+Cj4gICAgICAgICBpZiAoIUlTX0VSUl9PUl9OVUxMKHByaXYtPnBtX3N0YXRlKSkKPiAg
-ICAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4KPiAgICAgICAgIHByaXYtPnBtX3N0YXRlID0gZHJt
-X2F0b21pY19oZWxwZXJfc3VzcGVuZChkZGV2KTsKPgo+ICsgICAgICAgaWYgKG1kc3MgJiYgbWRz
-cy0+ZnVuY3MpCj4gKyAgICAgICAgICAgICAgIG1kc3MtPmZ1bmNzLT5kaXNhYmxlKG1kc3MpOwo+
-ICsKClRoaXMgcGF0Y2ggZG9lc24ndCBhY3R1YWxseSBzZWVtIHRvIGFwcGx5LCBJIGd1ZXNzIGl0
-IGhhcyBhIGRlcGVuZGVuY3kKb24gc29tZSBvdGhlciBtaXNzaW5nIHBhdGNoPwoKVGhhdCBzYWlk
-LCBzaG91bGRuJ3QgdGhlIHJlZmNvdW50IGFxdWlyZWQgaW4gX3ByZXBhcmUoKSBiZSBkcm9wcGVk
-CnNvbWV3aGVyZT8gIEl0IHNlZW1zIGxpa2UgaWYgYWxsIHBsYW5lcy9jcnRjcy9ldGMgYXJlIGRp
-c2FibGVkLCB3ZQpzaG91bGQgYWxzbyBkaXNhYmxlIHBvd2VyIChvciBhdCBsZWFzdCBhcyBtdWNo
-IGFzIHdlIGNhbiB3aGlsZSBzdGlsbApoYXZpbmcgaG90cGx1ZyB3b3JrKSwgc28gaWRlYWxseSBk
-cm1fYXRvbWljX2hlbHBlcl9zdXNwZW5kKCkgc2hvdWxkIGJlCmVub3VnaC4KCkJSLgotUgoKPiAg
-ICAgICAgIHJldHVybiBJU19FUlIocHJpdi0+cG1fc3RhdGUpID8gUFRSX0VSUihwcml2LT5wbV9z
-dGF0ZSkgOiAwOwo+ICB9Cj4KPiBAQCAtMTA4MSwxMSArMTA4NSwxNSBAQCBzdGF0aWMgaW50IG1z
-bV9wbV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQo+ICB7Cj4gICAgICAgICBzdHJ1Y3QgZHJt
-X2RldmljZSAqZGRldiA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwo+ICAgICAgICAgc3RydWN0IG1z
-bV9kcm1fcHJpdmF0ZSAqcHJpdiA9IGRkZXYtPmRldl9wcml2YXRlOwo+ICsgICAgICAgc3RydWN0
-IG1zbV9tZHNzICptZHNzID0gcHJpdi0+bWRzczsKPiAgICAgICAgIGludCByZXQ7Cj4KPiAgICAg
-ICAgIGlmIChJU19FUlJfT1JfTlVMTChwcml2LT5wbV9zdGF0ZSkpCj4gICAgICAgICAgICAgICAg
-IHJldHVybiAwOwo+Cj4gKyAgICAgICBpZiAobWRzcyAmJiBtZHNzLT5mdW5jcykKPiArICAgICAg
-ICAgICAgICAgbWRzcy0+ZnVuY3MtPmVuYWJsZShtZHNzKTsKPiArCj4gICAgICAgICByZXQgPSBk
-cm1fYXRvbWljX2hlbHBlcl9yZXN1bWUoZGRldiwgcHJpdi0+cG1fc3RhdGUpOwo+ICAgICAgICAg
-aWYgKHJldCA9PSAwKQo+ICAgICAgICAgICAgICAgICBwcml2LT5wbV9zdGF0ZSA9IE5VTEw7Cj4g
-LS0KPiBUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2Yg
-dGhlIENvZGUgQXVyb3JhIEZvcnVtLAo+IGEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZl
-IFByb2plY3QKPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
+Signed-off-by: Artem Panfilov <panfilov.artyom@gmail.com>
+---
+ Documentation/devicetree/bindings/rtc/rtc.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
+index 7c8da6926095..0ac93f2dcedc 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc.txt
+@@ -39,6 +39,7 @@ possibly an interrupt line.
+ Compatible		Vendor / Chip
+ ==========		=============
+ abracon,abb5zes3	AB-RTCMC-32.768kHz-B5ZE-S3: Real Time Clock/Calendar Module with I2C Interface
++abracon,abeoz9		AB-RTCMC-32.768kHz-EOZ9: Real Time Clock/Calendar Module with I2C Interface
+ dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
+ dallas,ds1672		Dallas DS1672 Real-time Clock
+ dallas,ds3232		Extremely Accurate I²C RTC with Integrated Crystal and SRAM
+-- 
+2.19.1
