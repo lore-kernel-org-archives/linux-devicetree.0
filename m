@@ -1,36 +1,92 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 0/3] input: goodix - support Goodix gt5688
-Date: Sat, 16 Feb 2019 23:07:06 -0800
-Message-ID: <20190217070527.GC148958@dtor-ws>
-References: <cover.1550239328.git.agx@sigxcpu.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: input: touchscreen: goodix: Document
+ AVDD28-supply property
+Date: Sun, 17 Feb 2019 13:21:25 +0530
+Message-ID: <CAMty3ZDMB=pwY8Rxdt3du=90pksBedLo0Pc_-=diqx9-Xndzqg@mail.gmail.com>
+References: <20181215151802.18592-1-jagan@amarulasolutions.com>
+ <20181215151802.18592-2-jagan@amarulasolutions.com> <20190107225810.ggmkkbrnkoy2ykx5@penguin>
+ <CAL_JsqKTnPVM7Qahy9ejQbPfENpLCdzf5K5uUTcPh8j3EiqWRA@mail.gmail.com>
+ <CAMty3ZCyq=tZMt6RC1aYJuEWgYp2zv1LBh+ZUwucE+g4RCoUaQ@mail.gmail.com>
+ <CAL_JsqKCw3EV+0_DuMiHh7GRGxv7YogQf-xwp71n9gpc2GzSSQ@mail.gmail.com>
+ <CAMty3ZBtoocXBW5A0astyQPh2y7vG7NtbZ_M0BjSeex2etmGsw@mail.gmail.com> <CAL_JsqJSMX7E2zQA2O8ofZQPDrm3S6PMCLG1iAQ95P10Pe2yFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1550239328.git.agx@sigxcpu.org>
+In-Reply-To: <CAL_JsqJSMX7E2zQA2O8ofZQPDrm3S6PMCLG1iAQ95P10Pe2yFg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bastien Nocera <hadess@hadess.net>, Matthias Brugger <matthias.bgg@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 03:11:50PM +0100, Guido Günther wrote:
-> Besides the support for gt5688 two more minimal changes piled up so I'm
-> folding these in here. One is a doc update for the goodix bindings, the
-> other one makes it a bit simpler to figure out configuration problems
-> (like lack of touchscreen-size-{x,y} in the device tree.
-> 
-> I've kept the original subject to (hopefully) not break the series for
-> patchwork. All patches can be applied independently. Series is based on
-> next-20190208.
-> 
-> Changes from v2
-> * Add 'dt-bindings: input: Refer to touchscreen.txt for goodix ts'
-> * Add 'input: goodix: Print values in case of inconsistencies'
->   (sent out separtely before, no comments so far)
-> * Collect 'Reviewed-By' on 'input: goodix - support Goodix gt5688'
+Hi Dmitry and Rob,
 
-Applied the lot, thank you.
+On Thu, Feb 14, 2019 at 3:21 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Jan 22, 2019 at 7:39 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> >
+> > On Mon, Jan 21, 2019 at 9:46 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, Jan 18, 2019 at 10:01 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > >
+> > > > On Wed, Jan 9, 2019 at 7:08 PM Rob Herring <robh@kernel.org> wrote:
+> > > > >
+> > > > > Please CC DT list if you want bindings reviewed.
+> > > >
+> > > > Sorry I forgot.
+> > > >
+> > > > >
+> > > > > On Wed, Jan 9, 2019 at 1:40 AM Dmitry Torokhov
+> > > > > <dmitry.torokhov@gmail.com> wrote:
+> > > > > >
+> > > > > > On Sat, Dec 15, 2018 at 08:47:59PM +0530, Jagan Teki wrote:
+> > > > > > > Most of the Goodix CTP controllers are supply with AVDD28 pin.
+> > > > > > > which need to supply for controllers like GT5663 on some boards
+> > > > > > > to trigger the power.
+> > > > > > >
+> > > > > > > So, document the supply property so-that the require boards
+> > > > > > > that used on GT5663 can enable it via device tree.
+> > > > > > >
+> > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > > ---
+> > > > > > >  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
+> > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > > index f7e95c52f3c7..c4622c983e08 100644
+> > > > > > > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > > @@ -23,6 +23,7 @@ Optional properties:
+> > > > > > >   - touchscreen-inverted-y  : Y axis is inverted (boolean)
+> > > > > > >   - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
+> > > > > > >                               (swapping is done after inverting the axis)
+> > > > > > > + - AVDD28-supply     : Analog power supply regulator on AVDD28 pin
+> > > > > >
+> > > > > > I think we normally use lower case in DT bindings and rarely encode
+> > > > > > voltage in the supply name unless we are dealing with several supplies
+> > > > > > of the same kind, but I'll let Ron comment on this.
+> > > > >
+> > > > > Yes on lowercase though there are some exceptions.
+> > > > >
+> > > > > There's also a AVDD22 supply as well as DVDD12 and VDDIO. So we
+> > > > > probably need to keep the voltage, but the binding is incomplete.
+> > > >
+> > > > What is incomplete here? can you please elaborate.
+> > >
+> > > You are missing the 3 other supplies the chip has: AVDD22, DVDD12 and VDDIO.
+> >
+> > Though it has other supplies, only AVDD28 is connected in the Host
+> > interface design similar like 9. Reference Schematic on Page, 23 in
+> > attached manual.
+>
+> That is for a particular board design. It still has other supplies.
+> Just make the binding complete please. You can make them optional. I
+> don't care if the driver supports controlling all the supplies or not
+> (though Dmitry might).
 
--- 
-Dmitry
+So, Can I make bulk get and enable in all 4 regulators global to
+driver or specific to that chip, in either way the regulators which
+are not used to process via dummy regulators (which we all know).
+
+or regulator which are not using are get via devm_regulator_get_optional.
+
+Any suggestions?
