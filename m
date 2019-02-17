@@ -1,60 +1,83 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH RESEND 3/3] drm/panel: simple: Add support for VXT
- VL050-8048NT-C01 panel
-Date: Sun, 17 Feb 2019 18:27:14 +0100
-Message-ID: <20190217172714.GA20525@ravnborg.org>
-References: <20190217143123.19705-1-festevam@gmail.com>
- <20190217143123.19705-3-festevam@gmail.com>
+From: Tony McKahan <tonymckahan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: rk3288 Tinker Board (S) add wi-fi
+Date: Sun, 17 Feb 2019 12:32:50 -0500
+Message-ID: <CAERgokksSKkFJx5rK16KoAUAz4qCzYEAAN6YrWKVNOcu5CfUJA@mail.gmail.com>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+ <20190217121513.22965-3-beagleboard@davidjohnsummers.uk>
+ <CAERgokmpHQb2czJdx++qFoogFRmkvXZm=4BNOsVuCz-ZvgTEaw@mail.gmail.com>
+ <4ef63671-f58d-3b16-9055-09e69314a0e6@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190217143123.19705-3-festevam@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, otavio.salvador@ossystems.com.br, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, thierry.reding@gmail.com, john.weber@technexion.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <4ef63671-f58d-3b16-9055-09e69314a0e6-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBGZWIgMTcsIDIwMTkgYXQgMTE6MzE6MjNBTSAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3
-cm90ZToKPiBBZGQgc3VwcG9ydCBmb3IgdGhlIFZYVCBWTDA1MC04MDQ4TlQtQzAxIDgwMHg0ODAg
-cGFuZWwgdG8gdGhlCj4gcGFuZWwtc2ltcGxlIGRyaXZlci4gCj4gCj4gVGhpcyBwYW5lbCBpcyB1
-c2VkIG9uIHNvbWUgYm9hcmRzIG1hbnVmYWN0dXJlZCBieSBUZWNoTmV4aW9uLCBzdWNoIGFzCj4g
-aW14N2QtcGljby4KPiAKPiBSZXZpZXdlZC1ieTogT3RhdmlvIFNhbHZhZG9yIDxvdGF2aW9Ab3Nz
-eXN0ZW1zLmNvbS5icj4KPiBTaWduZWQtb2ZmLWJ5OiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBn
-bWFpbC5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyB8
-IDI3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMjcgaW5z
-ZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
-c2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiBpbmRleCA1
-ZmJlZTgzLi4yZTc2ZTk1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5l
-bC1zaW1wbGUuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+
-IEBAIC0yNDEwLDYgKzI0MTAsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIHVy
-dF91bXNoXzg1OTZtZF9wYXJhbGxlbCA9IHsKPiAgCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZN
-VF9SR0I2NjZfMVgxOCwKPiAgfTsKPiAgCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3Bs
-YXlfbW9kZSB2bDA1MF84MDQ4bnRfYzAxX21vZGUgPSB7Cj4gKwkuY2xvY2sgPSAzMzMzMywKPiAr
-CS5oZGlzcGxheSA9IDgwMCwKPiArCS5oc3luY19zdGFydCA9IDgwMCArIDIxMCwKPiArCS5oc3lu
-Y19lbmQgPSA4MDAgKyAyMTAgKyAyMCwKPiArCS5odG90YWwgPSA4MDAgKyAyMTAgKyAyMCArIDQ2
-LAo+ICsJLnZkaXNwbGF5ID0gIDQ4MCwKPiArCS52c3luY19zdGFydCA9IDQ4MCArIDIyLAo+ICsJ
-LnZzeW5jX2VuZCA9IDQ4MCArIDIyICsgMTAsCj4gKwkudnRvdGFsID0gNDgwICsgMjIgKyAxMCAr
-IDIzLAo+ICsJLnZyZWZyZXNoID0gNjAsCj4gK307Ck5vIG5lZWQgZm9yIC5mbGFncz8KRXhhbXBs
-ZTogLmZsYWdzID0gRFJNX01PREVfRkxBR19OSFNZTkMgfCBEUk1fTU9ERV9GTEFHX05WU1lOQywK
-Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgdmwwNTBfODA0OG50X2MwMSA9
-IHsKPiArCS5tb2RlcyA9ICZ2bDA1MF84MDQ4bnRfYzAxX21vZGUsCj4gKwkubnVtX21vZGVzID0g
-MSwKPiArCS5icGMgPSA4LAo+ICsJLnNpemUgPSB7Cj4gKwkJLndpZHRoID0gMTIwLAo+ICsJCS5o
-ZWlnaHQgPSA3NiwKPiArCX0sCj4gKwkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4
-XzFYMjQsCldoYXQgYWJvdXQgLmJ1c19mbGFncz8KRXhhbXBsZTogLmJ1c19mbGFncyA9IERSTV9C
-VVNfRkxBR19QSVhEQVRBX1BPU0VER0UsCgpUaGUgZXhhbXBsZXMgYXJlIHJhbmRvbSBmcm9tIHRo
-ZSBwYW5lbC1zaW1wbGUgZHJpdmVyLgpJIGNvdWxkIG5vdCBmaW5kIGFueSBkYXRhc2hlZXQgYXQg
-aHR0cDovL3d3dy52eHQuY29tLnR3CmZvciB0aGUgcGFuZWwuCgpXaXRoIG15IGNvbW1lbnRzIGNv
-bnNpZGVyZWQgeW91IGNhbiBhZGQ6ClJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZu
-Ym9yZy5vcmc+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hello David,
+
+  I agree, of course coordination is not always so simple, I did not
+know Arch didn't have this configured yet.  As for patching, I agree,
+but the Tinker has some... peculiarities, I am a hardware guy,
+software is a passtime, so my code is not always perhaps up to
+standard.  And I wasn't 100% on submitting changes to the device tree
+based on a staging driver.  Most of my work has been absorbed into
+https://github.com/Miouyouyou/RockMyy .  As for your approach, as I
+said, the wifi is the same as I have except for the reset/enables and
+the DDR50, which I didn't know the rtl8723bs supported.  BT I have no
+in-kernel support for other than enabling the RTS pin to the device
+tree, I handle it in user space for now.  I've been watching the
+hci_h5 conversation, I'll look into testing these changes/options
+tonight perhaps once I make sure our rockchip-dev recipes are still
+valid with the newest RC, and can have them committed so others can
+test.
+
+Thank you,
+-Tony
+
+On Sun, Feb 17, 2019 at 10:55 AM David Summers
+<beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org> wrote:
+>
+> On 17/02/2019 14:32, Tony McKahan wrote:
+> > A similar configuration has been in use on Armbian images since kernel
+> > 4.14, but not in a clean enough format for submission. I will test
+> > this, but the only differences I see compared to ours are combination
+> > of the mystery "chip_h" power domain/reset with the Wifi one and the
+> > inclusion of sd_uhs_ddr50.
+> >
+> > -Tony
+> >
+> > On Sun, Feb 17, 2019 at 7:16 AM David Summers
+> > <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org> wrote:
+> >> This patch adds the wifi to the ASUS Tinker Board (S) machines.
+> >>
+> Tony, thanks for the interest in this and the Bluetooth RFC. To my mind
+> it would be good if we could mainline an agreed solution. As much as
+> anything doesn't make sense to me for Armbian and ArchLinux Arm to have
+> independent solutions.
+>
+> In the ArchLinux Arm  camp I'm not a fan of applying many patches to
+> support a board, as much as anything it makes that board non generic -
+> and so has to have its own hand crafted kernel. This to me isn't a good
+> solution, so if possible prefer the pain of getting it mainlined.
+>
+> Stefan Wahren has come up with a minimal patch to hci_h5 for bluetooth,
+> that says the relevant properties can be read from the device tree. This
+> means that acpi is no longer necessary. Thats currently out in testing.
+>
+> Anyway would be good if Arch and Armbian could merge our efforts ...
+>
+> Regards,
+>
+> David.
+>
