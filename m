@@ -1,54 +1,39 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 3/8] dt-bindings: usb: dwc2: Add Amlogic G12A DWC2 Compatible
-Date: Sun, 17 Feb 2019 23:07:30 +0100
-Message-ID: <CAFBinCCHy5-kxFoAGUvA7KgOFTjvRFjVE962U+FS1UZnGKEOXA@mail.gmail.com>
-References: <20190212151413.24632-1-narmstrong@baylibre.com> <20190212151413.24632-4-narmstrong@baylibre.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH v1 2/6] dt-bindings: drm/msm/a6xx: Add GX power-domain for
+ GMU bindings
+Date: Sun, 17 Feb 2019 17:43:16 -0500
+Message-ID: <CAF6AEGuXXqfa7OnfnyHLcyHaGXXGKHwpo4gMBH4gU0keExQcFg@mail.gmail.com>
+References: <1549296944-17285-1-git-send-email-jcrouse@codeaurora.org>
+ <1549296944-17285-3-git-send-email-jcrouse@codeaurora.org> <CAL_JsqJ0FX=dbQb34bvZcdbWibjKnS2VXGsApT_Vz+UcjUxCSQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212151413.24632-4-narmstrong@baylibre.com>
+In-Reply-To: <CAL_JsqJ0FX=dbQb34bvZcdbWibjKnS2VXGsApT_Vz+UcjUxCSQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>, freedreno <freedreno@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
-
-On Tue, Feb 12, 2019 at 4:15 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Sun, Feb 17, 2019 at 4:08 PM Rob Herring <robh+dt@kernel.org> wrote:
 >
-> Adds the specific compatible string for the DWC2 IP found in the
-> Amlogic G12A SoC Family.
+> On Mon, Feb 4, 2019 at 10:15 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> >
+> > The GMU should have two power domains defined: "cx" and "gx". "cx" is the
+> > actual power domain for the device and "gx" will be attached at runtime
+> > to manage reference counting on the GPU device in case of a GMU crash.
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
->  1 file changed, 1 insertion(+)
+> power-domains are supposed to be actual regions on a chip die which
+> can be power gated. However, they are often abused by being defined in
+> terms of kernel PM domains which are not always the same thing. This
+> description sounds like the latter case.
 >
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index 6dc3c4a34483..e150b7b227c9 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -14,6 +14,7 @@ Required properties:
->    - "amlogic,meson8-usb": The DWC2 USB controller instance in Amlogic Meson8 SoCs;
->    - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
->    - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
-> +  - "amlogic,meson-g12a-usb": The DWC2 USB controller instance in Amlogic G12A SoCs;
-if anyone is curious: starting with GXL (not supported by the dwc2
-driver yet) the dwc2 core is "peripheral mode" only while previous
-SoCs had one host-only dwc2 instance and another OTG capable dwc2
-instance
 
-I also discussed the compatible string with Neil off-list because I
-was not sure if we have unique compatible names for the dwc2
-controller and the "USB control" registers.
-The "USB control" registers are named "USBCTRL" according to Neil (I
-assume he got this information from the datasheet to which I don't
-have access). Thus the compatible string for the "USB control" device
-will be "amlogic,meson-g12a-usb-ctrl" - so we don't have any naming
-conflict.
+iirc (and Jordan can correct me), this arrangement was needed because
+normally the GMU does the GPU power control (except for if we manage
+to crash it and need to reset the GMU)..
 
+so maybe not 100% about the actual regions on chip die which can be
+gated.. but it is a reality of how hw + fw + sw fit together..
 
-Regards
-Martin
+BR,
+-R
