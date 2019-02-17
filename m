@@ -1,236 +1,60 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [RFC 2/6] mfd: Support for Ettus Research E31x devices PMU
-Date: Sun, 17 Feb 2019 08:37:35 -0800
-Message-ID: <CAAtXAHemEOOKOmQGT5StDt-Jxn0RUOoc9L-breMNURhd8=9q=Q@mail.gmail.com>
-References: <20190212010143.3729-1-virendra.kakade@ni.com> <20190212010143.3729-3-virendra.kakade@ni.com>
- <20190214093445.GF13737@dell>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH RESEND 3/3] drm/panel: simple: Add support for VXT
+ VL050-8048NT-C01 panel
+Date: Sun, 17 Feb 2019 18:27:14 +0100
+Message-ID: <20190217172714.GA20525@ravnborg.org>
+References: <20190217143123.19705-1-festevam@gmail.com>
+ <20190217143123.19705-3-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190214093445.GF13737@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Virendra Kakade <virendra.kakade@ni.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190217143123.19705-3-festevam@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, otavio.salvador@ossystems.com.br, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, thierry.reding@gmail.com, john.weber@technexion.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-thanks for your feedback!
-
-On Thu, Feb 14, 2019 at 1:34 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Mon, 11 Feb 2019, Virendra Kakade wrote:
->
-> > Signed-off-by: Virendra Kakade <virendra.kakade@ni.com>
-> > ---
-> >  drivers/mfd/Kconfig          |  7 +++
-> >  drivers/mfd/Makefile         |  2 +-
-> >  drivers/mfd/e31x-pmu.c       | 89 ++++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/e31x-pmu.h | 20 ++++++++
-> >  4 files changed, 117 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/mfd/e31x-pmu.c
-> >  create mode 100644 include/linux/mfd/e31x-pmu.h
-> >
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 8c5dfdce4326..6c4c0747f2a5 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -1916,4 +1916,11 @@ config RAVE_SP_CORE
-> >         device found on several devices in RAVE line of hardware.
-> >
-> >  endmenu
-> > +
-> > +config MFD_E31X_PMU
-> > +     tristate "E31X PMU driver"
-> > +     select MFD_SYSCON
-> > +     help
-> > +      Select this to get support for the Ettus Research E31x devices.
-> > +
-> >  endif
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index 12980a4ad460..e37c2057134b 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -241,4 +241,4 @@ obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
-> >  obj-$(CONFIG_MFD_SC27XX_PMIC)        += sprd-sc27xx-spi.o
-> >  obj-$(CONFIG_RAVE_SP_CORE)   += rave-sp.o
-> >  obj-$(CONFIG_MFD_ROHM_BD718XX)       += rohm-bd718x7.o
-> > -
-> > +obj-$(CONFIG_MFD_E31X_PMU)      += e31x-pmu.o
-> > diff --git a/drivers/mfd/e31x-pmu.c b/drivers/mfd/e31x-pmu.c
-> > new file mode 100644
-> > index 000000000000..383df68a538f
-> > --- /dev/null
-> > +++ b/drivers/mfd/e31x-pmu.c
-> > @@ -0,0 +1,89 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2018 National Instruments Corp
->
-> This is out of date.
->
-> '\n' here.
->
-> > + * Author: Virendra Kakade<virendra.kakade@ni.com>
->
-> You need a space after your name.
->
-> > + * Ettus Research E31x PMU MFD driver
->
-> Please expand PMU.
->
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/mfd/core.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/mfd/e31x-pmu.h>
-> > +#include <linux/platform_device.h>
->
-> Alphabetical.
->
-> > +#define E31X_PMU_MISC_IRQ_MASK               BIT(8)
-> > +#define E31X_PMU_MISC_IRQ_SHIFT              8
-> > +#define E31X_PMU_MISC_VERSION_MIN_MASK       GENMASK(3, 0)
-> > +#define E31X_PMU_MISC_VERSION_MIN_SHIFT      0
-> > +#define E31X_PMU_MISC_VERSION_MAJ_MASK       GENMASK(7, 4)
-> > +#define E31X_PMU_MISC_VERSION_MAJ_SHIFT      4
-> > +
-> > +struct e31x_pmu {
-> > +     struct regmap *regmap;
-> > +};
->
-> A whole struct for one attribute?
->
-> > +static int e31x_pmu_check_version(struct e31x_pmu *pmu)
-> > +{
-> > +     int timeout = 100;
->
-> Where does 100 come from?
->
-> > +     u32 misc, maj;
-> > +     int err;
->
-> 'ret' is more common.
->
-> > +     /* we need to wait a bit for firmware to populate the fields */
->
-> "a bit" ?
->
-> What does the datasheet say?
->
-> Please use proper grammar.  Capital letters.
->
-> > +     while (timeout--) {
-> > +             err = regmap_read(pmu->regmap, E31X_PMU_REG_MISC, &misc);
-> > +             if (err)
-> > +                     return err;
-> > +             if (misc)
-> > +                     break;
-> > +
-> > +     usleep_range(2500, 5000);
->
-> Formatting.
->
-> > +     }
-> > +
-> > +     /* only firmware versions above 2.0 are supported */
->
-> "Only supports firmware version 2.0 and above"
->
-> > +     maj = E31X_PMU_GET_FIELD(MISC_VERSION_MAJ, misc);
-> > +     if (maj < 2)
-> > +             return -ENOTSUPP;
->
-> '\n' here.
->
-> > +     return 0;
-> > +}
-> > +
-> > +static int e31x_pmu_probe(struct platform_device *pdev)
-> > +{
-> > +     struct e31x_pmu *pmu;
-> > +
-> > +     pmu = devm_kzalloc(&pdev->dev, sizeof(*pmu), GFP_KERNEL);
-> > +     if (!pmu)
-> > +             return -ENOMEM;
->
-> '\n' here.
->
-> > +     pmu->regmap = syscon_regmap_lookup_by_phandle(\
->
-> Why are you storing regmap?
-
-See my comment below.
->
-> Just pass it directly to e31x_pmu_check_version().
->
-> > +                     pdev->dev.of_node, "regmap");
-> > +
->
-> Remove this line.
->
-> > +     if (IS_ERR(pmu->regmap))
-> > +             return PTR_ERR(pmu->regmap);
->
-> '\n' here.
->
-> > +     if (e31x_pmu_check_version(pmu))
->
-> Please split out the function from the if.
->
-> Use a variable 'ret' to feed into and check that.
->
-> > +             return -ENOTSUPP;
->
-> '\n' here.
->
-> > +     return devm_of_platform_populate(&pdev->dev);
-> > +}
-> > +
-> > +static const struct of_device_id e31x_pmu_id[] = {
-> > +     { .compatible = "ni,e31x-pmu" },
-> > +     {},
-> > +};
-> > +
-> > +static struct platform_driver e31x_pmu_driver = {
-> > +     .driver = {
-> > +     .name = "e31x-pmu",
-> > +     .of_match_table = e31x_pmu_id,
->
-> These 2 lines need indenting.
->
-> > +     },
-> > +     .probe = e31x_pmu_probe,
-> > +};
-> > +module_platform_driver(e31x_pmu_driver);
-> > +
-> > +MODULE_DESCRIPTION("E31x PMU driver");
-> > +MODULE_AUTHOR("Virendra Kakade <virendra.kakade@ni.com>");
-> > +MODULE_LICENSE("GPL");
->
-> So the whole purpose of this driver is to do a version check.
->
-> Seems like over-kill!
->
-> Probably better to do the version check in an inline function stored
-> in a header file, then call it from each of the children's .probe()
-> function.
-
-A bit of context here, this is based on an in-house driver that we had that does
-a bunch of other stuff (e.g. it controls a flag on whether the device auto-boots
-on power being plugged in etc.). These functions will use the regmap.
-
-I had advised Virendra to submit a base version and follow up with patches
-that would add these functions one by one as he figures out how to expose them
-in a proper way to the kernel.
-
-Cheers,
-Moritz
+T24gU3VuLCBGZWIgMTcsIDIwMTkgYXQgMTE6MzE6MjNBTSAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3
+cm90ZToKPiBBZGQgc3VwcG9ydCBmb3IgdGhlIFZYVCBWTDA1MC04MDQ4TlQtQzAxIDgwMHg0ODAg
+cGFuZWwgdG8gdGhlCj4gcGFuZWwtc2ltcGxlIGRyaXZlci4gCj4gCj4gVGhpcyBwYW5lbCBpcyB1
+c2VkIG9uIHNvbWUgYm9hcmRzIG1hbnVmYWN0dXJlZCBieSBUZWNoTmV4aW9uLCBzdWNoIGFzCj4g
+aW14N2QtcGljby4KPiAKPiBSZXZpZXdlZC1ieTogT3RhdmlvIFNhbHZhZG9yIDxvdGF2aW9Ab3Nz
+eXN0ZW1zLmNvbS5icj4KPiBTaWduZWQtb2ZmLWJ5OiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBn
+bWFpbC5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyB8
+IDI3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMjcgaW5z
+ZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
+c2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiBpbmRleCA1
+ZmJlZTgzLi4yZTc2ZTk1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5l
+bC1zaW1wbGUuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+
+IEBAIC0yNDEwLDYgKzI0MTAsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIHVy
+dF91bXNoXzg1OTZtZF9wYXJhbGxlbCA9IHsKPiAgCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZN
+VF9SR0I2NjZfMVgxOCwKPiAgfTsKPiAgCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3Bs
+YXlfbW9kZSB2bDA1MF84MDQ4bnRfYzAxX21vZGUgPSB7Cj4gKwkuY2xvY2sgPSAzMzMzMywKPiAr
+CS5oZGlzcGxheSA9IDgwMCwKPiArCS5oc3luY19zdGFydCA9IDgwMCArIDIxMCwKPiArCS5oc3lu
+Y19lbmQgPSA4MDAgKyAyMTAgKyAyMCwKPiArCS5odG90YWwgPSA4MDAgKyAyMTAgKyAyMCArIDQ2
+LAo+ICsJLnZkaXNwbGF5ID0gIDQ4MCwKPiArCS52c3luY19zdGFydCA9IDQ4MCArIDIyLAo+ICsJ
+LnZzeW5jX2VuZCA9IDQ4MCArIDIyICsgMTAsCj4gKwkudnRvdGFsID0gNDgwICsgMjIgKyAxMCAr
+IDIzLAo+ICsJLnZyZWZyZXNoID0gNjAsCj4gK307Ck5vIG5lZWQgZm9yIC5mbGFncz8KRXhhbXBs
+ZTogLmZsYWdzID0gRFJNX01PREVfRkxBR19OSFNZTkMgfCBEUk1fTU9ERV9GTEFHX05WU1lOQywK
+Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgdmwwNTBfODA0OG50X2MwMSA9
+IHsKPiArCS5tb2RlcyA9ICZ2bDA1MF84MDQ4bnRfYzAxX21vZGUsCj4gKwkubnVtX21vZGVzID0g
+MSwKPiArCS5icGMgPSA4LAo+ICsJLnNpemUgPSB7Cj4gKwkJLndpZHRoID0gMTIwLAo+ICsJCS5o
+ZWlnaHQgPSA3NiwKPiArCX0sCj4gKwkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4
+XzFYMjQsCldoYXQgYWJvdXQgLmJ1c19mbGFncz8KRXhhbXBsZTogLmJ1c19mbGFncyA9IERSTV9C
+VVNfRkxBR19QSVhEQVRBX1BPU0VER0UsCgpUaGUgZXhhbXBsZXMgYXJlIHJhbmRvbSBmcm9tIHRo
+ZSBwYW5lbC1zaW1wbGUgZHJpdmVyLgpJIGNvdWxkIG5vdCBmaW5kIGFueSBkYXRhc2hlZXQgYXQg
+aHR0cDovL3d3dy52eHQuY29tLnR3CmZvciB0aGUgcGFuZWwuCgpXaXRoIG15IGNvbW1lbnRzIGNv
+bnNpZGVyZWQgeW91IGNhbiBhZGQ6ClJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZu
+Ym9yZy5vcmc+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
