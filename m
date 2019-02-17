@@ -1,39 +1,67 @@
-From: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Subject: [PATCH 0/3] ARM: dts: rk3288 Tinker Board (S) updates
-Date: Sun, 17 Feb 2019 12:15:10 +0000
-Message-ID: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+From: David Summers <beagleboard@davidjohnsummers.uk>
+Subject: [PATCH 1/3] ARM: dts: rk3288 Tinker Board (S) sdcard changes
+Date: Sun, 17 Feb 2019 12:15:11 +0000
+Message-ID: <20190217121513.22965-2-beagleboard@davidjohnsummers.uk>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-rockchip@lists.infradead.org, David Summers <beagleboard@davidjohnsummers.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Find in the following patches 3 sets of updates to the rk3288 ASUS
-Tinker Board (S) device tree. The patches consist of:
+This patch makes some minor changes to how the sd card is
+described in the device tree for the ASUS Tinker Board (S). In
+particular on the Tinker Board S, when booted from the eMMC, and with
+no card in the sd slot, and the log has endless messages about not
+being able to detect the card.
 
-       1) Changes to sd card, to remove error
-       2) Add WiFi to the device tree
-       3) Add an outline for Bluetooth to the device tree
+Several methods to remove this error have been tried, the only one
+that works is the broken-cd and so that is what is applied here.
 
-The patches have been developed by both Stefan and myself, and hence
-have both our sign off.
+Alas the ASUS schematic is not clear enough to indicate if the card
+detect is wired up to the cpu, the schematic does not show internal
+wiring on the Tinker Board!
 
-The patches have been extensivly tested by TheSaint on ArchLinux Arm
-Forum, details:
+Now this error didn't show up on the Tinker Board, as that machine
+only boots where there is a sd card installed. However as the TB and
+TBS are so similar it is expected that the Tinker Board also doesn't
+have a functioning card detect. Hence the change here is made to the
+dtsi file, so it applies to both TB and TBS.
 
-https://archlinuxarm.org/forum/viewtopic.php?f=44&t=13064&start=90
+The disable-wp is also removed, it doesnt seem needed on the micro
+sdcard slots, and without thisn the card can still be written
+to. Hence this flag is also removed.
 
-Each patch has more details on what is covered.
+Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
+---
+ arch/arm/boot/dts/rk3288-tinker.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-David.
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+index 2b38075a2917..fceaeed44e34 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dtsi
++++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+@@ -432,9 +432,7 @@
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+ 	cap-sd-highspeed;
+-	card-detect-delay = <200>;
+-	disable-wp;			/* wp not hooked up */
++	broken-cd;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
+ 	status = "okay";
+-- 
+beagleboard@davidjohnsummers.uk
