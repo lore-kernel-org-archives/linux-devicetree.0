@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 1/5] nvmem: sunxi-sid: fix wrong description in kernel doc
-Date: Sun, 17 Feb 2019 11:23:12 -0500
-Message-ID: <20190217162316.14111-2-tiny.windzz@gmail.com>
+Subject: [PATCH 2/5] nvmem: sunxi-sid: add support for H5's SID controller
+Date: Sun, 17 Feb 2019 11:23:13 -0500
+Message-ID: <20190217162316.14111-3-tiny.windzz@gmail.com>
 References: <20190217162316.14111-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190217162316.14111-1-tiny.windzz@gmail.com>
@@ -10,25 +10,34 @@ To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ma
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-qfprom->sunxi-sid
+Add support for H5's SID controller.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvmem/sunxi_sid.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-index 99c4ba6a3f61..d37017e343b1 100644
---- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-@@ -12,7 +12,7 @@ Required properties:
- - reg: Should contain registers location and length
+diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+index 570a2e354f30..036029e90921 100644
+--- a/drivers/nvmem/sunxi_sid.c
++++ b/drivers/nvmem/sunxi_sid.c
+@@ -219,11 +219,17 @@ static const struct sunxi_sid_cfg sun50i_a64_cfg = {
+ 	.size = 0x100,
+ };
  
- = Data cells =
--Are child nodes of qfprom, bindings of which as described in
-+Are child nodes of sunxi-sid, bindings of which as described in
- bindings/nvmem/nvmem.txt
- 
- Example for sun4i:
++static const struct sunxi_sid_cfg sun50i_h5_cfg = {
++	.value_offset = 0x200,
++	.size = 0x100,
++};
++
+ static const struct of_device_id sunxi_sid_of_match[] = {
+ 	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
+ 	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
+ 	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
+ 	{ .compatible = "allwinner,sun50i-a64-sid", .data = &sun50i_a64_cfg },
++	{ .compatible = "allwinner,sun50i-h5-sid", .data = &sun50i_h5_cfg },
+ 	{/* sentinel */},
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
 -- 
 2.17.0
