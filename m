@@ -1,42 +1,88 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: iio: chemical: pms7003: extend supported sensors list
-Date: Sun, 17 Feb 2019 20:22:13 +0100
-Message-ID: <20190217192213.15803-3-tduszyns@gmail.com>
-References: <20190217192213.15803-1-tduszyns@gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: rk3288 Tinker Board (S) sdcard changes
+Date: Sun, 17 Feb 2019 21:29:25 +0100 (CET)
+Message-ID: <1660942499.343639.1550435365757@email.ionos.de>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+ <20190217121513.22965-2-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190217192213.15803-1-tduszyns@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Duszynski <tduszyns@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190217121513.22965-2-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add other sensors to the compatible list.
+Hi David,
 
-Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
----
- .../bindings/iio/chemical/plantower,pms7003.txt           | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+we need a better patch subject here e.g.
 
-diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-index 7b5f06f324c8..c52ea2126eaa 100644
---- a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-+++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-@@ -1,7 +1,13 @@
- * Plantower PMS7003 particulate matter sensor
- 
- Required properties:
--- compatible: must be "plantower,pms7003"
-+- compatible: must one of:
-+   "plantower,pms1003"
-+   "plantower,pms3003"
-+   "plantower,pms5003"
-+   "plantower,pms6003"
-+   "plantower,pms7003"
-+   "plantower,pmsa003"
- - vcc-supply: phandle to the regulator that provides power to the sensor
- 
- Optional properties:
--- 
-2.20.1
+ARM: dts: rk3288-tinker: Fix SD card detection
+
+plus a Fixes tag for the commit we want to fix.
+
+> David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org> hat am 17. Februar 2019 um 13:15 geschrieben:
+> 
+> 
+> This patch makes some minor changes to how the sd card is
+> described in the device tree for the ASUS Tinker Board (S). In
+> particular on the Tinker Board S, when booted from the eMMC, and with
+> no card in the sd slot, and the log has endless messages about not
+> being able to detect the card.
+> 
+> Several methods to remove this error have been tried, the only one
+> that works is the broken-cd and so that is what is applied here.
+> 
+> Alas the ASUS schematic is not clear enough to indicate if the card
+> detect is wired up to the cpu, the schematic does not show internal
+> wiring on the Tinker Board!
+> 
+> Now this error didn't show up on the Tinker Board, as that machine
+> only boots where there is a sd card installed. However as the TB and
+> TBS are so similar it is expected that the Tinker Board also doesn't
+> have a functioning card detect. Hence the change here is made to the
+> dtsi file, so it applies to both TB and TBS.
+> 
+> The disable-wp is also removed, it doesnt seem needed on the micro
+> sdcard slots, and without thisn the card can still be written
+> to. Hence this flag is also removed.
+> 
+> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk3288-tinker.dtsi | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> index 2b38075a2917..fceaeed44e34 100644
+> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> @@ -432,9 +432,7 @@
+>  	bus-width = <4>;
+>  	cap-mmc-highspeed;
+>  	cap-sd-highspeed;
+> -	card-detect-delay = <200>;
+> -	disable-wp;			/* wp not hooked up */
+
+I think we should keep as long as it doesn't hurt.
+
+> +	broken-cd;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
+>  	status = "okay";
+> -- 
+> beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
