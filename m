@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 5/5] nvmem: sunxi-sid: convert to SPDX license tags
-Date: Sun, 17 Feb 2019 11:23:16 -0500
-Message-ID: <20190217162316.14111-6-tiny.windzz@gmail.com>
+Subject: [PATCH 4/5] nvmem: sunxi-sid: add support for H6's SID controller
+Date: Sun, 17 Feb 2019 11:23:15 -0500
+Message-ID: <20190217162316.14111-5-tiny.windzz@gmail.com>
 References: <20190217162316.14111-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190217162316.14111-1-tiny.windzz@gmail.com>
@@ -10,36 +10,36 @@ To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ma
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Updates license to use SPDX-License-Identifier.
+Add support for H6's SID controller. It supports 4K-bit
+EFUSE, bigger than before.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/nvmem/sunxi_sid.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/nvmem/sunxi_sid.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-index 8692b58d76ce..f56c9f713cb4 100644
+index 036029e90921..8692b58d76ce 100644
 --- a/drivers/nvmem/sunxi_sid.c
 +++ b/drivers/nvmem/sunxi_sid.c
-@@ -1,18 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Allwinner sunXi SoCs Security ID support.
-  *
-  * Copyright (c) 2013 Oliver Schinagl <oliver@schinagl.nl>
-  * Copyright (C) 2014 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
+@@ -224,12 +224,18 @@ static const struct sunxi_sid_cfg sun50i_h5_cfg = {
+ 	.size = 0x100,
+ };
  
- #include <linux/device.h>
++static const struct sunxi_sid_cfg sun50i_h6_cfg = {
++	.value_offset = 0x200,
++	.size = 0x200,
++};
++
+ static const struct of_device_id sunxi_sid_of_match[] = {
+ 	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
+ 	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
+ 	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
+ 	{ .compatible = "allwinner,sun50i-a64-sid", .data = &sun50i_a64_cfg },
+ 	{ .compatible = "allwinner,sun50i-h5-sid", .data = &sun50i_h5_cfg },
++	{ .compatible = "allwinner,sun50i-h6-sid", .data = &sun50i_h6_cfg },
+ 	{/* sentinel */},
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
 -- 
 2.17.0
