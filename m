@@ -1,14 +1,14 @@
 From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: rk3288 Tinker Board (S) add wi-fi
-Date: Sun, 17 Feb 2019 21:43:28 +0100 (CET)
-Message-ID: <1528638260.343699.1550436208775@email.ionos.de>
+Subject: Re: [PATCH 3/3] ARM: dts: rk3288 Tinker Board (S) add bluetooth
+Date: Sun, 17 Feb 2019 22:05:52 +0100 (CET)
+Message-ID: <2003821439.343814.1550437552156@email.ionos.de>
 References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190217121513.22965-3-beagleboard@davidjohnsummers.uk>
+ <20190217121513.22965-4-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190217121513.22965-3-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+In-Reply-To: <20190217121513.22965-4-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -27,146 +27,86 @@ Hi David,
 > David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org> hat am 17. Februar 2019 um 13:15 geschrieben:
 > 
 > 
-> This patch adds the wifi to the ASUS Tinker Board (S) machines.
+> This patch is to add Bluetooth to the ASUS Tinker Board (S) device
+> tree.
 > 
-> Unfortunatly neither the Tinker Board nor the Tinker Board S schematic
-> indicate how the WiFi is wired up on these devices. The WiFi is
-> provided by the RTL8723BS device, that has sdio WiFi and UART
-> Bluetooth. This patch just adds the WiFi interface.
+> This patch is more contraversal - so probably view it as a request for
+> comments.
 > 
-> With no schematic, most of the wiring has been derived from the ASUS
-> patch to Debian:
+> The reason behind this, is this patch does not currently set Bluetooth
+> working on the these boards. The problem is that the
+> bluetooth/hci_h5.c driver, that is used for Realtek serial devices,
+> depends on ACPI. Unfortantly ACPI can not be enabled on armv7 machines
+> such as the TB(S). And so the kernel module for the RTL8723BS
+> Bluetooth can not be loaded.
+> 
+> However this patch is believed to be an accurate description of the
+> Tinker Board (S) wiring. It is strongly based on the ASUS patch:
 > 
 > https://github.com/TinkerBoard/debian_kernel/commit/6a3128ade33f758887048578ada61a4b7ab8e678
 > 
-> In conjunction with the pin out of the RTL8723BS device:
+> As the Bluetooth is connected via a UART and this is wired into uart0,
+> this has been described as a SerDev.
 > 
-> http://files.pine64.org/doc/datasheet/pine64/RTL8723BS.pdf
-> http://cit.odessa.ua/media/pdf/Intel-Compute-Stick/FN-Link_F23BDSM25-W1.pdf
+> The ASUS patch mentions the UART_CTS, but not the _RTS. Now as the
+> RTL8723BS has both CTS and RTS on the uart, it has been assumed both
+> are wired into uart0 on the cpu.
+
+which would be very strange, because we could use H4 instead of H5.
+
 > 
-> The only unusual part is that to bring the card up, both the pins
-> RK_PD3 and RK_PD4 need to be pulled. Why this needs to be done is not
-> clear, best explaination is that they are connected to the RTL8723BS
-> pins WL_DIS# and BT_DIS#, which the data sheet vaguely says:
+> The Bluetooth connection has several wake up pins both device and host
+> and a reset pin. The wiring of these has been described; however how
+> the kernel driver will use these isn't clear. E.g. should HOST_WAKE be
+> an interupt?
 > 
-> Shared with GPIO9 This Pin Can Externally Shutdown the RTL8723BS WLAN
-> function when BT_DISn is Pulled Low. When this pin deasserted, SDIO
-> interface will be disabled. This pin can also support the WLAN Ra
-> dio-off function with host interface remaining connected.
-> 
-> Anyway extensive testing the TheSaint on ArchLinux Arm Forum 
-> 
-> https://archlinuxarm.org/forum/viewtopic.php?f=44&t=13064&start=120#p60548
+> The main reason for asking for comments, is that when it comes time to
+> make the changes to the bluetooth uart code, and add compatible flags,
+> robh has indicated that this will only be accepted with a valid
+> example. So the code below is that example. So I would like comments
+> that this approach is valid, which can be used when the later
+> submission comes. 
+
+Asking for comment should be mark with RFC in the patch subject.
+
 > 
 > Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 > ---
->  arch/arm/boot/dts/rk3288-tinker.dtsi | 39 +++++++++++++++++++++++++---
->  1 file changed, 36 insertions(+), 3 deletions(-)
+>  arch/arm/boot/dts/rk3288-tinker.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
 > diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
-> index fceaeed44e34..e1796f340eef 100644
+> index e1796f340eef..931b4c652fdc 100644
 > --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
 > +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-> @@ -3,8 +3,9 @@
->   * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
->   */
+> @@ -481,6 +481,17 @@
 >  
->  #include "rk3288.dtsi"
->  #include <dt-bindings/input/input.h>
-> +#include <dt-bindings/clock/rockchip,rk808.h>
->  
->  / {
->  	chosen {
-> @@ -98,6 +97,15 @@
->  		startup-delay-us = <100000>;
->  		vin-supply = <&vcc_io>;
->  	};
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		clocks = <&rk808 RK808_CLKOUT1>;
-> +		clock-names = "ext_clock";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&wifi_enable>;
-
-As i wrote at the Arch board it would be nice to keep the Asus comment here:
-
-/*
- * On the module itself this is one of these (depending
- * on the actual card populated):
- * - SDIO_RESET_L_WL_REG_ON
- * - PDN (power down when low)
- */
-
-> +		reset-gpios = <&gpio4 RK_PD3 GPIO_ACTIVE_LOW>, <&gpio4 RK_PD4 GPIO_ACTIVE_LOW>;
-> +	};
->  };
->  
->  &cpu0 {
-> @@ -337,8 +345,8 @@
->  
->  &io_domains {
+>  &uart0 {
 >  	status = "okay";
-> -
-
-Please drop this whitespace change
-
->  	sdcard-supply = <&vccio_sd>;
-> +	wifi-supply = <&vcc_18>;
->  };
->  
->  &pinctrl {
-> @@ -417,6 +425,12 @@
->  			rockchip,pins = <7 8 RK_FUNC_GPIO &pcfg_pull_none>;
->  		};
->  	};
-> +
-> +	sdio {
-> +		wifi_enable: wifi-enable {
-> +			rockchip,pins = <4 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>, <4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-
-Please make a line break after the first pin definition
-
-> +		};
-> +	};
->  };
->  
->  &pwm0 {
-> @@ -440,6 +454,25 @@
->  	vqmmc-supply = <&vccio_sd>;
->  };
->  
-> +&sdio0 {
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	cap-sdio-irq;
-> +	keep-power-in-suspend;
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +	non-removable;
 > +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdio0_bus4>, <&sdio0_cmd>, <&sdio0_clk>, <&sdio0_int>;
-> +	max-frequency = <50000000>;
-> +	sd-uhs-sdr12;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-ddr50;
-
-I'm okay with Tony's suggestion to remove sd-ush-ddr50.
-
-> +	vmmc-supply = <&vcc_io>;
-> +	vqmmc-supply = <&vcc_18>;
-> +	status = "okay";
-> +};
+> +	pinctrl-0 = <&uart0_xfer>, <&uart0_cts>, <&uart0_rts>;
 > +
->  &tsadc {
->  	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
->  	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
-> -- 
-> beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> +	bluetooth {
+> +		clocks = <&rk808 RK808_CLKOUT1>;
+
+As we already linked the RK808 clock in the sdio pwrseq, we shouldn't do this here again.
+
+> +		reset-gpios = <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;
+
+reset-gpios isn't compatible to hci_h5, please use my preliminary dt-binding
+
+> +		device-wake-gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+> +		host-wake-gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
+
+AFAIK hci_h5 doesn't support host-wake yet. So if you want to keep for the future we should make a comment.
+
+> +		vcc-18-supply = <&vcc_18>;
+> +		vcc-io-supply = <&vcc_io>;
+
+Please drop these as the driver doesn't use it and it's already linked in the sdio pwrseq.
+
+Thanks Stefan
+
+> +	};
+
+[1] - https://gist.github.com/lategoodbye/79bac99d4f1158a719a48ea3c45eb7f1#file-0002-dt-bindings-add-support-for-realtek-bluetooth-serial-patch
