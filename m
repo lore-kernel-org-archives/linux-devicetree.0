@@ -1,127 +1,252 @@
-Return-Path: <SRS0=gq5H=QX=codeaurora.org=govinds@kernel.org>
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH] arm64: dts: qcom: qcs404: Add non pas wcss remoteproc node
-Date: Sat, 16 Feb 2019 15:39:37 +0530
-Message-Id: <20190216100937.29010-1-govinds@codeaurora.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: andy.gross@linaro.org, bjorn.andersson@linaro.org
-Cc: robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+Return-Path: <SRS0=whS5=QY=martin.sperl.org=kernel@kernel.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH V6 6/9] can: mcp25xxfd: optimize TEF reads reading multiple TEFs in one go
+Date: Sun, 17 Feb 2019 11:01:59 +0000
+Message-Id: <20190217110202.31986-7-kernel@martin.sperl.org>
+In-Reply-To: <20190217110202.31986-1-kernel@martin.sperl.org>
+References: <20190217110202.31986-1-kernel@martin.sperl.org>
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the non pas based remoteproc nodes and their glink edges for
-WDSP.
+From: Martin Sperl <kernel@martin.sperl.org>
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
+To reduce the amount of spi_messages send this patch optimizes the
+read TEF so that multiple TEFs are read together.
+
+Statistics in debugfs show for 100000 DLC=0 can messages sent:
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_conservative_reads
+0
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads
+44691
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_1
+1862
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_2
+30349
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_3
+12480
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_4
+0
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_5
+0
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_6
+0
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_7
+0
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_optimized_reads_8+
+0
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_reads
+100000
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/tef_read_splits
+0
+
+So to read all of those 100000 TEF frames to read we formerly have
+scheduled 100000 spi_messages.
+While with this patch we have only scheduled 44691 spi_messages, so
+only 44.6% of the former value.
+This also means we have not been transferring 110618 (=2*30349+2*2*12480)
+unnecessary command bytes over the SPI bus.
+
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 73 ++++++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 4718fac68324..319ac6fbf3e1 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -5,6 +5,7 @@
- #include <dt-bindings/clock/qcom,gcc-qcs404.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-+#include <dt-bindings/clock/qcom,wcss-qcs404.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -541,6 +542,14 @@
- 			assigned-clock-rates = <19200000>;
- 		};
- 
-+		clock_wcsscc: clock-controller@7500000 {
-+			compatible = "qcom,qcs404-wcsscc";
-+			reg = <0x07500000 0x4e000>, <0x07550000 0x8012>, <0x07400000 0x104>;
-+			reg-names = "wcss_q6sstop", "wcnss_tcsr", "wcss_qdsp6ss";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
+Changelog:
+  V5->V6: new with this patchset version
+
+---
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c  | 18 +++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h |  7 ++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c   | 85 +++++++++++++++++++---
+ 3 files changed, 101 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
+index 4f7d5d8633c3..90034ea21c49 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
+@@ -43,6 +43,9 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
+ 					struct dentry *root)
+ {
+ 	struct dentry *dir = debugfs_create_dir("stats", root);
++	char name[32];
++	u64 *data;
++	int i;
+
+ # define DEBUGFS_CREATE(name, var) debugfs_create_u64(name, 0444, dir, \
+ 						      &cpriv->stats.var)
+@@ -62,6 +65,21 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
+ 	DEBUGFS_CREATE("int_rx_invalid_message", int_ivm_count);
+ 	DEBUGFS_CREATE("int_crcerror",		 int_cerr_count);
+
++	DEBUGFS_CREATE("tef_reads",		 tef_reads);
++	DEBUGFS_CREATE("tef_conservative_reads", tef_conservative_reads);
++	DEBUGFS_CREATE("tef_optimized_reads",	 tef_optimized_reads);
++	DEBUGFS_CREATE("tef_read_splits",	 tef_read_splits);
 +
- 		tcsr_mutex_regs: syscon@1905000 {
- 			compatible = "syscon";
- 			reg = <0x01905000 0x20000>;
-@@ -768,6 +777,65 @@
- 			};
- 		};
- 
-+		remoteproc_wcss_pil: remoteproc-wcss-pil {
-+			compatible = "qcom,qcs404-wcss-pil";
-+			reg = <0x07400000 0x00104>, <0x07500000 0x4e000>;
-+			reg-names = "qdsp6", "q6stop";
++	for (i = 0; i < MCP25XXFD_CAN_TEF_READ_BINS - 1; i++) {
++		snprintf(name, sizeof(name),
++			 "tef_optimized_reads_%i", i + 1);
++		data = &cpriv->stats.tef_optimized_read_sizes[i];
++		debugfs_create_u64(name, 0444, dir, data);
++	}
++	snprintf(name, sizeof(name), "tef_optimized_reads_%i+", i + 1);
++	debugfs_create_u64(name, 0444, dir,
++			   &cpriv->stats.tef_optimized_read_sizes[i]);
 +
-+			interrupts-extended = <&intc GIC_SPI 153 IRQ_TYPE_EDGE_RISING>,
-+					      <&wcss_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&wcss_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&wcss_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&wcss_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
+ 	DEBUGFS_CREATE("tx_frames_fd",		 tx_fd_count);
+ 	DEBUGFS_CREATE("tx_frames_brs",		 tx_brs_count);
+
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
+index 5727d4608dfd..766bec350e1e 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
+@@ -155,6 +155,13 @@ struct mcp25xxfd_can_priv {
+ 		u64 tx_fd_count;
+ 		u64 tx_brs_count;
+
++		u64 tef_reads;
++		u64 tef_read_splits;
++		u64 tef_conservative_reads;
++		u64 tef_optimized_reads;
++#define MCP25XXFD_CAN_TEF_READ_BINS 8
++		u64 tef_optimized_read_sizes[MCP25XXFD_CAN_TEF_READ_BINS];
 +
-+			clocks = <&xo_board>,
-+				 <&gcc GCC_WCSS_Q6_AHB_CLK>,
-+				 <&gcc GCC_WCSS_Q6_AXIM_CLK>,
-+				 <&clock_wcsscc WCSS_AHBFABRIC_CBCR_CLK>,
-+				 <&clock_wcsscc WCSS_LCC_CBCR_CLK>,
-+				 <&clock_wcsscc WCSS_AHBS_CBCR_CLK>,
-+				 <&clock_wcsscc WCSS_TCM_CBCR_CLK>,
-+				 <&clock_wcsscc WCSS_AHBM_CBCR_CLK>,
-+				 <&clock_wcsscc WCSS_AXIM_CBCR_CLK>,
-+				 <&clock_wcsscc WCSS_QDSP6SS_XO_CBCR_CLK>,
-+				 <&clock_wcsscc WCSS_QDSP6SS_SLEEP_CBCR_CLK>,
-+				 <&clock_wcsscc WCSS_QDSP6SS_GFMMUX_CLK>,
-+				 <&clock_wcsscc WCSS_BCR_CBCR_CLK>;
+ 		u64 rx_reads;
+ 		u64 rx_reads_prefetched_too_few;
+ 		u64 rx_reads_prefetched_too_few_bytes;
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
+index 0d08bc9768d9..13cb898247fe 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
+@@ -233,21 +233,62 @@ void mcp25xxfd_can_tx_queue_restart(struct mcp25xxfd_can_priv *cpriv)
+ }
+
+ static
+-int mcp25xxfd_can_tx_handle_int_tefif_fifo(struct mcp25xxfd_can_priv *cpriv)
++int mcp25xxfd_can_tx_tef_read(struct mcp25xxfd_can_priv *cpriv,
++			      int start, int count)
+ {
+-	u32 tef_offset = cpriv->fifos.tef.index * cpriv->fifos.tef.size;
++	u32 tef_offset = start * cpriv->fifos.tef.size;
+ 	struct mcp25xxfd_can_obj_tef *tef =
+ 		(struct mcp25xxfd_can_obj_tef *)(cpriv->sram + tef_offset);
+-	int fifo, ret;
+-	unsigned long flags;
++	int last, read, ret;
+
+-	/* read the next TEF entry to get the transmit timestamp and fifo */
++	/* compute how many we can read in one go */
++	last = start + count;
++	read = (last > cpriv->fifos.tef.count) ?
++		(cpriv->fifos.tef.count - start) :
++		count;
 +
-+			clock-names = "xo", "gcc_abhs_cbcr", "gcc_axim_cbcr",
-+				      "wcss_ahbfabric_cbcr", "wcnss_csr_cbcr",
-+				      "wcnss_ahbs_cbcr", "wcnss_tcm_slave_cbcr",
-+				      "wcnss_abhm_cbcr", "wcnss_axim_cbcr",
-+				      "wcnss_qdsp6ss_xo_cbcr", "wcnss_sleep_cbcr",
-+				      "wcnss_core_gfm", "wcss_bcr_cbcr";
-+			resets = <&gcc GCC_WDSP_RESTART>,
-+				 <&clock_wcsscc Q6SSTOP_QDSP6SS_RESET>,
-+				 <&clock_wcsscc Q6SSTOP_QDSP6SS_CORE_RESET>,
-+				 <&clock_wcsscc Q6SSTOP_QDSP6SS_BUS_RESET>,
-+				 <&clock_wcsscc Q6SSTOP_BCR_RESET>;
-+			reset-names = "wcss_reset", "wcss_q6_reset",
-+				      "wcss_q6_core_reset", "wcss_q6_bus_reset",
-+				      "wcss_q6_bcr_reset";
++	/* and read it */
+ 	ret = mcp25xxfd_cmd_read_regs(cpriv->priv->spi,
+ 				      MCP25XXFD_SRAM_ADDR(tef_offset),
+-				      &tef->id, sizeof(*tef));
++				      &tef->id, sizeof(*tef) * read);
+ 	if (ret)
+ 		return ret;
+
++	/* and read a second part on wrap */
++	if (read != count) {
++		/* update stats */
++		MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_read_splits);
++		/* compute the addresses  */
++		read = count - read;
++		tef = (struct mcp25xxfd_can_obj_tef *)(cpriv->sram);
++		/* and read again */
++		ret = mcp25xxfd_cmd_read_regs(cpriv->priv->spi,
++					      MCP25XXFD_SRAM_ADDR(0),
++					      &tef->id,
++					      sizeof(*tef) * read);
++	}
 +
-+			memory-region = <&wlan_fw_mem>;
++	return ret;
++}
 +
-+			qcom,smem-states = <&wcss_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+			qcom,halt-regs = <&tcsr_wlan_q6 0x18000>;
-+			status = "disabled";
++static
++int mcp25xxfd_can_tx_handle_int_tefif_fifo(struct mcp25xxfd_can_priv *cpriv,
++					   bool read_data)
++{
++	u32 tef_offset = cpriv->fifos.tef.index * cpriv->fifos.tef.size;
++	struct mcp25xxfd_can_obj_tef *tef =
++		(struct mcp25xxfd_can_obj_tef *)(cpriv->sram + tef_offset);
++	int fifo, ret;
++	unsigned long flags;
 +
-+			glink-edge {
-+				interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				qcom,remote-pid = <1>;
-+				mboxes = <&apcs_glb 16>;
-+				label = "wcss";
-+			};
-+		};
++	/* read the next TEF entry to get the transmit timestamp and fifo */
++	if (read_data) {
++		ret = mcp25xxfd_can_tx_tef_read(cpriv,
++						cpriv->fifos.tef.index, 1);
++		if (ret)
++			return ret;
++	}
 +
- 		wifi: wifi@a000000 {
- 			compatible = "qcom,wcn3990-wifi";
- 			reg = <0xa000000 0x800000>;
-@@ -1020,6 +1088,11 @@
- 			clock-names = "xo";
- 		};
- 
-+		tcsr_wlan_q6: syscon@19C0000 {
-+			compatible = "syscon";
-+			reg = <0x1937000 0x00100000>;
-+		};
+ 	/* get the fifo from tef */
+ 	fifo = (tef->flags & MCP25XXFD_CAN_OBJ_FLAGS_SEQ_MASK) >>
+ 		MCP25XXFD_CAN_OBJ_FLAGS_SEQ_SHIFT;
+@@ -260,6 +301,9 @@ int mcp25xxfd_can_tx_handle_int_tefif_fifo(struct mcp25xxfd_can_priv *cpriv)
+ 			   fifo, tef->id, tef->flags, tef->ts);
+ 	spin_unlock_irqrestore(&cpriv->fifos.tx_queue->lock, flags);
+
++	/* update stats */
++	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_reads);
 +
- 		timer@b120000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+ 	/* now we can schedule the fifo for echo submission */
+ 	mcp25xxfd_can_queue_frame(cpriv, fifo, tef->ts, false);
+
+@@ -296,10 +340,12 @@ mcp25xxfd_can_tx_handle_int_tefif_conservative(struct mcp25xxfd_can_priv *cpriv)
+ 	/* read the tef in an inefficient loop */
+ 	while (tefsta & MCP25XXFD_CAN_TEFSTA_TEFNEIF) {
+ 		/* read one tef */
+-		ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv);
++		ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv, true);
+ 		if (ret)
+ 			return ret;
+
++		MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_conservative_reads);
++
+ 		/* read the TEF status */
+ 		ret = mcp25xxfd_cmd_read_mask(cpriv->priv->spi,
+ 					      MCP25XXFD_CAN_TEFSTA, &tefsta,
+@@ -315,13 +361,34 @@ static int
+ mcp25xxfd_can_tx_handle_int_tefif_optimized(struct mcp25xxfd_can_priv *cpriv,
+ 					    u32 finished)
+ {
+-	int i, fifo, ret;
++	int i, fifo, count, ret;
++
++	/* count the number of fifos that have terminated */
++	for (i = 0, fifo = cpriv->fifos.tx.start, count = 0;
++	     i < cpriv->fifos.tx.count; i++, fifo++)
++		if (finished & BIT(fifo))
++			count++;
++
++	/* read them in one go if possible
++	 * we also assume that we have count(TEF) >= count(TX-FIFOS)
++	 * this may require 2 reads when we wrap arround
++	 * (that is unless count(TEF) == count(TX-FIFOS))
++	 */
++	ret = mcp25xxfd_can_tx_tef_read(cpriv, cpriv->fifos.tef.index, count);
++	if (ret)
++		return ret;
++
++	/* update stats */
++	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_optimized_reads);
++	i = min_t(int, MCP25XXFD_CAN_TEF_READ_BINS - 1, count - 1);
++	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, tef_optimized_read_sizes[i]);
+
+ 	/* now iterate those */
+ 	for (i = 0, fifo = cpriv->fifos.tx.start; i < cpriv->fifos.tx.count;
+ 	     i++, fifo++) {
+ 		if (finished & BIT(fifo)) {
+-			ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv);
++			ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv,
++								     false);
+ 			if (ret)
+ 				return ret;
+ 		}
+--
+2.11.0
