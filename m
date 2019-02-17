@@ -1,137 +1,269 @@
-Return-Path: <SRS0=6Dnf=QM=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 4/5] iio: gyro: fxas2100x: add spi driver
-Date: Tue,  5 Feb 2019 17:43:32 +0000
-Message-Id: <20190205174333.17672-5-rui.silva@linaro.org>
-In-Reply-To: <20190205174333.17672-1-rui.silva@linaro.org>
-References: <20190205174333.17672-1-rui.silva@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Return-Path: <SRS0=whS5=QY=martin.sperl.org=kernel@kernel.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH V6 7/9] can: mcp25xxfd: optimize SPI reads of FIFOs in can2.0 mode
+Date: Sun, 17 Feb 2019 11:02:00 +0000
+Message-Id: <20190217110202.31986-8-kernel@martin.sperl.org>
+In-Reply-To: <20190217110202.31986-1-kernel@martin.sperl.org>
+References: <20190217110202.31986-1-kernel@martin.sperl.org>
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add driver to talk over spi to a fxas21002 gyroscope device and use the
-core as main controller.
+From: Martin Sperl <kernel@martin.sperl.org>
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+To reduce the amount of spi_messages send this patch optimizes the
+read of RX fifos so that multiple Fifos are read together.
+
+This only works well in CAN2.0 mode where the overhead of prefetching
+8 bytes (even if the actual length is 0) is negligable compared
+to the SPI-framework overhead.
+
+Statistics in debugfs show for 1000000 DLC=0 can messages received:
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads <==
+355411
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_1 <==
+92778
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_2 <==
+7133
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_3 <==
+130390
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_4 <==
+123807
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_5 <==
+1266
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_6 <==
+34
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_7 <==
+1
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_8+ <==
+0
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_reads <==
+999999
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/int_system_error <==
+1
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/int_system_error_rx <==
+1
+==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/int_system_error_tx <==
+0
+
+There was one SERR error where we lost one can frame during the handling
+of the error condition.
+
+So to read all of those 999999 RX fifos we formerly have scheduled
+999999 spi_messages.
+
+With this patch we have only scheduled 355411 spi_messages, so
+only 35.5% of the former value.
+
+This also means we have not been transferring 1289176 (=2*(999999-355411))
+unnecessary command bytes over the SPI bus.
+
+As we have been issuing less SPI transfers reading SRAM this
+also has reduced the likleyhood of SERR happening - it does not
+solve the complete issue as seen above.
+
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- drivers/iio/gyro/Kconfig         |  5 +++
- drivers/iio/gyro/Makefile        |  1 +
- drivers/iio/gyro/fxas2100x_spi.c | 70 ++++++++++++++++++++++++++++++++
- 3 files changed, 76 insertions(+)
- create mode 100644 drivers/iio/gyro/fxas2100x_spi.c
+Changelog:
+  V5->V6: new with this patchset version
 
-diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
-index 1f9bfc51febb..4f6d6b393ad8 100644
---- a/drivers/iio/gyro/Kconfig
-+++ b/drivers/iio/gyro/Kconfig
-@@ -78,6 +78,7 @@ config FXAS2100X
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
- 	select FXAS2100X_I2C if (I2C)
-+	select FXAS2100X_SPI if (SPI)
- 	depends on (I2C || SPI_MASTER)
- 	help
- 	  Say yes here to build support for NXP FXAS2100X family Tri-axis Gyro
-@@ -90,6 +91,10 @@ config FXAS2100X_I2C
- 	tristate
- 	select REGMAP_I2C
- 
-+config FXAS2100X_SPI
-+	tristate
-+	select REGMAP_SPI
+---
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c  | 11 +++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h |  4 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c   | 96 +++++++++++++++++++---
+ 3 files changed, 100 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
+index 90034ea21c49..56b8d38b756d 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
+@@ -92,6 +92,17 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
+ 		       rx_reads_prefetched_too_many);
+ 	DEBUGFS_CREATE("rx_reads_prefetched_too_many_bytes",
+ 		       rx_reads_prefetched_too_many_bytes);
++	DEBUGFS_CREATE("rx_single_reads",	 rx_single_reads);
++	DEBUGFS_CREATE("rx_bulk_reads",		 rx_bulk_reads);
 +
- config HID_SENSOR_GYRO_3D
- 	depends on HID_SENSOR_HUB
- 	select IIO_BUFFER
-diff --git a/drivers/iio/gyro/Makefile b/drivers/iio/gyro/Makefile
-index 8b1540ddbbce..29915ba124b0 100644
---- a/drivers/iio/gyro/Makefile
-+++ b/drivers/iio/gyro/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_BMG160_I2C) += bmg160_i2c.o
- obj-$(CONFIG_BMG160_SPI) += bmg160_spi.o
- obj-$(CONFIG_FXAS2100X) += fxas2100x_core.o
- obj-$(CONFIG_FXAS2100X_I2C) += fxas2100x_i2c.o
-+obj-$(CONFIG_FXAS2100X_SPI) += fxas2100x_spi.o
- 
- obj-$(CONFIG_HID_SENSOR_GYRO_3D) += hid-sensor-gyro-3d.o
- 
-diff --git a/drivers/iio/gyro/fxas2100x_spi.c b/drivers/iio/gyro/fxas2100x_spi.c
-new file mode 100644
-index 000000000000..7bd16a607372
---- /dev/null
-+++ b/drivers/iio/gyro/fxas2100x_spi.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for NXP FXAS2100x Gyroscope - SPI
-+ *
-+ * Copyright (C) 2018 Linaro Ltd.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+#include <linux/spi/spi.h>
-+
-+#include "fxas2100x.h"
-+
-+static const struct regmap_config fxas2100x_regmap_spi_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = FXAS2100X_REG_CTRL3,
-+};
-+
-+static int fxas2100x_spi_probe(struct spi_device *spi)
-+{
-+	const struct spi_device_id *id = spi_get_device_id(spi);
-+	struct regmap *regmap;
-+
-+	regmap = devm_regmap_init_spi(spi, &fxas2100x_regmap_spi_conf);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&spi->dev, "Failed to register spi regmap: %ld\n",
-+			PTR_ERR(regmap));
-+		return PTR_ERR(regmap);
++	for (i = 0; i < MCP25XXFD_CAN_RX_BULK_READ_BINS - 1; i++) {
++		snprintf(name, sizeof(name), "rx_bulk_reads_%i", i + 1);
++		data = &cpriv->stats.rx_bulk_read_sizes[i];
++		debugfs_create_u64(name, 0444, dir, data);
 +	}
-+
-+	return fxas2100x_core_probe(&spi->dev, regmap, spi->irq, id->name);
-+}
-+
-+static int fxas2100x_spi_remove(struct spi_device *spi)
++	snprintf(name, sizeof(name), "rx_bulk_reads_%i+", i + 1);
++	debugfs_create_u64(name, 0444, dir,
++			   &cpriv->stats.rx_bulk_read_sizes[i]);
+ #undef DEBUGFS_CREATE
+ }
+
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
+index 766bec350e1e..cae22cc02795 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
+@@ -167,6 +167,10 @@ struct mcp25xxfd_can_priv {
+ 		u64 rx_reads_prefetched_too_few_bytes;
+ 		u64 rx_reads_prefetched_too_many;
+ 		u64 rx_reads_prefetched_too_many_bytes;
++		u64 rx_single_reads;
++		u64 rx_bulk_reads;
++#define MCP25XXFD_CAN_RX_BULK_READ_BINS 8
++		u64 rx_bulk_read_sizes[MCP25XXFD_CAN_RX_BULK_READ_BINS];
+ 	} stats;
+ #endif /* CONFIG_DEBUG_FS */
+
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
+index 0974cf8b0c56..ee52d2ba74a5 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
+@@ -131,7 +131,7 @@ int mcp25xxfd_can_rx_submit_frame(struct mcp25xxfd_can_priv *cpriv, int fifo)
+ }
+
+ static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
+-				       int fifo, int prefetch_bytes)
++				       int fifo, int prefetch_bytes, bool read)
+ {
+ 	struct spi_device *spi = cpriv->priv->spi;
+ 	struct net_device *net = cpriv->can.dev;
+@@ -142,10 +142,13 @@ static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
+ 	int len, ret;
+
+ 	/* we read the header plus prefetch_bytes */
+-	ret = mcp25xxfd_cmd_readn(spi, MCP25XXFD_SRAM_ADDR(addr),
+-				  rx, sizeof(*rx) + prefetch_bytes);
+-	if (ret)
+-		return ret;
++	if (read) {
++		cpriv->stats.rx_single_reads++;
++		ret = mcp25xxfd_cmd_readn(spi, MCP25XXFD_SRAM_ADDR(addr),
++					  rx, sizeof(*rx) + prefetch_bytes);
++		if (ret)
++			return ret;
++	}
+
+ 	/* transpose the headers to CPU format*/
+ 	rx->id = le32_to_cpu(rx->id);
+@@ -158,7 +161,7 @@ static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
+ 	len = can_dlc2len(min_t(int, dlc, (net->mtu == CANFD_MTU) ? 15 : 8));
+
+ 	/* read the remaining data for canfd frames */
+-	if (len > prefetch_bytes) {
++	if (read && len > prefetch_bytes) {
+ 		/* update stats */
+ 		MCP25XXFD_DEBUGFS_STATS_INCR(cpriv,
+ 					     rx_reads_prefetched_too_few);
+@@ -200,6 +203,40 @@ static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
+ 					MCP25XXFD_CAN_FIFOCON_FRESET);
+ }
+
++static int mcp25xxfd_can_read_rx_frame_bulk(struct mcp25xxfd_can_priv *cpriv,
++					    int fstart,
++					    int fend)
 +{
-+	fxas2100x_core_remove(&spi->dev);
++	struct net_device *net = cpriv->can.dev;
++	int count = abs(fend - fstart) + 1;
++	int flowest = min_t(int, fstart, fend);
++	int addr = cpriv->fifos.info[flowest].offset;
++	struct mcp25xxfd_can_obj_rx *rx =
++		(struct mcp25xxfd_can_obj_rx *)(cpriv->sram + addr);
++	int len = (sizeof(*rx) + ((net->mtu == CANFD_MTU) ? 64 : 8)) * count;
++	int fifo, i, ret;
++
++	/* update stats */
++	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, rx_bulk_reads);
++	i = min_t(int, MCP25XXFD_CAN_RX_BULK_READ_BINS - 1, count - 1);
++	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, rx_bulk_read_sizes[i]);
++
++	/* we read the header plus read_min data bytes */
++	ret = mcp25xxfd_cmd_readn(cpriv->priv->spi, MCP25XXFD_SRAM_ADDR(addr),
++				  rx, len);
++	if (ret)
++		return ret;
++
++	/* now process all of them - no need to read... */
++	for (fifo = fstart; count > 0; fifo ++, count--) {
++		ret = mcp25xxfd_can_rx_read_frame(cpriv, fifo, 8, false);
++		if (ret)
++			return ret;
++	}
 +
 +	return 0;
 +}
 +
-+static const struct spi_device_id fxas2100x_spi_id[] = {
-+	{ "fxas2100x", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, fxas2100x_spi_id);
+ /* at least in can2.0 mode we can read multiple RX-fifos in one go
+  * in case they are ajactent to each other and thus we can reduce
+  * the number of spi messages produced and this improves spi-bus
+@@ -318,24 +355,30 @@ static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
+  * reading multiple rx fifos is a realistic option of optimization
+  */
+
+-int mcp25xxfd_can_rx_read_frames(struct mcp25xxfd_can_priv *cpriv)
++/* right now we only optimize for sd (can2.0) frame case,
++ * but in principle it could be also be valuable for CANFD
++ * frames when we receive lots of 64 byte packets with BRS set
++ * and a big difference between nominal and data bitrates
++ */
 +
-+static const struct of_device_id fxas2100x_spi_of_match[] = {
-+	{ .compatible = "nxp,fxas21002", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, fxas2100x_spi_of_match);
++int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
+ {
+ 	int i, f, prefetch;
+ 	int ret;
+
+ 	/* calculate optimal prefetch to use */
+ 	if (rx_prefetch_bytes != -1)
+-		prefetch = min_t(int, rx_prefetch_bytes,
+-				 (cpriv->can.dev->mtu == CANFD_MTU) ? 64 : 8);
++		prefetch = min_t(int, rx_prefetch_bytes, 64);
+ 	else
+ 		prefetch = 8;
+
+-	/* we can optimize here */
++	/* loop all frames */
+ 	for (i = 0, f = cpriv->fifos.rx.start; i < cpriv->fifos.rx.count;
+ 	     i++, f++) {
+ 		if (cpriv->status.rxif & BIT(f)) {
+ 			/* read the frame */
+-			ret = mcp25xxfd_can_rx_read_frame(cpriv, f, prefetch);
++			ret = mcp25xxfd_can_rx_read_frame(cpriv, f,
++							  prefetch, true);
+ 			if (ret)
+ 				return ret;
+ 		}
+@@ -344,6 +387,37 @@ int mcp25xxfd_can_rx_read_frames(struct mcp25xxfd_can_priv *cpriv)
+ 	return 0;
+ }
+
++static int mcp25xxfd_can_rx_read_sd_frames(struct mcp25xxfd_can_priv *cpriv)
++{
++	int i, start, end;
++	int ret;
 +
-+static struct spi_driver fxas2100x_spi_driver = {
-+	.driver = {
-+		.name = "fxas2100x_spi",
-+		.pm = &fxas2100x_pm_ops,
-+		.of_match_table = of_match_ptr(fxas2100x_spi_of_match),
-+	},
-+	.probe		= fxas2100x_spi_probe,
-+	.remove		= fxas2100x_spi_remove,
-+	.id_table	= fxas2100x_spi_id,
-+};
-+module_spi_driver(fxas2100x_spi_driver);
++	/* iterate over fifos trying to find fifos next to each other */
++	for (i = 0, start = cpriv->fifos.rx.start, end = start;
++	     i < cpriv->fifos.rx.count; i++, end++, start = end) {
++		/* if bit is not set then continue */
++		if (!(cpriv->status.rxif & BIT(start)))
++			continue;
++		/* find the last fifo with a bit set in sequence */
++		for (end = start; cpriv->status.rxif & BIT(end + 1); end++)
++			;
++		/* and now read those fifos in bulk */
++		ret = mcp25xxfd_can_read_rx_frame_bulk(cpriv, start, end);
++		if (ret)
++			return ret;
++	}
 +
-+MODULE_AUTHOR("Rui Miguel Silva <rui.silva@linaro.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("FXAS2100X SPI Gyro driver");
--- 
-2.20.1
++	return 0;
++}
++
++static int mcp25xxfd_can_rx_read_frames(struct mcp25xxfd_can_priv *cpriv)
++{
++	if (cpriv->can.dev->mtu == CANFD_MTU)
++		return mcp25xxfd_can_rx_read_fd_frames(cpriv);
++	else
++		return mcp25xxfd_can_rx_read_sd_frames(cpriv);
++}
++
+ int mcp25xxfd_can_rx_handle_int_rxif(struct mcp25xxfd_can_priv *cpriv)
+ {
+ 	if (!cpriv->status.rxif)
+--
+2.11.0
