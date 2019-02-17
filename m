@@ -1,119 +1,53 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: Re: [PATCH] drm/mediatek: add mt8183 dpi support
-Date: Sun, 17 Feb 2019 23:22:05 +0800
-Message-ID: <1550416925.5194.37.camel@mszsdaap41>
-References: <20190211045059.11821-1-jitao.shi@mediatek.com>
-         <1550160809.6862.13.camel@mtksdaap41>
+From: David Summers <beagleboard@davidjohnsummers.uk>
+Subject: Re: [PATCH 2/3] ARM: dts: rk3288 Tinker Board (S) add wi-fi
+Date: Sun, 17 Feb 2019 15:55:04 +0000
+Message-ID: <4ef63671-f58d-3b16-9055-09e69314a0e6@davidjohnsummers.uk>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+ <20190217121513.22965-3-beagleboard@davidjohnsummers.uk>
+ <CAERgokmpHQb2czJdx++qFoogFRmkvXZm=4BNOsVuCz-ZvgTEaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550160809.6862.13.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAERgokmpHQb2czJdx++qFoogFRmkvXZm=4BNOsVuCz-ZvgTEaw@mail.gmail.com>
+Content-Language: en-PH
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony McKahan <tonymckahan@gmail.com>, David Summers <beagleboard@davidjohnsummers.uk>
+Cc: mark.rutland@arm.com, Stefan Wahren <stefan.wahren@i2se.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-02-15 at 00:13 +0800, CK Hu wrote:
-> Hi, Jitao:
-> 
-> On Mon, 2019-02-11 at 12:50 +0800, Jitao Shi wrote:
-> > MT8183 sample on rising and falling edge. It can reduce half data io.
-> > 
-> > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> > ---
-> >  drivers/gpu/drm/mediatek/mtk_dpi.c | 29 +++++++++++++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> > index 62a9d47df948..610c23334047 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> > @@ -117,6 +117,7 @@ struct mtk_dpi_conf {
-> >  	unsigned int (*cal_factor)(int clock);
-> >  	u32 reg_h_fre_con;
-> >  	bool edge_sel_en;
-> > +	bool dual_edge;
-> >  };
-> >  
-> >  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
-> > @@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
-> >  		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
-> >  }
-> >  
-> > +static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
-> > +{
-> > +	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
-> > +		     DDR_EN | DDR_4PHASE);
-> > +	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
-> > +}
-> 
-> All these register exist in MT8173, if you do the same setting in
-> MT8173, could it also sample on rising edge and falling edge?
-> 
-> Regards,
-> CK
-> 
-
-I'll fix is next version.
-
-Thanks for your review.
-
-Best Regards.
-Jitao
-
-> > +
-> >  static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
-> >  					enum mtk_dpi_out_color_format format)
-> >  {
-> > @@ -509,6 +517,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
-> >  	mtk_dpi_config_color_format(dpi, dpi->color_format);
-> >  	mtk_dpi_config_2n_h_fre(dpi);
-> >  	mtk_dpi_config_disable_edge(dpi);
-> > +	if (dpi->conf->dual_edge)
-> > +		mtk_dpi_enable_dual_edge(dpi);
-> >  	mtk_dpi_sw_reset(dpi, false);
-> >  
-> >  	return 0;
-> > @@ -671,6 +681,16 @@ static unsigned int mt2701_calculate_factor(int clock)
-> >  		return 2;
-> >  }
-> >  
-> > +static unsigned int mt8183_calculate_factor(int clock)
-> > +{
-> > +	if (clock <= 27000)
-> > +		return 8;
-> > +	else if (clock <= 167000)
-> > +		return 4;
-> > +	else
-> > +		return 2;
-> > +}
-> > +
-> >  static const struct mtk_dpi_conf mt8173_conf = {
-> >  	.cal_factor = mt8173_calculate_factor,
-> >  	.reg_h_fre_con = 0xe0,
-> > @@ -682,6 +702,12 @@ static const struct mtk_dpi_conf mt2701_conf = {
-> >  	.edge_sel_en = true,
-> >  };
-> >  
-> > +static const struct mtk_dpi_conf mt8183_conf = {
-> > +	.cal_factor = mt8183_calculate_factor,
-> > +	.reg_h_fre_con = 0xe0,
-> > +	.dual_edge = true,
-> > +};
-> > +
-> >  static int mtk_dpi_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev = &pdev->dev;
-> > @@ -777,6 +803,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
-> >  	{ .compatible = "mediatek,mt8173-dpi",
-> >  	  .data = &mt8173_conf,
-> >  	},
-> > +	{ .compatible = "mediatek,mt8183-dpi",
-> > +	  .data = &mt8183_conf,
-> > +	},
-> >  	{ },
-> >  };
-> >  
-> 
-> 
+T24gMTcvMDIvMjAxOSAxNDozMiwgVG9ueSBNY0thaGFuIHdyb3RlOgo+IEEgc2ltaWxhciBjb25m
+aWd1cmF0aW9uIGhhcyBiZWVuIGluIHVzZSBvbiBBcm1iaWFuIGltYWdlcyBzaW5jZSBrZXJuZWwK
+PiA0LjE0LCBidXQgbm90IGluIGEgY2xlYW4gZW5vdWdoIGZvcm1hdCBmb3Igc3VibWlzc2lvbi4g
+SSB3aWxsIHRlc3QKPiB0aGlzLCBidXQgdGhlIG9ubHkgZGlmZmVyZW5jZXMgSSBzZWUgY29tcGFy
+ZWQgdG8gb3VycyBhcmUgY29tYmluYXRpb24KPiBvZiB0aGUgbXlzdGVyeSAiY2hpcF9oIiBwb3dl
+ciBkb21haW4vcmVzZXQgd2l0aCB0aGUgV2lmaSBvbmUgYW5kIHRoZQo+IGluY2x1c2lvbiBvZiBz
+ZF91aHNfZGRyNTAuCj4KPiAtVG9ueQo+Cj4gT24gU3VuLCBGZWIgMTcsIDIwMTkgYXQgNzoxNiBB
+TSBEYXZpZCBTdW1tZXJzCj4gPGJlYWdsZWJvYXJkQGRhdmlkam9obnN1bW1lcnMudWs+IHdyb3Rl
+Ogo+PiBUaGlzIHBhdGNoIGFkZHMgdGhlIHdpZmkgdG8gdGhlIEFTVVMgVGlua2VyIEJvYXJkIChT
+KSBtYWNoaW5lcy4KPj4KVG9ueSwgdGhhbmtzIGZvciB0aGUgaW50ZXJlc3QgaW4gdGhpcyBhbmQg
+dGhlIEJsdWV0b290aCBSRkMuIFRvIG15IG1pbmQgCml0IHdvdWxkIGJlIGdvb2QgaWYgd2UgY291
+bGQgbWFpbmxpbmUgYW4gYWdyZWVkIHNvbHV0aW9uLiBBcyBtdWNoIGFzIAphbnl0aGluZyBkb2Vz
+bid0IG1ha2Ugc2Vuc2UgdG8gbWUgZm9yIEFybWJpYW4gYW5kIEFyY2hMaW51eCBBcm0gdG8gaGF2
+ZSAKaW5kZXBlbmRlbnQgc29sdXRpb25zLgoKSW4gdGhlIEFyY2hMaW51eCBBcm3CoCBjYW1wIEkn
+bSBub3QgYSBmYW4gb2YgYXBwbHlpbmcgbWFueSBwYXRjaGVzIHRvIApzdXBwb3J0IGEgYm9hcmQs
+IGFzIG11Y2ggYXMgYW55dGhpbmcgaXQgbWFrZXMgdGhhdCBib2FyZCBub24gZ2VuZXJpYyAtIAph
+bmQgc28gaGFzIHRvIGhhdmUgaXRzIG93biBoYW5kIGNyYWZ0ZWQga2VybmVsLiBUaGlzIHRvIG1l
+IGlzbid0IGEgZ29vZCAKc29sdXRpb24sIHNvIGlmIHBvc3NpYmxlIHByZWZlciB0aGUgcGFpbiBv
+ZiBnZXR0aW5nIGl0IG1haW5saW5lZC4KClN0ZWZhbiBXYWhyZW4gaGFzIGNvbWUgdXAgd2l0aCBh
+IG1pbmltYWwgcGF0Y2ggdG8gaGNpX2g1IGZvciBibHVldG9vdGgsIAp0aGF0IHNheXMgdGhlIHJl
+bGV2YW50IHByb3BlcnRpZXMgY2FuIGJlIHJlYWQgZnJvbSB0aGUgZGV2aWNlIHRyZWUuIFRoaXMg
+Cm1lYW5zIHRoYXQgYWNwaSBpcyBubyBsb25nZXIgbmVjZXNzYXJ5LiBUaGF0cyBjdXJyZW50bHkg
+b3V0IGluIHRlc3RpbmcuCgpBbnl3YXkgd291bGQgYmUgZ29vZCBpZiBBcmNoIGFuZCBBcm1iaWFu
+IGNvdWxkIG1lcmdlIG91ciBlZmZvcnRzIC4uLgoKUmVnYXJkcywKCkRhdmlkLgoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
