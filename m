@@ -1,43 +1,41 @@
-From: Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 3/7] dt-bindings: power: supply: Add voltage-max-design-microvolt property
-Date: Sun, 17 Feb 2019 15:29:12 +0100
-Message-ID: <20190217142914.17433-3-contact@artur-rojek.eu>
-References: <20190217142914.17433-1-contact@artur-rojek.eu>
+From: Fabio Estevam via dri-devel <dri-devel@lists.freedesktop.org>
+Subject: [PATCH RESEND 1/3] dt-bindings: Add vendor prefix for VXT Ltd
+Date: Sun, 17 Feb 2019 11:31:21 -0300
+Message-ID: <20190217143123.19705-1-festevam@gmail.com>
+Reply-To: Fabio Estevam <festevam@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190217142914.17433-1-contact@artur-rojek.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com
+Cc: devicetree@vger.kernel.org, otavio.salvador@ossystems.com.br, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, sam@ravnborg.org, john.weber@technexion.com
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the "voltage-max-design-microvolt" property.
-
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
----
- Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-index 89871ab8c704..5c913d4cf36c 100644
---- a/Documentation/devicetree/bindings/power/supply/battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-@@ -16,6 +16,7 @@ Required Properties:
- 
- Optional Properties:
-  - voltage-min-design-microvolt: drained battery voltage
-+ - voltage-max-design-microvolt: fully charged battery voltage
-  - energy-full-design-microwatt-hours: battery design energy
-  - charge-full-design-microamp-hours: battery design capacity
-  - precharge-current-microamp: current for pre-charge phase
-@@ -48,6 +49,7 @@ Example:
- 	bat: battery {
- 		compatible = "simple-battery";
- 		voltage-min-design-microvolt = <3200000>;
-+		voltage-max-design-microvolt = <4200000>;
- 		energy-full-design-microwatt-hours = <5290000>;
- 		charge-full-design-microamp-hours = <1430000>;
- 		precharge-current-microamp = <256000>;
--- 
-2.20.1
+VlhUIEx0ZCBpcyBhIG1hbnVmYWN0dXJlciBvZiBwcm9qZWN0ZWQgY2FwYWNpdGl2ZSB0b3VjaCBw
+YW5lbAphbmQgZGlzcGxheSBzb2x1dGlvbnM6IGh0dHA6Ly93d3cudnh0LmNvbS50dy8KClJldmll
+d2VkLWJ5OiBPdGF2aW8gU2FsdmFkb3IgPG90YXZpb0Bvc3N5c3RlbXMuY29tLmJyPgpSZXZpZXdl
+ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogRmFiaW8g
+RXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPgotLS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBp
+bnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdmVuZG9yLXByZWZpeGVzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy92ZW5kb3ItcHJlZml4ZXMudHh0CmluZGV4IDNiYmUzYjguLjE2YTJhOTcgMTAwNjQ0Ci0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0Cisr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0
+CkBAIC00MjYsNiArNDI2LDcgQEAgdml2YW50ZQlWaXZhbnRlIENvcnBvcmF0aW9uCiB2b2NvcmUg
+Vm9Db3JlIFN0dWRpbwogdm9pcGFjCVZvaXBhYyBUZWNobm9sb2dpZXMgcy5yLm8uCiB2b3QJVmlz
+aW9uIE9wdGljYWwgVGVjaG5vbG9neSBDby4sIEx0ZC4KK3Z4dAlWWFQgTHRkCiB3ZAlXZXN0ZXJu
+IERpZ2l0YWwgQ29ycC4KIHdldGVrCVdlVGVrIEVsZWN0cm9uaWNzLCBsaW1pdGVkLgogd2V4bGVy
+CVdleGxlcgotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbA==
