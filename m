@@ -1,94 +1,86 @@
-From: Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH 1/7] iio: inkern: API for reading available iio channel
- attribute values
-Date: Sun, 17 Feb 2019 15:37:58 +0100
-Message-ID: <0fb5a3fef7c4a790b208cf0f3651c059@artur-rojek.eu>
-References: <20190217142914.17433-1-contact@artur-rojek.eu>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH 3/3] drm/mediatek: add mt8183 dsi driver support
+Date: Sun, 17 Feb 2019 22:45:16 +0800
+Message-ID: <1550414716.5194.14.camel@mszsdaap41>
+References: <20190214044243.129920-1-jitao.shi@mediatek.com>
+ <20190214044243.129920-3-jitao.shi@mediatek.com>
+ <9e37106d-5e29-fc4a-56e1-5b551f47d723@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190217142914.17433-1-contact@artur-rojek.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <9e37106d-5e29-fc4a-56e1-5b551f47d723@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, yingjoe.chen@mediatek.com, Ajay Kumar <ajaykumar.rs@samsung.com>, drinkcat@chromium.org, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-This patchset is supposed to contain 5 patches, not 7. So this patch is 
-actually 1/5. My apologies for the mistake.
-
-Artur
-
-On 2019-02-17 15:29, Artur Rojek wrote:
-> Extend the inkern API with a function for reading available
-> attribute values of iio channels.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->  drivers/iio/inkern.c         | 20 ++++++++++++++++++++
->  include/linux/iio/consumer.h | 14 ++++++++++++++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> index 06ca3f7fcc44..f19dbde3c945 100644
-> --- a/drivers/iio/inkern.c
-> +++ b/drivers/iio/inkern.c
-> @@ -733,6 +733,26 @@ static int iio_channel_read_avail(struct 
-> iio_channel *chan,
->  						 vals, type, length, info);
->  }
-> 
-> +int iio_read_avail_channel_attribute(struct iio_channel *chan,
-> +				     const int **vals, int *type, int *length,
-> +				     enum iio_chan_info_enum attribute)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&chan->indio_dev->info_exist_lock);
-> +	if (!chan->indio_dev->info) {
-> +		ret = -ENODEV;
-> +		goto err_unlock;
-> +	}
-> +
-> +	ret = iio_channel_read_avail(chan, vals, type, length, attribute);
-> +err_unlock:
-> +	mutex_unlock(&chan->indio_dev->info_exist_lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(iio_read_avail_channel_attribute);
-> +
->  int iio_read_avail_channel_raw(struct iio_channel *chan,
->  			       const int **vals, int *length)
->  {
-> diff --git a/include/linux/iio/consumer.h 
-> b/include/linux/iio/consumer.h
-> index 9887f4f8e2a8..b2d34831ed7c 100644
-> --- a/include/linux/iio/consumer.h
-> +++ b/include/linux/iio/consumer.h
-> @@ -290,6 +290,20 @@ int iio_read_max_channel_raw(struct iio_channel
-> *chan, int *val);
->  int iio_read_avail_channel_raw(struct iio_channel *chan,
->  			       const int **vals, int *length);
-> 
-> +/**
-> + * iio_read_avail_channel_attribute() - read available channel 
-> attribute values
-> + * @chan:		The channel being queried.
-> + * @vals:		Available values read back.
-> + * @type:		Type of values read back.
-> + * @length:		Number of entries in vals.
-> + * @attribute:		info attribute to be read back.
-> + *
-> + * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
-> + */
-> +int iio_read_avail_channel_attribute(struct iio_channel *chan,
-> +				     const int **vals, int *type, int *length,
-> +				     enum iio_chan_info_enum attribute);
-> +
->  /**
->   * iio_get_channel_type() - get the type of a channel
->   * @channel:		The channel being queried.
+T24gVGh1LCAyMDE5LTAyLTE0IGF0IDEwOjU0ICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Ogo+IAo+IE9uIDE0LzAyLzIwMTkgMDU6NDIsIEppdGFvIFNoaSB3cm90ZToKPiA+IE1UODE4MyBk
+c2kgaGFzIHR3byBjaGFuZ2VzIHdpdGggbXQ4MTczLgo+ID4gMS4gQWRkIHRoZSByZWdpc3RlciBk
+b3VibGUgYnVmZmVyIGNvbnRyb2wsIGJ1dCB3ZSBubyBuZWVkIGl0LCBTbyBtYWtlCj4gPiAgICBp
+dCBkZWZhdWx0IG9mZi4KPiA+IDIuIEFkZCBwaWN0dXJlIHNpemUgY29udHJvbC4KPiA+IAo+ID4g
+U2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPgo+ID4gLS0t
+Cj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyB8IDIwICsrKysrKysrKysr
+KysrKysrKystCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gPiBpbmRleCA4MGRi
+MDJhMjVjYjAuLjIwY2I1M2YwNWQ0MiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHNpLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHNpLmMKPiA+IEBAIC03OCw2ICs3OCw3IEBACj4gPiAgI2RlZmluZSBEU0lfVkJQX05MCQkweDI0
+Cj4gPiAgI2RlZmluZSBEU0lfVkZQX05MCQkweDI4Cj4gPiAgI2RlZmluZSBEU0lfVkFDVF9OTAkJ
+MHgyQwo+ID4gKyNkZWZpbmUgRFNJX1NJWkVfQ09OCQkweDM4Cj4gPiAgI2RlZmluZSBEU0lfSFNB
+X1dDCQkweDUwCj4gPiAgI2RlZmluZSBEU0lfSEJQX1dDCQkweDU0Cj4gPiAgI2RlZmluZSBEU0lf
+SEZQX1dDCQkweDU4Cj4gPiBAQCAtMTMxLDcgKzEzMiwxMCBAQAo+ID4gICNkZWZpbmUgVk1fQ01E
+X0VOCQkJQklUKDApCj4gPiAgI2RlZmluZSBUU19WRlBfRU4JCQlCSVQoNSkKPiA+ICAKPiA+IC0j
+ZGVmaW5lIERTSV9DTURRMAkJMHgxODAKPiA+ICsjZGVmaW5lIERTSV9TSEFET1dfREVCVUcJMHgx
+OTBVCj4gPiArI2RlZmluZSBGT1JDRV9DT01NSVQJCUJJVCgwKQo+ID4gKyNkZWZpbmUgQllQQVNT
+X1NIQURPVwkJQklUKDEpCj4gPiArCj4gPiAgI2RlZmluZSBDT05GSUcJCQkJKDB4ZmYgPDwgMCkK
+PiA+ICAjZGVmaW5lIFNIT1JUX1BBQ0tFVAkJCTAKPiA+ICAjZGVmaW5lIExPTkdfUEFDS0VUCQkJ
+Mgo+ID4gQEAgLTE1OCw2ICsxNjIsNyBAQCBzdHJ1Y3QgcGh5Owo+ID4gIAo+ID4gIHN0cnVjdCBt
+dGtfZHNpX2RyaXZlcl9kYXRhIHsKPiA+ICAJY29uc3QgdTMyIHJlZ19jbWRxX29mZjsKPiA+ICsJ
+Ym9vbCBoYXNfc2l6ZV9jdGw7Cj4gPiAgfTsKPiA+ICAKPiA+ICBzdHJ1Y3QgbXRrX2RzaSB7Cj4g
+PiBAQCAtNDI2LDYgKzQzMSw5IEBAIHN0YXRpYyB2b2lkIG10a19kc2lfY29uZmlnX3Zkb190aW1p
+bmcoc3RydWN0IG10a19kc2kgKmRzaSkKPiA+ICAJd3JpdGVsKHZtLT52ZnJvbnRfcG9yY2gsIGRz
+aS0+cmVncyArIERTSV9WRlBfTkwpOwo+ID4gIAl3cml0ZWwodm0tPnZhY3RpdmUsIGRzaS0+cmVn
+cyArIERTSV9WQUNUX05MKTsKPiA+ICAKPiA+ICsJaWYgKGRzaS0+ZHJpdmVyX2RhdGEtPmhhc19z
+aXplX2N0bCkKPiA+ICsJCXdyaXRlbCh2bS0+dmFjdGl2ZSA8PCAxNiB8IHZtLT5oYWN0aXZlLCBk
+c2ktPnJlZ3MgKyBEU0lfU0laRV9DT04pOwo+ID4gKwo+ID4gIAlob3Jpem9udGFsX3N5bmNfYWN0
+aXZlX2J5dGUgPSAodm0tPmhzeW5jX2xlbiAqIGRzaV90bXBfYnVmX2JwcCAtIDEwKTsKPiA+ICAK
+PiA+ICAJaWYgKGRzaS0+bW9kZV9mbGFncyAmIE1JUElfRFNJX01PREVfVklERU9fU1lOQ19QVUxT
+RSkKPiA+IEBAIC01OTUsNiArNjAzLDkgQEAgc3RhdGljIGludCBtdGtfZHNpX3Bvd2Vyb24oc3Ry
+dWN0IG10a19kc2kgKmRzaSkKPiA+ICAJfQo+ID4gIAo+ID4gIAltdGtfZHNpX2VuYWJsZShkc2kp
+Owo+ID4gKwo+ID4gKwkvKiBEU0kgbm8gbmVlZCB0aGlzIGRvdWJsZSBidWZmZXIsIGRpc2FibGUg
+aXQgd2hlbiB3cml0aW5nIHJlZ2lzdGVyICovCj4gPiArCXdyaXRlbChGT1JDRV9DT01NSVQgfCBC
+WVBBU1NfU0hBRE9XLCBkc2ktPnJlZ3MgKyBEU0lfU0hBRE9XX0RFQlVHKTsKPiAKPiBJcyB0aGlz
+IGEgbXQ4MTgzIHRoaW5nPyBEaWQgeW91IGFzc3VyZSB0aGF0IHRoaXMgZG9lcyBub3QgaW50cm9k
+dWNlIHJlZ3Jlc3Npb25zCj4gb24gb3RoZXIgU29Dcywgb3IgZG9lcyBpdCBmaXggYW55Pwo+IAo+
+IEkgdGhpbmsgdGhpcyBzaG91bGQgYmUgYSBpbmRlcGVuZGVudCBwYXRjaC4gSWYgaXQgZml4ZXMg
+YW4gYWN0dWFsIGlzc3VlLCB0aGVuCj4gcGxlYXNlIHByb3ZpZGUgYSBmaXhlcyB0YWcgaW4gdGhh
+dCBwYXRjaC4KPiAKPiBUaGFua3MsCj4gTWF0dGhpYXMKPiAKClllcywgdGhpcyBpcyBmb3IgbXQ4
+MTgzLiBCdXQgdGhpcyByZWcgaXMgcmV2ZXJzZSBvbiBvdGhlciBtdGsgc29jLgpJdCBpcyB1bnN1
+aXRhYmxlLiBBbmQgaSdsbCBwdXQgaXQgaW4gbXQ4MTgzIGRyaXZlciBkYXRhIG5leHQgdmVyc2lv
+bi4KCkJlc3QgUmVnYXJkcwpKaXRhbwoKPiA+ICAJbXRrX2RzaV9yZXNldF9lbmdpbmUoZHNpKTsK
+PiA+ICAJbXRrX2RzaV9waHlfdGltY29uZmlnKGRzaSk7Cj4gPiAgCj4gPiBAQCAtMTA5MCwxMSAr
+MTEwMSwxOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19kc2lfZHJpdmVyX2RhdGEgbXQyNzAx
+X2RzaV9kcml2ZXJfZGF0YSA9IHsKPiA+ICAJLnJlZ19jbWRxX29mZiA9IDB4MTgwLAo+ID4gIH07
+Cj4gPiAgCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZHNpX2RyaXZlcl9kYXRhIG10ODE4
+M19kc2lfZHJpdmVyX2RhdGEgPSB7Cj4gPiArCS5yZWdfY21kcV9vZmYgPSAweDIwMCwKPiA+ICsJ
+Lmhhc19zaXplX2N0bCA9IHRydWUsCj4gPiArfTsKPiA+ICsKPiA+ICBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG9mX2RldmljZV9pZCBtdGtfZHNpX29mX21hdGNoW10gPSB7Cj4gPiAgCXsgLmNvbXBhdGli
+bGUgPSAibWVkaWF0ZWssbXQyNzAxLWRzaSIsCj4gPiAgCSAgLmRhdGEgPSAmbXQyNzAxX2RzaV9k
+cml2ZXJfZGF0YSB9LAo+ID4gIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1kc2ki
+LAo+ID4gIAkgIC5kYXRhID0gJm10ODE3M19kc2lfZHJpdmVyX2RhdGEgfSwKPiA+ICsJeyAuY29t
+cGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtZHNpIiwKPiA+ICsJICAuZGF0YSA9ICZtdDgxODNf
+ZHNpX2RyaXZlcl9kYXRhIH0sCj4gPiAgCXsgfSwKPiA+ICB9Owo+ID4gIAo+ID4gCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
