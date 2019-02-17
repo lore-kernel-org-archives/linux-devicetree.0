@@ -1,72 +1,79 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFCv1 2/3] ARM: dts: meson8b: odroidc1: fix USB power supplies
- for phy
-Date: Sun, 17 Feb 2019 15:26:46 +0100
-Message-ID: <CAFBinCALfZ4HbBdyXjMqFX-HyJtTyOU_FgW18+jK4cW4Svfenw@mail.gmail.com>
-References: <20190123151209.2080-1-linux.amoon@gmail.com>
- <20190123151209.2080-3-linux.amoon@gmail.com>
- <CAFBinCAdf0rtt-7tON_LRNH_cpvGJXX3LX8g-i4xsC3wahZSVA@mail.gmail.com>
- <CANAwSgQ4=Vn6RM4Kpd20UWkQNW81=mfg-qB0G73dsRem3qwjcA@mail.gmail.com>
- <CAFBinCB=3kmuFb_xXzhW+m8dTasVrCHQp2wti+=5UjrAHk5TTg@mail.gmail.com>
- <CANAwSgQnMkXECkCVjFKwNKB+2JoiPtVPQbateppmtgfPYCutZg@mail.gmail.com>
- <CAFBinCCFoBkbf-HvEoMk7mTYTBV27nJ9TF1X-DrLuHR9qDVDSA@mail.gmail.com>
- <CANAwSgRtBWzKiFLUV6twxv+TnvjLdHXv=U8+ppQ7=9uBBLEH+Q@mail.gmail.com>
- <CAFBinCD_Pddu+pBEKwMS6467J5nxKF4T5-LxVo06nFvyUSLpew@mail.gmail.com>
- <CANAwSgSQRwF+_VR1jJFg=Q9wSdanEH0GmnFaeegt=hRMXiHX3Q@mail.gmail.com>
- <CAFBinCBwDg21t+HT6w7CcUgH_aDuwh-UgoPs7GuZo9rABvPDig@mail.gmail.com>
- <CANAwSgRKgWCyNoDUxrK4asjZ_6z77Rew2nGCg1Yq9m3pi0Amrw@mail.gmail.com>
+From: Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH 1/7] iio: inkern: API for reading available iio channel attribute values
+Date: Sun, 17 Feb 2019 15:29:10 +0100
+Message-ID: <20190217142914.17433-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANAwSgRKgWCyNoDUxrK4asjZ_6z77Rew2nGCg1Yq9m3pi0Amrw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Emiliano Ingrassia <ingrassia@epigenesys.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
+Extend the inkern API with a function for reading available
+attribute values of iio channels.
 
-On Mon, Feb 11, 2019 at 4:09 PM Anand Moon <linux.amoon@gmail.com> wrote:
-[...]
-> Can we have other people who can test both the approach for
-> *vbus-supply* vs *phy-supply* setting.
-> Then we can conclude on the correct approach.
-this is a good idea. do we focus on the 4x USB host ports for this
-test or also on the OTG port?
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+---
+ drivers/iio/inkern.c         | 20 ++++++++++++++++++++
+ include/linux/iio/consumer.h | 14 ++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-my test-setup so far was:
-- Odroid-C1+ board revision 0.4 20150615
-- the board is powered using the micro USB port
-- connect an USB thumb drive to one of the USB host ports
-
-test-cases:
-- an "unpatched" (in terms of USB power regulators) kernel
-- using Anand's phy-supply = <&usb_vbus>; inside the usb1_phy node
-- using vbus-supply = <&usb_vbus>; inside the usb1 node
-
-in all thee scenarios the LED of my thumb drive did not light up and
-there was nothing in the kernel log. also lsusb -vv didn't show
-anything.
-
-Anand, do you have any other test-case in mind that we need to check?
-
-I CC'ed Emiliano because he initially added USB support to
-meson8b-odroidc1.dts (that was before I got my own Odroid-C1+).
-He can probably help us test on his board(s) as well.
-
-> Honestly I am using power supply from dc jack rather than power via usb otg.
-I don't have a plug which matches the little DC jack so I'm powering
-my board using the micro USB connector.
-
-
-Regards
-Martin
+diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+index 06ca3f7fcc44..f19dbde3c945 100644
+--- a/drivers/iio/inkern.c
++++ b/drivers/iio/inkern.c
+@@ -733,6 +733,26 @@ static int iio_channel_read_avail(struct iio_channel *chan,
+ 						 vals, type, length, info);
+ }
+ 
++int iio_read_avail_channel_attribute(struct iio_channel *chan,
++				     const int **vals, int *type, int *length,
++				     enum iio_chan_info_enum attribute)
++{
++	int ret;
++
++	mutex_lock(&chan->indio_dev->info_exist_lock);
++	if (!chan->indio_dev->info) {
++		ret = -ENODEV;
++		goto err_unlock;
++	}
++
++	ret = iio_channel_read_avail(chan, vals, type, length, attribute);
++err_unlock:
++	mutex_unlock(&chan->indio_dev->info_exist_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(iio_read_avail_channel_attribute);
++
+ int iio_read_avail_channel_raw(struct iio_channel *chan,
+ 			       const int **vals, int *length)
+ {
+diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+index 9887f4f8e2a8..b2d34831ed7c 100644
+--- a/include/linux/iio/consumer.h
++++ b/include/linux/iio/consumer.h
+@@ -290,6 +290,20 @@ int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
+ int iio_read_avail_channel_raw(struct iio_channel *chan,
+ 			       const int **vals, int *length);
+ 
++/**
++ * iio_read_avail_channel_attribute() - read available channel attribute values
++ * @chan:		The channel being queried.
++ * @vals:		Available values read back.
++ * @type:		Type of values read back.
++ * @length:		Number of entries in vals.
++ * @attribute:		info attribute to be read back.
++ *
++ * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
++ */
++int iio_read_avail_channel_attribute(struct iio_channel *chan,
++				     const int **vals, int *type, int *length,
++				     enum iio_chan_info_enum attribute);
++
+ /**
+  * iio_get_channel_type() - get the type of a channel
+  * @channel:		The channel being queried.
+-- 
+2.20.1
