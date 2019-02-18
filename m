@@ -1,83 +1,89 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 04/10] usb: dwc3: Add two quirks for Hisilicon Kirin
- Soc Platform
-Date: Mon, 18 Feb 2019 14:21:34 +0200
-Message-ID: <CAHp75VdrSyORjd0OXS11poCL-3PofgsiejzgZ=m56sZegfGyMw@mail.gmail.com>
-References: <20190218112310.17860-1-chenyu56@huawei.com> <20190218112310.17860-5-chenyu56@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Add one new cell to present
+ hardware slave id
+Date: Mon, 18 Feb 2019 13:23:00 +0100
+Message-ID: <CAK8P3a03rPjWQvGrDupoTAywVmjCZdpSJpqW9Sv=NVPR2uwZeQ@mail.gmail.com>
+References: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
+ <CAK8P3a2zkhrZLMi5KZ5=fGJCt85dad3_pZC0o7GqcwJkk4es9w@mail.gmail.com>
+ <CAMz4ku+PR4bHtcPu2uT2f974+FWJVi8Tp3WzmuqE1TS-M-QawQ@mail.gmail.com>
+ <CAMz4kuLEut0LqZ4bSAGJDufE8xHr6DgZ3Z1RCLQ10q_k6MUesw@mail.gmail.com>
+ <CAK8P3a1Zq6XjymG3sAaHGeNRxU5UXPfJPbi0A9s47cTVK7vC3g@mail.gmail.com> <CAMz4kuL=B53xLk4SFbrwWeUhp4P9zbUfOmXgftQCEjVSwOnD5A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218112310.17860-5-chenyu56@huawei.com>
+In-Reply-To: <CAMz4kuL=B53xLk4SFbrwWeUhp4P9zbUfOmXgftQCEjVSwOnD5A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>
-Cc: USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>, xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Dan Williams <dan.j.williams@intel.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, eric.long@unisoc.com, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 1:23 PM Yu Chen <chenyu56@huawei.com> wrote:
+On Mon, Feb 18, 2019 at 11:52 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+> On Mon, 18 Feb 2019 at 18:31, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Tue, Feb 12, 2019 at 9:25 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > On Fri, 1 Feb 2019 at 19:53, Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > > On Thu, 31 Jan 2019 at 00:52, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > On Tue, Jan 22, 2019 at 2:21 PM Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > > > >
+> > > > > >  Client:
+> > > > > >  DMA clients connected to the Spreadtrum DMA controller must use the format
+> > > > > > -described in the dma.txt file, using a two-cell specifier for each channel.
+> > > > > > -The two cells in order are:
+> > > > > > +described in the dma.txt file, using a three-cell specifier for each channel.
+> > > > > > +The three cells in order are:
+> > > > > >  1. A phandle pointing to the DMA controller.
+> > > > > >  2. The channel id.
+> > > > > > +3. The hardware slave id which is used for clients to trigger DMA engine
+> > > > > > +automatically.
+> > > > >
+> > > > > I notice that this is an incompatible binding change. Is that necessary?
+> > > > > If the current code works, I'd suggest allowing both #dma-cells=<2>
+> > > > > and <3>, and then implementing both in the driver.
+> > > >
+> > > > Yes, this is necessary.
+> > > >
+> > > > Yes, current code can work, but the problem is that the DMA clients
+> > > > must add one property (something like "sprd,slave-id") to specify the
+> > > > slave id. So considering this, we want to change the dma-cells to 2,
+> > > > including dma channel and dma slave id, which can avoid introducing
+> > > > some similar properties for DMA clients.
+> > > >
+> > > > Now there are no DMA clients in mainline for Spreadtrum platform, and
+> > > > we want to upstream our first DMA clients: SPI controller. So no other
+> > > > drivers need to change when we changing dma cells. Thanks.
+> > >
+> > > Do you have any other concerns about this patch set? If not, I think
+> > > Vinod can apply this patch set. Thanks.
+> >
+> > Sorry for the late reply. Yes, this makes sense since there are no
+> > existing users then. For the DT changes going through the dmaengine
+> > tree
+> >
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
 >
-> There are tow quirks for DesignWare USB3 DRD Core of Hisilicon Kirin Soc.
-> 1)SPLIT_BOUNDARY_DISABLE should be set for Host mode
-> 2)A GCTL soft reset should be executed when switch mode
+> Thanks for your reviewing.
+>
+> >
+> > One more question, to make sure we don't need to edit it again:
+> > Why do you need both a 'channel id' and a 'slave id' here? Is this
+> > a strict hardware requirement for your DMA engine? In many
+> > other designs, only a DMA request line number needs to
+> > be described, and I think this would correspond to what you
+> > call the 'hardware slave id' in your documentation.
+>
+> I try to explain why we need the slave id.
+>
+> For our DMA engine driver, we have software request mode and hardware
+> request mode. For software request mode, the DMA engine driver need
+> trigger DMA to start transfer manually. But for hardware request mode,
+> we just set one unique slave id corresponding to the slave hardware to
+> the DMA engine, then the slave hardware can trigger DMA automatically.
+> And the slave id is not always same with the channel id according to
+> the SoC design, so we add one cell to specify the slave id.
 
-Thus, it must be two patches, no?
+I did understand the need for a slave-id, I was instead wondering about
+the channel-id number. On many SoCs, all channels are equal, and you
+just have to pick one of those with the right capabilities for a particular
+slave.
 
-> +static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
-> +{
-> +       u32 reg;
-> +
-> +       reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-
-> +       reg |= (DWC3_GCTL_CORESOFTRESET);
-
-Redundant parens.
-
-> +       dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-> +
-> +       reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-
-> +       reg &= ~(DWC3_GCTL_CORESOFTRESET);
-
-Ditto.
-
-> +       dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-> +}
-
-> +static void dwc3_complete(struct device *dev)
-> +{
-
-> +       struct dwc3     *dwc = dev_get_drvdata(dev);
-> +       u32             reg;
-
-Indentation style is different to the other functions in the same patch.
-Use simple space here.
-
-> +       if (dwc->current_dr_role == DWC3_GCTL_PRTCAP_HOST &&
-> +                       dwc->dis_split_quirk) {
-> +               dev_dbg(dwc->dev, "set DWC3_GUCTL3_SPLITDISABLE\n");
-> +               reg = dwc3_readl(dwc->regs, DWC3_GUCTL3);
-> +               reg |= DWC3_GUCTL3_SPLITDISABLE;
-> +               dwc3_writel(dwc->regs, DWC3_GUCTL3, reg);
-> +       }
-> +}
-
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -269,7 +269,7 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
->  {
->         const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
->         struct dwc3             *dwc = dep->dwc;
-
-> -       u32                     timeout = 1000;
-> +       u32                     timeout = 5000;
-
-I don't see anything about this change in commit message. Moreoever,
-it looks like it must be a separate logical change with its own
-description.
-
->         u32                     saved_config = 0;
->         u32                     reg;
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+      Arnd
