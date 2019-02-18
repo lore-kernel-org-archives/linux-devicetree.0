@@ -1,8 +1,11 @@
 Return-Path: <SRS0=zazs=QZ=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH RESEND V2 0/4] Add i.MX8QXP system controller watchdog support
-Date: Mon, 18 Feb 2019 06:53:39 +0000
-Message-ID: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH V2 0/4] Add i.MX8QXP system controller watchdog support
+Date: Mon, 18 Feb 2019 06:11:50 +0000
+Message-ID: <DB3PR0402MB3916CB0E548CB6294DCFF7EFF5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550454997-4398-1-git-send-email-Anson.Huang@nxp.com>
+ <02ea476f-d055-ac12-d1b6-c6caffb14614@roeck-us.net>
+In-Reply-To: <02ea476f-d055-ac12-d1b6-c6caffb14614@roeck-us.net>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -12,49 +15,71 @@ List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
 List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-i.MX8QXP is an ARMv8 Cortex-A35 SoC with a Cortex-M4 system controller inside,
-the system controller manages overall power, clock, secure RTC and watchdog
-etc., so Linux kernel running on A35 needs to communicate with system
-controller for watchdog operation, this system controller watchdog will
-call SMC to trap to EL3 secure world ARM-Trusted-Firmware and then it will
-request system controller to do the watchdog operation via IPC.
-
-This V2 patch series addresses all the comments from V1, and change log is inside
-each patch of this V2 series.
-
-Below are the patch dependency:
-
-The dt-binding and imx8qxp.dtsi patch are based on my thermal patch series as below:
-https://patchwork.kernel.org/patch/10800699/
-
-Anson Huang (4):
-  dt-bindings: fsl: scu: add watchdog binding
-  watchdog: imx_sc: Add i.MX system controller watchdog support
-  arm64: defconfig: add support for i.MX system controller watchdog
-  arm64: dts: freescale: imx8qxp: add watchdog support
-
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  |  10 +
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   4 +
- arch/arm64/configs/defconfig                       |   1 +
- drivers/watchdog/Kconfig                           |  13 ++
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/imx_sc_wdt.c                      | 210 +++++++++++++++++++++
- 6 files changed, 239 insertions(+)
- create mode 100644 drivers/watchdog/imx_sc_wdt.c
-
--- 
-2.7.4
-
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+SGksIEd1ZW50ZXINCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVudGVyIFJvZWNrIFttYWlsdG86Z3JvZWNrN0Bn
+bWFpbC5jb21dIE9uIEJlaGFsZiBPZiBHdWVudGVyDQo+IFJvZWNrDQo+IFNlbnQ6IDIwMTnlubQy
+5pyIMTjml6UgMTM6MTYNCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsg
+cm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2Vy
+bmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRl
+OyBmZXN0ZXZhbUBnbWFpbC5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0KPiB3aWxsLmRl
+YWNvbkBhcm0uY29tOyB3aW1AbGludXgtd2F0Y2hkb2cub3JnOyBBaXNoZW5nIERvbmcNCj4gPGFp
+c2hlbmcuZG9uZ0BueHAuY29tPjsgdWxmLmhhbnNzb25AbGluYXJvLm9yZzsgRGFuaWVsIEJhbHV0
+YQ0KPiA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsgQW5keSBHcm9zcyA8YW5keS5ncm9zc0BsaW5h
+cm8ub3JnPjsNCj4gaG9ybXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXU7IGhlaWtvQHNudGVjaC5kZTsg
+YXJuZEBhcm5kYi5kZTsNCj4gYmpvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc7IGphZ2FuQGFtYXJ1
+bGFzb2x1dGlvbnMuY29tOw0KPiBlbnJpYy5iYWxsZXRib0Bjb2xsYWJvcmEuY29tOyBtYXJjLncu
+Z29uemFsZXpAZnJlZS5mcjsgb2xvZkBsaXhvbS5uZXQ7DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC13YXRjaGRvZ0B2Z2VyLmtlcm5lbC5vcmcNCj4g
+Q2M6IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggVjIgMC80XSBBZGQgaS5NWDhRWFAgc3lzdGVtIGNvbnRyb2xsZXIgd2F0Y2hkb2cNCj4gc3Vw
+cG9ydA0KPiANCj4gT24gMi8xNy8xOSA2OjAxIFBNLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBp
+Lk1YOFFYUCBpcyBhbiBBUk12OCBDb3J0ZXgtQTM1IFNvQyB3aXRoIGEgQ29ydGV4LU00IHN5c3Rl
+bSBjb250cm9sbGVyDQo+ID4gaW5zaWRlLCB0aGUgc3lzdGVtIGNvbnRyb2xsZXIgbWFuYWdlcyBv
+dmVyYWxsIHBvd2VyLCBjbG9jaywgc2VjdXJlIFJUQw0KPiA+IGFuZCB3YXRjaGRvZyBldGMuLCBz
+byBMaW51eCBrZXJuZWwgcnVubmluZyBvbiBBMzUgbmVlZHMgdG8gY29tbXVuaWNhdGUNCj4gPiB3
+aXRoIHN5c3RlbSBjb250cm9sbGVyIGZvciB3YXRjaGRvZyBvcGVyYXRpb24sIHRoaXMgc3lzdGVt
+IGNvbnRyb2xsZXINCj4gPiB3YXRjaGRvZyB3aWxsIGNhbGwgU01DIHRvIHRyYXAgdG8gRUwzIHNl
+Y3VyZSB3b3JsZA0KPiA+IEFSTS1UcnVzdGVkLUZpcm13YXJlIGFuZCB0aGVuIGl0IHdpbGwgcmVx
+dWVzdCBzeXN0ZW0gY29udHJvbGxlciB0byBkbyB0aGUNCj4gd2F0Y2hkb2cgb3BlcmF0aW9uIHZp
+YSBJUEMuDQo+ID4NCj4gPg0KPiBBbmQgeW91IGV4cGVjdCBJJ2xsIHNwZW5kIHRoZSB0aW1lIGNv
+bXBhcmluZyB0aGlzIHZlcnNpb24gb2YgdGhlIHBhdGNoIHNlcmllcw0KPiBhZ2FpbnN0IHZlcnNp
+b24gMSBhbmQgZmlndXJlIG91dCBteXNlbGYgd2hhdCBleGFjdGx5IGNoYW5nZWQgPw0KPiANCj4g
+R3VlbnRlcg0KDQpTb3JyeSwgSSBwbGFubmVkIHRvIHJlcGx5IHlvdXIgcmV2aWV3IG1haWwgYnV0
+IGZvcmdvdCwgSSBhZGRyZXNzZWQgYWxsIHlvdXIgY29tbWVudHMNCmluIFYyIHBhdGNoIHNldCwg
+SSB3aWxsIGFkZCB0aGUgY2hhbmdlIGxvZyBpbiBWMiB3YXRjaGRvZyBkcml2ZXIgcGF0Y2ggYW5k
+IHJlc2VuZC4NCg0KQW5zb24uDQoNCj4gDQo+IEJlbG93IGFyZSB0aGUgcGF0Y2ggZGVwZW5kZW5j
+eToNCj4gPg0KPiA+IFRoZSBkdC1iaW5kaW5nIGFuZCBpbXg4cXhwLmR0c2kgcGF0Y2ggYXJlIGJh
+c2VkIG9uIG15IHRoZXJtYWwgcGF0Y2gNCj4gc2VyaWVzIGFzIGJlbG93Og0KPiA+DQo+IGh0dHBz
+Oi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0El
+MkYlMkZwYXQNCj4gPg0KPiBjaHdvcmsua2VybmVsLm9yZyUyRnBhdGNoJTJGMTA4MDA2OTklMkYm
+YW1wO2RhdGE9MDIlN0MwMSU3Q2Fuc28NCj4gbi5odWFuZw0KPiA+ICU0MG54cC5jb20lN0M2MzBl
+NmM1ZDdlZDA0YTkxMmY3NzA4ZDY5NTYwM2NiMiU3QzY4NmVhMWQzYmMyYjQNCj4gYzZmYTkyY2Q5
+DQo+ID4NCj4gOWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2ODYwNjM3OTAzOTg0MjY4JmFtcDtzZGF0
+YT1hMjVxSnMlMkZiNGUNCj4gMmE5RXk3N1UNCj4gPiBnVE5LQUdDUThJV1JjVUtiNEcwbEslMkJr
+amMlM0QmYW1wO3Jlc2VydmVkPTANCj4gPg0KPiA+IEFuc29uIEh1YW5nICg0KToNCj4gPiAgICBk
+dC1iaW5kaW5nczogZnNsOiBzY3U6IGFkZCB3YXRjaGRvZyBiaW5kaW5nDQo+ID4gICAgd2F0Y2hk
+b2c6IGlteF9zYzogQWRkIGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgd2F0Y2hkb2cgc3VwcG9ydA0K
+PiA+ICAgIGFybTY0OiBkZWZjb25maWc6IGFkZCBzdXBwb3J0IGZvciBpLk1YIHN5c3RlbSBjb250
+cm9sbGVyIHdhdGNoZG9nDQo+ID4gICAgYXJtNjQ6IGR0czogZnJlZXNjYWxlOiBpbXg4cXhwOiBh
+ZGQgd2F0Y2hkb2cgc3VwcG9ydA0KPiA+DQo+ID4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0ICB8ICAxMCArDQo+ID4gICBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kgICAgICAgICB8ICAgNCArDQo+ID4gICBhcmNoL2Fy
+bTY0L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQo+ID4g
+ICBkcml2ZXJzL3dhdGNoZG9nL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAx
+MyArKw0KPiA+ICAgZHJpdmVycy93YXRjaGRvZy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgIDEgKw0KPiA+ICAgZHJpdmVycy93YXRjaGRvZy9pbXhfc2Nfd2R0LmMgICAgICAg
+ICAgICAgICAgICAgICAgfCAyMTANCj4gKysrKysrKysrKysrKysrKysrKysrDQo+ID4gICA2IGZp
+bGVzIGNoYW5nZWQsIDIzOSBpbnNlcnRpb25zKCspDQo+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy93YXRjaGRvZy9pbXhfc2Nfd2R0LmMNCj4gPg0KDQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
