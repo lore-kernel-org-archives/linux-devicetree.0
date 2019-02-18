@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v1 01/12] arm64: dts: msm8998: thermal: split address space into two
-Date: Mon, 18 Feb 2019 18:05:15 +0530
-Message-ID: <fb19401249fb49cbc62e9b5f8b49925c9d00b128.1550493113.git.amit.kucheria@linaro.org>
+Subject: [PATCH v1 02/12] arm64: dts: msm8998: efficiency is not valid property
+Date: Mon, 18 Feb 2019 18:05:16 +0530
+Message-ID: <bd63da47d92b9bbf942c9bc854d7bafcd3a0a87c.1550493113.git.amit.kucheria@linaro.org>
 References: <cover.1550493113.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1550493113.git.amit.kucheria@linaro.org>
@@ -12,46 +12,82 @@ To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson
 Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We've earlier added support to split the register address space into TM
-and SROT regions. Split up the regmap address space into two for msm8998
-that has a similar register layout.
-
-The order is important (TM before SROT) because we make an assumption
-that SROT is always the second address space in order to support legacy
-DTs.
+efficiency comes from downstream. The valid upstream property is
+capacity-dmips-mhz but until we can come up with those numbers, remove
+this property.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 8d41b69ec2da..3c5fb2509d5f 100644
+index 3c5fb2509d5f..db4cb687126b 100644
 --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -579,17 +579,19 @@
- 			cell-index = <0>;
- 		};
- 
--		tsens0: thermal@10aa000 {
-+		tsens0: thermal@10ab000 {
- 			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
--			reg = <0x10aa000 0x2000>;
-+			reg = <0x10ab000 0x1000>, /* TM */
-+			      <0x10aa000 0x1000>; /* SROT */
- 
- 			#qcom,sensors = <12>;
- 			#thermal-sensor-cells = <1>;
- 		};
- 
--		tsens1: thermal@10ad000 {
-+		tsens1: thermal@10ae000 {
- 			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
--			reg = <0x10ad000 0x2000>;
-+			reg = <0x10ae000 0x1000>, /* TM */
-+			      <0x10ad000 0x1000>; /* SROT */
- 
- 			#qcom,sensors = <8>;
- 			#thermal-sensor-cells = <1>;
+@@ -77,7 +77,6 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+-			efficiency = <1024>;
+ 			next-level-cache = <&L2_0>;
+ 			L2_0: l2-cache {
+ 				compatible = "arm,arch-cache";
+@@ -96,7 +95,6 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
+-			efficiency = <1024>;
+ 			next-level-cache = <&L2_0>;
+ 			L1_I_1: l1-icache {
+ 				compatible = "arm,arch-cache";
+@@ -111,7 +109,6 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
+-			efficiency = <1024>;
+ 			next-level-cache = <&L2_0>;
+ 			L1_I_2: l1-icache {
+ 				compatible = "arm,arch-cache";
+@@ -126,7 +123,6 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
+-			efficiency = <1024>;
+ 			next-level-cache = <&L2_0>;
+ 			L1_I_3: l1-icache {
+ 				compatible = "arm,arch-cache";
+@@ -141,7 +137,6 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
+-			efficiency = <1536>;
+ 			next-level-cache = <&L2_1>;
+ 			L2_1: l2-cache {
+ 				compatible = "arm,arch-cache";
+@@ -160,7 +155,6 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
+-			efficiency = <1536>;
+ 			next-level-cache = <&L2_1>;
+ 			L1_I_101: l1-icache {
+ 				compatible = "arm,arch-cache";
+@@ -175,7 +169,6 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x102>;
+ 			enable-method = "psci";
+-			efficiency = <1536>;
+ 			next-level-cache = <&L2_1>;
+ 			L1_I_102: l1-icache {
+ 				compatible = "arm,arch-cache";
+@@ -190,7 +183,6 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x103>;
+ 			enable-method = "psci";
+-			efficiency = <1536>;
+ 			next-level-cache = <&L2_1>;
+ 			L1_I_103: l1-icache {
+ 				compatible = "arm,arch-cache";
 -- 
 2.17.1
