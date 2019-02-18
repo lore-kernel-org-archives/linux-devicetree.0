@@ -1,70 +1,69 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Add one new cell to present
- hardware slave id
-Date: Mon, 18 Feb 2019 11:31:32 +0100
-Message-ID: <CAK8P3a1Zq6XjymG3sAaHGeNRxU5UXPfJPbi0A9s47cTVK7vC3g@mail.gmail.com>
-References: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
- <CAK8P3a2zkhrZLMi5KZ5=fGJCt85dad3_pZC0o7GqcwJkk4es9w@mail.gmail.com>
- <CAMz4ku+PR4bHtcPu2uT2f974+FWJVi8Tp3WzmuqE1TS-M-QawQ@mail.gmail.com> <CAMz4kuLEut0LqZ4bSAGJDufE8xHr6DgZ3Z1RCLQ10q_k6MUesw@mail.gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 2/8] dt-bindings: phy: Add Amlogic G12A USB3+PCIE Combo
+ PHY Bindings
+Date: Mon, 18 Feb 2019 11:33:41 +0100
+Message-ID: <15bb76c8-16f0-e74d-f3cf-070ce8cf6de2@baylibre.com>
+References: <20190212151413.24632-1-narmstrong@baylibre.com>
+ <20190212151413.24632-3-narmstrong@baylibre.com>
+ <CAFBinCA37waCTqGrMqaLmb5n8XuGJof_7iQsWkBdAYr7s2en=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMz4kuLEut0LqZ4bSAGJDufE8xHr6DgZ3Z1RCLQ10q_k6MUesw@mail.gmail.com>
+In-Reply-To: <CAFBinCA37waCTqGrMqaLmb5n8XuGJof_7iQsWkBdAYr7s2en=g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Dan Williams <dan.j.williams@intel.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, eric.long@unisoc.com, Mark Brown <broonie@kernel.org>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 9:25 AM Baolin Wang <baolin.wang@linaro.org> wrote:
-> On Fri, 1 Feb 2019 at 19:53, Baolin Wang <baolin.wang@linaro.org> wrote:
-> > On Thu, 31 Jan 2019 at 00:52, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Tue, Jan 22, 2019 at 2:21 PM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > >
-> > > >  Client:
-> > > >  DMA clients connected to the Spreadtrum DMA controller must use the format
-> > > > -described in the dma.txt file, using a two-cell specifier for each channel.
-> > > > -The two cells in order are:
-> > > > +described in the dma.txt file, using a three-cell specifier for each channel.
-> > > > +The three cells in order are:
-> > > >  1. A phandle pointing to the DMA controller.
-> > > >  2. The channel id.
-> > > > +3. The hardware slave id which is used for clients to trigger DMA engine
-> > > > +automatically.
-> > >
-> > > I notice that this is an incompatible binding change. Is that necessary?
-> > > If the current code works, I'd suggest allowing both #dma-cells=<2>
-> > > and <3>, and then implementing both in the driver.
-> >
-> > Yes, this is necessary.
-> >
-> > Yes, current code can work, but the problem is that the DMA clients
-> > must add one property (something like "sprd,slave-id") to specify the
-> > slave id. So considering this, we want to change the dma-cells to 2,
-> > including dma channel and dma slave id, which can avoid introducing
-> > some similar properties for DMA clients.
-> >
-> > Now there are no DMA clients in mainline for Spreadtrum platform, and
-> > we want to upstream our first DMA clients: SPI controller. So no other
-> > drivers need to change when we changing dma cells. Thanks.
->
-> Do you have any other concerns about this patch set? If not, I think
-> Vinod can apply this patch set. Thanks.
+On 17/02/2019 23:03, Martin Blumenstingl wrote:
+> On Tue, Feb 12, 2019 at 4:15 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Add the Amlogic G12A Family USB3 + PCIE Combo PHY Bindings.
+>>
+>> This PHY can provide exclusively USB3 or PCIE support on shared I/Os.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> one nit-pick below, but apart from that:
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> 
+>> ---
+>>  .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 25 +++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+>> new file mode 100644
+>> index 000000000000..714d751091f5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+>> @@ -0,0 +1,25 @@
+>> +* Amlogic G12A USB3 + PCIE Combo PHY binding
+>> +
+>> +Required properties:
+>> +- compatible:  Should be "amlogic,meson-g12a-usb3-pcie-phy"
+>> +- #phys-cells: must be 1. The cell number is used to select the phy mode
+>> +  as defined in <dt-bindings/phy/phy.h> between PHY_TYPE_USB3 and PHY_TYPE_PCIE
+>> +- reg:         The base address and length of the registers
+>> +- clocks:      a phandle to the 100MHz reference clock of this PHY
+>> +- clock-names: must be "ref_clk"
+>> +- resets:      phandle to the reset lines for:
+>> +               - the PHY control
+>> +               - the USB3+PCIE PHY
+>> +               - the PHY registers
+> no reset-names (like in the G12A USB2 PHY bindings) here?
+> even if you don't use them in the driver I suggest you add them for
+> consistency (and maybe to make it easier to compare the bindings with
+> the datasheet. I don't have access to the datasheet so I'm not sure if
+> having the reset-names is relevant for this case)
 
-Sorry for the late reply. Yes, this makes sense since there are no
-existing users then. For the DT changes going through the dmaengine
-tree
+You're right, it's better to have names here !
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Neil
 
-One more question, to make sure we don't need to edit it again:
-Why do you need both a 'channel id' and a 'slave id' here? Is this
-a strict hardware requirement for your DMA engine? In many
-other designs, only a DMA request line number needs to
-be described, and I think this would correspond to what you
-call the 'hardware slave id' in your documentation.
-
-Does each request line here correspond to a fixed channel
-id as well, or can a channel be shared between multiple
-slave devices?
-
-      Arnd
+> 
+> 
+> Regards
+> Martin
+> 
