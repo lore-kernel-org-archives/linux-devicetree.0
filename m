@@ -1,67 +1,40 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 2/4] mfd: max77620: add documentation for backup
- battery charging
-Date: Mon, 18 Feb 2019 12:06:12 -0600
-Message-ID: <CAL_JsqKiL8A+SBwqLzYa9djWBT1S+2kxUUB4iuKWX7EoqXouCw@mail.gmail.com>
-References: <20190212064353.7451-1-markz@nvidia.com> <20190212064353.7451-3-markz@nvidia.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 04/11] dt-bindings: Add ANX6345 DP/eDP
+ transmitter binding
+Date: Mon, 18 Feb 2019 12:13:06 -0600
+Message-ID: <20190218181306.GA14222@bogus>
+References: <20190215050957.20755-1-anarsoul@gmail.com>
+ <20190215050957.20755-5-anarsoul@gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212064353.7451-3-markz@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Zhang <markz@nvidia.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-tegra@vger.kernel.org
+Return-path: <linux-sunxi+bncBDJIP47K7MERBNHLVPRQKGQEXGXKHDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190215050957.20755-5-anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 12:44 AM Mark Zhang <markz@nvidia.com> wrote:
->
-> Adding documentation for 3 new backup battery charging dts
-> properties:
-> - maxim,charging-current-microamp
-> - maxim,charging-voltage-microvolt
-> - maxim,output-resister-ohms
-
-What's the difference between the 77620 and 77650 as there's patches
-on the list for the 77650 too. The properties are similar, but seems
-to be main vs. backup battery charger. We should have common
-properties for this.
-
-> Signed-off-by: Mark Zhang <markz@nvidia.com>
+On Thu, 14 Feb 2019 21:09:50 -0800, Vasily Khoruzhick wrote:
+> From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> 
+> The ANX6345 is an ultra-low power DisplayPort/eDP transmitter designed
+> for portable devices.
+> 
+> Add a binding document for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/mfd/max77620.txt      | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-> index 9c16d51cc15b..88825eaf2567 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77620.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-> @@ -122,6 +122,26 @@ For DT binding details of different sub modules like GPIO, pincontrol,
->  regulator, power, please refer respective device-tree binding document
->  under their respective sub-system directories.
->
-> +Backup Battery:
-> +==============
-> +This sub-node configure charging backup battery of the device. Device has
-> +support of charging the backup battery. The subnode name is "backup-battery".
-> +The property for backup-battery child nodes as:
-> +Presence of this child node will enable the backup battery charging.
-> +
-> +Optional properties:
-> +       -maxim,charging-current-microamp: Charging current setting.
-> +                       The device supports 50/100/200/400/600/800uA.
-> +                       If this property is unavailable then it will
-> +                       charge with 50uA.
-> +       -maxim,charging-voltage-microvolt: Charging Voltage Limit Setting.
-> +                       Device supports 2500000/3000000/3300000/350000uV.
-> +                       Default will be set to 2500mV. The voltage will be roundoff
-> +                       to nearest lower side if other than above is configured.
-> +       -maxim,output-resister-ohms: Output resistor on Ohm.
-> +                       Device supports 100/1000/3000/6000 Ohms.
-> +                       Default will be set to 1000 Ohm.
-> +
->  Example:
->  --------
->  #include <dt-bindings/mfd/max77620.h>
-> --
-> 2.19.2
->
+>  .../bindings/display/bridge/anx6345.txt       | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> 
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
