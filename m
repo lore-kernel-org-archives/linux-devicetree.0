@@ -1,60 +1,27 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] ARM: dts: exynos: Order nodes alphabetically in Arndale Octa
-Date: Mon, 18 Feb 2019 20:48:41 +0100
-Message-ID: <20190218194841.21374-2-krzk@kernel.org>
-References: <20190218194841.21374-1-krzk@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 01/15] dt-bindings: sram: milbeaut: Add binding for
+ Milbeaut smp-sram
+Date: Mon, 18 Feb 2019 13:49:09 -0600
+Message-ID: <20190218194909.GA9552@bogus>
+References: <1549628733-30171-1-git-send-email-sugaya.taichi@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218194841.21374-1-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1549628733-30171-1-git-send-email-sugaya.taichi@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Markus Reichl <reichl@t-online.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Having nodes and overrides-by-label ordered alphabetically reduces the
-possibility of conflicts from simultaneous edits.  No functional change.
+On Fri,  8 Feb 2019 21:25:33 +0900, Sugaya Taichi wrote:
+> The Milbeaut M10V SoC needs a part of sram for smp, so this adds the
+> M10V sram compatible and binding.
+> 
+> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> ---
+>  .../devicetree/bindings/sram/milbeaut-smp-sram.txt | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt
+> 
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos5420-arndale-octa.dts | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index 2b227246c685..6b4bf5ee2e45 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -51,6 +51,10 @@
- 	};
- };
- 
-+&cci {
-+	status = "disabled";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&buck2_reg>;
- };
-@@ -323,14 +327,6 @@
- 	};
- };
- 
--&usbdrd_dwc3_1 {
--	dr_mode = "host";
--};
--
--&cci {
--	status = "disabled";
--};
--
- &hdmi {
- 	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
- 	vdd_osc-supply = <&ldo7_reg>;
-@@ -724,3 +720,7 @@
- 	clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
- 	clock-names = "rtc", "rtc_src";
- };
-+
-+&usbdrd_dwc3_1 {
-+	dr_mode = "host";
-+};
--- 
-2.17.1
+Reviewed-by: Rob Herring <robh@kernel.org>
