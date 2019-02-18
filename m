@@ -1,206 +1,74 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH V2 4/4] rtc: imx-sc: add rtc alarm support
-Date: Mon, 18 Feb 2019 22:57:48 +0100
-Message-ID: <20190218215748.GC10129@piout.net>
-References: <1550115535-14488-1-git-send-email-Anson.Huang@nxp.com>
- <1550115535-14488-5-git-send-email-Anson.Huang@nxp.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
+Date: Mon, 18 Feb 2019 23:08:21 +0100 (CET)
+Message-ID: <1245842044.588056.1550527701604@email.ionos.de>
+References: <20190118170232.16142-1-anarsoul@gmail.com>
+ <20190118170232.16142-4-anarsoul@gmail.com> <20190218211035.GA28145@bogus>
+ <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550115535-14488-5-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>dl-linux-imx <linu>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>, beagleboard@davidjohnsummers.uk, linux-bluetooth@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Vasily,
 
-On 14/02/2019 03:44:48+0000, Anson Huang wrote:
-> Add i.MX system controller RTC alarm support, the RTC alarm
-> is implemented via SIP(silicon provider) runtime service call
-> and ARM-Trusted-Firmware will communicate with system controller
-> via MU(message unit) IPC to set RTC alarm. When RTC alarm fires,
-> system controller will generate a common MU irq event and notify
-> system controller RTC driver to handle the irq event.
+> Vasily Khoruzhick <anarsoul@gmail.com> hat am 18. Februar 2019 um 22:24 geschrieben:
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No V1 patch, just add it into the i.MX SC general irq support patch series,
-> to support system controller RTC's alarm function and also to provide an
-> example of how to use general MU irq, this patch depends on the i.MX SC
-> general irq support patch set, so add it into same patch series.
-
-Through which tree do you expect this patch to be merged?
-
-> --
->  drivers/rtc/rtc-imx-sc.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 100 insertions(+)
 > 
-> diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
-> index 60570a2..147545e 100644
-> --- a/drivers/rtc/rtc-imx-sc.c
-> +++ b/drivers/rtc/rtc-imx-sc.c
-> @@ -3,6 +3,7 @@
->   * Copyright 2018 NXP.
->   */
->  
-> +#include <dt-bindings/firmware/imx/rsrc.h>
->  #include <linux/arm-smccc.h>
->  #include <linux/firmware/imx/sci.h>
->  #include <linux/module.h>
-> @@ -11,11 +12,17 @@
->  #include <linux/rtc.h>
->  
->  #define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
-> +#define IMX_SC_TIMER_FUNC_SET_RTC_ALARM		8
->  #define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
->  
-> +#define IMX_SC_IRQ_FUNC_ENABLE			1
-> +
->  #define IMX_SIP_SRTC			0xC2000002
->  #define IMX_SIP_SRTC_SET_TIME		0x0
->  
-> +#define SC_IRQ_GROUP_RTC    2
-> +#define SC_IRQ_RTC          1
-> +
->  static struct imx_sc_ipc *rtc_ipc_handle;
->  static struct rtc_device *imx_sc_rtc;
->  
-> @@ -24,6 +31,24 @@ struct imx_sc_msg_timer_get_rtc_time {
->  	u32 time;
->  } __packed;
->  
-> +struct imx_sc_msg_timer_enable_irq {
-> +	struct imx_sc_rpc_msg hdr;
-> +	u32 mask;
-> +	u16 resource;
-> +	u8 group;
-> +	u8 enable;
-> +} __packed;
-> +
-> +struct imx_sc_msg_timer_rtc_set_alarm {
-> +	struct imx_sc_rpc_msg hdr;
-> +	u16 year;
-> +	u8 mon;
-> +	u8 day;
-> +	u8 hour;
-> +	u8 min;
-> +	u8 sec;
-> +} __packed;
-> +
->  static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time *tm)
->  {
->  	struct imx_sc_msg_timer_get_rtc_time msg;
-> @@ -60,9 +85,80 @@ static int imx_sc_rtc_set_time(struct device *dev, struct rtc_time *tm)
->  	return res.a0;
->  }
->  
-> +static int imx_sc_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
-> +{
-> +	struct imx_sc_msg_timer_enable_irq msg;
-> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-> +	int ret;
-> +
-> +	hdr->ver = IMX_SC_RPC_VERSION;
-> +	hdr->svc = IMX_SC_RPC_SVC_IRQ;
-> +	hdr->func = IMX_SC_IRQ_FUNC_ENABLE;
-> +	hdr->size = 3;
-> +
-> +	msg.resource = IMX_SC_R_MU_1A;
-> +	msg.group = SC_IRQ_GROUP_RTC;
-> +	msg.mask = SC_IRQ_RTC;
-> +	msg.enable = enable;
-> +
-> +	ret = imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
-> +	if (ret) {
-> +		dev_err(dev, "enable rtc irq failed, ret %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_sc_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct imx_sc_msg_timer_rtc_set_alarm msg;
-> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-> +	int ret;
-> +	struct rtc_time *alrm_tm = &alrm->time;
-> +
-> +	hdr->ver = IMX_SC_RPC_VERSION;
-> +	hdr->svc = IMX_SC_RPC_SVC_TIMER;
-> +	hdr->func = IMX_SC_TIMER_FUNC_SET_RTC_ALARM;
-> +	hdr->size = 3;
-> +
-> +	msg.year = alrm_tm->tm_year + 1900;
-> +	msg.mon = alrm_tm->tm_mon + 1;
-> +	msg.day = alrm_tm->tm_mday;
-> +	msg.hour = alrm_tm->tm_hour;
-> +	msg.min = alrm_tm->tm_min;
-> +	msg.sec = alrm_tm->tm_sec;
-> +
-> +	ret = imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
-> +	if (ret) {
-> +		dev_err(dev, "set rtc alarm failed, ret %d\n", ret);
-> +		return ret;
-> +	}
-> +
+> On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
+> > > Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+> > >
+> > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > > ---
+> > >  .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
+> > >  1 file changed, 35 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> > > new file mode 100644
+> > > index 000000000000..8357f242ae4c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> > > @@ -0,0 +1,35 @@
+> > > +RTL8723BS/RTL8723CS Bluetooth
+> > > +---------------------
+> > > +
+> > > +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
+> > > +BT is connected over serial. It speaks H5 protocol with few extra commands
+> > > +to upload firmware and change module speed.
+> > > +
+> > > +Required properties:
+> > > +
+> > > + - compatible: should be one of the following:
+> > > +   * "realtek,rtl8723bs-bt"
+> > > +   * "realtek,rtl8723cs-bt"
+> > > +Optional properties:
+> > > +
+> > > + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
+> > > + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
+> > > + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
+> > > + - firmware-postfix: firmware postfix to be used for firmware config
+> >
 
-You must check whether the alarm needs to be enabled here and enable the
-alarm else the userspace application that are using RTC_WKALM_SET will
-not work properly.
+sorry, i didn't noticed your great series before. David and i working at the same stuff but for the Asus Tinker Board.
 
-> +	return 0;
-> +}
-> +
->  static const struct rtc_class_ops imx_sc_rtc_ops = {
->  	.read_time = imx_sc_rtc_read_time,
->  	.set_time = imx_sc_rtc_set_time,
-> +	.set_alarm = imx_sc_rtc_set_alarm,
-> +	.alarm_irq_enable = imx_sc_rtc_alarm_irq_enable,
-> +};
-> +
-> +static int imx_sc_rtc_alarm_sc_notify(struct notifier_block *nb,
-> +					unsigned long event, void *group)
-> +{
-> +	/* ignore non-rtc irq */
-> +	if (!((event & SC_IRQ_RTC) && (*(u8 *)group == SC_IRQ_GROUP_RTC)))
-> +		return 0;
-> +
-> +	rtc_update_irq(imx_sc_rtc, 1, RTC_IRQF | RTC_AF);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct notifier_block imx_sc_rtc_alarm_sc_notifier = {
-> +	.notifier_call = imx_sc_rtc_alarm_sc_notify,
->  };
->  
->  static int imx_sc_rtc_probe(struct platform_device *pdev)
-> @@ -73,6 +169,8 @@ static int imx_sc_rtc_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	device_init_wakeup(&pdev->dev, true);
-> +
->  	imx_sc_rtc = devm_rtc_allocate_device(&pdev->dev);
->  	if (IS_ERR(imx_sc_rtc))
->  		return PTR_ERR(imx_sc_rtc);
-> @@ -87,6 +185,8 @@ static int imx_sc_rtc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	imx_scu_register_notifier(&imx_sc_rtc_alarm_sc_notifier);
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.7.4
-> 
+I created a similiar yet untested patch version for hci_h5 [1]. Maybe it's useful.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Just a comment about the binding. It's really necessary to add the reset-gpio? Can't we use the enable-gpio with inverse polarity for this?
+
+Stefan
