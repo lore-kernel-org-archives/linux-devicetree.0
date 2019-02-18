@@ -1,41 +1,74 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 1/4] dt-bindings: perf: imx8-ddr: add imx8qxp ddr
- performance monitor
-Date: Mon, 18 Feb 2019 10:56:44 -0600
-Message-ID: <20190218165644.GA20200@bogus>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: phy: Add Stingray USB PHY binding
+ document
+Date: Mon, 18 Feb 2019 11:22:21 -0600
+Message-ID: <20190218172221.GA20334@bogus>
+References: <1549474347-7224-1-git-send-email-srinath.mannam@broadcom.com>
+ <1549474347-7224-2-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Frank Li <frank.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1549474347-7224-2-git-send-email-srinath.mannam@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Feb 2019 18:03:08 +0000, Frank Li wrote:
-> Added binding doc for imx8qxp ddr performance monitor
+On Wed, Feb 06, 2019 at 11:02:25PM +0530, Srinath Mannam wrote:
+> Add DT binding document for Stingray USB PHY.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
 > ---
-> Change from v4 to v4
-> * remove "standard xxx"
+>  .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
 > 
-> Change from v2 to v3
-> * ddr_pmu0 -> ddr-pmu
-> 
->  .../devicetree/bindings/perf/fsl-imx-ddr.txt       | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-> 
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> new file mode 100644
+> index 0000000..bfe1367
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> @@ -0,0 +1,62 @@
+> +Broadcom Stingray USB PHY
+> +
+> +Required properties:
+> + - compatible : should be one of the listed compatibles
+> +	- "brcm,sr-usb-phy"
+> +	- "brcm,sr-usb-phy-v2"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+SoC specific compatibles are preferred. Version numbers can be used but 
+should follow some documented scheme and be meaningful. What we don't 
+want is just Linux developers making up numbering.
+
+> + - reg: offset and length of the PHY blocks registers
+> + - address-cells: should be 1
+> + - size-cells: should be 0
+> +
+> +Sub-nodes:
+> +  Each port's PHY should be represented as a sub-node.
+> +
+> +Sub-nodes required properties:
+> + - reg: required for brcm,sr-usb-phy model phy.
+> +	reg value 0 is HS phy and 1 is SS phy.
+> + - phy-cells: generic PHY binding; must be 0
+> +
+> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> +
+> +Example:
+> +	usbphy0: usb-phy@0 {
+> +		compatible = "brcm,sr-usb-phy";
+> +		reg = <0x00000000 0x100>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		usb0_phy0: phy@0 {
+> +			reg = <0>;
+> +			#phy-cells = <0>;
+
+Unless there's DT resources for each child node, you don't need these. 
+Just make #phy-cells 1 in the parent.
+
+Rob
