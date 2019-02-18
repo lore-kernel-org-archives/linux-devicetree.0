@@ -1,29 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 04/11] dt-bindings: input: add DT bindings for max77650
-Date: Mon, 18 Feb 2019 10:35:57 -0600
-Message-ID: <20190218163557.GA18049@bogus>
-References: <20190214140022.19201-1-brgl@bgdev.pl>
- <20190214140022.19201-5-brgl@bgdev.pl>
+Subject: Re: [PATCH v4 1/3] dt-bindings: pwm-stm32-lp: document pinctrl sleep
+ state
+Date: Mon, 18 Feb 2019 10:45:26 -0600
+Message-ID: <20190218164526.GA1356@bogus>
+References: <1550139951-25788-1-git-send-email-fabrice.gasnier@st.com>
+ <1550139951-25788-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190214140022.19201-5-brgl@bgdev.pl>
+In-Reply-To: <1550139951-25788-2-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, u.kleine-koenig@pengutronix.de, tduszyns@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Feb 2019 15:00:15 +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, 14 Feb 2019 11:25:49 +0100, Fabrice Gasnier wrote:
+> Add documentation for pinctrl sleep state on STM32 LPTimer PWM.
 > 
-> Add the DT binding document for the onkey module of max77650.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
->  .../bindings/input/max77650-onkey.txt         | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/max77650-onkey.txt
+>  Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
