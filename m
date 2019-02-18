@@ -1,28 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add HI3670 reset controller
- binding
-Date: Mon, 18 Feb 2019 14:08:16 -0600
-Message-ID: <20190218200816.GA9606@bogus>
-References: <20190215054955.788-1-manivannan.sadhasivam@linaro.org>
- <20190215054955.788-2-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 3/8] dt-bindings: sdhci-omap: Add properties for using
+ external dma
+Date: Mon, 18 Feb 2019 14:12:40 -0600
+Message-ID: <20190218201240.GA14067@bogus>
+References: <20190215192033.24203-1-faiz_abbas@ti.com>
+ <20190215192033.24203-4-faiz_abbas@ti.com>
+ <20190215200718.GB15711@atomide.com>
+ <2aa0f7e4-c880-ee88-2e88-dc2c3187f0c9@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190215054955.788-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <2aa0f7e4-c880-ee88-2e88-dc2c3187f0c9@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: p.zabel@pengutronix.de, xuwei5@hisilicon.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, guodong.xu@linaro.org, john.stultz@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, adrian.hunter@intel.com, kishon@ti.com, zhang.chunyan@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Feb 2019 11:19:54 +0530, Manivannan Sadhasivam wrote:
-> HI3670 SoC is architecturally same as the HI3660 SoC. Hence, the same
-> driver is reused for HI3670 SoC and the binding is documented here which
-> uses the fallback approach.
+On Mon, Feb 18, 2019 at 07:11:32PM +0530, Faiz Abbas wrote:
+> Hi Tony,
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../devicetree/bindings/reset/hisilicon,hi3660-reset.txt   | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> On 16/02/19 1:37 AM, Tony Lindgren wrote:
+> > * Faiz Abbas <faiz_abbas@ti.com> [190215 19:18]:
+> >> From: Chunyan Zhang <zhang.chunyan@linaro.org>
+> >>
+> >> sdhci-omap can support both external dma controller via dmaengine
+> >> framework as well as ADMA which standard SD host controller
+> >> provides.
+> > 
+> > Care to describe here also how to configure things for ADMA and
+> > instead of DMA? Just leave out dmas property?
+> > 
 > 
+> That's correct. If dmas property is populated, then use external DMA.
+> Otherwise use ADMA/SDMA depending on what you read from the CAPS register.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Then the properties should be optional.
+
+Rob
