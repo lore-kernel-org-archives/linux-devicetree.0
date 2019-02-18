@@ -1,68 +1,70 @@
-Return-Path: <SRS0=Pw1c=RD=renesas.com=gareth.williams.jx@kernel.org>
-From: Gareth Williams <gareth.williams.jx@renesas.com>
-Subject: [PATCH v5 1/2] dt: snps,designware-i2c: Add clock bindings documentation
-Date: Thu, 28 Feb 2019 13:52:09 +0000
-Message-Id: <1551361930-24434-2-git-send-email-gareth.williams.jx@renesas.com>
-In-Reply-To: <1551361930-24434-1-git-send-email-gareth.williams.jx@renesas.com>
-References: <1551361930-24434-1-git-send-email-gareth.williams.jx@renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Gareth Williams <gareth.williams.jx@renesas.com>
+Return-Path: <SRS0=zazs=QZ=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Date: Mon, 18 Feb 2019 06:53:48 +0000
+Message-ID: <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com>
+References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+MIME-Version: 1.0
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Phil Edworthy <phil.edworthy@renesas.com>
+Add i.MX8QXP system controller watchdog binding.
 
-The driver requires an undocumented clock property, so detail it.
-Add documentation for a separate, optional, interface clock.
-
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-v5:
- - Changed clocks and clock-names sections to use term "interface
-   clock" instead of "peripheral clock".
- - Updated commit message to reference "interface clock" instead of
-   "peripheral clock".
-v4:
- - Updated commit message to reference "peripheral clock" instead of
-   "bus clock".
-v3:
- - Changed clocks and clock-names sections to use term "peripheral clock"
-   (pclk) instead of "bus clock" (busclk).
-v2:
- - No changes.
-v1:
- - Reviewed-by: Rob Herring <robh@kernel.org>
+Changes since V1:
+	- update dts node name to "watchdog";
 ---
- Documentation/devicetree/bindings/i2c/i2c-designware.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-index 3e4bcc2..aa2c106 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-@@ -6,12 +6,21 @@ Required properties :
-                 or "mscc,ocelot-i2c" with "snps,designware-i2c" for fallback
-  - reg : Offset and length of the register set for the device
-  - interrupts : <IRQ> where IRQ is the interrupt number.
-+ - clocks : phandles for the clocks, see the description of clock-names below.
-+   The phandle for the "ic_clk" clock is required. The phandle for the "pclk"
-+   clock is optional. If a single clock is specified but no clock-name, it is
-+   the "ic_clk" clock. If both clocks are listed, the "ic_clk" must be first.
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 4b79751..f388ec6 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -136,6 +136,12 @@ Required properties:
+ 			   resource id for thermal driver to get temperature via
+ 			   SCU IPC.
  
- Recommended properties :
- 
-  - clock-frequency : desired I2C bus clock frequency in Hz.
- 
- Optional properties :
++Watchdog bindings based on SCU Message Protocol
++------------------------------------------------------------
 +
-+ - clock-names : Contains the names of the clocks:
-+    "ic_clk", for the core clock used to generate the external I2C clock.
-+    "pclk", the interface clock, required for register access.
++Required properties:
++- compatible: should be "fsl,imx8qxp-sc-wdt";
 +
-  - reg : for "mscc,ocelot-i2c", a second register set to configure the SDA hold
-    time, named ICPU_CFG:TWI_DELAY in the datasheet.
+ Example (imx8qxp):
+ -------------
+ lsio_mu1: mailbox@5d1c0000 {
+@@ -188,6 +194,10 @@ firmware {
+ 			tsens-num = <1>;
+ 			#thermal-sensor-cells = <1>;
+ 		};
++
++		watchdog: watchdog {
++			compatible = "fsl,imx8qxp-sc-wdt";
++		};
+ 	};
+ };
  
 -- 
 2.7.4
+
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
