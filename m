@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v1 08/12] arm64: dts: msm8998: thermal: Add temperature sensors near major peripherals
-Date: Mon, 18 Feb 2019 18:05:22 +0530
-Message-ID: <cfbf5b94cde763ea739b1c6e63d9d30463c0a63d.1550493113.git.amit.kucheria@linaro.org>
+Subject: [PATCH v1 09/12] arm64: dts: sdm845: thermal: Add temperature sensors near major peripherals
+Date: Mon, 18 Feb 2019 18:05:23 +0530
+Message-ID: <1a57e10249dfb9d97b45d748338dbd188a6cf6d5.1550493113.git.amit.kucheria@linaro.org>
 References: <cover.1550493113.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1550493113.git.amit.kucheria@linaro.org>
@@ -12,45 +12,66 @@ To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson
 Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-msm8998 has a total of 22 temperature sensors. Populate DT with
+sdm845 has a total of 21 temperature sensors. Populate DT with
 information about them.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 63 +++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 91 ++++++++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index dc641523fcbd..26a493af0866 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -513,6 +513,69 @@
- 
- 			thermal-sensors = <&tsens0 13>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index c27cbd3bcb0a..55c8f3f99add 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1851,5 +1851,96 @@
+ 				};
+ 			};
  		};
 +
-+		cluster0-mhm-thermal {
++		aoss0-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens0 0>;
++		};
++
++		cluster0-thermal {
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
 +			thermal-sensors = <&tsens0 5>;
 +		};
 +
-+		cluster1-mhm-thermal {
++		cluster1-thermal {
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
 +			thermal-sensors = <&tsens0 6>;
 +		};
 +
-+		cluster1-l2-thermal {
++		gpu-thermal-top {
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
 +			thermal-sensors = <&tsens0 11>;
 +		};
 +
-+		modem-thermal {
++		gpu-thermal-bottom {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens0 12>;
++		};
++
++		aoss1-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens1 0>;
++		};
++
++		q6-modem-thermal {
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
@@ -71,7 +92,7 @@ index dc641523fcbd..26a493af0866 100644
 +			thermal-sensors = <&tsens1 3>;
 +		};
 +
-+		q6-dsp-thermal {
++		q6-hvx-thermal {
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
@@ -85,14 +106,20 @@ index dc641523fcbd..26a493af0866 100644
 +			thermal-sensors = <&tsens1 5>;
 +		};
 +
-+		multimedia-thermal {
++		video-thermal {
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
 +			thermal-sensors = <&tsens1 6>;
 +		};
++
++		modem-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens1 7>;
++		};
  	};
- 
- 	timer {
+ };
 -- 
 2.17.1
