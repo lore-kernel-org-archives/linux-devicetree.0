@@ -1,126 +1,213 @@
 From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v2 07/10] usb: dwc3: Registering a role switch in the DRD code.
-Date: Mon, 18 Feb 2019 19:23:07 +0800
-Message-ID: <20190218112310.17860-8-chenyu56@huawei.com>
+Subject: [PATCH v2 10/10] dts: hi3660: Add support for usb on Hikey960
+Date: Mon, 18 Feb 2019 19:23:10 +0800
+Message-ID: <20190218112310.17860-11-chenyu56@huawei.com>
 References: <20190218112310.17860-1-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190218112310.17860-1-chenyu56@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, yudongbin@hisilicon.com, Binghui Wang <wangbinghui@hisilicon.com>, xuyiping@hisilicon.com, xuyoujun4@huawei.com, suzhuangluan@hisilicon.com, songxiaowei@hisilicon.com, Yu Chen <chenyu56@huawei.com>, kongfei@hisilicon.com, Wei Xu <xuwei5@hisilicon.com>, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, Rob Herring <robh+dt@kernel.org>, john.stultz@linaro.org, wanghu17@hisilicon.com, zangleigang@hisilicon.com, chenyao11@huawei.com, liuyu712@hisilicon.com, linux-arm-kernel@lists.infradead.org, butao@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-The Type-C drivers use USB role switch API to inform the
-system about the negotiated data role, so registering a role
-switch in the DRD code in order to support platforms with
-USB Type-C connectors.
+This patch adds support for usb on Hikey960.
 
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
 Cc: John Stultz <john.stultz@linaro.org>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
 v2:
-* Assign fwnode in dwc3_role_switch.
+* Remove device_type property.
+* Add property "usb-role-switch".
 ---
 ---
- drivers/usb/dwc3/core.h |  2 ++
- drivers/usb/dwc3/drd.c  | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 54 +++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 73 +++++++++++++++++++++++
+ 2 files changed, 127 insertions(+)
 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 402b3c29eb26..7385544b9936 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -25,6 +25,7 @@
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
- #include <linux/usb/otg.h>
-+#include <linux/usb/role.h>
- #include <linux/ulpi/interface.h>
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index 46435466f1ab..2cada9d44046 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -13,6 +13,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/usb/pd.h>
  
- #include <linux/phy/phy.h>
-@@ -1083,6 +1084,7 @@ struct dwc3 {
- 	struct extcon_dev	*edev;
- 	struct notifier_block	edev_nb;
- 	enum usb_phy_interface	hsphy_mode;
-+	struct usb_role_switch	*role_sw;
- 
- 	u32			fladj;
- 	u32			irq_gadget;
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index 869725d15c74..cf977bb0d62e 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -474,8 +474,42 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
- 	return edev;
- }
- 
-+static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-+{
-+	u32 mode;
+ / {
+ 	model = "HiKey960";
+@@ -196,6 +197,27 @@
+ 			method = "smc";
+ 		};
+ 	};
 +
-+	switch (role) {
-+	case USB_ROLE_HOST:
-+		mode = DWC3_GCTL_PRTCAP_HOST;
-+		break;
-+	case USB_ROLE_DEVICE:
-+		mode = DWC3_GCTL_PRTCAP_DEVICE;
-+		break;
-+	default:
-+		mode = DWC3_GCTL_PRTCAP_HOST;
-+		break;
++	hisi_hikey_usb: hisi_hikey_usb {
++		compatible = "hisilicon,hikey960_usb";
++		typec-vbus-gpios = <&gpio25 2 0>;
++		typec-vbus-enable-val = <1>;
++		otg-switch-gpios = <&gpio25 6 0>;
++		hub-vdd33-en-gpios = <&gpio5 6 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usbhub5734_pmx_func>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			hikey_usb_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&dwc3_role_switch_notify>;
++			};
++		};
 +	};
 +
-+	dwc3_set_mode(dev_get_drvdata(dev), mode);
-+	return 0;
-+}
-+
-+static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
-+{
-+	struct dwc3 *dwc = dev_get_drvdata(dev);
-+	unsigned long flags;
-+	enum usb_role role;
-+
-+	spin_lock_irqsave(&dwc->lock, flags);
-+	role = dwc->current_otg_role;
-+	spin_unlock_irqrestore(&dwc->lock, flags);
-+
-+	return role;
-+}
-+
- int dwc3_drd_init(struct dwc3 *dwc)
- {
-+	struct usb_role_switch_desc dwc3_role_switch = {0};
- 	int ret, irq;
+ };
  
- 	dwc->edev = dwc3_get_extcon(dwc);
-@@ -522,6 +556,15 @@ int dwc3_drd_init(struct dwc3 *dwc)
- 		dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_OTG);
- 	}
+ /*
+@@ -526,6 +548,38 @@
+ &i2c1 {
+ 	status = "okay";
  
-+	dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
-+	dwc3_role_switch.set = dwc3_usb_role_switch_set;
-+	dwc3_role_switch.get = dwc3_usb_role_switch_get;
-+	dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
-+	if (ret) {
-+		dwc3_drd_exit(dwc);
-+		return PTR_ERR(dwc->role_sw);
-+	}
++	rt1711h: rt1711h@4e {
++		compatible = "richtek,rt1711h";
++		reg = <0x4e>;
++		status = "ok";
++		interrupt-parent = <&gpio27>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_cfg_func>;
 +
- 	return 0;
- }
- 
-@@ -557,4 +600,6 @@ void dwc3_drd_exit(struct dwc3 *dwc)
- 
- 	if (!dwc->edev)
- 		free_irq(dwc->otg_irq, dwc);
++		usb_con: connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++			power-role = "dual";
++			try-power-role = "sink";
++			source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
++				PDO_VAR(5000, 5000, 1000)>;
++			op-sink-microwatt = <10000000>;
++		};
 +
-+	usb_role_switch_unregister(dwc->role_sw);
- }
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			rt1711h_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&dwc3_role_switch>;
++			};
++		};
++	};
++
+ 	adv7533: adv7533@39 {
+ 		status = "ok";
+ 		compatible = "adi,adv7533";
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 20ae40df61d5..a2808c53c538 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -355,6 +355,12 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		pmctrl: pmctrl@fff31000 {
++			compatible = "hisilicon,hi3660-pmctrl", "syscon";
++			reg = <0x0 0xfff31000 0x0 0x1000>;
++			#clock-cells = <1>;
++		};
++
+ 		pmuctrl: crg_ctrl@fff34000 {
+ 			compatible = "hisilicon,hi3660-pmuctrl", "syscon";
+ 			reg = <0x0 0xfff34000 0x0 0x1000>;
+@@ -1134,5 +1140,72 @@
+ 				};
+ 			};
+ 		};
++
++		usb3_otg_bc: usb3_otg_bc@ff200000 {
++			compatible = "syscon";
++			reg = <0x0 0xff200000 0x0 0x1000>;
++		};
++
++		usb_phy: usb-phy {
++			compatible = "hisilicon,hi3660-usb-phy";
++			#phy-cells = <0>;
++			hisilicon,pericrg-syscon = <&crg_ctrl>;
++			hisilicon,pctrl-syscon = <&pctrl>;
++			hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
++			hisilicon,eye-diagram-param = <0x22466e4>;
++		};
++
++		usb3: hisi_dwc3 {
++			compatible = "hisilicon,hi3660-dwc3";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
++				 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
++			clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
++
++			assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
++			assigned-clock-rates = <229000000>;
++			resets = <&crg_rst 0x90 8>,
++				 <&crg_rst 0x90 7>,
++				 <&crg_rst 0x90 6>,
++				 <&crg_rst 0x90 5>;
++
++			dwc3: dwc3@ff100000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0xff100000 0x0 0x100000>;
++				interrupts = <0 159 4>, <0 161 4>;
++				phys = <&usb_phy>;
++				phy-names = "usb3-phy";
++				dr_mode = "otg";
++				maximum-speed = "super-speed";
++				phy_type = "utmi";
++				snps,dis-del-phy-power-chg-quirk;
++				snps,lfps_filter_quirk;
++				snps,dis_u2_susphy_quirk;
++				snps,dis_u3_susphy_quirk;
++				snps,tx_de_emphasis_quirk;
++				snps,tx_de_emphasis = <1>;
++				snps,dis_enblslpm_quirk;
++				snps,gctl-reset-quirk;
++				usb-role-switch;
++
++				port {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					dwc3_role_switch: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&rt1711h_ep>;
++					};
++
++					dwc3_role_switch_notify: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&hikey_usb_ep>;
++					};
++				};
++			};
++		};
+ 	};
+ };
 -- 
 2.15.0-rc2
