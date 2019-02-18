@@ -1,52 +1,106 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/3] mfd: syscon: Add optional clock support
-Date: Mon, 18 Feb 2019 13:54:32 +0100
-Message-ID: <CAK8P3a01rEa3bqHuhgFbNZJrb38f5XrGnDd=W3xKVorfJXHZkw@mail.gmail.com>
-References: <1544604495-4082-1-git-send-email-fabrice.gasnier@st.com>
- <1544604495-4082-3-git-send-email-fabrice.gasnier@st.com> <CAK8P3a1MucNG86=bXwVVsasGBOLJ67kuRSpoeneF6M5aB6GmQA@mail.gmail.com>
- <9e0ee154-a399-9bff-3beb-adfd9d6c6fee@st.com> <CAK8P3a0kV4-OF7JPwM9cEqxaPvNM9dFZdyZetc47t+D5izkFwQ@mail.gmail.com>
- <47a3fe9f-8adb-8f47-e7c1-342f8fc318aa@st.com> <01d49f11-a68e-1674-e6b7-d1b87aa973c9@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 1/6] dt-bindings: net: bluetooth: add support for MediaTek
+ MT7663U and MT7668U UART devices
+Date: Mon, 18 Feb 2019 14:05:11 +0100
+Message-ID: <0EF74A38-3D1F-4BD1-9B72-78E8720C125D@holtmann.org>
+References: <cover.1550184473.git.sean.wang@mediatek.com>
+ <c31b9ed0f2c711f53ad88c96f2d0a1bd22d9de58.1550184473.git.sean.wang@mediatek.com>
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <01d49f11-a68e-1674-e6b7-d1b87aa973c9@st.com>
+In-Reply-To: <c31b9ed0f2c711f53ad88c96f2d0a1bd22d9de58.1550184473.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 5:32 PM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
->
-> On 1/28/19 2:20 PM, Fabrice Gasnier wrote:
-> > On 1/16/19 4:11 PM, Arnd Bergmann wrote:
-> >> On Wed, Jan 16, 2019 at 3:10 PM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
-> >>
-> >> What I mean is that nodes that listed as 'compatible="syscon"' get
-> >> probed by the syscon driver even when no other driver references
-> >> them, and that in turn would acquire the clock, right?
-> >
-> > When no other driver references them, nothing happens at probe time on
-> > the clock: no calls to get/prepare... the clock.
-> >
-> > => The clock will remain unrequested & unused until another driver calls
-> > one of "of_syscon_register()" variants:
-> > - syscon_node_to_regmap
-> > - syscon_regmap_lookup_by_compatible
-> > - syscon_regmap_lookup_by_phandle
-> >
-> > When another driver references them (e.g. one of the above calls), then
-> > it will acquire the optional clock and use it, e.g.:
-> > - clk_prepare() upon of_syscon_register() variants
-> > - clk_enable & clk_disable when accessing the registers
-> >
-> > I hope this clarifies.
->
-> I would appreciate to have your feedback.
+Hi Rob,
 
-Yes, I think that's all we need here, thanks for the clarification,
-and sorry for dropping the ball on this again.
+> Update binding document with adding support of MT7663U and MT7668U UART
+> devices to mediatek-bluetooth.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+> .../bindings/net/mediatek-bluetooth.txt       | 64 +++++++++++++++++++
+> 1 file changed, 64 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+> index 14ceb2a5b4e8..41a7dcc80f5b 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+> @@ -33,3 +33,67 @@ Example:
+> 			clock-names = "ref";
+> 		};
+> 	};
+> +
+> +MediaTek UART based Bluetooth Devices
+> +==================================
+> +
+> +This device is a serial attached device to UART device and thus it must be a
+> +child node of the serial node with UART.
+> +
+> +Please refer to the following documents for generic properties:
+> +
+> +	Documentation/devicetree/bindings/serial/slave-device.txt
+> +
+> +Required properties:
+> +
+> +- compatible:	Must be
+> +		  "mediatek,mt7663u-bluetooth": for MT7663U device
+> +		  "mediatek,mt7668u-bluetooth": for MT7668U device
+> +- vcc-supply:	Main voltage regulator
+> +- pinctrl-names: Should be "default", "runtime"
+> +- pinctrl-0: Should contain UART RXD low when the device is powered up to
+> +	     enter proper bootstrap mode.
+> +- pinctrl-1: Should contain UART mode pin ctrl
+> +
+> +Optional properties:
+> +
+> +- reset-gpios:	GPIO used to reset the device whose initial state keeps low,
+> +		if the GPIO is missing, then board-level design should be
+> +		guaranteed.
+> +- current-speed:  Current baud rate of the device whose defaults to 921600
+> +
+> +Example:
+> +
+> +	uart1_pins_boot: uart1-default {
+> +		pins-dat {
+> +			pinmux = <MT7623_PIN_81_URXD1_FUNC_GPIO81>;
+> +			output-low;
+> +		};
+> +	};
+> +
+> +	uart1_pins_runtime: uart1-runtime {
+> +		pins-dat {
+> +			pinmux = <MT7623_PIN_81_URXD1_FUNC_URXD1>,
+> +				 <MT7623_PIN_82_UTXD1_FUNC_UTXD1>;
+> +		};
+> +	};
+> +
+> +	uart1: serial@11003000 {
+> +		compatible = "mediatek,mt7623-uart",
+> +			     "mediatek,mt6577-uart";
+> +		reg = <0 0x11003000 0 0x400>;
+> +		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_UART1_SEL>,
+> +			 <&pericfg CLK_PERI_UART1>;
+> +		clock-names = "baud", "bus";
+> +
+> +		bluetooth {
+> +			compatible = "mediatek,mt7663u-bluetooth";
+> +			vcc-supply = <&reg_5v>;
+> +			reset-gpios = <&pio 24 GPIO_ACTIVE_LOW>;
+> +			pinctrl-names = "default", "runtime";
+> +			pinctrl-0 = <&uart1_pins_boot>;
+> +			pinctrl-1 = <&uart1_pins_runtime>;
+> +			current-speed = <921600>;
+> +		};
+> +	};
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+can you ACK this please.
 
+Regards
 
-      Arnd
+Marcel
