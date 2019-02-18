@@ -1,12 +1,12 @@
-Return-Path: <SRS0=CPOg=Q7=gmail.com=groeck7@kernel.org>
+Return-Path: <SRS0=Bvjn=QZ=gmail.com=groeck7@kernel.org>
 Sender: Guenter Roeck <groeck7@gmail.com>
 Subject: Re: [PATCH RESEND V2 2/4] watchdog: imx_sc: Add i.MX system
  controller watchdog support
 References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
  <1550472539-16590-3-git-send-email-Anson.Huang@nxp.com>
 From: Guenter Roeck <linux@roeck-us.net>
-Message-ID: <a66a3bcd-ceed-bc4b-1b66-c3ce2c7addeb@roeck-us.net>
-Date: Sat, 23 Feb 2019 19:29:00 -0800
+Message-ID: <e66d4432-03e5-a01b-e207-62b01889404f@roeck-us.net>
+Date: Mon, 18 Feb 2019 14:25:54 -0800
 MIME-Version: 1.0
 In-Reply-To: <1550472539-16590-3-git-send-email-Anson.Huang@nxp.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
@@ -29,8 +29,7 @@ On 2/17/19 10:53 PM, Anson Huang wrote:
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Sorry, but I have to take back my Reviewed-by: Comments below.
-Sorry, I completely missed that earlier.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
 > ---
 > Changes since V1:
@@ -130,19 +129,10 @@ Sorry, I completely missed that earlier.
 > +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 > +
 > +static unsigned int timeout = DEFAULT_TIMEOUT;
-
-Should not be initialized.
-
 > +module_param(timeout, uint, 0000);
 > +MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
 > +		 __MODULE_STRING(DEFAULT_TIMEOUT) ")");
 > +
-
-This suggests that you want to use that timeout. But that isn't the case.
-
-
-
-
 > +static int imx_sc_wdt_ping(struct watchdog_device *wdog)
 > +{
 > +	struct arm_smccc_res res;
@@ -220,28 +210,8 @@ This suggests that you want to use that timeout. But that isn't the case.
 > +	imx_sc_wdd->min_timeout = 1;
 > +	imx_sc_wdd->max_timeout = MAX_TIMEOUT;
 > +	imx_sc_wdd->parent = &pdev->dev;
-
-	imx_sc_wdd->timeout = DEFAULT_TIMEOUT;
-
 > +
 > +	ret = watchdog_init_timeout(imx_sc_wdd, DEFAULT_TIMEOUT, &pdev->dev);
-
-As written this doesn't make sense: It will set the timeout to the default,
-which is always valid, making the error check unnecessary. I assume you meant
-the above plus
-	ret = watchdog_init_timeout(imx_sc_wdd, timeout, &pdev->dev);
-
-By not pre=initializing 'timeout', the watchdog core will try to read the
-configured timeout from devicetree. If it is not specified, it will keep
-the default timeout which should be set explicitly as suggested above.
-
-With that, the error check makes some sense, though it is unusual to
-bail out if an out-of-range timeout was specified. But that is your call.
-
-Again, sorry for not noticing this earlier.
-
-Guenter
-
 > +	if (ret) {
 > +		dev_err(&pdev->dev, "Failed to init the wdog timeout:%d\n",
 > +			ret);
