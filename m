@@ -1,30 +1,63 @@
-From: Artem Panfilov <panfilov.artyom@gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: rtc: add ABEOZ9 support
-Date: Mon, 18 Feb 2019 23:35:08 +0300
-Message-ID: <03d1ac1f-581b-d9ee-9c24-ff246ebb30c7@gmail.com>
-References: <20190217185321.2189-1-panfilov.artyom@gmail.com>
- <20190218154607.GA651@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 2/5] dt-bindings: pwm: add a property
+ "mediatek,num-pwms"
+Date: Mon, 18 Feb 2019 14:36:58 -0600
+Message-ID: <20190218203658.GA20434@bogus>
+References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
+ <7e1de17a43f2cde73aecd2773e2b3a5fdfd294f3.1547781007.git.ryder.lee@mediatek.com>
+ <7d387d2a-74f0-c6c7-aa2d-cf9b87579682@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218154607.GA651@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <7d387d2a-74f0-c6c7-aa2d-cf9b87579682@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Ryder Lee <ryder.lee@mediatek.com>, Thierry Reding <thierry.reding@gmail.com>, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-> Acked-by:
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
+On Fri, Jan 18, 2019 at 09:44:49AM +0100, Matthias Brugger wrote:
 > 
-> If a tag was not added on purpose, please state why and what changed.
+> 
+> On 18/01/2019 04:24, Ryder Lee wrote:
+> > This adds a property "mediatek,num-pwms" in example so that we could
+> > set the number of PWM channels via device tree.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > ---
+> > Changes since v1: add a Reviewed-by tag.
+> > ---
+> >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > index 991728c..f9e2d1f 100644
+> > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > @@ -20,6 +20,7 @@ Required properties:
+> >   - pinctrl-names: Must contain a "default" entry.
+> >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
+> >     See pinctrl/pinctrl-bindings.txt for details of the property values.
+> > + - mediatek,num-pwms: the number of PWM channels.
+> >  
+> >  Example:
+> >  	pwm0: pwm@11006000 {
+> > @@ -37,4 +38,5 @@ Example:
+> >  			      "pwm3", "pwm4", "pwm5";
+> >  		pinctrl-names = "default";
+> >  		pinctrl-0 = <&pwm0_pins>;
+> > +		mediatek,num-pwms = <5>;
+> >  	};
+> > 
+> 
+> Wasn't there a comment in the last version to use num-pwms instead of
+> mediatek,num-pwms?
+> 
+> Uwe I think you requested that.
 
-Thanks for the feedback. I missed that point.
+Perhaps, but why is this needed? Typically, this would be implied by the 
+compatible or the driver doesn't care and we assume 'pwms' properties 
+are not out of range.
 
-Best Regard,
-Artem
+Rob
