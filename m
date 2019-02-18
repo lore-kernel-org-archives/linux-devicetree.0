@@ -1,10 +1,10 @@
 Return-Path: <SRS0=zazs=QZ=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
-Date: Mon, 18 Feb 2019 06:53:48 +0000
-Message-ID: <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com>
-References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Date: Mon, 18 Feb 2019 02:01:19 +0000
+Message-ID: <1550454997-4398-2-git-send-email-Anson.Huang@nxp.com>
+References: <1550454997-4398-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550454997-4398-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -26,8 +26,7 @@ Add i.MX8QXP system controller watchdog binding.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V1:
-	- update dts node name to "watchdog";
+Note: this patch is based on my thermal patch series: https://patchwork.kernel.org/patch/10800699/
 ---
  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 10 ++++++++++
  1 file changed, 10 insertions(+)
