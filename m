@@ -1,115 +1,396 @@
-From: David Summers <beagleboard@davidjohnsummers.uk>
-Subject: Re: [PATCH 3/3] ARM: dts: rk3288 Tinker Board (S) add bluetooth
-Date: Mon, 18 Feb 2019 20:47:50 +0000
-Message-ID: <d5b6ffaf-cf7a-22af-f2fc-c085897ef95f@davidjohnsummers.uk>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190217121513.22965-4-beagleboard@davidjohnsummers.uk>
- <2003821439.343814.1550437552156@email.ionos.de>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 1/3] clk: at91: sckc: add support to specify registers
+ bit offsets
+Date: Mon, 18 Feb 2019 22:08:11 +0100
+Message-ID: <20190218210811.GV10129@piout.net>
+References: <1550146447-1441-1-git-send-email-claudiu.beznea@microchip.com>
+ <1550146447-1441-2-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2003821439.343814.1550437552156@email.ionos.de>
-Content-Language: en-PH
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-rockchip@lists.infradead.org, Marcel Holtmann <marcel@holtmann.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1550146447-1441-2-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu.Beznea@microchip.com
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcvMDIvMjAxOSAyMTowNSwgU3RlZmFuIFdhaHJlbiB3cm90ZToKPiBIaSBEYXZpZCwKPgo+
-PiBEYXZpZCBTdW1tZXJzIDxiZWFnbGVib2FyZEBkYXZpZGpvaG5zdW1tZXJzLnVrPiBoYXQgYW0g
-MTcuIEZlYnJ1YXIgMjAxOSB1bSAxMzoxNSBnZXNjaHJpZWJlbjoKPj4KPj4KPj4gVGhpcyBwYXRj
-aCBpcyB0byBhZGQgQmx1ZXRvb3RoIHRvIHRoZSBBU1VTIFRpbmtlciBCb2FyZCAoUykgZGV2aWNl
-Cj4+IHRyZWUuCj4+Cj4+IFRoaXMgcGF0Y2ggaXMgbW9yZSBjb250cmF2ZXJzYWwgLSBzbyBwcm9i
-YWJseSB2aWV3IGl0IGFzIGEgcmVxdWVzdCBmb3IKPj4gY29tbWVudHMuCj4+Cj4+IFRoZSByZWFz
-b24gYmVoaW5kIHRoaXMsIGlzIHRoaXMgcGF0Y2ggZG9lcyBub3QgY3VycmVudGx5IHNldCBCbHVl
-dG9vdGgKPj4gd29ya2luZyBvbiB0aGUgdGhlc2UgYm9hcmRzLiBUaGUgcHJvYmxlbSBpcyB0aGF0
-IHRoZQo+PiBibHVldG9vdGgvaGNpX2g1LmMgZHJpdmVyLCB0aGF0IGlzIHVzZWQgZm9yIFJlYWx0
-ZWsgc2VyaWFsIGRldmljZXMsCj4+IGRlcGVuZHMgb24gQUNQSS4gVW5mb3J0YW50bHkgQUNQSSBj
-YW4gbm90IGJlIGVuYWJsZWQgb24gYXJtdjcgbWFjaGluZXMKPj4gc3VjaCBhcyB0aGUgVEIoUyku
-IEFuZCBzbyB0aGUga2VybmVsIG1vZHVsZSBmb3IgdGhlIFJUTDg3MjNCUwo+PiBCbHVldG9vdGgg
-Y2FuIG5vdCBiZSBsb2FkZWQuCj4+Cj4+IEhvd2V2ZXIgdGhpcyBwYXRjaCBpcyBiZWxpZXZlZCB0
-byBiZSBhbiBhY2N1cmF0ZSBkZXNjcmlwdGlvbiBvZiB0aGUKPj4gVGlua2VyIEJvYXJkIChTKSB3
-aXJpbmcuIEl0IGlzIHN0cm9uZ2x5IGJhc2VkIG9uIHRoZSBBU1VTIHBhdGNoOgo+Pgo+PiBodHRw
-czovL2dpdGh1Yi5jb20vVGlua2VyQm9hcmQvZGViaWFuX2tlcm5lbC9jb21taXQvNmEzMTI4YWRl
-MzNmNzU4ODg3MDQ4NTc4YWRhNjFhNGI3YWI4ZTY3OAo+Pgo+PiBBcyB0aGUgQmx1ZXRvb3RoIGlz
-IGNvbm5lY3RlZCB2aWEgYSBVQVJUIGFuZCB0aGlzIGlzIHdpcmVkIGludG8gdWFydDAsCj4+IHRo
-aXMgaGFzIGJlZW4gZGVzY3JpYmVkIGFzIGEgU2VyRGV2Lgo+Pgo+PiBUaGUgQVNVUyBwYXRjaCBt
-ZW50aW9ucyB0aGUgVUFSVF9DVFMsIGJ1dCBub3QgdGhlIF9SVFMuIE5vdyBhcyB0aGUKPj4gUlRM
-ODcyM0JTIGhhcyBib3RoIENUUyBhbmQgUlRTIG9uIHRoZSB1YXJ0LCBpdCBoYXMgYmVlbiBhc3N1
-bWVkIGJvdGgKPj4gYXJlIHdpcmVkIGludG8gdWFydDAgb24gdGhlIGNwdS4KPiB3aGljaCB3b3Vs
-ZCBiZSB2ZXJ5IHN0cmFuZ2UsIGJlY2F1c2Ugd2UgY291bGQgdXNlIEg0IGluc3RlYWQgb2YgSDUu
-CgpXZWxsIHRoZSBibHVldG9vdGggbWFpbnRhaW5lciBzYWlkIGl0IHdhcyBoY2lfaDUuCgpUaGUg
-ZGV2aWNlIGlzIEJUNC4wIGFuZCB0aGF0IHVuZGVyIFZvbHVtZSA0IEhDSSwgUGFydCBEIC0gMiB3
-aXJlIFVBUlQgClRyYW5zcG9ydCBMYXllciwgaW4gc2VjdGlvbiAxMS4yIHNheXMgdGhhdCBIYXJk
-d2FyZSBmbG93IGNvbnRyb2wgbWF5IGJlIAp1c2VkLgoKQWxzbyBpZiB5b3UgY2hlY2sgd2hhdCBB
-U1VTIGRpZDoKCmh0dHBzOi8vZ2l0aHViLmNvbS9UaW5rZXJCb2FyZC9kZWJpYW5fa2VybmVsL2Nv
-bW1pdC81MTA2ZDk0ODZjZjFjMmJhZDRmNzAxNjExZjUxYTUyNjE5MWM1NmFkCgpUaGV5IGFkZGVk
-IEg1IGNvZGUgdG8gdGhlIGhjaV9oNC5jLCBzZWVtcyBzdHJhbmdlIGJ1dCB0aGF0cyB3aGF0IHRo
-ZXkgCnNhaWQgdGhleSBkaWQuCgpOb3cgbWF5YmUgdGhlIFJUTDg3MjNCUyBjb3VsZCB3b3JrIHdp
-dGggdGhlIFVBUlQgVHJhbnNwb3J0IExheWVyLCBidXQgCnRoYXQgaGFzbid0IGJlZW4gZG9uZSB5
-ZXQuIDMgd2lyZSBoYXMgc29tZSBvdmVyaGVhZCwgYnV0IGl0IGRvZXNuJ3QgbG9vayAKbGlrZSBt
-dWNoLgoKVG8gbXkgbWluZCB0aG91Z2ggaXQgZG93biB0byB0aGUgYmx1ZXRvb3RoIE1haW50YWlu
-ZXIgLSBzbyBDQ2luZyBNYXJjZWwgCkhvbHRtYW5uIGluIC4uLgoKCj4+IFRoZSBCbHVldG9vdGgg
-Y29ubmVjdGlvbiBoYXMgc2V2ZXJhbCB3YWtlIHVwIHBpbnMgYm90aCBkZXZpY2UgYW5kIGhvc3QK
-Pj4gYW5kIGEgcmVzZXQgcGluLiBUaGUgd2lyaW5nIG9mIHRoZXNlIGhhcyBiZWVuIGRlc2NyaWJl
-ZDsgaG93ZXZlciBob3cKPj4gdGhlIGtlcm5lbCBkcml2ZXIgd2lsbCB1c2UgdGhlc2UgaXNuJ3Qg
-Y2xlYXIuIEUuZy4gc2hvdWxkIEhPU1RfV0FLRSBiZQo+PiBhbiBpbnRlcnVwdD8KPj4KPj4gVGhl
-IG1haW4gcmVhc29uIGZvciBhc2tpbmcgZm9yIGNvbW1lbnRzLCBpcyB0aGF0IHdoZW4gaXQgY29t
-ZXMgdGltZSB0bwo+PiBtYWtlIHRoZSBjaGFuZ2VzIHRvIHRoZSBibHVldG9vdGggdWFydCBjb2Rl
-LCBhbmQgYWRkIGNvbXBhdGlibGUgZmxhZ3MsCj4+IHJvYmggaGFzIGluZGljYXRlZCB0aGF0IHRo
-aXMgd2lsbCBvbmx5IGJlIGFjY2VwdGVkIHdpdGggYSB2YWxpZAo+PiBleGFtcGxlLiBTbyB0aGUg
-Y29kZSBiZWxvdyBpcyB0aGF0IGV4YW1wbGUuIFNvIEkgd291bGQgbGlrZSBjb21tZW50cwo+PiB0
-aGF0IHRoaXMgYXBwcm9hY2ggaXMgdmFsaWQsIHdoaWNoIGNhbiBiZSB1c2VkIHdoZW4gdGhlIGxh
-dGVyCj4+IHN1Ym1pc3Npb24gY29tZXMuCj4gQXNraW5nIGZvciBjb21tZW50IHNob3VsZCBiZSBt
-YXJrIHdpdGggUkZDIGluIHRoZSBwYXRjaCBzdWJqZWN0LgpPT3BzIG15IG1pc3Rha2UuCj4+IFNp
-Z25lZC1vZmYtYnk6IERhdmlkIFN1bW1lcnMgPGJlYWdsZWJvYXJkQGRhdmlkam9obnN1bW1lcnMu
-dWs+Cj4+IC0tLQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIuZHRzaSB8IDEx
-ICsrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykKPj4KPj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIuZHRzaSBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIuZHRzaQo+PiBpbmRleCBlMTc5NmYzNDBlZWYuLjkz
-MWI0YzY1MmZkYyAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LXRpbmtl
-ci5kdHNpCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC10aW5rZXIuZHRzaQo+PiBA
-QCAtNDgxLDYgKzQ4MSwxNyBAQAo+PiAgIAo+PiAgICZ1YXJ0MCB7Cj4+ICAgCXN0YXR1cyA9ICJv
-a2F5IjsKPj4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiArCXBpbmN0cmwtMCA9IDwm
-dWFydDBfeGZlcj4sIDwmdWFydDBfY3RzPiwgPCZ1YXJ0MF9ydHM+Owo+PiArCj4+ICsJYmx1ZXRv
-b3RoIHsKPj4gKwkJY2xvY2tzID0gPCZyazgwOCBSSzgwOF9DTEtPVVQxPjsKPiBBcyB3ZSBhbHJl
-YWR5IGxpbmtlZCB0aGUgUks4MDggY2xvY2sgaW4gdGhlIHNkaW8gcHdyc2VxLCB3ZSBzaG91bGRu
-J3QgZG8gdGhpcyBoZXJlIGFnYWluLgo+Cj4+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvNCBSS19Q
-RDUgR1BJT19BQ1RJVkVfTE9XPjsKPiByZXNldC1ncGlvcyBpc24ndCBjb21wYXRpYmxlIHRvIGhj
-aV9oNSwgcGxlYXNlIHVzZSBteSBwcmVsaW1pbmFyeSBkdC1iaW5kaW5nCj4KPj4gKwkJZGV2aWNl
-LXdha2UtZ3Bpb3MgPSA8JmdwaW80IFJLX1BEMiBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwkJaG9z
-dC13YWtlLWdwaW9zID0gPCZncGlvNCBSS19QRDcgR1BJT19BQ1RJVkVfSElHSD47Cj4gQUZBSUsg
-aGNpX2g1IGRvZXNuJ3Qgc3VwcG9ydCBob3N0LXdha2UgeWV0LiBTbyBpZiB5b3Ugd2FudCB0byBr
-ZWVwIGZvciB0aGUgZnV0dXJlIHdlIHNob3VsZCBtYWtlIGEgY29tbWVudC4KPgo+PiArCQl2Y2Mt
-MTgtc3VwcGx5ID0gPCZ2Y2NfMTg+Owo+PiArCQl2Y2MtaW8tc3VwcGx5ID0gPCZ2Y2NfaW8+Owo+
-IFBsZWFzZSBkcm9wIHRoZXNlIGFzIHRoZSBkcml2ZXIgZG9lc24ndCB1c2UgaXQgYW5kIGl0J3Mg
-YWxyZWFkeSBsaW5rZWQgaW4gdGhlIHNkaW8gcHdyc2VxLgo+Cj4gVGhhbmtzIFN0ZWZhbgo+Cj4+
-ICsJfTsKPiBbMV0gLSBodHRwczovL2dpc3QuZ2l0aHViLmNvbS9sYXRlZ29vZGJ5ZS83OWJhYzk5
-ZDRmMTE1OGE3MTlhNDhlYTNjNDVlYjdmMSNmaWxlLTAwMDItZHQtYmluZGluZ3MtYWRkLXN1cHBv
-cnQtZm9yLXJlYWx0ZWstYmx1ZXRvb3RoLXNlcmlhbC1wYXRjaAoKU29ycnkgSSBkaXNhZ3JlZSBo
-ZXJlLgoKTGFzdCB0aW1lIEkgcG9zdGVkIGFuIGV4YW1wbGUgcGF0Y2ggbGlrZSB0aGlzIHJvYmgg
-c2FpZCBjbGVhcmx5IHRoYXQgCnRoZXNlIHNob3VsZCBnaXZlIGNsb2NrcywgcG93ZXIsIGV0YzoK
-Cmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LWJsdWV0b290aC9tc2c3ODU0NS5o
-dG1sCmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LWJsdWV0b290aC9tc2c3ODU4
-NS5odG1sIAo8aHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtYmx1ZXRvb3RoL21z
-Zzc4NTg1Lmh0bWw+CgphbmQgYXMgaGUgaXMgbWFpbnRhaW5lciBoZSB3aW5zLgoKSSBjYW4gdW5k
-ZXJzdGFuZCBSb2JzIHBvc2l0aW9uLCBkZXZpY2UgdHJlZSBhcmUgZm9yIGRlc2NyaWJpbmcgaGFy
-ZHdhcmUsIAp0aGV5IGFyZW4ndCBwcmltYXJpbHkgZm9yIGhlbHBpbmcgY29kZSB0byBsb2FkLiBZ
-ZXMgdGhhdCBpcyBhIHNlY29uZCAKZWZmZWN0LCBpdHMgc28gaXQga25vd3Mgd2hhdCBpcyBpbsKg
-IHRoZSBoYXJkd2FyZS4gSW4gdGhpcyBjYXNlIHdoYXQgaWYgCnNvbWVvbmUgd2FudGVkIEJsdWV0
-b290aCwgYnV0IG5vdCBXaUZpIC0gdGhlbiB0aGUgQmx1ZXRvb3RoIHNob3VsZCBrbm93IAp3aGF0
-IHBvd2VyIGFuZCBjbG9ja3MgYXJlIG5lZWRlZC4gTm93IHRoYXQgdGhlIGRyaXZlciBkb2Vzbid0
-IHVuZGVyc3RhbmQgCnRoZXNlIHRoaW5ncyBpcyBzZWNvbmRhcnkuIE1heWJlIHRoYXQgd2lsbCBi
-ZSBjdXJlZCBpbiBmdXR1cmU/CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi,
+
+On 14/02/2019 12:14:28+0000, Claudiu.Beznea@microchip.com wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> 
+> Different IPs uses different offsets in registers for the same
+> functionality, thus adapt the driver to support this.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  drivers/clk/at91/sckc.c | 112 +++++++++++++++++++++++++++++++++---------------
+>  1 file changed, 77 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
+> index ab6ecefc49ad..b7163d3a2269 100644
+> --- a/drivers/clk/at91/sckc.c
+> +++ b/drivers/clk/at91/sckc.c
+> @@ -22,15 +22,25 @@
+>  #define SLOWCK_SW_TIME_USEC	((SLOWCK_SW_CYCLES * USEC_PER_SEC) / \
+>  				 SLOW_CLOCK_FREQ)
+>  
+> -#define	AT91_SCKC_CR			0x00
+> -#define		AT91_SCKC_RCEN		(1 << 0)
+> -#define		AT91_SCKC_OSC32EN	(1 << 1)
+> -#define		AT91_SCKC_OSC32BYP	(1 << 2)
+> -#define		AT91_SCKC_OSCSEL	(1 << 3)
+> +#define	AT91_SCKC_CR		0x00
+> +#define		AT91_SCKC_RCEN(off)	(1 << (off)->cr_rcen)
+> +#define		AT91_SCKC_OSC32EN(off)	(1 << (off)->cr_osc32en)
+> +#define		AT91_SCKC_OSC32BYP(off)	(1 << (off)->cr_osc32byp)
+> +#define		AT91_SCKC_OSCSEL(off)	(1 << (off)->cr_oscsel)
+
+You don't need those macros if you store BIT(off) instead of off in the
+members of clk_slow_offsets.
+
+> +
+> +#define AT91_SCKC_OFFSET_INVALID        (32)
+> +
+
+This would also remove the need for that define as 0 would mean that the
+bit doesn't exist.
+
+> +struct clk_slow_offsets {
+> +	u8 cr_rcen;
+> +	u8 cr_osc32en;
+> +	u8 cr_osc32byp;
+> +	u8 cr_oscsel;
+> +};
+>  
+>  struct clk_slow_osc {
+>  	struct clk_hw hw;
+>  	void __iomem *sckcr;
+> +	const struct clk_slow_offsets *offsets;
+>  	unsigned long startup_usec;
+>  };
+>  
+> @@ -39,6 +49,7 @@ struct clk_slow_osc {
+>  struct clk_sama5d4_slow_osc {
+>  	struct clk_hw hw;
+>  	void __iomem *sckcr;
+> +	const struct clk_slow_offsets *offsets;
+>  	unsigned long startup_usec;
+>  	bool prepared;
+>  };
+> @@ -48,6 +59,7 @@ struct clk_sama5d4_slow_osc {
+>  struct clk_slow_rc_osc {
+>  	struct clk_hw hw;
+>  	void __iomem *sckcr;
+> +	const struct clk_slow_offsets *offsets;
+>  	unsigned long frequency;
+>  	unsigned long accuracy;
+>  	unsigned long startup_usec;
+> @@ -58,6 +70,7 @@ struct clk_slow_rc_osc {
+>  struct clk_sam9x5_slow {
+>  	struct clk_hw hw;
+>  	void __iomem *sckcr;
+> +	const struct clk_slow_offsets *offsets;
+>  	u8 parent;
+>  };
+>  
+> @@ -69,10 +82,11 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
+>  	void __iomem *sckcr = osc->sckcr;
+>  	u32 tmp = readl(sckcr);
+>  
+> -	if (tmp & (AT91_SCKC_OSC32BYP | AT91_SCKC_OSC32EN))
+> +	if (tmp & (AT91_SCKC_OSC32BYP(osc->offsets) |
+> +		   AT91_SCKC_OSC32EN(osc->offsets)))
+>  		return 0;
+>  
+> -	writel(tmp | AT91_SCKC_OSC32EN, sckcr);
+> +	writel(tmp | AT91_SCKC_OSC32EN(osc->offsets), sckcr);
+>  
+>  	usleep_range(osc->startup_usec, osc->startup_usec + 1);
+>  
+> @@ -85,10 +99,10 @@ static void clk_slow_osc_unprepare(struct clk_hw *hw)
+>  	void __iomem *sckcr = osc->sckcr;
+>  	u32 tmp = readl(sckcr);
+>  
+> -	if (tmp & AT91_SCKC_OSC32BYP)
+> +	if (tmp & AT91_SCKC_OSC32BYP(osc->offsets))
+>  		return;
+>  
+> -	writel(tmp & ~AT91_SCKC_OSC32EN, sckcr);
+> +	writel(tmp & ~AT91_SCKC_OSC32EN(osc->offsets), sckcr);
+>  }
+>  
+>  static int clk_slow_osc_is_prepared(struct clk_hw *hw)
+> @@ -97,10 +111,10 @@ static int clk_slow_osc_is_prepared(struct clk_hw *hw)
+>  	void __iomem *sckcr = osc->sckcr;
+>  	u32 tmp = readl(sckcr);
+>  
+> -	if (tmp & AT91_SCKC_OSC32BYP)
+> +	if (tmp & AT91_SCKC_OSC32BYP(osc->offsets))
+>  		return 1;
+>  
+> -	return !!(tmp & AT91_SCKC_OSC32EN);
+> +	return !!(tmp & AT91_SCKC_OSC32EN(osc->offsets));
+>  }
+>  
+>  static const struct clk_ops slow_osc_ops = {
+> @@ -114,7 +128,8 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
+>  			   const char *name,
+>  			   const char *parent_name,
+>  			   unsigned long startup,
+> -			   bool bypass)
+> +			   bool bypass,
+> +			   const struct clk_slow_offsets *offsets)
+>  {
+>  	struct clk_slow_osc *osc;
+>  	struct clk_hw *hw;
+> @@ -137,9 +152,11 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
+>  	osc->hw.init = &init;
+>  	osc->sckcr = sckcr;
+>  	osc->startup_usec = startup;
+> +	osc->offsets = offsets;
+>  
+>  	if (bypass)
+> -		writel((readl(sckcr) & ~AT91_SCKC_OSC32EN) | AT91_SCKC_OSC32BYP,
+> +		writel((readl(sckcr) & ~AT91_SCKC_OSC32EN(osc->offsets)) |
+> +					AT91_SCKC_OSC32BYP(osc->offsets),
+>  		       sckcr);
+>  
+>  	hw = &osc->hw;
+> @@ -153,7 +170,8 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
+>  }
+>  
+>  static void __init
+> -of_at91sam9x5_clk_slow_osc_setup(struct device_node *np, void __iomem *sckcr)
+> +of_at91sam9x5_clk_slow_osc_setup(struct device_node *np, void __iomem *sckcr,
+> +				 const struct clk_slow_offsets *offsets)
+>  {
+>  	struct clk_hw *hw;
+>  	const char *parent_name;
+> @@ -167,7 +185,7 @@ of_at91sam9x5_clk_slow_osc_setup(struct device_node *np, void __iomem *sckcr)
+>  	bypass = of_property_read_bool(np, "atmel,osc-bypass");
+>  
+>  	hw = at91_clk_register_slow_osc(sckcr, name, parent_name, startup,
+> -					 bypass);
+> +					bypass, offsets);
+>  	if (IS_ERR(hw))
+>  		return;
+>  
+> @@ -195,7 +213,7 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
+>  	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
+>  	void __iomem *sckcr = osc->sckcr;
+>  
+> -	writel(readl(sckcr) | AT91_SCKC_RCEN, sckcr);
+> +	writel(readl(sckcr) | AT91_SCKC_RCEN(osc->offsets), sckcr);
+>  
+>  	usleep_range(osc->startup_usec, osc->startup_usec + 1);
+>  
+> @@ -207,14 +225,14 @@ static void clk_slow_rc_osc_unprepare(struct clk_hw *hw)
+>  	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
+>  	void __iomem *sckcr = osc->sckcr;
+>  
+> -	writel(readl(sckcr) & ~AT91_SCKC_RCEN, sckcr);
+> +	writel(readl(sckcr) & ~AT91_SCKC_RCEN(osc->offsets), sckcr);
+>  }
+>  
+>  static int clk_slow_rc_osc_is_prepared(struct clk_hw *hw)
+>  {
+>  	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
+>  
+> -	return !!(readl(osc->sckcr) & AT91_SCKC_RCEN);
+> +	return !!(readl(osc->sckcr) & AT91_SCKC_RCEN(osc->offsets));
+>  }
+>  
+>  static const struct clk_ops slow_rc_osc_ops = {
+> @@ -230,7 +248,8 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
+>  			      const char *name,
+>  			      unsigned long frequency,
+>  			      unsigned long accuracy,
+> -			      unsigned long startup)
+> +			      unsigned long startup,
+> +			      const struct clk_slow_offsets *offsets)
+>  {
+>  	struct clk_slow_rc_osc *osc;
+>  	struct clk_hw *hw;
+> @@ -252,6 +271,7 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
+>  
+>  	osc->hw.init = &init;
+>  	osc->sckcr = sckcr;
+> +	osc->offsets = offsets;
+>  	osc->frequency = frequency;
+>  	osc->accuracy = accuracy;
+>  	osc->startup_usec = startup;
+> @@ -267,7 +287,8 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
+>  }
+>  
+>  static void __init
+> -of_at91sam9x5_clk_slow_rc_osc_setup(struct device_node *np, void __iomem *sckcr)
+> +of_at91sam9x5_clk_slow_rc_osc_setup(struct device_node *np, void __iomem *sckcr,
+> +				    const struct clk_slow_offsets *offsets)
+>  {
+>  	struct clk_hw *hw;
+>  	u32 frequency = 0;
+> @@ -281,7 +302,7 @@ of_at91sam9x5_clk_slow_rc_osc_setup(struct device_node *np, void __iomem *sckcr)
+>  	of_property_read_u32(np, "atmel,startup-time-usec", &startup);
+>  
+>  	hw = at91_clk_register_slow_rc_osc(sckcr, name, frequency, accuracy,
+> -					    startup);
+> +					   startup, offsets);
+>  	if (IS_ERR(hw))
+>  		return;
+>  
+> @@ -299,14 +320,14 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
+>  
+>  	tmp = readl(sckcr);
+>  
+> -	if ((!index && !(tmp & AT91_SCKC_OSCSEL)) ||
+> -	    (index && (tmp & AT91_SCKC_OSCSEL)))
+> +	if ((!index && !(tmp & AT91_SCKC_OSCSEL(slowck->offsets))) ||
+> +	    (index && (tmp & AT91_SCKC_OSCSEL(slowck->offsets))))
+>  		return 0;
+>  
+>  	if (index)
+> -		tmp |= AT91_SCKC_OSCSEL;
+> +		tmp |= AT91_SCKC_OSCSEL(slowck->offsets);
+>  	else
+> -		tmp &= ~AT91_SCKC_OSCSEL;
+> +		tmp &= ~AT91_SCKC_OSCSEL(slowck->offsets);
+>  
+>  	writel(tmp, sckcr);
+>  
+> @@ -319,7 +340,7 @@ static u8 clk_sam9x5_slow_get_parent(struct clk_hw *hw)
+>  {
+>  	struct clk_sam9x5_slow *slowck = to_clk_sam9x5_slow(hw);
+>  
+> -	return !!(readl(slowck->sckcr) & AT91_SCKC_OSCSEL);
+> +	return !!(readl(slowck->sckcr) & AT91_SCKC_OSCSEL(slowck->offsets));
+>  }
+>  
+>  static const struct clk_ops sam9x5_slow_ops = {
+> @@ -331,7 +352,8 @@ static struct clk_hw * __init
+>  at91_clk_register_sam9x5_slow(void __iomem *sckcr,
+>  			      const char *name,
+>  			      const char **parent_names,
+> -			      int num_parents)
+> +			      int num_parents,
+> +			      const struct clk_slow_offsets *offsets)
+>  {
+>  	struct clk_sam9x5_slow *slowck;
+>  	struct clk_hw *hw;
+> @@ -353,7 +375,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
+>  
+>  	slowck->hw.init = &init;
+>  	slowck->sckcr = sckcr;
+> -	slowck->parent = !!(readl(sckcr) & AT91_SCKC_OSCSEL);
+> +	slowck->offsets = offsets;
+> +	slowck->parent = !!(readl(sckcr) & AT91_SCKC_OSCSEL(slowck->offsets));
+>  
+>  	hw = &slowck->hw;
+>  	ret = clk_hw_register(NULL, &slowck->hw);
+> @@ -366,7 +389,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
+>  }
+>  
+>  static void __init
+> -of_at91sam9x5_clk_slow_setup(struct device_node *np, void __iomem *sckcr)
+> +of_at91sam9x5_clk_slow_setup(struct device_node *np, void __iomem *sckcr,
+> +			     const struct clk_slow_offsets *offsets)
+>  {
+>  	struct clk_hw *hw;
+>  	const char *parent_names[2];
+> @@ -382,7 +406,7 @@ of_at91sam9x5_clk_slow_setup(struct device_node *np, void __iomem *sckcr)
+>  	of_property_read_string(np, "clock-output-names", &name);
+>  
+>  	hw = at91_clk_register_sam9x5_slow(sckcr, name, parent_names,
+> -					    num_parents);
+> +					   num_parents, offsets);
+>  	if (IS_ERR(hw))
+>  		return;
+>  
+> @@ -406,10 +430,18 @@ static const struct of_device_id sckc_clk_ids[] __initconst = {
+>  	{ /*sentinel*/ }
+>  };
+>  
+> +static const struct clk_slow_offsets at91sam9x5_offsets = {
+> +	.cr_rcen = 0,
+> +	.cr_osc32en = 1,
+> +	.cr_osc32byp = 2,
+> +	.cr_oscsel = 3,
+> +};
+> +
+>  static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
+>  {
+>  	struct device_node *childnp;
+> -	void (*clk_setup)(struct device_node *, void __iomem *);
+> +	void (*clk_setup)(struct device_node *np, void __iomem *io,
+> +			  const struct clk_slow_offsets *offsets);
+>  	const struct of_device_id *clk_id;
+>  	void __iomem *regbase = of_iomap(np, 0);
+>  
+> @@ -421,7 +453,7 @@ static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
+>  		if (!clk_id)
+>  			continue;
+>  		clk_setup = clk_id->data;
+> -		clk_setup(childnp, regbase);
+> +		clk_setup(childnp, regbase, &at91sam9x5_offsets);
+>  	}
+>  }
+>  CLK_OF_DECLARE(at91sam9x5_clk_sckc, "atmel,at91sam9x5-sckc",
+> @@ -438,7 +470,7 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
+>  	 * Assume that if it has already been selected (for example by the
+>  	 * bootloader), enough time has aready passed.
+>  	 */
+> -	if ((readl(osc->sckcr) & AT91_SCKC_OSCSEL)) {
+> +	if ((readl(osc->sckcr) & AT91_SCKC_OSCSEL(osc->offsets))) {
+>  		osc->prepared = true;
+>  		return 0;
+>  	}
+> @@ -461,6 +493,13 @@ static const struct clk_ops sama5d4_slow_osc_ops = {
+>  	.is_prepared = clk_sama5d4_slow_osc_is_prepared,
+>  };
+>  
+> +static const struct clk_slow_offsets at91sama5d4_offsets = {
+> +	.cr_rcen = AT91_SCKC_OFFSET_INVALID,
+> +	.cr_osc32en = AT91_SCKC_OFFSET_INVALID,
+> +	.cr_osc32byp = AT91_SCKC_OFFSET_INVALID,
+> +	.cr_oscsel = 3,
+> +};
+> +
+
+I don't think you need to change the sama5d4 part as it is not affected
+by any change in the sam9x5 part.
+
+>  static void __init of_sama5d4_sckc_setup(struct device_node *np)
+>  {
+>  	void __iomem *regbase = of_iomap(np, 0);
+> @@ -498,9 +537,11 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
+>  	osc->hw.init = &init;
+>  	osc->sckcr = regbase;
+>  	osc->startup_usec = 1200000;
+> +	osc->offsets = &at91sama5d4_offsets;
+>  
+>  	if (bypass)
+> -		writel((readl(regbase) | AT91_SCKC_OSC32BYP), regbase);
+> +		writel((readl(regbase) | AT91_SCKC_OSC32BYP(osc->offsets)),
+> +		       regbase);
+>  
+>  	hw = &osc->hw;
+>  	ret = clk_hw_register(NULL, &osc->hw);
+> @@ -509,7 +550,8 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
+>  		return;
+>  	}
+>  
+> -	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2);
+> +	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2,
+> +					   &at91sama5d4_offsets);
+>  	if (IS_ERR(hw))
+>  		return;
+>  
+> -- 
+> 2.7.4
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
