@@ -1,8 +1,8 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 2/4] soc: ti: ti_sci_pm_domains: Add support for exclusive
- access
-Date: Mon, 18 Feb 2019 10:45:15 +0530
-Message-ID: <20190218051517.9218-3-lokeshvutla@ti.com>
+Subject: [PATCH 1/4] firmware: ti_sci: (Dis)Allow for device exclusive
+ permissions
+Date: Mon, 18 Feb 2019 10:45:14 +0530
+Message-ID: <20190218051517.9218-2-lokeshvutla@ti.com>
 References: <20190218051517.9218-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,107 +22,115 @@ To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar
 Cc: Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-TISCI protocol supports for enabling the device with exclusive
-permissions. Certain remoteproc devices or some shared devices
-across VM doesn't wants to request devices with this flag set.
-So add support for getting this information from DT. With this
-power-domain-cells are increased to 2.
-
-For keeping the DT backward compatibility intact, defaulting the
-device permissions to set the exclusive flag set. In this case the
-power-domain-cells is 1.
+Sysfw provides an option for requesting exclusive access for a
+device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. Once a device
+is requested from a host with this flag set, any request to this
+device from a different host will be nacked by sysfw. Current tisci
+driver enables this flag for every device requests. But this may not
+be true for all the devices. So provide a separate command in driver
+for exclusive and non-exclusive device requests.
 
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- .../bindings/soc/ti/sci-pm-domain.txt         |  7 ++++--
- drivers/soc/ti/ti_sci_pm_domains.c            | 22 +++++++++++++++++--
- 2 files changed, 25 insertions(+), 4 deletions(-)
+ drivers/firmware/ti_sci.c              | 45 ++++++++++++++++++++++++--
+ include/linux/soc/ti/ti_sci_protocol.h |  3 ++
+ 2 files changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-index f7b00a7c0f68..5fdda7475023 100644
---- a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-+++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-@@ -19,8 +19,11 @@ child of the pmmc node.
- Required Properties:
- --------------------
- - compatible: should be "ti,sci-pm-domain"
--- #power-domain-cells: Must be 1 so that an id can be provided in each
--		       device node.
-+- #power-domain-cells: Can be one of the following:
-+			1: Containing the device id of each node
-+			2: First entry should be device id
-+			   Second entry should be 1 or 0. Use 1 for enabling
-+			   the device with exclusive permissions set else 0.
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 69ed1464175c..8c6f21ceb6f2 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -634,6 +634,7 @@ static int ti_sci_get_device_state(const struct ti_sci_handle *handle,
  
- Example (K2G):
- -------------
-diff --git a/drivers/soc/ti/ti_sci_pm_domains.c b/drivers/soc/ti/ti_sci_pm_domains.c
-index de31b9389e2e..4dae42651212 100644
---- a/drivers/soc/ti/ti_sci_pm_domains.c
-+++ b/drivers/soc/ti/ti_sci_pm_domains.c
-@@ -24,6 +24,8 @@
- #include <linux/slab.h>
- #include <linux/soc/ti/ti_sci_protocol.h>
- 
-+#define PD_REQUEST_EXCLUSIVE BIT(0)
-+
  /**
-  * struct ti_sci_genpd_dev_data: holds data needed for every device attached
-  *				 to this genpd
-@@ -32,6 +34,7 @@
+  * ti_sci_cmd_get_device() - command to request for device managed by TISCI
++ *			     that can be shared with other hosts.
+  * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
+  * @id:		Device Identifier
+  *
+@@ -641,11 +642,29 @@ static int ti_sci_get_device_state(const struct ti_sci_handle *handle,
+  * usage count by balancing get_device with put_device. No refcounting is
+  * managed by driver for that purpose.
+  *
+- * NOTE: The request is for exclusive access for the processor.
+- *
+  * Return: 0 if all went fine, else return appropriate error.
   */
- struct ti_sci_genpd_dev_data {
- 	int idx;
-+	u8 exclusive;
- };
- 
- /**
-@@ -63,6 +66,14 @@ static int ti_sci_dev_id(struct device *dev)
- 	return sci_dev_data->idx;
- }
- 
-+static u8 is_ti_sci_dev_exclusive(struct device *dev)
+ static int ti_sci_cmd_get_device(const struct ti_sci_handle *handle, u32 id)
 +{
-+	struct generic_pm_domain_data *genpd_data = dev_gpd_data(dev);
-+	struct ti_sci_genpd_dev_data *sci_dev_data = genpd_data->data;
-+
-+	return sci_dev_data->exclusive & PD_REQUEST_EXCLUSIVE;
++	return ti_sci_set_device_state(handle, id, 0,
++				       MSG_DEVICE_SW_STATE_ON);
 +}
 +
- /**
-  * ti_sci_dev_to_sci_handle(): get pointer to ti_sci_handle
-  * @dev: pointer to device associated with this genpd
-@@ -87,7 +98,10 @@ static int ti_sci_dev_start(struct device *dev)
- 	const struct ti_sci_handle *ti_sci = ti_sci_dev_to_sci_handle(dev);
- 	int idx = ti_sci_dev_id(dev);
++/**
++ * ti_sci_cmd_get_device_exclusive() - command to request for device managed by
++ *				       TISCI that is exclusively owned by the
++ *				       requesting host.
++ * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
++ * @id:		Device Identifier
++ *
++ * Request for the device - NOTE: the client MUST maintain integrity of
++ * usage count by balancing get_device with put_device. No refcounting is
++ * managed by driver for that purpose.
++ *
++ * Return: 0 if all went fine, else return appropriate error.
++ */
++static int ti_sci_cmd_get_device_exclusive(const struct ti_sci_handle *handle,
++					   u32 id)
+ {
+ 	return ti_sci_set_device_state(handle, id,
+ 				       MSG_FLAG_DEVICE_EXCLUSIVE,
+@@ -664,6 +683,26 @@ static int ti_sci_cmd_get_device(const struct ti_sci_handle *handle, u32 id)
+  * Return: 0 if all went fine, else return appropriate error.
+  */
+ static int ti_sci_cmd_idle_device(const struct ti_sci_handle *handle, u32 id)
++{
++	return ti_sci_set_device_state(handle, id, 0,
++				       MSG_DEVICE_SW_STATE_RETENTION);
++}
++
++/**
++ * ti_sci_cmd_idle_device_exclusive() - Command to idle a device managed by
++ *					TISCI that is exclusively owned by
++ *					requesting host.
++ * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
++ * @id:		Device Identifier
++ *
++ * Request for the device - NOTE: the client MUST maintain integrity of
++ * usage count by balancing get_device with put_device. No refcounting is
++ * managed by driver for that purpose.
++ *
++ * Return: 0 if all went fine, else return appropriate error.
++ */
++static int ti_sci_cmd_idle_device_exclusive(const struct ti_sci_handle *handle,
++					    u32 id)
+ {
+ 	return ti_sci_set_device_state(handle, id,
+ 				       MSG_FLAG_DEVICE_EXCLUSIVE,
+@@ -1631,7 +1670,9 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
+ 	core_ops->reboot_device = ti_sci_cmd_core_reboot;
  
--	return ti_sci->ops.dev_ops.get_device(ti_sci, idx);
-+	if (is_ti_sci_dev_exclusive(dev))
-+		return ti_sci->ops.dev_ops.get_device_exclusive(ti_sci, idx);
-+	else
-+		return ti_sci->ops.dev_ops.get_device(ti_sci, idx);
- }
+ 	dops->get_device = ti_sci_cmd_get_device;
++	dops->get_device_exclusive = ti_sci_cmd_get_device_exclusive;
+ 	dops->idle_device = ti_sci_cmd_idle_device;
++	dops->idle_device_exclusive = ti_sci_cmd_idle_device_exclusive;
+ 	dops->put_device = ti_sci_cmd_put_device;
  
- /**
-@@ -118,7 +132,7 @@ static int ti_sci_pd_attach_dev(struct generic_pm_domain *domain,
- 	if (ret < 0)
- 		return ret;
- 
--	if (pd_args.args_count != 1)
-+	if (pd_args.args_count != 1 && pd_args.args_count != 2)
- 		return -EINVAL;
- 
- 	idx = pd_args.args[0];
-@@ -136,6 +150,10 @@ static int ti_sci_pd_attach_dev(struct generic_pm_domain *domain,
- 		return -ENOMEM;
- 
- 	sci_dev_data->idx = idx;
-+	/* Enable the exclusive permissions by default */
-+	sci_dev_data->exclusive = PD_REQUEST_EXCLUSIVE;
-+	if (pd_args.args_count == 2)
-+		sci_dev_data->exclusive = pd_args.args[1];
- 
- 	genpd_data = dev_gpd_data(dev);
- 	genpd_data->data = sci_dev_data;
+ 	dops->is_valid = ti_sci_cmd_dev_is_valid;
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 18435e5c6364..5d704bb33989 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -97,7 +97,10 @@ struct ti_sci_core_ops {
+  */
+ struct ti_sci_dev_ops {
+ 	int (*get_device)(const struct ti_sci_handle *handle, u32 id);
++	int (*get_device_exclusive)(const struct ti_sci_handle *handle, u32 id);
+ 	int (*idle_device)(const struct ti_sci_handle *handle, u32 id);
++	int (*idle_device_exclusive)(const struct ti_sci_handle *handle,
++				     u32 id);
+ 	int (*put_device)(const struct ti_sci_handle *handle, u32 id);
+ 	int (*is_valid)(const struct ti_sci_handle *handle, u32 id);
+ 	int (*get_context_loss_count)(const struct ti_sci_handle *handle,
 -- 
 2.19.2
