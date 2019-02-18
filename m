@@ -1,32 +1,67 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V4 3/4] arm64: dts: imx8qxp: added ddr performance monitor
- nodes
-Date: Mon, 18 Feb 2019 14:38:56 -0300
-Message-ID: <CAOMZO5ArupZLgfw5abDdrBFK4B2s0vC7+g0H=oZiYMwn5nHSOA@mail.gmail.com>
-References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
- <1550253761-26841-3-git-send-email-Frank.Li@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 2/4] mfd: max77620: add documentation for backup
+ battery charging
+Date: Mon, 18 Feb 2019 12:06:12 -0600
+Message-ID: <CAL_JsqKiL8A+SBwqLzYa9djWBT1S+2kxUUB4iuKWX7EoqXouCw@mail.gmail.com>
+References: <20190212064353.7451-1-markz@nvidia.com> <20190212064353.7451-3-markz@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550253761-26841-3-git-send-email-Frank.Li@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Li <frank.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190212064353.7451-3-markz@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Zhang <markz@nvidia.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 4:03 PM Frank Li <frank.li@nxp.com> wrote:
+On Tue, Feb 12, 2019 at 12:44 AM Mark Zhang <markz@nvidia.com> wrote:
 >
-> Add ddr performance monitor
->
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Adding documentation for 3 new backup battery charging dts
+> properties:
+> - maxim,charging-current-microamp
+> - maxim,charging-voltage-microvolt
+> - maxim,output-resister-ohms
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+What's the difference between the 77620 and 77650 as there's patches
+on the list for the 77650 too. The properties are similar, but seems
+to be main vs. backup battery charger. We should have common
+properties for this.
+
+> Signed-off-by: Mark Zhang <markz@nvidia.com>
+> ---
+>  .../devicetree/bindings/mfd/max77620.txt      | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+> index 9c16d51cc15b..88825eaf2567 100644
+> --- a/Documentation/devicetree/bindings/mfd/max77620.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+> @@ -122,6 +122,26 @@ For DT binding details of different sub modules like GPIO, pincontrol,
+>  regulator, power, please refer respective device-tree binding document
+>  under their respective sub-system directories.
+>
+> +Backup Battery:
+> +==============
+> +This sub-node configure charging backup battery of the device. Device has
+> +support of charging the backup battery. The subnode name is "backup-battery".
+> +The property for backup-battery child nodes as:
+> +Presence of this child node will enable the backup battery charging.
+> +
+> +Optional properties:
+> +       -maxim,charging-current-microamp: Charging current setting.
+> +                       The device supports 50/100/200/400/600/800uA.
+> +                       If this property is unavailable then it will
+> +                       charge with 50uA.
+> +       -maxim,charging-voltage-microvolt: Charging Voltage Limit Setting.
+> +                       Device supports 2500000/3000000/3300000/350000uV.
+> +                       Default will be set to 2500mV. The voltage will be roundoff
+> +                       to nearest lower side if other than above is configured.
+> +       -maxim,output-resister-ohms: Output resistor on Ohm.
+> +                       Device supports 100/1000/3000/6000 Ohms.
+> +                       Default will be set to 1000 Ohm.
+> +
+>  Example:
+>  --------
+>  #include <dt-bindings/mfd/max77620.h>
+> --
+> 2.19.2
+>
