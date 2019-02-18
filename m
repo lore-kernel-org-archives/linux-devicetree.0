@@ -1,79 +1,111 @@
-Return-Path: <SRS0=c5cT=RC=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V10 1/4] dt-bindings: fsl: scu: add thermal binding
-Date: Wed, 27 Feb 2019 08:46:21 +0000
-Message-ID: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 18 Feb 2019 12:42:43 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: PCI: microsemi: Add DT Bindings for
+ Microsemi PCIe host controller
+Message-ID: <20190218184243.GA20289@bogus>
+References: <20190215162424.564-1-daire.mcnamara@microchip.com>
+ <20190215162424.564-3-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190215162424.564-3-daire.mcnamara@microchip.com>
+To: Daire McNamara <daire.mcnamara@microchip.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and thermal sensors etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to get temperature from thermal sensors, this patch adds
-binding doc for i.MX system controller thermal driver.
+On Fri, Feb 15, 2019 at 04:24:23PM +0000, Daire McNamara wrote:
+> This patch adds documentation for the DT bindings for Microsemi/Microchip
+> PolarFire PCIe controller when configured in host (Root Complex) mode.
+> 
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> ---
+>  .../bindings/pci/microsemi-pcie.txt           | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/microsemi-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/microsemi-pcie.txt b/Documentation/devicetree/bindings/pci/microsemi-pcie.txt
+> new file mode 100644
+> index 000000000000..a16e48806edc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/microsemi-pcie.txt
+> @@ -0,0 +1,65 @@
+> +* Microsemi AXI PCIe Root Port Bridge DT description
+> +
+> +Required properties:
+> +- #address-cells: Address representation for root ports, set to <3>
+> +- #size-cells: Size representation for root ports, set to <2>
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +- compatible: Should contain "microsemi,ms-pf-axi-pcie-host"
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V9:
-	- change #thermal-sensor-cells value in example to 1, since there are othe=
-r
-	  thermal sensors inside system controller, it is just because there are s=
-till
-	  some issue, so system controller does NOT expose them for now, they coul=
-d
-	  be exposed later, so it should be 1 from HW perspective.
----
- .../devicetree/bindings/arm/freescale/fsl,scu.txt   | 21 +++++++++++++++++=
-++++
- 1 file changed, 21 insertions(+)
+Only 1 version?
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
-Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 72d481c..855270b 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -122,6 +122,21 @@ RTC bindings based on SCU Message Protocol
- Required properties:
- - compatible: should be "fsl,imx8qxp-sc-rtc";
-=20
-+Thermal bindings based on SCU Message Protocol
-+------------------------------------------------------------
-+
-+Required properties:
-+- compatible:			Should be :
-+				  "fsl,imx8qxp-sc-thermal"
-+				followed by "fsl,imx-sc-thermal";
-+
-+- #thermal-sensor-cells:	See Documentation/devicetree/bindings/thermal/the=
-rmal.txt
-+				for a description.
-+
-+- imx,sensor-resource-id: 	A single integer for single thermal zone's reso=
-urce ID or
-+				an array of integers to specify each thermal zone's sensor
-+				resource ID.
-+
- Example (imx8qxp):
- -------------
- lsio_mu1: mailbox@5d1c0000 {
-@@ -168,6 +183,12 @@ firmware {
- 		rtc: rtc {
- 			compatible =3D "fsl,imx8qxp-sc-rtc";
- 		};
-+
-+		tsens: thermal-sensor {
-+			compatible =3D "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
-+			#thermal-sensor-cells =3D <1>;
-+			imx,sensor-resource-id =3D <IMX_SC_R_SYSTEM>;
-+		};
- 	};
- };
-=20
---=20
-2.7.4
+'ms' is short for Microsemi? Which you already have once.
+
+> +- reg: Should contain AXI PCIe registers location and length
+
+Need to say how many regions, what each one is, and the order.
+
+> +- device_type: must be "pci"
+> +- interrupts: Should contain AXI PCIe interrupt
+> +- interrupt-map-mask,
+> +  interrupt-map: standard PCI properties to define the mapping of the
+> +	PCI interface to interrupt numbers.
+> +- ranges: ranges for the PCI memory regions (I/O space region is not
+> +	supported by hardware)
+> +	Please refer to the standard PCI bus binding document for a more
+> +	detailed explanation
+> +
+> +Optional properties for PolarFire:
+> +- bus-range: PCI bus numbers covered
+> +
+> +Interrupt controller child node
+> ++++++++++++++++++++++++++++++++
+> +Required properties:
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #address-cells: specifies the number of cells needed to encode an
+> +	address. The value must be 0.
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +
+> +NOTE:
+> +The core provides a single interrupt for both INTx/MSI messages. So,
+> +create an interrupt controller node to support 'interrupt-map' DT
+> +functionality.  The driver will create an IRQ domain for this map, decode
+> +the four INTx interrupts in ISR and route them to this domain.
+
+If MSI is supported, don't you need some MSI properties?
+
+> +
+> +
+> +Example:
+> +++++++++
+> +AloeVera:
+> +
+> +	pcie: pcie@2030000000 {
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		#interrupt-cells = <1>;
+> +		compatible = "microsemi,ms-pf-axi-pcie-host";
+> +		device_type = "pci";
+> +		bus-range = <0x01 0x7f>;
+> +		interrupt-map = <0 0 0 1 &pcie_intc 1>,
+> +				<0 0 0 2 &pcie_intc 2>,
+> +				<0 0 0 3 &pcie_intc 3>,
+> +				<0 0 0 4 &pcie_intc 4>;
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-parent = <&L4>;
+> +		interrupts = <32>;
+> +		ranges = <0x3000000 0 0x40000000 0x0 0x40000000 0x0 0x20000000>;
+> +		reg = <0x20 0x30000000 0x0 0x4000000 0x20 0x0 0x0 0x100000>;
+> +		reg-names = "control", "apb";
+> +		pcie_intc: interrupt-controller {
+> +			#address-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-controller;
+> +		};
+> +	};
+> -- 
+> 2.17.0
+> 
