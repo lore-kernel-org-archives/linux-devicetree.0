@@ -1,52 +1,55 @@
-Return-Path: <robherring2@gmail.com>
-Date: Fri, 22 Feb 2019 18:32:46 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: usb: dwc3: add power down clock scale
- property
-Message-ID: <20190223003246.GA20964@bogus>
-References: <1548152179-19472-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=unlQ=QZ=linux.intel.com=sakari.ailus@kernel.org>
+Date: Mon, 18 Feb 2019 13:46:09 +0200
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH 3/3] media: tc358746: update MAINTAINERS file
+Message-ID: <20190218114608.qvoeyxlaw4yjrnnh@paasikivi.fi.intel.com>
+References: <20181218141240.3056-1-m.felsch@pengutronix.de>
+ <20181218141240.3056-4-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1548152179-19472-1-git-send-email-jun.li@nxp.com>
-To: Jun Li <jun.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <20181218141240.3056-4-m.felsch@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jan 22, 2019 at 10:37:17AM +0000, Jun Li wrote:
-> The USB3 suspend_clk input replaces pipe3_rx_pclk as a clock
-> source to a small part of the USB3 core that operates when the
-> SS PHY is in its lowest power(P3) state, and therefore does
-> not provide a clock. The power down scale specifies how many
-> suspend_clk periods fit into a 16 KHz clock period, details
-> can see DWC3 databook register GCTL.PWRDNSCALE.
+Hi Marco,
+
+On Tue, Dec 18, 2018 at 03:12:40PM +0100, Marco Felsch wrote:
+> Add me as partial maintainer, others are welcome too.
 > 
-> Signed-off-by: Li Jun <jun.li@nxp.com>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 3e4c38b..d1c8b62 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -102,6 +102,12 @@ Optional properties:
->  			more than one value, which means undefined length INCR burst type
->  			enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 546f8d936589..f97dedbe545c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15230,6 +15230,13 @@ S:	Maintained
+>  F:	drivers/media/i2c/tc358743*
+>  F:	include/media/i2c/tc358743.h
 >  
-> + - snps,power-down-scale: Power down scale field specifies how many suspend_clk
-> +			periods fit into a 16 Khz clock period. When performing
-> +			the division, round up the remainder. Suspend clock is
-> +			from 32kHz to 125MHz, means the value range is 2~8000.
-> +			(details see DWC_usb3 databook register GCTL.PWRDNSCALE).
+> +TOSHIBA TC358746 DRIVER
+> +M:	Marco Felsch <kernel@pengutronix.de>
+> +L:	linux-media@vger.kernel.org
+> +S:	Odd Fixes
+> +F:	drivers/media/i2c/tc358746*
+> +F:	Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
 > +
+>  TOSHIBA WMI HOTKEYS DRIVER
+>  M:	Azael Avalos <coproscefalo@gmail.com>
+>  L:	platform-driver-x86@vger.kernel.org
 
-Sounds like the suspend_clk should be provided as a clock input so you 
-can calculate this value.
+This should go together with the DT bindings, in the same patch.
 
->   - in addition all properties from usb-xhci.txt from the current directory are
->     supported as well
->  
-> -- 
-> 2.7.4
-> 
+I'd expect a new driver to be listed as "Maintained". "Odd Fixes" suggests
+no-one is particularly looking after it, and it's not nice if a new driver
+starts off like that. :-I
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
