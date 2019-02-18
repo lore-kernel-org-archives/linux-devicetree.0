@@ -1,36 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 09/14] dt-binding: remoteproc: Add binding doc for PRU
- Cores in the PRU-ICSS
-Date: Mon, 18 Feb 2019 13:36:23 -0600
-Message-ID: <20190218193623.GA20566@bogus>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
- <1549290167-876-10-git-send-email-rogerq@ti.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: panel: td028ttec1: add backlight
+ property
+Date: Mon, 18 Feb 2019 13:37:36 -0600
+Message-ID: <20190218193736.GA22600@bogus>
+References: <20190205063813.14873-1-andreas@kemnade.info>
+ <20190205063813.14873-3-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1549290167-876-10-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: tony@atomide.com, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rogerq@ti.com
+In-Reply-To: <20190205063813.14873-3-andreas@kemnade.info>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, sre@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, Andreas Kemnade <andreas@kemnade.info>, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 4 Feb 2019 16:22:42 +0200, Roger Quadros wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> The Programmable Real-Time Unit Subsystem (PRUSS) consists of
-> dual 32-bit RISC cores (Programmable Real-Time Units, or PRUs)
-> for program execution. This patch adds a remoteproc platform
-> driver for managing the individual PRU RISC cores life cycle.
-> 
-> Add DT binding documentation for that.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  .../bindings/remoteproc/ti,pru-rproc.txt           | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,pru-rproc.txt
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gVHVlLCAgNSBGZWIgMjAxOSAwNzozODoxMyArMDEwMCwgQW5kcmVhcyBLZW1uYWRlIHdyb3Rl
+Ogo+IFRoaXMgYWRkcyBhbiBhZGRpdGlvbmFsIGJhY2tsaWdodCBwcm9wZXJ0eSBhcyBkZXNjcmli
+ZWQKPiBpbiBwYW5lbC1jb21tb24udHh0Cj4gCj4gU2lnbmVkLW9mZi1ieTogQW5kcmVhcyBLZW1u
+YWRlIDxhbmRyZWFzQGtlbW5hZGUuaW5mbz4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdHBvLHRkMDI4dHRlYzEudHh0IHwgMiArKwo+ICAx
+IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4gCgpSZXZpZXdlZC1ieTogUm9iIEhlcnJp
+bmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVs
