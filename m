@@ -1,91 +1,188 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 00/15] Add basic support for Socionext Milbeaut M10V
- SoC
-Date: Mon, 18 Feb 2019 13:29:26 +0100
-Message-ID: <10a0375b-0814-6b7d-97d5-ed2c2838c4b4@linaro.org>
-References: <1549628687-29628-1-git-send-email-sugaya.taichi@socionext.com>
- <CAK8P3a3_j2W+KXSynW_SkVZk_+PJ-DqyxjLkgJL-OichS0fwWw@mail.gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 2/3] ARM: dts: rk3288 Tinker Board (S) add wi-fi
+Date: Mon, 18 Feb 2019 12:30:17 +0000
+Message-ID: <6d79652d-e6a3-cd50-878e-8e47e193a69b@arm.com>
+References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
+ <20190217121513.22965-3-beagleboard@davidjohnsummers.uk>
+ <1528638260.343699.1550436208775@email.ionos.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3_j2W+KXSynW_SkVZk_+PJ-DqyxjLkgJL-OichS0fwWw@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1528638260.343699.1550436208775@email.ionos.de>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Sugaya Taichi <sugaya.taichi@socionext.com>
-Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, David Summers <beagleboard@davidjohnsummers.uk>, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/02/2019 13:20, Arnd Bergmann wrote:
-> On Fri, Feb 8, 2019 at 1:24 PM Sugaya Taichi
-> <sugaya.taichi@socionext.com> wrote:
+On 17/02/2019 20:43, Stefan Wahren wrote:
+> Hi David,
+> 
+>> David Summers <beagleboard@davidjohnsummers.uk> hat am 17. Februar 2019 um 13:15 geschrieben:
 >>
->> Hi,
 >>
->> Here is the series of patches the initial support for SC2000(M10V) of
->> Milbeaut SoCs. "M10V" is the internal name of SC2000, so commonly used in
->> source code.
+>> This patch adds the wifi to the ASUS Tinker Board (S) machines.
 >>
->> SC2000 is a SoC of the Milbeaut series. equipped with a DSP optimized for
->> computer vision. It also features advanced functionalities such as 360-degree,
->> real-time spherical stitching with multi cameras, image stabilization for
->> without mechanical gimbals, and rolling shutter correction. More detail is
->> below:
->> https://www.socionext.com/en/products/assp/milbeaut/SC2000.html
+>> Unfortunatly neither the Tinker Board nor the Tinker Board S schematic
+>> indicate how the WiFi is wired up on these devices. The WiFi is
+>> provided by the RTL8723BS device, that has sdio WiFi and UART
+>> Bluetooth. This patch just adds the WiFi interface.
 >>
->> Specifications for developers are below:
->>  - Quad-core 32bit Cortex-A7 on ARMv7-A architecture
->>  - NEON support
->>  - DSP
->>  - GPU
->>  - MAX 3GB DDR3
->>  - Cortex-M0 for power control
->>  - NAND Flash Interface
->>  - SD UHS-I
->>  - SD UHS-II
->>  - SDIO
->>  - USB2.0 HOST / Device
->>  - USB3.0 HOST / Device
->>  - PCI express Gen2
->>  - Ethernet Engine
->>  - I2C
->>  - UART
->>  - SPI
->>  - PWM
+>> With no schematic, most of the wiring has been derived from the ASUS
+>> patch to Debian:
 >>
->> Support is quite minimal for now, since it only includes timer, clock,
->> pictrl and serial controller drivers, so we can only boot to userspace
->> through initramfs. Support for the other peripherals  will come eventually.
+>> https://github.com/TinkerBoard/debian_kernel/commit/6a3128ade33f758887048578ada61a4b7ab8e678
+>>
+>> In conjunction with the pin out of the RTL8723BS device:
+>>
+>> http://files.pine64.org/doc/datasheet/pine64/RTL8723BS.pdf
+>> http://cit.odessa.ua/media/pdf/Intel-Compute-Stick/FN-Link_F23BDSM25-W1.pdf
+>>
+>> The only unusual part is that to bring the card up, both the pins
+>> RK_PD3 and RK_PD4 need to be pulled. Why this needs to be done is not
+>> clear, best explaination is that they are connected to the RTL8723BS
+>> pins WL_DIS# and BT_DIS#, which the data sheet vaguely says:
+>>
+>> Shared with GPIO9 This Pin Can Externally Shutdown the RTL8723BS WLAN
+>> function when BT_DISn is Pulled Low. When this pin deasserted, SDIO
+>> interface will be disabled. This pin can also support the WLAN Ra
+>> dio-off function with host interface remaining connected.
+>>
+>> Anyway extensive testing the TheSaint on ArchLinux Arm Forum
+>>
+>> https://archlinuxarm.org/forum/viewtopic.php?f=44&t=13064&start=120#p60548
+>>
+>> Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
+>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> ---
+>>   arch/arm/boot/dts/rk3288-tinker.dtsi | 39 +++++++++++++++++++++++++---
+>>   1 file changed, 36 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+>> index fceaeed44e34..e1796f340eef 100644
+>> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+>> @@ -3,8 +3,9 @@
+>>    * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
+>>    */
+>>   
+>>   #include "rk3288.dtsi"
+>>   #include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/clock/rockchip,rk808.h>
+>>   
+>>   / {
+>>   	chosen {
+>> @@ -98,6 +97,15 @@
+>>   		startup-delay-us = <100000>;
+>>   		vin-supply = <&vcc_io>;
+>>   	};
+>> +
+>> +	sdio_pwrseq: sdio-pwrseq {
+>> +		compatible = "mmc-pwrseq-simple";
+>> +		clocks = <&rk808 RK808_CLKOUT1>;
+>> +		clock-names = "ext_clock";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&wifi_enable>;
 > 
-> I've looked over the platform once more. Overall, it looks very good, and
-> I'd still like to merge this for linux-5.1, but we are running out of time
-> there. If you send the patches to soc@kernel.org quickly, we can try to
-> still merge them in, but if anything goes wrong, it will have to wait until
-> we start merging patches for 5.2, directly after 5.1 is out.
+> As i wrote at the Arch board it would be nice to keep the Asus comment here:
 > 
-> I did not look at the device driver patches (clk, clocksource, pinctrl, serial)
-> in much detail. If you have an Ack from the maintainers, feel free to
-> include them in the series, otherwise let's merge the rest now and then
-> you can send the updated patches for inclusion through the subsystem
-> trees in 5.2.
+> /*
+>   * On the module itself this is one of these (depending
+>   * on the actual card populated):
+>   * - SDIO_RESET_L_WL_REG_ON
+>   * - PDN (power down when low)
+>   */
 
-I'm not in copy of the clocksource patch but I acked it for the initial
-post.
+Note that that comment (like many others) is merely copy-pasted from the 
+Rockchip evaluation board DT, so is of dubious relevance here. If 
+anything it becomes actively misleading when we already know that "this" 
+is two pins on a module where nothing matches either of those names.
 
-> I have sent a few comments. The only one that is really important
-> here is the missing platform check in the suspend options. Please
-> try to address most of the other commentsm, either by changing the
-> code, or by explaining why your version is correct.
-> 
-> 
-> 
->      Arnd
-> 
+Robin.
 
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>> +		reset-gpios = <&gpio4 RK_PD3 GPIO_ACTIVE_LOW>, <&gpio4 RK_PD4 GPIO_ACTIVE_LOW>;
+>> +	};
+>>   };
+>>   
+>>   &cpu0 {
+>> @@ -337,8 +345,8 @@
+>>   
+>>   &io_domains {
+>>   	status = "okay";
+>> -
+> 
+> Please drop this whitespace change
+> 
+>>   	sdcard-supply = <&vccio_sd>;
+>> +	wifi-supply = <&vcc_18>;
+>>   };
+>>   
+>>   &pinctrl {
+>> @@ -417,6 +425,12 @@
+>>   			rockchip,pins = <7 8 RK_FUNC_GPIO &pcfg_pull_none>;
+>>   		};
+>>   	};
+>> +
+>> +	sdio {
+>> +		wifi_enable: wifi-enable {
+>> +			rockchip,pins = <4 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>, <4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+> 
+> Please make a line break after the first pin definition
+> 
+>> +		};
+>> +	};
+>>   };
+>>   
+>>   &pwm0 {
+>> @@ -440,6 +454,25 @@
+>>   	vqmmc-supply = <&vccio_sd>;
+>>   };
+>>   
+>> +&sdio0 {
+>> +	bus-width = <4>;
+>> +	cap-sd-highspeed;
+>> +	cap-sdio-irq;
+>> +	keep-power-in-suspend;
+>> +	mmc-pwrseq = <&sdio_pwrseq>;
+>> +	non-removable;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&sdio0_bus4>, <&sdio0_cmd>, <&sdio0_clk>, <&sdio0_int>;
+>> +	max-frequency = <50000000>;
+>> +	sd-uhs-sdr12;
+>> +	sd-uhs-sdr25;
+>> +	sd-uhs-sdr50;
+>> +	sd-uhs-ddr50;
+> 
+> I'm okay with Tony's suggestion to remove sd-ush-ddr50.
+> 
+>> +	vmmc-supply = <&vcc_io>;
+>> +	vqmmc-supply = <&vcc_18>;
+>> +	status = "okay";
+>> +};
+>> +
+>>   &tsadc {
+>>   	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
+>>   	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
+>> -- 
+>> beagleboard@davidjohnsummers.uk
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
