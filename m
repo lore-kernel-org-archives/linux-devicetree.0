@@ -1,58 +1,82 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 2/5] nvmem: sunxi-sid: add support for H5's SID controller
-Date: Mon, 18 Feb 2019 17:19:40 +0800
-Message-ID: <CAGb2v65Frw+=DjcuqNUPd-UG6qsiVDBH0bd5btx+5=ns7VAQrQ@mail.gmail.com>
-References: <20190217162316.14111-1-tiny.windzz@gmail.com> <20190217162316.14111-3-tiny.windzz@gmail.com>
- <20190218084931.fdut6d4cgwkwvihx@flea>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 4/4] arm64: dts: allwinner: h6: Add CPU Operating
+ Performance Points table
+Date: Mon, 18 Feb 2019 10:33:40 +0100
+Message-ID: <20190218093340.jcggm7jplpwrogsv@flea>
+References: <20190214130910.9201-1-tiny.windzz@gmail.com>
+ <20190214130910.9201-5-tiny.windzz@gmail.com>
+ <20190214143842.nqsh6trwdjxq2ecd@flea>
+ <CAEExFWuxrVC1J0g93R3ifaDxOGy-20B4jftoHw932V7+wqhtxw@mail.gmail.com>
+ <CAEExFWv_K_07e30dgPbafVhDD_smwZkpi6Fqk6yzCahesdnrGg@mail.gmail.com>
+ <20190215135613.sdz56vtiawqeryi5@flea>
+ <CAEExFWt84MmpoWeibVf4bBJXOuPy9P7RrAFmEx304zz5z1GHwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i5c56aqsedye5nda"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218084931.fdut6d4cgwkwvihx@flea>
+Content-Disposition: inline
+In-Reply-To: <CAEExFWt84MmpoWeibVf4bBJXOuPy9P7RrAFmEx304zz5z1GHwQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Yangtao Li <tiny.windzz@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Frank Lee <tiny.windzz@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, robh+dt@kernel.org, mark.rutland@arm.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 4:49 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+
+--i5c56aqsedye5nda
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Feb 15, 2019 at 10:09:51PM +0800, Frank Lee wrote:
+> On Fri, Feb 15, 2019 at 9:56 PM Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> >
+> > Hi
+> >
+> > On Fri, Feb 15, 2019 at 12:56:03AM +0800, Frank Lee wrote:
+> > > How about to implement a thermal driver that is not integrated with
+> > > gpadc =EF=BC=9F
+> > >
+> > > GPADC on soc is rarely used now.
+> >
+> > You mean GPADC in general, or the gpadc driver in particular?
+> > Otherwise, yes, having a driver for the thermal sensor in the H6
+> > sounds like a good plan for thermal throttling, but I don't see it as
+> > a dependency for that whole series.
 >
-> On Sun, Feb 17, 2019 at 11:23:13AM -0500, Yangtao Li wrote:
-> > Add support for H5's SID controller.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  drivers/nvmem/sunxi_sid.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-> > index 570a2e354f30..036029e90921 100644
-> > --- a/drivers/nvmem/sunxi_sid.c
-> > +++ b/drivers/nvmem/sunxi_sid.c
-> > @@ -219,11 +219,17 @@ static const struct sunxi_sid_cfg sun50i_a64_cfg = {
-> >       .size = 0x100,
-> >  };
-> >
-> > +static const struct sunxi_sid_cfg sun50i_h5_cfg = {
-> > +     .value_offset = 0x200,
-> > +     .size = 0x100,
-> > +};
->
-> IIRC, there was an endianness issue on the newer SoCs, with the driver
-> converting the data from big endian to little endian, while it's
-> actually stored little endian in the SID.
+> At present, sunxi's thermal driver is integrated with the gpadc driver.
+> I have a idea to implement the thermal driver alone. I haven't started ye=
+t,
+> and it may take a while to do it.
+>=20
+> How about the plan to implement a thermal drive alone and put i
+> under drivers/thermal?
 
-About that, it seems the internals are either little endian or native (same
-as the bus). Either way the nvmem the driver currently exposes is wrong.
+The Thermal Sensor is basically a stripped down GPADC, which is why it
+would make sense to have a single driver.
 
-My idea is to keep the current one with the current name, but have it not
-associate itself with the DT node. We then register an extra one, called
-"sunxi-sid-native" which uses the native endian. This one will be associated
-with the DT node, so the THS driver can consume nvmem cells.
+There was a pending series doing this that could be a good idea to
+improve and merge:
+https://lkml.org/lkml/2018/8/30/729
 
-What do you think?
+Maxime
 
-> Have you checked the SID content?
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-On the A64 and H5, directly dumping the SID registers (not using the H3
-read method) shows the contents are little or native endian.
+--i5c56aqsedye5nda
+Content-Type: application/pgp-signature; name="signature.asc"
 
-ChenYu
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXGp78wAKCRDj7w1vZxhR
+xYT8AQDFxHvCKmLk+1YErRAvdFGGHBrdOrKxpjtJeofe/lDUvQD/Uhgp577MmwWQ
+kR6nS3Mly0LqyrhHUlvweeyb6jR+zw8=
+=qt/e
+-----END PGP SIGNATURE-----
+
+--i5c56aqsedye5nda--
