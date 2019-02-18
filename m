@@ -1,86 +1,97 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 3/3] dt-bindings: arm: atmel: add binding for SAM9X60
- shutdown controller
-Date: Mon, 18 Feb 2019 14:47:22 +0000
-Message-ID: <44adcef4-a3df-f906-2d69-f357af1ebfaf@microchip.com>
-References: <1550143407-26109-1-git-send-email-claudiu.beznea@microchip.com>
- <1550143407-26109-4-git-send-email-claudiu.beznea@microchip.com>
- <97af1d45-d74b-87d3-c934-baae80307e1d@microchip.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI
+ Interrupt router bindings
+Date: Mon, 18 Feb 2019 15:12:19 +0000
+Message-ID: <20190218150738.527a0507@why.wild-wind.fr.eu.org>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
+        <20190212074237.2875-6-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <97af1d45-d74b-87d3-c934-baae80307e1d@microchip.com>
-Content-Language: en-US
-Content-ID: <B7B81ABD4F21E44BA0081B373E7CD1CA@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas.Ferre@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, sre@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190212074237.2875-6-lokeshvutla@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 12 Feb 2019 13:12:32 +0530
+Lokesh Vutla <lokeshvutla@ti.com> wrote:
 
+> Add the DT binding documentation for Interrupt router driver.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+> Changes since v4:
+> - None
+> 
+>  .../interrupt-controller/ti,sci-intr.txt      | 85 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> new file mode 100644
+> index 000000000000..4b0ca797fda1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+> @@ -0,0 +1,85 @@
+> +Texas Instruments K3 Interrupt Router
+> +=====================================
+> +
+> +The Interrupt Router (INTR) module provides a mechanism to route M
+> +interrupt inputs to N interrupt outputs, where all M inputs are selectable
+> +to be driven per N output. There is one register per output (MUXCNTL_N) that
+> +controls the selection.
+> +
+> +
+> +                                 Interrupt Router
+> +                             +----------------------+
+> +                             |  Inputs     Outputs  |
+> +        +-------+            | +------+             |
+> +        | GPIO  |----------->| | irq0 |             |       Host IRQ
+> +        +-------+            | +------+             |      controller
+> +                             |    .        +-----+  |      +-------+
+> +        +-------+            |    .        |  0  |  |----->|  IRQ  |
+> +        | INTA  |----------->|    .        +-----+  |      +-------+
+> +        +-------+            |    .          .      |
+> +                             | +------+      .      |
+> +                             | | irqM |    +-----+  |
+> +                             | +------+    |  N  |  |
+> +                             |             +-----+  |
+> +                             +----------------------+
+> +
+> +Configuration of these MUXCNTL_N registers is done by a system controller
+> +(like the Device Memory and Security Controller on K3 AM654 SoC). System
+> +controller will keep track of the used and unused registers within the Router.
+> +Driver should request the system controller to get the range of GIC IRQs
+> +assigned to the requesting hosts. It is the drivers responsibility to keep
+> +track of Host IRQs.
+> +
+> +Communication between the host processor running an OS and the system
+> +controller happens through a protocol called TI System Control Interface
+> +(TISCI protocol). For more details refer:
+> +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+> +
+> +TISCI Interrupt Router Node:
+> +----------------------------
+> +- compatible:		Must be "ti,sci-intr".
+> +- interrupt-controller:	Identifies the node as an interrupt controller
+> +- #interrupt-cells:	Specifies the number of cells needed to encode an
+> +			interrupt source. The value should be 4.
+> +			First cell should contain the TISCI device ID of source
+> +			Second cell should contain the interrupt source offset
+> +			within the device
+> +			Third cell specifies the trigger type as defined
+> +			in interrupts.txt in this directory.
+> +			Fourth cell should be 1 if the irq is coming from
+> +			interrupt aggregator else 0.
 
-On 18.02.2019 13:01, Nicolas Ferre - M43238 wrote:
-> On 14/02/2019 at 12:24, Claudiu Beznea - M18063 wrote:
->> From: Claudiu Beznea <claudiu.beznea@microchip.com>
->>
->> Add documentation for SAM9X60 shutdown controller.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
->> ---
->>   Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
->> index 14f319f694b7..9711052c5800 100644
->> --- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
->> +++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
->> @@ -83,7 +83,7 @@ SHDWC SAMA5D2-Compatible Shutdown Controller
->>   1) shdwc node
->>   
->>   required properties:
->> -- compatible: should be "atmel,sama5d2-shdwc".
->> +- compatible: should be "atmel,sama5d2-shdwc" or "microchip,sam9x60-shdwc".
->>   - reg: should contain registers location and length
->>   - clocks: phandle to input clock.
->>   - #address-cells: should be one. The cell is the wake-up input index.
->> @@ -95,6 +95,10 @@ optional properties:
->>     microseconds. It's usually a board-related property.
->>   - atmel,wakeup-rtc-timer: boolean to enable Real-Time Clock wake-up.
->>   
->> +optional properties for microchip,sam9x60-shdwc:
-> 
-> is it for sam9x60 only or is the optional property "debounce-delay-us" 
-> applicable to this SoC?
+This is odd. Doesn't the aggregator have a device ID too, which could
+be used to discriminate between the two?
 
-No, I meant only to RTC and RTT.
+Thanks,
 
-> 
->> +- atmel,wakeup-rtc-timer: boolean to enable Real-Time Clock wake-up.
->> +- atmel,wakeup-rtt-timer: boolean to enable Real-time Timer Wake-up.
-> 
-> Well, I would make clear that the only additional optional property is 
-> "atmel,wakeup-rtt-timer" while the 2 other optional properties still 
-> apply...
-
-Ok, I will take care of this in next version.
-
-Thank you,
-Claudiu Beznea
-
-> 
-> 
->>   The node contains child nodes for each wake-up input that the platform uses.
->>   
->>   2) input nodes
->>
-> 
-> 
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
