@@ -1,65 +1,49 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: spi: Add the DMA properties for the
- SPI dma mode
-Date: Mon, 18 Feb 2019 08:02:06 -0600
-Message-ID: <CAL_JsqK+x+XgxSn7ks84_JZxTkpQ-irFBmRc3tp3zsfUcHUPpg@mail.gmail.com>
-References: <11e55b5f9b0d83649a5b81c7e3fdb667cd3ddc5b.1550043082.git.baolin.wang@linaro.org>
- <2be9d6de92507e5886433fb2cd55117c63b63d72.1550043082.git.baolin.wang@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Mon, 18 Feb 2019 06:32:45 -0800
+Message-ID: <20190218143245.GC15711@atomide.com>
+References: <20190212162247.GK5720@atomide.com>
+ <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
+ <20190213152620.GS5720@atomide.com>
+ <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
+ <20190214154100.GB5720@atomide.com>
+ <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
+ <20190214174612.GF5720@atomide.com>
+ <171e8597-2156-747d-d024-7b4bfc6f9186@ti.com>
+ <20190215161629.GK5720@atomide.com>
+ <2369739e-3bc8-257a-99e0-db2951c6777d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2be9d6de92507e5886433fb2cd55117c63b63d72.1550043082.git.baolin.wang@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <2369739e-3bc8-257a-99e0-db2951c6777d@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, lanqing.liu@unisoc.com, linux-spi <linux-spi@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2019 at 1:37 AM Baolin Wang <baolin.wang@linaro.org> wrote:
->
-> From: Lanqing Liu <lanqing.liu@unisoc.com>
->
-> Add the DMA properties for the SPI dma mode.
->
-> Signed-off-by: Lanqing Liu <lanqing.liu@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-> Changes from v1:
->  - Remove sprd,dma-slave-ids property.
-> ---
->  Documentation/devicetree/bindings/spi/spi-sprd.txt |    7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-sprd.txt b/Documentation/devicetree/bindings/spi/spi-sprd.txt
-> index bad211a..3c7eacc 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-sprd.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-sprd.txt
-> @@ -14,6 +14,11 @@ Required properties:
->         address on the SPI bus. Should be set to 1.
->  - #size-cells: Should be set to 0.
->
-> +Optional properties:
-> +dma-names: Should contain names of the SPI used DMA channel.
-> +dmas: Should contain DMA channels and DMA slave ids which the SPI used
-> +       sorted in the same order as the dma-names property.
+* Lokesh Vutla <lokeshvutla@ti.com> [190216 03:30]:
+> On 2/15/2019 9:46 PM, Tony Lindgren wrote:
+> > The dts node for the interrupt controller should describe a
+> > proper Linux device, that is with reg entries and so on.
+> 
+> You are asking to just keep the compatible property :)
 
-These need to define the order and names.
+Right, and then I realized this node is missing the standard
+reg entry too. And you're saying the registers are not even
+accissible from Linux.
 
-> +
->  Example:
->  spi0: spi@70a00000{
->         compatible = "sprd,sc9860-spi";
-> @@ -21,6 +26,8 @@ spi0: spi@70a00000{
->         interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
->         clock-names = "spi", "source","enable";
->         clocks = <&clk_spi0>, <&ext_26m>, <&clk_ap_apb_gates 5>;
-> +       dma-names = "rx_chn", "tx_chn";
+So based on that IMO you should not even have a device tree
+node for it at all. You should just have the interrupt
+controller driver do the muxing on request_irq() using tisci
+calls.
 
-Everyone else uses "rx" and "tx". Do you really need something different?
+If that's not true, and these mux registers are accessible
+from Linux, then set up proper dts node with reg entries.
+And have the driver deal with the firmware based on the
+compatible node.
 
-> +       dmas = <&apdma 11 11>, <&apdma 12 12>;
->         #address-cells = <1>;
->         #size-cells = <0>;
->  };
-> --
-> 1.7.9.5
->
+Regards,
+
+Tony
