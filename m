@@ -1,212 +1,105 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv3 09/27] PCI: mobiveil: correct inbound/outbound window
- setup routines
-Date: Mon, 18 Feb 2019 07:07:23 +0000
-Message-ID: <VI1PR04MB57928B4F6F3D3A1D76B933A884630@VI1PR04MB5792.eurprd04.prod.outlook.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
- <20190129080926.36773-10-Zhiqiang.Hou@nxp.com>
- <CAFZiPx2Qc50LpfdaBm=FYcQPmO5eB5j4SB8w-rNVs0jmJc6jqw@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4 2/4] Input: goodix - Add AVDD28-supply regulator
+ support
+Date: Sun, 17 Feb 2019 23:08:38 -0800
+Message-ID: <20190218070838.GD242714@dtor-ws>
+References: <20190212112439.2025-1-jagan@amarulasolutions.com>
+ <20190212112439.2025-3-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFZiPx2Qc50LpfdaBm=FYcQPmO5eB5j4SB8w-rNVs0jmJc6jqw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190212112439.2025-3-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Bastien Nocera <hadess@hadess.net>, Rob Herring <robh+dt@kernel.org>, Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3ViYnUsDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdWJyYWhtYW55YSBMaW5nYXBwYSA8bC5zdWJy
-YWhtYW55YUBtb2JpdmVpbC5jby5pbj4NCj4gU2VudDogMjAxOeW5tDLmnIg15pelIDE0OjEwDQo+
-IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0K
-PiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBh
-cm0uY29tOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNv
-bT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
-Ow0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+
-OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFv
-d2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjMgMDkvMjddIFBDSTogbW9i
-aXZlaWw6IGNvcnJlY3QgaW5ib3VuZC9vdXRib3VuZA0KPiB3aW5kb3cgc2V0dXAgcm91dGluZXMN
-Cj4gDQo+IFpRLA0KPiBwbGVhc2UgY29ycmVjdCB0aGUgdGFiIHNwYWNpbmcgb2YgdGhlIG1hY3Jv
-IGRlZmluaXRpb25zLCBvdGhlcndpc2UgaXRzIE9LLg0KDQpJdCBpcyBqdXN0IGEgZGlzcGxheSBp
-c3N1ZSBpbiB0aGUgZW1haWwuDQoNCj4gUmV2aWV3ZWQtYnk6IFN1YnJhaG1hbnlhIExpbmdhcHBh
-IDxsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluPg0KPiANCj4gT24gVHVlLCBKYW4gMjksIDIw
-MTkgYXQgMTozOSBQTSBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+IHdyb3RlOg0KPiA+
-DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+
-IE91dGJvdW5kIHdpbmRvdyByb3V0aW5lOg0KPiA+ICAtIFJlbW92ZWQgdW51c2VkIHZhciBkZWZp
-bml0aW9uIGFuZCByZWdpc3RlciByZWFkIG9wZXJhdGlvbnMuDQo+ID4gIC0gQWRkZWQgdGhlIHVw
-cGVyIDMyLWJpdCBjcHUgYWRkcmVzcyBzZXR1cCBvZiB0aGUgd2luZG93Lg0KPiA+ICAtIEluc3Rl
-YWQgb2YgYmxpbmRseSB3cml0ZSwgb25seSBjaGFuZ2UgdGhlIGZpZWxkcyBzcGVjaWZpZWQuDQo+
-ID4gIC0gTWFza2VkIHRoZSBsb3dlciBiaXRzIG9mIHdpbmRvdyBzaXplIGluIGNhc2Ugb3ZlcnJp
-ZGUgdGhlDQo+ID4gICAgY29udHJvbCBiaXRzLg0KPiA+ICAtIENoZWNrIGlmIHRoZSBwYXNzaW5n
-IHdpbmRvdyBudW1iZXIgaXMgYXZhaWxhYmxlLCBpbnN0ZWFkIG9mDQo+ID4gICAgdGhlIHRvdGFs
-IG51bWJlciBvZiB0aGUgaW5pdGlhbGl6ZWQgd2luZG93cy4NCj4gPg0KPiA+IEluYm91bmQgd2lu
-ZG93IHJvdXRpbmU6DQo+ID4gIC0gQWRkZWQgcGFyYW1ldGVyICd1NjQgY3B1X2FkZHInIHRvIHNw
-ZWNpZnkgdGhlIGNwdSBhZGRyZXNzDQo+ID4gICAgb2YgdGhlIHdpbmRvdyBpbnN0ZWFkIG9mIHVz
-aW5nICdwY2lfYWRkcicuDQo+ID4gIC0gQ2hhbmdlZCAnaW50IHBjaV9hZGRyJyB0byAndTY0IHBj
-aV9hZGRyJywgYW5kIGFkZGVkIHNldHVwDQo+ID4gICAgb2YgdGhlIHVwcGVyIDMyLWJpdCBwY2kg
-YWRkcmVzcyBvZiB0aGUgd2luZG93Lg0KPiA+ICAtIE1vdmVkIHRoZSBQQ0llIFBJTyBtYXN0ZXIg
-ZW5hYmxlbWVudCB0byBtb2JpdmVpbF9ob3N0X2luaXQoKS4NCj4gPiAgLSBJbnN0ZWFkIG9mIGJs
-aW5kbHkgd3JpdGUsIG9ubHkgY2hhbmdlIHRoZSBmaWVsZHMgc3BlY2lmaWVkLg0KPiA+ICAtIE1h
-c2tlZCB0aGUgbG93ZXIgYml0cyBvZiB3aW5kb3cgc2l6ZSBpbiBjYXNlIG92ZXJyaWRlIHRoZQ0K
-PiA+ICAgIGNvbnRyb2wgYml0cy4NCj4gPiAgLSBDaGVjayBpZiB0aGUgcGFzc2luZyB3aW5kb3cg
-bnVtYmVyIGlzIGF2YWlsYWJsZSwgaW5zdGVhZCBvZg0KPiA+ICAgIHRoZSB0b3RhbCBudW1iZXIg
-b2YgdGhlIGluaXRpYWxpemVkIHdpbmRvd3MuDQo+ID4gIC0gQW5kIGFkZGVkIHRoZSBzdGF0aXN0
-aWMgb2YgaW5pdGlhbGl6ZWQgaW5ib3VuZCB3aW5kb3dzLg0KPiA+DQo+ID4gRml4ZXM6IDlhZjZi
-Y2IxMWUxMiAoIlBDSTogbW9iaXZlaWw6IEFkZCBNb2JpdmVpbCBQQ0llIEhvc3QgQnJpZGdlIElQ
-DQo+ID4gZHJpdmVyIikNCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5n
-LkhvdUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNaW5naHVhbiBMaWFuIDxNaW5naHVhbi5M
-aWFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gVjM6DQo+ID4gIC0gTm8gY2hhbmdlDQo+ID4NCj4g
-PiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMgfCA3MA0KPiA+ICsrKysr
-KysrKysrKysrKy0tLS0tLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0MiBpbnNlcnRpb25z
-KCspLCAyOCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9j
-b250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9w
-Y2llLW1vYml2ZWlsLmMNCj4gPiBpbmRleCBlODhhZmM3OTJhNWMuLjRiYTQ1ODQ3NGU0MiAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+
-ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gQEAgLTY1
-LDkgKzY1LDEzIEBADQo+ID4gICNkZWZpbmUgUEFCX0FYSV9BTUFQX0NUUkwod2luKSAgICAgICAg
-IFBBQl9SRUdfQUREUigweDBiYTAsDQo+IHdpbikNCj4gPiAgI2RlZmluZSAgV0lOX0VOQUJMRV9T
-SElGVCAgICAgICAgICAgICAgMA0KPiA+ICAjZGVmaW5lICBXSU5fVFlQRV9TSElGVCAgICAgICAg
-ICAgICAgICAgICAgICAgIDENCj4gPiArI2RlZmluZSAgV0lOX1RZUEVfTUFTSyAgICAgICAgICAg
-ICAgICAgMHgzDQo+ID4gKyNkZWZpbmUgIFdJTl9TSVpFX1NISUZUICAgICAgICAgICAgICAgICAg
-ICAgICAgMTANCj4gPiArI2RlZmluZSAgV0lOX1NJWkVfTUFTSyAgICAgICAgICAgICAgICAgMHgz
-ZmZmZmYNCj4gPg0KPiA+ICAjZGVmaW5lIFBBQl9FWFRfQVhJX0FNQVBfU0laRSh3aW4pDQo+IFBB
-Ql9FWFRfUkVHX0FERFIoMHhiYWYwLCB3aW4pDQo+ID4NCj4gPiArI2RlZmluZSBQQUJfRVhUX0FY
-SV9BTUFQX0FYSV9XSU4od2luKQ0KPiBQQUJfRVhUX1JFR19BRERSKDB4ODBhMCwgd2luKQ0KPiA+
-ICAjZGVmaW5lIFBBQl9BWElfQU1BUF9BWElfV0lOKHdpbikgICAgICBQQUJfUkVHX0FERFIoMHgw
-YmE0LA0KPiB3aW4pDQo+ID4gICNkZWZpbmUgIEFYSV9XSU5ET1dfQUxJR05fTUFTSyAgICAgICAg
-IDMNCj4gPg0KPiA+IEBAIC04Miw4ICs4NiwxMCBAQA0KPiA+ICAjZGVmaW5lIFBBQl9QRVhfQU1B
-UF9DVFJMKHdpbikgICAgICAgICBQQUJfUkVHX0FERFIoMHg0YmEwLA0KPiB3aW4pDQo+ID4gICNk
-ZWZpbmUgIEFNQVBfQ1RSTF9FTl9TSElGVCAgICAgICAgICAgIDANCj4gPiAgI2RlZmluZSAgQU1B
-UF9DVFJMX1RZUEVfU0hJRlQgICAgICAgICAgMQ0KPiA+ICsjZGVmaW5lICBBTUFQX0NUUkxfVFlQ
-RV9NQVNLICAgICAgICAgICAzDQo+ID4NCj4gPiAgI2RlZmluZSBQQUJfRVhUX1BFWF9BTUFQX1NJ
-WkVOKHdpbikNCj4gUEFCX0VYVF9SRUdfQUREUigweGJlZjAsIHdpbikNCj4gPiArI2RlZmluZSBQ
-QUJfRVhUX1BFWF9BTUFQX0FYSV9XSU4od2luKQ0KPiBQQUJfRVhUX1JFR19BRERSKDB4YjRhMCwg
-d2luKQ0KPiA+ICAjZGVmaW5lIFBBQl9QRVhfQU1BUF9BWElfV0lOKHdpbikgICAgICBQQUJfUkVH
-X0FERFIoMHg0YmE0LA0KPiB3aW4pDQo+ID4gICNkZWZpbmUgUEFCX1BFWF9BTUFQX1BFWF9XSU5f
-TCh3aW4pICAgIFBBQl9SRUdfQUREUigweDRiYTgsDQo+IHdpbikNCj4gPiAgI2RlZmluZSBQQUJf
-UEVYX0FNQVBfUEVYX1dJTl9IKHdpbikgICAgUEFCX1JFR19BRERSKDB4NGJhYywNCj4gd2luKQ0K
-PiA+IEBAIC00NTUsNDkgKzQ2MSw1MSBAQCBzdGF0aWMgaW50IG1vYml2ZWlsX3BjaWVfcGFyc2Vf
-ZHQoc3RydWN0DQo+ID4gbW9iaXZlaWxfcGNpZSAqcGNpZSkgIH0NCj4gPg0KPiA+ICBzdGF0aWMg
-dm9pZCBwcm9ncmFtX2liX3dpbmRvd3Moc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIGludCB3
-aW5fbnVtLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnQgcGNpX2FkZHIs
-IHUzMiB0eXBlLCB1NjQgc2l6ZSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-dTY0IGNwdV9hZGRyLCB1NjQgcGNpX2FkZHIsIHUzMg0KPiB0eXBlLA0KPiA+ICsgdTY0IHNpemUp
-DQo+ID4gIHsNCj4gPiAtICAgICAgIGludCBwaW9fY3RybF92YWw7DQo+ID4gLSAgICAgICBpbnQg
-YW1hcF9jdHJsX2R3Ow0KPiA+ICsgICAgICAgdTMyIHZhbHVlOw0KPiA+ICAgICAgICAgdTY0IHNp
-emU2NCA9IH4oc2l6ZSAtIDEpOw0KPiA+DQo+ID4gLSAgICAgICBpZiAoKHBjaWUtPmliX3dpbnNf
-Y29uZmlndXJlZCArIDEpID4gcGNpZS0+cHBpb193aW5zKSB7DQo+ID4gKyAgICAgICBpZiAod2lu
-X251bSA+PSBwY2llLT5wcGlvX3dpbnMpIHsNCj4gPiAgICAgICAgICAgICAgICAgZGV2X2Vycigm
-cGNpZS0+cGRldi0+ZGV2LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICJFUlJPUjogbWF4
-IGluYm91bmQgd2luZG93cw0KPiByZWFjaGVkICFcbiIpOw0KPiA+ICAgICAgICAgICAgICAgICBy
-ZXR1cm47DQo+ID4gICAgICAgICB9DQo+ID4NCj4gPiAtICAgICAgIHBpb19jdHJsX3ZhbCA9IGNz
-cl9yZWFkbChwY2llLCBQQUJfUEVYX1BJT19DVFJMKTsNCj4gPiAtICAgICAgIHBpb19jdHJsX3Zh
-bCB8PSAxIDw8IFBJT19FTkFCTEVfU0hJRlQ7DQo+ID4gLSAgICAgICBjc3Jfd3JpdGVsKHBjaWUs
-IHBpb19jdHJsX3ZhbCwgUEFCX1BFWF9QSU9fQ1RSTCk7DQo+ID4gLQ0KPiA+IC0gICAgICAgYW1h
-cF9jdHJsX2R3ID0gY3NyX3JlYWRsKHBjaWUsDQo+IFBBQl9QRVhfQU1BUF9DVFJMKHdpbl9udW0p
-KTsNCj4gPiAtICAgICAgIGFtYXBfY3RybF9kdyB8PSAodHlwZSA8PCBBTUFQX0NUUkxfVFlQRV9T
-SElGVCkgfA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICgxIDw8IEFNQVBfQ1RSTF9FTl9T
-SElGVCkgfA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGxvd2VyXzMyX2JpdHMoc2l6ZTY0
-KTsNCj4gPiAtICAgICAgIGNzcl93cml0ZWwocGNpZSwgYW1hcF9jdHJsX2R3LCBQQUJfUEVYX0FN
-QVBfQ1RSTCh3aW5fbnVtKSk7DQo+ID4gKyAgICAgICB2YWx1ZSA9IGNzcl9yZWFkbChwY2llLCBQ
-QUJfUEVYX0FNQVBfQ1RSTCh3aW5fbnVtKSk7DQo+ID4gKyAgICAgICB2YWx1ZSAmPSB+KEFNQVBf
-Q1RSTF9UWVBFX01BU0sgPDwNCj4gQU1BUF9DVFJMX1RZUEVfU0hJRlQgfA0KPiA+ICsgICAgICAg
-ICAgICAgICAgV0lOX1NJWkVfTUFTSyA8PCBXSU5fU0laRV9TSElGVCk7DQo+ID4gKyAgICAgICB2
-YWx1ZSB8PSAodHlwZSA8PCBBTUFQX0NUUkxfVFlQRV9TSElGVCkgfCAoMSA8PA0KPiBBTUFQX0NU
-UkxfRU5fU0hJRlQpIHwNCj4gPiArICAgICAgICAgICAgICAgIChsb3dlcl8zMl9iaXRzKHNpemU2
-NCkgJiBXSU5fU0laRV9NQVNLIDw8DQo+IFdJTl9TSVpFX1NISUZUKTsNCj4gPiArICAgICAgIGNz
-cl93cml0ZWwocGNpZSwgdmFsdWUsIFBBQl9QRVhfQU1BUF9DVFJMKHdpbl9udW0pKTsNCj4gPg0K
-PiA+ICAgICAgICAgY3NyX3dyaXRlbChwY2llLCB1cHBlcl8zMl9iaXRzKHNpemU2NCksDQo+ID4g
-ICAgICAgICAgICAgICAgICAgIFBBQl9FWFRfUEVYX0FNQVBfU0laRU4od2luX251bSkpOw0KPiA+
-DQo+ID4gLSAgICAgICBjc3Jfd3JpdGVsKHBjaWUsIHBjaV9hZGRyLCBQQUJfUEVYX0FNQVBfQVhJ
-X1dJTih3aW5fbnVtKSk7DQo+ID4gKyAgICAgICBjc3Jfd3JpdGVsKHBjaWUsIGxvd2VyXzMyX2Jp
-dHMoY3B1X2FkZHIpLA0KPiA+ICsgICAgICAgICAgICAgICAgICBQQUJfUEVYX0FNQVBfQVhJX1dJ
-Tih3aW5fbnVtKSk7DQo+ID4gKyAgICAgICBjc3Jfd3JpdGVsKHBjaWUsIHVwcGVyXzMyX2JpdHMo
-Y3B1X2FkZHIpLA0KPiA+ICsgICAgICAgICAgICAgICAgICBQQUJfRVhUX1BFWF9BTUFQX0FYSV9X
-SU4od2luX251bSkpOw0KPiA+ICsNCj4gPiArICAgICAgIGNzcl93cml0ZWwocGNpZSwgbG93ZXJf
-MzJfYml0cyhwY2lfYWRkciksDQo+ID4gKyAgICAgICAgICAgICAgICAgIFBBQl9QRVhfQU1BUF9Q
-RVhfV0lOX0wod2luX251bSkpOw0KPiA+ICsgICAgICAgY3NyX3dyaXRlbChwY2llLCB1cHBlcl8z
-Ml9iaXRzKHBjaV9hZGRyKSwNCj4gPiArICAgICAgICAgICAgICAgICAgUEFCX1BFWF9BTUFQX1BF
-WF9XSU5fSCh3aW5fbnVtKSk7DQo+ID4NCj4gPiAtICAgICAgIGNzcl93cml0ZWwocGNpZSwgcGNp
-X2FkZHIsDQo+IFBBQl9QRVhfQU1BUF9QRVhfV0lOX0wod2luX251bSkpOw0KPiA+IC0gICAgICAg
-Y3NyX3dyaXRlbChwY2llLCAwLCBQQUJfUEVYX0FNQVBfUEVYX1dJTl9IKHdpbl9udW0pKTsNCj4g
-PiArICAgICAgIHBjaWUtPmliX3dpbnNfY29uZmlndXJlZCsrOw0KPiA+ICB9DQo+ID4NCj4gPiAg
-LyoNCj4gPiAgICogcm91dGluZSB0byBwcm9ncmFtIHRoZSBvdXRib3VuZCB3aW5kb3dzDQo+ID4g
-ICAqLw0KPiA+ICBzdGF0aWMgdm9pZCBwcm9ncmFtX29iX3dpbmRvd3Moc3RydWN0IG1vYml2ZWls
-X3BjaWUgKnBjaWUsIGludCB3aW5fbnVtLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB1NjQgY3B1X2FkZHIsIHU2NCBwY2lfYWRkciwNCj4gPiAtICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgdTMyIGNvbmZpZ19pb19iaXQsIHU2NCBzaXplKQ0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB1NjQgY3B1X2FkZHIsIHU2NCBwY2lfYWRkciwgdTMyDQo+IHR5
-cGUsDQo+ID4gKyB1NjQgc2l6ZSkNCj4gPiAgew0KPiA+DQo+ID4gLSAgICAgICB1MzIgdmFsdWUs
-IHR5cGU7DQo+ID4gKyAgICAgICB1MzIgdmFsdWU7DQo+ID4gICAgICAgICB1NjQgc2l6ZTY0ID0g
-fihzaXplIC0gMSk7DQo+ID4NCj4gPiAtICAgICAgIGlmICgocGNpZS0+b2Jfd2luc19jb25maWd1
-cmVkICsgMSkgPiBwY2llLT5hcGlvX3dpbnMpIHsNCj4gPiArICAgICAgIGlmICh3aW5fbnVtID49
-IHBjaWUtPmFwaW9fd2lucykgew0KPiA+ICAgICAgICAgICAgICAgICBkZXZfZXJyKCZwY2llLT5w
-ZGV2LT5kZXYsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgIkVSUk9SOiBtYXggb3V0Ym91
-bmQgd2luZG93cw0KPiByZWFjaGVkICFcbiIpOw0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm47
-DQo+ID4gQEAgLTUwNywxMCArNTE1LDEyIEBAIHN0YXRpYyB2b2lkIHByb2dyYW1fb2Jfd2luZG93
-cyhzdHJ1Y3QNCj4gbW9iaXZlaWxfcGNpZSAqcGNpZSwgaW50IHdpbl9udW0sDQo+ID4gICAgICAg
-ICAgKiBwcm9ncmFtIEVuYWJsZSBCaXQgdG8gMSwgVHlwZSBCaXQgdG8gKDAwKSBiYXNlIDIsIEFY
-SSBXaW5kb3cNCj4gU2l6ZSBCaXQNCj4gPiAgICAgICAgICAqIHRvIDQgS0IgaW4gUEFCX0FYSV9B
-TUFQX0NUUkwgcmVnaXN0ZXINCj4gPiAgICAgICAgICAqLw0KPiA+IC0gICAgICAgdHlwZSA9IGNv
-bmZpZ19pb19iaXQ7DQo+ID4gICAgICAgICB2YWx1ZSA9IGNzcl9yZWFkbChwY2llLCBQQUJfQVhJ
-X0FNQVBfQ1RSTCh3aW5fbnVtKSk7DQo+ID4gLSAgICAgICBjc3Jfd3JpdGVsKHBjaWUsIDEgPDwg
-V0lOX0VOQUJMRV9TSElGVCB8IHR5cGUgPDwNCj4gV0lOX1RZUEVfU0hJRlQgfA0KPiA+IC0gICAg
-ICAgICAgICAgICAgICBsb3dlcl8zMl9iaXRzKHNpemU2NCksDQo+IFBBQl9BWElfQU1BUF9DVFJM
-KHdpbl9udW0pKTsNCj4gPiArICAgICAgIHZhbHVlICY9IH4oV0lOX1RZUEVfTUFTSyA8PCBXSU5f
-VFlQRV9TSElGVCB8DQo+ID4gKyAgICAgICAgICAgICAgICBXSU5fU0laRV9NQVNLIDw8IFdJTl9T
-SVpFX1NISUZUKTsNCj4gPiArICAgICAgIHZhbHVlIHw9IDEgPDwgV0lOX0VOQUJMRV9TSElGVCB8
-IHR5cGUgPDwgV0lOX1RZUEVfU0hJRlQgfA0KPiA+ICsgICAgICAgICAgICAgICAgKGxvd2VyXzMy
-X2JpdHMoc2l6ZTY0KSAmIFdJTl9TSVpFX01BU0sgPDwNCj4gV0lOX1NJWkVfU0hJRlQpOw0KPiA+
-ICsgICAgICAgY3NyX3dyaXRlbChwY2llLCB2YWx1ZSwgUEFCX0FYSV9BTUFQX0NUUkwod2luX251
-bSkpOw0KPiA+DQo+ID4gICAgICAgICBjc3Jfd3JpdGVsKHBjaWUsIHVwcGVyXzMyX2JpdHMoc2l6
-ZTY0KSwNCj4gPiBQQUJfRVhUX0FYSV9BTUFQX1NJWkUod2luX251bSkpOw0KPiA+DQo+ID4gQEAg
-LTUxOCwxMSArNTI4LDEwIEBAIHN0YXRpYyB2b2lkIHByb2dyYW1fb2Jfd2luZG93cyhzdHJ1Y3QN
-Cj4gbW9iaXZlaWxfcGNpZSAqcGNpZSwgaW50IHdpbl9udW0sDQo+ID4gICAgICAgICAgKiBwcm9n
-cmFtIEFYSSB3aW5kb3cgYmFzZSB3aXRoIGFwcHJvcHJpYXRlIHZhbHVlIGluDQo+ID4gICAgICAg
-ICAgKiBQQUJfQVhJX0FNQVBfQVhJX1dJTjAgcmVnaXN0ZXINCj4gPiAgICAgICAgICAqLw0KPiA+
-IC0gICAgICAgdmFsdWUgPSBjc3JfcmVhZGwocGNpZSwgUEFCX0FYSV9BTUFQX0FYSV9XSU4od2lu
-X251bSkpOw0KPiA+IC0gICAgICAgY3NyX3dyaXRlbChwY2llLCBjcHVfYWRkciAmICh+QVhJX1dJ
-TkRPV19BTElHTl9NQVNLKSwNCj4gPiArICAgICAgIGNzcl93cml0ZWwocGNpZSwgbG93ZXJfMzJf
-Yml0cyhjcHVfYWRkcikgJg0KPiA+ICsgKH5BWElfV0lORE9XX0FMSUdOX01BU0spLA0KPiA+ICAg
-ICAgICAgICAgICAgICAgICBQQUJfQVhJX0FNQVBfQVhJX1dJTih3aW5fbnVtKSk7DQo+ID4gLQ0K
-PiA+IC0gICAgICAgdmFsdWUgPSBjc3JfcmVhZGwocGNpZSwgUEFCX0FYSV9BTUFQX1BFWF9XSU5f
-SCh3aW5fbnVtKSk7DQo+ID4gKyAgICAgICBjc3Jfd3JpdGVsKHBjaWUsIHVwcGVyXzMyX2JpdHMo
-Y3B1X2FkZHIpLA0KPiA+ICsgICAgICAgICAgICAgICAgICBQQUJfRVhUX0FYSV9BTUFQX0FYSV9X
-SU4od2luX251bSkpOw0KPiA+DQo+ID4gICAgICAgICBjc3Jfd3JpdGVsKHBjaWUsIGxvd2VyXzMy
-X2JpdHMocGNpX2FkZHIpLA0KPiA+ICAgICAgICAgICAgICAgICAgICBQQUJfQVhJX0FNQVBfUEVY
-X1dJTl9MKHdpbl9udW0pKTsgQEANCj4gLTYwNCw2ICs2MTMsMTENCj4gPiBAQCBzdGF0aWMgaW50
-IG1vYml2ZWlsX2hvc3RfaW5pdChzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSkNCj4gPiAgICAg
-ICAgIHZhbHVlIHw9IEFQSU9fRU5fTUFTSzsNCj4gPiAgICAgICAgIGNzcl93cml0ZWwocGNpZSwg
-dmFsdWUsIFBBQl9BWElfUElPX0NUUkwpOw0KPiA+DQo+ID4gKyAgICAgICAvKiBFbmFibGUgUENJ
-ZSBQSU8gbWFzdGVyICovDQo+ID4gKyAgICAgICB2YWx1ZSA9IGNzcl9yZWFkbChwY2llLCBQQUJf
-UEVYX1BJT19DVFJMKTsNCj4gPiArICAgICAgIHZhbHVlIHw9IDEgPDwgUElPX0VOQUJMRV9TSElG
-VDsNCj4gPiArICAgICAgIGNzcl93cml0ZWwocGNpZSwgdmFsdWUsIFBBQl9QRVhfUElPX0NUUkwp
-Ow0KPiA+ICsNCj4gPiAgICAgICAgIC8qDQo+ID4gICAgICAgICAgKiB3ZSdsbCBwcm9ncmFtIG9u
-ZSBvdXRib3VuZCB3aW5kb3cgZm9yIGNvbmZpZyByZWFkcyBhbmQNCj4gPiAgICAgICAgICAqIGFu
-b3RoZXIgZGVmYXVsdCBpbmJvdW5kIHdpbmRvdyBmb3IgYWxsIHRoZSB1cHN0cmVhbSB0cmFmZmlj
-DQo+ID4gQEAgLTYxNiw3ICs2MzAsNyBAQCBzdGF0aWMgaW50IG1vYml2ZWlsX2hvc3RfaW5pdChz
-dHJ1Y3QgbW9iaXZlaWxfcGNpZQ0KPiAqcGNpZSkNCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBDRkdfV0lORE9XX1RZUEUsDQo+ID4gcmVzb3VyY2Vfc2l6ZShwY2llLT5vYl9pb19yZXMp
-KTsNCj4gPg0KPiA+ICAgICAgICAgLyogbWVtb3J5IGluYm91bmQgdHJhbnNsYXRpb24gd2luZG93
-ICovDQo+ID4gLSAgICAgICBwcm9ncmFtX2liX3dpbmRvd3MocGNpZSwgV0lOX05VTV8wLCAwLA0K
-PiBNRU1fV0lORE9XX1RZUEUsIElCX1dJTl9TSVpFKTsNCj4gPiArICAgICAgIHByb2dyYW1faWJf
-d2luZG93cyhwY2llLCBXSU5fTlVNXzAsIDAsIDAsDQo+IE1FTV9XSU5ET1dfVFlQRSwNCj4gPiAr
-IElCX1dJTl9TSVpFKTsNCj4gPg0KPiA+ICAgICAgICAgLyogR2V0IHRoZSBJL08gYW5kIG1lbW9y
-eSByYW5nZXMgZnJvbSBEVCAqLw0KPiA+ICAgICAgICAgcmVzb3VyY2VfbGlzdF9mb3JfZWFjaF9l
-bnRyeSh3aW4sICZwY2llLT5yZXNvdXJjZXMpIHsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQpU
-aGFua3MsDQpaaGlxaWFuZw0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Jagan,
+
+On Tue, Feb 12, 2019 at 04:54:37PM +0530, Jagan Teki wrote:
+> Goodix CTP controllers have AVDD28 pin connected to voltage
+> regulator which may not be turned on by default, like for GT5663.
+> 
+> Add support for such ctp used boards by adding voltage regulator
+> handling code to goodix ctp driver.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  drivers/input/touchscreen/goodix.c | 44 ++++++++++++++++++++++++++----
+>  1 file changed, 39 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> index f2d9c2c41885..e92b90be1ac2 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/irq.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+>  #include <linux/acpi.h>
+>  #include <linux/of.h>
+> @@ -47,6 +48,7 @@ struct goodix_ts_data {
+>  	struct touchscreen_properties prop;
+>  	unsigned int max_touch_num;
+>  	unsigned int int_trigger_type;
+> +	struct regulator *avdd28;
+>  	struct gpio_desc *gpiod_int;
+>  	struct gpio_desc *gpiod_rst;
+>  	u16 id;
+> @@ -761,6 +763,13 @@ static void goodix_config_cb(const struct firmware *cfg, void *ctx)
+>  	complete_all(&ts->firmware_loading_complete);
+>  }
+>  
+> +static void goodix_disable_regulator(void *arg)
+> +{
+> +	struct goodix_ts_data *ts = arg;
+> +
+> +	regulator_disable(ts->avdd28);
+> +}
+> +
+>  static int goodix_ts_probe(struct i2c_client *client,
+>  			   const struct i2c_device_id *id)
+>  {
+> @@ -786,25 +795,46 @@ static int goodix_ts_probe(struct i2c_client *client,
+>  	if (error)
+>  		return error;
+>  
+> +	ts->avdd28 = devm_regulator_get(&client->dev, "AVDD28");
+> +	if (IS_ERR(ts->avdd28)) {
+> +		error = PTR_ERR(ts->avdd28);
+> +		if (error != -EPROBE_DEFER)
+> +			dev_err(&client->dev,
+> +				"Failed to get AVDD28 regulator: %d\n", error);
+> +		return error;
+> +	}
+> +
+> +	/* power the controller */
+> +	error = regulator_enable(ts->avdd28);
+> +	if (error) {
+> +		dev_err(&client->dev, "Controller fail to enable AVDD28\n");
+> +		return error;
+> +	}
+> +
+> +	error = devm_add_action_or_reset(&client->dev,
+> +					 goodix_disable_regulator, ts);
+> +	if (error)
+> +		return error;
+> +
+>  	if (ts->gpiod_int && ts->gpiod_rst) {
+>  		/* reset the controller */
+>  		error = goodix_reset(ts);
+>  		if (error) {
+>  			dev_err(&client->dev, "Controller reset failed.\n");
+> -			return error;
+> +			goto error;
+
+Why are you changing this? You added goodix_disable_regulator() as
+custom devm action, so it will fire if probe() returns with error.
+
+Thanks.
+
+-- 
+Dmitry
