@@ -1,66 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: fpga: Add bindings for ZynqMP fpga
- driver
-Date: Mon, 18 Feb 2019 11:28:02 -0600
-Message-ID: <20190218172802.GA1376@bogus>
-References: <20190211161736.23844-1-nava.manne@xilinx.com>
+From: Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH v2 00/10] Add support for usb on Hikey960
+Date: Mon, 18 Feb 2019 17:30:11 +0000
+Message-ID: <b1aca3d0-547a-51bd-5bff-69652484b6cc@arm.com>
+References: <20190218112310.17860-1-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190211161736.23844-1-nava.manne@xilinx.com>
+In-Reply-To: <20190218112310.17860-1-chenyu56@huawei.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>
-Cc: atull@kernel.org, mdf@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
+To: Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2019 at 09:47:36PM +0530, Nava kishore Manne wrote:
-> Add documentation to describe Xilinx ZynqMP fpga driver
-> bindings.
+Hi,
 
-I thought I was told in the review of the firmware binding that is went 
-away...
+On 18/02/2019 11:23, Yu Chen wrote:
+> The patchset adds support for usb functionality of Hikey960, includes:
+> - dwc3 driver for Hisilicon Kirin Soc hi3660
+> - usb driver for HiKey960 board
+> - some adjustment in dwc3, usb gadget and typec driver
+> - dts for support usb of HiKey960
+> 
 
-> 
-> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> ---
-> Changes for v3:
-> 		-Created patches on top of 5.0-rc5.
->                  No functional changes.
-> Changes for v2:
->                 -Removed "----" separators.
-> Changes for v1:
->                 -Created a Seperate(New) DT binding file as
->                  suggested by Rob.
-> 
-> Changes for RFC-V2:
->                 -Moved pcap node as a child to firwmare
->                  node as suggested by Rob.
-> 
->  .../devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt      | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> new file mode 100644
-> index 0000000..1f6f588
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> @@ -0,0 +1,13 @@
-> +Device Tree zynqmp-fpga bindings for the Zynq Ultrascale+ MPSoC controlled
-> +using ZynqMP SoC firmware interface
-> +For Bitstream configuration on ZynqMp Soc uses processor configuration
-> +port(PCAP) to configure the programmable logic(PL) through PS by using
-> +FW interface.
-> +
-> +Required properties:
-> +- compatible: should contain "xlnx,zynqmp-pcap-fpga"
-> +
-> +Example:
-> +	zynqmp_pcap: pcap {
-> +		compatible = "xlnx,zynqmp-pcap-fpga";
+I want to try this out on my HiKey960, but I can't get the USB A ports
+working (tried USB stick and USB eth adapter).
 
-There's no DT resources here, so there's no need for this in DT. Just 
-have the parent (the firmware driver) instantiate the driver.
+On top of the arm64 defconfig, I've enabled (with menuconfig):
 
-Rob
+	CONFIG_PHY_HI3660_USB
+	CONFIG_HISI_HIKEY_USB
+
+Am I missing something? FYI up until now I've carried over Fan Ning's old
+USB patch-set and that works fine, so I think it might just be a
+configuration error from my end.
+
+Thanks,
+Valentin
