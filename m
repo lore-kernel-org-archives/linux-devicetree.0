@@ -1,44 +1,86 @@
-Return-Path: <SRS0=QsKN=QZ=ccbib.org=harald@kernel.org>
-From: Harald Geyer <harald@ccbib.org>
-Subject: Re: [PATCH] regulator: gpio: Reword the binding document
-In-reply-to: <e2e9e577-b110-fc9b-c129-26f61e862fb4@gmail.com>
-References: <20190216174859.15738-1-marek.vasut@gmail.com> <E1gv6SG-0000Jv-KB@stardust.g4.wien.funkfeuer.at> <83550921-b0ec-fa34-b120-2dd159f256d8@gmail.com> <E1gvNOx-0000Kc-Dc@stardust.g4.wien.funkfeuer.at> <75846117-242c-6861-ace5-dccf88711208@gmail.com> <E1gvSbw-0000K8-Hj@stardust.g4.wien.funkfeuer.at> <7a993282-9137-caf4-ca0b-b2c01ea9959c@gmail.com> <E1gvfnE-0000Il-Jo@stardust.g4.wien.funkfeuer.at> <e2e9e577-b110-fc9b-c129-26f61e862fb4@gmail.com>
+Return-Path: <SRS0=XEtX=QZ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1245.1550528299.1@stardust.g4.wien.funkfeuer.at>
-Date: Mon, 18 Feb 2019 23:18:19 +0100
-Message-Id: <E1gvrEx-0000K7-Ks@stardust.g4.wien.funkfeuer.at>
+References: <20190216174859.15738-1-marek.vasut@gmail.com> <CAMuHMdXeuaqLEFfV6_7cPdiq_+vuo97brx1Xa1N6c_GFSKmM0A@mail.gmail.com>
+ <8374074b-9ef0-1286-71b4-756934e7d405@gmail.com>
+In-Reply-To: <8374074b-9ef0-1286-71b4-756934e7d405@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 18 Feb 2019 20:21:26 +0100
+Message-ID: <CAMuHMdVex9js2_yvrFoG+CM1WQE42RpZEJ3vEqB-ziQt-zdKVw@mail.gmail.com>
+Subject: Re: [PATCH] regulator: gpio: Reword the binding document
+Content-Type: text/plain; charset="UTF-8"
 To: Marek Vasut <marek.vasut@gmail.com>
-Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Harald Geyer <harald@ccbib.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Marek Vasut writes:
-> So what about
-> 
-> gpios-states : Initial state of GPIO pins in "gpios" array, set on
-> system start and retained until consumer changes the state. 0: LOW, 1:
-> HIGH. Default is LOW if nothing else is specified.
+Hi Marek,
 
-No. "retained until consumer changes the state" is promising more then
-is guaranteed.
+On Mon, Feb 18, 2019 at 8:04 PM Marek Vasut <marek.vasut@gmail.com> wrote:
+> On 2/18/19 10:30 AM, Geert Uytterhoeven wrote:
+> > On Sun, Feb 17, 2019 at 8:00 AM <marek.vasut@gmail.com> wrote:
+> >> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+> >> Reword the binding document to make it clear how the propeties work
+> >> and which properties affect which other properties.
+> >>
+> >> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 
->From the explanations provided by Mark it is clear that this property
-is an artifact of the implementation in linux. I think we should document
-is as such. How about:
+> >> --- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+> >> +++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+> >> @@ -4,16 +4,25 @@ Required properties:
+> >>  - compatible           : Must be "regulator-gpio".
+> >>  - regulator-name       : Defined in regulator.txt as optional, but required
+> >>                           here.
+> >> -- states               : Selection of available voltages and GPIO configs.
+> >> -                          if there are no states, then use a fixed regulator
+> >> +- states               : Selection of available voltages/currents provided by
+> >> +                         this regulator and matching GPIO configurations to
+> >> +                         achieve them. If there are no states in the "states"
+> >> +                         array, use a fixed regulator instead.
+> >>
+> >>  Optional properties:
+> >> -- enable-gpio          : GPIO to use to enable/disable the regulator.
+> >> -- gpios                        : GPIO group used to control voltage.
+> >> -- gpios-states         : gpios pin's initial states array. 0: LOW, 1: HIGH.
+> >> -                         defualt is LOW if nothing is specified.
+> >> +- enable-gpio          : GPIO used to enable/disable the regulator.
+> >
+> > According to modern GPIO rules, that should be "enable-gpios" (plural) ...
+>
+> Isn't that changing the ABI spec then ?
 
-gpios-states : On operating systems, that don't support reading back gpio
-	       values in output mode (most notably linux), this array
-	       provides the state of GPIO pins set when requesting them
-	       from the gpio controller. Systems, that are capable of
-	       preserving state when requesting the lines, are free to
-	       ignore this property. 0: LOW, 1: HIGH. Default is LOW if
-	       nothing else is specified.
+of_find_gpio() supports both anyway, through gpio_suffixes[].
 
-HTH,
-Harald
+> >> +                         Warning, the GPIO phandle flags are ignored and the
+> >> +                         GPIO polarity is controlled solely by the presence
+> >> +                         of "enable-active-high" DT property. This is due to
+> >> +                         compatibility with old DTs.
+> >
+> > Wasn't the purpose of the various *active-* flags to accommodate GPIOs
+> > lacking a flags cell (i.e. typically #gpio-cells = <1>)?
+>
+> Yes
+>
+> > When the flags cell is present, there's indeed opportunity for confusion
+> > (and breakage), combined with the presence/lack of *active-* below...
+>
+> The code is rather clear that the flags cell is ignored.
+>
+> drivers/gpio/gpiolib-of.c:
+>  91 /*
+>  92  * The regulator GPIO handles are specified such that the
+>  93  * presence or absence of "enable-active-high" solely controls
+>  94  * the polarity of the GPIO line. Any phandle flags must
+>  95  * be actively ignored.
+>  96  */
+
+Yeah, the code is the binding doc...
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-If you want to support my work:
-see http://friends.ccbib.org/harald/supporting/
-or donate via CLAM to xASPBtezLNqj4cUe8MT5nZjthRSEjrRQXN
-or via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
