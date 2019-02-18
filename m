@@ -1,54 +1,56 @@
 Return-Path: <SRS0=m5NJ=QZ=sirena.org.uk=broonie@kernel.org>
-Date: Mon, 18 Feb 2019 17:56:35 +0000
+Date: Mon, 18 Feb 2019 17:54:30 +0000
 From: Mark Brown <broonie@kernel.org>
 Subject: Re: [PATCH] regulator: gpio: Reword the binding document
-Message-ID: <20190218175635.GD10794@sirena.org.uk>
+Message-ID: <20190218175430.GC10794@sirena.org.uk>
 References: <20190216174859.15738-1-marek.vasut@gmail.com>
  <E1gv6SG-0000Jv-KB@stardust.g4.wien.funkfeuer.at>
  <83550921-b0ec-fa34-b120-2dd159f256d8@gmail.com>
- <E1gvNOx-0000Kc-Dc@stardust.g4.wien.funkfeuer.at>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yudcn1FV7Hsu/q59"
+	protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
 Content-Disposition: inline
-In-Reply-To: <E1gvNOx-0000Kc-Dc@stardust.g4.wien.funkfeuer.at>
-To: Harald Geyer <harald@ccbib.org>
-Cc: Marek Vasut <marek.vasut@gmail.com>, devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <83550921-b0ec-fa34-b120-2dd159f256d8@gmail.com>
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: Harald Geyer <harald@ccbib.org>, devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 
---yudcn1FV7Hsu/q59
+--Sr1nOIr3CvdE5hEN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, Feb 17, 2019 at 03:26:39PM +0100, Harald Geyer wrote:
+On Sat, Feb 16, 2019 at 10:37:37PM +0100, Marek Vasut wrote:
+> On 2/16/19 9:20 PM, Harald Geyer wrote:
+> >> From: Marek Vasut <marek.vasut+renesas@gmail.com>
 
-> If continuous operation of the regulator is important, I'd expect
-> we don't touch whatever the firmware setup instead of by default
-> setting all gpios to low.
+> >>  - startup-delay-us	: Startup time in microseconds.
 
-> However as we can't change this now, there isn't much point in
-> discussin this further.
+> > Not relevant for your patch, but I wonder why this is not in the
+> > generic regulator binding.
 
-The issue here is that the GPIO API does not allow us to read back the
-state of output GPIOs (even though for almost all hardware this is
-supported by the underlying hardware).  With the GPIO API as it stands
-it is unfortunately not possible to preserve the state, if the API were
-fixed we'd preserve state.
+> Presumably because it's implemented only be the gpio regulator driver,
+> however it could be moved into the core (?)
 
---yudcn1FV7Hsu/q59
+The core can do the ramping but for most regulators it should know any
+ramp rate restrictions just from knowing which regulator is being used
+(and possibly some device specific configuration like the values of some
+passives), there should be no requirement to manually configure the
+required delay in the DT.
+
+--Sr1nOIr3CvdE5hEN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxq8dIACgkQJNaLcl1U
-h9CpIAf/f8pzBd5oBLBsZakxXoEaleo81gFzm3v6aj8OBLlWpnEQEswOYCPCvWiw
-vI3h82co77N2kqqEpBnWANBlw05sNUClhY8DzgkqQSgaIzeT2i8yEZhtIgYfKgwK
-4RJgisnINyQJvoL0AQ2++23DeXRC5kpiFE1uMATqfxDH3F96XlCtdaKsYHd4t8Fk
-L2Vf6ollMiMZIlVk7kmjuIfUkrsjn53y8P79sZEDVy0zsMkxP5ZZhf7ZNLl5TeMo
-1KT5yQ2WbKrePrjbWsmouc2jVGyr4sFdbpoYiqDKVYCQGAbJNj5dRLaPaMUzYMHx
-0wnhYd//FJFWexN2qWPXCNKn4I3c4g==
-=QLbi
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxq8VUACgkQJNaLcl1U
+h9A7VAf+O+oj58O66vu3vZQB2/eZxCV8Qkpgg52G6Q0K81pabAVQF9E+vHU9wzg4
+tmW9ZMrZ8tXAJZyL1FVq75g++O/3NjDswO0Xi5MH4m9Kwe4LRrGD3/i2GYG056Gf
+0PqiSrIsG8XpZ/Vpnr+172rX49Dxv2MngHyrC+XzRldTrbeTatBhDcI8IHv4ZO1A
+ZJvRnip+YenNvK1tcU3dhoetyRFO8HWFvEHdLj19rHc+YE00xnsKZtmrl4Dmu6f2
+AuH90NXTEHKxDjso0o2I8Xqt7eKZtCBO4jk/Pc7Ce3RZG8hCwFOXirGAm3F2xAFt
+cfvP1klU4WWJNuAia3QR1lGay1Sw5A==
+=i6SP
 -----END PGP SIGNATURE-----
 
---yudcn1FV7Hsu/q59--
+--Sr1nOIr3CvdE5hEN--
