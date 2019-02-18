@@ -1,48 +1,44 @@
-Return-Path: <SRS0=n0G4=QW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:13589 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfBOQYj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Feb 2019 11:24:39 -0500
-From: Daire McNamara <daire.mcnamara@microchip.com>
-Subject: [PATCH v3 0/3] Add Microchip/Microsemi PolarFire SoC PCIe support
-Date: Fri, 15 Feb 2019 16:24:21 +0000
-Message-ID: <20190215162424.564-1-daire.mcnamara@microchip.com>
+Return-Path: <SRS0=hZYI=QZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr20054.outbound.protection.outlook.com ([40.107.2.54]:48436
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728539AbfBRGyS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Feb 2019 01:54:18 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH RESEND V2 3/4] arm64: defconfig: add support for i.MX system
+ controller watchdog
+Date: Mon, 18 Feb 2019 06:54:07 +0000
+Message-ID: <1550472539-16590-4-git-send-email-Anson.Huang@nxp.com>
+References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Daire McNamara <daire.mcnamara@microchip.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This v3 patch series adds support for PCIe IP block on Microsemi/Microchip PolarFire SoCs.
+Enable CONFIG_IMX_SC_WDT as module to support i.MX system
+controller watchdog.
 
-Updates since v2:
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-o Split out DT bindings and Vendor ID updates into their own
-  patch from PCIe driver.
-
-o Updated ChangeLog.
-
-Updates since v1:
-
-o Incorporate feedback from Bjorn Helgaas.
-
-Thanx, Daire
-
-Daire McNamara (3):
-  PCI: Add vendor ID for Microsemi
-  dt-bindings: PCI: microsemi: Add DT Bindings for Microsemi PCIe host
-    controller
-  PCI: microsemi: Add host driver for Microsemi PCIe controller
-
- .../bindings/pci/microsemi-pcie.txt           |  65 ++
- .../devicetree/bindings/vendor-prefixes.txt   |   1 +
- drivers/pci/controller/Kconfig                |   8 +
- drivers/pci/controller/Makefile               |   1 +
- drivers/pci/controller/pcie-microsemi.c       | 764 ++++++++++++++++++
- 5 files changed, 839 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/microsemi-pcie.txt
- create mode 100644 drivers/pci/controller/pcie-microsemi.c
-
--- 
-2.17.0
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 2d9c390..690f4ba 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -427,6 +427,7 @@ CONFIG_WATCHDOG=3Dy
+ CONFIG_ARM_SP805_WATCHDOG=3Dy
+ CONFIG_S3C2410_WATCHDOG=3Dy
+ CONFIG_IMX2_WDT=3Dy
++CONFIG_IMX_SC_WDT=3Dm
+ CONFIG_MESON_GXBB_WATCHDOG=3Dm
+ CONFIG_MESON_WATCHDOG=3Dm
+ CONFIG_RENESAS_WDT=3Dy
+--=20
+2.7.4
