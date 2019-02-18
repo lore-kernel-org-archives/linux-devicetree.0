@@ -1,54 +1,78 @@
-Return-Path: <SRS0=K5hT=QO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55123 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfBGOoN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Feb 2019 09:44:13 -0500
-Date: Thu, 7 Feb 2019 15:44:09 +0100
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 4/4] gpio: pca953x: add ->set_config implementation
-Message-ID: <20190207154409.7ed02a1d@windsurf>
-In-Reply-To: <CACRpkdY4A_Yvv3cKmvYio_9w2HMw9retG-4feydn47sDQY62ig@mail.gmail.com>
-References: <20190103164102.31437-1-thomas.petazzoni@bootlin.com>
-        <20190103164102.31437-5-thomas.petazzoni@bootlin.com>
-        <CACRpkdY4A_Yvv3cKmvYio_9w2HMw9retG-4feydn47sDQY62ig@mail.gmail.com>
+Return-Path: <SRS0=hZYI=QZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:45474 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728394AbfBRMAj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Feb 2019 07:00:39 -0500
+Date: Mon, 18 Feb 2019 13:59:45 +0200
+From: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 2/2] media: atmel-isc: Update device tree binding
+ documentation
+Message-ID: <20190218115945.oevov3zatqnttrwx@valkosipuli.retiisi.org.uk>
+References: <20190204141756.234563-1-ksloat@aampglobal.com>
+ <20190204141756.234563-2-ksloat@aampglobal.com>
+ <20190214154422.GA18167@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190214154422.GA18167@bogus>
 Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Ken Sloat <KSloat@aampglobal.com>, "eugen.hristev@microchip.com" <eugen.hristev@microchip.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Linus,
-
-On Fri, 11 Jan 2019 11:14:49 +0100
-Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> > This commit adds a minimal implementation of the ->set_config() hook,
-> > with support for the PIN_CONFIG_BIAS_PULL_UP and
-> > PIN_CONFIG_BIAS_PULL_DOWN configurations.
-> >
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>  
+On Thu, Feb 14, 2019 at 09:44:22AM -0600, Rob Herring wrote:
+> On Mon, Feb 04, 2019 at 02:18:14PM +0000, Ken Sloat wrote:
+> > From: Ken Sloat <ksloat@aampglobal.com>
 > 
-> This looks OK to me, but IIUC not all versions of the PCA953x supports
-> this?
+> Needs a better subject, not one that applies to any change. Update with 
+> what?
 > 
-> So we need to make sure that you return -ENOTSUPP if the device
-> does not support setting pull up/down.
+> > Update device tree binding documentation specifying how to
+> > enable BT656 with CRC decoding and specify properties for
+> > default parallel bus type.
+> > 
+> > Signed-off-by: Ken Sloat <ksloat@aampglobal.com>
+> > ---
+> >  Changes in v2:
+> >  -Use correct media "bus-type" dt property.
+> > 
+> >  Changes in v3:
+> >  -Specify default bus type.
+> >  -Document optional parallel bus flags.
+> > 
+> >  .../devicetree/bindings/media/atmel-isc.txt       | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> > index bbe0e87c6188..db3749a3964f 100644
+> > --- a/Documentation/devicetree/bindings/media/atmel-isc.txt
+> > +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> > @@ -21,6 +21,21 @@ Required properties for ISC:
+> >  - pinctrl-names, pinctrl-0
+> >  	Please refer to pinctrl-bindings.txt.
+> >  
+> > +Optional properties for ISC:
+> > +- bus-type
+> > +	When set to 6, Bt.656 decoding (embedded sync) with CRC decoding
+> > +	is enabled. If omitted, then the default bus-type is parallel and
+> > +	the additional properties to follow can be specified:
+> > +- hsync-active
+> > +	Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> > +	If unspecified, this signal is set as active HIGH.
+> > +- vsync-active
+> > +	Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> > +	If unspecified, this signal is set as active HIGH.
+> > +- pclk-sample
+> > +	Sample data on rising (1) or falling (0) edge of the pixel clock
+> > +	signal. If unspecified, data is sampled on the rising edge.
+> 
+> These are all common properties, right? No need to redefine them. Just 
+> reference the common doc. Maybe the default needs to be stated here if 
+> different or not defined.
 
-Indeed, I've added a check for this.
+Yeah, video-interfaces.txt does not define the defaults; it's hardware
+specific.
 
-> Also there are configs for debounce too, right? I suggested to add
-> that first but I have no strong opinion on it.
-
-The particular PCA variant that I have does not have any debounce
-related capability it seems, so I won't be able to implement this
-aspect.
-
-Best regards,
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Sakari Ailus
