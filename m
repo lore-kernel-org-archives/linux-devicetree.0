@@ -1,84 +1,139 @@
-Return-Path: <SRS0=5lt5=Q4=martin.sperl.org=kernel@kernel.org>
-From: kernel@martin.sperl.org
-Subject: [PATCH V7 06/10] can: mcp25xxfd: optimize TEF read avoiding unnecessary SPI transfers
-Date: Thu, 21 Feb 2019 21:07:32 +0000
-Message-Id: <20190221210736.640-7-kernel@martin.sperl.org>
-In-Reply-To: <20190221210736.640-1-kernel@martin.sperl.org>
-References: <20190221210736.640-1-kernel@martin.sperl.org>
-To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Return-Path: <SRS0=unlQ=QZ=linux.intel.com=sakari.ailus@kernel.org>
+Date: Mon, 18 Feb 2019 12:03:34 +0200
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH 1/3] media: dt-bindings: add bindings for Toshiba TC358746
+Message-ID: <20190218100333.qvptfllrd4pyhsyb@paasikivi.fi.intel.com>
+References: <20181218141240.3056-1-m.felsch@pengutronix.de>
+ <20181218141240.3056-2-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181218141240.3056-2-m.felsch@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Sperl <kernel@martin.sperl.org>
+Hi Marco,
 
-We have already enough information to know how many tx-messages have
-been terminated so that we do not have to query TEF every time if
-there is anything pending but we can read the tefs blindly.
+My apologies for reviewing this so late. You've received good comments
+already. I have a few more.
 
-This avoids 1 SPI transfer per TEF read.
+On Tue, Dec 18, 2018 at 03:12:38PM +0100, Marco Felsch wrote:
+> Add corresponding dt-bindings for the Toshiba tc358746 device.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  .../bindings/media/i2c/toshiba,tc358746.txt   | 80 +++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
+> new file mode 100644
+> index 000000000000..499733df744a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
+> @@ -0,0 +1,80 @@
+> +* Toshiba TC358746 Parallel to MIPI CSI2-TX or MIPI CSI2-RX to Parallel Bridge
+> +
+> +The Toshiba TC358746 is a bridge that converts a Parallel-in stream to MIPI CSI-2 TX
+> +or a MIPI CSI-2 RX stream into a Parallel-out. It is programmable through I2C.
 
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
----
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c | 33 ++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+This is interesting. The driver somehow needs to figure out the direction
+of the data flow if it does not originate from DT. I guess it shouldn't as
+it's not the property of an individual device, albeit in practice in all
+hardware I've seen the direction of the pipeline is determinable and this
+is visible in the kAPI as well. So I'm suggesting no changes due to this in
+bindings, likely we'll need to address it somehow elsewhere going forward.
 
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
-index 04c32b91cee1..0d08bc9768d9 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
-@@ -274,6 +274,13 @@ int mcp25xxfd_can_tx_handle_int_tefif_fifo(struct mcp25xxfd_can_priv *cpriv)
- 					MCP25XXFD_CAN_TEFCON_UINC);
- }
+> +
+> +Required Properties:
+> +
+> +- compatible: should be "toshiba,tc358746"
+> +- reg: should be <0x0e>
+> +- clocks: should contain a phandle link to the reference clock source
+> +- clock-names: the clock input is named "refclk".
+> +
+> +Optional Properties:
+> +
+> +- reset-gpios: gpio phandle GPIO connected to the reset pin
+> +
+> +Parallel Endpoint:
+> +
+> +Required Properties:
 
-+/* reading TEF entries can be made even more efficient by reading
-+ * multiple TEF entries in one go.
-+ * Under the assumption that we have count(TEF) >= count(TX_FIFO)
-+ * we can even release TEFs early (before we read them)
-+ * (and potentially restarting the transmit-queue early aswell)
-+ */
-+
- static int
- mcp25xxfd_can_tx_handle_int_tefif_conservative(struct mcp25xxfd_can_priv *cpriv)
- {
-@@ -304,6 +311,25 @@ mcp25xxfd_can_tx_handle_int_tefif_conservative(struct mcp25xxfd_can_priv *cpriv)
- 	return 0;
- }
+It'd be nice if the relation between these sections would be somehow
+apparent. E.g. using different underlining, such as in
+Documentation/devicetree/bindings/media/ti,omap3isp.txt .
 
-+static int
-+mcp25xxfd_can_tx_handle_int_tefif_optimized(struct mcp25xxfd_can_priv *cpriv,
-+					    u32 finished)
-+{
-+	int i, fifo, ret;
-+
-+	/* now iterate those */
-+	for (i = 0, fifo = cpriv->fifos.tx.start; i < cpriv->fifos.tx.count;
-+	     i++, fifo++) {
-+		if (finished & BIT(fifo)) {
-+			ret = mcp25xxfd_can_tx_handle_int_tefif_fifo(cpriv);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- int mcp25xxfd_can_tx_handle_int_tefif(struct mcp25xxfd_can_priv *cpriv)
- {
- 	unsigned long flags;
-@@ -323,6 +349,13 @@ int mcp25xxfd_can_tx_handle_int_tefif(struct mcp25xxfd_can_priv *cpriv)
+> +
+> +- reg: should be <0>
+> +- bus-width: the data bus width e.g. <8> for eight bit bus, or <16>
+> +	     for sixteen bit wide bus.
+> +
+> +MIPI CSI-2 Endpoint:
+> +
+> +Required Properties:
+> +
+> +- reg: should be <1>
+> +- data-lanes: should be <1 2 3 4> for four-lane operation,
+> +	      or <1 2> for two-lane operation
+> +- clock-lanes: should be <0>
+> +- link-frequencies: List of allowed link frequencies in Hz. Each frequency is
+> +		    expressed as a 64-bit big-endian integer. The frequency
+> +		    is half of the bps per lane due to DDR transmission.
+> +
+> +Optional Properties:
+> +
+> +- clock-noncontinuous: Presence of this boolean property decides whether the
+> +		       MIPI CSI-2 clock is continuous or non-continuous.
+> +
+> +For further information on the endpoint node properties, see
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +&i2c {
+> +	tc358746: tc358746@0e {
 
- 	spin_unlock_irqrestore(&cpriv->fifos.tx_queue->lock, flags);
+The node name should be a generic name of the type of the device, not the
+name of the specific device as such. A similar Cadence device uses
+"csi-bridge".
 
-+	/* run in optimized mode if possible */
-+	if (finished)
-+		return mcp25xxfd_can_tx_handle_int_tefif_optimized(cpriv,
-+								   finished);
-+	/* otherwise play it safe */
-+	netdev_warn(cpriv->can.dev,
-+		    "Something is wrong - we got a TEF interrupt but we were not able to detect a finished fifo\n");
- 	return mcp25xxfd_can_tx_handle_int_tefif_conservative(cpriv);
- }
+> +		reg = <0x0e>;
+> +		compatible = "toshiba,tc358746";
+> +		pinctrl-names = "default";
+> +		clocks = <&clk_cam_ref>;
+> +		clock-names = "refclk";
+> +		reset-gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			tc358746_parallel_in: endpoint {
+> +				bus-width = <8>;
+> +				remote-endpoint = <&micron_parallel_out>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			tc358746_mipi2_out: endpoint {
+> +				remote-endpoint = <&mipi_csi2_in>;
+> +				data-lanes = <1 2>;
+> +				clock-lanes = <0>;
+> +				clock-noncontinuous;
+> +				link-frequencies = /bits/ 64 <216000000>;
+> +			};
+> +		};
+> +	};
+> +};
 
---
-2.11.0
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
