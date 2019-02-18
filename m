@@ -1,41 +1,83 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v2 0/8] Port am335 and am437 devices to sdhci-omap
-Date: Mon, 18 Feb 2019 19:19:13 +0530
-Message-ID: <0c3b5570-c5ec-46c8-2548-8049100661d3@ti.com>
-References: <20190215192033.24203-1-faiz_abbas@ti.com>
- <20190215200244.GA15711@atomide.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: dmaengine: Add MediaTek Command-Queue
+ DMA controller bindings
+Date: Mon, 18 Feb 2019 08:47:19 -0600
+Message-ID: <20190218144719.GA28079@bogus>
+References: <1550130058-16566-1-git-send-email-shun-chih.yu@mediatek.com>
+ <1550130058-16566-2-git-send-email-shun-chih.yu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190215200244.GA15711@atomide.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1550130058-16566-2-git-send-email-shun-chih.yu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, kishon@ti.com, zhang.chunyan@linaro.org
+To: shun-chih.yu@mediatek.com
+Cc: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-On 16/02/19 1:32 AM, Tony Lindgren wrote:
-> * Faiz Abbas <faiz_abbas@ti.com> [190215 19:17]:
->> The following add driver patches for porting TI's am335x and am437x
->> devices to the sdhci-omap driver.
->>
->> This involves adding external DMA support to sdhci (first 3 patches from
->> Chunyan) plus some miscellaneous patches to take care of deviations of
->> the controllers from the sdhci model.
+On Thu, Feb 14, 2019 at 03:40:58PM +0800, shun-chih.yu@mediatek.com wrote:
+> From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
 > 
-> Good to see this happening :)
+> Document the devicetree bindings for MediaTek Command-Queue DMA controller
+> which could be found on MT6765 SoC or other similar Mediatek SoCs.
 > 
-> I think am437x should have also the ADMA as it's mostly
-> omap4 based? See the old omap4 ADMA series at [0] below.
+> Change-Id: I9736c8cac9be160358feeab935fabaffc5730519
+
+Drop this.
+
+> Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+> ---
+>  .../devicetree/bindings/dma/mtk-cqdma.txt          |   31 ++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.txt
 > 
-> Are you seeing any improvment in SDIO card read/write speeds
-> between external DMA and ADM BTW
+> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.txt b/Documentation/devicetree/bindings/dma/mtk-cqdma.txt
+> new file mode 100644
+> index 0000000..fb12927
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.txt
+> @@ -0,0 +1,31 @@
+> +MediaTek Command-Queue DMA Controller
+> +==================================
+> +
+> +Required properties:
+> +
+> +- compatible:	Must be "mediatek,mt6765-cqdma" for MT6765.
+> +- reg:		Should contain the base address and length for each channel.
+> +- interrupts:	Should contain references to the interrupts for each channel.
+> +- clocks:	Should be the clock specifiers corresponding to the entry in
+> +		clock-names property.
+> +- clock-names:	Should contain "cqdma" entries.
+> +- dma-channels: The number of DMA channels supported by the controller.
 
-am437 is using dmaengine even in the old omap_hsmmc driver. I haven't
-tried to enable ADMA in am437x.
+What's the range of valid values?
 
-Thanks,
-Faiz
+> +- dma-requests: The number of DMA request supported by the controller.
+
+What's the range of valid values?
+
+> +- #dma-cells: 	The length of the DMA specifier, must be <1>. This one cell
+> +		in dmas property of a client device represents the channel
+> +		number.
+> +Example:
+> +
+> +        cqdma: dma-controller@10212000 {
+> +		compatible = "mediatek,mt6765-cqdma";
+> +		reg = <0 0x10212000 0 0x1000>;
+
+Should be 2 entries here since there are 2 channels? Or the description 
+above is wrong.
+
+> +		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
+> +			<GIC_SPI 114 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&infracfg CLK_IFR_CQ_DMA>;
+> +		clock-names = "cqdma";
+> +		dma-channels = <2>;
+> +		dma-requests = <32>;
+> +		#dma-cells = <1>;
+> +	};
+> +
+> +DMA clients must use the format described in dma/dma.txt file.
+> -- 
+> 1.7.9.5
+> 
