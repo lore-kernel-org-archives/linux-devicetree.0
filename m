@@ -1,89 +1,32 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 3/3] ARM: dts: exynos: Raise maximum buck regulator voltages on Arndale Octa
-Date: Mon, 18 Feb 2019 18:32:58 +0100
-Message-ID: <20190218173258.7071-3-krzk@kernel.org>
-References: <20190218173258.7071-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218173258.7071-1-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Markus Reichl <reichl@t-online.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V4 3/4] arm64: dts: imx8qxp: added ddr performance monitor
+ nodes
+Date: Mon, 18 Feb 2019 14:38:56 -0300
+Message-ID: <CAOMZO5ArupZLgfw5abDdrBFK4B2s0vC7+g0H=oZiYMwn5nHSOA@mail.gmail.com>
+References: <1550253761-26841-1-git-send-email-Frank.Li@nxp.com>
+ <1550253761-26841-3-git-send-email-Frank.Li@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1550253761-26841-3-git-send-email-Frank.Li@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Li <frank.li@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Raise the buck 1-7 regulators voltages to allow cpufreq choosing them
-and to fix warnings during boot:
+On Fri, Feb 15, 2019 at 4:03 PM Frank Li <frank.li@nxp.com> wrote:
+>
+> Add ddr performance monitor
+>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-    core: _opp_supported_by_regulators: OPP minuV: 1250000 maxuV: 1250000, not supported by regulator
-    cpu cpu0: _opp_add: OPP not supported by regulators (1800000000)
-
-The maximum value is now in sync with other Exynos5420 boards with
-S2MPS11 PMIC (SMDK5420, Odroid XU3 family).  This also matches the
-values used in old patches done by Linaro Samsung team.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos5420-arndale-octa.dts | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index 308c74ebeacd..c7d9604a119e 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -342,48 +342,48 @@
- 			buck1_reg: BUCK1 {
- 				regulator-name = "PVDD_MIF_1V1";
- 				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1100000>;
-+				regulator-max-microvolt = <1300000>;
- 				regulator-always-on;
- 			};
- 
- 			buck2_reg: BUCK2 {
- 				regulator-name = "vdd_arm";
- 				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1000000>;
-+				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
- 
- 			buck3_reg: BUCK3 {
- 				regulator-name = "PVDD_INT_1V0";
- 				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1000000>;
-+				regulator-max-microvolt = <1400000>;
- 				regulator-always-on;
- 			};
- 
- 			buck4_reg: BUCK4 {
- 				regulator-name = "PVDD_G3D_1V0";
- 				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1000000>;
-+				regulator-max-microvolt = <1400000>;
- 			};
- 
- 			buck5_reg: BUCK5 {
- 				regulator-name = "PVDD_LPDDR3_1V2";
- 				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1200000>;
-+				regulator-max-microvolt = <1400000>;
- 				regulator-always-on;
- 			};
- 
- 			buck6_reg: BUCK6 {
- 				regulator-name = "PVDD_KFC_1V0";
- 				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1000000>;
-+				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
- 
- 			buck7_reg: BUCK7 {
- 				regulator-name = "VIN_LLDO_1V4";
- 				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1400000>;
-+				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
- 
--- 
-2.17.1
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
