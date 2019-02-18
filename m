@@ -1,15 +1,15 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH 4/5] iio:adc:lpc32xx Cleanup headers
-Date: Mon, 18 Feb 2019 14:07:38 +0000
-Message-ID: <20190218140738.0000582a@huawei.com>
-References: <20190208160944.13281-1-gregory.clement@bootlin.com>
- <20190208160944.13281-5-gregory.clement@bootlin.com>
- <20190209171646.49c75afc@archlinux> <87r2c92h34.fsf@FE-laptop>
+From: Loys Ollivier <lollivier@baylibre.com>
+Subject: Re: [PATCH v4 2/4] dt-bindings: gnss: add mediatek binding
+Date: Mon, 18 Feb 2019 15:08:38 +0100
+Message-ID: <86k1hxur2x.fsf@baylibre.com>
+References: <1550070569-18588-1-git-send-email-lollivier@baylibre.com>
+ <1550070569-18588-3-git-send-email-lollivier@baylibre.com>
+ <20190215160457.GO28278@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87r2c92h34.fsf@FE-laptop>
+In-reply-to: <20190215160457.GO28278@localhost>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,121 +19,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Loys Ollivier <lollivier@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Feb 2019 16:42:55 +0100
-Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
 
-> Hi Jonathan,
->  =
+On Fri 15 Feb 2019 at 16:04, Johan Hovold <johan@kernel.org> wrote:
 
->  On sam., f=E9vr. 09 2019, Jonathan Cameron <jic23@kernel.org> wrote:
-> =
+> On Wed, Feb 13, 2019 at 04:09:27PM +0100, Loys Ollivier wrote:
+>> Add binding for Mediatek-based GNSS receivers.
+>> 
+>> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+>> ---
+>> v4:
+>> Use standard names for reset-gpios and gnss-fix-gpios
+>> s/an/a UART
+>> 
+>> v3:
+>> Removed the I2C and SPI interfaces references.
+>> Removed the "mediatek,mt3339" compatible line.
+>> Added the optional propertied (reset, fix)
+>> Added the pin names for the optional properties.
+>> 
+>> v2:
+>> Renamed bindings from Globaltop/gtop to Mediatek/mtk.
+>> Moved current-speed as an optional propertie.
+>> Removed the status line in the example.
+>> Added "mediatek,mt3339" compatible.
+>> 
+>>  .../devicetree/bindings/gnss/mediatek.txt          | 37 ++++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/gnss/mediatek.txt b/Documentation/devicetree/bindings/gnss/mediatek.txt
+>> new file mode 100644
+>> index 000000000000..12283d429baa
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
+>> @@ -0,0 +1,37 @@
+>> +Mediatek-based GNSS Receiver DT binding
+>> +
+>> +Mediatek chipsets are used in GNSS-receiver modules produced by several
+>> +vendors and can use a UART interface.
+>> +
+>> +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
+>> +properties.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible	: Must be
+>> +
+>> +			"globaltop,pa6h"
+>> +
+>> +- vcc-supply	: Main voltage regulator (pin name: VCC)
+>> +
+>> +Optional properties:
+>> +
+>> +- current-speed		: Default UART baud rate
+>> +- gnss-fix-gpios	: GPIO used to determine device position fix state
+>> +			  (pin name: FIX, 3D_FIX)
+>> +- reset-gpios		: GPIO used to reset the device
+>> +  		  	  (pin name: RESET, NRESET)
+>> +- timepulse-gpios	: Time pulse GPIO (pin name: PPS1, 1PPS)
+>> +- v-bckp-supply		: Backup voltage regulator
+>> +  			  (pin name: VBAT, VBACKUP)
+>
+> As we discussed, I changed this to "vbackup-supply" (here and in the
+> driver) before applying.
+>
+> Note that git reported some whitespace errors above too (spaces before
+> tabs) that I fixed up. Not sure why checkpatch doesn't complain.
+>
+Oops, thanks for fixing it. I ran checkpatch again and it did not
+complain. Apprently it's not checking for spaces before tabs in "txt"
+files.
+I'll add a step in my flow to apply the patches I create before sending
+them to the list so that won't happen again ;)
 
-> > On Fri,  8 Feb 2019 17:09:43 +0100
-> > Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
-> >  =
+> All now applied.
+>
+Yay ! Thanks !
+Loys
 
-> >> A few headers was useless: remove them, and also sort them in alphabet=
-ic
-> >> order.
-> >> =
 
-> >> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>  =
+> Thanks,
+> Johan
 
-> > Hmm. Given the headers in question are mostly only useless (I think)
-> > in the sense they are always included by something else, I'm
-> > not sure this patch is worth the churn.
-> >
-> > It's also tricky to see which ones were actually removed
-> > given the combination with sorting.
-> > I think it's just kernel.h, device.h, err.h all of which
-> > are used in various ways and often directly included.  =
 
-> =
-
-> Actually, as I needed to add a header, I wanted to sort the list to put
-> it in the right place and then some of the header looked superfluous
-> that why I remove some of them. For example there was no reason to use
-> slab.h or of.h.
-Agreed on those two. I missed them probably because of the re organization
-being combined with them.  No specific allocations except
-via interfaces from elsewhere and no direct use of the devicetree
-stuff, so fine to drop them.
-
-> =
-
-> >
-> > The other one is the iio/sysfs.h file.  That one we could
-> > do to eventually kill off entirely, so happy to see that
-> > one alone go.  =
-
-> =
-
-> I am nit sure to know what do you want with this patch.
-
-Break it in two.  Drop the unwanted ones first, then reorganize.
-That way the diff is easy to read.  Clearly I missed some
-changes on my first read as it stands!
-
-Jonathan
-
-> =
-
-> Gregory
-> =
-
-> =
-
-> >
-> > Jonathan
-> >  =
-
-> >> ---
-> >>  drivers/iio/adc/lpc32xx_adc.c | 15 ++++-----------
-> >>  1 file changed, 4 insertions(+), 11 deletions(-)
-> >> =
-
-> >> diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_a=
-dc.c
-> >> index e361c1532a75..f391c1e10136 100644
-> >> --- a/drivers/iio/adc/lpc32xx_adc.c
-> >> +++ b/drivers/iio/adc/lpc32xx_adc.c
-> >> @@ -7,20 +7,13 @@
-> >>   *  Copyright (C) 2011, 2012 Roland Stigge <stigge@antcom.de>
-> >>   */
-> >>  =
-
-> >> -#include <linux/module.h>
-> >> -#include <linux/platform_device.h>
-> >> -#include <linux/interrupt.h>
-> >> -#include <linux/device.h>
-> >> -#include <linux/kernel.h>
-> >> -#include <linux/slab.h>
-> >> -#include <linux/io.h>
-> >>  #include <linux/clk.h>
-> >> -#include <linux/err.h>
-> >>  #include <linux/completion.h>
-> >> -#include <linux/of.h>
-> >> -
-> >>  #include <linux/iio/iio.h>
-> >> -#include <linux/iio/sysfs.h>
-> >> +#include <linux/interrupt.h>
-> >> +#include <linux/io.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/platform_device.h>
-> >>  =
-
-> >>  /*
-> >>   * LPC32XX registers definitions  =
-
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel  =
-
-> =
+-- 
+-L
