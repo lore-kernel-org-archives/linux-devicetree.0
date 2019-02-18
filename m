@@ -1,16 +1,15 @@
 Return-Path: <SRS0=hZYI=QZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:47456
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr00045.outbound.protection.outlook.com ([40.107.0.45]:21172
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728539AbfBRGy3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Feb 2019 01:54:29 -0500
+        id S1728094AbfBRCB5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 17 Feb 2019 21:01:57 -0500
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH RESEND V2 4/4] arm64: dts: freescale: imx8qxp: add watchdog
- support
-Date: Mon, 18 Feb 2019 06:54:17 +0000
-Message-ID: <1550472539-16590-5-git-send-email-Anson.Huang@nxp.com>
-References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 4/4] arm64: dts: freescale: imx8qxp: add watchdog support
+Date: Mon, 18 Feb 2019 02:01:46 +0000
+Message-ID: <1550454997-4398-5-git-send-email-Anson.Huang@nxp.com>
+References: <1550454997-4398-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550454997-4398-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -24,8 +23,8 @@ Add i.MX8QXP system controller watchdog support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V1:
-	- use watchdog instead of wdog.
+Note: this patch is based on my thermal patch series: https://patchwork.ker=
+nel.org/patch/10800699/
 ---
  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
  1 file changed, 4 insertions(+)
