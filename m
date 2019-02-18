@@ -1,62 +1,76 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
-Date: Mon, 18 Feb 2019 13:24:02 -0800
-Message-ID: <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
-References: <20190118170232.16142-1-anarsoul@gmail.com> <20190118170232.16142-4-anarsoul@gmail.com>
- <20190218211035.GA28145@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 09/17 v1] irqchip: ixp4xx: Add DT bindings
+Date: Mon, 18 Feb 2019 15:25:15 -0600
+Message-ID: <CAL_Jsq+XZewc60DhVTC6Zaj2qSBseT7DV3+XUS-7AQRjUm-uJA@mail.gmail.com>
+References: <20190203214205.13594-1-linus.walleij@linaro.org>
+ <20190203214205.13594-10-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190218211035.GA28145@bogus>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-bluetooth@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190203214205.13594-10-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Tim Harvey <tharvey@gateworks.com>, Krzysztof Halasa <khalasa@piap.pl>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, Imre Kaloz <kaloz@openwrt.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
+On Sun, Feb 3, 2019 at 3:42 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
-> > Add binding document for bluetooth part of RTL8723BS/RTL8723CS
-> >
-> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> > ---
-> >  .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
-> > new file mode 100644
-> > index 000000000000..8357f242ae4c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
-> > @@ -0,0 +1,35 @@
-> > +RTL8723BS/RTL8723CS Bluetooth
-> > +---------------------
-> > +
-> > +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
-> > +BT is connected over serial. It speaks H5 protocol with few extra commands
-> > +to upload firmware and change module speed.
-> > +
-> > +Required properties:
-> > +
-> > + - compatible: should be one of the following:
-> > +   * "realtek,rtl8723bs-bt"
-> > +   * "realtek,rtl8723cs-bt"
-> > +Optional properties:
-> > +
-> > + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
-> > + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
-> > + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
-> > + - firmware-postfix: firmware postfix to be used for firmware config
->
-> How is this used?
+> This adds device tree bindings for the IXP4xx interrupt
+> controller. It's a standard 2-cell controller.
 
-rtl8723bs-bt needs 2 firmware binaries -- one is actual firmware,
-another is firmware config which is specific to the board. If
-firmware-postfix is specified, driver appends it to the name of config
-and requests board-specific config while loading firmware. I.e. if
-'pine64' is specified as firmware-postfix driver will load
-rtl8723bs_config-pine64.bin.
+Not required, but writing as a schema would be great. Looks like it
+would be straight forward.
 
-> Rob
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> irqchip maintainers: I am requesting an ACK for this once
+> you're happy with the bindings, as I intend to merge all of
+> this IXP4xx rework through ARM SoC.
+> ---
+>  .../intel,ixp4xx-interrupt.txt                | 33 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
 >
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
+> new file mode 100644
+> index 000000000000..70ee93b9a6c0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.txt
+> @@ -0,0 +1,33 @@
+> +* Intel IXP4xx XScale Networking Processors Interrupt Controller
+> +
+> +This interrupt controller is found in the Intel IXP4xx processors.
+> +Some processors have 32 interrupts, some have up to 64 interrupts.
+> +The exact number of interrupts is determined from the compatible
+> +string.
+> +
+> +The distinct IXP4xx families with different interrupt controller
+> +variations are IXP42x, IXP43x, IXP45x and IXP46x. Those four
+> +families were the only ones to reach the developer and consumer
+> +market.
+> +
+> +Required properties:
+> +- compatible: must be one of
+> +  "intel,ixp42x-interrupt"
+> +  "intel,ixp43x-interrupt"
+> +  "intel,ixp45x-interrupt"
+> +  "intel,ixp46x-interrupt"
+
+While we normally don't allow wildcards, I'm guessing this is all so
+old^W mature that it will be fine.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
