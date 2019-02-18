@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v1 03/12] arm64: dts: msm8916: thermal: Add sensor for modem
-Date: Mon, 18 Feb 2019 18:05:17 +0530
-Message-ID: <b7a640640775f91956baebbd37a36201f93b78f8.1550493113.git.amit.kucheria@linaro.org>
+Subject: [PATCH v1 04/12] arm64: dts: msm8996: thermal: Add temperature sensors near major peripherals
+Date: Mon, 18 Feb 2019 18:05:18 +0530
+Message-ID: <51feb49578f6e412eb5e80012dc63eab5532342b.1550493113.git.amit.kucheria@linaro.org>
 References: <cover.1550493113.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1550493113.git.amit.kucheria@linaro.org>
@@ -12,30 +12,131 @@ To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson
 Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On platforms that have a modem, sensor 0 monitors the modem.
+msm8996 has a total of 21 temperature sensors. Populate DT with
+information about them.
+
+There are 2 sensors on each of the cpus - one on the top, the other
+below (we only expose one on the top in DT for now). For the GPU, we
+expose both, the one on the top and the one below.
+
+Depending on the version of the silicon, sensor 2 is either placed near
+the L3 cache or the venus video decoder. It would've been nice to be
+able to be version-specific but we don't have DTs that differentiate the
+two versions of silicon yet.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 98 +++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 9e598ab438a1..9e4a82e5e0b4 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -278,7 +278,13 @@
- 					type = "critical";
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index ae6e9f0778f0..8e36a39e1386 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -237,6 +237,104 @@
  				};
  			};
-+		};
+ 		};
 +
-+		modem-thermal {
++		gpu-thermal-top {
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
- 
-+			thermal-sensors = <&tsens 0>;
- 		};
- 
++
++			thermal-sensors = <&tsens1 6>;
++
++			trips {
++				gpu1_alert0: trip-point@0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				gpu1_crit: gpu_crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		gpu-thermal-bottom {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens1 7>;
++
++			trips {
++				gpu2_alert0: trip-point@0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				gpu2_crit: gpu_crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		m4m-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens0 1>;
++		};
++
++		l3_or_venus-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens0 2>;
++		};
++
++		cluster0-l2-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens0 7>;
++		};
++
++		cluster1-l2-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens0 12>;
++		};
++
++		camera-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens1 1>;
++		};
++
++		q6-dsp-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens1 2>;
++		};
++
++		mem-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens1 3>;
++		};
++
++		modemtx-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens1 4>;
++		};
  	};
+ 
+ 	timer {
 -- 
 2.17.1
