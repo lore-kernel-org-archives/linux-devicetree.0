@@ -1,79 +1,103 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv3 17/27] PCI: mobiveil: fix the checking of valid device
-Date: Mon, 18 Feb 2019 07:15:22 +0000
-Message-ID: <VI1PR04MB57927A11B589323E30E45BF884630@VI1PR04MB5792.eurprd04.prod.outlook.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
- <20190129080926.36773-18-Zhiqiang.Hou@nxp.com>
- <CAFZiPx0faPHN1mqPV28XTZfOxA2GgDPuc=RVdXEiGGNAUe=Fxw@mail.gmail.com>
- <20190208141315.GU7268@google.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] Input: i8042 - Rework DT node name comparisons
+Date: Sun, 17 Feb 2019 23:23:25 -0800
+Message-ID: <20190218072325.GF242714@dtor-ws>
+References: <20190213161631.17028-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190208141315.GU7268@google.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190213161631.17028-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIDxoZWxnYWFzQGtlcm5l
-bC5vcmc+DQo+IFNlbnQ6IDIwMTnE6jLUwjjI1SAyMjoxMw0KPiBUbzogU3VicmFobWFueWEgTGlu
-Z2FwcGEgPGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW4+DQo+IENjOiBaLnEuIEhvdSA8emhp
-cWlhbmcuaG91QG54cC5jb20+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc7IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IFhpYW93ZWkgQmFvDQo+
-IDx4aWFvd2VpLmJhb0BueHAuY29tPjsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgd2lsbC5k
-ZWFjb25AYXJtLmNvbTsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgTGVvIExpIDxs
-ZW95YW5nLmxpQG54cC5jb20+OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47
-IHJvYmgrZHRAa2VybmVsLm9yZzsgTWluZ2thaSBIdQ0KPiA8bWluZ2thaS5odUBueHAuY29tPjsg
-Y2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgVGhvbWFzIFBldGF6em9uaQ0KPiA8dGhvbWFz
-LnBldGF6em9uaUBib290bGluLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSHYzIDE3LzI3XSBQ
-Q0k6IG1vYml2ZWlsOiBmaXggdGhlIGNoZWNraW5nIG9mIHZhbGlkIGRldmljZQ0KPiANCj4gWytj
-YyBUaG9tYXNdDQo+IA0KPiBPbiBGcmksIEZlYiAwOCwgMjAxOSBhdCAwNjoxMToxNVBNICswNTMw
-LCBTdWJyYWhtYW55YSBMaW5nYXBwYSB3cm90ZToNCj4gPiBPbiBUdWUsIEphbiAyOSwgMjAxOSBh
-dCAxOjQwIFBNIFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4gd3JvdGU6DQo+ID4gPg0K
-PiA+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiA+DQo+
-ID4gPiBBdm9pZCB0byBpc3N1ZSBDRkcgdHJhbnNhY3Rpb25zIHRvIGxpbmsgcGFydG5lciB3aGVu
-IHRoZSBQQ0llIGxpbmsNCj4gPiA+IGlzIG5vdCB1cC4gQW5kIGFsbG93IENGRyB0cmFuc2FjdGlv
-bnMgdG8gYWxsIGZ1bmN0aW9ucyBvZiBFbmRwb2ludA0KPiA+ID4gaW1wbGVtZW50ZWQgbXVsdGlw
-bGUgZnVuY3Rpb25zLg0KPiA+ID4NCj4gPiA+IEZpeGVzOiA5YWY2YmNiMTFlMTIgKCJQQ0k6IG1v
-Yml2ZWlsOiBBZGQgTW9iaXZlaWwgUENJZSBIb3N0IEJyaWRnZQ0KPiA+ID4gSVAgZHJpdmVyIikN
-Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+
-DQo+ID4gPiBSZXZpZXdlZC1ieTogTWluZ2h1YW4gTGlhbiA8TWluZ2h1YW4uTGlhbkBueHAuY29t
-Pg0KPiA+ID4gLS0tDQo+ID4gPiBWMzoNCj4gPiA+ICAtIE5vIGNoYW5nZQ0KPiA+ID4NCj4gPiA+
-ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jIHwg
-NiArKysrKy0NCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0
-aW9uKC0pDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-bW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1ob3N0LmMNCj4gPiA+IGIvZHJpdmVycy9wY2kvY29udHJv
-bGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYw0KPiA+ID4gaW5kZXggZGM1MzI0ZDk0
-NDY2Li4xYWU4MmU3OTA1NjIgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jDQo+ID4gPiArKysgYi9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jDQo+ID4gPiBAQCAtMjks
-NiArMjksMTAgQEAgc3RhdGljIGJvb2wgbW9iaXZlaWxfcGNpZV92YWxpZF9kZXZpY2Uoc3RydWN0
-DQo+ID4gPiBwY2lfYnVzICpidXMsIHVuc2lnbmVkIGludCBkZXZmbikgIHsNCj4gPiA+ICAgICAg
-ICAgc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUgPSBidXMtPnN5c2RhdGE7DQo+ID4gPg0KPiA+
-ID4gKyAgICAgICAvKiBJZiB0aGVyZSBpcyBubyBsaW5rLCB0aGVuIHRoZXJlIGlzIG5vIGRldmlj
-ZSAqLw0KPiA+ID4gKyAgICAgICBpZiAoYnVzLT5udW1iZXIgPiBwY2llLT5ycC5yb290X2J1c19u
-cg0KPiAmJiAhbW9iaXZlaWxfcGNpZV9saW5rX3VwKHBjaWUpKQ0KPiA+ID4gKyAgICAgICAgICAg
-ICAgIHJldHVybiBmYWxzZTsNCj4gPiA+ICsNCj4gPiA+ICAgICAgICAgLyogT25seSBvbmUgZGV2
-aWNlIGRvd24gb24gZWFjaCByb290IHBvcnQgKi8NCj4gPiA+ICAgICAgICAgaWYgKChidXMtPm51
-bWJlciA9PSBwY2llLT5ycC5yb290X2J1c19ucikgJiYgKGRldmZuID4gMCkpDQo+ID4gPiAgICAg
-ICAgICAgICAgICAgcmV0dXJuIGZhbHNlOw0KPiA+ID4gQEAgLTM3LDcgKzQxLDcgQEAgc3RhdGlj
-IGJvb2wgbW9iaXZlaWxfcGNpZV92YWxpZF9kZXZpY2Uoc3RydWN0DQo+IHBjaV9idXMgKmJ1cywg
-dW5zaWduZWQgaW50IGRldmZuKQ0KPiA+ID4gICAgICAgICAgKiBEbyBub3QgcmVhZCBtb3JlIHRo
-YW4gb25lIGRldmljZSBvbiB0aGUgYnVzIGRpcmVjdGx5DQo+ID4gPiAgICAgICAgICAqIGF0dGFj
-aGVkIHRvIFJDDQo+ID4gPiAgICAgICAgICAqLw0KPiA+ID4gLSAgICAgICBpZiAoKGJ1cy0+cHJp
-bWFyeSA9PSBwY2llLT5ycC5yb290X2J1c19ucikgJiYgKGRldmZuID4gMCkpDQo+ID4gPiArICAg
-ICAgIGlmICgoYnVzLT5wcmltYXJ5ID09IHBjaWUtPnJwLnJvb3RfYnVzX25yKSAmJg0KPiA+ID4g
-KyAoUENJX1NMT1QoZGV2Zm4pID4gMCkpDQo+IA0KPiA+IGhlcmUgY2hhbmdlICJwcmltYXJ5IiB0
-byAibnVtYmVyIiwgYXMgaXQncyBhIGJ1ZyBpbiB0aGUgb3JpZ2luYWwgZHJpdmVyIHRvby4NCj4g
-DQo+IFRoaXMgbG9va3MgbGlrZSBpdCBzaG91bGQgYmUgc3BsaXQgaW50byB0d28gcGF0Y2hlczog
-KDEpIGNoZWNraW5nIGZvciBsaW5rIHVwLCBhbmQNCj4gKDIpIGNoZWNraW5nIHJvb3RfYnVzX25y
-Lg0KDQpZZXMsIHdpbGwgc3BsaXQgdGhpcyBwYXRjaCBpbiBuZXh0IHZlcnNpb24uDQoNCj4gDQo+
-IEFuZCBpZiB5b3UgbWVhbiAiYnVzLT5wcmltYXJ5ID09IHBjaWUtPnJwLnJvb3RfYnVzX25yIiBp
-cyBhIGJ1ZyBpbg0KPiBwY2ktYWFyZHZhcmsuYywgdG9vLCBpdCBpcyBpbXBlcmF0aXZlIHRvIGZp
-eCB0aGF0IGJ1ZyBhbHNvICh3aXRoIGEgc2VwYXJhdGUgcGF0Y2gpLg0KDQpJdCBpcyBub3QgYSBi
-dWcsIGJ1dCB0aGUgYnVnIGlzIHRvIGxpbWl0IG11bHRpcGxlIGZ1bmN0aW9uIEVQIChkZXZmbiA+
-IDApLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0K
+On Wed, Feb 13, 2019 at 10:16:31AM -0600, Rob Herring wrote:
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. For the root node on SUN DT, we need to retrieve the 'name'
+> property as it is the rare case where the 'name' property and node name
+> differ. With both changes, it removes direct access to the node name
+> pointer.
+> 
+> While at it, comvert the open coded loop to use
+> for_each_child_of_node().
+> 
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: linux-input@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+Applied, thank you.
+
+> ---
+>  drivers/input/serio/i8042-sparcio.h | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/input/serio/i8042-sparcio.h b/drivers/input/serio/i8042-sparcio.h
+> index 796289846204..fce76812843b 100644
+> --- a/drivers/input/serio/i8042-sparcio.h
+> +++ b/drivers/input/serio/i8042-sparcio.h
+> @@ -53,12 +53,11 @@ static struct resource *kbd_res;
+>  
+>  static int sparc_i8042_probe(struct platform_device *op)
+>  {
+> -	struct device_node *dp = op->dev.of_node;
+> +	struct device_node *dp;
+>  
+> -	dp = dp->child;
+> -	while (dp) {
+> -		if (!strcmp(dp->name, OBP_PS2KBD_NAME1) ||
+> -		    !strcmp(dp->name, OBP_PS2KBD_NAME2)) {
+> +	for_each_child_of_node(op->dev.of_node, dp) {
+> +		if (of_node_name_eq(dp, OBP_PS2KBD_NAME1) ||
+> +		    of_node_name_eq(dp, OBP_PS2KBD_NAME2)) {
+>  			struct platform_device *kbd = of_find_device_by_node(dp);
+>  			unsigned int irq = kbd->archdata.irqs[0];
+>  			if (irq == 0xffffffff)
+> @@ -67,16 +66,14 @@ static int sparc_i8042_probe(struct platform_device *op)
+>  			kbd_iobase = of_ioremap(&kbd->resource[0],
+>  						0, 8, "kbd");
+>  			kbd_res = &kbd->resource[0];
+> -		} else if (!strcmp(dp->name, OBP_PS2MS_NAME1) ||
+> -			   !strcmp(dp->name, OBP_PS2MS_NAME2)) {
+> +		} else if (of_node_name_eq(dp, OBP_PS2MS_NAME1) ||
+> +			   of_node_name_eq(dp, OBP_PS2MS_NAME2)) {
+>  			struct platform_device *ms = of_find_device_by_node(dp);
+>  			unsigned int irq = ms->archdata.irqs[0];
+>  			if (irq == 0xffffffff)
+>  				irq = op->archdata.irqs[0];
+>  			i8042_aux_irq = irq;
+>  		}
+> -
+> -		dp = dp->sibling;
+>  	}
+>  
+>  	return 0;
+> @@ -109,8 +106,9 @@ static struct platform_driver sparc_i8042_driver = {
+>  static int __init i8042_platform_init(void)
+>  {
+>  	struct device_node *root = of_find_node_by_path("/");
+> +	const char *name = of_get_property(root, "name", NULL);
+>  
+> -	if (!strcmp(root->name, "SUNW,JavaStation-1")) {
+> +	if (name && !strcmp(name, "SUNW,JavaStation-1")) {
+>  		/* Hardcoded values for MrCoffee.  */
+>  		i8042_kbd_irq = i8042_aux_irq = 13 | 0x20;
+>  		kbd_iobase = ioremap(0x71300060, 8);
+> @@ -139,8 +137,9 @@ static int __init i8042_platform_init(void)
+>  static inline void i8042_platform_exit(void)
+>  {
+>  	struct device_node *root = of_find_node_by_path("/");
+> +	const char *name = of_get_property(root, "name", NULL);
+>  
+> -	if (strcmp(root->name, "SUNW,JavaStation-1"))
+> +	if (!name || strcmp(name, "SUNW,JavaStation-1"))
+>  		platform_driver_unregister(&sparc_i8042_driver);
+>  }
+>  
+> -- 
+> 2.19.1
+> 
+
+-- 
+Dmitry
