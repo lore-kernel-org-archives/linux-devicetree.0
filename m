@@ -1,45 +1,91 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [RESEND PATCH] dt-bindings: arm: atmel: add new sam9x60 SFR
- binding
-Date: Mon, 18 Feb 2019 12:28:56 +0000
-Message-ID: <51c2d2af-3d2f-0fa8-c9e7-5fc6a4f1a1b4@microchip.com>
-References: <20190206180425.27324-1-nicolas.ferre@microchip.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 00/15] Add basic support for Socionext Milbeaut M10V
+ SoC
+Date: Mon, 18 Feb 2019 13:29:26 +0100
+Message-ID: <10a0375b-0814-6b7d-97d5-ed2c2838c4b4@linaro.org>
+References: <1549628687-29628-1-git-send-email-sugaya.taichi@socionext.com>
+ <CAK8P3a3_j2W+KXSynW_SkVZk_+PJ-DqyxjLkgJL-OichS0fwWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190206180425.27324-1-nicolas.ferre@microchip.com>
+In-Reply-To: <CAK8P3a3_j2W+KXSynW_SkVZk_+PJ-DqyxjLkgJL-OichS0fwWw@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <DE25B2A2E8D5964B884831A01533094A@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, stern@rowland.harvard.edu, Tudor.Ambarus@microchip.com
+To: Arnd Bergmann <arnd@arndb.de>, Sugaya Taichi <sugaya.taichi@socionext.com>
+Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi
 List-Id: devicetree@vger.kernel.org
 
-T24gMDYvMDIvMjAxOSBhdCAxOTowNCwgTmljb2xhcyBGZXJyZSB3cm90ZToNCj4gQWRkIHRoaXMg
-U0ZSIGNvbXBhdGlibGUgZGVmaW5pdGlvbiBmb3IgdGhlIHNhbTl4NjAgU29DLiBXaWxsIGJlIG5l
-ZWRlZA0KPiBpbiBPSENJIGRyaXZlcjogb2hjaS1hdDkxLmMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
-OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQo+IC0tLQ0KPiBI
-aSBSb2IsDQo+IEl0IHNlZW1zIHRoYXQgdGhpcyBwYXRjaCB3YXMgbG9zdCBpbiBteSBzZXJpZXMg
-IltQQVRDSCAwLzhdIEFSTTogYXQ5MS9kdDoNCj4gdXBkYXRlIHRvIGV4aXN0aW5nIGRyaXZlcnMg
-Zm9yIHRoZSBzYW05eDYwIFNvQyIuIEkgc3BsaXQgaXQgYW5kIHJlc2VuZCBpdCBvbmx5DQo+IGZv
-ciBVU0IgdHJlZS4NCg0KUm9iLA0KDQpQaW5nLi4uDQoNCg0KPiBIaSBHcmVnLA0KPiANCj4gVGhp
-cyBEVCBiaW5kaW5kIGdvZXMgd2l0aCB0aGUgcGF0Y2ggYWxyZWFkeSBxdWV1ZWQgaW4geW91ciB1
-c2ItbmV4dCB0cmVlICJVU0I6DQo+IGhvc3Q6IG9oY2ktYXQ5MTogYWRkIHNhbTl4NjAtc2ZyIGRl
-ZmluaXRpb24gZm9yIG9oY2kiLg0KPiANCj4gT25jZSBSb2IgYWRkZWQgaGlzIHRhZywgY2FuIHlv
-dSBwbGVhc2UgcXVldWUgaXQgaW4geW91ciB0cmVlIGFzIEkgcmV2aWV3ZWQgbXkNCj4gZmlyc3Qg
-aWRlYSBvZiBhZGRpbmcgaXQgdG8gdGhlIGFybS1zb2MgdHJlZT8NCj4gDQo+IEJlc3QgcmVnYXJk
-cywNCj4gICAgTmljb2xhcw0KPiANCj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL2F0bWVsLXN5c3JlZ3MudHh0IHwgMSArDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2FybS9hdG1lbC1zeXNyZWdzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9hcm0vYXRtZWwtc3lzcmVncy50eHQNCj4gaW5kZXggYmFkY2U2ZWYzYWIzLi5kZmM5
-MWJjMDJiOTcgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9hcm0vYXRtZWwtc3lzcmVncy50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2FybS9hdG1lbC1zeXNyZWdzLnR4dA0KPiBAQCAtMTQ4LDYgKzE0OCw3IEBAIHJl
-cXVpcmVkIHByb3BlcnRpZXM6DQo+ICAgLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgImF0bWVsLDxj
-aGlwPi1zZnIiLCAic3lzY29uIiBvcg0KPiAgIAkiYXRtZWwsPGNoaXA+LXNmcmJ1IiwgInN5c2Nv
-biINCj4gICAgIDxjaGlwPiBjYW4gYmUgInNhbWE1ZDMiLCAic2FtYTVkNCIgb3IgInNhbWE1ZDIi
-Lg0KPiArICBJdCBhbHNvIGNhbiBiZSAibWljcm9jaGlwLHNhbTl4NjAtc2ZyIiwgInN5c2NvbiIu
-DQo+ICAgLSByZWc6IFNob3VsZCBjb250YWluIHJlZ2lzdGVycyBsb2NhdGlvbiBhbmQgbGVuZ3Ro
-DQo+ICAgDQo+ICAgCXNmckBmMDAzODAwMCB7DQo+IA0KDQoNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
+On 18/02/2019 13:20, Arnd Bergmann wrote:
+> On Fri, Feb 8, 2019 at 1:24 PM Sugaya Taichi
+> <sugaya.taichi@socionext.com> wrote:
+>>
+>> Hi,
+>>
+>> Here is the series of patches the initial support for SC2000(M10V) of
+>> Milbeaut SoCs. "M10V" is the internal name of SC2000, so commonly used in
+>> source code.
+>>
+>> SC2000 is a SoC of the Milbeaut series. equipped with a DSP optimized for
+>> computer vision. It also features advanced functionalities such as 360-degree,
+>> real-time spherical stitching with multi cameras, image stabilization for
+>> without mechanical gimbals, and rolling shutter correction. More detail is
+>> below:
+>> https://www.socionext.com/en/products/assp/milbeaut/SC2000.html
+>>
+>> Specifications for developers are below:
+>>  - Quad-core 32bit Cortex-A7 on ARMv7-A architecture
+>>  - NEON support
+>>  - DSP
+>>  - GPU
+>>  - MAX 3GB DDR3
+>>  - Cortex-M0 for power control
+>>  - NAND Flash Interface
+>>  - SD UHS-I
+>>  - SD UHS-II
+>>  - SDIO
+>>  - USB2.0 HOST / Device
+>>  - USB3.0 HOST / Device
+>>  - PCI express Gen2
+>>  - Ethernet Engine
+>>  - I2C
+>>  - UART
+>>  - SPI
+>>  - PWM
+>>
+>> Support is quite minimal for now, since it only includes timer, clock,
+>> pictrl and serial controller drivers, so we can only boot to userspace
+>> through initramfs. Support for the other peripherals  will come eventually.
+> 
+> I've looked over the platform once more. Overall, it looks very good, and
+> I'd still like to merge this for linux-5.1, but we are running out of time
+> there. If you send the patches to soc@kernel.org quickly, we can try to
+> still merge them in, but if anything goes wrong, it will have to wait until
+> we start merging patches for 5.2, directly after 5.1 is out.
+> 
+> I did not look at the device driver patches (clk, clocksource, pinctrl, serial)
+> in much detail. If you have an Ack from the maintainers, feel free to
+> include them in the series, otherwise let's merge the rest now and then
+> you can send the updated patches for inclusion through the subsystem
+> trees in 5.2.
+
+I'm not in copy of the clocksource patch but I acked it for the initial
+post.
+
+> I have sent a few comments. The only one that is really important
+> here is the missing platform check in the suspend options. Please
+> try to address most of the other commentsm, either by changing the
+> code, or by explaining why your version is correct.
+> 
+> 
+> 
+>      Arnd
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
