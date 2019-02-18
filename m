@@ -1,83 +1,36 @@
-From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 06/11] drm/sun4i: rgb: Add DT property to
- disable strict clock rate check
-Date: Mon, 18 Feb 2019 11:33:05 -0800
-Message-ID: <CA+E=qVfDfDvVmKQDeh2e0SA=tm6VpBMpu9MPKUqxFPObxYFXDg@mail.gmail.com>
-References: <20190215050957.20755-1-anarsoul@gmail.com> <20190215050957.20755-7-anarsoul@gmail.com>
- <20190218182629.GA14714@bogus>
-Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 09/14] dt-binding: remoteproc: Add binding doc for PRU
+ Cores in the PRU-ICSS
+Date: Mon, 18 Feb 2019 13:36:23 -0600
+Message-ID: <20190218193623.GA20566@bogus>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-10-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBDERVTRQKGQEXI3HRNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190218182629.GA14714@bogus>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1549290167-876-10-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: tony@atomide.com, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 10:26 AM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> On Thu, Feb 14, 2019 at 09:09:52PM -0800, Vasily Khoruzhick wrote:
-> > Clock rate check that was added in commit bb43d40d7c83 ("drm/sun4i: rgb:
-> > Validate the clock rate") prevents some panel and bridges from working with
-> > sun4i driver.
->
-> Sounds lile a regression that should be reverted. The fix is not a
-> backwards compatible change either.
+On Mon, 4 Feb 2019 16:22:42 +0200, Roger Quadros wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> The Programmable Real-Time Unit Subsystem (PRUSS) consists of
+> dual 32-bit RISC cores (Programmable Real-Time Units, or PRUs)
+> for program execution. This patch adds a remoteproc platform
+> driver for managing the individual PRU RISC cores life cycle.
+> 
+> Add DT binding documentation for that.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  .../bindings/remoteproc/ti,pru-rproc.txt           | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,pru-rproc.txt
+> 
 
-anx6345 driver isn't mainlined yet and I'm not sure if this change
-breaks any mainlined boards. So likely there's not enough
-justification to revert it.
-
-> > Unfortunately, dotclock frequency for some modes are not achievable on
-> > sunxi hardware, and there's a slight deviation in rate returned by
-> > clk_round_rate(), so they fail this check.
-> >
-> > Experiments show that panels and bridges work fine with this slight
-> > deviation, e.g. Pinebook that uses ANX6345 bridge with 768p eDP panel
-> > requests 73 MHz, gets 72.296MHz instead (0.96% difference) and works just
-> > fine.
-> >
-> > This patch adds DT property to disable strict clock rate check
-> >
-> > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/display/sunxi/sun4i-drm.txt          | 2 ++
-> >  drivers/gpu/drm/sun4i/sun4i_rgb.c                            | 5 +++++
-> >  drivers/gpu/drm/sun4i/sun4i_tcon.c                           | 3 +++
-> >  drivers/gpu/drm/sun4i/sun4i_tcon.h                           | 1 +
-> >  4 files changed, 11 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > index f426bdb42f18..18c8b053a28d 100644
-> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > @@ -63,6 +63,8 @@ Required properties:
-> >      Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> >      first port should be the input endpoint. The second should be the
-> >      output, usually to an HDMI connector.
-> > +  - no-strict-clock-check: don't reject timings if exact dot clock can't be
-> > +    reached.
->
-> This should be the default IMO. Most panels are a single timing, so if
-> we reject it the fallback no display?
-
-As far as I remember the change was introduced to reject some modes
-for which dotclock can't be reached when driver is used with VGA
-bridge. So if we make it default it'll break boards with VGA bridge
-and old DT.
-
-> I thought we had some mechanism already to allow some range of
-> frequencies. I think the chromeos guys needed something IIRC.
-
-You can specify frequency range for panels, but there's nothing for
-bridges. In my case EDID doesn't specify clock tolerance.
-
->
-> Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
