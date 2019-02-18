@@ -1,49 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 04/12] of: Add bindings of gpu hw throttle for Tegra
- soctherm
-Date: Mon, 18 Feb 2019 14:33:14 -0600
-Message-ID: <20190218203314.GB12911@bogus>
-References: <1545118484-23641-1-git-send-email-wni@nvidia.com>
- <1545118484-23641-6-git-send-email-wni@nvidia.com>
+Subject: Re: [PATCH 3/3] dt-bindings: can: rcar_canfd: Document r8a774a1
+ support
+Date: Mon, 18 Feb 2019 14:33:57 -0600
+Message-ID: <20190218203357.GA19340@bogus>
+References: <1547736856-16539-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547736856-16539-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1545118484-23641-6-git-send-email-wni@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>
-Cc: thierry.reding@gmail.com, daniel.lezcano@linaro.org, edubezval@gmail.com, linux-tegra@vger.kernel.org, rui.zhang@intel.com, srikars@nvidia.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1547736856-16539-4-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 03:34:36PM +0800, Wei Ni wrote:
-> Add "nvidia,gpu-throt-level" property to set gpu hw
-> throttle level.
+On Thu, 17 Jan 2019 14:54:16 +0000, Fabrizio Castro wrote:
+> Document support for rcar_canfd on R8A774A1 SoC devices.
 > 
-> Signed-off-by: Wei Ni <wni@nvidia.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 > ---
->  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 17 +++++++++++++++--
->  include/dt-bindings/thermal/tegra124-soctherm.h    | 22 ++++++++++++++++++----
->  2 files changed, 33 insertions(+), 6 deletions(-)
+> This patch depends on:
+> https://patchwork.kernel.org/patch/10766781/
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> index ab66d6feab4b..cf6d0be56b7a 100644
-> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> @@ -52,6 +52,15 @@ Required properties :
->          Must set as following values:
->          TEGRA_SOCTHERM_THROT_LEVEL_LOW, TEGRA_SOCTHERM_THROT_LEVEL_MED
->          TEGRA_SOCTHERM_THROT_LEVEL_HIGH, TEGRA_SOCTHERM_THROT_LEVEL_NONE
-> +      - nvidia,gpu-throt-level: This property is for Tegra124 and Tegra210.
+>  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
 
-Also, why not just use percents like nvidia,cpu-throt-percent?
-
-> +        It is the level of pulse skippers, which used to throttle clock
-> +        frequencies. It indicates gpu clock throttling depth and can be
-> +        programmed to any of the following values which represent a throttling
-> +        percentage:
-> +        TEGRA_SOCTHERM_THROT_LEVEL_NONE (0%)
-> +        TEGRA_SOCTHERM_THROT_LEVEL_LOW (50%),
-> +        TEGRA_SOCTHERM_THROT_LEVEL_MED (75%),
-> +        TEGRA_SOCTHERM_THROT_LEVEL_HIGH (85%).
->        - #cooling-cells: Should be 1. This cooling device only support on/off state.
->          See ./thermal.txt for a description of this property.
+Reviewed-by: Rob Herring <robh@kernel.org>
