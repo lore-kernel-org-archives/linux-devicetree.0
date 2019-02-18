@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v1 06/12] arm64: dts: msm8998: thermal: Fix the gpu sensor number
-Date: Mon, 18 Feb 2019 18:05:20 +0530
-Message-ID: <6c8750d78d375ed288d95fa9af8d330f9ed62958.1550493113.git.amit.kucheria@linaro.org>
+Subject: [PATCH v1 07/12] arm64: dts: msm8998: thermal: GPU has two sensors, add the second
+Date: Mon, 18 Feb 2019 18:05:21 +0530
+Message-ID: <efa80be2e37b7fcf5c51cb24991f2c5c2b4fe7a5.1550493113.git.amit.kucheria@linaro.org>
 References: <cover.1550493113.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1550493113.git.amit.kucheria@linaro.org>
@@ -12,26 +12,32 @@ To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson
 Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The GPU sensor is sensor ID 13 on controller 0
+The first sensor is on top and the second sensor below the GPU
 
-Fixes: 4449b6f248d9a1 ("arm64: dts: qcom: msm8998: Add tsens and thermal-zones")
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 662ca458e64a..ba579cf10254 100644
+index ba579cf10254..dc641523fcbd 100644
 --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -504,7 +504,7 @@
+@@ -500,7 +500,14 @@
+ 			};
+ 		};
+ 
+-		gpu-thermal {
++		gpu-thermal-bottom {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens0 12>;
++		};
++
++		gpu-thermal-top {
  			polling-delay-passive = <250>;
  			polling-delay = <1000>;
- 
--			thermal-sensors = <&tsens1 3>;
-+			thermal-sensors = <&tsens0 13>;
- 		};
- 	};
  
 -- 
 2.17.1
