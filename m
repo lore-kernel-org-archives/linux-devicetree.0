@@ -1,155 +1,116 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv3 24/27] PCI: mobiveil: ls_pcie_g4: add Workaround for
- A-011577
-Date: Mon, 18 Feb 2019 07:10:59 +0000
-Message-ID: <VI1PR04MB57920D088DAAD019B1011C7084630@VI1PR04MB5792.eurprd04.prod.outlook.com>
-References: <20190129080926.36773-1-Zhiqiang.Hou@nxp.com>
- <20190129080926.36773-25-Zhiqiang.Hou@nxp.com>
- <CAFZiPx0Qv6LN6mi4Z9fta2X=Rh85uk7bYGPHmncy=XYgBQOnAw@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: input: touchscreen: goodix: Document
+ AVDD28-supply property
+Date: Sun, 17 Feb 2019 23:12:07 -0800
+Message-ID: <20190218071207.GE242714@dtor-ws>
+References: <20181215151802.18592-1-jagan@amarulasolutions.com>
+ <20181215151802.18592-2-jagan@amarulasolutions.com>
+ <20190107225810.ggmkkbrnkoy2ykx5@penguin>
+ <CAL_JsqKTnPVM7Qahy9ejQbPfENpLCdzf5K5uUTcPh8j3EiqWRA@mail.gmail.com>
+ <CAMty3ZCyq=tZMt6RC1aYJuEWgYp2zv1LBh+ZUwucE+g4RCoUaQ@mail.gmail.com>
+ <CAL_JsqKCw3EV+0_DuMiHh7GRGxv7YogQf-xwp71n9gpc2GzSSQ@mail.gmail.com>
+ <CAMty3ZBtoocXBW5A0astyQPh2y7vG7NtbZ_M0BjSeex2etmGsw@mail.gmail.com>
+ <CAL_JsqJSMX7E2zQA2O8ofZQPDrm3S6PMCLG1iAQ95P10Pe2yFg@mail.gmail.com>
+ <CAMty3ZDMB=pwY8Rxdt3du=90pksBedLo0Pc_-=diqx9-Xndzqg@mail.gmail.com>
+ <CAMty3ZDBu2Y9psNu9nrZ=BNVvhpJ2qYn-Qp7MDqdhK9_SrcpNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFZiPx0Qv6LN6mi4Z9fta2X=Rh85uk7bYGPHmncy=XYgBQOnAw@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZDBu2Y9psNu9nrZ=BNVvhpJ2qYn-Qp7MDqdhK9_SrcpNg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3ViYnUsDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdWJyYWhtYW55YSBMaW5nYXBwYSA8bC5zdWJy
-YWhtYW55YUBtb2JpdmVpbC5jby5pbj4NCj4gU2VudDogMjAxOeW5tDLmnIg45pelIDIwOjUyDQo+
-IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0K
-PiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBh
-cm0uY29tOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNv
-bT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
-Ow0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+
-OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFvIDx4aWFv
-d2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjMgMjQvMjddIFBDSTogbW9i
-aXZlaWw6IGxzX3BjaWVfZzQ6IGFkZCBXb3JrYXJvdW5kIGZvcg0KPiBBLTAxMTU3Nw0KPiANCj4g
-WlEsDQo+IA0KPiBPbiBUdWUsIEphbiAyOSwgMjAxOSBhdCAxOjQxIFBNIFoucS4gSG91IDx6aGlx
-aWFuZy5ob3VAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpo
-aXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gUENJZSBjb25maWd1cmF0aW9uIGFjY2VzcyB0
-byBub24tZXhpc3RlbnQgZnVuY3Rpb24gdHJpZ2dlcmVkIFNFUlJPUg0KPiA+IGludGVycnVwdCBl
-eGNlcHRpb24uDQo+ID4NCj4gPiBXb3JrYXJvdW5kOg0KPiA+IERpc2FibGUgZXJyb3IgcmVwb3J0
-aW5nIG9uIEFYSSBidXMgZHVyaW5nIHRoZSBWZW5kb3IgSUQgcmVhZA0KPiA+IHRyYW5zYWN0aW9u
-cyBpbiBlbnVtZXJhdGlvbi4NCj4gPg0KPiA+IFRoaXMgRVJSQVRBIGlzIG9ubHkgZm9yIExYMjE2
-MEEgUmV2MS4wLCBhbmQgaXQgd2lsbCBiZSBmaXhlZCBpbg0KPiA+IFJldjIuMC4NCj4gPg0KPiA+
-IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4g
-LS0tDQo+ID4gVjM6DQo+ID4gIC0gSW50ZWdyYXRlZCB3aXRob3V0IGNoYW5nZSBmcm9tDQo+ID4N
-Cj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1o
-dHRwJTNBJTJGJTJGcGF0Yw0KPiA+DQo+IGh3b3JrLm96bGFicy5vcmclMkZwYXRjaCUyRjEwMDY3
-OTAlMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q3poaXFpYW4NCj4gZy5ob3UlDQo+ID4NCj4gNDBueHAu
-Y29tJTdDMTIyMDc0ZjBhYzZkNGI0NmNhODIwOGQ2OGRjM2U3YWMlN0M2ODZlYTFkM2JjMmI0YzZm
-DQo+IGE5MmNkOTkNCj4gPg0KPiBjNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjg1MjI2OTg4NTQ0OTkw
-MyZhbXA7c2RhdGE9SWZBYWRhQWZIdUdTDQo+ICUyRkpDeUg0WA0KPiA+IFRRRW5QVjFITTNodUtq
-UlZESyUyQkFidjhNJTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4NCj4gPiAgLi4uL2NvbnRyb2xsZXIv
-bW9iaXZlaWwvcGNpLWxheWVyc2NhcGUtZ2VuNC5jIHwgMzcNCj4gPiArKysrKysrKysrKysrKysr
-KysrICAuLi4vY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYyAgfA0KPiAx
-NyArKysrKysrKy0NCj4gPiAgLi4uL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZl
-aWwuaCAgIHwgIDMgKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspLCAx
-IGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9tb2JpdmVpbC9wY2ktbGF5ZXJzY2FwZS1nZW40LmMNCj4gPiBiL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvbW9iaXZlaWwvcGNpLWxheWVyc2NhcGUtZ2VuNC5jDQo+ID4gaW5kZXggMTc0Y2JjYWM0
-MDU5Li5kMmM1ZGJiZDVlM2MgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9tb2JpdmVpbC9wY2ktbGF5ZXJzY2FwZS1nZW40LmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9j
-b250cm9sbGVyL21vYml2ZWlsL3BjaS1sYXllcnNjYXBlLWdlbjQuYw0KPiA+IEBAIC0yMiw4ICsy
-MiwxMyBAQA0KPiA+DQo+ID4gICNpbmNsdWRlICJwY2llLW1vYml2ZWlsLmgiDQo+ID4NCj4gPiAr
-I2RlZmluZSBSRVZfMV8wICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoMHgxMCkNCj4g
-PiArDQo+ID4gIC8qIExVVCBhbmQgUEYgY29udHJvbCByZWdpc3RlcnMgKi8NCj4gPiAgI2RlZmlu
-ZSBQQ0lFX0xVVF9PRkYgICAgICAgICAgICAgICAgICAgKDB4ODAwMDApDQo+ID4gKyNkZWZpbmUg
-UENJRV9MVVRfR0NSICAgICAgICAgICAgICAgICAgICgweDI4KQ0KPiA+ICsjZGVmaW5lIFBDSUVf
-TFVUX0dDUl9SUkUgICAgICAgICAgICAgICAoMCkNCj4gPiArDQo+ID4gICNkZWZpbmUgUENJRV9Q
-Rl9PRkYgICAgICAgICAgICAgICAgICAgICgweGMwMDAwKQ0KPiA+ICAjZGVmaW5lIFBDSUVfUEZf
-SU5UX1NUQVQgICAgICAgICAgICAgICAoMHgxOCkNCj4gPiAgI2RlZmluZSBQRl9JTlRfU1RBVF9Q
-QUJSU1QgICAgICAgICAgICAgKDMxKQ0KPiA+IEBAIC00MSw2ICs0Niw3IEBAIHN0cnVjdCBsc19w
-Y2llX2c0IHsNCj4gPiAgICAgICAgIHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2k7DQo+ID4gICAg
-ICAgICBzdHJ1Y3QgZGVsYXllZF93b3JrIGR3b3JrOw0KPiA+ICAgICAgICAgaW50IGlycTsNCj4g
-PiArICAgICAgIHU4IHJldjsNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0aWMgaW5saW5lIHUzMiBs
-c19wY2llX2c0X2x1dF9yZWFkbChzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZSwgdTMyDQo+ID4gb2Zm
-KSBAQCAtNzYsNiArODIsMTUgQEAgc3RhdGljIGJvb2wgbHNfcGNpZV9nNF9pc19icmlkZ2Uoc3Ry
-dWN0DQo+IGxzX3BjaWVfZzQgKnBjaWUpDQo+ID4gICAgICAgICByZXR1cm4gaGVhZGVyX3R5cGUg
-PT0gUENJX0hFQURFUl9UWVBFX0JSSURHRTsgIH0NCj4gPg0KPiA+ICtzdGF0aWMgaW50IGxzX3Bj
-aWVfZzRfaG9zdF9pbml0KHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2kpIHsNCj4gPiArICAgICAg
-IHN0cnVjdCBsc19wY2llX2c0ICpwY2llID0gdG9fbHNfcGNpZV9nNChwY2kpOw0KPiA+ICsNCj4g
-PiArICAgICAgIHBjaWUtPnJldiA9IGNzcl9yZWFkYihwY2ksIFBDSV9SRVZJU0lPTl9JRCk7DQo+
-ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyBp
-bnQgbHNfcGNpZV9nNF9saW5rX3VwKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2kpICB7DQo+ID4g
-ICAgICAgICBzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZSA9IHRvX2xzX3BjaWVfZzQocGNpKTsgQEAg
-LTE4OCwxMg0KPiA+ICsyMDMsMzQgQEAgc3RhdGljIHZvaWQgbHNfcGNpZV9nNF9yZXNldChzdHJ1
-Y3Qgd29ya19zdHJ1Y3QgKndvcmspDQo+ID4gICAgICAgICBsc19wY2llX2c0X3JlaW5pdF9odyhw
-Y2llKTsNCj4gPiAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBpbnQgbHNfcGNpZV9nNF9yZWFkX290aGVy
-X2NvbmYoc3RydWN0IHBjaV9idXMgKmJ1cywgdW5zaWduZWQgaW50DQo+IGRldmZuLA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IHdoZXJlLCBpbnQgc2l6ZSwgdTMy
-ICp2YWwpIHsNCj4gPiArICAgICAgIHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2kgPSBidXMtPnN5
-c2RhdGE7DQo+ID4gKyAgICAgICBzdHJ1Y3QgbHNfcGNpZV9nNCAqcGNpZSA9IHRvX2xzX3BjaWVf
-ZzQocGNpKTsNCj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKHBj
-aWUtPnJldiA9PSBSRVZfMV8wICYmIHdoZXJlID09IFBDSV9WRU5ET1JfSUQpDQo+ID4gKyAgICAg
-ICAgICAgICAgIGxzX3BjaWVfZzRfbHV0X3dyaXRlbChwY2llLCBQQ0lFX0xVVF9HQ1IsDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwIDw8IFBDSUVfTFVUX0dDUl9S
-UkUpOw0KPiA+ICsNCj4gPiArICAgICAgIHJldCA9IHBjaV9nZW5lcmljX2NvbmZpZ19yZWFkKGJ1
-cywgZGV2Zm4sIHdoZXJlLCBzaXplLCB2YWwpOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChwY2ll
-LT5yZXYgPT0gUkVWXzFfMCAmJiB3aGVyZSA9PSBQQ0lfVkVORE9SX0lEKQ0KPiA+ICsgICAgICAg
-ICAgICAgICBsc19wY2llX2c0X2x1dF93cml0ZWwocGNpZSwgUENJRV9MVVRfR0NSLA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMSA8PCBQQ0lFX0xVVF9HQ1JfUlJF
-KTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICBz
-dGF0aWMgc3RydWN0IG1vYml2ZWlsX3JwX29wcyBsc19wY2llX2c0X3JwX29wcyA9IHsNCj4gPiAg
-ICAgICAgIC5pbnRlcnJ1cHRfaW5pdCA9IGxzX3BjaWVfZzRfaW50ZXJydXB0X2luaXQsDQo+ID4g
-KyAgICAgICAucmVhZF9vdGhlcl9jb25mID0gbHNfcGNpZV9nNF9yZWFkX290aGVyX2NvbmYsDQo+
-ID4gIH07DQo+ID4NCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtb2JpdmVpbF9wYWJfb3BzIGxz
-X3BjaWVfZzRfcGFiX29wcyA9IHsNCj4gPiAgICAgICAgIC5saW5rX3VwID0gbHNfcGNpZV9nNF9s
-aW5rX3VwLA0KPiA+ICsgICAgICAgLmhvc3RfaW5pdCA9IGxzX3BjaWVfZzRfaG9zdF9pbml0LA0K
-PiA+ICB9Ow0KPiA+DQo+ID4gIHN0YXRpYyBpbnQgX19pbml0IGxzX3BjaWVfZzRfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikgZGlmZg0KPiA+IC0tZ2l0IGEvZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYw0KPiA+IGIvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYw0KPiA+IGluZGV4IGU4
-ZDBjNDk4OTAxMy4uNWY1MWJjMmRkNmQ3IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1ob3N0LmMNCj4gPiArKysgYi9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jDQo+ID4gQEAgLTc5
-LDkgKzc5LDIwIEBAIHN0YXRpYyB2b2lkIF9faW9tZW0gKm1vYml2ZWlsX3BjaWVfbWFwX2J1cyhz
-dHJ1Y3QNCj4gcGNpX2J1cyAqYnVzLA0KPiA+ICAgICAgICAgcmV0dXJuIHBjaWUtPnJwLmNvbmZp
-Z19heGlfc2xhdmVfYmFzZSArIHdoZXJlOyAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBpbnQgbW9iaXZl
-aWxfcGNpZV9jb25maWdfcmVhZChzdHJ1Y3QgcGNpX2J1cyAqYnVzLCB1bnNpZ25lZCBpbnQNCj4g
-ZGV2Zm4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludCB3aGVy
-ZSwgaW50IHNpemUsIHUzMiAqdmFsKSB7DQo+ID4gKyAgICAgICBzdHJ1Y3QgbW9iaXZlaWxfcGNp
-ZSAqcGNpZSA9IGJ1cy0+c3lzZGF0YTsNCj4gPiArICAgICAgIHN0cnVjdCByb290X3BvcnQgKnJw
-ID0gJnBjaWUtPnJwOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChidXMtPm51bWJlciA+IHJwLT5y
-b290X2J1c19uciAmJg0KPiBycC0+b3BzLT5yZWFkX290aGVyX2NvbmYpDQo+ID4gKyAgICAgICAg
-ICAgICAgIHJldHVybiBycC0+b3BzLT5yZWFkX290aGVyX2NvbmYoYnVzLCBkZXZmbiwgd2hlcmUs
-DQo+ID4gKyBzaXplLCB2YWwpOw0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiBwY2lfZ2VuZXJp
-Y19jb25maWdfcmVhZChidXMsIGRldmZuLCB3aGVyZSwgc2l6ZSwgdmFsKTsNCj4gPiArfQ0KPiA+
-ICBzdGF0aWMgc3RydWN0IHBjaV9vcHMgbW9iaXZlaWxfcGNpZV9vcHMgPSB7DQo+ID4gICAgICAg
-ICAubWFwX2J1cyA9IG1vYml2ZWlsX3BjaWVfbWFwX2J1cywNCj4gPiAtICAgICAgIC5yZWFkID0g
-cGNpX2dlbmVyaWNfY29uZmlnX3JlYWQsDQo+ID4gKyAgICAgICAucmVhZCA9IG1vYml2ZWlsX3Bj
-aWVfY29uZmlnX3JlYWQsDQo+ID4gICAgICAgICAud3JpdGUgPSBwY2lfZ2VuZXJpY19jb25maWdf
-d3JpdGUsICB9Ow0KPiA+DQo+ID4gQEAgLTMwOSw2ICszMjAsMTAgQEAgaW50IG1vYml2ZWlsX2hv
-c3RfaW5pdChzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSwNCj4gYm9vbCByZWluaXQpDQo+ID4g
-ICAgICAgICB2YWx1ZSB8PSAoUENJX0NMQVNTX0JSSURHRV9QQ0kgPDwgMTYpOw0KPiA+ICAgICAg
-ICAgY3NyX3dyaXRlbChwY2llLCB2YWx1ZSwgUEFCX0lOVFBfQVhJX1BJT19DTEFTUyk7DQo+ID4N
-Cj4gPiArICAgICAgIC8qIFBsYXRmb3JtIHNwZWNpZmljIGhvc3QgaW5pdCAqLw0KPiA+ICsgICAg
-ICAgaWYgKHBjaWUtPm9wcy0+aG9zdF9pbml0KQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4g
-cGNpZS0+b3BzLT5ob3N0X2luaXQocGNpZSk7DQo+ID4gKw0KPiA+ICAgICAgICAgcmV0dXJuIDA7
-DQo+ID4gIH0NCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21v
-Yml2ZWlsL3BjaWUtbW9iaXZlaWwuaA0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2Jp
-dmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gPiBpbmRleCAwY2NkNmNlZTVmOGYuLmFiNDNkZTVlNGIy
-YiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUt
-bW9iaXZlaWwuaA0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNp
-ZS1tb2JpdmVpbC5oDQo+ID4gQEAgLTE0NSw2ICsxNDUsOCBAQCBzdHJ1Y3QgbW9iaXZlaWxfbXNp
-DQo+IHsgICAgICAgICAgICAgICAgICAgICAgIC8qIE1TSSBpbmZvcm1hdGlvbiAqLw0KPiA+DQo+
-ID4gIHN0cnVjdCBtb2JpdmVpbF9ycF9vcHMgew0KPiA+ICAgICAgICAgaW50ICgqaW50ZXJydXB0
-X2luaXQpKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKTsNCj4gPiArICAgICAgIGludCAoKnJl
-YWRfb3RoZXJfY29uZikoc3RydWN0IHBjaV9idXMgKmJ1cywgdW5zaWduZWQgaW50IGRldmZuLA0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnQgd2hlcmUsIGludCBzaXplLCB1
-MzIgKnZhbCk7DQo+ID4gIH07DQo+ID4NCj4gPiAgc3RydWN0IHJvb3RfcG9ydCB7DQo+ID4gQEAg
-LTE2MCw2ICsxNjIsNyBAQCBzdHJ1Y3Qgcm9vdF9wb3J0IHsNCj4gPg0KPiA+ICBzdHJ1Y3QgbW9i
-aXZlaWxfcGFiX29wcyB7DQo+ID4gICAgICAgICBpbnQgKCpsaW5rX3VwKShzdHJ1Y3QgbW9iaXZl
-aWxfcGNpZSAqcGNpZSk7DQo+ID4gKyAgICAgICBpbnQgKCpob3N0X2luaXQpKHN0cnVjdCBtb2Jp
-dmVpbF9wY2llICpwY2llKTsNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdHJ1Y3QgbW9iaXZlaWxfcGNp
-ZSB7DQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0KPiBjYW4gd2UgaGF2ZSBhbiBlbmdsaXNoIGJy
-aWVmIHRoYW4gaGF2aW5nIGEgaW50ZXJuYWwgY3J5cHRpYyBudW1iZXI6QS0wMTE1NzcsDQo+IG9u
-IHRoZSBwYXRjaCB0aXRsZT8NCg0KSSB0aGluayBpdCBpcyB1bm5lY2Vzc2FyeSB0byBtYWtlIGEg
-cmVkdW5kYW50IHRpdGxlIGZvciB0aGUgRVJSQVRBIHBhdGNoIGFuZCB0aGUgY29tbWl0IG1lc3Nh
-Z2UgaGFzIHRoZSBFUlJBVEEgZGVzY3JpcHRpb24uDQoNClRoYW5rcywNClpoaXFpYW5nDQo=
+On Sun, Feb 17, 2019 at 02:45:52PM +0530, Jagan Teki wrote:
+> On Sun, Feb 17, 2019 at 1:21 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> >
+> > Hi Dmitry and Rob,
+> >
+> > On Thu, Feb 14, 2019 at 3:21 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Tue, Jan 22, 2019 at 7:39 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > >
+> > > > On Mon, Jan 21, 2019 at 9:46 PM Rob Herring <robh@kernel.org> wrote:
+> > > > >
+> > > > > On Fri, Jan 18, 2019 at 10:01 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > > >
+> > > > > > On Wed, Jan 9, 2019 at 7:08 PM Rob Herring <robh@kernel.org> wrote:
+> > > > > > >
+> > > > > > > Please CC DT list if you want bindings reviewed.
+> > > > > >
+> > > > > > Sorry I forgot.
+> > > > > >
+> > > > > > >
+> > > > > > > On Wed, Jan 9, 2019 at 1:40 AM Dmitry Torokhov
+> > > > > > > <dmitry.torokhov@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > On Sat, Dec 15, 2018 at 08:47:59PM +0530, Jagan Teki wrote:
+> > > > > > > > > Most of the Goodix CTP controllers are supply with AVDD28 pin.
+> > > > > > > > > which need to supply for controllers like GT5663 on some boards
+> > > > > > > > > to trigger the power.
+> > > > > > > > >
+> > > > > > > > > So, document the supply property so-that the require boards
+> > > > > > > > > that used on GT5663 can enable it via device tree.
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > > > > ---
+> > > > > > > > >  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
+> > > > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > > > >
+> > > > > > > > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > > > > index f7e95c52f3c7..c4622c983e08 100644
+> > > > > > > > > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > > > > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > > > > @@ -23,6 +23,7 @@ Optional properties:
+> > > > > > > > >   - touchscreen-inverted-y  : Y axis is inverted (boolean)
+> > > > > > > > >   - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
+> > > > > > > > >                               (swapping is done after inverting the axis)
+> > > > > > > > > + - AVDD28-supply     : Analog power supply regulator on AVDD28 pin
+> > > > > > > >
+> > > > > > > > I think we normally use lower case in DT bindings and rarely encode
+> > > > > > > > voltage in the supply name unless we are dealing with several supplies
+> > > > > > > > of the same kind, but I'll let Ron comment on this.
+> > > > > > >
+> > > > > > > Yes on lowercase though there are some exceptions.
+> > > > > > >
+> > > > > > > There's also a AVDD22 supply as well as DVDD12 and VDDIO. So we
+> > > > > > > probably need to keep the voltage, but the binding is incomplete.
+> > > > > >
+> > > > > > What is incomplete here? can you please elaborate.
+> > > > >
+> > > > > You are missing the 3 other supplies the chip has: AVDD22, DVDD12 and VDDIO.
+> > > >
+> > > > Though it has other supplies, only AVDD28 is connected in the Host
+> > > > interface design similar like 9. Reference Schematic on Page, 23 in
+> > > > attached manual.
+> > >
+> > > That is for a particular board design. It still has other supplies.
+> > > Just make the binding complete please. You can make them optional. I
+> > > don't care if the driver supports controlling all the supplies or not
+> > > (though Dmitry might).
+> >
+> > So, Can I make bulk get and enable in all 4 regulators global to
+> > driver or specific to that chip, in either way the regulators which
+> > are not used to process via dummy regulators (which we all know).
+> >
+> > or regulator which are not using are get via devm_regulator_get_optional.
+> >
+> > Any suggestions?
+> 
+> Just realized to go with bulk calls, please have a look at on v5 [1]
+
+I do not believe you can use bulk regulator API here as you need to
+implement the power up timing scheme mentioned on p. 12 of the spec you
+referenced earlier. And, because of that timing diagram, I believe if
+you want to control AVDD supply, you also have to control VDDIO supply
+as it has to be on only after enabling AVDD.
+
+I also wonder if it is valid to have both AVDD28 and AVDD22 connected at
+the same time.
+
+Thanks.
+
+-- 
+Dmitry
