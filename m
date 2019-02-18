@@ -1,38 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 0/9] Mellanox BlueField ARM SoC Rshim driver
-Date: Mon, 18 Feb 2019 14:24:50 +0100
-Message-ID: <CAK8P3a3BEA+oESXONvuVHq5XJ8vne+-4yL78DXux9pXQdybq3Q@mail.gmail.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1548098268-982-1-git-send-email-lsun@mellanox.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Linux-next 20190218: am57xx-evm: mmc1: ADMA error
+Date: Mon, 18 Feb 2019 18:57:52 +0530
+Message-ID: <CA+G9fYsmC5ckLXfQxSUn-tqxLZ4NofEyb9RA69Q07RUoxc79RQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1548098268-982-1-git-send-email-lsun@mellanox.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: t-kristo@ti.com, nm@ti.com, faiz_abbas@ti.com, Mark Rutland <mark.rutland@arm.com>, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 8:18 PM Liming Sun <lsun@mellanox.com> wrote:
->
-> Liming Sun (9):
->   soc: Add TmFifo driver for Mellanox BlueField Soc
->   arm64: Add Mellanox BlueField SoC config option
->   dt-bindings: soc: Add TmFifo binding for Mellanox BlueField SoC
->   MAINTAINERS: Add entry for Mellanox Bluefield Soc
+Do you see this error on am57xx-evm running Linux next 20190218 ?
+I have tested on multiple devices and found this error.
+Please find the full boot log [1].
+Am i missing any pre required configs [2] ?
 
-Could you send the arch/arm64 changes to soc@kernel.org for
-inclusion? I'm not sure what the status of the rshim driver is now,
-but we should probably merge the base support through the soc
-tree.
+[    5.620263] mmc1: ADMA error
+[    5.623266] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
+[    5.629740] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
+[    5.636215] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
+[    5.642690] mmc1: sdhci: Argument:  0x002cec70 | Trn mode: 0x00000033
+[    5.649162] mmc1: sdhci: Present:   0x01f00000 | Host ctl: 0x00000010
+[    5.655634] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
+[    5.662108] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
+[    5.668582] mmc1: sdhci: Timeout:   0x0000000c | Int stat: 0x00000000
+[    5.675055] mmc1: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
+[    5.681529] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
+[    5.688002] mmc1: sdhci: Caps:      0x21e90080 | Caps_1:   0x00000f77
+[    5.694474] mmc1: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
+[    5.700949] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffef
+[    5.707423] mmc1: sdhci: Resp[2]:   0x0f5903ff | Resp[3]:  0xd04f0132
+[    5.713896] mmc1: sdhci: Host ctl2: 0x00000004
+[    5.718364] mmc1: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xab868218
 
-     Arnd
+<>
+[   42.425587] print_req_error: I/O error, dev mmcblk1, sector 4542872 flags 1
+[   42.429013] mmc1: ADMA error
+[   42.432606] EXT4-fs warning (device mmcblk1p9): ext4_end_bio:324:
+I/O error 10 writing to inode 35321 (offset 0 size 4096 starting block
+567860)
+[   42.435475] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
+[   42.448543] Buffer I/O error on device mmcblk1p9, logical block 226675
+[   42.454944] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
+[   42.461528] EXT4-fs warning (device mmcblk1p9): ext4_end_bio:324:
+I/O error 10 writing to inode 35322 (offset 0 size 4096 starting block
+567861)
+[   42.467960] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
+[   42.480982] Buffer I/O error on device mmcblk1p9, logical block 226676
+[   42.487427] mmc1: sdhci: Argument:  0x002cae20 | Trn mode: 0x00000033
+[   42.494007] EXT4-fs warning (device mmcblk1p9): ext4_end_bio:324:
+I/O error 10 writing to inode 315 (offset 0 size 4096 starting block
+567862)
+
+Full boot log,
+[1] https://lkft.validation.linaro.org/scheduler/job/610989#L4354
+config,
+[2] http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/am57xx-evm/lkft/linux-next/467/config
+
+Best regards
+Naresh Kamboju
