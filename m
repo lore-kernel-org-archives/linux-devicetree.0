@@ -1,7 +1,8 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 4/4] arm64: dts: ti: k3-am654: Update the power domain cells
-Date: Mon, 18 Feb 2019 10:45:17 +0530
-Message-ID: <20190218051517.9218-5-lokeshvutla@ti.com>
+Subject: [PATCH 2/4] soc: ti: ti_sci_pm_domains: Add support for exclusive
+ access
+Date: Mon, 18 Feb 2019 10:45:15 +0530
+Message-ID: <20190218051517.9218-3-lokeshvutla@ti.com>
 References: <20190218051517.9218-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,214 +22,107 @@ To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar
 Cc: Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the power-domain cells to 2 and mark all devices as
-exclusive for now.
+TISCI protocol supports for enabling the device with exclusive
+permissions. Certain remoteproc devices or some shared devices
+across VM doesn't wants to request devices with this flag set.
+So add support for getting this information from DT. With this
+power-domain-cells are increased to 2.
+
+For keeping the DT backward compatibility intact, defaulting the
+device permissions to set the exclusive flag set. In this case the
+power-domain-cells is 1.
 
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi   | 26 +++++++++++-----------
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi    | 10 ++++-----
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi |  6 ++---
- 3 files changed, 21 insertions(+), 21 deletions(-)
+ .../bindings/soc/ti/sci-pm-domain.txt         |  7 ++++--
+ drivers/soc/ti/ti_sci_pm_domains.c            | 22 +++++++++++++++++--
+ 2 files changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 272cf8fc8d30..0156cf0e7205 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -48,7 +48,7 @@
- 		interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 146>;
-+		power-domains = <&k3_pds 146 1>;
- 	};
+diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+index f7b00a7c0f68..5fdda7475023 100644
+--- a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
++++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+@@ -19,8 +19,11 @@ child of the pmmc node.
+ Required Properties:
+ --------------------
+ - compatible: should be "ti,sci-pm-domain"
+-- #power-domain-cells: Must be 1 so that an id can be provided in each
+-		       device node.
++- #power-domain-cells: Can be one of the following:
++			1: Containing the device id of each node
++			2: First entry should be device id
++			   Second entry should be 1 or 0. Use 1 for enabling
++			   the device with exclusive permissions set else 0.
  
- 	main_uart1: serial@2810000 {
-@@ -58,7 +58,7 @@
- 		reg-io-width = <4>;
- 		interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		power-domains = <&k3_pds 147>;
-+		power-domains = <&k3_pds 147 1>;
- 	};
+ Example (K2G):
+ -------------
+diff --git a/drivers/soc/ti/ti_sci_pm_domains.c b/drivers/soc/ti/ti_sci_pm_domains.c
+index de31b9389e2e..4dae42651212 100644
+--- a/drivers/soc/ti/ti_sci_pm_domains.c
++++ b/drivers/soc/ti/ti_sci_pm_domains.c
+@@ -24,6 +24,8 @@
+ #include <linux/slab.h>
+ #include <linux/soc/ti/ti_sci_protocol.h>
  
- 	main_uart2: serial@2820000 {
-@@ -68,7 +68,7 @@
- 		reg-io-width = <4>;
- 		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		power-domains = <&k3_pds 148>;
-+		power-domains = <&k3_pds 148 1>;
- 	};
- 
- 	main_pmx0: pinmux@11c000 {
-@@ -95,7 +95,7 @@
- 		#size-cells = <0>;
- 		clock-names = "fck";
- 		clocks = <&k3_clks 110 1>;
--		power-domains = <&k3_pds 110>;
-+		power-domains = <&k3_pds 110 1>;
- 	};
- 
- 	main_i2c1: i2c@2010000 {
-@@ -106,7 +106,7 @@
- 		#size-cells = <0>;
- 		clock-names = "fck";
- 		clocks = <&k3_clks 111 1>;
--		power-domains = <&k3_pds 111>;
-+		power-domains = <&k3_pds 111 1>;
- 	};
- 
- 	main_i2c2: i2c@2020000 {
-@@ -117,7 +117,7 @@
- 		#size-cells = <0>;
- 		clock-names = "fck";
- 		clocks = <&k3_clks 112 1>;
--		power-domains = <&k3_pds 112>;
-+		power-domains = <&k3_pds 112 1>;
- 	};
- 
- 	main_i2c3: i2c@2030000 {
-@@ -128,14 +128,14 @@
- 		#size-cells = <0>;
- 		clock-names = "fck";
- 		clocks = <&k3_clks 113 1>;
--		power-domains = <&k3_pds 113>;
-+		power-domains = <&k3_pds 113 1>;
- 	};
- 
- 	ecap0: pwm@3100000 {
- 		compatible = "ti,am654-ecap", "ti,am3352-ecap";
- 		#pwm-cells = <3>;
- 		reg = <0x0 0x03100000 0x0 0x60>;
--		power-domains = <&k3_pds 39>;
-+		power-domains = <&k3_pds 39 1>;
- 		clocks = <&k3_clks 39 0>;
- 		clock-names = "fck";
- 	};
-@@ -145,7 +145,7 @@
- 		reg = <0x0 0x2100000 0x0 0x400>;
- 		interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&k3_clks 137 1>;
--		power-domains = <&k3_pds 137>;
-+		power-domains = <&k3_pds 137 1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
-@@ -155,7 +155,7 @@
- 		reg = <0x0 0x2110000 0x0 0x400>;
- 		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&k3_clks 138 1>;
--		power-domains = <&k3_pds 138>;
-+		power-domains = <&k3_pds 138 1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		assigned-clocks = <&k3_clks 137 1>;
-@@ -167,7 +167,7 @@
- 		reg = <0x0 0x2120000 0x0 0x400>;
- 		interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&k3_clks 139 1>;
--		power-domains = <&k3_pds 139>;
-+		power-domains = <&k3_pds 139 1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
-@@ -177,7 +177,7 @@
- 		reg = <0x0 0x2130000 0x0 0x400>;
- 		interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&k3_clks 140 1>;
--		power-domains = <&k3_pds 140>;
-+		power-domains = <&k3_pds 140 1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
-@@ -187,7 +187,7 @@
- 		reg = <0x0 0x2140000 0x0 0x400>;
- 		interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&k3_clks 141 1>;
--		power-domains = <&k3_pds 141>;
-+		power-domains = <&k3_pds 141 1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 593f718e8fb5..f2f54d80cf39 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -14,7 +14,7 @@
- 			interrupts = <GIC_SPI 565 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-frequency = <96000000>;
- 			current-speed = <115200>;
--			power-domains = <&k3_pds 149>;
-+			power-domains = <&k3_pds 149 1>;
- 	};
- 
- 	mcu_i2c0: i2c@40b00000 {
-@@ -25,7 +25,7 @@
- 		#size-cells = <0>;
- 		clock-names = "fck";
- 		clocks = <&k3_clks 114 1>;
--		power-domains = <&k3_pds 114>;
-+		power-domains = <&k3_pds 114 1>;
- 	};
- 
- 	mcu_spi0: spi@40300000 {
-@@ -33,7 +33,7 @@
- 		reg = <0x0 0x40300000 0x0 0x400>;
- 		interrupts = <GIC_SPI 560 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&k3_clks 142 1>;
--		power-domains = <&k3_pds 142>;
-+		power-domains = <&k3_pds 142 1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
-@@ -43,7 +43,7 @@
- 		reg = <0x0 0x40310000 0x0 0x400>;
- 		interrupts = <GIC_SPI 561 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&k3_clks 143 1>;
--		power-domains = <&k3_pds 143>;
-+		power-domains = <&k3_pds 143 1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
-@@ -53,7 +53,7 @@
- 		reg = <0x0 0x40320000 0x0 0x400>;
- 		interrupts = <GIC_SPI 562 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&k3_clks 144 1>;
--		power-domains = <&k3_pds 144>;
-+		power-domains = <&k3_pds 144 1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-index 7cbdc0912ab7..68fd833c130a 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-@@ -20,7 +20,7 @@
- 
- 		k3_pds: power-controller {
- 			compatible = "ti,sci-pm-domain";
--			#power-domain-cells = <1>;
-+			#power-domain-cells = <2>;
- 		};
- 
- 		k3_clks: clocks {
-@@ -50,7 +50,7 @@
- 		interrupts = <GIC_SPI 697 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 150>;
-+		power-domains = <&k3_pds 150 1>;
- 	};
- 
- 	wkup_i2c0: i2c@42120000 {
-@@ -61,6 +61,6 @@
- 		#size-cells = <0>;
- 		clock-names = "fck";
- 		clocks = <&k3_clks 115 1>;
--		power-domains = <&k3_pds 115>;
-+		power-domains = <&k3_pds 115 1>;
- 	};
++#define PD_REQUEST_EXCLUSIVE BIT(0)
++
+ /**
+  * struct ti_sci_genpd_dev_data: holds data needed for every device attached
+  *				 to this genpd
+@@ -32,6 +34,7 @@
+  */
+ struct ti_sci_genpd_dev_data {
+ 	int idx;
++	u8 exclusive;
  };
+ 
+ /**
+@@ -63,6 +66,14 @@ static int ti_sci_dev_id(struct device *dev)
+ 	return sci_dev_data->idx;
+ }
+ 
++static u8 is_ti_sci_dev_exclusive(struct device *dev)
++{
++	struct generic_pm_domain_data *genpd_data = dev_gpd_data(dev);
++	struct ti_sci_genpd_dev_data *sci_dev_data = genpd_data->data;
++
++	return sci_dev_data->exclusive & PD_REQUEST_EXCLUSIVE;
++}
++
+ /**
+  * ti_sci_dev_to_sci_handle(): get pointer to ti_sci_handle
+  * @dev: pointer to device associated with this genpd
+@@ -87,7 +98,10 @@ static int ti_sci_dev_start(struct device *dev)
+ 	const struct ti_sci_handle *ti_sci = ti_sci_dev_to_sci_handle(dev);
+ 	int idx = ti_sci_dev_id(dev);
+ 
+-	return ti_sci->ops.dev_ops.get_device(ti_sci, idx);
++	if (is_ti_sci_dev_exclusive(dev))
++		return ti_sci->ops.dev_ops.get_device_exclusive(ti_sci, idx);
++	else
++		return ti_sci->ops.dev_ops.get_device(ti_sci, idx);
+ }
+ 
+ /**
+@@ -118,7 +132,7 @@ static int ti_sci_pd_attach_dev(struct generic_pm_domain *domain,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (pd_args.args_count != 1)
++	if (pd_args.args_count != 1 && pd_args.args_count != 2)
+ 		return -EINVAL;
+ 
+ 	idx = pd_args.args[0];
+@@ -136,6 +150,10 @@ static int ti_sci_pd_attach_dev(struct generic_pm_domain *domain,
+ 		return -ENOMEM;
+ 
+ 	sci_dev_data->idx = idx;
++	/* Enable the exclusive permissions by default */
++	sci_dev_data->exclusive = PD_REQUEST_EXCLUSIVE;
++	if (pd_args.args_count == 2)
++		sci_dev_data->exclusive = pd_args.args[1];
+ 
+ 	genpd_data = dev_gpd_data(dev);
+ 	genpd_data->data = sci_dev_data;
 -- 
 2.19.2
