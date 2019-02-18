@@ -1,17 +1,12 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH 2/4] soc: ti: ti_sci_pm_domains: Add support for exclusive
- access
-Date: Mon, 18 Feb 2019 19:16:30 +0530
-Message-ID: <dea9f6ba-5a0f-59f1-7fa2-2a17df821c9c@ti.com>
-References: <20190218051517.9218-1-lokeshvutla@ti.com>
- <20190218051517.9218-3-lokeshvutla@ti.com>
- <74ef7305-0575-f24a-0806-49d85b7b70ff@ti.com>
+From: Patrick Havelange <patrick.havelange@essensium.com>
+Subject: [PATCH 1/8] include/fsl: add common FlexTimer #defines in a separate
+ header.
+Date: Mon, 18 Feb 2019 15:03:14 +0100
+Message-ID: <20190218140321.19166-1-patrick.havelange@essensium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <74ef7305-0575-f24a-0806-49d85b7b70ff@ti.com>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,93 +16,110 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Esben Haabendal <esben@haabendal.dk>, William Breathitt Gray <vilhelm.gray@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: Patrick Havelange <patrick.havelange@essensium.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxOC8wMi8xOSAxOjQwIFBNLCBUZXJvIEtyaXN0byB3cm90ZToKPiBPbiAxOC8wMi8yMDE5
-IDA3OjE1LCBMb2tlc2ggVnV0bGEgd3JvdGU6Cj4+IFRJU0NJIHByb3RvY29sIHN1cHBvcnRzIGZv
-ciBlbmFibGluZyB0aGUgZGV2aWNlIHdpdGggZXhjbHVzaXZlCj4+IHBlcm1pc3Npb25zLiBDZXJ0
-YWluIHJlbW90ZXByb2MgZGV2aWNlcyBvciBzb21lIHNoYXJlZCBkZXZpY2VzCj4+IGFjcm9zcyBW
-TSBkb2Vzbid0IHdhbnRzIHRvIHJlcXVlc3QgZGV2aWNlcyB3aXRoIHRoaXMgZmxhZyBzZXQuCj4+
-IFNvIGFkZCBzdXBwb3J0IGZvciBnZXR0aW5nIHRoaXMgaW5mb3JtYXRpb24gZnJvbSBEVC4gV2l0
-aCB0aGlzCj4+IHBvd2VyLWRvbWFpbi1jZWxscyBhcmUgaW5jcmVhc2VkIHRvIDIuCj4+Cj4+IEZv
-ciBrZWVwaW5nIHRoZSBEVCBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IGludGFjdCwgZGVmYXVsdGlu
-ZyB0aGUKPj4gZGV2aWNlIHBlcm1pc3Npb25zIHRvIHNldCB0aGUgZXhjbHVzaXZlIGZsYWcgc2V0
-LiBJbiB0aGlzIGNhc2UgdGhlCj4+IHBvd2VyLWRvbWFpbi1jZWxscyBpcyAxLgo+Pgo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBMb2tlc2ggVnV0bGEgPGxva2VzaHZ1dGxhQHRpLmNvbT4KPj4gLS0tCj4+IMKg
-IC4uLi9iaW5kaW5ncy9zb2MvdGkvc2NpLXBtLWRvbWFpbi50eHTCoMKgwqDCoMKgwqDCoMKgIHzC
-oCA3ICsrKystLQo+PiDCoCBkcml2ZXJzL3NvYy90aS90aV9zY2lfcG1fZG9tYWlucy5jwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCB8IDIyICsrKysrKysrKysrKysrKysrLS0KPiAKPiBQbGVhc2Ugc3Bs
-aXQgdGhlIGR0LWJpbmRpbmcgY2hhbmdlIGludG8gYSBzZXBhcmF0ZSBwYXRjaC4KClN1cmUsIHdp
-bGwgZml4IGluIHYyLiBXaWxsIHdhaXQgZm9yIHNvbWUgbW9yZSB0aW1lIGJlZm9yZSBwb3N0aW5n
-IHYyLgoKVGhhbmtzIGFuZCByZWdhcmRzLApMb2tlc2gKCj4gCj4gLVRlcm8KPiAKPj4gwqAgMiBm
-aWxlcyBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy90aS9zY2ktcG0t
-ZG9tYWluLnR4dAo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvdGkv
-c2NpLXBtLWRvbWFpbi50eHQKPj4gaW5kZXggZjdiMDBhN2MwZjY4Li41ZmRkYTc0NzUwMjMgMTAw
-NjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvdGkvc2Np
-LXBtLWRvbWFpbi50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NvYy90aS9zY2ktcG0tZG9tYWluLnR4dAo+PiBAQCAtMTksOCArMTksMTEgQEAgY2hpbGQgb2Yg
-dGhlIHBtbWMgbm9kZS4KPj4gwqAgUmVxdWlyZWQgUHJvcGVydGllczoKPj4gwqAgLS0tLS0tLS0t
-LS0tLS0tLS0tLS0KPj4gwqAgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgInRpLHNjaS1wbS1kb21h
-aW4iCj4+IC0tICNwb3dlci1kb21haW4tY2VsbHM6IE11c3QgYmUgMSBzbyB0aGF0IGFuIGlkIGNh
-biBiZSBwcm92aWRlZCBpbiBlYWNoCj4+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRl
-dmljZSBub2RlLgo+PiArLSAjcG93ZXItZG9tYWluLWNlbGxzOiBDYW4gYmUgb25lIG9mIHRoZSBm
-b2xsb3dpbmc6Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDE6IENvbnRhaW5pbmcgdGhlIGRl
-dmljZSBpZCBvZiBlYWNoIG5vZGUKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMjogRmlyc3Qg
-ZW50cnkgc2hvdWxkIGJlIGRldmljZSBpZAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBTZWNvbmQgZW50cnkgc2hvdWxkIGJlIDEgb3IgMC4gVXNlIDEgZm9yIGVuYWJsaW5nCj4+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRoZSBkZXZpY2Ugd2l0aCBleGNsdXNpdmUgcGVy
-bWlzc2lvbnMgc2V0IGVsc2UgMC4KPj4gwqAgwqAgRXhhbXBsZSAoSzJHKToKPj4gwqAgLS0tLS0t
-LS0tLS0tLQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvdGkvdGlfc2NpX3BtX2RvbWFpbnMu
-Ywo+PiBiL2RyaXZlcnMvc29jL3RpL3RpX3NjaV9wbV9kb21haW5zLmMKPj4gaW5kZXggZGUzMWI5
-Mzg5ZTJlLi40ZGFlNDI2NTEyMTIgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvc29jL3RpL3RpX3Nj
-aV9wbV9kb21haW5zLmMKPj4gKysrIGIvZHJpdmVycy9zb2MvdGkvdGlfc2NpX3BtX2RvbWFpbnMu
-Ywo+PiBAQCAtMjQsNiArMjQsOCBAQAo+PiDCoCAjaW5jbHVkZSA8bGludXgvc2xhYi5oPgo+PiDC
-oCAjaW5jbHVkZSA8bGludXgvc29jL3RpL3RpX3NjaV9wcm90b2NvbC5oPgo+PiDCoCArI2RlZmlu
-ZSBQRF9SRVFVRVNUX0VYQ0xVU0lWRSBCSVQoMCkKPj4gKwo+PiDCoCAvKioKPj4gwqDCoCAqIHN0
-cnVjdCB0aV9zY2lfZ2VucGRfZGV2X2RhdGE6IGhvbGRzIGRhdGEgbmVlZGVkIGZvciBldmVyeSBk
-ZXZpY2UgYXR0YWNoZWQKPj4gwqDCoCAqwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-dG8gdGhpcyBnZW5wZAo+PiBAQCAtMzIsNiArMzQsNyBAQAo+PiDCoMKgICovCj4+IMKgIHN0cnVj
-dCB0aV9zY2lfZ2VucGRfZGV2X2RhdGEgewo+PiDCoMKgwqDCoMKgIGludCBpZHg7Cj4+ICvCoMKg
-wqAgdTggZXhjbHVzaXZlOwo+PiDCoCB9Owo+PiDCoCDCoCAvKioKPj4gQEAgLTYzLDYgKzY2LDE0
-IEBAIHN0YXRpYyBpbnQgdGlfc2NpX2Rldl9pZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4+IMKgwqDC
-oMKgwqAgcmV0dXJuIHNjaV9kZXZfZGF0YS0+aWR4Owo+PiDCoCB9Cj4+IMKgICtzdGF0aWMgdTgg
-aXNfdGlfc2NpX2Rldl9leGNsdXNpdmUoc3RydWN0IGRldmljZSAqZGV2KQo+PiArewo+PiArwqDC
-oMKgIHN0cnVjdCBnZW5lcmljX3BtX2RvbWFpbl9kYXRhICpnZW5wZF9kYXRhID0gZGV2X2dwZF9k
-YXRhKGRldik7Cj4+ICvCoMKgwqAgc3RydWN0IHRpX3NjaV9nZW5wZF9kZXZfZGF0YSAqc2NpX2Rl
-dl9kYXRhID0gZ2VucGRfZGF0YS0+ZGF0YTsKPj4gKwo+PiArwqDCoMKgIHJldHVybiBzY2lfZGV2
-X2RhdGEtPmV4Y2x1c2l2ZSAmIFBEX1JFUVVFU1RfRVhDTFVTSVZFOwo+PiArfQo+PiArCj4+IMKg
-IC8qKgo+PiDCoMKgICogdGlfc2NpX2Rldl90b19zY2lfaGFuZGxlKCk6IGdldCBwb2ludGVyIHRv
-IHRpX3NjaV9oYW5kbGUKPj4gwqDCoCAqIEBkZXY6IHBvaW50ZXIgdG8gZGV2aWNlIGFzc29jaWF0
-ZWQgd2l0aCB0aGlzIGdlbnBkCj4+IEBAIC04Nyw3ICs5OCwxMCBAQCBzdGF0aWMgaW50IHRpX3Nj
-aV9kZXZfc3RhcnQoc3RydWN0IGRldmljZSAqZGV2KQo+PiDCoMKgwqDCoMKgIGNvbnN0IHN0cnVj
-dCB0aV9zY2lfaGFuZGxlICp0aV9zY2kgPSB0aV9zY2lfZGV2X3RvX3NjaV9oYW5kbGUoZGV2KTsK
-Pj4gwqDCoMKgwqDCoCBpbnQgaWR4ID0gdGlfc2NpX2Rldl9pZChkZXYpOwo+PiDCoCAtwqDCoMKg
-IHJldHVybiB0aV9zY2ktPm9wcy5kZXZfb3BzLmdldF9kZXZpY2UodGlfc2NpLCBpZHgpOwo+PiAr
-wqDCoMKgIGlmIChpc190aV9zY2lfZGV2X2V4Y2x1c2l2ZShkZXYpKQo+PiArwqDCoMKgwqDCoMKg
-wqAgcmV0dXJuIHRpX3NjaS0+b3BzLmRldl9vcHMuZ2V0X2RldmljZV9leGNsdXNpdmUodGlfc2Np
-LCBpZHgpOwo+PiArwqDCoMKgIGVsc2UKPj4gK8KgwqDCoMKgwqDCoMKgIHJldHVybiB0aV9zY2kt
-Pm9wcy5kZXZfb3BzLmdldF9kZXZpY2UodGlfc2NpLCBpZHgpOwo+PiDCoCB9Cj4+IMKgIMKgIC8q
-Kgo+PiBAQCAtMTE4LDcgKzEzMiw3IEBAIHN0YXRpYyBpbnQgdGlfc2NpX3BkX2F0dGFjaF9kZXYo
-c3RydWN0IGdlbmVyaWNfcG1fZG9tYWluCj4+ICpkb21haW4sCj4+IMKgwqDCoMKgwqAgaWYgKHJl
-dCA8IDApCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gcmV0Owo+PiDCoCAtwqDCoMKgIGlm
-IChwZF9hcmdzLmFyZ3NfY291bnQgIT0gMSkKPj4gK8KgwqDCoCBpZiAocGRfYXJncy5hcmdzX2Nv
-dW50ICE9IDEgJiYgcGRfYXJncy5hcmdzX2NvdW50ICE9IDIpCj4+IMKgwqDCoMKgwqDCoMKgwqDC
-oCByZXR1cm4gLUVJTlZBTDsKPj4gwqAgwqDCoMKgwqDCoCBpZHggPSBwZF9hcmdzLmFyZ3NbMF07
-Cj4+IEBAIC0xMzYsNiArMTUwLDEwIEBAIHN0YXRpYyBpbnQgdGlfc2NpX3BkX2F0dGFjaF9kZXYo
-c3RydWN0IGdlbmVyaWNfcG1fZG9tYWluCj4+ICpkb21haW4sCj4+IMKgwqDCoMKgwqDCoMKgwqDC
-oCByZXR1cm4gLUVOT01FTTsKPj4gwqAgwqDCoMKgwqDCoCBzY2lfZGV2X2RhdGEtPmlkeCA9IGlk
-eDsKPj4gK8KgwqDCoCAvKiBFbmFibGUgdGhlIGV4Y2x1c2l2ZSBwZXJtaXNzaW9ucyBieSBkZWZh
-dWx0ICovCj4+ICvCoMKgwqAgc2NpX2Rldl9kYXRhLT5leGNsdXNpdmUgPSBQRF9SRVFVRVNUX0VY
-Q0xVU0lWRTsKPj4gK8KgwqDCoCBpZiAocGRfYXJncy5hcmdzX2NvdW50ID09IDIpCj4+ICvCoMKg
-wqDCoMKgwqDCoCBzY2lfZGV2X2RhdGEtPmV4Y2x1c2l2ZSA9IHBkX2FyZ3MuYXJnc1sxXTsKPj4g
-wqAgwqDCoMKgwqDCoCBnZW5wZF9kYXRhID0gZGV2X2dwZF9kYXRhKGRldik7Cj4+IMKgwqDCoMKg
-wqAgZ2VucGRfZGF0YS0+ZGF0YSA9IHNjaV9kZXZfZGF0YTsKPj4KPiAKPiAtLSAKPiBUZXhhcyBJ
-bnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4K
-PiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBI
-ZWxzaW5raQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
+Reviewed-by: Esben Haabendal <esben@haabendal.dk>
+---
+ include/linux/fsl/ftm.h | 88 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 include/linux/fsl/ftm.h
+
+diff --git a/include/linux/fsl/ftm.h b/include/linux/fsl/ftm.h
+new file mode 100644
+index 000000000000..d59011acf66c
+--- /dev/null
++++ b/include/linux/fsl/ftm.h
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef __FSL_FTM_H__
++#define __FSL_FTM_H__
++
++#define FTM_SC       0x0 /* Status And Control */
++#define FTM_CNT      0x4 /* Counter */
++#define FTM_MOD      0x8 /* Modulo */
++
++#define FTM_CNTIN    0x4C /* Counter Initial Value */
++#define FTM_STATUS   0x50 /* Capture And Compare Status */
++#define FTM_MODE     0x54 /* Features Mode Selection */
++#define FTM_SYNC     0x58 /* Synchronization */
++#define FTM_OUTINIT  0x5C /* Initial State For Channels Output */
++#define FTM_OUTMASK  0x60 /* Output Mask */
++#define FTM_COMBINE  0x64 /* Function For Linked Channels */
++#define FTM_DEADTIME 0x68 /* Deadtime Insertion Control */
++#define FTM_EXTTRIG  0x6C /* FTM External Trigger */
++#define FTM_POL      0x70 /* Channels Polarity */
++#define FTM_FMS      0x74 /* Fault Mode Status */
++#define FTM_FILTER   0x78 /* Input Capture Filter Control */
++#define FTM_FLTCTRL  0x7C /* Fault Control */
++#define FTM_QDCTRL   0x80 /* Quadrature Decoder Control And Status */
++#define FTM_CONF     0x84 /* Configuration */
++#define FTM_FLTPOL   0x88 /* FTM Fault Input Polarity */
++#define FTM_SYNCONF  0x8C /* Synchronization Configuration */
++#define FTM_INVCTRL  0x90 /* FTM Inverting Control */
++#define FTM_SWOCTRL  0x94 /* FTM Software Output Control */
++#define FTM_PWMLOAD  0x98 /* FTM PWM Load */
++
++#define FTM_SC_CLK_MASK_SHIFT	3
++#define FTM_SC_CLK_MASK		(3 << FTM_SC_CLK_MASK_SHIFT)
++#define FTM_SC_TOF		0x80
++#define FTM_SC_TOIE		0x40
++#define FTM_SC_CPWMS		0x20
++#define FTM_SC_CLKS		0x18
++#define FTM_SC_PS_1		0x0
++#define FTM_SC_PS_2		0x1
++#define FTM_SC_PS_4		0x2
++#define FTM_SC_PS_8		0x3
++#define FTM_SC_PS_16		0x4
++#define FTM_SC_PS_32		0x5
++#define FTM_SC_PS_64		0x6
++#define FTM_SC_PS_128		0x7
++#define FTM_SC_PS_MASK		0x7
++
++#define FTM_MODE_FAULTIE	0x80
++#define FTM_MODE_FAULTM		0x60
++#define FTM_MODE_CAPTEST	0x10
++#define FTM_MODE_PWMSYNC	0x8
++#define FTM_MODE_WPDIS		0x4
++#define FTM_MODE_INIT		0x2
++#define FTM_MODE_FTMEN		0x1
++
++/* NXP Errata: The PHAFLTREN and PHBFLTREN bits are tide to zero internally
++ * and these bits cannot be set. Flextimer cannot use Filter in
++ * Quadrature Decoder Mode.
++ * https://community.nxp.com/thread/467648#comment-1010319
++ */
++#define FTM_QDCTRL_PHAFLTREN	0x80
++#define FTM_QDCTRL_PHBFLTREN	0x40
++#define FTM_QDCTRL_PHAPOL	0x20
++#define FTM_QDCTRL_PHBPOL	0x10
++#define FTM_QDCTRL_QUADMODE	0x8
++#define FTM_QDCTRL_QUADDIR	0x4
++#define FTM_QDCTRL_TOFDIR	0x2
++#define FTM_QDCTRL_QUADEN	0x1
++
++#define FTM_FMS_FAULTF		0x80
++#define FTM_FMS_WPEN		0x40
++#define FTM_FMS_FAULTIN		0x10
++#define FTM_FMS_FAULTF3		0x8
++#define FTM_FMS_FAULTF2		0x4
++#define FTM_FMS_FAULTF1		0x2
++#define FTM_FMS_FAULTF0		0x1
++
++#define FTM_CSC_BASE		0xC
++#define FTM_CSC_MSB		0x20
++#define FTM_CSC_MSA		0x10
++#define FTM_CSC_ELSB		0x8
++#define FTM_CSC_ELSA		0x4
++#define FTM_CSC(_channel)	(FTM_CSC_BASE + ((_channel) * 8))
++
++#define FTM_CV_BASE		0x10
++#define FTM_CV(_channel)	(FTM_CV_BASE + ((_channel) * 8))
++
++#define FTM_PS_MAX		7
++
++#endif
+-- 
+2.17.1
