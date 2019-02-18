@@ -1,74 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: phy: Add Stingray USB PHY binding
- document
-Date: Mon, 18 Feb 2019 11:22:21 -0600
-Message-ID: <20190218172221.GA20334@bogus>
-References: <1549474347-7224-1-git-send-email-srinath.mannam@broadcom.com>
- <1549474347-7224-2-git-send-email-srinath.mannam@broadcom.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v4 3/3] pwm: core: add consumer device link
+Date: Mon, 18 Feb 2019 18:22:23 +0100
+Message-ID: <20190218172223.lw3e5tn5hzsow6tg@pengutronix.de>
+References: <1550139951-25788-1-git-send-email-fabrice.gasnier@st.com>
+ <1550139951-25788-4-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1549474347-7224-2-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <1550139951-25788-4-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinath Mannam <srinath.mannam@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, tduszyns@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 06, 2019 at 11:02:25PM +0530, Srinath Mannam wrote:
-> Add DT binding document for Stingray USB PHY.
+Hello,
+
+On Thu, Feb 14, 2019 at 11:25:51AM +0100, Fabrice Gasnier wrote:
+> Add a device link between the PWM consumer and the PWM provider. This
+> enforces the PWM user to get suspended before the PWM provider. It
+> allows proper synchronization of suspend/resume sequences: the PWM user
+> is responsible for properly stopping PWM, before the provider gets
+> suspended: see [1]. Add the device link in:
+> - of_pwm_get()
+> - pwm_get()
+> - devm_*pwm_get() variants
+> as it requires a reference to the device for the PWM consumer.
 > 
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> [1] https://lkml.org/lkml/2019/2/5/770
+> 
+> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
->  .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> Changes in v4:
+> - rework error handling following Thierry's comments
+> - turn/split pr_debug() into dev_err()/pr_warn().
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> new file mode 100644
-> index 0000000..bfe1367
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> @@ -0,0 +1,62 @@
-> +Broadcom Stingray USB PHY
+> Changes in v3:
+> - add struct device to of_get_pwm() arguments to handle device link from
+>   there as discussed with Uwe.
+> ---
+>  drivers/pwm/core.c  | 50 +++++++++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/pwm.h |  6 ++++--
+>  2 files changed, 51 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 1581f6a..64e10a6 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -636,8 +636,35 @@ static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
+>  	return ERR_PTR(-EPROBE_DEFER);
+>  }
+>  
+> +static struct device_link *pwm_device_link_add(struct device *dev,
+> +					       struct pwm_device *pwm)
+> +{
+> +	struct device_link *dl;
 > +
-> +Required properties:
-> + - compatible : should be one of the listed compatibles
-> +	- "brcm,sr-usb-phy"
-> +	- "brcm,sr-usb-phy-v2"
+> +	if (!dev) {
+> +		/*
+> +		 * No device for the PWM consumer has been provided. It may
+> +		 * impact the PM sequence ordering: the PWM supplier may get
+> +		 * suspended before the consumer.
+> +		 */
+> +		pr_warn("no consumer dev, can't create device link to %s\n",
+> +			dev_name(pwm->chip->dev));
 
-SoC specific compatibles are preferred. Version numbers can be used but 
-should follow some documented scheme and be meaningful. What we don't 
-want is just Linux developers making up numbering.
+Maybe use dev_warn(pwm->chip->dev, ...) ?
 
-> + - reg: offset and length of the PHY blocks registers
-> + - address-cells: should be 1
-> + - size-cells: should be 0
+> +		return NULL;
+> +	}
 > +
-> +Sub-nodes:
-> +  Each port's PHY should be represented as a sub-node.
-> +
-> +Sub-nodes required properties:
-> + - reg: required for brcm,sr-usb-phy model phy.
-> +	reg value 0 is HS phy and 1 is SS phy.
-> + - phy-cells: generic PHY binding; must be 0
-> +
-> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
-> +
-> +Example:
-> +	usbphy0: usb-phy@0 {
-> +		compatible = "brcm,sr-usb-phy";
-> +		reg = <0x00000000 0x100>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		usb0_phy0: phy@0 {
-> +			reg = <0>;
-> +			#phy-cells = <0>;
+> +	dl = device_link_add(dev, pwm->chip->dev, DL_FLAG_AUTOREMOVE_CONSUMER);
+> +	if (!dl) {
+> +		dev_err(dev, "failed to create device link to %s\n",
+> +			dev_name(pwm->chip->dev));
+> +			return ERR_PTR(-EINVAL);
 
-Unless there's DT resources for each child node, you don't need these. 
-Just make #phy-cells 1 in the parent.
+broken indention.
 
-Rob
+> +	}
+> +
+> +	return dl;
+> +}
+> +
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
