@@ -1,124 +1,117 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: input: touchscreen: goodix: Document
- AVDD28-supply property
-Date: Tue, 19 Feb 2019 01:00:19 +0530
-Message-ID: <CAMty3ZBVpNY+JF_vEMs83M29WKQDhzmk7LyL-HHCCA7uD0Y+=g@mail.gmail.com>
-References: <20181215151802.18592-1-jagan@amarulasolutions.com>
- <20181215151802.18592-2-jagan@amarulasolutions.com> <20190107225810.ggmkkbrnkoy2ykx5@penguin>
- <CAL_JsqKTnPVM7Qahy9ejQbPfENpLCdzf5K5uUTcPh8j3EiqWRA@mail.gmail.com>
- <CAMty3ZCyq=tZMt6RC1aYJuEWgYp2zv1LBh+ZUwucE+g4RCoUaQ@mail.gmail.com>
- <CAL_JsqKCw3EV+0_DuMiHh7GRGxv7YogQf-xwp71n9gpc2GzSSQ@mail.gmail.com>
- <CAMty3ZBtoocXBW5A0astyQPh2y7vG7NtbZ_M0BjSeex2etmGsw@mail.gmail.com>
- <CAL_JsqJSMX7E2zQA2O8ofZQPDrm3S6PMCLG1iAQ95P10Pe2yFg@mail.gmail.com>
- <CAMty3ZDMB=pwY8Rxdt3du=90pksBedLo0Pc_-=diqx9-Xndzqg@mail.gmail.com>
- <CAMty3ZDBu2Y9psNu9nrZ=BNVvhpJ2qYn-Qp7MDqdhK9_SrcpNg@mail.gmail.com>
- <20190218071207.GE242714@dtor-ws> <CAMty3ZDbFU-NpWQvkaUWgUiVTabjTZoFWUCUZSPKMA6VuHc+iQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 03/14] dt-binding: irqchip: Add pruss-intc-irq driver
+ for PRUSS interrupts
+Date: Mon, 18 Feb 2019 13:32:52 -0600
+Message-ID: <20190218193252.GA6313@bogus>
+References: <1549290167-876-1-git-send-email-rogerq@ti.com>
+ <1549290167-876-4-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZDbFU-NpWQvkaUWgUiVTabjTZoFWUCUZSPKMA6VuHc+iQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1549290167-876-4-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 3:03 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> Hi Dmitry,
->
-> On Mon, Feb 18, 2019 at 12:42 PM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > On Sun, Feb 17, 2019 at 02:45:52PM +0530, Jagan Teki wrote:
-> > > On Sun, Feb 17, 2019 at 1:21 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > >
-> > > > Hi Dmitry and Rob,
-> > > >
-> > > > On Thu, Feb 14, 2019 at 3:21 AM Rob Herring <robh@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Jan 22, 2019 at 7:39 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > > > >
-> > > > > > On Mon, Jan 21, 2019 at 9:46 PM Rob Herring <robh@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Fri, Jan 18, 2019 at 10:01 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > > > > > >
-> > > > > > > > On Wed, Jan 9, 2019 at 7:08 PM Rob Herring <robh@kernel.org> wrote:
-> > > > > > > > >
-> > > > > > > > > Please CC DT list if you want bindings reviewed.
-> > > > > > > >
-> > > > > > > > Sorry I forgot.
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > On Wed, Jan 9, 2019 at 1:40 AM Dmitry Torokhov
-> > > > > > > > > <dmitry.torokhov@gmail.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Sat, Dec 15, 2018 at 08:47:59PM +0530, Jagan Teki wrote:
-> > > > > > > > > > > Most of the Goodix CTP controllers are supply with AVDD28 pin.
-> > > > > > > > > > > which need to supply for controllers like GT5663 on some boards
-> > > > > > > > > > > to trigger the power.
-> > > > > > > > > > >
-> > > > > > > > > > > So, document the supply property so-that the require boards
-> > > > > > > > > > > that used on GT5663 can enable it via device tree.
-> > > > > > > > > > >
-> > > > > > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > > > > > > ---
-> > > > > > > > > > >  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
-> > > > > > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > > > > > >
-> > > > > > > > > > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > > > > > > index f7e95c52f3c7..c4622c983e08 100644
-> > > > > > > > > > > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > > > > > > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > > > > > > @@ -23,6 +23,7 @@ Optional properties:
-> > > > > > > > > > >   - touchscreen-inverted-y  : Y axis is inverted (boolean)
-> > > > > > > > > > >   - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
-> > > > > > > > > > >                               (swapping is done after inverting the axis)
-> > > > > > > > > > > + - AVDD28-supply     : Analog power supply regulator on AVDD28 pin
-> > > > > > > > > >
-> > > > > > > > > > I think we normally use lower case in DT bindings and rarely encode
-> > > > > > > > > > voltage in the supply name unless we are dealing with several supplies
-> > > > > > > > > > of the same kind, but I'll let Ron comment on this.
-> > > > > > > > >
-> > > > > > > > > Yes on lowercase though there are some exceptions.
-> > > > > > > > >
-> > > > > > > > > There's also a AVDD22 supply as well as DVDD12 and VDDIO. So we
-> > > > > > > > > probably need to keep the voltage, but the binding is incomplete.
-> > > > > > > >
-> > > > > > > > What is incomplete here? can you please elaborate.
-> > > > > > >
-> > > > > > > You are missing the 3 other supplies the chip has: AVDD22, DVDD12 and VDDIO.
-> > > > > >
-> > > > > > Though it has other supplies, only AVDD28 is connected in the Host
-> > > > > > interface design similar like 9. Reference Schematic on Page, 23 in
-> > > > > > attached manual.
-> > > > >
-> > > > > That is for a particular board design. It still has other supplies.
-> > > > > Just make the binding complete please. You can make them optional. I
-> > > > > don't care if the driver supports controlling all the supplies or not
-> > > > > (though Dmitry might).
-> > > >
-> > > > So, Can I make bulk get and enable in all 4 regulators global to
-> > > > driver or specific to that chip, in either way the regulators which
-> > > > are not used to process via dummy regulators (which we all know).
-> > > >
-> > > > or regulator which are not using are get via devm_regulator_get_optional.
-> > > >
-> > > > Any suggestions?
-> > >
-> > > Just realized to go with bulk calls, please have a look at on v5 [1]
-> >
-> > I do not believe you can use bulk regulator API here as you need to
-> > implement the power up timing scheme mentioned on p. 12 of the spec you
-> > referenced earlier. And, because of that timing diagram, I believe if
-> > you want to control AVDD supply, you also have to control VDDIO supply
-> > as it has to be on only after enabling AVDD.
->
-> AVDD here is AVDD28 it' is an out name of pin (mentioned in p. 23). So
-> the power scheme goes to enable AVDD28 and then VDDIO does that really
-> mean bulk of two regulators?
+On Mon, Feb 04, 2019 at 04:22:36PM +0200, Roger Quadros wrote:
+> From: "Andrew F. Davis" <afd@ti.com>
+> 
+> The Programmable Real-Time Unit Subsystem (PRUSS) contains an
+> interrupt controller (INTC) that can handle various system input
+> events and post interrupts back to the device-level initiators.
+> The INTC can support upto 64 input events with individual control
+> configuration and hardware prioritization. These events are mapped
+> onto 10 interrupt signals through two levels of many-to-one mapping
+> support. Different interrupt signals are routed to the individual
+> PRU cores or to the host CPU.
+> 
+> The PRUSS INTC platform driver manages this PRUSS interrupt
+> controller and implements an irqchip driver to provide a Linux
+> standard way for the PRU client users to enable/disable/ack/
+> re-trigger a PRUSS system event. The system events to interrupt
+> channels and host interrupts relies on the mapping configuration
+> provided through a firmware resource table for now. This will be
+> revisited and enhanced in the future for a better interface. The
+> mappings will currently be programmed during the boot/shutdown
+> of the PRU.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  .../interrupt-controller/ti,pruss-intc-irq.txt     | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc-irq.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc-irq.txt
+> new file mode 100644
+> index 0000000..c70221c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc-irq.txt
+> @@ -0,0 +1,51 @@
+> +PRU ICSS INTC on TI SoCs
+> +========================
+> +
+> +Each PRUSS has a single interrupt controller instance that is common to both
+> +the PRU cores. Each interrupt controller can detect 64 input events which are
+> +then mapped to 10 possible output interrupts through two levels of mapping. The
+> +input events can be triggered by either the PRUs and/or various other PRUSS
+> +internal and external peripherals. The first 2 output interrupts are fed
+> +exclusively to the internal PRU cores, with the remaining 8 connected to
+> +external interrupt controllers including the MPU.
+> +
+> +Required Properties:
+> +--------------------
+> +- compatible           : should be one of,
+> +                             "ti,am3356-pruss-intc" for AM335x family of SoCs
+> +                             "ti,am4376-pruss-intc" for AM437x family of SoCs
+> +                             "ti,am5728-pruss-intc" for AM57xx family of SoCs
+> +                             "ti,k2g-pruss-intc" for 66AK2G family of SoCs
+> +- reg                  : base address and size for the PRUSS INTC sub-module
+> +- reg-names            : should contain the string "intc"
 
-The time between these two regulator operations is nearly 0, as per
-power scheme diagram T1 >= 0us. I think I can use bulk since there is
-no necessity of delay between these two regulator operations.
+Not really useful with only 1 entry.
 
-What do you think?
+> +- interrupts     : all the interrupts generated towards the main host
+> +                   processor in the SoC. The format depends on the
+> +                   interrupt specifier for the particular SoC's MPU
+> +                   parent interrupt controller
+> +- interrupt-names: should use one of the following names for each interrupt,
+> +                   the name should match the corresponding host interrupt
+> +                   number,
+> +                       "host2", "host3", "host4", "host5", "host6",
+> +                       "host7", "host8" or "host9"
+> +                   NOTE: AM437x and 66AK2G SoCs do not have "host7" interrupt
+> +                         connected to MPU
+> +- interrupt-controller : mark this node as an interrupt controller
+> +- #interrupt-cells     : should be 1. Client users shall use the PRU System
+> +                         event number (the interrupt source that the client
+> +                         is interested in) as the value of the interrupts
+> +                         property in their node
+> +
+> +Example:
+> +--------
+> +		pruss_intc: intc@20000 {
+
+interrupt-controller@20000
+
+> +			compatible = "ti,am3356-pruss-intc";
+> +			reg = <0x20000 0x2000>;
+> +			reg-names = "intc";
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +			interrupts = <20 21 22 23 24 25 26 27>;
+> +			interrupt-names = "host2", "host3", "host4",
+> +					  "host5", "host6", "host7",
+> +					  "host8", "host9";
+> +		};
+> +
+> -- 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
