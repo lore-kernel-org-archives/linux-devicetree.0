@@ -1,100 +1,140 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH 2/2] remoteproc: q6v5_adsp: Remove voting for lpass_aon
- clock
-Date: Mon, 18 Feb 2019 10:24:46 +0530
-Message-ID: <bca57260-6e1e-f808-afd4-2d6264e5c3f2@codeaurora.org>
-References: <1543562950-23997-1-git-send-email-rohitkr@codeaurora.org>
- <1543562950-23997-3-git-send-email-rohitkr@codeaurora.org>
- <f6f9b4a2-6205-0ba5-9a3a-b34bd814d303@codeaurora.org>
- <20190107071359.GK31596@builder>
- <214831ef-2139-7b48-1654-537634f898f4@codeaurora.org>
- <d90f7817-294e-a96e-0eb0-293a06e9190a@codeaurora.org>
+From: Henry Chen <henryc.chen@mediatek.com>
+Subject: Re: [RFC RESEND PATCH 1/7] dt-bindings: soc: Add DVFSRC driver
+ bindings
+Date: Mon, 18 Feb 2019 12:55:32 +0800
+Message-ID: <1550465732.32365.6.camel@mtksdaap41>
+References: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
+         <1546438198-1677-2-git-send-email-henryc.chen@mediatek.com>
+         <20190111160918.GA20480@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d90f7817-294e-a96e-0eb0-293a06e9190a@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20190111160918.GA20480@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Ulf Hansson <ulf.hansson@linaro.org>, Kees Cook <keescook@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, linux-kernel@vger.kernel.org, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Bjorn,
+Hi Rob,
 
+Sorry for late reply. I missed this mail before.
 
-On 1/30/2019 10:38 AM, Rohit Kumar wrote:
-> Hello Bjorn,
->
-> On 1/14/2019 4:14 PM, Rohit Kumar wrote:
->>
->> On 1/7/2019 12:43 PM, Bjorn Andersson wrote:
->>> On Thu 03 Jan 20:36 PST 2019, Rohit Kumar wrote:
->>>
->>>> Hello Bjorn,
->>>>
->>>> Can you please review this patch series too.
->>>>
->>>> LPASS_AON clock support is already removed from lpass clock driver.
->>>>
->>> Applied the two patches.
->>
-Can you please apply these patches. I don't see them in next.
->>
-> I did not see this in next yet. Can you please pick this up.
->
-> Thanks,
->
-> Rohit
->
->> Hello Bjorn,
->>
->>
->> Can you please point me to the tree where this is applied.
->>
->>
->> Thanks,
->>
->> Rohit
->>
->>> Thanks,
->>> Bjorn
->>>
->>>> Thanks,
->>>>
->>>> Rohit
->>>>
->>>> On 11/30/2018 12:59 PM, Rohit kumar wrote:
->>>>> Lpass_aon clock is on by default. Remove it from lpass
->>>>> clock list to avoid voting for it.
->>>>>
->>>>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->>>>> ---
->>>>>    drivers/remoteproc/qcom_q6v5_adsp.c | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c 
->>>>> b/drivers/remoteproc/qcom_q6v5_adsp.c
->>>>> index 79374d1..4829173 100644
->>>>> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
->>>>> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
->>>>> @@ -48,7 +48,7 @@
->>>>>    /* list of clocks required by ADSP PIL */
->>>>>    static const char * const adsp_clk_id[] = {
->>>>> -    "sway_cbcr", "lpass_aon", "lpass_ahbs_aon_cbcr", 
->>>>> "lpass_ahbm_aon_cbcr",
->>>>> +    "sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
->>>>>        "qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
->>>>>    };
->>>> -- 
->>>> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a 
->>>> member
->>>> of the Code Aurora Forum, hosted by the Linux Foundation.
->>>>
-Thanks,
+On Fri, 2019-01-11 at 10:09 -0600, Rob Herring wrote:
+> On Wed, Jan 02, 2019 at 10:09:52PM +0800, Henry Chen wrote:
+> > Document the binding for enabling DVFSRC on MediaTek SoC.
+> > 
+> > Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/soc/mediatek/dvfsrc.txt    | 26 ++++++++++++++++++++++
+> >  include/dt-bindings/soc/mtk,dvfsrc.h               | 18 +++++++++++++++
+> >  2 files changed, 44 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+> >  create mode 100644 include/dt-bindings/soc/mtk,dvfsrc.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+> > new file mode 100644
+> > index 0000000..402c885
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+> > @@ -0,0 +1,26 @@
+> > +MediaTek DVFSRC Driver
+> 
+> Bindings are for h/w blocks, not drivers.
+ok.
+> 
+> > +The Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC) is a
+> > +HW module which is used to collect all the requests from both software and
+> > +hardware and turn into the decision of minimum operating voltage and minimum
+> > +DRAM frequency to fulfill those requests.
+> 
+> Seems like the OPP table should be a child of this instead of where you 
+> currently have it?
+Do you means the opp table that I put on scpsys likes below?
+I think this opp table is used for mapping the performance state of
+power domain, so I put it on scpsys device tree document.
 
-Rohit
+		dvfsrc_opp_table: opp-table {
+			compatible = "operating-points-v2-level";
 
--- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+			dvfsrc_vol_min: opp1 {
+				opp,level = <MT8183_DVFSRC_LEVEL_1>;
+			};
+
+			dvfsrc_freq_medium: opp2 {
+				opp,level = <MT8183_DVFSRC_LEVEL_2>;
+			};
+
+			dvfsrc_freq_max: opp3 {
+				opp,level = <MT8183_DVFSRC_LEVEL_3>;
+			};
+
+			dvfsrc_vol_max: opp4 {
+				opp,level = <MT8183_DVFSRC_LEVEL_4>;
+			};
+		};
+
+> 
+> > +
+> > +Required Properties:
+> > +- compatible: Should be one of the following
+> > +	- "mediatek,mt8183-dvfsrc": For MT8183 SoC
+> > +- reg: Address range of the DVFSRC unit
+> > +- dram_type: Refer to <include/dt-bindings/soc/mtk,dvfsrc.h> for the
+> > +	different dram type support.
+> 
+> This information should come from the DDR controller or memory nodes 
+> probably. And we already have some properties related to DDR type.
+Sorry, I don't know that before, could you give some hint or example for
+that?
+
+> 
+> > +- clock-names: Must include the following entries:
+> > +	"dvfsrc": DVFSRC module clock
+> > +- clocks: Must contain an entry for each entry in clock-names.
+> > +
+> > +Example:
+> > +
+> > +	dvfsrc_top@10012000 {
+> 
+> Drop the '_top'. (Don't use '_' in node and property names)..
+ok
+> 
+> > +		compatible = "mediatek,mt8183-dvfsrc";
+> > +		reg = <0 0x10012000 0 0x1000>;
+> > +		clocks = <&infracfg CLK_INFRA_DVFSRC>;
+> > +		clock-names = "dvfsrc";
+> > +		dram_type = <MT8183_DVFSRC_OPP_LP4>;
+> > +	};
+> > diff --git a/include/dt-bindings/soc/mtk,dvfsrc.h b/include/dt-bindings/soc/mtk,dvfsrc.h
+> > new file mode 100644
+> > index 0000000..60b3497
+> > --- /dev/null
+> > +++ b/include/dt-bindings/soc/mtk,dvfsrc.h
+> > @@ -0,0 +1,18 @@
+> > +/* SPDX-License-Identifier: GPL-2.0
+> > + *
+> > + * Copyright (c) 2018 MediaTek Inc.
+> > + */
+> > +
+> > +#ifndef _DT_BINDINGS_POWER_MTK_DVFSRC_H
+> > +#define _DT_BINDINGS_POWER_MTK_DVFSRC_H
+> > +
+> > +#define MT8183_DVFSRC_OPP_LP4	0
+> > +#define MT8183_DVFSRC_OPP_LP4X	1
+> > +#define MT8183_DVFSRC_OPP_LP3	2
+> > +
+> > +#define MT8183_DVFSRC_LEVEL_1	1
+> > +#define MT8183_DVFSRC_LEVEL_2	2
+> > +#define MT8183_DVFSRC_LEVEL_3	3
+> > +#define MT8183_DVFSRC_LEVEL_4	4
+> > +
+> > +#endif /* _DT_BINDINGS_POWER_MTK_DVFSRC_H */
+> > -- 
+> > 1.9.1
+> > 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
