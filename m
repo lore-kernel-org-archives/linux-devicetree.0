@@ -1,52 +1,66 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 3/3] dt-bindings: arm: atmel: add binding for SAM9X60
- shutdown controller
-Date: Mon, 18 Feb 2019 11:01:45 +0000
-Message-ID: <97af1d45-d74b-87d3-c934-baae80307e1d@microchip.com>
-References: <1550143407-26109-1-git-send-email-claudiu.beznea@microchip.com>
- <1550143407-26109-4-git-send-email-claudiu.beznea@microchip.com>
+From: Yu Chen <chenyu56@huawei.com>
+Subject: [PATCH v2 00/10] Add support for usb on Hikey960
+Date: Mon, 18 Feb 2019 19:23:00 +0800
+Message-ID: <20190218112310.17860-1-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550143407-26109-4-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
-Content-ID: <9FB745B54B46AC43AE8FC8B39A8C0EB2@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, sre@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQvMDIvMjAxOSBhdCAxMjoyNCwgQ2xhdWRpdSBCZXpuZWEgLSBNMTgwNjMgd3JvdGU6DQo+
-IEZyb206IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPiAN
-Cj4gQWRkIGRvY3VtZW50YXRpb24gZm9yIFNBTTlYNjAgc2h1dGRvd24gY29udHJvbGxlci4NCj4g
-DQo+IFNpZ25lZC1vZmYtYnk6IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2No
-aXAuY29tPg0KPiAtLS0NCj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
-L2F0bWVsLXN5c3JlZ3MudHh0IHwgNiArKysrKy0NCj4gICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNl
-cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hdG1lbC1zeXNyZWdzLnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtc3lzcmVncy50eHQNCj4gaW5kZXggMTRm
-MzE5ZjY5NGI3Li45NzExMDUyYzU4MDAgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtc3lzcmVncy50eHQNCj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hdG1lbC1zeXNyZWdzLnR4dA0KPiBAQCAtODMs
-NyArODMsNyBAQCBTSERXQyBTQU1BNUQyLUNvbXBhdGlibGUgU2h1dGRvd24gQ29udHJvbGxlcg0K
-PiAgIDEpIHNoZHdjIG5vZGUNCj4gICANCj4gICByZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAtLSBj
-b21wYXRpYmxlOiBzaG91bGQgYmUgImF0bWVsLHNhbWE1ZDItc2hkd2MiLg0KPiArLSBjb21wYXRp
-YmxlOiBzaG91bGQgYmUgImF0bWVsLHNhbWE1ZDItc2hkd2MiIG9yICJtaWNyb2NoaXAsc2FtOXg2
-MC1zaGR3YyIuDQo+ICAgLSByZWc6IHNob3VsZCBjb250YWluIHJlZ2lzdGVycyBsb2NhdGlvbiBh
-bmQgbGVuZ3RoDQo+ICAgLSBjbG9ja3M6IHBoYW5kbGUgdG8gaW5wdXQgY2xvY2suDQo+ICAgLSAj
-YWRkcmVzcy1jZWxsczogc2hvdWxkIGJlIG9uZS4gVGhlIGNlbGwgaXMgdGhlIHdha2UtdXAgaW5w
-dXQgaW5kZXguDQo+IEBAIC05NSw2ICs5NSwxMCBAQCBvcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiAg
-ICAgbWljcm9zZWNvbmRzLiBJdCdzIHVzdWFsbHkgYSBib2FyZC1yZWxhdGVkIHByb3BlcnR5Lg0K
-PiAgIC0gYXRtZWwsd2FrZXVwLXJ0Yy10aW1lcjogYm9vbGVhbiB0byBlbmFibGUgUmVhbC1UaW1l
-IENsb2NrIHdha2UtdXAuDQo+ICAgDQo+ICtvcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBtaWNyb2No
-aXAsc2FtOXg2MC1zaGR3YzoNCg0KaXMgaXQgZm9yIHNhbTl4NjAgb25seSBvciBpcyB0aGUgb3B0
-aW9uYWwgcHJvcGVydHkgImRlYm91bmNlLWRlbGF5LXVzIiANCmFwcGxpY2FibGUgdG8gdGhpcyBT
-b0M/DQoNCj4gKy0gYXRtZWwsd2FrZXVwLXJ0Yy10aW1lcjogYm9vbGVhbiB0byBlbmFibGUgUmVh
-bC1UaW1lIENsb2NrIHdha2UtdXAuDQo+ICstIGF0bWVsLHdha2V1cC1ydHQtdGltZXI6IGJvb2xl
-YW4gdG8gZW5hYmxlIFJlYWwtdGltZSBUaW1lciBXYWtlLXVwLg0KDQpXZWxsLCBJIHdvdWxkIG1h
-a2UgY2xlYXIgdGhhdCB0aGUgb25seSBhZGRpdGlvbmFsIG9wdGlvbmFsIHByb3BlcnR5IGlzIA0K
-ImF0bWVsLHdha2V1cC1ydHQtdGltZXIiIHdoaWxlIHRoZSAyIG90aGVyIG9wdGlvbmFsIHByb3Bl
-cnRpZXMgc3RpbGwgDQphcHBseS4uLg0KDQoNCj4gICBUaGUgbm9kZSBjb250YWlucyBjaGlsZCBu
-b2RlcyBmb3IgZWFjaCB3YWtlLXVwIGlucHV0IHRoYXQgdGhlIHBsYXRmb3JtIHVzZXMuDQo+ICAg
-DQo+ICAgMikgaW5wdXQgbm9kZXMNCj4gDQoNCg0KLS0gDQpOaWNvbGFzIEZlcnJlDQo=
+The patchset adds support for usb functionality of Hikey960, includes:
+- dwc3 driver for Hisilicon Kirin Soc hi3660
+- usb driver for HiKey960 board
+- some adjustment in dwc3, usb gadget and typec driver
+- dts for support usb of HiKey960
+
+---
+v2:
+* This patchset based on patchset https://lkml.org/lkml/2019/1/25/344
+of Heikki Krogerus
+---
+
+Yu Chen (10):
+  dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
+  dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
+    switch functionality on HiKey960
+  usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc
+    Platform
+  usb: dwc3: Add two quirks for Hisilicon Kirin Soc Platform
+  phy: Add usb phy support for hi3660 Soc of Hisilicon
+  usb: roles: Add usb role switch notifier.
+  usb: dwc3: Registering a role switch in the DRD code.
+  hikey960: Support usb functionality of Hikey960
+  usb: gadget: Add configfs attribuite for controling
+    match_existing_only
+  dts: hi3660: Add support for usb on Hikey960
+
+ .../bindings/misc/hisilicon-hikey-usb.txt          |  35 ++++
+ .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  21 ++
+ MAINTAINERS                                        |   8 +
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  54 +++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  73 +++++++
+ drivers/misc/Kconfig                               |   6 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/hisi_hikey_usb.c                      | 181 ++++++++++++++++
+ drivers/phy/hisilicon/Kconfig                      |  10 +
+ drivers/phy/hisilicon/Makefile                     |   1 +
+ drivers/phy/hisilicon/phy-hi3660-usb3.c            | 232 +++++++++++++++++++++
+ drivers/usb/dwc3/core.c                            |  43 ++++
+ drivers/usb/dwc3/core.h                            |   9 +
+ drivers/usb/dwc3/drd.c                             |  45 ++++
+ drivers/usb/dwc3/dwc3-of-simple.c                  |   4 +-
+ drivers/usb/dwc3/gadget.c                          |   2 +-
+ drivers/usb/gadget/configfs.c                      |  32 +++
+ drivers/usb/roles/class.c                          |  20 +-
+ include/linux/usb/role.h                           |  46 ++++
+ 19 files changed, 820 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+ create mode 100644 drivers/misc/hisi_hikey_usb.c
+ create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
+
+-- 
+2.15.0-rc2
