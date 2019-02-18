@@ -1,5 +1,8 @@
-Return-Path: <SRS0=BtNw=QZ=gmail.com=marek.vasut@kernel.org>
+Return-Path: <SRS0=m5NJ=QZ=sirena.org.uk=broonie@kernel.org>
+Date: Mon, 18 Feb 2019 18:01:08 +0000
+From: Mark Brown <broonie@kernel.org>
 Subject: Re: [PATCH] regulator: gpio: Reword the binding document
+Message-ID: <20190218180108.GE10794@sirena.org.uk>
 References: <20190216174859.15738-1-marek.vasut@gmail.com>
  <E1gv6SG-0000Jv-KB@stardust.g4.wien.funkfeuer.at>
  <83550921-b0ec-fa34-b120-2dd159f256d8@gmail.com>
@@ -7,119 +10,50 @@ References: <20190216174859.15738-1-marek.vasut@gmail.com>
  <75846117-242c-6861-ace5-dccf88711208@gmail.com>
  <E1gvSbw-0000K8-Hj@stardust.g4.wien.funkfeuer.at>
  <7a993282-9137-caf4-ca0b-b2c01ea9959c@gmail.com>
- <E1gvfnE-0000Il-Jo@stardust.g4.wien.funkfeuer.at>
-From: Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <e2e9e577-b110-fc9b-c129-26f61e862fb4@gmail.com>
-Date: Mon, 18 Feb 2019 19:58:09 +0100
 MIME-Version: 1.0
-In-Reply-To: <E1gvfnE-0000Il-Jo@stardust.g4.wien.funkfeuer.at>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Harald Geyer <harald@ccbib.org>
-Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="h56sxpGKRmy85csR"
+Content-Disposition: inline
+In-Reply-To: <7a993282-9137-caf4-ca0b-b2c01ea9959c@gmail.com>
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: Harald Geyer <harald@ccbib.org>, devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 2/18/19 11:04 AM, Harald Geyer wrote:
 
-[...]
+--h56sxpGKRmy85csR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>>>>>> IIRC the regulator
->>>>>>> core automatically selects the lowest voltage/current compatible with
->>>>>>> all consumers. It seems the only usecase is to specify an initial
->>>>>>> state that is different from all states in the "states" property, before
->>>>>>> the regulator is turned on for the first time. However it also is not
->>>>>>> an off-state, because it won't be set again on turning the regulator off.
->>>>>>
->>>>>> Correct, this is not an off state. If you have a better wording, I am
->>>>>> open to that.
->>>>>
->>>>> I think it should be clearer that this is an array. (Looking at various
->>>>> users I doubt everybody was aware of that, but since we have only instances
->>>>> with one gpio, there is no functional difference between array and bit field.)
->>>>> Also it should be recommended to set this to match whatever the bootloader
->>>>> sets up. Maybe something like:
->>>>>
->>>>> - gpios-states: Array of GPIOs values set during probing the regulator.
->>>>> 		0: LOW, 1: HIGH. If continuous operation during boot is
->>>>> 		desired, this needs to match what the firmware or bootloader
->>>>> 		sets up. By default all GPIOs are set to low during probing.
->>>>
->>>> gpios-states has nothing to do with continuous operation, that's what
->>>> enable-gpios is for, we should not confuse the readers with it.
->>>
->>> I think we have some misunderstanding here, because I don't see how
->>> enable-gpios is relevant. Also maybe I still haven't understood the
->>> usecase, but IMO that indicates, that it should be cleared up in
->>> the document.
->>
->> The enable-gpios property is what turns the regulator ON/OFF , the
->> gpio-states is what selects the output voltage/current . Thus, I think
->> we should not mention "continuous operation" in the description.
-> 
-> Okay, I see where you are coming from. Yes, gpios-states is only part
-> of what is required for continuous operation during boot. Still it seems
-> to be the only realistic usecase, we have come up so far. (Also in
-> existing DTs it seems to be used mostly with "boot-on" regulators.)
+On Sun, Feb 17, 2019 at 10:57:26PM +0100, Marek Vasut wrote:
+> On 2/17/19 9:00 PM, Harald Geyer wrote:
 
-Consider eMMC bus voltage switch, which only selects between 3V3 and 1V8
-. It has nothing to do with continuous operation, it just selects one
-voltage level or the other.
+> > If this is the case, why would we need to set an initial state instead
+> > of just waiting what the first consumer requests. I still don't see
+> > a use case (aside from don't accidentally shut down something important
+> > during probing).
 
-So what about
+> Possibly to prevent a state which might be harmful until the first
+> consumer comes up. However this is rather theoretical.
 
-gpios-states : Initial state of GPIO pins in "gpios" array, set on
-system start and retained until consumer changes the state. 0: LOW, 1:
-HIGH. Default is LOW if nothing else is specified.
+This is the GPIO API restrictions again - there was a big push at one
+point to try to ensure that we set the output state when requesting
+output GPIOs, and a lot of the time requesting will set a state anyway
+when it puts things into output mode so it may as wel be one we know
+about.
 
-> Maybe we can word it better then I did above, but I think mentioning
-> this helps a lot to make it clearer how an implementation must behave
-> if this property is present.
-> 
->>>> Also
->>>> note that "probing" is OS specific, so we should use "default" instead.
->>>> What about this:
->>>
->>>> gpios-states		: Array of initial states of GPIO pins in "gpios" array.
->>>> 0: LOW, 1: HIGH. Default is LOW if nothing else is specified.
->>>
->>> "initial" is a bit too unspecific IMO.
->>
->> Well, got any better idea ? It's not "default" either.
-> 
-> Yes, it's difficult - which is why I cheated above and described what the
-> linux implementation does instead of describing it in general terms.
-> If the semantics of this property are too unclear to unambiguously
-> describe in an implementation indepenent way, then that's a point in
-> favor of marking this property deprecated and let whoever actually
-> needs it come up with something better.
+--h56sxpGKRmy85csR
+Content-Type: application/pgp-signature; name="signature.asc"
 
-We still need to support it though, due to older DTs, so we should make
-it clear what it does.
+-----BEGIN PGP SIGNATURE-----
 
->>> I believe this description doesn't define behaviour sufficiently and a
->>> future rewrite (or reimplementation for a different OS) is likely to
->>> interpret it in an incompatible way. I think one could even argue that
->>> completely ignoring this property and just setting up a valid state from
->>> "states" is allowed behaviour. This would likely break existing DTs, where
->>> among other things this regulator is used to set the CPU's voltage.
->>
->> I suspect ignoring this property, when it's present, wouldn't be a good
->> idea. After all, it adds additional information about the behavior of
->> the system upon start up.
-> 
-> Yes, it wouldn't be good, because it likely causes breakage. No, I don't
-> think it adds much additional information, because it is too unclear.
-> 
->> btw I am rewording it exactly because there was a recent breakage in the
->> regulator code.
-> 
-> Yeah, thanks for that. Your patch is an improvement and shouldn't be
-> held back because it doesn't address the other problems discussed above.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxq8uMACgkQJNaLcl1U
+h9BrYAf9Gp7it3E9GdzB1w2s8DbV0dGv8pDScXg/DRT+V3BqE57PWEc2xYTPSDXd
+ZjzZH2Vp6oX0sPR2xitBnOeac/Ohv23UsRwCLmYXUtv4FeEfQLHU+zzziab+h9ko
+7nURAJcfhXFbZKA/XEq266V5+S7tB7SzF/3hx+ziyAfJEnKGYcgHxkzknHVIpcll
+n6+7cXIxWetvS2W/dzu/cDV7l+ucQDMn4fSu/AXxGCxbFMrpNd/ls/JLS+StOgfq
+d2T5CTr8zlm4nStr5XftCAdWZ9NNeSSq1V/csQZhBOUgqtLJt6oOn4Fdm/IG+Iak
+PQFtWGduWTX6AZ3jym8fcpaxXjAnMA==
+=PZkU
+-----END PGP SIGNATURE-----
 
-I am hoping maybe someone who's actually native english speaker can help
-out with the fine wording.
-
--- 
-Best regards,
-Marek Vasut
+--h56sxpGKRmy85csR--
