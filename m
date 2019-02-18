@@ -1,136 +1,436 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 1/4] firmware: ti_sci: (Dis)Allow for device exclusive
- permissions
-Date: Mon, 18 Feb 2019 10:45:14 +0530
-Message-ID: <20190218051517.9218-2-lokeshvutla@ti.com>
-References: <20190218051517.9218-1-lokeshvutla@ti.com>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: Re: [PATCH v7 4/6] arm64: dts: Add Mediatek SoC MT8183 and
+ evaluation board dts and Makefile
+Date: Mon, 18 Feb 2019 14:10:57 +0800
+Message-ID: <1550470257.19053.1.camel@mtksdaap41>
+References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
+         <1550210558-30516-5-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190218051517.9218-1-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550210558-30516-5-git-send-email-erin.lo@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Ben Ho <Ben.Ho@mediatek.com>, Seiya Wang <seiya.wang@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, Zhiyong
 List-Id: devicetree@vger.kernel.org
 
-Sysfw provides an option for requesting exclusive access for a
-device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. Once a device
-is requested from a host with this flag set, any request to this
-device from a different host will be nacked by sysfw. Current tisci
-driver enables this flag for every device requests. But this may not
-be true for all the devices. So provide a separate command in driver
-for exclusive and non-exclusive device requests.
+On Fri, 2019-02-15 at 14:02 +0800, Erin Lo wrote:
+> From: Ben Ho <Ben.Ho@mediatek.com>
+> 
+> Add basic chip support for Mediatek 8183, include
+> uart node with correct uart clocks, pwrap device
+> 
+> Add clock controller nodes, include topckgen, infracfg,
+> apmixedsys and subsystem.
+> 
+> Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+>  arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  31 +++
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 336 ++++++++++++++++++++++++++++
+>  3 files changed, 368 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index e8f952f..458bbc4 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -7,3 +7,4 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-evb.dtb
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> new file mode 100644
+> index 0000000..9b52559
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> @@ -0,0 +1,31 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright (c) 2018 MediaTek Inc.
+> + * Author: Ben Ho <ben.ho@mediatek.com>
+> + *	   Erin Lo <erin.lo@mediatek.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include "mt8183.dtsi"
+> +
+> +/ {
+> +	model = "MediaTek MT8183 evaluation board";
+> +	compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0 0x40000000 0 0x80000000>;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:921600n8";
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> new file mode 100644
+> index 0000000..1bd1399
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -0,0 +1,336 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright (c) 2018 MediaTek Inc.
+> + * Author: Ben Ho <ben.ho@mediatek.com>
+> + *	   Erin Lo <erin.lo@mediatek.com>
+> + */
+> +
+> +#include <dt-bindings/clock/mt8183-clk.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/ {
+> +	compatible = "mediatek,mt8183";
+> +	interrupt-parent = <&sysirq>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&cpu0>;
+> +				};
+> +				core1 {
+> +					cpu = <&cpu1>;
+> +				};
+> +				core2 {
+> +					cpu = <&cpu2>;
+> +				};
+> +				core3 {
+> +					cpu = <&cpu3>;
+> +				};
+> +			};
+> +
+> +			cluster1 {
+> +				core0 {
+> +					cpu = <&cpu4>;
+> +				};
+> +				core1 {
+> +					cpu = <&cpu5>;
+> +				};
+> +				core2 {
+> +					cpu = <&cpu6>;
+> +				};
+> +				core3 {
+> +					cpu = <&cpu7>;
+> +				};
+> +			};
+> +		};
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x000>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x001>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x002>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x003>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu4: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a73";
+> +			reg = <0x100>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu5: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a73";
+> +			reg = <0x101>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu6: cpu@102 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a73";
+> +			reg = <0x102>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu7: cpu@103 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a73";
+> +			reg = <0x103>;
+> +			enable-method = "psci";
+> +		};
+> +	};
+> +
+> +	pmu-a53 {
+> +		compatible = "arm,cortex-a53-pmu";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_cluster0>;
+> +	};
+> +
+> +	pmu-a73 {
+> +		compatible = "arm,cortex-a73-pmu";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_cluster1>;
+> +	};
+> +
+> +	psci {
+> +		compatible      = "arm,psci-1.0";
+> +		method          = "smc";
+> +	};
+> +
+> +	clk26m: oscillator {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <26000000>;
+> +		clock-output-names = "clk26m";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
+> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
+> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
+> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+> +		gic: interrupt-controller@c000000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <4>;
+> +			interrupt-parent = <&gic>;
+> +			interrupt-controller;
+> +			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
+> +			      <0 0x0c100000 0 0x200000>, /* GICR */
+> +			      <0 0x0c400000 0 0x2000>,   /* GICC */
+> +			      <0 0x0c410000 0 0x1000>,   /* GICH */
+> +			      <0 0x0c420000 0 0x2000>;   /* GICV */
+> +
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
+> +			ppi-partitions {
+> +				ppi_cluster0: interrupt-partition-0 {
+> +					affinity = <&cpu0 &cpu1 &cpu2 &cpu3>;
+> +				};
+> +				ppi_cluster1: interrupt-partition-1 {
+> +					affinity = <&cpu4 &cpu5 &cpu6 &cpu7>;
+> +				};
+> +			};
+> +		};
+> +
+> +		mcucfg: syscon@c530000 {
+> +			compatible = "mediatek,mt8183-mcucfg", "syscon";
+> +			reg = <0 0x0c530000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		sysirq: interrupt-controller@c530a80 {
+> +			compatible = "mediatek,mt8183-sysirq",
+> +				     "mediatek,mt6577-sysirq";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			interrupt-parent = <&gic>;
+> +			reg = <0 0x0c530a80 0 0x50>;
+> +		};
+> +
+> +		topckgen: syscon@10000000 {
+> +			compatible = "mediatek,mt8183-topckgen", "syscon";
+> +			reg = <0 0x10000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		infracfg: syscon@10001000 {
+> +			compatible = "mediatek,mt8183-infracfg", "syscon";
+> +			reg = <0 0x10001000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		pio: pinctrl@10005000 {
+> +			compatible = "mediatek,mt8183-pinctrl";
+> +			reg = <0 0x10005000 0 0x1000>,
+> +			      <0 0x11f20000 0 0x1000>,
+> +			      <0 0x11e80000 0 0x1000>,
+> +			      <0 0x11e70000 0 0x1000>,
+> +			      <0 0x11e90000 0 0x1000>,
+> +			      <0 0x11d30000 0 0x1000>,
+> +			      <0 0x11d20000 0 0x1000>,
+> +			      <0 0x11c50000 0 0x1000>,
+> +			      <0 0x11f30000 0 0x1000>,
+> +			      <0 0x1000b000 0 0x1000>;
+> +			reg-names = "iocfg0", "iocfg1", "iocfg2",
+> +				    "iocfg3", "iocfg4", "iocfg5",
+> +				    "iocfg6", "iocfg7", "iocfg8",
+> +				    "eint";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pio 0 0 192>;
+> +			interrupt-controller;
+> +			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH 0>;
+> +			interrupt-parent = <&gic>;
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- drivers/firmware/ti_sci.c              | 45 ++++++++++++++++++++++++--
- include/linux/soc/ti/ti_sci_protocol.h |  3 ++
- 2 files changed, 46 insertions(+), 2 deletions(-)
+interrupt-parent should be sysirq not gic
+We will remove it in next version.
 
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 69ed1464175c..8c6f21ceb6f2 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -634,6 +634,7 @@ static int ti_sci_get_device_state(const struct ti_sci_handle *handle,
- 
- /**
-  * ti_sci_cmd_get_device() - command to request for device managed by TISCI
-+ *			     that can be shared with other hosts.
-  * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
-  * @id:		Device Identifier
-  *
-@@ -641,11 +642,29 @@ static int ti_sci_get_device_state(const struct ti_sci_handle *handle,
-  * usage count by balancing get_device with put_device. No refcounting is
-  * managed by driver for that purpose.
-  *
-- * NOTE: The request is for exclusive access for the processor.
-- *
-  * Return: 0 if all went fine, else return appropriate error.
-  */
- static int ti_sci_cmd_get_device(const struct ti_sci_handle *handle, u32 id)
-+{
-+	return ti_sci_set_device_state(handle, id, 0,
-+				       MSG_DEVICE_SW_STATE_ON);
-+}
-+
-+/**
-+ * ti_sci_cmd_get_device_exclusive() - command to request for device managed by
-+ *				       TISCI that is exclusively owned by the
-+ *				       requesting host.
-+ * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
-+ * @id:		Device Identifier
-+ *
-+ * Request for the device - NOTE: the client MUST maintain integrity of
-+ * usage count by balancing get_device with put_device. No refcounting is
-+ * managed by driver for that purpose.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+static int ti_sci_cmd_get_device_exclusive(const struct ti_sci_handle *handle,
-+					   u32 id)
- {
- 	return ti_sci_set_device_state(handle, id,
- 				       MSG_FLAG_DEVICE_EXCLUSIVE,
-@@ -664,6 +683,26 @@ static int ti_sci_cmd_get_device(const struct ti_sci_handle *handle, u32 id)
-  * Return: 0 if all went fine, else return appropriate error.
-  */
- static int ti_sci_cmd_idle_device(const struct ti_sci_handle *handle, u32 id)
-+{
-+	return ti_sci_set_device_state(handle, id, 0,
-+				       MSG_DEVICE_SW_STATE_RETENTION);
-+}
-+
-+/**
-+ * ti_sci_cmd_idle_device_exclusive() - Command to idle a device managed by
-+ *					TISCI that is exclusively owned by
-+ *					requesting host.
-+ * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
-+ * @id:		Device Identifier
-+ *
-+ * Request for the device - NOTE: the client MUST maintain integrity of
-+ * usage count by balancing get_device with put_device. No refcounting is
-+ * managed by driver for that purpose.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+static int ti_sci_cmd_idle_device_exclusive(const struct ti_sci_handle *handle,
-+					    u32 id)
- {
- 	return ti_sci_set_device_state(handle, id,
- 				       MSG_FLAG_DEVICE_EXCLUSIVE,
-@@ -1631,7 +1670,9 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
- 	core_ops->reboot_device = ti_sci_cmd_core_reboot;
- 
- 	dops->get_device = ti_sci_cmd_get_device;
-+	dops->get_device_exclusive = ti_sci_cmd_get_device_exclusive;
- 	dops->idle_device = ti_sci_cmd_idle_device;
-+	dops->idle_device_exclusive = ti_sci_cmd_idle_device_exclusive;
- 	dops->put_device = ti_sci_cmd_put_device;
- 
- 	dops->is_valid = ti_sci_cmd_dev_is_valid;
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index 18435e5c6364..5d704bb33989 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -97,7 +97,10 @@ struct ti_sci_core_ops {
-  */
- struct ti_sci_dev_ops {
- 	int (*get_device)(const struct ti_sci_handle *handle, u32 id);
-+	int (*get_device_exclusive)(const struct ti_sci_handle *handle, u32 id);
- 	int (*idle_device)(const struct ti_sci_handle *handle, u32 id);
-+	int (*idle_device_exclusive)(const struct ti_sci_handle *handle,
-+				     u32 id);
- 	int (*put_device)(const struct ti_sci_handle *handle, u32 id);
- 	int (*is_valid)(const struct ti_sci_handle *handle, u32 id);
- 	int (*get_context_loss_count)(const struct ti_sci_handle *handle,
--- 
-2.19.2
+Best Regards,
+Erin
+
+> +			#interrupt-cells = <4>;
+> +		};
+> +
+> +		apmixedsys: syscon@1000c000 {
+> +			compatible = "mediatek,mt8183-apmixedsys", "syscon";
+> +			reg = <0 0x1000c000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		pwrap: pwrap@1000d000 {
+> +			compatible = "mediatek,mt8183-pwrap";
+> +			reg = <0 0x1000d000 0 0x1000>;
+> +			reg-names = "pwrap";
+> +			interrupts = <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&topckgen CLK_TOP_MUX_PMICSPI>,
+> +				 <&infracfg CLK_INFRA_PMIC_AP>;
+> +			clock-names = "spi", "wrap";
+> +		};
+> +
+> +		uart0: serial@11002000 {
+> +			compatible = "mediatek,mt8183-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11002000 0 0x1000>;
+> +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART0>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@11003000 {
+> +			compatible = "mediatek,mt8183-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11003000 0 0x1000>;
+> +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART1>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@11004000 {
+> +			compatible = "mediatek,mt8183-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11004000 0 0x1000>;
+> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART2>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		audiosys: syscon@11220000 {
+> +			compatible = "mediatek,mt8183-audiosys", "syscon";
+> +			reg = <0 0x11220000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		mfgcfg: syscon@13000000 {
+> +			compatible = "mediatek,mt8183-mfgcfg", "syscon";
+> +			reg = <0 0x13000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		mmsys: syscon@14000000 {
+> +			compatible = "mediatek,mt8183-mmsys", "syscon";
+> +			reg = <0 0x14000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		imgsys: syscon@15020000 {
+> +			compatible = "mediatek,mt8183-imgsys", "syscon";
+> +			reg = <0 0x15020000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		vdecsys: syscon@16000000 {
+> +			compatible = "mediatek,mt8183-vdecsys", "syscon";
+> +			reg = <0 0x16000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		vencsys: syscon@17000000 {
+> +			compatible = "mediatek,mt8183-vencsys", "syscon";
+> +			reg = <0 0x17000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		ipu_conn: syscon@19000000 {
+> +			compatible = "mediatek,mt8183-ipu_conn", "syscon";
+> +			reg = <0 0x19000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		ipu_adl: syscon@19010000 {
+> +			compatible = "mediatek,mt8183-ipu_adl", "syscon";
+> +			reg = <0 0x19010000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		ipu_core0: syscon@19180000 {
+> +			compatible = "mediatek,mt8183-ipu_core0", "syscon";
+> +			reg = <0 0x19180000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		ipu_core1: syscon@19280000 {
+> +			compatible = "mediatek,mt8183-ipu_core1", "syscon";
+> +			reg = <0 0x19280000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		camsys: syscon@1a000000 {
+> +			compatible = "mediatek,mt8183-camsys", "syscon";
+> +			reg = <0 0x1a000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +	};
+> +};
