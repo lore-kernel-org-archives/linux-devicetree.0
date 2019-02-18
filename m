@@ -1,13 +1,11 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 3/4] soc: ti: ti_sci_pm_domains: Switch to SPDX Licensing
-Date: Mon, 18 Feb 2019 10:45:16 +0530
-Message-ID: <20190218051517.9218-4-lokeshvutla@ti.com>
-References: <20190218051517.9218-1-lokeshvutla@ti.com>
+Subject: [PATCH 0/4] soc: ti: k3-am654: Allow for exclsive request of devices
+Date: Mon, 18 Feb 2019 10:45:13 +0530
+Message-ID: <20190218051517.9218-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190218051517.9218-1-lokeshvutla@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,36 +19,28 @@ To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar
 Cc: Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Switch to SPDX licensing and drop the redundant GPL text.
+Sysfw provides an option for requesting exclusive access for a
+device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. Once a device
+is requested from a host with this flag set, any request to this
+device from a different host will be nacked by sysfw. Current tisci
+driver enables this flag for every device requests. But this may not
+be true for all the devices. This series adds support for providing
+an option to enable or disable exclusive permissions.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- drivers/soc/ti/ti_sci_pm_domains.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+Lokesh Vutla (4):
+  firmware: ti_sci: (Dis)Allow for device exclusive permissions
+  soc: ti: ti_sci_pm_domains: Add support for exclusive access
+  soc: ti: ti_sci_pm_domains: Switch to SPDX Licensing
+  arm64: dts: ti: k3-am654: Update the power domain cells
 
-diff --git a/drivers/soc/ti/ti_sci_pm_domains.c b/drivers/soc/ti/ti_sci_pm_domains.c
-index 4dae42651212..9cc4f663a29b 100644
---- a/drivers/soc/ti/ti_sci_pm_domains.c
-+++ b/drivers/soc/ti/ti_sci_pm_domains.c
-@@ -1,18 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * TI SCI Generic Power Domain Driver
-  *
-  * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
-  *	J Keerthy <j-keerthy@ti.com>
-  *	Dave Gerlach <d-gerlach@ti.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #include <linux/err.h>
+ .../bindings/soc/ti/sci-pm-domain.txt         |  7 ++-
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 26 +++++------
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 10 ++---
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  6 +--
+ drivers/firmware/ti_sci.c                     | 45 ++++++++++++++++++-
+ drivers/soc/ti/ti_sci_pm_domains.c            | 32 ++++++++-----
+ include/linux/soc/ti/ti_sci_protocol.h        |  3 ++
+ 7 files changed, 93 insertions(+), 36 deletions(-)
+
 -- 
 2.19.2
