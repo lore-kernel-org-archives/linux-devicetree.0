@@ -1,228 +1,91 @@
-Return-Path: <SRS0=QsKN=QZ=ccbib.org=harald@kernel.org>
-From: Harald Geyer <harald@ccbib.org>
-Subject: Re: [PATCH] regulator: gpio: Reword the binding document
-In-reply-to: <7a993282-9137-caf4-ca0b-b2c01ea9959c@gmail.com>
-References: <20190216174859.15738-1-marek.vasut@gmail.com> <E1gv6SG-0000Jv-KB@stardust.g4.wien.funkfeuer.at> <83550921-b0ec-fa34-b120-2dd159f256d8@gmail.com> <E1gvNOx-0000Kc-Dc@stardust.g4.wien.funkfeuer.at> <75846117-242c-6861-ace5-dccf88711208@gmail.com> <E1gvSbw-0000K8-Hj@stardust.g4.wien.funkfeuer.at> <7a993282-9137-caf4-ca0b-b2c01ea9959c@gmail.com>
+Return-Path: <SRS0=XEtX=QZ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1161.1550484296.1@stardust.g4.wien.funkfeuer.at>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 18 Feb 2019 11:04:56 +0100
-Message-Id: <E1gvfnE-0000Il-Jo@stardust.g4.wien.funkfeuer.at>
+References: <20190216174859.15738-1-marek.vasut@gmail.com>
+In-Reply-To: <20190216174859.15738-1-marek.vasut@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 18 Feb 2019 10:30:56 +0100
+Message-ID: <CAMuHMdXeuaqLEFfV6_7cPdiq_+vuo97brx1Xa1N6c_GFSKmM0A@mail.gmail.com>
+Subject: Re: [PATCH] regulator: gpio: Reword the binding document
+Content-Type: text/plain; charset="UTF-8"
 To: Marek Vasut <marek.vasut@gmail.com>
-Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Harald Geyer <harald@ccbib.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Marek Vasut writes:
-> On 2/17/19 9:00 PM, Harald Geyer wrote:
-> > Marek Vasut writes:
-> >> On 2/17/19 3:26 PM, Harald Geyer wrote:
-> >>> Marek Vasut writes:
-> >>>> On 2/16/19 9:20 PM, Harald Geyer wrote:
-> >>>>> marek.vasut@gmail.com writes:
-> >>>>>> +			  regulator voltage/current listed in "states".
-> >>>>>> +- gpios-states		: Initial state of GPIO pins in "gpios" array.
-> >>>>>> +			  0: LOW, 1: HIGH.
-> >>>>>> +			  Default is LOW if nothing else is specified.
-> >>>>>
-> >>>>> This is not very clear. Maybe add an example below or explain it b=
-etter.
-> >>>>>
-> >>>>> I guess we can't change it now anymore anyway, but it's not clear =
-to
-> >>>>> me, why we have this in the first place: A regulator should only b=
-e
-> >>>>> active when it has a consumer or is "always-on".
-> >>>>
-> >>>> Be careful here, the regulator-gpio may be instantiated such that i=
-t
-> >>>> will select between two voltage states, neither of which is 0V/off.
-> >>>> Consider eMMC vccq supply, which alternates between 1V8 and 3V3, bu=
-t
-> >>>> does not have a third, 0V/off state (unless you pull the plug).
-> >>>
-> >>> Yes, if it is always on (or simply has no enable-gpio) then we might
-> >>> select a voltage while probing the device. My point is: At some poin=
-t
-> >>> (probably when the first consumer probes, but I think there are no
-> >>> guarantees) the core will switch the regulator state. That usually
-> >>> happens a few milliseconds to seconds after probing the regulator
-> >>> itself. This seems to be nothing but a source of undefined behaviour=
-.
-> >>
-> >> Why would the core switch the regulator state when the first consumer
-> >> probes ? It is up to the consumer to reconfigure the regulator when/a=
-s
-> >> it sees fit.
-> > =
+Hi Marek,
 
-> > AFAIK the core is free to switch the regulator to any state that is
-> > compatible with all consumers. Ie there are no guarantees before the
-> > first consumer requests the regulator.
-> =
+On Sun, Feb 17, 2019 at 8:00 AM <marek.vasut@gmail.com> wrote:
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Reword the binding document to make it clear how the propeties work
+> and which properties affect which other properties.
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Harald Geyer <harald@ccbib.org>
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: linux-renesas-soc@vger.kernel.org
+> To: devicetree@vger.kernel.org
+> ---
+> Note: The recent gpio-regulator rework caused breakage. While the
+>       changes in the gpio-regulator code were according to the DT
+>       binding document, they stopped working with older DTs. Make
+>       the binding document clearer to prevent such breakage in the
+>       future.
 
-> That's correct.
-> =
+Thanks, adding more worms to the can, below...
 
-> > I only mentioned probing the
-> > first consumer, because it is a time where the core is likely to
-> > revisit it's decisions. The root problem is, that this property (as it
-> > is documented now, and also as it is implemented in linux now) doesn't
-> > actually define behaviour beyond "gpios will be set to this state once
-> > (but at an unkown time and for an unkown duration)".
-> =
+> --- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+> @@ -4,16 +4,25 @@ Required properties:
+>  - compatible           : Must be "regulator-gpio".
+>  - regulator-name       : Defined in regulator.txt as optional, but required
+>                           here.
+> -- states               : Selection of available voltages and GPIO configs.
+> -                          if there are no states, then use a fixed regulator
+> +- states               : Selection of available voltages/currents provided by
+> +                         this regulator and matching GPIO configurations to
+> +                         achieve them. If there are no states in the "states"
+> +                         array, use a fixed regulator instead.
+>
+>  Optional properties:
+> -- enable-gpio          : GPIO to use to enable/disable the regulator.
+> -- gpios                        : GPIO group used to control voltage.
+> -- gpios-states         : gpios pin's initial states array. 0: LOW, 1: HIGH.
+> -                         defualt is LOW if nothing is specified.
+> +- enable-gpio          : GPIO used to enable/disable the regulator.
 
-> ACK
-> =
+According to modern GPIO rules, that should be "enable-gpios" (plural) ...
 
-> >> The core should only set the default state and that's it.
-> > =
+> +                         Warning, the GPIO phandle flags are ignored and the
+> +                         GPIO polarity is controlled solely by the presence
+> +                         of "enable-active-high" DT property. This is due to
+> +                         compatibility with old DTs.
 
-> > That's hits exactly the problem I see:
-> > * gpios-states is not a _default_ state (but an initial state)
-> =
+Wasn't the purpose of the various *active-* flags to accommodate GPIOs
+lacking a flags cell (i.e. typically #gpio-cells = <1>)?
+When the flags cell is present, there's indeed opportunity for confusion
+(and breakage), combined with the presence/lack of *active-* below...
 
-> Right, OK, this we should clarify.
-> =
+> +- enable-active-high   : Polarity of "enable-gpio" GPIO is active HIGH.
+> +                         Default is active LOW.
+> +- gpios                        : Array of one or more GPIO pins used to select the
+> +                         regulator voltage/current listed in "states".
+> +- gpios-states         : Initial state of GPIO pins in "gpios" array.
+> +                         0: LOW, 1: HIGH.
+> +                         Default is LOW if nothing else is specified.
+>  - startup-delay-us     : Startup time in microseconds.
+> -- enable-active-high   : Polarity of GPIO is active high (default is low).
+>  - regulator-type       : Specifies what is being regulated, must be either
+>                           "voltage" or "current", defaults to voltage.
 
-> > * the core doesn't set this state (the driver writes it during probe -=
- maybe
-> >   at a time where probing might still fail)
-> =
+Gr{oetje,eeting}s,
 
-> Presumably the regulator driver, yes ?
+                        Geert
 
-Yes, the  regulator-gpio driver.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> > * the core doesn't even know about this state
-> > =
-
-> >>> If continuous operation of the regulator is important, I'd expect
-> >>> we don't touch whatever the firmware setup instead of by default
-> >>> setting all gpios to low.
-> >>>
-> >>> However as we can't change this now, there isn't much point in
-> >>> discussin this further.
-> >>
-> >> The firmware could've left the regulator in non-default state.
-> > =
-
-> > If this is the case, why would we need to set an initial state instead
-> > of just waiting what the first consumer requests. I still don't see
-> > a use case (aside from don't accidentally shut down something importan=
-t
-> > during probing).
-> =
-
-> Possibly to prevent a state which might be harmful until the first
-> consumer comes up. However this is rather theoretical.
-> =
-
-> >>>>> IIRC the regulator
-> >>>>> core automatically selects the lowest voltage/current compatible w=
-ith
-> >>>>> all consumers. It seems the only usecase is to specify an initial
-> >>>>> state that is different from all states in the "states" property, =
-before
-> >>>>> the regulator is turned on for the first time. However it also is =
-not
-> >>>>> an off-state, because it won't be set again on turning the regulat=
-or off.
-> >>>>
-> >>>> Correct, this is not an off state. If you have a better wording, I =
-am
-> >>>> open to that.
-> >>>
-> >>> I think it should be clearer that this is an array. (Looking at vari=
-ous
-> >>> users I doubt everybody was aware of that, but since we have only in=
-stances
-> >>> with one gpio, there is no functional difference between array and b=
-it field.)
-> >>> Also it should be recommended to set this to match whatever the boot=
-loader
-> >>> sets up. Maybe something like:
-> >>>
-> >>> - gpios-states: Array of GPIOs values set during probing the regulat=
-or.
-> >>> 		0: LOW, 1: HIGH. If continuous operation during boot is
-> >>> 		desired, this needs to match what the firmware or bootloader
-> >>> 		sets up. By default all GPIOs are set to low during probing.
-> >>
-> >> gpios-states has nothing to do with continuous operation, that's what
-> >> enable-gpios is for, we should not confuse the readers with it.
-> > =
-
-> > I think we have some misunderstanding here, because I don't see how
-> > enable-gpios is relevant. Also maybe I still haven't understood the
-> > usecase, but IMO that indicates, that it should be cleared up in
-> > the document.
-> =
-
-> The enable-gpios property is what turns the regulator ON/OFF , the
-> gpio-states is what selects the output voltage/current . Thus, I think
-> we should not mention "continuous operation" in the description.
-
-Okay, I see where you are coming from. Yes, gpios-states is only part
-of what is required for continuous operation during boot. Still it seems
-to be the only realistic usecase, we have come up so far. (Also in
-existing DTs it seems to be used mostly with "boot-on" regulators.)
-Maybe we can word it better then I did above, but I think mentioning
-this helps a lot to make it clearer how an implementation must behave
-if this property is present.
-
-> >> Also
-> >> note that "probing" is OS specific, so we should use "default" instea=
-d.
-> >> What about this:
-> > =
-
-> >> gpios-states		: Array of initial states of GPIO pins in "gpios" array=
-.
-> >> 0: LOW, 1: HIGH. Default is LOW if nothing else is specified.
-> > =
-
-> > "initial" is a bit too unspecific IMO.
-> =
-
-> Well, got any better idea ? It's not "default" either.
-
-Yes, it's difficult - which is why I cheated above and described what the
-linux implementation does instead of describing it in general terms.
-If the semantics of this property are too unclear to unambiguously
-describe in an implementation indepenent way, then that's a point in
-favor of marking this property deprecated and let whoever actually
-needs it come up with something better.
-
-> > I believe this description doesn't define behaviour sufficiently and a
-> > future rewrite (or reimplementation for a different OS) is likely to
-> > interpret it in an incompatible way. I think one could even argue that
-> > completely ignoring this property and just setting up a valid state fr=
-om
-> > "states" is allowed behaviour. This would likely break existing DTs, w=
-here
-> > among other things this regulator is used to set the CPU's voltage.
-> =
-
-> I suspect ignoring this property, when it's present, wouldn't be a good
-> idea. After all, it adds additional information about the behavior of
-> the system upon start up.
-
-Yes, it wouldn't be good, because it likely causes breakage. No, I don't
-think it adds much additional information, because it is too unclear.
-
-> btw I am rewording it exactly because there was a recent breakage in the
-> regulator code.
-
-Yeah, thanks for that. Your patch is an improvement and shouldn't be
-held back because it doesn't address the other problems discussed above.
-
-thanks,
-Harald
-
--- =
-
-If you want to support my work:
-see http://friends.ccbib.org/harald/supporting/
-or donate via CLAM to xASPBtezLNqj4cUe8MT5nZjthRSEjrRQXN
-or via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
