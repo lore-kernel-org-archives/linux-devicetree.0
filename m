@@ -1,11 +1,11 @@
 Return-Path: <SRS0=dbMV=QZ=nxp.com=anson.huang@kernel.org>
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH RESEND V2 2/4] watchdog: imx_sc: Add i.MX system controller
- watchdog support
-Date: Mon, 18 Feb 2019 06:53:58 +0000
-Message-ID: <1550472539-16590-3-git-send-email-Anson.Huang@nxp.com>
-References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/4] watchdog: imx_sc: Add i.MX system controller watchdog
+ support
+Date: Mon, 18 Feb 2019 02:01:28 +0000
+Message-ID: <1550454997-4398-3-git-send-email-Anson.Huang@nxp.com>
+References: <1550454997-4398-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550454997-4398-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -26,20 +26,11 @@ to do watchdog operation via IPC.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V1:
-        - use watchdog_active() instead of comparing watchdog status direct=
-ly;
-        - use devm_kzalloc instead of using static variable;
-        - remove unnecessary wdog set driver data in .probe;
-        - use watchdog_stop_on_unregister() instead of .remove callback;
-        - use watchdog_stop_on_reboot() instead of .shutdown callback;
-        - use SIMPLE_DEV_PM_OPS() to simply the PM code.
----
  drivers/watchdog/Kconfig      |  13 +++
  drivers/watchdog/Makefile     |   1 +
- drivers/watchdog/imx_sc_wdt.c | 185 ++++++++++++++++++++++++++++++++++++++=
+ drivers/watchdog/imx_sc_wdt.c | 187 ++++++++++++++++++++++++++++++++++++++=
 ++++
- 3 files changed, 199 insertions(+)
+ 3 files changed, 201 insertions(+)
  create mode 100644 drivers/watchdog/imx_sc_wdt.c
 
 diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
@@ -80,10 +71,10 @@ index 4e78a8c..0c9da63 100644
  obj-$(CONFIG_BCM2835_WDT) +=3D bcm2835_wdt.o
 diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
 new file mode 100644
-index 0000000..a234a0c
+index 0000000..5af6cf2
 --- /dev/null
 +++ b/drivers/watchdog/imx_sc_wdt.c
-@@ -0,0 +1,185 @@
+@@ -0,0 +1,187 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
 + * Copyright 2018-2019 NXP.
@@ -235,7 +226,8 @@ lt=3D"
 +};
 +MODULE_DEVICE_TABLE(of, imx_sc_wdt_dt_ids);
 +
-+static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)
++#ifdef CONFIG_PM_SLEEP
++static int imx_sc_wdt_suspend(struct device *dev)
 +{
 +	struct watchdog_device *imx_sc_wdd =3D dev_get_drvdata(dev);
 +
@@ -245,7 +237,7 @@ lt=3D"
 +	return 0;
 +}
 +
-+static int __maybe_unused imx_sc_wdt_resume(struct device *dev)
++static int imx_sc_wdt_resume(struct device *dev)
 +{
 +	struct watchdog_device *imx_sc_wdd =3D dev_get_drvdata(dev);
 +
@@ -254,6 +246,7 @@ lt=3D"
 +
 +	return 0;
 +}
++#endif
 +
 +static SIMPLE_DEV_PM_OPS(imx_sc_wdt_pm_ops,
 +			 imx_sc_wdt_suspend, imx_sc_wdt_resume);
