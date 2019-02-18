@@ -1,117 +1,83 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 03/14] dt-binding: irqchip: Add pruss-intc-irq driver
- for PRUSS interrupts
-Date: Mon, 18 Feb 2019 13:32:52 -0600
-Message-ID: <20190218193252.GA6313@bogus>
-References: <1549290167-876-1-git-send-email-rogerq@ti.com>
- <1549290167-876-4-git-send-email-rogerq@ti.com>
+From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 06/11] drm/sun4i: rgb: Add DT property to
+ disable strict clock rate check
+Date: Mon, 18 Feb 2019 11:33:05 -0800
+Message-ID: <CA+E=qVfDfDvVmKQDeh2e0SA=tm6VpBMpu9MPKUqxFPObxYFXDg@mail.gmail.com>
+References: <20190215050957.20755-1-anarsoul@gmail.com> <20190215050957.20755-7-anarsoul@gmail.com>
+ <20190218182629.GA14714@bogus>
+Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1549290167-876-4-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, david@lechnology.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDV3B667TUHBBDERVTRQKGQEXI3HRNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190218182629.GA14714@bogus>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2019 at 04:22:36PM +0200, Roger Quadros wrote:
-> From: "Andrew F. Davis" <afd@ti.com>
-> 
-> The Programmable Real-Time Unit Subsystem (PRUSS) contains an
-> interrupt controller (INTC) that can handle various system input
-> events and post interrupts back to the device-level initiators.
-> The INTC can support upto 64 input events with individual control
-> configuration and hardware prioritization. These events are mapped
-> onto 10 interrupt signals through two levels of many-to-one mapping
-> support. Different interrupt signals are routed to the individual
-> PRU cores or to the host CPU.
-> 
-> The PRUSS INTC platform driver manages this PRUSS interrupt
-> controller and implements an irqchip driver to provide a Linux
-> standard way for the PRU client users to enable/disable/ack/
-> re-trigger a PRUSS system event. The system events to interrupt
-> channels and host interrupts relies on the mapping configuration
-> provided through a firmware resource table for now. This will be
-> revisited and enhanced in the future for a better interface. The
-> mappings will currently be programmed during the boot/shutdown
-> of the PRU.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  .../interrupt-controller/ti,pruss-intc-irq.txt     | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc-irq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc-irq.txt
-> new file mode 100644
-> index 0000000..c70221c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc-irq.txt
-> @@ -0,0 +1,51 @@
-> +PRU ICSS INTC on TI SoCs
-> +========================
-> +
-> +Each PRUSS has a single interrupt controller instance that is common to both
-> +the PRU cores. Each interrupt controller can detect 64 input events which are
-> +then mapped to 10 possible output interrupts through two levels of mapping. The
-> +input events can be triggered by either the PRUs and/or various other PRUSS
-> +internal and external peripherals. The first 2 output interrupts are fed
-> +exclusively to the internal PRU cores, with the remaining 8 connected to
-> +external interrupt controllers including the MPU.
-> +
-> +Required Properties:
-> +--------------------
-> +- compatible           : should be one of,
-> +                             "ti,am3356-pruss-intc" for AM335x family of SoCs
-> +                             "ti,am4376-pruss-intc" for AM437x family of SoCs
-> +                             "ti,am5728-pruss-intc" for AM57xx family of SoCs
-> +                             "ti,k2g-pruss-intc" for 66AK2G family of SoCs
-> +- reg                  : base address and size for the PRUSS INTC sub-module
-> +- reg-names            : should contain the string "intc"
+On Mon, Feb 18, 2019 at 10:26 AM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+> On Thu, Feb 14, 2019 at 09:09:52PM -0800, Vasily Khoruzhick wrote:
+> > Clock rate check that was added in commit bb43d40d7c83 ("drm/sun4i: rgb:
+> > Validate the clock rate") prevents some panel and bridges from working with
+> > sun4i driver.
+>
+> Sounds lile a regression that should be reverted. The fix is not a
+> backwards compatible change either.
 
-Not really useful with only 1 entry.
+anx6345 driver isn't mainlined yet and I'm not sure if this change
+breaks any mainlined boards. So likely there's not enough
+justification to revert it.
 
-> +- interrupts     : all the interrupts generated towards the main host
-> +                   processor in the SoC. The format depends on the
-> +                   interrupt specifier for the particular SoC's MPU
-> +                   parent interrupt controller
-> +- interrupt-names: should use one of the following names for each interrupt,
-> +                   the name should match the corresponding host interrupt
-> +                   number,
-> +                       "host2", "host3", "host4", "host5", "host6",
-> +                       "host7", "host8" or "host9"
-> +                   NOTE: AM437x and 66AK2G SoCs do not have "host7" interrupt
-> +                         connected to MPU
-> +- interrupt-controller : mark this node as an interrupt controller
-> +- #interrupt-cells     : should be 1. Client users shall use the PRU System
-> +                         event number (the interrupt source that the client
-> +                         is interested in) as the value of the interrupts
-> +                         property in their node
-> +
-> +Example:
-> +--------
-> +		pruss_intc: intc@20000 {
+> > Unfortunately, dotclock frequency for some modes are not achievable on
+> > sunxi hardware, and there's a slight deviation in rate returned by
+> > clk_round_rate(), so they fail this check.
+> >
+> > Experiments show that panels and bridges work fine with this slight
+> > deviation, e.g. Pinebook that uses ANX6345 bridge with 768p eDP panel
+> > requests 73 MHz, gets 72.296MHz instead (0.96% difference) and works just
+> > fine.
+> >
+> > This patch adds DT property to disable strict clock rate check
+> >
+> > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/display/sunxi/sun4i-drm.txt          | 2 ++
+> >  drivers/gpu/drm/sun4i/sun4i_rgb.c                            | 5 +++++
+> >  drivers/gpu/drm/sun4i/sun4i_tcon.c                           | 3 +++
+> >  drivers/gpu/drm/sun4i/sun4i_tcon.h                           | 1 +
+> >  4 files changed, 11 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > index f426bdb42f18..18c8b053a28d 100644
+> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > @@ -63,6 +63,8 @@ Required properties:
+> >      Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> >      first port should be the input endpoint. The second should be the
+> >      output, usually to an HDMI connector.
+> > +  - no-strict-clock-check: don't reject timings if exact dot clock can't be
+> > +    reached.
+>
+> This should be the default IMO. Most panels are a single timing, so if
+> we reject it the fallback no display?
 
-interrupt-controller@20000
+As far as I remember the change was introduced to reject some modes
+for which dotclock can't be reached when driver is used with VGA
+bridge. So if we make it default it'll break boards with VGA bridge
+and old DT.
 
-> +			compatible = "ti,am3356-pruss-intc";
-> +			reg = <0x20000 0x2000>;
-> +			reg-names = "intc";
-> +			interrupt-controller;
-> +			#interrupt-cells = <1>;
-> +			interrupts = <20 21 22 23 24 25 26 27>;
-> +			interrupt-names = "host2", "host3", "host4",
-> +					  "host5", "host6", "host7",
-> +					  "host8", "host9";
-> +		};
-> +
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+> I thought we had some mechanism already to allow some range of
+> frequencies. I think the chromeos guys needed something IIRC.
+
+You can specify frequency range for panels, but there's nothing for
+bridges. In my case EDID doesn't specify clock tolerance.
+
+>
+> Rob
