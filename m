@@ -1,131 +1,70 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
-Date: Mon, 18 Feb 2019 11:24:42 +0100
-Message-ID: <20190218102442.l3br2h3oqfe2atdv@flea>
-References: <20190212083850.7genwc6ipnxtl7eo@flea>
- <E1gtUZn-0000NW-MA@stardust.g4.wien.funkfeuer.at>
- <20190212100929.iqsxu443qrkl6myf@flea>
- <E1gtds8-0000NB-Re@stardust.g4.wien.funkfeuer.at>
- <20190213094442.da2dy6d5bb527nft@flea>
- <E1gtsx9-0000RP-08@stardust.g4.wien.funkfeuer.at>
- <20190213155311.ovkpim3lxwyvuhhj@flea>
- <E1gu4dx-0000Sy-2B@stardust.g4.wien.funkfeuer.at>
- <20190215142029.GB32618@lst.de>
- <E1gv6rh-0000Km-U8@stardust.g4.wien.funkfeuer.at>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Add one new cell to present
+ hardware slave id
+Date: Mon, 18 Feb 2019 11:31:32 +0100
+Message-ID: <CAK8P3a1Zq6XjymG3sAaHGeNRxU5UXPfJPbi0A9s47cTVK7vC3g@mail.gmail.com>
+References: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
+ <CAK8P3a2zkhrZLMi5KZ5=fGJCt85dad3_pZC0o7GqcwJkk4es9w@mail.gmail.com>
+ <CAMz4ku+PR4bHtcPu2uT2f974+FWJVi8Tp3WzmuqE1TS-M-QawQ@mail.gmail.com> <CAMz4kuLEut0LqZ4bSAGJDufE8xHr6DgZ3Z1RCLQ10q_k6MUesw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2050964039732922955=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <E1gv6rh-0000Km-U8@stardust.g4.wien.funkfeuer.at>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Harald Geyer <harald@ccbib.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Torsten Duwe <duwe@lst.de>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMz4kuLEut0LqZ4bSAGJDufE8xHr6DgZ3Z1RCLQ10q_k6MUesw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Dan Williams <dan.j.williams@intel.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, eric.long@unisoc.com, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 12, 2019 at 9:25 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+> On Fri, 1 Feb 2019 at 19:53, Baolin Wang <baolin.wang@linaro.org> wrote:
+> > On Thu, 31 Jan 2019 at 00:52, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Tue, Jan 22, 2019 at 2:21 PM Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > >
+> > > >  Client:
+> > > >  DMA clients connected to the Spreadtrum DMA controller must use the format
+> > > > -described in the dma.txt file, using a two-cell specifier for each channel.
+> > > > -The two cells in order are:
+> > > > +described in the dma.txt file, using a three-cell specifier for each channel.
+> > > > +The three cells in order are:
+> > > >  1. A phandle pointing to the DMA controller.
+> > > >  2. The channel id.
+> > > > +3. The hardware slave id which is used for clients to trigger DMA engine
+> > > > +automatically.
+> > >
+> > > I notice that this is an incompatible binding change. Is that necessary?
+> > > If the current code works, I'd suggest allowing both #dma-cells=<2>
+> > > and <3>, and then implementing both in the driver.
+> >
+> > Yes, this is necessary.
+> >
+> > Yes, current code can work, but the problem is that the DMA clients
+> > must add one property (something like "sprd,slave-id") to specify the
+> > slave id. So considering this, we want to change the dma-cells to 2,
+> > including dma channel and dma slave id, which can avoid introducing
+> > some similar properties for DMA clients.
+> >
+> > Now there are no DMA clients in mainline for Spreadtrum platform, and
+> > we want to upstream our first DMA clients: SPI controller. So no other
+> > drivers need to change when we changing dma cells. Thanks.
+>
+> Do you have any other concerns about this patch set? If not, I think
+> Vinod can apply this patch set. Thanks.
 
---===============2050964039732922955==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hokxk7gwa2n735je"
-Content-Disposition: inline
+Sorry for the late reply. Yes, this makes sense since there are no
+existing users then. For the DT changes going through the dmaengine
+tree
 
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
---hokxk7gwa2n735je
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+One more question, to make sure we don't need to edit it again:
+Why do you need both a 'channel id' and a 'slave id' here? Is this
+a strict hardware requirement for your DMA engine? In many
+other designs, only a DMA request line number needs to
+be described, and I think this would correspond to what you
+call the 'hardware slave id' in your documentation.
 
-On Sat, Feb 16, 2019 at 09:47:13PM +0100, Harald Geyer wrote:
-> Hi Torsten!
->=20
-> Torsten Duwe writes:
->=20
-> > > > > > > But we need a way to control the mux from userspace and aside=
- from
-> > > > > > > unbinding the ideas proposed thus far are:
-> > > > > > >
-> > > > > > > a) control the gpio directly
-> > > > > > > b) control the gpio via leds-gpio
-> > > > > > >=20
-> > > > > > > (a) was dismissed because we can't set a default from DT
-> > > > > > > (b) was dismissed because some rogue app might try to blink it
-> >=20
-> > Hey, this is a debugging hack. If some rogue app tries to blink it, so =
-be it.
-> >=20
-> > > I suspect some distributions will pick up the patch I posted anyway, =
-if
-> > > it doesn't get merged mainline. (This is how I forgot missing backlig=
-ht
-> > > support - it just worked for too many people ...) If we ship
-> > > sun50i-a64-teres-i.dts with the proper nodes (but disabled), their
-> > > patches will be much easier to maintain as the official DT evolves.
-> >=20
-> > As I wrote (held by the list admin), I consider the whole console mux
-> > GPIO an U-Boot hack, and would put it into sun50i-a64-teres-i-u-boot.dt=
-si.
-> > (As a LED, see above :-)
->=20
-> The thing is, one of the quite strict rules in kernel development is:
-> Never break userspace. That means: If we provide a way to userspace to
-> do something (ie switch between debug and audio), we are expected to
-> keep it around forever. So since there is a decent chance that someday
-> somebody might write a driver that handles this situation properly, we
-> don't want chain ourselves to some dirty hack.
->=20
-> (I'm not totally against writing such a driver myself, if there are
-> enough use cases. However, I think that TERES alone is not enough.)
->=20
-> > Would you care to submit a patch version without that GPIO handled?
-> > I think it's very useful and has the potential to be agreed upon.
->=20
-> That would enable audio from the internal speakers but select debug
-> output on the HP jack by default. I would be okay with that, despite
-> still thinking that audio on the head phones should be the default.
->=20
-> Maxime and Wens are the maintainers, so it's their call in the end.
+Does each request line here correspond to a fixed channel
+id as well, or can a channel be shared between multiple
+slave devices?
 
-At this point, I'm not really convinced by the solution in that patch,
-but I don't have really good ideas either. I think it would be good to
-discuss this with Mark and Linus Walleij, they will probably have way
-better solutions than what I can come up with.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---hokxk7gwa2n735je
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXGqH6gAKCRDj7w1vZxhR
-xashAQDbjjYQHwqgbu1SqQX5qgkTWuLqt58lcPxbonZMhzMqJgEA5dOHZhZClyYd
-ea3rdkxNgaOI5DJ3GAwd3ALzXhycTwE=
-=n1ic
------END PGP SIGNATURE-----
-
---hokxk7gwa2n735je--
-
-
---===============2050964039732922955==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2050964039732922955==--
+      Arnd
