@@ -1,159 +1,81 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v7 2/5] dt-bindings: pstore-block: new support for blkoops
-Date: Mon, 18 Feb 2019 09:37:54 -0600
-Message-ID: <CAL_Jsq+zZyBcnQn-SzK+u-7BacD5kuqk9WJKqT9V3L20TPAbVw@mail.gmail.com>
-References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
- <20190130160707.GA31844@bogus> <ab72f73d-b7ea-4688-f768-509d55964be0@allwinnertech.com>
- <CAL_Jsq+qmBrXVLoD8FzgB589xET3isnqMsAxRiJJDvQyu+ZfiQ@mail.gmail.com> <d94eb644-d99a-1f9d-af06-a6e9ec3e3959@allwinnertech.com>
+Subject: Re: [PATCH v6 01/22] dt-bindings: mediatek: Add binding for mt8183
+ IOMMU and SMI
+Date: Mon, 18 Feb 2019 09:44:45 -0600
+Message-ID: <20190218154445.GA28558@bogus>
+References: <1550394300-17420-1-git-send-email-yong.wu@mediatek.com>
+ <1550394300-17420-2-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d94eb644-d99a-1f9d-af06-a6e9ec3e3959@allwinnertech.com>
+Content-Disposition: inline
+In-Reply-To: <1550394300-17420-2-git-send-email-yong.wu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: liaoweixiong <liaoweixiong@allwinnertech.com>
-Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, yong.wu@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 7:06 PM liaoweixiong
-<liaoweixiong@allwinnertech.com> wrote:
->
-> On 2019-02-14 04:30, Rob Herring wrote:
-> > On Wed, Feb 13, 2019 at 7:51 AM liaoweixiong
-> > <liaoweixiong@allwinnertech.com> wrote:
-> >>
-> >>
-> >> On 2019-01-31 00:07, Rob Herring wrote:> On Wed, Jan 23, 2019 at
-> >> 08:05:13PM +0800, liaoweixiong wrote:
-> >>>> Create DT binding document for blkoops.
-> >>>>
-> >>>> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
-> >>>> ---
-> >>>>  .../devicetree/bindings/pstore-block/blkoops.txt   | 32 ++++++++++++++++++++++
-> >>>
-> >>> /bindings/pstore/...
-> >>>
-> >>> I wouldn't call it blkoops either. I believe ramoops is called that to
-> >>> maintain compatibility keeping the same kernel module name that
-> >>> preceeded pstore.
-> >>>
-> >>
-> >> Fixed.
-> >>
-> >> In addition, I don't known whether should we move
-> >> ramreserved-memory/ooos.txt to /bindings/pstore. This is for maintainer
-> >> to decide, and do it on other patch.
-> >>
-> >>>>  MAINTAINERS                                        |  1 +
-> >>>>  2 files changed, 33 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/pstore-block/blkoops.txt b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
-> >>>> new file mode 100644
-> >>>> index 0000000..a25835b
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
-> >>>> @@ -0,0 +1,32 @@
-> >>>> +Blkoops oops logger
-> >>>> +===================
-> >>>> +
-> >>>> +Blkoops provides a block partition for oops, excluding panics now, so they can
-> >>>> +be recovered after a reboot.
-> >>>> +
-> >>>> +Any space of block partition will be used for a circular buffer of oops records.
-> >>>> +These records have a configurable size, with a size of 0 indicating that they
-> >>>> +should be disabled.
-> >>>> +
-> >>>> +"partition-size" and at least one of "dmesg-size" or "pmsg-size" must be set
-> >>>> +non-zero, but are otherwise optional as listed below.
-> >>>> +
-> >>>> +Blkoops will take value from Kconfig if device tree do not set, but settings
-> >>>> +from module parameters can also overwrite them.
-> >>>
-> >>> That's all kernel details not relevant to the binidng.
-> >>>
-> >>
-> >> Deleted.
-> >>
-> >>>> +
-> >>>> +Required properties:
-> >>>> +
-> >>>> +- compatible: must be "blkoops".
-> >>>> +
-> >>>> +- partition-size: size in kbytes, must be a multiple of 4.
-> >>>
-> >>> This seems unnecessary given a partition has a known size.
-> >>>
-> >>
-> >> partition-size is necessary for psotre/blk. User should tell pstore/blk
-> >> how large space can it use.
-> >
-> > The partition table says how big a partition is. If you only want to
-> > use part of it, then make the partition smaller or use a file system.
-> > This is a solved problem, so we don't need a new way in DT to handle
-> > this.
-> >
->
-> You are right, partition size is known and pstore/blk can get it
-> automatically from specified block device. I will try to do it on next
-> version patch.
-> But i prefer to rename partition-size to total-size and move it to
-> optional properties. Total-size means how big space pstore/blk can use.
-> It is not only about partition size as pstore/blk can use ram if no
-> partition specified.
-> So, I will process as follow logic:
-> 1. If specify total size, use total size.
-> 2. If no total size but specify partition, get size from partition.
+On Sun, 17 Feb 2019 17:04:39 +0800, Yong Wu wrote:
+> This patch adds decriptions for mt8183 IOMMU and SMI.
+> 
+> mt8183 has only one M4U like mt8173 and is also MTK IOMMU gen2 which
+> uses ARM Short-Descriptor translation table format.
+> 
+> The mt8183 M4U-SMI HW diagram is as below:
+> 
+>                           EMI
+>                            |
+>                           M4U
+>                            |
+>                        ----------
+>                        |        |
+>                    gals0-rx   gals1-rx
+>                        |        |
+>                        |        |
+>                    gals0-tx   gals1-tx
+>                        |        |
+>                       ------------
+>                        SMI Common
+>                       ------------
+>                            |
+>   +-----+-----+--------+-----+-----+-------+-------+
+>   |     |     |        |     |     |       |       |
+>   |     |  gals-rx  gals-rx  |   gals-rx gals-rx gals-rx
+>   |     |     |        |     |     |       |       |
+>   |     |     |        |     |     |       |       |
+>   |     |  gals-tx  gals-tx  |   gals-tx gals-tx gals-tx
+>   |     |     |        |     |     |       |       |
+> larb0 larb1  IPU0    IPU1  larb4  larb5  larb6    CCU
+> disp  vdec   img     cam    venc   img    cam
+> 
+> All the connections are HW fixed, SW can NOT adjust it.
+> 
+> Compared with mt8173, we add a GALS(Global Async Local Sync) module
+> between SMI-common and M4U, and additional GALS between larb2/3/5/6
+> and SMI-common. GALS can help synchronize for the modules in different
+> clock frequency, it can be seen as a "asynchronous fifo".
+> 
+> GALS can only help transfer the command/data while it doesn't have
+> the configuring register, thus it has the special "smi" clock and it
+> doesn't have the "apb" clock. From the diagram above, we add "gals0"
+> and "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
+> 
+> >From the diagram above, IPU0/IPU1(Image Processor Unit) and CCU(Camera
+> Control Unit) is connected with smi-common directly, we can take them
+> as "larb2", "larb3" and "larb7", and their register spaces are
+> different with the normal larb.
+> 
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> ---
+> Hi Rob,
+> In this version, I changed the picture in the binding and list the
+> detailed SoCs which has "bclk" and "gals". So I don't keep your R-b.
+> ---
+>  .../devicetree/bindings/iommu/mediatek,iommu.txt   |  30 ++++-
+>  .../memory-controllers/mediatek,smi-common.txt     |  12 +-
+>  .../memory-controllers/mediatek,smi-larb.txt       |   4 +
+>  include/dt-bindings/memory/mt8183-larb-port.h      | 130 +++++++++++++++++++++
+>  4 files changed, 170 insertions(+), 6 deletions(-)
+>  create mode 100644 include/dt-bindings/memory/mt8183-larb-port.h
+> 
 
-You haven't given any reason why we need to support this.
-
-> >>>> +Optional properties:
-> >>>> +
-> >>>> +- partition-path: strings must begin with "/dev", tell blkoops which partition
-> >>>> +  it can used. If it is not set, blkoops will drop all data when reboot.
-> >>>
-> >>> No. '/dev/...' is a Linux thing and doesn't belong in DT.
-> >>>
-> >>> You should define a partition UUID and/or label and the kernel can find
-> >>> the right partition to use.
-> >>>
-> >>
-> >> pstore/blk do general read/write by filp_open/kernel_read/kernel_write,
-> >> which need device path.
-> >> In addition, i have no idea how to use UUID and/or label to do general
-> >> read/write on kernel layer, can you give me a tip?
-> >
-> > The kernel can mount a filesystem by label or UUID though I think
-> > those are filesystem UUID and label, not partition UUID and label. But
-> > certainly bootloaders find the EFI system partition by UUID.
-> >
->
-> As your words, those are file system UUID and label, not partition
-> UUID/label.
-
-Actually, looking at do_mounts.c, it is the partition UUID and label.
-See PARTUUID and PARTLABEL.
-
-> Pstore is a file system, there is no other file system any
-> more for specified partition. Pstore/blk can't get specified partition
-> by UUID or label.
->
-> As far as i know, block device manager on user space scans each block
-> device and matches file system table to get UUID and label. Not even all
-> file systems have UUID/label.
-
-Yes, userspace has more capabilities for mounting.
-
-> MTD device may has label, but it is not suitable for all block device.
-
-MTD is special...
-
-> How if i cancel the prefix requirement for /dev and add it to the codes?
-> Then rename partition-path to block-device, by this, DT property may be
-> "mmcblk0p10" or "sda6" .
-
-There is simply no way we are putting Linux device names into DT.
-Besides just being Linux specific, the device names are not guaranteed
-to be stable.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
