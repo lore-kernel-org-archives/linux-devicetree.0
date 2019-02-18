@@ -1,108 +1,159 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Mon, 18 Feb 2019 20:57:25 +0530
-Message-ID: <d67d993a-e2c0-676c-5b83-f6722796e5be@ti.com>
-References: <20190212074237.2875-1-lokeshvutla@ti.com>
- <20190212074237.2875-6-lokeshvutla@ti.com>
- <20190218150738.527a0507@why.wild-wind.fr.eu.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v7 2/5] dt-bindings: pstore-block: new support for blkoops
+Date: Mon, 18 Feb 2019 09:37:54 -0600
+Message-ID: <CAL_Jsq+zZyBcnQn-SzK+u-7BacD5kuqk9WJKqT9V3L20TPAbVw@mail.gmail.com>
+References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
+ <20190130160707.GA31844@bogus> <ab72f73d-b7ea-4688-f768-509d55964be0@allwinnertech.com>
+ <CAL_Jsq+qmBrXVLoD8FzgB589xET3isnqMsAxRiJJDvQyu+ZfiQ@mail.gmail.com> <d94eb644-d99a-1f9d-af06-a6e9ec3e3959@allwinnertech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218150738.527a0507@why.wild-wind.fr.eu.org>
-Content-Language: en-US
+In-Reply-To: <d94eb644-d99a-1f9d-af06-a6e9ec3e3959@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: liaoweixiong <liaoweixiong@allwinnertech.com>
+Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+On Thu, Feb 14, 2019 at 7:06 PM liaoweixiong
+<liaoweixiong@allwinnertech.com> wrote:
+>
+> On 2019-02-14 04:30, Rob Herring wrote:
+> > On Wed, Feb 13, 2019 at 7:51 AM liaoweixiong
+> > <liaoweixiong@allwinnertech.com> wrote:
+> >>
+> >>
+> >> On 2019-01-31 00:07, Rob Herring wrote:> On Wed, Jan 23, 2019 at
+> >> 08:05:13PM +0800, liaoweixiong wrote:
+> >>>> Create DT binding document for blkoops.
+> >>>>
+> >>>> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+> >>>> ---
+> >>>>  .../devicetree/bindings/pstore-block/blkoops.txt   | 32 ++++++++++++++++++++++
+> >>>
+> >>> /bindings/pstore/...
+> >>>
+> >>> I wouldn't call it blkoops either. I believe ramoops is called that to
+> >>> maintain compatibility keeping the same kernel module name that
+> >>> preceeded pstore.
+> >>>
+> >>
+> >> Fixed.
+> >>
+> >> In addition, I don't known whether should we move
+> >> ramreserved-memory/ooos.txt to /bindings/pstore. This is for maintainer
+> >> to decide, and do it on other patch.
+> >>
+> >>>>  MAINTAINERS                                        |  1 +
+> >>>>  2 files changed, 33 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/pstore-block/blkoops.txt b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..a25835b
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
+> >>>> @@ -0,0 +1,32 @@
+> >>>> +Blkoops oops logger
+> >>>> +===================
+> >>>> +
+> >>>> +Blkoops provides a block partition for oops, excluding panics now, so they can
+> >>>> +be recovered after a reboot.
+> >>>> +
+> >>>> +Any space of block partition will be used for a circular buffer of oops records.
+> >>>> +These records have a configurable size, with a size of 0 indicating that they
+> >>>> +should be disabled.
+> >>>> +
+> >>>> +"partition-size" and at least one of "dmesg-size" or "pmsg-size" must be set
+> >>>> +non-zero, but are otherwise optional as listed below.
+> >>>> +
+> >>>> +Blkoops will take value from Kconfig if device tree do not set, but settings
+> >>>> +from module parameters can also overwrite them.
+> >>>
+> >>> That's all kernel details not relevant to the binidng.
+> >>>
+> >>
+> >> Deleted.
+> >>
+> >>>> +
+> >>>> +Required properties:
+> >>>> +
+> >>>> +- compatible: must be "blkoops".
+> >>>> +
+> >>>> +- partition-size: size in kbytes, must be a multiple of 4.
+> >>>
+> >>> This seems unnecessary given a partition has a known size.
+> >>>
+> >>
+> >> partition-size is necessary for psotre/blk. User should tell pstore/blk
+> >> how large space can it use.
+> >
+> > The partition table says how big a partition is. If you only want to
+> > use part of it, then make the partition smaller or use a file system.
+> > This is a solved problem, so we don't need a new way in DT to handle
+> > this.
+> >
+>
+> You are right, partition size is known and pstore/blk can get it
+> automatically from specified block device. I will try to do it on next
+> version patch.
+> But i prefer to rename partition-size to total-size and move it to
+> optional properties. Total-size means how big space pstore/blk can use.
+> It is not only about partition size as pstore/blk can use ram if no
+> partition specified.
+> So, I will process as follow logic:
+> 1. If specify total size, use total size.
+> 2. If no total size but specify partition, get size from partition.
 
-On 18/02/19 8:42 PM, Marc Zyngier wrote:
-> On Tue, 12 Feb 2019 13:12:32 +0530
-> Lokesh Vutla <lokeshvutla@ti.com> wrote:
-> 
->> Add the DT binding documentation for Interrupt router driver.
->>
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->> ---
->> Changes since v4:
->> - None
->>
->>  .../interrupt-controller/ti,sci-intr.txt      | 85 +++++++++++++++++++
->>  MAINTAINERS                                   |  1 +
->>  2 files changed, 86 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> new file mode 100644
->> index 000000000000..4b0ca797fda1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> @@ -0,0 +1,85 @@
->> +Texas Instruments K3 Interrupt Router
->> +=====================================
->> +
->> +The Interrupt Router (INTR) module provides a mechanism to route M
->> +interrupt inputs to N interrupt outputs, where all M inputs are selectable
->> +to be driven per N output. There is one register per output (MUXCNTL_N) that
->> +controls the selection.
->> +
->> +
->> +                                 Interrupt Router
->> +                             +----------------------+
->> +                             |  Inputs     Outputs  |
->> +        +-------+            | +------+             |
->> +        | GPIO  |----------->| | irq0 |             |       Host IRQ
->> +        +-------+            | +------+             |      controller
->> +                             |    .        +-----+  |      +-------+
->> +        +-------+            |    .        |  0  |  |----->|  IRQ  |
->> +        | INTA  |----------->|    .        +-----+  |      +-------+
->> +        +-------+            |    .          .      |
->> +                             | +------+      .      |
->> +                             | | irqM |    +-----+  |
->> +                             | +------+    |  N  |  |
->> +                             |             +-----+  |
->> +                             +----------------------+
->> +
->> +Configuration of these MUXCNTL_N registers is done by a system controller
->> +(like the Device Memory and Security Controller on K3 AM654 SoC). System
->> +controller will keep track of the used and unused registers within the Router.
->> +Driver should request the system controller to get the range of GIC IRQs
->> +assigned to the requesting hosts. It is the drivers responsibility to keep
->> +track of Host IRQs.
->> +
->> +Communication between the host processor running an OS and the system
->> +controller happens through a protocol called TI System Control Interface
->> +(TISCI protocol). For more details refer:
->> +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> +
->> +TISCI Interrupt Router Node:
->> +----------------------------
->> +- compatible:		Must be "ti,sci-intr".
->> +- interrupt-controller:	Identifies the node as an interrupt controller
->> +- #interrupt-cells:	Specifies the number of cells needed to encode an
->> +			interrupt source. The value should be 4.
->> +			First cell should contain the TISCI device ID of source
->> +			Second cell should contain the interrupt source offset
->> +			within the device
->> +			Third cell specifies the trigger type as defined
->> +			in interrupts.txt in this directory.
->> +			Fourth cell should be 1 if the irq is coming from
->> +			interrupt aggregator else 0.
-> 
-> This is odd. Doesn't the aggregator have a device ID too, which could
-> be used to discriminate between the two?
+You haven't given any reason why we need to support this.
 
-For that we have to store the list of INTA device IDs connected to the INTR in
-the router driver. Again we have to get this list from DT. I felt this is easier
-to differentiate the INTA interrupts. If you prefer to get the list of ids and
-store it in INTR driver, I can change that by adding an extra DT property.
+> >>>> +Optional properties:
+> >>>> +
+> >>>> +- partition-path: strings must begin with "/dev", tell blkoops which partition
+> >>>> +  it can used. If it is not set, blkoops will drop all data when reboot.
+> >>>
+> >>> No. '/dev/...' is a Linux thing and doesn't belong in DT.
+> >>>
+> >>> You should define a partition UUID and/or label and the kernel can find
+> >>> the right partition to use.
+> >>>
+> >>
+> >> pstore/blk do general read/write by filp_open/kernel_read/kernel_write,
+> >> which need device path.
+> >> In addition, i have no idea how to use UUID and/or label to do general
+> >> read/write on kernel layer, can you give me a tip?
+> >
+> > The kernel can mount a filesystem by label or UUID though I think
+> > those are filesystem UUID and label, not partition UUID and label. But
+> > certainly bootloaders find the EFI system partition by UUID.
+> >
+>
+> As your words, those are file system UUID and label, not partition
+> UUID/label.
 
-I guess you assumed that there is a single INTA attached to an INTR. There are
-cases where there are more than one INTA connected to INTR. We will have to
-handle that as well.
+Actually, looking at do_mounts.c, it is the partition UUID and label.
+See PARTUUID and PARTLABEL.
 
-Thanks and regards,
-Lokesh
+> Pstore is a file system, there is no other file system any
+> more for specified partition. Pstore/blk can't get specified partition
+> by UUID or label.
+>
+> As far as i know, block device manager on user space scans each block
+> device and matches file system table to get UUID and label. Not even all
+> file systems have UUID/label.
+
+Yes, userspace has more capabilities for mounting.
+
+> MTD device may has label, but it is not suitable for all block device.
+
+MTD is special...
+
+> How if i cancel the prefix requirement for /dev and add it to the codes?
+> Then rename partition-path to block-device, by this, DT property may be
+> "mmcblk0p10" or "sda6" .
+
+There is simply no way we are putting Linux device names into DT.
+Besides just being Linux specific, the device names are not guaranteed
+to be stable.
+
+Rob
