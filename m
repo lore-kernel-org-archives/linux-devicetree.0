@@ -1,145 +1,492 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Tue, 19 Feb 2019 21:49:21 +0530
-Message-ID: <6aa37276-0833-fdf5-575b-c3ca14f776a6@ti.com>
-References: <20190213152620.GS5720@atomide.com>
- <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
- <20190214154100.GB5720@atomide.com>
- <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
- <20190214174612.GF5720@atomide.com>
- <171e8597-2156-747d-d024-7b4bfc6f9186@ti.com>
- <20190215161629.GK5720@atomide.com>
- <2369739e-3bc8-257a-99e0-db2951c6777d@ti.com>
- <20190218143245.GC15711@atomide.com>
- <84b3ec21-9ce9-b9a8-80a9-75001db43a90@ti.com>
- <20190219153537.GJ15711@atomide.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 1/3] PCI: altera: Add Stratix 10 PCIe support
+Date: Tue, 19 Feb 2019 16:23:13 +0000
+Message-ID: <20190219162313.GB21833@e107981-ln.cambridge.arm.com>
+References: <1550157638-25112-1-git-send-email-ley.foon.tan@intel.com>
+ <1550157638-25112-2-git-send-email-ley.foon.tan@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190219153537.GJ15711@atomide.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, jason@lakedaemon.net, Peter Ujfalusi <peter.ujfalusi@ti.com>, marc.zyngier@arm.com, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1550157638-25112-2-git-send-email-ley.foon.tan@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ley Foon Tan <ley.foon.tan@intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, lftan.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 14, 2019 at 11:20:36PM +0800, Ley Foon Tan wrote:
+> Add PCIe Root Port support for Stratix 10 device.
+> 
+> Main differences:
 
+Main differences with what ? We need to rewrite this commit log.
 
-On 2/19/2019 9:05 PM, Tony Lindgren wrote:
-> * Lokesh Vutla <lokeshvutla@ti.com> [190219 08:51]:
->> Hi Tony,
->>
->> On 18/02/19 8:02 PM, Tony Lindgren wrote:
->>> * Lokesh Vutla <lokeshvutla@ti.com> [190216 03:30]:
->>>> On 2/15/2019 9:46 PM, Tony Lindgren wrote:
->>>>> The dts node for the interrupt controller should describe a
->>>>> proper Linux device, that is with reg entries and so on.
->>>>
->>>> You are asking to just keep the compatible property :)
->>>
->>> Right, and then I realized this node is missing the standard
->>> reg entry too. And you're saying the registers are not even
->>> accissible from Linux.
->>>
->>> So based on that IMO you should not even have a device tree
->>> node for it at all. You should just have the interrupt
->>
->> Practically lets look at what all I am adding in the DT node. Below is one such
->> example:
->>
->> main_intr: interrupt-controller0 {
->> 	compatible = "ti,sci-intr";
->> 	interrupt-controller;
->> 	interrupt-parent = <&gic500>;
->> 	#interrupt-cells = <4>;
->> 	ti,sci = <&dmsc>;
->> 	ti,sci-dst-id = <56>;
->> 	ti,sci-rm-range-girq = <0x1>;
->> };
->>
->> The following 4 properties are required at least for probing, to represent the
->> hierarchy and for  interrupt definition:
->> 	compatible = "ti,sci-intr";
->> 	interrupt-controller;
->> 	interrupt-parent = <&gic500>;
->> 	#interrupt-cells = <4>;
->>
->> The remaining 3 properties represents the TISCI interface. Let's go step by step:
->> * ti,sci = <&dmsc> :This is the phandle to the firmware protocol driver using
->> which the messages are sent
->> * ti,sci-dst-id = <56> : This is the TISCI device ID for the parent controller
->> for which your irqs needs to be connected. As I said this cannot be queried from
->> sysfw and this is the input to the messages that are send to sysfw.
+> - HIP interface to access Root Port configuration register.
+> - TLP programming flow:
+>   - One REG0 register
+>   - Don't need to check alignment
 > 
-> Let's not add anything that does not describe hardware to the device
-> tree. This is ID is an invented number used by the firmware.
+> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> ---
+>  drivers/pci/controller/pcie-altera.c |  246 ++++++++++++++++++++++++++++++----
+>  1 files changed, 222 insertions(+), 24 deletions(-)
 > 
->> *  ti,sci-rm-range-girq = <0x1>: This define the ids using which the parent-irq
->> ranges that are allocated to this interrupt router instance can be queried from
->> sysfw.
->> If the above 2 properties are to be added as driver phandle then for every
->> instance of interrupt router in the SoC, a new compatible needs to be created. I
->> don't think this is a desirable solution.
-> 
-> To me it seems that the interrupt router _must_ have proper IO
-> configuration registers available to the Linux running SoC.
-> 
-> Are you sure the interrupt route does not have proper IO
-> configuration registers available for the Linux running SoC?
-> 
-> If the there are not, I'd be surprised how the SoC is designed :)
-> 
-> So assuming it does, you should just use the standard device tree
-> reg property to differentiate between the various interrupt router
-> instances. And then you can have the driver talk to the firmware
-> in a way where the driver instances are separate even if no IO
-> access to these shared registers is done by the Linux running SoC.
-> 
-> But see also the mux comment below.
-> 
->> With this can you tell me how can we not have a device-tree and still support
->> irq allocation?
-> 
-> Using standard dts reg property to differentiate the interrupt
-> router instances. And if the interrupt router is a mux, you should
-> treat it as a mux rather than a chained interrupt controller.
-> 
-> We do have drivers/mux nowadays, not sure if it helps in this case
-> as at least timer interrupts need to be configured very early.
-> 
->> Also, this is not the first time a driver based on a firmware is being added.
->> K2g clock, power and reset drivers are based on this where device ids are being
->> passed from consumers. Similarly arm scpi based drivers are also available.
-> 
-> Having drivers communicate with firmware is quite standard.
+> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> index 7d05e51..76bb6a6 100644
+> --- a/drivers/pci/controller/pcie-altera.c
+> +++ b/drivers/pci/controller/pcie-altera.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/init.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/pci.h>
+> @@ -37,7 +38,12 @@
+>  #define RP_LTSSM_MASK			0x1f
+>  #define LTSSM_L0			0xf
+>  
+> -#define PCIE_CAP_OFFSET			0x80
+> +#define S10_RP_TX_CNTRL			0x2004
+> +#define S10_RP_RXCPL_REG		0x2008
+> +#define S10_RP_RXCPL_STATUS		0x200C
+> +#define S10_RP_CFG_ADDR(pcie, reg)	\
+> +	(((pcie)->hip_base) + (reg) + (1 << 20))
+> +
+>  /* TLP configuration type 0 and 1 */
+>  #define TLP_FMTTYPE_CFGRD0		0x04	/* Configuration Read Type 0 */
+>  #define TLP_FMTTYPE_CFGWR0		0x44	/* Configuration Write Type 0 */
+> @@ -49,18 +55,19 @@
+>  #define RP_DEVFN			0
+>  #define TLP_REQ_ID(bus, devfn)		(((bus) << 8) | (devfn))
+>  #define TLP_CFGRD_DW0(pcie, bus)					\
+> -    ((((bus == pcie->root_bus_nr) ? TLP_FMTTYPE_CFGRD0			\
+> -				    : TLP_FMTTYPE_CFGRD1) << 24) |	\
+> -     TLP_PAYLOAD_SIZE)
+> +	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgrd0		\
+> +				: pcie->pcie_data->cfgrd1) << 24) |	\
+> +				TLP_PAYLOAD_SIZE)
+>  #define TLP_CFGWR_DW0(pcie, bus)					\
+> -    ((((bus == pcie->root_bus_nr) ? TLP_FMTTYPE_CFGWR0			\
+> -				    : TLP_FMTTYPE_CFGWR1) << 24) |	\
+> -     TLP_PAYLOAD_SIZE)
+> +	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0		\
+> +				: pcie->pcie_data->cfgwr1) << 24) |	\
+> +				TLP_PAYLOAD_SIZE)
+>  #define TLP_CFG_DW1(pcie, tag, be)	\
+> -    (((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
+> +	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
+>  #define TLP_CFG_DW2(bus, devfn, offset)	\
+>  				(((bus) << 24) | ((devfn) << 16) | (offset))
+>  #define TLP_COMP_STATUS(s)		(((s) >> 13) & 7)
+> +#define TLP_BYTE_COUNT(s)		(((s) >> 0) & 0xfff)
+>  #define TLP_HDR_SIZE			3
+>  #define TLP_LOOP			500
+>  
+> @@ -69,14 +76,43 @@
+>  
+>  #define DWORD_MASK			3
+>  
+> +#define S10_TLP_FMTTYPE_CFGRD0		0x05
+> +#define S10_TLP_FMTTYPE_CFGRD1		0x04
+> +#define S10_TLP_FMTTYPE_CFGWR0		0x45
+> +#define S10_TLP_FMTTYPE_CFGWR1		0x44
+> +
+> +enum altera_pcie_version {
+> +	ALTERA_PCIE_V1 = 0,
+> +	ALTERA_PCIE_V2,
+> +};
+> +
+>  struct altera_pcie {
+>  	struct platform_device	*pdev;
+> -	void __iomem		*cra_base;	/* DT Cra */
+> +	void __iomem		*cra_base;
+> +	void __iomem		*hip_base;
+>  	int			irq;
+>  	u8			root_bus_nr;
+>  	struct irq_domain	*irq_domain;
+>  	struct resource		bus_range;
+>  	struct list_head	resources;
+> +	const struct altera_pcie_data	*pcie_data;
+> +};
+> +
+> +struct altera_pcie_data {
+> +	int (*tlp_read_pkt)(struct altera_pcie *pcie, u32 *value);
+> +	void (*tlp_write_pkt)(struct altera_pcie *pcie, u32 *headers,
+> +			      u32 data, bool align);
+> +	bool (*get_link_status)(struct altera_pcie *pcie);
+> +	int (*rp_read_cfg)(struct altera_pcie *pcie, int where,
+> +			   int size, u32 *value);
+> +	int (*rp_write_cfg)(struct altera_pcie *pcie, u8 bus, int where,
+> +			    int size, u32 value);
+> +	enum altera_pcie_version version;
+> +	u32 cap_offset;		/* PCIe capability structure register offset */
 
-yes. How different is this from any of the above mentioned drivers using
-firmware specific ids. Like sci pm domain[1] driver utilizes the same
-device id for enabling any device in the system. Similarly clock
-driver[2] uses the same device ids and clock ids specified by firmware.
-There are more which similarly represents firmware ids from DT.
+This is a duplication of struct pci_dev.pcie_cap right ?
 
-[1] Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-[2] Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+> +	u32 cfgrd0;
+> +	u32 cfgrd1;
+> +	u32 cfgwr0;
+> +	u32 cfgwr1;
+>  };
+>  
+>  struct tlp_rp_regpair_t {
+> @@ -101,6 +137,15 @@ static bool altera_pcie_link_up(struct altera_pcie *pcie)
+>  	return !!((cra_readl(pcie, RP_LTSSM) & RP_LTSSM_MASK) == LTSSM_L0);
+>  }
+>  
+> +static bool s10_altera_pcie_link_up(struct altera_pcie *pcie)
+> +{
+> +	void __iomem *addr = S10_RP_CFG_ADDR(pcie,
+> +				   pcie->pcie_data->cap_offset +
+> +				   PCI_EXP_LNKSTA);
+> +
+> +	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
+> +}
+> +
+>  /*
+>   * Altera PCIe port uses BAR0 of RC's configuration space as the translation
+>   * from PCI bus to native BUS.  Entire DDR region is mapped into PCIe space
+> @@ -128,12 +173,18 @@ static void tlp_write_tx(struct altera_pcie *pcie,
+>  	cra_writel(pcie, tlp_rp_regdata->ctrl, RP_TX_CNTRL);
+>  }
+>  
+> +static void s10_tlp_write_tx(struct altera_pcie *pcie, u32 reg0, u32 ctrl)
+> +{
+> +	cra_writel(pcie, reg0, RP_TX_REG0);
+> +	cra_writel(pcie, ctrl, S10_RP_TX_CNTRL);
+> +}
+> +
+>  static bool altera_pcie_valid_device(struct altera_pcie *pcie,
+>  				     struct pci_bus *bus, int dev)
+>  {
+>  	/* If there is no link, then there is no device */
+>  	if (bus->number != pcie->root_bus_nr) {
+> -		if (!altera_pcie_link_up(pcie))
+> +		if (!pcie->pcie_data->get_link_status(pcie))
+>  			return false;
+>  	}
+>  
+> @@ -183,6 +234,46 @@ static int tlp_read_packet(struct altera_pcie *pcie, u32 *value)
+>  	return PCIBIOS_DEVICE_NOT_FOUND;
+>  }
+>  
+> +static int s10_tlp_read_packet(struct altera_pcie *pcie, u32 *value)
+> +{
+> +	int i;
+> +	u32 ctrl;
+> +	u32 comp_status;
+> +	u32 dw[4];
+> +	u32 count = 0;
+> +
+> +	for (i = 0; i < TLP_LOOP; i++) {
+> +		ctrl = cra_readl(pcie, S10_RP_RXCPL_STATUS);
+> +		if (!(ctrl & RP_RXCPL_SOP))
+> +			continue;
+> +
+> +		/* Read first DW */
+> +		dw[count++] = cra_readl(pcie, S10_RP_RXCPL_REG);
+> +
+> +		/* Poll for EOP */
+> +		for (i = 0; i < TLP_LOOP; i++) {
+> +			ctrl = cra_readl(pcie, S10_RP_RXCPL_STATUS);
+> +			dw[count++] = cra_readl(pcie, S10_RP_RXCPL_REG);
 
-Thanks and regards,
-Lokesh
+I think you'd better add a check on count lest it can overflow dw[].
 
-> 
-> However, stuffing firmware specific data to the device tree
-> does not describe the hardware and must not be done.
-> 
-> Regards,
-> 
-> Tony
+> +			if (ctrl & RP_RXCPL_EOP) {
+> +				comp_status = TLP_COMP_STATUS(dw[1]);
+> +				if (comp_status)
+> +					return PCIBIOS_DEVICE_NOT_FOUND;
+> +
+> +				if (value &&
+> +				    TLP_BYTE_COUNT(dw[1]) == sizeof(u32) &&
+> +				    count >= 3)
+> +					*value = dw[3];
+> +
+> +				return PCIBIOS_SUCCESSFUL;
+> +			}
+> +		}
+> +
+> +		udelay(5);
+> +	}
+> +
+> +	return PCIBIOS_DEVICE_NOT_FOUND;
+> +}
+> +
+>  static void tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
+>  			     u32 data, bool align)
+>  {
+> @@ -210,6 +301,15 @@ static void tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
+>  	tlp_write_tx(pcie, &tlp_rp_regdata);
+>  }
+>  
+> +static void s10_tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
+> +				 u32 data, bool dummy)
+> +{
+> +	s10_tlp_write_tx(pcie, headers[0], RP_TX_SOP);
+> +	s10_tlp_write_tx(pcie, headers[1], 0);
+> +	s10_tlp_write_tx(pcie, headers[2], 0);
+> +	s10_tlp_write_tx(pcie, data, RP_TX_EOP);
+> +}
+> +
+>  static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  			      int where, u8 byte_en, u32 *value)
+>  {
+> @@ -219,9 +319,9 @@ static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  	headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
+>  	headers[2] = TLP_CFG_DW2(bus, devfn, where);
+>  
+> -	tlp_write_packet(pcie, headers, 0, false);
+> +	pcie->pcie_data->tlp_write_pkt(pcie, headers, 0, false);
+>  
+> -	return tlp_read_packet(pcie, value);
+> +	return pcie->pcie_data->tlp_read_pkt(pcie, value);
+>  }
+>  
+>  static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+> @@ -236,11 +336,11 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  
+>  	/* check alignment to Qword */
+>  	if ((where & 0x7) == 0)
+> -		tlp_write_packet(pcie, headers, value, true);
+> +		pcie->pcie_data->tlp_write_pkt(pcie, headers, value, true);
+>  	else
+> -		tlp_write_packet(pcie, headers, value, false);
+> +		pcie->pcie_data->tlp_write_pkt(pcie, headers, value, false);
+>  
+> -	ret = tlp_read_packet(pcie, NULL);
+> +	ret = pcie->pcie_data->tlp_read_pkt(pcie, NULL);
+>  	if (ret != PCIBIOS_SUCCESSFUL)
+>  		return ret;
+>  
+> @@ -254,6 +354,53 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
+>  
+> +static int s10_rp_read_cfg(struct altera_pcie *pcie, int where,
+> +			   int size, u32 *value)
+> +{
+> +	void *addr = S10_RP_CFG_ADDR(pcie, where);
+> +
+> +	switch (size) {
+> +	case 1:
+> +		*value = readb(addr);
+> +		break;
+> +	case 2:
+> +		*value = readw(addr);
+> +		break;
+> +	default:
+> +		*value = readl(addr);
+> +		break;
+> +	}
+
+This boilerplace could be avoided if you used generic config
+accessors (ie pci_generic_config_read()/write()).
+
+> +
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+> +static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 bus, int where,
+> +			    int size, u32 value)
+> +{
+> +	void *addr = S10_RP_CFG_ADDR(pcie, where);
+> +
+> +	switch (size) {
+> +	case 1:
+> +		writeb(value, addr);
+> +		break;
+> +	case 2:
+> +		writew(value, addr);
+> +		break;
+> +	default:
+> +		writel(value, addr);
+> +		break;
+> +	}
+
+Ditto.
+
+> +
+> +	/*
+> +	 * Monitor changes to PCI_PRIMARY_BUS register on root port
+> +	 * and update local copy of root bus number accordingly.
+> +	 */
+> +	if (bus == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
+> +		pcie->root_bus_nr = value & 0xff;
+> +
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+>  static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+>  				 unsigned int devfn, int where, int size,
+>  				 u32 *value)
+> @@ -262,6 +409,9 @@ static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+>  	u32 data;
+>  	u8 byte_en;
+>  
+> +	if (busno == pcie->root_bus_nr && pcie->pcie_data->rp_read_cfg)
+> +		return pcie->pcie_data->rp_read_cfg(pcie, where, size, value);
+> +
+>  	switch (size) {
+>  	case 1:
+>  		byte_en = 1 << (where & 3);
+> @@ -302,6 +452,10 @@ static int _altera_pcie_cfg_write(struct altera_pcie *pcie, u8 busno,
+>  	u32 shift = 8 * (where & 3);
+>  	u8 byte_en;
+>  
+> +	if (busno == pcie->root_bus_nr && pcie->pcie_data->rp_write_cfg)
+> +		return pcie->pcie_data->rp_write_cfg(pcie, busno, where,
+> +							size, value);
+> +
+>  	switch (size) {
+>  	case 1:
+>  		data32 = (value & 0xff) << shift;
+> @@ -365,7 +519,8 @@ static int altera_read_cap_word(struct altera_pcie *pcie, u8 busno,
+>  	int ret;
+>  
+>  	ret = _altera_pcie_cfg_read(pcie, busno, devfn,
+> -				    PCIE_CAP_OFFSET + offset, sizeof(*value),
+> +				    pcie->pcie_data->cap_offset + offset,
+> +				    sizeof(*value),
+>  				    &data);
+>  	*value = data;
+>  	return ret;
+> @@ -375,7 +530,8 @@ static int altera_write_cap_word(struct altera_pcie *pcie, u8 busno,
+>  				 unsigned int devfn, int offset, u16 value)
+>  {
+>  	return _altera_pcie_cfg_write(pcie, busno, devfn,
+> -				      PCIE_CAP_OFFSET + offset, sizeof(value),
+> +				      pcie->pcie_data->cap_offset + offset,
+> +				      sizeof(value),
+>  				      value);
+>  }
+>  
+> @@ -403,7 +559,7 @@ static void altera_wait_link_retrain(struct altera_pcie *pcie)
+>  	/* Wait for link is up */
+>  	start_jiffies = jiffies;
+>  	for (;;) {
+> -		if (altera_pcie_link_up(pcie))
+> +		if (pcie->pcie_data->get_link_status(pcie))
+>  			break;
+>  
+>  		if (time_after(jiffies, start_jiffies + LINK_UP_TIMEOUT)) {
+> @@ -418,7 +574,7 @@ static void altera_pcie_retrain(struct altera_pcie *pcie)
+>  {
+>  	u16 linkcap, linkstat, linkctl;
+>  
+> -	if (!altera_pcie_link_up(pcie))
+> +	if (!pcie->pcie_data->get_link_status(pcie))
+>  		return;
+>  
+>  	/*
+> @@ -540,12 +696,20 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+>  	struct device *dev = &pcie->pdev->dev;
+>  	struct platform_device *pdev = pcie->pdev;
+>  	struct resource *cra;
+> +	struct resource *hip;
+>  
+>  	cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
+>  	pcie->cra_base = devm_ioremap_resource(dev, cra);
+>  	if (IS_ERR(pcie->cra_base))
+>  		return PTR_ERR(pcie->cra_base);
+>  
+> +	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
+> +		hip = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Hip");
+> +		pcie->hip_base = devm_ioremap_resource(&pdev->dev, hip);
+> +		if (IS_ERR(pcie->hip_base))
+> +			return PTR_ERR(pcie->hip_base);
+> +	}
+> +
+>  	/* setup IRQ */
+>  	pcie->irq = platform_get_irq(pdev, 0);
+>  	if (pcie->irq < 0) {
+> @@ -562,6 +726,38 @@ static void altera_pcie_host_init(struct altera_pcie *pcie)
+>  	altera_pcie_retrain(pcie);
+>  }
+>  
+> +static struct altera_pcie_data pci_1_0_data = {
+> +	.tlp_read_pkt = tlp_read_packet,
+> +	.tlp_write_pkt = tlp_write_packet,
+> +	.get_link_status = altera_pcie_link_up,
+> +	.cap_offset = 0x80,
+> +	.version = ALTERA_PCIE_V1,
+> +	.cfgrd0 = TLP_FMTTYPE_CFGRD0,
+> +	.cfgrd1 = TLP_FMTTYPE_CFGRD1,
+> +	.cfgwr0 = TLP_FMTTYPE_CFGWR0,
+> +	.cfgwr1 = TLP_FMTTYPE_CFGWR1,
+> +};
+> +
+> +static struct altera_pcie_data pci_2_0_data = {
+> +	.tlp_read_pkt = s10_tlp_read_packet,
+> +	.tlp_write_pkt = s10_tlp_write_packet,
+> +	.get_link_status = s10_altera_pcie_link_up,
+> +	.rp_read_cfg = s10_rp_read_cfg,
+> +	.rp_write_cfg = s10_rp_write_cfg,
+> +	.version = ALTERA_PCIE_V2,
+> +	.cap_offset = 0x70,
+> +	.cfgrd0 = S10_TLP_FMTTYPE_CFGRD0,
+> +	.cfgrd1 = S10_TLP_FMTTYPE_CFGRD1,
+> +	.cfgwr0 = S10_TLP_FMTTYPE_CFGWR0,
+> +	.cfgwr1 = S10_TLP_FMTTYPE_CFGWR1,
+> +};
+
+I wonder if it is not better to have two different struct pci_ops (and
+have a pointer to them in struct altera_pcie_data) instead of all these
+parameters (most of which are there to differentiate struct pci_ops
+methods).
+
+See also my comments above.
+
+In the end I guess it depends on how many host bridges will be based on
+this IP as design, what you did is OK but it is worth thinking about it.
+
+Lorenzo
+
+> +
+> +static const struct of_device_id altera_pcie_of_match[] = {
+> +	{ .compatible = "altr,pcie-root-port-1.0", .data = &pci_1_0_data },
+> +	{ .compatible = "altr,pcie-root-port-2.0", .data = &pci_2_0_data },
+> +	{},
+> +};
+> +
+>  static int altera_pcie_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -570,6 +766,7 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>  	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	int ret;
+> +	const struct of_device_id *match;
+>  
+>  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+>  	if (!bridge)
+> @@ -578,6 +775,12 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>  	pcie = pci_host_bridge_priv(bridge);
+>  	pcie->pdev = pdev;
+>  
+> +	match = of_match_device(altera_pcie_of_match, &pdev->dev);
+> +	if (!match)
+> +		return -ENODEV;
+> +
+> +	pcie->pcie_data = match->data;
+> +
+>  	ret = altera_pcie_parse_dt(pcie);
+>  	if (ret) {
+>  		dev_err(dev, "Parsing DT failed\n");
+> @@ -628,11 +831,6 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> -static const struct of_device_id altera_pcie_of_match[] = {
+> -	{ .compatible = "altr,pcie-root-port-1.0", },
+> -	{},
+> -};
+> -
+>  static struct platform_driver altera_pcie_driver = {
+>  	.probe		= altera_pcie_probe,
+>  	.driver = {
+> -- 
+> 1.7.1
 > 
