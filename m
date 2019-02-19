@@ -1,122 +1,89 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v2 07/10] usb: dwc3: Registering a role switch in the DRD
- code.
-Date: Tue, 19 Feb 2019 11:37:33 +0800
-Message-ID: <39e822a2-54fb-f4ac-4471-ed8312acf53e@huawei.com>
-References: <20190218112310.17860-1-chenyu56@huawei.com>
- <20190218112310.17860-8-chenyu56@huawei.com>
- <CAKgpwJXgiJYkpTxddwLFJRSvadcCw7fMbd=d510NFkyRSKaswA@mail.gmail.com>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: phy: Add Stingray USB PHY binding document
+Date: Tue, 19 Feb 2019 09:09:04 +0530
+Message-ID: <CABe79T6W_NrgAsJnfX-tBmTWZCDUGC7wkWfayQ6BNF-7S_iRYA@mail.gmail.com>
+References: <1549474347-7224-1-git-send-email-srinath.mannam@broadcom.com>
+ <1549474347-7224-2-git-send-email-srinath.mannam@broadcom.com> <20190218172221.GA20334@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKgpwJXgiJYkpTxddwLFJRSvadcCw7fMbd=d510NFkyRSKaswA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190218172221.GA20334@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jun Li <lijun.kernel@gmail.com>
-Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Li Jun <jun.li@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On 2019/2/19 10:57, Jun Li wrote:
->>
->> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
->> +{
->> +       u32 mode;
->> +
->> +       switch (role) {
->> +       case USB_ROLE_HOST:
->> +               mode = DWC3_GCTL_PRTCAP_HOST;
->> +               break;
->> +       case USB_ROLE_DEVICE:
->> +               mode = DWC3_GCTL_PRTCAP_DEVICE;
->> +               break;
->> +       default:
->> +               mode = DWC3_GCTL_PRTCAP_HOST;
-> 
-> I'd propose let dwc3 stay at device mode at default case.
-> 
-Setting mode to DWC3_GCTL_PRTCAP_HOST at default case due to the
-requirement of Hikey960 board. When there is no cable connected to
-type-C port, dwc3 should be set to HOST mode and the hub on the
-Hikey960 will be power on.
-Here is the details of the Hikey960:
-	https://www.96boards.org/documentation/consumer/hikey/hikey960/hardware-docs/hardware-user-manual.md.html
+Thanks for review, please see my comments below inline.
 
-But I will check the code to see if it is possible to make dwc3
-set to device mode at default case.
+On Mon, Feb 18, 2019 at 10:52 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Feb 06, 2019 at 11:02:25PM +0530, Srinath Mannam wrote:
+> > Add DT binding document for Stingray USB PHY.
+> >
+> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> > ---
+> >  .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
+> >  1 file changed, 62 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> > new file mode 100644
+> > index 0000000..bfe1367
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> > @@ -0,0 +1,62 @@
+> > +Broadcom Stingray USB PHY
+> > +
+> > +Required properties:
+> > + - compatible : should be one of the listed compatibles
+> > +     - "brcm,sr-usb-phy"
+> > +     - "brcm,sr-usb-phy-v2"
+>
+> SoC specific compatibles are preferred. Version numbers can be used but
+> should follow some documented scheme and be meaningful. What we don't
+> want is just Linux developers making up numbering.
+>
+Both versions are different phy controllers and also have separate
+register offsets.
+I will provide more meaningful compatible IDs and their documentation
+in next patchset.
+> > + - reg: offset and length of the PHY blocks registers
+> > + - address-cells: should be 1
+> > + - size-cells: should be 0
+> > +
+> > +Sub-nodes:
+> > +  Each port's PHY should be represented as a sub-node.
+> > +
+> > +Sub-nodes required properties:
+> > + - reg: required for brcm,sr-usb-phy model phy.
+> > +     reg value 0 is HS phy and 1 is SS phy.
+> > + - phy-cells: generic PHY binding; must be 0
+> > +
+> > +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> > +
+> > +Example:
+> > +     usbphy0: usb-phy@0 {
+> > +             compatible = "brcm,sr-usb-phy";
+> > +             reg = <0x00000000 0x100>;
+> > +             #address-cells = <1>;
+> > +             #size-cells = <0>;
+> > +
+> > +             usb0_phy0: phy@0 {
+> > +                     reg = <0>;
+> > +                     #phy-cells = <0>;
+>
+> Unless there's DT resources for each child node, you don't need these.
+> Just make #phy-cells 1 in the parent.
+With the use of phy-cell, PHY argument is available with xlate
+function, But controller specific assignments required
+to be done while probe. So I will take your first option given in
+previous comment.
 
->> +               break;
->> +       };
->> +
->> +       dwc3_set_mode(dev_get_drvdata(dev), mode);
->> +       return 0;
->> +}
->> +
->> +static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
->> +{
->> +       struct dwc3 *dwc = dev_get_drvdata(dev);
->> +       unsigned long flags;
->> +       enum usb_role role;
->> +
->> +       spin_lock_irqsave(&dwc->lock, flags);
->> +       role = dwc->current_otg_role;
->> +       spin_unlock_irqrestore(&dwc->lock, flags);
->> +
->> +       return role;
->> +}
->> +
->>  int dwc3_drd_init(struct dwc3 *dwc)
->>  {
->> +       struct usb_role_switch_desc dwc3_role_switch = {0};
->>         int ret, irq;
->>
->>         dwc->edev = dwc3_get_extcon(dwc);
->> @@ -522,6 +556,15 @@ int dwc3_drd_init(struct dwc3 *dwc)
->>                 dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_OTG);
->>         }
->>
->> +       dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
->> +       dwc3_role_switch.set = dwc3_usb_role_switch_set;
->> +       dwc3_role_switch.get = dwc3_usb_role_switch_get;
->> +       dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
->> +       if (ret) {
->> +               dwc3_drd_exit(dwc);
->> +               return PTR_ERR(dwc->role_sw);
->> +       }
->> +
-> 
-> My understanding is, if you use usb role switch, you don't need either edev or
-> OTG block event, so this should be like:
-> 
-> if (device_property_read_bool(dwc->dev, "usb-role-switch")) {
->            usb role switch register;
-> } else if (edev) {
-> ...
-> } else {
-> ...
-> }
-Yes. Thanks!
-
-> 
-> Jun
->>         return 0;
->>  }
->>
->> @@ -557,4 +600,6 @@ void dwc3_drd_exit(struct dwc3 *dwc)
->>
->>         if (!dwc->edev)
->>                 free_irq(dwc->otg_irq, dwc);
->> +
->> +       usb_role_switch_unregister(dwc->role_sw);
->>  }
->> --
->> 2.15.0-rc2
->>
-> 
-> .
-> 
-
-Thanks
-Yu Chen
+Regards,
+Srinath.
+>
+> Rob
