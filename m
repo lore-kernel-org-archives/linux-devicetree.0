@@ -1,105 +1,80 @@
-Return-Path: <SRS0=/0Ct=QJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:38058 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfBBP1B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Feb 2019 10:27:01 -0500
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v4 6/8] dt-binding: remoteproc: Add QTI WCSS PIL bindings
-Date: Sat,  2 Feb 2019 20:56:24 +0530
-Message-Id: <20190202152626.1006-7-govinds@codeaurora.org>
-In-Reply-To: <20190202152626.1006-1-govinds@codeaurora.org>
+Return-Path: <SRS0=lQgi=Q2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37262 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfBSHCy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Feb 2019 02:02:54 -0500
+Received: by mail-pl1-f195.google.com with SMTP id q3so2585590pll.4
+        for <devicetree@vger.kernel.org>; Mon, 18 Feb 2019 23:02:53 -0800 (PST)
+Date: Mon, 18 Feb 2019 23:02:50 -0800
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 5/8] remoteproc: qcom: wcss: populate hardcoded param
+ using driver data
+Message-ID: <20190219070250.GG13018@tuxbook-pro>
 References: <20190202152626.1006-1-govinds@codeaurora.org>
+ <20190202152626.1006-6-govinds@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190202152626.1006-6-govinds@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+To: Govind Singh <govinds@codeaurora.org>
+Cc: linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add devicetree bindings for WCSS non pas remoteproc.
+On Sat 02 Feb 07:26 PST 2019, Govind Singh wrote:
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../bindings/remoteproc/qcom,q6v5.txt         | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
+> Q6 based WiFi fw loading is supported across
+> different targets, ex: IPQ8074/QCS404. In order to
+> support different fw names/pas id etc, populate
+> hardcoded param using driver data.
+> 
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> ---
+>  drivers/remoteproc/qcom_q6v5_wcss.c | 35 ++++++++++++++++++++++++-----
+>  1 file changed, 29 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+> index f93e1e4a1cc0..f18b55227805 100644
+> --- a/drivers/remoteproc/qcom_q6v5_wcss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_reserved_mem.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+> @@ -16,7 +17,6 @@
+>  #include "qcom_common.h"
+>  #include "qcom_q6v5.h"
+>  
+> -#define WCSS_CRASH_REASON		421
+>  
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index 9ff5b0309417..1fe8e9f72204 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -13,6 +13,7 @@ on the Qualcomm Hexagon core.
- 		    "qcom,msm8974-mss-pil"
- 		    "qcom,msm8996-mss-pil"
- 		    "qcom,sdm845-mss-pil"
-+		    "qcom,qcs404-wcss-pil"
- 
- - reg:
- 	Usage: required
-@@ -153,3 +154,63 @@ Hexagon, as it is found on MSM8974 boards.
- 			memory-region = <&mpss_region>;
- 		};
- 	};
-+
-+	remoteproc-wcss {
-+		compatible = "qcom,qcs404-wcss-pil";
-+		reg = <0x07400000 0x00104>;
-+		reg-names = "qdsp6";
-+
-+		interrupts-extended = <&intc GIC_SPI 153 IRQ_TYPE_EDGE_RISING>,
-+				      <&wcss_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				      <&wcss_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				      <&wcss_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				      <&wcss_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-names = "wdog", "fatal", "ready",
-+				  "handover", "stop-ack";
-+
-+		clocks = <&xo_board>,
-+			 <&gcc GCC_WCSS_Q6_AHB_CBCR_CLK>,
-+			 <&gcc GCC_WCSS_Q6_AXIM_CBCR_CLK>,
-+
-+			 <&clock_wcsscc WCSS_AHBFABRIC_CBCR_CLK>,
-+			 <&clock_wcsscc WCSS_LCC_CBCR_CLK>,
-+			 <&clock_wcsscc WCSS_AHBS_CBCR_CLK>,
-+			 <&clock_wcsscc WCSS_TCM_CBCR_CLK>,
-+			 <&clock_wcsscc WCSS_AHBM_CBCR_CLK>,
-+			 <&clock_wcsscc WCSS_AXIM_CBCR_CLK>,
-+			 <&clock_wcsscc WCSS_QDSP6SS_XO_CBCR_CLK>,
-+			 <&clock_wcsscc WCSS_QDSP6SS_SLEEP_CBCR_CLK>,
-+			 <&clock_wcsscc WCSS_QDSP6SS_GFMMUX_CLK>,
-+			 <&clock_wcsscc WCSS_BCR_CBCR_CLK>;
-+
-+		clock-names = "xo", "gcc_abhs_cbcr", "gcc_axim_cbcr",
-+			      "wcss_ahbfabric_cbcr", "wcnss_csr_cbcr",
-+			      "wcnss_ahbs_cbcr", "wcnss_tcm_slave_cbcr",
-+			      "wcnss_abhm_cbcr", "wcnss_axim_cbcr",
-+			      "wcnss_qdsp6ss_xo_cbcr", "wcnss_sleep_cbcr",
-+			      "wcnss_core_gfm", "wcss_bcr_cbcr";
-+		resets = <&gcc GCC_WDSP_RESTART>,
-+			 <&clock_wcsscc Q6SSTOP_QDSP6SS_RESET>,
-+			 <&clock_wcsscc Q6SSTOP_QDSP6SS_CORE_RESET>,
-+			 <&clock_wcsscc Q6SSTOP_QDSP6SS_BUS_RESET>,
-+			 <&clock_wcsscc Q6SSTOP_BCR_RESET>;
-+		reset-names = "wcss_reset", "wcss_q6_reset",
-+			      "wcss_q6_core_reset", "wcss_q6_bus_reset",
-+			      "wcss_q6_bcr_reset";
-+
-+		memory-region = <&wlan_fw_mem>;
-+
-+		qcom,smem-states = <&wcss_smp2p_out 0>;
-+		qcom,smem-state-names = "stop";
-+		qcom,halt-regs = <&tcsr_wlan_q6 0x18000>;
-+		glink-edge {
-+			interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			qcom,remote-pid = <1>;
-+			mboxes = <&apcs_glb 16>;
-+
-+			label = "wcss";
-+			};
-+		};
-+
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+After this series you two compatibles, both specifying 421 as the
+crash-reason SMEM item. So it's fine to just leave this as a define
+until that's not the case.
+
+[..]
+> @@ -581,8 +598,14 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct wcss_data wcss_ipq8074_res_init = {
+> +	.firmware_name = "IPQ8074/q6_fw.mdt",
+> +	.crash_reason_smem = 421,
+
+Fill out "version"
+
+> +};
+> +
+>  static const struct of_device_id q6v5_wcss_of_match[] = {
+> -	{ .compatible = "qcom,ipq8074-wcss-pil" },
+> +	{ .compatible = "qcom,ipq8074-wcss-pil", .data = &wcss_ipq8074_res_init },
+> +
+>  	{ },
+>  };
+
+Regards,
+Bjorn
