@@ -1,141 +1,89 @@
 From: Vignesh R <vigneshr@ti.com>
-Subject: [RFC PATCH 5/5] mtd: hyperbus: Add driver for TI's Hyperbus memory controller
-Date: Tue, 19 Feb 2019 12:06:07 +0530
-Message-ID: <20190219063607.29949-6-vigneshr@ti.com>
-References: <20190219063607.29949-1-vigneshr@ti.com>
+Subject: [RFC PATCH 0/5] MTD: Add Initial Hyperbus support
+Date: Tue, 19 Feb 2019 12:06:02 +0530
+Message-ID: <20190219063607.29949-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219063607.29949-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vignesh R <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add driver for Hyperbus memory controller on TI's AM654 SoC. Programming
-IP is pretty simple and provides direct memory mapped access to
-connected Flash devices.
+Cypress HyperBus is Low Signal Count, High Performance Double Data Rate Bus
+interface between a host system master and one or more slave interfaces.
+HyperBus is used to connect microprocessor, microcontroller, or ASIC
+devices with random access NOR flash memory(called HyperFlash) or
+self refresh DRAM(called HyperRAM).
 
-Add basic support for the IP without DMA. Second ChipSelect is not
-supported for now.
+Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+signal and either Single-ended clock(3.0V parts) or Differential clock
+(1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+At bus level, it follows a separate protocol described in HyperBus
+specification[1].
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- drivers/mtd/hyperbus/hbmc_am654.c | 105 ++++++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
+its equivalent to x16 parallel NOR flash wrt bits per clk. But Hyperbus
+operates at >166MHz frequencies.
+HyperRAM provides direct random read/write access to flash memory
+array.
+Framework is modelled along the lines of spi-nor framework. HyperBus
+memory controller(HBMC) drivers call hb_register_device() to register a
+single HyperFlash device. HyperFlash core parses MMIO access
+information from DT, sets up the map_info struct, probes CFI flash and
+registers it with MTD framework.
+
+This is an early RFC, to know if its okay to use maps framework and existing
+CFI compliant flash support code to support Hyperflash
+Also would like input on different types of HBMC master IPs out there
+and their programming sequences.
+Would appreciate any testing/review.
+
+Tested on modified TI AM654 EVM with Cypress Hyperflash S26KS512 by
+creating a UBIFS partition and writing and reading files to it.
+Stress tested by writing/reading 16MB flash repeatedly at different
+offsets using dd commmand.
+
+HyperBus specification can be found at[1]
+HyperFlash datasheet can be found at[2]
+TI's HBMC controller details at[3]
+
+[1] https://www.cypress.com/file/213356/download
+[2] https://www.cypress.com/file/213346/download
+[3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+    Table 12-5741. HyperFlash Access Sequence
+
+Vignesh R (5):
+  mtd: cfi_cmdset_0002: Add support for polling status register
+  dt-bindings: mtd: Add binding documentation for Hyperbus memory
+    devices
+  mtd: Add support for Hyperbus memory devices
+  dt-bindings: mtd: Add bindings for TI's AM654 Hyperbus memory
+    controller
+  mtd: hyperbus: Add driver for TI's Hyperbus memory controller
+
+ .../bindings/mtd/cypress,hyperbus.txt         |   6 +
+ .../devicetree/bindings/mtd/ti,am654-hbmc.txt |  27 +++
+ MAINTAINERS                                   |   8 +
+ drivers/mtd/Kconfig                           |   2 +
+ drivers/mtd/Makefile                          |   1 +
+ drivers/mtd/chips/cfi_cmdset_0002.c           |  50 ++++++
+ drivers/mtd/hyperbus/Kconfig                  |  23 +++
+ drivers/mtd/hyperbus/Makefile                 |   4 +
+ drivers/mtd/hyperbus/core.c                   | 167 ++++++++++++++++++
+ drivers/mtd/hyperbus/hbmc_am654.c             | 105 +++++++++++
+ include/linux/mtd/cfi.h                       |   5 +
+ include/linux/mtd/hyperbus.h                  |  73 ++++++++
+ 12 files changed, 471 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
+ create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+ create mode 100644 drivers/mtd/hyperbus/Kconfig
+ create mode 100644 drivers/mtd/hyperbus/Makefile
+ create mode 100644 drivers/mtd/hyperbus/core.c
  create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
+ create mode 100644 include/linux/mtd/hyperbus.h
 
-diff --git a/drivers/mtd/hyperbus/hbmc_am654.c b/drivers/mtd/hyperbus/hbmc_am654.c
-new file mode 100644
-index 000000000000..1f0d2dc52f9f
---- /dev/null
-+++ b/drivers/mtd/hyperbus/hbmc_am654.c
-@@ -0,0 +1,105 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+// Author: Vignesh R <vigneshr@ti.com>
-+
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mtd/hyperbus.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/types.h>
-+
-+struct am654_hbmc_priv {
-+	struct hb_device hbdev;
-+	void __iomem	*regbase;
-+};
-+
-+static int am654_hbmc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct am654_hbmc_priv *priv;
-+	struct resource *res;
-+	int err;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (IS_ERR(res)) {
-+		dev_err(&pdev->dev, "failed to get memory resource\n");
-+		return -ENOENT;
-+	}
-+
-+	priv->regbase = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->regbase)) {
-+		dev_err(dev, "Cannot remap controller address.\n");
-+		return PTR_ERR(priv->regbase);
-+	}
-+
-+	pm_runtime_enable(&pdev->dev);
-+	err = pm_runtime_get_sync(&pdev->dev);
-+	if (err < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
-+		return err;
-+	}
-+
-+	priv->hbdev.needs_calib = true;
-+	priv->hbdev.dev = &pdev->dev;
-+	priv->hbdev.np = of_get_next_child(dev->of_node, NULL);
-+	err = hb_register_device(&priv->hbdev);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to register controller\n");
-+		goto err_destroy;
-+	}
-+
-+	return 0;
-+
-+err_destroy:
-+	hb_unregister_device(&priv->hbdev);
-+	pm_runtime_put_sync(&pdev->dev);
-+	return err;
-+}
-+
-+static int am654_hbmc_remove(struct platform_device *pdev)
-+{
-+	struct am654_hbmc_priv *priv = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = hb_unregister_device(&priv->hbdev);
-+	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id am654_hbmc_dt_ids[] = {
-+	{
-+		.compatible = "ti,am654-hbmc",
-+	},
-+	{ /* end of table */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, am654_hbmc_dt_ids);
-+
-+static struct platform_driver am654_hbmc_platform_driver = {
-+	.probe = am654_hbmc_probe,
-+	.remove = am654_hbmc_remove,
-+	.driver = {
-+		.name = "hbmc-am654",
-+		.of_match_table = am654_hbmc_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(am654_hbmc_platform_driver);
-+
-+MODULE_DESCRIPTION("HBMC driver for AM654 SoC");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:hbmc-am654");
-+MODULE_AUTHOR("Vignesh R <vigneshr@ti.com>");
 -- 
 2.20.1
