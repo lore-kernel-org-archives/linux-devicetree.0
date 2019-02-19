@@ -1,7 +1,7 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 1/7] dt-bindings: clock: at91: new sckc bindings
-Date: Tue, 19 Feb 2019 18:01:54 +0100
-Message-ID: <20190219170200.3608-2-alexandre.belloni@bootlin.com>
+Subject: [PATCH 4/7] ARM: dts: at91: at91sam9x5: switch to new sckc bindings
+Date: Tue, 19 Feb 2019 18:01:57 +0100
+Message-ID: <20190219170200.3608-5-alexandre.belloni@bootlin.com>
 References: <20190219170200.3608-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,65 +9,51 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190219170200.3608-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@microchip.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh@kernel.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@microchip.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove the need for child nodes in the sckc binding to be able to remove
-dtc warnings and have a more modern binding.
+Remove the child nodes of the sckc as they are not necessary anymore.
 
-Also document optional properties.
-
-Cc: Rob Herring <robh@kernel.org>
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- .../devicetree/bindings/clock/at91-clock.txt  | 30 ++++++++-----------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+ arch/arm/boot/dts/at91sam9x5.dtsi | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
-index e9f70fcdfe80..cb838c1c4bdd 100644
---- a/Documentation/devicetree/bindings/clock/at91-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
-@@ -8,29 +8,23 @@ Slow Clock controller:
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index 07443a387a8f..ff50f49842f4 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -148,28 +148,11 @@
+ 				clocks = <&pmc PMC_TYPE_CORE PMC_MCK>;
+ 			};
  
- Required properties:
- - compatible : shall be one of the following:
--	"atmel,at91sam9x5-sckc" or
-+	"atmel,at91sam9x5-sckc",
-+	"atmel,sama5d3-sckc" or
- 	"atmel,sama5d4-sckc":
- 		at91 SCKC (Slow Clock Controller)
--		This node contains the slow clock definitions.
+-			sckc@fffffe50 {
++			clk32k: sckc@fffffe50 {
+ 				compatible = "atmel,at91sam9x5-sckc";
+ 				reg = <0xfffffe50 0x4>;
 -
--	"atmel,at91sam9x5-clk-slow-osc":
--		at91 slow oscillator
+-				slow_osc: slow_osc {
+-					compatible = "atmel,at91sam9x5-clk-slow-osc";
+-					#clock-cells = <0>;
+-					clocks = <&slow_xtal>;
+-				};
 -
--	"atmel,at91sam9x5-clk-slow-rc-osc":
--		at91 internal slow RC oscillator
--- reg : defines the IO memory reserved for the SCKC.
--- #size-cells : shall be 0 (reg is used to encode clk id).
--- #address-cells : shall be 1 (reg is used to encode clk id).
-+- #clock-cells : shall be 0.
-+- clocks : shall be the input parent clock phandle for the clock.
- 
-+Optional properties:
-+- atmel,osc-bypass : boolean property. Set this when a clock signal is directly
-+  provided on XIN.
- 
- For example:
--	sckc: sckc@fffffe50 {
--		compatible = "atmel,sama5d3-pmc";
--		reg = <0xfffffe50 0x4>
--		#size-cells = <0>;
--		#address-cells = <1>;
+-				slow_rc_osc: slow_rc_osc {
+-					compatible = "atmel,at91sam9x5-clk-slow-rc-osc";
+-					#clock-cells = <0>;
+-					clock-frequency = <32768>;
+-					clock-accuracy = <50000000>;
+-				};
 -
--		/* put at91 slow clocks here */
-+	sckc@fffffe50 {
-+		compatible = "atmel,at91sam9x5-sckc";
-+		reg = <0xfffffe50 0x4>;
-+		clocks = <&slow_xtal>;
-+		#clock-cells = <0>;
- 	};
+-				clk32k: slck {
+-					compatible = "atmel,at91sam9x5-clk-slow";
+-					#clock-cells = <0>;
+-					clocks = <&slow_rc_osc>, <&slow_osc>;
+-				};
++				clocks = <&slow_xtal>;
++				#clock-cells = <0>;
+ 			};
  
- Power Management Controller (PMC):
+ 			tcb0: timer@f8008000 {
 -- 
 2.20.1
