@@ -1,90 +1,94 @@
-From: pierre Kuo <vichy.kuo@gmail.com>
-Subject: [PATCH 1/1] of: reserved_mem: fix reserve memory leak
-Date: Tue, 19 Feb 2019 15:45:00 +0800
-Message-ID: <20190219074500.16454-1-vichy.kuo@gmail.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [RFC PATCH 0/5] MTD: Add Initial Hyperbus support
+Date: Tue, 19 Feb 2019 08:52:24 +0100
+Message-ID: <20190219085212.355921e5@kernel.org>
+References: <20190219063607.29949-1-vigneshr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190219063607.29949-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pierre Kuo <vichy.kuo@gmail.com>
+To: Vignesh R <vigneshr@ti.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com, Mason Yang <masonccyang@mxic.com.tw>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-The __reserved_mem_init_node will call region specific reserved memory
-init codes, but once all compatibled init codes failed, the memory region
-will left in memory.reserved and cause leakage.
++Sergei and Mason who recently worked on an HyperFlash controller.
 
-Take cma reserve memory DTS for example, if user declare 1MB size,
-which is not align to (PAGE_SIZE << max(MAX_ORDER - 1,
-pageblock_order)), rmem_cma_setup will return -EINVAL.
-Meanwhile, rmem_dma_setup will also return -EINVAL since "reusable"
-property is not set. If finally there is no reserved memory init pick up
-this memory, kernel will left the 1MB leak in memory.reserved.
+On Tue, 19 Feb 2019 12:06:02 +0530
+Vignesh R <vigneshr@ti.com> wrote:
 
-This patch will remove this kind of memory from memory.reserved, only
-when __reserved_mem_init_node return neither 0 nor -ENOENT.
-
-Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
----
- drivers/of/of_reserved_mem.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 1977ee0adcb1..d3bde057ec46 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -181,6 +181,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
- {
- 	extern const struct of_device_id __reservedmem_of_table[];
- 	const struct of_device_id *i;
-+	int ret = -ENOENT;
- 
- 	for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
- 		reservedmem_of_init_fn initfn = i->data;
-@@ -189,13 +190,14 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
- 		if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
- 			continue;
- 
--		if (initfn(rmem) == 0) {
-+		ret = initfn(rmem);
-+		if (ret == 0) {
- 			pr_info("initialized node %s, compatible id %s\n",
- 				rmem->name, compat);
--			return 0;
-+			break;
- 		}
- 	}
--	return -ENOENT;
-+	return ret;
- }
- 
- static int __init __rmem_cmp(const void *a, const void *b)
-@@ -255,7 +257,9 @@ void __init fdt_init_reserved_mem(void)
- 		int len;
- 		const __be32 *prop;
- 		int err = 0;
-+		int nomap;
- 
-+		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
- 		prop = of_get_flat_dt_prop(node, "phandle", &len);
- 		if (!prop)
- 			prop = of_get_flat_dt_prop(node, "linux,phandle", &len);
-@@ -265,8 +269,16 @@ void __init fdt_init_reserved_mem(void)
- 		if (rmem->size == 0)
- 			err = __reserved_mem_alloc_size(node, rmem->name,
- 						 &rmem->base, &rmem->size);
--		if (err == 0)
--			__reserved_mem_init_node(rmem);
-+		if (err == 0) {
-+			err = __reserved_mem_init_node(rmem);
-+			if (err != 0 && err != -ENOENT) {
-+				pr_info("node %s compatible matching fail\n",
-+					rmem->name);
-+				memblock_free(rmem->base, rmem->size);
-+				if (nomap)
-+					memblock_add(rmem->base, rmem->size);
-+			}
-+		}
- 	}
- }
- 
--- 
-2.17.1
+> Cypress HyperBus is Low Signal Count, High Performance Double Data Rate Bus
+> interface between a host system master and one or more slave interfaces.
+> HyperBus is used to connect microprocessor, microcontroller, or ASIC
+> devices with random access NOR flash memory(called HyperFlash) or
+> self refresh DRAM(called HyperRAM).
+> 
+> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+> signal and either Single-ended clock(3.0V parts) or Differential clock
+> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+> At bus level, it follows a separate protocol described in HyperBus
+> specification[1].
+> 
+> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+> to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
+> its equivalent to x16 parallel NOR flash wrt bits per clk. But Hyperbus
+> operates at >166MHz frequencies.
+> HyperRAM provides direct random read/write access to flash memory
+> array.
+> Framework is modelled along the lines of spi-nor framework. HyperBus
+> memory controller(HBMC) drivers call hb_register_device() to register a
+> single HyperFlash device. HyperFlash core parses MMIO access
+> information from DT, sets up the map_info struct, probes CFI flash and
+> registers it with MTD framework.
+> 
+> This is an early RFC, to know if its okay to use maps framework and existing
+> CFI compliant flash support code to support Hyperflash
+> Also would like input on different types of HBMC master IPs out there
+> and their programming sequences.
+> Would appreciate any testing/review.
+> 
+> Tested on modified TI AM654 EVM with Cypress Hyperflash S26KS512 by
+> creating a UBIFS partition and writing and reading files to it.
+> Stress tested by writing/reading 16MB flash repeatedly at different
+> offsets using dd commmand.
+> 
+> HyperBus specification can be found at[1]
+> HyperFlash datasheet can be found at[2]
+> TI's HBMC controller details at[3]
+> 
+> [1] https://www.cypress.com/file/213356/download
+> [2] https://www.cypress.com/file/213346/download
+> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>     Table 12-5741. HyperFlash Access Sequence
+> 
+> Vignesh R (5):
+>   mtd: cfi_cmdset_0002: Add support for polling status register
+>   dt-bindings: mtd: Add binding documentation for Hyperbus memory
+>     devices
+>   mtd: Add support for Hyperbus memory devices
+>   dt-bindings: mtd: Add bindings for TI's AM654 Hyperbus memory
+>     controller
+>   mtd: hyperbus: Add driver for TI's Hyperbus memory controller
+> 
+>  .../bindings/mtd/cypress,hyperbus.txt         |   6 +
+>  .../devicetree/bindings/mtd/ti,am654-hbmc.txt |  27 +++
+>  MAINTAINERS                                   |   8 +
+>  drivers/mtd/Kconfig                           |   2 +
+>  drivers/mtd/Makefile                          |   1 +
+>  drivers/mtd/chips/cfi_cmdset_0002.c           |  50 ++++++
+>  drivers/mtd/hyperbus/Kconfig                  |  23 +++
+>  drivers/mtd/hyperbus/Makefile                 |   4 +
+>  drivers/mtd/hyperbus/core.c                   | 167 ++++++++++++++++++
+>  drivers/mtd/hyperbus/hbmc_am654.c             | 105 +++++++++++
+>  include/linux/mtd/cfi.h                       |   5 +
+>  include/linux/mtd/hyperbus.h                  |  73 ++++++++
+>  12 files changed, 471 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
+>  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+>  create mode 100644 drivers/mtd/hyperbus/Kconfig
+>  create mode 100644 drivers/mtd/hyperbus/Makefile
+>  create mode 100644 drivers/mtd/hyperbus/core.c
+>  create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
+>  create mode 100644 include/linux/mtd/hyperbus.h
+> 
