@@ -1,76 +1,101 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 10/11] drm/panel: simple: Add NewEast
- Optoelectronics CO., LTD WJFH116008A panel support
-Date: Tue, 19 Feb 2019 08:54:36 -0600
-Message-ID: <CAL_Jsq+pyAd_kMMz+yKjqY=asAi1X1XguM58VjfVhPwD-xi-2w@mail.gmail.com>
-References: <20190215050957.20755-1-anarsoul@gmail.com> <20190215050957.20755-11-anarsoul@gmail.com>
- <20190218183301.GA5480@bogus> <CA+E=qVcdDQJvssZgu23gM_gKvz2G5GAWcmjFBokE_V=WGJ4h6A@mail.gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/5] nvmem: sunxi-sid: add support for H5's SID controller
+Date: Tue, 19 Feb 2019 16:03:11 +0100
+Message-ID: <20190219150311.yfqkr5svs6b3arjy@flea>
+References: <20190217162316.14111-1-tiny.windzz@gmail.com>
+ <20190217162316.14111-3-tiny.windzz@gmail.com>
+ <20190218084931.fdut6d4cgwkwvihx@flea>
+ <CAGb2v65Frw+=DjcuqNUPd-UG6qsiVDBH0bd5btx+5=ns7VAQrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBO5RWDRQKGQEETUMEOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CA+E=qVcdDQJvssZgu23gM_gKvz2G5GAWcmjFBokE_V=WGJ4h6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="a5jbqqvrdaqbxyhn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65Frw+=DjcuqNUPd-UG6qsiVDBH0bd5btx+5=ns7VAQrQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Yangtao Li <tiny.windzz@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 1:07 PM Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
-> On Mon, Feb 18, 2019 at 10:33 AM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+--a5jbqqvrdaqbxyhn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Feb 18, 2019 at 05:19:40PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Feb 18, 2019 at 4:49 PM Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
 > >
-> > On Thu, Feb 14, 2019 at 09:09:56PM -0800, Vasily Khoruzhick wrote:
-> > > This commit adds support for the NewEast Optoelectronics CO., LTD
-> > > WJFH116008A 11.6" 1920x1080 TFT LCD panel.
+> > On Sun, Feb 17, 2019 at 11:23:13AM -0500, Yangtao Li wrote:
+> > > Add support for H5's SID controller.
 > > >
-> > > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 > > > ---
-> > >  .../display/panel/neweast,wjfh116008a.txt     |  7 ++++
-> > >  drivers/gpu/drm/panel/panel-simple.c          | 39 +++++++++++++++++++
-> > >  2 files changed, 46 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/neweast,wjfh116008a.txt
+> > >  drivers/nvmem/sunxi_sid.c | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
 > > >
-> > > diff --git a/Documentation/devicetree/bindings/display/panel/neweast,wjfh116008a.txt b/Documentation/devicetree/bindings/display/panel/neweast,wjfh116008a.txt
-> > > new file mode 100644
-> > > index 000000000000..d76579f9f55e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/panel/neweast,wjfh116008a.txt
-> > > @@ -0,0 +1,7 @@
-> > > +NewEast Optoelectronics CO., LTD WJFH116008A 11.6" 1920x1080 TFT LCD panel
-> > > +
-> > > +Required properties:
-> > > +- compatible: should be "neweast,wjfh116008a"
-> > > +
-> > > +This binding is compatible with the simple-panel binding, which is specified
-> > > +in simple-panel.txt in this directory.
+> > > diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+> > > index 570a2e354f30..036029e90921 100644
+> > > --- a/drivers/nvmem/sunxi_sid.c
+> > > +++ b/drivers/nvmem/sunxi_sid.c
+> > > @@ -219,11 +219,17 @@ static const struct sunxi_sid_cfg sun50i_a64_cf=
+g =3D {
+> > >       .size =3D 0x100,
+> > >  };
+> > >
+> > > +static const struct sunxi_sid_cfg sun50i_h5_cfg =3D {
+> > > +     .value_offset =3D 0x200,
+> > > +     .size =3D 0x100,
+> > > +};
 > >
-> > We already established that this goes thru a standard eDP connector. We
-> > should describe that and everything associated with it.
->
-> I believe using eDP connector binding wouldn't help much in my case
-> and it won't improve accuracy of hardware description while adding
-> unnecessary code duplication (edp-connector will be pretty much
-> simple-panel).
->
-> Since currently there're no standalone connector drivers, implementing
-> one requires significant refactoring of the code that I'm not
-> familiar.
+> > IIRC, there was an endianness issue on the newer SoCs, with the driver
+> > converting the data from big endian to little endian, while it's
+> > actually stored little endian in the SID.
+>=20
+> About that, it seems the internals are either little endian or native (sa=
+me
+> as the bus). Either way the nvmem the driver currently exposes is wrong.
 
-I'm not talking about drivers. I'm talking about bindings. Those are
-not necessarily 1-1. There's no reason the simple panel driver can't
-have an 'edp-connector' entry.
+Do you mean that it can be configured either way, or it's little
+endian and since you are running a little endian system you can't
+tell?
 
-Also, since you have EDID, you should be using that for timing data
-IMO, and the binding needs to have enough information to support that.
-It may if DP-aux comes from the bridge chip or it may not if you need
-to describe that connection. Again, this is independent from what
-Linux chooses to do. If Linux chooses to have its own timing
-information that's its choice. Another OS may choose to use EDID.
+> My idea is to keep the current one with the current name, but have it not
+> associate itself with the DT node. We then register an extra one, called
+> "sunxi-sid-native" which uses the native endian. This one will be associa=
+ted
+> with the DT node, so the THS driver can consume nvmem cells.
+>=20
+> What do you think?
 
-Rob
+I thought about this some more, and I don't think anyone really has
+used the sysfs interface for it. Since the data are in an unusable
+order (without an additional conversion at least), we would have had a
+bug report by now (just like we had when someone tried to use it for
+the thermal calibration).
+
+So maybe the easy way out is just to disable the conversion on the
+affected SoCs, and see if anyone complains?
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--a5jbqqvrdaqbxyhn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXGwarwAKCRDj7w1vZxhR
+xRlQAP9SuuNNe+uQxmVUomjF7GRR7ixRMF2zFKil/KKkT6MwzQD+LppkfKh/by7K
+sUOXOlTBwGw8BGOtEByqkfFONxx9/wo=
+=n1MX
+-----END PGP SIGNATURE-----
+
+--a5jbqqvrdaqbxyhn--
