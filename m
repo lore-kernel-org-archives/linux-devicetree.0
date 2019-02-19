@@ -1,41 +1,39 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 1/2] of: Add vendor prefix for Menlo Systems GmbH
-Date: Tue, 19 Feb 2019 15:06:41 +0100
-Message-ID: <e5476463-05ef-8762-3b7f-5df30f5fe11d@denx.de>
-References: <20181004224227.16836-1-marex@denx.de>
- <20181016223249.GA14545@bogus>
+From: Bogdan Togorean <bogdan.togorean@gmail.com>
+Subject: [PATCH 0/2] ASoC: adau1977: Add support for micbias in
+	DT
+Date: Tue, 19 Feb 2019 16:11:37 +0200
+Message-ID: <20190219141139.24216-1-bogdan.togorean@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181016223249.GA14545@bogus>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org, lars@metafoo.de, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com, Bogdan Togorean <bogdan.togorean@gmail.com>, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/18 12:32 AM, Rob Herring wrote:
-> On Fri,  5 Oct 2018 00:42:26 +0200, Marek Vasut wrote:
->> Add vendor prefix for Menlo Systems GmbH, http://www.menlosystems.com/ .
->>
->> Signed-off-by: Marek Vasut <marex@denx.de>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> ---
->>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Currently micbias voltage is set based on platform_data.
+If driver is instantiated using DT only default voltage for
+micbias is possible.
 
-Could this be applied separately , so I don't have to repost it ?
-It seems I'm not getting any feedback from the iMX maintainer for months...
+This patch adds the possibility to specify an optional DT 
+property to configure the output voltage for micbias.
+
+Bogdan Togorean (2):
+  ASoC: adau1977: Add MICBIAS example in DT bindings
+  ASoC: adau1977: Add support for setting MICBIAS via DT
+
+ .../devicetree/bindings/sound/adi,adau1977.txt       |  7 +++++++
+ sound/soc/codecs/adau1977.c                          | 12 +++++++-----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+
+-- 
+2.20.1
