@@ -1,8 +1,8 @@
 From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH 1/8] regulator: stpmic1: Use regulator mode definition from
- bindings
-Date: Tue, 19 Feb 2019 10:04:31 +0000
-Message-ID: <1550570647-9555-2-git-send-email-p.paillet@st.com>
+Subject: [PATCH 3/8] dt-bindings: regulator: remove interrupt-parent
+ description on stpmic1
+Date: Tue, 19 Feb 2019 10:04:32 +0000
+Message-ID: <1550570647-9555-4-git-send-email-p.paillet@st.com>
 References: <1550570647-9555-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -15,35 +15,41 @@ To: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@k
 Cc: Pascal PAILLET-LME <p.paillet@st.com>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-Get the regulator mode definition from the bindings header.
+The interrupt parent description is not needed as the parent is a parent
+node with 'interrupt-controller' property.
 
 Signed-off-by: pascal paillet <p.paillet@st.com>
 ---
- drivers/regulator/stpmic1_regulator.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/regulator/stpmic1_regulator.c b/drivers/regulator/stpmic1_regulator.c
-index d456fb5..c25f82f 100644
---- a/drivers/regulator/stpmic1_regulator.c
-+++ b/drivers/regulator/stpmic1_regulator.c
-@@ -12,6 +12,8 @@
- #include <linux/regulator/machine.h>
- #include <linux/regulator/of_regulator.h>
+diff --git a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt b/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+index a3f4762..de27897 100644
+--- a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+@@ -29,7 +29,6 @@ Optional properties:
+     if set, all regulators are switched off in case of over-current detection
+     on this regulator,
+     if not set, the driver only sends an over-current event.
+-- interrupt-parent: phandle to the parent interrupt controller
+ - interrupts: index of current limit detection interrupt
+ - <regulator>-supply: phandle to the parent supply/regulator node
+ 	each regulator supply can be described except vref_ddr.
+@@ -43,7 +42,6 @@ regulators {
+ 	vdd_core: buck1 {
+ 		regulator-name = "vdd_core";
+ 		interrupts = <IT_CURLIM_BUCK1 0>;
+-		interrupt-parent = <&pmic>;
+ 		st,mask-reset;
+ 		regulator-pull-down;
+ 		regulator-min-microvolt = <700000>;
+@@ -53,7 +51,6 @@ regulators {
+ 	v3v3: buck4 {
+ 		regulator-name = "v3v3";
+ 		interrupts = <IT_CURLIM_BUCK4 0>;
+-		interrupt-parent = <&mypmic>;
  
-+#include <dt-bindings/mfd/st,stpmic1.h>
-+
- /**
-  * stpmic1 regulator description
-  * @desc: regulator framework description
-@@ -68,9 +70,6 @@ enum {
- /* Enable time worst case is 5000mV/(2250uV/uS) */
- #define PMIC_ENABLE_TIME_US 2200
- 
--#define STPMIC1_BUCK_MODE_NORMAL 0
--#define STPMIC1_BUCK_MODE_LP BUCK_HPLP_ENABLE_MASK
--
- static const struct regulator_linear_range buck1_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(600000, 0, 30, 25000),
- 	REGULATOR_LINEAR_RANGE(1350000, 31, 63, 0),
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
 -- 
 1.9.1
