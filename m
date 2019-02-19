@@ -1,44 +1,190 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 0/7] clk: at91: rework sckc bindings
-Date: Tue, 19 Feb 2019 18:01:53 +0100
-Message-ID: <20190219170200.3608-1-alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/7] clk: at91: modernize sckc binding
+Date: Tue, 19 Feb 2019 18:01:55 +0100
+Message-ID: <20190219170200.3608-3-alexandre.belloni@bootlin.com>
+References: <20190219170200.3608-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190219170200.3608-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@kernel.org>
 Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@microchip.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Remove the need for child nodes in the sckc binding and register the whole
+sckc tree (3 clocks in total) from the sckc node.
 
-This is a rework of the sckc DT bindings to avoid warnings with dtc.
-DT backward compatibility is kept.
+DT backward compatibility is kept by looking for properties in child nodes
+when they are not present in the sckc node.
 
-This series also fix a possible issue with the sama5d3 slow RC
-oscillator.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/clk/at91/sckc.c | 125 ++++++++++++----------------------------
+ 1 file changed, 36 insertions(+), 89 deletions(-)
 
-The sckc driver changes and documetation can go through the clk tree and
-we will handle th DT changes.
-
-Alexandre Belloni (7):
-  dt-bindings: clock: at91: new sckc bindings
-  clk: at91: modernize sckc binding
-  clk: at91: sckc: handle different RC startup time
-  ARM: dts: at91: at91sam9x5: switch to new sckc bindings
-  ARM: dts: at91: at91sam9g45: switch to new sckc bindings
-  ARM: dts: at91: at91sam9rl: switch to new sckc bindings
-  ARM: dts: at91: sama5d3: switch to new sckc bindings
-
- .../devicetree/bindings/clock/at91-clock.txt  |  30 ++--
- arch/arm/boot/dts/at91-wb50n.dtsi             |   2 +-
- arch/arm/boot/dts/at91sam9g45.dtsi            |  25 +---
- arch/arm/boot/dts/at91sam9rl.dtsi             |  25 +---
- arch/arm/boot/dts/at91sam9x5.dtsi             |  23 +--
- arch/arm/boot/dts/sama5d3.dtsi                |  27 +---
- drivers/clk/at91/sckc.c                       | 134 ++++++------------
- 7 files changed, 73 insertions(+), 193 deletions(-)
-
+diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
+index ab6ecefc49ad..470aef586f57 100644
+--- a/drivers/clk/at91/sckc.c
++++ b/drivers/clk/at91/sckc.c
+@@ -152,28 +152,6 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
+ 	return hw;
+ }
+ 
+-static void __init
+-of_at91sam9x5_clk_slow_osc_setup(struct device_node *np, void __iomem *sckcr)
+-{
+-	struct clk_hw *hw;
+-	const char *parent_name;
+-	const char *name = np->name;
+-	u32 startup;
+-	bool bypass;
+-
+-	parent_name = of_clk_get_parent_name(np, 0);
+-	of_property_read_string(np, "clock-output-names", &name);
+-	of_property_read_u32(np, "atmel,startup-time-usec", &startup);
+-	bypass = of_property_read_bool(np, "atmel,osc-bypass");
+-
+-	hw = at91_clk_register_slow_osc(sckcr, name, parent_name, startup,
+-					 bypass);
+-	if (IS_ERR(hw))
+-		return;
+-
+-	of_clk_add_hw_provider(np, of_clk_hw_simple_get, hw);
+-}
+-
+ static unsigned long clk_slow_rc_osc_recalc_rate(struct clk_hw *hw,
+ 						 unsigned long parent_rate)
+ {
+@@ -266,28 +244,6 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
+ 	return hw;
+ }
+ 
+-static void __init
+-of_at91sam9x5_clk_slow_rc_osc_setup(struct device_node *np, void __iomem *sckcr)
+-{
+-	struct clk_hw *hw;
+-	u32 frequency = 0;
+-	u32 accuracy = 0;
+-	u32 startup = 0;
+-	const char *name = np->name;
+-
+-	of_property_read_string(np, "clock-output-names", &name);
+-	of_property_read_u32(np, "clock-frequency", &frequency);
+-	of_property_read_u32(np, "clock-accuracy", &accuracy);
+-	of_property_read_u32(np, "atmel,startup-time-usec", &startup);
+-
+-	hw = at91_clk_register_slow_rc_osc(sckcr, name, frequency, accuracy,
+-					    startup);
+-	if (IS_ERR(hw))
+-		return;
+-
+-	of_clk_add_hw_provider(np, of_clk_hw_simple_get, hw);
+-}
+-
+ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
+ {
+ 	struct clk_sam9x5_slow *slowck = to_clk_sam9x5_slow(hw);
+@@ -365,64 +321,55 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
+ 	return hw;
+ }
+ 
+-static void __init
+-of_at91sam9x5_clk_slow_setup(struct device_node *np, void __iomem *sckcr)
++static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
+ {
++	const char *parent_names[2] = { "slow_rc_osc", "slow_osc" };
++	void __iomem *regbase = of_iomap(np, 0);
++	struct device_node *child = NULL;
++	const char *xtal_name;
+ 	struct clk_hw *hw;
+-	const char *parent_names[2];
+-	unsigned int num_parents;
+-	const char *name = np->name;
++	bool bypass;
+ 
+-	num_parents = of_clk_get_parent_count(np);
+-	if (num_parents == 0 || num_parents > 2)
++	if (!regbase)
+ 		return;
+ 
+-	of_clk_parent_fill(np, parent_names, num_parents);
+-
+-	of_property_read_string(np, "clock-output-names", &name);
+-
+-	hw = at91_clk_register_sam9x5_slow(sckcr, name, parent_names,
+-					    num_parents);
++	hw = at91_clk_register_slow_rc_osc(regbase, parent_names[0], 32768,
++					   50000000, 75);
+ 	if (IS_ERR(hw))
+ 		return;
+ 
+-	of_clk_add_hw_provider(np, of_clk_hw_simple_get, hw);
+-}
++	xtal_name = of_clk_get_parent_name(np, 0);
++	if (!xtal_name) {
++		/* DT backward compatibility */
++		child = of_get_compatible_child(np, "atmel,at91sam9x5-clk-slow-osc");
++		if (!child)
++			return;
++
++		xtal_name = of_clk_get_parent_name(child, 0);
++		bypass = of_property_read_bool(child, "atmel,osc-bypass");
++
++		child =  of_get_compatible_child(np, "atmel,at91sam9x5-clk-slow");
++	} else {
++		bypass = of_property_read_bool(np, "atmel,osc-bypass");
++	}
+ 
+-static const struct of_device_id sckc_clk_ids[] __initconst = {
+-	/* Slow clock */
+-	{
+-		.compatible = "atmel,at91sam9x5-clk-slow-osc",
+-		.data = of_at91sam9x5_clk_slow_osc_setup,
+-	},
+-	{
+-		.compatible = "atmel,at91sam9x5-clk-slow-rc-osc",
+-		.data = of_at91sam9x5_clk_slow_rc_osc_setup,
+-	},
+-	{
+-		.compatible = "atmel,at91sam9x5-clk-slow",
+-		.data = of_at91sam9x5_clk_slow_setup,
+-	},
+-	{ /*sentinel*/ }
+-};
++	if (!xtal_name)
++		return;
+ 
+-static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
+-{
+-	struct device_node *childnp;
+-	void (*clk_setup)(struct device_node *, void __iomem *);
+-	const struct of_device_id *clk_id;
+-	void __iomem *regbase = of_iomap(np, 0);
++	hw = at91_clk_register_slow_osc(regbase, parent_names[1], xtal_name,
++					1200000, bypass);
++	if (IS_ERR(hw))
++		return;
+ 
+-	if (!regbase)
++	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2);
++	if (IS_ERR(hw))
+ 		return;
+ 
+-	for_each_child_of_node(np, childnp) {
+-		clk_id = of_match_node(sckc_clk_ids, childnp);
+-		if (!clk_id)
+-			continue;
+-		clk_setup = clk_id->data;
+-		clk_setup(childnp, regbase);
+-	}
++	of_clk_add_hw_provider(np, of_clk_hw_simple_get, hw);
++
++	/* DT backward compatibility */
++	if (child)
++		of_clk_add_hw_provider(child, of_clk_hw_simple_get, hw);
+ }
+ CLK_OF_DECLARE(at91sam9x5_clk_sckc, "atmel,at91sam9x5-sckc",
+ 	       of_at91sam9x5_sckc_setup);
 -- 
 2.20.1
