@@ -1,89 +1,50 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: phy: Add Stingray USB PHY binding document
-Date: Tue, 19 Feb 2019 09:09:04 +0530
-Message-ID: <CABe79T6W_NrgAsJnfX-tBmTWZCDUGC7wkWfayQ6BNF-7S_iRYA@mail.gmail.com>
-References: <1549474347-7224-1-git-send-email-srinath.mannam@broadcom.com>
- <1549474347-7224-2-git-send-email-srinath.mannam@broadcom.com> <20190218172221.GA20334@bogus>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v2 01/10] dt-bindings: phy: Add support for HiSilicon's
+ hi3660 USB PHY
+Date: Tue, 19 Feb 2019 11:55:31 +0800
+Message-ID: <5ee91d42-ab9d-1bd2-d39e-8af4d69a5c19@huawei.com>
+References: <20190218112310.17860-1-chenyu56@huawei.com>
+ <20190218112310.17860-2-chenyu56@huawei.com> <20190218201824.GA23724@bogus>
+ <a944cd27-f7d5-eece-1ef5-c7dc5dbc311b@huawei.com>
+ <1550545405.2210.30.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218172221.GA20334@bogus>
+In-Reply-To: <1550545405.2210.30.camel@mhfsdcap03>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: liuyu712@hisilicon.com, Rob Herring <robh@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-Thanks for review, please see my comments below inline.
+On 2019/2/19 11:03, Chunfeng Yun wrote:
+>>>> +
+>>>> +Example:
+>>>> +	usb-phy {
+>>>> +		compatible = "hisilicon,hi3660-usb-phy";
+>>>> +		#phy-cells = <0>;
+>>>> +		hisilicon,pericrg-syscon = <&crg_ctrl>;
+>>>> +		hisilicon,pctrl-syscon = <&pctrl>;
+>>>> +		hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
+>>>
+>>> Are most of the registers within one of these blocks? If so, make this 
+>>> node a child of that node.
+>> I met a problem when I made this node a child of the syscon node,
+>> the driver "phy-hi3660-usb3" was not probed.
+>> Do you have any idea about how to make it probed when it is a child node?
+> call of_platform_populate() in parent node's driver,
+> but I don't know whether it's a standard way
+Yes, this function is used in dwc3 driver to probe the child node.
+But I think it is not a good way to modify the syscon driver.
+>>>
+>>>> +		hisilicon,eye-diagram-param = <0x22466e4>;
+>>>> +	};
+>>>> -- 
+>>>> 2.15.0-rc2
+>>>>
 
-On Mon, Feb 18, 2019 at 10:52 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Feb 06, 2019 at 11:02:25PM +0530, Srinath Mannam wrote:
-> > Add DT binding document for Stingray USB PHY.
-> >
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> > ---
-> >  .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
-> >  1 file changed, 62 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > new file mode 100644
-> > index 0000000..bfe1367
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > @@ -0,0 +1,62 @@
-> > +Broadcom Stingray USB PHY
-> > +
-> > +Required properties:
-> > + - compatible : should be one of the listed compatibles
-> > +     - "brcm,sr-usb-phy"
-> > +     - "brcm,sr-usb-phy-v2"
->
-> SoC specific compatibles are preferred. Version numbers can be used but
-> should follow some documented scheme and be meaningful. What we don't
-> want is just Linux developers making up numbering.
->
-Both versions are different phy controllers and also have separate
-register offsets.
-I will provide more meaningful compatible IDs and their documentation
-in next patchset.
-> > + - reg: offset and length of the PHY blocks registers
-> > + - address-cells: should be 1
-> > + - size-cells: should be 0
-> > +
-> > +Sub-nodes:
-> > +  Each port's PHY should be represented as a sub-node.
-> > +
-> > +Sub-nodes required properties:
-> > + - reg: required for brcm,sr-usb-phy model phy.
-> > +     reg value 0 is HS phy and 1 is SS phy.
-> > + - phy-cells: generic PHY binding; must be 0
-> > +
-> > +Refer to phy/phy-bindings.txt for the generic PHY binding properties
-> > +
-> > +Example:
-> > +     usbphy0: usb-phy@0 {
-> > +             compatible = "brcm,sr-usb-phy";
-> > +             reg = <0x00000000 0x100>;
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +
-> > +             usb0_phy0: phy@0 {
-> > +                     reg = <0>;
-> > +                     #phy-cells = <0>;
->
-> Unless there's DT resources for each child node, you don't need these.
-> Just make #phy-cells 1 in the parent.
-With the use of phy-cell, PHY argument is available with xlate
-function, But controller specific assignments required
-to be done while probe. So I will take your first option given in
-previous comment.
-
-Regards,
-Srinath.
->
-> Rob
+Thanks
+Yu Chen
