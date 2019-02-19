@@ -1,15 +1,14 @@
 From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH v2 01/15] dt-bindings: sram: milbeaut: Add binding for
- Milbeaut smp-sram
-Date: Tue, 19 Feb 2019 16:38:51 +0900
-Message-ID: <0885ddd4-158b-cad9-8aa5-4029676db036@socionext.com>
-References: <1549628733-30171-1-git-send-email-sugaya.taichi@socionext.com>
- <20190218194909.GA9552@bogus>
+Subject: Re: [PATCH v2 03/15] dt-bindings: Add documentation for Milbeaut SoCs
+Date: Tue, 19 Feb 2019 16:41:55 +0900
+Message-ID: <c111792a-397e-4018-fa94-ff03f06fa23a@socionext.com>
+References: <1549628764-30587-1-git-send-email-sugaya.taichi@socionext.com>
+ <20190218195247.GA9690@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218194909.GA9552@bogus>
+In-Reply-To: <20190218195247.GA9690@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
@@ -18,18 +17,42 @@ List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 2019/02/19 4:49, Rob Herring wrote:
-> On Fri,  8 Feb 2019 21:25:33 +0900, Sugaya Taichi wrote:
->> The Milbeaut M10V SoC needs a part of sram for smp, so this adds the
->> M10V sram compatible and binding.
+On 2019/02/19 4:52, Rob Herring wrote:
+> On Fri, Feb 08, 2019 at 09:26:04PM +0900, Sugaya Taichi wrote:
+>> This adds a DT binding documentation for the M10V and its evaluation
+>> board.
+> 
+> Most boards/soc bindings are using DT schema (yaml) now. We're not
+> requiring that just yet, but I'd like to not add more. So can you
+> convert this to schema.
+> 
+
+Probably yes. I try to convert with looking at references.
+
+Thanks,
+Sugaya Taichi
+
+> Rob
+> 
 >>
 >> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
 >> ---
->>   .../devicetree/bindings/sram/milbeaut-smp-sram.txt | 24 ++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt
+>>   Documentation/devicetree/bindings/arm/milbeaut.txt | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/milbeaut.txt
 >>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-Thank you!
+>> diff --git a/Documentation/devicetree/bindings/arm/milbeaut.txt b/Documentation/devicetree/bindings/arm/milbeaut.txt
+>> new file mode 100644
+>> index 0000000..9fd053a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/milbeaut.txt
+>> @@ -0,0 +1,6 @@
+>> +Milbeaut platforms device tree bindings
+>> +---------------------------------------
+>> +
+>> +- Milbeaut M10V Evaluation Board
+>> +    Required root node properties:
+>> +      - compatible = "socionext,milbeaut-m10v-evb", "socionext,sc2000a";
+>> -- 
+>> 1.9.1
+>>
