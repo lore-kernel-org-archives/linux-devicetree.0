@@ -1,43 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 13/15] ARM: dts: milbeaut: Add device tree set for the
- Milbeaut M10V board
-Date: Tue, 19 Feb 2019 11:11:23 +0100
-Message-ID: <CAK8P3a0H3wYKqiV6XZe9V_y8rjDTFHcU_jq7+HkwX+6dnXvU9Q@mail.gmail.com>
-References: <1549628920-32623-1-git-send-email-sugaya.taichi@socionext.com>
- <CAK8P3a15mLEgVAh1+jQ+GqOcQa0zhrePWofo8iGkTs5_bd=TmQ@mail.gmail.com> <ba5bb646-7fa6-e98f-4ac2-47c55c8f82ba@socionext.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v6 0/4]  input: touchscreen: Add goodix GT5553 CTP support
+Date: Tue, 19 Feb 2019 15:46:25 +0530
+Message-ID: <20190219101629.15977-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba5bb646-7fa6-e98f-4ac2-47c55c8f82ba@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Rob Herring <robh+dt@kernel.org>
+Cc: Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 19, 2019 at 6:11 AM Sugaya, Taichi
-<sugaya.taichi@socionext.com> wrote:
->
-> Hi,
-> Thank you for you comments.
->
-> On 2019/02/18 21:09, Arnd Bergmann wrote:
-> > On Fri, Feb 8, 2019 at 1:28 PM Sugaya Taichi
-> > <sugaya.taichi@socionext.com> wrote:
-> >> +
-> >> +       aliases {
-> >> +               serial1 = &uart1;
-> >> +       };
-> >
-> > Maybe start with serial0 here? It seems unusual to start
-> > counting at 1.
-> >
->
-> The M10V evaluation board(EVB) uses a console with uart ch1, so this
-> alias number is derived from the used channel one.
-> Therefore it is no problem to change the alias number to 0.
+This is v6 patchset for supporting goodix GT5553 CTP. Here is the
+previous version[1]
 
-The alias should normally reflect whatever is printed on the board,
-if there are no labels, the convention is to start with zero, regardless
-of what internal uart is connected to it.
+Changes for v5:
+- document bindings for required regulators, which are need during
+  power-on sequence
+- enable, disable required regulators as described in power-on sequence
+  using normal regulator calls
+- update the proper commi messages
+Changes for v4:
+- document AVDD22, DVDD12, VDDIO as optional properties
+- use regulator bulk calls, for get, enable and disable functionalities
+Changes for v4:
+- devm_add_action_or_reset for disabling regulator
+Changes for v3:
+- add cover-letter
+- s/ADVV28/AVDD28 on commit head
+- fix few typo
+Changes for v2:
+- Rename vcc-supply with AVDD28-supply
+- disable regulator in remove
+- fix to setup regulator in probe code
+- add chipdata
+- drop example node in dt-bindings
 
-     Arnd
+[1] https://patchwork.kernel.org/cover/10816901/
+
+Jagan Teki (4):
+  dt-bindings: input: touchscreen: goodix: Document regulator properties
+  Input: goodix - Add regulators suppot
+  dt-bindings: input: touchscreen: goodix: Add GT5663 compatible
+  Input: goodix - Add GT5663 CTP support
+
+ .../bindings/input/touchscreen/goodix.txt     |  3 +
+ drivers/input/touchscreen/goodix.c            | 60 +++++++++++++++++++
+ 2 files changed, 63 insertions(+)
+
+-- 
+2.18.0.321.gffc6fa0e3
