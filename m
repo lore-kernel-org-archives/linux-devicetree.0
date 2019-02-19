@@ -1,115 +1,69 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 4/7] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
-Date: Mon, 18 Feb 2019 22:04:04 -0800
-Message-ID: <20190219060407.15263-5-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2 PHY
+Date: Mon, 18 Feb 2019 22:04:02 -0800
+Message-ID: <20190219060407.15263-3-bjorn.andersson@linaro.org>
 References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190219060407.15263-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Before introducing the QCS404 platform, which uses the same PCIe
-controller as IPQ4019, migrate this to use the bulk clock API, in order
-to make the error paths slighly cleaner.
+The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
+Qualcomm platforms, add a binding to describe this.
 
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 48 +++++++-------------------
- 1 file changed, 13 insertions(+), 35 deletions(-)
+ .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index d185ea5fe996..b4d8bcf6eb77 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -113,9 +113,8 @@ struct qcom_pcie_resources_2_3_2 {
- };
- 
- struct qcom_pcie_resources_2_4_0 {
--	struct clk *aux_clk;
--	struct clk *master_clk;
--	struct clk *slave_clk;
-+	struct clk_bulk_data clks[3];
-+	int num_clks;
- 	struct reset_control *axi_m_reset;
- 	struct reset_control *axi_s_reset;
- 	struct reset_control *pipe_reset;
-@@ -638,18 +637,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
-+	int ret;
- 
--	res->aux_clk = devm_clk_get(dev, "aux");
--	if (IS_ERR(res->aux_clk))
--		return PTR_ERR(res->aux_clk);
-+	res->clks[0].id = "aux";
-+	res->clks[1].id = "master_bus";
-+	res->clks[2].id = "slave_bus";
- 
--	res->master_clk = devm_clk_get(dev, "master_bus");
--	if (IS_ERR(res->master_clk))
--		return PTR_ERR(res->master_clk);
-+	res->num_clks = 3;
- 
--	res->slave_clk = devm_clk_get(dev, "slave_bus");
--	if (IS_ERR(res->slave_clk))
--		return PTR_ERR(res->slave_clk);
-+	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
-+	if (ret < 0)
-+		return ret;
- 
- 	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
- 	if (IS_ERR(res->axi_m_reset))
-@@ -719,9 +717,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
- 	reset_control_assert(res->axi_m_sticky_reset);
- 	reset_control_assert(res->pwr_reset);
- 	reset_control_assert(res->ahb_reset);
--	clk_disable_unprepare(res->aux_clk);
--	clk_disable_unprepare(res->master_clk);
--	clk_disable_unprepare(res->slave_clk);
-+	clk_bulk_disable_unprepare(res->num_clks, res->clks);
- }
- 
- static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
-@@ -850,23 +846,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
- 
- 	usleep_range(10000, 12000);
- 
--	ret = clk_prepare_enable(res->aux_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable iface clock\n");
-+	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
-+	if (ret)
- 		goto err_clk_aux;
--	}
--
--	ret = clk_prepare_enable(res->master_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable core clock\n");
--		goto err_clk_axi_m;
--	}
--
--	ret = clk_prepare_enable(res->slave_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable phy clock\n");
--		goto err_clk_axi_s;
--	}
- 
- 	/* enable PCIe clocks and resets */
- 	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-@@ -891,10 +873,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
- 
- 	return 0;
- 
--err_clk_axi_s:
--	clk_disable_unprepare(res->master_clk);
--err_clk_axi_m:
--	clk_disable_unprepare(res->aux_clk);
- err_clk_aux:
- 	reset_control_assert(res->ahb_reset);
- err_rst_ahb:
+diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+new file mode 100644
+index 000000000000..7da02f9d78c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+@@ -0,0 +1,40 @@
++Qualcomm PCIe2 PHY controller
++=============================
++
++The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
++platforms.
++
++Required properties:
++ - compatible: compatible list, should be:
++	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
++
++ - reg: offset and length of the PHY register set.
++ - #phy-cells: must be 0.
++
++ - clocks: a clock-specifier pair for the "pipe" clock
++
++ - vdda-vp-supply: phandle to low voltage regulator
++ - vdda-vph-supply: phandle to high voltage regulator
++
++ - resets: reset-specifier pairs for the "phy" and "pipe" resets
++ - reset-names: list of resets, should contain:
++		"phy" and "pipe"
++
++ - clock-output-names: name of the outgoing clock signal from the PHY PLL
++
++Example:
++ phy@7786000 {
++	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
++	reg = <0x07786000 0xb8>;
++
++	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
++	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
++	         <&gcc GCC_PCIE_0_PIPE_ARES>;
++	reset-names = "phy", "pipe";
++
++	vdda-vp-supply = <&vreg_l3_1p05>;
++	vdda-vph-supply = <&vreg_l5_1p8>;
++
++	clock-output-names = "pcie_0_pipe_clk";
++	#phy-cells = <0>;
++ };
 -- 
 2.18.0
