@@ -1,68 +1,79 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 0/6]Bluetooth: mediatek: add support for MediaTek
- MT7663U and MT7668U UART devices
-Date: Wed, 20 Feb 2019 05:13:22 +0800
-Message-ID: <1550610802.8245.1.camel@mtkswgap22>
-References: <cover.1550184473.git.sean.wang@mediatek.com>
-         <B7EBA86E-B6C2-4301-BA01-004EA83A50A9@holtmann.org>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
+Date: Tue, 19 Feb 2019 13:25:46 -0800
+Message-ID: <CA+E=qVf44XBEGHY6NoQZrvkodCs2UX7xFkHZ5vs6A5TCAXr1oA@mail.gmail.com>
+References: <20190118170232.16142-1-anarsoul@gmail.com> <20190118170232.16142-4-anarsoul@gmail.com>
+ <20190218211035.GA28145@bogus> <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
+ <CAL_Jsq+kqFrY3DoHG_TJCCSxVHRkin4OwM+F9qm6W0w5YfjPQQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <B7EBA86E-B6C2-4301-BA01-004EA83A50A9@holtmann.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+kqFrY3DoHG_TJCCSxVHRkin4OwM+F9qm6W0w5YfjPQQ@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcel,
+On Tue, Feb 19, 2019 at 6:14 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Feb 18, 2019 at 3:24 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> >
+> > On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
+> > > > Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+> > > >
+> > > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > > > ---
+> > > >  .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
+> > > >  1 file changed, 35 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> > > > new file mode 100644
+> > > > index 000000000000..8357f242ae4c
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> > > > @@ -0,0 +1,35 @@
+> > > > +RTL8723BS/RTL8723CS Bluetooth
+> > > > +---------------------
+> > > > +
+> > > > +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
+> > > > +BT is connected over serial. It speaks H5 protocol with few extra commands
+> > > > +to upload firmware and change module speed.
+> > > > +
+> > > > +Required properties:
+> > > > +
+> > > > + - compatible: should be one of the following:
+> > > > +   * "realtek,rtl8723bs-bt"
+> > > > +   * "realtek,rtl8723cs-bt"
+> > > > +Optional properties:
+> > > > +
+> > > > + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
+> > > > + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
+> > > > + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
+> > > > + - firmware-postfix: firmware postfix to be used for firmware config
+> > >
+> > > How is this used?
+> >
+> > rtl8723bs-bt needs 2 firmware binaries -- one is actual firmware,
+> > another is firmware config which is specific to the board. If
+> > firmware-postfix is specified, driver appends it to the name of config
+> > and requests board-specific config while loading firmware. I.e. if
+> > 'pine64' is specified as firmware-postfix driver will load
+> > rtl8723bs_config-pine64.bin.
+>
+> We already have 'firmware-name' defined and I'd prefer not to have
+> another way to do things. The difference is just you have to give the
+> full filename.
 
-I will follow it up. Thank for your help!
+OK
 
-	Sean
+> Also, on other chips with board specific config blobs, there's been
+> some discussion of converting those to DT properties. That depends on
+> you knowing what's in the blob and having a reasonable number of
+> parameter to make properties.
 
+We'd have to RE binary format of this config first.
 
-On Mon, 2019-02-18 at 14:10 +0100, Marcel Holtmann wrote:
-> Hi Sean,
-> 
-> > This adds the support of enabling MT7668U and MT7663U UART based Bluetooth
-> > function running on the top of btmtkuart driver.
-> > 
-> > We are through several patches to reach the goal and also wish applied
-> > the same flow in MediaTek btusb [1] for the transport independence.
-> > Once [1] and the series is being merged and then in next step I will
-> > consider to add a btmtk.c to hold these independent operations among
-> > various transport reused by MediaTek UART, USB and SDIO-based Bluetooth.
-> > 
-> > Firstly,
-> > in patch 1/6 to update the dt-binding document for the kind of devices.
-> > in patch 2/6, 3/6 to fix the common error issues in the current code.
-> > in Patch 4/6, 5/6 to add the general flow which MT7622 and even MT7663U and
-> > MT7668U USB devices also utilize.
-> > 
-> > Finally, in patch 6/6 to add the specific setups for MediaTek UART-based
-> > Bluetooth and enable MT7663U and MT7668U device.
-> > 
-> > [1] http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017074.html 
-> > 
-> > Sean Wang (6):
-> >  dt-bindings: net: bluetooth: add support for MediaTek MT7663U and
-> >    MT7668U UART devices
-> >  Bluetooth: mediatek: trivial typo fix
-> >  Bluetooth: mediatek: fix up an error path to restore bdev->tx_state
-> >  Bluetooth: mediatek: pass a pointer to mtk_hci_wmt_sync
-> >  Bluetooth: mediatek: update the common setup between MT7622 and other
-> >    devices
-> >  Bluetooth: mediatek: add support for MediaTek MT7663U and MT7668U UART
-> >    devices
-> > 
-> > .../bindings/net/mediatek-bluetooth.txt       |  64 +++
-> > drivers/bluetooth/btmtkuart.c                 | 538 ++++++++++++++++--
-> > 2 files changed, 569 insertions(+), 33 deletions(-)
-> 
-> please re-send 1/6 and 6/6 when the DT changes are ACKed by Rob.
-> 
-> Regards
-> 
-> Marcel
-> 
+> Rob
