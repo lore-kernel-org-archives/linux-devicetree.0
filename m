@@ -1,50 +1,72 @@
-From: Bogdan Togorean <bogdan.togorean@gmail.com>
-Subject: [PATCH 2/2] ASoC: adau1977: Add support for setting MICBIAS via DT
-Date: Tue, 19 Feb 2019 16:11:39 +0200
-Message-ID: <20190219141139.24216-3-bogdan.togorean@gmail.com>
-References: <20190219141139.24216-1-bogdan.togorean@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
+Date: Tue, 19 Feb 2019 08:14:01 -0600
+Message-ID: <CAL_Jsq+kqFrY3DoHG_TJCCSxVHRkin4OwM+F9qm6W0w5YfjPQQ@mail.gmail.com>
+References: <20190118170232.16142-1-anarsoul@gmail.com> <20190118170232.16142-4-anarsoul@gmail.com>
+ <20190218211035.GA28145@bogus> <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219141139.24216-1-bogdan.togorean@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org
-Cc: lars@metafoo.de, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, tiwai@suse.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bogdan Togorean <bogdan.togorean@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-If platform_data is NULL add reading of optional adi,micbias
-property from DT. If adi,micbias is not set keep the default
-value for micbias.
+On Mon, Feb 18, 2019 at 3:24 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
+> > > Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+> > >
+> > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > > ---
+> > >  .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
+> > >  1 file changed, 35 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> > > new file mode 100644
+> > > index 000000000000..8357f242ae4c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> > > @@ -0,0 +1,35 @@
+> > > +RTL8723BS/RTL8723CS Bluetooth
+> > > +---------------------
+> > > +
+> > > +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
+> > > +BT is connected over serial. It speaks H5 protocol with few extra commands
+> > > +to upload firmware and change module speed.
+> > > +
+> > > +Required properties:
+> > > +
+> > > + - compatible: should be one of the following:
+> > > +   * "realtek,rtl8723bs-bt"
+> > > +   * "realtek,rtl8723cs-bt"
+> > > +Optional properties:
+> > > +
+> > > + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
+> > > + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
+> > > + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
+> > > + - firmware-postfix: firmware postfix to be used for firmware config
+> >
+> > How is this used?
+>
+> rtl8723bs-bt needs 2 firmware binaries -- one is actual firmware,
+> another is firmware config which is specific to the board. If
+> firmware-postfix is specified, driver appends it to the name of config
+> and requests board-specific config while loading firmware. I.e. if
+> 'pine64' is specified as firmware-postfix driver will load
+> rtl8723bs_config-pine64.bin.
 
-Signed-off-by: Bogdan Togorean <bogdan.togorean@gmail.com>
----
- sound/soc/codecs/adau1977.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+We already have 'firmware-name' defined and I'd prefer not to have
+another way to do things. The difference is just you have to give the
+full filename.
 
-diff --git a/sound/soc/codecs/adau1977.c b/sound/soc/codecs/adau1977.c
-index 116af6a9ce3b..11c53bcb71dd 100644
---- a/sound/soc/codecs/adau1977.c
-+++ b/sound/soc/codecs/adau1977.c
-@@ -885,13 +885,15 @@ static int adau1977_setup_micbias(struct adau1977 *adau1977)
- 	struct adau1977_platform_data *pdata = adau1977->dev->platform_data;
- 	unsigned int micbias;
- 
--	if (pdata) {
-+	if (pdata)
- 		micbias = pdata->micbias;
--		if (micbias > ADAU1977_MICBIAS_9V0)
--			return -EINVAL;
--
--	} else {
-+	else if (device_property_read_u32(adau1977->dev, "adi,micbias",
-+					  &micbias))
- 		micbias = ADAU1977_MICBIAS_8V5;
-+
-+	if (micbias > ADAU1977_MICBIAS_9V0) {
-+		dev_err(adau1977->dev, "Invalid value for 'adi,micbias'\n");
-+		return -EINVAL;
- 	}
- 
- 	return regmap_update_bits(adau1977->regmap, ADAU1977_REG_MICBIAS,
--- 
-2.20.1
+Also, on other chips with board specific config blobs, there's been
+some discussion of converting those to DT properties. That depends on
+you knowing what's in the blob and having a reasonable number of
+parameter to make properties.
+
+Rob
