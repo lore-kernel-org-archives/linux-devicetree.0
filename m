@@ -1,59 +1,82 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v1 2/6] dt-bindings: drm/msm/a6xx: Add GX
- power-domain for GMU bindings
-Date: Tue, 19 Feb 2019 09:12:19 -0700
-Message-ID: <20190219161219.GC10863@jcrouse1-lnx.qualcomm.com>
-References: <1549296944-17285-1-git-send-email-jcrouse@codeaurora.org>
- <1549296944-17285-3-git-send-email-jcrouse@codeaurora.org>
- <CAL_JsqJ0FX=dbQb34bvZcdbWibjKnS2VXGsApT_Vz+UcjUxCSQ@mail.gmail.com>
- <CAF6AEGuXXqfa7OnfnyHLcyHaGXXGKHwpo4gMBH4gU0keExQcFg@mail.gmail.com>
+From: Piotr Sroka <piotrs@cadence.com>
+Subject: [PATCH v2 2/2] dt-bindings: nand: Add Cadence NAND controller driver
+Date: Tue, 19 Feb 2019 16:19:20 +0000
+Message-ID: <20190219161920.26602-1-piotrs@cadence.com>
+References: <20190219161406.4340-1-piotrs@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGuXXqfa7OnfnyHLcyHaGXXGKHwpo4gMBH4gU0keExQcFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190219161406.4340-1-piotrs@cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: David Woodhouse <dwmw2@infradead.org>, BrianNorris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBGZWIgMTcsIDIwMTkgYXQgMDU6NDM6MTZQTSAtMDUwMCwgUm9iIENsYXJrIHdyb3Rl
-Ogo+IE9uIFN1biwgRmViIDE3LCAyMDE5IGF0IDQ6MDggUE0gUm9iIEhlcnJpbmcgPHJvYmgrZHRA
-a2VybmVsLm9yZz4gd3JvdGU6Cj4gPgo+ID4gT24gTW9uLCBGZWIgNCwgMjAxOSBhdCAxMDoxNSBB
-TSBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiA+ID4KPiA+
-ID4gVGhlIEdNVSBzaG91bGQgaGF2ZSB0d28gcG93ZXIgZG9tYWlucyBkZWZpbmVkOiAiY3giIGFu
-ZCAiZ3giLiAiY3giIGlzIHRoZQo+ID4gPiBhY3R1YWwgcG93ZXIgZG9tYWluIGZvciB0aGUgZGV2
-aWNlIGFuZCAiZ3giIHdpbGwgYmUgYXR0YWNoZWQgYXQgcnVudGltZQo+ID4gPiB0byBtYW5hZ2Ug
-cmVmZXJlbmNlIGNvdW50aW5nIG9uIHRoZSBHUFUgZGV2aWNlIGluIGNhc2Ugb2YgYSBHTVUgY3Jh
-c2guCj4gPgo+ID4gcG93ZXItZG9tYWlucyBhcmUgc3VwcG9zZWQgdG8gYmUgYWN0dWFsIHJlZ2lv
-bnMgb24gYSBjaGlwIGRpZSB3aGljaAo+ID4gY2FuIGJlIHBvd2VyIGdhdGVkLiBIb3dldmVyLCB0
-aGV5IGFyZSBvZnRlbiBhYnVzZWQgYnkgYmVpbmcgZGVmaW5lZCBpbgo+ID4gdGVybXMgb2Yga2Vy
-bmVsIFBNIGRvbWFpbnMgd2hpY2ggYXJlIG5vdCBhbHdheXMgdGhlIHNhbWUgdGhpbmcuIFRoaXMK
-PiA+IGRlc2NyaXB0aW9uIHNvdW5kcyBsaWtlIHRoZSBsYXR0ZXIgY2FzZS4KPiA+Cj4gCj4gaWly
-YyAoYW5kIEpvcmRhbiBjYW4gY29ycmVjdCBtZSksIHRoaXMgYXJyYW5nZW1lbnQgd2FzIG5lZWRl
-ZCBiZWNhdXNlCj4gbm9ybWFsbHkgdGhlIEdNVSBkb2VzIHRoZSBHUFUgcG93ZXIgY29udHJvbCAo
-ZXhjZXB0IGZvciBpZiB3ZSBtYW5hZ2UKPiB0byBjcmFzaCBpdCBhbmQgbmVlZCB0byByZXNldCB0
-aGUgR01VKS4uCj4gCj4gc28gbWF5YmUgbm90IDEwMCUgYWJvdXQgdGhlIGFjdHVhbCByZWdpb25z
-IG9uIGNoaXAgZGllIHdoaWNoIGNhbiBiZQo+IGdhdGVkLi4gYnV0IGl0IGlzIGEgcmVhbGl0eSBv
-ZiBob3cgaHcgKyBmdyArIHN3IGZpdCB0b2dldGhlci4uCgpBY2sgLSBmb3Jnb3QgdG8gYWRkIFN0
-ZXBoZW4gd2hvIGtub3dzIGFib3V0IHRoaXMuCgpSb2IgaXMgY29ycmVjdC4gVGhlIEdYIGRvbWFp
-biBpcyByZWFsIGJ1dCBpdCBpcyBub3JtYWxseSBjb250cm9sbGVkIGJ5IGFuCm9mZi1DUFUgbWlj
-cm9jb250cm9sbGVyLiBUaGUgQ1BVIG5lZWRzIHRvIGdldCBpbnZvbHZlZCBvbmx5IHdoZW4gdGhl
-Cm1pY3JvY29udHJvbGxlciBjcmFzaGVzIGFuZCB3ZSBuZWVkIHRvIGdldCB0aGluZ3MgYmFjayB0
-byBub3JtYWwuICBTbyB0aGUKZGVzY3JpcHRpb24gb2YgaXQgYmVpbmcgYW4gYWN0dWFsIHJlZ2lv
-biBvbiBhIGNoaXAgZGllIGlzIGFjY3VyYXRlLgoKSXQgc291bmRzIGxpa2UgSSBuZWVkIHRvIGRl
-c2NyaWJlIHRoZSBoYXJkd2FyZSBiZXR0ZXIgaW4gdGhlIGJpbmRpbmdzIGRvY3VtZW50LgoKSm9y
-ZGFuCgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVy
-IG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQ
-cm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZy
-ZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubw==
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+---
+Changes for v2:
+- remove chip dependends parameters from dts bindings
+- add names for register ranges in dts bindings
+- add generic bindings to describe NAND chip representation
+  under the NAND controller node 
+---
+ .../bindings/mtd/cadence-nand-controller.txt       | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+new file mode 100644
+index 000000000000..3d9b4decae24
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+@@ -0,0 +1,48 @@
++* Cadence NAND controller
++
++Required properties:
++  - compatible : "cdns,hpnfc"
++  - reg : Contains two entries, each of which is a tuple consisting of a
++	  physical address and length. The first entry is the address and
++	  length of the controller register set. The second entry is the
++	  address and length of the Slave DMA data port.
++  - reg-names: should contain "cadence_reg" and "cadence_sdma"
++  - interrupts : The interrupt number.
++  - clocks: phandle of the controller core clock (nf_clk).
++  - Children nodes represent the available NAND chips.
++
++Required properties of NAND chips:
++  - reg: shall contain the native Chip Select ids from 0 to max supported by
++    the cadence nand flash controller
++
++Optional properties:
++  - dmas: shall reference DMA channel associated to the NAND controller
++  - cdns,board-delay : Estimated Board delay. The value includes the total
++    round trip delay for the signals and is used for deciding on values
++    associated with data read capture. The example formula for SDR mode is
++    the following:
++    board_delay = RE#PAD_delay + PCB trace to device + PCB trace from device
++    + DQ PAD delay
++
++See Documentation/devicetree/bindings/mtd/nand.txt for more details on
++generic bindings.
++
++Example:
++
++nand_controller: nand-controller @60000000 {
++	  compatible = "cdns,hpnfc";
++	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
++	  reg-names = "cadence_reg", "cadence_sdma";
++	  clocks = <&nf_clk>;
++	  cdns,board-delay = <4830>;
++	  interrupts = <2 0>;
++	  nand@0 {
++	      reg = <0>;
++	      label = "nand-1";
++	  };
++	  nand@1 {
++	      reg = <1>;
++	      label = "nand-2";
++	  };
++
++};
+-- 
+2.15.0
