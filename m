@@ -1,98 +1,80 @@
 From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v2 07/10] usb: dwc3: Registering a role switch in the DRD
- code.
-Date: Tue, 19 Feb 2019 09:40:56 +0800
-Message-ID: <f0c4060c-87e0-dcc7-16a9-85be32a05724@huawei.com>
+Subject: Re: [PATCH v2 01/10] dt-bindings: phy: Add support for HiSilicon's
+ hi3660 USB PHY
+Date: Tue, 19 Feb 2019 09:50:49 +0800
+Message-ID: <a944cd27-f7d5-eece-1ef5-c7dc5dbc311b@huawei.com>
 References: <20190218112310.17860-1-chenyu56@huawei.com>
- <20190218112310.17860-8-chenyu56@huawei.com>
- <8162929c-0d1b-1081-4be0-d40ed6f752d6@arm.com>
+ <20190218112310.17860-2-chenyu56@huawei.com> <20190218201824.GA23724@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8162929c-0d1b-1081-4be0-d40ed6f752d6@arm.com>
+In-Reply-To: <20190218201824.GA23724@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Valentin Schneider <valentin.schneider@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: liuyu712@hisilicon.com, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 2019/2/19 1:30, Valentin Schneider wrote:
-> Hi,
-> 
-> On 18/02/2019 11:23, Yu Chen wrote:
-> [...]
->> @@ -522,6 +556,15 @@ int dwc3_drd_init(struct dwc3 *dwc)
->>  		dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_OTG);
->>  	}
->>  
->> +	dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
->> +	dwc3_role_switch.set = dwc3_usb_role_switch_set;
->> +	dwc3_role_switch.get = dwc3_usb_role_switch_get;
->> +	dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
-> 
-> Building arm64 defconfig gives me this:
-> 
-> drivers/usb/dwc3/drd.o: In function `dwc3_drd_exit':
-> /home/valsch01/Work/kernel/drivers/usb/dwc3/drd.c:604: undefined reference to `usb_role_switch_unregister'
-> /home/valsch01/Work/kernel/drivers/usb/dwc3/drd.c:604:(.text+0x814): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `usb_role_switch_unregister'
-> /home/valsch01/Work/kernel/drivers/usb/dwc3/drd.c:604: undefined reference to `usb_role_switch_unregister'
-> /home/valsch01/Work/kernel/drivers/usb/dwc3/drd.c:604:(.text+0x844): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `usb_role_switch_unregister'
-> drivers/usb/dwc3/drd.o: In function `dwc3_drd_init':
-> /home/valsch01/Work/kernel/drivers/usb/dwc3/drd.c:562: undefined reference to `usb_role_switch_register'
-> /home/valsch01/Work/kernel/drivers/usb/dwc3/drd.c:562:(.text+0xa20): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `usb_role_switch_register'
-> /home/valsch01/Work/kernel/drivers/usb/dwc3/drd.c:562: undefined reference to `usb_role_switch_register'
-> /home/valsch01/Work/kernel/drivers/usb/dwc3/drd.c:562:(.text+0xb4c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `usb_role_switch_register'
-> Makefile:1024: recipe for target 'vmlinux' failed
-> make: *** [vmlinux] Error 1
-> 
-> This has CONFIG_USB_ROLE_SWITCH=m, setting it as a built-in makes the thing
-> linkable.
-> 
-> I suppose that's because defconfig gives us
-> 
->   CONFIG_USB_DWC3_DUAL_ROLE=y
-> 
-> but then that should probably force a CONFIG_USB_ROLE_SWITCH=y. My
-> immediate reaction to this would be to add:
-> 
-> ---
-> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-> index 2b1494460d0c..661b1d2efc8b 100644
-> --- a/drivers/usb/dwc3/Kconfig
-> +++ b/drivers/usb/dwc3/Kconfig
-> @@ -44,6 +44,7 @@ config USB_DWC3_DUAL_ROLE
->  	bool "Dual Role mode"
->  	depends on ((USB=y || USB=USB_DWC3) && (USB_GADGET=y || USB_GADGET=USB_DWC3))
->  	depends on (EXTCON=y || EXTCON=USB_DWC3)
-> +	select USB_ROLE_SWITCH
->  	help
->  	  This is the default mode of working of DWC3 controller where
->  	  both host and gadget features are enabled.
-> ---
->   
-> Not sure how acceptable that is though.
-> 
-Thanks for your notice! I will add this in next version.
-
-> 
->> +	if (ret) {
->> +		dwc3_drd_exit(dwc);
->> +		return PTR_ERR(dwc->role_sw);
->> +	}
+On 2019/2/19 4:18, Rob Herring wrote:
+> On Mon, Feb 18, 2019 at 07:23:01PM +0800, Yu Chen wrote:
+>> This patch adds binding documentation for supporting the hi3660 usb
+>> phy on boards like the HiKey960.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: John Stultz <john.stultz@linaro.org>
+>> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>> ---
+>> v1:
+>> * Fix some format error as suggested by Rob.
+>> v2:
+>> * Change hi3660 usb PHY to hi3660 USB PHY
+>> ---
+>> ---
+>>  .../devicetree/bindings/phy/phy-hi3660-usb3.txt     | 21 +++++++++++++++++++++
+>>  1 file changed, 21 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>> new file mode 100644
+>> index 000000000000..f9a3d56cfdd2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>> @@ -0,0 +1,21 @@
+>> +Hisilicon hi3660 USB PHY
+>> +-----------------------
 >> +
->>  	return 0;
->>  }
->>  
->> @@ -557,4 +600,6 @@ void dwc3_drd_exit(struct dwc3 *dwc)
->>  
->>  	if (!dwc->edev)
->>  		free_irq(dwc->otg_irq, dwc);
+>> +Required properties:
+>> +- compatible: should be "hisilicon,hi3660-usb-phy"
+>> +- #phy-cells: must be 0
+>> +- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
+>> +- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
+>> +- hisilicon,usb3-otg-bc-syscon: phandle of syscon used to control phy.
+>> +- hisilicon,eye-diagram-param: parameter set for phy
+>> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
 >> +
->> +	usb_role_switch_unregister(dwc->role_sw);
->>  }
+>> +Example:
+>> +	usb-phy {
+>> +		compatible = "hisilicon,hi3660-usb-phy";
+>> +		#phy-cells = <0>;
+>> +		hisilicon,pericrg-syscon = <&crg_ctrl>;
+>> +		hisilicon,pctrl-syscon = <&pctrl>;
+>> +		hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
+> 
+> Are most of the registers within one of these blocks? If so, make this 
+> node a child of that node.
+I met a problem when I made this node a child of the syscon node,
+the driver "phy-hi3660-usb3" was not probed.
+Do you have any idea about how to make it probed when it is a child node?
+> 
+>> +		hisilicon,eye-diagram-param = <0x22466e4>;
+>> +	};
+>> -- 
+>> 2.15.0-rc2
 >>
 > 
 > .
