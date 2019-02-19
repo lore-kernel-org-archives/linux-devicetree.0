@@ -1,17 +1,18 @@
 From: David Summers <beagleboard@davidjohnsummers.uk>
-Subject: Re: [PATCH 1/3] ARM: dts: rk3288 Tinker Board (S) sdcard changes
-Date: Tue, 19 Feb 2019 20:13:46 +0000
-Message-ID: <7a5acd4a-71bc-0c94-2b9c-4c3a47a3446a@davidjohnsummers.uk>
-References: <20190217121513.22965-1-beagleboard@davidjohnsummers.uk>
- <20190217121513.22965-2-beagleboard@davidjohnsummers.uk>
- <e83b0404-bd32-a5d5-2e32-e0f49b122b95@arm.com>
- <2d8ac4e6-b825-dca7-d3cb-57cb32b3230b@davidjohnsummers.uk>
- <6a15343b-554b-6059-09af-f6511e740866@arm.com>
+Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
+Date: Tue, 19 Feb 2019 21:09:21 +0000
+Message-ID: <6a26ff97-0b9c-cfdd-9428-74580694220a@davidjohnsummers.uk>
+References: <20190118170232.16142-1-anarsoul@gmail.com>
+ <20190118170232.16142-4-anarsoul@gmail.com> <20190218211035.GA28145@bogus>
+ <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
+ <1245842044.588056.1550527701604@email.ionos.de>
+ <CA+E=qVdMNmVkytCzXqYgJtV196-G=c_bWx+aLvs=Y0iuRpjdRg@mail.gmail.com>
+ <CAL_JsqLROpJMoEPLXaAL_JG1SNufstMDmB4xy_V_p4=duHKPSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6a15343b-554b-6059-09af-f6511e740866@arm.com>
+In-Reply-To: <CAL_JsqLROpJMoEPLXaAL_JG1SNufstMDmB4xy_V_p4=duHKPSA@mail.gmail.com>
 Content-Language: en-PH
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -22,82 +23,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, netdev <netdev@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTgvMDIvMjAxOSAxMTo1NCwgUm9iaW4gTXVycGh5IHdyb3RlOgo+IE9uIDE3LzAyLzIwMTkg
-MTU6MTksIERhdmlkIFN1bW1lcnMgd3JvdGU6Cj4+IE9uIDE3LzAyLzIwMTkgMTQ6MDAsIFJvYmlu
-IE11cnBoeSB3cm90ZToKPj4+IEhpIERhdmlkLAo+Pj4KPj4+IE9uIDIwMTktMDItMTcgMTI6MTUg
-cG0sIERhdmlkIFN1bW1lcnMgd3JvdGU6Cj4+Pj4gVGhpcyBwYXRjaCBtYWtlcyBzb21lIG1pbm9y
-IGNoYW5nZXMgdG8gaG93IHRoZSBzZCBjYXJkIGlzCj4+Pj4gZGVzY3JpYmVkIGluIHRoZSBkZXZp
-Y2UgdHJlZSBmb3IgdGhlIEFTVVMgVGlua2VyIEJvYXJkIChTKS4gSW4KPj4+PiBwYXJ0aWN1bGFy
-IG9uIHRoZSBUaW5rZXIgQm9hcmQgUywgd2hlbiBib290ZWQgZnJvbSB0aGUgZU1NQywgYW5kIHdp
-dGgKPj4+PiBubyBjYXJkIGluIHRoZSBzZCBzbG90LCBhbmQgdGhlIGxvZyBoYXMgZW5kbGVzcyBt
-ZXNzYWdlcyBhYm91dCBub3QKPj4+PiBiZWluZyBhYmxlIHRvIGRldGVjdCB0aGUgY2FyZC4KPj4+
-Pgo+Pj4+IFNldmVyYWwgbWV0aG9kcyB0byByZW1vdmUgdGhpcyBlcnJvciBoYXZlIGJlZW4gdHJp
-ZWQsIHRoZSBvbmx5IG9uZQo+Pj4+IHRoYXQgd29ya3MgaXMgdGhlIGJyb2tlbi1jZCBhbmQgc28g
-dGhhdCBpcyB3aGF0IGlzIGFwcGxpZWQgaGVyZS4KPj4+Cj4+PiBJIGRvbid0IGhhdmUgYSBUaW5r
-ZXIgQm9hcmQsIGJ1dCB0aGUgc3ltcHRvbSBzb3VuZHMgaW5zdGFudGx5IAo+Pj4gZmFtaWxpYXIg
-ZnJvbSBoYWNraW5nIG9uIGFub3RoZXIgUkszMjg4IGJveDsgaGF2ZSB5b3UgdHJpZWQgYWRkaW5n
-IAo+Pj4gInJlZ3VsYXRvci1hbHdheXMtb24iIHRvIHRoZSB2Y2Npb19zZCByZWd1bGF0b3I/Cj4+
-Pgo+Pj4gV2l0aCB0aGUgcmVmZXJlbmNlIGRlc2lnbiAod2hpY2ggSSB3b3VsZCBhc3N1bWUgdGhl
-IFRpbmtlciBCb2FyZCBoYXMgCj4+PiBubyByZWFzb24gdG8gZGV2aWF0ZSBmcm9tIGluIHRoaXMg
-YXJlYSksIHRoZSBDRCBwaW4gaXMgZWl0aGVyIHdpcmVkIAo+Pj4gZGlyZWN0bHkgdG8gdGhlIFNv
-QyB3aXRoIG5vIGV4dGVybmFsIHB1bGwtdXAsIG9yIGV4cGxpY2l0bHkgcHVsbGVkIAo+Pj4gdXAg
-dG8gVkNDSU9fU0QuIEVpdGhlciB3YXksIHdoZW4gdGhlIGR3bW1jIGRyaXZlciBwcm9iZXMgYW5k
-IAo+Pj4gZGlzY292ZXJzIHRoZXJlIGlzIG5vIGNhcmQgcHJlc2VudCwgaXQgc2V0cyB0aGUgCj4+
-PiBjdXJyZW50bHktdW5uZWNlc3NhcnkgdnFtbWMtc3VwcGx5IGFzIGluYWN0aXZlLCBhbmQgdGh1
-cyB0aGUgCj4+PiByZWd1bGF0b3IgY29yZSB0dXJucyBvZmYgVkNDSU9fU0QgZW50aXJlbHkuIFVu
-Zm9ydHVuYXRlbHksIHRoaXMgCj4+PiByZW1vdmVzIHRoZSB2b2x0YWdlIGZyb20gdGhlIGVudGly
-ZSBJL08gZG9tYWluIGluY2x1ZGluZyB0aGUgCj4+PiBpbnRlcm5hbCBwdWxsLXVwLCB3aGljaCBl
-bmRzIHVwIGxlYXZpbmcgdGhlIENEIHBpbiBmbG9hdGluZyBhbmQgCj4+PiBnZW5lcmF0aW5nIHNw
-dXJpb3VzIGV2ZW50cy4KPj4+Cj4+PiBSb2Jpbi4KPj4KPj4gSGkgUm9iaW4sCj4+Cj4+IEFuIGlu
-dGVyZXN0aW5nIHN1Z2dlc3Rpb24gLSBubyBpdCBoYXNuJ3QgYmVlbiB0cmllZCB0byBhbHdheXMg
-c2V0IHRoZSAKPj4gdmNjaW9fc2QgcmVndWxhdG9yIG9uLiBXaWxsIGdpdmUgaXQgYSBnbyBvbiBB
-cmNoTGludXggQXJtLgo+Pgo+PiBJIGd1ZXNzIHRoaXMgd291bGQgZXhwbGFpbiB3aHkgdGhlIFRp
-bmtlciBCb2FyZCBib290aW5nIGZyb20gc2QgCj4+IGRvZXNuJ3Qgc2VlIHRoZSBlcnJvciwgYXMg
-aXRzIGVuYWJsZWQgcHJvYmFibHkgaW4gdWJvb3QgYW5kIHRoZW4gCj4+IGtlZXBzIHdvcmtpbmcu
-Cj4+Cj4+IElJUkMgdGhvdWdoLCBpZiBib290aW5nIHRoZSBUQlMgZnJvbSBlTU1DLCB0aGVuIGlu
-c2VydGluZyBhbiBzZCBjYXJkIAo+PiBhbmQgdGhlIGVycm9ycyBzdG9wLiBJIGd1ZXNzIHRoaXMg
-d291bGRuJ3QgaGFwcGVuIGlmIHRoZSBwb3dlciB3YXNuJ3QgCj4+IGFwcGxpZWQ/Cj4KPiBUaGF0
-J3MgdGhlIGZ1biBwYXJ0IG9mIHRoaXMgc2NlbmFyaW8gLSB0aGUgcHJlc2VuY2Ugb2YgYSBjYXJk
-IGlzIAo+IHVuYW1iaWd1b3VzLCBpdCdzIG9ubHkgdGhlIGFic2VuY2Ugb2Ygb25lIHdoaWNoIGRl
-cGVuZHMgb24gdGhlIHB1bGwtdXAgCj4gc3RhdGUsIHNvIHdoZW5ldmVyIGFzIGEgY2FyZCBpcyBp
-bnNlcnRlZCBldmVyeXRoaW5nIGRvZXMgd29yayAKPiBjb3JyZWN0bHkuIMKgQXNzdW1pbmcgdGhl
-eSBhcmUgdGhlIHNhbWUgZXJyb3JzIEkgd2FzIHNlZWluZywgdGhleSdyZSAKPiBmcm9tIHRoZSBk
-cml2ZXIgKnRoaW5raW5nKiBhIGNhcmQgaXMgaW5zZXJ0ZWQgZHVlIHRvIENEIGZsb2F0aW5nIGxv
-dywgCj4gdGhlbiBmYWlsaW5nIHRvIGNvbW11bmljYXRlIHdpdGggaXQsIGFmdGVyIHdoaWNoIGl0
-IHBvd2VycyBkb3duIHRoZSAKPiBJL08gaW50ZXJmYWNlIGFnYWluIGFuZCB0aGUgd2hvbGUgY3lj
-bGUgYmVnaW5zIGFuZXcuCj4KPj4gSSBndWVzcyBhbHNvIHRoYXQgInJlZ3VsYXRvci1hbHdheXMt
-b24iIGlzIGEgcXVpY2sgdGVzdCAtIGJ1dCB0aGF0IAo+PiBmb3Igc3VibWlzc2lvbiB0byBrZXJu
-ZWwgaXQgd291bGQgYmUgYmV0dGVyIGRvbmUgdmlhIAo+PiAibW1jLXB3cnNlcS1zaW1wbGUiPwo+
-Cj4gTm8sIGl0J3MgYSB2YWxpZCBkZXNjcmlwdGlvbiBvZiB0aGUgaGFyZHdhcmUgdG8gc2F5ICJk
-aXNhYmxpbmcgdGhpcyAKPiByZWd1bGF0b3IgbWFrZXMgc29tZXRoaW5nIGZhaWwgdG8gd29yayBh
-cyBleHBlY3RlZCIgaWYgdGhhdCBpcyB0cnVseSAKPiB0aGUgY2FzZS4gQmVzaWRlcywgcHdyc2Vx
-IGlzIGFib3V0IGhvdyB0byBpbml0aWFsaXNlIGEgZGV0ZWN0ZWQgCj4gcHJlc2VudCBjYXJkLCBu
-b3QgaG93IHRvIGNvcnJlY3RseSBkZXRlY3QgdGhhdCBwcmVzZW5jZSBpbiB0aGUgZmlyc3QgCj4g
-cGxhY2UuCj4KPj4gQW55d2F5IEkgc2V0IHVwIGEgdGVzdCAtIHNvIHdlIGNhbiBjb25maXJtIHRo
-aXMuCj4KPiBHcmVhdCAtIHRoZXJlIGlzIG9mIGNvdXJzZSBzdGlsbCB0aGUgcG9zc2liaWxpdHkg
-dGhhdCB0aGUgcGluIHJlYWxseSAKPiBpc24ndCB3aXJlZCB1cCBhdCBhbGwsIGluIHdoaWNoIGNh
-c2UgaWdub3JpbmcgQ0QgYW5kIHRha2luZyB0aGUgQ1BVIAo+IG92ZXJoZWFkIG9mIHBvbGxpbmcg
-d291bGQgYmUgdGhlIG9ubHkgb3B0aW9uLCBidXQgdGhlIHZlbmRvciBEVCAKPiBkb2Vzbid0IGhh
-dmUgYW55IHNpZ25zIHRvIHN1Z2dlc3QgdGhhdCdzIHRoZSBjYXNlLCBhbmQgbWFrZXMgbWUgbGVh
-biAKPiBtb3JlIHRvd2FyZHMgdGhlIHB1bGwtdXAgaXNzdWUuCj4KPiBSb2Jpbi4KClJvYmluLAoK
-SGVhcmQgYmFjayBmcm9tIHRoZSB1c2VyIG9uIEFyY2hMaW51eCBBcm0gd2hvIGhhcyBhIHRpbmtl
-ciBCb2FyZCBTLCBoZSAKdGVzdGVkIHlvdXIgc29sdXRpb24sIGFuZCBpdCB3b3JrZWQuCgpFeGNl
-bGxlbnQsIGFzIGl0IG1lYW5zIHRoZSBDUFUgd29uJ3QgaGF2ZSB0byBwb2xsIHRoZSBjYXJkIQoK
-SSdsbCBwcm9iYWJseSBhZGQgYm90aCAicmVndWxhdG9yLWFsd2F5cy1vbjsiIGFuZCAicmVndWxh
-dG9yLWJvb3Qtb247IiwgCmFzIHJlYWRpbmcgdGhlIHJlZ3VsYXRvciBkb2N1bWVudGF0aW9uLCBh
-bmQgdGhlIFRpbmtlciBCb2FyZCBib290cyBmcm9tIApzZCBjYXJkLCBhbmQgdGhlIFRpbmtlckJv
-YXJkIFMgaGFzIHRoZSBvcHRpb24gb2YgYm9vdGluZyBmcm9tIHRoZSBzZCAKY2FyZCAtIHdlIGNh
-biBiZSBmYWlybHkgc3VyZSB0aGF0IHVib290IGhhcyBhbHJlYWR5IGVuYWJsZWQgdGhlIHBvd2Vy
-IApzdXBwbHkuCgpTbyBiZXN0IHRvIHdpdGhkcmF3IHRoaXMgcGF0Y2guIEknbGwgZG8gYSBmcmVz
-aCBvbmUsIHdoZW4gSSBnZXQgdGltZSAtIApwcm9iYWJseSB0aGUgd2Vla2VuZCAuLi4KClRoYW5r
-cyBmb3IgdGhlIGhlbHAsIEkgc2hvdWxkIGhhdmUgdGhvdWdoIG9mIGxvb2tpbmcgYmV5b25kIHNk
-bW1jIHBhcnQgCm9mIGRldmljZSB0cmVlLiBTbyB3ZSBhcmUgZ3JhdGVmdWwgdGhhdCB5b3UgcmVt
-ZW1iZXJlZCB5b3VyIHNvbHV0aW9uIAp3aGVuIHlvdSBoYWQgdGhlIHByb2JsZW0gb24gYW5vdGhl
-ciBib2FyZC4KClJlZ2FyZHMsCgpEYXZpZAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 19/02/2019 14:17, Rob Herring wrote:
+> On Mon, Feb 18, 2019 at 4:28 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>> On Mon, Feb 18, 2019 at 2:08 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
+>>> Hi Vasily,
+>> Hi Stefan,
+>>
+>>>> Vasily Khoruzhick <anarsoul@gmail.com> hat am 18. Februar 2019 um 22:24 geschrieben:
+>>>>
+>>>>
+>>>> On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
+>>>>> On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
+>>>>>> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+>>>>>>
+>>>>>> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+>>>>>> ---
+>>>>>>   .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
+>>>>>>   1 file changed, 35 insertions(+)
+>>>>>>   create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..8357f242ae4c
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+>>>>>> @@ -0,0 +1,35 @@
+>>>>>> +RTL8723BS/RTL8723CS Bluetooth
+>>>>>> +---------------------
+>>>>>> +
+>>>>>> +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
+>>>>>> +BT is connected over serial. It speaks H5 protocol with few extra commands
+>>>>>> +to upload firmware and change module speed.
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +
+>>>>>> + - compatible: should be one of the following:
+>>>>>> +   * "realtek,rtl8723bs-bt"
+>>>>>> +   * "realtek,rtl8723cs-bt"
+>>>>>> +Optional properties:
+>>>>>> +
+>>>>>> + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
+>>>>>> + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
+>>>>>> + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
+>>>>>> + - firmware-postfix: firmware postfix to be used for firmware config
+>>> sorry, i didn't noticed your great series before. David and i working at the same stuff but for the Asus Tinker Board.
+>>>
+>>> I created a similiar yet untested patch version for hci_h5 [1]. Maybe it's useful.
+>> Looks good to me, but you may need to add firmware-postfix.
+>>
+>>> Just a comment about the binding. It's really necessary to add the reset-gpio? Can't we use the enable-gpio with inverse polarity for this?
+>> Yes, we can use enable-gpio instead of reset-gpio on pine64 and pinebook.
+> Then why do we have both? Reset and enable are distinct. The inverse
+> of enable-gpios is typically powerdown-gpios, not reset-gpios.
+>
+> Rob
+
+Both data sheets that I know:
+
+http://cit.odessa.ua/media/pdf/Intel-Compute-Stick/FN-Link_F23BDSM25-W1.pdf
+http://files.pine64.org/doc/datasheet/pine64/RTL8723BS.pdf
+
+BT_RST_N BT Reset IN / BT_DIS# General Purpose I/O Pin
+
+So from the datasheet there is only one pin. And from its name it sounds 
+like reset.
+
+This said though the datasheets of these Realtek devices are a bit thin ....
