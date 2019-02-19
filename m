@@ -1,25 +1,90 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH v7 5/6] arm64: dts: mt8183: add pintcrl file
-Date: Tue, 19 Feb 2019 15:45:10 +0800
-Message-ID: <CANMq1KDzYSJSKXZJd=xuwP+uFrDY-jGO1Yt2koH7uD5hpJmjJw@mail.gmail.com>
-References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com> <1550210558-30516-6-git-send-email-erin.lo@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: pierre Kuo <vichy.kuo@gmail.com>
+Subject: [PATCH 1/1] of: reserved_mem: fix reserve memory leak
+Date: Tue, 19 Feb 2019 15:45:00 +0800
+Message-ID: <20190219074500.16454-1-vichy.kuo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550210558-30516-6-git-send-email-erin.lo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Cheng Mars <mars.cheng@mediatek.com>, Eddie Huang <eddie.huang@mediatek>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pierre Kuo <vichy.kuo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 2:07 PM Erin Lo <erin.lo@mediatek.com> wrote:
-> Subject: [PATCH v7 5/6] arm64: dts: mt8183: add pintcrl file
+The __reserved_mem_init_node will call region specific reserved memory
+init codes, but once all compatibled init codes failed, the memory region
+will left in memory.reserved and cause leakage.
 
-minor spelling mistake in the commit title: pinctrl
+Take cma reserve memory DTS for example, if user declare 1MB size,
+which is not align to (PAGE_SIZE << max(MAX_ORDER - 1,
+pageblock_order)), rmem_cma_setup will return -EINVAL.
+Meanwhile, rmem_dma_setup will also return -EINVAL since "reusable"
+property is not set. If finally there is no reserved memory init pick up
+this memory, kernel will left the 1MB leak in memory.reserved.
 
->
-> This patch adds pinctrl file for mt8183.
->
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> ---
+This patch will remove this kind of memory from memory.reserved, only
+when __reserved_mem_init_node return neither 0 nor -ENOENT.
+
+Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
+---
+ drivers/of/of_reserved_mem.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 1977ee0adcb1..d3bde057ec46 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -181,6 +181,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+ {
+ 	extern const struct of_device_id __reservedmem_of_table[];
+ 	const struct of_device_id *i;
++	int ret = -ENOENT;
+ 
+ 	for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
+ 		reservedmem_of_init_fn initfn = i->data;
+@@ -189,13 +190,14 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+ 		if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
+ 			continue;
+ 
+-		if (initfn(rmem) == 0) {
++		ret = initfn(rmem);
++		if (ret == 0) {
+ 			pr_info("initialized node %s, compatible id %s\n",
+ 				rmem->name, compat);
+-			return 0;
++			break;
+ 		}
+ 	}
+-	return -ENOENT;
++	return ret;
+ }
+ 
+ static int __init __rmem_cmp(const void *a, const void *b)
+@@ -255,7 +257,9 @@ void __init fdt_init_reserved_mem(void)
+ 		int len;
+ 		const __be32 *prop;
+ 		int err = 0;
++		int nomap;
+ 
++		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+ 		prop = of_get_flat_dt_prop(node, "phandle", &len);
+ 		if (!prop)
+ 			prop = of_get_flat_dt_prop(node, "linux,phandle", &len);
+@@ -265,8 +269,16 @@ void __init fdt_init_reserved_mem(void)
+ 		if (rmem->size == 0)
+ 			err = __reserved_mem_alloc_size(node, rmem->name,
+ 						 &rmem->base, &rmem->size);
+-		if (err == 0)
+-			__reserved_mem_init_node(rmem);
++		if (err == 0) {
++			err = __reserved_mem_init_node(rmem);
++			if (err != 0 && err != -ENOENT) {
++				pr_info("node %s compatible matching fail\n",
++					rmem->name);
++				memblock_free(rmem->base, rmem->size);
++				if (nomap)
++					memblock_add(rmem->base, rmem->size);
++			}
++		}
+ 	}
+ }
+ 
+-- 
+2.17.1
