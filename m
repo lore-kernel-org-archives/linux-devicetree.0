@@ -1,254 +1,117 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v2 1/3] clk: at91: sckc: add support to specify registers
- bit offsets
-Date: Tue, 19 Feb 2019 09:17:52 +0000
-Message-ID: <8af47d4c-667f-bee1-e710-4f3276a944af@microchip.com>
-References: <1550146447-1441-1-git-send-email-claudiu.beznea@microchip.com>
- <1550146447-1441-2-git-send-email-claudiu.beznea@microchip.com>
- <20190218210811.GV10129@piout.net>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Add one new cell to present
+ hardware slave id
+Date: Tue, 19 Feb 2019 10:30:44 +0100
+Message-ID: <CAMuHMdWPZGYpvANL_V=YszPWjtTA+ZnU6GVDmn188LC=eC005Q@mail.gmail.com>
+References: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
+ <CAK8P3a2zkhrZLMi5KZ5=fGJCt85dad3_pZC0o7GqcwJkk4es9w@mail.gmail.com>
+ <CAMz4ku+PR4bHtcPu2uT2f974+FWJVi8Tp3WzmuqE1TS-M-QawQ@mail.gmail.com>
+ <CAMz4kuLEut0LqZ4bSAGJDufE8xHr6DgZ3Z1RCLQ10q_k6MUesw@mail.gmail.com>
+ <CAK8P3a1Zq6XjymG3sAaHGeNRxU5UXPfJPbi0A9s47cTVK7vC3g@mail.gmail.com>
+ <CAMz4kuL=B53xLk4SFbrwWeUhp4P9zbUfOmXgftQCEjVSwOnD5A@mail.gmail.com>
+ <CAK8P3a03rPjWQvGrDupoTAywVmjCZdpSJpqW9Sv=NVPR2uwZeQ@mail.gmail.com> <CAMz4kuKnVppCB0-9LVgq8bya6=iWPhMcrHL_N53QfiU5Kn9YAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218210811.GV10129@piout.net>
-Content-Language: en-US
-Content-ID: <2CC93EF21D409C4DA9A2C46CE4B5A8C8@namprd11.prod.outlook.com>
+In-Reply-To: <CAMz4kuKnVppCB0-9LVgq8bya6=iWPhMcrHL_N53QfiU5Kn9YAA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Dan Williams <dan.j.williams@intel.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, eric.long@unisoc.com, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCk9uIDE4LjAyLjIwMTkgMjM6MDgsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBI
-aSwNCj4gDQo+IE9uIDE0LzAyLzIwMTkgMTI6MTQ6MjgrMDAwMCwgQ2xhdWRpdS5CZXpuZWFAbWlj
-cm9jaGlwLmNvbSB3cm90ZToNCj4+IEZyb206IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5l
-YUBtaWNyb2NoaXAuY29tPg0KPj4NCj4+IERpZmZlcmVudCBJUHMgdXNlcyBkaWZmZXJlbnQgb2Zm
-c2V0cyBpbiByZWdpc3RlcnMgZm9yIHRoZSBzYW1lDQo+PiBmdW5jdGlvbmFsaXR5LCB0aHVzIGFk
-YXB0IHRoZSBkcml2ZXIgdG8gc3VwcG9ydCB0aGlzLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IENs
-YXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPj4gLS0tDQo+PiAg
-ZHJpdmVycy9jbGsvYXQ5MS9zY2tjLmMgfCAxMTIgKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrLS0tLS0tLS0tLS0tLS0tDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDc3IGluc2VydGlvbnMo
-KyksIDM1IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9hdDkx
-L3Nja2MuYyBiL2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jDQo+PiBpbmRleCBhYjZlY2VmYzQ5YWQu
-LmI3MTYzZDNhMjI2OSAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jDQo+
-PiArKysgYi9kcml2ZXJzL2Nsay9hdDkxL3Nja2MuYw0KPj4gQEAgLTIyLDE1ICsyMiwyNSBAQA0K
-Pj4gICNkZWZpbmUgU0xPV0NLX1NXX1RJTUVfVVNFQwkoKFNMT1dDS19TV19DWUNMRVMgKiBVU0VD
-X1BFUl9TRUMpIC8gXA0KPj4gIAkJCQkgU0xPV19DTE9DS19GUkVRKQ0KPj4gIA0KPj4gLSNkZWZp
-bmUJQVQ5MV9TQ0tDX0NSCQkJMHgwMA0KPj4gLSNkZWZpbmUJCUFUOTFfU0NLQ19SQ0VOCQkoMSA8
-PCAwKQ0KPj4gLSNkZWZpbmUJCUFUOTFfU0NLQ19PU0MzMkVOCSgxIDw8IDEpDQo+PiAtI2RlZmlu
-ZQkJQVQ5MV9TQ0tDX09TQzMyQllQCSgxIDw8IDIpDQo+PiAtI2RlZmluZQkJQVQ5MV9TQ0tDX09T
-Q1NFTAkoMSA8PCAzKQ0KPj4gKyNkZWZpbmUJQVQ5MV9TQ0tDX0NSCQkweDAwDQo+PiArI2RlZmlu
-ZQkJQVQ5MV9TQ0tDX1JDRU4ob2ZmKQkoMSA8PCAob2ZmKS0+Y3JfcmNlbikNCj4+ICsjZGVmaW5l
-CQlBVDkxX1NDS0NfT1NDMzJFTihvZmYpCSgxIDw8IChvZmYpLT5jcl9vc2MzMmVuKQ0KPj4gKyNk
-ZWZpbmUJCUFUOTFfU0NLQ19PU0MzMkJZUChvZmYpCSgxIDw8IChvZmYpLT5jcl9vc2MzMmJ5cCkN
-Cj4+ICsjZGVmaW5lCQlBVDkxX1NDS0NfT1NDU0VMKG9mZikJKDEgPDwgKG9mZiktPmNyX29zY3Nl
-bCkNCj4gDQo+IFlvdSBkb24ndCBuZWVkIHRob3NlIG1hY3JvcyBpZiB5b3Ugc3RvcmUgQklUKG9m
-ZikgaW5zdGVhZCBvZiBvZmYgaW4gdGhlDQo+IG1lbWJlcnMgb2YgY2xrX3Nsb3dfb2Zmc2V0cy4N
-Cg0KT2ssIEknbGwgdGFrZSBjYXJlIG9mIGl0Lg0KDQo+IA0KPj4gKw0KPj4gKyNkZWZpbmUgQVQ5
-MV9TQ0tDX09GRlNFVF9JTlZBTElEICAgICAgICAoMzIpDQo+PiArDQo+IA0KPiBUaGlzIHdvdWxk
-IGFsc28gcmVtb3ZlIHRoZSBuZWVkIGZvciB0aGF0IGRlZmluZSBhcyAwIHdvdWxkIG1lYW4gdGhh
-dCB0aGUNCj4gYml0IGRvZXNuJ3QgZXhpc3QuDQoNCkFncmVlLg0KDQo+IA0KPj4gK3N0cnVjdCBj
-bGtfc2xvd19vZmZzZXRzIHsNCj4+ICsJdTggY3JfcmNlbjsNCj4+ICsJdTggY3Jfb3NjMzJlbjsN
-Cj4+ICsJdTggY3Jfb3NjMzJieXA7DQo+PiArCXU4IGNyX29zY3NlbDsNCj4+ICt9Ow0KPj4gIA0K
-Pj4gIHN0cnVjdCBjbGtfc2xvd19vc2Mgew0KPj4gIAlzdHJ1Y3QgY2xrX2h3IGh3Ow0KPj4gIAl2
-b2lkIF9faW9tZW0gKnNja2NyOw0KPj4gKwljb25zdCBzdHJ1Y3QgY2xrX3Nsb3dfb2Zmc2V0cyAq
-b2Zmc2V0czsNCj4+ICAJdW5zaWduZWQgbG9uZyBzdGFydHVwX3VzZWM7DQo+PiAgfTsNCj4+ICAN
-Cj4+IEBAIC0zOSw2ICs0OSw3IEBAIHN0cnVjdCBjbGtfc2xvd19vc2Mgew0KPj4gIHN0cnVjdCBj
-bGtfc2FtYTVkNF9zbG93X29zYyB7DQo+PiAgCXN0cnVjdCBjbGtfaHcgaHc7DQo+PiAgCXZvaWQg
-X19pb21lbSAqc2NrY3I7DQo+PiArCWNvbnN0IHN0cnVjdCBjbGtfc2xvd19vZmZzZXRzICpvZmZz
-ZXRzOw0KPj4gIAl1bnNpZ25lZCBsb25nIHN0YXJ0dXBfdXNlYzsNCj4+ICAJYm9vbCBwcmVwYXJl
-ZDsNCj4+ICB9Ow0KPj4gQEAgLTQ4LDYgKzU5LDcgQEAgc3RydWN0IGNsa19zYW1hNWQ0X3Nsb3df
-b3NjIHsNCj4+ICBzdHJ1Y3QgY2xrX3Nsb3dfcmNfb3NjIHsNCj4+ICAJc3RydWN0IGNsa19odyBo
-dzsNCj4+ICAJdm9pZCBfX2lvbWVtICpzY2tjcjsNCj4+ICsJY29uc3Qgc3RydWN0IGNsa19zbG93
-X29mZnNldHMgKm9mZnNldHM7DQo+PiAgCXVuc2lnbmVkIGxvbmcgZnJlcXVlbmN5Ow0KPj4gIAl1
-bnNpZ25lZCBsb25nIGFjY3VyYWN5Ow0KPj4gIAl1bnNpZ25lZCBsb25nIHN0YXJ0dXBfdXNlYzsN
-Cj4+IEBAIC01OCw2ICs3MCw3IEBAIHN0cnVjdCBjbGtfc2xvd19yY19vc2Mgew0KPj4gIHN0cnVj
-dCBjbGtfc2FtOXg1X3Nsb3cgew0KPj4gIAlzdHJ1Y3QgY2xrX2h3IGh3Ow0KPj4gIAl2b2lkIF9f
-aW9tZW0gKnNja2NyOw0KPj4gKwljb25zdCBzdHJ1Y3QgY2xrX3Nsb3dfb2Zmc2V0cyAqb2Zmc2V0
-czsNCj4+ICAJdTggcGFyZW50Ow0KPj4gIH07DQo+PiAgDQo+PiBAQCAtNjksMTAgKzgyLDExIEBA
-IHN0YXRpYyBpbnQgY2xrX3Nsb3dfb3NjX3ByZXBhcmUoc3RydWN0IGNsa19odyAqaHcpDQo+PiAg
-CXZvaWQgX19pb21lbSAqc2NrY3IgPSBvc2MtPnNja2NyOw0KPj4gIAl1MzIgdG1wID0gcmVhZGwo
-c2NrY3IpOw0KPj4gIA0KPj4gLQlpZiAodG1wICYgKEFUOTFfU0NLQ19PU0MzMkJZUCB8IEFUOTFf
-U0NLQ19PU0MzMkVOKSkNCj4+ICsJaWYgKHRtcCAmIChBVDkxX1NDS0NfT1NDMzJCWVAob3NjLT5v
-ZmZzZXRzKSB8DQo+PiArCQkgICBBVDkxX1NDS0NfT1NDMzJFTihvc2MtPm9mZnNldHMpKSkNCj4+
-ICAJCXJldHVybiAwOw0KPj4gIA0KPj4gLQl3cml0ZWwodG1wIHwgQVQ5MV9TQ0tDX09TQzMyRU4s
-IHNja2NyKTsNCj4+ICsJd3JpdGVsKHRtcCB8IEFUOTFfU0NLQ19PU0MzMkVOKG9zYy0+b2Zmc2V0
-cyksIHNja2NyKTsNCj4+ICANCj4+ICAJdXNsZWVwX3JhbmdlKG9zYy0+c3RhcnR1cF91c2VjLCBv
-c2MtPnN0YXJ0dXBfdXNlYyArIDEpOw0KPj4gIA0KPj4gQEAgLTg1LDEwICs5OSwxMCBAQCBzdGF0
-aWMgdm9pZCBjbGtfc2xvd19vc2NfdW5wcmVwYXJlKHN0cnVjdCBjbGtfaHcgKmh3KQ0KPj4gIAl2
-b2lkIF9faW9tZW0gKnNja2NyID0gb3NjLT5zY2tjcjsNCj4+ICAJdTMyIHRtcCA9IHJlYWRsKHNj
-a2NyKTsNCj4+ICANCj4+IC0JaWYgKHRtcCAmIEFUOTFfU0NLQ19PU0MzMkJZUCkNCj4+ICsJaWYg
-KHRtcCAmIEFUOTFfU0NLQ19PU0MzMkJZUChvc2MtPm9mZnNldHMpKQ0KPj4gIAkJcmV0dXJuOw0K
-Pj4gIA0KPj4gLQl3cml0ZWwodG1wICYgfkFUOTFfU0NLQ19PU0MzMkVOLCBzY2tjcik7DQo+PiAr
-CXdyaXRlbCh0bXAgJiB+QVQ5MV9TQ0tDX09TQzMyRU4ob3NjLT5vZmZzZXRzKSwgc2NrY3IpOw0K
-Pj4gIH0NCj4+ICANCj4+ICBzdGF0aWMgaW50IGNsa19zbG93X29zY19pc19wcmVwYXJlZChzdHJ1
-Y3QgY2xrX2h3ICpodykNCj4+IEBAIC05NywxMCArMTExLDEwIEBAIHN0YXRpYyBpbnQgY2xrX3Ns
-b3dfb3NjX2lzX3ByZXBhcmVkKHN0cnVjdCBjbGtfaHcgKmh3KQ0KPj4gIAl2b2lkIF9faW9tZW0g
-KnNja2NyID0gb3NjLT5zY2tjcjsNCj4+ICAJdTMyIHRtcCA9IHJlYWRsKHNja2NyKTsNCj4+ICAN
-Cj4+IC0JaWYgKHRtcCAmIEFUOTFfU0NLQ19PU0MzMkJZUCkNCj4+ICsJaWYgKHRtcCAmIEFUOTFf
-U0NLQ19PU0MzMkJZUChvc2MtPm9mZnNldHMpKQ0KPj4gIAkJcmV0dXJuIDE7DQo+PiAgDQo+PiAt
-CXJldHVybiAhISh0bXAgJiBBVDkxX1NDS0NfT1NDMzJFTik7DQo+PiArCXJldHVybiAhISh0bXAg
-JiBBVDkxX1NDS0NfT1NDMzJFTihvc2MtPm9mZnNldHMpKTsNCj4+ICB9DQo+PiAgDQo+PiAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBjbGtfb3BzIHNsb3dfb3NjX29wcyA9IHsNCj4+IEBAIC0xMTQsNyAr
-MTI4LDggQEAgYXQ5MV9jbGtfcmVnaXN0ZXJfc2xvd19vc2Modm9pZCBfX2lvbWVtICpzY2tjciwN
-Cj4+ICAJCQkgICBjb25zdCBjaGFyICpuYW1lLA0KPj4gIAkJCSAgIGNvbnN0IGNoYXIgKnBhcmVu
-dF9uYW1lLA0KPj4gIAkJCSAgIHVuc2lnbmVkIGxvbmcgc3RhcnR1cCwNCj4+IC0JCQkgICBib29s
-IGJ5cGFzcykNCj4+ICsJCQkgICBib29sIGJ5cGFzcywNCj4+ICsJCQkgICBjb25zdCBzdHJ1Y3Qg
-Y2xrX3Nsb3dfb2Zmc2V0cyAqb2Zmc2V0cykNCj4+ICB7DQo+PiAgCXN0cnVjdCBjbGtfc2xvd19v
-c2MgKm9zYzsNCj4+ICAJc3RydWN0IGNsa19odyAqaHc7DQo+PiBAQCAtMTM3LDkgKzE1MiwxMSBA
-QCBhdDkxX2Nsa19yZWdpc3Rlcl9zbG93X29zYyh2b2lkIF9faW9tZW0gKnNja2NyLA0KPj4gIAlv
-c2MtPmh3LmluaXQgPSAmaW5pdDsNCj4+ICAJb3NjLT5zY2tjciA9IHNja2NyOw0KPj4gIAlvc2Mt
-PnN0YXJ0dXBfdXNlYyA9IHN0YXJ0dXA7DQo+PiArCW9zYy0+b2Zmc2V0cyA9IG9mZnNldHM7DQo+
-PiAgDQo+PiAgCWlmIChieXBhc3MpDQo+PiAtCQl3cml0ZWwoKHJlYWRsKHNja2NyKSAmIH5BVDkx
-X1NDS0NfT1NDMzJFTikgfCBBVDkxX1NDS0NfT1NDMzJCWVAsDQo+PiArCQl3cml0ZWwoKHJlYWRs
-KHNja2NyKSAmIH5BVDkxX1NDS0NfT1NDMzJFTihvc2MtPm9mZnNldHMpKSB8DQo+PiArCQkJCQlB
-VDkxX1NDS0NfT1NDMzJCWVAob3NjLT5vZmZzZXRzKSwNCj4+ICAJCSAgICAgICBzY2tjcik7DQo+
-PiAgDQo+PiAgCWh3ID0gJm9zYy0+aHc7DQo+PiBAQCAtMTUzLDcgKzE3MCw4IEBAIGF0OTFfY2xr
-X3JlZ2lzdGVyX3Nsb3dfb3NjKHZvaWQgX19pb21lbSAqc2NrY3IsDQo+PiAgfQ0KPj4gIA0KPj4g
-IHN0YXRpYyB2b2lkIF9faW5pdA0KPj4gLW9mX2F0OTFzYW05eDVfY2xrX3Nsb3dfb3NjX3NldHVw
-KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIHZvaWQgX19pb21lbSAqc2NrY3IpDQo+PiArb2ZfYXQ5
-MXNhbTl4NV9jbGtfc2xvd19vc2Nfc2V0dXAoc3RydWN0IGRldmljZV9ub2RlICpucCwgdm9pZCBf
-X2lvbWVtICpzY2tjciwNCj4+ICsJCQkJIGNvbnN0IHN0cnVjdCBjbGtfc2xvd19vZmZzZXRzICpv
-ZmZzZXRzKQ0KPj4gIHsNCj4+ICAJc3RydWN0IGNsa19odyAqaHc7DQo+PiAgCWNvbnN0IGNoYXIg
-KnBhcmVudF9uYW1lOw0KPj4gQEAgLTE2Nyw3ICsxODUsNyBAQCBvZl9hdDkxc2FtOXg1X2Nsa19z
-bG93X29zY19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLCB2b2lkIF9faW9tZW0gKnNja2Ny
-KQ0KPj4gIAlieXBhc3MgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJhdG1lbCxvc2MtYnlw
-YXNzIik7DQo+PiAgDQo+PiAgCWh3ID0gYXQ5MV9jbGtfcmVnaXN0ZXJfc2xvd19vc2Moc2NrY3Is
-IG5hbWUsIHBhcmVudF9uYW1lLCBzdGFydHVwLA0KPj4gLQkJCQkJIGJ5cGFzcyk7DQo+PiArCQkJ
-CQlieXBhc3MsIG9mZnNldHMpOw0KPj4gIAlpZiAoSVNfRVJSKGh3KSkNCj4+ICAJCXJldHVybjsN
-Cj4+ICANCj4+IEBAIC0xOTUsNyArMjEzLDcgQEAgc3RhdGljIGludCBjbGtfc2xvd19yY19vc2Nf
-cHJlcGFyZShzdHJ1Y3QgY2xrX2h3ICpodykNCj4+ICAJc3RydWN0IGNsa19zbG93X3JjX29zYyAq
-b3NjID0gdG9fY2xrX3Nsb3dfcmNfb3NjKGh3KTsNCj4+ICAJdm9pZCBfX2lvbWVtICpzY2tjciA9
-IG9zYy0+c2NrY3I7DQo+PiAgDQo+PiAtCXdyaXRlbChyZWFkbChzY2tjcikgfCBBVDkxX1NDS0Nf
-UkNFTiwgc2NrY3IpOw0KPj4gKwl3cml0ZWwocmVhZGwoc2NrY3IpIHwgQVQ5MV9TQ0tDX1JDRU4o
-b3NjLT5vZmZzZXRzKSwgc2NrY3IpOw0KPj4gIA0KPj4gIAl1c2xlZXBfcmFuZ2Uob3NjLT5zdGFy
-dHVwX3VzZWMsIG9zYy0+c3RhcnR1cF91c2VjICsgMSk7DQo+PiAgDQo+PiBAQCAtMjA3LDE0ICsy
-MjUsMTQgQEAgc3RhdGljIHZvaWQgY2xrX3Nsb3dfcmNfb3NjX3VucHJlcGFyZShzdHJ1Y3QgY2xr
-X2h3ICpodykNCj4+ICAJc3RydWN0IGNsa19zbG93X3JjX29zYyAqb3NjID0gdG9fY2xrX3Nsb3df
-cmNfb3NjKGh3KTsNCj4+ICAJdm9pZCBfX2lvbWVtICpzY2tjciA9IG9zYy0+c2NrY3I7DQo+PiAg
-DQo+PiAtCXdyaXRlbChyZWFkbChzY2tjcikgJiB+QVQ5MV9TQ0tDX1JDRU4sIHNja2NyKTsNCj4+
-ICsJd3JpdGVsKHJlYWRsKHNja2NyKSAmIH5BVDkxX1NDS0NfUkNFTihvc2MtPm9mZnNldHMpLCBz
-Y2tjcik7DQo+PiAgfQ0KPj4gIA0KPj4gIHN0YXRpYyBpbnQgY2xrX3Nsb3dfcmNfb3NjX2lzX3By
-ZXBhcmVkKHN0cnVjdCBjbGtfaHcgKmh3KQ0KPj4gIHsNCj4+ICAJc3RydWN0IGNsa19zbG93X3Jj
-X29zYyAqb3NjID0gdG9fY2xrX3Nsb3dfcmNfb3NjKGh3KTsNCj4+ICANCj4+IC0JcmV0dXJuICEh
-KHJlYWRsKG9zYy0+c2NrY3IpICYgQVQ5MV9TQ0tDX1JDRU4pOw0KPj4gKwlyZXR1cm4gISEocmVh
-ZGwob3NjLT5zY2tjcikgJiBBVDkxX1NDS0NfUkNFTihvc2MtPm9mZnNldHMpKTsNCj4+ICB9DQo+
-PiAgDQo+PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBjbGtfb3BzIHNsb3dfcmNfb3NjX29wcyA9IHsN
-Cj4+IEBAIC0yMzAsNyArMjQ4LDggQEAgYXQ5MV9jbGtfcmVnaXN0ZXJfc2xvd19yY19vc2Modm9p
-ZCBfX2lvbWVtICpzY2tjciwNCj4+ICAJCQkgICAgICBjb25zdCBjaGFyICpuYW1lLA0KPj4gIAkJ
-CSAgICAgIHVuc2lnbmVkIGxvbmcgZnJlcXVlbmN5LA0KPj4gIAkJCSAgICAgIHVuc2lnbmVkIGxv
-bmcgYWNjdXJhY3ksDQo+PiAtCQkJICAgICAgdW5zaWduZWQgbG9uZyBzdGFydHVwKQ0KPj4gKwkJ
-CSAgICAgIHVuc2lnbmVkIGxvbmcgc3RhcnR1cCwNCj4+ICsJCQkgICAgICBjb25zdCBzdHJ1Y3Qg
-Y2xrX3Nsb3dfb2Zmc2V0cyAqb2Zmc2V0cykNCj4+ICB7DQo+PiAgCXN0cnVjdCBjbGtfc2xvd19y
-Y19vc2MgKm9zYzsNCj4+ICAJc3RydWN0IGNsa19odyAqaHc7DQo+PiBAQCAtMjUyLDYgKzI3MSw3
-IEBAIGF0OTFfY2xrX3JlZ2lzdGVyX3Nsb3dfcmNfb3NjKHZvaWQgX19pb21lbSAqc2NrY3IsDQo+
-PiAgDQo+PiAgCW9zYy0+aHcuaW5pdCA9ICZpbml0Ow0KPj4gIAlvc2MtPnNja2NyID0gc2NrY3I7
-DQo+PiArCW9zYy0+b2Zmc2V0cyA9IG9mZnNldHM7DQo+PiAgCW9zYy0+ZnJlcXVlbmN5ID0gZnJl
-cXVlbmN5Ow0KPj4gIAlvc2MtPmFjY3VyYWN5ID0gYWNjdXJhY3k7DQo+PiAgCW9zYy0+c3RhcnR1
-cF91c2VjID0gc3RhcnR1cDsNCj4+IEBAIC0yNjcsNyArMjg3LDggQEAgYXQ5MV9jbGtfcmVnaXN0
-ZXJfc2xvd19yY19vc2Modm9pZCBfX2lvbWVtICpzY2tjciwNCj4+ICB9DQo+PiAgDQo+PiAgc3Rh
-dGljIHZvaWQgX19pbml0DQo+PiAtb2ZfYXQ5MXNhbTl4NV9jbGtfc2xvd19yY19vc2Nfc2V0dXAo
-c3RydWN0IGRldmljZV9ub2RlICpucCwgdm9pZCBfX2lvbWVtICpzY2tjcikNCj4+ICtvZl9hdDkx
-c2FtOXg1X2Nsa19zbG93X3JjX29zY19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLCB2b2lk
-IF9faW9tZW0gKnNja2NyLA0KPj4gKwkJCQkgICAgY29uc3Qgc3RydWN0IGNsa19zbG93X29mZnNl
-dHMgKm9mZnNldHMpDQo+PiAgew0KPj4gIAlzdHJ1Y3QgY2xrX2h3ICpodzsNCj4+ICAJdTMyIGZy
-ZXF1ZW5jeSA9IDA7DQo+PiBAQCAtMjgxLDcgKzMwMiw3IEBAIG9mX2F0OTFzYW05eDVfY2xrX3Ns
-b3dfcmNfb3NjX3NldHVwKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIHZvaWQgX19pb21lbSAqc2Nr
-Y3IpDQo+PiAgCW9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAiYXRtZWwsc3RhcnR1cC10aW1lLXVz
-ZWMiLCAmc3RhcnR1cCk7DQo+PiAgDQo+PiAgCWh3ID0gYXQ5MV9jbGtfcmVnaXN0ZXJfc2xvd19y
-Y19vc2Moc2NrY3IsIG5hbWUsIGZyZXF1ZW5jeSwgYWNjdXJhY3ksDQo+PiAtCQkJCQkgICAgc3Rh
-cnR1cCk7DQo+PiArCQkJCQkgICBzdGFydHVwLCBvZmZzZXRzKTsNCj4+ICAJaWYgKElTX0VSUiho
-dykpDQo+PiAgCQlyZXR1cm47DQo+PiAgDQo+PiBAQCAtMjk5LDE0ICszMjAsMTQgQEAgc3RhdGlj
-IGludCBjbGtfc2FtOXg1X3Nsb3dfc2V0X3BhcmVudChzdHJ1Y3QgY2xrX2h3ICpodywgdTggaW5k
-ZXgpDQo+PiAgDQo+PiAgCXRtcCA9IHJlYWRsKHNja2NyKTsNCj4+ICANCj4+IC0JaWYgKCghaW5k
-ZXggJiYgISh0bXAgJiBBVDkxX1NDS0NfT1NDU0VMKSkgfHwNCj4+IC0JICAgIChpbmRleCAmJiAo
-dG1wICYgQVQ5MV9TQ0tDX09TQ1NFTCkpKQ0KPj4gKwlpZiAoKCFpbmRleCAmJiAhKHRtcCAmIEFU
-OTFfU0NLQ19PU0NTRUwoc2xvd2NrLT5vZmZzZXRzKSkpIHx8DQo+PiArCSAgICAoaW5kZXggJiYg
-KHRtcCAmIEFUOTFfU0NLQ19PU0NTRUwoc2xvd2NrLT5vZmZzZXRzKSkpKQ0KPj4gIAkJcmV0dXJu
-IDA7DQo+PiAgDQo+PiAgCWlmIChpbmRleCkNCj4+IC0JCXRtcCB8PSBBVDkxX1NDS0NfT1NDU0VM
-Ow0KPj4gKwkJdG1wIHw9IEFUOTFfU0NLQ19PU0NTRUwoc2xvd2NrLT5vZmZzZXRzKTsNCj4+ICAJ
-ZWxzZQ0KPj4gLQkJdG1wICY9IH5BVDkxX1NDS0NfT1NDU0VMOw0KPj4gKwkJdG1wICY9IH5BVDkx
-X1NDS0NfT1NDU0VMKHNsb3djay0+b2Zmc2V0cyk7DQo+PiAgDQo+PiAgCXdyaXRlbCh0bXAsIHNj
-a2NyKTsNCj4+ICANCj4+IEBAIC0zMTksNyArMzQwLDcgQEAgc3RhdGljIHU4IGNsa19zYW05eDVf
-c2xvd19nZXRfcGFyZW50KHN0cnVjdCBjbGtfaHcgKmh3KQ0KPj4gIHsNCj4+ICAJc3RydWN0IGNs
-a19zYW05eDVfc2xvdyAqc2xvd2NrID0gdG9fY2xrX3NhbTl4NV9zbG93KGh3KTsNCj4+ICANCj4+
-IC0JcmV0dXJuICEhKHJlYWRsKHNsb3djay0+c2NrY3IpICYgQVQ5MV9TQ0tDX09TQ1NFTCk7DQo+
-PiArCXJldHVybiAhIShyZWFkbChzbG93Y2stPnNja2NyKSAmIEFUOTFfU0NLQ19PU0NTRUwoc2xv
-d2NrLT5vZmZzZXRzKSk7DQo+PiAgfQ0KPj4gIA0KPj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgY2xr
-X29wcyBzYW05eDVfc2xvd19vcHMgPSB7DQo+PiBAQCAtMzMxLDcgKzM1Miw4IEBAIHN0YXRpYyBz
-dHJ1Y3QgY2xrX2h3ICogX19pbml0DQo+PiAgYXQ5MV9jbGtfcmVnaXN0ZXJfc2FtOXg1X3Nsb3co
-dm9pZCBfX2lvbWVtICpzY2tjciwNCj4+ICAJCQkgICAgICBjb25zdCBjaGFyICpuYW1lLA0KPj4g
-IAkJCSAgICAgIGNvbnN0IGNoYXIgKipwYXJlbnRfbmFtZXMsDQo+PiAtCQkJICAgICAgaW50IG51
-bV9wYXJlbnRzKQ0KPj4gKwkJCSAgICAgIGludCBudW1fcGFyZW50cywNCj4+ICsJCQkgICAgICBj
-b25zdCBzdHJ1Y3QgY2xrX3Nsb3dfb2Zmc2V0cyAqb2Zmc2V0cykNCj4+ICB7DQo+PiAgCXN0cnVj
-dCBjbGtfc2FtOXg1X3Nsb3cgKnNsb3djazsNCj4+ICAJc3RydWN0IGNsa19odyAqaHc7DQo+PiBA
-QCAtMzUzLDcgKzM3NSw4IEBAIGF0OTFfY2xrX3JlZ2lzdGVyX3NhbTl4NV9zbG93KHZvaWQgX19p
-b21lbSAqc2NrY3IsDQo+PiAgDQo+PiAgCXNsb3djay0+aHcuaW5pdCA9ICZpbml0Ow0KPj4gIAlz
-bG93Y2stPnNja2NyID0gc2NrY3I7DQo+PiAtCXNsb3djay0+cGFyZW50ID0gISEocmVhZGwoc2Nr
-Y3IpICYgQVQ5MV9TQ0tDX09TQ1NFTCk7DQo+PiArCXNsb3djay0+b2Zmc2V0cyA9IG9mZnNldHM7
-DQo+PiArCXNsb3djay0+cGFyZW50ID0gISEocmVhZGwoc2NrY3IpICYgQVQ5MV9TQ0tDX09TQ1NF
-TChzbG93Y2stPm9mZnNldHMpKTsNCj4+ICANCj4+ICAJaHcgPSAmc2xvd2NrLT5odzsNCj4+ICAJ
-cmV0ID0gY2xrX2h3X3JlZ2lzdGVyKE5VTEwsICZzbG93Y2stPmh3KTsNCj4+IEBAIC0zNjYsNyAr
-Mzg5LDggQEAgYXQ5MV9jbGtfcmVnaXN0ZXJfc2FtOXg1X3Nsb3codm9pZCBfX2lvbWVtICpzY2tj
-ciwNCj4+ICB9DQo+PiAgDQo+PiAgc3RhdGljIHZvaWQgX19pbml0DQo+PiAtb2ZfYXQ5MXNhbTl4
-NV9jbGtfc2xvd19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLCB2b2lkIF9faW9tZW0gKnNj
-a2NyKQ0KPj4gK29mX2F0OTFzYW05eDVfY2xrX3Nsb3dfc2V0dXAoc3RydWN0IGRldmljZV9ub2Rl
-ICpucCwgdm9pZCBfX2lvbWVtICpzY2tjciwNCj4+ICsJCQkgICAgIGNvbnN0IHN0cnVjdCBjbGtf
-c2xvd19vZmZzZXRzICpvZmZzZXRzKQ0KPj4gIHsNCj4+ICAJc3RydWN0IGNsa19odyAqaHc7DQo+
-PiAgCWNvbnN0IGNoYXIgKnBhcmVudF9uYW1lc1syXTsNCj4+IEBAIC0zODIsNyArNDA2LDcgQEAg
-b2ZfYXQ5MXNhbTl4NV9jbGtfc2xvd19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLCB2b2lk
-IF9faW9tZW0gKnNja2NyKQ0KPj4gIAlvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZyhucCwgImNsb2Nr
-LW91dHB1dC1uYW1lcyIsICZuYW1lKTsNCj4+ICANCj4+ICAJaHcgPSBhdDkxX2Nsa19yZWdpc3Rl
-cl9zYW05eDVfc2xvdyhzY2tjciwgbmFtZSwgcGFyZW50X25hbWVzLA0KPj4gLQkJCQkJICAgIG51
-bV9wYXJlbnRzKTsNCj4+ICsJCQkJCSAgIG51bV9wYXJlbnRzLCBvZmZzZXRzKTsNCj4+ICAJaWYg
-KElTX0VSUihodykpDQo+PiAgCQlyZXR1cm47DQo+PiAgDQo+PiBAQCAtNDA2LDEwICs0MzAsMTgg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgc2NrY19jbGtfaWRzW10gX19pbml0
-Y29uc3QgPSB7DQo+PiAgCXsgLypzZW50aW5lbCovIH0NCj4+ICB9Ow0KPj4gIA0KPj4gK3N0YXRp
-YyBjb25zdCBzdHJ1Y3QgY2xrX3Nsb3dfb2Zmc2V0cyBhdDkxc2FtOXg1X29mZnNldHMgPSB7DQo+
-PiArCS5jcl9yY2VuID0gMCwNCj4+ICsJLmNyX29zYzMyZW4gPSAxLA0KPj4gKwkuY3Jfb3NjMzJi
-eXAgPSAyLA0KPj4gKwkuY3Jfb3Njc2VsID0gMywNCj4+ICt9Ow0KPj4gKw0KPj4gIHN0YXRpYyB2
-b2lkIF9faW5pdCBvZl9hdDkxc2FtOXg1X3Nja2Nfc2V0dXAoc3RydWN0IGRldmljZV9ub2RlICpu
-cCkNCj4+ICB7DQo+PiAgCXN0cnVjdCBkZXZpY2Vfbm9kZSAqY2hpbGRucDsNCj4+IC0Jdm9pZCAo
-KmNsa19zZXR1cCkoc3RydWN0IGRldmljZV9ub2RlICosIHZvaWQgX19pb21lbSAqKTsNCj4+ICsJ
-dm9pZCAoKmNsa19zZXR1cCkoc3RydWN0IGRldmljZV9ub2RlICpucCwgdm9pZCBfX2lvbWVtICpp
-bywNCj4+ICsJCQkgIGNvbnN0IHN0cnVjdCBjbGtfc2xvd19vZmZzZXRzICpvZmZzZXRzKTsNCj4+
-ICAJY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqY2xrX2lkOw0KPj4gIAl2b2lkIF9faW9tZW0g
-KnJlZ2Jhc2UgPSBvZl9pb21hcChucCwgMCk7DQo+PiAgDQo+PiBAQCAtNDIxLDcgKzQ1Myw3IEBA
-IHN0YXRpYyB2b2lkIF9faW5pdCBvZl9hdDkxc2FtOXg1X3Nja2Nfc2V0dXAoc3RydWN0IGRldmlj
-ZV9ub2RlICpucCkNCj4+ICAJCWlmICghY2xrX2lkKQ0KPj4gIAkJCWNvbnRpbnVlOw0KPj4gIAkJ
-Y2xrX3NldHVwID0gY2xrX2lkLT5kYXRhOw0KPj4gLQkJY2xrX3NldHVwKGNoaWxkbnAsIHJlZ2Jh
-c2UpOw0KPj4gKwkJY2xrX3NldHVwKGNoaWxkbnAsIHJlZ2Jhc2UsICZhdDkxc2FtOXg1X29mZnNl
-dHMpOw0KPj4gIAl9DQo+PiAgfQ0KPj4gIENMS19PRl9ERUNMQVJFKGF0OTFzYW05eDVfY2xrX3Nj
-a2MsICJhdG1lbCxhdDkxc2FtOXg1LXNja2MiLA0KPj4gQEAgLTQzOCw3ICs0NzAsNyBAQCBzdGF0
-aWMgaW50IGNsa19zYW1hNWQ0X3Nsb3dfb3NjX3ByZXBhcmUoc3RydWN0IGNsa19odyAqaHcpDQo+
-PiAgCSAqIEFzc3VtZSB0aGF0IGlmIGl0IGhhcyBhbHJlYWR5IGJlZW4gc2VsZWN0ZWQgKGZvciBl
-eGFtcGxlIGJ5IHRoZQ0KPj4gIAkgKiBib290bG9hZGVyKSwgZW5vdWdoIHRpbWUgaGFzIGFyZWFk
-eSBwYXNzZWQuDQo+PiAgCSAqLw0KPj4gLQlpZiAoKHJlYWRsKG9zYy0+c2NrY3IpICYgQVQ5MV9T
-Q0tDX09TQ1NFTCkpIHsNCj4+ICsJaWYgKChyZWFkbChvc2MtPnNja2NyKSAmIEFUOTFfU0NLQ19P
-U0NTRUwob3NjLT5vZmZzZXRzKSkpIHsNCj4+ICAJCW9zYy0+cHJlcGFyZWQgPSB0cnVlOw0KPj4g
-IAkJcmV0dXJuIDA7DQo+PiAgCX0NCj4+IEBAIC00NjEsNiArNDkzLDEzIEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgY2xrX29wcyBzYW1hNWQ0X3Nsb3dfb3NjX29wcyA9IHsNCj4+ICAJLmlzX3ByZXBh
-cmVkID0gY2xrX3NhbWE1ZDRfc2xvd19vc2NfaXNfcHJlcGFyZWQsDQo+PiAgfTsNCj4+ICANCj4+
-ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNsa19zbG93X29mZnNldHMgYXQ5MXNhbWE1ZDRfb2Zmc2V0
-cyA9IHsNCj4+ICsJLmNyX3JjZW4gPSBBVDkxX1NDS0NfT0ZGU0VUX0lOVkFMSUQsDQo+PiArCS5j
-cl9vc2MzMmVuID0gQVQ5MV9TQ0tDX09GRlNFVF9JTlZBTElELA0KPj4gKwkuY3Jfb3NjMzJieXAg
-PSBBVDkxX1NDS0NfT0ZGU0VUX0lOVkFMSUQsDQo+PiArCS5jcl9vc2NzZWwgPSAzLA0KPj4gK307
-DQo+PiArDQo+IA0KPiBJIGRvbid0IHRoaW5rIHlvdSBuZWVkIHRvIGNoYW5nZSB0aGUgc2FtYTVk
-NCBwYXJ0IGFzIGl0IGlzIG5vdCBhZmZlY3RlZA0KPiBieSBhbnkgY2hhbmdlIGluIHRoZSBzYW05
-eDUgcGFydC4NCg0KT2suDQoNCj4gDQo+PiAgc3RhdGljIHZvaWQgX19pbml0IG9mX3NhbWE1ZDRf
-c2NrY19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPj4gIHsNCj4+ICAJdm9pZCBfX2lv
-bWVtICpyZWdiYXNlID0gb2ZfaW9tYXAobnAsIDApOw0KPj4gQEAgLTQ5OCw5ICs1MzcsMTEgQEAg
-c3RhdGljIHZvaWQgX19pbml0IG9mX3NhbWE1ZDRfc2NrY19zZXR1cChzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm5wKQ0KPj4gIAlvc2MtPmh3LmluaXQgPSAmaW5pdDsNCj4+ICAJb3NjLT5zY2tjciA9IHJl
-Z2Jhc2U7DQo+PiAgCW9zYy0+c3RhcnR1cF91c2VjID0gMTIwMDAwMDsNCj4+ICsJb3NjLT5vZmZz
-ZXRzID0gJmF0OTFzYW1hNWQ0X29mZnNldHM7DQo+PiAgDQo+PiAgCWlmIChieXBhc3MpDQo+PiAt
-CQl3cml0ZWwoKHJlYWRsKHJlZ2Jhc2UpIHwgQVQ5MV9TQ0tDX09TQzMyQllQKSwgcmVnYmFzZSk7
-DQo+PiArCQl3cml0ZWwoKHJlYWRsKHJlZ2Jhc2UpIHwgQVQ5MV9TQ0tDX09TQzMyQllQKG9zYy0+
-b2Zmc2V0cykpLA0KPj4gKwkJICAgICAgIHJlZ2Jhc2UpOw0KPj4gIA0KPj4gIAlodyA9ICZvc2Mt
-Pmh3Ow0KPj4gIAlyZXQgPSBjbGtfaHdfcmVnaXN0ZXIoTlVMTCwgJm9zYy0+aHcpOw0KPj4gQEAg
-LTUwOSw3ICs1NTAsOCBAQCBzdGF0aWMgdm9pZCBfX2luaXQgb2Zfc2FtYTVkNF9zY2tjX3NldHVw
-KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApDQo+PiAgCQlyZXR1cm47DQo+PiAgCX0NCj4+ICANCj4+
-IC0JaHcgPSBhdDkxX2Nsa19yZWdpc3Rlcl9zYW05eDVfc2xvdyhyZWdiYXNlLCAic2xvd2NrIiwg
-cGFyZW50X25hbWVzLCAyKTsNCj4+ICsJaHcgPSBhdDkxX2Nsa19yZWdpc3Rlcl9zYW05eDVfc2xv
-dyhyZWdiYXNlLCAic2xvd2NrIiwgcGFyZW50X25hbWVzLCAyLA0KPj4gKwkJCQkJICAgJmF0OTFz
-YW1hNWQ0X29mZnNldHMpOw0KPj4gIAlpZiAoSVNfRVJSKGh3KSkNCj4+ICAJCXJldHVybjsNCj4+
-ICANCj4+IC0tIA0KPj4gMi43LjQNCj4+DQo+IA0K
+Hi Baolin,
+
+On Tue, Feb 19, 2019 at 4:15 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+> On Mon, 18 Feb 2019 at 20:23, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Mon, Feb 18, 2019 at 11:52 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > On Mon, 18 Feb 2019 at 18:31, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > >
+> > > > On Tue, Feb 12, 2019 at 9:25 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > > > On Fri, 1 Feb 2019 at 19:53, Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > > > > On Thu, 31 Jan 2019 at 00:52, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > > > On Tue, Jan 22, 2019 at 2:21 PM Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > > > > > >
+> > > > > > > >  Client:
+> > > > > > > >  DMA clients connected to the Spreadtrum DMA controller must use the format
+> > > > > > > > -described in the dma.txt file, using a two-cell specifier for each channel.
+> > > > > > > > -The two cells in order are:
+> > > > > > > > +described in the dma.txt file, using a three-cell specifier for each channel.
+> > > > > > > > +The three cells in order are:
+> > > > > > > >  1. A phandle pointing to the DMA controller.
+> > > > > > > >  2. The channel id.
+> > > > > > > > +3. The hardware slave id which is used for clients to trigger DMA engine
+> > > > > > > > +automatically.
+> > > > > > >
+> > > > > > > I notice that this is an incompatible binding change. Is that necessary?
+> > > > > > > If the current code works, I'd suggest allowing both #dma-cells=<2>
+> > > > > > > and <3>, and then implementing both in the driver.
+> > > > > >
+> > > > > > Yes, this is necessary.
+> > > > > >
+> > > > > > Yes, current code can work, but the problem is that the DMA clients
+> > > > > > must add one property (something like "sprd,slave-id") to specify the
+> > > > > > slave id. So considering this, we want to change the dma-cells to 2,
+> > > > > > including dma channel and dma slave id, which can avoid introducing
+> > > > > > some similar properties for DMA clients.
+> > > > > >
+> > > > > > Now there are no DMA clients in mainline for Spreadtrum platform, and
+> > > > > > we want to upstream our first DMA clients: SPI controller. So no other
+> > > > > > drivers need to change when we changing dma cells. Thanks.
+> > > > >
+> > > > > Do you have any other concerns about this patch set? If not, I think
+> > > > > Vinod can apply this patch set. Thanks.
+> > > >
+> > > > Sorry for the late reply. Yes, this makes sense since there are no
+> > > > existing users then. For the DT changes going through the dmaengine
+> > > > tree
+> > > >
+> > > > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > Thanks for your reviewing.
+> > >
+> > > >
+> > > > One more question, to make sure we don't need to edit it again:
+> > > > Why do you need both a 'channel id' and a 'slave id' here? Is this
+> > > > a strict hardware requirement for your DMA engine? In many
+> > > > other designs, only a DMA request line number needs to
+> > > > be described, and I think this would correspond to what you
+> > > > call the 'hardware slave id' in your documentation.
+> > >
+> > > I try to explain why we need the slave id.
+> > >
+> > > For our DMA engine driver, we have software request mode and hardware
+> > > request mode. For software request mode, the DMA engine driver need
+> > > trigger DMA to start transfer manually. But for hardware request mode,
+> > > we just set one unique slave id corresponding to the slave hardware to
+> > > the DMA engine, then the slave hardware can trigger DMA automatically.
+> > > And the slave id is not always same with the channel id according to
+> > > the SoC design, so we add one cell to specify the slave id.
+> >
+> > I did understand the need for a slave-id, I was instead wondering about
+> > the channel-id number. On many SoCs, all channels are equal, and you
+> > just have to pick one of those with the right capabilities for a particular
+> > slave.
+>
+> Yes, all channels are equal. We just set a unique slave id for the
+> channel for a particular slave. For example, the SPI slave can use
+> channel 10 for tx transfer by setting slave id 11, or it also can use
+> channel 9 for tx transfer by setting same slave id 11.
+
+So the channel selection is software policy, not hardware description, and
+thus doesn't belong in DT?
+
+Can't the DMA engine driver allocate channels dynamically, removing the
+need to specify this in DT?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
