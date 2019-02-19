@@ -1,73 +1,47 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
-Date: Mon, 18 Feb 2019 14:28:01 -0800
-Message-ID: <CA+E=qVdMNmVkytCzXqYgJtV196-G=c_bWx+aLvs=Y0iuRpjdRg@mail.gmail.com>
-References: <20190118170232.16142-1-anarsoul@gmail.com> <20190118170232.16142-4-anarsoul@gmail.com>
- <20190218211035.GA28145@bogus> <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
- <1245842044.588056.1550527701604@email.ionos.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH v2 2/3] dt-bindings: Add VXT VL050-8048NT-C01 panel bindings
+Date: Mon, 18 Feb 2019 21:27:05 -0300
+Message-ID: <20190219002706.20077-2-festevam@gmail.com>
+References: <20190219002706.20077-1-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1245842044.588056.1550527701604@email.ionos.de>
-Sender: netdev-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, arm-linux <linux-arm-kernel@lists.infradead.org>, beagleboard@davidjohnsummers.uk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190219002706.20077-1-festevam@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com
+Cc: devicetree@vger.kernel.org, otavio.salvador@ossystems.com.br, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, sam@ravnborg.org, john.weber@technexion.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 2:08 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
->
-> Hi Vasily,
-
-Hi Stefan,
-
-> > Vasily Khoruzhick <anarsoul@gmail.com> hat am 18. Februar 2019 um 22:24 geschrieben:
-> >
-> >
-> > On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
-> > > > Add binding document for bluetooth part of RTL8723BS/RTL8723CS
-> > > >
-> > > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> > > > ---
-> > > >  .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
-> > > >  1 file changed, 35 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
-> > > > new file mode 100644
-> > > > index 000000000000..8357f242ae4c
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
-> > > > @@ -0,0 +1,35 @@
-> > > > +RTL8723BS/RTL8723CS Bluetooth
-> > > > +---------------------
-> > > > +
-> > > > +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
-> > > > +BT is connected over serial. It speaks H5 protocol with few extra commands
-> > > > +to upload firmware and change module speed.
-> > > > +
-> > > > +Required properties:
-> > > > +
-> > > > + - compatible: should be one of the following:
-> > > > +   * "realtek,rtl8723bs-bt"
-> > > > +   * "realtek,rtl8723cs-bt"
-> > > > +Optional properties:
-> > > > +
-> > > > + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
-> > > > + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
-> > > > + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
-> > > > + - firmware-postfix: firmware postfix to be used for firmware config
-> > >
->
-> sorry, i didn't noticed your great series before. David and i working at the same stuff but for the Asus Tinker Board.
->
-> I created a similiar yet untested patch version for hci_h5 [1]. Maybe it's useful.
-
-Looks good to me, but you may need to add firmware-postfix.
-
-> Just a comment about the binding. It's really necessary to add the reset-gpio? Can't we use the enable-gpio with inverse polarity for this?
-
-Yes, we can use enable-gpio instead of reset-gpio on pine64 and pinebook.
-
-> Stefan
+VGhlIFZYVCBWTDA1MC04MDQ4TlQtQzAxIGlzIGEgVEZUIExDRCBwYW5lbCB3aXRoIGEgODAweDQ4
+MCByZXNvbHV0aW9uCmNvbm5lY3RlZCB2aWEgMjQgd2lkdGggcGFyYWxsZWwgaW50ZXJmYWNlLgoK
+UmV2aWV3ZWQtYnk6IE90YXZpbyBTYWx2YWRvciA8b3RhdmlvQG9zc3lzdGVtcy5jb20uYnI+ClJl
+dmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnClNpZ25lZC1vZmYtYnk6IEZh
+YmlvIEVzdGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbT4KLS0tCkNoYW5nZXMgc2luY2UgdjE6Ci0g
+Tm9uZQoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3ZsMDUwXzgwNDhudF9jMDEudHh0ICAg
+ICAgfCAxMiArKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvdmwwNTBfODA0OG50X2MwMS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC92bDA1MF84MDQ4bnRfYzAxLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3ZsMDUwXzgw
+NDhudF9jMDEudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uYjQy
+YmYwNmJiZDk5Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvdmwwNTBfODA0OG50X2MwMS50eHQKQEAgLTAsMCArMSwxMiBA
+QAorVlhUIDgwMHg0ODAgY29sb3IgVEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVz
+OgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgInZ4dCx2bDA1MC04MDQ4bnQtYzAxIgorLSBwb3dl
+ci1zdXBwbHk6IGFzIHNwZWNpZmllZCBpbiB0aGUgYmFzZSBiaW5kaW5nCisKK09wdGlvbmFsIHBy
+b3BlcnRpZXM6CistIGJhY2tsaWdodDogYXMgc3BlY2lmaWVkIGluIHRoZSBiYXNlIGJpbmRpbmcK
+Ky0gZW5hYmxlLWdwaW9zOiBhcyBzcGVjaWZpZWQgaW4gdGhlIGJhc2UgYmluZGluZworCitUaGlz
+IGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hp
+Y2ggaXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgot
+LSAKMi4xNy4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
