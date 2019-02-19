@@ -1,64 +1,47 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [PATCH v1 04/12] of: Add bindings of gpu hw throttle for Tegra
- soctherm
-Date: Tue, 19 Feb 2019 14:34:49 +0800
-Message-ID: <739a8c81-ee0a-999e-0508-6aa1fba768b7@nvidia.com>
-References: <1545118484-23641-1-git-send-email-wni@nvidia.com>
- <1545118484-23641-6-git-send-email-wni@nvidia.com>
- <20190218203314.GB12911@bogus>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [RFC PATCH 2/5] dt-bindings: mtd: Add binding documentation for
+ Hyperbus memory devices
+Date: Tue, 19 Feb 2019 12:06:04 +0530
+Message-ID: <20190219063607.29949-3-vigneshr@ti.com>
+References: <20190219063607.29949-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218203314.GB12911@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: thierry.reding@gmail.com, daniel.lezcano@linaro.org, edubezval@gmail.com, linux-tegra@vger.kernel.org, rui.zhang@intel.com, srikars@nvidia.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190219063607.29949-1-vigneshr@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vignesh R <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, tudor.ambarus@microchip.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add DT binding documentation for Hyperbus memory devices. For now only
+Hyperflash is supported.
 
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
+ Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
 
-On 19/2/2019 4:33 AM, Rob Herring wrote:
-> On Tue, Dec 18, 2018 at 03:34:36PM +0800, Wei Ni wrote:
->> Add "nvidia,gpu-throt-level" property to set gpu hw
->> throttle level.
->>
->> Signed-off-by: Wei Ni <wni@nvidia.com>
->> ---
->>  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 17 +++++++++++++++--
->>  include/dt-bindings/thermal/tegra124-soctherm.h    | 22 ++++++++++++++++++----
->>  2 files changed, 33 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
->> index ab66d6feab4b..cf6d0be56b7a 100644
->> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
->> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
->> @@ -52,6 +52,15 @@ Required properties :
->>          Must set as following values:
->>          TEGRA_SOCTHERM_THROT_LEVEL_LOW, TEGRA_SOCTHERM_THROT_LEVEL_MED
->>          TEGRA_SOCTHERM_THROT_LEVEL_HIGH, TEGRA_SOCTHERM_THROT_LEVEL_NONE
->> +      - nvidia,gpu-throt-level: This property is for Tegra124 and Tegra210.
-> 
-> Also, why not just use percents like nvidia,cpu-throt-percent?
-
-Hi Rob,
-We have to use "-level" for gpu throttle, can't use percents. It's
-designed by hardware.
-BTW, for the cpu-throt, it use "-level" for t132, and use "-percent" for
-t124 and t210.
-
-Thanks.
-Wei.
-
-> 
->> +        It is the level of pulse skippers, which used to throttle clock
->> +        frequencies. It indicates gpu clock throttling depth and can be
->> +        programmed to any of the following values which represent a throttling
->> +        percentage:
->> +        TEGRA_SOCTHERM_THROT_LEVEL_NONE (0%)
->> +        TEGRA_SOCTHERM_THROT_LEVEL_LOW (50%),
->> +        TEGRA_SOCTHERM_THROT_LEVEL_MED (75%),
->> +        TEGRA_SOCTHERM_THROT_LEVEL_HIGH (85%).
->>        - #cooling-cells: Should be 1. This cooling device only support on/off state.
->>          See ./thermal.txt for a description of this property.
+diff --git a/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt b/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
+new file mode 100644
+index 000000000000..cb408f80b868
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
+@@ -0,0 +1,6 @@
++Bindings for Hyperflash NOR flash chips compliant with Cypress Hyperbus
++specification and supports Cypress CFI specification 1.5 command set.
++
++Required properties:
++- compatible : "cypress,hyperflash" for Hyperflash NOR chips
++- reg : Address where flash's memory mapped space
+-- 
+2.20.1
