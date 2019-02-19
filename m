@@ -1,101 +1,85 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: [v2 1/1] drm/mediatek: add mt8183 dpi support
-Date: Tue, 19 Feb 2019 11:06:45 +0800
-Message-ID: <20190219030645.68321-1-jitao.shi@mediatek.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V3 1/4] dt-bindings: fsl: scu: add general interrupt support
+Date: Tue, 19 Feb 2019 03:10:42 +0000
+Message-ID: <1550545569-7197-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com, ck.hu@mediate
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-MT8183 samples on rising and falling edge. It can reduce half data
-io.
-MT8173 also has those registers. But the hw function is removed.
-So MT8173 doesn't support DPI dual edge sample and can't use the
-same setting to mt8183.
+Add scu general interrupt function support.
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_dpi.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+No change since V2.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt      | 18 ++++++++++++--=
+----
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 62a9d47df948..610c23334047 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -117,6 +117,7 @@ struct mtk_dpi_conf {
- 	unsigned int (*cal_factor)(int clock);
- 	u32 reg_h_fre_con;
- 	bool edge_sel_en;
-+	bool dual_edge;
- };
- 
- static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
-@@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
- 		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
- }
- 
-+static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
-+{
-+	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
-+		     DDR_EN | DDR_4PHASE);
-+	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
-+}
-+
- static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
- 					enum mtk_dpi_out_color_format format)
- {
-@@ -509,6 +517,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
- 	mtk_dpi_config_color_format(dpi, dpi->color_format);
- 	mtk_dpi_config_2n_h_fre(dpi);
- 	mtk_dpi_config_disable_edge(dpi);
-+	if (dpi->conf->dual_edge)
-+		mtk_dpi_enable_dual_edge(dpi);
- 	mtk_dpi_sw_reset(dpi, false);
- 
- 	return 0;
-@@ -671,6 +681,16 @@ static unsigned int mt2701_calculate_factor(int clock)
- 		return 2;
- }
- 
-+static unsigned int mt8183_calculate_factor(int clock)
-+{
-+	if (clock <= 27000)
-+		return 8;
-+	else if (clock <= 167000)
-+		return 4;
-+	else
-+		return 2;
-+}
-+
- static const struct mtk_dpi_conf mt8173_conf = {
- 	.cal_factor = mt8173_calculate_factor,
- 	.reg_h_fre_con = 0xe0,
-@@ -682,6 +702,12 @@ static const struct mtk_dpi_conf mt2701_conf = {
- 	.edge_sel_en = true,
- };
- 
-+static const struct mtk_dpi_conf mt8183_conf = {
-+	.cal_factor = mt8183_calculate_factor,
-+	.reg_h_fre_con = 0xe0,
-+	.dual_edge = true,
-+};
-+
- static int mtk_dpi_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -777,6 +803,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
- 	{ .compatible = "mediatek,mt8173-dpi",
- 	  .data = &mt8173_conf,
- 	},
-+	{ .compatible = "mediatek,mt8183-dpi",
-+	  .data = &mt8183_conf,
-+	},
- 	{ },
- };
- 
--- 
-2.20.1
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
+Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index f388ec6..e5def3e 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -22,9 +22,11 @@ Required properties:
+ -------------------
+ - compatible:	should be "fsl,imx-scu".
+ - mbox-names:	should include "tx0", "tx1", "tx2", "tx3",
+-			       "rx0", "rx1", "rx2", "rx3".
+-- mboxes:	List of phandle of 4 MU channels for tx and 4 MU channels
+-		for rx. All 8 MU channels must be in the same MU instance.
++			       "rx0", "rx1", "rx2", "rx3",
++			       "gi3".
++- mboxes:	List of phandle of 4 MU channels for tx, 4 MU channels for
++		rx, and 1 MU channel for general interrupt. All 9 MU channels
++		must be in the same MU instance.
+ 		Cross instances are not allowed. The MU instance can only
+ 		be one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
+ 		to make sure use the one which is not conflict with other
+@@ -34,6 +36,7 @@ Required properties:
+ 		Channel 1 must be "tx1" or "rx1".
+ 		Channel 2 must be "tx2" or "rx2".
+ 		Channel 3 must be "tx3" or "rx3".
++		General interrupt channel must be "gi3".
+ 		e.g.
+ 		mboxes =3D <&lsio_mu1 0 0
+ 			  &lsio_mu1 0 1
+@@ -42,7 +45,8 @@ Required properties:
+ 			  &lsio_mu1 1 0
+ 			  &lsio_mu1 1 1
+ 			  &lsio_mu1 1 2
+-			  &lsio_mu1 1 3>;
++			  &lsio_mu1 1 3
++			  &lsio_mu1 3 3>;
+ 		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+ 		for detailed mailbox binding.
+=20
+@@ -153,7 +157,8 @@ firmware {
+ 	scu {
+ 		compatible =3D "fsl,imx-scu";
+ 		mbox-names =3D "tx0", "tx1", "tx2", "tx3",
+-			     "rx0", "rx1", "rx2", "rx3";
++			     "rx0", "rx1", "rx2", "rx3",
++			     "gi3";
+ 		mboxes =3D <&lsio_mu1 0 0
+ 			  &lsio_mu1 0 1
+ 			  &lsio_mu1 0 2
+@@ -161,7 +166,8 @@ firmware {
+ 			  &lsio_mu1 1 0
+ 			  &lsio_mu1 1 1
+ 			  &lsio_mu1 1 2
+-			  &lsio_mu1 1 3>;
++			  &lsio_mu1 1 3
++			  &lsio_mu1 3 3>;
+=20
+ 		clk: clk {
+ 			compatible =3D "fsl,imx8qxp-clk", "fsl,scu-clk";
+--=20
+2.7.4
