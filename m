@@ -1,82 +1,59 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 08/10] power: supply: olpc_battery: Allow building the
- driver on non-x86
-Date: Wed, 20 Feb 2019 00:17:49 +0100
-Message-ID: <20190219231749.b6ydhiq2now3z5fr@earth.universe>
-References: <20190110175845.1203986-1-lkundrak@v3.sk>
- <20190110175845.1203986-9-lkundrak@v3.sk>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [RFC v4 10/17] kunit: test: add test managed resource tests
+Date: Tue, 19 Feb 2019 15:20:18 -0800
+Message-ID: <CAFd5g44Dizk-VsFOmGn++E0d40sZmH6V+j05Eu6zUXaBj1xfcA@mail.gmail.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+ <20190214213729.21702-11-brendanhiggins@google.com> <155026408761.115909.17855438744578437385@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="byb526xt5hk5xygm"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190110175845.1203986-9-lkundrak@v3.sk>
+In-Reply-To: <155026408761.115909.17855438744578437385@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, shuah@kernel.org, Greg KH <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Michael Ellerman <mpe@ellerman.id.au>, Joe Perches <joe@perches.com>, brakmo@fb.com, Steven Rostedt <rostedt@goodmis.org>, "Bird, Timothy" <Tim.Bird@sony.com>, Kevin Hilman <khilman@baylibre.com>, Julia Lawall <julia.lawall@lip6.fr>, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 15, 2019 at 12:54 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-02-14 13:37:22)
+> > diff --git a/kunit/test-test.c b/kunit/test-test.c
+> > index 0b4ad6690310d..bb34431398526 100644
+> > --- a/kunit/test-test.c
+> > +++ b/kunit/test-test.c
+> [...]
+> > +
+> > +#define KUNIT_RESOURCE_NUM 5
+> > +static void kunit_resource_test_cleanup_resources(struct kunit *test)
+> > +{
+> > +       int i;
+> > +       struct kunit_test_resource_context *ctx = test->priv;
+> > +       struct kunit_resource *resources[KUNIT_RESOURCE_NUM];
+> > +
+> > +       for (i = 0; i < KUNIT_RESOURCE_NUM; i++) {
+>
+> Nitpick: This could use ARRAY_SIZE(resources) and then the #define could
+> be dropped.
 
---byb526xt5hk5xygm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Noted. Will fix in next revision.
 
-Hi,
+>
+> > +               resources[i] = kunit_alloc_resource(&ctx->test,
+> > +                                                   fake_resource_init,
+> > +                                                   fake_resource_free,
+> > +                                                   ctx);
+> > +       }
+> > +
+> > +       kunit_cleanup(&ctx->test);
+> > +
+> > +       KUNIT_EXPECT_TRUE(test, list_empty(&ctx->test.resources));
+> > +}
+> > +
+> [...]
+> > +
+> > +static struct kunit_case kunit_resource_test_cases[] = {
+>
+> Can these arrays be const?
 
-On Thu, Jan 10, 2019 at 06:58:43PM +0100, Lubomir Rintel wrote:
-> With the recent changes to the driver and addition of OLPC XO-1.75 EC
-> driver it is possible to use this driver on ARM-based XO laptops as
-> well.
->=20
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
-
-This looks simple enough to not cause a big mess when merged
-through x86 platform tree:
-
-Acked-by: Sebastian Reichel <sre@kernel.org>
-
--- Sebastian
-
->  drivers/power/supply/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index e901b9879e7e..66e4d1958de3 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -151,7 +151,7 @@ config BATTERY_PMU
-> =20
->  config BATTERY_OLPC
->  	tristate "One Laptop Per Child battery"
-> -	depends on X86_32 && OLPC
-> +	depends on OLPC_EC
->  	help
->  	  Say Y to enable support for the battery on the OLPC laptop.
-> =20
-> --=20
-> 2.20.1
->=20
-
---byb526xt5hk5xygm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlxsjpwACgkQ2O7X88g7
-+pr83Q/8Ca1j0ayvype2fj2zz7DiMEXkdtft6NqEhS/u3xrNP6fSaZqMHhMqWbbs
-aYzJqKykpIrTvKpF7pvLGNYwV6yQVdVxcemy1AThPrRYenNQCrKErPz/YAsYsxst
-G1OEiTM34HG9pdjwQgDACDLrd6y0cUmi/fq6TJJOKIaiM4FEaK5UUg7Yva526uzS
-d4snhlUTTDPjMYkvvNPNzMa1idpEoH2J8SI7ZRGRicbklbNNsehPkve3MG5u81MI
-v2QAr5v2HnW+R0CmghycE0mrDO3CkFGWOsutytvwxIFEnOcAwyYrIeFnFQFjG7ll
-KegWRWOtCRYk9iPqIA8DK7ZFg+ef3APt71fCG7Fb+2GoUduhsokllSF24Q+tygMh
-yBgJ98xVkBQAYxlWGNxH370+PaHvcl1ShQ1yMZOVVogtdvqdlCH+7how0XsPIV/b
-udGnxBnvUJ+ZWq9ax2bqxGttR53bJlSXGH5uVaRTYl0ElMpfZkvgJehL3TWG4uE6
-T2+Km2SDuGLaF+TgxR4IEJ39zquT5lHdlQPyo3obYMy3mFP1XTiMiiw0LfZ90UVk
-yqWhFUxyc2hy2WZJbEKsvyEOWASH5LfwDUzhnbE583GWll2aQceQXXQ3w3YTLPAB
-MhEsVEUPfEmahjxRFRpZ1Zulvto2r2lCp9sSB7c1+Vhllx/9/l4=
-=a6QF
------END PGP SIGNATURE-----
-
---byb526xt5hk5xygm--
+There is some private mutable state inside of `struct kunit_case` that
+would be kind of annoying to pull out; I don't think it would make it
+cleaner.
