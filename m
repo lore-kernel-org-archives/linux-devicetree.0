@@ -1,86 +1,95 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Tue, 19 Feb 2019 14:21:10 +0530
-Message-ID: <84b3ec21-9ce9-b9a8-80a9-75001db43a90@ti.com>
-References: <20190212162247.GK5720@atomide.com>
- <6a274588-0fb6-2ddf-3bcc-f9e4d849ac07@ti.com>
- <20190213152620.GS5720@atomide.com>
- <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
- <20190214154100.GB5720@atomide.com>
- <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
- <20190214174612.GF5720@atomide.com>
- <171e8597-2156-747d-d024-7b4bfc6f9186@ti.com>
- <20190215161629.GK5720@atomide.com>
- <2369739e-3bc8-257a-99e0-db2951c6777d@ti.com>
- <20190218143245.GC15711@atomide.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v4 3/3] pwm: core: add consumer device link
+Date: Tue, 19 Feb 2019 09:55:16 +0100
+Message-ID: <20190219085516.dz5ux37kdszqkisy@pengutronix.de>
+References: <1550139951-25788-1-git-send-email-fabrice.gasnier@st.com>
+ <1550139951-25788-4-git-send-email-fabrice.gasnier@st.com>
+ <20190218172223.lw3e5tn5hzsow6tg@pengutronix.de>
+ <53bc3d80-8732-46be-caef-015998c9ad0e@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218143245.GC15711@atomide.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <53bc3d80-8732-46be-caef-015998c9ad0e@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, tduszyns@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-On 18/02/19 8:02 PM, Tony Lindgren wrote:
-> * Lokesh Vutla <lokeshvutla@ti.com> [190216 03:30]:
->> On 2/15/2019 9:46 PM, Tony Lindgren wrote:
->>> The dts node for the interrupt controller should describe a
->>> proper Linux device, that is with reg entries and so on.
->>
->> You are asking to just keep the compatible property :)
+On Tue, Feb 19, 2019 at 09:46:32AM +0100, Fabrice Gasnier wrote:
+> On 2/18/19 6:22 PM, Uwe Kleine-König wrote:
+> > Hello,
+> > 
+> > On Thu, Feb 14, 2019 at 11:25:51AM +0100, Fabrice Gasnier wrote:
+> >> Add a device link between the PWM consumer and the PWM provider. This
+> >> enforces the PWM user to get suspended before the PWM provider. It
+> >> allows proper synchronization of suspend/resume sequences: the PWM user
+> >> is responsible for properly stopping PWM, before the provider gets
+> >> suspended: see [1]. Add the device link in:
+> >> - of_pwm_get()
+> >> - pwm_get()
+> >> - devm_*pwm_get() variants
+> >> as it requires a reference to the device for the PWM consumer.
+> >>
+> >> [1] https://lkml.org/lkml/2019/2/5/770
+> >>
+> >> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> >> ---
+> >> Changes in v4:
+> >> - rework error handling following Thierry's comments
+> >> - turn/split pr_debug() into dev_err()/pr_warn().
+> >>
+> >> Changes in v3:
+> >> - add struct device to of_get_pwm() arguments to handle device link from
+> >>   there as discussed with Uwe.
+> >> ---
+> >>  drivers/pwm/core.c  | 50 +++++++++++++++++++++++++++++++++++++++++++++++---
+> >>  include/linux/pwm.h |  6 ++++--
+> >>  2 files changed, 51 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> >> index 1581f6a..64e10a6 100644
+> >> --- a/drivers/pwm/core.c
+> >> +++ b/drivers/pwm/core.c
+> >> @@ -636,8 +636,35 @@ static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
+> >>  	return ERR_PTR(-EPROBE_DEFER);
+> >>  }
+> >>  
+> >> +static struct device_link *pwm_device_link_add(struct device *dev,
+> >> +					       struct pwm_device *pwm)
+> >> +{
+> >> +	struct device_link *dl;
+> >> +
+> >> +	if (!dev) {
+> >> +		/*
+> >> +		 * No device for the PWM consumer has been provided. It may
+> >> +		 * impact the PM sequence ordering: the PWM supplier may get
+> >> +		 * suspended before the consumer.
+> >> +		 */
+> >> +		pr_warn("no consumer dev, can't create device link to %s\n",
+> >> +			dev_name(pwm->chip->dev));
+> > 
+> > Maybe use dev_warn(pwm->chip->dev, ...) ?
 > 
-> Right, and then I realized this node is missing the standard
-> reg entry too. And you're saying the registers are not even
-> accissible from Linux.
+> Hi Uwe,
 > 
-> So based on that IMO you should not even have a device tree
-> node for it at all. You should just have the interrupt
+> I'm wondering a bit about this: In this case, the caller that doesn't
+> provide a struct device *, PWM provider isn't responsible for that. So I
+> just hope this wouldn't be miss-leading ?
 
-Practically lets look at what all I am adding in the DT node. Below is one such
-example:
+IMHO it's more the wording that might make the message misleading. If
+you use
 
-main_intr: interrupt-controller0 {
-	compatible = "ti,sci-intr";
-	interrupt-controller;
-	interrupt-parent = <&gic500>;
-	#interrupt-cells = <4>;
-	ti,sci = <&dmsc>;
-	ti,sci-dst-id = <56>;
-	ti,sci-rm-range-girq = <0x1>;
-};
+	dev_warn(pwm->chip->dev, "No consumer device specified to create a device link to\n");
 
-The following 4 properties are required at least for probing, to represent the
-hierarchy and for  interrupt definition:
-	compatible = "ti,sci-intr";
-	interrupt-controller;
-	interrupt-parent = <&gic500>;
-	#interrupt-cells = <4>;
+that's completely fine in my eyes.
+ 
+Best regards
+Uwe
 
-The remaining 3 properties represents the TISCI interface. Let's go step by step:
-* ti,sci = <&dmsc> :This is the phandle to the firmware protocol driver using
-which the messages are sent
-* ti,sci-dst-id = <56> : This is the TISCI device ID for the parent controller
-for which your irqs needs to be connected. As I said this cannot be queried from
-sysfw and this is the input to the messages that are send to sysfw.
-*  ti,sci-rm-range-girq = <0x1>: This define the ids using which the parent-irq
-ranges that are allocated to this interrupt router instance can be queried from
-sysfw.
-If the above 2 properties are to be added as driver phandle then for every
-instance of interrupt router in the SoC, a new compatible needs to be created. I
-don't think this is a desirable solution.
-
-With this can you tell me how can we not have a device-tree and still support
-irq allocation?
-
-Also, this is not the first time a driver based on a firmware is being added.
-K2g clock, power and reset drivers are based on this where device ids are being
-passed from consumers. Similarly arm scpi based drivers are also available.
-
-Thanks and regards,
-Lokesh
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
