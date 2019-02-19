@@ -1,84 +1,120 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v2 01/10] dt-bindings: phy: Add support for HiSilicon's
- hi3660 USB PHY
-Date: Tue, 19 Feb 2019 09:50:49 +0800
-Message-ID: <a944cd27-f7d5-eece-1ef5-c7dc5dbc311b@huawei.com>
-References: <20190218112310.17860-1-chenyu56@huawei.com>
- <20190218112310.17860-2-chenyu56@huawei.com> <20190218201824.GA23724@bogus>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH] drm/mediatek: add mt8183 dpi support
+Date: Tue, 19 Feb 2019 09:53:10 +0800
+Message-ID: <1550541190.13121.2.camel@mszsdaap41>
+References: <20190211045059.11821-1-jitao.shi@mediatek.com>
+         <1550160809.6862.13.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218201824.GA23724@bogus>
-Content-Language: en-US
+In-Reply-To: <1550160809.6862.13.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 2019-02-15 at 00:13 +0800, CK Hu wrote:
+> Hi, Jitao:
+> 
+> On Mon, 2019-02-11 at 12:50 +0800, Jitao Shi wrote:
+> > MT8183 sample on rising and falling edge. It can reduce half data io.
+> > 
+> > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_dpi.c | 29 +++++++++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> > index 62a9d47df948..610c23334047 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> > @@ -117,6 +117,7 @@ struct mtk_dpi_conf {
+> >  	unsigned int (*cal_factor)(int clock);
+> >  	u32 reg_h_fre_con;
+> >  	bool edge_sel_en;
+> > +	bool dual_edge;
+> >  };
+> >  
+> >  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
+> > @@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
+> >  		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
+> >  }
+> >  
+> > +static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
+> > +{
+> > +	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
+> > +		     DDR_EN | DDR_4PHASE);
+> > +	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
+> > +}
+> 
+> All these register exist in MT8173, if you do the same setting in
+> MT8173, could it also sample on rising edge and falling edge?
+> 
+> Regards,
+> CK
 
-On 2019/2/19 4:18, Rob Herring wrote:
-> On Mon, Feb 18, 2019 at 07:23:01PM +0800, Yu Chen wrote:
->> This patch adds binding documentation for supporting the hi3660 usb
->> phy on boards like the HiKey960.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Cc: Binghui Wang <wangbinghui@hisilicon.com>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> ---
->> v1:
->> * Fix some format error as suggested by Rob.
->> v2:
->> * Change hi3660 usb PHY to hi3660 USB PHY
->> ---
->> ---
->>  .../devicetree/bindings/phy/phy-hi3660-usb3.txt     | 21 +++++++++++++++++++++
->>  1 file changed, 21 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
->> new file mode 100644
->> index 000000000000..f9a3d56cfdd2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
->> @@ -0,0 +1,21 @@
->> +Hisilicon hi3660 USB PHY
->> +-----------------------
->> +
->> +Required properties:
->> +- compatible: should be "hisilicon,hi3660-usb-phy"
->> +- #phy-cells: must be 0
->> +- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
->> +- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
->> +- hisilicon,usb3-otg-bc-syscon: phandle of syscon used to control phy.
->> +- hisilicon,eye-diagram-param: parameter set for phy
->> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
->> +
->> +Example:
->> +	usb-phy {
->> +		compatible = "hisilicon,hi3660-usb-phy";
->> +		#phy-cells = <0>;
->> +		hisilicon,pericrg-syscon = <&crg_ctrl>;
->> +		hisilicon,pctrl-syscon = <&pctrl>;
->> +		hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
-> 
-> Are most of the registers within one of these blocks? If so, make this 
-> node a child of that node.
-I met a problem when I made this node a child of the syscon node,
-the driver "phy-hi3660-usb3" was not probed.
-Do you have any idea about how to make it probed when it is a child node?
-> 
->> +		hisilicon,eye-diagram-param = <0x22466e4>;
->> +	};
->> -- 
->> 2.15.0-rc2
->>
-> 
-> .
-> 
+Hi CK,
 
-Thanks
-Yu Chen
+MT8173 has those registers. But the hw function is removed.
+So MT8173 doesn't support DPI dual edge sample.
+
+Best Regards
+Jitao
+
+> 
+> > +
+> >  static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
+> >  					enum mtk_dpi_out_color_format format)
+> >  {
+> > @@ -509,6 +517,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+> >  	mtk_dpi_config_color_format(dpi, dpi->color_format);
+> >  	mtk_dpi_config_2n_h_fre(dpi);
+> >  	mtk_dpi_config_disable_edge(dpi);
+> > +	if (dpi->conf->dual_edge)
+> > +		mtk_dpi_enable_dual_edge(dpi);
+> >  	mtk_dpi_sw_reset(dpi, false);
+> >  
+> >  	return 0;
+> > @@ -671,6 +681,16 @@ static unsigned int mt2701_calculate_factor(int clock)
+> >  		return 2;
+> >  }
+> >  
+> > +static unsigned int mt8183_calculate_factor(int clock)
+> > +{
+> > +	if (clock <= 27000)
+> > +		return 8;
+> > +	else if (clock <= 167000)
+> > +		return 4;
+> > +	else
+> > +		return 2;
+> > +}
+> > +
+> >  static const struct mtk_dpi_conf mt8173_conf = {
+> >  	.cal_factor = mt8173_calculate_factor,
+> >  	.reg_h_fre_con = 0xe0,
+> > @@ -682,6 +702,12 @@ static const struct mtk_dpi_conf mt2701_conf = {
+> >  	.edge_sel_en = true,
+> >  };
+> >  
+> > +static const struct mtk_dpi_conf mt8183_conf = {
+> > +	.cal_factor = mt8183_calculate_factor,
+> > +	.reg_h_fre_con = 0xe0,
+> > +	.dual_edge = true,
+> > +};
+> > +
+> >  static int mtk_dpi_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > @@ -777,6 +803,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
+> >  	{ .compatible = "mediatek,mt8173-dpi",
+> >  	  .data = &mt8173_conf,
+> >  	},
+> > +	{ .compatible = "mediatek,mt8183-dpi",
+> > +	  .data = &mt8183_conf,
+> > +	},
+> >  	{ },
+> >  };
+> >  
+> 
+> 
