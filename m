@@ -1,34 +1,80 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH v2 05/15] dt-bindings: timer: Add Milbeaut M10V timer
- description
-Date: Tue, 19 Feb 2019 16:42:27 +0900
-Message-ID: <ad705c11-c93d-8fdb-be2b-eda22a73b77c@socionext.com>
-References: <1549628790-30960-1-git-send-email-sugaya.taichi@socionext.com>
- <20190218195331.GA16665@bogus>
+From: Stefan Mavrodiev <stefan@olimex.com>
+Subject: Re: [PATCH v2 1/8] leds: Add support for AXP20X CHGLED
+Date: Tue, 19 Feb 2019 09:42:30 +0200
+Message-ID: <5fdac512-947d-fd46-d953-22d6fc837423@olimex.com>
+References: <20190215115013.11098-1-stefan@olimex.com>
+ <20190215115013.11098-2-stefan@olimex.com>
+ <20190215155732.nmtshldcjk2qyhx4@flea> <20190215183239.GB3280@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218195331.GA16665@bogus>
+In-Reply-To: <20190215183239.GB3280@amd>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>
+To: Pavel Machek <pavel@ucw.cz>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Stefan Mavrodiev <stefan@olimex.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 2019/02/19 4:53, Rob Herring wrote:
-> On Fri,  8 Feb 2019 21:26:30 +0900, Sugaya Taichi wrote:
->> Add DT bindings document for Milbeaut M10V timer.
->>
->> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
->> ---
->>   .../bindings/timer/socionext,milbeaut-timer.txt         | 17 +++++++++++++++++
->>   1 file changed, 17 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
->>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-Thank you!
+On 2/15/19 8:32 PM, Pavel Machek wrote:
+> Hi!
+>
+>> On Fri, Feb 15, 2019 at 01:50:06PM +0200, Stefan Mavrodiev wrote:
+>>> +static ssize_t control_store(struct device *dev, struct device_attribute *attr,
+>>> +			     const char *buf, size_t size)
+>>> +{
+>>> +	struct led_classdev *cdev = dev_get_drvdata(dev);
+>>> +	struct axp20x_led *priv = to_axp20x_led(cdev);
+>>> +	unsigned long val;
+>>> +	int ret;
+>>> +
+>>> +	ret = kstrtoul(buf, 0, &val);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	/**
+>>> +	 * Supported values are:
+>>> +	 *   - 0 : Manual control
+>>> +	 *   - 1 : Charger control
+>>> +	 */
+> ...
+>>> +static struct attribute *axp20x_led_attrs[] = {
+>>> +	&dev_attr_control.attr,
+>>> +	&dev_attr_mode.attr,
+>>> +	NULL,
+>>> +};
+>>> +ATTRIBUTE_GROUPS(axp20x_led);
+>> I can't really say whether adding sysfs handles for this is the right
+>> thing to do, but if it is you should document the interface.
+> It is not. See "Add Intel Cherry Trail Whiskey Cove PMIC LEDs" thread
+> in the last few days.
+
+What I understood is that there will be changes in the LED core, exporting
+a new sysfs entry "hw_control". Then I should set HW_CONTROL flag for the
+device and add hw_control_get/set callback functions. And this can happen
+when the LED core is updated. Right?
+
+However I didn't understand how (in my case) hardware controlled pattern
+will be selected?
+
+Best regards,
+Stefan Mavrodiev
+
+>>> +	if (!of_property_read_u8(np, "x-powers,charger-mode", &value)) {
+>>> +		priv->ctrl = AXP20X_CHGLED_CTRL_CHARGER;
+>>> +		priv->mode = (value < 2) ? value : 0;
+>>> +	} else {
+>>> +		priv->ctrl = AXP20X_CHGLED_CTRL_MANUAL;
+>>> +	}
+>> I'm not sure we want to make this a property of the device
+>> tree. Changing the device tree isn't an option for some users, so we
+>> need to make sure we can change it even if we can't change the device
+>> tree.
+> We want this to be configurable at run time. It can get default from
+> the device tree.
+>
+> If we go for the "hardware" trigger, you'll get it for free.
+>
+> Best regards,
+> 								Pavel
