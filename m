@@ -1,54 +1,25 @@
-From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: Re: [PATCH v2 5/8] arm64: dts: allwinner: Enable AXP803 CHGLED for
- Olimex boards
-Date: Tue, 19 Feb 2019 09:43:56 +0200
-Message-ID: <d01f4cd2-67ef-66dc-4cb9-cad117bae90b@olimex.com>
-References: <20190215115013.11098-1-stefan@olimex.com>
- <20190215115013.11098-6-stefan@olimex.com> <20190215184916.GA17897@amd>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH v7 5/6] arm64: dts: mt8183: add pintcrl file
+Date: Tue, 19 Feb 2019 15:45:10 +0800
+Message-ID: <CANMq1KDzYSJSKXZJd=xuwP+uFrDY-jGO1Yt2koH7uD5hpJmjJw@mail.gmail.com>
+References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com> <1550210558-30516-6-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190215184916.GA17897@amd>
-Content-Language: en-US
+In-Reply-To: <1550210558-30516-6-git-send-email-erin.lo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Stefan Mavrodiev <stefan@olimex.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
+To: Erin Lo <erin.lo@mediatek.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Cheng Mars <mars.cheng@mediatek.com>, Eddie Huang <eddie.huang@mediatek>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 15, 2019 at 2:07 PM Erin Lo <erin.lo@mediatek.com> wrote:
+> Subject: [PATCH v7 5/6] arm64: dts: mt8183: add pintcrl file
 
-On 2/15/19 8:49 PM, Pavel Machek wrote:
-> On Fri 2019-02-15 13:50:10, Stefan Mavrodiev wrote:
->> Teres-I and A64-OLinuXino commes with populated LED connected
->> to AXP803. So to be used as battery indication, pass the LED control
->> to the charger itself in mode 0 ( FULL while charging, OFF no battery
->> or completed).
->>
->> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
->> ---
->>   arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 6 ++++++
->>   arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts   | 6 ++++++
->>   2 files changed, 12 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
->> index f7a4bccaa5d4..7d6930319fba 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
->> @@ -177,6 +177,12 @@
->>   
->>   #include "axp803.dtsi"
->>   
->> +&axp_led {
->> +	label = "a64-olinuxino:yellow:chgled";
-> There's little chance userspace will recognize this led.
->
-> Can you make it "platform:yellow:charging" and fix it for other
-> boards, too?
-
-Sure.
-
-Best regards,
-Stefan Mavrodiev
+minor spelling mistake in the commit title: pinctrl
 
 >
-> 									Pavel
+> This patch adds pinctrl file for mt8183.
+>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> ---
