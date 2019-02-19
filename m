@@ -1,73 +1,84 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [RFC PATCH 0/5] MTD: Add Initial Hyperbus support
-Date: Tue, 19 Feb 2019 12:54:34 +0530
-Message-ID: <a843dbb2-054a-2afd-863f-2d1822b3ca33@ti.com>
-References: <20190219063607.29949-1-vigneshr@ti.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v1 2/5] dt-bindings: pwm: add a property
+ "mediatek,num-pwms"
+Date: Tue, 19 Feb 2019 08:30:28 +0100
+Message-ID: <20190219073028.eljpo6vlqpgmzcef@pengutronix.de>
+References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
+ <7e1de17a43f2cde73aecd2773e2b3a5fdfd294f3.1547781007.git.ryder.lee@mediatek.com>
+ <7d387d2a-74f0-c6c7-aa2d-cf9b87579682@gmail.com>
+ <20190218203658.GA20434@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219063607.29949-1-vigneshr@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190218203658.GA20434@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com
+To: Rob Herring <robh@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, linux-pwm@vger.kernel.org, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 18, 2019 at 02:36:58PM -0600, Rob Herring wrote:
+> On Fri, Jan 18, 2019 at 09:44:49AM +0100, Matthias Brugger wrote:
+> > 
+> > 
+> > On 18/01/2019 04:24, Ryder Lee wrote:
+> > > This adds a property "mediatek,num-pwms" in example so that we could
+> > > set the number of PWM channels via device tree.
+> > > 
+> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > > ---
+> > > Changes since v1: add a Reviewed-by tag.
+> > > ---
+> > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > > index 991728c..f9e2d1f 100644
+> > > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > > @@ -20,6 +20,7 @@ Required properties:
+> > >   - pinctrl-names: Must contain a "default" entry.
+> > >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
+> > >     See pinctrl/pinctrl-bindings.txt for details of the property values.
+> > > + - mediatek,num-pwms: the number of PWM channels.
+> > >  
+> > >  Example:
+> > >  	pwm0: pwm@11006000 {
+> > > @@ -37,4 +38,5 @@ Example:
+> > >  			      "pwm3", "pwm4", "pwm5";
+> > >  		pinctrl-names = "default";
+> > >  		pinctrl-0 = <&pwm0_pins>;
+> > > +		mediatek,num-pwms = <5>;
+> > >  	};
+> > > 
+> > 
+> > Wasn't there a comment in the last version to use num-pwms instead of
+> > mediatek,num-pwms?
+> > 
+> > Uwe I think you requested that.
+> 
+> Perhaps, but why is this needed? Typically, this would be implied by the 
+> compatible or the driver doesn't care and we assume 'pwms' properties 
+> are not out of range.
 
+I think it is sensible to standardize such a property because there are
+a few drivers that support different variants of PWMs that only differ
+in the number of supported pwms. See for example pwm-mediatek and
+pwm-sun4i. I wrote a longer motivation in a mail that is available at
+https://www.spinics.net/lists/linux-pwm/msg08859.html.
 
-On 19/02/19 12:06 PM, Vignesh R wrote:
-[...]
-> 
-> Tested on modified TI AM654 EVM with Cypress Hyperflash S26KS512 by
-> creating a UBIFS partition and writing and reading files to it.
-> Stress tested by writing/reading 16MB flash repeatedly at different
-> offsets using dd commmand.
-> 
+The short version is that there are at least four drivers that have to
+solve the same task to determine the number of available pwms from the
+compatible. While this isn't a hard task it seems sensible to me to
+describe this generic property of a piece of hardware that provides PWMs
+in the device tree instead of implementing a table in the driver.
 
-Here is the enumeration log from dmesg:
-https://pastebin.ubuntu.com/p/Vd5jYQT4FH/
-
-> HyperBus specification can be found at[1]
-> HyperFlash datasheet can be found at[2]
-> TI's HBMC controller details at[3]
-> 
-> [1] https://www.cypress.com/file/213356/download
-> [2] https://www.cypress.com/file/213346/download
-> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->     Table 12-5741. HyperFlash Access Sequence
-> 
-> Vignesh R (5):
->   mtd: cfi_cmdset_0002: Add support for polling status register
->   dt-bindings: mtd: Add binding documentation for Hyperbus memory
->     devices
->   mtd: Add support for Hyperbus memory devices
->   dt-bindings: mtd: Add bindings for TI's AM654 Hyperbus memory
->     controller
->   mtd: hyperbus: Add driver for TI's Hyperbus memory controller
-> 
->  .../bindings/mtd/cypress,hyperbus.txt         |   6 +
->  .../devicetree/bindings/mtd/ti,am654-hbmc.txt |  27 +++
->  MAINTAINERS                                   |   8 +
->  drivers/mtd/Kconfig                           |   2 +
->  drivers/mtd/Makefile                          |   1 +
->  drivers/mtd/chips/cfi_cmdset_0002.c           |  50 ++++++
->  drivers/mtd/hyperbus/Kconfig                  |  23 +++
->  drivers/mtd/hyperbus/Makefile                 |   4 +
->  drivers/mtd/hyperbus/core.c                   | 167 ++++++++++++++++++
->  drivers/mtd/hyperbus/hbmc_am654.c             | 105 +++++++++++
->  include/linux/mtd/cfi.h                       |   5 +
->  include/linux/mtd/hyperbus.h                  |  73 ++++++++
->  12 files changed, 471 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
->  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
->  create mode 100644 drivers/mtd/hyperbus/Kconfig
->  create mode 100644 drivers/mtd/hyperbus/Makefile
->  create mode 100644 drivers/mtd/hyperbus/core.c
->  create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
->  create mode 100644 include/linux/mtd/hyperbus.h
-> 
+Best regards
+Uwe
 
 -- 
-Regards
-Vignesh
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
