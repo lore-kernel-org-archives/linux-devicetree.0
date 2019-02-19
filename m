@@ -1,51 +1,74 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 2/4] pwm: atmel: add support for controllers with 32 bit
- counters
-Date: Tue, 19 Feb 2019 08:57:04 +0000
-Message-ID: <e08cbcb2-4e37-4a2e-ea79-021a2c7a25d6@microchip.com>
-References: <1548073783-22640-1-git-send-email-claudiu.beznea@microchip.com>
- <1548073783-22640-3-git-send-email-claudiu.beznea@microchip.com>
- <20190219074246.kcdbd5nhf43yw5ax@pengutronix.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
+Date: Tue, 19 Feb 2019 09:56:47 +0100
+Message-ID: <6a61bca4-c458-6d98-68e6-ef49b191019c@i2se.com>
+References: <20190118170232.16142-1-anarsoul@gmail.com>
+ <20190118170232.16142-4-anarsoul@gmail.com> <20190218211035.GA28145@bogus>
+ <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219074246.kcdbd5nhf43yw5ax@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <8BF9CBF41A5E0F40A8890E8641F34482@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: u.kleine-koenig@pengutronix.de
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDE5LjAyLjIwMTkgMDk6NDIsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0KPiBIZWxs
-byBDbGF1ZGl1LA0KPiANCj4gT24gTW9uLCBKYW4gMjEsIDIwMTkgYXQgMTI6MzA6NTNQTSArMDAw
-MCwgQ2xhdWRpdS5CZXpuZWFAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4+IEZyb206IENsYXVkaXUg
-QmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPj4NCj4+IE5ldyBTQU05WDYw
-J3MgUFdNIGNvbnRyb2xsZXIgdXNlIDMyIGJpdHMgY291bnRlcnMgdGh1cyBpdCBjb3VsZCBnZW5l
-cmF0ZQ0KPj4gc2lnbmFscyB3aXRoIGhpZ2hlciBwZXJpb2QgYW5kIGR1dHkgY3ljbGVzLiBVcGRh
-dGUgdGhlIGN1cnJlbnQgZHJpdmVyDQo+PiB0byB3b3JrIHdpdGggb2xkIGNvbnRyb2xsZXIgKHRo
-YXQgdXNlcyAxNiBiaXRzIGNvdW50ZXJzKSBhbmQgd2l0aCB0aGUNCj4+IG5ldyBTQU05WDYwJ3Mg
-Y29udHJvbGxlci4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRp
-dS5iZXpuZWFAbWljcm9jaGlwLmNvbT4NCj4+IC0tLQ0KPj4gIGRyaXZlcnMvcHdtL3B3bS1hdG1l
-bC5jIHwgMzggKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4+ICAxIGZp
-bGUgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvcHdtL3B3bS1hdG1lbC5jIGIvZHJpdmVycy9wd20vcHdtLWF0bWVs
-LmMNCj4+IGluZGV4IDdlODZhNTI2NmViNi4uNDRmNGExYzlmNjBiIDEwMDY0NA0KPj4gLS0tIGEv
-ZHJpdmVycy9wd20vcHdtLWF0bWVsLmMNCj4+ICsrKyBiL2RyaXZlcnMvcHdtL3B3bS1hdG1lbC5j
-DQo+PiBAQCAtNDgsMTUgKzQ4LDE1IEBADQo+PiAgI2RlZmluZSBQV01WMl9DUFJECQkweDBDDQo+
-PiAgI2RlZmluZSBQV01WMl9DUFJEVVBECQkweDEwDQo+PiAgDQo+PiAtLyoNCj4+IC0gKiBNYXgg
-dmFsdWUgZm9yIGR1dHkgYW5kIHBlcmlvZA0KPj4gLSAqDQo+PiAtICogQWx0aG91Z2ggdGhlIGR1
-dHkgYW5kIHBlcmlvZCByZWdpc3RlciBpcyAzMiBiaXQsDQo+PiAtICogaG93ZXZlciBvbmx5IHRo
-ZSBMU0IgMTYgYml0cyBhcmUgc2lnbmlmaWNhbnQuDQo+PiAtICovDQo+PiAtI2RlZmluZSBQV01f
-TUFYX0RUWQkJMHhGRkZGDQo+PiAtI2RlZmluZSBQV01fTUFYX1BSRAkJMHhGRkZGDQo+PiAtI2Rl
-ZmluZSBQUkRfTUFYX1BSRVMJCTEwDQo+PiArLyogTWF4IHZhbHVlcyBmb3IgcGVyaW9kIGFuZCBw
-cmVzY2FsZXIgKi8NCj4+ICsNCj4+ICsvKiBPbmx5IHRoZSBMU0IgMTYgYml0cyBhcmUgc2lnbmlm
-aWNhbnQuICovDQo+PiArI2RlZmluZSBQV01fTUFYVjFfUFJECQkweEZGRkYNCj4+ICsNCj4+ICsv
-KiBBbGwgMzIgYml0cyBhcmUgc2lnbmlmaWNhbnQuICovDQo+PiArI2RlZmluZSBQV01fTUFYVjJf
-UFJECQkweEZGRkZGRkZGDQo+IA0KPiBUaGlzIHN5bWJvbCBpcyB1bnVzZWQsIHNvIEkgd29uZGVy
-IGlmIHRoZSBwYXRjaCByZWFsbHkgZG9lcyB3aGF0IHRoZQ0KPiBjb21taXQgbG9nIHByb21pc2Vz
-Lg0KDQpJdCBpcyBvbmx5IG9mIFNBTTlYNjAncyBQV00uIFBsZWFzZSBjaGVjayBwYXRjaCAzLzQu
-IE1heWJlIEkgc2hvdWxkIGhhdmUNCmJlZW4gaW50cm9kdWNlZCBpdCBpbiB0aGVyZS4gSWYgeW91
-IGNvbnNpZGVyIGl0IGlzIGJldHRlciB0byBiZSBpbnRyb2R1Y2VkDQppbiBwYXRjaCAzLzQgcGxl
-YXNlIGxldCBtZSBrbm93Lg0KDQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gVXdlDQo+IA0K
+Hi Vasily,
+
+Am 18.02.19 um 22:24 schrieb Vasily Khoruzhick:
+> On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
+>> On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
+>>> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+>>>
+>>> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+>>> ---
+>>>  .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
+>>>  1 file changed, 35 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+>>> new file mode 100644
+>>> index 000000000000..8357f242ae4c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+>>> @@ -0,0 +1,35 @@
+>>> +RTL8723BS/RTL8723CS Bluetooth
+>>> +---------------------
+>>> +
+>>> +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
+>>> +BT is connected over serial. It speaks H5 protocol with few extra commands
+>>> +to upload firmware and change module speed.
+>>> +
+>>> +Required properties:
+>>> +
+>>> + - compatible: should be one of the following:
+>>> +   * "realtek,rtl8723bs-bt"
+>>> +   * "realtek,rtl8723cs-bt"
+>>> +Optional properties:
+>>> +
+>>> + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
+>>> + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
+>>> + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
+>>> + - firmware-postfix: firmware postfix to be used for firmware config
+>> How is this used?
+> rtl8723bs-bt needs 2 firmware binaries -- one is actual firmware,
+> another is firmware config which is specific to the board. If
+> firmware-postfix is specified, driver appends it to the name of config
+> and requests board-specific config while loading firmware. I.e. if
+> 'pine64' is specified as firmware-postfix driver will load
+> rtl8723bs_config-pine64.bin.
+
+this is a common problem (e.g. brcmfmac has the same problem [1]).
+
+Why not using the "model" property instead of inventing a new software
+specific property?
+
+[1] - https://patchwork.kernel.org/patch/10764463/
+
+>
+>> Rob
+>>
+> _
