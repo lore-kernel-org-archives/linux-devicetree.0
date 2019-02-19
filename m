@@ -1,51 +1,44 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 4/4] Input: goodix - Add GT5663 CTP support
-Date: Tue, 19 Feb 2019 15:46:29 +0530
-Message-ID: <20190219101629.15977-5-jagan@amarulasolutions.com>
-References: <20190219101629.15977-1-jagan@amarulasolutions.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 6/8] regulator: stpmic1: Change buck1 voltage range
+Date: Tue, 19 Feb 2019 10:42:57 +0000
+Message-ID: <20190219104257.GA6319@sirena.org.uk>
+References: <1550570647-9555-1-git-send-email-p.paillet@st.com>
+ <1550570647-9555-7-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219101629.15977-1-jagan@amarulasolutions.com>
+Content-Disposition: inline
+In-Reply-To: <1550570647-9555-7-git-send-email-p.paillet@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "axel.lin@ingics.com" <axel.lin@ingics.com>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-GT5663 is capacitive touch controller with customized smart
-wakeup gestures.
 
-Add support for it by adding compatible and supported chip data.
+--+HP7ph2BbKc20aGI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The chip data on GT5663 is similar to GT1151, like
-- config data register has 0x8050 address
-- config data register max len is 240
-- config data checksum has 16-bit
+On Tue, Feb 19, 2019 at 10:04:34AM +0000, Pascal PAILLET-LME wrote:
+> Change buck1 voltage range to be conform with the data-sheet.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- drivers/input/touchscreen/goodix.c | 2 ++
- 1 file changed, 2 insertions(+)
+This is a bug fix so it should've gone at the start of the series to
+make it easier to apply and send to Linus as a fix.
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index 5f9e755c5bc7..405246d61701 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -219,6 +219,7 @@ static const struct goodix_chip_data *goodix_get_chip_data(u16 id)
- {
- 	switch (id) {
- 	case 1151:
-+	case 5663:
- 		return &gt1x_chip_data;
- 
- 	case 911:
-@@ -1000,6 +1001,7 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
- #ifdef CONFIG_OF
- static const struct of_device_id goodix_of_match[] = {
- 	{ .compatible = "goodix,gt1151" },
-+	{ .compatible = "goodix,gt5663" },
- 	{ .compatible = "goodix,gt911" },
- 	{ .compatible = "goodix,gt9110" },
- 	{ .compatible = "goodix,gt912" },
--- 
-2.18.0.321.gffc6fa0e3
+--+HP7ph2BbKc20aGI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxr3bAACgkQJNaLcl1U
+h9AMkQf+N2Iy/0bBdB1WS1fToVshGDV5kAXEiyK9b0yxIHSwCxxBLRqDr3NwAM0h
+f4qpBCDF3DUbgl/CE7thOa7Zyz4xm6bwM5/9QJO+qv/ryJj/1v59gFMa22nULHrs
+Z3KD3R60kgCcKk2mENHpvyyNFyhGtw7+bhpQagGOyJXTc/Cv275itfosq3CB9B+7
+dwzHejJUJY7OcefHiLGF6Y2X4hoHEJQlYgoyj7ZjKJddvub4XRGwKAf+OO/jWf0C
+4IybyQkJ2KK6o42qGhcwLX/8ODmE6qiVH1O1u/cTq5gKljab+l82Sen6FxYHSzSg
+UEyyJocK6t9jDkqHH7bRj0wZHfNfLQ==
+=fCnH
+-----END PGP SIGNATURE-----
+
+--+HP7ph2BbKc20aGI--
