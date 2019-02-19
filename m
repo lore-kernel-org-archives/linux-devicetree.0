@@ -1,52 +1,60 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH v2 13/15] ARM: dts: milbeaut: Add device tree set for the
- Milbeaut M10V board
-Date: Tue, 19 Feb 2019 14:11:21 +0900
-Message-ID: <ba5bb646-7fa6-e98f-4ac2-47c55c8f82ba@socionext.com>
-References: <1549628920-32623-1-git-send-email-sugaya.taichi@socionext.com>
- <CAK8P3a15mLEgVAh1+jQ+GqOcQa0zhrePWofo8iGkTs5_bd=TmQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2 1/7] clk: gcc-qcs404: Add PCIe resets
+Date: Mon, 18 Feb 2019 22:04:01 -0800
+Message-ID: <20190219060407.15263-2-bjorn.andersson@linaro.org>
+References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a15mLEgVAh1+jQ+GqOcQa0zhrePWofo8iGkTs5_bd=TmQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190219060407.15263-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-Thank you for you comments.
+Enabling PCIe requires several of the PCIe related resets from GCC, so
+add them all.
 
-On 2019/02/18 21:09, Arnd Bergmann wrote:
-> On Fri, Feb 8, 2019 at 1:28 PM Sugaya Taichi
-> <sugaya.taichi@socionext.com> wrote:
->> +
->> +       aliases {
->> +               serial1 = &uart1;
->> +       };
-> 
-> Maybe start with serial0 here? It seems unusual to start
-> counting at 1.
-> 
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/clk/qcom/gcc-qcs404.c               | 7 +++++++
+ include/dt-bindings/clock/qcom,gcc-qcs404.h | 7 +++++++
+ 2 files changed, 14 insertions(+)
 
-The M10V evaluation board(EVB) uses a console with uart ch1, so this 
-alias number is derived from the used channel one.
-Therefore it is no problem to change the alias number to 0.
-
->> +       chosen {
->> +               bootargs = "init=/sbin/finit rootwait earlycon";
-> 
-> The /sbin/finit argument seems user space specific, so you probably don't
-> want this in the dts file but rather pass it from the boot loader.
-> Possible drop the bootargs entirely.
-> 
-
-Okay, remove the arg from the dts and add to bootargs instead.
-
-Thanks,
-Sugaya Taichi
-
->       Arnd
-> 
+diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
+index 64da032bb9ed..5aed43923239 100644
+--- a/drivers/clk/qcom/gcc-qcs404.c
++++ b/drivers/clk/qcom/gcc-qcs404.c
+@@ -2675,6 +2675,13 @@ static const struct qcom_reset_map gcc_qcs404_resets[] = {
+ 	[GCC_PCIE_0_PHY_BCR] = { 0x3e004 },
+ 	[GCC_PCIE_0_LINK_DOWN_BCR] = { 0x3e038 },
+ 	[GCC_PCIEPHY_0_PHY_BCR] = { 0x3e03c },
++	[GCC_PCIE_0_AXI_MASTER_STICKY_ARES] = { 0x3e040, 6},
++	[GCC_PCIE_0_AHB_ARES] = { 0x3e040, 5 },
++	[GCC_PCIE_0_AXI_SLAVE_ARES] = { 0x3e040, 4 },
++	[GCC_PCIE_0_AXI_MASTER_ARES] = { 0x3e040, 3 },
++	[GCC_PCIE_0_CORE_STICKY_ARES] = { 0x3e040, 2 },
++	[GCC_PCIE_0_SLEEP_ARES] = { 0x3e040, 1 },
++	[GCC_PCIE_0_PIPE_ARES] = { 0x3e040, 0 },
+ 	[GCC_EMAC_BCR] = { 0x4e000 },
+ };
+ 
+diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+index 6ceb55ed72c6..00ab0d77b38a 100644
+--- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
++++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+@@ -161,5 +161,12 @@
+ #define GCC_PCIE_0_LINK_DOWN_BCR			11
+ #define GCC_PCIEPHY_0_PHY_BCR				12
+ #define GCC_EMAC_BCR					13
++#define GCC_PCIE_0_AXI_MASTER_STICKY_ARES		14
++#define GCC_PCIE_0_AHB_ARES				15
++#define GCC_PCIE_0_AXI_SLAVE_ARES			16
++#define GCC_PCIE_0_AXI_MASTER_ARES			17
++#define GCC_PCIE_0_CORE_STICKY_ARES			18
++#define GCC_PCIE_0_SLEEP_ARES				19
++#define GCC_PCIE_0_PIPE_ARES				20
+ 
+ #endif
+-- 
+2.18.0
