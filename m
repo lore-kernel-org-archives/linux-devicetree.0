@@ -1,63 +1,102 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv6 1/4] dt-bindings: add DT binding for the layerscape PCIe
- controller with EP mode
-Date: Tue, 19 Feb 2019 06:57:39 +0000
-Message-ID: <AM5PR04MB3299AE3A36D909AC192810D5F57C0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190122063328.25228-1-xiaowei.bao@nxp.com>
- <20190205180247.GA13891@e107981-ln.cambridge.arm.com>
+From: Jianjun Wang <jianjun.wang@mediatek.com>
+Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
+Date: Tue, 19 Feb 2019 15:01:39 +0800
+Message-ID: <1550559699.29794.2.camel@mhfsdcap03>
+References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
+         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
+         <20181213145517.GB4701@google.com> <1545034779.8528.8.camel@mhfsdcap03>
+         <20181217143247.GK20725@google.com>
+         <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
+         <1545124764.25199.3.camel@mhfsdcap03> <20181220182043.GC183878@google.com>
+         <1545651628.5634.57.camel@mhfsdcap03>
+         <20190123154023.GA1157@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190205180247.GA13891@e107981-ln.cambridge.arm.com>
-Content-Language: en-US
+In-Reply-To: <20190123154023.GA1157@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org, jianjun.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMb3JlbnpvIFBpZXJhbGlzaSA8
-bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4gDQpTZW50OiAyMDE5xOoy1MI2yNUgMjowMw0KVG86
-IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IGJoZWxnYWFzQGdvb2dsZS5j
-b207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtl
-cm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsgYXJu
-ZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IE0uaC4gTGlhbiA8bWluZ2h1
-YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFph
-bmcgPHJveS56YW5nQG54cC5jb20+OyBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyBjeXJp
-bGxlLnBpdGNoZW5AZnJlZS1lbGVjdHJvbnMuY29tOyBwb21icmVkYW5uZUBuZXhiLmNvbTsgc2hh
-d24ubGluQHJvY2stY2hpcHMuY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
-Lm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSHY2IDEvNF0gZHQtYmluZGluZ3M6IGFkZCBEVCBiaW5k
-aW5nIGZvciB0aGUgbGF5ZXJzY2FwZSBQQ0llIGNvbnRyb2xsZXIgd2l0aCBFUCBtb2RlDQoNCk9u
-IFR1ZSwgSmFuIDIyLCAyMDE5IGF0IDAyOjMzOjI1UE0gKzA4MDAsIFhpYW93ZWkgQmFvIHdyb3Rl
-Og0KPiBBZGQgdGhlIGRvY3VtZW50YXRpb24gZm9yIHRoZSBEZXZpY2UgVHJlZSBiaW5kaW5nIGZv
-ciB0aGUgbGF5ZXJzY2FwZSANCj4gUENJZSBjb250cm9sbGVyIHdpdGggRVAgbW9kZS4NCj4gDQo+
-IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBSZXZp
-ZXdlZC1ieTogTWluZ2h1YW4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPg0KPiBSZXZpZXdl
-ZC1ieTogWmhpcWlhbmcgSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gUmV2aWV3ZWQtYnk6
-IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+DQo+IC0tLQ0KPiB2MjoNCj4gIC0gQWRk
-IHRoZSBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZXMuDQo+IHYzOg0KPiAgLSBtb2RpZnkgdGhlIGNv
-bW1pdCBtZXNzYWdlLg0KPiB2NDoNCj4gIC0gbm8gY2hhbmdlLg0KPiB2NToNCj4gIC0gbm8gY2hh
-bmdlLg0KPiB2NjoNCj4gIC0gbm8gY2hhbmdlLg0KPiANCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQgICAgIHwgICAgMyArKysNCj4gIDEgZmlsZXMgY2hh
-bmdlZCwgMyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KDQpBcHBsaWVkIHRoZSBzZXJp
-ZXMgdG8gcGNpL2xheWVyc2NhcGUgZm9yIHY1LjEsIHRoYW5rcy4NCltYaWFvd2VpIEJhb10gSGkg
-TG9yZW56bywgdGhhbmsgYSBsb3QuDQoNCkxvcmVuem8NCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0IA0KPiBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+
-IGluZGV4IDliMmI4ZDYuLmUyMGNlYWEgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+IEBAIC0x
-Myw2ICsxMyw3IEBAIGluZm9ybWF0aW9uLg0KPiAgDQo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
-PiAgLSBjb21wYXRpYmxlOiBzaG91bGQgY29udGFpbiB0aGUgcGxhdGZvcm0gaWRlbnRpZmllciBz
-dWNoIGFzOg0KPiArICBSQyBtb2RlOg0KPiAgICAgICAgICAiZnNsLGxzMTAyMWEtcGNpZSINCj4g
-ICAgICAgICAgImZzbCxsczIwODBhLXBjaWUiLCAiZnNsLGxzMjA4NWEtcGNpZSINCj4gICAgICAg
-ICAgImZzbCxsczIwODhhLXBjaWUiDQo+IEBAIC0yMCw2ICsyMSw4IEBAIFJlcXVpcmVkIHByb3Bl
-cnRpZXM6DQo+ICAgICAgICAgICJmc2wsbHMxMDQ2YS1wY2llIg0KPiAgICAgICAgICAiZnNsLGxz
-MTA0M2EtcGNpZSINCj4gICAgICAgICAgImZzbCxsczEwMTJhLXBjaWUiDQo+ICsgIEVQIG1vZGU6
-DQo+ICsJImZzbCxsczEwNDZhLXBjaWUtZXAiLCAiZnNsLGxzLXBjaWUtZXAiDQo+ICAtIHJlZzog
-YmFzZSBhZGRyZXNzZXMgYW5kIGxlbmd0aHMgb2YgdGhlIFBDSWUgY29udHJvbGxlciByZWdpc3Rl
-ciBibG9ja3MuDQo+ICAtIGludGVycnVwdHM6IEEgbGlzdCBvZiBpbnRlcnJ1cHQgb3V0cHV0cyBv
-ZiB0aGUgY29udHJvbGxlci4gTXVzdCBjb250YWluIGFuDQo+ICAgIGVudHJ5IGZvciBlYWNoIGVu
-dHJ5IGluIHRoZSBpbnRlcnJ1cHQtbmFtZXMgcHJvcGVydHkuDQo+IC0tDQo+IDEuNy4xDQo+IA0K
+On Wed, 2019-01-23 at 15:40 +0000, Lorenzo Pieralisi wrote:
+> On Mon, Dec 24, 2018 at 07:40:28PM +0800, Jianjun Wang wrote:
+> > On Thu, 2018-12-20 at 12:20 -0600, Bjorn Helgaas wrote:
+> > > On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
+> > > > On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
+> > > > > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
+> > > > > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
+> > > > > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
+> > > > > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
+> > > > > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be
+> > > > > > > > > calculated as 4GB in arm64 but bogus alignment values at
+> > > > > > > > > arm32, the pcie device and devices behind this bridge will
+> > > > > > > > > not be enabled. Fix it's BAR0 resource size to guarantee
+> > > > > > > > > the pcie devices will be enabled correctly.
+> > > > > > > > 
+> > > > > > > > So this is a hardware erratum?  Per spec, a memory BAR has
+> > > > > > > > bit 0 hardwired to 0, and an IO BAR has bit 1 hardwired to
+> > > > > > > > 0.
+> > > > > > > 
+> > > > > > > Yes, it only works properly on 64bit platform.
+> > > > > > 
+> > > > > > I don't understand.  BARs are supposed to work the same
+> > > > > > regardless of whether it's a 32- or 64-bit platform.  If this is
+> > > > > > a workaround for a hardware defect, please just say that
+> > > > > > explicitly.
+> > > > > 
+> > > > > I do not understand this either. First thing to do is to describe
+> > > > > the problem properly so that we can actually find a solution to
+> > > > > it.
+> > > > 
+> > > > This BAR0 is a 64-bit memory BAR, the HW default values for this BAR
+> > > > is 0xffff_ffff_0000_0000 and it could not be changed except by
+> > > > config write operation.
+> > > 
+> > > If you literally get 0xffff_ffff_0000_0000 when reading the BAR, that
+> > > is out of spec because the low-order 4 bits of a 64-bit memory BAR
+> > > cannot all be zero.
+> > > 
+> > > A 64-bit BAR consumes two DWORDS in config space.  For a 64-bit BAR0,
+> > > the DWORD at 0x10 contains the low-order bits, and the DWORD at 0x14
+> > > contains the upper 32 bits.  Bits 0-3 of the low-order DWORD (the
+> > > one at 0x10) are read-only, and in this case should contain the value
+> > > 0b1100 (0xc).  That means the range is prefetchable (bit 3 == 1) and
+> > > the BAR is 64 bits (bits 2:1 == 10).
+> > 
+> > Sorry, I have confused the HW default value and the read value of BAR
+> > size. The hardware default value is 0xffff_ffff_0000_000c, it's a 64-bit
+> > BAR with prefetchable range.
+> > 
+> > When we start to decoding the BAR, the read value of BAR0 at 0x10 is
+> > 0x0c, and the value at 0x14 is 0xffff_ffff, so the read value of BAR
+> > size is 0xffff_ffff_0000_0000, which will be decoded to 0xffff_ffff, and
+> > it will be set to the end value of BAR0 resource in the pci_dev.
+> > > 
+> > > > The calculated BAR size will be 0 in 32-bit platform since the
+> > > > phys_addr_t is a 32bit value in 32-bit platform.
+> > > 
+> > > Either (1) this is a hardware defect that feeds incorrect data to the
+> > > BAR size calculation, or (2) there's a problem in the BAR size
+> > > calculation code.  We need to figure out which one and work around or
+> > > fix it correctly.
+> > 
+> > The BAR size is calculated by the code (res->end - res->start + 1) is
+> > fine, I think it's a hardware defect because that we can not change the
+> > hardware default value or just disable it since we don't using it.
+> 
+> Apologies for the delay in getting back to this.
+> 
+> This looks like a kernel defect, not a HW defect.
+> 
+> I need some time to make up my mind on what the right fix for this
+> but it is most certainly not this patch.
+> 
+> Lorenzo
+
+Hi Lorenzo,
+
+Is there any better idea about this patch?
+
+Thanks.
