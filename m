@@ -1,120 +1,80 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Add one new cell to present
- hardware slave id
-Date: Tue, 19 Feb 2019 17:49:19 +0800
-Message-ID: <CAMz4ku+yzwaww5o06tz9-8n99UfiVh6d5UB2L12RYMpTow6K3w@mail.gmail.com>
-References: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
- <CAK8P3a2zkhrZLMi5KZ5=fGJCt85dad3_pZC0o7GqcwJkk4es9w@mail.gmail.com>
- <CAMz4ku+PR4bHtcPu2uT2f974+FWJVi8Tp3WzmuqE1TS-M-QawQ@mail.gmail.com>
- <CAMz4kuLEut0LqZ4bSAGJDufE8xHr6DgZ3Z1RCLQ10q_k6MUesw@mail.gmail.com>
- <CAK8P3a1Zq6XjymG3sAaHGeNRxU5UXPfJPbi0A9s47cTVK7vC3g@mail.gmail.com>
- <CAMz4kuL=B53xLk4SFbrwWeUhp4P9zbUfOmXgftQCEjVSwOnD5A@mail.gmail.com>
- <CAK8P3a03rPjWQvGrDupoTAywVmjCZdpSJpqW9Sv=NVPR2uwZeQ@mail.gmail.com>
- <CAMz4kuKnVppCB0-9LVgq8bya6=iWPhMcrHL_N53QfiU5Kn9YAA@mail.gmail.com> <CAMuHMdWPZGYpvANL_V=YszPWjtTA+ZnU6GVDmn188LC=eC005Q@mail.gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v4 3/3] pwm: core: add consumer device link
+Date: Tue, 19 Feb 2019 10:54:20 +0100
+Message-ID: <b4f42c35-df0e-8b61-6132-39a453a3b11c@st.com>
+References: <1550139951-25788-1-git-send-email-fabrice.gasnier@st.com>
+ <1550139951-25788-4-git-send-email-fabrice.gasnier@st.com>
+ <20190218172223.lw3e5tn5hzsow6tg@pengutronix.de>
+ <53bc3d80-8732-46be-caef-015998c9ad0e@st.com>
+ <20190219085516.dz5ux37kdszqkisy@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWPZGYpvANL_V=YszPWjtTA+ZnU6GVDmn188LC=eC005Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Dan Williams <dan.j.williams@intel.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, eric.long@unisoc.com, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190219085516.dz5ux37kdszqkisy@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, tduszyns@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Tue, 19 Feb 2019 at 17:30, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Baolin,
->
-> On Tue, Feb 19, 2019 at 4:15 AM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > On Mon, 18 Feb 2019 at 20:23, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Mon, Feb 18, 2019 at 11:52 AM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > On Mon, 18 Feb 2019 at 18:31, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > >
-> > > > > On Tue, Feb 12, 2019 at 9:25 AM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > > > On Fri, 1 Feb 2019 at 19:53, Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > > > > On Thu, 31 Jan 2019 at 00:52, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > > > > On Tue, Jan 22, 2019 at 2:21 PM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > > > > > >
-> > > > > > > > >  Client:
-> > > > > > > > >  DMA clients connected to the Spreadtrum DMA controller must use the format
-> > > > > > > > > -described in the dma.txt file, using a two-cell specifier for each channel.
-> > > > > > > > > -The two cells in order are:
-> > > > > > > > > +described in the dma.txt file, using a three-cell specifier for each channel.
-> > > > > > > > > +The three cells in order are:
-> > > > > > > > >  1. A phandle pointing to the DMA controller.
-> > > > > > > > >  2. The channel id.
-> > > > > > > > > +3. The hardware slave id which is used for clients to trigger DMA engine
-> > > > > > > > > +automatically.
-> > > > > > > >
-> > > > > > > > I notice that this is an incompatible binding change. Is that necessary?
-> > > > > > > > If the current code works, I'd suggest allowing both #dma-cells=<2>
-> > > > > > > > and <3>, and then implementing both in the driver.
-> > > > > > >
-> > > > > > > Yes, this is necessary.
-> > > > > > >
-> > > > > > > Yes, current code can work, but the problem is that the DMA clients
-> > > > > > > must add one property (something like "sprd,slave-id") to specify the
-> > > > > > > slave id. So considering this, we want to change the dma-cells to 2,
-> > > > > > > including dma channel and dma slave id, which can avoid introducing
-> > > > > > > some similar properties for DMA clients.
-> > > > > > >
-> > > > > > > Now there are no DMA clients in mainline for Spreadtrum platform, and
-> > > > > > > we want to upstream our first DMA clients: SPI controller. So no other
-> > > > > > > drivers need to change when we changing dma cells. Thanks.
-> > > > > >
-> > > > > > Do you have any other concerns about this patch set? If not, I think
-> > > > > > Vinod can apply this patch set. Thanks.
-> > > > >
-> > > > > Sorry for the late reply. Yes, this makes sense since there are no
-> > > > > existing users then. For the DT changes going through the dmaengine
-> > > > > tree
-> > > > >
-> > > > > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> > > >
-> > > > Thanks for your reviewing.
-> > > >
-> > > > >
-> > > > > One more question, to make sure we don't need to edit it again:
-> > > > > Why do you need both a 'channel id' and a 'slave id' here? Is this
-> > > > > a strict hardware requirement for your DMA engine? In many
-> > > > > other designs, only a DMA request line number needs to
-> > > > > be described, and I think this would correspond to what you
-> > > > > call the 'hardware slave id' in your documentation.
-> > > >
-> > > > I try to explain why we need the slave id.
-> > > >
-> > > > For our DMA engine driver, we have software request mode and hardware
-> > > > request mode. For software request mode, the DMA engine driver need
-> > > > trigger DMA to start transfer manually. But for hardware request mode,
-> > > > we just set one unique slave id corresponding to the slave hardware to
-> > > > the DMA engine, then the slave hardware can trigger DMA automatically.
-> > > > And the slave id is not always same with the channel id according to
-> > > > the SoC design, so we add one cell to specify the slave id.
-> > >
-> > > I did understand the need for a slave-id, I was instead wondering about
-> > > the channel-id number. On many SoCs, all channels are equal, and you
-> > > just have to pick one of those with the right capabilities for a particular
-> > > slave.
-> >
-> > Yes, all channels are equal. We just set a unique slave id for the
-> > channel for a particular slave. For example, the SPI slave can use
-> > channel 10 for tx transfer by setting slave id 11, or it also can use
-> > channel 9 for tx transfer by setting same slave id 11.
->
-> So the channel selection is software policy, not hardware description, and
-> thus doesn't belong in DT?
->
-> Can't the DMA engine driver allocate channels dynamically, removing the
-> need to specify this in DT?
-
-In theory we can do as you suggested. But we still want to
-manage/assign the DMA channel resources manually for one SoC, we can
-make sure some important DMA slaves (such as audio)  can request a DMA
-channel at runtime firstly, another benefit is that it is easy to
-debug since we can easily know which channel is assigned for this
-slave.
-
--- 
-Baolin Wang
-Best Regards
+T24gMi8xOS8xOSA5OjU1IEFNLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToKPiBPbiBUdWUsIEZl
+YiAxOSwgMjAxOSBhdCAwOTo0NjozMkFNICswMTAwLCBGYWJyaWNlIEdhc25pZXIgd3JvdGU6Cj4+
+IE9uIDIvMTgvMTkgNjoyMiBQTSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6Cj4+PiBIZWxsbywK
+Pj4+Cj4+PiBPbiBUaHUsIEZlYiAxNCwgMjAxOSBhdCAxMToyNTo1MUFNICswMTAwLCBGYWJyaWNl
+IEdhc25pZXIgd3JvdGU6Cj4+Pj4gQWRkIGEgZGV2aWNlIGxpbmsgYmV0d2VlbiB0aGUgUFdNIGNv
+bnN1bWVyIGFuZCB0aGUgUFdNIHByb3ZpZGVyLiBUaGlzCj4+Pj4gZW5mb3JjZXMgdGhlIFBXTSB1
+c2VyIHRvIGdldCBzdXNwZW5kZWQgYmVmb3JlIHRoZSBQV00gcHJvdmlkZXIuIEl0Cj4+Pj4gYWxs
+b3dzIHByb3BlciBzeW5jaHJvbml6YXRpb24gb2Ygc3VzcGVuZC9yZXN1bWUgc2VxdWVuY2VzOiB0
+aGUgUFdNIHVzZXIKPj4+PiBpcyByZXNwb25zaWJsZSBmb3IgcHJvcGVybHkgc3RvcHBpbmcgUFdN
+LCBiZWZvcmUgdGhlIHByb3ZpZGVyIGdldHMKPj4+PiBzdXNwZW5kZWQ6IHNlZSBbMV0uIEFkZCB0
+aGUgZGV2aWNlIGxpbmsgaW46Cj4+Pj4gLSBvZl9wd21fZ2V0KCkKPj4+PiAtIHB3bV9nZXQoKQo+
+Pj4+IC0gZGV2bV8qcHdtX2dldCgpIHZhcmlhbnRzCj4+Pj4gYXMgaXQgcmVxdWlyZXMgYSByZWZl
+cmVuY2UgdG8gdGhlIGRldmljZSBmb3IgdGhlIFBXTSBjb25zdW1lci4KPj4+Pgo+Pj4+IFsxXSBo
+dHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS8yLzUvNzcwCj4+Pj4KPj4+PiBTdWdnZXN0ZWQtYnk6
+IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4+Pj4gU2lnbmVkLW9m
+Zi1ieTogRmFicmljZSBHYXNuaWVyIDxmYWJyaWNlLmdhc25pZXJAc3QuY29tPgo+Pj4+IC0tLQo+
+Pj4+IENoYW5nZXMgaW4gdjQ6Cj4+Pj4gLSByZXdvcmsgZXJyb3IgaGFuZGxpbmcgZm9sbG93aW5n
+IFRoaWVycnkncyBjb21tZW50cwo+Pj4+IC0gdHVybi9zcGxpdCBwcl9kZWJ1ZygpIGludG8gZGV2
+X2VycigpL3ByX3dhcm4oKS4KPj4+Pgo+Pj4+IENoYW5nZXMgaW4gdjM6Cj4+Pj4gLSBhZGQgc3Ry
+dWN0IGRldmljZSB0byBvZl9nZXRfcHdtKCkgYXJndW1lbnRzIHRvIGhhbmRsZSBkZXZpY2UgbGlu
+ayBmcm9tCj4+Pj4gICB0aGVyZSBhcyBkaXNjdXNzZWQgd2l0aCBVd2UuCj4+Pj4gLS0tCj4+Pj4g
+IGRyaXZlcnMvcHdtL2NvcmUuYyAgfCA1MCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKy0tLQo+Pj4+ICBpbmNsdWRlL2xpbnV4L3B3bS5oIHwgIDYgKysrKy0t
+Cj4+Pj4gIDIgZmlsZXMgY2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkK
+Pj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9jb3JlLmMgYi9kcml2ZXJzL3B3bS9j
+b3JlLmMKPj4+PiBpbmRleCAxNTgxZjZhLi42NGUxMGE2IDEwMDY0NAo+Pj4+IC0tLSBhL2RyaXZl
+cnMvcHdtL2NvcmUuYwo+Pj4+ICsrKyBiL2RyaXZlcnMvcHdtL2NvcmUuYwo+Pj4+IEBAIC02MzYs
+OCArNjM2LDM1IEBAIHN0YXRpYyBzdHJ1Y3QgcHdtX2NoaXAgKm9mX25vZGVfdG9fcHdtY2hpcChz
+dHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQo+Pj4+ICAJcmV0dXJuIEVSUl9QVFIoLUVQUk9CRV9ERUZF
+Uik7Cj4+Pj4gIH0KPj4+PiAgCj4+Pj4gK3N0YXRpYyBzdHJ1Y3QgZGV2aWNlX2xpbmsgKnB3bV9k
+ZXZpY2VfbGlua19hZGQoc3RydWN0IGRldmljZSAqZGV2LAo+Pj4+ICsJCQkJCSAgICAgICBzdHJ1
+Y3QgcHdtX2RldmljZSAqcHdtKQo+Pj4+ICt7Cj4+Pj4gKwlzdHJ1Y3QgZGV2aWNlX2xpbmsgKmRs
+Owo+Pj4+ICsKPj4+PiArCWlmICghZGV2KSB7Cj4+Pj4gKwkJLyoKPj4+PiArCQkgKiBObyBkZXZp
+Y2UgZm9yIHRoZSBQV00gY29uc3VtZXIgaGFzIGJlZW4gcHJvdmlkZWQuIEl0IG1heQo+Pj4+ICsJ
+CSAqIGltcGFjdCB0aGUgUE0gc2VxdWVuY2Ugb3JkZXJpbmc6IHRoZSBQV00gc3VwcGxpZXIgbWF5
+IGdldAo+Pj4+ICsJCSAqIHN1c3BlbmRlZCBiZWZvcmUgdGhlIGNvbnN1bWVyLgo+Pj4+ICsJCSAq
+Lwo+Pj4+ICsJCXByX3dhcm4oIm5vIGNvbnN1bWVyIGRldiwgY2FuJ3QgY3JlYXRlIGRldmljZSBs
+aW5rIHRvICVzXG4iLAo+Pj4+ICsJCQlkZXZfbmFtZShwd20tPmNoaXAtPmRldikpOwo+Pj4KPj4+
+IE1heWJlIHVzZSBkZXZfd2Fybihwd20tPmNoaXAtPmRldiwgLi4uKSA/Cj4+Cj4+IEhpIFV3ZSwK
+Pj4KPj4gSSdtIHdvbmRlcmluZyBhIGJpdCBhYm91dCB0aGlzOiBJbiB0aGlzIGNhc2UsIHRoZSBj
+YWxsZXIgdGhhdCBkb2Vzbid0Cj4+IHByb3ZpZGUgYSBzdHJ1Y3QgZGV2aWNlICosIFBXTSBwcm92
+aWRlciBpc24ndCByZXNwb25zaWJsZSBmb3IgdGhhdC4gU28gSQo+PiBqdXN0IGhvcGUgdGhpcyB3
+b3VsZG4ndCBiZSBtaXNzLWxlYWRpbmcgPwo+IAo+IElNSE8gaXQncyBtb3JlIHRoZSB3b3JkaW5n
+IHRoYXQgbWlnaHQgbWFrZSB0aGUgbWVzc2FnZSBtaXNsZWFkaW5nLiBJZgo+IHlvdSB1c2UKPiAK
+PiAJZGV2X3dhcm4ocHdtLT5jaGlwLT5kZXYsICJObyBjb25zdW1lciBkZXZpY2Ugc3BlY2lmaWVk
+IHRvIGNyZWF0ZSBhIGRldmljZSBsaW5rIHRvXG4iKTsKPiAKPiB0aGF0J3MgY29tcGxldGVseSBm
+aW5lIGluIG15IGV5ZXMuCgpUaGFua3MgZm9yIHRoZSBzdWdnZXN0aW9uLCBJJ2xsIHVwZGF0ZSB0
+aGlzIGFzIHdlbGwgaW4gdjUuCgpCZXN0IHJlZ2FyZHMsCkZhYnJpY2UKPiAgCj4gQmVzdCByZWdh
+cmRzCj4gVXdlCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
