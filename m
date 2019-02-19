@@ -1,72 +1,113 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 2/6] usb:common Separated decoding functions from dwc3
- driver.
-Date: Tue, 19 Feb 2019 14:14:02 +0100
-Message-ID: <20190219131402.GB20719@kroah.com>
-References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
- <1550173514-23573-3-git-send-email-pawell@cadence.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH] dt-bindings: imx: update scu resource id headfile
+Date: Tue, 19 Feb 2019 13:21:59 +0000
+Message-ID: <DB3PR0402MB3916AF3AA0283DB22DF61E2FF57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
+ <20190219125211.2pg2bqxner4klcb5@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550173514-23573-3-git-send-email-pawell@cadence.com>
+In-Reply-To: <20190219125211.2pg2bqxner4klcb5@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: devicetree@vger.kernel.org, felipe.balbi@linux.intel.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, kurahul@cadence.com
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 07:45:10PM +0000, Pawel Laszczak wrote:
-> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
-> to driver/usb/common/debug.c file. These moved functions include:
->     dwc3_decode_get_status
->     dwc3_decode_set_clear_feature
->     dwc3_decode_set_address
->     dwc3_decode_get_set_descriptor
->     dwc3_decode_get_configuration
->     dwc3_decode_set_configuration
->     dwc3_decode_get_intf
->     dwc3_decode_set_intf
->     dwc3_decode_synch_frame
->     dwc3_decode_set_sel
->     dwc3_decode_set_isoch_delay
->     dwc3_decode_ctrl
-> 
-> These functions are used also in inroduced cdns3 driver.
-> 
-> All functions prefixes were changed from dwc3 to usb.
-> Also, function's parameters has been extended according to the name
-> of fields in standard SETUP packet.
-> Additionally, patch adds usb_decode_ctrl function to
-> include/linux/usb/ch9.h file.
-> 
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> ---
->  drivers/usb/common/Makefile |   2 +-
->  drivers/usb/common/debug.c  | 270 ++++++++++++++++++++++++++++++++++++
->  drivers/usb/dwc3/debug.h    | 249 ---------------------------------
->  drivers/usb/dwc3/trace.h    |   2 +-
->  include/linux/usb/ch9.h     |  25 ++++
->  5 files changed, 297 insertions(+), 251 deletions(-)
->  create mode 100644 drivers/usb/common/debug.c
-> 
-> diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
-> index fb4d5ef4165c..3d3d2962ea4b 100644
-> --- a/drivers/usb/common/Makefile
-> +++ b/drivers/usb/common/Makefile
-> @@ -4,7 +4,7 @@
->  #
->  
->  obj-$(CONFIG_USB_COMMON)	  += usb-common.o
-> -usb-common-y			  += common.o
-> +usb-common-y			  += common.o debug.o
-
-It's nice to have these in a common place, but you just bloated all of
-the USB-enabled systems in the world for the use of 2 odd-ball system
-controllers that almost no one has :)
-
-So, any way to only pull in this file if you actually need these
-functions?
-
-thanks,
-
-greg k-h
+SGksIE1hcmNvDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFyY28gRmVsc2NoIFttYWlsdG86bS5mZWxzY2hAcGVu
+Z3V0cm9uaXguZGVdDQo+IFNlbnQ6IDIwMTnE6jLUwjE5yNUgMjA6NTINCj4gVG86IEFuc29uIEh1
+YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJr
+LnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gcy5oYXVlckBwZW5ndXRy
+b25peC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+IHVs
+Zi5oYW5zc29uQGxpbmFyby5vcmc7IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+
+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgt
+aW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gZHQtYmluZGlu
+Z3M6IGlteDogdXBkYXRlIHNjdSByZXNvdXJjZSBpZCBoZWFkZmlsZQ0KPiANCj4gSGkgQW5zb24s
+DQo+IA0KPiBPbiAxOS0wMi0xOSAwOTowMSwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gVXBkYXRl
+IGkuTVggU0NVIHJlc291cmNlIElEIHRhYmxlIGFjY29yZGluZyB0byBsYXRlc3Qgc3lzdGVtDQo+
+ID4gY29udHJvbGxlciBmaXJtd2FyZS4NCj4gDQo+IHdpbGwgdGhpcyBoYXBwZW4gZXZlcnkgdGlt
+ZSB0aGUgc2N1IGZpcm13YXJlIGdldHMgYSB1cGRhdGU/DQoNCklmIFNDVSBmaXJtd2FyZSB1cGRh
+dGVzIHRoaXMgdGFibGUsIHRoZW4geWVzLCBpdCBNVVNUIGtlZXAgc2FtZSBhcyBTQ1UgZmlybXdh
+cmUsDQpidXQgc3VjaCBJRCB0YWJsZSBpcyBOT1QgdXBkYXRlZCB2ZXJ5IG9mdGVuLCBJIGNoZWNr
+ZWQgdGhlIGhpc3RvcnkgaW4gb3VyIGludGVybmFsIHRyZWUsIHRoZXJlDQphcmUgT05MWSAzIHVw
+ZGF0ZXMgc2luY2UgMjAxNi4NCg0KQW5zb24uDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IE1hcmNvDQo+
+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0K
+PiA+IC0tLQ0KPiA+ICBpbmNsdWRlL2R0LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmggfCAz
+OQ0KPiA+ICsrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMjIgaW5zZXJ0aW9ucygrKSwgMTcgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0t
+Z2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oDQo+ID4gYi9pbmNs
+dWRlL2R0LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmgNCj4gPiBpbmRleCA0NDgxZjJkLi5h
+ZDc0N2E4IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvZHQtYmluZGluZ3MvZmlybXdhcmUvaW14
+L3JzcmMuaA0KPiA+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvZmlybXdhcmUvaW14L3JzcmMu
+aA0KPiA+IEBAIC0zNiwxNSArMzYsMTUgQEANCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9EQ18wX0JM
+SVQxCQkyMA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzBfQkxJVDIJCTIxDQo+ID4gICNkZWZp
+bmUgSU1YX1NDX1JfRENfMF9CTElUX09VVAkJMjINCj4gPiAtI2RlZmluZSBJTVhfU0NfUl9EQ18w
+X0NBUFRVUkUwCQkyMw0KPiA+IC0jZGVmaW5lIElNWF9TQ19SX0RDXzBfQ0FQVFVSRTEJCTI0DQo+
+ID4gKyNkZWZpbmUgSU1YX1NDX1JfUEVSRgkJCTIzDQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfVU5V
+U0VENQkJMjQNCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9EQ18wX1dBUlAJCTI1DQo+ID4gLSNkZWZp
+bmUgSU1YX1NDX1JfRENfMF9JTlRFR1JBTDAJCTI2DQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENf
+MF9JTlRFR1JBTDEJCTI3DQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfVU5VU0VENwkJMjYNCj4gPiAr
+I2RlZmluZSBJTVhfU0NfUl9VTlVTRUQ4CQkyNw0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzBf
+VklERU8wCQkyOA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzBfVklERU8xCQkyOQ0KPiA+ICAj
+ZGVmaW5lIElNWF9TQ19SX0RDXzBfRlJBQzAJCTMwDQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENf
+MF9GUkFDMQkJMzENCj4gPiArI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQ2CQkzMQ0KPiA+ICAjZGVm
+aW5lIElNWF9TQ19SX0RDXzAJCQkzMg0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0dQVV8yX1BJRDAJ
+CTMzDQo+ID4gICNkZWZpbmUgSU1YX1NDX1JfRENfMF9QTExfMAkJMzQNCj4gPiBAQCAtNTMsMTcg
+KzUzLDE3IEBADQo+ID4gICNkZWZpbmUgSU1YX1NDX1JfRENfMV9CTElUMQkJMzcNCj4gPiAgI2Rl
+ZmluZSBJTVhfU0NfUl9EQ18xX0JMSVQyCQkzOA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFf
+QkxJVF9PVVQJCTM5DQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENfMV9DQVBUVVJFMAkJNDANCj4g
+PiAtI2RlZmluZSBJTVhfU0NfUl9EQ18xX0NBUFRVUkUxCQk0MQ0KPiA+ICsjZGVmaW5lIElNWF9T
+Q19SX1VOVVNFRDkJCTQwDQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfVU5VU0VEMTAJCTQxDQo+ID4g
+ICNkZWZpbmUgSU1YX1NDX1JfRENfMV9XQVJQCQk0Mg0KPiA+IC0jZGVmaW5lIElNWF9TQ19SX0RD
+XzFfSU5URUdSQUwwCQk0Mw0KPiA+IC0jZGVmaW5lIElNWF9TQ19SX0RDXzFfSU5URUdSQUwxCQk0
+NA0KPiA+ICsjZGVmaW5lIElNWF9TQ19SX1VOVVNFRDExCQk0Mw0KPiA+ICsjZGVmaW5lIElNWF9T
+Q19SX1VOVVNFRDEyCQk0NA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfVklERU8wCQk0NQ0K
+PiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfVklERU8xCQk0Ng0KPiA+ICAjZGVmaW5lIElNWF9T
+Q19SX0RDXzFfRlJBQzAJCTQ3DQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENfMV9GUkFDMQkJNDgN
+Cj4gPiArI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQxMwkJNDgNCj4gPiAgI2RlZmluZSBJTVhfU0Nf
+Ul9EQ18xCQkJNDkNCj4gPiAtI2RlZmluZSBJTVhfU0NfUl9HUFVfM19QSUQwCQk1MA0KPiA+ICsj
+ZGVmaW5lIElNWF9TQ19SX1VOVVNFRDE0CQk1MA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFf
+UExMXzAJCTUxDQo+ID4gICNkZWZpbmUgSU1YX1NDX1JfRENfMV9QTExfMQkJNTINCj4gPiAgI2Rl
+ZmluZSBJTVhfU0NfUl9TUElfMAkJCTUzDQo+ID4gQEAgLTMwMyw4ICszMDMsOCBAQA0KPiA+ICAj
+ZGVmaW5lIElNWF9TQ19SX000XzBfVUFSVAkJMjg3DQo+ID4gICNkZWZpbmUgSU1YX1NDX1JfTTRf
+MF9JMkMJCTI4OA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzBfSU5UTVVYCQkyODkNCj4gPiAt
+I2RlZmluZSBJTVhfU0NfUl9NNF8wX1NJTQkJMjkwDQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfTTRf
+MF9XRE9HCQkyOTENCj4gPiArI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQxNQkJMjkwDQo+ID4gKyNk
+ZWZpbmUgSU1YX1NDX1JfVU5VU0VEMTYJCTI5MQ0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzBf
+TVVfMEIJCTI5Mg0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzBfTVVfMEEwCQkyOTMNCj4gPiAg
+I2RlZmluZSBJTVhfU0NfUl9NNF8wX01VXzBBMQkJMjk0DQo+ID4gQEAgLTMyMyw4ICszMjMsOCBA
+QA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzFfVUFSVAkJMzA3DQo+ID4gICNkZWZpbmUgSU1Y
+X1NDX1JfTTRfMV9JMkMJCTMwOA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzFfSU5UTVVYCQkz
+MDkNCj4gPiAtI2RlZmluZSBJTVhfU0NfUl9NNF8xX1NJTQkJMzEwDQo+ID4gLSNkZWZpbmUgSU1Y
+X1NDX1JfTTRfMV9XRE9HCQkzMTENCj4gPiArI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQxNwkJMzEw
+DQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfVU5VU0VEMTgJCTMxMQ0KPiA+ICAjZGVmaW5lIElNWF9T
+Q19SX000XzFfTVVfMEIJCTMxMg0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzFfTVVfMEEwCQkz
+MTMNCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9NNF8xX01VXzBBMQkJMzE0DQo+ID4gQEAgLTMzNyw3
+ICszMzcsNyBAQA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0lSUVNUUl9TQ1UyCQkzMjENCj4gPiAg
+I2RlZmluZSBJTVhfU0NfUl9JUlFTVFJfRFNQCQkzMjINCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9F
+TENESUZfUExMCQkzMjMNCj4gPiAtI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQ2CQkzMjQNCj4gPiAr
+I2RlZmluZSBJTVhfU0NfUl9PQ1JBTQkJCTMyNA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0FVRElP
+X1BMTF8wCQkzMjUNCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9QSV8wCQkJMzI2DQo+ID4gICNkZWZp
+bmUgSU1YX1NDX1JfUElfMF9QV01fMAkJMzI3DQo+ID4gQEAgLTU1NCw2ICs1NTQsMTEgQEANCj4g
+PiAgI2RlZmluZSBJTVhfU0NfUl9WUFVfTVVfMwkJNTM4DQo+ID4gICNkZWZpbmUgSU1YX1NDX1Jf
+VlBVX0VOQ18xCQk1MzkNCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9WUFUJCQk1NDANCj4gPiAtI2Rl
+ZmluZSBJTVhfU0NfUl9MQVNUCQkJNTQxDQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfRE1BXzVfQ0gw
+CQk1NDENCj4gPiArI2RlZmluZSBJTVhfU0NfUl9ETUFfNV9DSDEJCTU0Mg0KPiA+ICsjZGVmaW5l
+IElNWF9TQ19SX0RNQV81X0NIMgkJNTQzDQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfRE1BXzVfQ0gz
+CQk1NDQNCj4gPiArI2RlZmluZSBJTVhfU0NfUl9BVFRFU1RBVElPTgkJNTQ1DQo+ID4gKyNkZWZp
+bmUgSU1YX1NDX1JfTEFTVAkJCTU0Ng0KPiA+DQo+ID4gICNlbmRpZiAvKiBfX0RUX0JJTkRJTkdT
+X1JTQ1JDX0lNWF9IICovDQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo+ID4NCj4gPg0KPiANCj4g
+LS0NCj4gUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAg
+ICAgICAgICAgICAgIHwNCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0
+bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3cNCj4gdy5wZW5ndXRyb25peC5kZSUyRiZhbXA7
+ZGF0YT0wMiU3QzAxJTdDYW5zb24uaHVhbmclNDBueHAuY29tJTcNCj4gQ2ZlNzA5YWMxN2ExNjRk
+ODJjN2Q1MDhkNjk2NjkxNWZiJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDENCj4gNjM1
+JTdDMCU3QzAlN0M2MzY4NjE3NzU0MTIwNzY3MzAmYW1wO3NkYXRhPTA1WnpQZjIlMkJRRjEwSlhM
+THMNCj4gT1BxRGRxVGkwMEJXWE5IeG1NT3NRMXoweUklM0QmYW1wO3Jlc2VydmVkPTAgIHwNCj4g
+UGVpbmVyIFN0ci4gNi04LCAzMTEzNyBIaWxkZXNoZWltLCBHZXJtYW55IHwgUGhvbmU6ICs0OS01
+MTIxLTIwNjkxNy0wICAgIHwNCj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgICAg
+ICAgICAgIHwgRmF4OiAgICs0OS01MTIxLTIwNjkxNy01NTU1IHwNCg==
