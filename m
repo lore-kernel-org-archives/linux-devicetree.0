@@ -1,265 +1,153 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v2 08/10] hikey960: Support usb functionality of Hikey960
-Date: Tue, 19 Feb 2019 10:50:15 +0800
-Message-ID: <1550544615.2210.27.camel@mhfsdcap03>
-References: <20190218112310.17860-1-chenyu56@huawei.com>
-         <20190218112310.17860-9-chenyu56@huawei.com>
+From: Jun Li <lijun.kernel@gmail.com>
+Subject: Re: [PATCH v2 07/10] usb: dwc3: Registering a role switch in the DRD code.
+Date: Tue, 19 Feb 2019 10:57:23 +0800
+Message-ID: <CAKgpwJXgiJYkpTxddwLFJRSvadcCw7fMbd=d510NFkyRSKaswA@mail.gmail.com>
+References: <20190218112310.17860-1-chenyu56@huawei.com> <20190218112310.17860-8-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218112310.17860-9-chenyu56@huawei.com>
+In-Reply-To: <20190218112310.17860-8-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Li Jun <jun.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Mon, 2019-02-18 at 19:23 +0800, Yu Chen wrote:
-> This driver handles usb hub power on and typeC port event of HiKey960 board:
-> 1)DP&DM switching between usb hub and typeC port base on typeC port
-> state
-> 2)Control power of usb hub on Hikey960
-> 3)Control vbus of typeC port
-> 
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hi
+Yu Chen <chenyu56@huawei.com> =E4=BA=8E2019=E5=B9=B42=E6=9C=8818=E6=97=A5=
+=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=887:34=E5=86=99=E9=81=93=EF=BC=9A
+>
+> The Type-C drivers use USB role switch API to inform the
+> system about the negotiated data role, so registering a role
+> switch in the DRD code in order to support platforms with
+> USB Type-C connectors.
+>
 > Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 > Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> 
 > ---
-> v1:
-> * Using gpiod API with the gpios.
-> * Removing registering usb role switch.
-> * Registering usb role switch notifier.
 > v2:
-> * Fix license declaration.
-> * Add configuration of  gpio direction.
-> * Remove some log print.
+> * Assign fwnode in dwc3_role_switch.
 > ---
 > ---
->  drivers/misc/Kconfig          |   6 ++
->  drivers/misc/Makefile         |   1 +
->  drivers/misc/hisi_hikey_usb.c | 181 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 188 insertions(+)
->  create mode 100644 drivers/misc/hisi_hikey_usb.c
-> 
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index f417b06e11c5..8d8b717759e2 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -521,6 +521,12 @@ config PVPANIC
->  	  a paravirtualized device provided by QEMU; it lets a virtual machine
->  	  (guest) communicate panic events to the host.
->  
-> +config HISI_HIKEY_USB
-> +	tristate "USB functionality of HiSilicon Hikey Platform"
-> +	depends on OF && GPIOLIB
-> +	help
-> +	  If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
-> +
->  source "drivers/misc/c2port/Kconfig"
->  source "drivers/misc/eeprom/Kconfig"
->  source "drivers/misc/cb710/Kconfig"
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index e39ccbbc1b3a..dc8892b13a1a 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -59,3 +59,4 @@ obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
->  obj-$(CONFIG_OCXL)		+= ocxl/
->  obj-y				+= cardreader/
->  obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
-> +obj-$(CONFIG_HISI_HIKEY_USB)	+= hisi_hikey_usb.o
-> diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
-> new file mode 100644
-> index 000000000000..70013f8e76f0
-> --- /dev/null
-> +++ b/drivers/misc/hisi_hikey_usb.c
-> @@ -0,0 +1,181 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Support for usb functionality of Hikey series boards
-> + * based on Hisilicon Kirin Soc.
-> + *
-> + * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
-> + *		http://www.huawei.com
-> + *
-> + * Authors: Yu Chen <chenyu56@huawei.com>
-> + */
-> +
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
+>  drivers/usb/dwc3/core.h |  2 ++
+>  drivers/usb/dwc3/drd.c  | 45 +++++++++++++++++++++++++++++++++++++++++++=
+++
+>  2 files changed, 47 insertions(+)
+>
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 402b3c29eb26..7385544b9936 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/usb/ch9.h>
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/otg.h>
 > +#include <linux/usb/role.h>
-> +
-> +#define DEVICE_DRIVER_NAME "hisi_hikey_usb"
-> +
-> +#define HUB_VBUS_POWER_ON 1
-> +#define HUB_VBUS_POWER_OFF 0
-> +#define USB_SWITCH_TO_HUB 1
-> +#define USB_SWITCH_TO_TYPEC 0
-> +
-> +struct hisi_hikey_usb {
-> +	struct gpio_desc *otg_switch;
-> +	struct gpio_desc *typec_vbus;
-> +	struct gpio_desc *hub_vbus;
-> +	int typec_vbus_enable_val;
-> +
-> +	struct usb_role_switch *role_sw;
-> +	struct notifier_block nb;
-> +};
-> +
-> +static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
+>  #include <linux/ulpi/interface.h>
+>
+>  #include <linux/phy/phy.h>
+> @@ -1083,6 +1084,7 @@ struct dwc3 {
+>         struct extcon_dev       *edev;
+>         struct notifier_block   edev_nb;
+>         enum usb_phy_interface  hsphy_mode;
+> +       struct usb_role_switch  *role_sw;
+>
+>         u32                     fladj;
+>         u32                     irq_gadget;
+> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> index 869725d15c74..cf977bb0d62e 100644
+> --- a/drivers/usb/dwc3/drd.c
+> +++ b/drivers/usb/dwc3/drd.c
+> @@ -474,8 +474,42 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc=
+3 *dwc)
+>         return edev;
+>  }
+>
+> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role ro=
+le)
 > +{
-> +	gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
-> +}
+> +       u32 mode;
 > +
-> +static void usb_switch_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
-> +		int switch_to)
-> +{
-> +	gpiod_set_value_cansleep(hisi_hikey_usb->otg_switch, switch_to);
-> +}
-> +
-> +static void usb_typec_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
-> +		int value)
-> +{
-> +	gpiod_set_value_cansleep(hisi_hikey_usb->typec_vbus, value);
-> +}
-> +
-> +static int hisi_hikey_role_switch(struct notifier_block *nb,
-> +			unsigned long state, void *data)
-> +{
-> +	struct hisi_hikey_usb *hisi_hikey_usb;
-> +
-> +	hisi_hikey_usb = container_of(nb, struct hisi_hikey_usb, nb);
-> +
-> +	switch (state) {
-> +	case USB_ROLE_NONE:
-> +		usb_typec_power_ctrl(hisi_hikey_usb,
-> +				!hisi_hikey_usb->typec_vbus_enable_val);
-> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_HUB);
-> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_ON);
-> +		break;
-> +	case USB_ROLE_HOST:
-> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
-> +		usb_typec_power_ctrl(hisi_hikey_usb,
-> +				hisi_hikey_usb->typec_vbus_enable_val);
-> +		break;
-> +	case USB_ROLE_DEVICE:
-> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_OFF);
-> +		usb_typec_power_ctrl(hisi_hikey_usb,
-> +				!hisi_hikey_usb->typec_vbus_enable_val);
-> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int hisi_hikey_usb_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *root = dev->of_node;
-> +	struct hisi_hikey_usb *hisi_hikey_usb;
-> +	int ret;
-> +
-> +	hisi_hikey_usb = devm_kzalloc(dev, sizeof(*hisi_hikey_usb), GFP_KERNEL);
-> +	if (!hisi_hikey_usb)
-> +		return -ENOMEM;
-> +
-> +	hisi_hikey_usb->nb.notifier_call = hisi_hikey_role_switch;
-> +
-> +	ret = of_property_read_u32(root, "typec-vbus-enable-val",
-> +				   &hisi_hikey_usb->typec_vbus_enable_val);
-> +	if (ret)
-> +		hisi_hikey_usb->typec_vbus_enable_val = 1;
-> +
-> +	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
-> +			hisi_hikey_usb->typec_vbus_enable_val ?
-> +			GPIOD_OUT_LOW : GPIOD_OUT_HIGH);
-> +	if (!hisi_hikey_usb->typec_vbus)
-> +		return -ENOENT;
-> +	else if (IS_ERR(hisi_hikey_usb->typec_vbus))
-> +		return PTR_ERR(hisi_hikey_usb->typec_vbus);
-> +
-> +	gpiod_direction_output(hisi_hikey_usb->typec_vbus,
-> +			!hisi_hikey_usb->typec_vbus_enable_val);
-maybe a simple way if use fixed regulator?
+> +       switch (role) {
+> +       case USB_ROLE_HOST:
+> +               mode =3D DWC3_GCTL_PRTCAP_HOST;
+> +               break;
+> +       case USB_ROLE_DEVICE:
+> +               mode =3D DWC3_GCTL_PRTCAP_DEVICE;
+> +               break;
+> +       default:
+> +               mode =3D DWC3_GCTL_PRTCAP_HOST;
 
+I'd propose let dwc3 stay at device mode at default case.
+
+> +               break;
+> +       };
 > +
-> +	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch", GPIOD_IN);
-> +	if (!hisi_hikey_usb->otg_switch)
-> +		return -ENOENT;
-> +	else if (IS_ERR(hisi_hikey_usb->otg_switch))
-> +		return PTR_ERR(hisi_hikey_usb->otg_switch);
-> +
-> +	gpiod_direction_output(hisi_hikey_usb->otg_switch, USB_SWITCH_TO_HUB);
-> +
-> +	/* hub-vdd33-en is optional */
-> +	hisi_hikey_usb->hub_vbus = devm_gpiod_get(dev, "hub-vdd33-en",
-> +			GPIOD_OUT_LOW);
-> +	if (IS_ERR(hisi_hikey_usb->hub_vbus))
-> +		return PTR_ERR(hisi_hikey_usb->hub_vbus);
-> +
-> +	gpiod_direction_output(hisi_hikey_usb->hub_vbus, HUB_VBUS_POWER_ON);
-ditto
-> +
-> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
-> +	if (!hisi_hikey_usb->role_sw)
-> +		return -EPROBE_DEFER;
-> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
-> +		return PTR_ERR(hisi_hikey_usb->role_sw);
-> +
-> +	ret = usb_role_switch_register_notifier(hisi_hikey_usb->role_sw,
-> +			&hisi_hikey_usb->nb);
-> +	if (ret) {
-> +		usb_role_switch_put(hisi_hikey_usb->role_sw);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, hisi_hikey_usb);
-> +
-> +	return 0;
+> +       dwc3_set_mode(dev_get_drvdata(dev), mode);
+> +       return 0;
 > +}
 > +
-> +static int  hisi_hikey_usb_remove(struct platform_device *pdev)
+> +static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
 > +{
-> +	struct hisi_hikey_usb *hisi_hikey_usb = platform_get_drvdata(pdev);
+> +       struct dwc3 *dwc =3D dev_get_drvdata(dev);
+> +       unsigned long flags;
+> +       enum usb_role role;
 > +
-> +	usb_role_switch_unregister_notifier(hisi_hikey_usb->role_sw,
-> +			&hisi_hikey_usb->nb);
+> +       spin_lock_irqsave(&dwc->lock, flags);
+> +       role =3D dwc->current_otg_role;
+> +       spin_unlock_irqrestore(&dwc->lock, flags);
 > +
-> +	usb_role_switch_put(hisi_hikey_usb->role_sw);
-> +
-> +	return 0;
+> +       return role;
 > +}
 > +
-> +static const struct of_device_id id_table_hisi_hikey_usb[] = {
-> +	{.compatible = "hisilicon,gpio_hubv1"},
-> +	{.compatible = "hisilicon,hikey960_usb"},
-> +	{}
-> +};
+>  int dwc3_drd_init(struct dwc3 *dwc)
+>  {
+> +       struct usb_role_switch_desc dwc3_role_switch =3D {0};
+>         int ret, irq;
+>
+>         dwc->edev =3D dwc3_get_extcon(dwc);
+> @@ -522,6 +556,15 @@ int dwc3_drd_init(struct dwc3 *dwc)
+>                 dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_OTG);
+>         }
+>
+> +       dwc3_role_switch.fwnode =3D dev_fwnode(dwc->dev);
+> +       dwc3_role_switch.set =3D dwc3_usb_role_switch_set;
+> +       dwc3_role_switch.get =3D dwc3_usb_role_switch_get;
+> +       dwc->role_sw =3D usb_role_switch_register(dwc->dev, &dwc3_role_sw=
+itch);
+> +       if (ret) {
+> +               dwc3_drd_exit(dwc);
+> +               return PTR_ERR(dwc->role_sw);
+> +       }
 > +
-> +static struct platform_driver hisi_hikey_usb_driver = {
-> +	.probe = hisi_hikey_usb_probe,
-> +	.remove = hisi_hikey_usb_remove,
-> +	.driver = {
-> +		.name = DEVICE_DRIVER_NAME,
-> +		.of_match_table = id_table_hisi_hikey_usb,
-> +	},
-> +};
+
+My understanding is, if you use usb role switch, you don't need either edev=
+ or
+OTG block event, so this should be like:
+
+if (device_property_read_bool(dwc->dev, "usb-role-switch")) {
+           usb role switch register;
+} else if (edev) {
+...
+} else {
+...
+}
+
+Jun
+>         return 0;
+>  }
+>
+> @@ -557,4 +600,6 @@ void dwc3_drd_exit(struct dwc3 *dwc)
+>
+>         if (!dwc->edev)
+>                 free_irq(dwc->otg_irq, dwc);
 > +
-> +module_platform_driver(hisi_hikey_usb_driver);
-> +
-> +MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
-> +MODULE_DESCRIPTION("Driver Support for USB functionality of Hikey");
-> +MODULE_LICENSE("GPL v2");
+> +       usb_role_switch_unregister(dwc->role_sw);
+>  }
+> --
+> 2.15.0-rc2
+>
