@@ -1,34 +1,34 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: sifive: Add DT documentation for SiFive SPI controller"
- to the spi tree
-Date: Tue, 19 Feb 2019 15:50:48 +0000 (GMT)
-Message-ID: <20190219155048.8FD3711284D7@debutante.sirena.org.uk>
-References: <1550576407-17778-2-git-send-email-yash.shah@sifive.com>
+Subject: Applied "ASoC: sunxi: sun50i-codec-analog: Rename hpvcc regulator
+ supply to cpvdd" to the asoc tree
+Date: Tue, 19 Feb 2019 15:50:16 +0000 (GMT)
+Message-ID: <20190219155016.29FAB11284BB@debutante.sirena.org.uk>
+References: <20190213070457.26049-2-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550576407-17778-2-git-send-email-yash.shah@sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>, broonie@kernel.org, palmer@sifive.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, sachin.ghadi@sifive.com, robh+dt@kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190213070457.26049-2-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maxime Ripard <maxime.ripard@bootlin.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   spi: sifive: Add DT documentation for SiFive SPI controller
+   ASoC: sunxi: sun50i-codec-analog: Rename hpvcc regulator supply to cpvdd
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -49,64 +49,48 @@ to this mail.
 Thanks,
 Mark
 
->From 3b155e873a38c3b28e419da759cfe86c74b1c870 Mon Sep 17 00:00:00 2001
-From: Yash Shah <yash.shah@sifive.com>
-Date: Tue, 19 Feb 2019 17:10:06 +0530
-Subject: [PATCH] spi: sifive: Add DT documentation for SiFive SPI controller
+>From 5fd812e6f5ae0376134234ceb70e8de541ccb10d Mon Sep 17 00:00:00 2001
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Wed, 13 Feb 2019 15:04:56 +0800
+Subject: [PATCH] ASoC: sunxi: sun50i-codec-analog: Rename hpvcc regulator
+ supply to cpvdd
 
-DT documentation for SPI controller added.
+The A64 datasheet lists the supply rail for the headphone amp's charge
+pump as "CPVDD". cpvdd-supply is the name of the property for this power
+rail specified in the device tree bindings. "HPVCC" was the name used in
+the A33 datasheet for the same function.
 
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Rename the supply so it matches the datasheet, bindings, and the subject
+from the original commit.
+
+Fixes: ca0412a05756 ("ASoC: sunxi: sun50i-codec-analog: Add support for cpvdd regulator supply")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/spi/spi-sifive.txt    | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
+ sound/soc/sunxi/sun50i-codec-analog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.txt b/Documentation/devicetree/bindings/spi/spi-sifive.txt
-new file mode 100644
-index 000000000000..3f5c6e438972
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-sifive.txt
-@@ -0,0 +1,37 @@
-+SiFive SPI controller Device Tree Bindings
-+------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "sifive,<chip>-spi" and "sifive,spi<version>".
-+			  Supported compatible strings are:
-+			  "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
-+			  onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
-+			  SPI v0 IP block with no chip integration tweaks.
-+			  Please refer to sifive-blocks-ip-versioning.txt for details
-+- reg			: Physical base address and size of SPI registers map
-+			  A second (optional) range can indicate memory mapped flash
-+- interrupts		: Must contain one entry
-+- interrupt-parent	: Must be core interrupt controller
-+- clocks		: Must reference the frequency given to the controller
-+- #address-cells	: Must be '1', indicating which CS to use
-+- #size-cells		: Must be '0'
-+
-+Optional properties:
-+- sifive,fifo-depth		: Depth of hardware queues; defaults to 8
-+- sifive,max-bits-per-word	: Maximum bits per word; defaults to 8
-+
-+SPI RTL that corresponds to the IP block version numbers can be found here:
-+https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
-+
-+Example:
-+	spi: spi@10040000 {
-+		compatible = "sifive,fu540-c000-spi", "sifive,spi0";
-+		reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
-+		interrupt-parent = <&plic>;
-+		interrupts = <51>;
-+		clocks = <&tlclk>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		sifive,fifo-depth = <8>;
-+		sifive,max-bits-per-word = <8>;
-+	};
+diff --git a/sound/soc/sunxi/sun50i-codec-analog.c b/sound/soc/sunxi/sun50i-codec-analog.c
+index df1fed0aa001..d105c90c3706 100644
+--- a/sound/soc/sunxi/sun50i-codec-analog.c
++++ b/sound/soc/sunxi/sun50i-codec-analog.c
+@@ -274,7 +274,7 @@ static const struct snd_soc_dapm_widget sun50i_a64_codec_widgets[] = {
+ 	 * stream widgets at the card level.
+ 	 */
+ 
+-	SND_SOC_DAPM_REGULATOR_SUPPLY("hpvcc", 0, 0),
++	SND_SOC_DAPM_REGULATOR_SUPPLY("cpvdd", 0, 0),
+ 	SND_SOC_DAPM_MUX("Headphone Source Playback Route",
+ 			 SND_SOC_NOPM, 0, 0, sun50i_codec_hp_src),
+ 	SND_SOC_DAPM_OUT_DRV("Headphone Amp", SUN50I_ADDA_HP_CTRL,
+@@ -362,7 +362,7 @@ static const struct snd_soc_dapm_route sun50i_a64_codec_routes[] = {
+ 	{ "Headphone Source Playback Route", "Mixer", "Left Mixer" },
+ 	{ "Headphone Source Playback Route", "Mixer", "Right Mixer" },
+ 	{ "Headphone Amp", NULL, "Headphone Source Playback Route" },
+-	{ "Headphone Amp", NULL, "hpvcc" },
++	{ "Headphone Amp", NULL, "cpvdd" },
+ 	{ "HP", NULL, "Headphone Amp" },
+ 
+ 	/* Microphone Routes */
 -- 
 2.20.1
