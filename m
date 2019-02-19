@@ -1,48 +1,54 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v2 3/8] dt-bindings: sdhci-omap: Add properties for using
- external dma
-Date: Tue, 19 Feb 2019 19:02:40 +0530
-Message-ID: <60f2cc85-90dc-a15e-78bb-385213ca53c4@ti.com>
-References: <20190215192033.24203-1-faiz_abbas@ti.com>
- <20190215192033.24203-4-faiz_abbas@ti.com>
- <20190215200718.GB15711@atomide.com>
- <2aa0f7e4-c880-ee88-2e88-dc2c3187f0c9@ti.com> <20190218201240.GA14067@bogus>
+From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Subject: [PATCH] ARM: dts: imx6dl-yapp4: Use rgmii-id phy mode on the cpu port
+Date: Tue, 19 Feb 2019 14:37:00 +0100
+Message-ID: <1550583420-112858-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218201240.GA14067@bogus>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, adrian.hunter@intel.com, kishon@ti.com, zhang.chunyan@linaro.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+The PHY must add delays to both Tx and Rx clock on the cpu port
+to work propperly.
 
-On 19/02/19 1:42 AM, Rob Herring wrote:
-> On Mon, Feb 18, 2019 at 07:11:32PM +0530, Faiz Abbas wrote:
->> Hi Tony,
->>
->> On 16/02/19 1:37 AM, Tony Lindgren wrote:
->>> * Faiz Abbas <faiz_abbas@ti.com> [190215 19:18]:
->>>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
->>>>
->>>> sdhci-omap can support both external dma controller via dmaengine
->>>> framework as well as ADMA which standard SD host controller
->>>> provides.
->>>
->>> Care to describe here also how to configure things for ADMA and
->>> instead of DMA? Just leave out dmas property?
->>>
->>
->> That's correct. If dmas property is populated, then use external DMA.
->> Otherwise use ADMA/SDMA depending on what you read from the CAPS register.
-> 
-> Then the properties should be optional.
-> 
+It worked with the rgmii mode before beacause the qca8k driver
+(incorrecly) enabled delays in that mode.
 
-Will move it to optional in v3.
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+---
+This imx6dl-yapp4 platform is currently waiting in linux-next.
 
-Thanks,
-Faiz
+Commit 5ecdd77c61c8 ("net: dsa: qca8k: disable delay for RGMII mode"), now
+also in linux-next removed the delays from the RGMII mode so the networking
+stopped working.
+
+Recently Koul submitted a patch that implements the rgmii-id mode to fix
+the issue [1].
+
+As the networking is broken at this moment it does not matter which patch
+goes in first. It is not neccessary to wait until the Koul's patch is
+applied/merged if that should be the case.
+
+[1] http://patchwork.ozlabs.org/patch/1044505/
+
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+index b715ab0fa1ff..091d829f6b05 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+@@ -125,7 +125,7 @@
+ 				ethphy0: port@0 {
+ 					reg = <0>;
+ 					label = "cpu";
+-					phy-mode = "rgmii";
++					phy-mode = "rgmii-id";
+ 					ethernet = <&fec>;
+ 
+ 					fixed-link {
+-- 
+2.1.4
