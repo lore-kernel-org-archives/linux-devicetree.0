@@ -1,69 +1,128 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2 PHY
-Date: Mon, 18 Feb 2019 22:04:02 -0800
-Message-ID: <20190219060407.15263-3-bjorn.andersson@linaro.org>
-References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [PATCH v1 04/12] of: Add bindings of gpu hw throttle for Tegra
+ soctherm
+Date: Tue, 19 Feb 2019 14:08:26 +0800
+Message-ID: <5ce01da3-cb00-3d35-5164-d837df65c184@nvidia.com>
+References: <1545118484-23641-1-git-send-email-wni@nvidia.com>
+ <1545118484-23641-6-git-send-email-wni@nvidia.com>
+ <20190218202939.GA7473@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219060407.15263-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190218202939.GA7473@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: thierry.reding@gmail.com, daniel.lezcano@linaro.org, edubezval@gmail.com, linux-tegra@vger.kernel.org, rui.zhang@intel.com, srikars@nvidia.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
-Qualcomm platforms, add a binding to describe this.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-new file mode 100644
-index 000000000000..7da02f9d78c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-@@ -0,0 +1,40 @@
-+Qualcomm PCIe2 PHY controller
-+=============================
-+
-+The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
-+platforms.
-+
-+Required properties:
-+ - compatible: compatible list, should be:
-+	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
-+
-+ - reg: offset and length of the PHY register set.
-+ - #phy-cells: must be 0.
-+
-+ - clocks: a clock-specifier pair for the "pipe" clock
-+
-+ - vdda-vp-supply: phandle to low voltage regulator
-+ - vdda-vph-supply: phandle to high voltage regulator
-+
-+ - resets: reset-specifier pairs for the "phy" and "pipe" resets
-+ - reset-names: list of resets, should contain:
-+		"phy" and "pipe"
-+
-+ - clock-output-names: name of the outgoing clock signal from the PHY PLL
-+
-+Example:
-+ phy@7786000 {
-+	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
-+	reg = <0x07786000 0xb8>;
-+
-+	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-+	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
-+	         <&gcc GCC_PCIE_0_PIPE_ARES>;
-+	reset-names = "phy", "pipe";
-+
-+	vdda-vp-supply = <&vreg_l3_1p05>;
-+	vdda-vph-supply = <&vreg_l5_1p8>;
-+
-+	clock-output-names = "pcie_0_pipe_clk";
-+	#phy-cells = <0>;
-+ };
--- 
-2.18.0
+On 19/2/2019 4:29 AM, Rob Herring wrote:
+> On Tue, Dec 18, 2018 at 03:34:36PM +0800, Wei Ni wrote:
+>> Add "nvidia,gpu-throt-level" property to set gpu hw
+>> throttle level.
+>>
+>> Signed-off-by: Wei Ni <wni@nvidia.com>
+>> ---
+>>  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 17 +++++++++++++++--
+>>  include/dt-bindings/thermal/tegra124-soctherm.h    | 22 ++++++++++++++++++----
+>>  2 files changed, 33 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
+>> index ab66d6feab4b..cf6d0be56b7a 100644
+>> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
+>> @@ -52,6 +52,15 @@ Required properties :
+>>          Must set as following values:
+>>          TEGRA_SOCTHERM_THROT_LEVEL_LOW, TEGRA_SOCTHERM_THROT_LEVEL_MED
+>>          TEGRA_SOCTHERM_THROT_LEVEL_HIGH, TEGRA_SOCTHERM_THROT_LEVEL_NONE
+>> +      - nvidia,gpu-throt-level: This property is for Tegra124 and Tegra210.
+>> +        It is the level of pulse skippers, which used to throttle clock
+>> +        frequencies. It indicates gpu clock throttling depth and can be
+>> +        programmed to any of the following values which represent a throttling
+>> +        percentage:
+>> +        TEGRA_SOCTHERM_THROT_LEVEL_NONE (0%)
+>> +        TEGRA_SOCTHERM_THROT_LEVEL_LOW (50%),
+>> +        TEGRA_SOCTHERM_THROT_LEVEL_MED (75%),
+>> +        TEGRA_SOCTHERM_THROT_LEVEL_HIGH (85%).
+>>        - #cooling-cells: Should be 1. This cooling device only support on/off state.
+>>          See ./thermal.txt for a description of this property.
+>>  
+>> @@ -96,22 +105,26 @@ Example :
+>>  		throttle-cfgs {
+>>  			/*
+>>  			 * When the "heavy" cooling device triggered,
+>> -			 * the HW will skip cpu clock's pulse in 85% depth
+>> +			 * the HW will skip cpu clock's pulse in 85% depth,
+>> +			 * skip gpu clock's pulse in 85% level
+>>  			 */
+>>  			throttle_heavy: heavy {
+>>  				nvidia,priority = <100>;
+>>  				nvidia,cpu-throt-percent = <85>;
+>> +				nvidia,gpu-throt-level = <TEGRA_SOCTHERM_THROT_LEVEL_HIGH>;
+>>  
+>>  				#cooling-cells = <1>;
+>>  			};
+>>  
+>>  			/*
+>>  			 * When the "light" cooling device triggered,
+>> -			 * the HW will skip cpu clock's pulse in 50% depth
+>> +			 * the HW will skip cpu clock's pulse in 50% depth,
+>> +			 * skip gpu clock's pulse in 50% level
+>>  			 */
+>>  			throttle_light: light {
+>>  				nvidia,priority = <80>;
+>>  				nvidia,cpu-throt-percent = <50>;
+>> +				nvidia,gpu-throt-level = <TEGRA_SOCTHERM_THROT_LEVEL_LOW>;
+>>  
+>>  				#cooling-cells = <1>;
+>>  			};
+>> diff --git a/include/dt-bindings/thermal/tegra124-soctherm.h b/include/dt-bindings/thermal/tegra124-soctherm.h
+>> index c15e8b709a0d..75853df1c609 100644
+>> --- a/include/dt-bindings/thermal/tegra124-soctherm.h
+>> +++ b/include/dt-bindings/thermal/tegra124-soctherm.h
+>> @@ -1,5 +1,19 @@
+>>  /* SPDX-License-Identifier: GPL-2.0 */
+>>  /*
+>> + * Copyright (c) 2014 - 2018, NVIDIA CORPORATION.  All rights reserved.
+>> + *
+>> + * Author:
+>> + *      Mikko Perttunen <mperttunen@nvidia.com>
+>> + *
+>> + * This software is licensed under the terms of the GNU General Public
+>> + * License version 2, as published by the Free Software Foundation, and
+>> + * may be copied, distributed, and modified under those terms.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+> 
+> Why are you adding this?
+
+We doesn't need it, will remove it.
+
+> 
+>>   * This header provides constants for binding nvidia,tegra124-soctherm.
+>>   */
+>>  
+>> @@ -12,9 +26,9 @@
+>>  #define TEGRA124_SOCTHERM_SENSOR_PLLX 3
+>>  #define TEGRA124_SOCTHERM_SENSOR_NUM 4
+>>  
+>> -#define TEGRA_SOCTHERM_THROT_LEVEL_LOW  0
+>> -#define TEGRA_SOCTHERM_THROT_LEVEL_MED  1
+>> -#define TEGRA_SOCTHERM_THROT_LEVEL_HIGH 2
+>> -#define TEGRA_SOCTHERM_THROT_LEVEL_NONE -1
+>> +#define TEGRA_SOCTHERM_THROT_LEVEL_NONE 0
+>> +#define TEGRA_SOCTHERM_THROT_LEVEL_LOW  1
+>> +#define TEGRA_SOCTHERM_THROT_LEVEL_MED  2
+>> +#define TEGRA_SOCTHERM_THROT_LEVEL_HIGH 3
+> 
+> You are breaking an ABI.
+> 
+> Rob
+> 
