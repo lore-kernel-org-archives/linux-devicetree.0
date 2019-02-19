@@ -1,145 +1,75 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: input: touchscreen: goodix: Document
- AVDD28-supply property
-Date: Tue, 19 Feb 2019 14:15:14 +0530
-Message-ID: <CAMty3ZCE+zTbDw2O6Ct7_ABfQnJucfhr9zkE9vWZoofJ3XJmtA@mail.gmail.com>
-References: <CAL_JsqKTnPVM7Qahy9ejQbPfENpLCdzf5K5uUTcPh8j3EiqWRA@mail.gmail.com>
- <CAMty3ZCyq=tZMt6RC1aYJuEWgYp2zv1LBh+ZUwucE+g4RCoUaQ@mail.gmail.com>
- <CAL_JsqKCw3EV+0_DuMiHh7GRGxv7YogQf-xwp71n9gpc2GzSSQ@mail.gmail.com>
- <CAMty3ZBtoocXBW5A0astyQPh2y7vG7NtbZ_M0BjSeex2etmGsw@mail.gmail.com>
- <CAL_JsqJSMX7E2zQA2O8ofZQPDrm3S6PMCLG1iAQ95P10Pe2yFg@mail.gmail.com>
- <CAMty3ZDMB=pwY8Rxdt3du=90pksBedLo0Pc_-=diqx9-Xndzqg@mail.gmail.com>
- <CAMty3ZDBu2Y9psNu9nrZ=BNVvhpJ2qYn-Qp7MDqdhK9_SrcpNg@mail.gmail.com>
- <20190218071207.GE242714@dtor-ws> <CAMty3ZDbFU-NpWQvkaUWgUiVTabjTZoFWUCUZSPKMA6VuHc+iQ@mail.gmail.com>
- <CAMty3ZBVpNY+JF_vEMs83M29WKQDhzmk7LyL-HHCCA7uD0Y+=g@mail.gmail.com> <20190219081510.GB65896@dtor-ws>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v4 3/3] pwm: core: add consumer device link
+Date: Tue, 19 Feb 2019 09:46:32 +0100
+Message-ID: <53bc3d80-8732-46be-caef-015998c9ad0e@st.com>
+References: <1550139951-25788-1-git-send-email-fabrice.gasnier@st.com>
+ <1550139951-25788-4-git-send-email-fabrice.gasnier@st.com>
+ <20190218172223.lw3e5tn5hzsow6tg@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219081510.GB65896@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190218172223.lw3e5tn5hzsow6tg@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, tduszyns@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 19, 2019 at 1:45 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Tue, Feb 19, 2019 at 01:00:19AM +0530, Jagan Teki wrote:
-> > On Mon, Feb 18, 2019 at 3:03 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > >
-> > > Hi Dmitry,
-> > >
-> > > On Mon, Feb 18, 2019 at 12:42 PM Dmitry Torokhov
-> > > <dmitry.torokhov@gmail.com> wrote:
-> > > >
-> > > > On Sun, Feb 17, 2019 at 02:45:52PM +0530, Jagan Teki wrote:
-> > > > > On Sun, Feb 17, 2019 at 1:21 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > > > >
-> > > > > > Hi Dmitry and Rob,
-> > > > > >
-> > > > > > On Thu, Feb 14, 2019 at 3:21 AM Rob Herring <robh@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Tue, Jan 22, 2019 at 7:39 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > > > > > >
-> > > > > > > > On Mon, Jan 21, 2019 at 9:46 PM Rob Herring <robh@kernel.org> wrote:
-> > > > > > > > >
-> > > > > > > > > On Fri, Jan 18, 2019 at 10:01 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Wed, Jan 9, 2019 at 7:08 PM Rob Herring <robh@kernel.org> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > Please CC DT list if you want bindings reviewed.
-> > > > > > > > > >
-> > > > > > > > > > Sorry I forgot.
-> > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > On Wed, Jan 9, 2019 at 1:40 AM Dmitry Torokhov
-> > > > > > > > > > > <dmitry.torokhov@gmail.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > On Sat, Dec 15, 2018 at 08:47:59PM +0530, Jagan Teki wrote:
-> > > > > > > > > > > > > Most of the Goodix CTP controllers are supply with AVDD28 pin.
-> > > > > > > > > > > > > which need to supply for controllers like GT5663 on some boards
-> > > > > > > > > > > > > to trigger the power.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > So, document the supply property so-that the require boards
-> > > > > > > > > > > > > that used on GT5663 can enable it via device tree.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > > > > > > > > ---
-> > > > > > > > > > > > >  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
-> > > > > > > > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > > > > > > > > index f7e95c52f3c7..c4622c983e08 100644
-> > > > > > > > > > > > > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > > > > > > > > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > > > > > > > > @@ -23,6 +23,7 @@ Optional properties:
-> > > > > > > > > > > > >   - touchscreen-inverted-y  : Y axis is inverted (boolean)
-> > > > > > > > > > > > >   - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
-> > > > > > > > > > > > >                               (swapping is done after inverting the axis)
-> > > > > > > > > > > > > + - AVDD28-supply     : Analog power supply regulator on AVDD28 pin
-> > > > > > > > > > > >
-> > > > > > > > > > > > I think we normally use lower case in DT bindings and rarely encode
-> > > > > > > > > > > > voltage in the supply name unless we are dealing with several supplies
-> > > > > > > > > > > > of the same kind, but I'll let Ron comment on this.
-> > > > > > > > > > >
-> > > > > > > > > > > Yes on lowercase though there are some exceptions.
-> > > > > > > > > > >
-> > > > > > > > > > > There's also a AVDD22 supply as well as DVDD12 and VDDIO. So we
-> > > > > > > > > > > probably need to keep the voltage, but the binding is incomplete.
-> > > > > > > > > >
-> > > > > > > > > > What is incomplete here? can you please elaborate.
-> > > > > > > > >
-> > > > > > > > > You are missing the 3 other supplies the chip has: AVDD22, DVDD12 and VDDIO.
-> > > > > > > >
-> > > > > > > > Though it has other supplies, only AVDD28 is connected in the Host
-> > > > > > > > interface design similar like 9. Reference Schematic on Page, 23 in
-> > > > > > > > attached manual.
-> > > > > > >
-> > > > > > > That is for a particular board design. It still has other supplies.
-> > > > > > > Just make the binding complete please. You can make them optional. I
-> > > > > > > don't care if the driver supports controlling all the supplies or not
-> > > > > > > (though Dmitry might).
-> > > > > >
-> > > > > > So, Can I make bulk get and enable in all 4 regulators global to
-> > > > > > driver or specific to that chip, in either way the regulators which
-> > > > > > are not used to process via dummy regulators (which we all know).
-> > > > > >
-> > > > > > or regulator which are not using are get via devm_regulator_get_optional.
-> > > > > >
-> > > > > > Any suggestions?
-> > > > >
-> > > > > Just realized to go with bulk calls, please have a look at on v5 [1]
-> > > >
-> > > > I do not believe you can use bulk regulator API here as you need to
-> > > > implement the power up timing scheme mentioned on p. 12 of the spec you
-> > > > referenced earlier. And, because of that timing diagram, I believe if
-> > > > you want to control AVDD supply, you also have to control VDDIO supply
-> > > > as it has to be on only after enabling AVDD.
-> > >
-> > > AVDD here is AVDD28 it' is an out name of pin (mentioned in p. 23). So
-> > > the power scheme goes to enable AVDD28 and then VDDIO does that really
-> > > mean bulk of two regulators?
-> >
-> > The time between these two regulator operations is nearly 0, as per
-> > power scheme diagram T1 >= 0us. I think I can use bulk since there is
-> > no necessity of delay between these two regulator operations.
-> >
-> > What do you think?
->
-> Does the bulk enable provide any guarantees as to the order of
-> operations? If it does not then I think we should ensure that they are
-> powered up/down in the right order.
-
-At-least I can saw from the log, async enables based on the definition
-of supply arrays. Indeed the regulators with bulk calls enables based
-on the supply array order, this is what I usually think.
-
-[    3.676483] Goodix-TS 1-005d: 1-005d supply VDDIO not found, using
-dummy regulator
-[    3.693159] regulator_bulk_enable_async: Supply AVDD28
-[    3.693162] regulator_bulk_enable_async: Supply VDDIO
-[    3.806095] Goodix-TS 1-005d: ID 5663, version: 0100
-
-Do we need to go reverse order for power-down? I couldn't see this
-information on the datasheet. If yes then we need to go for normal
-calls.
+T24gMi8xOC8xOSA2OjIyIFBNLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToKPiBIZWxsbywKPiAK
+PiBPbiBUaHUsIEZlYiAxNCwgMjAxOSBhdCAxMToyNTo1MUFNICswMTAwLCBGYWJyaWNlIEdhc25p
+ZXIgd3JvdGU6Cj4+IEFkZCBhIGRldmljZSBsaW5rIGJldHdlZW4gdGhlIFBXTSBjb25zdW1lciBh
+bmQgdGhlIFBXTSBwcm92aWRlci4gVGhpcwo+PiBlbmZvcmNlcyB0aGUgUFdNIHVzZXIgdG8gZ2V0
+IHN1c3BlbmRlZCBiZWZvcmUgdGhlIFBXTSBwcm92aWRlci4gSXQKPj4gYWxsb3dzIHByb3BlciBz
+eW5jaHJvbml6YXRpb24gb2Ygc3VzcGVuZC9yZXN1bWUgc2VxdWVuY2VzOiB0aGUgUFdNIHVzZXIK
+Pj4gaXMgcmVzcG9uc2libGUgZm9yIHByb3Blcmx5IHN0b3BwaW5nIFBXTSwgYmVmb3JlIHRoZSBw
+cm92aWRlciBnZXRzCj4+IHN1c3BlbmRlZDogc2VlIFsxXS4gQWRkIHRoZSBkZXZpY2UgbGluayBp
+bjoKPj4gLSBvZl9wd21fZ2V0KCkKPj4gLSBwd21fZ2V0KCkKPj4gLSBkZXZtXypwd21fZ2V0KCkg
+dmFyaWFudHMKPj4gYXMgaXQgcmVxdWlyZXMgYSByZWZlcmVuY2UgdG8gdGhlIGRldmljZSBmb3Ig
+dGhlIFBXTSBjb25zdW1lci4KPj4KPj4gWzFdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzIv
+NS83NzAKPj4KPj4gU3VnZ2VzdGVkLWJ5OiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdA
+Z21haWwuY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBGYWJyaWNlIEdhc25pZXIgPGZhYnJpY2UuZ2Fz
+bmllckBzdC5jb20+Cj4+IC0tLQo+PiBDaGFuZ2VzIGluIHY0Ogo+PiAtIHJld29yayBlcnJvciBo
+YW5kbGluZyBmb2xsb3dpbmcgVGhpZXJyeSdzIGNvbW1lbnRzCj4+IC0gdHVybi9zcGxpdCBwcl9k
+ZWJ1ZygpIGludG8gZGV2X2VycigpL3ByX3dhcm4oKS4KPj4KPj4gQ2hhbmdlcyBpbiB2MzoKPj4g
+LSBhZGQgc3RydWN0IGRldmljZSB0byBvZl9nZXRfcHdtKCkgYXJndW1lbnRzIHRvIGhhbmRsZSBk
+ZXZpY2UgbGluayBmcm9tCj4+ICAgdGhlcmUgYXMgZGlzY3Vzc2VkIHdpdGggVXdlLgo+PiAtLS0K
+Pj4gIGRyaXZlcnMvcHdtL2NvcmUuYyAgfCA1MCArKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKy0tLQo+PiAgaW5jbHVkZS9saW51eC9wd20uaCB8ICA2ICsrKyst
+LQo+PiAgMiBmaWxlcyBjaGFuZ2VkLCA1MSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQo+
+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wd20vY29yZS5jIGIvZHJpdmVycy9wd20vY29yZS5j
+Cj4+IGluZGV4IDE1ODFmNmEuLjY0ZTEwYTYgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvcHdtL2Nv
+cmUuYwo+PiArKysgYi9kcml2ZXJzL3B3bS9jb3JlLmMKPj4gQEAgLTYzNiw4ICs2MzYsMzUgQEAg
+c3RhdGljIHN0cnVjdCBwd21fY2hpcCAqb2Zfbm9kZV90b19wd21jaGlwKHN0cnVjdCBkZXZpY2Vf
+bm9kZSAqbnApCj4+ICAJcmV0dXJuIEVSUl9QVFIoLUVQUk9CRV9ERUZFUik7Cj4+ICB9Cj4+ICAK
+Pj4gK3N0YXRpYyBzdHJ1Y3QgZGV2aWNlX2xpbmsgKnB3bV9kZXZpY2VfbGlua19hZGQoc3RydWN0
+IGRldmljZSAqZGV2LAo+PiArCQkJCQkgICAgICAgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSkKPj4g
+K3sKPj4gKwlzdHJ1Y3QgZGV2aWNlX2xpbmsgKmRsOwo+PiArCj4+ICsJaWYgKCFkZXYpIHsKPj4g
+KwkJLyoKPj4gKwkJICogTm8gZGV2aWNlIGZvciB0aGUgUFdNIGNvbnN1bWVyIGhhcyBiZWVuIHBy
+b3ZpZGVkLiBJdCBtYXkKPj4gKwkJICogaW1wYWN0IHRoZSBQTSBzZXF1ZW5jZSBvcmRlcmluZzog
+dGhlIFBXTSBzdXBwbGllciBtYXkgZ2V0Cj4+ICsJCSAqIHN1c3BlbmRlZCBiZWZvcmUgdGhlIGNv
+bnN1bWVyLgo+PiArCQkgKi8KPj4gKwkJcHJfd2Fybigibm8gY29uc3VtZXIgZGV2LCBjYW4ndCBj
+cmVhdGUgZGV2aWNlIGxpbmsgdG8gJXNcbiIsCj4+ICsJCQlkZXZfbmFtZShwd20tPmNoaXAtPmRl
+dikpOwo+IAo+IE1heWJlIHVzZSBkZXZfd2Fybihwd20tPmNoaXAtPmRldiwgLi4uKSA/CgpIaSBV
+d2UsCgpJJ20gd29uZGVyaW5nIGEgYml0IGFib3V0IHRoaXM6IEluIHRoaXMgY2FzZSwgdGhlIGNh
+bGxlciB0aGF0IGRvZXNuJ3QKcHJvdmlkZSBhIHN0cnVjdCBkZXZpY2UgKiwgUFdNIHByb3ZpZGVy
+IGlzbid0IHJlc3BvbnNpYmxlIGZvciB0aGF0LiBTbyBJCmp1c3QgaG9wZSB0aGlzIHdvdWxkbid0
+IGJlIG1pc3MtbGVhZGluZyA/Cgo+IAo+PiArCQlyZXR1cm4gTlVMTDsKPj4gKwl9Cj4+ICsKPj4g
+KwlkbCA9IGRldmljZV9saW5rX2FkZChkZXYsIHB3bS0+Y2hpcC0+ZGV2LCBETF9GTEFHX0FVVE9S
+RU1PVkVfQ09OU1VNRVIpOwo+PiArCWlmICghZGwpIHsKPj4gKwkJZGV2X2VycihkZXYsICJmYWls
+ZWQgdG8gY3JlYXRlIGRldmljZSBsaW5rIHRvICVzXG4iLAo+PiArCQkJZGV2X25hbWUocHdtLT5j
+aGlwLT5kZXYpKTsKPj4gKwkJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+IAo+IGJyb2tlbiBp
+bmRlbnRpb24uCgpPb3BzLCBJJ2xsIGZpeCBpdC4KClRoYW5rcywKRmFicmljZQoKPiAKPj4gKwl9
+Cj4+ICsKPj4gKwlyZXR1cm4gZGw7Cj4+ICt9Cj4+ICsKPiAKPiBCZXN0IHJlZ2FyZHMKPiBVd2UK
+PiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
