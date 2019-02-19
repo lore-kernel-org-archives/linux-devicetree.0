@@ -1,35 +1,49 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v1 2/2] arm64: dts: renesas: r8a7796: use extended audio
- dmac register
-Date: Wed, 20 Feb 2019 09:05:02 +0100
-Message-ID: <CAMuHMdVVo7LkYu6taKBndssmHMHS5U=nw+FnBoUXuF-r19Yuiw@mail.gmail.com>
-References: <20190220052435.20508-1-jiada_wang@mentor.com> <20190220052435.20508-3-jiada_wang@mentor.com>
+From: Marek Vasut <marex@denx.de>
+Subject: [PATCH 1/2] dt-bindings: display: Add ETM0430G0DH6 bindings
+Date: Tue, 19 Feb 2019 15:04:37 +0100
+Message-ID: <20190219140438.17063-1-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220052435.20508-3-jiada_wang@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiada Wang <jiada_wang@mentor.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Marek Vasut <marex@denx.de>, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Jan Tuerk <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2019 at 6:25 AM Jiada Wang <jiada_wang@mentor.com> wrote:
-> Basic audio dmac register only supports busif from 0 to 3,
-> in order to use busif4 ~ busif7, extended audio dmac register
-> need to be used
->
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-but please consider my comments to the cover letter.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+RG9jdW1lbnQgdGhlIEVtZXJnaW5nIERpc3BsYXkgVGVjaG5vbG9neSBDb3JwLiAoRURUKSBFVE0w
+NDMwRzBESDYKZGlzcGxheSwgd2hpY2ggaXMgYSA0ODB4MjcyIDQuMyIgVEZUIGRpc3BsYXkuCgpT
+aWduZWQtb2ZmLWJ5OiBNYXJlayBWYXN1dCA8bWFyZXhAZGVueC5kZT4KQ2M6IFJvYiBIZXJyaW5n
+IDxyb2JoK2R0QGtlcm5lbC5vcmc+CkNjOiBKYW4gVHVlcmsgPGphbi50dWVya0BlbXRyaW9uLmNv
+bT4KQ2M6IFRoaWVycnkgUmVkaW5nIDx0cmVkaW5nQG52aWRpYS5jb20+CkNjOiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZwotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvZWR0LGV0LXNlcmllcy50eHQgICB8IDggKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA4IGlu
+c2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2VkdCxldC1zZXJpZXMudHh0CmluZGV4IGY1NmI5
+OWViZDliZS4uZDlmMjFkNjI0MjJlIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4dAorKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4
+dApAQCAtNiw2ICs2LDE0IEBAIERpc3BsYXkgYmluZGluZ3MgZm9yIEVEVCBEaXNwbGF5IFRlY2hu
+b2xvZ3kgQ29ycC4gRGlzcGxheXMgd2hpY2ggYXJlCiBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBs
+ZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQgaW4KIHNpbXBsZS1wYW5lbC50eHQK
+IAorNCwzIiBXVkdBIFRGVCBQYW5lbHMKKy0tLS0tLS0tLS0tLS0tLS0tLS0tCisKKystLS0tLS0t
+LS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLSsKK3wgSWRlbnRpZmllciAgICAgIHwgY29tcGF0YmlsZSAgICAgICAgICB8
+IGRlc2NyaXB0aW9uICAgICAgICAgICAgICAgICAgICAgICAgIHwKKys9PT09PT09PT09PT09PT09
+PSs9PT09PT09PT09PT09PT09PT09PT0rPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PSsKK3wgRVRNMDQzMEcwREg2ICAgIHwgZWR0LGV0bTA0MzBnMGRoNiAgICB8IDQ4MHgyNzIg
+VEZUIERpc3BsYXkgICAgICAgICAgICAgICAgIHwKKystLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0t
+LS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKIAog
+NSw3IiBXVkdBIFRGVCBQYW5lbHMKIC0tLS0tLS0tLS0tLS0tLS0tLS0tCi0tIAoyLjE5LjIKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
