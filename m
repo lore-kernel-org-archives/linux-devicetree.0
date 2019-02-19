@@ -1,88 +1,65 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/4] pwm: atmel: add support for controllers with 32 bit
- counters
-Date: Tue, 19 Feb 2019 10:15:20 +0100
-Message-ID: <20190219091520.4s3hafqxkszmhme2@pengutronix.de>
-References: <1548073783-22640-1-git-send-email-claudiu.beznea@microchip.com>
- <1548073783-22640-3-git-send-email-claudiu.beznea@microchip.com>
- <20190219074246.kcdbd5nhf43yw5ax@pengutronix.de>
- <e08cbcb2-4e37-4a2e-ea79-021a2c7a25d6@microchip.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH v2 2/3] clk: at91: sckc: add support for SAM9X60
+Date: Tue, 19 Feb 2019 09:17:43 +0000
+Message-ID: <c00fb195-1688-6ac4-a606-5e08509a2c39@microchip.com>
+References: <1550146447-1441-1-git-send-email-claudiu.beznea@microchip.com>
+ <1550146447-1441-3-git-send-email-claudiu.beznea@microchip.com>
+ <20190218212007.GW10129@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e08cbcb2-4e37-4a2e-ea79-021a2c7a25d6@microchip.com>
+In-Reply-To: <20190218212007.GW10129@piout.net>
+Content-Language: en-US
+Content-ID: <295E9E7462964B43873190813069E9E3@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: alexandre.belloni@bootlin.com
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 19, 2019 at 08:57:04AM +0000, Claudiu.Beznea@microchip.com wrote:
-> 
-> 
-> On 19.02.2019 09:42, Uwe Kleine-König wrote:
-> > Hello Claudiu,
-> > 
-> > On Mon, Jan 21, 2019 at 12:30:53PM +0000, Claudiu.Beznea@microchip.com wrote:
-> >> From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> >>
-> >> New SAM9X60's PWM controller use 32 bits counters thus it could generate
-> >> signals with higher period and duty cycles. Update the current driver
-> >> to work with old controller (that uses 16 bits counters) and with the
-> >> new SAM9X60's controller.
-> >>
-> >> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> >> ---
-> >>  drivers/pwm/pwm-atmel.c | 38 +++++++++++++++++++++++++++-----------
-> >>  1 file changed, 27 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> >> index 7e86a5266eb6..44f4a1c9f60b 100644
-> >> --- a/drivers/pwm/pwm-atmel.c
-> >> +++ b/drivers/pwm/pwm-atmel.c
-> >> @@ -48,15 +48,15 @@
-> >>  #define PWMV2_CPRD		0x0C
-> >>  #define PWMV2_CPRDUPD		0x10
-> >>  
-> >> -/*
-> >> - * Max value for duty and period
-> >> - *
-> >> - * Although the duty and period register is 32 bit,
-> >> - * however only the LSB 16 bits are significant.
-> >> - */
-> >> -#define PWM_MAX_DTY		0xFFFF
-> >> -#define PWM_MAX_PRD		0xFFFF
-> >> -#define PRD_MAX_PRES		10
-> >> +/* Max values for period and prescaler */
-> >> +
-> >> +/* Only the LSB 16 bits are significant. */
-> >> +#define PWM_MAXV1_PRD		0xFFFF
-> >> +
-> >> +/* All 32 bits are significant. */
-> >> +#define PWM_MAXV2_PRD		0xFFFFFFFF
-> > 
-> > This symbol is unused, so I wonder if the patch really does what the
-> > commit log promises.
-> 
-> It is only of SAM9X60's PWM. Please check patch 3/4. Maybe I should have
-> been introduced it in there. If you consider it is better to be introduced
-> in patch 3/4 please let me know.
-
-Yeah, I think cpp symbols should be introduced with their first user.
-And then the commit log should read something like:
-
-	New SAM9X60's PWM controller use 32 bits counters thus it could
-	generate signals with higher period and duty cycles compared to
-	the already supported implementations that only have 16 bit
-	counters. Update the driver to handle counter width depending on
-	compatible data. Semantically this is a no-op but it's used in
-	the next patch to add support for SAM9X60.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+DQoNCk9uIDE4LjAyLjIwMTkgMjM6MjAsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBPbiAx
+NC8wMi8yMDE5IDEyOjE0OjMyKzAwMDAsIENsYXVkaXUuQmV6bmVhQG1pY3JvY2hpcC5jb20gd3Jv
+dGU6DQo+PiBGcm9tOiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNv
+bT4NCj4+DQo+PiBBZGQgc3VwcG9ydCBmb3IgU0FNOVg2MC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5
+OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4NCj4+IC0tLQ0K
+Pj4gIGRyaXZlcnMvY2xrL2F0OTEvc2NrYy5jIHwgMzAgKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKykNCj4+DQo+PiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9jbGsvYXQ5MS9zY2tjLmMgYi9kcml2ZXJzL2Nsay9hdDkxL3Nja2Mu
+Yw0KPj4gaW5kZXggYjcxNjNkM2EyMjY5Li5iMzA3NWM1MWQyNjAgMTAwNjQ0DQo+PiAtLS0gYS9k
+cml2ZXJzL2Nsay9hdDkxL3Nja2MuYw0KPj4gKysrIGIvZHJpdmVycy9jbGsvYXQ5MS9zY2tjLmMN
+Cj4+IEBAIC00NTksNiArNDU5LDM2IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBvZl9hdDkxc2FtOXg1
+X3Nja2Nfc2V0dXAoc3RydWN0IGRldmljZV9ub2RlICpucCkNCj4+ICBDTEtfT0ZfREVDTEFSRShh
+dDkxc2FtOXg1X2Nsa19zY2tjLCAiYXRtZWwsYXQ5MXNhbTl4NS1zY2tjIiwNCj4+ICAJICAgICAg
+IG9mX2F0OTFzYW05eDVfc2NrY19zZXR1cCk7DQo+PiAgDQo+PiArc3RhdGljIGNvbnN0IHN0cnVj
+dCBjbGtfc2xvd19vZmZzZXRzIGF0OTFzYW05eDYwX29mZnNldHMgPSB7DQo+PiArCS5jcl9yY2Vu
+ID0gQVQ5MV9TQ0tDX09GRlNFVF9JTlZBTElELA0KPj4gKwkuY3Jfb3NjMzJlbiA9IDEsDQo+PiAr
+CS5jcl9vc2MzMmJ5cCA9IDIsDQo+PiArCS5jcl9vc2NzZWwgPSAyNCwNCj4+ICt9Ow0KPj4gKw0K
+Pj4gK3N0YXRpYyB2b2lkIF9faW5pdCBvZl9hdDkxc2FtOXg2MF9zY2tjX3NldHVwKHN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqbnApDQo+PiArew0KPj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmNoaWxkbnA7
+DQo+PiArCXZvaWQgKCpjbGtfc2V0dXApKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIHZvaWQgX19p
+b21lbSAqaW8sDQo+PiArCQkJICBjb25zdCBzdHJ1Y3QgY2xrX3Nsb3dfb2Zmc2V0cyAqb2Zmc2V0
+cyk7DQo+PiArCWNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKmNsa19pZDsNCj4+ICsJdm9pZCBf
+X2lvbWVtICpyZWdiYXNlID0gb2ZfaW9tYXAobnAsIDApOw0KPj4gKw0KPj4gKwlpZiAoIXJlZ2Jh
+c2UpDQo+PiArCQlyZXR1cm47DQo+PiArDQo+PiArCWZvcl9lYWNoX2NoaWxkX29mX25vZGUobnAs
+IGNoaWxkbnApIHsNCj4+ICsJCWNsa19pZCA9IG9mX21hdGNoX25vZGUoc2NrY19jbGtfaWRzLCBj
+aGlsZG5wKTsNCj4+ICsJCWlmICghY2xrX2lkKQ0KPj4gKwkJCWNvbnRpbnVlOw0KPj4gKwkJY2xr
+X3NldHVwID0gY2xrX2lkLT5kYXRhOw0KPj4gKwkJY2xrX3NldHVwKGNoaWxkbnAsIHJlZ2Jhc2Us
+ICZhdDkxc2FtOXg2MF9vZmZzZXRzKTsNCj4+ICsJfQ0KPiANCj4gWW91IGFjdHVhbGx5IG5lZWQg
+dG8gaGF2ZSBuZXcgYmluZGluZ3MuIFRoZSBzYW05eDYwIHJlZ2lzdHJhdGlvbiBzaG91bGQNCj4g
+bG9vayBtb3JlIGxpa2UgdGhlIHNhbWE1ZDQgcmVnaXN0cmF0aW9uLiBJIGhhdmUgYSByZXdvcmsg
+Zm9yIHRoZSBzYW05eDUNCj4gc2NrYyB0aGF0IEkgd2lsbCBzZW5kIHRoaXMgd2VlayB0byBoYXZl
+IGEgcHJvcGVyIGJpbmRpbmcgKGkuZTogbm8NCj4gY2hpbGRyZW4pLg0KDQpEb2VzIHRoaXMgbWVh
+bnMgdGhhdCB0aGlzIHdvdWxkIGFsc28gc29sdmUgdGhlIHByb2JsZW0gSSB0cmllZCB0byBhZGRy
+ZXNzDQp3aXRoIHRoaXMgcGF0Y2g/DQoNCj4gDQo+IEhvd2V2ZXIsIHRoZXJlIGlzIGEgZnVuZGFt
+ZW50YWwgY2hhbmdlIGluIHRoZSBzYW05eDYwLCBwcmV2aW91c2x5LCB0aGUNCj4gc2NrYyBoYWQg
+b25seSBvbmUgb3V0cHV0IGNsb2NrLiB0aGUgc2FtOXg2MCBoYXMgYm90aCB0ZF9zbGNrIGFuZA0K
+PiBtZF9zbGNrLiBCb3RoIG5lZWQgdG8gYmUgYWNjZXNzaWJsZSBiZWNhdXNlIHRoZXkgYXJlIGlu
+cHV0IHRvIHRoZSBQTUMuDQoNCkkgd2FzIGd1aWRlZCBieSB0aGUgZmFjdCB0aGF0IG1kX3NsY2sg
+aXMgZ2VuZXJhdGVkIGJ5IHRoZSBhbHdheXMgb24gc2xvdyBSQw0Kb3NjaWxsYXRvciAocGFydCBv
+ZiBzbG93IGNsb2NrIGNvbnRyb2xsZXIpIGFuZCBzaW5jZSB0aGVyZSBpcyBubyBjb250cm9sDQpm
+b3IgaXQgb24gc2xvdyBjbG9jayBjb250cm9sbGVyIHRoZXJlIGlzIG5vIG5lZWQgdG8gYmUgZGVz
+Y3JpYmVkIGJ5IHRoaXMNCmRyaXZlci4NCg0KPiANCj4gVGhpcyBtZWFucyB5b3Ugd2lsbCBoYXZl
+IHRvIHJlZ2lzdGVyIHRoZSBzY2tjIHdpdGggb2ZfY2xrX2h3X29uZWNlbGxfZ2V0DQo+IGFzIHRo
+ZSBnZXQgY2FsbGJhY2suDQoNCk9rLCBJJ2xsIGxvb2sgaW50byBpdC4NCg0KPiANCj4gV2UgY291
+bGQgc3RpbGwgZGVjaWRlIHRvIGRvIHRoZSBzYW1lIHdpdGggc2FtOXg1IGV2ZW4gaWYgaXQgaGFz
+IG9ubHkgb25lDQo+IG91dHB1dCBjbG9jay4NCj4gDQo=
