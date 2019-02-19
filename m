@@ -1,97 +1,98 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 3/3] pwm: hibvt: Add hi3559v100 support
-Date: Tue, 19 Feb 2019 08:38:07 +0100
-Message-ID: <20190219073807.osevzhot6qdfvuke@pengutronix.de>
-References: <20190213150508.11499-1-m.othacehe@gmail.com>
- <20190213150508.11499-3-m.othacehe@gmail.com>
+From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Subject: Re: [PATCH v2 00/15] Add basic support for Socionext Milbeaut M10V
+ SoC
+Date: Tue, 19 Feb 2019 16:38:15 +0900
+Message-ID: <26959ef6-bca0-fe51-fc24-9969913e9af4@socionext.com>
+References: <1549628687-29628-1-git-send-email-sugaya.taichi@socionext.com>
+ <CAK8P3a3_j2W+KXSynW_SkVZk_+PJ-DqyxjLkgJL-OichS0fwWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190213150508.11499-3-m.othacehe@gmail.com>
+In-Reply-To: <CAK8P3a3_j2W+KXSynW_SkVZk_+PJ-DqyxjLkgJL-OichS0fwWw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Othacehe <m.othacehe@gmail.com>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2019 at 04:05:08PM +0100, Mathieu Othacehe wrote:
-> Add support for hi3559v100-shub-pwm and hisilicon,hi3559v100-pwm
-> platforms. They require a special quirk: pwm has to be enabled again
-> to force duty_cycle refresh.
+Hi,
+
+Thank you for your comments.
+
+On 2019/02/18 21:20, Arnd Bergmann wrote:
+> On Fri, Feb 8, 2019 at 1:24 PM Sugaya Taichi
+> <sugaya.taichi@socionext.com> wrote:
+>>
+>> Hi,
+>>
+>> Here is the series of patches the initial support for SC2000(M10V) of
+>> Milbeaut SoCs. "M10V" is the internal name of SC2000, so commonly used in
+>> source code.
+>>
+>> SC2000 is a SoC of the Milbeaut series. equipped with a DSP optimized for
+>> computer vision. It also features advanced functionalities such as 360-degree,
+>> real-time spherical stitching with multi cameras, image stabilization for
+>> without mechanical gimbals, and rolling shutter correction. More detail is
+>> below:
+>> https://www.socionext.com/en/products/assp/milbeaut/SC2000.html
+>>
+>> Specifications for developers are below:
+>>   - Quad-core 32bit Cortex-A7 on ARMv7-A architecture
+>>   - NEON support
+>>   - DSP
+>>   - GPU
+>>   - MAX 3GB DDR3
+>>   - Cortex-M0 for power control
+>>   - NAND Flash Interface
+>>   - SD UHS-I
+>>   - SD UHS-II
+>>   - SDIO
+>>   - USB2.0 HOST / Device
+>>   - USB3.0 HOST / Device
+>>   - PCI express Gen2
+>>   - Ethernet Engine
+>>   - I2C
+>>   - UART
+>>   - SPI
+>>   - PWM
+>>
+>> Support is quite minimal for now, since it only includes timer, clock,
+>> pictrl and serial controller drivers, so we can only boot to userspace
+>> through initramfs. Support for the other peripherals  will come eventually.
 > 
-> Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
-> ---
->  drivers/pwm/pwm-hibvt.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
+> I've looked over the platform once more. Overall, it looks very good, and
+> I'd still like to merge this for linux-5.1, but we are running out of time
+> there. If you send the patches to soc@kernel.org quickly, we can try to
+> still merge them in, but if anything goes wrong, it will have to wait until
+> we start merging patches for 5.2, directly after 5.1 is out.
 > 
-> diff --git a/drivers/pwm/pwm-hibvt.c b/drivers/pwm/pwm-hibvt.c
-> index ffc803818c3c..b6a7942b3367 100644
-> --- a/drivers/pwm/pwm-hibvt.c
-> +++ b/drivers/pwm/pwm-hibvt.c
-> @@ -54,6 +54,7 @@ struct hibvt_pwm_chip {
->  
->  struct hibvt_pwm_soc {
->  	u32 num_pwms;
-> +	bool quirk_force_enable;
->  };
->  
->  static const struct hibvt_pwm_soc hi3516cv300_soc_info = {
-> @@ -64,6 +65,16 @@ static const struct hibvt_pwm_soc hi3519v100_soc_info = {
->  	.num_pwms = 8,
->  };
->  
-> +static const struct hibvt_pwm_soc hi3559v100_shub_soc_info = {
-> +	.num_pwms = 8,
-> +	.quirk_force_enable = true,
-> +};
-> +
-> +static const struct hibvt_pwm_soc hi3559v100_soc_info = {
-> +	.num_pwms = 2,
-> +	.quirk_force_enable = true,
-> +};
-> +
->  static inline struct hibvt_pwm_chip *to_hibvt_pwm_chip(struct pwm_chip *chip)
->  {
->  	return container_of(chip, struct hibvt_pwm_chip, chip);
-> @@ -152,13 +163,24 @@ static void hibvt_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  static int hibvt_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  				struct pwm_state *state)
->  {
-> +	struct hibvt_pwm_chip *hi_pwm_chip = to_hibvt_pwm_chip(chip);
-> +
->  	if (state->polarity != pwm->state.polarity)
->  		hibvt_pwm_set_polarity(chip, pwm, state->polarity);
->  
->  	if (state->period != pwm->state.period ||
-> -		state->duty_cycle != pwm->state.duty_cycle)
-> +		state->duty_cycle != pwm->state.duty_cycle) {
->  		hibvt_pwm_config(chip, pwm, state->duty_cycle, state->period);
 
-I would prefer to have the continued line in the if condition aligned to
-the opening parenthesis. Then it is optically separated from the first
-expression in the body of the if.
+I see.
+I do my best to make it.
 
->  
-> +		/*
-> +		 * On those platforms, it is required to enable the
+> I did not look at the device driver patches (clk, clocksource, pinctrl, serial)
+> in much detail. If you have an Ack from the maintainers, feel free to
+> include them in the series, otherwise let's merge the rest now and then
+> you can send the updated patches for inclusion through the subsystem
+> trees in 5.2.
+> 
 
-Which platforms? I think in a previous round it was obvious what was
-meant here because there was a test against two specific compatibles.
-Now something like
+OK, I'll add the patches with "Acked" or "Reviewed" tag.
 
-	Some implementations require the pwm to be enabled once more
-	each time the duty cycle is refreshed.
+> I have sent a few comments. The only one that is really important
+> here is the missing platform check in the suspend options. Please
+> try to address most of the other commentsm, either by changing the
+> code, or by explaining why your version is correct.
+> 
 
-would be more suitable.
+Okay, try to address them.
+I send the next version as soon as possible.
 
-Is there a publicly available reference manual available for the newly
-supported hardware?
+Thanks.
+Sugaya Taichi
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> 
+> 
+>       Arnd
+> 
