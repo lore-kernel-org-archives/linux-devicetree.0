@@ -1,57 +1,72 @@
-From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 10/11] drm/panel: simple: Add NewEast
- Optoelectronics CO., LTD WJFH116008A panel support
-Date: Tue, 19 Feb 2019 13:35:26 -0800
-Message-ID: <CA+E=qVcmLnr9sL7UjG2PSC0Ji5PhW=xOLQHGvRUG3yMMZW1hnw@mail.gmail.com>
-References: <20190215050957.20755-1-anarsoul@gmail.com> <20190215050957.20755-11-anarsoul@gmail.com>
- <20190218183301.GA5480@bogus> <CA+E=qVcdDQJvssZgu23gM_gKvz2G5GAWcmjFBokE_V=WGJ4h6A@mail.gmail.com>
- <CAL_Jsq+pyAd_kMMz+yKjqY=asAi1X1XguM58VjfVhPwD-xi-2w@mail.gmail.com>
-Reply-To: anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v5 2/7] x86, olpc: Use a correct version when making up a
+ battery node
+Date: Wed, 20 Feb 2019 00:15:31 +0100
+Message-ID: <20190219231530.ndmpcitemcjzf5xc@earth.universe>
+References: <20190110174005.1202564-1-lkundrak@v3.sk>
+ <20190110174005.1202564-3-lkundrak@v3.sk>
+ <20190123205627.nbddtfuy6qdo2bgb@earth.universe>
+ <0adff00d4c4797fe1f9d593a7ba7c772ac3312c4.camel@v3.sk>
+ <48f658a78ddcd6cc67f6eb280dc2c3aa3399c459.camel@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDV3B667TUHBBOHNWHRQKGQEKC67KLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAL_Jsq+pyAd_kMMz+yKjqY=asAi1X1XguM58VjfVhPwD-xi-2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="j4x3gsyaydkk6jd2"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <48f658a78ddcd6cc67f6eb280dc2c3aa3399c459.camel@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 19, 2019 at 6:54 AM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-> > I believe using eDP connector binding wouldn't help much in my case
-> > and it won't improve accuracy of hardware description while adding
-> > unnecessary code duplication (edp-connector will be pretty much
-> > simple-panel).
-> >
-> > Since currently there're no standalone connector drivers, implementing
-> > one requires significant refactoring of the code that I'm not
-> > familiar.
->
-> I'm not talking about drivers. I'm talking about bindings. Those are
-> not necessarily 1-1. There's no reason the simple panel driver can't
-> have an 'edp-connector' entry.
+--j4x3gsyaydkk6jd2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-These aren't independent things. Bindings are useless without drivers.
+[+cc Darren Hart, Andy Shevchenko]
 
-Also how are you going to address mainlined platforms that have eDP
-and use panel bindings? E.g. rk3399 supports eDP and uses panel
-binding - see rk3399-gru-kevin.dts as example.
+Hi Lubo,
 
-> Also, since you have EDID, you should be using that for timing data
-> IMO, and the binding needs to have enough information to support that.
-> It may if DP-aux comes from the bridge chip or it may not if you need
-> to describe that connection. Again, this is independent from what
-> Linux chooses to do. If Linux chooses to have its own timing
-> information that's its choice. Another OS may choose to use EDID.
+On Mon, Feb 11, 2019 at 12:37:19PM +0100, Lubomir Rintel wrote:
+> perhaps the message slipped through the cracks? I'm happy to do
+> whatever is needed to get the patch set into 5.1, but it seems I
+> need some help and clarifications.
 
-I see nothing wrong here - anx6345 driver reads EDID (over AUX) and
-uses timing from it, if reading EDID failed it fallback to timings
-defined in panel driver.
+The following patches should be merged through the power-supply
+tree, which is maintained by me. This one is not for my subsystem,
+so either I need an Acked-by from the x86 people (=they are ok
+with me merging the patch through the power-supply tree) or they
+merge it into the x86 platform tree. If it is merged through the
+x86 tree I need a pull-request from them, so that I can merge the
+other patches.
 
-> Rob
+TLDR: This needs interaction from the x86 platform maintainers
+(i.e. Darren Hart and Andy Shevchenko). Looks like you did not
+Cc them?
+
+https://patchwork.kernel.org/patch/10756459/
+
+-- Sebastian
+
+--j4x3gsyaydkk6jd2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlxsjhAACgkQ2O7X88g7
++poXeg/9Fr3IwFdAmmBDYvdoaeAP5lLdEDe+W01Al2E7rjYyJ58Z48h5BqcTiaAf
+jTKqu5JmTfRwHs7oVe8KKPOOga/7gR68JPNdptrkLeVm/TPfQ/ZjQGcvydQm1RAI
+YgthK2/8hSTcheGFzHfJ5RuwpZYb8t/7wUQUGuNLqf0HXJ1eFCDmcOaRjs+kOngS
+XuSQBrLxG110tyo4jr3uRIGFvLbVSzV5wgGdT05ewTuP3GBxqvGkmBQEv9JfqvK0
+t5FMcuokwcXMsyA78RCpjYRJuRE3wpYz7SyM+ek5V57vRaX0kqr+Q6+NtACsc5EN
+3QpD+LZ29pDmZY2Si270t2sMv7hAJOR1xtziQG/bqtL1Jh3+/uXDOYqw5+1xxT9R
+03L8xUFdLdvygEtqIDSM+mhqlTpfApVrmhNY79ZWLV/eWnnLgEcjTCSf6iVhSZ+Q
+itg0w5wxwwl6HTw54kDImS1KVzjzvByt2yDS6tQ1rsVy3LNkLUCTQJ2X9VNmmdiW
+OGXgvGf/bv02K2KifZ5xiQK8YoN5vdXraN4W9v2rd/62lYsPiKPD5aKMDoqcc0/K
+Wqwz0U99VkpYc3TQ88dk5miGvWaPs1a7Kx0uGOBLAX1Pr3948pyVPSaYDd5K+kx8
+1xqjo6wMI5PRiyuGMrVaxwdssuBxDbDPOSrw7rEAROtDjZwD5Es=
+=5pzH
+-----END PGP SIGNATURE-----
+
+--j4x3gsyaydkk6jd2--
