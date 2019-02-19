@@ -1,68 +1,61 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 03/15] dt-bindings: Add documentation for Milbeaut SoCs
-Date: Tue, 19 Feb 2019 10:25:57 +0900
-Message-ID: <CAK7LNARTX4_phfcXRXUKGp_V0k_q_RKjL6A3Kz=Hxyqj6VXW+Q@mail.gmail.com>
-References: <1549628764-30587-1-git-send-email-sugaya.taichi@socionext.com>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v2 00/10] Add support for usb on Hikey960
+Date: Tue, 19 Feb 2019 09:34:33 +0800
+Message-ID: <5e884818-7afe-e76c-a181-81d3b78f40bf@huawei.com>
+References: <20190218112310.17860-1-chenyu56@huawei.com>
+ <b1aca3d0-547a-51bd-5bff-69652484b6cc@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1549628764-30587-1-git-send-email-sugaya.taichi@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sugaya Taichi <sugaya.taichi@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b1aca3d0-547a-51bd-5bff-69652484b6cc@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Valentin Schneider <valentin.schneider@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: liuyu712@hisilicon.com, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 8, 2019 at 9:26 PM Sugaya Taichi
-<sugaya.taichi@socionext.com> wrote:
->
-> This adds a DT binding documentation for the M10V and its evaluation
-> board.
->
-> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-> ---
->  Documentation/devicetree/bindings/arm/milbeaut.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/milbeaut.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/milbeaut.txt b/Documentation/devicetree/bindings/arm/milbeaut.txt
+Hi,
 
+On 2019/2/19 1:30, Valentin Schneider wrote:
+> Hi,
+> 
+> On 18/02/2019 11:23, Yu Chen wrote:
+>> The patchset adds support for usb functionality of Hikey960, includes:
+>> - dwc3 driver for Hisilicon Kirin Soc hi3660
+>> - usb driver for HiKey960 board
+>> - some adjustment in dwc3, usb gadget and typec driver
+>> - dts for support usb of HiKey960
+>>
+> 
+> I want to try this out on my HiKey960, but I can't get the USB A ports
+> working (tried USB stick and USB eth adapter).
+> 
+> On top of the arm64 defconfig, I've enabled (with menuconfig):
+> 
+> 	CONFIG_PHY_HI3660_USB
+> 	CONFIG_HISI_HIKEY_USB
+> 
+> Am I missing something? FYI up until now I've carried over Fan Ning's old
+> USB patch-set and that works fine, so I think it might just be a
+> configuration error from my end.
 
+This patch set based on Heikki Krogerus's patches.
+Have you applied https://do-db2.lkml.org/lkml/2019/2/13/106 first?
+And these configs should be set to y:
+	CONFIG_TYPEC
+	CONFIG_TYPEC_TCPM
+	CONFIG_TYPEC_TCPCI
+	CONFIG_TYPEC_RT1711H
 
-I added uniphier SoC/board binding into
+> 
+> Thanks,
+> Valentin
+> 
+> 
+> 
+> .
+> 
 
-Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-
-
-You can milbeaut.txt to the socionext directory as well.
-
-
-
-
-> new file mode 100644
-> index 0000000..9fd053a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/milbeaut.txt
-> @@ -0,0 +1,6 @@
-> +Milbeaut platforms device tree bindings
-> +---------------------------------------
-> +
-> +- Milbeaut M10V Evaluation Board
-> +    Required root node properties:
-> +      - compatible = "socionext,milbeaut-m10v-evb", "socionext,sc2000a";
-> --
-> 1.9.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks,
+Yu Chen
