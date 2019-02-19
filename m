@@ -1,50 +1,59 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH v4 0/2] irqchip: Add support for Renesas RZ/N1 GPIO interrupt multiplexer
-Date: Tue, 19 Feb 2019 15:55:09 +0000
-Message-ID: <20190219155511.28507-1-phil.edworthy@renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v1 2/6] dt-bindings: drm/msm/a6xx: Add GX
+ power-domain for GMU bindings
+Date: Tue, 19 Feb 2019 09:12:19 -0700
+Message-ID: <20190219161219.GC10863@jcrouse1-lnx.qualcomm.com>
+References: <1549296944-17285-1-git-send-email-jcrouse@codeaurora.org>
+ <1549296944-17285-3-git-send-email-jcrouse@codeaurora.org>
+ <CAL_JsqJ0FX=dbQb34bvZcdbWibjKnS2VXGsApT_Vz+UcjUxCSQ@mail.gmail.com>
+ <CAF6AEGuXXqfa7OnfnyHLcyHaGXXGKHwpo4gMBH4gU0keExQcFg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGuXXqfa7OnfnyHLcyHaGXXGKHwpo4gMBH4gU0keExQcFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On RZ/N1 devices, there are lots of GPIO interrupts that are multiplexed before
-getting to the GIC interrupt controller. Other than the multiplexing, there is
-no other logic applied to the signals.
-
-The multiplexing cannot be handled dynamically because there is another CPU that
-runs firmware. It's likely that the firmware will use some of these GPIO
-interrupts and so we don't want them to move around.
-
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
----
-v4:
- - Fix DT binding nits
-v3:
- - Use 'interrupt-map' DT property to map the interrupts, this is very similar
-   to PCIe MSI. The only difference is that we need to get hold of the interrupt
-   specifier for the interupts coming into the irqmux.
-   I had completely messed up the use of 'interrupt-map' in v2... oops.
- - Do not use a chained interrupt controller.
-v2:
- - Split DT bindings into separate patch.
- - Use interrupt-map to allow the GPIO controller info to be specified
-   as part of the irq.
- - Don't show status in binding examples.
- - Don't show the soc/board split in binding doc.
- - Renamed struct and funcs from 'girq' to a more comprehenisble 'irqmux'.
-
-Phil Edworthy (2):
-  dt-bindings/interrupt-controller: rzn1: Add RZ/N1 gpio irq mux binding
-  irqchip: Add support for Renesas RZ/N1 GPIO interrupt multiplexer
-
- .../interrupt-controller/renesas,rzn1-mux.txt |  73 +++++++
- drivers/irqchip/Kconfig                       |   9 +
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/rzn1-irq-mux.c                | 205 ++++++++++++++++++
- 4 files changed, 288 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
- create mode 100644 drivers/irqchip/rzn1-irq-mux.c
-
--- 
-2.17.1
+T24gU3VuLCBGZWIgMTcsIDIwMTkgYXQgMDU6NDM6MTZQTSAtMDUwMCwgUm9iIENsYXJrIHdyb3Rl
+Ogo+IE9uIFN1biwgRmViIDE3LCAyMDE5IGF0IDQ6MDggUE0gUm9iIEhlcnJpbmcgPHJvYmgrZHRA
+a2VybmVsLm9yZz4gd3JvdGU6Cj4gPgo+ID4gT24gTW9uLCBGZWIgNCwgMjAxOSBhdCAxMDoxNSBB
+TSBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiA+ID4KPiA+
+ID4gVGhlIEdNVSBzaG91bGQgaGF2ZSB0d28gcG93ZXIgZG9tYWlucyBkZWZpbmVkOiAiY3giIGFu
+ZCAiZ3giLiAiY3giIGlzIHRoZQo+ID4gPiBhY3R1YWwgcG93ZXIgZG9tYWluIGZvciB0aGUgZGV2
+aWNlIGFuZCAiZ3giIHdpbGwgYmUgYXR0YWNoZWQgYXQgcnVudGltZQo+ID4gPiB0byBtYW5hZ2Ug
+cmVmZXJlbmNlIGNvdW50aW5nIG9uIHRoZSBHUFUgZGV2aWNlIGluIGNhc2Ugb2YgYSBHTVUgY3Jh
+c2guCj4gPgo+ID4gcG93ZXItZG9tYWlucyBhcmUgc3VwcG9zZWQgdG8gYmUgYWN0dWFsIHJlZ2lv
+bnMgb24gYSBjaGlwIGRpZSB3aGljaAo+ID4gY2FuIGJlIHBvd2VyIGdhdGVkLiBIb3dldmVyLCB0
+aGV5IGFyZSBvZnRlbiBhYnVzZWQgYnkgYmVpbmcgZGVmaW5lZCBpbgo+ID4gdGVybXMgb2Yga2Vy
+bmVsIFBNIGRvbWFpbnMgd2hpY2ggYXJlIG5vdCBhbHdheXMgdGhlIHNhbWUgdGhpbmcuIFRoaXMK
+PiA+IGRlc2NyaXB0aW9uIHNvdW5kcyBsaWtlIHRoZSBsYXR0ZXIgY2FzZS4KPiA+Cj4gCj4gaWly
+YyAoYW5kIEpvcmRhbiBjYW4gY29ycmVjdCBtZSksIHRoaXMgYXJyYW5nZW1lbnQgd2FzIG5lZWRl
+ZCBiZWNhdXNlCj4gbm9ybWFsbHkgdGhlIEdNVSBkb2VzIHRoZSBHUFUgcG93ZXIgY29udHJvbCAo
+ZXhjZXB0IGZvciBpZiB3ZSBtYW5hZ2UKPiB0byBjcmFzaCBpdCBhbmQgbmVlZCB0byByZXNldCB0
+aGUgR01VKS4uCj4gCj4gc28gbWF5YmUgbm90IDEwMCUgYWJvdXQgdGhlIGFjdHVhbCByZWdpb25z
+IG9uIGNoaXAgZGllIHdoaWNoIGNhbiBiZQo+IGdhdGVkLi4gYnV0IGl0IGlzIGEgcmVhbGl0eSBv
+ZiBob3cgaHcgKyBmdyArIHN3IGZpdCB0b2dldGhlci4uCgpBY2sgLSBmb3Jnb3QgdG8gYWRkIFN0
+ZXBoZW4gd2hvIGtub3dzIGFib3V0IHRoaXMuCgpSb2IgaXMgY29ycmVjdC4gVGhlIEdYIGRvbWFp
+biBpcyByZWFsIGJ1dCBpdCBpcyBub3JtYWxseSBjb250cm9sbGVkIGJ5IGFuCm9mZi1DUFUgbWlj
+cm9jb250cm9sbGVyLiBUaGUgQ1BVIG5lZWRzIHRvIGdldCBpbnZvbHZlZCBvbmx5IHdoZW4gdGhl
+Cm1pY3JvY29udHJvbGxlciBjcmFzaGVzIGFuZCB3ZSBuZWVkIHRvIGdldCB0aGluZ3MgYmFjayB0
+byBub3JtYWwuICBTbyB0aGUKZGVzY3JpcHRpb24gb2YgaXQgYmVpbmcgYW4gYWN0dWFsIHJlZ2lv
+biBvbiBhIGNoaXAgZGllIGlzIGFjY3VyYXRlLgoKSXQgc291bmRzIGxpa2UgSSBuZWVkIHRvIGRl
+c2NyaWJlIHRoZSBoYXJkd2FyZSBiZXR0ZXIgaW4gdGhlIGJpbmRpbmdzIGRvY3VtZW50LgoKSm9y
+ZGFuCgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVy
+IG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQ
+cm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZy
+ZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubw==
