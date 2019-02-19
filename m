@@ -1,50 +1,56 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v2 01/10] dt-bindings: phy: Add support for HiSilicon's
- hi3660 USB PHY
-Date: Tue, 19 Feb 2019 11:55:31 +0800
-Message-ID: <5ee91d42-ab9d-1bd2-d39e-8af4d69a5c19@huawei.com>
-References: <20190218112310.17860-1-chenyu56@huawei.com>
- <20190218112310.17860-2-chenyu56@huawei.com> <20190218201824.GA23724@bogus>
- <a944cd27-f7d5-eece-1ef5-c7dc5dbc311b@huawei.com>
- <1550545405.2210.30.camel@mhfsdcap03>
+From: Wei Ni <wni@nvidia.com>
+Subject: [PATCH v8 0/3] Fixes for Tegra soctherm
+Date: Tue, 19 Feb 2019 12:27:01 +0800
+Message-ID: <1550550424-7979-1-git-send-email-wni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550545405.2210.30.camel@mhfsdcap03>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: liuyu712@hisilicon.com, Rob Herring <robh@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
+To: daniel.lezcano@linaro.org, edubezval@gmail.com, linux-tegra@vger.kernel.org
+Cc: thierry.reding@gmail.com, rui.zhang@intel.com, srikars@nvidia.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Wei Ni <wni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This series fixed some issues for Tegra soctherm,
+and add get_trend().
 
-On 2019/2/19 11:03, Chunfeng Yun wrote:
->>>> +
->>>> +Example:
->>>> +	usb-phy {
->>>> +		compatible = "hisilicon,hi3660-usb-phy";
->>>> +		#phy-cells = <0>;
->>>> +		hisilicon,pericrg-syscon = <&crg_ctrl>;
->>>> +		hisilicon,pctrl-syscon = <&pctrl>;
->>>> +		hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
->>>
->>> Are most of the registers within one of these blocks? If so, make this 
->>> node a child of that node.
->> I met a problem when I made this node a child of the syscon node,
->> the driver "phy-hi3660-usb3" was not probed.
->> Do you have any idea about how to make it probed when it is a child node?
-> call of_platform_populate() in parent node's driver,
-> but I don't know whether it's a standard way
-Yes, this function is used in dwc3 driver to probe the child node.
-But I think it is not a good way to modify the syscon driver.
->>>
->>>> +		hisilicon,eye-diagram-param = <0x22466e4>;
->>>> +	};
->>>> -- 
->>>> 2.15.0-rc2
->>>>
+Main changes from v7:
+1. use READ_ONCE to get temperature in get_trend()
 
-Thanks
-Yu Chen
+Main changes from v6:
+1. Per Eduardo's comment, we can remove the change:
+"thermal: tegra: parse sensor id before sensor register"
+
+Main changes from v5:
+1. Move the get_trend() patch https://lkml.org/lkml/2018/11/20/643
+into this serial.
+
+Main changes from v4:
+1. fixed for the parsing sensor id.
+2. keep warning for missing critical trips.
+
+Main changes from v3:
+1. updated codes for parsing sensor id, per Thierry's comments
+
+Main changes from v2:
+1. add codes to parse sensor id to avoid registration
+failure.
+
+Main changes from v1:
+1. Acked by Thierry Reding <treding@nvidia.com> for the patch
+"thermal: tegra: fix memory allocation".
+2. Print out the sensor name when register failed.
+2. Remove patch "thermal: tegra: fix coverity defect"
+
+
+*** BLURB HERE ***
+
+Wei Ni (3):
+  thermal: tegra: remove unnecessary warnings
+  thermal: tegra: fix memory allocation
+  thermal: tegra: add get_trend ops
+
+ drivers/thermal/tegra/soctherm.c | 38 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 35 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
