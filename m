@@ -1,75 +1,40 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: Linux-next 20190218: am57xx-evm: mmc1: ADMA error
-Date: Tue, 19 Feb 2019 18:38:33 +0530
-Message-ID: <34c78d7f-cc3c-853d-b3fd-a70abdb66293@ti.com>
-References: <CA+G9fYsmC5ckLXfQxSUn-tqxLZ4NofEyb9RA69Q07RUoxc79RQ@mail.gmail.com>
+From: Qii Wang <qii.wang@mediatek.com>
+Subject: Re: [PATCH v3 5/6] dt-bindings: i2c: Add Mediatek MT8183 i2c binding
+Date: Tue, 19 Feb 2019 21:13:43 +0800
+Message-ID: <1550582023.30065.52.camel@mhfsdcap03>
+References: <1548057574-8061-1-git-send-email-qii.wang@mediatek.com>
+         <1548057574-8061-6-git-send-email-qii.wang@mediatek.com>
+         <20190205131641.GF12401@kunai> <1550109268.30065.13.camel@mhfsdcap03>
+         <20190215090257.geumssb2cucs7rzt@ninjato>
+         <1550316723.30065.44.camel@mhfsdcap03>
+         <20190216122915.hchghozcn7ntdkbm@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+G9fYsmC5ckLXfQxSUn-tqxLZ4NofEyb9RA69Q07RUoxc79RQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190216122915.hchghozcn7ntdkbm@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: t-kristo@ti.com, nm@ti.com, Mark Rutland <mark.rutland@arm.com>, robh+dt@kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, ryder.lee@mediatek.com, xinping.qian@mediatek.com, liguo.zhang@mediatek.com, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Naresh,
-
-On 18/02/19 6:57 PM, Naresh Kamboju wrote:
-> Do you see this error on am57xx-evm running Linux next 20190218 ?
-> I have tested on multiple devices and found this error.
-> Please find the full boot log [1].
-> Am i missing any pre required configs [2] ?
+On Sat, 2019-02-16 at 13:29 +0100, Wolfram Sang wrote:
+> > Maybe you think that MT8183 SoC only has the I3C controllers. Actually,
+> > there are I2C and I3C controllers on MT8183 SoC. We will remove
+> > "mediatek,share-i3c" for I2C controller driver, so these patches are
+> > just to support the I2C controllers on MT8183 SoC. For the I3C
+> > controller we will send some new patches which are based on i3c
+> > framework directories(kernel/drivers/i3c), not based on
+> > i2c-mt65xx.c.
 > 
-> [    5.620263] mmc1: ADMA error
-> [    5.623266] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [    5.629740] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
-> [    5.636215] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
-> [    5.642690] mmc1: sdhci: Argument:  0x002cec70 | Trn mode: 0x00000033
-> [    5.649162] mmc1: sdhci: Present:   0x01f00000 | Host ctl: 0x00000010
-> [    5.655634] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
-> [    5.662108] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
-> [    5.668582] mmc1: sdhci: Timeout:   0x0000000c | Int stat: 0x00000000
-> [    5.675055] mmc1: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
-> [    5.681529] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
-> [    5.688002] mmc1: sdhci: Caps:      0x21e90080 | Caps_1:   0x00000f77
-> [    5.694474] mmc1: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
-> [    5.700949] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffef
-> [    5.707423] mmc1: sdhci: Resp[2]:   0x0f5903ff | Resp[3]:  0xd04f0132
-> [    5.713896] mmc1: sdhci: Host ctl2: 0x00000004
-> [    5.718364] mmc1: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xab868218
+> Sounds perfect to me. If it turns out that the I3C driver can share
+> things with the I2C driver, we can discuss it then. But unless we have
+> an I3C driver and know for sure, the above strategy seems good to me.
 > 
 
-I see this as well on my setup. Trying to bisect now. Will keep you posted.
+Can I push the V4 patches of I2C controller driver now? or you just want
+an I3C driver that is compatible with the I2C controller?
 
-Thanks,
-Faiz
-
-> <>
-> [   42.425587] print_req_error: I/O error, dev mmcblk1, sector 4542872 flags 1
-> [   42.429013] mmc1: ADMA error
-> [   42.432606] EXT4-fs warning (device mmcblk1p9): ext4_end_bio:324:
-> I/O error 10 writing to inode 35321 (offset 0 size 4096 starting block
-> 567860)
-> [   42.435475] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [   42.448543] Buffer I/O error on device mmcblk1p9, logical block 226675
-> [   42.454944] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
-> [   42.461528] EXT4-fs warning (device mmcblk1p9): ext4_end_bio:324:
-> I/O error 10 writing to inode 35322 (offset 0 size 4096 starting block
-> 567861)
-> [   42.467960] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
-> [   42.480982] Buffer I/O error on device mmcblk1p9, logical block 226676
-> [   42.487427] mmc1: sdhci: Argument:  0x002cae20 | Trn mode: 0x00000033
-> [   42.494007] EXT4-fs warning (device mmcblk1p9): ext4_end_bio:324:
-> I/O error 10 writing to inode 315 (offset 0 size 4096 starting block
-> 567862)
-> 
-> Full boot log,
-> [1] https://lkft.validation.linaro.org/scheduler/job/610989#L4354
-> config,
-> [2] http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/am57xx-evm/lkft/linux-next/467/config
-> 
-> Best regards
-> Naresh Kamboju
-> 
+According to our plan, I2C controller will use
+i2c-mt65xx.c(kernel/drivers/i2c/busses/)and I3C controller will use
+i3c-xxx.c(kernel/drivers/i3c/master/)
