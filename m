@@ -1,81 +1,135 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH v2 09/15] dt-bindings: serial: Add Milbeaut serial driver
- description
-Date: Tue, 19 Feb 2019 17:11:29 +0900
-Message-ID: <04726ec4-4ee5-3aa8-8b46-2e1293f773f5@socionext.com>
-References: <1549628849-31726-1-git-send-email-sugaya.taichi@socionext.com>
- <20190218195713.GA18625@bogus>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: input: touchscreen: goodix: Document
+ AVDD28-supply property
+Date: Tue, 19 Feb 2019 00:15:10 -0800
+Message-ID: <20190219081510.GB65896@dtor-ws>
+References: <CAL_JsqKTnPVM7Qahy9ejQbPfENpLCdzf5K5uUTcPh8j3EiqWRA@mail.gmail.com>
+ <CAMty3ZCyq=tZMt6RC1aYJuEWgYp2zv1LBh+ZUwucE+g4RCoUaQ@mail.gmail.com>
+ <CAL_JsqKCw3EV+0_DuMiHh7GRGxv7YogQf-xwp71n9gpc2GzSSQ@mail.gmail.com>
+ <CAMty3ZBtoocXBW5A0astyQPh2y7vG7NtbZ_M0BjSeex2etmGsw@mail.gmail.com>
+ <CAL_JsqJSMX7E2zQA2O8ofZQPDrm3S6PMCLG1iAQ95P10Pe2yFg@mail.gmail.com>
+ <CAMty3ZDMB=pwY8Rxdt3du=90pksBedLo0Pc_-=diqx9-Xndzqg@mail.gmail.com>
+ <CAMty3ZDBu2Y9psNu9nrZ=BNVvhpJ2qYn-Qp7MDqdhK9_SrcpNg@mail.gmail.com>
+ <20190218071207.GE242714@dtor-ws>
+ <CAMty3ZDbFU-NpWQvkaUWgUiVTabjTZoFWUCUZSPKMA6VuHc+iQ@mail.gmail.com>
+ <CAMty3ZBVpNY+JF_vEMs83M29WKQDhzmk7LyL-HHCCA7uD0Y+=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218195713.GA18625@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBVpNY+JF_vEMs83M29WKQDhzmk7LyL-HHCCA7uD0Y+=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2019/02/19 4:57, Rob Herring wrote:
-> On Fri, Feb 08, 2019 at 09:27:29PM +0900, Sugaya Taichi wrote:
->> Add DT bindings document for Milbeaut serial driver.
->>
->> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
->> ---
->>   .../devicetree/bindings/serial/milbeaut-uart.txt    | 21 +++++++++++++++++++++
->>   1 file changed, 21 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/serial/milbeaut-uart.txt
->>
->> diff --git a/Documentation/devicetree/bindings/serial/milbeaut-uart.txt b/Documentation/devicetree/bindings/serial/milbeaut-uart.txt
->> new file mode 100644
->> index 0000000..8f61c38
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/serial/milbeaut-uart.txt
->> @@ -0,0 +1,21 @@
->> +Socionext Milbeaut UART controller
->> +
->> +Required properties:
->> +- compatible: should be "socionext,milbeaut-usio-uart".
->> +- reg: offset and length of the register set for the device.
->> +- interrupts: two interrupts specifier.
->> +- clocks: phandle to the input clock.
->> +- interrupt-names: should be "rx", "tx".
+On Tue, Feb 19, 2019 at 01:00:19AM +0530, Jagan Teki wrote:
+> On Mon, Feb 18, 2019 at 3:03 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> >
+> > Hi Dmitry,
+> >
+> > On Mon, Feb 18, 2019 at 12:42 PM Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
+> > >
+> > > On Sun, Feb 17, 2019 at 02:45:52PM +0530, Jagan Teki wrote:
+> > > > On Sun, Feb 17, 2019 at 1:21 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > >
+> > > > > Hi Dmitry and Rob,
+> > > > >
+> > > > > On Thu, Feb 14, 2019 at 3:21 AM Rob Herring <robh@kernel.org> wrote:
+> > > > > >
+> > > > > > On Tue, Jan 22, 2019 at 7:39 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > > > >
+> > > > > > > On Mon, Jan 21, 2019 at 9:46 PM Rob Herring <robh@kernel.org> wrote:
+> > > > > > > >
+> > > > > > > > On Fri, Jan 18, 2019 at 10:01 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > > > > > >
+> > > > > > > > > On Wed, Jan 9, 2019 at 7:08 PM Rob Herring <robh@kernel.org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Please CC DT list if you want bindings reviewed.
+> > > > > > > > >
+> > > > > > > > > Sorry I forgot.
+> > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > On Wed, Jan 9, 2019 at 1:40 AM Dmitry Torokhov
+> > > > > > > > > > <dmitry.torokhov@gmail.com> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > On Sat, Dec 15, 2018 at 08:47:59PM +0530, Jagan Teki wrote:
+> > > > > > > > > > > > Most of the Goodix CTP controllers are supply with AVDD28 pin.
+> > > > > > > > > > > > which need to supply for controllers like GT5663 on some boards
+> > > > > > > > > > > > to trigger the power.
+> > > > > > > > > > > >
+> > > > > > > > > > > > So, document the supply property so-that the require boards
+> > > > > > > > > > > > that used on GT5663 can enable it via device tree.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > > > > > > > ---
+> > > > > > > > > > > >  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
+> > > > > > > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > > > > > > >
+> > > > > > > > > > > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > > > > > > > index f7e95c52f3c7..c4622c983e08 100644
+> > > > > > > > > > > > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > > > > > > > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > > > > > > > @@ -23,6 +23,7 @@ Optional properties:
+> > > > > > > > > > > >   - touchscreen-inverted-y  : Y axis is inverted (boolean)
+> > > > > > > > > > > >   - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
+> > > > > > > > > > > >                               (swapping is done after inverting the axis)
+> > > > > > > > > > > > + - AVDD28-supply     : Analog power supply regulator on AVDD28 pin
+> > > > > > > > > > >
+> > > > > > > > > > > I think we normally use lower case in DT bindings and rarely encode
+> > > > > > > > > > > voltage in the supply name unless we are dealing with several supplies
+> > > > > > > > > > > of the same kind, but I'll let Ron comment on this.
+> > > > > > > > > >
+> > > > > > > > > > Yes on lowercase though there are some exceptions.
+> > > > > > > > > >
+> > > > > > > > > > There's also a AVDD22 supply as well as DVDD12 and VDDIO. So we
+> > > > > > > > > > probably need to keep the voltage, but the binding is incomplete.
+> > > > > > > > >
+> > > > > > > > > What is incomplete here? can you please elaborate.
+> > > > > > > >
+> > > > > > > > You are missing the 3 other supplies the chip has: AVDD22, DVDD12 and VDDIO.
+> > > > > > >
+> > > > > > > Though it has other supplies, only AVDD28 is connected in the Host
+> > > > > > > interface design similar like 9. Reference Schematic on Page, 23 in
+> > > > > > > attached manual.
+> > > > > >
+> > > > > > That is for a particular board design. It still has other supplies.
+> > > > > > Just make the binding complete please. You can make them optional. I
+> > > > > > don't care if the driver supports controlling all the supplies or not
+> > > > > > (though Dmitry might).
+> > > > >
+> > > > > So, Can I make bulk get and enable in all 4 regulators global to
+> > > > > driver or specific to that chip, in either way the regulators which
+> > > > > are not used to process via dummy regulators (which we all know).
+> > > > >
+> > > > > or regulator which are not using are get via devm_regulator_get_optional.
+> > > > >
+> > > > > Any suggestions?
+> > > >
+> > > > Just realized to go with bulk calls, please have a look at on v5 [1]
+> > >
+> > > I do not believe you can use bulk regulator API here as you need to
+> > > implement the power up timing scheme mentioned on p. 12 of the spec you
+> > > referenced earlier. And, because of that timing diagram, I believe if
+> > > you want to control AVDD supply, you also have to control VDDIO supply
+> > > as it has to be on only after enabling AVDD.
+> >
+> > AVDD here is AVDD28 it' is an out name of pin (mentioned in p. 23). So
+> > the power scheme goes to enable AVDD28 and then VDDIO does that really
+> > mean bulk of two regulators?
 > 
-> Put this next to 'interrupts'
+> The time between these two regulator operations is nearly 0, as per
+> power scheme diagram T1 >= 0us. I think I can use bulk since there is
+> no necessity of delay between these two regulator operations.
 > 
+> What do you think?
 
-OK, change the order.
+Does the bulk enable provide any guarantees as to the order of
+operations? If it does not then I think we should ensure that they are
+powered up/down in the right order.
 
->> +
->> +Optional properties:
->> +- uart-flow-enable: flow control enable.
-> 
-> We already have a standard property for this: auto-flow-control
-> 
+Thanks.
 
-Okay, I change the property name to "auto-flow-control"
-
->> +
->> +Example:
->> +	usio1: usio_uart@1e700010 {
-> 
-> serial@...
-> 
-
-I got it.
-
-Thanks,
-Sugaya Taichi
-
->> +		compatible = "socionext,milbeaut-usio-uart";
->> +		reg = <0x1e700010 0x10>;
->> +		interrupts = <0 141 0x4>, <0 149 0x4>;
->> +		interrupt-names = "rx", "tx";
->> +		clocks = <&clk 2>;
->> +		uart-flow-enable;
->> +	};
->> -- 
->> 1.9.1
->>
+-- 
+Dmitry
