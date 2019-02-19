@@ -1,94 +1,52 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [RFC PATCH 0/5] MTD: Add Initial Hyperbus support
-Date: Tue, 19 Feb 2019 08:52:24 +0100
-Message-ID: <20190219085212.355921e5@kernel.org>
-References: <20190219063607.29949-1-vigneshr@ti.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Allwinner SID THS calibration data cell representation?
+Date: Tue, 19 Feb 2019 15:54:00 +0800
+Message-ID: <CAGb2v65p0G83BVODsxxnXmiSCwuuwPFtY2k2ZV1F5xoFKrJjWQ@mail.gmail.com>
+References: <20180830154518.29507-1-embed3d@gmail.com> <20180830154518.29507-28-embed3d@gmail.com>
+ <20180904184623.e4386b8e6b657b1b25e90c09@bidouilliste.com>
+ <55579dd6-625d-e71b-1482-4592dccac665@gmail.com> <20180906115114.inc6dhqhy47obo25@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219063607.29949-1-vigneshr@ti.com>
+In-Reply-To: <20180906115114.inc6dhqhy47obo25@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com, Mason Yang <masonccyang@mxic.com.tw>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Philipp Rossak <embed3d@gmail.com>, Emmanuel Vadot <manu@bidouilliste.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Quentin Schulz <quentin.schulz@bootlin.com>, Icenowy Zheng <icenowy@aosc.io>, linux-iio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-+Sergei and Mason who recently worked on an HyperFlash controller.
+Sorry for resurrecting an old discussion, but since someone posted patches
+for H5 and H6, I thought we should resolve this. I'm working on patches to
+fix / replace the big-endian issue.
 
-On Tue, 19 Feb 2019 12:06:02 +0530
-Vignesh R <vigneshr@ti.com> wrote:
+On Thu, Sep 6, 2018 at 7:51 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Thu, Sep 06, 2018 at 01:47:47PM +0200, Philipp Rossak wrote:
+> > On 04.09.2018 18:46, Emmanuel Vadot wrote:
+> > > > +                 /* Data cells */
+> > > > +                 thermal_calibration: calib@234 {
+> > > > +                         reg = <0x234 0x8>;
+> > > > +                 };
+> > >   You are declaring 8 bytes of calibration data but to my knowledge it's
+> > > only 2 bytes per sensor, so 2 bytes for H3.
+> > >   Am I missing something ?
+> > >
+> > >   Thanks,
+> >
+> > Emmanuel you are right, it is 2 bytes per Sensor and should be 2 bytes for
+> > H3, but the thermal calibration data field is on all chips 64 bit wide - so
+> > 8 bytes. So I'm reading here the complete calibration data field.
+>
+> Having one cell per channel would make more sense I guess.
 
-> Cypress HyperBus is Low Signal Count, High Performance Double Data Rate Bus
-> interface between a host system master and one or more slave interfaces.
-> HyperBus is used to connect microprocessor, microcontroller, or ASIC
-> devices with random access NOR flash memory(called HyperFlash) or
-> self refresh DRAM(called HyperRAM).
-> 
-> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
-> signal and either Single-ended clock(3.0V parts) or Differential clock
-> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
-> At bus level, it follows a separate protocol described in HyperBus
-> specification[1].
-> 
-> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
-> to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
-> its equivalent to x16 parallel NOR flash wrt bits per clk. But Hyperbus
-> operates at >166MHz frequencies.
-> HyperRAM provides direct random read/write access to flash memory
-> array.
-> Framework is modelled along the lines of spi-nor framework. HyperBus
-> memory controller(HBMC) drivers call hb_register_device() to register a
-> single HyperFlash device. HyperFlash core parses MMIO access
-> information from DT, sets up the map_info struct, probes CFI flash and
-> registers it with MTD framework.
-> 
-> This is an early RFC, to know if its okay to use maps framework and existing
-> CFI compliant flash support code to support Hyperflash
-> Also would like input on different types of HBMC master IPs out there
-> and their programming sequences.
-> Would appreciate any testing/review.
-> 
-> Tested on modified TI AM654 EVM with Cypress Hyperflash S26KS512 by
-> creating a UBIFS partition and writing and reading files to it.
-> Stress tested by writing/reading 16MB flash repeatedly at different
-> offsets using dd commmand.
-> 
-> HyperBus specification can be found at[1]
-> HyperFlash datasheet can be found at[2]
-> TI's HBMC controller details at[3]
-> 
-> [1] https://www.cypress.com/file/213356/download
-> [2] https://www.cypress.com/file/213346/download
-> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->     Table 12-5741. HyperFlash Access Sequence
-> 
-> Vignesh R (5):
->   mtd: cfi_cmdset_0002: Add support for polling status register
->   dt-bindings: mtd: Add binding documentation for Hyperbus memory
->     devices
->   mtd: Add support for Hyperbus memory devices
->   dt-bindings: mtd: Add bindings for TI's AM654 Hyperbus memory
->     controller
->   mtd: hyperbus: Add driver for TI's Hyperbus memory controller
-> 
->  .../bindings/mtd/cypress,hyperbus.txt         |   6 +
->  .../devicetree/bindings/mtd/ti,am654-hbmc.txt |  27 +++
->  MAINTAINERS                                   |   8 +
->  drivers/mtd/Kconfig                           |   2 +
->  drivers/mtd/Makefile                          |   1 +
->  drivers/mtd/chips/cfi_cmdset_0002.c           |  50 ++++++
->  drivers/mtd/hyperbus/Kconfig                  |  23 +++
->  drivers/mtd/hyperbus/Makefile                 |   4 +
->  drivers/mtd/hyperbus/core.c                   | 167 ++++++++++++++++++
->  drivers/mtd/hyperbus/hbmc_am654.c             | 105 +++++++++++
->  include/linux/mtd/cfi.h                       |   5 +
->  include/linux/mtd/hyperbus.h                  |  73 ++++++++
->  12 files changed, 471 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
->  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
->  create mode 100644 drivers/mtd/hyperbus/Kconfig
->  create mode 100644 drivers/mtd/hyperbus/Makefile
->  create mode 100644 drivers/mtd/hyperbus/core.c
->  create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
->  create mode 100644 include/linux/mtd/hyperbus.h
-> 
+Would it? The 2 32-bit words directly map onto the registers 0x74 / 0x78 in
+the THS. As far as the SID is concerned, their is just one consumer for this
+data, the thermal sensor. How the thermal sensor uses that data is really not
+its concern. And the thermal sensor is really just copying the data from the
+e-fuses into its registers. Nothing more.
+
+Furthermore, with the register access interface, the e-fuses are read/write
+32 bits at a time. Seems to me it would make more sense to enforce a 32-bit
+word size, so cells should be multiples of 32 bits.
+
+Regards
+ChenYu
