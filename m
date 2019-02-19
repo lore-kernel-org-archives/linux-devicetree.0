@@ -1,48 +1,56 @@
-Return-Path: <SRS0=0E4C=QS=sigxcpu.org=agx@kernel.org>
-Date: Mon, 11 Feb 2019 11:43:50 +0100
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: [PATCH] dt-bindings: input: Refer to touchscreen.txt for goodix ts
-Message-ID: <20190211104350.GA1330@bogon.m.sigxcpu.org>
+Return-Path: <SRS0=gY1q=Q2=ccbib.org=harald@kernel.org>
+From: Harald Geyer <harald@ccbib.org>
+Subject: Re: [PATCH] regulator: gpio: Reword the binding document
+In-reply-to: <72363317-8259-eda2-4cd8-4f336f0c155f@gmail.com>
+References: <20190216174859.15738-1-marek.vasut@gmail.com> <E1gv6SG-0000Jv-KB@stardust.g4.wien.funkfeuer.at> <83550921-b0ec-fa34-b120-2dd159f256d8@gmail.com> <E1gvNOx-0000Kc-Dc@stardust.g4.wien.funkfeuer.at> <75846117-242c-6861-ace5-dccf88711208@gmail.com> <E1gvSbw-0000K8-Hj@stardust.g4.wien.funkfeuer.at> <7a993282-9137-caf4-ca0b-b2c01ea9959c@gmail.com> <E1gvfnE-0000Il-Jo@stardust.g4.wien.funkfeuer.at> <e2e9e577-b110-fc9b-c129-26f61e862fb4@gmail.com> <E1gvrEx-0000K7-Ks@stardust.g4.wien.funkfeuer.at> <72363317-8259-eda2-4cd8-4f336f0c155f@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Bastien Nocera <hadess@hadess.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1385.1550571004.1@stardust.g4.wien.funkfeuer.at>
+Date: Tue, 19 Feb 2019 11:10:04 +0100
+Message-Id: <E1gw2Ll-0000MN-40@stardust.g4.wien.funkfeuer.at>
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Refer to touchscreen.txt for generic touch properties. This avoids
-duplication and we're using the generic code to parse these in the
-driver. While at that add touchscreen-size-{x,y} which are respected by
-the driver as well.
+Marek Vasut writes:
+> On 2/18/19 11:18 PM, Harald Geyer wrote:
+> > From the explanations provided by Mark it is clear that this property
+> > is an artifact of the implementation in linux. I think we should document
+> > is as such. How about:
+> > 
+> > gpios-states : On operating systems, that don't support reading back gpio
+> > 	       values in output mode (most notably linux), this array
+> > 	       provides the state of GPIO pins set when requesting them
+> > 	       from the gpio controller.
+> 
+> That's good.
+> 
+> > Systems, that are capable of
+> > 	       preserving state when requesting the lines, are free to
+> > 	       ignore this property.
+> 
+> Are they ?
 
-Signed-off-by: Guido G�nther <agx@sigxcpu.org>
----
- .../bindings/input/touchscreen/goodix.txt           | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+I think so. Also this seems to be what Mark wrote yesterday:
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-index f7e95c52f3c7..bc7796b98a00 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-@@ -18,11 +18,14 @@ Optional properties:
-  - irq-gpios		: GPIO pin used for IRQ. The driver uses the
- 			  interrupt gpio pin as output to reset the device.
-  - reset-gpios		: GPIO pin used for reset
--
-- - touchscreen-inverted-x  : X axis is inverted (boolean)
-- - touchscreen-inverted-y  : Y axis is inverted (boolean)
-- - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
--                             (swapping is done after inverting the axis)
-+ - touchscreen-inverted-x
-+ - touchscreen-inverted-y
-+ - touchscreen-size-x
-+ - touchscreen-size-y
-+ - touchscreen-swapped-x-y
-+
-+The touchscreen-* properties are documented in
-+Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
- 
- Example:
- 
+| With the GPIO API as it stands it is unfortunately not possible to
+| preserve the state, if the API were fixed we'd preserve state.
+
+> I think there are systems which depend on preconfiguring the
+> GPIO according to this property.
+
+These systems need to preconfigure the GPIOs in firmware anyway, so
+they should be fine so long as the driver preserves state.
+
+Since the original wording doesn't give any guarantees, I think the
+new wording doesn't change anything. It just makes it clearer, that
+there are no guarantees and that some drivers will happily overwrite
+state when this property is absent.
+
+Harald
+
 -- 
-2.20.1
+If you want to support my work:
+see http://friends.ccbib.org/harald/supporting/
+or donate via CLAM to xASPBtezLNqj4cUe8MT5nZjthRSEjrRQXN
+or via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
