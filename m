@@ -1,68 +1,99 @@
-From: Mathieu Othacehe <m.othacehe@gmail.com>
-Subject: [PATCH v3 1/3] pwm: hibvt: Use individual struct per of-data.
-Date: Tue, 19 Feb 2019 10:58:06 +0100
-Message-ID: <20190219095808.12059-1-m.othacehe@gmail.com>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: [PATCH 5/8] regulator: stpmic1: Remove support for regulator pull
+ down
+Date: Tue, 19 Feb 2019 10:04:33 +0000
+Message-ID: <1550570647-9555-6-git-send-email-p.paillet@st.com>
+References: <1550570647-9555-1-git-send-email-p.paillet@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550570647-9555-1-git-send-email-p.paillet@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mathieu Othacehe <m.othacehe@gmail.com>
+To: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+Cc: Pascal PAILLET-LME <p.paillet@st.com>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-Split pwm-soc array in one struct per soc and point to the
-corresponding on in of-data.
+Regulator high pull down are enabled by default so remove support in the
+driver.
 
-Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
+Signed-off-by: pascal paillet <p.paillet@st.com>
 ---
- drivers/pwm/pwm-hibvt.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/regulator/stpmic1_regulator.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/drivers/pwm/pwm-hibvt.c b/drivers/pwm/pwm-hibvt.c
-index 27c107e78d59..ffc803818c3c 100644
---- a/drivers/pwm/pwm-hibvt.c
-+++ b/drivers/pwm/pwm-hibvt.c
-@@ -49,15 +49,19 @@ struct hibvt_pwm_chip {
- 	struct clk *clk;
- 	void __iomem *base;
- 	struct reset_control *rstc;
-+	const struct hibvt_pwm_soc *soc;
+diff --git a/drivers/regulator/stpmic1_regulator.c b/drivers/regulator/stpmic1_regulator.c
+index f5c0e58..6970e45 100644
+--- a/drivers/regulator/stpmic1_regulator.c
++++ b/drivers/regulator/stpmic1_regulator.c
+@@ -133,7 +133,6 @@ enum {
+ 	.disable = regulator_disable_regmap,
+ 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+ 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
+-	.set_pull_down = regulator_set_pull_down_regmap,
+ 	.set_over_current_protection = stpmic1_set_icc,
  };
  
- struct hibvt_pwm_soc {
- 	u32 num_pwms;
+@@ -145,7 +144,6 @@ enum {
+ 	.disable = regulator_disable_regmap,
+ 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+ 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
+-	.set_pull_down = regulator_set_pull_down_regmap,
+ 	.get_bypass = regulator_get_bypass_regmap,
+ 	.set_bypass = regulator_set_bypass_regmap,
+ 	.set_over_current_protection = stpmic1_set_icc,
+@@ -155,7 +153,6 @@ enum {
+ 	.is_enabled = regulator_is_enabled_regmap,
+ 	.enable = regulator_enable_regmap,
+ 	.disable = regulator_disable_regmap,
+-	.set_pull_down = regulator_set_pull_down_regmap,
+ 	.set_over_current_protection = stpmic1_set_icc,
  };
  
--static const struct hibvt_pwm_soc pwm_soc[2] = {
--	{ .num_pwms = 4 },
--	{ .num_pwms = 8 },
-+static const struct hibvt_pwm_soc hi3516cv300_soc_info = {
-+	.num_pwms = 4,
-+};
-+
-+static const struct hibvt_pwm_soc hi3519v100_soc_info = {
-+	.num_pwms = 8,
+@@ -177,7 +174,6 @@ enum {
+ 	.is_enabled = regulator_is_enabled_regmap,
+ 	.enable = regulator_enable_regmap,
+ 	.disable = regulator_disable_regmap,
+-	.set_pull_down = regulator_set_pull_down_regmap,
  };
  
- static inline struct hibvt_pwm_chip *to_hibvt_pwm_chip(struct pwm_chip *chip)
-@@ -198,6 +202,7 @@ static int hibvt_pwm_probe(struct platform_device *pdev)
- 	pwm_chip->chip.npwm = soc->num_pwms;
- 	pwm_chip->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pwm_chip->chip.of_pwm_n_cells = 3;
-+	pwm_chip->soc = soc;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pwm_chip->base = devm_ioremap_resource(&pdev->dev, res);
-@@ -250,8 +255,10 @@ static int hibvt_pwm_remove(struct platform_device *pdev)
+ static const struct regulator_ops stpmic1_switch_regul_ops = {
+@@ -203,8 +199,6 @@ enum {
+ 	.enable_val = 1, \
+ 	.disable_val = 0, \
+ 	.enable_time = PMIC_ENABLE_TIME_US, \
+-	.pull_down_reg = ids##_PULL_DOWN_REG, \
+-	.pull_down_mask = ids##_PULL_DOWN_MASK, \
+ 	.supply_name = #base, \
  }
  
- static const struct of_device_id hibvt_pwm_of_match[] = {
--	{ .compatible = "hisilicon,hi3516cv300-pwm", .data = &pwm_soc[0] },
--	{ .compatible = "hisilicon,hi3519v100-pwm", .data = &pwm_soc[1] },
-+	{ .compatible = "hisilicon,hi3516cv300-pwm",
-+	  .data = &hi3516cv300_soc_info },
-+	{ .compatible = "hisilicon,hi3519v100-pwm",
-+	  .data = &hi3519v100_soc_info },
- 	{  }
- };
- MODULE_DEVICE_TABLE(of, hibvt_pwm_of_match);
+@@ -228,8 +222,6 @@ enum {
+ 	.bypass_mask = LDO_BYPASS_MASK, \
+ 	.bypass_val_on = LDO_BYPASS_MASK, \
+ 	.bypass_val_off = 0, \
+-	.pull_down_reg = ids##_PULL_DOWN_REG, \
+-	.pull_down_mask = ids##_PULL_DOWN_MASK, \
+ 	.supply_name = #base, \
+ }
+ 
+@@ -247,8 +239,6 @@ enum {
+ 	.enable_val = 1, \
+ 	.disable_val = 0, \
+ 	.enable_time = PMIC_ENABLE_TIME_US, \
+-	.pull_down_reg = ids##_PULL_DOWN_REG, \
+-	.pull_down_mask = ids##_PULL_DOWN_MASK, \
+ 	.supply_name = #base, \
+ }
+ 
+@@ -288,8 +278,6 @@ enum {
+ 	.enable_val = 1, \
+ 	.disable_val = 0, \
+ 	.enable_time = PMIC_ENABLE_TIME_US, \
+-	.pull_down_reg = ids##_PULL_DOWN_REG, \
+-	.pull_down_mask = ids##_PULL_DOWN_MASK, \
+ 	.supply_name = #base, \
+ }
+ 
 -- 
-2.17.1
+1.9.1
