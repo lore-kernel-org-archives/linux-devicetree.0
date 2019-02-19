@@ -1,102 +1,53 @@
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-Date: Tue, 19 Feb 2019 15:01:39 +0800
-Message-ID: <1550559699.29794.2.camel@mhfsdcap03>
-References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
-         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
-         <20181213145517.GB4701@google.com> <1545034779.8528.8.camel@mhfsdcap03>
-         <20181217143247.GK20725@google.com>
-         <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
-         <1545124764.25199.3.camel@mhfsdcap03> <20181220182043.GC183878@google.com>
-         <1545651628.5634.57.camel@mhfsdcap03>
-         <20190123154023.GA1157@e107981-ln.cambridge.arm.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH v2 1/2] usb: dwc3: Add avoiding vbus glitch happen during xhci
+ reset
+Date: Tue, 19 Feb 2019 07:23:14 +0000
+Message-ID: <20190219072358.43493-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123154023.GA1157@e107981-ln.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org, jianjun.wang@mediatek.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-01-23 at 15:40 +0000, Lorenzo Pieralisi wrote:
-> On Mon, Dec 24, 2018 at 07:40:28PM +0800, Jianjun Wang wrote:
-> > On Thu, 2018-12-20 at 12:20 -0600, Bjorn Helgaas wrote:
-> > > On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
-> > > > On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
-> > > > > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
-> > > > > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
-> > > > > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
-> > > > > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
-> > > > > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be
-> > > > > > > > > calculated as 4GB in arm64 but bogus alignment values at
-> > > > > > > > > arm32, the pcie device and devices behind this bridge will
-> > > > > > > > > not be enabled. Fix it's BAR0 resource size to guarantee
-> > > > > > > > > the pcie devices will be enabled correctly.
-> > > > > > > > 
-> > > > > > > > So this is a hardware erratum?  Per spec, a memory BAR has
-> > > > > > > > bit 0 hardwired to 0, and an IO BAR has bit 1 hardwired to
-> > > > > > > > 0.
-> > > > > > > 
-> > > > > > > Yes, it only works properly on 64bit platform.
-> > > > > > 
-> > > > > > I don't understand.  BARs are supposed to work the same
-> > > > > > regardless of whether it's a 32- or 64-bit platform.  If this is
-> > > > > > a workaround for a hardware defect, please just say that
-> > > > > > explicitly.
-> > > > > 
-> > > > > I do not understand this either. First thing to do is to describe
-> > > > > the problem properly so that we can actually find a solution to
-> > > > > it.
-> > > > 
-> > > > This BAR0 is a 64-bit memory BAR, the HW default values for this BAR
-> > > > is 0xffff_ffff_0000_0000 and it could not be changed except by
-> > > > config write operation.
-> > > 
-> > > If you literally get 0xffff_ffff_0000_0000 when reading the BAR, that
-> > > is out of spec because the low-order 4 bits of a 64-bit memory BAR
-> > > cannot all be zero.
-> > > 
-> > > A 64-bit BAR consumes two DWORDS in config space.  For a 64-bit BAR0,
-> > > the DWORD at 0x10 contains the low-order bits, and the DWORD at 0x14
-> > > contains the upper 32 bits.  Bits 0-3 of the low-order DWORD (the
-> > > one at 0x10) are read-only, and in this case should contain the value
-> > > 0b1100 (0xc).  That means the range is prefetchable (bit 3 == 1) and
-> > > the BAR is 64 bits (bits 2:1 == 10).
-> > 
-> > Sorry, I have confused the HW default value and the read value of BAR
-> > size. The hardware default value is 0xffff_ffff_0000_000c, it's a 64-bit
-> > BAR with prefetchable range.
-> > 
-> > When we start to decoding the BAR, the read value of BAR0 at 0x10 is
-> > 0x0c, and the value at 0x14 is 0xffff_ffff, so the read value of BAR
-> > size is 0xffff_ffff_0000_0000, which will be decoded to 0xffff_ffff, and
-> > it will be set to the end value of BAR0 resource in the pci_dev.
-> > > 
-> > > > The calculated BAR size will be 0 in 32-bit platform since the
-> > > > phys_addr_t is a 32bit value in 32-bit platform.
-> > > 
-> > > Either (1) this is a hardware defect that feeds incorrect data to the
-> > > BAR size calculation, or (2) there's a problem in the BAR size
-> > > calculation code.  We need to figure out which one and work around or
-> > > fix it correctly.
-> > 
-> > The BAR size is calculated by the code (res->end - res->start + 1) is
-> > fine, I think it's a hardware defect because that we can not change the
-> > hardware default value or just disable it since we don't using it.
-> 
-> Apologies for the delay in getting back to this.
-> 
-> This looks like a kernel defect, not a HW defect.
-> 
-> I need some time to make up my mind on what the right fix for this
-> but it is most certainly not this patch.
-> 
-> Lorenzo
+When DWC3 is set to host mode by programming register DWC3_GCTL, VBUS
+(or its control signal) will turn on immediately on related Root Hub
+ports. Then the VBUS will be de-asserted for a little while during xhci
+reset (conducted by xhci driver) for a little while and back to normal.
 
-Hi Lorenzo,
+This VBUS glitch might cause some USB devices emuration fail if kernel
+boot with them connected. One SW workaround which can fix this is to
+program all PORTSC[PP] to 0 to turn off VBUS immediately after setting
+host mode in DWC3 driver(per signal measurement result, it will be too
+late to do it in xhci-plat.c or xhci.c).
 
-Is there any better idea about this patch?
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+Changes in v2:
+  - Correct typos
+  - Shorten the name to snps,host-vbus-glitches
 
-Thanks.
+ Documentation/devicetree/bindings/usb/dwc3.txt |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation=
+/devicetree/bindings/usb/dwc3.txt
+index 8e5265e..453f562 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -106,6 +106,9 @@ Optional properties:
+ 			When just one value, which means INCRX burst mode enabled. When
+ 			more than one value, which means undefined length INCR burst type
+ 			enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
++ - snps,host-vbus-glitches: Power off all Root Hub ports immediately after
++			setting host mode to avoid vbus (negative) glitch happen in later
++			xhci reset. And the vbus will back to 5V automatically when reset done.
+=20
+  - in addition all properties from usb-xhci.txt from the current directory=
+ are
+    supported as well
+--=20
+1.7.1
