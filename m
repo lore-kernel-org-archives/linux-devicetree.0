@@ -1,61 +1,68 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v2 3/3] drm/panel: simple: Add support for VXT
- VL050-8048NT-C01 panel
-Date: Mon, 18 Feb 2019 21:27:06 -0300
-Message-ID: <20190219002706.20077-3-festevam@gmail.com>
-References: <20190219002706.20077-1-festevam@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 03/15] dt-bindings: Add documentation for Milbeaut SoCs
+Date: Tue, 19 Feb 2019 10:25:57 +0900
+Message-ID: <CAK7LNARTX4_phfcXRXUKGp_V0k_q_RKjL6A3Kz=Hxyqj6VXW+Q@mail.gmail.com>
+References: <1549628764-30587-1-git-send-email-sugaya.taichi@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190219002706.20077-1-festevam@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com
-Cc: devicetree@vger.kernel.org, otavio.salvador@ossystems.com.br, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, sam@ravnborg.org, john.weber@technexion.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1549628764-30587-1-git-send-email-sugaya.taichi@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sugaya Taichi <sugaya.taichi@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIHRoZSBWWFQgVkwwNTAtODA0OE5ULUMwMSA4MDB4NDgwIHBhbmVsIHRv
-IHRoZQpwYW5lbC1zaW1wbGUgZHJpdmVyLiAKClRoaXMgcGFuZWwgaXMgdXNlZCBvbiBzb21lIGJv
-YXJkcyBtYW51ZmFjdHVyZWQgYnkgVGVjaE5leGlvbiwgc3VjaCBhcwppbXg3ZC1waWNvLgoKUmV2
-aWV3ZWQtYnk6IE90YXZpbyBTYWx2YWRvciA8b3RhdmlvQG9zc3lzdGVtcy5jb20uYnI+ClJldmll
-d2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+ClNpZ25lZC1vZmYtYnk6IEZh
-YmlvIEVzdGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbT4KLS0tCkNoYW5nZXMgc2luY2UgdjE6Ci0g
-UGFzcyAuZmxhZ3MgYW5kIC5idXNfZmxhZ3MgKFNhbSkKCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwv
-cGFuZWwtc2ltcGxlLmMgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUg
-Y2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9w
-YW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUu
-YwppbmRleCA5YzY5ZTczOWE1MjQuLjczN2NiZjNhZWUxMSAxMDA2NDQKLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
-YW5lbC1zaW1wbGUuYwpAQCAtMjQzNCw2ICsyNDM0LDMyIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-cGFuZWxfZGVzYyB1cnRfdW1zaF84NTk2bWRfcGFyYWxsZWwgPSB7CiAJLmJ1c19mb3JtYXQgPSBN
-RURJQV9CVVNfRk1UX1JHQjY2Nl8xWDE4LAogfTsKIAorc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1f
-ZGlzcGxheV9tb2RlIHZsMDUwXzgwNDhudF9jMDFfbW9kZSA9IHsKKwkuY2xvY2sgPSAzMzMzMywK
-KwkuaGRpc3BsYXkgPSA4MDAsCisJLmhzeW5jX3N0YXJ0ID0gODAwICsgMjEwLAorCS5oc3luY19l
-bmQgPSA4MDAgKyAyMTAgKyAyMCwKKwkuaHRvdGFsID0gODAwICsgMjEwICsgMjAgKyA0NiwKKwku
-dmRpc3BsYXkgPSAgNDgwLAorCS52c3luY19zdGFydCA9IDQ4MCArIDIyLAorCS52c3luY19lbmQg
-PSA0ODAgKyAyMiArIDEwLAorCS52dG90YWwgPSA0ODAgKyAyMiArIDEwICsgMjMsCisJLnZyZWZy
-ZXNoID0gNjAsCisJLmZsYWdzID0gRFJNX01PREVfRkxBR19OSFNZTkMgfCBEUk1fTU9ERV9GTEFH
-X05WU1lOQywKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyB2bDA1MF84MDQ4
-bnRfYzAxID0geworCS5tb2RlcyA9ICZ2bDA1MF84MDQ4bnRfYzAxX21vZGUsCisJLm51bV9tb2Rl
-cyA9IDEsCisJLmJwYyA9IDgsCisJLnNpemUgPSB7CisJCS53aWR0aCA9IDEyMCwKKwkJLmhlaWdo
-dCA9IDc2LAorCX0sCisJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDI0LAor
-CS5idXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfREVfSElHSCB8IERSTV9CVVNfRkxBR19QSVhEQVRB
-X1BPU0VER0UsCit9OworCiBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgd2lu
-c3Rhcl93ZjM1bHRpYWNkX21vZGUgPSB7CiAJLmNsb2NrID0gNjQxMCwKIAkuaGRpc3BsYXkgPSAz
-MjAsCkBAIC0yNzUxLDYgKzI3NzcsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
-ZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCX0sIHsKIAkJLmNvbXBhdGlibGUgPSAidXJ0LHVt
-c2gtODU5Nm1kLTIwdCIsCiAJCS5kYXRhID0gJnVydF91bXNoXzg1OTZtZF9wYXJhbGxlbCwKKwl9
-LCB7CisJCS5jb21wYXRpYmxlID0gInZ4dCx2bDA1MC04MDQ4bnQtYzAxIiwKKwkJLmRhdGEgPSAm
-dmwwNTBfODA0OG50X2MwMSwKIAl9LCB7CiAJCS5jb21wYXRpYmxlID0gIndpbnN0YXIsd2YzNWx0
-aWFjZCIsCiAJCS5kYXRhID0gJndpbnN0YXJfd2YzNWx0aWFjZCwKLS0gCjIuMTcuMQoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Fri, Feb 8, 2019 at 9:26 PM Sugaya Taichi
+<sugaya.taichi@socionext.com> wrote:
+>
+> This adds a DT binding documentation for the M10V and its evaluation
+> board.
+>
+> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> ---
+>  Documentation/devicetree/bindings/arm/milbeaut.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/milbeaut.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/milbeaut.txt b/Documentation/devicetree/bindings/arm/milbeaut.txt
+
+
+
+I added uniphier SoC/board binding into
+
+Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+
+
+You can milbeaut.txt to the socionext directory as well.
+
+
+
+
+> new file mode 100644
+> index 0000000..9fd053a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/milbeaut.txt
+> @@ -0,0 +1,6 @@
+> +Milbeaut platforms device tree bindings
+> +---------------------------------------
+> +
+> +- Milbeaut M10V Evaluation Board
+> +    Required root node properties:
+> +      - compatible = "socionext,milbeaut-m10v-evb", "socionext,sc2000a";
+> --
+> 1.9.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
