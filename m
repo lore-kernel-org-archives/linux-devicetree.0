@@ -1,33 +1,36 @@
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH] ARM: dts: rockchip: remove disable-wp from rv1108-elgin-r1 emmc node
-Date: Tue, 19 Feb 2019 14:03:17 +0100
-Message-ID: <20190219130317.2817-1-jbx6244@gmail.com>
+From: Stuart Menefy <stuart.menefy@mathembedded.com>
+Subject: [PATCH v2 4/4] ARM: dts: exynos: Fix interrupt for shared EINTs on Exynos5260
+Date: Tue, 19 Feb 2019 13:03:37 +0000
+Message-ID: <20190219130337.21353-5-stuart@menefy.org>
+References: <20190219130337.21353-1-stuart@menefy.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190219130337.21353-1-stuart@menefy.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The mmc.txt didn't explicitly say disable-wp is for SD card slot only,
-but that is what it was designed for in the first place.
-Remove all disable-wp from emmc or sdio controllers.
+From: Stuart Menefy <stuart.menefy@mathembedded.com>
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Fix the interrupt information for the GPIO lines with a shared EINT
+interrupt.
+
+Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
 ---
- arch/arm/boot/dts/rv1108-elgin-r1.dts | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/exynos5260.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rv1108-elgin-r1.dts b/arch/arm/boot/dts/rv1108-elgin-r1.dts
-index 1c4507b..b1db924 100644
---- a/arch/arm/boot/dts/rv1108-elgin-r1.dts
-+++ b/arch/arm/boot/dts/rv1108-elgin-r1.dts
-@@ -37,7 +37,6 @@
- &emmc {
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
--	disable-wp;
- 	no-sd;
- 	no-sdio;
- 	non-removable;
+diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
+index a8c7c6e589a0..3581b57fbbf7 100644
+--- a/arch/arm/boot/dts/exynos5260.dtsi
++++ b/arch/arm/boot/dts/exynos5260.dtsi
+@@ -227,7 +227,7 @@
+ 			wakeup-interrupt-controller {
+ 				compatible = "samsung,exynos4210-wakeup-eint";
+ 				interrupt-parent = <&gic>;
+-				interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 		};
+ 
 -- 
-2.11.0
+2.13.6
