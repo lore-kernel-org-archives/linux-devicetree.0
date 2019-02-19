@@ -1,55 +1,91 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 2/4] mfd: max77620: add documentation for backup
- battery charging
-Date: Tue, 19 Feb 2019 09:18:22 -0600
-Message-ID: <CAL_JsqJkw1Ti7Jdz_1oqGHarM1aUs3odQW37SUrKZUJq6hpDsw@mail.gmail.com>
-References: <20190212064353.7451-1-markz@nvidia.com> <20190212064353.7451-3-markz@nvidia.com>
- <CAL_JsqKiL8A+SBwqLzYa9djWBT1S+2kxUUB4iuKWX7EoqXouCw@mail.gmail.com> <91d3d8f8-0b96-c442-5674-3eff8209848b@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 3/6] dt-bindings: pinctrl: mt8183: add binding document
+Date: Tue, 19 Feb 2019 09:21:57 -0600
+Message-ID: <CAL_JsqKgp615eJZnSu6aogzLwubnBKdxdU8+19hj=hS1aOWefA@mail.gmail.com>
+References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
+ <1550210558-30516-4-git-send-email-erin.lo@mediatek.com> <20190218163211.GB2714@bogus>
+ <1550544357.4739.32.camel@mhfsdcap03>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <91d3d8f8-0b96-c442-5674-3eff8209848b@nvidia.com>
+In-Reply-To: <1550544357.4739.32.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Zhang <markz@nvidia.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-tegra@vger.kernel.org
+To: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc: Erin Lo <erin.lo@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@media>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 8:07 PM Mark Zhang <markz@nvidia.com> wrote:
+On Mon, Feb 18, 2019 at 8:46 PM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
 >
-> On 2/19/2019 2:06 AM, Rob Herring wrote:
-> > On Tue, Feb 12, 2019 at 12:44 AM Mark Zhang <markz@nvidia.com> wrote:
-> >>
-> >> Adding documentation for 3 new backup battery charging dts
-> >> properties:
-> >> - maxim,charging-current-microamp
-> >> - maxim,charging-voltage-microvolt
-> >> - maxim,output-resister-ohms
+> On Mon, 2019-02-18 at 10:32 -0600, Rob Herring wrote:
+> > On Fri, Feb 15, 2019 at 02:02:35PM +0800, Erin Lo wrote:
+> > > From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > >
+> > > The commit adds mt8183 compatible node in binding document.
+> > >
+> > > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > > ---
+> > >  .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt | 115 +++++++++++++++++++++
+> > >  1 file changed, 115 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> > > new file mode 100644
+> > > index 0000000..364e673
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> > > @@ -0,0 +1,115 @@
+> > > +* Mediatek MT8183 Pin Controller
+> > > +
+> > > +The Mediatek's Pin controller is used to control SoC pins.
+> > > +
+> > > +Required properties:
+> > > +- compatible: value should be one of the following.
+> > > +   "mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
+> > > +- gpio-controller : Marks the device node as a gpio controller.
+> > > +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+> > > +  binding is used, the amount of cells must be specified as 2. See the below
+> > > +  mentioned gpio binding representation for description of particular cells.
+> > > +- gpio-ranges : gpio valid number range.
+> > > +- reg: physicall address base for gpio base registers. There are nine
+> > > +  physicall address base in mt8183. They are 0x10005000, 0x11F20000,
+> > > +  0x11E80000, 0x11E70000, 0x11E90000, 0x11D30000, 0x11D20000, 0x11C50000,
+> > > +  0x11F30000.
 > >
-> > What's the difference between the 77620 and 77650 as there's patches
-> > on the list for the 77650 too. The properties are similar, but seems
-> > to be main vs. backup battery charger. We should have common
-> > properties for this.
+> > You don't need to list out each address, just what each address is. (Or
+> > just '9 GPIO base addresses'.)
 >
-> Rob, it's different. The RTC in max77620 is supplied from a backup
-> battery and consumes 2.0uA (IBBATT) when no other power sources are
-> available. So unlike max77620 battery charging, which provides features
-> like:
->
-> static enum power_supply_property max77650_charger_properties[] = {
->         POWER_SUPPLY_PROP_STATUS,
->         POWER_SUPPLY_PROP_ONLINE,
->         POWER_SUPPLY_PROP_CHARGE_TYPE
-> };
->
-> For backup battery charging in max77620, what we can do is just setting
-> those 3 parameters. We don't know whether it's charging, whether the
-> backup battery is online, the percentage of the charging progress, and
-> etc. That's why I mentioned before that it's not appropriate to create
-> it as a power supply driver.
+> ==>ok, we will change it.
+> >
+> > > +
+> > > +   Eg: <&pio 6 0>
+> >
+> > How is this an example of reg? Seems something is missing.
+> >
+> > > +   <[phandle of the gpio controller node]
+> > > +   [line number within the gpio controller]
+> > > +   [flags]>
+> > > +
+> > > +   Values for gpio specifier:
+> > > +   - Line number: is a value between 0 to 202.
+> > > +   - Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
+> > > +            Only the following flags are supported:
+> > > +            0 - GPIO_ACTIVE_HIGH
+> > > +            1 - GPIO_ACTIVE_LOW
+> > > +
+> > > +Optional properties:
+> > > +- reg-names: gpio base register names. There are nine gpio base register
+> > > +  names in mt8183. They are "iocfg0", "iocfg1", "iocfg2", "iocfg3", "iocfg4",
+> > > +  "iocfg5", "iocfg6", "iocfg7", "iocfg8".
+> > > +- interrupt-controller: Marks the device node as an interrupt controller
+> > > +- #interrupt-cells: Should be two.
+> > > +- interrupts : The interrupt outputs from the controller.
+> >
+> > outputs? More than 1? If so, need to say what they are and the order.
+> >
+> ==> there is only use one interrupt in mt8183. we will change
+> "interrupts" to "interrupt" in v8.
 
-Maybe so, but that's all outside the scope of the binding. Both
-bindings define charging current and voltage. And other vendor's
-chargers likely need the same parameters, too. So there's no reason to
-have different properties.
+No, 'interrupts' is always plural. The problem is 'outputs'.
 
 Rob
