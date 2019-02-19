@@ -1,131 +1,169 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH] drm/mediatek: add mt8183 dpi support
-Date: Tue, 19 Feb 2019 10:36:35 +0800
-Message-ID: <1550543795.4018.3.camel@mtksdaap41>
-References: <20190211045059.11821-1-jitao.shi@mediatek.com>
-         <1550160809.6862.13.camel@mtksdaap41> <1550541190.13121.2.camel@mszsdaap41>
+From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Subject: Re: [PATCH v7 3/6] dt-bindings: pinctrl: mt8183: add binding
+ document
+Date: Tue, 19 Feb 2019 10:45:57 +0800
+Message-ID: <1550544357.4739.32.camel@mhfsdcap03>
+References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
+         <1550210558-30516-4-git-send-email-erin.lo@mediatek.com>
+         <20190218163211.GB2714@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550541190.13121.2.camel@mszsdaap41>
+In-Reply-To: <20190218163211.GB2714@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel
+To: Rob Herring <robh@kernel.org>
+Cc: Erin Lo <erin.lo@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Jitao:
+On Mon, 2019-02-18 at 10:32 -0600, Rob Herring wrote:
+> On Fri, Feb 15, 2019 at 02:02:35PM +0800, Erin Lo wrote:
+> > From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > 
+> > The commit adds mt8183 compatible node in binding document.
+> > 
+> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt | 115 +++++++++++++++++++++
+> >  1 file changed, 115 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> > new file mode 100644
+> > index 0000000..364e673
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> > @@ -0,0 +1,115 @@
+> > +* Mediatek MT8183 Pin Controller
+> > +
+> > +The Mediatek's Pin controller is used to control SoC pins.
+> > +
+> > +Required properties:
+> > +- compatible: value should be one of the following.
+> > +	"mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
+> > +- gpio-controller : Marks the device node as a gpio controller.
+> > +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+> > +  binding is used, the amount of cells must be specified as 2. See the below
+> > +  mentioned gpio binding representation for description of particular cells.
+> > +- gpio-ranges : gpio valid number range.
+> > +- reg: physicall address base for gpio base registers. There are nine
+> > +  physicall address base in mt8183. They are 0x10005000, 0x11F20000,
+> > +  0x11E80000, 0x11E70000, 0x11E90000, 0x11D30000, 0x11D20000, 0x11C50000,
+> > +  0x11F30000.
+> 
+> You don't need to list out each address, just what each address is. (Or 
+> just '9 GPIO base addresses'.)
 
-On Tue, 2019-02-19 at 09:53 +0800, Jitao Shi wrote:
-> On Fri, 2019-02-15 at 00:13 +0800, CK Hu wrote:
-> > Hi, Jitao:
-> > 
-> > On Mon, 2019-02-11 at 12:50 +0800, Jitao Shi wrote:
-> > > MT8183 sample on rising and falling edge. It can reduce half data io.
-> > > 
-> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> > > ---
-> > >  drivers/gpu/drm/mediatek/mtk_dpi.c | 29 +++++++++++++++++++++++++++++
-> > >  1 file changed, 29 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> > > index 62a9d47df948..610c23334047 100644
-> > > --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> > > +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> > > @@ -117,6 +117,7 @@ struct mtk_dpi_conf {
-> > >  	unsigned int (*cal_factor)(int clock);
-> > >  	u32 reg_h_fre_con;
-> > >  	bool edge_sel_en;
-> > > +	bool dual_edge;
-> > >  };
-> > >  
-> > >  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
-> > > @@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
-> > >  		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
-> > >  }
-> > >  
-> > > +static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
-> > > +{
-> > > +	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
-> > > +		     DDR_EN | DDR_4PHASE);
-> > > +	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
-> > > +}
-> > 
-> > All these register exist in MT8173, if you do the same setting in
-> > MT8173, could it also sample on rising edge and falling edge?
-> > 
-> > Regards,
-> > CK
+==>ok, we will change it.
 > 
-> Hi CK,
+> > +
+> > +	Eg: <&pio 6 0>
 > 
-> MT8173 has those registers. But the hw function is removed.
-> So MT8173 doesn't support DPI dual edge sample.
-
-OK, please add this information in commit message.
-
-Regards,
-CK
-
+> How is this an example of reg? Seems something is missing.
 > 
-> Best Regards
-> Jitao
+> > +	<[phandle of the gpio controller node]
+> > +	[line number within the gpio controller]
+> > +	[flags]>
+> > +
+> > +	Values for gpio specifier:
+> > +	- Line number: is a value between 0 to 202.
+> > +	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
+> > +            Only the following flags are supported:
+> > +            0 - GPIO_ACTIVE_HIGH
+> > +            1 - GPIO_ACTIVE_LOW
+> > +
+> > +Optional properties:
+> > +- reg-names: gpio base register names. There are nine gpio base register
+> > +  names in mt8183. They are "iocfg0", "iocfg1", "iocfg2", "iocfg3", "iocfg4",
+> > +  "iocfg5", "iocfg6", "iocfg7", "iocfg8".
+> > +- interrupt-controller: Marks the device node as an interrupt controller
+> > +- #interrupt-cells: Should be two.
+> > +- interrupts : The interrupt outputs from the controller.
 > 
+> outputs? More than 1? If so, need to say what they are and the order.
+> 
+==> there is only use one interrupt in mt8183. we will change
+"interrupts" to "interrupt" in v8.
+> > +
+> > +Please refer to pinctrl-bindings.txt in this directory for details of the
+> > +common pinctrl bindings used by client devices.
+> > +
+> > +Subnode format
+> > +A pinctrl node should contain at least one subnodes representing the
+> > +pinctrl groups available on the machine. Each subnode will list the
+> > +pins it needs, and how they should be configured, with regard to muxer
+> > +configuration, pullups, drive strength, input enable/disable and input schmitt.
+> > +
+> > +    node {
+> > +	pinmux = <PIN_NUMBER_PINMUX>;
+> > +	GENERIC_PINCONFIG;
+> > +    };
+> > +
+> > +Required properties:
+> > +- pinmux: integer array, represents gpio pin number and mux setting.
+> > +    Supported pin number and mux varies for different SoCs, and are defined
+> > +    as macros in boot/dts/<soc>-pinfunc.h directly.
+> > +
+> > +Optional properties:
+> > +- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
+> > +    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
+> > +    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
+> > +
+> > +    Some special pins have extra pull up strength, there are R0 and R1 pull-up
+> > +    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
+> > +    So when config mediatek,pull-up-adv or mediatek,pull-down-adv,
+> > +    it support arguments for those special pins.
+> > +
+> > +    When config drive-strength, it can support some arguments, such as
+> > +    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
+> > +
+> > +Examples:
+> > +
+> > +#include "mt8183-pinfunc.h"
+> > +
+> > +...
+> > +{
+> > +	pio: pinctrl@10005000 {
+> > +		compatible = "mediatek,mt8183-pinctrl";
+> > +		reg = <0 0x10005000 0 0x1000>,
+> > +		      <0 0x11F20000 0 0x1000>,
+> > +		      <0 0x11E80000 0 0x1000>,
+> > +		      <0 0x11E70000 0 0x1000>,
+> > +		      <0 0x11E90000 0 0x1000>,
+> > +		      <0 0x11D30000 0 0x1000>,
+> > +		      <0 0x11D20000 0 0x1000>,
+> > +		      <0 0x11C50000 0 0x1000>,
+> > +		      <0 0x11F30000 0 0x1000>;
+> > +		reg-names = "iocfg0", "iocfg1", "iocfg2",
+> > +			    "iocfg3", "iocfg4", "iocfg5",
+> > +			    "iocfg6", "iocfg7", "iocfg8";
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		gpio-ranges = <&pio 0 0 192>;
+> > +		interrupt-controller;
+> > +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-parent = <&gic>;
+> > +		#interrupt-cells = <2>;
+> > +
+> > +		i2c0_pins_a: i2c0 {
+> > +			pins1 {
+> > +				pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
+> > +					 <PINMUX_GPIO49__FUNC_SDA5>;
+> > +				mediatek,pull-up-adv = <11>;
+> > +			};
+> > +		};
+> > +
+> > +		i2c1_pins_a: i2c1 {
+> > +			pins {
+> > +				pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
+> > +					 <PINMUX_GPIO51__FUNC_SDA3>;
+> > +				mediatek,pull-down-adv = <10>;
+> > +			};
+> > +		};
+> > +		...
+> > +	};
+> > +};
+> > -- 
+> > 1.9.1
 > > 
-> > > +
-> > >  static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
-> > >  					enum mtk_dpi_out_color_format format)
-> > >  {
-> > > @@ -509,6 +517,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
-> > >  	mtk_dpi_config_color_format(dpi, dpi->color_format);
-> > >  	mtk_dpi_config_2n_h_fre(dpi);
-> > >  	mtk_dpi_config_disable_edge(dpi);
-> > > +	if (dpi->conf->dual_edge)
-> > > +		mtk_dpi_enable_dual_edge(dpi);
-> > >  	mtk_dpi_sw_reset(dpi, false);
-> > >  
-> > >  	return 0;
-> > > @@ -671,6 +681,16 @@ static unsigned int mt2701_calculate_factor(int clock)
-> > >  		return 2;
-> > >  }
-> > >  
-> > > +static unsigned int mt8183_calculate_factor(int clock)
-> > > +{
-> > > +	if (clock <= 27000)
-> > > +		return 8;
-> > > +	else if (clock <= 167000)
-> > > +		return 4;
-> > > +	else
-> > > +		return 2;
-> > > +}
-> > > +
-> > >  static const struct mtk_dpi_conf mt8173_conf = {
-> > >  	.cal_factor = mt8173_calculate_factor,
-> > >  	.reg_h_fre_con = 0xe0,
-> > > @@ -682,6 +702,12 @@ static const struct mtk_dpi_conf mt2701_conf = {
-> > >  	.edge_sel_en = true,
-> > >  };
-> > >  
-> > > +static const struct mtk_dpi_conf mt8183_conf = {
-> > > +	.cal_factor = mt8183_calculate_factor,
-> > > +	.reg_h_fre_con = 0xe0,
-> > > +	.dual_edge = true,
-> > > +};
-> > > +
-> > >  static int mtk_dpi_probe(struct platform_device *pdev)
-> > >  {
-> > >  	struct device *dev = &pdev->dev;
-> > > @@ -777,6 +803,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
-> > >  	{ .compatible = "mediatek,mt8173-dpi",
-> > >  	  .data = &mt8173_conf,
-> > >  	},
-> > > +	{ .compatible = "mediatek,mt8183-dpi",
-> > > +	  .data = &mt8183_conf,
-> > > +	},
-> > >  	{ },
-> > >  };
-> > >  
-> > 
-> > 
-> 
-> 
