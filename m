@@ -1,7 +1,7 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5/7] ARM: dts: at91: at91sam9g45: switch to new sckc bindings
-Date: Tue, 19 Feb 2019 18:01:58 +0100
-Message-ID: <20190219170200.3608-6-alexandre.belloni@bootlin.com>
+Subject: [PATCH 6/7] ARM: dts: at91: at91sam9rl: switch to new sckc bindings
+Date: Tue, 19 Feb 2019 18:01:59 +0100
+Message-ID: <20190219170200.3608-7-alexandre.belloni@bootlin.com>
 References: <20190219170200.3608-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -16,15 +16,15 @@ Remove the child nodes of the sckc as they are not necessary anymore.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- arch/arm/boot/dts/at91sam9g45.dtsi | 25 +++----------------------
+ arch/arm/boot/dts/at91sam9rl.dtsi | 25 +++----------------------
  1 file changed, 3 insertions(+), 22 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index d16db1fa7e15..74a011077d54 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -1257,30 +1257,11 @@
- 				};
+diff --git a/arch/arm/boot/dts/at91sam9rl.dtsi b/arch/arm/boot/dts/at91sam9rl.dtsi
+index 3862ff2f26e0..f5f09a30dd3f 100644
+--- a/arch/arm/boot/dts/at91sam9rl.dtsi
++++ b/arch/arm/boot/dts/at91sam9rl.dtsi
+@@ -867,30 +867,11 @@
+ 				status = "disabled";
  			};
  
 -			sckc@fffffd50 {
