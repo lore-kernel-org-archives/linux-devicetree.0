@@ -1,157 +1,63 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [RFC PATCH 1/5] mtd: cfi_cmdset_0002: Add support for polling status
- register
-Date: Tue, 19 Feb 2019 12:06:03 +0530
-Message-ID: <20190219063607.29949-2-vigneshr@ti.com>
-References: <20190219063607.29949-1-vigneshr@ti.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv6 1/4] dt-bindings: add DT binding for the layerscape PCIe
+ controller with EP mode
+Date: Tue, 19 Feb 2019 06:57:39 +0000
+Message-ID: <AM5PR04MB3299AE3A36D909AC192810D5F57C0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190122063328.25228-1-xiaowei.bao@nxp.com>
+ <20190205180247.GA13891@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190219063607.29949-1-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vignesh R <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, tudor.ambarus@microchip.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190205180247.GA13891@e107981-ln.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger>
 List-Id: devicetree@vger.kernel.org
 
-HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
-Set(0x0002) for flash operations, therefore drivers/mtd/chips/cfi_cmdset_0002.c
-can be use as is. But these devices do not support DQ polling method of
-determining chip ready/good status. These flashes provide Status
-Register whose bits can be polled to know status of flash operation.
-
-Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
-Extended Query version 1.5. Bit 0 of "Software Features supported" field
-of CFI Primary Vendor-Specific Extended Query table indicates
-presence/absence of status register and Bit 1 indicates whether or not
-DQ polling is supported. Using these bits, its possible to determine
-whether flash supports DQ polling or need to use Status Register.
-
-Add support for polling status register to know device ready/status of
-erase/write operations when DQ polling is not supported.
-
-[1] https://www.cypress.com/file/213346/download
-
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
-
-Note: PRI extended query table size is bigger on 1.5 than on older
-revision. Not sure if this causes problems on older rev. because of
-reading beyond current size.
-
- drivers/mtd/chips/cfi_cmdset_0002.c | 50 +++++++++++++++++++++++++++++
- include/linux/mtd/cfi.h             |  5 +++
- 2 files changed, 55 insertions(+)
-
-diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
-index 72428b6bfc47..7a4ef0237750 100644
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -49,6 +49,14 @@
- #define SST49LF008A		0x005a
- #define AT49BV6416		0x00d6
- 
-+/*
-+ * Bits of Status Register definition for flash devices that don't
-+ * support DQ polling (Eg.: Hyperflash)
-+ */
-+#define CFI_SR_DRB		BIT(7)
-+#define CFI_SR_ESB		BIT(5)
-+#define CFI_SR_PSB		BIT(4)
-+
- static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t, size_t *, u_char *);
- static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
- static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
-@@ -97,6 +105,18 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
- 	.module		= THIS_MODULE
- };
- 
-+/*
-+ * Use status register to poll for Erase/write completion when DQ is not
-+ * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
-+ * CFI Primary Vendor-Specific Extended Query table 1.5
-+ */
-+static int cfi_use_status_reg(struct cfi_private *cfi)
-+{
-+	struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
-+
-+	return (extp->MinorVersion >= '5') &&
-+		((extp->SoftwareFeatures & 0x11) == 1);
-+}
- 
- /* #define DEBUG_CFI_FEATURES */
- 
-@@ -744,8 +764,21 @@ static struct mtd_info *cfi_amdstd_setup(struct mtd_info *mtd)
-  */
- static int __xipram chip_ready(struct map_info *map, unsigned long addr)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word d, t;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		d = map_read(map, addr);
-+
-+		return (d.x[0] & CFI_SR_DRB);
-+	}
-+
- 	d = map_read(map, addr);
- 	t = map_read(map, addr);
- 
-@@ -769,8 +802,25 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
-  */
- static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word expected)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word oldd, curd;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit and Erase/Program status bit to know if
-+		 * operation succeeded.
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		curd = map_read(map, addr);
-+
-+		if (curd.x[0] & CFI_SR_DRB)
-+			return !(curd.x[0] & (CFI_SR_PSB | CFI_SR_ESB));
-+
-+		return 0;
-+	}
-+
- 	oldd = map_read(map, addr);
- 	curd = map_read(map, addr);
- 
-diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
-index cbf77168658c..92ac82ac2329 100644
---- a/include/linux/mtd/cfi.h
-+++ b/include/linux/mtd/cfi.h
-@@ -233,6 +233,11 @@ struct cfi_pri_amdstd {
- 	uint8_t  VppMin;
- 	uint8_t  VppMax;
- 	uint8_t  TopBottom;
-+	/* Below field are added from version 1.5 */
-+	uint8_t  ProgramSuspend;
-+	uint8_t  UnlockBypass;
-+	uint8_t  SecureSiliconSector;
-+	uint8_t  SoftwareFeatures;
- } __packed;
- 
- /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
--- 
-2.20.1
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMb3JlbnpvIFBpZXJhbGlzaSA8
+bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4gDQpTZW50OiAyMDE5xOoy1MI2yNUgMjowMw0KVG86
+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IGJoZWxnYWFzQGdvb2dsZS5j
+b207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtl
+cm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsgYXJu
+ZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IE0uaC4gTGlhbiA8bWluZ2h1
+YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFph
+bmcgPHJveS56YW5nQG54cC5jb20+OyBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyBjeXJp
+bGxlLnBpdGNoZW5AZnJlZS1lbGVjdHJvbnMuY29tOyBwb21icmVkYW5uZUBuZXhiLmNvbTsgc2hh
+d24ubGluQHJvY2stY2hpcHMuY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
+Lm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSHY2IDEvNF0gZHQtYmluZGluZ3M6IGFkZCBEVCBiaW5k
+aW5nIGZvciB0aGUgbGF5ZXJzY2FwZSBQQ0llIGNvbnRyb2xsZXIgd2l0aCBFUCBtb2RlDQoNCk9u
+IFR1ZSwgSmFuIDIyLCAyMDE5IGF0IDAyOjMzOjI1UE0gKzA4MDAsIFhpYW93ZWkgQmFvIHdyb3Rl
+Og0KPiBBZGQgdGhlIGRvY3VtZW50YXRpb24gZm9yIHRoZSBEZXZpY2UgVHJlZSBiaW5kaW5nIGZv
+ciB0aGUgbGF5ZXJzY2FwZSANCj4gUENJZSBjb250cm9sbGVyIHdpdGggRVAgbW9kZS4NCj4gDQo+
+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBSZXZp
+ZXdlZC1ieTogTWluZ2h1YW4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPg0KPiBSZXZpZXdl
+ZC1ieTogWmhpcWlhbmcgSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gUmV2aWV3ZWQtYnk6
+IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+DQo+IC0tLQ0KPiB2MjoNCj4gIC0gQWRk
+IHRoZSBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZXMuDQo+IHYzOg0KPiAgLSBtb2RpZnkgdGhlIGNv
+bW1pdCBtZXNzYWdlLg0KPiB2NDoNCj4gIC0gbm8gY2hhbmdlLg0KPiB2NToNCj4gIC0gbm8gY2hh
+bmdlLg0KPiB2NjoNCj4gIC0gbm8gY2hhbmdlLg0KPiANCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQgICAgIHwgICAgMyArKysNCj4gIDEgZmlsZXMgY2hh
+bmdlZCwgMyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KDQpBcHBsaWVkIHRoZSBzZXJp
+ZXMgdG8gcGNpL2xheWVyc2NhcGUgZm9yIHY1LjEsIHRoYW5rcy4NCltYaWFvd2VpIEJhb10gSGkg
+TG9yZW56bywgdGhhbmsgYSBsb3QuDQoNCkxvcmVuem8NCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0IA0KPiBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+
+IGluZGV4IDliMmI4ZDYuLmUyMGNlYWEgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+IEBAIC0x
+Myw2ICsxMyw3IEBAIGluZm9ybWF0aW9uLg0KPiAgDQo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
+PiAgLSBjb21wYXRpYmxlOiBzaG91bGQgY29udGFpbiB0aGUgcGxhdGZvcm0gaWRlbnRpZmllciBz
+dWNoIGFzOg0KPiArICBSQyBtb2RlOg0KPiAgICAgICAgICAiZnNsLGxzMTAyMWEtcGNpZSINCj4g
+ICAgICAgICAgImZzbCxsczIwODBhLXBjaWUiLCAiZnNsLGxzMjA4NWEtcGNpZSINCj4gICAgICAg
+ICAgImZzbCxsczIwODhhLXBjaWUiDQo+IEBAIC0yMCw2ICsyMSw4IEBAIFJlcXVpcmVkIHByb3Bl
+cnRpZXM6DQo+ICAgICAgICAgICJmc2wsbHMxMDQ2YS1wY2llIg0KPiAgICAgICAgICAiZnNsLGxz
+MTA0M2EtcGNpZSINCj4gICAgICAgICAgImZzbCxsczEwMTJhLXBjaWUiDQo+ICsgIEVQIG1vZGU6
+DQo+ICsJImZzbCxsczEwNDZhLXBjaWUtZXAiLCAiZnNsLGxzLXBjaWUtZXAiDQo+ICAtIHJlZzog
+YmFzZSBhZGRyZXNzZXMgYW5kIGxlbmd0aHMgb2YgdGhlIFBDSWUgY29udHJvbGxlciByZWdpc3Rl
+ciBibG9ja3MuDQo+ICAtIGludGVycnVwdHM6IEEgbGlzdCBvZiBpbnRlcnJ1cHQgb3V0cHV0cyBv
+ZiB0aGUgY29udHJvbGxlci4gTXVzdCBjb250YWluIGFuDQo+ICAgIGVudHJ5IGZvciBlYWNoIGVu
+dHJ5IGluIHRoZSBpbnRlcnJ1cHQtbmFtZXMgcHJvcGVydHkuDQo+IC0tDQo+IDEuNy4xDQo+IA0K
