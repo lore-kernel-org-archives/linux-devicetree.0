@@ -1,67 +1,236 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] dt-bindings: adau1977: Fix reset-gpios typo
-Date: Tue, 19 Feb 2019 11:11:17 +0000
-Message-ID: <20190219111117.GB6319@sirena.org.uk>
-References: <20190215102633.12700-1-bogdan.togorean@analog.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv6 3/4] pci: layerscape: Add the EP mode support.
+Date: Tue, 19 Feb 2019 11:27:21 +0000
+Message-ID: <20190219112721.GA15442@e107981-ln.cambridge.arm.com>
+References: <20190122063328.25228-1-xiaowei.bao@nxp.com>
+ <20190122063328.25228-3-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2419714198574446430=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190215102633.12700-1-bogdan.togorean@analog.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Bogdan Togorean <bogdan.togorean@analog.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, robh+dt@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190122063328.25228-3-xiaowei.bao@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: mark.rutland@arm.com, roy.zang@nxp.com, arnd@arndb.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, kstewart@linuxfoundation.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, minghuan.Lian@nxp.com, robh+dt@kernel.org, cyrille.pitchen@free-electrons.com, linux-arm-kernel@lists.infradead.org, pombredanne@nexb.com, bhelgaas@google.com, leoyang.li@nxp.com, shawnguo@kernel.org, shawn.lin@rock-chips.com, mingkai.hu@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 22, 2019 at 02:33:27PM +0800, Xiaowei Bao wrote:
+> Add the PCIe EP mode support for layerscape platform.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Reviewed-by: Minghuan Lian <minghuan.lian@nxp.com>
+> Reviewed-by: Zhiqiang Hou <zhiqiang.hou@nxp.com>
+> Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> depends on: https://patchwork.kernel.org/project/linux-pci/list/?series=66177
+> 
+> v2:
+>  - remove the EP mode check function.
+> v3:
+>  - modif the return value when enter default case.
+> v4:
+>  - no change.
+> v5:
+>  - no change.
+> v6:
+>  - modify the code base on the submit patch of the EP framework.
 
---===============2419714198574446430==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
-Content-Disposition: inline
+Can I apply this series to my pci/endpoint branch (where I queued
+Kishon's EP features rework patches) ? Can you check please ?
 
+Thanks,
+Lorenzo
 
---0ntfKIWw70PvrIHh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Feb 15, 2019 at 12:26:33PM +0200, Bogdan Togorean wrote:
-> This change fixes a typo in the dt-binding examples (reset_gpio ->
-> reset-gpios).
-> Even though 'reset-gpio' is a valid construct for gpiolib the naming
-> 'reset-gpios' is more suited for dt-bindings documentation.
-
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
-
---0ntfKIWw70PvrIHh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxr5FQACgkQJNaLcl1U
-h9CtnQf+NoJB0Yopx+2IR5L4aN935UsJkKu/UFQZm9ByCB5Ic21EO56CYe8D1u/0
-uxPiG00M3Q1SNMQpvlwVQhzu/BHVq4YQ5x9He30BoayyO8Y2mPXfHB7cfcBCD57p
-+FvygqrL7cNoWmgfj+elab0guvOhGe7cKUEGjrRv1tPYcWrZJf7rZZR/mLB77TTl
-oNJm0cun4t7RXIIdctqEctee62y5Un9gCYU0YLUHE0zRYBHH1mv972+aOk6FLomv
-WY/jtL2rTnWOxluYUNSw0CXSewB92YF+pYSzt5NJ6HF2sv0uyh11GEYs5N6oYoAo
-3tklYgbQHUiJ23m7O0mKIDxLGbrAaw==
-=S90x
------END PGP SIGNATURE-----
-
---0ntfKIWw70PvrIHh--
-
---===============2419714198574446430==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2419714198574446430==--
+>  drivers/pci/controller/dwc/Makefile            |    2 +-
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c |  157 ++++++++++++++++++++++++
+>  2 files changed, 158 insertions(+), 1 deletions(-)
+>  create mode 100644 drivers/pci/controller/dwc/pci-layerscape-ep.c
+> 
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 7bcdcdf..b5f3b83 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -8,7 +8,7 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>  obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
+>  obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
+> -obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+> +obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
+>  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+>  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+>  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> new file mode 100644
+> index 0000000..ddc2dbb
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -0,0 +1,157 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe controller EP driver for Freescale Layerscape SoCs
+> + *
+> + * Copyright (C) 2018 NXP Semiconductor.
+> + *
+> + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/resource.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +#define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+> +
+> +struct ls_pcie_ep {
+> +	struct dw_pcie		*pci;
+> +};
+> +
+> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> +
+> +static int ls_pcie_establish_link(struct dw_pcie *pci)
+> +{
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> +	.start_link = ls_pcie_establish_link,
+> +};
+> +
+> +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> +	{ .compatible = "fsl,ls-pcie-ep",},
+> +	{ },
+> +};
+> +
+> +static const struct pci_epc_features ls_pcie_epc_features = {
+> +	.linkup_notifier = false,
+> +	.msi_capable = true,
+> +	.msix_capable = false,
+> +};
+> +
+> +static const struct pci_epc_features*
+> +ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
+> +{
+> +	return &ls_pcie_epc_features;
+> +}
+> +
+> +static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct pci_epc *epc = ep->epc;
+> +	enum pci_barno bar;
+> +
+> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +}
+> +
+> +static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> +				  enum pci_epc_irq_type type, u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	switch (type) {
+> +	case PCI_EPC_IRQ_LEGACY:
+> +		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
+> +	case PCI_EPC_IRQ_MSI:
+> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+> +	case PCI_EPC_IRQ_MSIX:
+> +		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
+> +	default:
+> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static struct dw_pcie_ep_ops pcie_ep_ops = {
+> +	.ep_init = ls_pcie_ep_init,
+> +	.raise_irq = ls_pcie_ep_raise_irq,
+> +	.get_features = ls_pcie_ep_get_features,
+> +};
+> +
+> +static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+> +					struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct device *dev = pci->dev;
+> +	struct dw_pcie_ep *ep;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	ep = &pci->ep;
+> +	ep->ops = &pcie_ep_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	ep->phys_base = res->start;
+> +	ep->addr_size = resource_size(res);
+> +
+> +	ret = dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize endpoint\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct dw_pcie *pci;
+> +	struct ls_pcie_ep *pcie;
+> +	struct resource *dbi_base;
+> +	int ret;
+> +
+> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> +	if (!pcie)
+> +		return -ENOMEM;
+> +
+> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> +	if (!pci)
+> +		return -ENOMEM;
+> +
+> +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> +	if (IS_ERR(pci->dbi_base))
+> +		return PTR_ERR(pci->dbi_base);
+> +
+> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> +	pci->dev = dev;
+> +	pci->ops = &ls_pcie_ep_ops;
+> +	pcie->pci = pci;
+> +
+> +	platform_set_drvdata(pdev, pcie);
+> +
+> +	ret = ls_add_pcie_ep(pcie, pdev);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver ls_pcie_ep_driver = {
+> +	.driver = {
+> +		.name = "layerscape-pcie-ep",
+> +		.of_match_table = ls_pcie_ep_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +builtin_platform_driver_probe(ls_pcie_ep_driver, ls_pcie_ep_probe);
+> -- 
+> 1.7.1
+> 
