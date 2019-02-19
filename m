@@ -1,169 +1,265 @@
-From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Subject: Re: [PATCH v7 3/6] dt-bindings: pinctrl: mt8183: add binding
- document
-Date: Tue, 19 Feb 2019 10:45:57 +0800
-Message-ID: <1550544357.4739.32.camel@mhfsdcap03>
-References: <1550210558-30516-1-git-send-email-erin.lo@mediatek.com>
-         <1550210558-30516-4-git-send-email-erin.lo@mediatek.com>
-         <20190218163211.GB2714@bogus>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v2 08/10] hikey960: Support usb functionality of Hikey960
+Date: Tue, 19 Feb 2019 10:50:15 +0800
+Message-ID: <1550544615.2210.27.camel@mhfsdcap03>
+References: <20190218112310.17860-1-chenyu56@huawei.com>
+         <20190218112310.17860-9-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190218163211.GB2714@bogus>
+In-Reply-To: <20190218112310.17860-9-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Erin Lo <erin.lo@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org
+To: Yu Chen <chenyu56@huawei.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-02-18 at 10:32 -0600, Rob Herring wrote:
-> On Fri, Feb 15, 2019 at 02:02:35PM +0800, Erin Lo wrote:
-> > From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > 
-> > The commit adds mt8183 compatible node in binding document.
-> > 
-> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt | 115 +++++++++++++++++++++
-> >  1 file changed, 115 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> > new file mode 100644
-> > index 0000000..364e673
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> > @@ -0,0 +1,115 @@
-> > +* Mediatek MT8183 Pin Controller
-> > +
-> > +The Mediatek's Pin controller is used to control SoC pins.
-> > +
-> > +Required properties:
-> > +- compatible: value should be one of the following.
-> > +	"mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
-> > +- gpio-controller : Marks the device node as a gpio controller.
-> > +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
-> > +  binding is used, the amount of cells must be specified as 2. See the below
-> > +  mentioned gpio binding representation for description of particular cells.
-> > +- gpio-ranges : gpio valid number range.
-> > +- reg: physicall address base for gpio base registers. There are nine
-> > +  physicall address base in mt8183. They are 0x10005000, 0x11F20000,
-> > +  0x11E80000, 0x11E70000, 0x11E90000, 0x11D30000, 0x11D20000, 0x11C50000,
-> > +  0x11F30000.
+Hi,
+On Mon, 2019-02-18 at 19:23 +0800, Yu Chen wrote:
+> This driver handles usb hub power on and typeC port event of HiKey960 board:
+> 1)DP&DM switching between usb hub and typeC port base on typeC port
+> state
+> 2)Control power of usb hub on Hikey960
+> 3)Control vbus of typeC port
 > 
-> You don't need to list out each address, just what each address is. (Or 
-> just '9 GPIO base addresses'.)
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> 
+> ---
+> v1:
+> * Using gpiod API with the gpios.
+> * Removing registering usb role switch.
+> * Registering usb role switch notifier.
+> v2:
+> * Fix license declaration.
+> * Add configuration of  gpio direction.
+> * Remove some log print.
+> ---
+> ---
+>  drivers/misc/Kconfig          |   6 ++
+>  drivers/misc/Makefile         |   1 +
+>  drivers/misc/hisi_hikey_usb.c | 181 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 188 insertions(+)
+>  create mode 100644 drivers/misc/hisi_hikey_usb.c
+> 
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index f417b06e11c5..8d8b717759e2 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -521,6 +521,12 @@ config PVPANIC
+>  	  a paravirtualized device provided by QEMU; it lets a virtual machine
+>  	  (guest) communicate panic events to the host.
+>  
+> +config HISI_HIKEY_USB
+> +	tristate "USB functionality of HiSilicon Hikey Platform"
+> +	depends on OF && GPIOLIB
+> +	help
+> +	  If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
+> +
+>  source "drivers/misc/c2port/Kconfig"
+>  source "drivers/misc/eeprom/Kconfig"
+>  source "drivers/misc/cb710/Kconfig"
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index e39ccbbc1b3a..dc8892b13a1a 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -59,3 +59,4 @@ obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
+>  obj-$(CONFIG_OCXL)		+= ocxl/
+>  obj-y				+= cardreader/
+>  obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
+> +obj-$(CONFIG_HISI_HIKEY_USB)	+= hisi_hikey_usb.o
+> diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
+> new file mode 100644
+> index 000000000000..70013f8e76f0
+> --- /dev/null
+> +++ b/drivers/misc/hisi_hikey_usb.c
+> @@ -0,0 +1,181 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Support for usb functionality of Hikey series boards
+> + * based on Hisilicon Kirin Soc.
+> + *
+> + * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
+> + *		http://www.huawei.com
+> + *
+> + * Authors: Yu Chen <chenyu56@huawei.com>
+> + */
+> +
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/usb/role.h>
+> +
+> +#define DEVICE_DRIVER_NAME "hisi_hikey_usb"
+> +
+> +#define HUB_VBUS_POWER_ON 1
+> +#define HUB_VBUS_POWER_OFF 0
+> +#define USB_SWITCH_TO_HUB 1
+> +#define USB_SWITCH_TO_TYPEC 0
+> +
+> +struct hisi_hikey_usb {
+> +	struct gpio_desc *otg_switch;
+> +	struct gpio_desc *typec_vbus;
+> +	struct gpio_desc *hub_vbus;
+> +	int typec_vbus_enable_val;
+> +
+> +	struct usb_role_switch *role_sw;
+> +	struct notifier_block nb;
+> +};
+> +
+> +static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
+> +{
+> +	gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
+> +}
+> +
+> +static void usb_switch_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
+> +		int switch_to)
+> +{
+> +	gpiod_set_value_cansleep(hisi_hikey_usb->otg_switch, switch_to);
+> +}
+> +
+> +static void usb_typec_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
+> +		int value)
+> +{
+> +	gpiod_set_value_cansleep(hisi_hikey_usb->typec_vbus, value);
+> +}
+> +
+> +static int hisi_hikey_role_switch(struct notifier_block *nb,
+> +			unsigned long state, void *data)
+> +{
+> +	struct hisi_hikey_usb *hisi_hikey_usb;
+> +
+> +	hisi_hikey_usb = container_of(nb, struct hisi_hikey_usb, nb);
+> +
+> +	switch (state) {
+> +	case USB_ROLE_NONE:
+> +		usb_typec_power_ctrl(hisi_hikey_usb,
+> +				!hisi_hikey_usb->typec_vbus_enable_val);
+> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_HUB);
+> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_ON);
+> +		break;
+> +	case USB_ROLE_HOST:
+> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
+> +		usb_typec_power_ctrl(hisi_hikey_usb,
+> +				hisi_hikey_usb->typec_vbus_enable_val);
+> +		break;
+> +	case USB_ROLE_DEVICE:
+> +		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_OFF);
+> +		usb_typec_power_ctrl(hisi_hikey_usb,
+> +				!hisi_hikey_usb->typec_vbus_enable_val);
+> +		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_hikey_usb_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *root = dev->of_node;
+> +	struct hisi_hikey_usb *hisi_hikey_usb;
+> +	int ret;
+> +
+> +	hisi_hikey_usb = devm_kzalloc(dev, sizeof(*hisi_hikey_usb), GFP_KERNEL);
+> +	if (!hisi_hikey_usb)
+> +		return -ENOMEM;
+> +
+> +	hisi_hikey_usb->nb.notifier_call = hisi_hikey_role_switch;
+> +
+> +	ret = of_property_read_u32(root, "typec-vbus-enable-val",
+> +				   &hisi_hikey_usb->typec_vbus_enable_val);
+> +	if (ret)
+> +		hisi_hikey_usb->typec_vbus_enable_val = 1;
+> +
+> +	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
+> +			hisi_hikey_usb->typec_vbus_enable_val ?
+> +			GPIOD_OUT_LOW : GPIOD_OUT_HIGH);
+> +	if (!hisi_hikey_usb->typec_vbus)
+> +		return -ENOENT;
+> +	else if (IS_ERR(hisi_hikey_usb->typec_vbus))
+> +		return PTR_ERR(hisi_hikey_usb->typec_vbus);
+> +
+> +	gpiod_direction_output(hisi_hikey_usb->typec_vbus,
+> +			!hisi_hikey_usb->typec_vbus_enable_val);
+maybe a simple way if use fixed regulator?
 
-==>ok, we will change it.
-> 
-> > +
-> > +	Eg: <&pio 6 0>
-> 
-> How is this an example of reg? Seems something is missing.
-> 
-> > +	<[phandle of the gpio controller node]
-> > +	[line number within the gpio controller]
-> > +	[flags]>
-> > +
-> > +	Values for gpio specifier:
-> > +	- Line number: is a value between 0 to 202.
-> > +	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
-> > +            Only the following flags are supported:
-> > +            0 - GPIO_ACTIVE_HIGH
-> > +            1 - GPIO_ACTIVE_LOW
-> > +
-> > +Optional properties:
-> > +- reg-names: gpio base register names. There are nine gpio base register
-> > +  names in mt8183. They are "iocfg0", "iocfg1", "iocfg2", "iocfg3", "iocfg4",
-> > +  "iocfg5", "iocfg6", "iocfg7", "iocfg8".
-> > +- interrupt-controller: Marks the device node as an interrupt controller
-> > +- #interrupt-cells: Should be two.
-> > +- interrupts : The interrupt outputs from the controller.
-> 
-> outputs? More than 1? If so, need to say what they are and the order.
-> 
-==> there is only use one interrupt in mt8183. we will change
-"interrupts" to "interrupt" in v8.
-> > +
-> > +Please refer to pinctrl-bindings.txt in this directory for details of the
-> > +common pinctrl bindings used by client devices.
-> > +
-> > +Subnode format
-> > +A pinctrl node should contain at least one subnodes representing the
-> > +pinctrl groups available on the machine. Each subnode will list the
-> > +pins it needs, and how they should be configured, with regard to muxer
-> > +configuration, pullups, drive strength, input enable/disable and input schmitt.
-> > +
-> > +    node {
-> > +	pinmux = <PIN_NUMBER_PINMUX>;
-> > +	GENERIC_PINCONFIG;
-> > +    };
-> > +
-> > +Required properties:
-> > +- pinmux: integer array, represents gpio pin number and mux setting.
-> > +    Supported pin number and mux varies for different SoCs, and are defined
-> > +    as macros in boot/dts/<soc>-pinfunc.h directly.
-> > +
-> > +Optional properties:
-> > +- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
-> > +    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
-> > +    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
-> > +
-> > +    Some special pins have extra pull up strength, there are R0 and R1 pull-up
-> > +    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
-> > +    So when config mediatek,pull-up-adv or mediatek,pull-down-adv,
-> > +    it support arguments for those special pins.
-> > +
-> > +    When config drive-strength, it can support some arguments, such as
-> > +    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
-> > +
-> > +Examples:
-> > +
-> > +#include "mt8183-pinfunc.h"
-> > +
-> > +...
-> > +{
-> > +	pio: pinctrl@10005000 {
-> > +		compatible = "mediatek,mt8183-pinctrl";
-> > +		reg = <0 0x10005000 0 0x1000>,
-> > +		      <0 0x11F20000 0 0x1000>,
-> > +		      <0 0x11E80000 0 0x1000>,
-> > +		      <0 0x11E70000 0 0x1000>,
-> > +		      <0 0x11E90000 0 0x1000>,
-> > +		      <0 0x11D30000 0 0x1000>,
-> > +		      <0 0x11D20000 0 0x1000>,
-> > +		      <0 0x11C50000 0 0x1000>,
-> > +		      <0 0x11F30000 0 0x1000>;
-> > +		reg-names = "iocfg0", "iocfg1", "iocfg2",
-> > +			    "iocfg3", "iocfg4", "iocfg5",
-> > +			    "iocfg6", "iocfg7", "iocfg8";
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +		gpio-ranges = <&pio 0 0 192>;
-> > +		interrupt-controller;
-> > +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-parent = <&gic>;
-> > +		#interrupt-cells = <2>;
-> > +
-> > +		i2c0_pins_a: i2c0 {
-> > +			pins1 {
-> > +				pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
-> > +					 <PINMUX_GPIO49__FUNC_SDA5>;
-> > +				mediatek,pull-up-adv = <11>;
-> > +			};
-> > +		};
-> > +
-> > +		i2c1_pins_a: i2c1 {
-> > +			pins {
-> > +				pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
-> > +					 <PINMUX_GPIO51__FUNC_SDA3>;
-> > +				mediatek,pull-down-adv = <10>;
-> > +			};
-> > +		};
-> > +		...
-> > +	};
-> > +};
-> > -- 
-> > 1.9.1
-> > 
+> +
+> +	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch", GPIOD_IN);
+> +	if (!hisi_hikey_usb->otg_switch)
+> +		return -ENOENT;
+> +	else if (IS_ERR(hisi_hikey_usb->otg_switch))
+> +		return PTR_ERR(hisi_hikey_usb->otg_switch);
+> +
+> +	gpiod_direction_output(hisi_hikey_usb->otg_switch, USB_SWITCH_TO_HUB);
+> +
+> +	/* hub-vdd33-en is optional */
+> +	hisi_hikey_usb->hub_vbus = devm_gpiod_get(dev, "hub-vdd33-en",
+> +			GPIOD_OUT_LOW);
+> +	if (IS_ERR(hisi_hikey_usb->hub_vbus))
+> +		return PTR_ERR(hisi_hikey_usb->hub_vbus);
+> +
+> +	gpiod_direction_output(hisi_hikey_usb->hub_vbus, HUB_VBUS_POWER_ON);
+ditto
+> +
+> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
+> +	if (!hisi_hikey_usb->role_sw)
+> +		return -EPROBE_DEFER;
+> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
+> +		return PTR_ERR(hisi_hikey_usb->role_sw);
+> +
+> +	ret = usb_role_switch_register_notifier(hisi_hikey_usb->role_sw,
+> +			&hisi_hikey_usb->nb);
+> +	if (ret) {
+> +		usb_role_switch_put(hisi_hikey_usb->role_sw);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, hisi_hikey_usb);
+> +
+> +	return 0;
+> +}
+> +
+> +static int  hisi_hikey_usb_remove(struct platform_device *pdev)
+> +{
+> +	struct hisi_hikey_usb *hisi_hikey_usb = platform_get_drvdata(pdev);
+> +
+> +	usb_role_switch_unregister_notifier(hisi_hikey_usb->role_sw,
+> +			&hisi_hikey_usb->nb);
+> +
+> +	usb_role_switch_put(hisi_hikey_usb->role_sw);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id id_table_hisi_hikey_usb[] = {
+> +	{.compatible = "hisilicon,gpio_hubv1"},
+> +	{.compatible = "hisilicon,hikey960_usb"},
+> +	{}
+> +};
+> +
+> +static struct platform_driver hisi_hikey_usb_driver = {
+> +	.probe = hisi_hikey_usb_probe,
+> +	.remove = hisi_hikey_usb_remove,
+> +	.driver = {
+> +		.name = DEVICE_DRIVER_NAME,
+> +		.of_match_table = id_table_hisi_hikey_usb,
+> +	},
+> +};
+> +
+> +module_platform_driver(hisi_hikey_usb_driver);
+> +
+> +MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
+> +MODULE_DESCRIPTION("Driver Support for USB functionality of Hikey");
+> +MODULE_LICENSE("GPL v2");
