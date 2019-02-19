@@ -1,89 +1,157 @@
 From: Vignesh R <vigneshr@ti.com>
-Subject: [RFC PATCH 0/5] MTD: Add Initial Hyperbus support
-Date: Tue, 19 Feb 2019 12:06:02 +0530
-Message-ID: <20190219063607.29949-1-vigneshr@ti.com>
+Subject: [RFC PATCH 1/5] mtd: cfi_cmdset_0002: Add support for polling status
+ register
+Date: Tue, 19 Feb 2019 12:06:03 +0530
+Message-ID: <20190219063607.29949-2-vigneshr@ti.com>
+References: <20190219063607.29949-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190219063607.29949-1-vigneshr@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Vignesh R <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com, nsekhar@ti.com
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, tudor.ambarus@microchip.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Cypress HyperBus is Low Signal Count, High Performance Double Data Rate Bus
-interface between a host system master and one or more slave interfaces.
-HyperBus is used to connect microprocessor, microcontroller, or ASIC
-devices with random access NOR flash memory(called HyperFlash) or
-self refresh DRAM(called HyperRAM).
+HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
+Set(0x0002) for flash operations, therefore drivers/mtd/chips/cfi_cmdset_0002.c
+can be use as is. But these devices do not support DQ polling method of
+determining chip ready/good status. These flashes provide Status
+Register whose bits can be polled to know status of flash operation.
 
-Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
-signal and either Single-ended clock(3.0V parts) or Differential clock
-(1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
-At bus level, it follows a separate protocol described in HyperBus
-specification[1].
+Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
+Extended Query version 1.5. Bit 0 of "Software Features supported" field
+of CFI Primary Vendor-Specific Extended Query table indicates
+presence/absence of status register and Bit 1 indicates whether or not
+DQ polling is supported. Using these bits, its possible to determine
+whether flash supports DQ polling or need to use Status Register.
 
-HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
-to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
-its equivalent to x16 parallel NOR flash wrt bits per clk. But Hyperbus
-operates at >166MHz frequencies.
-HyperRAM provides direct random read/write access to flash memory
-array.
-Framework is modelled along the lines of spi-nor framework. HyperBus
-memory controller(HBMC) drivers call hb_register_device() to register a
-single HyperFlash device. HyperFlash core parses MMIO access
-information from DT, sets up the map_info struct, probes CFI flash and
-registers it with MTD framework.
+Add support for polling status register to know device ready/status of
+erase/write operations when DQ polling is not supported.
 
-This is an early RFC, to know if its okay to use maps framework and existing
-CFI compliant flash support code to support Hyperflash
-Also would like input on different types of HBMC master IPs out there
-and their programming sequences.
-Would appreciate any testing/review.
+[1] https://www.cypress.com/file/213346/download
 
-Tested on modified TI AM654 EVM with Cypress Hyperflash S26KS512 by
-creating a UBIFS partition and writing and reading files to it.
-Stress tested by writing/reading 16MB flash repeatedly at different
-offsets using dd commmand.
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
 
-HyperBus specification can be found at[1]
-HyperFlash datasheet can be found at[2]
-TI's HBMC controller details at[3]
+Note: PRI extended query table size is bigger on 1.5 than on older
+revision. Not sure if this causes problems on older rev. because of
+reading beyond current size.
 
-[1] https://www.cypress.com/file/213356/download
-[2] https://www.cypress.com/file/213346/download
-[3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
-    Table 12-5741. HyperFlash Access Sequence
+ drivers/mtd/chips/cfi_cmdset_0002.c | 50 +++++++++++++++++++++++++++++
+ include/linux/mtd/cfi.h             |  5 +++
+ 2 files changed, 55 insertions(+)
 
-Vignesh R (5):
-  mtd: cfi_cmdset_0002: Add support for polling status register
-  dt-bindings: mtd: Add binding documentation for Hyperbus memory
-    devices
-  mtd: Add support for Hyperbus memory devices
-  dt-bindings: mtd: Add bindings for TI's AM654 Hyperbus memory
-    controller
-  mtd: hyperbus: Add driver for TI's Hyperbus memory controller
-
- .../bindings/mtd/cypress,hyperbus.txt         |   6 +
- .../devicetree/bindings/mtd/ti,am654-hbmc.txt |  27 +++
- MAINTAINERS                                   |   8 +
- drivers/mtd/Kconfig                           |   2 +
- drivers/mtd/Makefile                          |   1 +
- drivers/mtd/chips/cfi_cmdset_0002.c           |  50 ++++++
- drivers/mtd/hyperbus/Kconfig                  |  23 +++
- drivers/mtd/hyperbus/Makefile                 |   4 +
- drivers/mtd/hyperbus/core.c                   | 167 ++++++++++++++++++
- drivers/mtd/hyperbus/hbmc_am654.c             | 105 +++++++++++
- include/linux/mtd/cfi.h                       |   5 +
- include/linux/mtd/hyperbus.h                  |  73 ++++++++
- 12 files changed, 471 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
- create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
- create mode 100644 drivers/mtd/hyperbus/Kconfig
- create mode 100644 drivers/mtd/hyperbus/Makefile
- create mode 100644 drivers/mtd/hyperbus/core.c
- create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
- create mode 100644 include/linux/mtd/hyperbus.h
-
+diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
+index 72428b6bfc47..7a4ef0237750 100644
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -49,6 +49,14 @@
+ #define SST49LF008A		0x005a
+ #define AT49BV6416		0x00d6
+ 
++/*
++ * Bits of Status Register definition for flash devices that don't
++ * support DQ polling (Eg.: Hyperflash)
++ */
++#define CFI_SR_DRB		BIT(7)
++#define CFI_SR_ESB		BIT(5)
++#define CFI_SR_PSB		BIT(4)
++
+ static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t, size_t *, u_char *);
+ static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
+ static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
+@@ -97,6 +105,18 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
+ 	.module		= THIS_MODULE
+ };
+ 
++/*
++ * Use status register to poll for Erase/write completion when DQ is not
++ * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
++ * CFI Primary Vendor-Specific Extended Query table 1.5
++ */
++static int cfi_use_status_reg(struct cfi_private *cfi)
++{
++	struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
++
++	return (extp->MinorVersion >= '5') &&
++		((extp->SoftwareFeatures & 0x11) == 1);
++}
+ 
+ /* #define DEBUG_CFI_FEATURES */
+ 
+@@ -744,8 +764,21 @@ static struct mtd_info *cfi_amdstd_setup(struct mtd_info *mtd)
+  */
+ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
+ {
++	struct cfi_private *cfi = map->fldrv_priv;
+ 	map_word d, t;
+ 
++	if (cfi_use_status_reg(cfi)) {
++		/*
++		 * For chips that support status register, check device
++		 * ready bit
++		 */
++		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
++				 cfi->device_type, NULL);
++		d = map_read(map, addr);
++
++		return (d.x[0] & CFI_SR_DRB);
++	}
++
+ 	d = map_read(map, addr);
+ 	t = map_read(map, addr);
+ 
+@@ -769,8 +802,25 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
+  */
+ static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word expected)
+ {
++	struct cfi_private *cfi = map->fldrv_priv;
+ 	map_word oldd, curd;
+ 
++	if (cfi_use_status_reg(cfi)) {
++		/*
++		 * For chips that support status register, check device
++		 * ready bit and Erase/Program status bit to know if
++		 * operation succeeded.
++		 */
++		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
++				 cfi->device_type, NULL);
++		curd = map_read(map, addr);
++
++		if (curd.x[0] & CFI_SR_DRB)
++			return !(curd.x[0] & (CFI_SR_PSB | CFI_SR_ESB));
++
++		return 0;
++	}
++
+ 	oldd = map_read(map, addr);
+ 	curd = map_read(map, addr);
+ 
+diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
+index cbf77168658c..92ac82ac2329 100644
+--- a/include/linux/mtd/cfi.h
++++ b/include/linux/mtd/cfi.h
+@@ -233,6 +233,11 @@ struct cfi_pri_amdstd {
+ 	uint8_t  VppMin;
+ 	uint8_t  VppMax;
+ 	uint8_t  TopBottom;
++	/* Below field are added from version 1.5 */
++	uint8_t  ProgramSuspend;
++	uint8_t  UnlockBypass;
++	uint8_t  SecureSiliconSector;
++	uint8_t  SoftwareFeatures;
+ } __packed;
+ 
+ /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
 -- 
 2.20.1
