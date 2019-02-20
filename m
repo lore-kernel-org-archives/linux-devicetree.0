@@ -1,154 +1,50 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v1 04/12] arm64: dts: msm8996: thermal: Add temperature
- sensors near major peripherals
-Date: Wed, 20 Feb 2019 14:48:31 +0530
-Message-ID: <CAP245DUv+3rMiFFQWGnAv6xgqDt7jJ2m5ioo3ETyQ8iKRef++g@mail.gmail.com>
-References: <cover.1550493113.git.amit.kucheria@linaro.org>
- <51feb49578f6e412eb5e80012dc63eab5532342b.1550493113.git.amit.kucheria@linaro.org>
- <20190220012456.GG2811@localhost.localdomain>
+Subject: Re: [PATCH v1 00/12] qcom: dts: thermal cleanups
+Date: Wed, 20 Feb 2019 15:09:36 +0530
+Message-ID: <CAP245DXn3db27wMPSaZazRhprXD89JKQ5qEkc8r0DpSL9A847w@mail.gmail.com>
+References: <cover.1550493113.git.amit.kucheria@linaro.org> <20190220012641.GH2811@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220012456.GG2811@localhost.localdomain>
+In-Reply-To: <20190220012641.GH2811@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Eduardo Valentin <edubezval@gmail.com>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2019 at 6:55 AM Eduardo Valentin <edubezval@gmail.com> wrote:
+On Wed, Feb 20, 2019 at 6:56 AM Eduardo Valentin <edubezval@gmail.com> wrote:
 >
-> On Mon, Feb 18, 2019 at 06:05:18PM +0530, Amit Kucheria wrote:
-> > msm8996 has a total of 21 temperature sensors. Populate DT with
-> > information about them.
+> Hey
+> On Mon, Feb 18, 2019 at 06:05:14PM +0530, Amit Kucheria wrote:
+> > - Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
+> > - split up the register address map for msm8998
+> > - standardize names of the various thermal-zones across boards to make it
+> >   easy for test scripts to parse
 > >
-> > There are 2 sensors on each of the cpus - one on the top, the other
-> > below (we only expose one on the top in DT for now). For the GPU, we
-> > expose both, the one on the top and the one below.
-> >
-> > Depending on the version of the silicon, sensor 2 is either placed near
-> > the L3 cache or the venus video decoder. It would've been nice to be
-> > able to be version-specific but we don't have DTs that differentiate the
-> > two versions of silicon yet.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8996.dtsi | 98 +++++++++++++++++++++++++++
-> >  1 file changed, 98 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > index ae6e9f0778f0..8e36a39e1386 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > @@ -237,6 +237,104 @@
-> >                               };
-> >                       };
-> >               };
-> > +
-> > +             gpu-thermal-top {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens1 6>;
-> > +
-> > +                     trips {
-> > +                             gpu1_alert0: trip-point@0 {
-> > +                                     temperature = <75000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
 >
-> What is the cooling map for this?
+> I am generally fine with the effort but please fix the following
+> (applies for the whole series) wrt to required properties for DT
+> thermal:
+> a. Trip points for your zones
 
-I'm working on it. Will send out an update.
+Thanks for the review.
 
-> > +                             };
-> > +
-> > +                             gpu1_crit: gpu_crit {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             gpu-thermal-bottom {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens1 7>;
-> > +
-> > +                     trips {
-> > +                             gpu2_alert0: trip-point@0 {
-> > +                                     temperature = <75000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +
-> > +                             gpu2_crit: gpu_crit {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             m4m-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens0 1>;
-> > +             };
-> > +
-> > +             l3_or_venus-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens0 2>;
-> > +             };
-> > +
-> > +             cluster0-l2-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens0 7>;
-> > +             };
-> > +
-> > +             cluster1-l2-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens0 12>;
-> > +             };
-> > +
-> > +             camera-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens1 1>;
-> > +             };
-> > +
-> > +             q6-dsp-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens1 2>;
-> > +             };
-> > +
-> > +             mem-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens1 3>;
-> > +             };
-> > +
-> > +             modemtx-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens1 4>;
-> > +             };
-> >       };
-> >
-> >       timer {
-> > --
-> > 2.17.1
-> >
+In some cases, the temperatures are just exposed so something in
+userspace might read it and do something with it. We don't expect
+kernel trips for them.
+
+Adding trip points also requires me to add cooling-maps (your point b. below).
+
+I guess I'm looking for an example of how to just expose sensor
+temperatures w/o any associated trips and cooling maps.
+
+> b. Cooling Mappings for zones that have passive trips.
+>
+
+>From what I can see currently only CPUs and GPUs (among the major heat
+sources) can passively reduce heat by reducing frequencies.
+
+Things like cameras, display, video might have a more ON/OFF approach
+to throttling that might be controlled from userspace. And we don't
+have a way to tell in DT that these zones are managed in userspace
+(https://patchwork.kernel.org/patch/10259487/)
