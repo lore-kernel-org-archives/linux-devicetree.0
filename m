@@ -1,73 +1,64 @@
-From: Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH 3/3] ALSA: hda/tegra: sound card name from device tree
-Date: Wed, 20 Feb 2019 20:43:24 +0530
-Message-ID: <1550675604-14788-3-git-send-email-spujar@nvidia.com>
-References: <1550675604-14788-1-git-send-email-spujar@nvidia.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: add pinctrl for missing uart mux options
+Date: Wed, 20 Feb 2019 23:22:25 +0800
+Message-ID: <CAGb2v669BXTtL=u2_yn3K_9zpdGBxGzA+UfrDgpu+zi99P=77g@mail.gmail.com>
+References: <20190216182132.12895-1-mans@mansr.com> <CAGb2v66C6HFKgF8kERfp2UQ5XUyNS0-prgC3sX2iobkz7SjBcw@mail.gmail.com>
+ <20190220090617.aprfndnidcamwcvy@flea> <yw1x36oiybbl.fsf@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550675604-14788-1-git-send-email-spujar@nvidia.com>
+In-Reply-To: <yw1x36oiybbl.fsf@mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tiwai@suse.com, perex@perex.cz, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>
+To: =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-A platform can have multiple sound cards for different audio paths.
-Following is the print seen duirng device boot for jetson-xavier,
-  ALSA device list:
-    #0: nvidia,p2972-0000 at 0x3518000 irq 17
-By looking at above, it is not very clear if the sound card is for
-HDA. It becomes confusing when platform has registered multiple cards,
-and platform model name is used for card.
+On Wed, Feb 20, 2019 at 7:00 PM Måns Rullgård <mans@mansr.com> wrote:
+>
+> Maxime Ripard <maxime.ripard@bootlin.com> writes:
+>
+> > On Wed, Feb 20, 2019 at 04:58:49PM +0800, Chen-Yu Tsai wrote:
+> >> On Sun, Feb 17, 2019 at 2:21 AM Mans Rullgard <mans@mansr.com> wrote:
+> >> >
+> >> > This adds pinctrl settings for various missing uart options.
+> >> >
+> >> > Signed-off-by: Mans Rullgard <mans@mansr.com>
+> >> > ---
+> >> >  arch/arm/boot/dts/sun7i-a20.dtsi | 45 ++++++++++++++++++++++++++++++++
+> >> >  1 file changed, 45 insertions(+)
+> >> >
+> >> > diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+> >> > index af5b067a5f83..2295ff5adf48 100644
+> >> > --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> >> > +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> >> > @@ -944,6 +944,31 @@
+> >> >                                 function = "uart0";
+> >> >                         };
+> >> >
+> >> > +                       uart0_pf_pins: uart0-pf-pins {
+> >> > +                               pins = "PF2", "PF4";
+> >> > +                               function = "uart0";
+> >> > +                       };
+> >>
+> >> We've had the policy of not adding pinctrl nodes that aren't used in-tree,
+> >> to avoid bloating up the blob size. However DTC 1.4.7 introduced the new
+> >> /omit-if-no-ref/ directive, which would make the compiler discard marked
+> >> nodes if they aren't referenced.
+> >>
+> >> So please add this to all the new nodes. It seems to work regardless whether
+> >> you add it before or after the label, though having it after the label seems
+> >> to make vim syntax highlighting happier.
+>
+> Should we also add this to existing nodes?
+>
+> BTW, I really do need all those uart pin options.
 
-This patch uses "nvidia,model" property mentioned in hda device tree
-to get the card name. Since property is optional, legacy boards will
-continue to use "tegra-hda". Custom name can be passed wherever needed.
-This naming convention is conistent with the way sound cards are named
-in general.
+Note that /omit-if-no-ref/ does not work with dtc -@,
+as in the node will be removed if no references to it
+are found within the same file. It will not result in
+a symbol being created.
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
----
- sound/pci/hda/hda_tegra.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+I have a patch for that but haven't sent it out yet.
 
-diff --git a/sound/pci/hda/hda_tegra.c b/sound/pci/hda/hda_tegra.c
-index c8d18dc..dbd8da5 100644
---- a/sound/pci/hda/hda_tegra.c
-+++ b/sound/pci/hda/hda_tegra.c
-@@ -380,8 +380,8 @@ static int hda_tegra_first_init(struct azx *chip, struct platform_device *pdev)
- 	int err;
- 	unsigned short gcap;
- 	int irq_id = platform_get_irq(pdev, 0);
--	const char *sname;
--	struct device_node *root;
-+	const char *sname, *drv_name = "tegra-hda";
-+	struct device_node *np = pdev->dev.of_node;
- 
- 	err = hda_tegra_init_chip(chip, pdev);
- 	if (err)
-@@ -440,17 +440,11 @@ static int hda_tegra_first_init(struct azx *chip, struct platform_device *pdev)
- 	}
- 
- 	/* driver name */
--	strcpy(card->driver, "tegra-hda");
--
--	root = of_find_node_by_path("/");
--	sname = of_get_property(root, "compatible", NULL);
--	of_node_put(root);
--	if (!sname) {
--		dev_err(card->dev,
--			"failed to get compatible property from root node\n");
--		return -ENODEV;
--	}
-+	strncpy(card->driver, drv_name, sizeof(card->driver));
- 	/* shortname for card */
-+	sname = of_get_property(np, "nvidia,model", NULL);
-+	if (!sname)
-+		sname = drv_name;
- 	if (strlen(sname) > sizeof(card->shortname))
- 		dev_info(card->dev, "truncating shortname for card\n");
- 	strncpy(card->shortname, sname, sizeof(card->shortname));
--- 
-2.7.4
+ChenYu
