@@ -1,84 +1,173 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 2/4] dt-bindings: irq: imx-irqsteer: add multi output
- interrupts support
-Date: Wed, 20 Feb 2019 06:37:47 +0000
-Message-ID: <AM6PR04MB421536C38BF72B8739485304807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
-References: <1548921464-28917-1-git-send-email-aisheng.dong@nxp.com>
- <1548921464-28917-3-git-send-email-aisheng.dong@nxp.com>
- <23f5f2f0-79b8-b9f7-9f46-972966563596@arm.com> <20190213222952.GA4814@bogus>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC v4 08/17] kunit: test: add support for test abort
+Date: Tue, 19 Feb 2019 22:44:23 -0800
+Message-ID: <0124ed28-466c-e954-ddde-495419630a9f@gmail.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+ <20190214213729.21702-9-brendanhiggins@google.com>
+ <da1995fa-a362-dfe6-8184-7fcdf2b923e8@gmail.com>
+ <CAFd5g467OV8wTB7zEshgZw8g8=zoq0dLVfwx3wDH-8UA+9GWFA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190213222952.GA4814@bogus>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAFd5g467OV8wTB7zEshgZw8g8=zoq0dLVfwx3wDH-8UA+9GWFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: brakmo-b10kYP2dOMg@public.gmane.org, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Bird,
+ Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>, Kees Cook <keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Luis
 List-Id: devicetree@vger.kernel.org
 
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Thursday, February 14, 2019 6:30 AM
-> On Mon, Feb 11, 2019 at 03:34:23PM +0000, Marc Zyngier wrote:
-> > On 31/01/2019 08:03, Aisheng Dong wrote:
-> > > One irqsteer channel can support up to 8 output interrupts.
-> > >
-> > > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > > Cc: Shawn Guo <shawnguo@kernel.org>
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > > ---
-> > > ChangeLog:
-> > > v2->v3:
-> > >  * fix a typo
-> > > v1->v2:
-> > >  * remove one unnecessary note.
-> > > ---
-> > >  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt       =
- | 5
-> +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqstee
-> > > r.txt
-> > > b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqstee
-> > > r.txt
-> > > index 6d0a41b..582991c 100644
-> > > ---
-> > > a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqstee
-> > > r.txt
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irq
-> > > +++ steer.txt
-> > > @@ -6,8 +6,9 @@ Required properties:
-> > >  	- "fsl,imx8m-irqsteer"
-> > >  	- "fsl,imx-irqsteer"
-> > >  - reg: Physical base address and size of registers.
-> > > -- interrupts: Should contain the parent interrupt line used to
-> > > multiplex the
-> > > -  input interrupts.
-> > > +- interrupts: Should contain the up to 8 parent interrupt lines
-> > > +used to
-> > > +  multiplex the input interrupts. They should be specified
-> > > +sequentially
-> > > +  from output 0 to 7.
-> > >  - clocks: Should contain one clock for entry in clock-names
-> > >    see Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > >  - clock-names:
-> > >
-> >
-> > I'd like an Ack from a DT person, as this is a change to an existing
-> > binding.
->=20
-> It's fine as long as old kernels ignore extra entries and new kernels sti=
-ll support
-> a single entry. Otherwise, it needs a explanation.
+On 2/19/19 7:39 PM, Brendan Higgins wrote:
+> On Mon, Feb 18, 2019 at 11:52 AM Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>> On 2/14/19 1:37 PM, Brendan Higgins wrote:
+>>> Add support for aborting/bailing out of test cases. Needed for
+>>> implementing assertions.
+>>>
+>>> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>> Changes Since Last Version
+>>>  - This patch is new introducing a new cross-architecture way to abort
+>>>    out of a test case (needed for KUNIT_ASSERT_*, see next patch for
+>>>    details).
+>>>  - On a side note, this is not a complete replacement for the UML abort
+>>>    mechanism, but covers the majority of necessary functionality. UML
+>>>    architecture specific featurs have been dropped from the initial
+>>>    patchset.
+>>> ---
+>>>  include/kunit/test.h |  24 +++++
+>>>  kunit/Makefile       |   3 +-
+>>>  kunit/test-test.c    | 127 ++++++++++++++++++++++++++
+>>>  kunit/test.c         | 208 +++++++++++++++++++++++++++++++++++++++++--
+>>>  4 files changed, 353 insertions(+), 9 deletions(-)
+>>>  create mode 100644 kunit/test-test.c
+>>
+>> < snip >
+>>
+>>> diff --git a/kunit/test.c b/kunit/test.c
+>>> index d18c50d5ed671..6e5244642ab07 100644
+>>> --- a/kunit/test.c
+>>> +++ b/kunit/test.c
+>>> @@ -6,9 +6,9 @@
+>>>   * Author: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>>>   */
+>>>
+>>> -#include <linux/sched.h>
+>>>  #include <linux/sched/debug.h>
+>>> -#include <os.h>
+>>> +#include <linux/completion.h>
+>>> +#include <linux/kthread.h>
+>>>  #include <kunit/test.h>
+>>>
+>>>  static bool kunit_get_success(struct kunit *test)
+>>> @@ -32,6 +32,27 @@ static void kunit_set_success(struct kunit *test, bool success)
+>>>       spin_unlock_irqrestore(&test->lock, flags);
+>>>  }
+>>>
+>>> +static bool kunit_get_death_test(struct kunit *test)
+>>> +{
+>>> +     unsigned long flags;
+>>> +     bool death_test;
+>>> +
+>>> +     spin_lock_irqsave(&test->lock, flags);
+>>> +     death_test = test->death_test;
+>>> +     spin_unlock_irqrestore(&test->lock, flags);
+>>> +
+>>> +     return death_test;
+>>> +}
+>>> +
+>>> +static void kunit_set_death_test(struct kunit *test, bool death_test)
+>>> +{
+>>> +     unsigned long flags;
+>>> +
+>>> +     spin_lock_irqsave(&test->lock, flags);
+>>> +     test->death_test = death_test;
+>>> +     spin_unlock_irqrestore(&test->lock, flags);
+>>> +}
+>>> +
+>>>  static int kunit_vprintk_emit(const struct kunit *test,
+>>>                             int level,
+>>>                             const char *fmt,
+>>> @@ -70,13 +91,29 @@ static void kunit_fail(struct kunit *test, struct kunit_stream *stream)
+>>>       stream->commit(stream);
+>>>  }
+>>>
+>>> +static void __noreturn kunit_abort(struct kunit *test)
+>>> +{
+>>> +     kunit_set_death_test(test, true);
+>>> +
+>>> +     test->try_catch.throw(&test->try_catch);
+>>> +
+>>> +     /*
+>>> +      * Throw could not abort from test.
+>>> +      */
+>>> +     kunit_err(test, "Throw could not abort from test!");
+>>> +     show_stack(NULL, NULL);
+>>> +     BUG();
+>>
+>> kunit_abort() is what will be call as the result of an assert failure.
+> 
+> Yep. Does that need clarified somewhere.
+>>
+>> BUG(), which is a panic, which is crashing the system is not acceptable
+>> in the Linux kernel.  You will just annoy Linus if you submit this.
+> 
+> Sorry, I thought this was an acceptable use case since, a) this should
+> never be compiled in a production kernel, b) we are in a pretty bad,
+> unpredictable state if we get here and keep going. I think you might
+> have said elsewhere that you think "a" is not valid? In any case, I
+> can replace this with a WARN, would that be acceptable?
 
-Yes, it's like that. No compatibility break.
+A WARN may or may not make sense, depending on the context.  It may
+be sufficient to simply report a test failure (as in the old version
+of case (2) below.
 
-Regards
-Dong Aisheng
->=20
-> Rob
+Answers to "a)" and "b)":
+
+a) it might be in a production kernel
+
+a') it is not acceptable in my development kernel either
+
+b) No.  You don't crash a developer's kernel either unless it is
+required to avoid data corruption.
+
+b') And you can not do replacements like:
+
+(1) in of_unittest_check_tree_linkage()
+
+-----  old  -----
+
+        if (!of_root)
+                return;
+
+-----  new  -----
+
+        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, of_root);
+
+(2) in of_unittest_property_string()
+
+-----  old  -----
+
+        /* of_property_read_string_index() tests */
+        rc = of_property_read_string_index(np, "string-property", 0, strings);
+        unittest(rc == 0 && !strcmp(strings[0], "foobar"), "of_property_read_string_index() failure; rc=%i\n", rc);
+
+-----  new  -----
+
+        /* of_property_read_string_index() tests */
+        rc = of_property_read_string_index(np, "string-property", 0, strings);
+        KUNIT_ASSERT_EQ(test, rc, 0);
+        KUNIT_EXPECT_STREQ(test, strings[0], "foobar");
+
+
+If a test fails, that is no reason to abort testing.  The remainder of the unit
+tests can still run.  There may be cascading failures, but that is ok.
