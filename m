@@ -1,58 +1,107 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [PATCH] ARM: dts: sun7i: add pinctrl for missing uart mux options
-Date: Wed, 20 Feb 2019 10:59:58 +0000
-Message-ID: <yw1x36oiybbl.fsf@mansr.com>
-References: <20190216182132.12895-1-mans@mansr.com>
-        <CAGb2v66C6HFKgF8kERfp2UQ5XUyNS0-prgC3sX2iobkz7SjBcw@mail.gmail.com>
-        <20190220090617.aprfndnidcamwcvy@flea>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 2/3] clk: at91: sckc: add support for SAM9X60
+Date: Wed, 20 Feb 2019 12:06:43 +0100
+Message-ID: <20190220110643.GI11432@piout.net>
+References: <1550146447-1441-1-git-send-email-claudiu.beznea@microchip.com>
+ <1550146447-1441-3-git-send-email-claudiu.beznea@microchip.com>
+ <20190218212007.GW10129@piout.net>
+ <c00fb195-1688-6ac4-a606-5e08509a2c39@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220090617.aprfndnidcamwcvy@flea> (Maxime Ripard's message
-        of "Wed, 20 Feb 2019 10:06:17 +0100")
+Content-Disposition: inline
+In-Reply-To: <c00fb195-1688-6ac4-a606-5e08509a2c39@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Claudiu.Beznea@microchip.com
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard <maxime.ripard@bootlin.com> writes:
+On 19/02/2019 09:17:43+0000, Claudiu.Beznea@microchip.com wrote:
+> 
+> 
+> On 18.02.2019 23:20, Alexandre Belloni wrote:
+> > On 14/02/2019 12:14:32+0000, Claudiu.Beznea@microchip.com wrote:
+> >> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> >>
+> >> Add support for SAM9X60.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> >> ---
+> >>  drivers/clk/at91/sckc.c | 30 ++++++++++++++++++++++++++++++
+> >>  1 file changed, 30 insertions(+)
+> >>
+> >> diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
+> >> index b7163d3a2269..b3075c51d260 100644
+> >> --- a/drivers/clk/at91/sckc.c
+> >> +++ b/drivers/clk/at91/sckc.c
+> >> @@ -459,6 +459,36 @@ static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
+> >>  CLK_OF_DECLARE(at91sam9x5_clk_sckc, "atmel,at91sam9x5-sckc",
+> >>  	       of_at91sam9x5_sckc_setup);
+> >>  
+> >> +static const struct clk_slow_offsets at91sam9x60_offsets = {
+> >> +	.cr_rcen = AT91_SCKC_OFFSET_INVALID,
+> >> +	.cr_osc32en = 1,
+> >> +	.cr_osc32byp = 2,
+> >> +	.cr_oscsel = 24,
+> >> +};
+> >> +
+> >> +static void __init of_at91sam9x60_sckc_setup(struct device_node *np)
+> >> +{
+> >> +	struct device_node *childnp;
+> >> +	void (*clk_setup)(struct device_node *np, void __iomem *io,
+> >> +			  const struct clk_slow_offsets *offsets);
+> >> +	const struct of_device_id *clk_id;
+> >> +	void __iomem *regbase = of_iomap(np, 0);
+> >> +
+> >> +	if (!regbase)
+> >> +		return;
+> >> +
+> >> +	for_each_child_of_node(np, childnp) {
+> >> +		clk_id = of_match_node(sckc_clk_ids, childnp);
+> >> +		if (!clk_id)
+> >> +			continue;
+> >> +		clk_setup = clk_id->data;
+> >> +		clk_setup(childnp, regbase, &at91sam9x60_offsets);
+> >> +	}
+> > 
+> > You actually need to have new bindings. The sam9x60 registration should
+> > look more like the sama5d4 registration. I have a rework for the sam9x5
+> > sckc that I will send this week to have a proper binding (i.e: no
+> > children).
+> 
+> Does this means that this would also solve the problem I tried to address
+> with this patch?
+> 
 
-> On Wed, Feb 20, 2019 at 04:58:49PM +0800, Chen-Yu Tsai wrote:
->> On Sun, Feb 17, 2019 at 2:21 AM Mans Rullgard <mans@mansr.com> wrote:
->> >
->> > This adds pinctrl settings for various missing uart options.
->> >
->> > Signed-off-by: Mans Rullgard <mans@mansr.com>
->> > ---
->> >  arch/arm/boot/dts/sun7i-a20.dtsi | 45 ++++++++++++++++++++++++++++++++
->> >  1 file changed, 45 insertions(+)
->> >
->> > diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
->> > index af5b067a5f83..2295ff5adf48 100644
->> > --- a/arch/arm/boot/dts/sun7i-a20.dtsi
->> > +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
->> > @@ -944,6 +944,31 @@
->> >                                 function = "uart0";
->> >                         };
->> >
->> > +                       uart0_pf_pins: uart0-pf-pins {
->> > +                               pins = "PF2", "PF4";
->> > +                               function = "uart0";
->> > +                       };
->> 
->> We've had the policy of not adding pinctrl nodes that aren't used in-tree,
->> to avoid bloating up the blob size. However DTC 1.4.7 introduced the new
->> /omit-if-no-ref/ directive, which would make the compiler discard marked
->> nodes if they aren't referenced.
->> 
->> So please add this to all the new nodes. It seems to work regardless whether
->> you add it before or after the label, though having it after the label seems
->> to make vim syntax highlighting happier.
+I've sent the series now. It doesn't solve this particular issue.
 
-Should we also add this to existing nodes?
+> > 
+> > However, there is a fundamental change in the sam9x60, previously, the
+> > sckc had only one output clock. the sam9x60 has both td_slck and
+> > md_slck. Both need to be accessible because they are input to the PMC.
+> 
+> I was guided by the fact that md_slck is generated by the always on slow RC
+> oscillator (part of slow clock controller) and since there is no control
+> for it on slow clock controller there is no need to be described by this
+> driver.
+> 
 
-BTW, I really do need all those uart pin options.
+Well, then it would need to be added as an input to the sckc which would
+mean that you still need to change the binding. This doesn't matter too
+much but else your clock tree would be wrong.
+
+> > 
+> > This means you will have to register the sckc with of_clk_hw_onecell_get
+> > as the get callback.
+> 
+> Ok, I'll look into it.
+> 
+> > 
+> > We could still decide to do the same with sam9x5 even if it has only one
+> > output clock.
+> > 
 
 -- 
-Måns Rullgård
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
