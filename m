@@ -1,150 +1,55 @@
 From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v1 04/12] arm64: dts: msm8996: thermal: Add temperature
- sensors near major peripherals
-Date: Tue, 19 Feb 2019 17:24:57 -0800
-Message-ID: <20190220012456.GG2811@localhost.localdomain>
+Subject: Re: [PATCH v1 00/12] qcom: dts: thermal cleanups
+Date: Tue, 19 Feb 2019 17:26:42 -0800
+Message-ID: <20190220012641.GH2811@localhost.localdomain>
 References: <cover.1550493113.git.amit.kucheria@linaro.org>
- <51feb49578f6e412eb5e80012dc63eab5532342b.1550493113.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51feb49578f6e412eb5e80012dc63eab5532342b.1550493113.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1550493113.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Amit Kucheria <amit.kucheria@linaro.org>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 06:05:18PM +0530, Amit Kucheria wrote:
-> msm8996 has a total of 21 temperature sensors. Populate DT with
-> information about them.
+Hey
+On Mon, Feb 18, 2019 at 06:05:14PM +0530, Amit Kucheria wrote:
+> - Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
+> - split up the register address map for msm8998
+> - standardize names of the various thermal-zones across boards to make it
+>   easy for test scripts to parse
 > 
-> There are 2 sensors on each of the cpus - one on the top, the other
-> below (we only expose one on the top in DT for now). For the GPU, we
-> expose both, the one on the top and the one below.
-> 
-> Depending on the version of the silicon, sensor 2 is either placed near
-> the L3 cache or the venus video decoder. It would've been nice to be
-> able to be version-specific but we don't have DTs that differentiate the
-> two versions of silicon yet.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 98 +++++++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index ae6e9f0778f0..8e36a39e1386 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -237,6 +237,104 @@
->  				};
->  			};
->  		};
-> +
-> +		gpu-thermal-top {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens1 6>;
-> +
-> +			trips {
-> +				gpu1_alert0: trip-point@0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
 
-What is the cooling map for this?
+I am generally fine with the effort but please fix the following
+(applies for the whole series) wrt to required properties for DT
+thermal:
+a. Trip points for your zones
+b. Cooling Mappings for zones that have passive trips.
 
-> +				};
-> +
-> +				gpu1_crit: gpu_crit {
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		gpu-thermal-bottom {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens1 7>;
-> +
-> +			trips {
-> +				gpu2_alert0: trip-point@0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				gpu2_crit: gpu_crit {
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		m4m-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 1>;
-> +		};
-> +
-> +		l3_or_venus-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 2>;
-> +		};
-> +
-> +		cluster0-l2-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 7>;
-> +		};
-> +
-> +		cluster1-l2-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 12>;
-> +		};
-> +
-> +		camera-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens1 1>;
-> +		};
-> +
-> +		q6-dsp-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens1 2>;
-> +		};
-> +
-> +		mem-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens1 3>;
-> +		};
-> +
-> +		modemtx-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens1 4>;
-> +		};
->  	};
->  
->  	timer {
+> Amit Kucheria (12):
+>   arm64: dts: msm8998: thermal: split address space into two
+>   arm64: dts: msm8998: efficiency is not valid property
+>   arm64: dts: msm8916: thermal: Add sensor for modem
+>   arm64: dts: msm8996: thermal: Add temperature sensors near major
+>     peripherals
+>   arm64: dts: msm8998: thermal: Fix the cpu sensor numbers
+>   arm64: dts: msm8998: thermal: Fix the gpu sensor number
+>   arm64: dts: msm8998: thermal: GPU has two sensors, add the second
+>   arm64: dts: msm8998: thermal: Add temperature sensors near major
+>     peripherals
+>   arm64: dts: sdm845: thermal: Add temperature sensors near major
+>     peripherals
+>   arm64: dts: msm8998: thermal: Make trip names consistent
+>   arm64: dts: msm8916: thermal: Make trip names consistent
+>   arm64: dts: msm8996: thermal: Make trip names consistent
+> 
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi |  30 +++--
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 122 ++++++++++++++++++--
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi | 154 ++++++++++++++++++--------
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi  |  91 +++++++++++++++
+>  4 files changed, 328 insertions(+), 69 deletions(-)
+> 
 > -- 
 > 2.17.1
 > 
