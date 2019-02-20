@@ -1,26 +1,26 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 6/6] net: ethernet: ti: cpsw: deprecate cpsw-phy-sel
- driver
-Date: Wed, 20 Feb 2019 11:22:44 -0800 (PST)
-Message-ID: <20190220.112244.1206973642383679896.davem@davemloft.net>
-References: <1550676319-6440-1-git-send-email-grygorii.strashko@ti.com>
-        <1550676319-6440-7-git-send-email-grygorii.strashko@ti.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: at91: fix masterck name
+Date: Wed, 20 Feb 2019 11:43:40 -0800
+Message-ID: <155069182090.77512.6031671349879787129@swboyd.mtv.corp.google.com>
+References: <20190208144059.29861-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550676319-6440-7-git-send-email-grygorii.strashko@ti.com>
+In-Reply-To: <20190208144059.29861-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: grygorii.strashko@ti.com
-Cc: kishon@ti.com, robh+dt@kernel.org, tony@atomide.com, netdev@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Wed, 20 Feb 2019 17:25:19 +0200
+Quoting Alexandre Belloni (2019-02-08 06:40:59)
+> The master clock is actually named masterck earlier in the driver. Having
+> "mck" in the parent list means that it can never be selected.
+>=20
+> Fixes: 1eabdc2f9dd8 ("clk: at91: add at91sam9x5 PMCs driver")
+> Fixes: a2038077de9a ("clk: at91: add sama5d2 PMC driver")
+> Fixes: 084b696bb509 ("clk: at91: add sama5d4 pmc driver")
+>=20
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
 
-> Deprecate cpsw-phy-sel driver as it's been replaced with new
-> TI phy-gmii-sel PHY driver.
-> 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-
-Acked-by: David S. Miller <davem@davemloft.net>
+Applied to clk-fixes
