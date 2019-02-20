@@ -1,115 +1,132 @@
-From: Mans Rullgard <mans@mansr.com>
-Subject: [PATCH v2] ARM: dts: sun7i: add pinctrl for missing uart mux options
-Date: Wed, 20 Feb 2019 12:07:17 +0000
-Message-ID: <20190220120717.30650-1-mans@mansr.com>
-References: <20190216182132.12895-1-mans@mansr.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] dt-bindings: imx: update scu resource id headfile
+Date: Wed, 20 Feb 2019 13:11:13 +0100
+Message-ID: <a55e0643bb2acd522145c74ec0e8b74a16b718f8.camel@pengutronix.de>
+References: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
+         <20190219125211.2pg2bqxner4klcb5@pengutronix.de>
+         <DB3PR0402MB3916AF3AA0283DB22DF61E2FF57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+         <20190219144808.qqpaubjcsb4huoml@pengutronix.de>
+         <DB3PR0402MB39160A56E168ED20410674D7F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+         <AM6PR04MB42152D05E62753E760741160807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+         <20190220081650.cu3yzausx55jefb6@pengutronix.de>
+         <AM6PR04MB4215014B734F71D409D617A5807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+         <20190220105249.u2hcvk6ut3cycvqs@pengutronix.de>
+         <AM6PR04MB4215D9FE015E9251425B0FFC807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190216182132.12895-1-mans@mansr.com>
+In-Reply-To: <AM6PR04MB4215D9FE015E9251425B0FFC807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Aisheng Dong <aisheng.dong@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>
+Cc: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds pinctrl settings for various missing uart options.
+Am Mittwoch, den 20.02.2019, 11:21 +0000 schrieb Aisheng Dong:
+> Hi Marco,
+> 
+> > From: Marco Felsch [mailto:m.felsch@pengutronix.de]
+> > Sent: Wednesday, February 20, 2019 6:53 PM
+> > 
+> > Hi Aisheng,
+> > 
+> > On 19-02-20 09:49, Aisheng Dong wrote:
+> > > > From: Marco Felsch [mailto:m.felsch@pengutronix.de]
+> > > > Sent: Wednesday, February 20, 2019 4:17 PM On 19-02-20 03:38,
+> > > > Aisheng Dong wrote:
+> > > > > [...]
+> > > > > 
+> > > > > > > I don't like droping some ID's (e.g. IMX_SC_R_DC_0_CAPTURE0)
+> > > > > > > by mark them as unused or even worse give them a other
+> > > > > > > meaning. IMHO the scu-api should be stable since day 1 and the
+> > > > > > > ID's should only be
+> > > > extended.
+> > > > > > > Marking ID's as deprecated is much better than moving them around.
+> > > > > > 
+> > > > > > I agree the SCU APIs should be stable since day 1 and the ID
+> > > > > > should ONLY be extended, but that is the best cases, the reality
+> > > > > > is, there are different SoCs/Revision, some revisions may remove
+> > > > > > the resources ID defined in pre-coded SCU firmware, like the
+> > > > > > IMX_SC_R_DC_0_CAPTURE0 etc., so SCU APIs removes them after real
+> > > > > > silicon arrived, now latest SCU firmware marks them as UNUSED,
+> > > > > > they could be replaced by some other new resources in later new
+> > > > > > SoC, I am NOT sure, but if it happens, this resource ID table
+> > > > > > should be updated anyway, leaving the out-of-date resource ID
+> > > > > > table there will have
+> > > > issues, since it is NOT sync with SCU firmware.
+> > > > > > So how to resolve such issue? We hope the SCU firmware should be
+> > > > > > stable since day 1, but the truth is NOT, could be still some
+> > > > > > updates but NOT very often. And I believe the updates will NOT
+> > > > > > break old
+> > > > kernel version.
+> > > > 
+> > > > Hi Anson,
+> > > > 
+> > > > Please don't mix the dt-bindings and the kernel related stuff.
+> > > > Unfortunately the bindings are within the kernel repo which in fact
+> > > > is great for us kernel developer but the bindings are also used in
+> > > > other projects such as barebox or other kernels (don't know the BSD
+> > > > guys). So you can't ensure that your change will break something. Please
+> > keep that in mind.
+> > > > IMHO solving that issue should be done by the scu firmware. I tought
+> > > > the scu is a cortex-m4 with a bunch of embedded flash and ram (I
+> > > > don't know that much about the scu since it is closed/black-boxed).
+> > > > Why do you don't use a translation table within the scu? As I said
+> > > > earlier I don't like the redefinition of ID's since they are now part of the
+> > dt-bindings.
+> > > > The bindings can store up to 32bit values which is a large number ;)
+> > > > IMHO wasting some ID's in favour of stability is a better solution.
+> > > > 
+> > > 
+> > > As far as I know, those remove resource IDs are pre-defined and has
+> > > never been used and won't be used anymore by SC firmware. (Anson can
+> > > double check it) So I think it's safe to remove them or mark them as
+> > deprecated.
+> > 
+> > I think marking them as deprecated by a commentar is better than redefining
+> > bits to be unused. As I said the bindings not only linux related they are used in
+> > other projects too.
+> > 
+> 
+> For other projects, the result is same because SC firmware does not support those
+> Resource IDs.
+> 
+> > > Personally I may prefer to remove them as they never worked to avoid
+> > > confusing, especially at this early stage for mx8.
+> > 
+> > So why they are there if they never worked? Wouldn't it a better approach to
+> > start with a basic and working ID file and extend this rather than adding id's
+> > because maybe the will work.. 
+> 
+> Ideally yes, but may be hard in reality.
+> 
+> SC firmware code usually is developed quite early before silicon comes.
+> But the real chip may changes, e.g. removed or added something.
+> 
+> AFAIK those resource IDs removed have never worked in SC firmware,
+> and they're likely to come out of pre-silicon definition. But chip changes
+> later.
+> 
+> > Sorry but this seems wrong to me too.
+> > I know the approach from driver development, adding a driver specific *_reg.h
+> > file and later figuring out that those bits won't work as aspected. As I said this
+> > will be driver and only linux related so we can change them as many times as
+> > we want. But in your case we are talking about dt-bindings and this approach
+> > won't work.
+> 
+> I would agree with you if those resource IDs have worked before.
+> But they never worked.
+> Should we keep a thing never worked in device tree just because
+> It makes us look like keeping compatibility?
+> 
+> If that, I'd rather removing them to avoid confusing in the future. Life is long, right?
+> I don't want people to bother with those unmeaning things anymore when they
+> look at it.
 
-Signed-off-by: Mans Rullgard <mans@mansr.com>
----
-Changed in v2:
-- add /omit-if-no-ref/ tags to new nodes
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 54 ++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+Removing things is totally fine if they have never worked. Re-using the
+now "free" IDs is what is problematic. Only ever use previously unused
+IDs when introducing new stuff into the SCU firmware. This is something
+you need to communicate quite clearly with the SCU firmware developers.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index af5b067a5f83..76d0c961f01e 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -944,6 +944,36 @@
- 				function = "uart0";
- 			};
- 
-+			/omit-if-no-ref/
-+			uart0_pf_pins: uart0-pf-pins {
-+				pins = "PF2", "PF4";
-+				function = "uart0";
-+			};
-+
-+			/omit-if-no-ref/
-+			uart1_pa_pins: uart1-pa-pins {
-+				pins = "PA10", "PA11";
-+				function = "uart1";
-+			};
-+
-+			/omit-if-no-ref/
-+			uart1_cts_rts_pa_pins: uart1-cts-rts-pa-pins {
-+				pins = "PA12", "PIA13";
-+				function = "uart2";
-+			};
-+
-+			/omit-if-no-ref/
-+			uart2_pa_pins: uart2-pa-pins {
-+				pins = "PIA2", "PIA3";
-+				function = "uart2";
-+			};
-+
-+			/omit-if-no-ref/
-+			uart2_cts_rts_pa_pins: uart2-cts-rts-pa-pins {
-+				pins = "PA0", "PIA1";
-+				function = "uart2";
-+			};
-+
- 			uart2_pi_pins: uart2-pi-pins {
- 				pins = "PI18", "PI19";
- 				function = "uart2";
-@@ -969,6 +999,12 @@
- 				function = "uart3";
- 			};
- 
-+			/omit-if-no-ref/
-+			uart3_cts_rts_ph_pins: uart3-cts-rts-ph-pins {
-+				pins = "PH2", "PH3";
-+				function = "uart3";
-+			};
-+
- 			uart4_pg_pins: uart4-pg-pins {
- 				pins = "PG10", "PG11";
- 				function = "uart4";
-@@ -979,16 +1015,34 @@
- 				function = "uart4";
- 			};
- 
-+			/omit-if-no-ref/
-+			uart5_ph_pins: uart5-ph-pins {
-+				pins = "PH6", "PH7";
-+				function = "uart5";
-+			};
-+
- 			uart5_pi_pins: uart5-pi-pins {
- 				pins = "PI10", "PI11";
- 				function = "uart5";
- 			};
- 
-+			/omit-if-no-ref/
-+			uart6_pa_pins: uart6-pa-pins {
-+				pins = "PA12", "PA13";
-+				function = "uart6";
-+			};
-+
- 			uart6_pi_pins: uart6-pi-pins {
- 				pins = "PI12", "PI13";
- 				function = "uart6";
- 			};
- 
-+			/omit-if-no-ref/
-+			uart7_pa_pins: uart7-pa-pins {
-+				pins = "PA14", "PA15";
-+				function = "uart7";
-+			};
-+
- 			uart7_pi_pins: uart7-pi-pins {
- 				pins = "PI20", "PI21";
- 				function = "uart7";
--- 
-2.20.1
+Regards,
+Lucas
