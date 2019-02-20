@@ -1,53 +1,101 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Tue, 19 Feb 2019 22:46:19 -0800
-Message-ID: <4dff3b1a-7ded-7218-5325-3c397cc3c73e@gmail.com>
-References: <20190214213729.21702-1-brendanhiggins@google.com>
- <a6ae907e-391b-993e-6011-6f40c761b339@gmail.com>
- <CAFd5g44AmF6eN-HKwHOqPiGZHNc2K_wAmWR3PkV0OX-=YNUKDw@mail.gmail.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V3 4/5] dt-bindings: imx8-clock: add a53 and a72 clock id
+Date: Wed, 20 Feb 2019 07:07:46 +0000
+Message-ID: <AM6PR04MB4215A70B99715434A3770532807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+References: <1548335800-6438-1-git-send-email-aisheng.dong@nxp.com>
+ <1548335800-6438-5-git-send-email-aisheng.dong@nxp.com>
+ <20190213221818.GA13126@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g44AmF6eN-HKwHOqPiGZHNc2K_wAmWR3PkV0OX-=YNUKDw@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190213221818.GA13126@bogus>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Kees Cook <keescook@google.com>, Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Greg KH <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Michael Ellerman <mpe@ellerman.id.au>, Joe Perches <joe@perches.com>, brakmo@fb.com, Steven Rostedt <rostedt@goodmis.org>, "Bird, Timothy" <Tim.Bird@sony.com>, Kevin Hilman <khilman@baylibre.com>, Julia Lawall <julia.lawall@lip6.fr>, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedeskto>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/19/19 10:34 PM, Brendan Higgins wrote:
-> On Mon, Feb 18, 2019 at 12:02 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> <snip>
->> I have not read through the patches in any detail.  I have read some of
->> the code to try to understand the patches to the devicetree unit tests.
->> So that may limit how valid my comments below are.
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Thursday, February 14, 2019 6:18 AM
+> On Thu, Jan 24, 2019 at 01:22:45PM +0000, Aisheng Dong wrote:
+> > Add a53 and a72 clock id, as there's still no users, we update
+> > IMX_LSIO_MEM_CLK base to start from 6 to allow a53 and a72 clock id to
+> > be continued with a35 clk.
+> >
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > ---
+> > v1->v2:
+> >  * change cpu clock to cpu cluster clock per Rob's suggestion
+> > ---
+> >  include/dt-bindings/clock/imx8-clock.h | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/dt-bindings/clock/imx8-clock.h
+> > b/include/dt-bindings/clock/imx8-clock.h
+> > index b149e63..dcce744 100644
+> > --- a/include/dt-bindings/clock/imx8-clock.h
+> > +++ b/include/dt-bindings/clock/imx8-clock.h
+> > @@ -14,10 +14,12 @@
+> >  /* CPU */
+> >  #define IMX_A35_CLK					1
+> >  #define IMX_CPU_CLUSTER_A35_CLK				1
+> > +#define IMX_CPU_CLUSTER_A53_CLK				2
+> > +#define IMX_CPU_CLUSTER_A72_CLK				3
 > 
-> No problem.
-> 
->>
->> I found the code difficult to read in places where it should have been
->> much simpler to read.  Structuring the code in a pseudo object oriented
->> style meant that everywhere in a code path that I encountered a dynamic
->> function call, I had to go find where that dynamic function call was
->> initialized (and being the cautious person that I am, verify that
->> no where else was the value of that dynamic function call).  With
->> primitive vi and tags, that search would have instead just been a
->> simple key press (or at worst a few keys) if hard coded function
->> calls were done instead of dynamic function calls.  In the code paths
->> that I looked at, I did not see any case of a dynamic function being
->> anything other than the value it was originally initialized as.
->> There may be such cases, I did not read the entire patch set.  There
->> may also be cases envisioned in the architects mind of how this
->> flexibility may be of future value.  Dunno.
-> 
-> Yeah, a lot of it is intended to make architecture specific
-> implementations and some other future work easier. Some of it is also
-> for testing purposes. Admittedly some is for neither reason, but given
-> the heavy usage elsewhere, I figured there was no harm since it was
-> all private internal usage anyway.
+> I still don't get this. How many clock outputs does the clock controller have for
+> CPUs? If 3, then this is correct. If it's the same clock controller bits across
+> different SoCs, then just name it something like IMX_CPU_CLUSTER_CLK and
+> reuse the same ID.
 > 
 
-Increasing the cost for me (and all the other potential code readers)
-to read the code is harm.
+For SCU firmware based platforms like mx8qxp/qm, the clocks are provided
+by SCU firmware via SCU firmware call with unique IDs. So it's safe to use a common
+Clock IDs file.
+
+But please ignore patch 3 and 4 first because we still met a few limitations with
+current approach due to the device availability may vary a bit across CPUs and
+Subsystems.
+
+We formerly planned to add all new IDs for each SS and dynamically check availability
+in driver. That can be done but that may involve a lot effort and may result in more
+changes In driver. Also hard to upstream device tree code due to dependency on Clock IDs.
+
+To relief this situation, we want to move the clock definition into device tree which
+can fully decouple the dependency of Clock ID definition from device tree.
+And no frequent changes required in clock driver.
+
+I will send a patch set to do it later.
+
+Regards
+Dong Aisheng
+
+> >  /* LSIO SS */
+> > -#define IMX_LSIO_MEM_CLK				2
+> > -#define IMX_LSIO_BUS_CLK				3
+> > +#define IMX_LSIO_MEM_CLK				6
+> > +#define IMX_LSIO_BUS_CLK				7
+> 
+> Changing numbering is not good, but I guess it's early for imx8.
+> 
+> >  #define IMX_LSIO_PWM0_CLK				10
+> >  #define IMX_LSIO_PWM1_CLK				11
+> >  #define IMX_LSIO_PWM2_CLK				12
+> > --
+> > 2.7.4
+> >
