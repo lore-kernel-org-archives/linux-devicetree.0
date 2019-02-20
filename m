@@ -1,106 +1,104 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 6/6] iio: imu: adis16480: Add docs for ADIS16480 IMU
-Date: Wed, 20 Feb 2019 10:46:03 +0000
-Message-ID: <20190220104603.15053787@archlinux>
-References: <1550596338-24220-1-git-send-email-stefan.popa@analog.com>
-        <1550596338-24220-7-git-send-email-stefan.popa@analog.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH] dt-bindings: imx: update scu resource id headfile
+Date: Wed, 20 Feb 2019 11:52:49 +0100
+Message-ID: <20190220105249.u2hcvk6ut3cycvqs@pengutronix.de>
+References: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
+ <20190219125211.2pg2bqxner4klcb5@pengutronix.de>
+ <DB3PR0402MB3916AF3AA0283DB22DF61E2FF57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190219144808.qqpaubjcsb4huoml@pengutronix.de>
+ <DB3PR0402MB39160A56E168ED20410674D7F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <AM6PR04MB42152D05E62753E760741160807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+ <20190220081650.cu3yzausx55jefb6@pengutronix.de>
+ <AM6PR04MB4215014B734F71D409D617A5807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550596338-24220-7-git-send-email-stefan.popa@analog.com>
+Content-Disposition: inline
+In-Reply-To: <AM6PR04MB4215014B734F71D409D617A5807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: robh+dt@kernel.org, Michael.Hennerich@analog.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Feb 2019 19:12:18 +0200
-Stefan Popa <stefan.popa@analog.com> wrote:
+Hi Aisheng,
 
-> Document support for ADIS16480 Inertial Measurement Unit.
+On 19-02-20 09:49, Aisheng Dong wrote:
+> > From: Marco Felsch [mailto:m.felsch@pengutronix.de]
+> > Sent: Wednesday, February 20, 2019 4:17 PM
+> > On 19-02-20 03:38, Aisheng Dong wrote:
+> > > [...]
+> > >
+> > > > > I don't like droping some ID's (e.g. IMX_SC_R_DC_0_CAPTURE0) by
+> > > > > mark them as unused or even worse give them a other meaning. IMHO
+> > > > > the scu-api should be stable since day 1 and the ID's should only be
+> > extended.
+> > > > > Marking ID's as deprecated is much better than moving them around.
+> > > >
+> > > > I agree the SCU APIs should be stable since day 1 and the ID should
+> > > > ONLY be extended, but that is the best cases, the reality is, there
+> > > > are different SoCs/Revision, some revisions may remove the resources
+> > > > ID defined in pre-coded SCU firmware, like the
+> > > > IMX_SC_R_DC_0_CAPTURE0 etc., so SCU APIs removes them after real
+> > > > silicon arrived, now latest SCU firmware marks them as UNUSED, they
+> > > > could be replaced by some other new resources in later new SoC, I am
+> > > > NOT sure, but if it happens, this resource ID table should be
+> > > > updated anyway, leaving the out-of-date resource ID table there will have
+> > issues, since it is NOT sync with SCU firmware.
+> > > >
+> > > > So how to resolve such issue? We hope the SCU firmware should be
+> > > > stable since day 1, but the truth is NOT, could be still some
+> > > > updates but NOT very often. And I believe the updates will NOT break old
+> > kernel version.
+> > 
+> > Hi Anson,
+> > 
+> > Please don't mix the dt-bindings and the kernel related stuff.
+> > Unfortunately the bindings are within the kernel repo which in fact is great for
+> > us kernel developer but the bindings are also used in other projects such as
+> > barebox or other kernels (don't know the BSD guys). So you can't ensure that
+> > your change will break something. Please keep that in mind.
+> > 
+> > IMHO solving that issue should be done by the scu firmware. I tought the scu is
+> > a cortex-m4 with a bunch of embedded flash and ram (I don't know that much
+> > about the scu since it is closed/black-boxed). Why do you don't use a
+> > translation table within the scu? As I said earlier I don't like the redefinition of
+> > ID's since they are now part of the dt-bindings.
+> > The bindings can store up to 32bit values which is a large number ;) IMHO
+> > wasting some ID's in favour of stability is a better solution.
+> > 
 > 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Make sure to CC the dt list as well as Rob.  Just because it's normally
-Rob who is kind enough to review our patches, doesn't mean we shouldn't
-bombard any other interested parties with them as well ;)
+> As far as I know, those remove resource IDs are pre-defined and has never been used
+> and won't be used anymore by SC firmware. (Anson can double check it)
+> So I think it's safe to remove them or mark them as deprecated.
 
-Looks good to me, with the exception of the DIO1 vs 2 default
-discussed in the earlier patch.
+I think marking them as deprecated by a commentar is better than
+redefining bits to be unused. As I said the bindings not only linux
+related they are used in other projects too.
 
-Thanks,
-
-Jonathan
-
-> ---
->  .../devicetree/bindings/iio/imu/adi,adis16480.txt  | 49 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> new file mode 100644
-> index 0000000..dacf5f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> @@ -0,0 +1,49 @@
-> +
-> +Analog Devices ADIS16480 and similar IMUs
-> +
-> +Required properties for the ADIS16480:
-> +
-> +- compatible: Must be one of
-> +	* "adi,adis16375"
-> +	* "adi,adis16480"
-> +	* "adi,adis16485"
-> +	* "adi,adis16488"
-> +	* "adi,adis16495-1"
-> +	* "adi,adis16495-2"
-> +	* "adi,adis16495-3"
-> +	* "adi,adis16497-1"
-> +	* "adi,adis16497-2"
-> +	* "adi,adis16497-3"
-> +- reg: SPI chip select number for the device
-> +- spi-max-frequency: Max SPI frequency to use
-> +	see: Documentation/devicetree/bindings/spi/spi-bus.txt
-> +- spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
-> +- spi-cpol: See Documentation/devicetree/bindings/spi/spi-bus.txt
-> +- interrupts: interrupt mapping for IRQ, accepted values are:
-> +	* IRQF_TRIGGER_RISING
-> +	* IRQF_TRIGGER_FALLING
-> +
-> +Optional properties:
-> +
-> +- interrupt-names: Data ready line selection. Valid values are:
-> +	* DIO1
-> +	* DIO2
-> +	* DIO3
-> +	* DIO4
-> +	If this field is left empty, the factory default assigns DIO2 as data
-> +	ready signal.
-> +- reset-gpios: must be the device tree identifier of the RESET pin. As the line
-> +	is active low, it should be marked GPIO_ACTIVE_LOW.
-> +
-> +Example:
-> +
-> +	imu@0 {
-> +		compatible = "adi,adis16495-1";
-> +		reg = <0>;
-> +		spi-max-frequency = <3200000>;
-> +		spi-cpol;
-> +		spi-cpha;
-> +		interrupts = <25 IRQF_TRIGGER_FALLING>;
-> +		interrupt-parent = <&gpio>;
-> +		interrupt-names = "DIO2";
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e4091ac..beecd1e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -942,6 +942,7 @@ F:	drivers/dma/dma-axi-dmac.c
->  ANALOG DEVICES INC IIO DRIVERS
->  M:	Lars-Peter Clausen <lars@metafoo.de>
->  M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> +M:	Stefan Popa <stefan.popa@analog.com>
->  W:	http://wiki.analog.com/
->  W:	http://ez.analog.com/community/linux-device-drivers
->  S:	Supported
+> Personally I may prefer to remove them as they never worked to avoid confusing,
+> especially at this early stage for mx8.
+
+So why they are there if they never worked? Wouldn't it a better
+approach to start with a basic and working ID file and extend this
+rather than adding id's because maybe the will work.. Sorry but this
+seems wrong to me too.
+I know the approach from driver development, adding a driver specific
+*_reg.h file and later figuring out that those bits won't work as
+aspected. As I said this will be driver and only linux related so we can
+change them as many times as we want. But in your case we are talking
+about dt-bindings and this approach won't work.
+
+Regards,
+Marco
+
+> 
+> Regards
+> Dong Aisheng
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
