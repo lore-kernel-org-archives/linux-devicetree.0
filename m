@@ -1,7 +1,7 @@
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 9/9] iio: magnetometer: hmc5843: add mount matrix support
-Date: Wed, 20 Feb 2019 15:00:56 +0100
-Message-ID: <effcfa7fb13fb8ba2b8b13ab07a6eb86defec77e.1550671256.git.hns@goldelico.com>
+Subject: [PATCH 8/9] iio: magnetometer: bmc150: add mount matrix support
+Date: Wed, 20 Feb 2019 15:00:55 +0100
+Message-ID: <2600653840b79a9817b68c17b47ef9b043137d20.1550671256.git.hns@goldelico.com>
 References: <cover.1550671256.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -18,67 +18,59 @@ clients.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/iio/magnetometer/hmc5843.h      |  1 +
- drivers/iio/magnetometer/hmc5843_core.c | 14 ++++++++++++++
- 2 files changed, 15 insertions(+)
+ drivers/iio/magnetometer/bmc150_magn.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/iio/magnetometer/hmc5843.h b/drivers/iio/magnetometer/hmc5843.h
-index a75224cf99df..e3e22d2508d3 100644
---- a/drivers/iio/magnetometer/hmc5843.h
-+++ b/drivers/iio/magnetometer/hmc5843.h
-@@ -43,6 +43,7 @@ struct hmc5843_data {
- 	struct mutex lock;
+diff --git a/drivers/iio/magnetometer/bmc150_magn.c b/drivers/iio/magnetometer/bmc150_magn.c
+index d91cb845e3d6..48e3a16432b4 100644
+--- a/drivers/iio/magnetometer/bmc150_magn.c
++++ b/drivers/iio/magnetometer/bmc150_magn.c
+@@ -143,6 +143,7 @@ struct bmc150_magn_data {
+ 	 */
+ 	struct mutex mutex;
  	struct regmap *regmap;
- 	const struct hmc5843_chip_info *variant;
 +	struct iio_mount_matrix orientation;
- 	__be16 buffer[8];
- };
- 
-diff --git a/drivers/iio/magnetometer/hmc5843_core.c b/drivers/iio/magnetometer/hmc5843_core.c
-index ada142fb7aa3..e6b6da70c152 100644
---- a/drivers/iio/magnetometer/hmc5843_core.c
-+++ b/drivers/iio/magnetometer/hmc5843_core.c
-@@ -237,6 +237,13 @@ int hmc5843_set_measurement_configuration(struct iio_dev *indio_dev,
- 	return hmc5843_set_meas_conf(data, meas_conf);
+ 	/* 4 x 32 bits for x, y z, 4 bytes align, 64 bits timestamp */
+ 	s32 buffer[6];
+ 	struct iio_trigger *dready_trig;
+@@ -612,6 +613,18 @@ static ssize_t bmc150_magn_show_samp_freq_avail(struct device *dev,
+ 	return len;
  }
  
 +static const struct iio_mount_matrix *
-+hmc5843_get_mount_matrix(const struct iio_dev *indio_dev,
-+			  const struct iio_chan_spec *chan)
++bmc150_magn_get_mount_matrix(const struct iio_dev *indio_dev,
++			      const struct iio_chan_spec *chan)
 +{
-+	return &((struct hmc5843_data *)iio_priv(indio_dev))->orientation;
++	return &((struct bmc150_magn_data *)iio_priv(indio_dev))->orientation;
 +}
 +
- static const struct iio_enum hmc5843_meas_conf_enum = {
- 	.items = hmc5843_meas_conf_modes,
- 	.num_items = ARRAY_SIZE(hmc5843_meas_conf_modes),
-@@ -247,6 +254,7 @@ static const struct iio_enum hmc5843_meas_conf_enum = {
- static const struct iio_chan_spec_ext_info hmc5843_ext_info[] = {
- 	IIO_ENUM("meas_conf", true, &hmc5843_meas_conf_enum),
- 	IIO_ENUM_AVAILABLE("meas_conf", &hmc5843_meas_conf_enum),
-+	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, hmc5843_get_mount_matrix),
- 	{ },
- };
++static const struct iio_chan_spec_ext_info bmc150_magn_ext_info[] = {
++	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmc150_magn_get_mount_matrix),
++	{ },
++};
++
+ static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(bmc150_magn_show_samp_freq_avail);
  
-@@ -260,6 +268,7 @@ static const struct iio_enum hmc5983_meas_conf_enum = {
- static const struct iio_chan_spec_ext_info hmc5983_ext_info[] = {
- 	IIO_ENUM("meas_conf", true, &hmc5983_meas_conf_enum),
- 	IIO_ENUM_AVAILABLE("meas_conf", &hmc5983_meas_conf_enum),
-+	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, hmc5843_get_mount_matrix),
- 	{ },
- };
+ static struct attribute *bmc150_magn_attributes[] = {
+@@ -638,6 +651,7 @@ static const struct attribute_group bmc150_magn_attrs_group = {
+ 		.storagebits = 32,					\
+ 		.endianness = IIO_LE					\
+ 	},								\
++	.ext_info = bmc150_magn_ext_info,				\
+ }
  
-@@ -635,6 +644,11 @@ int hmc5843_common_probe(struct device *dev, struct regmap *regmap,
- 	data->variant = &hmc5843_chip_info_tbl[id];
- 	mutex_init(&data->lock);
+ static const struct iio_chan_spec bmc150_magn_channels[] = {
+@@ -861,6 +875,11 @@ int bmc150_magn_probe(struct device *dev, struct regmap *regmap,
+ 	data->irq = irq;
+ 	data->dev = dev;
  
 +	ret = of_iio_read_mount_matrix(dev, "mount-matrix",
 +				&data->orientation);
 +	if (ret)
 +		return ret;
 +
- 	indio_dev->dev.parent = dev;
- 	indio_dev->name = name;
- 	indio_dev->info = &hmc5843_info;
+ 	if (!name && ACPI_HANDLE(dev))
+ 		name = bmc150_magn_match_acpi_device(dev);
+ 
 -- 
 2.19.1
