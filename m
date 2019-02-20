@@ -1,132 +1,199 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 06/11] drm/sun4i: rgb: Add DT property to
- disable strict clock rate check
-Date: Wed, 20 Feb 2019 11:33:47 +0100
-Message-ID: <20190220103347.74wqu2btdti2myi7@flea>
-References: <20190215050957.20755-1-anarsoul@gmail.com>
- <20190215050957.20755-7-anarsoul@gmail.com>
- <20190218182629.GA14714@bogus>
- <CA+E=qVfDfDvVmKQDeh2e0SA=tm6VpBMpu9MPKUqxFPObxYFXDg@mail.gmail.com>
- <20190219085626.7poutwvm3lrilnon@flea>
- <CA+E=qVfV8ds-zb0oG1-g8c-ReCSnZjfUjvAHbZf1zBf8H-xUcw@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 4/4] drm/panel: Add OSD101T2587-53TS driver
+Date: Wed, 20 Feb 2019 12:34:21 +0200
+Message-ID: <2398a647-be4c-15e4-3e28-36382a834dce@ti.com>
+References: <20190215140315.18046-1-peter.ujfalusi@ti.com>
+ <20190215140315.18046-5-peter.ujfalusi@ti.com>
+ <20190215180759.GA26944@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5pzj3icjzfrpvm6r"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBEO2WTRQKGQESJ5JF3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVfV8ds-zb0oG1-g8c-ReCSnZjfUjvAHbZf1zBf8H-xUcw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190215180759.GA26944@ravnborg.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
---5pzj3icjzfrpvm6r
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Feb 19, 2019 at 07:44:56AM -0800, Vasily Khoruzhick wrote:
-> On Tue, Feb 19, 2019 at 12:56 AM Maxime Ripard
-> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Mon, Feb 18, 2019 at 11:33:05AM -0800, Vasily Khoruzhick wrote:
-> > > On Mon, Feb 18, 2019 at 10:26 AM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > > >
-> > > > On Thu, Feb 14, 2019 at 09:09:52PM -0800, Vasily Khoruzhick wrote:
-> > > > > Clock rate check that was added in commit bb43d40d7c83 ("drm/sun4i: rgb:
-> > > > > Validate the clock rate") prevents some panel and bridges from working with
-> > > > > sun4i driver.
-> > > >
-> > > > Sounds lile a regression that should be reverted. The fix is not a
-> > > > backwards compatible change either.
-> > >
-> > > anx6345 driver isn't mainlined yet and I'm not sure if this change
-> > > breaks any mainlined boards. So likely there's not enough
-> > > justification to revert it.
-> > >
-> > > > > Unfortunately, dotclock frequency for some modes are not achievable on
-> > > > > sunxi hardware, and there's a slight deviation in rate returned by
-> > > > > clk_round_rate(), so they fail this check.
-> > > > >
-> > > > > Experiments show that panels and bridges work fine with this slight
-> > > > > deviation, e.g. Pinebook that uses ANX6345 bridge with 768p eDP panel
-> > > > > requests 73 MHz, gets 72.296MHz instead (0.96% difference) and works just
-> > > > > fine.
-> > > > >
-> > > > > This patch adds DT property to disable strict clock rate check
-> > > > >
-> > > > > Signed-off-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > > ---
-> > > > >  .../devicetree/bindings/display/sunxi/sun4i-drm.txt          | 2 ++
-> > > > >  drivers/gpu/drm/sun4i/sun4i_rgb.c                            | 5 +++++
-> > > > >  drivers/gpu/drm/sun4i/sun4i_tcon.c                           | 3 +++
-> > > > >  drivers/gpu/drm/sun4i/sun4i_tcon.h                           | 1 +
-> > > > >  4 files changed, 11 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > > > > index f426bdb42f18..18c8b053a28d 100644
-> > > > > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > > > > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > > > > @@ -63,6 +63,8 @@ Required properties:
-> > > > >      Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> > > > >      first port should be the input endpoint. The second should be the
-> > > > >      output, usually to an HDMI connector.
-> > > > > +  - no-strict-clock-check: don't reject timings if exact dot clock can't be
-> > > > > +    reached.
-> > > >
-> > > > This should be the default IMO. Most panels are a single timing, so if
-> > > > we reject it the fallback no display?
-> > >
-> > > As far as I remember the change was introduced to reject some modes
-> > > for which dotclock can't be reached when driver is used with VGA
-> > > bridge. So if we make it default it'll break boards with VGA bridge
-> > > and old DT.
-> > >
-> > > > I thought we had some mechanism already to allow some range of
-> > > > frequencies. I think the chromeos guys needed something IIRC.
-> > >
-> > > You can specify frequency range for panels, but there's nothing for
-> > > bridges. In my case EDID doesn't specify clock tolerance.
-> >
-> > I gave it some more though, and came up with the following patch. The
-> > basic idea is to leave the boundary check for the bridges that will
-> > have EDID and we need to filter out the modes that have no chance of
-> > being supported. The tolerancy used is the one defined in VESA specs,
-> > but I added a module parameter if you wanted to tune that.
-> >
-> > And finally, since most of our panels are single timings without any
-> > tolerancy, we just try our best in this case and that's it, while
-> > leaving the door open to support display_timings and being able to do
-> > more once we have an idea of what the tolerancies are.
-> >
-> > If that works for you, I'll submit it.
-> 
-> Maxime, thanks for your patch but  it doesn't work for me. Pinebook
-> needs 1% tolerance. Having it as a module parameter means that no
-> distro will be able to boot on Pinebook out of the box.
-
-I don't really know what to tell you, the VESA spec defines everywhere
-that tolerance, and if we're not able to provide that, then we're not
-compliant and I don't want us to not be compliant just because one
-panel needed to be a bit more flexible, and especially since what
-could work on one panel might fail on another one.
-
-If you want alternate solutions, then please answer to:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/630441.html
-
-or provide the EDID blob.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---5pzj3icjzfrpvm6r--
+SGkgU2FtLAoKT24gMTUvMDIvMjAxOSAyMC4wNywgU2FtIFJhdm5ib3JnIHdyb3RlOgo+IEhpIFBl
+dGVyLgo+IAo+IEdvb2Qgd2l0aCBtb3JlIHBhbmVsIGRyaXZlcnMuCj4gU29tZSBjb21tZW50cyBp
+biB0aGUgZm9sbG93aW5nLCBwbGVhc2UgZG8gbm90IGJsaW5kbHkgZm9sbG93IHRoZW0gYnV0Cj4g
+Y2hlY2sgdGhhdCB0aGlzIGlzIE9LLgoKRmlyc3Qgb2YgYWxsLCB0aGFuayB5b3UgZm9yIHRoZSBy
+ZXZpZXcgYW5kIHNvcnJ5IGZvciB0aGUgZGVsYXkhCgo+IAo+IAlTYW0KPiAKPiBPbiBGcmksIEZl
+YiAxNSwgMjAxOSBhdCAwNDowMzoxNVBNICswMjAwLCBQZXRlciBVamZhbHVzaSB2aWEgZHJpLWRl
+dmVsIHdyb3RlOgo+PiBUaGUgcGFuZWwgaXMgc2ltaWxhciB0byBPU0QxMDFUMjA0NS01M1RTICh3
+aGljaCBpcyBoYW5kbGVkIGJ5IHBhbmVsLXNpbXBsZSkKPj4gd2l0aCBvbmUgYmlnIGRpZmZlcmVu
+Y2U6IG9zZDEwMXQyNTg3LTUzdHMgbmVlZHMgTUlQSV9EU0lfVFVSTl9PTl9QRVJJUEhFUkFMCj4+
+IG1lc3NhZ2UgdG8gYmUgc2VudCBmcm9tIHRoZSBob3N0IHRvIGJlIG9wZXJhdGlvbmFsIGFuZCB0
+aHVzIGNhbiBub3QgYmUKPj4gaGFuZGxlZCBieSBwYW5lbC1zaW1wbGUuCj4+Cj4+IFNpZ25lZC1v
+ZmYtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5jb20+Cj4+IC0tLQo+PiAr
+KysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtb3NkLW9zZDEwMXQyNTg3LTUzdHMuYwo+
+PiBAQCAtMCwwICsxLDI4NCBAQAo+PiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0y
+LjAKPj4gKy8qCj4+ICsgKiAgQ29weXJpZ2h0IChDKSAyMDE4IFRleGFzIEluc3RydW1lbnRzIElu
+Y29ycG9yYXRlZCAtIGh0dHA6Ly93d3cudGkuY29tCj4+ICsgKiAgQXV0aG9yOiBQZXRlciBVamZh
+bHVzaSA8cGV0ZXIudWpmYWx1c2lAdGkuY29tPgo+PiArICovCj4+ICsKPj4gKyNpbmNsdWRlIDxs
+aW51eC9iYWNrbGlnaHQuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPj4gKyNpbmNs
+dWRlIDxsaW51eC9vZi5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5o
+Pgo+PiArCj4+ICsjaW5jbHVkZSA8ZHJtL2RybVAuaD4KPiBQbGVhc2UgZG8gbm90IHVzZSBkcm1Q
+LmggaW4gbmV3IGRyaXZlcnMgLSB3ZSB0cnkgdG8gZ2V0IHJpZCBvZiB0aGlzIGZpbGUuCgpPSy4K
+Cj4gCj4+ICsjaW5jbHVkZSA8ZHJtL2RybV9jcnRjLmg+Cj4+ICsjaW5jbHVkZSA8ZHJtL2RybV9t
+aXBpX2RzaS5oPgo+PiArI2luY2x1ZGUgPGRybS9kcm1fcGFuZWwuaD4KPj4gKwo+PiArI2luY2x1
+ZGUgPHZpZGVvL21pcGlfZGlzcGxheS5oPgo+PiArCj4+ICtzdHJ1Y3Qgb3NkMTAxdDI1ODdfcGFu
+ZWwgewo+PiArCXN0cnVjdCBkcm1fcGFuZWwgYmFzZTsKPj4gKwlzdHJ1Y3QgbWlwaV9kc2lfZGV2
+aWNlICpkc2k7Cj4+ICsKPj4gKwlzdHJ1Y3QgYmFja2xpZ2h0X2RldmljZSAqYmFja2xpZ2h0Owo+
+PiArCXN0cnVjdCByZWd1bGF0b3IgKnN1cHBseTsKPj4gKwo+PiArCWJvb2wgcHJlcGFyZWQ7Cj4+
+ICsJYm9vbCBlbmFibGVkOwo+PiArCj4+ICsJa3RpbWVfdCBlYXJsaWVzdF93YWtlOwo+IGVhcmxp
+ZXN0X3dha2UgaXMgbm90IHVzZWQsIGFuZCBjYW4gYmUgZGVsZXRlZC4KClllcywgaXQgaXMgbGVm
+dG92ZXIuCgo+PiArCj4+ICsJY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKmRlZmF1bHRf
+bW9kZTsKPj4gKwljb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZTsKPiBBc3NpZ25l
+ZCBidXQgbmV2ZXIgdXNlZC4gRHJvcCB0aGUgYXNzaWdubWVudCBhbmQgdGhlIHZhcmlhYmxlPwoK
+SHJtLCB5b3UgYXJlIHJpZ2h0LgoKPiAKPj4gK307Cj4+ICsKPj4gK3N0YXRpYyBpbmxpbmUgc3Ry
+dWN0IG9zZDEwMXQyNTg3X3BhbmVsICp0b19vc2QxMDF0MjU4N19wYW5lbChzdHJ1Y3QgZHJtX3Bh
+bmVsICpwYW5lbCkKPj4gK3sKPj4gKwlyZXR1cm4gY29udGFpbmVyX29mKHBhbmVsLCBzdHJ1Y3Qg
+b3NkMTAxdDI1ODdfcGFuZWwsIGJhc2UpOwo+PiArfQo+PiArCj4+ICtzdGF0aWMgaW50IG9zZDEw
+MXQyNTg3X3BhbmVsX2Rpc2FibGUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCj4+ICt7Cj4+ICsJ
+c3RydWN0IG9zZDEwMXQyNTg3X3BhbmVsICpvc2QxMDF0MjU4NyA9IHRvX29zZDEwMXQyNTg3X3Bh
+bmVsKHBhbmVsKTsKPj4gKwlpbnQgcmV0Owo+PiArCj4+ICsJaWYgKCFvc2QxMDF0MjU4Ny0+ZW5h
+YmxlZCkKPj4gKwkJcmV0dXJuIDA7Cj4+ICsKPj4gKwlpZiAob3NkMTAxdDI1ODctPmJhY2tsaWdo
+dCkgewo+PiArCQlvc2QxMDF0MjU4Ny0+YmFja2xpZ2h0LT5wcm9wcy5wb3dlciA9IEZCX0JMQU5L
+X1BPV0VSRE9XTjsKPj4gKwkJb3NkMTAxdDI1ODctPmJhY2tsaWdodC0+cHJvcHMuc3RhdGUgfD0g
+QkxfQ09SRV9GQkJMQU5LOwo+PiArCQliYWNrbGlnaHRfdXBkYXRlX3N0YXR1cyhvc2QxMDF0MjU4
+Ny0+YmFja2xpZ2h0KTsKPj4gKwl9Cj4gYmFja2xpZ2h0X2Rpc2FibGUob3NkMTAxdDI1ODctPmJh
+Y2tsaWdodCk7CgpPSwoKPj4gKwo+PiArCXJldCA9IG1pcGlfZHNpX3NodXRkb3duX3BlcmlwaGVy
+YWwob3NkMTAxdDI1ODctPmRzaSk7Cj4+ICsKPj4gKwlvc2QxMDF0MjU4Ny0+ZW5hYmxlZCA9IGZh
+bHNlOwo+PiArCj4+ICsJcmV0dXJuIHJldDsKPj4gK30KPj4gKwo+PiArc3RhdGljIGludCBvc2Qx
+MDF0MjU4N19wYW5lbF91bnByZXBhcmUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCj4+ICt7Cj4+
+ICsJc3RydWN0IG9zZDEwMXQyNTg3X3BhbmVsICpvc2QxMDF0MjU4NyA9IHRvX29zZDEwMXQyNTg3
+X3BhbmVsKHBhbmVsKTsKPj4gKwo+PiArCWlmICghb3NkMTAxdDI1ODctPnByZXBhcmVkKQo+PiAr
+CQlyZXR1cm4gMDsKPj4gKwo+PiArCXJlZ3VsYXRvcl9kaXNhYmxlKG9zZDEwMXQyNTg3LT5zdXBw
+bHkpOwo+PiArCW9zZDEwMXQyNTg3LT5wcmVwYXJlZCA9IGZhbHNlOwo+PiArCj4+ICsJcmV0dXJu
+IDA7Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgb3NkMTAxdDI1ODdfcGFuZWxfcHJlcGFyZShz
+dHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPj4gK3sKPj4gKwlzdHJ1Y3Qgb3NkMTAxdDI1ODdfcGFu
+ZWwgKm9zZDEwMXQyNTg3ID0gdG9fb3NkMTAxdDI1ODdfcGFuZWwocGFuZWwpOwo+PiArCWludCBy
+ZXQ7Cj4+ICsKPj4gKwlpZiAob3NkMTAxdDI1ODctPnByZXBhcmVkKQo+PiArCQlyZXR1cm4gMDsK
+Pj4gKwo+PiArCXJldCA9IHJlZ3VsYXRvcl9lbmFibGUob3NkMTAxdDI1ODctPnN1cHBseSk7Cj4+
+ICsJaWYgKCFyZXQpCj4+ICsJCW9zZDEwMXQyNTg3LT5wcmVwYXJlZCA9IHRydWU7Cj4+ICsKPj4g
+KwlyZXR1cm4gcmV0Owo+PiArfQo+PiArCj4+ICtzdGF0aWMgaW50IG9zZDEwMXQyNTg3X3BhbmVs
+X2VuYWJsZShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPj4gK3sKPj4gKwlzdHJ1Y3Qgb3NkMTAx
+dDI1ODdfcGFuZWwgKm9zZDEwMXQyNTg3ID0gdG9fb3NkMTAxdDI1ODdfcGFuZWwocGFuZWwpOwo+
+PiArCWludCByZXQ7Cj4+ICsKPj4gKwlpZiAob3NkMTAxdDI1ODctPmVuYWJsZWQpCj4+ICsJCXJl
+dHVybiAwOwo+PiArCj4+ICsJcmV0ID0gbWlwaV9kc2lfdHVybl9vbl9wZXJpcGhlcmFsKG9zZDEw
+MXQyNTg3LT5kc2kpOwo+PiArCWlmIChyZXQpCj4+ICsJCXJldHVybiByZXQ7Cj4+ICsKPj4gKwlp
+ZiAob3NkMTAxdDI1ODctPmJhY2tsaWdodCkgewo+PiArCQlvc2QxMDF0MjU4Ny0+YmFja2xpZ2h0
+LT5wcm9wcy5wb3dlciA9IEZCX0JMQU5LX1VOQkxBTks7Cj4+ICsJCW9zZDEwMXQyNTg3LT5iYWNr
+bGlnaHQtPnByb3BzLnN0YXRlICY9IH5CTF9DT1JFX0ZCQkxBTks7Cj4+ICsJCWJhY2tsaWdodF91
+cGRhdGVfc3RhdHVzKG9zZDEwMXQyNTg3LT5iYWNrbGlnaHQpOwo+PiArCX0KPiBiYWNrbGlnaHRf
+ZW5hYmxlKG9zZDEwMXQyNTg3LT5iYWNrbGlnaHQpOwo+IGNhbiBiZSB1c2VkIGhlcmUuCgpZZXMs
+IGl0IGNhbiBiZSB1c2VkLgoKPiAKPj4gKwo+PiArCW9zZDEwMXQyNTg3LT5lbmFibGVkID0gdHJ1
+ZTsKPj4gKwo+PiArCXJldHVybiByZXQ7Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBjb25zdCBzdHJ1
+Y3QgZHJtX2Rpc3BsYXlfbW9kZSBkZWZhdWx0X21vZGVfb3NkMTAxdDI1ODcgPSB7Cj4+ICsJLmNs
+b2NrID0gMTY0NDAwLAo+PiArCS5oZGlzcGxheSA9IDE5MjAsCj4+ICsJLmhzeW5jX3N0YXJ0ID0g
+MTkyMCArIDE1MiwKPj4gKwkuaHN5bmNfZW5kID0gMTkyMCArIDE1MiArIDUyLAo+PiArCS5odG90
+YWwgPSAxOTIwICsgMTUyICsgNTIgKyAyMCwKPj4gKwkudmRpc3BsYXkgPSAxMjAwLAo+PiArCS52
+c3luY19zdGFydCA9IDEyMDAgKyAyNCwKPj4gKwkudnN5bmNfZW5kID0gMTIwMCArIDI0ICsgNiwK
+Pj4gKwkudnRvdGFsID0gMTIwMCArIDI0ICsgNiArIDQ4LAo+PiArCS52cmVmcmVzaCA9IDYwLAo+
+PiArCS5mbGFncyA9IERSTV9NT0RFX0ZMQUdfTkhTWU5DIHwgRFJNX01PREVfRkxBR19OVlNZTkMs
+Cj4+ICt9Owo+PiArCj4+ICtzdGF0aWMgaW50IG9zZDEwMXQyNTg3X3BhbmVsX2dldF9tb2Rlcyhz
+dHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKPj4gK3sKPj4gKwlzdHJ1Y3Qgb3NkMTAxdDI1ODdfcGFu
+ZWwgKm9zZDEwMXQyNTg3ID0gdG9fb3NkMTAxdDI1ODdfcGFuZWwocGFuZWwpOwo+PiArCXN0cnVj
+dCBkcm1fZGlzcGxheV9tb2RlICptb2RlOwo+PiArCj4+ICsJbW9kZSA9IGRybV9tb2RlX2R1cGxp
+Y2F0ZShwYW5lbC0+ZHJtLCBvc2QxMDF0MjU4Ny0+ZGVmYXVsdF9tb2RlKTsKPj4gKwlpZiAoIW1v
+ZGUpIHsKPj4gKwkJZGV2X2VycihwYW5lbC0+ZHJtLT5kZXYsICJmYWlsZWQgdG8gYWRkIG1vZGUg
+JXV4JXV4QCV1XG4iLAo+PiArCQkJb3NkMTAxdDI1ODctPmRlZmF1bHRfbW9kZS0+aGRpc3BsYXks
+Cj4+ICsJCQlvc2QxMDF0MjU4Ny0+ZGVmYXVsdF9tb2RlLT52ZGlzcGxheSwKPj4gKwkJCW9zZDEw
+MXQyNTg3LT5kZWZhdWx0X21vZGUtPnZyZWZyZXNoKTsKPj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4+
+ICsJfQo+PiArCj4+ICsJZHJtX21vZGVfc2V0X25hbWUobW9kZSk7Cj4+ICsKPj4gKwlkcm1fbW9k
+ZV9wcm9iZWRfYWRkKHBhbmVsLT5jb25uZWN0b3IsIG1vZGUpOwo+PiArCj4+ICsJcGFuZWwtPmNv
+bm5lY3Rvci0+ZGlzcGxheV9pbmZvLndpZHRoX21tID0gMjE3Owo+PiArCXBhbmVsLT5jb25uZWN0
+b3ItPmRpc3BsYXlfaW5mby5oZWlnaHRfbW0gPSAxMzY7Cj4+ICsKPj4gKwlyZXR1cm4gMTsKPj4g
+K30KPj4gKwo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fcGFuZWxfZnVuY3Mgb3NkMTAxdDI1
+ODdfcGFuZWxfZnVuY3MgPSB7Cj4+ICsJLmRpc2FibGUgPSBvc2QxMDF0MjU4N19wYW5lbF9kaXNh
+YmxlLAo+PiArCS51bnByZXBhcmUgPSBvc2QxMDF0MjU4N19wYW5lbF91bnByZXBhcmUsCj4+ICsJ
+LnByZXBhcmUgPSBvc2QxMDF0MjU4N19wYW5lbF9wcmVwYXJlLAo+PiArCS5lbmFibGUgPSBvc2Qx
+MDF0MjU4N19wYW5lbF9lbmFibGUsCj4+ICsJLmdldF9tb2RlcyA9IG9zZDEwMXQyNTg3X3BhbmVs
+X2dldF9tb2RlcywKPj4gK307Cj4+ICsKPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
+X2lkIG9zZDEwMXQyNTg3X29mX21hdGNoW10gPSB7Cj4+ICsJewo+PiArCQkuY29tcGF0aWJsZSA9
+ICJvc2Qsb3NkMTAxdDI1ODctNTN0cyIsCj4+ICsJCS5kYXRhID0gJmRlZmF1bHRfbW9kZV9vc2Qx
+MDF0MjU4NywKPj4gKwl9LCB7IH0KPiBNb3ZlIHsgfSB0byBhIHNlcGFyYXRlIGxpbmUgYW5kIHVz
+ZSB7IC8qIHNlbnRpbmVsICovIH0gdG8gbWFrZSBpdCBsb29rIGxpa2Ugb3RoZXIgZHJpdmVycy4K
+PiAgCj4gCj4+ICt9Owo+PiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgb3NkMTAxdDI1ODdfb2Zf
+bWF0Y2gpOwo+PiArCj4+ICtzdGF0aWMgaW50IG9zZDEwMXQyNTg3X3BhbmVsX2FkZChzdHJ1Y3Qg
+b3NkMTAxdDI1ODdfcGFuZWwgKm9zZDEwMXQyNTg3KQo+PiArewo+PiArCXN0cnVjdCBkZXZpY2Ug
+KmRldiA9ICZvc2QxMDF0MjU4Ny0+ZHNpLT5kZXY7Cj4+ICsJc3RydWN0IGRldmljZV9ub2RlICpu
+cDsKPj4gKwlpbnQgcmV0Owo+PiArCj4+ICsJb3NkMTAxdDI1ODctPm1vZGUgPSBvc2QxMDF0MjU4
+Ny0+ZGVmYXVsdF9tb2RlOwo+PiArCj4+ICsJb3NkMTAxdDI1ODctPnN1cHBseSA9IGRldm1fcmVn
+dWxhdG9yX2dldChkZXYsICJwb3dlciIpOwo+PiArCWlmIChJU19FUlIob3NkMTAxdDI1ODctPnN1
+cHBseSkpCj4+ICsJCXJldHVybiBQVFJfRVJSKG9zZDEwMXQyNTg3LT5zdXBwbHkpOwo+PiArCj4+
+ICsJbnAgPSBvZl9wYXJzZV9waGFuZGxlKGRldi0+b2Zfbm9kZSwgImJhY2tsaWdodCIsIDApOwo+
+PiArCWlmIChucCkgewo+PiArCQlvc2QxMDF0MjU4Ny0+YmFja2xpZ2h0ID0gb2ZfZmluZF9iYWNr
+bGlnaHRfYnlfbm9kZShucCk7Cj4+ICsJCW9mX25vZGVfcHV0KG5wKTsKPj4gKwo+PiArCQlpZiAo
+IW9zZDEwMXQyNTg3LT5iYWNrbGlnaHQpCj4+ICsJCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKPj4g
+Kwl9Cj4gVXNlIGRldm1fb2ZfZmluZF9iYWNrbGlnaHQoKSAtIHRoaXMgcmVzdWx0cyBpbiBzaW1w
+bGVyIGNvZGUuCgpZZXMsIGl0IGNlcnRhaW5seSBtYWtlcyB0aGUgY29kZSBjbGVhbmVyLgoKPiAK
+Pj4gKwo+PiArCWRybV9wYW5lbF9pbml0KCZvc2QxMDF0MjU4Ny0+YmFzZSk7Cj4+ICsJb3NkMTAx
+dDI1ODctPmJhc2UuZnVuY3MgPSAmb3NkMTAxdDI1ODdfcGFuZWxfZnVuY3M7Cj4+ICsJb3NkMTAx
+dDI1ODctPmJhc2UuZGV2ID0gJm9zZDEwMXQyNTg3LT5kc2ktPmRldjsKPj4gKwo+PiArCXJldCA9
+IGRybV9wYW5lbF9hZGQoJm9zZDEwMXQyNTg3LT5iYXNlKTsKPj4gKwlpZiAocmV0IDwgMCkKPj4g
+KwkJZ290byBwdXRfYmFja2xpZ2h0Owo+PiArCj4+ICsJcmV0dXJuIDA7Cj4+ICsKPj4gK3B1dF9i
+YWNrbGlnaHQ6Cj4+ICsJaWYgKG9zZDEwMXQyNTg3LT5iYWNrbGlnaHQpCj4+ICsJCXB1dF9kZXZp
+Y2UoJm9zZDEwMXQyNTg3LT5iYWNrbGlnaHQtPmRldik7Cj4gV2hlbiB1c2luZyBkZXZtX29mX2Zp
+bmRfYmFja2xpZ2h0KCkgdGhpcyBpcyBub3QgbmVlZGVkLgoKT0suCgo+IAo+PiArCj4+ICsJcmV0
+dXJuIHJldDsKPj4gK30KPj4gKwo+PiArc3RhdGljIHZvaWQgb3NkMTAxdDI1ODdfcGFuZWxfZGVs
+KHN0cnVjdCBvc2QxMDF0MjU4N19wYW5lbCAqb3NkMTAxdDI1ODcpCj4+ICt7Cj4+ICsJaWYgKG9z
+ZDEwMXQyNTg3LT5iYXNlLmRldikKPj4gKwkJZHJtX3BhbmVsX3JlbW92ZSgmb3NkMTAxdDI1ODct
+PmJhc2UpOwo+PiArCj4+ICsJaWYgKG9zZDEwMXQyNTg3LT5iYWNrbGlnaHQpCj4+ICsJCXB1dF9k
+ZXZpY2UoJm9zZDEwMXQyNTg3LT5iYWNrbGlnaHQtPmRldik7Cj4gV2hlbiB5b3UgdXNlIGRldm1f
+b2ZfZmluZF9iYWNrbGlnaHQoKSB0aGVuIHRoaXMgaXMgZG9uZSBmb3IgeW91LCBzbyB0aGUgYWJv
+dmUgY2FuIGJlIGRlbGV0ZWQuCgpPSy4KCj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgb3NkMTAx
+dDI1ODdfcGFuZWxfcHJvYmUoc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKQo+PiArewo+PiAr
+CXN0cnVjdCBvc2QxMDF0MjU4N19wYW5lbCAqb3NkMTAxdDI1ODc7Cj4+ICsJY29uc3Qgc3RydWN0
+IG9mX2RldmljZV9pZCAqaWQ7Cj4+ICsJaW50IHJldDsKPj4gKwo+PiArCWlkID0gb2ZfbWF0Y2hf
+bm9kZShvc2QxMDF0MjU4N19vZl9tYXRjaCwgZHNpLT5kZXYub2Zfbm9kZSk7Cj4+ICsJaWYgKCFp
+ZCkKPj4gKwkJcmV0dXJuIC1FTk9ERVY7Cj4+ICsKPj4gKwlkc2ktPmxhbmVzID0gNDsKPj4gKwlk
+c2ktPmZvcm1hdCA9IE1JUElfRFNJX0ZNVF9SR0I4ODg7Cj4+ICsJZHNpLT5tb2RlX2ZsYWdzID0g
+TUlQSV9EU0lfTU9ERV9WSURFTyB8Cj4+ICsJCQkgIE1JUElfRFNJX01PREVfVklERU9fQlVSU1Qg
+fAo+PiArCQkJICBNSVBJX0RTSV9NT0RFX1ZJREVPX1NZTkNfUFVMU0UgfAo+PiArCQkJICBNSVBJ
+X0RTSV9NT0RFX0VPVF9QQUNLRVQ7Cj4+ICsKPj4gKwlvc2QxMDF0MjU4NyA9IGRldm1fa3phbGxv
+YygmZHNpLT5kZXYsIHNpemVvZigqb3NkMTAxdDI1ODcpLCBHRlBfS0VSTkVMKTsKPj4gKwlpZiAo
+IW9zZDEwMXQyNTg3KQo+PiArCQlyZXR1cm4gLUVOT01FTTsKPj4gKwo+PiArCW1pcGlfZHNpX3Nl
+dF9kcnZkYXRhKGRzaSwgb3NkMTAxdDI1ODcpOwo+PiArCj4+ICsJb3NkMTAxdDI1ODctPmRzaSA9
+IGRzaTsKPj4gKwlvc2QxMDF0MjU4Ny0+ZGVmYXVsdF9tb2RlID0gaWQtPmRhdGE7Cj4+ICsKPj4g
+KwlyZXQgPSBvc2QxMDF0MjU4N19wYW5lbF9hZGQob3NkMTAxdDI1ODcpOwo+PiArCWlmIChyZXQg
+PCAwKQo+PiArCQlyZXR1cm4gcmV0Owo+PiArCj4+ICsJcmV0dXJuIG1pcGlfZHNpX2F0dGFjaChk
+c2kpOwo+PiArfQo+PiArCj4+ICtzdGF0aWMgaW50IG9zZDEwMXQyNTg3X3BhbmVsX3JlbW92ZShz
+dHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkc2kpCj4+ICt7Cj4+ICsJc3RydWN0IG9zZDEwMXQyNTg3
+X3BhbmVsICpvc2QxMDF0MjU4NyA9IG1pcGlfZHNpX2dldF9kcnZkYXRhKGRzaSk7Cj4+ICsJaW50
+IHJldDsKPj4gKwo+PiArCXJldCA9IG9zZDEwMXQyNTg3X3BhbmVsX2Rpc2FibGUoJm9zZDEwMXQy
+NTg3LT5iYXNlKTsKPj4gKwlpZiAocmV0IDwgMCkKPj4gKwkJZGV2X2VycigmZHNpLT5kZXYsICJm
+YWlsZWQgdG8gZGlzYWJsZSBwYW5lbDogJWRcbiIsIHJldCk7Cj4+ICsKPiBUbyB0cnVuIG9mZiBw
+b3dlciBzdXBwbHkgY2FsbCBvc2QxMDF0MjU4N19wYW5lbF91bnByZXBhcmUoKSBoZXJlPwo+IAo+
+PiArCXJldCA9IG1pcGlfZHNpX2RldGFjaChkc2kpOwo+PiArCWlmIChyZXQgPCAwKQo+PiArCQlk
+ZXZfZXJyKCZkc2ktPmRldiwgImZhaWxlZCB0byBkZXRhY2ggZnJvbSBEU0kgaG9zdDogJWRcbiIs
+IHJldCk7Cj4+ICsKPj4gKwlvc2QxMDF0MjU4N19wYW5lbF9kZWwob3NkMTAxdDI1ODcpOwo+IFJl
+cGxhY2UgdGhpcyB3aXRoCj4gCWRybV9wYW5lbF9yZW1vdmUob3NkMTAxdDI1ODctPmJhc2UpOwo+
+IFRoaXMgc2hvdWxkIGJlIGZpbmUgYW5kIG5vIG5lZWQgdG8gZGlzYWJsZSBiYWNrbGlnaHQsIHRo
+aXMgaXMgZG9uZSBpbiBvc2QxMDF0MjU4N19wYW5lbF9kaXNhYmxlKCkKCk9LLgoKPj4gKwo+PiAr
+CXJldHVybiAwOwo+PiArfQo+PiArCj4+ICtzdGF0aWMgdm9pZCBvc2QxMDF0MjU4N19wYW5lbF9z
+aHV0ZG93bihzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkc2kpCj4+ICt7Cj4+ICsJc3RydWN0IG9z
+ZDEwMXQyNTg3X3BhbmVsICpvc2QxMDF0MjU4NyA9IG1pcGlfZHNpX2dldF9kcnZkYXRhKGRzaSk7
+Cj4+ICsKPiBNYXliZSBjYWxsIG9zZDEwMXQyNTg3X3BhbmVsX3VucHJlcGFyZSgpIGhlcmUgdG8g
+dHVybiBvZmYgcG93ZXIgc3VwcGx5PwoKTWFrZSBzZW5zZSwgaW4gdGhpcyBvcmRlcjoKCW9zZDEw
+MXQyNTg3X3BhbmVsX2Rpc2FibGUoJm9zZDEwMXQyNTg3LT5iYXNlKTsKCW9zZDEwMXQyNTg3X3Bh
+bmVsX3VucHJlcGFyZSgmb3NkMTAxdDI1ODctPmJhc2UpOwoKQnV0IHNob3VsZCB0aGUgb3NkMTAx
+dDI1ODdfcGFuZWxfcmVtb3ZlKCkgZG8gdGhlIHNhbWUgdGhpbmc/IG9yIHRoZQpvc2QxMDF0MjU4
+N19wYW5lbF9kaXNhYmxlKCkgaXMgcmVkdW5kYW50IGluIHRoZSBvc2QxMDF0MjU4N19wYW5lbF9y
+ZW1vdmUoKT8KClJlZ2FyZHMsCi0gUMOpdGVyCgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95
+LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6
+IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
