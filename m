@@ -1,46 +1,92 @@
 From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v4 0/3] Stingray USB PHY driver support
-Date: Wed, 20 Feb 2019 16:03:59 +0530
-Message-ID: <1550658842-19167-1-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v4 1/3] dt-bindings: phy: Add Stingray USB PHY binding document
+Date: Wed, 20 Feb 2019 16:04:00 +0530
+Message-ID: <1550658842-19167-2-git-send-email-srinath.mannam@broadcom.com>
+References: <1550658842-19167-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550658842-19167-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
 Cc: Tejun Heo <tj@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-These patches add Stingray USB PHY driver and its corresponding
-DT nodes with documentation.
+Add DT binding document for Stingray USB PHY.
 
-This patch set is based on Linux-5.0-rc2.
-
-Changes from v3:
-  - Addressed Rob Herring review comments
-     - Changed compatible strings.
-     - updated driver based on new compatible strings.
-
-Changes from v2:
-  - Addressed Kishon review comments
-  - Updated patchset to Linux-5.0-rc2
-
-Changes from v1:
-  - Addressed Kishon review comments
-  - phy init call return value handle
-  
-Srinath Mannam (3):
-  dt-bindings: phy: Add Stingray USB PHY binding document
-  phy: sr-usb: Add Stingray USB PHY driver
-  arm64: dts: Add USB DT nodes for Stingray SoC
-
- .../bindings/phy/brcm,stingray-usb-phy.txt         |  62 ++++
- .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  95 ++++++
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
- drivers/phy/broadcom/Kconfig                       |  11 +
- drivers/phy/broadcom/Makefile                      |   1 +
- drivers/phy/broadcom/phy-bcm-sr-usb.c              | 371 +++++++++++++++++++++
- 6 files changed, 541 insertions(+)
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+---
+ .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
- create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
- create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
 
+diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+new file mode 100644
+index 0000000..da19236
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+@@ -0,0 +1,62 @@
++Broadcom Stingray USB PHY
++
++Required properties:
++ - compatible : should be one of the listed compatibles
++	- "brcm,sr-usb-combo-phy" is a combo PHY has one SS PHY and one HS PHY.
++	- "brcm,sr-usb-hs-phy" has a single HS PHY.
++ - reg: offset and length of the PHY blocks registers
++ - address-cells: should be 1
++ - size-cells: should be 0
++
++Sub-nodes:
++  brcm,sr-usb-combo-phy have two sub-nodes for one SS PHY and one HS PHY.
++
++Sub-nodes required properties:
++ - reg: required for brcm,sr-usb-phy model PHY.
++	reg value 0 is HS PHY and 1 is SS PHY.
++ - phy-cells: generic PHY binding; must be 0
++
++Refer to phy/phy-bindings.txt for the generic PHY binding properties
++
++Example:
++	usbphy0: usb-phy@0 {
++		compatible = "brcm,sr-usb-combo-phy";
++		reg = <0x00000000 0x100>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		usb0_phy0: phy@0 {
++			reg = <0>;
++			#phy-cells = <0>;
++		};
++
++		usb0_phy1: phy@1 {
++			reg = <1>;
++			#phy-cells = <0>;
++		};
++	};
++
++	usbphy1: usb-phy@10000 {
++		compatible = "brcm,sr-usb-combo-phy";
++		reg = <0x00010000 0x100>,
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		usb1_phy0: phy@0 {
++			reg = <0>;
++			#phy-cells = <0>;
++		};
++
++		usb1_phy1: phy@1 {
++			reg = <1>;
++			#phy-cells = <0>;
++		};
++	};
++
++	usbphy2: usb-phy@20000 {
++		compatible = "brcm,sr-usb-hs-phy";
++		reg = <0x00020000 0x100>,
++		#address-cells = <1>;
++		#size-cells = <0>;
++		#phy-cells = <0>;
++	};
 -- 
 2.7.4
