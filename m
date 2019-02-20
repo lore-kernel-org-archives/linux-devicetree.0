@@ -1,126 +1,66 @@
-Return-Path: <SRS0=5lt5=Q4=martin.sperl.org=kernel@kernel.org>
-From: kernel@martin.sperl.org
-Subject: [PATCH V7 10/10] can: mcp25xxfd: optimize reception of big CanFD frame reception with BRS
-Date: Thu, 21 Feb 2019 21:07:36 +0000
-Message-Id: <20190221210736.640-11-kernel@martin.sperl.org>
-In-Reply-To: <20190221210736.640-1-kernel@martin.sperl.org>
-References: <20190221210736.640-1-kernel@martin.sperl.org>
-To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Return-Path: <SRS0=4we3=Q3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.nic.cz ([217.31.204.67]:48579 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726667AbfBTOFe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Feb 2019 09:05:34 -0500
+Date: Wed, 20 Feb 2019 15:05:14 +0100
+From: Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: Document no-uhs-voltage MMC
+ property
+Message-ID: <20190220150514.102ee9f3@dellmb.labs.office.nic.cz>
+In-Reply-To: <CAPDyKFpUsOi3V05DrbB8rU9O1dj4uP7GkV-Cq+U5WU1Uy8ysyw@mail.gmail.com>
+References: <20181018152916.9355-1-marek.behun@nic.cz>
+        <CAPDyKFpUsOi3V05DrbB8rU9O1dj4uP7GkV-Cq+U5WU1Uy8ysyw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Sender: devicetree-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Sperl <kernel@martin.sperl.org>
+On Mon, 22 Oct 2018 14:23:04 +0200
+Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
-In case of predicted DLC=15 and in case at least 33% of those are
-sent via BRS be aggressive and use bulk fifo reads to avoid missing
-any frames due to releasing FIFOs not as fast as possible.
+> On 18 October 2018 at 17:29, Marek Beh=C3=BAn <marek.behun@nic.cz> wrote:
+> > Add documentation for no-uhs-voltage MMC property.
+> >
+> > Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > ---
+> >  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
+> > b/Documentation/devicetree/bindings/mmc/mmc.txt index
+> > f5a0923b34ca..0506dcbc2070 100644 ---
+> > a/Documentation/devicetree/bindings/mmc/mmc.txt +++
+> > b/Documentation/devicetree/bindings/mmc/mmc.txt @@ -55,6 +55,7 @@
+> > Optional properties:
+> >  - no-sdio: controller is limited to send sdio cmd during
+> > initialization
+> >  - no-sd: controller is limited to send sd cmd during initialization
+> >  - no-mmc: controller is limited to send mmc cmd during
+> > initialization +- no-uhs-voltage: controller does not support
+> > switching to UHS voltage =20
+>=20
+> We already have bindings for telling which UHS modes that are
+> supported.
+>=20
+> It doesn't make sense to me, to also have a binding saying that UHS
+> mode isn't supported, as that information is already available.
+>=20
 
-This would be of most impact when having a 1MHz Can Bus with
-a 8MHz data bitrate.
+Hi Ulf,
+the problem here is that I some boards have hardware bugs which report
+UHS support but the voltage switch won't work. In this case how should
+I tell the kernel not to do the voltage_switch? If I looked at the code
+correctly, currently there isn't a way to specify this via device tree.
 
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
----
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h |  1 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c   | 48 +++++++++++++++-------
- 2 files changed, 35 insertions(+), 14 deletions(-)
+sd.c function mmc_sd_get_cid calls mmc_set_uhs_voltage if the device
+reports it (CCS and S18A in the response is set). But
+mmc_set_uhs_voltage fails on such boards and kernel won't boot root
+partition.
 
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
-index 1a48e801065d..eeb9c88c7e97 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
-@@ -178,6 +178,7 @@ struct mcp25xxfd_can_priv {
- 	struct {
- #define MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE 32
- 		u8 dlc[MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE];
-+		u8 brs[MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE];
- 		u8 index;
- 		u32 predicted_len;
- 	} rx_history;
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
-index e2102aa00578..11bf12461e58 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
-@@ -104,6 +104,8 @@ int mcp25xxfd_can_rx_submit_frame(struct mcp25xxfd_can_priv *cpriv, int fifo)
-
- 	/* add to rx_history */
- 	cpriv->rx_history.dlc[cpriv->rx_history.index] = dlc;
-+	cpriv->rx_history.brs[cpriv->rx_history.index] =
-+		(rx->flags & MCP25XXFD_CAN_OBJ_FLAGS_BRS) ? CANFD_BRS : 0;
- 	cpriv->rx_history.index++;
- 	if (cpriv->rx_history.index >= MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE)
- 		cpriv->rx_history.index = 0;
-@@ -395,19 +397,10 @@ static int mcp25xxfd_can_rx_predict_prefetch(struct mcp25xxfd_can_priv *cpriv)
-  * reading multiple rx fifos is a realistic option of optimization
-  */
-
--/* right now we only optimize for sd (can2.0) frame case,
-- * but in principle it could be also be valuable for CANFD
-- * frames when we receive lots of 64 byte packets with BRS set
-- * and a big difference between nominal and data bitrates
-- */
--
--int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
-+static int mcp25xxfd_can_rx_read_single_frames(struct mcp25xxfd_can_priv *cpriv,
-+					       int prefetch)
- {
--	int i, f, prefetch;
--	int ret;
--
--	/* calculate optimal prefetch to use */
--	prefetch = mcp25xxfd_can_rx_predict_prefetch(cpriv);
-+	int i, f, ret;
-
- 	/* loop all frames */
- 	for (i = 0, f = cpriv->fifos.rx.start; i < cpriv->fifos.rx.count;
-@@ -424,7 +417,7 @@ int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
- 	return 0;
- }
-
--static int mcp25xxfd_can_rx_read_sd_frames(struct mcp25xxfd_can_priv *cpriv)
-+static int mcp25xxfd_can_rx_read_bulk_frames(struct mcp25xxfd_can_priv *cpriv)
- {
- 	int i, start, end;
- 	int ret;
-@@ -447,12 +440,39 @@ static int mcp25xxfd_can_rx_read_sd_frames(struct mcp25xxfd_can_priv *cpriv)
- 	return 0;
- }
-
-+static int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
-+{
-+	int i, count_dlc15, count_brs, prefetch;
-+
-+	/* get a prediction on prefetch */
-+	prefetch = mcp25xxfd_can_rx_predict_prefetch(cpriv);
-+
-+	/* if the prefetch is < 64 then just read single */
-+	if (prefetch < 64)
-+		return mcp25xxfd_can_rx_read_single_frames(cpriv, prefetch);
-+
-+	/* check if we have mostly brs frames of those DLC=15 frames */
-+	for (i = 0, count_brs = 0, count_dlc15 = 0;
-+	     i < MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE; i++)
-+		if (cpriv->rx_history.dlc[i] == 15) {
-+			count_dlc15++;
-+			if (cpriv->rx_history.brs[i])
-+				count_brs++;
-+		}
-+
-+	/* if we have at least 33% brs frames then run bulk */
-+	if (count_brs * 3 >= count_dlc15)
-+		return mcp25xxfd_can_rx_read_bulk_frames(cpriv);
-+	else
-+		return mcp25xxfd_can_rx_read_single_frames(cpriv, prefetch);
-+}
-+
- static int mcp25xxfd_can_rx_read_frames(struct mcp25xxfd_can_priv *cpriv)
- {
- 	if (cpriv->can.dev->mtu == CANFD_MTU)
- 		return mcp25xxfd_can_rx_read_fd_frames(cpriv);
- 	else
--		return mcp25xxfd_can_rx_read_sd_frames(cpriv);
-+		return mcp25xxfd_can_rx_read_bulk_frames(cpriv);
- }
-
- int mcp25xxfd_can_rx_handle_int_rxif(struct mcp25xxfd_can_priv *cpriv)
---
-2.11.0
+Marek
