@@ -1,45 +1,107 @@
-Return-Path: <SRS0=ylgW=Q7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr130055.outbound.protection.outlook.com ([40.107.13.55]:11658
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726405AbfBXCu2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 23 Feb 2019 21:50:28 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V9 3/4] defconfig: arm64: add i.MX system controller thermal
- support
-Date: Sun, 24 Feb 2019 02:50:23 +0000
-Message-ID: <1550976319-20216-3-git-send-email-Anson.Huang@nxp.com>
-References: <1550976319-20216-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1550976319-20216-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=rHzN=Q3=the-dreams.de=wsa@kernel.org>
+Date: Wed, 20 Feb 2019 20:52:49 +0100
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 1/2] dt: snps,designware-i2c: Add clock bindings
+ documentation
+Message-ID: <20190220195249.GA2523@kunai>
+References: <1550677803-29716-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1550677803-29716-2-git-send-email-gareth.williams.jx@renesas.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
+Content-Disposition: inline
+In-Reply-To: <1550677803-29716-2-git-send-email-gareth.williams.jx@renesas.com>
+To: Gareth Williams <gareth.williams.jx@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables CONFIG_IMX_SC_THERMAL as module.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No changes.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2d9c390..52d503e 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -413,6 +413,7 @@ CONFIG_SENSORS_INA2XX=3Dm
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3Dy
- CONFIG_CPU_THERMAL=3Dy
- CONFIG_THERMAL_EMULATION=3Dy
-+CONFIG_IMX_SC_THERMAL=3Dm
- CONFIG_ROCKCHIP_THERMAL=3Dm
- CONFIG_RCAR_THERMAL=3Dy
- CONFIG_RCAR_GEN3_THERMAL=3Dy
---=20
-2.7.4
+On Wed, Feb 20, 2019 at 03:50:02PM +0000, Gareth Williams wrote:
+> From: Phil Edworthy <phil.edworthy@renesas.com>
+>=20
+> The driver requires an undocumented clock property, so detail it.
+> Add documentation for a separate, optional, bus clock.
+>=20
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+
+Looks good to me:
+
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+Let's see what the designware maintainers have to say.
+
+>=20
+> v3:
+>  - Changed clocks and clock-names sections to use term "peripheral clock"
+>    (pclk) instead of "bus clock" (busclk).
+> v2:
+>  - No changes.
+> v1:
+>  - Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-designware.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/D=
+ocumentation/devicetree/bindings/i2c/i2c-designware.txt
+> index 3e4bcc2..f94aa59 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -6,12 +6,21 @@ Required properties :
+>                  or "mscc,ocelot-i2c" with "snps,designware-i2c" for fall=
+back
+>   - reg : Offset and length of the register set for the device
+>   - interrupts : <IRQ> where IRQ is the interrupt number.
+> + - clocks : phandles for the clocks, see the description of clock-names =
+below.
+> +   The phandle for the "ic_clk" clock is required. The phandle for the "=
+pclk"
+> +   clock is optional. If a single clock is specified but no clock-name, =
+it is
+> +   the "ic_clk" clock. If both clocks are listed, the "ic_clk" must be f=
+irst.
+> =20
+>  Recommended properties :
+> =20
+>   - clock-frequency : desired I2C bus clock frequency in Hz.
+> =20
+>  Optional properties :
+> +
+> + - clock-names : Contains the names of the clocks:
+> +    "ic_clk", for the core clock used to generate the external I2C clock.
+> +    "pclk", the peripheral clock, required for register accesses.
+> +
+>   - reg : for "mscc,ocelot-i2c", a second register set to configure the S=
+DA hold
+>     time, named ICPU_CFG:TWI_DELAY in the datasheet.
+> =20
+> --=20
+> 2.7.4
+>=20
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlxtsAwACgkQFA3kzBSg
+KbbLdA/+IJumuoJcK+yvECoRVPUftlwpO4ehEYPPbjRp9scRSB7mUl4PWLubHqkw
+0f6oJh8JCqOWSEVIVFj7i1Fn8EcebN7HG/61CbBMYc5gDdB/XIIgM3kvPHIa88Pj
+nd4GbuSY/f/JFJhk7eHwaLmQTGOlFG3OO7XCsVF23QKifr+S4DM+GRK3RudOZt1G
+8212ua5UgcIQ2KrGIe6XptFxpQzihwBbRjMiQDiVr/Hlh7D8p74redj1WzGO+eN/
+6f2ULtEdbFWtnadLVN0tSCzlSQ0vNZa+CZ2ob3VKDwmG4MF7HN9vs2S4zJVulHbc
+QoUXfPGHgDffeYvGp7iu9PANiBnGm9WNkaAAcfk4Lgt8/Zk+V0J34qKpGt0XBruU
+nkLd0fHje4NW5l3nYuXMz1ItgYCiLFuu7mUqdNnxb3BpReJ4ZdNO/COXtBk8IfrA
+CTbzLgPaIxp6GH+gpLlwpmYtb3tWRaqzBSFa7mGTGpHpbvvBZ3UdNv0bZ09Ycxfv
+mLIp+X2yM5apWAosSfsXC9eVDG2fz4xcezCx7sD0dsODG8dAneKOuQkAEmyPbq/R
+dCOCzmCL/sQRRXRf19SlnnaIqJ1iH/KNiPCI2YqV+lDRj0/N/ZSDKrdgc9bjYIW8
+Fhl0e8cxm3c8d27NKTk5F7gHUrvHAwHDDNYmDrVCYqvTazB1iw4=
+=algl
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
