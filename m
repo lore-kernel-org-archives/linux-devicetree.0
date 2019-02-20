@@ -1,44 +1,106 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 4/4] drm/panel: Add OSD101T2587-53TS driver
-Date: Wed, 20 Feb 2019 12:39:11 +0200
-Message-ID: <fefcd92c-4171-ed86-28d2-4145d409a73d@ti.com>
-References: <20190215140315.18046-1-peter.ujfalusi@ti.com>
- <20190215140315.18046-5-peter.ujfalusi@ti.com>
- <20190215180759.GA26944@ravnborg.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 6/6] iio: imu: adis16480: Add docs for ADIS16480 IMU
+Date: Wed, 20 Feb 2019 10:46:03 +0000
+Message-ID: <20190220104603.15053787@archlinux>
+References: <1550596338-24220-1-git-send-email-stefan.popa@analog.com>
+        <1550596338-24220-7-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190215180759.GA26944@ravnborg.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550596338-24220-7-git-send-email-stefan.popa@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: robh+dt@kernel.org, Michael.Hennerich@analog.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FtLAoKT24gMTUvMDIvMjAxOSAyMC4wNywgU2FtIFJhdm5ib3JnIHdyb3RlOgo+PiArI2lu
-Y2x1ZGUgPGxpbnV4L2JhY2tsaWdodC5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+
-PiArI2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2Nv
-bnN1bWVyLmg+Cj4+ICsKPj4gKyNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+IFBsZWFzZSBkbyBub3Qg
-dXNlIGRybVAuaCBpbiBuZXcgZHJpdmVycyAtIHdlIHRyeSB0byBnZXQgcmlkIG9mIHRoaXMgZmls
-ZS4KCi4uLgoKPj4gK3N0YXRpYyBpbnQgb3NkMTAxdDI1ODdfcGFuZWxfZ2V0X21vZGVzKHN0cnVj
-dCBkcm1fcGFuZWwgKnBhbmVsKQo+PiArewo+PiArCXN0cnVjdCBvc2QxMDF0MjU4N19wYW5lbCAq
-b3NkMTAxdDI1ODcgPSB0b19vc2QxMDF0MjU4N19wYW5lbChwYW5lbCk7Cj4+ICsJc3RydWN0IGRy
-bV9kaXNwbGF5X21vZGUgKm1vZGU7Cj4+ICsKPj4gKwltb2RlID0gZHJtX21vZGVfZHVwbGljYXRl
-KHBhbmVsLT5kcm0sIG9zZDEwMXQyNTg3LT5kZWZhdWx0X21vZGUpOwo+PiArCWlmICghbW9kZSkg
-ewo+PiArCQlkZXZfZXJyKHBhbmVsLT5kcm0tPmRldiwgImZhaWxlZCB0byBhZGQgbW9kZSAldXgl
-dXhAJXVcbiIsCgpkcm0vZHJtUC5oIGlzIG5lZWRlZCBmb3IgdGhpcyBkZXZfZXJyLgoKUmVnYXJk
-cywKLSBQw6l0ZXIKClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUg
-MjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3Rp
-cGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWw=
+On Tue, 19 Feb 2019 19:12:18 +0200
+Stefan Popa <stefan.popa@analog.com> wrote:
+
+> Document support for ADIS16480 Inertial Measurement Unit.
+> 
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Make sure to CC the dt list as well as Rob.  Just because it's normally
+Rob who is kind enough to review our patches, doesn't mean we shouldn't
+bombard any other interested parties with them as well ;)
+
+Looks good to me, with the exception of the DIO1 vs 2 default
+discussed in the earlier patch.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  .../devicetree/bindings/iio/imu/adi,adis16480.txt  | 49 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
+> new file mode 100644
+> index 0000000..dacf5f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
+> @@ -0,0 +1,49 @@
+> +
+> +Analog Devices ADIS16480 and similar IMUs
+> +
+> +Required properties for the ADIS16480:
+> +
+> +- compatible: Must be one of
+> +	* "adi,adis16375"
+> +	* "adi,adis16480"
+> +	* "adi,adis16485"
+> +	* "adi,adis16488"
+> +	* "adi,adis16495-1"
+> +	* "adi,adis16495-2"
+> +	* "adi,adis16495-3"
+> +	* "adi,adis16497-1"
+> +	* "adi,adis16497-2"
+> +	* "adi,adis16497-3"
+> +- reg: SPI chip select number for the device
+> +- spi-max-frequency: Max SPI frequency to use
+> +	see: Documentation/devicetree/bindings/spi/spi-bus.txt
+> +- spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
+> +- spi-cpol: See Documentation/devicetree/bindings/spi/spi-bus.txt
+> +- interrupts: interrupt mapping for IRQ, accepted values are:
+> +	* IRQF_TRIGGER_RISING
+> +	* IRQF_TRIGGER_FALLING
+> +
+> +Optional properties:
+> +
+> +- interrupt-names: Data ready line selection. Valid values are:
+> +	* DIO1
+> +	* DIO2
+> +	* DIO3
+> +	* DIO4
+> +	If this field is left empty, the factory default assigns DIO2 as data
+> +	ready signal.
+> +- reset-gpios: must be the device tree identifier of the RESET pin. As the line
+> +	is active low, it should be marked GPIO_ACTIVE_LOW.
+> +
+> +Example:
+> +
+> +	imu@0 {
+> +		compatible = "adi,adis16495-1";
+> +		reg = <0>;
+> +		spi-max-frequency = <3200000>;
+> +		spi-cpol;
+> +		spi-cpha;
+> +		interrupts = <25 IRQF_TRIGGER_FALLING>;
+> +		interrupt-parent = <&gpio>;
+> +		interrupt-names = "DIO2";
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e4091ac..beecd1e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -942,6 +942,7 @@ F:	drivers/dma/dma-axi-dmac.c
+>  ANALOG DEVICES INC IIO DRIVERS
+>  M:	Lars-Peter Clausen <lars@metafoo.de>
+>  M:	Michael Hennerich <Michael.Hennerich@analog.com>
+> +M:	Stefan Popa <stefan.popa@analog.com>
+>  W:	http://wiki.analog.com/
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
