@@ -1,102 +1,154 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v6 21/22] iommu/mediatek: Fix iova_to_phys PA start for
- 4GB mode
-Date: Wed, 20 Feb 2019 17:17:15 +0800
-Message-ID: <1550654235.26244.10.camel@mhfsdcap03>
-References: <1550394300-17420-1-git-send-email-yong.wu@mediatek.com>
-         <1550394300-17420-22-git-send-email-yong.wu@mediatek.com>
-         <CAE=gft783rOUubODiFHxa9NKeUJxGk4FCeguDsyoqrUxsGDEsQ@mail.gmail.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v1 04/12] arm64: dts: msm8996: thermal: Add temperature
+ sensors near major peripherals
+Date: Wed, 20 Feb 2019 14:48:31 +0530
+Message-ID: <CAP245DUv+3rMiFFQWGnAv6xgqDt7jJ2m5ioo3ETyQ8iKRef++g@mail.gmail.com>
+References: <cover.1550493113.git.amit.kucheria@linaro.org>
+ <51feb49578f6e412eb5e80012dc63eab5532342b.1550493113.git.amit.kucheria@linaro.org>
+ <20190220012456.GG2811@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft783rOUubODiFHxa9NKeUJxGk4FCeguDsyoqrUxsGDEsQ@mail.gmail.com>
+In-Reply-To: <20190220012456.GG2811@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: youlin.pei@mediatek.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, srv_heupstream@mediatek.com, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, anan.sun@mediatek.com, Robin Murphy <robin.murphy@arm.com>, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-02-19 at 15:33 -0800, Evan Green wrote:
-> On Sun, Feb 17, 2019 at 1:09 AM Yong Wu <yong.wu@mediatek.com> wrote:
+On Wed, Feb 20, 2019 at 6:55 AM Eduardo Valentin <edubezval@gmail.com> wrote:
+>
+> On Mon, Feb 18, 2019 at 06:05:18PM +0530, Amit Kucheria wrote:
+> > msm8996 has a total of 21 temperature sensors. Populate DT with
+> > information about them.
 > >
-> > In the 4GB mode, the physical address is remapped,
+> > There are 2 sensors on each of the cpus - one on the top, the other
+> > below (we only expose one on the top in DT for now). For the GPU, we
+> > expose both, the one on the top and the one below.
 > >
-> > Here is the detailed remap relationship.
-> > CPU PA         ->    HW PA
-> > 0x4000_0000          0x1_4000_0000 (Add bit32)
-> > 0x8000_0000          0x1_8000_0000 ...
-> > 0xc000_0000          0x1_c000_0000 ...
-> > 0x1_0000_0000        0x1_0000_0000 (No change)
+> > Depending on the version of the silicon, sensor 2 is either placed near
+> > the L3 cache or the venus video decoder. It would've been nice to be
+> > able to be version-specific but we don't have DTs that differentiate the
+> > two versions of silicon yet.
 > >
-> > Thus, we always add bit32 for PA when entering mtk_iommu_map.
-> > But in the iova_to_phys, the CPU don't need this bit32 if the
-> > PA is from 0x1_4000_0000 to 0x1_ffff_ffff.
-> > This patch discards the bit32 in this iova_to_phys in the 4GB mode.
-> >
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > > ---
-> >  drivers/iommu/mtk_iommu.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
+> >  arch/arm64/boot/dts/qcom/msm8996.dtsi | 98 +++++++++++++++++++++++++++
+> >  1 file changed, 98 insertions(+)
 > >
-> > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> > index 0277396..076d333 100644
-> > --- a/drivers/iommu/mtk_iommu.c
-> > +++ b/drivers/iommu/mtk_iommu.c
-> > @@ -119,6 +119,19 @@ struct mtk_iommu_domain {
-> >
-> >  static const struct iommu_ops mtk_iommu_ops;
-> >
-> > +/*
-> > + * In M4U 4GB mode, the physical address is remapped as below:
-> > + *  CPU PA         ->   M4U HW PA
-> > + *  0x4000_0000         0x1_4000_0000 (Add bit32)
-> > + *  0x8000_0000         0x1_8000_0000 ...
-> > + *  0xc000_0000         0x1_c000_0000 ...
-> > + *  0x1_0000_0000       0x1_0000_0000 (No change)
-> > + *
-> > + * Thus, We always add BIT32 in the iommu_map and disable BIT32 if PA is >=
-> > + * 0x1_4000_0000 in the iova_to_phys.
-> > + */
-> > +#define MTK_IOMMU_4GB_MODE_PA_140000000     0x140000000UL
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > index ae6e9f0778f0..8e36a39e1386 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > @@ -237,6 +237,104 @@
+> >                               };
+> >                       };
+> >               };
 > > +
-> >  static LIST_HEAD(m4ulist);     /* List all the M4U HWs */
-> >
-> >  #define for_each_m4u(data)     list_for_each_entry(data, &m4ulist, list)
-> > @@ -415,6 +428,7 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
-> >                                           dma_addr_t iova)
-> >  {
-> >         struct mtk_iommu_domain *dom = to_mtk_domain(domain);
-> > +       struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
-> >         unsigned long flags;
-> >         phys_addr_t pa;
-> >
-> > @@ -422,6 +436,10 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
-> >         pa = dom->iop->iova_to_phys(dom->iop, iova);
-> >         spin_unlock_irqrestore(&dom->pgtlock, flags);
-> >
-> > +       if (data->plat_data->has_4gb_mode && data->dram_is_4gb &&
-> > +           pa >= MTK_IOMMU_4GB_MODE_PA_140000000)
-> > +               pa &= ~BIT_ULL(32);
+> > +             gpu-thermal-top {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
 > > +
-> 
-> The define doesn't really make it much better, but I guess it doesn't
-> make it worse either. As I was reviewing this I was thinking that this
-> should be rolled into patch 6 "iommu/io-pgtable-arm-v7s: Extend
-> MediaTek 4GB Mode". But I guess this was returning bad PAs since
-> before this series, right? So does this need a Fixes tag?
+> > +                     thermal-sensors = <&tsens1 6>;
+> > +
+> > +                     trips {
+> > +                             gpu1_alert0: trip-point@0 {
+> > +                                     temperature = <75000>;
+> > +                                     hysteresis = <2000>;
+> > +                                     type = "passive";
+>
+> What is the cooling map for this?
 
-Thanks very much for your reviewing so many patches.
+I'm working on it. Will send out an update.
 
-Yes. The issue exist before this series, It was introduced by this
-commit:
-30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range for 4GB
-mode")
-
-I will send a new version to add this tag.
-
-> -Evan
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> > +                             };
+> > +
+> > +                             gpu1_crit: gpu_crit {
+> > +                                     temperature = <95000>;
+> > +                                     hysteresis = <2000>;
+> > +                                     type = "critical";
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             gpu-thermal-bottom {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
+> > +
+> > +                     thermal-sensors = <&tsens1 7>;
+> > +
+> > +                     trips {
+> > +                             gpu2_alert0: trip-point@0 {
+> > +                                     temperature = <75000>;
+> > +                                     hysteresis = <2000>;
+> > +                                     type = "passive";
+> > +                             };
+> > +
+> > +                             gpu2_crit: gpu_crit {
+> > +                                     temperature = <95000>;
+> > +                                     hysteresis = <2000>;
+> > +                                     type = "critical";
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             m4m-thermal {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
+> > +
+> > +                     thermal-sensors = <&tsens0 1>;
+> > +             };
+> > +
+> > +             l3_or_venus-thermal {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
+> > +
+> > +                     thermal-sensors = <&tsens0 2>;
+> > +             };
+> > +
+> > +             cluster0-l2-thermal {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
+> > +
+> > +                     thermal-sensors = <&tsens0 7>;
+> > +             };
+> > +
+> > +             cluster1-l2-thermal {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
+> > +
+> > +                     thermal-sensors = <&tsens0 12>;
+> > +             };
+> > +
+> > +             camera-thermal {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
+> > +
+> > +                     thermal-sensors = <&tsens1 1>;
+> > +             };
+> > +
+> > +             q6-dsp-thermal {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
+> > +
+> > +                     thermal-sensors = <&tsens1 2>;
+> > +             };
+> > +
+> > +             mem-thermal {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
+> > +
+> > +                     thermal-sensors = <&tsens1 3>;
+> > +             };
+> > +
+> > +             modemtx-thermal {
+> > +                     polling-delay-passive = <250>;
+> > +                     polling-delay = <1000>;
+> > +
+> > +                     thermal-sensors = <&tsens1 4>;
+> > +             };
+> >       };
+> >
+> >       timer {
+> > --
+> > 2.17.1
+> >
