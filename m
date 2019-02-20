@@ -1,38 +1,88 @@
-Return-Path: <SRS0=8Fol=Q4=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/5] rtc: rx8581: Add rx8571 compatible
-Date: Thu, 21 Feb 2019 09:40:44 +0000
-Message-Id: <1550742048-28068-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1550742048-28068-1-git-send-email-biju.das@bp.renesas.com>
-References: <1550742048-28068-1-git-send-email-biju.das@bp.renesas.com>
+Return-Path: <SRS0=4we3=Q3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40062.outbound.protection.outlook.com ([40.107.4.62]:56736
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726210AbfBTGyC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Feb 2019 01:54:02 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V7 4/4] arm64: dts: imx: add i.MX8QXP thermal support
+Date: Wed, 20 Feb 2019 06:53:58 +0000
+Message-ID: <1550645332-2907-4-git-send-email-Anson.Huang@nxp.com>
+References: <1550645332-2907-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550645332-2907-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Sender: devicetree-owner@vger.kernel.org
+To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The Epson rx8571 is compatible with the Epson rx8581 RTC.
+Add i.MX8QXP CPU thermal zone support.
 
-The difference between the rx8571 and rx8581 RTC is that the former has
-16 bytes more RAM. This renders them incompatible from a DT point of view.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/rtc/rtc.txt | 1 +
- 1 file changed, 1 insertion(+)
+Changes since V6:
+	- add fallback compatible string "fsl,imx-sc-thermal" according to i.MX SC=
+ thermal driver
+	  update.
+---
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 28 ++++++++++++++++++++++++++=
+++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-index 3e6a215..0bc687e 100644
---- a/Documentation/devicetree/bindings/rtc/rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-@@ -47,6 +47,7 @@ dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and
- dallas,ds1672		Dallas DS1672 Real-time Clock
- dallas,ds3232		Extremely Accurate I²C RTC with Integrated Crystal and SRAM
- epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
-+epson,rx8571		I2C-BUS INTERFACE REAL TIME CLOCK MODULE with Battery Backed RAM
- epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
- emmicro,em3027		EM Microelectronic EM3027 Real-time Clock
- isil,isl1208		Intersil ISL1208 Low Power RTC with Battery Backed SRAM
--- 
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
+ts/freescale/imx8qxp.dtsi
+index 4c3dd95..24b03d6 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/pads-imx8qxp.h>
++#include <dt-bindings/thermal/thermal.h>
+=20
+ / {
+ 	interrupt-parent =3D <&gic>;
+@@ -116,6 +117,12 @@
+ 		rtc: rtc {
+ 			compatible =3D "fsl,imx8qxp-sc-rtc";
+ 		};
++
++		tsens: thermal-sensor {
++			compatible =3D "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
++			tsens-num =3D <1>;
++			#thermal-sensor-cells =3D <1>;
++		};
+ 	};
+=20
+ 	timer {
+@@ -443,4 +450,25 @@
+ 			power-domains =3D <&pd IMX_SC_R_GPIO_7>;
+ 		};
+ 	};
++
++	thermal_zones: thermal-zones {
++		cpu-thermal0 {
++			polling-delay-passive =3D <250>;
++			polling-delay =3D <2000>;
++			thermal-sensors =3D <&tsens 0>;
++			imx,sensor-resource-id =3D <355>;
++			trips {
++				cpu_alert0: trip0 {
++					temperature =3D <107000>;
++					hysteresis =3D <2000>;
++					type =3D "passive";
++				};
++				cpu_crit0: trip1 {
++					temperature =3D <127000>;
++					hysteresis =3D <2000>;
++					type =3D "critical";
++				};
++			};
++		};
++	};
+ };
+--=20
 2.7.4
