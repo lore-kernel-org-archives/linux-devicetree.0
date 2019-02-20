@@ -1,14 +1,17 @@
-From: Anson Huang <anson.huang@nxp.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
 Subject: RE: [PATCH] dt-bindings: imx: update scu resource id headfile
-Date: Wed, 20 Feb 2019 03:36:33 +0000
-Message-ID: <DB3PR0402MB3916C81C158BD68ECB4DA7B6F57D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Date: Wed, 20 Feb 2019 03:38:04 +0000
+Message-ID: <AM6PR04MB42152D05E62753E760741160807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 References: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB421521095AEEC7530E97998A807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+ <20190219125211.2pg2bqxner4klcb5@pengutronix.de>
+ <DB3PR0402MB3916AF3AA0283DB22DF61E2FF57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190219144808.qqpaubjcsb4huoml@pengutronix.de>
+ <DB3PR0402MB39160A56E168ED20410674D7F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM6PR04MB421521095AEEC7530E97998A807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39160A56E168ED20410674D7F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -19,95 +22,195 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Anson Huang <anson.huang@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogQWlzaGVuZyBEb25nDQo+IFNlbnQ6IDIwMTnE6jLUwjIwyNUgMTE6MjkN
-Cj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwu
-b3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVl
-ckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFp
-bC5jb207IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJu
-ZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29t
-Pg0KPiBTdWJqZWN0OiBSRTogW1BBVENIXSBkdC1iaW5kaW5nczogaW14OiB1cGRhdGUgc2N1IHJl
-c291cmNlIGlkIGhlYWRmaWxlDQo+IA0KPiA+IEZyb206IEFuc29uIEh1YW5nDQo+ID4gU2VudDog
-VHVlc2RheSwgRmVicnVhcnkgMTksIDIwMTkgNTowMSBQTQ0KPiA+IFN1YmplY3Q6IFtQQVRDSF0g
-ZHQtYmluZGluZ3M6IGlteDogdXBkYXRlIHNjdSByZXNvdXJjZSBpZCBoZWFkZmlsZQ0KPiA+DQo+
-ID4gVXBkYXRlIGkuTVggU0NVIHJlc291cmNlIElEIHRhYmxlIGFjY29yZGluZyB0byBsYXRlc3Qg
-c3lzdGVtDQo+ID4gY29udHJvbGxlciBmaXJtd2FyZS4NCj4gPg0KPiANCj4gWW91IG5lZWQgYXQg
-bGVhc3QgZXhwbGFpbiB3aGF0IGNoYW5nZXMgbWFkZSBsaWtlIHdoYXQgbmV3IGZlYXR1cmVzIGFk
-ZGVkPw0KPiBXaGF0IHJlbW92ZWQ/IFNpZGUgYWZmZWN0IGlmIGFueT8NCg0KTm8gbmV3IGZlYXR1
-cmVzIGFkZGVkLCBsb29rcyBsaWtlIFNDRlcganVzdCByZW1vdmUgc29tZSB1bnVzZWQgcmVzb3Vy
-Y2VzLg0KTm8gc2lkZS1lZmZlY3QsIGFzIHRoZXkgYXJlIE5PVCB1c2VkIGJ5IGFueW9uZS4NCg0K
-QW5zb24uDQoNCj4gDQo+IFJlZ2FyZHMNCj4gRG9uZyBBaXNoZW5nDQo+IA0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBp
-bmNsdWRlL2R0LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmggfCAzOQ0KPiA+ICsrKysrKysr
-KysrKysrKysrKystLS0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0
-aW9ucygrKSwgMTcgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9k
-dC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oDQo+ID4gYi9pbmNsdWRlL2R0LWJpbmRpbmdz
-L2Zpcm13YXJlL2lteC9yc3JjLmgNCj4gPiBpbmRleCA0NDgxZjJkLi5hZDc0N2E4IDEwMDY0NA0K
-PiA+IC0tLSBhL2luY2x1ZGUvZHQtYmluZGluZ3MvZmlybXdhcmUvaW14L3JzcmMuaA0KPiA+ICsr
-KyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvZmlybXdhcmUvaW14L3JzcmMuaA0KPiA+IEBAIC0zNiwx
-NSArMzYsMTUgQEANCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9EQ18wX0JMSVQxCQkyMA0KPiA+ICAj
-ZGVmaW5lIElNWF9TQ19SX0RDXzBfQkxJVDIJCTIxDQo+ID4gICNkZWZpbmUgSU1YX1NDX1JfRENf
-MF9CTElUX09VVAkJMjINCj4gPiAtI2RlZmluZSBJTVhfU0NfUl9EQ18wX0NBUFRVUkUwCQkyMw0K
-PiA+IC0jZGVmaW5lIElNWF9TQ19SX0RDXzBfQ0FQVFVSRTEJCTI0DQo+ID4gKyNkZWZpbmUgSU1Y
-X1NDX1JfUEVSRgkJCTIzDQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfVU5VU0VENQkJMjQNCj4gPiAg
-I2RlZmluZSBJTVhfU0NfUl9EQ18wX1dBUlAJCTI1DQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENf
-MF9JTlRFR1JBTDAJCTI2DQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENfMF9JTlRFR1JBTDEJCTI3
-DQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfVU5VU0VENwkJMjYNCj4gPiArI2RlZmluZSBJTVhfU0Nf
-Ul9VTlVTRUQ4CQkyNw0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzBfVklERU8wCQkyOA0KPiA+
-ICAjZGVmaW5lIElNWF9TQ19SX0RDXzBfVklERU8xCQkyOQ0KPiA+ICAjZGVmaW5lIElNWF9TQ19S
-X0RDXzBfRlJBQzAJCTMwDQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENfMF9GUkFDMQkJMzENCj4g
-PiArI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQ2CQkzMQ0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RD
-XzAJCQkzMg0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0dQVV8yX1BJRDAJCTMzDQo+ID4gICNkZWZp
-bmUgSU1YX1NDX1JfRENfMF9QTExfMAkJMzQNCj4gPiBAQCAtNTMsMTcgKzUzLDE3IEBADQo+ID4g
-ICNkZWZpbmUgSU1YX1NDX1JfRENfMV9CTElUMQkJMzcNCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9E
-Q18xX0JMSVQyCQkzOA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfQkxJVF9PVVQJCTM5DQo+
-ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENfMV9DQVBUVVJFMAkJNDANCj4gPiAtI2RlZmluZSBJTVhf
-U0NfUl9EQ18xX0NBUFRVUkUxCQk0MQ0KPiA+ICsjZGVmaW5lIElNWF9TQ19SX1VOVVNFRDkJCTQw
-DQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfVU5VU0VEMTAJCTQxDQo+ID4gICNkZWZpbmUgSU1YX1ND
-X1JfRENfMV9XQVJQCQk0Mg0KPiA+IC0jZGVmaW5lIElNWF9TQ19SX0RDXzFfSU5URUdSQUwwCQk0
-Mw0KPiA+IC0jZGVmaW5lIElNWF9TQ19SX0RDXzFfSU5URUdSQUwxCQk0NA0KPiA+ICsjZGVmaW5l
-IElNWF9TQ19SX1VOVVNFRDExCQk0Mw0KPiA+ICsjZGVmaW5lIElNWF9TQ19SX1VOVVNFRDEyCQk0
-NA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfVklERU8wCQk0NQ0KPiA+ICAjZGVmaW5lIElN
-WF9TQ19SX0RDXzFfVklERU8xCQk0Ng0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfRlJBQzAJ
-CTQ3DQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENfMV9GUkFDMQkJNDgNCj4gPiArI2RlZmluZSBJ
-TVhfU0NfUl9VTlVTRUQxMwkJNDgNCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9EQ18xCQkJNDkNCj4g
-PiAtI2RlZmluZSBJTVhfU0NfUl9HUFVfM19QSUQwCQk1MA0KPiA+ICsjZGVmaW5lIElNWF9TQ19S
-X1VOVVNFRDE0CQk1MA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfUExMXzAJCTUxDQo+ID4g
-ICNkZWZpbmUgSU1YX1NDX1JfRENfMV9QTExfMQkJNTINCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9T
-UElfMAkJCTUzDQo+ID4gQEAgLTMwMyw4ICszMDMsOCBAQA0KPiA+ICAjZGVmaW5lIElNWF9TQ19S
-X000XzBfVUFSVAkJMjg3DQo+ID4gICNkZWZpbmUgSU1YX1NDX1JfTTRfMF9JMkMJCTI4OA0KPiA+
-ICAjZGVmaW5lIElNWF9TQ19SX000XzBfSU5UTVVYCQkyODkNCj4gPiAtI2RlZmluZSBJTVhfU0Nf
-Ul9NNF8wX1NJTQkJMjkwDQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfTTRfMF9XRE9HCQkyOTENCj4g
-PiArI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQxNQkJMjkwDQo+ID4gKyNkZWZpbmUgSU1YX1NDX1Jf
-VU5VU0VEMTYJCTI5MQ0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzBfTVVfMEIJCTI5Mg0KPiA+
-ICAjZGVmaW5lIElNWF9TQ19SX000XzBfTVVfMEEwCQkyOTMNCj4gPiAgI2RlZmluZSBJTVhfU0Nf
-Ul9NNF8wX01VXzBBMQkJMjk0DQo+ID4gQEAgLTMyMyw4ICszMjMsOCBAQA0KPiA+ICAjZGVmaW5l
-IElNWF9TQ19SX000XzFfVUFSVAkJMzA3DQo+ID4gICNkZWZpbmUgSU1YX1NDX1JfTTRfMV9JMkMJ
-CTMwOA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzFfSU5UTVVYCQkzMDkNCj4gPiAtI2RlZmlu
-ZSBJTVhfU0NfUl9NNF8xX1NJTQkJMzEwDQo+ID4gLSNkZWZpbmUgSU1YX1NDX1JfTTRfMV9XRE9H
-CQkzMTENCj4gPiArI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQxNwkJMzEwDQo+ID4gKyNkZWZpbmUg
-SU1YX1NDX1JfVU5VU0VEMTgJCTMxMQ0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzFfTVVfMEIJ
-CTMxMg0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzFfTVVfMEEwCQkzMTMNCj4gPiAgI2RlZmlu
-ZSBJTVhfU0NfUl9NNF8xX01VXzBBMQkJMzE0DQo+ID4gQEAgLTMzNyw3ICszMzcsNyBAQA0KPiA+
-ICAjZGVmaW5lIElNWF9TQ19SX0lSUVNUUl9TQ1UyCQkzMjENCj4gPiAgI2RlZmluZSBJTVhfU0Nf
-Ul9JUlFTVFJfRFNQCQkzMjINCj4gPiAgI2RlZmluZSBJTVhfU0NfUl9FTENESUZfUExMCQkzMjMN
-Cj4gPiAtI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQ2CQkzMjQNCj4gPiArI2RlZmluZSBJTVhfU0Nf
-Ul9PQ1JBTQkJCTMyNA0KPiA+ICAjZGVmaW5lIElNWF9TQ19SX0FVRElPX1BMTF8wCQkzMjUNCj4g
-PiAgI2RlZmluZSBJTVhfU0NfUl9QSV8wCQkJMzI2DQo+ID4gICNkZWZpbmUgSU1YX1NDX1JfUElf
-MF9QV01fMAkJMzI3DQo+ID4gQEAgLTU1NCw2ICs1NTQsMTEgQEANCj4gPiAgI2RlZmluZSBJTVhf
-U0NfUl9WUFVfTVVfMwkJNTM4DQo+ID4gICNkZWZpbmUgSU1YX1NDX1JfVlBVX0VOQ18xCQk1MzkN
-Cj4gPiAgI2RlZmluZSBJTVhfU0NfUl9WUFUJCQk1NDANCj4gPiAtI2RlZmluZSBJTVhfU0NfUl9M
-QVNUCQkJNTQxDQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfRE1BXzVfQ0gwCQk1NDENCj4gPiArI2Rl
-ZmluZSBJTVhfU0NfUl9ETUFfNV9DSDEJCTU0Mg0KPiA+ICsjZGVmaW5lIElNWF9TQ19SX0RNQV81
-X0NIMgkJNTQzDQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfRE1BXzVfQ0gzCQk1NDQNCj4gPiArI2Rl
-ZmluZSBJTVhfU0NfUl9BVFRFU1RBVElPTgkJNTQ1DQo+ID4gKyNkZWZpbmUgSU1YX1NDX1JfTEFT
-VAkJCTU0Ng0KPiA+DQo+ID4gICNlbmRpZiAvKiBfX0RUX0JJTkRJTkdTX1JTQ1JDX0lNWF9IICov
-DQo+ID4gLS0NCj4gPiAyLjcuNA0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+[...]
+
+> > I don't like droping some ID's (e.g. IMX_SC_R_DC_0_CAPTURE0) by mark
+> > them as unused or even worse give them a other meaning. IMHO the
+> > scu-api should be stable since day 1 and the ID's should only be extended.
+> > Marking ID's as deprecated is much better than moving them around.
+> 
+> I agree the SCU APIs should be stable since day 1 and the ID should ONLY be
+> extended, but that is the best cases, the reality is, there are different
+> SoCs/Revision, some revisions may remove the resources ID defined in
+> pre-coded SCU firmware, like the IMX_SC_R_DC_0_CAPTURE0 etc., so SCU APIs
+> removes them after real silicon arrived, now latest SCU firmware marks them
+> as UNUSED, they could be replaced by some other new resources in later new
+> SoC, I am NOT sure, but if it happens, this resource ID table should be updated
+> anyway, leaving the out-of-date resource ID table there will have issues, since it
+> is NOT sync with SCU firmware.
+> 
+> So how to resolve such issue? We hope the SCU firmware should be stable
+> since day 1, but the truth is NOT, could be still some updates but NOT very
+> often. And I believe the updates will NOT break old kernel version.
+> 
+
+Please double check with SCU firmware owner what the removed ID are used before?
+Any side effect if removing them.
+
+And please also check if the combability can be maintained via IMX_SC_RPC_VERSION?
+
+Regards
+Dong Aisheng
+
+> Anson.
+> 
+> >
+> > Regards,
+> > Marco
+> >
+> > >
+> > > Anson.
+> > >
+> > > >
+> > > > Regards,
+> > > > Marco
+> > > >
+> > > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > > > ---
+> > > > >  include/dt-bindings/firmware/imx/rsrc.h | 39
+> > > > > +++++++++++++++++++--------------
+> > > > >  1 file changed, 22 insertions(+), 17 deletions(-)
+> > > > >
+> > > > > diff --git a/include/dt-bindings/firmware/imx/rsrc.h
+> > > > > b/include/dt-bindings/firmware/imx/rsrc.h
+> > > > > index 4481f2d..ad747a8 100644
+> > > > > --- a/include/dt-bindings/firmware/imx/rsrc.h
+> > > > > +++ b/include/dt-bindings/firmware/imx/rsrc.h
+> > > > > @@ -36,15 +36,15 @@
+> > > > >  #define IMX_SC_R_DC_0_BLIT1		20
+> > > > >  #define IMX_SC_R_DC_0_BLIT2		21
+> > > > >  #define IMX_SC_R_DC_0_BLIT_OUT		22
+> > > > > -#define IMX_SC_R_DC_0_CAPTURE0		23
+> > > > > -#define IMX_SC_R_DC_0_CAPTURE1		24
+> > > > > +#define IMX_SC_R_PERF			23
+> > > > > +#define IMX_SC_R_UNUSED5		24
+> > > > >  #define IMX_SC_R_DC_0_WARP		25
+> > > > > -#define IMX_SC_R_DC_0_INTEGRAL0		26
+> > > > > -#define IMX_SC_R_DC_0_INTEGRAL1		27
+> > > > > +#define IMX_SC_R_UNUSED7		26
+> > > > > +#define IMX_SC_R_UNUSED8		27
+> > > > >  #define IMX_SC_R_DC_0_VIDEO0		28
+> > > > >  #define IMX_SC_R_DC_0_VIDEO1		29
+> > > > >  #define IMX_SC_R_DC_0_FRAC0		30
+> > > > > -#define IMX_SC_R_DC_0_FRAC1		31
+> > > > > +#define IMX_SC_R_UNUSED6		31
+> > > > >  #define IMX_SC_R_DC_0			32
+> > > > >  #define IMX_SC_R_GPU_2_PID0		33
+> > > > >  #define IMX_SC_R_DC_0_PLL_0		34
+> > > > > @@ -53,17 +53,17 @@
+> > > > >  #define IMX_SC_R_DC_1_BLIT1		37
+> > > > >  #define IMX_SC_R_DC_1_BLIT2		38
+> > > > >  #define IMX_SC_R_DC_1_BLIT_OUT		39
+> > > > > -#define IMX_SC_R_DC_1_CAPTURE0		40
+> > > > > -#define IMX_SC_R_DC_1_CAPTURE1		41
+> > > > > +#define IMX_SC_R_UNUSED9		40
+> > > > > +#define IMX_SC_R_UNUSED10		41
+> > > > >  #define IMX_SC_R_DC_1_WARP		42
+> > > > > -#define IMX_SC_R_DC_1_INTEGRAL0		43
+> > > > > -#define IMX_SC_R_DC_1_INTEGRAL1		44
+> > > > > +#define IMX_SC_R_UNUSED11		43
+> > > > > +#define IMX_SC_R_UNUSED12		44
+> > > > >  #define IMX_SC_R_DC_1_VIDEO0		45
+> > > > >  #define IMX_SC_R_DC_1_VIDEO1		46
+> > > > >  #define IMX_SC_R_DC_1_FRAC0		47
+> > > > > -#define IMX_SC_R_DC_1_FRAC1		48
+> > > > > +#define IMX_SC_R_UNUSED13		48
+> > > > >  #define IMX_SC_R_DC_1			49
+> > > > > -#define IMX_SC_R_GPU_3_PID0		50
+> > > > > +#define IMX_SC_R_UNUSED14		50
+> > > > >  #define IMX_SC_R_DC_1_PLL_0		51
+> > > > >  #define IMX_SC_R_DC_1_PLL_1		52
+> > > > >  #define IMX_SC_R_SPI_0			53
+> > > > > @@ -303,8 +303,8 @@
+> > > > >  #define IMX_SC_R_M4_0_UART		287
+> > > > >  #define IMX_SC_R_M4_0_I2C		288
+> > > > >  #define IMX_SC_R_M4_0_INTMUX		289
+> > > > > -#define IMX_SC_R_M4_0_SIM		290
+> > > > > -#define IMX_SC_R_M4_0_WDOG		291
+> > > > > +#define IMX_SC_R_UNUSED15		290
+> > > > > +#define IMX_SC_R_UNUSED16		291
+> > > > >  #define IMX_SC_R_M4_0_MU_0B		292
+> > > > >  #define IMX_SC_R_M4_0_MU_0A0		293
+> > > > >  #define IMX_SC_R_M4_0_MU_0A1		294
+> > > > > @@ -323,8 +323,8 @@
+> > > > >  #define IMX_SC_R_M4_1_UART		307
+> > > > >  #define IMX_SC_R_M4_1_I2C		308
+> > > > >  #define IMX_SC_R_M4_1_INTMUX		309
+> > > > > -#define IMX_SC_R_M4_1_SIM		310
+> > > > > -#define IMX_SC_R_M4_1_WDOG		311
+> > > > > +#define IMX_SC_R_UNUSED17		310
+> > > > > +#define IMX_SC_R_UNUSED18		311
+> > > > >  #define IMX_SC_R_M4_1_MU_0B		312
+> > > > >  #define IMX_SC_R_M4_1_MU_0A0		313
+> > > > >  #define IMX_SC_R_M4_1_MU_0A1		314
+> > > > > @@ -337,7 +337,7 @@
+> > > > >  #define IMX_SC_R_IRQSTR_SCU2		321
+> > > > >  #define IMX_SC_R_IRQSTR_DSP		322
+> > > > >  #define IMX_SC_R_ELCDIF_PLL		323
+> > > > > -#define IMX_SC_R_UNUSED6		324
+> > > > > +#define IMX_SC_R_OCRAM			324
+> > > > >  #define IMX_SC_R_AUDIO_PLL_0		325
+> > > > >  #define IMX_SC_R_PI_0			326
+> > > > >  #define IMX_SC_R_PI_0_PWM_0		327
+> > > > > @@ -554,6 +554,11 @@
+> > > > >  #define IMX_SC_R_VPU_MU_3		538
+> > > > >  #define IMX_SC_R_VPU_ENC_1		539
+> > > > >  #define IMX_SC_R_VPU			540
+> > > > > -#define IMX_SC_R_LAST			541
+> > > > > +#define IMX_SC_R_DMA_5_CH0		541
+> > > > > +#define IMX_SC_R_DMA_5_CH1		542
+> > > > > +#define IMX_SC_R_DMA_5_CH2		543
+> > > > > +#define IMX_SC_R_DMA_5_CH3		544
+> > > > > +#define IMX_SC_R_ATTESTATION		545
+> > > > > +#define IMX_SC_R_LAST			546
+> > > > >
+> > > > >  #endif /* __DT_BINDINGS_RSCRC_IMX_H */
+> > > > > --
+> > > > > 2.7.4
+> > > > >
+> > > > >
+> > > > >
+> > > >
+> > > > --
+> > > > Pengutronix e.K.                           |
+> |
+> > > > Industrial Linux Solutions                 |
+> > > >
+> > https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fww
+> > > >
+> > w.pengutronix.de%2F&amp;data=02%7C01%7Canson.huang%40nxp.com%7
+> > > >
+> >
+> Cfe709ac17a164d82c7d508d6966915fb%7C686ea1d3bc2b4c6fa92cd99c5c30
+> 1
+> > > >
+> >
+> 635%7C0%7C0%7C636861775412076730&amp;sdata=05ZzPf2%2BQF10JXLLs
+> > > > OPqDdqTi00BWXNHxmMOsQ1z0yI%3D&amp;reserved=0  | Peiner Str.
+> 6-8,
+> > > > 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
+> > |
+> > > > Amtsgericht Hildesheim, HRA 2686           | Fax:
+> +49-5121-206917-5555 |
+> >
+> > --
+> > Pengutronix e.K.                           |
+> |
+> > Industrial Linux Solutions                 |
+> > https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fww
+> > w.pengutronix.de%2F&amp;data=02%7C01%7Canson.huang%40nxp.com%7
+> >
+> Cd5d39730435e4b06549c08d696794904%7C686ea1d3bc2b4c6fa92cd99c5c
+> 30
+> >
+> 1635%7C0%7C0%7C636861845015130502&amp;sdata=tQYrNl5lzIRRNVBCji6
+> A
+> > sPREOnIfDgdPWgAnsWyCErg%3D&amp;reserved=0  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
+> |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:
+> +49-5121-206917-5555 |
