@@ -1,66 +1,112 @@
-Return-Path: <SRS0=4we3=Q3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.nic.cz ([217.31.204.67]:48579 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbfBTOFe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Feb 2019 09:05:34 -0500
-Date: Wed, 20 Feb 2019 15:05:14 +0100
-From: Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: Document no-uhs-voltage MMC
- property
-Message-ID: <20190220150514.102ee9f3@dellmb.labs.office.nic.cz>
-In-Reply-To: <CAPDyKFpUsOi3V05DrbB8rU9O1dj4uP7GkV-Cq+U5WU1Uy8ysyw@mail.gmail.com>
-References: <20181018152916.9355-1-marek.behun@nic.cz>
-        <CAPDyKFpUsOi3V05DrbB8rU9O1dj4uP7GkV-Cq+U5WU1Uy8ysyw@mail.gmail.com>
+Return-Path: <SRS0=9Qkd=Q3=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V7 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Wed, 20 Feb 2019 08:51:06 +0000
+Message-ID: <DB3PR0402MB39165AFD394E16C9FAA6FC4AF57D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550645332-2907-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB42152F3A2F9C6E6D8CF3D0DA807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB42152F3A2F9C6E6D8CF3D0DA807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Sender: devicetree-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, 22 Oct 2018 14:23:04 +0200
-Ulf Hansson <ulf.hansson@linaro.org> wrote:
-
-> On 18 October 2018 at 17:29, Marek Beh=C3=BAn <marek.behun@nic.cz> wrote:
-> > Add documentation for no-uhs-voltage MMC property.
-> >
-> > Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> >  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
-> > b/Documentation/devicetree/bindings/mmc/mmc.txt index
-> > f5a0923b34ca..0506dcbc2070 100644 ---
-> > a/Documentation/devicetree/bindings/mmc/mmc.txt +++
-> > b/Documentation/devicetree/bindings/mmc/mmc.txt @@ -55,6 +55,7 @@
-> > Optional properties:
-> >  - no-sdio: controller is limited to send sdio cmd during
-> > initialization
-> >  - no-sd: controller is limited to send sd cmd during initialization
-> >  - no-mmc: controller is limited to send mmc cmd during
-> > initialization +- no-uhs-voltage: controller does not support
-> > switching to UHS voltage =20
->=20
-> We already have bindings for telling which UHS modes that are
-> supported.
->=20
-> It doesn't make sense to me, to also have a binding saying that UHS
-> mode isn't supported, as that information is already available.
->=20
-
-Hi Ulf,
-the problem here is that I some boards have hardware bugs which report
-UHS support but the voltage switch won't work. In this case how should
-I tell the kernel not to do the voltage_switch? If I looked at the code
-correctly, currently there isn't a way to specify this via device tree.
-
-sd.c function mmc_sd_get_cid calls mmc_set_uhs_voltage if the device
-reports it (CCS and S18A in the response is set). But
-mmc_set_uhs_voltage fails on such boards and kernel won't boot root
-partition.
-
-Marek
+DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gRnJvbTogQWlzaGVuZyBEb25nDQo+IFNlbnQ6IDIwMTnE6jLUwjIwyNUgMTU6NDUN
+Cj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgbWFyay5ydXRsYW5kQGFy
+bS5jb207DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtl
+cm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZmVzdGV2YW1AZ21haWwuY29tOyBjYXRhbGluLm1hcmlu
+YXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gcnVpLnpoYW5nQGludGVsLmNvbTsg
+ZWR1YmV6dmFsQGdtYWlsLmNvbTsgZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZzsNCj4gdWxmLmhh
+bnNzb25AbGluYXJvLm9yZzsgRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsN
+Cj4gaG9ybXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXU7IEFuZHkgR3Jvc3MgPGFuZHkuZ3Jvc3NAbGlu
+YXJvLm9yZz47DQo+IGhlaWtvQHNudGVjaC5kZTsgYXJuZEBhcm5kYi5kZTsgb2xvZkBsaXhvbS5u
+ZXQ7DQo+IGJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnOyBqYWdhbkBhbWFydWxhc29sdXRpb25z
+LmNvbTsNCj4gZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbTsgbWFyYy53LmdvbnphbGV6QGZy
+ZWUuZnI7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51
+eC1wbUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5j
+b20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggVjcgMS80XSBkdC1iaW5kaW5nczogZnNsOiBzY3U6
+IGFkZCB0aGVybWFsIGJpbmRpbmcNCj4gDQo+ID4gRnJvbTogQW5zb24gSHVhbmcNCj4gPiBTZW50
+OiBXZWRuZXNkYXksIEZlYnJ1YXJ5IDIwLCAyMDE5IDI6NTQgUE0NCj4gPg0KPiA+IE5YUCBpLk1Y
+OFFYUCBpcyBhbiBBUk12OCBTb0Mgd2l0aCBhIENvcnRleC1NNCBjb3JlIGluc2lkZSBhcyBzeXN0
+ZW0NCj4gPiBjb250cm9sbGVyLCB0aGUgc3lzdGVtIGNvbnRyb2xsZXIgaXMgaW4gY2hhcmdlIG9m
+IHN5c3RlbSBwb3dlciwgY2xvY2sNCj4gPiBhbmQgdGhlcm1hbCBzZW5zb3JzIGV0Yy4gbWFuYWdl
+bWVudCwgTGludXgga2VybmVsIGhhcyB0byBjb21tdW5pY2F0ZQ0KPiA+IHdpdGggc3lzdGVtIGNv
+bnRyb2xsZXIgdmlhIE1VIChtZXNzYWdlIHVuaXQpIElQQyB0byBnZXQgdGVtcGVyYXR1cmUNCj4g
+PiBmcm9tIHRoZXJtYWwgc2Vuc29ycywgdGhpcyBwYXRjaCBhZGRzIGJpbmRpbmcgZG9jIGZvciBp
+Lk1YIHN5c3RlbQ0KPiBjb250cm9sbGVyIHRoZXJtYWwgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVk
+LW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQt
+Ynk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBz
+aW5jZSBWNjoNCj4gPiAJLSBwdXQgImlteCxzZW5zb3ItcmVzb3VyY2UtaWQiIHByb3BlcnR5IGlu
+IHRoZXJtYWwgem9uZSBub2Rlcy4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dCAgfCAyNw0KPiA+ICsrKysrKysrKysrKysrKysr
+KysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRp
+ZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJl
+ZXNjYWxlL2ZzbCxzY3UudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IGluZGV4IDcyZDQ4MWMuLmFkOTY4ODEg
+MTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9m
+cmVlc2NhbGUvZnNsLHNjdS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IEBAIC0xMjIsNiArMTIyLDI3
+IEBAIFJUQyBiaW5kaW5ncyBiYXNlZCBvbiBTQ1UgTWVzc2FnZSBQcm90b2NvbA0KPiA+IFJlcXVp
+cmVkIHByb3BlcnRpZXM6DQo+ID4gIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJmc2wsaW14OHF4
+cC1zYy1ydGMiOw0KPiA+DQo+ID4gK1RoZXJtYWwgYmluZGluZ3MgYmFzZWQgb24gU0NVIE1lc3Nh
+Z2UgUHJvdG9jb2wNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
+PiA+ICstIGNvbXBhdGlibGUgOiBNdXN0IGJlICJmc2wsaW14LXNjLXRoZXJtYWwiOw0KPiA+ICst
+IHRzZW5zLW51bSA6IFRvdGFsIG51bWJlciBvZiB0aGVybWFsIHNlbnNvcnMgc3VwcG9ydGVkOw0K
+PiANCj4gV2UgcHJvcGVybHkgZG9uJ3QgbmVlZCB0aGlzIHByb3BlcnR5IGlmIHRoZSBudW1iZXIg
+b2Ygc2Vuc29yIGlzIGZpeGVkIG9uIGENCj4gc3BlY2lmaWMgU29DLg0KDQpBZnRlciBmdXJ0aGVy
+IGNoZWNrLCBJIHRoaW5rIHdlIGNhbiB1c2UgIiBmb3JfZWFjaF9hdmFpbGFibGVfY2hpbGRfb2Zf
+bm9kZSAiDQp0byBnZXQgZXZlcnkgdGhlcm1hbCB6b25lJ3MgSFcgcmVzb3VyY2UgSUQgYW5kIHJl
+bW92ZSB0aGlzIHByb3BlcnR5Lg0KDQo+IA0KPiA+ICstICN0aGVybWFsLXNlbnNvci1jZWxscyA6
+IFNob3VsZCBiZSAxLiBTZWUNCj4gPiArDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy90aGVybWFsL3RoZXJtYWwudHh0DQo+ID4gKwkJCSAgZm9yIGEgZGVzY3JpcHRpb24uDQo+
+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciB0aGVybWFsIHpvbmUgbm9kZXM6DQo+
+ID4gKy0gaW14LHNlbnNvci1yZXNvdXJjZS1pZCA6IFRoaXMgcHJvcGVydHkgc2hvdWxkIGJlIGRl
+ZmluZWQgaW4gZWFjaA0KPiA+ICt0aGVybWFsDQo+IA0KPiBBZnRlciBhIGZ1cnRoZXIgbG9va2lu
+ZyBhdCBpdCwgSSB3b25kZXIgdGhpcyBwcm9wZXJ0eSBtYXkgbm90IG5lZWRlZCBlaXRoZXIuDQo+
+IA0KDQpJZiB3ZSBkbyBOT1QgaGF2ZSBzdWNoIHByb3BlcnR5LCB3ZSBoYXZlIHRvIGRvIHRoZSBt
+YXBwaW5nIGluIGRyaXZlciB0byBnZXQNCnJlc291cmNlIElELCBmb3IgZGlmZmVyZW50IFNvQywg
+d2Ugd2lsbCBoYXZlIHRvIGNyZWF0ZSBkaWZmZXJlbnQgbWFwcGluZyB0YWJsZSwNCnRoZSB0aGVy
+bWFsIHpvbmUgSUQgZ2l2ZW4gYnkgY29tbW9uIHRoZXJtYWwgZnJhbWV3b3JrIGlzIHZpcnR1YWwg
+SUQgc3RhcnRpbmcNCmZyb20gMC4gQWRkaW5nIHRoaXMgcHJvcGVydHkgaW4gdGhlcm1hbCB6b25l
+IG5vZGUgaXMgdG8gbWFrZSBTQyB0aGVybWFsIGRyaXZlcg0KbW9yZSBnZW5lcmljIGZvciBvdGhl
+ciBTb0NzLg0KDQo+ID4gem9uZQ0KPiA+ICsJCQkgICBvZiB0aGVybWFsLXpvbmVzIG5vZGUsIGl0
+IHBhc3NlcyBlYWNoIHRoZXJtYWwNCj4gem9uZSdzDQo+ID4gKwkJCSAgIHJlc291cmNlIGlkIGZv
+ciB0aGVybWFsIGRyaXZlciB0byBnZXQgdGVtcGVyYXR1cmUNCj4gdmlhDQo+ID4gKwkJCSAgIFND
+VSBJUEMuDQo+ID4gKw0KPiA+ICsJCQkgICBGb3IgdGhlcm1hbCB6b25lIG5vZGVzLCBwbGVhc2Ug
+cmVmZXIgdG8gYmVsb3cNCj4gYmluZGluZw0KPiA+ICsJCQkgICBkb2MgZm9yIGRldGFpbHM6DQo+
+ID4gKw0KPiA+ICtbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwv
+dGhlcm1hbC50eHQNCj4gPiArDQo+ID4gIEV4YW1wbGUgKGlteDhxeHApOg0KPiA+ICAtLS0tLS0t
+LS0tLS0tDQo+ID4gIGxzaW9fbXUxOiBtYWlsYm94QDVkMWMwMDAwIHsNCj4gPiBAQCAtMTY4LDYg
+KzE4OSwxMiBAQCBmaXJtd2FyZSB7DQo+ID4gIAkJcnRjOiBydGMgew0KPiA+ICAJCQljb21wYXRp
+YmxlID0gImZzbCxpbXg4cXhwLXNjLXJ0YyI7DQo+ID4gIAkJfTsNCj4gPiArDQo+ID4gKwkJdHNl
+bnM6IHRoZXJtYWwtc2Vuc29yIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1z
+Yy10aGVybWFsIjsNCj4gPiArCQkJdHNlbnMtbnVtID0gPDE+Ow0KPiA+ICsJCQkjdGhlcm1hbC1z
+ZW5zb3ItY2VsbHMgPSA8MT47DQo+IA0KPiBUaGlzIGxvb2tzIG1heSBub3QgY29ycmVjdCBpZiBz
+ZW5zb3IgY2VsbHMgaXMgMSBidXQgdGhlIHNlbnNvciBudW1iZXIgSXMgYWxzbyAxLg0KPiBTbyB3
+ZSBwcm9iYWJseSBiZXR0ZXIgcmVtb3ZlIHRzZW5zLW51bSBwcm9wZXJ0eS4NCg0KWWVzLCB0aGlz
+IHNob3VsZCBiZSAwIGlmIDEgdGhlcm1hbCB6b25lIE9OTFkgaGF2ZSAxIHRoZXJtYWwgc2Vuc29y
+LCBsYXRlciB3ZSB3aWxsDQphZGQgb3RoZXIgdGhlcm1hbCB6b25lIGxpa2UgRERSIHpvbmUsIGN1
+cnJlbnRseSB0aGVyZSBpcyBzdGlsbCBzb21lIGlzc3VlcyBzbyBTQ0ZXDQpkb2VzIE5PVCBwcm92
+aWRlIHN1cHBvcnQgZm9yIHRoaXMgem9uZSwgYWZ0ZXIgaXNzdWUgZml4ZWQsIFNDRlcgbWF5IGFk
+ZCB0aGlzIHRoZXJtYWwNCnpvbmUncyBzdXBwb3J0LiBXaWxsIGZpeCB0aGVtIGluIG5leHQgdmVy
+c2lvbi4NCg0KVGhhbmtzLA0KQW5zb24uDQoNCj4gDQo+IFJlZ2FyZHMNCj4gRG9uZyBBaXNoZW5n
+DQo+IA0KPiA+ICsJCX07DQo+ID4gIAl9Ow0KPiA+ICB9Ow0KPiA+DQo+ID4gLS0NCj4gPiAyLjcu
+NA0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
+eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsCg==
