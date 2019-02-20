@@ -1,14 +1,14 @@
 From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 1/4] dt-bindings: fsl: scu: add general interrupt
- support
-Date: Wed, 20 Feb 2019 05:33:26 +0000
-Message-ID: <AM6PR04MB42159D22AC552CB81AEEF6DE807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH V3 2/4] firmware: imx: enable imx scu general irq function
+Date: Wed, 20 Feb 2019 05:46:18 +0000
+Message-ID: <AM6PR04MB42155AF83E6DA131886045B8807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 References: <1550545569-7197-1-git-send-email-Anson.Huang@nxp.com>
+ <1550545569-7197-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550545569-7197-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550545569-7197-2-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -25,91 +25,192 @@ List-Id: devicetree@vger.kernel.org
 
 > From: Anson Huang
 > Sent: Tuesday, February 19, 2019 11:11 AM
-> Subject: [PATCH V3 1/4] dt-bindings: fsl: scu: add general interrupt support
 > 
-> Add scu general interrupt function support.
+> The System Controller Firmware (SCFW) controls RTC, thermal and WDOG etc.,
+> these resources' interrupt function are managed by SCU. When any IRQ
+> pending, SCU will notify Linux via MU general interrupt channel #3, and Linux
+> kernel needs to call SCU APIs to get IRQ status and notify each module to
+> handle the interrupt.
+> 
+> Since there is no data transmission for SCU IRQ notification, so doorbell mode
+> is used for this MU channel, and SCU driver will use notifier mechanism to
+> broadcast to every module which registers the SCU block notifier.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
 > No change since V2.
 > ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt      | 18
-> ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
+>  drivers/firmware/imx/imx-scu.c   | 101
+> +++++++++++++++++++++++++++++++++++++++
+>  include/linux/firmware/imx/sci.h |   3 ++
+>  2 files changed, 104 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> index f388ec6..e5def3e 100644
-> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -22,9 +22,11 @@ Required properties:
->  -------------------
->  - compatible:	should be "fsl,imx-scu".
->  - mbox-names:	should include "tx0", "tx1", "tx2", "tx3",
-> -			       "rx0", "rx1", "rx2", "rx3".
-> -- mboxes:	List of phandle of 4 MU channels for tx and 4 MU channels
-> -		for rx. All 8 MU channels must be in the same MU instance.
-> +			       "rx0", "rx1", "rx2", "rx3",
-> +			       "gi3".
+> diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+> index 2bb1a19..e93bea5 100644
+> --- a/drivers/firmware/imx/imx-scu.c
+> +++ b/drivers/firmware/imx/imx-scu.c
+> @@ -7,6 +7,7 @@
+>   *
+>   */
+> 
+> +#include <dt-bindings/firmware/imx/rsrc.h>
+>  #include <linux/err.h>
+>  #include <linux/firmware/imx/types.h>
+>  #include <linux/firmware/imx/ipc.h>
+> @@ -21,6 +22,8 @@
+> 
+>  #define SCU_MU_CHAN_NUM		8
+>  #define MAX_RX_TIMEOUT		(msecs_to_jiffies(30))
+> +#define IMX_SC_IRQ_FUNC_STATUS	2
+> +#define IMX_SC_IRQ_NUM_GROUP	6
+> 
+>  struct imx_sc_chan {
+>  	struct imx_sc_ipc *sc_ipc;
+> @@ -77,7 +80,23 @@ static int imx_sc_linux_errmap[IMX_SC_ERR_LAST] = {
+>  	-EIO,	 /* IMX_SC_ERR_FAIL */
+>  };
+> 
+> +struct imx_sc_msg_irq_get_status {
+> +	struct imx_sc_rpc_msg hdr;
+> +	union {
+> +		struct {
+> +			u16 resource;
+> +			u8 group;
+> +			u8 reserved;
+> +		} send;
 
-Should it be optional as SCU firmware does not require it for normal function?
+} __packed req
 
-And as MU also support sending interrupt via GIRn register,
-How about using gip3 to distinguish sending general purpose interrupt?
+> +		struct {
+> +			u32 status;
+> +		} receive;
+
+resp
+
+> +	} data;
+> +} __packed;
+
+No need __packed anymore
+
+> +
+>  static struct imx_sc_ipc *imx_sc_ipc_handle;
+> +static struct work_struct imx_sc_general_irq_work; static
+> +BLOCKING_NOTIFIER_HEAD(imx_scu_notifier_chain);
+> 
+>  static inline int imx_sc_to_linux_errno(int errno)  { @@ -194,6 +213,86 @@
+> int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)  }
+> EXPORT_SYMBOL(imx_scu_call_rpc);
+> 
+> +int imx_scu_register_notifier(struct notifier_block *nb) {
+> +	return blocking_notifier_chain_register(&imx_scu_notifier_chain, nb);
+> +} EXPORT_SYMBOL(imx_scu_register_notifier);
+> +
+> +int imx_scu_unregister_notifier(struct notifier_block *nb) {
+> +	return blocking_notifier_chain_unregister(&imx_scu_notifier_chain,
+> +nb); } EXPORT_SYMBOL(imx_scu_unregister_notifier);
+> +
+> +static int imx_scu_notifier_call_chain(unsigned long status, u8 *group)
+> +{
+> +	return blocking_notifier_call_chain(&imx_scu_notifier_chain,
+> +					    status, (void *)group);
+> +}
+> +
+> +static void imx_scu_general_irq_work_handler(struct work_struct *work)
+> +{
+> +	struct imx_sc_msg_irq_get_status msg;
+> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+> +	u32 irq_status;
+> +	int ret;
+> +	u8 i;
+> +
+> +	for (i = 0; i < IMX_SC_IRQ_NUM_GROUP; i++) {
+> +		hdr->ver = IMX_SC_RPC_VERSION;
+> +		hdr->svc = IMX_SC_RPC_SVC_IRQ;
+> +		hdr->func = IMX_SC_IRQ_FUNC_STATUS;
+> +		hdr->size = 2;
+> +
+> +		msg.data.send.resource = IMX_SC_R_MU_1A;
+
+Please make sure if it's fixed to MU_1A.
+
+> +		msg.data.send.group = i;
+> +
+> +		ret = imx_scu_call_rpc(imx_sc_ipc_handle, &msg, true);
+> +		if (ret) {
+> +			pr_err("get irq status failed, ret %d\n", ret);
+> +			return;
+> +		}
+> +
+> +		irq_status = msg.data.receive.status;
+> +		if (!irq_status)
+> +			continue;
+> +
+> +		imx_scu_notifier_call_chain(irq_status, &i);
+> +	}
+> +}
+> +
+> +static void imx_scu_rxdb_callback(struct mbox_client *c, void *msg) {
+> +	schedule_work(&imx_sc_general_irq_work);
+> +}
+> +
+> +static int imx_scu_enable_general_irq_channel(struct device *dev) {
+> +	struct mbox_client *cl;
+> +	struct mbox_chan *ch;
+> +	int ret = 0;
+> +
+> +	cl = devm_kzalloc(dev, sizeof(*cl), GFP_KERNEL);
+> +	if (!cl)
+> +		return -ENOMEM;
+> +
+> +	cl->dev = dev;
+> +	cl->rx_callback = imx_scu_rxdb_callback;
+> +
+> +	/* SCU general IRQ uses general interrupt channel 3 */
+> +	ch = mbox_request_channel_byname(cl, "gi3");
+> +	if (IS_ERR(ch)) {
+> +		ret = PTR_ERR(ch);
+> +		dev_err(dev, "failed to request mbox chan gi3, ret %d\n", ret);
+> +		return ret;
+
+return PTR_ERR(ch)
+
+> +	}
+> +
+> +	INIT_WORK(&imx_sc_general_irq_work,
+> imx_scu_general_irq_work_handler);
+> +
+> +	return ret;
+> +}
+> +
+>  static int imx_scu_probe(struct platform_device *pdev)  {
+>  	struct device *dev = &pdev->dev;
+> @@ -246,6 +345,8 @@ static int imx_scu_probe(struct platform_device
+> *pdev)
+> 
+>  	imx_sc_ipc_handle = sc_ipc;
+> 
+> +	imx_scu_enable_general_irq_channel(dev);
+> +
+
+Check return in case a failure
 
 Regards
 Dong Aisheng
-> +- mboxes:	List of phandle of 4 MU channels for tx, 4 MU channels for
-> +		rx, and 1 MU channel for general interrupt. All 9 MU channels
-> +		must be in the same MU instance.
->  		Cross instances are not allowed. The MU instance can only
->  		be one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
->  		to make sure use the one which is not conflict with other @@ -34,6
-> +36,7 @@ Required properties:
->  		Channel 1 must be "tx1" or "rx1".
->  		Channel 2 must be "tx2" or "rx2".
->  		Channel 3 must be "tx3" or "rx3".
-> +		General interrupt channel must be "gi3".
 
-This can be:
-		General interrupt Rx channel must be "gip3"
-
-Regards
-Dong Aisheng
-
->  		e.g.
->  		mboxes = <&lsio_mu1 0 0
->  			  &lsio_mu1 0 1
-> @@ -42,7 +45,8 @@ Required properties:
->  			  &lsio_mu1 1 0
->  			  &lsio_mu1 1 1
->  			  &lsio_mu1 1 2
-> -			  &lsio_mu1 1 3>;
-> +			  &lsio_mu1 1 3
-> +			  &lsio_mu1 3 3>;
->  		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->  		for detailed mailbox binding.
+>  	dev_info(dev, "NXP i.MX SCU Initialized\n");
 > 
-> @@ -153,7 +157,8 @@ firmware {
->  	scu {
->  		compatible = "fsl,imx-scu";
->  		mbox-names = "tx0", "tx1", "tx2", "tx3",
-> -			     "rx0", "rx1", "rx2", "rx3";
-> +			     "rx0", "rx1", "rx2", "rx3",
-> +			     "gi3";
->  		mboxes = <&lsio_mu1 0 0
->  			  &lsio_mu1 0 1
->  			  &lsio_mu1 0 2
-> @@ -161,7 +166,8 @@ firmware {
->  			  &lsio_mu1 1 0
->  			  &lsio_mu1 1 1
->  			  &lsio_mu1 1 2
-> -			  &lsio_mu1 1 3>;
-> +			  &lsio_mu1 1 3
-> +			  &lsio_mu1 3 3>;
+>  	return devm_of_platform_populate(dev); diff --git
+> a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/sci.h
+> index ebc5509..9d608db 100644
+> --- a/include/linux/firmware/imx/sci.h
+> +++ b/include/linux/firmware/imx/sci.h
+> @@ -15,4 +15,7 @@
 > 
->  		clk: clk {
->  			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
+>  #include <linux/firmware/imx/svc/misc.h>  #include
+> <linux/firmware/imx/svc/pm.h>
+> +
+> +int imx_scu_register_notifier(struct notifier_block *nb); int
+> +imx_scu_unregister_notifier(struct notifier_block *nb);
+>  #endif /* _SC_SCI_H */
 > --
 > 2.7.4
