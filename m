@@ -1,349 +1,106 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 7/7] clk: at91: add sam9x60 pmc driver
-Date: Wed, 20 Feb 2019 12:26:05 +0100
-Message-ID: <20190220112605.23095-8-alexandre.belloni@bootlin.com>
+Subject: [PATCH 4/7] clk: at91: master: Add sam9x60 support
+Date: Wed, 20 Feb 2019 12:26:02 +0100
+Message-ID: <20190220112605.23095-5-alexandre.belloni@bootlin.com>
 References: <20190220112605.23095-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190220112605.23095-1-alexandre.belloni@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Stephen Boyd <sboyd@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@microchip.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Claudiu Beznea <claudiu.beznea@microchip.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the PMC clocks of the sam9c60.
+The sam9x60 cpu clock is located at a different offset but is otherwise
+similar to the master clock.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clk/at91/Makefile  |   1 +
- drivers/clk/at91/sam9x60.c | 307 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 308 insertions(+)
- create mode 100644 drivers/clk/at91/sam9x60.c
+ drivers/clk/at91/clk-master.c | 8 +++++---
+ drivers/clk/at91/pmc.h        | 1 +
+ include/linux/clk/at91_pmc.h  | 2 ++
+ 3 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index 0a30fc8dfcb0..3732241352ce 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -16,5 +16,6 @@ obj-$(CONFIG_HAVE_AT91_GENERATED_CLK)	+= clk-generated.o
- obj-$(CONFIG_HAVE_AT91_I2S_MUX_CLK)	+= clk-i2s-mux.o
- obj-$(CONFIG_HAVE_AT91_SAM9X60_PLL)	+= clk-sam9x60-pll.o
- obj-$(CONFIG_SOC_AT91SAM9) += at91sam9260.o at91sam9rl.o at91sam9x5.o
-+obj-$(CONFIG_SOC_SAM9X60) += sam9x60.o
- obj-$(CONFIG_SOC_SAMA5D4) += sama5d4.o
- obj-$(CONFIG_SOC_SAMA5D2) += sama5d2.o
-diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-new file mode 100644
-index 000000000000..22bf51c55bdc
---- /dev/null
-+++ b/drivers/clk/at91/sam9x60.c
-@@ -0,0 +1,307 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/clk-provider.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/slab.h>
+diff --git a/drivers/clk/at91/clk-master.c b/drivers/clk/at91/clk-master.c
+index eb53b4a8fab6..12b5bf4cc7bb 100644
+--- a/drivers/clk/at91/clk-master.c
++++ b/drivers/clk/at91/clk-master.c
+@@ -29,6 +29,7 @@ struct clk_master {
+ 	struct regmap *regmap;
+ 	const struct clk_master_layout *layout;
+ 	const struct clk_master_characteristics *characteristics;
++	u32 mckr;
+ };
+ 
+ static inline bool clk_master_ready(struct regmap *regmap)
+@@ -69,7 +70,7 @@ static unsigned long clk_master_recalc_rate(struct clk_hw *hw,
+ 						master->characteristics;
+ 	unsigned int mckr;
+ 
+-	regmap_read(master->regmap, AT91_PMC_MCKR, &mckr);
++	regmap_read(master->regmap, master->layout->offset, &mckr);
+ 	mckr &= layout->mask;
+ 
+ 	pres = (mckr >> layout->pres_shift) & MASTER_PRES_MASK;
+@@ -95,7 +96,7 @@ static u8 clk_master_get_parent(struct clk_hw *hw)
+ 	struct clk_master *master = to_clk_master(hw);
+ 	unsigned int mckr;
+ 
+-	regmap_read(master->regmap, AT91_PMC_MCKR, &mckr);
++	regmap_read(master->regmap, master->layout->offset, &mckr);
+ 
+ 	return mckr & AT91_PMC_CSS;
+ }
+@@ -147,13 +148,14 @@ at91_clk_register_master(struct regmap *regmap,
+ 	return hw;
+ }
+ 
+-
+ const struct clk_master_layout at91rm9200_master_layout = {
+ 	.mask = 0x31F,
+ 	.pres_shift = 2,
++	.offset = AT91_PMC_MCKR,
+ };
+ 
+ const struct clk_master_layout at91sam9x5_master_layout = {
+ 	.mask = 0x373,
+ 	.pres_shift = 4,
++	.offset = AT91_PMC_MCKR,
+ };
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index 44345e4ab1c9..4a30c20f17f1 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -38,6 +38,7 @@ struct clk_range {
+ #define CLK_RANGE(MIN, MAX) {.min = MIN, .max = MAX,}
+ 
+ struct clk_master_layout {
++	u32 offset;
+ 	u32 mask;
+ 	u8 pres_shift;
+ };
+diff --git a/include/linux/clk/at91_pmc.h b/include/linux/clk/at91_pmc.h
+index 31f00ebf1315..0c53f26ae3d3 100644
+--- a/include/linux/clk/at91_pmc.h
++++ b/include/linux/clk/at91_pmc.h
+@@ -74,6 +74,8 @@
+ #define			AT91_PMC_USBDIV_4		(2 << 28)
+ #define		AT91_PMC_USB96M		(1     << 28)		/* Divider by 2 Enable (PLLB only) */
+ 
++#define AT91_PMC_CPU_CKR	0x28			/* CPU Clock Register */
 +
-+#include <dt-bindings/clock/at91.h>
-+
-+#include "pmc.h"
-+
-+DEFINE_SPINLOCK(pmc_pll_lock);
-+
-+static const struct clk_master_characteristics mck_characteristics = {
-+	.output = { .min = 140000000, .max = 200000000 },
-+	.divisors = { 1, 2, 4, 3 },
-+	.have_div3_pres = 1,
-+};
-+
-+static const struct clk_master_layout sam9x60_master_layout = {
-+	.mask = 0x373,
-+	.pres_shift = 4,
-+	.offset = 0x28,
-+};
-+
-+static struct clk_range plla_outputs[] = {
-+	{ .min = 300000000, .max = 600000000 },
-+};
-+
-+static const struct clk_pll_characteristics plla_characteristics = {
-+	.input = { .min = 12000000, .max = 48000000 },
-+	.num_output = ARRAY_SIZE(plla_outputs),
-+	.output = plla_outputs,
-+};
-+
-+static struct clk_range upll_outputs[] = {
-+	{ .min = 300000000, .max = 500000000 },
-+};
-+
-+static const struct clk_pll_characteristics upll_characteristics = {
-+	.input = { .min = 12000000, .max = 48000000 },
-+	.num_output = ARRAY_SIZE(upll_outputs),
-+	.output = upll_outputs,
-+	.upll = true,
-+};
-+
-+static const struct clk_programmable_layout sam9x60_programmable_layout = {
-+	.pres_shift = 8,
-+	.css_mask = 0x1f,
-+	.have_slck_mck = 0,
-+};
-+
-+static const struct clk_pcr_layout sam9x60_pcr_layout = {
-+	.offset = 0x88,
-+	.cmd = BIT(31),
-+	.gckcss_mask = GENMASK(12, 8),
-+	.pid_mask = GENMASK(6, 0),
-+};
-+
-+static const struct {
-+	char *n;
-+	char *p;
-+	u8 id;
-+} sam9x60_systemck[] = {
-+	{ .n = "ddrck",  .p = "masterck", .id = 2 },
-+	{ .n = "uhpck",  .p = "usbck",    .id = 6 },
-+	{ .n = "pck0",   .p = "prog0",    .id = 8 },
-+	{ .n = "pck1",   .p = "prog1",    .id = 9 },
-+	{ .n = "qspick", .p = "masterck", .id = 19 },
-+};
-+
-+static const struct {
-+	char *n;
-+	u8 id;
-+} sam9x60_periphck[] = {
-+	{ .n = "pioA_clk",   .id = 2, },
-+	{ .n = "pioB_clk",   .id = 3, },
-+	{ .n = "pioC_clk",   .id = 4, },
-+	{ .n = "flex0_clk",  .id = 5, },
-+	{ .n = "flex1_clk",  .id = 6, },
-+	{ .n = "flex2_clk",  .id = 7, },
-+	{ .n = "flex3_clk",  .id = 8, },
-+	{ .n = "flex6_clk",  .id = 9, },
-+	{ .n = "flex7_clk",  .id = 10, },
-+	{ .n = "flex8_clk",  .id = 11, },
-+	{ .n = "sdmmc0_clk", .id = 12, },
-+	{ .n = "flex4_clk",  .id = 13, },
-+	{ .n = "flex5_clk",  .id = 14, },
-+	{ .n = "flex9_clk",  .id = 15, },
-+	{ .n = "flex10_clk", .id = 16, },
-+	{ .n = "tcb0_clk",   .id = 17, },
-+	{ .n = "pwm_clk",    .id = 18, },
-+	{ .n = "adc_clk",    .id = 19, },
-+	{ .n = "dma0_clk",   .id = 20, },
-+	{ .n = "matrix_clk", .id = 21, },
-+	{ .n = "uhphs_clk",  .id = 22, },
-+	{ .n = "udphs_clk",  .id = 23, },
-+	{ .n = "macb0_clk",  .id = 24, },
-+	{ .n = "lcd_clk",    .id = 25, },
-+	{ .n = "sdmmc1_clk", .id = 26, },
-+	{ .n = "macb1_clk",  .id = 27, },
-+	{ .n = "ssc_clk",    .id = 28, },
-+	{ .n = "can0_clk",   .id = 29, },
-+	{ .n = "can1_clk",   .id = 30, },
-+	{ .n = "flex11_clk", .id = 32, },
-+	{ .n = "flex12_clk", .id = 33, },
-+	{ .n = "i2s_clk",    .id = 34, },
-+	{ .n = "qspi_clk",   .id = 35, },
-+	{ .n = "gfx2d_clk",  .id = 36, },
-+	{ .n = "pit64b_clk", .id = 37, },
-+	{ .n = "trng_clk",   .id = 38, },
-+	{ .n = "aes_clk",    .id = 39, },
-+	{ .n = "tdes_clk",   .id = 40, },
-+	{ .n = "sha_clk",    .id = 41, },
-+	{ .n = "classd_clk", .id = 42, },
-+	{ .n = "isi_clk",    .id = 43, },
-+	{ .n = "pioD_clk",   .id = 44, },
-+	{ .n = "tcb1_clk",   .id = 45, },
-+	{ .n = "dbgu_clk",   .id = 47, },
-+	{ .n = "mpddr_clk",  .id = 49, },
-+};
-+
-+static const struct {
-+	char *n;
-+	u8 id;
-+	struct clk_range r;
-+	bool pll;
-+} sam9x60_gck[] = {
-+	{ .n = "flex0_gclk",  .id = 5, },
-+	{ .n = "flex1_gclk",  .id = 6, },
-+	{ .n = "flex2_gclk",  .id = 7, },
-+	{ .n = "flex3_gclk",  .id = 8, },
-+	{ .n = "flex6_gclk",  .id = 9, },
-+	{ .n = "flex7_gclk",  .id = 10, },
-+	{ .n = "flex8_gclk",  .id = 11, },
-+	{ .n = "sdmmc0_gclk", .id = 12, .r = { .min = 0, .max = 105000000 }, },
-+	{ .n = "flex4_gclk",  .id = 13, },
-+	{ .n = "flex5_gclk",  .id = 14, },
-+	{ .n = "flex9_gclk",  .id = 15, },
-+	{ .n = "flex10_gclk", .id = 16, },
-+	{ .n = "tcb0_gclk",   .id = 17, },
-+	{ .n = "adc_gclk",    .id = 19, },
-+	{ .n = "lcd_gclk",    .id = 25, .r = { .min = 0, .max = 140000000 }, },
-+	{ .n = "sdmmc1_gclk", .id = 26, .r = { .min = 0, .max = 105000000 }, },
-+	{ .n = "flex11_gclk", .id = 32, },
-+	{ .n = "flex12_gclk", .id = 33, },
-+	{ .n = "i2s_gclk",    .id = 34, .r = { .min = 0, .max = 105000000 },
-+		.pll = true, },
-+	{ .n = "pit64b_gclk", .id = 37, },
-+	{ .n = "classd_gclk", .id = 42, .r = { .min = 0, .max = 100000000 },
-+		.pll = true, },
-+	{ .n = "tcb1_gclk",   .id = 45, },
-+	{ .n = "dbgu_gclk",   .id = 47, },
-+};
-+
-+static void __init sam9x60_pmc_setup(struct device_node *np)
-+{
-+	struct clk_range range = CLK_RANGE(0, 0);
-+	const char *td_slck_name, *md_slck_name, *mainxtal_name;
-+	struct pmc_data *sam9x60_pmc;
-+	const char *parent_names[6];
-+	struct regmap *regmap;
-+	struct clk_hw *hw;
-+	int i;
-+	bool bypass;
-+
-+	i = of_property_match_string(np, "clock-names", "td_slck");
-+	if (i < 0)
-+		return;
-+
-+	td_slck_name = of_clk_get_parent_name(np, i);
-+
-+	i = of_property_match_string(np, "clock-names", "md_slck");
-+	if (i < 0)
-+		return;
-+
-+	md_slck_name = of_clk_get_parent_name(np, i);
-+
-+	i = of_property_match_string(np, "clock-names", "main_xtal");
-+	if (i < 0)
-+		return;
-+	mainxtal_name = of_clk_get_parent_name(np, i);
-+
-+	regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(regmap))
-+		return;
-+
-+	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+					nck(sam9x60_systemck),
-+					nck(sam9x60_periphck),
-+					nck(sam9x60_gck));
-+	if (!sam9x60_pmc)
-+		return;
-+
-+	hw = at91_clk_register_main_rc_osc(regmap, "main_rc_osc", 24000000,
-+					   50000000);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	bypass = of_property_read_bool(np, "atmel,osc-bypass");
-+
-+	hw = at91_clk_register_main_osc(regmap, "main_osc", mainxtal_name,
-+					bypass);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	parent_names[0] = "main_rc_osc";
-+	parent_names[1] = "main_osc";
-+	hw = at91_clk_register_sam9x5_main(regmap, "mainck", parent_names, 2);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	sam9x60_pmc->chws[PMC_MAIN] = hw;
-+
-+	hw = sam9x60_clk_register_pll(regmap, &pmc_pll_lock, "pllack",
-+				      "mainck", 0, &plla_characteristics);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	hw = sam9x60_clk_register_pll(regmap, &pmc_pll_lock, "upllck",
-+				      "main_osc", 1, &upll_characteristics);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	sam9x60_pmc->chws[PMC_UTMI] = hw;
-+
-+	parent_names[0] = md_slck_name;
-+	parent_names[1] = "mainck";
-+	parent_names[2] = "pllack";
-+	hw = at91_clk_register_master(regmap, "masterck", 3, parent_names,
-+				      &sam9x60_master_layout,
-+				      &mck_characteristics);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	sam9x60_pmc->chws[PMC_MCK] = hw;
-+
-+	parent_names[0] = "pllack";
-+	parent_names[1] = "upllck";
-+	parent_names[2] = "mainck";
-+	parent_names[3] = "mainck";
-+	hw = sam9x60_clk_register_usb(regmap, "usbck", parent_names, 4);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	parent_names[0] = md_slck_name;
-+	parent_names[1] = td_slck_name;
-+	parent_names[2] = "mainck";
-+	parent_names[3] = "masterck";
-+	parent_names[4] = "pllack";
-+	parent_names[5] = "upllck";
-+	for (i = 0; i < 8; i++) {
-+		char name[6];
-+
-+		snprintf(name, sizeof(name), "prog%d", i);
-+
-+		hw = at91_clk_register_programmable(regmap, name,
-+						    parent_names, 6, i,
-+						    &sam9x60_programmable_layout);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(sam9x60_systemck); i++) {
-+		hw = at91_clk_register_system(regmap, sam9x60_systemck[i].n,
-+					      sam9x60_systemck[i].p,
-+					      sam9x60_systemck[i].id);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+
-+		sam9x60_pmc->shws[sam9x60_systemck[i].id] = hw;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(sam9x60_periphck); i++) {
-+		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
-+							 &sam9x60_pcr_layout,
-+							 sam9x60_periphck[i].n,
-+							 "masterck",
-+							 sam9x60_periphck[i].id,
-+							 &range);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+
-+		sam9x60_pmc->phws[sam9x60_periphck[i].id] = hw;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(sam9x60_gck); i++) {
-+		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock,
-+						 &sam9x60_pcr_layout,
-+						 sam9x60_gck[i].n,
-+						 parent_names, 6,
-+						 sam9x60_gck[i].id,
-+						 sam9x60_gck[i].pll,
-+						 &sam9x60_gck[i].r);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+
-+		sam9x60_pmc->ghws[sam9x60_gck[i].id] = hw;
-+	}
-+
-+	of_clk_add_hw_provider(np, of_clk_hw_pmc_get, sam9x60_pmc);
-+
-+	return;
-+
-+err_free:
-+	pmc_data_free(sam9x60_pmc);
-+}
-+
-+CLK_OF_DECLARE_DRIVER(sam9x60_pmc, "microchip,sam9x60-pmc", sam9x60_pmc_setup);
+ #define	AT91_PMC_MCKR		0x30			/* Master Clock Register */
+ #define		AT91_PMC_CSS		(3 <<  0)		/* Master Clock Selection */
+ #define			AT91_PMC_CSS_SLOW		(0 << 0)
 -- 
 2.20.1
