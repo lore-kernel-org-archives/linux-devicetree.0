@@ -1,76 +1,47 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH] clk: at91: fix masterck name
-Date: Wed, 20 Feb 2019 11:27:25 +0000
-Message-ID: <93c2e981-f32e-7d21-d094-786b36eccc70@microchip.com>
-References: <20190208144059.29861-1-alexandre.belloni@bootlin.com>
- <db6b542f-add1-af4c-e3f1-ce293042f375@microchip.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 6/7] dt-bindings: clk: at91: add bindings for SAM9X60 pmc
+Date: Wed, 20 Feb 2019 12:26:04 +0100
+Message-ID: <20190220112605.23095-7-alexandre.belloni@bootlin.com>
+References: <20190220112605.23095-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <db6b542f-add1-af4c-e3f1-ce293042f375@microchip.com>
-Content-Language: en-US
-Content-ID: <119F4639F6E5B543B98F047024A54316@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, sboyd@kernel.org
-Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190220112605.23095-1-alexandre.belloni@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Claudiu Beznea <claudiu.beznea@microchip.com>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMDIvMjAxOSBhdCAxNjo1MywgTmljb2xhcy5GZXJyZUBtaWNyb2NoaXAuY29tIHdyb3Rl
-Og0KPiBPbiAwOC8wMi8yMDE5IGF0IDE1OjQwLCBBbGV4YW5kcmUgQmVsbG9uaSB3cm90ZToNCj4+
-IFRoZSBtYXN0ZXIgY2xvY2sgaXMgYWN0dWFsbHkgbmFtZWQgbWFzdGVyY2sgZWFybGllciBpbiB0
-aGUgZHJpdmVyLiBIYXZpbmcNCj4+ICJtY2siIGluIHRoZSBwYXJlbnQgbGlzdCBtZWFucyB0aGF0
-IGl0IGNhbiBuZXZlciBiZSBzZWxlY3RlZC4NCj4+DQo+PiBGaXhlczogMWVhYmRjMmY5ZGQ4ICgi
-Y2xrOiBhdDkxOiBhZGQgYXQ5MXNhbTl4NSBQTUNzIGRyaXZlciIpDQo+PiBGaXhlczogYTIwMzgw
-NzdkZTlhICgiY2xrOiBhdDkxOiBhZGQgc2FtYTVkMiBQTUMgZHJpdmVyIikNCj4+IEZpeGVzOiAw
-ODRiNjk2YmI1MDkgKCJjbGs6IGF0OTE6IGFkZCBzYW1hNWQ0IHBtYyBkcml2ZXIiKQ0KPj4NCj4+
-IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9uaUBib290
-bGluLmNvbT4NCj4gDQo+IEFja2VkLWJ5OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1p
-Y3JvY2hpcC5jb20+DQoNCisNCkNjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4gIyB2NC4yMCsN
-Cg0KU3RlcGhlbiAocGluZyksDQoNClRoaXMgcGF0Y2ggdG9nZXRoZXIgd2l0aCB0aGUgb25lIHNl
-bnQgdG9kYXkgIltQQVRDSF0gY2xrOiBhdDkxOiBmaXggDQphdDkxc2FtOXg1IHBlcmlwaGVyYWwg
-Y2xvY2sgbnVtYmVyIiBtYWtlIGEgZ29vZCBzZXQgZm9yIDUuMC1maW5hbCBhcyANCnRoZXkgYmFz
-aWNhbGx5IGFyZSByZWFsIHJlZ3Jlc3Npb25zLg0KVGhpcyBpcyB0cnVlIGV2ZW4gaWYgdGhleSBh
-cHBseSBvbiA0LjIwIGFzIHdlIHdlcmUgdXNpbmcgYW4gb2xkZXIgYmlkaW5nIA0KZGVmaW5pdGlv
-biB1bnRpbCA1LjAtcmMuLi4NCg0KRG8gd2hhdCB5b3UgY2FuLi4uIEFzIGl0J3MgcmVhbGx5IGxh
-dGUsIEkga25vdy4uLg0KDQpCZXN0IHJlZ2FyZHMsDQogICBOaWNvbGFzDQoNCg0KPj4gLS0tDQo+
-PiAgICBkcml2ZXJzL2Nsay9hdDkxL2F0OTFzYW05eDUuYyB8IDIgKy0NCj4+ICAgIGRyaXZlcnMv
-Y2xrL2F0OTEvc2FtYTVkMi5jICAgIHwgNCArKy0tDQo+PiAgICBkcml2ZXJzL2Nsay9hdDkxL3Nh
-bWE1ZDQuYyAgICB8IDIgKy0NCj4+ICAgIDMgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
-LCA0IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9hdDkxL2F0
-OTFzYW05eDUuYyBiL2RyaXZlcnMvY2xrL2F0OTEvYXQ5MXNhbTl4NS5jDQo+PiBpbmRleCAyZmUy
-MjVhNjk3ZGYuLmQ1NWExNTFjYjdmNSAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvY2xrL2F0OTEv
-YXQ5MXNhbTl4NS5jDQo+PiArKysgYi9kcml2ZXJzL2Nsay9hdDkxL2F0OTFzYW05eDUuYw0KPj4g
-QEAgLTIxMCw3ICsyMTAsNyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgYXQ5MXNhbTl4NV9wbWNfc2V0
-dXAoc3RydWN0IGRldmljZV9ub2RlICpucCwNCj4+ICAgIAlwYXJlbnRfbmFtZXNbMV0gPSAibWFp
-bmNrIjsNCj4+ICAgIAlwYXJlbnRfbmFtZXNbMl0gPSAicGxsYWRpdmNrIjsNCj4+ICAgIAlwYXJl
-bnRfbmFtZXNbM10gPSAidXRtaWNrIjsNCj4+IC0JcGFyZW50X25hbWVzWzRdID0gIm1jayI7DQo+
-PiArCXBhcmVudF9uYW1lc1s0XSA9ICJtYXN0ZXJjayI7DQo+PiAgICAJZm9yIChpID0gMDsgaSA8
-IDI7IGkrKykgew0KPj4gICAgCQljaGFyIG5hbWVbNl07DQo+PiAgICANCj4+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL2Nsay9hdDkxL3NhbWE1ZDIuYyBiL2RyaXZlcnMvY2xrL2F0OTEvc2FtYTVkMi5j
-DQo+PiBpbmRleCBkNjlhZDk2ZmU5ODguLmNkMGVmNzI3NGZkYiAxMDA2NDQNCj4+IC0tLSBhL2Ry
-aXZlcnMvY2xrL2F0OTEvc2FtYTVkMi5jDQo+PiArKysgYi9kcml2ZXJzL2Nsay9hdDkxL3NhbWE1
-ZDIuYw0KPj4gQEAgLTI0MCw3ICsyNDAsNyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgc2FtYTVkMl9w
-bWNfc2V0dXAoc3RydWN0IGRldmljZV9ub2RlICpucCkNCj4+ICAgIAlwYXJlbnRfbmFtZXNbMV0g
-PSAibWFpbmNrIjsNCj4+ICAgIAlwYXJlbnRfbmFtZXNbMl0gPSAicGxsYWRpdmNrIjsNCj4+ICAg
-IAlwYXJlbnRfbmFtZXNbM10gPSAidXRtaWNrIjsNCj4+IC0JcGFyZW50X25hbWVzWzRdID0gIm1j
-ayI7DQo+PiArCXBhcmVudF9uYW1lc1s0XSA9ICJtYXN0ZXJjayI7DQo+PiAgICAJZm9yIChpID0g
-MDsgaSA8IDM7IGkrKykgew0KPj4gICAgCQljaGFyIG5hbWVbNl07DQo+PiAgICANCj4+IEBAIC0y
-OTEsNyArMjkxLDcgQEAgc3RhdGljIHZvaWQgX19pbml0IHNhbWE1ZDJfcG1jX3NldHVwKHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqbnApDQo+PiAgICAJcGFyZW50X25hbWVzWzFdID0gIm1haW5jayI7DQo+
-PiAgICAJcGFyZW50X25hbWVzWzJdID0gInBsbGFkaXZjayI7DQo+PiAgICAJcGFyZW50X25hbWVz
-WzNdID0gInV0bWljayI7DQo+PiAtCXBhcmVudF9uYW1lc1s0XSA9ICJtY2siOw0KPj4gKwlwYXJl
-bnRfbmFtZXNbNF0gPSAibWFzdGVyY2siOw0KPj4gICAgCXBhcmVudF9uYW1lc1s1XSA9ICJhdWRp
-b3BsbF9wbWNjayI7DQo+PiAgICAJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoc2FtYTVkMl9n
-Y2spOyBpKyspIHsNCj4+ICAgIAkJaHcgPSBhdDkxX2Nsa19yZWdpc3Rlcl9nZW5lcmF0ZWQocmVn
-bWFwLCAmcG1jX3Bjcl9sb2NrLA0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2F0OTEvc2Ft
-YTVkNC5jIGIvZHJpdmVycy9jbGsvYXQ5MS9zYW1hNWQ0LmMNCj4+IGluZGV4IGUzNThiZTdmNmM4
-ZC4uYjY0NWE5ZDU5Y2RiIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9jbGsvYXQ5MS9zYW1hNWQ0
-LmMNCj4+ICsrKyBiL2RyaXZlcnMvY2xrL2F0OTEvc2FtYTVkNC5jDQo+PiBAQCAtMjA3LDcgKzIw
-Nyw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBzYW1hNWQ0X3BtY19zZXR1cChzdHJ1Y3QgZGV2aWNl
-X25vZGUgKm5wKQ0KPj4gICAgCXBhcmVudF9uYW1lc1sxXSA9ICJtYWluY2siOw0KPj4gICAgCXBh
-cmVudF9uYW1lc1syXSA9ICJwbGxhZGl2Y2siOw0KPj4gICAgCXBhcmVudF9uYW1lc1szXSA9ICJ1
-dG1pY2siOw0KPj4gLQlwYXJlbnRfbmFtZXNbNF0gPSAibWNrIjsNCj4+ICsJcGFyZW50X25hbWVz
-WzRdID0gIm1hc3RlcmNrIjsNCj4+ICAgIAlmb3IgKGkgPSAwOyBpIDwgMzsgaSsrKSB7DQo+PiAg
-ICAJCWNoYXIgbmFtZVs2XTsNCj4+ICAgIA0KPj4NCj4gDQo+IA0KDQoNCi0tIA0KTmljb2xhcyBG
-ZXJyZQ0K
+Add SAM9X60 PMC compatible string.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ Documentation/devicetree/bindings/clock/at91-clock.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+index ce1d21102428..e0e4fa67716f 100644
+--- a/Documentation/devicetree/bindings/clock/at91-clock.txt
++++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+@@ -37,7 +37,8 @@ For example:
+ Power Management Controller (PMC):
+ 
+ Required properties:
+-- compatible : shall be "atmel,<chip>-pmc", "syscon":
++- compatible : shall be "atmel,<chip>-pmc", "syscon" or
++	"microchip,sam9x60-pmc"
+ 	<chip> can be: at91rm9200, at91sam9260, at91sam9261,
+ 	at91sam9263, at91sam9g45, at91sam9n12, at91sam9rl, at91sam9g15,
+ 	at91sam9g25, at91sam9g35, at91sam9x25, at91sam9x35, at91sam9x5,
+-- 
+2.20.1
