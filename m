@@ -1,529 +1,539 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v4 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT
- buffer.
-Date: Wed, 20 Feb 2019 15:17:08 +0200
-Message-ID: <e8616274-b0a8-6e59-b6fa-a68fed58bad7@ti.com>
-References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
- <1550173514-23573-7-git-send-email-pawell@cadence.com>
- <67da432f-9c95-d644-65b5-dbc5b942d24c@ti.com>
- <BYAPR07MB47091C199971D677DE0FBB84DD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v5 06/10] irqchip: ti-sci-intr: Add support for Interrupt
+ Router driver
+Date: Wed, 20 Feb 2019 18:47:16 +0530
+Message-ID: <1c2f2610-2be4-c145-4786-eabf3a07bc47@ti.com>
+References: <20190212074237.2875-1-lokeshvutla@ti.com>
+ <20190212074237.2875-7-lokeshvutla@ti.com>
+ <20190218155217.5195f118@why.wild-wind.fr.eu.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB47091C199971D677DE0FBB84DD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Language: en-GB
+In-Reply-To: <20190218155217.5195f118@why.wild-wind.fr.eu.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Pawel,
+Hi Marc,
 
-On 20/02/2019 13:18, Pawel Laszczak wrote:
-> Hi Roger.
+On 18/02/19 9:22 PM, Marc Zyngier wrote:
+> On Tue, 12 Feb 2019 13:12:33 +0530
+> Lokesh Vutla <lokeshvutla@ti.com> wrote:
+> 
+>> Texas Instruments' K3 generation SoCs has an IP Interrupt Router
+>> that does allows for redirection of input interrupts to host
+>> interrupt controller. Interrupt Router inputs are either from a
+>> peripheral or from an Interrupt Aggregator which is another
+>> interrupt controller.
 >>
->> On 14/02/2019 21:45, Pawel Laszczak wrote:
->>> Controller for OUT endpoints has shared on-chip buffers for all incoming
->>> packets, including ep0out. It's FIFO buffer, so packets must be handle
->>> by DMA in correct order. If the first packet in the buffer will not be
->>> handled, then the following packets directed for other endpoints and
->>> functions will be blocked.
->>>
->>> Additionally the packets directed to one endpoint can block entire on-chip
->>> buffers. In this case transfer to other endpoints also will blocked.
->>>
->>> To resolve this issue after raising the descriptor missing interrupt
->>> driver prepares internal usb_request object and use it to arm DMA
->>> transfer.
->>>
->>> The problematic situation was observed in case when endpoint has
->>> been enabled but no usb_request were queued. Driver try detects
->>> such endpoints and will use this workaround only for these endpoint.
->>>
->>> Driver use limited number of buffer. This number can be set by macro
->>> CDNS_WA2_NUM_BUFFERS.
->>>
->>> Such blocking situation was observed on ACM gadget. For this function
->>> host send OUT data packet but ACM function is not prepared for
->>> this packet. It's cause that buffer placed in on chip memory block
->>> transfer to other endpoints.
->>>
->>> It's limitation of controller but maybe this issues should be fixed in
->>> function driver.
->>>
->>> This work around can be disabled/enabled by means of quirk_internal_buffer
->>> module parameter. By default feature is enabled. It can has impact to
->>> transfer performance and in most case this feature can be disabled.
+>> Configuration of the interrupt router registers can only be done by
+>> a system co-processor and the driver needs to send a message to this
+>> co processor over TISCI protocol.
 >>
->> How much is the performance impact?
-> 
-> I didn't check this, but performance will be decreased because driver has to 
-> copy data from internally allocated buffer to usb_request->buff.
-> 
->> You mentioned that the issue was observed only in the ACM case and
->> could be fixed in the function driver?
->> It seems pointless to enable an endpoint and not have any requests queued for it.
-> 
-> Yes, it’s true. The request in ACM class is send to Controller Driver when user read file associated 
-> with ACM gadget. Problem exist because host send data to controller but USB controller 
-> has not prepared buffer for this data by ACM class.
-> 
->> Isn't fixing the ACM driver (if there is a real issue) a better approach than having
->> a workaround that affects performance of all other use cases?
-> 
-> Yes it should be better. But what ACM driver should do with unexpected data. I'm not sure if we 
-> can simply delete them. 
-> 
-> The best solution would be to make modification in controller. In such case Controller shouldn't accept 
-> packet but should send NAK. 
-
-Yes, that should be standard behaviour. No?
-
->  
-> One more thing. Workaround has implemented algorithm that decide for which endpoint it should be enabled.
-> e.g for composite device MSC+NCM+ACM it should work only for ACM OUT endpoint.
-> 
-
-If ACM driver didn't queue the request for ACM OUT endpoint, why does the controller accept the data at all?
-I didn't understand why we need a workaround for this. It should be standard behaviour to NAK data if
-function driver didn't request for all endpoints.
-
-Also I didn't understand why performance should be impacted to just NAK data.
-
-cheers,
--roger
-
-> Cheers,
-> Pawel
+>> Add support for Interrupt Router driver over TISCI protocol.
 >>
->>>
->>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->>> ---
->>>  drivers/usb/cdns3/gadget.c | 273 ++++++++++++++++++++++++++++++++++++-
->>>  drivers/usb/cdns3/gadget.h |   7 +
->>>  2 files changed, 278 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
->>> index 7f7f24ee3c4b..5dfbe6e1421c 100644
->>> --- a/drivers/usb/cdns3/gadget.c
->>> +++ b/drivers/usb/cdns3/gadget.c
->>> @@ -27,6 +27,37 @@
->>>   * If (((Dequeue Ptr (i.e. EP_TRADDR) == Enqueue Ptr-1) or
->>>   *	(Dequeue Ptr (i.e. EP_TRADDR) == Enqueue Ptr))
->>>   *		and (DRBL==1 and (not EP0)))
->>> + *
->>> + * Work around 2:
->>> + * Controller for OUT endpoints has shared on-chip buffers for all incoming
->>> + * packets, including ep0out. It's FIFO buffer, so packets must be handle by DMA
->>> + * in correct order. If the first packet in the buffer will not be handled,
->>> + * then the following packets directed for other endpoints and  functions
->>> + * will be blocked.
->>> + * Additionally the packets directed to one endpoint can block entire on-chip
->>> + * buffers. In this case transfer to other endpoints also will blocked.
->>> + *
->>> + * To resolve this issue after raising the descriptor missing interrupt
->>> + * driver prepares internal usb_request object and use it to arm DMA transfer.
->>> + *
->>> + * The problematic situation was observed in case when endpoint has been enabled
->>> + * but no usb_request were queued. Driver try detects such endpoints and will
->>> + * use this workaround only for these endpoint.
->>> + *
->>> + * Driver use limited number of buffer. This number can be set by macro
->>> + * CDNS_WA2_NUM_BUFFERS.
->>> + *
->>> + * Such blocking situation was observed on ACM gadget. For this function
->>> + * host send OUT data packet but ACM function is not prepared for this packet.
->>> + * It's cause that buffer placed in on chip memory block transfer to other
->>> + * endpoints.
->>> + *
->>> + * It's limitation of controller but maybe this issues should be fixed in
->>> + * function driver.
->>> + *
->>> + * This work around can be disabled/enabled by means of quirk_internal_buffer
->>> + * module parameter. By default feature is enabled. It can has impact to
->>> + * transfer performance and in most case this feature can be disabled.
->>>   */
->>>
->>>  #include <linux/dma-mapping.h>
->>> @@ -42,6 +73,14 @@ static int __cdns3_gadget_ep_queue(struct usb_ep *ep,
->>>  				   struct usb_request *request,
->>>  				   gfp_t gfp_flags);
->>>
->>> +/*
->>> + * Parameter allows to disable/enable handling of work around 2 feature.
->>> + * By default this value is enabled.
->>> + */
->>> +static bool quirk_internal_buffer = 1;
->>> +module_param(quirk_internal_buffer, bool, 0644);
->>> +MODULE_PARM_DESC(quirk_internal_buffer, "Disable/enable WA2 algorithm");
->>> +
->>>  /**
->>>   * cdns3_handshake - spin reading  until handshake completes or fails
->>>   * @ptr: address of device controller register to be read
->>> @@ -105,6 +144,17 @@ struct usb_request *cdns3_next_request(struct list_head *list)
->>>  	return list_first_entry_or_null(list, struct usb_request, list);
->>>  }
->>>
->>> +/**
->>> + * cdns3_next_priv_request - returns next request from list
->>> + * @list: list containing requests
->>> + *
->>> + * Returns request or NULL if no requests in list
->>> + */
->>> +struct cdns3_request *cdns3_next_priv_request(struct list_head *list)
->>> +{
->>> +	return list_first_entry_or_null(list, struct cdns3_request, list);
->>> +}
->>> +
->>>  /**
->>>   * select_ep - selects endpoint
->>>   * @priv_dev:  extended gadget object
->>> @@ -384,6 +434,53 @@ static int cdns3_start_all_request(struct cdns3_device *priv_dev,
->>>  	return ret;
->>>  }
->>>
->>> +/**
->>> + * cdns3_descmiss_copy_data copy data from internal requests to request queued
->>> + * by class driver.
->>> + * @priv_ep: extended endpoint object
->>> + * @request: request object
->>> + */
->>> +static void cdns3_descmiss_copy_data(struct cdns3_endpoint *priv_ep,
->>> +				     struct usb_request *request)
->>> +{
->>> +	struct usb_request *descmiss_req;
->>> +	struct cdns3_request *descmiss_priv_req;
->>> +
->>> +	while (!list_empty(&priv_ep->descmiss_req_list)) {
->>> +		int chunk_end;
->>> +		int length;
->>> +
->>> +		descmiss_priv_req =
->>> +			cdns3_next_priv_request(&priv_ep->descmiss_req_list);
->>> +		descmiss_req = &descmiss_priv_req->request;
->>> +
->>> +		/* driver can't touch pending request */
->>> +		if (descmiss_priv_req->flags & REQUEST_PENDING)
->>> +			break;
->>> +
->>> +		chunk_end = descmiss_priv_req->flags & REQUEST_INTERNAL_CH;
->>> +		length = request->actual + descmiss_req->actual;
->>> +
->>> +		if (length <= request->length) {
->>> +			memcpy(&((u8 *)request->buf)[request->actual],
->>> +			       descmiss_req->buf,
->>> +			       descmiss_req->actual);
->>> +			request->actual = length;
->>> +		} else {
->>> +			/* It should never occures */
->>> +			request->status = -ENOMEM;
->>> +		}
->>> +
->>> +		list_del_init(&descmiss_priv_req->list);
->>> +
->>> +		kfree(descmiss_req->buf);
->>> +		cdns3_gadget_ep_free_request(&priv_ep->endpoint, descmiss_req);
->>> +
->>> +		if (!chunk_end)
->>> +			break;
->>> +	}
->>> +}
->>> +
->>>  /**
->>>   * cdns3_gadget_giveback - call struct usb_request's ->complete callback
->>>   * @priv_ep: The endpoint to whom the request belongs to
->>> @@ -412,6 +509,32 @@ void cdns3_gadget_giveback(struct cdns3_endpoint *priv_ep,
->>>  	priv_req->flags &= ~REQUEST_PENDING;
->>>  	trace_cdns3_gadget_giveback(priv_req);
->>>
->>> +	/* WA2: */
->>> +	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN &&
->>> +	    priv_req->flags & REQUEST_INTERNAL) {
->>> +		struct usb_request *req;
->>> +
->>> +		req = cdns3_next_request(&priv_ep->deferred_req_list);
->>> +		request = req;
->>> +		priv_ep->descmis_req = NULL;
->>> +
->>> +		if (!req)
->>> +			return;
->>> +
->>> +		cdns3_descmiss_copy_data(priv_ep, req);
->>> +		if (!(priv_ep->flags & EP_QUIRK_END_TRANSFER) &&
->>> +		    req->length != req->actual) {
->>> +			/* wait for next part of transfer */
->>> +			return;
->>> +		}
->>> +
->>> +		if (req->status == -EINPROGRESS)
->>> +			req->status = 0;
->>> +
->>> +		list_del_init(&req->list);
->>> +		cdns3_start_all_request(priv_dev, priv_ep);
->>> +	}
->>> +
->>>  	/* Start all not pending request */
->>>  	if (priv_ep->flags & EP_RING_FULL)
->>>  		cdns3_start_all_request(priv_dev, priv_ep);
->>> @@ -774,6 +897,59 @@ void cdns3_rearm_transfer(struct cdns3_endpoint *priv_ep, u8 rearm)
->>>  	}
->>>  }
->>>
->>> +/**
->>> + * cdns3_descmissing_packet - handles descriptor missing event.
->>> + * @priv_dev: extended gadget object
->>> + *
->>> + * This function is used only for WA2. For more information see Work around 2
->>> + * description.
->>> + */
->>> +static int cdns3_descmissing_packet(struct cdns3_endpoint *priv_ep)
->>> +{
->>> +	struct cdns3_request *priv_req;
->>> +	struct usb_request *request;
->>> +
->>> +	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_DET) {
->>> +		priv_ep->flags &= ~EP_QUIRK_EXTRA_BUF_DET;
->>> +		priv_ep->flags |= EP_QUIRK_EXTRA_BUF_EN;
->>> +	}
->>> +
->>> +	cdns3_dbg(priv_ep->cdns3_dev, "WA2: Description Missing detected\n");
->>> +
->>> +	request = cdns3_gadget_ep_alloc_request(&priv_ep->endpoint,
->>> +						GFP_ATOMIC);
->>> +	if (!request)
->>> +		return -ENOMEM;
->>> +
->>> +	priv_req = to_cdns3_request(request);
->>> +	priv_req->flags |= REQUEST_INTERNAL;
->>> +
->>> +	/* if this field is still assigned it indicate that transfer related
->>> +	 * with this request has not been finished yet. Driver in this
->>> +	 * case simply allocate next request and assign flag REQUEST_INTERNAL_CH
->>> +	 * flag to previous one. It will indicate that current request is
->>> +	 * part of the previous one.
->>> +	 */
->>> +	if (priv_ep->descmis_req)
->>> +		priv_ep->descmis_req->flags |= REQUEST_INTERNAL_CH;
->>> +
->>> +	priv_req->request.buf = kzalloc(CDNS3_DESCMIS_BUF_SIZE,
->>> +					GFP_ATOMIC);
->>> +	if (!priv_req) {
->>> +		cdns3_gadget_ep_free_request(&priv_ep->endpoint, request);
->>> +		return -ENOMEM;
->>> +	}
->>> +
->>> +	priv_req->request.length = CDNS3_DESCMIS_BUF_SIZE;
->>> +	priv_ep->descmis_req = priv_req;
->>> +
->>> +	__cdns3_gadget_ep_queue(&priv_ep->endpoint,
->>> +				&priv_ep->descmis_req->request,
->>> +				GFP_ATOMIC);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>>  /**
->>>   * cdns3_check_ep_interrupt_proceed - Processes interrupt related to endpoint
->>>   * @priv_ep: endpoint object
->>> @@ -807,8 +983,31 @@ static int cdns3_check_ep_interrupt_proceed(struct cdns3_endpoint *priv_ep)
->>>  			cdns3_rearm_transfer(priv_ep, priv_ep->wa1_set);
->>>  	}
->>>
->>> -	if ((ep_sts_reg & EP_STS_IOC) || (ep_sts_reg & EP_STS_ISP))
->>> +	if ((ep_sts_reg & EP_STS_IOC) || (ep_sts_reg & EP_STS_ISP)) {
->>> +		if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN) {
->>> +			if (ep_sts_reg & EP_STS_ISP)
->>> +				priv_ep->flags |= EP_QUIRK_END_TRANSFER;
->>> +			else
->>> +				priv_ep->flags &= ~EP_QUIRK_END_TRANSFER;
->>> +		}
->>> +
->>>  		cdns3_transfer_completed(priv_dev, priv_ep);
->>> +	}
->>> +
->>> +	/*
->>> +	 * WA2: this condition should only be meet when
->>> +	 * priv_ep->flags & EP_QUIRK_EXTRA_BUF_DET or
->>> +	 * priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN.
->>> +	 * In other cases this interrupt will be disabled/
->>> +	 */
->>> +	if (ep_sts_reg & EP_STS_DESCMIS) {
->>> +		int err;
->>> +
->>> +		err = cdns3_descmissing_packet(priv_ep);
->>> +		if (err)
->>> +			dev_err(priv_dev->dev,
->>> +				"Failed: No sufficient memory for DESCMIS\n");
->>> +	}
->>>
->>>  	return 0;
->>>  }
->>> @@ -1241,13 +1440,26 @@ static int cdns3_gadget_ep_enable(struct usb_ep *ep,
->>>  	/* enable interrupt for selected endpoint */
->>>  	cdns3_set_register_bit(&priv_dev->regs->ep_ien,
->>>  			       BIT(cdns3_ep_addr_to_index(bEndpointAddress)));
->>> +	/*
->>> +	 * WA2: Set flag for all not ISOC OUT endpoints. If this flag is set
->>> +	 * driver try to detect whether endpoint need additional internal
->>> +	 * buffer for unblocking on-chip FIFO buffer. This flag will be cleared
->>> +	 * if before first DESCMISS interrupt the DMA will be armed.
->>> +	 */
->>> +	if (quirk_internal_buffer) {
->>> +		if (!priv_ep->dir && priv_ep->type != USB_ENDPOINT_XFER_ISOC) {
->>> +			priv_ep->flags |= EP_QUIRK_EXTRA_BUF_DET;
->>> +			reg |= EP_STS_EN_DESCMISEN;
->>> +		}
->>> +	}
->>>
->>>  	writel(reg, &priv_dev->regs->ep_sts_en);
->>>
->>>  	cdns3_set_register_bit(&priv_dev->regs->ep_cfg, EP_CFG_ENABLE);
->>>
->>>  	ep->desc = desc;
->>> -	priv_ep->flags &= ~(EP_PENDING_REQUEST | EP_STALL);
->>> +	priv_ep->flags &= ~(EP_PENDING_REQUEST | EP_STALL |
->>> +			    EP_QUIRK_EXTRA_BUF_EN);
->>>  	priv_ep->flags |= EP_ENABLED | EP_UPDATE_EP_TRBADDR;
->>>  	priv_ep->wa1_set = 0;
->>>  	priv_ep->enqueue = 0;
->>> @@ -1272,6 +1484,7 @@ static int cdns3_gadget_ep_enable(struct usb_ep *ep,
->>>  static int cdns3_gadget_ep_disable(struct usb_ep *ep)
->>>  {
->>>  	struct cdns3_endpoint *priv_ep;
->>> +	struct cdns3_request *priv_req;
->>>  	struct cdns3_device *priv_dev;
->>>  	struct usb_request *request;
->>>  	unsigned long flags;
->>> @@ -1308,6 +1521,14 @@ static int cdns3_gadget_ep_disable(struct usb_ep *ep)
->>>  				      -ESHUTDOWN);
->>>  	}
->>>
->>> +	while (!list_empty(&priv_ep->descmiss_req_list)) {
->>> +		priv_req = cdns3_next_priv_request(&priv_ep->descmiss_req_list);
->>> +
->>> +		kfree(priv_req->request.buf);
->>> +		cdns3_gadget_ep_free_request(&priv_ep->endpoint,
->>> +					     &priv_req->request);
->>> +	}
->>> +
->>>  	while (!list_empty(&priv_ep->deferred_req_list)) {
->>>  		request = cdns3_next_request(&priv_ep->deferred_req_list);
->>>
->>> @@ -1348,6 +1569,53 @@ static int __cdns3_gadget_ep_queue(struct usb_ep *ep,
->>>  	priv_req = to_cdns3_request(request);
->>>  	trace_cdns3_ep_queue(priv_req);
->>>
->>> +	/*
->>> +	 * WA2: if transfer was queued before DESCMISS appear than we
->>> +	 * can disable handling of DESCMISS interrupt. Driver assumes that it
->>> +	 * can disable special treatment for this endpoint.
->>> +	 */
->>> +	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_DET) {
->>> +		u32 reg;
->>> +
->>> +		cdns3_select_ep(priv_dev, priv_ep->num | priv_ep->dir);
->>> +		priv_ep->flags &= ~EP_QUIRK_EXTRA_BUF_DET;
->>> +		reg = readl(&priv_dev->regs->ep_sts_en);
->>> +		reg &= ~EP_STS_EN_DESCMISEN;
->>> +		writel(reg, &priv_dev->regs->ep_sts_en);
->>> +	}
->>> +
->>> +	/* WA2 */
->>> +	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN) {
->>> +		u8 pending_empty = list_empty(&priv_ep->pending_req_list);
->>> +		u8 descmiss_empty = list_empty(&priv_ep->descmiss_req_list);
->>> +
->>> +		/*
->>> +		 *  DESCMISS transfer has been finished, so data will be
->>> +		 *  directly copied from internal allocated usb_request
->>> +		 *  objects.
->>> +		 */
->>> +		if (pending_empty && !descmiss_empty &&
->>> +		    !(priv_req->flags & REQUEST_INTERNAL)) {
->>> +			cdns3_descmiss_copy_data(priv_ep, request);
->>> +			list_add_tail(&request->list,
->>> +				      &priv_ep->pending_req_list);
->>> +			cdns3_gadget_giveback(priv_ep, priv_req,
->>> +					      request->status);
->>> +			return ret;
->>> +		}
->>> +
->>> +		/*
->>> +		 * WA2 driver will wait for completion DESCMISS transfer,
->>> +		 * before starts new, not DESCMISS transfer.
->>> +		 */
->>> +		if (!pending_empty && !descmiss_empty)
->>> +			deferred = 1;
->>> +
->>> +		if (priv_req->flags & REQUEST_INTERNAL)
->>> +			list_add_tail(&priv_req->list,
->>> +				      &priv_ep->descmiss_req_list);
->>> +	}
->>> +
->>>  	ret = usb_gadget_map_request_by_dev(priv_dev->sysdev, request,
->>>  					    usb_endpoint_dir_in(ep->desc));
->>>  	if (ret)
->>> @@ -1782,6 +2050,7 @@ static int cdns3_init_eps(struct cdns3_device *priv_dev)
->>>
->>>  		INIT_LIST_HEAD(&priv_ep->pending_req_list);
->>>  		INIT_LIST_HEAD(&priv_ep->deferred_req_list);
->>> +		INIT_LIST_HEAD(&priv_ep->descmiss_req_list);
->>>  	}
->>>
->>>  	return 0;
->>> diff --git a/drivers/usb/cdns3/gadget.h b/drivers/usb/cdns3/gadget.h
->>> index 817f8ae7a4da..8de733b315e9 100644
->>> --- a/drivers/usb/cdns3/gadget.h
->>> +++ b/drivers/usb/cdns3/gadget.h
->>> @@ -1000,6 +1000,7 @@ struct cdns3_device;
->>>   * @endpoint: usb endpoint
->>>   * @pending_req_list: list of requests queuing on transfer ring.
->>>   * @deferred_req_list: list of requests waiting for queuing on transfer ring.
->>> + * @descmiss_req_list: list of requests internally allocated by driver (WA2).
->>>   * @trb_pool: transfer ring - array of transaction buffers
->>>   * @trb_pool_dma: dma address of transfer ring
->>>   * @cdns3_dev: device associated with this endpoint
->>> @@ -1026,6 +1027,7 @@ struct cdns3_endpoint {
->>>  	struct usb_ep		endpoint;
->>>  	struct list_head	pending_req_list;
->>>  	struct list_head	deferred_req_list;
->>> +	struct list_head	descmiss_req_list;
->>>
->>>  	struct cdns3_trb	*trb_pool;
->>>  	dma_addr_t		trb_pool_dma;
->>> @@ -1041,6 +1043,9 @@ struct cdns3_endpoint {
->>>  #define EP_PENDING_REQUEST	BIT(5)
->>>  #define EP_RING_FULL		BIT(6)
->>>  #define EP_CLAIMED		BIT(7)
->>> +#define EP_QUIRK_EXTRA_BUF_DET	BIT(8)
->>> +#define EP_QUIRK_EXTRA_BUF_EN	BIT(9)
->>> +#define EP_QUIRK_END_TRANSFER	BIT(10)
->>>
->>>  	u32			flags;
->>>
->>> @@ -1074,6 +1079,7 @@ struct cdns3_endpoint {
->>>   * @start_trb: number of the first TRB in transfer ring
->>>   * @end_trb: number of the last TRB in transfer ring
->>>   * @flags: flag specifying special usage of request
->>> + * @list: used by internally allocated request to add to descmiss_req_list.
->>>   */
->>>  struct cdns3_request {
->>>  	struct usb_request	request;
->>> @@ -1086,6 +1092,7 @@ struct cdns3_request {
->>>  #define REQUEST_INTERNAL_CH	BIT(2)
->>>  #define REQUEST_ZLP		BIT(3)
->>>  	u32			flags;
->>> +	struct list_head	list;
->>>  };
->>>
->>>  #define to_cdns3_request(r) (container_of(r, struct cdns3_request, request))
->>>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> ---
+>> Changes since v4:
+>> - Moved the ti_sci irq resource handling to ti-sci-common.c from ti_sci.c.
+>>   Firmware maintainer rejected the idea of having this in firmware
+>> driver as the resource handling is specific to the client.
+>> - Obtain the number of peripheral interrupts attached to INTR by
+>> parsing DT. Using this information store the max irqs that can be
+>> allocated to INTA. This is done for pre allocating the INTA
+>> irqs(vints) during inta driver probe.
+>>   This will not work for cases where there are more that 1 INTAs
+>> attached to INTR, but wanted to show this approach as suggested by
+>> Marc.
+> 
+> Or not.
+> 
 >>
->> --
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>  MAINTAINERS                         |   3 +
+>>  drivers/irqchip/Kconfig             |  11 +
+>>  drivers/irqchip/Makefile            |   1 +
+>>  drivers/irqchip/irq-ti-sci-common.c | 131 ++++++++++++
+>>  drivers/irqchip/irq-ti-sci-common.h |  59 ++++++
+>>  drivers/irqchip/irq-ti-sci-intr.c   | 315
+>> ++++++++++++++++++++++++++++ 6 files changed, 520 insertions(+)
+>>  create mode 100644 drivers/irqchip/irq-ti-sci-common.c
+>>  create mode 100644 drivers/irqchip/irq-ti-sci-common.h
+>>  create mode 100644 drivers/irqchip/irq-ti-sci-intr.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index c918d9b2ee18..823eeb672cf0 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -15065,6 +15065,9 @@ F:
+>> Documentation/devicetree/bindings/clock/ti,sci-clk.txt F:
+>> drivers/clk/keystone/sci-clk.c F:	drivers/reset/reset-ti-sci.c
+>>  F:
+>> Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>> +F:	drivers/irqchip/irq-ti-sci-intr.c +F:
+>> drivers/irqchip/irq-ti-sci-common.c +F:
+>> drivers/irqchip/irq-ti-sci-common.h 
+>>  Texas Instruments ASoC drivers
+>>  M:	Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+>> index 3d1e60779078..a8d9bed0254b 100644
+>> --- a/drivers/irqchip/Kconfig
+>> +++ b/drivers/irqchip/Kconfig
+>> @@ -406,6 +406,17 @@ config IMX_IRQSTEER
+>>  	help
+>>  	  Support for the i.MX IRQSTEER interrupt
+>> multiplexer/remapper. 
+>> +config TI_SCI_INTR_IRQCHIP
+>> +	bool
+>> +	depends on TI_SCI_PROTOCOL && ARCH_K3
+>> +	select IRQ_DOMAIN
+>> +	select IRQ_DOMAIN_HIERARCHY
+>> +	help
+>> +	  This enables the irqchip driver support for K3 Interrupt
+>> router
+>> +	  over TI System Control Interface available on some new
+>> TI's SoCs.
+>> +	  If you wish to use interrupt router irq resources managed
+>> by the
+>> +	  TI System Controller, say Y here. Otherwise, say N.
+>> +
+>>  endmenu
+>>  
+>>  config SIFIVE_PLIC
+>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+>> index c93713d24b86..0499fae148a9 100644
+>> --- a/drivers/irqchip/Makefile
+>> +++ b/drivers/irqchip/Makefile
+>> @@ -94,3 +94,4 @@ obj-$(CONFIG_CSKY_APB_INTC)		+=
+>> irq-csky-apb-intc.o obj-$(CONFIG_SIFIVE_PLIC)		+=
+>> irq-sifive-plic.o obj-$(CONFIG_IMX_IRQSTEER)		+=
+>> irq-imx-irqsteer.o obj-$(CONFIG_MADERA_IRQ)		+=
+>> irq-madera.o +obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+=
+>> irq-ti-sci-intr.o irq-ti-sci-common.o diff --git
+>> a/drivers/irqchip/irq-ti-sci-common.c
+>> b/drivers/irqchip/irq-ti-sci-common.c new file mode 100644 index
+>> 000000000000..79d9c4e8ea14 --- /dev/null
+>> +++ b/drivers/irqchip/irq-ti-sci-common.c
+>> @@ -0,0 +1,131 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Common Code for TISCI IRQCHIP drivers
+>> + *
+>> + * Copyright (C) 2019 Texas Instruments Incorporated -
+>> http://www.ti.com/
+>> + *	Lokesh Vutla <lokeshvutla@ti.com>
+>> + */
+>> +
+>> +#include <linux/of.h>
+>> +#include <linux/bitmap.h>
+>> +#include <linux/device.h>
+>> +#include <linux/soc/ti/ti_sci_protocol.h>
+>> +#include "irq-ti-sci-common.h"
+>> +
+>> +/**
+>> + * ti_sci_get_free_resource() - Get a free resource from TISCI
+>> resource.
+>> + * @res:	Pointer to the TISCI resource
+>> + *
+>> + * Return: resource num if all went ok else TI_SCI_RESOURCE_NULL.
+>> + */
+>> +u16 ti_sci_get_free_resource(struct ti_sci_resource *res)
+>> +{
+>> +	u16 set, free_bit;
+>> +
+>> +	mutex_lock(&res->request_mutex);
+>> +	for (set = 0; set < res->sets; set++) {
+>> +		free_bit =
+>> find_first_zero_bit(res->desc[set].res_map,
+>> +					       res->desc[set].num);
+>> +		if (free_bit != res->desc[set].num) {
+>> +			set_bit(free_bit, res->desc[set].res_map);
+>> +			mutex_unlock(&res->request_mutex);
+>> +			return res->desc[set].start + free_bit;
+>> +		}
+>> +	}
+>> +	mutex_unlock(&res->request_mutex);
+>> +
+>> +	return TI_SCI_RESOURCE_NULL;
+>> +}
+>> +
+>> +/**
+>> + * ti_sci_release_resource() - Release a resource from TISCI
+>> resource.
+>> + * @res:	Pointer to the TISCI resource
+>> + * @id:		Resource id to be released.
+>> + */
+>> +void ti_sci_release_resource(struct ti_sci_resource *res, u16 id)
+>> +{
+>> +	u16 set;
+>> +
+>> +	mutex_lock(&res->request_mutex);
+>> +	for (set = 0; set < res->sets; set++) {
+>> +		if (res->desc[set].start <= id &&
+>> +		    (res->desc[set].num + res->desc[set].start) > id)
+>> +			clear_bit(id - res->desc[set].start,
+>> +				  res->desc[set].res_map);
+>> +	}
+>> +	mutex_unlock(&res->request_mutex);
+>> +}
+>> +
+>> +u32 ti_sci_get_num_resources(struct ti_sci_resource *res)
+>> +{
+>> +	u32 count = 0, set;
+>> +
+>> +	for (set = 0; set < res->sets; set++)
+>> +		count += res->desc[set].num;
+>> +
+>> +	return count;
+>> +}
+>> +
+>> +/**
+>> + * devm_ti_sci_get_of_resource() - Get a TISCI resource assigned to
+>> a device
+>> + * @handle:	TISCI handle
+>> + * @dev:	Device pointer to which the resource is assigned
+>> + * @of_prop:	property name by which the resource are
+>> represented
+>> + *
+>> + * Return: Pointer to ti_sci_resource if all went well else
+>> appropriate
+>> + *	   error pointer.
+>> + */
+>> +struct ti_sci_resource *
+>> +devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
+>> +			    struct device *dev, u32 dev_id, char
+>> *of_prop) +{
+>> +	struct ti_sci_resource *res;
+>> +	u32 resource_subtype;
+>> +	int i, ret;
+>> +
+>> +	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
+>> +	if (!res)
+>> +		return ERR_PTR(-ENOMEM);
+>> +
+>> +	res->sets =
+>> of_property_count_elems_of_size(dev_of_node(dev), of_prop,
+>> +						    sizeof(u32));
+>> +	if (res->sets < 0) {
+>> +		dev_err(dev, "%s resource type ids not available\n",
+>> of_prop);
+>> +		return ERR_PTR(res->sets);
+>> +	}
+>> +
+>> +	res->desc = devm_kcalloc(dev, res->sets, sizeof(*res->desc),
+>> +				 GFP_KERNEL);
+>> +	if (!res->desc)
+>> +		return ERR_PTR(-ENOMEM);
+>> +
+>> +	for (i = 0; i < res->sets; i++) {
+>> +		ret = of_property_read_u32_index(dev_of_node(dev),
+>> of_prop, i,
+>> +						 &resource_subtype);
+>> +		if (ret)
+>> +			return ERR_PTR(-EINVAL);
+>> +
+>> +		ret = handle->ops.rm_core_ops.get_range(handle,
+>> dev_id,
+>> +
+>> resource_subtype,
+>> +
+>> &res->desc[i].start,
+>> +
+>> &res->desc[i].num);
+>> +		if (ret) {
+>> +			dev_err(dev, "dev = %d subtype %d not
+>> allocated for this host\n",
+>> +				dev_id, resource_subtype);
+>> +			return ERR_PTR(ret);
+>> +		}
+>> +
+>> +		dev_dbg(dev, "dev = %d, subtype = %d, start = %d,
+>> num = %d\n",
+>> +			dev_id, resource_subtype, res->desc[i].start,
+>> +			res->desc[i].num);
+>> +
+>> +		res->desc[i].res_map =
+>> +			devm_kzalloc(dev,
+>> BITS_TO_LONGS(res->desc[i].num) *
+>> +				     sizeof(*res->desc[i].res_map),
+>> GFP_KERNEL);
+>> +		if (!res->desc[i].res_map)
+>> +			return ERR_PTR(-ENOMEM);
+>> +	}
+>> +	mutex_init(&res->request_mutex);
+>> +
+>> +	return res;
+>> +}
+>> diff --git a/drivers/irqchip/irq-ti-sci-common.h
+>> b/drivers/irqchip/irq-ti-sci-common.h new file mode 100644
+>> index 000000000000..60c4b28bebab
+>> --- /dev/null
+>> +++ b/drivers/irqchip/irq-ti-sci-common.h
+>> @@ -0,0 +1,59 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Common header file for TISCI IRQCHIP drivers
+>> + *
+>> + * Copyright (C) 2019 Texas Instruments Incorporated -
+>> http://www.ti.com/
+>> + *	Lokesh Vutla <lokeshvutla@ti.com>
+>> + */
+>> +
+>> +#ifndef __TI_SCI_COMMON_IRQCHIP_H
+>> +#define __TI_SCI_COMMON_IRQCHIP_H
+>> +
+>> +#include <linux/mutex.h>
+>> +
+>> +#define TI_SCI_RESOURCE_NULL	0xffff
+>> +#define TI_SCI_DEV_ID_MASK	0xffff
+>> +#define TI_SCI_DEV_ID_SHIFT	16
+>> +#define TI_SCI_IRQ_ID_MASK	0xffff
+>> +#define TI_SCI_IRQ_ID_SHIFT	0
+>> +#define TI_SCI_VINT_IRQ		BIT(0)
+>> +#define HWIRQ_TO_DEVID(hwirq)	(((hwirq) >>
+>> (TI_SCI_DEV_ID_SHIFT)) & \
+>> +				 (TI_SCI_DEV_ID_MASK))
+>> +#define HWIRQ_TO_IRQID(hwirq)	((hwirq) & (TI_SCI_IRQ_ID_MASK))
+>> +#define TO_HWIRQ(dev, index)	((((dev) & TI_SCI_DEV_ID_MASK)
+>> << \
+>> +				 TI_SCI_DEV_ID_SHIFT) | \
+>> +				((index) & TI_SCI_IRQ_ID_MASK))
+>> +
+>> +/**
+>> + * struct ti_sci_resource_desc - Description of TI SCI resource
+>> instance range.
+>> + * @start:	Start index of the resource.
+>> + * @num:	Number of resources.
+>> + * @res_map:	Bitmap to manage the allocation of these
+>> resources.
+>> + */
+>> +struct ti_sci_resource_desc {
+>> +	u16 start;
+>> +	u16 num;
+>> +	unsigned long *res_map;
+>> +};
+>> +
+>> +/**
+>> + * struct ti_sci_resource - Structure representing a resource
+>> assigned
+>> + *			    to a device.
+>> + * @sets:		Number of sets available from this resource
+>> type
+>> + * @request_mutex:	mutex to protect request and release of
+>> resources.
+>> + * @desc:		Array of resource descriptors.
+>> + */
+>> +struct ti_sci_resource {
+>> +	u16 sets;
+>> +	/* Mutex to protect request and release of resources */
+>> +	struct mutex request_mutex;
+>> +	struct ti_sci_resource_desc *desc;
+>> +};
+>> +
+>> +u16 ti_sci_get_free_resource(struct ti_sci_resource *res);
+>> +void ti_sci_release_resource(struct ti_sci_resource *res, u16 id);
+>> +u32 ti_sci_get_num_resources(struct ti_sci_resource *res);
+>> +struct ti_sci_resource *
+>> +devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
+>> +			    struct device *dev, u32 dev_id, char
+>> *of_prop); +#endif /*__TI_SCI_COMMON_IRQCHIP_H */
+> 
+> Most the above "common" should be a separate patch, really. Also, why
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+ok will move this into a separate patch.
+
+> isn't the whole resource management part of the firmware interface? I
+> see that "Firmware maintainer rejected the idea", but I don't really
+> buy the rational. I don't see anything irq specific to the whole
+> devm_ti_sci_get_of_resource and co, to be honest.
+
+I guess the concern is mostly about the way ids are represented from DT. Using
+this every tisci client should mandate to have separate DT property for each of
+its resource.
+
+> 
+>> diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-sci-intr.c
+>> new file mode 100644
+>> index 000000000000..7e224552a735
+>> --- /dev/null
+>> +++ b/drivers/irqchip/irq-ti-sci-intr.c
+>> @@ -0,0 +1,315 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Texas Instruments' K3 Interrupt Router irqchip driver
+>> + *
+>> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
+>> + *	Lokesh Vutla <lokeshvutla@ti.com>
+>> + */
+
+[..snip..]
+
+>> +	err = ti_sci_intr_irq_domain_translate(domain, fwspec, &hwirq, &type);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	vint_irq = fwspec->param[3] & TI_SCI_VINT_IRQ;
+>> +
+>> +	err = ti_sci_intr_alloc_gic_irq(domain, virq, hwirq, type, vint_irq);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+>> +					    &ti_sci_intr_irq_chip,
+>> +					    (void *)vint_irq);
+> 
+> I think I see what you're trying to achieve. I suggest you look a
+> uintptr_t instead of playing with unrelated data types whose semantic
+> really doesn't apply here.
+
+As you commented on the dt-bindings patch to differentiate vints using the INTA
+ids, this will not be needed anymore. Will completely drop this.
+
+> 
+>> +	if (err) {
+>> +		ti_sci_intr_irq_domain_free(domain, virq, 1);
+>> +		return err;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct irq_domain_ops ti_sci_intr_irq_domain_ops = {
+>> +	.alloc		= ti_sci_intr_irq_domain_alloc,
+>> +	.free		= ti_sci_intr_irq_domain_free,
+>> +	.translate	= ti_sci_intr_irq_domain_translate,
+>> +};
+>> +
+>> +static int ti_sci_intr_irq_domain_probe(struct platform_device *pdev)
+>> +{
+>> +	struct irq_domain *parent_domain, *domain;
+>> +	struct device_node *parent_node, *dn;
+>> +	struct ti_sci_intr_irq_domain *intr;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct of_phandle_iterator it;
+>> +	int ret, count, intsize;
+>> +
+>> +	parent_node = of_irq_find_parent(dev_of_node(dev));
+>> +	if (!parent_node) {
+>> +		dev_err(dev, "Failed to get IRQ parent node\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	parent_domain = irq_find_host(parent_node);
+>> +	if (!parent_domain) {
+>> +		dev_err(dev, "Failed to find IRQ parent domain\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	intr = devm_kzalloc(dev, sizeof(*intr), GFP_KERNEL);
+>> +	if (!intr)
+>> +		return -ENOMEM;
+>> +
+>> +	intr->sci = devm_ti_sci_get_by_phandle(dev, "ti,sci");
+>> +	if (IS_ERR(intr->sci)) {
+>> +		ret = PTR_ERR(intr->sci);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "ti,sci read fail %d\n", ret);
+>> +		intr->sci = NULL;
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = of_property_read_u32(dev_of_node(dev), "ti,sci-dst-id",
+>> +				   (u32 *)&intr->dst_id);
+>> +	if (ret) {
+>> +		dev_err(dev, "missing 'ti,sci-dst-id' property\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	intr->dst_irq = devm_ti_sci_get_of_resource(intr->sci, dev,
+>> +						    intr->dst_id,
+>> +						    "ti,sci-rm-range-girq");
+>> +	if (IS_ERR(intr->dst_irq)) {
+>> +		dev_err(dev, "Destination irq resource allocation failed\n");
+>> +		return PTR_ERR(intr->dst_irq);
+>> +	}
+>> +
+>> +	domain = irq_domain_add_hierarchy(parent_domain, 0, 0, dev_of_node(dev),
+>> +					  &ti_sci_intr_irq_domain_ops, intr);
+>> +	if (!domain) {
+>> +		dev_err(dev, "Failed to allocate IRQ domain\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	if (of_property_read_u32(dev_of_node(dev), "#interrupt-cells",
+>> +				 &intsize))
+>> +		return -EINVAL;
+>> +
+>> +	count = 0;
+>> +	for_each_node_with_property(dn, "interrupts") {
+>> +		if (of_irq_find_parent(dn) != dev_of_node(dev))
+>> +			continue;
+>> +		count += of_property_count_elems_of_size(dn, "interrupts",
+>> +							 sizeof(u32) * intsize);
+>> +	}
+>> +
+>> +	for_each_node_with_property(dn, "interrupts-extended") {
+>> +		of_for_each_phandle(&it, ret, dn, "interrupts-extended",
+>> +				    "#interrupt-cells", 0) {
+>> +			if (it.node == dev_of_node(dev))
+>> +				count++;
+>> +		}
+>> +	}
+> 
+> What is this trying to do? Counting the number of interrupt descriptors
+> in the whole system? What does this even mean?
+
+I am just trying for max utilization of GIC interrupts available for this. Since
+inta vints are not represented in DT, total gic available - whatever is in DT
+gives the max interrupts that can be used for the child INTA.
+
+> 
+> What I suggested was to allocate the required number of interrupts
+> for a given device, based on the requirements of that device. I also
+
+okay, then Ill get the number of interrupts needed for INTA from DT.
+
+> suggested to investigate the x86 two phase allocation mechanism for the
+> INTA driver.
+
+Sorry, Ill try to explore this path. Any pointers to the doc/code will be really
+helpful :)
+
+Thanks and regards,
+Lokesh
+
+> 
+> I never suggested that you'd parse the DT to guess how many interrupts
+> you'd need to allocate...
+> 
+> 	M.
+> 
+>> +
+>> +	intr->vint_irqs = ti_sci_get_num_resources(intr->dst_irq) - count;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id ti_sci_intr_irq_domain_of_match[] = {
+>> +	{ .compatible = "ti,sci-intr", },
+>> +	{ /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, ti_sci_intr_irq_domain_of_match);
+>> +
+>> +static struct platform_driver ti_sci_intr_irq_domain_driver = {
+>> +	.probe = ti_sci_intr_irq_domain_probe,
+>> +	.driver = {
+>> +		.name = "ti-sci-intr",
+>> +		.of_match_table = ti_sci_intr_irq_domain_of_match,
+>> +	},
+>> +};
+>> +module_platform_driver(ti_sci_intr_irq_domain_driver);
+>> +
+>> +MODULE_AUTHOR("Lokesh Vutla <lokeshvutla@ticom>");
+>> +MODULE_DESCRIPTION("K3 Interrupt Router driver over TI SCI protocol");
+>> +MODULE_LICENSE("GPL v2");
+> 
+> 
+> 
