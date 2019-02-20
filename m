@@ -1,78 +1,80 @@
-From: Alison Wang <alison.wang@nxp.com>
-Subject: RE: [PATCH] arm64: dts: ls1028a: Add Audio DT nodes
-Date: Wed, 20 Feb 2019 08:12:44 +0000
-Message-ID: <VI1PR04MB4062E534325E82002E5DCBEEF47D0@VI1PR04MB4062.eurprd04.prod.outlook.com>
-References: <20190123052135.26829-1-alison.wang@nxp.com>
- <20190201045002.GH19882@dragon>
+From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Subject: [PATCH 3/3] regulator: tps65218: Add support for LS2
+Date: Wed, 20 Feb 2019 09:15:52 +0100
+Message-ID: <1550650552-26013-4-git-send-email-Christian.Hohnstaedt@wago.com>
+References: <1550650552-26013-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190201045002.GH19882@dragon>
-Content-Language: en-US
+In-Reply-To: <1550650552-26013-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: J Keerthy <j-keerthy@ti.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Shawn,
+Re-use the "tps65218_pmic_*_current_limit()" functions of LS3
+and calculate the different required bit-shift by counting the
+trailing 0s in "struct regulator_desc.csel_mask"
 
-> On Wed, Jan 23, 2019 at 01:21:35PM +0800, Alison Wang wrote:
-> > This patch adds Audio DT nodes for LS1028ARDB and LS1028AQDS boards.
-> >
-> > Signed-off-by: Alison Wang <alison.wang@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |   62
-> ++++++++++++++++++++
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   63
-> +++++++++++++++++++++
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   57
-> +++++++++++++++++++
-> >  3 files changed, 182 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> > index 14c79f4..139728e 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> > @@ -32,6 +32,49 @@
-> >  		device_type =3D "memory";
-> >  		reg =3D <0x0 0x80000000 0x1 0x00000000>;
-> >  	};
-> > +
-> > +	sys_mclk: clock-mclk {
-> > +		compatible =3D "fixed-clock";
-> > +		#clock-cells =3D <0>;
-> > +		clock-frequency =3D <25000000>;
-> > +	};
-> > +
-> > +	reg_1p8v: regulator-1p8v {
-> > +		compatible =3D "regulator-fixed";
-> > +		regulator-name =3D "1P8V";
-> > +		regulator-min-microvolt =3D <1800000>;
-> > +		regulator-max-microvolt =3D <1800000>;
-> > +		regulator-always-on;
-> > +	};
-> > +
-> > <snip>
-> > +
-> > +			codec: sgtl5000@a {
-> > +				#sound-dai-cells =3D <0>;
-> > +				compatible =3D "fsl,sgtl5000";
-> > +				reg =3D <0xa>;
-> > +				VDDA-supply =3D <&reg_1p8v>;
-> > +				VDDIO-supply =3D <&reg_1p8v>;
-> > +				clocks =3D <&sys_mclk>;
-> > +				sclk-strength =3D <3>;
->=20
-> What is this property?
-[Alison] It is a new property. I have submitted a patch for this new proper=
-ty https://lkml.org/lkml/2018/12/25/123. This patch is already merged in li=
-nux-next.
+Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+---
+ drivers/regulator/tps65218-regulator.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-For other items you mentioned, I will modify them in v2. Thanks a lot for y=
-our review.
-
-
-Best Regards,
-Alison Wang
+diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
+index 5dd559e..95708d3 100644
+--- a/drivers/regulator/tps65218-regulator.c
++++ b/drivers/regulator/tps65218-regulator.c
+@@ -205,7 +205,8 @@ static int tps65218_pmic_set_input_current_lim(struct regulator_dev *dev,
+ 		return -EINVAL;
+ 
+ 	return tps65218_set_bits(tps, dev->desc->csel_reg, dev->desc->csel_mask,
+-				 index << 2, TPS65218_PROTECT_L1);
++				 index << __builtin_ctz(dev->desc->csel_mask),
++				 TPS65218_PROTECT_L1);
+ }
+ 
+ static int tps65218_pmic_set_current_limit(struct regulator_dev *dev,
+@@ -224,7 +225,8 @@ static int tps65218_pmic_set_current_limit(struct regulator_dev *dev,
+ 		return -EINVAL;
+ 
+ 	return tps65218_set_bits(tps, dev->desc->csel_reg, dev->desc->csel_mask,
+-				 index << 2, TPS65218_PROTECT_L1);
++				 index << __builtin_ctz(dev->desc->csel_mask),
++				 TPS65218_PROTECT_L1);
+ }
+ 
+ static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
+@@ -237,12 +239,13 @@ static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
+ 	if (retval < 0)
+ 		return retval;
+ 
+-	index = (index & dev->desc->csel_mask) >> 2;
++	index = (index & dev->desc->csel_mask) >>
++					 __builtin_ctz(dev->desc->csel_mask);
+ 
+ 	return ls3_currents[index];
+ }
+ 
+-static struct regulator_ops tps65218_ls3_ops = {
++static struct regulator_ops tps65218_ls23_ops = {
+ 	.is_enabled		= regulator_is_enabled_regmap,
+ 	.enable			= tps65218_pmic_enable,
+ 	.disable		= tps65218_pmic_disable,
+@@ -304,8 +307,13 @@ static const struct regulator_desc regulators[] = {
+ 			   TPS65218_ENABLE2_LDO1_EN, 0, 0, ldo1_dcdc3_ranges,
+ 			   2, 0, 0, TPS65218_REG_SEQ6,
+ 			   TPS65218_SEQ6_LDO1_SEQ_MASK),
++	TPS65218_REGULATOR("LS2", "regulator-ls2", TPS65218_LS_2,
++			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
++			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS2_EN,
++			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS2ILIM_MASK,
++			   NULL, 0, 0, 0, 0, 0),
+ 	TPS65218_REGULATOR("LS3", "regulator-ls3", TPS65218_LS_3,
+-			   REGULATOR_CURRENT, tps65218_ls3_ops, 0, 0, 0,
++			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
+ 			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS3_EN,
+ 			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS3ILIM_MASK,
+ 			   NULL, 0, 0, 0, 0, 0),
+-- 
+2.7.4
