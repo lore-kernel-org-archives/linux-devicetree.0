@@ -1,112 +1,108 @@
-Return-Path: <SRS0=9Qkd=Q3=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
+Return-Path: <SRS0=4we3=Q3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr30046.outbound.protection.outlook.com ([40.107.3.46]:61666
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725379AbfBTHpc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Feb 2019 02:45:32 -0500
+From: Aisheng Dong <aisheng.dong@nxp.com>
 Subject: RE: [PATCH V7 1/4] dt-bindings: fsl: scu: add thermal binding
-Date: Wed, 20 Feb 2019 08:51:06 +0000
-Message-ID: <DB3PR0402MB39165AFD394E16C9FAA6FC4AF57D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Date: Wed, 20 Feb 2019 07:45:27 +0000
+Message-ID: <AM6PR04MB42152F3A2F9C6E6D8CF3D0DA807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 References: <1550645332-2907-1-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB42152F3A2F9C6E6D8CF3D0DA807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB42152F3A2F9C6E6D8CF3D0DA807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+In-Reply-To: <1550645332-2907-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogQWlzaGVuZyBEb25nDQo+IFNlbnQ6IDIwMTnE6jLUwjIwyNUgMTU6NDUN
-Cj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgbWFyay5ydXRsYW5kQGFy
-bS5jb207DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtl
-cm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZmVzdGV2YW1AZ21haWwuY29tOyBjYXRhbGluLm1hcmlu
-YXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gcnVpLnpoYW5nQGludGVsLmNvbTsg
-ZWR1YmV6dmFsQGdtYWlsLmNvbTsgZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZzsNCj4gdWxmLmhh
-bnNzb25AbGluYXJvLm9yZzsgRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsN
-Cj4gaG9ybXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXU7IEFuZHkgR3Jvc3MgPGFuZHkuZ3Jvc3NAbGlu
-YXJvLm9yZz47DQo+IGhlaWtvQHNudGVjaC5kZTsgYXJuZEBhcm5kYi5kZTsgb2xvZkBsaXhvbS5u
-ZXQ7DQo+IGJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnOyBqYWdhbkBhbWFydWxhc29sdXRpb25z
-LmNvbTsNCj4gZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbTsgbWFyYy53LmdvbnphbGV6QGZy
-ZWUuZnI7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51
-eC1wbUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5j
-b20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggVjcgMS80XSBkdC1iaW5kaW5nczogZnNsOiBzY3U6
-IGFkZCB0aGVybWFsIGJpbmRpbmcNCj4gDQo+ID4gRnJvbTogQW5zb24gSHVhbmcNCj4gPiBTZW50
-OiBXZWRuZXNkYXksIEZlYnJ1YXJ5IDIwLCAyMDE5IDI6NTQgUE0NCj4gPg0KPiA+IE5YUCBpLk1Y
-OFFYUCBpcyBhbiBBUk12OCBTb0Mgd2l0aCBhIENvcnRleC1NNCBjb3JlIGluc2lkZSBhcyBzeXN0
-ZW0NCj4gPiBjb250cm9sbGVyLCB0aGUgc3lzdGVtIGNvbnRyb2xsZXIgaXMgaW4gY2hhcmdlIG9m
-IHN5c3RlbSBwb3dlciwgY2xvY2sNCj4gPiBhbmQgdGhlcm1hbCBzZW5zb3JzIGV0Yy4gbWFuYWdl
-bWVudCwgTGludXgga2VybmVsIGhhcyB0byBjb21tdW5pY2F0ZQ0KPiA+IHdpdGggc3lzdGVtIGNv
-bnRyb2xsZXIgdmlhIE1VIChtZXNzYWdlIHVuaXQpIElQQyB0byBnZXQgdGVtcGVyYXR1cmUNCj4g
-PiBmcm9tIHRoZXJtYWwgc2Vuc29ycywgdGhpcyBwYXRjaCBhZGRzIGJpbmRpbmcgZG9jIGZvciBp
-Lk1YIHN5c3RlbQ0KPiBjb250cm9sbGVyIHRoZXJtYWwgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVk
-LW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQt
-Ynk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBz
-aW5jZSBWNjoNCj4gPiAJLSBwdXQgImlteCxzZW5zb3ItcmVzb3VyY2UtaWQiIHByb3BlcnR5IGlu
-IHRoZXJtYWwgem9uZSBub2Rlcy4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dCAgfCAyNw0KPiA+ICsrKysrKysrKysrKysrKysr
-KysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRp
-ZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJl
-ZXNjYWxlL2ZzbCxzY3UudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IGluZGV4IDcyZDQ4MWMuLmFkOTY4ODEg
-MTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9m
-cmVlc2NhbGUvZnNsLHNjdS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IEBAIC0xMjIsNiArMTIyLDI3
-IEBAIFJUQyBiaW5kaW5ncyBiYXNlZCBvbiBTQ1UgTWVzc2FnZSBQcm90b2NvbA0KPiA+IFJlcXVp
-cmVkIHByb3BlcnRpZXM6DQo+ID4gIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJmc2wsaW14OHF4
-cC1zYy1ydGMiOw0KPiA+DQo+ID4gK1RoZXJtYWwgYmluZGluZ3MgYmFzZWQgb24gU0NVIE1lc3Nh
-Z2UgUHJvdG9jb2wNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
-PiA+ICstIGNvbXBhdGlibGUgOiBNdXN0IGJlICJmc2wsaW14LXNjLXRoZXJtYWwiOw0KPiA+ICst
-IHRzZW5zLW51bSA6IFRvdGFsIG51bWJlciBvZiB0aGVybWFsIHNlbnNvcnMgc3VwcG9ydGVkOw0K
-PiANCj4gV2UgcHJvcGVybHkgZG9uJ3QgbmVlZCB0aGlzIHByb3BlcnR5IGlmIHRoZSBudW1iZXIg
-b2Ygc2Vuc29yIGlzIGZpeGVkIG9uIGENCj4gc3BlY2lmaWMgU29DLg0KDQpBZnRlciBmdXJ0aGVy
-IGNoZWNrLCBJIHRoaW5rIHdlIGNhbiB1c2UgIiBmb3JfZWFjaF9hdmFpbGFibGVfY2hpbGRfb2Zf
-bm9kZSAiDQp0byBnZXQgZXZlcnkgdGhlcm1hbCB6b25lJ3MgSFcgcmVzb3VyY2UgSUQgYW5kIHJl
-bW92ZSB0aGlzIHByb3BlcnR5Lg0KDQo+IA0KPiA+ICstICN0aGVybWFsLXNlbnNvci1jZWxscyA6
-IFNob3VsZCBiZSAxLiBTZWUNCj4gPiArDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy90aGVybWFsL3RoZXJtYWwudHh0DQo+ID4gKwkJCSAgZm9yIGEgZGVzY3JpcHRpb24uDQo+
-ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciB0aGVybWFsIHpvbmUgbm9kZXM6DQo+
-ID4gKy0gaW14LHNlbnNvci1yZXNvdXJjZS1pZCA6IFRoaXMgcHJvcGVydHkgc2hvdWxkIGJlIGRl
-ZmluZWQgaW4gZWFjaA0KPiA+ICt0aGVybWFsDQo+IA0KPiBBZnRlciBhIGZ1cnRoZXIgbG9va2lu
-ZyBhdCBpdCwgSSB3b25kZXIgdGhpcyBwcm9wZXJ0eSBtYXkgbm90IG5lZWRlZCBlaXRoZXIuDQo+
-IA0KDQpJZiB3ZSBkbyBOT1QgaGF2ZSBzdWNoIHByb3BlcnR5LCB3ZSBoYXZlIHRvIGRvIHRoZSBt
-YXBwaW5nIGluIGRyaXZlciB0byBnZXQNCnJlc291cmNlIElELCBmb3IgZGlmZmVyZW50IFNvQywg
-d2Ugd2lsbCBoYXZlIHRvIGNyZWF0ZSBkaWZmZXJlbnQgbWFwcGluZyB0YWJsZSwNCnRoZSB0aGVy
-bWFsIHpvbmUgSUQgZ2l2ZW4gYnkgY29tbW9uIHRoZXJtYWwgZnJhbWV3b3JrIGlzIHZpcnR1YWwg
-SUQgc3RhcnRpbmcNCmZyb20gMC4gQWRkaW5nIHRoaXMgcHJvcGVydHkgaW4gdGhlcm1hbCB6b25l
-IG5vZGUgaXMgdG8gbWFrZSBTQyB0aGVybWFsIGRyaXZlcg0KbW9yZSBnZW5lcmljIGZvciBvdGhl
-ciBTb0NzLg0KDQo+ID4gem9uZQ0KPiA+ICsJCQkgICBvZiB0aGVybWFsLXpvbmVzIG5vZGUsIGl0
-IHBhc3NlcyBlYWNoIHRoZXJtYWwNCj4gem9uZSdzDQo+ID4gKwkJCSAgIHJlc291cmNlIGlkIGZv
-ciB0aGVybWFsIGRyaXZlciB0byBnZXQgdGVtcGVyYXR1cmUNCj4gdmlhDQo+ID4gKwkJCSAgIFND
-VSBJUEMuDQo+ID4gKw0KPiA+ICsJCQkgICBGb3IgdGhlcm1hbCB6b25lIG5vZGVzLCBwbGVhc2Ug
-cmVmZXIgdG8gYmVsb3cNCj4gYmluZGluZw0KPiA+ICsJCQkgICBkb2MgZm9yIGRldGFpbHM6DQo+
-ID4gKw0KPiA+ICtbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwv
-dGhlcm1hbC50eHQNCj4gPiArDQo+ID4gIEV4YW1wbGUgKGlteDhxeHApOg0KPiA+ICAtLS0tLS0t
-LS0tLS0tDQo+ID4gIGxzaW9fbXUxOiBtYWlsYm94QDVkMWMwMDAwIHsNCj4gPiBAQCAtMTY4LDYg
-KzE4OSwxMiBAQCBmaXJtd2FyZSB7DQo+ID4gIAkJcnRjOiBydGMgew0KPiA+ICAJCQljb21wYXRp
-YmxlID0gImZzbCxpbXg4cXhwLXNjLXJ0YyI7DQo+ID4gIAkJfTsNCj4gPiArDQo+ID4gKwkJdHNl
-bnM6IHRoZXJtYWwtc2Vuc29yIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1z
-Yy10aGVybWFsIjsNCj4gPiArCQkJdHNlbnMtbnVtID0gPDE+Ow0KPiA+ICsJCQkjdGhlcm1hbC1z
-ZW5zb3ItY2VsbHMgPSA8MT47DQo+IA0KPiBUaGlzIGxvb2tzIG1heSBub3QgY29ycmVjdCBpZiBz
-ZW5zb3IgY2VsbHMgaXMgMSBidXQgdGhlIHNlbnNvciBudW1iZXIgSXMgYWxzbyAxLg0KPiBTbyB3
-ZSBwcm9iYWJseSBiZXR0ZXIgcmVtb3ZlIHRzZW5zLW51bSBwcm9wZXJ0eS4NCg0KWWVzLCB0aGlz
-IHNob3VsZCBiZSAwIGlmIDEgdGhlcm1hbCB6b25lIE9OTFkgaGF2ZSAxIHRoZXJtYWwgc2Vuc29y
-LCBsYXRlciB3ZSB3aWxsDQphZGQgb3RoZXIgdGhlcm1hbCB6b25lIGxpa2UgRERSIHpvbmUsIGN1
-cnJlbnRseSB0aGVyZSBpcyBzdGlsbCBzb21lIGlzc3VlcyBzbyBTQ0ZXDQpkb2VzIE5PVCBwcm92
-aWRlIHN1cHBvcnQgZm9yIHRoaXMgem9uZSwgYWZ0ZXIgaXNzdWUgZml4ZWQsIFNDRlcgbWF5IGFk
-ZCB0aGlzIHRoZXJtYWwNCnpvbmUncyBzdXBwb3J0LiBXaWxsIGZpeCB0aGVtIGluIG5leHQgdmVy
-c2lvbi4NCg0KVGhhbmtzLA0KQW5zb24uDQoNCj4gDQo+IFJlZ2FyZHMNCj4gRG9uZyBBaXNoZW5n
-DQo+IA0KPiA+ICsJCX07DQo+ID4gIAl9Ow0KPiA+ICB9Ow0KPiA+DQo+ID4gLS0NCj4gPiAyLjcu
-NA0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+> From: Anson Huang
+> Sent: Wednesday, February 20, 2019 2:54 PM
+>=20
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as system
+> controller, the system controller is in charge of system power, clock and
+> thermal sensors etc. management, Linux kernel has to communicate with
+> system controller via MU (message unit) IPC to get temperature from therm=
+al
+> sensors, this patch adds binding doc for i.MX system controller thermal d=
+river.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since V6:
+> 	- put "imx,sensor-resource-id" property in thermal zone nodes.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 27
+> ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index 72d481c..ad96881 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -122,6 +122,27 @@ RTC bindings based on SCU Message Protocol
+> Required properties:
+>  - compatible: should be "fsl,imx8qxp-sc-rtc";
+>=20
+> +Thermal bindings based on SCU Message Protocol
+> +------------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible : Must be "fsl,imx-sc-thermal";
+> +- tsens-num : Total number of thermal sensors supported;
+
+We properly don't need this property if the number of sensor
+is fixed on a specific SoC.
+
+> +- #thermal-sensor-cells : Should be 1. See
+> +			  Documentation/devicetree/bindings/thermal/thermal.txt
+> +			  for a description.
+> +
+> +Required properties for thermal zone nodes:
+> +- imx,sensor-resource-id : This property should be defined in each therm=
+al
+
+After a further looking at it, I wonder this property may not needed either=
+.
+
+> zone
+> +			   of thermal-zones node, it passes each thermal zone's
+> +			   resource id for thermal driver to get temperature via
+> +			   SCU IPC.
+> +
+> +			   For thermal zone nodes, please refer to below binding
+> +			   doc for details:
+> +
+> +[1] Documentation/devicetree/bindings/thermal/thermal.txt
+> +
+>  Example (imx8qxp):
+>  -------------
+>  lsio_mu1: mailbox@5d1c0000 {
+> @@ -168,6 +189,12 @@ firmware {
+>  		rtc: rtc {
+>  			compatible =3D "fsl,imx8qxp-sc-rtc";
+>  		};
+> +
+> +		tsens: thermal-sensor {
+> +			compatible =3D "fsl,imx8qxp-sc-thermal";
+> +			tsens-num =3D <1>;
+> +			#thermal-sensor-cells =3D <1>;
+
+This looks may not correct if sensor cells is 1 but the sensor number
+Is also 1.
+So we probably better remove tsens-num property.
+
+Regards
+Dong Aisheng
+
+> +		};
+>  	};
+>  };
+>=20
+> --
+> 2.7.4
