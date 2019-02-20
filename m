@@ -1,14 +1,23 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 2/4] firmware: imx: enable imx scu general irq function
-Date: Wed, 20 Feb 2019 05:46:18 +0000
-Message-ID: <AM6PR04MB42155AF83E6DA131886045B8807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
-References: <1550545569-7197-1-git-send-email-Anson.Huang@nxp.com>
- <1550545569-7197-2-git-send-email-Anson.Huang@nxp.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Wed, 20 Feb 2019 11:23:56 +0530
+Message-ID: <884a59a0-81e8-738e-9f26-c2b66ec71af1@ti.com>
+References: <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
+ <20190214174612.GF5720@atomide.com>
+ <171e8597-2156-747d-d024-7b4bfc6f9186@ti.com>
+ <20190215161629.GK5720@atomide.com>
+ <2369739e-3bc8-257a-99e0-db2951c6777d@ti.com>
+ <20190218143245.GC15711@atomide.com>
+ <84b3ec21-9ce9-b9a8-80a9-75001db43a90@ti.com>
+ <20190219153537.GJ15711@atomide.com>
+ <6aa37276-0833-fdf5-575b-c3ca14f776a6@ti.com>
+ <20190219171104.GM15711@atomide.com> <20190219175651.GN15711@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550545569-7197-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20190219175651.GN15711@atomide.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -19,198 +28,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, jason@lakedaemon.net, marc.zyngier@arm.com, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Anson Huang
-> Sent: Tuesday, February 19, 2019 11:11 AM
-> 
-> The System Controller Firmware (SCFW) controls RTC, thermal and WDOG etc.,
-> these resources' interrupt function are managed by SCU. When any IRQ
-> pending, SCU will notify Linux via MU general interrupt channel #3, and Linux
-> kernel needs to call SCU APIs to get IRQ status and notify each module to
-> handle the interrupt.
-> 
-> Since there is no data transmission for SCU IRQ notification, so doorbell mode
-> is used for this MU channel, and SCU driver will use notifier mechanism to
-> broadcast to every module which registers the SCU block notifier.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No change since V2.
-> ---
->  drivers/firmware/imx/imx-scu.c   | 101
-> +++++++++++++++++++++++++++++++++++++++
->  include/linux/firmware/imx/sci.h |   3 ++
->  2 files changed, 104 insertions(+)
-> 
-> diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-> index 2bb1a19..e93bea5 100644
-> --- a/drivers/firmware/imx/imx-scu.c
-> +++ b/drivers/firmware/imx/imx-scu.c
-> @@ -7,6 +7,7 @@
->   *
->   */
-> 
-> +#include <dt-bindings/firmware/imx/rsrc.h>
->  #include <linux/err.h>
->  #include <linux/firmware/imx/types.h>
->  #include <linux/firmware/imx/ipc.h>
-> @@ -21,6 +22,8 @@
-> 
->  #define SCU_MU_CHAN_NUM		8
->  #define MAX_RX_TIMEOUT		(msecs_to_jiffies(30))
-> +#define IMX_SC_IRQ_FUNC_STATUS	2
-> +#define IMX_SC_IRQ_NUM_GROUP	6
-> 
->  struct imx_sc_chan {
->  	struct imx_sc_ipc *sc_ipc;
-> @@ -77,7 +80,23 @@ static int imx_sc_linux_errmap[IMX_SC_ERR_LAST] = {
->  	-EIO,	 /* IMX_SC_ERR_FAIL */
->  };
-> 
-> +struct imx_sc_msg_irq_get_status {
-> +	struct imx_sc_rpc_msg hdr;
-> +	union {
-> +		struct {
-> +			u16 resource;
-> +			u8 group;
-> +			u8 reserved;
-> +		} send;
+Hi Tony,
 
-} __packed req
-
-> +		struct {
-> +			u32 status;
-> +		} receive;
-
-resp
-
-> +	} data;
-> +} __packed;
-
-No need __packed anymore
-
-> +
->  static struct imx_sc_ipc *imx_sc_ipc_handle;
-> +static struct work_struct imx_sc_general_irq_work; static
-> +BLOCKING_NOTIFIER_HEAD(imx_scu_notifier_chain);
+On 19/02/19 11:26 PM, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [190219 17:11]:
+>> * Lokesh Vutla <lokeshvutla@ti.com> [190219 16:19]:
+>>> yes. How different is this from any of the above mentioned drivers using
+>>> firmware specific ids. Like sci pm domain[1] driver utilizes the same
+>>> device id for enabling any device in the system. Similarly clock
+>>> driver[2] uses the same device ids and clock ids specified by firmware.
+>>> There are more which similarly represents firmware ids from DT.
+>>>
+>>> [1] Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>> [2] Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>
+>> That's horrible. We really must not use any firmware invented
+>> numbers in the device as they do not describe hardware.
 > 
->  static inline int imx_sc_to_linux_errno(int errno)  { @@ -194,6 +213,86 @@
-> int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)  }
-> EXPORT_SYMBOL(imx_scu_call_rpc);
-> 
-> +int imx_scu_register_notifier(struct notifier_block *nb) {
-> +	return blocking_notifier_chain_register(&imx_scu_notifier_chain, nb);
-> +} EXPORT_SYMBOL(imx_scu_register_notifier);
-> +
-> +int imx_scu_unregister_notifier(struct notifier_block *nb) {
-> +	return blocking_notifier_chain_unregister(&imx_scu_notifier_chain,
-> +nb); } EXPORT_SYMBOL(imx_scu_unregister_notifier);
-> +
-> +static int imx_scu_notifier_call_chain(unsigned long status, u8 *group)
-> +{
-> +	return blocking_notifier_call_chain(&imx_scu_notifier_chain,
-> +					    status, (void *)group);
-> +}
-> +
-> +static void imx_scu_general_irq_work_handler(struct work_struct *work)
-> +{
-> +	struct imx_sc_msg_irq_get_status msg;
-> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-> +	u32 irq_status;
-> +	int ret;
-> +	u8 i;
-> +
-> +	for (i = 0; i < IMX_SC_IRQ_NUM_GROUP; i++) {
-> +		hdr->ver = IMX_SC_RPC_VERSION;
-> +		hdr->svc = IMX_SC_RPC_SVC_IRQ;
-> +		hdr->func = IMX_SC_IRQ_FUNC_STATUS;
-> +		hdr->size = 2;
-> +
-> +		msg.data.send.resource = IMX_SC_R_MU_1A;
+> No firmware invented numbers in the device tree I mean naturally.
+> Drivers do whatever they need to do to deal with the firmware.
 
-Please make sure if it's fixed to MU_1A.
+Let's look at these similar other examples available inside Linux:
 
-> +		msg.data.send.group = i;
-> +
-> +		ret = imx_scu_call_rpc(imx_sc_ipc_handle, &msg, true);
-> +		if (ret) {
-> +			pr_err("get irq status failed, ret %d\n", ret);
-> +			return;
-> +		}
-> +
-> +		irq_status = msg.data.receive.status;
-> +		if (!irq_status)
-> +			continue;
-> +
-> +		imx_scu_notifier_call_chain(irq_status, &i);
-> +	}
-> +}
-> +
-> +static void imx_scu_rxdb_callback(struct mbox_client *c, void *msg) {
-> +	schedule_work(&imx_sc_general_irq_work);
-> +}
-> +
-> +static int imx_scu_enable_general_irq_channel(struct device *dev) {
-> +	struct mbox_client *cl;
-> +	struct mbox_chan *ch;
-> +	int ret = 0;
-> +
-> +	cl = devm_kzalloc(dev, sizeof(*cl), GFP_KERNEL);
-> +	if (!cl)
-> +		return -ENOMEM;
-> +
-> +	cl->dev = dev;
-> +	cl->rx_callback = imx_scu_rxdb_callback;
-> +
-> +	/* SCU general IRQ uses general interrupt channel 3 */
-> +	ch = mbox_request_channel_byname(cl, "gi3");
-> +	if (IS_ERR(ch)) {
-> +		ret = PTR_ERR(ch);
-> +		dev_err(dev, "failed to request mbox chan gi3, ret %d\n", ret);
-> +		return ret;
+1: ./Documentation/devicetree/bindings/arm/arm,scmi.txt mentions the following:
+- #clock-cells : Should be 1. Contains the Clock ID value used by SCMI commands.
+- #power-domain-cells : Should be 1. Contains the device or the power
+                                        domain ID value used by SCMI commands.
 
-return PTR_ERR(ch)
+2: Documentation/devicetree/bindings/arm/arm,scpi.txt mentions the following:
+- #power-domain-cells : Should be 1. Contains the device or the power
+                             domain ID value used by SCPI commands.
 
-> +	}
-> +
-> +	INIT_WORK(&imx_sc_general_irq_work,
-> imx_scu_general_irq_work_handler);
-> +
-> +	return ret;
-> +}
-> +
->  static int imx_scu_probe(struct platform_device *pdev)  {
->  	struct device *dev = &pdev->dev;
-> @@ -246,6 +345,8 @@ static int imx_scu_probe(struct platform_device
-> *pdev)
-> 
->  	imx_sc_ipc_handle = sc_ipc;
-> 
-> +	imx_scu_enable_general_irq_channel(dev);
-> +
+3: Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+the firmware specified identifier are defined in the following header files:
+	include/dt-bindings/clock/tegra186-clock.h
+	include/dt-bindings/power/tegra186-powergate.h
+	include/dt-bindings/reset/tegra186-reset.h
 
-Check return in case a failure
+4. Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+mentions the following:
+"Output clocks are registered based on clock information received
+from firmware. Output clocks indexes are mentioned in
+include/dt-bindings/clock/xlnx,zynqmp-clk.h."
 
-Regards
-Dong Aisheng
+5. Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt mentions the
+following:
+ - #power-domain-cells:  Must be 1. Contains the Resource ID used by
+                          SCU commands.
+                          See detailed Resource ID list from:
+                          include/dt-bindings/firmware/imx/rsrc.h
+- The clock consumer should specify the desired clock by having the clock
+ID in its "clocks" phandle cell.
+See the full list of clock IDs from: include/dt-bindings/clock/imx8qxp-clock.
 
->  	dev_info(dev, "NXP i.MX SCU Initialized\n");
-> 
->  	return devm_of_platform_populate(dev); diff --git
-> a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/sci.h
-> index ebc5509..9d608db 100644
-> --- a/include/linux/firmware/imx/sci.h
-> +++ b/include/linux/firmware/imx/sci.h
-> @@ -15,4 +15,7 @@
-> 
->  #include <linux/firmware/imx/svc/misc.h>  #include
-> <linux/firmware/imx/svc/pm.h>
-> +
-> +int imx_scu_register_notifier(struct notifier_block *nb); int
-> +imx_scu_unregister_notifier(struct notifier_block *nb);
->  #endif /* _SC_SCI_H */
-> --
-> 2.7.4
+6. Documentation/devicetree/bindings/arm/psci.txt have the following properties:
+- cpu_suspend   : Function ID for CPU_SUSPEND operation
+- cpu_off       : Function ID for CPU_OFF operation
+- cpu_on        : Function ID for CPU_ON operation
+- migrate       : Function ID for MIGRATE operation
+
+All the above examples uses the firmware identifiers for devices/clocks or for
+other functionalities and use them directly in DT. These are all somewhat
+similar to TI sysfw which runs on a micro-controller and tries to abstract
+certain functionalities from HLOS. There are many more such examples but I
+listed only a few users. The feedback you are providing is not going to work for
+any of the above listed firmware interfaces.
+
+Thanks and regards,
+Lokesh
