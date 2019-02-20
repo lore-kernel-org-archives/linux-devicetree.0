@@ -1,55 +1,46 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v1 00/12] qcom: dts: thermal cleanups
-Date: Tue, 19 Feb 2019 17:26:42 -0800
-Message-ID: <20190220012641.GH2811@localhost.localdomain>
-References: <cover.1550493113.git.amit.kucheria@linaro.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v3] of: unittest: unflatten device tree on UML when
+ testing
+Date: Tue, 19 Feb 2019 17:49:10 -0800
+Message-ID: <3ebcb18e-ffe3-95e5-07b4-950271e3c076@gmail.com>
+References: <20190219235422.256847-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1550493113.git.amit.kucheria@linaro.org>
+In-Reply-To: <20190219235422.256847-1-brendanhiggins@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>, robh+dt@kernel.org, mcgrof@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hey
-On Mon, Feb 18, 2019 at 06:05:14PM +0530, Amit Kucheria wrote:
-> - Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
-> - split up the register address map for msm8998
-> - standardize names of the various thermal-zones across boards to make it
->   easy for test scripts to parse
+On 2/19/19 3:54 PM, Brendan Higgins wrote:
+> UML supports enabling OF, and is useful for running the device tree
+> tests, so add support for unflattening device tree blobs so we can
+> actually use it.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>  drivers/of/unittest.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 84427384654d5..98f0dfc91c2a3 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -2514,6 +2514,10 @@ static int __init of_unittest(void)
+>  	int res;
+>  
+>  	/* adding data for unittest */
+> +
+> +	if (IS_ENABLED(CONFIG_UML))
+> +		unittest_unflatten_overlay_base();
+> +
+>  	res = unittest_data_add();
+>  	if (res)
+>  		return res;
 > 
 
-I am generally fine with the effort but please fix the following
-(applies for the whole series) wrt to required properties for DT
-thermal:
-a. Trip points for your zones
-b. Cooling Mappings for zones that have passive trips.
 
-> Amit Kucheria (12):
->   arm64: dts: msm8998: thermal: split address space into two
->   arm64: dts: msm8998: efficiency is not valid property
->   arm64: dts: msm8916: thermal: Add sensor for modem
->   arm64: dts: msm8996: thermal: Add temperature sensors near major
->     peripherals
->   arm64: dts: msm8998: thermal: Fix the cpu sensor numbers
->   arm64: dts: msm8998: thermal: Fix the gpu sensor number
->   arm64: dts: msm8998: thermal: GPU has two sensors, add the second
->   arm64: dts: msm8998: thermal: Add temperature sensors near major
->     peripherals
->   arm64: dts: sdm845: thermal: Add temperature sensors near major
->     peripherals
->   arm64: dts: msm8998: thermal: Make trip names consistent
->   arm64: dts: msm8916: thermal: Make trip names consistent
->   arm64: dts: msm8996: thermal: Make trip names consistent
-> 
->  arch/arm64/boot/dts/qcom/msm8916.dtsi |  30 +++--
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 122 ++++++++++++++++++--
->  arch/arm64/boot/dts/qcom/msm8998.dtsi | 154 ++++++++++++++++++--------
->  arch/arm64/boot/dts/qcom/sdm845.dtsi  |  91 +++++++++++++++
->  4 files changed, 328 insertions(+), 69 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
