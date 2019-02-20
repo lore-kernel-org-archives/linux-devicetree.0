@@ -1,133 +1,75 @@
-Return-Path: <SRS0=4Lph=QT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr680127.outbound.protection.outlook.com ([40.107.68.127]:17120
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727265AbfBLCeQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Feb 2019 21:34:16 -0500
-From: Trent Piepho <tpiepho@impinj.com>
-Subject: [PATCH v3 4/4] dt-bindings: rtc: Update for new chip in isl1208
- series
-Date: Tue, 12 Feb 2019 02:34:05 +0000
-Message-ID: <20190212023225.2710-4-tpiepho@impinj.com>
-References: <20190212023225.2710-1-tpiepho@impinj.com>
-In-Reply-To: <20190212023225.2710-1-tpiepho@impinj.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Cc: Trent Piepho <tpiepho@impinj.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-Path: <SRS0=vN6s=Q3=zte.com.cn=wen.yang99@kernel.org>
+Date: Wed, 20 Feb 2019 10:41:06 +0800 (CST)
+Message-ID: <201902201041061130247@zte.com.cn>
+In-Reply-To: <alpine.DEB.2.20.1902191824410.27989@hadrien>
+References: 1550071969-86286-1-git-send-email-peng.hao2@zte.com.cn,20190219170516.GL15711@atomide.com,alpine.DEB.2.20.1902191824410.27989@hadrien
+Mime-Version: 1.0
+From: <wen.yang99@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gYXJtL21hY2gtb21hcDIvZGlzcGxheTogZml4IHBvc3NpYmxlIG9iamVjdCByZWZlcmVuY2VsZWFr?=
+Content-Type: multipart/mixed;
+	boundary="=====_001_next====="
+To: julia.lawall@lip6.fr
+Cc: tony@atomide.com, peng.hao2@zte.com.cn, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, tomi.valkeinen@ti.com, robh@kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Since this documents multiple chips controlled by the isl1208 driver,
-name it isil,isl1208.txt, as the convention is to use the base driver
-name in the bindings document for drivers with multiple devices.
 
-Include all chips supported by this driver in the docs.  Make it
-clear which properties apply to which chips.
 
-Expand documentation for existing isil,evienb property to explain
-operation in more detail.  Existing docs just describe it in terms of
-setting a bit in a register.
+--=====_001_next=====
+Content-Type: multipart/alternative;
+	boundary="=====_003_next====="
 
-CC: Alessandro Zummo <a.zummo@towertech.it>
-CC: Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Trent Piepho <tpiepho@impinj.com>
----
- .../devicetree/bindings/rtc/isil,isl1208.txt       | 38 ++++++++++++++++++=
-++++
- .../devicetree/bindings/rtc/isil,isl1219.txt       | 29 -----------------
- 2 files changed, 38 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl1208.txt
- delete mode 100644 Documentation/devicetree/bindings/rtc/isil,isl1219.txt
 
-diff --git a/Documentation/devicetree/bindings/rtc/isil,isl1208.txt b/Docum=
-entation/devicetree/bindings/rtc/isil,isl1208.txt
-new file mode 100644
-index 000000000000..51f003006f04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/isil,isl1208.txt
-@@ -0,0 +1,38 @@
-+Intersil ISL1209/19 I2C RTC/Alarm chip with event in
-+
-+ISL12X9 have additional pins EVIN and #EVDET for tamper detection, while t=
-he
-+ISL1208 and ISL1218 do not.  They are all use the same driver with the bin=
-dings
-+described here, with chip specific properties as noted.
-+
-+Required properties supported by the device:
-+ - "compatible": Should be one of the following:
-+		- "isil,isl1208"
-+		- "isil,isl1209"
-+		- "isil,isl1218"
-+		- "isil,isl1219"
-+ - "reg": I2C bus address of the device
-+
-+Optional properties:
-+ - "interrupt-names": list which may contains "irq" and "evdet"
-+	evdet applies to isl1209 and isl1219 only
-+ - "interrupts": list of interrupts for "irq" and "evdet"
-+	evdet applies to isl1209 and isl1219 only
-+ - "isil,ev-evienb": Enable or disable internal pull on EVIN pin
-+	Applies to isl1209 and isl1219 only
-+	Possible values are 0 and 1
-+	Value 0 enables internal pull-up on evin pin, 1 disables it.
-+	Default will leave the non-volatile configuration of the pullup
-+	as is.
-+
-+Example isl1219 node with #IRQ pin connected to SoC gpio1 pin12 and #EVDET=
- pin
-+connected to SoC gpio2 pin 24 and internal pull-up enabled in EVIN pin.
-+
-+	isl1219: rtc@68 {
-+		compatible =3D "isil,isl1219";
-+		reg =3D <0x68>;
-+		interrupt-names =3D "irq", "evdet";
-+		interrupts-extended =3D <&gpio1 12 IRQ_TYPE_EDGE_FALLING>,
-+			<&gpio2 24 IRQ_TYPE_EDGE_FALLING>;
-+		isil,ev-evienb =3D <1>;
-+	};
-+
-diff --git a/Documentation/devicetree/bindings/rtc/isil,isl1219.txt b/Docum=
-entation/devicetree/bindings/rtc/isil,isl1219.txt
-deleted file mode 100644
-index c3efd48e91c2..000000000000
---- a/Documentation/devicetree/bindings/rtc/isil,isl1219.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--Intersil ISL1219 I2C RTC/Alarm chip with event in
--
--ISL1219 has additional pins EVIN and #EVDET for tamper detection.
--
--Required properties supported by the device:
--
-- - "compatible": must be "isil,isl1219"
-- - "reg": I2C bus address of the device
--
--Optional properties:
--
-- - "interrupt-names": list which may contains "irq" and "evdet"
-- - "interrupts": list of interrupts for "irq" and "evdet"
-- - "isil,ev-evienb": if present EV.EVIENB bit is set to the specified
--                     value for proper operation.
--
--
--Example isl1219 node with #IRQ pin connected to SoC gpio1 pin12
-- and #EVDET pin connected to SoC gpio2 pin 24:
--
--	isl1219: rtc@68 {
--		compatible =3D "isil,isl1219";
--		reg =3D <0x68>;
--		interrupt-names =3D "irq", "evdet";
--		interrupts-extended =3D <&gpio1 12 IRQ_TYPE_EDGE_FALLING>,
--			<&gpio2 24 IRQ_TYPE_EDGE_FALLING>;
--		isil,ev-evienb =3D <1>;
--	};
--
---=20
-2.14.4
+--=====_003_next=====
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+SGksCj4gPiBBZGRpbmcgZGV2aWNldHJlZSBsaXN0LCBKdWxpYSwgUm9iIGFuZCBUb21pIHRvIENj
+Lgo+ID4KPiA+ICogUGVuZyBIYW8gPHBlbmcuaGFvMkB6dGUuY29tLmNuPiBbMTkwMjEyIDIzOjEx
+XToKPiA+ID4gb2ZfZmluZF9kZXZpY2VfYnlfbm9kZSgpIHRha2VzIGEgcmVmZXJlbmNlIHRvIHRo
+ZSBzdHJ1Y3QgZGV2aWNlCj4gPiA+IHdoZW4gaXQgZmluZHMgYSBtYXRjaCB2aWEgZ2V0X2Rldmlj
+ZS5XaGVuIHJldHVybmluZyBlcnJvciB3ZSBzaG91bGQKPiA+ID4gY2FsbCBwdXRfZGV2aWNlLgo+
+ID4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEhhbyA8cGVuZy5oYW8yQHp0ZS5jb20uY24+
+Cj4gPiA+IC0tLQo+ID4gPiAgYXJjaC9hcm0vbWFjaC1vbWFwMi9kaXNwbGF5LmMgfCAxICsKPiA+
+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+ID4gPgo+ID4gPiBkaWZmIC0tZ2l0
+IGEvYXJjaC9hcm0vbWFjaC1vbWFwMi9kaXNwbGF5LmMgYi9hcmNoL2FybS9tYWNoLW9tYXAyL2Rp
+c3BsYXkuYwo+ID4gPiBpbmRleCBmODZiNzJkLi5jNmFhOWVkIDEwMDY0NAo+ID4gPiAtLS0gYS9h
+cmNoL2FybS9tYWNoLW9tYXAyL2Rpc3BsYXkuYwo+ID4gPiArKysgYi9hcmNoL2FybS9tYWNoLW9t
+YXAyL2Rpc3BsYXkuYwo+ID4gPiBAQCAtMjU4LDYgKzI1OCw3IEBAIHN0YXRpYyBpbnQgX19pbml0
+IG9tYXBkc3NfaW5pdF9vZih2b2lkKQo+ID4gPiAgICAgIHIgPSBvZl9wbGF0Zm9ybV9wb3B1bGF0
+ZShub2RlLCBOVUxMLCBOVUxMLCAmcGRldi0+ZGV2KTsKPiA+ID4gICAgICBpZiAocikgewo+ID4g
+PiAgICAgICAgICBwcl9lcnIoIlVuYWJsZSB0byBwb3B1bGF0ZSBEU1Mgc3VibW9kdWxlIGRldmlj
+ZXNcbiIpOwo+ID4gPiArICAgICAgICBwdXRfZGV2aWNlKCZwZGV2LT5kZXYpOwo+ID4gPiAgICAg
+ICAgICByZXR1cm4gcjsKPiA+ID4gICAgICB9Cj4gPgo+ID4gSW4gZ2VuZXJhbCwgaWYgdGhlIGRl
+dmljZSB0cmVlIG5vZGUgaXMgbmV2ZXIgdXNlZCBhZnRlcndhcmRzLAo+ID4gc2hvdWxkIHRoaXMg
+YmUganVzdDoKPiA+Cj4gPiAgICAgciA9IG9mX3BsYXRmb3JtX3BvcHVsYXRlKG5vZGUsIE5VTEws
+IE5VTEwsICZwZGV2LT5kZXYpOwo+ID4gICAgIG9mX25vZGVfcHV0KGRldl9ub2RlKTsKPiAKPiBB
+cmUgdGhlc2Ugc29sdmluZyB0aGUgc2FtZSBwcm9ibGVtcz8gIFRoZSBvZl9ub2RlX3B1dCBsb29r
+cyBjbGVhcmx5Cj4gbmVjZXNzYXJ5LCB3aGV0aGVyIHRoZXJlIGlzIGEgc3VjY2VzcyBvciBmYWls
+dXJlLiAgSSdtIG5vdCBmYW1pbGlhciB3aXRoCj4gcHV0X2RldmljZS4gIEkgc2VlIHRoYXQgaXQg
+ZG9lcyBhIGtvYmplY3RfcHV0LCBidXQgSSBkb24ndCBrbm93IHdoYXQKPiBoYXBwZW5zIGJlY2F1
+c2Ugb2YgdGhhdC4gIEJ1dCBpdCBsb29rcyBsaWtlIGFuIGluY29uc2lzdGVuY3kgdGhhdCBQZW5n
+J3MKPiBwYXRjaCBvbmx5IGNvbnNpZGVycyB0aGUgZmFpbHVyZSBjYXNlLCB3aGlsZSB5b3VyIHN1
+Z2dlc3Rpb24gaGFwcGVucwo+IGFsd2F5cy4KPgo+IEkgZ3Vlc3MgUGVuZydzIHBhdGNoIGlzIG1v
+dGl2YXRlZCBieSBhIENvY2NpbmVsbGUgc2NyaXB0IHRoYXQgV2VuIFlhbmcKPiAoYWxzbyBmcm9t
+IFpURSkgaGFzIGJlZW4gd29ya2luZyBvbi4gIFBlcmhhcHMgdGhlcmUgaXMgYSBuZWVkIHRvIGFk
+anVzdAo+IHdoYXQgaXMgc3VnZ2VzdGVkIGJ5IHRoYXQgc2NyaXB0LgoKWWVzLCBQZW5nIEhhbyBh
+bmQgSSBiZWxvbmcgdG8gdGhlIHNhbWUgY29tcGFueS4KSSBmb3VuZCBzb21lIGNvZGUgaXNzdWVz
+IHdpdGggdGhpcyBDb2NjaW5lbGxlIHNjcmlwdDoKSHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkv
+Mi8xNi8xMDcKT3VyIG90aGVyIGNvbGxlYWd1ZXMgYXJlIHN1Ym1pdHRpbmcgc29tZSBwYXRjaGVz
+IHRvIGZpeCB0aGVzZSBkaXNjb3ZlcmVkIHByb2JsZW1zLgoKRm9yIHRoaXMgY29kZShhcmNoL2Fy
+bS9tYWNoLW9tYXAyL2Rpc3BsYXkuYyksIHRoZXJlIG1heSBiZSB0d28gaXNzdWVzOgoxLCB0aGUg
+b2ZfZmluZF9kZXZpY2VfYnlfbm9kZSgpIHRha2VzIGEgcmVmZXJlbmNlIHRvIHRoZSB1bmRlcmx5
+aW5nIGRldmljZQpzdHJ1Y3R1cmUsIHdlIHNob3VsZCBjYWxsIHB1dF9kZXZpY2UoKSAgcmVsZWFz
+ZSB0aGF0IHJlZmVyZW5jZS4KMiwgb2ZfZmluZF9jb21wYXRpYmxlX25vZGUvb2ZfZmluZF9ub2Rl
+X2J5X25hbWUvb2ZfcGFyc2VfcGhhbmRsZS4uLiAgd2lsbCAKaW5jcmVhc2UgdGhlIHJlZmNvdW50
+IG9mIGRldmljZV9ub2RlLCAgd2Ugc2hvdWxkIGNhbGwgb2Zfbm9kZV9wdXQoKSB0byByZWxlYXNl
+CnRoZSByZWZjb3VudC4KClRoZSBmaXJzdCBpc3N1ZSBjYW4gYWxyZWFkeSBiZSBkZXRlY3RlZCBi
+eSB0aGUgQ29jY2luZWxsZSBzY3JpcHQgZGVzY3JpYmVkIGFib3ZlOwpUaGUgc2Vjb25kIGlzc3Vl
+LCB3ZSBhcmUgc3RpbGwgbG9va2luZyBmb3Igd2F5cyB0byBkZXZlbG9wIHRoZSBjb3JyZXNwb25k
+aW5nIENvY2NpbmVsbGUgc2NyaXB0LgoKUmVnYXJkcywKICBXZW4=
+
+
+--=====_003_next=====--
+
+--=====_001_next=====--
