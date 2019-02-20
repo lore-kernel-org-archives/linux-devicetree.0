@@ -1,65 +1,70 @@
-From: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Subject: [RFC PATCH V0 6/7] media: platform: Add Mediatek FD driver KConfig
-Date: Wed, 20 Feb 2019 15:48:12 +0800
-Message-ID: <1550648893-42050-7-git-send-email-Jerry-Ch.chen@mediatek.com>
+From: Jerry-ch Chen <Jerry-Ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [RFC PATCH V0 3/7] [media] dt-bindings: mt8183: Added FD-SMEM
+ dt-bindings
+Date: Wed, 20 Feb 2019 15:48:09 +0800
+Message-ID: <1550648893-42050-4-git-send-email-Jerry-Ch.chen@mediatek.com>
 References: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, Jerry-ch Chen <jerry-ch.chen@mediatek.com>, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1550648893-42050-1-git-send-email-Jerry-Ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Jerry-ch Chen <jerry-ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds KConfig for Mediatek Face Detection driver (FD).
-FD is embedded in Mediatek SoCs. It can provide hardware
-accelerated face detection function.
+This patch adds the DT binding documentation for the shared memory
+between Face Detection unit of the camera system and the co-processor
+in Mediatek SoCs.
 
-Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+Signed-off-by: Jerry-ch Chen <jerry-ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/media/platform/Kconfig         |  2 ++
- drivers/media/platform/mtk-isp/Kconfig | 10 ++++++++++
- 2 files changed, 12 insertions(+)
- create mode 100644 drivers/media/platform/mtk-isp/Kconfig
+ .../devicetree/bindings/media/mediatek,fd_smem.txt | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,fd_smem.txt
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index a505e9f..ef08d48 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -32,6 +32,8 @@ source "drivers/media/platform/davinci/Kconfig"
- 
- source "drivers/media/platform/omap/Kconfig"
- 
-+source "drivers/media/platform/mtk-isp/Kconfig"
-+
- config VIDEO_ASPEED
- 	tristate "Aspeed AST2400 and AST2500 Video Engine driver"
- 	depends on VIDEO_V4L2
-diff --git a/drivers/media/platform/mtk-isp/Kconfig b/drivers/media/platform/mtk-isp/Kconfig
+diff --git a/Documentation/devicetree/bindings/media/mediatek,fd_smem.txt b/Documentation/devicetree/bindings/media/mediatek,fd_smem.txt
 new file mode 100644
-index 0000000..096d2cb
+index 0000000..6f7c836
 --- /dev/null
-+++ b/drivers/media/platform/mtk-isp/Kconfig
-@@ -0,0 +1,10 @@
-+config VIDEO_MEDIATEK_FD_SUPPORT
-+	bool "Mediatek face detection processing function"
++++ b/Documentation/devicetree/bindings/media/mediatek,fd_smem.txt
+@@ -0,0 +1,28 @@
++Mediatek FD Shared Memory Device
 +
-+	default n
-+	help
-+		Support the basic hardware accelerated face detectioin feature.
++Mediatek FD Shared Memory Device is used to manage shared memory
++among CPU, FD and coprocessor. It is associated with a reserved
++memory region (Please see Documentation/devicetree/bindings/
++reserved-memory/mediatek,reserve-memory-fd_smem.txt) and
++provide the context to allocate memory with dma addresses.
 +
-+		FD driver provide face detection function, it can detect
-+		faces of Rotation-in-Plane from -180 degrees to +180 degrees
-+		and Rotation-off-Plane from -90 degrees to +90 degrees.
++Required properties:
++- compatible: Shall be "mediatek,fd_smem"
++
++- iommus: Shall point to the respective IOMMU block with master port
++  as argument. Please set the ports which may be accessed
++  through the common path. You can see
++  Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
++  for the detail.
++
++- mediatek,larb: must contain the local arbiters in the current SoCs.
++  Please set the larb of imgsys for FD if you are using FD function.
++  You can see Documentation/devicetree/bindings/memory-controllers/
++  mediatek,smi-larb.txt for the detail.
++
++Example:
++	fd_smem: fd_smem {
++		compatible = "mediatek,fd_smem";
++		mediatek,larb = <&larb5>;
++		iommus = <&iommu M4U_PORT_CAM_IMGI>;
++	};
 -- 
 1.9.1
