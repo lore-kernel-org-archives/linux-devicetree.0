@@ -1,7 +1,7 @@
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 6/9] iio: gyro: bmg160: add mount matrix support
-Date: Wed, 20 Feb 2019 15:00:53 +0100
-Message-ID: <56495e0c2fe1b943430c26e14924a436718af9b9.1550671256.git.hns@goldelico.com>
+Subject: [PATCH 7/9] iio: gyro: itg3200: add mount matrix support
+Date: Wed, 20 Feb 2019 15:00:54 +0100
+Message-ID: <5184e7ed452ca66f48db6ba34de8f2bd607ead24.1550671256.git.hns@goldelico.com>
 References: <cover.1550671256.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -18,59 +18,64 @@ clients.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/iio/gyro/bmg160_core.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/iio/gyro/itg3200_core.c  | 18 ++++++++++++++++++
+ include/linux/iio/gyro/itg3200.h |  1 +
+ 2 files changed, 19 insertions(+)
 
-diff --git a/drivers/iio/gyro/bmg160_core.c b/drivers/iio/gyro/bmg160_core.c
-index 63ca31628a93..7ae59be9a5ef 100644
---- a/drivers/iio/gyro/bmg160_core.c
-+++ b/drivers/iio/gyro/bmg160_core.c
-@@ -102,6 +102,7 @@ struct bmg160_data {
- 	struct regmap *regmap;
- 	struct iio_trigger *dready_trig;
- 	struct iio_trigger *motion_trig;
-+	struct iio_mount_matrix orientation;
- 	struct mutex mutex;
- 	s16 buffer[8];
- 	u32 dps_range;
-@@ -794,6 +795,18 @@ static int bmg160_write_event_config(struct iio_dev *indio_dev,
- 	return 0;
+diff --git a/drivers/iio/gyro/itg3200_core.c b/drivers/iio/gyro/itg3200_core.c
+index 7adecb562c81..b4bf721d309f 100644
+--- a/drivers/iio/gyro/itg3200_core.c
++++ b/drivers/iio/gyro/itg3200_core.c
+@@ -242,6 +242,18 @@ static int itg3200_initial_setup(struct iio_dev *indio_dev)
+ 	return ret;
  }
  
 +static const struct iio_mount_matrix *
-+bmg160_get_mount_matrix(const struct iio_dev *indio_dev,
-+			 const struct iio_chan_spec *chan)
++itg3200_get_mount_matrix(const struct iio_dev *indio_dev,
++			  const struct iio_chan_spec *chan)
 +{
-+	return &((struct bmg160_data *)iio_priv(indio_dev))->orientation;
++	return &((struct itg3200 *)iio_priv(indio_dev))->orientation;
 +}
 +
-+static const struct iio_chan_spec_ext_info bmg160_ext_info[] = {
-+	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmg160_get_mount_matrix),
++static const struct iio_chan_spec_ext_info itg3200_ext_info[] = {
++	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, itg3200_get_mount_matrix),
 +	{ },
 +};
 +
- static IIO_CONST_ATTR_SAMP_FREQ_AVAIL("100 200 400 1000 2000");
+ #define ITG3200_ST						\
+ 	{ .sign = 's', .realbits = 16, .storagebits = 16, .endianness = IIO_BE }
  
- static IIO_CONST_ATTR(in_anglvel_scale_available,
-@@ -831,6 +844,7 @@ static const struct iio_event_spec bmg160_event = {
- 		.storagebits = 16,					\
- 		.endianness = IIO_LE,					\
- 	},								\
-+	.ext_info = bmg160_ext_info,					\
- 	.event_spec = &bmg160_event,					\
- 	.num_event_specs = 1						\
+@@ -255,6 +267,7 @@ static int itg3200_initial_setup(struct iio_dev *indio_dev)
+ 	.address = ITG3200_REG_GYRO_ ## _mod ## OUT_H, \
+ 	.scan_index = ITG3200_SCAN_GYRO_ ## _mod, \
+ 	.scan_type = ITG3200_ST, \
++	.ext_info = itg3200_ext_info, \
  }
-@@ -1075,6 +1089,11 @@ int bmg160_core_probe(struct device *dev, struct regmap *regmap, int irq,
- 	data->irq = irq;
- 	data->regmap = regmap;
  
-+	ret = of_iio_read_mount_matrix(dev, "mount-matrix",
-+				&data->orientation);
+ static const struct iio_chan_spec itg3200_channels[] = {
+@@ -297,6 +310,11 @@ static int itg3200_probe(struct i2c_client *client,
+ 
+ 	st = iio_priv(indio_dev);
+ 
++	ret = of_iio_read_mount_matrix(&client->dev, "mount-matrix",
++				&st->orientation);
 +	if (ret)
 +		return ret;
 +
- 	ret = bmg160_chip_init(data);
- 	if (ret < 0)
- 		return ret;
+ 	i2c_set_clientdata(client, indio_dev);
+ 	st->i2c = client;
+ 
+diff --git a/include/linux/iio/gyro/itg3200.h b/include/linux/iio/gyro/itg3200.h
+index 2a820850f284..0a30fddccfb3 100644
+--- a/include/linux/iio/gyro/itg3200.h
++++ b/include/linux/iio/gyro/itg3200.h
+@@ -104,6 +104,7 @@
+ struct itg3200 {
+ 	struct i2c_client	*i2c;
+ 	struct iio_trigger	*trig;
++	struct iio_mount_matrix orientation;
+ };
+ 
+ enum ITG3200_SCAN_INDEX {
 -- 
 2.19.1
