@@ -1,116 +1,95 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v2 02/10] dt-bindings: misc: Add bindings for HiSilicon
- usb hub and data role switch functionality on HiKey960
-Date: Wed, 20 Feb 2019 10:34:16 +0800
-Message-ID: <8c217714-381c-f449-4f9e-d398c260a916@huawei.com>
-References: <20190218112310.17860-1-chenyu56@huawei.com>
- <20190218112310.17860-3-chenyu56@huawei.com>
- <22270fce-602e-d9fd-0416-58bfecc40b07@cogentembedded.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
+Date: Wed, 20 Feb 2019 10:59:49 +0800
+Message-ID: <CAGb2v65ZCaRcr1SJ=6pvviMAn7S0Nf3gEt8y9o8-ftXwXGc5hA@mail.gmail.com>
+References: <20190118170232.16142-1-anarsoul@gmail.com> <20190118170232.16142-4-anarsoul@gmail.com>
+ <20190218211035.GA28145@bogus> <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
+ <1245842044.588056.1550527701604@email.ionos.de> <CA+E=qVdMNmVkytCzXqYgJtV196-G=c_bWx+aLvs=Y0iuRpjdRg@mail.gmail.com>
+ <CAL_JsqLROpJMoEPLXaAL_JG1SNufstMDmB4xy_V_p4=duHKPSA@mail.gmail.com> <6a26ff97-0b9c-cfdd-9428-74580694220a@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <22270fce-602e-d9fd-0416-58bfecc40b07@cogentembedded.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: liuyu712@hisilicon.com, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Binghui Wang <wangbinghui@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <6a26ff97-0b9c-cfdd-9428-74580694220a@davidjohnsummers.uk>
+Sender: netdev-owner@vger.kernel.org
+To: David Summers <beagleboard@davidjohnsummers.uk>
+Cc: Rob Herring <robh@kernel.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, netdev <netdev@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Feb 20, 2019 at 5:09 AM David Summers
+<beagleboard@davidjohnsummers.uk> wrote:
+>
+> On 19/02/2019 14:17, Rob Herring wrote:
+> > On Mon, Feb 18, 2019 at 4:28 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> >> On Mon, Feb 18, 2019 at 2:08 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
+> >>> Hi Vasily,
+> >> Hi Stefan,
+> >>
+> >>>> Vasily Khoruzhick <anarsoul@gmail.com> hat am 18. Februar 2019 um 22:24 geschrieben:
+> >>>>
+> >>>>
+> >>>> On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
+> >>>>> On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
+> >>>>>> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+> >>>>>>
+> >>>>>> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> >>>>>> ---
+> >>>>>>   .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
+> >>>>>>   1 file changed, 35 insertions(+)
+> >>>>>>   create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> >>>>>>
+> >>>>>> diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> >>>>>> new file mode 100644
+> >>>>>> index 000000000000..8357f242ae4c
+> >>>>>> --- /dev/null
+> >>>>>> +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+> >>>>>> @@ -0,0 +1,35 @@
+> >>>>>> +RTL8723BS/RTL8723CS Bluetooth
+> >>>>>> +---------------------
+> >>>>>> +
+> >>>>>> +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
+> >>>>>> +BT is connected over serial. It speaks H5 protocol with few extra commands
+> >>>>>> +to upload firmware and change module speed.
+> >>>>>> +
+> >>>>>> +Required properties:
+> >>>>>> +
+> >>>>>> + - compatible: should be one of the following:
+> >>>>>> +   * "realtek,rtl8723bs-bt"
+> >>>>>> +   * "realtek,rtl8723cs-bt"
+> >>>>>> +Optional properties:
+> >>>>>> +
+> >>>>>> + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
+> >>>>>> + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
+> >>>>>> + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
+> >>>>>> + - firmware-postfix: firmware postfix to be used for firmware config
+> >>> sorry, i didn't noticed your great series before. David and i working at the same stuff but for the Asus Tinker Board.
+> >>>
+> >>> I created a similiar yet untested patch version for hci_h5 [1]. Maybe it's useful.
+> >> Looks good to me, but you may need to add firmware-postfix.
+> >>
+> >>> Just a comment about the binding. It's really necessary to add the reset-gpio? Can't we use the enable-gpio with inverse polarity for this?
+> >> Yes, we can use enable-gpio instead of reset-gpio on pine64 and pinebook.
+> > Then why do we have both? Reset and enable are distinct. The inverse
+> > of enable-gpios is typically powerdown-gpios, not reset-gpios.
+> >
+> > Rob
+>
+> Both data sheets that I know:
+>
+> http://cit.odessa.ua/media/pdf/Intel-Compute-Stick/FN-Link_F23BDSM25-W1.pdf
+> http://files.pine64.org/doc/datasheet/pine64/RTL8723BS.pdf
+>
+> BT_RST_N BT Reset IN / BT_DIS# General Purpose I/O Pin
+>
+> So from the datasheet there is only one pin. And from its name it sounds
+> like reset.
 
-On 2019/2/19 16:25, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 18.02.2019 14:23, Yu Chen wrote:
-> 
->> This patch adds binding documentation to support usb hub and usb
->> data role switch of Hisilicon HiKey960 Board.
->>
->> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Cc: Binghui Wang <wangbinghui@hisilicon.com>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> ---
->> v1:
->> * Fix some format errors as suggested by Sergei.
->> * Modify gpio description to use gpiod API.
->> v2:
->> * Remove information about Hikey.
->> * Fix gpio description.
->> * Remove device_type of endpoint.
->> ---
->> ---
->>   .../bindings/misc/hisilicon-hikey-usb.txt          | 35 ++++++++++++++++++++++
->>   1 file changed, 35 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->> new file mode 100644
->> index 000000000000..c2b789b515df
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->> @@ -0,0 +1,35 @@
->> +Support usb hub and usb data role switch of Hisilicon HiKey960 Board.
->> +
->> +-----------------------------
->> +
->> +Required properties:
->> +- compatible: "hisilicon,gpio-hubv1","hisilicon,hikey960-usb"
-> 
->    Only one of those, looking at your example?
-"hisilicon,gpio-hubv1" is similar as "hisilicon,hikey960-usb".
+Yes there's only one pin. Would be nice if we could use "enable" though.
+That is what ACPI uses.
 
->    Need a space after comma, BTW.
-OK. Thanks!
+> This said though the datasheets of these Realtek devices are a bit thin ....
 
-> 
->> +- typec-vbus-gpios: gpio to control the vbus of typeC port
->> +- typec-vbus-enable-val: gpio value that enable the vbus of typeC port
-> 
->    Hm, I thought that can be inferred from the GPIO specifier above...
-> 
-OK. Thanks!
+These datasheets are for the integrated modules (the chip plus passive
+components).
+I don't think the datasheet for the chip itself is public.
 
->> +- otg-switch-gpios: gpio to switch DP & DM between the hub and typeC port
->> +- hub-vdd33-en-gpios: gpio to enable the power of hub
->> +- pinctrl-0: pinctrl config
-> 
->    You forgot about "pinctrl-names"...
-OK. Thanks!
-
-> 
->> +
->> +Example
->> +-----
->> +
->> +    hisi_hikey_usb: hisi_hikey_usb {
->> +        compatible = "hisilicon,hikey960-usb";
->> +        typec-vbus-gpios = <&gpio25 2 0>;
->> +        typec-vbus-enable-val = <1>;
->> +        otg-switch-gpios = <&gpio25 6 0>;
->> +        hub-vdd33-en-gpios = <&gpio5 6 0>;
->> +        pinctrl-names = "default";
->> +        pinctrl-0 = <&usbhub5734_pmx_func>;
->> +
->> +        port {
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +
->> +            hikey_usb_ep: endpoint@0 {
->> +                reg = <0>;
->> +                remote-endpoint = <&dwc3_role_switch_notify>;
->> +            };
->> +        };
->> +
->> +    };
-> 
-> MBR, Sergei
-> 
-> .
-> 
-
-Thanks
-Yu Chen
+ChenYu
