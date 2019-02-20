@@ -1,47 +1,83 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 5/9] iio: accel: bma180: convert to devm
-Date: Wed, 20 Feb 2019 17:15:09 +0100
-Message-ID: <175C24D1-2C0D-455F-B091-E16ED67C4049@goldelico.com>
-References: <cover.1550671256.git.hns@goldelico.com> <900f59b94ef2e1b5559b363c0d1af4fefccd0366.1550671256.git.hns@goldelico.com> <20190220160951.GX9224@smile.fi.intel.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 6/6] net: ethernet: ti: cpsw: deprecate cpsw-phy-sel
+ driver
+Date: Wed, 20 Feb 2019 08:18:09 -0800
+Message-ID: <20190220161809.GR15711@atomide.com>
+References: <1550676319-6440-1-git-send-email-grygorii.strashko@ti.com>
+ <1550676319-6440-7-git-send-email-grygorii.strashko@ti.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220160951.GX9224@smile.fi.intel.com>
+Content-Disposition: inline
+In-Reply-To: <1550676319-6440-7-git-send-email-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-> Am 20.02.2019 um 17:09 schrieb Andy Shevchenko =
-<andriy.shevchenko@linux.intel.com>:
->=20
-> On Wed, Feb 20, 2019 at 03:00:52PM +0100, H. Nikolaus Schaller wrote:
->> This simplifies the code a little.
->=20
->> -err_buffer_cleanup:
->> -	iio_triggered_buffer_cleanup(indio_dev);
->> -err_trigger_unregister:
->> -	if (data->trig)
->> -		iio_trigger_unregister(data->trig);
->> -err_trigger_free:
->> -	iio_trigger_free(data->trig);
->=20
->> -err_chip_disable:
->> +err:
->=20
-> Please, leave the original label name as it's more self-explanatory.
+* Grygorii Strashko <grygorii.strashko@ti.com> [190220 15:26]:
+> Deprecate cpsw-phy-sel driver as it's been replaced with new
+> TI phy-gmii-sel PHY driver.
 
-Ok.
+I'm not going to pick up this one, seems that Dave can merge
+this later on? That is unless Dave wants to ack this one.
 
->=20
->> 	data->part_info->chip_disable(data);
->>=20
->> 	return ret;
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
->=20
->=20
+Regards,
+
+Tony
+
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  drivers/net/ethernet/ti/Kconfig | 6 +++---
+>  drivers/net/ethernet/ti/cpsw.h  | 6 ++++++
+>  2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+> index bb126be1eb72..8b21b40a9fe5 100644
+> --- a/drivers/net/ethernet/ti/Kconfig
+> +++ b/drivers/net/ethernet/ti/Kconfig
+> @@ -49,10 +49,11 @@ config TI_DAVINCI_CPDMA
+>  	  will be called davinci_cpdma.  This is recommended.
+>  
+>  config TI_CPSW_PHY_SEL
+> -	bool
+> +	bool "TI CPSW Phy mode Selection (DEPRECATED)"
+> +	default n
+>  	---help---
+>  	  This driver supports configuring of the phy mode connected to
+> -	  the CPSW.
+> +	  the CPSW. DEPRECATED: use PHY_TI_GMII_SEL.
+>  
+>  config TI_CPSW_ALE
+>  	tristate "TI CPSW ALE Support"
+> @@ -64,7 +65,6 @@ config TI_CPSW
+>  	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
+>  	select TI_DAVINCI_CPDMA
+>  	select TI_DAVINCI_MDIO
+> -	select TI_CPSW_PHY_SEL
+>  	select TI_CPSW_ALE
+>  	select MFD_SYSCON
+>  	select REGMAP
+> diff --git a/drivers/net/ethernet/ti/cpsw.h b/drivers/net/ethernet/ti/cpsw.h
+> index cf111db3dc27..907e05fc22e4 100644
+> --- a/drivers/net/ethernet/ti/cpsw.h
+> +++ b/drivers/net/ethernet/ti/cpsw.h
+> @@ -21,7 +21,13 @@
+>  			 ((mac)[2] << 16) | ((mac)[3] << 24))
+>  #define mac_lo(mac)	(((mac)[4] << 0) | ((mac)[5] << 8))
+>  
+> +#if IS_ENABLED(CONFIG_TI_CPSW_PHY_SEL)
+>  void cpsw_phy_sel(struct device *dev, phy_interface_t phy_mode, int slave);
+> +#else
+> +static inline
+> +void cpsw_phy_sel(struct device *dev, phy_interface_t phy_mode, int slave)
+> +{}
+> +#endif
+>  int ti_cm_get_macid(struct device *dev, int slave, u8 *mac_addr);
+>  
+>  #endif /* __CPSW_H__ */
+> -- 
+> 2.17.1
+> 
