@@ -1,116 +1,72 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/9] iio: accel: bmc150: add mount matrix support
-Date: Wed, 20 Feb 2019 17:09:53 +0000
-Message-ID: <20190220170953.0200e256@archlinux>
-References: <cover.1550671256.git.hns@goldelico.com>
-        <71ef51037525ae6324bc22e933c00a514d518b31.1550671256.git.hns@goldelico.com>
-        <20190220161444.78f34a61@archlinux>
-        <4C07F0C8-3149-4DEA-B108-39F2CC04ED88@goldelico.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Wed, 20 Feb 2019 22:47:37 +0530
+Message-ID: <ffc39399-a6bc-aabf-b701-d419346f9a71@ti.com>
+References: <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
+ <20190214154100.GB5720@atomide.com>
+ <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
+ <20190214174612.GF5720@atomide.com>
+ <171e8597-2156-747d-d024-7b4bfc6f9186@ti.com>
+ <20190215161629.GK5720@atomide.com>
+ <2369739e-3bc8-257a-99e0-db2951c6777d@ti.com>
+ <20190218143245.GC15711@atomide.com>
+ <84b3ec21-9ce9-b9a8-80a9-75001db43a90@ti.com>
+ <20190219153537.GJ15711@atomide.com> <20190220163651.GS15711@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4C07F0C8-3149-4DEA-B108-39F2CC04ED88@goldelico.com>
+In-Reply-To: <20190220163651.GS15711@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, jason@lakedaemon.net, Peter Ujfalusi <peter.ujfalusi@ti.com>, marc.zyngier@arm.com, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Feb 2019 17:20:29 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+Hi Tony,
 
-> > Am 20.02.2019 um 17:14 schrieb Jonathan Cameron <jic23@kernel.org>:
-> > 
-> > On Wed, 20 Feb 2019 15:00:50 +0100
-> > "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-> >   
-> >> This patch allows to read a mount-matrix device tree
-> >> property and report to user-space or in-kernel iio
-> >> clients.
-> >> 
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>  
-> > This will clash with Andy's current patch, but I'll fix that up if
-> > needed. Otherwise, one trivial suggestion inline.  
+On 2/20/2019 10:06 PM, Tony Lindgren wrote:
+> Hi,
 > 
-> Ok, thanks!
+> Some more info on chained irq vs mux below that might
+> help.
 > 
-> > 
-> > Jonathan
-> >   
-> >> ---
-> >> drivers/iio/accel/bmc150-accel-core.c | 19 +++++++++++++++++++
-> >> 1 file changed, 19 insertions(+)
-> >> 
-> >> diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
-> >> index 383c802eb5b8..9178846cfddc 100644
-> >> --- a/drivers/iio/accel/bmc150-accel-core.c
-> >> +++ b/drivers/iio/accel/bmc150-accel-core.c
-> >> @@ -204,6 +204,7 @@ struct bmc150_accel_data {
-> >> 	int ev_enable_state;
-> >> 	int64_t timestamp, old_timestamp; /* Only used in hw fifo mode. */
-> >> 	const struct bmc150_accel_chip_info *chip_info;
-> >> +	struct iio_mount_matrix orientation;
-> >> };
-> >> 
-> >> static const struct {
-> >> @@ -796,6 +797,18 @@ static ssize_t bmc150_accel_get_fifo_state(struct device *dev,
-> >> 	return sprintf(buf, "%d\n", state);
-> >> }
-> >> 
-> >> +static const struct iio_mount_matrix *
-> >> +bmc150_accel_get_mount_matrix(const struct iio_dev *indio_dev,
-> >> +				const struct iio_chan_spec *chan)
-> >> +{
-> >> +	return &((struct bmc150_accel_data *)iio_priv(indio_dev))->orientation;  
-> > 
-> > I would use a local variable as that casting is less than simple to parse
-> > to my eyes anyway!  
+> * Tony Lindgren <tony@atomide.com> [190219 15:36]:
+>> * Lokesh Vutla <lokeshvutla@ti.com> [190219 08:51]:
+>>> With this can you tell me how can we not have a device-tree and still support
+>>> irq allocation?
+>>
+>> Using standard dts reg property to differentiate the interrupt
+>> router instances. And if the interrupt router is a mux, you should
+>> treat it as a mux rather than a chained interrupt controller.
+>>
+>> We do have drivers/mux nowadays, not sure if it helps in this case
+>> as at least timer interrupts need to be configured very early.
 > 
-> Yes, Andy already suggested that. I just happend to pick one of the only two bad examples
-> from all iio drivers as template...
+> Adding Linus Walleij to Cc since he posted a good test to
+> consider if something should use chained (or nested) irq:
 > 
-> drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> drivers/iio/magnetometer/ak8975.c
+> "individual masking and ACKing bits and can all be used at the
+>  same time" [0]
 
-If you like, feel free to send patches to tidy those up as well!
-Then no one else can be unlucky on the same thing in future.
+Interrupt Router just routes M inputs to N outputs. One input can only
+be mapped to one output. This is a clear case of a hierarchical domain
+and the driver is implementing it.
 
-Jonathan
+Thanks and regards,
+Lokesh
 
 > 
-> >   
-> >> +}
-> >> +
-> >> +static const struct iio_chan_spec_ext_info bmc150_accel_ext_info[] = {
-> >> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmc150_accel_get_mount_matrix),
-> >> +	{ },
-> >> +};
-> >> +
-> >> static IIO_CONST_ATTR(hwfifo_watermark_min, "1");
-> >> static IIO_CONST_ATTR(hwfifo_watermark_max,
-> >> 		      __stringify(BMC150_ACCEL_FIFO_LENGTH));
-> >> @@ -978,6 +991,7 @@ static const struct iio_event_spec bmc150_accel_event = {
-> >> 		.shift = 16 - (bits),					\
-> >> 		.endianness = IIO_LE,					\
-> >> 	},								\
-> >> +	.ext_info = bmc150_accel_ext_info,				\
-> >> 	.event_spec = &bmc150_accel_event,				\
-> >> 	.num_event_specs = 1						\
-> >> }
-> >> @@ -1555,6 +1569,11 @@ int bmc150_accel_core_probe(struct device *dev, struct regmap *regmap, int irq,
-> >> 
-> >> 	data->regmap = regmap;
-> >> 
-> >> +	ret = of_iio_read_mount_matrix(dev, "mount-matrix",
-> >> +				       &data->orientation);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >> 	ret = bmc150_accel_chip_init(data);
-> >> 	if (ret < 0)
-> >> 		return ret;  
-> >   
+> Not sure if we have that documented somewhere?
 > 
-> BR and thanks,
-> Nikolaus
+> But seems like the interrupt router should be set up as
+> a separate mux driver talking with firmware that the
+> interrupt controller driver calls on request_irq(>
+> Cheers,
+> 
+> Tony
+> 
+> 
+> [0] https://marc.info/?l=linux-omap&m=155065629529311&w=2
 > 
