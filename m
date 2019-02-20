@@ -1,95 +1,163 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
-Date: Wed, 20 Feb 2019 10:59:49 +0800
-Message-ID: <CAGb2v65ZCaRcr1SJ=6pvviMAn7S0Nf3gEt8y9o8-ftXwXGc5hA@mail.gmail.com>
-References: <20190118170232.16142-1-anarsoul@gmail.com> <20190118170232.16142-4-anarsoul@gmail.com>
- <20190218211035.GA28145@bogus> <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
- <1245842044.588056.1550527701604@email.ionos.de> <CA+E=qVdMNmVkytCzXqYgJtV196-G=c_bWx+aLvs=Y0iuRpjdRg@mail.gmail.com>
- <CAL_JsqLROpJMoEPLXaAL_JG1SNufstMDmB4xy_V_p4=duHKPSA@mail.gmail.com> <6a26ff97-0b9c-cfdd-9428-74580694220a@davidjohnsummers.uk>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv6 3/4] pci: layerscape: Add the EP mode support.
+Date: Wed, 20 Feb 2019 03:09:01 +0000
+Message-ID: <HE1PR04MB3306890D5A1656EC818521A2F57D0@HE1PR04MB3306.eurprd04.prod.outlook.com>
+References: <20190122063328.25228-1-xiaowei.bao@nxp.com>
+ <20190122063328.25228-3-xiaowei.bao@nxp.com>
+ <20190219112721.GA15442@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <6a26ff97-0b9c-cfdd-9428-74580694220a@davidjohnsummers.uk>
-Sender: netdev-owner@vger.kernel.org
-To: David Summers <beagleboard@davidjohnsummers.uk>
-Cc: Rob Herring <robh@kernel.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, netdev <netdev@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190219112721.GA15442@e107981-ln.cambridge.arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Zang <roy.zang@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kishon@ti.com" <kishon@ti.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Leo Li <leoyang.li@nxp.com>, shawnguo@kernel.or
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2019 at 5:09 AM David Summers
-<beagleboard@davidjohnsummers.uk> wrote:
->
-> On 19/02/2019 14:17, Rob Herring wrote:
-> > On Mon, Feb 18, 2019 at 4:28 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
-> >> On Mon, Feb 18, 2019 at 2:08 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> >>> Hi Vasily,
-> >> Hi Stefan,
-> >>
-> >>>> Vasily Khoruzhick <anarsoul@gmail.com> hat am 18. Februar 2019 um 22:24 geschrieben:
-> >>>>
-> >>>>
-> >>>> On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
-> >>>>> On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
-> >>>>>> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
-> >>>>>>
-> >>>>>> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> >>>>>> ---
-> >>>>>>   .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
-> >>>>>>   1 file changed, 35 insertions(+)
-> >>>>>>   create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
-> >>>>>>
-> >>>>>> diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
-> >>>>>> new file mode 100644
-> >>>>>> index 000000000000..8357f242ae4c
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
-> >>>>>> @@ -0,0 +1,35 @@
-> >>>>>> +RTL8723BS/RTL8723CS Bluetooth
-> >>>>>> +---------------------
-> >>>>>> +
-> >>>>>> +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
-> >>>>>> +BT is connected over serial. It speaks H5 protocol with few extra commands
-> >>>>>> +to upload firmware and change module speed.
-> >>>>>> +
-> >>>>>> +Required properties:
-> >>>>>> +
-> >>>>>> + - compatible: should be one of the following:
-> >>>>>> +   * "realtek,rtl8723bs-bt"
-> >>>>>> +   * "realtek,rtl8723cs-bt"
-> >>>>>> +Optional properties:
-> >>>>>> +
-> >>>>>> + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
-> >>>>>> + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
-> >>>>>> + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
-> >>>>>> + - firmware-postfix: firmware postfix to be used for firmware config
-> >>> sorry, i didn't noticed your great series before. David and i working at the same stuff but for the Asus Tinker Board.
-> >>>
-> >>> I created a similiar yet untested patch version for hci_h5 [1]. Maybe it's useful.
-> >> Looks good to me, but you may need to add firmware-postfix.
-> >>
-> >>> Just a comment about the binding. It's really necessary to add the reset-gpio? Can't we use the enable-gpio with inverse polarity for this?
-> >> Yes, we can use enable-gpio instead of reset-gpio on pine64 and pinebook.
-> > Then why do we have both? Reset and enable are distinct. The inverse
-> > of enable-gpios is typically powerdown-gpios, not reset-gpios.
-> >
-> > Rob
->
-> Both data sheets that I know:
->
-> http://cit.odessa.ua/media/pdf/Intel-Compute-Stick/FN-Link_F23BDSM25-W1.pdf
-> http://files.pine64.org/doc/datasheet/pine64/RTL8723BS.pdf
->
-> BT_RST_N BT Reset IN / BT_DIS# General Purpose I/O Pin
->
-> So from the datasheet there is only one pin. And from its name it sounds
-> like reset.
-
-Yes there's only one pin. Would be nice if we could use "enable" though.
-That is what ACPI uses.
-
-> This said though the datasheets of these Realtek devices are a bit thin ....
-
-These datasheets are for the integrated modules (the chip plus passive
-components).
-I don't think the datasheet for the chip itself is public.
-
-ChenYu
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMb3JlbnpvIFBpZXJhbGlzaSA8
+bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4gDQpTZW50OiAyMDE5xOoy1MIxOcjVIDE5OjI3DQpU
+bzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQpDYzogYmhlbGdhYXNAZ29vZ2xl
+LmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9A
+a2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBh
+cm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgTS5oLiBMaWFuIDxtaW5n
+aHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kg
+WmFuZyA8cm95LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7IGN5
+cmlsbGUucGl0Y2hlbkBmcmVlLWVsZWN0cm9ucy5jb207IHBvbWJyZWRhbm5lQG5leGIuY29tOyBz
+aGF3bi5saW5Acm9jay1jaGlwcy5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxh
+YnMub3JnDQpTdWJqZWN0OiBSZTogW1BBVENIdjYgMy80XSBwY2k6IGxheWVyc2NhcGU6IEFkZCB0
+aGUgRVAgbW9kZSBzdXBwb3J0Lg0KDQpPbiBUdWUsIEphbiAyMiwgMjAxOSBhdCAwMjozMzoyN1BN
+ICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gQWRkIHRoZSBQQ0llIEVQIG1vZGUgc3VwcG9y
+dCBmb3IgbGF5ZXJzY2FwZSBwbGF0Zm9ybS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkg
+QmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBSZXZpZXdlZC1ieTogTWluZ2h1YW4gTGlhbiA8
+bWluZ2h1YW4ubGlhbkBueHAuY29tPg0KPiBSZXZpZXdlZC1ieTogWmhpcWlhbmcgSG91IDx6aGlx
+aWFuZy5ob3VAbnhwLmNvbT4NCj4gUmV2aWV3ZWQtYnk6IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkg
+PGtpc2hvbkB0aS5jb20+DQo+IC0tLQ0KPiBkZXBlbmRzIG9uOiANCj4gaHR0cHM6Ly9lbWVhMDEu
+c2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnBhdA0K
+PiBjaHdvcmsua2VybmVsLm9yZyUyRnByb2plY3QlMkZsaW51eC1wY2klMkZsaXN0JTJGJTNGc2Vy
+aWVzJTNENjYxNzcmYW1wDQo+IDtkYXRhPTAyJTdDMDElN0N4aWFvd2VpLmJhbyU0MG54cC5jb20l
+N0M2Zjg3NzJiYTQ3Yzc0ZDhlZTBhYTA4ZDY5NjVkM2UNCj4gYjQlN0M2ODZlYTFkM2JjMmI0YzZm
+YTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2ODYxNzI0NTcyNjExMTkzJmFtcA0KPiA7c2Rh
+dGE9YjNBY2owZnU3Yzl2U29IZTlWemVBa0VNYk1rcHlmWVBzWHRmNmZBOEZsayUzRCZhbXA7cmVz
+ZXJ2ZWQ9MA0KPiANCj4gdjI6DQo+ICAtIHJlbW92ZSB0aGUgRVAgbW9kZSBjaGVjayBmdW5jdGlv
+bi4NCj4gdjM6DQo+ICAtIG1vZGlmIHRoZSByZXR1cm4gdmFsdWUgd2hlbiBlbnRlciBkZWZhdWx0
+IGNhc2UuDQo+IHY0Og0KPiAgLSBubyBjaGFuZ2UuDQo+IHY1Og0KPiAgLSBubyBjaGFuZ2UuDQo+
+IHY2Og0KPiAgLSBtb2RpZnkgdGhlIGNvZGUgYmFzZSBvbiB0aGUgc3VibWl0IHBhdGNoIG9mIHRo
+ZSBFUCBmcmFtZXdvcmsuDQoNCkNhbiBJIGFwcGx5IHRoaXMgc2VyaWVzIHRvIG15IHBjaS9lbmRw
+b2ludCBicmFuY2ggKHdoZXJlIEkgcXVldWVkIEtpc2hvbidzIEVQIGZlYXR1cmVzIHJld29yayBw
+YXRjaGVzKSA/IENhbiB5b3UgY2hlY2sgcGxlYXNlID8NCltYaWFvd2VpIEJhb10gb2YgY291cnNl
+LCBpbiBteSBwYXRjaCwgSSBmb3VuZCBhIGNvbXBpbGUgd2FybmluZywgYnV0IHRoaXMgc2VyaWVz
+IHBhdGNoIGhhdmUgYXBwcm92ZWQgYnkgeW91LCBJIGRvbid0IGtub3cgaG93IHRvIGRvLCB0aGUg
+Y29tcGlsZSB3YXJuaW5nOiAiIHN0cnVjdCBwY2lfZXBjICplcGMgPSBlcC0+ZXBjOyIgaW4gImxz
+X3BjaWVfZXBfaW5pdCIgZnVuY3Rpb24sIEkgYW0gc28gc29ycnksIGNvdWxkIHlvdSBoZWxwIG1l
+IHJlbW92ZSB0aGlzIGNvZGUsIHRoYW5rcyBhIGxvdC4NCg0KVGhhbmtzLA0KTG9yZW56bw0KDQo+
+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9NYWtlZmlsZSAgICAgICAgICAgIHwgICAgMiAr
+LQ0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYyB8ICAx
+NTcgDQo+ICsrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxNTgg
+aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlIA0KPiAxMDA2NDQgZHJp
+dmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiANCj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlIA0KPiBiL2RyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlDQo+IGluZGV4IDdiY2RjZGYuLmI1ZjNiODMgMTAw
+NjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlDQo+ICsrKyBi
+L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlDQo+IEBAIC04LDcgKzgsNyBAQCBv
+YmotJChDT05GSUdfUENJX0VYWU5PUykgKz0gcGNpLWV4eW5vcy5vDQo+ICBvYmotJChDT05GSUdf
+UENJX0lNWDYpICs9IHBjaS1pbXg2Lm8NCj4gIG9iai0kKENPTkZJR19QQ0lFX1NQRUFSMTNYWCkg
+Kz0gcGNpZS1zcGVhcjEzeHgubw0KPiAgb2JqLSQoQ09ORklHX1BDSV9LRVlTVE9ORSkgKz0gcGNp
+LWtleXN0b25lLm8NCj4gLW9iai0kKENPTkZJR19QQ0lfTEFZRVJTQ0FQRSkgKz0gcGNpLWxheWVy
+c2NhcGUubw0KPiArb2JqLSQoQ09ORklHX1BDSV9MQVlFUlNDQVBFKSArPSBwY2ktbGF5ZXJzY2Fw
+ZS5vIHBjaS1sYXllcnNjYXBlLWVwLm8NCj4gIG9iai0kKENPTkZJR19QQ0lFX1FDT00pICs9IHBj
+aWUtcWNvbS5vDQo+ICBvYmotJChDT05GSUdfUENJRV9BUk1BREFfOEspICs9IHBjaWUtYXJtYWRh
+OGsubw0KPiAgb2JqLSQoQ09ORklHX1BDSUVfQVJUUEVDNikgKz0gcGNpZS1hcnRwZWM2Lm8gZGlm
+ZiAtLWdpdCANCj4gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1l
+cC5jIA0KPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMN
+Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uZGRjMmRiYg0KPiAtLS0g
+L2Rldi9udWxsDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNj
+YXBlLWVwLmMNCj4gQEAgLTAsMCArMSwxNTcgQEANCj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlm
+aWVyOiBHUEwtMi4wDQo+ICsvKg0KPiArICogUENJZSBjb250cm9sbGVyIEVQIGRyaXZlciBmb3Ig
+RnJlZXNjYWxlIExheWVyc2NhcGUgU29Dcw0KPiArICoNCj4gKyAqIENvcHlyaWdodCAoQykgMjAx
+OCBOWFAgU2VtaWNvbmR1Y3Rvci4NCj4gKyAqDQo+ICsgKiBBdXRob3I6IFhpYW93ZWkgQmFvIDx4
+aWFvd2VpLmJhb0BueHAuY29tPiAgKi8NCj4gKw0KPiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5o
+Pg0KPiArI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9vZl9wY2ku
+aD4NCj4gKyNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPg0KPiArI2luY2x1ZGUgPGxpbnV4
+L29mX2FkZHJlc3MuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9wY2kuaD4NCj4gKyNpbmNsdWRlIDxs
+aW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9yZXNvdXJjZS5oPg0K
+PiArDQo+ICsjaW5jbHVkZSAicGNpZS1kZXNpZ253YXJlLmgiDQo+ICsNCj4gKyNkZWZpbmUgUENJ
+RV9EQkkyX09GRlNFVAkJMHgxMDAwCS8qIERCSTIgYmFzZSBhZGRyZXNzKi8NCj4gKw0KPiArc3Ry
+dWN0IGxzX3BjaWVfZXAgew0KPiArCXN0cnVjdCBkd19wY2llCQkqcGNpOw0KPiArfTsNCj4gKw0K
+PiArI2RlZmluZSB0b19sc19wY2llX2VwKHgpCWRldl9nZXRfZHJ2ZGF0YSgoeCktPmRldikNCj4g
+Kw0KPiArc3RhdGljIGludCBsc19wY2llX2VzdGFibGlzaF9saW5rKHN0cnVjdCBkd19wY2llICpw
+Y2kpIHsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBk
+d19wY2llX29wcyBsc19wY2llX2VwX29wcyA9IHsNCj4gKwkuc3RhcnRfbGluayA9IGxzX3BjaWVf
+ZXN0YWJsaXNoX2xpbmssIH07DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
+X2lkIGxzX3BjaWVfZXBfb2ZfbWF0Y2hbXSA9IHsNCj4gKwl7IC5jb21wYXRpYmxlID0gImZzbCxs
+cy1wY2llLWVwIix9LA0KPiArCXsgfSwNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1
+Y3QgcGNpX2VwY19mZWF0dXJlcyBsc19wY2llX2VwY19mZWF0dXJlcyA9IHsNCj4gKwkubGlua3Vw
+X25vdGlmaWVyID0gZmFsc2UsDQo+ICsJLm1zaV9jYXBhYmxlID0gdHJ1ZSwNCj4gKwkubXNpeF9j
+YXBhYmxlID0gZmFsc2UsDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9l
+cGNfZmVhdHVyZXMqIGxzX3BjaWVfZXBfZ2V0X2ZlYXR1cmVzKHN0cnVjdCANCj4gK2R3X3BjaWVf
+ZXAgKmVwKSB7DQo+ICsJcmV0dXJuICZsc19wY2llX2VwY19mZWF0dXJlczsNCj4gK30NCj4gKw0K
+PiArc3RhdGljIHZvaWQgbHNfcGNpZV9lcF9pbml0KHN0cnVjdCBkd19wY2llX2VwICplcCkgew0K
+PiArCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiArCXN0
+cnVjdCBwY2lfZXBjICplcGMgPSBlcC0+ZXBjOw0KPiArCWVudW0gcGNpX2Jhcm5vIGJhcjsNCj4g
+Kw0KPiArCWZvciAoYmFyID0gQkFSXzA7IGJhciA8PSBCQVJfNTsgYmFyKyspDQo+ICsJCWR3X3Bj
+aWVfZXBfcmVzZXRfYmFyKHBjaSwgYmFyKTsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBsc19w
+Y2llX2VwX3JhaXNlX2lycShzdHJ1Y3QgZHdfcGNpZV9lcCAqZXAsIHU4IGZ1bmNfbm8sDQo+ICsJ
+CQkJICBlbnVtIHBjaV9lcGNfaXJxX3R5cGUgdHlwZSwgdTE2IGludGVycnVwdF9udW0pIHsNCj4g
+KwlzdHJ1Y3QgZHdfcGNpZSAqcGNpID0gdG9fZHdfcGNpZV9mcm9tX2VwKGVwKTsNCj4gKw0KPiAr
+CXN3aXRjaCAodHlwZSkgew0KPiArCWNhc2UgUENJX0VQQ19JUlFfTEVHQUNZOg0KPiArCQlyZXR1
+cm4gZHdfcGNpZV9lcF9yYWlzZV9sZWdhY3lfaXJxKGVwLCBmdW5jX25vKTsNCj4gKwljYXNlIFBD
+SV9FUENfSVJRX01TSToNCj4gKwkJcmV0dXJuIGR3X3BjaWVfZXBfcmFpc2VfbXNpX2lycShlcCwg
+ZnVuY19ubywgaW50ZXJydXB0X251bSk7DQo+ICsJY2FzZSBQQ0lfRVBDX0lSUV9NU0lYOg0KPiAr
+CQlyZXR1cm4gZHdfcGNpZV9lcF9yYWlzZV9tc2l4X2lycShlcCwgZnVuY19ubywgaW50ZXJydXB0
+X251bSk7DQo+ICsJZGVmYXVsdDoNCj4gKwkJZGV2X2VycihwY2ktPmRldiwgIlVOS05PV04gSVJR
+IHR5cGVcbiIpOw0KPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gKwl9DQo+ICt9DQo+ICsNCj4gK3N0
+YXRpYyBzdHJ1Y3QgZHdfcGNpZV9lcF9vcHMgcGNpZV9lcF9vcHMgPSB7DQo+ICsJLmVwX2luaXQg
+PSBsc19wY2llX2VwX2luaXQsDQo+ICsJLnJhaXNlX2lycSA9IGxzX3BjaWVfZXBfcmFpc2VfaXJx
+LA0KPiArCS5nZXRfZmVhdHVyZXMgPSBsc19wY2llX2VwX2dldF9mZWF0dXJlcywgfTsNCj4gKw0K
+PiArc3RhdGljIGludCBfX2luaXQgbHNfYWRkX3BjaWVfZXAoc3RydWN0IGxzX3BjaWVfZXAgKnBj
+aWUsDQo+ICsJCQkJCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICt7DQo+ICsJc3Ry
+dWN0IGR3X3BjaWUgKnBjaSA9IHBjaWUtPnBjaTsNCj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBw
+Y2ktPmRldjsNCj4gKwlzdHJ1Y3QgZHdfcGNpZV9lcCAqZXA7DQo+ICsJc3RydWN0IHJlc291cmNl
+ICpyZXM7DQo+ICsJaW50IHJldDsNCj4gKw0KPiArCWVwID0gJnBjaS0+ZXA7DQo+ICsJZXAtPm9w
+cyA9ICZwY2llX2VwX29wczsNCj4gKw0KPiArCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9i
+eW5hbWUocGRldiwgSU9SRVNPVVJDRV9NRU0sICJhZGRyX3NwYWNlIik7DQo+ICsJaWYgKCFyZXMp
+DQo+ICsJCXJldHVybiAtRUlOVkFMOw0KPiArDQo+ICsJZXAtPnBoeXNfYmFzZSA9IHJlcy0+c3Rh
+cnQ7DQo+ICsJZXAtPmFkZHJfc2l6ZSA9IHJlc291cmNlX3NpemUocmVzKTsNCj4gKw0KPiArCXJl
+dCA9IGR3X3BjaWVfZXBfaW5pdChlcCk7DQo+ICsJaWYgKHJldCkgew0KPiArCQlkZXZfZXJyKGRl
+diwgImZhaWxlZCB0byBpbml0aWFsaXplIGVuZHBvaW50XG4iKTsNCj4gKwkJcmV0dXJuIHJldDsN
+Cj4gKwl9DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBfX2lu
+aXQgbHNfcGNpZV9lcF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSB7DQo+ICsJ
+c3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gKwlzdHJ1Y3QgZHdfcGNpZSAqcGNp
+Ow0KPiArCXN0cnVjdCBsc19wY2llX2VwICpwY2llOw0KPiArCXN0cnVjdCByZXNvdXJjZSAqZGJp
+X2Jhc2U7DQo+ICsJaW50IHJldDsNCj4gKw0KPiArCXBjaWUgPSBkZXZtX2t6YWxsb2MoZGV2LCBz
+aXplb2YoKnBjaWUpLCBHRlBfS0VSTkVMKTsNCj4gKwlpZiAoIXBjaWUpDQo+ICsJCXJldHVybiAt
+RU5PTUVNOw0KPiArDQo+ICsJcGNpID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpwY2kpLCBH
+RlBfS0VSTkVMKTsNCj4gKwlpZiAoIXBjaSkNCj4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ICsNCj4g
+KwlkYmlfYmFzZSA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwgSU9SRVNPVVJD
+RV9NRU0sICJyZWdzIik7DQo+ICsJcGNpLT5kYmlfYmFzZSA9IGRldm1fcGNpX3JlbWFwX2NmZ19y
+ZXNvdXJjZShkZXYsIGRiaV9iYXNlKTsNCj4gKwlpZiAoSVNfRVJSKHBjaS0+ZGJpX2Jhc2UpKQ0K
+PiArCQlyZXR1cm4gUFRSX0VSUihwY2ktPmRiaV9iYXNlKTsNCj4gKw0KPiArCXBjaS0+ZGJpX2Jh
+c2UyID0gcGNpLT5kYmlfYmFzZSArIFBDSUVfREJJMl9PRkZTRVQ7DQo+ICsJcGNpLT5kZXYgPSBk
+ZXY7DQo+ICsJcGNpLT5vcHMgPSAmbHNfcGNpZV9lcF9vcHM7DQo+ICsJcGNpZS0+cGNpID0gcGNp
+Ow0KPiArDQo+ICsJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgcGNpZSk7DQo+ICsNCj4gKwly
+ZXQgPSBsc19hZGRfcGNpZV9lcChwY2llLCBwZGV2KTsNCj4gKw0KPiArCXJldHVybiByZXQ7DQo+
+ICt9DQo+ICsNCj4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGxzX3BjaWVfZXBfZHJp
+dmVyID0gew0KPiArCS5kcml2ZXIgPSB7DQo+ICsJCS5uYW1lID0gImxheWVyc2NhcGUtcGNpZS1l
+cCIsDQo+ICsJCS5vZl9tYXRjaF90YWJsZSA9IGxzX3BjaWVfZXBfb2ZfbWF0Y2gsDQo+ICsJCS5z
+dXBwcmVzc19iaW5kX2F0dHJzID0gdHJ1ZSwNCj4gKwl9LA0KPiArfTsNCj4gK2J1aWx0aW5fcGxh
+dGZvcm1fZHJpdmVyX3Byb2JlKGxzX3BjaWVfZXBfZHJpdmVyLCBsc19wY2llX2VwX3Byb2JlKTsN
+Cj4gLS0NCj4gMS43LjENCj4gDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
