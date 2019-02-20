@@ -1,136 +1,87 @@
-From: Peng Ma <peng.ma@nxp.com>
-Subject: [v6 2/3] arm64: dts: lx2160a: add sata node support
-Date: Wed, 20 Feb 2019 08:56:06 +0000
-Message-ID: <20190220085607.31582-2-peng.ma@nxp.com>
-References: <20190220085607.31582-1-peng.ma@nxp.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: sun7i: add pinctrl for missing uart mux options
+Date: Wed, 20 Feb 2019 10:06:17 +0100
+Message-ID: <20190220090617.aprfndnidcamwcvy@flea>
+References: <20190216182132.12895-1-mans@mansr.com>
+ <CAGb2v66C6HFKgF8kERfp2UQ5XUyNS0-prgC3sX2iobkz7SjBcw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="foh6urmif5xrrhfj"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220085607.31582-1-peng.ma@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66C6HFKgF8kERfp2UQ5XUyNS0-prgC3sX2iobkz7SjBcw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: axboe@kernel.dk, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, andy.tang@nxp.com
-Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yousaf.kaukab@suse.com, Peng Ma <peng.ma@nxp.com>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mans Rullgard <mans@mansr.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add SATA device nodes for fsl-lx2160a and enable support
-for QDS and RDB boards.
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
-changed for V6:
-	- no change
+--foh6urmif5xrrhfj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts |   16 +++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |   16 +++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi    |   44 +++++++++++++++++++++
- 3 files changed, 76 insertions(+), 0 deletions(-)
+On Wed, Feb 20, 2019 at 04:58:49PM +0800, Chen-Yu Tsai wrote:
+> On Sun, Feb 17, 2019 at 2:21 AM Mans Rullgard <mans@mansr.com> wrote:
+> >
+> > This adds pinctrl settings for various missing uart options.
+> >
+> > Signed-off-by: Mans Rullgard <mans@mansr.com>
+> > ---
+> >  arch/arm/boot/dts/sun7i-a20.dtsi | 45 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 45 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i=
+-a20.dtsi
+> > index af5b067a5f83..2295ff5adf48 100644
+> > --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> > +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> > @@ -944,6 +944,31 @@
+> >                                 function =3D "uart0";
+> >                         };
+> >
+> > +                       uart0_pf_pins: uart0-pf-pins {
+> > +                               pins =3D "PF2", "PF4";
+> > +                               function =3D "uart0";
+> > +                       };
+>=20
+> We've had the policy of not adding pinctrl nodes that aren't used in-tree,
+> to avoid bloating up the blob size. However DTC 1.4.7 introduced the new
+> /omit-if-no-ref/ directive, which would make the compiler discard marked
+> nodes if they aren't referenced.
+>=20
+> So please add this to all the new nodes. It seems to work regardless whet=
+her
+> you add it before or after the label, though having it after the label se=
+ems
+> to make vim syntax highlighting happier.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-index 99a22ab..1a5acf6 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-@@ -95,6 +95,22 @@
- 	};
- };
- 
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&sata1 {
-+	status = "okay";
-+};
-+
-+&sata2 {
-+	status = "okay";
-+};
-+
-+&sata3 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-index 6481e5f..5b6799e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-@@ -102,6 +102,22 @@
- 	};
- };
- 
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&sata1 {
-+	status = "okay";
-+};
-+
-+&sata2 {
-+	status = "okay";
-+};
-+
-+&sata3 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index a79f5c1..592034b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -671,6 +671,50 @@
- 			status = "disabled";
- 		};
- 
-+		sata0: sata@3200000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3200000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata1: sata@3210000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3210000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata2: sata@3220000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3220000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata3: sata@3230000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3230000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
- 		smmu: iommu@5000000 {
- 			compatible = "arm,mmu-500";
- 			reg = <0 0x5000000 0 0x800000>;
--- 
-1.7.1
+It also works (both for dtc and vim) if we put it on the previous
+line, so something like:
+
+/omit-if-no-ref/
+uart0_pf_pins: uart0-pf-pins {
+};
+
+And it does have the advantage of keeping the same line width, which
+could get pretty long on some nodes.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--foh6urmif5xrrhfj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXG0YiQAKCRDj7w1vZxhR
+xXzVAP9ijrsG7dQ9ZkgmVB+wYx/3Y8mdnIpj0J1trQGPtzNyiQD/as1MQ3MQA2eo
+/lMgL7JN23+8+YbQ3x8rN3XItEkscAw=
+=rn9g
+-----END PGP SIGNATURE-----
+
+--foh6urmif5xrrhfj--
