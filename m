@@ -1,332 +1,83 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v1 23/24] arm64: dts: qcom: qcs404: Add thermal zones for
- each sensor
-Date: Wed, 20 Feb 2019 15:10:07 +0530
-Message-ID: <CAP245DW1W4oxxtEK_C4X0xvOUqZm4W_+-0XxZFy4AtZcHscCNQ@mail.gmail.com>
-References: <cover.1549525708.git.amit.kucheria@linaro.org>
- <42fd6c63c58db82088924c70d016e03a2b6fa9fe.1549525708.git.amit.kucheria@linaro.org>
- <20190220010913.GB2811@localhost.localdomain>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH] dt-bindings: imx: update scu resource id headfile
+Date: Wed, 20 Feb 2019 09:49:54 +0000
+Message-ID: <AM6PR04MB4215014B734F71D409D617A5807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+References: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
+ <20190219125211.2pg2bqxner4klcb5@pengutronix.de>
+ <DB3PR0402MB3916AF3AA0283DB22DF61E2FF57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190219144808.qqpaubjcsb4huoml@pengutronix.de>
+ <DB3PR0402MB39160A56E168ED20410674D7F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <AM6PR04MB42152D05E62753E760741160807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+ <20190220081650.cu3yzausx55jefb6@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220010913.GB2811@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Zhang Rui <rui.zhang@intel.com>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190220081650.cu3yzausx55jefb6@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Anson Huang <anson.huang@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2019 at 6:39 AM Eduardo Valentin <edubezval@gmail.com> wrote:
->
-> On Thu, Feb 07, 2019 at 04:19:41PM +0530, Amit Kucheria wrote:
-> > qcs404 has 10 sensors connected to the single TSENS IP. Define a thermal
-> > zone for each of those sensors to expose the temperature of each zone.
+> From: Marco Felsch [mailto:m.felsch@pengutronix.de]
+> Sent: Wednesday, February 20, 2019 4:17 PM
+> On 19-02-20 03:38, Aisheng Dong wrote:
+> > [...]
 > >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 243 +++++++++++++++++++++++++++
-> >  1 file changed, 243 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > index 57d14d8f0c90..ca99c45864df 100644
-> > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > @@ -3,6 +3,7 @@
-> >
-> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >  #include <dt-bindings/clock/qcom,gcc-qcs404.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> >
-> >  / {
-> >       interrupt-parent = <&intc>;
-> > @@ -30,6 +31,7 @@
-> >                       reg = <0x100>;
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2_0>;
-> > +                     #cooling-cells= <2>;
-> >               };
-> >
-> >               CPU1: cpu@101 {
-> > @@ -38,6 +40,7 @@
-> >                       reg = <0x101>;
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2_0>;
-> > +                     #cooling-cells= <2>;
-> >               };
-> >
-> >               CPU2: cpu@102 {
-> > @@ -46,6 +49,7 @@
-> >                       reg = <0x102>;
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2_0>;
-> > +                     #cooling-cells= <2>;
-> >               };
-> >
-> >               CPU3: cpu@103 {
-> > @@ -54,6 +58,7 @@
-> >                       reg = <0x103>;
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2_0>;
-> > +                     #cooling-cells= <2>;
-> >               };
-> >
-> >               L2_0: l2-cache {
-> > @@ -507,4 +512,242 @@
-> >                       #interrupt-cells = <2>;
-> >               };
-> >       };
-> > +
-> > +     thermal-zones {
->
-> There are several zones with passive trips and no cooling maps.
+> > > > I don't like droping some ID's (e.g. IMX_SC_R_DC_0_CAPTURE0) by
+> > > > mark them as unused or even worse give them a other meaning. IMHO
+> > > > the scu-api should be stable since day 1 and the ID's should only be
+> extended.
+> > > > Marking ID's as deprecated is much better than moving them around.
+> > >
+> > > I agree the SCU APIs should be stable since day 1 and the ID should
+> > > ONLY be extended, but that is the best cases, the reality is, there
+> > > are different SoCs/Revision, some revisions may remove the resources
+> > > ID defined in pre-coded SCU firmware, like the
+> > > IMX_SC_R_DC_0_CAPTURE0 etc., so SCU APIs removes them after real
+> > > silicon arrived, now latest SCU firmware marks them as UNUSED, they
+> > > could be replaced by some other new resources in later new SoC, I am
+> > > NOT sure, but if it happens, this resource ID table should be
+> > > updated anyway, leaving the out-of-date resource ID table there will have
+> issues, since it is NOT sync with SCU firmware.
+> > >
+> > > So how to resolve such issue? We hope the SCU firmware should be
+> > > stable since day 1, but the truth is NOT, could be still some
+> > > updates but NOT very often. And I believe the updates will NOT break old
+> kernel version.
+> 
+> Hi Anson,
+> 
+> Please don't mix the dt-bindings and the kernel related stuff.
+> Unfortunately the bindings are within the kernel repo which in fact is great for
+> us kernel developer but the bindings are also used in other projects such as
+> barebox or other kernels (don't know the BSD guys). So you can't ensure that
+> your change will break something. Please keep that in mind.
+> 
+> IMHO solving that issue should be done by the scu firmware. I tought the scu is
+> a cortex-m4 with a bunch of embedded flash and ram (I don't know that much
+> about the scu since it is closed/black-boxed). Why do you don't use a
+> translation table within the scu? As I said earlier I don't like the redefinition of
+> ID's since they are now part of the dt-bindings.
+> The bindings can store up to 32bit values which is a large number ;) IMHO
+> wasting some ID's in favour of stability is a better solution.
+> 
 
-Indeed. The policy bits are still a WIP and in some cases the
-throttling is handled by someone in userspace. But I'd like to expose
-at least the temperatures at each of the sensors to make it easier for
-others to use this information. See my reply to the cover letter.
+As far as I know, those remove resource IDs are pre-defined and has never been used
+and won't be used anymore by SC firmware. (Anson can double check it)
+So I think it's safe to remove them or mark them as deprecated.
 
-Regards,
-Amit
+Personally I may prefer to remove them as they never worked to avoid confusing,
+especially at this early stage for mx8.
 
-
-
-
-> > +             aoss-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 0>;
-> > +
-> > +                     trips {
-> > +                             aoss_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             aoss_crit: aoss_crit {
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             dsp-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 1>;
-> > +
-> > +                     trips {
-> > +                             dsp_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             dsp_crit: dsp_crit {
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             lpass-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 2>;
-> > +
-> > +                     trips {
-> > +                             lpass_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             lpass_crit: lpass_crit {
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             wlan-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 3>;
-> > +
-> > +                     trips {
-> > +                             wlan_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             wlan_crit: wlan_crit {
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             cluster-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 4>;
-> > +
-> > +                     trips {
-> > +                             cluster_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             cluster_crit: cluster_crit {
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             cpu0-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 5>;
-> > +
-> > +                     trips {
-> > +                             cpu0_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             cpu0_crit: cpu_crit {
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip = <&cpu0_alert0>;
-> > +                                     cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             cpu1-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 6>;
-> > +
-> > +                     trips {
-> > +                             cpu1_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             cpu1_crit: cpu_crit {
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip = <&cpu1_alert0>;
-> > +                                     cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             cpu2-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 7>;
-> > +
-> > +                     trips {
-> > +                             cpu2_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             cpu2_crit: cpu_crit {
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip = <&cpu2_alert0>;
-> > +                                     cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             cpu3-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 8>;
-> > +
-> > +                     trips {
-> > +                             cpu3_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             cpu3_crit: cpu_crit {
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip = <&cpu3_alert0>;
-> > +                                     cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                    <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             gpu-thermal {
-> > +                     polling-delay-passive = <250>;
-> > +                     polling-delay = <1000>;
-> > +
-> > +                     thermal-sensors = <&tsens 9>;
-> > +
-> > +                     trips {
-> > +                             gpu_alert0: trip-point@0 {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +                             gpu_crit: gpu_crit {
-> > +                                     temperature = <95000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +     };
-> >  };
-> > --
-> > 2.17.1
-> >
+Regards
+Dong Aisheng
