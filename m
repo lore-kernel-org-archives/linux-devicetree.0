@@ -1,49 +1,78 @@
-From: Marek Vasut <marex@denx.de>
-Subject: [PATCH 1/2] dt-bindings: display: Add ETM0430G0DH6 bindings
-Date: Tue, 19 Feb 2019 15:04:37 +0100
-Message-ID: <20190219140438.17063-1-marex@denx.de>
+From: Alison Wang <alison.wang@nxp.com>
+Subject: RE: [PATCH] arm64: dts: ls1028a: Add Audio DT nodes
+Date: Wed, 20 Feb 2019 08:12:44 +0000
+Message-ID: <VI1PR04MB4062E534325E82002E5DCBEEF47D0@VI1PR04MB4062.eurprd04.prod.outlook.com>
+References: <20190123052135.26829-1-alison.wang@nxp.com>
+ <20190201045002.GH19882@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Marek Vasut <marex@denx.de>, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Jan Tuerk <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190201045002.GH19882@dragon>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIEVtZXJnaW5nIERpc3BsYXkgVGVjaG5vbG9neSBDb3JwLiAoRURUKSBFVE0w
-NDMwRzBESDYKZGlzcGxheSwgd2hpY2ggaXMgYSA0ODB4MjcyIDQuMyIgVEZUIGRpc3BsYXkuCgpT
-aWduZWQtb2ZmLWJ5OiBNYXJlayBWYXN1dCA8bWFyZXhAZGVueC5kZT4KQ2M6IFJvYiBIZXJyaW5n
-IDxyb2JoK2R0QGtlcm5lbC5vcmc+CkNjOiBKYW4gVHVlcmsgPGphbi50dWVya0BlbXRyaW9uLmNv
-bT4KQ2M6IFRoaWVycnkgUmVkaW5nIDx0cmVkaW5nQG52aWRpYS5jb20+CkNjOiBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZwotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
-ZWwvZWR0LGV0LXNlcmllcy50eHQgICB8IDggKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA4IGlu
-c2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2VkdCxldC1zZXJpZXMudHh0CmluZGV4IGY1NmI5
-OWViZDliZS4uZDlmMjFkNjI0MjJlIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4dAorKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4
-dApAQCAtNiw2ICs2LDE0IEBAIERpc3BsYXkgYmluZGluZ3MgZm9yIEVEVCBEaXNwbGF5IFRlY2hu
-b2xvZ3kgQ29ycC4gRGlzcGxheXMgd2hpY2ggYXJlCiBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBs
-ZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQgaW4KIHNpbXBsZS1wYW5lbC50eHQK
-IAorNCwzIiBXVkdBIFRGVCBQYW5lbHMKKy0tLS0tLS0tLS0tLS0tLS0tLS0tCisKKystLS0tLS0t
-LS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLSsKK3wgSWRlbnRpZmllciAgICAgIHwgY29tcGF0YmlsZSAgICAgICAgICB8
-IGRlc2NyaXB0aW9uICAgICAgICAgICAgICAgICAgICAgICAgIHwKKys9PT09PT09PT09PT09PT09
-PSs9PT09PT09PT09PT09PT09PT09PT0rPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PSsKK3wgRVRNMDQzMEcwREg2ICAgIHwgZWR0LGV0bTA0MzBnMGRoNiAgICB8IDQ4MHgyNzIg
-VEZUIERpc3BsYXkgICAgICAgICAgICAgICAgIHwKKystLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0t
-LS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKIAog
-NSw3IiBXVkdBIFRGVCBQYW5lbHMKIC0tLS0tLS0tLS0tLS0tLS0tLS0tCi0tIAoyLjE5LjIKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Hi, Shawn,
+
+> On Wed, Jan 23, 2019 at 01:21:35PM +0800, Alison Wang wrote:
+> > This patch adds Audio DT nodes for LS1028ARDB and LS1028AQDS boards.
+> >
+> > Signed-off-by: Alison Wang <alison.wang@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |   62
+> ++++++++++++++++++++
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   63
+> +++++++++++++++++++++
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   57
+> +++++++++++++++++++
+> >  3 files changed, 182 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> > index 14c79f4..139728e 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> > @@ -32,6 +32,49 @@
+> >  		device_type =3D "memory";
+> >  		reg =3D <0x0 0x80000000 0x1 0x00000000>;
+> >  	};
+> > +
+> > +	sys_mclk: clock-mclk {
+> > +		compatible =3D "fixed-clock";
+> > +		#clock-cells =3D <0>;
+> > +		clock-frequency =3D <25000000>;
+> > +	};
+> > +
+> > +	reg_1p8v: regulator-1p8v {
+> > +		compatible =3D "regulator-fixed";
+> > +		regulator-name =3D "1P8V";
+> > +		regulator-min-microvolt =3D <1800000>;
+> > +		regulator-max-microvolt =3D <1800000>;
+> > +		regulator-always-on;
+> > +	};
+> > +
+> > <snip>
+> > +
+> > +			codec: sgtl5000@a {
+> > +				#sound-dai-cells =3D <0>;
+> > +				compatible =3D "fsl,sgtl5000";
+> > +				reg =3D <0xa>;
+> > +				VDDA-supply =3D <&reg_1p8v>;
+> > +				VDDIO-supply =3D <&reg_1p8v>;
+> > +				clocks =3D <&sys_mclk>;
+> > +				sclk-strength =3D <3>;
+>=20
+> What is this property?
+[Alison] It is a new property. I have submitted a patch for this new proper=
+ty https://lkml.org/lkml/2018/12/25/123. This patch is already merged in li=
+nux-next.
+
+For other items you mentioned, I will modify them in v2. Thanks a lot for y=
+our review.
+
+
+Best Regards,
+Alison Wang
