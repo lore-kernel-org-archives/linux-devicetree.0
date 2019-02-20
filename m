@@ -1,44 +1,47 @@
 From: Sugaya Taichi <sugaya.taichi@socionext.com>
-Subject: [PATCH v3 5/9] dt-bindings: timer: Add Milbeaut M10V timer description
-Date: Wed, 20 Feb 2019 16:44:02 +0900
-Message-ID: <1550648642-10802-1-git-send-email-sugaya.taichi@socionext.com>
+Subject: [PATCH v3 7/9] dt-bindings: serial: Add Milbeaut serial driver description
+Date: Wed, 20 Feb 2019 16:44:37 +0900
+Message-ID: <1550648677-11164-1-git-send-email-sugaya.taichi@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, soc@kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
+To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, soc@kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings document for Milbeaut M10V timer.
+Add DT bindings document for Milbeaut serial driver.
 
 Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/timer/socionext,milbeaut-timer.txt         | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
+ .../devicetree/bindings/serial/milbeaut-uart.txt    | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/milbeaut-uart.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt b/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
+diff --git a/Documentation/devicetree/bindings/serial/milbeaut-uart.txt b/Documentation/devicetree/bindings/serial/milbeaut-uart.txt
 new file mode 100644
-index 0000000..ac44c4b
+index 0000000..3d2fb1a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
-@@ -0,0 +1,17 @@
-+Milbeaut SoCs Timer Controller
++++ b/Documentation/devicetree/bindings/serial/milbeaut-uart.txt
+@@ -0,0 +1,21 @@
++Socionext Milbeaut UART controller
 +
 +Required properties:
++- compatible: should be "socionext,milbeaut-usio-uart".
++- reg: offset and length of the register set for the device.
++- interrupts: two interrupts specifier.
++- interrupt-names: should be "rx", "tx".
++- clocks: phandle to the input clock.
 +
-+- compatible : should be "socionext,milbeaut-timer".
-+- reg : Specifies base physical address and size of the registers.
-+- interrupts : The interrupt of the first timer.
-+- clocks: phandle to the input clk.
++Optional properties:
++- auto-flow-control: flow control enable.
 +
 +Example:
-+
-+timer {
-+	compatible = "socionext,milbeaut-timer";
-+	reg = <0x1e000050 0x20>
-+	interrupts = <0 91 4>;
-+	clocks = <&clk 4>;
-+};
++	usio1: usio_uart@1e700010 {
++		compatible = "socionext,milbeaut-usio-uart";
++		reg = <0x1e700010 0x10>;
++		interrupts = <0 141 0x4>, <0 149 0x4>;
++		interrupt-names = "rx", "tx";
++		clocks = <&clk 2>;
++		auto-flow-control;
++	};
 -- 
 1.9.1
