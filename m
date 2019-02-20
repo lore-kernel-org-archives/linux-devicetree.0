@@ -1,36 +1,50 @@
-From: Gareth Williams <gareth.williams.jx@renesas.com>
-Subject: [PATCH v3 0/2] i2c: designware: Add support for a bus clock
-Date: Wed, 20 Feb 2019 15:50:01 +0000
-Message-ID: <1550677803-29716-1-git-send-email-gareth.williams.jx@renesas.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 3/9] iio: accel: bmc150: add mount matrix support
+Date: Wed, 20 Feb 2019 18:07:54 +0200
+Message-ID: <20190220160754.GW9224@smile.fi.intel.com>
+References: <cover.1550671256.git.hns@goldelico.com>
+ <71ef51037525ae6324bc22e933c00a514d518b31.1550671256.git.hns@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <71ef51037525ae6324bc22e933c00a514d518b31.1550671256.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Gareth Williams <gareth.williams.jx@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Synopsys I2C Controller has a bus clock that some SoCs require to access
-the registers. This series also details the new clock property in the bindings
-documentation.
+On Wed, Feb 20, 2019 at 03:00:50PM +0100, H. Nikolaus Schaller wrote:
+> This patch allows to read a mount-matrix device tree
+> property and report to user-space or in-kernel iio
+> clients.
 
-v3:
- - busclk renamed to pclk.
- - Added comment with dw_i2c_dev struct definition describing pclk.
- - Added enable rollback of first clock if second fails to enable.
- - Changed clocks and clock-names sections to use term "peripheral clock"
-   (pclk) instead of "bus clock" (busclk) in dt-bindings documentation.
-v2:
- - Use new devm_clk_get_optional() function as it simplifies handling when
-   the optional clock is not present.
-   
-Phil Edworthy (2):
-  dt: snps,designware-i2c: Add clock bindings documentation
-  i2c: designware: Add support for a bus clock
+> +static const struct iio_mount_matrix *
+> +bmc150_accel_get_mount_matrix(const struct iio_dev *indio_dev,
+> +				const struct iio_chan_spec *chan)
+> +{
+> +	return &((struct bmc150_accel_data *)iio_priv(indio_dev))->orientation;
 
- .../devicetree/bindings/i2c/i2c-designware.txt         |  9 +++++++++
- drivers/i2c/busses/i2c-designware-common.c             | 18 ++++++++++++++++--
- drivers/i2c/busses/i2c-designware-core.h               |  2 ++
- drivers/i2c/busses/i2c-designware-platdrv.c            |  5 +++++
- 4 files changed, 32 insertions(+), 2 deletions(-)
+It's hard to read.
+
+Can you split such lines in your series to something like
+
+struct bmc150_accel_data *data = iio_priv(indio_dev);
+
+return &data->orientation;
+
+?
+
+> +}
+> +
+> +static const struct iio_chan_spec_ext_info bmc150_accel_ext_info[] = {
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmc150_accel_get_mount_matrix),
+> +	{ },
+
+Terminator lines better without comma.
+
+> +};
 
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
