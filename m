@@ -1,142 +1,113 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
+From: Anson Huang <anson.huang@nxp.com>
 Subject: RE: [PATCH] dt-bindings: imx: update scu resource id headfile
-Date: Wed, 20 Feb 2019 03:43:14 +0000
-Message-ID: <AM6PR04MB4215CDF6103C8E085802DA91807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+Date: Wed, 20 Feb 2019 03:46:57 +0000
+Message-ID: <DB3PR0402MB39169C4F2A62AC31D2825055F57D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 References: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
  <AM6PR04MB421521095AEEC7530E97998A807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
  <DB3PR0402MB3916C81C158BD68ECB4DA7B6F57D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <AM6PR04MB4215CDF6103C8E085802DA91807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB3916C81C158BD68ECB4DA7B6F57D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB4215CDF6103C8E085802DA91807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-> >
-> > You need at least explain what changes made like what new features adde=
-d?
-> > What removed? Side affect if any?
->=20
-> No new features added, looks like SCFW just remove some unused resources.
-> No side-effect, as they are NOT used by anyone.
->=20
-
-That seems not true.
-I see some new IDs added.
-e.g. IMX_SC_R_PERF, IMX_SC_R_OCRAM
-
-Regards
-Dong Aisheng
-
-> Anson.
->=20
-> >
-> > Regards
-> > Dong Aisheng
-> >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > >  include/dt-bindings/firmware/imx/rsrc.h | 39
-> > > +++++++++++++++++++--------------
-> > >  1 file changed, 22 insertions(+), 17 deletions(-)
-> > >
-> > > diff --git a/include/dt-bindings/firmware/imx/rsrc.h
-> > > b/include/dt-bindings/firmware/imx/rsrc.h
-> > > index 4481f2d..ad747a8 100644
-> > > --- a/include/dt-bindings/firmware/imx/rsrc.h
-> > > +++ b/include/dt-bindings/firmware/imx/rsrc.h
-> > > @@ -36,15 +36,15 @@
-> > >  #define IMX_SC_R_DC_0_BLIT1		20
-> > >  #define IMX_SC_R_DC_0_BLIT2		21
-> > >  #define IMX_SC_R_DC_0_BLIT_OUT		22
-> > > -#define IMX_SC_R_DC_0_CAPTURE0		23
-> > > -#define IMX_SC_R_DC_0_CAPTURE1		24
-> > > +#define IMX_SC_R_PERF			23
-> > > +#define IMX_SC_R_UNUSED5		24
-> > >  #define IMX_SC_R_DC_0_WARP		25
-> > > -#define IMX_SC_R_DC_0_INTEGRAL0		26
-> > > -#define IMX_SC_R_DC_0_INTEGRAL1		27
-> > > +#define IMX_SC_R_UNUSED7		26
-> > > +#define IMX_SC_R_UNUSED8		27
-> > >  #define IMX_SC_R_DC_0_VIDEO0		28
-> > >  #define IMX_SC_R_DC_0_VIDEO1		29
-> > >  #define IMX_SC_R_DC_0_FRAC0		30
-> > > -#define IMX_SC_R_DC_0_FRAC1		31
-> > > +#define IMX_SC_R_UNUSED6		31
-> > >  #define IMX_SC_R_DC_0			32
-> > >  #define IMX_SC_R_GPU_2_PID0		33
-> > >  #define IMX_SC_R_DC_0_PLL_0		34
-> > > @@ -53,17 +53,17 @@
-> > >  #define IMX_SC_R_DC_1_BLIT1		37
-> > >  #define IMX_SC_R_DC_1_BLIT2		38
-> > >  #define IMX_SC_R_DC_1_BLIT_OUT		39
-> > > -#define IMX_SC_R_DC_1_CAPTURE0		40
-> > > -#define IMX_SC_R_DC_1_CAPTURE1		41
-> > > +#define IMX_SC_R_UNUSED9		40
-> > > +#define IMX_SC_R_UNUSED10		41
-> > >  #define IMX_SC_R_DC_1_WARP		42
-> > > -#define IMX_SC_R_DC_1_INTEGRAL0		43
-> > > -#define IMX_SC_R_DC_1_INTEGRAL1		44
-> > > +#define IMX_SC_R_UNUSED11		43
-> > > +#define IMX_SC_R_UNUSED12		44
-> > >  #define IMX_SC_R_DC_1_VIDEO0		45
-> > >  #define IMX_SC_R_DC_1_VIDEO1		46
-> > >  #define IMX_SC_R_DC_1_FRAC0		47
-> > > -#define IMX_SC_R_DC_1_FRAC1		48
-> > > +#define IMX_SC_R_UNUSED13		48
-> > >  #define IMX_SC_R_DC_1			49
-> > > -#define IMX_SC_R_GPU_3_PID0		50
-> > > +#define IMX_SC_R_UNUSED14		50
-> > >  #define IMX_SC_R_DC_1_PLL_0		51
-> > >  #define IMX_SC_R_DC_1_PLL_1		52
-> > >  #define IMX_SC_R_SPI_0			53
-> > > @@ -303,8 +303,8 @@
-> > >  #define IMX_SC_R_M4_0_UART		287
-> > >  #define IMX_SC_R_M4_0_I2C		288
-> > >  #define IMX_SC_R_M4_0_INTMUX		289
-> > > -#define IMX_SC_R_M4_0_SIM		290
-> > > -#define IMX_SC_R_M4_0_WDOG		291
-> > > +#define IMX_SC_R_UNUSED15		290
-> > > +#define IMX_SC_R_UNUSED16		291
-> > >  #define IMX_SC_R_M4_0_MU_0B		292
-> > >  #define IMX_SC_R_M4_0_MU_0A0		293
-> > >  #define IMX_SC_R_M4_0_MU_0A1		294
-> > > @@ -323,8 +323,8 @@
-> > >  #define IMX_SC_R_M4_1_UART		307
-> > >  #define IMX_SC_R_M4_1_I2C		308
-> > >  #define IMX_SC_R_M4_1_INTMUX		309
-> > > -#define IMX_SC_R_M4_1_SIM		310
-> > > -#define IMX_SC_R_M4_1_WDOG		311
-> > > +#define IMX_SC_R_UNUSED17		310
-> > > +#define IMX_SC_R_UNUSED18		311
-> > >  #define IMX_SC_R_M4_1_MU_0B		312
-> > >  #define IMX_SC_R_M4_1_MU_0A0		313
-> > >  #define IMX_SC_R_M4_1_MU_0A1		314
-> > > @@ -337,7 +337,7 @@
-> > >  #define IMX_SC_R_IRQSTR_SCU2		321
-> > >  #define IMX_SC_R_IRQSTR_DSP		322
-> > >  #define IMX_SC_R_ELCDIF_PLL		323
-> > > -#define IMX_SC_R_UNUSED6		324
-> > > +#define IMX_SC_R_OCRAM			324
-> > >  #define IMX_SC_R_AUDIO_PLL_0		325
-> > >  #define IMX_SC_R_PI_0			326
-> > >  #define IMX_SC_R_PI_0_PWM_0		327
-> > > @@ -554,6 +554,11 @@
-> > >  #define IMX_SC_R_VPU_MU_3		538
-> > >  #define IMX_SC_R_VPU_ENC_1		539
-> > >  #define IMX_SC_R_VPU			540
-> > > -#define IMX_SC_R_LAST			541
-> > > +#define IMX_SC_R_DMA_5_CH0		541
-> > > +#define IMX_SC_R_DMA_5_CH1		542
-> > > +#define IMX_SC_R_DMA_5_CH2		543
-> > > +#define IMX_SC_R_DMA_5_CH3		544
-> > > +#define IMX_SC_R_ATTESTATION		545
-> > > +#define IMX_SC_R_LAST			546
-> > >
-> > >  #endif /* __DT_BINDINGS_RSCRC_IMX_H */
-> > > --
-> > > 2.7.4
+DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gRnJvbTogQWlzaGVuZyBEb25nDQo+IFNlbnQ6IDIwMTnE6jLUwjIwyNUgMTE6NDMN
+Cj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwu
+b3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVl
+ckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFp
+bC5jb207IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJu
+ZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29t
+Pg0KPiBTdWJqZWN0OiBSRTogW1BBVENIXSBkdC1iaW5kaW5nczogaW14OiB1cGRhdGUgc2N1IHJl
+c291cmNlIGlkIGhlYWRmaWxlDQo+IA0KPiA+ID4NCj4gPiA+IFlvdSBuZWVkIGF0IGxlYXN0IGV4
+cGxhaW4gd2hhdCBjaGFuZ2VzIG1hZGUgbGlrZSB3aGF0IG5ldyBmZWF0dXJlcw0KPiBhZGRlZD8N
+Cj4gPiA+IFdoYXQgcmVtb3ZlZD8gU2lkZSBhZmZlY3QgaWYgYW55Pw0KPiA+DQo+ID4gTm8gbmV3
+IGZlYXR1cmVzIGFkZGVkLCBsb29rcyBsaWtlIFNDRlcganVzdCByZW1vdmUgc29tZSB1bnVzZWQN
+Cj4gcmVzb3VyY2VzLg0KPiA+IE5vIHNpZGUtZWZmZWN0LCBhcyB0aGV5IGFyZSBOT1QgdXNlZCBi
+eSBhbnlvbmUuDQo+ID4NCj4gDQo+IFRoYXQgc2VlbXMgbm90IHRydWUuDQo+IEkgc2VlIHNvbWUg
+bmV3IElEcyBhZGRlZC4NCj4gZS5nLiBJTVhfU0NfUl9QRVJGLCBJTVhfU0NfUl9PQ1JBTQ0KDQpX
+aGVuIEkgc2FpZCBubyBuZXcgZmVhdHVyZXMgYWRkZWQsIEkgbWVhbiBmb3Iga2VybmVsIHNpZGUs
+IFNDRlcgbWF5IGFkZCBuZXcgcmVzb3VyY2UvZmVhdHVyZQ0KYWx3YXlzLCBidXQgdGhhdCBkb2Vz
+IE5PVCBpbXBhY3Qgb3VyIGtlcm5lbCBpZiB3ZSBkbyBOT1QgZW5hYmxlIHRoZXNlIGZlYXR1cmVz
+IHNvIGZhci4NCg0KQW5zb24uDQoNCj4gDQo+IFJlZ2FyZHMNCj4gRG9uZyBBaXNoZW5nDQo+IA0K
+PiA+IEFuc29uLg0KPiA+DQo+ID4gPg0KPiA+ID4gUmVnYXJkcw0KPiA+ID4gRG9uZyBBaXNoZW5n
+DQo+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdA
+bnhwLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICBpbmNsdWRlL2R0LWJpbmRpbmdzL2Zpcm13
+YXJlL2lteC9yc3JjLmggfCAzOQ0KPiA+ID4gPiArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0t
+LS0tLS0NCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAxNyBkZWxl
+dGlvbnMoLSkNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHQtYmluZGlu
+Z3MvZmlybXdhcmUvaW14L3JzcmMuaA0KPiA+ID4gPiBiL2luY2x1ZGUvZHQtYmluZGluZ3MvZmly
+bXdhcmUvaW14L3JzcmMuaA0KPiA+ID4gPiBpbmRleCA0NDgxZjJkLi5hZDc0N2E4IDEwMDY0NA0K
+PiA+ID4gPiAtLS0gYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2Zpcm13YXJlL2lteC9yc3JjLmgNCj4g
+PiA+ID4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oDQo+ID4g
+PiA+IEBAIC0zNiwxNSArMzYsMTUgQEANCj4gPiA+ID4gICNkZWZpbmUgSU1YX1NDX1JfRENfMF9C
+TElUMQkJMjANCj4gPiA+ID4gICNkZWZpbmUgSU1YX1NDX1JfRENfMF9CTElUMgkJMjENCj4gPiA+
+ID4gICNkZWZpbmUgSU1YX1NDX1JfRENfMF9CTElUX09VVAkJMjINCj4gPiA+ID4gLSNkZWZpbmUg
+SU1YX1NDX1JfRENfMF9DQVBUVVJFMAkJMjMNCj4gPiA+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENf
+MF9DQVBUVVJFMQkJMjQNCj4gPiA+ID4gKyNkZWZpbmUgSU1YX1NDX1JfUEVSRgkJCTIzDQo+ID4g
+PiA+ICsjZGVmaW5lIElNWF9TQ19SX1VOVVNFRDUJCTI0DQo+ID4gPiA+ICAjZGVmaW5lIElNWF9T
+Q19SX0RDXzBfV0FSUAkJMjUNCj4gPiA+ID4gLSNkZWZpbmUgSU1YX1NDX1JfRENfMF9JTlRFR1JB
+TDAJCTI2DQo+ID4gPiA+IC0jZGVmaW5lIElNWF9TQ19SX0RDXzBfSU5URUdSQUwxCQkyNw0KPiA+
+ID4gPiArI2RlZmluZSBJTVhfU0NfUl9VTlVTRUQ3CQkyNg0KPiA+ID4gPiArI2RlZmluZSBJTVhf
+U0NfUl9VTlVTRUQ4CQkyNw0KPiA+ID4gPiAgI2RlZmluZSBJTVhfU0NfUl9EQ18wX1ZJREVPMAkJ
+MjgNCj4gPiA+ID4gICNkZWZpbmUgSU1YX1NDX1JfRENfMF9WSURFTzEJCTI5DQo+ID4gPiA+ICAj
+ZGVmaW5lIElNWF9TQ19SX0RDXzBfRlJBQzAJCTMwDQo+ID4gPiA+IC0jZGVmaW5lIElNWF9TQ19S
+X0RDXzBfRlJBQzEJCTMxDQo+ID4gPiA+ICsjZGVmaW5lIElNWF9TQ19SX1VOVVNFRDYJCTMxDQo+
+ID4gPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzAJCQkzMg0KPiA+ID4gPiAgI2RlZmluZSBJTVhf
+U0NfUl9HUFVfMl9QSUQwCQkzMw0KPiA+ID4gPiAgI2RlZmluZSBJTVhfU0NfUl9EQ18wX1BMTF8w
+CQkzNA0KPiA+ID4gPiBAQCAtNTMsMTcgKzUzLDE3IEBADQo+ID4gPiA+ICAjZGVmaW5lIElNWF9T
+Q19SX0RDXzFfQkxJVDEJCTM3DQo+ID4gPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfQkxJVDIJ
+CTM4DQo+ID4gPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfQkxJVF9PVVQJCTM5DQo+ID4gPiA+
+IC0jZGVmaW5lIElNWF9TQ19SX0RDXzFfQ0FQVFVSRTAJCTQwDQo+ID4gPiA+IC0jZGVmaW5lIElN
+WF9TQ19SX0RDXzFfQ0FQVFVSRTEJCTQxDQo+ID4gPiA+ICsjZGVmaW5lIElNWF9TQ19SX1VOVVNF
+RDkJCTQwDQo+ID4gPiA+ICsjZGVmaW5lIElNWF9TQ19SX1VOVVNFRDEwCQk0MQ0KPiA+ID4gPiAg
+I2RlZmluZSBJTVhfU0NfUl9EQ18xX1dBUlAJCTQyDQo+ID4gPiA+IC0jZGVmaW5lIElNWF9TQ19S
+X0RDXzFfSU5URUdSQUwwCQk0Mw0KPiA+ID4gPiAtI2RlZmluZSBJTVhfU0NfUl9EQ18xX0lOVEVH
+UkFMMQkJNDQNCj4gPiA+ID4gKyNkZWZpbmUgSU1YX1NDX1JfVU5VU0VEMTEJCTQzDQo+ID4gPiA+
+ICsjZGVmaW5lIElNWF9TQ19SX1VOVVNFRDEyCQk0NA0KPiA+ID4gPiAgI2RlZmluZSBJTVhfU0Nf
+Ul9EQ18xX1ZJREVPMAkJNDUNCj4gPiA+ID4gICNkZWZpbmUgSU1YX1NDX1JfRENfMV9WSURFTzEJ
+CTQ2DQo+ID4gPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfRlJBQzAJCTQ3DQo+ID4gPiA+IC0j
+ZGVmaW5lIElNWF9TQ19SX0RDXzFfRlJBQzEJCTQ4DQo+ID4gPiA+ICsjZGVmaW5lIElNWF9TQ19S
+X1VOVVNFRDEzCQk0OA0KPiA+ID4gPiAgI2RlZmluZSBJTVhfU0NfUl9EQ18xCQkJNDkNCj4gPiA+
+ID4gLSNkZWZpbmUgSU1YX1NDX1JfR1BVXzNfUElEMAkJNTANCj4gPiA+ID4gKyNkZWZpbmUgSU1Y
+X1NDX1JfVU5VU0VEMTQJCTUwDQo+ID4gPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfUExMXzAJ
+CTUxDQo+ID4gPiA+ICAjZGVmaW5lIElNWF9TQ19SX0RDXzFfUExMXzEJCTUyDQo+ID4gPiA+ICAj
+ZGVmaW5lIElNWF9TQ19SX1NQSV8wCQkJNTMNCj4gPiA+ID4gQEAgLTMwMyw4ICszMDMsOCBAQA0K
+PiA+ID4gPiAgI2RlZmluZSBJTVhfU0NfUl9NNF8wX1VBUlQJCTI4Nw0KPiA+ID4gPiAgI2RlZmlu
+ZSBJTVhfU0NfUl9NNF8wX0kyQwkJMjg4DQo+ID4gPiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzBf
+SU5UTVVYCQkyODkNCj4gPiA+ID4gLSNkZWZpbmUgSU1YX1NDX1JfTTRfMF9TSU0JCTI5MA0KPiA+
+ID4gPiAtI2RlZmluZSBJTVhfU0NfUl9NNF8wX1dET0cJCTI5MQ0KPiA+ID4gPiArI2RlZmluZSBJ
+TVhfU0NfUl9VTlVTRUQxNQkJMjkwDQo+ID4gPiA+ICsjZGVmaW5lIElNWF9TQ19SX1VOVVNFRDE2
+CQkyOTENCj4gPiA+ID4gICNkZWZpbmUgSU1YX1NDX1JfTTRfMF9NVV8wQgkJMjkyDQo+ID4gPiA+
+ICAjZGVmaW5lIElNWF9TQ19SX000XzBfTVVfMEEwCQkyOTMNCj4gPiA+ID4gICNkZWZpbmUgSU1Y
+X1NDX1JfTTRfMF9NVV8wQTEJCTI5NA0KPiA+ID4gPiBAQCAtMzIzLDggKzMyMyw4IEBADQo+ID4g
+PiA+ICAjZGVmaW5lIElNWF9TQ19SX000XzFfVUFSVAkJMzA3DQo+ID4gPiA+ICAjZGVmaW5lIElN
+WF9TQ19SX000XzFfSTJDCQkzMDgNCj4gPiA+ID4gICNkZWZpbmUgSU1YX1NDX1JfTTRfMV9JTlRN
+VVgJCTMwOQ0KPiA+ID4gPiAtI2RlZmluZSBJTVhfU0NfUl9NNF8xX1NJTQkJMzEwDQo+ID4gPiA+
+IC0jZGVmaW5lIElNWF9TQ19SX000XzFfV0RPRwkJMzExDQo+ID4gPiA+ICsjZGVmaW5lIElNWF9T
+Q19SX1VOVVNFRDE3CQkzMTANCj4gPiA+ID4gKyNkZWZpbmUgSU1YX1NDX1JfVU5VU0VEMTgJCTMx
+MQ0KPiA+ID4gPiAgI2RlZmluZSBJTVhfU0NfUl9NNF8xX01VXzBCCQkzMTINCj4gPiA+ID4gICNk
+ZWZpbmUgSU1YX1NDX1JfTTRfMV9NVV8wQTAJCTMxMw0KPiA+ID4gPiAgI2RlZmluZSBJTVhfU0Nf
+Ul9NNF8xX01VXzBBMQkJMzE0DQo+ID4gPiA+IEBAIC0zMzcsNyArMzM3LDcgQEANCj4gPiA+ID4g
+ICNkZWZpbmUgSU1YX1NDX1JfSVJRU1RSX1NDVTIJCTMyMQ0KPiA+ID4gPiAgI2RlZmluZSBJTVhf
+U0NfUl9JUlFTVFJfRFNQCQkzMjINCj4gPiA+ID4gICNkZWZpbmUgSU1YX1NDX1JfRUxDRElGX1BM
+TAkJMzIzDQo+ID4gPiA+IC0jZGVmaW5lIElNWF9TQ19SX1VOVVNFRDYJCTMyNA0KPiA+ID4gPiAr
+I2RlZmluZSBJTVhfU0NfUl9PQ1JBTQkJCTMyNA0KPiA+ID4gPiAgI2RlZmluZSBJTVhfU0NfUl9B
+VURJT19QTExfMAkJMzI1DQo+ID4gPiA+ICAjZGVmaW5lIElNWF9TQ19SX1BJXzAJCQkzMjYNCj4g
+PiA+ID4gICNkZWZpbmUgSU1YX1NDX1JfUElfMF9QV01fMAkJMzI3DQo+ID4gPiA+IEBAIC01NTQs
+NiArNTU0LDExIEBADQo+ID4gPiA+ICAjZGVmaW5lIElNWF9TQ19SX1ZQVV9NVV8zCQk1MzgNCj4g
+PiA+ID4gICNkZWZpbmUgSU1YX1NDX1JfVlBVX0VOQ18xCQk1MzkNCj4gPiA+ID4gICNkZWZpbmUg
+SU1YX1NDX1JfVlBVCQkJNTQwDQo+ID4gPiA+IC0jZGVmaW5lIElNWF9TQ19SX0xBU1QJCQk1NDEN
+Cj4gPiA+ID4gKyNkZWZpbmUgSU1YX1NDX1JfRE1BXzVfQ0gwCQk1NDENCj4gPiA+ID4gKyNkZWZp
+bmUgSU1YX1NDX1JfRE1BXzVfQ0gxCQk1NDINCj4gPiA+ID4gKyNkZWZpbmUgSU1YX1NDX1JfRE1B
+XzVfQ0gyCQk1NDMNCj4gPiA+ID4gKyNkZWZpbmUgSU1YX1NDX1JfRE1BXzVfQ0gzCQk1NDQNCj4g
+PiA+ID4gKyNkZWZpbmUgSU1YX1NDX1JfQVRURVNUQVRJT04JCTU0NQ0KPiA+ID4gPiArI2RlZmlu
+ZSBJTVhfU0NfUl9MQVNUCQkJNTQ2DQo+ID4gPiA+DQo+ID4gPiA+ICAjZW5kaWYgLyogX19EVF9C
+SU5ESU5HU19SU0NSQ19JTVhfSCAqLw0KPiA+ID4gPiAtLQ0KPiA+ID4gPiAyLjcuNA0KDQo=
