@@ -1,113 +1,47 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v14 05/13] media: staging/imx7: add MIPI CSI-2 receiver
- subdev for i.MX7
-Date: Wed, 20 Feb 2019 09:56:24 +0100
-Message-ID: <6c6c0e29-d65b-3796-578c-2e3e6f742d11@xs4all.nl>
-References: <20190206151328.21629-1-rui.silva@linaro.org>
- <20190206151328.21629-6-rui.silva@linaro.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: add pinctrl for missing uart mux options
+Date: Wed, 20 Feb 2019 16:58:49 +0800
+Message-ID: <CAGb2v66C6HFKgF8kERfp2UQ5XUyNS0-prgC3sX2iobkz7SjBcw@mail.gmail.com>
+References: <20190216182132.12895-1-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20190206151328.21629-6-rui.silva@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190216182132.12895-1-mans@mansr.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mans Rullgard <mans@mansr.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/6/19 4:13 PM, Rui Miguel Silva wrote:
-> Adds MIPI CSI-2 subdev for i.MX7 to connect with sensors with a MIPI
-> CSI-2 interface.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+On Sun, Feb 17, 2019 at 2:21 AM Mans Rullgard <mans@mansr.com> wrote:
+>
+> This adds pinctrl settings for various missing uart options.
+>
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
 > ---
->  drivers/staging/media/imx/Makefile         |    1 +
->  drivers/staging/media/imx/imx7-mipi-csis.c | 1186 ++++++++++++++++++++
->  2 files changed, 1187 insertions(+)
->  create mode 100644 drivers/staging/media/imx/imx7-mipi-csis.c
-> 
-> diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
-> index 074f016d3519..d2d909a36239 100644
-> --- a/drivers/staging/media/imx/Makefile
-> +++ b/drivers/staging/media/imx/Makefile
-> @@ -14,3 +14,4 @@ obj-$(CONFIG_VIDEO_IMX_CSI) += imx-media-csi.o
->  obj-$(CONFIG_VIDEO_IMX_CSI) += imx6-mipi-csi2.o
->  
->  obj-$(CONFIG_VIDEO_IMX7_CSI) += imx7-media-csi.o
-> +obj-$(CONFIG_VIDEO_IMX7_CSI) += imx7-mipi-csis.o
-> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-> new file mode 100644
-> index 000000000000..516d308dc44b
-> --- /dev/null
-> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-> @@ -0,0 +1,1186 @@
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 45 ++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+> index af5b067a5f83..2295ff5adf48 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -944,6 +944,31 @@
+>                                 function = "uart0";
+>                         };
+>
+> +                       uart0_pf_pins: uart0-pf-pins {
+> +                               pins = "PF2", "PF4";
+> +                               function = "uart0";
+> +                       };
 
-<snip>
+We've had the policy of not adding pinctrl nodes that aren't used in-tree,
+to avoid bloating up the blob size. However DTC 1.4.7 introduced the new
+/omit-if-no-ref/ directive, which would make the compiler discard marked
+nodes if they aren't referenced.
 
-> +static int mipi_csi_registered(struct v4l2_subdev *mipi_sd)
-> +{
-> +	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	for (i = 0; i < CSIS_PADS_NUM; i++) {
-> +		state->pads[i].flags = (i == CSIS_PAD_SINK) ?
-> +			MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
-> +	}
-> +
-> +	/* set a default mbus format  */
-> +	ret = imx_media_init_mbus_fmt(&state->format_mbus,
-> +				      MIPI_CSIS_DEF_PIX_HEIGHT,
-> +				      MIPI_CSIS_DEF_PIX_WIDTH, 0,
-> +				      V4L2_FIELD_NONE, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return media_entity_pads_init(&mipi_sd->entity, CSIS_PADS_NUM,
-> +				      state->pads);
-> +}
-> +
-> +static const struct v4l2_subdev_core_ops mipi_csis_core_ops = {
-> +	.log_status	= mipi_csis_log_status,
-> +};
-> +
-> +static const struct media_entity_operations mipi_csis_entity_ops = {
-> +	.link_setup	= mipi_csis_link_setup,
-> +	.link_validate	= v4l2_subdev_link_validate,
-> +};
-> +
-> +static const struct v4l2_subdev_video_ops mipi_csis_video_ops = {
-> +	.s_stream	= mipi_csis_s_stream,
-> +};
-> +
-> +static const struct v4l2_subdev_pad_ops mipi_csis_pad_ops = {
-> +	.init_cfg		= mipi_csis_init_cfg,
-> +	.get_fmt		= mipi_csis_get_fmt,
-> +	.set_fmt		= mipi_csis_set_fmt,
-> +};
-> +
-> +static const struct v4l2_subdev_ops mipi_csis_subdev_ops = {
-> +	.core	= &mipi_csis_core_ops,
-> +	.video	= &mipi_csis_video_ops,
-> +	.pad	= &mipi_csis_pad_ops,
-> +};
-> +
-> +static const struct v4l2_subdev_internal_ops mipi_csis_internal_ops = {
-> +	.registered = mipi_csi_registered,
-> +};
+So please add this to all the new nodes. It seems to work regardless whether
+you add it before or after the label, though having it after the label seems
+to make vim syntax highlighting happier.
 
-This struct is not used, and therefor mipi_csi_registered() is never called
-either. Should it be called or can this be removed?
-
-Regards,
-
-	Hans
+Regards
+ChenYu
