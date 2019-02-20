@@ -1,50 +1,149 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 4/4] drm/panel: Add OSD101T2587-53TS driver
-Date: Wed, 20 Feb 2019 12:52:02 +0100
-Message-ID: <20190220115202.GA18603@ravnborg.org>
-References: <20190215140315.18046-1-peter.ujfalusi@ti.com>
- <20190215140315.18046-5-peter.ujfalusi@ti.com>
- <20190215180759.GA26944@ravnborg.org>
- <fefcd92c-4171-ed86-28d2-4145d409a73d@ti.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V2] dt-bindings: imx: update scu resource id headfile
+Date: Wed, 20 Feb 2019 12:01:59 +0000
+Message-ID: <1550663846-22698-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <fefcd92c-4171-ed86-28d2-4145d409a73d@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch, devicetree@vger.kernel.org, tomi.valkeinen@ti.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter.
+Update i.MX SCU resource ID table according to latest
+system controller firmware.
 
-On Wed, Feb 20, 2019 at 12:39:11PM +0200, Peter Ujfalusi wrote:
-> Hi Sam,
-> 
-> On 15/02/2019 20.07, Sam Ravnborg wrote:
-> >> +#include <linux/backlight.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/regulator/consumer.h>
-> >> +
-> >> +#include <drm/drmP.h>
-> > Please do not use drmP.h in new drivers - we try to get rid of this file.
-> 
-> ...
-> 
-> >> +static int osd101t2587_panel_get_modes(struct drm_panel *panel)
-> >> +{
-> >> +	struct osd101t2587_panel *osd101t2587 = to_osd101t2587_panel(panel);
-> >> +	struct drm_display_mode *mode;
-> >> +
-> >> +	mode = drm_mode_duplicate(panel->drm, osd101t2587->default_mode);
-> >> +	if (!mode) {
-> >> +		dev_err(panel->drm->dev, "failed to add mode %ux%ux@%u\n",
-> 
-> drm/drmP.h is needed for this dev_err.
-drmP.h is only a set of include files and forwards today.
-So you need to figure out what to replace it with.
+Latest system controller firmware removes below resources
+which are never be used:
+	IMX_SC_R_DC_0_CAPTURE0
+	IMX_SC_R_DC_0_CAPTURE1
+	IMX_SC_R_DC_0_INTEGRAL0
+	IMX_SC_R_DC_0_INTEGRAL1
+	IMX_SC_R_DC_0_FRAC1
+	IMX_SC_R_DC_1_CAPTURE0
+	IMX_SC_R_DC_1_CAPTURE1
+	IMX_SC_R_DC_1_INTEGRAL0
+	IMX_SC_R_DC_1_INTEGRAL1
+	IMX_SC_R_DC_1_FRAC1
+	IMX_SC_R_GPU_3_PID0
+	IMX_SC_R_M4_0_SIM
+	IMX_SC_R_M4_0_WDOG
+	IMX_SC_R_M4_1_SIM
+	IMX_SC_R_M4_1_WDOG
 
-Often removing drmP.h requires you to add more than one extra include file.
+and also add below resources to support new features:
+	IMX_SC_R_PERF
+	IMX_SC_R_OCRAM
+	IMX_SC_R_DMA_5_CH0
+	IMX_SC_R_DMA_5_CH1
+	IMX_SC_R_DMA_5_CH2
+	IMX_SC_R_DMA_5_CH3
+	IMX_SC_R_ATTESTATION
 
-	Sam
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No changes since V1, just update the commit message to provide more detail =
+info.
+---
+ include/dt-bindings/firmware/imx/rsrc.h | 39 +++++++++++++++++++----------=
+----
+ 1 file changed, 22 insertions(+), 17 deletions(-)
+
+diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/=
+firmware/imx/rsrc.h
+index 4481f2d..ad747a8 100644
+--- a/include/dt-bindings/firmware/imx/rsrc.h
++++ b/include/dt-bindings/firmware/imx/rsrc.h
+@@ -36,15 +36,15 @@
+ #define IMX_SC_R_DC_0_BLIT1		20
+ #define IMX_SC_R_DC_0_BLIT2		21
+ #define IMX_SC_R_DC_0_BLIT_OUT		22
+-#define IMX_SC_R_DC_0_CAPTURE0		23
+-#define IMX_SC_R_DC_0_CAPTURE1		24
++#define IMX_SC_R_PERF			23
++#define IMX_SC_R_UNUSED5		24
+ #define IMX_SC_R_DC_0_WARP		25
+-#define IMX_SC_R_DC_0_INTEGRAL0		26
+-#define IMX_SC_R_DC_0_INTEGRAL1		27
++#define IMX_SC_R_UNUSED7		26
++#define IMX_SC_R_UNUSED8		27
+ #define IMX_SC_R_DC_0_VIDEO0		28
+ #define IMX_SC_R_DC_0_VIDEO1		29
+ #define IMX_SC_R_DC_0_FRAC0		30
+-#define IMX_SC_R_DC_0_FRAC1		31
++#define IMX_SC_R_UNUSED6		31
+ #define IMX_SC_R_DC_0			32
+ #define IMX_SC_R_GPU_2_PID0		33
+ #define IMX_SC_R_DC_0_PLL_0		34
+@@ -53,17 +53,17 @@
+ #define IMX_SC_R_DC_1_BLIT1		37
+ #define IMX_SC_R_DC_1_BLIT2		38
+ #define IMX_SC_R_DC_1_BLIT_OUT		39
+-#define IMX_SC_R_DC_1_CAPTURE0		40
+-#define IMX_SC_R_DC_1_CAPTURE1		41
++#define IMX_SC_R_UNUSED9		40
++#define IMX_SC_R_UNUSED10		41
+ #define IMX_SC_R_DC_1_WARP		42
+-#define IMX_SC_R_DC_1_INTEGRAL0		43
+-#define IMX_SC_R_DC_1_INTEGRAL1		44
++#define IMX_SC_R_UNUSED11		43
++#define IMX_SC_R_UNUSED12		44
+ #define IMX_SC_R_DC_1_VIDEO0		45
+ #define IMX_SC_R_DC_1_VIDEO1		46
+ #define IMX_SC_R_DC_1_FRAC0		47
+-#define IMX_SC_R_DC_1_FRAC1		48
++#define IMX_SC_R_UNUSED13		48
+ #define IMX_SC_R_DC_1			49
+-#define IMX_SC_R_GPU_3_PID0		50
++#define IMX_SC_R_UNUSED14		50
+ #define IMX_SC_R_DC_1_PLL_0		51
+ #define IMX_SC_R_DC_1_PLL_1		52
+ #define IMX_SC_R_SPI_0			53
+@@ -303,8 +303,8 @@
+ #define IMX_SC_R_M4_0_UART		287
+ #define IMX_SC_R_M4_0_I2C		288
+ #define IMX_SC_R_M4_0_INTMUX		289
+-#define IMX_SC_R_M4_0_SIM		290
+-#define IMX_SC_R_M4_0_WDOG		291
++#define IMX_SC_R_UNUSED15		290
++#define IMX_SC_R_UNUSED16		291
+ #define IMX_SC_R_M4_0_MU_0B		292
+ #define IMX_SC_R_M4_0_MU_0A0		293
+ #define IMX_SC_R_M4_0_MU_0A1		294
+@@ -323,8 +323,8 @@
+ #define IMX_SC_R_M4_1_UART		307
+ #define IMX_SC_R_M4_1_I2C		308
+ #define IMX_SC_R_M4_1_INTMUX		309
+-#define IMX_SC_R_M4_1_SIM		310
+-#define IMX_SC_R_M4_1_WDOG		311
++#define IMX_SC_R_UNUSED17		310
++#define IMX_SC_R_UNUSED18		311
+ #define IMX_SC_R_M4_1_MU_0B		312
+ #define IMX_SC_R_M4_1_MU_0A0		313
+ #define IMX_SC_R_M4_1_MU_0A1		314
+@@ -337,7 +337,7 @@
+ #define IMX_SC_R_IRQSTR_SCU2		321
+ #define IMX_SC_R_IRQSTR_DSP		322
+ #define IMX_SC_R_ELCDIF_PLL		323
+-#define IMX_SC_R_UNUSED6		324
++#define IMX_SC_R_OCRAM			324
+ #define IMX_SC_R_AUDIO_PLL_0		325
+ #define IMX_SC_R_PI_0			326
+ #define IMX_SC_R_PI_0_PWM_0		327
+@@ -554,6 +554,11 @@
+ #define IMX_SC_R_VPU_MU_3		538
+ #define IMX_SC_R_VPU_ENC_1		539
+ #define IMX_SC_R_VPU			540
+-#define IMX_SC_R_LAST			541
++#define IMX_SC_R_DMA_5_CH0		541
++#define IMX_SC_R_DMA_5_CH1		542
++#define IMX_SC_R_DMA_5_CH2		543
++#define IMX_SC_R_DMA_5_CH3		544
++#define IMX_SC_R_ATTESTATION		545
++#define IMX_SC_R_LAST			546
+=20
+ #endif /* __DT_BINDINGS_RSCRC_IMX_H */
+--=20
+2.7.4
