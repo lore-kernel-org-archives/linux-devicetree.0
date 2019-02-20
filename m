@@ -1,58 +1,115 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH v2 13/15] ARM: dts: milbeaut: Add device tree set for the
- Milbeaut M10V board
-Date: Wed, 20 Feb 2019 14:29:47 +0900
-Message-ID: <cdba2c36-59bc-fb50-a795-03f9b00b11c8@socionext.com>
-References: <1549628920-32623-1-git-send-email-sugaya.taichi@socionext.com>
- <CAK8P3a15mLEgVAh1+jQ+GqOcQa0zhrePWofo8iGkTs5_bd=TmQ@mail.gmail.com>
- <ba5bb646-7fa6-e98f-4ac2-47c55c8f82ba@socionext.com>
- <CAK8P3a0H3wYKqiV6XZe9V_y8rjDTFHcU_jq7+HkwX+6dnXvU9Q@mail.gmail.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V3 1/4] dt-bindings: fsl: scu: add general interrupt
+ support
+Date: Wed, 20 Feb 2019 05:33:26 +0000
+Message-ID: <AM6PR04MB42159D22AC552CB81AEEF6DE807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+References: <1550545569-7197-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a0H3wYKqiV6XZe9V_y8rjDTFHcU_jq7+HkwX+6dnXvU9Q@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1550545569-7197-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2019/02/19 19:11, Arnd Bergmann wrote:
-> On Tue, Feb 19, 2019 at 6:11 AM Sugaya, Taichi
-> <sugaya.taichi@socionext.com> wrote:
->>
->> Hi,
->> Thank you for you comments.
->>
->> On 2019/02/18 21:09, Arnd Bergmann wrote:
->>> On Fri, Feb 8, 2019 at 1:28 PM Sugaya Taichi
->>> <sugaya.taichi@socionext.com> wrote:
->>>> +
->>>> +       aliases {
->>>> +               serial1 = &uart1;
->>>> +       };
->>>
->>> Maybe start with serial0 here? It seems unusual to start
->>> counting at 1.
->>>
->>
->> The M10V evaluation board(EVB) uses a console with uart ch1, so this
->> alias number is derived from the used channel one.
->> Therefore it is no problem to change the alias number to 0.
+> From: Anson Huang
+> Sent: Tuesday, February 19, 2019 11:11 AM
+> Subject: [PATCH V3 1/4] dt-bindings: fsl: scu: add general interrupt support
 > 
-> The alias should normally reflect whatever is printed on the board,
-> if there are no labels, the convention is to start with zero, regardless
-> of what internal uart is connected to it.
+> Add scu general interrupt function support.
 > 
-
-I got it.
-I use a "serial0" beacause there are no labels about uart ch on M10V EVB.
-
-Thanks,
-Sugaya Taichi
-
->       Arnd
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> No change since V2.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt      | 18
+> ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index f388ec6..e5def3e 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -22,9 +22,11 @@ Required properties:
+>  -------------------
+>  - compatible:	should be "fsl,imx-scu".
+>  - mbox-names:	should include "tx0", "tx1", "tx2", "tx3",
+> -			       "rx0", "rx1", "rx2", "rx3".
+> -- mboxes:	List of phandle of 4 MU channels for tx and 4 MU channels
+> -		for rx. All 8 MU channels must be in the same MU instance.
+> +			       "rx0", "rx1", "rx2", "rx3",
+> +			       "gi3".
+
+Should it be optional as SCU firmware does not require it for normal function?
+
+And as MU also support sending interrupt via GIRn register,
+How about using gip3 to distinguish sending general purpose interrupt?
+
+Regards
+Dong Aisheng
+> +- mboxes:	List of phandle of 4 MU channels for tx, 4 MU channels for
+> +		rx, and 1 MU channel for general interrupt. All 9 MU channels
+> +		must be in the same MU instance.
+>  		Cross instances are not allowed. The MU instance can only
+>  		be one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
+>  		to make sure use the one which is not conflict with other @@ -34,6
+> +36,7 @@ Required properties:
+>  		Channel 1 must be "tx1" or "rx1".
+>  		Channel 2 must be "tx2" or "rx2".
+>  		Channel 3 must be "tx3" or "rx3".
+> +		General interrupt channel must be "gi3".
+
+This can be:
+		General interrupt Rx channel must be "gip3"
+
+Regards
+Dong Aisheng
+
+>  		e.g.
+>  		mboxes = <&lsio_mu1 0 0
+>  			  &lsio_mu1 0 1
+> @@ -42,7 +45,8 @@ Required properties:
+>  			  &lsio_mu1 1 0
+>  			  &lsio_mu1 1 1
+>  			  &lsio_mu1 1 2
+> -			  &lsio_mu1 1 3>;
+> +			  &lsio_mu1 1 3
+> +			  &lsio_mu1 3 3>;
+>  		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>  		for detailed mailbox binding.
+> 
+> @@ -153,7 +157,8 @@ firmware {
+>  	scu {
+>  		compatible = "fsl,imx-scu";
+>  		mbox-names = "tx0", "tx1", "tx2", "tx3",
+> -			     "rx0", "rx1", "rx2", "rx3";
+> +			     "rx0", "rx1", "rx2", "rx3",
+> +			     "gi3";
+>  		mboxes = <&lsio_mu1 0 0
+>  			  &lsio_mu1 0 1
+>  			  &lsio_mu1 0 2
+> @@ -161,7 +166,8 @@ firmware {
+>  			  &lsio_mu1 1 0
+>  			  &lsio_mu1 1 1
+>  			  &lsio_mu1 1 2
+> -			  &lsio_mu1 1 3>;
+> +			  &lsio_mu1 1 3
+> +			  &lsio_mu1 3 3>;
+> 
+>  		clk: clk {
+>  			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
+> --
+> 2.7.4
