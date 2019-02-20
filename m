@@ -1,9 +1,8 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH] dt-bindings: imx: update scu resource id headfile
-Date: Wed, 20 Feb 2019 13:44:53 +0000
-Message-ID: <AM6PR04MB42154C73B66A9F7E99597274807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
-References: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
- <20190219125211.2pg2bqxner4klcb5@pengutronix.de>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH] dt-bindings: imx: update scu resource id headfile
+Date: Wed, 20 Feb 2019 14:52:32 +0100
+Message-ID: <20190220135232.4drv77tbkfwjeapl@pengutronix.de>
+References: <20190219125211.2pg2bqxner4klcb5@pengutronix.de>
  <DB3PR0402MB3916AF3AA0283DB22DF61E2FF57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
  <20190219144808.qqpaubjcsb4huoml@pengutronix.de>
  <DB3PR0402MB39160A56E168ED20410674D7F57C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
@@ -14,148 +13,140 @@ References: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
  <AM6PR04MB4215D9FE015E9251425B0FFC807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
  <a55e0643bb2acd522145c74ec0e8b74a16b718f8.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <a55e0643bb2acd522145c74ec0e8b74a16b718f8.camel@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Marco Felsch <m.felsch@pengutronix.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Anson Huang <anson.huang@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-> From: Lucas Stach [mailto:l.stach@pengutronix.de]
-> Sent: Wednesday, February 20, 2019 8:11 PM
-> 
+On 19-02-20 13:11, Lucas Stach wrote:
 > Am Mittwoch, den 20.02.2019, 11:21 +0000 schrieb Aisheng Dong:
 > > Hi Marco,
-> >
+> > 
 > > > From: Marco Felsch [mailto:m.felsch@pengutronix.de]
 > > > Sent: Wednesday, February 20, 2019 6:53 PM
-> > >
+> > > 
 > > > Hi Aisheng,
-> > >
+> > > 
 > > > On 19-02-20 09:49, Aisheng Dong wrote:
 > > > > > From: Marco Felsch [mailto:m.felsch@pengutronix.de]
 > > > > > Sent: Wednesday, February 20, 2019 4:17 PM On 19-02-20 03:38,
 > > > > > Aisheng Dong wrote:
 > > > > > > [...]
-> > > > > >
-> > > > > > > > I don't like droping some ID's (e.g.
-> > > > > > > > IMX_SC_R_DC_0_CAPTURE0) by mark them as unused or even
-> > > > > > > > worse give them a other meaning. IMHO the scu-api should
-> > > > > > > > be stable since day 1 and the ID's should only be
+> > > > > > 
+> > > > > > > > I don't like droping some ID's (e.g. IMX_SC_R_DC_0_CAPTURE0)
+> > > > > > > > by mark them as unused or even worse give them a other
+> > > > > > > > meaning. IMHO the scu-api should be stable since day 1 and the
+> > > > > > > > ID's should only be
 > > > > > extended.
-> > > > > > > > Marking ID's as deprecated is much better than moving them
-> around.
-> > > > > > >
+> > > > > > > > Marking ID's as deprecated is much better than moving them around.
+> > > > > > > 
 > > > > > > > I agree the SCU APIs should be stable since day 1 and the ID
-> > > > > > > should ONLY be extended, but that is the best cases, the
-> > > > > > > reality is, there are different SoCs/Revision, some
-> > > > > > > revisions may remove the resources ID defined in pre-coded
-> > > > > > > SCU firmware, like the
-> > > > > > > IMX_SC_R_DC_0_CAPTURE0 etc., so SCU APIs removes them after
-> > > > > > > real silicon arrived, now latest SCU firmware marks them as
-> > > > > > > UNUSED, they could be replaced by some other new resources
-> > > > > > > in later new SoC, I am NOT sure, but if it happens, this
-> > > > > > > resource ID table should be updated anyway, leaving the
-> > > > > > > out-of-date resource ID table there will have
+> > > > > > > should ONLY be extended, but that is the best cases, the reality
+> > > > > > > is, there are different SoCs/Revision, some revisions may remove
+> > > > > > > the resources ID defined in pre-coded SCU firmware, like the
+> > > > > > > IMX_SC_R_DC_0_CAPTURE0 etc., so SCU APIs removes them after real
+> > > > > > > silicon arrived, now latest SCU firmware marks them as UNUSED,
+> > > > > > > they could be replaced by some other new resources in later new
+> > > > > > > SoC, I am NOT sure, but if it happens, this resource ID table
+> > > > > > > should be updated anyway, leaving the out-of-date resource ID
+> > > > > > > table there will have
 > > > > > issues, since it is NOT sync with SCU firmware.
-> > > > > > > So how to resolve such issue? We hope the SCU firmware
-> > > > > > > should be stable since day 1, but the truth is NOT, could be
-> > > > > > > still some updates but NOT very often. And I believe the
-> > > > > > > updates will NOT break old
+> > > > > > > So how to resolve such issue? We hope the SCU firmware should be
+> > > > > > > stable since day 1, but the truth is NOT, could be still some
+> > > > > > > updates but NOT very often. And I believe the updates will NOT
+> > > > > > > break old
 > > > > > kernel version.
-> > > > >
+> > > > > 
 > > > > > Hi Anson,
-> > > > >
+> > > > > 
 > > > > > Please don't mix the dt-bindings and the kernel related stuff.
-> > > > > Unfortunately the bindings are within the kernel repo which in
-> > > > > fact is great for us kernel developer but the bindings are also
-> > > > > used in other projects such as barebox or other kernels (don't
-> > > > > know the BSD guys). So you can't ensure that your change will
-> > > > > break something. Please
+> > > > > Unfortunately the bindings are within the kernel repo which in fact
+> > > > > is great for us kernel developer but the bindings are also used in
+> > > > > other projects such as barebox or other kernels (don't know the BSD
+> > > > > guys). So you can't ensure that your change will break something. Please
 > > > keep that in mind.
-> > > > > IMHO solving that issue should be done by the scu firmware. I
-> > > > > tought the scu is a cortex-m4 with a bunch of embedded flash and
-> > > > > ram (I don't know that much about the scu since it is
-> closed/black-boxed).
-> > > > > Why do you don't use a translation table within the scu? As I
-> > > > > said earlier I don't like the redefinition of ID's since they
-> > > > > are now part of the
+> > > > > IMHO solving that issue should be done by the scu firmware. I tought
+> > > > > the scu is a cortex-m4 with a bunch of embedded flash and ram (I
+> > > > > don't know that much about the scu since it is closed/black-boxed).
+> > > > > Why do you don't use a translation table within the scu? As I said
+> > > > > earlier I don't like the redefinition of ID's since they are now part of the
 > > > dt-bindings.
-> > > > > The bindings can store up to 32bit values which is a large
-> > > > > number ;) IMHO wasting some ID's in favour of stability is a better
-> solution.
-> > > > >
-> > > >
-> > > > As far as I know, those remove resource IDs are pre-defined and
-> > > > has never been used and won't be used anymore by SC firmware.
-> > > > (Anson can double check it) So I think it's safe to remove them or
-> > > > mark them as
+> > > > > The bindings can store up to 32bit values which is a large number ;)
+> > > > > IMHO wasting some ID's in favour of stability is a better solution.
+> > > > > 
+> > > > 
+> > > > As far as I know, those remove resource IDs are pre-defined and has
+> > > > never been used and won't be used anymore by SC firmware. (Anson can
+> > > > double check it) So I think it's safe to remove them or mark them as
 > > > deprecated.
-> > >
-> > > I think marking them as deprecated by a commentar is better than
-> > > redefining bits to be unused. As I said the bindings not only linux
-> > > related they are used in other projects too.
-> > >
-> >
-> > For other projects, the result is same because SC firmware does not
-> > support those Resource IDs.
-> >
-> > > > Personally I may prefer to remove them as they never worked to
-> > > > avoid confusing, especially at this early stage for mx8.
-> > >
-> > > So why they are there if they never worked? Wouldn't it a better
-> > > approach to start with a basic and working ID file and extend this
-> > > rather than adding id's because maybe the will work..
-> >
+> > > 
+> > > I think marking them as deprecated by a commentar is better than redefining
+> > > bits to be unused. As I said the bindings not only linux related they are used in
+> > > other projects too.
+> > > 
+> > 
+> > For other projects, the result is same because SC firmware does not support those
+> > Resource IDs.
+> > 
+> > > > Personally I may prefer to remove them as they never worked to avoid
+> > > > confusing, especially at this early stage for mx8.
+> > > 
+> > > So why they are there if they never worked? Wouldn't it a better approach to
+> > > start with a basic and working ID file and extend this rather than adding id's
+> > > because maybe the will work.. 
+> > 
 > > Ideally yes, but may be hard in reality.
-> >
+> > 
 > > SC firmware code usually is developed quite early before silicon comes.
 > > But the real chip may changes, e.g. removed or added something.
-> >
-> > AFAIK those resource IDs removed have never worked in SC firmware, and
-> > they're likely to come out of pre-silicon definition. But chip changes
+> > 
+> > AFAIK those resource IDs removed have never worked in SC firmware,
+> > and they're likely to come out of pre-silicon definition. But chip changes
 > > later.
-> >
+> > 
 > > > Sorry but this seems wrong to me too.
-> > > I know the approach from driver development, adding a driver
-> > > specific *_reg.h file and later figuring out that those bits won't
-> > > work as aspected. As I said this will be driver and only linux
-> > > related so we can change them as many times as we want. But in your
-> > > case we are talking about dt-bindings and this approach won't work.
-> >
+> > > I know the approach from driver development, adding a driver specific *_reg.h
+> > > file and later figuring out that those bits won't work as aspected. As I said this
+> > > will be driver and only linux related so we can change them as many times as
+> > > we want. But in your case we are talking about dt-bindings and this approach
+> > > won't work.
+> > 
 > > I would agree with you if those resource IDs have worked before.
 > > But they never worked.
-> > Should we keep a thing never worked in device tree just because It
-> > makes us look like keeping compatibility?
-> >
-> > If that, I'd rather removing them to avoid confusing in the future. Life is long,
-> right?
-> > I don't want people to bother with those unmeaning things anymore when
-> > they look at it.
+> > Should we keep a thing never worked in device tree just because
+> > It makes us look like keeping compatibility?
+> > 
+> > If that, I'd rather removing them to avoid confusing in the future. Life is long, right?
+> > I don't want people to bother with those unmeaning things anymore when they
+> > look at it.
 > 
-> Removing things is totally fine if they have never worked. Re-using the now
-> "free" IDs is what is problematic. Only ever use previously unused IDs when
-> introducing new stuff into the SCU firmware. This is something you need to
-> communicate quite clearly with the SCU firmware developers.
+> Removing things is totally fine if they have never worked. Re-using the
+> now "free" IDs is what is problematic. Only ever use previously unused
+> IDs when introducing new stuff into the SCU firmware. This is something
+> you need to communicate quite clearly with the SCU firmware developers.
+
+I'm fine with removing too then there would be a gap. Don't know if it
+is better to have a gap or a comment that those ID isn't supported since
+fw-revision XYZ / silicon version ZYX.
+
+Just some toughts:
+The gap will then suggest that this ID is free and was never assigned to
+some functionality. In real it was assigned previously and now gets
+redefined. Also as far as I can see there are no gaps currently. Let's
+wait for Rob's feedback.
+
+As Lucas mentioned using IMX_SC_R_UNUSED* ID's for new functionality is
+totaly fine but redefine ID's seems wrong to me. 
+
+Regards,
+Marco
+
 > 
-
-Yes, that's right.
-I will forward this request to them.
-Thanks for the info.
-
-Regards
-Dong Aisheng
-
 > Regards,
 > Lucas
+> 
+> 
