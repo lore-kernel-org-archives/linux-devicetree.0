@@ -1,56 +1,118 @@
-From: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Subject: Re: [PATCH 2/5] dt-bindings: iio: adc: lpc32xx-adc: Document
- vref-supply
-Date: Wed, 20 Feb 2019 07:11:39 -0500
-Message-ID: <CA+rxa6qbk49J8X3Ph81naXEKWWDUH_0h7uJfC0KOFOoTvEW=9w@mail.gmail.com>
-References: <20190208160944.13281-1-gregory.clement@bootlin.com>
- <20190208160944.13281-3-gregory.clement@bootlin.com>
- <8bc7bfcf-ad04-0615-1735-c2bbf20b7861@mleia.com>
- <87o97d2fyg.fsf@FE-laptop>
+From: <michael.kao@mediatek.com>
+Subject: [PATCH v2,3/7] thermal: mediatek: add calibration item
+Date: Wed, 20 Feb 2019 20:31:29 +0800
+Message-ID: <1550665893-22561-4-git-send-email-michael.kao@mediatek.com>
+References: <1550665893-22561-1-git-send-email-michael.kao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87o97d2fyg.fsf@FE-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550665893-22561-1-git-send-email-michael.kao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Michael Kao <michael.kao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3JlZ29yeSwKCk9uIEZyaSwgRmViIDE1LCAyMDE5IGF0IDExOjA3IEFNIEdyZWdvcnkgQ0xF
-TUVOVAo8Z3JlZ29yeS5jbGVtZW50QGJvb3RsaW4uY29tPiB3cm90ZToKPgo+IEhpIFZsYWRpbWly
-LAo+Cj4gIE9uIHNhbS4sIGbDqXZyLiAwOSAyMDE5LCBWbGFkaW1pciBaYXBvbHNraXkgPHZ6QG1s
-ZWlhLmNvbT4gd3JvdGU6Cj4KPiA+IEhpIEdyZWdvcnksCj4gPgo+ID4gT24gMDIvMDgvMjAxOSAw
-NjowOSBQTSwgR3JlZ29yeSBDTEVNRU5UIHdyb3RlOgo+ID4+IEFzIG1vc3Qgb2YgdGhlIG90aGVy
-IEFEQyB0aGUgbHBjMzJ4eCBvbmUgdXNlIGEgdnJlZi1zdXBwbHkgcHJvcGVydHk6Cj4gPj4gZG9j
-dW1lbnQgaXQuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBHcmVnb3J5IENMRU1FTlQgPGdyZWdv
-cnkuY2xlbWVudEBib290bGluLmNvbT4KPiA+PiAtLS0KPiA+PiAgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvbHBjMzJ4eC1hZGMudHh0IHwgNSArKysrKwo+ID4+ICAx
-IGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspCj4gPj4KWy4uLl0KPiA+Pgo+ID4KPiA+IEkg
-a2luZGx5IGFzayB5b3UgdG8gaW5jbHVkZSBtZSB0byBUbzogbGlzdCwgaWYgeW91IHNlbmQgYW5v
-dGhlciBjaGFuZ2VzIGZvcgo+ID4gTlhQIExQQzMyeHggcGxhdGZvcm0uCj4KPiBZZXMgc3VyZSEg
-SSB3cm9uZ2x5IG9ubHkgdXNlIHRoZSBmaXJzdCBsaW5lcyBwcm92aWRlZCBieQo+IC4vc2NyaXB0
-cy9nZXRfbWFpbnRhaW5lci5wbCwgSSB3aWxsIGluY2x1ZGUgeW91IGluIHRoZSBuZXh0IHZlcnNp
-b24uCj4KClBsZWFzZSBhbHNvIGluY2x1ZGUgbXlzZWxmIGluIHRoZSBuZXh0IExQQzMyeHggcmVs
-YXRlZCBwYXRjaGVzLgoKUmVnYXJkcywKU3lsdmFpbgo+Cj4gVGhhbmtzLAo+Cj4gR3JlZ29yeQo+
-Cj4KPgo+ID4KPiA+IFRoYW5rIHlvdS4KPiA+Cj4gPiAtLQo+ID4gQmVzdCB3aXNoZXMsCj4gPiBW
-bGFkaW1pcgo+ID4KPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCj4gPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+ID4gbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKPgo+IC0tCj4gR3JlZ29yeSBDbGVtZW50
-LCBCb290bGluCj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwo+IGh0dHA6
-Ly9ib290bGluLmNvbQo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+IGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+From: Michael Kao <michael.kao@mediatek.com>
+
+Add calibration item in thermal_data to support
+the project with different calibration coefficient.
+
+Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+---
+ drivers/thermal/mtk_thermal.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+index 07f8ad7..45c6587 100644
+--- a/drivers/thermal/mtk_thermal.c
++++ b/drivers/thermal/mtk_thermal.c
+@@ -105,6 +105,9 @@
+ /* The number of sensing points per bank */
+ #define MT8173_NUM_SENSORS_PER_ZONE	4
+ 
++/* The calibration coefficient of sensor  */
++#define MT8173_CALIBRATION	165
++
+ /*
+  * Layout of the fuses providing the calibration data
+  * These macros could be used for MT8173, MT2701, and MT2712.
+@@ -147,6 +150,9 @@ enum {
+ /* The number of sensing points per bank */
+ #define MT2701_NUM_SENSORS_PER_ZONE	3
+ 
++/* The calibration coefficient of sensor  */
++#define MT2701_CALIBRATION	165
++
+ /* MT2712 thermal sensors */
+ #define MT2712_TS1	0
+ #define MT2712_TS2	1
+@@ -162,12 +168,18 @@ enum {
+ /* The number of sensing points per bank */
+ #define MT2712_NUM_SENSORS_PER_ZONE	4
+ 
++/* The calibration coefficient of sensor  */
++#define MT2712_CALIBRATION	165
++
+ #define MT7622_TEMP_AUXADC_CHANNEL	11
+ #define MT7622_NUM_SENSORS		1
+ #define MT7622_NUM_ZONES		1
+ #define MT7622_NUM_SENSORS_PER_ZONE	1
+ #define MT7622_TS1	0
+ 
++/* The calibration coefficient of sensor  */
++#define MT7622_CALIBRATION	165
++
+ struct mtk_thermal;
+ 
+ struct thermal_bank_cfg {
+@@ -188,6 +200,7 @@ struct mtk_thermal_data {
+ 	const int *sensor_mux_values;
+ 	const int *msr;
+ 	const int *adcpnp;
++	const int cali_val;
+ 	struct thermal_bank_cfg bank_data[];
+ };
+ 
+@@ -295,6 +308,7 @@ struct mtk_thermal {
+ 	.num_banks = MT8173_NUM_ZONES,
+ 	.num_sensors = MT8173_NUM_SENSORS,
+ 	.vts_index = mt8173_vts_index,
++	.cali_val = MT8173_CALIBRATION,
+ 	.bank_data = {
+ 		{
+ 			.num_sensors = 2,
+@@ -330,6 +344,7 @@ struct mtk_thermal {
+ 	.num_banks = 1,
+ 	.num_sensors = MT2701_NUM_SENSORS,
+ 	.vts_index = mt2701_vts_index,
++	.cali_val = MT2701_CALIBRATION,
+ 	.bank_data = {
+ 		{
+ 			.num_sensors = 3,
+@@ -356,6 +371,7 @@ struct mtk_thermal {
+ 	.num_banks = 1,
+ 	.num_sensors = MT2712_NUM_SENSORS,
+ 	.vts_index = mt2712_vts_index,
++	.cali_val = MT2712_CALIBRATION,
+ 	.bank_data = {
+ 		{
+ 			.num_sensors = 4,
+@@ -376,6 +392,7 @@ struct mtk_thermal {
+ 	.num_banks = MT7622_NUM_ZONES,
+ 	.num_sensors = MT7622_NUM_SENSORS,
+ 	.vts_index = mt7622_vts_index,
++	.cali_val = MT7622_CALIBRATION,
+ 	.bank_data = {
+ 		{
+ 			.num_sensors = 1,
+@@ -402,7 +419,7 @@ static int raw_to_mcelsius(struct mtk_thermal *mt, int sensno, s32 raw)
+ 	raw &= 0xfff;
+ 
+ 	tmp = 203450520 << 3;
+-	tmp /= 165 + mt->o_slope;
++	tmp /= mt->conf->cali_val + mt->o_slope;
+ 	tmp /= 10000 + mt->adc_ge;
+ 	tmp *= raw - mt->vts[sensno] - 3350;
+ 	tmp >>= 3;
+-- 
+1.9.1
