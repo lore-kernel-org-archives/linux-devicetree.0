@@ -1,60 +1,51 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 05/10] dt-bindings: irqchip: Introduce TISCI Interrupt
- router bindings
-Date: Wed, 20 Feb 2019 08:36:51 -0800
-Message-ID: <20190220163651.GS15711@atomide.com>
-References: <4791de04-63af-4c5e-db9c-47634fcb8dc9@ti.com>
- <20190214154100.GB5720@atomide.com>
- <b4e821b3-f2fb-41d8-eb8c-8f4e8a19f77c@ti.com>
- <20190214174612.GF5720@atomide.com>
- <171e8597-2156-747d-d024-7b4bfc6f9186@ti.com>
- <20190215161629.GK5720@atomide.com>
- <2369739e-3bc8-257a-99e0-db2951c6777d@ti.com>
- <20190218143245.GC15711@atomide.com>
- <84b3ec21-9ce9-b9a8-80a9-75001db43a90@ti.com>
- <20190219153537.GJ15711@atomide.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] regulator: tps65218.c: fix LS3 issues
+Date: Wed, 20 Feb 2019 16:40:03 +0000
+Message-ID: <20190220164003.GC9878@sirena.org.uk>
+References: <1550650552-26013-1-git-send-email-Christian.Hohnstaedt@wago.com>
+ <1550650552-26013-2-git-send-email-Christian.Hohnstaedt@wago.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="c3bfwLpm8qysLVxt"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190219153537.GJ15711@atomide.com>
+In-Reply-To: <1550650552-26013-2-git-send-email-Christian.Hohnstaedt@wago.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, jason@lakedaemon.net, Peter Ujfalusi <peter.ujfalusi@ti.com>, marc.zyngier@arm.com, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>
+To: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Cc: J Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Some more info on chained irq vs mux below that might
-help.
+--c3bfwLpm8qysLVxt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-* Tony Lindgren <tony@atomide.com> [190219 15:36]:
-> * Lokesh Vutla <lokeshvutla@ti.com> [190219 08:51]:
-> > With this can you tell me how can we not have a device-tree and still support
-> > irq allocation?
-> 
-> Using standard dts reg property to differentiate the interrupt
-> router instances. And if the interrupt router is a mux, you should
-> treat it as a mux rather than a chained interrupt controller.
-> 
-> We do have drivers/mux nowadays, not sure if it helps in this case
-> as at least timer interrupts need to be configured very early.
+On Wed, Feb 20, 2019 at 09:15:50AM +0100, Christian Hohnstaedt wrote:
 
-Adding Linus Walleij to Cc since he posted a good test to
-consider if something should use chained (or nested) irq:
+> - Fix list of valid LS3 currents from mA to =B5A
+> - Fix selection of min/max microAmps of LS3.
+>   Selecting one of the configured values as max value now really
+>   selects it instead of the next lower one
 
-"individual masking and ACKing bits and can all be used at the
- same time" [0]
+This is two separate changes so should have been two separate patches,
+that way things are easier to review since it's clear what change does
+what and if there's a problem with one change the other doesn't need to
+get held up.
 
-Not sure if we have that documented somewhere?
+--c3bfwLpm8qysLVxt
+Content-Type: application/pgp-signature; name="signature.asc"
 
-But seems like the interrupt router should be set up as
-a separate mux driver talking with firmware that the
-interrupt controller driver calls on request_irq()?
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxtguIACgkQJNaLcl1U
+h9AF0Qf/fl2EYOJDIhIr5YJ368Jm/dHKVxTRIjwETYMpyWf2QvKsdU4NnUdnxDiB
+PEkmQJA8Z0qy0DTcrd97md6/HpozZMf3G2zY8nZP42URa/V8wn/eXnAIUIHi8Nro
+cI8sL+/1Bk6tl0b/0kcK0uu6m116D77y9ZMGf/nXHBKByePKC7VrnjFH8TPkT7mF
+HT8hT1ePV4u1xiKiazDsRmCN5T057AbmP60H/+PiZnO3ASdYGPgqIFzyIJVmMtbm
+4q2gDdP1abbb8Ia2vF0s2R93/CTXNclHcXpNTHAYhkaT8zycg4vU4cpxoMOYNw6w
+bFUOtyDlKyGgIHMh+aOLG/kFhlEcxA==
+=Toz0
+-----END PGP SIGNATURE-----
 
-Tony
-
-
-[0] https://marc.info/?l=linux-omap&m=155065629529311&w=2
+--c3bfwLpm8qysLVxt--
