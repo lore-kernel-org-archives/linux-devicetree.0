@@ -1,43 +1,71 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 0/4] Devicetree updates for Exynos 5260
-Date: Wed, 20 Feb 2019 14:59:34 +0100
-Message-ID: <CAJKOXPediHZqN3MRMYUaQT_jKyvb_20fxZm8paV1AVysWHScsQ@mail.gmail.com>
-References: <20190219130337.21353-1-stuart@menefy.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 4/9] iio: accel: bma180: add mount matrix support
+Date: Wed, 20 Feb 2019 15:00:51 +0100
+Message-ID: <445e2cafb4c741859219830bc1204bb3cb87f152.1550671256.git.hns@goldelico.com>
+References: <cover.1550671256.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219130337.21353-1-stuart@menefy.org>
+In-Reply-To: <cover.1550671256.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stuart Menefy <stuart.menefy@mathembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>
+Cc: letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Feb 2019 at 14:03, Stuart Menefy
-<stuart.menefy@mathembedded.com> wrote:
->
-> These four patches are stand alone updates for the Exynos 5260 device
-> tree, which do not depend on any other code changes. They either
-> fix issues or add functionality which is already available
-> on other Exynos devices. They were previously posted as version 1
-> of the larger patch series "Resuscitate Exynos 5260 support"
-> https://www.spinics.net/lists/linux-samsung-soc/#65035
-> which was only posted to the samsung-soc mailing list.
->
-> Changes since v1:
-> - Removed from larger patch set for easier review
-> - Applied reviewer comments to patch 2/4 "Add high speed I2C ports
->   for exynos5260"
-> - Expanded patch comments
->
-> Stuart Menefy (4):
->   ARM: dts: exynos: Use bustop PLL as the source for MMC clocks on
->     Exynos5260
->   ARM: dts: exynos: Add high speed I2C ports for exynos5260
->   ARM: dts: exynos: Add interrupts for dedicated EINTs on Exynos5260
->   ARM: dts: exynos: Fix interrupt for shared EINTs on Exynos5260
+This patch allows to read a mount-matrix device tree
+property and report to user-space or in-kernel iio
+clients.
 
-Thanks for the changes. All look fine to me but it is too late to pick
-them up in this cycle. I will take them after merge window.
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/iio/accel/bma180.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
+index cb9765a3de60..248be67e4f41 100644
+--- a/drivers/iio/accel/bma180.c
++++ b/drivers/iio/accel/bma180.c
+@@ -116,6 +116,7 @@ struct bma180_data {
+ 	struct i2c_client *client;
+ 	struct iio_trigger *trig;
+ 	const struct bma180_part_info *part_info;
++	struct iio_mount_matrix orientation;
+ 	struct mutex mutex;
+ 	bool sleep_state;
+ 	int scale;
+@@ -561,6 +562,13 @@ static int bma180_set_power_mode(struct iio_dev *indio_dev,
+ 	return ret;
+ }
+ 
++static const struct iio_mount_matrix *
++bma180_accel_get_mount_matrix(const struct iio_dev *indio_dev,
++				const struct iio_chan_spec *chan)
++{
++	return &((struct bma180_data *)iio_priv(indio_dev))->orientation;
++}
++
+ static const struct iio_enum bma180_power_mode_enum = {
+ 	.items = bma180_power_modes,
+ 	.num_items = ARRAY_SIZE(bma180_power_modes),
+@@ -571,6 +579,7 @@ static const struct iio_enum bma180_power_mode_enum = {
+ static const struct iio_chan_spec_ext_info bma180_ext_info[] = {
+ 	IIO_ENUM("power_mode", true, &bma180_power_mode_enum),
+ 	IIO_ENUM_AVAILABLE("power_mode", &bma180_power_mode_enum),
++	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bma180_accel_get_mount_matrix),
+ 	{ },
+ };
+ 
+@@ -722,6 +731,11 @@ static int bma180_probe(struct i2c_client *client,
+ 		chip = id->driver_data;
+ 	data->part_info = &bma180_part_info[chip];
+ 
++	ret = of_iio_read_mount_matrix(&client->dev, "mount-matrix",
++				&data->orientation);
++	if (ret)
++		return ret;
++
+ 	ret = data->part_info->chip_config(data);
+ 	if (ret < 0)
+ 		goto err_chip_disable;
+-- 
+2.19.1
