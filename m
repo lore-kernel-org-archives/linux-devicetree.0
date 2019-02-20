@@ -1,30 +1,47 @@
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: hisilicon: hi3670: Add UFS controller support
-Date: Wed, 20 Feb 2019 09:21:01 -0500
-Message-ID: <yq18syak0c2.fsf@oracle.com>
-References: <20190105072859.9134-1-manivannan.sadhasivam@linaro.org>
-        <20190105072859.9134-3-manivannan.sadhasivam@linaro.org>
-        <20190220113508.GB7498@ulmo>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v5 1/3] dt-bindings: pwm-stm32-lp: document pinctrl sleep
+ state
+Date: Wed, 20 Feb 2019 15:26:37 +0100
+Message-ID: <20190220142637.xxlhq7x6sqt4cwzd@pengutronix.de>
+References: <1550668068-9661-1-git-send-email-fabrice.gasnier@st.com>
+ <1550668068-9661-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220113508.GB7498@ulmo> (Thierry Reding's message of "Wed,
-        20 Feb 2019 12:35:08 +0100")
+Content-Disposition: inline
+In-Reply-To: <1550668068-9661-2-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, liwei213@huawei.com, robh+dt@kernel.org, devicetree@vger.kernel.org, guodong.xu@linaro.org, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, john.stultz@linaro.org, linux-arm-kernel@lists.infradead.org, Wei Xu <xuwei5@hisilicon.com>, linux-next@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, tduszyns@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 20, 2019 at 02:07:46PM +0100, Fabrice Gasnier wrote:
+> Add documentation for pinctrl sleep state on STM32 LPTimer PWM.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Hi Thierry,
+nitpick (i.e. no need to resend): Your Signed-off-by should be the last
+thing in your commit log. Assuming your patch ends in mainline in the
+end with Thierry taking it it should be
 
-> it looks like you picked this up into the SCSI tree (perhaps
-> inadvertently). It's been causing linux-next to fail to build since
-> Monday (next-20190218) because it references a phandle (&crg_rst)
-> that's not available.
+	Signed-off-by: Fabrice
+	Reviewed-by: Rob
+	Signed-off-by: Thierry
 
-I dropped the offending patch from the SCSI tree yesterday. When Stephen
-updates -next, things should be fine.
+if it was Thierry who added Rob's Reviewed-by tag and it should be
+
+	Reviewed-by: Rob
+	Signed-off-by: Fabrice
+	Signed-off-by: Thierry
+
+if it was you.
+
+Best regards
+Uwe
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
