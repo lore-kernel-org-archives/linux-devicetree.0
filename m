@@ -1,106 +1,128 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4/7] clk: at91: master: Add sam9x60 support
-Date: Wed, 20 Feb 2019 12:26:02 +0100
-Message-ID: <20190220112605.23095-5-alexandre.belloni@bootlin.com>
-References: <20190220112605.23095-1-alexandre.belloni@bootlin.com>
+From: Rui Miguel Silva <rmfrfs@gmail.com>
+Subject: Re: [PATCH v14 05/13] media: staging/imx7: add MIPI CSI-2 receiver
+ subdev for i.MX7
+Date: Wed, 20 Feb 2019 11:26:42 +0000
+Message-ID: <m35zteu2dp.fsf@gmail.com>
+References: <20190206151328.21629-1-rui.silva@linaro.org>
+ <20190206151328.21629-6-rui.silva@linaro.org>
+ <6c6c0e29-d65b-3796-578c-2e3e6f742d11@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190220112605.23095-1-alexandre.belloni@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Claudiu Beznea <claudiu.beznea@microchip.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <6c6c0e29-d65b-3796-578c-2e3e6f742d11@xs4all.nl>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The sam9x60 cpu clock is located at a different offset but is otherwise
-similar to the master clock.
+Hi Hans,
+On Wed 20 Feb 2019 at 08:56, Hans Verkuil wrote:
+> On 2/6/19 4:13 PM, Rui Miguel Silva wrote:
+>> Adds MIPI CSI-2 subdev for i.MX7 to connect with sensors with a 
+>> MIPI
+>> CSI-2 interface.
+>> 
+>> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> ---
+>>  drivers/staging/media/imx/Makefile         |    1 +
+>>  drivers/staging/media/imx/imx7-mipi-csis.c | 1186 
+>>  ++++++++++++++++++++
+>>  2 files changed, 1187 insertions(+)
+>>  create mode 100644 drivers/staging/media/imx/imx7-mipi-csis.c
+>> 
+>> diff --git a/drivers/staging/media/imx/Makefile 
+>> b/drivers/staging/media/imx/Makefile
+>> index 074f016d3519..d2d909a36239 100644
+>> --- a/drivers/staging/media/imx/Makefile
+>> +++ b/drivers/staging/media/imx/Makefile
+>> @@ -14,3 +14,4 @@ obj-$(CONFIG_VIDEO_IMX_CSI) += 
+>> imx-media-csi.o
+>>  obj-$(CONFIG_VIDEO_IMX_CSI) += imx6-mipi-csi2.o
+>>  
+>>  obj-$(CONFIG_VIDEO_IMX7_CSI) += imx7-media-csi.o
+>> +obj-$(CONFIG_VIDEO_IMX7_CSI) += imx7-mipi-csis.o
+>> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c 
+>> b/drivers/staging/media/imx/imx7-mipi-csis.c
+>> new file mode 100644
+>> index 000000000000..516d308dc44b
+>> --- /dev/null
+>> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+>> @@ -0,0 +1,1186 @@
+>
+> <snip>
+>
+>> +static int mipi_csi_registered(struct v4l2_subdev *mipi_sd)
+>> +{
+>> +	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	for (i = 0; i < CSIS_PADS_NUM; i++) {
+>> +		state->pads[i].flags = (i == CSIS_PAD_SINK) ?
+>> +			MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
+>> +	}
+>> +
+>> +	/* set a default mbus format  */
+>> +	ret = imx_media_init_mbus_fmt(&state->format_mbus,
+>> +				      MIPI_CSIS_DEF_PIX_HEIGHT,
+>> +				      MIPI_CSIS_DEF_PIX_WIDTH, 0,
+>> +				      V4L2_FIELD_NONE, NULL);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return media_entity_pads_init(&mipi_sd->entity, 
+>> CSIS_PADS_NUM,
+>> +				      state->pads);
+>> +}
+>> +
+>> +static const struct v4l2_subdev_core_ops mipi_csis_core_ops = 
+>> {
+>> +	.log_status	= mipi_csis_log_status,
+>> +};
+>> +
+>> +static const struct media_entity_operations 
+>> mipi_csis_entity_ops = {
+>> +	.link_setup	= mipi_csis_link_setup,
+>> +	.link_validate	= v4l2_subdev_link_validate,
+>> +};
+>> +
+>> +static const struct v4l2_subdev_video_ops mipi_csis_video_ops 
+>> = {
+>> +	.s_stream	= mipi_csis_s_stream,
+>> +};
+>> +
+>> +static const struct v4l2_subdev_pad_ops mipi_csis_pad_ops = {
+>> +	.init_cfg		= mipi_csis_init_cfg,
+>> +	.get_fmt		= mipi_csis_get_fmt,
+>> +	.set_fmt		= mipi_csis_set_fmt,
+>> +};
+>> +
+>> +static const struct v4l2_subdev_ops mipi_csis_subdev_ops = {
+>> +	.core	= &mipi_csis_core_ops,
+>> +	.video	= &mipi_csis_video_ops,
+>> +	.pad	= &mipi_csis_pad_ops,
+>> +};
+>> +
+>> +static const struct v4l2_subdev_internal_ops 
+>> mipi_csis_internal_ops = {
+>> +	.registered = mipi_csi_registered,
+>> +};
+>
+> This struct is not used, and therefor mipi_csi_registered() is 
+> never called
+> either. Should it be called or can this be removed?
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Good question :), I will get back to you on this one later.
+
 ---
- drivers/clk/at91/clk-master.c | 8 +++++---
- drivers/clk/at91/pmc.h        | 1 +
- include/linux/clk/at91_pmc.h  | 2 ++
- 3 files changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clk/at91/clk-master.c b/drivers/clk/at91/clk-master.c
-index eb53b4a8fab6..12b5bf4cc7bb 100644
---- a/drivers/clk/at91/clk-master.c
-+++ b/drivers/clk/at91/clk-master.c
-@@ -29,6 +29,7 @@ struct clk_master {
- 	struct regmap *regmap;
- 	const struct clk_master_layout *layout;
- 	const struct clk_master_characteristics *characteristics;
-+	u32 mckr;
- };
- 
- static inline bool clk_master_ready(struct regmap *regmap)
-@@ -69,7 +70,7 @@ static unsigned long clk_master_recalc_rate(struct clk_hw *hw,
- 						master->characteristics;
- 	unsigned int mckr;
- 
--	regmap_read(master->regmap, AT91_PMC_MCKR, &mckr);
-+	regmap_read(master->regmap, master->layout->offset, &mckr);
- 	mckr &= layout->mask;
- 
- 	pres = (mckr >> layout->pres_shift) & MASTER_PRES_MASK;
-@@ -95,7 +96,7 @@ static u8 clk_master_get_parent(struct clk_hw *hw)
- 	struct clk_master *master = to_clk_master(hw);
- 	unsigned int mckr;
- 
--	regmap_read(master->regmap, AT91_PMC_MCKR, &mckr);
-+	regmap_read(master->regmap, master->layout->offset, &mckr);
- 
- 	return mckr & AT91_PMC_CSS;
- }
-@@ -147,13 +148,14 @@ at91_clk_register_master(struct regmap *regmap,
- 	return hw;
- }
- 
--
- const struct clk_master_layout at91rm9200_master_layout = {
- 	.mask = 0x31F,
- 	.pres_shift = 2,
-+	.offset = AT91_PMC_MCKR,
- };
- 
- const struct clk_master_layout at91sam9x5_master_layout = {
- 	.mask = 0x373,
- 	.pres_shift = 4,
-+	.offset = AT91_PMC_MCKR,
- };
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 44345e4ab1c9..4a30c20f17f1 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -38,6 +38,7 @@ struct clk_range {
- #define CLK_RANGE(MIN, MAX) {.min = MIN, .max = MAX,}
- 
- struct clk_master_layout {
-+	u32 offset;
- 	u32 mask;
- 	u8 pres_shift;
- };
-diff --git a/include/linux/clk/at91_pmc.h b/include/linux/clk/at91_pmc.h
-index 31f00ebf1315..0c53f26ae3d3 100644
---- a/include/linux/clk/at91_pmc.h
-+++ b/include/linux/clk/at91_pmc.h
-@@ -74,6 +74,8 @@
- #define			AT91_PMC_USBDIV_4		(2 << 28)
- #define		AT91_PMC_USB96M		(1     << 28)		/* Divider by 2 Enable (PLLB only) */
- 
-+#define AT91_PMC_CPU_CKR	0x28			/* CPU Clock Register */
-+
- #define	AT91_PMC_MCKR		0x30			/* Master Clock Register */
- #define		AT91_PMC_CSS		(3 <<  0)		/* Master Clock Selection */
- #define			AT91_PMC_CSS_SLOW		(0 << 0)
--- 
-2.20.1
+Cheers,
+	Rui
