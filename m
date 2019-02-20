@@ -1,44 +1,102 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [RFC v4 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Tue, 19 Feb 2019 22:34:54 -0800
-Message-ID: <CAFd5g44AmF6eN-HKwHOqPiGZHNc2K_wAmWR3PkV0OX-=YNUKDw@mail.gmail.com>
-References: <20190214213729.21702-1-brendanhiggins@google.com> <a6ae907e-391b-993e-6011-6f40c761b339@gmail.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V3 1/4] dt-binding: irq: imx-irqsteer: use irq number
+ instead of group number
+Date: Wed, 20 Feb 2019 06:36:27 +0000
+Message-ID: <AM6PR04MB4215574A539086C4B0386A01807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+References: <1548921464-28917-1-git-send-email-aisheng.dong@nxp.com>
+ <1548921464-28917-2-git-send-email-aisheng.dong@nxp.com>
+ <8db40cd7-7695-0267-c626-26ebe086b2b8@arm.com> <20190213222700.GA31052@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a6ae907e-391b-993e-6011-6f40c761b339@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Kees Cook <keescook@google.com>, Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Greg KH <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Michael Ellerman <mpe@ellerman.id.au>, Joe Perches <joe@perches.com>, brakmo@fb.com, Steven Rostedt <rostedt@goodmis.org>, "Bird, Timothy" <Tim.Bird@sony.com>, Kevin Hilman <khilman@baylibre.com>, Julia Lawall <julia.lawall@lip6.fr>, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedeskto>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190213222700.GA31052@bogus>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 12:02 PM Frank Rowand <frowand.list@gmail.com> wrote:
-<snip>
-> I have not read through the patches in any detail.  I have read some of
-> the code to try to understand the patches to the devicetree unit tests.
-> So that may limit how valid my comments below are.
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Thursday, February 14, 2019 6:27 AM> 
+> On Mon, Feb 11, 2019 at 03:35:40PM +0000, Marc Zyngier wrote:
+> > On 31/01/2019 08:03, Aisheng Dong wrote:
+> > > Not all 64 interrupts may be used in one group. e.g. most irqsteer
+> > > in imx8qxp and imx8qm subsystems supports only 32 interrupts.
+> > >
+> > > As the IP integration parameters are Channel number and interrupts
+> > > number, let's use fsl,irqs-num to represents how many interrupts
+> > > supported by this irqsteer channel.
+> > >
+> > > Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > Cc: devicetree@vger.kernel.org
+> > > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > ---
+> > > ChangeLog:
+> > >  v1->v2:
+> > >   * change property name fsl,irqs-per-chan to fsl,num-irqs.
+> > > ---
+> > >  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt       | 6
+> +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqstee
+> > > r.txt
+> > > b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqstee
+> > > r.txt
+> > > index 45790ce..6d0a41b 100644
+> > > ---
+> > > a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqstee
+> > > r.txt
+> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irq
+> > > +++ steer.txt
+> > > @@ -16,8 +16,8 @@ Required properties:
+> > >  - #interrupt-cells: Specifies the number of cells needed to encode an
+> > >    interrupt source. The value must be 1.
+> > >  - fsl,channel: The output channel that all input IRQs should be steered
+> into.
+> > > -- fsl,irq-groups: Number of IRQ groups managed by this controller
+> instance.
+> > > -  Each group manages 64 input interrupts.
+> > > +- fsl,num-irqs: Number of input interrupts of this channel.
+> > > +  Should be multiple of 32 input interrupts and up to 512 interrupts.
+> > >
+> > >  Example:
+> > >
+> > > @@ -28,7 +28,7 @@ Example:
+> > >  		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
+> > >  		clock-names = "ipg";
+> > >  		fsl,channel = <0>;
+> > > -		fsl,irq-groups = <1>;
+> > > +		fsl,num-irqs = <64>;
+> > >  		interrupt-controller;
+> > >  		#interrupt-cells = <1>;
+> > >  	};
+> > >
+> >
+> > This is a change to an existing binding, so I'd need the Ack from a DT
+> > maintainer before I can queue this.
+> 
+> The DT maintainer doesn't care as long as there's an explanation that says it's
+> breaking compatibility and why it is okay to do so. This one doesn't do that.
+> 
 
-No problem.
+Got it.
+I will add them and resend, thanks for the suggestion.
 
->
-> I found the code difficult to read in places where it should have been
-> much simpler to read.  Structuring the code in a pseudo object oriented
-> style meant that everywhere in a code path that I encountered a dynamic
-> function call, I had to go find where that dynamic function call was
-> initialized (and being the cautious person that I am, verify that
-> no where else was the value of that dynamic function call).  With
-> primitive vi and tags, that search would have instead just been a
-> simple key press (or at worst a few keys) if hard coded function
-> calls were done instead of dynamic function calls.  In the code paths
-> that I looked at, I did not see any case of a dynamic function being
-> anything other than the value it was originally initialized as.
-> There may be such cases, I did not read the entire patch set.  There
-> may also be cases envisioned in the architects mind of how this
-> flexibility may be of future value.  Dunno.
+Regards
+Dong Aisheng
 
-Yeah, a lot of it is intended to make architecture specific
-implementations and some other future work easier. Some of it is also
-for testing purposes. Admittedly some is for neither reason, but given
-the heavy usage elsewhere, I figured there was no harm since it was
-all private internal usage anyway.
+> Rob
