@@ -1,244 +1,92 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/9] iio: document bindings for mounting matrices
-Date: Wed, 20 Feb 2019 17:18:41 +0100
-Message-ID: <49606C25-608D-4F77-8038-E2C7A11B861D@goldelico.com>
-References: <cover.1550671256.git.hns@goldelico.com> <a1fcef308d9193cac33cda2420b6df5000cfc9c7.1550671256.git.hns@goldelico.com> <20190220161017.35f2f3a4@archlinux>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 9/9] iio: magnetometer: hmc5843: add mount matrix
+ support
+Date: Wed, 20 Feb 2019 16:19:42 +0000
+Message-ID: <20190220161942.703f0c4a@archlinux>
+References: <cover.1550671256.git.hns@goldelico.com>
+        <effcfa7fb13fb8ba2b8b13ab07a6eb86defec77e.1550671256.git.hns@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220161017.35f2f3a4@archlinux>
+In-Reply-To: <effcfa7fb13fb8ba2b8b13ab07a6eb86defec77e.1550671256.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Gregor Boirie <gregor.boirie@parrot.com>, Sebastian Reichel <sre@kernel.org>, Samu Onkalo <samu.onkalo@intel.com>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 20 Feb 2019 15:00:56 +0100
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-> Am 20.02.2019 um 17:10 schrieb Jonathan Cameron <jic23@kernel.org>:
->=20
-> On Wed, 20 Feb 2019 15:00:48 +0100
-> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
->=20
->> From: Linus Walleij <linus.walleij@linaro.org>
->>=20
->> The mounting matrix for sensors was introduced in
->> commit dfc57732ad38 ("iio:core: mounting matrix support")
->>=20
->> However the device tree bindings are very terse and since this is
->> a widely applicable property, we need a proper binding for it
->> that the other bindings can reference. This will also be useful
->> for other operating systems and sensor engineering at large.
->>=20
->> I think all 3D sensors should support it, the current situation
->> is probably that the mounting information is confined in magic
->> userspace components rather than using the mounting matrix, which
->> is not good for portability and reuse.
->>=20
->> Cc: Gregor Boirie <gregor.boirie@parrot.com>
->> Cc: Sebastian Reichel <sre@kernel.org>
->> Cc: Samu Onkalo <samu.onkalo@intel.com>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> Hmm. I looked back and seems there were still some outstanding =
-questions
-> on this last time around.
->=20
-> =
-https://lore.kernel.org/linux-iio/a6d866f2-ee20-282b-def0-f65de2177aee@ker=
-nel.org/
->=20
-> Particularly hard as ever to define the magnetic planes when near the
-> magnetic poles when in 3D.
->=20
-> That needs cleaning up ideally before we apply this.
+> This patch allows to read a mount-matrix device tree
+> property and report to user-space or in-kernel iio
+> clients.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+The rest of these are all fine, though I suggest considering
+a local variable rather than the fiddly bit of casting.
 
-Agreed. I already placed my proposal for improvement on top of that,
-but I did not try to solve the magnetic planes issue.
-
-Maybe Linus could squeeze the patches and edit a new one that solves
-all issues.
-
-What I am most interested at the moment is to get an unambigous
-description for accelerometers first. The otehr topic was that I
-did not clearly see how the matrix is applied to the raw values
-(one could do row index first or column index first).
-
-BR and thanks,
-Nikolaus
-
->=20
-> Jonathan
->=20
->> ---
->> .../devicetree/bindings/iio/mount-matrix.txt  | 108 =
-++++++++++++++++++
->> 1 file changed, 108 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/iio/mount-matrix.txt
->>=20
->> diff --git a/Documentation/devicetree/bindings/iio/mount-matrix.txt =
-b/Documentation/devicetree/bindings/iio/mount-matrix.txt
->> new file mode 100644
->> index 000000000000..a3714727f739
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/mount-matrix.txt
->> @@ -0,0 +1,108 @@
->> +Mounting matrix
->> +
->> +The mounting matrix is a device tree property used to orient any IIO =
-device
->> +that produce three-dimensional data in relation to the world where =
-it is
->> +deployed.
->> +
->> +The purpose of the mounting matrix is to translate the sensor frame =
-of
->> +reference into the device frame of reference using a translation =
-matrix as
->> +defined in linear algebra.
->> +
->> +The typical usecase is that where a component has an internal =
-representation
->> +of the (x,y,z) triplets, such as different registers to read these =
-coordinates,
->> +and thus implying that the component should be mounted in a certain =
-orientation
->> +relative to some specific device frame of reference.
->> +
->> +For example a device with some kind of screen, where the user is =
-supposed to
->> +interact with the environment using an accelerometer, gyroscope or =
-magnetometer
->> +mounted on the same chassis as this screen, will likely take the =
-screen as
->> +reference to (x,y,z) orientation, with (x,y) corresponding to these =
-axes on the
->> +screen and (z) being depth, the axis perpendicular to the screen.
->> +
->> +For a screen you probably want (x) coordinates to go from negative =
-on the left
->> +to positive on the right and (z) depth to be negative under the =
-screen and
->> +positive in front of it, toward the face of the user.
->> +
->> +A sensor can be mounted in any angle along the axes relative to the =
-frame of
->> +reference. This means that the sensor may be flipped upside-down, =
-left-right,
->> +or tilted at any angle relative to the frame of reference.
->> +
->> +Another frame of reference is how the device with its sensor relates =
-to the
->> +external world, the environment where the device is deployed. =
-Usually the data
->> +from the sensor is used to figure out how the device is oriented =
-with respect
->> +to this world. When using the mounting matrix, the sensor and device =
-orientation
->> +becomes identical and we can focus on the data as it relates to the =
-surrounding
->> +world.
->> +
->> +Device-to-world examples for some three-dimensional sensor types:
->> +
->> +- Accelerometers have their world frame of reference toward the =
-center of
->> +  gravity, usually to the core of the planet. A reading of the =
-(x,y,z) values
->> +  from the sensor will give a projection of the gravity vector =
-through the
->> +  device relative to the center of the planet, i.e. relative to its =
-surface at
->> +  this point. Up and down in the world relative to the device frame =
-of
->> +  reference can thus be determined. and users would likely expect a =
-value of
->> +  9.81 m/s^2 upwards along the (z) axis, i.e. out of the screen when =
-the device
->> +  is held with its screen flat on the planets surface and 0 on the =
-other axes,
->> +  as the gravity vector is projected 1:1 onto the sensors (z)-axis.
->> +
->> +- Magnetometers (compasses) have their world frame of reference =
-relative to the
->> +  geomagnetic field. The system orientation vis-a-vis the world is =
-defined with
->> +  respect to the local earth geomagnetic reference frame where (y) =
-is in the
->> +  ground plane and positive towards magnetic North, (x) is in the =
-ground plane,
->> +  perpendicular to the North axis and positive towards the East and =
-(z) is
->> +  perpendicular to the ground plane and positive upwards.
->> +
->> +- Gyroscopes detects the movement relative the device itself. The =
-angular
->> +  velocity is defined as orthogonal to the plane of rotation, so if =
-you put the
->> +  device on a flat surface and spin it around the z axis (such as =
-rotating a
->> +  device with a screen lying flat on a table), you should get a =
-negative value
->> +  along the (z) axis if rotated clockwise, and a positive value if =
-rotated
->> +  counter-clockwise according to the right-hand rule.
->> +
->> +So unless the sensor is ideally mounted, we need a means to indicate =
-the
->> +relative orientation of any given sensor of this type with respect =
-to the
->> +frame of reference.
->> +
->> +To achieve this, use the device tree property "mount-matrix" for the =
-sensor.
->> +This supplies a 3x3 rotation matrix in the strict linear algebraic =
-sense,
->> +to orient the senor axes relative to a desired point of reference. =
-This means
->> +the resulting values from the sensor, after scaling to proper units, =
-should be
->> +multiplied by this matrix to give the proper vectors values in =
-three-dimensional
->> +space, relative to the device or world point of reference.
->> +
->> +For more information, consult:
->> +https://en.wikipedia.org/wiki/Rotation_matrix
->> +
->> +The mounting matrix has the layout:
->> +
->> + (x0, y0, z0)
->> + (x1, y1, z1)
->> + (x2, y2, z3)
->> +
->> +And it is represented as an array of strings containing the real =
-values for
->> +producing the transformation matrix. The real values use a decimal =
-point and
->> +a minus (-) to indicate a negative value.
->> +
->> +Examples:
->> +
->> +Identity matrix (nothing happens to the coordinates, which means the =
-device was
->> +mechanically mounted in an ideal way and we need no transformation):
->> +
->> +mount-matrix =3D "1", "0", "0",
->> +               "0", "1", "0",
->> +               "0", "0", "1";
->> +
->> +The sensor is mounted 30 degrees (Pi/6 radians) tilted along the X =
-axis, so we
->> +compensate by performing a -30 degrees rotation around the X axis:
->> +
->> +mount-matrix =3D "1", "0", "0",
->> +               "0", "0.866", "0.5",
->> +               "0", "-0.5", "0.866";
->> +
->> +The sensor is flipped 180 degrees (Pi radians) around the Z axis, =
-i.e. mounted
->> +upside-down:
->> +
->> +mount-matrix =3D "0.998", "0.054", "0",
->> +               "-0.054", "0.998", "0",
->> +               "0", "0", "1";
->=20
+Jonathan
+> ---
+>  drivers/iio/magnetometer/hmc5843.h      |  1 +
+>  drivers/iio/magnetometer/hmc5843_core.c | 14 ++++++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/iio/magnetometer/hmc5843.h b/drivers/iio/magnetometer/hmc5843.h
+> index a75224cf99df..e3e22d2508d3 100644
+> --- a/drivers/iio/magnetometer/hmc5843.h
+> +++ b/drivers/iio/magnetometer/hmc5843.h
+> @@ -43,6 +43,7 @@ struct hmc5843_data {
+>  	struct mutex lock;
+>  	struct regmap *regmap;
+>  	const struct hmc5843_chip_info *variant;
+> +	struct iio_mount_matrix orientation;
+>  	__be16 buffer[8];
+>  };
+>  
+> diff --git a/drivers/iio/magnetometer/hmc5843_core.c b/drivers/iio/magnetometer/hmc5843_core.c
+> index ada142fb7aa3..e6b6da70c152 100644
+> --- a/drivers/iio/magnetometer/hmc5843_core.c
+> +++ b/drivers/iio/magnetometer/hmc5843_core.c
+> @@ -237,6 +237,13 @@ int hmc5843_set_measurement_configuration(struct iio_dev *indio_dev,
+>  	return hmc5843_set_meas_conf(data, meas_conf);
+>  }
+>  
+> +static const struct iio_mount_matrix *
+> +hmc5843_get_mount_matrix(const struct iio_dev *indio_dev,
+> +			  const struct iio_chan_spec *chan)
+> +{
+> +	return &((struct hmc5843_data *)iio_priv(indio_dev))->orientation;
+> +}
+> +
+>  static const struct iio_enum hmc5843_meas_conf_enum = {
+>  	.items = hmc5843_meas_conf_modes,
+>  	.num_items = ARRAY_SIZE(hmc5843_meas_conf_modes),
+> @@ -247,6 +254,7 @@ static const struct iio_enum hmc5843_meas_conf_enum = {
+>  static const struct iio_chan_spec_ext_info hmc5843_ext_info[] = {
+>  	IIO_ENUM("meas_conf", true, &hmc5843_meas_conf_enum),
+>  	IIO_ENUM_AVAILABLE("meas_conf", &hmc5843_meas_conf_enum),
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, hmc5843_get_mount_matrix),
+>  	{ },
+>  };
+>  
+> @@ -260,6 +268,7 @@ static const struct iio_enum hmc5983_meas_conf_enum = {
+>  static const struct iio_chan_spec_ext_info hmc5983_ext_info[] = {
+>  	IIO_ENUM("meas_conf", true, &hmc5983_meas_conf_enum),
+>  	IIO_ENUM_AVAILABLE("meas_conf", &hmc5983_meas_conf_enum),
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, hmc5843_get_mount_matrix),
+>  	{ },
+>  };
+>  
+> @@ -635,6 +644,11 @@ int hmc5843_common_probe(struct device *dev, struct regmap *regmap,
+>  	data->variant = &hmc5843_chip_info_tbl[id];
+>  	mutex_init(&data->lock);
+>  
+> +	ret = of_iio_read_mount_matrix(dev, "mount-matrix",
+> +				&data->orientation);
+> +	if (ret)
+> +		return ret;
+> +
+>  	indio_dev->dev.parent = dev;
+>  	indio_dev->name = name;
+>  	indio_dev->info = &hmc5843_info;
