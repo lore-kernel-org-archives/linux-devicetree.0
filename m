@@ -1,49 +1,44 @@
 From: Sugaya Taichi <sugaya.taichi@socionext.com>
-Subject: [PATCH v3 3/9] dt-bindings: Add documentation for Milbeaut SoCs
-Date: Wed, 20 Feb 2019 16:43:42 +0900
-Message-ID: <1550648622-10541-1-git-send-email-sugaya.taichi@socionext.com>
+Subject: [PATCH v3 5/9] dt-bindings: timer: Add Milbeaut M10V timer description
+Date: Wed, 20 Feb 2019 16:44:02 +0900
+Message-ID: <1550648642-10802-1-git-send-email-sugaya.taichi@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, soc@kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, soc@kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a DT binding documentation for the M10V and its evaluation
-board.
+Add DT bindings document for Milbeaut M10V timer.
 
 Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/arm/socionext/milbeaut.yaml           | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
+ .../bindings/timer/socionext,milbeaut-timer.txt         | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml b/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
+diff --git a/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt b/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
 new file mode 100644
-index 0000000..522396f
+index 0000000..ac44c4b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/milbeaut.yaml#
-+$schema: http://devicetree.org/meta-schemas/milbeaut.yaml#
++++ b/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
+@@ -0,0 +1,17 @@
++Milbeaut SoCs Timer Controller
 +
-+title: Milbeaut platforms device tree bindings
++Required properties:
 +
-+maintainers:
-+  - Taichi Sugaya <sugaya.taichi@socionext.com>
-+  - Takao Orito <orito.takao@socionext.com>
++- compatible : should be "socionext,milbeaut-timer".
++- reg : Specifies base physical address and size of the registers.
++- interrupts : The interrupt of the first timer.
++- clocks: phandle to the input clk.
 +
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - socionext,milbeaut-m10v-evb
-+          - const: socionext,sc2000a
-+...
++Example:
++
++timer {
++	compatible = "socionext,milbeaut-timer";
++	reg = <0x1e000050 0x20>
++	interrupts = <0 91 4>;
++	clocks = <&clk 4>;
++};
 -- 
 1.9.1
