@@ -1,86 +1,91 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v4 2/6] usb:common Separated decoding functions from dwc3
- driver.
-Date: Wed, 20 Feb 2019 06:28:59 +0000
-Message-ID: <BYAPR07MB47096562AEB2B07800130D7ADD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1550173514-23573-1-git-send-email-pawell@cadence.com>
- <1550173514-23573-3-git-send-email-pawell@cadence.com>
- <20190219131402.GB20719@kroah.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v1 1/2] drm/mediatek: separate mipi_tx to different file
+Date: Wed, 20 Feb 2019 14:32:16 +0800
+Message-ID: <1550644336.14153.8.camel@mtksdaap41>
+References: <20190219091404.89370-1-jitao.shi@mediatek.com>
+ <20190219091404.89370-2-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219131402.GB20719@kroah.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190219091404.89370-2-jitao.shi@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, yingjoe.chen@mediatek.com, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Sean Paul <seanpaul@chromium>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
->On Thu, Feb 14, 2019 at 07:45:10PM +0000, Pawel Laszczak wrote:
->> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
->> to driver/usb/common/debug.c file. These moved functions include:
->>     dwc3_decode_get_status
->>     dwc3_decode_set_clear_feature
->>     dwc3_decode_set_address
->>     dwc3_decode_get_set_descriptor
->>     dwc3_decode_get_configuration
->>     dwc3_decode_set_configuration
->>     dwc3_decode_get_intf
->>     dwc3_decode_set_intf
->>     dwc3_decode_synch_frame
->>     dwc3_decode_set_sel
->>     dwc3_decode_set_isoch_delay
->>     dwc3_decode_ctrl
->>
->> These functions are used also in inroduced cdns3 driver.
->>
->> All functions prefixes were changed from dwc3 to usb.
->> Also, function's parameters has been extended according to the name
->> of fields in standard SETUP packet.
->> Additionally, patch adds usb_decode_ctrl function to
->> include/linux/usb/ch9.h file.
->>
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->> ---
->>  drivers/usb/common/Makefile |   2 +-
->>  drivers/usb/common/debug.c  | 270 ++++++++++++++++++++++++++++++++++++
->>  drivers/usb/dwc3/debug.h    | 249 ---------------------------------
->>  drivers/usb/dwc3/trace.h    |   2 +-
->>  include/linux/usb/ch9.h     |  25 ++++
->>  5 files changed, 297 insertions(+), 251 deletions(-)
->>  create mode 100644 drivers/usb/common/debug.c
->>
->> diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
->> index fb4d5ef4165c..3d3d2962ea4b 100644
->> --- a/drivers/usb/common/Makefile
->> +++ b/drivers/usb/common/Makefile
->> @@ -4,7 +4,7 @@
->>  #
->>
->>  obj-$(CONFIG_USB_COMMON)	  +=3D usb-common.o
->> -usb-common-y			  +=3D common.o
->> +usb-common-y			  +=3D common.o debug.o
->
->It's nice to have these in a common place, but you just bloated all of
->the USB-enabled systems in the world for the use of 2 odd-ball system
->controllers that almost no one has :)
->
->So, any way to only pull in this file if you actually need these
->functions?
->
-Yes, I'm using these functions a lot for debugging. It's only way to check =
-what driver does.
-We are also going to upstreaming 3.1 controller so there will be a third dr=
-iver using them :).=20
- =20
-I'm not sure If anyone will use them on host side, so we can consider wheth=
-er they should be
-in usb/common directory. Maybe usb/gadget will be better place.=20
-
-Felipe, do you have any comments in this topic?  =20
-
-Thanks=20
-Pawel
+SGksIEppdGFvOgoKT24gVHVlLCAyMDE5LTAyLTE5IGF0IDE3OjE0ICswODAwLCBKaXRhbyBTaGkg
+d3JvdGU6Cj4gRGlmZmVyZW50IElDIGhhcyBkaWZmZXJlbnQgbWlwaV90eCBzZXR0aW5nIG9mIGRz
+aS4KPiBUaGlzIHBhdGNoIHNlcGFyYXRlcyB0aGUgbWlwaV90eCBoYXJkd2FyZSByZWxhdGUgcGFy
+dCBmb3IgbXQ4MTczLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1l
+ZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxlICAg
+ICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4
+LmMgICAgICAgIHwgMzUwICsrLS0tLS0tLS0tLS0tLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX21pcGlfdHguaCAgICAgICAgfCAgNTEgKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfbXQ4MTczX21pcGlfdHguYyB8IDI5MCArKysrKysrKysrKysrKysKPiAgNCBm
+aWxlcyBjaGFuZ2VkLCAzNzcgaW5zZXJ0aW9ucygrKSwgMzE1IGRlbGV0aW9ucygtKQo+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmgKPiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQ4MTczX21p
+cGlfdHguYwo+IAoKW3NuaXBdCj4gIAo+ICtzdGF0aWMgdm9pZCBtdGtfbWlwaV90eF9jbGtfZ2V0
+X29wcyhzdHJ1Y3QgbXRrX21pcGlfdHggKm1pcGlfdHgsCj4gKwkJCQkgICAgY29uc3Qgc3RydWN0
+IGNsa19vcHMgKipvcHMpCj4gK3sKPiArCWlmIChtaXBpX3R4ICYmIG1pcGlfdHgtPmRyaXZlcl9k
+YXRhICYmCj4gKwkgICAgbWlwaV90eC0+ZHJpdmVyX2RhdGEtPm1pcGlfdHhfY2xrX29wcykKPiAr
+CQkqb3BzID0gbWlwaV90eC0+ZHJpdmVyX2RhdGEtPm1pcGlfdHhfY2xrX29wczsKPiArCWVsc2UK
+PiArCQlkZXZfZXJyKG1pcGlfdHgtPmRldiwgIkZhaWxlZCB0byBnZXQgY2xrIG9wcyBvZiBwaHlc
+biIpOwoKQW55IHdoZXJlIGNhbGwgbXRrX21pcGlfdHhfY2xrX2dldF9vcHMoKSB3b3VsZCBtYWtl
+IHN1cmUgbWlwaV90eCBpcyBub3QKTlVMTCwgc28geW91IG5lZWQgbm90IHRvIGNoZWNrIG1pcGlf
+dHguIEFuZCB0aGUgY2hlY2tpbmcgb2YgZHJpdmVyX2RhdGEKYW5kIG1pcGlfdHhfY2xrX29wcyBs
+b29rcyB1bm5lY2Vzc2FyeSBiZWNhdXNlIGFueSBvbmUgd2hvIGltcGxlbWVudCB0aGlzCmRyaXZl
+ciB3b3VsZCBuZXZlciBsZXQgdGhpcyBoYXBwZW4uIFNvIHRoaXMgZnVuY3Rpb24ganVzdCBuZWVk
+IGRvIHRoZQphc3NpZ25tZW50IGFuZCB0aGVyZWZvcmUgdGhpcyBhc3NpZ25tZW50IGNvdWxkIGp1
+c3QgZG8gaW4gcHJvYmUoKS4KClJlZ2FyZHMsCkNLCgo+ICt9Cj4gKwo+ICBzdGF0aWMgaW50IG10
+a19taXBpX3R4X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIHsKPiAgCXN0
+cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7Cj4gIAlzdHJ1Y3QgbXRrX21pcGlfdHggKm1p
+cGlfdHg7Cj4gIAlzdHJ1Y3QgcmVzb3VyY2UgKm1lbTsKPiAtCXN0cnVjdCBjbGsgKnJlZl9jbGs7
+Cj4gIAljb25zdCBjaGFyICpyZWZfY2xrX25hbWU7Cj4gIAlzdHJ1Y3QgY2xrX2luaXRfZGF0YSBj
+bGtfaW5pdCA9IHsKPiAtCQkub3BzID0gJm10a19taXBpX3R4X3BsbF9vcHMsCj4gIAkJLm51bV9w
+YXJlbnRzID0gMSwKPiAgCQkucGFyZW50X25hbWVzID0gKGNvbnN0IGNoYXIgKiBjb25zdCAqKSZy
+ZWZfY2xrX25hbWUsCj4gIAkJLmZsYWdzID0gQ0xLX1NFVF9SQVRFX0dBVEUsCj4gQEAgLTQwOCw2
+ICsxMzIsNyBAQCBzdGF0aWMgaW50IG10a19taXBpX3R4X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKnBkZXYpCj4gIAkJcmV0dXJuIC1FTk9NRU07Cj4gIAo+ICAJbWlwaV90eC0+ZHJpdmVy
+X2RhdGEgPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoZGV2KTsKPiArCj4gIAltZW0gPSBwbGF0
+Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOwo+ICAJbWlwaV90eC0+
+cmVncyA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIG1lbSk7Cj4gIAlpZiAoSVNfRVJSKG1p
+cGlfdHgtPnJlZ3MpKSB7Cj4gQEAgLTQxNiwxMyArMTQxLDE0IEBAIHN0YXRpYyBpbnQgbXRrX21p
+cGlfdHhfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCQlyZXR1cm4gcmV0
+Owo+ICAJfQo+ICAKPiAtCXJlZl9jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCBOVUxMKTsKPiAtCWlm
+IChJU19FUlIocmVmX2NsaykpIHsKPiAtCQlyZXQgPSBQVFJfRVJSKHJlZl9jbGspOwo+ICsJbWlw
+aV90eC0+cmVmX2NsayA9IGRldm1fY2xrX2dldChkZXYsIE5VTEwpOwo+ICsJaWYgKElTX0VSUiht
+aXBpX3R4LT5yZWZfY2xrKSkgewo+ICsJCXJldCA9IFBUUl9FUlIobWlwaV90eC0+cmVmX2Nsayk7
+Cj4gIAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IHJlZmVyZW5jZSBjbG9jazogJWRcbiIs
+IHJldCk7Cj4gIAkJcmV0dXJuIHJldDsKPiAgCX0KPiAtCXJlZl9jbGtfbmFtZSA9IF9fY2xrX2dl
+dF9uYW1lKHJlZl9jbGspOwo+ICsKPiArCXJlZl9jbGtfbmFtZSA9IF9fY2xrX2dldF9uYW1lKG1p
+cGlfdHgtPnJlZl9jbGspOwo+ICAKPiAgCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKGRl
+di0+b2Zfbm9kZSwgImNsb2NrLW91dHB1dC1uYW1lcyIsCj4gIAkJCQkgICAgICAmY2xrX2luaXQu
+bmFtZSk7Cj4gQEAgLTQzMSw2ICsxNTcsOCBAQCBzdGF0aWMgaW50IG10a19taXBpX3R4X3Byb2Jl
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAkJcmV0dXJuIHJldDsKPiAgCX0KPiAg
+Cj4gKwltdGtfbWlwaV90eF9jbGtfZ2V0X29wcyhtaXBpX3R4LCAmY2xrX2luaXQub3BzKTsKPiAr
+Cj4gIAltaXBpX3R4LT5wbGxfaHcuaW5pdCA9ICZjbGtfaW5pdDsKPiAgCW1pcGlfdHgtPnBsbCA9
+IGRldm1fY2xrX3JlZ2lzdGVyKGRldiwgJm1pcGlfdHgtPnBsbF9odyk7Cj4gIAlpZiAoSVNfRVJS
+KG1pcGlfdHgtPnBsbCkpIHsKPiBAQCAtNDY1LDIwICsxOTMsMTIgQEAgc3RhdGljIGludCBtdGtf
+bWlwaV90eF9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCXJldHVybiAw
+Owo+ICB9Cj4gIAo+IC1zdGF0aWMgY29uc3Qgc3RydWN0IG10a19taXBpdHhfZGF0YSBtdDI3MDFf
+bWlwaXR4X2RhdGEgPSB7Cj4gLQkubXBwbGxfcHJlc2VydmUgPSAoMyA8PCA4KQo+IC19Owo+IC0K
+PiAtc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfbWlwaXR4X2RhdGEgbXQ4MTczX21pcGl0eF9kYXRh
+ID0gewo+IC0JLm1wcGxsX3ByZXNlcnZlID0gKDAgPDwgOCkKPiAtfTsKPiAtCj4gIHN0YXRpYyBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10a19taXBpX3R4X21hdGNoW10gPSB7Cj4gIAl7IC5j
+b21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcwMS1taXBpLXR4IiwKPiAgCSAgLmRhdGEgPSAmbXQy
+NzAxX21pcGl0eF9kYXRhIH0sCj4gIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1t
+aXBpLXR4IiwKPiAgCSAgLmRhdGEgPSAmbXQ4MTczX21pcGl0eF9kYXRhIH0sCj4gLQl7fSwKPiAr
+CXsgfSwKPiAgfTsKPiAgCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbA==
