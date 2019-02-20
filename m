@@ -1,174 +1,117 @@
-From: Sugaya Taichi <sugaya.taichi@socionext.com>
-Subject: [PATCH v3 8/9] ARM: dts: milbeaut: Add device tree set for the Milbeaut M10V board
-Date: Wed, 20 Feb 2019 16:44:53 +0900
-Message-ID: <1550648693-11382-1-git-send-email-sugaya.taichi@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, soc@kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
+From: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
+Subject: [RFC PATCH V0 0/7] media: platform: Add support for Face Detection
+ (FD) on mt8183 SoC
+Date: Wed, 20 Feb 2019 15:48:06 +0800
+Message-ID: <1550648893-42050-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree for Milbeaut M10V SoC and M10V Evaluation board.
+Hello,
 
-Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
----
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/milbeaut-m10v-evb.dts | 32 +++++++++++
- arch/arm/boot/dts/milbeaut-m10v.dtsi    | 95 +++++++++++++++++++++++++++++++++
- 3 files changed, 128 insertions(+)
- create mode 100644 arch/arm/boot/dts/milbeaut-m10v-evb.dts
- create mode 100644 arch/arm/boot/dts/milbeaut-m10v.dtsi
+This is the first version of the RFC patch series adding Face Detection
+(FD) driver on Mediatek mt8183 SoC, which will be used in camera features
+on CrOS application. It belongs to the first Mediatek's camera driver
+series based on V4L2 and media controller framework. I posted the main part
+of the FD driver as RFC to discuss first and would like some review
+comments on the overall structure of the driver.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bd40148..f697d87 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1233,6 +1233,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
- 	mt7623n-bananapi-bpi-r2.dtb \
- 	mt8127-moose.dtb \
- 	mt8135-evbp1.dtb
-+dtb-$(CONFIG_ARCH_MILBEAUT) += milbeaut-m10v-evb.dtb
- dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
- dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-ast2500-evb.dtb \
-diff --git a/arch/arm/boot/dts/milbeaut-m10v-evb.dts b/arch/arm/boot/dts/milbeaut-m10v-evb.dts
-new file mode 100644
-index 0000000..614f60c
---- /dev/null
-+++ b/arch/arm/boot/dts/milbeaut-m10v-evb.dts
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Socionext Milbeaut M10V Evaluation Board */
-+/dts-v1/;
-+#include "milbeaut-m10v.dtsi"
-+
-+/ {
-+	model = "Socionext M10V EVB";
-+	compatible = "socionext,milbeaut-m10v-evb", "socionext,sc2000a";
-+
-+	aliases {
-+		serial0 = &uart1;
-+	};
-+
-+	chosen {
-+		bootargs = "rootwait earlycon";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	clocks {
-+		uclk40xi: uclk40xi {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <40000000>;
-+		};
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0x40000000  0x80000000>;
-+	};
-+
-+};
-diff --git a/arch/arm/boot/dts/milbeaut-m10v.dtsi b/arch/arm/boot/dts/milbeaut-m10v.dtsi
-new file mode 100644
-index 0000000..aa7c6ca
---- /dev/null
-+++ b/arch/arm/boot/dts/milbeaut-m10v.dtsi
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "socionext,sc2000a";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "socionext,milbeaut-m10v-smp";
-+		cpu@f00 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0xf00>;
-+		};
-+		cpu@f01 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0xf01>;
-+		};
-+		cpu@f02 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0xf02>;
-+		};
-+		cpu@f03 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0xf03>;
-+		};
-+	};
-+
-+	timer { /* The Generic Timer */
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13
-+				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			<GIC_PPI 14
-+				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			<GIC_PPI 11
-+				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			<GIC_PPI 10
-+				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+		clock-frequency = <40000000>;
-+		always-on;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		interrupt-parent = <&gic>;
-+
-+		gic: interrupt-controller@1d000000 {
-+			compatible = "arm,cortex-a7-gic";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0x1d001000 0x1000>,
-+			      <0x1d002000 0x1000>; /* CPU I/f base and size */
-+		};
-+
-+		timer@1e000050 { /* 32-bit Reload Timers */
-+			compatible = "socionext,milbeaut-timer";
-+			reg = <0x1e000050 0x20>;
-+			interrupts = <0 91 4>;
-+		};
-+
-+		uart1: serial@1e700010 { /* PE4, PE5 */
-+			/* Enable this as ttyUSI0 */
-+			compatible = "socionext,milbeaut-usio-uart";
-+			reg = <0x1e700010 0x10>;
-+			interrupts = <0 141 0x4>, <0 149 0x4>;
-+			interrupt-names = "rx", "tx";
-+		};
-+
-+	};
-+
-+	sram@0 {
-+		compatible = "mmio-sram";
-+		reg = <0x0 0x10000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x0 0x10000>;
-+		smp-sram@f100 {
-+			compatible = "socionext,milbeaut-smp-sram";
-+			reg = <0xf100 0x20>;
-+		};
-+	};
-+};
+Face Detection (FD) unit provide hardware accelerated face detection
+feature. It can detect different sizes of faces in a given image.
+Furthermore, it has the capability to detect the faces of Rotation-in-Plane
+from -180 to +180 degrees and Rotation-off-Plane from -90 to +90 degrees.
+
+The driver is implemented with V4L2 and media controller framework. We have
+the following entities describing the FD path.
+
+1. Meta input (output video device): connects to FD sub device. It accepts
+   the input parameter buffer from userspace. The metadata interface used
+   currently is only a temporary solution to kick off driver development
+   and is not ready for reviewed yet.
+
+2. RAW (output video device): connects to FD sub device. It accepts input
+   image buffer from userspace.
+
+3. FD (sub device): connects to Meta output. When processing an image,
+   FD hardware only returns the statistics of detected faces so it needs
+   only one capture video devices to return the streaming data to the user.
+
+4. Meta output (capture video device): Return the result of detected faces
+   as metadata output.
+
+   The overall file structure of the FD driver is as following:
+
+* mtk_fd-dev-ctx-core.c: Implements common software flow of FD driver.
+* mtk_fd-v4l2.c: Static FD contexts configuration.
+* mtk_fd.c: Controls the hardware flow.
+* mtk_fd-dev.c: Implements context-independent flow.
+* mtk_fd-ctrl.c: Handles the HW ctrl request from userspace.
+* mtk_fd-smem-drv.c: Provides the shared memory management required
+operation. We reserved a memory region for the co-processor and FD to
+exchange the hardware configuration data.
+* mtk_fd-v4l2-util.c: Implements V4L2 and vb2 ops.
+
+Jerry-ch Chen (7):
+  dt-bindings: mt8183: Add binding for FD shared memory
+  dts: arm64: mt8183: Add FD shared memory node
+  dt-bindings: mt8183: Added FD-SMEM dt-bindings
+  dt-bindings: mt8183: Added FD dt-bindings
+  dts: arm64: mt8183: Add FD nodes
+  media: platform: Add Mediatek FD driver KConfig
+  platform: mtk-isp: Add Mediatek FD driver
+
+ .../devicetree/bindings/media/mediatek,fd_smem.txt |   28 +
+ .../bindings/media/mediatek,mt8183-fd.txt          |   30 +
+ .../mediatek,reserve-memory-fd_smem.txt            |   44 +
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           |   28 +
+ drivers/media/platform/Kconfig                     |    2 +
+ drivers/media/platform/mtk-isp/Kconfig             |   10 +
+ drivers/media/platform/mtk-isp/Makefile            |   16 +
+ drivers/media/platform/mtk-isp/fd/Makefile         |   38 +
+ drivers/media/platform/mtk-isp/fd/mtk_fd-core.h    |  157 +++
+ drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h     |  299 ++++++
+ .../platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c      |  917 +++++++++++++++++
+ drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c     |  355 +++++++
+ drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h     |  198 ++++
+ .../media/platform/mtk-isp/fd/mtk_fd-smem-drv.c    |  452 +++++++++
+ drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h    |   25 +
+ .../media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c   | 1046 ++++++++++++++++++++
+ drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c    |  115 +++
+ drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h    |   36 +
+ drivers/media/platform/mtk-isp/fd/mtk_fd.c         |  730 ++++++++++++++
+ drivers/media/platform/mtk-isp/fd/mtk_fd.h         |  127 +++
+ 20 files changed, 4653 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,fd_smem.txt
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/mediatek,reserve-memory-fd_smem.txt
+ create mode 100644 drivers/media/platform/mtk-isp/Kconfig
+ create mode 100644 drivers/media/platform/mtk-isp/Makefile
+ create mode 100644 drivers/media/platform/mtk-isp/fd/Makefile
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-core.h
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-ctx.h
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev-ctx-core.c
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev.c
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-dev.h
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-smem-drv.c
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-smem.h
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2-util.c
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.c
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd-v4l2.h
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.c
+ create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.h
+
 -- 
 1.9.1
