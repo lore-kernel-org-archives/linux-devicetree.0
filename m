@@ -1,10 +1,10 @@
 Return-Path: <SRS0=W9ao=Q3=renesas.com=gareth.williams.jx@kernel.org>
 From: Gareth Williams <gareth.williams.jx@renesas.com>
 Subject: [PATCH v3 1/2] dt: snps,designware-i2c: Add clock bindings documentation
-Date: Wed, 20 Feb 2019 15:50:02 +0000
-Message-Id: <1550677803-29716-2-git-send-email-gareth.williams.jx@renesas.com>
-In-Reply-To: <1550677803-29716-1-git-send-email-gareth.williams.jx@renesas.com>
-References: <1550677803-29716-1-git-send-email-gareth.williams.jx@renesas.com>
+Date: Wed, 20 Feb 2019 13:25:47 +0000
+Message-Id: <1550669148-6027-2-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <1550669148-6027-1-git-send-email-gareth.williams.jx@renesas.com>
+References: <1550669148-6027-1-git-send-email-gareth.williams.jx@renesas.com>
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>
 Cc: Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
