@@ -1,142 +1,132 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Add one new cell to present
- hardware slave id
-Date: Wed, 20 Feb 2019 11:12:47 +0800
-Message-ID: <CAMz4kuK89AyL6PA2dRF1t=tR6-fKXKp+x3oi+cKDqSqi08xv0Q@mail.gmail.com>
-References: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
- <CAK8P3a2zkhrZLMi5KZ5=fGJCt85dad3_pZC0o7GqcwJkk4es9w@mail.gmail.com>
- <CAMz4ku+PR4bHtcPu2uT2f974+FWJVi8Tp3WzmuqE1TS-M-QawQ@mail.gmail.com>
- <CAMz4kuLEut0LqZ4bSAGJDufE8xHr6DgZ3Z1RCLQ10q_k6MUesw@mail.gmail.com>
- <CAK8P3a1Zq6XjymG3sAaHGeNRxU5UXPfJPbi0A9s47cTVK7vC3g@mail.gmail.com>
- <CAMz4kuL=B53xLk4SFbrwWeUhp4P9zbUfOmXgftQCEjVSwOnD5A@mail.gmail.com>
- <CAK8P3a03rPjWQvGrDupoTAywVmjCZdpSJpqW9Sv=NVPR2uwZeQ@mail.gmail.com>
- <CAMz4kuKnVppCB0-9LVgq8bya6=iWPhMcrHL_N53QfiU5Kn9YAA@mail.gmail.com>
- <CAMuHMdWPZGYpvANL_V=YszPWjtTA+ZnU6GVDmn188LC=eC005Q@mail.gmail.com>
- <CAMz4ku+yzwaww5o06tz9-8n99UfiVh6d5UB2L12RYMpTow6K3w@mail.gmail.com> <20190219122027.GA21884@vkoul-mobl>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH] dt-bindings: imx: update scu resource id headfile
+Date: Wed, 20 Feb 2019 03:29:29 +0000
+Message-ID: <AM6PR04MB421521095AEEC7530E97998A807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+References: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219122027.GA21884@vkoul-mobl>
+In-Reply-To: <1550566601-11497-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Dan Williams <dan.j.williams@intel.com>, DTML <devicetree@vger.kernel.org>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, eric.long@unisoc.com, Mark Brown <broonie@kernel.org>
+To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Feb 2019 at 20:20, Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 19-02-19, 17:49, Baolin Wang wrote:
-> > Hi Geert,
-> >
-> > On Tue, 19 Feb 2019 at 17:30, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > >
-> > > Hi Baolin,
-> > >
-> > > On Tue, Feb 19, 2019 at 4:15 AM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > On Mon, 18 Feb 2019 at 20:23, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > On Mon, Feb 18, 2019 at 11:52 AM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > > > On Mon, 18 Feb 2019 at 18:31, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > > >
-> > > > > > > On Tue, Feb 12, 2019 at 9:25 AM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > > > > > On Fri, 1 Feb 2019 at 19:53, Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > > > > > > On Thu, 31 Jan 2019 at 00:52, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > > > > > > On Tue, Jan 22, 2019 at 2:21 PM Baolin Wang <baolin.wang@linaro.org> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > >  Client:
-> > > > > > > > > > >  DMA clients connected to the Spreadtrum DMA controller must use the format
-> > > > > > > > > > > -described in the dma.txt file, using a two-cell specifier for each channel.
-> > > > > > > > > > > -The two cells in order are:
-> > > > > > > > > > > +described in the dma.txt file, using a three-cell specifier for each channel.
-> > > > > > > > > > > +The three cells in order are:
-> > > > > > > > > > >  1. A phandle pointing to the DMA controller.
-> > > > > > > > > > >  2. The channel id.
-> > > > > > > > > > > +3. The hardware slave id which is used for clients to trigger DMA engine
-> > > > > > > > > > > +automatically.
-> > > > > > > > > >
-> > > > > > > > > > I notice that this is an incompatible binding change. Is that necessary?
-> > > > > > > > > > If the current code works, I'd suggest allowing both #dma-cells=<2>
-> > > > > > > > > > and <3>, and then implementing both in the driver.
-> > > > > > > > >
-> > > > > > > > > Yes, this is necessary.
-> > > > > > > > >
-> > > > > > > > > Yes, current code can work, but the problem is that the DMA clients
-> > > > > > > > > must add one property (something like "sprd,slave-id") to specify the
-> > > > > > > > > slave id. So considering this, we want to change the dma-cells to 2,
-> > > > > > > > > including dma channel and dma slave id, which can avoid introducing
-> > > > > > > > > some similar properties for DMA clients.
-> > > > > > > > >
-> > > > > > > > > Now there are no DMA clients in mainline for Spreadtrum platform, and
-> > > > > > > > > we want to upstream our first DMA clients: SPI controller. So no other
-> > > > > > > > > drivers need to change when we changing dma cells. Thanks.
-> > > > > > > >
-> > > > > > > > Do you have any other concerns about this patch set? If not, I think
-> > > > > > > > Vinod can apply this patch set. Thanks.
-> > > > > > >
-> > > > > > > Sorry for the late reply. Yes, this makes sense since there are no
-> > > > > > > existing users then. For the DT changes going through the dmaengine
-> > > > > > > tree
-> > > > > > >
-> > > > > > > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> > > > > >
-> > > > > > Thanks for your reviewing.
-> > > > > >
-> > > > > > >
-> > > > > > > One more question, to make sure we don't need to edit it again:
-> > > > > > > Why do you need both a 'channel id' and a 'slave id' here? Is this
-> > > > > > > a strict hardware requirement for your DMA engine? In many
-> > > > > > > other designs, only a DMA request line number needs to
-> > > > > > > be described, and I think this would correspond to what you
-> > > > > > > call the 'hardware slave id' in your documentation.
-> > > > > >
-> > > > > > I try to explain why we need the slave id.
-> > > > > >
-> > > > > > For our DMA engine driver, we have software request mode and hardware
-> > > > > > request mode. For software request mode, the DMA engine driver need
-> > > > > > trigger DMA to start transfer manually. But for hardware request mode,
-> > > > > > we just set one unique slave id corresponding to the slave hardware to
-> > > > > > the DMA engine, then the slave hardware can trigger DMA automatically.
-> > > > > > And the slave id is not always same with the channel id according to
-> > > > > > the SoC design, so we add one cell to specify the slave id.
-> > > > >
-> > > > > I did understand the need for a slave-id, I was instead wondering about
-> > > > > the channel-id number. On many SoCs, all channels are equal, and you
-> > > > > just have to pick one of those with the right capabilities for a particular
-> > > > > slave.
-> > > >
-> > > > Yes, all channels are equal. We just set a unique slave id for the
-> > > > channel for a particular slave. For example, the SPI slave can use
-> > > > channel 10 for tx transfer by setting slave id 11, or it also can use
-> > > > channel 9 for tx transfer by setting same slave id 11.
-> > >
-> > > So the channel selection is software policy, not hardware description, and
-> > > thus doesn't belong in DT?
-> > >
-> > > Can't the DMA engine driver allocate channels dynamically, removing the
-> > > need to specify this in DT?
-> >
-> > In theory we can do as you suggested. But we still want to
-> > manage/assign the DMA channel resources manually for one SoC, we can
-> > make sure some important DMA slaves (such as audio)  can request a DMA
-> > channel at runtime firstly, another benefit is that it is easy to
-> > debug since we can easily know which channel is assigned for this
-> > slave.
->
-> Are  you suggesting that you have more users than channels available?
+> From: Anson Huang
+> Sent: Tuesday, February 19, 2019 5:01 PM
+> Subject: [PATCH] dt-bindings: imx: update scu resource id headfile
+>=20
+> Update i.MX SCU resource ID table according to latest system controller
+> firmware.
+>=20
 
-Until now we have not met this issue, but we can not make sure if this
-can happen in future. Moreover DMA channel resources are belonging to
-the DMA engine's hardware resources, I think it should be described in
-DT like many other drivers did.
+You need at least explain what changes made like
+what new features added? What removed? Side affect if any?
 
-> I dont think it is hard to debug if channels are dynamic in
-> nature (for example we can print channel number and you know which one
-> are you talking about, fwiw i have worked on a such a system where we
-> grabbed the free channel)
->
+Regards
+Dong Aisheng
+
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  include/dt-bindings/firmware/imx/rsrc.h | 39
+> +++++++++++++++++++--------------
+>  1 file changed, 22 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/include/dt-bindings/firmware/imx/rsrc.h
+> b/include/dt-bindings/firmware/imx/rsrc.h
+> index 4481f2d..ad747a8 100644
+> --- a/include/dt-bindings/firmware/imx/rsrc.h
+> +++ b/include/dt-bindings/firmware/imx/rsrc.h
+> @@ -36,15 +36,15 @@
+>  #define IMX_SC_R_DC_0_BLIT1		20
+>  #define IMX_SC_R_DC_0_BLIT2		21
+>  #define IMX_SC_R_DC_0_BLIT_OUT		22
+> -#define IMX_SC_R_DC_0_CAPTURE0		23
+> -#define IMX_SC_R_DC_0_CAPTURE1		24
+> +#define IMX_SC_R_PERF			23
+> +#define IMX_SC_R_UNUSED5		24
+>  #define IMX_SC_R_DC_0_WARP		25
+> -#define IMX_SC_R_DC_0_INTEGRAL0		26
+> -#define IMX_SC_R_DC_0_INTEGRAL1		27
+> +#define IMX_SC_R_UNUSED7		26
+> +#define IMX_SC_R_UNUSED8		27
+>  #define IMX_SC_R_DC_0_VIDEO0		28
+>  #define IMX_SC_R_DC_0_VIDEO1		29
+>  #define IMX_SC_R_DC_0_FRAC0		30
+> -#define IMX_SC_R_DC_0_FRAC1		31
+> +#define IMX_SC_R_UNUSED6		31
+>  #define IMX_SC_R_DC_0			32
+>  #define IMX_SC_R_GPU_2_PID0		33
+>  #define IMX_SC_R_DC_0_PLL_0		34
+> @@ -53,17 +53,17 @@
+>  #define IMX_SC_R_DC_1_BLIT1		37
+>  #define IMX_SC_R_DC_1_BLIT2		38
+>  #define IMX_SC_R_DC_1_BLIT_OUT		39
+> -#define IMX_SC_R_DC_1_CAPTURE0		40
+> -#define IMX_SC_R_DC_1_CAPTURE1		41
+> +#define IMX_SC_R_UNUSED9		40
+> +#define IMX_SC_R_UNUSED10		41
+>  #define IMX_SC_R_DC_1_WARP		42
+> -#define IMX_SC_R_DC_1_INTEGRAL0		43
+> -#define IMX_SC_R_DC_1_INTEGRAL1		44
+> +#define IMX_SC_R_UNUSED11		43
+> +#define IMX_SC_R_UNUSED12		44
+>  #define IMX_SC_R_DC_1_VIDEO0		45
+>  #define IMX_SC_R_DC_1_VIDEO1		46
+>  #define IMX_SC_R_DC_1_FRAC0		47
+> -#define IMX_SC_R_DC_1_FRAC1		48
+> +#define IMX_SC_R_UNUSED13		48
+>  #define IMX_SC_R_DC_1			49
+> -#define IMX_SC_R_GPU_3_PID0		50
+> +#define IMX_SC_R_UNUSED14		50
+>  #define IMX_SC_R_DC_1_PLL_0		51
+>  #define IMX_SC_R_DC_1_PLL_1		52
+>  #define IMX_SC_R_SPI_0			53
+> @@ -303,8 +303,8 @@
+>  #define IMX_SC_R_M4_0_UART		287
+>  #define IMX_SC_R_M4_0_I2C		288
+>  #define IMX_SC_R_M4_0_INTMUX		289
+> -#define IMX_SC_R_M4_0_SIM		290
+> -#define IMX_SC_R_M4_0_WDOG		291
+> +#define IMX_SC_R_UNUSED15		290
+> +#define IMX_SC_R_UNUSED16		291
+>  #define IMX_SC_R_M4_0_MU_0B		292
+>  #define IMX_SC_R_M4_0_MU_0A0		293
+>  #define IMX_SC_R_M4_0_MU_0A1		294
+> @@ -323,8 +323,8 @@
+>  #define IMX_SC_R_M4_1_UART		307
+>  #define IMX_SC_R_M4_1_I2C		308
+>  #define IMX_SC_R_M4_1_INTMUX		309
+> -#define IMX_SC_R_M4_1_SIM		310
+> -#define IMX_SC_R_M4_1_WDOG		311
+> +#define IMX_SC_R_UNUSED17		310
+> +#define IMX_SC_R_UNUSED18		311
+>  #define IMX_SC_R_M4_1_MU_0B		312
+>  #define IMX_SC_R_M4_1_MU_0A0		313
+>  #define IMX_SC_R_M4_1_MU_0A1		314
+> @@ -337,7 +337,7 @@
+>  #define IMX_SC_R_IRQSTR_SCU2		321
+>  #define IMX_SC_R_IRQSTR_DSP		322
+>  #define IMX_SC_R_ELCDIF_PLL		323
+> -#define IMX_SC_R_UNUSED6		324
+> +#define IMX_SC_R_OCRAM			324
+>  #define IMX_SC_R_AUDIO_PLL_0		325
+>  #define IMX_SC_R_PI_0			326
+>  #define IMX_SC_R_PI_0_PWM_0		327
+> @@ -554,6 +554,11 @@
+>  #define IMX_SC_R_VPU_MU_3		538
+>  #define IMX_SC_R_VPU_ENC_1		539
+>  #define IMX_SC_R_VPU			540
+> -#define IMX_SC_R_LAST			541
+> +#define IMX_SC_R_DMA_5_CH0		541
+> +#define IMX_SC_R_DMA_5_CH1		542
+> +#define IMX_SC_R_DMA_5_CH2		543
+> +#define IMX_SC_R_DMA_5_CH3		544
+> +#define IMX_SC_R_ATTESTATION		545
+> +#define IMX_SC_R_LAST			546
+>=20
+>  #endif /* __DT_BINDINGS_RSCRC_IMX_H */
 > --
-> ~Vinod
-
-
-
--- 
-Baolin Wang
-Best Regards
+> 2.7.4
