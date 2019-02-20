@@ -1,32 +1,58 @@
-From: Jiada Wang <jiada_wang@mentor.com>
-Subject: [PATCH v1 0/2] rsnd: dts: change to use extended audio dmac register
-Date: Wed, 20 Feb 2019 14:24:33 +0900
-Message-ID: <20190220052435.20508-1-jiada_wang@mentor.com>
+From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Subject: Re: [PATCH v2 13/15] ARM: dts: milbeaut: Add device tree set for the
+ Milbeaut M10V board
+Date: Wed, 20 Feb 2019 14:29:47 +0900
+Message-ID: <cdba2c36-59bc-fb50-a795-03f9b00b11c8@socionext.com>
+References: <1549628920-32623-1-git-send-email-sugaya.taichi@socionext.com>
+ <CAK8P3a15mLEgVAh1+jQ+GqOcQa0zhrePWofo8iGkTs5_bd=TmQ@mail.gmail.com>
+ <ba5bb646-7fa6-e98f-4ac2-47c55c8f82ba@socionext.com>
+ <CAK8P3a0H3wYKqiV6XZe9V_y8rjDTFHcU_jq7+HkwX+6dnXvU9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0H3wYKqiV6XZe9V_y8rjDTFHcU_jq7+HkwX+6dnXvU9Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, kuninori.morimoto.gx@renesas.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jiada_wang@mentor.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Shinji Kanematsu <kanematsu.shinji@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-According to user reference manual for R-CAR H3 and M3-W SoCs,
-in order to access busif4 ~ busif7, extended audio dmac registers
-(PDMASAREn, PDMADAREn, PDMACHCREn)
-need to be used, rather than basic audio dmac registers
-(PDMASARn, PDMADARn, PDMACHCRn)
+Hi,
 
-This patch set updates H3 (= r8a7795) and M3-W (= r8a7796) 
-to use extended audio dmac registers
+On 2019/02/19 19:11, Arnd Bergmann wrote:
+> On Tue, Feb 19, 2019 at 6:11 AM Sugaya, Taichi
+> <sugaya.taichi@socionext.com> wrote:
+>>
+>> Hi,
+>> Thank you for you comments.
+>>
+>> On 2019/02/18 21:09, Arnd Bergmann wrote:
+>>> On Fri, Feb 8, 2019 at 1:28 PM Sugaya Taichi
+>>> <sugaya.taichi@socionext.com> wrote:
+>>>> +
+>>>> +       aliases {
+>>>> +               serial1 = &uart1;
+>>>> +       };
+>>>
+>>> Maybe start with serial0 here? It seems unusual to start
+>>> counting at 1.
+>>>
+>>
+>> The M10V evaluation board(EVB) uses a console with uart ch1, so this
+>> alias number is derived from the used channel one.
+>> Therefore it is no problem to change the alias number to 0.
+> 
+> The alias should normally reflect whatever is printed on the board,
+> if there are no labels, the convention is to start with zero, regardless
+> of what internal uart is connected to it.
+> 
 
-Jiada Wang (2):
-  arm64: dts: renesas: r8a7795: use extended audio dmac register
-  arm64: dts: renesas: r8a7796: use extended audio dmac register
+I got it.
+I use a "serial0" beacause there are no labels about uart ch on M10V EVB.
 
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Thanks,
+Sugaya Taichi
 
--- 
-2.19.2
+>       Arnd
+> 
