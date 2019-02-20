@@ -1,83 +1,148 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 6/6] net: ethernet: ti: cpsw: deprecate cpsw-phy-sel
- driver
-Date: Wed, 20 Feb 2019 08:18:09 -0800
-Message-ID: <20190220161809.GR15711@atomide.com>
-References: <1550676319-6440-1-git-send-email-grygorii.strashko@ti.com>
- <1550676319-6440-7-git-send-email-grygorii.strashko@ti.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 5/9] iio: accel: bma180: convert to devm
+Date: Wed, 20 Feb 2019 16:18:28 +0000
+Message-ID: <20190220161828.0c6fcd8e@archlinux>
+References: <cover.1550671256.git.hns@goldelico.com>
+        <900f59b94ef2e1b5559b363c0d1af4fefccd0366.1550671256.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550676319-6440-7-git-send-email-grygorii.strashko@ti.com>
+In-Reply-To: <900f59b94ef2e1b5559b363c0d1af4fefccd0366.1550671256.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 20 Feb 2019 15:00:52 +0100
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [190220 15:26]:
-> Deprecate cpsw-phy-sel driver as it's been replaced with new
-> TI phy-gmii-sel PHY driver.
+> This simplifies the code a little.
+It does, but at the cost of introducing potential race conditions.
+Please don't do this.  See below for why and a suggestion on how
+to resolve things if you want to make this change safely.
 
-I'm not going to pick up this one, seems that Dave can merge
-this later on? That is unless Dave wants to ack this one.
-
-Regards,
-
-Tony
-
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Jonathan
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
->  drivers/net/ethernet/ti/Kconfig | 6 +++---
->  drivers/net/ethernet/ti/cpsw.h  | 6 ++++++
->  2 files changed, 9 insertions(+), 3 deletions(-)
+>  drivers/iio/accel/bma180.c | 56 ++++++++++++++------------------------
+>  1 file changed, 21 insertions(+), 35 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-> index bb126be1eb72..8b21b40a9fe5 100644
-> --- a/drivers/net/ethernet/ti/Kconfig
-> +++ b/drivers/net/ethernet/ti/Kconfig
-> @@ -49,10 +49,11 @@ config TI_DAVINCI_CPDMA
->  	  will be called davinci_cpdma.  This is recommended.
+> diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
+> index 248be67e4f41..3f5ee2d495d3 100644
+> --- a/drivers/iio/accel/bma180.c
+> +++ b/drivers/iio/accel/bma180.c
+> @@ -738,7 +738,7 @@ static int bma180_probe(struct i2c_client *client,
 >  
->  config TI_CPSW_PHY_SEL
-> -	bool
-> +	bool "TI CPSW Phy mode Selection (DEPRECATED)"
-> +	default n
->  	---help---
->  	  This driver supports configuring of the phy mode connected to
-> -	  the CPSW.
-> +	  the CPSW. DEPRECATED: use PHY_TI_GMII_SEL.
+>  	ret = data->part_info->chip_config(data);
+>  	if (ret < 0)
+> -		goto err_chip_disable;
+> +		goto err;
 >  
->  config TI_CPSW_ALE
->  	tristate "TI CPSW ALE Support"
-> @@ -64,7 +65,6 @@ config TI_CPSW
->  	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
->  	select TI_DAVINCI_CPDMA
->  	select TI_DAVINCI_MDIO
-> -	select TI_CPSW_PHY_SEL
->  	select TI_CPSW_ALE
->  	select MFD_SYSCON
->  	select REGMAP
-> diff --git a/drivers/net/ethernet/ti/cpsw.h b/drivers/net/ethernet/ti/cpsw.h
-> index cf111db3dc27..907e05fc22e4 100644
-> --- a/drivers/net/ethernet/ti/cpsw.h
-> +++ b/drivers/net/ethernet/ti/cpsw.h
-> @@ -21,7 +21,13 @@
->  			 ((mac)[2] << 16) | ((mac)[3] << 24))
->  #define mac_lo(mac)	(((mac)[4] << 0) | ((mac)[5] << 8))
+>  	mutex_init(&data->mutex);
+>  	indio_dev->dev.parent = &client->dev;
+> @@ -748,12 +748,25 @@ static int bma180_probe(struct i2c_client *client,
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->info = &bma180_info;
 >  
-> +#if IS_ENABLED(CONFIG_TI_CPSW_PHY_SEL)
->  void cpsw_phy_sel(struct device *dev, phy_interface_t phy_mode, int slave);
-> +#else
-> +static inline
-> +void cpsw_phy_sel(struct device *dev, phy_interface_t phy_mode, int slave)
-> +{}
-> +#endif
->  int ti_cm_get_macid(struct device *dev, int slave, u8 *mac_addr);
+> +	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev, NULL,
+> +			bma180_trigger_handler, NULL);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "unable to setup iio triggered buffer\n");
+> +		goto err;
+> +	}
+> +
+> +	ret = devm_iio_device_register(&client->dev, indio_dev);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "unable to register iio device\n");
+> +		goto err;
+> +	}
+> +
+>  	if (client->irq > 0) {
+> -		data->trig = iio_trigger_alloc("%s-dev%d", indio_dev->name,
+> -			indio_dev->id);
+> +		data->trig = devm_iio_trigger_alloc(&client->dev, "%s-dev%d",
+> +			indio_dev->name, indio_dev->id);
+>  		if (!data->trig) {
+>  			ret = -ENOMEM;
+> -			goto err_chip_disable;
+> +			goto err;
+>  		}
 >  
->  #endif /* __CPSW_H__ */
-> -- 
-> 2.17.1
-> 
+>  		ret = devm_request_irq(&client->dev, client->irq,
+> @@ -761,7 +774,7 @@ static int bma180_probe(struct i2c_client *client,
+>  			"bma180_event", data->trig);
+>  		if (ret) {
+>  			dev_err(&client->dev, "unable to request IRQ\n");
+> -			goto err_trigger_free;
+> +			goto err;
+>  		}
+>  
+>  		data->trig->dev.parent = &client->dev;
+> @@ -769,34 +782,14 @@ static int bma180_probe(struct i2c_client *client,
+>  		iio_trigger_set_drvdata(data->trig, indio_dev);
+>  		indio_dev->trig = iio_trigger_get(data->trig);
+>  
+> -		ret = iio_trigger_register(data->trig);
+> +		ret = devm_iio_trigger_register(&client->dev, data->trig);
+>  		if (ret)
+> -			goto err_trigger_free;
+> -	}
+> -
+> -	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> -			bma180_trigger_handler, NULL);
+> -	if (ret < 0) {
+> -		dev_err(&client->dev, "unable to setup iio triggered buffer\n");
+> -		goto err_trigger_unregister;
+> -	}
+> -
+> -	ret = iio_device_register(indio_dev);
+> -	if (ret < 0) {
+> -		dev_err(&client->dev, "unable to register iio device\n");
+> -		goto err_buffer_cleanup;
+> +			goto err;
+>  	}
+>  
+>  	return 0;
+>  
+> -err_buffer_cleanup:
+> -	iio_triggered_buffer_cleanup(indio_dev);
+> -err_trigger_unregister:
+> -	if (data->trig)
+> -		iio_trigger_unregister(data->trig);
+> -err_trigger_free:
+> -	iio_trigger_free(data->trig);
+> -err_chip_disable:
+> +err:
+>  	data->part_info->chip_disable(data);
+>  
+>  	return ret;
+> @@ -807,13 +800,6 @@ static int bma180_remove(struct i2c_client *client)
+>  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+>  	struct bma180_data *data = iio_priv(indio_dev);
+>  
+> -	iio_device_unregister(indio_dev);
+> -	iio_triggered_buffer_cleanup(indio_dev);
+> -	if (data->trig) {
+> -		iio_trigger_unregister(data->trig);
+> -		iio_trigger_free(data->trig);
+> -	}
+> -
+Now we disable the device before removing it's userspace interface.
+Not a good idea.
+
+Generally I will insist on the remove order always being the precise
+opposite of probe simply because it is obviously correct.
+That includes cases which can be simply argued to be fine (not
+this one which isn't). The reason is readability trumps saving
+a few lines of code and it's a lot easier to check a probe and
+remove function against each other if the order is maintained.
+
+Of course, there are ways to do this by making all the unwind
+managed, but you haven't done this here.
+devm_add_action_or_reset is handy for this if you want to do it.
+
+>  	mutex_lock(&data->mutex);
+>  	data->part_info->chip_disable(data);
+>  	mutex_unlock(&data->mutex);
