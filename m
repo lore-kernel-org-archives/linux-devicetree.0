@@ -1,70 +1,47 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 6/6] net: ethernet: ti: cpsw: deprecate cpsw-phy-sel driver
-Date: Wed, 20 Feb 2019 13:01:27 -0800
-Message-ID: <20190220210127.GU15711@atomide.com>
-References: <1550676319-6440-7-git-send-email-grygorii.strashko@ti.com>
- <20190220.112244.1206973642383679896.davem@davemloft.net>
- <20190220203326.GT15711@atomide.com>
- <20190220.124155.2226787912266109280.davem@davemloft.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/9] iio: document bindings for mounting matrices
+Date: Wed, 20 Feb 2019 22:34:11 +0100
+Message-ID: <CACRpkdbSsOcem+_JZNXvjC9KA-F-+O40aAnLUq0CcrO25YCQuQ@mail.gmail.com>
+References: <cover.1550671256.git.hns@goldelico.com> <a1fcef308d9193cac33cda2420b6df5000cfc9c7.1550671256.git.hns@goldelico.com>
+ <20190220161017.35f2f3a4@archlinux> <49606C25-608D-4F77-8038-E2C7A11B861D@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190220.124155.2226787912266109280.davem@davemloft.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Miller <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, netdev@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, kishon@ti.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <49606C25-608D-4F77-8038-E2C7A11B861D@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Gregor Boirie <gregor.boirie@parrot.com>, Sebastian Reichel <sre@kernel.org>, Samu Onkalo <samu.onkalo@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-* David Miller <davem@davemloft.net> [190220 20:42]:
-> From: Tony Lindgren <tony@atomide.com>
-> Date: Wed, 20 Feb 2019 12:33:26 -0800
-> 
-> > * David Miller <davem@davemloft.net> [190220 19:23]:
-> >> From: Grygorii Strashko <grygorii.strashko@ti.com>
-> >> Date: Wed, 20 Feb 2019 17:25:19 +0200
-> >> 
-> >> > Deprecate cpsw-phy-sel driver as it's been replaced with new
-> >> > TI phy-gmii-sel PHY driver.
-> >> > 
-> >> > Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> >> 
-> >> Acked-by: David S. Miller <davem@davemloft.net>
-> > 
-> > Thanks for the ack, but actually I'd prefer you to pick
-> > this patch at some future date. I suggest Grygorii just
-> > repost this one after v5.1-rc1.
-> 
-> It's so much easier if you group this with those DT changes, they
-> logically belong together as well and it helps someone reading
-> the changes in the tree also if they are side by side.
+On Wed, Feb 20, 2019 at 5:18 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> > Am 20.02.2019 um 17:10 schrieb Jonathan Cameron <jic23@kernel.org>:
+> > On Wed, 20 Feb 2019 15:00:48 +0100
+> > "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-I agree that a group of patches should go together in
-most cases.
+> > Hmm. I looked back and seems there were still some outstanding questions
+> > on this last time around.
+> >
+> > https://lore.kernel.org/linux-iio/a6d866f2-ee20-282b-def0-f65de2177aee@kernel.org/
+> >
+> > Particularly hard as ever to define the magnetic planes when near the
+> > magnetic poles when in 3D.
+> >
+> > That needs cleaning up ideally before we apply this.
 
-> Why don't you want to integrate this with them?
+I agree. I guess I ran out of steam somewhere when I had to
+look around for my linear algebra textbooks and course notes
+and I could not find them :D
 
-Because the arm-soc tree wants dts changes separately in
-general. The dts changes are considered firmware describing
-hardware. And it makes it possible to split the arm-soc pile
-of patches into multiple pull requests. In theory there
-should be no dependency between dts changes and driver
-changes, but in reality that's not always the case :)
+> Agreed. I already placed my proposal for improvement on top of that,
+> but I did not try to solve the magnetic planes issue.
+>
+> Maybe Linus could squeeze the patches and edit a new one that solves
+> all issues.
 
-What I can do is set up a separate branch with just this
-patch on top of the dts changes that the arm-soc guys can
-then merge towards the end of the merge cycle. If that
-works for you, let me know and I'll do it.
+Oh I trust you 100% to do the right thing with this, just edit it and
+sign it off a second time. Whatever becomes the author is not
+something I care much about either, whatever makes sense
+to you.
 
-Regards,
-
-Tony
+Yours,
+Linus Walleij
