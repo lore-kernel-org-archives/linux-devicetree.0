@@ -1,85 +1,102 @@
-Return-Path: <SRS0=4we3=Q3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40080.outbound.protection.outlook.com ([40.107.4.80]:7764
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725890AbfBTGxf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Feb 2019 01:53:35 -0500
+Return-Path: <SRS0=9Qkd=Q3=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V7 1/4] dt-bindings: fsl: scu: add thermal binding
-Date: Wed, 20 Feb 2019 06:53:30 +0000
-Message-ID: <1550645332-2907-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH V6 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Wed, 20 Feb 2019 03:43:54 +0000
+Message-ID: <DB3PR0402MB3916F868BBB10B2898C46026F57D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1549532838-27025-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB4215E32892899A6E84182D43807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB4215E32892899A6E84182D43807D0@AM6PR04MB4215.eurprd04.prod.outlook.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and thermal sensors etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to get temperature from thermal sensors, this patch adds
-binding doc for i.MX system controller thermal driver.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes since V6:
-	- put "imx,sensor-resource-id" property in thermal zone nodes.
----
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 27 ++++++++++++++++++=
-++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
-Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 72d481c..ad96881 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -122,6 +122,27 @@ RTC bindings based on SCU Message Protocol
- Required properties:
- - compatible: should be "fsl,imx8qxp-sc-rtc";
-=20
-+Thermal bindings based on SCU Message Protocol
-+------------------------------------------------------------
-+
-+Required properties:
-+- compatible : Must be "fsl,imx-sc-thermal";
-+- tsens-num : Total number of thermal sensors supported;
-+- #thermal-sensor-cells : Should be 1. See
-+			  Documentation/devicetree/bindings/thermal/thermal.txt
-+			  for a description.
-+
-+Required properties for thermal zone nodes:
-+- imx,sensor-resource-id : This property should be defined in each thermal=
- zone
-+			   of thermal-zones node, it passes each thermal zone's
-+			   resource id for thermal driver to get temperature via
-+			   SCU IPC.
-+
-+			   For thermal zone nodes, please refer to below binding
-+			   doc for details:
-+
-+[1] Documentation/devicetree/bindings/thermal/thermal.txt
-+
- Example (imx8qxp):
- -------------
- lsio_mu1: mailbox@5d1c0000 {
-@@ -168,6 +189,12 @@ firmware {
- 		rtc: rtc {
- 			compatible =3D "fsl,imx8qxp-sc-rtc";
- 		};
-+
-+		tsens: thermal-sensor {
-+			compatible =3D "fsl,imx8qxp-sc-thermal";
-+			tsens-num =3D <1>;
-+			#thermal-sensor-cells =3D <1>;
-+		};
- 	};
- };
-=20
---=20
-2.7.4
+DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gRnJvbTogQWlzaGVuZyBEb25nDQo+IFNlbnQ6IDIwMTnE6jLUwjIwyNUgMTE6MjcN
+Cj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwu
+b3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVl
+ckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFp
+bC5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBy
+dWkuemhhbmdAaW50ZWwuY29tOyBlZHViZXp2YWxAZ21haWwuY29tOw0KPiBkYW5pZWwubGV6Y2Fu
+b0BsaW5hcm8ub3JnOyB1bGYuaGFuc3NvbkBsaW5hcm8ub3JnOyBEYW5pZWwgQmFsdXRhDQo+IDxk
+YW5pZWwuYmFsdXRhQG54cC5jb20+OyBob3JtcytyZW5lc2FzQHZlcmdlLm5ldC5hdTsgQW5keSBH
+cm9zcw0KPiA8YW5keS5ncm9zc0BsaW5hcm8ub3JnPjsgaGVpa29Ac250ZWNoLmRlOyBhcm5kQGFy
+bmRiLmRlOw0KPiBtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tOyBqYWdhbkBhbWFydWxhc29sdXRp
+b25zLmNvbTsNCj4gYmpvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc7IGVucmljLmJhbGxldGJvQGNv
+bGxhYm9yYS5jb207DQo+IG1hcmMudy5nb256YWxlekBmcmVlLmZyOyBvbG9mQGxpeG9tLm5ldDsg
+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IHBtQHZn
+ZXIua2VybmVsLm9yZw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4g
+U3ViamVjdDogUkU6IFtQQVRDSCBWNiAxLzRdIGR0LWJpbmRpbmdzOiBmc2w6IHNjdTogYWRkIHRo
+ZXJtYWwgYmluZGluZw0KPiANCj4gPiBGcm9tOiBBbnNvbiBIdWFuZw0KPiA+IFNlbnQ6IFRodXJz
+ZGF5LCBGZWJydWFyeSA3LCAyMDE5IDU6NTMgUE0NCj4gWy4uLl0NCj4gPg0KPiA+IE5YUCBpLk1Y
+OFFYUCBpcyBhbiBBUk12OCBTb0Mgd2l0aCBhIENvcnRleC1NNCBjb3JlIGluc2lkZSBhcyBzeXN0
+ZW0NCj4gPiBjb250cm9sbGVyLCB0aGUgc3lzdGVtIGNvbnRyb2xsZXIgaXMgaW4gY2hhcmdlIG9m
+IHN5c3RlbSBwb3dlciwgY2xvY2sNCj4gPiBhbmQgdGhlcm1hbCBzZW5zb3JzIGV0Yy4gbWFuYWdl
+bWVudCwgTGludXgga2VybmVsIGhhcyB0byBjb21tdW5pY2F0ZQ0KPiA+IHdpdGggc3lzdGVtIGNv
+bnRyb2xsZXIgdmlhIE1VIChtZXNzYWdlIHVuaXQpIElQQyB0byBnZXQgdGVtcGVyYXR1cmUNCj4g
+PiBmcm9tIHRoZXJtYWwgc2Vuc29ycywgdGhpcyBwYXRjaCBhZGRzIGJpbmRpbmcgZG9jIGZvciBp
+Lk1YIHN5c3RlbQ0KPiBjb250cm9sbGVyIHRoZXJtYWwgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVk
+LW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQt
+Ynk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlTG9n
+IHNpbmNlIFY1Og0KPiA+IAktIGFkZCAiaW14LHNlbnNvci1yZXNvdXJjZS1pZCIgaW4gZWFjaCB0
+aGVybWFsIHpvbmUgdG8gcGFzcyByZXNvdXJjZQ0KPiA+IElEIGZvciB0aGVybWFsIGRyaXZlci4N
+Cj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2ws
+c2N1LnR4dCAgICB8IDIwDQo+ID4gKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDIwIGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+
+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2ws
+c2N1LnR4dA0KPiA+IGluZGV4IDcyZDQ4MWMuLjRiNzk3NTEgMTAwNjQ0DQo+ID4gLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQN
+Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2Fs
+ZS9mc2wsc2N1LnR4dA0KPiA+IEBAIC0xMjIsNiArMTIyLDIwIEBAIFJUQyBiaW5kaW5ncyBiYXNl
+ZCBvbiBTQ1UgTWVzc2FnZSBQcm90b2NvbA0KPiA+IFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4g
+IC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJmc2wsaW14OHF4cC1zYy1ydGMiOw0KPiA+DQo+ID4g
+K1RoZXJtYWwgYmluZGluZ3MgYmFzZWQgb24gU0NVIE1lc3NhZ2UgUHJvdG9jb2wNCj4gPiArLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+DQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGUgOiBN
+dXN0IGJlICJmc2wsaW14OHF4cC1zYy10aGVybWFsIjsNCj4gPiArLSB0c2Vucy1udW0gOiBUb3Rh
+bCBudW1iZXIgb2YgdGhlcm1hbCBzZW5zb3JzIHN1cHBvcnRlZDsNCj4gPiArLSAjdGhlcm1hbC1z
+ZW5zb3ItY2VsbHMgOiBTaG91bGQgYmUgMS4gU2VlDQo+ID4gKw0KPiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC90aGVybWFsLnR4dA0KPiA+ICsJCQkgIGZvciBhIGRl
+c2NyaXB0aW9uLg0KPiA+ICstIGlteCxzZW5zb3ItcmVzb3VyY2UtaWQgOiBUaGlzIHByb3BlcnR5
+IHNob3VsZCBiZSBkZWZpbmVkIGluIGVhY2gNCj4gPiArdGhlcm1hbA0KPiA+IHpvbmUNCj4gPiAr
+CQkJICAgb2YgdGhlcm1hbC16b25lcyBub2RlLCBpdCBwYXNzZXMgZWFjaCB0aGVybWFsDQo+IHpv
+bmUncw0KPiA+ICsJCQkgICByZXNvdXJjZSBpZCBmb3IgdGhlcm1hbCBkcml2ZXIgdG8gZ2V0IHRl
+bXBlcmF0dXJlDQo+IHZpYQ0KPiA+ICsJCQkgICBTQ1UgSVBDLg0KPiANCj4gVGhpcyBpcyBtaXNz
+aW5nIGluIHRoZSBleGFtcGxlPw0KDQpUaGVyZSBhcmUgdHdvIHBhcnRzIG9mIHRoZXJtYWwgZHRz
+LCBvbmUgaXMgdGhlIHRzZW5zIHdoaWNoIGFyZSBkaWZmZXJlbnQgb24gZWFjaCBwbGF0Zm9ybS4N
+ClRoZSBvdGhlciBhcmUgY29tbW9uIHRoZXJtYWwtem9uZSBkZWZpbml0aW9ucywgdGhlc2UgYXJl
+IGNvdmVyZWQgYnkgdGhlcm1hbCBiaW5kaW5nIGRvYy4NClRoZSBwcm9wZXJ0eSBpcyBhZGRlZCBi
+eSB1cyBmb3Igb3VyIHBsYXRmb3JtcywgaWYgd2FudCB0byBwdXQgaXQgaW4gZXhhbXBsZSwgSSBu
+ZWVkIHRvIGNvcHkNCkhvcGUgcGllY2Ugb2YgY29tbW9uIHRoZXJtYWwtem9uZSBub2RlLg0KDQo+
+IA0KPiBCVFcsIGlzIHRoaXMgU0NVIGZ1bmN0aW9uIGxpa2VseSBwbGF0Zm9ybSBkZXBlbmRlbnQ/
+DQo+IElmIG5vdCwgeW91IHByb2JhYmx5IGNvdWxkIGFkZCBhIGZhbGxiYWNrIGNvbXBhdGlibGUg
+c3VjaCBhcyAiZnNsLHNjdS1ydGMiDQoNCkZvciBub3csIHRoZSBTQ1UgQVBJIHdlIHVzZWQgYXJl
+IHBsYXRmb3JtIGluZGVwZW5kZW50LCB0aGUgT05MWSBwYXJhbWV0ZXIgZGVwZW5kcw0Kb24gcGxh
+dGZvcm0gaXMgcmVzb3VyY2UgSUQsIHdlIGNhbiBnZXQgaXQgZnJvbSBkdGIgbm9kZS4NCg0KT0ss
+IEkgdGhpbmsgd2UgY2FuIHVzZSBhIG1vcmUgZ2VuZXJpYyBjb21wYXRpYmxlIG5hbWUgbGlrZSAi
+ZnNsLGlteC1zYy10aGVybWFsIi4NCg0KQW5zb24uDQo+IA0KPiBSZWdhcmRzDQo+IERvbmcgQWlz
+aGVuZw0KPiANCj4gPiArDQo+ID4gIEV4YW1wbGUgKGlteDhxeHApOg0KPiA+ICAtLS0tLS0tLS0t
+LS0tDQo+ID4gIGxzaW9fbXUxOiBtYWlsYm94QDVkMWMwMDAwIHsNCj4gPiBAQCAtMTY4LDYgKzE4
+MiwxMiBAQCBmaXJtd2FyZSB7DQo+ID4gIAkJcnRjOiBydGMgew0KPiA+ICAJCQljb21wYXRpYmxl
+ID0gImZzbCxpbXg4cXhwLXNjLXJ0YyI7DQo+ID4gIAkJfTsNCj4gPiArDQo+ID4gKwkJdHNlbnM6
+IHRoZXJtYWwtc2Vuc29yIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1zYy10
+aGVybWFsIjsNCj4gPiArCQkJdHNlbnMtbnVtID0gPDE+Ow0KPiA+ICsJCQkjdGhlcm1hbC1zZW5z
+b3ItY2VsbHMgPSA8MT47DQo+ID4gKwkJfTsNCj4gPiAgCX07DQo+ID4gIH07DQo+ID4NCj4gPiAt
+LQ0KPiA+IDIuNy40DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
