@@ -1,149 +1,53 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2] dt-bindings: imx: update scu resource id headfile
-Date: Wed, 20 Feb 2019 12:01:59 +0000
-Message-ID: <1550663846-22698-1-git-send-email-Anson.Huang@nxp.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 4/4] drm/panel: Add OSD101T2587-53TS driver
+Date: Wed, 20 Feb 2019 14:06:34 +0200
+Message-ID: <8d973bd7-3e8b-5d37-10c3-347a7328291f@ti.com>
+References: <20190215140315.18046-1-peter.ujfalusi@ti.com>
+ <20190215140315.18046-5-peter.ujfalusi@ti.com>
+ <20190215180759.GA26944@ravnborg.org>
+ <fefcd92c-4171-ed86-28d2-4145d409a73d@ti.com>
+ <20190220115202.GA18603@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190220115202.GA18603@ravnborg.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Update i.MX SCU resource ID table according to latest
-system controller firmware.
-
-Latest system controller firmware removes below resources
-which are never be used:
-	IMX_SC_R_DC_0_CAPTURE0
-	IMX_SC_R_DC_0_CAPTURE1
-	IMX_SC_R_DC_0_INTEGRAL0
-	IMX_SC_R_DC_0_INTEGRAL1
-	IMX_SC_R_DC_0_FRAC1
-	IMX_SC_R_DC_1_CAPTURE0
-	IMX_SC_R_DC_1_CAPTURE1
-	IMX_SC_R_DC_1_INTEGRAL0
-	IMX_SC_R_DC_1_INTEGRAL1
-	IMX_SC_R_DC_1_FRAC1
-	IMX_SC_R_GPU_3_PID0
-	IMX_SC_R_M4_0_SIM
-	IMX_SC_R_M4_0_WDOG
-	IMX_SC_R_M4_1_SIM
-	IMX_SC_R_M4_1_WDOG
-
-and also add below resources to support new features:
-	IMX_SC_R_PERF
-	IMX_SC_R_OCRAM
-	IMX_SC_R_DMA_5_CH0
-	IMX_SC_R_DMA_5_CH1
-	IMX_SC_R_DMA_5_CH2
-	IMX_SC_R_DMA_5_CH3
-	IMX_SC_R_ATTESTATION
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No changes since V1, just update the commit message to provide more detail =
-info.
----
- include/dt-bindings/firmware/imx/rsrc.h | 39 +++++++++++++++++++----------=
-----
- 1 file changed, 22 insertions(+), 17 deletions(-)
-
-diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/=
-firmware/imx/rsrc.h
-index 4481f2d..ad747a8 100644
---- a/include/dt-bindings/firmware/imx/rsrc.h
-+++ b/include/dt-bindings/firmware/imx/rsrc.h
-@@ -36,15 +36,15 @@
- #define IMX_SC_R_DC_0_BLIT1		20
- #define IMX_SC_R_DC_0_BLIT2		21
- #define IMX_SC_R_DC_0_BLIT_OUT		22
--#define IMX_SC_R_DC_0_CAPTURE0		23
--#define IMX_SC_R_DC_0_CAPTURE1		24
-+#define IMX_SC_R_PERF			23
-+#define IMX_SC_R_UNUSED5		24
- #define IMX_SC_R_DC_0_WARP		25
--#define IMX_SC_R_DC_0_INTEGRAL0		26
--#define IMX_SC_R_DC_0_INTEGRAL1		27
-+#define IMX_SC_R_UNUSED7		26
-+#define IMX_SC_R_UNUSED8		27
- #define IMX_SC_R_DC_0_VIDEO0		28
- #define IMX_SC_R_DC_0_VIDEO1		29
- #define IMX_SC_R_DC_0_FRAC0		30
--#define IMX_SC_R_DC_0_FRAC1		31
-+#define IMX_SC_R_UNUSED6		31
- #define IMX_SC_R_DC_0			32
- #define IMX_SC_R_GPU_2_PID0		33
- #define IMX_SC_R_DC_0_PLL_0		34
-@@ -53,17 +53,17 @@
- #define IMX_SC_R_DC_1_BLIT1		37
- #define IMX_SC_R_DC_1_BLIT2		38
- #define IMX_SC_R_DC_1_BLIT_OUT		39
--#define IMX_SC_R_DC_1_CAPTURE0		40
--#define IMX_SC_R_DC_1_CAPTURE1		41
-+#define IMX_SC_R_UNUSED9		40
-+#define IMX_SC_R_UNUSED10		41
- #define IMX_SC_R_DC_1_WARP		42
--#define IMX_SC_R_DC_1_INTEGRAL0		43
--#define IMX_SC_R_DC_1_INTEGRAL1		44
-+#define IMX_SC_R_UNUSED11		43
-+#define IMX_SC_R_UNUSED12		44
- #define IMX_SC_R_DC_1_VIDEO0		45
- #define IMX_SC_R_DC_1_VIDEO1		46
- #define IMX_SC_R_DC_1_FRAC0		47
--#define IMX_SC_R_DC_1_FRAC1		48
-+#define IMX_SC_R_UNUSED13		48
- #define IMX_SC_R_DC_1			49
--#define IMX_SC_R_GPU_3_PID0		50
-+#define IMX_SC_R_UNUSED14		50
- #define IMX_SC_R_DC_1_PLL_0		51
- #define IMX_SC_R_DC_1_PLL_1		52
- #define IMX_SC_R_SPI_0			53
-@@ -303,8 +303,8 @@
- #define IMX_SC_R_M4_0_UART		287
- #define IMX_SC_R_M4_0_I2C		288
- #define IMX_SC_R_M4_0_INTMUX		289
--#define IMX_SC_R_M4_0_SIM		290
--#define IMX_SC_R_M4_0_WDOG		291
-+#define IMX_SC_R_UNUSED15		290
-+#define IMX_SC_R_UNUSED16		291
- #define IMX_SC_R_M4_0_MU_0B		292
- #define IMX_SC_R_M4_0_MU_0A0		293
- #define IMX_SC_R_M4_0_MU_0A1		294
-@@ -323,8 +323,8 @@
- #define IMX_SC_R_M4_1_UART		307
- #define IMX_SC_R_M4_1_I2C		308
- #define IMX_SC_R_M4_1_INTMUX		309
--#define IMX_SC_R_M4_1_SIM		310
--#define IMX_SC_R_M4_1_WDOG		311
-+#define IMX_SC_R_UNUSED17		310
-+#define IMX_SC_R_UNUSED18		311
- #define IMX_SC_R_M4_1_MU_0B		312
- #define IMX_SC_R_M4_1_MU_0A0		313
- #define IMX_SC_R_M4_1_MU_0A1		314
-@@ -337,7 +337,7 @@
- #define IMX_SC_R_IRQSTR_SCU2		321
- #define IMX_SC_R_IRQSTR_DSP		322
- #define IMX_SC_R_ELCDIF_PLL		323
--#define IMX_SC_R_UNUSED6		324
-+#define IMX_SC_R_OCRAM			324
- #define IMX_SC_R_AUDIO_PLL_0		325
- #define IMX_SC_R_PI_0			326
- #define IMX_SC_R_PI_0_PWM_0		327
-@@ -554,6 +554,11 @@
- #define IMX_SC_R_VPU_MU_3		538
- #define IMX_SC_R_VPU_ENC_1		539
- #define IMX_SC_R_VPU			540
--#define IMX_SC_R_LAST			541
-+#define IMX_SC_R_DMA_5_CH0		541
-+#define IMX_SC_R_DMA_5_CH1		542
-+#define IMX_SC_R_DMA_5_CH2		543
-+#define IMX_SC_R_DMA_5_CH3		544
-+#define IMX_SC_R_ATTESTATION		545
-+#define IMX_SC_R_LAST			546
-=20
- #endif /* __DT_BINDINGS_RSCRC_IMX_H */
---=20
-2.7.4
+SGkgU2FtLAoKT24gMjAvMDIvMjAxOSAxMy41MiwgU2FtIFJhdm5ib3JnIHdyb3RlOgo+IEhpIFBl
+dGVyLgo+IAo+IE9uIFdlZCwgRmViIDIwLCAyMDE5IGF0IDEyOjM5OjExUE0gKzAyMDAsIFBldGVy
+IFVqZmFsdXNpIHdyb3RlOgo+PiBIaSBTYW0sCj4+Cj4+IE9uIDE1LzAyLzIwMTkgMjAuMDcsIFNh
+bSBSYXZuYm9yZyB3cm90ZToKPj4+PiArI2luY2x1ZGUgPGxpbnV4L2JhY2tsaWdodC5oPgo+Pj4+
+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+
+Pj4+ICsjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+Cj4+Pj4gKwo+Pj4+ICsj
+aW5jbHVkZSA8ZHJtL2RybVAuaD4KPj4+IFBsZWFzZSBkbyBub3QgdXNlIGRybVAuaCBpbiBuZXcg
+ZHJpdmVycyAtIHdlIHRyeSB0byBnZXQgcmlkIG9mIHRoaXMgZmlsZS4KPj4KPj4gLi4uCj4+Cj4+
+Pj4gK3N0YXRpYyBpbnQgb3NkMTAxdDI1ODdfcGFuZWxfZ2V0X21vZGVzKHN0cnVjdCBkcm1fcGFu
+ZWwgKnBhbmVsKQo+Pj4+ICt7Cj4+Pj4gKwlzdHJ1Y3Qgb3NkMTAxdDI1ODdfcGFuZWwgKm9zZDEw
+MXQyNTg3ID0gdG9fb3NkMTAxdDI1ODdfcGFuZWwocGFuZWwpOwo+Pj4+ICsJc3RydWN0IGRybV9k
+aXNwbGF5X21vZGUgKm1vZGU7Cj4+Pj4gKwo+Pj4+ICsJbW9kZSA9IGRybV9tb2RlX2R1cGxpY2F0
+ZShwYW5lbC0+ZHJtLCBvc2QxMDF0MjU4Ny0+ZGVmYXVsdF9tb2RlKTsKPj4+PiArCWlmICghbW9k
+ZSkgewo+Pj4+ICsJCWRldl9lcnIocGFuZWwtPmRybS0+ZGV2LCAiZmFpbGVkIHRvIGFkZCBtb2Rl
+ICV1eCV1eEAldVxuIiwKPj4KPj4gZHJtL2RybVAuaCBpcyBuZWVkZWQgZm9yIHRoaXMgZGV2X2Vy
+ci4KPiBkcm1QLmggaXMgb25seSBhIHNldCBvZiBpbmNsdWRlIGZpbGVzIGFuZCBmb3J3YXJkcyB0
+b2RheS4KPiBTbyB5b3UgbmVlZCB0byBmaWd1cmUgb3V0IHdoYXQgdG8gcmVwbGFjZSBpdCB3aXRo
+Lgo+IAo+IE9mdGVuIHJlbW92aW5nIGRybVAuaCByZXF1aXJlcyB5b3UgdG8gYWRkIG1vcmUgdGhh
+biBvbmUgZXh0cmEgaW5jbHVkZSBmaWxlLgoKUmVwbGFjaW5nIGl0IHdpdGgKI2luY2x1ZGUgPGRy
+bS9kcm1fZGV2aWNlLmg+Cgp3b3JrcyBwZXJmZWN0bHkuCgpUaGFua3MsCi0gUMOpdGVyCgpUZXhh
+cyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5r
+aS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTog
+SGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
