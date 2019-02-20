@@ -1,53 +1,115 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 4/4] drm/panel: Add OSD101T2587-53TS driver
-Date: Wed, 20 Feb 2019 14:06:34 +0200
-Message-ID: <8d973bd7-3e8b-5d37-10c3-347a7328291f@ti.com>
-References: <20190215140315.18046-1-peter.ujfalusi@ti.com>
- <20190215140315.18046-5-peter.ujfalusi@ti.com>
- <20190215180759.GA26944@ravnborg.org>
- <fefcd92c-4171-ed86-28d2-4145d409a73d@ti.com>
- <20190220115202.GA18603@ravnborg.org>
+From: Mans Rullgard <mans@mansr.com>
+Subject: [PATCH v2] ARM: dts: sun7i: add pinctrl for missing uart mux options
+Date: Wed, 20 Feb 2019 12:07:17 +0000
+Message-ID: <20190220120717.30650-1-mans@mansr.com>
+References: <20190216182132.12895-1-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190220115202.GA18603@ravnborg.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190216182132.12895-1-mans@mansr.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FtLAoKT24gMjAvMDIvMjAxOSAxMy41MiwgU2FtIFJhdm5ib3JnIHdyb3RlOgo+IEhpIFBl
-dGVyLgo+IAo+IE9uIFdlZCwgRmViIDIwLCAyMDE5IGF0IDEyOjM5OjExUE0gKzAyMDAsIFBldGVy
-IFVqZmFsdXNpIHdyb3RlOgo+PiBIaSBTYW0sCj4+Cj4+IE9uIDE1LzAyLzIwMTkgMjAuMDcsIFNh
-bSBSYXZuYm9yZyB3cm90ZToKPj4+PiArI2luY2x1ZGUgPGxpbnV4L2JhY2tsaWdodC5oPgo+Pj4+
-ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+
-Pj4+ICsjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+Cj4+Pj4gKwo+Pj4+ICsj
-aW5jbHVkZSA8ZHJtL2RybVAuaD4KPj4+IFBsZWFzZSBkbyBub3QgdXNlIGRybVAuaCBpbiBuZXcg
-ZHJpdmVycyAtIHdlIHRyeSB0byBnZXQgcmlkIG9mIHRoaXMgZmlsZS4KPj4KPj4gLi4uCj4+Cj4+
-Pj4gK3N0YXRpYyBpbnQgb3NkMTAxdDI1ODdfcGFuZWxfZ2V0X21vZGVzKHN0cnVjdCBkcm1fcGFu
-ZWwgKnBhbmVsKQo+Pj4+ICt7Cj4+Pj4gKwlzdHJ1Y3Qgb3NkMTAxdDI1ODdfcGFuZWwgKm9zZDEw
-MXQyNTg3ID0gdG9fb3NkMTAxdDI1ODdfcGFuZWwocGFuZWwpOwo+Pj4+ICsJc3RydWN0IGRybV9k
-aXNwbGF5X21vZGUgKm1vZGU7Cj4+Pj4gKwo+Pj4+ICsJbW9kZSA9IGRybV9tb2RlX2R1cGxpY2F0
-ZShwYW5lbC0+ZHJtLCBvc2QxMDF0MjU4Ny0+ZGVmYXVsdF9tb2RlKTsKPj4+PiArCWlmICghbW9k
-ZSkgewo+Pj4+ICsJCWRldl9lcnIocGFuZWwtPmRybS0+ZGV2LCAiZmFpbGVkIHRvIGFkZCBtb2Rl
-ICV1eCV1eEAldVxuIiwKPj4KPj4gZHJtL2RybVAuaCBpcyBuZWVkZWQgZm9yIHRoaXMgZGV2X2Vy
-ci4KPiBkcm1QLmggaXMgb25seSBhIHNldCBvZiBpbmNsdWRlIGZpbGVzIGFuZCBmb3J3YXJkcyB0
-b2RheS4KPiBTbyB5b3UgbmVlZCB0byBmaWd1cmUgb3V0IHdoYXQgdG8gcmVwbGFjZSBpdCB3aXRo
-Lgo+IAo+IE9mdGVuIHJlbW92aW5nIGRybVAuaCByZXF1aXJlcyB5b3UgdG8gYWRkIG1vcmUgdGhh
-biBvbmUgZXh0cmEgaW5jbHVkZSBmaWxlLgoKUmVwbGFjaW5nIGl0IHdpdGgKI2luY2x1ZGUgPGRy
-bS9kcm1fZGV2aWNlLmg+Cgp3b3JrcyBwZXJmZWN0bHkuCgpUaGFua3MsCi0gUMOpdGVyCgpUZXhh
-cyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5r
-aS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTog
-SGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+This adds pinctrl settings for various missing uart options.
+
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+---
+Changed in v2:
+- add /omit-if-no-ref/ tags to new nodes
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 54 ++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index af5b067a5f83..76d0c961f01e 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -944,6 +944,36 @@
+ 				function = "uart0";
+ 			};
+ 
++			/omit-if-no-ref/
++			uart0_pf_pins: uart0-pf-pins {
++				pins = "PF2", "PF4";
++				function = "uart0";
++			};
++
++			/omit-if-no-ref/
++			uart1_pa_pins: uart1-pa-pins {
++				pins = "PA10", "PA11";
++				function = "uart1";
++			};
++
++			/omit-if-no-ref/
++			uart1_cts_rts_pa_pins: uart1-cts-rts-pa-pins {
++				pins = "PA12", "PIA13";
++				function = "uart2";
++			};
++
++			/omit-if-no-ref/
++			uart2_pa_pins: uart2-pa-pins {
++				pins = "PIA2", "PIA3";
++				function = "uart2";
++			};
++
++			/omit-if-no-ref/
++			uart2_cts_rts_pa_pins: uart2-cts-rts-pa-pins {
++				pins = "PA0", "PIA1";
++				function = "uart2";
++			};
++
+ 			uart2_pi_pins: uart2-pi-pins {
+ 				pins = "PI18", "PI19";
+ 				function = "uart2";
+@@ -969,6 +999,12 @@
+ 				function = "uart3";
+ 			};
+ 
++			/omit-if-no-ref/
++			uart3_cts_rts_ph_pins: uart3-cts-rts-ph-pins {
++				pins = "PH2", "PH3";
++				function = "uart3";
++			};
++
+ 			uart4_pg_pins: uart4-pg-pins {
+ 				pins = "PG10", "PG11";
+ 				function = "uart4";
+@@ -979,16 +1015,34 @@
+ 				function = "uart4";
+ 			};
+ 
++			/omit-if-no-ref/
++			uart5_ph_pins: uart5-ph-pins {
++				pins = "PH6", "PH7";
++				function = "uart5";
++			};
++
+ 			uart5_pi_pins: uart5-pi-pins {
+ 				pins = "PI10", "PI11";
+ 				function = "uart5";
+ 			};
+ 
++			/omit-if-no-ref/
++			uart6_pa_pins: uart6-pa-pins {
++				pins = "PA12", "PA13";
++				function = "uart6";
++			};
++
+ 			uart6_pi_pins: uart6-pi-pins {
+ 				pins = "PI12", "PI13";
+ 				function = "uart6";
+ 			};
+ 
++			/omit-if-no-ref/
++			uart7_pa_pins: uart7-pa-pins {
++				pins = "PA14", "PA15";
++				function = "uart7";
++			};
++
+ 			uart7_pi_pins: uart7-pi-pins {
+ 				pins = "PI20", "PI21";
+ 				function = "uart7";
+-- 
+2.20.1
