@@ -1,33 +1,30 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 2/2] gpio: sprd: Change to use SoC compatible string
-Date: Thu, 21 Feb 2019 13:19:14 +0100
-Message-ID: <CACRpkdbctA2T8iAXT30cAUr_RFntSSsd4ksH+_dDMd+w7ORZ3w@mail.gmail.com>
-References: <70f5476004b2f4e4b444bf8425f21a3c993edf47.1550543288.git.baolin.wang@linaro.org>
- <d0f8377078efc1af13fa81c5d6837f3f26ddc1fb.1550543288.git.baolin.wang@linaro.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Document the i.MX50 IOMUXC binding
+Date: Thu, 21 Feb 2019 13:38:07 +0100
+Message-ID: <CACRpkdbPiVvaY4W6_UMd20PG8mnQCyPHq9W+7x=ZR8+vwy=Oow@mail.gmail.com>
+References: <20190129165530.7606-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d0f8377078efc1af13fa81c5d6837f3f26ddc1fb.1550543288.git.baolin.wang@linaro.org>
+In-Reply-To: <20190129165530.7606-1-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Dong Aisheng <dong.aisheng@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 19, 2019 at 3:30 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+On Tue, Jan 29, 2019 at 5:55 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 
-> Change to use SoC compatible string instead of wildcard string.
+> AFAICS from the i.MX50 Reference Manual, the i.MX50 IOMUXC works the
+> same as the one in i.MX51, so I copied fsl,imx51-pinctrl.txt and changed
+> the text to imx50.
 >
-> The Spreadtrum SC9860 platform device trees and drivers' development
-> are still in progress, and now we will always recompile and ship
-> device trees at the same time as we will compile and ship the kernel,
-> so we do not need care about the backwards compatibility.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-> Changes from v2:
->  - Add some comments to explain why we do not care backwards compatibility.
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> Cc: Dong Aisheng <dong.aisheng@linaro.org>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
 
-Patch applied.
+Patch applied with Fabio's review tag.
 
 Yours,
 Linus Walleij
