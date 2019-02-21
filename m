@@ -1,48 +1,50 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: arm: atmel: add binding for SAM9X60
- shutdown controller
-Date: Thu, 21 Feb 2019 14:09:57 +0000
-Message-ID: <4d728bb8-cada-6656-204f-2ae766211f5e@microchip.com>
-References: <1550756716-3032-1-git-send-email-claudiu.beznea@microchip.com>
- <1550756716-3032-4-git-send-email-claudiu.beznea@microchip.com>
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: RE: [PATCH] dt-bindings: Add bindings for mdio mux consumers
+Date: Thu, 21 Feb 2019 14:10:11 +0000
+Message-ID: <VI1PR0401MB24962D52E53B9637922BD4CBF17E0@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+References: <20190221182349.4057-1-pankaj.bansal@nxp.com>
+ <20190221134504.GE5653@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550756716-3032-4-git-send-email-claudiu.beznea@microchip.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190221134504.GE5653@lunn.ch>
 Content-Language: en-US
-Content-ID: <14B759396FBAD44AB926956191F84D69@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, sre@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Leo Li <leoyang.li@nxp.com>, Peter Rosin <peda@axentia.se>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjEvMDIvMjAxOSBhdCAxNDo0NSwgQ2xhdWRpdSBCZXpuZWEgLSBNMTgwNjMgd3JvdGU6DQo+
-IEZyb206IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPiAN
-Cj4gQWRkIGRvY3VtZW50YXRpb24gZm9yIFNBTTlYNjAgc2h1dGRvd24gY29udHJvbGxlci4NCj4g
-DQo+IFNpZ25lZC1vZmYtYnk6IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2No
-aXAuY29tPg0KDQpBY2tlZC1ieTogTmljb2xhcyBGZXJyZSA8bmljb2xhcy5mZXJyZUBtaWNyb2No
-aXAuY29tPg0KDQpUaGFua3MgQ2xhdWRpdS4gUmVnYXJkcywNCiAgIE5pY29sYXMNCg0KPiAtLS0N
-Cj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2F0bWVsLXN5c3JlZ3Mu
-dHh0IHwgNSArKysrLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVs
-ZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvYXJtL2F0bWVsLXN5c3JlZ3MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2FybS9hdG1lbC1zeXNyZWdzLnR4dA0KPiBpbmRleCAxNGYzMTlmNjk0YjcuLjUwZjI4
-MmNjYmNiNyAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2FybS9hdG1lbC1zeXNyZWdzLnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvYXJtL2F0bWVsLXN5c3JlZ3MudHh0DQo+IEBAIC04Myw3ICs4Myw3IEBAIFNIRFdD
-IFNBTUE1RDItQ29tcGF0aWJsZSBTaHV0ZG93biBDb250cm9sbGVyDQo+ICAgMSkgc2hkd2Mgbm9k
-ZQ0KPiAgIA0KPiAgIHJlcXVpcmVkIHByb3BlcnRpZXM6DQo+IC0tIGNvbXBhdGlibGU6IHNob3Vs
-ZCBiZSAiYXRtZWwsc2FtYTVkMi1zaGR3YyIuDQo+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
-YXRtZWwsc2FtYTVkMi1zaGR3YyIgb3IgIm1pY3JvY2hpcCxzYW05eDYwLXNoZHdjIi4NCj4gICAt
-IHJlZzogc2hvdWxkIGNvbnRhaW4gcmVnaXN0ZXJzIGxvY2F0aW9uIGFuZCBsZW5ndGgNCj4gICAt
-IGNsb2NrczogcGhhbmRsZSB0byBpbnB1dCBjbG9jay4NCj4gICAtICNhZGRyZXNzLWNlbGxzOiBz
-aG91bGQgYmUgb25lLiBUaGUgY2VsbCBpcyB0aGUgd2FrZS11cCBpbnB1dCBpbmRleC4NCj4gQEAg
-LTk1LDYgKzk1LDkgQEAgb3B0aW9uYWwgcHJvcGVydGllczoNCj4gICAgIG1pY3Jvc2Vjb25kcy4g
-SXQncyB1c3VhbGx5IGEgYm9hcmQtcmVsYXRlZCBwcm9wZXJ0eS4NCj4gICAtIGF0bWVsLHdha2V1
-cC1ydGMtdGltZXI6IGJvb2xlYW4gdG8gZW5hYmxlIFJlYWwtVGltZSBDbG9jayB3YWtlLXVwLg0K
-PiAgIA0KPiArb3B0aW9uYWwgbWljcm9jaGlwLHNhbTl4NjAtc2hkd2MgcHJvcGVydGllczoNCj4g
-Ky0gYXRtZWwsd2FrZXVwLXJ0dC10aW1lcjogYm9vbGVhbiB0byBlbmFibGUgUmVhbC10aW1lIFRp
-bWVyIFdha2UtdXAuDQo+ICsNCj4gICBUaGUgbm9kZSBjb250YWlucyBjaGlsZCBub2RlcyBmb3Ig
-ZWFjaCB3YWtlLXVwIGlucHV0IHRoYXQgdGhlIHBsYXRmb3JtIHVzZXMuDQo+ICAgDQo+ICAgMikg
-aW5wdXQgbm9kZXMNCj4gDQoNCg0KLS0gDQpOaWNvbGFzIEZlcnJlDQo=
+
+
+> -----Original Message-----
+> From: Andrew Lunn [mailto:andrew@lunn.ch]
+> Sent: Thursday, 21 February, 2019 07:15 PM
+> To: Pankaj Bansal <pankaj.bansal@nxp.com>
+> Cc: Leo Li <leoyang.li@nxp.com>; Peter Rosin <peda@axentia.se>; Florian
+> Fainelli <f.fainelli@gmail.com>; Heiner Kallweit <hkallweit1@gmail.com>; =
+Rob
+> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> devicetree@vger.kernel.org; netdev@vger.kernel.org
+> Subject: Re: [PATCH] dt-bindings: Add bindings for mdio mux consumers
+>=20
+> On Thu, Feb 21, 2019 at 12:59:19PM +0000, Pankaj Bansal wrote:
+> > When we use the bindings defined in
+> > Documentation/devicetree/bindings/mux
+> > to define mdio mux in producer and consumer terms, it results in two
+> > devices. one is mux producer and other is mux consumer.
+> >
+> > Add the bindings needed for Mdio mux consumer devices.
+>=20
+> Hi Pankaj
+>=20
+> Please thread this binding patch with the code which implements the bindi=
+ng.
+> The two should be reviewed together.
+
+OK. If you have any comments about this patch, then please let me know.
+I will incorporate these when I send both patches together.
+
+>=20
+> Thanks
+> 	Andrew
