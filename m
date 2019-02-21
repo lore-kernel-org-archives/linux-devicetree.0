@@ -1,99 +1,301 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq mapping already exists
-Date: Thu, 21 Feb 2019 10:47:03 -0800
-Message-ID: <155077482380.77512.11109337732610217265@swboyd.mtv.corp.google.com>
-References: <20190208021631.30252-1-masneyb@onstation.org> <20190208021631.30252-6-masneyb@onstation.org> <155020988635.115909.8353948296231202388@swboyd.mtv.corp.google.com> <20190215134733.GA21208@basecamp> <155026608236.115909.9007817366859489104@swboyd.mtv.corp.google.com> <20190216002359.GA24752@basecamp>
+From: Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH 5/7] power: supply: add Ingenic JZ47xx battery driver.
+Date: Thu, 21 Feb 2019 20:18:36 +0100
+Message-ID: <a53ba58dddea94c011d2ec839d438c51@artur-rojek.eu>
+References: <20190217142914.17433-1-contact@artur-rojek.eu>
+ <20190217142914.17433-5-contact@artur-rojek.eu>
+ <20190220111441.585eb3eb@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190216002359.GA24752@basecamp>
+In-Reply-To: <20190220111441.585eb3eb@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brian Masney (2019-02-15 16:23:59)
-> On Fri, Feb 15, 2019 at 01:28:02PM -0800, Stephen Boyd wrote:
-> > Quoting Brian Masney (2019-02-15 05:47:33)
-> > > On Thu, Feb 14, 2019 at 09:51:26PM -0800, Stephen Boyd wrote:
-> > > > > diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
-> > > > > index 8eb2528793f9..2f99a98ccee5 100644
-> > > > > --- a/drivers/mfd/qcom-pm8xxx.c
-> > > > > +++ b/drivers/mfd/qcom-pm8xxx.c
-> > > > > @@ -380,6 +380,12 @@ static void pm8xxx_irq_domain_map(struct pm_=
-irq_chip *chip,
-> > > > >                                   struct irq_domain *domain, unsi=
-gned int irq,
-> > > > >                                   irq_hw_number_t hwirq, unsigned=
- int type)
-> > > > >  {
-> > > > > +       unsigned int old_virq;
-> > > > > +
-> > > > > +       old_virq =3D irq_find_mapping(domain, hwirq);
-> > > > > +       if (old_virq)
-> > > > > +               irq_domain_disassociate(domain, old_virq);
-> > > >=20
-> > > > Is it possible to pass 'true' for the 'realloc' argument to
-> > > > __irq_domain_alloc_irqs() and then this disassociate change isn't
-> > > > needed?
-> > >=20
-> > > The kernel doc for __irq_domain_alloc_irqs() says that the realloc
-> > > parameter is mainly to support legacy IRQs. I don't think its a good
-> > > idea to add new code that'll stay past the end of this patch series
-> > > on top of that legacy interface.
-> > >=20
-> >=20
-> > Ok. The other side of the argument is that this is the only user of
-> > irq_domain_disassociate(), which may also be some sort of legacy
-> > interface that isn't supposed to be used. Looking at the commit that
-> > exposed it, it seems to be that it's there for legacy reasons.
-> >=20
-> > commit 43a775916d63d1c822107b39987192ca5ced445c
-> > Author: Jiang Liu <jiang.liu@linux.intel.com>
-> > Date:   Mon Jun 9 16:20:05 2014 +0800
-> >=20
-> >     genirq: Export irq_domain_disassociate() to architecture interrupt =
-drivers
-> >    =20
-> >     Export irq_domain_disassociate() to architecture interrupt drivers,
-> >     so it could be used to handle legacy IRQ descriptors on x86.
-> >=20
-> > So maybe we should just use the realloc argument and bury the
-> > disassociate API in irqdomain.c because it's not supposed to be used?
-> > Or does the realloc path not work for some reason?
->=20
-> I haven't tried the realloc path yet. Let's back up further so that we
-> are both starting with the same assumptions. Do you want to keep either
-> your proposed change (realloc argument) or the existing
-> irq_domain_disassociate change in mainline past the end of this patch
-> series? If it is going to continue to be a temporary shim that will be
-> reverted at the end of the patch series (like I did here), then I don't
-> see the point in this extra work since this patch is only here to keep
-> it bisectable and works. We're not using any legacy interfaces by the
-> end of this patch series.
+On 2019-02-20 12:14, Jonathan Cameron wrote:
+> On Sun, 17 Feb 2019 15:29:14 +0100
+> Artur Rojek <contact@artur-rojek.eu> wrote:
+> 
+>> Add a driver for battery present on Ingenic JZ47xx SoCs.
+>> 
+>> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> A few things inline.
+> 
+> thanks,
+> 
+> Jonathan
+Hi Jonathan.
 
-The main concern I have is that we're changing the binding to avoid a
-larger discussion we could have about whether or not the binding is
-wrong to list out the hierarchical irqs as part of an 'interrupts'
-property. We have one case where hardware irq numbers are remapped to
-other hardware irq number spaces and it seems perfectly valid to use the
-'interrupts' property to indicate this, i.e. chained interrupt
-controllers.
+One thing inline.
 
-Those controllers typically have a single 'interrupts' specifier for the
-chained irq of the parent interrupt controller, but when it comes to
-hierarchical interrupts we seem to have various different ways of
-expressing the mapping from one number space to another. I've seen
-approaches varying between hardcoding everything in the kernel to
-hardcoding everything in DT.
-
-I'm mostly wondering if having an interrupts property listing all the
-parent interrupts in corresponding specifier slots for the interrupt
-controller's hardware irq space is wrong. It seems to describe the
-mapping between the two number spaces already, so maybe it would make
-sense to use the realloc argument and keep listing them as interrupts in
-DT. Obviously things are already moving forward with the new DT binding,
-so maybe I just need to be told that having an interrupts property there
-is wrong. If it is wrong, then nothing needs to be kept around and the
-binding can easily be changed.
+Artur
+> 
+>> ---
+>>  drivers/power/supply/Kconfig           |  11 ++
+>>  drivers/power/supply/Makefile          |   1 +
+>>  drivers/power/supply/ingenic-battery.c | 182 
+>> +++++++++++++++++++++++++
+>>  3 files changed, 194 insertions(+)
+>>  create mode 100644 drivers/power/supply/ingenic-battery.c
+>> 
+>> diff --git a/drivers/power/supply/Kconfig 
+>> b/drivers/power/supply/Kconfig
+>> index e901b9879e7e..9bfb1637ec28 100644
+>> --- a/drivers/power/supply/Kconfig
+>> +++ b/drivers/power/supply/Kconfig
+>> @@ -169,6 +169,17 @@ config BATTERY_COLLIE
+>>  	  Say Y to enable support for the battery on the Sharp Zaurus
+>>  	  SL-5500 (collie) models.
+>> 
+>> +config BATTERY_INGENIC
+>> +	tristate "Ingenic JZ47xx SoCs battery driver"
+>> +	depends on MIPS || COMPILE_TEST
+>> +	depends on INGENIC_ADC
+>> +	help
+>> +	  Choose this option if you want to monitor battery status on
+>> +	  Ingenic JZ47xx SoC based devices.
+>> +
+>> +	  This driver can also be built as a module. If so, the module will 
+>> be
+>> +	  called ingenic-battery.
+>> +
+>>  config BATTERY_IPAQ_MICRO
+>>  	tristate "iPAQ Atmel Micro ASIC battery driver"
+>>  	depends on MFD_IPAQ_MICRO
+>> diff --git a/drivers/power/supply/Makefile 
+>> b/drivers/power/supply/Makefile
+>> index b731c2a9b695..9e2c481d0187 100644
+>> --- a/drivers/power/supply/Makefile
+>> +++ b/drivers/power/supply/Makefile
+>> @@ -34,6 +34,7 @@ obj-$(CONFIG_BATTERY_PMU)	+= pmu_battery.o
+>>  obj-$(CONFIG_BATTERY_OLPC)	+= olpc_battery.o
+>>  obj-$(CONFIG_BATTERY_TOSA)	+= tosa_battery.o
+>>  obj-$(CONFIG_BATTERY_COLLIE)	+= collie_battery.o
+>> +obj-$(CONFIG_BATTERY_INGENIC)	+= ingenic-battery.o
+>>  obj-$(CONFIG_BATTERY_IPAQ_MICRO) += ipaq_micro_battery.o
+>>  obj-$(CONFIG_BATTERY_WM97XX)	+= wm97xx_battery.o
+>>  obj-$(CONFIG_BATTERY_SBS)	+= sbs-battery.o
+>> diff --git a/drivers/power/supply/ingenic-battery.c 
+>> b/drivers/power/supply/ingenic-battery.c
+>> new file mode 100644
+>> index 000000000000..4ee75c1ac241
+>> --- /dev/null
+>> +++ b/drivers/power/supply/ingenic-battery.c
+>> @@ -0,0 +1,182 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Battery driver for the Ingenic JZ47xx SoCs
+>> + * Copyright (c) 2019 Artur Rojek <contact@artur-rojek.eu>
+>> + *
+>> + * based on drivers/power/supply/jz4740-battery.c
+> 
+> What is the relationship between this driver and the older one?
+> 
+>> + */
+>> +
+>> +#include <linux/iio/consumer.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/power_supply.h>
+>> +#include <linux/property.h>
+>> +
+>> +struct ingenic_battery {
+>> +	struct device *dev;
+>> +	struct iio_channel *channel;
+>> +	struct power_supply_desc desc;
+>> +	struct power_supply *battery;
+>> +	struct power_supply_battery_info info;
+>> +};
+>> +
+>> +static int ingenic_battery_get_property(struct power_supply *psy,
+>> +					enum power_supply_property psp,
+>> +					union power_supply_propval *val)
+>> +{
+>> +	struct ingenic_battery *bat = power_supply_get_drvdata(psy);
+>> +	struct power_supply_battery_info *info = &bat->info;
+>> +	int ret = 0;
+>> +
+>> +	switch (psp) {
+>> +	case POWER_SUPPLY_PROP_HEALTH:
+>> +		ret = iio_read_channel_processed(bat->channel, &val->intval);
+>> +		val->intval *= 1000;
+>> +		if (val->intval < info->voltage_min_design_uv)
+>> +			val->intval = POWER_SUPPLY_HEALTH_DEAD;
+>> +		else if (val->intval > info->voltage_max_design_uv)
+>> +			val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
+>> +		else
+>> +			val->intval = POWER_SUPPLY_HEALTH_GOOD;
+>> +	break;
+>> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+>> +		ret = iio_read_channel_processed(bat->channel, &val->intval);
+>> +		val->intval *= 1000;
+>> +	break;
+>> +	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
+>> +		val->intval = info->voltage_min_design_uv;
+>> +	break;
+>> +	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
+>> +		val->intval = info->voltage_max_design_uv;
+>> +	break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	};
+>> +
+> Can't get here, so drop.
+Execution actually does reach this point.
+Would you rather have me return in individual switch cases instead?
+> 
+>> +	return ret;
+>> +}
+>> +
+>> +/* Set the most appropriate IIO channel voltage reference scale
+>> + * based on the battery's max voltage.
+>> + */
+>> +static int ingenic_battery_set_scale(struct ingenic_battery *bat)
+>> +{
+>> +	const int *scale_raw;
+>> +	int scale_len, scale_type, best_idx = -1, best_mV, max_raw, i, ret;
+>> +	u64 max_mV;
+>> +
+>> +	ret = iio_read_max_channel_raw(bat->channel, &max_raw);
+>> +	if (ret) {
+>> +		dev_err(bat->dev, "Unable to read max raw channel value\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = iio_read_avail_channel_attribute(bat->channel, &scale_raw,
+>> +					       &scale_type, &scale_len,
+>> +					       IIO_CHAN_INFO_SCALE);
+>> +	if (ret < 0) {
+>> +		dev_err(bat->dev, "Unable to read channel avail scale\n");
+>> +		return ret;
+>> +	}
+> This works under the constraints of knowing what ADC we are talking to, 
+> but
+> this isn't generic.  The relationship between scale and the range isn't 
+> always
+> direct.  i.e. there are devices where you sample the same range at a 
+> lower
+> scale to be able to read it faster (can be thought of as oversampling, 
+> or
+> just not running the last stages of a pipelined ADC).
+> Anyhow, doesn't matter here as I assume this is fine on this part.
+> 
+>> +	if (ret != IIO_AVAIL_LIST || scale_type != IIO_VAL_FRACTIONAL_LOG2)
+>> +		return -EINVAL;
+>> +
+>> +	max_mV = bat->info.voltage_max_design_uv / 1000;
+>> +
+>> +	for (i = 1; i < scale_len; i += 2) {
+>> +		u64 scale_mV = (max_raw * scale_raw[i - 1]) >> scale_raw[i];
+> Not keen on the offset in the index being backwards.
+> 
+> This would be clearer I think as
+> 
+> for (i = 0; i < scale_len; i+= 2) {
+> 	u64 scale_mv = (max_raw * scale_raw[i]) >> scale_raw[i + 1];
+> 	...
+> 	best_idx = i;
+> }
+> 
+>> +
+>> +		if (scale_mV < max_mV)
+>> +			continue;
+>> +
+>> +		if (best_idx >= 0 && scale_mV > best_mV)
+>> +			continue;
+>> +
+>> +		best_mV = scale_mV;
+>> +		best_idx = i - 1;
+>> +	}
+>> +
+>> +	if (best_idx < 0) {
+>> +		dev_err(bat->dev, "Unable to find matching voltage scale\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return iio_write_channel_attribute(bat->channel,
+>> +					   scale_raw[best_idx],
+>> +					   scale_raw[best_idx+1],
+> 
+> Spacing around that +.
+> 
+>> +					   IIO_CHAN_INFO_SCALE);
+>> +}
+>> +
+>> +static enum power_supply_property ingenic_battery_properties[] = {
+>> +	POWER_SUPPLY_PROP_HEALTH,
+>> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+>> +	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
+>> +	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
+>> +};
+>> +
+>> +static int ingenic_battery_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct ingenic_battery *bat;
+>> +	struct power_supply_config psy_cfg = {};
+>> +	struct power_supply_desc *desc;
+>> +	int ret;
+>> +
+>> +	bat = devm_kzalloc(dev, sizeof(*bat), GFP_KERNEL);
+>> +	if (!bat)
+>> +		return -ENOMEM;
+>> +
+>> +	bat->dev = dev;
+>> +	bat->channel = devm_iio_channel_get(dev, "battery");
+>> +	if (IS_ERR(bat->channel))
+>> +		return PTR_ERR(bat->channel);
+>> +
+>> +	desc = &bat->desc;
+>> +	desc->name = "jz-battery";
+>> +	desc->type = POWER_SUPPLY_TYPE_BATTERY;
+>> +	desc->properties = ingenic_battery_properties;
+>> +	desc->num_properties = ARRAY_SIZE(ingenic_battery_properties);
+>> +	desc->get_property = ingenic_battery_get_property;
+>> +	psy_cfg.drv_data = bat;
+>> +	psy_cfg.of_node = dev->of_node;
+>> +
+>> +	bat->battery = devm_power_supply_register(dev, desc, &psy_cfg);
+>> +	if (IS_ERR(bat->battery)) {
+>> +		dev_err(dev, "Unable to register battery\n");
+>> +		return PTR_ERR(bat->battery);
+>> +	}
+>> +
+>> +	ret = power_supply_get_battery_info(bat->battery, &bat->info);
+>> +	if (ret) {
+>> +		dev_err(dev, "Unable to get battery info: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +	if (bat->info.voltage_min_design_uv < 0) {
+>> +		dev_err(dev, "Unable to get voltage min design\n");
+>> +		return bat->info.voltage_min_design_uv;
+>> +	}
+>> +	if (bat->info.voltage_max_design_uv < 0) {
+>> +		dev_err(dev, "Unable to get voltage max design\n");
+>> +		return bat->info.voltage_max_design_uv;
+>> +	}
+>> +
+>> +	return ingenic_battery_set_scale(bat);
+>> +}
+>> +
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id ingenic_battery_of_match[] = {
+>> +	{ .compatible = "ingenic,jz4740-battery", },
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, ingenic_battery_of_match);
+>> +#endif
+>> +
+>> +static struct platform_driver ingenic_battery_driver = {
+>> +	.driver = {
+>> +		.name = "ingenic-battery",
+>> +		.of_match_table = of_match_ptr(ingenic_battery_of_match),
+>> +	},
+>> +	.probe = ingenic_battery_probe,
+>> +};
+>> +module_platform_driver(ingenic_battery_driver);
