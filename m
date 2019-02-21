@@ -1,7 +1,7 @@
 From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH 07/14] arm64: dts: imx8: add adma lpcg clocks
-Date: Thu, 21 Feb 2019 18:25:17 +0000
-Message-ID: <1550773093-13349-8-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH 06/14] arm64: dts: imx8: add conn lpcg clocks
+Date: Thu, 21 Feb 2019 18:25:13 +0000
+Message-ID: <1550773093-13349-7-git-send-email-aisheng.dong@nxp.com>
 References: <1550773093-13349-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,7 +22,7 @@ To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org
 Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add adma lpcg clocks
+Add conn lpcg clocks
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -32,92 +32,78 @@ Cc: Sascha Hauer <kernel@pengutronix.de>
 Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi | 73 +++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi | 59 ++++++++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-index 5f0e9e3..c7adeba 100644
---- a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-@@ -146,6 +146,79 @@ adma_subsys: bus@59000000 {
- 		clock-output-names = "uart3_clk";
+diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+index 0765cb2..33a3584 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+@@ -132,7 +132,64 @@ conn_subsys: bus@5b000000 {
+ 		clock-output-names = "usb3_lpm_aclk";
  	};
  
+-	conn_lpcg: clock-controller@5b200000 {
 +	/* LPCG clocks */
-+	uart0_lpcg: clock-controller@5a460000 {
-+		reg = <0x5a460000 0x10000>;
++	sdhc0_lpcg: clock-controller@5b200000 {
++		reg = <0x5b200000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&uart0_clk>, <&adma_ipg_clk>;
-+		bit-offset = <0 16>;
-+		clock-output-names = "uart0_lpcg_baud_clk",
-+				     "uart0_lpcg_ipg_clk";
++		clocks = <&sdhc0_clk>, <&conn_ipg_clk>, <&conn_axi_clk>;
++		bit-offset = <0 16 20>;
++		clock-output-names = "sdhc0_lpcg_per_clk",
++				     "sdhc0_lpcg_ipg_clk",
++				     "sdhc0_lpcg_ahb_clk";
 +	};
 +
-+	uart1_lpcg: clock-controller@5a470000 {
-+		reg = <0x5a470000 0x10000>;
++	sdhc1_lpcg: clock-controller@5b210000 {
++		reg = <0x5b210000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&uart1_clk>, <&adma_ipg_clk>;
-+		bit-offset = <0 16>;
-+		clock-output-names = "uart1_lpcg_baud_clk",
-+				     "uart1_lpcg_ipg_clk";
++		clocks = <&sdhc1_clk>, <&conn_ipg_clk>, <&conn_axi_clk>;
++		bit-offset = <0 16 20>;
++		clock-output-names = "sdhc1_lpcg_per_clk",
++				     "sdhc1_lpcg_ipg_clk",
++				     "sdhc1_lpcg_ahb_clk";
 +	};
 +
-+	uart2_lpcg: clock-controller@5a480000 {
-+		reg = <0x5a480000 0x10000>;
++	sdhc2_lpcg: clock-controller@5b220000 {
++		reg = <0x5b220000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&uart2_clk>, <&adma_ipg_clk>;
-+		bit-offset = <0 16>;
-+		clock-output-names = "uart2_lpcg_baud_clk",
-+				     "uart2_lpcg_ipg_clk";
++		clocks = <&sdhc2_clk>, <&conn_ipg_clk>, <&conn_axi_clk>;
++		bit-offset = <0 16 20>;
++		clock-output-names = "sdhc2_lpcg_per_clk",
++				     "sdhc2_lpcg_ipg_clk",
++				     "sdhc2_lpcg_ahb_clk";
 +	};
 +
-+	uart3_lpcg: clock-controller@5a490000 {
-+		reg = <0x5a490000 0x10000>;
++	enet0_lpcg: clock-controller@5b230000 {
++		reg = <0x5b230000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&uart3_clk>, <&adma_ipg_clk>;
-+		bit-offset = <0 16>;
-+		clock-output-names = "uart3_lpcg_baud_clk",
-+				     "uart3_lpcg_ipg_clk";
++		clocks = <&enet0_clk>, <&enet0_clk>, <&conn_axi_clk>,
++			 <&conn_ipg_clk>, <&conn_ipg_clk>;
++		bit-offset = <0 4 8 16 20>;
++		clock-output-names = "enet0_ipg_root_clk",
++				     "enet0_tx_clk",
++				     "enet0_ahb_clk",
++				     "enet0_ipg_clk",
++				     "enet0_ipg_s_clk";
 +	};
 +
-+	i2c0_lpcg: clock-controller@5ac00000 {
-+		reg = <0x5ac00000 0x10000>;
++	enet1_lpcg: clock-controller@5b240000 {
++		reg = <0x5b240000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&i2c0_clk>, <&adma_ipg_clk>;
-+		bit-offset = <0 16>;
-+		clock-output-names = "i2c0_lpcg_clk",
-+				     "i2c0_lpcg_ipg_clk";
++		clocks = <&enet1_clk>, <&enet1_clk>, <&conn_axi_clk>,
++			 <&conn_ipg_clk>, <&conn_ipg_clk>;
++		bit-offset = <0 4 8 16 20>;
++		clock-output-names = "enet1_ipg_root_clk",
++				     "enet1_tx_clk",
++				     "enet1_ahb_clk",
++				     "enet1_ipg_clk",
++				     "enet1_ipg_s_clk";
 +	};
 +
-+	i2c1_lpcg: clock-controller@5ac10000 {
-+		reg = <0x5ac10000 0x10000>;
-+		#clock-cells = <1>;
-+		clocks = <&i2c1_clk>, <&adma_ipg_clk>;
-+		bit-offset = <0 16>;
-+		clock-output-names = "i2c1_lpcg_clk",
-+				     "i2c1_lpcg_ipg_clk";
-+	};
-+
-+	i2c2_lpcg: clock-controller@5ac20000 {
-+		reg = <0x5ac20000 0x10000>;
-+		#clock-cells = <1>;
-+		clocks = <&i2c2_clk>, <&adma_ipg_clk>;
-+		bit-offset = <0 16>;
-+		clock-output-names = "i2c2_lpcg_clk",
-+				     "i2c2_lpcg_ipg_clk";
-+	};
-+
-+	i2c3_lpcg: clock-controller@5ac30000 {
-+		reg = <0x5ac30000 0x10000>;
-+		#clock-cells = <1>;
-+		clocks = <&i2c3_clk>, <&adma_ipg_clk>;
-+		bit-offset = <0 16>;
-+		clock-output-names = "i2c3_lpcg_clk",
-+				     "i2c3_lpcg_ipg_clk";
-+	};
-+
- 	adma_lpcg: clock-controller@59000000 {
- 		reg = <0x59000000 0x2000000>;
++	conn_lpcg: clock-controller-legacy@5b200000 {
+ 		reg = <0x5b200000 0xb0000>;
  		#clock-cells = <1>;
+ 	};
 -- 
 2.7.4
