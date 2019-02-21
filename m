@@ -1,205 +1,87 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V4 4/4] rtc: imx-sc: add rtc alarm support
-Date: Thu, 21 Feb 2019 09:19:40 +0000
-Message-ID: <1550740354-2701-4-git-send-email-Anson.Huang@nxp.com>
-References: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V4 1/4] dt-bindings: fsl: scu: add general interrupt support
+Date: Thu, 21 Feb 2019 09:19:22 +0000
+Message-ID: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX system controller RTC alarm support, the RTC alarm
-is implemented via SIP(silicon provider) runtime service call
-and ARM-Trusted-Firmware will communicate with system controller
-via MU(message unit) IPC to set RTC alarm. When RTC alarm fires,
-system controller will generate a common MU irq event and notify
-system controller RTC driver to handle the irq event.
+Add scu general interrupt function support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-No changes since V3.
+Changes since V3:
+	- make general MU interrupt channel as optional;
+	- rename "gi3" to "gip3" according to driver/dts change.
 ---
- drivers/rtc/rtc-imx-sc.c | 112 +++++++++++++++++++++++++++++++++++++++++++=
-++++
- 1 file changed, 112 insertions(+)
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt      | 18 ++++++++++++--=
+----
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
-index 60570a2..3557f12 100644
---- a/drivers/rtc/rtc-imx-sc.c
-+++ b/drivers/rtc/rtc-imx-sc.c
-@@ -3,6 +3,7 @@
-  * Copyright 2018 NXP.
-  */
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
+Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 72d481c..4a9b9ab 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -22,9 +22,11 @@ Required properties:
+ -------------------
+ - compatible:	should be "fsl,imx-scu".
+ - mbox-names:	should include "tx0", "tx1", "tx2", "tx3",
+-			       "rx0", "rx1", "rx2", "rx3".
+-- mboxes:	List of phandle of 4 MU channels for tx and 4 MU channels
+-		for rx. All 8 MU channels must be in the same MU instance.
++			       "rx0", "rx1", "rx2", "rx3";
++		include "gip3" if want to support general MU interrupt.
++- mboxes:	List of phandle of 4 MU channels for tx, 4 MU channels for
++		rx, and 1 optional MU channel for general interrupt.
++		All MU channels must be in the same MU instance.
+ 		Cross instances are not allowed. The MU instance can only
+ 		be one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
+ 		to make sure use the one which is not conflict with other
+@@ -34,6 +36,7 @@ Required properties:
+ 		Channel 1 must be "tx1" or "rx1".
+ 		Channel 2 must be "tx2" or "rx2".
+ 		Channel 3 must be "tx3" or "rx3".
++		General interrupt rx channel must be "gip3".
+ 		e.g.
+ 		mboxes =3D <&lsio_mu1 0 0
+ 			  &lsio_mu1 0 1
+@@ -42,7 +45,8 @@ Required properties:
+ 			  &lsio_mu1 1 0
+ 			  &lsio_mu1 1 1
+ 			  &lsio_mu1 1 2
+-			  &lsio_mu1 1 3>;
++			  &lsio_mu1 1 3
++			  &lsio_mu1 3 3>;
+ 		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+ 		for detailed mailbox binding.
 =20
-+#include <dt-bindings/firmware/imx/rsrc.h>
- #include <linux/arm-smccc.h>
- #include <linux/firmware/imx/sci.h>
- #include <linux/module.h>
-@@ -11,11 +12,17 @@
- #include <linux/rtc.h>
+@@ -133,7 +137,8 @@ firmware {
+ 	scu {
+ 		compatible =3D "fsl,imx-scu";
+ 		mbox-names =3D "tx0", "tx1", "tx2", "tx3",
+-			     "rx0", "rx1", "rx2", "rx3";
++			     "rx0", "rx1", "rx2", "rx3",
++			     "gip3";
+ 		mboxes =3D <&lsio_mu1 0 0
+ 			  &lsio_mu1 0 1
+ 			  &lsio_mu1 0 2
+@@ -141,7 +146,8 @@ firmware {
+ 			  &lsio_mu1 1 0
+ 			  &lsio_mu1 1 1
+ 			  &lsio_mu1 1 2
+-			  &lsio_mu1 1 3>;
++			  &lsio_mu1 1 3
++			  &lsio_mu1 3 3>;
 =20
- #define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
-+#define IMX_SC_TIMER_FUNC_SET_RTC_ALARM		8
- #define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
-=20
-+#define IMX_SC_IRQ_FUNC_ENABLE			1
-+
- #define IMX_SIP_SRTC			0xC2000002
- #define IMX_SIP_SRTC_SET_TIME		0x0
-=20
-+#define SC_IRQ_GROUP_RTC    2
-+#define SC_IRQ_RTC          1
-+
- static struct imx_sc_ipc *rtc_ipc_handle;
- static struct rtc_device *imx_sc_rtc;
-=20
-@@ -24,6 +31,24 @@ struct imx_sc_msg_timer_get_rtc_time {
- 	u32 time;
- } __packed;
-=20
-+struct imx_sc_msg_timer_enable_irq {
-+	struct imx_sc_rpc_msg hdr;
-+	u32 mask;
-+	u16 resource;
-+	u8 group;
-+	u8 enable;
-+} __packed;
-+
-+struct imx_sc_msg_timer_rtc_set_alarm {
-+	struct imx_sc_rpc_msg hdr;
-+	u16 year;
-+	u8 mon;
-+	u8 day;
-+	u8 hour;
-+	u8 min;
-+	u8 sec;
-+} __packed;
-+
- static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time *tm)
- {
- 	struct imx_sc_msg_timer_get_rtc_time msg;
-@@ -60,9 +85,92 @@ static int imx_sc_rtc_set_time(struct device *dev, struc=
-t rtc_time *tm)
- 	return res.a0;
- }
-=20
-+static int imx_sc_rtc_alarm_irq_enable(struct device *dev, unsigned int en=
-able)
-+{
-+	struct imx_sc_msg_timer_enable_irq msg;
-+	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
-+	int ret;
-+
-+	hdr->ver =3D IMX_SC_RPC_VERSION;
-+	hdr->svc =3D IMX_SC_RPC_SVC_IRQ;
-+	hdr->func =3D IMX_SC_IRQ_FUNC_ENABLE;
-+	hdr->size =3D 3;
-+
-+	msg.resource =3D IMX_SC_R_MU_1A;
-+	msg.group =3D SC_IRQ_GROUP_RTC;
-+	msg.mask =3D SC_IRQ_RTC;
-+	msg.enable =3D enable;
-+
-+	ret =3D imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
-+	if (ret) {
-+		dev_err(dev, "enable rtc irq failed, ret %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int imx_sc_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *al=
-rm)
-+{
-+	return 0;
-+}
-+
-+static int imx_sc_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alr=
-m)
-+{
-+	struct imx_sc_msg_timer_rtc_set_alarm msg;
-+	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
-+	int ret;
-+	struct rtc_time *alrm_tm =3D &alrm->time;
-+
-+	hdr->ver =3D IMX_SC_RPC_VERSION;
-+	hdr->svc =3D IMX_SC_RPC_SVC_TIMER;
-+	hdr->func =3D IMX_SC_TIMER_FUNC_SET_RTC_ALARM;
-+	hdr->size =3D 3;
-+
-+	msg.year =3D alrm_tm->tm_year + 1900;
-+	msg.mon =3D alrm_tm->tm_mon + 1;
-+	msg.day =3D alrm_tm->tm_mday;
-+	msg.hour =3D alrm_tm->tm_hour;
-+	msg.min =3D alrm_tm->tm_min;
-+	msg.sec =3D alrm_tm->tm_sec;
-+
-+	ret =3D imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
-+	if (ret) {
-+		dev_err(dev, "set rtc alarm failed, ret %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret =3D imx_sc_rtc_alarm_irq_enable(dev, alrm->enabled);
-+	if (ret) {
-+		dev_err(dev, "enable rtc alarm failed, ret %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct rtc_class_ops imx_sc_rtc_ops =3D {
- 	.read_time =3D imx_sc_rtc_read_time,
- 	.set_time =3D imx_sc_rtc_set_time,
-+	.read_alarm =3D imx_sc_rtc_read_alarm,
-+	.set_alarm =3D imx_sc_rtc_set_alarm,
-+	.alarm_irq_enable =3D imx_sc_rtc_alarm_irq_enable,
-+};
-+
-+static int imx_sc_rtc_alarm_sc_notify(struct notifier_block *nb,
-+					unsigned long event, void *group)
-+{
-+	/* ignore non-rtc irq */
-+	if (!((event & SC_IRQ_RTC) && (*(u8 *)group =3D=3D SC_IRQ_GROUP_RTC)))
-+		return 0;
-+
-+	rtc_update_irq(imx_sc_rtc, 1, RTC_IRQF | RTC_AF);
-+
-+	return 0;
-+}
-+
-+static struct notifier_block imx_sc_rtc_alarm_sc_notifier =3D {
-+	.notifier_call =3D imx_sc_rtc_alarm_sc_notify,
- };
-=20
- static int imx_sc_rtc_probe(struct platform_device *pdev)
-@@ -73,6 +181,8 @@ static int imx_sc_rtc_probe(struct platform_device *pdev=
-)
- 	if (ret)
- 		return ret;
-=20
-+	device_init_wakeup(&pdev->dev, true);
-+
- 	imx_sc_rtc =3D devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(imx_sc_rtc))
- 		return PTR_ERR(imx_sc_rtc);
-@@ -87,6 +197,8 @@ static int imx_sc_rtc_probe(struct platform_device *pdev=
-)
- 		return ret;
- 	}
-=20
-+	imx_scu_register_notifier(&imx_sc_rtc_alarm_sc_notifier);
-+
- 	return 0;
- }
-=20
+ 		clk: clk {
+ 			compatible =3D "fsl,imx8qxp-clk", "fsl,scu-clk";
 --=20
 2.7.4
