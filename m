@@ -1,103 +1,76 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 2/3] soc: qcom: rpmpd: Add QCS404 corners
-Date: Wed, 20 Feb 2019 22:44:33 -0800
-Message-ID: <20190221064434.2760-3-bjorn.andersson@linaro.org>
-References: <20190221064434.2760-1-bjorn.andersson@linaro.org>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: RE: [PATCH v4 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT buffer.
+Date: Thu, 21 Feb 2019 09:14:30 +0200
+Message-ID: <87va1dbokp.fsf@linux.intel.com>
+References: <1550173514-23573-1-git-send-email-pawell@cadence.com> <1550173514-23573-7-git-send-email-pawell@cadence.com> <67da432f-9c95-d644-65b5-dbc5b942d24c@ti.com> <BYAPR07MB47091C199971D677DE0FBB84DD7D0@BYAPR07MB4709.namprd07.prod.outlook.com> <e8616274-b0a8-6e59-b6fa-a68fed58bad7@ti.com> <BYAPR07MB470939C6F100336BAF6C41BFDD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190221064434.2760-1-bjorn.andersson@linaro.org>
+In-Reply-To: <BYAPR07MB470939C6F100336BAF6C41BFDD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pawel Laszczak <pawell@cadence.com>, Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the shared cx/mx and the low-power-island's cx and mx power-domains
-found on QCS404.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../devicetree/bindings/power/qcom,rpmpd.txt  |  1 +
- drivers/soc/qcom/rpmpd.c                      | 29 +++++++++++++++++++
- include/dt-bindings/power/qcom-rpmpd.h        |  9 ++++++
- 3 files changed, 39 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-index 980e5413d18f..b6c596883ea4 100644
---- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-@@ -6,6 +6,7 @@ which then translates it into a corresponding voltage on a rail
- Required Properties:
-  - compatible: Should be one of the following
- 	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
-+	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404
- 	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
-  - #power-domain-cells: number of cells in Power domain specifier
- 	must be 1.
-diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
-index 74b2f001b9c6..0001fcafaf97 100644
---- a/drivers/soc/qcom/rpmpd.c
-+++ b/drivers/soc/qcom/rpmpd.c
-@@ -19,6 +19,9 @@
- /* Resource types */
- #define RPMPD_SMPA 0x61706d73 /* smpa */
- #define RPMPD_LDOA 0x616f646c /* ldoa */
-+#define RPMPD_RWMX 0x786d7772 /* rwmx */
-+#define RPMPD_RWLC 0x636c7772 /* rwlc */
-+#define RPMPD_RWLM 0x6d6c7772 /* rwlm */
- 
- /* Operation Keys */
- #define KEY_CORNER		0x6e726f63 /* corn */
-@@ -110,8 +113,34 @@ static const struct rpmpd_desc msm8996_desc = {
- 	.num_pds = ARRAY_SIZE(msm8996_rpmpds),
- };
- 
-+/* qcs404 RPM Power domains */
-+DEFINE_RPMPD_CORNER_PAIR(qcs404, vddmx, vddmx_ao, RWMX, 0);
-+DEFINE_RPMPD_VFC(qcs404, vddmx_vfc, RWMX, 0);
-+
-+DEFINE_RPMPD_CORNER(qcs404, vdd_lpicx, RWLC, 0);
-+DEFINE_RPMPD_VFC(qcs404, vdd_lpicx_vfc, RWLC, 0);
-+
-+DEFINE_RPMPD_CORNER(qcs404, vdd_lpimx, RWLM, 0);
-+DEFINE_RPMPD_VFC(qcs404, vdd_lpimx_vfc, RWLM, 0);
-+
-+static struct rpmpd *qcs404_rpmpds[] = {
-+	[QCS404_VDDMX] = &qcs404_vddmx,
-+	[QCS404_VDDMX_AO] = &qcs404_vddmx_ao,
-+	[QCS404_VDDMX_VFC] = &qcs404_vddmx_vfc,
-+	[QCS404_LPICX] = &qcs404_vdd_lpicx,
-+	[QCS404_LPICX_VFC] = &qcs404_vdd_lpicx_vfc,
-+	[QCS404_LPIMX] = &qcs404_vdd_lpimx,
-+	[QCS404_LPIMX_VFC] = &qcs404_vdd_lpimx_vfc,
-+};
-+
-+static const struct rpmpd_desc qcs404_desc = {
-+	.rpmpds = qcs404_rpmpds,
-+	.num_pds = ARRAY_SIZE(qcs404_rpmpds),
-+};
-+
- static const struct of_device_id rpmpd_match_table[] = {
- 	{ .compatible = "qcom,msm8996-rpmpd", .data = &msm8996_desc },
-+	{ .compatible = "qcom,qcs404-rpmpd", .data = &qcs404_desc },
- 	{ }
- };
- 
-diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-index 87d9c6611682..0b1b147292a3 100644
---- a/include/dt-bindings/power/qcom-rpmpd.h
-+++ b/include/dt-bindings/power/qcom-rpmpd.h
-@@ -36,4 +36,13 @@
- #define MSM8996_VDDSSCX		5
- #define MSM8996_VDDSSCX_VFC	6
- 
-+/* QCS404 Power Domains */
-+#define QCS404_VDDMX		0
-+#define QCS404_VDDMX_AO		1
-+#define QCS404_VDDMX_VFC	2
-+#define QCS404_LPICX		3
-+#define QCS404_LPICX_VFC	4
-+#define QCS404_LPIMX		5
-+#define QCS404_LPIMX_VFC	6
-+
- #endif
--- 
-2.18.0
+Hi,
+
+(please break your emails at 80-columns)
+
+Pawel Laszczak <pawell@cadence.com> writes:
+>>> One more thing. Workaround has implemented algorithm that decide for wh=
+ich
+>>> endpoint it should be enabled.  e.g for composite device MSC+NCM+ACM it
+>>> should work only for ACM OUT endpoint.
+>>>
+>>
+>>If ACM driver didn't queue the request for ACM OUT endpoint, why does the
+>>controller accept the data at all?
+>>
+>>I didn't understand why we need a workaround for this. It should be stand=
+ard
+>>behaviour to NAK data if function driver didn't request for all endpoints.
+>
+> Yes, I agree with you. Controller shouldn=E2=80=99t accept such packet. A=
+s I know this
+> behavior will be fixed in RTL.
+>
+> But I assume that some older version of this controller are one the marke=
+t,
+> and driver should work correct with them.
+>
+> In the feature this workaround can be limited only to selected controller=
+s.
+>
+> Even now I assume that it can be enabled/disabled by module parameter.
+
+no module parameters, please. Use revision detection in runtime.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlxuT9YACgkQzL64meEa
+mQb0KA/9G9q4320JmbOLoOs7lhzSroaa+cRfzRqvFN84Wt1jcLdbt427Hmei9KQD
+hSuWJCN8XfbS0SQouEf+ijLXOloQoj++Po57Vr9hhlciVwbfd//pREYlwv3KqEhc
+9B29m84tEBl762fesbu+r6jEhyIEFoj5QvKSQQQ6Sn3mjBwDHuX9rT6XPqYBgR93
+uemDLnIKVpt/U56jVtkTofBSEFnlaQXnCMjrB7pZhWLUG0WEPABJ+3oyVBGqzEYQ
+Cqw8QTh/jr1EB4qj9ArHOXPRqC0NXFhWLNV3N/BuN0No/yVeVv/WntgXMUo4aOQ6
+veeG3/YuvO3UxzrR3ChUkqQXpQK0oynIjOdCSEuZ8EyWjHlPfYParu0y0M86RZCN
+uMQLBt53g3gOtoyfEq0U9Xn6fxeIXVB2SPWBJrL/dt+0iLfksS634RxD4xH90jp+
+RkktSilOQzwHqhlvF+SWC/ilY4Y4NKheFN3MAz7USTyBDhIKaxkQg9aZmQf5Vr/F
+puC3+syTKBrnmF6bPaTzvSQJJ+zYO6Dyhs7EsZDET3+ye08BZB7KDC5h3SsISeY2
+vHG6NxaZm37kzY9d6MkOC9JYupyQhLbHD0imgYAEjU7DncNjlR2Fb5N1JNgW9pxV
+5qQeZbY4dVJycXG8vrrLEnB6oBM4tJFpCiBN6vyG+//+RQ5jmPM=
+=9xvx
+-----END PGP SIGNATURE-----
+--=-=-=--
