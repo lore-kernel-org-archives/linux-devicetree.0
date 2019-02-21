@@ -1,7 +1,7 @@
 From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v2 1/5] iio: imu: adis16480: Add support for configurable drdy indicator
-Date: Thu, 21 Feb 2019 15:15:02 +0200
-Message-ID: <1550754906-24640-2-git-send-email-stefan.popa@analog.com>
+Subject: [PATCH v2 5/5] iio: imu: adis16480: Add docs for ADIS16480 IMU
+Date: Thu, 21 Feb 2019 15:15:06 +0200
+Message-ID: <1550754906-24640-6-git-send-email-stefan.popa@analog.com>
 References: <1550754906-24640-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,173 +12,81 @@ To: jic23@kernel.org, robh+dt@kernel.org
 Cc: Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The FNCTIO_CTRL register provides configuration control for each I/O pin
-(DIO1, DIO2, DIO3 and DIO4).
-
-This patch adds the option to configure each DIOx pin as data ready
-indicator with positive or negative polarity by reading the 'interrupts'
-and 'interrupt-names' properties from the devicetree. The
-'interrupt-names' property is optional, if it is not specified, then the
-DIO1 pin is used as default data ready signal.
-
-Although the factory default assigns DIO2 as data ready signal, in the
-versions previous this patch, DIO1 pin was used. We should leave this
-configuration as is, since some devices might be expecting the interrupt
-on the wrong physical pin.
+Document support for ADIS16480 Inertial Measurement Unit.
 
 Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 ---
- drivers/iio/imu/adis16480.c | 97 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 95 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/iio/imu/adi,adis16480.txt  | 49 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
 
-diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
-index a27fe20..98a23ac 100644
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -9,6 +9,8 @@
-  *
-  */
- 
-+#include <linux/bitfield.h>
-+#include <linux/of_irq.h>
- #include <linux/interrupt.h>
- #include <linux/delay.h>
- #include <linux/mutex.h>
-@@ -107,6 +109,14 @@
- #define ADIS16480_FIR_COEF_C(x)			ADIS16480_FIR_COEF(0x09, (x))
- #define ADIS16480_FIR_COEF_D(x)			ADIS16480_FIR_COEF(0x0B, (x))
- 
-+/* ADIS16480_REG_FNCTIO_CTRL */
-+#define ADIS16480_DRDY_SEL_MSK		GENMASK(1, 0)
-+#define ADIS16480_DRDY_SEL(x)		FIELD_PREP(ADIS16480_DRDY_SEL_MSK, x)
-+#define ADIS16480_DRDY_POL_MSK		BIT(2)
-+#define ADIS16480_DRDY_POL(x)		FIELD_PREP(ADIS16480_DRDY_POL_MSK, x)
-+#define ADIS16480_DRDY_EN_MSK		BIT(3)
-+#define ADIS16480_DRDY_EN(x)		FIELD_PREP(ADIS16480_DRDY_EN_MSK, x)
+diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
+new file mode 100644
+index 0000000..39ab016
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
+@@ -0,0 +1,49 @@
 +
- struct adis16480_chip_info {
- 	unsigned int num_channels;
- 	const struct iio_chan_spec *channels;
-@@ -116,12 +126,26 @@ struct adis16480_chip_info {
- 	unsigned int accel_max_scale;
- };
- 
-+enum adis16480_int_pin {
-+	ADIS16480_PIN_DIO1,
-+	ADIS16480_PIN_DIO2,
-+	ADIS16480_PIN_DIO3,
-+	ADIS16480_PIN_DIO4
-+};
++Analog Devices ADIS16480 and similar IMUs
 +
- struct adis16480 {
- 	const struct adis16480_chip_info *chip_info;
- 
- 	struct adis adis;
- };
- 
-+static const char * const adis16480_int_pin_names[4] = {
-+	[ADIS16480_PIN_DIO1] = "DIO1",
-+	[ADIS16480_PIN_DIO2] = "DIO2",
-+	[ADIS16480_PIN_DIO3] = "DIO3",
-+	[ADIS16480_PIN_DIO4] = "DIO4",
-+};
++Required properties for the ADIS16480:
 +
- #ifdef CONFIG_DEBUG_FS
- 
- static ssize_t adis16480_show_firmware_revision(struct file *file,
-@@ -741,8 +765,17 @@ static int adis16480_stop_device(struct iio_dev *indio_dev)
- 
- static int adis16480_enable_irq(struct adis *adis, bool enable)
- {
--	return adis_write_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL,
--		enable ? BIT(3) : 0);
-+	uint16_t val;
-+	int ret;
++- compatible: Must be one of
++	* "adi,adis16375"
++	* "adi,adis16480"
++	* "adi,adis16485"
++	* "adi,adis16488"
++	* "adi,adis16495-1"
++	* "adi,adis16495-2"
++	* "adi,adis16495-3"
++	* "adi,adis16497-1"
++	* "adi,adis16497-2"
++	* "adi,adis16497-3"
++- reg: SPI chip select number for the device
++- spi-max-frequency: Max SPI frequency to use
++	see: Documentation/devicetree/bindings/spi/spi-bus.txt
++- spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
++- spi-cpol: See Documentation/devicetree/bindings/spi/spi-bus.txt
++- interrupts: interrupt mapping for IRQ, accepted values are:
++	* IRQF_TRIGGER_RISING
++	* IRQF_TRIGGER_FALLING
 +
-+	ret = adis_read_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, &val);
-+	if (ret < 0)
-+		return ret;
++Optional properties:
 +
-+	val &= ~ADIS16480_DRDY_EN_MSK;
-+	val |= ADIS16480_DRDY_EN(enable);
++- interrupt-names: Data ready line selection. Valid values are:
++	* DIO1
++	* DIO2
++	* DIO3
++	* DIO4
++	If this field is left empty, DIO1 is assigned as default data ready
++	signal.
++- reset-gpios: must be the device tree identifier of the RESET pin. As the line
++	is active low, it should be marked GPIO_ACTIVE_LOW.
 +
-+	return adis_write_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, val);
- }
- 
- static int adis16480_initial_setup(struct iio_dev *indio_dev)
-@@ -826,6 +859,62 @@ static const struct adis_data adis16480_data = {
- 	.enable_irq = adis16480_enable_irq,
- };
- 
-+static int adis16480_config_irq_pin(struct device_node *of_node,
-+				    struct adis16480 *st)
-+{
-+	struct irq_data *desc;
-+	enum adis16480_int_pin pin;
-+	unsigned int irq_type;
-+	uint16_t val;
-+	int i, irq = 0;
++Example:
 +
-+	desc = irq_get_irq_data(st->adis.spi->irq);
-+	if (!desc) {
-+		dev_err(&st->adis.spi->dev, "Could not find IRQ %d\n", irq);
-+		return -EINVAL;
-+	}
-+
-+	/* Disable data ready since the default after reset is on */
-+	val = ADIS16480_DRDY_EN(0);
-+
-+	/*
-+	 * Get the interrupt from the devicetre by reading the interrupt-names
-+	 * property. If it is not specified, use DIO1 pin as default.
-+	 * According to the datasheet, the factory default assigns DIO2 as data
-+	 * ready signal. However, in the previous versions of the driver, DIO1
-+	 * pin was used. So, we should leave it as is since some devices might
-+	 * be expecting the interrupt on the wrong physical pin.
-+	 */
-+	pin = ADIS16480_PIN_DIO1;
-+	for (i = 0; i < ARRAY_SIZE(adis16480_int_pin_names); i++) {
-+		irq = of_irq_get_byname(of_node, adis16480_int_pin_names[i]);
-+		if (irq > 0) {
-+			pin = i;
-+			break;
-+		}
-+	}
-+
-+	val |= ADIS16480_DRDY_SEL(pin);
-+
-+	/*
-+	 * Get the interrupt line behaviour. The data ready polarity can be
-+	 * configured as positive or negative, corresponding to
-+	 * IRQF_TRIGGER_RISING or IRQF_TRIGGER_FALLING respectively.
-+	 */
-+	irq_type = irqd_get_trigger_type(desc);
-+	if (irq_type == IRQF_TRIGGER_RISING) { /* Default */
-+		val |= ADIS16480_DRDY_POL(1);
-+	} else if (irq_type == IRQF_TRIGGER_FALLING) {
-+		val |= ADIS16480_DRDY_POL(0);
-+	} else {
-+		dev_err(&st->adis.spi->dev,
-+			"Invalid interrupt type 0x%x specified\n", irq_type);
-+		return -EINVAL;
-+	}
-+	/* Write the data ready configuration to the FNCTIO_CTRL register */
-+	return adis_write_reg_16(&st->adis, ADIS16480_REG_FNCTIO_CTRL, val);
-+}
-+
- static int adis16480_probe(struct spi_device *spi)
- {
- 	const struct spi_device_id *id = spi_get_device_id(spi);
-@@ -853,6 +942,10 @@ static int adis16480_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
-+	ret = adis16480_config_irq_pin(spi->dev.of_node, st);
-+	if (ret)
-+		return ret;
-+
- 	ret = adis_setup_buffer_and_trigger(&st->adis, indio_dev, NULL);
- 	if (ret)
- 		return ret;
++	imu@0 {
++		compatible = "adi,adis16495-1";
++		reg = <0>;
++		spi-max-frequency = <3200000>;
++		spi-cpol;
++		spi-cpha;
++		interrupts = <25 IRQF_TRIGGER_FALLING>;
++		interrupt-parent = <&gpio>;
++		interrupt-names = "DIO2";
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e4091ac..beecd1e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -942,6 +942,7 @@ F:	drivers/dma/dma-axi-dmac.c
+ ANALOG DEVICES INC IIO DRIVERS
+ M:	Lars-Peter Clausen <lars@metafoo.de>
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
++M:	Stefan Popa <stefan.popa@analog.com>
+ W:	http://wiki.analog.com/
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
 -- 
 2.7.4
