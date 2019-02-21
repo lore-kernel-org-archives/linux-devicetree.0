@@ -1,64 +1,85 @@
-Return-Path: <SRS0=/0Ct=QJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43047 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfBBX7R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Feb 2019 18:59:17 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q2-v6so8781236lji.10
-        for <devicetree@vger.kernel.org>; Sat, 02 Feb 2019 15:59:15 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2] USB: gadget: pxa25x: Add DT bindings
-Date: Sun,  3 Feb 2019 00:59:07 +0100
-Message-Id: <20190202235908.30751-1-linus.walleij@linaro.org>
+Return-Path: <SRS0=AZ7C=Q4=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V8 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Thu, 21 Feb 2019 06:38:30 +0000
+Message-ID: <1550730831-14995-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>
-Cc: linux-usb@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This adds device tree bindings for the PXA25x USB Device
-Controller as found in the PXA25x and the IXP4xx.
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and thermal sensors etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to get temperature from thermal sensors, this patch adds
+binding doc for i.MX system controller thermal driver.
 
-Cc: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/usb/pxa25x-udc.txt    | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/pxa25x-udc.txt
+Changes since V7:
+        - remove unused property "tsens-num";
+        - improve the compatible description;
+        - update examples according to latest dts file.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt     | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/pxa25x-udc.txt b/Documentation/devicetree/bindings/usb/pxa25x-udc.txt
-new file mode 100644
-index 000000000000..bbdbe0df3565
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/pxa25x-udc.txt
-@@ -0,0 +1,27 @@
-+PXA25x UDC (USB Device Controller)
-+
-+The PXA25x and IXP4xx USB Device Controller is different from the
-+PXA27x UDC described in pxa-usb.txt and is compatible between the
-+Marvell PXA25x and the Intel IXP4xx devices.
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 72d481c..d89147e 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -122,6 +122,19 @@ RTC bindings based on SCU Message Protocol
+ Required properties:
+ - compatible: should be "fsl,imx8qxp-sc-rtc";
+ 
++Thermal bindings based on SCU Message Protocol
++------------------------------------------------------------
 +
 +Required properties:
-+ - compatible: Should be one of
-+   "marvell,pxa25x-udc"
-+   "intel,ixp4xx-udc"
-+   for USB controllers used in device mode.
-+ - reg: usb device MMIO address space
-+ - interrupts: single interrupt generated by the UDC IP
-+ - clocks: input clock of the UDC IP (see clock-bindings.txt)
++- compatible:			Should be :
++				  "fsl,imx8qxp-sc-thermal"
++				followed by "fsl,imx-sc-thermal";
 +
-+Optional properties:
-+ - gpios:
-+   - gpio activated to control the USB D+ pullup (see gpio.txt)
++- #thermal-sensor-cells:	See Documentation/devicetree/bindings/thermal/thermal.txt
++				for a description.
 +
-+Example:
++- imx,sensor-resource-id: 	Property array to specify each thermal zone's sensor resource ID.
 +
-+usb@c800b000 {
-+	compatible = "intel,ixp4xx-udc";
-+	reg = <0xc800b000 0x1000>;
-+	interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&pclk 0>;
-+};
+ Example (imx8qxp):
+ -------------
+ lsio_mu1: mailbox@5d1c0000 {
+@@ -168,6 +181,12 @@ firmware {
+ 		rtc: rtc {
+ 			compatible = "fsl,imx8qxp-sc-rtc";
+ 		};
++
++		tsens: thermal-sensor {
++			compatible = "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
++			#thermal-sensor-cells = <0>;
++			imx,sensor-resource-id = <IMX_SC_R_SYSTEM>;
++		};
+ 	};
+ };
+ 
 -- 
-2.20.1
+2.7.4
+
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
