@@ -1,45 +1,37 @@
-Return-Path: <SRS0=ZPg/=RD=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:56688 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731372AbfB1KvY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Feb 2019 05:51:24 -0500
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] dt-bindings: power: r8a77965: Remove non-existent A3IR power domain
-Date: Thu, 28 Feb 2019 11:51:19 +0100
-Message-Id: <20190228105119.548-1-geert+renesas@glider.be>
+Return-Path: <SRS0=TIRm=Q4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:59526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbfBUPUm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Feb 2019 10:20:42 -0500
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH 2/2] dt-bindings: iio: imu: st_lsm6dsx: add asm330lhh device bindings
+Date: Thu, 21 Feb 2019 16:20:21 +0100
+Message-Id: <1df29add6d5a0fcdd51594f8cf4366c9086f6fc9.1550753006.git.lorenzo@kernel.org>
+In-Reply-To: <cover.1550753006.git.lorenzo@kernel.org>
+References: <cover.1550753006.git.lorenzo@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, mario.tesi@st.com, lorenzo.bianconi@redhat.com
 List-ID: <devicetree@vger.kernel.org>
 
-The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
-removed the A3IR power domain on R-Car M3-N, as this SoC does not have
-an Image Processing Unit (IMP-X5).
-
-As of commit d8c6557bc93be73e ("arm64: dts: renesas: r8a77965: Remove
-non-existent IPMMU-IR"), this definition is no longer used from DT, and
-thus can be removed.
-
-Fixes: a527709b78b3c997 ("soc: renesas: rcar-sysc: Add R-Car M3-N support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 ---
-v2:
-  - Drop RFC, as the dependency is part of v5.0-rc1.
----
- include/dt-bindings/power/r8a77965-sysc.h | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/dt-bindings/power/r8a77965-sysc.h b/include/dt-bindings/power/r8a77965-sysc.h
-index 05a4b5917314791a..de82d8a15ea13a85 100644
---- a/include/dt-bindings/power/r8a77965-sysc.h
-+++ b/include/dt-bindings/power/r8a77965-sysc.h
-@@ -21,7 +21,6 @@
- #define R8A77965_PD_A3VC		14
- #define R8A77965_PD_3DG_A		17
- #define R8A77965_PD_3DG_B		18
--#define R8A77965_PD_A3IR		24
- #define R8A77965_PD_A2VC1		26
+diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+index 69d53d98d0f0..8f1b09e39c72 100644
+--- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
++++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+@@ -8,6 +8,7 @@ Required properties:
+   "st,lsm6dsm"
+   "st,ism330dlc"
+   "st,lsm6dso"
++  "st,asm330lhh"
+ - reg: i2c address of the sensor / spi cs line
  
- /* Always-on power area */
+ Optional properties:
 -- 
-2.17.1
+2.20.1
