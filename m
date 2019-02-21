@@ -1,122 +1,68 @@
-From: Pankaj Bansal <pankaj.bansal@nxp.com>
-Subject: [PATCH] dt-bindings: Add bindings for mdio mux consumers
-Date: Thu, 21 Feb 2019 12:59:19 +0000
-Message-ID: <20190221182349.4057-1-pankaj.bansal@nxp.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [EXT] [PATCH v6 2/2] mtd: spi-nor: cadence-quadspi: Add support
+ for Octal SPI controller
+Date: Thu, 21 Feb 2019 18:41:21 +0530
+Message-ID: <b459f797-d24c-5501-76a0-057ec1df594d@ti.com>
+References: <20190212083809.6534-1-vigneshr@ti.com>
+ <20190212083809.6534-3-vigneshr@ti.com>
+ <BYAPR08MB453362F4253ADA149D05315FDB7E0@BYAPR08MB4533.namprd08.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <BYAPR08MB453362F4253ADA149D05315FDB7E0@BYAPR08MB4533.namprd08.prod.outlook.com>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: "Bean Huo (beanhuo)" <beanhuo@micron.com>, Boris Brezillon <bbrezillon@kernel.org>, "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-When we use the bindings defined in Documentation/devicetree/bindings/mux
-to define mdio mux in producer and consumer terms, it results in two
-devices. one is mux producer and other is mux consumer.
 
-Add the bindings needed for Mdio mux consumer devices.
 
-Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
----
- .../devicetree/bindings/net/mdio-mux.txt     | 73 ++++++++++++++++++
- 1 file changed, 73 insertions(+)
+On 21/02/19 4:11 PM, Bean Huo (beanhuo) wrote:
+> Hi, Vignesh
+> 
+>>
+>> Cadence OSPI controller IP supports Octal IO (x8 IO lines), It also has an
+>> integrated PHY. IP register layout is very similar to existing QSPI IP except for
+>> additional bits to support Octal and Octal DDR mode. Therefore, extend
+>> current driver to support Octal mode. Only Octal SDR read (1-1-8)mode is
+>> supported for now.
+> 
+> Does this your Cadence OSPI controller support 8-8-8 IO mode, if yes,
+> Why not directly enable 8-8-8 mode? 
+> 
 
-diff --git a/Documentation/devicetree/bindings/net/mdio-mux.txt b/Documenta=
-tion/devicetree/bindings/net/mdio-mux.txt
-index f58571f36570..bd198d1c6f10 100644
---- a/Documentation/devicetree/bindings/net/mdio-mux.txt
-+++ b/Documentation/devicetree/bindings/net/mdio-mux.txt
-@@ -18,8 +18,16 @@ Required properties for child nodes:
- - #size-cells =3D <0>;
- - reg : The sub-bus number.
-=20
-+Required properties when Mdio mux node is consumer of a separate mux produ=
-cer
-+node.
-+- compatible : should be "mmio-mux"
-+- mux-controls : mux controller node to use for operating the mux
-+- mdio-parent-bus : phandle to the parent MDIO bus.
-+for more information please refer Documentation/devicetree/bindings/mux/
-+
-=20
- Example :
-+The mux Producer and consumer nodes are same.
-=20
- 	/* The parent MDIO bus. */
- 	smi1: mdio@1180000001900 {
-@@ -127,3 +135,68 @@ Example :
- 			};
- 		};
- 	};
-+
-+Example 2:
-+In below example the Mux producer and consumer are separate nodes.
-+
-+&i2c0 {
-+        fpga@66 { // fpga connected to i2c
-+                compatible =3D "fsl,lx2160aqds-fpga", "fsl,fpga-qixis-i2c"=
-,
-+                             "simple-mfd";
-+                reg =3D <0x66>;
-+
-+                mux: mux-controller { // Mux Producer
-+                        compatible =3D "reg-mux";
-+                        #mux-control-cells =3D <1>;
-+                        mux-reg-masks =3D <0x54 0xf8>, /* 0: reg 0x54, bit=
-s 7:3 */
-+                                        <0x54 0x07>; /* 1: reg 0x54, bits =
-2:0 */
-+                };
-+        };
-+};
-+
-+mdio-mux-1 { // Mux consumer
-+        compatible =3D "mdio-mux";
-+        mux-controls =3D <&mux 0>;
-+        mdio-parent-bus =3D <&emdio1>;
-+        #address-cells =3D <1>;
-+        #size-cells =3D <0>;
-+
-+        mdio@0 {
-+                reg =3D <0x0>;
-+                #address-cells =3D <1>;
-+                #size-cells =3D <0>;
-+        };
-+
-+        mdio@40 {
-+                reg =3D <0x40>;
-+                #address-cells =3D <1>;
-+                #size-cells =3D <0>;
-+        };
-+
-+        ..
-+        ..
-+};
-+
-+mdio-mux-2 { // Mux consumer
-+        compatible =3D "mdio-mux";
-+        mux-controls =3D <&mux 1>;
-+        mdio-parent-bus =3D <&emdio2>;
-+        #address-cells =3D <1>;
-+        #size-cells =3D <0>;
-+
-+        mdio@0 {
-+                reg =3D <0x0>;
-+                #address-cells =3D <1>;
-+                #size-cells =3D <0>;
-+        };
-+
-+        mdio@1 {
-+                reg =3D <0x1>;
-+                #address-cells =3D <1>;
-+                #size-cells =3D <0>;
-+        };
-+
-+        ..
-+        ..
-+};
-+
---=20
-2.17.1
+Yes.. IP also supports 8-8-8 DTR mode. But supporting those modes
+require enabling, configuring and calibrating OSPI PHY module within the
+IP.
+I am planning to do that, after moving driver over to spi-mem layer.
+
+
+>> Tested with mt35xu512aba Octal flash on TI's AM654 EVM.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ______________________________________________________
+>> Linux MTD discussion mailing list
+>> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> 
+
+-- 
+Regards
+Vignesh
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
