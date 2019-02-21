@@ -1,7 +1,7 @@
 From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH 03/14] arm64: dts: imx8: add conn scu clocks
-Date: Thu, 21 Feb 2019 18:25:00 +0000
-Message-ID: <1550773093-13349-4-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH 04/14] arm64: dts: imx8: add adma scu clocks
+Date: Thu, 21 Feb 2019 18:25:04 +0000
+Message-ID: <1550773093-13349-5-git-send-email-aisheng.dong@nxp.com>
 References: <1550773093-13349-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,7 +22,7 @@ To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org
 Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add conn scu clocks
+Add adma scu clocks
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -32,147 +32,161 @@ Cc: Sascha Hauer <kernel@pengutronix.de>
 Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi | 122 ++++++++++++++++++++++++
- 1 file changed, 122 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi | 136 ++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-index ac5131d..0765cb2 100644
---- a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-@@ -4,12 +4,134 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+index f6f2b94..5f0e9e3 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+@@ -4,12 +4,148 @@
   *	Dong Aisheng <aisheng.dong@nxp.com>
   */
  
 +#include <dt-bindings/firmware/imx/rsrc.h>
 +
- conn_subsys: bus@5b000000 {
+ adma_subsys: bus@59000000 {
  	compatible = "simple-bus";
  	#address-cells = <1>;
  	#size-cells = <1>;
- 	ranges = <0x5b000000 0x0 0x5b000000 0x1000000>;
+ 	ranges = <0x59000000 0x0 0x59000000 0x2000000>;
  
 +	/* SCU clocks */
-+	conn_axi_clk: clock-conn-axi {
++	adma_ipg_clk: clock-adma-ipg {
 +		compatible = "fixed-clock";
 +		#clock-cells = <0>;
-+		clock-frequency = <333333333>;
-+		clock-output-names = "conn_axi_clk";
++		clock-frequency = <120000000>;
++		clock-output-names = "adma_ipg_clk";
 +	};
 +
-+	conn_ahb_clk: clock-conn-ahb {
-+		compatible = "fixed-clock";
++	adc0_clk: clock-adc0 {
 +		#clock-cells = <0>;
-+		clock-frequency = <166666666>;
-+		clock-output-names = "conn_ahb_clk";
-+	};
-+
-+	conn_ipg_clk: clock-conn-ipg {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <83333333>;
-+		clock-output-names = "conn_ipg_clk";
-+	};
-+
-+	enet0_clk: clock-enet0 {
-+		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_ENET_0>;
++		rsrc-id = <IMX_SC_R_ADC_0>;
 +		clk-type = <IMX_SC_PM_CLK_PER>;
-+		clock-output-names = "enet0_clk";
++		clock-output-names = "adc0_clk";
 +	};
 +
-+	enet0_bypass_clk: clock-enet0-bypass {
++	can0_clk: clock-can0 {
 +		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_ENET_0>;
-+		clk-type = <IMX_SC_PM_CLK_BYPASS>;
-+		clock-output-names = "enet0_bypass_clk";
-+	};
-+
-+	enet0_rgmii_clk: clock-enet0-rgmii {
-+		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_ENET_0>;
-+		clk-type = <IMX_SC_PM_CLK_MISC0>;
-+		clock-output-names = "enet0_rgmii_clk";
-+	};
-+
-+	enet1_clk: clock-enet1 {
-+		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_ENET_1>;
++		rsrc-id = <IMX_SC_R_CAN_0>;
 +		clk-type = <IMX_SC_PM_CLK_PER>;
-+		clock-output-names = "enet1_clk";
++		clock-output-names = "can0_clk";
 +	};
 +
-+	enet1_bypass_clk: clock-enet1-bypass {
++	ftm0_clk: clock-ftm0 {
 +		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_ENET_1>;
-+		clk-type = <IMX_SC_PM_CLK_BYPASS>;
-+		clock-output-names = "enet1_bypass_clk";
-+	};
-+
-+	enet1_rgmii_clk: clock-enet1-rgmii {
-+		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_ENET_1>;
-+		clk-type = <IMX_SC_PM_CLK_MISC0>;
-+		clock-output-names = "enet1_rgmii_clk";
-+	};
-+
-+	gpmi_bch_clk: clock-gpmi-bch {
-+		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_NAND>;
++		rsrc-id = <IMX_SC_R_FTM_0>;
 +		clk-type = <IMX_SC_PM_CLK_PER>;
-+		clock-output-names = "gpmi_bch_clk";
++		clock-output-names = "ftm0_clk";
 +	};
 +
-+	gpmi_bch_io_clk: clock-gpmi-bch-io {
++	ftm1_clk: clock-ftm1 {
 +		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_NAND>;
-+		clk-type = <IMX_SC_PM_CLK_MST_BUS>;
-+		clock-output-names = "gpmi_bch_io_clk";
-+	};
-+
-+	sdhc0_clk: clock-sdhc0 {
-+		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_SDHC_0>;
++		rsrc-id = <IMX_SC_R_FTM_1>;
 +		clk-type = <IMX_SC_PM_CLK_PER>;
-+		clock-output-names = "sdhc0_clk";
++		clock-output-names = "ftm1_clk";
 +	};
 +
-+	sdhc1_clk: clock-sdhc1 {
++	i2c0_clk: clock-i2c0 {
 +		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_SDHC_1>;
++		rsrc-id = <IMX_SC_R_I2C_0>;
 +		clk-type = <IMX_SC_PM_CLK_PER>;
-+		clock-output-names = "sdhc1_clk";
++		clock-output-names = "i2c0_clk";
 +	};
 +
-+	sdhc2_clk: clock-sdhc2 {
++	i2c1_clk: clock-i2c1 {
 +		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_SDHC_2>;
++		rsrc-id = <IMX_SC_R_I2C_1>;
 +		clk-type = <IMX_SC_PM_CLK_PER>;
-+		clock-output-names = "sdhc2_clk";
++		clock-output-names = "i2c1_clk";
 +	};
 +
-+	usb3_aclk: clock-usb3-aclk {
++	i2c2_clk: clock-i2c2 {
 +		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_USB_2>;
++		rsrc-id = <IMX_SC_R_I2C_2>;
 +		clk-type = <IMX_SC_PM_CLK_PER>;
-+		clock-output-names = "usb3_aclk";
++		clock-output-names = "i2c2_clk";
 +	};
 +
-+	usb3_bus_aclk: clock-usb3-bus {
++	i2c3_clk: clock-i2c3 {
 +		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_USB_2>;
-+		clk-type = <IMX_SC_PM_CLK_MST_BUS>;
-+		clock-output-names = "usb3_bus_aclk";
++		rsrc-id = <IMX_SC_R_I2C_3>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "i2c3_clk";
 +	};
 +
-+	usb3_lpm_aclk: clock-usb3-lpm {
++	lcd0_clk: clock-lcd0 {
 +		#clock-cells = <0>;
-+		rsrc-id = <IMX_SC_R_USB_2>;
-+		clk-type = <IMX_SC_PM_CLK_MISC>;
-+		clock-output-names = "usb3_lpm_aclk";
++		rsrc-id = <IMX_SC_R_LCD_0>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "lcd0_clk";
 +	};
 +
- 	conn_lpcg: clock-controller@5b200000 {
- 		reg = <0x5b200000 0xb0000>;
++	lcd0_pwm0_clk: clock-lcd0-pwm0 {
++		#clock-cells = <0>;
++		rsrc-id = <IMX_SC_R_LCD_0_PWM_0>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "lcd0_pwm0_clk";
++	};
++
++	spi0_clk: clock-spi0 {
++		#clock-cells = <0>;
++		rsrc-id = <IMX_SC_R_SPI_0>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "spi0_clk";
++	};
++
++	spi1_clk: clock-spi1 {
++		#clock-cells = <0>;
++		rsrc-id = <IMX_SC_R_SPI_1>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "spi1_clk";
++	};
++
++	spi2_clk: clock-spi2 {
++		#clock-cells = <0>;
++		rsrc-id = <IMX_SC_R_SPI_2>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "spi2_clk";
++	};
++
++	spi3_clk: clock-spi3 {
++		#clock-cells = <0>;
++		rsrc-id = <IMX_SC_R_SPI_3>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "spi3_clk";
++	};
++
++	uart0_clk: clock-uart0 {
++		#clock-cells = <0>;
++		rsrc-id = <IMX_SC_R_UART_0>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "uart0_clk";
++	};
++
++	uart1_clk: clock-uart1 {
++		#clock-cells = <0>;
++		rsrc-id = <IMX_SC_R_UART_1>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "uart1_clk";
++	};
++
++	uart2_clk: clock-uart2 {
++		#clock-cells = <0>;
++		rsrc-id = <IMX_SC_R_UART_2>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "uart2_clk";
++	};
++
++	uart3_clk: clock-uart3 {
++		#clock-cells = <0>;
++		rsrc-id = <IMX_SC_R_UART_3>;
++		clk-type = <IMX_SC_PM_CLK_PER>;
++		clock-output-names = "uart3_clk";
++	};
++
+ 	adma_lpcg: clock-controller@59000000 {
+ 		reg = <0x59000000 0x2000000>;
  		#clock-cells = <1>;
 -- 
 2.7.4
