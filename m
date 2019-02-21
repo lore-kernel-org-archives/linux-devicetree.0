@@ -1,90 +1,78 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [PATCH v5 1/6] dt-bindings: Add a binding for Mediatek SCP
-Date: Thu, 21 Feb 2019 16:47:24 +0800
-Message-ID: <20190221084729.101784-2-pihsun@chromium.org>
-References: <20190221084729.101784-1-pihsun@chromium.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v7 0/2] PWM support for HiFive Unleashed
+Date: Thu, 21 Feb 2019 14:41:39 +0530
+Message-ID: <1550740301-10097-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190221084729.101784-1-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR
-        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Erin Lo <erin.lo@mediatek.com>
+This patch series adds a PWM driver and DT documentation
+for HiFive Unleashed board. The patches are mostly based on
+Wesley's patch.
 
-Add a DT binding documentation of SCP for the
-MT8183 SoC from Mediatek.
+v7
+- Modify description of compatible property in DT documentation
+- Use mutex locks at appropriate places
+- Fix all bad line breaks
+- Allow enabling/disabling PWM only when the user is the only active user
+- Remove Deglitch logic
+- Other minor fixes
 
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
----
-Changes from v4:
- - Add detail of more properties.
- - Document the usage of mtk,rpmsg-name in subnode from the new design.
+v6
+- Remove the global property 'sifive,period-ns'
+- Implement free and request callbacks to maintain user counts.
+- Add user_count member to struct pwm_sifive_ddata
+- Allow period change only if user_count is one
+- Add pwm_sifive_enable function to enable/disable PWM
+- Change calculation logic of frac (in pwm_sifive_apply)
+- Remove state correction
+- Remove pwm_sifive_xlate function
+- Clock to be enabled only when PWM is enabled
+- Other minor fixes
 
-Changes from v3:
- - No change.
+v5
+- Correct the order of compatible string properties
+- PWM state correction to be done always
+- Other minor fixes based upon feedback on v4
 
-Changes from v2:
- - No change. I realized that for this patch series, there's no need to
-   add anything under the mt8183-scp node (neither the mt8183-rpmsg or
-   the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
-   directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
-   created by SCP name service.
+v4
+- Rename macros with appropriate names
+- Remove unused macros
+- Rename struct sifive_pwm_device to struct pwm_sifive_ddata
+- Rename function prefix as per driver name
+- Other minor fixes based upon feedback on v3
 
-Changes from v1:
- - No change.
----
- .../bindings/remoteproc/mtk,scp.txt           | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+v3
+- Add a link to the reference manaul
+- Use appropriate apis for division operation
+- Add check for polarity
+- Enable clk before calling clk_get_rate
+- Other minor fixes based upon feedback on v2
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-new file mode 100644
-index 00000000000000..8cf8b0e0d98a4c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-@@ -0,0 +1,37 @@
-+Mediatek SCP Bindings
-+----------------------------------------
-+
-+This binding provides support for ARM Cortex M4 Co-processor found on some
-+Mediatek SoCs.
-+
-+Required properties:
-+- compatible		Should be "mediatek,mt8183-scp"
-+- reg			Should contain the address ranges for the two memory
-+			regions, SRAM and CFG.
-+- reg-names		Contains the corresponding names for the two memory
-+			regions. These should be named "sram" & "cfg".
-+- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-+- clock-names		Contains the corresponding name for the clock. This
-+			should be named "main".
-+
-+Subnodes
-+--------
-+
-+When CONFIG_RPMSG_MTK_SCP is enabled, subnodes of the SCP represent rpmsg
-+devices. The names of the devices are not important. The properties of these
-+nodes are defined by the individual bindings for the rpmsg devices - but must
-+contain the following property:
-+
-+- mtk,rpmsg-name	Contains the name for the rpmsg device. Used to match
-+			the subnode to rpmsg device announced by SCP.
-+
-+Example:
-+
-+	scp: scp@10500000 {
-+		compatible = "mediatek,mt8183-scp";
-+		reg = <0 0x10500000 0 0x80000>,
-+		      <0 0x105c0000 0 0x5000>;
-+		reg-names = "sram", "cfg";
-+		clocks = <&infracfg CLK_INFRA_SCPSYS>;
-+		clock-names = "main";
-+	};
+V2 changed from V1:
+- Remove inclusion of dt-bindings/pwm/pwm.h
+- Remove artificial alignments
+- Replace ioread32/iowrite32 with readl/writel
+- Remove camelcase
+- Change dev_info to dev_dbg for unnecessary log
+- Correct typo in driver name
+- Remove use of of_match_ptr macro
+- Update the DT compatible strings and Add reference to a common
+  versioning document
+
+Yash Shah (2):
+  pwm: sifive: Add DT documentation for SiFive PWM Controller
+  pwm: sifive: Add a driver for SiFive SoC PWM
+
+ .../devicetree/bindings/pwm/pwm-sifive.txt         |  33 ++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sifive.c                           | 346 +++++++++++++++++++++
+ 4 files changed, 391 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+ create mode 100644 drivers/pwm/pwm-sifive.c
+
 -- 
-2.21.0.rc0.258.g878e2cd30e-goog
+1.9.1
