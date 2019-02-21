@@ -1,29 +1,46 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] dt-bindings: Add bindings for mdio mux consumers
-Date: Thu, 21 Feb 2019 14:45:04 +0100
-Message-ID: <20190221134504.GE5653@lunn.ch>
-References: <20190221182349.4057-1-pankaj.bansal@nxp.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH v2 0/3] add support for SAM9X60's shutdown controller
+Date: Thu, 21 Feb 2019 13:45:44 +0000
+Message-ID: <1550756716-3032-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190221182349.4057-1-pankaj.bansal@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc: Leo Li <leoyang.li@nxp.com>, Peter Rosin <peda@axentia.se>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, sre@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 12:59:19PM +0000, Pankaj Bansal wrote:
-> When we use the bindings defined in Documentation/devicetree/bindings/mux
-> to define mdio mux in producer and consumer terms, it results in two
-> devices. one is mux producer and other is mux consumer.
-> 
-> Add the bindings needed for Mdio mux consumer devices.
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Hi Pankaj
+Hi,
 
-Please thread this binding patch with the code which implements the
-binding. The two should be reviewed together.
+This series adapt SAMA5D2's shutdown controller driver to work for
+SAM9X60's shutdown controller. The difference is that SAM9X60 have
+option for RTT timer wakeup.
 
-Thanks
-	Andrew
+Thank you,
+Claudiu Beznea
+
+Changes in v2:
+- collect Acked-by tags
+- in patch 3/3 use "optional microchip,sam9x60-shdwc properties"
+  string to specify that the introduced property is only for
+  microchip,sam9x60-shdwc as specified above in case of
+  atmel,<chip>-shdwc shutdown controllers
+- in patch 3/3 keep only the optional property introduced by
+  microchip,sam9x60-shwdwc (atmel,wakeup-rtt-timer)
+
+Claudiu Beznea (3):
+  power: reset: at91-poweroff: add RTT wakeup capability
+  power: reset: at91-poweroff: add support for SAM9X60
+  dt-bindings: arm: atmel: add binding for SAM9X60 shutdown controller
+
+ .../devicetree/bindings/arm/atmel-sysregs.txt      |  6 +++++-
+ drivers/power/reset/at91-sama5d2_shdwc.c           | 25 ++++++++++++++++++=
+++++
+ 2 files changed, 30 insertions(+), 1 deletion(-)
+
+--=20
+2.7.4
