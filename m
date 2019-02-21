@@ -1,78 +1,61 @@
-From: Thiago Jung Bauermann <bauerman-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>
-Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Date: Thu, 21 Feb 2019 19:18:59 -0300
-Message-ID: <878sy8bx9o.fsf@morokweng.localdomain>
-References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
-	<20190123083435.x3svwqp472mdgglw@8bytes.org>
-	<a6315ab3-bffb-7470-365d-b26df6524bda@arm.com>
+From: Patrick Venture <venture@google.com>
+Subject: [PATCH 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Thu, 21 Feb 2019 14:25:23 -0800
+Message-ID: <20190221222523.136829-1-venture@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-reply-to: <a6315ab3-bffb-7470-365d-b26df6524bda-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "virtio-dev-sDuHXQ4OtrM4h7I2RyI4rWD2FQJk+8+b@public.gmane.org" <virtio-dev-sDuHXQ4OtrM4h7I2RyI4rWD2FQJk+8+b@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CkhlbGxvIEplYW4tUGhpbGlwcGUsCgpKZWFuLVBoaWxpcHBlIEJydWNrZXIgPGplYW4tcGhpbGlw
-cGUuYnJ1Y2tlckBhcm0uY29tPiB3cml0ZXM6Cj4gTWFrZXMgc2Vuc2UsIHRob3VnaCBJIHRoaW5r
-IG90aGVyIHZpcnRpbyBkZXZpY2VzIGhhdmUgYmVlbiBkZXZlbG9wZWQgYQo+IGxpdHRsZSBtb3Jl
-IG9yZ2FuaWNhbGx5OiBkZXZpY2UgYW5kIGRyaXZlciBjb2RlIGdvdCB1cHN0cmVhbWVkIGZpcnN0
-LAo+IGFuZCB0aGVuIHRoZSBzcGVjaWZpY2F0aW9uIGRlc2NyaWJpbmcgdGhlaXIgaW50ZXJmYWNl
-IGdvdCBtZXJnZWQgaW50bwo+IHRoZSBzdGFuZGFyZC4gRm9yIGV4YW1wbGUgSSBiZWxpZXZlIHRo
-YXQgY29kZSBmb3IgY3J5cHRvLCBpbnB1dCBhbmQgR1BVCj4gZGV2aWNlcyB3ZXJlIHVwc3RyZWFt
-ZWQgbG9uZyBiZWZvcmUgdGhlIHNwZWNpZmljYXRpb24gd2FzIG1lcmdlZC4gT25jZQo+IGFuIGlt
-cGxlbWVudGF0aW9uIGlzIHVwc3RyZWFtLCB0aGUgaW50ZXJmYWNlIGlzIGV4cGVjdGVkIHRvIGJl
-Cj4gYmFja3dhcmQtY29tcGF0aWJsZSAoYWxsIHN1YnNlcXVlbnQgY2hhbmdlcyBhcmUgaW50cm9k
-dWNlZCB1c2luZyBmZWF0dXJlCj4gYml0cykuCj4KPiBTbyBJJ3ZlIGJlZW4gd29ya2luZyB3aXRo
-IHRoaXMgcHJvY2VzcyBpbiBtaW5kLCBhbHNvIGRlc2NyaWJlZCBieSBKZW5zCj4gYXQgS1ZNIGZv
-cnVtIDIwMTcgWzNdOgo+ICgxKSBSZXNlcnZlIGEgZGV2aWNlIElELCBhbmQgZ2V0IHRoYXQgbWVy
-Z2VkIGludG8gdmlydGlvIChJRCAyMyBmb3IKPiB2aXJ0aW8taW9tbXUgd2FzIHJlc2VydmVkIGxh
-c3QgeWVhcikKPiAoMikgT3Blbi1zb3VyY2UgYW4gaW1wbGVtZW50YXRpb24gKHRoaXMgZHJpdmVy
-IGFuZCBFcmljJ3MgZGV2aWNlKQo+ICgzKSBGb3JtYWxpemUgYW5kIHVwc3RyZWFtIHRoZSBkZXZp
-Y2Ugc3BlY2lmaWNhdGlvbgo+Cj4gQnV0IEkgZ2V0IHRoYXQgc29tZSBvdmVybGFwIGJldHdlZW4g
-KDIpIGFuZCAoMykgd291bGQgaGF2ZSBiZWVuIGJldHRlci4KPiBTbyBmYXIgdGhlIHNwZWMgZG9j
-dW1lbnQgaGFzIGJlZW4gcmV2aWV3ZWQgbWFpbmx5IGZyb20gdGhlIElPTU1VIHBvaW50Cj4gb2Yg
-dmlldywgYW5kIG1pZ2h0IHJlcXVpcmUgbW9yZSBjaGFuZ2VzIHRvIGJlIGluIGxpbmUgd2l0aCB0
-aGUgb3RoZXIKPiB2aXJ0aW8gZGV2aWNlcyAtLSBob3BlZnVsbHkganVzdCB3b3JkaW5nIGNoYW5n
-ZXMuIEknbGwga2ljayBvZmYgc3RlcAo+ICgzKSwgYnV0IEkgdGhpbmsgdGhlIHZpcnRpbyBmb2xr
-cyBhcmUgYSBiaXQgYnVzeSB3aXRoIGZpbmFsaXppbmcgdGhlIDEuMQo+IHNwZWMgc28gSSBleHBl
-Y3QgaXQgdG8gdGFrZSBhIHdoaWxlLgoKSSByZWFkIHYwLjkgb2YgdGhlIHNwZWMgYW5kIGhhdmUg
-c29tZSBtaW5vciBjb21tZW50cywgaG9wZSB0aGlzIGlzIGEKZ29vZCBwbGFjZSB0byBzZW5kIHRo
-ZW06CgoxLiBJbiBzZWN0aW9uIDIuNi4yLCBvbmUgcmVhZHMKCiAgICBJZiB0aGUgVklSVElPX0lP
-TU1VX0ZfSU5QVVRfUkFOR0UgZmVhdHVyZSBpcyBvZmZlcmVkIGFuZCB0aGUgcmFuZ2UKICAgIGRl
-c2NyaWJlZCBieSBmaWVsZHMgdmlydF9zdGFydCBhbmQgdmlydF9lbmQgZG9lc27igJl0IGZpdCBp
-biB0aGUgcmFuZ2UKICAgIGRlc2NyaWJlZCBieSBpbnB1dF9yYW5nZSwgdGhlIGRldmljZSBNQVkg
-c2V0IHN0YXR1cyB0byBWSVJUSU9fLQogICAgSU9NTVVfU19SQU5HRSBhbmQgaWdub3JlIHRoZSBy
-ZXF1ZXN0LgoKU2hvdWxkbid0IGludCBzYXkgIklmIHRoZSBWSVJUSU9fSU9NTVVfRl9JTlBVVF9S
-QU5HRSBmZWF0dXJlIGlzCm5lZ290aWF0ZWQiIGluc3RlYWQ/CgoyLiBUaGVyZSdzIGEgdHlwbyBh
-dCB0aGUgZW5kIG9mIHNlY3Rpb24gMi42LjU6CgogICAgVGhlIFZJUlRJT19JT01NVV9NQVBfRl9N
-TUlPIGZsYWcgaXMgYSBtZW1vcnkgdHlwZSByYXRoZXIgdGhhbiBhCiAgICBwcm90ZWN0aW9uIGxh
-Zy4KCnMvbGFnL2ZsYWcvCgozLiBJbiBzZWN0aW9uIDMuMS4yLjEuMSwgdGhlIHZpb21tdSBjb21w
-YXRpYmxlIGZpZWxkIHNheXMgInZpcnRpbyxtbWlvIi4KU2hvdWxkbid0IGl0IHNheSAidmlydGlv
-LG1taW8taW9tbXUiIGluc3RlYWQsIHRvIGJlIGNvbnNpc3RlbnQgd2l0aAoidmlydGlvLHBjaS1p
-b21tdSI/Cgo0LiBUaGVyZSdzIGEgdHlwbyBpbiBzZWN0aW9uIDMuMzoKCiAgICBBIGhvc3QgYnJp
-ZGdlIG1heSBsaW1pdCB0aGUgaW5wdXQgYWRkcmVzcyBzcGFjZSDigJMgdHJhbnNhY3Rpb24KICAg
-IGFjY2Vzc2luZyBzb21lIGFkZHJlc3NlcyB3b27igJl0IHJlYWNoIHRoZSBwaHlzaWNhbCBJT01N
-VS4KCnMvdHJhbnNhY3Rpb24vdHJhbnNhY3Rpb25zLwoKSSBhbHNvIGhhdmUgb25lIGxhc3QgY29t
-bWVudCB3aGljaCB5b3UgbWF5IGZyZWVseSBpZ25vcmUsIGNvbnNpZGVyaW5nCml0J3MgY2xlYXJs
-eSBqdXN0IHBlcnNvbmFsIG9waW5pb24gYW5kIGFsc28gY29uc2lkZXJpbmcgdGhhdCB0aGUKc3Bl
-Y2lmaWNhdGlvbiBpcyBtYXR1cmUgYXQgdGhpcyBwb2ludDogaXQgc3BlY2lmaWVzIG1lbW9yeSBy
-YW5nZXMgYnkKc3BlY2lmeWluZyBzdGFydCBhbmQgZW5kIGFkZHJlc3Nlcy4gTXkgZXhwZXJpZW5j
-ZSBoYXMgYmVlbiB0aGF0IHRoaXMgaXMKZXJyb3IgcHJvbmUsIGxlYWRpbmcgdG8gY29uZnVzaW9u
-IGFuZCBidWdzIHJlZ2FyZGluZyB3aGV0aGVyIHRoZSBlbmQKYWRkcmVzcyBpcyBpbmNsdXNpdmUg
-b3IgZXhjbHVzaXZlLiBJIHRlbmQgdG8gcHJlZmVyIGV4cHJlc3NpbmcgbWVtb3J5CnJhbmdlcyBi
-eSBzcGVjaWZ5aW5nIGEgc3RhcnQgYWRkcmVzcyBhbmQgYSBsZW5ndGgsIHdoaWNoIGVsaW1pbmF0
-ZXMKYW1iaWd1aXR5LgoKLS0KVGhpYWdvIEp1bmcgQmF1ZXJtYW5uCklCTSBMaW51eCBUZWNobm9s
-b2d5IENlbnRlcgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0
-dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
+Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+
+Signed-off-by: Patrick Venture <venture@google.com>
+---
+ .../bindings/misc/aspeed-p2a-ctrl.txt         | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+new file mode 100644
+index 000000000000..9c4d036ad5f5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -0,0 +1,33 @@
++======================================================================
++Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
++======================================================================
++
++The bridge is available on platforms with the VGA enabled on the Aspeed device.
++In this case, the host has access to a 64KiB window into all of the BMC's
++memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
++has read access to all the regions of memory, however the host only has read
++and write access depending on a register controlled by the BMC.
++
++Required properties:
++===================
++
++ - compatible: must be one of:
++	- "aspeed,ast2400-p2a-ctrl"
++	- "aspeed,ast2500-p2a-ctrl"
++
++ - reg: physical address of SCU2C followed by SCU180
++
++Optional properties:
++===================
++
++- memory-region: A phandle to a reserved_memory region to be used for the PCI
++		to AHB mapping
++
++Example:
++
++p2a: p2a-control@1e6e2000 {
++	compatible = "aspeed,ast2400-p2a-ctrl";
++	reg = <0x1e6e202C 4
++	       0x1e6e2180 4>;
++	memory-region = <&reserved_memory>;
++};
+-- 
+2.21.0.rc0.258.g878e2cd30e-goog
