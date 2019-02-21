@@ -1,86 +1,131 @@
 Return-Path: <SRS0=TIRm=Q4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00098.outbound.protection.outlook.com ([40.107.0.98]:24384
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr130072.outbound.protection.outlook.com ([40.107.13.72]:63029
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725845AbfBUQfK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Feb 2019 11:35:10 -0500
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2] dt-bindings: add register based devices' mux
- controller DT bindings
-Date: Thu, 21 Feb 2019 16:35:04 +0000
-Message-ID: <b2133ce1-1caf-8831-8919-18048c752ba4@axentia.se>
-References: <20190221181514.5964-1-pankaj.bansal@nxp.com>
-In-Reply-To: <20190221181514.5964-1-pankaj.bansal@nxp.com>
+        id S1725891AbfBUMuw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Feb 2019 07:50:52 -0500
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: [PATCH v2] dt-bindings: add register based devices' mux controller DT
+ bindings
+Date: Thu, 21 Feb 2019 12:50:46 +0000
+Message-ID: <20190221181514.5964-1-pankaj.bansal@nxp.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <821C478219A09C4990C5054163F6140F@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Pankaj Bansal <pankaj.bansal@nxp.com>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Leo Li <leoyang.li@nxp.com>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gMjAxOS0wMi0yMSAxMzo1MCwgUGFua2FqIEJhbnNhbCB3cm90ZToNCj4gVGhpcyBhZGRzIGRl
-dmljZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgZ2VuZXJpYyByZWdpc3RlciBiYXNl
-ZA0KPiBtdWx0aXBsZXhlciBjb250cm9sbGVkIGJ5IGEgYml0ZmllbGRzIGluIGEgcGFyZW50IGRl
-dmljZSdzIHJlZ2lzdGVyIHJhbmdlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUGFua2FqIEJhbnNh
-bCA8cGFua2FqLmJhbnNhbEBueHAuY29tPg0KPiAtLS0NCj4gDQo+IE5vdGVzOg0KPiAgICAgVjI6
-DQo+ICAgICAtIFJlbW92ZWQgc3lzY29uIHJlZmVyZW5jZSBmcm9tIHR4dCBmaWxlDQo+ICAgICAt
-IFJlbW92ZWQgbG9hZGluZyB6ZXJvZXMgZnJvbSBoZXggbnVtYmVycw0KPiAgICAgLSBGaXhlZCB0
-aGUgZGVwdGggb2YgZHRzIG5vZGVzDQo+ICAgICAtIGZpeGVkIG1pbm9yIGZvcm1hdHRpbmcgZXJy
-b3JzDQo+IA0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbXV4L3JlZy1tdXgudHh0ICAgICAg
-fCA4MyArKysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA4MyBpbnNlcnRpb25z
-KCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L211eC9yZWctbXV4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdXgv
-cmVnLW11eC50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAw
-Li4yNjBjNmY1MTFiNTkNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbXV4L3JlZy1tdXgudHh0DQo+IEBAIC0wLDAgKzEsODMgQEANCj4g
-K0dlbmVyaWMgcmVnaXN0ZXIgYml0ZmllbGQtYmFzZWQgbXVsdGlwbGV4ZXIgY29udHJvbGxlciBi
-aW5kaW5ncw0KPiArDQo+ICtEZWZpbmUgcmVnaXN0ZXIgYml0ZmllbGRzIHRvIGJlIHVzZWQgdG8g
-Y29udHJvbCBtdWx0aXBsZXhlcnMuIFRoZSBwYXJlbnQNCj4gK2RldmljZSB0cmVlIG5vZGUgbXVz
-dCBiZSBhIGRldmljZSBub2RlIHRvIHByb3ZpZGUgcmVnaXN0ZXIgci93IGFjY2Vzcy4NCj4gKw0K
-PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKy0gY29tcGF0aWJsZSA6ICJyZWctbXV4Ig0KPiAr
-LSAjbXV4LWNvbnRyb2wtY2VsbHMgOiA8MT4NCj4gKy0gbXV4LXJlZy1tYXNrcyA6IGFuIGFycmF5
-IG9mIHJlZ2lzdGVyIG9mZnNldCBhbmQgcHJlLXNoaWZ0ZWQgYml0ZmllbGQgbWFzaw0KPiArICAg
-ICAgICAgICAgICAgICAgcGFpcnMsIGVhY2ggZGVzY3JpYmluZyBhIHNpbmdsZSBtdXggY29udHJv
-bC4NCj4gKyogU3RhbmRhcmQgbXV4LWNvbnRyb2xsZXIgYmluZGluZ3MgYXMgZGVjcmliZWQgaW4g
-bXV4LWNvbnRyb2xsZXIudHh0DQo+ICsNCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICstIGlk
-bGUtc3RhdGVzIDogaWYgcHJlc2VudCwgdGhlIHN0YXRlIHRoZSBtdXhlcyB3aWxsIGhhdmUgd2hl
-biBpZGxlLiBUaGUNCj4gKwkJc3BlY2lhbCBzdGF0ZSBNVVhfSURMRV9BU19JUyBpcyB0aGUgZGVm
-YXVsdC4NCj4gKw0KPiArVGhlIG11bHRpcGxleGVyIHN0YXRlIG9mIGVhY2ggbXVsdGlwbGV4ZXIg
-aXMgZGVmaW5lZCBhcyB0aGUgdmFsdWUgb2YgdGhlDQo+ICtiaXRmaWVsZCBkZXNjcmliZWQgYnkg
-dGhlIGNvcnJlc3BvbmRpbmcgcmVnaXN0ZXIgb2Zmc2V0IGFuZCBiaXRmaWVsZCBtYXNrIHBhaXIN
-Cj4gK2luIHRoZSBtdXgtcmVnLW1hc2tzIGFycmF5LCBhY2Nlc3NlZCB0aHJvdWdoIHRoZSBwYXJl
-bnQgcmVnaXN0ZXIgci93IGZ1bmN0aW9ucy4NCj4gKw0KPiArRXhhbXBsZToNCj4gKw0KPiArJmky
-YzAgew0KPiArCWZwZ2FANjYgeyAvLyBmcGdhIGNvbm5lY3RlZCB0byBpMmMNCj4gKwkJY29tcGF0
-aWJsZSA9ICJmc2wsbHgyMTYwYXFkcy1mcGdhIiwgImZzbCxmcGdhLXFpeGlzLWkyYyIsDQo+ICsJ
-CQkgICAgICJzaW1wbGUtbWZkIjsNCj4gKwkJcmVnID0gPDB4NjY+Ow0KPiArDQo+ICsJCW11eDog
-bXV4LWNvbnRyb2xsZXIgeyAvLyBNdXggUHJvZHVjZXINCj4gKwkJCWNvbXBhdGlibGUgPSAicmVn
-LW11eCI7DQo+ICsJCQkjbXV4LWNvbnRyb2wtY2VsbHMgPSA8MT47DQo+ICsJCQltdXgtcmVnLW1h
-c2tzID0gPDB4NTQgMHhmOD4sIC8qIDA6IHJlZyAweDU0LCBiaXRzIDc6MyAqLw0KPiArCQkJCQk8
-MHg1NCAweDA3PjsgLyogMTogcmVnIDB4NTQsIGJpdHMgMjowICovDQo+ICsJCX07DQo+ICsJfTsN
-Cj4gK307DQo+ICsNCj4gK21kaW8tbXV4LTEgeyAvLyBNdXggY29uc3VtZXINCj4gKwljb21wYXRp
-YmxlID0gIm1kaW8tbXV4IjsNCj4gKwltdXgtY29udHJvbHMgPSA8Jm11eCAwPjsNCj4gKwltZGlv
-LXBhcmVudC1idXMgPSA8JmVtZGlvMT47DQo+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJ
-I3NpemUtY2VsbHMgPSA8MD47DQo+ICsNCj4gKwltZGlvQDAgew0KPiArCQlyZWcgPSA8MHgwPjsN
-Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiAr
-CX07DQo+ICsNCj4gKwltZGlvQDQwIHsNCj4gKwkJcmVnID0gPDB4NDA+Ow0KDQpIbW1tLCBJIGRp
-ZG4ndCBzZWUgdGhpcyBpbiBWMSwgYnV0IHRoZSByZWcgdmFsdWUgaXMgc3VwcG9zZWQgdG8gYmUg
-dGhlDQp2YWx1ZSB3aXRoaW4gdGhlIGZpZWxkLiBUaGUgZHJpdmVyIHdpbGwgZG8gdGhlIHNoaWZ0
-L21hc2sgZm9yIHlvdS4gSW4gb3RoZXINCndvcmRzLCAweDQwIGlzIG91dCBvZiByYW5nZSBoZXJl
-LCBzaW5jZSBtdXggY29udHJvbGxlciAwIGlzIDMyLXdheSAoNSBiaXRzKS4NCg0KQWxzbywgbXkg
-cXVlc3Rpb24gZnJvbSBWMSBbMV0gc3RpbGwgYXBwbGllcy4gT3IsIGluIG90aGVyIHdvcmRzLCB3
-aGF0DQptZWFuaW5nIGRvZXMgdGhlIGFib3ZlICJwYXJlbnQgcmVnaXN0ZXIgci93IGZ1bmN0aW9u
-cyIgaGF2ZSBpbiBhIGRldmljZS10cmVlDQpjb250ZXh0Pw0KDQpDaGVlcnMsDQpQZXRlciAod291
-bGQgYWxzbyBsaWtlIGEgdGhyZWFkZWQgc2VyaWVzIG5leHQgdGltZSkNCg0KWzFdIGh0dHBzOi8v
-d3d3LnNwaW5pY3MubmV0L2xpc3RzL2RldmljZXRyZWUvbXNnMjc0ODQ1Lmh0bWwNCg0KPiArCQkj
-YWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMgPSA8MD47DQo+ICsJfTsNCj4g
-Kw0KPiArCS4uDQo+ICsJLi4NCj4gK307DQo+ICsNCj4gK21kaW8tbXV4LTIgeyAvLyBNdXggY29u
-c3VtZXINCj4gKwljb21wYXRpYmxlID0gIm1kaW8tbXV4IjsNCj4gKwltdXgtY29udHJvbHMgPSA8
-Jm11eCAxPjsNCj4gKwltZGlvLXBhcmVudC1idXMgPSA8JmVtZGlvMj47DQo+ICsJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47DQo+ICsJI3NpemUtY2VsbHMgPSA8MD47DQo+ICsNCj4gKwltZGlvQDAgew0K
-PiArCQlyZWcgPSA8MHgwPjsNCj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCSNzaXpl
-LWNlbGxzID0gPDA+Ow0KPiArCX07DQo+ICsNCj4gKwltZGlvQDEgew0KPiArCQlyZWcgPSA8MHgx
-PjsNCj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0K
-PiArCX07DQo+ICsNCj4gKwkuLg0KPiArCS4uDQo+ICt9Ow0KPiArDQo+IA0KDQo=
+This adds device tree binding documentation for generic register based
+multiplexer controlled by a bitfields in a parent device's register range.
+
+Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+---
+
+Notes:
+    V2:
+    - Removed syscon reference from txt file
+    - Removed loading zeroes from hex numbers
+    - Fixed the depth of dts nodes
+    - fixed minor formatting errors
+
+ .../devicetree/bindings/mux/reg-mux.txt      | 83 ++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mux/reg-mux.txt b/Documentat=
+ion/devicetree/bindings/mux/reg-mux.txt
+new file mode 100644
+index 000000000000..260c6f511b59
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mux/reg-mux.txt
+@@ -0,0 +1,83 @@
++Generic register bitfield-based multiplexer controller bindings
++
++Define register bitfields to be used to control multiplexers. The parent
++device tree node must be a device node to provide register r/w access.
++
++Required properties:
++- compatible : "reg-mux"
++- #mux-control-cells : <1>
++- mux-reg-masks : an array of register offset and pre-shifted bitfield mas=
+k
++                  pairs, each describing a single mux control.
++* Standard mux-controller bindings as decribed in mux-controller.txt
++
++Optional properties:
++- idle-states : if present, the state the muxes will have when idle. The
++		special state MUX_IDLE_AS_IS is the default.
++
++The multiplexer state of each multiplexer is defined as the value of the
++bitfield described by the corresponding register offset and bitfield mask =
+pair
++in the mux-reg-masks array, accessed through the parent register r/w funct=
+ions.
++
++Example:
++
++&i2c0 {
++	fpga@66 { // fpga connected to i2c
++		compatible =3D "fsl,lx2160aqds-fpga", "fsl,fpga-qixis-i2c",
++			     "simple-mfd";
++		reg =3D <0x66>;
++
++		mux: mux-controller { // Mux Producer
++			compatible =3D "reg-mux";
++			#mux-control-cells =3D <1>;
++			mux-reg-masks =3D <0x54 0xf8>, /* 0: reg 0x54, bits 7:3 */
++					<0x54 0x07>; /* 1: reg 0x54, bits 2:0 */
++		};
++	};
++};
++
++mdio-mux-1 { // Mux consumer
++	compatible =3D "mdio-mux";
++	mux-controls =3D <&mux 0>;
++	mdio-parent-bus =3D <&emdio1>;
++	#address-cells =3D <1>;
++	#size-cells =3D <0>;
++
++	mdio@0 {
++		reg =3D <0x0>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	mdio@40 {
++		reg =3D <0x40>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	..
++	..
++};
++
++mdio-mux-2 { // Mux consumer
++	compatible =3D "mdio-mux";
++	mux-controls =3D <&mux 1>;
++	mdio-parent-bus =3D <&emdio2>;
++	#address-cells =3D <1>;
++	#size-cells =3D <0>;
++
++	mdio@0 {
++		reg =3D <0x0>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	mdio@1 {
++		reg =3D <0x1>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	..
++	..
++};
++
+--=20
+2.17.1
