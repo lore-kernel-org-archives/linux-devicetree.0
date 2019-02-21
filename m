@@ -1,134 +1,123 @@
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Date: Thu, 21 Feb 2019 18:57:17 -0300
-Message-ID: <87a7ioby9u.fsf@morokweng.localdomain>
-References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
- <20190118103235-mutt-send-email-mst@kernel.org>
- <0ba215f5-e856-bf31-8dd9-a85710714a7a@arm.com>
- <20190129135345-mutt-send-email-mst@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 28/30 v2] soc: ixp4xx: qmgr: Add DT bindings for IXP4xx
+ qmgr
+Date: Thu, 21 Feb 2019 16:00:18 -0600
+Message-ID: <CAL_JsqKJF0xdktw7BFRj8MWqty+Rkg6i9gDkWu_eHCq0TXyYMA@mail.gmail.com>
+References: <20190221154458.23763-1-linus.walleij@linaro.org>
+ <20190221154458.23763-29-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-reply-to: <20190129135345-mutt-send-email-mst@kernel.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, kevin.tian@intel.com, tnowicki@caviumnetworks.com, virtio-dev@lists.oasis-open.org, Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, linux-pci@vger.kernel.org, jasowang@redhat.com, linuxppc-dev@lists.ozlabs.org, will.deacon@arm.com, frowand.list@gmail.com, virtualization@lists.linux-foundation.org, marc.zyngier@arm.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, bhelgaas@google.com, robin.murphy@arm.com, kvmarm@lists.cs.columbia.edu
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190221154458.23763-29-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Michael S. Tsirkin <mst@redhat.com> writes:
-
-> On Mon, Jan 21, 2019 at 11:29:05AM +0000, Jean-Philippe Brucker wrote:
->> Hi,
->>
->> On 18/01/2019 15:51, Michael S. Tsirkin wrote:
->> >
->> > On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
->> >> Implement the virtio-iommu driver, following specification v0.9 [1].
->> >>
->> >> This is a simple rebase onto Linux v5.0-rc2. We now use the
->> >> dev_iommu_fwspec_get() helper introduced in v5.0 instead of accessing
->> >> dev->iommu_fwspec, but there aren't any functional change from v6 [2].
->> >>
->> >> Our current goal for virtio-iommu is to get a paravirtual IOMMU working
->> >> on Arm, and enable device assignment to guest userspace. In this
->> >> use-case the mappings are static, and don't require optimal performance,
->> >> so this series tries to keep things simple. However there is plenty more
->> >> to do for features and optimizations, and having this base in v5.1 would
->> >> be good. Given that most of the changes are to drivers/iommu, I believe
->> >> the driver and future changes should go via the IOMMU tree.
->> >>
->> >> You can find Linux driver and kvmtool device on v0.9.2 branches [3],
->> >> module and x86 support on virtio-iommu/devel. Also tested with Eric's
->> >> QEMU device [4]. Please note that the series depends on Robin's
->> >> probe-deferral fix [5], which will hopefully land in v5.0.
->> >>
->> >> [1] Virtio-iommu specification v0.9, sources and pdf
->> >>     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
->> >>     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
->> >>
->> >> [2] [PATCH v6 0/7] Add virtio-iommu driver
->> >>     https://lists.linuxfoundation.org/pipermail/iommu/2018-December/032127.html
->> >>
->> >> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9.2
->> >>     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9.2
->> >>
->> >> [4] [RFC v9 00/17] VIRTIO-IOMMU device
->> >>     https://www.mail-archive.com/qemu-devel@nongnu.org/msg575578.html
->> >>
->> >> [5] [PATCH] iommu/of: Fix probe-deferral
->> >>     https://www.spinics.net/lists/arm-kernel/msg698371.html
->> >
->> > Thanks for the work!
->> > So really my only issue with this is that there's no
->> > way for the IOMMU to describe the devices that it
->> > covers.
->> >
->> > As a result that is then done in a platform-specific way.
->> >
->> > And this means that for example it does not solve the problem that e.g.
->> > some power people have in that their platform simply does not have a way
->> > to specify which devices are covered by the IOMMU.
->>
->> Isn't power using device tree? I haven't looked much at power because I
->> was told a while ago that they already paravirtualize their IOMMU and
->> don't need virtio-iommu, except perhaps for some legacy platforms. Or
->> something along those lines. But I would certainly be interested in
->> enabling the IOMMU for more architectures.
+On Thu, Feb 21, 2019 at 9:46 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> I have CC'd the relevant ppc developers, let's see what do they think.
+> This adds device tree bindings for the Intel IXP4xx AHB
+> Queue Manager.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../misc/intel,ixp4xx-queue-manager.yaml      | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml b/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
+> new file mode 100644
+> index 000000000000..c324860bede5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/misc/intel-ixp4xx-ahb-queue-manager.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Intel IXP4xx AHB Queue Manager
+> +
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
+> +
+> +description: |
+> +  The IXP4xx AHB Queue Manager maintains queues as circular buffers in
+> +  an 8KB embedded SRAM along with hardware pointers. It is used by both
+> +  the XScale processor and the NPEs (Network Processing Units) in the
+> +  IXP4xx for accelerating queues, especially for networking. Clients pick
+> +  queues from the queue manager with foo-queue = <&qmgr N> where the
+> +  &qmgr is a phandle to the queue manager and N is the queue resource
+> +  number. The queue resources available and their specific purpose
+> +  on a certain IXP4xx system will vary.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
 
-I'm far from being an expert, but what could be very useful for us is to
-have a way for the guest to request IOMMU bypass for a device.
+oneOf can be dropped.
 
->From what I understand, the pSeries platform used by POWER guests always
-puts devices behind an IOMMU, so at least for current systems a
-description of which devices are covered by the IOMMU would always say
-"all of them".
+> +      - items:
+> +          - const: intel,ixp4xx-ahb-queue-manager
+> +
+> +  reg:
+> +    items:
+> +      - description: Queue Manager MMIO range
 
->> As for the enumeration problem, I still don't think we can get much
->> better than DT and ACPI as solutions (and IMO they are necessary to make
->> this device portable). But I believe that getting DT and ACPI support is
->> just a one-off inconvenience. That is, once the required bindings are
->> accepted, any future extension can then be done at the virtio level with
->> feature bits and probe requests, without having to update ACPI or DT.
+Just do 'maxItems: 1'.
 
-There is a device tree binding that can specify devices connected to a
-given IOMMU in Documentation/devicetree/bindings/iommu/iommu.txt.
-I don't believe POWER machines use it though.
+Then again, maybe consistency is better. If there's only 1 register
+range, there's not much point in describing it and I don't want a
+bunch of free-form copy-n-paste of descriptions. It's only if there's
+more than one that we need to define what each one is. In any case, I
+should get a meta-schema in place to enforce something. And this could
+easily be scripted to change the format how we end up wanting it to
+look like.
 
->> Thanks,
->> Jean
->>
->> > Solving that problem would make me much more excited about
->> > this device.
->> >
->> > On the other hand I can see that while there have been some
->> > developments most of the code has been stable for quite a while now.
->> >
->> > So what I am trying to do right about now, is making a small module that
->> > loads early and pokes at the IOMMU sufficiently to get the data about
->> > which devices use the IOMMU out of it using standard virtio config
->> > space.  IIUC it's claimed to be impossible without messy changes to the
->> > boot sequence.
->> >
->> > If I succeed at least on some platforms I'll ask that this design is
->> > worked into this device, minimizing info that goes through DT/ACPI.  If
->> > I see I can't make it in time to meet the next merge window, I plan
->> > merging the existing patches using DT (barring surprises).
->> >
->> > As I only have a very small amount of time to spend on this attempt, If
->> > someone else wants to try doing that in parallel, that would be great!
+> +
+> +  interrupts:
+> +    minItems: 2
+> +    maxItems: 2
 
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Can drop these 2.
+
+> +    items:
+> +      - description: Interrupt for queues 0-31
+> +      - description: Interrupt for queues 32-63
+> +
+> +  '#queue-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+
+#queue-cells not required?
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    qmgr: queue-manager@60000000 {
+> +         compatible = "intel,ixp4xx-ahb-queue-manager";
+> +         reg = <0x60000000 0x4000>;
+> +         interrupts = <3 IRQ_TYPE_LEVEL_HIGH>, <4 IRQ_TYPE_LEVEL_HIGH>;
+> +         #queue-cells = <1>;
+> +    };
+> --
+> 2.20.1
+>
