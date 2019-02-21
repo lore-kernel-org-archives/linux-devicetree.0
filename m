@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 28/30 v2] soc: ixp4xx: qmgr: Add DT bindings for IXP4xx qmgr
-Date: Thu, 21 Feb 2019 16:44:56 +0100
-Message-ID: <20190221154458.23763-29-linus.walleij@linaro.org>
+Subject: [PATCH 09/30 v2] irqchip: ixp4xx: Add DT bindings
+Date: Thu, 21 Feb 2019 16:44:37 +0100
+Message-ID: <20190221154458.23763-10-linus.walleij@linaro.org>
 References: <20190221154458.23763-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,81 +18,102 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Intel IXP4xx AHB
-Queue Manager.
+This adds device tree bindings for the IXP4xx interrupt
+controller. It's a standard 2-cell controller.
 
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../misc/intel,ixp4xx-queue-manager.yaml      | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
+ChangeLog v1->v2:
+- Converted to use JSON yaml schema, why not.
+- Not keeping Rob's ACK because I think he wants to take
+  a second look.
+---
+ .../intel,ixp4xx-interrupt.yaml               | 57 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
 
-diff --git a/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml b/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
 new file mode 100644
-index 000000000000..c324860bede5
+index 000000000000..f32c08f270d6
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
 @@ -0,0 +1,57 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Linaro Ltd.
++# Copyright 2018 Linaro Ltd.
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/misc/intel-ixp4xx-ahb-queue-manager.yaml#"
++$id: "http://devicetree.org/schemas/interrupt/intel-ixp4xx-interrupt.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Intel IXP4xx AHB Queue Manager
++title: Intel IXP4xx XScale Networking Processors Interrupt Controller
 +
 +maintainers:
 +  - Linus Walleij <linus.walleij@linaro.org>
 +
 +description: |
-+  The IXP4xx AHB Queue Manager maintains queues as circular buffers in
-+  an 8KB embedded SRAM along with hardware pointers. It is used by both
-+  the XScale processor and the NPEs (Network Processing Units) in the
-+  IXP4xx for accelerating queues, especially for networking. Clients pick
-+  queues from the queue manager with foo-queue = <&qmgr N> where the
-+  &qmgr is a phandle to the queue manager and N is the queue resource
-+  number. The queue resources available and their specific purpose
-+  on a certain IXP4xx system will vary.
++  This interrupt controller is found in the Intel IXP4xx processors.
++  Some processors have 32 interrupts, some have up to 64 interrupts.
++  The exact number of interrupts is determined from the compatible
++  string.
++
++  The distinct IXP4xx families with different interrupt controller
++  variations are IXP42x, IXP43x, IXP45x and IXP46x. Those four
++  families were the only ones to reach the developer and consumer
++  market.
 +
 +properties:
 +  compatible:
 +    oneOf:
 +      - items:
-+          - const: intel,ixp4xx-ahb-queue-manager
++        - enum:
++          - intel,ixp42x-interrupt
++          - intel,ixp43x-interrupt
++          - intel,ixp45x-interrupt
++          - intel,ixp46x-interrupt
 +
 +  reg:
-+    items:
-+      - description: Queue Manager MMIO range
++    description: The register bank for the interrupt controller.
 +
-+  interrupts:
-+    minItems: 2
-+    maxItems: 2
-+    items:
-+      - description: Interrupt for queues 0-31
-+      - description: Interrupt for queues 32-63
++  interrupt-controller: true
 +
-+  '#queue-cells':
-+    const: 1
++  '#interrupt-cells':
++    const: 2
++    description: The number of cells to define the interrupts.
++      with two cells specified in interrupt-controller/interrupts.txt
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
++  - interrupt-controller
++  - '#interrupt-cells'
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    qmgr: queue-manager@60000000 {
-+         compatible = "intel,ixp4xx-ahb-queue-manager";
-+         reg = <0x60000000 0x4000>;
-+         interrupts = <3 IRQ_TYPE_LEVEL_HIGH>, <4 IRQ_TYPE_LEVEL_HIGH>;
-+         #queue-cells = <1>;
++    intcon: interrupt-controller@c8003000 {
++        compatible = "intel,ixp43x-interrupt";
++        reg = <0xc8003000 0x100>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
 +    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a2fb67b75026..79f01af59a63 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1650,6 +1650,7 @@ M:	Imre Kaloz <kaloz@openwrt.org>
+ M:	Krzysztof Halasa <khalasa@piap.pl>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
++F:	Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
+ F:	arch/arm/mach-ixp4xx/
+ F:	drivers/clocksource/timer-ixp4xx.c
+ F:	drivers/gpio/gpio-ixp4xx.c
 -- 
 2.20.1
