@@ -1,7 +1,7 @@
 From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v2 4/5] iio: imu: adis16480: Add support for ADIS1649x family of devices
-Date: Thu, 21 Feb 2019 15:15:05 +0200
-Message-ID: <1550754906-24640-5-git-send-email-stefan.popa@analog.com>
+Subject: [PATCH v2 1/5] iio: imu: adis16480: Add support for configurable drdy indicator
+Date: Thu, 21 Feb 2019 15:15:02 +0200
+Message-ID: <1550754906-24640-2-git-send-email-stefan.popa@analog.com>
 References: <1550754906-24640-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,135 +12,173 @@ To: jic23@kernel.org, robh+dt@kernel.org
 Cc: Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The ADIS16495 and ADIS16497 are inertial systems that include a triaxis
-gyroscope and a triaxis accelerometer. The serial peripheral interface
-(SPI) provide a simple interface for data collection and configuration
-control. The devices are similar to ADIS16475, ADIS16480, ADIS16485 and
-ADIS16488, the main differences are related to range and scale factors.
+The FNCTIO_CTRL register provides configuration control for each I/O pin
+(DIO1, DIO2, DIO3 and DIO4).
 
-The temperature data scale is 0.00565 C/LSB for ADIS16475 and ADIS1648x
-devices, while for ADIS1649x 0.0125 C/LSB.
+This patch adds the option to configure each DIOx pin as data ready
+indicator with positive or negative polarity by reading the 'interrupts'
+and 'interrupt-names' properties from the devicetree. The
+'interrupt-names' property is optional, if it is not specified, then the
+DIO1 pin is used as default data ready signal.
 
-Another difference is that ADIS1649x devices support different gyroscope
-measurement ranges which are dependent on the dash number (-1, -2, -3),
-see Table 24 in the ADIS16495 datasheet. However, the ADIS16497
-gyroscopes have the same scale as ADIS16495.
-
-Furthermore, ADIS16495 devices support the acceleration maximum range of
-8g, while ADIS16497 devices go up to 40g.
-
-Datasheets:
-Link: https://www.analog.com/media/en/technical-documentation/data-sheets/adis16495.pdf
-Link: https://www.analog.com/media/en/technical-documentation/data-sheets/adis16497.pdf
+Although the factory default assigns DIO2 as data ready signal, in the
+versions previous this patch, DIO1 pin was used. We should leave this
+configuration as is, since some devices might be expecting the interrupt
+on the wrong physical pin.
 
 Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 ---
- drivers/iio/imu/adis16480.c | 72 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ drivers/iio/imu/adis16480.c | 97 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 95 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
-index 5a2864a..313936c 100644
+index a27fe20..98a23ac 100644
 --- a/drivers/iio/imu/adis16480.c
 +++ b/drivers/iio/imu/adis16480.c
-@@ -710,6 +710,12 @@ enum adis16480_variant {
- 	ADIS16480,
- 	ADIS16485,
- 	ADIS16488,
-+	ADIS16495_1,
-+	ADIS16495_2,
-+	ADIS16495_3,
-+	ADIS16497_1,
-+	ADIS16497_2,
-+	ADIS16497_3,
+@@ -9,6 +9,8 @@
+  *
+  */
+ 
++#include <linux/bitfield.h>
++#include <linux/of_irq.h>
+ #include <linux/interrupt.h>
+ #include <linux/delay.h>
+ #include <linux/mutex.h>
+@@ -107,6 +109,14 @@
+ #define ADIS16480_FIR_COEF_C(x)			ADIS16480_FIR_COEF(0x09, (x))
+ #define ADIS16480_FIR_COEF_D(x)			ADIS16480_FIR_COEF(0x0B, (x))
+ 
++/* ADIS16480_REG_FNCTIO_CTRL */
++#define ADIS16480_DRDY_SEL_MSK		GENMASK(1, 0)
++#define ADIS16480_DRDY_SEL(x)		FIELD_PREP(ADIS16480_DRDY_SEL_MSK, x)
++#define ADIS16480_DRDY_POL_MSK		BIT(2)
++#define ADIS16480_DRDY_POL(x)		FIELD_PREP(ADIS16480_DRDY_POL_MSK, x)
++#define ADIS16480_DRDY_EN_MSK		BIT(3)
++#define ADIS16480_DRDY_EN(x)		FIELD_PREP(ADIS16480_DRDY_EN_MSK, x)
++
+ struct adis16480_chip_info {
+ 	unsigned int num_channels;
+ 	const struct iio_chan_spec *channels;
+@@ -116,12 +126,26 @@ struct adis16480_chip_info {
+ 	unsigned int accel_max_scale;
  };
  
- static const struct adis16480_chip_info adis16480_chip_info[] = {
-@@ -754,6 +760,60 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
- 		.accel_max_scale = 18,
- 		.temp_scale = 5650, /* 5.65 milli degree Celsius */
- 	},
-+	[ADIS16495_1] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
-+		.gyro_max_scale = 125,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 8,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+	},
-+	[ADIS16495_2] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(18000),
-+		.gyro_max_scale = 450,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 8,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+	},
-+	[ADIS16495_3] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
-+		.gyro_max_scale = 2000,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 8,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+	},
-+	[ADIS16497_1] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
-+		.gyro_max_scale = 125,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 40,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+	},
-+	[ADIS16497_2] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(18000),
-+		.gyro_max_scale = 450,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 40,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+	},
-+	[ADIS16497_3] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
-+		.gyro_max_scale = 2000,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 40,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+	},
++enum adis16480_int_pin {
++	ADIS16480_PIN_DIO1,
++	ADIS16480_PIN_DIO2,
++	ADIS16480_PIN_DIO3,
++	ADIS16480_PIN_DIO4
++};
++
+ struct adis16480 {
+ 	const struct adis16480_chip_info *chip_info;
+ 
+ 	struct adis adis;
  };
  
- static const struct iio_info adis16480_info = {
-@@ -999,6 +1059,12 @@ static const struct spi_device_id adis16480_ids[] = {
- 	{ "adis16480", ADIS16480 },
- 	{ "adis16485", ADIS16485 },
- 	{ "adis16488", ADIS16488 },
-+	{ "adis16495-1", ADIS16495_1 },
-+	{ "adis16495-2", ADIS16495_2 },
-+	{ "adis16495-3", ADIS16495_3 },
-+	{ "adis16497-1", ADIS16497_1 },
-+	{ "adis16497-2", ADIS16497_2 },
-+	{ "adis16497-3", ADIS16497_3 },
- 	{ }
++static const char * const adis16480_int_pin_names[4] = {
++	[ADIS16480_PIN_DIO1] = "DIO1",
++	[ADIS16480_PIN_DIO2] = "DIO2",
++	[ADIS16480_PIN_DIO3] = "DIO3",
++	[ADIS16480_PIN_DIO4] = "DIO4",
++};
++
+ #ifdef CONFIG_DEBUG_FS
+ 
+ static ssize_t adis16480_show_firmware_revision(struct file *file,
+@@ -741,8 +765,17 @@ static int adis16480_stop_device(struct iio_dev *indio_dev)
+ 
+ static int adis16480_enable_irq(struct adis *adis, bool enable)
+ {
+-	return adis_write_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL,
+-		enable ? BIT(3) : 0);
++	uint16_t val;
++	int ret;
++
++	ret = adis_read_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, &val);
++	if (ret < 0)
++		return ret;
++
++	val &= ~ADIS16480_DRDY_EN_MSK;
++	val |= ADIS16480_DRDY_EN(enable);
++
++	return adis_write_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, val);
+ }
+ 
+ static int adis16480_initial_setup(struct iio_dev *indio_dev)
+@@ -826,6 +859,62 @@ static const struct adis_data adis16480_data = {
+ 	.enable_irq = adis16480_enable_irq,
  };
- MODULE_DEVICE_TABLE(spi, adis16480_ids);
-@@ -1008,6 +1074,12 @@ static const struct of_device_id adis16480_of_match[] = {
- 	{ .compatible = "adi,adis16480" },
- 	{ .compatible = "adi,adis16485" },
- 	{ .compatible = "adi,adis16488" },
-+	{ .compatible = "adi,adis16495-1" },
-+	{ .compatible = "adi,adis16495-2" },
-+	{ .compatible = "adi,adis16495-3" },
-+	{ .compatible = "adi,adis16497-1" },
-+	{ .compatible = "adi,adis16497-2" },
-+	{ .compatible = "adi,adis16497-3" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, adis16480_of_match);
+ 
++static int adis16480_config_irq_pin(struct device_node *of_node,
++				    struct adis16480 *st)
++{
++	struct irq_data *desc;
++	enum adis16480_int_pin pin;
++	unsigned int irq_type;
++	uint16_t val;
++	int i, irq = 0;
++
++	desc = irq_get_irq_data(st->adis.spi->irq);
++	if (!desc) {
++		dev_err(&st->adis.spi->dev, "Could not find IRQ %d\n", irq);
++		return -EINVAL;
++	}
++
++	/* Disable data ready since the default after reset is on */
++	val = ADIS16480_DRDY_EN(0);
++
++	/*
++	 * Get the interrupt from the devicetre by reading the interrupt-names
++	 * property. If it is not specified, use DIO1 pin as default.
++	 * According to the datasheet, the factory default assigns DIO2 as data
++	 * ready signal. However, in the previous versions of the driver, DIO1
++	 * pin was used. So, we should leave it as is since some devices might
++	 * be expecting the interrupt on the wrong physical pin.
++	 */
++	pin = ADIS16480_PIN_DIO1;
++	for (i = 0; i < ARRAY_SIZE(adis16480_int_pin_names); i++) {
++		irq = of_irq_get_byname(of_node, adis16480_int_pin_names[i]);
++		if (irq > 0) {
++			pin = i;
++			break;
++		}
++	}
++
++	val |= ADIS16480_DRDY_SEL(pin);
++
++	/*
++	 * Get the interrupt line behaviour. The data ready polarity can be
++	 * configured as positive or negative, corresponding to
++	 * IRQF_TRIGGER_RISING or IRQF_TRIGGER_FALLING respectively.
++	 */
++	irq_type = irqd_get_trigger_type(desc);
++	if (irq_type == IRQF_TRIGGER_RISING) { /* Default */
++		val |= ADIS16480_DRDY_POL(1);
++	} else if (irq_type == IRQF_TRIGGER_FALLING) {
++		val |= ADIS16480_DRDY_POL(0);
++	} else {
++		dev_err(&st->adis.spi->dev,
++			"Invalid interrupt type 0x%x specified\n", irq_type);
++		return -EINVAL;
++	}
++	/* Write the data ready configuration to the FNCTIO_CTRL register */
++	return adis_write_reg_16(&st->adis, ADIS16480_REG_FNCTIO_CTRL, val);
++}
++
+ static int adis16480_probe(struct spi_device *spi)
+ {
+ 	const struct spi_device_id *id = spi_get_device_id(spi);
+@@ -853,6 +942,10 @@ static int adis16480_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = adis16480_config_irq_pin(spi->dev.of_node, st);
++	if (ret)
++		return ret;
++
+ 	ret = adis_setup_buffer_and_trigger(&st->adis, indio_dev, NULL);
+ 	if (ret)
+ 		return ret;
 -- 
 2.7.4
