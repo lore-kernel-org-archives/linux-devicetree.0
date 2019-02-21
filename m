@@ -1,45 +1,126 @@
-Return-Path: <SRS0=4we3=Q3=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40062.outbound.protection.outlook.com ([40.107.4.62]:28160
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725890AbfBTGxx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Feb 2019 01:53:53 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V7 3/4] defconfig: arm64: add i.MX system controller thermal
- support
-Date: Wed, 20 Feb 2019 06:53:49 +0000
-Message-ID: <1550645332-2907-3-git-send-email-Anson.Huang@nxp.com>
-References: <1550645332-2907-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1550645332-2907-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Return-Path: <SRS0=5lt5=Q4=martin.sperl.org=kernel@kernel.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH V7 10/10] can: mcp25xxfd: optimize reception of big CanFD frame reception with BRS
+Date: Thu, 21 Feb 2019 21:07:36 +0000
+Message-Id: <20190221210736.640-11-kernel@martin.sperl.org>
+In-Reply-To: <20190221210736.640-1-kernel@martin.sperl.org>
+References: <20190221210736.640-1-kernel@martin.sperl.org>
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables CONFIG_IMX_SC_THERMAL as module.
+From: Martin Sperl <kernel@martin.sperl.org>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No changes since V6.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+In case of predicted DLC=15 and in case at least 33% of those are
+sent via BRS be aggressive and use bulk fifo reads to avoid missing
+any frames due to releasing FIFOs not as fast as possible.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2d9c390..52d503e 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -413,6 +413,7 @@ CONFIG_SENSORS_INA2XX=3Dm
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3Dy
- CONFIG_CPU_THERMAL=3Dy
- CONFIG_THERMAL_EMULATION=3Dy
-+CONFIG_IMX_SC_THERMAL=3Dm
- CONFIG_ROCKCHIP_THERMAL=3Dm
- CONFIG_RCAR_THERMAL=3Dy
- CONFIG_RCAR_GEN3_THERMAL=3Dy
---=20
-2.7.4
+This would be of most impact when having a 1MHz Can Bus with
+a 8MHz data bitrate.
+
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+---
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h |  1 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c   | 48 +++++++++++++++-------
+ 2 files changed, 35 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
+index 1a48e801065d..eeb9c88c7e97 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
+@@ -178,6 +178,7 @@ struct mcp25xxfd_can_priv {
+ 	struct {
+ #define MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE 32
+ 		u8 dlc[MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE];
++		u8 brs[MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE];
+ 		u8 index;
+ 		u32 predicted_len;
+ 	} rx_history;
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
+index e2102aa00578..11bf12461e58 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
+@@ -104,6 +104,8 @@ int mcp25xxfd_can_rx_submit_frame(struct mcp25xxfd_can_priv *cpriv, int fifo)
+
+ 	/* add to rx_history */
+ 	cpriv->rx_history.dlc[cpriv->rx_history.index] = dlc;
++	cpriv->rx_history.brs[cpriv->rx_history.index] =
++		(rx->flags & MCP25XXFD_CAN_OBJ_FLAGS_BRS) ? CANFD_BRS : 0;
+ 	cpriv->rx_history.index++;
+ 	if (cpriv->rx_history.index >= MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE)
+ 		cpriv->rx_history.index = 0;
+@@ -395,19 +397,10 @@ static int mcp25xxfd_can_rx_predict_prefetch(struct mcp25xxfd_can_priv *cpriv)
+  * reading multiple rx fifos is a realistic option of optimization
+  */
+
+-/* right now we only optimize for sd (can2.0) frame case,
+- * but in principle it could be also be valuable for CANFD
+- * frames when we receive lots of 64 byte packets with BRS set
+- * and a big difference between nominal and data bitrates
+- */
+-
+-int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
++static int mcp25xxfd_can_rx_read_single_frames(struct mcp25xxfd_can_priv *cpriv,
++					       int prefetch)
+ {
+-	int i, f, prefetch;
+-	int ret;
+-
+-	/* calculate optimal prefetch to use */
+-	prefetch = mcp25xxfd_can_rx_predict_prefetch(cpriv);
++	int i, f, ret;
+
+ 	/* loop all frames */
+ 	for (i = 0, f = cpriv->fifos.rx.start; i < cpriv->fifos.rx.count;
+@@ -424,7 +417,7 @@ int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
+ 	return 0;
+ }
+
+-static int mcp25xxfd_can_rx_read_sd_frames(struct mcp25xxfd_can_priv *cpriv)
++static int mcp25xxfd_can_rx_read_bulk_frames(struct mcp25xxfd_can_priv *cpriv)
+ {
+ 	int i, start, end;
+ 	int ret;
+@@ -447,12 +440,39 @@ static int mcp25xxfd_can_rx_read_sd_frames(struct mcp25xxfd_can_priv *cpriv)
+ 	return 0;
+ }
+
++static int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
++{
++	int i, count_dlc15, count_brs, prefetch;
++
++	/* get a prediction on prefetch */
++	prefetch = mcp25xxfd_can_rx_predict_prefetch(cpriv);
++
++	/* if the prefetch is < 64 then just read single */
++	if (prefetch < 64)
++		return mcp25xxfd_can_rx_read_single_frames(cpriv, prefetch);
++
++	/* check if we have mostly brs frames of those DLC=15 frames */
++	for (i = 0, count_brs = 0, count_dlc15 = 0;
++	     i < MCP25XXFD_CAN_RX_DLC_HISTORY_SIZE; i++)
++		if (cpriv->rx_history.dlc[i] == 15) {
++			count_dlc15++;
++			if (cpriv->rx_history.brs[i])
++				count_brs++;
++		}
++
++	/* if we have at least 33% brs frames then run bulk */
++	if (count_brs * 3 >= count_dlc15)
++		return mcp25xxfd_can_rx_read_bulk_frames(cpriv);
++	else
++		return mcp25xxfd_can_rx_read_single_frames(cpriv, prefetch);
++}
++
+ static int mcp25xxfd_can_rx_read_frames(struct mcp25xxfd_can_priv *cpriv)
+ {
+ 	if (cpriv->can.dev->mtu == CANFD_MTU)
+ 		return mcp25xxfd_can_rx_read_fd_frames(cpriv);
+ 	else
+-		return mcp25xxfd_can_rx_read_sd_frames(cpriv);
++		return mcp25xxfd_can_rx_read_bulk_frames(cpriv);
+ }
+
+ int mcp25xxfd_can_rx_handle_int_rxif(struct mcp25xxfd_can_priv *cpriv)
+--
+2.11.0
