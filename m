@@ -1,127 +1,201 @@
-Return-Path: <robherring2@gmail.com>
-Date: Wed, 13 Feb 2019 16:23:26 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: i2c: I2C binding for Mellanox
- BlueField SoC
-Message-ID: <20190213222326.GA23442@bogus>
-References: <cover.1548866223.git.kblaiech@mellanox.com>
- <cf04b305725aacf0a52b3529131e510b1fd6565a.1548866223.git.kblaiech@mellanox.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf04b305725aacf0a52b3529131e510b1fd6565a.1548866223.git.kblaiech@mellanox.com>
-To: Khalil Blaiech <kblaiech@mellanox.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, David Woods <dwoods@mellanox.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, arm-soc <arm@kernel.org>
+Return-Path: <SRS0=5lt5=Q4=martin.sperl.org=kernel@kernel.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH V7 00/10] Microchip mcp25xxfd can controller driver
+Date: Thu, 21 Feb 2019 21:07:26 +0000
+Message-Id: <20190221210736.640-1-kernel@martin.sperl.org>
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jan 30, 2019 at 01:01:32PM -0500, Khalil Blaiech wrote:
-> Added device tree bindings documentation for Mellanox BlueField
-> I2C SMBus controller.
-> 
-> Reviewed-by: David Woods <dwoods@mellanox.com>
-> Signed-off-by: Khalil Blaiech <kblaiech@mellanox.com>
-> ---
->  .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt | 71 ++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-> new file mode 100644
-> index 0000000..db20b23
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-> @@ -0,0 +1,71 @@
-> +Device tree configuration for the Mellanox I2C SMBus on BlueField SoCs
-> +
-> +Required Properties:
-> +- reg :		address offset and length of the device registers. The
-> +		registers consists of a set of dedicated and shared
-> +		resources:
-> +
-> +			1: Smbus block registers.
-> +			2: Cause master registers.
-> +			3: Cause slave registers.
-> +
+From: Martin Sperl <kernel@martin.sperl.org>
 
-> +		The BlueField SoCs includes three I2C bus controllers;
-> +		the set of resources <address length> must be defined
-> +		as follow:
-> +
-> +		BlueField 1:
-> +
-> +			* i2c bus 0:
-> +		    	<0x02804000 0x800>	/* Smbus[0]        */
-> +		    	<0x02801200 0x020>	/* Cause Master[0] */
-> +		    	<0x02801260 0x020>	/* Cause Slave[0]  */
-> +
-> +			* i2c bus 1:
-> +		    	<0x02804800 0x800>	/* Smbus[1]        */
-> +		    	<0x02801220 0x020>	/* Cause Master[1] */
-> +		    	<0x02801280 0x020>	/* Cause Slave[1]  */
-> +
-> +			* i2c bus 2:
-> +		    	<0x02805000 0x800>	/* Smbus[2]        */
-> +		    	<0x02801240 0x020>	/* Cause Master[2] */
-> +		    	<0x028012a0 0x020>	/* Cause Slave[2]  */
-> +
-> +		BlueField 2:
-> +
-> +			* i2c bus 0:
-> +		    	<0x02804000 0x800>	/* Smbus[0]        */
-> +		    	<0x02801400 0x020>	/* Cause Master[0] */
-> +		    	<0x02801540 0x020>	/* Cause Slave[0]  */
-> +
-> +			* i2c bus 1:
-> +		    	<0x02804800 0x800>	/* Smbus[1]        */
-> +		    	<0x02801420 0x020>	/* Cause Master[1] */
-> +		    	<0x02801560 0x020>	/* Cause Slave[1]  */
-> +
-> +			* i2c bus 2:
-> +		    	<0x02805000 0x800>	/* Smbus[2]        */
-> +		    	<0x02801440 0x020>	/* Cause Master[2] */
-> +		    	<0x02801580 0x020>	/* Cause Slave[2]  */
+This patchset adds a driver for the mcp25xxfd CanFD controller.
 
-You can remove all these addresses from the binding. The important part 
-is just that it is 3 entries and what each entry is.
+Most of the features of the controller are supported by this driver
+release.
 
-> +
-> +- compatible : 	should be "mellanox,i2c-mlxbf1" or "mellanox,i2c-mlxbf2".
+The controller includes a few features that the current core Can(FD)
+implementation does not support: * Transmit Bandwidth Sharing bits
+  - this waits for a configurable number of syncronization bits before
+    atempting to transmit the next frame - for the moment controllable
+    via a module parameter
+* SID11 with CanFD frames
+  - at this moment not supported by driver
+* 3 transmit attempts in addition to ONE_SHOT
+* transmitter delay compensation configurations
+* micro second exact transmission and reception timestamps
+  - used internally by driver
+* variable number of tx-fifos
+  - exposed via module parameter at this moment
 
-Usually we put this first.
+The driver driver has been split into several patches - first just
+initial setup of each section and then driver optimization patches.
 
-> +- interrupts : 	interrupt number.
+As requested the driver has now also been split out into smaller
+files for individual components of the driver - in the hope that this
+has not been producing regressions...
 
-Some space before tab here.
+The driver is able to handle reception of 99.95% of all CAN frames
+of a 100% saturated 1MHz Can2.0 Bus with Frames with standard IDs and
+DLC=0 on a Raspberry Pi 3. Note that this statistics is without injection
+into the network stack, which then drops about 60% of all frames.
 
-> +
-> +Optional Properties:
-> +- clock-frequency :	bus frequency used to configure timing registers;
-> +			allowed values are 100000, 400000 and 1000000;
-> +			those are expressed in Hz.
+At this time the SPI bus is utilized 75% (when counting CS asserted)
+and 60% from a SPI-Clock perspective.
 
-What's the default if not present?
+On the Rasberry pi 3 in such a situation we are using 100% of one
+CPU for the interrupt thread (as the spi driver is using polling for
+short transfers) and this has exposed a performance inefficiency in the
+spi framework that shows as the the spi-worker thread also consuming
+CPU cycles (30% of one CPU in this test case) unnecessarily.
 
-> +
-> +Example:
-> +
-> +aliases {
-> +	i2c0 = &i2c_0
-> +};
+The driver also allows to use the INT0/1 pins as GPIOs.
+Lots of internal data/statistics is exposed via debugfs.
 
-Don't need to show aliases in examples.
+On the HW side some errata related to SRAM access have been found
+during the development of the patchsets. Since then an errata for
+the controller has been shared by microchip.
 
-> +
-> +i2c_0: i2c {
+At this very moment there is no 100% mitigation for this (besides
+a newer version of the silicon).
+The only instance where this is probably not an issue is when using
+a SPI bus driver that reliably deasserts CS in the "requested"
+time-frame of a few Can clock cycles.
 
-i2c@2804000
+When the spi-bus-driver is using GPIO-CS (which is nowadays the preferred
+implementation of spi-bus-drivers) then we have to rely on
+interrupt and interrupt worker thread scheduling latencies to be fast
+enough to fullfill the requirements of the mcp2517fd of SCK stop to
+CS-deassert. To achive this a faster CPU is needed and preferably more
+cores.
 
-> +	compatible = "mellanox,i2c-mlxbf1";
-> +	reg = <0x02804000 0x800>,
-> +	      <0x02801200 0x020>,
-> +	      <0x02801260 0x020>;
-> +	interrupts = <57>;
-> +	clock-frequency = <100000>;
-> +};
-> -- 
-> 2.1.2
-> 
+A lot of possible mitigations have been investigated (Fifo ordering in
+SRAM, the use of CRC SPI commands,...), but none have been successful.
+That is why we are only able to reach 99.95% rate, because
+when this issue occurres then there is the need to reconfigure the
+controller and that takes some time which can not get used to process
+frames. Fortunately this only happens on highly congested systems, but it
+is more likely to occur on low end systems.
+
+So as an example almost everything related to can-transmission can get
+found in mcp25xxfd_can_tx.c. mcp25xxfd_can_rx.c is responsible for
+can-reception and mcp25xxfd_can_int.c for interrupt handling.
+
+Unfortunately the limit of the linux-can mailing-list seems lower than
+128k (and thus patch 4 of the series seems not to have been accepted).
+Thus V7 is essentially splitting V6 patch 4 into basic Can functionality
+with Can RX working in V7 patch 4 and TX-support in V7 patch 5.
+
+Changelog:
+  V1 -> V2: new more generic name based on feedback from microchip
+            cleanup of code (checkpatch)
+            address all feedback on code
+            handle (HW) systemerrors in a much better/reliable way
+            cleanup of dt custom properties removing (most) gpio
+              related properties
+            implemented GPIOLIB support as per feedback
+  V2 -> V3: added vendor-prefix for gpio-opendrain to dt-binding
+            added gpio-controller to dt-binding
+	    added feedback by Rob Herring
+	    waited for other feedback regarding the code
+  V3 -> V4: resend
+            Patch-1 (dt) added: Reviewed-by: Rob Herring <robh@kernel.org>
+  V4 -> V5: reorganisation of the patchset into smaller patches
+            review of the whole driver code for better modularization
+  V5 -> V6: Major refactoring as per feedback from Wilhelm Grandegger
+	    Fixing bugs reported by several other parties
+            Split out of optimizations into separate patches
+  V6 -> V7: added include linux/irqreturn.h (feedback by Eric Scholz)
+            move can transmission into a separate patch to reduce
+              the size of the individual patches to make the linux-can
+              mailing-list happy...
+
+Martin Sperl (10):
+  dt-binding: can: mcp25xxfd: document device tree bindings
+  can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver basics
+  can: mcp25xxfd: add gpiolib support for GPIO0/1 (aka. INT0/INT1)
+  can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver
+  can: mcp25xxfd: Add Can transmission support
+  can: mcp25xxfd: optimize TEF read avoiding unnecessary SPI transfers
+  can: mcp25xxfd: optimize TEF reads reading multiple TEFs in one go
+  can: mcp25xxfd: optimize SPI reads of FIFOs in can2.0 mode
+  can: mcp25xxfd: add prediction of CanFD frames sizes based on history
+  can: mcp25xxfd: optimize reception of big CanFD frame reception with
+    BRS
+
+ .../bindings/net/can/microchip,mcp25xxfd.txt       |  32 +
+ drivers/net/can/spi/Kconfig                        |   2 +
+ drivers/net/can/spi/Makefile                       |   2 +
+ drivers/net/can/spi/mcp25xxfd/Kconfig              |   5 +
+ drivers/net/can/spi/mcp25xxfd/Makefile             |  18 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.c     | 281 ++++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.h     |  14 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.c      | 684 ++++++++++++++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.h      |  56 ++
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c  | 235 ++++++
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.h  |  44 ++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.c | 347 +++++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.h |  16 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_id.h   |  69 ++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.c  | 706 ++++++++++++++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.h  |  17 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h | 203 ++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c   | 521 ++++++++++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.h   |  18 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c   | 794 +++++++++++++++++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.h   |  86 +++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_clock.c    | 485 +++++++++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_clock.h    |  28 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.c      | 312 ++++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.h      |  84 +++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.c      |  31 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.h      |  15 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_debugfs.c  | 110 +++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_debugfs.h  |  30 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.c      |  75 ++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.h      |  16 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.c     | 194 +++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.h     |  16 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.c      |  73 ++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.h      |  15 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_priv.h     |  83 +++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_regs.h     | 661 +++++++++++++++++
+ 37 files changed, 6378 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/Kconfig
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/Makefile
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_id.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_clock.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_clock.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_debugfs.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_debugfs.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_priv.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_regs.h
+
+--
+2.11.0
