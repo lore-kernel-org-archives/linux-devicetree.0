@@ -1,208 +1,99 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH 14/14] arm64: dts: imx: add imx8qm mek support
-Date: Thu, 21 Feb 2019 18:25:47 +0000
-Message-ID: <1550773093-13349-15-git-send-email-aisheng.dong@nxp.com>
-References: <1550773093-13349-1-git-send-email-aisheng.dong@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq mapping already exists
+Date: Thu, 21 Feb 2019 10:47:03 -0800
+Message-ID: <155077482380.77512.11109337732610217265@swboyd.mtv.corp.google.com>
+References: <20190208021631.30252-1-masneyb@onstation.org> <20190208021631.30252-6-masneyb@onstation.org> <155020988635.115909.8353948296231202388@swboyd.mtv.corp.google.com> <20190215134733.GA21208@basecamp> <155026608236.115909.9007817366859489104@swboyd.mtv.corp.google.com> <20190216002359.GA24752@basecamp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550773093-13349-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190216002359.GA24752@basecamp>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The i.MX8QuadMax is a Dual (2x) Cortex-A72 and Quad (4x) Cortex-A53
-proccessor with powerful graphic and multimedia features.
-This patch adds i.MX8QuadMax MEK board support.
+Quoting Brian Masney (2019-02-15 16:23:59)
+> On Fri, Feb 15, 2019 at 01:28:02PM -0800, Stephen Boyd wrote:
+> > Quoting Brian Masney (2019-02-15 05:47:33)
+> > > On Thu, Feb 14, 2019 at 09:51:26PM -0800, Stephen Boyd wrote:
+> > > > > diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+> > > > > index 8eb2528793f9..2f99a98ccee5 100644
+> > > > > --- a/drivers/mfd/qcom-pm8xxx.c
+> > > > > +++ b/drivers/mfd/qcom-pm8xxx.c
+> > > > > @@ -380,6 +380,12 @@ static void pm8xxx_irq_domain_map(struct pm_=
+irq_chip *chip,
+> > > > >                                   struct irq_domain *domain, unsi=
+gned int irq,
+> > > > >                                   irq_hw_number_t hwirq, unsigned=
+ int type)
+> > > > >  {
+> > > > > +       unsigned int old_virq;
+> > > > > +
+> > > > > +       old_virq =3D irq_find_mapping(domain, hwirq);
+> > > > > +       if (old_virq)
+> > > > > +               irq_domain_disassociate(domain, old_virq);
+> > > >=20
+> > > > Is it possible to pass 'true' for the 'realloc' argument to
+> > > > __irq_domain_alloc_irqs() and then this disassociate change isn't
+> > > > needed?
+> > >=20
+> > > The kernel doc for __irq_domain_alloc_irqs() says that the realloc
+> > > parameter is mainly to support legacy IRQs. I don't think its a good
+> > > idea to add new code that'll stay past the end of this patch series
+> > > on top of that legacy interface.
+> > >=20
+> >=20
+> > Ok. The other side of the argument is that this is the only user of
+> > irq_domain_disassociate(), which may also be some sort of legacy
+> > interface that isn't supposed to be used. Looking at the commit that
+> > exposed it, it seems to be that it's there for legacy reasons.
+> >=20
+> > commit 43a775916d63d1c822107b39987192ca5ced445c
+> > Author: Jiang Liu <jiang.liu@linux.intel.com>
+> > Date:   Mon Jun 9 16:20:05 2014 +0800
+> >=20
+> >     genirq: Export irq_domain_disassociate() to architecture interrupt =
+drivers
+> >    =20
+> >     Export irq_domain_disassociate() to architecture interrupt drivers,
+> >     so it could be used to handle legacy IRQ descriptors on x86.
+> >=20
+> > So maybe we should just use the realloc argument and bury the
+> > disassociate API in irqdomain.c because it's not supposed to be used?
+> > Or does the realloc path not work for some reason?
+>=20
+> I haven't tried the realloc path yet. Let's back up further so that we
+> are both starting with the same assumptions. Do you want to keep either
+> your proposed change (realloc argument) or the existing
+> irq_domain_disassociate change in mainline past the end of this patch
+> series? If it is going to continue to be a temporary shim that will be
+> reverted at the end of the patch series (like I did here), then I don't
+> see the point in this extra work since this patch is only here to keep
+> it bisectable and works. We're not using any legacy interfaces by the
+> end of this patch series.
 
-Note that MX8QM needs a special workaround for TLB flush due to a SoC
-errata, otherwise there may be random crash if enable both clusters of
-A72 and A53. As the errata workaround is still not in mainline, so we
-disable A72 cluster first for MX8QM MEK.
+The main concern I have is that we're changing the binding to avoid a
+larger discussion we could have about whether or not the binding is
+wrong to list out the hierarchical irqs as part of an 'interrupts'
+property. We have one case where hardware irq numbers are remapped to
+other hardware irq number spaces and it seems perfectly valid to use the
+'interrupts' property to indicate this, i.e. chained interrupt
+controllers.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
- arch/arm64/boot/dts/freescale/Makefile       |   1 +
- arch/arm64/boot/dts/freescale/imx8qm-mek.dts | 144 +++++++++++++++++++++++++++
- 2 files changed, 145 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-mek.dts
+Those controllers typically have a single 'interrupts' specifier for the
+chained irq of the parent interrupt controller, but when it comes to
+hierarchical interrupts we seem to have various different ways of
+expressing the mapping from one number space to another. I've seen
+approaches varying between hardcoding everything in the kernel to
+hardcoding everything in DT.
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 13604e5..b8e5e3b 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -21,4 +21,5 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
- 
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-new file mode 100644
-index 0000000..80d8da1
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018 NXP
-+ *	Dong Aisheng <aisheng.dong@nxp.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8qm.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX8QM MEK";
-+	compatible = "fsl,imx8qm-mek", "fsl,imx8qm";
-+
-+	chosen {
-+		stdout-path = &dma_lpuart0;
-+	};
-+
-+	cpus {
-+		/delete-node/ cpu-map;
-+		/delete-node/ cpu@100;
-+		/delete-node/ cpu@101;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0 0x40000000>;
-+	};
-+
-+	reg_usdhc2_vmmc: usdhc2-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "SD1_SPWR";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&lsio_gpio4 19 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
-+
-+&dma_lpuart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart0>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+
-+		ethphy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+		};
-+	};
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <8>;
-+	no-sd;
-+	no-sdio;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
-+	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			IMX8QM_ENET0_MDC_CONN_ENET0_MDC				0x06000020
-+			IMX8QM_ENET0_MDIO_CONN_ENET0_MDIO			0x06000020
-+			IMX8QM_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x06000020
-+			IMX8QM_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3		0x06000020
-+			IMX8QM_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC		0x06000020
-+			IMX8QM_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x06000020
-+			IMX8QM_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0		0x06000020
-+			IMX8QM_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1		0x06000020
-+			IMX8QM_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2		0x06000020
-+			IMX8QM_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3		0x06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart0: lpuart0grp {
-+		fsl,pins = <
-+			IMX8QM_UART0_RX_DMA_UART0_RX				0x06000020
-+			IMX8QM_UART0_TX_DMA_UART0_TX				0x06000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK				0x06000041
-+			IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD				0x00000021
-+			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0			0x00000021
-+			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1			0x00000021
-+			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2			0x00000021
-+			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3			0x00000021
-+			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4			0x00000021
-+			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5			0x00000021
-+			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6			0x00000021
-+			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7			0x00000021
-+			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE			0x00000041
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK			0x06000041
-+			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD			0x00000021
-+			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0			0x00000021
-+			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1			0x00000021
-+			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2			0x00000021
-+			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3			0x00000021
-+			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT		0x00000021
-+		>;
-+	};
-+};
--- 
-2.7.4
+I'm mostly wondering if having an interrupts property listing all the
+parent interrupts in corresponding specifier slots for the interrupt
+controller's hardware irq space is wrong. It seems to describe the
+mapping between the two number spaces already, so maybe it would make
+sense to use the realloc argument and keep listing them as interrupts in
+DT. Obviously things are already moving forward with the new DT binding,
+so maybe I just need to be told that having an interrupts property there
+is wrong. If it is wrong, then nothing needs to be kept around and the
+binding can easily be changed.
