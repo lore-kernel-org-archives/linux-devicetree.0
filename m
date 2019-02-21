@@ -1,67 +1,29 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v1 00/12] qcom: dts: thermal cleanups
-Date: Wed, 20 Feb 2019 15:32:59 -0800
-Message-ID: <20190220233257.GA31479@localhost.localdomain>
-References: <cover.1550493113.git.amit.kucheria@linaro.org>
- <20190220012641.GH2811@localhost.localdomain>
- <CAP245DXn3db27wMPSaZazRhprXD89JKQ5qEkc8r0DpSL9A847w@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 6/6] net: ethernet: ti: cpsw: deprecate cpsw-phy-sel
+ driver
+Date: Wed, 20 Feb 2019 16:18:31 -0800 (PST)
+Message-ID: <20190220.161831.2067856031892978.davem@davemloft.net>
+References: <20190220203326.GT15711@atomide.com>
+        <20190220.124155.2226787912266109280.davem@davemloft.net>
+        <20190220210127.GU15711@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP245DXn3db27wMPSaZazRhprXD89JKQ5qEkc8r0DpSL9A847w@mail.gmail.com>
+In-Reply-To: <20190220210127.GU15711@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, DTML <devicetree@vger.kernel.org>
+To: tony@atomide.com
+Cc: grygorii.strashko@ti.com, kishon@ti.com, robh+dt@kernel.org, netdev@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2019 at 03:09:36PM +0530, Amit Kucheria wrote:
-> On Wed, Feb 20, 2019 at 6:56 AM Eduardo Valentin <edubezval@gmail.com> wrote:
-> >
-> > Hey
-> > On Mon, Feb 18, 2019 at 06:05:14PM +0530, Amit Kucheria wrote:
-> > > - Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
-> > > - split up the register address map for msm8998
-> > > - standardize names of the various thermal-zones across boards to make it
-> > >   easy for test scripts to parse
-> > >
-> >
-> > I am generally fine with the effort but please fix the following
-> > (applies for the whole series) wrt to required properties for DT
-> > thermal:
-> > a. Trip points for your zones
-> 
-> Thanks for the review.
-> 
-> In some cases, the temperatures are just exposed so something in
-> userspace might read it and do something with it. We don't expect
-> kernel trips for them.
+From: Tony Lindgren <tony@atomide.com>
+Date: Wed, 20 Feb 2019 13:01:27 -0800
 
-Would a hwmon driver make more sense here?
+> What I can do is set up a separate branch with just this
+> patch on top of the dts changes that the arm-soc guys can
+> then merge towards the end of the merge cycle. If that
+> works for you, let me know and I'll do it.
 
-> 
-> Adding trip points also requires me to add cooling-maps (your point b. below).
+Yes, it does work for me.
 
-Yes.
-
-> 
-> I guess I'm looking for an example of how to just expose sensor
-> temperatures w/o any associated trips and cooling maps.
-> 
-> > b. Cooling Mappings for zones that have passive trips.
-> >
-> 
-> From what I can see currently only CPUs and GPUs (among the major heat
-> sources) can passively reduce heat by reducing frequencies.
-> 
-> Things like cameras, display, video might have a more ON/OFF approach
-> to throttling that might be controlled from userspace. And we don't
-> have a way to tell in DT that these zones are managed in userspace
-
-You can always add a Hot trip point. To my understanding that is for
-notifying userspace.
-
-
-
-
-> (https://patchwork.kernel.org/patch/10259487/)
+Thanks.
