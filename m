@@ -1,41 +1,35 @@
-From: Gareth Williams <gareth.williams.jx@renesas.com>
-Subject: [PATCH v4 0/2] i2c: designware: Add support for a bus clock
-Date: Thu, 21 Feb 2019 16:10:57 +0000
-Message-ID: <1550765459-14519-1-git-send-email-gareth.williams.jx@renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Gareth Williams <gareth.williams.jx@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 6/6] net: ethernet: ti: cpsw: deprecate cpsw-phy-sel
+ driver
+Date: Thu, 21 Feb 2019 08:36:38 -0800
+Message-ID: <20190221163638.GW15711@atomide.com>
+References: <20190220203326.GT15711@atomide.com>
+ <20190220.124155.2226787912266109280.davem@davemloft.net>
+ <20190220210127.GU15711@atomide.com>
+ <20190220.161831.2067856031892978.davem@davemloft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190220.161831.2067856031892978.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: grygorii.strashko@ti.com, kishon@ti.com, robh+dt@kernel.org, netdev@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Synopsys I2C Controller has a peripheral clock that some SoCs 
-require to access the registers. This series also details the new clock
-property in the bindings documentation.
+* David Miller <davem@davemloft.net> [190221 00:18]:
+> From: Tony Lindgren <tony@atomide.com>
+> Date: Wed, 20 Feb 2019 13:01:27 -0800
+> 
+> > What I can do is set up a separate branch with just this
+> > patch on top of the dts changes that the arm-soc guys can
+> > then merge towards the end of the merge cycle. If that
+> > works for you, let me know and I'll do it.
+> 
+> Yes, it does work for me.
 
-v4:
- - Code comments and commit messages updated to reference "peripheral clock"
-   instead of "bus clock".
- - Rebased onto next-20190221.
-v3:
- - busclk renamed to pclk.
- - Added comment with dw_i2c_dev struct definition describing pclk.
- - Added enable rollback of first clock if second fails to enable.
- - Changed clocks and clock-names sections to use term "peripheral clock"
-   (pclk) instead of "bus clock" (busclk) in dt-bindings documentation.
+OK I've applied this patch into omap-for-v5.1/cpsw.
 
-v2:
- - Use new devm_clk_get_optional() function as it simplifies handling when
-   the optional clock is not present.
+Thanks,
 
-Phil Edworthy (2):
-  dt: snps,designware-i2c: Add clock bindings documentation
-  i2c: designware: Add support for a peripheral clock
-
- .../devicetree/bindings/i2c/i2c-designware.txt         |  9 +++++++++
- drivers/i2c/busses/i2c-designware-common.c             | 18 ++++++++++++++++--
- drivers/i2c/busses/i2c-designware-core.h               |  2 ++
- drivers/i2c/busses/i2c-designware-platdrv.c            |  5 +++++
- 4 files changed, 32 insertions(+), 2 deletions(-)
-
--- 
-2.7.4
+Tony
