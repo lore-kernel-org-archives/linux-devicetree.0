@@ -1,76 +1,94 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: RE: [PATCH v4 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT buffer.
-Date: Thu, 21 Feb 2019 09:14:30 +0200
-Message-ID: <87va1dbokp.fsf@linux.intel.com>
-References: <1550173514-23573-1-git-send-email-pawell@cadence.com> <1550173514-23573-7-git-send-email-pawell@cadence.com> <67da432f-9c95-d644-65b5-dbc5b942d24c@ti.com> <BYAPR07MB47091C199971D677DE0FBB84DD7D0@BYAPR07MB4709.namprd07.prod.outlook.com> <e8616274-b0a8-6e59-b6fa-a68fed58bad7@ti.com> <BYAPR07MB470939C6F100336BAF6C41BFDD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: [PATCH V7 1/8] dt-bindings: timer: add Tegra210 timer
+Date: Thu, 21 Feb 2019 15:21:43 +0800
+Message-ID: <20190221072150.4395-2-josephl@nvidia.com>
+References: <20190221072150.4395-1-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB470939C6F100336BAF6C41BFDD7D0@BYAPR07MB4709.namprd07.prod.outlook.com>
+In-Reply-To: <20190221072150.4395-1-josephl@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Rahul Kumar <kurahul@cadence.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
+timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
+from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
+(TMR10-TMR13). Each TMR can be programmed to generate one-shot periodic,
+or watchdog interrupts.
 
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Joseph Lo <josephl@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+---
+v7:
+ * no change
+v6:
+ * add ack tag from Jon.
+v5:
+ * no change
+v4:
+ * no change
+v3:
+ * no change
+v2:
+ * list all the interrupts that are supported by tegra210 timers block
+ * add RB tag from Rob.
+---
+ .../bindings/timer/nvidia,tegra210-timer.txt  | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra210=
+-timer.txt
 
-Hi,
-
-(please break your emails at 80-columns)
-
-Pawel Laszczak <pawell@cadence.com> writes:
->>> One more thing. Workaround has implemented algorithm that decide for wh=
-ich
->>> endpoint it should be enabled.  e.g for composite device MSC+NCM+ACM it
->>> should work only for ACM OUT endpoint.
->>>
->>
->>If ACM driver didn't queue the request for ACM OUT endpoint, why does the
->>controller accept the data at all?
->>
->>I didn't understand why we need a workaround for this. It should be stand=
-ard
->>behaviour to NAK data if function driver didn't request for all endpoints.
->
-> Yes, I agree with you. Controller shouldn=E2=80=99t accept such packet. A=
-s I know this
-> behavior will be fixed in RTL.
->
-> But I assume that some older version of this controller are one the marke=
-t,
-> and driver should work correct with them.
->
-> In the feature this workaround can be limited only to selected controller=
-s.
->
-> Even now I assume that it can be enabled/disabled by module parameter.
-
-no module parameters, please. Use revision detection in runtime.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlxuT9YACgkQzL64meEa
-mQb0KA/9G9q4320JmbOLoOs7lhzSroaa+cRfzRqvFN84Wt1jcLdbt427Hmei9KQD
-hSuWJCN8XfbS0SQouEf+ijLXOloQoj++Po57Vr9hhlciVwbfd//pREYlwv3KqEhc
-9B29m84tEBl762fesbu+r6jEhyIEFoj5QvKSQQQ6Sn3mjBwDHuX9rT6XPqYBgR93
-uemDLnIKVpt/U56jVtkTofBSEFnlaQXnCMjrB7pZhWLUG0WEPABJ+3oyVBGqzEYQ
-Cqw8QTh/jr1EB4qj9ArHOXPRqC0NXFhWLNV3N/BuN0No/yVeVv/WntgXMUo4aOQ6
-veeG3/YuvO3UxzrR3ChUkqQXpQK0oynIjOdCSEuZ8EyWjHlPfYParu0y0M86RZCN
-uMQLBt53g3gOtoyfEq0U9Xn6fxeIXVB2SPWBJrL/dt+0iLfksS634RxD4xH90jp+
-RkktSilOQzwHqhlvF+SWC/ilY4Y4NKheFN3MAz7USTyBDhIKaxkQg9aZmQf5Vr/F
-puC3+syTKBrnmF6bPaTzvSQJJ+zYO6Dyhs7EsZDET3+ye08BZB7KDC5h3SsISeY2
-vHG6NxaZm37kzY9d6MkOC9JYupyQhLbHD0imgYAEjU7DncNjlR2Fb5N1JNgW9pxV
-5qQeZbY4dVJycXG8vrrLEnB6oBM4tJFpCiBN6vyG+//+RQ5jmPM=
-=9xvx
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.=
+txt b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+new file mode 100644
+index 000000000000..032cda96fe0d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+@@ -0,0 +1,36 @@
++NVIDIA Tegra210 timer
++
++The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
++timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
++from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
++(TMR10-TMR13). Each TMR can be programmed to generate one-shot, periodic,
++or watchdog interrupts.
++
++Required properties:
++- compatible : "nvidia,tegra210-timer".
++- reg : Specifies base physical address and size of the registers.
++- interrupts : A list of 14 interrupts; one per each timer channels 0 thro=
+ugh
++  13.
++- clocks : Must contain one entry, for the module clock.
++  See ../clocks/clock-bindings.txt for details.
++
++timer@60005000 {
++	compatible =3D "nvidia,tegra210-timer";
++	reg =3D <0x0 0x60005000 0x0 0x400>;
++	interrupts =3D <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
++	clocks =3D <&tegra_car TEGRA210_CLK_TIMER>;
++	clock-names =3D "timer";
++};
+--=20
+2.20.1
