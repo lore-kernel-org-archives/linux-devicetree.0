@@ -1,45 +1,24 @@
-Return-Path: <SRS0=+tgD=QP=bgdev.pl=brgl@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 13/33] ARM: davinci: aintc: use readl/writel_relaxed()
-Date: Fri,  8 Feb 2019 18:31:34 +0100
-Message-Id: <20190208173154.4665-14-brgl@bgdev.pl>
-In-Reply-To: <20190208173154.4665-1-brgl@bgdev.pl>
-References: <20190208173154.4665-1-brgl@bgdev.pl>
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner --to=David Lechner <tglx@linutronix.dedavid>, lechnology.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/3] clk: imx: Add PLLs driver for imx8mm soc
+Message-ID: <155078186491.77512.17676637225196093830@swboyd.mtv.corp.google.com>
+References: <1548149769-32267-1-git-send-email-ping.bai@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <1548149769-32267-1-git-send-email-ping.bai@nxp.com>
+Date: Thu, 21 Feb 2019 12:44:24 -0800
+To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Quoting Jacky Bai (2019-01-22 01:31:41)
+> From: Bai Ping <ping.bai@nxp.com>
+>=20
+> New PLLs are introduced on i.MX8M Mini SOC.
+> PLL1416X is Integer PLL, PLL1443X is a Frac PLL.
+>=20
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> ---
 
-Raplace all calls to __raw_readl() & __raw_writel() with readl_relaxed()
-and writel_relaxed() respectively. It's safe to do as there's no
-endianness conversion being done in the code.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/mach-davinci/irq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/mach-davinci/irq.c b/arch/arm/mach-davinci/irq.c
-index 148c23728bdb..6a7205a844e1 100644
---- a/arch/arm/mach-davinci/irq.c
-+++ b/arch/arm/mach-davinci/irq.c
-@@ -36,12 +36,12 @@ static struct irq_domain *davinci_aintc_irq_domain;
- 
- static inline void davinci_aintc_writel(unsigned long value, int offset)
- {
--	__raw_writel(value, davinci_aintc_base + offset);
-+	writel_relaxed(value, davinci_aintc_base + offset);
- }
- 
- static inline unsigned long davinci_aintc_readl(int offset)
- {
--	return __raw_readl(davinci_aintc_base + offset);
-+	return readl_relaxed(davinci_aintc_base + offset);
- }
- 
- static __init void
--- 
-2.20.1
+Applied to clk-next
