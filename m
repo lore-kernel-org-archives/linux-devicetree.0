@@ -1,7 +1,7 @@
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v2 10/10] iio: ak8975: improve code readability
-Date: Thu, 21 Feb 2019 18:02:55 +0100
-Message-ID: <8a4498a761bf63e38c16f17d437715be0399a957.1550768574.git.hns@goldelico.com>
+Subject: [PATCH v2 06/10] iio: gyro: itg3200: add mount matrix support
+Date: Thu, 21 Feb 2019 18:02:51 +0100
+Message-ID: <ad1f1af237439dcf2a0769280f9e7b1806d484f2.1550768574.git.hns@goldelico.com>
 References: <cover.1550768574.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,43 +12,72 @@ To: Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org
 Cc: letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-- use temporary variable in get_mount_matrix()
-- remove , after { }
+This patch allows to read a mount-matrix device tree
+property and report to user-space or in-kernel iio
+clients.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/iio/magnetometer/ak8975.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/iio/gyro/itg3200_core.c  | 20 ++++++++++++++++++++
+ include/linux/iio/gyro/itg3200.h |  1 +
+ 2 files changed, 21 insertions(+)
 
-diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-index db7214ac514c..43d08c089792 100644
---- a/drivers/iio/magnetometer/ak8975.c
-+++ b/drivers/iio/magnetometer/ak8975.c
-@@ -746,12 +746,14 @@ static const struct iio_mount_matrix *
- ak8975_get_mount_matrix(const struct iio_dev *indio_dev,
- 			const struct iio_chan_spec *chan)
- {
--	return &((struct ak8975_data *)iio_priv(indio_dev))->orientation;
-+	struct ak8975_data *data = iio_priv(indio_dev);
-+
-+	return &data->orientation;
+diff --git a/drivers/iio/gyro/itg3200_core.c b/drivers/iio/gyro/itg3200_core.c
+index 7adecb562c81..203a6be33b70 100644
+--- a/drivers/iio/gyro/itg3200_core.c
++++ b/drivers/iio/gyro/itg3200_core.c
+@@ -242,6 +242,20 @@ static int itg3200_initial_setup(struct iio_dev *indio_dev)
+ 	return ret;
  }
  
- static const struct iio_chan_spec_ext_info ak8975_ext_info[] = {
- 	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, ak8975_get_mount_matrix),
--	{ },
++static const struct iio_mount_matrix *
++itg3200_get_mount_matrix(const struct iio_dev *indio_dev,
++			  const struct iio_chan_spec *chan)
++{
++	struct itg3200 *data = iio_priv(indio_dev);
++
++	return &data->orientation;
++}
++
++static const struct iio_chan_spec_ext_info itg3200_ext_info[] = {
++	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, itg3200_get_mount_matrix),
 +	{ }
++};
++
+ #define ITG3200_ST						\
+ 	{ .sign = 's', .realbits = 16, .storagebits = 16, .endianness = IIO_BE }
+ 
+@@ -255,6 +269,7 @@ static int itg3200_initial_setup(struct iio_dev *indio_dev)
+ 	.address = ITG3200_REG_GYRO_ ## _mod ## OUT_H, \
+ 	.scan_index = ITG3200_SCAN_GYRO_ ## _mod, \
+ 	.scan_type = ITG3200_ST, \
++	.ext_info = itg3200_ext_info, \
+ }
+ 
+ static const struct iio_chan_spec itg3200_channels[] = {
+@@ -297,6 +312,11 @@ static int itg3200_probe(struct i2c_client *client,
+ 
+ 	st = iio_priv(indio_dev);
+ 
++	ret = iio_read_mount_matrix(&client->dev, "mount-matrix",
++				&st->orientation);
++	if (ret)
++		return ret;
++
+ 	i2c_set_clientdata(client, indio_dev);
+ 	st->i2c = client;
+ 
+diff --git a/include/linux/iio/gyro/itg3200.h b/include/linux/iio/gyro/itg3200.h
+index 2a820850f284..0a30fddccfb3 100644
+--- a/include/linux/iio/gyro/itg3200.h
++++ b/include/linux/iio/gyro/itg3200.h
+@@ -104,6 +104,7 @@
+ struct itg3200 {
+ 	struct i2c_client	*i2c;
+ 	struct iio_trigger	*trig;
++	struct iio_mount_matrix orientation;
  };
  
- #define AK8975_CHANNEL(axis, index)					\
-@@ -792,7 +794,7 @@ static const struct acpi_device_id ak_acpi_match[] = {
- 	{"AK09911", AK09911},
- 	{"AKM9911", AK09911},
- 	{"AK09912", AK09912},
--	{ },
-+	{ }
- };
- MODULE_DEVICE_TABLE(acpi, ak_acpi_match);
- #endif
+ enum ITG3200_SCAN_INDEX {
 -- 
 2.19.1
