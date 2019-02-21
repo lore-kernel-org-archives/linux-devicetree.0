@@ -1,55 +1,102 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 1/5] dt-bindings: phy: tegra: Add Tegra186 support
-Date: Thu, 21 Feb 2019 16:46:30 +0100
-Message-ID: <20190221154634.10684-2-thierry.reding@gmail.com>
-References: <20190221154634.10684-1-thierry.reding@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 11/30 v2] clocksource/drivers/ixp4xx: Add DT bindings
+Date: Thu, 21 Feb 2019 16:44:39 +0100
+Message-ID: <20190221154458.23763-12-linus.walleij@linaro.org>
+References: <20190221154458.23763-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190221154634.10684-1-thierry.reding@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, JC Kuo <jckuo@nvidia.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190221154458.23763-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+This adds device tree bindings for the Intel IXP4xx
+timers.
 
-Extend the bindings to cover the set of features found in Tegra186. Note
-that, technically, there are four more supplies connected to the XUSB
-pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL), but
-the power sequencing requirements of Tegra186 require these to be under
-the control of the PMIC.
-
-Reviewed-by: JC Kuo <jckuo@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../bindings/phy/nvidia,tegra124-xusb-padctl.txt         | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ChangeLog v1->v2:
+- Switch to JSON YAML schema, why not.
+- Not collecting any review tags as this changed a bit.
+---
+ .../bindings/timer/intel,ixp4xx-timer.yaml    | 42 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
 
-diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
-index 3742c152c467..daedb15f322e 100644
---- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
-+++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
-@@ -36,11 +36,20 @@ Required properties:
-   - Tegra124: "nvidia,tegra124-xusb-padctl"
-   - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-padctl"
-   - Tegra210: "nvidia,tegra210-xusb-padctl"
-+  - Tegra186: "nvidia,tegra186-xusb-padctl"
- - reg: Physical base address and length of the controller's registers.
- - resets: Must contain an entry for each entry in reset-names.
- - reset-names: Must include the following entries:
-   - "padctl"
- 
-+For Tegra186:
-+- avdd-pll-erefeut-supply: UPHY brick and reference clock as well as UTMI PHY
-+  power supply. Must supply 1.8 V.
-+- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Must supply
-+  3.3 V.
-+- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
-+- vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
+diff --git a/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml b/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
+new file mode 100644
+index 000000000000..a36a0746c056
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
+@@ -0,0 +1,42 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2018 Linaro Ltd.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/timer/intel-ixp4xx-timer.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- 
- Pad nodes:
- ==========
++title: Intel IXP4xx XScale Networking Processors Timers
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++description: This timer is found in the Intel IXP4xx processors.
++
++properties:
++  compatible:
++    items:
++      - const: intel,ixp4xx-timer
++
++  reg:
++    description: Should contain registers location and length
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: Timer 1 interrupt
++      - description: Timer 2 interrupt
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    timer@c8005000 {
++        compatible = "intel,ixp4xx-timer";
++        reg = <0xc8005000 0x100>;
++        interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 79f01af59a63..bd04142b1026 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1651,6 +1651,7 @@ M:	Krzysztof Halasa <khalasa@piap.pl>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
++F:	Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
+ F:	arch/arm/mach-ixp4xx/
+ F:	drivers/clocksource/timer-ixp4xx.c
+ F:	drivers/gpio/gpio-ixp4xx.c
 -- 
 2.20.1
