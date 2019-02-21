@@ -1,127 +1,154 @@
-From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Subject: [PATCH v2 9/9] serial: st32-usart: set SER_RS485_DELAY_IN_USEC accordingly
-Date: Thu, 21 Feb 2019 18:17:58 +0100
-Message-ID: <20190221171758.10322-9-martin.kepplinger@ginzinger.com>
-References: <20190221171758.10322-1-martin.kepplinger@ginzinger.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH 1/4] dt-bindings: firmware: imx-scu: new binding to parse
+ clocks from device tree
+Date: Thu, 21 Feb 2019 18:03:43 +0000
+Message-ID: <1550771836-10014-2-git-send-email-aisheng.dong@nxp.com>
+References: <1550771836-10014-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----F7AE14D43A445C3EC7AE780450C1E7D2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190221171758.10322-1-martin.kepplinger@ginzinger.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, jslaby@suse.com, corbet@lwn.net, richard.genoud@gmail.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1550771836-10014-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an S/MIME signed message
+There's a few limitations on one cell clock binding (#clock-cells = <1>)
+that we have to define all clock IDs for device tree to reference.
+This may cause troubles if we want to use common clock IDs for multi
+platforms support when the clock of those platforms are mostly the same.
+e.g. Current clock IDs name are defined with SS prefix. However the device
+may reside in different SS across CPUs, that means the SS prefix may
+not valid anymore for a new SoC. Furthermore, the device availability of
+those clocks may also vary a bit.
 
-------F7AE14D43A445C3EC7AE780450C1E7D2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+For such situation, We formerly planned to add all new IDs for each SS
+and dynamically check availability for different SoC in driver. That can
+be done but that may involve a lot effort and may result in more changes
+and duplicated code in driver, also make device tree upstreaming hard which
+depends on Clock IDs.
 
-Unset SER_RS485_DELAY_IN_USEC for userspace to get correct settings.
+To relief this situation, we want to move the clock definition into
+device tree which can fully decouple the dependency of Clock ID definition
+from device tree. And no frequent changes required in clock driver any more.
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Then we can use the existence of clock nodes in device tree to address the
+device and clock availability differences across different SoCs.
+
+For SCU clocks, only two params required, thus two new property created:
+rsrc-id = <IMX_SC_R_UART_0>;
+clk-type = <IMX_SC_PM_CLK_PER>;
+
+And as we want to support clock set parent function, 'clocks' property
+is also used to pass all the possible input parents.
+
+Cc: Rob Herring <robh@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- drivers/tty/serial/stm32-usart.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 29 ++++++++++++++++------
+ include/dt-bindings/firmware/imx/rsrc.h            | 17 +++++++++++++
+ 2 files changed, 38 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index e8d7a7bb4339..4daf5fc71644 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -112,6 +112,7 @@ static int stm32_config_rs485(struct uart_port *port,
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 72d481c..2816789 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -78,6 +78,19 @@ Required properties:
+ 			  "fsl,imx8qm-clock"
+ 			  "fsl,imx8qxp-clock"
+ 			followed by "fsl,scu-clk"
++- #clock-cells:		Should be 0.
++- rsrc-id:		Resource ID associated with this clock
++- clk-type:		Type of this clock.
++			Refer to <include/dt-bindings/firmware/imx/rsrc.h> for
++			available clock types supported by SCU.
++- clock-output-names:	Shall be the corresponding names of the outputs.
++
++Optional properties:
++- clocks:		Shall be the input parent clock(s) phandle for the clock.
++			For multiplexed clocks, the list order must match the hardware
++			programming order.
++
++Legacy Clock binding (DEPRECATED):
+ - #clock-cells:		Should be 1. Contains the Clock ID value.
+ - clocks:		List of clock specifiers, must contain an entry for
+ 			each required entry in clock-names
+@@ -129,6 +142,13 @@ lsio_mu1: mailbox@5d1c0000 {
+ 	#mbox-cells = <2>;
+ };
  
- 	port->rs485 = *rs485conf;
++uart0_clk: uart0-clock-controller {
++	compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-clk";
++	#clock-cells = <0>;
++	rsrc-id = <IMX_SC_R_UART_0>;
++	clk-type = <IMX_SC_PM_CLK_PER>;
++};
++
+ firmware {
+ 	scu {
+ 		compatible = "fsl,imx-scu";
+@@ -143,11 +163,6 @@ firmware {
+ 			  &lsio_mu1 1 2
+ 			  &lsio_mu1 1 3>;
  
-+	rs485conf->flags &= ~SER_RS485_DELAY_IN_USEC;
- 	rs485conf->flags |= SER_RS485_RX_DURING_TX;
+-		clk: clk {
+-			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
+-			#clock-cells = <1>;
+-		};
+-
+ 		iomuxc {
+ 			compatible = "fsl,imx8qxp-iomuxc";
  
- 	if (rs485conf->flags & SER_RS485_ENABLED) {
+@@ -175,8 +190,6 @@ serial@5a060000 {
+ 	...
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_lpuart0>;
+-	clocks = <&clk IMX8QXP_UART0_CLK>,
+-		 <&clk IMX8QXP_UART0_IPG_CLK>;
+-	clock-names = "per", "ipg";
++	clocks = <&uart0_clk>;
+ 	power-domains = <&pd IMX_SC_R_UART_0>;
+ };
+diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/firmware/imx/rsrc.h
+index 4481f2d..f650fc3 100644
+--- a/include/dt-bindings/firmware/imx/rsrc.h
++++ b/include/dt-bindings/firmware/imx/rsrc.h
+@@ -556,4 +556,21 @@
+ #define IMX_SC_R_VPU			540
+ #define IMX_SC_R_LAST			541
+ 
++/*
++ * Defines for SC PM CLK
++ */
++#define IMX_SC_PM_CLK_SLV_BUS		0	/* Slave bus clock */
++#define IMX_SC_PM_CLK_MST_BUS		1	/* Master bus clock */
++#define IMX_SC_PM_CLK_PER		2	/* Peripheral clock */
++#define IMX_SC_PM_CLK_PHY		3	/* Phy clock */
++#define IMX_SC_PM_CLK_MISC		4	/* Misc clock */
++#define IMX_SC_PM_CLK_MISC0		0	/* Misc 0 clock */
++#define IMX_SC_PM_CLK_MISC1		1	/* Misc 1 clock */
++#define IMX_SC_PM_CLK_MISC2		2	/* Misc 2 clock */
++#define IMX_SC_PM_CLK_MISC3		3	/* Misc 3 clock */
++#define IMX_SC_PM_CLK_MISC4		4	/* Misc 4 clock */
++#define IMX_SC_PM_CLK_CPU		2	/* CPU clock */
++#define IMX_SC_PM_CLK_PLL		4	/* PLL */
++#define IMX_SC_PM_CLK_BYPASS		4	/* Bypass clock */
++
+ #endif /* __DT_BINDINGS_RSCRC_IMX_H */
 -- 
-2.20.1
-
-
-------F7AE14D43A445C3EC7AE780450C1E7D2
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-
-MIIOHAYJKoZIhvcNAQcCoIIODTCCDgkCAQExDzANBglghkgBZQMEAgEFADALBgkq
-hkiG9w0BBwGgggshMIIF5jCCA86gAwIBAgIQapvhODv/K2ufAdXZuKdSVjANBgkq
-hkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFu
-Y2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExp
-bWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3Jp
-dHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMC
-R0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9y
-ZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBS
-U0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEi
-MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYh
-UPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9NEjk6vW7rN/5sYFLIP1of3l0NKZ6
-fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+UlNEQ1/5ErCsHq9x9aU/x1
-KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2qvGlnHJvijjI
-03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZjrqc
-k39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMB
-AAGjggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNV
-HQ4EFgQUgq9sjPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1Ud
-EwEB/wQIMAYBAf8CAQAwEQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/
-oD2GO2h0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRp
-b25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEBBGUwYzA7BggrBgEFBQcwAoYvaHR0
-cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRkVHJ1c3RDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkqhkiG9w0BAQwF
-AAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+jsQgwR
-GiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDc
-ZoFD7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwp
-WZT89RY0wpJO+2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNm
-NppI4ZNMUH4Tam85S1j6E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade
-2022O/tUU1gb4jfWCcyvB8czm12FgX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztve
-BdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiOSEmIDsS5N5w/8IW1Hva5hEFy6fDA
-fd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz/W3JlHaeI5iKFn4UJu1/
-cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSam9V1niiCfOBe
-2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpOUvxh
-csjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIwggUzMIIEG6AD
-AgECAhBNQrEzGzrZ6FVYh1EEYH4+MA0GCSqGSIb3DQEBCwUAMIGXMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
-b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
-IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAe
-Fw0xODA3MTgwMDAwMDBaFw0yMTA3MTcyMzU5NTlaMDAxLjAsBgkqhkiG9w0BCQEW
-H21hcnRpbi5rZXBwbGluZ2VyQGdpbnppbmdlci5jb20wggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQDsMC77L0D+2D8I8X5ubnBhADLgU+HtlwMTFt/WJIhc
-kgbvnawYXWrCIpk8F6BJ0R/iFCykPdG7741EmlcHRKOJfhVxjXhwnoGFqnYmurCt
-fvZLR3+mT3FWnVv2RAdrXscXH3BpijqqWabdtTbiTvmcl86Zc6mNlVhYZSbDul/E
-voIGZotGcGIWrgZxN+8MQJQHKb0KHyWlPVPkrjvEfOJHKKLFsBNSnNMR95Ijg3Sp
-h8/8RG490/zRHflGzUlxDSlLyY9YJGzSdDzcFKoYcc4oaaUY5N3uhRna43TLUIQh
-6ybt3DKVz1Pw/ikwYJrOsulJrVr3D8KVHdGxq7HYl7jnAgMBAAGjggHfMIIB2zAf
-BgNVHSMEGDAWgBSCr2yM+MX+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQU/GtSUbHg
-14sPDlmo27eQYwtjaS0wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYD
-VR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMEYGA1UdIAQ/MD0wOwYMKwYBBAGy
-MQECAQMFMCswKQYIKwYBBQUHAgEWHWh0dHBzOi8vc2VjdXJlLmNvbW9kby5uZXQv
-Q1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuY29tb2RvY2EuY29tL0NP
-TU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmww
-gYsGCCsGAQUFBwEBBH8wfTBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5jb21vZG9j
-YS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuY29tb2RvY2EuY29tMCoG
-A1UdEQQjMCGBH21hcnRpbi5rZXBwbGluZ2VyQGdpbnppbmdlci5jb20wDQYJKoZI
-hvcNAQELBQADggEBAGEuG01K1tt5i3gUdQkYem/KpbJUYBZd43QwmoTa0TGXUiYq
-b+g/TeGG9QQ1yq+73xOr8fu6oT2608C7EiJc6JmjTs485/OZmTqgYkrLfs71F1kB
-3Z59WPf5aoR/pnn5vdfkkoO29V1cKPJR4z+iOG2hOlcK/dXrX8i6mnL5DGIe8l5n
-udUPvIbUhbMavrDd6kwhs0oCjylwdKGlFkCpKMn3HPflfDeHuV9Z8Nrpeq/7+Pm0
-I/fLPkaYlULASJoJCucMYcedY9rmuro9JhV+NuVXaqLIrQPc1vyKFeRuLHh84M6c
-1h1DArdGTykXZUwjXnnHtuOtzjIAzkx2Ns43vEsxggK/MIICuwIBATCBrDCBlzEL
-MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMT
-NENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEE1CsTMbOtnoVViHUQRgfj4wDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZI
-hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkwMjIxMTcxODQ4
-WjAvBgkqhkiG9w0BCQQxIgQgggA5I3grN5NFmfc0thFV1EijyCH+lRivMIuzsEI0
-s6wweQYJKoZIhvcNAQkPMWwwajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsG
-CWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcN
-AwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEA
-OJWi5OCTHmWdVgBB4QDN628up/noAaGdBnkaXdT7ZCAPh0qxKhQFwO1NT7vYcoxY
-SoQ8LUVh630mxPeKXebm7dr+3XBs1S1yMPWJiSLhhT1dW7I1bKAIAyQNe2HJwdOV
-o/9nFbs0KctjTsdIPteFwxT16FTDrKy3y3Aae8/bwuilwMKgxC2Mc4RfObgkb7CE
-0IUWoguwA4ahkNJUmyHA5z3GTLnJPlS+4904w3QFdqKVGhM964TKgjXgLtYZiASc
-MnivSS/G63HiTVQecsVaviv9qzUopEJCNgd8VIM2/dr7IXQECGYLd2WFiWGGv8m4
-K2Uq/kQIT2tEr36HveaeOw==
-
-------F7AE14D43A445C3EC7AE780450C1E7D2--
+2.7.4
