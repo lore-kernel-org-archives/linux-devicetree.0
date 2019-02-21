@@ -1,424 +1,205 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v7 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Thu, 21 Feb 2019 14:41:41 +0530
-Message-ID: <1550740301-10097-3-git-send-email-yash.shah@sifive.com>
-References: <1550740301-10097-1-git-send-email-yash.shah@sifive.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V4 4/4] rtc: imx-sc: add rtc alarm support
+Date: Thu, 21 Feb 2019 09:19:40 +0000
+Message-ID: <1550740354-2701-4-git-send-email-Anson.Huang@nxp.com>
+References: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550740301-10097-1-git-send-email-yash.shah@sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>, thierry.reding@gmail.com, paul.walmsley@sifive.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550740354-2701-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC.
+Add i.MX system controller RTC alarm support, the RTC alarm
+is implemented via SIP(silicon provider) runtime service call
+and ARM-Trusted-Firmware will communicate with system controller
+via MU(message unit) IPC to set RTC alarm. When RTC alarm fires,
+system controller will generate a common MU irq event and notify
+system controller RTC driver to handle the irq event.
 
-Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-[Atish: Various fixes and code cleanup]
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/pwm/Kconfig      |  11 ++
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-sifive.c | 346 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 358 insertions(+)
- create mode 100644 drivers/pwm/pwm-sifive.c
+No changes since V3.
+---
+ drivers/rtc/rtc-imx-sc.c | 112 +++++++++++++++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 112 insertions(+)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a8f47df..4a61d1a 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -380,6 +380,17 @@ config PWM_SAMSUNG
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-samsung.
- 
-+config PWM_SIFIVE
-+	tristate "SiFive PWM support"
-+	depends on OF
-+	depends on COMMON_CLK
-+	depends on RISCV || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for SiFive SoCs.
+diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
+index 60570a2..3557f12 100644
+--- a/drivers/rtc/rtc-imx-sc.c
++++ b/drivers/rtc/rtc-imx-sc.c
+@@ -3,6 +3,7 @@
+  * Copyright 2018 NXP.
+  */
+=20
++#include <dt-bindings/firmware/imx/rsrc.h>
+ #include <linux/arm-smccc.h>
+ #include <linux/firmware/imx/sci.h>
+ #include <linux/module.h>
+@@ -11,11 +12,17 @@
+ #include <linux/rtc.h>
+=20
+ #define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
++#define IMX_SC_TIMER_FUNC_SET_RTC_ALARM		8
+ #define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
+=20
++#define IMX_SC_IRQ_FUNC_ENABLE			1
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-sifive.
+ #define IMX_SIP_SRTC			0xC2000002
+ #define IMX_SIP_SRTC_SET_TIME		0x0
+=20
++#define SC_IRQ_GROUP_RTC    2
++#define SC_IRQ_RTC          1
 +
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
- 	depends on PLAT_SPEAR
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9c676a0..30089ca 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
-+obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
- obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-new file mode 100644
-index 0000000..8f29283d
---- /dev/null
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -0,0 +1,346 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017-2018 SiFive
-+ * For SiFive's PWM IP block documentation please refer Chapter 14 of
-+ * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-+ *
-+ * Limitations:
-+ * - When changing both duty cycle and period, we cannot prevent in
-+ *   software that the output might produce a period with mixed
-+ *   settings (new period length and old duty cycle).
-+ * - The hardware cannot generate a 100% duty cycle.
-+ * - The hardware generaets only inverted output.
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
+ static struct imx_sc_ipc *rtc_ipc_handle;
+ static struct rtc_device *imx_sc_rtc;
+=20
+@@ -24,6 +31,24 @@ struct imx_sc_msg_timer_get_rtc_time {
+ 	u32 time;
+ } __packed;
+=20
++struct imx_sc_msg_timer_enable_irq {
++	struct imx_sc_rpc_msg hdr;
++	u32 mask;
++	u16 resource;
++	u8 group;
++	u8 enable;
++} __packed;
 +
-+/* Register offsets */
-+#define PWM_SIFIVE_PWMCFG		0x0
-+#define PWM_SIFIVE_PWMCOUNT		0x8
-+#define PWM_SIFIVE_PWMS			0x10
-+#define PWM_SIFIVE_PWMCMP0		0x20
++struct imx_sc_msg_timer_rtc_set_alarm {
++	struct imx_sc_rpc_msg hdr;
++	u16 year;
++	u8 mon;
++	u8 day;
++	u8 hour;
++	u8 min;
++	u8 sec;
++} __packed;
 +
-+/* PWMCFG fields */
-+#define PWM_SIFIVE_PWMCFG_SCALE		0
-+#define PWM_SIFIVE_PWMCFG_STICKY	8
-+#define PWM_SIFIVE_PWMCFG_ZERO_CMP	9
-+#define PWM_SIFIVE_PWMCFG_DEGLITCH	10
-+#define PWM_SIFIVE_PWMCFG_EN_ALWAYS	BIT(12)
-+#define PWM_SIFIVE_PWMCFG_EN_ONCE	13
-+#define PWM_SIFIVE_PWMCFG_CENTER	16
-+#define PWM_SIFIVE_PWMCFG_GANG		24
-+#define PWM_SIFIVE_PWMCFG_IP		28
-+
-+/* PWM_SIFIVE_SIZE_PWMCMP is used to calculate offset for pwmcmpX registers */
-+#define PWM_SIFIVE_SIZE_PWMCMP		4
-+#define PWM_SIFIVE_CMPWIDTH		16
-+
-+struct pwm_sifive_ddata {
-+	struct pwm_chip	chip;
-+	struct mutex lock; /* lock to protect user_count and active_user */
-+	struct notifier_block notifier;
-+	struct clk *clk;
-+	void __iomem *regs;
-+	unsigned int real_period;
-+	int user_count;
-+	int active_user;
-+};
-+
-+static inline
-+struct pwm_sifive_ddata *pwm_sifive_chip_to_ddata(struct pwm_chip *c)
+ static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ {
+ 	struct imx_sc_msg_timer_get_rtc_time msg;
+@@ -60,9 +85,92 @@ static int imx_sc_rtc_set_time(struct device *dev, struc=
+t rtc_time *tm)
+ 	return res.a0;
+ }
+=20
++static int imx_sc_rtc_alarm_irq_enable(struct device *dev, unsigned int en=
+able)
 +{
-+	return container_of(c, struct pwm_sifive_ddata, chip);
-+}
-+
-+static int pwm_sifive_request(struct pwm_chip *chip, struct pwm_device *dev)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+
-+	mutex_lock(&pwm->lock);
-+	pwm->user_count++;
-+	mutex_unlock(&pwm->lock);
-+
-+	return 0;
-+}
-+
-+static void pwm_sifive_free(struct pwm_chip *chip, struct pwm_device *dev)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+
-+	mutex_lock(&pwm->lock);
-+	pwm->user_count--;
-+	mutex_unlock(&pwm->lock);
-+}
-+
-+static void pwm_sifive_update_clock(struct pwm_sifive_ddata *pwm,
-+				    unsigned long rate)
-+{
-+	u32 val;
-+	unsigned long num;
-+	/* (1 << (PWM_SIFIVE_CMPWIDTH+scale)) * 10^9/rate = real_period */
-+	unsigned long scale_pow =
-+			div64_ul(pwm->real_period * (u64)rate, NSEC_PER_SEC);
-+	int scale = clamp(ilog2(scale_pow) - PWM_SIFIVE_CMPWIDTH, 0, 0xf);
-+
-+	val = PWM_SIFIVE_PWMCFG_EN_ALWAYS | (scale << PWM_SIFIVE_PWMCFG_SCALE);
-+	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	/* As scale <= 15 the shift operation cannot overflow. */
-+	num = 1000000000ULL << (PWM_SIFIVE_CMPWIDTH + scale);
-+	pwm->real_period = div64_ul(num, rate);
-+	dev_dbg(pwm->chip.dev, "New real_period = %u ns\n", pwm->real_period);
-+}
-+
-+static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *dev,
-+				 struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+	u32 duty, val;
-+	unsigned long num;
-+
-+	duty = readl(pwm->regs + PWM_SIFIVE_PWMCMP0 +
-+		     dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
-+
-+	val = readl(pwm->regs + PWM_SIFIVE_PWMCFG);
-+	state->enabled = duty > 0;
-+
-+	val &= 0x0F;
-+	num = 1000000000ULL << (PWM_SIFIVE_CMPWIDTH + val);
-+	pwm->real_period = div64_ul(num, clk_get_rate(pwm->clk));
-+
-+	state->period = pwm->real_period;
-+	state->duty_cycle =
-+		(u64)duty * pwm->real_period >> PWM_SIFIVE_CMPWIDTH;
-+	state->polarity = PWM_POLARITY_INVERSED;
-+}
-+
-+static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+	int val, ret;
-+
-+	if (enable) {
-+		ret = clk_enable(pwm->clk);
-+		if (ret) {
-+			dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	val = readl(pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	if (enable)
-+		val |= PWM_SIFIVE_PWMCFG_EN_ALWAYS;
-+	else
-+		val &= ~PWM_SIFIVE_PWMCFG_EN_ALWAYS;
-+
-+	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	if (!enable)
-+		clk_disable(pwm->clk);
-+
-+	return 0;
-+}
-+
-+static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *dev,
-+			    struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+	unsigned int duty_cycle, x;
-+	u32 frac;
-+	struct pwm_state cur_state;
-+	bool enabled;
-+	int ret;
-+	unsigned long num;
-+
-+	pwm_get_state(dev, &cur_state);
-+	enabled = cur_state.enabled;
-+
-+	if (state->polarity != PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	if (state->period != cur_state.period) {
-+		mutex_lock(&pwm->lock);
-+		if (pwm->user_count != 1) {
-+			mutex_unlock(&pwm->lock);
-+			return -EINVAL;
-+		}
-+		pwm->real_period = state->period;
-+		pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
-+		mutex_unlock(&pwm->lock);
-+	}
-+
-+	duty_cycle = state->duty_cycle;
-+	if (!state->enabled)
-+		duty_cycle = 0;
-+
-+	x = 1U << PWM_SIFIVE_CMPWIDTH;
-+	num = (u64)duty_cycle * x + x / 2;
-+	frac = div_u64(num, state->period);
-+	/* The hardware cannot generate a 100% duty cycle */
-+	frac = min(frac, x - 1);
-+
-+	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 +
-+	       dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
-+
-+	if (!state->enabled && enabled) {
-+		mutex_lock(&pwm->lock);
-+		if (pwm->active_user == 1) {
-+			ret = pwm_sifive_enable(chip, false);
-+			if (ret) {
-+				mutex_unlock(&pwm->lock);
-+				return ret;
-+			}
-+		}
-+		pwm->active_user--;
-+		mutex_unlock(&pwm->lock);
-+		enabled = false;
-+	}
-+
-+	if (state->enabled != enabled) {
-+		mutex_lock(&pwm->lock);
-+		if (pwm->active_user == 0) {
-+			ret = pwm_sifive_enable(chip, state->enabled);
-+			if (ret) {
-+				mutex_unlock(&pwm->lock);
-+				return ret;
-+			}
-+		}
-+		pwm->active_user++;
-+		mutex_unlock(&pwm->lock);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops pwm_sifive_ops = {
-+	.request = pwm_sifive_request,
-+	.free = pwm_sifive_free,
-+	.get_state = pwm_sifive_get_state,
-+	.apply = pwm_sifive_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int pwm_sifive_clock_notifier(struct notifier_block *nb,
-+				     unsigned long event, void *data)
-+{
-+	struct clk_notifier_data *ndata = data;
-+	struct pwm_sifive_ddata *pwm =
-+		container_of(nb, struct pwm_sifive_ddata, notifier);
-+
-+	if (event == POST_RATE_CHANGE)
-+		pwm_sifive_update_clock(pwm, ndata->new_rate);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int pwm_sifive_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pwm_sifive_ddata *pwm;
-+	struct pwm_chip *chip;
-+	struct resource *res;
++	struct imx_sc_msg_timer_enable_irq msg;
++	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
 +	int ret;
 +
-+	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-+	if (!pwm)
-+		return -ENOMEM;
++	hdr->ver =3D IMX_SC_RPC_VERSION;
++	hdr->svc =3D IMX_SC_RPC_SVC_IRQ;
++	hdr->func =3D IMX_SC_IRQ_FUNC_ENABLE;
++	hdr->size =3D 3;
 +
-+	mutex_init(&pwm->lock);
-+	chip = &pwm->chip;
-+	chip->dev = dev;
-+	chip->ops = &pwm_sifive_ops;
-+	chip->of_pwm_n_cells = 3;
-+	chip->base = -1;
-+	chip->npwm = 4;
++	msg.resource =3D IMX_SC_R_MU_1A;
++	msg.group =3D SC_IRQ_GROUP_RTC;
++	msg.mask =3D SC_IRQ_RTC;
++	msg.enable =3D enable;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pwm->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pwm->regs)) {
-+		dev_err(dev, "Unable to map IO resources\n");
-+		return PTR_ERR(pwm->regs);
-+	}
-+
-+	pwm->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pwm->clk)) {
-+		if (PTR_ERR(pwm->clk) != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to find controller clock\n");
-+		return PTR_ERR(pwm->clk);
-+	}
-+
-+	ret = clk_prepare_enable(pwm->clk);
++	ret =3D imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
 +	if (ret) {
-+		dev_err(dev, "failed to enable clock for pwm: %d\n", ret);
++		dev_err(dev, "enable rtc irq failed, ret %d\n", ret);
 +		return ret;
 +	}
 +
-+	/* Watch for changes to underlying clock frequency */
-+	pwm->notifier.notifier_call = pwm_sifive_clock_notifier;
-+	ret = clk_notifier_register(pwm->clk, &pwm->notifier);
++	return 0;
++}
++
++static int imx_sc_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *al=
+rm)
++{
++	return 0;
++}
++
++static int imx_sc_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alr=
+m)
++{
++	struct imx_sc_msg_timer_rtc_set_alarm msg;
++	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
++	int ret;
++	struct rtc_time *alrm_tm =3D &alrm->time;
++
++	hdr->ver =3D IMX_SC_RPC_VERSION;
++	hdr->svc =3D IMX_SC_RPC_SVC_TIMER;
++	hdr->func =3D IMX_SC_TIMER_FUNC_SET_RTC_ALARM;
++	hdr->size =3D 3;
++
++	msg.year =3D alrm_tm->tm_year + 1900;
++	msg.mon =3D alrm_tm->tm_mon + 1;
++	msg.day =3D alrm_tm->tm_mday;
++	msg.hour =3D alrm_tm->tm_hour;
++	msg.min =3D alrm_tm->tm_min;
++	msg.sec =3D alrm_tm->tm_sec;
++
++	ret =3D imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
 +	if (ret) {
-+		dev_err(dev, "failed to register clock notifier: %d\n", ret);
-+		goto disable_clk;
++		dev_err(dev, "set rtc alarm failed, ret %d\n", ret);
++		return ret;
 +	}
 +
-+	ret = pwmchip_add(chip);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot register PWM: %d\n", ret);
-+		goto unregister_clk;
++	ret =3D imx_sc_rtc_alarm_irq_enable(dev, alrm->enabled);
++	if (ret) {
++		dev_err(dev, "enable rtc alarm failed, ret %d\n", ret);
++		return ret;
 +	}
-+
-+	/* Enable PWM */
-+	ret = pwm_sifive_enable(chip, true);
-+	if (ret)
-+		dev_warn(dev, "cannot Enable PWM: %d\n", ret);
-+
-+	if (!pwm_is_enabled(pwm->chip.pwms))
-+		clk_disable(pwm->clk);
-+
-+	platform_set_drvdata(pdev, pwm);
-+	dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
 +
 +	return 0;
-+
-+unregister_clk:
-+	clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+disable_clk:
-+	clk_disable_unprepare(pwm->clk);
-+
-+	return ret;
 +}
 +
-+static int pwm_sifive_remove(struct platform_device *dev)
+ static const struct rtc_class_ops imx_sc_rtc_ops =3D {
+ 	.read_time =3D imx_sc_rtc_read_time,
+ 	.set_time =3D imx_sc_rtc_set_time,
++	.read_alarm =3D imx_sc_rtc_read_alarm,
++	.set_alarm =3D imx_sc_rtc_set_alarm,
++	.alarm_irq_enable =3D imx_sc_rtc_alarm_irq_enable,
++};
++
++static int imx_sc_rtc_alarm_sc_notify(struct notifier_block *nb,
++					unsigned long event, void *group)
 +{
-+	struct pwm_sifive_ddata *pwm = platform_get_drvdata(dev);
-+	int ret;
++	/* ignore non-rtc irq */
++	if (!((event & SC_IRQ_RTC) && (*(u8 *)group =3D=3D SC_IRQ_GROUP_RTC)))
++		return 0;
 +
-+	ret = pwmchip_remove(&pwm->chip);
-+	clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+	if (!pwm_is_enabled(pwm->chip.pwms))
-+		clk_disable(pwm->clk);
-+	clk_unprepare(pwm->clk);
-+	return ret;
++	rtc_update_irq(imx_sc_rtc, 1, RTC_IRQF | RTC_AF);
++
++	return 0;
 +}
 +
-+static const struct of_device_id pwm_sifive_of_match[] = {
-+	{ .compatible = "sifive,pwm0" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, pwm_sifive_of_match);
++static struct notifier_block imx_sc_rtc_alarm_sc_notifier =3D {
++	.notifier_call =3D imx_sc_rtc_alarm_sc_notify,
+ };
+=20
+ static int imx_sc_rtc_probe(struct platform_device *pdev)
+@@ -73,6 +181,8 @@ static int imx_sc_rtc_probe(struct platform_device *pdev=
+)
+ 	if (ret)
+ 		return ret;
+=20
++	device_init_wakeup(&pdev->dev, true);
 +
-+static struct platform_driver pwm_sifive_driver = {
-+	.probe = pwm_sifive_probe,
-+	.remove = pwm_sifive_remove,
-+	.driver = {
-+		.name = "pwm-sifive",
-+		.of_match_table = pwm_sifive_of_match,
-+	},
-+};
-+module_platform_driver(pwm_sifive_driver);
+ 	imx_sc_rtc =3D devm_rtc_allocate_device(&pdev->dev);
+ 	if (IS_ERR(imx_sc_rtc))
+ 		return PTR_ERR(imx_sc_rtc);
+@@ -87,6 +197,8 @@ static int imx_sc_rtc_probe(struct platform_device *pdev=
+)
+ 		return ret;
+ 	}
+=20
++	imx_scu_register_notifier(&imx_sc_rtc_alarm_sc_notifier);
 +
-+MODULE_DESCRIPTION("SiFive PWM driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+ 	return 0;
+ }
+=20
+--=20
+2.7.4
