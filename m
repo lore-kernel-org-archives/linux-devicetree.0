@@ -1,36 +1,38 @@
-Return-Path: <SRS0=4zMx=QP=gmail.com=akinobu.mita@kernel.org>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH] dt-bindings: display: add missing semicolon in example
-Date: Fri,  8 Feb 2019 16:51:33 +0900
-Message-Id: <1549612293-5674-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=8Fol=Q4=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 1/5] rtc: rx8581: Add rx8571 compatible
+Date: Thu, 21 Feb 2019 09:40:44 +0000
+Message-Id: <1550742048-28068-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1550742048-28068-1-git-send-email-biju.das@bp.renesas.com>
+References: <1550742048-28068-1-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Rob Herring <robh@kernel.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add missing semicolon in example for Sitronix ST7735R display panels.
+The Epson rx8571 is compatible with the Epson rx8581 RTC.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: Noralf Trønnes <noralf@tronnes.org>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+The difference between the rx8571 and rx8581 RTC is that the former has
+16 bytes more RAM. This renders them incompatible from a DT point of view.
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/display/sitronix,st7735r.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/rtc/rtc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
-index f0a5090..cd5c718 100644
---- a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
-+++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
-@@ -20,7 +20,7 @@ Example:
- 	backlight: backlight {
- 		compatible = "gpio-backlight";
- 		gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
--	}
-+	};
- 
- 	...
- 
+diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
+index 3e6a215..0bc687e 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc.txt
+@@ -47,6 +47,7 @@ dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and
+ dallas,ds1672		Dallas DS1672 Real-time Clock
+ dallas,ds3232		Extremely Accurate I²C RTC with Integrated Crystal and SRAM
+ epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
++epson,rx8571		I2C-BUS INTERFACE REAL TIME CLOCK MODULE with Battery Backed RAM
+ epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
+ emmicro,em3027		EM Microelectronic EM3027 Real-time Clock
+ isil,isl1208		Intersil ISL1208 Low Power RTC with Battery Backed SRAM
 -- 
 2.7.4
