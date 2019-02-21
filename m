@@ -1,68 +1,46 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [EXT] [PATCH v6 2/2] mtd: spi-nor: cadence-quadspi: Add support
- for Octal SPI controller
-Date: Thu, 21 Feb 2019 18:41:21 +0530
-Message-ID: <b459f797-d24c-5501-76a0-057ec1df594d@ti.com>
-References: <20190212083809.6534-1-vigneshr@ti.com>
- <20190212083809.6534-3-vigneshr@ti.com>
- <BYAPR08MB453362F4253ADA149D05315FDB7E0@BYAPR08MB4533.namprd08.prod.outlook.com>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v2 0/5] iio: imu: adis16480: Add support for ADIS1649x family of devices
+Date: Thu, 21 Feb 2019 15:15:01 +0200
+Message-ID: <1550754906-24640-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <BYAPR08MB453362F4253ADA149D05315FDB7E0@BYAPR08MB4533.namprd08.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: "Bean Huo (beanhuo)" <beanhuo@micron.com>, Boris Brezillon <bbrezillon@kernel.org>, "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This series has as main goal to add support for ADIS1649x family of devices as
+part of the already existing adis16480, but on the way it also deals with some
+outstanding items:
 
+* Make drdy pin configurable
+* Add OF device ID table
+* Deal with the temperature max scale in a generic way
+* Add missing docs
 
-On 21/02/19 4:11 PM, Bean Huo (beanhuo) wrote:
-> Hi, Vignesh
-> 
->>
->> Cadence OSPI controller IP supports Octal IO (x8 IO lines), It also has an
->> integrated PHY. IP register layout is very similar to existing QSPI IP except for
->> additional bits to support Octal and Octal DDR mode. Therefore, extend
->> current driver to support Octal mode. Only Octal SDR read (1-1-8)mode is
->> supported for now.
-> 
-> Does this your Cadence OSPI controller support 8-8-8 IO mode, if yes,
-> Why not directly enable 8-8-8 mode? 
-> 
+Changes in v2:
+Patch 1:
+	- use DIO1 pin as default data ready signal instead of DIO2.
+Patch 2:
+	- nothing changed.
+Patch 3, 4:
+	- give the scale directly in the adis16480_chip_info struct.
+Patch 5: 
+	- document the use of DIO1 pin as default data ready signal.
 
-Yes.. IP also supports 8-8-8 DTR mode. But supporting those modes
-require enabling, configuring and calibrating OSPI PHY module within the
-IP.
-I am planning to do that, after moving driver over to spi-mem layer.
+Stefan Popa (5):
+  iio: imu: adis16480: Add support for configurable drdy indicator
+  iio: imu: adis16480: Add OF device ID table
+  iio: imu: adis16480: Treat temperature scale in a generic way
+  iio: imu: adis16480: Add support for ADIS1649x family of devices
+  iio: imu: adis16480: Add docs for ADIS16480 IMU
 
-
->> Tested with mt35xu512aba Octal flash on TI's AM654 EVM.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ______________________________________________________
->> Linux MTD discussion mailing list
->> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-> 
+ .../devicetree/bindings/iio/imu/adi,adis16480.txt  |  49 +++++
+ MAINTAINERS                                        |   1 +
+ drivers/iio/imu/adis16480.c                        | 197 ++++++++++++++++++++-
+ 3 files changed, 242 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
 
 -- 
-Regards
-Vignesh
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+2.7.4
