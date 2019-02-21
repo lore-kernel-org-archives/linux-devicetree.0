@@ -1,41 +1,62 @@
-Return-Path: <robherring2@gmail.com>
-Date: Fri, 22 Feb 2019 09:06:39 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt: snps,designware-i2c: Add clock bindings
- documentation
-Message-ID: <20190222150639.GA19921@bogus>
+Return-Path: <SRS0=7R9R=Q4=renesas.com=gareth.williams.jx@kernel.org>
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Subject: [PATCH v4 1/2] dt: snps,designware-i2c: Add clock bindings documentation
+Date: Thu, 21 Feb 2019 16:10:58 +0000
+Message-Id: <1550765459-14519-2-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <1550765459-14519-1-git-send-email-gareth.williams.jx@renesas.com>
 References: <1550765459-14519-1-git-send-email-gareth.williams.jx@renesas.com>
- <1550765459-14519-2-git-send-email-gareth.williams.jx@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1550765459-14519-2-git-send-email-gareth.williams.jx@renesas.com>
-To: Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Feb 21, 2019 at 04:10:58PM +0000, Gareth Williams wrote:
-> From: Phil Edworthy <phil.edworthy@renesas.com>
-> 
-> The driver requires an undocumented clock property, so detail it.
-> Add documentation for a separate, optional, peripheral clock.
-> 
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
-> v4:
->  - Updated commit message to reference "peripheral clock" instead of 
->    "bus clock" 
->  - Added Wolfram's Acked-by
-> v3:
->  - Changed clocks and clock-names sections to use term "peripheral clock"
->    (pclk) instead of "bus clock" (busclk).
-> v2:
->  - No changes.
-> v1:
->  - Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-designware.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
+From: Phil Edworthy <phil.edworthy@renesas.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The driver requires an undocumented clock property, so detail it.
+Add documentation for a separate, optional, peripheral clock.
+
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+v4:
+ - Updated commit message to reference "peripheral clock" instead of 
+   "bus clock" 
+ - Added Wolfram's Acked-by
+v3:
+ - Changed clocks and clock-names sections to use term "peripheral clock"
+   (pclk) instead of "bus clock" (busclk).
+v2:
+ - No changes.
+v1:
+ - Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/i2c/i2c-designware.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+index 3e4bcc2..f94aa59 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+@@ -6,12 +6,21 @@ Required properties :
+                 or "mscc,ocelot-i2c" with "snps,designware-i2c" for fallback
+  - reg : Offset and length of the register set for the device
+  - interrupts : <IRQ> where IRQ is the interrupt number.
++ - clocks : phandles for the clocks, see the description of clock-names below.
++   The phandle for the "ic_clk" clock is required. The phandle for the "pclk"
++   clock is optional. If a single clock is specified but no clock-name, it is
++   the "ic_clk" clock. If both clocks are listed, the "ic_clk" must be first.
+ 
+ Recommended properties :
+ 
+  - clock-frequency : desired I2C bus clock frequency in Hz.
+ 
+ Optional properties :
++
++ - clock-names : Contains the names of the clocks:
++    "ic_clk", for the core clock used to generate the external I2C clock.
++    "pclk", the peripheral clock, required for register accesses.
++
+  - reg : for "mscc,ocelot-i2c", a second register set to configure the SDA hold
+    time, named ICPU_CFG:TWI_DELAY in the datasheet.
+ 
+-- 
+2.7.4
