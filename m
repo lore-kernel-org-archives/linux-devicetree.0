@@ -1,84 +1,48 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 0/2] mmc: mmci: add quirk property to add stm32 transfer
- mode
-Date: Thu, 21 Feb 2019 10:30:49 +0000
-Message-ID: <20190221103049.tspc5igoe6wmt3jd@shell.armlinux.org.uk>
-References: <1550743851-13588-1-git-send-email-ludovic.Barre@st.com>
- <20190221102739.cc37au6elqu6gvfe@shell.armlinux.org.uk>
+From: "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Subject: RE: [EXT] [PATCH v6 2/2] mtd: spi-nor: cadence-quadspi: Add support
+ for Octal SPI controller
+Date: Thu, 21 Feb 2019 10:41:33 +0000
+Message-ID: <BYAPR08MB453362F4253ADA149D05315FDB7E0@BYAPR08MB4533.namprd08.prod.outlook.com>
+References: <20190212083809.6534-1-vigneshr@ti.com>
+ <20190212083809.6534-3-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190221102739.cc37au6elqu6gvfe@shell.armlinux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Alexandre Torgue <alexandre.torgue@st.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20190212083809.6534-3-vigneshr@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Vignesh R <vigneshr@ti.com>, Boris Brezillon <bbrezillon@kernel.org>, "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 10:27:39AM +0000, Russell King - ARM Linux admin wrote:
-> On Thu, Feb 21, 2019 at 11:10:49AM +0100, Ludovic Barre wrote:
-> > From: Ludovic Barre <ludovic.barre@st.com>
-> > 
-> > This patch series introduces a bitmap of hardware quirks that require
-> > some special action. This should reduce the number of boolean
-> > into variant structure. 
-> > And adds quirk bit to define sdmmc specific transfer modes.
-> 
-> Please find some other way to deal with these differences.  As far as
-> I'm concerned, introducing a quirk bitmask such as what was done in
-> sdhci is a complete disaster and leads to long-term maintanability
-> problems.
-> 
-> We already have a way to deal with variants in mmci.
+Hi, Vignesh
 
-... to finish what I was saying ...
+>
+>Cadence OSPI controller IP supports Octal IO (x8 IO lines), It also has an
+>integrated PHY. IP register layout is very similar to existing QSPI IP except for
+>additional bits to support Octal and Octal DDR mode. Therefore, extend
+>current driver to support Octal mode. Only Octal SDR read (1-1-8)mode is
+>supported for now.
 
-and I think that:
+Does this your Cadence OSPI controller support 8-8-8 IO mode, if yes,
+Why not directly enable 8-8-8 mode? 
 
-        if (variant->blksz_datactrl16)
-                datactrl = variant->datactrl_dpsm_enable | (data->blksz << 16);
-        else if (variant->blksz_datactrl4)
-                datactrl = variant->datactrl_dpsm_enable | (data->blksz << 4);
-        else
-                datactrl = variant->datactrl_dpsm_enable | blksz_bits << 4;
+>Tested with mt35xu512aba Octal flash on TI's AM654 EVM.
+>
+>Signed-off-by: Vignesh R <vigneshr@ti.com>
+>______________________________________________________
+>Linux MTD discussion mailing list
+>http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
-ought to become a variant function call which returns the appropriate
-datactrl value.  This would shrink the amount of variant testing in this
-path, and also means that going forward we aren't facing an endlessly
-increasing number of tests here.
-
-> 
-> > 
-> > Ludovic Barre (2):
-> >   mmc: mmci: introduce a quirks property into variant struct
-> >   mmc: mmci: add quirk property to add stm32 transfer mode
-> > 
-> >  drivers/mmc/host/mmci.c | 11 +++++++++++
-> >  drivers/mmc/host/mmci.h |  9 +++++++++
-> >  2 files changed, 20 insertions(+)
-> > 
-> > -- 
-> > 2.7.4
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > 
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
