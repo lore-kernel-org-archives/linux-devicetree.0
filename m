@@ -1,180 +1,198 @@
-Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr60073.outbound.protection.outlook.com ([40.107.6.73]:32279
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732400AbfCABZR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 Feb 2019 20:25:17 -0500
-From: Jun Li <jun.li@nxp.com>
-Subject: [PATCH v2 2/2] usb: typec: add typec switch via GPIO control
-Date: Fri, 1 Mar 2019 01:25:13 +0000
-Message-ID: <1551402256-7815-2-git-send-email-jun.li@nxp.com>
-References: <1551402256-7815-1-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1551402256-7815-1-git-send-email-jun.li@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=TIRm=Q4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbfBUPUk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Feb 2019 10:20:40 -0500
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH 1/2] iio: imu: st_lsm6dsx: add support to ASM330LHH
+Date: Thu, 21 Feb 2019 16:20:20 +0100
+Message-Id: <4eeb8888ba5572736cb26f4f6e2376d416e3b3fc.1550753006.git.lorenzo@kernel.org>
+In-Reply-To: <cover.1550753006.git.lorenzo@kernel.org>
+References: <cover.1550753006.git.lorenzo@kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, mario.tesi@st.com, lorenzo.bianconi@redhat.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds a simple typec switch driver which only needs
-a GPIO to switch the super speed active channel according to
-typec orientation.
+Add support to STM ASM330LHH 6-axis (acc + gyro) Mems sensor
+https://www.st.com/resource/en/datasheet/asm330lhh.pdf
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Tested-by: Mario Tesi <mario.tesi@st.com>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 ---
+ drivers/iio/imu/st_lsm6dsx/Kconfig            |  2 +-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       |  2 +
+ .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    |  8 ++--
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  | 41 ++++++++++++++++++-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c   |  5 +++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c   |  5 +++
+ 6 files changed, 57 insertions(+), 6 deletions(-)
 
-Changes for v2:
-- Use the correct head files for gpio api and of_device_id:
-  #include <linux/gpio/consumer.h>
-  #include <linux/mod_devicetable.h>
-- Add driver dependency on GPIOLIB
-
- drivers/usb/typec/mux/Kconfig       |   7 +++
- drivers/usb/typec/mux/Makefile      |   1 +
- drivers/usb/typec/mux/gpio-switch.c | 105 ++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 113 insertions(+)
-
-diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
-index 01ed0d5..27120e6 100644
---- a/drivers/usb/typec/mux/Kconfig
-+++ b/drivers/usb/typec/mux/Kconfig
-@@ -9,4 +9,11 @@ config TYPEC_MUX_PI3USB30532
- 	  Say Y or M if your system has a Pericom PI3USB30532 Type-C cross
- 	  switch / mux chip found on some devices with a Type-C port.
-=20
-+config TYPEC_SWITCH_GPIO
-+	tristate "Simple Super Speed Active Switch via GPIO"
-+	depends on GPIOLIB
-+	help
-+	  Say Y or M if your system has a typec super speed channel
-+	  switch via a simple GPIO control.
-+
- endmenu
-diff --git a/drivers/usb/typec/mux/Makefile b/drivers/usb/typec/mux/Makefil=
-e
-index 1332e46..e29377c 100644
---- a/drivers/usb/typec/mux/Makefile
-+++ b/drivers/usb/typec/mux/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
-=20
- obj-$(CONFIG_TYPEC_MUX_PI3USB30532)	+=3D pi3usb30532.o
-+obj-$(CONFIG_TYPEC_SWITCH_GPIO)		+=3D gpio-switch.o
-diff --git a/drivers/usb/typec/mux/gpio-switch.c b/drivers/usb/typec/mux/gp=
-io-switch.c
-new file mode 100644
-index 0000000..b01844c
---- /dev/null
-+++ b/drivers/usb/typec/mux/gpio-switch.c
-@@ -0,0 +1,105 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * gpio-switch.c - typec switch via a simple GPIO control.
-+ *
-+ * Copyright 2019 NXP
-+ * Author: Jun Li <jun.li@nxp.com>
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/usb/typec_mux.h>
-+
-+struct gpio_typec_switch {
-+	struct typec_switch sw;
-+	struct mutex lock;
-+	struct gpio_desc *ss_sel;
-+};
-+
-+static int switch_gpio_set(struct typec_switch *sw,
-+			   enum typec_orientation orientation)
-+{
-+	struct gpio_typec_switch *gpio_sw =3D container_of(sw,
-+				struct gpio_typec_switch, sw);
-+
-+	mutex_lock(&gpio_sw->lock);
-+
-+	switch (orientation) {
-+	case TYPEC_ORIENTATION_NORMAL:
-+		gpiod_set_value_cansleep(gpio_sw->ss_sel, 1);
-+		break;
-+	case TYPEC_ORIENTATION_REVERSE:
-+		gpiod_set_value_cansleep(gpio_sw->ss_sel, 0);
-+		break;
-+	case TYPEC_ORIENTATION_NONE:
-+		break;
-+	}
-+
-+	mutex_unlock(&gpio_sw->lock);
-+
-+	return 0;
-+}
-+
-+static int typec_switch_gpio_probe(struct platform_device *pdev)
-+{
-+	struct gpio_typec_switch	*gpio_sw;
-+	struct device			*dev =3D &pdev->dev;
-+	int				ret;
-+
-+	gpio_sw =3D devm_kzalloc(dev, sizeof(*gpio_sw), GFP_KERNEL);
-+	if (!gpio_sw)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, gpio_sw);
-+
-+	gpio_sw->sw.dev =3D dev;
-+	gpio_sw->sw.set =3D switch_gpio_set;
-+	mutex_init(&gpio_sw->lock);
-+
-+	/* Get the super speed active channel selection GPIO */
-+	gpio_sw->ss_sel =3D devm_gpiod_get(dev, NULL, GPIOD_OUT_LOW);
-+	if (IS_ERR(gpio_sw->ss_sel))
-+		return PTR_ERR(gpio_sw->ss_sel);
-+
-+	ret =3D typec_switch_register(&gpio_sw->sw);
-+	if (ret) {
-+		dev_err(dev, "Error registering typec switch: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int typec_switch_gpio_remove(struct platform_device *pdev)
-+{
-+	struct gpio_typec_switch *gpio_sw =3D platform_get_drvdata(pdev);
-+
-+	typec_switch_unregister(&gpio_sw->sw);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_typec_switch_gpio_match[] =3D {
-+	{ .compatible =3D "nxp,ptn36043" },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, of_typec_switch_gpio_match);
-+
-+static struct platform_driver typec_switch_gpio_driver =3D {
-+	.probe		=3D typec_switch_gpio_probe,
-+	.remove		=3D typec_switch_gpio_remove,
-+	.driver		=3D {
-+		.name	=3D "typec-switch-gpio",
-+		.of_match_table =3D of_typec_switch_gpio_match,
+diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+index 094fd006b63d..36048bf0455a 100644
+--- a/drivers/iio/imu/st_lsm6dsx/Kconfig
++++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+@@ -9,7 +9,7 @@ config IIO_ST_LSM6DSX
+ 	help
+ 	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+ 	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+-	  ism330dlc, lsm6dso
++	  ism330dlc, lsm6dso, asm330lhh
+ 
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called st_lsm6dsx.
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+index d1d8d07a0714..de2a0dc39353 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -20,6 +20,7 @@
+ #define ST_LSM6DSM_DEV_NAME	"lsm6dsm"
+ #define ST_ISM330DLC_DEV_NAME	"ism330dlc"
+ #define ST_LSM6DSO_DEV_NAME	"lsm6dso"
++#define ST_ASM330LHH_DEV_NAME	"asm330lhh"
+ 
+ enum st_lsm6dsx_hw_id {
+ 	ST_LSM6DS3_ID,
+@@ -28,6 +29,7 @@ enum st_lsm6dsx_hw_id {
+ 	ST_LSM6DSM_ID,
+ 	ST_ISM330DLC_ID,
+ 	ST_LSM6DSO_ID,
++	ST_ASM330LHH_ID,
+ 	ST_LSM6DSX_MAX_ID,
+ };
+ 
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+index 2c0d3763405a..8f443bdb5b51 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+@@ -13,9 +13,9 @@
+  * (e.g. Gx, Gy, Gz, Ax, Ay, Az), then data are repeated depending on the
+  * value of the decimation factor and ODR set for each FIFO data set.
+  *
+- * LSM6DSO: The FIFO buffer can be configured to store data from gyroscope and
+- * accelerometer. Each sample is queued with a tag (1B) indicating data source
+- * (gyroscope, accelerometer, hw timer).
++ * LSM6DSO/ASM330LHH: The FIFO buffer can be configured to store data
++ * from gyroscope and accelerometer. Each sample is queued with a tag (1B)
++ * indicating data source (gyroscope, accelerometer, hw timer).
+  *
+  * FIFO supported modes:
+  *  - BYPASS: FIFO disabled
+@@ -506,7 +506,7 @@ st_lsm6dsx_push_tagged_data(struct st_lsm6dsx_hw *hw, u8 tag,
+ }
+ 
+ /**
+- * st_lsm6dsx_read_tagged_fifo() - LSM6DSO read FIFO routine
++ * st_lsm6dsx_read_tagged_fifo() - LSM6DSO/ASM330LHH read FIFO routine
+  * @hw: Pointer to instance of struct st_lsm6dsx_hw.
+  *
+  * Read samples from the hw FIFO and push them to IIO buffers.
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+index 12e29dda9b98..50cab3531b11 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -23,7 +23,7 @@
+  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
+  *   - FIFO size: 4KB
+  *
+- * - LSM6DSO
++ * - LSM6DSO/ASM330LHH
+  *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
+  *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
+  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
+@@ -347,6 +347,45 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 			.batch_en = BIT(3),
+ 		}
+ 	},
++	{
++		.wai = 0x6b,
++		.max_fifo_size = 512,
++		.id = {
++			[0] = ST_ASM330LHH_ID,
++		},
++		.batch = {
++			[ST_LSM6DSX_ID_ACC] = {
++				.addr = 0x09,
++				.mask = GENMASK(3, 0),
++			},
++			[ST_LSM6DSX_ID_GYRO] = {
++				.addr = 0x09,
++				.mask = GENMASK(7, 4),
++			},
++		},
++		.fifo_ops = {
++			.read_fifo = st_lsm6dsx_read_tagged_fifo,
++			.fifo_th = {
++				.addr = 0x07,
++				.mask = GENMASK(8, 0),
++			},
++			.fifo_diff = {
++				.addr = 0x3a,
++				.mask = GENMASK(8, 0),
++			},
++			.th_wl = 1,
++		},
++		.ts_settings = {
++			.timer_en = {
++				.addr = 0x19,
++				.mask = BIT(5),
++			},
++			.decimator = {
++				.addr = 0x0a,
++				.mask = GENMASK(7, 6),
++			},
++		},
 +	},
-+};
-+
-+module_platform_driver(typec_switch_gpio_driver);
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("TypeC Super Speed Switch GPIO driver");
-+MODULE_AUTHOR("Jun Li <jun.li@nxp.com>");
---=20
-2.7.4
+ };
+ 
+ static const struct iio_chan_spec st_lsm6dsx_acc_channels[] = {
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+index 448b7bc1e578..00b4b702645a 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+@@ -65,6 +65,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
+ 		.compatible = "st,lsm6dso",
+ 		.data = (void *)ST_LSM6DSO_ID,
+ 	},
++	{
++		.compatible = "st,asm330lhh",
++		.data = (void *)ST_ASM330LHH_ID,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
+@@ -76,6 +80,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
+ 	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
+ 	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
+ 	{ ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID },
++	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+index b1df8a6973e6..836256c2ac7d 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+@@ -65,6 +65,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
+ 		.compatible = "st,lsm6dso",
+ 		.data = (void *)ST_LSM6DSO_ID,
+ 	},
++	{
++		.compatible = "st,asm330lhh",
++		.data = (void *)ST_ASM330LHH_ID,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
+@@ -76,6 +80,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
+ 	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
+ 	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
+ 	{ ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID },
++	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
+-- 
+2.20.1
