@@ -1,81 +1,90 @@
-From: William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: Re: [PATCH 5/8] iio/counter: add FlexTimer Module Quadrature decoder
- counter driver
-Date: Thu, 21 Feb 2019 17:28:21 +0900
-Message-ID: <20190221082758.GA3380@icarus>
-References: <20190218140321.19166-1-patrick.havelange@essensium.com>
- <20190218140321.19166-5-patrick.havelange@essensium.com>
- <20190220164154.00547a77@archlinux>
- <20190221010931.GA3471@icarus>
+From: Pi-Hsun Shih <pihsun@chromium.org>
+Subject: [PATCH v5 1/6] dt-bindings: Add a binding for Mediatek SCP
+Date: Thu, 21 Feb 2019 16:47:24 +0800
+Message-ID: <20190221084729.101784-2-pihsun@chromium.org>
+References: <20190221084729.101784-1-pihsun@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190221010931.GA3471@icarus>
+In-Reply-To: <20190221084729.101784-1-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Havelange <patrick.havelange@essensium.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Esben Haabendal <esben@haabendal.dk>, Linus Walleij <linus.walleij@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR
+        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 10:09:54AM +0900, William Breathitt Gray wrote:
-> On Wed, Feb 20, 2019 at 04:41:54PM +0000, Jonathan Cameron wrote:
-> > On Mon, 18 Feb 2019 15:03:18 +0100
-> > Patrick Havelange <patrick.havelange@essensium.com> wrote:
-> > 
-> > > This driver exposes the counter for the quadrature decoder of the
-> > > FlexTimer Module, present in the LS1021A soc.
-> > > 
-> > > Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> > > Reviewed-by: Esben Haabendal <esben@haabendal.dk>
-> > Given you cc'd William, I'm guessing you know about the counter
-> > subsystem effort.  I would really rather not take any drivers
-> > into IIO if we have any hope of getting that upstreamed soon
-> > (which I personally think we do and should!).  The reason is
-> > we end up having to maintain old ABI just because someone might be using
-> > it and it makes the drivers very messy.
-> > 
-> > I'll review as is though as may be there are some elements that will
-> > cross over.
-> > 
-> > Comments inline.  William: Looks like a straight forward conversion if
-> > it makes sense to get this lined up as part of your initial submission?
-> > You have quite a few drivers so I wouldn't have said it needs to be there
-> > at the start, but good to have it soon after.
-> > 
-> > Jonathan
-> 
-> I agree, we should try to merge this as part of Counter subsystem
-> introduction rather than as another IIO Counter driver. As we determined
-> when adding support for the STM32 timers, the existing IIO Counter API
-> is fundamentally unsuitable for representing counter devices. So
-> regardless of how a new Counter API is merged, the existing IIO Counter
-> API must be deprecated.
-> 
-> Patrick, I apologize for the confusion this has caused. Would you be
-> able to convert this driver to use the proposed Counter subsystem API
-> from this patchset that I believe you encountered before:
-> https://marc.info/?l=linux-arm-kernel&m=153229982404051
-> 
-> Although it was last updated in October, I believe you should be able to
-> rebase that Counter subsystem introduction patchset cleanly on top of
-> the IIO tree (if there are any merge conflicts send me an email). Take a
-> look at the generic-counter.rst file under the Documentation/driver-api/
-> directory for an overview of the API; the counter drivers under the
-> drivers/counter/ directory also make good references.
-> 
-> If you have any difficulties understanding the API, or any other
-> troubles, don't hesitate to ask. Hopefully, I've made the documentation
-> clear enough to make the conversion of this driver quick and easy -- and
-> if not, then it's something I need to fix, so let me know. :-)
-> 
-> William Breathitt Gray
+From: Erin Lo <erin.lo@mediatek.com>
 
-Patrick,
+Add a DT binding documentation of SCP for the
+MT8183 SoC from Mediatek.
 
-It looks like there were some minor conflicts with the v9 patchset, so
-I've rebased it on top of the latest iio tree testing branch and
-resolved the conflicts in my personal repository. Please pull from my
-personal repository at https://gitlab.com/vilhelmgray/iio.git and base
-your patches on top of the generic_counter_v10 branch.
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+---
+Changes from v4:
+ - Add detail of more properties.
+ - Document the usage of mtk,rpmsg-name in subnode from the new design.
 
-William Breathitt Gray
+Changes from v3:
+ - No change.
+
+Changes from v2:
+ - No change. I realized that for this patch series, there's no need to
+   add anything under the mt8183-scp node (neither the mt8183-rpmsg or
+   the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
+   directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
+   created by SCP name service.
+
+Changes from v1:
+ - No change.
+---
+ .../bindings/remoteproc/mtk,scp.txt           | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+new file mode 100644
+index 00000000000000..8cf8b0e0d98a4c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+@@ -0,0 +1,37 @@
++Mediatek SCP Bindings
++----------------------------------------
++
++This binding provides support for ARM Cortex M4 Co-processor found on some
++Mediatek SoCs.
++
++Required properties:
++- compatible		Should be "mediatek,mt8183-scp"
++- reg			Should contain the address ranges for the two memory
++			regions, SRAM and CFG.
++- reg-names		Contains the corresponding names for the two memory
++			regions. These should be named "sram" & "cfg".
++- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
++- clock-names		Contains the corresponding name for the clock. This
++			should be named "main".
++
++Subnodes
++--------
++
++When CONFIG_RPMSG_MTK_SCP is enabled, subnodes of the SCP represent rpmsg
++devices. The names of the devices are not important. The properties of these
++nodes are defined by the individual bindings for the rpmsg devices - but must
++contain the following property:
++
++- mtk,rpmsg-name	Contains the name for the rpmsg device. Used to match
++			the subnode to rpmsg device announced by SCP.
++
++Example:
++
++	scp: scp@10500000 {
++		compatible = "mediatek,mt8183-scp";
++		reg = <0 0x10500000 0 0x80000>,
++		      <0 0x105c0000 0 0x5000>;
++		reg-names = "sram", "cfg";
++		clocks = <&infracfg CLK_INFRA_SCPSYS>;
++		clock-names = "main";
++	};
+-- 
+2.21.0.rc0.258.g878e2cd30e-goog
