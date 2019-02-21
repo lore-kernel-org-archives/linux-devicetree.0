@@ -1,47 +1,71 @@
-Return-Path: <>
-From: Martin Kelly <martin@martingkelly.com>
-Subject: [PATCH v4 0/6] iio:bmi160: add drdy interrupt support
-Date: Sat,  2 Feb 2019 13:55:55 -0800
-Message-Id: <20190202215601.20275-1-martin@martingkelly.com>
-To: linux-iio@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org, Martin Kelly <martin@martingkelly.com>
+Return-Path: <SRS0=5lt5=Q4=martin.sperl.org=kernel@kernel.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH V7 01/10] dt-binding: can: mcp25xxfd: document device tree bindings
+Date: Thu, 21 Feb 2019 21:07:27 +0000
+Message-Id: <20190221210736.640-2-kernel@martin.sperl.org>
+In-Reply-To: <20190221210736.640-1-kernel@martin.sperl.org>
+References: <20190221210736.640-1-kernel@martin.sperl.org>
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Kelly <martin@martingkelly.com>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-This patch series adds drdy interrupt support to the BMI160 IMU. It also
-updates the relevant DT bindings and does a little bit of related cleanup.
+Add device-tree bindings for Microcip CanFD Controller mcp2517fd
 
-v2:
-- Drop "BOTH" interrupt setting.
-- Change to "if (ret)" instead of "if (ret < 0)".
-- Stylistic changes suggested by Jonathan Cameron.
-- Fix bogus return check after iio_trigger_get.
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+--
+Changelog:
+  V1 -> V2: new more generic name based on feedback from microchip
+            cleanup of dt custom properties removing (most) gpio functions
+  V2 -> V3: added vendor-prefix for gpio-opendrain
+            s/_/-/
+            added gpio-controller
+  V3 -> V4: resend
+            added: Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/net/can/microchip,mcp25xxfd.txt       | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
 
-v3:
-- More cleanup changes.
-- Directly get INT1/INT2 by name instead of using I2C/SPI IRQs. Move this
-  code to the probe function.
-- Fix EDGE/LEVEL #define naming. The code was correct but the names were
-  wrong.
-
-v4:
-- Use standard "drive-open-drain" DT name.
-
-Martin Kelly (6):
-  iio:bmi160: add SPDX identifiers
-  iio:bmi160: add drdy interrupt support
-  dt-bindings: fix incorrect bmi160 IRQ note
-  dt-bindings: document open-drain property
-  iio:bmi160: use iio_pollfunc_store_time
-  iio:bmi160: use if (ret) instead of if (ret < 0)
-
- .../devicetree/bindings/iio/imu/bmi160.txt         |   6 +-
- drivers/iio/imu/bmi160/bmi160.h                    |  11 +
- drivers/iio/imu/bmi160/bmi160_core.c               | 317 +++++++++++++++++++--
- drivers/iio/imu/bmi160/bmi160_i2c.c                |   5 +-
- drivers/iio/imu/bmi160/bmi160_spi.c                |   4 +-
- 5 files changed, 304 insertions(+), 39 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+new file mode 100644
+index 000000000000..b388b3eb3905
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+@@ -0,0 +1,32 @@
++* Microchip MCP2517 stand-alone CAN controller device tree bindings
++
++Required properties:
++ - compatible: Should be one of the following:
++   - "microchip,mcp2517fd" for MCP2517fd.
++ - reg: SPI chip select.
++ - clocks: The clock feeding the CAN controller.
++ - interrupt-parent: The parent interrupt controller.
++ - interrupts: Should contain IRQ line for the CAN controller.
++ - gpio-controller: Marks the device node as a GPIO controller
++
++Optional properties:
++ - vdd-supply: Regulator that powers the CAN controller.
++ - xceiver-supply: Regulator that powers the CAN transceiver.
++ - microchip,clock-out-div = <0|1|2|4|10>: Clock output pin divider
++					   0 = Start of Frame output
++					   default: 10
++ - microchip,clock-div2: bool: divide the internal clock by 2
++ - microchip,gpio-open-drain: bool: enable open-drain for all pins
++                                    (except cantx)
++
++Example:
++	can0: can@1 {
++		compatible = "microchip,mcp2517fd";
++		reg = <1>;
++		clocks = <&clk24m>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <13 0x8>;
++		vdd-supply = <&reg5v0>;
++		xceiver-supply = <&reg5v0>;
++		gpio-controller;
++	};
 --
 2.11.0
