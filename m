@@ -1,98 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/6] dt-bindings: Add a binding for Mediatek SCP
-Date: Fri, 22 Feb 2019 08:43:16 -0600
-Message-ID: <20190222144316.GA19284@bogus>
-References: <20190221084729.101784-1-pihsun@chromium.org>
- <20190221084729.101784-2-pihsun@chromium.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 00/10] iio mount matrix - revitalize missing bindings
+ documentation and provide code for bmc150, bmg160, bma180, itg3200, hmc584x
+Date: Fri, 22 Feb 2019 16:48:14 +0200
+Message-ID: <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com>
+References: <cover.1550768574.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190221084729.101784-2-pihsun@chromium.org>
+In-Reply-To: <cover.1550768574.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pi-Hsun Shih <pihsun@chromium.org>
-Cc: Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio <linux-iio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 04:47:24PM +0800, Pi-Hsun Shih wrote:
-> From: Erin Lo <erin.lo@mediatek.com>
-> 
-> Add a DT binding documentation of SCP for the
-> MT8183 SoC from Mediatek.
-> 
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> ---
-> Changes from v4:
->  - Add detail of more properties.
->  - Document the usage of mtk,rpmsg-name in subnode from the new design.
-> 
-> Changes from v3:
->  - No change.
-> 
-> Changes from v2:
->  - No change. I realized that for this patch series, there's no need to
->    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
->    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
->    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
->    created by SCP name service.
-> 
-> Changes from v1:
->  - No change.
-> ---
->  .../bindings/remoteproc/mtk,scp.txt           | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> new file mode 100644
-> index 00000000000000..8cf8b0e0d98a4c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> @@ -0,0 +1,37 @@
-> +Mediatek SCP Bindings
-> +----------------------------------------
-> +
-> +This binding provides support for ARM Cortex M4 Co-processor found on some
-> +Mediatek SoCs.
-> +
-> +Required properties:
-> +- compatible		Should be "mediatek,mt8183-scp"
-> +- reg			Should contain the address ranges for the two memory
-> +			regions, SRAM and CFG.
-> +- reg-names		Contains the corresponding names for the two memory
-> +			regions. These should be named "sram" & "cfg".
-> +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-> +- clock-names		Contains the corresponding name for the clock. This
-> +			should be named "main".
-> +
-> +Subnodes
-> +--------
-> +
-> +When CONFIG_RPMSG_MTK_SCP is enabled, subnodes of the SCP represent rpmsg
+On Thu, Feb 21, 2019 at 7:04 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> Fixes V2:
+> * make get_mount_matrix() functions more readable (use temp variable)
+>   (suggested by Jonathan and Andy)
+> * add these readability improvements also for ak8975 and mpu6050
+>   (suggested by Jonathan and Andy)
+> * squash bindings documentation into single commit for better discussion
+>   (suggested by Linus)
+> * FOR DISCUSSION: add some more clarifications to the bindings documentation
+>   and an attempt to define the magnetometer orientation
+> * add "iio: Allow to read mount matrix from ACPI" to the beginning of
+>   the series to make it compile
+>   (suggested by Andy)
+> * replace of_iio_read_mount_matrix() by iio_read_mount_matrix()
+>   (required by "iio: Allow to read mount matrix from ACPI")
+> * drop patch to convert bma180 to devm (potential race)
+>   (suggested by Jonathan)
+>
+> PATCH V1 2019-02-20 15:01:02:
+> This patch series adds the mount-matrix to several iio sensor drivers
+> used in handheld devices.
+>
+> The mount-matrix translates the quite arbitrary orientation of the sensor
+> on some printed circuit board to user-tangible orientation in handheld
+> devices that relates to typical screen orientation.
+>
+> There was a bindings documentation by Linus Walleij but the patch
+> did not make it into mainline. Therefore I resend it here.
+>
+> Next I have added some clarifications (at least I hope it clarifies)
+> in a second patch.
+>
+> Finally, the patch set implements the hooks for the mount matrix
+> in several iio drivers: bmc150, bma180, bmg160, itg3200, hmc5843.
+> This includes also one patch for the bma180 to convert it to devm API.
+>
+> We use them in different variants of the omap3-gta04 so a separate
+> patch set will provide device tree additions for them.
+>
 
-Bindings can't depend on kernel config options.
+Thank you, it looks nice.
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> +devices. The names of the devices are not important. The properties of these
-> +nodes are defined by the individual bindings for the rpmsg devices - but must
-> +contain the following property:
-> +
-> +- mtk,rpmsg-name	Contains the name for the rpmsg device. Used to match
-> +			the subnode to rpmsg device announced by SCP.
 
-I don't think this belongs in DT, but without some examples I'm not 
-really sure.
+>
+> Andy Shevchenko (1):
+>   iio: Allow to read mount matrix from ACPI
+>
+> H. Nikolaus Schaller (8):
+>   iio: accel: bmc150: add mount matrix support
+>   iio: accel: bma180: add mount matrix support
+>   iio: gyro: bmg160: add mount matrix support
+>   iio: gyro: itg3200: add mount matrix support
+>   iio: magnetometer: bmc150: add mount matrix support
+>   iio: magnetometer: hmc5843: add mount matrix support
+>   iio: mpu6050: improve code readability
+>   iio: ak8975: improve code readability
+>
+> Linus Walleij (1):
+>   iio: document bindings for mounting matrices
+>
+>  .../devicetree/bindings/iio/mount-matrix.txt  | 204 ++++++++++++++++++
+>  drivers/iio/accel/bma180.c                    |  18 +-
+>  drivers/iio/accel/bmc150-accel-core.c         |  21 ++
+>  drivers/iio/accel/kxsd9.c                     |   4 +-
+>  drivers/iio/gyro/bmg160_core.c                |  21 ++
+>  drivers/iio/gyro/itg3200_core.c               |  20 ++
+>  drivers/iio/gyro/mpu3050-core.c               |   3 +-
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c    |  10 +-
+>  drivers/iio/industrialio-core.c               |  46 ++--
+>  drivers/iio/magnetometer/ak8974.c             |   5 +-
+>  drivers/iio/magnetometer/ak8975.c             |  13 +-
+>  drivers/iio/magnetometer/bmc150_magn.c        |  21 ++
+>  drivers/iio/magnetometer/hmc5843.h            |   1 +
+>  drivers/iio/magnetometer/hmc5843_core.c       |  20 +-
+>  include/linux/iio/gyro/itg3200.h              |   1 +
+>  include/linux/iio/iio.h                       |   4 +-
+>  16 files changed, 361 insertions(+), 51 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/mount-matrix.txt
+>
+> --
+> 2.19.1
+>
 
-> +
-> +Example:
-> +
-> +	scp: scp@10500000 {
-> +		compatible = "mediatek,mt8183-scp";
-> +		reg = <0 0x10500000 0 0x80000>,
-> +		      <0 0x105c0000 0 0x5000>;
-> +		reg-names = "sram", "cfg";
-> +		clocks = <&infracfg CLK_INFRA_SCPSYS>;
-> +		clock-names = "main";
-> +	};
-> -- 
-> 2.21.0.rc0.258.g878e2cd30e-goog
-> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
