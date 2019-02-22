@@ -1,29 +1,81 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/7] clk: gcc-qcs404: Add PCIe resets
-Date: Fri, 22 Feb 2019 13:54:36 -0600
-Message-ID: <20190222195436.GA26101@bogus>
+Subject: Re: [PATCH v2 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2
+ PHY
+Date: Fri, 22 Feb 2019 13:57:58 -0600
+Message-ID: <20190222195758.GA26984@bogus>
 References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
- <20190219060407.15263-2-bjorn.andersson@linaro.org>
+ <20190219060407.15263-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190219060407.15263-2-bjorn.andersson@linaro.org>
+In-Reply-To: <20190219060407.15263-3-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 10:04:01PM -0800, Bjorn Andersson wrote:
-> Enabling PCIe requires several of the PCIe related resets from GCC, so
-> add them all.
+On Mon, Feb 18, 2019 at 10:04:02PM -0800, Bjorn Andersson wrote:
+> The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
+> Qualcomm platforms, add a binding to describe this.
 > 
-> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
 > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  drivers/clk/qcom/gcc-qcs404.c               | 7 +++++++
->  include/dt-bindings/clock/qcom,gcc-qcs404.h | 7 +++++++
->  2 files changed, 14 insertions(+)
+>  .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> new file mode 100644
+> index 000000000000..7da02f9d78c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> @@ -0,0 +1,40 @@
+> +Qualcomm PCIe2 PHY controller
+> +=============================
+> +
+> +The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
+> +platforms.
+> +
+> +Required properties:
+> + - compatible: compatible list, should be:
+> +	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
+> +
+> + - reg: offset and length of the PHY register set.
+> + - #phy-cells: must be 0.
+> +
+> + - clocks: a clock-specifier pair for the "pipe" clock
+> +
+> + - vdda-vp-supply: phandle to low voltage regulator
+> + - vdda-vph-supply: phandle to high voltage regulator
+> +
+> + - resets: reset-specifier pairs for the "phy" and "pipe" resets
+> + - reset-names: list of resets, should contain:
+> +		"phy" and "pipe"
+> +
+> + - clock-output-names: name of the outgoing clock signal from the PHY PLL
 
-Acked-by: Rob Herring <robh@kernel.org>
+Not valid to have this without '#clock-cells'.
+
+Though I'm confused how this and the input clock name seem to match.
+
+> +
+> +Example:
+> + phy@7786000 {
+> +	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
+> +	reg = <0x07786000 0xb8>;
+> +
+> +	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+> +	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
+> +	         <&gcc GCC_PCIE_0_PIPE_ARES>;
+> +	reset-names = "phy", "pipe";
+> +
+> +	vdda-vp-supply = <&vreg_l3_1p05>;
+> +	vdda-vph-supply = <&vreg_l5_1p8>;
+> +
+> +	clock-output-names = "pcie_0_pipe_clk";
+> +	#phy-cells = <0>;
+> + };
+> -- 
+> 2.18.0
+> 
