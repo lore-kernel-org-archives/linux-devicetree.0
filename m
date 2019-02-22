@@ -1,120 +1,38 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5/5] arm64: dts: marvell: armada-cp110: Switch to per-port
- SATA interrupts
-Date: Fri, 22 Feb 2019 15:53:56 +0100
-Message-ID: <20190222145356.23072-6-miquel.raynal@bootlin.com>
-References: <20190222145356.23072-1-miquel.raynal@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190222145356.23072-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: [PATCH net-next v3 0/4] enetc: Add mdio support and device tree nodes
+Date: Fri, 22 Feb 2019 17:04:15 +0200
+Message-ID: <1550847859-17346-1-git-send-email-claudiu.manoil@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>
+Cc: alexandru.marginean@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+This is the missing part to enable PCI probing of the ENETC ethernet
+ports on the LS1028A SoC and external traffic on the LS1028A RDB board.
+It's one of the first items on the TODO list for the recently merged
+ENETC ethernet driver.
 
-There are two SATA ports per CP110. Each of them has a dedicated
-interrupt. Describe the real hardware by adding two SATA ports to the
-CP110 SATA node and enabling them in all the DTs including it
-(7040-db/8040-db/8040-clearfog).
+v3: Add DT bindings doc for ENETC connections
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-7040-db.dts |  7 ++++++-
- arch/arm64/boot/dts/marvell/armada-8040-db.dts | 14 ++++++++++++--
- arch/arm64/boot/dts/marvell/armada-cp110.dtsi  | 16 ++++++++++++++--
- 3 files changed, 32 insertions(+), 5 deletions(-)
+Claudiu Manoil (4):
+  arm64: dts: fsl: ls1028a: Add PCI IERC node and ENETC endpoints
+  arm64: dts: fsl: ls1028a-rdb: Add ENETC external eth ports for the
+    LS1028A RDB board
+  enetc: Add ENETC PF level external MDIO support
+  dt-bindings: net: freescale: enetc: Add connection bindings for ENETC
+    ethernet nodes
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-index 412efdb46e7c..54c1c0ddc813 100644
---- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-@@ -194,7 +194,12 @@
- };
- 
- &cp0_sata0 {
--	status = "okay";
-+	sata-port@0 {
-+		status = "okay";
-+	};
-+	sata-port@1 {
-+		status = "okay";
-+	};
- };
- 
- &cp0_usb3_0 {
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-index 1bac437369a1..988cc7dc15d9 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-@@ -147,7 +147,12 @@
- 
- /* CON4 on CP0 expansion */
- &cp0_sata0 {
--	status = "okay";
-+	sata-port@0 {
-+		status = "okay";
-+	};
-+	sata-port@1 {
-+		status = "okay";
-+	};
- };
- 
- /* CON9 on CP0 expansion */
-@@ -279,7 +284,12 @@
- 
- /* CON4 on CP1 expansion */
- &cp1_sata0 {
--	status = "okay";
-+	sata-port@0 {
-+		status = "okay";
-+	};
-+	sata-port@1 {
-+		status = "okay";
-+	};
- };
- 
- /* CON9 on CP1 expansion */
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-index b9d9f31e3ba1..f27edddcacd1 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-@@ -292,10 +292,22 @@
- 			"generic-ahci";
- 			reg = <0x540000 0x30000>;
- 			dma-coherent;
--			interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&CP110_LABEL(clk) 1 15>,
- 				 <&CP110_LABEL(clk) 1 16>;
--			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			sata-port@0 {
-+				reg = <0>;
-+				interrupts = <109 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			sata-port@1 {
-+				reg = <1>;
-+				interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		CP110_LABEL(xor0): xor@6a0000 {
+ .../devicetree/bindings/net/fsl-enetc.txt          | 109 +++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts  |  17 ++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi     |  33 ++++
+ drivers/net/ethernet/freescale/enetc/Makefile      |   3 +-
+ drivers/net/ethernet/freescale/enetc/enetc_mdio.c  | 199 +++++++++++++++++++++
+ drivers/net/ethernet/freescale/enetc/enetc_pf.c    |  12 ++
+ drivers/net/ethernet/freescale/enetc/enetc_pf.h    |   6 +
+ 7 files changed, 378 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/net/fsl-enetc.txt
+ create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+
 -- 
-2.19.1
+2.7.4
