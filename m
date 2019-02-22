@@ -1,58 +1,194 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 08/14] clk: qcom: hfpll: CLK_IGNORE_UNUSED
-Date: Fri, 22 Feb 2019 10:12:33 -0800
-Message-ID: <155085915374.77512.3766517034394591147@swboyd.mtv.corp.google.com>
-References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1548700381-22376-9-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: move QCA6174A wakeup pin into
+ its USB node
+Date: Fri, 22 Feb 2019 10:27:40 -0800
+Message-ID: <20190222182740.GC223791@google.com>
+References: <20190222003403.128243-1-briannorris@chromium.org>
+ <20190222003403.128243-3-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548700381-22376-9-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20190222003403.128243-3-briannorris@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, david.brown@linaro.org, enric.balletbo@collabora.com, heiko@sntech.de, horms+renesas@verge.net.au, jagan@amarulasolutions.com, jassisinghbrar@gmail.com, jorge.ramirez-ortiz@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, olof@lixom.net, robh+dt@kernel.org, sibis@codeaurora.org, will.deacon@arm.com
-Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz (2019-01-28 10:32:55)
-> When COMMON_CLK_DISABLED_UNUSED is set, in an effort to save power and
-> to keep the software model of the clock in line with reality, the
-> framework transverses the clock tree and disables those clocks that
-> were enabled by the firmware but have not been enabled by any device
-> driver.
->=20
-> If CPUFREQ is enabled, early during the system boot, it might attempt
-> to change the CPU frequency ("set_rate"). If the HFPLL is selected as
-> a provider, it will then change the rate for this clock.
->=20
-> As boot continues, clk_disable_unused_subtree will run. Since it wont
-> find a valid counter (enable_count) for a clock that is actually
-> enabled it will attempt to disable it which will cause the CPU to
-> stop. Notice that in this driver, calls to check whether the clock is
-> enabled are routed via the is_enabled callback which queries the
-> hardware.
->=20
-> The following commit, rather than marking the clock critical and
-> forcing the clock to be always enabled, addresses the above scenario
-> making sure the clock is not disabled but it continues to rely on the
-> firmware to enable the clock.
->=20
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+On Thu, Feb 21, 2019 at 04:34:03PM -0800, Brian Norris wrote:
+> Currently, we don't coordinate BT USB activity with our handling of the
+> BT out-of-band wake pin, and instead just use gpio-keys. That causes
+> problems because we have no way of distinguishing wake activity due to a
+> BT device (e.g., mouse) vs. the BT controller (e.g., re-configuring wake
+> mask before suspend). This can cause spurious wake events just because
+> we, for instance, try to reconfigure the host controller's event mask
+> before suspending.
+> 
+> We can avoid these synchronization problems by handling the BT wake pin
+> directly in the btusb driver -- for all activity up until BT controller
+> suspend(), we simply listen to normal USB activity (e.g., to know the
+> difference between device and host activity); once we're really ready to
+> suspend the host controller, there should be no more host activity, and
+> only *then* do we unmask the GPIO interrupt.
+> 
+> This is already supported by btusb; we just need to describe the wake
+> pin in the right node.
+> 
+> We list 2 compatible properties, since both PID/VID pairs show up on
+> Scarlet devices, and they're both essentially identical QCA6174A-based
+> modules.
+> 
+> Also note that the polarity was wrong before: Qualcomm implemented WAKE
+> as active high, not active low. We only got away with this because
+> gpio-keys always reconfigured us as bi-directional edge-triggered.
+> 
+> Finally, we have an external pull-up and a level-shifter on this line
+> (we didn't notice Qualcomm's polarity in the initial design), so we
+> can't do pull-down. Switch to pull-none.
+> 
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 > ---
->  drivers/clk/qcom/hfpll.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
-> index 0ffed0d..9d92f5d 100644
-> --- a/drivers/clk/qcom/hfpll.c
-> +++ b/drivers/clk/qcom/hfpll.c
-> @@ -58,6 +58,7 @@ static int qcom_hfpll_probe(struct platform_device *pde=
-v)
->                 .parent_names =3D (const char *[]){ "xo" },
->                 .num_parents =3D 1,
->                 .ops =3D &clk_ops_hfpll,
-> +               .flags =3D CLK_IGNORE_UNUSED,
+> This patch is also required to make this stable, but since it's not
+> really tied to the device tree, and it's an existing bug, I sent it
+> separately:
+> 
+>   https://lore.kernel.org/patchwork/patch/1044896/
+>   Subject: Bluetooth: btusb: request wake pin with NOAUTOEN
+> 
+>  .../dts/rockchip/rk3399-gru-chromebook.dtsi   | 13 ++++++
+>  .../boot/dts/rockchip/rk3399-gru-scarlet.dtsi | 46 ++++++++++++-------
+>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi  | 13 ------
+>  3 files changed, 42 insertions(+), 30 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+> index c400be64170e..931640e9aed4 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+> @@ -200,6 +200,19 @@
+>  		pinctrl-0 = <&bl_en>;
+>  		pwm-delay-us = <10000>;
+>  	};
+> +
+> +	gpio_keys: gpio-keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&bt_host_wake_l>;
+> +
+> +		wake_on_bt: wake-on-bt {
+> +			label = "Wake-on-Bluetooth";
+> +			gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_WAKEUP>;
+> +			wakeup-source;
+> +		};
+> +	};
+>  };
+>  
+>  &ppvar_bigcpu {
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet.dtsi
+> index fc50b3ef758c..3e2196c08473 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet.dtsi
+> @@ -175,6 +175,21 @@
+>  		pinctrl-0 = <&dmic_en>;
+>  		wakeup-delay-ms = <250>;
+>  	};
+> +
+> +	gpio_keys: gpio-keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pen_eject_odl>;
+> +
+> +		pen-insert {
+> +			label = "Pen Insert";
+> +			/* Insert = low, eject = high */
+> +			gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+> +			linux,code = <SW_PEN_INSERTED>;
+> +			linux,input-type = <EV_SW>;
+> +			wakeup-source;
+> +		};
+> +	};
+>  };
+>  
+>  /* pp900_s0 aliases */
+> @@ -328,20 +343,6 @@ camera: &i2c7 {
+>  		<400000000>;
+>  };
+>  
+> -&gpio_keys {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&bt_host_wake_l>, <&pen_eject_odl>;
+> -
+> -	pen-insert {
+> -		label = "Pen Insert";
+> -		/* Insert = low, eject = high */
+> -		gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+> -		linux,code = <SW_PEN_INSERTED>;
+> -		linux,input-type = <EV_SW>;
+> -		wakeup-source;
+> -	};
+> -};
+> -
+>  &i2c_tunnel {
+>  	google,remote-bus = <0>;
+>  };
+> @@ -437,8 +438,19 @@ camera: &i2c7 {
+>  	status = "okay";
+>  };
+>  
+> -&wake_on_bt {
+> -	gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
+> +&usb_host0_ohci {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	qca_bt: bt@1 {
+> +		compatible = "usb0cf3,e300", "usb04ca,301a";
+> +		reg = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&bt_host_wake_l>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "wakeup";
+> +	};
+>  };
 
-Please put some sort of similar comment in the code so we can find it
-without git history digging.
+I didn't know it was possible to configure (certain) USB devices
+through the DT, neat!
+
+>  
+>  /* PINCTRL OVERRIDES */
+> @@ -455,7 +467,7 @@ camera: &i2c7 {
+>  };
+>  
+>  &bt_host_wake_l {
+> -	rockchip,pins = <1 2 RK_FUNC_GPIO &pcfg_pull_up>;
+> +	rockchip,pins = <1 2 RK_FUNC_GPIO &pcfg_pull_none>;
+>  };
+>  
+>  &ec_ap_int_l {
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> index ea607a601a86..da03fa9c5662 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> @@ -269,19 +269,6 @@
+>  		#clock-cells = <0>;
+>  	};
+>  
+> -	gpio_keys: gpio-keys {
+> -		compatible = "gpio-keys";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&bt_host_wake_l>;
+> -
+> -		wake_on_bt: wake-on-bt {
+> -			label = "Wake-on-Bluetooth";
+> -			gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> -			linux,code = <KEY_WAKEUP>;
+> -			wakeup-source;
+> -		};
+> -	};
+> -
+>  	max98357a: max98357a {
+>  		compatible = "maxim,max98357a";
+>  		pinctrl-names = "default";
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
