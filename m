@@ -1,105 +1,63 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 00/10] iio mount matrix - revitalize missing bindings
- documentation and provide code for bmc150, bmg160, bma180, itg3200, hmc584x
-Date: Fri, 22 Feb 2019 16:48:14 +0200
-Message-ID: <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com>
-References: <cover.1550768574.git.hns@goldelico.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 1/5] ata: libahci: Ensure the host interrupt status bits are
+ cleared
+Date: Fri, 22 Feb 2019 15:53:52 +0100
+Message-ID: <20190222145356.23072-2-miquel.raynal@bootlin.com>
+References: <20190222145356.23072-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1550768574.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio <linux-iio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190222145356.23072-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 7:04 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Fixes V2:
-> * make get_mount_matrix() functions more readable (use temp variable)
->   (suggested by Jonathan and Andy)
-> * add these readability improvements also for ak8975 and mpu6050
->   (suggested by Jonathan and Andy)
-> * squash bindings documentation into single commit for better discussion
->   (suggested by Linus)
-> * FOR DISCUSSION: add some more clarifications to the bindings documentation
->   and an attempt to define the magnetometer orientation
-> * add "iio: Allow to read mount matrix from ACPI" to the beginning of
->   the series to make it compile
->   (suggested by Andy)
-> * replace of_iio_read_mount_matrix() by iio_read_mount_matrix()
->   (required by "iio: Allow to read mount matrix from ACPI")
-> * drop patch to convert bma180 to devm (potential race)
->   (suggested by Jonathan)
->
-> PATCH V1 2019-02-20 15:01:02:
-> This patch series adds the mount-matrix to several iio sensor drivers
-> used in handheld devices.
->
-> The mount-matrix translates the quite arbitrary orientation of the sensor
-> on some printed circuit board to user-tangible orientation in handheld
-> devices that relates to typical screen orientation.
->
-> There was a bindings documentation by Linus Walleij but the patch
-> did not make it into mainline. Therefore I resend it here.
->
-> Next I have added some clarifications (at least I hope it clarifies)
-> in a second patch.
->
-> Finally, the patch set implements the hooks for the mount matrix
-> in several iio drivers: bmc150, bma180, bmg160, itg3200, hmc5843.
-> This includes also one patch for the bma180 to convert it to devm API.
->
-> We use them in different variants of the omap3-gta04 so a separate
-> patch set will provide device tree additions for them.
->
+ahci_multi_irqs_intr_hard() is going to be used as interrupt handler
+to support SATA per-port interrupts. The current logic is to check and
+clear the SATA port interrupt status register only. To avoid spurious
+IRQs and interrupt storms, it will be needed to clear the port
+interrupt bit in the host interrupt status register as well.
 
-Thank you, it looks nice.
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/ata/libahci.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-
->
-> Andy Shevchenko (1):
->   iio: Allow to read mount matrix from ACPI
->
-> H. Nikolaus Schaller (8):
->   iio: accel: bmc150: add mount matrix support
->   iio: accel: bma180: add mount matrix support
->   iio: gyro: bmg160: add mount matrix support
->   iio: gyro: itg3200: add mount matrix support
->   iio: magnetometer: bmc150: add mount matrix support
->   iio: magnetometer: hmc5843: add mount matrix support
->   iio: mpu6050: improve code readability
->   iio: ak8975: improve code readability
->
-> Linus Walleij (1):
->   iio: document bindings for mounting matrices
->
->  .../devicetree/bindings/iio/mount-matrix.txt  | 204 ++++++++++++++++++
->  drivers/iio/accel/bma180.c                    |  18 +-
->  drivers/iio/accel/bmc150-accel-core.c         |  21 ++
->  drivers/iio/accel/kxsd9.c                     |   4 +-
->  drivers/iio/gyro/bmg160_core.c                |  21 ++
->  drivers/iio/gyro/itg3200_core.c               |  20 ++
->  drivers/iio/gyro/mpu3050-core.c               |   3 +-
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c    |  10 +-
->  drivers/iio/industrialio-core.c               |  46 ++--
->  drivers/iio/magnetometer/ak8974.c             |   5 +-
->  drivers/iio/magnetometer/ak8975.c             |  13 +-
->  drivers/iio/magnetometer/bmc150_magn.c        |  21 ++
->  drivers/iio/magnetometer/hmc5843.h            |   1 +
->  drivers/iio/magnetometer/hmc5843_core.c       |  20 +-
->  include/linux/iio/gyro/itg3200.h              |   1 +
->  include/linux/iio/iio.h                       |   4 +-
->  16 files changed, 361 insertions(+), 51 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/mount-matrix.txt
->
-> --
-> 2.19.1
->
-
-
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index b5f57c69c487..66d4906a5013 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -1912,7 +1912,10 @@ static void ahci_port_intr(struct ata_port *ap)
+ static irqreturn_t ahci_multi_irqs_intr_hard(int irq, void *dev_instance)
+ {
+ 	struct ata_port *ap = dev_instance;
++	struct ata_host *host = ap->host;
++	struct ahci_host_priv *hpriv = host->private_data;
+ 	void __iomem *port_mmio = ahci_port_base(ap);
++	void __iomem *mmio = hpriv->mmio;
+ 	u32 status;
+ 
+ 	VPRINTK("ENTER\n");
+@@ -1924,6 +1927,10 @@ static irqreturn_t ahci_multi_irqs_intr_hard(int irq, void *dev_instance)
+ 	ahci_handle_port_interrupt(ap, port_mmio, status);
+ 	spin_unlock(ap->lock);
+ 
++	spin_lock(&host->lock);
++	writel(BIT(ap->port_no), mmio + HOST_IRQ_STAT);
++	spin_unlock(&host->lock);
++
+ 	VPRINTK("EXIT\n");
+ 
+ 	return IRQ_HANDLED;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.19.1
