@@ -1,41 +1,25 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 2/3] dt-bindings: net: btusb: add QCA6174A IDs
-Date: Fri, 22 Feb 2019 10:05:46 -0800
-Message-ID: <20190222180546.GB223791@google.com>
-References: <20190222003403.128243-1-briannorris@chromium.org>
- <20190222003403.128243-2-briannorris@chromium.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 07/14] clk: qcom: hfpll: register as clock provider
+Date: Fri, 22 Feb 2019 10:06:19 -0800
+Message-ID: <155085877912.77512.282683582779131155@swboyd.mtv.corp.google.com>
+References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1548700381-22376-8-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190222003403.128243-2-briannorris@chromium.org>
+In-Reply-To: <1548700381-22376-8-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+To: andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, david.brown@linaro.org, enric.balletbo@collabora.com, heiko@sntech.de, horms+renesas@verge.net.au, jagan@amarulasolutions.com, jassisinghbrar@gmail.com, jorge.ramirez-ortiz@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, olof@lixom.net, robh+dt@kernel.org, sibis@codeaurora.org, will.deacon@arm.com
+Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 04:34:02PM -0800, Brian Norris wrote:
-> There are two USB PID/VID variations I've seen for this chip, and I want
-> to utilize the 'interrupts' property defined here already.
-> 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
+Quoting Jorge Ramirez-Ortiz (2019-01-28 10:32:54)
+> Make the output of the high frequency pll a clock provider.
+> On the QCS404 this PLL controls cpu frequency scaling.
+>=20
+> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > ---
->  Documentation/devicetree/bindings/net/btusb.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/btusb.txt b/Documentation/devicetree/bindings/net/btusb.txt
-> index 37d67926dd6d..43c96c3380a6 100644
-> --- a/Documentation/devicetree/bindings/net/btusb.txt
-> +++ b/Documentation/devicetree/bindings/net/btusb.txt
-> @@ -9,6 +9,9 @@ Required properties:
->  		 (more may be added later) are:
->  
->  		  "usb1286,204e" (Marvell 8997)
-> +		  "usb0cf3,e300" (Qualcomm QCA6174A)
-> +		  "usb04ca,301a" (Qualcomm QCA6174A (Lite-On))
-> +
->  
->  Also, vendors that use btusb may have device additional properties, e.g:
->  Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
