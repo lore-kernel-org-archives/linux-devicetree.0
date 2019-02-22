@@ -1,26 +1,59 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 2/3] dt-bindings: net: btusb: add QCA6174A IDs
-Date: Fri, 22 Feb 2019 14:10:57 -0800
-Message-ID: <CA+ASDXOFTYmXHw6DD6f3P-0DfyKGZUt9MANEYZXfBBkiXqikYQ@mail.gmail.com>
-References: <20190222003403.128243-1-briannorris@chromium.org>
- <20190222003403.128243-2-briannorris@chromium.org> <5efc9f02-eeb8-78cc-0f11-13e0010efd46@arm.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v3 5/9] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
+Date: Fri, 22 Feb 2019 15:18:46 -0700
+Message-ID: <20190222221850.26939-6-ilina@codeaurora.org>
+References: <20190222221850.26939-1-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5efc9f02-eeb8-78cc-0f11-13e0010efd46@arm.com>
+In-Reply-To: <20190222221850.26939-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Rajat Jain <rajatja@google.com>, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
+To: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com
+Cc: linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, dianders@chromium.org, linus.walleij@linaro.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 22, 2019 at 1:57 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> On 2019-02-22 12:34 am, Brian Norris wrote:
-> > +               "usb0cf3,e300" (Qualcomm QCA6174A)
-> > +               "usb04ca,301a" (Qualcomm QCA6174A (Lite-On))
->
-> Nit: the USB device binding states that those leading zeroes in the VIDs
-> should be suppressed.
+SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
+routed to the PDC as interrupts that can be used to wake the system up
+from deep low power modes and suspend.
 
-Ah, thanks. Didn't notice that part. I'll remove the zeroes and resend.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Brian
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+index 665aadb5ea28..f0fedbc5d41a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+@@ -29,6 +29,11 @@ SDM845 platform.
+ 	Definition: must be 2. Specifying the pin number and flags, as defined
+ 		    in <dt-bindings/interrupt-controller/irq.h>
+ 
++- wakeup-parent:
++	Usage: optional
++	Value type: <phandle>
++	Definition: A phandle to the wakeup interrupt controller for the SoC.
++
+ - gpio-controller:
+ 	Usage: required
+ 	Value type: <none>
+@@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
+ mux function to select on those pin(s)/group(s), and various pin configuration
+ parameters, such as pull-up, drive strength, etc.
+ 
+-
+ PIN CONFIGURATION NODES:
+ 
+ The name of each subnode is not important; all subnodes should be enumerated
+@@ -160,6 +164,7 @@ Example:
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++		wake-parent = <&pdc_intc>;
+ 
+ 		qup9_active: qup9-active {
+ 			mux {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
