@@ -1,59 +1,99 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 2/5] ata: libahci_platform: Support per-port interrupts
-Date: Fri, 22 Feb 2019 16:31:14 +0100
-Message-ID: <20190222163114.0f4488fe@xps13>
-References: <20190222145356.23072-1-miquel.raynal@bootlin.com>
- <20190222145356.23072-3-miquel.raynal@bootlin.com>
- <5040d4cf-7da1-eefa-a8a3-bc4054d528da@redhat.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v9 2/5] dt-bindings: pstore-block: new support for blkoops
+Date: Fri, 22 Feb 2019 09:36:31 -0600
+Message-ID: <20190222153631.GA2612@bogus>
+References: <1550577170-18761-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1550577170-18761-3-git-send-email-liaoweixiong@allwinnertech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5040d4cf-7da1-eefa-a8a3-bc4054d528da@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1550577170-18761-3-git-send-email-liaoweixiong@allwinnertech.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: liaoweixiong <liaoweixiong@allwinnertech.com>
+Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGFucywKCkhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+IHdyb3RlIG9uIEZy
-aSwgMjIgRmViIDIwMTkgMTY6MjY6MDEKKzAxMDA6Cgo+IEhpLAo+IAo+IE9uIDIvMjIvMTkgMzo1
-MyBQTSwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+IFJpZ2h0IG5vdyB0aGUgQVRBIGNvcmUgb25s
-eSBhbGxvd3MgSVBzIHRvIHVzZSBhIHNpbmdsZSBpbnRlcnJ1cHQuIFNvbWUKPiA+IG9mIHRoZW0g
-KGZvciBpbnN0YW5jZSB0aGUgQXJtYWRhLUNQMTEwIG9uZSkgYWN0dWFsbHkgaGFzIG9uZSBpbnRl
-cnJ1cHQKPiA+IHBlciBwb3J0LiBBZGQgc29tZSBsb2dpYyB0byBzdXBwb3J0IHN1Y2ggc2l0dWF0
-aW9uLgo+ID4gCj4gPiBXZSBjb25zaWRlciB0aGF0IGVpdGhlciB0aGVyZSBpcyBvbmUgc2luZ2xl
-IGludGVycnVwdCBkZWNsYXJlZCBpbiB0aGUKPiA+IG1haW4gSVAgbm9kZSwgb3IgdGhlcmUgYXJl
-IHBlci1wb3J0IGludGVycnVwdHMsIGVhY2ggb2YgdGhlbSBiZWluZwo+ID4gZGVjbGFyZWQgaW4g
-dGhlIHBvcnQgc3ViLW5vZGVzLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFs
-IDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+ID4gLS0tCj4gPiAgIGRyaXZlcnMvYXRhL2Fj
-YXJkLWFoY2kuYyAgICAgICB8ICAyICstCj4gPiAgIGRyaXZlcnMvYXRhL2FoY2kuYyAgICAgICAg
-ICAgICB8ICAyICstCj4gPiAgIGRyaXZlcnMvYXRhL2FoY2kuaCAgICAgICAgICAgICB8ICAzICst
-Cj4gPiAgIGRyaXZlcnMvYXRhL2xpYmFoY2kuYyAgICAgICAgICB8ICAyICstCj4gPiAgIGRyaXZl
-cnMvYXRhL2xpYmFoY2lfcGxhdGZvcm0uYyB8IDY2ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KystLS0tLS0KPiA+ICAgZHJpdmVycy9hdGEvc2F0YV9oaWdoYmFuay5jICAgIHwgIDIgKy0KPiA+
-ICAgNiBmaWxlcyBjaGFuZ2VkLCA2MSBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkKPiA+
-IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYXRhL2FjYXJkLWFoY2kuYyBiL2RyaXZlcnMvYXRh
-L2FjYXJkLWFoY2kuYwo+ID4gaW5kZXggNTgzZTM2NmJlN2UyLi45NDE0YjgxZTk5NGMgMTAwNjQ0
-Cj4gPiAtLS0gYS9kcml2ZXJzL2F0YS9hY2FyZC1haGNpLmMKPiA+ICsrKyBiL2RyaXZlcnMvYXRh
-L2FjYXJkLWFoY2kuYwo+ID4gQEAgLTQzNCw3ICs0MzQsNyBAQCBzdGF0aWMgaW50IGFjYXJkX2Fo
-Y2lfaW5pdF9vbmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGNvbnN0IHN0cnVjdCBwY2lfZGV2aWNl
-X2lkCj4gPiAgIAlpZiAoIWhwcml2KQo+ID4gICAJCXJldHVybiAtRU5PTUVNOyAgCj4gPiAgID4g
-LQlocHJpdi0+aXJxID0gcGRldi0+aXJxOyAgCj4gPiArCWhwcml2LT5pcnFzWzBdID0gcGRldi0+
-aXJxOwo+ID4gICAJaHByaXYtPmZsYWdzIHw9ICh1bnNpZ25lZCBsb25nKXBpLnByaXZhdGVfZGF0
-YTsKPiA+ICAgICAKPiBXaGF0IGNvZGUtcGF0aCBpcyBnb2luZyB0byBhbGxvYyBocHJpdi0+aXJx
-cyBmb3IgZHJpdmVycyB1c2luZyB0aGlzIGNvZGUtcGF0aAo+IHdoaWNoIGFyZSBub3QgdXNpbmcg
-bGliYWhjaV9wbGF0Zm9ybSAuYyA/CgpJIGRvbid0IHVuZGVyc3RhbmQgdGhlIHF1ZXN0aW9uIChv
-ciB0aGUgcmVtYXJrIGJlaGluZCB0aGUgcXVlc3Rpb24pLApjYW4geW91IGV4cGxhaW4gYSBsaXR0
-bGUgYml0IG1vcmUgd2hhdCB5b3UgaGF2ZSBpbiBtaW5kPwoKClRoYW5rcywKTWlxdcOobAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
++boot-architecture list
+
+On Tue, Feb 19, 2019 at 07:52:47PM +0800, liaoweixiong wrote:
+> Create DT binding document for blkoops.
+> 
+> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+> ---
+>  .../devicetree/bindings/pstore/blkoops.txt         | 53 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pstore/blkoops.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pstore/blkoops.txt b/Documentation/devicetree/bindings/pstore/blkoops.txt
+> new file mode 100644
+> index 0000000..5462915
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pstore/blkoops.txt
+> @@ -0,0 +1,53 @@
+> +Blkoops oops logger
+> +===================
+> +
+> +Blkoops provides a block partition for oops, excluding panics now, so they can
+> +be recovered after a reboot.
+> +
+> +Any space of block device will be used for a circular buffer of oops records.
+> +These records have a configurable size, with a size of 0 indicating that they
+> +should be disabled.
+> +
+> +At least one of "block-device" and "total_size" must be set.
+> +
+> +At least one of "dmesg-size" or "pmsg-size" must be set non-zero.
+> +
+> +Required properties:
+> +
+> +- compatible: must be "blkoops".
+> +
+> +Optional properties:
+> +
+> +- block-device: The block device to use. Most of the time, it is a partition of
+> +		device. If block-device is NULL, no block device is effective
+> +		and the data will be lost after rebooting.
+> +		It accept the following variants:
+> +		1) <hex_major><hex_minor> device number in hexadecimal
+> +		   represents itself no leading 0x, for example b302.
+> +		2) /dev/<disk_name> represents the device number of disk
+> +		3) /dev/<disk_name><decimal> represents the device number of
+> +		   partition - device number of disk plus the partition number
+> +		4) /dev/<disk_name>p<decimal> - same as the above, that form is
+> +		   used when disk name of partitioned disk ends on a digit.
+> +		5) PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF representing
+> +		   the unique id of a partition if the partition table provides
+> +		   it. The UUID may be either an EFI/GPT UUID, or refer to an
+> +		   MSDOS partition using the format SSSSSSSS-PP, where SSSSSSSS
+> +		   is a zero-filled hex representation of the 32-bit
+> +		   "NT disk signature", and PP is a zero-filled hex
+> +		   representation of the 1-based partition number.
+> +		6) PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in
+> +		   relation to a partition with a known unique id.
+> +		7) <major>:<minor> major and minor number of the device
+> +		   separated by a colon.
+
+No.
+
+I didn't suggest to go look at PARTUUID to copy it into the binding, but 
+rather to point out that the kernel can already mount by UUID. 
+Specifying the UUID in DT is also not what I suggested. My suggestion is 
+to define a known UUID so that the kernel (and bootloaders, userspace, 
+the world) can just know the UUID. Just like the EFI system partition. 
+Now this means you have to get it defined in the UEFI specification 
+(or maybe EBBR[1]). If you want help with how to do that, the 
+boot-architecture list is a good place to start.
+
+major/minor numbers are a Linux thing, so they don't go in DT.
+/dev/* is Linux thing, so it doesn't go in DT.
+
+You can always define all these parameters as kernel command line 
+options and avoid DT. That would also make this work on *all* systems, 
+not just DT based systems. (Though I still believe that the partition 
+should be discoverable.)
+
+Rob
+
+[1] https://github.com/ARM-software/ebbr
