@@ -1,14 +1,16 @@
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v3 1/4] arm64: dts: fsl: ls1028a: Add PCI IERC node
- and ENETC endpoints
-Date: Fri, 22 Feb 2019 17:04:16 +0200
-Message-ID: <1550847859-17346-2-git-send-email-claudiu.manoil@nxp.com>
-References: <1550847859-17346-1-git-send-email-claudiu.manoil@nxp.com>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 5/5] arm64: dts: marvell: armada-cp110: Switch to
+ per-port SATA interrupts
+Date: Fri, 22 Feb 2019 15:13:35 +0000
+Message-ID: <20190222151335.r27yreym5bhaoqaw@shell.armlinux.org.uk>
+References: <20190222145356.23072-1-miquel.raynal@bootlin.com>
+ <20190222145356.23072-6-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550847859-17346-1-git-send-email-claudiu.manoil@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20190222145356.23072-6-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,78 +20,119 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, alexandru.marginean@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-ide@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The LS1028A SoC features a PCI Integrated Endpoint Root Complex
-(IERC) defining several integrated PCI devices, including the ENETC
-ethernet controller integrated endpoints (IEPs). The IERC implements
-ECAM (Enhanced Configuration Access Mechanism) to provide access
-to the PCIe config space of the IEPs. This means the the IEPs
-(including ENETC) do not support the standard PCIe BARs, instead
-the Enhanced Allocation (EA) capability structures in the ECAM space
-are used to fix the base addresses in the system, and the PCI
-subsystem uses these structures for device enumeration and discovery.
-The "ranges" entries contain basic information from these EA capabily
-structures required by the kernel for device enumeration.
+On Fri, Feb 22, 2019 at 03:53:56PM +0100, Miquel Raynal wrote:
+> From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> 
+> There are two SATA ports per CP110. Each of them has a dedicated
+> interrupt. Describe the real hardware by adding two SATA ports to the
+> CP110 SATA node and enabling them in all the DTs including it
+> (7040-db/8040-db/8040-clearfog).
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  arch/arm64/boot/dts/marvell/armada-7040-db.dts |  7 ++++++-
+>  arch/arm64/boot/dts/marvell/armada-8040-db.dts | 14 ++++++++++++--
+>  arch/arm64/boot/dts/marvell/armada-cp110.dtsi  | 16 ++++++++++++++--
+>  3 files changed, 32 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+> index 412efdb46e7c..54c1c0ddc813 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+> @@ -194,7 +194,12 @@
+>  };
+>  
+>  &cp0_sata0 {
+> -	status = "okay";
+> +	sata-port@0 {
 
-The current patch also enables the first 2 ENETC PFs (Physiscal
-Functions) and the associated VFs (Virtual Functions), 2 VFs for
-each PF.  Each of these ENETC PFs has an external ethernet port
-on the LS1028A SoC.
+Don't these all need a reg = <N> to correspond with @N in the node name?
 
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
-v2 - none
-v3 - none
+> +		status = "okay";
+> +	};
+> +	sata-port@1 {
+> +		status = "okay";
+> +	};
+>  };
+>  
+>  &cp0_usb3_0 {
+> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+> index 1bac437369a1..988cc7dc15d9 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+> @@ -147,7 +147,12 @@
+>  
+>  /* CON4 on CP0 expansion */
+>  &cp0_sata0 {
+> -	status = "okay";
+> +	sata-port@0 {
+> +		status = "okay";
+> +	};
+> +	sata-port@1 {
+> +		status = "okay";
+> +	};
+>  };
+>  
+>  /* CON9 on CP0 expansion */
+> @@ -279,7 +284,12 @@
+>  
+>  /* CON4 on CP1 expansion */
+>  &cp1_sata0 {
+> -	status = "okay";
+> +	sata-port@0 {
+> +		status = "okay";
+> +	};
+> +	sata-port@1 {
+> +		status = "okay";
+> +	};
+>  };
+>  
+>  /* CON9 on CP1 expansion */
+> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> index b9d9f31e3ba1..f27edddcacd1 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> @@ -292,10 +292,22 @@
+>  			"generic-ahci";
+>  			reg = <0x540000 0x30000>;
+>  			dma-coherent;
+> -			interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&CP110_LABEL(clk) 1 15>,
+>  				 <&CP110_LABEL(clk) 1 16>;
+> -			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			sata-port@0 {
+> +				reg = <0>;
+> +				interrupts = <109 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+> +			sata-port@1 {
+> +				reg = <1>;
+> +				interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+>  		};
+>  
+>  		CP110_LABEL(xor0): xor@6a0000 {
+> -- 
+> 2.19.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 33 ++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index a8cf92a..7f5a8e6 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -335,5 +335,38 @@
- 				     <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-+
-+		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
-+			compatible = "pci-host-ecam-generic";
-+			reg = <0x01 0xf0000000 0x0 0x100000>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			msi-parent = <&its>;
-+			device_type = "pci";
-+			bus-range = <0x0 0x0>;
-+			dma-coherent;
-+			msi-map = <0 &its 0x17 0xe>;
-+			iommu-map = <0 &smmu 0x17 0xe>;
-+				  /* PF0-6 BAR0 - non-prefetchable memory */
-+			ranges = <0x82000000 0x0 0x00000000  0x1 0xf8000000  0x0 0x160000
-+				  /* PF0-6 BAR2 - prefetchable memory */
-+				  0xc2000000 0x0 0x00000000  0x1 0xf8160000  0x0 0x070000
-+				  /* PF0: VF0-1 BAR0 - non-prefetchable memory */
-+				  0x82000000 0x0 0x00000000  0x1 0xf81d0000  0x0 0x020000
-+				  /* PF0: VF0-1 BAR2 - prefetchable memory */
-+				  0xc2000000 0x0 0x00000000  0x1 0xf81f0000  0x0 0x020000
-+				  /* PF1: VF0-1 BAR0 - non-prefetchable memory */
-+				  0x82000000 0x0 0x00000000  0x1 0xf8210000  0x0 0x020000
-+				  /* PF1: VF0-1 BAR2 - prefetchable memory */
-+				  0xc2000000 0x0 0x00000000  0x1 0xf8230000  0x0 0x020000>;
-+
-+			enetc_port0: pci@0,0 {
-+				reg = <0x000000 0 0 0 0>;
-+			};
-+			enetc_port1: pci@0,1 {
-+				reg = <0x000100 0 0 0 0>;
-+			};
-+		};
- 	};
- };
 -- 
-2.7.4
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
