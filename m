@@ -1,39 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 2/4] dt-bindings: irq: imx-irqsteer: add multi output
-  interrupts support
-Date: Fri, 22 Feb 2019 11:38:07 -0600
-Message-ID: <20190222173807.GA3023@bogus>
-References: <1550662447-8565-1-git-send-email-aisheng.dong@nxp.com>
- <1550662447-8565-3-git-send-email-aisheng.dong@nxp.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v3 3/4] enetc: Add ENETC PF level external MDIO
+ support
+Date: Fri, 22 Feb 2019 18:44:35 +0100
+Message-ID: <20190222174435.GL5894@lunn.ch>
+References: <1550847859-17346-1-git-send-email-claudiu.manoil@nxp.com>
+ <1550847859-17346-4-git-send-email-claudiu.manoil@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1550662447-8565-3-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <1550847859-17346-4-git-send-email-claudiu.manoil@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>
+To: Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, alexandru.marginean@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Feb 2019 11:40:43 +0000, Aisheng Dong wrote:
-> One irqsteer channel can support up to 8 output interrupts.
+On Fri, Feb 22, 2019 at 05:04:18PM +0200, Claudiu Manoil wrote:
+> Each ENETC PF has its own MDIO interface, the corresponding
+> MDIO registers are mapped in the ENETC's Port register block.
+> The current patch adds a driver for these PF level MDIO buses,
+> so that each PF can manage directly its own external link.
 > 
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
-> ChangeLog:
-> v3->v4:
->  * no changes
-> v2->v3:
->  * fix a typo
-> v1->v2:
->  * remove one unnecessary note.
-> ---
->  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt        | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
