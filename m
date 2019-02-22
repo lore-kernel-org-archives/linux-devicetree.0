@@ -1,40 +1,30 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 00/10] iio mount matrix - revitalize missing bindings
- documentation and provide code for bmc150, bmg160, bma180, itg3200, hmc584x
-Date: Fri, 22 Feb 2019 17:24:10 +0100
-Message-ID: <CACRpkdbb_7JZ=TdtAfqRJZ5C3JjORqKbOqZZP71+_v+0QLpUQg@mail.gmail.com>
-References: <cover.1550768574.git.hns@goldelico.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 1/2] pwm: sifive: Add DT documentation for SiFive PWM
+ Controller
+Date: Fri, 22 Feb 2019 10:41:37 -0600
+Message-ID: <20190222164137.GA23340@bogus>
+References: <1550740301-10097-1-git-send-email-yash.shah@sifive.com>
+ <1550740301-10097-2-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1550768574.git.hns@goldelico.com>
+Content-Disposition: inline
+In-Reply-To: <1550740301-10097-2-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>li
+Cc: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 6:03 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+On Thu, 21 Feb 2019 14:41:40 +0530, Yash Shah wrote:
+> DT documentation for PWM controller added.
+> 
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Compatible string update]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-sifive.txt         | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> 
 
-> Fixes V2:
-> * make get_mount_matrix() functions more readable (use temp variable)
->   (suggested by Jonathan and Andy)
-> * add these readability improvements also for ak8975 and mpu6050
->   (suggested by Jonathan and Andy)
-> * squash bindings documentation into single commit for better discussion
->   (suggested by Linus)
-> * FOR DISCUSSION: add some more clarifications to the bindings documentation
->   and an attempt to define the magnetometer orientation
-> * add "iio: Allow to read mount matrix from ACPI" to the beginning of
->   the series to make it compile
->   (suggested by Andy)
-> * replace of_iio_read_mount_matrix() by iio_read_mount_matrix()
->   (required by "iio: Allow to read mount matrix from ACPI")
-> * drop patch to convert bma180 to devm (potential race)
->   (suggested by Jonathan)
-
-I'm a big fan of this series and I really like what you did with my old
-patch!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Reviewed-by: Rob Herring <robh@kernel.org>
