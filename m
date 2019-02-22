@@ -1,99 +1,97 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v9 2/5] dt-bindings: pstore-block: new support for blkoops
-Date: Fri, 22 Feb 2019 09:36:31 -0600
-Message-ID: <20190222153631.GA2612@bogus>
-References: <1550577170-18761-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1550577170-18761-3-git-send-email-liaoweixiong@allwinnertech.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 2/5] ata: libahci_platform: Support per-port interrupts
+Date: Fri, 22 Feb 2019 16:52:55 +0100
+Message-ID: <c847985c-7117-6b31-ae78-4467871714c8@redhat.com>
+References: <20190222145356.23072-1-miquel.raynal@bootlin.com>
+ <20190222145356.23072-3-miquel.raynal@bootlin.com>
+ <5040d4cf-7da1-eefa-a8a3-bc4054d528da@redhat.com>
+ <20190222163114.0f4488fe@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550577170-18761-3-git-send-email-liaoweixiong@allwinnertech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: liaoweixiong <liaoweixiong@allwinnertech.com>
-Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190222163114.0f4488fe@xps13>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-+boot-architecture list
+Hi,
 
-On Tue, Feb 19, 2019 at 07:52:47PM +0800, liaoweixiong wrote:
-> Create DT binding document for blkoops.
+On 2/22/19 4:31 PM, Miquel Raynal wrote:
+> Hi Hans,
 > 
-> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
-> ---
->  .../devicetree/bindings/pstore/blkoops.txt         | 53 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pstore/blkoops.txt
+> Hans de Goede <hdegoede@redhat.com> wrote on Fri, 22 Feb 2019 16:26:01
+> +0100:
 > 
-> diff --git a/Documentation/devicetree/bindings/pstore/blkoops.txt b/Documentation/devicetree/bindings/pstore/blkoops.txt
-> new file mode 100644
-> index 0000000..5462915
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pstore/blkoops.txt
-> @@ -0,0 +1,53 @@
-> +Blkoops oops logger
-> +===================
-> +
-> +Blkoops provides a block partition for oops, excluding panics now, so they can
-> +be recovered after a reboot.
-> +
-> +Any space of block device will be used for a circular buffer of oops records.
-> +These records have a configurable size, with a size of 0 indicating that they
-> +should be disabled.
-> +
-> +At least one of "block-device" and "total_size" must be set.
-> +
-> +At least one of "dmesg-size" or "pmsg-size" must be set non-zero.
-> +
-> +Required properties:
-> +
-> +- compatible: must be "blkoops".
-> +
-> +Optional properties:
-> +
-> +- block-device: The block device to use. Most of the time, it is a partition of
-> +		device. If block-device is NULL, no block device is effective
-> +		and the data will be lost after rebooting.
-> +		It accept the following variants:
-> +		1) <hex_major><hex_minor> device number in hexadecimal
-> +		   represents itself no leading 0x, for example b302.
-> +		2) /dev/<disk_name> represents the device number of disk
-> +		3) /dev/<disk_name><decimal> represents the device number of
-> +		   partition - device number of disk plus the partition number
-> +		4) /dev/<disk_name>p<decimal> - same as the above, that form is
-> +		   used when disk name of partitioned disk ends on a digit.
-> +		5) PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF representing
-> +		   the unique id of a partition if the partition table provides
-> +		   it. The UUID may be either an EFI/GPT UUID, or refer to an
-> +		   MSDOS partition using the format SSSSSSSS-PP, where SSSSSSSS
-> +		   is a zero-filled hex representation of the 32-bit
-> +		   "NT disk signature", and PP is a zero-filled hex
-> +		   representation of the 1-based partition number.
-> +		6) PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in
-> +		   relation to a partition with a known unique id.
-> +		7) <major>:<minor> major and minor number of the device
-> +		   separated by a colon.
+>> Hi,
+>>
+>> On 2/22/19 3:53 PM, Miquel Raynal wrote:
+>>> Right now the ATA core only allows IPs to use a single interrupt. Some
+>>> of them (for instance the Armada-CP110 one) actually has one interrupt
+>>> per port. Add some logic to support such situation.
+>>>
+>>> We consider that either there is one single interrupt declared in the
+>>> main IP node, or there are per-port interrupts, each of them being
+>>> declared in the port sub-nodes.
+>>>
+>>> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+>>> ---
+>>>    drivers/ata/acard-ahci.c       |  2 +-
+>>>    drivers/ata/ahci.c             |  2 +-
+>>>    drivers/ata/ahci.h             |  3 +-
+>>>    drivers/ata/libahci.c          |  2 +-
+>>>    drivers/ata/libahci_platform.c | 66 ++++++++++++++++++++++++++++------
+>>>    drivers/ata/sata_highbank.c    |  2 +-
+>>>    6 files changed, 61 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/drivers/ata/acard-ahci.c b/drivers/ata/acard-ahci.c
+>>> index 583e366be7e2..9414b81e994c 100644
+>>> --- a/drivers/ata/acard-ahci.c
+>>> +++ b/drivers/ata/acard-ahci.c
+>>> @@ -434,7 +434,7 @@ static int acard_ahci_init_one(struct pci_dev *pdev, const struct pci_device_id
+>>>    	if (!hpriv)
+>>>    		return -ENOMEM;
+>>>    > -	hpriv->irq = pdev->irq;
+>>> +	hpriv->irqs[0] = pdev->irq;
+>>>    	hpriv->flags |= (unsigned long)pi.private_data;
+>>>      
+>> What code-path is going to alloc hpriv->irqs for drivers using this code-path
+>> which are not using libahci_platform .c ?
+> 
+> I don't understand the question (or the remark behind the question),
+> can you explain a little bit more what you have in mind?
 
-No.
+Sorry I got the code context wrong I meant to put that comment below this chunk:
 
-I didn't suggest to go look at PARTUUID to copy it into the binding, but 
-rather to point out that the kernel can already mount by UUID. 
-Specifying the UUID in DT is also not what I suggested. My suggestion is 
-to define a known UUID so that the kernel (and bootloaders, userspace, 
-the world) can just know the UUID. Just like the EFI system partition. 
-Now this means you have to get it defined in the UEFI specification 
-(or maybe EBBR[1]). If you want help with how to do that, the 
-boot-architecture list is a good place to start.
+ > diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+ > index 021ce46e2e57..18bce556d85f 100644
+ > --- a/drivers/ata/ahci.c
+ > +++ b/drivers/ata/ahci.c
+ > @@ -1817,7 +1817,7 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ >   		/* legacy intx interrupts */
+ >   		pci_intx(pdev, 1);
+ >   	}
+ > -	hpriv->irq = pci_irq_vector(pdev, 0);
+ > +	hpriv->irqs[0] = pci_irq_vector(pdev, 0);
+ >
+ >   	if (!(hpriv->cap & HOST_CAP_SSS) || ahci_ignore_sss)
+ >   		host->flags |= ATA_HOST_PARALLEL_SCAN;
 
-major/minor numbers are a Linux thing, so they don't go in DT.
-/dev/* is Linux thing, so it doesn't go in DT.
 
-You can always define all these parameters as kernel command line 
-options and avoid DT. That would also make this work on *all* systems, 
-not just DT based systems. (Though I still believe that the partition 
-should be discoverable.)
+Which AFAIK is a common code-path also used by ahci drivers not using
+libahci_platform, and in that case hpriv->irqs will be NULL as nothing
+initializes it.
 
-Rob
+Regards,
 
-[1] https://github.com/ARM-software/ebbr
+Hans
