@@ -1,28 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2,6/7] dt-bindings: thermal: add binding document for
- mt8183 thermal controller
-Date: Fri, 22 Feb 2019 14:41:16 -0600
-Message-ID: <20190222204116.GA25502@bogus>
-References: <1550665893-22561-1-git-send-email-michael.kao@mediatek.com>
- <1550665893-22561-7-git-send-email-michael.kao@mediatek.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: dmaengine: sprd: Change channel id
+ to slave id for DMA cell specifier
+Date: Fri, 22 Feb 2019 14:42:12 -0600
+Message-ID: <20190222204212.GA26859@bogus>
+References: <652a8ef9554890c254823ec39858b8d7413fd561.1550719757.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1550665893-22561-7-git-send-email-michael.kao@mediatek.com>
+In-Reply-To: <652a8ef9554890c254823ec39858b8d7413fd561.1550719757.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Michael Kao <michael.kao@mediatek.com>
+Cc: vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, orsonzhai@gmail.com, zhang.lyra@gmail.com, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, eric.long@unisoc.com, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Feb 2019 20:31:32 +0800, <michael.kao@mediatek.com> wrote:
-> From: Michael Kao <michael.kao@mediatek.com>
+On Thu, 21 Feb 2019 13:34:40 +0800, Baolin Wang wrote:
+> For Spreadtrum DMA engine, all channels are equal, which means slave can
+> request any channels with setting a unique slave id to trigger this channel.
 > 
-> This patch adds binding document for mt8183 thermal controller.
+> Thus we can remove the channel id from device tree to assign the channel
+> dynamically, moreover we should add the slave id in device tree.
 > 
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
->  Documentation/devicetree/bindings/thermal/mediatek-thermal.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Changes from v1:
+>  - Remove channel id from DT.
+> ---
+>  Documentation/devicetree/bindings/dma/sprd-dma.txt |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
