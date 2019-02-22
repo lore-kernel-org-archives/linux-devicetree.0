@@ -1,47 +1,54 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 1/4] dt-bindings: display: Add bindings for OSD101T2045-53TS
-Date: Fri, 22 Feb 2019 15:16:15 +0200
-Message-ID: <20190222131618.20520-2-peter.ujfalusi@ti.com>
-References: <20190222131618.20520-1-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 0/4] drm/panel: Support for OSD101T2045-53TS and OSD101T2587-53TS
+Date: Fri, 22 Feb 2019 15:16:14 +0200
+Message-ID: <20190222131618.20520-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190222131618.20520-1-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org, sam@ravnborg.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, sam@ravnborg.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHRoZSBkZXZpY2UtdHJlZSBiaW5kaW5ncyBmb3IgdGhlIE9TRDEwMVQyMDQ1LTUz
-VFMgMTAuMSIKMTkyMHgxMjAwIHBhbmVsIGZyb20gT25lIFN0b3AgRGlzcGxheXMuCgpTaWduZWQt
-b2ZmLWJ5OiBQZXRlciBVamZhbHVzaSA8cGV0ZXIudWpmYWx1c2lAdGkuY29tPgotLS0KIC4uLi9i
-aW5kaW5ncy9kaXNwbGF5L3BhbmVsL29zZCxvc2QxMDF0MjA0NS01M3RzLnR4dCAgIHwgMTEgKysr
-KysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Nk
-LG9zZDEwMXQyMDQ1LTUzdHMudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3NkLG9zZDEwMXQyMDQ1LTUzdHMudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3NkLG9zZDEwMXQy
-MDQ1LTUzdHMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uYjNm
-NmRmNTlmN2MxCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3NkLG9zZDEwMXQyMDQ1LTUzdHMudHh0CkBAIC0wLDAgKzEs
-MTEgQEAKK09uZSBTdG9wIERpc3BsYXlzIE9TRDEwMVQyMDQ1LTUzVFMgMTAuMSIgMTkyMHgxMjAw
-IHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
-b3NkLG9zZDEwMXQyMDQ1LTUzdHMiCistIHBvd2VyLXN1cHBseTogYXMgc3BlY2lmaWVkIGluIHRo
-ZSBiYXNlIGJpbmRpbmcKKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gYmFja2xpZ2h0OiBhcyBz
-cGVjaWZpZWQgaW4gdGhlIGJhc2UgYmluZGluZworCitUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJs
-ZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCitpbiBz
-aW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgotLSAKUGV0ZXIKClRleGFzIEluc3Ry
-dW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1
-bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5r
-aQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Hi,
+
+Changes since v1 (only panel-osd-osd101t2587-53ts changed):
+- Removed unused members from struct osd101t2587_panel
+- Use backlight_enable/backlight_disable
+- Use devm_of_find_backlight()
+- osd101t2587_of_match table standardized 
+- osd101t2587_panel_unprepare() added to shutdown and remove callbacks to turn
+  power off
+- Fix probe in case mipi_dsi_attach() would fail
+
+Add support for OSD101T2045-53TS and OSD101T2587-53TS from One Stop Displays.
+
+The two panel is similar with one big difference: OSD101T2587-53TS requires the
+MIPI_DSI_TURN_ON_PERIPHERAL message, thus can not be handled by panel-simple.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (4):
+  dt-bindings: display: Add bindings for OSD101T2045-53TS
+  drm/panel: simple: Add support for OSD101T2045-53TS
+  dt-bindings: display: Add bindings for OSD101T2587-53TS panel
+  drm/panel: Add OSD101T2587-53TS driver
+
+ .../display/panel/osd,osd101t2045-53ts.txt    |  11 +
+ .../display/panel/osd,osd101t2587-53ts.txt    |  14 +
+ drivers/gpu/drm/panel/Kconfig                 |   6 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../drm/panel/panel-osd-osd101t2587-53ts.c    | 254 ++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c          |  34 +++
+ 6 files changed, 320 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/osd,osd101t2045-53ts.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/osd,osd101t2587-53ts.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.c
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
