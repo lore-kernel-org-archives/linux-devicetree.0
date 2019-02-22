@@ -1,138 +1,88 @@
-From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
-Subject: [PATCH] dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
-Date: Fri, 22 Feb 2019 14:20:05 +0100
-Message-ID: <201902221420.05267.pisa@cmp.felk.cvut.cz>
+From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH v1 2/2] scsi: ufs-mediatek: Add UFS support for Mediatek
+ SoC chips
+Date: Fri, 22 Feb 2019 22:13:51 +0800
+Message-ID: <1550844831.30977.21.camel@mtkswgap22>
+References: <1550742637-12385-1-git-send-email-stanley.chu@mediatek.com>
+ <1550742637-12385-4-git-send-email-stanley.chu@mediatek.com>
+ <SN6PR04MB4925CDAF80047DBCED9E2836FC7F0@SN6PR04MB4925.namprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Jerabek <martin.jerabek01@gmail.com>, Ondrej Ille <ondrej.ille@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <SN6PR04MB4925CDAF80047DBCED9E2836FC7F0-UKdxhu0+N/VnT3GYGerMaFM8qxBPnqtHvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Avri Altman <Avri.Altman-Sjgp3cTcYWE@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->From 3e19a7f5c33e5fb50f52c9df05bf00022e3f3dd5 Mon Sep 17 00:00:00 2001
-From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
-Date: Fri, 22 Feb 2019 14:11:11 +0100
-Subject: [PATCH] dt-bindings: net: can: binding for CTU CAN FD open-source IP
- core.
+Hi Avri,
 
-Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
----
- .../devicetree/bindings/net/can/ctu,ctucanfd.txt   | 102 +++++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
+On Fri, 2019-02-22 at 10:29 +0000, Avri Altman wrote:
+> Hi,
+> 
+> > +
+> > +struct ufs_mtk_dev_params {
+> > +	u32 pwm_rx_gear;        /* pwm rx gear to work in */
+> > +	u32 pwm_tx_gear;        /* pwm tx gear to work in */
+> > +	u32 hs_rx_gear;         /* hs rx gear to work in */
+> > +	u32 hs_tx_gear;         /* hs tx gear to work in */
+> > +	u32 rx_lanes;           /* number of rx lanes */
+> > +	u32 tx_lanes;           /* number of tx lanes */
+> > +	u32 rx_pwr_pwm;         /* rx pwm working pwr */
+> > +	u32 tx_pwr_pwm;         /* tx pwm working pwr */
+> > +	u32 rx_pwr_hs;          /* rx hs working pwr */
+> > +	u32 tx_pwr_hs;          /* tx hs working pwr */
+> > +	u32 hs_rate;            /* rate A/B to work in HS */
+> > +	u32 desired_working_mode;
+> > +};
+> As this is essentially identical to ufs_qcom_dev_params and ufs_hisi_dev_params etc.,
+> Maybe move it to ufshcd-platform.h in a short preparatory patch, so it can be reused?
+> 
 
-diff --git a/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt 
-b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
-new file mode 100644
-index 000000000000..6c75e5850904
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
-@@ -0,0 +1,102 @@
-+Memory mapped CTU CAN FD open-source IP core
-+
-+The core sources and documentation on project page
-+
-+  https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core
-+  http://canbus.pages.fel.cvut.cz/ctucanfd_ip_core/Progdokum.pdf
-+
-+Integration in Xilinx Zynq SoC based system together with
-+OpenCores SJA1000 compatible controllers
-+
-+  https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top
-+
-+Martin Jerabek's dimploma thesis with integration and testing
-+framework description
-+
-+ 
-https://dspace.cvut.cz/bitstream/handle/10467/80366/F3-DP-2019-Jerabek-Martin-Jerabek-thesis-2019-canfd.pdf
-+
-+Required properties:
-+
-+- compatible : should be one of "ctu,ctucanfd", "ctu,canfd-2".
-+
-+- reg = <(baseaddr) (size)> : specify mapping into physical address
-+      space of the processor system.
-+
-+- interrupts : property with a value describing the interrupt source
-+      required for the CTU CAN FD. For Zynq SoC system format is
-+      <(is_spi) (number) (type)> where is_spi defines if it is SPI
-+      (shared peripheral) interrupt, the second number is translated
-+      to the vector by addition of 32 on Zynq-7000 systems and type
-+      is IRQ_TYPE_LEVEL_HIGH (4) for Zynq.
-+
-+- interrupt-parent = <&interrupt-controller-phandle> :
-+      is required for Zynq SoC to find map interrupt
-+      to the correct controller
-+
-+- clocks: phandle of reference clock (100 MHz is appropriate
-+      for FPGA implementation on Zynq-7000 system).
-+
-+Example when integrated to Zynq-7000 system DTS:
-+
-+        / {
-+            /* ... */
-+            amba: amba {
-+                #address-cells = <1>;
-+                #size-cells = <1>;
-+                compatible = "simple-bus";
-+
-+                CTU_CAN_FD_0: CTU_CAN_FD@43c30000 {
-+                    compatible = "ctu,ctucanfd";
-+                    interrupt-parent = <&intc>;
-+                    interrupts = <0 30 4>;
-+                    clocks = <&clkc 15>;
-+                    reg = <0x43c30000 0x10000>;
-+                };
-+            };
-+        };
-+
-+
-+Example when used as DTS overlay on Zynq-7000 system:
-+
-+
-+// Device Tree Example: Full Reconfiguration without Bridges
-+/dts-v1/;
-+/plugin/;
-+
-+/ {
-+    fragment@0 {
-+        target-path = "/fpga-full";
-+
-+        __overlay__ {
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+
-+            firmware-name = "system.bit.bin";
-+        };
-+    };
-+
-+    fragment@1 {
-+        target-path = "/amba";
-+        __overlay__ {
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+
-+            CTU_CAN_FD_0: CTU_CAN_FD@43c30000 {
-+                compatible = "ctu,ctucanfd";
-+                interrupt-parent = <&intc>;
-+                interrupts = <0 30 4>;
-+                clocks = <&clkc 15>;
-+                //clock-names = "can_clk";
-+                reg = <0x43c30000 0x10000>;
-+            };
-+            CTU_CAN_FD_1: CTU_CAN_FD@43c70000 {
-+                compatible = "ctu,ctucanfd";
-+                interrupt-parent = <&intc>;
-+                interrupts = <0 31 4>;
-+                clocks = <&clkc 15>;
-+                //clock-names = "can_clk";
-+                reg = <0x43c70000 0x10000>;
-+            };
-+        };
-+    };
-+};
--- 
-2.11.0
+Good suggestion. This is currently also our preferred way to define host
+limitation. I can help re-factor this in next patch.
+
+> Also, the vast majority of the code in these platform-dependent modules is pretty much the same.
+> I wonder if it can be shape to fit some standard form?
+> But this is out of scope of your series.
+> 
+
+Currently ufs-mediatek driver is a "shell" only for basic UFS operations
+in Mediatek SoC chips. We are planning to try to add more rich features
+in the near future and thus more and more different platform-dependent
+codes will be uploaded.
+
+However, as you mentioned, there may be still lots of similar codes and
+flows in these platform-dependent drivers. And we can think how to
+simplify or standardize them later.
+
+> 
+> > +/*
+> > + * PHY Adpater attributes
+> > + */
+> > +#define PA_LOCALTXLCCENABLE         0x155E
+> Already in unipro.h
+
+Will remove this.
+
+> 
+> Thanks,
+> Avri
+
+Thanks,
+Stanley
+
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
