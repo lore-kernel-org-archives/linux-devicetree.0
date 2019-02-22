@@ -1,45 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
-Date: Fri, 22 Feb 2019 17:42:44 -0600
-Message-ID: <20190222234244.GA19838@bogus>
-References: <cover.1550768574.git.hns@goldelico.com>
- <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
+Subject: Re: [PATCH v2 3/9] serial: core: add rs485-rts-delay-us devicetree
+ property for RS485
+Date: Fri, 22 Feb 2019 17:44:29 -0600
+Message-ID: <20190222234429.GA19985@bogus>
+References: <20190221171758.10322-1-martin.kepplinger@ginzinger.com>
+ <20190221171758.10322-3-martin.kepplinger@ginzinger.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
+In-Reply-To: <20190221171758.10322-3-martin.kepplinger@ginzinger.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gregor Boirie <gregor.boirie@pa>
+To: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, jslaby@suse.com, corbet@lwn.net, richard.genoud@gmail.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Feb 2019 18:02:47 +0100, "H. Nikolaus Schaller" wrote:
-> From: Linus Walleij <linus.walleij@linaro.org>
-> 
-> The mounting matrix for sensors was introduced in
-> commit dfc57732ad38 ("iio:core: mounting matrix support")
-> 
-> However the device tree bindings are very terse and since this is
-> a widely applicable property, we need a proper binding for it
-> that the other bindings can reference. This will also be useful
-> for other operating systems and sensor engineering at large.
-> 
-> I think all 3D sensors should support it, the current situation
-> is probably that the mounting information is confined in magic
-> userspace components rather than using the mounting matrix, which
-> is not good for portability and reuse.
-> 
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Gregor Boirie <gregor.boirie@parrot.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Samu Onkalo <samu.onkalo@intel.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  .../devicetree/bindings/iio/mount-matrix.txt  | 204 ++++++++++++++++++
->  1 file changed, 204 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/mount-matrix.txt
-> 
+On Thu, Feb 21, 2019 at 06:17:52PM +0100, Martin Kepplinger wrote:
+> struct serial_rs485 now optionally holds the rts delay values in
+> microseconds. Users can set these delays in their devicetree descriptions,
+> so this adds the microseconds-option with the "rs485-rts-delay-us" boolean
+> property.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+If it has a value, it's not boolean.
+
+Should the old prop be deprecated?
+
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+> ---
+>  Documentation/devicetree/bindings/serial/rs485.txt |  1 +
+>  drivers/tty/serial/serial_core.c                   | 11 +++++++++++
+>  2 files changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/rs485.txt b/Documentation/devicetree/bindings/serial/rs485.txt
+> index b92592dff6dd..77396c62b383 100644
+> --- a/Documentation/devicetree/bindings/serial/rs485.txt
+> +++ b/Documentation/devicetree/bindings/serial/rs485.txt
+> @@ -12,6 +12,7 @@ Optional properties:
+>    * b is the delay between end of data sent and rts signal in milliseconds
+>        it corresponds to the delay after sending data and actual release of the line.
+>    If this property is not specified, <0 0> is assumed.
+> +- rs485-rts-delay-us: the same as rs485-rts-delay, but in microseconds.
+>  - rs485-rts-active-low: drive RTS low when sending (default is high).
+>  - linux,rs485-enabled-at-boot-time: empty property telling to enable the rs485
+>    feature at boot time. It can be disabled later with proper ioctl.
