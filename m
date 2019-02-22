@@ -1,63 +1,73 @@
-From: jiada <jiada_wang@mentor.com>
-Subject: Re: [PATCH v1 0/2] rsnd: dts: change to use extended audio dmac
- register
-Date: Fri, 22 Feb 2019 12:05:02 +0900
-Message-ID: <021012f9-f522-0efd-4bb2-c56917623266@mentor.com>
-References: <20190220052435.20508-1-jiada_wang@mentor.com>
- <CAMuHMdX1OqmwtCAtx8mxQtrG0D6bxkJ-trkA50qw=t16kBfdTQ@mail.gmail.com>
- <871s427ux5.wl-kuninori.morimoto.gx@renesas.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v2 08/10] hikey960: Support usb functionality of Hikey960
+Date: Fri, 22 Feb 2019 15:32:18 +0800
+Message-ID: <1550820738.2210.39.camel@mhfsdcap03>
+References: <20190218112310.17860-1-chenyu56@huawei.com>
+         <20190218112310.17860-9-chenyu56@huawei.com>
+         <1550544615.2210.27.camel@mhfsdcap03>
+         <c02407b4-1825-83f5-2aff-dd41ae16e2ab@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <871s427ux5.wl-kuninori.morimoto.gx@renesas.com>
-Content-Language: en-US
+In-Reply-To: <c02407b4-1825-83f5-2aff-dd41ae16e2ab@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Chen Yu <chenyu56@huawei.com>
+Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert
-
-
-On 2019/02/20 17:10, Kuninori Morimoto wrote:
+On Tue, 2019-02-19 at 11:20 +0800, Chen Yu wrote:
+> Hi,
 > 
-> Hi Geert
+> On 2019/2/19 10:50, Chunfeng Yun wrote:
+> >> +	if (ret)
+> >> +		hisi_hikey_usb->typec_vbus_enable_val = 1;
+> >> +
+> >> +	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
+> >> +			hisi_hikey_usb->typec_vbus_enable_val ?
+> >> +			GPIOD_OUT_LOW : GPIOD_OUT_HIGH);
+> >> +	if (!hisi_hikey_usb->typec_vbus)
+> >> +		return -ENOENT;
+> >> +	else if (IS_ERR(hisi_hikey_usb->typec_vbus))
+> >> +		return PTR_ERR(hisi_hikey_usb->typec_vbus);
+> >> +
+> >> +	gpiod_direction_output(hisi_hikey_usb->typec_vbus,
+> >> +			!hisi_hikey_usb->typec_vbus_enable_val);
+> > maybe a simple way if use fixed regulator?
+> > 
+> The hardware of the Hikey960 board has been fixed, and the type-c
+> port can act as UFP. So it is better to close the vbus when Hikey960
+> connect to host(e.g PC).
+I guess you misunderstand what I mean?
+Please refer to bindings/regulator/fixed-regulator.txt
+If you control vbus by gpio, you can use fixed-regulator, it will be
+easy to make compatible with other cases, think about using a LDO to
+control vbus
+> >> +
+> >> +	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch", GPIOD_IN);
+> >> +	if (!hisi_hikey_usb->otg_switch)
+> >> +		return -ENOENT;
+> >> +	else if (IS_ERR(hisi_hikey_usb->otg_switch))
+> >> +		return PTR_ERR(hisi_hikey_usb->otg_switch);
+> >> +
+> >> +	gpiod_direction_output(hisi_hikey_usb->otg_switch, USB_SWITCH_TO_HUB);
+> >> +
+> >> +	/* hub-vdd33-en is optional */
+> >> +	hisi_hikey_usb->hub_vbus = devm_gpiod_get(dev, "hub-vdd33-en",
+> >> +			GPIOD_OUT_LOW);
+> >> +	if (IS_ERR(hisi_hikey_usb->hub_vbus))
+> >> +		return PTR_ERR(hisi_hikey_usb->hub_vbus);
+> >> +
+> >> +	gpiod_direction_output(hisi_hikey_usb->hub_vbus, HUB_VBUS_POWER_ON);
+> > ditto
+> >> +
+> >> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
+> >> +	if (!hisi_hikey_usb->role_sw)
+> >> +		return -EPROBE_DEFER;
+> >> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
+> >> +		return PTR_ERR(hisi_hikey_usb->role_sw);
+> >> +
 > 
->>> According to user reference manual for R-CAR H3 and M3-W SoCs,
->>> in order to access busif4 ~ busif7, extended audio dmac registers
->>> (PDMASAREn, PDMADAREn, PDMACHCREn)
->>> need to be used, rather than basic audio dmac registers
->>> (PDMASARn, PDMADARn, PDMACHCRn)
->>>
->>> This patch set updates H3 (= r8a7795) and M3-W (= r8a7796)
->>> to use extended audio dmac registers
->>
->> The same change should be applied for M3-N and RZ/G2M, right?
->>
-Currently only H3 and M3-W support to use busif other than busif0,
-I feel currently it's only necessary to use extended audio dmac register 
-for these SoCs
-
->> R-Car E3 and RZ/G2E already use the extended register set, as they do not
->> have the basic set.
->>
->> For SoCs having both, this feels a bit like describing software policy, instead
->> of hardware, to me. Would it make sense to extend the audio bindings, and
->> allow describing both the basic and extended register sets, and let the driver
->> make the decision which one to use?
-> 
-> I don't think we need to use basic register.
-> This means extended register only is very enough.
-> I'm not sure why datasheet is indicating basic...
-> 
-Extended audio dmac registers covers all function of basic ones,
-so there is no need to use basic registers
-
-Thanks,
-Jiada
-
-> Best regards
-> ---
-> Kuninori Morimoto
+> Thanks
+> Yu Chen
 > 
