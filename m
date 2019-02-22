@@ -1,105 +1,133 @@
-From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Subject: [PATCH v2] regulator: tps65218: Add support for LS2
-Date: Fri, 22 Feb 2019 09:38:54 +0100
-Message-ID: <1550824734-26581-1-git-send-email-Christian.Hohnstaedt@wago.com>
-References: <20190220164851.GD9878@sirena.org.uk>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq
+ mapping already exists
+Date: Fri, 22 Feb 2019 08:57:13 +0000
+Message-ID: <20190222085713.16f7822d@why.wild-wind.fr.eu.org>
+References: <20190208021631.30252-1-masneyb@onstation.org>
+        <20190208021631.30252-6-masneyb@onstation.org>
+        <155020988635.115909.8353948296231202388@swboyd.mtv.corp.google.com>
+        <20190215134733.GA21208@basecamp>
+        <155026608236.115909.9007817366859489104@swboyd.mtv.corp.google.com>
+        <20190216002359.GA24752@basecamp>
+        <155077482380.77512.11109337732610217265@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190220164851.GD9878@sirena.org.uk>
+In-Reply-To: <155077482380.77512.11109337732610217265@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: J Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org, tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Re-use the "tps65218_pmic_*_current_limit()" functions of LS3
-and calculate the different required bit-shift by counting the
-trailing 0s in "struct regulator_desc.csel_mask"
+On Thu, 21 Feb 2019 10:47:03 -0800
+Stephen Boyd <sboyd@kernel.org> wrote:
 
-Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
----
+> Quoting Brian Masney (2019-02-15 16:23:59)
+> > On Fri, Feb 15, 2019 at 01:28:02PM -0800, Stephen Boyd wrote:  
+> > > Quoting Brian Masney (2019-02-15 05:47:33)  
+> > > > On Thu, Feb 14, 2019 at 09:51:26PM -0800, Stephen Boyd wrote:  
+> > > > > > diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+> > > > > > index 8eb2528793f9..2f99a98ccee5 100644
+> > > > > > --- a/drivers/mfd/qcom-pm8xxx.c
+> > > > > > +++ b/drivers/mfd/qcom-pm8xxx.c
+> > > > > > @@ -380,6 +380,12 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip *chip,
+> > > > > >                                   struct irq_domain *domain, unsigned int irq,
+> > > > > >                                   irq_hw_number_t hwirq, unsigned int type)
+> > > > > >  {
+> > > > > > +       unsigned int old_virq;
+> > > > > > +
+> > > > > > +       old_virq = irq_find_mapping(domain, hwirq);
+> > > > > > +       if (old_virq)
+> > > > > > +               irq_domain_disassociate(domain, old_virq);  
+> > > > > 
+> > > > > Is it possible to pass 'true' for the 'realloc' argument to
+> > > > > __irq_domain_alloc_irqs() and then this disassociate change isn't
+> > > > > needed?  
+> > > > 
+> > > > The kernel doc for __irq_domain_alloc_irqs() says that the realloc
+> > > > parameter is mainly to support legacy IRQs. I don't think its a good
+> > > > idea to add new code that'll stay past the end of this patch series
+> > > > on top of that legacy interface.
+> > > >   
+> > > 
+> > > Ok. The other side of the argument is that this is the only user of
+> > > irq_domain_disassociate(), which may also be some sort of legacy
+> > > interface that isn't supposed to be used. Looking at the commit that
+> > > exposed it, it seems to be that it's there for legacy reasons.
+> > > 
+> > > commit 43a775916d63d1c822107b39987192ca5ced445c
+> > > Author: Jiang Liu <jiang.liu@linux.intel.com>
+> > > Date:   Mon Jun 9 16:20:05 2014 +0800
+> > > 
+> > >     genirq: Export irq_domain_disassociate() to architecture interrupt drivers
+> > >     
+> > >     Export irq_domain_disassociate() to architecture interrupt drivers,
+> > >     so it could be used to handle legacy IRQ descriptors on x86.
+> > > 
+> > > So maybe we should just use the realloc argument and bury the
+> > > disassociate API in irqdomain.c because it's not supposed to be used?
+> > > Or does the realloc path not work for some reason?  
+> > 
+> > I haven't tried the realloc path yet. Let's back up further so that we
+> > are both starting with the same assumptions. Do you want to keep either
+> > your proposed change (realloc argument) or the existing
+> > irq_domain_disassociate change in mainline past the end of this patch
+> > series? If it is going to continue to be a temporary shim that will be
+> > reverted at the end of the patch series (like I did here), then I don't
+> > see the point in this extra work since this patch is only here to keep
+> > it bisectable and works. We're not using any legacy interfaces by the
+> > end of this patch series.  
+> 
+> The main concern I have is that we're changing the binding to avoid a
+> larger discussion we could have about whether or not the binding is
+> wrong to list out the hierarchical irqs as part of an 'interrupts'
+> property. We have one case where hardware irq numbers are remapped to
+> other hardware irq number spaces and it seems perfectly valid to use the
+> 'interrupts' property to indicate this, i.e. chained interrupt
+> controllers.
+> 
+> Those controllers typically have a single 'interrupts' specifier for the
+> chained irq of the parent interrupt controller, but when it comes to
+> hierarchical interrupts we seem to have various different ways of
+> expressing the mapping from one number space to another. I've seen
+> approaches varying between hardcoding everything in the kernel to
+> hardcoding everything in DT.
+> 
+> I'm mostly wondering if having an interrupts property listing all the
+> parent interrupts in corresponding specifier slots for the interrupt
+> controller's hardware irq space is wrong. It seems to describe the
+> mapping between the two number spaces already, so maybe it would make
+> sense to use the realloc argument and keep listing them as interrupts in
+> DT. Obviously things are already moving forward with the new DT binding,
+> so maybe I just need to be told that having an interrupts property there
+> is wrong. If it is wrong, then nothing needs to be kept around and the
+> binding can easily be changed.
 
-Somehow the header changes got lost in the first patch, Sorry.
+The issue I've had in the past about the use of 'proper' interrupt
+specifiers in DT for stuff that is represented as a hierarchy comes
+mainly from the way Linux deals with those (unsurprisingly).
 
- drivers/regulator/tps65218-regulator.c | 18 +++++++++++++-----
- include/linux/mfd/tps65218.h           |  3 ++-
- 2 files changed, 15 insertions(+), 6 deletions(-)
+The DT parsing code will create a Linux interrupt each time it probes
+an device that has these descriptors. That's all fine, except that for
+a hierarchy, these output lines are not independent IRQs. We end-up
+with double the interrupt descriptors at each level of the hierarchy,
+which is both a waste of memory and a pain to debug. It also creates
+all kind of bad problems as the interrupt is now registered in the
+irqdomain, and I think this is what this patch is trying to work around.
 
-diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
-index 5dd559e..95708d3 100644
---- a/drivers/regulator/tps65218-regulator.c
-+++ b/drivers/regulator/tps65218-regulator.c
-@@ -205,7 +205,8 @@ static int tps65218_pmic_set_input_current_lim(struct regulator_dev *dev,
- 		return -EINVAL;
- 
- 	return tps65218_set_bits(tps, dev->desc->csel_reg, dev->desc->csel_mask,
--				 index << 2, TPS65218_PROTECT_L1);
-+				 index << __builtin_ctz(dev->desc->csel_mask),
-+				 TPS65218_PROTECT_L1);
- }
- 
- static int tps65218_pmic_set_current_limit(struct regulator_dev *dev,
-@@ -224,7 +225,8 @@ static int tps65218_pmic_set_current_limit(struct regulator_dev *dev,
- 		return -EINVAL;
- 
- 	return tps65218_set_bits(tps, dev->desc->csel_reg, dev->desc->csel_mask,
--				 index << 2, TPS65218_PROTECT_L1);
-+				 index << __builtin_ctz(dev->desc->csel_mask),
-+				 TPS65218_PROTECT_L1);
- }
- 
- static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
-@@ -237,12 +239,13 @@ static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
- 	if (retval < 0)
- 		return retval;
- 
--	index = (index & dev->desc->csel_mask) >> 2;
-+	index = (index & dev->desc->csel_mask) >>
-+					 __builtin_ctz(dev->desc->csel_mask);
- 
- 	return ls3_currents[index];
- }
- 
--static struct regulator_ops tps65218_ls3_ops = {
-+static struct regulator_ops tps65218_ls23_ops = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= tps65218_pmic_enable,
- 	.disable		= tps65218_pmic_disable,
-@@ -304,8 +307,13 @@ static const struct regulator_desc regulators[] = {
- 			   TPS65218_ENABLE2_LDO1_EN, 0, 0, ldo1_dcdc3_ranges,
- 			   2, 0, 0, TPS65218_REG_SEQ6,
- 			   TPS65218_SEQ6_LDO1_SEQ_MASK),
-+	TPS65218_REGULATOR("LS2", "regulator-ls2", TPS65218_LS_2,
-+			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
-+			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS2_EN,
-+			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS2ILIM_MASK,
-+			   NULL, 0, 0, 0, 0, 0),
- 	TPS65218_REGULATOR("LS3", "regulator-ls3", TPS65218_LS_3,
--			   REGULATOR_CURRENT, tps65218_ls3_ops, 0, 0, 0,
-+			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
- 			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS3_EN,
- 			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS3ILIM_MASK,
- 			   NULL, 0, 0, 0, 0, 0),
-diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
-index 3cbe103..b0470c3 100644
---- a/include/linux/mfd/tps65218.h
-+++ b/include/linux/mfd/tps65218.h
-@@ -212,6 +212,7 @@ enum tps65218_regulator_id {
- 	/* LDOs */
- 	TPS65218_LDO_1,
- 	/* LS's */
-+	TPS65218_LS_2,
- 	TPS65218_LS_3,
- };
- 
-@@ -222,7 +223,7 @@ enum tps65218_regulator_id {
- /* Number of LDO voltage regulators available */
- #define TPS65218_NUM_LDO		1
- /* Number of total LS current regulators available */
--#define TPS65218_NUM_LS			1
-+#define TPS65218_NUM_LS			2
- /* Number of total regulators available */
- #define TPS65218_NUM_REGULATOR		(TPS65218_NUM_DCDC + TPS65218_NUM_LDO \
- 					 + TPS65218_NUM_LS)
+Short of being able to tell the DT parser "don't map interrupts for this
+device", we have two options: undo the mess when mapping a hierarchy,
+or sidestep the issue altogether, which is what I've recommended in the
+past (though Rob did disagree with me on that, and he has good
+arguments too).
+
+To be honest, I'd like to make progress on that too, if only to put
+something in core code so that individual drivers don't have to play
+that kind of game.
+
+Thanks,
+
+	M.
 -- 
-2.7.4
+Without deviation from the norm, progress is not possible.
