@@ -1,53 +1,63 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 2/2] clk: imx: scu: add cpu frequency scaling support
-Date: Fri, 22 Feb 2019 02:34:16 +0000
-Message-ID: <DB3PR0402MB3916D31F618C847E3504A564F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1550108915-574-1-git-send-email-Anson.Huang@nxp.com>
- <1550108915-574-2-git-send-email-Anson.Huang@nxp.com>
- <155078210899.77512.5319038009555276321@swboyd.mtv.corp.google.com>
+From: jiada <jiada_wang@mentor.com>
+Subject: Re: [PATCH v1 0/2] rsnd: dts: change to use extended audio dmac
+ register
+Date: Fri, 22 Feb 2019 12:05:02 +0900
+Message-ID: <021012f9-f522-0efd-4bb2-c56917623266@mentor.com>
+References: <20190220052435.20508-1-jiada_wang@mentor.com>
+ <CAMuHMdX1OqmwtCAtx8mxQtrG0D6bxkJ-trkA50qw=t16kBfdTQ@mail.gmail.com>
+ <871s427ux5.wl-kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155078210899.77512.5319038009555276321@swboyd.mtv.corp.google.com>
+In-Reply-To: <871s427ux5.wl-kuninori.morimoto.gx@renesas.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0ZXBoZW4NCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGVwaGVuIEJveWQgW21haWx0bzpzYm95ZEBrZXJu
-ZWwub3JnXQ0KPiBTZW50OiAyMDE55bm0MuaciDIy5pelIDQ6NDgNCj4gVG86IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+IGtlcm5lbEBwZW5ndXRyb25p
-eC5kZTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4gY2xr
-QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbWFyay5ydXRs
-YW5kQGFybS5jb207DQo+IG10dXJxdWV0dGVAYmF5bGlicmUuY29tOyByb2JoK2R0QGtlcm5lbC5v
-cmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHZpcmVz
-aC5rdW1hckBsaW5hcm8ub3JnOyBBaXNoZW5nIERvbmcNCj4gPGFpc2hlbmcuZG9uZ0BueHAuY29t
-PjsgQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+OyBEYW5pZWwNCj4gQmFsdXRhIDxk
-YW5pZWwuYmFsdXRhQG54cC5jb20+DQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
-Y29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFY0IDIvMl0gY2xrOiBpbXg6IHNjdTogYWRkIGNw
-dSBmcmVxdWVuY3kgc2NhbGluZyBzdXBwb3J0DQo+IA0KPiBRdW90aW5nIEFuc29uIEh1YW5nICgy
-MDE5LTAyLTEzIDE3OjU0OjA4KQ0KPiA+IE9uIE5YUCdzIGkuTVggU29DcyB3aXRoIHN5c3RlbSBj
-b250cm9sbGVyIGluc2lkZSwgQ1BVIGZyZXF1ZW5jeQ0KPiA+IHNjYWxpbmcgY2FuIE9OTFkgYmUg
-ZG9uZSBieSBzeXN0ZW0gY29udHJvbGxlciBmaXJtd2FyZSwgYW5kIGl0IGNhbg0KPiA+IE9OTFkg
-YmUgcmVxdWVzdGVkIGZyb20gc2VjdXJlIG1vZGUsIHNvIExpbnV4IGtlcm5lbCBoYXMgdG8gY2Fs
-bCBBUk0NCj4gPiBTTUMgdG8gdHJhcCB0byBBUk0tVHJ1c3RlZC1GaXJtd2FyZSB0byByZXF1ZXN0
-IHN5c3RlbSBjb250cm9sbGVyDQo+ID4gZmlybXdhcmUgdG8gZG8gQ1BVIGZyZXF1ZW5jeSBzY2Fs
-aW5nLg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBhZGRzIGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgQ1BV
-IGZyZXF1ZW5jeSBzY2FsaW5nIHN1cHBvcnQsDQo+ID4gaXQgcmV1c2VzIGNwdWZyZXEtZHQgZHJp
-dmVyIGFuZCBpbXBsZW1lbnQgdGhlIENQVSBmcmVxdWVuY3kgc2NhbGluZw0KPiA+IGluc2lkZSBT
-Q1UgY2xvY2sgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFu
-c29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBzaW5jZSBWMzoNCj4gPiAg
-ICAgICAgIC0gdXNlIGRpZmZlcmVudCBjbGsgb3BzIGZvciBDUFUgY2xvY2sgdG8gYXZvaWQgcnVu
-dGltZSBjaGVjayBpbg0KPiBjbGtfc2V0X3JhdGU7DQo+ID4gICAgICAgICAtIHVzZSByc3JjX2lk
-IHRvIGRldGVybWluZSB3aGV0aGVyIGl0IGlzIENQVSBmcmVxdWVuY3kgY2hhbmdlIGFuZCBhbHNv
-DQo+IHRvIGdldA0KPiA+ICAgICAgICAgICBjbHVzdGVyIElEIGZvciBTTUMgY2FsbC4NCj4gDQo+
-IFRoaXMgZGlyZWN0bHkgY29uZmxpY3RzIHdpdGggYSBwYXRjaCB0byBhZGQgZ2V0L3NldCBwYXJl
-bnQgc3VwcG9ydCBmcm9tDQo+IEFpc2hlbmcgRG9uZy4gQ2FuIHlvdSBwbGVhc2Ugd29yayB0b2dl
-dGhlciBhbmQgcmViYXNlIHRoZSBwYXRjaCBvbiB0b3Agb2YNCj4gdGhhdCBwYXRjaCAod2hpY2gg
-aXMgaW4gY2xrLW5leHQpIGFuZCByZXNlbmQgdGhpcz8NCg0KSSBoYXZlIHJlc2VudCB0aGUgcGF0
-Y2ggc2V0IGJhc2VkIG9uIHRvcCBvZiBjbGstbmV4dCBhbmQgdGVzdGVkIHRoZSBmdW5jdGlvbi4N
-ClBsZWFzZSBhcHBseSB0aGlzIHJlc2VudCBwYXRjaCwgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
-Lm9yZy9wYXRjaC8xMDgyNTA4NS8NCg0KVGhhbmtzLA0KQW5zb24uDQo=
+Hi Geert
+
+
+On 2019/02/20 17:10, Kuninori Morimoto wrote:
+> 
+> Hi Geert
+> 
+>>> According to user reference manual for R-CAR H3 and M3-W SoCs,
+>>> in order to access busif4 ~ busif7, extended audio dmac registers
+>>> (PDMASAREn, PDMADAREn, PDMACHCREn)
+>>> need to be used, rather than basic audio dmac registers
+>>> (PDMASARn, PDMADARn, PDMACHCRn)
+>>>
+>>> This patch set updates H3 (= r8a7795) and M3-W (= r8a7796)
+>>> to use extended audio dmac registers
+>>
+>> The same change should be applied for M3-N and RZ/G2M, right?
+>>
+Currently only H3 and M3-W support to use busif other than busif0,
+I feel currently it's only necessary to use extended audio dmac register 
+for these SoCs
+
+>> R-Car E3 and RZ/G2E already use the extended register set, as they do not
+>> have the basic set.
+>>
+>> For SoCs having both, this feels a bit like describing software policy, instead
+>> of hardware, to me. Would it make sense to extend the audio bindings, and
+>> allow describing both the basic and extended register sets, and let the driver
+>> make the decision which one to use?
+> 
+> I don't think we need to use basic register.
+> This means extended register only is very enough.
+> I'm not sure why datasheet is indicating basic...
+> 
+Extended audio dmac registers covers all function of basic ones,
+so there is no need to use basic registers
+
+Thanks,
+Jiada
+
+> Best regards
+> ---
+> Kuninori Morimoto
+> 
