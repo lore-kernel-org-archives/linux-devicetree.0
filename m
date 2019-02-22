@@ -1,81 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2
- PHY
-Date: Fri, 22 Feb 2019 13:57:58 -0600
-Message-ID: <20190222195758.GA26984@bogus>
-References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
- <20190219060407.15263-3-bjorn.andersson@linaro.org>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v5 0/8] iProc I2C slave mode and NIC mode
+Date: Fri, 22 Feb 2019 12:04:21 -0800
+Message-ID: <5c5ed177-0e9e-6271-518c-6956a7a6c554@broadcom.com>
+References: <20190214175725.60462-1-ray.jui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190219060407.15263-3-bjorn.andersson@linaro.org>
+In-Reply-To: <20190214175725.60462-1-ray.jui@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 10:04:02PM -0800, Bjorn Andersson wrote:
-> The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
-> Qualcomm platforms, add a binding to describe this.
+Hi Wolfram,
+
+Rob has reviewed all DT binding related changes from this patch series.
+Could you please help to review the I2C driver related changes when you
+have time?
+
+Thanks,
+
+Ray
+
+On 2/14/2019 9:57 AM, Ray Jui wrote:
+> This patch series adds the following support to the iProc I2C driver:
+> - Increase maximum read transfer size to 255 bytes
+> - I2C slave mode
+> - Polling mode
+> - NIC I2C mode
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> This patch series is based on kernel v5.0-rc3 and available at:
+> https://github.com/Broadcom/arm64-linux.git
+> branch: i2c-slave-v5
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-> new file mode 100644
-> index 000000000000..7da02f9d78c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-> @@ -0,0 +1,40 @@
-> +Qualcomm PCIe2 PHY controller
-> +=============================
-> +
-> +The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
-> +platforms.
-> +
-> +Required properties:
-> + - compatible: compatible list, should be:
-> +	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
-> +
-> + - reg: offset and length of the PHY register set.
-> + - #phy-cells: must be 0.
-> +
-> + - clocks: a clock-specifier pair for the "pipe" clock
-> +
-> + - vdda-vp-supply: phandle to low voltage regulator
-> + - vdda-vph-supply: phandle to high voltage regulator
-> +
-> + - resets: reset-specifier pairs for the "phy" and "pipe" resets
-> + - reset-names: list of resets, should contain:
-> +		"phy" and "pipe"
-> +
-> + - clock-output-names: name of the outgoing clock signal from the PHY PLL
-
-Not valid to have this without '#clock-cells'.
-
-Though I'm confused how this and the input clock name seem to match.
-
-> +
-> +Example:
-> + phy@7786000 {
-> +	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
-> +	reg = <0x07786000 0xb8>;
-> +
-> +	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-> +	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
-> +	         <&gcc GCC_PCIE_0_PIPE_ARES>;
-> +	reset-names = "phy", "pipe";
-> +
-> +	vdda-vp-supply = <&vreg_l3_1p05>;
-> +	vdda-vph-supply = <&vreg_l5_1p8>;
-> +
-> +	clock-output-names = "pcie_0_pipe_clk";
-> +	#phy-cells = <0>;
-> + };
-> -- 
-> 2.18.0
+> Changes from v4:
+>  - Add more detailed explanations in the device tree binding document
+>    changes, to address Rob's review comments
+> 
+> Changes from v3:
+>  - Various minor fixes on commit messages and commits
+>  - Rebased to v5.0-rc3
+> 
+> Changes from v2:
+>  - Address Ray's review comments.
+> 
+> Changes from v1:
+>  - Rebased to Linux v5.0.0-rc2
+> 
+> Ray Jui (1):
+>   dt-bindings: i2c: iproc: make 'interrupts' optional
+> 
+> Rayagonda Kokatanur (5):
+>   i2c: iproc: add polling support
+>   i2c: iproc: use wrapper for read/write access
+>   dt-bindings: i2c: iproc: add "brcm,iproc-nic-i2c" compatible string
+>   i2c: iproc: add NIC I2C support
+>   arm64: dts: Stingray: Add NIC i2c device node
+> 
+> Shreesha Rajashekar (2):
+>   i2c: iproc: Extend I2C read up to 255 bytes
+>   i2c: iproc: Add slave mode support
+> 
+>  .../bindings/i2c/brcm,iproc-i2c.txt           |  17 +-
+>  .../boot/dts/broadcom/stingray/stingray.dtsi  |  18 +
+>  drivers/i2c/busses/Kconfig                    |   1 +
+>  drivers/i2c/busses/i2c-bcm-iproc.c            | 758 +++++++++++++++---
+>  4 files changed, 663 insertions(+), 131 deletions(-)
 > 
