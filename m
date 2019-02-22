@@ -1,36 +1,27 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] checkpatch: don't complain about "undocumented" USB VID
-Date: Fri, 22 Feb 2019 14:55:45 -0800
-Message-ID: <20190222225545.78031-1-briannorris@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/5] iio: imu: adis16480: Add docs for ADIS16480 IMU
+Date: Fri, 22 Feb 2019 16:56:47 -0600
+Message-ID: <20190222225647.GA14942@bogus>
+References: <1550754906-24640-1-git-send-email-stefan.popa@analog.com>
+ <1550754906-24640-6-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1550754906-24640-6-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>
+Cc: jic23@kernel.org, robh+dt@kernel.org, Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Documentation/devicetree/bindings/usb/usb-device.txt describes the
-'usbVID,...' compatible format, where VID is hexadecimal, with leading
-zeroes suppressed. Allow it here without complaining.
+On Thu, 21 Feb 2019 15:15:06 +0200, Stefan Popa wrote:
+> Document support for ADIS16480 Inertial Measurement Unit.
+> 
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> ---
+>  .../devicetree/bindings/iio/imu/adi,adis16480.txt  | 49 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
+> 
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- scripts/checkpatch.pl | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index b737ca9d7204..124c6fc116b3 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3012,6 +3012,8 @@ sub process {
- 				}
- 
- 				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
-+				# USB VIDs don't need special vendor prefix documentation.
-+				next if $compat =~ /^usb[1-9a-f][0-9a-f]{0,3},/;
- 				my $vendor = $1;
- 				`grep -Eq "^$vendor\\b" $vp_file`;
- 				if ( $? >> 8 ) {
--- 
-2.21.0.rc0.258.g878e2cd30e-goog
+Reviewed-by: Rob Herring <robh@kernel.org>
