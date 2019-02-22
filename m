@@ -1,53 +1,35 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 3/4] dt-bindings: display: Add bindings for
- OSD101T2587-53TS panel
-Date: Fri, 22 Feb 2019 15:16:17 +0200
-Message-ID: <20190222131618.20520-4-peter.ujfalusi@ti.com>
-References: <20190222131618.20520-1-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190222131618.20520-1-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org, sam@ravnborg.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V3 0/2] hwmon: pwm-fan: Add optional regulator support
+Date: Fri, 22 Feb 2019 14:45:22 +0100
+Message-ID: <1550843124-10992-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHRoZSBkZXZpY2UtdHJlZSBiaW5kaW5ncyBmb3IgdGhlIE9TRDEwMVQyNTg3LTUz
-VFMgMTAuMSIKMTkyMHgxMjAwIHBhbmVsIGZyb20gT25lIFN0b3AgRGlzcGxheXMuCgpOb3RlOiB0
-aGUgcGFuZWwgaXMgc2ltaWxhciB0byBPU0QxMDFUMjA0NS01M1RTLCBidXQgaXQgbmVlZHMgYWRk
-aXRpb25hbApNSVBJX0RTSV9UVVJOX09OX1BFUklQSEVSQUwgbWVzc2FnZSBmcm9tIHRoZSBob3N0
-LgoKU2lnbmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4K
-LS0tCiAuLi4vZGlzcGxheS9wYW5lbC9vc2Qsb3NkMTAxdDI1ODctNTN0cy50eHQgICAgICAgICB8
-IDE0ICsrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKQogY3Jl
-YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL29zZCxvc2QxMDF0MjU4Ny01M3RzLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29zZCxvc2QxMDF0MjU4Ny01M3Rz
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29z
-ZCxvc2QxMDF0MjU4Ny01M3RzLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAw
-MDAwMDAuLjIwODJjYWUxYTBlMwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29zZCxvc2QxMDF0MjU4Ny01M3RzLnR4dApA
-QCAtMCwwICsxLDE0IEBACitPbmUgU3RvcCBEaXNwbGF5cyBPU0QxMDFUMjU4Ny01M1RTIDEwLjEi
-IDE5MjB4MTIwMCBwYW5lbAorCitUaGUgcGFuZWwgaXMgc2ltaWxhciB0byBPU0QxMDFUMjA0NS01
-M1RTLCBidXQgaXQgbmVlZHMgYWRkaXRpb25hbAorTUlQSV9EU0lfVFVSTl9PTl9QRVJJUEhFUkFM
-IG1lc3NhZ2UgZnJvbSB0aGUgaG9zdC4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0
-aWJsZTogc2hvdWxkIGJlICJvc2Qsb3NkMTAxdDI1ODctNTN0cyIKKy0gcG93ZXItc3VwcGx5OiBh
-cyBzcGVjaWZpZWQgaW4gdGhlIGJhc2UgYmluZGluZworCitPcHRpb25hbCBwcm9wZXJ0aWVzOgor
-LSBiYWNrbGlnaHQ6IGFzIHNwZWNpZmllZCBpbiB0aGUgYmFzZSBiaW5kaW5nCisKK1RoaXMgYmlu
-ZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBp
-cyBzcGVjaWZpZWQKK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCi0tIApQ
-ZXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAx
-ODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2Ev
-RG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWw=
+This small series implements the optional regulator support for the
+pwm-fan driver.
+
+Changes in V3:
+- simplify error case in probing code
+- return regulator error code in pm callbacks
+
+Changes in V2:
+- address Guenter's comments:
+  - handle error case first
+  - drop ENOSYS handling
+  - implement more consistent bail out handling
+- enable regulator before setup PWM
+- make sure we disable regulator if probe fails
+
+Stefan Wahren (2):
+  dt-bindings: hwmon: Add optional regulator support to pwm-fan
+  hwmon: pwm-fan: Add optional regulator support
+
+ .../devicetree/bindings/hwmon/pwm-fan.txt          |  3 ++
+ drivers/hwmon/pwm-fan.c                            | 43 +++++++++++++++++++++-
+ 2 files changed, 45 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
