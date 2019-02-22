@@ -1,113 +1,67 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/8] dt-bindings: leds: Add binding for axp20x-led
- device driver
-Date: Fri, 22 Feb 2019 13:51:09 -0600
-Message-ID: <20190222195109.GA17753@bogus>
-References: <20190215115013.11098-1-stefan@olimex.com>
- <20190215115013.11098-4-stefan@olimex.com>
+Subject: Re: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Date: Fri, 22 Feb 2019 13:52:17 -0600
+Message-ID: <20190222195217.GA22194@bogus>
+References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+ <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190215115013.11098-4-stefan@olimex.com>
+In-Reply-To: <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Mavrodiev <stefan@olimex.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@lin>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 01:50:08PM +0200, Stefan Mavrodiev wrote:
-> This adds the devicetree bindings for charge led indicator found
-> on most of X-Powers AXP20X PMICs.
+On Mon, Feb 18, 2019 at 06:53:48AM +0000, Anson Huang wrote:
+> Add i.MX8QXP system controller watchdog binding.
 > 
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../devicetree/bindings/leds/leds-axp20x.txt  | 74 +++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.txt
+> Changes since V1:
+> 	- update dts node name to "watchdog";
+> ---
+>  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-axp20x.txt b/Documentation/devicetree/bindings/leds/leds-axp20x.txt
-> new file mode 100644
-> index 000000000000..5a83ad06796d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-axp20x.txt
-> @@ -0,0 +1,74 @@
-> +Device Tree Bindings for LED support on X-Powers PMIC
-> +
-> +Most of the X-Powers PMICs have integrated battery charger with LED indicator.
-> +The output is open-drain, so the state is either high-Z or output-low. The
-> +driver is a subnode of AXP20X MFD driver, since it uses shared bus with all
-> +other cells.
-> +The LED can be controlled either manually or automatically. Then in automatic
-> +(controlled by the charger) there are two indication modes:
-> +
-> +Mode-A
-> +======
-> +- output-low:		Charging
-> +- high-Z		Not charging
-> +- 1Hz flashing:		Abnormal alarm
-> +- 4Hz flashing		Overvoltage alarm
-> +
-> +Mode-B
-> +======
-> +- output-low:		Battery full
-> +- high-Z		Not charging
-> +- 1Hz flashing:		Charging
-> +- 4Hz flashing		Overvoltage or abnormal alarm
-> +
-> +The control and the mode can be changed from sysfs.
-> +
-> +For AXP20X MFD bindings see:
-> +Documentation/devicetree/bindings/mfd/axp20x.txt
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index 4b79751..f388ec6 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -136,6 +136,12 @@ Required properties:
+>  			   resource id for thermal driver to get temperature via
+>  			   SCU IPC.
+>  
+> +Watchdog bindings based on SCU Message Protocol
+> +------------------------------------------------------------
 > +
 > +Required properties:
-> +- compatible : Must be "x-powers,axp20x-led"
+> +- compatible: should be "fsl,imx8qxp-sc-wdt";
 > +
-> +Supported common LED properties, see ./common.txt for more informationn
-> +- label : See Documentation/devicetree/bindings/leds/common.txt
-> +- linux,default-trigger : See Documentation/devicetree/bindings/leds/common.txt
-> +- default-state: See Documentation/devicetree/bindings/leds/common.txt
+>  Example (imx8qxp):
+>  -------------
+>  lsio_mu1: mailbox@5d1c0000 {
+> @@ -188,6 +194,10 @@ firmware {
+>  			tsens-num = <1>;
+>  			#thermal-sensor-cells = <1>;
+>  		};
 > +
-> +Optional properties:
-> +- x-powers,charger-mode: 0 for Mode-A, 1 for Mode-B
-> +			 If omitted, then the control is set to manual mode.
-> +			 On invalid value, Mode-A is used.
-> +
-> +
-> +Example:
-> +
-> +	axp803: pmic@3a3 {
-> +		compatible = "x-powers,axp803";
-> +
-> +		...
-> +
-> +		led@0 {
+> +		watchdog: watchdog {
+> +			compatible = "fsl,imx8qxp-sc-wdt";
 
-What's the 0 for? A unit address without a reg property is not valid.
+As-is, there's no reason for this to be in DT. The parent node's driver 
+can instantiate the wdog.
 
-> +			compatible = "x-powers,axp20x-led";
-> +			status = "okay";
-> +
-> +			label = "axp20x:yellow:chgled";
-> +			linux,default-trigger = "timer";
-> +			default-state = "on";
 > +		};
-> +	};
-> +
-> +or
-> +
-> +	axp803: pmic@3a3 {
-> +		compatible = "x-powers,axp803";
-> +
-> +		...
-> +
-> +		led@0 {
-> +			compatible = "x-powers,axp20x-led";
-> +			status = "okay";
-> +
-> +			label = "axp20x:yellow:chgled";
-> +			x-powers,charger-mode = <1>;
-> +		};
-> +	};
+>  	};
+>  };
+>  
 > -- 
-> 2.17.1
+> 2.7.4
 > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
