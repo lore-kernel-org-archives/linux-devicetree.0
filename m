@@ -1,67 +1,136 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem binding
-Date: Fri, 22 Feb 2019 14:23:39 -0600
-Message-ID: <CAL_JsqJsfwC4fAJaVEvKwtZkZwapu5jojEFn6Ddx34a6jZ_dSQ@mail.gmail.com>
-References: <20190120172534.24617-1-lkundrak@v3.sk> <20190120172534.24617-5-lkundrak@v3.sk>
- <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com> <b92426e9f5c50c71fa89ea5b53396c1885cc396f.camel@v3.sk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+Date: Fri, 22 Feb 2019 14:30:38 -0600
+Message-ID: <CAL_JsqKy0DB+nt+q307d2HHuuf1OCdCe-Ro-5covdTibBwQw8A@mail.gmail.com>
+References: <20190121173835.21173-1-nava.manne@xilinx.com> <20190121173835.21173-7-nava.manne@xilinx.com>
+ <20190121154928.GA32129@bogus> <BYAPR02MB4710D1404CF2816599623363C2980@BYAPR02MB4710.namprd02.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b92426e9f5c50c71fa89ea5b53396c1885cc396f.camel@v3.sk>
+In-Reply-To: <BYAPR02MB4710D1404CF2816599623363C2980@BYAPR02MB4710.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Nava kishore Manne <navam@xilinx.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jolly Shah <JOLLYS@xilinx.com>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2019 at 4:37 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+On Wed, Jan 23, 2019 at 2:46 PM Nava kishore Manne <navam@xilinx.com> wrote:
 >
-> On Mon, 2019-01-21 at 09:35 -0600, Rob Herring wrote:
-> > On Sun, Jan 20, 2019 at 11:26 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> > > The Marvell Armada DRM master device is a virtual device needed to list all
-> > > nodes that comprise the graphics subsystem.
-> > >
-> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > ---
-> > >  .../display/armada/marvell-armada-drm.txt     | 24 +++++++++++++++++++
-> > >  1 file changed, 24 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
-> > > index de4cca9432c8..3dbfa8047f0b 100644
-> > > --- a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
-> > > +++ b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
-> > > @@ -1,3 +1,27 @@
-> > > +Marvell Armada DRM master device
-> > > +================================
-> > > +
-> > > +The Marvell Armada DRM master device is a virtual device needed to list all
-> > > +nodes that comprise the graphics subsystem.
-> > > +
-> > > +Required properties:
-> > > +
-> > > + - compatible: value should be "marvell,dove-display-subsystem",
-> > > +   "marvell,armada-display-subsystem"
-> > > + - ports: a list of phandles pointing to display interface ports of CRTC
-> > > +   devices
-> > > + - memory-region: phandle to a node describing memory to be used for the
-> > > +   framebuffer
-> > > +
-> > > +Example:
-> > > +
-> > > +       display-subsystem {
-> > > +               compatible = "marvell,dove-display-subsystem",
-> > > +                            "marvell,armada-display-subsystem";
-> > > +               memory-region = <&display_reserved>;
-> > > +               ports = <&lcd0_port>;
-> >
-> > If there is only one device, you don't need this virtual node.
+> Hi Rob,
 >
-> Before I follow up on this and submit a version without the virtual
-> node, I'm wondering: is it okay that the bindings for the LCDC and the
-> framebuffer are in the same file, or would it be preferrable if they
-> were separate? Both styles seem to be used for the display bindings.
+>
+>
+> Thanks for providing the comments...
 
-framebuffer as in the kernel fbdev? Really, that should be the same
-binding. It's the same h/w after all. However, there have been cases
-where things deviated. So I don't have a good answer.
+Please fix your mailer to send plain text emails to mail lists.
+
+
+> > -----Original Message-----
+>
+> > From: Rob Herring [mailto:robh@kernel.org]
+>
+> > Sent: Monday, January 21, 2019 9:19 PM
+>
+> > To: Nava kishore Manne <navam@xilinx.com>
+>
+> > Cc: mark.rutland@arm.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
+>
+> > <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
+>
+> > kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly Shah
+>
+> > <JOLLYS@xilinx.com>; chinnikishore369@gmail.com
+>
+> > Subject: Re: [PATCH v3 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga
+>
+> > driver
+>
+> >
+>
+> > On Mon, Jan 21, 2019 at 11:08:35PM +0530, Nava kishore Manne wrote:
+>
+> > > Add documentation to describe Xilinx ZynqMP fpga driver bindings.
+>
+> > >
+>
+> > > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+>
+> > > ---
+>
+> > > Changes for v3:
+>
+> > >                         -Removed PCAP as a child node to the FW and Created
+>
+> > >                         an independent node since PCAP driver is a consumer
+>
+> > >                         not a provider.
+>
+> > >
+>
+> > >  .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt         | 13 +++++++++++++
+>
+> > >  1 file changed, 13 insertions(+)
+>
+> > >  create mode 100644
+>
+> > > Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+>
+> > >
+>
+> > > diff --git
+>
+> > > a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+>
+> > > b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+>
+> > > new file mode 100644
+>
+> > > index 000000000000..1f6f58872311
+>
+> > > --- /dev/null
+>
+> > > +++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+>
+> > > @@ -0,0 +1,13 @@
+>
+> > > +Device Tree zynqmp-fpga bindings for the Zynq Ultrascale+ MPSoC
+>
+> > > +controlled using ZynqMP SoC firmware interface For Bitstream
+>
+> > > +configuration on ZynqMp Soc uses processor configuration
+>
+> > > +port(PCAP) to configure the programmable logic(PL) through PS by
+>
+> > > +using FW interface.
+>
+> > > +
+>
+> > > +Required properties:
+>
+> > > +- compatible: should contain "xlnx,zynqmp-pcap-fpga"
+>
+> > > +
+>
+> > > +Example:
+>
+> > > +      zynqmp_pcap: pcap {
+>
+> > > +                     compatible = "xlnx,zynqmp-pcap-fpga";
+>
+> > > +      };
+>
+> >
+>
+> > There's no need for a DT node. Just make the firware driver create a platform
+>
+> > device for pcap.
+>
+> >
+>
+>
+>
+> This driver being used by the FPGA manager framework(fpga-region) to apply overlay's so this node is needed AFAIK.
+
+The binding says nothing about child nodes and what they are. Please
+define that.
 
 Rob
