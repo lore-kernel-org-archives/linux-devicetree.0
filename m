@@ -1,62 +1,86 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH RESEND V6 2/2] clk: imx: scu: add cpu frequency scaling support
-Date: Fri, 22 Feb 2019 11:08:10 -0800
-Message-ID: <155086249004.77512.8709011386763447047@swboyd.mtv.corp.google.com>
-References: <1550802436-13007-1-git-send-email-Anson.Huang@nxp.com> <1550802436-13007-2-git-send-email-Anson.Huang@nxp.com>
+From: David Summers <beagleboard@davidjohnsummers.uk>
+Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
+Date: Fri, 22 Feb 2019 19:14:56 +0000
+Message-ID: <8b97f349-4416-058c-0d01-3be592b89a7d@davidjohnsummers.uk>
+References: <20190118170232.16142-1-anarsoul@gmail.com>
+ <20190118170232.16142-4-anarsoul@gmail.com> <20190218211035.GA28145@bogus>
+ <CA+E=qVdq5GORg-t-vVXM3zBxy3Aq93iCE+zmcGgLFBMcnTDgfw@mail.gmail.com>
+ <1245842044.588056.1550527701604@email.ionos.de>
+ <CA+E=qVdMNmVkytCzXqYgJtV196-G=c_bWx+aLvs=Y0iuRpjdRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550802436-13007-2-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CA+E=qVdMNmVkytCzXqYgJtV196-G=c_bWx+aLvs=Y0iuRpjdRg@mail.gmail.com>
+Content-Language: en-PH
+Sender: netdev-owner@vger.kernel.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anson Huang (2019-02-21 18:32:10)
-> On NXP's i.MX SoCs with system controller inside, CPU frequency
-> scaling can ONLY be done by system controller firmware, and it
-> can ONLY be requested from secure mode, so Linux kernel has to
-> call ARM SMC to trap to ARM-Trusted-Firmware to request system
-> controller firmware to do CPU frequency scaling.
->=20
-> This patch adds i.MX system controller CPU frequency scaling support,
-> it reuses cpufreq-dt driver and implement the CPU frequency scaling
-> inside SCU clock driver.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi Vasily,
 
-Ah I missed one thing, see below.
+Just catching up with this series - good that you are doing it. We need 
+it for users on ArchLinux ARM!
 
-> @@ -180,6 +185,23 @@ static long clk_scu_round_rate(struct clk_hw *hw, un=
-signed long rate,
->         return rate;
->  }
-> =20
-> +static int clk_scu_atf_set_cpu_rate(struct clk_hw *hw, unsigned long rat=
-e,
-> +                                   unsigned long parent_rate)
-> +{
-> +       struct clk_scu *clk =3D to_clk_scu(hw);
-> +       struct arm_smccc_res res;
-> +       unsigned long cluster_id;
-> +
-> +       if (clk->rsrc_id =3D=3D IMX_SC_R_A35)
-> +               cluster_id =3D 0;
+On question though, what is "firmware-postfix" used for? I see in the 
+documentation, that it points to the board name. But can't see where 
+else it is used.
 
-Do we still need to check this anymore? Why not just always use
-cluster_id 0?
+Is there a need to have the board name?
 
-> +
-> +       /* CPU frequency scaling can ONLY be done by ARM-Trusted-Firmware=
- */
-> +       arm_smccc_smc(IMX_SIP_CPUFREQ, IMX_SIP_SET_CPUFREQ,
-> +                     cluster_id, rate, 0, 0, 0, 0, &res);
+Anyway good work.
 
-Because not checking would make this work, vs. checking causes this code
-to sometimes use an uninitialized value from the stack.
+David.
 
-> +
-> +       return 0;
-> +}
-> +
+On 18/02/2019 22:28, Vasily Khoruzhick wrote:
+> On Mon, Feb 18, 2019 at 2:08 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
+>> Hi Vasily,
+> Hi Stefan,
+>
+>>> Vasily Khoruzhick <anarsoul@gmail.com> hat am 18. Februar 2019 um 22:24 geschrieben:
+>>>
+>>>
+>>> On Mon, Feb 18, 2019 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
+>>>> On Fri, Jan 18, 2019 at 09:02:27AM -0800, Vasily Khoruzhick wrote:
+>>>>> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+>>>>>
+>>>>> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+>>>>> ---
+>>>>>   .../bindings/net/rtl8723bs-bluetooth.txt      | 35 +++++++++++++++++++
+>>>>>   1 file changed, 35 insertions(+)
+>>>>>   create mode 100644 Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+>>>>> new file mode 100644
+>>>>> index 000000000000..8357f242ae4c
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/net/rtl8723bs-bluetooth.txt
+>>>>> @@ -0,0 +1,35 @@
+>>>>> +RTL8723BS/RTL8723CS Bluetooth
+>>>>> +---------------------
+>>>>> +
+>>>>> +RTL8723CS/RTL8723CS is WiFi + BT chip. WiFi part is connected over SDIO, while
+>>>>> +BT is connected over serial. It speaks H5 protocol with few extra commands
+>>>>> +to upload firmware and change module speed.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +
+>>>>> + - compatible: should be one of the following:
+>>>>> +   * "realtek,rtl8723bs-bt"
+>>>>> +   * "realtek,rtl8723cs-bt"
+>>>>> +Optional properties:
+>>>>> +
+>>>>> + - device-wake-gpios: GPIO specifier, used to wakeup the BT module (active high)
+>>>>> + - enable-gpios: GPIO specifier, used to enable the BT module (active high)
+>>>>> + - host-wake-gpios: GPIO specifier, used to wakeup the host processor (active high)
+>>>>> + - firmware-postfix: firmware postfix to be used for firmware config
+>> sorry, i didn't noticed your great series before. David and i working at the same stuff but for the Asus Tinker Board.
+>>
+>> I created a similiar yet untested patch version for hci_h5 [1]. Maybe it's useful.
+> Looks good to me, but you may need to add firmware-postfix.
+>
+>> Just a comment about the binding. It's really necessary to add the reset-gpio? Can't we use the enable-gpio with inverse polarity for this?
+> Yes, we can use enable-gpio instead of reset-gpio on pine64 and pinebook.
+>
+>> Stefan
