@@ -1,38 +1,52 @@
 From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v3 0/4] enetc: Add mdio support and device tree nodes
-Date: Fri, 22 Feb 2019 17:04:15 +0200
-Message-ID: <1550847859-17346-1-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next v3 2/4] arm64: dts: fsl: ls1028a-rdb: Add ENETC external eth ports for the LS1028A RDB board
+Date: Fri, 22 Feb 2019 17:04:17 +0200
+Message-ID: <1550847859-17346-3-git-send-email-claudiu.manoil@nxp.com>
+References: <1550847859-17346-1-git-send-email-claudiu.manoil@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550847859-17346-1-git-send-email-claudiu.manoil@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>
 Cc: alexandru.marginean@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is the missing part to enable PCI probing of the ENETC ethernet
-ports on the LS1028A SoC and external traffic on the LS1028A RDB board.
-It's one of the first items on the TODO list for the recently merged
-ENETC ethernet driver.
+The LS1028A RDB board features an Atheros PHY connected over
+SGMII to the ENETC PF0 (or Port0).  ENETC Port1 (PF1) has no
+external connection on this board, so it can be disabled for now.
 
-v3: Add DT bindings doc for ENETC connections
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+---
+v2 - added a mdio node as parent for the phy node
+v3 - none
 
-Claudiu Manoil (4):
-  arm64: dts: fsl: ls1028a: Add PCI IERC node and ENETC endpoints
-  arm64: dts: fsl: ls1028a-rdb: Add ENETC external eth ports for the
-    LS1028A RDB board
-  enetc: Add ENETC PF level external MDIO support
-  dt-bindings: net: freescale: enetc: Add connection bindings for ENETC
-    ethernet nodes
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
- .../devicetree/bindings/net/fsl-enetc.txt          | 109 +++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts  |  17 ++
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi     |  33 ++++
- drivers/net/ethernet/freescale/enetc/Makefile      |   3 +-
- drivers/net/ethernet/freescale/enetc/enetc_mdio.c  | 199 +++++++++++++++++++++
- drivers/net/ethernet/freescale/enetc/enetc_pf.c    |  12 ++
- drivers/net/ethernet/freescale/enetc/enetc_pf.h    |   6 +
- 7 files changed, 378 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/net/fsl-enetc.txt
- create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index fdeb417..f86b054 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -71,3 +71,20 @@
+ &duart1 {
+ 	status = "okay";
+ };
++
++&enetc_port0 {
++	phy-handle = <&sgmii_phy0>;
++	phy-connection-type = "sgmii";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		sgmii_phy0: ethernet-phy@2 {
++			reg = <0x2>;
++		};
++	};
++};
++
++&enetc_port1 {
++	status = "disabled";
++};
 -- 
 2.7.4
