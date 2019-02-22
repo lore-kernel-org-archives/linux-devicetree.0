@@ -1,54 +1,59 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 0/4] drm/panel: Support for OSD101T2045-53TS and OSD101T2587-53TS
-Date: Fri, 22 Feb 2019 15:16:14 +0200
-Message-ID: <20190222131618.20520-1-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 2/4] drm/panel: simple: Add support for OSD101T2045-53TS
+Date: Fri, 22 Feb 2019 15:16:16 +0200
+Message-ID: <20190222131618.20520-3-peter.ujfalusi@ti.com>
+References: <20190222131618.20520-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190222131618.20520-1-peter.ujfalusi@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, sam@ravnborg.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org, sam@ravnborg.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Changes since v1 (only panel-osd-osd101t2587-53ts changed):
-- Removed unused members from struct osd101t2587_panel
-- Use backlight_enable/backlight_disable
-- Use devm_of_find_backlight()
-- osd101t2587_of_match table standardized 
-- osd101t2587_panel_unprepare() added to shutdown and remove callbacks to turn
-  power off
-- Fix probe in case mipi_dsi_attach() would fail
-
-Add support for OSD101T2045-53TS and OSD101T2587-53TS from One Stop Displays.
-
-The two panel is similar with one big difference: OSD101T2587-53TS requires the
-MIPI_DSI_TURN_ON_PERIPHERAL message, thus can not be handled by panel-simple.
-
-Regards,
-Peter
----
-Peter Ujfalusi (4):
-  dt-bindings: display: Add bindings for OSD101T2045-53TS
-  drm/panel: simple: Add support for OSD101T2045-53TS
-  dt-bindings: display: Add bindings for OSD101T2587-53TS panel
-  drm/panel: Add OSD101T2587-53TS driver
-
- .../display/panel/osd,osd101t2045-53ts.txt    |  11 +
- .../display/panel/osd,osd101t2587-53ts.txt    |  14 +
- drivers/gpu/drm/panel/Kconfig                 |   6 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../drm/panel/panel-osd-osd101t2587-53ts.c    | 254 ++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c          |  34 +++
- 6 files changed, 320 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/osd,osd101t2045-53ts.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/osd,osd101t2587-53ts.txt
- create mode 100644 drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.c
-
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+QWRkIHN1cHBvcnQgZm9yIHRoZSBPU0QxMDFUMjA0NS01M1RTIDEwLjEiIDE5MjB4MTIwMCBwYW5l
+bCBmcm9tIE9uZSBTdG9wCkRpc3BsYXlzIHRvIHRoZSBwYW5lbC1zaW1wbGUgZHJpdmVyCgpTaWdu
+ZWQtb2ZmLWJ5OiBQZXRlciBVamZhbHVzaSA8cGV0ZXIudWpmYWx1c2lAdGkuY29tPgotLS0KIGRy
+aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyB8IDM0ICsrKysrKysrKysrKysrKysr
+KysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IDllODIxOGY2YTNmMi4uMDMzNzU4M2ZmYTQ5IDEw
+MDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJp
+dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBAIC0yOTk2LDYgKzI5OTYsMzcgQEAg
+c3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjX2RzaSBwYW5hc29uaWNfdnZ4MTBmMDA0YjAw
+ID0gewogCS5sYW5lcyA9IDQsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5
+X21vZGUgb3NkMTAxdDIwNDVfNTN0c19tb2RlID0geworCS5jbG9jayA9IDE1NDUwMCwKKwkuaGRp
+c3BsYXkgPSAxOTIwLAorCS5oc3luY19zdGFydCA9IDE5MjAgKyAxMTIsCisJLmhzeW5jX2VuZCA9
+IDE5MjAgKyAxMTIgKyAxNiwKKwkuaHRvdGFsID0gMTkyMCArIDExMiArIDE2ICsgMzIsCisJLnZk
+aXNwbGF5ID0gMTIwMCwKKwkudnN5bmNfc3RhcnQgPSAxMjAwICsgMTYsCisJLnZzeW5jX2VuZCA9
+IDEyMDAgKyAxNiArIDIsCisJLnZ0b3RhbCA9IDEyMDAgKyAxNiArIDIgKyAxNiwKKwkudnJlZnJl
+c2ggPSA2MCwKKwkuZmxhZ3MgPSBEUk1fTU9ERV9GTEFHX05IU1lOQyB8IERSTV9NT0RFX0ZMQUdf
+TlZTWU5DLAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjX2RzaSBvc2QxMDF0
+MjA0NV81M3RzID0geworCS5kZXNjID0geworCQkubW9kZXMgPSAmb3NkMTAxdDIwNDVfNTN0c19t
+b2RlLAorCQkubnVtX21vZGVzID0gMSwKKwkJLmJwYyA9IDgsCisJCS5zaXplID0geworCQkJLndp
+ZHRoID0gMjE3LAorCQkJLmhlaWdodCA9IDEzNiwKKwkJfSwKKwl9LAorCS5mbGFncyA9IE1JUElf
+RFNJX01PREVfVklERU8gfCBNSVBJX0RTSV9NT0RFX1ZJREVPX0JVUlNUIHwKKwkJIE1JUElfRFNJ
+X01PREVfVklERU9fU1lOQ19QVUxTRSB8CisJCSBNSVBJX0RTSV9NT0RFX0VPVF9QQUNLRVQsCisJ
+LmZvcm1hdCA9IE1JUElfRFNJX0ZNVF9SR0I4ODgsCisJLmxhbmVzID0gNCwKK307CisKIHN0YXRp
+YyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGRzaV9vZl9tYXRjaFtdID0gewogCXsKIAkJLmNv
+bXBhdGlibGUgPSAiYXVvLGIwODB1YW4wMSIsCkBAIC0zMDEyLDYgKzMwNDMsOSBAQCBzdGF0aWMg
+Y29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBkc2lfb2ZfbWF0Y2hbXSA9IHsKIAl9LCB7CiAJCS5j
+b21wYXRpYmxlID0gInBhbmFzb25pYyx2dngxMGYwMDRiMDAiLAogCQkuZGF0YSA9ICZwYW5hc29u
+aWNfdnZ4MTBmMDA0YjAwCisJfSwgeworCQkuY29tcGF0aWJsZSA9ICJvc2Qsb3NkMTAxdDIwNDUt
+NTN0cyIsCisJCS5kYXRhID0gJm9zZDEwMXQyMDQ1XzUzdHMKIAl9LCB7CiAJCS8qIHNlbnRpbmVs
+ICovCiAJfQotLSAKUGV0ZXIKClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxh
+bmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00
+LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVs
