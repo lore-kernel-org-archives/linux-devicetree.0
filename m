@@ -1,39 +1,51 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 05/11] mfd: pm8xxx: disassociate old virq if hwirq
- mapping already exists
-Date: Fri, 22 Feb 2019 10:07:44 +0100
-Message-ID: <CACRpkdbFQ2B7AvVW38etdsq-R38p5uX7eMrD2oKxTtDE3_W5aA@mail.gmail.com>
-References: <20190208021631.30252-1-masneyb@onstation.org> <20190208021631.30252-6-masneyb@onstation.org>
- <155020988635.115909.8353948296231202388@swboyd.mtv.corp.google.com>
- <20190215134733.GA21208@basecamp> <155026608236.115909.9007817366859489104@swboyd.mtv.corp.google.com>
- <20190216002359.GA24752@basecamp> <155077482380.77512.11109337732610217265@swboyd.mtv.corp.google.com>
- <20190222085713.16f7822d@why.wild-wind.fr.eu.org>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH v2 3/4] pwm: atmel: add support for SAM9X60's PWM
+ controller
+Date: Fri, 22 Feb 2019 09:07:57 +0000
+Message-ID: <12a63031-596c-77a3-f10c-be276d75e82c@microchip.com>
+References: <1550570914-26391-1-git-send-email-claudiu.beznea@microchip.com>
+ <1550570914-26391-4-git-send-email-claudiu.beznea@microchip.com>
+ <20190221204503.w2xh4rw6rh4e5rg4@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190222085713.16f7822d@why.wild-wind.fr.eu.org>
+In-Reply-To: <20190221204503.w2xh4rw6rh4e5rg4@pengutronix.de>
+Content-Language: en-US
+Content-ID: <4A6ED854A060F44D88C6B462F9D1E694@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Brian Masney <masneyb@onstation.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDING
+To: u.kleine-koenig@pengutronix.de
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 22, 2019 at 9:57 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
-
-> To be honest, I'd like to make progress on that too, if only to put
-> something in core code so that individual drivers don't have to play
-> that kind of game.
-
-I am trying to pull hierarchical IRQ into the gpiolib core by refactoring
-based on these and some other patches (like the IXP4xx GPIO driver).
-
-I am working under the assumptions of what compatible strings
-indicating the hierarchy topology and hard coded ranges of
-offsets from parent to child in the driver only associated with
-the compatible string, so no IRQ range mapping in the device
-tree.
-
-AFAICT that is how hierarchical irqdomain is engineered as of
-today.
-
-Yours,
-Linus Walleij
+DQoNCk9uIDIxLjAyLjIwMTkgMjI6NDUsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0KPiBPbiBU
+dWUsIEZlYiAxOSwgMjAxOSBhdCAxMDowOTowMEFNICswMDAwLCBDbGF1ZGl1LkJlem5lYUBtaWNy
+b2NoaXAuY29tIHdyb3RlOg0KPj4gRnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVh
+QG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gQWRkIHN1cHBvcnQgZm9yIFNBTTlYNjAncyBQV00gY29u
+dHJvbGxlci4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5i
+ZXpuZWFAbWljcm9jaGlwLmNvbT4NCj4+IC0tLQ0KPj4gIGRyaXZlcnMvcHdtL3B3bS1hdG1lbC5j
+IHwgMTkgKysrKysrKysrKysrKysrKysrKw0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxOSBpbnNlcnRp
+b25zKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHdtL3B3bS1hdG1lbC5jIGIvZHJp
+dmVycy9wd20vcHdtLWF0bWVsLmMNCj4+IGluZGV4IDY0N2QwNjM1NjJkYi4uMjI5Y2VkYjAyNzcw
+IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9wd20vcHdtLWF0bWVsLmMNCj4+ICsrKyBiL2RyaXZl
+cnMvcHdtL3B3bS1hdG1lbC5jDQo+PiBAQCAtNTIsNiArNTIsOCBAQA0KPj4gIA0KPj4gIC8qIE9u
+bHkgdGhlIExTQiAxNiBiaXRzIGFyZSBzaWduaWZpY2FudC4gKi8NCj4+ICAjZGVmaW5lIFBXTV9N
+QVhWMV9QUkQJCTB4RkZGRg0KPj4gKy8qIEFsbCAzMiBiaXRzIGFyZSBzaWduaWZpY2FudC4gKi8N
+Cj4+ICsjZGVmaW5lIFBXTV9NQVhWMl9QUkQJCTB4RkZGRkZGRkYNCj4+ICAjZGVmaW5lIFBSRF9N
+QVhWMV9QUkVTCQkxMA0KPj4gIA0KPj4gIHN0cnVjdCBhdG1lbF9wd21fcmVnaXN0ZXJzIHsNCj4+
+IEBAIC0zMTEsNiArMzEzLDIwIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgYXRtZWxfcHdtX2RhdGEg
+YXRtZWxfcHdtX2RhdGFfdjIgPSB7DQo+PiAgCX0sDQo+PiAgfTsNCj4+ICANCj4+ICtzdGF0aWMg
+Y29uc3Qgc3RydWN0IGF0bWVsX3B3bV9kYXRhIGF0bWVsX3B3bV9kYXRhX3YzID0gew0KPiANCj4g
+RG9lcyBpdCBtYWtlIG1vcmUgc2Vuc2UgdG8gY2FsbCB0aGlzIC4uLl9zYW05eDYwIHRvIG1hdGNo
+IHRoZQ0KPiBjb21wYXRpYmxlPyAoSWYgeWVzLCBwYXRjaCAxIHNob3VsZCBiZSBjaGFuZ2VkIGFj
+Y29yZGluZ2x5LikNCg0KSXQgY291bGQgYmUgY2hhbmdlZCwgeWVwLg0KDQo+IA0KPiBJIHdvbmRl
+ciBob3cgdGhlIG5hbWluZyBvZiB0aGUgZGVmaW5lcyBpcyBjaG9zZW4gZ2l2ZW4gdGhhdCBwd21f
+ZGF0YV92Mw0KPiBpcyB0aGUgZmlyc3QgdGhhdCBuZWVkcyBQV01fTUFYVjJfUFJELiBMb29rcyBp
+bmNvbnNpc3RlbnQuDQoNCkkga25vdy4uLiBJJ20gYXdhcmUgb2YgdGhhdC4gVGhlIHRoaW5nIGlz
+IGNvbnRyb2xsZXJzIG1heSBkaWZmZXIgd2l0aA0KcmVnYXJkcyB0byBpbi1mbGlnaHQgZHV0eSB1
+cGRhdGUgYW5kIG5vdyB0aGVyZSBpcyB0aGlzIG5ldyBkaWZmZXJlbmNlIHcvDQpyZWdhcmRzIHRv
+IGNvdW50ZXJzIHNpemUuDQoNClJlbmFtaW5nIHRoZSBvYmplY3RzIG9mIHR5cGUgYXRtZWxfcHdt
+X2RhdGEgaW4gc29tZXRoaW5nIGxpa2UNCmF0bWVsX3B3bV9kYXRhXzxjaGlwLW5hbWU+IGFzIHlv
+dSBzdWdnZXN0ZWQgYmVmb3JlIHdvdWxkIG1ha2UgdGhpbmdzIGNsZWFyDQpmb3IgeW91Pw0KDQpU
+aGFuayB5b3UsDQpDbGF1ZGl1IEJlem5lYQ0KDQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gVXdlDQo+
+IA0K
