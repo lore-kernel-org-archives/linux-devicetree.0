@@ -1,112 +1,53 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH RESEND V6 2/2] clk: imx: scu: add cpu frequency scaling
- support
-Date: Fri, 22 Feb 2019 02:32:10 +0000
-Message-ID: <1550802436-13007-2-git-send-email-Anson.Huang@nxp.com>
-References: <1550802436-13007-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH V4 2/2] clk: imx: scu: add cpu frequency scaling support
+Date: Fri, 22 Feb 2019 02:34:16 +0000
+Message-ID: <DB3PR0402MB3916D31F618C847E3504A564F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550108915-574-1-git-send-email-Anson.Huang@nxp.com>
+ <1550108915-574-2-git-send-email-Anson.Huang@nxp.com>
+ <155078210899.77512.5319038009555276321@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550802436-13007-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <155078210899.77512.5319038009555276321@swboyd.mtv.corp.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On NXP's i.MX SoCs with system controller inside, CPU frequency
-scaling can ONLY be done by system controller firmware, and it
-can ONLY be requested from secure mode, so Linux kernel has to
-call ARM SMC to trap to ARM-Trusted-Firmware to request system
-controller firmware to do CPU frequency scaling.
-
-This patch adds i.MX system controller CPU frequency scaling support,
-it reuses cpufreq-dt driver and implement the CPU frequency scaling
-inside SCU clock driver.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No changes compared to last version, just redo patch based on clk-next to f=
-ix patch conflicts.
----
- drivers/clk/imx/clk-scu.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
-index f460526..34c7cdf4 100644
---- a/drivers/clk/imx/clk-scu.c
-+++ b/drivers/clk/imx/clk-scu.c
-@@ -4,12 +4,17 @@
-  *   Dong Aisheng <aisheng.dong@nxp.com>
-  */
-=20
-+#include <dt-bindings/firmware/imx/rsrc.h>
-+#include <linux/arm-smccc.h>
- #include <linux/clk-provider.h>
- #include <linux/err.h>
- #include <linux/slab.h>
-=20
- #include "clk-scu.h"
-=20
-+#define IMX_SIP_CPUFREQ			0xC2000001
-+#define IMX_SIP_SET_CPUFREQ		0x00
-+
- static struct imx_sc_ipc *ccm_ipc_handle;
-=20
- /*
-@@ -180,6 +185,23 @@ static long clk_scu_round_rate(struct clk_hw *hw, unsi=
-gned long rate,
- 	return rate;
- }
-=20
-+static int clk_scu_atf_set_cpu_rate(struct clk_hw *hw, unsigned long rate,
-+				    unsigned long parent_rate)
-+{
-+	struct clk_scu *clk =3D to_clk_scu(hw);
-+	struct arm_smccc_res res;
-+	unsigned long cluster_id;
-+
-+	if (clk->rsrc_id =3D=3D IMX_SC_R_A35)
-+		cluster_id =3D 0;
-+
-+	/* CPU frequency scaling can ONLY be done by ARM-Trusted-Firmware */
-+	arm_smccc_smc(IMX_SIP_CPUFREQ, IMX_SIP_SET_CPUFREQ,
-+		      cluster_id, rate, 0, 0, 0, 0, &res);
-+
-+	return 0;
-+}
-+
- /*
-  * clk_scu_set_rate - Set rate for a SCU clock
-  * @hw: clock to change rate for
-@@ -312,6 +334,14 @@ static const struct clk_ops clk_scu_ops =3D {
- 	.unprepare =3D clk_scu_unprepare,
- };
-=20
-+static const struct clk_ops clk_scu_cpu_ops =3D {
-+	.recalc_rate =3D clk_scu_recalc_rate,
-+	.round_rate =3D clk_scu_round_rate,
-+	.set_rate =3D clk_scu_atf_set_cpu_rate,
-+	.prepare =3D clk_scu_prepare,
-+	.unprepare =3D clk_scu_unprepare,
-+};
-+
- struct clk_hw *__imx_clk_scu(const char *name, const char * const *parents=
-,
- 			     int num_parents, u32 rsrc_id, u8 clk_type)
- {
-@@ -329,6 +359,10 @@ struct clk_hw *__imx_clk_scu(const char *name, const c=
-har * const *parents,
-=20
- 	init.name =3D name;
- 	init.ops =3D &clk_scu_ops;
-+	if (rsrc_id =3D=3D IMX_SC_R_A35)
-+		init.ops =3D &clk_scu_cpu_ops;
-+	else
-+		init.ops =3D &clk_scu_ops;
- 	init.parent_names =3D parents;
- 	init.num_parents =3D num_parents;
-=20
---=20
-2.7.4
+SGksIFN0ZXBoZW4NCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGVwaGVuIEJveWQgW21haWx0bzpzYm95ZEBrZXJu
+ZWwub3JnXQ0KPiBTZW50OiAyMDE55bm0MuaciDIy5pelIDQ6NDgNCj4gVG86IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+IGtlcm5lbEBwZW5ndXRyb25p
+eC5kZTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4gY2xr
+QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbWFyay5ydXRs
+YW5kQGFybS5jb207DQo+IG10dXJxdWV0dGVAYmF5bGlicmUuY29tOyByb2JoK2R0QGtlcm5lbC5v
+cmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHZpcmVz
+aC5rdW1hckBsaW5hcm8ub3JnOyBBaXNoZW5nIERvbmcNCj4gPGFpc2hlbmcuZG9uZ0BueHAuY29t
+PjsgQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+OyBEYW5pZWwNCj4gQmFsdXRhIDxk
+YW5pZWwuYmFsdXRhQG54cC5jb20+DQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
+Y29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFY0IDIvMl0gY2xrOiBpbXg6IHNjdTogYWRkIGNw
+dSBmcmVxdWVuY3kgc2NhbGluZyBzdXBwb3J0DQo+IA0KPiBRdW90aW5nIEFuc29uIEh1YW5nICgy
+MDE5LTAyLTEzIDE3OjU0OjA4KQ0KPiA+IE9uIE5YUCdzIGkuTVggU29DcyB3aXRoIHN5c3RlbSBj
+b250cm9sbGVyIGluc2lkZSwgQ1BVIGZyZXF1ZW5jeQ0KPiA+IHNjYWxpbmcgY2FuIE9OTFkgYmUg
+ZG9uZSBieSBzeXN0ZW0gY29udHJvbGxlciBmaXJtd2FyZSwgYW5kIGl0IGNhbg0KPiA+IE9OTFkg
+YmUgcmVxdWVzdGVkIGZyb20gc2VjdXJlIG1vZGUsIHNvIExpbnV4IGtlcm5lbCBoYXMgdG8gY2Fs
+bCBBUk0NCj4gPiBTTUMgdG8gdHJhcCB0byBBUk0tVHJ1c3RlZC1GaXJtd2FyZSB0byByZXF1ZXN0
+IHN5c3RlbSBjb250cm9sbGVyDQo+ID4gZmlybXdhcmUgdG8gZG8gQ1BVIGZyZXF1ZW5jeSBzY2Fs
+aW5nLg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBhZGRzIGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgQ1BV
+IGZyZXF1ZW5jeSBzY2FsaW5nIHN1cHBvcnQsDQo+ID4gaXQgcmV1c2VzIGNwdWZyZXEtZHQgZHJp
+dmVyIGFuZCBpbXBsZW1lbnQgdGhlIENQVSBmcmVxdWVuY3kgc2NhbGluZw0KPiA+IGluc2lkZSBT
+Q1UgY2xvY2sgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFu
+c29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBzaW5jZSBWMzoNCj4gPiAg
+ICAgICAgIC0gdXNlIGRpZmZlcmVudCBjbGsgb3BzIGZvciBDUFUgY2xvY2sgdG8gYXZvaWQgcnVu
+dGltZSBjaGVjayBpbg0KPiBjbGtfc2V0X3JhdGU7DQo+ID4gICAgICAgICAtIHVzZSByc3JjX2lk
+IHRvIGRldGVybWluZSB3aGV0aGVyIGl0IGlzIENQVSBmcmVxdWVuY3kgY2hhbmdlIGFuZCBhbHNv
+DQo+IHRvIGdldA0KPiA+ICAgICAgICAgICBjbHVzdGVyIElEIGZvciBTTUMgY2FsbC4NCj4gDQo+
+IFRoaXMgZGlyZWN0bHkgY29uZmxpY3RzIHdpdGggYSBwYXRjaCB0byBhZGQgZ2V0L3NldCBwYXJl
+bnQgc3VwcG9ydCBmcm9tDQo+IEFpc2hlbmcgRG9uZy4gQ2FuIHlvdSBwbGVhc2Ugd29yayB0b2dl
+dGhlciBhbmQgcmViYXNlIHRoZSBwYXRjaCBvbiB0b3Agb2YNCj4gdGhhdCBwYXRjaCAod2hpY2gg
+aXMgaW4gY2xrLW5leHQpIGFuZCByZXNlbmQgdGhpcz8NCg0KSSBoYXZlIHJlc2VudCB0aGUgcGF0
+Y2ggc2V0IGJhc2VkIG9uIHRvcCBvZiBjbGstbmV4dCBhbmQgdGVzdGVkIHRoZSBmdW5jdGlvbi4N
+ClBsZWFzZSBhcHBseSB0aGlzIHJlc2VudCBwYXRjaCwgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC8xMDgyNTA4NS8NCg0KVGhhbmtzLA0KQW5zb24uDQo=
