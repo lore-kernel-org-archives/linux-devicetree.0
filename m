@@ -1,77 +1,44 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Add pin configuration for read strobe
- for Odroid XU3/XU4 eMMC
-Date: Fri, 22 Feb 2019 16:03:26 +0530
-Message-ID: <CANAwSgSnunUbZJeT72B7HjAuBgsLQFA6_y_ijadHUKEAOoM-gA@mail.gmail.com>
-References: <CGME20190222102034epcas3p373245ed6e3e83e297bcaff48aec37992@epcas3p3.samsung.com>
- <20190222101948.848-1-linux.amoon@gmail.com> <d4f36ce1-ddef-5756-05dc-74e8dd08417c@samsung.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 26/30 v2] soc: ixp4xx: Add DT bindings for IXP4xx NPE
+Date: Fri, 22 Feb 2019 11:37:35 +0100
+Message-ID: <CACRpkdZ5Sm53AbWf1a3sL4bfrsgrkbxXwajO4c=ZQbH6w_BmEA@mail.gmail.com>
+References: <20190221154458.23763-1-linus.walleij@linaro.org>
+ <20190221154458.23763-27-linus.walleij@linaro.org>
+ <CAL_JsqKxEu6AhqEXhXSMwSFcfd3oZ2pZMmT_wwZZvvX9e=jUDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d4f36ce1-ddef-5756-05dc-74e8dd08417c@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKxEu6AhqEXhXSMwSFcfd3oZ2pZMmT_wwZZvvX9e=jUDg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Imre Kaloz <kaloz@openwrt.org>, Krzysztof Halasa <khalasa@piap.pl>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+On Thu, Feb 21, 2019 at 10:48 PM Rob Herring <robh@kernel.org> wrote:
 
-On Fri, 22 Feb 2019 at 15:59, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > +$id: "http://devicetree.org/schemas/firmware/intel-ixp4xx-network-processing-engine.yaml#"
 >
-> Hi Anand,
->
-> On 2019-02-22 11:19, Anand Moon wrote:
-> > Add Read Strobe RDQS pin configuration for eMMC to support higher data rate read/write.
-> >
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/exynos5420-pinctrl.dtsi          | 6 ++++++
-> >  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 2 +-
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> > index b82af7c89654..4fb3865e082a 100644
-> > --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> > @@ -206,6 +206,12 @@
-> >               samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
-> >       };
-> >
-> > +     sd0_rdqs: sd0-rdqs {
-> > +             samsung,pins = "gpc0-7";
-> > +             samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> > +             samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
-> > +     };
-> > +
->
-> The above lines are not needed. There is already a sd0_rclk node with
-> exactly the same configuration just above your change.
->
+> firmware? firmware/ is for things like psci, optee, etc. I'm not sure
+> this fits as it has some sort of h/w interface. Wouldn't networking be
+> a better fit?
 
-Sorry once again, I failed to look closely., sorry for the noise.
+You would think so, but the NPE, despite being named something
+with "network" and primarily intended for that is also used for e.g.
+crypto acceleration which is generic and can as well be used for
+disk encryption. Intel names it a "hardware multi-threaded
+processor engine".
 
-Best Regards
--Anand
+Each unit has quite elaborate microcode and is clearly containing
+its own CPU somekindof, it clearly has a Harvard architecture.
 
-> >       sd1_clk: sd1-clk {
-> >               samsung,pins = "gpc1-0";
-> >               samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> > diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> > index b299e541cac0..d41397748ed2 100644
-> > --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> > @@ -411,7 +411,7 @@
-> >       samsung,dw-mshc-hs400-timing = <0 2>;
-> >       samsung,read-strobe-delay = <90>;
-> >       pinctrl-names = "default";
-> > -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8 &sd0_cd &sd0_rclk>;
-> > +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_rdqs &sd0_bus1 &sd0_bus4 &sd0_bus8 &sd0_cd &sd0_rclk>;
-> >       bus-width = <8>;
-> >       cap-mmc-highspeed;
-> >       mmc-hs200-1_8v;
->
-> Best regards
-> --
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
->
+Yours,
+Linus Walleij
