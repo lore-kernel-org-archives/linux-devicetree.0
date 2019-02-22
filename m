@@ -1,30 +1,65 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: device tree binding for poly-phased regulators
-Date: Fri, 22 Feb 2019 12:21:51 +0100
-Message-ID: <20190222112151.GA23266@lst.de>
+From: Vishal Sagar <vsagar@xilinx.com>
+Subject: RE: [PATCH v3 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem
+Date: Fri, 22 Feb 2019 12:05:55 +0000
+Message-ID: <CY4PR02MB2709DC93D6F6F1BA181B9607A77F0@CY4PR02MB2709.namprd02.prod.outlook.com>
+References: <1549025766-135037-1-git-send-email-vishal.sagar@xilinx.com>
+ <1549025766-135037-3-git-send-email-vishal.sagar@xilinx.com>
+ <3923069f-7c69-c601-0ded-f7629696ef9b@lucaceresoli.net>
+ <CY4PR02MB2709000898D5E290B5EE99F4A7640@CY4PR02MB2709.namprd02.prod.outlook.com>
+ <7fc3bd7b-4537-3df5-12ee-55ebec17a8bd@lucaceresoli.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <7fc3bd7b-4537-3df5-12ee-55ebec17a8bd@lucaceresoli.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Carlo Caione <carlo@caione.org>, Olliver Schinagl <oliver@schinagl.nl>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jagan Teki <jagan@amarulasolutions.com>, Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Luca Ceresoli <luca@lucaceresoli.net>, Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-Documentation/devicetree/bindings/mfd/axp20x.txt nicely describes the
-capabilities of the X-powers PMICs; however, it seems polyphasing is
-left to comments only.
-
-May I suggest to add a property "poly-phased", just to get the discussion
-started? It could be a simple property in the current case for the axp803
-and axp806 ("poly-phased with you-know-which") or a phandle in the future.
-
-BTW the axp803 datasheet is quite terse in that respect: is there one
-"master" reulator whose settings are copied or does a driver have to keep
-them in sync.
-
-Anyway, comments welcome!
-
-	Torsten
+SGkgTHVjYSwNCg0KQXBvbG9naWVzIGZvciB0aGUgZGVsYXllZCByZXNwb25zZS4gDQoNCj4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTHVjYSBDZXJlc29saSBbbWFpbHRvOmx1
+Y2FAbHVjYWNlcmVzb2xpLm5ldF0NCj4gU2VudDogTW9uZGF5LCBGZWJydWFyeSAxMSwgMjAxOSA4
+OjAxIFBNDQo+IFRvOiBWaXNoYWwgU2FnYXIgPHZzYWdhckB4aWxpbnguY29tPjsgVmlzaGFsIFNh
+Z2FyIDx2aXNoYWwuc2FnYXJAeGlsaW54LmNvbT47DQo+IEh5dW4gS3dvbiA8aHl1bmtAeGlsaW54
+LmNvbT47IGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbTsNCj4gbWNoZWhhYkBrZXJu
+ZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBNaWNoYWwN
+Cj4gU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IGxpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9y
+ZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IHNha2FyaS5haWx1c0BsaW51eC5pbnRl
+bC5jb207DQo+IGhhbnMudmVya3VpbEBjaXNjby5jb207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IERpbmVzaCBL
+dW1hciA8ZGluZXNoa0B4aWxpbnguY29tPjsgU2FuZGlwIEtvdGhhcmkNCj4gPHNhbmRpcGtAeGls
+aW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzJdIG1lZGlhOiB2NGw6IHhpbGlu
+eDogQWRkIFhpbGlueCBNSVBJIENTSS0yIFJ4DQo+IFN1YnN5c3RlbQ0KPiANCj4gSGksDQo+IA0K
+PiB0aGFua3MgZm9yIHRoZSBxdWljayByZXBseS4NCj4gDQo+IE9uIDExLzAyLzE5IDEzOjQzLCBW
+aXNoYWwgU2FnYXIgd3JvdGU6DQo+ID4+PiArc3RhdGljIGludCB4Y3NpMnJ4c3Nfc3RhcnRfc3Ry
+ZWFtKHN0cnVjdCB4Y3NpMnJ4c3Nfc3RhdGUgKnN0YXRlKQ0KPiA+Pj4gK3sNCj4gPj4+ICsgICAg
+IHN0cnVjdCB4Y3NpMnJ4c3NfY29yZSAqY29yZSA9ICZzdGF0ZS0+Y29yZTsNCj4gPj4+ICsgICAg
+IGludCByZXQgPSAwOw0KPiA+Pj4gKw0KPiA+Pj4gKyAgICAgeGNzaTJyeHNzX2VuYWJsZShjb3Jl
+KTsNCj4gPj4+ICsNCj4gPj4+ICsgICAgIHJldCA9IHhjc2kycnhzc19yZXNldChjb3JlKTsNCj4g
+Pj4+ICsgICAgIGlmIChyZXQgPCAwKSB7DQo+ID4+PiArICAgICAgICAgICAgIHN0YXRlLT5zdHJl
+YW1pbmcgPSBmYWxzZTsNCj4gPj4+ICsgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gPj4+ICsg
+ICAgIH0NCj4gPj4+ICsNCj4gPj4+ICsgICAgIHhjc2kycnhzc19pbnRyX2VuYWJsZShjb3JlKTsN
+Cj4gPj4+ICsgICAgIHN0YXRlLT5zdHJlYW1pbmcgPSB0cnVlOw0KPiA+Pg0KPiA+PiBTaG91bGRu
+J3QgeW91IHByb3BhZ2F0ZSBzX3N0cmVhbSB0byB0aGUgdXBzdHJlYW0gc3ViZGV2IGhlcmUgY2Fs
+bGluZw0KPiA+PiB2NGwyX3N1YmRldl9jYWxsKC4uLiwgLi4uLCBzX3N0cmVhbSwgMSk/DQo+ID4+
+DQo+ID4NCj4gPiBUaGlzIGlzIGRvbmUgYnkgdGhlIHh2aXBfcGlwZWxpbmVfc3RhcnRfc3RvcCgp
+IGluIHhpbGlueC1kbWEuYyBmb3IgWGlsaW54IFZpZGVvDQo+IHBpcGVsaW5lLg0KPiANCj4gSW5k
+ZWVkIGl0IGRvZXMsIGhvd2V2ZXIgb3RoZXIgQ1NJMiBSWCBkcml2ZXJzIGRvIHByb3BhZ2F0ZSBz
+X3N0cmVhbSBpbg0KPiB0aGVpciBvd24gc19zdHJlYW0uIE5vdCBzdHJpY3RseSByZWxhdGVkIHRv
+IHRoaXMgZHJpdmVyLCBidXQgd2hhdCdzIHRoZQ0KPiBsb2dpYyBmb3IgaGF2aW5nIHRoZXNlIHR3
+byBkaWZmZXJlbnQgYmVoYXZpb3JzPw0KPiANCg0KSSBhbSBub3QgcmVhbGx5IHN1cmUgYWJvdXQg
+dGhpcy4gSSBhZ3JlZSB3aXRoIHdoYXQgeW91IHNheSBidXQNCmluIGNhc2UgdGhlIHNfc3RyZWFt
+KCkgaXMgaW1wbGVtZW50ZWQgaGVyZSwgdGhlbiB0aGUgc2Vuc29yJ3Mgc19zdHJlYW0oKSB3aWxs
+IGJlIGNhbGxlZCB0d2ljZS4NCkkgZG9uJ3QgdGhpbmsgdGhpcyB3b3VsZCBiZSB0aGUgY29ycmVj
+dCBiZWhhdmlvci4NCg0KPiBBbHNvIHh2aXBfcGlwZWxpbmVfc3RhcnRfc3RvcCgpIG9ubHkgZm9s
+bG93cyB0aGUgZ3JhcGggdGhyb3VnaA0KPiBlbnRpdHktPnBhZHNbMF0sIHNvIGl0IGxvb2tzIGxp
+a2UgaXQgY2Fubm90IGhhbmRsZSBlbnRpdGllcyB3aXRoDQo+IG11bHRpcGxlIHNpbmsgcGFkcy4g
+SG93IHdvdWxkIGl0IGJlIGFibGUgdG8gaGFuZGxlIGUuZy4gdGhlIEFYSTQtU3RyZWFtDQo+IFN3
+aXRjaCBbMF0sIHdoaWNoIGhhcyAyKyBzaW5rIHBhZHM/DQo+IA0KDQpJIGFncmVlIHdpdGggeW91
+IGFib3V0IHRoaXMuIFRoZXJlIHNob3VsZCBiZSBhIGRpZmZlcmVudCBtZWNoYW5pc20gZm9yIHRo
+aXMuIA0KDQpSZWdhcmRzDQpWaXNoYWwgU2FnYXINCg0KPiBbMF0NCj4gaHR0cHM6Ly93d3cueGls
+aW54LmNvbS9zdXBwb3J0L2RvY3VtZW50YXRpb24vaXBfZG9jdW1lbnRhdGlvbi9heGlzX2luZnJh
+DQo+IHN0cnVjdHVyZV9pcF9zdWl0ZS92MV8xL3BnMDg1LWF4aTRzdHJlYW0taW5mcmFzdHJ1Y3R1
+cmUucGRmDQo+IChwYWdlIDE2KS4NCj4gDQo+IC0tDQo+IEx1Y2ENCg==
