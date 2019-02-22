@@ -1,125 +1,138 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V3 2/2] hwmon: pwm-fan: Add optional regulator support
-Date: Fri, 22 Feb 2019 14:45:24 +0100
-Message-ID: <1550843124-10992-3-git-send-email-stefan.wahren@i2se.com>
-References: <1550843124-10992-1-git-send-email-stefan.wahren@i2se.com>
+From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Subject: [PATCH] dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
+Date: Fri, 22 Feb 2019 14:20:05 +0100
+Message-ID: <201902221420.05267.pisa@cmp.felk.cvut.cz>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550843124-10992-1-git-send-email-stefan.wahren@i2se.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Jerabek <martin.jerabek01@gmail.com>, Ondrej Ille <ondrej.ille@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds optional regulator support to the pwm-fan driver. This is
-necessary for pwm fans which are powered by a switchable supply.
+>From 3e19a7f5c33e5fb50f52c9df05bf00022e3f3dd5 Mon Sep 17 00:00:00 2001
+From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Date: Fri, 22 Feb 2019 14:11:11 +0100
+Subject: [PATCH] dt-bindings: net: can: binding for CTU CAN FD open-source IP
+ core.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 ---
- drivers/hwmon/pwm-fan.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/net/can/ctu,ctucanfd.txt   | 102 +++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 2c94482..167221c 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -23,6 +23,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/sysfs.h>
- #include <linux/thermal.h>
- 
-@@ -31,6 +32,7 @@
- struct pwm_fan_ctx {
- 	struct mutex lock;
- 	struct pwm_device *pwm;
-+	struct regulator *reg_en;
- 	unsigned int pwm_value;
- 	unsigned int pwm_fan_state;
- 	unsigned int pwm_fan_max_state;
-@@ -231,6 +233,21 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, ctx);
- 
-+	ctx->reg_en = devm_regulator_get_optional(&pdev->dev, "fan");
-+	if (IS_ERR(ctx->reg_en)) {
-+		if (PTR_ERR(ctx->reg_en) != -ENODEV)
-+			return PTR_ERR(ctx->reg_en);
+diff --git a/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt 
+b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
+new file mode 100644
+index 000000000000..6c75e5850904
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
+@@ -0,0 +1,102 @@
++Memory mapped CTU CAN FD open-source IP core
 +
-+		ctx->reg_en = NULL;
-+	} else {
-+		ret = regulator_enable(ctx->reg_en);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"Failed to enable fan supply: %d\n", ret);
-+			return ret;
-+		}
-+	}
++The core sources and documentation on project page
 +
- 	ctx->pwm_value = MAX_PWM;
- 
- 	/* Set duty cycle to maximum allowed and enable PWM output */
-@@ -241,7 +258,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 	ret = pwm_apply_state(ctx->pwm, &state);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to configure PWM\n");
--		return ret;
-+		goto err_reg_disable;
- 	}
- 
- 	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
-@@ -277,6 +294,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 	state.enabled = false;
- 	pwm_apply_state(ctx->pwm, &state);
- 
-+err_reg_disable:
-+	if (ctx->reg_en)
-+		regulator_disable(ctx->reg_en);
++  https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core
++  http://canbus.pages.fel.cvut.cz/ctucanfd_ip_core/Progdokum.pdf
 +
- 	return ret;
- }
- 
-@@ -287,6 +308,10 @@ static int pwm_fan_remove(struct platform_device *pdev)
- 	thermal_cooling_device_unregister(ctx->cdev);
- 	if (ctx->pwm_value)
- 		pwm_disable(ctx->pwm);
++Integration in Xilinx Zynq SoC based system together with
++OpenCores SJA1000 compatible controllers
 +
-+	if (ctx->reg_en)
-+		regulator_disable(ctx->reg_en);
++  https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top
 +
- 	return 0;
- }
- 
-@@ -307,6 +332,14 @@ static int pwm_fan_suspend(struct device *dev)
- 		pwm_disable(ctx->pwm);
- 	}
- 
-+	if (ctx->reg_en) {
-+		ret = regulator_disable(ctx->reg_en);
-+		if (ret) {
-+			dev_err(dev, "Failed to disable fan supply: %d\n", ret);
-+			return ret;
-+		}
-+	}
++Martin Jerabek's dimploma thesis with integration and testing
++framework description
 +
- 	return 0;
- }
- 
-@@ -317,6 +350,14 @@ static int pwm_fan_resume(struct device *dev)
- 	unsigned long duty;
- 	int ret;
- 
-+	if (ctx->reg_en) {
-+		ret = regulator_enable(ctx->reg_en);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
-+			return ret;
-+		}
-+	}
++ 
+https://dspace.cvut.cz/bitstream/handle/10467/80366/F3-DP-2019-Jerabek-Martin-Jerabek-thesis-2019-canfd.pdf
 +
- 	if (ctx->pwm_value == 0)
- 		return 0;
- 
++Required properties:
++
++- compatible : should be one of "ctu,ctucanfd", "ctu,canfd-2".
++
++- reg = <(baseaddr) (size)> : specify mapping into physical address
++      space of the processor system.
++
++- interrupts : property with a value describing the interrupt source
++      required for the CTU CAN FD. For Zynq SoC system format is
++      <(is_spi) (number) (type)> where is_spi defines if it is SPI
++      (shared peripheral) interrupt, the second number is translated
++      to the vector by addition of 32 on Zynq-7000 systems and type
++      is IRQ_TYPE_LEVEL_HIGH (4) for Zynq.
++
++- interrupt-parent = <&interrupt-controller-phandle> :
++      is required for Zynq SoC to find map interrupt
++      to the correct controller
++
++- clocks: phandle of reference clock (100 MHz is appropriate
++      for FPGA implementation on Zynq-7000 system).
++
++Example when integrated to Zynq-7000 system DTS:
++
++        / {
++            /* ... */
++            amba: amba {
++                #address-cells = <1>;
++                #size-cells = <1>;
++                compatible = "simple-bus";
++
++                CTU_CAN_FD_0: CTU_CAN_FD@43c30000 {
++                    compatible = "ctu,ctucanfd";
++                    interrupt-parent = <&intc>;
++                    interrupts = <0 30 4>;
++                    clocks = <&clkc 15>;
++                    reg = <0x43c30000 0x10000>;
++                };
++            };
++        };
++
++
++Example when used as DTS overlay on Zynq-7000 system:
++
++
++// Device Tree Example: Full Reconfiguration without Bridges
++/dts-v1/;
++/plugin/;
++
++/ {
++    fragment@0 {
++        target-path = "/fpga-full";
++
++        __overlay__ {
++            #address-cells = <1>;
++            #size-cells = <1>;
++
++            firmware-name = "system.bit.bin";
++        };
++    };
++
++    fragment@1 {
++        target-path = "/amba";
++        __overlay__ {
++            #address-cells = <1>;
++            #size-cells = <1>;
++
++            CTU_CAN_FD_0: CTU_CAN_FD@43c30000 {
++                compatible = "ctu,ctucanfd";
++                interrupt-parent = <&intc>;
++                interrupts = <0 30 4>;
++                clocks = <&clkc 15>;
++                //clock-names = "can_clk";
++                reg = <0x43c30000 0x10000>;
++            };
++            CTU_CAN_FD_1: CTU_CAN_FD@43c70000 {
++                compatible = "ctu,ctucanfd";
++                interrupt-parent = <&intc>;
++                interrupts = <0 31 4>;
++                clocks = <&clkc 15>;
++                //clock-names = "can_clk";
++                reg = <0x43c70000 0x10000>;
++            };
++        };
++    };
++};
 -- 
-2.7.4
+2.11.0
