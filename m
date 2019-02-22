@@ -1,61 +1,38 @@
-From: Patrick Venture <venture@google.com>
-Subject: [PATCH 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Thu, 21 Feb 2019 14:25:23 -0800
-Message-ID: <20190221222523.136829-1-venture@google.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: [PATCH 1/3] Bluetooth: btusb: add QCA6174A compatible properties
+Date: Thu, 21 Feb 2019 16:34:01 -0800
+Message-ID: <20190222003403.128243-1-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>, Rajat Jain <rajatja@google.com>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+We may need to specify a GPIO wake pin for this device, so add a
+compatible property for it.
 
-Signed-off-by: Patrick Venture <venture@google.com>
+There are at least to USB PID/VID variations of this chip: one with a
+Lite-On ID and one with an Atheros ID.
+
+Signed-off-by: Brian Norris <briannorris@chromium.org>
 ---
- .../bindings/misc/aspeed-p2a-ctrl.txt         | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+ drivers/bluetooth/btusb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-new file mode 100644
-index 000000000000..9c4d036ad5f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-@@ -0,0 +1,33 @@
-+======================================================================
-+Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
-+======================================================================
-+
-+The bridge is available on platforms with the VGA enabled on the Aspeed device.
-+In this case, the host has access to a 64KiB window into all of the BMC's
-+memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
-+has read access to all the regions of memory, however the host only has read
-+and write access depending on a register controlled by the BMC.
-+
-+Required properties:
-+===================
-+
-+ - compatible: must be one of:
-+	- "aspeed,ast2400-p2a-ctrl"
-+	- "aspeed,ast2500-p2a-ctrl"
-+
-+ - reg: physical address of SCU2C followed by SCU180
-+
-+Optional properties:
-+===================
-+
-+- memory-region: A phandle to a reserved_memory region to be used for the PCI
-+		to AHB mapping
-+
-+Example:
-+
-+p2a: p2a-control@1e6e2000 {
-+	compatible = "aspeed,ast2400-p2a-ctrl";
-+	reg = <0x1e6e202C 4
-+	       0x1e6e2180 4>;
-+	memory-region = <&reserved_memory>;
-+};
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 470ee68555d9..380e6f38c607 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2862,6 +2862,8 @@ static irqreturn_t btusb_oob_wake_handler(int irq, void *priv)
+ 
+ static const struct of_device_id btusb_match_table[] = {
+ 	{ .compatible = "usb1286,204e" },
++	{ .compatible = "usb0cf3,e300" }, /* QCA6174A */
++	{ .compatible = "usb04ca,301a" }, /* QCA6174A (Lite-On) */
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, btusb_match_table);
 -- 
 2.21.0.rc0.258.g878e2cd30e-goog
