@@ -1,32 +1,98 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [v6 1/3] dt-bindings: ahci-fsl-qoriq: add lx2160a chip name to
- the list
-Date: Fri, 22 Feb 2019 08:39:31 -0600
-Message-ID: <20190222143931.GA17132@bogus>
-References: <20190220085607.31582-1-peng.ma@nxp.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: Add a binding for Mediatek SCP
+Date: Fri, 22 Feb 2019 08:43:16 -0600
+Message-ID: <20190222144316.GA19284@bogus>
+References: <20190221084729.101784-1-pihsun@chromium.org>
+ <20190221084729.101784-2-pihsun@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190220085607.31582-1-peng.ma@nxp.com>
+In-Reply-To: <20190221084729.101784-2-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: axboe@kernel.dk, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, andy.tang@nxp.com, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yousaf.kaukab@suse.com, Peng Ma <peng.ma@nxp.com>
+To: Pi-Hsun Shih <pihsun@chromium.org>
+Cc: Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Feb 2019 08:56:05 +0000, Peng Ma wrote:
-> Add lx2160a compatible to bindings documentation.
+On Thu, Feb 21, 2019 at 04:47:24PM +0800, Pi-Hsun Shih wrote:
+> From: Erin Lo <erin.lo@mediatek.com>
 > 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> Add a DT binding documentation of SCP for the
+> MT8183 SoC from Mediatek.
+> 
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 > ---
-> changed for V6:
-> 	- no changed 
+> Changes from v4:
+>  - Add detail of more properties.
+>  - Document the usage of mtk,rpmsg-name in subnode from the new design.
 > 
->  .../devicetree/bindings/ata/ahci-fsl-qoriq.txt     |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+> Changes from v3:
+>  - No change.
 > 
+> Changes from v2:
+>  - No change. I realized that for this patch series, there's no need to
+>    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
+>    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
+>    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
+>    created by SCP name service.
+> 
+> Changes from v1:
+>  - No change.
+> ---
+>  .../bindings/remoteproc/mtk,scp.txt           | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> new file mode 100644
+> index 00000000000000..8cf8b0e0d98a4c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> @@ -0,0 +1,37 @@
+> +Mediatek SCP Bindings
+> +----------------------------------------
+> +
+> +This binding provides support for ARM Cortex M4 Co-processor found on some
+> +Mediatek SoCs.
+> +
+> +Required properties:
+> +- compatible		Should be "mediatek,mt8183-scp"
+> +- reg			Should contain the address ranges for the two memory
+> +			regions, SRAM and CFG.
+> +- reg-names		Contains the corresponding names for the two memory
+> +			regions. These should be named "sram" & "cfg".
+> +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
+> +- clock-names		Contains the corresponding name for the clock. This
+> +			should be named "main".
+> +
+> +Subnodes
+> +--------
+> +
+> +When CONFIG_RPMSG_MTK_SCP is enabled, subnodes of the SCP represent rpmsg
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Bindings can't depend on kernel config options.
 
-If a tag was not added on purpose, please state why and what changed.
+> +devices. The names of the devices are not important. The properties of these
+> +nodes are defined by the individual bindings for the rpmsg devices - but must
+> +contain the following property:
+> +
+> +- mtk,rpmsg-name	Contains the name for the rpmsg device. Used to match
+> +			the subnode to rpmsg device announced by SCP.
+
+I don't think this belongs in DT, but without some examples I'm not 
+really sure.
+
+> +
+> +Example:
+> +
+> +	scp: scp@10500000 {
+> +		compatible = "mediatek,mt8183-scp";
+> +		reg = <0 0x10500000 0 0x80000>,
+> +		      <0 0x105c0000 0 0x5000>;
+> +		reg-names = "sram", "cfg";
+> +		clocks = <&infracfg CLK_INFRA_SCPSYS>;
+> +		clock-names = "main";
+> +	};
+> -- 
+> 2.21.0.rc0.258.g878e2cd30e-goog
+> 
