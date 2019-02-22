@@ -1,29 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/7] dt-bindings: PCI: qcom: Add QCS404 to the binding
-Date: Fri, 22 Feb 2019 14:33:31 -0600
-Message-ID: <20190222203331.GA14965@bogus>
-References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
- <20190219060407.15263-6-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/2] usb: dwc3: Add avoiding vbus glitch happen during
+ xhci  reset
+Date: Fri, 22 Feb 2019 14:34:59 -0600
+Message-ID: <20190222203459.GA16999@bogus>
+References: <20190219072358.43493-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190219060407.15263-6-bjorn.andersson@linaro.org>
+In-Reply-To: <20190219072358.43493-1-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Feb 2019 22:04:05 -0800, Bjorn Andersson wrote:
-> The Qualcomm QCS404 platform contains a PCIe controller, add this to the
-> Qualcomm PCI binding document. The controller is the same version as the
-> one used in IPQ4019, but the PHY part is described separately, hence the
-> difference in clocks and resets.
+On Tue, 19 Feb 2019 07:23:14 +0000, Ran Wang wrote:
+> When DWC3 is set to host mode by programming register DWC3_GCTL, VBUS
+> (or its control signal) will turn on immediately on related Root Hub
+> ports. Then the VBUS will be de-asserted for a little while during xhci
+> reset (conducted by xhci driver) for a little while and back to normal.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> This VBUS glitch might cause some USB devices emuration fail if kernel
+> boot with them connected. One SW workaround which can fix this is to
+> program all PORTSC[PP] to 0 to turn off VBUS immediately after setting
+> host mode in DWC3 driver(per signal measurement result, it will be too
+> late to do it in xhci-plat.c or xhci.c).
+> 
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 > ---
->  .../devicetree/bindings/pci/qcom,pcie.txt     | 25 +++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
+> Changes in v2:
+>   - Correct typos
+>   - Shorten the name to snps,host-vbus-glitches
+> 
+>  Documentation/devicetree/bindings/usb/dwc3.txt |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
