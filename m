@@ -1,7 +1,7 @@
 From: Stephen Boyd <sboyd@kernel.org>
 Subject: Re: [PATCH RESEND V6 2/2] clk: imx: scu: add cpu frequency scaling support
-Date: Fri, 22 Feb 2019 11:03:49 -0800
-Message-ID: <155086222918.77512.13959395913988791957@swboyd.mtv.corp.google.com>
+Date: Fri, 22 Feb 2019 11:08:10 -0800
+Message-ID: <155086249004.77512.8709011386763447047@swboyd.mtv.corp.google.com>
 References: <1550802436-13007-1-git-send-email-Anson.Huang@nxp.com> <1550802436-13007-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -25,6 +25,38 @@ Quoting Anson Huang (2019-02-21 18:32:10)
 > inside SCU clock driver.
 >=20
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
 
-Applied to clk-next
+Ah I missed one thing, see below.
+
+> @@ -180,6 +185,23 @@ static long clk_scu_round_rate(struct clk_hw *hw, un=
+signed long rate,
+>         return rate;
+>  }
+> =20
+> +static int clk_scu_atf_set_cpu_rate(struct clk_hw *hw, unsigned long rat=
+e,
+> +                                   unsigned long parent_rate)
+> +{
+> +       struct clk_scu *clk =3D to_clk_scu(hw);
+> +       struct arm_smccc_res res;
+> +       unsigned long cluster_id;
+> +
+> +       if (clk->rsrc_id =3D=3D IMX_SC_R_A35)
+> +               cluster_id =3D 0;
+
+Do we still need to check this anymore? Why not just always use
+cluster_id 0?
+
+> +
+> +       /* CPU frequency scaling can ONLY be done by ARM-Trusted-Firmware=
+ */
+> +       arm_smccc_smc(IMX_SIP_CPUFREQ, IMX_SIP_SET_CPUFREQ,
+> +                     cluster_id, rate, 0, 0, 0, 0, &res);
+
+Because not checking would make this work, vs. checking causes this code
+to sometimes use an uninitialized value from the stack.
+
+> +
+> +       return 0;
+> +}
+> +
