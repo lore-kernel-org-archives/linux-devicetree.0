@@ -1,29 +1,78 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v3 3/4] enetc: Add ENETC PF level external MDIO
- support
-Date: Fri, 22 Feb 2019 18:44:35 +0100
-Message-ID: <20190222174435.GL5894@lunn.ch>
-References: <1550847859-17346-1-git-send-email-claudiu.manoil@nxp.com>
- <1550847859-17346-4-git-send-email-claudiu.manoil@nxp.com>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH v4 1/2] dt-bindings: drm: panel: Add Samsung s6e63m0 panel documentation
+Date: Fri, 22 Feb 2019 18:51:52 +0100
+Message-ID: <20190222175153.20567-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550847859-17346-4-git-send-email-claudiu.manoil@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, alexandru.marginean@nxp.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+To: thierry.reding@gmail.com
+Cc: airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, m.szyprowski@samsung.com, krzk@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 22, 2019 at 05:04:18PM +0200, Claudiu Manoil wrote:
-> Each ENETC PF has its own MDIO interface, the corresponding
-> MDIO registers are mapped in the ENETC's Port register block.
-> The current patch adds a driver for these PF level MDIO buses,
-> so that each PF can manage directly its own external link.
-> 
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+This commit adds documentation for Samsung s6e63m0 AMOLED LCD panel
+driver.
 
-    Andrew
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes from v2:
+  - Added Reviewed-by
+
+Changes from v1:
+  - Add missing subject prefix
+  - Rename reset-gpio to reset-gpios
+  - Add link to spi properites documentation. They're required
+    for driver to work
+  - Removed delay properties, which are now hardcoded in driver
+  - Removed display timings, which are now hardcoded in driver
+---
+ .../display/panel/samsung,s6e63m0.txt         | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt b/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
+new file mode 100644
+index 000000000000..9fb9ebeef8e4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
+@@ -0,0 +1,33 @@
++Samsung s6e63m0 AMOLED LCD panel
++
++Required properties:
++  - compatible: "samsung,s6e63m0"
++  - reset-gpios: GPIO spec for reset pin
++  - vdd3-supply: VDD regulator
++  - vci-supply: VCI regulator
++
++The panel must obey rules for SPI slave device specified in document [1].
++
++The device node can contain one 'port' child node with one child
++'endpoint' node, according to the bindings defined in [2]. This
++node should describe panel's video bus.
++
++[1]: Documentation/devicetree/bindings/spi/spi-bus.txt
++[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++		s6e63m0: display@0 {
++			compatible = "samsung,s6e63m0";
++			reg = <0>;
++			reset-gpio = <&mp05 5 1>;
++			vdd3-supply = <&ldo12_reg>;
++			vci-supply = <&ldo11_reg>;
++			spi-max-frequency = <1200000>;
++
++			port {
++				lcd_ep: endpoint {
++					remote-endpoint = <&fimd_ep>;
++				};
++			};
++		};
+-- 
+2.17.1
