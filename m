@@ -1,51 +1,89 @@
 From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH V2 3/8] dt-bindings: net: stmmac: add phys config properties
-Date: Fri, 22 Feb 2019 09:28:04 +0100
-Message-ID: <1550824089-19961-4-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH V2 1/8] net: ethernet: stmmac: manage Ethernet WoL for stm32mp157c.
+Date: Fri, 22 Feb 2019 09:28:02 +0100
+Message-ID: <1550824089-19961-2-git-send-email-christophe.roullier@st.com>
 References: <1550824089-19961-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1550824089-19961-1-git-send-email-christophe.roullier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
-Cc: devicetree@vger.kernel.org, andrew@lunn.ch, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, christophe.roullier@st.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Add properties to support all Phy config
- PHY_MODE	(MII,GMII, RMII, RGMII) and in normal, PHY wo crystal (25Mhz),
- PHY wo crystal (50Mhz), No 125Mhz from PHY config.
+Add glue codes to support magic packet on stm32mp157c
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- Documentation/devicetree/bindings/net/stm32-dwmac.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 30 ++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-index 1341012..f42dc68 100644
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-@@ -24,9 +24,9 @@ Required properties:
- 	       encompases the glue register, and the offset of the control register.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 7e2e79d..d1cf145 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -42,6 +42,7 @@ struct stm32_dwmac {
+ 	struct clk *clk_ethstp;
+ 	struct clk *syscfg_clk;
+ 	bool int_phyclk;	/* Clock from RCC to drive PHY */
++	int irq_pwr_wakeup;
+ 	u32 mode_reg;		/* MAC glue-logic mode register */
+ 	struct regmap *regmap;
+ 	u32 speed;
+@@ -232,7 +233,9 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
+ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+ 			       struct device *dev)
+ {
++	struct platform_device *pdev = to_platform_device(dev);
+ 	struct device_node *np = dev->of_node;
++	int err = 0;
  
- Optional properties:
--- clock-names:     For MPU family "mac-clk-ck" for PHY without quartz
--- st,int-phyclk (boolean) :  valid only where PHY do not have quartz and need to be clock
--	           by RCC
-+- clock-names:     For MPU family "eth-ck" for PHY without quartz
-+- st,eth_clk_sel (boolean) : set this property in RGMII PHY when you do not want use 125Mhz
-+- st,eth_ref_clk_sel (boolean) :  set this property in RMII mode when you have PHY without crystal 50MHz
+ 	dwmac->int_phyclk = of_property_read_bool(np, "st,int-phyclk");
  
- Example:
+@@ -260,7 +263,26 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+ 		return PTR_ERR(dwmac->syscfg_clk);
+ 	}
+ 
+-	return 0;
++	/* Get IRQ information early to have an ability to ask for deferred
++	 * probe if needed before we went too far with resource allocation.
++	 */
++	dwmac->irq_pwr_wakeup = platform_get_irq_byname(pdev,
++							"stm32_pwr_wakeup");
++	if (!dwmac->int_phyclk && dwmac->irq_pwr_wakeup >= 0) {
++		err = device_init_wakeup(&pdev->dev, true);
++		if (err) {
++			dev_err(&pdev->dev, "Failed to init wake up irq\n");
++			return err;
++		}
++		err = dev_pm_set_dedicated_wake_irq(&pdev->dev,
++						    dwmac->irq_pwr_wakeup);
++		if (err) {
++			dev_err(&pdev->dev, "Failed to set wake up irq\n");
++			device_init_wakeup(&pdev->dev, false);
++		}
++		device_set_wakeup_enable(&pdev->dev, false);
++	}
++	return err;
+ }
+ 
+ static int stm32_dwmac_probe(struct platform_device *pdev)
+@@ -326,9 +348,15 @@ static int stm32_dwmac_remove(struct platform_device *pdev)
+ 	struct net_device *ndev = platform_get_drvdata(pdev);
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
+ 	int ret = stmmac_dvr_remove(&pdev->dev);
++	struct stm32_dwmac *dwmac = priv->plat->bsp_priv;
+ 
+ 	stm32_dwmac_clk_disable(priv->plat->bsp_priv);
+ 
++	if (dwmac->irq_pwr_wakeup >= 0) {
++		dev_pm_clear_wake_irq(&pdev->dev);
++		device_init_wakeup(&pdev->dev, false);
++	}
++
+ 	return ret;
+ }
  
 -- 
 2.7.4
