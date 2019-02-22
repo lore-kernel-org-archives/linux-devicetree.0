@@ -1,61 +1,160 @@
 From: Wendy Liang <wendy.liang@xilinx.com>
-Subject: [PATCH v8 0/2] Xilinx ZynqMP IPI Mailbox Controller Driver
-Date: Thu, 21 Feb 2019 16:36:32 -0800
-Message-ID: <1550795794-27594-1-git-send-email-wendy.liang@xilinx.com>
+Subject: [PATCH v8 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
+Date: Thu, 21 Feb 2019 16:36:34 -0800
+Message-ID: <1550795794-27594-3-git-send-email-wendy.liang@xilinx.com>
+References: <1550795794-27594-1-git-send-email-wendy.liang@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1550795794-27594-1-git-send-email-wendy.liang@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: jassisinghbrar@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Wendy Liang <wendy.liang@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Introduce mailbox controller driver for ZynqMP IPI(Inter-processor
-interrupt) IP core.
+Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
+in ZynqMP SoC used for the communication between various processor
+systems.
 
-v8:
- - Remove unused macros
- - Remove polling sending status from send_data
- - Remove calling receive callback from last_tx_done()
- - Use devm_mbox_controller_register()
- - Use of_get_child_count() to get the number of mailboxes.
-
-v7:
- - Fix sparse warning, and documentation check.
- - Add emply block to the end of of_device_id.
-
-v6:
- - dts-binding, remove compatible property from IPI subnode
-
-v5:
- - fix check patch warning on write a paragraph to describe the kconfig
-   symbol.
-
-v4:
- - make IPI mailboxes as subnodes to the IPI agent device node to properly
-   describe the hardware.
-
-v3:
- - add NULL entry to of_device_id of IPI controller
-
-v2:
- - change SPDX-License-Identifier license text style in .c file
- - replace xlnx-ipi-ids with xlnx,ipi-ids
-
-
-Wendy Liang (2):
-  mailbox: ZynqMP IPI mailbox controller
-  dt-bindings: mailbox: Add Xilinx IPI Mailbox
-
- .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 127 ++++
- drivers/mailbox/Kconfig                            |  11 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/zynqmp-ipi-mailbox.c               | 725 +++++++++++++++++++++
- include/linux/mailbox/zynqmp-ipi-message.h         |  20 +
- 5 files changed, 885 insertions(+)
+Signed-off-by: Wendy Liang <wendy.liang@xilinx.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 127 +++++++++++++++++++++
+ 1 file changed, 127 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
- create mode 100644 drivers/mailbox/zynqmp-ipi-mailbox.c
- create mode 100644 include/linux/mailbox/zynqmp-ipi-message.h
 
+diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+new file mode 100644
+index 0000000..4438432
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+@@ -0,0 +1,127 @@
++Xilinx IPI Mailbox Controller
++========================================
++
++The Xilinx IPI(Inter Processor Interrupt) mailbox controller is to manage
++messaging between two Xilinx Zynq UltraScale+ MPSoC IPI agents. Each IPI
++agent owns registers used for notification and buffers for message.
++
++               +-------------------------------------+
++               | Xilinx ZynqMP IPI Controller        |
++               +-------------------------------------+
++    +--------------------------------------------------+
++ATF                    |                     |
++                       |                     |
++                       |                     |
++    +--------------------------+             |
++                       |                     |
++                       |                     |
++    +--------------------------------------------------+
++            +------------------------------------------+
++            |  +----------------+   +----------------+ |
++Hardware    |  |  IPI Agent     |   |  IPI Buffers   | |
++            |  |  Registers     |   |                | |
++            |  |                |   |                | |
++            |  +----------------+   +----------------+ |
++            |                                          |
++            | Xilinx IPI Agent Block                   |
++            +------------------------------------------+
++
++
++Controller Device Node:
++===========================
++Required properties:
++--------------------
++IPI agent node:
++- compatible:		Shall be: "xlnx,zynqmp-ipi-mailbox"
++- interrupt-parent:	Phandle for the interrupt controller
++- interrupts:		Interrupt information corresponding to the
++			interrupt-names property.
++- xlnx,ipi-id:		local Xilinx IPI agent ID
++- #address-cells:	number of address cells of internal IPI mailbox nodes
++- #size-cells:		number of size cells of internal IPI mailbox nodes
++
++Internal IPI mailbox node:
++- reg:			IPI buffers address ranges
++- reg-names:		Names of the reg resources. It should have:
++			* local_request_region
++			  - IPI request msg buffer written by local and read
++			    by remote
++			* local_response_region
++			  - IPI response msg buffer written by local and read
++			    by remote
++			* remote_request_region
++			  - IPI request msg buffer written by remote and read
++			    by local
++			* remote_response_region
++			  - IPI response msg buffer written by remote and read
++			    by local
++- #mbox-cells:		Shall be 1. It contains:
++			* tx(0) or rx(1) channel
++- xlnx,ipi-id:		remote Xilinx IPI agent ID of which the mailbox is
++			connected to.
++
++Optional properties:
++--------------------
++- method:              The method of accessing the IPI agent registers.
++                       Permitted values are: "smc" and "hvc". Default is
++                       "smc".
++
++Client Device Node:
++===========================
++Required properties:
++--------------------
++- mboxes:		Standard property to specify a mailbox
++			(See ./mailbox.txt)
++- mbox-names:		List of identifier  strings for each mailbox
++			channel.
++
++Example:
++===========================
++	zynqmp_ipi {
++		compatible = "xlnx,zynqmp-ipi-mailbox";
++		interrupt-parent = <&gic>;
++		interrupts = <0 29 4>;
++		xlnx,ipi-id = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		/* APU<->RPU0 IPI mailbox controller */
++		ipi_mailbox_rpu0: mailbox@ff90400 {
++			reg = <0xff990400 0x20>,
++			      <0xff990420 0x20>,
++			      <0xff990080 0x20>,
++			      <0xff9900a0 0x20>;
++			reg-names = "local_request_region",
++				    "local_response_region",
++				    "remote_request_region",
++				    "remote_response_region";
++			#mbox-cells = <1>;
++			xlnx,ipi-id = <1>;
++		};
++		/* APU<->RPU1 IPI mailbox controller */
++		ipi_mailbox_rpu1: mailbox@ff990440 {
++			reg = <0xff990440 0x20>,
++			      <0xff990460 0x20>,
++			      <0xff990280 0x20>,
++			      <0xff9902a0 0x20>;
++			reg-names = "local_request_region",
++				    "local_response_region",
++				    "remote_request_region",
++				    "remote_response_region";
++			#mbox-cells = <1>;
++			xlnx,ipi-id = <2>;
++		};
++	};
++	rpu0 {
++		...
++		mboxes = <&ipi_mailbox_rpu0 0>,
++			 <&ipi_mailbox_rpu0 1>;
++		mbox-names = "tx", "rx";
++	};
++	rpu1 {
++		...
++		mboxes = <&ipi_mailbox_rpu1 0>,
++			 <&ipi_mailbox_rpu1 1>;
++		mbox-names = "tx", "rx";
++	};
 -- 
 2.7.4
