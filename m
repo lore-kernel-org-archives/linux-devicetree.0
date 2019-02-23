@@ -1,52 +1,53 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 0/2] i2c: designware: Add support for a bus clock
-Date: Sat, 23 Feb 2019 10:32:07 +0100
-Message-ID: <20190223093207.GC1018@kunai>
-References: <1550765459-14519-1-git-send-email-gareth.williams.jx@renesas.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v2 0/5] soc: ti: k3-am654: Allow for exclsive request of
+ devices
+Date: Sat, 23 Feb 2019 15:02:27 +0530
+Message-ID: <20190223093232.29003-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mvpLiMfbWzRoNl4x"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550765459-14519-1-git-send-email-gareth.williams.jx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Sysfw provides an option for requesting exclusive access for a
+device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. Once a device
+is requested from a host with this flag set, any request to this
+device from a different host will be nacked by sysfw. Current tisci
+driver enables this flag for every device requests. But this may not
+be true for all the devices. This series adds support for providing
+an option to enable or disable exclusive permissions.
 
---mvpLiMfbWzRoNl4x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v1: https://patchwork.kernel.org/cover/10817307/
 
-On Thu, Feb 21, 2019 at 04:10:57PM +0000, Gareth Williams wrote:
-> The Synopsys I2C Controller has a peripheral clock that some SoCs=20
-> require to access the registers. This series also details the new clock
-> property in the bindings documentation.
+Changes since v1:
+- Split the dt-bindings doc to a separate patch
 
-Your SoB is missing for patch 1. And besides my ack, I'd still like some
-feedback from the actual driver maintainers.
+Lokesh Vutla (5):
+  firmware: ti_sci: (Dis)Allow for device exclusive permissions
+  dt-bindings: ti_sci_pm_domains: Add support for exclusive access
+  soc: ti: ti_sci_pm_domains: Add support for exclusive access
+  soc: ti: ti_sci_pm_domains: Switch to SPDX Licensing
+  arm64: dts: ti: k3-am654: Update the power domain cells
 
+ .../bindings/soc/ti/sci-pm-domain.txt         |  7 ++-
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 26 +++++------
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 10 ++---
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  6 +--
+ drivers/firmware/ti_sci.c                     | 45 ++++++++++++++++++-
+ drivers/soc/ti/ti_sci_pm_domains.c            | 32 ++++++++-----
+ include/linux/soc/ti/ti_sci_protocol.h        |  3 ++
+ 7 files changed, 93 insertions(+), 36 deletions(-)
 
---mvpLiMfbWzRoNl4x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlxxExcACgkQFA3kzBSg
-Kbbf4g//TujUaeMwqhkaKlx4ZBmDq4MuNjaJkLFxuwd6+UM/aLM4g81XAUhNIF8f
-Rj0fDiMgsxOGmxlq668hN8vayZen0fcCYM2yAhjfMstIhALWF10x8ckupGd82YMm
-BAJ1eigAf02PO9Af/JDPlAdGHmoCQ6bkbawB7QFlfTqkaBrPJPOjdL2V0kO+Orh8
-jhuuZLr2X2IdmYzx+egDvL7AWDypuruwonJTFpw5reosqKPmRzH6IZJ4w+iFo2G6
-8bjSvpoyyci83TTaLFuhMcxvVH/42Izq7vHq9uRIgJakcr7TSitOPhx3Pl+Y8PLL
-/rJYSt1jwozxMA1dIbB3thjF/hW8qe7KgZByKd46ax3P5iikKoYlkWal5CW+OIEI
-D1TKycw9tXGlcVGKHJK+kVmOOOihp7gD5cNmg4bqULiYe+sEAzVhVTY+xzkL3eM5
-vBtRRB5TdZeDNJ0kDZbXLlJgPJSnTgYZpbMsRPy40w7WLj5mw7/Zg6xBul3sYiu8
-cYdq8jHGhavXhgOWeJN23hYdF3ly/SLSMfoswbRWBZ3zzCSjrKu1+8tRfVvGS+Gh
-HzTuDa09MgX50JwsNw+XSzPugZWDFrEG1l9rS7yuR6e31b6bHxVKZjsky8i8u68F
-AJZYZS7V5lIUgE8WXl6T/DXU5DGM/1Wzxd/zzOnCt5wnfGhosHc=
-=H1Po
------END PGP SIGNATURE-----
-
---mvpLiMfbWzRoNl4x--
+-- 
+2.19.2
