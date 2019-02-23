@@ -1,32 +1,74 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: display: Add bindings for
- OSD101T2587-53TS panel
-Date: Fri, 22 Feb 2019 18:20:22 -0600
-Message-ID: <20190223002022.GA6504@bogus>
-References: <20190222131618.20520-1-peter.ujfalusi@ti.com>
- <20190222131618.20520-4-peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add interconnect binding for
+ GENI QUP
+Date: Fri, 22 Feb 2019 18:26:55 -0600
+Message-ID: <20190223002655.GA6631@bogus>
+References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
+ <1548138816-1149-2-git-send-email-alokc@codeaurora.org>
+ <20190123170758.GB512@tuxbook-pro>
+ <5ca1ce61-c458-5550-f89d-ab361f1ec456@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190222131618.20520-4-peter.ujfalusi@ti.com>
+In-Reply-To: <5ca1ce61-c458-5550-f89d-ab361f1ec456@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tomi.valkeinen@ti.com, sam@ravnborg.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Alok Chauhan <alokc@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, dianders@chromium.org, swboyd@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Feb 2019 15:16:17 +0200, Peter Ujfalusi wrote:
-> This adds the device-tree bindings for the OSD101T2587-53TS 10.1"
-> 1920x1200 panel from One Stop Displays.
+On Wed, Jan 23, 2019 at 08:41:20PM +0200, Georgi Djakov wrote:
+> Hi,
 > 
-> Note: the panel is similar to OSD101T2045-53TS, but it needs additional
-> MIPI_DSI_TURN_ON_PERIPHERAL message from the host.
+> On 1/23/19 19:07, Bjorn Andersson wrote:
+> > On Mon 21 Jan 22:33 PST 2019, Alok Chauhan wrote:
+> > 
+> >> Add documentation for the interconnect and interconnect-names bindings
+> >> for the GENI QUP as detailed by bindings/interconnect/interconnect.txt.
+> >>
+> >> Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 10 ++++++++++
+> >>  1 file changed, 10 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> >> index dab7ca9..44d7e02 100644
+> >> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> >> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> >> @@ -17,6 +17,12 @@ Required properties if child node exists:
+> >>  - #address-cells: 	Must be <1> for Serial Engine Address
+> >>  - #size-cells: 		Must be <1> for Serial Engine Address Size
+> >>  - ranges: 		Must be present
+> >> +- interconnects:	phandle to a interconnect provider. Please refer
+> >> +			../interconnect/interconnect.txt for details.
+> >> +			Must be 2 paths corresponding to 2 AXI ports.
+> >> +- interconnect-names:	Port names to differentiate between the
+> > 
+> > s/Port names/Path names/
+> > 
+> >> +			2 interconnect paths defined with interconnect
+> >> +			specifier.
+> > 
+> > These two names are significant in that they must match what the driver
+> > expects, hence you must actually specify them here.
+> > 
+> > And as the scope of these strings are local to the QUP node you can omit
+> > "qup" from them, so make them "memory" and "config" (or perhaps iface,
+> > to match the clock naming?).
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  .../display/panel/osd,osd101t2587-53ts.txt         | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/osd,osd101t2587-53ts.txt
-> 
+> Actually there was a discussion in the past where we decided include
+> both the src and dst endpoint names in this property so that there is
+> some symmetry with the "interconnects" property. It would be nice to be
+> consistent across different drivers at least for now.
+> If we want to denote the master and slave ports here, my two cents would
+> be for "qup-mem" and "cpu-qup" or something similar?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Well, there's a proposal from Maxime to add 'dma-memory' or something. 
+You all need to sort this out.
+
+I assume config or cpu-qup is for register access? Why is this needed? 
+That should get described thru the DT tree. The interconnect stuff was 
+supposed to be for the non-cpu centric view (i.e. DMA masters). Maybe 
+it's fine, but that's not my initial reaction.
+
+Rob
