@@ -1,73 +1,52 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V4 2/2] dt-bindings: imx: add new resources to scu resource
- table
-Date: Sat, 23 Feb 2019 03:19:41 +0000
-Message-ID: <1550891655-29043-2-git-send-email-Anson.Huang@nxp.com>
-References: <1550891655-29043-1-git-send-email-Anson.Huang@nxp.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 0/2] i2c: designware: Add support for a bus clock
+Date: Sat, 23 Feb 2019 10:32:07 +0100
+Message-ID: <20190223093207.GC1018@kunai>
+References: <1550765459-14519-1-git-send-email-gareth.williams.jx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mvpLiMfbWzRoNl4x"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550891655-29043-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1550765459-14519-1-git-send-email-gareth.williams.jx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Gareth Williams <gareth.williams.jx@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add new resources as below according to latest system
-controller firmware for new features:
 
-	IMX_SC_R_PERF
-	IMX_SC_R_OCRAM
-	IMX_SC_R_DMA_5_CH0
-	IMX_SC_R_DMA_5_CH1
-	IMX_SC_R_DMA_5_CH2
-	IMX_SC_R_DMA_5_CH3
-	IMX_SC_R_ATTESTATION
+--mvpLiMfbWzRoNl4x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-No changes since V3.
----
- include/dt-bindings/firmware/imx/rsrc.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+On Thu, Feb 21, 2019 at 04:10:57PM +0000, Gareth Williams wrote:
+> The Synopsys I2C Controller has a peripheral clock that some SoCs=20
+> require to access the registers. This series also details the new clock
+> property in the bindings documentation.
 
-diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/=
-firmware/imx/rsrc.h
-index d69f934..4e61f64 100644
---- a/include/dt-bindings/firmware/imx/rsrc.h
-+++ b/include/dt-bindings/firmware/imx/rsrc.h
-@@ -36,6 +36,7 @@
- #define IMX_SC_R_DC_0_BLIT1		20
- #define IMX_SC_R_DC_0_BLIT2		21
- #define IMX_SC_R_DC_0_BLIT_OUT		22
-+#define IMX_SC_R_PERF			23
- #define IMX_SC_R_DC_0_WARP		25
- #define IMX_SC_R_DC_0_VIDEO0		28
- #define IMX_SC_R_DC_0_VIDEO1		29
-@@ -322,7 +323,7 @@
- #define IMX_SC_R_IRQSTR_SCU2		321
- #define IMX_SC_R_IRQSTR_DSP		322
- #define IMX_SC_R_ELCDIF_PLL		323
--#define IMX_SC_R_UNUSED6		324
-+#define IMX_SC_R_OCRAM			324
- #define IMX_SC_R_AUDIO_PLL_0		325
- #define IMX_SC_R_PI_0			326
- #define IMX_SC_R_PI_0_PWM_0		327
-@@ -539,6 +540,11 @@
- #define IMX_SC_R_VPU_MU_3		538
- #define IMX_SC_R_VPU_ENC_1		539
- #define IMX_SC_R_VPU			540
--#define IMX_SC_R_LAST			541
-+#define IMX_SC_R_DMA_5_CH0		541
-+#define IMX_SC_R_DMA_5_CH1		542
-+#define IMX_SC_R_DMA_5_CH2		543
-+#define IMX_SC_R_DMA_5_CH3		544
-+#define IMX_SC_R_ATTESTATION		545
-+#define IMX_SC_R_LAST			546
-=20
- #endif /* __DT_BINDINGS_RSCRC_IMX_H */
---=20
-2.7.4
+Your SoB is missing for patch 1. And besides my ack, I'd still like some
+feedback from the actual driver maintainers.
+
+
+--mvpLiMfbWzRoNl4x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlxxExcACgkQFA3kzBSg
+Kbbf4g//TujUaeMwqhkaKlx4ZBmDq4MuNjaJkLFxuwd6+UM/aLM4g81XAUhNIF8f
+Rj0fDiMgsxOGmxlq668hN8vayZen0fcCYM2yAhjfMstIhALWF10x8ckupGd82YMm
+BAJ1eigAf02PO9Af/JDPlAdGHmoCQ6bkbawB7QFlfTqkaBrPJPOjdL2V0kO+Orh8
+jhuuZLr2X2IdmYzx+egDvL7AWDypuruwonJTFpw5reosqKPmRzH6IZJ4w+iFo2G6
+8bjSvpoyyci83TTaLFuhMcxvVH/42Izq7vHq9uRIgJakcr7TSitOPhx3Pl+Y8PLL
+/rJYSt1jwozxMA1dIbB3thjF/hW8qe7KgZByKd46ax3P5iikKoYlkWal5CW+OIEI
+D1TKycw9tXGlcVGKHJK+kVmOOOihp7gD5cNmg4bqULiYe+sEAzVhVTY+xzkL3eM5
+vBtRRB5TdZeDNJ0kDZbXLlJgPJSnTgYZpbMsRPy40w7WLj5mw7/Zg6xBul3sYiu8
+cYdq8jHGhavXhgOWeJN23hYdF3ly/SLSMfoswbRWBZ3zzCSjrKu1+8tRfVvGS+Gh
+HzTuDa09MgX50JwsNw+XSzPugZWDFrEG1l9rS7yuR6e31b6bHxVKZjsky8i8u68F
+AJZYZS7V5lIUgE8WXl6T/DXU5DGM/1Wzxd/zzOnCt5wnfGhosHc=
+=H1Po
+-----END PGP SIGNATURE-----
+
+--mvpLiMfbWzRoNl4x--
