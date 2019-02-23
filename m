@@ -1,80 +1,75 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v2] checkpatch: handle PCI/USB VID,PID in DT compatible
-Date: Fri, 22 Feb 2019 18:24:40 -0800
-Message-ID: <20190223022440.146915-1-briannorris@chromium.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH RESEND V6 2/2] clk: imx: scu: add cpu frequency scaling
+ support
+Date: Sat, 23 Feb 2019 02:32:28 +0000
+Message-ID: <DB3PR0402MB3916BA142113B84C0199C93EF5780@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550802436-13007-1-git-send-email-Anson.Huang@nxp.com>
+ <1550802436-13007-2-git-send-email-Anson.Huang@nxp.com>
+ <155086249004.77512.8709011386763447047@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <155086249004.77512.8709011386763447047@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>
+To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Documentation/devicetree/bindings/usb/usb-device.txt describes the
-'usbVID,...' compatible format, where VID is lower-case hexadecimal,
-with leading zeroes suppressed. Allow it here without complaining about
-lack of documentation (we don't need a new entry for every ID).
-
-PCI has a similar format
-Documentation/devicetree/bindings/pci/pci.txt
-http://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
-
-For both, I try to detect something that's close to a VID,PID, but I
-intentionally don't parse beyond 4 characters of PID, since USB supports
-extending with an interface index, and PCI supports additional subystem
-IDs.
-
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
-Overall, this got a little more unwieldy, but it works.
-
-v2:
- * Include PCI in addition to USB
- * Add special warning for leading zeroes and for upper-case
- * Move the VID,PID check up higher, so we don't complain about
-   documentation at all if using the correct format
----
- scripts/checkpatch.pl | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index b737ca9d7204..9e770a8f5dfa 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3001,6 +3001,24 @@ sub process {
- 			my $vp_file = $dt_path . "vendor-prefixes.txt";
- 
- 			foreach my $compat (@compats) {
-+				my ($vendor, $device) = ("", "");
-+				if ($compat =~ /^([a-zA-Z0-9\-]+)\,(.*)$/) {
-+					($vendor, $device) = ($1, $2);
-+				}
-+
-+				# PCI and USB VIDs/PIDs have special rules.
-+				if ($vendor =~ /^(usb|pci)[0-9a-fA-F]{1,4}$/ && $device =~ /^[0-9a-fA-F]{1,4}/) {
-+					if ($vendor =~ /^(usb|pci).*[A-F]/ || $device =~ /[A-F]/) {
-+						WARN("UNDOCUMENTED_DT_STRING",
-+						     "VID/PID in DT compatible string (\"$compat\") should use lower-case hexadecimal\n" . $herecurr);
-+					}
-+					if ($vendor =~ /^(usb|pci)0/ || $device =~ /^0/) {
-+						WARN("UNDOCUMENTED_DT_STRING",
-+						     "VID/PID in DT compatible string (\"$compat\") should omit leading zeroes\n" . $herecurr);
-+					}
-+					next;
-+				}
-+
- 				my $compat2 = $compat;
- 				$compat2 =~ s/\,[a-zA-Z0-9]*\-/\,<\.\*>\-/;
- 				my $compat3 = $compat;
-@@ -3011,8 +3029,7 @@ sub process {
- 					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
- 				}
- 
--				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
--				my $vendor = $1;
-+				next if "$vendor" eq "";
- 				`grep -Eq "^$vendor\\b" $vp_file`;
- 				if ( $? >> 8 ) {
- 					WARN("UNDOCUMENTED_DT_STRING",
--- 
-2.21.0.rc0.258.g878e2cd30e-goog
+SGksIFN0ZWhwZW4NCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGVwaGVuIEJveWQgW21haWx0bzpzYm95ZEBrZXJu
+ZWwub3JnXQ0KPiBTZW50OiAyMDE55bm0MuaciDIz5pelIDM6MDgNCj4gVG86IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+IGtlcm5lbEBwZW5ndXRyb25p
+eC5kZTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4gY2xr
+QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbWFyay5ydXRs
+YW5kQGFybS5jb207DQo+IG10dXJxdWV0dGVAYmF5bGlicmUuY29tOyByb2JoK2R0QGtlcm5lbC5v
+cmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IEFpc2hl
+bmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBBbnNvbg0KPiBIdWFuZyA8YW5zb24uaHVh
+bmdAbnhwLmNvbT47IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCj4gQ2M6
+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+UkVTRU5EIFY2IDIvMl0gY2xrOiBpbXg6IHNjdTogYWRkIGNwdSBmcmVxdWVuY3kgc2NhbGluZw0K
+PiBzdXBwb3J0DQo+IA0KPiBRdW90aW5nIEFuc29uIEh1YW5nICgyMDE5LTAyLTIxIDE4OjMyOjEw
+KQ0KPiA+IE9uIE5YUCdzIGkuTVggU29DcyB3aXRoIHN5c3RlbSBjb250cm9sbGVyIGluc2lkZSwg
+Q1BVIGZyZXF1ZW5jeQ0KPiA+IHNjYWxpbmcgY2FuIE9OTFkgYmUgZG9uZSBieSBzeXN0ZW0gY29u
+dHJvbGxlciBmaXJtd2FyZSwgYW5kIGl0IGNhbg0KPiA+IE9OTFkgYmUgcmVxdWVzdGVkIGZyb20g
+c2VjdXJlIG1vZGUsIHNvIExpbnV4IGtlcm5lbCBoYXMgdG8gY2FsbCBBUk0NCj4gPiBTTUMgdG8g
+dHJhcCB0byBBUk0tVHJ1c3RlZC1GaXJtd2FyZSB0byByZXF1ZXN0IHN5c3RlbSBjb250cm9sbGVy
+DQo+ID4gZmlybXdhcmUgdG8gZG8gQ1BVIGZyZXF1ZW5jeSBzY2FsaW5nLg0KPiA+DQo+ID4gVGhp
+cyBwYXRjaCBhZGRzIGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgQ1BVIGZyZXF1ZW5jeSBzY2FsaW5n
+IHN1cHBvcnQsDQo+ID4gaXQgcmV1c2VzIGNwdWZyZXEtZHQgZHJpdmVyIGFuZCBpbXBsZW1lbnQg
+dGhlIENQVSBmcmVxdWVuY3kgc2NhbGluZw0KPiA+IGluc2lkZSBTQ1UgY2xvY2sgZHJpdmVyLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
+DQo+IA0KPiBBaCBJIG1pc3NlZCBvbmUgdGhpbmcsIHNlZSBiZWxvdy4NCj4gDQo+ID4gQEAgLTE4
+MCw2ICsxODUsMjMgQEAgc3RhdGljIGxvbmcgY2xrX3NjdV9yb3VuZF9yYXRlKHN0cnVjdCBjbGtf
+aHcgKmh3LA0KPiB1bnNpZ25lZCBsb25nIHJhdGUsDQo+ID4gICAgICAgICByZXR1cm4gcmF0ZTsN
+Cj4gPiAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBpbnQgY2xrX3NjdV9hdGZfc2V0X2NwdV9yYXRlKHN0
+cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsDQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBwYXJlbnRfcmF0ZSkgew0KPiA+ICsg
+ICAgICAgc3RydWN0IGNsa19zY3UgKmNsayA9IHRvX2Nsa19zY3UoaHcpOw0KPiA+ICsgICAgICAg
+c3RydWN0IGFybV9zbWNjY19yZXMgcmVzOw0KPiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyBjbHVz
+dGVyX2lkOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChjbGstPnJzcmNfaWQgPT0gSU1YX1NDX1Jf
+QTM1KQ0KPiA+ICsgICAgICAgICAgICAgICBjbHVzdGVyX2lkID0gMDsNCj4gDQo+IERvIHdlIHN0
+aWxsIG5lZWQgdG8gY2hlY2sgdGhpcyBhbnltb3JlPyBXaHkgbm90IGp1c3QgYWx3YXlzIHVzZSBj
+bHVzdGVyX2lkIDA/DQoNClRoZSBpLk1YOFFYUCBPTkxZIGhhcyAxIGNsdXN0ZXIgbmFtZWQgQTM1
+LCB3aGlsZSBvbiBpLk1YOFFNIHRoZXJlIHdpbGwgYmUNCjIgY2x1c3RlcnMsIEE1MyBhbmQgQTcy
+LCBzbyB3ZSBuZWVkIHRvIHVzZSB0aGUgcmVzb3VyY2UgSUQgdG8gaW5pdGlhbGl6ZSB0aGUgY2x1
+c3Rlcl9pZC4NCg0KPiANCj4gPiArDQo+ID4gKyAgICAgICAvKiBDUFUgZnJlcXVlbmN5IHNjYWxp
+bmcgY2FuIE9OTFkgYmUgZG9uZSBieSBBUk0tVHJ1c3RlZC1GaXJtd2FyZQ0KPiAqLw0KPiA+ICsg
+ICAgICAgYXJtX3NtY2NjX3NtYyhJTVhfU0lQX0NQVUZSRVEsIElNWF9TSVBfU0VUX0NQVUZSRVEs
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNsdXN0ZXJfaWQsIHJhdGUsIDAsIDAsIDAsIDAs
+ICZyZXMpOw0KPiANCj4gQmVjYXVzZSBub3QgY2hlY2tpbmcgd291bGQgbWFrZSB0aGlzIHdvcmss
+IHZzLiBjaGVja2luZyBjYXVzZXMgdGhpcyBjb2RlIHRvDQo+IHNvbWV0aW1lcyB1c2UgYW4gdW5p
+bml0aWFsaXplZCB2YWx1ZSBmcm9tIHRoZSBzdGFjay4NCg0KIDg5ICsgICAgICAgaWYgKHJzcmNf
+aWQgPT0gSU1YX1NDX1JfQTM1KQ0KIDkwICsgICAgICAgICAgICAgICBpbml0Lm9wcyA9ICZjbGtf
+c2N1X2NwdV9vcHM7DQogOTEgKyAgICAgICBlbHNlDQogOTIgKyAgICAgICAgICAgICAgIGluaXQu
+b3BzID0gJmNsa19zY3Vfb3BzOw0KDQpJIHRoaW5rIGl0IHNob3VsZCBiZSBnb29kLiBPbmx5IHdo
+ZW4gcGxhbiB0byBzdXBwb3J0IGNwdS1mcmVxIHNjYWxpbmcsIHRoZW4gdGhlDQpDUFUgY2xvY2sg
+d2lsbCBiZSBzd2l0Y2hlZCB0byB1c2UgY2xrX3NjdV9jcHVfb3BzIGFuZCB0aGUgY2x1dHNlcl9p
+ZCBpbml0aWFsaXphdGlvbg0Kd2lsbCBiZSBkb25lIGFjY29yZGluZyB0byBDUFUgcmVzb3VyY2Uu
+IEZvciBleGFtcGxlLCB3aGVuIHdlIHBsYW4gdG8gc3VwcG9ydCBpLk1YOFFNDQpjcHUtZnJlcSBz
+Y2FsaW5nLCB3ZSB3aWxsIGFkZCBBNTMgYW5kIEE3MiBjaGVjayBoZXJlIGFuZCBzd2l0Y2ggdGhl
+IGNsb2NrIG9wcyB0byBjbGtfc2N1X2NwdV9vcHMsDQphbHNvIHdlIHdpbGwgYWRkIHRoZSBjbHVz
+dGVyX2lkIGluaXRpYWxpemF0aW9uIGluIHRoZSBTTUMgY2xvY2sgc2V0IHJhdGUuDQoNClRoYW5r
+cywNCkFuc29uLg0KDQo+IA0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiAwOw0KPiA+ICt9DQo+
+ID4gKw0K
