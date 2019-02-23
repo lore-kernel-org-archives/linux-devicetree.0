@@ -1,134 +1,66 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V3 2/2] hwmon: pwm-fan: Add optional regulator support
-Date: Sat, 23 Feb 2019 09:03:37 -0800
-Message-ID: <20190223170337.GA14857@roeck-us.net>
-References: <1550843124-10992-1-git-send-email-stefan.wahren@i2se.com>
- <1550843124-10992-3-git-send-email-stefan.wahren@i2se.com>
+Subject: Re: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Date: Sat, 23 Feb 2019 09:08:10 -0800
+Message-ID: <bb19470c-1590-f8dd-72e6-b382444d7902@roeck-us.net>
+References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+ <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com>
+ <20190222195217.GA22194@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1550843124-10992-3-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <20190222195217.GA22194@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jag>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 22, 2019 at 02:45:24PM +0100, Stefan Wahren wrote:
-> This adds optional regulator support to the pwm-fan driver. This is
-> necessary for pwm fans which are powered by a switchable supply.
+On 2/22/19 11:52 AM, Rob Herring wrote:
+> On Mon, Feb 18, 2019 at 06:53:48AM +0000, Anson Huang wrote:
+>> Add i.MX8QXP system controller watchdog binding.
+>>
+>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>> ---
+>> Changes since V1:
+>> 	- update dts node name to "watchdog";
+>> ---
+>>   Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+>> index 4b79751..f388ec6 100644
+>> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+>> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+>> @@ -136,6 +136,12 @@ Required properties:
+>>   			   resource id for thermal driver to get temperature via
+>>   			   SCU IPC.
+>>   
+>> +Watchdog bindings based on SCU Message Protocol
+>> +------------------------------------------------------------
+>> +
+>> +Required properties:
+>> +- compatible: should be "fsl,imx8qxp-sc-wdt";
+>> +
+>>   Example (imx8qxp):
+>>   -------------
+>>   lsio_mu1: mailbox@5d1c0000 {
+>> @@ -188,6 +194,10 @@ firmware {
+>>   			tsens-num = <1>;
+>>   			#thermal-sensor-cells = <1>;
+>>   		};
+>> +
+>> +		watchdog: watchdog {
+>> +			compatible = "fsl,imx8qxp-sc-wdt";
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> As-is, there's no reason for this to be in DT. The parent node's driver
+> can instantiate the wdog.
+> 
 
-Applied to hwmon-next.
+As the driver is currently written, you are correct, since it doesn't accept
+watchdog timeout configuration through devicetree.
+
+Question is if that is intended. Is it ?
 
 Thanks,
 Guenter
-
-> ---
->  drivers/hwmon/pwm-fan.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 42 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 2c94482..167221c 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -23,6 +23,7 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwm.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/sysfs.h>
->  #include <linux/thermal.h>
->  
-> @@ -31,6 +32,7 @@
->  struct pwm_fan_ctx {
->  	struct mutex lock;
->  	struct pwm_device *pwm;
-> +	struct regulator *reg_en;
->  	unsigned int pwm_value;
->  	unsigned int pwm_fan_state;
->  	unsigned int pwm_fan_max_state;
-> @@ -231,6 +233,21 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, ctx);
->  
-> +	ctx->reg_en = devm_regulator_get_optional(&pdev->dev, "fan");
-> +	if (IS_ERR(ctx->reg_en)) {
-> +		if (PTR_ERR(ctx->reg_en) != -ENODEV)
-> +			return PTR_ERR(ctx->reg_en);
-> +
-> +		ctx->reg_en = NULL;
-> +	} else {
-> +		ret = regulator_enable(ctx->reg_en);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"Failed to enable fan supply: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	ctx->pwm_value = MAX_PWM;
->  
->  	/* Set duty cycle to maximum allowed and enable PWM output */
-> @@ -241,7 +258,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  	ret = pwm_apply_state(ctx->pwm, &state);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to configure PWM\n");
-> -		return ret;
-> +		goto err_reg_disable;
->  	}
->  
->  	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
-> @@ -277,6 +294,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  	state.enabled = false;
->  	pwm_apply_state(ctx->pwm, &state);
->  
-> +err_reg_disable:
-> +	if (ctx->reg_en)
-> +		regulator_disable(ctx->reg_en);
-> +
->  	return ret;
->  }
->  
-> @@ -287,6 +308,10 @@ static int pwm_fan_remove(struct platform_device *pdev)
->  	thermal_cooling_device_unregister(ctx->cdev);
->  	if (ctx->pwm_value)
->  		pwm_disable(ctx->pwm);
-> +
-> +	if (ctx->reg_en)
-> +		regulator_disable(ctx->reg_en);
-> +
->  	return 0;
->  }
->  
-> @@ -307,6 +332,14 @@ static int pwm_fan_suspend(struct device *dev)
->  		pwm_disable(ctx->pwm);
->  	}
->  
-> +	if (ctx->reg_en) {
-> +		ret = regulator_disable(ctx->reg_en);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to disable fan supply: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -317,6 +350,14 @@ static int pwm_fan_resume(struct device *dev)
->  	unsigned long duty;
->  	int ret;
->  
-> +	if (ctx->reg_en) {
-> +		ret = regulator_enable(ctx->reg_en);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	if (ctx->pwm_value == 0)
->  		return 0;
->  
