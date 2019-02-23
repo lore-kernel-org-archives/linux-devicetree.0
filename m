@@ -1,45 +1,87 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH] checkpatch: don't complain about "undocumented" USB VID
-Date: Fri, 22 Feb 2019 17:00:40 -0800
-Message-ID: <CA+ASDXOy64dLEOXwQZ9Mv9+gD7qecv5njTYAMmV49qonOaswNg@mail.gmail.com>
-References: <20190222225545.78031-1-briannorris@chromium.org> <82b7d3bb2799468a715e280366401f732d83cfdf.camel@perches.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v9 14/27] pwm: jz4740: Improve algorithm of clock
+ calculation
+Date: Fri, 22 Feb 2019 22:17:58 -0300
+Message-ID: <1550884678.20534.0@crapouillou.net>
+References: <20181227181319.31095-1-paul@crapouillou.net>
+        <20181227181319.31095-15-paul@crapouillou.net>
+        <20190105195725.cuxfge6zkpbt3cyk@pengutronix.de>
+        <1546722339.30174.0@crapouillou.net>
+        <20190105212711.s765knwwerceytvk@pengutronix.de>
+        <1547129096.16183.0@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <82b7d3bb2799468a715e280366401f732d83cfdf.camel@perches.com>
+In-Reply-To: <1547129096.16183.0@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Stephen Boyd <sboyd@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 22, 2019 at 4:52 PM Joe Perches <joe@perches.com> wrote:
->
-> On Fri, 2019-02-22 at 14:55 -0800, Brian Norris wrote:
-> > Documentation/devicetree/bindings/usb/usb-device.txt describes the
-> > 'usbVID,...' compatible format, where VID is hexadecimal, with leading
-> > zeroes suppressed. Allow it here without complaining.
-> []
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
-> > @@ -3012,6 +3012,8 @@ sub process {
-> >                               }
-> >
-> >                               next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
-> > +                             # USB VIDs don't need special vendor prefix documentation.
-> > +                             next if $compat =~ /^usb[1-9a-f][0-9a-f]{0,3},/;
->
-> Maybe check the PID too?
->
->                                 next if $compat =~ /^usb[1-9a-f][0-9a-f]{0,3},[1-9a-f][0-9a-f]{0,3}\b/;
+Hi,
 
-Ah, good point. I shouldn't be allowing, e.g.,
-"usb123,something-that's-not-a-PID".
+Le jeu. 10 janv. 2019 =E0 11:04, Paul Cercueil <paul@crapouillou.net> a=20
+=E9crit :
+> Adding Stephen to the discussion.
+> Adding Stephen to the discussion.
+>=20
+> On Sat, Jan 5, 2019 at 6:27 PM, Uwe Kleine-K=F6nig=20
+> <u.kleine-koenig@pengutronix.de> wrote:
+>> Hello Paul,
+>>=20
+>> On Sat, Jan 05, 2019 at 06:05:38PM -0300, Paul Cercueil wrote:
+>>>  On Sat, Jan 5, 2019 at 4:57 PM, Uwe Kleine-K=F6nig
+>>>  <u.kleine-koenig@pengutronix.de> wrote:
+>>>  > You are assuming stuff here about the parent clk which isn't=20
+>>> =7F=7Fguaranteed
+>>>  > (AFAICT) by the clk framework: If you call clk_round_rate(clk,=20
+>>> =7F=7Frate - 1)
+>>>  > this might well return rate even if the clock could run slower=20
+>>> =7F=7Fthan
+>>>  > rate.
+>>>=20
+>>>  It may not be guaranteed by the clock framework itself, but it is=20
+>>> =7F=7Fguaranteed
+>>>  to behave like that on this family of SoCs.
+>>=20
+>> You shouldn't rely on that. Experience shows that people will start
+>> copying code to machines where this is not guaranteed. Even if they
+>> don't copy and only learn from reading this is bad. Also how do you
+>> guarantee that this won't change in the future making the pwm code=20
+>> =7Fbreak
+>> without noticing?
+>>=20
+>> If you use an API better don't assume more things given than are
+>> guaranteed by the API.
+>>=20
+>> Having said that I would consider it sensible to introduce something
+>> like clk_roundup_rate() and clk_rounddown_rate() which would allow
+>> calculations like that.
+>=20
+> @Stephen:
+> Some context: my algorithm makes use of clk_round_rate(clk, rate - 1)=20
+> to get the
+> next (smaller) clock rate that a clock support.
+>=20
+> Is it something safe to assume? If not is there a better way?
 
-> Maybe add a test for uses of the leading 0?
+Bump.
 
-I suppose that'd be good too. Would help catch problems with the PID,
-at least. (VID problems would fall into the "invalid vendor prefix"
-check that's already present.)
+What should I do here?
+
+>>>  > Wouldn't it make sense to start iterating with rate =3D 0xffff *=20
+>>> =7F=7F1e9 /
+>>>  > period? Otherwise you get bad configurations if rate is=20
+>>> =7F=7Fconsiderable
+>>>  > slower than necessary.
+>>>=20
+>>>  The algorithm will start with 'rate' being the parent clock's=20
+>>> rate, =7F=7Fwhich
+>>>  will always be the highest rate that the child clock will support.
+>>=20
+>> Ah right, I missed that bit.
 
 Thanks,
-Brian
+-Paul
+=
