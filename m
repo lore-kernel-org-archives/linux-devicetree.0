@@ -1,106 +1,146 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/3] clk: imx8mq: initialize clock tree earlier
-Date: Sat, 23 Feb 2019 03:04:13 +0000
-Message-ID: <DB3PR0402MB39163B39C2E45C86FA4B1FA8F5780@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1550828264-9962-1-git-send-email-Anson.Huang@nxp.com>
- <66e1685e5cc3fdcaba6ab55b3d030628c37ef8e2.camel@pengutronix.de>
+From: Min Guo <min.guo@mediatek.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: usb: musb: Add support for MediaTek
+ musb controller
+Date: Sat, 23 Feb 2019 11:04:36 +0800
+Message-ID: <1550891076.12020.30.camel@mhfsdcap03>
+References: <1550561795-31132-1-git-send-email-min.guo@mediatek.com>
+ <1550561795-31132-2-git-send-email-min.guo@mediatek.com>
+ <20190222164923.GA26413@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <66e1685e5cc3fdcaba6ab55b3d030628c37ef8e2.camel@pengutronix.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190222164923.GA26413@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, hdegoede@redhat.com, tony@atomide.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-mediatek@lists.infradead.org, Bin Liu <b-liu@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEx1Y2FzDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTHVjYXMgU3RhY2ggW21haWx0bzpsLnN0YWNoQHBlbmd1
-dHJvbml4LmRlXQ0KPiBTZW50OiAyMDE55bm0MuaciDIy5pelIDE4OjU1DQo+IFRvOiBBbnNvbiBI
-dWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFyay5y
-dXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXgu
-ZGU7DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOyBtdHVycXVl
-dHRlQGJheWxpYnJlLmNvbTsNCj4gc2JveWRAa2VybmVsLm9yZzsgQWJlbCBWZXNhIDxhYmVsLnZl
-c2FAbnhwLmNvbT47IGNjYWlvbmVAYmF5bGlicmUuY29tOw0KPiBhZ3hAc2lneGNwdS5vcmc7IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gY2xrQHZn
-ZXIua2VybmVsLm9yZw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4g
-U3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIGNsazogaW14OG1xOiBpbml0aWFsaXplIGNsb2NrIHRy
-ZWUgZWFybGllcg0KPiANCj4gQW0gRnJlaXRhZywgZGVuIDIyLjAyLjIwMTksIDA5OjQyICswMDAw
-IHNjaHJpZWIgQW5zb24gSHVhbmc6DQo+ID4gQ3VycmVudGx5IG9uIGkuTVg4TVEgcGxhdGZvcm0s
-IGNsb2NrIGRyaXZlciBpcyBwcm9iZWQgbGF0ZXIgdGhhbiBHUElPDQo+ID4gZHJpdmVyLCBhbmQg
-R1BJTyBkcml2ZXIgZG9lcyBOT1QgaGF2ZSBkZWZlciBwcm9iZSBtZWNoYW5pc20gc2luY2UgdGhl
-DQo+ID4gR1BJTyBjbG9jayBpcyBvcHRpb25hbCwNCj4gDQo+IFNvIHRoaXMgaXMgd2hhdCBzaG91
-bGQgYmUgZml4ZWQuIElmIHRoZXJlIGlzIGEgY2xvY2sgcmVmZXJlbmNlIGluIHRoZSBEVCwgaGF2
-aW5nDQo+IHRoZSBjbG9jayBkcml2ZXIgcmVhZHkgaXMgbm90IG9wdGlvbmFsLiBPcHRpb25hbCB0
-byB0aGUgR1BJTyBkcml2ZXIganVzdCBtZWFucw0KPiBpdCB3b24ndCBmYWlsIGlmIHRoZXJlIGlz
-IG5vIGNsb2NrIHJlZmVyZW5jZSBhdCBhbGwuDQo+IElmIHRoZXJlIGlzIGFuZCB0aGUgY2xvY2sg
-cHJvdmlkZXIgaXMgbm90IHlldCB0aGVyZSwgaXQgbmVlZHMgdG8gZG8gYQ0KPiBQUk9CRV9ERUZF
-Ui4NCj4gDQo+IFNvIHRoYXQncyBhIE5BQ0sgb24gdGhpcyBwYXRjaC4NCg0KT0ssIEkgc2VlLiBU
-aGVuIEkgd2lsbCBkbyBhIHBhdGNoIGZvciBHUElPIGRyaXZlciwgYW5kIEkganVzdCBjaGVjayBv
-dGhlciBkcml2ZXJzLCBsb29rcw0KbGlrZSBpbXgyIHdhdGNoZG9nIGRyaXZlciBhbHNvIGhhcyBz
-aW1pbGFyIGlzc3VlLCBJIHdpbGwgZG8gYSBwYXRjaCB0b28uDQoNClRoYW5rcywNCkFuc29uLg0K
-DQo+IA0KPiBSZWdhcmRzLA0KPiBMdWNhcw0KPiANCj4gPiBzb21lIHBsYXRmb3JtcyBoYXZlIEdQ
-SU8gY2xvY2tzIGFuZCBzb21lIGFyZSBOT1QuIFNvIGl0IGlzIGFuIGlzc3VlDQo+ID4gdGhhdCBv
-biBpLk1YOE1RIHBsYXRmb3JtLCB0aGVyZSBhcmUgR1BJTyBjbG9ja3MgZGVmaW5lZCwgYnV0IGR1
-ZSB0bw0KPiA+IGNsb2NrIHRyZWUgaXMgTk9UIHJlYWR5IGR1cmluZyBHUElPIGRyaXZlciBwcm9i
-ZSwgdGhlIEdQSU8gY2xvY2sNCj4gPiBtYW5hZ2VtZW50IHdpbGwgZmFpbCBhbmQgY2F1c2Ugc3lz
-dGVtIGhhbmcgaWYgR1BJTyBjbG9ja3MgYXJlIE9GRiBieQ0KPiA+IGRlZmF1bHQuDQo+ID4NCj4g
-PiBUaGlzIHBhdGNoIGNoYW5nZXMgdGhlIGkuTVg4TVEgY2xvY2sgdHJlZSBpbml0aWFsaXphdGlv
-biB1c2luZw0KPiA+IENMS19PRl9ERUNMQVJFIGluc3RlYWQgb2YgcGxhdGZvcm0gZHJpdmVyIG1v
-ZGVsIHRvIG1ha2UgY2xvY2sgdHJlZQ0KPiA+IHJlYWR5IGVhcmxpZXIgdGhhbiBHUElPIGRyaXZl
-ci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAu
-Y29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtcS5jIHwgMzMgKysr
-KysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3IGlu
-c2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvY2xrL2lteC9jbGstaW14OG1xLmMgYi9kcml2ZXJzL2Nsay9pbXgvY2xrLQ0KPiA+IGlteDht
-cS5jIGluZGV4IDI2YjU3ZjQuLjJkZjE1NzUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9jbGsv
-aW14L2Nsay1pbXg4bXEuYw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OG1xLmMN
-Cj4gPiBAQCAtMjY5LDEwICsyNjksOSBAQCBzdGF0aWMgY29uc3QgY2hhciAqaW14OG1xX2Nsa28y
-X3NlbHNbXSA9DQo+ID4geyJvc2NfMjVtIiwgInN5czJfcGxsXzIwMG0iLCAic3lzMV9wbGxfDQo+
-ID4NCj4gPiAgc3RhdGljIHN0cnVjdCBjbGtfb25lY2VsbF9kYXRhIGNsa19kYXRhOw0KPiA+DQo+
-ID4gLXN0YXRpYyBpbnQgaW14OG1xX2Nsb2Nrc19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KPiA+ICtzdGF0aWMgdm9pZCBfX2luaXQgaW14OG1xX2Nsb2Nrc19pbml0KHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqbnApDQo+ID4gIHsNCj4gPiAtCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZw
-ZGV2LT5kZXY7DQo+ID4gLQlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gZGV2LT5vZl9ub2RlOw0K
-PiA+ICsJc3RydWN0IGRldmljZV9ub2RlICphbmF0b3BfbnA7DQo+ID4gIAl2b2lkIF9faW9tZW0g
-KmJhc2U7DQo+ID4gIAlpbnQgZXJyOw0KPiA+ICAJaW50IGk7DQo+ID4gQEAgLTI4NiwxMCArMjg1
-LDEwIEBAIHN0YXRpYyBpbnQgaW14OG1xX2Nsb2Nrc19wcm9iZShzdHJ1Y3QNCj4gPiBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYpDQo+ID4gIAljbGtzW0lNWDhNUV9DTEtfRVhUM10gPSBvZl9jbGtfZ2V0
-X2J5X25hbWUobnAsICJjbGtfZXh0MyIpOw0KPiA+ICAJY2xrc1tJTVg4TVFfQ0xLX0VYVDRdID0g
-b2ZfY2xrX2dldF9ieV9uYW1lKG5wLCAiY2xrX2V4dDQiKTsNCj4gPg0KPiA+IC0JbnAgPSBvZl9m
-aW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAiZnNsLGlteDhtcS1hbmF0b3AiKTsNCj4g
-PiAtCWJhc2UgPSBvZl9pb21hcChucCwgMCk7DQo+ID4gKwlhbmF0b3BfbnAgPSBvZl9maW5kX2Nv
-bXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAiZnNsLGlteDhtcS0NCj4gPiBhbmF0b3AiKTsNCj4g
-PiArCWJhc2UgPSBvZl9pb21hcChhbmF0b3BfbnAsIDApOw0KPiA+ICAJaWYgKFdBUk5fT04oIWJh
-c2UpKQ0KPiA+IC0JCXJldHVybiAtRU5PTUVNOw0KPiA+ICsJCXJldHVybjsNCj4gPg0KPiA+ICAJ
-Y2xrc1tJTVg4TVFfQVJNX1BMTF9SRUZfU0VMXSA9IGlteF9jbGtfbXV4KCJhcm1fcGxsX3JlZl9z
-ZWwiLA0KPiBiYXNlICsNCj4gPiAweDI4LCAxNiwgMiwgcGxsX3JlZl9zZWxzLCBBUlJBWV9TSVpF
-KHBsbF9yZWZfc2VscykpOw0KPiA+ICAJY2xrc1tJTVg4TVFfR1BVX1BMTF9SRUZfU0VMXSA9IGlt
-eF9jbGtfbXV4KCJncHVfcGxsX3JlZl9zZWwiLA0KPiBiYXNlICsNCj4gPiAweDE4LCAxNiwgMiwg
-cGxsX3JlZl9zZWxzLCBBUlJBWV9TSVpFKHBsbF9yZWZfc2VscykpOyBAQCAtMzg5LDEwDQo+ID4g
-KzM4OCw5IEBAIHN0YXRpYyBpbnQgaW14OG1xX2Nsb2Nrc19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQ0KPiA+ICAJY2xrc1tJTVg4TVFfU1lTMl9QTExfNTAwTV0gPQ0KPiA+IGlt
-eF9jbGtfZml4ZWRfZmFjdG9yKCJzeXMyX3BsbF81MDBtIiwgInN5czJfcGxsX291dCIsIDEsIDIp
-Ow0KPiA+ICAJY2xrc1tJTVg4TVFfU1lTMl9QTExfMTAwME1dID0NCj4gPiBpbXhfY2xrX2ZpeGVk
-X2ZhY3Rvcigic3lzMl9wbGxfMTAwMG0iLCAic3lzMl9wbGxfb3V0IiwgMSwgMSk7DQo+ID4NCj4g
-PiAtCW5wID0gZGV2LT5vZl9ub2RlOw0KPiA+ICAJYmFzZSA9IG9mX2lvbWFwKG5wLCAwKTsNCj4g
-PiAgCWlmIChXQVJOX09OKCFiYXNlKSkNCj4gPiAtCQlyZXR1cm4gLUVOT01FTTsNCj4gPiArCQly
-ZXR1cm47DQo+ID4NCj4gPiAgCS8qIENPUkUgKi8NCj4gPiAgCWNsa3NbSU1YOE1RX0NMS19BNTNf
-U1JDXSA9IGlteF9jbGtfbXV4MigiYXJtX2E1M19zcmMiLCBiYXNlICsNCj4gPiAweDgwMDAsIDI0
-LCAzLCBpbXg4bXFfYTUzX3NlbHMsIEFSUkFZX1NJWkUoaW14OG1xX2E1M19zZWxzKSk7IEBADQo+
-ID4gLTU2OCwyMiArNTY2LDUgQEAgc3RhdGljIGludCBpbXg4bXFfY2xvY2tzX3Byb2JlKHN0cnVj
-dA0KPiA+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPg0KPiA+ICAJZXJyID0gb2ZfY2xrX2Fk
-ZF9wcm92aWRlcihucCwgb2ZfY2xrX3NyY19vbmVjZWxsX2dldCwgJmNsa19kYXRhKTsNCj4gPiAg
-CVdBUk5fT04oZXJyKTsNCj4gPiAtDQo+ID4gLQlyZXR1cm4gZXJyOw0KPiA+ICB9DQo+ID4gLQ0K
-PiA+IC1zdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBpbXg4bXFfY2xrX29mX21hdGNo
-W10gPSB7DQo+ID4gLQl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg4bXEtY2NtIiB9LA0KPiA+IC0J
-eyAvKiBTZW50aW5lbCAqLyB9LA0KPiA+IC19Ow0KPiA+IC1NT0RVTEVfREVWSUNFX1RBQkxFKG9m
-LCBpbXg4bXFfY2xrX29mX21hdGNoKTsNCj4gPiAtDQo+ID4gLQ0KPiA+IC1zdGF0aWMgc3RydWN0
-IHBsYXRmb3JtX2RyaXZlciBpbXg4bXFfY2xrX2RyaXZlciA9IHsNCj4gPiAtCS5wcm9iZSA9IGlt
-eDhtcV9jbG9ja3NfcHJvYmUsDQo+ID4gLQkuZHJpdmVyID0gew0KPiA+IC0JCS5uYW1lID0gImlt
-eDhtcS1jY20iLA0KPiA+IC0JCS5vZl9tYXRjaF90YWJsZSA9IG9mX21hdGNoX3B0cihpbXg4bXFf
-Y2xrX29mX21hdGNoKSwNCj4gPiAtCX0sDQo+ID4gLX07DQo+ID4gLW1vZHVsZV9wbGF0Zm9ybV9k
-cml2ZXIoaW14OG1xX2Nsa19kcml2ZXIpOw0KPiA+ICtDTEtfT0ZfREVDTEFSRShpbXg4bXEsICJm
-c2wsaW14OG1xLWNjbSIsIGlteDhtcV9jbG9ja3NfaW5pdCk7DQoNCg==
+On Fri, 2019-02-22 at 10:49 -0600, Rob Herring wrote:
+> On Tue, Feb 19, 2019 at 03:36:30PM +0800, min.guo@mediatek.com wrote:
+> > From: Min Guo <min.guo@mediatek.com>
+> > 
+> > This adds support for MediaTek musb controller in
+> > host, peripheral and otg mode.
+> > 
+> > Signed-off-by: Min Guo <min.guo@mediatek.com>
+> > ---
+> > changes in v5:
+> > suggested by Rob:
+> > 1. Modify compatible as 
+> > - compatible : should be one of:
+> >                "mediatek,mt-2701"
+> >                ...
+> >                followed by "mediatek,mtk-musb"
+> > 2. Add usb connector child node
+> > 
+> > changes in v4:
+> > suggested by Sergei:
+> > 1. String alignment
+> > 
+> > changes in v3:
+> > 1. no changes
+> > 
+> > changes in v2:
+> > suggested by Bin:
+> > 1. Modify DRC to DRD
+> > suggested by Rob:
+> > 2. Drop the "<soc-model>-musb" in compatible
+> > 3. Remove phy-names
+> > 4. Add space after comma in clock-names
+> > ---
+> >  .../devicetree/bindings/usb/mediatek,musb.txt      | 54 ++++++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > new file mode 100644
+> > index 0000000..0632e6e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > @@ -0,0 +1,54 @@
+> > +MediaTek musb DRD/OTG controller
+> > +-------------------------------------------
+> > +
+> > +Required properties:
+> > + - compatible      : should be one of:
+> > +                     "mediatek,mt-2701"
+> 
+> That looks like a top-level SoC compatible and doesn't match the 
+> example.
+"mediatek,mt-2701" is an example, just to describe a specific SOC.
+May I modify compatibel like:
+compatible : should be "mediatek,mtk-musb"
+
+> > +                     ...
+> > +                     followed by "mediatek,mtk-musb"
+> > + - reg             : specifies physical base address and size of
+> > +                     the registers
+> > + - interrupts      : interrupt used by musb controller
+> > + - interrupt-names : must be "mc"
+> 
+> Not much point in a name when there is only 1.
+The MUSB core driver has two interrupts, one is for MAC, another for
+DMA, but on MTK platform, there is only a MAC interrupt, musb core
+driver uses platform_get_irq_byname(pdev, "mc") to get this interrupt
+number.
+
+> > + - phys            : PHY specifier for the OTG phy
+> > + - dr_mode         : should be one of "host", "peripheral" or "otg",
+> > +                     refer to usb/generic.txt
+> > + - clocks          : a list of phandle + clock-specifier pairs, one for
+> > +                     each entry in clock-names
+> > + - clock-names     : must contain "main", "mcu", "univpll"
+> > +                     for clocks of controller
+> > +
+> > +Optional properties:
+> > + - power-domains   : a phandle to USB power domain node to control USB's
+> > +                     MTCMOS
+> > +
+> > +Required child nodes:
+> > + usb connector node as defined in bindings/connector/usb-connector.txt
+> > + - extcon          : for VBUS and ID pin changes detection, needed when
+> > +                     supports dual-role mode
+> > + - vbus-supply     : reference to the VBUS regulator, needed when supports
+> > +                     dual-role mode
+> > +
+> > +Example:
+> > +
+> > +usb2: usb@11200000 {
+> > +	compatible = "mediatek,mt2701-musb",
+> > +		     "mediatek,mtk-musb";
+> > +	reg = <0 0x11200000 0 0x1000>;
+> > +	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
+> > +	interrupt-names = "mc";
+> > +	phys = <&u2port2 PHY_TYPE_USB2>;
+> > +	dr_mode = "otg";
+> > +	clocks = <&pericfg CLK_PERI_USB0>,
+> > +		 <&pericfg CLK_PERI_USB0_MCU>,
+> > +		 <&pericfg CLK_PERI_USB_SLV>;
+> > +	clock-names = "main","mcu","univpll";
+> > +	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+> > +	usb_con: connector{
+> > +		compatible = "usb-b-connector";
+> > +		label = "micro-USB";
+> > +		type = "micro";
+> > +		extcon = <&extcon_usb>;
+> 
+> The connector node should replace 'extcon'. Add what you need here 
+> directly (e.g. id-gpios). What you add needs to be defined in 
+> usb-connector.txt.
+OK.
+
+> > +		vbus-supply = <&usb_vbus>;
+> > +	};
+> > +};
+> > -- 
+> > 1.9.1
+> > 
