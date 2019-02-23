@@ -1,42 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] mtd: partitions: Add AFS partitions DT bindings
-Date: Fri, 22 Feb 2019 18:34:22 -0600
-Message-ID: <20190223003422.GA25691@bogus>
-References: <20190123122910.19024-1-linus.walleij@linaro.org>
- <20190123122910.19024-3-linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/6] dt-bindings: usb: xhci-tegra: Add Tegra186 support
+Date: Fri, 22 Feb 2019 18:36:51 -0600
+Message-ID: <20190223003651.GA29316@bogus>
+References: <20190125113013.11447-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190123122910.19024-3-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Linus Walleij <linus.walleij@linaro.org>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+In-Reply-To: <20190125113013.11447-1-thierry.reding@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Jon Hunter <jonathanh@nvidia.com>, JC Kuo <jckuo@nvidia.com>, linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Jan 2019 13:29:09 +0100, Linus Walleij wrote:
-> This adds device tree bindings for ARM Firmware Suite
-> flash partitioning used in NOR flashes on ARM reference
-> designs.
+On Fri, 25 Jan 2019 12:30:08 +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Extend the bindings to cover the set of features found in Tegra186.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->  .../mtd/partitions/arm,arm-firmware-suite.txt   | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/partitions/arm,arm-firmware-suite.txt
+>  .../devicetree/bindings/usb/nvidia,tegra124-xusb.txt          | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
