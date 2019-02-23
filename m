@@ -1,52 +1,137 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 1/3] Input: lpc32xx-key - add clocks property and fix DT
- binding example
-Date: Sat, 23 Feb 2019 13:38:01 +0200
-Message-ID: <41befcd7-5ca4-34c9-6929-1ae1d706b108@mleia.com>
-References: <20190126142921.16041-1-vz@mleia.com>
- <20190126142921.16041-2-vz@mleia.com> <20190223004158.GA3951@bogus>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 3/8] dt-bindings: leds: Add binding for axp20x-led
+ device driver
+Date: Sat, 23 Feb 2019 14:02:32 +0100
+Message-ID: <07d9d8f2-6263-8966-19da-ecaa761b3db9@gmail.com>
+References: <20190215115013.11098-1-stefan@olimex.com>
+ <20190215115013.11098-4-stefan@olimex.com> <20190222195109.GA17753@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190223004158.GA3951@bogus>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190222195109.GA17753@bogus>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylvain Lemieux <slemieux.tyco@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Stefan Mavrodiev <stefan@olimex.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
-
-On 02/23/2019 02:41 AM, Rob Herring wrote:
-> On Sat, 26 Jan 2019 16:29:19 +0200, Vladimir Zapolskiy wrote:
->> The keypad controller on NXP LPC32xx requires its clock gate to be open,
->> therefore add description of the requires 'clocks' property.
+On 2/22/19 8:51 PM, Rob Herring wrote:
+> On Fri, Feb 15, 2019 at 01:50:08PM +0200, Stefan Mavrodiev wrote:
+>> This adds the devicetree bindings for charge led indicator found
+>> on most of X-Powers AXP20X PMICs.
 >>
->> In addition adjust the example by adding description of required 'clocks'
->> property and by fixing 'interrupts' property.
->>
->> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+>> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
 >> ---
->>  Documentation/devicetree/bindings/input/lpc32xx-key.txt | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>   .../devicetree/bindings/leds/leds-axp20x.txt  | 74 +++++++++++++++++++
+>>   1 file changed, 74 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-axp20x.txt b/Documentation/devicetree/bindings/leds/leds-axp20x.txt
+>> new file mode 100644
+>> index 000000000000..5a83ad06796d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-axp20x.txt
+>> @@ -0,0 +1,74 @@
+>> +Device Tree Bindings for LED support on X-Powers PMIC
+>> +
+>> +Most of the X-Powers PMICs have integrated battery charger with LED indicator.
+>> +The output is open-drain, so the state is either high-Z or output-low. The
+>> +driver is a subnode of AXP20X MFD driver, since it uses shared bus with all
+>> +other cells.
+>> +The LED can be controlled either manually or automatically. Then in automatic
+>> +(controlled by the charger) there are two indication modes:
+>> +
+>> +Mode-A
+>> +======
+>> +- output-low:		Charging
+>> +- high-Z		Not charging
+>> +- 1Hz flashing:		Abnormal alarm
+>> +- 4Hz flashing		Overvoltage alarm
+>> +
+>> +Mode-B
+>> +======
+>> +- output-low:		Battery full
+>> +- high-Z		Not charging
+>> +- 1Hz flashing:		Charging
+>> +- 4Hz flashing		Overvoltage or abnormal alarm
+>> +
+>> +The control and the mode can be changed from sysfs.
+>> +
+>> +For AXP20X MFD bindings see:
+>> +Documentation/devicetree/bindings/mfd/axp20x.txt
+>> +
+>> +Required properties:
+>> +- compatible : Must be "x-powers,axp20x-led"
+>> +
+>> +Supported common LED properties, see ./common.txt for more informationn
+>> +- label : See Documentation/devicetree/bindings/leds/common.txt
+>> +- linux,default-trigger : See Documentation/devicetree/bindings/leds/common.txt
+>> +- default-state: See Documentation/devicetree/bindings/leds/common.txt
+>> +
+>> +Optional properties:
+>> +- x-powers,charger-mode: 0 for Mode-A, 1 for Mode-B
+>> +			 If omitted, then the control is set to manual mode.
+>> +			 On invalid value, Mode-A is used.
+>> +
+>> +
+>> +Example:
+>> +
+>> +	axp803: pmic@3a3 {
+>> +		compatible = "x-powers,axp803";
+>> +
+>> +		...
+>> +
+>> +		led@0 {
+> 
+> What's the 0 for? A unit address without a reg property is not valid.
+
+It was done on my request, but now I see it was an omission.
+
+Since this node describes a LED controller, then it should
+be called "led-controller".
+
+>> +			compatible = "x-powers,axp20x-led";
+>> +			status = "okay";
+
+And below part should be in a child node.
+
+Stefan, please compare
+Documentation/devicetree/bindings/leds/common.txt and
+other LED bindings.
+
+>> +			label = "axp20x:yellow:chgled";
+
+Moreover "axp20x:" part should be removed from here added in the driver.
+
+Please refer to drivers/leds/leds-cr0014114.c on how we
+do that now.
+
+>> +			linux,default-trigger = "timer";
+>> +			default-state = "on";
+>> +		};
+>> +	};
+>> +
+>> +or
+>> +
+>> +	axp803: pmic@3a3 {
+>> +		compatible = "x-powers,axp803";
+>> +
+>> +		...
+>> +
+>> +		led@0 {
+>> +			compatible = "x-powers,axp20x-led";
+>> +			status = "okay";
+>> +
+>> +			label = "axp20x:yellow:chgled";
+>> +			x-powers,charger-mode = <1>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.17.1
 >>
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
 
-can you please pull this documentation change through Linux input branch?
-
-The two other dts changes have been already included into arm-soc.
-
---
-Best wishes,
-Vladimir
+-- 
+Best regards,
+Jacek Anaszewski
