@@ -1,7 +1,7 @@
 From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 2/4] mwifiex: Fetch wake-up interrupt from 'wake-up' subnode when it exists
-Date: Sun, 24 Feb 2019 14:04:24 +0000
-Message-ID: <20190224140426.3267-3-marc.zyngier@arm.com>
+Subject: [PATCH 1/4] dt-bindings/marvell-8xxx: Allow wake-up interrupt to be placed in a separate node
+Date: Sun, 24 Feb 2019 14:04:23 +0000
+Message-ID: <20190224140426.3267-2-marc.zyngier@arm.com>
 References: <20190224140426.3267-1-marc.zyngier@arm.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,59 +12,66 @@ To: Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balle
 Cc: "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Encoding the wake-up interrupt as part of the PCI DT node is completely
-broken, as it violates the most basic rules of PCI description in OF:
-the interrupts described in such node are supposed to apply to the
-PCI device, and not to some non-PCI stuff on the side.
+The DT binding for the PCI version of the Marvell 8xxx wifi devices
+is pretty broken (the fact that a PCI device requires a DT binding
+is quite telling on its own).
 
-In such a configuration, both the PCI device and the wake-up widget
-end-up trying to share an interrupt. Of course, this doesn't work:
-The PCI device can only generate interrupts through the root port,
-while the wake-up widget uses sideband signaling that bypasses PCI
-altogether. Clearly, this was never tested.
+The binding allows the description of a wake-up interrupt as a sideband
+signal, allowing the wifi device to wake-up the system. So far, so good.
+Until you realise that placing an interrupt in the PCI device DT node
+has a specific meaning, and applies to the actual PCI function, and
+not some random sideband stuff. This is of course in total violation
+of the OF specification (IEEE Std 1275-1994), but hey, who cares.
 
-So let's first try and obtain the wake-up interrupt from a 'wake-up'
-subnode, and fallback to the main DT node otherwise. This ensures
-that old DTs will carry on working as bad as before (with the added
-warning to let the user know about the situation), and new DT will
-enjoy legacy interrupts in case MSIs are unavailable.
+Let's thus change the binding to be somewhat compatible with the spec,
+by placing the wake-up interrupt in a subnode called "wake-up". This
+still is an optional property, but a recommended one for PCI devices.
 
 Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 ---
- drivers/net/wireless/marvell/mwifiex/main.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ .../bindings/net/wireless/marvell-8xxx.txt    | 23 ++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
-index 20cee5c397fb..2105c2b7c627 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.c
-+++ b/drivers/net/wireless/marvell/mwifiex/main.c
-@@ -1590,17 +1590,26 @@ static void mwifiex_probe_of(struct mwifiex_adapter *adapter)
- {
- 	int ret;
- 	struct device *dev = adapter->dev;
-+	struct device_node *wup_node;
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+index 9bf9bbac16e2..f9340ca37047 100644
+--- a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+@@ -33,10 +33,16 @@ Optional properties:
+ 		 this interrupt number. during system suspend, the irq will be enabled
+ 		 so that the wifi chip can wakeup host platform under certain condition.
+ 		 during system resume, the irq will be disabled to make sure
+-		 unnecessary interrupt is not received.
++		 unnecessary interrupt is not received. For PCI devices, it
++		 is recommended that this property is placed in a "wake-up"
++		 sub-node in order to limit the ambiguity with PCI legacy
++		 interrupts.
+   - vmmc-supply: a phandle of a regulator, supplying VCC to the card
+   - mmc-pwrseq:  phandle to the MMC power sequence node. See "mmc-pwrseq-*"
+ 		 for documentation of MMC power sequence bindings.
++  - wake-up:	 a subnode containing the interrupt specifier for a wake-up
++		 interrupt. This is the recommended configuration for PCI
++		 devices.
  
- 	if (!dev->of_node)
- 		goto err_exit;
+ Example:
  
- 	adapter->dt_node = dev->of_node;
--	adapter->irq_wakeup = irq_of_parse_and_map(adapter->dt_node, 0);
-+	wup_node = of_get_child_by_name(adapter->dt_node, "wake-up");
-+	if (!wup_node)
-+		wup_node = adapter->dt_node;
-+	adapter->irq_wakeup = irq_of_parse_and_map(wup_node, 0);
- 	if (!adapter->irq_wakeup) {
- 		dev_dbg(dev, "fail to parse irq_wakeup from device tree\n");
- 		goto err_exit;
- 	}
- 
-+	if (dev_is_pci(dev) && adapter->dt_node == wup_node)
-+		dev_warn(dev,
-+			 "wake-up interrupt outside 'wake-up' subnode of %pOF\n",
-+			 adapter->dt_node);
+@@ -66,3 +72,18 @@ so that firmware can wakeup host using this device side pin.
+ 		marvell,wakeup-pin = <3>;
+ 	};
+ };
 +
- 	ret = devm_request_irq(dev, adapter->irq_wakeup,
- 			       mwifiex_irq_wakeup_handler, IRQF_TRIGGER_LOW,
- 			       "wifi_wake", adapter);
++&pci_rootport {
++	mvl_wifi: wifi@0,0 {
++		compatible = "pci1b4b,2b42";
++		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
++		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&wlan_host_wake_l>;
++		wake-up {
++			interrupt-parent = <&gpio0>;
++			interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
++			wakeup-source;
++		};
++	};
++};
 -- 
 2.20.1
