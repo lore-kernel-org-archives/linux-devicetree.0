@@ -1,265 +1,232 @@
-Return-Path: <SRS0=5lt5=Q4=martin.sperl.org=kernel@kernel.org>
-From: kernel@martin.sperl.org
-Subject: [PATCH V7 08/10] can: mcp25xxfd: optimize SPI reads of FIFOs in can2.0 mode
-Date: Thu, 21 Feb 2019 21:07:34 +0000
-Message-Id: <20190221210736.640-9-kernel@martin.sperl.org>
-In-Reply-To: <20190221210736.640-1-kernel@martin.sperl.org>
-References: <20190221210736.640-1-kernel@martin.sperl.org>
-To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Return-Path: <SRS0=ylgW=Q7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr130043.outbound.protection.outlook.com ([40.107.13.43]:14820
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726405AbfBXCuU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 23 Feb 2019 21:50:20 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V9 2/4] thermal: imx_sc: add i.MX system controller thermal
+ support
+Date: Sun, 24 Feb 2019 02:50:13 +0000
+Message-ID: <1550976319-20216-2-git-send-email-Anson.Huang@nxp.com>
+References: <1550976319-20216-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550976319-20216-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Sperl <kernel@martin.sperl.org>
+i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+inside, the system controller is in charge of controlling power,
+clock and thermal sensors etc..
 
-To reduce the amount of spi_messages send this patch optimizes the
-read of RX fifos so that multiple Fifos are read together.
+This patch adds i.MX system controller thermal driver support,
+Linux kernel has to communicate with system controller via MU
+(message unit) IPC to get each thermal sensor's temperature,
+it supports multiple sensors which are passed from device tree,
+please see the binding doc for details.
 
-This only works well in CAN2.0 mode where the overhead of prefetching
-8 bytes (even if the actual length is 0) is negligable compared
-to the SPI-framework overhead.
-
-Statistics in debugfs show for 1000000 DLC=0 can messages received:
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads <==
-355411
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_1 <==
-92778
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_2 <==
-7133
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_3 <==
-130390
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_4 <==
-123807
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_5 <==
-1266
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_6 <==
-34
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_7 <==
-1
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_bulk_reads_8+ <==
-0
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/rx_reads <==
-999999
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/int_system_error <==
-1
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/int_system_error_rx <==
-1
-==> /sys/kernel/debug/mcp25xxfd-spi0.0/can/stats/int_system_error_tx <==
-0
-
-There was one SERR error where we lost one can frame during the handling
-of the error condition.
-
-So to read all of those 999999 RX fifos we formerly have scheduled
-999999 spi_messages.
-
-With this patch we have only scheduled 355411 spi_messages, so
-only 35.5% of the former value.
-
-This also means we have not been transferring 1289176 (=2*(999999-355411))
-unnecessary command bytes over the SPI bus.
-
-As we have been issuing less SPI transfers reading SRAM this
-also has reduced the likleyhood of SERR happening - it does not
-solve the complete issue as seen above.
-
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- .../net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c  | 11 +++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h |  4 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c   | 96 +++++++++++++++++++---
- 3 files changed, 100 insertions(+), 11 deletions(-)
+Changes since V8:
+	- get thermal zones number from "imx,sensor-resource-id" element count, so=
+ that we get get rid
+	  of searching thermal-zones node;
+	- use "pdev->dev.of_node" directly instead of getting phandle from thermal=
+-zones node.
+---
+ drivers/thermal/Kconfig          |  11 ++++
+ drivers/thermal/Makefile         |   1 +
+ drivers/thermal/imx_sc_thermal.c | 139 +++++++++++++++++++++++++++++++++++=
+++++
+ 3 files changed, 151 insertions(+)
+ create mode 100644 drivers/thermal/imx_sc_thermal.c
 
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
-index 90034ea21c49..56b8d38b756d 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_debugfs.c
-@@ -92,6 +92,17 @@ static void mcp25xxfd_can_debugfs_stats(struct mcp25xxfd_can_priv *cpriv,
- 		       rx_reads_prefetched_too_many);
- 	DEBUGFS_CREATE("rx_reads_prefetched_too_many_bytes",
- 		       rx_reads_prefetched_too_many_bytes);
-+	DEBUGFS_CREATE("rx_single_reads",	 rx_single_reads);
-+	DEBUGFS_CREATE("rx_bulk_reads",		 rx_bulk_reads);
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 58bb7d7..fec0ef5 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -223,6 +223,17 @@ config IMX_THERMAL
+ 	  cpufreq is used as the cooling device to throttle CPUs when the
+ 	  passive trip is crossed.
+=20
++config IMX_SC_THERMAL
++	tristate "Temperature sensor driver for NXP i.MX SoCs with System Control=
+ler"
++	depends on (ARCH_MXC && IMX_SCU) || COMPILE_TEST
++	depends on OF
++	help
++	  Support for Temperature Monitor (TEMPMON) found on NXP i.MX SoCs with
++	  system controller inside, Linux kernel has to communicate with system
++	  controller via MU (message unit) IPC to get temperature from thermal
++	  sensor. It supports one critical trip point and one
++	  passive trip point for each thermal sensor.
 +
-+	for (i = 0; i < MCP25XXFD_CAN_RX_BULK_READ_BINS - 1; i++) {
-+		snprintf(name, sizeof(name), "rx_bulk_reads_%i", i + 1);
-+		data = &cpriv->stats.rx_bulk_read_sizes[i];
-+		debugfs_create_u64(name, 0444, dir, data);
-+	}
-+	snprintf(name, sizeof(name), "rx_bulk_reads_%i+", i + 1);
-+	debugfs_create_u64(name, 0444, dir,
-+			   &cpriv->stats.rx_bulk_read_sizes[i]);
- #undef DEBUGFS_CREATE
- }
-
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
-index 766bec350e1e..cae22cc02795 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
-@@ -167,6 +167,10 @@ struct mcp25xxfd_can_priv {
- 		u64 rx_reads_prefetched_too_few_bytes;
- 		u64 rx_reads_prefetched_too_many;
- 		u64 rx_reads_prefetched_too_many_bytes;
-+		u64 rx_single_reads;
-+		u64 rx_bulk_reads;
-+#define MCP25XXFD_CAN_RX_BULK_READ_BINS 8
-+		u64 rx_bulk_read_sizes[MCP25XXFD_CAN_RX_BULK_READ_BINS];
- 	} stats;
- #endif /* CONFIG_DEBUG_FS */
-
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
-index 0974cf8b0c56..ee52d2ba74a5 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
-@@ -131,7 +131,7 @@ int mcp25xxfd_can_rx_submit_frame(struct mcp25xxfd_can_priv *cpriv, int fifo)
- }
-
- static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
--				       int fifo, int prefetch_bytes)
-+				       int fifo, int prefetch_bytes, bool read)
- {
- 	struct spi_device *spi = cpriv->priv->spi;
- 	struct net_device *net = cpriv->can.dev;
-@@ -142,10 +142,13 @@ static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
- 	int len, ret;
-
- 	/* we read the header plus prefetch_bytes */
--	ret = mcp25xxfd_cmd_readn(spi, MCP25XXFD_SRAM_ADDR(addr),
--				  rx, sizeof(*rx) + prefetch_bytes);
--	if (ret)
--		return ret;
-+	if (read) {
-+		cpriv->stats.rx_single_reads++;
-+		ret = mcp25xxfd_cmd_readn(spi, MCP25XXFD_SRAM_ADDR(addr),
-+					  rx, sizeof(*rx) + prefetch_bytes);
-+		if (ret)
-+			return ret;
-+	}
-
- 	/* transpose the headers to CPU format*/
- 	rx->id = le32_to_cpu(rx->id);
-@@ -158,7 +161,7 @@ static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
- 	len = can_dlc2len(min_t(int, dlc, (net->mtu == CANFD_MTU) ? 15 : 8));
-
- 	/* read the remaining data for canfd frames */
--	if (len > prefetch_bytes) {
-+	if (read && len > prefetch_bytes) {
- 		/* update stats */
- 		MCP25XXFD_DEBUGFS_STATS_INCR(cpriv,
- 					     rx_reads_prefetched_too_few);
-@@ -200,6 +203,40 @@ static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
- 					MCP25XXFD_CAN_FIFOCON_FRESET);
- }
-
-+static int mcp25xxfd_can_read_rx_frame_bulk(struct mcp25xxfd_can_priv *cpriv,
-+					    int fstart,
-+					    int fend)
+ config MAX77620_THERMAL
+ 	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
+ 	depends on MFD_MAX77620
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index 486d682..4062627 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -40,6 +40,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+=3D db8500_thermal.o
+ obj-$(CONFIG_ARMADA_THERMAL)	+=3D armada_thermal.o
+ obj-$(CONFIG_TANGO_THERMAL)	+=3D tango_thermal.o
+ obj-$(CONFIG_IMX_THERMAL)	+=3D imx_thermal.o
++obj-$(CONFIG_IMX_SC_THERMAL)	+=3D imx_sc_thermal.o
+ obj-$(CONFIG_MAX77620_THERMAL)	+=3D max77620_thermal.o
+ obj-$(CONFIG_QORIQ_THERMAL)	+=3D qoriq_thermal.o
+ obj-$(CONFIG_DA9062_THERMAL)	+=3D da9062-thermal.o
+diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_ther=
+mal.c
+new file mode 100644
+index 0000000..e9a8207
+--- /dev/null
++++ b/drivers/thermal/imx_sc_thermal.c
+@@ -0,0 +1,139 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright 2018-2019 NXP.
++ */
++
++#include <linux/err.h>
++#include <linux/firmware/imx/sci.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/thermal.h>
++
++#include "thermal_core.h"
++
++#define IMX_SC_MISC_FUNC_GET_TEMP	13
++#define IMX_SC_C_TEMP			0
++
++static struct imx_sc_ipc *thermal_ipc_handle;
++
++struct imx_sc_sensor {
++	struct thermal_zone_device *tzd;
++	u32 resource_id;
++};
++
++struct req_get_temp {
++	u16 resource_id;
++	u8 type;
++} __packed;
++
++struct resp_get_temp {
++	u16 celsius;
++	u8 tenths;
++} __packed;
++
++struct imx_sc_msg_misc_get_temp {
++	struct imx_sc_rpc_msg hdr;
++	union {
++		struct req_get_temp req;
++		struct resp_get_temp resp;
++	} data;
++} __packed;
++
++static int imx_sc_thermal_get_temp(void *data, int *temp)
 +{
-+	struct net_device *net = cpriv->can.dev;
-+	int count = abs(fend - fstart) + 1;
-+	int flowest = min_t(int, fstart, fend);
-+	int addr = cpriv->fifos.info[flowest].offset;
-+	struct mcp25xxfd_can_obj_rx *rx =
-+		(struct mcp25xxfd_can_obj_rx *)(cpriv->sram + addr);
-+	int len = (sizeof(*rx) + ((net->mtu == CANFD_MTU) ? 64 : 8)) * count;
-+	int fifo, i, ret;
++	struct imx_sc_msg_misc_get_temp msg;
++	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
++	struct imx_sc_sensor *sensor =3D data;
++	int ret;
 +
-+	/* update stats */
-+	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, rx_bulk_reads);
-+	i = min_t(int, MCP25XXFD_CAN_RX_BULK_READ_BINS - 1, count - 1);
-+	MCP25XXFD_DEBUGFS_STATS_INCR(cpriv, rx_bulk_read_sizes[i]);
++	msg.data.req.resource_id =3D sensor->resource_id;
++	msg.data.req.type =3D IMX_SC_C_TEMP;
 +
-+	/* we read the header plus read_min data bytes */
-+	ret = mcp25xxfd_cmd_readn(cpriv->priv->spi, MCP25XXFD_SRAM_ADDR(addr),
-+				  rx, len);
++	hdr->ver =3D IMX_SC_RPC_VERSION;
++	hdr->svc =3D IMX_SC_RPC_SVC_MISC;
++	hdr->func =3D IMX_SC_MISC_FUNC_GET_TEMP;
++	hdr->size =3D 2;
++
++	ret =3D imx_scu_call_rpc(thermal_ipc_handle, &msg, true);
++	if (ret) {
++		pr_err("read temp sensor %d failed, ret %d\n",
++			sensor->resource_id, ret);
++		return ret;
++	}
++
++	*temp =3D msg.data.resp.celsius * 1000 + msg.data.resp.tenths * 100;
++
++	return 0;
++}
++
++static const struct thermal_zone_of_device_ops imx_sc_thermal_ops =3D {
++	.get_temp =3D imx_sc_thermal_get_temp,
++};
++
++static int imx_sc_thermal_probe(struct platform_device *pdev)
++{
++	int ret, tsen_num, i;
++
++	ret =3D imx_scu_get_handle(&thermal_ipc_handle);
 +	if (ret)
 +		return ret;
 +
-+	/* now process all of them - no need to read... */
-+	for (fifo = fstart; count > 0; fifo ++, count--) {
-+		ret = mcp25xxfd_can_rx_read_frame(cpriv, fifo, 8, false);
-+		if (ret)
-+			return ret;
++	tsen_num =3D of_property_count_elems_of_size(pdev->dev.of_node,
++						   "imx,sensor-resource-id",
++						   sizeof(u32));
++	if (tsen_num <=3D 0) {
++		dev_err(&pdev->dev,
++			"failed to get valid sensor number: %d\n", tsen_num);
++		return -EINVAL;
 +	}
 +
-+	return 0;
-+}
++	for (i =3D 0; i < tsen_num; i++) {
++		struct imx_sc_sensor *sensor =3D
++			devm_kzalloc(&pdev->dev, sizeof(*sensor), GFP_KERNEL);
++		if (!sensor)
++			return -ENOMEM;
 +
- /* at least in can2.0 mode we can read multiple RX-fifos in one go
-  * in case they are ajactent to each other and thus we can reduce
-  * the number of spi messages produced and this improves spi-bus
-@@ -318,24 +355,30 @@ static int mcp25xxfd_can_rx_read_frame(struct mcp25xxfd_can_priv *cpriv,
-  * reading multiple rx fifos is a realistic option of optimization
-  */
-
--int mcp25xxfd_can_rx_read_frames(struct mcp25xxfd_can_priv *cpriv)
-+/* right now we only optimize for sd (can2.0) frame case,
-+ * but in principle it could be also be valuable for CANFD
-+ * frames when we receive lots of 64 byte packets with BRS set
-+ * and a big difference between nominal and data bitrates
-+ */
++		ret =3D of_property_read_u32_index(pdev->dev.of_node,
++			"imx,sensor-resource-id", i, &sensor->resource_id);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"failed to get valid sensor resource id: %d\n",
++				ret);
++			break;
++		}
 +
-+int mcp25xxfd_can_rx_read_fd_frames(struct mcp25xxfd_can_priv *cpriv)
- {
- 	int i, f, prefetch;
- 	int ret;
-
- 	/* calculate optimal prefetch to use */
- 	if (rx_prefetch_bytes != -1)
--		prefetch = min_t(int, rx_prefetch_bytes,
--				 (cpriv->can.dev->mtu == CANFD_MTU) ? 64 : 8);
-+		prefetch = min_t(int, rx_prefetch_bytes, 64);
- 	else
- 		prefetch = 8;
-
--	/* we can optimize here */
-+	/* loop all frames */
- 	for (i = 0, f = cpriv->fifos.rx.start; i < cpriv->fifos.rx.count;
- 	     i++, f++) {
- 		if (cpriv->status.rxif & BIT(f)) {
- 			/* read the frame */
--			ret = mcp25xxfd_can_rx_read_frame(cpriv, f, prefetch);
-+			ret = mcp25xxfd_can_rx_read_frame(cpriv, f,
-+							  prefetch, true);
- 			if (ret)
- 				return ret;
- 		}
-@@ -344,6 +387,37 @@ int mcp25xxfd_can_rx_read_frames(struct mcp25xxfd_can_priv *cpriv)
- 	return 0;
- }
-
-+static int mcp25xxfd_can_rx_read_sd_frames(struct mcp25xxfd_can_priv *cpriv)
-+{
-+	int i, start, end;
-+	int ret;
-+
-+	/* iterate over fifos trying to find fifos next to each other */
-+	for (i = 0, start = cpriv->fifos.rx.start, end = start;
-+	     i < cpriv->fifos.rx.count; i++, end++, start = end) {
-+		/* if bit is not set then continue */
-+		if (!(cpriv->status.rxif & BIT(start)))
-+			continue;
-+		/* find the last fifo with a bit set in sequence */
-+		for (end = start; cpriv->status.rxif & BIT(end + 1); end++)
-+			;
-+		/* and now read those fifos in bulk */
-+		ret = mcp25xxfd_can_read_rx_frame_bulk(cpriv, start, end);
-+		if (ret)
-+			return ret;
++		sensor->tzd =3D devm_thermal_zone_of_sensor_register(&pdev->dev,
++								   i,
++								   sensor,
++								   &imx_sc_thermal_ops);
++		if (IS_ERR(sensor->tzd)) {
++			dev_err(&pdev->dev, "failed to register thermal zone\n");
++			ret =3D PTR_ERR(sensor->tzd);
++			break;
++		}
 +	}
 +
-+	return 0;
++	return ret;
 +}
 +
-+static int mcp25xxfd_can_rx_read_frames(struct mcp25xxfd_can_priv *cpriv)
-+{
-+	if (cpriv->can.dev->mtu == CANFD_MTU)
-+		return mcp25xxfd_can_rx_read_fd_frames(cpriv);
-+	else
-+		return mcp25xxfd_can_rx_read_sd_frames(cpriv);
-+}
++static const struct of_device_id imx_sc_thermal_table[] =3D {
++	{ .compatible =3D "fsl,imx-sc-thermal", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, imx_sc_thermal_table);
 +
- int mcp25xxfd_can_rx_handle_int_rxif(struct mcp25xxfd_can_priv *cpriv)
- {
- 	if (!cpriv->status.rxif)
---
-2.11.0
++static struct platform_driver imx_sc_thermal_driver =3D {
++		.probe =3D imx_sc_thermal_probe,
++		.driver =3D {
++			.name =3D "imx-sc-thermal",
++			.of_match_table =3D imx_sc_thermal_table,
++		},
++};
++module_platform_driver(imx_sc_thermal_driver);
++
++MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
++MODULE_DESCRIPTION("Thermal driver for NXP i.MX SoCs with system controlle=
+r");
++MODULE_LICENSE("GPL v2");
+--=20
+2.7.4
