@@ -1,60 +1,45 @@
-Return-Path: <SRS0=lcGb=Q2=mellanox.com=kblaiech@kernel.org>
-From: Khalil Blaiech <kblaiech@mellanox.com>
-Subject: [PATCH v4 2/2] dt-bindings: i2c: I2C binding for Mellanox BlueField SoC
-Date: Tue, 19 Feb 2019 18:45:46 -0500
-Message-Id: <7af2f2f12bb6e1562c94f867d971953795681d53.1550618900.git.kblaiech@mellanox.com>
-In-Reply-To: <cover.1550618900.git.kblaiech@mellanox.com>
-References: <cover.1550618900.git.kblaiech@mellanox.com>
-In-Reply-To: <cover.1550618900.git.kblaiech@mellanox.com>
-References: <cover.1550618900.git.kblaiech@mellanox.com>
-To: Rob Herring <robh@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, David Woods <dwoods@mellanox.com>
-Cc: Khalil Blaiech <kblaiech@mellanox.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, arm-soc <arm@kernel.org>
+Return-Path: <SRS0=ylgW=Q7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr130055.outbound.protection.outlook.com ([40.107.13.55]:11658
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726405AbfBXCu2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 23 Feb 2019 21:50:28 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V9 3/4] defconfig: arm64: add i.MX system controller thermal
+ support
+Date: Sun, 24 Feb 2019 02:50:23 +0000
+Message-ID: <1550976319-20216-3-git-send-email-Anson.Huang@nxp.com>
+References: <1550976319-20216-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1550976319-20216-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Added device tree bindings documentation for Mellanox BlueField
-I2C SMBus controller.
+This patch enables CONFIG_IMX_SC_THERMAL as module.
 
-Reviewed-by: David Woods <dwoods@mellanox.com>
-Signed-off-by: Khalil Blaiech <kblaiech@mellanox.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
+No changes.
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-new file mode 100644
-index 0000000..3478bb2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-@@ -0,0 +1,29 @@
-+Device tree configuration for the Mellanox I2C SMBus on BlueField SoCs
-+
-+Required Properties:
-+- compatible : should be "mellanox,i2c-mlxbf1" or "mellanox,i2c-mlxbf2".
-+
-+- reg : address offset and length of the device registers. The
-+	registers consist of the following set of resources:
-+		1) Smbus block registers.
-+		2) Cause master registers.
-+		3) Cause slave registers.
-+
-+- interrupts : interrupt number.
-+
-+Optional Properties:
-+
-+- clock-frequency : bus frequency used to configure timing registers;
-+			allowed values are 100000, 400000 and 1000000;
-+			those are expressed in Hz. Default is 100000.
-+
-+Example:
-+
-+i2c@2804000 {
-+	compatible = "mellanox,i2c-mlxbf1";
-+	reg =	<0x02804000 0x800>,
-+		<0x02801200 0x020>,
-+		<0x02801260 0x020>;
-+	interrupts = <57>;
-+	clock-frequency = <100000>;
-+};
--- 
-2.1.2
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 2d9c390..52d503e 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -413,6 +413,7 @@ CONFIG_SENSORS_INA2XX=3Dm
+ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3Dy
+ CONFIG_CPU_THERMAL=3Dy
+ CONFIG_THERMAL_EMULATION=3Dy
++CONFIG_IMX_SC_THERMAL=3Dm
+ CONFIG_ROCKCHIP_THERMAL=3Dm
+ CONFIG_RCAR_THERMAL=3Dy
+ CONFIG_RCAR_GEN3_THERMAL=3Dy
+--=20
+2.7.4
