@@ -1,53 +1,59 @@
-From: Robert Eshleman <bobbyeshleman@gmail.com>
-Subject: [PATCH v2 3/3] dt-bindings: iio: light: Add ap3216c
-Date: Sun, 24 Feb 2019 12:33:51 -0800
-Message-ID: <b1689e99c868d19aa33932b0a96944852e91db45.1551037168.git.bobbyeshleman@gmail.com>
-References: <42dbbd7568e4216a320c6fd617bd91c1ee045af0.1551037168.git.bobbyeshleman@gmail.com>
+From: Jonas Karlman <jonas@kwiboo.se>
+Subject: [PATCH] ARM: dts: rockchip: fix rk3288 cpu opp node reference
+Date: Sun, 24 Feb 2019 21:51:22 +0000
+Message-ID: <AM3PR03MB0966C52CCF14FCEDE6615265AC790@AM3PR03MB0966.eurprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <42dbbd7568e4216a320c6fd617bd91c1ee045af0.1551037168.git.bobbyeshleman@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: bobbyeshleman@gmail.com
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>
 List-Id: devicetree@vger.kernel.org
 
-Adds device tree bindings for the ap3216c ambient light and proximity
-sensor.
+The following error can be seen during boot:
 
-Signed-off-by: Robert Eshleman <bobbyeshleman@gmail.com>
+  of: /cpus/cpu@501: Couldn't find opp node
+
+Change cpu nodes to use operating-points-v2 in order to fix this.
+
+Fixes: ce76de984649 ("ARM: dts: rockchip: convert rk3288 to operating-points-v2")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- .../devicetree/bindings/iio/light/ap3216c.txt | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/ap3216c.txt
+ arch/arm/boot/dts/rk3288.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/light/ap3216c.txt b/Documentation/devicetree/bindings/iio/light/ap3216c.txt
-new file mode 100644
-index 000000000000..c5ae80c79dd8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/ap3216c.txt
-@@ -0,0 +1,22 @@
-+* AP3216C Ambient Light and Proximity Sensor
-+
-+Required properties:
-+  - compatible: should be "liteon,ap3216c"
-+  - reg: the I2C address of the sensor (default is <0x1e>)
-+
-+Optional properties:
-+  - interrupts: interrupt mapping for GPIO IRQ. Should be configured with
-+    IRQ_TYPE_EDGE_FALLING.
-+
-+Refer to interrupt-controller/interrupts.txt for generic interrupt client
-+node bindings.
-+
-+Example:
-+
-+light-sensor@1e {
-+	compatible = "liteon,ap3216c";
-+	reg = <0x1e>;
-+
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-+};
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index ca7d52daa8fb..09868dcee34b 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -70,7 +70,7 @@
+ 			compatible = "arm,cortex-a12";
+ 			reg = <0x501>;
+ 			resets = <&cru SRST_CORE1>;
+-			operating-points = <&cpu_opp_table>;
++			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			clock-latency = <40000>;
+ 			clocks = <&cru ARMCLK>;
+@@ -80,7 +80,7 @@
+ 			compatible = "arm,cortex-a12";
+ 			reg = <0x502>;
+ 			resets = <&cru SRST_CORE2>;
+-			operating-points = <&cpu_opp_table>;
++			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			clock-latency = <40000>;
+ 			clocks = <&cru ARMCLK>;
+@@ -90,7 +90,7 @@
+ 			compatible = "arm,cortex-a12";
+ 			reg = <0x503>;
+ 			resets = <&cru SRST_CORE3>;
+-			operating-points = <&cpu_opp_table>;
++			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			clock-latency = <40000>;
+ 			clocks = <&cru ARMCLK>;
 -- 
-2.20.1
+2.17.1
