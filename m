@@ -1,71 +1,122 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH 4/5] arm64: dts: marvell: armada-8040-clearfog: Drop
- non-existent SATA port
-Date: Sun, 24 Feb 2019 07:29:09 +0200
-Message-ID: <87tvgt7o0q.fsf@tarshish>
-References: <20190222145356.23072-1-miquel.raynal@bootlin.com>
- <20190222145356.23072-5-miquel.raynal@bootlin.com>
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: [PATCH v2 1/2] dt-bindings: net:  Add bindings for mdio mux consumers
+Date: Sun, 24 Feb 2019 08:49:21 +0000
+Message-ID: <20190224141338.29907-1-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20190222145356.23072-5-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-ide@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Leo Li <leoyang.li@nxp.com>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Pankaj Bansal <pankaj.bansal@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
+When we use the bindings defined in Documentation/devicetree/bindings/mux
+to define mdio mux in producer and consumer terms, it results in two
+devices. one is mux producer and other is mux consumer.
 
-On Fri, Feb 22 2019, Miquel Raynal wrote:
+Add the bindings needed for Mdio mux consumer devices.
 
-> There is no CP110 SATA port available on the 8040 Clearfog A8k, SATA
-> may be used thanks to a mPCIe -> SATA extension board only. Hence, the
-> cp1_sata0 node must be removed from the device tree.
+Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+---
 
-Not true. You can use the mini PCIe serdes as SATA directly if you
-configure it as such. You only need to invert the serdes Rx pair
-polarity. This is the default configuration for the Clearfog GT-8K CON3
-mini-PCIe slot (CP1, lane #0) in current mainline U-Boot. I verified
-that this setup works on Clearfog GT-8K.
+Notes:
+    V2:
+    - moved the bindings from mdio-mux.txt to new file mdio-mux-multiplexer=
+.txt
+    - changed compatible to mdio-mux-multiplexer
 
-This patch would break mini PCIe direct SATA.
-
-baruch
-
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-> index 5b4a9609e31f..caabbd3a85a8 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-> @@ -333,11 +333,6 @@
->  	};
->  };
->
-> -&cp1_sata0 {
-> -	pinctrl-0 = <&cp0_pci1_reset_pins>;
-> -	status = "okay";
-> -};
-> -
->  &cp1_mdio {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&cp1_ge_mdio_pins>;
-
-
---
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+diff --git a/Documentation/devicetree/bindings/net/mdio-mux-multiplexer.txt=
+ b/Documentation/devicetree/bindings/net/mdio-mux-multiplexer.txt
+new file mode 100644
+index 000000000000..9d5384849929
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mdio-mux-multiplexer.txt
+@@ -0,0 +1,83 @@
++Properties for an MDIO bus multiplexer consumer device
++
++This is a special case of MDIO mux  when MDIO mux is defined as a consumer
++of a mux producer device. The mux producer can be of any type like mmio mu=
+x
++producer, gpio mux producer or generic register based mux producer.
++
++Required properties in addition to the MDIO Bus multiplexer properties:
++
++- compatible : should be "mmio-mux-multiplexer"
++- mux-controls : mux controller node to use for operating the mux
++- mdio-parent-bus : phandle to the parent MDIO bus.
++
++each child node of mdio bus multiplexer consumer device represent a mdio
++bus.
++
++for more information please refer
++Documentation/devicetree/bindings/mux/mux-controller.txt
++and Documentation/devicetree/bindings/net/mdio-mux.txt
++
++Example:
++In below example the Mux producer and consumer are separate nodes.
++
++&i2c0 {
++	fpga@66 { // fpga connected to i2c
++		compatible =3D "fsl,lx2160aqds-fpga", "fsl,fpga-qixis-i2c",
++			     "simple-mfd";
++		reg =3D <0x66>;
++
++		mux: mux-controller { // Mux Producer
++			compatible =3D "reg-mux";
++			#mux-control-cells =3D <1>;
++			mux-reg-masks =3D <0x54 0xf8>, /* 0: reg 0x54, bits 7:3 */
++					<0x54 0x07>; /* 1: reg 0x54, bits 2:0 */
++		};
++	};
++};
++
++mdio-mux-1 { // Mux consumer
++	compatible =3D "mdio-mux-multiplexer";
++	mux-controls =3D <&mux 0>;
++	mdio-parent-bus =3D <&emdio1>;
++	#address-cells =3D <1>;
++	#size-cells =3D <0>;
++
++	mdio@0 {
++		reg =3D <0x0>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	mdio@8 {
++		reg =3D <0x8>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	..
++	..
++};
++
++mdio-mux-2 { // Mux consumer
++	compatible =3D "mdio-mux-multiplexer";
++	mux-controls =3D <&mux 1>;
++	mdio-parent-bus =3D <&emdio2>;
++	#address-cells =3D <1>;
++	#size-cells =3D <0>;
++
++	mdio@0 {
++		reg =3D <0x0>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	mdio@1 {
++		reg =3D <0x1>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	..
++	..
++};
++
+--=20
+2.17.1
