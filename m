@@ -1,65 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: MIPS: Add doc about Ingenic CPU node.
-Date: Mon, 25 Feb 2019 10:17:05 -0600
-Message-ID: <20190225161705.GA29894@bogus>
-References: <1548854044-56483-1-git-send-email-zhouyanjie@zoho.com>
- <1548854044-56483-2-git-send-email-zhouyanjie@zoho.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [RFC PATCH 5/5] mtd: hyperbus: Add driver for TI's Hyperbus
+ memory controller
+Date: Mon, 25 Feb 2019 19:29:17 +0300
+Message-ID: <907041d1-8412-22ca-3716-109a56251850@cogentembedded.com>
+References: <20190219063607.29949-1-vigneshr@ti.com>
+ <20190219063607.29949-6-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548854044-56483-2-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <20190219063607.29949-6-vigneshr@ti.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhou Yanjie <zhouyanjie@zoho.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org, ezequiel@collabora.co.uk, paul@crapouillou.net, mark.rutland@arm.com, syq@debian.org, jiaxun.yang@flygoat.com, 772753199@qq.com, ulf.hansson@linaro.org, malat@debian.org
+To: "Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>)" <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, tudor.ambarus@microchip.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 09:14:03PM +0800, Zhou Yanjie wrote:
-> Dt-bindings doc about CPU node of Ingenic XBurst based SOCs.
+Hello!
+
+On 02/19/2019 09:36 AM, Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>) wrote:
+
+> Add driver for Hyperbus memory controller on TI's AM654 SoC. Programming
+> IP is pretty simple and provides direct memory mapped access to
+> connected Flash devices.
+
+   Are you sure you posted the _complete_ driver?
+
+> Add basic support for the IP without DMA. Second ChipSelect is not
+> supported for now.
 > 
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
 > ---
->  .../devicetree/bindings/mips/ingenic/ingenic,cpu.txt    | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
+>  drivers/mtd/hyperbus/hbmc_am654.c | 105 ++++++++++++++++++++++++++++++
+>  1 file changed, 105 insertions(+)
+>  create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
 > 
-> diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
+> diff --git a/drivers/mtd/hyperbus/hbmc_am654.c b/drivers/mtd/hyperbus/hbmc_am654.c
 > new file mode 100644
-> index 0000000..38e3cd3
+> index 000000000000..1f0d2dc52f9f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
-> @@ -0,0 +1,17 @@
-> +Ingenic Soc CPU
+> +++ b/drivers/mtd/hyperbus/hbmc_am654.c
+> @@ -0,0 +1,105 @@
+[...]
+> +static int am654_hbmc_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct am654_hbmc_priv *priv;
+> +	struct resource *res;
+> +	int err;
 > +
-> +Required properties:
-> +- device_type: Must be "cpu".
-> +- compatible: One of:
-> +  - "ingenic,xburst".
-
-Only 1 version?
-
-Is everything else discoverable or implied by this? Cache sizes, 
-instruction set features, bugs, etc.?
-
-> +- reg: The number of the CPU.
-
-Ideally, this should be based on some h/w id, but generally only SMP 
-processors have that.
-
-BTW, is SMP supported? If so, you need to define how secondary cores get 
-booted (unless that is standard and implied).
-
-> +- next-level-cache: If there is a next level cache, point to it.
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
 > +
-> +Example:
-> +cpu0: cpu@0 {
-> +	device_type = "cpu";
-> +	compatible = "ingenic,xburst";
-> +	reg = <0>;
-> +	next-level-cache = <&l2c>;
-> +};
+> +	platform_set_drvdata(pdev, priv);
 > +
-> -- 
-> 2.7.4
-> 
-> 
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (IS_ERR(res)) {
+> +		dev_err(&pdev->dev, "failed to get memory resource\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	priv->regbase = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(priv->regbase)) {
+> +		dev_err(dev, "Cannot remap controller address.\n");
+> +		return PTR_ERR(priv->regbase);
+> +	}
+> +
+> +	pm_runtime_enable(&pdev->dev);
+> +	err = pm_runtime_get_sync(&pdev->dev);
+
+   That's all nice but where's the code that accesses the actual registers?
+
+> +	if (err < 0) {
+> +		pm_runtime_put_noidle(&pdev->dev);
+
+   Calling "put" with previously failed "get" sees strange...
+
+> +		return err;
+> +	}
+> +
+> +	priv->hbdev.needs_calib = true;
+> +	priv->hbdev.dev = &pdev->dev;
+> +	priv->hbdev.np = of_get_next_child(dev->of_node, NULL);
+> +	err = hb_register_device(&priv->hbdev);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "failed to register controller\n");
+> +		goto err_destroy;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_destroy:
+> +	hb_unregister_device(&priv->hbdev);
+
+   Calling "unregister" with "register" previously failed also looks strange...
+
+> +	pm_runtime_put_sync(&pdev->dev);
+
+   Why the sync() version?
+
+> +	return err;
+> +}
+[...]
+
+MBR, Sergei
