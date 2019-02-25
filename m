@@ -1,52 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: power: supply: gpio-charger: Add
- status-gpios property
-Date: Mon, 25 Feb 2019 15:53:17 -0600
-Message-ID: <20190225215316.GA10117@bogus>
-References: <20190205190316.19296-1-contact@artur-rojek.eu>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH] MIPS: lantiq: Remove separate GPHY Firmware loader
+Date: Mon, 25 Feb 2019 22:19:53 +0000
+Message-ID: <MWHPR2201MB127707BA7F4A45AE606E803BC17A0@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190222201347.29242-1-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190205190316.19296-1-contact@artur-rojek.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Artur Rojek <contact@artur-rojek.eu>
-Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190222201347.29242-1-hauke@hauke-m.de>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+Cc: Paul Burton <pburton@wavecomp.com>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 05, 2019 at 08:03:15PM +0100, Artur Rojek wrote:
-> Add documentation for the "status-gpios" property.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->  .../devicetree/bindings/power/supply/gpio-charger.txt         | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> index adbb5dc5b6e9..b98a05a4973c 100644
-> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
-> @@ -14,12 +14,16 @@ Required properties :
->       usb-cdp (USB charging downstream port)
->       usb-aca (USB accessory charger adapter)
->  
-> +Optional properties:
-> + - status-gpios: GPIO indicating the charger status
+Hello,
 
-So when it is asserted it has 'status'? What does status mean?
+Hauke Mehrtens wrote:
+> The separate GPHY Firmware loader driver is not used any more, the GPHY
+> firmware is now loaded by the GSWIP switch driver which also makes use
+> of the GPHY.
+> Remove the old unused GPHY firmware loader driver.
+>=20
+> The GPHY firmware is useless without an Ethernet and switch driver, it
+> should not harm if loading this does not work for system using an old
+> device tree.
+> I am not aware of any vendor separating the device tree from the kernel
+> binary, it should be ok to remove this.
+>=20
+> The code and the functionality form this separate GPHY firmware loader
+> was added to the gswip driver in commit 14fceff4771e ("net: dsa: Add
+> Lantiq / Intel DSA driver for vrx200")
+>=20
+> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
 
-> +
->  Example:
->  
->  	usb_charger: charger {
->  		compatible = "gpio-charger";
->  		charger-type = "usb-sdp";
->  		gpios = <&gpf0 2 0 0 0>;
-> +		status-gpios = <&gpf0 3 0 0 0>;
+Applied to mips-next.
 
-Humm, not sure what the thinking for 'gpios' was, but it's wrong and you 
-just copied it. If we follow the normal cell encoding with 2 cells, this 
-means the property takes 3 gpios (though the last 2 are marked not 
-present with 0).
+Thanks,
+    Paul
 
-Rob
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
