@@ -1,26 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: spi: Add Support for Allwinner F1C100s
-Date: Mon, 25 Feb 2019 17:33:01 -0600
-Message-ID: <20190225233301.GA25780@bogus>
-References: <cover.1549875778.git.mesihkilinc@gmail.com>
- <8d62291fa2f98d07e08d81fe4f54e4c49744c24e.1549875778.git.mesihkilinc@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: imx-ocotp: Add i.MX8MQ compatible
+Date: Mon, 25 Feb 2019 17:34:22 -0600
+Message-ID: <20190225233422.GA27988@bogus>
+References: <20190211165011.5114-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8d62291fa2f98d07e08d81fe4f54e4c49744c24e.1549875778.git.mesihkilinc@gmail.com>
+In-Reply-To: <20190211165011.5114-1-l.stach@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com, Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Carlo Caione <ccaione@baylibre.com>, linux-imx@nxp.com, kernel@pengutronix.de, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Feb 2019 12:21:10 +0300, Mesih Kilinc wrote:
-> Allwinner suniv F1C100s has similar SPI controllers as sun8i H3.
-> Add compatible string for it.
+On Mon, 11 Feb 2019 17:50:09 +0100, Lucas Stach wrote:
+> Add compatible for i.MX8MQ and add both i.MX7D/S and i.M8MQ
+> to the description.
 > 
-> Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 > ---
->  Documentation/devicetree/bindings/spi/spi-sun6i.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
