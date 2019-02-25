@@ -1,94 +1,53 @@
-Return-Path: <SRS0=ylgW=Q7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr80079.outbound.protection.outlook.com ([40.107.8.79]:51747
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=cWXf=RA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr00065.outbound.protection.outlook.com ([40.107.0.65]:26832
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728150AbfBXCui (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 23 Feb 2019 21:50:38 -0500
+        id S1727276AbfBYCTb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 24 Feb 2019 21:19:31 -0500
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V9 4/4] arm64: dts: imx: add i.MX8QXP thermal support
-Date: Sun, 24 Feb 2019 02:50:32 +0000
-Message-ID: <1550976319-20216-4-git-send-email-Anson.Huang@nxp.com>
-References: <1550976319-20216-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1550976319-20216-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V3 4/4] arm64: dts: freescale: imx8qxp: add watchdog support
+Date: Mon, 25 Feb 2019 02:19:28 +0000
+Message-ID: <1551060850-22553-5-git-send-email-Anson.Huang@nxp.com>
+References: <1551060850-22553-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1551060850-22553-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add i.MX8QXP CPU thermal zone support.
+Add i.MX8QXP system controller watchdog support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V8:
-	- remove "#cooling-cells" since it is already included in cpu-freq opp tab=
-le patch:
-	  https://patchwork.kernel.org/patch/10825081/
+Changes since V2:
+	- add fallback compatilbe "fsl,imx-sc-wdt" for other i.MX platforms with s=
+ystem
+	  controller watchdog available;
+	- this patch depends on my thermal patch series: https://patchwork.kernel.=
+org/patch/10827673/
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 34 ++++++++++++++++++++++++++=
-++++
- 1 file changed, 34 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
 ts/freescale/imx8qxp.dtsi
-index 4c3dd95..85c90e0 100644
+index 85c90e0..514432c7 100644
 --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/pads-imx8qxp.h>
-+#include <dt-bindings/thermal/thermal.h>
-=20
- / {
- 	interrupt-parent =3D <&gic>;
-@@ -116,6 +117,12 @@
- 		rtc: rtc {
- 			compatible =3D "fsl,imx8qxp-sc-rtc";
+@@ -123,6 +123,10 @@
+ 			#thermal-sensor-cells =3D <0>;
+ 			imx,sensor-resource-id =3D <IMX_SC_R_SYSTEM>;
  		};
 +
-+		tsens: thermal-sensor {
-+			compatible =3D "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
-+			#thermal-sensor-cells =3D <0>;
-+			imx,sensor-resource-id =3D <IMX_SC_R_SYSTEM>;
++		watchdog: watchdog {
++			compatible =3D "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
 +		};
  	};
 =20
  	timer {
-@@ -443,4 +450,31 @@
- 			power-domains =3D <&pd IMX_SC_R_GPIO_7>;
- 		};
- 	};
-+
-+	thermal_zones: thermal-zones {
-+		cpu-thermal0 {
-+			polling-delay-passive =3D <250>;
-+			polling-delay =3D <2000>;
-+			thermal-sensors =3D <&tsens 0>;
-+			trips {
-+				cpu_alert0: trip0 {
-+					temperature =3D <107000>;
-+					hysteresis =3D <2000>;
-+					type =3D "passive";
-+				};
-+				cpu_crit0: trip1 {
-+					temperature =3D <127000>;
-+					hysteresis =3D <2000>;
-+					type =3D "critical";
-+				};
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip =3D <&cpu_alert0>;
-+					cooling-device =3D
-+						<&A35_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+	};
- };
 --=20
 2.7.4
