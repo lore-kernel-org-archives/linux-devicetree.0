@@ -1,135 +1,44 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 2/2] iio: counter: stm32-lptimer: Add power management support
-Date: Mon, 25 Feb 2019 11:42:47 +0100
-Message-ID: <1551091367-21718-3-git-send-email-fabrice.gasnier@st.com>
-References: <1551091367-21718-1-git-send-email-fabrice.gasnier@st.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 0/8] add power management support for SAM9X60
+Date: Mon, 25 Feb 2019 11:46:22 +0100
+Message-ID: <20190225104622.GA11983@piout.net>
+References: <1550159642-26878-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551091367-21718-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, robh+dt@kernel.org, alexandre.torgue@st.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1550159642-26878-1-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu.Beznea@microchip.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add suspend/resume PM sleep ops. When going to low power, disable
-active counter. Only active counter should be resumed: don't touch
-disabled counter, as it may be used by other LPTimer MFD child driver.
+On 14/02/2019 15:54:26+0000, Claudiu.Beznea@microchip.com wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> 
+> Hi,
+> 
+> This series add power management support for SAM9X60. The following
+> platform specific power management modes were enabled for it:
+> Idle, ULP0 and ULP1.
+> 
+> Thank you,
+> Claudiu Beznea
+> 
+> Claudiu Beznea (8):
+>   ARM: at91: pm: introduce at91_soc_pm structure
+>   dt-bindings: arm: atmel: add binding for SAM9X60 SoC
+>   ARM: at91: pm: initial PM support for SAM9X60
+>   ARM: at91: pm: keep at91_pm_backup_init() only for SAMA5D2 SoCs
+>   ARM: at91: pm: add support for per SoC wakeup source configuration
+>   ARM: at91: pm: add ULP1 support for SAM9X60
+>   ARM: at91: pm: disable RC oscillator in ULP0
+>   ARM: at91: pm: do not disable/enable PLLA for ULP modes
+> 
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/iio/counter/stm32-lptimer-cnt.c | 55 +++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+All applied.
 
-diff --git a/drivers/iio/counter/stm32-lptimer-cnt.c b/drivers/iio/counter/stm32-lptimer-cnt.c
-index 42fb8ba..2a49cce 100644
---- a/drivers/iio/counter/stm32-lptimer-cnt.c
-+++ b/drivers/iio/counter/stm32-lptimer-cnt.c
-@@ -14,6 +14,7 @@
- #include <linux/iio/iio.h>
- #include <linux/mfd/stm32-lptimer.h>
- #include <linux/module.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- 
- struct stm32_lptim_cnt {
-@@ -23,6 +24,7 @@ struct stm32_lptim_cnt {
- 	u32 preset;
- 	u32 polarity;
- 	u32 quadrature_mode;
-+	bool enabled;
- };
- 
- static int stm32_lptim_is_enabled(struct stm32_lptim_cnt *priv)
-@@ -50,6 +52,7 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
- 
- 	if (!enable) {
- 		clk_disable(priv->clk);
-+		priv->enabled = false;
- 		return 0;
- 	}
- 
-@@ -79,6 +82,7 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
- 		regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
- 		return ret;
- 	}
-+	priv->enabled = true;
- 
- 	/* Start LP timer in continuous mode */
- 	return regmap_update_bits(priv->regmap, STM32_LPTIM_CR,
-@@ -361,6 +365,56 @@ static int stm32_lptim_cnt_probe(struct platform_device *pdev)
- 	return devm_iio_device_register(&pdev->dev, indio_dev);
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int stm32_lptim_cnt_suspend(struct device *dev)
-+{
-+	struct stm32_lptim_cnt *priv = dev_get_drvdata(dev);
-+	int ret;
-+
-+	/* Only take care of enabled counter: don't disturb other MFD child */
-+	if (priv->enabled) {
-+		ret = stm32_lptim_setup(priv, 0);
-+		if (ret)
-+			return ret;
-+
-+		ret = stm32_lptim_set_enable_state(priv, 0);
-+		if (ret)
-+			return ret;
-+
-+		/* Force enable state for later resume */
-+		priv->enabled = true;
-+	}
-+
-+	return pinctrl_pm_select_sleep_state(dev);
-+}
-+
-+static int stm32_lptim_cnt_resume(struct device *dev)
-+{
-+	struct stm32_lptim_cnt *priv = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = pinctrl_pm_select_default_state(dev);
-+	if (ret)
-+		return ret;
-+
-+	if (priv->enabled) {
-+		priv->enabled = false;
-+		ret = stm32_lptim_setup(priv, 1);
-+		if (ret)
-+			return ret;
-+
-+		ret = stm32_lptim_set_enable_state(priv, 1);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(stm32_lptim_cnt_pm_ops, stm32_lptim_cnt_suspend,
-+			 stm32_lptim_cnt_resume);
-+
- static const struct of_device_id stm32_lptim_cnt_of_match[] = {
- 	{ .compatible = "st,stm32-lptimer-counter", },
- 	{},
-@@ -372,6 +426,7 @@ static struct platform_driver stm32_lptim_cnt_driver = {
- 	.driver = {
- 		.name = "stm32-lptimer-counter",
- 		.of_match_table = stm32_lptim_cnt_of_match,
-+		.pm = &stm32_lptim_cnt_pm_ops,
- 	},
- };
- module_platform_driver(stm32_lptim_cnt_driver);
 -- 
-2.7.4
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
