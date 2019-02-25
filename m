@@ -1,41 +1,84 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH 0/3] RPMPD for QCS404
-Date: Mon, 25 Feb 2019 18:18:09 +0530
-Message-ID: <c4b2a60c-80a5-8491-38fb-1fed3dee2e8a@codeaurora.org>
-References: <20190221064434.2760-1-bjorn.andersson@linaro.org>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 4/5] arm64: dts: marvell: armada-8040-clearfog: Drop
+ non-existent SATA port
+Date: Mon, 25 Feb 2019 13:05:02 +0000
+Message-ID: <20190225130502.om6y5q7cbe35fbyw@shell.armlinux.org.uk>
+References: <20190222145356.23072-1-miquel.raynal@bootlin.com>
+ <20190222145356.23072-5-miquel.raynal@bootlin.com>
+ <87tvgt7o0q.fsf@tarshish> <20190225115826.5bc17f6d@xps13>
+ <20190225121519.2quhgqcf24rutqn4@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190221064434.2760-1-bjorn.andersson@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190225121519.2quhgqcf24rutqn4@sapphire.tkos.co.il>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baruch Siach <baruch@tkos.co.il>, Jon Nettleton <jon@solid-run.com>, Rabeeh Khoury <rabeeh@solid-run.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-ide@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2/21/2019 12:14 PM, Bjorn Andersson wrote:
-> Reworkd the macros of the rpmpd driver and add qcs404 power domains, then add
-> this to the dts.
-
-For the entire series,
-
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-
+On Mon, Feb 25, 2019 at 02:15:19PM +0200, Baruch Siach wrote:
+> Hi Miquel,
 > 
-> Bjorn Andersson (3):
->    soc: qcom: rpmpd: Modify corner defining macros
->    soc: qcom: rpmpd: Add QCS404 corners
->    arm64: dts: qcom: qcs404: Add rpmpd node
+> On Mon, Feb 25, 2019 at 11:58:26AM +0100, Miquel Raynal wrote:
+> > Baruch Siach <baruch@tkos.co.il> wrote on Sun, 24 Feb 2019 07:29:09
+> > +0200:
+> > 
+> > > On Fri, Feb 22 2019, Miquel Raynal wrote:
+> > > > There is no CP110 SATA port available on the 8040 Clearfog A8k, SATA
+> > > > may be used thanks to a mPCIe -> SATA extension board only. Hence, the
+> > > > cp1_sata0 node must be removed from the device tree.  
+> > > 
+> > > Not true. You can use the mini PCIe serdes as SATA directly if you
+> > > configure it as such. You only need to invert the serdes Rx pair
+> > > polarity. This is the default configuration for the Clearfog GT-8K CON3
+> > > mini-PCIe slot (CP1, lane #0) in current mainline U-Boot. I verified
+> > > that this setup works on Clearfog GT-8K.
+> > > 
+> > > This patch would break mini PCIe direct SATA.
+> > 
+> > Thanks for explaining, I am a little bit surprised that it actually
+> > uses the SATA host IP on CP110 but fine. So can you tell me which SATA
+> > port is used in this case? Because I will have to update the DT
+> > representation along with the CP110 changes.
 > 
->   .../devicetree/bindings/power/qcom,rpmpd.txt  |  1 +
->   arch/arm64/boot/dts/qcom/qcs404.dtsi          | 35 +++++++++++
->   drivers/soc/qcom/rpmpd.c                      | 63 +++++++++++++------
->   include/dt-bindings/power/qcom-rpmpd.h        |  9 +++
->   4 files changed, 88 insertions(+), 20 deletions(-)
-> 
+> According to the cp110_comphy_phy_mux_data[] array in U-Boot 
+> drivers/phy/marvell/comphy_cp110.c, serdes 0 of CP110 can only be SATA1 (i.e. 
+> the second port; first is SATA0).
+
+Adding folk from SolidRun...
+
+Why are the mPCIe connectors configured by default for mSATA cards?
+This sounds like it's going to cause confusion.  The published
+specification for the board at:
+
+https://developer.solid-run.com/products/clearfog-gt-8k/
+
+states that the board has "3 x mPCIe (USB 2.0 + PCIe)" and makes no
+mention of mSATA.
+
+mSATA is not compatible with mPCIe - mSATA cards expect the serdes
+lanes to be connected to a SATA interface, mPCIe cards expect a PCIe
+controller at the other end of the serdes lanes.
+
+Given that there is a lot of confusion about mSATA vs mPCIe out there,
+(caused by both being the same physical form factor and fitting into
+the same socket, yet being electrically different) I think it's
+important to have a coherent story on these connectors everywhere.
+
+Maybe we need a way to have these connectors configurable by the end
+user?
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
