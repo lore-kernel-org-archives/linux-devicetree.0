@@ -1,82 +1,74 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v3 3/5] pwm: atmel: rename objects of type atmel_pwm_data
-Date: Mon, 25 Feb 2019 16:44:41 +0000
-Message-ID: <1551113039-937-4-git-send-email-claudiu.beznea@microchip.com>
-References: <1551113039-937-1-git-send-email-claudiu.beznea@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: nvmem: Add STM32 factory-programmed
+ romem
+Date: Mon, 25 Feb 2019 10:53:07 -0600
+Message-ID: <20190225165307.GA26260@bogus>
+References: <1548866336-14765-1-git-send-email-fabrice.gasnier@st.com>
+ <1548866336-14765-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551113039-937-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1548866336-14765-2-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: srinivas.kandagatla@linaro.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lionel.debieve@st.com, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+On Wed, Jan 30, 2019 at 05:38:53PM +0100, Fabrice Gasnier wrote:
+> Add documentation for STMicroelectronics STM32 Factory-programmed
+> read only memory area.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  .../devicetree/bindings/nvmem/st,stm32-romem.txt   | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+> new file mode 100644
+> index 0000000..fbff52e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+> @@ -0,0 +1,31 @@
+> +STMicroelectronics STM32 Factory-programmed data device tree bindings
+> +
+> +This represents STM32 Factory-programmed read only non-volatile area: locked
+> +flash, OTP, read-only HW regs... This contains various information such as:
 
-Rename objects of type atmel_pwm_data to contain chip name instead of
-version number.
+Several distinct types here. Does s/w need to know the difference 
+rather than just one generic-ish compatible? Access size restrictions 
+maybe? Ability to unlock and program?
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/pwm/pwm-atmel.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+If not, then why even make this stm32 specific?
 
-diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-index 647d063562db..4ac899d8008c 100644
---- a/drivers/pwm/pwm-atmel.c
-+++ b/drivers/pwm/pwm-atmel.c
-@@ -283,7 +283,7 @@ static const struct pwm_ops atmel_pwm_ops =3D {
- 	.owner =3D THIS_MODULE,
- };
-=20
--static const struct atmel_pwm_data atmel_pwm_data_v1 =3D {
-+static const struct atmel_pwm_data atmel_sam9rl_pwm_data =3D {
- 	.regs =3D {
- 		.period		=3D PWMV1_CPRD,
- 		.period_upd	=3D PWMV1_CUPD,
-@@ -297,7 +297,7 @@ static const struct atmel_pwm_data atmel_pwm_data_v1 =
-=3D {
- 	},
- };
-=20
--static const struct atmel_pwm_data atmel_pwm_data_v2 =3D {
-+static const struct atmel_pwm_data atmel_sama5_pwm_data =3D {
- 	.regs =3D {
- 		.period		=3D PWMV2_CPRD,
- 		.period_upd	=3D PWMV2_CPRDUPD,
-@@ -314,10 +314,10 @@ static const struct atmel_pwm_data atmel_pwm_data_v2 =
-=3D {
- static const struct platform_device_id atmel_pwm_devtypes[] =3D {
- 	{
- 		.name =3D "at91sam9rl-pwm",
--		.driver_data =3D (kernel_ulong_t)&atmel_pwm_data_v1,
-+		.driver_data =3D (kernel_ulong_t)&atmel_sam9rl_pwm_data,
- 	}, {
- 		.name =3D "sama5d3-pwm",
--		.driver_data =3D (kernel_ulong_t)&atmel_pwm_data_v2,
-+		.driver_data =3D (kernel_ulong_t)&atmel_sama5_pwm_data,
- 	}, {
- 		/* sentinel */
- 	},
-@@ -327,13 +327,13 @@ MODULE_DEVICE_TABLE(platform, atmel_pwm_devtypes);
- static const struct of_device_id atmel_pwm_dt_ids[] =3D {
- 	{
- 		.compatible =3D "atmel,at91sam9rl-pwm",
--		.data =3D &atmel_pwm_data_v1,
-+		.data =3D &atmel_sam9rl_pwm_data,
- 	}, {
- 		.compatible =3D "atmel,sama5d3-pwm",
--		.data =3D &atmel_pwm_data_v2,
-+		.data =3D &atmel_sama5_pwm_data,
- 	}, {
- 		.compatible =3D "atmel,sama5d2-pwm",
--		.data =3D &atmel_pwm_data_v2,
-+		.data =3D &atmel_sama5_pwm_data,
- 	}, {
- 		/* sentinel */
- 	},
---=20
-2.7.4
+> +analog calibration data for temperature sensor (e.g. TS_CAL1, TS_CAL2),
+> +internal vref (VREFIN_CAL), unique device ID...
+> +
+> +Required properties:
+> +- compatible:		Should be one of:
+> +			"st,stm32-romem"
+> +			"st,stm32mp15-bsec"
+> +- reg:			Offset and length of factory-programmed area.
+> +- #address-cells:	Should be '<1>'.
+> +- #size-cells:		Should be '<1>'.
+> +
+> +Optional Data cells:
+> +- Must be child nodes as described in nvmem.txt.
+> +
+> +Example on stm32f4:
+> +	romem: nvmem@1fff7800 {
+> +		compatible = "st,stm32-romem";
+> +		reg = <0x1fff7800 0x400>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		/* Data cells: ts_cal1 at 0x1fff7a2c */
+> +		ts_cal1: calib@22c {
+> +			reg = <0x22c 0x2>;
+> +		};
+> +		...
+> +	};
+> -- 
+> 1.9.1
+> 
