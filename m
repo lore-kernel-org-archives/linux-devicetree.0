@@ -1,84 +1,26 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
-Date: Mon, 25 Feb 2019 14:52:58 +0000
-Message-ID: <5310b73b-4821-6dff-b9c0-34c59fb7fd72@arm.com>
-References: <20190224140426.3267-1-marc.zyngier@arm.com>
- <CAKv+Gu9OOzOxx0rTAZqM8r4q_hRmOp3b=KP7fwgNeiu67FCApA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/6] dt-bindings: mfd: Add compatible for the MediaTek
+ MT6358 PMIC
+Date: Mon, 25 Feb 2019 08:54:09 -0600
+Message-ID: <20190225145409.GA724@bogus>
+References: <1548839891-20932-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1548839891-20932-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKv+Gu9OOzOxx0rTAZqM8r4q_hRmOp3b=KP7fwgNeiu67FCApA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1548839891-20932-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, Kalle Valo <kvalo@codeaurora.org>, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Xinming Hu <huxinming820@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, "<linux-wireless@vger.kernel.org>" <linux-wireless@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ard,
-
-On 25/02/2019 12:45, Ard Biesheuvel wrote:
-> On Sun, 24 Feb 2019 at 15:08, Marc Zyngier <marc.zyngier@arm.com> wrote:
->>
->> For quite some time, I wondered why the PCI mwifiex device built in my
->> Chromebook was unable to use the good old legacy interrupts. But as MSIs
->> were working fine, I never really bothered investigating. I finally had a
->> look, and the result isn't very pretty.
->>
->> On this machine (rk3399-based kevin), the wake-up interrupt is described as
->> such:
->>
->> &pci_rootport {
->>         mvl_wifi: wifi@0,0 {
->>                 compatible = "pci1b4b,2b42";
->>                 reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
->>                        0x83010000 0x0 0x00100000 0x0 0x00100000>;
->>                 interrupt-parent = <&gpio0>;
->>                 interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
->>                 pinctrl-names = "default";
->>                 pinctrl-0 = <&wlan_host_wake_l>;
->>                 wakeup-source;
->>         };
->> };
->>
->> Note how the interrupt is part of the properties directly attached to the
->> PCI node. And yet, this interrupt has nothing to do with a PCI legacy
->> interrupt, as it is attached to the wake-up widget that bypasses the PCIe RC
->> altogether (Yay for the broken design!). This is in total violation of the
->> IEEE Std 1275-1994 spec[1], which clearly documents that such interrupt
->> specifiers describe the PCI device interrupts, and must obey the
->> INT-{A,B,C,D} mapping. Oops!
->>
+On Wed, 30 Jan 2019 17:18:07 +0800, Hsin-Hsiung Wang wrote:
+> This adds compatible for the MediaTek MT6358 PMIC.
 > 
-> The mapping of legacy PCIe INTx interrupts onto wired system
-> interrupts is a property of the PCIe host controller, not of a
-> particular PCIe device. So I would argue that the code is broken here
-> as well: it should never attempt to interpret 'interrupt' properties
-> at the PCI device level as having any bearing on how legacy interrupts
-> are routed.
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/mt6397.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
 
-OpenFirmware says that this node contains the interrupt number of the
-device (4.1.1. Open Firmware-defined Properties for Child Nodes). The
-trick is that this property is generated *from* the device, and not set
-in stone.
-
-DT, on the other hand, takes whatever is described there and uses it as
-the gospel to configure the OS, no matter how the PCI device is actually
-configured. If the two don't match (like in this case), things break.
-This is the "DT describes the HW" mantra, for (sometimes) better or
-(more generally) worse.
-
-What the DT code does is to interpret the whole interrupt specifier,
-*including the interrupt-parent*. And that feels wrong. It should always
-be in the context of the host controller. But on the other side, the DT
-code is not in the business of validating the DT either...
-
-It outlines one thing: If you have to interpret per-device PCI
-properties from DT, you're in for serious trouble. I should get some
-better HW.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Reviewed-by: Rob Herring <robh@kernel.org>
