@@ -1,74 +1,53 @@
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 5/5] arm64: dts: imx8qm: Enable wm8524 codec
-Date: Mon, 25 Feb 2019 13:17:50 +0000
-Message-ID: <20190225131722.10253-5-daniel.baluta@nxp.com>
+Subject: Re: [PATCH 1/5] arm64: dts: imx8mq: Add SDMA nodes
+Date: Mon, 25 Feb 2019 13:23:41 +0000
+Message-ID: <f02865a5b9cd3cde711d818ccbb25f6b7b95a4cf.camel@nxp.com>
 References: <20190225131722.10253-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190225131722.10253-1-daniel.baluta@nxp.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-ID: <75BE431F1FB38E41A58EBC99CA645D39@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Abel Vesa <abel.vesa@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutro>
 List-Id: devicetree@vger.kernel.org
 
-This uses simple-audio-card machine driver adding 1 CPU DAI
-and 1 Codec DAI.
-
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 29 ++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index 58de4a3d6029..77f590c13ee0 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -31,6 +31,35 @@
- 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	wm8524: audio-codec-0 {
-+		#sound-dai-cells = <0>;
-+		compatible = "wlf,wm8524";
-+		clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
-+		clock-names = "mclk";
-+		wlf,mute-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sound-wm8524 {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "wm8524-audio";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,frame-master = <&cpudai>;
-+		simple-audio-card,bitclock-master = <&cpudai>;
-+		simple-audio-card,widgets =
-+			"Line", "Left Line Out Jack",
-+			"Line", "Right Line Out Jack";
-+		simple-audio-card,routing =
-+			"Left Line Out Jack", "LINEVOUTL",
-+			"Right Line Out Jack", "LINEVOUTR";
-+		cpudai: simple-audio-card,cpu {
-+			sound-dai = <&sai2>;
-+		};
-+		link_codec: simple-audio-card,codec {
-+			sound-dai = <&wm8524>;
-+			clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
-+		};
-+	};
- };
- 
- &fec1 {
--- 
-2.17.1
+UGxlYXNlIGlnbm9yZSB0aGlzLCBJIHNlbnQgaXQgZnJvbSB0aGUgd3JvbmcgcmVwby4gSSBzd2Vh
+ciB0aGF0IEkNCmRvdWJsZSBjaGVja2VkLg0KDQpXaWxsIHNlbnQgdjIgd2l0aCBjb3JyZWN0IGJh
+c2UuDQoNCg0KT24gTW9uLCAyMDE5LTAyLTI1IGF0IDEzOjE3ICswMDAwLCBEYW5pZWwgQmFsdXRh
+IHdyb3RlOg0KPiBTRE1BMSBpcyBwYXJ0IG9mIEFJUFMtMyByZWdpb24gYW5kIFNETUEyIGlzIHBh
+cnQNCj4gb2YgQUlQUy0xIHJlZ2lvbi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5n
+IDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBbaW5pdGlhbCBzdWJtaXQgaW4gaS5NWCBpbnRlcm5h
+bCB0cmVlXQ0KPiBTaWduZWQtb2ZmLWJ5OiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54
+cC5jb20+DQo+IFthZGFwdGF0aW9uIGZvciBsaW51eC1uZXh0XQ0KPiAtLS0NCj4gIGFyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpIHwgMjINCj4gKysrKysrKysrKysrKysr
+KysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYg
+LS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQ0KPiBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpDQo+IGluZGV4IDkxNTViZDQ3
+ODRlYi4uODc4MzljNWM4YTdmIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9pbXg4bXEuZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2Fs
+ZS9pbXg4bXEuZHRzaQ0KPiBAQCAtMjM0LDYgKzIzNCwxNyBAQA0KPiAgCQkJCXN0YXR1cyA9ICJk
+aXNhYmxlZCI7DQo+ICAJCQl9Ow0KPiAgDQo+ICsJCQlzZG1hMjogc2RtYUAzMDJjMDAwMCB7DQo+
+ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OG1xLXNkbWEiLA0KPiAiZnNsLGlteDdkLXNkbWEi
+Ow0KPiArCQkJCXJlZyA9IDwweDMwMmMwMDAwIDB4MTAwMDA+Ow0KPiArCQkJCWludGVycnVwdHMg
+PSA8R0lDX1NQSSAxMDMNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ICsJCQkJY2xvY2tzID0g
+PCZjbGsgSU1YOE1RX0NMS19TRE1BMl9ST09UPiwNCj4gKwkJCQkJIDwmY2xrIElNWDhNUV9DTEtf
+U0RNQTJfUk9PVD47DQo+ICsJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgImFoYiI7DQo+ICsJCQkJ
+I2RtYS1jZWxscyA9IDwzPjsNCj4gKwkJCQlmc2wsc2RtYS1yYW0tc2NyaXB0LW5hbWUgPQ0KPiAi
+aW14L3NkbWEvc2RtYS1pbXg3ZC5iaW4iOw0KPiArCQkJfTsNCj4gKw0KPiAgCQkJaW9tdXhjOiBp
+b211eGNAMzAzMzAwMDAgew0KPiAgCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1pb211eGMi
+Ow0KPiAgCQkJCXJlZyA9IDwweDMwMzMwMDAwIDB4MTAwMDA+Ow0KPiBAQCAtNTc1LDYgKzU4Niwx
+NyBAQA0KPiAgCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICAJCQl9Ow0KPiAgDQo+ICsJCQlz
+ZG1hMTogc2RtYUAzMGJkMDAwMCB7DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OG1xLXNk
+bWEiLA0KPiAiZnNsLGlteDdkLXNkbWEiOw0KPiArCQkJCXJlZyA9IDwweDMwYmQwMDAwIDB4MTAw
+MDA+Ow0KPiArCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyDQo+IElSUV9UWVBFX0xFVkVMX0hJ
+R0g+Ow0KPiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfU0RNQTFfUk9PVD4sDQo+ICsJ
+CQkJCSA8JmNsayBJTVg4TVFfQ0xLX1NETUExX1JPT1Q+Ow0KPiArCQkJCWNsb2NrLW5hbWVzID0g
+ImlwZyIsICJhaGIiOw0KPiArCQkJCSNkbWEtY2VsbHMgPSA8Mz47DQo+ICsJCQkJZnNsLHNkbWEt
+cmFtLXNjcmlwdC1uYW1lID0NCj4gImlteC9zZG1hL3NkbWEtaW14N2QuYmluIjsNCj4gKwkJCX07
+DQo+ICsNCj4gIAkJCWZlYzE6IGV0aGVybmV0QDMwYmUwMDAwIHsNCj4gIAkJCQljb21wYXRpYmxl
+ID0gImZzbCxpbXg4bXEtZmVjIiwNCj4gImZzbCxpbXg2c3gtZmVjIjsNCj4gIAkJCQlyZWcgPSA8
+MHgzMGJlMDAwMCAweDEwMDAwPjsNCg==
