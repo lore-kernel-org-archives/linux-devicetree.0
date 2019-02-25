@@ -1,191 +1,60 @@
-From: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/3 v2] ARM: dts: rk3288-tinker.dtsi: Fix SD card detection
-Date: Mon, 25 Feb 2019 08:59:45 +0000
-Message-ID: <AM3PR03MB0966BAB53F14A0D644EF68FEAC7A0@AM3PR03MB0966.eurprd03.prod.outlook.com>
-References: <20190217121513.22965-2-beagleboard@davidjohnsummers.uk>
- <AM3PR03MB09663F32FC40000E42C1A722AC790@AM3PR03MB0966.eurprd03.prod.outlook.com>
- <e1f1a93e-505b-bf53-a253-5c1ddaeaebf8@davidjohnsummers.uk>
- <1827776.DXBEgXTPyu@diego>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v1 0/2] rsnd: dts: change to use extended audio dmac
+ register
+Date: Mon, 25 Feb 2019 10:23:55 +0100
+Message-ID: <20190225092355.w5o5se22mucgb5i5@verge.net.au>
+References: <20190220052435.20508-1-jiada_wang@mentor.com>
+ <CAMuHMdX1OqmwtCAtx8mxQtrG0D6bxkJ-trkA50qw=t16kBfdTQ@mail.gmail.com>
+ <871s427ux5.wl-kuninori.morimoto.gx@renesas.com>
+ <021012f9-f522-0efd-4bb2-c56917623266@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1827776.DXBEgXTPyu@diego>
-Content-Language: en-US
-Content-ID: <FF1DB24E552EEB43B1B683BCF35274A0-yI6K9L9iJZCcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: =?Windows-1252?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <021012f9-f522-0efd-4bb2-c56917623266@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jiada <jiada_wang@mentor.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-02-24 23:54, Heiko St=FCbner wrote:
-> Am Sonntag, 24. Februar 2019, 21:10:50 CET schrieb David Summers:
->> On 24/02/2019 19:56, Jonas Karlman wrote:
->>> On 2019-02-24 20:35, David Summers wrote:
->>>> On 24/02/2019 19:26, Jonas Karlman wrote:
->>>>> On 2019-02-22 19:47, David Summers wrote:
->>>>>> The Problem:
->>>>>>
->>>>>> On ASUS Tinker Board S, when booting from the eMMC, and there is no
->>>>>> card sd slot, then there are constant errors.
->>>>>>
->>>>>> Cause:
->>>>>>
->>>>>> Thanks must go to Robin Murphy @ ARM for idenifying the problem. The
->>>>>> rk808 on the Tinker Board and Tinker Board S has many regulators, one
->>>>>> vccio_sd powers the IO for the sd card. Unfortunatly this is also us=
-ed
->>>>>> in the card detect. Now when no card is install, the regulator is
->>>>>> powered down. This means that the card detect floats, and this means
->>>>>> random card detection.
->>>>>>
->>>>>> The Solution:
->>>>>>
->>>>>> Make sure that the sd IO is always powered, this means card detection
->>>>>> is always active, which is what should be done on a board with an sd
->>>>>> slot, which both the Tinker Board and Tinker Board S are. Hence chan=
-ge
->>>>>> is made to the .dtsi which takes effect on all Tinker Boards as
->>>>>> required.
->>>>>>
->>>>>> The change also adds "regulator-boot-on" the Tinker Board boot from
->>>>>> uboot, and the sd card is always one option. Hence the IO must be
->>>>>> powered in uboot, and so setting this flag.
->>>>>>
->>>>>> Also removed is "disable-wp" the micro sd card which are used have no
->>>>>> write  protection, so the concept doesn't mean anything, and the
->>>>>> Tinker Boards work without this. Hence it is removed to simply.
->>>>>>
->>>>>> This change came from ArchLinux Arm, but we note it is the fix also
->>>>>> used by Armbian:
->>>>>>
->>>>>> https://nam02.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2F=
-githu
->>>>>> b.com%2FMiouyouyou%2FRockMyy%2Fblob%2Fmaster%2Fpatches%2Fkernel%2Fv5=
-.0%
->>>>>> 2FDTS%2F0016-ARM-DTSI-rk3288-tinker-Setting-up-the-SD-regulators.pat=
-ch&
->>>>>> amp;data=3D02%7C01%7C%7Cf5937082939e4163c84b08d69a8f3b61%7C84df9e7fe=
-9f640
->>>>>> afb435aaaaaaaaaaaa%7C1%7C0%7C636866337295767294&amp;sdata=3DtK8QE3bs=
-G9LW%
->>>>>> 2FJcvFzLKa8%2BPj5u%2F8exbEn8m2vqKly0%3D&amp;reserved=3D0
->>>>>>
->>>>>> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
->>>>>> ---
->>>>>>
->>>>>>    arch/arm/boot/dts/rk3288-tinker.dtsi | 3 ++-
->>>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi
->>>>>> b/arch/arm/boot/dts/rk3288-tinker.dtsi index
->>>>>> aa107ee41b8b..6b7e55085b0c 100644
->>>>>> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
->>>>>> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
->>>>>> @@ -254,6 +254,8 @@
->>>>>>
->>>>>>    			};
->>>>>>    			=
+On Fri, Feb 22, 2019 at 12:05:02PM +0900, jiada wrote:
+> Hi Geert
+> 
+> 
+> On 2019/02/20 17:10, Kuninori Morimoto wrote:
+> > 
+> > Hi Geert
+> > 
+> > > > According to user reference manual for R-CAR H3 and M3-W SoCs,
+> > > > in order to access busif4 ~ busif7, extended audio dmac registers
+> > > > (PDMASAREn, PDMADAREn, PDMACHCREn)
+> > > > need to be used, rather than basic audio dmac registers
+> > > > (PDMASARn, PDMADARn, PDMACHCRn)
+> > > > 
+> > > > This patch set updates H3 (= r8a7795) and M3-W (= r8a7796)
+> > > > to use extended audio dmac registers
+> > > 
+> > > The same change should be applied for M3-N and RZ/G2M, right?
+> > > 
+> Currently only H3 and M3-W support to use busif other than busif0,
+> I feel currently it's only necessary to use extended audio dmac register for
+> these SoCs
+> 
+> > > R-Car E3 and RZ/G2E already use the extended register set, as they do not
+> > > have the basic set.
+> > > 
+> > > For SoCs having both, this feels a bit like describing software policy, instead
+> > > of hardware, to me. Would it make sense to extend the audio bindings, and
+> > > allow describing both the basic and extended register sets, and let the driver
+> > > make the decision which one to use?
+> > 
+> > I don't think we need to use basic register.
+> > This means extended register only is very enough.
+> > I'm not sure why datasheet is indicating basic...
+> > 
+> Extended audio dmac registers covers all function of basic ones,
+> so there is no need to use basic registers
 
->>>>>>    			vccio_sd: LDO_REG5 {
->>>>>>
->>>>>> +				regulator-always-on;
->>>>>> +				regulator-boot-on;
->>>>>>
->>>>>>    				regulator-min-microvolt =3D <1800000>;
->>>>>>    				regulator-max-microvolt =3D <3300000>;
->>>>>>    				regulator-name =3D "vccio_sd";
->>>>>>
->>>>>> @@ -431,7 +433,6 @@
->>>>>>
->>>>>>    	cap-mmc-highspeed;
->>>>>>    	cap-sd-highspeed;
->>>>>>    	card-detect-delay =3D <200>;
->>>>>>
->>>>>> -	disable-wp;			/* wp not hooked up */
->>>>> I think disable-wp correctly describes that wp is not expected to work
->>>>> and should not be removed.>>> =
-
->>>>>   From comment in mmc_sd_get_ro():
->>>>> "Some systems don't feature a write-protect pin and don't need one.
->>>>> E.g. because they only have micro-SD card slot. For those systems
->>>>> assume that the SD card is always read-write."
->>>>>
->>>>> Without disable-wp core will call dw_mci_get_ro() to get wp status.
->>>>>
->>>>>
->>>>> This patch also fixes reboot when booting from sd-card and having emmc
->>>>> zeroed out.
->>>>>
->>>>> Tested-by: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
->>>>>
->>>>> Regards,
->>>>> Jonas
->>>>>
->>>>>>    	pinctrl-names =3D "default";
->>>>>>    	pinctrl-0 =3D <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
->>>>>>    	status =3D "okay";
->>>> Hi Jonas,
->>>>
->>>> Thanks for testing - did you get an error with "disable-wp" ?
->>>>
->>>> We tested this with @TheSaint On ArchLinux Arm, and it worked!
->>>>
->>>> With the "regulator-boot-on" and on reboot, it should keep power on the
->>>> sd card - so reboot should work.
->>> I tested both with and without "disable-wp" removed and both works with=
-out
->>> error. SD-card reboots now works as it should thanks to
->>> "regulator-always-on" and "regulator-boot-on", I only tested using both.
->>>
->>> On a side note I have also been testing [1] to make reboot with UHS sig=
-nal
->>> voltage work and will send out a RFC v2 after I have concluded testing =
-on
->>> my other devices supporting UHS signal voltage.
->>>
->>> [1]
->>> https://github.com/Kwiboo/linux-rockchip/compare/patch-rk-5.x-tinker-uh=
-s%
->>> 5E%5E%5E...patch-rk-5.x-tinker-uhs
->>>
->>> Regards,
->>> Jonas
->> Thanks.
->>
->> Glad your are testing - and I hope the uhs tests work.
->>
->> Alas for us to test uhs - and our user on Arch isn't so experienced. I
->> could push him to try different speeds - but to be honest I expect it to
->> be beyond his comfort zone.
->>
->> But its good to here you confirm "disable-wp" works. To my mind it says
->> we are sure that  all three changes in the patch are are correct.
->>
->> Hopefully this will be straight forward to Heiko to accept. Its the
->> simple patch of the 3 to accept ;)
-> From Jonas' explanation, I'd guess we want disable-wp to stay in the node,
-> and not remove it as it tells the system, that "there is no write protect =
-
-> status available" hence it doesn't need to check for it.
-
-Correct, I may have been unclear ealier but I think that the disable-wp sho=
-uld stay as it correctly describes
-that the board has a microSD slot that do not support write protection.
-
-Regards,
-Jonas
-
->
->
-> Heiko
->
->
+This still sounds a lot like a policy decision that should
+be made by the driver based on a fuller description of the hardware
+in DT.
