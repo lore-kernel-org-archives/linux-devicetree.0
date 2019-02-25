@@ -1,131 +1,28 @@
-Return-Path: <SRS0=TIRm=Q4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr130072.outbound.protection.outlook.com ([40.107.13.72]:63029
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725891AbfBUMuw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Feb 2019 07:50:52 -0500
-From: Pankaj Bansal <pankaj.bansal@nxp.com>
-Subject: [PATCH v2] dt-bindings: add register based devices' mux controller DT
- bindings
-Date: Thu, 21 Feb 2019 12:50:46 +0000
-Message-ID: <20190221181514.5964-1-pankaj.bansal@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 25 Feb 2019 16:57:48 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: display: add missing semicolon in example
+Message-ID: <20190225225748.GA7431@bogus>
+References: <1549612293-5674-1-git-send-email-akinobu.mita@gmail.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1549612293-5674-1-git-send-email-akinobu.mita@gmail.com>
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: devicetree@vger.kernel.org, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This adds device tree binding documentation for generic register based
-multiplexer controlled by a bitfields in a parent device's register range.
+On Fri, Feb 08, 2019 at 04:51:33PM +0900, Akinobu Mita wrote:
+> Add missing semicolon in example for Sitronix ST7735R display panels.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Noralf Tr�nnes <noralf@tronnes.org>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/display/sitronix,st7735r.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
----
+Applied, thanks.
 
-Notes:
-    V2:
-    - Removed syscon reference from txt file
-    - Removed loading zeroes from hex numbers
-    - Fixed the depth of dts nodes
-    - fixed minor formatting errors
-
- .../devicetree/bindings/mux/reg-mux.txt      | 83 ++++++++++++++++++
- 1 file changed, 83 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mux/reg-mux.txt b/Documentat=
-ion/devicetree/bindings/mux/reg-mux.txt
-new file mode 100644
-index 000000000000..260c6f511b59
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mux/reg-mux.txt
-@@ -0,0 +1,83 @@
-+Generic register bitfield-based multiplexer controller bindings
-+
-+Define register bitfields to be used to control multiplexers. The parent
-+device tree node must be a device node to provide register r/w access.
-+
-+Required properties:
-+- compatible : "reg-mux"
-+- #mux-control-cells : <1>
-+- mux-reg-masks : an array of register offset and pre-shifted bitfield mas=
-k
-+                  pairs, each describing a single mux control.
-+* Standard mux-controller bindings as decribed in mux-controller.txt
-+
-+Optional properties:
-+- idle-states : if present, the state the muxes will have when idle. The
-+		special state MUX_IDLE_AS_IS is the default.
-+
-+The multiplexer state of each multiplexer is defined as the value of the
-+bitfield described by the corresponding register offset and bitfield mask =
-pair
-+in the mux-reg-masks array, accessed through the parent register r/w funct=
-ions.
-+
-+Example:
-+
-+&i2c0 {
-+	fpga@66 { // fpga connected to i2c
-+		compatible =3D "fsl,lx2160aqds-fpga", "fsl,fpga-qixis-i2c",
-+			     "simple-mfd";
-+		reg =3D <0x66>;
-+
-+		mux: mux-controller { // Mux Producer
-+			compatible =3D "reg-mux";
-+			#mux-control-cells =3D <1>;
-+			mux-reg-masks =3D <0x54 0xf8>, /* 0: reg 0x54, bits 7:3 */
-+					<0x54 0x07>; /* 1: reg 0x54, bits 2:0 */
-+		};
-+	};
-+};
-+
-+mdio-mux-1 { // Mux consumer
-+	compatible =3D "mdio-mux";
-+	mux-controls =3D <&mux 0>;
-+	mdio-parent-bus =3D <&emdio1>;
-+	#address-cells =3D <1>;
-+	#size-cells =3D <0>;
-+
-+	mdio@0 {
-+		reg =3D <0x0>;
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+	};
-+
-+	mdio@40 {
-+		reg =3D <0x40>;
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+	};
-+
-+	..
-+	..
-+};
-+
-+mdio-mux-2 { // Mux consumer
-+	compatible =3D "mdio-mux";
-+	mux-controls =3D <&mux 1>;
-+	mdio-parent-bus =3D <&emdio2>;
-+	#address-cells =3D <1>;
-+	#size-cells =3D <0>;
-+
-+	mdio@0 {
-+		reg =3D <0x0>;
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+	};
-+
-+	mdio@1 {
-+		reg =3D <0x1>;
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+	};
-+
-+	..
-+	..
-+};
-+
---=20
-2.17.1
+Rob
