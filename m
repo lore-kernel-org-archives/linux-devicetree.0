@@ -1,99 +1,30 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 4/4] drm/panel: Add OSD101T2587-53TS driver
-Date: Mon, 25 Feb 2019 16:39:03 +0200
-Message-ID: <37fcd744-b32c-d77a-b422-fb44d6f2c952@ti.com>
-References: <20190222131618.20520-1-peter.ujfalusi@ti.com>
- <20190222131618.20520-5-peter.ujfalusi@ti.com>
- <20190223193805.GA21790@ravnborg.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 02/10] dt-binding: gce: add gce header file for mt8183
+Date: Mon, 25 Feb 2019 08:39:42 -0600
+Message-ID: <20190225143942.GA13388@bogus>
+References: <1548747128-60136-1-git-send-email-bibby.hsieh@mediatek.com>
+ <1548747128-60136-3-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190223193805.GA21790@ravnborg.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, tomi.valkeinen@ti.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, thierry.reding@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1548747128-60136-3-git-send-email-bibby.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, kendrick.hsu@mediat
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FtLAoKT24gMjMvMDIvMjAxOSAyMS4zOCwgU2FtIFJhdm5ib3JnIHdyb3RlOgo+IEhpIFBl
-dGVyLgo+IAo+IERyaXZlciBsb29rcyB0byBiZSBpbiBnb29kIHNoYXBlIG5vdy4KPiBXaXRoIHRo
-ZSBmZXcgY29tbWVudHMgYmVsb3cgYWRkcmVzc2VkIHlvdSBjYW4gYWRkIG15Ogo+IFJldmlld2Vk
-LWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+Cj4gCj4gCVNhbQo+IAo+IE9uIEZy
-aSwgRmViIDIyLCAyMDE5IGF0IDAzOjE2OjE4UE0gKzAyMDAsIFBldGVyIFVqZmFsdXNpIHdyb3Rl
-Ogo+PiBUaGUgcGFuZWwgaXMgc2ltaWxhciB0byBPU0QxMDFUMjA0NS01M1RTICh3aGljaCBpcyBo
-YW5kbGVkIGJ5IHBhbmVsLXNpbXBsZSkKPj4gd2l0aCBvbmUgYmlnIGRpZmZlcmVuY2U6IG9zZDEw
-MXQyNTg3LTUzdHMgbmVlZHMgTUlQSV9EU0lfVFVSTl9PTl9QRVJJUEhFUkFMCj4+IG1lc3NhZ2Ug
-dG8gYmUgc2VudCBmcm9tIHRoZSBob3N0IHRvIGJlIG9wZXJhdGlvbmFsIGFuZCB0aHVzIGNhbiBu
-b3QgYmUKPj4gaGFuZGxlZCBieSBwYW5lbC1zaW1wbGUuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFBl
-dGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9n
-cHUvZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAgIHwgICA2ICsKPj4gIGRyaXZlcnMv
-Z3B1L2RybS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCj4+ICAuLi4vZHJt
-L3BhbmVsL3BhbmVsLW9zZC1vc2QxMDF0MjU4Ny01M3RzLmMgICAgfCAyNTQgKysrKysrKysrKysr
-KysrKysrCj4+ICAzIGZpbGVzIGNoYW5nZWQsIDI2MSBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9zZC1vc2QxMDF0MjU4Ny01
-M3RzLmMKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnIGIv
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcKPj4gaW5kZXggM2UwNzAxNTNlZjIxLi4zNTE2
-NjE5MjA4MzggMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCj4+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCj4+IEBAIC0xMjIsNiArMTIyLDEy
-IEBAIGNvbmZpZyBEUk1fUEFORUxfT1JJU0VURUNIX09UTTgwMDlBCj4+ICAJICBTYXkgWSBoZXJl
-IGlmIHlvdSB3YW50IHRvIGVuYWJsZSBzdXBwb3J0IGZvciBPcmlzZSBUZWNobm9sb2d5Cj4+ICAJ
-ICBvdG04MDA5YSA0ODB4ODAwIGRzaSAyZGwgcGFuZWwuCj4+ICAKPj4gK2NvbmZpZyBEUk1fUEFO
-RUxfT1NEX09TRDEwMVQyNTg3XzUzVFMKPj4gKwl0cmlzdGF0ZSAiT1NEIE9TRDEwMVQyNTg3LTUz
-VFMgRFNJIDE5MjB4MTIwMCB2aWRlbyBtb2RlIHBhbmVsIgo+PiArCWRlcGVuZHMgb24gT0YKPj4g
-KwlkZXBlbmRzIG9uIERSTV9NSVBJX0RTSQo+PiArCWRlcGVuZHMgb24gQkFDS0xJR0hUX0NMQVNT
-X0RFVklDRQo+IFBsZWFzZSBhZGQgYSBoZWxwLXRleHQKClN1cmUsIEkgZm9yZ290IHRoaXMuCgo+
-PiArCj4+ICtzdGF0aWMgaW50IG9zZDEwMXQyNTg3X3BhbmVsX3VucHJlcGFyZShzdHJ1Y3QgZHJt
-X3BhbmVsICpwYW5lbCkKPj4gK3sKPj4gKwlzdHJ1Y3Qgb3NkMTAxdDI1ODdfcGFuZWwgKm9zZDEw
-MXQyNTg3ID0gdG9fb3NkMTAxdDI1ODdfcGFuZWwocGFuZWwpOwo+PiArCj4+ICsJaWYgKCFvc2Qx
-MDF0MjU4Ny0+cHJlcGFyZWQpCj4+ICsJCXJldHVybiAwOwo+PiArCj4+ICsJcmVndWxhdG9yX2Rp
-c2FibGUob3NkMTAxdDI1ODctPnN1cHBseSk7Cj4+ICsJb3NkMTAxdDI1ODctPnByZXBhcmVkID0g
-ZmFsc2U7Cj4+ICsKPj4gKwlyZXR1cm4gMDsKPj4gK30KPj4gKwo+PiArc3RhdGljIGludCBvc2Qx
-MDF0MjU4N19wYW5lbF9wcmVwYXJlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+PiArewo+PiAr
-CXN0cnVjdCBvc2QxMDF0MjU4N19wYW5lbCAqb3NkMTAxdDI1ODcgPSB0b19vc2QxMDF0MjU4N19w
-YW5lbChwYW5lbCk7Cj4+ICsJaW50IHJldDsKPj4gKwo+PiArCWlmIChvc2QxMDF0MjU4Ny0+cHJl
-cGFyZWQpCj4+ICsJCXJldHVybiAwOwo+PiArCj4+ICsJcmV0ID0gcmVndWxhdG9yX2VuYWJsZShv
-c2QxMDF0MjU4Ny0+c3VwcGx5KTsKPj4gKwlpZiAoIXJldCkKPj4gKwkJb3NkMTAxdDI1ODctPnBy
-ZXBhcmVkID0gdHJ1ZTsKPiAKPiBMb2dpYyBpcyB3cm9uZyBoZXJlLiByZWd1bGF0b3JfZW5hYmxl
-KCkgd2lsbCByZXR1cm4gYSBuZWdhdGl2ZSB2YWx1ZSBvbiBlcnJvcgo+IGFuZCAwIGluIHRoZSBn
-b29kIGNhc2UuCj4gU28gb3NkMTAxdDI1ODctPnByZXBhcmVkIGlzIHNldCB0byB0cnVlIG9ubHkg
-aW4gdGhlIGVycm9yIGNhc2UsIG5vdCBpbiB0aGUgZ29vZCBjYXNlLgoKSXQgaXMgZ29vZCBhcyBp
-dCBpczoKJ2lmICghMCknID09ICdpZiAoMSknCidpZiAoIS1YKScgPT0gJ2lmICgwKScKCj4+ICsK
-Pj4gKwlyZXQgPSBtaXBpX2RzaV9hdHRhY2goZHNpKTsKPj4gKwlpZiAocmV0KQo+PiArCQlkcm1f
-cGFuZWxfcmVtb3ZlKCZvc2QxMDF0MjU4Ny0+YmFzZSk7Cj4gCj4gSSBkbyBub3Qgc2VlIHBhbmVs
-LXNpbXBsZS5jIGRvIGEgZHJtX3BhbmVsX3JlbW92ZSgpIGlmIG1pcGlfZHNpX2F0dGFjaCgpIGZh
-aWxzLgo+IE1heWJlIHRoZSBkcml2ZXIgY29yZSB3aWxsIGNhbGwgcmVtb3ZlKCkgaXMgcHJvYmUg
-ZmFpbHM/Cj4gT3IgbWF5YmUgcGFuZWwtc2ltcGxlKCkgc2hvdWxkIGNhbGwgZHJtX3BhbmVsX3Jl
-bW92ZSgpCj4gCj4gS2VlcCB0aGUgYWJvdmUgYXMgaXMgLSBJIGp1c3Qgd2FudGVkIHRvIGV4cHJl
-c3MgdGhhdCB0aGlzIGxvb2tzIGRpZmZlcmVudAo+IGZyb20gdGhlIHBhbmxlLXNpbXBsZSgpIGRy
-aXZlci4KCkkgaGF2ZSBhIHBhdGNoIGZvciBwYW5lbC1zaW1wbGUgYXMgd2VsbCB3aXRoIHRoZSBm
-b2xsb3dpbmcgY29tbWl0IG1lc3NhZ2U6CiJkcm0vcGFuZWw6IHNpbXBsZTogRml4IHBhbmVsX3Np
-bXBsZV9kc2lfcHJvYmUKCkluIGNhc2UgbWlwaV9kc2lfYXR0YWNoKCkgZmFpbHMgcmVtb3ZlIHRo
-ZSByZWdpc3RlcmVkIHBhbmVsIHRvIGF2b2lkCmFkZGVkIHBhbmVsIHdpdGhvdXQgY29ycmVzcG9u
-ZGluZyBkZXZpY2UuIgoKSXQgaGFzIHRoZSBzYW1lIGJ1Zy4KCj4+ICtzdGF0aWMgaW50IG9zZDEw
-MXQyNTg3X3BhbmVsX3JlbW92ZShzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkc2kpCj4+ICt7Cj4+
-ICsJc3RydWN0IG9zZDEwMXQyNTg3X3BhbmVsICpvc2QxMDF0MjU4NyA9IG1pcGlfZHNpX2dldF9k
-cnZkYXRhKGRzaSk7Cj4+ICsJaW50IHJldDsKPj4gKwo+PiArCXJldCA9IG9zZDEwMXQyNTg3X3Bh
-bmVsX2Rpc2FibGUoJm9zZDEwMXQyNTg3LT5iYXNlKTsKPj4gKwlpZiAocmV0IDwgMCkKPj4gKwkJ
-ZGV2X3dhcm4oJmRzaS0+ZGV2LCAiZmFpbGVkIHRvIGRpc2FibGUgcGFuZWxcbiIpOwo+IFRoaXMg
-aXMgYWxyZWFkeSB3YXJuZWQgaW4gbG93ZXIgbGF5ZXJzIGFuZCBJIHRoaW5rIHlvdSBjb3VsZAo+
-IGRyb3AgdGhlIGRldl93YXJuKCkuCgpJIHRoaW5rIHRoZXJlIGlzIG5vIHdhcm5pbmcgZnJvbSBs
-b3dlciBsYXllciwgYnV0IG5vdCBzdXJlIGFzIEkgbmV2ZXIKaGl0IHRoaXMgY2FzZS4KCj4+ICsK
-Pj4gKwlvc2QxMDF0MjU4N19wYW5lbF91bnByZXBhcmUoJm9zZDEwMXQyNTg3LT5iYXNlKTsKPj4g
-Kwo+PiArCWRybV9wYW5lbF9yZW1vdmUoJm9zZDEwMXQyNTg3LT5iYXNlKTsKPj4gKwo+PiArCXJl
-dCA9IG1pcGlfZHNpX2RldGFjaChkc2kpOwo+PiArCWlmIChyZXQgPCAwKQo+PiArCQlkZXZfd2Fy
-bigmZHNpLT5kZXYsICJmYWlsZWQgdG8gZGV0YWNoIGZyb20gRFNJIGhvc3RcbiIpOwo+IEFkZCBl
-cnJvciBjb2RlIGluIGxvZ2dpbmcuCgpPSwoKLSBQw6l0ZXIKClRleGFzIEluc3RydW1lbnRzIEZp
-bmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNp
-bmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Tue, 29 Jan 2019 15:31:59 +0800, Bibby Hsieh wrote:
+> Add documentation for the mt8183 gce.
+> 
+> Add gce header file defined the gce hardware event,
+> subsys number and constant for mt8183.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  .../devicetree/bindings/mailbox/mtk-gce.txt        |   6 +-
+>  include/dt-bindings/gce/mt8183-gce.h               | 177 +++++++++++++++++++++
+>  2 files changed, 180 insertions(+), 3 deletions(-)
+>  create mode 100644 include/dt-bindings/gce/mt8183-gce.h
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
