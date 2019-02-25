@@ -1,168 +1,142 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/3 v2] ARM: dts: rk3288-tinker.dtsi: Fix SD card detection
-Date: Sun, 24 Feb 2019 23:54:34 +0100
-Message-ID: <1827776.DXBEgXTPyu@diego>
-References: <20190217121513.22965-2-beagleboard@davidjohnsummers.uk>
- <AM3PR03MB09663F32FC40000E42C1A722AC790@AM3PR03MB0966.eurprd03.prod.outlook.com>
- <e1f1a93e-505b-bf53-a253-5c1ddaeaebf8@davidjohnsummers.uk>
+From: Min Guo <min.guo@mediatek.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: usb: musb: Add support for MediaTek
+ musb controller
+Date: Mon, 25 Feb 2019 09:36:44 +0800
+Message-ID: <1551058604.12020.34.camel@mhfsdcap03>
+References: <1550561795-31132-1-git-send-email-min.guo@mediatek.com>
+         <1550561795-31132-2-git-send-email-min.guo@mediatek.com>
+         <20190222164923.GA26413@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <e1f1a93e-505b-bf53-a253-5c1ddaeaebf8-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190222164923.GA26413@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, tony@atomide.com, hdegoede@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, 24. Februar 2019, 21:10:50 CET schrieb David Summers:
-> On 24/02/2019 19:56, Jonas Karlman wrote:
-> > On 2019-02-24 20:35, David Summers wrote:
-> >> On 24/02/2019 19:26, Jonas Karlman wrote:
-> >>> On 2019-02-22 19:47, David Summers wrote:
-> >>>> The Problem:
-> >>>> 
-> >>>> On ASUS Tinker Board S, when booting from the eMMC, and there is no
-> >>>> card sd slot, then there are constant errors.
-> >>>> 
-> >>>> Cause:
-> >>>> 
-> >>>> Thanks must go to Robin Murphy @ ARM for idenifying the problem. The
-> >>>> rk808 on the Tinker Board and Tinker Board S has many regulators, one
-> >>>> vccio_sd powers the IO for the sd card. Unfortunatly this is also used
-> >>>> in the card detect. Now when no card is install, the regulator is
-> >>>> powered down. This means that the card detect floats, and this means
-> >>>> random card detection.
-> >>>> 
-> >>>> The Solution:
-> >>>> 
-> >>>> Make sure that the sd IO is always powered, this means card detection
-> >>>> is always active, which is what should be done on a board with an sd
-> >>>> slot, which both the Tinker Board and Tinker Board S are. Hence change
-> >>>> is made to the .dtsi which takes effect on all Tinker Boards as
-> >>>> required.
-> >>>> 
-> >>>> The change also adds "regulator-boot-on" the Tinker Board boot from
-> >>>> uboot, and the sd card is always one option. Hence the IO must be
-> >>>> powered in uboot, and so setting this flag.
-> >>>> 
-> >>>> Also removed is "disable-wp" the micro sd card which are used have no
-> >>>> write  protection, so the concept doesn't mean anything, and the
-> >>>> Tinker Boards work without this. Hence it is removed to simply.
-> >>>> 
-> >>>> This change came from ArchLinux Arm, but we note it is the fix also
-> >>>> used by Armbian:
-> >>>> 
-> >>>> https://nam02.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithu
-> >>>> b.com%2FMiouyouyou%2FRockMyy%2Fblob%2Fmaster%2Fpatches%2Fkernel%2Fv5.0%
-> >>>> 2FDTS%2F0016-ARM-DTSI-rk3288-tinker-Setting-up-the-SD-regulators.patch&
-> >>>> amp;data=02%7C01%7C%7Cf5937082939e4163c84b08d69a8f3b61%7C84df9e7fe9f640
-> >>>> afb435aaaaaaaaaaaa%7C1%7C0%7C636866337295767294&amp;sdata=tK8QE3bsG9LW%
-> >>>> 2FJcvFzLKa8%2BPj5u%2F8exbEn8m2vqKly0%3D&amp;reserved=0
-> >>>> 
-> >>>> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-> >>>> ---
-> >>>> 
-> >>>>    arch/arm/boot/dts/rk3288-tinker.dtsi | 3 ++-
-> >>>>    1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>> 
-> >>>> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi
-> >>>> b/arch/arm/boot/dts/rk3288-tinker.dtsi index
-> >>>> aa107ee41b8b..6b7e55085b0c 100644
-> >>>> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-> >>>> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-> >>>> @@ -254,6 +254,8 @@
-> >>>> 
-> >>>>    			};
-> >>>>    			
-> >>>>    			vccio_sd: LDO_REG5 {
-> >>>> 
-> >>>> +				regulator-always-on;
-> >>>> +				regulator-boot-on;
-> >>>> 
-> >>>>    				regulator-min-microvolt = <1800000>;
-> >>>>    				regulator-max-microvolt = <3300000>;
-> >>>>    				regulator-name = "vccio_sd";
-> >>>> 
-> >>>> @@ -431,7 +433,6 @@
-> >>>> 
-> >>>>    	cap-mmc-highspeed;
-> >>>>    	cap-sd-highspeed;
-> >>>>    	card-detect-delay = <200>;
-> >>>> 
-> >>>> -	disable-wp;			/* wp not hooked up */
-> >>> 
-> >>> I think disable-wp correctly describes that wp is not expected to work
-> >>> and should not be removed.>>> 
-> >>>   From comment in mmc_sd_get_ro():
-> >>> "Some systems don't feature a write-protect pin and don't need one.
-> >>> E.g. because they only have micro-SD card slot. For those systems
-> >>> assume that the SD card is always read-write."
-> >>> 
-> >>> Without disable-wp core will call dw_mci_get_ro() to get wp status.
-> >>> 
-> >>> 
-> >>> This patch also fixes reboot when booting from sd-card and having emmc
-> >>> zeroed out.
-> >>> 
-> >>> Tested-by: Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>
-> >>> 
-> >>> Regards,
-> >>> Jonas
-> >>> 
-> >>>>    	pinctrl-names = "default";
-> >>>>    	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-> >>>>    	status = "okay";
-> >> 
-> >> Hi Jonas,
-> >> 
-> >> Thanks for testing - did you get an error with "disable-wp" ?
-> >> 
-> >> We tested this with @TheSaint On ArchLinux Arm, and it worked!
-> >> 
-> >> With the "regulator-boot-on" and on reboot, it should keep power on the
-> >> sd card - so reboot should work.
+Hi Rob,
+On Fri, 2019-02-22 at 10:49 -0600, Rob Herring wrote:
+> On Tue, Feb 19, 2019 at 03:36:30PM +0800, min.guo@mediatek.com wrote:
+> > From: Min Guo <min.guo@mediatek.com>
 > > 
-> > I tested both with and without "disable-wp" removed and both works without
-> > error. SD-card reboots now works as it should thanks to
-> > "regulator-always-on" and "regulator-boot-on", I only tested using both.
+> > This adds support for MediaTek musb controller in
+> > host, peripheral and otg mode.
 > > 
-> > On a side note I have also been testing [1] to make reboot with UHS signal
-> > voltage work and will send out a RFC v2 after I have concluded testing on
-> > my other devices supporting UHS signal voltage.
+> > Signed-off-by: Min Guo <min.guo@mediatek.com>
+> > ---
+> > changes in v5:
+> > suggested by Rob:
+> > 1. Modify compatible as 
+> > - compatible : should be one of:
+> >                "mediatek,mt-2701"
+> >                ...
+> >                followed by "mediatek,mtk-musb"
+> > 2. Add usb connector child node
 > > 
-> > [1]
-> > https://github.com/Kwiboo/linux-rockchip/compare/patch-rk-5.x-tinker-uhs%
-> > 5E%5E%5E...patch-rk-5.x-tinker-uhs
+> > changes in v4:
+> > suggested by Sergei:
+> > 1. String alignment
 > > 
-> > Regards,
-> > Jonas
+> > changes in v3:
+> > 1. no changes
+> > 
+> > changes in v2:
+> > suggested by Bin:
+> > 1. Modify DRC to DRD
+> > suggested by Rob:
+> > 2. Drop the "<soc-model>-musb" in compatible
+> > 3. Remove phy-names
+> > 4. Add space after comma in clock-names
+> > ---
+> >  .../devicetree/bindings/usb/mediatek,musb.txt      | 54 ++++++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > new file mode 100644
+> > index 0000000..0632e6e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > @@ -0,0 +1,54 @@
+> > +MediaTek musb DRD/OTG controller
+> > +-------------------------------------------
+> > +
+> > +Required properties:
+> > + - compatible      : should be one of:
+> > +                     "mediatek,mt-2701"
 > 
-> Thanks.
-> 
-> Glad your are testing - and I hope the uhs tests work.
-> 
-> Alas for us to test uhs - and our user on Arch isn't so experienced. I
-> could push him to try different speeds - but to be honest I expect it to
-> be beyond his comfort zone.
-> 
-> But its good to here you confirm "disable-wp" works. To my mind it says
-> we are sure that  all three changes in the patch are are correct.
-> 
-> Hopefully this will be straight forward to Heiko to accept. Its the
-> simple patch of the 3 to accept ;)
+> That looks like a top-level SoC compatible and doesn't match the 
+> example.
+"mediatek,mt-2701" is an example, just to describe a specific SOC.
+May I modify compatibel like:
+compatible : should be "mediatek,mtk-musb"
 
->From Jonas' explanation, I'd guess we want disable-wp to stay in the node,
-and not remove it as it tells the system, that "there is no write protect 
-status available" hence it doesn't need to check for it.
+> > +                     ...
+> > +                     followed by "mediatek,mtk-musb"
+> > + - reg             : specifies physical base address and size of
+> > +                     the registers
+> > + - interrupts      : interrupt used by musb controller
+> > + - interrupt-names : must be "mc"
+> 
+> Not much point in a name when there is only 1.
+The MUSB core driver has two interrupts, one is for MAC, another for
+DMA, but on MTK platform, there is only a MAC interrupt, musb core
+driver uses platform_get_irq_byname(pdev, "mc") to get this interrupt
+number.
 
+> > + - phys            : PHY specifier for the OTG phy
+> > + - dr_mode         : should be one of "host", "peripheral" or "otg",
+> > +                     refer to usb/generic.txt
+> > + - clocks          : a list of phandle + clock-specifier pairs, one for
+> > +                     each entry in clock-names
+> > + - clock-names     : must contain "main", "mcu", "univpll"
+> > +                     for clocks of controller
+> > +
+> > +Optional properties:
+> > + - power-domains   : a phandle to USB power domain node to control USB's
+> > +                     MTCMOS
+> > +
+> > +Required child nodes:
+> > + usb connector node as defined in bindings/connector/usb-connector.txt
+> > + - extcon          : for VBUS and ID pin changes detection, needed when
+> > +                     supports dual-role mode
+> > + - vbus-supply     : reference to the VBUS regulator, needed when supports
+> > +                     dual-role mode
+> > +
+> > +Example:
+> > +
+> > +usb2: usb@11200000 {
+> > +	compatible = "mediatek,mt2701-musb",
+> > +		     "mediatek,mtk-musb";
+> > +	reg = <0 0x11200000 0 0x1000>;
+> > +	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
+> > +	interrupt-names = "mc";
+> > +	phys = <&u2port2 PHY_TYPE_USB2>;
+> > +	dr_mode = "otg";
+> > +	clocks = <&pericfg CLK_PERI_USB0>,
+> > +		 <&pericfg CLK_PERI_USB0_MCU>,
+> > +		 <&pericfg CLK_PERI_USB_SLV>;
+> > +	clock-names = "main","mcu","univpll";
+> > +	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+> > +	usb_con: connector{
+> > +		compatible = "usb-b-connector";
+> > +		label = "micro-USB";
+> > +		type = "micro";
+> > +		extcon = <&extcon_usb>;
+> 
+> The connector node should replace 'extcon'. Add what you need here 
+> directly (e.g. id-gpios). What you add needs to be defined in 
+> usb-connector.txt.
+OK.
 
-Heiko
+> > +		vbus-supply = <&usb_vbus>;
+> > +	};
+> > +};
+> > -- 
+> > 1.9.1
+> > 
+
+Regards,
+Min.
