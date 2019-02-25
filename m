@@ -1,123 +1,127 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: Re: [PATCH v5 1/6] dt-bindings: Add a binding for Mediatek SCP
-Date: Mon, 25 Feb 2019 14:15:40 +0800
-Message-ID: <CANdKZ0d+2CqbVEwruW+pbqUeRMBwzXV7tFC7Cp7i+98CWiB_4w@mail.gmail.com>
-References: <20190221084729.101784-1-pihsun@chromium.org> <20190221084729.101784-2-pihsun@chromium.org>
- <20190222144316.GA19284@bogus>
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: [PATCH v3 1/2] dt-bindings: net:  Add bindings for mdio mux consumers
+Date: Mon, 25 Feb 2019 06:16:53 +0000
+Message-ID: <20190225114121.7878-1-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190222144316.GA19284@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Leo Li <leoyang.li@nxp.com>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Pankaj Bansal <pankaj.bansal@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 22, 2019 at 10:43 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Feb 21, 2019 at 04:47:24PM +0800, Pi-Hsun Shih wrote:
-> > From: Erin Lo <erin.lo@mediatek.com>
-> >
-> > Add a DT binding documentation of SCP for the
-> > MT8183 SoC from Mediatek.
-> >
-> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > ---
-> > Changes from v4:
-> >  - Add detail of more properties.
-> >  - Document the usage of mtk,rpmsg-name in subnode from the new design.
-> >
-> > Changes from v3:
-> >  - No change.
-> >
-> > Changes from v2:
-> >  - No change. I realized that for this patch series, there's no need to
-> >    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
-> >    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
-> >    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
-> >    created by SCP name service.
-> >
-> > Changes from v1:
-> >  - No change.
-> > ---
-> >  .../bindings/remoteproc/mtk,scp.txt           | 37 +++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > new file mode 100644
-> > index 00000000000000..8cf8b0e0d98a4c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > @@ -0,0 +1,37 @@
-> > +Mediatek SCP Bindings
-> > +----------------------------------------
-> > +
-> > +This binding provides support for ARM Cortex M4 Co-processor found on some
-> > +Mediatek SoCs.
-> > +
-> > +Required properties:
-> > +- compatible         Should be "mediatek,mt8183-scp"
-> > +- reg                        Should contain the address ranges for the two memory
-> > +                     regions, SRAM and CFG.
-> > +- reg-names          Contains the corresponding names for the two memory
-> > +                     regions. These should be named "sram" & "cfg".
-> > +- clocks             Clock for co-processor (See: ../clock/clock-bindings.txt)
-> > +- clock-names                Contains the corresponding name for the clock. This
-> > +                     should be named "main".
-> > +
-> > +Subnodes
-> > +--------
-> > +
-> > +When CONFIG_RPMSG_MTK_SCP is enabled, subnodes of the SCP represent rpmsg
->
-> Bindings can't depend on kernel config options.
->
+When we use the bindings defined in Documentation/devicetree/bindings/mux
+to define mdio mux in producer and consumer terms, it results in two
+devices. one is mux producer and other is mux consumer.
 
-What's the recommendation here if the subnode only has effect when the
-config is enabled? Should I just skip the sentence "When ... is
-enabled"?
+Add the bindings needed for Mdio mux consumer devices.
 
-> > +devices. The names of the devices are not important. The properties of these
-> > +nodes are defined by the individual bindings for the rpmsg devices - but must
-> > +contain the following property:
-> > +
-> > +- mtk,rpmsg-name     Contains the name for the rpmsg device. Used to match
-> > +                     the subnode to rpmsg device announced by SCP.
->
-> I don't think this belongs in DT, but without some examples I'm not
-> really sure.
->
+Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+---
 
-This is similar to the qcom,smd-channels property in
-Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt, a example DT
-for this:
+Notes:
+    V3:
+    - No Change
+    V2:
+    - moved the bindings from mdio-mux.txt to new file mdio-mux-multiplexer=
+.txt
+    - changed compatible to mdio-mux-multiplexer
 
-scp {
-        compatible = "mediatek,mt8183-scp";
-        ...
-        cros_ec {
-                compatible = "google,cros-ec-rpmsg";
-                mtk,rpmsg-name = "cros-ec-rpmsg";
+ .../bindings/net/mdio-mux-multiplexer.txt    | 83 ++++++++++++++++++
+ 1 file changed, 83 insertions(+)
 
-                cros_ec_codec {
-                        compatible = "google,cros-ec-codec";
-                        ...
-                };
-        };
-};
-
-> > +
-> > +Example:
-> > +
-> > +     scp: scp@10500000 {
-> > +             compatible = "mediatek,mt8183-scp";
-> > +             reg = <0 0x10500000 0 0x80000>,
-> > +                   <0 0x105c0000 0 0x5000>;
-> > +             reg-names = "sram", "cfg";
-> > +             clocks = <&infracfg CLK_INFRA_SCPSYS>;
-> > +             clock-names = "main";
-> > +     };
-> > --
-> > 2.21.0.rc0.258.g878e2cd30e-goog
-> >
+diff --git a/Documentation/devicetree/bindings/net/mdio-mux-multiplexer.txt=
+ b/Documentation/devicetree/bindings/net/mdio-mux-multiplexer.txt
+new file mode 100644
+index 000000000000..9d5384849929
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mdio-mux-multiplexer.txt
+@@ -0,0 +1,83 @@
++Properties for an MDIO bus multiplexer consumer device
++
++This is a special case of MDIO mux  when MDIO mux is defined as a consumer
++of a mux producer device. The mux producer can be of any type like mmio mu=
+x
++producer, gpio mux producer or generic register based mux producer.
++
++Required properties in addition to the MDIO Bus multiplexer properties:
++
++- compatible : should be "mmio-mux-multiplexer"
++- mux-controls : mux controller node to use for operating the mux
++- mdio-parent-bus : phandle to the parent MDIO bus.
++
++each child node of mdio bus multiplexer consumer device represent a mdio
++bus.
++
++for more information please refer
++Documentation/devicetree/bindings/mux/mux-controller.txt
++and Documentation/devicetree/bindings/net/mdio-mux.txt
++
++Example:
++In below example the Mux producer and consumer are separate nodes.
++
++&i2c0 {
++	fpga@66 { // fpga connected to i2c
++		compatible =3D "fsl,lx2160aqds-fpga", "fsl,fpga-qixis-i2c",
++			     "simple-mfd";
++		reg =3D <0x66>;
++
++		mux: mux-controller { // Mux Producer
++			compatible =3D "reg-mux";
++			#mux-control-cells =3D <1>;
++			mux-reg-masks =3D <0x54 0xf8>, /* 0: reg 0x54, bits 7:3 */
++					<0x54 0x07>; /* 1: reg 0x54, bits 2:0 */
++		};
++	};
++};
++
++mdio-mux-1 { // Mux consumer
++	compatible =3D "mdio-mux-multiplexer";
++	mux-controls =3D <&mux 0>;
++	mdio-parent-bus =3D <&emdio1>;
++	#address-cells =3D <1>;
++	#size-cells =3D <0>;
++
++	mdio@0 {
++		reg =3D <0x0>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	mdio@8 {
++		reg =3D <0x8>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	..
++	..
++};
++
++mdio-mux-2 { // Mux consumer
++	compatible =3D "mdio-mux-multiplexer";
++	mux-controls =3D <&mux 1>;
++	mdio-parent-bus =3D <&emdio2>;
++	#address-cells =3D <1>;
++	#size-cells =3D <0>;
++
++	mdio@0 {
++		reg =3D <0x0>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	mdio@1 {
++		reg =3D <0x1>;
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++	};
++
++	..
++	..
++};
++
+--=20
+2.17.1
