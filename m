@@ -1,41 +1,55 @@
-From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Subject: [PATCH v2 1/2] dt-bindings: regulator: add LS2 load switch documentation
-Date: Mon, 25 Feb 2019 07:41:05 +0100
-Message-ID: <1551076866-12578-2-git-send-email-Christian.Hohnstaedt@wago.com>
-References: <1550650552-26013-1-git-send-email-Christian.Hohnstaedt@wago.com>
- <1551076866-12578-1-git-send-email-Christian.Hohnstaedt@wago.com>
+From: Seiya Wang <seiya.wang@mediatek.com>
+Subject: [PATCH v2 1/2] arm64: dts: mt8173: correct cpu type of cpu2 and cpu3 to cortex-a72
+Date: Mon, 25 Feb 2019 14:51:11 +0800
+Message-ID: <20190225065112.3400-1-seiya.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551076866-12578-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: J Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Seiya Wang <seiya.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Document device-tree settings of the load-switch LS2
-in the tps65218 device.
+The cpu type of cpu2 and cpu3 should be cortex-a72, not cortex-a57.
 
-Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
 ---
- Documentation/devicetree/bindings/regulator/tps65218.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/tps65218.txt b/Documentation/devicetree/bindings/regulator/tps65218.txt
-index 02f0e9b..b28e9bd 100644
---- a/Documentation/devicetree/bindings/regulator/tps65218.txt
-+++ b/Documentation/devicetree/bindings/regulator/tps65218.txt
-@@ -71,6 +71,11 @@ tps65218: tps65218@24 {
- 		regulator-always-on;
- 	};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 44374c506a1c..99675c51577a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -178,12 +178,12 @@
  
-+	ls2: regulator-ls2 {
-+		regulator-min-microamp = <100000>;
-+		regulator-max-microamp = <1000000>;
-+	};
-+
- 	ls3: regulator-ls3 {
- 		regulator-min-microvolt = <100000>;
- 		regulator-max-microvolt = <1000000>;
+ 		cpu2: cpu@100 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a57";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x100>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			#cooling-cells = <2>;
+-			clocks = <&infracfg CLK_INFRA_CA57SEL>,
++			clocks = <&infracfg CLK_INFRA_CA72SEL>,
+ 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+ 			clock-names = "cpu", "intermediate";
+ 			operating-points-v2 = <&cluster1_opp>;
+@@ -191,12 +191,12 @@
+ 
+ 		cpu3: cpu@101 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a57";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x101>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SLEEP_0>;
+ 			#cooling-cells = <2>;
+-			clocks = <&infracfg CLK_INFRA_CA57SEL>,
++			clocks = <&infracfg CLK_INFRA_CA72SEL>,
+ 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+ 			clock-names = "cpu", "intermediate";
+ 			operating-points-v2 = <&cluster1_opp>;
 -- 
-2.7.4
+2.14.1
