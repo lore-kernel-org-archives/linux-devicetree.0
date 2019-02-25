@@ -1,64 +1,33 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v1 2/3] ARM: dts: stm32: enable Vivante GPU support on
- stm32mp157c-ed1 board
-Date: Mon, 25 Feb 2019 16:57:43 +0100
-Message-ID: <2cf49be6-474d-350b-8dfd-3fe1bf38af3a@st.com>
-References: <1550246316-9747-1-git-send-email-pierre-yves.mordret@st.com>
- <1550246316-9747-3-git-send-email-pierre-yves.mordret@st.com>
- <1550247269.2546.58.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1550247269.2546.58.camel@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Philippe Cornu <philippe.cornu@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC V2 2/3] Documentation: pwm-fan: Add description for RPM support
+Date: Mon, 25 Feb 2019 16:59:18 +0100
+Message-ID: <1551110359-19860-3-git-send-email-stefan.wahren@i2se.com>
+References: <1551110359-19860-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1551110359-19860-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kamil Debski <kamil@wypas.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgYWdhaW4sCgpPbiAyLzE1LzE5IDU6MTQgUE0sIEx1Y2FzIFN0YWNoIHdyb3RlOgo+IEFtIEZy
-ZWl0YWcsIGRlbiAxNS4wMi4yMDE5LCAxNjo1OCArMDEwMCBzY2hyaWViIFBpZXJyZS1ZdmVzIE1P
-UkRSRVQ6Cj4+IEVuYWJsZSBWaXZhbnRlIEdQVSBkcml2ZXIgZm9yIHN0bTMybXAxNTdjLWVkMSBi
-b2FyZC4KPj4KPj4gU2lnbmVkLW9mZi1ieTogUGllcnJlLVl2ZXMgTU9SRFJFVCA8cGllcnJlLXl2
-ZXMubW9yZHJldEBzdC5jb20+Cj4+IC0tLQo+PiDCoGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAx
-NTdjLWVkMS5kdHMgfCAxNiArKysrKysrKysrKysrKysrCj4+IMKgMSBmaWxlIGNoYW5nZWQsIDE2
-IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMy
-bXAxNTdjLWVkMS5kdHMKPj4gYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy1lZDEuZHRz
-Cj4+IGluZGV4IDk4ZWY3YTAuLjc5MmY0MDIgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3N0bTMybXAxNTdjLWVkMS5kdHMKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJt
-cDE1N2MtZWQxLmR0cwo+PiBAQCAtMjAsNiArMjAsMTcgQEAKPj4gwqAJCXJlZyA9IDwweEMwMDAw
-MDAwIDB4NDAwMDAwMDA+Owo+PiDCoAl9Owo+PiDCoAo+PiArCXJlc2VydmVkLW1lbW9yeSB7Cj4+
-ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkjc2l6ZS1jZWxscyA9IDwxPjsKPj4gKwkJ
-cmFuZ2VzOwo+PiArCj4+ICsJCWdwdV9yZXNlcnZlZDogZ3B1QGY4MDAwMDAwIHsKPj4gKwkJCXJl
-ZyA9IDwweGY4MDAwMDAwIDB4ODAwMDAwMD47Cj4+ICsJCQluby1tYXA7Cj4+ICsJCX07Cj4+ICsJ
-fTsKPj4gKwo+IAo+IEkgZG9uJ3QgdGhpbmsgeW91IG5lZWQgdGhpcy4gVGhlIEdQVSBkcml2ZXIg
-dXNlcyB2ZXJ5IGxpdHRsZSBjb250aWcgZG1hCj4gbWVtb3J5LiBNb3N0IG9mIHRoZSBHUFUgbWVt
-b3J5IGlzIG9yZGluYXJ5IHBhZ2VkIG1lbW9yeSwgc28gc2V0dGluZwo+IGFzaWRlIGEgcHJpdmF0
-ZSBtZW1vcnkgcmVnaW9uIG9mIHRoaXMgc2l6ZSBpcyBhIHdhc3RlIG9mIG1lbW9yeS4gTW9zdAo+
-IGxpa2VseSB5b3UgY2FuIGp1c3QgYWxsb3cgdGhlIEdQVSBkcml2ZXIgdG8gdXNlIHRoZSBzeXN0
-ZW0gZ2xvYmFsIENNQQo+IHJlZ2lvbi4KClRoYXQncyBjb3JyZWN0LCBidXQgdGhpcyBtZW1vcnkg
-YXJlYSBpcyBhbHNvIHVzZWQgZm9yIFUtQk9PVCBzcGxhc2ggc2NyZWVuCnJlbmRlcmluZy4KTW9y
-ZW92ZXIsIGV2ZW4gaWYgd2UgbGFjayBvZiBwcm9vZiBhcyBmb3IgdG9kYXksIGl0IHR1cm5zIG91
-dCBwZXJmb3JtYW5jZXMgYXJlCmJldHRlciB3aXRoIHRoaXMgcmVnaW9uIGFzIHJlZHVjZXMgTU1V
-IGFjY2Vzc2VzICh3aXRoIFZpdmFudGUgZHJpdmVyKQpFdmVudHVhbGx5IHVzaW5nIEFuZHJvaWQg
-ZnJhbWV3b3JrIGFwcGxpY2F0aW9uIGlzIHN0YXJ0ZWQgbW9yZSBnZW50bHkgd2hhdGV2ZXIKcHJl
-dmlvdXMgYXBwbGljYXRpb24gYW5kIENNQSBzdGF0dXMoZnJhZ21lbnRhdGlvbikuClByb3ZpZGVk
-IHRoaXMgbWVtb3J5LCBDTUEgcmVnaW9uIGlzIGRlY3JlYXNlZCBhY2NvcmRpbmdseS4KCkhvcGUg
-aXQgY2xhcmlmaWVzLgoKUmVnYXJkcwo+IAo+IFJlZ2FyZHMsCj4gTHVjYXMKPiAKPiAKPj4gwqAJ
-YWxpYXNlcyB7Cj4+IMKgCQlzZXJpYWwwID0gJnVhcnQ0Owo+PiDCoAl9Owo+PiBAQCAtNTMsNiAr
-NjQsMTEgQEAKPj4gwqAJc3RhdHVzID0gIm9rYXkiOwo+PiDCoH07Cj4+IMKgCj4+ICsmZ3B1IHsK
-Pj4gKwljb250aWd1b3VzLWFyZWEgPSA8JmdwdV9yZXNlcnZlZD47Cj4+ICsJc3RhdHVzID0gIm9r
-YXkiOwo+PiArfTsKPj4gKwo+PiDCoCZpMmM0IHsKPj4gwqAJcGluY3RybC1uYW1lcyA9ICJkZWZh
-dWx0IjsKPj4gwqAJcGluY3RybC0wID0gPCZpMmM0X3BpbnNfYT47CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+This adds a short description for the new RPM support of the pwm-fan
+driver.
+
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ Documentation/hwmon/pwm-fan | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/hwmon/pwm-fan b/Documentation/hwmon/pwm-fan
+index 18529d2..82fe967 100644
+--- a/Documentation/hwmon/pwm-fan
++++ b/Documentation/hwmon/pwm-fan
+@@ -15,3 +15,6 @@ The driver implements a simple interface for driving a fan connected to
+ a PWM output. It uses the generic PWM interface, thus it can be used with
+ a range of SoCs. The driver exposes the fan to the user space through
+ the hwmon's sysfs interface.
++
++The fan rotation speed returned via the optional 'fan1_input' is extrapolated
++from the sampled interrupts from the tachometer signal within 1 second.
+-- 
+2.7.4
