@@ -1,53 +1,38 @@
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH 1/5] arm64: dts: imx8mq: Add SDMA nodes
-Date: Mon, 25 Feb 2019 13:23:41 +0000
-Message-ID: <f02865a5b9cd3cde711d818ccbb25f6b7b95a4cf.camel@nxp.com>
-References: <20190225131722.10253-1-daniel.baluta@nxp.com>
+Subject: [PATCH 0/5 v2] Enable wm8524 on i.MX8MQ
+Date: Mon, 25 Feb 2019 13:26:35 +0000
+Message-ID: <20190225132617.10987-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225131722.10253-1-daniel.baluta@nxp.com>
 Content-Language: en-US
-Content-ID: <75BE431F1FB38E41A58EBC99CA645D39@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Abel Vesa <abel.vesa@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Anson Huang <anson.huang@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutro>
+Cc: "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng
 List-Id: devicetree@vger.kernel.org
 
-UGxlYXNlIGlnbm9yZSB0aGlzLCBJIHNlbnQgaXQgZnJvbSB0aGUgd3JvbmcgcmVwby4gSSBzd2Vh
-ciB0aGF0IEkNCmRvdWJsZSBjaGVja2VkLg0KDQpXaWxsIHNlbnQgdjIgd2l0aCBjb3JyZWN0IGJh
-c2UuDQoNCg0KT24gTW9uLCAyMDE5LTAyLTI1IGF0IDEzOjE3ICswMDAwLCBEYW5pZWwgQmFsdXRh
-IHdyb3RlOg0KPiBTRE1BMSBpcyBwYXJ0IG9mIEFJUFMtMyByZWdpb24gYW5kIFNETUEyIGlzIHBh
-cnQNCj4gb2YgQUlQUy0xIHJlZ2lvbi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5n
-IDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBbaW5pdGlhbCBzdWJtaXQgaW4gaS5NWCBpbnRlcm5h
-bCB0cmVlXQ0KPiBTaWduZWQtb2ZmLWJ5OiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54
-cC5jb20+DQo+IFthZGFwdGF0aW9uIGZvciBsaW51eC1uZXh0XQ0KPiAtLS0NCj4gIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpIHwgMjINCj4gKysrKysrKysrKysrKysr
-KysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQ0KPiBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpDQo+IGluZGV4IDkxNTViZDQ3
-ODRlYi4uODc4MzljNWM4YTdmIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9pbXg4bXEuZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2Fs
-ZS9pbXg4bXEuZHRzaQ0KPiBAQCAtMjM0LDYgKzIzNCwxNyBAQA0KPiAgCQkJCXN0YXR1cyA9ICJk
-aXNhYmxlZCI7DQo+ICAJCQl9Ow0KPiAgDQo+ICsJCQlzZG1hMjogc2RtYUAzMDJjMDAwMCB7DQo+
-ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OG1xLXNkbWEiLA0KPiAiZnNsLGlteDdkLXNkbWEi
-Ow0KPiArCQkJCXJlZyA9IDwweDMwMmMwMDAwIDB4MTAwMDA+Ow0KPiArCQkJCWludGVycnVwdHMg
-PSA8R0lDX1NQSSAxMDMNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ICsJCQkJY2xvY2tzID0g
-PCZjbGsgSU1YOE1RX0NMS19TRE1BMl9ST09UPiwNCj4gKwkJCQkJIDwmY2xrIElNWDhNUV9DTEtf
-U0RNQTJfUk9PVD47DQo+ICsJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgImFoYiI7DQo+ICsJCQkJ
-I2RtYS1jZWxscyA9IDwzPjsNCj4gKwkJCQlmc2wsc2RtYS1yYW0tc2NyaXB0LW5hbWUgPQ0KPiAi
-aW14L3NkbWEvc2RtYS1pbXg3ZC5iaW4iOw0KPiArCQkJfTsNCj4gKw0KPiAgCQkJaW9tdXhjOiBp
-b211eGNAMzAzMzAwMDAgew0KPiAgCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1pb211eGMi
-Ow0KPiAgCQkJCXJlZyA9IDwweDMwMzMwMDAwIDB4MTAwMDA+Ow0KPiBAQCAtNTc1LDYgKzU4Niwx
-NyBAQA0KPiAgCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICAJCQl9Ow0KPiAgDQo+ICsJCQlz
-ZG1hMTogc2RtYUAzMGJkMDAwMCB7DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OG1xLXNk
-bWEiLA0KPiAiZnNsLGlteDdkLXNkbWEiOw0KPiArCQkJCXJlZyA9IDwweDMwYmQwMDAwIDB4MTAw
-MDA+Ow0KPiArCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyDQo+IElSUV9UWVBFX0xFVkVMX0hJ
-R0g+Ow0KPiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfU0RNQTFfUk9PVD4sDQo+ICsJ
-CQkJCSA8JmNsayBJTVg4TVFfQ0xLX1NETUExX1JPT1Q+Ow0KPiArCQkJCWNsb2NrLW5hbWVzID0g
-ImlwZyIsICJhaGIiOw0KPiArCQkJCSNkbWEtY2VsbHMgPSA8Mz47DQo+ICsJCQkJZnNsLHNkbWEt
-cmFtLXNjcmlwdC1uYW1lID0NCj4gImlteC9zZG1hL3NkbWEtaW14N2QuYmluIjsNCj4gKwkJCX07
-DQo+ICsNCj4gIAkJCWZlYzE6IGV0aGVybmV0QDMwYmUwMDAwIHsNCj4gIAkJCQljb21wYXRpYmxl
-ID0gImZzbCxpbXg4bXEtZmVjIiwNCj4gImZzbCxpbXg2c3gtZmVjIjsNCj4gIAkJCQlyZWcgPSA8
-MHgzMGJlMDAwMCAweDEwMDAwPjsNCg==
+On i.MX8MQ we can start the party using the wm8524 codec
+which gets it's data through the SAI2 interface.
+
+In order to make it work this patch series enables the SDMA nodes,
+sets the correct pinctrl configuration and uses the simple card
+machine driver to put everything together.
+
+Changes since v1:
+	- added cover letter
+	- remove "fsl,imx8mq-sdma" compatible for sdma.
+
+Daniel Baluta (5):
+  arm64: dts: imx8mq: Add SDMA nodes
+  arm64: dts: imx8mq: Add SAI2 node
+  arm64: dts: imx8qm: Add SAI pinctrl configuration
+  arm64: dts: imx8qm: Enable SAI2 for wm8524 codec
+  arm64: dts: imx8qm: Enable wm8524 codec
+
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 48 ++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 38 ++++++++++++++++
+ 2 files changed, 86 insertions(+)
+
+--=20
+2.17.1
