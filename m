@@ -1,109 +1,117 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: display: rockchip: add document for rk3066
- hdmi
-Date: Mon, 25 Feb 2019 10:59:23 -0600
-Message-ID: <20190225165923.GA2578@bogus>
-References: <20181229133318.18128-1-jbx6244@gmail.com>
- <20190201123235.1693-1-jbx6244@gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/3 v2] ARM: dts: rk3288-tinker.dtsi: Fix SD card detection
+Date: Mon, 25 Feb 2019 09:13:01 -0800
+Message-ID: <CAD=FV=UkQ7pEan4aGezvQZZjBc0gDJ1R7YRbN1Lbv9HBVQRgHQ@mail.gmail.com>
+References: <20190217121513.22965-2-beagleboard@davidjohnsummers.uk>
+ <20190222184708.32004-1-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190201123235.1693-1-jbx6244@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Jonker <jbx6244@gmail.com>
-Cc: heiko@sntech.de, hjc@rock-chips.com, airlied@linux.ie, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190222184708.32004-1-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 01, 2019 at 01:32:35PM +0100, Johan Jonker wrote:
-> This patch adds a binding that describes the HDMI controller for
-> rk3066.
+Hi,
 
-This is not using the DW block like other Rockchip SoCs (IIRC)? 
+On Fri, Feb 22, 2019 at 10:48 AM David Summers
+<beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org> wrote:
+>
+> The Problem:
+>
+> On ASUS Tinker Board S, when booting from the eMMC, and there is no
+> card sd slot, then there are constant errors.
+>
+> Cause:
+>
+> Thanks must go to Robin Murphy @ ARM for idenifying the problem. The
+> rk808 on the Tinker Board and Tinker Board S has many regulators, one
+> vccio_sd powers the IO for the sd card. Unfortunatly this is also used
+> in the card detect. Now when no card is install, the regulator is
+> powered down. This means that the card detect floats, and this means
+> random card detection.
 
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  .../display/rockchip/rk3066_hdmi-rockchip.txt      | 60 ++++++++++++++++++++++
+Yeah, this is broken on a lot of SoCs that use dw_mmc.  :(  Really the
+card detect line needs to be on a different rail and this is why all
+boards I've worked on recently have a the card detect going to a GPIO
+instead of the dw_mmc CD.
 
-Using the compatible string plus '.txt' is the preferred naming.
+IIRC Rockchip moved the Card Detect to a different rail on newer SoCs
+(like rk3399) but we still used a GPIO even there since we didn't like
+the default/automatic muxing of JTAG and SD signals.
 
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
-> new file mode 100644
-> index 000000000..6a8f3754f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
-> @@ -0,0 +1,60 @@
-> +Rockchip specific extensions for rk3066 HDMI
-> +============================================
-> +
-> +Required properties:
-> +- compatible:
-> +	"rockchip,rk3066-hdmi";
-> +- reg:
-> +	Physical base address and length of the controller's registers.
-> +- clocks, clock-names:
-> +	Phandle to HDMI controller clock, name should be "hclk".
-> +- interrupts:
-> +	HDMI interrupt number.
-> +- power-domains:
-> +	Phandle to the RK3066_PD_VIO power domain.
-> +- rockchip,grf:
-> +	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
-> +- ports:
-> +	Contains one port node with two endpoints, numbered 0 and 1,
-> +	connected respectively to vop0 and vop1.
+The one board I was involved in that did it wrong (where we discovered
+this issue) was exynos5250-snow.  You can see some discussion about
+the issue at:
 
-You should have an output port to an hdmi-connector node (or bridge) as 
-well.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/282474.html
 
-> +- pinctrl-0, pinctrl-name:
-> +	Switch the iomux for the HPD/I2C pins to HDMI function.
-> +
-> +Example:
-> +	hdmi: hdmi@10116000 {
-> +		compatible = "rockchip,rk3066-hdmi";
-> +		reg = <0x10116000 0x2000>;
-> +		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_HDMI>;
-> +		clock-names = "hclk";
-> +		power-domains = <&power RK3066_PD_VIO>;
-> +		rockchip,grf = <&grf>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
-> +		status = "disabled";
+In that discussion I'm pretty sure that Ulf suggested that a better
+way to go was to use something like "broken-cd" which I think was
+supposed to switch us to use polling.  AKA periodically the SD card
+would be powered on and we'd check for a card, then we'd power
+everything off.  ...but that was never implemented for snow at least
+so there may be something more than just adding the property.  You can
+read through the whole thread for more details.
 
-Don't show status in examples.
 
-> +
-> +		hdmi_in: port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			hdmi_in_vop0: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&vop0_out_hdmi>;
-> +			};
-> +			hdmi_in_vop1: endpoint@1 {
-> +				reg = <1>;
-> +				remote-endpoint = <&vop1_out_hdmi>;
-> +			};
-> +		};
-> +	};
-> +
-> +&pinctrl {
-> +		hdmi {
-> +			hdmi_hpd: hdmi-hpd {
-> +				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
-> +			};
-> +			hdmii2c_xfer: hdmii2c-xfer {
-> +				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
-> +						<0 RK_PA2 1 &pcfg_pull_none>;
-> +			};
-> +		};
-> +};
-> -- 
-> 2.11.0
-> 
+IIRC leaving the IO rail always on like you're proposing can also work
+OK but there may be some corner cases, especially if you are trying to
+reach UHS speeds and/or if the bootloader ever tries to use UHS
+speeds.  It's almost certainly busted if the bootloader did UHS since
+it will leave the line at ~1.8 V and the kernel will expect it to be
+at ~3.3 V.  ...but maybe you rely on the bootloader not doing UHS and
+maybe things are generally OK if not?  There may also be cases where
+you can't properly power down / reset a card because the card may be
+drawing power through the IO lines when you power off its main lines.
+That's not good for the card and can also put it in a bad state.  I
+haven't done all the research here so this may be a bit of FUD--it's
+just a vague recollection from many years ago.
+
+
+...so to make a long story short, a better solution is to allow the IO
+lines to be powered off but then poll for the card periodically.
+
+
+> The Solution:
+>
+> Make sure that the sd IO is always powered, this means card detection
+> is always active, which is what should be done on a board with an sd
+> slot, which both the Tinker Board and Tinker Board S are. Hence change
+> is made to the .dtsi which takes effect on all Tinker Boards as
+> required.
+>
+> The change also adds "regulator-boot-on" the Tinker Board boot from
+> uboot, and the sd card is always one option. Hence the IO must be
+> powered in uboot, and so setting this flag.
+>
+> Also removed is "disable-wp" the micro sd card which are used have no
+> write  protection, so the concept doesn't mean anything, and the
+> Tinker Boards work without this. Hence it is removed to simply.
+
+As others have said, please leave disable-wp.  There's no way for the
+kernel to know if you have a SD or uSD slot and the only difference
+between the two (electrically) is that there's no write protect for
+micro SD.
+
+
+Also: please CC dw_mmc people on future patches in this area.
+
+$ ./scripts/get_maintainer.pl -f drivers/mmc/host/dw_mmc.c
+Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> (maintainer:SYNOPSYS DESIGNWARE
+MMC/SD/SDIO DRIVER)
+Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (maintainer:MULTIMEDIA CARD
+(MMC), SECURE DIGITAL (SD) AND...)
+linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:SYNOPSYS DESIGNWARE MMC/SD/SDIO DRIVER)
+
+-Doug
