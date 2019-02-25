@@ -1,58 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: input: sitronix-st1232: document
- optional reset-gpios property
-Date: Mon, 25 Feb 2019 08:43:28 -0600
-Message-ID: <20190225144328.GA13518@bogus>
-References: <20190129102347.27754-1-martink@posteo.de>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
+Date: Mon, 25 Feb 2019 14:52:58 +0000
+Message-ID: <5310b73b-4821-6dff-b9c0-34c59fb7fd72@arm.com>
+References: <20190224140426.3267-1-marc.zyngier@arm.com>
+ <CAKv+Gu9OOzOxx0rTAZqM8r4q_hRmOp3b=KP7fwgNeiu67FCApA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190129102347.27754-1-martink@posteo.de>
+In-Reply-To: <CAKv+Gu9OOzOxx0rTAZqM8r4q_hRmOp3b=KP7fwgNeiu67FCApA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martink@posteo.de>
-Cc: devicetree@vger.kernel.org, linux-input@vger.kernel.org, dmitry.torokhov@gmail.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@ginzinger.com>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, Kalle Valo <kvalo@codeaurora.org>, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Xinming Hu <huxinming820@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, "<linux-wireless@vger.kernel.org>" <linux-wireless@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 11:23:46AM +0100, Martin Kepplinger wrote:
-> From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-> 
-> The st1232 driver reads this via gpiod.
+Hi Ard,
 
-What a driver does is not relevant to the binding. This breaks 
-compatibility so you need to mention that and why this is okay.
+On 25/02/2019 12:45, Ard Biesheuvel wrote:
+> On Sun, 24 Feb 2019 at 15:08, Marc Zyngier <marc.zyngier@arm.com> wrote:
+>>
+>> For quite some time, I wondered why the PCI mwifiex device built in my
+>> Chromebook was unable to use the good old legacy interrupts. But as MSIs
+>> were working fine, I never really bothered investigating. I finally had a
+>> look, and the result isn't very pretty.
+>>
+>> On this machine (rk3399-based kevin), the wake-up interrupt is described as
+>> such:
+>>
+>> &pci_rootport {
+>>         mvl_wifi: wifi@0,0 {
+>>                 compatible = "pci1b4b,2b42";
+>>                 reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+>>                        0x83010000 0x0 0x00100000 0x0 0x00100000>;
+>>                 interrupt-parent = <&gpio0>;
+>>                 interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+>>                 pinctrl-names = "default";
+>>                 pinctrl-0 = <&wlan_host_wake_l>;
+>>                 wakeup-source;
+>>         };
+>> };
+>>
+>> Note how the interrupt is part of the properties directly attached to the
+>> PCI node. And yet, this interrupt has nothing to do with a PCI legacy
+>> interrupt, as it is attached to the wake-up widget that bypasses the PCIe RC
+>> altogether (Yay for the broken design!). This is in total violation of the
+>> IEEE Std 1275-1994 spec[1], which clearly documents that such interrupt
+>> specifiers describe the PCI device interrupts, and must obey the
+>> INT-{A,B,C,D} mapping. Oops!
+>>
+> 
+> The mapping of legacy PCIe INTx interrupts onto wired system
+> interrupts is a property of the PCIe host controller, not of a
+> particular PCIe device. So I would argue that the code is broken here
+> as well: it should never attempt to interpret 'interrupt' properties
+> at the PCI device level as having any bearing on how legacy interrupts
+> are routed.
 
-Either you need to keep 'gpios' as deprecated or you can drop it if 
-there aren't any dts files using it.
+OpenFirmware says that this node contains the interrupt number of the
+device (4.1.1. Open Firmware-defined Properties for Child Nodes). The
+trick is that this property is generated *from* the device, and not set
+in stone.
 
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-> ---
->  .../devicetree/bindings/input/touchscreen/sitronix-st1232.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.txt b/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.txt
-> index e73e826e0f2a..365b32d30d4b 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/sitronix-st1232.txt
-> @@ -8,7 +8,7 @@ Required properties:
->  - interrupts: interrupt to which the chip is connected
->  
->  Optional properties:
-> -- gpios: a phandle to the reset GPIO
-> +- reset-gpios: a phandle to the reset GPIO
->  
->  Example:
->  
-> @@ -19,7 +19,7 @@ Example:
->  			compatible = "sitronix,st1232";
->  			reg = <0x55>;
->  			interrupts = <2 0>;
-> -			gpios = <&gpio1 166 0>;
-> +			reset-gpios = <&gpio1 166 0>;
->  		};
->  
->  		/* ... */
-> -- 
-> 2.20.1
-> 
+DT, on the other hand, takes whatever is described there and uses it as
+the gospel to configure the OS, no matter how the PCI device is actually
+configured. If the two don't match (like in this case), things break.
+This is the "DT describes the HW" mantra, for (sometimes) better or
+(more generally) worse.
+
+What the DT code does is to interpret the whole interrupt specifier,
+*including the interrupt-parent*. And that feels wrong. It should always
+be in the context of the host controller. But on the other side, the DT
+code is not in the business of validating the DT either...
+
+It outlines one thing: If you have to interpret per-device PCI
+properties from DT, you're in for serious trouble. I should get some
+better HW.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
