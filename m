@@ -1,119 +1,41 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
-Date: Mon, 25 Feb 2019 13:45:35 +0100
-Message-ID: <CAKv+Gu9OOzOxx0rTAZqM8r4q_hRmOp3b=KP7fwgNeiu67FCApA@mail.gmail.com>
-References: <20190224140426.3267-1-marc.zyngier@arm.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH 0/3] RPMPD for QCS404
+Date: Mon, 25 Feb 2019 18:18:09 +0530
+Message-ID: <c4b2a60c-80a5-8491-38fb-1fed3dee2e8a@codeaurora.org>
+References: <20190221064434.2760-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190224140426.3267-1-marc.zyngier@arm.com>
+In-Reply-To: <20190221064434.2760-1-bjorn.andersson@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, Kalle Valo <kvalo@codeaurora.org>, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Xinming Hu <huxinming820@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, "<linux-wireless@vger.kernel.org>" <linux-wireless@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 24 Feb 2019 at 15:08, Marc Zyngier <marc.zyngier@arm.com> wrote:
->
-> For quite some time, I wondered why the PCI mwifiex device built in my
-> Chromebook was unable to use the good old legacy interrupts. But as MSIs
-> were working fine, I never really bothered investigating. I finally had a
-> look, and the result isn't very pretty.
->
-> On this machine (rk3399-based kevin), the wake-up interrupt is described as
-> such:
->
-> &pci_rootport {
->         mvl_wifi: wifi@0,0 {
->                 compatible = "pci1b4b,2b42";
->                 reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
->                        0x83010000 0x0 0x00100000 0x0 0x00100000>;
->                 interrupt-parent = <&gpio0>;
->                 interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
->                 pinctrl-names = "default";
->                 pinctrl-0 = <&wlan_host_wake_l>;
->                 wakeup-source;
->         };
-> };
->
-> Note how the interrupt is part of the properties directly attached to the
-> PCI node. And yet, this interrupt has nothing to do with a PCI legacy
-> interrupt, as it is attached to the wake-up widget that bypasses the PCIe RC
-> altogether (Yay for the broken design!). This is in total violation of the
-> IEEE Std 1275-1994 spec[1], which clearly documents that such interrupt
-> specifiers describe the PCI device interrupts, and must obey the
-> INT-{A,B,C,D} mapping. Oops!
->
 
-The mapping of legacy PCIe INTx interrupts onto wired system
-interrupts is a property of the PCIe host controller, not of a
-particular PCIe device. So I would argue that the code is broken here
-as well: it should never attempt to interpret 'interrupt' properties
-at the PCI device level as having any bearing on how legacy interrupts
-are routed.
+On 2/21/2019 12:14 PM, Bjorn Andersson wrote:
+> Reworkd the macros of the rpmpd driver and add qcs404 power domains, then add
+> this to the dts.
 
-> The net effect of the above is that Linux tries to do something vaguely
-> sensible, and uses the same interrupt for both the wake-up widget and the
-> PCI device. This doesn't work for two reasons: (1) the wake-up widget grabs
-> the interrupt in exclusive mode, and (2) the PCI interrupt is still routed
-> to the RC, leading to a screaming interrupt. This simply cannot work.
->
-> To sort out this mess, we need to lift the confusion between the two
-> interrupts. This is done by extending the DT binding to allow the wake-up
-> interrupt to be described in a 'wake-up' subnode, sidestepping the issue
-> completely. On my Chromebook, it now looks like this:
->
-> &pci_rootport {
->         mvl_wifi: wifi@0,0 {
->                 compatible = "pci1b4b,2b42";
->                 reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
->                        0x83010000 0x0 0x00100000 0x0 0x00100000>;
->                 pinctrl-names = "default";
->                 pinctrl-0 = <&wlan_host_wake_l>;
->                 wake-up {
->                         interrupt-parent = <&gpio0>;
->                         interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
->                         wakeup-source;
->                 };
->         };
-> };
->
-> The driver is then updated to look for this subnode first, and fallback to
-> the original, broken behaviour (spitting out a warning in the offending
-> configuration).
->
-> For good measure, there are two additional patches:
->
-> - The wake-up interrupt requesting is horribly racy, and could lead to
->   unpredictable behaviours. Let's fix that properly.
->
-> - A final patch implementing the above transformation for the whole
->   RK3399-based Chromebook range, which all use the same broken
->   configuration.
->
-> With all that, I finally have PCI legacy interrupts working with the mwifiex
-> driver on my Chromebook.
->
-> [1] http://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
->
-> Marc Zyngier (4):
->   dt-bindings/marvell-8xxx: Allow wake-up interrupt to be placed in a
->     separate node
->   mwifiex: Fetch wake-up interrupt from 'wake-up' subnode when it exists
->   mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling
->     it too late
->   arm64: dts: rockchip: gru: Move wifi wake-up interrupt into its own
->     subnode
->
->  .../bindings/net/wireless/marvell-8xxx.txt    | 23 ++++++++++++++++++-
->  .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  8 ++++---
->  drivers/net/wireless/marvell/mwifiex/main.c   | 13 +++++++++--
->  3 files changed, 38 insertions(+), 6 deletions(-)
->
-> --
-> 2.20.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+For the entire series,
+
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+
+> 
+> Bjorn Andersson (3):
+>    soc: qcom: rpmpd: Modify corner defining macros
+>    soc: qcom: rpmpd: Add QCS404 corners
+>    arm64: dts: qcom: qcs404: Add rpmpd node
+> 
+>   .../devicetree/bindings/power/qcom,rpmpd.txt  |  1 +
+>   arch/arm64/boot/dts/qcom/qcs404.dtsi          | 35 +++++++++++
+>   drivers/soc/qcom/rpmpd.c                      | 63 +++++++++++++------
+>   include/dt-bindings/power/qcom-rpmpd.h        |  9 +++
+>   4 files changed, 88 insertions(+), 20 deletions(-)
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
