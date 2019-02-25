@@ -1,96 +1,61 @@
-Return-Path: <SRS0=Fy5c=QS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr140059.outbound.protection.outlook.com ([40.107.14.59]:27776
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726015AbfBKHPS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Feb 2019 02:15:18 -0500
-From: Matthias Fend <Matthias.Fend@wolfvision.net>
-Subject: AW: [PATCH 2/2] Input: st1232 - handle common DT bindings
-Date: Mon, 11 Feb 2019 07:15:12 +0000
-Message-ID: <VI1PR08MB37589A1C275E8D0A1224037B85640@VI1PR08MB3758.eurprd08.prod.outlook.com>
-References: <1548757144-2222-1-git-send-email-matthias.fend@wolfvision.net>
- <1548757144-2222-2-git-send-email-matthias.fend@wolfvision.net>
-In-Reply-To: <1548757144-2222-2-git-send-email-matthias.fend@wolfvision.net>
-Content-Language: de-DE
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=cWXf=RA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37529 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfBYPFk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Feb 2019 10:05:40 -0500
+Date: Mon, 25 Feb 2019 16:05:35 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 0/4] Prepare Armada 3700 PCIe suspend to RAM support
+Message-ID: <20190225160535.3395c680@xps13>
+In-Reply-To: <20181123094444.27956-1-miquel.raynal@bootlin.com>
+References: <20181123094444.27956-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
-To: "'dmitry.torokhov@gmail.com'" <dmitry.torokhov@gmail.com>
-Cc: Martin Kepplinger <martin.kepplinger@ginzinger.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Dmitry,
+Hi Stephen,
 
-> -----Urspr=FCngliche Nachricht-----
-> Von: Matthias Fend <matthias.fend@wolfvision.net>
-> Gesendet: Dienstag, 29. J=E4nner 2019 11:19
-> An: mfend@vol.at
-> Cc: Matthias Fend <Matthias.Fend@wolfvision.net>
-> Betreff: [PATCH 2/2] Input: st1232 - handle common DT bindings
->=20
-> This is required to specify generic touchscreen properties via DT.
->=20
-> Signed-off-by: Matthias Fend <matthias.fend@wolfvision.net>
-> ---
->  drivers/input/touchscreen/st1232.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/input/touchscreen/st1232.c
-> b/drivers/input/touchscreen/st1232.c
-> index 11ff32c..efed2e9 100644
-> --- a/drivers/input/touchscreen/st1232.c
-> +++ b/drivers/input/touchscreen/st1232.c
-> @@ -21,6 +21,7 @@
->  #include <linux/pm_qos.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
-> +#include <linux/input/touchscreen.h>
->=20
->  #define ST1232_TS_NAME	"st1232-ts"
->=20
-> @@ -41,6 +42,7 @@ struct st1232_ts_finger {
->  struct st1232_ts_data {
->  	struct i2c_client *client;
->  	struct input_dev *input_dev;
-> +	struct touchscreen_properties prop;
->  	struct st1232_ts_finger finger[MAX_FINGERS];
->  	struct dev_pm_qos_request low_latency_req;
->  	int reset_gpio;
-> @@ -109,8 +111,7 @@ static irqreturn_t st1232_ts_irq_handler(int irq, voi=
-d
-> *dev_id)
->  			continue;
->=20
->  		input_report_abs(input_dev, ABS_MT_TOUCH_MAJOR,
-> finger[i].t);
-> -		input_report_abs(input_dev, ABS_MT_POSITION_X,
-> finger[i].x);
-> -		input_report_abs(input_dev, ABS_MT_POSITION_Y,
-> finger[i].y);
-> +		touchscreen_report_pos(input_dev, &ts->prop, finger[i].x,
-> finger[i].y, true);
->  		input_mt_sync(input_dev);
->  		count++;
->  	}
-> @@ -195,6 +196,7 @@ static int st1232_ts_probe(struct i2c_client *client,
->  	input_set_abs_params(input_dev, ABS_MT_TOUCH_MAJOR, 0,
-> MAX_AREA, 0, 0);
->  	input_set_abs_params(input_dev, ABS_MT_POSITION_X, MIN_X,
-> MAX_X, 0, 0);
->  	input_set_abs_params(input_dev, ABS_MT_POSITION_Y, MIN_Y,
-> MAX_Y, 0, 0);
-> +	touchscreen_parse_properties(input_dev, true, &ts->prop);
->=20
->  	error =3D devm_request_threaded_irq(&client->dev, client->irq,
->  					  NULL, st1232_ts_irq_handler,
-> --
+Miquel Raynal <miquel.raynal@bootlin.com> wrote on Fri, 23 Nov 2018
+10:44:39 +0100:
 
-You asked me if I could also include the conversion to touchscreen_report_p=
-os() - which I did in this patch version.
-Is there anything else missing?
+> Hello,
+> 
+> As part of an effort to bring suspend to RAM support to the Armada
+> 3700 SoC (main target: ESPRESSObin board), there are small things to
+> do in the Armada 3700 peripherals clock driver:
+> 
+> * On this SoC, the PCIe controller gets fed by a gated clock in the
+>   south bridge. This clock is missing in the current driver, patch 1
+>   adds it.
+> 
+> * Because of a constraint in the PCI core, the resume function of a
+>   PCIe controller driver must be run at an early stage
+>   (->suspend/resume_noirq()), before the core tries to ->read/write()
+>   in the PCIe registers to do more configuration. Hence, the PCIe
+>   clock must be resumed before. This is enforced thanks to two
+>   changes:
+>   1/ Add device links to the clock framework. This enforce order in
+>      the PM core: the clocks are resumed before the consumers. Series
+>      has been posted, see [1].
+>   2/ Even with the above feature, the clock's resume() callback is
+>      called after the PCI controller's resume_noirq() callback. The
+>      only way to fix this is to change the "priority" of the clock
+>      suspend/resume callbacks. This is done in patch 2.
+> 
+> * The bindings are updated with the PCI clock in patch 4 while patch 3
+>   is just a typo correction in the same file.
+> 
+> If there is anything unclear please feel free to ask.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-November/614527.html
+
+This series does not depend on the clock device links work so I
+wonder if you are still considering it?
+
 
 Thanks,
-  ~Matthias
-
-> 2.7.4
+Miquèl
