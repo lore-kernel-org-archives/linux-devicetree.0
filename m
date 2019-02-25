@@ -1,59 +1,109 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: extcon: Add support for fsa9480 switch
-Date: Mon, 25 Feb 2019 17:58:21 +0100
-Message-ID: <20190225165822.2770-2-pawel.mikolaj.chmiel@gmail.com>
-References: <20190225165822.2770-1-pawel.mikolaj.chmiel@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: display: rockchip: add document for rk3066
+ hdmi
+Date: Mon, 25 Feb 2019 10:59:23 -0600
+Message-ID: <20190225165923.GA2578@bogus>
+References: <20181229133318.18128-1-jbx6244@gmail.com>
+ <20190201123235.1693-1-jbx6244@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225165822.2770-1-pawel.mikolaj.chmiel@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190201123235.1693-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com
-Cc: cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+To: Johan Jonker <jbx6244@gmail.com>
+Cc: heiko@sntech.de, hjc@rock-chips.com, airlied@linux.ie, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tomasz Figa <tomasz.figa@gmail.com>
+On Fri, Feb 01, 2019 at 01:32:35PM +0100, Johan Jonker wrote:
+> This patch adds a binding that describes the HDMI controller for
+> rk3066.
 
-This patch adds documentation for binding of extcont Fairchild
-Semiconductor FSA9480 microusb switch.
-This usb port accessory detector and switch, can be found for example in
-some Samsung s5pv210 based phones.
+This is not using the DW block like other Rockchip SoCs (IIRC)? 
 
-Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- .../bindings/extcon/extcon-fsa9480.txt        | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>  .../display/rockchip/rk3066_hdmi-rockchip.txt      | 60 ++++++++++++++++++++++
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-new file mode 100644
-index 000000000000..ebced7b18eb5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-@@ -0,0 +1,21 @@
-+FAIRCHILD SEMICONDUCTOR FSA9480 MICROUSB SWITCH
-+
-+The FSA9480 is a USB port accessory detector and switch. The FSA9480 is fully
-+controlled using I2C and enables USB data, stereo and mono audio, video,
-+microphone, and UART data to use a common connector port.
-+
-+Required properties:
-+ - compatible : Must be "fcs,fsa9480"
-+ - reg : Specifies i2c slave address. Must be 0x25.
-+ - interrupt-parent : Phandle to interrupt controller to which interrupt
-+   signal of the chip is connected.
-+ - interrupts : Should contain one entry specifying interrupt signal of
-+   interrupt parent to which interrupt pin of the chip is connected.
-+
-+ Example:
-+	musb@25 {
-+		compatible = "fcs,fsa9480";
-+		reg = <0x25>;
-+		interrupt-parent = <&gph2>;
-+		interrupts = <7 0>;
-+	};
-\ No newline at end of file
--- 
-2.17.1
+Using the compatible string plus '.txt' is the preferred naming.
+
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
+> new file mode 100644
+> index 000000000..6a8f3754f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
+> @@ -0,0 +1,60 @@
+> +Rockchip specific extensions for rk3066 HDMI
+> +============================================
+> +
+> +Required properties:
+> +- compatible:
+> +	"rockchip,rk3066-hdmi";
+> +- reg:
+> +	Physical base address and length of the controller's registers.
+> +- clocks, clock-names:
+> +	Phandle to HDMI controller clock, name should be "hclk".
+> +- interrupts:
+> +	HDMI interrupt number.
+> +- power-domains:
+> +	Phandle to the RK3066_PD_VIO power domain.
+> +- rockchip,grf:
+> +	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
+> +- ports:
+> +	Contains one port node with two endpoints, numbered 0 and 1,
+> +	connected respectively to vop0 and vop1.
+
+You should have an output port to an hdmi-connector node (or bridge) as 
+well.
+
+> +- pinctrl-0, pinctrl-name:
+> +	Switch the iomux for the HPD/I2C pins to HDMI function.
+> +
+> +Example:
+> +	hdmi: hdmi@10116000 {
+> +		compatible = "rockchip,rk3066-hdmi";
+> +		reg = <0x10116000 0x2000>;
+> +		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_HDMI>;
+> +		clock-names = "hclk";
+> +		power-domains = <&power RK3066_PD_VIO>;
+> +		rockchip,grf = <&grf>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
+> +		status = "disabled";
+
+Don't show status in examples.
+
+> +
+> +		hdmi_in: port {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			hdmi_in_vop0: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&vop0_out_hdmi>;
+> +			};
+> +			hdmi_in_vop1: endpoint@1 {
+> +				reg = <1>;
+> +				remote-endpoint = <&vop1_out_hdmi>;
+> +			};
+> +		};
+> +	};
+> +
+> +&pinctrl {
+> +		hdmi {
+> +			hdmi_hpd: hdmi-hpd {
+> +				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
+> +			};
+> +			hdmii2c_xfer: hdmii2c-xfer {
+> +				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
+> +						<0 RK_PA2 1 &pcfg_pull_none>;
+> +			};
+> +		};
+> +};
+> -- 
+> 2.11.0
+> 
