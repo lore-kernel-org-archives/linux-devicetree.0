@@ -1,107 +1,55 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [RFC PATCH 5/5] mtd: hyperbus: Add driver for TI's Hyperbus
- memory controller
-Date: Mon, 25 Feb 2019 19:29:17 +0300
-Message-ID: <907041d1-8412-22ca-3716-109a56251850@cogentembedded.com>
-References: <20190219063607.29949-1-vigneshr@ti.com>
- <20190219063607.29949-6-vigneshr@ti.com>
+From: Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
+Date: Mon, 25 Feb 2019 09:32:22 -0700
+Message-ID: <20190225093222.40533238@lwn.net>
+References: <cover.1550768574.git.hns@goldelico.com>
+        <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219063607.29949-6-vigneshr@ti.com>
-Content-Language: en-MW
+In-Reply-To: <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>)" <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, tudor.ambarus@microchip.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gregor Boirie <gregor.boirie@parrot.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Thu, 21 Feb 2019 18:02:47 +0100
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-On 02/19/2019 09:36 AM, Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>) wrote:
-
-> Add driver for Hyperbus memory controller on TI's AM654 SoC. Programming
-> IP is pretty simple and provides direct memory mapped access to
-> connected Flash devices.
-
-   Are you sure you posted the _complete_ driver?
-
-> Add basic support for the IP without DMA. Second ChipSelect is not
-> supported for now.
+> From: Linus Walleij <linus.walleij@linaro.org>
 > 
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> The mounting matrix for sensors was introduced in
+> commit dfc57732ad38 ("iio:core: mounting matrix support")
+> 
+> However the device tree bindings are very terse and since this is
+> a widely applicable property, we need a proper binding for it
+> that the other bindings can reference. This will also be useful
+> for other operating systems and sensor engineering at large.
+> 
+> I think all 3D sensors should support it, the current situation
+> is probably that the mounting information is confined in magic
+> userspace components rather than using the mounting matrix, which
+> is not good for portability and reuse.
+> 
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Gregor Boirie <gregor.boirie@parrot.com>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Samu Onkalo <samu.onkalo@intel.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
->  drivers/mtd/hyperbus/hbmc_am654.c | 105 ++++++++++++++++++++++++++++++
->  1 file changed, 105 insertions(+)
->  create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
-> 
-> diff --git a/drivers/mtd/hyperbus/hbmc_am654.c b/drivers/mtd/hyperbus/hbmc_am654.c
-> new file mode 100644
-> index 000000000000..1f0d2dc52f9f
-> --- /dev/null
-> +++ b/drivers/mtd/hyperbus/hbmc_am654.c
-> @@ -0,0 +1,105 @@
-[...]
-> +static int am654_hbmc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct am654_hbmc_priv *priv;
-> +	struct resource *res;
-> +	int err;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (IS_ERR(res)) {
-> +		dev_err(&pdev->dev, "failed to get memory resource\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	priv->regbase = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(priv->regbase)) {
-> +		dev_err(dev, "Cannot remap controller address.\n");
-> +		return PTR_ERR(priv->regbase);
-> +	}
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +	err = pm_runtime_get_sync(&pdev->dev);
+>  .../devicetree/bindings/iio/mount-matrix.txt  | 204 ++++++++++++++++++
+>  1 file changed, 204 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/mount-matrix.txt
 
-   That's all nice but where's the code that accesses the actual registers?
+So forgive me, but I have to ask: what are the chances of getting this
+file in RST format?  It's 99% of the way there now, finishing the job
+would allow it to be integrated into our docs tree.
 
-> +	if (err < 0) {
-> +		pm_runtime_put_noidle(&pdev->dev);
+It should probably have an SPDX line too.
 
-   Calling "put" with previously failed "get" sees strange...
+Thanks,
 
-> +		return err;
-> +	}
-> +
-> +	priv->hbdev.needs_calib = true;
-> +	priv->hbdev.dev = &pdev->dev;
-> +	priv->hbdev.np = of_get_next_child(dev->of_node, NULL);
-> +	err = hb_register_device(&priv->hbdev);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "failed to register controller\n");
-> +		goto err_destroy;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_destroy:
-> +	hb_unregister_device(&priv->hbdev);
-
-   Calling "unregister" with "register" previously failed also looks strange...
-
-> +	pm_runtime_put_sync(&pdev->dev);
-
-   Why the sync() version?
-
-> +	return err;
-> +}
-[...]
-
-MBR, Sergei
+jon
