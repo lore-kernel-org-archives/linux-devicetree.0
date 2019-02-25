@@ -1,801 +1,99 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 7/7] arm: dts: mediatek: add basic support for MT7629 SoC
-Date: Mon, 25 Feb 2019 08:37:40 -0600
-Message-ID: <20190225143740.GA30135@bogus>
-References: <d1ab6c89b115ad0582815816490fa0c13ea83178.1548735271.git.ryder.lee@mediatek.com>
- <6bda890b763ca0f2fceaca4f7480de7ce8bef637.1548735271.git.ryder.lee@mediatek.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 4/4] drm/panel: Add OSD101T2587-53TS driver
+Date: Mon, 25 Feb 2019 16:39:03 +0200
+Message-ID: <37fcd744-b32c-d77a-b422-fb44d6f2c952@ti.com>
+References: <20190222131618.20520-1-peter.ujfalusi@ti.com>
+ <20190222131618.20520-5-peter.ujfalusi@ti.com>
+ <20190223193805.GA21790@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6bda890b763ca0f2fceaca4f7480de7ce8bef637.1548735271.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <roychl666@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190223193805.GA21790@ravnborg.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, tomi.valkeinen@ti.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 12:31:19PM +0800, Ryder Lee wrote:
-> This adds basic support for MT7629 reference board.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
-> The I2C node depends on https://patchwork.kernel.org/patch/10772837/
-> The PCIe node depends on https://patchwork.kernel.org/patch/10773637/
-> ---
->  arch/arm/boot/dts/Makefile                |   1 +
->  arch/arm/boot/dts/mt7629-rfb.dts          | 234 +++++++++++++++++
->  arch/arm/boot/dts/mt7629.dtsi             | 416 ++++++++++++++++++++++++++++++
->  include/dt-bindings/reset/mt7629-resets.h |  71 +++++
->  4 files changed, 722 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mt7629-rfb.dts
->  create mode 100644 arch/arm/boot/dts/mt7629.dtsi
->  create mode 100644 include/dt-bindings/reset/mt7629-resets.h
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index bd40148..a5a6d9f 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1231,6 +1231,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
->  	mt7623a-rfb-nand.dtb \
->  	mt7623n-rfb-emmc.dtb \
->  	mt7623n-bananapi-bpi-r2.dtb \
-> +	mt7629-rfb.dtb \
->  	mt8127-moose.dtb \
->  	mt8135-evbp1.dtb
->  dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
-> diff --git a/arch/arm/boot/dts/mt7629-rfb.dts b/arch/arm/boot/dts/mt7629-rfb.dts
-> new file mode 100644
-> index 0000000..0878a14
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt7629-rfb.dts
-> @@ -0,0 +1,234 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Ryder Lee <ryder.lee@mediatek.com>
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/input/input.h>
-> +#include "mt7629.dtsi"
-> +
-> +/ {
-> +	model = "MediaTek MT7629 reference board";
-> +	compatible = "mediatek,mt7629-rfb", "mediatek,mt7629";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +		bootargs = "earlycon=uart8250,mmio32,0x11002000";
-
-Just 'earlycon' with no options is all you need if stdout-path is set.
-
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +
-> +		reset {
-> +			label = "factory";
-> +			linux,code = <KEY_RESTART>;
-> +			gpios = <&pio 60 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		wps {
-> +			label = "wps";
-> +			linux,code = <KEY_WPS_BUTTON>;
-> +			gpios = <&pio 58 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x40000000 0 0x10000000>;
-> +	};
-> +
-> +	reg_3p3v: regulator-3p3v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-3.3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_5v: regulator-5v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-5V";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&i2c {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&qspi {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&qspi_pins>;
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		partition@00000 {
-
-All these under a 'partitions' node is the preferred way.
-
-> +			label = "Bootloader";
-> +			reg = <0x00000 0x0060000>;
-> +		};
-> +
-> +		partition@60000 {
-> +			label = "Config";
-> +			reg = <0x60000 0x0010000>;
-> +		};
-> +
-> +		partition@70000 {
-> +			label = "Factory";
-> +			reg = <0x70000 0x0040000>;
-> +		};
-> +
-> +		partition@b0000 {
-> +			label = "Kernel";
-> +			reg = <0xb0000 0xb50000>;
-> +		};
-> +	};
-> +};
-> +
-> +&pcie {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_pins>;
-> +	status = "okay";
-> +
-> +	pcie@1,0 {
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&pio {
-> +	eth_pins: eth-pins {
-> +		mux {
-> +			function = "eth";
-> +			groups = "mdc_mdio";
-> +		};
-> +	};
-> +
-> +	ephy_leds_pins: ephy-leds-pins {
-> +		mux {
-> +			function = "led";
-> +			groups = "gphy_leds_0", "ephy_leds";
-> +		};
-> +	};
-> +
-> +	i2c_pins: i2c-pins {
-> +		mux {
-> +			function = "i2c";
-> +			groups =  "i2c_0";
-> +		};
-> +
-> +		conf {
-> +			pins = "I2C_SDA", "I2C_SCL";
-> +			drive-strength = <4>;
-> +			bias-disable;
-> +		};
-> +	};
-> +
-> +	pcie_pins: pcie-pins {
-> +		mux {
-> +			function = "pcie";
-> +			groups = "pcie_clkreq",
-> +				 "pcie_pereset",
-> +				 "pcie_wake";
-> +		};
-> +	};
-> +
-> +	pwm_pins: pwm-pins {
-> +		mux {
-> +			function = "pwm";
-> +			groups = "pwm_0";
-> +		};
-> +	};
-> +
-> +	/* Serial NAND is shared pin with SPI-NOR */
-> +	serial_nand_pins: serial-nand-pins {
-> +		mux {
-> +			function = "flash";
-> +			groups = "snfi";
-> +		};
-> +	};
-> +
-> +	spi_pins: spi-pins {
-> +		mux {
-> +			function = "spi";
-> +			groups = "spi_0";
-> +		};
-> +	};
-> +
-> +	/* SPI-NOR is shared pin with serial NAND */
-> +	qspi_pins: qspi-pins {
-> +		mux {
-> +			function = "flash";
-> +			groups = "spi_nor";
-> +		};
-> +	};
-> +
-> +	uart0_pins: uart0-pins {
-> +		mux {
-> +			function = "uart";
-> +			groups = "uart0_txd_rxd" ;
-> +		};
-> +	};
-> +
-> +	uart1_pins: uart1-pins {
-> +		mux {
-> +			function = "uart";
-> +			groups = "uart1_0_tx_rx" ;
-> +		};
-> +	};
-> +
-> +	uart2_pins: uart2-pins {
-> +		mux {
-> +			function = "uart";
-> +			groups = "uart2_0_txd_rxd" ;
-> +		};
-> +	};
-> +
-> +	watchdog_pins: watchdog-pins {
-> +		mux {
-> +			function = "watchdog";
-> +			groups = "watchdog";
-> +		};
-> +	};
-> +};
-> +
-> +&spi {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&ssusb {
-> +	vusb33-supply = <&reg_3p3v>;
-> +	vbus-supply = <&reg_5v>;
-> +	status = "okay";
-> +};
-> +
-> +&u3phy1 {
-> +	status = "okay";
-> +};
-> +
-> +&watchdog {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&watchdog_pins>;
-> +	status = "okay";
-> +};
-> \ No newline at end of file
-> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-> new file mode 100644
-> index 0000000..2b4410a
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt7629.dtsi
-> @@ -0,0 +1,416 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + *
-> + * Author: Ryder Lee <ryder.lee@mediatek.com>
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/mt7629-clk.h>
-> +#include <dt-bindings/power/mt7622-power.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/phy/phy.h>
-> +#include <dt-bindings/reset/mt7629-resets.h>
-> +
-> +/ {
-> +	compatible = "mediatek,mt7629";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		enable-method = "mediatek,mt6589-smp";
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x0>;
-> +			clock-frequency = <1250000000>;
-> +			cci-control-port = <&cci_control2>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x1>;
-> +			clock-frequency = <1250000000>;
-> +			cci-control-port = <&cci_control2>;
-> +		};
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,cortex-a7-pmu";
-> +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-affinity = <&cpu0>, <&cpu1>;
-> +	};
-> +
-> +	clk20m: oscillator@0 {
-
-Unit-address without reg is not valid, so drop it. Build your dtb with 
-W=1 (and W=12 preferrably) and fix the warnings like this.
-
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <20000000>;
-> +		clock-output-names = "clk20m";
-> +	};
-> +
-> +	clk40m: oscillator@1 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <40000000>;
-> +		clock-output-names = "clkxtal";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		clock-frequency = <20000000>;
-> +		arm,cpu-registers-not-fw-configured;
-> +	};
-> +
-> +	infracfg: syscon@10000000 {
-
-Put all the mmio peripherals under a simple-bus node.
-
-> +		compatible = "mediatek,mt7629-infracfg", "syscon";
-> +		reg = <0 0x10000000 0 0x1000>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	pericfg: syscon@10002000 {
-> +		compatible = "mediatek,mt7629-pericfg", "syscon";
-> +		reg = <0 0x10002000 0 0x1000>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	scpsys: scpsys@10006000 {
-> +		compatible = "mediatek,mt7629-scpsys",
-> +			     "mediatek,mt7622-scpsys";
-> +		#power-domain-cells = <1>;
-> +		reg = <0 0x10006000 0 0x1000>;
-> +		clocks = <&topckgen CLK_TOP_HIF_SEL>;
-> +		clock-names = "hif_sel";
-> +		assigned-clocks = <&topckgen CLK_TOP_HIF_SEL>;
-> +		assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL1_D2>;
-> +		infracfg = <&infracfg>;
-> +	};
-> +
-> +	timer: timer@10009000 {
-> +		compatible = "mediatek,mt7629-timer",
-> +			     "mediatek,mt6765-timer";
-> +		reg = <0 0x10009000 0 0x60>;
-> +		interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clk20m>;
-> +		clock-names = "clk20m";
-> +	};
-> +
-> +	sysirq: interrupt-controller@10200a80 {
-> +		compatible = "mediatek,mt7629-sysirq",
-> +			     "mediatek,mt6577-sysirq";
-> +		reg = <0 0x10200a80 0 0x20>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-> +	};
-> +
-> +	apmixedsys: syscon@10209000 {
-> +		compatible = "mediatek,mt7629-apmixedsys", "syscon";
-> +		reg = <0 0x10209000 0 0x1000>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	rng: rng@1020f000 {
-> +		compatible = "mediatek,mt7629-rng",
-> +			     "mediatek,mt7623-rng";
-> +		reg = <0 0x1020f000 0 0x100>;
-> +		clocks = <&infracfg CLK_INFRA_TRNG_PD>;
-> +		clock-names = "rng";
-> +	};
-> +
-> +	topckgen: syscon@10210000 {
-> +		compatible = "mediatek,mt7629-topckgen", "syscon";
-> +		reg = <0 0x10210000 0 0x1000>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	watchdog: watchdog@10212000 {
-> +		compatible = "mediatek,mt7629-wdt",
-> +			     "mediatek,mt6589-wdt";
-> +		reg = <0 0x10212000 0 0x100>;
-> +	};
-> +
-> +	pio: pinctrl@10217000 {
-> +		compatible = "mediatek,mt7629-pinctrl";
-> +		reg = <0 0x10217000 0 0x8000>,
-> +		      <0 0x10005000 0 0x1000>;
-> +		reg-names = "base", "eint";
-> +		gpio-controller;
-> +		gpio-ranges = <&pio 0 0 79>;
-> +		#gpio-cells = <2>;
-> +		#interrupt-cells = <2>;
-> +		interrupt-controller;
-> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-parent = <&gic>;
-> +	};
-> +
-> +	gic: interrupt-controller@10300000 {
-> +		compatible = "arm,gic-400";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-> +		reg = <0 0x10310000 0 0x1000>,
-> +		      <0 0x10320000 0 0x1000>,
-> +		      <0 0x10340000 0 0x2000>,
-> +		      <0 0x10360000 0 0x2000>;
-> +	};
-> +
-> +	cci: cci@10390000 {
-> +		compatible = "arm,cci-400";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0 0x10390000 0 0x1000>;
-> +		ranges = <0 0 0x10390000 0x10000>;
-> +
-> +		cci_control0: slave-if@1000 {
-> +			compatible = "arm,cci-400-ctrl-if";
-> +			interface-type = "ace-lite";
-> +			reg = <0x1000 0x1000>;
-> +		};
-> +
-> +		cci_control1: slave-if@4000 {
-> +			compatible = "arm,cci-400-ctrl-if";
-> +			interface-type = "ace";
-> +			reg = <0x4000 0x1000>;
-> +		};
-> +
-> +		cci_control2: slave-if@5000 {
-> +			compatible = "arm,cci-400-ctrl-if";
-> +			interface-type = "ace";
-> +			reg = <0x5000 0x1000>;
-> +		};
-> +
-> +		pmu@9000 {
-> +			compatible = "arm,cci-400-pmu,r1";
-> +			reg = <0x9000 0x5000>;
-> +			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +	};
-> +
-> +	uart0: serial@11002000 {
-> +		compatible = "mediatek,mt7629-uart",
-> +			     "mediatek,mt6577-uart";
-> +		reg = <0 0x11002000 0 0x400>;
-> +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&topckgen CLK_TOP_UART_SEL>,
-> +			 <&pericfg CLK_PERI_UART0_PD>;
-> +		clock-names = "baud", "bus";
-> +		status = "disabled";
-> +	};
-> +
-> +	uart1: serial@11003000 {
-> +		compatible = "mediatek,mt7629-uart",
-> +			     "mediatek,mt6577-uart";
-> +		reg = <0 0x11003000 0 0x400>;
-> +		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&topckgen CLK_TOP_UART_SEL>,
-> +			 <&pericfg CLK_PERI_UART1_PD>;
-> +		clock-names = "baud", "bus";
-> +		status = "disabled";
-> +	};
-> +
-> +	uart2: serial@11004000 {
-> +		compatible = "mediatek,mt7629-uart",
-> +			     "mediatek,mt6577-uart";
-> +		reg = <0 0x11004000 0 0x400>;
-> +		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&topckgen CLK_TOP_UART_SEL>,
-> +			 <&pericfg CLK_PERI_UART2_PD>;
-> +		clock-names = "baud", "bus";
-> +		status = "disabled";
-> +	};
-> +
-> +	i2c: i2c@11007000 {
-> +		compatible = "mediatek,mt7629-i2c",
-> +			     "mediatek,mt2712-i2c";
-> +		reg = <0 0x11007000 0 0x90>,
-> +		      <0 0x11000100 0 0x80>;
-> +		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>;
-> +		clock-div = <4>;
-> +		clocks = <&pericfg CLK_PERI_I2C0_PD>,
-> +			 <&pericfg CLK_PERI_AP_DMA_PD>;
-> +		clock-names = "main", "dma";
-> +		assigned-clocks = <&topckgen CLK_TOP_AXI_SEL>;
-> +		assigned-clock-parents = <&topckgen CLK_TOP_SYSPLL1_D2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
-> +	spi: spi@1100a000 {
-> +		compatible = "mediatek,mt7629-spi",
-> +			     "mediatek,mt7622-spi";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0 0x1100a000 0 0x100>;
-> +		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
-> +			 <&topckgen CLK_TOP_SPI0_SEL>,
-> +			 <&pericfg CLK_PERI_SPI0_PD>;
-> +		clock-names = "parent-clk", "sel-clk", "spi-clk";
-> +		status = "disabled";
-> +	};
-> +
-> +	qspi: spi@11014000 {
-> +		compatible = "mediatek,mt7629-nor",
-> +			     "mediatek,mt8173-nor";
-> +		reg = <0 0x11014000 0 0xe0>;
-> +		clocks = <&pericfg CLK_PERI_FLASH_PD>,
-> +			 <&topckgen CLK_TOP_FLASH_SEL>;
-> +		clock-names = "spi", "sf";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
-> +	ssusbsys: syscon@1a000000 {
-> +		compatible = "mediatek,mt7629-ssusbsys", "syscon";
-> +		reg = <0 0x1a000000 0 0x1000>;
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +	ssusb: usb@1a0c0000 {
-> +		compatible = "mediatek,mt7629-xhci",
-> +			     "mediatek,mtk-xhci";
-> +		reg = <0 0x1a0c0000 0 0x01000>,
-> +		      <0 0x1a0c3e00 0 0x0100>;
-> +		reg-names = "mac", "ippc";
-> +		interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&ssusbsys CLK_SSUSB_SYS_EN>,
-> +			 <&ssusbsys CLK_SSUSB_REF_EN>,
-> +			 <&ssusbsys CLK_SSUSB_MCU_EN>,
-> +			 <&ssusbsys CLK_SSUSB_DMA_EN>;
-> +		clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck";
-> +		assigned-clocks = <&topckgen CLK_TOP_AXI_SEL>,
-> +				  <&topckgen CLK_TOP_SATA_SEL>,
-> +				  <&topckgen CLK_TOP_HIF_SEL>;
-> +		assigned-clock-parents = <&topckgen CLK_TOP_SYSPLL1_D2>,
-> +					 <&topckgen CLK_TOP_UNIVPLL2_D4>,
-> +					 <&topckgen CLK_TOP_UNIVPLL1_D2>;
-> +		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF1>;
-> +		phys = <&u2port0 PHY_TYPE_USB2>,
-> +		       <&u3port0 PHY_TYPE_USB3>;
-> +		status = "disabled";
-> +	};
-> +
-> +	u3phy1: usb-phy@1a0c4000 {
-> +		compatible = "mediatek,generic-tphy-v1";
-> +		reg = <0 0x1a0c4000 0 0x300>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		status = "disabled";
-> +
-> +		u2port0: usb-phy@1a0c4300 {
-> +			reg = <0 0x1a0c4300 0 0x100>;
-> +			clocks = <&ssusbsys CLK_SSUSB_U2_PHY_EN>;
-> +			clock-names = "ref";
-> +			#phy-cells = <1>;
-> +			status = "okay";
-> +		};
-> +
-> +		u3port0: usb-phy@1a1c4900 {
-> +			reg = <0 0x1a1c4900 0 0x700>;
-> +			clocks = <&clk20m>;
-> +			clock-names = "ref";
-> +			#phy-cells = <1>;
-> +			status = "okay";
-> +		};
-> +	};
-> +
-> +	pciesys: syscon@1a100800 {
-> +		compatible = "mediatek,mt7629-pciesys", "syscon";
-> +		reg = <0 0x1a100800 0 0x1000>;
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +	pcie: pcie@1a140000 {
-> +		compatible = "mediatek,mt7629-pcie";
-> +		device_type = "pci";
-> +		reg = <0 0x1a140000 0 0x1000>,
-> +		      <0 0x1a145000 0 0x1000>;
-> +		reg-names = "subsys", "port1";
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		#interrupt-cells = <1>;
-> +		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&pciesys CLK_PCIE_P1_MAC_EN>,
-> +			 <&pciesys CLK_PCIE_P0_AHB_EN>,
-> +			 <&pciesys CLK_PCIE_P1_AUX_EN>,
-> +			 <&pciesys CLK_PCIE_P1_AXI_EN>,
-> +			 <&pciesys CLK_PCIE_P1_OBFF_EN>,
-> +			 <&pciesys CLK_PCIE_P1_PIPE_EN>;
-> +		clock-names = "sys_ck1", "ahb_ck1",
-> +			      "aux_ck1", "axi_ck1",
-> +			      "obff_ck1", "pipe_ck1";
-> +		assigned-clocks = <&topckgen CLK_TOP_SATA_SEL>,
-> +				  <&topckgen CLK_TOP_AXI_SEL>,
-> +				  <&topckgen CLK_TOP_HIF_SEL>;
-> +		assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL2_D4>,
-> +					 <&topckgen CLK_TOP_SYSPLL1_D2>,
-> +					 <&topckgen CLK_TOP_UNIVPLL1_D2>;
-> +		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
-> +		bus-range = <0x00 0xff>;
-> +		status = "disabled";
-> +		ranges = <0x82000000 0 0x20000000 0 0x20000000 0 0x10000000>;
-> +
-> +		pcie@1,0 {
-> +			reg = <0x0800 0 0 0 0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			#interrupt-cells = <1>;
-> +			ranges;
-> +			status = "disabled";
-> +
-> +			num-lanes = <1>;
-> +			interrupt-map-mask = <0 0 0 7>;
-> +			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
-> +					<0 0 0 2 &pcie_intc1 1>,
-> +					<0 0 0 3 &pcie_intc1 2>,
-> +					<0 0 0 4 &pcie_intc1 3>;
-> +			pcie_intc1: interrupt-controller {
-> +				interrupt-controller;
-> +				#address-cells = <0>;
-> +				#interrupt-cells = <1>;
-> +			};
-> +		};
-> +	};
-> +
-> +	ethsys: syscon@1b000000 {
-> +		compatible = "mediatek,mt7629-ethsys", "syscon";
-> +		reg = <0 0x1b000000 0 0x1000>;
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +	sgmiisys0: syscon@1b128000 {
-> +		compatible = "mediatek,mt7629-sgmiisys", "syscon";
-> +		reg = <0 0x1b128000 0 0x1000>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	sgmiisys1: syscon@1b130000 {
-> +		compatible = "mediatek,mt7629-sgmiisys", "syscon";
-> +		reg = <0 0x1b130000 0 0x1000>;
-> +		#clock-cells = <1>;
-> +	};
-> +};
-> diff --git a/include/dt-bindings/reset/mt7629-resets.h b/include/dt-bindings/reset/mt7629-resets.h
-> new file mode 100644
-> index 0000000..6bb8573
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/mt7629-resets.h
-> @@ -0,0 +1,71 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 MediaTek Inc.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT7629
-> +#define _DT_BINDINGS_RESET_CONTROLLER_MT7629
-> +
-> +/* INFRACFG resets */
-> +#define MT7629_INFRA_EMI_MPU_RST		0
-> +#define MT7629_INFRA_UART5_RST			2
-> +#define MT7629_INFRA_CIRQ_EINT_RST		3
-> +#define MT7629_INFRA_APXGPT_RST			4
-> +#define MT7629_INFRA_SCPSYS_RST			5
-> +#define MT7629_INFRA_KP_RST			6
-> +#define MT7629_INFRA_SPI1_RST			7
-> +#define MT7629_INFRA_SPI4_RST			8
-> +#define MT7629_INFRA_SYSTIMER_RST		9
-> +#define MT7629_INFRA_IRRX_RST			10
-> +#define MT7629_INFRA_AO_BUS_RST			16
-> +#define MT7629_INFRA_EMI_RST			32
-> +#define MT7629_INFRA_APMIXED_RST		35
-> +#define MT7629_INFRA_MIPI_RST			36
-> +#define MT7629_INFRA_TRNG_RST			37
-> +#define MT7629_INFRA_SYSCIRQ_RST		38
-> +#define MT7629_INFRA_MIPI_CSI_RST		39
-> +#define MT7629_INFRA_GCE_FAXI_RST		40
-> +#define MT7629_INFRA_I2C_SRAM_RST		41
-> +#define MT7629_INFRA_IOMMU_RST			47
-> +
-> +/* PERICFG resets */
-> +#define MT7629_PERI_UART0_SW_RST		0
-> +#define MT7629_PERI_UART1_SW_RST		1
-> +#define MT7629_PERI_UART2_SW_RST		2
-> +#define MT7629_PERI_BTIF_SW_RST			6
-> +#define MT7629_PERI_PWN_SW_RST			8
-> +#define MT7629_PERI_DMA_SW_RST			11
-> +#define MT7629_PERI_NFI_SW_RST			14
-> +#define MT7629_PERI_I2C0_SW_RST			22
-> +#define MT7629_PERI_SPI0_SW_RST			33
-> +#define MT7629_PERI_SPI1_SW_RST			34
-> +#define MT7629_PERI_FLASHIF_SW_RST		36
-> +
-> +/* PCIe Subsystem resets */
-> +#define MT7629_PCIE1_CORE_RST			19
-> +#define MT7629_PCIE1_MMIO_RST			20
-> +#define MT7629_PCIE1_HRST			21
-> +#define MT7629_PCIE1_USER_RST			22
-> +#define MT7629_PCIE1_PIPE_RST			23
-> +#define MT7629_PCIE0_CORE_RST			27
-> +#define MT7629_PCIE0_MMIO_RST			28
-> +#define MT7629_PCIE0_HRST			29
-> +#define MT7629_PCIE0_USER_RST			30
-> +#define MT7629_PCIE0_PIPE_RST			31
-> +
-> +/* SSUSB Subsystem resets */
-> +#define MT7629_SSUSB_PHY_PWR_RST		3
-> +#define MT7629_SSUSB_MAC_PWR_RST		4
-> +
-> +/* ETH Subsystem resets */
-> +#define MT7629_ETHSYS_SYS_RST			0
-> +#define MT7629_ETHSYS_MCM_RST			2
-> +#define MT7629_ETHSYS_HSDMA_RST			5
-> +#define MT7629_ETHSYS_FE_RST			6
-> +#define MT7629_ETHSYS_ESW_RST			16
-> +#define MT7629_ETHSYS_GMAC_RST			23
-> +#define MT7629_ETHSYS_EPHY_RST			24
-> +#define MT7629_ETHSYS_CRYPTO_RST		29
-> +#define MT7629_ETHSYS_PPE_RST			31
-> +
-> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT7629 */
-> -- 
-> 1.9.1
-> 
+SGkgU2FtLAoKT24gMjMvMDIvMjAxOSAyMS4zOCwgU2FtIFJhdm5ib3JnIHdyb3RlOgo+IEhpIFBl
+dGVyLgo+IAo+IERyaXZlciBsb29rcyB0byBiZSBpbiBnb29kIHNoYXBlIG5vdy4KPiBXaXRoIHRo
+ZSBmZXcgY29tbWVudHMgYmVsb3cgYWRkcmVzc2VkIHlvdSBjYW4gYWRkIG15Ogo+IFJldmlld2Vk
+LWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+Cj4gCj4gCVNhbQo+IAo+IE9uIEZy
+aSwgRmViIDIyLCAyMDE5IGF0IDAzOjE2OjE4UE0gKzAyMDAsIFBldGVyIFVqZmFsdXNpIHdyb3Rl
+Ogo+PiBUaGUgcGFuZWwgaXMgc2ltaWxhciB0byBPU0QxMDFUMjA0NS01M1RTICh3aGljaCBpcyBo
+YW5kbGVkIGJ5IHBhbmVsLXNpbXBsZSkKPj4gd2l0aCBvbmUgYmlnIGRpZmZlcmVuY2U6IG9zZDEw
+MXQyNTg3LTUzdHMgbmVlZHMgTUlQSV9EU0lfVFVSTl9PTl9QRVJJUEhFUkFMCj4+IG1lc3NhZ2Ug
+dG8gYmUgc2VudCBmcm9tIHRoZSBob3N0IHRvIGJlIG9wZXJhdGlvbmFsIGFuZCB0aHVzIGNhbiBu
+b3QgYmUKPj4gaGFuZGxlZCBieSBwYW5lbC1zaW1wbGUuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFBl
+dGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9n
+cHUvZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAgIHwgICA2ICsKPj4gIGRyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCj4+ICAuLi4vZHJt
+L3BhbmVsL3BhbmVsLW9zZC1vc2QxMDF0MjU4Ny01M3RzLmMgICAgfCAyNTQgKysrKysrKysrKysr
+KysrKysrCj4+ICAzIGZpbGVzIGNoYW5nZWQsIDI2MSBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9zZC1vc2QxMDF0MjU4Ny01
+M3RzLmMKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnIGIv
+ZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcKPj4gaW5kZXggM2UwNzAxNTNlZjIxLi4zNTE2
+NjE5MjA4MzggMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCj4+
+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCj4+IEBAIC0xMjIsNiArMTIyLDEy
+IEBAIGNvbmZpZyBEUk1fUEFORUxfT1JJU0VURUNIX09UTTgwMDlBCj4+ICAJICBTYXkgWSBoZXJl
+IGlmIHlvdSB3YW50IHRvIGVuYWJsZSBzdXBwb3J0IGZvciBPcmlzZSBUZWNobm9sb2d5Cj4+ICAJ
+ICBvdG04MDA5YSA0ODB4ODAwIGRzaSAyZGwgcGFuZWwuCj4+ICAKPj4gK2NvbmZpZyBEUk1fUEFO
+RUxfT1NEX09TRDEwMVQyNTg3XzUzVFMKPj4gKwl0cmlzdGF0ZSAiT1NEIE9TRDEwMVQyNTg3LTUz
+VFMgRFNJIDE5MjB4MTIwMCB2aWRlbyBtb2RlIHBhbmVsIgo+PiArCWRlcGVuZHMgb24gT0YKPj4g
+KwlkZXBlbmRzIG9uIERSTV9NSVBJX0RTSQo+PiArCWRlcGVuZHMgb24gQkFDS0xJR0hUX0NMQVNT
+X0RFVklDRQo+IFBsZWFzZSBhZGQgYSBoZWxwLXRleHQKClN1cmUsIEkgZm9yZ290IHRoaXMuCgo+
+PiArCj4+ICtzdGF0aWMgaW50IG9zZDEwMXQyNTg3X3BhbmVsX3VucHJlcGFyZShzdHJ1Y3QgZHJt
+X3BhbmVsICpwYW5lbCkKPj4gK3sKPj4gKwlzdHJ1Y3Qgb3NkMTAxdDI1ODdfcGFuZWwgKm9zZDEw
+MXQyNTg3ID0gdG9fb3NkMTAxdDI1ODdfcGFuZWwocGFuZWwpOwo+PiArCj4+ICsJaWYgKCFvc2Qx
+MDF0MjU4Ny0+cHJlcGFyZWQpCj4+ICsJCXJldHVybiAwOwo+PiArCj4+ICsJcmVndWxhdG9yX2Rp
+c2FibGUob3NkMTAxdDI1ODctPnN1cHBseSk7Cj4+ICsJb3NkMTAxdDI1ODctPnByZXBhcmVkID0g
+ZmFsc2U7Cj4+ICsKPj4gKwlyZXR1cm4gMDsKPj4gK30KPj4gKwo+PiArc3RhdGljIGludCBvc2Qx
+MDF0MjU4N19wYW5lbF9wcmVwYXJlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+PiArewo+PiAr
+CXN0cnVjdCBvc2QxMDF0MjU4N19wYW5lbCAqb3NkMTAxdDI1ODcgPSB0b19vc2QxMDF0MjU4N19w
+YW5lbChwYW5lbCk7Cj4+ICsJaW50IHJldDsKPj4gKwo+PiArCWlmIChvc2QxMDF0MjU4Ny0+cHJl
+cGFyZWQpCj4+ICsJCXJldHVybiAwOwo+PiArCj4+ICsJcmV0ID0gcmVndWxhdG9yX2VuYWJsZShv
+c2QxMDF0MjU4Ny0+c3VwcGx5KTsKPj4gKwlpZiAoIXJldCkKPj4gKwkJb3NkMTAxdDI1ODctPnBy
+ZXBhcmVkID0gdHJ1ZTsKPiAKPiBMb2dpYyBpcyB3cm9uZyBoZXJlLiByZWd1bGF0b3JfZW5hYmxl
+KCkgd2lsbCByZXR1cm4gYSBuZWdhdGl2ZSB2YWx1ZSBvbiBlcnJvcgo+IGFuZCAwIGluIHRoZSBn
+b29kIGNhc2UuCj4gU28gb3NkMTAxdDI1ODctPnByZXBhcmVkIGlzIHNldCB0byB0cnVlIG9ubHkg
+aW4gdGhlIGVycm9yIGNhc2UsIG5vdCBpbiB0aGUgZ29vZCBjYXNlLgoKSXQgaXMgZ29vZCBhcyBp
+dCBpczoKJ2lmICghMCknID09ICdpZiAoMSknCidpZiAoIS1YKScgPT0gJ2lmICgwKScKCj4+ICsK
+Pj4gKwlyZXQgPSBtaXBpX2RzaV9hdHRhY2goZHNpKTsKPj4gKwlpZiAocmV0KQo+PiArCQlkcm1f
+cGFuZWxfcmVtb3ZlKCZvc2QxMDF0MjU4Ny0+YmFzZSk7Cj4gCj4gSSBkbyBub3Qgc2VlIHBhbmVs
+LXNpbXBsZS5jIGRvIGEgZHJtX3BhbmVsX3JlbW92ZSgpIGlmIG1pcGlfZHNpX2F0dGFjaCgpIGZh
+aWxzLgo+IE1heWJlIHRoZSBkcml2ZXIgY29yZSB3aWxsIGNhbGwgcmVtb3ZlKCkgaXMgcHJvYmUg
+ZmFpbHM/Cj4gT3IgbWF5YmUgcGFuZWwtc2ltcGxlKCkgc2hvdWxkIGNhbGwgZHJtX3BhbmVsX3Jl
+bW92ZSgpCj4gCj4gS2VlcCB0aGUgYWJvdmUgYXMgaXMgLSBJIGp1c3Qgd2FudGVkIHRvIGV4cHJl
+c3MgdGhhdCB0aGlzIGxvb2tzIGRpZmZlcmVudAo+IGZyb20gdGhlIHBhbmxlLXNpbXBsZSgpIGRy
+aXZlci4KCkkgaGF2ZSBhIHBhdGNoIGZvciBwYW5lbC1zaW1wbGUgYXMgd2VsbCB3aXRoIHRoZSBm
+b2xsb3dpbmcgY29tbWl0IG1lc3NhZ2U6CiJkcm0vcGFuZWw6IHNpbXBsZTogRml4IHBhbmVsX3Np
+bXBsZV9kc2lfcHJvYmUKCkluIGNhc2UgbWlwaV9kc2lfYXR0YWNoKCkgZmFpbHMgcmVtb3ZlIHRo
+ZSByZWdpc3RlcmVkIHBhbmVsIHRvIGF2b2lkCmFkZGVkIHBhbmVsIHdpdGhvdXQgY29ycmVzcG9u
+ZGluZyBkZXZpY2UuIgoKSXQgaGFzIHRoZSBzYW1lIGJ1Zy4KCj4+ICtzdGF0aWMgaW50IG9zZDEw
+MXQyNTg3X3BhbmVsX3JlbW92ZShzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkc2kpCj4+ICt7Cj4+
+ICsJc3RydWN0IG9zZDEwMXQyNTg3X3BhbmVsICpvc2QxMDF0MjU4NyA9IG1pcGlfZHNpX2dldF9k
+cnZkYXRhKGRzaSk7Cj4+ICsJaW50IHJldDsKPj4gKwo+PiArCXJldCA9IG9zZDEwMXQyNTg3X3Bh
+bmVsX2Rpc2FibGUoJm9zZDEwMXQyNTg3LT5iYXNlKTsKPj4gKwlpZiAocmV0IDwgMCkKPj4gKwkJ
+ZGV2X3dhcm4oJmRzaS0+ZGV2LCAiZmFpbGVkIHRvIGRpc2FibGUgcGFuZWxcbiIpOwo+IFRoaXMg
+aXMgYWxyZWFkeSB3YXJuZWQgaW4gbG93ZXIgbGF5ZXJzIGFuZCBJIHRoaW5rIHlvdSBjb3VsZAo+
+IGRyb3AgdGhlIGRldl93YXJuKCkuCgpJIHRoaW5rIHRoZXJlIGlzIG5vIHdhcm5pbmcgZnJvbSBs
+b3dlciBsYXllciwgYnV0IG5vdCBzdXJlIGFzIEkgbmV2ZXIKaGl0IHRoaXMgY2FzZS4KCj4+ICsK
+Pj4gKwlvc2QxMDF0MjU4N19wYW5lbF91bnByZXBhcmUoJm9zZDEwMXQyNTg3LT5iYXNlKTsKPj4g
+Kwo+PiArCWRybV9wYW5lbF9yZW1vdmUoJm9zZDEwMXQyNTg3LT5iYXNlKTsKPj4gKwo+PiArCXJl
+dCA9IG1pcGlfZHNpX2RldGFjaChkc2kpOwo+PiArCWlmIChyZXQgPCAwKQo+PiArCQlkZXZfd2Fy
+bigmZHNpLT5kZXYsICJmYWlsZWQgdG8gZGV0YWNoIGZyb20gRFNJIGhvc3RcbiIpOwo+IEFkZCBl
+cnJvciBjb2RlIGluIGxvZ2dpbmcuCgpPSwoKLSBQw6l0ZXIKClRleGFzIEluc3RydW1lbnRzIEZp
+bmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNp
+bmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
