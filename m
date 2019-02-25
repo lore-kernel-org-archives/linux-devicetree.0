@@ -1,7 +1,7 @@
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 4/5] arm64: dts: imx8qm: Enable SAI2 for wm8524 codec
-Date: Mon, 25 Feb 2019 13:17:49 +0000
-Message-ID: <20190225131722.10253-4-daniel.baluta@nxp.com>
+Subject: [PATCH 5/5] arm64: dts: imx8qm: Enable wm8524 codec
+Date: Mon, 25 Feb 2019 13:17:50 +0000
+Message-ID: <20190225131722.10253-5-daniel.baluta@nxp.com>
 References: <20190225131722.10253-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,37 +22,53 @@ To: "shawnguo@kernel.org" <shawnguo@kernel.org>
 Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This enables SAI2 digital audio interface to be used with
-wm8524 codec.
-
-wm8524 works only in slave mode, so we make sure that IMX8MQ_CLK_SAI2
-has an appropriate frequency in order to easily derive rates divisible
-with 8000.
+This uses simple-audio-card machine driver adding 1 CPU DAI
+and 1 Codec DAI.
 
 Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 29 ++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index d21ee2a5312c..58de4a3d6029 100644
+index 58de4a3d6029..77f590c13ee0 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
 +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -52,6 +52,15 @@
+@@ -31,6 +31,35 @@
+ 		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
  	};
++
++	wm8524: audio-codec-0 {
++		#sound-dai-cells = <0>;
++		compatible = "wlf,wm8524";
++		clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
++		clock-names = "mclk";
++		wlf,mute-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
++	};
++
++	sound-wm8524 {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "wm8524-audio";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,frame-master = <&cpudai>;
++		simple-audio-card,bitclock-master = <&cpudai>;
++		simple-audio-card,widgets =
++			"Line", "Left Line Out Jack",
++			"Line", "Right Line Out Jack";
++		simple-audio-card,routing =
++			"Left Line Out Jack", "LINEVOUTL",
++			"Right Line Out Jack", "LINEVOUTR";
++		cpudai: simple-audio-card,cpu {
++			sound-dai = <&sai2>;
++		};
++		link_codec: simple-audio-card,codec {
++			sound-dai = <&wm8524>;
++			clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
++		};
++	};
  };
  
-+&sai2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai2>;
-+	assigned-clocks = <&clk IMX8MQ_CLK_SAI2>;
-+	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <24576000>;
-+	status = "okay";
-+};
-+
- &i2c1 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
+ &fec1 {
 -- 
 2.17.1
