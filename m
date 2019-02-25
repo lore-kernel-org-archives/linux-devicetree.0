@@ -1,94 +1,75 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: Linux-next 20190218: am57xx-evm: mmc1: ADMA error
-Date: Mon, 25 Feb 2019 18:46:05 +0530
-Message-ID: <22ccca46-7390-1707-cfca-43b3577b79f2@ti.com>
-References: <CA+G9fYsmC5ckLXfQxSUn-tqxLZ4NofEyb9RA69Q07RUoxc79RQ@mail.gmail.com>
- <34c78d7f-cc3c-853d-b3fd-a70abdb66293@ti.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 1/5] arm64: dts: imx8mq: Add SDMA nodes
+Date: Mon, 25 Feb 2019 13:17:45 +0000
+Message-ID: <20190225131722.10253-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <34c78d7f-cc3c-853d-b3fd-a70abdb66293@ti.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: t-kristo@ti.com, nm@ti.com, Mark Rutland <mark.rutland@arm.com>, robh+dt@kernel.org, osandov@fb.com, ming.lei@redhat.com, Jens Axboe <axboe@kernel.dk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <anson.huang@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, Daniel Baluta <daniel.baluta@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Naresh,
+SDMA1 is part of AIPS-3 region and SDMA2 is part
+of AIPS-1 region.
 
-+ Commit authors.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+[initial submit in i.MX internal tree]
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+[adaptation for linux-next]
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-On 19/02/19 6:38 PM, Faiz Abbas wrote:
-> Hi Naresh,
-> 
-> On 18/02/19 6:57 PM, Naresh Kamboju wrote:
->> Do you see this error on am57xx-evm running Linux next 20190218 ?
->> I have tested on multiple devices and found this error.
->> Please find the full boot log [1].
->> Am i missing any pre required configs [2] ?
->>
->> [    5.620263] mmc1: ADMA error
->> [    5.623266] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
->> [    5.629740] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
->> [    5.636215] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
->> [    5.642690] mmc1: sdhci: Argument:  0x002cec70 | Trn mode: 0x00000033
->> [    5.649162] mmc1: sdhci: Present:   0x01f00000 | Host ctl: 0x00000010
->> [    5.655634] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
->> [    5.662108] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
->> [    5.668582] mmc1: sdhci: Timeout:   0x0000000c | Int stat: 0x00000000
->> [    5.675055] mmc1: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
->> [    5.681529] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
->> [    5.688002] mmc1: sdhci: Caps:      0x21e90080 | Caps_1:   0x00000f77
->> [    5.694474] mmc1: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
->> [    5.700949] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffef
->> [    5.707423] mmc1: sdhci: Resp[2]:   0x0f5903ff | Resp[3]:  0xd04f0132
->> [    5.713896] mmc1: sdhci: Host ctl2: 0x00000004
->> [    5.718364] mmc1: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xab868218
->>
-> 
-> I see this as well on my setup. Trying to bisect now. Will keep you posted.
-
-
-Reverting the following commit fixes this.
-commit 07173c3ec276cbb18dc0e0687d37d310e98a1480
-Author: Ming Lei <ming.lei@redhat.com>
-Date:   Fri Feb 15 19:13:20 2019 +0800
-
-    block: enable multipage bvecs
-
-    This patch pulls the trigger for multi-page bvecs.
-
-    Reviewed-by: Omar Sandoval <osandov@fb.com>
-    Signed-off-by: Ming Lei <ming.lei@redhat.com>
-    Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
-
-
->> <>
->> [   42.425587] print_req_error: I/O error, dev mmcblk1, sector 4542872 flags 1
->> [   42.429013] mmc1: ADMA error
->> [   42.432606] EXT4-fs warning (device mmcblk1p9): ext4_end_bio:324:
->> I/O error 10 writing to inode 35321 (offset 0 size 4096 starting block
->> 567860)
->> [   42.435475] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
->> [   42.448543] Buffer I/O error on device mmcblk1p9, logical block 226675
->> [   42.454944] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
->> [   42.461528] EXT4-fs warning (device mmcblk1p9): ext4_end_bio:324:
->> I/O error 10 writing to inode 35322 (offset 0 size 4096 starting block
->> 567861)
->> [   42.467960] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
->> [   42.480982] Buffer I/O error on device mmcblk1p9, logical block 226676
->> [   42.487427] mmc1: sdhci: Argument:  0x002cae20 | Trn mode: 0x00000033
->> [   42.494007] EXT4-fs warning (device mmcblk1p9): ext4_end_bio:324:
->> I/O error 10 writing to inode 315 (offset 0 size 4096 starting block
->> 567862)
->>
->> Full boot log,
->> [1] https://lkft.validation.linaro.org/scheduler/job/610989#L4354
->> config,
->> [2] http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/am57xx-evm/lkft/linux-next/467/config
->>
->> Best regards
->> Naresh Kamboju
->>
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 9155bd4784eb..87839c5c8a7f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -234,6 +234,17 @@
+ 				status = "disabled";
+ 			};
+ 
++			sdma2: sdma@302c0000 {
++				compatible = "fsl,imx8mq-sdma", "fsl,imx7d-sdma";
++				reg = <0x302c0000 0x10000>;
++				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_SDMA2_ROOT>,
++					 <&clk IMX8MQ_CLK_SDMA2_ROOT>;
++				clock-names = "ipg", "ahb";
++				#dma-cells = <3>;
++				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
++			};
++
+ 			iomuxc: iomuxc@30330000 {
+ 				compatible = "fsl,imx8mq-iomuxc";
+ 				reg = <0x30330000 0x10000>;
+@@ -575,6 +586,17 @@
+ 				status = "disabled";
+ 			};
+ 
++			sdma1: sdma@30bd0000 {
++				compatible = "fsl,imx8mq-sdma", "fsl,imx7d-sdma";
++				reg = <0x30bd0000 0x10000>;
++				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_SDMA1_ROOT>,
++					 <&clk IMX8MQ_CLK_SDMA1_ROOT>;
++				clock-names = "ipg", "ahb";
++				#dma-cells = <3>;
++				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
++			};
++
+ 			fec1: ethernet@30be0000 {
+ 				compatible = "fsl,imx8mq-fec", "fsl,imx6sx-fec";
+ 				reg = <0x30be0000 0x10000>;
+-- 
+2.17.1
