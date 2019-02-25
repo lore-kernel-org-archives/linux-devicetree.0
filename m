@@ -1,64 +1,119 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH 4/5] arm64: dts: marvell: armada-8040-clearfog: Drop
- non-existent SATA port
-Date: Mon, 25 Feb 2019 14:15:19 +0200
-Message-ID: <20190225121519.2quhgqcf24rutqn4@sapphire.tkos.co.il>
-References: <20190222145356.23072-1-miquel.raynal@bootlin.com>
- <20190222145356.23072-5-miquel.raynal@bootlin.com>
- <87tvgt7o0q.fsf@tarshish> <20190225115826.5bc17f6d@xps13>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
+Date: Mon, 25 Feb 2019 13:45:35 +0100
+Message-ID: <CAKv+Gu9OOzOxx0rTAZqM8r4q_hRmOp3b=KP7fwgNeiu67FCApA@mail.gmail.com>
+References: <20190224140426.3267-1-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190225115826.5bc17f6d@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-ide@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190224140426.3267-1-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, Kalle Valo <kvalo@codeaurora.org>, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Xinming Hu <huxinming820@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, "<linux-wireless@vger.kernel.org>" <linux-wireless@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
+On Sun, 24 Feb 2019 at 15:08, Marc Zyngier <marc.zyngier@arm.com> wrote:
+>
+> For quite some time, I wondered why the PCI mwifiex device built in my
+> Chromebook was unable to use the good old legacy interrupts. But as MSIs
+> were working fine, I never really bothered investigating. I finally had a
+> look, and the result isn't very pretty.
+>
+> On this machine (rk3399-based kevin), the wake-up interrupt is described as
+> such:
+>
+> &pci_rootport {
+>         mvl_wifi: wifi@0,0 {
+>                 compatible = "pci1b4b,2b42";
+>                 reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+>                        0x83010000 0x0 0x00100000 0x0 0x00100000>;
+>                 interrupt-parent = <&gpio0>;
+>                 interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&wlan_host_wake_l>;
+>                 wakeup-source;
+>         };
+> };
+>
+> Note how the interrupt is part of the properties directly attached to the
+> PCI node. And yet, this interrupt has nothing to do with a PCI legacy
+> interrupt, as it is attached to the wake-up widget that bypasses the PCIe RC
+> altogether (Yay for the broken design!). This is in total violation of the
+> IEEE Std 1275-1994 spec[1], which clearly documents that such interrupt
+> specifiers describe the PCI device interrupts, and must obey the
+> INT-{A,B,C,D} mapping. Oops!
+>
 
-On Mon, Feb 25, 2019 at 11:58:26AM +0100, Miquel Raynal wrote:
-> Baruch Siach <baruch@tkos.co.il> wrote on Sun, 24 Feb 2019 07:29:09
-> +0200:
-> 
-> > On Fri, Feb 22 2019, Miquel Raynal wrote:
-> > > There is no CP110 SATA port available on the 8040 Clearfog A8k, SATA
-> > > may be used thanks to a mPCIe -> SATA extension board only. Hence, the
-> > > cp1_sata0 node must be removed from the device tree.  
-> > 
-> > Not true. You can use the mini PCIe serdes as SATA directly if you
-> > configure it as such. You only need to invert the serdes Rx pair
-> > polarity. This is the default configuration for the Clearfog GT-8K CON3
-> > mini-PCIe slot (CP1, lane #0) in current mainline U-Boot. I verified
-> > that this setup works on Clearfog GT-8K.
-> > 
-> > This patch would break mini PCIe direct SATA.
-> 
-> Thanks for explaining, I am a little bit surprised that it actually
-> uses the SATA host IP on CP110 but fine. So can you tell me which SATA
-> port is used in this case? Because I will have to update the DT
-> representation along with the CP110 changes.
+The mapping of legacy PCIe INTx interrupts onto wired system
+interrupts is a property of the PCIe host controller, not of a
+particular PCIe device. So I would argue that the code is broken here
+as well: it should never attempt to interpret 'interrupt' properties
+at the PCI device level as having any bearing on how legacy interrupts
+are routed.
 
-According to the cp110_comphy_phy_mux_data[] array in U-Boot 
-drivers/phy/marvell/comphy_cp110.c, serdes 0 of CP110 can only be SATA1 (i.e. 
-the second port; first is SATA0).
-
-Please Cc me on your next submission.
-
-Thanks,
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+> The net effect of the above is that Linux tries to do something vaguely
+> sensible, and uses the same interrupt for both the wake-up widget and the
+> PCI device. This doesn't work for two reasons: (1) the wake-up widget grabs
+> the interrupt in exclusive mode, and (2) the PCI interrupt is still routed
+> to the RC, leading to a screaming interrupt. This simply cannot work.
+>
+> To sort out this mess, we need to lift the confusion between the two
+> interrupts. This is done by extending the DT binding to allow the wake-up
+> interrupt to be described in a 'wake-up' subnode, sidestepping the issue
+> completely. On my Chromebook, it now looks like this:
+>
+> &pci_rootport {
+>         mvl_wifi: wifi@0,0 {
+>                 compatible = "pci1b4b,2b42";
+>                 reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+>                        0x83010000 0x0 0x00100000 0x0 0x00100000>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&wlan_host_wake_l>;
+>                 wake-up {
+>                         interrupt-parent = <&gpio0>;
+>                         interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+>                         wakeup-source;
+>                 };
+>         };
+> };
+>
+> The driver is then updated to look for this subnode first, and fallback to
+> the original, broken behaviour (spitting out a warning in the offending
+> configuration).
+>
+> For good measure, there are two additional patches:
+>
+> - The wake-up interrupt requesting is horribly racy, and could lead to
+>   unpredictable behaviours. Let's fix that properly.
+>
+> - A final patch implementing the above transformation for the whole
+>   RK3399-based Chromebook range, which all use the same broken
+>   configuration.
+>
+> With all that, I finally have PCI legacy interrupts working with the mwifiex
+> driver on my Chromebook.
+>
+> [1] http://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+>
+> Marc Zyngier (4):
+>   dt-bindings/marvell-8xxx: Allow wake-up interrupt to be placed in a
+>     separate node
+>   mwifiex: Fetch wake-up interrupt from 'wake-up' subnode when it exists
+>   mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling
+>     it too late
+>   arm64: dts: rockchip: gru: Move wifi wake-up interrupt into its own
+>     subnode
+>
+>  .../bindings/net/wireless/marvell-8xxx.txt    | 23 ++++++++++++++++++-
+>  .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  8 ++++---
+>  drivers/net/wireless/marvell/mwifiex/main.c   | 13 +++++++++--
+>  3 files changed, 38 insertions(+), 6 deletions(-)
+>
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
