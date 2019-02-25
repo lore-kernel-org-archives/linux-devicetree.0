@@ -1,95 +1,94 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: phy: Add bindings for the SMSC USB333x
- ULPI USB PHY
-Date: Mon, 25 Feb 2019 10:41:39 -0600
-Message-ID: <20190225164139.GA10291@bogus>
-References: <20190130155023.4495-1-paul.kocialkowski@bootlin.com>
- <20190130155023.4495-2-paul.kocialkowski@bootlin.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: linux-next: manual merge of the sound tree with the arm-soc tree
+Date: Mon, 25 Feb 2019 16:43:38 +0000
+Message-ID: <20190225164338.GB13898@sirena.org.uk>
+References: <20190225123615.49bce7cd@canb.auug.org.au>
+ <CAK8P3a3moJ12SDM3Ow-Hw3qBeTv9siswK+9pPiEA4JJ+7k4xvg@mail.gmail.com>
+ <s5hr2bw2k7m.wl-tiwai@suse.de>
+ <e2aaed45-0fb1-c9c8-76d4-3b97b36cada6@nvidia.com>
+ <CAK8P3a2Q7OAAYCU01TNpHR2SM7N=YunyqZEihSESnQwxzL5=Vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190130155023.4495-2-paul.kocialkowski@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: multipart/mixed; boundary="===============6153343474275666067=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a2Q7OAAYCU01TNpHR2SM7N=YunyqZEihSESnQwxzL5=Vg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, DTML <devicetree@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, Sameer Pujar <spujar@nvidia.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Next Mailing List <linux-next@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Thierry Reding <treding@nvidia.com>, ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2019 at 04:50:21PM +0100, Paul Kocialkowski wrote:
-> Introduce the device-tree bindings for this ULPI USB PHY.
-> Optional bindings that are not prefixed with the vendor may be
-> relevant to other ULPI USB PHYs since they match generic ULPI
-> registers.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  .../devicetree/bindings/phy/smsc-usb333x.txt  | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/smsc-usb333x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/smsc-usb333x.txt b/Documentation/devicetree/bindings/phy/smsc-usb333x.txt
-> new file mode 100644
-> index 000000000000..50d500d67b2f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/smsc-usb333x.txt
-> @@ -0,0 +1,50 @@
-> +Device tree bindings for SMSC USB333x ULPI USB PHY
-> +
-> +Required properties:
-> +- compatible: Should be "smsc,usb333x".
-> +
-> +Optional properties:
-> +- reset-gpios: GPIO to reset the PHY.
-> +- clocks: Reference clock that feeds the PHY's PLL.
-> +- clock-names: Should be "refclk" for the reference clock.
 
-> +- extvbus-passthru: Enable EXTVBUS signal pass-through to assert the VbusValid
-> +  signal internally. This is useful when no VBUS line is connected to the PHY.
-> +- auto-resume: Enable automatic transmission resume (in host mode).
-> +- chrg-vbus: Enable internal VBUS pull-up to 3.3 V during OTG SRP.
-> +- dischrg-vbus: Enable internal VBUS pull-down during OTG SRP.
-> +- id-pull-up: Enable internal ID pull-up tp 3.3 V.
+--===============6153343474275666067==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
+Content-Disposition: inline
 
-These all need smsc prefix.
 
-> +- smsc,varisense: Squelch detector threshold register field value, as described
-> +  in the datasheet.
-> +- smsc,phyboost: Output voltage change register field value, as described in the
-> +  datasheet.
+--nVMJ2NtxeReIH9PS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Please give a range of values at least so we can write constraints.
+On Mon, Feb 25, 2019 at 02:38:50PM +0100, Arnd Bergmann wrote:
+> On Mon, Feb 25, 2019 at 12:24 PM Sameer Pujar <spujar@nvidia.com> wrote:
 
-> +
-> +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
-> +Refer to usb/ulpi.txt for the parent ULPI bus binding required for this PHY.
-> +
-> +Example:
-> +
-> +&usb0 {
-> +	compatible = "xlnx,zynq-usb-2.20a", "chipidea,usb2";
-> +	clocks = <&clkc 28>;
-> +	interrupt-parent = <&intc>;
-> +	interrupts = <0 21 4>;
-> +	reg = <0xe0002000 0x1000>;
-> +	dr_mode = "peripheral";
-> +	phys = <&usb_phy0>;
-> +	phy-names = "usb-phy";
-> +	phy_type = "ulpi";
-> +
-> +	ulpi {
-> +		usb_phy0: usb-phy0 {
-> +			#phy-cells = <0>;
-> +			compatible = "smsc,usb333x";
-> +			reset-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-> +			clocks = <&usb_phy_clk>;
-> +			clock-names = "refclk";
-> +			smsc,varisense = <1>;
-> +			smsc,phyboost = <5>;
-> +			extvbus-passthru;
-> +			chrg-vbus;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.20.1
-> 
+> > The motivation for adding custom sound card name is following,
+> > 1. When for boards, multiple HDMI/DP ports are exposed, it is sometimes
+> >     necessary to know the default port or any customization for that matter.
+> >     Audio userspace can distinguish based on the sound card names.
+> > 2. Multiple sound cards can coexist for a platform, the indication of
+> > particular
+> >     audio path is useful.
+> > 3. It can help to customize audio paths.
+> >     Generally people use "*,model" property in DT to name the sound complex.
+> >     Ex: "samsung,model" [sound/soc/samsung/snow.c]
+> >         "rockchip,model" [sound/soc/rockchip/rockchip_rt5645.c]
+
+It's also useful since sound cards can be electically identical but
+prefer different configuration due to the plastics (eg, a smaller
+speaker was fitted, different outputs have different labels or playing
+the speaker at full volume causes some models to have unpleasant effects
+while others handle it fine).
+
+> My impression here is that the idea of passing a model name
+> through DT is well established, but for new stuff, we probably
+> want to standardize on plain "model" rather than "$vendor,model".
+
+Yes.
+
+--nVMJ2NtxeReIH9PS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlx0GzoACgkQJNaLcl1U
+h9AoGwf/YtZFwMpwHz3bSYXmaNlmUCq3Uy7LDrDc/RlsJnUIPnIlqhk69mWJ/FjZ
+LGyNQ2nJs1m+car7QLiPKFcuQRJ5eh6wtS2kYPm2jT3uiXlDPoU7t8gf7YDgiCsY
+kOZC5vJ7j/nvITZx9qqlEZYprw0EIaxPsnn9PiKeQKET/yeSNvs1WF0SDrWjqPB0
+drXMv47kVwY5rmPwB0NttbbMx6uXehd3Z2mcoO2/c4FvJpJXNTTLcUrfcm7EWJ+r
+qCgbexpCZBQWyAJ9oGUG7O5tDyGAxwOQUzsyKEM8I+h+cZQmdP9qN2BomI0FH5uS
+XXbspx4qWUnZFgawxDq+IbuZ0A2zvg==
+=iv2n
+-----END PGP SIGNATURE-----
+
+--nVMJ2NtxeReIH9PS--
+
+
+--===============6153343474275666067==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6153343474275666067==--
