@@ -1,33 +1,76 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v4 2/2] drm/panel: Add driver for Samsung S6E63M0 panel
-Date: Mon, 25 Feb 2019 10:41:16 +0100
-Message-ID: <20190225094116.GA19587@ravnborg.org>
-References: <20190222175153.20567-1-pawel.mikolaj.chmiel@gmail.com>
- <20190222175153.20567-2-pawel.mikolaj.chmiel@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: renesas: salvator: add dummy 2nd port to
+ rcar_sound
+Date: Mon, 25 Feb 2019 10:49:04 +0100
+Message-ID: <CAMuHMdX-U_y7axw9AHYt7Omj5LzE69FTNy6PNUy4TBbxs3CtRA@mail.gmail.com>
+References: <20190225093604.25753-1-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190222175153.20567-2-pawel.mikolaj.chmiel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: thierry.reding@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190225093604.25753-1-horms+renesas@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms+renesas@verge.net.au>, rob+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paweł, Thierry
+CC DT
 
-On Fri, Feb 22, 2019 at 06:51:53PM +0100, Paweł Chmiel wrote:
-> This patch adds Samsung S6E63M0 AMOLED LCD panel driver, connected over
-> spi. It's based on already removed, non dt s6e63m0 driver and
-> panel-samsung-ld9040. It can be found for example in some of Samsung
-> Aries based phones.
-> 
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+On Mon, Feb 25, 2019 at 10:37 AM Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> Add dummy 2nd port node to rcar_sound ports node to satisfy dtc
+> recommendation that #address-cells / #size-cells is only needed.
+>
+> This addresses the following warning:
+>
+> arch/arm64/boot/dts/renesas/salvator-common.dtsi:703.8-719.4: Warning (graph_child_address): /soc/sound@ec500000/ports: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
+> arch/arm64/boot/dts/renesas/salvator-common.dtsi:703.8-719.4: Warning (graph_child_address): /soc/sound@ec500000/ports: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
+>
+> This change should not have any run-time effect.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+>
+> ---
+> Build tested against renesas-devel-20190214-v5.0-rc6
+> ---
+>  arch/arm64/boot/dts/renesas/salvator-common.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> index a225c2457274..20b35991bc17 100644
+> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> @@ -716,6 +716,15 @@
+>                                 capture  = <&ssi1 &src1 &dvc1>;
+>                         };
+>                 };
+> +
+> +               /* Dummy node to be overriden by board DT
+> +                * Satisfies dtc recommendation that
+> +                * #address-cells / #size-cells is only needed
+> +                * for graph nodes with multiple child nodes.
+> +                */
+> +               rsnd_port1: port@1 {
+> +                       reg = <1>;
+> +               };
+>         };
+>  };
 
-I took a last look at the driver.
-Everything looks good to me now, and I consider this driver ready to be applied.
+Gr{oetje,eeting}s,
 
-	Sam
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
