@@ -1,128 +1,91 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
-Date: Mon, 25 Feb 2019 02:26:16 +0000
-Message-ID: <DB3PR0402MB391659B6A466B1D85114E9C9F57A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
- <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com>
- <20190222195217.GA22194@bogus>
- <bb19470c-1590-f8dd-72e6-b382444d7902@roeck-us.net>
- <DB3PR0402MB3916912A64AF0837A9649913F5790@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <96932b3e-87f1-d8f2-95bc-0e9a8d5d45ed@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH] arm64: dts: ls1088a: add one more thermal zone node
+Date: Mon, 25 Feb 2019 11:00:49 +0800
+Message-ID: <20190225030049.20401-1-andy.tang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <96932b3e-87f1-d8f2-95bc-0e9a8d5d45ed@roeck-us.net>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jag>
+To: shawnguo@kernel.org
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEd1ZW50ZXINCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVudGVyIFJvZWNrIFttYWlsdG86Z3JvZWNrN0Bn
-bWFpbC5jb21dIE9uIEJlaGFsZiBPZiBHdWVudGVyDQo+IFJvZWNrDQo+IFNlbnQ6IDIwMTnlubQy
-5pyIMjTml6UgMTE6MjANCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsg
-Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gQ2M6IG1hcmsucnV0bGFuZEBhcm0uY29t
-OyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxA
-cGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gY2F0YWxpbi5tYXJpbmFzQGFy
-bS5jb207IHdpbGwuZGVhY29uQGFybS5jb207IHdpbUBsaW51eC13YXRjaGRvZy5vcmc7DQo+IEFp
-c2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyB1bGYuaGFuc3NvbkBsaW5hcm8ub3Jn
-OyBEYW5pZWwNCj4gQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBBbmR5IEdyb3NzIDxh
-bmR5Lmdyb3NzQGxpbmFyby5vcmc+Ow0KPiBob3JtcytyZW5lc2FzQHZlcmdlLm5ldC5hdTsgaGVp
-a29Ac250ZWNoLmRlOyBhcm5kQGFybmRiLmRlOw0KPiBiam9ybi5hbmRlcnNzb25AbGluYXJvLm9y
-ZzsgamFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb207DQo+IGVucmljLmJhbGxldGJvQGNvbGxhYm9y
-YS5jb207IG1hcmMudy5nb256YWxlekBmcmVlLmZyOyBvbG9mQGxpeG9tLm5ldDsNCj4gZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LXdhdGNoZG9nQHZnZXIu
-a2VybmVsLm9yZzsgZGwtbGludXgtaW14DQo+IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCBSRVNFTkQgVjIgMS80XSBkdC1iaW5kaW5nczogZnNsOiBzY3U6IGFkZCB3
-YXRjaGRvZw0KPiBiaW5kaW5nDQo+IA0KPiBPbiAyLzIzLzE5IDc6MDQgUE0sIEFuc29uIEh1YW5n
-IHdyb3RlOg0KPiA+IEhpLCBHdWVudGVyL1JvYg0KPiA+DQo+ID4gQmVzdCBSZWdhcmRzIQ0KPiA+
-IEFuc29uIEh1YW5nDQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4g
-RnJvbTogR3VlbnRlciBSb2VjayBbbWFpbHRvOmdyb2VjazdAZ21haWwuY29tXSBPbiBCZWhhbGYg
-T2YgR3VlbnRlcg0KPiA+PiBSb2Vjaw0KPiA+PiBTZW50OiAyMDE55bm0MuaciDI05pelIDE6MDgN
-Cj4gPj4gVG86IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+OyBBbnNvbiBIdWFuZw0KPiA8
-YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gPj4gQ2M6IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3
-bmd1b0BrZXJuZWwub3JnOw0KPiA+PiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVu
-Z3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsNCj4gPj4gY2F0YWxpbi5tYXJpbmFzQGFy
-bS5jb207IHdpbGwuZGVhY29uQGFybS5jb207IHdpbUBsaW51eC0NCj4gd2F0Y2hkb2cub3JnOw0K
-PiA+PiBBaXNoZW5nIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPjsgdWxmLmhhbnNzb25AbGlu
-YXJvLm9yZzsgRGFuaWVsDQo+ID4+IEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsgQW5k
-eSBHcm9zcyA8YW5keS5ncm9zc0BsaW5hcm8ub3JnPjsNCj4gPj4gaG9ybXMrcmVuZXNhc0B2ZXJn
-ZS5uZXQuYXU7IGhlaWtvQHNudGVjaC5kZTsgYXJuZEBhcm5kYi5kZTsNCj4gPj4gYmpvcm4uYW5k
-ZXJzc29uQGxpbmFyby5vcmc7IGphZ2FuQGFtYXJ1bGFzb2x1dGlvbnMuY29tOw0KPiA+PiBlbnJp
-Yy5iYWxsZXRib0Bjb2xsYWJvcmEuY29tOyBtYXJjLncuZ29uemFsZXpAZnJlZS5mcjsNCj4gPj4g
-b2xvZkBsaXhvbS5uZXQ7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+PiBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tIGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOw0KPiA+PiBsaW51eC13YXRjaGRvZ0B2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8
-bGludXgtaW14QG54cC5jb20+DQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUkVTRU5EIFYyIDEv
-NF0gZHQtYmluZGluZ3M6IGZzbDogc2N1OiBhZGQNCj4gPj4gd2F0Y2hkb2cgYmluZGluZw0KPiA+
-Pg0KPiA+PiBPbiAyLzIyLzE5IDExOjUyIEFNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPj4+IE9u
-IE1vbiwgRmViIDE4LCAyMDE5IGF0IDA2OjUzOjQ4QU0gKzAwMDAsIEFuc29uIEh1YW5nIHdyb3Rl
-Og0KPiA+Pj4+IEFkZCBpLk1YOFFYUCBzeXN0ZW0gY29udHJvbGxlciB3YXRjaGRvZyBiaW5kaW5n
-Lg0KPiA+Pj4+DQo+ID4+Pj4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5n
-QG54cC5jb20+DQo+ID4+Pj4gLS0tDQo+ID4+Pj4gQ2hhbmdlcyBzaW5jZSBWMToNCj4gPj4+PiAJ
-LSB1cGRhdGUgZHRzIG5vZGUgbmFtZSB0byAid2F0Y2hkb2ciOw0KPiA+Pj4+IC0tLQ0KPiA+Pj4+
-ICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxz
-Y3UudHh0IHwgMTANCj4gPj4gKysrKysrKysrKw0KPiA+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCAx
-MCBpbnNlcnRpb25zKCspDQo+ID4+Pj4NCj4gPj4+PiBkaWZmIC0tZ2l0DQo+ID4+Pj4gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0K
-PiA+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUv
-ZnNsLHNjdS50eHQNCj4gPj4+PiBpbmRleCA0Yjc5NzUxLi5mMzg4ZWM2IDEwMDY0NA0KPiA+Pj4+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2Zz
-bCxzY3UudHh0DQo+ID4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCj4gPj4+PiBAQCAtMTM2LDYgKzEzNiwxMiBAQCBS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+Pj4+ICAgIAkJCSAgIHJlc291cmNlIGlkIGZvciB0aGVy
-bWFsIGRyaXZlciB0byBnZXQgdGVtcGVyYXR1cmUNCj4gPj4gdmlhDQo+ID4+Pj4gICAgCQkJICAg
-U0NVIElQQy4NCj4gPj4+Pg0KPiA+Pj4+ICtXYXRjaGRvZyBiaW5kaW5ncyBiYXNlZCBvbiBTQ1Ug
-TWVzc2FnZSBQcm90b2NvbA0KPiA+Pj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPj4+PiArDQo+ID4+Pj4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6DQo+ID4+Pj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJmc2wsaW14OHF4
-cC1zYy13ZHQiOw0KPiA+Pj4+ICsNCj4gPj4+PiAgICBFeGFtcGxlIChpbXg4cXhwKToNCj4gPj4+
-PiAgICAtLS0tLS0tLS0tLS0tDQo+ID4+Pj4gICAgbHNpb19tdTE6IG1haWxib3hANWQxYzAwMDAg
-ew0KPiA+Pj4+IEBAIC0xODgsNiArMTk0LDEwIEBAIGZpcm13YXJlIHsNCj4gPj4+PiAgICAJCQl0
-c2Vucy1udW0gPSA8MT47DQo+ID4+Pj4gICAgCQkJI3RoZXJtYWwtc2Vuc29yLWNlbGxzID0gPDE+
-Ow0KPiA+Pj4+ICAgIAkJfTsNCj4gPj4+PiArDQo+ID4+Pj4gKwkJd2F0Y2hkb2c6IHdhdGNoZG9n
-IHsNCj4gPj4+PiArCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OHF4cC1zYy13ZHQiOw0KPiA+Pj4N
-Cj4gPj4+IEFzLWlzLCB0aGVyZSdzIG5vIHJlYXNvbiBmb3IgdGhpcyB0byBiZSBpbiBEVC4gVGhl
-IHBhcmVudCBub2RlJ3MNCj4gPj4+IGRyaXZlciBjYW4gaW5zdGFudGlhdGUgdGhlIHdkb2cuDQo+
-ID4+Pg0KPiA+Pg0KPiA+PiBBcyB0aGUgZHJpdmVyIGlzIGN1cnJlbnRseSB3cml0dGVuLCB5b3Ug
-YXJlIGNvcnJlY3QsIHNpbmNlIGl0IGRvZXNuJ3QNCj4gPj4gYWNjZXB0IHdhdGNoZG9nIHRpbWVv
-dXQgY29uZmlndXJhdGlvbiB0aHJvdWdoIGRldmljZXRyZWUuDQo+ID4+DQo+ID4+IFF1ZXN0aW9u
-IGlzIGlmIHRoYXQgaXMgaW50ZW5kZWQuIElzIGl0ID8NCj4gPg0KPiA+IEkgYW0gYSBsaXR0bGUg
-Y29uZnVzZWQsIGRvIHlvdSBtZWFuIHdlIG5vIG5lZWQgdG8gaGF2ZSAid2F0Y2hkb2ciIG5vZGUN
-Cj4gaW4gc2lkZSAic2N1Ig0KPiA+IG5vZGU/IE9yIHdlIG5lZWQgdG8gbW9kaWZ5IHRoZSB3YXRj
-aGRvZyBub2RlJ3MgY29tcGF0aWJsZSBzdHJpbmcgdG8gIg0KPiA+IGZzbCxpbXgtc2Mtd2R0IiB0
-byBtYWtlIGl0IG1vcmUgZ2VuZXJpYyBmb3Igb3RoZXIgcGxhdGZvcm1zPyBJZiB5ZXMsIEkgY2Fu
-DQo+IHJlc2VuZCB0aGUgcGF0Y2ggc2VyaWVzIHRvIG1vZGlmeSBpdC4NCj4gPg0KPiANCj4gSSB0
-aGluayBSb2Igc3VnZ2VzdGVkIHRoYXQgdGhlIFNDVSBwYXJlbnQgZHJpdmVyIHNob3VsZCBpbnN0
-YW50aWF0ZSB0aGUNCj4gd2F0Y2hkb2cgd2l0aG91dCBleHBsaWNpdCB3YXRjaGRvZyBub2RlLiBU
-aGF0IHdvdWxkIGJlIHBvc3NpYmxlLCBidXQgaXQNCj4gY3VycmVudGx5IHVzZXMNCj4gZGV2bV9v
-Zl9wbGF0Zm9ybV9wb3B1bGF0ZSgpIHRvIGRvIHRoZSBpbnN0YW50aWF0aW9uLCBhbmQgY2hhbmdp
-bmcgdGhhdA0KPiB3b3VsZCBiZSBhIG1lc3MuIEJlc2lkZXMsIGl0IGRvZXMgc2VtIHRvIG1lIHRo
-YXQgeW91ciBzdWdnZXN0ZWQgbm9kZSB3b3VsZA0KPiBkZXNjcmliZSB0aGUgaGFyZHdhcmUsIHNv
-IEkgYW0gbm90IHN1cmUgSSB1bmRlcnN0YW5kIHRoZSByZWFzb25pbmcuDQo+IA0KPiBGb3IgbXkg
-cGFydCBJIHJlZmVycmVkIHRvDQo+IAl3YXRjaGRvZ19pbml0X3RpbWVvdXQoaW14X3NjX3dkZCwg
-REVGQVVMVF9USU1FT1VULCAmcGRldi0NCj4gPmRldik7IGluIHRoZSBkcml2ZXIsIHdoaWNoIGd1
-YXJhbnRlZXMgdGhhdCB0aGUgdGltZW91dCBwcm9wZXJ0eSB3aWxsIG5vdCBiZQ0KPiB1c2VkIHRv
-IHNldCB0aGUgdGltZW91dC4gQSBtb3JlIGNvbW1vbiBpbXBsZW1lbnRhdGlvbiB3b3VsZCBoYXZl
-IGJlZW4NCj4gDQo+IAlpbXhfc2Nfd2RkLT50aW1lb3V0ID0gREVGQVVMVF9USU1FT1VUOw0KPiAJ
-cmV0ID0gd2F0Y2hkb2dfaW5pdF90aW1lb3V0KGlteF9zY193ZGQsIHRpbWVvdXQsICZwZGV2LT5k
-ZXYpOw0KPiANCj4gd2hlcmUgJ3RpbWVvdXQnIGlzIHRoZSBtb2R1bGUgcGFyYW1ldGVyLiBXaGlj
-aCBpcyBhY3R1YWxseSBub3QgdXNlZCBpbiB5b3VyDQo+IGRyaXZlci4NCj4gSG1tIC4uLiBJIHdh
-c24ndCBjYXJlZnVsIGVub3VnaCB3aXRoIG15IHJldmlldy4gVGhlIHRpbWVvdXQgaW5pdGlhbGl6
-YXRpb24gYXMtDQo+IGlzIGRvZXNuJ3QgbWFrZSBzZW5zZS4gSSdsbCBjb21tZW50IG9uIHRoYXQg
-aW4gdGhlIHBhdGNoLg0KDQpJIHVuZGVyc3RhbmQgbm93LCBpbiBvdXIgY2FzZXMsIEkgd291bGQg
-c3RpbGwgcHJlZmVyIHRvIGhhdmUgd2F0Y2hkb2cgbm9kZSB1bmRlcg0KdGhlIFNDVSBwYXJlbnQg
-bm9kZSwgc2luY2UgdGhlcmUgY291bGQgYmUgb3RoZXIgcHJvcGVydHkgc2V0dGluZyBkaWZmZXJl
-bmNlIGJldHdlZW4NCmRpZmZlcmVudCBpLk1YIHBsYXRmb3JtcyB3aXRoIHN5c3RlbSBjb250cm9s
-bGVyIHdhdGNoZG9nIGluc2lkZSwgdXNpbmcgdGhlIFNDVSBub2RlDQp0byBpbnN0YW50aWF0ZSBt
-YWtlcyB1cyBhIGxpdHRsZSBjb25mdXNlZCBhYm91dCB0aGUgd2F0Y2hkb2csIHNvIGlmIGl0IGlz
-IE5PVCB0aGF0IGNyaXRpY2FsLA0KSSB0aGluayB3ZSBzaG91bGQga2VlcCB3YXRjaGRvZyBub2Rl
-LiBCdXQgdG8gbWFrZSB0aGUgd2F0Y2hkb2cgZHJpdmVyIG1vcmUgZ2VuZXJpYw0KZm9yIG90aGVy
-IGkuTVggcGxhdGZvcm1zLCBJIGNoYW5nZWQgdGhlIGNvbXBhdGlibGUgc3RyaW5nIHRvICJmc2ws
-aW14LXNjLXdkdCIgaW4gZHJpdmVyLCBhbmQNCmVhY2ggU29DIHNob3VsZCBoYXMgaXQgYXMgZmFs
-bGJhY2sgaWYgaXQgY2FuIHJldXNlIHRoaXMgd2F0Y2hkb2cgZHJpdmVyLg0KDQpUaGFua3MsDQpB
-bnNvbg0KDQo+IA0KPiBHdWVudGVyDQo+IA0KPiA+IEFuc29uLg0KPiA+DQo+ID4+DQo+ID4+IFRo
-YW5rcywNCj4gPj4gR3VlbnRlcg0KDQo=
+Ls1088a has 2 thermal sensors. This patch adds the second node
+to dts to enable it.
+
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
+ 1 files changed, 39 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 661137f..9f52bc9 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -129,19 +129,19 @@
+ 	};
+ 
+ 	thermal-zones {
+-		cpu_thermal: cpu-thermal {
++		ccu {
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <5000>;
+ 			thermal-sensors = <&tmu 0>;
+ 
+ 			trips {
+-				cpu_alert: cpu-alert {
++				ccu_alert: ccu-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu_crit: cpu-crit {
++				ccu_crit: ccu-crit {
+ 					temperature = <95000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -150,7 +150,42 @@
+ 
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu_alert>;
++					trip = <&ccu_alert>;
++					cooling-device =
++						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		plt {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&tmu 1>;
++
++			trips {
++				plt_alert: plt-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				plt_crit: plt-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&plt_alert>;
+ 					cooling-device =
+ 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-- 
+1.7.1
