@@ -1,32 +1,63 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 2/2] clk: mediatek: correct cpu clock name for MT8173 SoC
-Date: Tue, 26 Feb 2019 10:18:16 -0800
-Message-ID: <155120509627.260864.5936412356126577519@swboyd.mtv.corp.google.com>
-References: <20190225065112.3400-1-seiya.wang@mediatek.com> <20190225065112.3400-2-seiya.wang@mediatek.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [RFC PATCH 5/5] mtd: hyperbus: Add driver for TI's Hyperbus
+ memory controller
+Date: Tue, 26 Feb 2019 21:28:16 +0300
+Message-ID: <4d2e31e3-0130-14a1-ab06-e6ffeae1cd22@cogentembedded.com>
+References: <20190219063607.29949-1-vigneshr@ti.com>
+ <20190219063607.29949-6-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225065112.3400-2-seiya.wang@mediatek.com>
+In-Reply-To: <20190219063607.29949-6-vigneshr@ti.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Seiya Wang <seiya.wang@mediatek.com>
+To: "Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>)" <vigneshr@ti.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, tudor.ambarus@microchip.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Seiya Wang (2019-02-24 22:51:12)
-> diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings=
-/clock/mt8173-clk.h
-> index 8aea623dd518..76e4e5b65353 100644
-> --- a/include/dt-bindings/clock/mt8173-clk.h
-> +++ b/include/dt-bindings/clock/mt8173-clk.h
-> @@ -194,7 +194,8 @@
->  #define CLK_INFRA_PMICWRAP             11
->  #define CLK_INFRA_CLK_13M              12
->  #define CLK_INFRA_CA53SEL               13
-> -#define CLK_INFRA_CA57SEL               14
-> +#define CLK_INFRA_CA57SEL               14 /* Deprecated. Don't use it. =
-*/
-> +#define CLK_INFRA_CA72SEL               14
+On 02/19/2019 09:36 AM, Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>) wrote:
 
-Also, please send a followup patch to remove the deprecated define later
-when the dts file is fixed up.
+> Add driver for Hyperbus memory controller on TI's AM654 SoC. Programming
+> IP is pretty simple and provides direct memory mapped access to
+> connected Flash devices.
+> 
+> Add basic support for the IP without DMA. Second ChipSelect is not
+> supported for now.
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ---
+>  drivers/mtd/hyperbus/hbmc_am654.c | 105 ++++++++++++++++++++++++++++++
+>  1 file changed, 105 insertions(+)
+>  create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
+> 
+> diff --git a/drivers/mtd/hyperbus/hbmc_am654.c b/drivers/mtd/hyperbus/hbmc_am654.c
+> new file mode 100644
+> index 000000000000..1f0d2dc52f9f
+> --- /dev/null
+> +++ b/drivers/mtd/hyperbus/hbmc_am654.c
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+> +// Author: Vignesh R <vigneshr@ti.com>
+> +
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mtd/hyperbus.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/types.h>
+> +
+> +struct am654_hbmc_priv {
+> +	struct hb_device hbdev;
+> +	void __iomem	*regbase;
+
+   Isn't regbase a controller's data, not a slave device's?
+
+[...]
+
+MBR, Sergei
