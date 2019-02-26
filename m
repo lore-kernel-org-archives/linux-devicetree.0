@@ -1,103 +1,50 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH] Document: dt: binding: imx: Fix PAD_CTL_DSE_X*
-Date: Tue, 26 Feb 2019 12:21:49 +0000
-Message-ID: <VI1PR04MB42227AA158BA1FCBF314AA27807B0@VI1PR04MB4222.eurprd04.prod.outlook.com>
-References: <20190222170038.9669-1-cquast@hanoverdisplays.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 0/5] Enable wm8524 on i.MX8MQ
+Date: Tue, 26 Feb 2019 09:52:11 -0300
+Message-ID: <CAOMZO5CpefU56xLaOUq0GRwWP9kcMPyZ2PWM38C9FuU-3k1MJA@mail.gmail.com>
+References: <20190226070742.30551-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190222170038.9669-1-cquast@hanoverdisplays.com>
-Content-Language: en-US
+In-Reply-To: <20190226070742.30551-1-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christina Quast <cquast@hanoverdisplays.com>
-Cc: "festevam@gmail.com" <festevam@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng
 List-Id: devicetree@vger.kernel.org
 
-> From: Christina Quast [mailto:cquast@hanoverdisplays.com]
-> Sent: Saturday, February 23, 2019 1:01 AM
->=20
-> In the iMX7d datasheet, the PAD_CTL_DSE_X* values are different from the
-> documentation.
->=20
+Hi Daniel,
 
-It's a doc problem.
-Latest RM seems got updated.
+On Tue, Feb 26, 2019 at 4:08 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
+>
+> On i.MX8MQ we can start the party using the wm8524 codec
+> which gets it's data through the SAI2 interface.
+>
+> In order to make it work this patch series enables the SDMA nodes,
+> sets the correct pinctrl configuration and uses the simple card
+> machine driver to put everything together.
+>
+> Changes since v2:
+>         - s/QM/MQ after Chris comments
+>
+> Changes since v1:
+>         - added cover letter
+>         - remove "fsl,imx8mq-sdma" compatible for sdma.
 
-As here it's a reference definition in binding doc and device tree actually=
- does not
-use it (IMX Pinctrl use raw data to set pad configuration). So it won't cau=
-se any
-compatibility issue to me.
+Why? It is good practice to add the new compatible entry.
 
-Please update the patch title to:
-dt-bindings: pinctrl: imx7d: xxxxx
+In case we find out a need for a fix that only affects imx8mq in the
+future we can do that by using the specific compatible and no dts
+change will be needed.
 
-Otherwise:
-Ack-by: Dong Aisheng <aisheng.dong@nxp.com>
+>
+> Daniel Baluta (5):
+>   arm64: dts: imx8mq: Add SDMA nodes
+>   arm64: dts: imx8mq: Add SAI2 node
+>   arm64: dts: imx8mq: Add SAI pinctrl configuration
+>   arm64: dts: imx8mq: Enable SAI2 for wm8524 codec
+>   arm64: dts: imx8mq: Enable wm8524 codec
 
-Regards
-Dong Aisheng
+I would suggest making the last three patches as a single one.
 
-> Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
-> ---
->  .../devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt       | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.=
-txt
-> b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> index 6666277c3acb..8ac1d0851a0f 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> @@ -48,9 +48,9 @@ PAD_CTL_HYS                     (1 << 3)
->  PAD_CTL_SRE_SLOW                (1 << 2)
->  PAD_CTL_SRE_FAST                (0 << 2)
->  PAD_CTL_DSE_X1                  (0 << 0)
-> -PAD_CTL_DSE_X2                  (1 << 0)
-> -PAD_CTL_DSE_X3                  (2 << 0)
-> -PAD_CTL_DSE_X4                  (3 << 0)
-> +PAD_CTL_DSE_X4                  (1 << 0)
-> +PAD_CTL_DSE_X2                  (2 << 0)
-> +PAD_CTL_DSE_X6                  (3 << 0)
->=20
-
-
->  Examples:
->  While iomuxc-lpsr is intended to be used by dedicated peripherals to tak=
-e
-> --
-> 2.20.1
->=20
->=20
->=20
->=20
->=20
-> Please consider the environment before printing this email
->=20
->=20
->=20
->=20
->=20
-> The information transmitted is intended only for the person or entity to =
-which
-> it is addressed and may contain confidential and/or privileged material. =
-Any
-> review, retransmission, dissemination or other use of, or taking of any a=
-ction in
-> reliance upon, this information by persons or entities other than the int=
-ended
-> recipient is prohibited.
-> If you received this in error, please contact the sender or postmaster
-> (postmaster@hanoverdisplays.com) and delete the material from any
-> computer.
-> Although we routinely screen for viruses, addressees should check this e-=
-mail
-> and any attachment for viruses. We make no warranty as to absence of viru=
-ses
-> in this e-mail or any attachments.
-> Our Company's email policy is to permit incidental personal use. If this =
-email is
-> of a personal nature, it must not be relied upon as expressing the views =
-or
-> opinions of the company.
+Also, please make the Subject as: arm64: dts: imx8mq-evk when a patch
+is specific to the imx8mq-evk dts.
