@@ -1,42 +1,69 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 2/4] bus: ti-sysc: Add support for PRUSS SYSC type
-Date: Tue, 26 Feb 2019 16:16:24 +0200
-Message-ID: <7b762f7d-75af-a615-a18d-6f3854bc099a@ti.com>
-References: <1549295637-24890-1-git-send-email-rogerq@ti.com>
- <1549295637-24890-3-git-send-email-rogerq@ti.com>
- <20190225212600.GA12346@bogus>
+From: Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH 1/2] dt-bindings: power: supply: gpio-charger: Add
+ status-gpios property
+Date: Tue, 26 Feb 2019 15:40:38 +0100
+Message-ID: <780b0ff3bb738ab36a5e729f74e6cfb2@artur-rojek.eu>
+References: <20190205190316.19296-1-contact@artur-rojek.eu>
+ <20190225215316.GA10117@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225212600.GA12346@bogus>
-Content-Language: en-GB
+In-Reply-To: <20190225215316.GA10117@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: tony@atomide.com, s-anna@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, david@lechnology.com, woods.technical@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-On 25/02/2019 23:26, Rob Herring wrote:
-> On Mon, Feb 04, 2019 at 05:53:55PM +0200, Roger Quadros wrote:
->> The PRUSS module has a SYSCFG which is unique. Add
->> support for it.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
+Hi Rob.
+
+Thanks for the review.
+
+On 2019-02-25 22:53, Rob Herring wrote:
+> On Tue, Feb 05, 2019 at 08:03:15PM +0100, Artur Rojek wrote:
+>> Add documentation for the "status-gpios" property.
+>> 
+>> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
 >> ---
->>  drivers/bus/ti-sysc.c                 | 77 +++++++++++++++++++++++++++++++++++
->>  include/dt-bindings/bus/ti-sysc.h     | 11 -----
+>>  .../devicetree/bindings/power/supply/gpio-charger.txt         | 4 
+>> ++++
+>>  1 file changed, 4 insertions(+)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt 
+>> b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+>> index adbb5dc5b6e9..b98a05a4973c 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+>> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+>> @@ -14,12 +14,16 @@ Required properties :
+>>       usb-cdp (USB charging downstream port)
+>>       usb-aca (USB accessory charger adapter)
+>> 
+>> +Optional properties:
+>> + - status-gpios: GPIO indicating the charger status
 > 
-> Did you intend to remove what you just added?
-
-Yes, it was a mistake.
-
+> So when it is asserted it has 'status'? What does status mean?
+It is a GPIO indicating whether a battery is charging.
+I shall make the description more clear.
 > 
->>  include/linux/platform_data/ti-sysc.h |  1 +
->>  3 files changed, 78 insertions(+), 11 deletions(-)
+>> +
+>>  Example:
+>> 
+>>  	usb_charger: charger {
+>>  		compatible = "gpio-charger";
+>>  		charger-type = "usb-sdp";
+>>  		gpios = <&gpf0 2 0 0 0>;
+>> +		status-gpios = <&gpf0 3 0 0 0>;
+> 
+> Humm, not sure what the thinking for 'gpios' was, but it's wrong and 
+> you
+> just copied it. If we follow the normal cell encoding with 2 cells, 
+> this
+> means the property takes 3 gpios (though the last 2 are marked not
+> present with 0).
+I will replace both of those properties with a valid example.
 
-cheers,
--roger
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Artur
+> 
+> Rob
