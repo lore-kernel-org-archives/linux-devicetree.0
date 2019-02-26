@@ -1,78 +1,54 @@
-From: Ming Lei <tom.leiming@gmail.com>
-Subject: Re: Linux-next 20190218: am57xx-evm: mmc1: ADMA error
-Date: Tue, 26 Feb 2019 09:41:38 +0800
-Message-ID: <CACVXFVP0h-xvJaW1HaMrhozwhR484x0owc6XX63JT-59N08Fag@mail.gmail.com>
-References: <CA+G9fYsmC5ckLXfQxSUn-tqxLZ4NofEyb9RA69Q07RUoxc79RQ@mail.gmail.com>
- <34c78d7f-cc3c-853d-b3fd-a70abdb66293@ti.com> <22ccca46-7390-1707-cfca-43b3577b79f2@ti.com>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH 1/2] dt-bindings: usb-xhci: Add usb-phy-port-reset property
+Date: Tue, 26 Feb 2019 10:27:13 +0530
+Message-ID: <CABe79T4j7batxZ7BDhEpwRK8x5UMZLkxLJOt-FD0SCr9JOFizw@mail.gmail.com>
+References: <1549347534-11320-1-git-send-email-srinath.mannam@broadcom.com>
+ <1549347534-11320-2-git-send-email-srinath.mannam@broadcom.com> <20190225213807.GA18852@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <22ccca46-7390-1707-cfca-43b3577b79f2@ti.com>
+In-Reply-To: <20190225213807.GA18852@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, nm@ti.com, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 25, 2019 at 9:14 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
+Hi Rob,
+Thanks for the review, Please see my comments below in line.
+
+Regards,
+Srinath.
+On Tue, Feb 26, 2019 at 3:08 AM Rob Herring <robh@kernel.org> wrote:
 >
-> Hi Naresh,
->
-> + Commit authors.
->
-> On 19/02/19 6:38 PM, Faiz Abbas wrote:
-> > Hi Naresh,
+> On Tue, Feb 05, 2019 at 11:48:53AM +0530, Srinath Mannam wrote:
+> > Add usb-phy-port-reset optional property to set quirk in xhci platform
+> > driver which forces USB port PHY reset on port disconnect event.
 > >
-> > On 18/02/19 6:57 PM, Naresh Kamboju wrote:
-> >> Do you see this error on am57xx-evm running Linux next 20190218 ?
-> >> I have tested on multiple devices and found this error.
-> >> Please find the full boot log [1].
-> >> Am i missing any pre required configs [2] ?
-> >>
-> >> [    5.620263] mmc1: ADMA error
-> >> [    5.623266] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
-> >> [    5.629740] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
-> >> [    5.636215] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
-> >> [    5.642690] mmc1: sdhci: Argument:  0x002cec70 | Trn mode: 0x00000033
-> >> [    5.649162] mmc1: sdhci: Present:   0x01f00000 | Host ctl: 0x00000010
-> >> [    5.655634] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
-> >> [    5.662108] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
-> >> [    5.668582] mmc1: sdhci: Timeout:   0x0000000c | Int stat: 0x00000000
-> >> [    5.675055] mmc1: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
-> >> [    5.681529] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
-> >> [    5.688002] mmc1: sdhci: Caps:      0x21e90080 | Caps_1:   0x00000f77
-> >> [    5.694474] mmc1: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
-> >> [    5.700949] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffef
-> >> [    5.707423] mmc1: sdhci: Resp[2]:   0x0f5903ff | Resp[3]:  0xd04f0132
-> >> [    5.713896] mmc1: sdhci: Host ctl2: 0x00000004
-> >> [    5.718364] mmc1: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xab868218
-> >>
+> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> > ---
+> >  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
+> >  1 file changed, 1 insertion(+)
 > >
-> > I see this as well on my setup. Trying to bisect now. Will keep you posted.
+> > diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > index fea8b15..ecbdb15 100644
+> > --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > @@ -40,6 +40,7 @@ Optional properties:
+> >    - usb3-lpm-capable: determines if platform is USB3 LPM capable
+> >    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+> >    - imod-interval-ns: default interrupt moderation interval is 5000ns
+> > +  - usb-phy-port-reset: set this to do USB PORT PHY reset while disconnect
+> >    - phys : see usb-hcd.txt in the current directory
 >
+> This should be implied by the HCI or phy compatible string (depending
+> on who exactly needs the quirky behavior).
+Stingray USB HS PHY connected to xHCI port has an issue, if full speed
+devices connected to this port then
+after all High Speed devices connected to this port are detected at
+full speed instead of high speed.
+So that we need to do PHY (which is connected to port) reset on xHCI
+port disconnect event.
+That is the reason we required to add quirk in xHCI.
 >
-> Reverting the following commit fixes this.
-> commit 07173c3ec276cbb18dc0e0687d37d310e98a1480
-> Author: Ming Lei <ming.lei@redhat.com>
-> Date:   Fri Feb 15 19:13:20 2019 +0800
->
->     block: enable multipage bvecs
->
->     This patch pulls the trigger for multi-page bvecs.
->
->     Reviewed-by: Omar Sandoval <osandov@fb.com>
->     Signed-off-by: Ming Lei <ming.lei@redhat.com>
->     Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
-Hi,
-
-Thanks for your report & bisect.
-
-Could you test the following patch?
-
-https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.1/block&id=8f4e80da764ec1ca44c83f3e17dbc9bf0209bccc
-
-Or  simply run the latest -next?
-
-
-Thanks,
-Ming Lei
+> Rob
