@@ -1,111 +1,172 @@
-From: Ming Lei <tom.leiming@gmail.com>
-Subject: Re: Linux-next 20190218: am57xx-evm: mmc1: ADMA error
-Date: Tue, 26 Feb 2019 18:06:33 +0800
-Message-ID: <CACVXFVNqtPnWHp+b0-ED70n1pcv9EkARKYWVKaWtFEEgh0N1XA@mail.gmail.com>
-References: <CA+G9fYsmC5ckLXfQxSUn-tqxLZ4NofEyb9RA69Q07RUoxc79RQ@mail.gmail.com>
- <34c78d7f-cc3c-853d-b3fd-a70abdb66293@ti.com> <22ccca46-7390-1707-cfca-43b3577b79f2@ti.com>
- <CACVXFVP0h-xvJaW1HaMrhozwhR484x0owc6XX63JT-59N08Fag@mail.gmail.com> <236a3ac2-5988-9150-4a53-4a33a45d595e@ti.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 2/4] dt-bindings: clock: imx-lpcg: add support to parse
+ clocks from device tree
+Date: Tue, 26 Feb 2019 10:07:34 +0000
+Message-ID: <VI1PR04MB422296935D82A351A6A1DD92807B0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+References: <1550771836-10014-1-git-send-email-aisheng.dong@nxp.com>
+ <1550771836-10014-3-git-send-email-aisheng.dong@nxp.com>
+ <155112397472.191923.18309287020361500256@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <236a3ac2-5988-9150-4a53-4a33a45d595e@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, nm@ti.com, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <155112397472.191923.18309287020361500256@swboyd.mtv.corp.google.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 2:47 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->
-> Hi Ming Lei,
->
-> On 26/02/19 7:11 AM, Ming Lei wrote:
-> > On Mon, Feb 25, 2019 at 9:14 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
-> >>
-> >> Hi Naresh,
-> >>
-> >> + Commit authors.
-> >>
-> >> On 19/02/19 6:38 PM, Faiz Abbas wrote:
-> >>> Hi Naresh,
-> >>>
-> >>> On 18/02/19 6:57 PM, Naresh Kamboju wrote:
-> >>>> Do you see this error on am57xx-evm running Linux next 20190218 ?
-> >>>> I have tested on multiple devices and found this error.
-> >>>> Please find the full boot log [1].
-> >>>> Am i missing any pre required configs [2] ?
-> >>>>
-> >>>> [    5.620263] mmc1: ADMA error
-> >>>> [    5.623266] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
-> >>>> [    5.629740] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
-> >>>> [    5.636215] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
-> >>>> [    5.642690] mmc1: sdhci: Argument:  0x002cec70 | Trn mode: 0x00000033
-> >>>> [    5.649162] mmc1: sdhci: Present:   0x01f00000 | Host ctl: 0x00000010
-> >>>> [    5.655634] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
-> >>>> [    5.662108] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
-> >>>> [    5.668582] mmc1: sdhci: Timeout:   0x0000000c | Int stat: 0x00000000
-> >>>> [    5.675055] mmc1: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
-> >>>> [    5.681529] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
-> >>>> [    5.688002] mmc1: sdhci: Caps:      0x21e90080 | Caps_1:   0x00000f77
-> >>>> [    5.694474] mmc1: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
-> >>>> [    5.700949] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffef
-> >>>> [    5.707423] mmc1: sdhci: Resp[2]:   0x0f5903ff | Resp[3]:  0xd04f0132
-> >>>> [    5.713896] mmc1: sdhci: Host ctl2: 0x00000004
-> >>>> [    5.718364] mmc1: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xab868218
-> >>>>
-> >>>
-> >>> I see this as well on my setup. Trying to bisect now. Will keep you posted.
-> >>
-> >>
-> >> Reverting the following commit fixes this.
-> >> commit 07173c3ec276cbb18dc0e0687d37d310e98a1480
-> >> Author: Ming Lei <ming.lei@redhat.com>
-> >> Date:   Fri Feb 15 19:13:20 2019 +0800
-> >>
-> >>     block: enable multipage bvecs
-> >>
-> >>     This patch pulls the trigger for multi-page bvecs.
-> >>
-> >>     Reviewed-by: Omar Sandoval <osandov@fb.com>
-> >>     Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> >>     Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> >
-> > Hi,
-> >
-> > Thanks for your report & bisect.
-> >
-> > Could you test the following patch?
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.1/block&id=8f4e80da764ec1ca44c83f3e17dbc9bf0209bccc
-> >
-> > Or  simply run the latest -next?
->
-> That didn't fix it for me. Still see ADMA error.
->
-> [   13.126186] mmc0: ADMA error
-> [   13.129084] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [   13.135552] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
-> [   13.142019] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000000
-> [   13.148485] mmc0: sdhci: Argument:  0x00000089 | Trn mode: 0x00000033
-> [   13.154952] mmc0: sdhci: Present:   0x00000000 | Host ctl: 0x00000012
-> [   13.161418] mmc0: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
-> [   13.167885] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
-> [   13.174351] mmc0: sdhci: Timeout:   0x0000000a | Int stat: 0x00000000
-> [   13.180817] mmc0: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
-> [   13.187282] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
-> [   13.193748] mmc0: sdhci: Caps:      0x25e90080 | Caps_1:   0x00000f77
-> [   13.200215] mmc0: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
-> [   13.206682] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x3b377f80
-> [   13.213148] mmc0: sdhci: Resp[2]:   0x5b590000 | Resp[3]:  0x400e0032
-> [   13.219613] mmc0: sdhci: Host ctl2: 0x00000000
-> [   13.224073] mmc0: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xae857288
-> [   13.230538] mmc0: sdhci: ============================================
+Hi Stephen,
 
-OK, I will write a debug patch to dump the sg data and see if it is
-generated as wrong.
+Sorry for the long email, I want to describe things more clear to help the review.
 
-BTW, which kind of failure can you find from the mmc dma error log?
+First, i want to share some backgrounds on how this patch series comes from,
+it mainly consists of three reasons:
 
+1. New architecture to save a lot duplicated codes
+We want to write a more generic <soc>-ss-<subsys>.dtsi shared by imx8qxp, imx8qm,
+imx8dx, imx8dm according to HW characteristic then we'd better decouple the dependency
+of Clock ID definitions from device tree due to the SS and device availability difference among them.
+[00/14] arm64: dts: imx8: architecture improvement and adding imx8qm support
+https://patchwork.kernel.org/cover/10824537/
 
+2. Power domain requirements
+Both SCU and LPCG clock access requires it's associated power domain enabled, CCF
+already supports it and device tree seems to be the best place to describe it.
+e.g. arch/arm64/boot/dts/exynos/exynos5433.dtsi
+cmu_aud: clock-controller@114c0000 {
+        compatible = "samsung,exynos5433-cmu-aud";
+        #clock-cells = <1>;
+		....
+        power-domains = <&pd_aud>;
+};
 
-Thanks,
-Ming Lei
+Furthermore, if the power domain is off (e.g. during system suspend) the clock state
+Within this domain will be lost and we have to restored it after power domain is re-enabled.
+We'd like to use common driver suspend/resume to handle it.
+(In the future, we might support Runtime state save&restore as well in order to shut
+down the whole SS if not used, that also need power domain info from DT).
+
+3. Partition support
+IMX SCU firmware supports Resource Partition service which allows each device resource
+to be partitioned into different ownership groupings that are associated with different
+execution environments including multiple operating systems executing on different
+cores, TrustZone, and hypervisor.
+
+That means we can't register all the clocks in Linux as some of them may not belong
+to us and can't access. (we can check all the clocks via SCU RPC call before register, 
+but that also needs a branch of time. However, LPCG not easy to check as it does not provide
+resource id). Putting clocks of device in DT allows the dynamically configuration of it according
+to the real partition requirements.
+E.g. Remove some clock/device nodes once not belong to Linux OS partition or not exist in
+hardware on this SoC SS.
+
+And please see below for my replies to other of your questions:
+
+> From: Stephen Boyd [mailto:sboyd@kernel.org]
+> Sent: Tuesday, February 26, 2019 3:46 AM
+> Quoting Aisheng Dong (2019-02-21 10:03:47)
+> > MX8QM and MX8QXP LPCG Clocks are mostly the same except they may
+> > reside in different subsystems across CPUs and also vary a bit on the
+> availability.
+> >
+> > Same as SCU clock, we want to move the clock definition into device
+> > tree which can fully decouple the dependency of Clock ID definition
+> > from device tree. And no frequent changes required in clock driver any
+> > more to handle the difference.
+> >
+> > We can use the existence of clock nodes in device tree to address the
+> > device and clock availability differences across different SoCs.
+> 
+> This sounds similar to what TI folks are doing with their new firmware.
+> It leads to problems where we don't know what in the clk tree needs to be
+> registered, 
+
+AFAICT we know what clocks need to be registered according to the device availability
+in each SS (Subsystem) in HW definition.
+Am I missed something?
+
+> debugfs is not super helpful in that case, 
+
+Debugfs functions the same as defining clocks in driver.
+Every cock defined in driver can be defined in device tree according to HW configuration
+and displayed with debugfs. So I'm not quite get the point of the concern.
+Can you help clarify a bit more?
+
+> and late init only turns off
+> clks that are found during probe (so nothing then?).
+
+Same as above.
+
+BTW, we did not support turn off clocks for LPCG during late init.
+Probably won't support in the future as LPCG is the next level gates of SCU clocks.
+Gating off LPCG clocks while SCU clocks disabled already looks not so meaningful, right?
+And gate off such type LPCG is quite expensive as LPCG needs enable its power domain
+to access and chip reset already ensures the LPCG clocks are off and the later LPCG
+enable/disable also can sync the HW state.
+
+For the parent SCU clocks, we also still don't have the plan to support late gate off because
+SCU clock might be shared with M-Core OS or Secure SW (e.g. ATF, OPTee) and A core can't
+Gate off those "unused" ones it believes. Currently what we're doing is ensure gate off
+power&clocks after using in bootloader before hand over to kernel.
+
+> 
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+> > b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+> > index 965cfa4..a317844 100644
+> > --- a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+> > +++ b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+> > @@ -11,6 +11,20 @@ enabled by these control bits, it might still not
+> > be running based  on the base resource.
+> >
+> >  Required properties:
+> > +- compatible:          Should be one of:
+> > +                         "fsl,imx8qxp-lpcg"
+> > +                         "fsl,imx8qm-lpcg" followed by
+> "fsl,imx8qxp-lpcg".
+> > +- reg:                 Address and length of the register set.
+> > +- #clock-cells:                Should be 1. One LPCG supports multiple
+> clocks.
+> > +- clocks:              Input parent clocks phandle array for each clock.
+> > +- bit-offset:          An integer array indicating the bit offset for each
+> clock.
+> > +- hw-autogate:         Boolean array indicating whether supports HW
+> autogate for
+> > +                       each clock.
+> 
+> This looks like one clk per node style of bindings which is a direction we don't
+> want DT bindings to go in. It leads to a bunch of time parsing DT to generate
+> clks and in general doesn't represent the clock controller hardware that is
+> there. Basically, anything with 'bit-offset'
+> in the binding is not going to be acceptable.
+> 
+
+It's one LPCG per node which represents a couple of clock output gates controlled by
+this LPCG for one specific module.
+For MX8QM/QXP platforms, there're separate LPCGs for each device resource.
+LPCGs are independent with each other with separate io space, behaving separate module
+clock controllers and they are distributed in different SS (subsystems).
+Describing it separately in device tree is more comply with real hardware although
+it sacrifices a bit parsing time.
+
+Regards
+Dong Aisheng
+
+> > +- clock-output-names:  Shall be the corresponding names of the outputs.
+> > +                       NOTE this property must be specified in the
+> same order
+> > +                       as the clock bit-offset and hw-autogate property.
+> > +
+> > +Legacy binding (DEPRECATED):
+> >  - compatible:  Should be one of:
+> >                   "fsl,imx8qxp-lpcg-adma",
