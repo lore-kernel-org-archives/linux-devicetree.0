@@ -1,54 +1,143 @@
-From: Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: [PATCH v1 3/4] clk: qoriq: increase array size of cmux_to_group
-Date: Tue, 26 Feb 2019 10:11:02 +0000
-Message-ID: <1551132245-6089-4-git-send-email-vabhav.sharma@nxp.com>
-References: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [RFC PATCH 5/5] mtd: hyperbus: Add driver for TI's Hyperbus
+ memory controller
+Date: Tue, 26 Feb 2019 15:48:00 +0530
+Message-ID: <24b7c553-44c9-4800-a455-31b9b2c1f8c5@ti.com>
+References: <20190219063607.29949-1-vigneshr@ti.com>
+ <20190219063607.29949-6-vigneshr@ti.com>
+ <907041d1-8412-22ca-3716-109a56251850@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com>
+In-Reply-To: <907041d1-8412-22ca-3716-109a56251850@cogentembedded.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "oss@buserror.net" <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-kernel-owner@vger.kernel.org
-Cc: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, tudor.ambarus@microchip.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
 
-Increase size of cmux_to_group array, to accomdate entry of
--1 termination.
 
-Added -1, terminated, entry for 4080_cmux_grpX.
+On 25/02/19 9:59 PM, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 02/19/2019 09:36 AM, Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>) wrote:
+> 
+>> Add driver for Hyperbus memory controller on TI's AM654 SoC. Programming
+>> IP is pretty simple and provides direct memory mapped access to
+>> connected Flash devices.
+> 
+>    Are you sure you posted the _complete_ driver?
+> 
 
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
----
- drivers/clk/clk-qoriq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index 5baa9e0..e75194a 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -79,7 +79,7 @@ struct clockgen_chipinfo {
- 	const struct clockgen_muxinfo *cmux_groups[2];
- 	const struct clockgen_muxinfo *hwaccel[NUM_HWACCEL];
- 	void (*init_periph)(struct clockgen *cg);
--	int cmux_to_group[NUM_CMUX]; /* -1 terminates if fewer than NUM_CMUX */
-+	int cmux_to_group[NUM_CMUX+1]; /* array should be -1 terminated */
- 	u32 pll_mask;	/* 1 << n bit set if PLL n is valid */
- 	u32 flags;	/* CG_xxx */
- };
-@@ -601,7 +601,7 @@ static const struct clockgen_chipinfo chipinfo[] =3D {
- 			&p4080_cmux_grp1, &p4080_cmux_grp2
- 		},
- 		.cmux_to_group =3D {
--			0, 0, 0, 0, 1, 1, 1, 1
-+			0, 0, 0, 0, 1, 1, 1, 1, -1
- 		},
- 		.pll_mask =3D 0x1f,
- 	},
---=20
-2.7.4
+Yes, it is... You can find controller doc here[1]. Default values in the
+MCR/MTR registers are good enough to simple Hyperflash access.
+More perf optimization and timing optimizations will come incrementally
+
+[1] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf 12.3.3 Hyperbus Interface
+
+>> Add basic support for the IP without DMA. Second ChipSelect is not
+>> supported for now.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>>  drivers/mtd/hyperbus/hbmc_am654.c | 105 ++++++++++++++++++++++++++++++
+>>  1 file changed, 105 insertions(+)
+>>  create mode 100644 drivers/mtd/hyperbus/hbmc_am654.c
+>>
+>> diff --git a/drivers/mtd/hyperbus/hbmc_am654.c b/drivers/mtd/hyperbus/hbmc_am654.c
+>> new file mode 100644
+>> index 000000000000..1f0d2dc52f9f
+>> --- /dev/null
+>> +++ b/drivers/mtd/hyperbus/hbmc_am654.c
+>> @@ -0,0 +1,105 @@
+> [...]
+>> +static int am654_hbmc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct am654_hbmc_priv *priv;
+>> +	struct resource *res;
+>> +	int err;
+>> +
+>> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	platform_set_drvdata(pdev, priv);
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (IS_ERR(res)) {
+>> +		dev_err(&pdev->dev, "failed to get memory resource\n");
+>> +		return -ENOENT;
+>> +	}
+>> +
+>> +	priv->regbase = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(priv->regbase)) {
+>> +		dev_err(dev, "Cannot remap controller address.\n");
+>> +		return PTR_ERR(priv->regbase);
+>> +	}
+>> +
+>> +	pm_runtime_enable(&pdev->dev);
+>> +	err = pm_runtime_get_sync(&pdev->dev);
+> 
+>    That's all nice but where's the code that accesses the actual registers?
+
+Interface and functional clk needs to be enabled even to access MMIO
+space to read/write data to flash (done by the map framework). So driver
+currently just enables everything during probe and disables on remove
+
+> 
+>> +	if (err < 0) {
+>> +		pm_runtime_put_noidle(&pdev->dev);
+> 
+>    Calling "put" with previously failed "get" sees strange...
+> 
+
+Basically pm_runtime_get_sync() increments usage_count even in case of
+failure and pm_runtime_put_noidle() puts it back. You can find many
+examples of above piece of code in kernel.
+
+>> +		return err;
+>> +	}
+>> +
+>> +	priv->hbdev.needs_calib = true;
+>> +	priv->hbdev.dev = &pdev->dev;
+>> +	priv->hbdev.np = of_get_next_child(dev->of_node, NULL);
+>> +	err = hb_register_device(&priv->hbdev);
+>> +	if (err) {
+>> +		dev_err(&pdev->dev, "failed to register controller\n");
+>> +		goto err_destroy;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err_destroy:
+>> +	hb_unregister_device(&priv->hbdev);
+> 
+>    Calling "unregister" with "register" previously failed also looks strange...
+> 
+
+Agree, this is unneeded as hb_register_device() takes care of all
+cleanups in err path.
+
+>> +	pm_runtime_put_sync(&pdev->dev);
+> 
+>    Why the sync() version?
+> 
+
+Why not? Since the device is going away, I think its safer to ensure
+device has definitely been put to idle state. I see its a common
+practice in driver code.
+
+>> +	return err;
+>> +}
+> [...]
+> 
+> MBR, Sergei
+> 
+
+-- 
+Regards
+Vignesh
