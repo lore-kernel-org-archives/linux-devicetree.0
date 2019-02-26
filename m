@@ -1,73 +1,64 @@
-Return-Path: <SRS0=U2vk=RB=synopsys.com=luis.oliveira@kernel.org>
+Return-Path: <SRS0=eAy/=RB=the-dreams.de=wsa@kernel.org>
+Date: Tue, 26 Feb 2019 16:39:21 +0100
+From: Wolfram Sang <wsa@the-dreams.de>
 Subject: Re: [PATCH v4 1/2] dt: snps,designware-i2c: Add clock bindings
  documentation
+Message-ID: <20190226153921.GC839@kunai>
 References: <1550765459-14519-1-git-send-email-gareth.williams.jx@renesas.com>
  <1550765459-14519-2-git-send-email-gareth.williams.jx@renesas.com>
  <de2a72f3-6d2c-cc18-73f3-1e925bd5b88f@linux.intel.com>
-From: Luis de Oliveira <luis.oliveira@synopsys.com>
-Message-ID: <84a5eb6b-8d5c-fc26-5e28-fadce9ff4978@synopsys.com>
-Date: Tue, 26 Feb 2019 18:39:20 +0000
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="f+W+jCU1fRNres8c"
+Content-Disposition: inline
 In-Reply-To: <de2a72f3-6d2c-cc18-73f3-1e925bd5b88f@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Gareth Williams <gareth.williams.jx@renesas.com>, Rob Herring <robh+dt@kernel.org>, "Mark Rutland  <mark.rutland@arm.com>, Alexandre Belloni" <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Luis Oliveira <luis.oliveira@synopsys.com>
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: Gareth Williams <gareth.williams.jx@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Luis Oliveira <Luis.Oliveira@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
 
-Yes Jarkko.
-Registers are on the PCLK domain (applications clock) and the IC_CLK is t=
-he
-clock that controls peripheral logic (like SCL definition).
+--f+W+jCU1fRNres8c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks!
 
-On 26-Feb-19 14:54, Jarkko Nikula wrote:
-> Hi
+> > + - clock-names : Contains the names of the clocks:
+> > +    "ic_clk", for the core clock used to generate the external I2C clo=
+ck.
+> > +    "pclk", the peripheral clock, required for register accesses.
+> > +
 >=20
-> + Luis from Synopsys.
->=20
-> Sorry the delay, I was out of office last week. Comment below.
->=20
-> On 2/21/19 6:10 PM, Gareth Williams wrote:
->> From: Phil Edworthy <phil.edworthy@renesas.com>
->>
->> The driver requires an undocumented clock property, so detail it.
->> Add documentation for a separate, optional, peripheral clock.
->>
->> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
->> Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->> ---
->> v4:
->> =C2=A0 - Updated commit message to reference "peripheral clock" instea=
-d of
->> =C2=A0=C2=A0=C2=A0 "bus clock"
->> =C2=A0 - Added Wolfram's Acked-by
->> v3:
->> =C2=A0 - Changed clocks and clock-names sections to use term "peripher=
-al clock"
->> =C2=A0=C2=A0=C2=A0 (pclk) instead of "bus clock" (busclk).
-> ...
->> =C2=A0 Optional properties :
->> +
->> + - clock-names : Contains the names of the clocks:
->> +=C2=A0=C2=A0=C2=A0 "ic_clk", for the core clock used to generate the =
-external I2C clock.
->> +=C2=A0=C2=A0=C2=A0 "pclk", the peripheral clock, required for registe=
-r accesses.
->> +
->=20
-> Actually it looks there is need to revert back to bus clock (or better)=
- in
+> Actually it looks there is need to revert back to bus clock (or better) in
 > comments but keep the "pclk" property.
 >=20
-> The specification I have tells the ic_clk is the peripheral clock which=
- runs the
-> logic and the pclk (exactly pclk) is for bus interface and where regist=
-ers are.
->=20
-> Luis: did I interpret it right?
->=20
+> The specification I have tells the ic_clk is the peripheral clock which r=
+uns
+> the logic and the pclk (exactly pclk) is for bus interface and where
+> registers are.
+
+Can we make it "bus interface clock" then? I'd think this is a tad
+better.
+
+
+--f+W+jCU1fRNres8c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlx1XaUACgkQFA3kzBSg
+KbbIQRAAnTk3dnyBP4T/I2tBw+MfOtLMupey696eq0DUhYzQP+2rrOvYndO8x2QU
+AMJwIgeicC0554BJ7ZIEUPlNBp3IBRtUzFG5yqnP6UQ8rozr7nlUmJrilXASdRU2
+QDwwWSGYfDBpJTY2EqOOwTEoDp4SR0bB4ihPt4D9AnD8Rmh2SyEm5Xs2S6b+O+qW
+K20U/Tv/OedEfF20vNMQXCrDTBmQ9mhbHc0RBukmfeANJthfNlkKFUui3DAx3sXI
+y8VP9sAYmlDVJN4zeCzg0t+d0n88e+/Uo6S1EMzYamifQx0vaUhVTizJnq5b4kJx
+FRIvL0KEQTaT16hliF8zED5mIOPMP5lJS5qVklKggeHTBFB+e4aNIJZtTNeEY8Nt
+VAtzIZkDAJuooYXGIGmb3M1SNoXs8WmeRMiczA7BjLWoblitTqfxrODHIZxbrZ5M
+knp1jiJ3Sx6lknciGk3kj7MrWXOXHf1cY+yWjf7tn+I+9RLR5hlZlgwL0lm7EgFX
+gAqaWOTSadR76iZaNfB35wbxGeUy41DhB/HR/uHijoyD9fPuifqNGKCS7BC66tnA
+amOxWZNe9ENwcKqW+qjF9dgFH72mNKIHHvgSRc3avWxDuW+NY0RrUybV+L9/pMZL
+V00IXOC3LPYK/X/MtbbIb+80c6P7GTAzaoCmJV+TYTvvcVTrFy0=
+=W7Px
+-----END PGP SIGNATURE-----
+
+--f+W+jCU1fRNres8c--
