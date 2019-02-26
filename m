@@ -1,54 +1,103 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH 1/2] dt-bindings: usb-xhci: Add usb-phy-port-reset property
-Date: Tue, 26 Feb 2019 10:27:13 +0530
-Message-ID: <CABe79T4j7batxZ7BDhEpwRK8x5UMZLkxLJOt-FD0SCr9JOFizw@mail.gmail.com>
-References: <1549347534-11320-1-git-send-email-srinath.mannam@broadcom.com>
- <1549347534-11320-2-git-send-email-srinath.mannam@broadcom.com> <20190225213807.GA18852@bogus>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V7 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
+Date: Tue, 26 Feb 2019 05:17:31 +0000
+Message-ID: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190225213807.GA18852@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-Thanks for the review, Please see my comments below in line.
+Add i.MX8QXP CPU opp table to support cpufreq.
 
-Regards,
-Srinath.
-On Tue, Feb 26, 2019 at 3:08 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Feb 05, 2019 at 11:48:53AM +0530, Srinath Mannam wrote:
-> > Add usb-phy-port-reset optional property to set quirk in xhci platform
-> > driver which forces USB port PHY reset on port disconnect event.
-> >
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > ---
-> >  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> > index fea8b15..ecbdb15 100644
-> > --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> > +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> > @@ -40,6 +40,7 @@ Optional properties:
-> >    - usb3-lpm-capable: determines if platform is USB3 LPM capable
-> >    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-> >    - imod-interval-ns: default interrupt moderation interval is 5000ns
-> > +  - usb-phy-port-reset: set this to do USB PORT PHY reset while disconnect
-> >    - phys : see usb-hcd.txt in the current directory
->
-> This should be implied by the HCI or phy compatible string (depending
-> on who exactly needs the quirky behavior).
-Stingray USB HS PHY connected to xHCI port has an issue, if full speed
-devices connected to this port then
-after all High Speed devices connected to this port are detected at
-full speed instead of high speed.
-So that we need to do PHY (which is connected to port) reset on xHCI
-port disconnect event.
-That is the reason we required to add quirk in xHCI.
->
-> Rob
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+No changes since V6.
+---
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 4c3dd95..41bf0ce 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -34,6 +34,9 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A35_L2>;
++			clocks = <&clk IMX_A35_CLK>;
++			operating-points-v2 = <&a35_0_opp_table>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A35_1: cpu@1 {
+@@ -42,6 +45,9 @@
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A35_L2>;
++			clocks = <&clk IMX_A35_CLK>;
++			operating-points-v2 = <&a35_0_opp_table>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A35_2: cpu@2 {
+@@ -50,6 +56,9 @@
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A35_L2>;
++			clocks = <&clk IMX_A35_CLK>;
++			operating-points-v2 = <&a35_0_opp_table>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A35_3: cpu@3 {
+@@ -58,6 +67,9 @@
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A35_L2>;
++			clocks = <&clk IMX_A35_CLK>;
++			operating-points-v2 = <&a35_0_opp_table>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A35_L2: l2-cache0 {
+@@ -65,6 +77,24 @@
+ 		};
+ 	};
+ 
++	a35_0_opp_table: opp-table {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-900000000 {
++			opp-hz = /bits/ 64 <900000000>;
++			opp-microvolt = <1000000>;
++			clock-latency-ns = <150000>;
++		};
++
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1100000>;
++			clock-latency-ns = <150000>;
++			opp-suspend;
++		};
++	};
++
+ 	gic: interrupt-controller@51a00000 {
+ 		compatible = "arm,gic-v3";
+ 		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
+-- 
+2.7.4
