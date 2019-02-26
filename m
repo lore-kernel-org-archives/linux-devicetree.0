@@ -1,23 +1,53 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 2/5] arm64: dts: imx8mq: Add SAI2 node
-Date: Tue, 26 Feb 2019 09:54:27 -0300
-Message-ID: <CAOMZO5AzUzyr_xixDcntoNt1KNSRih_2ZRFnzQHcg6pZmHsYig@mail.gmail.com>
-References: <20190226070742.30551-1-daniel.baluta@nxp.com> <20190226070742.30551-3-daniel.baluta@nxp.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 2/3] spi: pxa2xx: Introduce dma-burst-sz property
+ support
+Date: Tue, 26 Feb 2019 15:02:05 +0200
+Message-ID: <20190226130205.GX9224@smile.fi.intel.com>
+References: <20190226092441.49198-1-andriy.shevchenko@linux.intel.com>
+ <20190226092441.49198-2-andriy.shevchenko@linux.intel.com>
+ <b845fbcf-d9d9-f682-9604-31c7a9c8c418@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226070742.30551-3-daniel.baluta@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <b845fbcf-d9d9-f682-9604-31c7a9c8c418@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Robert Jarzmik <robert.jarzmik@free.fr>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 4:08 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
->
-> SAI2 is part of AIPS-3 memory region and it's the DAI through
-> which the wm8524 codec gets its data.
+On Tue, Feb 26, 2019 at 01:46:49PM +0200, Jarkko Nikula wrote:
+> On 2/26/19 11:24 AM, Andy Shevchenko wrote:
+> > Some masters may have different DMA burst size than hard coded default.
+> > In such case respect the value given by dma-burst-size property.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >   drivers/spi/spi-pxa2xx-dma.c   | 4 +++-
+> >   drivers/spi/spi-pxa2xx-pci.c   | 8 +++++++-
+> >   drivers/spi/spi-pxa2xx.c       | 5 ++++-
+> >   include/linux/spi/pxa2xx_spi.h | 1 +
+> >   4 files changed, 15 insertions(+), 3 deletions(-)
+> ...
+> > @@ -1566,9 +1568,10 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+> >   	ssp->pdev = pdev;
+> >   	ssp->port_id = pxa2xx_spi_get_port_id(adev);
+> > -	pdata->is_slave = of_property_read_bool(pdev->dev.of_node, "spi-slave");
+> > +	pdata->is_slave = device_property_read_bool(dev, "spi-slave");
+> 
+> Unrelated change. Not sure is it worth of its own patch.
 
-Please do not mention wm8524 in a SoC dtsi file commit message.
+Fixed in v2.
 
-It is the imx8mq-evk board that uses this codec and this information
-is not SoC related.
+-- 
+With Best Regards,
+Andy Shevchenko
