@@ -1,134 +1,351 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845: Add GEN2 PCIe controller and PHY
-Date: Mon, 25 Feb 2019 23:05:25 -0800
-Message-ID: <20190226070525.22453-1-bjorn.andersson@linaro.org>
+From: Ley Foon Tan <lftan.linux@gmail.com>
+Subject: Re: [PATCH v4 1/3] PCI: altera: Add Stratix 10 PCIe support
+Date: Tue, 26 Feb 2019 15:07:29 +0800
+Message-ID: <CAFiDJ59U2eJPhbh9AK_N6v8rtV1XdRZek1e9sdt6BqdOBtR=LA@mail.gmail.com>
+References: <1550157638-25112-1-git-send-email-ley.foon.tan@intel.com>
+ <1550157638-25112-2-git-send-email-ley.foon.tan@intel.com>
+ <20190219162313.GB21833@e107981-ln.cambridge.arm.com> <1551087307.2534.16.camel@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1551087307.2534.16.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ley Foon Tan <ley.foon.tan@intel.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SDM845 sports two PCIe controller/phy pairs; one GEN2 and one GEN3. Add
-the nodes for the GEN2 pair.
+On Mon, Feb 25, 2019 at 5:35 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
+>
+> On Tue, 2019-02-19 at 16:23 +0000, Lorenzo Pieralisi wrote:
+> > On Thu, Feb 14, 2019 at 11:20:36PM +0800, Ley Foon Tan wrote:
+> > >
+> > > Add PCIe Root Port support for Stratix 10 device.
+> > >
+> > > Main differences:
+> > Main differences with what ? We need to rewrite this commit log.
+> Differences compare with Cyclone V and Arria 10 devices.
+> I will rewrite this.
+> >
+> > >
+> > > - HIP interface to access Root Port configuration register.
+> > > - TLP programming flow:
+> > >   - One REG0 register
+> > >   - Don't need to check alignment
+> > >
+> > > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-altera.c |  246
+> > > ++++++++++++++++++++++++++++++----
+> > >  1 files changed, 222 insertions(+), 24 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-altera.c
+> > > b/drivers/pci/controller/pcie-altera.c
+> > > index 7d05e51..76bb6a6 100644
+> > > --- a/drivers/pci/controller/pcie-altera.c
+> > > +++ b/drivers/pci/controller/pcie-altera.c
+> > > @@ -11,6 +11,7 @@
+> > >  #include <linux/irqchip/chained_irq.h>
+> > >  #include <linux/init.h>
+> > >  #include <linux/of_address.h>
+> > > +#include <linux/of_device.h>
+> > >  #include <linux/of_irq.h>
+> > >  #include <linux/of_pci.h>
+> > >  #include <linux/pci.h>
+> > > @@ -37,7 +38,12 @@
+> > >  #define RP_LTSSM_MASK                      0x1f
+> > >  #define LTSSM_L0                   0xf
+> > >
+> > > -#define PCIE_CAP_OFFSET                    0x80
+> > > +#define S10_RP_TX_CNTRL                    0x2004
+> > > +#define S10_RP_RXCPL_REG           0x2008
+> > > +#define S10_RP_RXCPL_STATUS                0x200C
+> > > +#define S10_RP_CFG_ADDR(pcie, reg) \
+> > > +   (((pcie)->hip_base) + (reg) + (1 << 20))
+> > > +
+> > >  /* TLP configuration type 0 and 1 */
+> > >  #define TLP_FMTTYPE_CFGRD0         0x04    /*
+> > > Configuration Read Type 0 */
+> > >  #define TLP_FMTTYPE_CFGWR0         0x44    /*
+> > > Configuration Write Type 0 */
+> > > @@ -49,18 +55,19 @@
+> > >  #define RP_DEVFN                   0
+> > >  #define TLP_REQ_ID(bus, devfn)             (((bus) << 8) |
+> > > (devfn))
+> > >  #define TLP_CFGRD_DW0(pcie, bus)
+> > > \
+> > > -    ((((bus == pcie->root_bus_nr) ? TLP_FMTTYPE_CFGRD0
+> > >     \
+> > > -                               : TLP_FMTTYPE_CFGRD1) << 24) |
+> > >     \
+> > > -     TLP_PAYLOAD_SIZE)
+> > > +   ((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgrd0
+> > >     \
+> > > +                           : pcie->pcie_data->cfgrd1) << 24)
+> > > |   \
+> > > +                           TLP_PAYLOAD_SIZE)
+> > >  #define TLP_CFGWR_DW0(pcie, bus)
+> > > \
+> > > -    ((((bus == pcie->root_bus_nr) ? TLP_FMTTYPE_CFGWR0
+> > >     \
+> > > -                               : TLP_FMTTYPE_CFGWR1) << 24) |
+> > >     \
+> > > -     TLP_PAYLOAD_SIZE)
+> > > +   ((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0
+> > >     \
+> > > +                           : pcie->pcie_data->cfgwr1) << 24)
+> > > |   \
+> > > +                           TLP_PAYLOAD_SIZE)
+> > >  #define TLP_CFG_DW1(pcie, tag, be) \
+> > > -    (((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag <<
+> > > 8) | (be))
+> > > +   (((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag
+> > > << 8) | (be))
+> > >  #define TLP_CFG_DW2(bus, devfn, offset)    \
+> > >                             (((bus) << 24) | ((devfn) << 16) |
+> > > (offset))
+> > >  #define TLP_COMP_STATUS(s)         (((s) >> 13) & 7)
+> > > +#define TLP_BYTE_COUNT(s)          (((s) >> 0) & 0xfff)
+> > >  #define TLP_HDR_SIZE                       3
+> > >  #define TLP_LOOP                   500
+> > >
+> > > @@ -69,14 +76,43 @@
+> > >
+> > >  #define DWORD_MASK                 3
+> > >
+> > > +#define S10_TLP_FMTTYPE_CFGRD0             0x05
+> > > +#define S10_TLP_FMTTYPE_CFGRD1             0x04
+> > > +#define S10_TLP_FMTTYPE_CFGWR0             0x45
+> > > +#define S10_TLP_FMTTYPE_CFGWR1             0x44
+> > > +
+> > > +enum altera_pcie_version {
+> > > +   ALTERA_PCIE_V1 = 0,
+> > > +   ALTERA_PCIE_V2,
+> > > +};
+> > > +
+> > >  struct altera_pcie {
+> > >     struct platform_device  *pdev;
+> > > -   void __iomem            *cra_base;      /* DT Cra */
+> > > +   void __iomem            *cra_base;
+> > > +   void __iomem            *hip_base;
+> > >     int                     irq;
+> > >     u8                      root_bus_nr;
+> > >     struct irq_domain       *irq_domain;
+> > >     struct resource         bus_range;
+> > >     struct list_head        resources;
+> > > +   const struct altera_pcie_data   *pcie_data;
+> > > +};
+> > > +
+> > > +struct altera_pcie_data {
+> > > +   int (*tlp_read_pkt)(struct altera_pcie *pcie, u32 *value);
+> > > +   void (*tlp_write_pkt)(struct altera_pcie *pcie, u32
+> > > *headers,
+> > > +                         u32 data, bool align);
+> > > +   bool (*get_link_status)(struct altera_pcie *pcie);
+> > > +   int (*rp_read_cfg)(struct altera_pcie *pcie, int where,
+> > > +                      int size, u32 *value);
+> > > +   int (*rp_write_cfg)(struct altera_pcie *pcie, u8 bus, int
+> > > where,
+> > > +                       int size, u32 value);
+> > > +   enum altera_pcie_version version;
+> > > +   u32 cap_offset;         /* PCIe capability
+> > > structure register offset */
+> > This is a duplication of struct pci_dev.pcie_cap right ?
+>
+> This is register offset in PCIe Rootport IP to access PCIe Cap
+> structure register of directly RP. This allow us to access PCIe cap
+> struct register without pci_dev.
+>
+> >
+> > >
+> > > +   u32 cfgrd0;
+> > > +   u32 cfgrd1;
+> > > +   u32 cfgwr0;
+> > > +   u32 cfgwr1;
+> > >  };
+> > >
+> > >  struct tlp_rp_regpair_t {
+> > > @@ -101,6 +137,15 @@ static bool altera_pcie_link_up(struct
+> > > altera_pcie *pcie)
+> > >     return !!((cra_readl(pcie, RP_LTSSM) & RP_LTSSM_MASK) ==
+> > > LTSSM_L0);
+> > >  }
+> > >
+> > > +static bool s10_altera_pcie_link_up(struct altera_pcie *pcie)
+> > > +{
+> > > +   void __iomem *addr = S10_RP_CFG_ADDR(pcie,
+> > > +                              pcie->pcie_data->cap_offset +
+> > > +                              PCI_EXP_LNKSTA);
+> > > +
+> > > +   return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
+> > > +}
+> > > +
+> > >  /*
+> > >   * Altera PCIe port uses BAR0 of RC's configuration space as the
+> > > translation
+> > >   * from PCI bus to native BUS.  Entire DDR region is mapped into
+> > > PCIe space
+> > > @@ -128,12 +173,18 @@ static void tlp_write_tx(struct altera_pcie
+> > > *pcie,
+> > >     cra_writel(pcie, tlp_rp_regdata->ctrl, RP_TX_CNTRL);
+> > >  }
+> > >
+> > > +static void s10_tlp_write_tx(struct altera_pcie *pcie, u32 reg0,
+> > > u32 ctrl)
+> > > +{
+> > > +   cra_writel(pcie, reg0, RP_TX_REG0);
+> > > +   cra_writel(pcie, ctrl, S10_RP_TX_CNTRL);
+> > > +}
+> > > +
+> > >  static bool altera_pcie_valid_device(struct altera_pcie *pcie,
+> > >                                  struct pci_bus *bus, int dev)
+> > >  {
+> > >     /* If there is no link, then there is no device */
+> > >     if (bus->number != pcie->root_bus_nr) {
+> > > -           if (!altera_pcie_link_up(pcie))
+> > > +           if (!pcie->pcie_data->get_link_status(pcie))
+> > >                     return false;
+> > >     }
+> > >
+> > > @@ -183,6 +234,46 @@ static int tlp_read_packet(struct altera_pcie
+> > > *pcie, u32 *value)
+> > >     return PCIBIOS_DEVICE_NOT_FOUND;
+> > >  }
+> > >
+> > > +static int s10_tlp_read_packet(struct altera_pcie *pcie, u32
+> > > *value)
+> > > +{
+> > > +   int i;
+> > > +   u32 ctrl;
+> > > +   u32 comp_status;
+> > > +   u32 dw[4];
+> > > +   u32 count = 0;
+> > > +
+> > > +   for (i = 0; i < TLP_LOOP; i++) {
+> > > +           ctrl = cra_readl(pcie, S10_RP_RXCPL_STATUS);
+> > > +           if (!(ctrl & RP_RXCPL_SOP))
+> > > +                   continue;
+> > > +
+> > > +           /* Read first DW */
+> > > +           dw[count++] = cra_readl(pcie, S10_RP_RXCPL_REG);
+> > > +
+> > > +           /* Poll for EOP */
+> > > +           for (i = 0; i < TLP_LOOP; i++) {
+> > > +                   ctrl = cra_readl(pcie,
+> > > S10_RP_RXCPL_STATUS);
+> > > +                   dw[count++] = cra_readl(pcie,
+> > > S10_RP_RXCPL_REG);
+> > I think you'd better add a check on count lest it can overflow dw[].
+> Okay, will check that.
+> >
+> > >
+> > > +                   if (ctrl & RP_RXCPL_EOP) {
+> > > +                           comp_status =
+> > > TLP_COMP_STATUS(dw[1]);
+> > > +                           if (comp_status)
+> > > +                                   return
+> > > PCIBIOS_DEVICE_NOT_FOUND;
+> > > +
+> > > +                           if (value &&
+> > > +                               TLP_BYTE_COUNT(dw[1]) ==
+> > > sizeof(u32) &&
+> > > +                               count >= 3)
+> > > +                                   *value = dw[3];
+> > > +
+> > > +                           return PCIBIOS_SUCCESSFUL;
+> > > +                   }
+> > > +           }
+> > > +
+> > > +           udelay(5);
+> > > +   }
+> > > +
+> > > +   return PCIBIOS_DEVICE_NOT_FOUND;
+> > > +}
+> > > +
+> > >  static void tlp_write_packet(struct altera_pcie *pcie, u32
+> > > *headers,
+> > >                          u32 data, bool align)
+> > >  {
+> > > @@ -210,6 +301,15 @@ static void tlp_write_packet(struct
+> > > altera_pcie *pcie, u32 *headers,
+> > >     tlp_write_tx(pcie, &tlp_rp_regdata);
+> > >  }
+> > >
+> > > +static void s10_tlp_write_packet(struct altera_pcie *pcie, u32
+> > > *headers,
+> > > +                            u32 data, bool dummy)
+> > > +{
+> > > +   s10_tlp_write_tx(pcie, headers[0], RP_TX_SOP);
+> > > +   s10_tlp_write_tx(pcie, headers[1], 0);
+> > > +   s10_tlp_write_tx(pcie, headers[2], 0);
+> > > +   s10_tlp_write_tx(pcie, data, RP_TX_EOP);
+> > > +}
+> > > +
+> > >  static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus,
+> > > u32 devfn,
+> > >                           int where, u8 byte_en, u32 *value)
+> > >  {
+> > > @@ -219,9 +319,9 @@ static int tlp_cfg_dword_read(struct
+> > > altera_pcie *pcie, u8 bus, u32 devfn,
+> > >     headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
+> > >     headers[2] = TLP_CFG_DW2(bus, devfn, where);
+> > >
+> > > -   tlp_write_packet(pcie, headers, 0, false);
+> > > +   pcie->pcie_data->tlp_write_pkt(pcie, headers, 0, false);
+> > >
+> > > -   return tlp_read_packet(pcie, value);
+> > > +   return pcie->pcie_data->tlp_read_pkt(pcie, value);
+> > >  }
+> > >
+> > >  static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus,
+> > > u32 devfn,
+> > > @@ -236,11 +336,11 @@ static int tlp_cfg_dword_write(struct
+> > > altera_pcie *pcie, u8 bus, u32 devfn,
+> > >
+> > >     /* check alignment to Qword */
+> > >     if ((where & 0x7) == 0)
+> > > -           tlp_write_packet(pcie, headers, value, true);
+> > > +           pcie->pcie_data->tlp_write_pkt(pcie, headers,
+> > > value, true);
+> > >     else
+> > > -           tlp_write_packet(pcie, headers, value, false);
+> > > +           pcie->pcie_data->tlp_write_pkt(pcie, headers,
+> > > value, false);
+> > >
+> > > -   ret = tlp_read_packet(pcie, NULL);
+> > > +   ret = pcie->pcie_data->tlp_read_pkt(pcie, NULL);
+> > >     if (ret != PCIBIOS_SUCCESSFUL)
+> > >             return ret;
+> > >
+> > > @@ -254,6 +354,53 @@ static int tlp_cfg_dword_write(struct
+> > > altera_pcie *pcie, u8 bus, u32 devfn,
+> > >     return PCIBIOS_SUCCESSFUL;
+> > >  }
+> > >
+> > > +static int s10_rp_read_cfg(struct altera_pcie *pcie, int where,
+> > > +                      int size, u32 *value)
+> > > +{
+> > > +   void *addr = S10_RP_CFG_ADDR(pcie, where);
+> > > +
+> > > +   switch (size) {
+> > > +   case 1:
+> > > +           *value = readb(addr);
+> > > +           break;
+> > > +   case 2:
+> > > +           *value = readw(addr);
+> > > +           break;
+> > > +   default:
+> > > +           *value = readl(addr);
+> > > +           break;
+> > > +   }
+> > This boilerplace could be avoided if you used generic config
+> > accessors (ie pci_generic_config_read()/write()).
+> Okay. I will change this.
+I just remembered that, we can't use pci_generic_config_read/write()
+here because we need access to
+Root port PCIe capabilities struct register to retrain PCIe link
+before struct pci_bus *bus is available.
+pci_generic_config_read/write() function needs struct pci_bus *bus.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 103 +++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 5308f1671824..43848653babd 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1024,6 +1024,109 @@
- 			};
- 		};
- 
-+		pcie0: pci@1c00000 {
-+			compatible = "qcom,pcie-sdm845", "snps,dw-pcie";
-+			ret = <0 0x01c00000 0 0x2000>,
-+			      <0 0x60000000 0 0xf1d>,
-+			      <0 0x60000f20 0 0xa8>,
-+			      <0 0x60100000 0 0x100000>;
-+			reg-names = "parf", "dbi", "elbi", "config";
-+			device_type = "pci";
-+			linux,pci-domain = <0>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <1>;
-+
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
-+				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0xd00000>;
-+
-+			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+					<0 0 0 2 &intc 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+					<0 0 0 3 &intc 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+					<0 0 0 4 &intc 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+
-+			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
-+				 <&gcc GCC_PCIE_0_AUX_CLK>,
-+				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-+				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
-+				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
-+			clock-names = "pipe",
-+				      "aux",
-+				      "cfg",
-+				      "bus_master",
-+				      "bus_slave",
-+				      "slave_q2a",
-+				      "tbu";
-+
-+			iommu-map = <0x0 &apps_smmu 0x1c10 0x1>,
-+				    <0x100 &apps_smmu 0x1c11 0x1>,
-+				    <0x200 &apps_smmu 0x1c12 0x1>,
-+				    <0x300 &apps_smmu 0x1c13 0x1>,
-+				    <0x400 &apps_smmu 0x1c14 0x1>,
-+				    <0x500 &apps_smmu 0x1c15 0x1>,
-+				    <0x600 &apps_smmu 0x1c16 0x1>,
-+				    <0x700 &apps_smmu 0x1c17 0x1>,
-+				    <0x800 &apps_smmu 0x1c18 0x1>,
-+				    <0x900 &apps_smmu 0x1c19 0x1>,
-+				    <0xa00 &apps_smmu 0x1c1a 0x1>,
-+				    <0xb00 &apps_smmu 0x1c1b 0x1>,
-+				    <0xc00 &apps_smmu 0x1c1c 0x1>,
-+				    <0xd00 &apps_smmu 0x1c1d 0x1>,
-+				    <0xe00 &apps_smmu 0x1c1e 0x1>,
-+				    <0xf00 &apps_smmu 0x1c1f 0x1>;
-+
-+			resets = <&gcc GCC_PCIE_0_BCR>;
-+			reset-names = "pci";
-+
-+			power-domains = <&gcc PCIE_0_GDSC>;
-+
-+			phys = <&pcie0_lane>;
-+			phy-names = "pciephy";
-+
-+			status = "disabled";
-+		};
-+
-+		pcie0_phy: phy@1c06000 {
-+			compatible = "qcom,sdm845-qmp-pcie-phy";
-+			reg = <0 0x01c06000 0 0x18c>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-+				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_0_CLKREF_CLK>,
-+				 <&gcc GCC_PCIE_PHY_REFGEN_CLK>;
-+			clock-names = "aux", "cfg_ahb", "ref", "refgen";
-+
-+			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-+			reset-names = "phy";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_PHY_REFGEN_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			status = "disabled";
-+
-+			pcie0_lane: lanes@1c06200 {
-+				reg = <0 0x01c06200 0 0x128>,
-+				      <0 0x01c06400 0 0x1fc>,
-+				      <0 0x01c06800 0 0x218>,
-+				      <0 0x01c06600 0 0x70>;
-+				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-+				clock-names = "pipe0";
-+
-+				#phy-cells = <0>;
-+				clock-output-names = "pcie_0_pipe_clk";
-+			};
-+		};
-+
- 		ufs_mem_hc: ufshc@1d84000 {
- 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
- 				     "jedec,ufs-2.0";
--- 
-2.18.0
+Regards
+Ley Foon
