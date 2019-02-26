@@ -1,49 +1,73 @@
-Return-Path: <SRS0=OE9M=RC=linux.intel.com=jarkko.nikula@kernel.org>
+Return-Path: <SRS0=U2vk=RB=synopsys.com=luis.oliveira@kernel.org>
 Subject: Re: [PATCH v4 1/2] dt: snps,designware-i2c: Add clock bindings
  documentation
 References: <1550765459-14519-1-git-send-email-gareth.williams.jx@renesas.com>
  <1550765459-14519-2-git-send-email-gareth.williams.jx@renesas.com>
  <de2a72f3-6d2c-cc18-73f3-1e925bd5b88f@linux.intel.com>
- <20190226153921.GC839@kunai>
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <8ad4aca6-cdbd-d2bf-81e2-5e2cd04a05c0@linux.intel.com>
-Date: Wed, 27 Feb 2019 09:10:14 +0200
+From: Luis de Oliveira <luis.oliveira@synopsys.com>
+Message-ID: <84a5eb6b-8d5c-fc26-5e28-fadce9ff4978@synopsys.com>
+Date: Tue, 26 Feb 2019 18:39:20 +0000
 MIME-Version: 1.0
-In-Reply-To: <20190226153921.GC839@kunai>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <de2a72f3-6d2c-cc18-73f3-1e925bd5b88f@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Gareth Williams <gareth.williams.jx@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Luis Oliveira <Luis.Oliveira@synopsys.com>
+Content-Transfer-Encoding: quoted-printable
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Gareth Williams <gareth.williams.jx@renesas.com>, Rob Herring <robh+dt@kernel.org>, "Mark Rutland  <mark.rutland@arm.com>, Alexandre Belloni" <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Luis Oliveira <luis.oliveira@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 2/26/19 5:39 PM, Wolfram Sang wrote:
-> 
->>> + - clock-names : Contains the names of the clocks:
->>> +    "ic_clk", for the core clock used to generate the external I2C clock.
->>> +    "pclk", the peripheral clock, required for register accesses.
->>> +
+Hi,
+
+Yes Jarkko.
+Registers are on the PCLK domain (applications clock) and the IC_CLK is t=
+he
+clock that controls peripheral logic (like SCL definition).
+
+Thanks!
+
+On 26-Feb-19 14:54, Jarkko Nikula wrote:
+> Hi
+>=20
+> + Luis from Synopsys.
+>=20
+> Sorry the delay, I was out of office last week. Comment below.
+>=20
+> On 2/21/19 6:10 PM, Gareth Williams wrote:
+>> From: Phil Edworthy <phil.edworthy@renesas.com>
 >>
->> Actually it looks there is need to revert back to bus clock (or better) in
->> comments but keep the "pclk" property.
+>> The driver requires an undocumented clock property, so detail it.
+>> Add documentation for a separate, optional, peripheral clock.
 >>
->> The specification I have tells the ic_clk is the peripheral clock which runs
->> the logic and the pclk (exactly pclk) is for bus interface and where
->> registers are.
-> 
-> Can we make it "bus interface clock" then? I'd think this is a tad
-> better.
-> 
-Yes, that makes it clear. Plain "interface clock" might work too. TI 
-OMAPs are using that term for register access clock domains.
-
-Luis: Does that make sense for HW point of view? You mention PCLK is 
-called also as application clock but for me personally it is not as 
-clear as interface clock when I see it. I'll let Luis have the final 
-word here.
-
-ic_clk - peripheral clock
-pclk - (bus) interface/application clock
-
--- 
-Jarkko
+>> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+>> Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>> ---
+>> v4:
+>> =C2=A0 - Updated commit message to reference "peripheral clock" instea=
+d of
+>> =C2=A0=C2=A0=C2=A0 "bus clock"
+>> =C2=A0 - Added Wolfram's Acked-by
+>> v3:
+>> =C2=A0 - Changed clocks and clock-names sections to use term "peripher=
+al clock"
+>> =C2=A0=C2=A0=C2=A0 (pclk) instead of "bus clock" (busclk).
+> ...
+>> =C2=A0 Optional properties :
+>> +
+>> + - clock-names : Contains the names of the clocks:
+>> +=C2=A0=C2=A0=C2=A0 "ic_clk", for the core clock used to generate the =
+external I2C clock.
+>> +=C2=A0=C2=A0=C2=A0 "pclk", the peripheral clock, required for registe=
+r accesses.
+>> +
+>=20
+> Actually it looks there is need to revert back to bus clock (or better)=
+ in
+> comments but keep the "pclk" property.
+>=20
+> The specification I have tells the ic_clk is the peripheral clock which=
+ runs the
+> logic and the pclk (exactly pclk) is for bus interface and where regist=
+ers are.
+>=20
+> Luis: did I interpret it right?
+>=20
