@@ -1,264 +1,134 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] pcie: qcom: Add support for sdm845 PCIe controller
-Date: Mon, 25 Feb 2019 23:01:25 -0800
-Message-ID: <20190226070125.22318-1-bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845: Add GEN2 PCIe controller and PHY
+Date: Mon, 25 Feb 2019 23:05:25 -0800
+Message-ID: <20190226070525.22453-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The SDM845 has one Gen2 and one Gen3 controller, add support for these.
-
-Due to lack of hardware only the Gen2 controller has been verified.
+SDM845 sports two PCIe controller/phy pairs; one GEN2 and one GEN3. Add
+the nodes for the GEN2 pair.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../devicetree/bindings/pci/qcom,pcie.txt     |  19 +++
- drivers/pci/controller/dwc/pcie-qcom.c        | 146 ++++++++++++++++++
- 2 files changed, 165 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 103 +++++++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 1fd703bd73e0..2cf92ed39499 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -10,6 +10,7 @@
- 			- "qcom,pcie-msm8996" for msm8996 or apq8096
- 			- "qcom,pcie-ipq4019" for ipq4019
- 			- "qcom,pcie-ipq8074" for ipq8074
-+			- "qcom,pcie-sdm845" for sdm845
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 5308f1671824..43848653babd 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1024,6 +1024,109 @@
+ 			};
+ 		};
  
- - reg:
- 	Usage: required
-@@ -116,6 +117,18 @@
- 			- "ahb"		AHB clock
- 			- "aux"		Auxiliary clock
- 
-+- clock-names:
-+	Usage: required for sdm845
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+			- "aux"		Auxiliary clock
-+			- "cfg"		Configuration clock
-+			- "bus_master"	Master AXI clock
-+			- "bus_slave"	Slave AXI clock
-+			- "slave_q2a"	Slave Q2A clock
-+			- "tbu"		PCIe TBU clock
-+			- "pipe"	PIPE clock
++		pcie0: pci@1c00000 {
++			compatible = "qcom,pcie-sdm845", "snps,dw-pcie";
++			ret = <0 0x01c00000 0 0x2000>,
++			      <0 0x60000000 0 0xf1d>,
++			      <0 0x60000f20 0 0xa8>,
++			      <0 0x60100000 0 0x100000>;
++			reg-names = "parf", "dbi", "elbi", "config";
++			device_type = "pci";
++			linux,pci-domain = <0>;
++			bus-range = <0x00 0xff>;
++			num-lanes = <1>;
 +
- - resets:
- 	Usage: required
- 	Value type: <prop-encoded-array>
-@@ -167,6 +180,12 @@
- 			- "ahb"			AHB Reset
- 			- "axi_m_sticky"	AXI Master Sticky reset
- 
-+- reset-names:
-+	Usage: required for sdm845
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+			- "pci"			PCIe core reset
++			#address-cells = <3>;
++			#size-cells = <2>;
 +
- - power-domains:
- 	Usage: required for apq8084 and msm8996/apq8096
- 	Value type: <prop-encoded-array>
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index d185ea5fe996..5147454a6ae5 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -54,6 +54,7 @@
- #define PCIE20_PARF_LTSSM			0x1B0
- #define PCIE20_PARF_SID_OFFSET			0x234
- #define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
-+#define PCIE20_PARF_DEVICE_TYPE			0x1000
- 
- #define PCIE20_ELBI_SYS_CTRL			0x04
- #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
-@@ -80,6 +81,8 @@
- #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
- #define SLV_ADDR_SPACE_SZ			0x10000000
- 
-+#define DEVICE_TYPE_RC				0x4
++			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
++				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0xd00000>;
 +
- #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
- struct qcom_pcie_resources_2_1_0 {
- 	struct clk *iface_clk;
-@@ -139,12 +142,21 @@ struct qcom_pcie_resources_2_3_3 {
- 	struct reset_control *rst[7];
- };
- 
-+struct qcom_pcie_resources_2_7_0 {
-+	struct clk_bulk_data clks[6];
-+	struct regulator_bulk_data supplies[2];
++			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++					<0 0 0 2 &intc 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++					<0 0 0 3 &intc 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++					<0 0 0 4 &intc 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
 +
-+	struct reset_control *pci_reset;
-+	struct clk *pipe_clk;
-+};
++			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
++				 <&gcc GCC_PCIE_0_AUX_CLK>,
++				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
++				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
++				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
++				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
++				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
++			clock-names = "pipe",
++				      "aux",
++				      "cfg",
++				      "bus_master",
++				      "bus_slave",
++				      "slave_q2a",
++				      "tbu";
 +
- union qcom_pcie_resources {
- 	struct qcom_pcie_resources_1_0_0 v1_0_0;
- 	struct qcom_pcie_resources_2_1_0 v2_1_0;
- 	struct qcom_pcie_resources_2_3_2 v2_3_2;
- 	struct qcom_pcie_resources_2_3_3 v2_3_3;
- 	struct qcom_pcie_resources_2_4_0 v2_4_0;
-+	struct qcom_pcie_resources_2_7_0 v2_7_0;
- };
- 
- struct qcom_pcie;
-@@ -1076,6 +1088,129 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
- 	return ret;
- }
- 
-+static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int ret;
++			iommu-map = <0x0 &apps_smmu 0x1c10 0x1>,
++				    <0x100 &apps_smmu 0x1c11 0x1>,
++				    <0x200 &apps_smmu 0x1c12 0x1>,
++				    <0x300 &apps_smmu 0x1c13 0x1>,
++				    <0x400 &apps_smmu 0x1c14 0x1>,
++				    <0x500 &apps_smmu 0x1c15 0x1>,
++				    <0x600 &apps_smmu 0x1c16 0x1>,
++				    <0x700 &apps_smmu 0x1c17 0x1>,
++				    <0x800 &apps_smmu 0x1c18 0x1>,
++				    <0x900 &apps_smmu 0x1c19 0x1>,
++				    <0xa00 &apps_smmu 0x1c1a 0x1>,
++				    <0xb00 &apps_smmu 0x1c1b 0x1>,
++				    <0xc00 &apps_smmu 0x1c1c 0x1>,
++				    <0xd00 &apps_smmu 0x1c1d 0x1>,
++				    <0xe00 &apps_smmu 0x1c1e 0x1>,
++				    <0xf00 &apps_smmu 0x1c1f 0x1>;
 +
-+	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
-+	if (IS_ERR(res->pci_reset))
-+		return PTR_ERR(res->pci_reset);
++			resets = <&gcc GCC_PCIE_0_BCR>;
++			reset-names = "pci";
 +
-+	res->supplies[0].supply = "vdda";
-+	res->supplies[1].supply = "vddpe-3v3";
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(res->supplies),
-+				      res->supplies);
-+	if (ret)
-+		return ret;
++			power-domains = <&gcc PCIE_0_GDSC>;
 +
-+	res->clks[0].id = "aux";
-+	res->clks[1].id = "cfg";
-+	res->clks[2].id = "bus_master";
-+	res->clks[3].id = "bus_slave";
-+	res->clks[4].id = "slave_q2a";
-+	res->clks[5].id = "tbu";
++			phys = <&pcie0_lane>;
++			phy-names = "pciephy";
 +
-+	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-+	if (ret < 0)
-+		return ret;
++			status = "disabled";
++		};
 +
-+	res->pipe_clk = devm_clk_get(dev, "pipe");
-+	return PTR_ERR_OR_ZERO(res->pipe_clk);
-+}
++		pcie0_phy: phy@1c06000 {
++			compatible = "qcom,sdm845-qmp-pcie-phy";
++			reg = <0 0x01c06000 0 0x18c>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
++				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
++				 <&gcc GCC_PCIE_0_CLKREF_CLK>,
++				 <&gcc GCC_PCIE_PHY_REFGEN_CLK>;
++			clock-names = "aux", "cfg_ahb", "ref", "refgen";
 +
-+static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	u32 val;
-+	int ret;
++			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
++			reset-names = "phy";
 +
-+	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot enable regulators\n");
-+		return ret;
-+	}
++			assigned-clocks = <&gcc GCC_PCIE_PHY_REFGEN_CLK>;
++			assigned-clock-rates = <100000000>;
 +
-+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-+	if (ret < 0)
-+		goto err_disable_regulators;
++			status = "disabled";
 +
-+	ret = reset_control_assert(res->pci_reset);
-+	if (ret) {
-+		dev_err(dev, "cannot deassert pci reset\n");
-+		return ret;
-+	}
++			pcie0_lane: lanes@1c06200 {
++				reg = <0 0x01c06200 0 0x128>,
++				      <0 0x01c06400 0 0x1fc>,
++				      <0 0x01c06800 0 0x218>,
++				      <0 0x01c06600 0 0x70>;
++				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
++				clock-names = "pipe0";
 +
-+	msleep(10);
++				#phy-cells = <0>;
++				clock-output-names = "pcie_0_pipe_clk";
++			};
++		};
 +
-+	ret = reset_control_deassert(res->pci_reset);
-+	if (ret) {
-+		dev_err(dev, "cannot deassert pci reset\n");
-+		return ret;
-+	}
-+
-+	clk_prepare_enable(res->pipe_clk);
-+
-+	/* configure PCIe to RC mode */
-+	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
-+
-+	/* enable PCIe clocks and resets */
-+	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-+	val &= ~BIT(0);
-+	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-+
-+	/* change DBI base address */
-+	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-+
-+	/* MAC PHY_POWERDOWN MUX DISABLE  */
-+	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
-+	val &= ~BIT(29);
-+	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
-+
-+	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-+	val |= BIT(4);
-+	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-+		val |= BIT(31);
-+		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-+	}
-+
-+	return 0;
-+
-+err_disable_regulators:
-+	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
-+
-+	return ret;
-+}
-+
-+static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-+	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
-+}
-+
-+static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+
-+	return clk_prepare_enable(res->pipe_clk);
-+}
-+
-+static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+
-+	clk_disable_unprepare(res->pipe_clk);
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 val = readw(pci->dbi_base + PCIE20_CAP + PCI_EXP_LNKSTA);
-@@ -1192,6 +1327,16 @@ static const struct qcom_pcie_ops ops_2_3_3 = {
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
-+/* Qcom IP rev.: 2.7.0	Synopsys IP rev.: 4.30a */
-+static const struct qcom_pcie_ops ops_2_7_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_7_0,
-+	.init = qcom_pcie_init_2_7_0,
-+	.deinit = qcom_pcie_deinit_2_7_0,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+	.post_init = qcom_pcie_post_init_2_7_0,
-+	.post_deinit = qcom_pcie_post_deinit_2_7_0,
-+};
-+
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- };
-@@ -1306,6 +1451,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
-+	{ .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
- 	{ }
- };
- 
+ 		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
 -- 
 2.18.0
