@@ -1,13 +1,18 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V7 2/2] clk: imx: scu: add cpu frequency scaling support
-Date: Tue, 26 Feb 2019 05:17:36 +0000
-Message-ID: <1551157967-30925-2-git-send-email-Anson.Huang@nxp.com>
-References: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH RESEND V6 2/2] clk: imx: scu: add cpu frequency scaling
+ support
+Date: Tue, 26 Feb 2019 05:18:08 +0000
+Message-ID: <DB3PR0402MB3916536B5BDD5CD17E9E04BFF57B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1550802436-13007-1-git-send-email-Anson.Huang@nxp.com>
+ <1550802436-13007-2-git-send-email-Anson.Huang@nxp.com>
+ <155086249004.77512.8709011386763447047@swboyd.mtv.corp.google.com>
+ <DB3PR0402MB3916BA142113B84C0199C93EF5780@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <155111530880.77512.16435986555733393398@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <155111530880.77512.16435986555733393398@swboyd.mtv.corp.google.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -18,102 +23,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On NXP's i.MX SoCs with system controller inside, CPU frequency
-scaling can ONLY be done by system controller firmware, and it
-can ONLY be requested from secure mode, so Linux kernel has to
-call ARM SMC to trap to ARM-Trusted-Firmware to request system
-controller firmware to do CPU frequency scaling.
-
-This patch adds i.MX system controller CPU frequency scaling support,
-it reuses cpufreq-dt driver and implement the CPU frequency scaling
-inside SCU clock driver.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V6:
-	- add return fail to clk_scu_atf_set_cpu_rate() when the resource ID
-	  is NOT expected, this is to avoid warning of uninitialized data usage.
----
- drivers/clk/imx/clk-scu.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
-index f460526..fbef740 100644
---- a/drivers/clk/imx/clk-scu.c
-+++ b/drivers/clk/imx/clk-scu.c
-@@ -4,12 +4,17 @@
-  *   Dong Aisheng <aisheng.dong@nxp.com>
-  */
- 
-+#include <dt-bindings/firmware/imx/rsrc.h>
-+#include <linux/arm-smccc.h>
- #include <linux/clk-provider.h>
- #include <linux/err.h>
- #include <linux/slab.h>
- 
- #include "clk-scu.h"
- 
-+#define IMX_SIP_CPUFREQ			0xC2000001
-+#define IMX_SIP_SET_CPUFREQ		0x00
-+
- static struct imx_sc_ipc *ccm_ipc_handle;
- 
- /*
-@@ -180,6 +185,25 @@ static long clk_scu_round_rate(struct clk_hw *hw, unsigned long rate,
- 	return rate;
- }
- 
-+static int clk_scu_atf_set_cpu_rate(struct clk_hw *hw, unsigned long rate,
-+				    unsigned long parent_rate)
-+{
-+	struct clk_scu *clk = to_clk_scu(hw);
-+	struct arm_smccc_res res;
-+	unsigned long cluster_id;
-+
-+	if (clk->rsrc_id == IMX_SC_R_A35)
-+		cluster_id = 0;
-+	else
-+		return -EINVAL;
-+
-+	/* CPU frequency scaling can ONLY be done by ARM-Trusted-Firmware */
-+	arm_smccc_smc(IMX_SIP_CPUFREQ, IMX_SIP_SET_CPUFREQ,
-+		      cluster_id, rate, 0, 0, 0, 0, &res);
-+
-+	return 0;
-+}
-+
- /*
-  * clk_scu_set_rate - Set rate for a SCU clock
-  * @hw: clock to change rate for
-@@ -312,6 +336,14 @@ static const struct clk_ops clk_scu_ops = {
- 	.unprepare = clk_scu_unprepare,
- };
- 
-+static const struct clk_ops clk_scu_cpu_ops = {
-+	.recalc_rate = clk_scu_recalc_rate,
-+	.round_rate = clk_scu_round_rate,
-+	.set_rate = clk_scu_atf_set_cpu_rate,
-+	.prepare = clk_scu_prepare,
-+	.unprepare = clk_scu_unprepare,
-+};
-+
- struct clk_hw *__imx_clk_scu(const char *name, const char * const *parents,
- 			     int num_parents, u32 rsrc_id, u8 clk_type)
- {
-@@ -329,6 +361,10 @@ struct clk_hw *__imx_clk_scu(const char *name, const char * const *parents,
- 
- 	init.name = name;
- 	init.ops = &clk_scu_ops;
-+	if (rsrc_id == IMX_SC_R_A35)
-+		init.ops = &clk_scu_cpu_ops;
-+	else
-+		init.ops = &clk_scu_ops;
- 	init.parent_names = parents;
- 	init.num_parents = num_parents;
- 
--- 
-2.7.4
+SGksIFN0ZXBoZW4NCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGVwaGVuIEJveWQgW21haWx0bzpzYm95ZEBrZXJu
+ZWwub3JnXQ0KPiBTZW50OiAyMDE55bm0MuaciDI25pelIDE6MjINCj4gVG86IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBmZXN0ZXZhbUBnbWFpbC5jb207DQo+IGtlcm5lbEBwZW5ndXRyb25p
+eC5kZTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4gY2xr
+QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbWFyay5ydXRs
+YW5kQGFybS5jb207DQo+IG10dXJxdWV0dGVAYmF5bGlicmUuY29tOyByb2JoK2R0QGtlcm5lbC5v
+cmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IEFpc2hl
+bmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBBbnNvbg0KPiBIdWFuZyA8YW5zb24uaHVh
+bmdAbnhwLmNvbT47IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCj4gQ2M6
+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0gg
+UkVTRU5EIFY2IDIvMl0gY2xrOiBpbXg6IHNjdTogYWRkIGNwdSBmcmVxdWVuY3kgc2NhbGluZw0K
+PiBzdXBwb3J0DQo+IA0KPiBRdW90aW5nIEFuc29uIEh1YW5nICgyMDE5LTAyLTIyIDE4OjMyOjI4
+KQ0KPiA+ID4gPiArICAgICAgICAgICAgICAgY2x1c3Rlcl9pZCA9IDA7DQo+ID4gPg0KPiA+ID4g
+RG8gd2Ugc3RpbGwgbmVlZCB0byBjaGVjayB0aGlzIGFueW1vcmU/IFdoeSBub3QganVzdCBhbHdh
+eXMgdXNlDQo+IGNsdXN0ZXJfaWQgMD8NCj4gPg0KPiA+IFRoZSBpLk1YOFFYUCBPTkxZIGhhcyAx
+IGNsdXN0ZXIgbmFtZWQgQTM1LCB3aGlsZSBvbiBpLk1YOFFNIHRoZXJlIHdpbGwNCj4gPiBiZQ0K
+PiA+IDIgY2x1c3RlcnMsIEE1MyBhbmQgQTcyLCBzbyB3ZSBuZWVkIHRvIHVzZSB0aGUgcmVzb3Vy
+Y2UgSUQgdG8gaW5pdGlhbGl6ZSB0aGUNCj4gY2x1c3Rlcl9pZC4NCj4gPg0KPiA+ID4NCj4gPiA+
+ID4gKw0KPiA+ID4gPiArICAgICAgIC8qIENQVSBmcmVxdWVuY3kgc2NhbGluZyBjYW4gT05MWSBi
+ZSBkb25lIGJ5DQo+ID4gPiA+ICsgQVJNLVRydXN0ZWQtRmlybXdhcmUNCj4gPiA+ICovDQo+ID4g
+PiA+ICsgICAgICAgYXJtX3NtY2NjX3NtYyhJTVhfU0lQX0NQVUZSRVEsIElNWF9TSVBfU0VUX0NQ
+VUZSRVEsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBjbHVzdGVyX2lkLCByYXRlLCAw
+LCAwLCAwLCAwLCAmcmVzKTsNCj4gPiA+DQo+ID4gPiBCZWNhdXNlIG5vdCBjaGVja2luZyB3b3Vs
+ZCBtYWtlIHRoaXMgd29yaywgdnMuIGNoZWNraW5nIGNhdXNlcyB0aGlzDQo+ID4gPiBjb2RlIHRv
+IHNvbWV0aW1lcyB1c2UgYW4gdW5pbml0aWFsaXplZCB2YWx1ZSBmcm9tIHRoZSBzdGFjay4NCj4g
+Pg0KPiA+ICA4OSArICAgICAgIGlmIChyc3JjX2lkID09IElNWF9TQ19SX0EzNSkNCj4gPiAgOTAg
+KyAgICAgICAgICAgICAgIGluaXQub3BzID0gJmNsa19zY3VfY3B1X29wczsNCj4gPiAgOTEgKyAg
+ICAgICBlbHNlDQo+ID4gIDkyICsgICAgICAgICAgICAgICBpbml0Lm9wcyA9ICZjbGtfc2N1X29w
+czsNCj4gPg0KPiA+IEkgdGhpbmsgaXQgc2hvdWxkIGJlIGdvb2QuIE9ubHkgd2hlbiBwbGFuIHRv
+IHN1cHBvcnQgY3B1LWZyZXEgc2NhbGluZywNCj4gPiB0aGVuIHRoZSBDUFUgY2xvY2sgd2lsbCBi
+ZSBzd2l0Y2hlZCB0byB1c2UgY2xrX3NjdV9jcHVfb3BzIGFuZCB0aGUNCj4gPiBjbHV0c2VyX2lk
+IGluaXRpYWxpemF0aW9uIHdpbGwgYmUgZG9uZSBhY2NvcmRpbmcgdG8gQ1BVIHJlc291cmNlLiBG
+b3INCj4gPiBleGFtcGxlLCB3aGVuIHdlIHBsYW4gdG8gc3VwcG9ydCBpLk1YOFFNIGNwdS1mcmVx
+IHNjYWxpbmcsIHdlIHdpbGwgYWRkDQo+ID4gQTUzIGFuZCBBNzIgY2hlY2sgaGVyZSBhbmQgc3dp
+dGNoIHRoZSBjbG9jayBvcHMgdG8gY2xrX3NjdV9jcHVfb3BzLCBhbHNvDQo+IHdlIHdpbGwgYWRk
+IHRoZSBjbHVzdGVyX2lkIGluaXRpYWxpemF0aW9uIGluIHRoZSBTTUMgY2xvY2sgc2V0IHJhdGUu
+DQo+ID4NCj4gDQo+IE9rLiBTbyB0aGVuIHBsZWFzZSBtYWtlIHRoZSBzZXRfcmF0ZSBmdW5jdGlv
+biBmYWlsIGlmIHRoZSByc3JjX2lkIGRvZXNuJ3QNCj4gbWF0Y2ggc29tZXRoaW5nIGV4cGVjdGVk
+LiBBcyB0aGUgY29kZSBpcyB3cml0dGVuIHJpZ2h0IG5vdywgdGhlIGNvbXBpbGVyDQo+IGNhbid0
+IGZpZ3VyZSBvdXQgdGhhdCBjbHVzdGVyX2lkIHdpbGwgYWx3YXlzIGJlIGFzc2lnbmVkLCBzbyBp
+dCBjb21wbGFpbnMgdGhhdCBpdA0KPiBtYXkgYmUgdXNpbmcgdW5pbml0aWFsaXplZCBkYXRhLg0K
+DQpBZ3JlZWQsIEkgaGF2ZSBzZW50IFY3IHBhdGNoIHNlcmllcyB0byBhZGQgcmV0dXJuIGZhaWwg
+aWYgdGhlIHJlc291cmNlIElEIGlzIE5PVCBleHBlY3RlZC4NCg0KVGhhbmtzLA0KQW5zb24uDQoN
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
