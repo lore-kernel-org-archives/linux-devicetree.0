@@ -1,44 +1,51 @@
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: [PATCH v2] ls1021aqds: enable esdhc controller
-Date: Tue, 26 Feb 2019 08:40:22 +0000
-Message-ID: <20190226084121.41499-1-yinbo.zhu@nxp.com>
+From: Carlo Caione <ccaione@baylibre.com>
+Subject: Re: [PATCH v2 0/2] Add and document the i.MX8MQ OTP controller
+Date: Tue, 26 Feb 2019 08:57:13 +0000
+Message-ID: <e0af9818-86cf-c341-61a4-0a1406b07880@baylibre.com>
+References: <20190202150638.13672-1-ccaione@baylibre.com>
+ <20190225151127.elg2iuaxa4otdb46@fsr-ub1664-175>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190225151127.elg2iuaxa4otdb46@fsr-ub1664-175>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Yinbo Zhu <yinbo.zhu@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
+On 25/02/2019 15:11, Abel Vesa wrote:
+> On 19-02-02 15:06:36, Carlo Caione wrote:
+>> Add a new node to enable the On-Chip OTP controller and add the new
+>> binding in the documentation.
+>>
+>> Carlo Caione (2):
+>>    arm64: dts: imx8mq: Add on-chip OTP controller node
+>>    dt-bindings: imx-ocotp: Add i.MX8MQ compatible
+>>
+>>   Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 1 +
+>>   arch/arm64/boot/dts/freescale/imx8mq.dtsi             | 8 ++++++++
+>>   2 files changed, 9 insertions(+)
+>>
+>> -- 
+>> 2.19.1
+>>
+> 
+> What's the status of this patchseries ?
+> 
+> It would help a lot if we would manage to get this in.
 
-This patch is to enable esdhc controller in ls1021aqds
+Uh, for some reason I thought Lucas was going to take care of this.
+I'll submit a v2 now.
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
----
-Change in v2:
-		Add patch code after &enet2 to keep them sort alphabetically.
-
- arch/arm/boot/dts/ls1021a-qds.dts |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-=
-qds.dts
-index dac61e7..ae26f8b 100644
---- a/arch/arm/boot/dts/ls1021a-qds.dts
-+++ b/arch/arm/boot/dts/ls1021a-qds.dts
-@@ -160,6 +160,10 @@
- 	status =3D "okay";
- };
-=20
-+&esdhc {
-+	status =3D "okay";
-+};
-+
- &i2c0 {
- 	status =3D "okay";
-=20
---=20
-1.7.1
+--
+Carlo Caione
