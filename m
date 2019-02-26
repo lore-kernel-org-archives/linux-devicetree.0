@@ -1,165 +1,264 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v3 2/2] usb: dwc3: Add workaround for host mode VBUS glitch
- when boot
-Date: Tue, 26 Feb 2019 06:59:25 +0000
-Message-ID: <20190226070016.27372-2-ran.wang_1@nxp.com>
-References: <20190226070016.27372-1-ran.wang_1@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] pcie: qcom: Add support for sdm845 PCIe controller
+Date: Mon, 25 Feb 2019 23:01:25 -0800
+Message-ID: <20190226070125.22318-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226070016.27372-1-ran.wang_1@nxp.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Yang Li <pku.leo@gmail.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When DWC3 is set to host mode by programming register DWC3_GCTL, VBUS
-(or its control signal) will be turned on immediately on related Root Hub
-ports. Then, the VBUS is turned off for a little while(15us) when do xhci
-reset (conducted by xhci driver) and back to normal finally, we can
-observe a negative glitch of related signal happen.
+The SDM845 has one Gen2 and one Gen3 controller, add support for these.
 
-This VBUS glitch might cause some USB devices enumeration fail if kernel
-boot with them connected. Such as LS1012AFWRY/LS1043ARDB/LX2160AQDS
-/LS1088ARDB with Kingston 16GB USB2.0/Kingston USB3.0/JetFlash Transcend
-4GB USB2.0 drives. The fail cases include enumerated as full-speed device
-or report wrong device descriptor, etc.
+Due to lack of hardware only the Gen2 controller has been verified.
 
-One SW workaround which can fix this is by programing all xhci PORTSC[PP]
-to 0 to turn off VBUS immediately after setting host mode in DWC3 driver
-(per signal measurement result, it will be too late to do it in
-xhci-plat.c or xhci.c). Then, after xhci reset complete in xhci driver,
-PORTSC[PP]s' value will back to 1 automatically and VBUS on at that time,
-no glitch happen and normal enumeration process has no impact.
-
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-Changes in v3:
-  - Add macro PORT_REGS_SIZE to replace 0x10
-  - Change initial value of i to 0 for the for loop
-  - Cosmetic changes
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  19 +++
+ drivers/pci/controller/dwc/pcie-qcom.c        | 146 ++++++++++++++++++
+ 2 files changed, 165 insertions(+)
 
-Changes in v2:
-  - Rename related property to 'snps,host-vbus-glitches'
-  - Rename related dwc member to 'host_vbus_glitches'
-  - Add member 'host_vbus_glitches' description in 'dwc3'
-
- drivers/usb/dwc3/core.c |   48 +++++++++++++++++++++++++++++++++++++++++++=
-++++
- drivers/usb/dwc3/core.h |   12 +++++++++++
- 2 files changed, 60 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index a1b126f..dd80e3d 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -100,6 +100,42 @@ static int dwc3_get_dr_mode(struct dwc3 *dwc)
- 	return 0;
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index 1fd703bd73e0..2cf92ed39499 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -10,6 +10,7 @@
+ 			- "qcom,pcie-msm8996" for msm8996 or apq8096
+ 			- "qcom,pcie-ipq4019" for ipq4019
+ 			- "qcom,pcie-ipq8074" for ipq8074
++			- "qcom,pcie-sdm845" for sdm845
+ 
+ - reg:
+ 	Usage: required
+@@ -116,6 +117,18 @@
+ 			- "ahb"		AHB clock
+ 			- "aux"		Auxiliary clock
+ 
++- clock-names:
++	Usage: required for sdm845
++	Value type: <stringlist>
++	Definition: Should contain the following entries
++			- "aux"		Auxiliary clock
++			- "cfg"		Configuration clock
++			- "bus_master"	Master AXI clock
++			- "bus_slave"	Slave AXI clock
++			- "slave_q2a"	Slave Q2A clock
++			- "tbu"		PCIe TBU clock
++			- "pipe"	PIPE clock
++
+ - resets:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -167,6 +180,12 @@
+ 			- "ahb"			AHB Reset
+ 			- "axi_m_sticky"	AXI Master Sticky reset
+ 
++- reset-names:
++	Usage: required for sdm845
++	Value type: <stringlist>
++	Definition: Should contain the following entries
++			- "pci"			PCIe core reset
++
+ - power-domains:
+ 	Usage: required for apq8084 and msm8996/apq8096
+ 	Value type: <prop-encoded-array>
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index d185ea5fe996..5147454a6ae5 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -54,6 +54,7 @@
+ #define PCIE20_PARF_LTSSM			0x1B0
+ #define PCIE20_PARF_SID_OFFSET			0x234
+ #define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
++#define PCIE20_PARF_DEVICE_TYPE			0x1000
+ 
+ #define PCIE20_ELBI_SYS_CTRL			0x04
+ #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
+@@ -80,6 +81,8 @@
+ #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+ #define SLV_ADDR_SPACE_SZ			0x10000000
+ 
++#define DEVICE_TYPE_RC				0x4
++
+ #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
+ struct qcom_pcie_resources_2_1_0 {
+ 	struct clk *iface_clk;
+@@ -139,12 +142,21 @@ struct qcom_pcie_resources_2_3_3 {
+ 	struct reset_control *rst[7];
+ };
+ 
++struct qcom_pcie_resources_2_7_0 {
++	struct clk_bulk_data clks[6];
++	struct regulator_bulk_data supplies[2];
++
++	struct reset_control *pci_reset;
++	struct clk *pipe_clk;
++};
++
+ union qcom_pcie_resources {
+ 	struct qcom_pcie_resources_1_0_0 v1_0_0;
+ 	struct qcom_pcie_resources_2_1_0 v2_1_0;
+ 	struct qcom_pcie_resources_2_3_2 v2_3_2;
+ 	struct qcom_pcie_resources_2_3_3 v2_3_3;
+ 	struct qcom_pcie_resources_2_4_0 v2_4_0;
++	struct qcom_pcie_resources_2_7_0 v2_7_0;
+ };
+ 
+ struct qcom_pcie;
+@@ -1076,6 +1088,129 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+ 	return ret;
  }
-=20
-+/*
-+ * dwc3_power_of_all_roothub_ports - Power off all Root hub ports
-+ * @dwc3: Pointer to our controller context structure
-+ */
-+static void dwc3_power_off_all_roothub_ports(struct dwc3 *dwc)
+ 
++static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
 +{
-+	int i, port_num;
-+	u32 reg, op_regs_base, offset;
-+	void __iomem		*xhci_regs;
++	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
++	struct dw_pcie *pci = pcie->pci;
++	struct device *dev = pci->dev;
++	int ret;
 +
-+	/* xhci regs is not mapped yet, do it temperary here */
-+	if (dwc->xhci_resources[0].start) {
-+		xhci_regs =3D ioremap(dwc->xhci_resources[0].start,
-+				DWC3_XHCI_REGS_END);
-+		if (IS_ERR(xhci_regs)) {
-+			dev_err(dwc->dev, "Failed to ioremap xhci_regs\n");
-+			return;
-+		}
++	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
++	if (IS_ERR(res->pci_reset))
++		return PTR_ERR(res->pci_reset);
 +
-+		op_regs_base =3D HC_LENGTH(readl(xhci_regs));
-+		reg =3D readl(xhci_regs + XHCI_HCSPARAMS1);
-+		port_num =3D HCS_MAX_PORTS(reg);
++	res->supplies[0].supply = "vdda";
++	res->supplies[1].supply = "vddpe-3v3";
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(res->supplies),
++				      res->supplies);
++	if (ret)
++		return ret;
 +
-+		for (i =3D 0; i < port_num; i++) {
-+			offset =3D op_regs_base + XHCI_PORTSC_BASE +
-+				PORT_REGS_SIZE * i;
-+			reg =3D readl(xhci_regs + offset);
-+			reg &=3D ~PORT_POWER;
-+			writel(reg, xhci_regs + offset);
-+		}
++	res->clks[0].id = "aux";
++	res->clks[1].id = "cfg";
++	res->clks[2].id = "bus_master";
++	res->clks[3].id = "bus_slave";
++	res->clks[4].id = "slave_q2a";
++	res->clks[5].id = "tbu";
 +
-+		iounmap(xhci_regs);
-+	} else
-+		dev_err(dwc->dev, "xhci base reg invalid\n");
++	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
++	if (ret < 0)
++		return ret;
++
++	res->pipe_clk = devm_clk_get(dev, "pipe");
++	return PTR_ERR_OR_ZERO(res->pipe_clk);
 +}
 +
- void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- {
- 	u32 reg;
-@@ -109,6 +145,15 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- 	reg |=3D DWC3_GCTL_PRTCAPDIR(mode);
- 	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-=20
-+	/*
-+	 * We have to power off all Root hub ports immediately after DWC3 set
-+	 * to host mode to avoid VBUS glitch happen when xhci get reset later.
-+	 */
-+	if (dwc->host_vbus_glitches) {
-+		if (mode =3D=3D DWC3_GCTL_PRTCAP_HOST)
-+			dwc3_power_off_all_roothub_ports(dwc);
++static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
++	struct dw_pcie *pci = pcie->pci;
++	struct device *dev = pci->dev;
++	u32 val;
++	int ret;
++
++	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
++	if (ret < 0) {
++		dev_err(dev, "cannot enable regulators\n");
++		return ret;
 +	}
 +
- 	dwc->current_dr_role =3D mode;
- }
-=20
-@@ -1306,6 +1351,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 	dwc->dis_metastability_quirk =3D device_property_read_bool(dev,
- 				"snps,dis_metastability_quirk");
-=20
-+	dwc->host_vbus_glitches =3D device_property_read_bool(dev,
-+				"snps,host-vbus-glitches");
++	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
++	if (ret < 0)
++		goto err_disable_regulators;
 +
- 	dwc->lpm_nyet_threshold =3D lpm_nyet_threshold;
- 	dwc->tx_de_emphasis =3D tx_de_emphasis;
-=20
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index df87641..c2dee0b 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -606,6 +606,15 @@
- #define DWC3_OSTS_VBUSVLD		BIT(1)
- #define DWC3_OSTS_CONIDSTS		BIT(0)
-=20
-+/* Partial XHCI Register and Bit fields for quirk */
-+#define XHCI_HCSPARAMS1		0x4
-+#define XHCI_PORTSC_BASE	0x400
-+#define PORT_REGS_SIZE		0x10
-+#define PORT_POWER			(1 << 9)
-+#define HCS_MAX_PORTS(p)	(((p) >> 24) & 0x7f)
-+#define XHCI_HC_LENGTH(p)	(((p)>>00)&0x00ff)
-+#define HC_LENGTH(p)		XHCI_HC_LENGTH(p)
++	ret = reset_control_assert(res->pci_reset);
++	if (ret) {
++		dev_err(dev, "cannot deassert pci reset\n");
++		return ret;
++	}
 +
- /* Structures */
-=20
- struct dwc3_trb;
-@@ -1024,6 +1033,8 @@ struct dwc3_scratchpad_array {
-  * 	2	- No de-emphasis
-  * 	3	- Reserved
-  * @dis_metastability_quirk: set to disable metastability quirk.
-+ * @host-vbus-glitches: set to avoid vbus glitch during
-+ *                      xhci reset.
-  * @imod_interval: set the interrupt moderation interval in 250ns
-  *                 increments or 0 to disable.
-  */
-@@ -1209,6 +1220,7 @@ struct dwc3 {
- 	unsigned		tx_de_emphasis:2;
-=20
- 	unsigned		dis_metastability_quirk:1;
-+	unsigned		host_vbus_glitches:1;
-=20
- 	u16			imod_interval;
++	msleep(10);
++
++	ret = reset_control_deassert(res->pci_reset);
++	if (ret) {
++		dev_err(dev, "cannot deassert pci reset\n");
++		return ret;
++	}
++
++	clk_prepare_enable(res->pipe_clk);
++
++	/* configure PCIe to RC mode */
++	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
++
++	/* enable PCIe clocks and resets */
++	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++	val &= ~BIT(0);
++	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++
++	/* change DBI base address */
++	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
++
++	/* MAC PHY_POWERDOWN MUX DISABLE  */
++	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
++	val &= ~BIT(29);
++	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
++
++	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++	val |= BIT(4);
++	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
++		val |= BIT(31);
++		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
++	}
++
++	return 0;
++
++err_disable_regulators:
++	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
++
++	return ret;
++}
++
++static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
++
++	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
++	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
++}
++
++static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
++
++	return clk_prepare_enable(res->pipe_clk);
++}
++
++static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
++
++	clk_disable_unprepare(res->pipe_clk);
++}
++
+ static int qcom_pcie_link_up(struct dw_pcie *pci)
+ {
+ 	u16 val = readw(pci->dbi_base + PCIE20_CAP + PCI_EXP_LNKSTA);
+@@ -1192,6 +1327,16 @@ static const struct qcom_pcie_ops ops_2_3_3 = {
+ 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
  };
---=20
-1.7.1
+ 
++/* Qcom IP rev.: 2.7.0	Synopsys IP rev.: 4.30a */
++static const struct qcom_pcie_ops ops_2_7_0 = {
++	.get_resources = qcom_pcie_get_resources_2_7_0,
++	.init = qcom_pcie_init_2_7_0,
++	.deinit = qcom_pcie_deinit_2_7_0,
++	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
++	.post_init = qcom_pcie_post_init_2_7_0,
++	.post_deinit = qcom_pcie_post_deinit_2_7_0,
++};
++
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.link_up = qcom_pcie_link_up,
+ };
+@@ -1306,6 +1451,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
+ 	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
+ 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
++	{ .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
+ 	{ }
+ };
+ 
+-- 
+2.18.0
