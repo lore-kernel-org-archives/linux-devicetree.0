@@ -1,62 +1,49 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 02/11] ARM: davinci: enable the clocksource driver for DT mode
-Date: Tue, 26 Feb 2019 13:06:24 +0100
-Message-ID: <20190226120633.18200-3-brgl@bgdev.pl>
-References: <20190226120633.18200-1-brgl@bgdev.pl>
+Subject: Re: [PATCH v2 08/12] ARM: davinci: dm355: switch to using the
+ clocksource driver
+Date: Tue, 26 Feb 2019 13:09:26 +0100
+Message-ID: <CAMRc=Mf8wGNaPOxNx8xmvw5cRpA1fnRQ1-sc7iyMihcZ=Fb6dw@mail.gmail.com>
+References: <20190204171757.32073-1-brgl@bgdev.pl> <20190204171757.32073-9-brgl@bgdev.pl>
+ <bb0bc61a-8c2b-affa-c58a-1e7c14f9390d@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226120633.18200-1-brgl@bgdev.pl>
+In-Reply-To: <bb0bc61a-8c2b-affa-c58a-1e7c14f9390d@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, David Lechner <david@lechnology.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+pt., 8 lut 2019 o 13:34 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
+>
+> On 04/02/19 10:47 PM, Bartosz Golaszewski wrote:
+> > -/*
+> > - * T0_BOT: Timer 0, bottom:  clockevent source for hrtimers
+> > - * T0_TOP: Timer 0, top   :  clocksource for generic timekeeping
+> > - * T1_BOT: Timer 1, bottom:  (used by DSP in TI DSPLink code)
+> > - * T1_TOP: Timer 1, top   :  <unused>
+>
+> Documenting this timer division is important because DSP usage and
+> unused timers are not immediately clear from kernel code alone. Can you
+> retain these comments in all patches of this series (I guess T0_BOT etc.
+> terminology is changed, so feel free to adjust the comment text).
+>
+> > - */
+> > -static struct davinci_timer_info dm355_timer_info =3D {
+> > -     .timers         =3D davinci_timer_instance,
+> > -     .clockevent_id  =3D T0_BOT,
+> > -     .clocksource_id =3D T0_TOP,
+> > +static const struct davinci_timer_cfg dm355_timer_cfg =3D {
+> > +     .reg =3D {
+> > +             .start          =3D DAVINCI_TIMER0_BASE,
+> > +             .end            =3D DAVINCI_TIMER0_BASE + SZ_4K,
+>
+> Here and other places too, SZ_4K - 1
+>
+> Thanks,
+> Sekhar
 
-Switch all davinci boards supporting device tree to using the new
-clocksource driver: remove the previous OF_TIMER_DECLARE() from
-mach-davinci and select davinci-timer for ARCH_DAVINCI.
+I used appropriate DEFINE_RES_x() macros instead.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/Kconfig             |  1 +
- arch/arm/mach-davinci/time.c | 14 --------------
- 2 files changed, 1 insertion(+), 14 deletions(-)
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 1037f49e050f..da414692bd0a 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -586,6 +586,7 @@ config ARCH_DAVINCI
- 	select ARCH_HAS_HOLES_MEMORYMODEL
- 	select COMMON_CLK
- 	select CPU_ARM926T
-+	select DAVINCI_TIMER
- 	select GENERIC_ALLOCATOR
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_IRQ_CHIP
-diff --git a/arch/arm/mach-davinci/time.c b/arch/arm/mach-davinci/time.c
-index 5a6de5368ab0..740410a3bb6a 100644
---- a/arch/arm/mach-davinci/time.c
-+++ b/arch/arm/mach-davinci/time.c
-@@ -398,17 +398,3 @@ void __init davinci_timer_init(struct clk *timer_clk)
- 	for (i=0; i< ARRAY_SIZE(timers); i++)
- 		timer32_config(&timers[i]);
- }
--
--static int __init of_davinci_timer_init(struct device_node *np)
--{
--	struct clk *clk;
--
--	clk = of_clk_get(np, 0);
--	if (IS_ERR(clk))
--		return PTR_ERR(clk);
--
--	davinci_timer_init(clk);
--
--	return 0;
--}
--TIMER_OF_DECLARE(davinci_timer, "ti,da830-timer", of_davinci_timer_init);
--- 
-2.20.1
+Bart
