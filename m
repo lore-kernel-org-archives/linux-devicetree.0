@@ -1,34 +1,78 @@
-From: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 12/13] arm: dts: mediatek: Get rid of mediatek,
- larb for MM nodes
-Date: Mon, 25 Feb 2019 15:56:38 -0800
-Message-ID: <CAE=gft5KJf=mx1zmzVPxGw7roL6N9Z4QvDSyTekOCeBzaTDQVg@mail.gmail.com>
-References: <1546318276-18993-1-git-send-email-yong.wu@mediatek.com>
- <1546318276-18993-13-git-send-email-yong.wu@mediatek.com>
+From: Ming Lei <tom.leiming@gmail.com>
+Subject: Re: Linux-next 20190218: am57xx-evm: mmc1: ADMA error
+Date: Tue, 26 Feb 2019 09:41:38 +0800
+Message-ID: <CACVXFVP0h-xvJaW1HaMrhozwhR484x0owc6XX63JT-59N08Fag@mail.gmail.com>
+References: <CA+G9fYsmC5ckLXfQxSUn-tqxLZ4NofEyb9RA69Q07RUoxc79RQ@mail.gmail.com>
+ <34c78d7f-cc3c-853d-b3fd-a70abdb66293@ti.com> <22ccca46-7390-1707-cfca-43b3577b79f2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1546318276-18993-13-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <22ccca46-7390-1707-cfca-43b3577b79f2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, nm@ti.com, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 31, 2018 at 8:53 PM Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+On Mon, Feb 25, 2019 at 9:14 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
 >
-> After adding device_link between the IOMMU consumer and smi,
-> the mediatek,larb is unnecessary now.
+> Hi Naresh,
 >
-> CC: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + Commit authors.
+>
+> On 19/02/19 6:38 PM, Faiz Abbas wrote:
+> > Hi Naresh,
+> >
+> > On 18/02/19 6:57 PM, Naresh Kamboju wrote:
+> >> Do you see this error on am57xx-evm running Linux next 20190218 ?
+> >> I have tested on multiple devices and found this error.
+> >> Please find the full boot log [1].
+> >> Am i missing any pre required configs [2] ?
+> >>
+> >> [    5.620263] mmc1: ADMA error
+> >> [    5.623266] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
+> >> [    5.629740] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
+> >> [    5.636215] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
+> >> [    5.642690] mmc1: sdhci: Argument:  0x002cec70 | Trn mode: 0x00000033
+> >> [    5.649162] mmc1: sdhci: Present:   0x01f00000 | Host ctl: 0x00000010
+> >> [    5.655634] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
+> >> [    5.662108] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
+> >> [    5.668582] mmc1: sdhci: Timeout:   0x0000000c | Int stat: 0x00000000
+> >> [    5.675055] mmc1: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
+> >> [    5.681529] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
+> >> [    5.688002] mmc1: sdhci: Caps:      0x21e90080 | Caps_1:   0x00000f77
+> >> [    5.694474] mmc1: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
+> >> [    5.700949] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffef
+> >> [    5.707423] mmc1: sdhci: Resp[2]:   0x0f5903ff | Resp[3]:  0xd04f0132
+> >> [    5.713896] mmc1: sdhci: Host ctl2: 0x00000004
+> >> [    5.718364] mmc1: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xab868218
+> >>
+> >
+> > I see this as well on my setup. Trying to bisect now. Will keep you posted.
+>
+>
+> Reverting the following commit fixes this.
+> commit 07173c3ec276cbb18dc0e0687d37d310e98a1480
+> Author: Ming Lei <ming.lei@redhat.com>
+> Date:   Fri Feb 15 19:13:20 2019 +0800
+>
+>     block: enable multipage bvecs
+>
+>     This patch pulls the trigger for multi-page bvecs.
+>
+>     Reviewed-by: Omar Sandoval <osandov@fb.com>
+>     Signed-off-by: Ming Lei <ming.lei@redhat.com>
+>     Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Hi,
+
+Thanks for your report & bisect.
+
+Could you test the following patch?
+
+https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.1/block&id=8f4e80da764ec1ca44c83f3e17dbc9bf0209bccc
+
+Or  simply run the latest -next?
+
+
+Thanks,
+Ming Lei
