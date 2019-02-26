@@ -1,109 +1,326 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: Linux-next 20190218: am57xx-evm: mmc1: ADMA error
-Date: Tue, 26 Feb 2019 12:20:18 +0530
-Message-ID: <236a3ac2-5988-9150-4a53-4a33a45d595e@ti.com>
-References: <CA+G9fYsmC5ckLXfQxSUn-tqxLZ4NofEyb9RA69Q07RUoxc79RQ@mail.gmail.com>
- <34c78d7f-cc3c-853d-b3fd-a70abdb66293@ti.com>
- <22ccca46-7390-1707-cfca-43b3577b79f2@ti.com>
- <CACVXFVP0h-xvJaW1HaMrhozwhR484x0owc6XX63JT-59N08Fag@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] phy: qcom: qmp: Add SDM845 PCIe QMP PHY support
+Date: Mon, 25 Feb 2019 22:59:19 -0800
+Message-ID: <20190226065919.22218-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACVXFVP0h-xvJaW1HaMrhozwhR484x0owc6XX63JT-59N08Fag@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ming Lei <tom.leiming@gmail.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, nm@ti.com, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ming Lei,
+qcom_qmp_phy_init() is extended to support the additional register
+writes needed in PCS MISC and the appropriate sequences and resources
+are defined for SDM845.
 
-On 26/02/19 7:11 AM, Ming Lei wrote:
-> On Mon, Feb 25, 2019 at 9:14 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->>
->> Hi Naresh,
->>
->> + Commit authors.
->>
->> On 19/02/19 6:38 PM, Faiz Abbas wrote:
->>> Hi Naresh,
->>>
->>> On 18/02/19 6:57 PM, Naresh Kamboju wrote:
->>>> Do you see this error on am57xx-evm running Linux next 20190218 ?
->>>> I have tested on multiple devices and found this error.
->>>> Please find the full boot log [1].
->>>> Am i missing any pre required configs [2] ?
->>>>
->>>> [    5.620263] mmc1: ADMA error
->>>> [    5.623266] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
->>>> [    5.629740] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
->>>> [    5.636215] mmc1: sdhci: Blk size:  0x00000200 | Blk cnt:  0x0000ffff
->>>> [    5.642690] mmc1: sdhci: Argument:  0x002cec70 | Trn mode: 0x00000033
->>>> [    5.649162] mmc1: sdhci: Present:   0x01f00000 | Host ctl: 0x00000010
->>>> [    5.655634] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
->>>> [    5.662108] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
->>>> [    5.668582] mmc1: sdhci: Timeout:   0x0000000c | Int stat: 0x00000000
->>>> [    5.675055] mmc1: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
->>>> [    5.681529] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
->>>> [    5.688002] mmc1: sdhci: Caps:      0x21e90080 | Caps_1:   0x00000f77
->>>> [    5.694474] mmc1: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
->>>> [    5.700949] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffef
->>>> [    5.707423] mmc1: sdhci: Resp[2]:   0x0f5903ff | Resp[3]:  0xd04f0132
->>>> [    5.713896] mmc1: sdhci: Host ctl2: 0x00000004
->>>> [    5.718364] mmc1: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xab868218
->>>>
->>>
->>> I see this as well on my setup. Trying to bisect now. Will keep you posted.
->>
->>
->> Reverting the following commit fixes this.
->> commit 07173c3ec276cbb18dc0e0687d37d310e98a1480
->> Author: Ming Lei <ming.lei@redhat.com>
->> Date:   Fri Feb 15 19:13:20 2019 +0800
->>
->>     block: enable multipage bvecs
->>
->>     This patch pulls the trigger for multi-page bvecs.
->>
->>     Reviewed-by: Omar Sandoval <osandov@fb.com>
->>     Signed-off-by: Ming Lei <ming.lei@redhat.com>
->>     Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> 
-> Hi,
-> 
-> Thanks for your report & bisect.
-> 
-> Could you test the following patch?
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.1/block&id=8f4e80da764ec1ca44c83f3e17dbc9bf0209bccc
-> 
-> Or  simply run the latest -next?
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   7 +
+ drivers/phy/qualcomm/phy-qcom-qmp.c           | 160 ++++++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.h           |  12 ++
+ 3 files changed, 179 insertions(+)
 
-That didn't fix it for me. Still see ADMA error.
-
-[   13.126186] mmc0: ADMA error
-[   13.129084] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-[   13.135552] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
-[   13.142019] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000000
-[   13.148485] mmc0: sdhci: Argument:  0x00000089 | Trn mode: 0x00000033
-[   13.154952] mmc0: sdhci: Present:   0x00000000 | Host ctl: 0x00000012
-[   13.161418] mmc0: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
-[   13.167885] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
-[   13.174351] mmc0: sdhci: Timeout:   0x0000000a | Int stat: 0x00000000
-[   13.180817] mmc0: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
-[   13.187282] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
-[   13.193748] mmc0: sdhci: Caps:      0x25e90080 | Caps_1:   0x00000f77
-[   13.200215] mmc0: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
-[   13.206682] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x3b377f80
-[   13.213148] mmc0: sdhci: Resp[2]:   0x5b590000 | Resp[3]:  0x400e0032
-[   13.219613] mmc0: sdhci: Host ctl2: 0x00000000
-[   13.224073] mmc0: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xae857288
-[   13.230538] mmc0: sdhci: ============================================
-
-Full Log:
-
-https://pastebin.ubuntu.com/p/4yGqgJCGZQ/
-
-Thanks,
-Faiz
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index 5d181fc3cc18..dd2725a9d3f7 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+ 	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
+ 	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
++	       "qcom,sdm845-qmp-pcie-phy" for PCIe phy on sdm845,
+ 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+ 	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
+ 	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
+@@ -48,6 +49,10 @@ Required properties:
+ 			"aux", "cfg_ahb", "ref".
+ 		For "qcom,msm8998-qmp-ufs-phy" must contain:
+ 			"ref", "ref_aux".
++		For "qcom,sdm845-qmp-usb3-phy" must contain:
++			"aux", "cfg_ahb", "ref", "refgen".
++		For "qcom,sdm845-qmp-usb3-phy" must contain:
++			"aux", "cfg_ahb", "ref", "com_aux".
+ 		For "qcom,sdm845-qmp-usb3-phy" must contain:
+ 			"aux", "cfg_ahb", "ref", "com_aux".
+ 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+@@ -70,6 +75,8 @@ Required properties:
+ 		For "qcom,msm8998-qmp-usb3-phy" must contain
+ 			"phy", "common".
+ 		For "qcom,msm8998-qmp-ufs-phy": no resets are listed.
++		For "qcom,sdm845-qmp-pcie-phy" must contain:
++			"phy".
+ 		For "qcom,sdm845-qmp-usb3-phy" must contain:
+ 			"phy", "common".
+ 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 08d6f6f7f039..c5ca4a217439 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -159,6 +159,11 @@ static const unsigned int qmp_v3_usb3phy_regs_layout[] = {
+ 	[QPHY_PCS_LFPS_RXTERM_IRQ_STATUS] = 0x170,
+ };
+ 
++static const unsigned int sdm845_pciephy_regs_layout[] = {
++	[QPHY_START_CTRL]		= 0x08,
++	[QPHY_PCS_READY_STATUS]		= 0x174,
++};
++
+ static const unsigned int sdm845_ufsphy_regs_layout[] = {
+ 	[QPHY_START_CTRL]		= 0x00,
+ 	[QPHY_PCS_READY_STATUS]		= 0x160,
+@@ -392,6 +397,109 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_pcs_tbl[] = {
+ 	QMP_PHY_INIT_CFG_L(QPHY_START_CTRL, 0x3),
+ };
+ 
++static const struct qmp_phy_init_tbl sdm845_pcie_serdes_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x14),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x007),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_RESETSM_CNTRL, 0x20),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE2_MODE0, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE1_MODE0, 0xc9),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_TIMER1, 0xff),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_TIMER2, 0x3f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORE_CLK_EN, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORECLK_DIV_MODE0, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_EP_DIV, 0x19),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_ENABLE1, 0x90),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x82),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0xea),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START1_MODE0, 0xab),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP3_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x0d),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE0, 0x16),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE0, 0x36),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_MODE, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x33),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_BUF_ENABLE, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE0, 0x3f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BG_TIMER, 0x09),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_EN_CENTER, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_PER1, 0x40),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_PER2, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_ADJ_PER1, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_ADJ_PER2, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_STEP_SIZE1, 0x7e),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_STEP_SIZE2, 0x15),
++};
++
++static const struct qmp_phy_init_tbl sdm845_pcie_tx_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_TX, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RCV_DETECT_LVL_2, 0x12),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_HIGHZ_DRVR_EN, 0x10),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_LANE_MODE_1, 0x06),
++};
++
++static const struct qmp_phy_init_tbl sdm845_pcie_rx_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_CNTRL, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_ENABLES, 0x10),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_DEGLITCH_CNTRL, 0x14),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0e),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL3, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL4, 0x1a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_GAIN, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_GAIN_HALF, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQ_OFFSET_ADAPTOR_CNTRL1, 0x71),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_MODE_00, 0x59),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_MODE_01, 0x59),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x80),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_INTERFACE_MODE, 0x40),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_PI_CONTROLS, 0x71),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_FASTLOCK_COUNT_LOW, 0x40),
++};
++
++static const struct qmp_phy_init_tbl sdm845_pcie_pcs_tbl[] = {
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_ENDPOINT_REFCLK_DRIVE, 0x04),
++
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNTRL2, 0x83),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNT_VAL_L, 0x09),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNT_VAL_H_TOL, 0xa2),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_MAN_CODE, 0x40),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNTRL1, 0x02),
++
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_OSC_DTCT_ACTIONS, 0x00),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_PWRUP_RESET_DLY_TIME_AUXCLK, 0x01),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB, 0x00),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB, 0x20),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK_MSB, 0x00),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK, 0x01),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_PLL_LOCK_CHK_DLY_TIME, 0x73),
++
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RX_SIGDET_LVL, 0xbb),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_SIGDET_CNTRL, 0x03),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_REFGEN_REQ_CONFIG1, 0x0d),
++
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_POWER_STATE_CONFIG4, 0x00),
++};
++
++static const struct qmp_phy_init_tbl sdm845_pcie_pcs_misc_tbl[] = {
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_MISC_OSC_DTCT_CONFIG2, 0x52),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG2, 0x10),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG4, 0x1a),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5, 0x06),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_MISC_PCIE_INT_AUX_CLK_CONFIG1, 0x00),
++};
++
+ static const struct qmp_phy_init_tbl qmp_v3_usb3_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x07),
+ 	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x14),
+@@ -813,6 +921,8 @@ struct qmp_phy_cfg {
+ 	int rx_tbl_num;
+ 	const struct qmp_phy_init_tbl *pcs_tbl;
+ 	int pcs_tbl_num;
++	const struct qmp_phy_init_tbl *pcs_misc_tbl;
++	int pcs_misc_tbl_num;
+ 
+ 	/* clock ids to be requested */
+ 	const char * const *clk_list;
+@@ -949,6 +1059,10 @@ static const char * const qmp_v3_phy_clk_l[] = {
+ 	"aux", "cfg_ahb", "ref", "com_aux",
+ };
+ 
++static const char * const sdm845_pciephy_clk_l[] = {
++	"aux", "cfg_ahb", "ref", "refgen",
++};
++
+ static const char * const sdm845_ufs_phy_clk_l[] = {
+ 	"ref", "ref_aux",
+ };
+@@ -962,6 +1076,10 @@ static const char * const msm8996_usb3phy_reset_l[] = {
+ 	"phy", "common",
+ };
+ 
++static const char * const sdm845_pciephy_reset_l[] = {
++	"phy",
++};
++
+ /* list of regulators */
+ static const char * const qmp_phy_vreg_l[] = {
+ 	"vdda-phy", "vdda-pll",
+@@ -1059,6 +1177,39 @@ static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
+ 	.pwrdn_delay_max	= 1005,		/* us */
+ };
+ 
++static const struct qmp_phy_cfg sdm845_pciephy_cfg = {
++	.type = PHY_TYPE_PCIE,
++	.nlanes = 1,
++
++	.serdes_tbl		= sdm845_pcie_serdes_tbl,
++	.serdes_tbl_num		= ARRAY_SIZE(sdm845_pcie_serdes_tbl),
++	.tx_tbl			= sdm845_pcie_tx_tbl,
++	.tx_tbl_num		= ARRAY_SIZE(sdm845_pcie_tx_tbl),
++	.rx_tbl			= sdm845_pcie_rx_tbl,
++	.rx_tbl_num		= ARRAY_SIZE(sdm845_pcie_rx_tbl),
++	.pcs_tbl		= sdm845_pcie_pcs_tbl,
++	.pcs_tbl_num		= ARRAY_SIZE(sdm845_pcie_pcs_tbl),
++	.pcs_misc_tbl		= sdm845_pcie_pcs_misc_tbl,
++	.pcs_misc_tbl_num	= ARRAY_SIZE(sdm845_pcie_pcs_misc_tbl),
++	.clk_list		= sdm845_pciephy_clk_l,
++	.num_clks		= ARRAY_SIZE(sdm845_pciephy_clk_l),
++	.reset_list		= sdm845_pciephy_reset_l,
++	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++	.regs			= sdm845_pciephy_regs_layout,
++
++	.start_ctrl		= PCS_START | SERDES_START,
++	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
++	.mask_com_pcs_ready	= PCS_READY,
++
++	.has_phy_com_ctrl	= false,
++	.has_lane_rst		= false,
++	.has_pwrdn_delay	= true,
++	.pwrdn_delay_min	= 995,		/* us */
++	.pwrdn_delay_max	= 1005,		/* us */
++};
++
+ static const struct qmp_phy_cfg qmp_v3_usb3phy_cfg = {
+ 	.type			= PHY_TYPE_USB3,
+ 	.nlanes			= 1,
+@@ -1344,6 +1495,7 @@ static int qcom_qmp_phy_init(struct phy *phy)
+ 	void __iomem *tx = qphy->tx;
+ 	void __iomem *rx = qphy->rx;
+ 	void __iomem *pcs = qphy->pcs;
++	void __iomem *pcs_misc = qphy->pcs_misc;
+ 	void __iomem *dp_com = qmp->dp_com;
+ 	void __iomem *status;
+ 	unsigned int mask, val;
+@@ -1384,6 +1536,11 @@ static int qcom_qmp_phy_init(struct phy *phy)
+ 
+ 	qcom_qmp_phy_configure(pcs, cfg->regs, cfg->pcs_tbl, cfg->pcs_tbl_num);
+ 
++	if (cfg->pcs_misc_tbl) {
++		qcom_qmp_phy_configure(pcs_misc, cfg->regs, cfg->pcs_misc_tbl,
++				       cfg->pcs_misc_tbl_num);
++	}
++
+ 	/*
+ 	 * UFS PHY requires the deassert of software reset before serdes start.
+ 	 * For UFS PHYs that do not have software reset control bits, defer
+@@ -1878,6 +2035,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+ 	}, {
+ 		.compatible = "qcom,ipq8074-qmp-pcie-phy",
+ 		.data = &ipq8074_pciephy_cfg,
++	}, {
++		.compatible = "qcom,sdm845-qmp-pcie-phy",
++		.data = &sdm845_pciephy_cfg,
+ 	}, {
+ 		.compatible = "qcom,sdm845-qmp-usb3-phy",
+ 		.data = &qmp_v3_usb3phy_cfg,
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+index a1b6cdee9a08..335ea5d7ef40 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.h
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+@@ -241,6 +241,7 @@
+ #define QSERDES_V3_RX_RX_BAND				0x110
+ #define QSERDES_V3_RX_RX_INTERFACE_MODE			0x11c
+ #define QSERDES_V3_RX_RX_MODE_00			0x164
++#define QSERDES_V3_RX_RX_MODE_01			0x168
+ 
+ /* Only for QMP V3 PHY - PCS registers */
+ #define QPHY_V3_PCS_POWER_DOWN_CONTROL			0x004
+@@ -280,6 +281,7 @@
+ #define QPHY_V3_PCS_TSYNC_RSYNC_TIME			0x08c
+ #define QPHY_V3_PCS_PWRUP_RESET_DLY_TIME_AUXCLK		0x0a0
+ #define QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK		0x0a4
++#define QPHY_V3_PCS_PLL_LOCK_CHK_DLY_TIME		0x0a8
+ #define QPHY_V3_PCS_LFPS_TX_ECSTART_EQTLOCK		0x0b0
+ #define QPHY_V3_PCS_RXEQTRAINING_WAIT_TIME		0x0b8
+ #define QPHY_V3_PCS_RXEQTRAINING_RUN_TIME		0x0bc
+@@ -292,13 +294,23 @@
+ #define QPHY_V3_PCS_RX_MIN_HIBERN8_TIME			0x138
+ #define QPHY_V3_PCS_RX_SIGDET_CTRL1			0x13c
+ #define QPHY_V3_PCS_RX_SIGDET_CTRL2			0x140
++#define QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK_MSB	0x1a8
++#define QPHY_V3_PCS_OSC_DTCT_ACTIONS			0x1ac
++#define QPHY_V3_PCS_SIGDET_CNTRL			0x1b0
+ #define QPHY_V3_PCS_TX_MID_TERM_CTRL1			0x1bc
+ #define QPHY_V3_PCS_MULTI_LANE_CTRL1			0x1c4
+ #define QPHY_V3_PCS_RX_SIGDET_LVL			0x1d8
++#define QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB	0x1dc
++#define QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB	0x1e0
+ #define QPHY_V3_PCS_REFGEN_REQ_CONFIG1			0x20c
+ #define QPHY_V3_PCS_REFGEN_REQ_CONFIG2			0x210
+ 
+ /* Only for QMP V3 PHY - PCS_MISC registers */
+ #define QPHY_V3_PCS_MISC_CLAMP_ENABLE			0x0c
++#define QPHY_V3_PCS_MISC_OSC_DTCT_CONFIG2		0x2c
++#define QPHY_V3_PCS_MISC_PCIE_INT_AUX_CLK_CONFIG1	0x44
++#define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG2		0x54
++#define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG4		0x5c
++#define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5		0x60
+ 
+ #endif
+-- 
+2.18.0
