@@ -1,64 +1,72 @@
-From: Patrick Venture <venture@google.com>
-Subject: [PATCH v2 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Tue, 26 Feb 2019 15:36:00 -0800
-Message-ID: <20190226233600.140153-1-venture@google.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
+Date: Tue, 26 Feb 2019 15:44:23 -0800
+Message-ID: <20190226234422.GD174696@google.com>
+References: <20190224140426.3267-1-marc.zyngier@arm.com>
+ <CAKv+Gu9OOzOxx0rTAZqM8r4q_hRmOp3b=KP7fwgNeiu67FCApA@mail.gmail.com>
+ <5310b73b-4821-6dff-b9c0-34c59fb7fd72@arm.com>
+ <CAKv+Gu_=bQyVZqgUnJm9moCcaCcpDrag6NWGEpaR65=pMiTFJQ@mail.gmail.com>
+ <0c433a70-27f6-76ad-c46c-6015de1ffaa4@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0c433a70-27f6-76ad-c46c-6015de1ffaa4@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, Kalle Valo <kvalo@codeaurora.org>, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Xinming Hu <huxinming820@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, "<linux-wireless@vger.kernel.org>" <linux-wireless@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-pci@vger.kernel.org, linux-pm@vger.kernel.o
 List-Id: devicetree@vger.kernel.org
 
-Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+Hi,
 
-Signed-off-by: Patrick Venture <venture@google.com>
-Change-Id: Ic89a2df0f555dee10598f87537ee004e82d13acd
----
-Changes for v2:
-- Added comment about syscon required parameter.
----
- .../bindings/misc/aspeed-p2a-ctrl.txt         | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+On Tue, Feb 26, 2019 at 05:14:00PM +0000, Marc Zyngier wrote:
+> On 26/02/2019 16:21, Ard Biesheuvel wrote:
+> > On Mon, 25 Feb 2019 at 15:53, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> >> It outlines one thing: If you have to interpret per-device PCI
+> >> properties from DT, you're in for serious trouble. I should get some
+> >> better HW.
+> >>
+> > 
+> > Yeah, it obviously makes no sense at all for the interrupt parent of a
+> > PCI device to deviate from the host bridge's interrupt parent, and
+> > it's quite unfortunate that we can't simply ban it now that the cat is
+> > out of the bag already.
+> > 
+> > Arguably, the wake up widget is not part of the PCI device, but I have
+> > no opinion as to whether it is better modeling it as a sub device as
+> > you are proposing or as an entirely separate device referenced via a
+> > phandle.
+> 
+> It is not that clear. The widget seems to be an integral part of the
+> device, as it is the same basic IP that is used for SDIO and USB.
 
-diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-new file mode 100644
-index 000000000000..1092d62d1c92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-@@ -0,0 +1,32 @@
-+======================================================================
-+Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
-+======================================================================
-+
-+The bridge is available on platforms with the VGA enabled on the Aspeed device.
-+In this case, the host has access to a 64KiB window into all of the BMC's
-+memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
-+has read access to all the regions of memory, however the host only has read
-+and write access depending on a register controlled by the BMC.
-+
-+Required properties:
-+===================
-+
-+ - compatible: must be one of:
-+	- "aspeed,ast2400-p2a-ctrl"
-+	- "aspeed,ast2500-p2a-ctrl"
-+
-+ - syscon: handle to syscon device node controlling PCI.
-+
-+Optional properties:
-+===================
-+
-+- memory-region: A phandle to a reserved_memory region to be used for the PCI
-+		to AHB mapping
-+
-+Example:
-+
-+p2a: p2a-control@1e6e2000 {
-+	compatible = "aspeed,ast2400-p2a-ctrl";
-+	memory-region = <&reserved_memory>;
-+	syscon = <&syscon>;
-+};
--- 
-2.21.0.rc2.261.ga7da99ff1b-goog
+It's not really a widget specific to this IP. It's just a GPIO. It so
+happens that both SDIO and PCIe designs have wanted to use a GPIO for
+wakeup, as many other devices do. (Note: it's not just cheap ARM
+devices; pulling up some Intel Chromebook designs, I see the exact same
+WAKE# GPIO on their PCIe WiFi as well.)
+
+> It looks like the good old pre-PCI-2.2 days, where you had to have a
+> separate cable between your network card and the base-board for the
+> wake-up interrupt to be delivered. Starting with PCI-2.2, the bus can
+> carry the signal just fine. With PCIe, it should just be an interrupt
+> TLP sent to the RC, but that's obviously not within the capabilities of
+> the HW.
+
+You should search the PCI Express specification for WAKE#. There is a
+clearly-documented "side-band wake" feature that is part of the
+standard, as an alternative to in-band TLP wakeup. While you claim this
+is an ancient thing, it in fact still in use on many systems -- it's
+just usually abstracted better by ACPI firmware, whereas the dirty
+laundry is aired a bit more on a Device Tree system. And we got it
+wrong.
+
+> Anyway, it'd be good if the Marvell people could chime in and let us
+> know how they'd prefer to handle this.
+
+I'm not sure this is really a Marvell-specific problem. (Well, except
+for the marvell,wakeup-pin silliness, which is somewhat orthogonal.) In
+fact, if we cared a little more about Wake-on-WiFi, we'd be trying to
+support the same (out-of-band WAKE#) with other WiFi drivers.
+
+Brian
