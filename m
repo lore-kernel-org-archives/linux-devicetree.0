@@ -1,79 +1,44 @@
-From: Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: [PATCH 4/4] clk: qoriq: Add clockgen support for lx2160a
-Date: Tue, 26 Feb 2019 08:34:46 +0000
-Message-ID: <1551126463-5341-5-git-send-email-vabhav.sharma@nxp.com>
-References: <1551126463-5341-1-git-send-email-vabhav.sharma@nxp.com>
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: [PATCH v2] ls1021aqds: enable esdhc controller
+Date: Tue, 26 Feb 2019 08:40:22 +0000
+Message-ID: <20190226084121.41499-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551126463-5341-1-git-send-email-vabhav.sharma@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "oss@buserror.net" <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-kernel-owner@vger.kernel.org
-Cc: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Andy Tang <andy.tang@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Yinbo Zhu <yinbo.zhu@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
 
-Add clockgen support for lx2160a.
-Added entry for compat 'fsl,lx2160a-clockgen'.
+This patch is to enable esdhc controller in ls1021aqds
 
-Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 ---
- drivers/clk/clk-qoriq.c         | 12 ++++++++++++
- drivers/cpufreq/qoriq-cpufreq.c |  1 +
- 2 files changed, 13 insertions(+)
+Change in v2:
+		Add patch code after &enet2 to keep them sort alphabetically.
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index e75194a..cfd14ef 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -570,6 +570,17 @@ static const struct clockgen_chipinfo chipinfo[] =3D {
- 		.flags =3D CG_VER3 | CG_LITTLE_ENDIAN,
- 	},
- 	{
-+		.compat =3D "fsl,lx2160a-clockgen",
-+		.cmux_groups =3D {
-+			&clockgen2_cmux_cga12, &clockgen2_cmux_cgb
-+		},
-+		.cmux_to_group =3D {
-+			0, 0, 0, 0, 1, 1, 1, 1, -1
-+		},
-+		.pll_mask =3D 0x37,
-+		.flags =3D CG_VER3 | CG_LITTLE_ENDIAN,
-+	},
-+	{
- 		.compat =3D "fsl,p2041-clockgen",
- 		.guts_compat =3D "fsl,qoriq-device-config-1.0",
- 		.init_periph =3D p2041_init_periph,
-@@ -1435,6 +1446,7 @@ CLK_OF_DECLARE(qoriq_clockgen_t1023, "fsl,t1023-clock=
-gen", clockgen_init);
- CLK_OF_DECLARE(qoriq_clockgen_t1040, "fsl,t1040-clockgen", clockgen_init);
- CLK_OF_DECLARE(qoriq_clockgen_t2080, "fsl,t2080-clockgen", clockgen_init);
- CLK_OF_DECLARE(qoriq_clockgen_t4240, "fsl,t4240-clockgen", clockgen_init);
-+CLK_OF_DECLARE(qoriq_clockgen_lx2160a, "fsl,lx2160a-clockgen", clockgen_in=
-it);
+ arch/arm/boot/dts/ls1021a-qds.dts |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-=
+qds.dts
+index dac61e7..ae26f8b 100644
+--- a/arch/arm/boot/dts/ls1021a-qds.dts
++++ b/arch/arm/boot/dts/ls1021a-qds.dts
+@@ -160,6 +160,10 @@
+ 	status =3D "okay";
+ };
 =20
- /* Legacy nodes */
- CLK_OF_DECLARE(qoriq_sysclk_1, "fsl,qoriq-sysclk-1.0", sysclk_init);
-diff --git a/drivers/cpufreq/qoriq-cpufreq.c b/drivers/cpufreq/qoriq-cpufre=
-q.c
-index 3d773f6..83921b7 100644
---- a/drivers/cpufreq/qoriq-cpufreq.c
-+++ b/drivers/cpufreq/qoriq-cpufreq.c
-@@ -295,6 +295,7 @@ static const struct of_device_id node_matches[] __initc=
-onst =3D {
- 	{ .compatible =3D "fsl,ls1046a-clockgen", },
- 	{ .compatible =3D "fsl,ls1088a-clockgen", },
- 	{ .compatible =3D "fsl,ls2080a-clockgen", },
-+	{ .compatible =3D "fsl,lx2160a-clockgen", },
- 	{ .compatible =3D "fsl,p4080-clockgen", },
- 	{ .compatible =3D "fsl,qoriq-clockgen-1.0", },
- 	{ .compatible =3D "fsl,qoriq-clockgen-2.0", },
++&esdhc {
++	status =3D "okay";
++};
++
+ &i2c0 {
+ 	status =3D "okay";
+=20
 --=20
-2.7.4
+1.7.1
