@@ -1,53 +1,72 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 2/3] spi: pxa2xx: Introduce dma-burst-sz property
- support
-Date: Tue, 26 Feb 2019 15:02:05 +0200
-Message-ID: <20190226130205.GX9224@smile.fi.intel.com>
-References: <20190226092441.49198-1-andriy.shevchenko@linux.intel.com>
- <20190226092441.49198-2-andriy.shevchenko@linux.intel.com>
- <b845fbcf-d9d9-f682-9604-31c7a9c8c418@linux.intel.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH v3 0/5] Enable wm8524 on i.MX8MQ
+Date: Tue, 26 Feb 2019 15:05:20 +0200
+Message-ID: <CAEnQRZBRG4d59y3kteMaZMjfHWZ=FYL4dP+uRcthvXxqtmH7cw@mail.gmail.com>
+References: <20190226070742.30551-1-daniel.baluta@nxp.com> <CAOMZO5CpefU56xLaOUq0GRwWP9kcMPyZ2PWM38C9FuU-3k1MJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <b845fbcf-d9d9-f682-9604-31c7a9c8c418@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Robert Jarzmik <robert.jarzmik@free.fr>, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5CpefU56xLaOUq0GRwWP9kcMPyZ2PWM38C9FuU-3k1MJA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-li
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 01:46:49PM +0200, Jarkko Nikula wrote:
-> On 2/26/19 11:24 AM, Andy Shevchenko wrote:
-> > Some masters may have different DMA burst size than hard coded default.
-> > In such case respect the value given by dma-burst-size property.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >   drivers/spi/spi-pxa2xx-dma.c   | 4 +++-
-> >   drivers/spi/spi-pxa2xx-pci.c   | 8 +++++++-
-> >   drivers/spi/spi-pxa2xx.c       | 5 ++++-
-> >   include/linux/spi/pxa2xx_spi.h | 1 +
-> >   4 files changed, 15 insertions(+), 3 deletions(-)
-> ...
-> > @@ -1566,9 +1568,10 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
-> >   	ssp->pdev = pdev;
-> >   	ssp->port_id = pxa2xx_spi_get_port_id(adev);
-> > -	pdata->is_slave = of_property_read_bool(pdev->dev.of_node, "spi-slave");
-> > +	pdata->is_slave = device_property_read_bool(dev, "spi-slave");
-> 
-> Unrelated change. Not sure is it worth of its own patch.
+On Tue, Feb 26, 2019 at 2:53 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Daniel,
+>
+> On Tue, Feb 26, 2019 at 4:08 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
+> >
+> > On i.MX8MQ we can start the party using the wm8524 codec
+> > which gets it's data through the SAI2 interface.
+> >
+> > In order to make it work this patch series enables the SDMA nodes,
+> > sets the correct pinctrl configuration and uses the simple card
+> > machine driver to put everything together.
+> >
+> > Changes since v2:
+> >         - s/QM/MQ after Chris comments
+> >
+> > Changes since v1:
+> >         - added cover letter
+> >         - remove "fsl,imx8mq-sdma" compatible for sdma.
+>
+> Why? It is good practice to add the new compatible entry.
 
-Fixed in v2.
+I get your point here. But for the moment it is identical with
+"fsl,imx7d-sdma" so there is no need to add it now!
 
--- 
-With Best Regards,
-Andy Shevchenko
+See the discussion here, and comment from Lucas:
+
+https://lkml.org/lkml/2019/1/28/194
+
+So, I prefer to keep it simple.
+
+>
+> In case we find out a need for a fix that only affects imx8mq in the
+> future we can do that by using the specific compatible and no dts
+> change will be needed.
+>
+> >
+> > Daniel Baluta (5):
+> >   arm64: dts: imx8mq: Add SDMA nodes
+> >   arm64: dts: imx8mq: Add SAI2 node
+> >   arm64: dts: imx8mq: Add SAI pinctrl configuration
+> >   arm64: dts: imx8mq: Enable SAI2 for wm8524 codec
+> >   arm64: dts: imx8mq: Enable wm8524 codec
+>
+> I would suggest making the last three patches as a single one.
+
+I'm not convinced about this. I try to separate patches like this
+in order for people to really understand step by step how
+audio is enabled on i.MX board.
+
+I will give a second thought though. Maybe 3/5 and 4/5 could be squashed
+together.
+
+>
+> Also, please make the Subject as: arm64: dts: imx8mq-evk when a patch
+> is specific to the imx8mq-evk dts.
+
+Indeed, will fix in next version.
