@@ -1,50 +1,65 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v2 1/3] Bluetooth: btusb: add QCA6174A compatible
- properties
-Date: Tue, 26 Feb 2019 10:01:34 +0100
-Message-ID: <49653AC5-5800-4319-B3C0-0CCA6A920E2C@holtmann.org>
-References: <20190222225345.69084-1-briannorris@chromium.org>
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190222225345.69084-1-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Rajat Jain <rajatja@google.com>, Robin Murphy <robin.murphy@arm.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH v2 0/2] Add and document the i.MX8MQ OTP controller
+Date: Tue, 26 Feb 2019 09:01:48 +0000
+Message-ID: <20190226090147.fohb7ez7pprnxfvb@fsr-ub1664-175>
+References: <20190202150638.13672-1-ccaione@baylibre.com>
+ <20190225151127.elg2iuaxa4otdb46@fsr-ub1664-175>
+ <e0af9818-86cf-c341-61a4-0a1406b07880@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e0af9818-86cf-c341-61a4-0a1406b07880@baylibre.com>
+Content-Language: en-US
+Content-ID: <8DC7F742E4ADD548A54687F54AFAEB12@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
-> We may need to specify a GPIO wake pin for this device, so add a
-> compatible property for it.
+On 19-02-26 08:57:13, Carlo Caione wrote:
+> On 25/02/2019 15:11, Abel Vesa wrote:
+> > On 19-02-02 15:06:36, Carlo Caione wrote:
+> > > Add a new node to enable the On-Chip OTP controller and add the new
+> > > binding in the documentation.
+> > > 
+> > > Carlo Caione (2):
+> > >    arm64: dts: imx8mq: Add on-chip OTP controller node
+> > >    dt-bindings: imx-ocotp: Add i.MX8MQ compatible
+> > > 
+> > >   Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 1 +
+> > >   arch/arm64/boot/dts/freescale/imx8mq.dtsi             | 8 ++++++++
+> > >   2 files changed, 9 insertions(+)
+> > > 
+> > > -- 
+> > > 2.19.1
+> > > 
+> > 
+> > What's the status of this patchseries ?
+> > 
+> > It would help a lot if we would manage to get this in.
 > 
-> There are at least to USB PID/VID variations of this chip: one with a
-> Lite-On ID and one with an Atheros ID.
+> Uh, for some reason I thought Lucas was going to take care of this.
+> I'll submit a v2 now.
 > 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> v2:
-> * drop leading zeroes from VID, per documented binding
-> ---
-> drivers/bluetooth/btusb.c | 2 ++
-> 1 file changed, 2 insertions(+)
+
+I tried this morning to apply and test both yours and Lucas's.
+
+Your second patch overlaps with Lucas's.
+
+Plus, Lucas's patch updates the the list in the description too.
+
+So I would suggest you send only the dts update since Lucas's patch series
+already has R-b and it's good to go.
+
+> --
+> Carlo Caione
 > 
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 470ee68555d9..54cb5f583b1d 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -2862,6 +2862,8 @@ static irqreturn_t btusb_oob_wake_handler(int irq, void *priv)
-> 
-> static const struct of_device_id btusb_match_table[] = {
-> 	{ .compatible = "usb1286,204e" },
-> +	{ .compatible = "usbcf3,e300" }, /* QCA6174A */
-> +	{ .compatible = "usb4ca,301a" }, /* QCA6174A (Lite-On) */
-
-are these really proper .compatible USB VID?PID strings. I think they are one letter short.
-
-Regards
-
-Marcel
