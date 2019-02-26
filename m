@@ -1,46 +1,57 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH] dt-bindings: Add vendor prefix for feiyang
-Date: Tue, 26 Feb 2019 11:41:27 +0530
-Message-ID: <CAMty3ZCdYiWPstFh8JAwLSWwC6sE3Un+-QmKDaEWwmmWF5MQ4g@mail.gmail.com>
-References: <20190212115232.4532-1-jagan@amarulasolutions.com>
+Subject: Re: [PATCH v6 0/4] input: touchscreen: Add goodix GT5553 CTP support
+Date: Tue, 26 Feb 2019 11:43:54 +0530
+Message-ID: <CAMty3ZDpy5YX3V+6e=UtY=a9Lgiw-NEP1JPQn4_LKL3mYFtrvQ@mail.gmail.com>
+References: <20190219101629.15977-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212115232.4532-1-jagan@amarulasolutions.com>
+In-Reply-To: <20190219101629.15977-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Rob Herring <robh+dt@kernel.org>
+Cc: Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Dmitry,
 
-On Tue, Feb 12, 2019 at 5:22 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+On Tue, Feb 19, 2019 at 3:46 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
-> Add vendor prefix for feiyang, known as
-> Shenzhen Fly Young Technology Co.,LTD. a known producer for LCD modules.
+> This is v6 patchset for supporting goodix GT5553 CTP. Here is the
+> previous version[1]
 >
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Note: notation about using 'feiyang' is based on the datasheet
-> http://files.pine64.org/doc/datasheet/pine64/FY07024DI26A30-D_feiyang_LCD_panel.pdf
+> Changes for v5:
+> - document bindings for required regulators, which are need during
+>   power-on sequence
+> - enable, disable required regulators as described in power-on sequence
+>   using normal regulator calls
+> - update the proper commi messages
+> Changes for v4:
+> - document AVDD22, DVDD12, VDDIO as optional properties
+> - use regulator bulk calls, for get, enable and disable functionalities
+> Changes for v4:
+> - devm_add_action_or_reset for disabling regulator
+> Changes for v3:
+> - add cover-letter
+> - s/ADVV28/AVDD28 on commit head
+> - fix few typo
+> Changes for v2:
+> - Rename vcc-supply with AVDD28-supply
+> - disable regulator in remove
+> - fix to setup regulator in probe code
+> - add chipdata
+> - drop example node in dt-bindings
 >
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> [1] https://patchwork.kernel.org/cover/10816901/
 >
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index a5ad57eaee20..f42e12eb9d64 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -140,6 +140,7 @@ fairphone   Fairphone B.V.
->  faraday        Faraday Technology Corporation
->  fastrax        Fastrax Oy
->  fcs    Fairchild Semiconductor
-> +feiyang        Shenzhen Fly Young Technology Co.,LTD.
->  firefly        Firefly
->  focaltech      FocalTech Systems Co.,Ltd
->  friendlyarm    Guangzhou FriendlyARM Computer Tech Co., Ltd
-> --
-> 2.18.0.321.gffc6fa0e3
+> Jagan Teki (4):
+>   dt-bindings: input: touchscreen: goodix: Document regulator properties
+>   Input: goodix - Add regulators suppot
+>   dt-bindings: input: touchscreen: goodix: Add GT5663 compatible
+>   Input: goodix - Add GT5663 CTP support
 >
+>  .../bindings/input/touchscreen/goodix.txt     |  3 +
+>  drivers/input/touchscreen/goodix.c            | 60 +++++++++++++++++++
+>  2 files changed, 63 insertions(+)
 
-Any comments?
+Let me know if you have any further comments on regulator patch, fyi
+Rob reviewed it already.
