@@ -1,28 +1,29 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v3 2/5] arm64: dts: imx8mq: Add SAI2 node
-Date: Tue, 26 Feb 2019 15:06:56 +0200
-Message-ID: <CAEnQRZBhR__V_J8LnwNCkhai_8WrSHtsKHtA07wDkScuqhacKA@mail.gmail.com>
-References: <20190226070742.30551-1-daniel.baluta@nxp.com> <20190226070742.30551-3-daniel.baluta@nxp.com>
- <CAOMZO5AzUzyr_xixDcntoNt1KNSRih_2ZRFnzQHcg6pZmHsYig@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 0/5] Enable wm8524 on i.MX8MQ
+Date: Tue, 26 Feb 2019 10:10:07 -0300
+Message-ID: <CAOMZO5DTR8aLphJBCqR=oLOz5aZXuNfPVEgUk6K_YOdVD0UK+A@mail.gmail.com>
+References: <20190226070742.30551-1-daniel.baluta@nxp.com> <CAOMZO5CpefU56xLaOUq0GRwWP9kcMPyZ2PWM38C9FuU-3k1MJA@mail.gmail.com>
+ <CAEnQRZBRG4d59y3kteMaZMjfHWZ=FYL4dP+uRcthvXxqtmH7cw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AzUzyr_xixDcntoNt1KNSRih_2ZRFnzQHcg6pZmHsYig@mail.gmail.com>
+In-Reply-To: <CAEnQRZBRG4d59y3kteMaZMjfHWZ=FYL4dP+uRcthvXxqtmH7cw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
+To: Daniel Baluta <daniel.baluta@gmail.com>
 Cc: Daniel Baluta <daniel.baluta@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-li
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 2:55 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> On Tue, Feb 26, 2019 at 4:08 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
-> >
-> > SAI2 is part of AIPS-3 memory region and it's the DAI through
-> > which the wm8524 codec gets its data.
->
-> Please do not mention wm8524 in a SoC dtsi file commit message.
->
-> It is the imx8mq-evk board that uses this codec and this information
-> is not SoC related.
+On Tue, Feb 26, 2019 at 10:05 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
 
-Got it. Thanks for the comment. Will fix in next version.
+> I get your point here. But for the moment it is identical with
+> "fsl,imx7d-sdma" so there is no need to add it now!
+>
+> See the discussion here, and comment from Lucas:
+>
+> https://lkml.org/lkml/2019/1/28/194
+
+Lucas' suggestion was not change the sdma driver code and I also agree with it.
+
+The SoC dts should still use:
+
+compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
