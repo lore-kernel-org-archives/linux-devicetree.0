@@ -1,43 +1,42 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: [PATCH] ARM: dts: sun7i: olimex-lime2: Add regulators for GPIO banks
-Date: Tue, 26 Feb 2019 16:15:25 +0200
-Message-ID: <20190226141525.1039-1-plaes@plaes.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 2/4] bus: ti-sysc: Add support for PRUSS SYSC type
+Date: Tue, 26 Feb 2019 16:16:24 +0200
+Message-ID: <7b762f7d-75af-a615-a18d-6f3854bc099a@ti.com>
+References: <1549295637-24890-1-git-send-email-rogerq@ti.com>
+ <1549295637-24890-3-git-send-email-rogerq@ti.com>
+ <20190225212600.GA12346@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190225212600.GA12346@bogus>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: linux-sunxi@googlegroups.com, Priit Laes <priit.laes@paf.com>
+To: Rob Herring <robh@kernel.org>
+Cc: tony@atomide.com, s-anna@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, david@lechnology.com, woods.technical@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Priit Laes <priit.laes@paf.com>
+On 25/02/2019 23:26, Rob Herring wrote:
+> On Mon, Feb 04, 2019 at 05:53:55PM +0200, Roger Quadros wrote:
+>> The PRUSS module has a SYSCFG which is unique. Add
+>> support for it.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>  drivers/bus/ti-sysc.c                 | 77 +++++++++++++++++++++++++++++++++++
+>>  include/dt-bindings/bus/ti-sysc.h     | 11 -----
+> 
+> Did you intend to remove what you just added?
 
-Make sure that A20 Olimex Lime2 pin bank regulators are
-properly represented.
+Yes, it was a mistake.
 
-While pin banks A, B and F are connected to 3.3V static
-regulator, pin banks E and G tied with LDO3 and LDO4 regulators
-with 2.8V reference.
+> 
+>>  include/linux/platform_data/ti-sysc.h |  1 +
+>>  3 files changed, 78 insertions(+), 11 deletions(-)
 
-Signed-off-by: Priit Laes <priit.laes@paf.com>
----
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+cheers,
+-roger
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-index 4e1c590eb098..3de479bfa4cf 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-@@ -174,6 +174,12 @@
- };
- 
- &pio {
-+	vcc-pa-supply = <&reg_vcc3v3>;
-+	vcc-pc-supply = <&reg_vcc3v3>;
-+	vcc-pe-supply = <&reg_ldo3>;
-+	vcc-pf-supply = <&reg_vcc3v3>;
-+	vcc-pg-supply = <&reg_ldo4>;
-+
- 	led_pins_olinuxinolime: led-pins {
- 		pins = "PH2";
- 		function = "gpio_out";
 -- 
-2.11.0
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
