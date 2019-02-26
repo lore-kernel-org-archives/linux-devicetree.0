@@ -1,106 +1,61 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 05/11] ARM: davinci: da830: switch to using the clocksource driver
-Date: Tue, 26 Feb 2019 13:06:27 +0100
-Message-ID: <20190226120633.18200-6-brgl@bgdev.pl>
-References: <20190226120633.18200-1-brgl@bgdev.pl>
+Subject: Re: [PATCH v2 04/12] ARM: davinci: WARN_ON() if clk_get() fails
+Date: Tue, 26 Feb 2019 13:08:59 +0100
+Message-ID: <CAMRc=Mcd886pfbOr3cWwMtRJt34DVAEq63B7W8m2Nqkrddw5FQ@mail.gmail.com>
+References: <20190204171757.32073-1-brgl@bgdev.pl> <20190204171757.32073-5-brgl@bgdev.pl>
+ <0750392d-e298-b467-24c0-3c2779ead3f7@lechnology.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226120633.18200-1-brgl@bgdev.pl>
+In-Reply-To: <0750392d-e298-b467-24c0-3c2779ead3f7@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, David Lechner <david@lechnology.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: David Lechner <david@lechnology.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+wt., 5 lut 2019 o 03:18 David Lechner <david@lechnology.com> napisa=C5=82(a=
+):
+>
+> On 2/4/19 11:17 AM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Currently the timer code checks if the clock pointer passed to it is
+> > good (!IS_ERR(clk)). The new clocksource driver expects the clock to
+> > be functional and doesn't perform any checks so emit a warning if
+> > clk_get() fails. Apply this to all davinci platforms.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >   arch/arm/mach-davinci/da830.c  | 4 ++++
+> >   arch/arm/mach-davinci/da850.c  | 4 ++++
+> >   arch/arm/mach-davinci/dm355.c  | 4 ++++
+> >   arch/arm/mach-davinci/dm365.c  | 4 ++++
+> >   arch/arm/mach-davinci/dm644x.c | 4 ++++
+> >   arch/arm/mach-davinci/dm646x.c | 4 ++++
+> >   6 files changed, 24 insertions(+)
+> >
+> > diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da83=
+0.c
+> > index 2cc9fe4c3a91..9a4b749cbb6b 100644
+> > --- a/arch/arm/mach-davinci/da830.c
+> > +++ b/arch/arm/mach-davinci/da830.c
+> > @@ -834,6 +834,10 @@ void __init da830_init_time(void)
+> >       da830_pll_init(NULL, pll, NULL);
+> >
+> >       clk =3D clk_get(NULL, "timer0");
+> > +     if (WARN_ON(IS_ERR(clk))) {
+> > +             pr_err("Unable to get the timer clock\n");
+>
+> Do we really need a warning _and_ an error?
+>
 
-We now have a proper clocksource driver for davinci. Switch the da830
-platform to using it.
+That will give us the reason AND point us to the right place in the code.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/mach-davinci/da830.c | 36 ++++++++++++-----------------------
- 1 file changed, 12 insertions(+), 24 deletions(-)
+Bart
 
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index d242ce06f7e5..1dd4c7273bd7 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -20,7 +20,8 @@
- #include <mach/common.h>
- #include <mach/cputype.h>
- #include <mach/da8xx.h>
--#include <mach/time.h>
-+
-+#include <clocksource/timer-davinci.h>
- 
- #include "irqs.h"
- #include "mux.h"
-@@ -675,32 +676,18 @@ int __init da830_register_gpio(void)
- 	return da8xx_register_gpio(&da830_gpio_platform_data);
- }
- 
--static struct davinci_timer_instance da830_timer_instance[2] = {
--	{
--		.base		= DA8XX_TIMER64P0_BASE,
--		.bottom_irq	= DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT12_0),
--		.top_irq	= DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT34_0),
--		.cmp_off	= DA830_CMP12_0,
--		.cmp_irq	= DAVINCI_INTC_IRQ(IRQ_DA830_T12CMPINT0_0),
--	},
--	{
--		.base		= DA8XX_TIMER64P1_BASE,
--		.bottom_irq	= DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT12_1),
--		.top_irq	= DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT34_1),
--		.cmp_off	= DA830_CMP12_0,
--		.cmp_irq	= DAVINCI_INTC_IRQ(IRQ_DA830_T12CMPINT0_1),
--	},
--};
--
- /*
-  * T0_BOT: Timer 0, bottom		: Used for clock_event & clocksource
-  * T0_TOP: Timer 0, top			: Used by DSP
-  * T1_BOT, T1_TOP: Timer 1, bottom & top: Used for watchdog timer
-  */
--static struct davinci_timer_info da830_timer_info = {
--	.timers		= da830_timer_instance,
--	.clockevent_id	= T0_BOT,
--	.clocksource_id	= T0_BOT,
-+static const struct davinci_timer_cfg da830_timer_cfg = {
-+	.reg = DEFINE_RES_IO(DA8XX_TIMER64P0_BASE, SZ_4K),
-+	.irq = {
-+		DEFINE_RES_IRQ(DAVINCI_INTC_IRQ(IRQ_DA830_T12CMPINT0_0)),
-+		DEFINE_RES_IRQ(DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT12_0)),
-+	},
-+	.cmp_off = DA830_CMP12_0,
- };
- 
- static const struct davinci_soc_info davinci_soc_info_da830 = {
-@@ -712,7 +699,6 @@ static const struct davinci_soc_info davinci_soc_info_da830 = {
- 	.pinmux_base		= DA8XX_SYSCFG0_BASE + 0x120,
- 	.pinmux_pins		= da830_pins,
- 	.pinmux_pins_num	= ARRAY_SIZE(da830_pins),
--	.timer_info		= &da830_timer_info,
- 	.emac_pdata		= &da8xx_emac_pdata,
- };
- 
-@@ -742,6 +728,7 @@ void __init da830_init_time(void)
- {
- 	void __iomem *pll;
- 	struct clk *clk;
-+	int rv;
- 
- 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA830_REF_FREQ);
- 
-@@ -755,7 +742,8 @@ void __init da830_init_time(void)
- 		return;
- 	}
- 
--	davinci_timer_init(clk);
-+	rv = davinci_timer_register(clk, &da830_timer_cfg);
-+	WARN(rv, "Unable to register the timer: %d\n", rv);
- }
- 
- static struct resource da830_psc0_resources[] = {
--- 
-2.20.1
+> > +             return;
+> > +     }
+> >
+> >       davinci_timer_init(clk);
+> >   }
