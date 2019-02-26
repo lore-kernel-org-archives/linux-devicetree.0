@@ -1,16 +1,16 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: Add dma-burst-sz property for
- spi-pxa2xx
-Date: Tue, 26 Feb 2019 13:33:54 +0200
-Message-ID: <20190226113354.GW9224@smile.fi.intel.com>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH v1 2/3] spi: pxa2xx: Introduce dma-burst-sz property
+ support
+Date: Tue, 26 Feb 2019 13:46:49 +0200
+Message-ID: <b845fbcf-d9d9-f682-9604-31c7a9c8c418@linux.intel.com>
 References: <20190226092441.49198-1-andriy.shevchenko@linux.intel.com>
- <20190226110238.GA7082@sirena.org.uk>
+ <20190226092441.49198-2-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190226110238.GA7082@sirena.org.uk>
+In-Reply-To: <20190226092441.49198-2-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,20 +20,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, linux-arm-kernel@lists.infradead.org, Robert Jarzmik <robert.jarzmik@free.fr>, Daniel Mack <daniel@zonque.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 11:02:38AM +0000, Mark Brown wrote:
-> On Tue, Feb 26, 2019 at 12:24:39PM +0300, Andy Shevchenko wrote:
-> > Add DMA burst size property to the SPI PXA2xx bindings.
+On 2/26/19 11:24 AM, Andy Shevchenko wrote:
+> Some masters may have different DMA burst size than hard coded default.
+> In such case respect the value given by dma-burst-size property.
 > 
-> Shouldn't we be inferring this from the device specific compatible
-> string (or PCI identifier for x86)?  That way if there's other quirks
-> needed we don't need any binding changes.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>   drivers/spi/spi-pxa2xx-dma.c   | 4 +++-
+>   drivers/spi/spi-pxa2xx-pci.c   | 8 +++++++-
+>   drivers/spi/spi-pxa2xx.c       | 5 ++++-
+>   include/linux/spi/pxa2xx_spi.h | 1 +
+>   4 files changed, 15 insertions(+), 3 deletions(-)
+...
+> @@ -1566,9 +1568,10 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+>   	ssp->pdev = pdev;
+>   	ssp->port_id = pxa2xx_spi_get_port_id(adev);
+>   
+> -	pdata->is_slave = of_property_read_bool(pdev->dev.of_node, "spi-slave");
+> +	pdata->is_slave = device_property_read_bool(dev, "spi-slave");
 
-Hmm... Yes, we may use PCI ID for that.
+Unrelated change. Not sure is it worth of its own patch.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Jarkko
