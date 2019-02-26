@@ -1,85 +1,155 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/2] arm64: dts: bitmain: Add GPIO support for BM1880 SoC
-Date: Tue, 26 Feb 2019 17:20:21 +0530
-Message-ID: <20190226115022.19022-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: bitmain: Add GPIO Line names for Sophon Edge board
+Date: Tue, 26 Feb 2019 17:20:22 +0530
+Message-ID: <20190226115022.19022-2-manivannan.sadhasivam@linaro.org>
+References: <20190226115022.19022-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190226115022.19022-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, amit.kucheria@linaro.org, linux-gpio@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add GPIO support for Bitmain BM1880 SoC based on Designware APB GPIO
-controller IP. IP exposes 3 GPIO controllers with a total of 72 pins.
+Add GPIO line names for Sophon Edge board based on BM1880 SoC from
+Bitmain. Line names are based on the board schematics as well as the
+96Boards Consumer Edition specification v1.0.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- arch/arm64/boot/dts/bitmain/bm1880.dtsi | 54 +++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ .../boot/dts/bitmain/bm1880-sophon-edge.dts   | 114 ++++++++++++++++++
+ 1 file changed, 114 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/bitmain/bm1880.dtsi b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-index 55a4769e0de2..e4da4ec6a5ee 100644
---- a/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-+++ b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-@@ -80,6 +80,60 @@
- 			#interrupt-cells = <3>;
- 		};
+diff --git a/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts b/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
+index 6a3255597138..6bdf4c101c61 100644
+--- a/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
++++ b/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
+@@ -8,6 +8,28 @@
  
-+		gpio0: gpio@50027000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x0 0x50027000 0x0 0x400>;
+ #include "bm1880.dtsi"
+ 
++/*
++ * GPIO name legend: proper name = the GPIO line is used as GPIO
++ *         NC = not connected (pin out but not routed from the chip to
++ *              anything the board)
++ *         "[PER]" = pin is muxed for [peripheral] (not GPIO)
++ *         LSEC = Low Speed External Connector
++ *         HSEC = High Speed External Connector
++ *
++ * Line names are taken from the schematic "sophon-edge-schematics"
++ * version, 1.0210.
++ *
++ * For the lines routed to the external connectors the
++ * lines are named after the 96Boards CE Specification 1.0,
++ * Appendix "Expansion Connector Signal Description".
++ *
++ * When the 96Board naming of a line and the schematic name of
++ * the same line are in conflict, the 96Board specification
++ * takes precedence. This is only for the informational
++ * lines i.e. "[FOO]", the GPIO named lines "GPIO-A" thru "GPIO-L"
++ * are the only ones actually used for GPIO.
++ */
 +
+ / {
+ 	compatible = "bitmain,sophon-edge", "bitmain,bm1880";
+ 	model = "Sophon Edge";
+@@ -32,6 +54,98 @@
+ 		clock-frequency = <500000000>;
+ 		#clock-cells = <0>;
+ 	};
++
++	soc {
++		gpio0: gpio@50027000 {
 +			porta: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
++				gpio-line-names =
++					"GPIO-A", /* GPIO0, LSEC pin 23 */
++					"GPIO-C", /* GPIO1, LSEC pin 25 */
++					"[GPIO2_PHY0_RST]", /* GPIO2 */
++					"GPIO-E", /* GPIO3, LSEC pin 27 */
++					"[USB_DET]", /* GPIO4 */
++					"[EN_P5V]", /* GPIO5 */
++					"[VDDIO_MS1_SEL]", /* GPIO6 */
++					"GPIO-G", /* GPIO7, LSEC pin 29 */
++					"[BM_TUSB_RST_L]", /* GPIO8 */
++					"[EN_P5V_USBHUB]", /* GPIO9 */
++					"NC",
++					"LED_WIFI", /* GPIO11 */
++					"LED_BT", /* GPIO12 */
++					"[BM_BLM8221_EN_L]", /* GPIO13 */
++					"NC", /* GPIO14 */
++					"NC", /* GPIO15 */
++					"NC", /* GPIO16 */
++					"NC", /* GPIO17 */
++					"NC", /* GPIO18 */
++					"NC", /* GPIO19 */
++					"NC", /* GPIO20 */
++					"NC", /* GPIO21 */
++					"NC", /* GPIO22 */
++					"NC", /* GPIO23 */
++					"NC", /* GPIO24 */
++					"NC", /* GPIO25 */
++					"NC", /* GPIO26 */
++					"NC", /* GPIO27 */
++					"NC", /* GPIO28 */
++					"NC", /* GPIO29 */
++					"NC", /* GPIO30 */
++					"NC"; /* GPIO31 */
 +			};
 +		};
 +
 +		gpio1: gpio@50027400 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x0 0x50027400 0x0 0x400>;
-+
 +			portb: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
++				gpio-line-names =
++					"NC", /* GPIO32 */
++					"NC", /* GPIO33 */
++					"[I2C0_SDA]", /* GPIO34, LSEC pin 17 */
++					"[I2C0_SCL]", /* GPIO35, LSEC pin 15 */
++					"[JTAG0_TDO]", /* GPIO36 */
++					"[JTAG0_TCK]", /* GPIO37 */
++					"[JTAG0_TDI]", /* GPIO38 */
++					"[JTAG0_TMS]", /* GPIO39 */
++					"[JTAG0_TRST_X]", /* GPIO40 */
++					"[JTAG1_TDO]", /* GPIO41 */
++					"[JTAG1_TCK]", /* GPIO42 */
++					"[JTAG1_TDI]", /* GPIO43 */
++					"[CPU_TX]", /* GPIO44 */
++					"[CPU_RX]", /* GPIO45 */
++					"[UART1_TXD]", /* GPIO46 */
++					"[UART1_RXD]", /* GPIO47 */
++					"[UART0_TXD]", /* GPIO48 */
++					"[UART0_RXD]", /* GPIO49 */
++					"GPIO-I", /* GPIO50, LSEC pin 31 */
++					"GPIO-K", /* GPIO51, LSEC pin 33 */
++					"USER_LED2", /* GPIO52 */
++					"USER_LED1", /* GPIO53 */
++					"[UART0_RTS]", /* GPIO54 */
++					"[UART0_CTS]", /* GPIO55 */
++					"USER_LED4", /* GPIO56, JTAG1_TRST_X */
++					"USER_LED3", /* GPIO57, JTAG1_TMS */
++					"[I2S0_SCLK]", /* GPIO58 */
++					"[I2S0_FS]", /* GPIO59 */
++					"[I2S0_SDI]", /* GPIO60 */
++					"[I2S0_SDO]", /* GPIO61 */
++					"GPIO-B", /* GPIO62, LSEC pin 24 */
++					"GPIO-F"; /* GPIO63, I2S1_SCLK, LSEC pin 28 */
 +			};
 +		};
 +
 +		gpio2: gpio@50027800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x0 0x50027800 0x0 0x400>;
-+
 +			portc: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <8>;
-+				reg = <0>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
++				gpio-line-names =
++					"GPIO-D", /* GPIO64, I2S1_FS, LSEC pin 26 */
++					"GPIO-J", /* GPIO65, I2S1_SDI, LSEC pin 32 */
++					"GPIO-H", /* GPIO66, I2S1_SDO, LSEC pin 30 */
++					"GPIO-L", /* GPIO67, LSEC pin 34 */
++					"[SPI0_CS]", /* GPIO68, SPI1_CS, LSEC pin 12 */
++					"[SPI0_DIN]", /* GPIO69, SPI1_SDI, LSEC pin 10 */
++					"[SPI0_DOUT]", /* GPIO70, SPI1_SDO, LSEC pin 14 */
++					"[SPI0_SCLK]"; /* GPIO71, SPI1_SCK, LSEC pin 8 */
 +			};
 +		};
-+
- 		uart0: serial@58018000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x0 0x58018000 0x0 0x2000>;
++	};
+ };
+ 
+ &uart0 {
 -- 
 2.17.1
