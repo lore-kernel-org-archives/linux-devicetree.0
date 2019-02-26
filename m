@@ -1,29 +1,45 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 0/5] Enable wm8524 on i.MX8MQ
-Date: Tue, 26 Feb 2019 10:10:07 -0300
-Message-ID: <CAOMZO5DTR8aLphJBCqR=oLOz5aZXuNfPVEgUk6K_YOdVD0UK+A@mail.gmail.com>
-References: <20190226070742.30551-1-daniel.baluta@nxp.com> <CAOMZO5CpefU56xLaOUq0GRwWP9kcMPyZ2PWM38C9FuU-3k1MJA@mail.gmail.com>
- <CAEnQRZBRG4d59y3kteMaZMjfHWZ=FYL4dP+uRcthvXxqtmH7cw@mail.gmail.com>
+From: Qii Wang <qii.wang@mediatek.com>
+Subject: [PATCH v5 0/5] add i2c support for mt8183
+Date: Tue, 26 Feb 2019 21:10:55 +0800
+Message-ID: <1551186660-16902-1-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEnQRZBRG4d59y3kteMaZMjfHWZ=FYL4dP+uRcthvXxqtmH7cw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-li
+To: wsa@the-dreams.de
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, qii.wang@mediatek.com, xinping.qian@mediatek.com, liguo.zhang@mediatek.com, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 10:05 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
+This series are based on 5.0-rc1 and provide five patches to support
+mt8183 IC.
 
-> I get your point here. But for the moment it is identical with
-> "fsl,imx7d-sdma" so there is no need to add it now!
->
-> See the discussion here, and comment from Lucas:
->
-> https://lkml.org/lkml/2019/1/28/194
+Main changes compared to v4:
+--modify the commit of arb clock dt-binding
+--split a patch(3/3) into three(3/5 4/5 5/5)
 
-Lucas' suggestion was not change the sdma driver code and I also agree with it.
+Main changes compared to v3:
+--remove the patches which have been applied to for-next
+--remove i2c fallback for i3c controller 
 
-The SoC dts should still use:
+Main changes compared to v2:
+--update commit message
+--add Reviewed-by from Rob Herring, Nicolas and Sean
 
-compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
+Main changes compared to v1:
+--remove useless dt-binding for mt7629
+--split a patch into two(2/6 3/6)
+--muti-user feature was dropped
+
+Qii Wang (5):
+  i2c: mediatek: Add offsets array for new i2c registers
+  dt-bindings: i2c: Add Mediatek MT8183 i2c binding
+  i2c: mediatek: Add arb clock in i2c driver
+  i2c: mediatek: Add i2c and apdma sync in i2c driver
+  i2c: mediatek: Add i2c support for MediaTek MT8183
+
+ Documentation/devicetree/bindings/i2c/i2c-mtk.txt |   4 +-
+ drivers/i2c/busses/i2c-mt65xx.c                   | 246 ++++++++++++++++------
+ 2 files changed, 188 insertions(+), 62 deletions(-)
+
+-- 
+1.9.1
