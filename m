@@ -1,149 +1,55 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [RFC PATCH 3/5] mtd: Add support for Hyperbus memory devices
-Date: Tue, 26 Feb 2019 15:56:46 +0530
-Message-ID: <1137312b-c326-9e41-4667-e2126649f384@ti.com>
-References: <20190219063607.29949-1-vigneshr@ti.com>
- <20190219063607.29949-4-vigneshr@ti.com>
- <42d0fd7b-42e0-605c-70ee-6e308908fc90@cogentembedded.com>
- <4910fda5-133d-7ebb-6ab3-49e0839ea920@ti.com>
- <95344724-214f-20b7-b629-149ddf396117@cogentembedded.com>
+From: Christophe ROULLIER <christophe.roullier@st.com>
+Subject: Re: [PATCH V2 3/8] dt-bindings: net: stmmac: add phys config
+ properties
+Date: Tue, 26 Feb 2019 10:30:12 +0000
+Message-ID: <419f54c3-08a7-42be-4e1a-a7c0f61a4543@st.com>
+References: <1550824089-19961-1-git-send-email-christophe.roullier@st.com>
+ <1550824089-19961-4-git-send-email-christophe.roullier@st.com>
+ <20190223001651.GA22381@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <95344724-214f-20b7-b629-149ddf396117@cogentembedded.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190223001651.GA22381@bogus>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Nori,
- Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-ID: <2F65357342655644ADC33EBEC8F06FC7@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "joabreu@synopsys.com" <joabreu@synopsys.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 26/02/19 1:03 AM, Sergei Shtylyov wrote:
-> On 02/25/2019 09:21 PM, Vignesh R wrote:
-> 
-> [...]
-> 
->>>> HyperBus specification can be found at[1]
->>>> HyperFlash datasheet can be found at[2]
->>>>
->>>> [1] https://www.cypress.com/file/213356/download
->>>> [2] https://www.cypress.com/file/213346/download
->>>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>>>     Table 12-5741. HyperFlash Access Sequence
->>>>
->>>> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> [...]
->>>> diff --git a/drivers/mtd/hyperbus/core.c b/drivers/mtd/hyperbus/core.c
->>>> new file mode 100644
->>>> index 000000000000..d3d44aab7503
->>>> --- /dev/null
->>>> +++ b/drivers/mtd/hyperbus/core.c
-> [...]
->>>> +int hb_register_device(struct hb_device *hbdev)
->>>> +{
->>>> +	struct resource res;
->>>> +	struct device *dev;
->>>> +	struct device_node *np;
->>>> +	struct map_info *map;
->>>> +	struct hb_ops *ops;
->>>> +	int err;
->>>> +
->>>> +	if (!hbdev || !hbdev->dev || !hbdev->np) {
->>>> +		pr_err("hyperbus: please fill all the necessary fields!\n");
->>>> +		return -EINVAL;
->>>> +	}
->>>> +
->>>> +	np = hbdev->np;
->>>> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
->>>> +		return -ENODEV;
->>>> +
->>>> +	hbdev->memtype = HYPERFLASH;
->>>> +
->>>> +	if (of_address_to_resource(np, 0, &res))
->>>
->>>     Isn't the direct mapping property of the HF controller, not of HyperFlash
->>> itself?
->>>
->>
->> As I said in the cover letter, I could not find many examples of HF
->> controllers, but couple of them that I studied provide MMIO access to
->> flash. So, reg property of flash node would represent local address on
->> the HyperBus and controller node would set up ranges properly to provide
->> translation from CS to SoC address space.
->> For example see patch 4/5 where reg property would indicate CS and Size
->> of flash. This scheme is similar to whats described here [1]
->> HBMC controllers usually have different MMIO regions to access flashes
->> connected to different CS. So using ranges for address translation along
->> with flash node describing local address works pretty well.
->>
->> My understanding is that this part of code will be common for most MMIO
->> based HB controllers and hence made part of core layer. But, if
->> controllers uses different IO space for read vs write, then this needs a
->> bit of thinking. In that case, mapping needs to be moved to controller
->> drivers.
->>
->> [1]https://elinux.org/Device_Tree_Usage#Ranges_.28Address_Translation.29
->>
->>>> +		return -EINVAL;
->>>> +
->>>> +	dev = hbdev->dev;
->>>> +	map = &hbdev->map;
->>>> +	map->size = resource_size(&res);
->>>> +	map->virt = devm_ioremap_resource(dev, &res);
->>>> +	if (IS_ERR(map->virt))
->>>> +		return PTR_ERR(map->virt);
->>>> +
->>>> +	map->name = dev_name(dev);
->>>> +	map->bankwidth = 2;
->>>> +
->>>> +	simple_map_init(map);
->>>
->>>    It's not that simple, I'm afraid -- e.g. Renesas RPC-IF has read and write
->>> mappings in the separate memory resources.
->>>
->>
->> Hmm, could you point me to public datasheet of the controller?
-> 
->    See chapter 20 in [1]. Note that it's not the same SoC I'm developing for (R-Car
-> gen3 family, with NDA docs) but should be mostly the same RPC-IF core.
-> 
-> [1] https://www.renesas.com/us/en/doc/products/mpumcu/doc/rz/r01uh0746ej0200-rza2m.pdf?key=74862185b5e22ad09e648d21a35de615
-
-Thanks for the info!
-
-> 
->> simple_map_init() provides default implementation for map operations
->> which is overridden, if hb_ops is populated.
->> I think, Renesas RPC-IF can populate custom hb_ops struct and use
->> appropriate MMIO base for read vs write, while still reusing the map
->> framework. Wouldnt that work?
-> 
->    It probably would...
-> 
-
-
-Looking at above link, I see there are two HBMC controllers on Renesas
-SoC. One is a dedicated HBMC controller(chapter 21) very similar to that
-on TI SoC and a SPI Multi I/O Bus Controller (chapter 20) that also
-supports Hyperbus protocol.
-
-AFAICS, passing custom hb_ops is good enough to support both HW needs.
-Let me know if something is missing. I would greatly appreciate if you
-could test this series with your HW.
-
-
-
--- 
-Regards
-Vignesh
+T24gMi8yMy8xOSAxOjE2IEFNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gRnJpLCBGZWIgMjIs
+IDIwMTkgYXQgMDk6Mjg6MDRBTSArMDEwMCwgQ2hyaXN0b3BoZSBSb3VsbGllciB3cm90ZToNCj4+
+IEFkZCBwcm9wZXJ0aWVzIHRvIHN1cHBvcnQgYWxsIFBoeSBjb25maWcNCj4+ICAgUEhZX01PREUJ
+KE1JSSxHTUlJLCBSTUlJLCBSR01JSSkgYW5kIGluIG5vcm1hbCwgUEhZIHdvIGNyeXN0YWwgKDI1
+TWh6KSwNCj4+ICAgUEhZIHdvIGNyeXN0YWwgKDUwTWh6KSwgTm8gMTI1TWh6IGZyb20gUEhZIGNv
+bmZpZy4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGhlIFJvdWxsaWVyIDxjaHJpc3Rv
+cGhlLnJvdWxsaWVyQHN0LmNvbT4NCj4+IC0tLQ0KPj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbmV0L3N0bTMyLWR3bWFjLnR4dCB8IDYgKysrLS0tDQo+PiAgIDEgZmlsZSBj
+aGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvc3RtMzItZHdtYWMudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9zdG0zMi1kd21hYy50eHQN
+Cj4+IGluZGV4IDEzNDEwMTIuLmY0MmRjNjggMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3N0bTMyLWR3bWFjLnR4dA0KPj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9zdG0zMi1kd21hYy50eHQNCj4+IEBAIC0y
+NCw5ICsyNCw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiAgIAkgICAgICAgZW5jb21wYXNl
+cyB0aGUgZ2x1ZSByZWdpc3RlciwgYW5kIHRoZSBvZmZzZXQgb2YgdGhlIGNvbnRyb2wgcmVnaXN0
+ZXIuDQo+PiAgIA0KPj4gICBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPj4gLS0gY2xvY2stbmFtZXM6
+ICAgICBGb3IgTVBVIGZhbWlseSAibWFjLWNsay1jayIgZm9yIFBIWSB3aXRob3V0IHF1YXJ0eg0K
+Pj4gLS0gc3QsaW50LXBoeWNsayAoYm9vbGVhbikgOiAgdmFsaWQgb25seSB3aGVyZSBQSFkgZG8g
+bm90IGhhdmUgcXVhcnR6IGFuZCBuZWVkIHRvIGJlIGNsb2NrDQo+PiAtCSAgICAgICAgICAgYnkg
+UkNDDQo+IA0KPiBZb3UgY2FuJ3QganVzdCByZW1vdmUgcHJvcGVydGllcy4NCg0KVGhlcmUgaXMg
+bm8gcmlzayB0byByZW1vdmUvcmVuYW1lIHRoZXNlIDIgcHJvcGVydGllcywgYmVjYXVzZSBpdCBp
+cyANCnNwZWNpZmljIGJvYXJkIHdoaWNoIGlzIG5ldmVyIGRlcGxveWVkLg0KV2l0aCBuZXcgcHJv
+cGVydGllcyAocmVuYW1pbmcgY2xvY2sgKGV0aC1jaykgKyBzdCxldGhfY2xrX3NlbCBhbmQgDQpz
+dCxldGhfcmVmX2Nsa19zZWwsIHdlIGFyZSBtYW5hZ2VkIGFsbCBraW5kIG9mIHNwZWNpZmljIGJv
+YXJkcyBzdG0zMm1wMQ0KU28gbm8gcmlzayBvZiBiYWNrd2FyZCBjb21wYXRpYmxlLg0KDQo+IA0K
+Pj4gKy0gY2xvY2stbmFtZXM6ICAgICBGb3IgTVBVIGZhbWlseSAiZXRoLWNrIiBmb3IgUEhZIHdp
+dGhvdXQgcXVhcnR6DQo+PiArLSBzdCxldGhfY2xrX3NlbCAoYm9vbGVhbikgOiBzZXQgdGhpcyBw
+cm9wZXJ0eSBpbiBSR01JSSBQSFkgd2hlbiB5b3UgZG8gbm90IHdhbnQgdXNlIDEyNU1oeg0KPj4g
+Ky0gc3QsZXRoX3JlZl9jbGtfc2VsIChib29sZWFuKSA6ICBzZXQgdGhpcyBwcm9wZXJ0eSBpbiBS
+TUlJIG1vZGUgd2hlbiB5b3UgaGF2ZSBQSFkgd2l0aG91dCBjcnlzdGFsIDUwTUh6DQo+IA0KPiBz
+L18vLS8NCj4gDQo+ICdzZWwnIEkgYXNzdW1lIGlzIHNob3J0IGZvciBzZWxlY3QsIGJ1dCB0aGUg
+bmFtaW5nIGhlcmUgYW5kIGRlc2NyaXB0aW9uDQo+IGRvbid0IHJlYWxseSB0ZWxsIG1lIHdoYXQg
+SSdtIGdldHRpbmcuDQo+IA0KDQpPaywgUm9iLCBJIHdpbGwgdXBkYXRlIHdpdGggeW91ciByZWNv
+bW1lbmRhdGlvbnMNCg0KPiBSb2INCj4gDQo=
