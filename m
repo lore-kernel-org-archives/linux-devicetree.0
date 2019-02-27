@@ -1,187 +1,177 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: Linux-next 20190218: am57xx-evm: mmc1: ADMA error
-Date: Wed, 27 Feb 2019 15:15:50 +0530
-Message-ID: <34184f5e-429e-e02d-3fa1-17bb33028a91@ti.com>
-References: <CA+G9fYsmC5ckLXfQxSUn-tqxLZ4NofEyb9RA69Q07RUoxc79RQ@mail.gmail.com>
- <34c78d7f-cc3c-853d-b3fd-a70abdb66293@ti.com>
- <22ccca46-7390-1707-cfca-43b3577b79f2@ti.com>
- <CACVXFVP0h-xvJaW1HaMrhozwhR484x0owc6XX63JT-59N08Fag@mail.gmail.com>
- <236a3ac2-5988-9150-4a53-4a33a45d595e@ti.com>
- <CACVXFVNqtPnWHp+b0-ED70n1pcv9EkARKYWVKaWtFEEgh0N1XA@mail.gmail.com>
- <c6d72393-cf42-a4f6-06b3-589ca1f3de19@ti.com>
- <20190226130647.GA7150@ming.t460p>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [RFC PATCH 3/5] mtd: Add support for Hyperbus memory devices
+Date: Wed, 27 Feb 2019 15:22:19 +0530
+Message-ID: <3952b327-3aff-a32e-4280-6ab24c32cfd9@ti.com>
+References: <20190219063607.29949-1-vigneshr@ti.com>
+ <20190219063607.29949-4-vigneshr@ti.com>
+ <7e79fff7-2565-28f7-7b2b-bb3098f1a928@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226130647.GA7150@ming.t460p>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <7e79fff7-2565-28f7-7b2b-bb3098f1a928@cogentembedded.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Ming Lei <tom.leiming@gmail.com>, Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, nm@ti.com, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Omar Sandoval <osandov@fb.com>, Jens Axboe <axboe@kernel.dk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Nori,
+ Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 26/02/19 6:36 PM, Ming Lei wrote:
-> On Tue, Feb 26, 2019 at 05:04:40PM +0530, Faiz Abbas wrote:
->> Hi,
+
+On 26/02/19 11:46 PM, Sergei Shtylyov wrote:
+> On 02/19/2019 09:36 AM, Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>) wrote:
+> 
+>> Cypress HyperBus is Low Signal Count, High Performance Double Data Rate Bus
+>> interface between a host system master and one or more slave interfaces.
+>> HyperBus is used to connect microprocessor, microcontroller, or ASIC
+>> devices with random access NOR flash memory(called HyperFlash) or
+>> self refresh DRAM(called HyperRAM).
 >>
->> On 26/02/19 3:36 PM, Ming Lei wrote:
->>> On Tue, Feb 26, 2019 at 2:47 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->>>>
->>>> Hi Ming Lei,
->>>>
->>>> On 26/02/19 7:11 AM, Ming Lei wrote:
->>>>> On Mon, Feb 25, 2019 at 9:14 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->>>>>>
->>>>>> Hi Naresh,
->>>>>>
->>>>>> + Commit authors.
->>>>>>
->>>>>> On 19/02/19 6:38 PM, Faiz Abbas wrote:
->>>>>>> Hi Naresh,
->>>>>>>
-...
->> It looks like it only happens for some requests. More verbose log with
->> dma descriptor entries:
+>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>> At bus level, it follows a separate protocol described in HyperBus
+>> specification[1].
 >>
->> [   14.840865] mmc0: ADMA error
->> [   14.840869] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
->> [   14.840874] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00003302
->> [   14.840879] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000000
->> [   14.840884] mmc0: sdhci: Argument:  0x00000200 | Trn mode: 0x00000033
->> [   14.840889] mmc0: sdhci: Present:   0x00000000 | Host ctl: 0x00000012
->> [   14.840893] mmc0: sdhci: Power:     0x0000000f | Blk gap:  0x00000000
->> [   14.840898] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
->> [   14.840903] mmc0: sdhci: Timeout:   0x0000000a | Int stat: 0x00000000
->> [   14.840908] mmc0: sdhci: Int enab:  0x027f000b | Sig enab: 0x027f000b
->> [   14.840912] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
->> [   14.840917] mmc0: sdhci: Caps:      0x25e90080 | Caps_1:   0x00000f77
->> [   14.840922] mmc0: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
->> [   14.840926] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x20050044
->> [   14.840931] mmc0: sdhci: Resp[2]:   0x53445531 | Resp[3]:  0x744a6055
->> [   14.840935] mmc0: sdhci: Host ctl2: 0x00000000
->> [   14.840939] mmc0: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0xae857300
->> [   14.840943] mmc0: sdhci: ============================================
->> [   14.840950] mmc0: sdhci: be2c9004: DMA 0xab1bd000, LEN 0x1000, Attr=0x21
->> [   14.840956] mmc0: sdhci: 92173e21: DMA 0xab1bc000, LEN 0x1000, Attr=0x21
->> [   14.840962] mmc0: sdhci: c8a0cde4: DMA 0xab1bb000, LEN 0x1000, Attr=0x21
->> [   14.840967] mmc0: sdhci: 4bb03017: DMA 0xab1ba000, LEN 0x1000, Attr=0x21
->> [   14.840972] mmc0: sdhci: 2fb0d59e: DMA 0xab1b9000, LEN 0x1000, Attr=0x21
->> [   14.840978] mmc0: sdhci: c3024ff2: DMA 0xab1b8000, LEN 0x1000, Attr=0x21
->> [   14.840983] mmc0: sdhci: 0738188d: DMA 0xab179000, LEN 0x1000, Attr=0x21
->> [   14.840989] mmc0: sdhci: 78ecca83: DMA 0xab178000, LEN 0x1000, Attr=0x21
->> [   14.840994] mmc0: sdhci: 1432e5a9: DMA 0xab0d7000, LEN 0x1000, Attr=0x21
->> [   14.840999] mmc0: sdhci: 8a36c77c: DMA 0xab0d6000, LEN 0x1000, Attr=0x21
->> [   14.841005] mmc0: sdhci: b7196410: DMA 0xab0d5000, LEN 0x1000, Attr=0x21
->> [   14.841010] mmc0: sdhci: dcb25259: DMA 0xab0d4000, LEN 0x1000, Attr=0x21
->> [   14.841015] mmc0: sdhci: ef1e5d32: DMA 0xab0d3000, LEN 0x1000, Attr=0x21
->> [   14.841020] mmc0: sdhci: 0319c66c: DMA 0xab0d2000, LEN 0x1000, Attr=0x21
->> [   14.841026] mmc0: sdhci: 2e6b85d9: DMA 0xab0d1000, LEN 0x1000, Attr=0x21
->> [   14.841031] mmc0: sdhci: d4dd19da: DMA 0xab0d0000, LEN 0x1000, Attr=0x21
->> [   14.841036] mmc0: sdhci: 55cdc0f6: DMA 0xab27f000, LEN 0x1000, Attr=0x21
->> [   14.841041] mmc0: sdhci: a172f4f3: DMA 0xab27e000, LEN 0x1000, Attr=0x21
->> [   14.841046] mmc0: sdhci: ed27e53e: DMA 0xab27d000, LEN 0x1000, Attr=0x21
->> [   14.841051] mmc0: sdhci: c04971ce: DMA 0xab27c000, LEN 0x1000, Attr=0x21
->> [   14.841057] mmc0: sdhci: f43985d3: DMA 0xab27b000, LEN 0x1000, Attr=0x21
->> [   14.841062] mmc0: sdhci: b977bd17: DMA 0xab27a000, LEN 0x1000, Attr=0x21
->> [   14.841067] mmc0: sdhci: 8b74ee6f: DMA 0xab279000, LEN 0x1000, Attr=0x21
->> [   14.841072] mmc0: sdhci: 12e52bc8: DMA 0xab30d000, LEN 0xffff, Attr=0x21
->> [   14.841077] mmc0: sdhci: b39efa31: DMA 0xae857000, LEN 0x0001, Attr=0x21
->> [   14.841082] mmc0: sdhci: bc4b71f0: DMA 0xab31d000, LEN 0x3000, Attr=0x21
->> [   14.841087] mmc0: sdhci: 4cb5aa08: DMA 0xab2a8000, LEN 0x2000, Attr=0x21
->> [   14.841092] mmc0: sdhci: 5e717781: DMA 0xab12a000, LEN 0x2000, Attr=0x21
->> [   14.841098] mmc0: sdhci: 125d82b5: DMA 0xab2b4000, LEN 0x4000, Attr=0x21
->> [   14.841103] mmc0: sdhci: b33874b9: DMA 0xab148000, LEN 0x4000, Attr=0x21
->> [   14.841108] mmc0: sdhci: 9b0e47a5: DMA 0xab218000, LEN 0x8000, Attr=0x21
->> [   14.841113] mmc0: sdhci: 47ce17da: DMA 0xab2a0000, LEN 0x2000, Attr=0x21
->> [   14.841118] mmc0: sdhci: 97ea0d9f: DMA 0x00000000, LEN 0x0000, Attr=0x03
+>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>> to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
+>> its equivalent to x16 parallel NOR flash wrt bits per clk. But Hyperbus
+>> operates at >166MHz frequencies.
+>> HyperRAM provides direct random read/write access to flash memory
+>> array.
 >>
->> There is a big transfer of 0xffff length followed by a smaller transfer
->> of 0x1 (at address 0xae857000 above) and that is where it fails. This is
->> the same signature every time it happens.
+>> But, Hyperbus memory controllers seem to abstract implementation details
+>> and expose a simple MMIO interface to access connected flash.
+>>
+>> Add support for registering HyperFlash devices with MTD framework. MTD
+>> maps framework along with CFI chip support framework are used to support
+>> communicate with flash.
+>>
+>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>> memory controller(HBMC) drivers call hb_register_device() to register a
+>> single HyperFlash device. HyperFlash core parses MMIO access
+>> information from DT, sets up the map_info struct, probes CFI flash and
+>> registers it with MTD framework.
+>>
+>> Some HBMC masters need calibration/training sequence[3] to be carried
+>> out, in order for DLL inside the controller to lock, by reading a known
+>> string/pattern. This is done by repeatedly reading CFI Query
+>> Identification String. Calibration needs to be done before try to detect
+>> flash as part of CFI flash probe.
+>>
+>> HyperRAM is not supported atm.
+>>
+>> HyperBus specification can be found at[1]
+>> HyperFlash datasheet can be found at[2]
+>>
+>> [1] https://www.cypress.com/file/213356/download
+>> [2] https://www.cypress.com/file/213346/download
+>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>     Table 12-5741. HyperFlash Access Sequence
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> [...]
+>> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
+>> new file mode 100644
+>> index 000000000000..0aa11458c424
+>> --- /dev/null
+>> +++ b/include/linux/mtd/hyperbus.h
+>> @@ -0,0 +1,73 @@
+>> +/* SPDX-License-Identifier: GPL-2.0
+>> + *
+>> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> + */
+>> +
+>> +#ifndef __LINUX_MTD_HYPERBUS_H__
+>> +#define __LINUX_MTD_HYPERBUS_H__
+>> +
+>> +#include <linux/mtd/map.h>
+>> +
+>> +enum hb_memtype {
+>> +	HYPERFLASH,
+>> +	HYPERRAM,
+>> +};
+>> +
+>> +/**
+>> + * struct hb_device - struct representing Hyperbus slave device
+>> + * @map: map_info struct for accessing MMIO Hyperbus flash memory
+>> + * @dev: device pointer of Hyperbus Controller
 > 
-> Thanks for the investigation, and that is very helpful!
+>    I think we need a separate structure for the HyperBus controller, not just
+> for the slave devices...
 > 
-> Then I guess it is caused by bad segment size, see sdhci_setup_host():
+>> + * @np:	pointer to Hyperbus slave device node
+>> + * @mtd: pointer to MTD struct
+>> + * @ops: pointer to custom Hyperbus ops
+>> + * @memtype: type of memory device: Hyperflash or HyperRAM
+>> + * @needs_calib: flag to indicate whether calibration sequence is needed
+>> + * @registered: flag to indicate whether device is registered with MTD core
+>> + */
+>> +
+>> +struct hb_device {
+>> +	struct map_info map;
+>> +	struct device *dev;
+>> +	struct device_node *np;
+>> +	struct mtd_info *mtd;
+>> +	struct hb_ops *ops;
+>> +	enum hb_memtype memtype;
+>> +	bool needs_calib;
+>> +	bool registered;
+>> +};
+>> +
+>> +/**
+>> + * struct hb_ops - struct representing custom Hyperbus operations
+>> + * @read16: read 16 bit of data, usually from register/ID-CFI space
+>> + * @write16: write 16 bit of data, usually to register/ID-CFI space
+>> + * copy_from: copy data from flash memory
+>> + * copy_to: copy data to flash_memory
+>> + */
+>> +
+>> +struct hb_ops {
+>> +	u16 (*read16)(struct hb_device *hbdev, unsigned long addr);
+>> +	void (*write16)(struct hb_device *hbdev, unsigned long addr, u16 val);
+>> +
+>> +	void (*copy_from)(struct hb_device *hbdev, void *to,
+>> +			  unsigned long from, ssize_t len);
+>> +	void (*copy_to)(struct hb_device *dev, unsigned long to,
+>> +			const void *from, ssize_t len);
 > 
->         if (host->flags & SDHCI_USE_ADMA) {
->                 if (host->quirks & SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC)
->                         mmc->max_seg_size = 65535;
->                 else
->                         mmc->max_seg_size = 65536;
->         } else {
->                 mmc->max_seg_size = mmc->max_req_size;
->         }
+>    ... else these methods won't fly if you need to "massage" the controller
+> registers inside them...
 > 
-> Could you confirm it by collecting the following log?
-> 
-> (cd  /sys/block/mmcblk0/queue && find . -type f -exec grep -aH . {} \;)
 
-The max_segment_size is 65535.
+If accessing controller register is the only need, wouldn't a private
+data pointer within struct hb_device be sufficient to hold pointer to
+controller specific struct?
 
-root@dra7xx-evm:~# (cd  /sys/block/mmcblk0/queue && find . -type f -exec
-grep -aH . {} \;)
-./hw_sector_size:512
-./max_discard_segments:1
-./max_segment_size:65535
-./physical_block_size:512
-./discard_max_bytes:4194304
-./rotational:0
-./iosched/fifo_batch:16
-./iosched/read_expire:500
-./iosched/writes_starved:2
-./iosched/write_expire:5000
-./iosched/front_merges:1
-./write_same_max_bytes:0
-./zoned:none
-./max_sectors_kb:512
-./discard_zeroes_data:0
-./read_ahead_kb:128
-./discard_max_hw_bytes:4194304
-./nomerges:0
-./max_segments:128
-./rq_affinity:1
-./iostats:1
-./dax:0
-./minimum_io_size:512
-./chunk_sectors:0
-./io_poll:0
-./write_zeroes_max_bytes:0
-./max_hw_sectors_kb:512
-./add_random:0
-./optimal_io_size:0
-./nr_requests:128
-./scheduler:[mq-deadline] kyber none
-./io_timeout:60000
-./discard_granularity:4194304
-./logical_block_size:512
-./nr_zones:0
-./fua:1
-./io_poll_delay:-1
-./max_integrity_segments:0
-./write_cache:write back
-root@dra7xx-evm:~#
+struct hb_device {
+	...
+	void *priv; /* points to controller's private data */
+};
 
+
+Or do you see a need for separate structure for the HyperBus controller?
+
+
+>> +};
+> [...]
 > 
-> If 'max_segment_size' is 65535, we may need the following patch:
+> MBR, Sergei
 > 
-> diff --git a/block/blk-settings.c b/block/blk-settings.c
-> index 6375afaedcec..6fb7a312b4ea 100644
-> --- a/block/blk-settings.c
-> +++ b/block/blk-settings.c
-> @@ -309,7 +309,7 @@ void blk_queue_max_segment_size(struct request_queue *q, unsigned int max_size)
->  		       __func__, max_size);
->  	}
->  
-> -	q->limits.max_segment_size = max_size;
-> +	q->limits.max_segment_size = round_down(max_size, 512);
->  }
->  EXPORT_SYMBOL(blk_queue_max_segment_size);
->  
 
-This patch fixes it for me. Thanks!
+-- 
+Regards
+Vignesh
 
-Regards,
-Faiz
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
