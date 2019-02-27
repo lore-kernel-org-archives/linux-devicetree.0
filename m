@@ -1,7 +1,7 @@
 From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v4 7/9] ARM: dts: stm32: add orange and blue leds on stm32746g-eval
-Date: Wed, 27 Feb 2019 10:34:52 +0100
-Message-ID: <1551260094-32570-8-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH v4 8/9] ARM: dts: stm32: add STMFX support on stm32mp157c-ev1
+Date: Wed, 27 Feb 2019 10:34:53 +0100
+Message-ID: <1551260094-32570-9-git-send-email-amelie.delaunay@st.com>
 References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,34 +12,40 @@ To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Orange (LD2) and blue (LD4) leds on stm32746g-eval are connected on
-STMFX gpio expander, offset 17 and 19.
+This patch adds support for STMicroelectronics Multi-Function eXpander
+(STMFX) on stm32mp157c-ev1. It is connected on i2c2.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/stm32746g-eval.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/stm32mp157c-ev1.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
-index b86ad83..a5fa73f 100644
---- a/arch/arm/boot/dts/stm32746g-eval.dts
-+++ b/arch/arm/boot/dts/stm32746g-eval.dts
-@@ -69,9 +69,15 @@
- 			gpios = <&gpiof 10 1>;
- 			linux,default-trigger = "heartbeat";
- 		};
-+		orange {
-+			gpios = <&stmfx_pinctrl 17 1>;
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index 063ee8a..3a6f033 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -99,6 +99,22 @@
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	status = "okay";
++
++	stmfx: stmfx@42 {
++		compatible = "st,stmfx-0300";
++		reg = <0x42>;
++		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
++		interrupt-parent = <&gpioi>;
++
++		stmfx_pinctrl: stmfx-pin-controller {
++			compatible = "st,stmfx-0300-pinctrl";
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			gpio-ranges = <&stmfx_pinctrl 0 0 24>;
 +		};
- 		red {
- 			gpios = <&gpiob 7 1>;
- 		};
-+		blue {
-+			gpios = <&stmfx_pinctrl 19 1>;
-+		};
- 	};
++	};
+ };
  
- 	gpio_keys {
+ &i2c5 {
 -- 
 2.7.4
