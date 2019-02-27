@@ -1,83 +1,83 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH 1/2] dt-bindings: usb-xhci: Add usb-phy-port-reset property
-Date: Wed, 27 Feb 2019 22:38:27 +0530
-Message-ID: <CABe79T7=uhVfy4x+L0Vi6g5fiT=-WKnnZmNn5XpZrvOiUzJOaA@mail.gmail.com>
-References: <1549347534-11320-1-git-send-email-srinath.mannam@broadcom.com>
- <1549347534-11320-2-git-send-email-srinath.mannam@broadcom.com>
- <20190225213807.GA18852@bogus> <CABe79T4j7batxZ7BDhEpwRK8x5UMZLkxLJOt-FD0SCr9JOFizw@mail.gmail.com>
- <CAL_Jsq+ZOWyY7p=ZjRnB85RY=fcNXu7xiH5j-1-OkuAmXqCFxw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: thor.thayer@linux.intel.com
+Subject: [PATCHv2 1/5] Documentation: dt: edac: Fix Stratix10 IRQ bindings
+Date: Wed, 27 Feb 2019 11:27:21 -0600
+Message-ID: <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
+References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+ZOWyY7p=ZjRnB85RY=fcNXu7xiH5j-1-OkuAmXqCFxw@mail.gmail.com>
+In-Reply-To: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Mark Rutland <mark.rutland@arm.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-Thanks for the information. Please find my comments below.
-Regards,
-Srinath.
-On Tue, Feb 26, 2019 at 11:33 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Feb 25, 2019 at 10:57 PM Srinath Mannam
-> <srinath.mannam@broadcom.com> wrote:
-> >
-> > Hi Rob,
-> > Thanks for the review, Please see my comments below in line.
-> >
-> > Regards,
-> > Srinath.
-> > On Tue, Feb 26, 2019 at 3:08 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Tue, Feb 05, 2019 at 11:48:53AM +0530, Srinath Mannam wrote:
-> > > > Add usb-phy-port-reset optional property to set quirk in xhci platform
-> > > > driver which forces USB port PHY reset on port disconnect event.
-> > > >
-> > > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > > > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> > > > index fea8b15..ecbdb15 100644
-> > > > --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> > > > +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> > > > @@ -40,6 +40,7 @@ Optional properties:
-> > > >    - usb3-lpm-capable: determines if platform is USB3 LPM capable
-> > > >    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-> > > >    - imod-interval-ns: default interrupt moderation interval is 5000ns
-> > > > +  - usb-phy-port-reset: set this to do USB PORT PHY reset while disconnect
-> > > >    - phys : see usb-hcd.txt in the current directory
-> > >
-> > > This should be implied by the HCI or phy compatible string (depending
-> > > on who exactly needs the quirky behavior).
-> > Stingray USB HS PHY connected to xHCI port has an issue, if full speed
-> > devices connected to this port then
-> > after all High Speed devices connected to this port are detected at
-> > full speed instead of high speed.
-> > So that we need to do PHY (which is connected to port) reset on xHCI
-> > port disconnect event.
-> > That is the reason we required to add quirk in xHCI.
->
-> So, by looking at the xhci host and phy compatible strings (or maybe
-> just the phy) you can determine whether you need to reset the port or
-> not. All the information you need is in DT already.
-xHCI controller in our SOC has three ports each port has one
-PHY(SS/HS) connected to it.
-HS PHY has to reset on its corresponding port disconnect event. port
-disconnect event is
-captured in xHCI host framework so, quirk has to be registered in xHCI
-framework only.
-But we are using "generic-xhci" generic compatible string for our xHCI
-controller.
-As per your advice, we will add new compatible string in xhci-plat.c
-driver for our xHCI controller
-and will add quirk part of that.
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Thank you.
+Fix Stratix10 ECC bindings to specify only the single
+bit error. On Stratix10 double bit errors are handled
+as SErrors instead of interrupts.
+Indicate the differences between the ARM64 and ARM32
+EDAC architecture in the bindings.
 
->
-> Rob
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+v2 No change
+---
+ .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 23 +++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+index 5626560a6cfd..a0ac50e15912 100644
+--- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
++++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+@@ -236,33 +236,42 @@ Stratix10 SoCFPGA ECC Manager
+ The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
+ in a shared register similar to the Arria10. However, ECC requires
+ access to registers that can only be read from Secure Monitor with
+-SMC calls. Therefore the device tree is slightly different.
++SMC calls. Therefore the device tree is slightly different. Note that
++only 1 interrupt is sent because the double bit errors are treated as
++SErrors instead of IRQ.
+ 
+ Required Properties:
+ - compatible : Should be "altr,socfpga-s10-ecc-manager"
+-- interrupts : Should be single bit error interrupt, then double bit error
+-	interrupt.
++- altr,sysgr-syscon : phandle to Stratix10 System Manager Block
++	              containing the ECC manager registers.
++- interrupts : Should be single bit error interrupt.
+ - interrupt-controller : boolean indicator that ECC Manager is an interrupt controller
+ - #interrupt-cells : must be set to 2.
++- #address-cells: must be 1
++- #size-cells: must be 1
++- ranges : standard definition, should translate from local addresses
+ 
+ Subcomponents:
+ 
+ SDRAM ECC
+ Required Properties:
+ - compatible : Should be "altr,sdram-edac-s10"
+-- interrupts : Should be single bit error interrupt, then double bit error
+-	interrupt, in this order.
++- interrupts : Should be single bit error interrupt.
+ 
+ Example:
+ 
+ 	eccmgr {
+ 		compatible = "altr,socfpga-s10-ecc-manager";
+-		interrupts = <0 15 4>, <0 95 4>;
++		altr,sysmgr-syscon = <&sysmgr>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupts = <0 15 4>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++		ranges;
+ 
+ 		sdramedac {
+ 			compatible = "altr,sdram-edac-s10";
+-			interrupts = <16 4>, <48 4>;
++			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 	};
+-- 
+2.7.4
