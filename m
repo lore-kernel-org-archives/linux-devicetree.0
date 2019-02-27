@@ -1,63 +1,61 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v8 05/26] clocksource: Add driver for the Ingenic JZ47xx
- OST
-Date: Wed, 27 Feb 2019 20:54:28 -0300
-Message-ID: <1551311669.21164.1@crapouillou.net>
-References: <20181212220922.18759-1-paul@crapouillou.net>
-        <CA+7wUsxNN2SL9_7tDh0DiBAgdUwxd_osgmi=09HP7110Tm0DYQ@mail.gmail.com>
-        <128675a5-7ede-4114-a649-89a536346dc8@roeck-us.net>
-        <1548264353.3173.1@crapouillou.net> <20190123180155.GB9781@roeck-us.net>
-        <154835808767.136743.14531363127962557756@swboyd.mtv.corp.google.com>
-        <1548362788.3881.0@crapouillou.net>
-        <154836998080.136743.17683029101430122926@swboyd.mtv.corp.google.com>
-        <1548370388.3881.2@crapouillou.net> <1550891845.20534.1@crapouillou.net>
-        <155111793658.191923.2540746255375959460@swboyd.mtv.corp.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V10 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Wed, 27 Feb 2019 17:54:55 -0600
+Message-ID: <20190227235455.GA15211@bogus>
+References: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <155111793658.191923.2540746255375959460@swboyd.mtv.corp.google.com>
+Content-Disposition: inline
+In-Reply-To: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Mathieu Malaterre <malat@debian.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-c
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sn>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Feb 27, 2019 at 08:46:21AM +0000, Anson Huang wrote:
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> system controller, the system controller is in charge of system
+> power, clock and thermal sensors etc. management, Linux kernel
+> has to communicate with system controller via MU (message unit)
+> IPC to get temperature from thermal sensors, this patch adds
+> binding doc for i.MX system controller thermal driver.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V9:
+> 	- change #thermal-sensor-cells value in example to 1, since there are other
+> 	  thermal sensors inside system controller, it is just because there are still
+> 	  some issue, so system controller does NOT expose them for now, they could
+> 	  be exposed later, so it should be 1 from HW perspective.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt   | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index 72d481c..855270b 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -122,6 +122,21 @@ RTC bindings based on SCU Message Protocol
+>  Required properties:
+>  - compatible: should be "fsl,imx8qxp-sc-rtc";
+>  
+> +Thermal bindings based on SCU Message Protocol
+> +------------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible:			Should be :
+> +				  "fsl,imx8qxp-sc-thermal"
+> +				followed by "fsl,imx-sc-thermal";
+> +
+> +- #thermal-sensor-cells:	See Documentation/devicetree/bindings/thermal/thermal.txt
+> +				for a description.
+> +
+> +- imx,sensor-resource-id: 	A single integer for single thermal zone's resource ID or
+> +				an array of integers to specify each thermal zone's sensor
+> +				resource ID.
 
-Le lun. 25 f=E9vr. 2019 =E0 15:05, Stephen Boyd <sboyd@kernel.org> a=20
-=E9crit :
-> Quoting Paul Cercueil (2019-02-22 19:17:25)
->>  Hi,
->>=20
->>  Anything new on this? It still happens on 5.0-rc7.
->>  It probes with late_initcall, and not with device_initcall.
->>  I have no clue what's going on.
->>=20
->=20
-> I'm not sure what's going on either. You'll probably have to debug=20
-> when
-> the device is created and when it is probed by enabling the debug
-> printing in the driver core or by adding in extra debug prints to=20
-> narrow
-> down the problem. For example, add a '#define DEBUG 1' at the top of
-> drivers/base/dd.c and see if that helps give some info on what's going
-> on with the drivers and devices.
+Can't you put the resource ids in the thermal-sensor cells? Why do you 
+need to list them here?
 
-The doc of __platform_driver_probe says:
-"Use this instead of platform_driver_register() when you know the device
-is not hotpluggable and has already been registered".
-
-When the parent device and child device are both probed with
-builtin_platform_driver_probe(), and the parent calls
-devm_of_platform_populate(), it is not certain that the parent's
-probe will happen before the child's, and if it does not, the child
-device has not been registered and its probe is not allowed to defer.
-So it turned out not to be a core bug, rather a misuse of the API.
-
-So I will keep the builtin_platform_driver_probe() in the child, and=20
-use a
-subsys_initcall() in the parent. That works fine.
-
-Regards,
--Paul
-=
+Rob
