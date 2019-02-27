@@ -1,50 +1,52 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v2 1/3] Bluetooth: btusb: add QCA6174A compatible properties
-Date: Wed, 27 Feb 2019 13:34:22 -0800
-Message-ID: <CA+ASDXOG43dRtqzZJuA4ixVvfpt-Wd1rUVMMG3QFRnNGOmY5GA@mail.gmail.com>
-References: <20190222225345.69084-1-briannorris@chromium.org> <C908FF06-43F1-4A5C-B80F-0982315DDB6A@holtmann.org>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v2 1/5] drm/bridge: sii902x: add input_bus_flags
+Date: Wed, 27 Feb 2019 23:54:19 +0200
+Message-ID: <087bea83b75afa55f0b156da3893e99c49ebb186.1551303673.git.jsarha@ti.com>
+References: <cover.1551303673.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <C908FF06-43F1-4A5C-B80F-0982315DDB6A@holtmann.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Rajat Jain <rajatja@google.com>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1551303673.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: fabrizio.castro@bp.renesas.com, Songjun.Wu@atmel.com, tony@atomide.com, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, voice.shen@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcel,
-
-On Tue, Feb 26, 2019 at 11:53 PM Marcel Holtmann <marcel@holtmann.org> wrote:
-> > We may need to specify a GPIO wake pin for this device, so add a
-> > compatible property for it.
-> >
-> > There are at least to USB PID/VID variations of this chip: one with a
-> > Lite-On ID and one with an Atheros ID.
-> >
-> > Signed-off-by: Brian Norris <briannorris@chromium.org>
-> > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > v2:
-> > * drop leading zeroes from VID, per documented binding
-> > ---
-> > drivers/bluetooth/btusb.c | 2 ++
-> > 1 file changed, 2 insertions(+)
->
-> all 3 patches have been applied to bluetooth-next tree.
-
-Thanks! I failed to repeat my comment from v1:
-
-"""
-This patch is also required to make this stable, but since it's not
-really tied to the device tree, and it's an existing bug, I sent it
-separately:
-
-  https://lore.kernel.org/patchwork/patch/1044896/
-  Subject: Bluetooth: btusb: request wake pin with NOAUTOEN
-"""
-
-Can you take this one too? Otherwise Scarlet will be less stable
-(possible interrupt storm at boot).
-
-Regards,
-Brian
+RnJvbTogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KClRoZSBkcml2ZXIg
+YWx3YXlzIHNldHMgSW5wdXRCdXNGbXQ6RURHRSB0byAwIChmYWxsaW5nIGVkZ2UpLgoKQWRkIGRy
+bV9icmlkZ2VfdGltaW5ncydzIGlucHV0X2J1c19mbGFncyB0byByZWZsZWN0IHRoYXQgdGhlIGJy
+aWRnZQpzYW1wbGVzIG9uIGZhbGxpbmcgZWRnZXMuCgpTaWduZWQtb2ZmLWJ5OiBUb21pIFZhbGtl
+aW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgpTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxq
+c2FyaGFAdGkuY29tPgpSZXZpZXdlZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5n
+LmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYyB8IDcgKysrKysrKwog
+MSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
+L2RybS9icmlkZ2Uvc2lpOTAyeC5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMK
+aW5kZXggYmZhOTAyMDEzYWE0Li4xYWZhMDAwMTQxZDUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9icmlkZ2Uvc2lpOTAyeC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAy
+eC5jCkBAIC00NTksNiArNDU5LDEyIEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9pMmNfYnlwYXNzX2Rl
+c2VsZWN0KHN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eCwgdTMyIGNoYW5faWQpCiAJcmV0dXJuIDA7
+CiB9CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzIGRlZmF1bHRfc2lp
+OTAyeF90aW1pbmdzID0geworCS5pbnB1dF9idXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfUElYREFU
+QV9TQU1QTEVfTkVHRURHRQorCQkgfCBEUk1fQlVTX0ZMQUdfU1lOQ19TQU1QTEVfTkVHRURHRQor
+CQkgfCBEUk1fQlVTX0ZMQUdfREVfSElHSCwKK307CisKIHN0YXRpYyBpbnQgc2lpOTAyeF9wcm9i
+ZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAogCQkJIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNl
+X2lkICppZCkKIHsKQEAgLTUyOSw2ICs1MzUsNyBAQCBzdGF0aWMgaW50IHNpaTkwMnhfcHJvYmUo
+c3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKIAogCXNpaTkwMngtPmJyaWRnZS5mdW5jcyA9ICZz
+aWk5MDJ4X2JyaWRnZV9mdW5jczsKIAlzaWk5MDJ4LT5icmlkZ2Uub2Zfbm9kZSA9IGRldi0+b2Zf
+bm9kZTsKKwlzaWk5MDJ4LT5icmlkZ2UudGltaW5ncyA9ICZkZWZhdWx0X3NpaTkwMnhfdGltaW5n
+czsKIAlkcm1fYnJpZGdlX2FkZCgmc2lpOTAyeC0+YnJpZGdlKTsKIAogCWkyY19zZXRfY2xpZW50
+ZGF0YShjbGllbnQsIHNpaTkwMngpOwotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwg
+UG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNzIElEOiAw
+NjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
