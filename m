@@ -1,23 +1,35 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH RESEND V2 2/2] arm64: dts: freescale: imx8mq: add clock
- for GPIO node
-Date: Tue, 26 Feb 2019 22:42:59 -0300
-Message-ID: <CAOMZO5AddhSfB0Efuy-Z5GjvpXMwyBGHB8H6YTWcztXzCOWVyA@mail.gmail.com>
-References: <1551230622-30660-1-git-send-email-Anson.Huang@nxp.com> <1551230622-30660-2-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Alison Wang <alison.wang@nxp.com>
+Subject: [PATCH] arm64: dts: ls1028a: add pmu dt nodes
+Date: Wed, 27 Feb 2019 09:57:52 +0800
+Message-ID: <20190227015752.18342-1-alison.wang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551230622-30660-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@>
+To: shawnguo@kernel.org, leoyang.li@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: alison.wang@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 10:29 PM Anson Huang <anson.huang@nxp.com> wrote:
->
-> i.MX8MQ has clock gate for each GPIO bank, add clock info
-> to GPIO node for clock management.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+This patch adds pmu dt nodes for LS1028A.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Alison Wang <alison.wang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index a8cf92a..36ef9c5 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -89,6 +89,11 @@
+ 					  IRQ_TYPE_LEVEL_LOW)>;
+ 	};
+ 
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+ 	gic: interrupt-controller@6000000 {
+ 		compatible= "arm,gic-v3";
+ 		#address-cells = <2>;
+-- 
+1.7.1
