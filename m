@@ -1,68 +1,34 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/3] watchdog: orion: don't enable rstout if an interrupt
- is configured
-Date: Wed, 27 Feb 2019 15:07:07 -0800
-Message-ID: <20190227230707.GA28635@roeck-us.net>
-References: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
- <20171011022958.31268-3-chris.packham@alliedtelesis.co.nz>
- <227eed69-c4c8-01a1-3c6b-6cf95e84a9cd@roeck-us.net>
- <4f82b24c3b244d3eba0f8de8cb25049f@svr-chch-ex1.atlnz.lc>
- <636717314b294a5f9a4ed1ffa44625c4@svr-chch-ex1.atlnz.lc>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] dt-bindings: power: supply:
+ axp20x_usb_power: add axp813 compatible
+Date: Wed, 27 Feb 2019 17:43:56 -0600
+Message-ID: <20190227234356.GA1909@bogus>
+References: <20190225033107.17326-1-wens@csie.org>
+ <20190225033107.17326-2-wens@csie.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBPWB3TRQKGQEAKSYACY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <636717314b294a5f9a4ed1ffa44625c4@svr-chch-ex1.atlnz.lc>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: "wim@iguana.be" <wim@iguana.be>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20190225033107.17326-2-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 08:59:07PM +0000, Chris Packham wrote:
-> Hijacking an old thread,
+On Mon, 25 Feb 2019 11:30:59 +0800, Chen-Yu Tsai wrote:
+> This adds the "x-powers,axp813-usb-power-supply" to the list of
+> compatibles for AXP20X VBUS power supply driver.
 > 
-> On 11/10/17 5:30 PM, Chris Packham wrote:
-> > On 11/10/17 16:42, Guenter Roeck wrote:
-> >> On 10/10/2017 07:29 PM, Chris Packham wrote:
-> >>> The orion_wdt_irq invokes panic() so we are going to reset the CPU
-> >>> regardless.  By not setting this bit we get a chance to gather debug
-> >>> from the panic output before the system is reset.
-> >>>
-> >>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> >>
-> >> Unless I am missing something, this assumes that the interrupt is
-> >> handled, ie that the system is not stuck with interrupts disabled.
-> >> This makes the watchdog less reliable. This added verbosity comes
-> >> at a significant cost. I'd like to get input from others if this
-> >> is acceptable.
-> >>
-> >> That would be different if there was a means to configure a pretimeout,
-> >> ie a means to tell the system to generate an irq first, followed by a
-> >> hard reset if the interrupt is not served. that does not seem to be
-> >> the case here, though.
-> >>
-> > 
-> > As far as I can tell there is no pretimeout capability in the orion
-> > /armada WDT. I have got a work-in-progress patch that enables the RSTOUT
-> > in the interrupt handler which some-what mitigates your concern but
-> > still requires the interrupt to be handled at least once.
-> > 
-> > Another option would be to use one of the spare global timers to provide
-> > the interrupt-driven aspect.
-> 
-> So as Guenter rightly pointed out my original patch meant that we'd hang 
-> if we got stuck in a loop with interrupts disabled. Shortly after that 
-> that's exactly what happened on my test setup.
-> 
-> I've now been able to follow-up on the idea of using one of the spare 
-> global timers as a pretimeout indication and it's looking pretty 
-> promising. The patch is below (beware MUA wrapping). I'll submit it 
-> properly but I'm wondering if I should add the timer1 based watchdog as 
-> a separate watchdog device or like I have below roll it into the 
-> existing watchdog device.
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  .../devicetree/bindings/power/supply/axp20x_usb_power.txt        | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Why not use a pretimeout ? Isn't this exactly what you are doing,
-with a fixed pretimeout of timeout / 2 ?
-
-Guenter
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
