@@ -1,7 +1,7 @@
 From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v3 6/7] iio: imu: adis16480: Add support for ADIS1649x family of devices
-Date: Wed, 27 Feb 2019 18:14:27 +0200
-Message-ID: <1551284068-4882-7-git-send-email-stefan.popa@analog.com>
+Subject: [PATCH v3 7/7] iio: imu: adis16480: Add docs for ADIS16480 IMU
+Date: Wed, 27 Feb 2019 18:14:28 +0200
+Message-ID: <1551284068-4882-8-git-send-email-stefan.popa@analog.com>
 References: <1551284068-4882-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,173 +12,82 @@ To: jic23@kernel.org, robh+dt@kernel.org
 Cc: Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The ADIS16495 and ADIS16497 are inertial systems that include a triaxis
-gyroscope and a triaxis accelerometer. The serial peripheral interface
-(SPI) provide a simple interface for data collection and configuration
-control. The devices are similar to ADIS16475, ADIS16480, ADIS16485 and
-ADIS16488, the main differences are highlighted below:
-
-* The temperature data scale is 0.00565 C/LSB for ADIS16475 and ADIS1648x
-  devices, while for ADIS1649x 0.0125 C/LSB.
-
-* ADIS1649x devices support different gyroscope measurement ranges which
-  are dependent on the dash number (-1, -2, -3), see Table 24 in the
-  ADIS16495 datasheet. However, the ADIS16497 gyroscopes have the same
-  scale as ADIS16495.
-
-* ADIS16495 devices support the acceleration maximum range of 8g, while
-  ADIS16497 devices go up to 40g.
-
-* The internal clock for ADIS1649x devices is 4.25 kSPS. The sampling
-  frequency is calculated by applying a decimation rate which can take a
-  maximum value of 4250.
-
-* ADIS1649x devices support different default filter frequencies.
-
-Datasheets:
-Link: https://www.analog.com/media/en/technical-documentation/data-sheets/adis16495.pdf
-Link: https://www.analog.com/media/en/technical-documentation/data-sheets/adis16497.pdf
+Document support for ADIS16480 Inertial Measurement Unit.
 
 Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/iio/imu/adis16480.c | 97 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
+ .../devicetree/bindings/iio/imu/adi,adis16480.txt  | 49 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
 
-diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
-index c90375d..28cece3 100644
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -453,6 +453,13 @@ static const unsigned int adis16480_def_filter_freqs[] = {
- 	63,
- };
- 
-+static const unsigned int adis16495_def_filter_freqs[] = {
-+	300,
-+	100,
-+	300,
-+	100,
-+};
+diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
+new file mode 100644
+index 0000000..39ab016
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
+@@ -0,0 +1,49 @@
 +
- static const unsigned int ad16480_filter_data[][2] = {
- 	[ADIS16480_SCAN_GYRO_X]		= { ADIS16480_REG_FILTER_BNK0, 0 },
- 	[ADIS16480_SCAN_GYRO_Y]		= { ADIS16480_REG_FILTER_BNK0, 3 },
-@@ -713,6 +720,12 @@ enum adis16480_variant {
- 	ADIS16480,
- 	ADIS16485,
- 	ADIS16488,
-+	ADIS16495_1,
-+	ADIS16495_2,
-+	ADIS16495_3,
-+	ADIS16497_1,
-+	ADIS16497_2,
-+	ADIS16497_3,
- };
- 
- static const struct adis16480_chip_info adis16480_chip_info[] = {
-@@ -769,6 +782,78 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
- 		.max_dec_rate = 2048,
- 		.filter_freqs = adis16480_def_filter_freqs,
- 	},
-+	[ADIS16495_1] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
-+		.gyro_max_scale = 125,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 8,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+	},
-+	[ADIS16495_2] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(18000),
-+		.gyro_max_scale = 450,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 8,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+	},
-+	[ADIS16495_3] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
-+		.gyro_max_scale = 2000,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 8,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+	},
-+	[ADIS16497_1] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
-+		.gyro_max_scale = 125,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 40,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+	},
-+	[ADIS16497_2] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(18000),
-+		.gyro_max_scale = 450,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 40,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+	},
-+	[ADIS16497_3] = {
-+		.channels = adis16485_channels,
-+		.num_channels = ARRAY_SIZE(adis16485_channels),
-+		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
-+		.gyro_max_scale = 2000,
-+		.accel_max_val = IIO_M_S_2_TO_G(32000),
-+		.accel_max_scale = 40,
-+		.temp_scale = 12500, /* 12.5 milli degree Celsius */
-+		.int_clk = 4250000,
-+		.max_dec_rate = 4250,
-+		.filter_freqs = adis16495_def_filter_freqs,
-+	},
- };
- 
- static const struct iio_info adis16480_info = {
-@@ -1014,6 +1099,12 @@ static const struct spi_device_id adis16480_ids[] = {
- 	{ "adis16480", ADIS16480 },
- 	{ "adis16485", ADIS16485 },
- 	{ "adis16488", ADIS16488 },
-+	{ "adis16495-1", ADIS16495_1 },
-+	{ "adis16495-2", ADIS16495_2 },
-+	{ "adis16495-3", ADIS16495_3 },
-+	{ "adis16497-1", ADIS16497_1 },
-+	{ "adis16497-2", ADIS16497_2 },
-+	{ "adis16497-3", ADIS16497_3 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, adis16480_ids);
-@@ -1023,6 +1114,12 @@ static const struct of_device_id adis16480_of_match[] = {
- 	{ .compatible = "adi,adis16480" },
- 	{ .compatible = "adi,adis16485" },
- 	{ .compatible = "adi,adis16488" },
-+	{ .compatible = "adi,adis16495-1" },
-+	{ .compatible = "adi,adis16495-2" },
-+	{ .compatible = "adi,adis16495-3" },
-+	{ .compatible = "adi,adis16497-1" },
-+	{ .compatible = "adi,adis16497-2" },
-+	{ .compatible = "adi,adis16497-3" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, adis16480_of_match);
++Analog Devices ADIS16480 and similar IMUs
++
++Required properties for the ADIS16480:
++
++- compatible: Must be one of
++	* "adi,adis16375"
++	* "adi,adis16480"
++	* "adi,adis16485"
++	* "adi,adis16488"
++	* "adi,adis16495-1"
++	* "adi,adis16495-2"
++	* "adi,adis16495-3"
++	* "adi,adis16497-1"
++	* "adi,adis16497-2"
++	* "adi,adis16497-3"
++- reg: SPI chip select number for the device
++- spi-max-frequency: Max SPI frequency to use
++	see: Documentation/devicetree/bindings/spi/spi-bus.txt
++- spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
++- spi-cpol: See Documentation/devicetree/bindings/spi/spi-bus.txt
++- interrupts: interrupt mapping for IRQ, accepted values are:
++	* IRQF_TRIGGER_RISING
++	* IRQF_TRIGGER_FALLING
++
++Optional properties:
++
++- interrupt-names: Data ready line selection. Valid values are:
++	* DIO1
++	* DIO2
++	* DIO3
++	* DIO4
++	If this field is left empty, DIO1 is assigned as default data ready
++	signal.
++- reset-gpios: must be the device tree identifier of the RESET pin. As the line
++	is active low, it should be marked GPIO_ACTIVE_LOW.
++
++Example:
++
++	imu@0 {
++		compatible = "adi,adis16495-1";
++		reg = <0>;
++		spi-max-frequency = <3200000>;
++		spi-cpol;
++		spi-cpha;
++		interrupts = <25 IRQF_TRIGGER_FALLING>;
++		interrupt-parent = <&gpio>;
++		interrupt-names = "DIO2";
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e4091ac..beecd1e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -942,6 +942,7 @@ F:	drivers/dma/dma-axi-dmac.c
+ ANALOG DEVICES INC IIO DRIVERS
+ M:	Lars-Peter Clausen <lars@metafoo.de>
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
++M:	Stefan Popa <stefan.popa@analog.com>
+ W:	http://wiki.analog.com/
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
 -- 
 2.7.4
