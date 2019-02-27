@@ -1,112 +1,120 @@
 Return-Path: <SRS0=iAyG=RC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr140119.outbound.protection.outlook.com ([40.107.14.119]:50926
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr30040.outbound.protection.outlook.com ([40.107.3.40]:30848
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726880AbfB0Imn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Feb 2019 03:42:43 -0500
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v3 1/2] dt-bindings: add register based devices' mux
+        id S1726791AbfB0Ia5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Feb 2019 03:30:57 -0500
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: RE: [PATCH v3 1/2] dt-bindings: add register based devices' mux
  controller DT bindings
-Date: Wed, 27 Feb 2019 08:42:35 +0000
-Message-ID: <e117e1b6-35d4-a57d-fa22-8a9c8704e1d6@axentia.se>
+Date: Wed, 27 Feb 2019 08:30:51 +0000
+Message-ID: <VI1PR0401MB24969E748AEE91DD50B5BD3AF1740@VI1PR0401MB2496.eurprd04.prod.outlook.com>
 References: <20190224135143.24770-1-pankaj.bansal@nxp.com>
  <20190226195354.GA19598@bogus>
  <CADRPPNSJ3Re+Ztfq_-a1D1xRJr3zxreG3irk4RBz6gibwbNNtA@mail.gmail.com>
  <20190226220031.GA7919@bogus>
- <VI1PR0401MB24969E748AEE91DD50B5BD3AF1740@VI1PR0401MB2496.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0401MB24969E748AEE91DD50B5BD3AF1740@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+In-Reply-To: <20190226220031.GA7919@bogus>
 Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AD8ABBDD710EF84AAB92A8AC025511C5@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Pankaj Bansal <pankaj.bansal@nxp.com>, 'Rob Herring' <robh@kernel.org>, Leo Li <leoyang.li@nxp.com>
+To: 'Rob Herring' <robh@kernel.org>, Leo Li <leoyang.li@nxp.com>, Peter Rosin <peda@axentia.se>
 Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gMjAxOS0wMi0yNyAwOTozMCwgUGFua2FqIEJhbnNhbCB3cm90ZToNCj4gSGkgUm9iLA0KPiAN
-Cj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+PiBGcm9tOiBSb2IgSGVycmluZyBbbWFp
-bHRvOnJvYmhAa2VybmVsLm9yZ10NCj4+IFNlbnQ6IFdlZG5lc2RheSwgMjcgRmVicnVhcnksIDIw
-MTkgMDM6MzEgQU0NCj4+IFRvOiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT4NCj4+IENjOiBQ
-YW5rYWogQmFuc2FsIDxwYW5rYWouYmFuc2FsQG54cC5jb20+OyBQZXRlciBSb3NpbiA8cGVkYUBh
-eGVudGlhLnNlPjsNCj4+IEZyYW5rIFJvd2FuZCA8ZnJvd2FuZC5saXN0QGdtYWlsLmNvbT47IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvMl0g
-ZHQtYmluZGluZ3M6IGFkZCByZWdpc3RlciBiYXNlZCBkZXZpY2VzJyBtdXgNCj4+IGNvbnRyb2xs
-ZXIgRFQgYmluZGluZ3MNCj4+DQo+PiBPbiBUdWUsIEZlYiAyNiwgMjAxOSBhdCAwMjoyODoxMlBN
-IC0wNjAwLCBMaSBZYW5nIHdyb3RlOg0KPj4+IE9uIFR1ZSwgRmViIDI2LCAyMDE5IGF0IDE6NTQg
-UE0gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6DQo+Pj4+DQo+Pj4+IE9uIFN1
-biwgRmViIDI0LCAyMDE5IGF0IDA4OjI3OjIzQU0gKzAwMDAsIFBhbmthaiBCYW5zYWwgd3JvdGU6
-DQo+Pj4+PiBUaGlzIGFkZHMgZGV2aWNlIHRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciBn
-ZW5lcmljIHJlZ2lzdGVyDQo+Pj4+PiBiYXNlZCBtdWx0aXBsZXhlciBjb250cm9sbGVkIGJ5IGEg
-Yml0ZmllbGRzIGluIGEgcGFyZW50IGRldmljZSdzIHJlZ2lzdGVyDQo+PiByYW5nZS4NCj4+Pj4+
-DQo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBQYW5rYWogQmFuc2FsIDxwYW5rYWouYmFuc2FsQG54cC5j
-b20+DQo+Pj4+PiAtLS0NCj4+Pj4+DQo+Pj4+PiBOb3RlczoNCj4+Pj4+ICAgICBWMzoNCj4+Pj4+
-ICAgICAtIEFkZGVkIHRoZSBwYXRjaCBpbiBzZXJpZXMgd2l0aCB0aGUgZHJpdmVyIHBhdGNoDQo+
-Pj4+PiAgICAgLSBGaXhlZCB0aGUgbm9kZSB2YWx1ZSBvdXQgb2YgYml0ZmllbGQgZXJyb3INCj4+
-Pj4+ICAgICAtIHJlbW92ZWQgdGhlICJwYXJlbnQgcmVnaXN0ZXIgci93IGZ1bmN0aW9ucyIgbGlu
-ZQ0KPj4+Pj4gICAgIFYyOg0KPj4+Pj4gICAgIC0gUmVtb3ZlZCBzeXNjb24gcmVmZXJlbmNlIGZy
-b20gdHh0IGZpbGUNCj4+Pj4+ICAgICAtIFJlbW92ZWQgbG9hZGluZyB6ZXJvZXMgZnJvbSBoZXgg
-bnVtYmVycw0KPj4+Pj4gICAgIC0gRml4ZWQgdGhlIGRlcHRoIG9mIGR0cyBub2Rlcw0KPj4+Pj4g
-ICAgIC0gZml4ZWQgbWlub3IgZm9ybWF0dGluZyBlcnJvcnMNCj4+Pj4+DQo+Pj4+PiAgLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbXV4L3JlZy1tdXgudHh0ICAgICAgfCA4MyArKysrKysrKysrKysr
-KysrKysNCj4+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgODMgaW5zZXJ0aW9ucygrKQ0KPj4+Pj4NCj4+
-Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXV4L3Jl
-Zy1tdXgudHh0DQo+Pj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdXgv
-cmVnLW11eC50eHQNCj4+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+Pj4+PiBpbmRleCAwMDAw
-MDAwMDAwMDAuLjhiZWE2MTI5YzExMw0KPj4+Pj4gLS0tIC9kZXYvbnVsbA0KPj4+Pj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL211eC9yZWctbXV4LnR4dA0KPj4+Pj4g
-QEAgLTAsMCArMSw4MyBAQA0KPj4+Pj4gK0dlbmVyaWMgcmVnaXN0ZXIgYml0ZmllbGQtYmFzZWQg
-bXVsdGlwbGV4ZXIgY29udHJvbGxlciBiaW5kaW5ncw0KPj4+Pj4gKw0KPj4+Pj4gK0RlZmluZSBy
-ZWdpc3RlciBiaXRmaWVsZHMgdG8gYmUgdXNlZCB0byBjb250cm9sIG11bHRpcGxleGVycy4gVGhl
-DQo+Pj4+PiArcGFyZW50IGRldmljZSB0cmVlIG5vZGUgbXVzdCBiZSBhIGRldmljZSBub2RlIHRv
-IHByb3ZpZGUgcmVnaXN0ZXIgci93DQo+PiBhY2Nlc3MuDQo+Pj4+DQo+Pj4+IFdlIGdlbmVyYWxs
-eSBhdm9pZCByZWdpc3RlciBiaXQgbGV2ZWwgYmluZGluZ3MgbGlrZSB0aGlzLi4uDQo+Pj4+DQo+
-Pj4+IFdoYXQgaGFwcGVucyB3aGVuIEkgbmVlZCA4IG9yIDE2LWJpdCBhY2Nlc3Nlcy4gT3Igc29t
-ZSBxdWlya3kNCj4+Pj4gZW5jb2Rpbmcgb2YgdGhlIGJpdHMuIE9yIG5vbi1jb250aWd1b3VzIGJp
-dCBmaWVsZHMuLi4gSXQncyBhbg0KPj4+PiBlbmRsZXNzIGV4dGVuZGluZyBvZiB0aGUgYmluZGlu
-ZyB0byB0cnkgdG8gaGFuZGxlIGRpZmZlcmVudCBjYXNlcy4NCj4+Pg0KPj4+IEkgdGhpbmsgdGhl
-IGludGVudGlvbiBoZXJlIGlzIHRvIG1pbWljIHRoZSBleGlzdGluZyBtbWlvLW11eCBiaW5kaW5n
-DQo+Pj4gKERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdXgvbW1pby1tdXgudHh0
-KSBzbyB0aGF0IHRoZQ0KPj4+IGV4aXN0aW5nIG1taW8tbXV4IGRyaXZlciBjYW4gYmUgZXh0ZW5k
-ZWQgdG8gY292ZXIgYm90aCBNTUlPIGFuZA0KPj4+IG5vbi1NTUlPIHJlZ2lzdGVyIGJhc2VkIG11
-eGVzLiAgVGhlIGJpdC13aWR0aCBvZiB0aGUgcmVnaXN0ZXIgYWNjZXNzDQo+Pj4gd2lsbCBiZSB0
-YWtlbiBjYXJlIG9mIGJ5IHRoZSByZWdtYXAgZnJhbWV3b3JrLiAgSXQgaXMgcHJvYmFibHkgdHJ1
-ZQ0KPj4+IHRoYXQgdGhpcyBjYW4gbm90IGNvdmVyIGFsbCB0aGUgcmVnaXN0ZXIgYmFzZWQgbXV4
-IGRldmljZSBpZiB0aGV5IGRvDQo+Pj4gaGF2ZSBxdWlyY2t5IHJlZ2lzdGVyIGxheW91dCwgYnV0
-IEkgdGhpbmsgaXQgc2hvdWxkIGJlIGdvb2QgZW5vdWdoIHRvDQo+Pj4gY292ZXIgbWFqb3JpdHkg
-b2YgdGhlIGNhc2VzLiAgSWYgdGhlcmUgYXJlIGRldmljZXMgdGhhdCBjYW5ub3QgYmUNCj4+PiBj
-b3ZlcmVkIGJ5IHRoZSBnZW5lcmljIGJpbmRpbmcgYW5kIGRyaXZlciwgdGhleSBjb3VsZCBjcmVh
-dGUgdGhlaXIgb3duDQo+Pj4gYmluZGluZ3MgYW5kIGRyaXZlcnMuDQo+Pg0KPj4gT3RoZXIgdGhh
-biB0aGUgc29tZXdoYXQgbWlzbGVhZGluZyBuYW1lLCB3aHkgbm90IGp1c3QgcmV1c2UgdGhlIGV4
-aXN0aW5nDQo+PiBiaW5kaW5nPyBXb3JzdCBjYXNlLCBqdXN0IGFkZCBhbm90aGVyIGNvbXBhdGli
-bGUgdG8gaXQgYW5kIHJlbmFuZSB0aGUgZmlsZS4gVGhhdA0KPj4gd291bGQgaGF2ZSBzYXZlZCBt
-ZSByZXZpZXdpbmcgdGhlIHdob2xlIHRoaW5nIGFnYWluLi4uDQo+Pg0KPiANCj4gSSBndWVzcyBJ
-IGNhbiByZW5hbWUgbW1pby1tdXggdG8gcmVnLW11eCBhbmQgYWRkIHRoZSBiaW5kaW5ncyBpbiBp
-dC4gQmVjYXVzZSByZWFsbHksIHRoZQ0KPiBNTUlPIG11eCBpcyBhIHNwZWNpYWwgY2FzZSBvZiBy
-ZWdpc3RlciBiYXNlZCBtdXgsIHdoZXJlIHRoZSByZWdpc3RlciBhY2Nlc3MgaXMgbWVtb3J5IG1h
-cHBlZC4NCj4gQFBldGVyIFJvc2luIDogQXJlIHlvdSBva2F5IHdpdGggdGhpcz8NCg0KSXQncyBz
-byBvYnZpb3VzIG5vdyB0aGF0IFJvYiBwb2ludHMgaXQgb3V0LiBTb3JyeSBmb3Igbm90IHJlYWxp
-emluZyB0aGlzDQphbGwgYnkgbXlzZWxmIHdoZW4gSSByZXZpZXdlZCB0aGUgaW5pdGlhbCByZXZp
-c2lvbnMuIEkgbWFkZSB0aGUgY29ubmVjdGlvbg0KZm9yIHRoZSBkcml2ZXIgaXRzZWxmLCBidXQg
-bm90IHNvIGZvciB0aGUgYmluZGluZy4gSG93IHNpbGx5LCBhbmQgc29ycnkNCmFnYWluIGZvciB0
-aGUgdHJvdWJsZS4NCg0KU28sIHBsZWFzZSByZW5hbWUgdGhlIGZpbGUgd2l0aCB0aGUgYmluZGlu
-ZywgYW5kIGhhY2sgdGhlIHRleHQgdG8gY292ZXINCmJvdGggY29tcGF0aWJsZXMgKG1taW8tbXV4
-IGFuZCByZWctbXV4KSwgYmVjYXVzZSBJIHRoaW5rIGl0IHdvdWxkIGJlDQp2ZXJ5IGNvbmZ1c2lu
-ZyB0byByZXVzZSB0aGUgbW1pby1tdXggY29tcGF0aWJsZSBmb3IgYSAicmVnLW11eCIgdGhhdCBp
-cw0Kbm90IG1taW8gYmFzZWQuDQoNCj4+IEJ1dCByZWFsbHksIHlvdSBzaG91bGQganVzdCBiZSBh
-YmxlIHRvIHVzZSB3aGF0IGlzIHRoZXJlIGFuZCBkZXRlcm1pbmUgdGhlIHR5cGUgb2YNCj4+IGFj
-Y2VzcyBmcm9tIHRoZSBwYXJlbnQgbm9kZSAob3IgSSBzdXBwb3NlIHJlZ21hcCBkb2VzIHRoYXQg
-Zm9yIHlvdSkuDQo+IA0KPiBUaGUgaW50ZW50aW9uIGlzIHRvIGhhdmUgYW4gaW5kaWNhdGlvbiB0
-aGF0IHRoZSBwYXJlbnQgZGV2aWNlcyBwcm9kdWNlcyBvbmUgKG9yIG1hbnkpIG11eA0KPiBQcm9k
-dWNlcnMsIHdoaWNoIGFyZSBjb250cm9sbGVkIGJ5IHBhcmVudCBkZXZpY2VzJyByZWdpc3RlcnMu
-DQo+IFdoaWNoIGlzIHdoeSBJIGNob3NlIGNvbXBhdGlibGUgInJlZy1tdXgiLg0KDQpUaGlzIGlz
-IG5vdCB3aGF0IFJvYiBpcyB0YWxraW5nIGFib3V0LCBoZSBpcyB0YWxraW5nIGFib3V0IC9ub3Qv
-IGFkZGluZw0KYSBuZXcgY29tcGF0aWJsZSBhdCBhbGwsIGFuZCBoYXZlIHRoZSBkcml2ZXIgc2lt
-cGx5IHRyeSBib3RoIG9mDQpzeXNjb25fbm9kZV90b19yZWdtYXAobnAtPnBhcmVudCkgYW5kIGRl
-dl9nZXRfcmVnbWFwKGRldi0+cGFyZW50LCBOVUxMKQ0KKGluIHNvbWUgb3RoZXIpIGFuZCBnbyB3
-aXRoIGFueXRoaW5nIHRoYXQgaXMgcmV0dXJuZWQuDQoNCkhvd2V2ZXIsIGFzIEkgc2FpZCBhYm92
-ZSwgdGhhdCBsZWFkcyB0byBjb25mdXNpbmcgbmFtaW5nIGluIHRoZSBkdHMsDQphbmQgYWRkaW5n
-IGEgbmV3IGNvbXBhdGlibGUgZmVlbHMgbGlrZSBpdCdzIHdvcnRoIGl0Lg0KDQpDaGVlcnMsDQpQ
-ZXRlcg0KDQo+IFRoZSBwYXJlbnQgZGV2aWNlJ3MgcmVnaXN0ZXIgY2FuIGJlIHdyaXR0ZW4gaW4g
-YW55IHdheSAoTU1JTyAvIFNQSSAvIEkyQykgZXRjLg0K
+Hi Rob,
+
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Wednesday, 27 February, 2019 03:31 AM
+> To: Leo Li <leoyang.li@nxp.com>
+> Cc: Pankaj Bansal <pankaj.bansal@nxp.com>; Peter Rosin <peda@axentia.se>;
+> Frank Rowand <frowand.list@gmail.com>; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v3 1/2] dt-bindings: add register based devices' mux
+> controller DT bindings
+>=20
+> On Tue, Feb 26, 2019 at 02:28:12PM -0600, Li Yang wrote:
+> > On Tue, Feb 26, 2019 at 1:54 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Sun, Feb 24, 2019 at 08:27:23AM +0000, Pankaj Bansal wrote:
+> > > > This adds device tree binding documentation for generic register
+> > > > based multiplexer controlled by a bitfields in a parent device's re=
+gister
+> range.
+> > > >
+> > > > Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+> > > > ---
+> > > >
+> > > > Notes:
+> > > >     V3:
+> > > >     - Added the patch in series with the driver patch
+> > > >     - Fixed the node value out of bitfield error
+> > > >     - removed the "parent register r/w functions" line
+> > > >     V2:
+> > > >     - Removed syscon reference from txt file
+> > > >     - Removed loading zeroes from hex numbers
+> > > >     - Fixed the depth of dts nodes
+> > > >     - fixed minor formatting errors
+> > > >
+> > > >  .../devicetree/bindings/mux/reg-mux.txt      | 83 ++++++++++++++++=
+++
+> > > >  1 file changed, 83 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/mux/reg-mux.txt
+> > > > b/Documentation/devicetree/bindings/mux/reg-mux.txt
+> > > > new file mode 100644
+> > > > index 000000000000..8bea6129c113
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/mux/reg-mux.txt
+> > > > @@ -0,0 +1,83 @@
+> > > > +Generic register bitfield-based multiplexer controller bindings
+> > > > +
+> > > > +Define register bitfields to be used to control multiplexers. The
+> > > > +parent device tree node must be a device node to provide register =
+r/w
+> access.
+> > >
+> > > We generally avoid register bit level bindings like this...
+> > >
+> > > What happens when I need 8 or 16-bit accesses. Or some quirky
+> > > encoding of the bits. Or non-contiguous bit fields... It's an
+> > > endless extending of the binding to try to handle different cases.
+> >
+> > I think the intention here is to mimic the existing mmio-mux binding
+> > (Documentation/devicetree/bindings/mux/mmio-mux.txt) so that the
+> > existing mmio-mux driver can be extended to cover both MMIO and
+> > non-MMIO register based muxes.  The bit-width of the register access
+> > will be taken care of by the regmap framework.  It is probably true
+> > that this can not cover all the register based mux device if they do
+> > have quircky register layout, but I think it should be good enough to
+> > cover majority of the cases.  If there are devices that cannot be
+> > covered by the generic binding and driver, they could create their own
+> > bindings and drivers.
+>=20
+> Other than the somewhat misleading name, why not just reuse the existing
+> binding? Worst case, just add another compatible to it and renane the fil=
+e. That
+> would have saved me reviewing the whole thing again...
+>=20
+
+I guess I can rename mmio-mux to reg-mux and add the bindings in it. Becaus=
+e really, the
+MMIO mux is a special case of register based mux, where the register access=
+ is memory mapped.
+@Peter Rosin : Are you okay with this?
+
+> But really, you should just be able to use what is there and determine th=
+e type of
+> access from the parent node (or I suppose regmap does that for you).
+
+The intention is to have an indication that the parent devices produces one=
+ (or many) mux
+Producers, which are controlled by parent devices' registers.
+Which is why I chose compatible "reg-mux".
+
+The parent device's register can be written in any way (MMIO / SPI / I2C) e=
+tc.
+
+>=20
+> Rob
