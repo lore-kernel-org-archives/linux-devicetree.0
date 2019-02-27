@@ -1,43 +1,70 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: Add Dragonboard 845c
-Date: Wed, 27 Feb 2019 07:25:54 -0700
-Message-ID: <60e2bea0-463c-7705-b9bf-a0380111156a@codeaurora.org>
-References: <20190227074009.19248-1-bjorn.andersson@linaro.org>
+From: Yong Wu <yong.wu@mediatek.com>
+Subject: Re: [PATCH 05/13] memory: mtk-smi: Add device-link between smi-larb
+ and smi-common
+Date: Wed, 27 Feb 2019 22:33:05 +0800
+Message-ID: <1551277985.17917.48.camel@mhfsdcap03>
+References: <1546318276-18993-1-git-send-email-yong.wu@mediatek.com>
+         <1546318276-18993-6-git-send-email-yong.wu@mediatek.com>
+         <CAE=gft71J+5ui_FFm4D+62uSy6KHYzT7wru_NNdPsvrCDV3ekw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190227074009.19248-1-bjorn.andersson@linaro.org>
-Content-Language: en-US
+In-Reply-To: <CAE=gft71J+5ui_FFm4D+62uSy6KHYzT7wru_NNdPsvrCDV3ekw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>
+Cc: Joerg Roedel <joro@8bytes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, Arnd Bergmann <arnd@arndb.de>, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/27/2019 12:40 AM, Bjorn Andersson wrote:
-> This adds an initial dts for the Dragonboard 845. Supported
-> functionality includes Debug UART, UFS, USB-C (peripheral), USB-A
-> (host), Ethernet, microSD-card and Bluetooth.
+On Mon, 2019-02-25 at 15:54 -0800, Evan Green wrote:
+> On Mon, Dec 31, 2018 at 8:52 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> >
+> > Normally, If the smi-larb HW need work, we should enable the smi-common
+> > HW power and clock firstly.
+> > This patch adds device-link between the smi-larb dev and the smi-common
+> > dev. then If pm_runtime_get_sync(smi-larb-dev), the pm_runtime_get_sync
+> > (smi-common-dev) will be called automatically.
+> >
+> > Since smi is built-in driver like IOMMU and never unbound,
+> > DL_FLAG_AUTOREMOVE_* is not needed.
+> >
+> > CC: Matthias Brugger <matthias.bgg@gmail.com>
+> > Suggested-by: Tomasz Figa <tfiga@chromium.org>
+> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > ---
+> >  drivers/memory/mtk-smi.c | 16 +++++++---------
+> >  1 file changed, 7 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> > index 9688341..30930e4 100644
+> > --- a/drivers/memory/mtk-smi.c
+> > +++ b/drivers/memory/mtk-smi.c
+> > @@ -271,6 +271,7 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+> >         struct device *dev = &pdev->dev;
+> >         struct device_node *smi_node;
+> >         struct platform_device *smi_pdev;
+> > +       struct device_link *link;
+> >
+> >         larb = devm_kzalloc(dev, sizeof(*larb), GFP_KERNEL);
+> >         if (!larb)
+> > @@ -310,6 +311,12 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+> >                 if (!platform_get_drvdata(smi_pdev))
+> >                         return -EPROBE_DEFER;
+> >                 larb->smi_common_dev = &smi_pdev->dev;
+> > +               link = device_link_add(dev, larb->smi_common_dev,
+> > +                                      DL_FLAG_PM_RUNTIME);
 > 
-> Initializing the SMMU is clearing the mapping used for the splash screen
-> framebuffer, which causes the baord to reboot. This can be worked around
+> Doesn't this need to be torn down in remove()? You mention that it's
+> built-in and never removed, but it does seem to have a remove()
 
-baord -> board?
+The MTK IOMMU driver need depend on this SMI driver. the IOMMU is a
+builtin driver, thus the SMI also should be a builtin driver.
 
-> using:
-> 
->    fastboot oem select-display-panel none
-> 
-> Ethernet and the second USB-A port depends on a functional firmware
-> loader for the uPD720201.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+Technically, If the driver is builtin, then the "remove" function can be
+removed? If yes, I could use a new patch do it.
 
+It looks the MACRO(builtin_platform_driver) only support one driver, but
+we have two driver(smi-common and smi-larb) here.
 
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+> function that tears down everything else, so it seemed a shame to
+> start leaking now. Maybe the AUTOREMOVE flag would do it.
