@@ -1,41 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 4/9] pinctrl: Add STMFX GPIO expander Pinctrl/GPIO
- driver
-Date: Wed, 27 Feb 2019 14:55:00 +0100
-Message-ID: <CACRpkdaa4K3uoo7mXkLqjqbmP4qHfrbmqQuqc2fDCE3D=s_2Dw@mail.gmail.com>
-References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
- <1551260094-32570-5-git-send-email-amelie.delaunay@st.com>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: Add Dragonboard 845c
+Date: Wed, 27 Feb 2019 07:25:54 -0700
+Message-ID: <60e2bea0-463c-7705-b9bf-a0380111156a@codeaurora.org>
+References: <20190227074009.19248-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551260094-32570-5-git-send-email-amelie.delaunay@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190227074009.19248-1-bjorn.andersson@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 10:35 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
+On 2/27/2019 12:40 AM, Bjorn Andersson wrote:
+> This adds an initial dts for the Dragonboard 845. Supported
+> functionality includes Debug UART, UFS, USB-C (peripheral), USB-A
+> (host), Ethernet, microSD-card and Bluetooth.
+> 
+> Initializing the SMMU is clearing the mapping used for the splash screen
+> framebuffer, which causes the baord to reboot. This can be worked around
 
-> This patch adds pinctrl/GPIO driver for STMicroelectronics
-> Multi-Function eXpander (STMFX) GPIO expander.
-> STMFX is an I2C slave controller, offering up to 24 GPIOs.
-> The driver relies on generic pin config interface to configure the GPIOs.
->
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+baord -> board?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> using:
+> 
+>    fastboot oem select-display-panel none
+> 
+> Ethernet and the second USB-A port depends on a functional firmware
+> loader for the uPD720201.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-I assume Lee will merge the whole patch set through the MFD
-tree.
 
-Yours,
-Linus Walleij
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
