@@ -1,67 +1,83 @@
-From: Patrick Venture <venture@google.com>
-Subject: [PATCH v4 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Wed, 27 Feb 2019 08:58:41 -0800
-Message-ID: <20190227165841.143802-1-venture@google.com>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH 1/2] dt-bindings: usb-xhci: Add usb-phy-port-reset property
+Date: Wed, 27 Feb 2019 22:38:27 +0530
+Message-ID: <CABe79T7=uhVfy4x+L0Vi6g5fiT=-WKnnZmNn5XpZrvOiUzJOaA@mail.gmail.com>
+References: <1549347534-11320-1-git-send-email-srinath.mannam@broadcom.com>
+ <1549347534-11320-2-git-send-email-srinath.mannam@broadcom.com>
+ <20190225213807.GA18852@bogus> <CABe79T4j7batxZ7BDhEpwRK8x5UMZLkxLJOt-FD0SCr9JOFizw@mail.gmail.com>
+ <CAL_Jsq+ZOWyY7p=ZjRnB85RY=fcNXu7xiH5j-1-OkuAmXqCFxw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+ZOWyY7p=ZjRnB85RY=fcNXu7xiH5j-1-OkuAmXqCFxw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Mark Rutland <mark.rutland@arm.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+Hi Rob,
+Thanks for the information. Please find my comments below.
+Regards,
+Srinath.
+On Tue, Feb 26, 2019 at 11:33 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Feb 25, 2019 at 10:57 PM Srinath Mannam
+> <srinath.mannam@broadcom.com> wrote:
+> >
+> > Hi Rob,
+> > Thanks for the review, Please see my comments below in line.
+> >
+> > Regards,
+> > Srinath.
+> > On Tue, Feb 26, 2019 at 3:08 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Tue, Feb 05, 2019 at 11:48:53AM +0530, Srinath Mannam wrote:
+> > > > Add usb-phy-port-reset optional property to set quirk in xhci platform
+> > > > driver which forces USB port PHY reset on port disconnect event.
+> > > >
+> > > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > > > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > > > index fea8b15..ecbdb15 100644
+> > > > --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > > > +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > > > @@ -40,6 +40,7 @@ Optional properties:
+> > > >    - usb3-lpm-capable: determines if platform is USB3 LPM capable
+> > > >    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+> > > >    - imod-interval-ns: default interrupt moderation interval is 5000ns
+> > > > +  - usb-phy-port-reset: set this to do USB PORT PHY reset while disconnect
+> > > >    - phys : see usb-hcd.txt in the current directory
+> > >
+> > > This should be implied by the HCI or phy compatible string (depending
+> > > on who exactly needs the quirky behavior).
+> > Stingray USB HS PHY connected to xHCI port has an issue, if full speed
+> > devices connected to this port then
+> > after all High Speed devices connected to this port are detected at
+> > full speed instead of high speed.
+> > So that we need to do PHY (which is connected to port) reset on xHCI
+> > port disconnect event.
+> > That is the reason we required to add quirk in xHCI.
+>
+> So, by looking at the xhci host and phy compatible strings (or maybe
+> just the phy) you can determine whether you need to reset the port or
+> not. All the information you need is in DT already.
+xHCI controller in our SOC has three ports each port has one
+PHY(SS/HS) connected to it.
+HS PHY has to reset on its corresponding port disconnect event. port
+disconnect event is
+captured in xHCI host framework so, quirk has to be registered in xHCI
+framework only.
+But we are using "generic-xhci" generic compatible string for our xHCI
+controller.
+As per your advice, we will add new compatible string in xhci-plat.c
+driver for our xHCI controller
+and will add quirk part of that.
 
-Signed-off-by: Patrick Venture <venture@google.com>
----
-Changes for v4:
-- None
-Changes for v3:
-- None
-Changes for v2:
-- Added comment about syscon required parameter.
----
- .../bindings/misc/aspeed-p2a-ctrl.txt         | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+Thank you.
 
-diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-new file mode 100644
-index 000000000000..1092d62d1c92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-@@ -0,0 +1,32 @@
-+======================================================================
-+Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
-+======================================================================
-+
-+The bridge is available on platforms with the VGA enabled on the Aspeed device.
-+In this case, the host has access to a 64KiB window into all of the BMC's
-+memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
-+has read access to all the regions of memory, however the host only has read
-+and write access depending on a register controlled by the BMC.
-+
-+Required properties:
-+===================
-+
-+ - compatible: must be one of:
-+	- "aspeed,ast2400-p2a-ctrl"
-+	- "aspeed,ast2500-p2a-ctrl"
-+
-+ - syscon: handle to syscon device node controlling PCI.
-+
-+Optional properties:
-+===================
-+
-+- memory-region: A phandle to a reserved_memory region to be used for the PCI
-+		to AHB mapping
-+
-+Example:
-+
-+p2a: p2a-control@1e6e2000 {
-+	compatible = "aspeed,ast2400-p2a-ctrl";
-+	memory-region = <&reserved_memory>;
-+	syscon = <&syscon>;
-+};
--- 
-2.21.0.rc2.261.ga7da99ff1b-goog
+>
+> Rob
