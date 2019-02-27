@@ -1,75 +1,35 @@
-From: thor.thayer@linux.intel.com
-Subject: [PATCHv2 3/5] EDAC, altera: Skip DB IRQ for Stratix10
-Date: Wed, 27 Feb 2019 11:27:23 -0600
-Message-ID: <1551288445-22335-4-git-send-email-thor.thayer@linux.intel.com>
-References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
+From: pisa@cmp.felk.cvut.cz
+Subject: [PATCH v2 1/2] dt-bindings: vendor-prefix: add prefix for Czech Technical University in Prague.
+Date: Wed, 27 Feb 2019 18:26:28 +0100
+Message-ID: <c8988d37b193d7e713fa8f4916a6fb2787c37bef.1551287365.git.pisa@cmp.felk.cvut.cz>
+References: <cover.1551287365.git.pisa@cmp.felk.cvut.cz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <cover.1551287365.git.pisa@cmp.felk.cvut.cz>
+In-Reply-To: <cover.1551287365.git.pisa@cmp.felk.cvut.cz>
+References: <cover.1551287365.git.pisa@cmp.felk.cvut.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org
-Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org, mkl@pengutronix.de, linux-can@vger.kernel.org
+Cc: wg@grandegger.com, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com, ondrej.ille@gmail.com, Pavel Pisa <pisa@cmp.felk.cvut.cz>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 
-Stratix10 Double Bit errors are configured as SErrors
-so skip the Double Bit IRQ initialization if Stratix10.
-
-Since all the ECC peripherals are handled in this routine,
-the machine compatible device tree test is used here
-instead of multiple ECC block device tree compatible
-tests.
-
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 ---
-v2 No change. Add explanation for machine compatible test
-   in commit description.
----
- drivers/edac/altera_edac.c | 31 ++++++++++++++++++-------------
- 1 file changed, 18 insertions(+), 13 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 3127e927bcec..a92259d8afdc 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -1927,20 +1927,25 @@ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
- 		goto err_release_group1;
- 	}
- 
--	altdev->db_irq = irq_of_parse_and_map(np, 1);
--	if (!altdev->db_irq) {
--		edac_printk(KERN_ERR, EDAC_DEVICE, "Error allocating DBIRQ\n");
--		rc = -ENODEV;
--		goto err_release_group1;
--	}
--	rc = devm_request_irq(edac->dev, altdev->db_irq, prv->ecc_irq_handler,
--			      IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
--			      ecc_name, altdev);
--	if (rc) {
--		edac_printk(KERN_ERR, EDAC_DEVICE, "No DBERR IRQ resource\n");
--		goto err_release_group1;
-+	/* Arria10 has double bit error IRQs. Stratix10 uses SErrors */
-+	if (socfpga_is_a10()) {
-+		altdev->db_irq = irq_of_parse_and_map(np, 1);
-+		if (!altdev->db_irq) {
-+			edac_printk(KERN_ERR, EDAC_DEVICE,
-+				    "Error allocating DBIRQ\n");
-+			rc = -ENODEV;
-+			goto err_release_group1;
-+		}
-+		rc = devm_request_irq(edac->dev, altdev->db_irq,
-+				      prv->ecc_irq_handler,
-+				      IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-+				      ecc_name, altdev);
-+		if (rc) {
-+			edac_printk(KERN_ERR, EDAC_DEVICE,
-+				    "No DBERR IRQ resource\n");
-+			goto err_release_group1;
-+		}
- 	}
--
- 	rc = edac_device_add_device(dci);
- 	if (rc) {
- 		dev_err(edac->dev, "edac_device_add_device failed\n");
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 389508584f48..07de8df03c57 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -86,6 +86,7 @@ crane	Crane Connectivity Solutions
+ creative	Creative Technology Ltd
+ crystalfontz	Crystalfontz America, Inc.
+ csky	Hangzhou C-SKY Microsystems Co., Ltd
++ctu	Czech Technical University in Prague
+ cubietech	Cubietech, Ltd.
+ cypress	Cypress Semiconductor Corporation
+ cznic	CZ.NIC, z.s.p.o.
 -- 
-2.7.4
+2.11.0
