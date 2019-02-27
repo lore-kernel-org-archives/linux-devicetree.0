@@ -1,637 +1,125 @@
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: Add Dragonboard 845c
-Date: Wed, 27 Feb 2019 21:00:50 +0100
-Message-ID: <CAP71Wjww2RLi_+tLRzxjSCxASwHZLvF1U0EFFfOSpjk=UFjLPA@mail.gmail.com>
-References: <20190227074009.19248-1-bjorn.andersson@linaro.org>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v7 0/9] EDAC drivers for Armada XP L2 and DDR
+Date: Wed, 27 Feb 2019 20:05:45 +0000
+Message-ID: <ddd4d4738bf2484e8d13e6bc59cec6d8@svr-chch-ex1.atlnz.lc>
+References: <20181122001142.19187-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190227074009.19248-1-bjorn.andersson@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+To: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "bp@alien8.de" <bp@alien8.de>, "arnd@arndb.de" <arnd@arndb.de>, "jlu@pengutronix.de" <jlu@pengutronix.de>, "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 8:39 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> This adds an initial dts for the Dragonboard 845. Supported
-> functionality includes Debug UART, UFS, USB-C (peripheral), USB-A
-> (host), Ethernet, microSD-card and Bluetooth.
->
-> Initializing the SMMU is clearing the mapping used for the splash screen
-> framebuffer, which causes the baord to reboot. This can be worked around
-> using:
->
->   fastboot oem select-display-panel none
->
-> Ethernet and the second USB-A port depends on a functional firmware
-> loader for the uPD720201.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->
-> This depends on the addition of the PCIe controller and PHY nodes, from
-> https://lore.kernel.org/lkml/20190227070022.31975-1-bjorn.andersson@linaro.org/
->
->  arch/arm64/boot/dts/qcom/Makefile          |   1 +
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 570 +++++++++++++++++++++
->  2 files changed, 571 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-db845c.dts
->
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 21d548f02d39..b3fe72ff2955 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_QCOM) += msm8992-bullhead-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += msm8994-angler-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += msm8996-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += msm8998-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)        += sdm845-db845c.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += sdm845-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-1000.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-4000.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> new file mode 100644
-> index 000000000000..0a5cfab6f6e2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> @@ -0,0 +1,570 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> +#include "sdm845.dtsi"
-> +#include "pm8998.dtsi"
-> +#include "pmi8998.dtsi"
-> +
-> +/ {
-> +       model = "Thundercomm Dragonboard 845c";
-> +       compatible = "thundercomm,db845c", "qcom,sdm845";
-> +
-> +       aliases {
-> +               serial0 = &uart9;
-> +               hsuart0 = &uart6;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = "serial0:115200n8";
-> +       };
-> +
-> +       dc12v: dc12v-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "DC12V";
-> +               regulator-min-microvolt = <12000000>;
-> +               regulator-max-microvolt = <12000000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       lt9611_1v8: lt9611-vdd18-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "LT9611_1V8";
-> +
-> +               vin-supply = <&vdc_5v>;
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +
-> +               gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +       };
-> +
-> +       lt9611_3v3: lt9611-3v3 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "LT9611_3V3";
-> +
-> +               vin-supply = <&vdc_3v3>;
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +
-> +               // TODO: make it possible to drive same GPIO from two clients
-> +               // gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
-> +               // enable-active-high;
-> +       };
-> +
-> +       pcie0_1p05v: pcie-0-1p05v-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "PCIE0_1.05V";
-> +
-> +               vin-supply = <&vbat>;
-> +               regulator-min-microvolt = <1050000>;
-> +               regulator-max-microvolt = <1050000>;
-> +
-> +               // TODO: make it possible to drive same GPIO from two clients
-> +               // gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
-> +               // enable-active-high;
-> +       };
-> +
-> +       pcie0_3p3v_dual: vldo-3v3-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VLDO_3V3";
-> +
-> +               vin-supply = <&vbat>;
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +
-> +               gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +       };
-> +
-> +       gpio_keys {
-> +               compatible = "gpio-keys";
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               autorepeat;
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&vol_up_pin_a>;
-> +
-> +               vol-up {
-> +                       label = "Volume Up";
-> +                       linux,code = <KEY_VOLUMEUP>;
-> +                       gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
-> +               };
-> +       };
-> +
-> +       leds {
-> +               compatible = "gpio-leds";
-> +
-> +               user4 {
-> +                       label = "db845c:green:user4";
-
-I think we've agreed to standardize on label names for 96boards
-compatible boards.
-https://lore.kernel.org/lkml/20190205192412.GG31919@minitux/
-
-> +                       gpios = <&pm8998_gpio 13 GPIO_ACTIVE_HIGH>;
-> +                       linux,default-trigger = "heartbeat";
-> +                       default-state = "off";
-> +               };
-> +
-> +               wlan {
-> +                       label = "db845c:yellow:wlan";
-> +                       gpios = <&pm8998_gpio 9 GPIO_ACTIVE_HIGH>;
-> +                       linux,default-trigger = "phy0tx";
-> +                       default-state = "off";
-> +               };
-> +
-> +               bt {
-> +                       label = "db845c:blue:bt";
-> +                       gpios = <&pm8998_gpio 5 GPIO_ACTIVE_HIGH>;
-> +                       linux,default-trigger = "bluetooth-power";
-> +                       default-state = "off";
-> +               };
-> +       };
-> +
-> +       v5p0_hdmiout: v5p0-hdmiout-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "V5P0_HDMIOUT";
-> +
-> +               vin-supply = <&vdc_5v>;
-> +               regulator-min-microvolt = <500000>;
-> +               regulator-max-microvolt = <500000>;
-> +
-> +               // TODO: make it possible to drive same GPIO from two clients
-> +               // gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
-> +               // enable-active-high;
-> +       };
-> +
-> +       vbat: vbat-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VBAT";
-> +
-> +               vin-supply = <&dc12v>;
-> +               regulator-min-microvolt = <4200000>;
-> +               regulator-max-microvolt = <4200000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       vbat_som: vbat-som-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VBAT_SOM";
-> +
-> +               vin-supply = <&dc12v>;
-> +               regulator-min-microvolt = <4200000>;
-> +               regulator-max-microvolt = <4200000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       vdc_3v3: vdc-3v3-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VDC_3V3";
-> +               vin-supply = <&dc12v>;
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       vdc_5v: vdc-5v-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VDC_5V";
-> +
-> +               vin-supply = <&dc12v>;
-> +               regulator-min-microvolt = <500000>;
-> +               regulator-max-microvolt = <500000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       vreg_s4a_1p8: vreg-s4a-1p8 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vreg_s4a_1p8";
-> +
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       vph_pwr: vph-pwr-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vph_pwr";
-> +
-> +               vin-supply = <&vbat_som>;
-> +       };
-> +};
-> +
-> +&apps_rsc {
-> +       pm8998-rpmh-regulators {
-> +               compatible = "qcom,pm8998-rpmh-regulators";
-> +               qcom,pmic-id = "a";
-> +               vdd-s1-supply = <&vph_pwr>;
-> +               vdd-s2-supply = <&vph_pwr>;
-> +               vdd-s3-supply = <&vph_pwr>;
-> +               vdd-s4-supply = <&vph_pwr>;
-> +               vdd-s5-supply = <&vph_pwr>;
-> +               vdd-s6-supply = <&vph_pwr>;
-> +               vdd-s7-supply = <&vph_pwr>;
-> +               vdd-s8-supply = <&vph_pwr>;
-> +               vdd-s9-supply = <&vph_pwr>;
-> +               vdd-s10-supply = <&vph_pwr>;
-> +               vdd-s11-supply = <&vph_pwr>;
-> +               vdd-s12-supply = <&vph_pwr>;
-> +               vdd-s13-supply = <&vph_pwr>;
-> +               vdd-l1-l27-supply = <&vreg_s7a_1p025>;
-> +               vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
-> +               vdd-l3-l11-supply = <&vreg_s7a_1p025>;
-> +               vdd-l4-l5-supply = <&vreg_s7a_1p025>;
-> +               vdd-l6-supply = <&vph_pwr>;
-> +               vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
-> +               vdd-l9-supply = <&vreg_bob>;
-> +               vdd-l10-l23-l25-supply = <&vreg_bob>;
-> +               vdd-l13-l19-l21-supply = <&vreg_bob>;
-> +               vdd-l16-l28-supply = <&vreg_bob>;
-> +               vdd-l18-l22-supply = <&vreg_bob>;
-> +               vdd-l20-l24-supply = <&vreg_bob>;
-> +               vdd-l26-supply = <&vreg_s3a_1p35>;
-> +               vin-lvs-1-2-supply = <&vreg_s4a_1p8>;
-> +
-> +               vreg_s3a_1p35: smps3 {
-> +                       regulator-min-microvolt = <1352000>;
-> +                       regulator-max-microvolt = <1352000>;
-> +               };
-> +
-> +               vreg_s5a_2p04: smps5 {
-> +                       regulator-min-microvolt = <1904000>;
-> +                       regulator-max-microvolt = <2040000>;
-> +               };
-> +
-> +               vreg_s7a_1p025: smps7 {
-> +                       regulator-min-microvolt = <900000>;
-> +                       regulator-max-microvolt = <1028000>;
-> +               };
-> +
-> +               vreg_l1a_0p875: ldo1 {
-> +                       regulator-min-microvolt = <880000>;
-> +                       regulator-max-microvolt = <880000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +
-> +               vreg_l12a_1p8: ldo12 {
-> +                       regulator-min-microvolt = <1800000>;
-> +                       regulator-max-microvolt = <1800000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +
-> +               vreg_l7a_1p8: ldo7 {
-> +                       regulator-min-microvolt = <1800000>;
-> +                       regulator-max-microvolt = <1800000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +
-> +               vreg_l13a_2p95: ldo13 {
-> +                       regulator-min-microvolt = <1800000>;
-> +                       regulator-max-microvolt = <2960000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +
-> +               vreg_l17a_1p3: ldo17 {
-> +                       regulator-min-microvolt = <1304000>;
-> +                       regulator-max-microvolt = <1304000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +
-> +               vreg_l20a_2p95: ldo20 {
-> +                       regulator-min-microvolt = <2960000>;
-> +                       regulator-max-microvolt = <2968000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +
-> +               vreg_l21a_2p95: ldo21 {
-> +                       regulator-min-microvolt = <2960000>;
-> +                       regulator-max-microvolt = <2968000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +
-> +               vreg_l24a_3p075: ldo24 {
-> +                       regulator-min-microvolt = <3088000>;
-> +                       regulator-max-microvolt = <3088000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +
-> +               vreg_l25a_3p3: ldo25 {
-> +                       regulator-min-microvolt = <3300000>;
-> +                       regulator-max-microvolt = <3312000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +
-> +               vreg_l26a_1p2: ldo26 {
-> +                       regulator-min-microvolt = <1200000>;
-> +                       regulator-max-microvolt = <1200000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +               };
-> +       };
-> +
-> +       pmi8998-rpmh-regulators {
-> +               compatible = "qcom,pmi8998-rpmh-regulators";
-> +               qcom,pmic-id = "b";
-> +
-> +               vdd-bob-supply = <&vph_pwr>;
-> +
-> +               vreg_bob: bob {
-> +                       regulator-min-microvolt = <3312000>;
-> +                       regulator-max-microvolt = <3600000>;
-> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
-> +                       regulator-allow-bypass;
-> +               };
-> +       };
-> +};
-> +
-> +&gcc {
-> +       protected-clocks = <GCC_QSPI_CORE_CLK>,
-> +                          <GCC_QSPI_CORE_CLK_SRC>,
-> +                          <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
-> +};
-> +
-> +&pcie0 {
-> +       status = "okay";
-> +       perst-gpio = <&tlmm 35 GPIO_ACTIVE_LOW>;
-> +       enable-gpio = <&tlmm 134 GPIO_ACTIVE_HIGH>;
-> +
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pcie0_perst_state>, <&pcie0_clkreq_state>, <&pcie0_wake_state>;
-> +
-> +       vddpe-3v3-supply = <&pcie0_3p3v_dual>;
-> +};
-> +
-> +&pcie0_phy {
-> +       status = "okay";
-> +
-> +       vdda-phy-supply = <&vreg_l1a_0p875>;
-> +       vdda-pll-supply = <&vreg_l26a_1p2>;
-> +};
-> +
-> +&pm8998_gpio {
-> +       vol_up_pin_a: vol-up-active {
-> +               pins = "gpio6";
-> +               function = "normal";
-> +               input-enable;
-> +               bias-pull-up;
-> +               qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-> +       };
-> +};
-> +
-> +&pm8998_pon {
-> +       resin {
-> +               compatible = "qcom,pm8941-resin";
-> +               interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-> +               debounce = <15625>;
-> +               bias-pull-up;
-> +               linux,code = <KEY_VOLUMEDOWN>;
-> +       };
-> +};
-> +
-> +&qupv3_id_0 {
-> +       status = "okay";
-> +};
-> +
-> +&qupv3_id_1 {
-> +       status = "okay";
-> +};
-> +
-> +&sdhc_2 {
-> +       status = "okay";
-> +
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&sdc2_clk &sdc2_cmd &sdc2_data &sd_card_det_n>;
-> +
-> +       vmmc-supply = <&vreg_l21a_2p95>;
-> +       vqmmc-supply = <&vreg_l13a_2p95>;
-> +
-> +       bus-width = <4>;
-> +       cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
-> +};
-> +
-> +&tlmm {
-> +       pcie0_pwren_state: pcie0-pwren {
-> +               pins = "gpio90";
-> +               function = "gpio";
-> +
-> +               drive-strength = <2>;
-> +               bias-disable;
-> +       };
-> +
-> +       pcie0_perst_state: pcie0-reset {
-> +               pins = "gpio35";
-> +               function = "gpio";
-> +
-> +               drive-strength = <2>;
-> +               output-low;
-> +               bias-pull-down;
-> +       };
-> +
-> +       pcie0_clkreq_state: pcie0-clkreq {
-> +               pins = "gpio36";
-> +               function = "pci_e0";
-> +               bias-pull-up;
-> +       };
-> +
-> +       pcie0_wake_state: pcie0-wake {
-> +               pins = "gpio37";
-> +               function = "gpio";
-> +
-> +               drive-strength = <2>;
-> +               bias-pull-up;
-> +       };
-> +
-> +       sdc2_clk: sdc2-clk {
-> +               pins = "sdc2_clk";
-> +               bias-disable;
-> +
-> +               /*
-> +                * It seems that mmc_test reports errors if drive
-> +                * strength is not 16 on clk, cmd, and data pins.
-> +                */
-> +               drive-strength = <16>;
-> +       };
-> +
-> +       sdc2_cmd: sdc2-cmd {
-> +               pins = "sdc2_cmd";
-> +               bias-pull-up;
-> +               drive-strength = <10>;
-> +       };
-> +
-> +       sdc2_data: sdc2-data {
-> +               pins = "sdc2_data";
-> +               bias-pull-up;
-> +               drive-strength = <10>;
-> +       };
-> +
-> +       sd_card_det_n: sd-card-det-n {
-> +               pins = "gpio126";
-> +               function = "gpio";
-> +               bias-pull-up;
-> +       };
-> +};
-> +
-> +&uart6 {
-> +       status = "okay";
-> +
-> +       bluetooth {
-> +               compatible = "qcom,wcn3990-bt";
-> +
-> +               vddio-supply = <&vreg_s4a_1p8>;
-> +               vddxo-supply = <&vreg_l7a_1p8>;
-> +               vddrf-supply = <&vreg_l17a_1p3>;
-> +               vddch0-supply = <&vreg_l25a_3p3>;
-> +               max-speed = <3200000>;
-> +       };
-> +};
-> +
-> +&uart9 {
-> +       status = "okay";
-> +};
-> +
-> +&usb_1 {
-> +       status = "okay";
-> +};
-> +
-> +&usb_1_dwc3 {
-> +       dr_mode = "peripheral";
-> +};
-> +
-> +&usb_1_hsphy {
-> +       status = "okay";
-> +
-> +       vdd-supply = <&vreg_l1a_0p875>;
-> +       vdda-pll-supply = <&vreg_l12a_1p8>;
-> +       vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-> +
-> +       qcom,imp-res-offset-value = <8>;
-> +       qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
-> +       qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
-> +       qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
-> +};
-> +
-> +&usb_1_qmpphy {
-> +       status = "okay";
-> +
-> +       vdda-phy-supply = <&vreg_l26a_1p2>;
-> +       vdda-pll-supply = <&vreg_l1a_0p875>;
-> +};
-> +
-> +&usb_2 {
-> +       status = "okay";
-> +};
-> +
-> +&usb_2_dwc3 {
-> +       dr_mode = "host";
-> +};
-> +
-> +&usb_2_hsphy {
-> +       status = "okay";
-> +
-> +       vdd-supply = <&vreg_l1a_0p875>;
-> +       vdda-pll-supply = <&vreg_l12a_1p8>;
-> +       vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-> +
-> +       qcom,imp-res-offset-value = <8>;
-> +       qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
-> +};
-> +
-> +&usb_2_qmpphy {
-> +       status = "okay";
-> +
-> +       vdda-phy-supply = <&vreg_l26a_1p2>;
-> +       vdda-pll-supply = <&vreg_l1a_0p875>;
-> +};
-> +
-> +&ufs_mem_hc {
-> +       status = "okay";
-> +
-> +       vcc-supply = <&vreg_l20a_2p95>;
-> +       vcc-max-microamp = <800000>;
-> +};
-> +
-> +&ufs_mem_phy {
-> +       status = "okay";
-> +
-> +       vdda-phy-supply = <&vreg_l1a_0p875>;
-> +       vdda-pll-supply = <&vreg_l26a_1p2>;
-> +};
-> +
-> +&wifi {
-> +       status = "okay";
-> +};
-> +
-> +/* PINCTRL - additions to nodes defined in sdm845.dtsi */
-> +
-> +&qup_uart6_default {
-> +       pinmux {
-> +               pins = "gpio45", "gpio46", "gpio47", "gpio48";
-> +               function = "qup6";
-> +       };
-> +
-> +       cts {
-> +               pins = "gpio45";
-> +               bias-disable;
-> +       };
-> +
-> +       rts-tx {
-> +               pins = "gpio46", "gpio47";
-> +               drive-strength = <2>;
-> +               bias-disable;
-> +       };
-> +
-> +       rx {
-> +               pins = "gpio48";
-> +               bias-pull-up;
-> +       };
-> +};
-> +
-> +&qup_uart9_default {
-> +       pinconf-tx {
-> +               pins = "gpio4";
-> +               drive-strength = <2>;
-> +               bias-disable;
-> +       };
-> +
-> +       pinconf-rx {
-> +               pins = "gpio5";
-> +               drive-strength = <2>;
-> +               bias-pull-up;
-> +       };
-> +};
-> --
-> 2.18.0
->
+Hi Borislav, Russell,=0A=
+=0A=
+This seems to have fallen off the radar. Is there anything stopping this =
+=0A=
+series from being merged?=0A=
+=0A=
+On 22/11/18 1:12 PM, Chris Packham wrote:=0A=
+> The current plan is for these to go in via the ARM tree once appropriate=
+=0A=
+> Reviews/Acks have been given=0A=
+> =0A=
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2017-August/525561.=
+html=0A=
+> =0A=
+> This series adds drivers for the L2 cache and DDR RAM ECC functionality a=
+s=0A=
+> found on the MV78230/MV78x60 SoCs. Jan has tested these changes with the=
+=0A=
+> MV78460 (on a custom board with a DDR3 ECC DIMM), Chris has tested these=
+=0A=
+> changes with 88F6820 and 98dx3236 (both a custom boards with fixed DDR3 +=
+ ECC).=0A=
+> =0A=
+> Also contained in this series is an additional debugfs wrapper.=0A=
+> =0A=
+> Compared to the previous v6 series I've dropped the marvell,ecc-disable=
+=0A=
+> property.=0A=
+> =0A=
+> Compared to the previous v5 series I've split the dt-binding documentatio=
+n into=0A=
+> its own patch and updated armada_xp_edac.c to use a SPDX license.=0A=
+> =0A=
+> Compared to the previous v4 series I've added my s-o-b to some of Jan's=
+=0A=
+> patches and rebased against v4.19.0.=0A=
+> =0A=
+> Compared to the previous v3 series, the following changes have been made:=
+=0A=
+> - Use shorter names for the AURORA ECC and parity registers=0A=
+> - Numerous formatting changes to edac/armada_xp.c (as requested by Boris)=
+=0A=
+> - Added support for Armada-38x and 98dx3236 SoCs=0A=
+> =0A=
+> Compared to the previous v2 series, the following changes have been made:=
+=0A=
+> - Allocate EDAC structures later during probing and drop devres support=
+=0A=
+>    patches (requested by Boris)=0A=
+> - Make drvdata->width usage consistent according to the comment (suggeste=
+d by=0A=
+>    Chris)=0A=
+> =0A=
+> Compared to the previous v1 series, the following changes have been made:=
+=0A=
+> - Add the aurora-l2 register defines earlier in the series (suggested by=
+=0A=
+>    Russell King and Gregory CLEMENT )=0A=
+> - Changed the DT vendor prefix from "arm" to "marvell" for the ecc-enable=
+/disable=0A=
+>    properties on the aurora-l2 (suggested by Russell King)=0A=
+> - Fix some warnings reported by checkpatch=0A=
+> =0A=
+> Compared to the original RFC series, the following changes have been made=
+:=0A=
+> - Integrated Chris' patches for parity and ECC configuration via DT=0A=
+> - Merged the DDR RAM and L2 cache drivers (as requested by Boris, analogo=
+us=0A=
+>    to fsl_ddr_edac.c and mpc85xx_edac.c)=0A=
+> - Added myself to MAINTAINERS (requested by Boris)=0A=
+> - L2 cache: Track the msg size and use snprintf (review comment by Chris)=
+=0A=
+> - L2 cache: Split error injection from the check function (review comment=
+ by=0A=
+>    Chris)=0A=
+> - DDR RAM: Allow 16 bit width in addition to 32 and 64 bit (review commen=
+t by=0A=
+>    Chris)=0A=
+> - Use of_match_ptr() (review comments by Chris)=0A=
+> - Minor checkpatch cleanups=0A=
+> =0A=
+> Chris Packham (4):=0A=
+>    ARM: l2x0: support parity-enable/disable on aurora=0A=
+>    dt-bindings: ARM: document marvell,ecc-enable binding=0A=
+>    ARM: l2x0: add marvell,ecc-enable property for aurora=0A=
+>    EDAC: armada_xp: Add support for more SoCs=0A=
+> =0A=
+> Jan Luebbe (5):=0A=
+>    ARM: l2c: move cache-aurora-l2.h to asm/hardware=0A=
+>    ARM: aurora-l2: add prefix to MAX_RANGE_SIZE=0A=
+>    ARM: aurora-l2: add defines for parity and ECC registers=0A=
+>    EDAC: Add missing debugfs_create_x32 wrapper=0A=
+>    EDAC: Add driver for the Marvell Armada XP SDRAM and L2 cache ECC=0A=
+> =0A=
+>   .../devicetree/bindings/arm/l2c2x0.txt        |   1 +=0A=
+>   MAINTAINERS                                   |   6 +=0A=
+>   .../asm/hardware}/cache-aurora-l2.h           |  50 +-=0A=
+>   arch/arm/mm/cache-l2x0.c                      |  18 +-=0A=
+>   drivers/edac/Kconfig                          |   7 +=0A=
+>   drivers/edac/Makefile                         |   1 +=0A=
+>   drivers/edac/armada_xp_edac.c                 | 635 ++++++++++++++++++=
+=0A=
+>   drivers/edac/debugfs.c                        |  11 +=0A=
+>   drivers/edac/edac_module.h                    |   5 +=0A=
+>   9 files changed, 730 insertions(+), 4 deletions(-)=0A=
+>   rename arch/arm/{mm =3D> include/asm/hardware}/cache-aurora-l2.h (50%)=
+=0A=
+>   create mode 100644 drivers/edac/armada_xp_edac.c=0A=
+> =0A=
+=0A=
