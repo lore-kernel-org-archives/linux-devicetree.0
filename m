@@ -1,74 +1,101 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH v3 1/2] usb: dwc3: Add avoiding vbus glitch happen during
- xhci  reset
-Date: Wed, 27 Feb 2019 02:35:15 +0000
-Message-ID: <AM5PR0402MB2865656822F6CA28AF9E50E5F1740@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190226070016.27372-1-ran.wang_1@nxp.com>
- <20190226163948.GA8854@bogus>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2
+ PHY
+Date: Tue, 26 Feb 2019 20:25:45 -0800
+Message-ID: <20190227042545.GE5511@minitux>
+References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
+ <20190219060407.15263-3-bjorn.andersson@linaro.org>
+ <20190222195758.GA26984@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226163948.GA8854@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190222195758.GA26984@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yang Li <pku.leo@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Fri 22 Feb 11:57 PST 2019, Rob Herring wrote:
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Wednesday, February 27, 2019 00:40
-> To: Ran Wang <ran.wang_1@nxp.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Yang Li
-> <pku.leo@gmail.com>; linux-usb@vger.kernel.org; devicetree@vger.kernel.or=
-g;
-> linux-kernel@vger.kernel.org; Ran Wang <ran.wang_1@nxp.com>
-> Subject: Re: [PATCH v3 1/2] usb: dwc3: Add avoiding vbus glitch happen du=
-ring
-> xhci reset
->=20
-> On Tue, 26 Feb 2019 06:59:21 +0000, Ran Wang wrote:
-> > When DWC3 is set to host mode by programming register DWC3_GCTL, VBUS
-> > (or its control signal) will turn on immediately on related Root Hub
-> > ports. Then the VBUS will be de-asserted for a little while during
-> > xhci reset (conducted by xhci driver) for a little while and back to no=
-rmal.
-> >
-> > This VBUS glitch might cause some USB devices emuration fail if kernel
-> > boot with them connected. One SW workaround which can fix this is to
-> > program all PORTSC[PP] to 0 to turn off VBUS immediately after setting
-> > host mode in DWC3 driver(per signal measurement result, it will be too
-> > late to do it in xhci-plat.c or xhci.c).
-> >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> On Mon, Feb 18, 2019 at 10:04:02PM -0800, Bjorn Andersson wrote:
+> > The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
+> > Qualcomm platforms, add a binding to describe this.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > > ---
-> > Changes in v3:
-> >   - None
-> >
-> > Changes in v2:
-> >   - Correct typos
-> >   - Shorten the name to snps,host-vbus-glitches
-> >
-> >  Documentation/devicetree/bindings/usb/dwc3.txt |    3 +++
-> >  1 files changed, 3 insertions(+), 0 deletions(-)
-> >
->=20
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
+> >  .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> > new file mode 100644
+> > index 000000000000..7da02f9d78c7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> > @@ -0,0 +1,40 @@
+> > +Qualcomm PCIe2 PHY controller
+> > +=============================
+> > +
+> > +The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
+> > +platforms.
+> > +
+> > +Required properties:
+> > + - compatible: compatible list, should be:
+> > +	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
+> > +
+> > + - reg: offset and length of the PHY register set.
+> > + - #phy-cells: must be 0.
+> > +
+> > + - clocks: a clock-specifier pair for the "pipe" clock
+> > +
+> > + - vdda-vp-supply: phandle to low voltage regulator
+> > + - vdda-vph-supply: phandle to high voltage regulator
+> > +
+> > + - resets: reset-specifier pairs for the "phy" and "pipe" resets
+> > + - reset-names: list of resets, should contain:
+> > +		"phy" and "pipe"
+> > +
+> > + - clock-output-names: name of the outgoing clock signal from the PHY PLL
+> 
+> Not valid to have this without '#clock-cells'.
+> 
 
-Got it, thanks for telling me this. So if I need to update patch 2/2 in nex=
-t version,
-I still need to attach this 1/2 patch with adding tag 'Reviewed-by' to it, =
-am I right?
+This happens to work today as we don't describe &gcc's dependency on
+this, but just rely on the global clock namespace. But it should be
+there, so I'll respin this.
 
->=20
-> If a tag was not added on purpose, please state why and what changed.
+> Though I'm confused how this and the input clock name seem to match.
+> 
 
-OK
+The PHY generates the clock we call "pcie_0_pipe_clk" which is fed into
+the global clock controller (gcc), where it can be gated (and divided)
+and then fed back to both the PHY and the controller as
+"gcc_pcie_0_pipe_clk".
+
+
+Thanks for the review Rob.
 
 Regards,
-Ran
+Bjorn
+
+> > +
+> > +Example:
+> > + phy@7786000 {
+> > +	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
+> > +	reg = <0x07786000 0xb8>;
+> > +
+> > +	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+> > +	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
+> > +	         <&gcc GCC_PCIE_0_PIPE_ARES>;
+> > +	reset-names = "phy", "pipe";
+> > +
+> > +	vdda-vp-supply = <&vreg_l3_1p05>;
+> > +	vdda-vph-supply = <&vreg_l5_1p8>;
+> > +
+> > +	clock-output-names = "pcie_0_pipe_clk";
+> > +	#phy-cells = <0>;
+> > + };
+> > -- 
+> > 2.18.0
+> > 
