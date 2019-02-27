@@ -1,98 +1,97 @@
-Return-Path: <SRS0=m20R=QU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36409 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387858AbfBMRvk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Feb 2019 12:51:40 -0500
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v3 0/3] Add ZynqMP VCU/Allegro DVT H.264 encoder driver
-Date: Wed, 13 Feb 2019 18:51:21 +0100
-Message-Id: <20190213175124.3695-1-m.tretter@pengutronix.de>
+Return-Path: <SRS0=iAyG=RC=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr30057.outbound.protection.outlook.com ([40.107.3.57]:42641
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726724AbfB0Iq5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Feb 2019 03:46:57 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V10 4/4] arm64: dts: imx: add i.MX8QXP thermal support
+Date: Wed, 27 Feb 2019 08:46:50 +0000
+Message-ID: <1551256894-21954-4-git-send-email-Anson.Huang@nxp.com>
+References: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, dshah@xilinx.com, Michael Tretter <m.tretter@pengutronix.de>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This is v3 of the series to add support for the Allegro DVT H.264 encoder
-found in the EV family of the Xilinx ZynqMP platform.
+Add i.MX8QXP CPU thermal zone support.
 
-The devicetree bindings now also include the clocks as documented in PG252
-"H.264/H.265 Video Codec Unit v1.2" [0].
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V9:
+	- change #thermal-sensor-cells value in to 1, since there are other
+	  thermal sensors inside system controller, it is just because there are s=
+till
+	  some issue, so system controller does NOT expose them for now, they coul=
+d
+	  be exposed later, so it should be 1 from HW perspective.
+---
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 34 ++++++++++++++++++++++++++=
+++++
+ 1 file changed, 34 insertions(+)
 
-Most changes involve added or removed v4l2 callbacks that were mentioned in
-the review comments to make the v4l2-compliance test suite happy.
-
-I also updated the firmware loading and device probing to properly handle
-failures and correctly reset or stop the MCU.
-
-Still on my list is a check against the documentation of the memory-to-memory
-stateful video encoder interface. If there are fixes necessary, I will include
-them in a v4.
-
-I did not introduce a separate queue for internal buffers for encoded frames.
-I am still considering this split, but I want to have tracing in place before
-doing this. The changes will completely internal to the driver and can be done
-later anyway.
-
-Each patch also contains a more detailed changelog.
-
-Michael
-
-[0] https://www.xilinx.com/support/documentation/ip_documentation/vcu/v1_2/pg252-vcu.pdf
-
-v2 -> v3:
-- add clocks to devicetree bindings
-- fix devicetree binding according to review comments on v2
-- add missing v4l2 callbacks
-- drop unnecessary v4l2 callbacks
-- drop debug module parameter poison_capture_buffers
-- check firmware size before loading firmware
-- rework error handling
-
-v1 -> v2:
-- clean up debug log levels
-- fix unused variable in allegro_mbox_init
-- fix uninitialized variable in allegro_mbox_write
-- fix global module parameters
-- fix Kconfig dependencies
-- return h264 as default codec for mcu
-- implement device reset as documented
-- document why irq does not wait for clear
-- rename ENCODE_ONE_FRM to ENCODE_FRAME
-- allow error codes for mcu_channel_id
-- move control handler to channel
-- add fw version check
-- add support for colorspaces
-- enable configuration of H.264 levels
-- enable configuration of frame size
-- enable configuration of bit rate and CPB size
-- enable configuration of GOP size
-- rework response handling
-- fix missing error handling in allegro_h264_write_sps
-
-
-Michael Tretter (3):
-  media: dt-bindings: media: document allegro-dvt bindings
-  [media] allegro: add Allegro DVT video IP core driver
-  [media] allegro: add SPS/PPS nal unit writer
-
- .../devicetree/bindings/media/allegro.txt     |   43 +
- MAINTAINERS                                   |    6 +
- drivers/staging/media/Kconfig                 |    2 +
- drivers/staging/media/Makefile                |    1 +
- drivers/staging/media/allegro-dvt/Kconfig     |   16 +
- drivers/staging/media/allegro-dvt/Makefile    |    6 +
- .../staging/media/allegro-dvt/allegro-core.c  | 2909 +++++++++++++++++
- drivers/staging/media/allegro-dvt/nal-h264.c  | 1278 ++++++++
- drivers/staging/media/allegro-dvt/nal-h264.h  |  188 ++
- 9 files changed, 4449 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
- create mode 100644 drivers/staging/media/allegro-dvt/Kconfig
- create mode 100644 drivers/staging/media/allegro-dvt/Makefile
- create mode 100644 drivers/staging/media/allegro-dvt/allegro-core.c
- create mode 100644 drivers/staging/media/allegro-dvt/nal-h264.c
- create mode 100644 drivers/staging/media/allegro-dvt/nal-h264.h
-
--- 
-2.20.1
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
+ts/freescale/imx8qxp.dtsi
+index 4c3dd95..f532cba 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/pads-imx8qxp.h>
++#include <dt-bindings/thermal/thermal.h>
+=20
+ / {
+ 	interrupt-parent =3D <&gic>;
+@@ -116,6 +117,12 @@
+ 		rtc: rtc {
+ 			compatible =3D "fsl,imx8qxp-sc-rtc";
+ 		};
++
++		tsens: thermal-sensor {
++			compatible =3D "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
++			#thermal-sensor-cells =3D <1>;
++			imx,sensor-resource-id =3D <IMX_SC_R_SYSTEM>;
++		};
+ 	};
+=20
+ 	timer {
+@@ -443,4 +450,31 @@
+ 			power-domains =3D <&pd IMX_SC_R_GPIO_7>;
+ 		};
+ 	};
++
++	thermal_zones: thermal-zones {
++		cpu-thermal0 {
++			polling-delay-passive =3D <250>;
++			polling-delay =3D <2000>;
++			thermal-sensors =3D <&tsens 0>;
++			trips {
++				cpu_alert0: trip0 {
++					temperature =3D <107000>;
++					hysteresis =3D <2000>;
++					type =3D "passive";
++				};
++				cpu_crit0: trip1 {
++					temperature =3D <127000>;
++					hysteresis =3D <2000>;
++					type =3D "critical";
++				};
++			};
++			cooling-maps {
++				map0 {
++					trip =3D <&cpu_alert0>;
++					cooling-device =3D
++						<&A35_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++	};
+ };
+--=20
+2.7.4
