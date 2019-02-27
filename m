@@ -1,7 +1,7 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCHv2 5/5] EDAC, altera: Remove Stratix10 Machine compatible check
-Date: Wed, 27 Feb 2019 11:27:25 -0600
-Message-ID: <1551288445-22335-6-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCHv2 2/5] Documentation: dt: edac: Add Stratix10 Peripheral bindings
+Date: Wed, 27 Feb 2019 11:27:22 -0600
+Message-ID: <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
 References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
@@ -12,63 +12,137 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Replace the Stratix10 Machine compatible check with
-specific ECC block compatible tests.
+Add peripheral bindings for Stratix10 EDAC to capture
+the differences between the ARM64 and ARM32 architecture.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
-v2 New patch
+v2 No change
 ---
- drivers/edac/altera_edac.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+ .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 106 +++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index a92259d8afdc..3ff222a0c852 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -1013,11 +1013,6 @@ static int socfpga_is_a10(void)
- 	return of_machine_is_compatible("altr,socfpga-arria10");
- }
+diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+index a0ac50e15912..a0fa80c53d2a 100644
+--- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
++++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+@@ -258,6 +258,49 @@ Required Properties:
+ - compatible : Should be "altr,sdram-edac-s10"
+ - interrupts : Should be single bit error interrupt.
  
--static int socfpga_is_s10(void)
--{
--	return of_machine_is_compatible("altr,socfpga-stratix10");
--}
--
- static __init int __maybe_unused
- altr_init_a10_ecc_block(struct device_node *np, u32 irq_mask,
- 			u32 ecc_ctrl_en_mask, bool dual_port)
-@@ -1122,13 +1117,14 @@ static int __init __maybe_unused altr_init_a10_ecc_device_type(char *compat)
- 	int irq;
- 	struct device_node *child, *np;
++On-Chip RAM ECC
++Required Properties:
++- compatible      : Should be "altr,socfpga-s10-ocram-ecc"
++- reg             : Address and size for ECC block registers.
++- altr,ecc-parent : phandle to parent OCRAM node.
++- interrupts      : Should be single bit error interrupt.
++
++Ethernet FIFO ECC
++Required Properties:
++- compatible      : Should be "altr,socfpga-s10-eth-mac-ecc"
++- reg             : Address and size for ECC block registers.
++- altr,ecc-parent : phandle to parent Ethernet node.
++- interrupts      : Should be single bit error interrupt.
++
++NAND FIFO ECC
++Required Properties:
++- compatible      : Should be "altr,socfpga-s10-nand-ecc"
++- reg             : Address and size for ECC block registers.
++- altr,ecc-parent : phandle to parent NAND node.
++- interrupts      : Should be single bit error interrupt.
++
++DMA FIFO ECC
++Required Properties:
++- compatible      : Should be "altr,socfpga-s10-dma-ecc"
++- reg             : Address and size for ECC block registers.
++- altr,ecc-parent : phandle to parent DMA node.
++- interrupts      : Should be single bit error interrupt.
++
++USB FIFO ECC
++Required Properties:
++- compatible      : Should be "altr,socfpga-s10-usb-ecc"
++- reg             : Address and size for ECC block registers.
++- altr,ecc-parent : phandle to parent USB node.
++- interrupts      : Should be single bit error interrupt.
++
++SDMMC FIFO ECC
++Required Properties:
++- compatible      : Should be "altr,socfpga-s10-sdmmc-ecc"
++- reg             : Address and size for ECC block registers.
++- altr,ecc-parent : phandle to parent SD/MMC node.
++- interrupts      : Should be single bit error interrupt for port A
++		    and then single bit error interrupt for port B.
++
+ Example:
  
--	if (!socfpga_is_a10() && !socfpga_is_s10())
--		return -ENODEV;
--
- 	np = of_find_compatible_node(NULL, NULL,
- 				     "altr,socfpga-a10-ecc-manager");
- 	if (!np) {
--		edac_printk(KERN_ERR, EDAC_DEVICE, "ECC Manager not found\n");
-+		/* Error only valid for Arria10 and Stratix10 */
-+		if (!of_find_compatible_node(NULL, NULL,
-+					     "altr,socfpga-ecc-manager"))
-+			edac_printk(KERN_ERR, EDAC_DEVICE,
-+				    "ECC Manager not found\n");
- 		return -ENODEV;
- 	}
- 
-@@ -1644,12 +1640,8 @@ static int __init socfpga_init_sdmmc_ecc(void)
- 	int rc = -ENODEV;
- 	struct device_node *child;
- 
--	if (!socfpga_is_a10() && !socfpga_is_s10())
--		return -ENODEV;
--
- 	child = of_find_compatible_node(NULL, NULL, "altr,socfpga-sdmmc-ecc");
- 	if (!child) {
--		edac_printk(KERN_WARNING, EDAC_DEVICE, "SDMMC node not found\n");
- 		return -ENODEV;
- 	}
- 
+ 	eccmgr {
+@@ -274,4 +317,67 @@ Example:
+ 			compatible = "altr,sdram-edac-s10";
+ 			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
++
++		ocram-ecc@ff8cc000 {
++			compatible = "altr,socfpga-s10-ocram-ecc";
++			reg = <ff8cc000 0x100>;
++			altr,ecc-parent = <&ocram>;
++			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		emac0-rx-ecc@ff8c0000 {
++			compatible = "altr,socfpga-s10-eth-mac-ecc";
++			reg = <0xff8c0000 0x100>;
++			altr,ecc-parent = <&gmac0>;
++			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		emac0-tx-ecc@ff8c0400 {
++			compatible = "altr,socfpga-s10-eth-mac-ecc";
++			reg = <0xff8c0400 0x100>;
++			altr,ecc-parent = <&gmac0>;
++			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>'
++		};
++
++		nand-buf-ecc@ff8c8000 {
++			compatible = "altr,socfpga-s10-nand-ecc";
++			reg = <0xff8c8000 0x100>;
++			altr,ecc-parent = <&nand>;
++			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		nand-rd-ecc@ff8c8400 {
++			compatible = "altr,socfpga-s10-nand-ecc";
++			reg = <0xff8c8400 0x100>;
++			altr,ecc-parent = <&nand>;
++			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		nand-wr-ecc@ff8c8800 {
++			compatible = "altr,socfpga-s10-nand-ecc";
++			reg = <0xff8c8800 0x100>;
++			altr,ecc-parent = <&nand>;
++			interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		dma-ecc@ff8c9000 {
++			compatible = "altr,socfpga-s10-dma-ecc";
++			reg = <0xff8c9000 0x100>;
++			altr,ecc-parent = <&pdma>;
++			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
++
++		usb0-ecc@ff8c4000 {
++			compatible = "altr,socfpga-s10-usb-ecc";
++			reg = <0xff8c4000 0x100>;
++			altr,ecc-parent = <&usb0>;
++			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		sdmmc-ecc@ff8c8c00 {
++			compatible = "altr,socfpga-s10-sdmmc-ecc";
++			reg = <0xff8c8c00 0x100>;
++			altr,ecc-parent = <&mmc>;
++			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
++				     <15 IRQ_TYPE_LEVEL_HIGH>;
++		};
+ 	};
 -- 
 2.7.4
