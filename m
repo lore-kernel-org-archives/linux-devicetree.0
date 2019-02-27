@@ -1,7 +1,8 @@
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v4 5/5] arm64: dts: imx8mq-evk: Enable wm8524 codec
-Date: Wed, 27 Feb 2019 06:38:14 +0000
-Message-ID: <20190227063737.24445-6-daniel.baluta@nxp.com>
+Subject: [PATCH v4 2/5] bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma
+ compatbile string
+Date: Wed, 27 Feb 2019 06:38:11 +0000
+Message-ID: <20190227063737.24445-3-daniel.baluta@nxp.com>
 References: <20190227063737.24445-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,54 +15,26 @@ To: "shawnguo@kernel.org" <shawnguo@kernel.org>
 Cc: "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng
 List-Id: devicetree@vger.kernel.org
 
-This uses simple-audio-card machine driver adding 1 CPU DAI
-and 1 Codec DAI.
+Add imx8mq sdma support.
 
 Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 29 ++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot=
-/dts/freescale/imx8mq-evk.dts
-index 58de4a3d6029..77f590c13ee0 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -31,6 +31,35 @@
- 		gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	wm8524: audio-codec-0 {
-+		#sound-dai-cells =3D <0>;
-+		compatible =3D "wlf,wm8524";
-+		clocks =3D <&clk IMX8MQ_CLK_SAI2_ROOT>;
-+		clock-names =3D "mclk";
-+		wlf,mute-gpios =3D <&gpio1 8 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sound-wm8524 {
-+		compatible =3D "simple-audio-card";
-+		simple-audio-card,name =3D "wm8524-audio";
-+		simple-audio-card,format =3D "i2s";
-+		simple-audio-card,frame-master =3D <&cpudai>;
-+		simple-audio-card,bitclock-master =3D <&cpudai>;
-+		simple-audio-card,widgets =3D
-+			"Line", "Left Line Out Jack",
-+			"Line", "Right Line Out Jack";
-+		simple-audio-card,routing =3D
-+			"Left Line Out Jack", "LINEVOUTL",
-+			"Right Line Out Jack", "LINEVOUTR";
-+		cpudai: simple-audio-card,cpu {
-+			sound-dai =3D <&sai2>;
-+		};
-+		link_codec: simple-audio-card,codec {
-+			sound-dai =3D <&wm8524>;
-+			clocks =3D <&clk IMX8MQ_CLK_SAI2_ROOT>;
-+		};
-+	};
- };
-=20
- &fec1 {
+diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Docum=
+entation/devicetree/bindings/dma/fsl-imx-sdma.txt
+index 3c9a57a8443b..9d8bbac27d8b 100644
+--- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
++++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+@@ -9,6 +9,7 @@ Required properties:
+       "fsl,imx53-sdma"
+       "fsl,imx6q-sdma"
+       "fsl,imx7d-sdma"
++      "fsl,imx8mq-sdma"
+   The -to variants should be preferred since they allow to determine the
+   correct ROM script addresses needed for the driver to work without addit=
+ional
+   firmware.
 --=20
 2.17.1
