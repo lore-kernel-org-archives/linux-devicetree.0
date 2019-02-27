@@ -1,79 +1,79 @@
-Return-Path: <SRS0=Fy5c=QS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from verein.lst.de ([213.95.11.211]:55998 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfBKLMr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Feb 2019 06:12:47 -0500
-Date: Mon, 11 Feb 2019 12:12:45 +0100
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH RFC] arm64: dts: allwinner: a64: teres-i: Enable audio
-Message-ID: <20190211111245.GA18147@lst.de>
-Reply-To: 20190201113743.10058-1-harald@ccbib.org
+Return-Path: <SRS0=c5cT=RC=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V10 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Wed, 27 Feb 2019 08:46:21 +0000
+Message-ID: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: devicetree-owner@vger.kernel.org
-To: Harald Geyer <harald@ccbib.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, info@olimex.com, Mark Brown <broonie@kernel.org>, ibu@radempa.de, linux-arm-kernel@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and thermal sensors etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to get temperature from thermal sensors, this patch adds
+binding doc for i.MX system controller thermal driver.
 
-> hpvcc-supply vs. cpvdd-supply:
-> On the A64 manual the pin is called CPVDD and the binding documents
-> requires a cpvdd-supply property. However in the actual driver and
-> devicetrees so far hpvcc-supply is used. This is a very new binding,
-> so we have the luxury to decide either way, I think. Any input from
-> the devicetree maintainers would be appreciated.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V9:
+	- change #thermal-sensor-cells value in example to 1, since there are othe=
+r
+	  thermal sensors inside system controller, it is just because there are s=
+till
+	  some issue, so system controller does NOT expose them for now, they coul=
+d
+	  be exposed later, so it should be 1 from HW perspective.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt   | 21 +++++++++++++++++=
+++++
+ 1 file changed, 21 insertions(+)
 
-I don't really have a strong opinion here, besides settling this ASAP,
-to minimise confusion.
-
-> debug console multiplexing:
-> Olimex have a userspace script that controls gpio PL9 during boot,
-> to select between HP and serial console. I guess this is not acceptable
-> for mainline.
-
-> The best solution I can see is to switch the HP jack from serial console
-> to audio once the audio drivers load. With this people can still capture
-> the bootlogs but everybody gets audio once the system is up and
-> switching back to console output is as simple as unloading the audio
-> drivers.
-
-IMO it is really not the audio driver's business to mess with this switch.
-You could argue as well that the serial driver should get a flag to claim
-the HP jack, which would be similarily unjustified.
-
-My solution is to confine this choice inside U-Boot:
-in sun50i-a64-teres-i-u-boot.dtsi I put
-
-/ {
-        leds {
-                compatible = "gpio-leds";
-                /* Not really a LED, but the least intrusive workaround */
-                audioconsole {
-                        label = "teres-i:audio:console";
-                        gpio = <&r_pio 0 9 GPIO_ACTIVE_LOW>; /* PL9 */
-                        default-state = "on";
-                };
-        };
-[...]
-
-and place a "gpio set PL9;" somewhere in the bootcmd_* logic. Otherwise there's
-a *lot* of chirping on the right ear during boot ;-)
-The switch is for early boot debugging, so it's best to have U-Boot enable it
-when required, and keep it off by default.
-
-> Testing:
-> I don't have a headset with combo connector, so I could only test the
-> headphones output, but not the headset mic. If somebody happens to
-> have a TERES-I and a suitable headset, testing this would be nice.
-
-The pinout required is the "CTIA" one, *not* OMTP (standards are great...) see
-https://source.android.com/devices/accessories/headset/plug-headset-spec#mechanical
-
-I do have a compatible headset, but was neither able to record from the HS mic
-nor from the internal mic, so I have to try harder, I guess ;-) I could hear
-both mics when choosing the mixer as output source though. Mute and boost
-worked for both mics, in alsamixer.  Kernel is 4.20.6, so ca0412a05756cd0b
-is missing; which shouldn't make a difference in this respect, right?
-
-	Torsten
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
+Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 72d481c..855270b 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -122,6 +122,21 @@ RTC bindings based on SCU Message Protocol
+ Required properties:
+ - compatible: should be "fsl,imx8qxp-sc-rtc";
+=20
++Thermal bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++Required properties:
++- compatible:			Should be :
++				  "fsl,imx8qxp-sc-thermal"
++				followed by "fsl,imx-sc-thermal";
++
++- #thermal-sensor-cells:	See Documentation/devicetree/bindings/thermal/the=
+rmal.txt
++				for a description.
++
++- imx,sensor-resource-id: 	A single integer for single thermal zone's reso=
+urce ID or
++				an array of integers to specify each thermal zone's sensor
++				resource ID.
++
+ Example (imx8qxp):
+ -------------
+ lsio_mu1: mailbox@5d1c0000 {
+@@ -168,6 +183,12 @@ firmware {
+ 		rtc: rtc {
+ 			compatible =3D "fsl,imx8qxp-sc-rtc";
+ 		};
++
++		tsens: thermal-sensor {
++			compatible =3D "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
++			#thermal-sensor-cells =3D <1>;
++			imx,sensor-resource-id =3D <IMX_SC_R_SYSTEM>;
++		};
+ 	};
+ };
+=20
+--=20
+2.7.4
