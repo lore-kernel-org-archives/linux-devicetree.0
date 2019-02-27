@@ -1,40 +1,140 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v4 2/5] bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma
- compatbile string
-Date: Wed, 27 Feb 2019 06:38:11 +0000
-Message-ID: <20190227063737.24445-3-daniel.baluta@nxp.com>
-References: <20190227063737.24445-1-daniel.baluta@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2] arm64: dts: qcom: sdm845: Add GEN2 PCIe controller and PHY
+Date: Tue, 26 Feb 2019 23:00:22 -0800
+Message-ID: <20190227070022.31975-1-bjorn.andersson@linaro.org>
+References: <20190226070525.22453-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190227063737.24445-1-daniel.baluta@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190226070525.22453-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add imx8mq sdma support.
+SDM845 sports two PCIe controller/phy pairs; one GEN2 and one GEN3. Add
+the nodes for the GEN2 pair.
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Docum=
-entation/devicetree/bindings/dma/fsl-imx-sdma.txt
-index 3c9a57a8443b..9d8bbac27d8b 100644
---- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-@@ -9,6 +9,7 @@ Required properties:
-       "fsl,imx53-sdma"
-       "fsl,imx6q-sdma"
-       "fsl,imx7d-sdma"
-+      "fsl,imx8mq-sdma"
-   The -to variants should be preferred since they allow to determine the
-   correct ROM script addresses needed for the driver to work without addit=
-ional
-   firmware.
---=20
-2.17.1
+Changes since v1:
+- "reg" is spelled without a 't'
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 103 +++++++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 5308f1671824..35887fedfd0e 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1024,6 +1024,109 @@
+ 			};
+ 		};
+ 
++		pcie0: pci@1c00000 {
++			compatible = "qcom,pcie-sdm845", "snps,dw-pcie";
++			reg = <0 0x01c00000 0 0x2000>,
++			      <0 0x60000000 0 0xf1d>,
++			      <0 0x60000f20 0 0xa8>,
++			      <0 0x60100000 0 0x100000>;
++			reg-names = "parf", "dbi", "elbi", "config";
++			device_type = "pci";
++			linux,pci-domain = <0>;
++			bus-range = <0x00 0xff>;
++			num-lanes = <1>;
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++
++			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
++				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0xd00000>;
++
++			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++					<0 0 0 2 &intc 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++					<0 0 0 3 &intc 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++					<0 0 0 4 &intc 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++
++			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
++				 <&gcc GCC_PCIE_0_AUX_CLK>,
++				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
++				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
++				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
++				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
++				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
++			clock-names = "pipe",
++				      "aux",
++				      "cfg",
++				      "bus_master",
++				      "bus_slave",
++				      "slave_q2a",
++				      "tbu";
++
++			iommu-map = <0x0 &apps_smmu 0x1c10 0x1>,
++				    <0x100 &apps_smmu 0x1c11 0x1>,
++				    <0x200 &apps_smmu 0x1c12 0x1>,
++				    <0x300 &apps_smmu 0x1c13 0x1>,
++				    <0x400 &apps_smmu 0x1c14 0x1>,
++				    <0x500 &apps_smmu 0x1c15 0x1>,
++				    <0x600 &apps_smmu 0x1c16 0x1>,
++				    <0x700 &apps_smmu 0x1c17 0x1>,
++				    <0x800 &apps_smmu 0x1c18 0x1>,
++				    <0x900 &apps_smmu 0x1c19 0x1>,
++				    <0xa00 &apps_smmu 0x1c1a 0x1>,
++				    <0xb00 &apps_smmu 0x1c1b 0x1>,
++				    <0xc00 &apps_smmu 0x1c1c 0x1>,
++				    <0xd00 &apps_smmu 0x1c1d 0x1>,
++				    <0xe00 &apps_smmu 0x1c1e 0x1>,
++				    <0xf00 &apps_smmu 0x1c1f 0x1>;
++
++			resets = <&gcc GCC_PCIE_0_BCR>;
++			reset-names = "pci";
++
++			power-domains = <&gcc PCIE_0_GDSC>;
++
++			phys = <&pcie0_lane>;
++			phy-names = "pciephy";
++
++			status = "disabled";
++		};
++
++		pcie0_phy: phy@1c06000 {
++			compatible = "qcom,sdm845-qmp-pcie-phy";
++			reg = <0 0x01c06000 0 0x18c>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
++				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
++				 <&gcc GCC_PCIE_0_CLKREF_CLK>,
++				 <&gcc GCC_PCIE_PHY_REFGEN_CLK>;
++			clock-names = "aux", "cfg_ahb", "ref", "refgen";
++
++			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
++			reset-names = "phy";
++
++			assigned-clocks = <&gcc GCC_PCIE_PHY_REFGEN_CLK>;
++			assigned-clock-rates = <100000000>;
++
++			status = "disabled";
++
++			pcie0_lane: lanes@1c06200 {
++				reg = <0 0x01c06200 0 0x128>,
++				      <0 0x01c06400 0 0x1fc>,
++				      <0 0x01c06800 0 0x218>,
++				      <0 0x01c06600 0 0x70>;
++				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
++				clock-names = "pipe0";
++
++				#phy-cells = <0>;
++				clock-output-names = "pcie_0_pipe_clk";
++			};
++		};
++
+ 		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
+-- 
+2.18.0
