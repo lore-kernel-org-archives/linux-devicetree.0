@@ -1,126 +1,59 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD initial support
-Date: Wed, 27 Feb 2019 21:49:23 +0530
-Message-ID: <CAMty3ZDSZvaxMjcQJLNaTDJQ5OjJ9NbjpOJKWMUE5PhRCzYvqw@mail.gmail.com>
-References: <20190226060240.8783-1-jagan@amarulasolutions.com>
- <20190226060240.8783-2-jagan@amarulasolutions.com> <20190227153346.dwd3stsbsvf7rwly@flea>
+From: <Claudiu.Beznea@microchip.com>
+Subject: [PATCH 0/7] add LCD support for SAM9X60
+Date: Wed, 27 Feb 2019 16:24:11 +0000
+Message-ID: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190227153346.dwd3stsbsvf7rwly@flea>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryan Pannell <ryan@osukl.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula@amarulasolutions.com
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 9:03 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> On Tue, Feb 26, 2019 at 11:32:40AM +0530, Jagan Teki wrote:
-> > Oceanic A64-5inMFD is a 5 inch Multi function display baseboard
-> > designed to mount SoPine SOM.
-> >
-> > Key features:
-> > - Allwinner A64 Cortex-A53
-> > - Mali-400MP2 GPU
-> > - AXP803 PMIC
-> > - 2GB DDR3 RAM
-> > - SD Slot
-> > - SPI-NOR flash
-> > - EMAC, RTL8211E
-> > - MCP2515 CAN
-> > - MIPI-DSI
-> > - Goodix 911 CTP
-> > - USB Host
-> > - 12V DC power supply
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
-> >  .../allwinner/sun50i-a64-oceanic-5inmfd.dts   | 46 +++++++++++++++++++
-> >  2 files changed, 47 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-> > index a5fb1eaa8acf..ec39fe856117 100644
-> > --- a/arch/arm64/boot/dts/allwinner/Makefile
-> > +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> > @@ -2,6 +2,7 @@
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-amarula-relic.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb sun50i-a64-bananapi-m64-icn6211.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
-> > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-oceanic-5inmfd.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-olinuxino.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-lts.dtb
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
-> > new file mode 100644
-> > index 000000000000..d73d1f55acb9
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
-> > @@ -0,0 +1,46 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Copyright (C) 2019 Oceanic Systems (UK) Ltd.
-> > + * Copyright (C) 2019 Amarula Solutions B.V.
-> > + * Author: Jagan Teki <jagan@amarulasolutions.com>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "sun50i-a64-sopine.dtsi"
-> > +
-> > +/ {
-> > +     model = "Oceanic A64-5inMFD";
-> > +     compatible = "oceanic,a64-5inmfd", "allwinner,sun50i-a64";
->
-> The name of the DT is Oceanic 5inMFD, while you call the board
-> A64-5inMFD here, which name is the actual name?
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Yes, this is something that we discussed during "Amarula A64-Relic"
-naming convention.
+Hi,
 
-Since these boards are not famous like teres-i we agreed to add vendor
-name after sun50i-a64- followed by real board name.
+These patches adds support for SAM9X60's LCD controller.
 
-Here A64 already covered during sun50i-a64- so the dts name simply the
-<vendor_name>-<real_board_name>
+First patches add option to specify if controller clock source is fixed.
+Second patch avoid a variable initialization in atmel_hlcdc_crtc_mode_set_n=
+ofb().
+The 3rd one adds specific bindings for SAM9X60 LCD controller.
+The 4th and 5th add compatibles in the driver.
+The 6th patch enables sys_clk in probe since SAM9X60 needs this.
+Specific support was added also in suspend/resume hooks.
+The work in the 6th patch was done based on support added in 1st patch.
+The 7th patch adds SAM9X60's LCD configuration and enabled it.=20
 
->
-> > +
-> > +     aliases {
-> > +             serial0 = &uart0;
-> > +     };
-> > +
-> > +     chosen {
-> > +             stdout-path = "serial0:115200n8";
-> > +     };
-> > +};
-> > +
-> > +&ehci0 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&ohci0 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&uart0 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&uart0_pb_pins>;
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_otg {
-> > +     dr_mode = "host";
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usbphy {
-> > +     status = "okay";
-> > +};
->
-> Is the OTG controller really is only capable of running in host mode?
+I kept a big series including PWM, MFD, LCD changes due to shared DT
+bindings. If you prefer, I'm available to send them separately. Please let
+me know.
 
-Yes, USB on baseboard is similar like sopine-baseboard
+Thank you,
+Claudiu Beznea
+
+Claudiu Beznea (5):
+  drm: atmel-hlcdc: add config option for clock selection
+  drm: atmel-hlcdc: avoid initializing cfg with zero
+  dt-bindings: mfd: add bindings for SAM9X60 HLCD controller
+  mfd: atmel-hlcdc: add compatible for SAM9X60 HLCD controller
+  pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM
+
+Sandeep Sheriker Mallikarjun (2):
+  drm: atmel-hlcdc: enable sys_clk during initalization.
+  drm: atmel-hlcdc: add sam9x60 LCD controller
+
+ .../devicetree/bindings/mfd/atmel-hlcdc.txt        |   1 +
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     |  17 ++-
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c       | 120 +++++++++++++++++=
++++-
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |   2 +
+ drivers/mfd/atmel-hlcdc.c                          |   1 +
+ drivers/pwm/pwm-atmel-hlcdc.c                      |   3 +
+ 6 files changed, 134 insertions(+), 10 deletions(-)
+
+--=20
+2.7.4
