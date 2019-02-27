@@ -1,124 +1,130 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: display: rockchip: add document for rk3066 hdmi
-Date: Wed, 27 Feb 2019 13:06:26 -0600
-Message-ID: <CABGGisyUfENpaHgE3u9ECiMYn-fvC22x3BRKdj2y3eCdgFjKUA@mail.gmail.com>
-References: <20181229133318.18128-1-jbx6244@gmail.com> <20190201123235.1693-1-jbx6244@gmail.com>
- <20190225165923.GA2578@bogus> <b183d099-dcb3-9c3f-7031-2bd54d7fe5bb@gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 04/13] iommu/mediatek: Add device_link between the
+ consumer and the larb devices
+Date: Wed, 27 Feb 2019 19:30:10 +0000
+Message-ID: <709d7d66-9610-eeb3-128e-e2156bcfb616@arm.com>
+References: <1546318276-18993-1-git-send-email-yong.wu@mediatek.com>
+ <1546318276-18993-5-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b183d099-dcb3-9c3f-7031-2bd54d7fe5bb@gmail.com>
+In-Reply-To: <1546318276-18993-5-git-send-email-yong.wu@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Jonker <jbx6244@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, hjc@rock-chips.com, airlied@linux.ie, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, arnd@arndb.de, srv_heupstream@mediatek.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 12:04 PM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Thanks for your advice.
->
-> On 2/25/19 5:59 PM, Rob Herring wrote:> On Fri, Feb 01, 2019 at
-> 01:32:35PM +0100, Johan Jonker wrote:
-> >> This patch adds a binding that describes the HDMI controller for
-> >> rk3066.
-> >
-> > This is not using the DW block like other Rockchip SoCs (IIRC)?
->
-> As outsider it's a little bit difficult to comment on that.
-> Maybe an insider can give a better answer.
-> The rk3066 is there early model.
-> Reusing blocks like in the later improved models wasn't in the fashion
-> yet I think.
-> Also comparing the rk3066-hdmi driver to the inno driver gives too many
-> differences in registers, sound support and irqs.
-> If it was similar they would have combined it in there own kernel.
-> Given the age there won't come any other support for it.
-> This is what we have...
+On 01/01/2019 04:51, Yong Wu wrote:
+> MediaTek IOMMU don't have its power-domain. all the consumer connect
+> with smi-larb, then connect with smi-common.
+> 
+>          M4U
+>           |
+>      smi-common
+>           |
+>    -------------
+>    |         |    ...
+>    |         |
+> larb1     larb2
+>    |         |
+> vdec       venc
+> 
+> When the consumer works, it should enable the smi-larb's power which
+> also need enable the smi-common's power firstly.
+> 
+> Thus, First of all, use the device link connect the consumer and the
+> smi-larbs. then add device link between the smi-larb and smi-common.
+> 
+> This patch adds device_link between the consumer and the larbs.
+> 
+> Suggested-by: Tomasz Figa <tfiga@chromium.org>
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> ---
+>   drivers/iommu/mtk_iommu.c    | 15 +++++++++++++--
+>   drivers/iommu/mtk_iommu_v1.c | 14 ++++++++++++--
+>   2 files changed, 25 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 202e41b..735ae8d 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -247,6 +247,7 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+>   	struct mtk_smi_larb_iommu    *larb_mmu;
+>   	unsigned int                 larbid, portid;
+>   	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+> +	struct device_link *link;
+>   	int i;
+>   
+>   	for (i = 0; i < fwspec->num_ids; ++i) {
+> @@ -257,10 +258,20 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+>   		dev_dbg(dev, "%s iommu port: %d\n",
+>   			enable ? "enable" : "disable", portid);
+>   
+> -		if (enable)
+> +		if (enable) {
+>   			larb_mmu->mmu |= MTK_SMI_MMU_EN(portid);
+> -		else
+> +			/* Link the consumer with the larb device(supplier) */
+> +			link = device_link_add(dev, larb_mmu->dev,
+> +					       DL_FLAG_PM_RUNTIME |
+> +					       DL_FLAG_AUTOREMOVE_CONSUMER);
 
-Okay, if it looks different then good enough for me.
+This looks technically wrong, since we get here from 
+mtk_iommu_attach_device(), and in theory a device could get attached to 
+any number of domains over its lifetime, so adding a link at this point 
+when there's no corresponding cleanup on detach is definitely 
+unbalanced. If you want this layer to manage the link on behalf of the 
+consumer, it would probably be better to do it at the point of 
+mtk_iommu_add_device(), and either track it for manual cleanup in 
+mtk_iommu_remove_device() or rely on AUTOREMOVE_SUPPLIER.
 
-> >> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> >> ---
-> >>  .../display/rockchip/rk3066_hdmi-rockchip.txt      | 60
-> ++++++++++++++++++++++
-> >
-> > Using the compatible string plus '.txt' is the preferred naming.
->
-> Will change that in V2.
-> rk3066-hdmi      -> rk3066-hdmi-rockchip.txt
->
-> How about the other documents?
-> rk3036-inno-hdmi -> inno_hdmi-rockchip.txt
-> rk3288-dw-hdmi   -> dw_hdmi-rockchip.txt
-> rk3288-dp        -> analogix_dp-rockchip.txt
-> etc.
+Robin.
 
-Just leave them for now.
-
-> >>  1 file changed, 60 insertions(+)
-> >>  create mode 100644
-> Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
-> >>
-> >> diff --git
-> a/Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
-> b/Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
-> >> new file mode 100644
-> >> index 000000000..6a8f3754f
-> >> --- /dev/null
-> >> +++
-> b/Documentation/devicetree/bindings/display/rockchip/rk3066_hdmi-rockchip.txt
-> >> @@ -0,0 +1,60 @@
-> >> +Rockchip specific extensions for rk3066 HDMI
-> >> +============================================
-> >> +
-> >> +Required properties:
-> >> +- compatible:
-> >> +    "rockchip,rk3066-hdmi";
-> >> +- reg:
-> >> +    Physical base address and length of the controller's registers.
-> >> +- clocks, clock-names:
-> >> +    Phandle to HDMI controller clock, name should be "hclk".
-> >> +- interrupts:
-> >> +    HDMI interrupt number.
-> >> +- power-domains:
-> >> +    Phandle to the RK3066_PD_VIO power domain.
-> >> +- rockchip,grf:
-> >> +    This soc uses GRF regs to switch the HDMI TX input between vop0 and
-> vop1.
-> >> +- ports:
->
-> Should "ports" be replaced by: "hdmi_in: port"?
-> What is preferred?
->
-> There are two different methods in use:
-> -1
->                 hdmi_in: port {
->
-> -2
->                 ports {
->                         hdmi_in: port {
-
-Generally, you have 'ports' when there is more than one 'port' node
-which you should in this case.
-
-> >> +    Contains one port node with two endpoints, numbered 0 and 1,
-> >> +    connected respectively to vop0 and vop1.
-> >
-> > You should have an output port to an hdmi-connector node (or bridge) as
-> > well.
->
-> Which hdmi-connector node?
-> Could you explane with an example?
-
-grep hdmi-connector in the tree there's lot's of examples.
-
-> The Rockchip hdmi nodes I'm aware off only use the port nodes as a way
-> to switch the hdmi input between the vop's.
-> The vop nodes can have multiple outputs.
-
-Yes, that's the input side. And generally, muxing is represented as
-multiple endpoints.
-
-Not all cases of HDMI have defined a connector node as that came along later.
-
-Rob
+> +			if (!link) {
+> +				dev_err(dev, "Unable to link %s\n",
+> +					dev_name(larb_mmu->dev));
+> +				return;
+> +			}
+> +		} else {
+>   			larb_mmu->mmu &= ~MTK_SMI_MMU_EN(portid);
+> +		}
+>   	}
+>   }
+>   
+> diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
+> index 9386aee..022bad9 100644
+> --- a/drivers/iommu/mtk_iommu_v1.c
+> +++ b/drivers/iommu/mtk_iommu_v1.c
+> @@ -201,6 +201,7 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+>   	struct mtk_smi_larb_iommu    *larb_mmu;
+>   	unsigned int                 larbid, portid;
+>   	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+> +	struct device_link *link;
+>   	int i;
+>   
+>   	for (i = 0; i < fwspec->num_ids; ++i) {
+> @@ -211,10 +212,19 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+>   		dev_dbg(dev, "%s iommu port: %d\n",
+>   			enable ? "enable" : "disable", portid);
+>   
+> -		if (enable)
+> +		if (enable) {
+>   			larb_mmu->mmu |= MTK_SMI_MMU_EN(portid);
+> -		else
+> +			link = device_link_add(dev, larb_mmu->dev,
+> +					       DL_FLAG_PM_RUNTIME |
+> +					       DL_FLAG_AUTOREMOVE_CONSUMER);
+> +			if (!link) {
+> +				dev_err(dev, "Unable to link %s\n",
+> +					dev_name(larb_mmu->dev));
+> +				return;
+> +			}
+> +		} else {
+>   			larb_mmu->mmu &= ~MTK_SMI_MMU_EN(portid);
+> +		}
+>   	}
+>   }
+>   
+> 
