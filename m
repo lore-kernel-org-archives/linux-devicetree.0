@@ -1,140 +1,107 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
-Date: Wed, 27 Feb 2019 10:02:16 +0000
-Message-ID: <d67512fe-42b4-513f-d27a-fed85c19e9c2@arm.com>
-References: <20190224140426.3267-1-marc.zyngier@arm.com>
- <20190226232822.GA174696@google.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [RFC PATCH 3/5] mtd: Add support for Hyperbus memory devices
+Date: Wed, 27 Feb 2019 15:42:27 +0530
+Message-ID: <acde502c-63fb-e272-d701-4ee63eac4eaa@ti.com>
+References: <20190219063607.29949-1-vigneshr@ti.com>
+ <20190219063607.29949-4-vigneshr@ti.com>
+ <7e79fff7-2565-28f7-7b2b-bb3098f1a928@cogentembedded.com>
+ <3952b327-3aff-a32e-4280-6ab24c32cfd9@ti.com>
+ <20190227105937.527c6573@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226232822.GA174696@google.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20190227105937.527c6573@kernel.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Amitkumar Karwar <amitkarwar@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ganapathi Bhat <gbhat@marvell.com>, Heiko Stuebner <heiko@sntech.de>, Kalle Valo <kvalo@codeaurora.org>, Nishant Sarmukadam <nishants@marvell.com>, Rob Herring <robh+dt@kernel.org>, Xinming Hu <huxinming820@gmail.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, linux-pm@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Tony Lindgren <tony@atomide.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <bbrezillon@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Lorenzo
 
-Hi Brian,
 
-On 26/02/2019 23:28, Brian Norris wrote:
-> + others
+On 27/02/19 3:29 PM, Boris Brezillon wrote:
+> On Wed, 27 Feb 2019 15:22:19 +0530
+> Vignesh Raghavendra <vigneshr@ti.com> wrote:
 > 
-> Hi Marc,
-> 
-> Thanks for the series. I have a few bits of history to add to this, and
-> some comments.
-> 
-> On Sun, Feb 24, 2019 at 02:04:22PM +0000, Marc Zyngier wrote:
->> For quite some time, I wondered why the PCI mwifiex device built in my
->> Chromebook was unable to use the good old legacy interrupts. But as MSIs
->> were working fine, I never really bothered investigating. I finally had a
->> look, and the result isn't very pretty.
+>> On 26/02/19 11:46 PM, Sergei Shtylyov wrote:
+>>> On 02/19/2019 09:36 AM, Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>) wrote:
+>>>   
+>
+[...]
+>>>> + */
+>>>> +
+>>>> +struct hb_device {
+>>>> +	struct map_info map;
+>>>> +	struct device *dev;
+>>>> +	struct device_node *np;
+>>>> +	struct mtd_info *mtd;
+>>>> +	struct hb_ops *ops;
+>>>> +	enum hb_memtype memtype;
+>>>> +	bool needs_calib;
+>>>> +	bool registered;
+>>>> +};
+>>>> +
+>>>> +/**
+>>>> + * struct hb_ops - struct representing custom Hyperbus operations
+>>>> + * @read16: read 16 bit of data, usually from register/ID-CFI space
+>>>> + * @write16: write 16 bit of data, usually to register/ID-CFI space
+>>>> + * copy_from: copy data from flash memory
+>>>> + * copy_to: copy data to flash_memory
+>>>> + */
+>>>> +
+>>>> +struct hb_ops {
+>>>> +	u16 (*read16)(struct hb_device *hbdev, unsigned long addr);
+>>>> +	void (*write16)(struct hb_device *hbdev, unsigned long addr, u16 val);
+>>>> +
+>>>> +	void (*copy_from)(struct hb_device *hbdev, void *to,
+>>>> +			  unsigned long from, ssize_t len);
+>>>> +	void (*copy_to)(struct hb_device *dev, unsigned long to,
+>>>> +			const void *from, ssize_t len);  
+>>>
+>>>    ... else these methods won't fly if you need to "massage" the controller
+>>> registers inside them...
+>>>   
 >>
->> On this machine (rk3399-based kevin), the wake-up interrupt is described as
->> such:
+>> If accessing controller register is the only need, wouldn't a private
+>> data pointer within struct hb_device be sufficient to hold pointer to
+>> controller specific struct?
 >>
->> &pci_rootport {
->> 	mvl_wifi: wifi@0,0 {
->> 		compatible = "pci1b4b,2b42";
->> 		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
->> 		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
->> 		interrupt-parent = <&gpio0>;
->> 		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
->> 		pinctrl-names = "default";
->> 		pinctrl-0 = <&wlan_host_wake_l>;
->> 		wakeup-source;
->> 	};
+>> struct hb_device {
+>> 	...
+>> 	void *priv; /* points to controller's private data */
 >> };
 >>
->> Note how the interrupt is part of the properties directly attached to the
->> PCI node. And yet, this interrupt has nothing to do with a PCI legacy
->> interrupt, as it is attached to the wake-up widget that bypasses the PCIe RC
->> altogether (Yay for the broken design!). This is in total violation of the
->> IEEE Std 1275-1994 spec[1], which clearly documents that such interrupt
->> specifiers describe the PCI device interrupts, and must obey the
->> INT-{A,B,C,D} mapping. Oops!
+>>
+>> Or do you see a need for separate structure for the HyperBus controller?
 > 
-> You're not the first person to notice this. All the motivations are not
-> necessarily painted clearly in their cover letter, but here are some
-> previous attempts at solving this problem:
+> Sorry to chime in. Just want to share my experience here: properly
+> splitting the controller/device representation is always a good thing.
+> When it's not done from the beginning and people start to add their own
+> controller drivers as if it was a flash device driver it becomes messy
+> pretty quickly and people add hacks to support that (look at the raw
+> NAND framework if you need a proof). So, I'd recommend having this
+> separation now, even if the onle controllers we support have a 1:1
+> relationship between HB controller and HB device.
 > 
-> [RFC PATCH v11 0/5] PCI: rockchip: Move PCIe WAKE# handling into pci core
-> https://lkml.kernel.org/lkml/20171225114742.18920-1-jeffy.chen@rock-chips.com/
-> http://lkml.kernel.org/lkml/20171226023646.17722-1-jeffy.chen@rock-chips.com/
-> 
-> As you can see by the 12th iteration, it wasn't left unsolved for lack
-> of trying...
+>>
 
-I wasn't aware of this. That's definitely a better approach than my
-hack, and I would really like this to be revived.
+Alright, will separate controller and slave representation. Thanks for
+the feedback!
 
-> 
-> Frankly, if a proper DT replacement to the admittedly bad binding isn't
-> agreed upon quickly, I'd be very happy to just have WAKE# support
-> removed from the DTS for now, and the existing mwifiex binding should
-> just be removed. (Wake-on-WiFi was never properly vetted on these
-> platforms anyway.) It mostly serves to just cause problems like you've
-> noticed.
 
-Agreed. If there is no actual use for this, and that we can build a case
-for a better solution, let's remove the wakeup support from the Gru DT
-(it is invalid anyway), and bring it back if and when we get the right
-level of support.
-
-[...]
-
-> One problem Rockchip authors were also trying to resolve here is that
-> PCIe WAKE# handling should not really be something the PCI device driver
-> has to handle directly. Despite your complaints about not using in-band
-> TLP wakeup, a separate WAKE# pin is in fact a documented part of the
-> PCIe standard, and it so happens that the Rockchip RC does not support
-> handling TLPs in S3, if you want to have decent power consumption. (Your
-> "bad hardware" complaints could justifiably fall here, I suppose.)
-> 
-> Additionally, I've had pushback from PCI driver authors/maintainers on
-> adding more special handling for this sort of interrupt property (not
-> the binding specifically, but just the concept of handling WAKE# in the
-> driver), as they claim this should be handled by the system firmware,
-> when they set the appropriate wakeup flags, which filter down to
-> __pci_enable_wake() -> platform_pci_set_wakeup(). That's how x86 systems
-> do it (note: I know for a fact that many have a very similar
-> architecture -- WAKE# is not routed to the RC, because, why does it need
-> to? and they *don't* use TLP wakeup either -- they just hide it in
-> firmware better), and it Just Works.
-
-Even on an arm64 platform, there is no reason why a wakeup interrupt
-couldn't be handled by FW rather than the OS. It just need to be wired
-to the right spot (so that it generates a secure interrupt that can be
-handled by FW).
-
-> So, we basically concluded that we should standardize on a way to
-> describe WAKE# interrupts such that PCI drivers don't have to deal with
-> it at all, and the PCI core can do it for us. 12 revisions later
-> and...we still never agreed on a good device tree binding for this.
-
-Is the DT binding the only problem? Do we have an agreement for the core
-code?
-
-> IOW, maybe your wake-up sub-node is the best way to side-step the
-> problems of conflicting with the OF PCI spec. But I'd still really like
-> to avoid parsing it in mwifiex, if at all possible.
-
-Honestly, my solution is just a terrible hack. I wasn't aware that this
-was a more general problem, and I'd love it to be addressed in the core
-PCI code.
-
-> (We'd still be left with the marvell,wakeup-pin propery to parse
-> specifically in mwifiex, which sadly has to exist because....well,
-> Samsung decided to do chip-on-board, and then they failed to use the
-> correct pin on Marvell's side when wiring up WAKE#. Sigh.)
-
-Oh well...
-
-Thanks,
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+Regards
+Vignesh
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
