@@ -1,628 +1,624 @@
-From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] phy: mediatek: Add UFS M-PHY driver
-Date: Wed, 27 Feb 2019 15:27:21 +0800
-Message-ID: <1551252441.30977.26.camel@mtkswgap22>
-References: <1551086655-5029-1-git-send-email-stanley.chu@mediatek.com>
- <1551086655-5029-7-git-send-email-stanley.chu@mediatek.com>
- <1551089232.2210.53.camel@mhfsdcap03>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1551089232.2210.53.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, chun-hung.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kuohong.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, peter.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, avri.altman-Sjgp3cTcYWE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pedrom.sousa-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: Add Dragonboard 845c
+Date: Tue, 26 Feb 2019 23:40:09 -0800
+Message-ID: <20190227074009.19248-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunfeng,
+This adds an initial dts for the Dragonboard 845. Supported
+functionality includes Debug UART, UFS, USB-C (peripheral), USB-A
+(host), Ethernet, microSD-card and Bluetooth.
 
-Thanks so much for comments!
+Initializing the SMMU is clearing the mapping used for the splash screen
+framebuffer, which causes the baord to reboot. This can be worked around
+using:
 
-phy-mtk-ufs will be simplified and all belows are also fixed in v3.
+  fastboot oem select-display-panel none
 
-Thanks,
-Stanley
+Ethernet and the second USB-A port depends on a functional firmware
+loader for the uPD720201.
 
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-On Mon, 2019-02-25 at 18:07 +0800, Chunfeng Yun wrote:
-> Hi Stanley,
-> 
-> On Mon, 2019-02-25 at 17:24 +0800, stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > Add UFS M-PHY driver on Mediatek chipsets.
-> > 
-> > Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/phy/mediatek/Kconfig            |  29 ++--
-> >  drivers/phy/mediatek/Makefile           |   2 +
-> >  drivers/phy/mediatek/phy-mtk-ufs-12nm.c | 151 +++++++++++++++++++
-> >  drivers/phy/mediatek/phy-mtk-ufs-12nm.h |  52 +++++++
-> >  drivers/phy/mediatek/phy-mtk-ufs.c      | 189 ++++++++++++++++++++++++
-> >  drivers/phy/mediatek/phy-mtk-ufs.h      |  76 ++++++++++
-> >  6 files changed, 489 insertions(+), 10 deletions(-)
-> >  create mode 100644 drivers/phy/mediatek/phy-mtk-ufs-12nm.c
-> >  create mode 100644 drivers/phy/mediatek/phy-mtk-ufs-12nm.h
-> >  create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.c
-> >  create mode 100644 drivers/phy/mediatek/phy-mtk-ufs.h
-> > 
-> > diff --git a/drivers/phy/mediatek/Kconfig b/drivers/phy/mediatek/Kconfig
-> > index 8857d00b3c65..38c41836ef46 100644
-> > --- a/drivers/phy/mediatek/Kconfig
-> > +++ b/drivers/phy/mediatek/Kconfig
-> > @@ -2,22 +2,31 @@
-> >  # Phy drivers for Mediatek devices
-> >  #
-> >  config PHY_MTK_TPHY
-> > -    tristate "MediaTek T-PHY Driver"
-> > -    depends on ARCH_MEDIATEK && OF
-> > -    select GENERIC_PHY
-> > -    help
-> > -      Say 'Y' here to add support for MediaTek T-PHY driver,
-> > -      it supports multiple usb2.0, usb3.0 ports, PCIe and
-> > +	tristate "MediaTek T-PHY Driver"
-> > +	depends on ARCH_MEDIATEK && OF
-> > +	select GENERIC_PHY
-> > +	help
-> > +	  Say 'Y' here to add support for MediaTek T-PHY driver,
-> > +	  it supports multiple usb2.0, usb3.0 ports, PCIe and
-> Could you please revert these changes? no relations with the new driver
-> 
-> >  	  SATA, and meanwhile supports two version T-PHY which have
-> >  	  different banks layout, the T-PHY with shared banks between
-> >  	  multi-ports is first version, otherwise is second veriosn,
-> >  	  so you can easily distinguish them by banks layout.
-> >  
-> >  config PHY_MTK_XSPHY
-> > -    tristate "MediaTek XS-PHY Driver"
-> > -    depends on ARCH_MEDIATEK && OF
-> > -    select GENERIC_PHY
-> > -    help
-> > +	tristate "MediaTek XS-PHY Driver"
-> > +	depends on ARCH_MEDIATEK && OF
-> > +	select GENERIC_PHY
-> > +	help
-> Ditto
-> >  	  Enable this to support the SuperSpeedPlus XS-PHY transceiver for
-> >  	  USB3.1 GEN2 controllers on MediaTek chips. The driver supports
-> >  	  multiple USB2.0, USB3.1 GEN2 ports.
-> > +
-> > +config PHY_MTK_UFS
-> > +	tristate "Mediatek UFS M-PHY driver"
-> > +	depends on ARCH_MEDIATEK && OF
-> > +	select GENERIC_PHY
-> > +	help
-> > +	  Support for UFS M-PHY on MediaTek chipsets. Enable this to provide
-> > +	  vendor-specific initialization, power on and off flow of specified
-> > +	  M-PHYs.
-> > diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
-> > index ee49edc97ee9..e29b56b29d21 100644
-> > --- a/drivers/phy/mediatek/Makefile
-> > +++ b/drivers/phy/mediatek/Makefile
-> > @@ -5,3 +5,5 @@
-> >  
-> >  obj-$(CONFIG_PHY_MTK_TPHY)		+= phy-mtk-tphy.o
-> >  obj-$(CONFIG_PHY_MTK_XSPHY)		+= phy-mtk-xsphy.o
-> > +obj-$(CONFIG_PHY_MTK_UFS)		+= phy-mtk-ufs.o
-> > +obj-$(CONFIG_PHY_MTK_UFS) 		+= phy-mtk-ufs-12nm.o
-> > diff --git a/drivers/phy/mediatek/phy-mtk-ufs-12nm.c b/drivers/phy/mediatek/phy-mtk-ufs-12nm.c
-> > new file mode 100644
-> > index 000000000000..7ddcaaceafbd
-> > --- /dev/null
-> > +++ b/drivers/phy/mediatek/phy-mtk-ufs-12nm.c
-> > @@ -0,0 +1,151 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2019 MediaTek Inc.
-> Add author, and the follow lines can be removed
-> 
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-> > + * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/platform_device.h>
-> > +#include "phy-mtk-ufs.h"
-> > +#include "phy-mtk-ufs-12nm.h"
-> > +
-> > +#define MPHY_NAME "ufs_phy_mtk_12nm"
-> > +
-> > +static void ufs_mtk_phy_12nm_power_on(struct ufs_mtk_phy *phy)
-> > +{
-> > +	/* release DA_MP_PLL_PWR_ON */
-> > +	mphy_set_bit(phy, MP_GLB_DIG_8C, PLL_PWR_ON);
-> > +	mphy_clr_bit(phy, MP_GLB_DIG_8C, FRC_FRC_PWR_ON);
-> > +
-> > +	/* release DA_MP_PLL_ISO_EN */
-> > +	mphy_clr_bit(phy, MP_GLB_DIG_8C, PLL_ISO_EN);
-> > +	mphy_clr_bit(phy, MP_GLB_DIG_8C, FRC_PLL_ISO_EN);
-> > +
-> > +	/* release DA_MP_CDR_PWR_ON */
-> > +	mphy_set_bit(phy, MP_LN_RX_44, CDR_PWR_ON);
-> > +	mphy_clr_bit(phy, MP_LN_RX_44, FRC_CDR_PWR_ON);
-> > +
-> > +	/* release DA_MP_CDR_ISO_EN */
-> > +	mphy_clr_bit(phy, MP_LN_RX_44, CDR_ISO_EN);
-> > +	mphy_clr_bit(phy, MP_LN_RX_44, FRC_CDR_ISO_EN);
-> > +
-> > +	/* release DA_MP_RX0_SQ_EN */
-> > +	mphy_set_bit(phy, MP_LN_DIG_RX_AC, RX_SQ_EN);
-> > +	mphy_clr_bit(phy, MP_LN_DIG_RX_AC, FRC_RX_SQ_EN);
-> > +
-> > +	/* delay 1us to wait DIFZ stable */
-> > +	udelay(1);
-> > +
-> > +	/* release DIFZ */
-> > +	mphy_clr_bit(phy, MP_LN_DIG_RX_9C, FSM_DIFZ_FRC);
-> > +}
-> > +
-> > +static void ufs_mtk_phy_12nm_power_off(struct ufs_mtk_phy *phy)
-> > +{
-> > +	/* force DIFZ */
-> > +	mphy_set_bit(phy, MP_LN_DIG_RX_9C, FSM_DIFZ_FRC);
-> > +
-> > +	/* force DA_MP_RX0_SQ_EN */
-> > +	mphy_set_bit(phy, MP_LN_DIG_RX_AC, FRC_RX_SQ_EN);
-> > +	mphy_clr_bit(phy, MP_LN_DIG_RX_AC, RX_SQ_EN);
-> > +
-> > +	/* force DA_MP_CDR_ISO_EN */
-> > +	mphy_set_bit(phy, MP_LN_RX_44, FRC_CDR_ISO_EN);
-> > +	mphy_set_bit(phy, MP_LN_RX_44, CDR_ISO_EN);
-> > +
-> > +	/* force DA_MP_CDR_PWR_ON */
-> > +	mphy_set_bit(phy, MP_LN_RX_44, FRC_CDR_PWR_ON);
-> > +	mphy_clr_bit(phy, MP_LN_RX_44, CDR_PWR_ON);
-> > +
-> > +	/* force DA_MP_PLL_ISO_EN */
-> > +	mphy_set_bit(phy, MP_GLB_DIG_8C, FRC_PLL_ISO_EN);
-> > +	mphy_set_bit(phy, MP_GLB_DIG_8C, PLL_ISO_EN);
-> > +
-> > +	/* force DA_MP_PLL_PWR_ON */
-> > +	mphy_set_bit(phy, MP_GLB_DIG_8C, FRC_FRC_PWR_ON);
-> > +	mphy_clr_bit(phy, MP_GLB_DIG_8C, PLL_PWR_ON);
-> > +}
-> > +
-> > +static void ufs_mtk_phy_12nm_power_control(struct ufs_mtk_phy *phy, bool on)
-> > +{
-> > +	if (on)
-> > +		ufs_mtk_phy_12nm_power_on(phy);
-> > +	else
-> > +		ufs_mtk_phy_12nm_power_off(phy);
-> > +}
-> > +
-> > +static const struct phy_ops ufs_mtk_phy_12nm_phy_ops = {
-> > +	.power_on       = ufs_mtk_phy_power_on,
-> > +	.power_off      = ufs_mtk_phy_power_off,
-> > +	.owner          = THIS_MODULE,
-> > +};
-> > +
-> > +static struct ufs_mtk_phy_specific_ops phy_12nm_ops = {
-> > +	.power_control  = ufs_mtk_phy_12nm_power_control,
-> > +};
-> > +
-> > +static int ufs_mtk_phy_12nm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct phy *generic_phy;
-> > +	struct ufs_mtk_phy_12nm *phy;
-> > +	int err = 0;
-> > +
-> > +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-> > +	if (!phy) {
-> > +		err = -ENOMEM;
-> > +		goto out;
-> > +	}
-> > +
-> > +	generic_phy = ufs_mtk_phy_generic_probe(pdev, &phy->common_cfg,
-> > +						&ufs_mtk_phy_12nm_phy_ops,
-> > +						&phy_12nm_ops);
-> > +
-> > +	if (!generic_phy) {
-> > +		dev_info(dev, "%s: ufs_mtk_phy_generic_probe() failed\n",
-> > +			 __func__);
-> use dev_err()
-> > +		err = -EIO;
-> > +		goto out;
-> > +	}
-> > +
-> > +	phy_set_drvdata(generic_phy, phy);
-> > +
-> > +	strlcpy(phy->common_cfg.name, MPHY_NAME,
-> > +		sizeof(phy->common_cfg.name));
-> > +
-> > +	err = ufs_mtk_phy_init_clks(generic_phy, &phy->common_cfg);
-> > +	if (err) {
-> > +		dev_info(dev,
-> > +			 "%s: ufs_mtk_phy_init_clks() failed %d\n",
-> > +			 __func__, err);
-> ditto
-> > +	}
-> > +out:
-> > +	return err;
-> > +}
-> > +
-> > +static const struct of_device_id ufs_mtk_phy_12nm_of_match[] = {
-> > +	{.compatible = "mediatek,ufs-mphy-12nm"},
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ufs_mtk_phy_12nm_of_match);
-> > +
-> > +static struct platform_driver ufs_mtk_phy_12nm_driver = {
-> > +	.probe = ufs_mtk_phy_12nm_probe,
-> > +	.driver = {
-> > +		.of_match_table = ufs_mtk_phy_12nm_of_match,
-> > +		.name = "ufs_mtk_phy_12nm",
-> > +	},
-> > +};
-> > +module_platform_driver(ufs_mtk_phy_12nm_driver);
-> > +
-> > +MODULE_DESCRIPTION("Universal Flash Storage (UFS) Mediatek MPHY 12nm");
-> > diff --git a/drivers/phy/mediatek/phy-mtk-ufs-12nm.h b/drivers/phy/mediatek/phy-mtk-ufs-12nm.h
-> > new file mode 100644
-> > index 000000000000..5ebcdbd8ec4d
-> > --- /dev/null
-> > +++ b/drivers/phy/mediatek/phy-mtk-ufs-12nm.h
-> > @@ -0,0 +1,52 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2019 MediaTek Inc.
-> add author, and the following lines can be removed when
-> SPDX-License-Identifier is provided before
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-> > + * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
-> > + */
-> > +
-> > +#ifndef UFS_MTK_PHY_12NM_H_
-> > +#define UFS_MTK_PHY_12NM_H_
-> > +
-> > +#include "phy-mtk-ufs.h"
-> > +
-> > +/*
-> > + * MPHY register and offsets
-> > + */
-> > +#define MP_GLB_DIG_8C               0x008C
-> > +#define FRC_PLL_ISO_EN              0x00000100
-> > +#define PLL_ISO_EN                  0x00000200
-> > +#define FRC_FRC_PWR_ON              0x00000400
-> > +#define PLL_PWR_ON                  0x00000800
-> Use BIT()
-> > +
-> > +#define MP_LN_DIG_RX_9C             0xA09C
-> > +#define FSM_DIFZ_FRC                0x00040000
-> ditto
-> > +
-> > +#define MP_LN_DIG_RX_AC             0xA0AC
-> > +#define FRC_RX_SQ_EN                0x00000001
-> > +#define RX_SQ_EN                    0x00000002
-> ditto
-> > +
-> > +#define MP_LN_RX_44                 0xB044
-> > +#define FRC_CDR_PWR_ON              0x00020000
-> > +#define CDR_PWR_ON                  0x00040000
-> > +#define FRC_CDR_ISO_EN              0x00080000
-> > +#define CDR_ISO_EN                  0x00100000
-> ditto
-> > +
-> > +/*
-> > + * This structure represents the 12nm specific phy.
-> > + * common_cfg MUST remain the first field in this structure
-> > + * in case extra fields are added. This way, when calling
-> > + * get_ufs_mtk_phy() of generic phy, we can extract the
-> > + * common phy structure (struct ufs_mtk_phy) out of it
-> > + * regardless of the relevant specific phy.
-> > + */
-> > +struct ufs_mtk_phy_12nm {
-> > +	struct ufs_mtk_phy common_cfg;
-> > +};
-> > +
-> > +#endif
-> > diff --git a/drivers/phy/mediatek/phy-mtk-ufs.c b/drivers/phy/mediatek/phy-mtk-ufs.c
-> > new file mode 100644
-> > index 000000000000..68ed27eaf195
-> > --- /dev/null
-> > +++ b/drivers/phy/mediatek/phy-mtk-ufs.c
-> > @@ -0,0 +1,189 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2019 MediaTek Inc.
-> also here
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-> > + * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/platform_device.h>
-> > +#include "phy-mtk-ufs.h"
-> > +
-> > +static int ufs_mtk_phy_base_init(struct platform_device *pdev,
-> > +				 struct ufs_mtk_phy *phy);
-> > +
-> > +struct phy
-> > +*ufs_mtk_phy_generic_probe(struct platform_device *pdev,
-> > +			   struct ufs_mtk_phy *common_cfg,
-> > +			   const struct phy_ops *ufs_mtk_phy_gen_ops,
-> > +			   struct ufs_mtk_phy_specific_ops *phy_spec_ops)
-> > +{
-> > +	int err;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct phy *generic_phy = NULL;
-> > +	struct phy_provider *phy_provider;
-> > +
-> > +	err = ufs_mtk_phy_base_init(pdev, common_cfg);
-> > +	if (err) {
-> > +		dev_info(dev, "%s: phy base init failed %d\n", __func__, err);
-> dev_err
-> > +		goto out;
-> > +	}
-> > +
-> > +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> > +	if (IS_ERR(phy_provider)) {
-> > +		err = PTR_ERR(phy_provider);
-> > +		dev_info(dev, "%s: failed to register phy %d\n", __func__, err);
-> ditto
-> > +		goto out;
-> > +	}
-> > +
-> > +	generic_phy = devm_phy_create(dev, NULL, ufs_mtk_phy_gen_ops);
-> > +	if (IS_ERR(generic_phy)) {
-> > +		err =  PTR_ERR(generic_phy);
-> > +		dev_info(dev, "%s: failed to create phy %d\n", __func__, err);
-> ditto
-> > +		generic_phy = NULL;
-> > +		goto out;
-> > +	}
-> > +
-> > +	common_cfg->phy_spec_ops = phy_spec_ops;
-> > +	common_cfg->dev = dev;
-> > +
-> > +out:
-> > +	return generic_phy;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ufs_mtk_phy_generic_probe);
-> > +
-> > +/*
-> > + * This assumes the embedded phy structure inside generic_phy is of type
-> > + * struct ufs_mtk_phy. In order to function properly it's crucial
-> > + * to keep the embedded struct "struct ufs_mtk_phy common_cfg"
-> > + * as the first inside generic_phy.
-> > + */
-> > +struct ufs_mtk_phy *get_ufs_mtk_phy(struct phy *generic_phy)
-> > +{
-> > +	return (struct ufs_mtk_phy *)phy_get_drvdata(generic_phy);
-> > +}
-> > +EXPORT_SYMBOL_GPL(get_ufs_mtk_phy);
-> > +
-> > +static int ufs_mtk_phy_ctl_clk(struct ufs_mtk_phy *phy,
-> > +			       struct clk *clk,
-> > +			       bool on)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (on) {
-> > +		ret = clk_prepare_enable(clk);
-> > +		if (ret) {
-> > +			dev_info(phy->dev,
-> > +				 "%s: mp_clk enable failed %d\n",
-> > +				 __func__, ret);
-> ditto
-> > +			goto out;
-> > +		}
-> > +	} else {
-> > +		clk_disable_unprepare(clk);
-> > +	}
-> > +out:
-> > +	return ret;
-> > +}
-> > +
-> > +static int ufs_mtk_phy_ctl_clks(struct phy *generic_phy, bool on)
-> > +{
-> > +	struct ufs_mtk_phy *phy = get_ufs_mtk_phy(generic_phy);
-> > +	int ret;
-> > +
-> > +	ret = ufs_mtk_phy_ctl_clk(phy, phy->unipro_clk, on);
-> > +	if (ret)
-> > +		goto out;
-> > +
-> > +	ret = ufs_mtk_phy_ctl_clk(phy, phy->mp_clk, on);
-> > +out:
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ufs_mtk_phy_ctl_clks);
-> > +
-> > +static int ufs_mtk_phy_base_init(struct platform_device *pdev,
-> > +				 struct ufs_mtk_phy *phy)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct resource *res;
-> > +	int err = 0;
-> > +
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ufs_mphy");
-> > +	phy->mmio = devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR((void const *)phy->mmio)) {
-> > +		err = PTR_ERR((void const *)phy->mmio);
-> > +		phy->mmio = NULL;
-> > +		dev_info(dev, "%s: ioremap for ufs_mphy resource failed %d\n",
-> > +			 __func__, err);
-> ditto
-> > +		return err;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static
-> > +int ufs_mtk_phy_clk_get(struct phy *phy,
-> > +			const char *name, struct clk **clk_out)
-> > +{
-> > +	struct clk *clk;
-> > +	int err = 0;
-> > +	struct ufs_mtk_phy *ufs_mtk_phy = get_ufs_mtk_phy(phy);
-> > +	struct device *dev = ufs_mtk_phy->dev;
-> > +
-> > +	clk = devm_clk_get(dev, name);
-> > +	if (IS_ERR(clk)) {
-> > +		err = PTR_ERR(clk);
-> > +		dev_info(dev, "failed to get %s err %d", name, err);
-> ditto
-> > +	} else {
-> > +		*clk_out = clk;
-> > +	}
-> > +
-> > +	return err;
-> > +}
-> 
-> > +
-> > +int ufs_mtk_phy_init_clks(struct phy *generic_phy,
-> > +			  struct ufs_mtk_phy *phy)
-> > +{
-> > +	int err;
-> > +
-> > +	err = ufs_mtk_phy_clk_get(generic_phy, "ufs0-unipro-clk",
-> > +				  &phy->unipro_clk);
-> > +	if (err)
-> > +		goto out;
-> > +
-> > +	err = ufs_mtk_phy_clk_get(generic_phy, "ufs0-mp-clk",
-> > +				  &phy->mp_clk);
-> > +out:
-> > +	return err;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ufs_mtk_phy_init_clks);
-> > +
-> > +int ufs_mtk_phy_power_on(struct phy *generic_phy)
-> > +{
-> > +	struct ufs_mtk_phy *phy = get_ufs_mtk_phy(generic_phy);
-> > +
-> > +	ufs_mtk_phy_ctl_clks(generic_phy, true);
-> > +	phy->phy_spec_ops->power_control(phy, true);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ufs_mtk_phy_power_on);
-> > +
-> > +int ufs_mtk_phy_power_off(struct phy *generic_phy)
-> > +{
-> > +	struct ufs_mtk_phy *phy = get_ufs_mtk_phy(generic_phy);
-> > +
-> > +	phy->phy_spec_ops->power_control(phy, false);
-> > +	ufs_mtk_phy_ctl_clks(generic_phy, false);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ufs_mtk_phy_power_off);
-> > +
-> > diff --git a/drivers/phy/mediatek/phy-mtk-ufs.h b/drivers/phy/mediatek/phy-mtk-ufs.h
-> > new file mode 100644
-> > index 000000000000..7163aae2b56b
-> > --- /dev/null
-> > +++ b/drivers/phy/mediatek/phy-mtk-ufs.h
-> > @@ -0,0 +1,76 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2019 MediaTek Inc.
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-> > + * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
-> > + */
-> > +
-> > +#ifndef UFS_MTK_PHY_H_
-> > +#define UFS_MTK_PHY_H_
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define UFS_MTK_PHY_NAME_LEN       30
-> > +
-> > +#define mphy_readl(phy, ofs) readl((phy)->mmio + (ofs))
-> > +#define mphy_writel(phy, val, ofs) writel((val), (phy)->mmio + (ofs))
-> > +
-> > +#define mphy_set_bit(phy, reg, ofs) \
-> > +do { \
-> > +	u32 val; \
-> > +	u32 _reg = (reg); \
-> > +	struct ufs_mtk_phy *_phy = (phy); \
-> > +	val = mphy_readl(_phy, _reg); \
-> > +	val = val | (ofs); \
-> > +	mphy_writel(_phy, val, _reg); \
-> > +} while (0)
-> > +
-> define it as a inline function?
-> > +#define mphy_clr_bit(phy, reg, ofs) \
-> > +do { \
-> > +	u32 val; \
-> > +	u32 _reg = (reg); \
-> > +	struct ufs_mtk_phy *_phy = (phy); \
-> > +	val = mphy_readl(_phy, _reg); \
-> > +	val = val & ~(ofs); \
-> > +	mphy_writel(_phy, val, _reg); \
-> > +} while (0)
-> > +
-> > +struct ufs_mtk_phy {
-> > +	struct device *dev;
-> > +	void __iomem *mmio;
-> > +	struct clk *mp_clk;
-> > +	struct clk *unipro_clk;
-> > +	char name[UFS_MTK_PHY_NAME_LEN];
-> > +	struct ufs_mtk_phy_specific_ops *phy_spec_ops;
-> > +};
-> > +
-> > +/**
-> > + * struct ufs_mtk_phy_specific_ops - set of pointers to functions which have a
-> > + * specific implementation per phy. Each UFS phy, should implement
-> > + * those functions according to its spec and requirements
-> > + * @power_control: Control power on/off flow of phy.
-> > + */
-> > +struct ufs_mtk_phy_specific_ops {
-> > +	void (*power_control)(struct ufs_mtk_phy *phy, bool on);
-> > +};
-> > +
-> > +struct ufs_mtk_phy *get_ufs_mtk_phy(struct phy *generic_phy);
-> > +int ufs_mtk_phy_power_on(struct phy *generic_phy);
-> > +int ufs_mtk_phy_power_off(struct phy *generic_phy);
-> > +int ufs_mtk_phy_init_clks(struct phy *generic_phy,
-> > +			  struct ufs_mtk_phy *phy_common);
-> > +struct phy
-> > +*ufs_mtk_phy_generic_probe(struct platform_device *pdev,
-> > +			   struct ufs_mtk_phy *common_cfg,
-> > +			   const struct phy_ops *ufs_mtk_phy_gen_ops,
-> > +			   struct ufs_mtk_phy_specific_ops *phy_spec_ops);
-> > +#endif
-> 
+This depends on the addition of the PCIe controller and PHY nodes, from
+https://lore.kernel.org/lkml/20190227070022.31975-1-bjorn.andersson@linaro.org/
+
+ arch/arm64/boot/dts/qcom/Makefile          |   1 +
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 570 +++++++++++++++++++++
+ 2 files changed, 571 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 21d548f02d39..b3fe72ff2955 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+new file mode 100644
+index 000000000000..0a5cfab6f6e2
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -0,0 +1,570 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++#include "sdm845.dtsi"
++#include "pm8998.dtsi"
++#include "pmi8998.dtsi"
++
++/ {
++	model = "Thundercomm Dragonboard 845c";
++	compatible = "thundercomm,db845c", "qcom,sdm845";
++
++	aliases {
++		serial0 = &uart9;
++		hsuart0 = &uart6;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	dc12v: dc12v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "DC12V";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++	};
++
++	lt9611_1v8: lt9611-vdd18-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "LT9611_1V8";
++
++		vin-supply = <&vdc_5v>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	lt9611_3v3: lt9611-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "LT9611_3V3";
++
++		vin-supply = <&vdc_3v3>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		// TODO: make it possible to drive same GPIO from two clients
++		// gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
++		// enable-active-high;
++	};
++
++	pcie0_1p05v: pcie-0-1p05v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "PCIE0_1.05V";
++
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <1050000>;
++		regulator-max-microvolt = <1050000>;
++
++		// TODO: make it possible to drive same GPIO from two clients
++		// gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
++		// enable-active-high;
++	};
++
++	pcie0_3p3v_dual: vldo-3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VLDO_3V3";
++
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&vol_up_pin_a>;
++
++		vol-up {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		user4 {
++			label = "db845c:green:user4";
++			gpios = <&pm8998_gpio 13 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "off";
++		};
++
++		wlan {
++			label = "db845c:yellow:wlan";
++			gpios = <&pm8998_gpio 9 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "phy0tx";
++			default-state = "off";
++		};
++
++		bt {
++			label = "db845c:blue:bt";
++			gpios = <&pm8998_gpio 5 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "bluetooth-power";
++			default-state = "off";
++		};
++	};
++
++	v5p0_hdmiout: v5p0-hdmiout-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "V5P0_HDMIOUT";
++
++		vin-supply = <&vdc_5v>;
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <500000>;
++
++		// TODO: make it possible to drive same GPIO from two clients
++		// gpio = <&tlmm 89 GPIO_ACTIVE_HIGH>;
++		// enable-active-high;
++	};
++
++	vbat: vbat-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VBAT";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <4200000>;
++		regulator-max-microvolt = <4200000>;
++		regulator-always-on;
++	};
++
++	vbat_som: vbat-som-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VBAT_SOM";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <4200000>;
++		regulator-max-microvolt = <4200000>;
++		regulator-always-on;
++	};
++
++	vdc_3v3: vdc-3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VDC_3V3";
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	vdc_5v: vdc-5v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VDC_5V";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <500000>;
++		regulator-always-on;
++	};
++
++	vreg_s4a_1p8: vreg-s4a-1p8 {
++		compatible = "regulator-fixed";
++		regulator-name = "vreg_s4a_1p8";
++
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++
++		vin-supply = <&vbat_som>;
++	};
++};
++
++&apps_rsc {
++	pm8998-rpmh-regulators {
++		compatible = "qcom,pm8998-rpmh-regulators";
++		qcom,pmic-id = "a";
++		vdd-s1-supply = <&vph_pwr>;
++		vdd-s2-supply = <&vph_pwr>;
++		vdd-s3-supply = <&vph_pwr>;
++		vdd-s4-supply = <&vph_pwr>;
++		vdd-s5-supply = <&vph_pwr>;
++		vdd-s6-supply = <&vph_pwr>;
++		vdd-s7-supply = <&vph_pwr>;
++		vdd-s8-supply = <&vph_pwr>;
++		vdd-s9-supply = <&vph_pwr>;
++		vdd-s10-supply = <&vph_pwr>;
++		vdd-s11-supply = <&vph_pwr>;
++		vdd-s12-supply = <&vph_pwr>;
++		vdd-s13-supply = <&vph_pwr>;
++		vdd-l1-l27-supply = <&vreg_s7a_1p025>;
++		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
++		vdd-l3-l11-supply = <&vreg_s7a_1p025>;
++		vdd-l4-l5-supply = <&vreg_s7a_1p025>;
++		vdd-l6-supply = <&vph_pwr>;
++		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
++		vdd-l9-supply = <&vreg_bob>;
++		vdd-l10-l23-l25-supply = <&vreg_bob>;
++		vdd-l13-l19-l21-supply = <&vreg_bob>;
++		vdd-l16-l28-supply = <&vreg_bob>;
++		vdd-l18-l22-supply = <&vreg_bob>;
++		vdd-l20-l24-supply = <&vreg_bob>;
++		vdd-l26-supply = <&vreg_s3a_1p35>;
++		vin-lvs-1-2-supply = <&vreg_s4a_1p8>;
++
++		vreg_s3a_1p35: smps3 {
++			regulator-min-microvolt = <1352000>;
++			regulator-max-microvolt = <1352000>;
++		};
++
++		vreg_s5a_2p04: smps5 {
++			regulator-min-microvolt = <1904000>;
++			regulator-max-microvolt = <2040000>;
++		};
++
++		vreg_s7a_1p025: smps7 {
++			regulator-min-microvolt = <900000>;
++			regulator-max-microvolt = <1028000>;
++		};
++
++		vreg_l1a_0p875: ldo1 {
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <880000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l12a_1p8: ldo12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l7a_1p8: ldo7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l13a_2p95: ldo13 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l17a_1p3: ldo17 {
++			regulator-min-microvolt = <1304000>;
++			regulator-max-microvolt = <1304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l20a_2p95: ldo20 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2968000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l21a_2p95: ldo21 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2968000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l24a_3p075: ldo24 {
++			regulator-min-microvolt = <3088000>;
++			regulator-max-microvolt = <3088000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l25a_3p3: ldo25 {
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3312000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l26a_1p2: ldo26 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	pmi8998-rpmh-regulators {
++		compatible = "qcom,pmi8998-rpmh-regulators";
++		qcom,pmic-id = "b";
++
++		vdd-bob-supply = <&vph_pwr>;
++
++		vreg_bob: bob {
++			regulator-min-microvolt = <3312000>;
++			regulator-max-microvolt = <3600000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
++			regulator-allow-bypass;
++		};
++	};
++};
++
++&gcc {
++	protected-clocks = <GCC_QSPI_CORE_CLK>,
++			   <GCC_QSPI_CORE_CLK_SRC>,
++			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
++};
++
++&pcie0 {
++	status = "okay";
++	perst-gpio = <&tlmm 35 GPIO_ACTIVE_LOW>;
++	enable-gpio = <&tlmm 134 GPIO_ACTIVE_HIGH>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_perst_state>, <&pcie0_clkreq_state>, <&pcie0_wake_state>;
++
++	vddpe-3v3-supply = <&pcie0_3p3v_dual>;
++};
++
++&pcie0_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l26a_1p2>;
++};
++
++&pm8998_gpio {
++	vol_up_pin_a: vol-up-active {
++		pins = "gpio6";
++		function = "normal";
++		input-enable;
++		bias-pull-up;
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
++	};
++};
++
++&pm8998_pon {
++	resin {
++		compatible = "qcom,pm8941-resin";
++		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
++		debounce = <15625>;
++		bias-pull-up;
++		linux,code = <KEY_VOLUMEDOWN>;
++	};
++};
++
++&qupv3_id_0 {
++	status = "okay";
++};
++
++&qupv3_id_1 {
++	status = "okay";
++};
++
++&sdhc_2 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdc2_clk &sdc2_cmd &sdc2_data &sd_card_det_n>;
++
++	vmmc-supply = <&vreg_l21a_2p95>;
++	vqmmc-supply = <&vreg_l13a_2p95>;
++
++	bus-width = <4>;
++	cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
++};
++
++&tlmm {
++	pcie0_pwren_state: pcie0-pwren {
++		pins = "gpio90";
++		function = "gpio";
++
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	pcie0_perst_state: pcie0-reset {
++		pins = "gpio35";
++		function = "gpio";
++
++		drive-strength = <2>;
++		output-low;
++		bias-pull-down;
++	};
++
++	pcie0_clkreq_state: pcie0-clkreq {
++		pins = "gpio36";
++		function = "pci_e0";
++		bias-pull-up;
++	};
++
++	pcie0_wake_state: pcie0-wake {
++		pins = "gpio37";
++		function = "gpio";
++
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++
++	sdc2_clk: sdc2-clk {
++		pins = "sdc2_clk";
++		bias-disable;
++
++		/*
++		 * It seems that mmc_test reports errors if drive
++		 * strength is not 16 on clk, cmd, and data pins.
++		 */
++		drive-strength = <16>;
++	};
++
++	sdc2_cmd: sdc2-cmd {
++		pins = "sdc2_cmd";
++		bias-pull-up;
++		drive-strength = <10>;
++	};
++
++	sdc2_data: sdc2-data {
++		pins = "sdc2_data";
++		bias-pull-up;
++		drive-strength = <10>;
++	};
++
++	sd_card_det_n: sd-card-det-n {
++		pins = "gpio126";
++		function = "gpio";
++		bias-pull-up;
++	};
++};
++
++&uart6 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "qcom,wcn3990-bt";
++
++		vddio-supply = <&vreg_s4a_1p8>;
++		vddxo-supply = <&vreg_l7a_1p8>;
++		vddrf-supply = <&vreg_l17a_1p3>;
++		vddch0-supply = <&vreg_l25a_3p3>;
++		max-speed = <3200000>;
++	};
++};
++
++&uart9 {
++	status = "okay";
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "peripheral";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l12a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l26a_1p2>;
++	vdda-pll-supply = <&vreg_l1a_0p875>;
++};
++
++&usb_2 {
++	status = "okay";
++};
++
++&usb_2_dwc3 {
++	dr_mode = "host";
++};
++
++&usb_2_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l12a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
++};
++
++&usb_2_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l26a_1p2>;
++	vdda-pll-supply = <&vreg_l1a_0p875>;
++};
++
++&ufs_mem_hc {
++	status = "okay";
++
++	vcc-supply = <&vreg_l20a_2p95>;
++	vcc-max-microamp = <800000>;
++};
++
++&ufs_mem_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l26a_1p2>;
++};
++
++&wifi {
++	status = "okay";
++};
++
++/* PINCTRL - additions to nodes defined in sdm845.dtsi */
++
++&qup_uart6_default {
++	pinmux {
++		pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		function = "qup6";
++	};
++
++	cts {
++		pins = "gpio45";
++		bias-disable;
++	};
++
++	rts-tx {
++		pins = "gpio46", "gpio47";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	rx {
++		pins = "gpio48";
++		bias-pull-up;
++	};
++};
++
++&qup_uart9_default {
++	pinconf-tx {
++		pins = "gpio4";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	pinconf-rx {
++		pins = "gpio5";
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++};
+-- 
+2.18.0
