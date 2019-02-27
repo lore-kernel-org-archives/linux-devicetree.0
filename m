@@ -1,107 +1,63 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [RFC PATCH 3/5] mtd: Add support for Hyperbus memory devices
-Date: Wed, 27 Feb 2019 15:42:27 +0530
-Message-ID: <acde502c-63fb-e272-d701-4ee63eac4eaa@ti.com>
-References: <20190219063607.29949-1-vigneshr@ti.com>
- <20190219063607.29949-4-vigneshr@ti.com>
- <7e79fff7-2565-28f7-7b2b-bb3098f1a928@cogentembedded.com>
- <3952b327-3aff-a32e-4280-6ab24c32cfd9@ti.com>
- <20190227105937.527c6573@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH 1/2] dt-bindings: memory-controllers: freescale: add MMDC
+ binding doc
+Date: Wed, 27 Feb 2019 10:08:47 +0000
+Message-ID: <1551261844-23983-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20190227105937.527c6573@kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <bbrezillon@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Freescale MMDC (Multi Mode DDR Controller) driver is supported
+since i.MX6Q, but not yet documented, this patch adds binding
+doc for MMDC module driver.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../bindings/memory-controllers/fsl/mmdc.txt       | 27 ++++++++++++++++++=
+++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/fs=
+l/mmdc.txt
 
-On 27/02/19 3:29 PM, Boris Brezillon wrote:
-> On Wed, 27 Feb 2019 15:22:19 +0530
-> Vignesh Raghavendra <vigneshr@ti.com> wrote:
-> 
->> On 26/02/19 11:46 PM, Sergei Shtylyov wrote:
->>> On 02/19/2019 09:36 AM, Vignesh R (by way of Boris Brezillon <bbrezillon@kernel.org>) wrote:
->>>   
->
-[...]
->>>> + */
->>>> +
->>>> +struct hb_device {
->>>> +	struct map_info map;
->>>> +	struct device *dev;
->>>> +	struct device_node *np;
->>>> +	struct mtd_info *mtd;
->>>> +	struct hb_ops *ops;
->>>> +	enum hb_memtype memtype;
->>>> +	bool needs_calib;
->>>> +	bool registered;
->>>> +};
->>>> +
->>>> +/**
->>>> + * struct hb_ops - struct representing custom Hyperbus operations
->>>> + * @read16: read 16 bit of data, usually from register/ID-CFI space
->>>> + * @write16: write 16 bit of data, usually to register/ID-CFI space
->>>> + * copy_from: copy data from flash memory
->>>> + * copy_to: copy data to flash_memory
->>>> + */
->>>> +
->>>> +struct hb_ops {
->>>> +	u16 (*read16)(struct hb_device *hbdev, unsigned long addr);
->>>> +	void (*write16)(struct hb_device *hbdev, unsigned long addr, u16 val);
->>>> +
->>>> +	void (*copy_from)(struct hb_device *hbdev, void *to,
->>>> +			  unsigned long from, ssize_t len);
->>>> +	void (*copy_to)(struct hb_device *dev, unsigned long to,
->>>> +			const void *from, ssize_t len);  
->>>
->>>    ... else these methods won't fly if you need to "massage" the controller
->>> registers inside them...
->>>   
->>
->> If accessing controller register is the only need, wouldn't a private
->> data pointer within struct hb_device be sufficient to hold pointer to
->> controller specific struct?
->>
->> struct hb_device {
->> 	...
->> 	void *priv; /* points to controller's private data */
->> };
->>
->>
->> Or do you see a need for separate structure for the HyperBus controller?
-> 
-> Sorry to chime in. Just want to share my experience here: properly
-> splitting the controller/device representation is always a good thing.
-> When it's not done from the beginning and people start to add their own
-> controller drivers as if it was a flash device driver it becomes messy
-> pretty quickly and people add hacks to support that (look at the raw
-> NAND framework if you need a proof). So, I'd recommend having this
-> separation now, even if the onle controllers we support have a 1:1
-> relationship between HB controller and HB device.
-> 
->>
-
-Alright, will separate controller and slave representation. Thanks for
-the feedback!
-
-
--- 
-Regards
-Vignesh
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.=
+txt b/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt
+new file mode 100644
+index 0000000..5b5a224
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt
+@@ -0,0 +1,27 @@
++Freescale Multi Mode DDR controller (MMDC)
++
++Required properties :
++- compatible : should be one of following:
++	for i.MX6Q/i.MX6DL:
++	- "fsl,imx6q-mmdc";
++	for i.MX6SL:
++	- "fsl,imx6sl-mmdc", "fsl,imx6q-mmdc";
++	for i.MX6SLL:
++	- "fsl,imx6sll-mmdc", "fsl,imx6q-mmdc";
++	for i.MX6SX:
++	- "fsl,imx6sx-mmdc", "fsl,imx6q-mmdc";
++	for i.MX6UL/i.MX6ULL/i.MX6ULZ:
++	- "fsl,imx6ul-mmdc", "fsl,imx6q-mmdc";
++	for i.MX7ULP:
++	- "fsl,imx7ulp-mmdc", "fsl,imx6q-mmdc";
++- reg : address and size of MMDC DDR controller registers
++
++Optional properties :
++- clocks : the clock provided by the SoC to access the MMDC registers
++
++Example :
++	mmdc0: mmdc@21b0000 { /* MMDC0 */
++		compatible =3D "fsl,imx6q-mmdc";
++		reg =3D <0x021b0000 0x4000>;
++		clocks =3D <&clks IMX6QDL_CLK_MMDC_P0_IPG>;
++	};
+--=20
+2.7.4
