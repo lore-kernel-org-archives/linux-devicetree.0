@@ -1,35 +1,74 @@
-From: Alison Wang <alison.wang@nxp.com>
-Subject: [PATCH] arm64: dts: ls1028a: add pmu dt nodes
-Date: Wed, 27 Feb 2019 09:57:52 +0800
-Message-ID: <20190227015752.18342-1-alison.wang@nxp.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH v3 1/2] usb: dwc3: Add avoiding vbus glitch happen during
+ xhci  reset
+Date: Wed, 27 Feb 2019 02:35:15 +0000
+Message-ID: <AM5PR0402MB2865656822F6CA28AF9E50E5F1740@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20190226070016.27372-1-ran.wang_1@nxp.com>
+ <20190226163948.GA8854@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190226163948.GA8854@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, leoyang.li@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: alison.wang@nxp.com
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yang Li <pku.leo@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pmu dt nodes for LS1028A.
+Hi Rob,
 
-Signed-off-by: Alison Wang <alison.wang@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Wednesday, February 27, 2019 00:40
+> To: Ran Wang <ran.wang_1@nxp.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Yang Li
+> <pku.leo@gmail.com>; linux-usb@vger.kernel.org; devicetree@vger.kernel.or=
+g;
+> linux-kernel@vger.kernel.org; Ran Wang <ran.wang_1@nxp.com>
+> Subject: Re: [PATCH v3 1/2] usb: dwc3: Add avoiding vbus glitch happen du=
+ring
+> xhci reset
+>=20
+> On Tue, 26 Feb 2019 06:59:21 +0000, Ran Wang wrote:
+> > When DWC3 is set to host mode by programming register DWC3_GCTL, VBUS
+> > (or its control signal) will turn on immediately on related Root Hub
+> > ports. Then the VBUS will be de-asserted for a little while during
+> > xhci reset (conducted by xhci driver) for a little while and back to no=
+rmal.
+> >
+> > This VBUS glitch might cause some USB devices emuration fail if kernel
+> > boot with them connected. One SW workaround which can fix this is to
+> > program all PORTSC[PP] to 0 to turn off VBUS immediately after setting
+> > host mode in DWC3 driver(per signal measurement result, it will be too
+> > late to do it in xhci-plat.c or xhci.c).
+> >
+> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > ---
+> > Changes in v3:
+> >   - None
+> >
+> > Changes in v2:
+> >   - Correct typos
+> >   - Shorten the name to snps,host-vbus-glitches
+> >
+> >  Documentation/devicetree/bindings/usb/dwc3.txt |    3 +++
+> >  1 files changed, 3 insertions(+), 0 deletions(-)
+> >
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index a8cf92a..36ef9c5 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -89,6 +89,11 @@
- 					  IRQ_TYPE_LEVEL_LOW)>;
- 	};
- 
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
- 	gic: interrupt-controller@6000000 {
- 		compatible= "arm,gic-v3";
- 		#address-cells = <2>;
--- 
-1.7.1
+Got it, thanks for telling me this. So if I need to update patch 2/2 in nex=
+t version,
+I still need to attach this 1/2 patch with adding tag 'Reviewed-by' to it, =
+am I right?
+
+>=20
+> If a tag was not added on purpose, please state why and what changed.
+
+OK
+
+Regards,
+Ran
