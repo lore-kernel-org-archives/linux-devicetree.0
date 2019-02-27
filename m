@@ -1,34 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] dt-bindings: power: supply:
- axp20x_usb_power: add axp813 compatible
-Date: Wed, 27 Feb 2019 17:43:56 -0600
-Message-ID: <20190227234356.GA1909@bogus>
-References: <20190225033107.17326-1-wens@csie.org>
- <20190225033107.17326-2-wens@csie.org>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: regulator: add LS2 load switch
+ documentation
+Date: Wed, 27 Feb 2019 17:44:28 -0600
+Message-ID: <20190227234428.GA2855@bogus>
+References: <1550650552-26013-1-git-send-email-Christian.Hohnstaedt@wago.com>
+ <1551076866-12578-1-git-send-email-Christian.Hohnstaedt@wago.com>
+ <1551076866-12578-2-git-send-email-Christian.Hohnstaedt@wago.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBPWB3TRQKGQEAKSYACY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190225033107.17326-2-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1551076866-12578-2-git-send-email-Christian.Hohnstaedt@wago.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Cc: Mark Brown <broonie@kernel.org>, J Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Feb 2019 11:30:59 +0800, Chen-Yu Tsai wrote:
-> This adds the "x-powers,axp813-usb-power-supply" to the list of
-> compatibles for AXP20X VBUS power supply driver.
+On Mon, 25 Feb 2019 07:41:05 +0100, Christian Hohnstaedt wrote:
+> Document device-tree settings of the load-switch LS2
+> in the tps65218 device.
 > 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
 > ---
->  .../devicetree/bindings/power/supply/axp20x_usb_power.txt        | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/regulator/tps65218.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
