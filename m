@@ -1,40 +1,112 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V2 2/3] ARM: dts: imx7ulp: add mmdc support
-Date: Thu, 28 Feb 2019 03:00:08 +0000
-Message-ID: <DB3PR0402MB39167B9C2EEA8546CE8FDED5F5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1551316741-7848-1-git-send-email-Anson.Huang@nxp.com>
- <1551316741-7848-2-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5DQM0-rBbWuWa7dZw8es1NbY8DwCGmU4_ZJ2FdFEXYC6Q@mail.gmail.com>
- <DB3PR0402MB391672641C4829C18DA0DB36F5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAOMZO5BXCgj+uqA0xoOFYo3GxbN_HfbFyfQFmNRa4_AHL3nx0g@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V7 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
+Date: Thu, 28 Feb 2019 11:18:34 +0800
+Message-ID: <20190228031832.GH26041@dragon>
+References: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5BXCgj+uqA0xoOFYo3GxbN_HfbFyfQFmNRa4_AHL3nx0g@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRvOmZlc3RldmFtQGdt
-YWlsLmNvbV0NCj4gU2VudDogMjAxOeW5tDLmnIgyOOaXpSA5OjU3DQo+IFRvOiBBbnNvbiBIdWFu
-ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5y
-dXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0cm9u
-aXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggVjIgMi8zXSBBUk06IGR0czogaW14N3VscDogYWRkIG1tZGMgc3Vw
-cG9ydA0KPiANCj4gSGkgQW5zb24sDQo+IA0KPiBPbiBXZWQsIEZlYiAyNywgMjAxOSBhdCAxMDo1
-NCBQTSBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+
-IElmIHNvLCBzaG91bGQgSSBjaGFuZ2Ugb3RoZXIgaS5NWDYgU29DcyB3aXRoIHNpbmdsZSBNTURD
-IG5vZGUgYXMgd2VsbD8NCj4gPiBSZW1vdmUgdGhlbSBhcyB3ZWxsPw0KPiANCj4gT25seSBpbXg2
-cXAgbmVlZHMgdGhlIG1tZGMgbGFiZWwuDQo+IA0KPiBJIGNhbiBzZW5kIGEgcGF0Y2ggcmVtb3Zp
-bmcgaXQgZnJvbSB0aGUgb3RoZXIgaS5NWCBTb0NzLCBzbyBkb24ndCBuZWVkIHRvDQo+IHdvcnJ5
-IGFib3V0IGl0IGluIHlvdXIgc2VyaWVzLg0KDQpPb3BzLCBJIGFscmVhZHkgc2VudCBvdXQgVjMg
-cGF0Y2ggc2VyaWVzIGluY2x1ZGluZyBhbGwgaS5NWCBTb0MgTU1EQyBsYWJlbCByZW1vdmVkIGJl
-Zm9yZQ0Kc2VlaW5nIHlvdXIgbWFpbCwgc28geW91IGNhbiByZW1vdmUgaXQgZnJvbSB5b3VyIFRP
-RE8gbGlzdCwgcGxlYXNlIGhlbHAgcmV2aWV3IGl0LCB0aGFua3MhDQoNCkFuc29uLg0KDQo+IA0K
-PiBUaGFua3MNCg==
+On Tue, Feb 26, 2019 at 05:17:31AM +0000, Anson Huang wrote:
+> Add i.MX8QXP CPU opp table to support cpufreq.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+Prefix 'arm64: dts: imx8qxp: ' would already be clear enough.  I dropped
+'freescale' from there and applied patch.
+
+> ---
+> No changes since V6.
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 4c3dd95..41bf0ce 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -34,6 +34,9 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			clocks = <&clk IMX_A35_CLK>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_1: cpu@1 {
+> @@ -42,6 +45,9 @@
+>  			reg = <0x0 0x1>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			clocks = <&clk IMX_A35_CLK>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_2: cpu@2 {
+> @@ -50,6 +56,9 @@
+>  			reg = <0x0 0x2>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			clocks = <&clk IMX_A35_CLK>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_3: cpu@3 {
+> @@ -58,6 +67,9 @@
+>  			reg = <0x0 0x3>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			clocks = <&clk IMX_A35_CLK>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_L2: l2-cache0 {
+> @@ -65,6 +77,24 @@
+>  		};
+>  	};
+>  
+> +	a35_0_opp_table: opp-table {
+
+What does the '0' in the label mean?
+
+Shawn
+
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp-900000000 {
+> +			opp-hz = /bits/ 64 <900000000>;
+> +			opp-microvolt = <1000000>;
+> +			clock-latency-ns = <150000>;
+> +		};
+> +
+> +		opp-1200000000 {
+> +			opp-hz = /bits/ 64 <1200000000>;
+> +			opp-microvolt = <1100000>;
+> +			clock-latency-ns = <150000>;
+> +			opp-suspend;
+> +		};
+> +	};
+> +
+>  	gic: interrupt-controller@51a00000 {
+>  		compatible = "arm,gic-v3";
+>  		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
