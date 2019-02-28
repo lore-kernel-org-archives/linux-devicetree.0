@@ -1,46 +1,48 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 01/36] ARM: dts: omap4-droid4: Fix typo in cpcap IRQ flags
-Date: Thu, 28 Feb 2019 10:13:02 -0500
-Message-ID: <20190228151337.12176-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 06/36] arm64: dts: add msm8996 compatible to gicv3
+Date: Thu, 28 Feb 2019 10:13:07 -0500
+Message-ID: <20190228151337.12176-6-sashal@kernel.org>
+References: <20190228151337.12176-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit ef4a55b9197a8f844ea0663138e902dcce3e2f36 ]
+[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
 
-We're now getting the following error:
+Add compatible to gicv3 node to enable quirk required to restrict writing
+to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
 
-genirq: Setting trigger mode 1 for irq 230 failed
-(regmap_irq_set_type+0x0/0x15c)
-cpcap-usb-phy cpcap-usb-phy.0: could not get irq dp: -524
+With this quirk MSM8996 can at least boot out of mainline, which can help
+community to work with boards based on MSM8996.
 
-Cc: Sebastian Reichel <sre@kernel.org>
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Tested-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Without this patch Qualcomm DB820c board reboots on mainline.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-index 4d61e5b1334a6..bcced922b2807 100644
---- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-@@ -92,7 +92,7 @@
- 			interrupts-extended = <
- 				&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
- 				&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
--				&cpcap 48 1
-+				&cpcap 48 0
- 			>;
- 			interrupt-names =
- 				"id_ground", "id_float", "se0conn", "vbusvld",
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index ab00be277c6fc..6f372ec055dd3 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -359,7 +359,7 @@
+ 		};
+ 
+ 		intc: interrupt-controller@9bc0000 {
+-			compatible = "arm,gic-v3";
++			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+ 			#redistributor-regions = <1>;
 -- 
 2.19.1
