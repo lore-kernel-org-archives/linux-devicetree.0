@@ -1,48 +1,74 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 03/19] arm64: dts: add msm8996 compatible to gicv3
-Date: Thu, 28 Feb 2019 10:14:59 -0500
-Message-ID: <20190228151517.12705-3-sashal@kernel.org>
-References: <20190228151517.12705-1-sashal@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: hwmon: Add missing documentation for lm75
+Date: Thu, 28 Feb 2019 09:15:43 -0600
+Message-ID: <20190228151543.GA18597@bogus>
+References: <20190212113808.3040-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190212113808.3040-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Tue, Feb 12, 2019 at 05:08:08PM +0530, Jagan Teki wrote:
+> Add missing dt-binding documentation for lm75 hwmon sensor.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Changes for v2:
+> -  Add all compatible nodes available in lm75.
+> 
+>  .../devicetree/bindings/hwmon/lm75.txt        | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/lm75.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> new file mode 100644
+> index 000000000000..12d8cf7cf592
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> @@ -0,0 +1,37 @@
+> +*LM75 hwmon sensor.
+> +
+> +Required properties:
+> +- compatible: manufacturer and chip name, one of
+> +		"adi,adt75",
+> +		"dallas,ds1775",
+> +		"dallas,ds75",
+> +		"dallas,ds7505",
+> +		"gmt,g751",
+> +		"national,lm75",
+> +		"national,lm75a",
+> +		"national,lm75b",
+> +		"maxim,max6625",
+> +		"maxim,max6626",
+> +		"maxim,max31725",
+> +		"maxim,max31726",
+> +		"maxim,mcp980x",
+> +		"st,stds75",
+> +		"st,stlm75",
+> +		"microchip,tcn75",
+> +		"ti,tmp100",
+> +		"ti,tmp101",
+> +		"ti,tmp105",
+> +		"ti,tmp112",
+> +		"ti,tmp175",
+> +		"ti,tmp275",
+> +		"ti,tmp75",
+> +		"ti,tmp75c",
 
-[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
+Some of these are in trivial-devices.yaml already. So you either need to 
+remove them from there. Or you can move all these to trivial-devices and 
+benefit from having a schema. I prefer the latter, but either way is 
+fine. You can remove them from trivial-devices.yaml in a separate patch, 
+so:
 
-Add compatible to gicv3 node to enable quirk required to restrict writing
-to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
+Acked-by: Rob Herring <robh@kernel.org>
 
-With this quirk MSM8996 can at least boot out of mainline, which can help
-community to work with boards based on MSM8996.
+Rob
 
-Without this patch Qualcomm DB820c board reboots on mainline.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 2c93de7fffe50..bdea2d6fde94a 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -219,7 +219,7 @@
- 		compatible = "simple-bus";
- 
- 		intc: interrupt-controller@9bc0000 {
--			compatible = "arm,gic-v3";
-+			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			#redistributor-regions = <1>;
--- 
-2.19.1
+P.S. Third option is convert this doc to DT schema. Don't tell anyone, 
+but you'll be a the top of my review queue.
