@@ -1,56 +1,40 @@
-From: Gareth Williams <gareth.williams.jx@renesas.com>
-Subject: [PATCH 1/2] dt: snps,dw-apb-ssi: Add clock bindings documentation
-Date: Thu, 28 Feb 2019 13:25:41 +0000
-Message-ID: <1551360342-23981-2-git-send-email-gareth.williams.jx@renesas.com>
-References: <1551360342-23981-1-git-send-email-gareth.williams.jx@renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551360342-23981-1-git-send-email-gareth.williams.jx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gareth Williams <gareth.williams.jx@renesas.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [RFC v4 08/17] kunit: test: add support for test abort
+Date: Thu, 28 Feb 2019 16:54:03 +0300
+Message-ID: <20190228135403.GD9806@kadam>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+ <20190214213729.21702-9-brendanhiggins@google.com>
+ <155121334527.260864.5324117081460979741@swboyd.mtv.corp.google.com>
+ <CAFd5g46QCisA4PHQXo57-LC6sNdk=OUjBE0O1s4005uBz_Vo6Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAFd5g46QCisA4PHQXo57-LC6sNdk=OUjBE0O1s4005uBz_Vo6Q@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: brakmo@fb.com, Petr Mladek <pmladek@suse.com>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, linux-kselftest@vger.kernel.org, shuah@kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, Richard Weinberger <richard@nod.at>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, "Bird, Timothy" <Tim.Bird@sony.com>, devicetree <devicetree@vger.kernel.org>, Jeff Dike <jdike@addtoit.com>, Kees Cook <keescook@google.com>, linux-um@lists.infradead.org, Steven Rostedt <rostedt@goodmis.org>, Julia Lawall <julia.lawall@lip6.fr>, Dan Williams <dan.j.williams@intel.com>, kunit-dev@googlegroups.com, Stephen Boyd <sboyd@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
-From: Phil Edworthy <phil.edworthy@renesas.com>
-
-The driver requires a clock property, so detail it in the docs.
-Fix a typo, 'pis' to 'pins'.
-Add documentation for a separate, optional, interface clock.
-
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
----
- Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-index 2864bc6..7971193 100644
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-@@ -8,9 +8,16 @@ Required properties:
- - interrupts : One interrupt, used by the controller.
- - #address-cells : <1>, as required by generic SPI binding.
- - #size-cells : <0>, also as required by generic SPI binding.
-+- clocks : phandles for the clocks, see the description of clock-names below.
-+   The phandle for the "ssi_clk" clock is required. The phandle for the "pclk"
-+   clock is optional. If a single clock is specified but no clock-name, it is
-+   the "ssi_clk" clock. If both clocks are listed, the "ssi_clk" must be first.
- 
- Optional properties:
--- cs-gpios : Specifies the gpio pis to be used for chipselects.
-+- clock-names : Contains the names of the clocks:
-+    "ssi_clk", for the core clock used to generate the external SPI clock.
-+    "pclk", the interface clock, required for register access.
-+- cs-gpios : Specifies the gpio pins to be used for chipselects.
- - num-cs : The number of chipselects. If omitted, this will default to 4.
- - reg-io-width : The I/O register width (in bytes) implemented by this
-   device.  Supported values are 2 or 4 (the default).
-@@ -25,6 +32,7 @@ Example:
- 		interrupts = <0 154 4>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		clocks = <&spi_m_clk>;
- 		num-cs = <2>;
- 		cs-gpios = <&gpio0 13 0>,
- 			   <&gpio0 14 0>;
--- 
-2.7.4
+T24gVGh1LCBGZWIgMjgsIDIwMTkgYXQgMDE6MDM6MjRBTSAtMDgwMCwgQnJlbmRhbiBIaWdnaW5z
+IHdyb3RlOgo+IHlvdSBjb3VsZCBkbzoKPiAKPiBpZiAoSVNfRVJSX09SX05VTEwocHRyKSkgewo+
+ICAgICAgICAgS1VOSVRfRkFJTCh0ZXN0LCAicHRyIGlzIGFuIGVycm5vIG9yIG51bGw6ICVsZCIs
+IHB0cik7Cj4gICAgICAgICByZXR1cm47Cj4gfQoKSXQncyBiZXN0IHRvIG5vdCBtaXggZXJyb3Ig
+cG9pbnRlcnMgYW5kIE5VTEwgYnV0IHdoZW4gd2UgZG8gbWl4IHRoZW0sCml0IG1lYW5zIHRoYXQg
+TlVMTCBpcyBhIHNwZWNpYWwga2luZCBvZiBzdWNjZXNzLiAgTGlrZSB3ZSB0cnkgdG8gbG9hZAph
+IGZlYXR1cmUgYW5kIHdlIGdldCBiYWNrOgoKICAgIHZhbGlkIHBvaW50ZXIgPC0tIHN1Y2Nlc3MK
+ICAgIG51bGwgICAgICAgICAgPC0tIGZlYXR1cmUgaXMgZGlzYWJsZWQuICBub3QgYW4gZXJyb3Iu
+CiAgICBlcnJvciBwb2ludGVyIDwtLSBmZWF0dXJlIGlzIGJyb2tlbi4gIGZhaWwuCgpyZWdhcmRz
+LApkYW4gY2FycGVudGVyCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbA==
