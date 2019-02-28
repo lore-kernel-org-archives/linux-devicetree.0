@@ -1,29 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/6] dt-bindings: net: bluetooth: add support for
- MediaTek MT7663U and MT7668U UART devices
-Date: Thu, 28 Feb 2019 12:35:43 -0600
-Message-ID: <20190228183543.GA4454@bogus>
-References: <cover.1550184473.git.sean.wang@mediatek.com>
- <c31b9ed0f2c711f53ad88c96f2d0a1bd22d9de58.1550184473.git.sean.wang@mediatek.com>
+Subject: Re: [PATCH] dt-bindings: adau1977: Fix reset-gpios typo
+Date: Thu, 28 Feb 2019 12:36:13 -0600
+Message-ID: <20190228183613.GA5519@bogus>
+References: <20190215102633.12700-1-bogdan.togorean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <c31b9ed0f2c711f53ad88c96f2d0a1bd22d9de58.1550184473.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+In-Reply-To: <20190215102633.12700-1-bogdan.togorean@analog.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, robh+dt@kernel.org, broonie@kernel.org, Bogdan Togorean <bogdan.togorean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Feb 2019 07:19:33 +0800, <sean.wang@mediatek.com> wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Fri, 15 Feb 2019 12:26:33 +0200, Bogdan Togorean wrote:
+> This change fixes a typo in the dt-binding examples (reset_gpio ->
+> reset-gpios).
+> Even though 'reset-gpio' is a valid construct for gpiolib the naming
+> 'reset-gpios' is more suited for dt-bindings documentation.
 > 
-> Update binding document with adding support of MT7663U and MT7668U UART
-> devices to mediatek-bluetooth.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
 > ---
->  .../bindings/net/mediatek-bluetooth.txt       | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
+>  Documentation/devicetree/bindings/sound/adi,adau1977.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
