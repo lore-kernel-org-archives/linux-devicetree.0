@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 22/81] arm64: dts: add msm8996 compatible to gicv3
-Date: Thu, 28 Feb 2019 10:07:14 -0500
-Message-ID: <20190228150813.10256-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 10/81] arm64: dts: renesas: r8a7796: Enable DMA for SCIF2
+Date: Thu, 28 Feb 2019 10:07:02 -0500
+Message-ID: <20190228150813.10256-10-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,40 +9,36 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
+[ Upstream commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4 ]
 
-Add compatible to gicv3 node to enable quirk required to restrict writing
-to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
+SCIF2 on R-Car M3-W can be used with both DMAC1 and DMAC2.
 
-With this quirk MSM8996 can at least boot out of mainline, which can help
-community to work with boards based on MSM8996.
-
-Without this patch Qualcomm DB820c board reboots on mainline.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Fixes: dbcae5ea4bd27409 ("arm64: dts: r8a7796: Enable SCIF DMA")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index b29fe80d72883..461612a5ab5e4 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -397,7 +397,7 @@
- 		};
- 
- 		intc: interrupt-controller@9bc0000 {
--			compatible = "arm,gic-v3";
-+			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			#redistributor-regions = <1>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 1ec6aaa520c19..09320caea54ed 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -1160,6 +1160,9 @@
+ 				 <&cpg CPG_CORE R8A7796_CLK_S3D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
++			       <&dmac2 0x13>, <&dmac2 0x12>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+ 			resets = <&cpg 310>;
+ 			status = "disabled";
 -- 
 2.19.1
