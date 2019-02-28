@@ -1,97 +1,39 @@
-From: Patrick Havelange <patrick.havelange@essensium.com>
-Subject: Re: [PATCH v5 1/2] iio:temperature:max31856:Add device tree bind info
-Date: Thu, 28 Feb 2019 16:15:55 +0100
-Message-ID: <CAKKE0ZFNm1BNS5xbgo4D1Kp0U+TbL35A9Uk-r245CPVkAuE=XQ@mail.gmail.com>
-References: <20190226150214.19467-1-patrick.havelange@essensium.com> <20190227235947.GA27130@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: Add vendor prefix for feiyang
+Date: Thu, 28 Feb 2019 09:16:26 -0600
+Message-ID: <20190228151626.GA17387@bogus>
+References: <20190212115232.4532-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190227235947.GA27130@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>, Matt Weber <matthew.weber@rockwellcollins.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190212115232.4532-1-jagan@amarulasolutions.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 12:59 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Feb 26, 2019 at 04:02:13PM +0100, Patrick Havelange wrote:
-> > From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> >
-> > This patch added device tree binding info for MAX31856 driver.
-> >
-> > Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> > Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
-> > Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> > ---
-> > Changes
-> > v1 -> v2
-> > [Matt
-> >  - Removed comment block and added possibilities of
-> >    thermocouple type in device tree binding doc.
-> >
-> > v2 -> v3
-> >  - Rebased
-> >
-> > v3 -> v4
-> >  - Removed one-shot property related information.
-> >  - Used standard name 'temp-sensor'
-> >
-> > v4 -> v5
-> > [Patrick
-> >  - Rename thermocouple type to maxim,thermocouple-type for DT entry
-> > ---
-> >  .../bindings/iio/temperature/max31856.txt     | 29 +++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/temperature/max31856.txt b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> > new file mode 100644
-> > index 000000000000..b4396069b8fa
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> > @@ -0,0 +1,29 @@
-> > +Maxim MAX31856 thermocouple support
-> > +
-> > +https://datasheets.maximintegrated.com/en/ds/MAX31856.pdf
-> > +
-> > +Required properties:
-> > +     - compatible: must be "maxim,max31856"
-> > +     - reg: SPI chip select number for the device
-> > +     - spi-max-frequency: As per datasheet max. supported freq is 5000000
-> > +     - spi-cpha: must be defined for max31856 to enable SPI mode 1
-> > +     - maxim,thermocouple-type: Type of thermocouple (By default is K-Type)
-> > +             0x00 : TYPE_B
-> > +             0x01 : TYPE_E
-> > +             0x02 : TYPE_J
-> > +             0x03 : TYPE_K (default)
-> > +             0x04 : TYPE_N
-> > +             0x05 : TYPE_R
-> > +             0x06 : TYPE_S
-> > +             0x07 : TYPE_T
->
-> These appear to be standard types. Perhaps this should be a common
-> property instead?
+On Tue, Feb 12, 2019 at 05:22:32PM +0530, Jagan Teki wrote:
+> Add vendor prefix for feiyang, known as
+> Shenzhen Fly Young Technology Co.,LTD. a known producer for LCD modules.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Note: notation about using 'feiyang' is based on the datasheet 
+> http://files.pine64.org/doc/datasheet/pine64/FY07024DI26A30-D_feiyang_LCD_panel.pdf
+> 
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-A remark on the v4 of the patch recommended to add a vendor prefix. It
-also mentioned that it could be done as a generic type with a
-translation layer for each driver.
-Maybe this generic type could be introduced in a separate patch, or
-when another driver also uses that kind of thermocouple-type, as there
-is no other use of it for the moment it seems.
+Applied.
 
-
->
-> > +
-> > +     Refer to spi/spi-bus.txt for generic SPI slave bindings.
-> > +
-> > + Example:
-> > +     temp-sensor@0 {
-> > +             compatible = "maxim,max31856";
-> > +             reg = <0>;
-> > +             spi-max-frequency = <5000000>;
-> > +             spi-cpha;
-> > +             maxim,thermocouple-type = <0x03>;
-> > +     };
-> > --
-> > 2.19.1
-> >
+Rob
