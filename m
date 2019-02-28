@@ -1,69 +1,47 @@
-From: Patrick Venture <venture@google.com>
-Subject: [PATCH v5 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-Date: Wed, 27 Feb 2019 17:52:10 -0800
-Message-ID: <20190228015210.28880-1-venture@google.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V2 2/3] ARM: dts: imx7ulp: add mmdc support
+Date: Thu, 28 Feb 2019 01:54:41 +0000
+Message-ID: <DB3PR0402MB391672641C4829C18DA0DB36F5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1551316741-7848-1-git-send-email-Anson.Huang@nxp.com>
+ <1551316741-7848-2-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5DQM0-rBbWuWa7dZw8es1NbY8DwCGmU4_ZJ2FdFEXYC6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5DQM0-rBbWuWa7dZw8es1NbY8DwCGmU4_ZJ2FdFEXYC6Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-
-Signed-off-by: Patrick Venture <venture@google.com>
----
-Changes for v5:
-- None
-Changes for v4:
-- None
-Changes for v3:
-- None
-Changes for v2:
-- Added comment about syscon required parameter.
----
- .../bindings/misc/aspeed-p2a-ctrl.txt         | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-
-diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-new file mode 100644
-index 000000000000..1092d62d1c92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-@@ -0,0 +1,32 @@
-+======================================================================
-+Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
-+======================================================================
-+
-+The bridge is available on platforms with the VGA enabled on the Aspeed device.
-+In this case, the host has access to a 64KiB window into all of the BMC's
-+memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
-+has read access to all the regions of memory, however the host only has read
-+and write access depending on a register controlled by the BMC.
-+
-+Required properties:
-+===================
-+
-+ - compatible: must be one of:
-+	- "aspeed,ast2400-p2a-ctrl"
-+	- "aspeed,ast2500-p2a-ctrl"
-+
-+ - syscon: handle to syscon device node controlling PCI.
-+
-+Optional properties:
-+===================
-+
-+- memory-region: A phandle to a reserved_memory region to be used for the PCI
-+		to AHB mapping
-+
-+Example:
-+
-+p2a: p2a-control@1e6e2000 {
-+	compatible = "aspeed,ast2400-p2a-ctrl";
-+	memory-region = <&reserved_memory>;
-+	syscon = <&syscon>;
-+};
--- 
-2.21.0.rc2.261.ga7da99ff1b-goog
+SGksIEZhYmlvDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRvOmZlc3RldmFtQGdt
+YWlsLmNvbV0NCj4gU2VudDogMjAxOeW5tDLmnIgyOOaXpSA5OjMyDQo+IFRvOiBBbnNvbiBIdWFu
+ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5y
+dXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0cm9u
+aXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggVjIgMi8zXSBBUk06IGR0czogaW14N3VscDogYWRkIG1tZGMgc3Vw
+cG9ydA0KPiANCj4gSGkgQW5zb24sDQo+IA0KPiBPbiBXZWQsIEZlYiAyNywgMjAxOSBhdCAxMDoy
+MyBQTSBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4NCj4g
+PiBpLk1YN1VMUCBoYXMgYSBNTURDIG1vZHVsZSB0byBjb250cm9sIEREUiwgaXQgcmV1c2VzIGku
+TVg2USdzIE1NREMNCj4gPiBtb2R1bGUsIGFkZCBzdXBwb3J0IGZvciBpdC4NCj4gPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0K
+PiA+IENoYW5nZXMgc2luY2UgVjE6DQo+ID4gICAgICAgICAtIHVzZSAibWVtb3J5LWNvbnRyb2xs
+ZXIiIGFzIE1NREMgbm9kZSBuYW1lIHRvIG1ha2UgaXQgbW9yZQ0KPiBnZW5lcmljLg0KPiA+IC0t
+LQ0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3dWxwLmR0c2kgfCA2ICsrKysrKw0KPiA+ICAx
+IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14N3VscC5kdHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg3
+dWxwLmR0c2kgaW5kZXggZmNhNmU1MC4uNzhmNjExNyAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2Fy
+bS9ib290L2R0cy9pbXg3dWxwLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3
+dWxwLmR0c2kNCj4gPiBAQCAtMjg2LDYgKzI4NiwxMiBAQA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4N
+Cj4gPiArICAgICAgICAgICAgICAgbW1kYzogbWVtb3J5LWNvbnRyb2xsZXJANDBhYjAwMDAgew0K
+PiANCj4gSXQgc2VlbXMgdGhhdCB0aGUgJ21tZGMnIGxhYmVsIGlzIG5vdCBuZWVlZC4NCj4gDQo+
+IFlvdSBjb3VsZCBtYWtlIGl0IHNpbXBsZXIgYXM6DQo+IA0KPiBtZW1vcnktY29udHJvbGxlckA0
+MGFiMDAwMCB7DQoNCklmIHNvLCBzaG91bGQgSSBjaGFuZ2Ugb3RoZXIgaS5NWDYgU29DcyB3aXRo
+IHNpbmdsZSBNTURDIG5vZGUgYXMgd2VsbD8NClJlbW92ZSB0aGVtIGFzIHdlbGw/DQoNCkFuc29u
+Lg0K
