@@ -1,44 +1,55 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 09/64] arm64: dts: renesas: r8a77965: Enable DMA for SCIF2
-Date: Thu, 28 Feb 2019 10:10:10 -0500
-Message-ID: <20190228151105.11277-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 06/64] ARM: dts: meson8m2: mxiii-plus: mark the SD card detection GPIO active-low
+Date: Thu, 28 Feb 2019 10:10:07 -0500
+Message-ID: <20190228151105.11277-6-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 05c8478abd485507c25aa565afab604af8d8fe46 ]
+[ Upstream commit 8615f5596335db0978cea593dcd0070dc5f8b116 ]
 
-SCIF2 on R-Car M3-N can be used with both DMAC1 and DMAC2.
+After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
+tree") SD cards are not detected anymore.
 
-Fixes: 0ea5b2fd38db56aa ("arm64: dts: renesas: r8a77965: Add SCIF device nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+The CD GPIO is "active low" on the MXIII-Plus. The MMC dt-bindings
+specify: "[...] using the "cd-inverted" property means, that the CD line
+is active high, i.e. it is high, when a card is inserted".
+
+Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
+drop the "cd-inverted" property. This makes the definition consistent
+with the existing dt-bindings and fixes the check whether an SD card is
+inserted.
+
+Fixes: 35ee52bea66c74 ("ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 0cd44461a0bd2..f60f08ba1a6f9 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -951,6 +951,9 @@
- 				 <&cpg CPG_CORE R8A77965_CLK_S3D1>,
- 				 <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
-+			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
-+			       <&dmac2 0x13>, <&dmac2 0x12>;
-+			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
- 			resets = <&cpg 310>;
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+index f5853610b20b8..6ac02beb5fa72 100644
+--- a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
++++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+@@ -206,8 +206,7 @@
+ 		cap-sd-highspeed;
+ 		disable-wp;
+ 
+-		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-		cd-inverted;
++		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 		vmmc-supply = <&vcc_3v3>;
+ 	};
 -- 
 2.19.1
