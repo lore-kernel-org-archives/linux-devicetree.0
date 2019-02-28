@@ -1,99 +1,340 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 4/4] [WIP] ARM: shmobile: Enable ARM_GLOBAL_TIMER on
- Cortex-A9 MPCore SoCs
-Date: Thu, 28 Feb 2019 11:34:36 +0100
-Message-ID: <CAMuHMdW2U_UmMNXdmG27FBmY7PYtQ=Pju6ZhDtxVSTQFzh+j6w@mail.gmail.com>
-References: <20180731160855.6758-1-geert+renesas@glider.be>
- <20180731160855.6758-5-geert+renesas@glider.be>
- <CAMuHMdWSsjO731VwMeLXqDjCboH=7k546PjovN5yPEHwn8zu9g@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v6 1/3] PCI: altera: Add Stratix 10 PCIe support
+Date: Thu, 28 Feb 2019 10:56:12 +0000
+Message-ID: <20190228105612.GA31404@red-moon>
+References: <1551351172-25424-1-git-send-email-ley.foon.tan@intel.com>
+ <1551351172-25424-2-git-send-email-ley.foon.tan@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuHMdWSsjO731VwMeLXqDjCboH=7k546PjovN5yPEHwn8zu9g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1551351172-25424-2-git-send-email-ley.foon.tan@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ley Foon Tan <ley.foon.tan@intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, lftan.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 21, 2018 at 9:37 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Tue, Jul 31, 2018 at 6:08 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > SH-Mobile AG5 and R-Car H1 SoCs are based on the Cortex-A9 MPCore, which
-> > includes a global timer.
-> >
-> > Enable the ARM global timer on these SoCs, which will be used for:
-> >   - the scheduler clock, improving scheduler accuracy from 10 ms to 3 or
-> >     4 ns,
-> >   - delay loops, allowing removal of calls to shmobile_init_delay() from
-> >     the corresponding machine vectors.
-> >
-> > Note that when using an old DTB lacking the global timer, the kernel
-> > will still work.  However, loops-per-jiffies will no longer be preset,
-> > and the delay loop will need to be calibrated during boot.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> This seems to cause random system resume issues on the venerable SH-Mobile
-> AG5, ranging from plain lockups to RCU warnings:
->
-> WARNING: suspicious RCU usage
-> 4.18.0-kzm9g-00218-gaf4425056bd09e9e #38 Not tainted
-> -----------------------------
-> kernel/sched/fair.c:6231 suspicious rcu_dereference_check() usage!
->
-> other info that might help us debug this:
->
->
-> RCU used illegally from offline CPU!
-> rcu_scheduler_active = 2, debug_locks = 1
-> 3 locks held by swapper/1/0:
->  #0: 6d7f5781 ((cpu_died).wait.lock){....}, at: complete+0x14/0x48
->  #1: 84ce6f8e (&p->pi_lock){-.-.}, at: try_to_wake_up+0x30/0x3cc
->  #2: 93591133 (rcu_read_lock){....}, at: select_task_rq_fair+0x5c/0xe8c
->
-> stack backtrace:
-> CPU: 1 PID: 0 Comm: swapper/1 Not tainted
-> 4.18.0-kzm9g-00218-gaf4425056bd09e9e #38
-> Hardware name: Generic SH73A0 (Flattened Device Tree)
-> [<c010f22c>] (unwind_backtrace) from [<c010bab0>] (show_stack+0x10/0x14)
-> [<c010bab0>] (show_stack) from [<c0599750>] (dump_stack+0x9c/0xd4)
-> [<c0599750>] (dump_stack) from [<c01542c8>] (select_task_rq_fair+0x140/0xe8c)
-> [<c01542c8>] (select_task_rq_fair) from [<c0149494>]
-> (try_to_wake_up+0x210/0x3cc)
-> [<c0149494>] (try_to_wake_up) from [<c016355c>] (__wake_up_common+0xcc/0x140)
-> [<c016355c>] (__wake_up_common) from [<c01636a8>] (__wake_up_locked+0x14/0x1c)
-> [<c01636a8>] (__wake_up_locked) from [<c016450c>] (complete+0x38/0x48)
-> [<c016450c>] (complete) from [<c010d66c>] (arch_cpu_idle_dead+0x2c/0x8c)
-> [<c010d66c>] (arch_cpu_idle_dead) from [<c014edec>] (do_idle+0x98/0x148)
-> [<c014edec>] (do_idle) from [<c014f1fc>] (cpu_startup_entry+0x18/0x1c)
-> [<c014f1fc>] (cpu_startup_entry) from [<4010246c>] (0x4010246c)
->
-> Given secondary CPU startup is already quite flaky on this SoC, perhaps
-> it's best to leave it alone?
+On Thu, Feb 28, 2019 at 06:52:50PM +0800, Ley Foon Tan wrote:
 
-Last time I saw that was on v4.19-rc7 in October.
-Presumably that was fixed in the big RCU update in v4.20-rc1, so I think
-it's safe to use the Global Timer on SH Mobile AG5 now.
+[...]
 
-Thoughts?
-Thanks!
+> +static int s10_tlp_read_packet(struct altera_pcie *pcie, u32 *value)
+> +{
+> +	int i;
+> +	u32 ctrl;
+> +	u32 comp_status;
+> +	u32 dw[4];
+> +	u32 count;
+> +
+> +	for (i = 0; i < TLP_LOOP; i++) {
+> +		ctrl = cra_readl(pcie, S10_RP_RXCPL_STATUS);
+> +		if (!(ctrl & RP_RXCPL_SOP)) {
+> +			udelay(5);
+> +			continue;
+> +		}
+> +
+> +		/* Read first DW */
+> +		dw[0] = cra_readl(pcie, S10_RP_RXCPL_REG);
+> +		count = 1;
+> +
+> +		/* Poll for EOP */
+> +		for (i = 0; i < TLP_LOOP && count < ARRAY_SIZE(dw); i++) {
+> +			ctrl = cra_readl(pcie, S10_RP_RXCPL_STATUS);
+> +			dw[count++] = cra_readl(pcie, S10_RP_RXCPL_REG);
+> +			if (ctrl & RP_RXCPL_EOP) {
+> +				comp_status = TLP_COMP_STATUS(dw[1]);
+> +				if (comp_status)
+> +					return PCIBIOS_DEVICE_NOT_FOUND;
+> +
+> +				if (value &&
+> +				    TLP_BYTE_COUNT(dw[1]) == sizeof(u32) &&
+> +				    count == 4)
+> +					*value = dw[3];
+> +
+> +				return PCIBIOS_SUCCESSFUL;
+> +			}
 
-Gr{oetje,eeting}s,
+Two more things.
 
-                        Geert
+- Why don't you need a udelay() in the inner loop ?
+- I think that count >= ARRAY_SIZE(dw) in the inner loop is an error
+  condition and it should be flagged up with a warning before exiting.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I can make these changes if you let me know your thoughts on this.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lorenzo
+
+> +		}
+> +	}
+> +
+> +	return PCIBIOS_DEVICE_NOT_FOUND;
+> +}
+> +
+>  static void tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
+>  			     u32 data, bool align)
+>  {
+> @@ -210,6 +306,15 @@ static void tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
+>  	tlp_write_tx(pcie, &tlp_rp_regdata);
+>  }
+>  
+> +static void s10_tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
+> +				 u32 data, bool dummy)
+> +{
+> +	s10_tlp_write_tx(pcie, headers[0], RP_TX_SOP);
+> +	s10_tlp_write_tx(pcie, headers[1], 0);
+> +	s10_tlp_write_tx(pcie, headers[2], 0);
+> +	s10_tlp_write_tx(pcie, data, RP_TX_EOP);
+> +}
+> +
+>  static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  			      int where, u8 byte_en, u32 *value)
+>  {
+> @@ -219,9 +324,9 @@ static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  	headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
+>  	headers[2] = TLP_CFG_DW2(bus, devfn, where);
+>  
+> -	tlp_write_packet(pcie, headers, 0, false);
+> +	pcie->pcie_data->ops->tlp_write_pkt(pcie, headers, 0, false);
+>  
+> -	return tlp_read_packet(pcie, value);
+> +	return pcie->pcie_data->ops->tlp_read_pkt(pcie, value);
+>  }
+>  
+>  static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+> @@ -236,11 +341,13 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  
+>  	/* check alignment to Qword */
+>  	if ((where & 0x7) == 0)
+> -		tlp_write_packet(pcie, headers, value, true);
+> +		pcie->pcie_data->ops->tlp_write_pkt(pcie, headers,
+> +						    value, true);
+>  	else
+> -		tlp_write_packet(pcie, headers, value, false);
+> +		pcie->pcie_data->ops->tlp_write_pkt(pcie, headers,
+> +						    value, false);
+>  
+> -	ret = tlp_read_packet(pcie, NULL);
+> +	ret = pcie->pcie_data->ops->tlp_read_pkt(pcie, NULL);
+>  	if (ret != PCIBIOS_SUCCESSFUL)
+>  		return ret;
+>  
+> @@ -254,6 +361,53 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
+>  
+> +static int s10_rp_read_cfg(struct altera_pcie *pcie, int where,
+> +			   int size, u32 *value)
+> +{
+> +	void *addr = S10_RP_CFG_ADDR(pcie, where);
+> +
+> +	switch (size) {
+> +	case 1:
+> +		*value = readb(addr);
+> +		break;
+> +	case 2:
+> +		*value = readw(addr);
+> +		break;
+> +	default:
+> +		*value = readl(addr);
+> +		break;
+> +	}
+> +
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+> +static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+> +			    int where, int size, u32 value)
+> +{
+> +	void *addr = S10_RP_CFG_ADDR(pcie, where);
+> +
+> +	switch (size) {
+> +	case 1:
+> +		writeb(value, addr);
+> +		break;
+> +	case 2:
+> +		writew(value, addr);
+> +		break;
+> +	default:
+> +		writel(value, addr);
+> +		break;
+> +	}
+> +
+> +	/*
+> +	 * Monitor changes to PCI_PRIMARY_BUS register on root port
+> +	 * and update local copy of root bus number accordingly.
+> +	 */
+> +	if (busno == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
+> +		pcie->root_bus_nr = value & 0xff;
+> +
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+>  static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+>  				 unsigned int devfn, int where, int size,
+>  				 u32 *value)
+> @@ -262,6 +416,10 @@ static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+>  	u32 data;
+>  	u8 byte_en;
+>  
+> +	if (busno == pcie->root_bus_nr && pcie->pcie_data->ops->rp_read_cfg)
+> +		return pcie->pcie_data->ops->rp_read_cfg(pcie, where,
+> +							 size, value);
+> +
+>  	switch (size) {
+>  	case 1:
+>  		byte_en = 1 << (where & 3);
+> @@ -302,6 +460,10 @@ static int _altera_pcie_cfg_write(struct altera_pcie *pcie, u8 busno,
+>  	u32 shift = 8 * (where & 3);
+>  	u8 byte_en;
+>  
+> +	if (busno == pcie->root_bus_nr && pcie->pcie_data->ops->rp_write_cfg)
+> +		return pcie->pcie_data->ops->rp_write_cfg(pcie, busno,
+> +						     where, size, value);
+> +
+>  	switch (size) {
+>  	case 1:
+>  		data32 = (value & 0xff) << shift;
+> @@ -365,7 +527,8 @@ static int altera_read_cap_word(struct altera_pcie *pcie, u8 busno,
+>  	int ret;
+>  
+>  	ret = _altera_pcie_cfg_read(pcie, busno, devfn,
+> -				    PCIE_CAP_OFFSET + offset, sizeof(*value),
+> +				    pcie->pcie_data->cap_offset + offset,
+> +				    sizeof(*value),
+>  				    &data);
+>  	*value = data;
+>  	return ret;
+> @@ -375,7 +538,8 @@ static int altera_write_cap_word(struct altera_pcie *pcie, u8 busno,
+>  				 unsigned int devfn, int offset, u16 value)
+>  {
+>  	return _altera_pcie_cfg_write(pcie, busno, devfn,
+> -				      PCIE_CAP_OFFSET + offset, sizeof(value),
+> +				      pcie->pcie_data->cap_offset + offset,
+> +				      sizeof(value),
+>  				      value);
+>  }
+>  
+> @@ -403,7 +567,7 @@ static void altera_wait_link_retrain(struct altera_pcie *pcie)
+>  	/* Wait for link is up */
+>  	start_jiffies = jiffies;
+>  	for (;;) {
+> -		if (altera_pcie_link_up(pcie))
+> +		if (pcie->pcie_data->ops->get_link_status(pcie))
+>  			break;
+>  
+>  		if (time_after(jiffies, start_jiffies + LINK_UP_TIMEOUT)) {
+> @@ -418,7 +582,7 @@ static void altera_pcie_retrain(struct altera_pcie *pcie)
+>  {
+>  	u16 linkcap, linkstat, linkctl;
+>  
+> -	if (!altera_pcie_link_up(pcie))
+> +	if (!pcie->pcie_data->ops->get_link_status(pcie))
+>  		return;
+>  
+>  	/*
+> @@ -540,12 +704,20 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+>  	struct device *dev = &pcie->pdev->dev;
+>  	struct platform_device *pdev = pcie->pdev;
+>  	struct resource *cra;
+> +	struct resource *hip;
+>  
+>  	cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
+>  	pcie->cra_base = devm_ioremap_resource(dev, cra);
+>  	if (IS_ERR(pcie->cra_base))
+>  		return PTR_ERR(pcie->cra_base);
+>  
+> +	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
+> +		hip = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Hip");
+> +		pcie->hip_base = devm_ioremap_resource(&pdev->dev, hip);
+> +		if (IS_ERR(pcie->hip_base))
+> +			return PTR_ERR(pcie->hip_base);
+> +	}
+> +
+>  	/* setup IRQ */
+>  	pcie->irq = platform_get_irq(pdev, 0);
+>  	if (pcie->irq < 0) {
+> @@ -562,6 +734,48 @@ static void altera_pcie_host_init(struct altera_pcie *pcie)
+>  	altera_pcie_retrain(pcie);
+>  }
+>  
+> +static const struct altera_pcie_ops altera_pcie_ops_1_0 = {
+> +	.tlp_read_pkt = tlp_read_packet,
+> +	.tlp_write_pkt = tlp_write_packet,
+> +	.get_link_status = altera_pcie_link_up,
+> +};
+> +
+> +static const struct altera_pcie_ops altera_pcie_ops_2_0 = {
+> +	.tlp_read_pkt = s10_tlp_read_packet,
+> +	.tlp_write_pkt = s10_tlp_write_packet,
+> +	.get_link_status = s10_altera_pcie_link_up,
+> +	.rp_read_cfg = s10_rp_read_cfg,
+> +	.rp_write_cfg = s10_rp_write_cfg,
+> +};
+> +
+> +static const struct altera_pcie_data altera_pcie_1_0_data = {
+> +	.ops = &altera_pcie_ops_1_0,
+> +	.cap_offset = 0x80,
+> +	.version = ALTERA_PCIE_V1,
+> +	.cfgrd0 = TLP_FMTTYPE_CFGRD0,
+> +	.cfgrd1 = TLP_FMTTYPE_CFGRD1,
+> +	.cfgwr0 = TLP_FMTTYPE_CFGWR0,
+> +	.cfgwr1 = TLP_FMTTYPE_CFGWR1,
+> +};
+> +
+> +static const struct altera_pcie_data altera_pcie_2_0_data = {
+> +	.ops = &altera_pcie_ops_2_0,
+> +	.version = ALTERA_PCIE_V2,
+> +	.cap_offset = 0x70,
+> +	.cfgrd0 = S10_TLP_FMTTYPE_CFGRD0,
+> +	.cfgrd1 = S10_TLP_FMTTYPE_CFGRD1,
+> +	.cfgwr0 = S10_TLP_FMTTYPE_CFGWR0,
+> +	.cfgwr1 = S10_TLP_FMTTYPE_CFGWR1,
+> +};
+> +
+> +static const struct of_device_id altera_pcie_of_match[] = {
+> +	{.compatible = "altr,pcie-root-port-1.0",
+> +	 .data = &altera_pcie_1_0_data },
+> +	{.compatible = "altr,pcie-root-port-2.0",
+> +	 .data = &altera_pcie_2_0_data },
+> +	{},
+> +};
+> +
+>  static int altera_pcie_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -570,6 +784,7 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>  	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	int ret;
+> +	const struct of_device_id *match;
+>  
+>  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+>  	if (!bridge)
+> @@ -578,6 +793,12 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>  	pcie = pci_host_bridge_priv(bridge);
+>  	pcie->pdev = pdev;
+>  
+> +	match = of_match_device(altera_pcie_of_match, &pdev->dev);
+> +	if (!match)
+> +		return -ENODEV;
+> +
+> +	pcie->pcie_data = match->data;
+> +
+>  	ret = altera_pcie_parse_dt(pcie);
+>  	if (ret) {
+>  		dev_err(dev, "Parsing DT failed\n");
+> @@ -628,11 +849,6 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> -static const struct of_device_id altera_pcie_of_match[] = {
+> -	{ .compatible = "altr,pcie-root-port-1.0", },
+> -	{},
+> -};
+> -
+>  static struct platform_driver altera_pcie_driver = {
+>  	.probe		= altera_pcie_probe,
+>  	.driver = {
+> -- 
+> 2.19.0
+> 
