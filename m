@@ -1,50 +1,46 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC][PATCH] dt-bindings: usb: add non-removable device property
-Date: Thu, 28 Feb 2019 16:13:30 +0100
-Message-ID: <20190228151330.GA1360@kroah.com>
-References: <20190228143344.16312-1-mans@mansr.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 01/36] ARM: dts: omap4-droid4: Fix typo in cpcap IRQ flags
+Date: Thu, 28 Feb 2019 10:13:02 -0500
+Message-ID: <20190228151337.12176-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190228143344.16312-1-mans@mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mans Rullgard <mans@mansr.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 02:33:44PM +0000, Mans Rullgard wrote:
-> Add a boolean property indicating that a device is hardwired to the
-> upstream port.  Although hubs can provide this information, they are not
-> always configured correctly.  An alternate means of indicating this for
-> built-in USB devices is thus useful.
-> 
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> ---
-> I have a situation where userspace would like to know which USB devices
-> are built-in, but the on-board hub doesn't have the right setting.
-> Also, the hub itself can't be indicated as fixed in any other way that
-> I'm aware of.
+From: Tony Lindgren <tony@atomide.com>
 
-Then that's a firmware bug, right?  We have a way for firmware to export
-this to the USB core, why not use that?  Your on-board hub should get a
-firmware update with this information, let's not try to create
-yet-another-way to define this type of information please.
+[ Upstream commit ef4a55b9197a8f844ea0663138e902dcce3e2f36 ]
 
-> In a way, adding this property seems a bit silly since dt can only
-> sensibly be used for hardwired devices in the first place.  Thus the
-> mere presence of a dt node could be taken to indicate the same thing.
-> On the other hand, it's conceivable that someone might dynamically
-> generate a devicetree based on what happens to be connected on boot or
-> something.  For that reason, and explicit property seems safer.
-> ---
->  Documentation/devicetree/bindings/usb/usb-device.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+We're now getting the following error:
 
-Can you show some code actually using this?  Again, this should "just
-work" for USB today unless your platform is really broken (and if it is,
-go complain to the vendor...)
+genirq: Setting trigger mode 1 for irq 230 failed
+(regmap_irq_set_type+0x0/0x15c)
+cpcap-usb-phy cpcap-usb-phy.0: could not get irq dp: -524
 
-thanks,
+Cc: Sebastian Reichel <sre@kernel.org>
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Tested-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+index 4d61e5b1334a6..bcced922b2807 100644
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -92,7 +92,7 @@
+ 			interrupts-extended = <
+ 				&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
+ 				&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
+-				&cpcap 48 1
++				&cpcap 48 0
+ 			>;
+ 			interrupt-names =
+ 				"id_ground", "id_float", "se0conn", "vbusvld",
+-- 
+2.19.1
