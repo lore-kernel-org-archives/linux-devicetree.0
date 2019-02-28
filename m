@@ -1,44 +1,69 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 2/3] ARM: dts: imx7ulp: add mmdc support
-Date: Wed, 27 Feb 2019 22:32:26 -0300
-Message-ID: <CAOMZO5DQM0-rBbWuWa7dZw8es1NbY8DwCGmU4_ZJ2FdFEXYC6Q@mail.gmail.com>
-References: <1551316741-7848-1-git-send-email-Anson.Huang@nxp.com> <1551316741-7848-2-git-send-email-Anson.Huang@nxp.com>
+From: Patrick Venture <venture@google.com>
+Subject: [PATCH v5 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+Date: Wed, 27 Feb 2019 17:52:10 -0800
+Message-ID: <20190228015210.28880-1-venture@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551316741-7848-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 
-On Wed, Feb 27, 2019 at 10:23 PM Anson Huang <anson.huang@nxp.com> wrote:
->
-> i.MX7ULP has a MMDC module to control DDR, it reuses
-> i.MX6Q's MMDC module, add support for it.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
->         - use "memory-controller" as MMDC node name to make it more generic.
-> ---
->  arch/arm/boot/dts/imx7ulp.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-> index fca6e50..78f6117 100644
-> --- a/arch/arm/boot/dts/imx7ulp.dtsi
-> +++ b/arch/arm/boot/dts/imx7ulp.dtsi
-> @@ -286,6 +286,12 @@
->                         status = "disabled";
->                 };
->
-> +               mmdc: memory-controller@40ab0000 {
+Signed-off-by: Patrick Venture <venture@google.com>
+---
+Changes for v5:
+- None
+Changes for v4:
+- None
+Changes for v3:
+- None
+Changes for v2:
+- Added comment about syscon required parameter.
+---
+ .../bindings/misc/aspeed-p2a-ctrl.txt         | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 
-It seems that the 'mmdc' label is not neeed.
-
-You could make it simpler as:
-
-memory-controller@40ab0000 {
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+new file mode 100644
+index 000000000000..1092d62d1c92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -0,0 +1,32 @@
++======================================================================
++Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
++======================================================================
++
++The bridge is available on platforms with the VGA enabled on the Aspeed device.
++In this case, the host has access to a 64KiB window into all of the BMC's
++memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
++has read access to all the regions of memory, however the host only has read
++and write access depending on a register controlled by the BMC.
++
++Required properties:
++===================
++
++ - compatible: must be one of:
++	- "aspeed,ast2400-p2a-ctrl"
++	- "aspeed,ast2500-p2a-ctrl"
++
++ - syscon: handle to syscon device node controlling PCI.
++
++Optional properties:
++===================
++
++- memory-region: A phandle to a reserved_memory region to be used for the PCI
++		to AHB mapping
++
++Example:
++
++p2a: p2a-control@1e6e2000 {
++	compatible = "aspeed,ast2400-p2a-ctrl";
++	memory-region = <&reserved_memory>;
++	syscon = <&syscon>;
++};
+-- 
+2.21.0.rc2.261.ga7da99ff1b-goog
