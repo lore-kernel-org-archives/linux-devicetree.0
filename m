@@ -1,31 +1,89 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v1 0/4] arm64: dts: NXP: add basic dts file for LX2160A SoC
-Date: Wed, 27 Feb 2019 16:01:28 -0800
-Message-ID: <155131208867.260864.6630901066653352400@swboyd.mtv.corp.google.com>
-References: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V10 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Thu, 28 Feb 2019 00:47:56 +0000
+Message-ID: <DB3PR0402MB391673518C43A0ABE9BDB55FF5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
+ <20190227235455.GA15211@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com>
+In-Reply-To: <20190227235455.GA15211@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "arnd@arndb.de" <arnd@arndb.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, oss@buserror
-Cc: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sn>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vabhav Sharma (2019-02-26 02:10:46)
-> These patches were reviewed and acked but dropped during merge window.
-> Patchwork link was https://lore.kernel.org/patchwork/cover/1004155/
->=20
-> Changes for v1:
-> - Updated lx2160a clockgen in alphabetical order
->=20
-> Vabhav Sharma (2):
->   dt-bindings: arm64: add compatible for LX2160A
->   soc/fsl/guts: Add definition for LX2160A
->=20
-> Yogesh Gaur (2):
->   clk: qoriq: increase array size of cmux_to_group
->   clk: qoriq: Add clockgen support for lx2160a
-
-Who do you want to apply these patches?
+SGksIFJvYg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3Jn
+XQ0KPiBTZW50OiAyMDE5xOoy1MIyOMjVIDc6NTUNCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5o
+dWFuZ0BueHAuY29tPg0KPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5l
+bC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsg
+ZmVzdGV2YW1AZ21haWwuY29tOw0KPiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFj
+b25AYXJtLmNvbTsgcnVpLnpoYW5nQGludGVsLmNvbTsNCj4gZWR1YmV6dmFsQGdtYWlsLmNvbTsg
+ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZzsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5nLmRvbmdA
+bnhwLmNvbT47IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7IHNib3lkQGtlcm5lbC5vcmc7DQo+IERh
+bmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IEFuZHkgR3Jvc3MNCj4gPGFuZHku
+Z3Jvc3NAbGluYXJvLm9yZz47IGhvcm1zK3JlbmVzYXNAdmVyZ2UubmV0LmF1OyBoZWlrb0BzbnRl
+Y2guZGU7DQo+IGFybmRAYXJuZGIuZGU7IG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb207IGJqb3Ju
+LmFuZGVyc3NvbkBsaW5hcm8ub3JnOw0KPiBqYWdhbkBhbWFydWxhc29sdXRpb25zLmNvbTsgZW5y
+aWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbTsNCj4gbWFyYy53LmdvbnphbGV6QGZyZWUuZnI7IG9s
+b2ZAbGl4b20ubmV0OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
+aW51eC0NCj4gcG1Admdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
+Y29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYxMCAxLzRdIGR0LWJpbmRpbmdzOiBmc2w6IHNj
+dTogYWRkIHRoZXJtYWwgYmluZGluZw0KPiANCj4gT24gV2VkLCBGZWIgMjcsIDIwMTkgYXQgMDg6
+NDY6MjFBTSArMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gTlhQIGkuTVg4UVhQIGlzIGFu
+IEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00IGNvcmUgaW5zaWRlIGFzIHN5c3RlbQ0KPiA+IGNv
+bnRyb2xsZXIsIHRoZSBzeXN0ZW0gY29udHJvbGxlciBpcyBpbiBjaGFyZ2Ugb2Ygc3lzdGVtIHBv
+d2VyLCBjbG9jaw0KPiA+IGFuZCB0aGVybWFsIHNlbnNvcnMgZXRjLiBtYW5hZ2VtZW50LCBMaW51
+eCBrZXJuZWwgaGFzIHRvIGNvbW11bmljYXRlDQo+ID4gd2l0aCBzeXN0ZW0gY29udHJvbGxlciB2
+aWEgTVUgKG1lc3NhZ2UgdW5pdCkgSVBDIHRvIGdldCB0ZW1wZXJhdHVyZQ0KPiA+IGZyb20gdGhl
+cm1hbCBzZW5zb3JzLCB0aGlzIHBhdGNoIGFkZHMgYmluZGluZyBkb2MgZm9yIGkuTVggc3lzdGVt
+DQo+ID4gY29udHJvbGxlciB0aGVybWFsIGRyaXZlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXMg
+c2luY2UgVjk6DQo+ID4gCS0gY2hhbmdlICN0aGVybWFsLXNlbnNvci1jZWxscyB2YWx1ZSBpbiBl
+eGFtcGxlIHRvIDEsIHNpbmNlIHRoZXJlIGFyZQ0KPiBvdGhlcg0KPiA+IAkgIHRoZXJtYWwgc2Vu
+c29ycyBpbnNpZGUgc3lzdGVtIGNvbnRyb2xsZXIsIGl0IGlzIGp1c3QgYmVjYXVzZSB0aGVyZSBh
+cmUNCj4gc3RpbGwNCj4gPiAJICBzb21lIGlzc3VlLCBzbyBzeXN0ZW0gY29udHJvbGxlciBkb2Vz
+IE5PVCBleHBvc2UgdGhlbSBmb3Igbm93LA0KPiB0aGV5IGNvdWxkDQo+ID4gCSAgYmUgZXhwb3Nl
+ZCBsYXRlciwgc28gaXQgc2hvdWxkIGJlIDEgZnJvbSBIVyBwZXJzcGVjdGl2ZS4NCj4gPiAtLS0N
+Cj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dCAg
+IHwgMjENCj4gKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyMSBp
+bnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCj4g
+PiBpbmRleCA3MmQ0ODFjLi44NTUyNzBiIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+ID4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50
+eHQNCj4gPiBAQCAtMTIyLDYgKzEyMiwyMSBAQCBSVEMgYmluZGluZ3MgYmFzZWQgb24gU0NVIE1l
+c3NhZ2UgUHJvdG9jb2wNCj4gPiBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAtIGNvbXBhdGli
+bGU6IHNob3VsZCBiZSAiZnNsLGlteDhxeHAtc2MtcnRjIjsNCj4gPg0KPiA+ICtUaGVybWFsIGJp
+bmRpbmdzIGJhc2VkIG9uIFNDVSBNZXNzYWdlIFByb3RvY29sDQo+ID4gKy0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICsNCj4g
+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlOgkJCVNob3VsZCBiZSA6
+DQo+ID4gKwkJCQkgICJmc2wsaW14OHF4cC1zYy10aGVybWFsIg0KPiA+ICsJCQkJZm9sbG93ZWQg
+YnkgImZzbCxpbXgtc2MtdGhlcm1hbCI7DQo+ID4gKw0KPiA+ICstICN0aGVybWFsLXNlbnNvci1j
+ZWxsczoJU2VlDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3Ro
+ZXJtYWwudHh0DQo+ID4gKwkJCQlmb3IgYSBkZXNjcmlwdGlvbi4NCj4gPiArDQo+ID4gKy0gaW14
+LHNlbnNvci1yZXNvdXJjZS1pZDogCUEgc2luZ2xlIGludGVnZXIgZm9yIHNpbmdsZSB0aGVybWFs
+IHpvbmUncw0KPiByZXNvdXJjZSBJRCBvcg0KPiA+ICsJCQkJYW4gYXJyYXkgb2YgaW50ZWdlcnMg
+dG8gc3BlY2lmeSBlYWNoIHRoZXJtYWwNCj4gem9uZSdzIHNlbnNvcg0KPiA+ICsJCQkJcmVzb3Vy
+Y2UgSUQuDQo+IA0KPiBDYW4ndCB5b3UgcHV0IHRoZSByZXNvdXJjZSBpZHMgaW4gdGhlIHRoZXJt
+YWwtc2Vuc29yIGNlbGxzPyBXaHkgZG8geW91IG5lZWQNCj4gdG8gbGlzdCB0aGVtIGhlcmU/DQoN
+CkZvciB0aGUgdGhlcm1hbC1zZW5zb3IgY2VsbHMsIGlmIHlvdSBtZWFudCB0aGUgYXJndW1lbnQg
+b2YgdHNlbnMgcGhhbmRsZSwgdGhlbg0KdGhlIHJlYXNvbiBpcyB0aGF0IGFyZ3VtZW50IGlzIGZv
+ciBzZW5zb3IgaW5kZXggc3RhcnRpbmcgZnJvbSAwLCBwcmV2aW91cyBJIHVzZQ0KaXQgZm9yIG91
+ciByZXNvdXJjZSBJRCwgYnV0IGl0IGxvb2tzIGNvbmZ1c2VkLCBzaW5jZSB1c2VyIHdpbGwgdGhp
+bmsgdGhlcmUgYXJlIG1hbnkNCnNlbnNvcnMgdGhlcmUgcGVyIEVkdWFyZG8ncyBjb21tZW50Lg0K
+DQorCQkJdGhlcm1hbC1zZW5zb3JzID0gPCZ0c2VucyAwPjsNCg0KSWYgeW91IG1lYW50IHB1dHRp
+bmcgaXQgaW4gZWFjaCB0aGVybWFsIHNlbnNvciBub2RlIGluc3RlYWQgb2YgInRzZW5zIiBub2Rl
+LCB0aGVuDQppbiBwcmV2aW91cyBwYXRjaCBzZXJpZXMsIEkgcHV0IHRoaXMgIiBpbXgsc2Vuc29y
+LXJlc291cmNlLWlkICIgcHJvcGVydHkgaW4gZWFjaCB0aGVybWFsDQpzZW5zb3Igbm9kZSwgYnV0
+IHRoZSB0aGVybWFsIHNlbnNvciBub2RlcyBhcmUgcGFyc2VkIGJ5IGNvbW1vbiB0aGVybWFsIGZy
+YW1ld29yaywNCnRoZXJtYWwgZHJpdmVyIHdpbGwgbmVlZCB0byBmaW5kIHRoZSB0aGVybWFsIHpv
+bmUgbm9kZSBhbmQgZ28gdGhyb3VnaCBldmVyeSBjaGlsZCBub2RlDQp0byBnZXQgdGhlIHJlc291
+cmNlIGlkIGFnYWluLCBzbyBFZHVhcmRvIHN1Z2dlc3RlZCB0byBwdXQgaXQgaW4gb3VyIHBsYXRm
+b3JtIHRzZW5zIG5vZGUsIHRoYXQgbWFrZXMNCm91ciB0aGVybWFsIGRyaXZlciBjb2RlIG11Y2gg
+bW9yZSBzaW1wbGUuDQoNClRoYW5rcywNCkFuc29uLg0KDQo+IA0KPiBSb2INCg==
