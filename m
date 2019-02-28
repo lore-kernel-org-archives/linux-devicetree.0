@@ -1,45 +1,36 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/3] Add MMC controller support for HI3670 SoC
-Date: Thu, 28 Feb 2019 21:15:08 +0530
-Message-ID: <20190228154511.17566-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 1/3] dt-bindings: mmc: Add HI3670 MMC controller binding
+Date: Thu, 28 Feb 2019 21:15:09 +0530
+Message-ID: <20190228154511.17566-2-manivannan.sadhasivam@linaro.org>
+References: <20190228154511.17566-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190228154511.17566-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: xuwei5@hisilicon.com, robh+dt@kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, amit.kucheria@linaro.org, guodong.xu@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+HI3670 SoC is architecturally same as the HI3660 SoC. Hence, the same
+K3 specific designware driver is reused for HI3670 SoC and the binding
+is documented with fallback approach for compatible property.
 
-This patchset adds MMC controller support for HI3670 SoC. Since HI3670
-SoC is architecturally same as the HI3660 SoC, HI3660 DWMMC driver is
-reused here with DT compatible fallback approach. Also, SD and WiFi
-supports are added for the HiKey970 board.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Wei:
-
-Please apply this patchset along with the reset and UFS patches in the
-following order:
-
-1. Reset support patches
-2. MMC support patches
-3. UFS support patches
-
-PS: Since there is no PMIC support available yet, fixed-regulator nodes
-are used to get the driver working (regulators are enabled by bootloader).
-
-Thanks,
-Mani
-
-Manivannan Sadhasivam (3):
-  dt-bindings: mmc: Add HI3670 MMC controller binding
-  arm64: dts: hisilicon: hi3670: Add MMC controller support
-  arm64: dts: hisilicon: hikey970: Add SD and WiFi support
-
- .../devicetree/bindings/mmc/k3-dw-mshc.txt    |   2 +
- .../boot/dts/hisilicon/hi3670-hikey970.dts    |  75 ++++++++++++
- arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  37 ++++++
- .../boot/dts/hisilicon/hikey970-pinctrl.dtsi  | 115 ++++++++++++++++++
- 4 files changed, 229 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+index 07242d141773..36c4bea675d5 100644
+--- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+@@ -13,6 +13,8 @@ Required Properties:
+ 
+ * compatible: should be one of the following.
+   - "hisilicon,hi3660-dw-mshc": for controllers with hi3660 specific extensions.
++  - "hisilicon,hi3670-dw-mshc", "hisilicon,hi3660-dw-mshc": for controllers
++     with hi3670 specific extensions.
+   - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific extensions.
+   - "hisilicon,hi6220-dw-mshc": for controllers with hi6220 specific extensions.
+ 
 -- 
 2.17.1
