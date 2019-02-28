@@ -1,53 +1,129 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander
- (STMFX) core bindings
-Date: Thu, 28 Feb 2019 08:41:49 -0600
-Message-ID: <CAL_JsqJ+orZUitUvMtKJ8ww4hnn9eacy5Xak+oTO_MGrgSGJpw@mail.gmail.com>
-References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
- <1551260094-32570-2-git-send-email-amelie.delaunay@st.com>
- <20190227235535.GA24395@bogus> <c54c4fd8-b97f-a70b-4805-fd3d217f5050@st.com>
+Subject: Re: [PATCH V10 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Thu, 28 Feb 2019 08:49:10 -0600
+Message-ID: <CAL_JsqJct4BztHEak+=iNK3G7dwYR-pQPeUqb4kBnEdRQMLr6A@mail.gmail.com>
+References: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
+ <20190227235455.GA15211@bogus> <DB3PR0402MB391673518C43A0ABE9BDB55FF5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c54c4fd8-b97f-a70b-4805-fd3d217f5050@st.com>
+In-Reply-To: <DB3PR0402MB391673518C43A0ABE9BDB55FF5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sn>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 2:54 AM Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+On Wed, Feb 27, 2019 at 6:48 PM Anson Huang <anson.huang@nxp.com> wrote:
 >
-> On 2/28/19 12:55 AM, Rob Herring wrote:
-> > On Wed, 27 Feb 2019 10:34:46 +0100, Amelie Delaunay wrote:
-> >> This patch adds documentation of device tree bindings for the
-> >> STMicroelectronics Multi-Function eXpander (STMFX) MFD core.
-> >>
-> >> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> >> ---
-> >>   Documentation/devicetree/bindings/mfd/stmfx.txt | 28 +++++++++++++++++++++++++
-> >>   1 file changed, 28 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
-> >>
+> Hi, Rob
+>
+> Best Regards!
+> Anson Huang
+>
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: 2019=E5=B9=B42=E6=9C=8828=E6=97=A5 7:55
+> > To: Anson Huang <anson.huang@nxp.com>
+> > Cc: mark.rutland@arm.com; shawnguo@kernel.org;
+> > s.hauer@pengutronix.de; kernel@pengutronix.de; festevam@gmail.com;
+> > catalin.marinas@arm.com; will.deacon@arm.com; rui.zhang@intel.com;
+> > edubezval@gmail.com; daniel.lezcano@linaro.org; Aisheng Dong
+> > <aisheng.dong@nxp.com>; ulf.hansson@linaro.org; sboyd@kernel.org;
+> > Daniel Baluta <daniel.baluta@nxp.com>; Andy Gross
+> > <andy.gross@linaro.org>; horms+renesas@verge.net.au; heiko@sntech.de;
+> > arnd@arndb.de; maxime.ripard@bootlin.com; bjorn.andersson@linaro.org;
+> > jagan@amarulasolutions.com; enric.balletbo@collabora.com;
+> > marc.w.gonzalez@free.fr; olof@lixom.net; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; lin=
+ux-
+> > pm@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
+> > Subject: Re: [PATCH V10 1/4] dt-bindings: fsl: scu: add thermal binding
 > >
-> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > there's no need to repost patches *only* to add the tags. The upstream
-> > maintainer will do that for acks received on the version they apply.
+> > On Wed, Feb 27, 2019 at 08:46:21AM +0000, Anson Huang wrote:
+> > > NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as system
+> > > controller, the system controller is in charge of system power, clock
+> > > and thermal sensors etc. management, Linux kernel has to communicate
+> > > with system controller via MU (message unit) IPC to get temperature
+> > > from thermal sensors, this patch adds binding doc for i.MX system
+> > > controller thermal driver.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > > Changes since V9:
+> > >     - change #thermal-sensor-cells value in example to 1, since there=
+ are
+> > other
+> > >       thermal sensors inside system controller, it is just because th=
+ere are
+> > still
+> > >       some issue, so system controller does NOT expose them for now,
+> > they could
+> > >       be exposed later, so it should be 1 from HW perspective.
+> > > ---
+> > >  .../devicetree/bindings/arm/freescale/fsl,scu.txt   | 21
+> > +++++++++++++++++++++
+> > >  1 file changed, 21 insertions(+)
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > index 72d481c..855270b 100644
+> > > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > @@ -122,6 +122,21 @@ RTC bindings based on SCU Message Protocol
+> > > Required properties:
+> > >  - compatible: should be "fsl,imx8qxp-sc-rtc";
+> > >
+> > > +Thermal bindings based on SCU Message Protocol
+> > > +------------------------------------------------------------
+> > > +
+> > > +Required properties:
+> > > +- compatible:                      Should be :
+> > > +                             "fsl,imx8qxp-sc-thermal"
+> > > +                           followed by "fsl,imx-sc-thermal";
+> > > +
+> > > +- #thermal-sensor-cells:   See
+> > Documentation/devicetree/bindings/thermal/thermal.txt
+> > > +                           for a description.
+> > > +
+> > > +- imx,sensor-resource-id:  A single integer for single thermal zone'=
+s
+> > resource ID or
+> > > +                           an array of integers to specify each ther=
+mal
+> > zone's sensor
+> > > +                           resource ID.
 > >
-> > If a tag was not added on purpose, please state why and what changed.
-> >
+> > Can't you put the resource ids in the thermal-sensor cells? Why do you =
+need
+> > to list them here?
 >
-> I'm sorry Rob, I forgot to add your Reviewed-by on this patch, which is
-> identical to v3.
+> For the thermal-sensor cells, if you meant the argument of tsens phandle,=
+ then
+> the reason is that argument is for sensor index starting from 0, previous=
+ I use
+> it for our resource ID, but it looks confused, since user will think ther=
+e are many
+> sensors there per Eduardo's comment.
 >
-> I reposted the whole series, due to changes in MFD driver with side
-> effect in pinctrl driver, but bindings (MFD and pinctrl) didn't change
-> between the two versions. I stated the changes in cover letter.
+> +                       thermal-sensors =3D <&tsens 0>;
 >
-> Should I have removed the bindings patches from the series ?
+> If you meant putting it in each thermal sensor node instead of "tsens" no=
+de, then
+> in previous patch series, I put this " imx,sensor-resource-id " property =
+in each thermal
+> sensor node, but the thermal sensor nodes are parsed by common thermal fr=
+amework,
+> thermal driver will need to find the thermal zone node and go through eve=
+ry child node
+> to get the resource id again, so Eduardo suggested to put it in our platf=
+orm tsens node, that makes
+> our thermal driver code much more simple.
 
-No, as the series should be applied together. You just need to add the
-Reviewed-by so I can ignore it.
+The phandle args are meant to be an id typically. There's absolutely
+no requirement they are 0-N based. They often are because things like
+interrupts are 0-N or clocks have no h/w id. If you already have an
+id, use it. Don't invent your own.
 
 Rob
