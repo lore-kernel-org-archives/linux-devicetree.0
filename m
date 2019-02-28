@@ -1,28 +1,25 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 06/11] dt-bindings: mtd: atmel-nand: add sam9x60
- compatible
-Date: Thu, 28 Feb 2019 12:24:56 -0600
-Message-ID: <20190228182456.GA21460@bogus>
-References: <20190213085930.31578-1-tudor.ambarus@microchip.com>
- <20190213085930.31578-7-tudor.ambarus@microchip.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V3 1/3] dt-bindings: memory-controllers: freescale: add
+ MMDC binding doc
+Date: Thu, 28 Feb 2019 15:26:25 -0300
+Message-ID: <CAOMZO5C6UOG5aW2EiUMNqMjsQRqqotDWvtA=EBwctYicxXJ1yw@mail.gmail.com>
+References: <1551321831-11597-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190213085930.31578-7-tudor.ambarus@microchip.com>
+In-Reply-To: <1551321831-11597-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, dwmw2@infradead.org, computersforpeace@gmail.com, bbrezillon@kernel.org, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Tudor.Ambarus@microchip.com
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Feb 2019 09:00:01 +0000, <Tudor.Ambarus@microchip.com> wrote:
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
-> 
-> Add compatibility string for the sam9x60 nand controller.
-> 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> ---
->  Documentation/devicetree/bindings/mtd/atmel-nand.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hi Anson,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed, Feb 27, 2019 at 11:48 PM Anson Huang <anson.huang@nxp.com> wrote:
+
+> +Required properties :
+> +- compatible : should be one of following:
+> +       for i.MX6Q/i.MX6DL:
+> +       - "fsl,imx6q-mmdc";
+
+You missed the entry for imx6qp.
