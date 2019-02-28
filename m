@@ -1,7 +1,8 @@
 From: Renato Lui Geh <renatogeh@gmail.com>
-Subject: [PATCH v4 2/9] staging: iio: ad7780: add filter reading to ad778x
-Date: Thu, 28 Feb 2019 11:24:10 -0300
-Message-ID: <a44c3316553c3cab4378d7e31c2d1914bf558c62.1551358569.git.renatogeh@gmail.com>
+Subject: [PATCH v4 3/9] staging: iio: ad7780: set pattern values and masks
+ directly
+Date: Thu, 28 Feb 2019 11:24:32 -0300
+Message-ID: <9c8331166124ec2bd52794a9c9f844bfb70d1cd9.1551358569.git.renatogeh@gmail.com>
 References: <cover.1551358569.git.renatogeh@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
@@ -13,82 +14,78 @@ To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, knaack.h@gm
 Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the new feature of reading the filter odr value for
-ad778x chips. This value is stored in the chip's state struct whenever a
-read or write call is performed on the chip's driver.
-
-This feature requires sharing SAMP_FREQ. Since the ad717x does not have
-a filter option, the driver only shares the relevant info mask for the
-ad778x family.
+The AD7780 driver contains status pattern bits designed for checking
+whether serial transfers have been correctly performed. Pattern macros
+were previously generated through bit fields. This patch sets good
+pattern values directly and masks through GENMASK.
 
 Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
 ---
-Changes in v4:
- - As mentioned in the previous patch, this was originally as part of
-   the 'add gain & filter gpio support' patch
-
- drivers/staging/iio/adc/ad7780.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/staging/iio/adc/ad7780.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
-index 87fbcf510d45..7a68e90ddf14 100644
+index 7a68e90ddf14..56c49e28f432 100644
 --- a/drivers/staging/iio/adc/ad7780.c
 +++ b/drivers/staging/iio/adc/ad7780.c
-@@ -59,6 +59,7 @@ struct ad7780_state {
- 	struct gpio_desc		*gain_gpio;
- 	struct gpio_desc		*filter_gpio;
- 	unsigned int			gain;
-+	unsigned int			odr;
- 	unsigned int			int_vref_mv;
+@@ -17,6 +17,7 @@
+ #include <linux/sched.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/module.h>
++#include <linux/bits.h>
  
- 	struct ad_sigma_delta sd;
-@@ -121,6 +122,9 @@ static int ad7780_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_OFFSET:
- 		*val = -(1 << (chan->scan_type.realbits - 1));
- 		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		*val = st->odr;
-+		return IIO_VAL_INT;
- 	default:
- 	break;
- 	}
-@@ -163,6 +167,7 @@ static int ad7780_write_raw(struct iio_dev *indio_dev,
- 			val = 0;
- 		else
- 			val = 1;
-+		st->odr = ad778x_odr_avail[val];
- 		gpiod_set_value(st->filter_gpio, val);
- 		break;
- 	default:
-@@ -184,6 +189,7 @@ static int ad7780_postprocess_sample(struct ad_sigma_delta *sigma_delta,
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+@@ -28,16 +29,13 @@
+ #define AD7780_ID1		BIT(4)
+ #define AD7780_ID0		BIT(3)
+ #define AD7780_GAIN		BIT(2)
+-#define AD7780_PAT1		BIT(1)
+-#define AD7780_PAT0		BIT(0)
  
- 	if (chip_info->is_ad778x) {
- 		st->gain = ad778x_gain[raw_sample & AD7780_GAIN];
-+		st->odr = ad778x_odr_avail[raw_sample & AD7780_FILTER];
- 	}
+-#define AD7780_PATTERN		(AD7780_PAT0)
+-#define AD7780_PATTERN_MASK	(AD7780_PAT0 | AD7780_PAT1)
  
- 	return 0;
-@@ -196,17 +202,19 @@ static const struct ad_sigma_delta_info ad7780_sigma_delta_info = {
- };
+-#define AD7170_PAT2		BIT(2)
++#define AD7780_PATTERN_GOOD	1
++#define AD7780_PATTERN_MASK	GENMASK(1, 0)
  
- #define AD7780_CHANNEL(bits, wordsize) \
-+	AD_SD_CHANNEL(1, 0, 0, bits, 32, wordsize - bits)
-+#define AD7170_CHANNEL(bits, wordsize) \
- 	AD_SD_CHANNEL_NO_SAMP_FREQ(1, 0, 0, bits, 32, wordsize - bits)
+-#define AD7170_PATTERN		(AD7780_PAT0 | AD7170_PAT2)
+-#define AD7170_PATTERN_MASK	(AD7780_PAT0 | AD7780_PAT1 | AD7170_PAT2)
++#define AD7170_PATTERN_GOOD	5
++#define AD7170_PATTERN_MASK	GENMASK(2, 0)
  
+ #define AD7780_GAIN_MIDPOINT	64
+ #define AD7780_FILTER_MIDPOINT	13350
+@@ -209,25 +207,25 @@ static const struct ad_sigma_delta_info ad7780_sigma_delta_info = {
  static const struct ad7780_chip_info ad7780_chip_info_tbl[] = {
  	[ID_AD7170] = {
--		.channel = AD7780_CHANNEL(12, 24),
-+		.channel = AD7170_CHANNEL(12, 24),
- 		.pattern = AD7170_PATTERN,
+ 		.channel = AD7170_CHANNEL(12, 24),
+-		.pattern = AD7170_PATTERN,
++		.pattern = AD7170_PATTERN_GOOD,
  		.pattern_mask = AD7170_PATTERN_MASK,
  		.is_ad778x = false,
  	},
  	[ID_AD7171] = {
--		.channel = AD7780_CHANNEL(16, 24),
-+		.channel = AD7170_CHANNEL(16, 24),
- 		.pattern = AD7170_PATTERN,
+ 		.channel = AD7170_CHANNEL(16, 24),
+-		.pattern = AD7170_PATTERN,
++		.pattern = AD7170_PATTERN_GOOD,
  		.pattern_mask = AD7170_PATTERN_MASK,
  		.is_ad778x = false,
+ 	},
+ 	[ID_AD7780] = {
+ 		.channel = AD7780_CHANNEL(24, 32),
+-		.pattern = AD7780_PATTERN,
++		.pattern = AD7780_PATTERN_GOOD,
+ 		.pattern_mask = AD7780_PATTERN_MASK,
+ 		.is_ad778x = true,
+ 	},
+ 	[ID_AD7781] = {
+ 		.channel = AD7780_CHANNEL(20, 32),
+-		.pattern = AD7780_PATTERN,
++		.pattern = AD7780_PATTERN_GOOD,
+ 		.pattern_mask = AD7780_PATTERN_MASK,
+ 		.is_ad778x = true,
+ 	},
 -- 
 2.21.0
