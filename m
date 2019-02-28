@@ -1,48 +1,56 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 03/64] ARM: dts: sun8i: h3: Add ethernet0 alias to Beelink X2
-Date: Thu, 28 Feb 2019 10:10:04 -0500
-Message-ID: <20190228151105.11277-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/64] ARM: dts: meson8b: odroidc1: mark the SD card detection GPIO active-low
+Date: Thu, 28 Feb 2019 10:10:06 -0500
+Message-ID: <20190228151105.11277-5-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Jernej Skrabec <jernej.skrabec@siol.net>, Maxime Ripard <maxime.ripard@bootlin.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit cc4bddade114b696ab27c1a77cfc7040151306da ]
+[ Upstream commit 3fb348e030319f20ebbde082a449d4bf8a96f2fd ]
 
-Because "ethernet0" alias is missing, U-Boot doesn't generate board
-specific MAC address. Effect of this is random MAC address every boot
-and thus new IP address is assigned to the board.
+After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
+tree") SD cards are not detected anymore.
 
-Fix this by adding alias.
+The CD GPIO is "active low" on Odroid-C1. The MMC dt-bindings specify:
+"[...] using the "cd-inverted" property means, that the CD line is active
+high, i.e. it is high, when a card is inserted".
 
-Fixes: 7389172fc3ed ("ARM: dts: sun8i: h3: Enable dwmac-sun8i on the Beelink X2")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-[Maxime: Removed unneeded comment]
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
+drop the "cd-inverted" property. This makes the definition consistent
+with the existing dt-bindings and fixes the check whether an SD card is
+inserted.
+
+Fixes: e03efbce6bebf5 ("ARM: dts: meson8b-odroidc1: add microSD support")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Tested-by: Anand Moon <linux.amoon@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 5d23667dc2d2e..25540b7694d59 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -53,7 +53,7 @@
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index 9e48936e2d8d7..8fdeeffecbdbc 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -171,8 +171,7 @@
+ 		cap-sd-highspeed;
+ 		disable-wp;
  
- 	aliases {
- 		serial0 = &uart0;
--		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
-+		ethernet0 = &emac;
- 		ethernet1 = &sdiowifi;
- 	};
+-		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-		cd-inverted;
++		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
  
+ 		vmmc-supply = <&tflash_vdd>;
+ 		vqmmc-supply = <&tf_io>;
 -- 
 2.19.1
