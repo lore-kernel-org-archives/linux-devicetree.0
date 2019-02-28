@@ -1,27 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/5] bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma
-  compatbile string
-Date: Thu, 28 Feb 2019 08:31:08 -0600
-Message-ID: <20190228143108.GA16838@bogus>
-References: <20190227063737.24445-1-daniel.baluta@nxp.com>
- <20190227063737.24445-3-daniel.baluta@nxp.com>
+From: Mans Rullgard <mans@mansr.com>
+Subject: [RFC][PATCH] dt-bindings: usb: add non-removable device property
+Date: Thu, 28 Feb 2019 14:33:44 +0000
+Message-ID: <20190228143344.16312-1-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190227063737.24445-3-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>d
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Feb 2019 06:38:11 +0000, Daniel Baluta wrote:
-> Add imx8mq sdma support.
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Add a boolean property indicating that a device is hardwired to the
+upstream port.  Although hubs can provide this information, they are not
+always configured correctly.  An alternate means of indicating this for
+built-in USB devices is thus useful.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+---
+I have a situation where userspace would like to know which USB devices
+are built-in, but the on-board hub doesn't have the right setting.
+Also, the hub itself can't be indicated as fixed in any other way that
+I'm aware of.
+
+In a way, adding this property seems a bit silly since dt can only
+sensibly be used for hardwired devices in the first place.  Thus the
+mere presence of a dt node could be taken to indicate the same thing.
+On the other hand, it's conceivable that someone might dynamically
+generate a devicetree based on what happens to be connected on boot or
+something.  For that reason, and explicit property seems safer.
+---
+ Documentation/devicetree/bindings/usb/usb-device.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+index 036be172b1ae..903d39b7e415 100644
+--- a/Documentation/devicetree/bindings/usb/usb-device.txt
++++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+@@ -26,6 +26,10 @@ Required properties for device nodes:
+ - reg: the number of the USB hub port or the USB host-controller port to which
+   this device is attached. The range is 1-255.
+ 
++Optional properties for device nodes:
++- non-removable: boolean, if present the device is hardwired to the
++  upstream port.
++
+ 
+ Required properties for device nodes with interface nodes:
+ - #address-cells: shall be 2
+@@ -55,6 +59,10 @@ Required properties for combined nodes:
+ - reg: the number of the USB hub port or the USB host-controller port to which
+   this device is attached. The range is 1-255.
+ 
++Optional properties for combined nodes:
++- non-removable: boolean, if present the device is hardwired to the
++  upstream port.
++
+ 
+ Required properties for hub nodes with device nodes:
+ - #address-cells: shall be 1
+-- 
+2.20.1
