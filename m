@@ -1,57 +1,46 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH v4 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander
- (STMFX) core bindings
-Date: Thu, 28 Feb 2019 08:53:42 +0000
-Message-ID: <c54c4fd8-b97f-a70b-4805-fd3d217f5050@st.com>
-References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
- <1551260094-32570-2-git-send-email-amelie.delaunay@st.com>
- <20190227235535.GA24395@bogus>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH 1/2] clk: imx7ulp: remove snvs clock
+Date: Thu, 28 Feb 2019 08:56:00 +0000
+Message-ID: <1551343889-6674-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190227235535.GA24395@bogus>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
-Content-ID: <57CB0BFA4FFC6546A2026BD7801F867B@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/28/19 12:55 AM, Rob Herring wrote:
-> On Wed, 27 Feb 2019 10:34:46 +0100, Amelie Delaunay wrote:
->> This patch adds documentation of device tree bindings for the
->> STMicroelectronics Multi-Function eXpander (STMFX) MFD core.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
->> ---
->>   Documentation/devicetree/bindings/mfd/stmfx.txt | 28 +++++++++++++++++++++++++
->>   1 file changed, 28 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
->>
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> 
+Since i.MX7ULP B0 chip, the SNVS module is moved into M4
+domain and its clock is also moved into PCC0 which is
+contorlled by M4, Linux kernel should NOT add it into
+clock tree.
 
-I'm sorry Rob, I forgot to add your Reviewed-by on this patch, which is 
-identical to v3.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/clk/imx/clk-imx7ulp.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I reposted the whole series, due to changes in MFD driver with side 
-effect in pinctrl driver, but bindings (MFD and pinctrl) didn't change 
-between the two versions. I stated the changes in cover letter.
-
-Should I have removed the bindings patches from the series ?
+diff --git a/drivers/clk/imx/clk-imx7ulp.c b/drivers/clk/imx/clk-imx7ulp.c
+index ce30663..6668210 100644
+--- a/drivers/clk/imx/clk-imx7ulp.c
++++ b/drivers/clk/imx/clk-imx7ulp.c
+@@ -151,7 +151,6 @@ static void __init imx7ulp_clk_pcc2_init(struct device_=
+node *np)
+ 	clks[IMX7ULP_CLK_DMA1]		=3D imx_clk_hw_gate("dma1", "nic1_clk", base + 0x=
+20, 30);
+ 	clks[IMX7ULP_CLK_RGPIO2P1]	=3D imx_clk_hw_gate("rgpio2p1", "nic1_bus_clk"=
+, base + 0x3c, 30);
+ 	clks[IMX7ULP_CLK_DMA_MUX1]	=3D imx_clk_hw_gate("dma_mux1", "nic1_bus_clk"=
+, base + 0x84, 30);
+-	clks[IMX7ULP_CLK_SNVS]		=3D imx_clk_hw_gate("snvs", "nic1_bus_clk", base =
++ 0x8c, 30);
+ 	clks[IMX7ULP_CLK_CAAM]		=3D imx_clk_hw_gate("caam", "nic1_clk", base + 0x=
+90, 30);
+ 	clks[IMX7ULP_CLK_LPTPM4]	=3D imx7ulp_clk_composite("lptpm4",  periph_bus_=
+sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x94);
+ 	clks[IMX7ULP_CLK_LPTPM5]	=3D imx7ulp_clk_composite("lptpm5",  periph_bus_=
+sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x98);
+--=20
+2.7.4
