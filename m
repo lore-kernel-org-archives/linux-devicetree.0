@@ -1,176 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/8] dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue
- Bindings
-Date: Thu, 28 Feb 2019 10:29:06 -0600
-Message-ID: <20190228162906.GA2387@bogus>
-References: <20190212151413.24632-1-narmstrong@baylibre.com>
- <20190212151413.24632-5-narmstrong@baylibre.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v2] dt-bindings: hwmon: Add missing documentation for lm75
+Date: Thu, 28 Feb 2019 23:00:44 +0530
+Message-ID: <CAMty3ZDR_Vnutobg=wjzwPZ_pkD4pLA76Lpec9u4OR8OtmuLGA@mail.gmail.com>
+References: <20190212113808.3040-1-jagan@amarulasolutions.com> <20190228151543.GA18597@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212151413.24632-5-narmstrong@baylibre.com>
+In-Reply-To: <20190228151543.GA18597@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, linux-hwmon@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 04:14:09PM +0100, Neil Armstrong wrote:
-> Adds the bindings for the Amlogic G12A USB Glue HW.
-> 
-> The Amlogic G12A SoC Family embeds 2 USB Controllers :
-> - a DWC3 IP configured as Host for USB2 and USB3
-> - a DWC2 IP configured as Peripheral USB2 Only
-> 
-> A glue connects these both controllers to 2 USB2 PHYs,
-> and optionnally to an USB3+PCIE Combo PHY shared with the PCIE controller.
-> 
-> The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
-> routing of the OTG PHY between the DWC3 and DWC2 controllers, and
-> setups the on-chip OTG mode selection for this PHY.
-> 
-> The PHYs are children of the Glue node since the Glue controls the interface
-> with the PHY, not the DWC3 controller.
-> 
-> The PHY interconnect is handled into ports subnodes, which eases describing
-> which PHY is enabled (like the USB3 shared PHY) and futures layouts on
-> derivatives of the G12A Family.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../devicetree/bindings/usb/amlogic,dwc3.txt  | 109 ++++++++++++++++++
->  1 file changed, 109 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-> index 9a8b631904fd..c7c4726ef10d 100644
-> --- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-> @@ -40,3 +40,112 @@ Example device nodes:
->  				phy-names = "usb2-phy", "usb3-phy";
->  			};
->  		};
-> +
-> +Amlogic Meson G12A DWC3 USB SoC Controller Glue
-> +
-> +The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
-> +in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
-> +only.
-> +
-> +A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
-> +
-> +One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
-> +
-> +The DWC3 Glue controls the PHY routing and power, an interrupt line is
-> +connected to the Glue to serve as OTG ID change detection.
-> +
-> +Required properties:
-> +- compatible:	Should be "amlogic,meson-g12a-usb-ctrl"
-> +- clocks:	a handle for the "USB" clock
-> +- clock-names:	must be "usb"
-> +- resets:	a handle for the shared "USB" reset line
-> +- reset-names:	must be "usb"
+On Thu, Feb 28, 2019 at 8:45 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Feb 12, 2019 at 05:08:08PM +0530, Jagan Teki wrote:
+> > Add missing dt-binding documentation for lm75 hwmon sensor.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Changes for v2:
+> > -  Add all compatible nodes available in lm75.
+> >
+> >  .../devicetree/bindings/hwmon/lm75.txt        | 37 +++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/hwmon/lm75.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> > new file mode 100644
+> > index 000000000000..12d8cf7cf592
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> > @@ -0,0 +1,37 @@
+> > +*LM75 hwmon sensor.
+> > +
+> > +Required properties:
+> > +- compatible: manufacturer and chip name, one of
+> > +             "adi,adt75",
+> > +             "dallas,ds1775",
+> > +             "dallas,ds75",
+> > +             "dallas,ds7505",
+> > +             "gmt,g751",
+> > +             "national,lm75",
+> > +             "national,lm75a",
+> > +             "national,lm75b",
+> > +             "maxim,max6625",
+> > +             "maxim,max6626",
+> > +             "maxim,max31725",
+> > +             "maxim,max31726",
+> > +             "maxim,mcp980x",
+> > +             "st,stds75",
+> > +             "st,stlm75",
+> > +             "microchip,tcn75",
+> > +             "ti,tmp100",
+> > +             "ti,tmp101",
+> > +             "ti,tmp105",
+> > +             "ti,tmp112",
+> > +             "ti,tmp175",
+> > +             "ti,tmp275",
+> > +             "ti,tmp75",
+> > +             "ti,tmp75c",
+>
+> Some of these are in trivial-devices.yaml already. So you either need to
+> remove them from there. Or you can move all these to trivial-devices and
+> benefit from having a schema. I prefer the latter, but either way is
+> fine. You can remove them from trivial-devices.yaml in a separate patch,
+> so:
 
--name for a single entry is pointless.
+Thanks, Rob.
 
-> +- reg:		The base address and length of the registers
-> +- interrupts:	the interrupt specifier for the OTG detection
-> +
-> +Required child nodes:
-> +
-> +USB Ports are described as child 'port' nodes grouped under a 'ports' node,
-> +with #address-cells, #size-cells specified.
-> +
-> +Each 'port' sub-node identifies a possible USB Port served by an USB PHY
-> +identified by the 'phy' property as decribed in ../phy/phy-bindings.txt
-> +
-> +Each 'port' is identified by a reg property to number the port.
-> +
-> +The following table lists for each supported model the port number
-> +corresponding to each PHY serving a physical USB Port.
-> +
-> + Family	   Port 0     Port 1    Port 2    Port 3    Port 4
-> +---------------------------------------------------------------
-> + G12A	   USBHOST_A  USBOTG_B  Reserved  Reserved  USB3_0
-> +
-> +A child node must exist to represent the core DWC3 IP block. The name of
-> +the node is not important. The content of the node is defined in dwc3.txt.
-> +
-> +A child node must exist to represent the core DWC2 IP block. The name of
-> +the node is not important. The content of the node is defined in dwc2.txt.
-> +
-> +PHY documentation is provided in the following places:
-> +- Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
-> +- Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-> +
-> +
-> +Example device nodes:
-> +	usb: usb@ffe09000 {
-> +			compatible = "amlogic,meson-g12a-usb-ctrl";
-> +			reg = <0x0 0xffe09000 0x0 0xa0>;
-> +			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +
-> +			clocks = <&clkc CLKID_USB>;
-> +			clock-names = "usb";
-> +			resets = <&reset RESET_USB>;
-> +			reset-names = "usb";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				/* USB2 Port 0 */
-> +				usb20: port@0 {
-> +					reg = <0>;
-> +					phys = <&usb2_phy0>;
+I will remove trivial devices from here wrt trivial-devices.yaml in
+separate patch.
 
-'ports' and 'port' are reserved for the graph binding. Don't use it for 
-your own thing.
-
-Can't you just make 'phys' a list using 0 phandle if you need to skip 
-entries.
-
-> +				};
-> +
-> +				/* USB2 Port 1 */
-> +				usb21: port@1 {
-> +					reg = <1>;
-> +					phys = <&usb2_phy1>;
-> +				};
-> +
-> +				/* USB3 Port 0 */
-> +				usb3: port@4 {
-> +					reg = <4>;
-> +					phys = <&usb3_pcie_phy PHY_TYPE_USB3>;
-> +				};
-> +			};
-> +
-> +			dwc2: usb@ff400000 {
-> +				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
-> +				reg = <0x0 0xff400000 0x0 0x40000>;
-> +				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
-> +				clock-names = "ddr";
-> +				dr_mode = "peripheral";
-> +				g-rx-fifo-size = <192>;
-> +				g-np-tx-fifo-size = <128>;
-> +				g-tx-fifo-size = <128 128 16 16 16>;
-> +			};
-> +
-> +			dwc3: dwc3@ff500000 {
-
-usb@... or usb3@...
-
-> +				compatible = "snps,dwc3";
-> +				reg = <0x0 0xff500000 0x0 0x100000>;
-> +				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> +				dr_mode = "host";
-> +				snps,dis_u2_susphy_quirk;
-> +				snps,quirk-frame-length-adjustment;
-> +			};
-> +	};
-> -- 
-> 2.20.1
-> 
+Guenter, could you please pick this.
