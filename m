@@ -1,34 +1,73 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 0/7] add LCD support for SAM9X60
-Date: Thu, 28 Feb 2019 19:21:19 +0100
-Message-ID: <20190228182119.GA28318@ravnborg.org>
-References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: gpu: add bindings for the ARM Mali
+ Bifrost GPU
+Date: Thu, 28 Feb 2019 12:21:41 -0600
+Message-ID: <20190228182141.GA5362@bogus>
+References: <20190212163838.22644-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Claudiu.Beznea@microchip.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, bbrezillon@kernel.org, airlied@linux.ie, Nicolas.Ferre@microchip.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190212163838.22644-1-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: daniel@ffwll.ch, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2xhdWRpdQoKT24gV2VkLCBGZWIgMjcsIDIwMTkgYXQgMDQ6MjQ6MTFQTSArMDAwMCwgQ2xh
-dWRpdS5CZXpuZWFAbWljcm9jaGlwLmNvbSB3cm90ZToKPiBGcm9tOiBDbGF1ZGl1IEJlem5lYSA8
-Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4KPiAKPiBIaSwKPiAKPiBUaGVzZSBwYXRjaGVz
-IGFkZHMgc3VwcG9ydCBmb3IgU0FNOVg2MCdzIExDRCBjb250cm9sbGVyLgpDYW4geW91IGVsYWJv
-cmF0ZSBhIGxpdHRsZSBtb3JlIHdoaWNoIGNoaXBzIHRoYXQgYXJlIHJlbGV2YW50LgpUbyBiZSBh
-YmxlIHRvIGxvb2sgaW50byB0aGUgcmlnaHQgZGF0YS1zaGVldCwgd2hpbGUgcmV2aWV3aW5nLgpM
-aW5rIHRvIGRhdGEtc2hlZXQgd291bGQgYmUgbmljZSB0b28uCgpUaGFua3MgaW4gYWR2YW5jZSwK
-CVNhbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Tue, Feb 12, 2019 at 05:38:38PM +0100, Neil Armstrong wrote:
+> Add the bindings for the Bifrost family of ARM Mali GPUs.
+> 
+> The Bifrost GPU architecture is similar to the Midgard family,
+> but with a different Shader Core & Execution Engine structures.
+> 
+> Bindings are based on the Midgard family bindings, but the inner
+> architectural changes makes it a separate family needing separate
+> bindings.
+> 
+> The Bifrost GPUs are present in a number of recent SoCs, like the
+> Amlogic G12A Family, and many other vendors.
+> The Amlogic vendor specific compatible is added to handle the
+> specific IP integration differences and dependencies.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+> Changes since v1:
+> - adding missing G31 and G52
+> - fixed example
+> 
+>  .../bindings/gpu/arm,mali-bifrost.txt         | 96 +++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> new file mode 100644
+> index 000000000000..04a1d63ee578
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> @@ -0,0 +1,96 @@
+> +ARM Mali Bifrost GPU
+> +====================
+> +
+> +Required properties:
+> +
+> +- compatible :
+> +  * Must contain one of the following:
+> +    + "arm,mali-g31"
+> +    + "arm,mali-g51"
+> +    + "arm,mali-g52"
+> +    + "arm,mali-g71"
+> +    + "arm,mali-g72"
+> +    + "arm,mali-g76"
+
+Given that these flavors are all fully disoverable, we could probably 
+just have 1 compatible here. It's not often that I suggest this. :)
+
+We allowed this with vivante as all the version and feature information 
+is discoverable.
+
+> +  * which must be preceded by one of the following vendor specifics:
+> +    + "amlogic,meson-g12a-mali"
+
+We should keep these for any integration differences though.
+
+Rob
