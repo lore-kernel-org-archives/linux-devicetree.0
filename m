@@ -1,22 +1,23 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V3 2/3] ARM: dts: imx7ulp: add mmdc support
-Date: Thu, 28 Feb 2019 15:27:47 -0300
-Message-ID: <CAOMZO5C8CWu2ArCZ1vMzZsmpFKt9RuR+FrfB_P3S35s8Ynbt2Q@mail.gmail.com>
-References: <1551321831-11597-1-git-send-email-Anson.Huang@nxp.com> <1551321831-11597-2-git-send-email-Anson.Huang@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH RESEND V2 1/2] clk: imx8mq: add GPIO clocks to clock tree
+Date: Thu, 28 Feb 2019 10:28:33 -0800
+Message-ID: <155137851395.260864.14415827055284077946@swboyd.mtv.corp.google.com>
+References: <1551230622-30660-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551321831-11597-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1551230622-30660-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <anson.huang@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 11:48 PM Anson Huang <anson.huang@nxp.com> wrote:
->
-> i.MX7ULP has a MMDC module to control DDR, it reuses
-> i.MX6Q's MMDC module, add support for it.
->
+Quoting Anson Huang (2019-02-26 17:28:26)
+> i.MX8MQ has clock gate for each GPIO bank, add them
+> into clock tree for GPIO driver to manage.
+>=20
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Applied to clk-next
