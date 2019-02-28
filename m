@@ -1,50 +1,43 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 24/81] MIPS: DTS: jz4740: Correct interrupt number of DMA core
-Date: Thu, 28 Feb 2019 10:07:16 -0500
-Message-ID: <20190228150813.10256-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 21/81] ARM: dts: am335x-shc.dts: fix wrong cd pin level
+Date: Thu, 28 Feb 2019 10:07:13 -0500
+Message-ID: <20190228150813.10256-21-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Paul Cercueil <paul@crapouillou.net>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Cc: Heiko Schocher <hs@denx.de>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Heiko Schocher <hs@denx.de>
 
-[ Upstream commit 70999ec1c9d3f783a7232973cfc26971e5732758 ]
+[ Upstream commit 063c20e12f8bbbc10cabc2413606b140085beb62 ]
 
-The interrupt number set in the devicetree node of the DMA driver was
-wrong.
+cd pin on mmc1 is GPIO_ACTIVE_LOW not GPIO_ACTIVE_HIGH
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Fixes: e63201f19438 ("mmc: omap_hsmmc: Delete platform data GPIO CD and WP")
+Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 2 +-
+ arch/arm/boot/dts/am335x-shc.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 6fb16fd240353..2beb78a62b7dc 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -161,7 +161,7 @@
- 		#dma-cells = <2>;
- 
- 		interrupt-parent = <&intc>;
--		interrupts = <29>;
-+		interrupts = <20>;
- 
- 		clocks = <&cgu JZ4740_CLK_DMA>;
- 
+diff --git a/arch/arm/boot/dts/am335x-shc.dts b/arch/arm/boot/dts/am335x-shc.dts
+index 1d925ed2b102c..8fbbad11a80c9 100644
+--- a/arch/arm/boot/dts/am335x-shc.dts
++++ b/arch/arm/boot/dts/am335x-shc.dts
+@@ -215,7 +215,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	bus-width = <0x4>;
+-	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+ 	cd-inverted;
+ 	max-frequency = <26000000>;
+ 	vmmc-supply = <&vmmcsd_fixed>;
 -- 
 2.19.1
