@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 05/64] ARM: dts: meson8b: odroidc1: mark the SD card detection GPIO active-low
-Date: Thu, 28 Feb 2019 10:10:06 -0500
-Message-ID: <20190228151105.11277-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/64] arm64: dts: renesas: r8a7796: Enable DMA for SCIF2
+Date: Thu, 28 Feb 2019 10:10:09 -0500
+Message-ID: <20190228151105.11277-8-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,48 +9,36 @@ Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 3fb348e030319f20ebbde082a449d4bf8a96f2fd ]
+[ Upstream commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4 ]
 
-After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
-tree") SD cards are not detected anymore.
+SCIF2 on R-Car M3-W can be used with both DMAC1 and DMAC2.
 
-The CD GPIO is "active low" on Odroid-C1. The MMC dt-bindings specify:
-"[...] using the "cd-inverted" property means, that the CD line is active
-high, i.e. it is high, when a card is inserted".
-
-Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
-drop the "cd-inverted" property. This makes the definition consistent
-with the existing dt-bindings and fixes the check whether an SD card is
-inserted.
-
-Fixes: e03efbce6bebf5 ("ARM: dts: meson8b-odroidc1: add microSD support")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Fixes: dbcae5ea4bd27409 ("arm64: dts: r8a7796: Enable SCIF DMA")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8b-odroidc1.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index 9e48936e2d8d7..8fdeeffecbdbc 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -171,8 +171,7 @@
- 		cap-sd-highspeed;
- 		disable-wp;
- 
--		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
--		cd-inverted;
-+		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
- 
- 		vmmc-supply = <&tflash_vdd>;
- 		vqmmc-supply = <&tf_io>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index cbd35c00b4af6..33cb0281c39c8 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -1161,6 +1161,9 @@
+ 				 <&cpg CPG_CORE R8A7796_CLK_S3D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
++			       <&dmac2 0x13>, <&dmac2 0x12>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+ 			resets = <&cpg 310>;
+ 			status = "disabled";
 -- 
 2.19.1
