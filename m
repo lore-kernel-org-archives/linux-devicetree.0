@@ -1,55 +1,47 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 06/81] ARM: dts: meson8b: ec100: mark the SD card detection GPIO active-low
-Date: Thu, 28 Feb 2019 10:06:58 -0500
-Message-ID: <20190228150813.10256-6-sashal@kernel.org>
-References: <20190228150813.10256-1-sashal@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH v1 07/13] devicetree: bindings: Document first ROHM
+ BD70528 bindings
+Date: Thu, 28 Feb 2019 09:37:43 -0600
+Message-ID: <CAL_JsqKBUyygGu9FRb+hye+1DyRgdATm_64+XfsvwEa8AvZhJg@mail.gmail.com>
+References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <80de7a2b537ae3f414b0281736652256f38cf94c.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190223003041.GA16670@bogus> <20190228064923.GA3773@localhost.localdomain>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
+In-Reply-To: <20190228064923.GA3773@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-c>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Thu, Feb 28, 2019 at 12:49 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+>
+> Hello Rob, All
+>
+> Sorry for long delay - I was ill for a few days. Back at the business
+> now =)
+>
+> Rob, maybe dropping the RFC tag has messed your book keeping? This
+> is the latest version:
+> https://lore.kernel.org/lkml/90c3b820baf072a7cc3a21aa50c661774a045158.1550148989.git.matti.vaittinen@fi.rohmeurope.com/
+> and I thought it already had the Reviewed-by tag from you :)
 
-[ Upstream commit c8bfe65fb1fb7a43d766df1dfa379406112cba61 ]
+I thought I ignored RFC tag, but could be that. My script (and memory)
+aren't perfect.
 
-After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
-tree") SD cards are not detected anymore.
+> On Fri, Feb 22, 2019 at 06:30:41PM -0600, Rob Herring wrote:
+> > On Tue, Jan 22, 2019 at 11:45:38AM +0200, Matti Vaittinen wrote:
+> > > Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
+> > > drivers) and 4 GPIO pins which can be configured for I/O or
+> > > as interrupt sources withe configurable trigger levels.
+> >
+> > 'dt-bindings: mfd: ...' for the subject.
+>
+> I see at least the patch subject comment is still valid though. Do you
+> want me to change it and resubmit the series?
 
-The CD GPIO is "active low" on the EC-100. The MMC dt-bindings specify:
-"[...] using the "cd-inverted" property means, that the CD line is active
-high, i.e. it is high, when a card is inserted".
+No, if that's the only thing, it's not important.
 
-Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
-drop the "cd-inverted" property. This makes the definition consistent
-with the existing dt-bindings and fixes the check whether an SD card is
-inserted.
-
-Fixes: bbedc1f1d90e33 ("ARM: dts: meson8b: Add support for the Endless Mini (EC-100)")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/meson8b-ec100.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/meson8b-ec100.dts b/arch/arm/boot/dts/meson8b-ec100.dts
-index 0872f6e3abf56..d50fc2f60fa31 100644
---- a/arch/arm/boot/dts/meson8b-ec100.dts
-+++ b/arch/arm/boot/dts/meson8b-ec100.dts
-@@ -205,8 +205,7 @@
- 		cap-sd-highspeed;
- 		disable-wp;
- 
--		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
--		cd-inverted;
-+		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
- 
- 		vmmc-supply = <&vcc_3v3>;
- 	};
--- 
-2.19.1
+Rob
