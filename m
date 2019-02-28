@@ -1,25 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] nvmem: sunxi-sid: add binding for H6's SID controller
-Date: Thu, 28 Feb 2019 13:03:51 -0600
-Message-ID: <20190228190351.GA11970@bogus>
-References: <20190217162316.14111-1-tiny.windzz@gmail.com>
- <20190217162316.14111-4-tiny.windzz@gmail.com>
+Subject: Re: [PATCH 2/6] dt-bindings: add DT binding for the layerscape PCIe
+ GEN4 controller with EP mode
+Date: Thu, 28 Feb 2019 13:45:26 -0600
+Message-ID: <20190228194526.GA2716@bogus>
+References: <20190218094643.2692-1-xiaowei.bao@nxp.com>
+ <20190218094643.2692-2-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190217162316.14111-4-tiny.windzz@gmail.com>
+In-Reply-To: <20190218094643.2692-2-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+Cc: bhelgaas@google.com, Zhiqiang.Hou@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, l.subrahmanya@mobiveil.co.in, arnd@arndb.de, Minghuan.Lian@nxp.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 17 Feb 2019 11:23:14 -0500, Yangtao Li wrote:
-> Add a binding for H6's SID controller.
+On Mon, 18 Feb 2019 17:46:39 +0800, Xiaowei Bao wrote:
+> Add the documentation for the Device Tree binding for the layerscape
+> PCIe GEN4 controller with EP mode.
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 > ---
->  Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt | 1 +
->  1 file changed, 1 insertion(+)
+> depends on: http://patchwork.ozlabs.org/project/linux-pci/list/?series=88754
+> 
+>  .../bindings/pci/layerscape-pci-gen4.txt           |    5 ++++-
+>  1 files changed, 4 insertions(+), 1 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
