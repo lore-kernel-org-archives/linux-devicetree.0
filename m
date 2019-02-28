@@ -1,35 +1,74 @@
-From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: net: can: binding for CTU CAN FD
- open-source IP core.
-Date: Thu, 28 Feb 2019 11:13:39 +0100
-Message-ID: <e0cbca72-d30a-c4e5-a935-30933a09ed5f@ysoft.com>
-References: <cover.1551287365.git.pisa@cmp.felk.cvut.cz>
- <2b529d1574916b50e7647281af87df33442b7549.1551287365.git.pisa@cmp.felk.cvut.cz>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 1/6] dt-bindings: nvmem: Add STM32 factory-programmed romem
+Date: Thu, 28 Feb 2019 11:19:51 +0100
+Message-ID: <1551349196-8956-2-git-send-email-fabrice.gasnier@st.com>
+References: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2b529d1574916b50e7647281af87df33442b7549.1551287365.git.pisa@cmp.felk.cvut.cz>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: pisa@cmp.felk.cvut.cz
-Cc: devicetree@vger.kernel.org, mkl@pengutronix.de, linux-can@vger.kernel.org, wg@grandegger.com, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com, ondrej.ille@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, alexandre.torgue@st.com
+Cc: mark.rutland@arm.com, lionel.debieve@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 27. 02. 19 18:26, pisa@cmp.felk.cvut.cz wrote:
-> From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Add documentation for STMicroelectronics STM32 Factory-programmed
+read only memory area.
 
-Ahoj Pavle,
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+Changes in v2:
+- update "st,stm32f4-otp" compatible as discussed with Rob
+---
+ .../devicetree/bindings/nvmem/st,stm32-romem.txt   | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
 
-I can not comment on the content of the binding but it is a good
-practice to add at least a short description to each commit even
-if it should be the subject said differently.
-
-Anyway, hats off to all of you, great work!
-
-Greetings back to my alma mater,
-Michal
-
-> 
-> Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
-> ---
+diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+new file mode 100644
+index 0000000..142a51d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+@@ -0,0 +1,31 @@
++STMicroelectronics STM32 Factory-programmed data device tree bindings
++
++This represents STM32 Factory-programmed read only non-volatile area: locked
++flash, OTP, read-only HW regs... This contains various information such as:
++analog calibration data for temperature sensor (e.g. TS_CAL1, TS_CAL2),
++internal vref (VREFIN_CAL), unique device ID...
++
++Required properties:
++- compatible:		Should be one of:
++			"st,stm32f4-otp"
++			"st,stm32mp15-bsec"
++- reg:			Offset and length of factory-programmed area.
++- #address-cells:	Should be '<1>'.
++- #size-cells:		Should be '<1>'.
++
++Optional Data cells:
++- Must be child nodes as described in nvmem.txt.
++
++Example on stm32f4:
++	romem: nvmem@1fff7800 {
++		compatible = "st,stm32f4-otp";
++		reg = <0x1fff7800 0x400>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		/* Data cells: ts_cal1 at 0x1fff7a2c */
++		ts_cal1: calib@22c {
++			reg = <0x22c 0x2>;
++		};
++		...
++	};
+-- 
+2.7.4
