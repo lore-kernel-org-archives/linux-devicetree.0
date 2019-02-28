@@ -1,198 +1,63 @@
-Return-Path: <SRS0=TIRm=Q4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbfBUPUk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Feb 2019 10:20:40 -0500
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: [PATCH 1/2] iio: imu: st_lsm6dsx: add support to ASM330LHH
-Date: Thu, 21 Feb 2019 16:20:20 +0100
-Message-Id: <4eeb8888ba5572736cb26f4f6e2376d416e3b3fc.1550753006.git.lorenzo@kernel.org>
-In-Reply-To: <cover.1550753006.git.lorenzo@kernel.org>
-References: <cover.1550753006.git.lorenzo@kernel.org>
+Return-Path: <SRS0=ZPg/=RD=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400117.outbound.protection.outlook.com ([40.107.140.117]:37376
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730883AbfB1Lgd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 Feb 2019 06:36:33 -0500
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v2] dt-bindings: power: r8a77965: Remove non-existent A3IR
+ power domain
+Date: Thu, 28 Feb 2019 11:36:28 +0000
+Message-ID: <TY1PR01MB1770F8D490EB33636F24954AC0750@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <20190228105119.548-1-geert+renesas@glider.be>
+In-Reply-To: <20190228105119.548-1-geert+renesas@glider.be>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, mario.tesi@st.com, lorenzo.bianconi@redhat.com
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support to STM ASM330LHH 6-axis (acc + gyro) Mems sensor
-https://www.st.com/resource/en/datasheet/asm330lhh.pdf
+> From: Geert Uytterhoeven <geert+renesas@glider.be>
+> Sent: 28 February 2019 10:51
+> Subject: [PATCH v2] dt-bindings: power: r8a77965: Remove non-existent A3I=
+R power domain
+>=20
+> The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
+> removed the A3IR power domain on R-Car M3-N, as this SoC does not have
+> an Image Processing Unit (IMP-X5).
+>=20
+> As of commit d8c6557bc93be73e ("arm64: dts: renesas: r8a77965: Remove
+> non-existent IPMMU-IR"), this definition is no longer used from DT, and
+> thus can be removed.
+>=20
+> Fixes: a527709b78b3c997 ("soc: renesas: rcar-sysc: Add R-Car M3-N support=
+")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Tested-by: Mario Tesi <mario.tesi@st.com>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/iio/imu/st_lsm6dsx/Kconfig            |  2 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       |  2 +
- .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    |  8 ++--
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  | 41 ++++++++++++++++++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c   |  5 +++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c   |  5 +++
- 6 files changed, 57 insertions(+), 6 deletions(-)
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-index 094fd006b63d..36048bf0455a 100644
---- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-+++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-@@ -9,7 +9,7 @@ config IIO_ST_LSM6DSX
- 	help
- 	  Say yes here to build support for STMicroelectronics LSM6DSx imu
- 	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
--	  ism330dlc, lsm6dso
-+	  ism330dlc, lsm6dso, asm330lhh
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called st_lsm6dsx.
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index d1d8d07a0714..de2a0dc39353 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -20,6 +20,7 @@
- #define ST_LSM6DSM_DEV_NAME	"lsm6dsm"
- #define ST_ISM330DLC_DEV_NAME	"ism330dlc"
- #define ST_LSM6DSO_DEV_NAME	"lsm6dso"
-+#define ST_ASM330LHH_DEV_NAME	"asm330lhh"
- 
- enum st_lsm6dsx_hw_id {
- 	ST_LSM6DS3_ID,
-@@ -28,6 +29,7 @@ enum st_lsm6dsx_hw_id {
- 	ST_LSM6DSM_ID,
- 	ST_ISM330DLC_ID,
- 	ST_LSM6DSO_ID,
-+	ST_ASM330LHH_ID,
- 	ST_LSM6DSX_MAX_ID,
- };
- 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-index 2c0d3763405a..8f443bdb5b51 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-@@ -13,9 +13,9 @@
-  * (e.g. Gx, Gy, Gz, Ax, Ay, Az), then data are repeated depending on the
-  * value of the decimation factor and ODR set for each FIFO data set.
-  *
-- * LSM6DSO: The FIFO buffer can be configured to store data from gyroscope and
-- * accelerometer. Each sample is queued with a tag (1B) indicating data source
-- * (gyroscope, accelerometer, hw timer).
-+ * LSM6DSO/ASM330LHH: The FIFO buffer can be configured to store data
-+ * from gyroscope and accelerometer. Each sample is queued with a tag (1B)
-+ * indicating data source (gyroscope, accelerometer, hw timer).
-  *
-  * FIFO supported modes:
-  *  - BYPASS: FIFO disabled
-@@ -506,7 +506,7 @@ st_lsm6dsx_push_tagged_data(struct st_lsm6dsx_hw *hw, u8 tag,
- }
- 
- /**
-- * st_lsm6dsx_read_tagged_fifo() - LSM6DSO read FIFO routine
-+ * st_lsm6dsx_read_tagged_fifo() - LSM6DSO/ASM330LHH read FIFO routine
-  * @hw: Pointer to instance of struct st_lsm6dsx_hw.
-  *
-  * Read samples from the hw FIFO and push them to IIO buffers.
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 12e29dda9b98..50cab3531b11 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -23,7 +23,7 @@
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-  *   - FIFO size: 4KB
-  *
-- * - LSM6DSO
-+ * - LSM6DSO/ASM330LHH
-  *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
-  *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-@@ -347,6 +347,45 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 			.batch_en = BIT(3),
- 		}
- 	},
-+	{
-+		.wai = 0x6b,
-+		.max_fifo_size = 512,
-+		.id = {
-+			[0] = ST_ASM330LHH_ID,
-+		},
-+		.batch = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.addr = 0x09,
-+				.mask = GENMASK(3, 0),
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.addr = 0x09,
-+				.mask = GENMASK(7, 4),
-+			},
-+		},
-+		.fifo_ops = {
-+			.read_fifo = st_lsm6dsx_read_tagged_fifo,
-+			.fifo_th = {
-+				.addr = 0x07,
-+				.mask = GENMASK(8, 0),
-+			},
-+			.fifo_diff = {
-+				.addr = 0x3a,
-+				.mask = GENMASK(8, 0),
-+			},
-+			.th_wl = 1,
-+		},
-+		.ts_settings = {
-+			.timer_en = {
-+				.addr = 0x19,
-+				.mask = BIT(5),
-+			},
-+			.decimator = {
-+				.addr = 0x0a,
-+				.mask = GENMASK(7, 6),
-+			},
-+		},
-+	},
- };
- 
- static const struct iio_chan_spec st_lsm6dsx_acc_channels[] = {
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-index 448b7bc1e578..00b4b702645a 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-@@ -65,6 +65,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
- 		.compatible = "st,lsm6dso",
- 		.data = (void *)ST_LSM6DSO_ID,
- 	},
-+	{
-+		.compatible = "st,asm330lhh",
-+		.data = (void *)ST_ASM330LHH_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
-@@ -76,6 +80,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
- 	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
- 	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
- 	{ ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID },
-+	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-index b1df8a6973e6..836256c2ac7d 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-@@ -65,6 +65,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
- 		.compatible = "st,lsm6dso",
- 		.data = (void *)ST_LSM6DSO_ID,
- 	},
-+	{
-+		.compatible = "st,asm330lhh",
-+		.data = (void *)ST_ASM330LHH_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
-@@ -76,6 +80,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
- 	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
- 	{ ST_ISM330DLC_DEV_NAME, ST_ISM330DLC_ID },
- 	{ ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID },
-+	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
--- 
-2.20.1
+> ---
+> v2:
+>   - Drop RFC, as the dependency is part of v5.0-rc1.
+> ---
+>  include/dt-bindings/power/r8a77965-sysc.h | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/include/dt-bindings/power/r8a77965-sysc.h b/include/dt-bindi=
+ngs/power/r8a77965-sysc.h
+> index 05a4b5917314791a..de82d8a15ea13a85 100644
+> --- a/include/dt-bindings/power/r8a77965-sysc.h
+> +++ b/include/dt-bindings/power/r8a77965-sysc.h
+> @@ -21,7 +21,6 @@
+>  #define R8A77965_PD_A3VC		14
+>  #define R8A77965_PD_3DG_A		17
+>  #define R8A77965_PD_3DG_B		18
+> -#define R8A77965_PD_A3IR		24
+>  #define R8A77965_PD_A2VC1		26
+>=20
+>  /* Always-on power area */
+> --
+> 2.17.1
