@@ -1,98 +1,44 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 01/81] ARM: OMAP: dts: N950/N9: fix onenand timings
-Date: Thu, 28 Feb 2019 10:06:53 -0500
-Message-ID: <20190228150813.10256-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 11/81] arm64: dts: renesas: r8a77965: Enable DMA for SCIF2
+Date: Thu, 28 Feb 2019 10:07:03 -0500
+Message-ID: <20190228150813.10256-11-sashal@kernel.org>
+References: <20190228150813.10256-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 8443e4843e1c2594bf5664e1d993a1be71d1befb ]
+[ Upstream commit 05c8478abd485507c25aa565afab604af8d8fe46 ]
 
-Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-started using DT specified timings for GPMC, and as a result the
-OneNAND stopped working on N950/N9 as we had wrong values in the DT.
-Fix by updating the values to bootloader timings that have been tested
-to be working on both Nokia N950 and N9.
+SCIF2 on R-Car M3-N can be used with both DMAC1 and DMAC2.
 
-Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 0ea5b2fd38db56aa ("arm64: dts: renesas: r8a77965: Add SCIF device nodes")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-n950-n9.dtsi | 42 ++++++++++++++++++----------
- 1 file changed, 28 insertions(+), 14 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-index 0d9b85317529b..e142e6c70a59f 100644
---- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-+++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-@@ -370,6 +370,19 @@
- 		compatible = "ti,omap2-onenand";
- 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
- 
-+		/*
-+		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
-+		 * bootloader set values when booted with v4.19 using both N950
-+		 * and N9 devices (OneNAND Manufacturer: Samsung):
-+		 *
-+		 *   gpmc cs0 before gpmc_cs_program_settings:
-+		 *   cs0 GPMC_CS_CONFIG1: 0xfd001202
-+		 *   cs0 GPMC_CS_CONFIG2: 0x00181800
-+		 *   cs0 GPMC_CS_CONFIG3: 0x00030300
-+		 *   cs0 GPMC_CS_CONFIG4: 0x18001804
-+		 *   cs0 GPMC_CS_CONFIG5: 0x03171d1d
-+		 *   cs0 GPMC_CS_CONFIG6: 0x97080000
-+		 */
- 		gpmc,sync-read;
- 		gpmc,sync-write;
- 		gpmc,burst-length = <16>;
-@@ -379,26 +392,27 @@
- 		gpmc,device-width = <2>;
- 		gpmc,mux-add-data = <2>;
- 		gpmc,cs-on-ns = <0>;
--		gpmc,cs-rd-off-ns = <87>;
--		gpmc,cs-wr-off-ns = <87>;
-+		gpmc,cs-rd-off-ns = <122>;
-+		gpmc,cs-wr-off-ns = <122>;
- 		gpmc,adv-on-ns = <0>;
--		gpmc,adv-rd-off-ns = <10>;
--		gpmc,adv-wr-off-ns = <10>;
--		gpmc,oe-on-ns = <15>;
--		gpmc,oe-off-ns = <87>;
-+		gpmc,adv-rd-off-ns = <15>;
-+		gpmc,adv-wr-off-ns = <15>;
-+		gpmc,oe-on-ns = <20>;
-+		gpmc,oe-off-ns = <122>;
- 		gpmc,we-on-ns = <0>;
--		gpmc,we-off-ns = <87>;
--		gpmc,rd-cycle-ns = <112>;
--		gpmc,wr-cycle-ns = <112>;
--		gpmc,access-ns = <81>;
-+		gpmc,we-off-ns = <122>;
-+		gpmc,rd-cycle-ns = <148>;
-+		gpmc,wr-cycle-ns = <148>;
-+		gpmc,access-ns = <117>;
- 		gpmc,page-burst-access-ns = <15>;
- 		gpmc,bus-turnaround-ns = <0>;
- 		gpmc,cycle2cycle-delay-ns = <0>;
- 		gpmc,wait-monitoring-ns = <0>;
--		gpmc,clk-activation-ns = <5>;
--		gpmc,wr-data-mux-bus-ns = <30>;
--		gpmc,wr-access-ns = <81>;
--		gpmc,sync-clk-ps = <15000>;
-+		gpmc,clk-activation-ns = <10>;
-+		gpmc,wr-data-mux-bus-ns = <40>;
-+		gpmc,wr-access-ns = <117>;
-+
-+		gpmc,sync-clk-ps = <15000>; /* TBC; Where this value came? */
- 
- 		/*
- 		 * MTD partition table corresponding to Nokia's MeeGo 1.2
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 83946ca2eba5d..d59dada137223 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -1028,6 +1028,9 @@
+ 				 <&cpg CPG_CORE R8A77965_CLK_S3D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
++			       <&dmac2 0x13>, <&dmac2 0x12>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
+ 			resets = <&cpg 310>;
+ 			status = "disabled";
 -- 
 2.19.1
