@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 11/81] arm64: dts: renesas: r8a77965: Enable DMA for SCIF2
-Date: Thu, 28 Feb 2019 10:07:03 -0500
-Message-ID: <20190228150813.10256-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 24/81] MIPS: DTS: jz4740: Correct interrupt number of DMA core
+Date: Thu, 28 Feb 2019 10:07:16 -0500
+Message-ID: <20190228150813.10256-24-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,36 +9,42 @@ Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Paul Cercueil <paul@crapouillou.net>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 05c8478abd485507c25aa565afab604af8d8fe46 ]
+[ Upstream commit 70999ec1c9d3f783a7232973cfc26971e5732758 ]
 
-SCIF2 on R-Car M3-N can be used with both DMAC1 and DMAC2.
+The interrupt number set in the devicetree node of the DMA driver was
+wrong.
 
-Fixes: 0ea5b2fd38db56aa ("arm64: dts: renesas: r8a77965: Add SCIF device nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 83946ca2eba5d..d59dada137223 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -1028,6 +1028,9 @@
- 				 <&cpg CPG_CORE R8A77965_CLK_S3D1>,
- 				 <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
-+			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
-+			       <&dmac2 0x13>, <&dmac2 0x12>;
-+			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
- 			resets = <&cpg 310>;
- 			status = "disabled";
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index 6fb16fd240353..2beb78a62b7dc 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -161,7 +161,7 @@
+ 		#dma-cells = <2>;
+ 
+ 		interrupt-parent = <&intc>;
+-		interrupts = <29>;
++		interrupts = <20>;
+ 
+ 		clocks = <&cgu JZ4740_CLK_DMA>;
+ 
 -- 
 2.19.1
