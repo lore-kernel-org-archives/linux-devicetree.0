@@ -1,14 +1,18 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v4 0/9] Introduce STMFX I2C Multi-Function eXpander
-Date: Thu, 28 Feb 2019 09:51:59 +0100
-Message-ID: <aefde9a4-2775-6c36-7c75-b60f39434a53@st.com>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v4 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander
+ (STMFX) core bindings
+Date: Thu, 28 Feb 2019 08:53:42 +0000
+Message-ID: <c54c4fd8-b97f-a70b-4805-fd3d217f5050@st.com>
 References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
+ <1551260094-32570-2-git-send-email-amelie.delaunay@st.com>
+ <20190227235535.GA24395@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <20190227235535.GA24395@bogus>
 Content-Language: en-US
+Content-ID: <57CB0BFA4FFC6546A2026BD7801F867B@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,45 +22,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW3DqWxpZQoKT24gMi8yNy8xOSAxMDozNCBBTSwgQW1lbGllIERlbGF1bmF5IHdyb3RlOgo+
-IFRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3IgU1RNaWNyb2VsZWN0cm9uaWNzIE11bHRpLUZ1
-bmN0aW9uIGVYcGFuZGVyCj4gKFNUTUZYKSwgdXNlZCBvbiBzb21lIFNUTTMyIGRpc2NvdmVyeSBh
-bmQgZXZhbHVhdGlvbiBib2FyZHMuCj4gCj4gU1RNRlggaXMgYW4gU1RNMzJMMTUyIHNsYXZlIGNv
-bnRyb2xsZXIgd2hvc2UgZmlybXdhcmUgZW1iZWRzIHRoZSBmb2xsb3dpbmcKPiBmZWF0dXJlczoK
-PiAtIEkvTyBleHBhbmRlciAoMTYgR1BJT3MgKyA4IGV4dHJhIGlmIHRoZSBvdGhlciBmZWF0dXJl
-cyBhcmUgbm90IGVuYWJsZWQpLAo+IC0gcmVzaXN0aXZlIHRvdWNoc2NyZWVuIGNvbnRyb2xsZXIs
-Cj4gLSBJREQgbWVhc3VyZW1lbnQuCj4gCj4gSTJDIHN0dWZmIGFuZCBjaGlwIGluaXRpYWxpemF0
-aW9uIGlzIGJhc2VkIG9uIGFuIE1GRCBwYXJlbnQgZHJpdmVyLCB3aGljaAo+IHJlZ2lzdGVycyBT
-VE1GWCBmZWF0dXJlcyBNRkQgY2hpbGRyZW4uCj4gCj4gLS0tCj4gQ2hhbmdlcyBpbiB2NDoKPiAt
-IG1mZDogbW92ZSByZWdpc3RlcnMgI2RlZmluZSBpbnRvIHRoZSBoZWFkZXIKPiAtIG1mZDogbWVy
-Z2Ugc3RtZnggYW5kIHN0bWZ4X2RkYXRhIHN0cnVjdHVyZXMgaW50byBvbmUgc3RtZnggc3RydWN0
-dXJlCj4gLSBtZmQ6IGNoYW5nZSBzdG1meF9jaGlwX2luaXQvZXhpdCBhbmQgc3RtZnhfaXJxX2lu
-aXQvZXhpdCBhcmdzOiB1c2UKPiAgICBpMmNfY2xpZW50IHN0cnVjdCBhbmQgaTJjX2dldF9jbGll
-bnRkYXRhCj4gLSBtZmQ6IGZpeCB0eXBvcwo+IC0gbWZkOiBhZGQgTUZEIGNlbGxzIGZvciBJREQg
-YW5kIFRTIGZlYXR1cmVzCj4gLSBwaW5jdHJsOiByZXdvcmsgcmVnaXN0ZXJzICNkZWZpbmUKPiAt
-IGR0czogYWRkIFNUTUZYIHN1cHBvcnQgb24gc3RtMzJtcDE1N2MtZXYxCj4gQ2hhbmdlcyBpbiB2
-MzoKPiAtIGZpeCBNRkQgaW50ZXJydXB0IGJpbmRpbmdzCj4gLSBmaXggZHJpdmVycy9tZmQvc3Rt
-ZnguYzoxMDM6ODogd2FybmluZzogJ21hc2snIG1heSBiZSB1c2VkIHVuaW5pdGlhbGl6ZWQKPiAg
-ICBpbiB0aGlzIGZ1bmN0aW9uCj4gQ2hhbmdlcyBpbiB2MjoKPiAtIG1vdmUgdG8gTUZEIHBhcmVu
-dCBkcml2ZXIgZm9yIGkyYyBzdHVmZiBhbmQgY2hpcCBpbml0aWFsaXphdGlvbgo+IC0gaW1wcm92
-ZSByZWdtYXAgY29uZmlndXJhdGlvbgo+IC0gdGFrZSBhZHZhbnRhZ2Ugb2YgdGhlIHVzZSBvZiBn
-cGlvLXJhbmdlcwo+IAo+IEFtZWxpZSBEZWxhdW5heSAoOSk6Cj4gICAgZHQtYmluZGluZ3M6IG1m
-ZDogQWRkIFNUIE11bHRpLUZ1bmN0aW9uIGVYcGFuZGVyIChTVE1GWCkgY29yZSBiaW5kaW5ncwo+
-ICAgIG1mZDogQWRkIFNUIE11bHRpLUZ1bmN0aW9uIGVYcGFuZGVyIChTVE1GWCkgY29yZSBkcml2
-ZXIKPiAgICBkdC1iaW5kaW5nczogcGluY3RybDogZG9jdW1lbnQgdGhlIFNUTUZYIHBpbmN0cmwg
-YmluZGluZ3MKPiAgICBwaW5jdHJsOiBBZGQgU1RNRlggR1BJTyBleHBhbmRlciBQaW5jdHJsL0dQ
-SU8gZHJpdmVyCj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgU1RNRlggc3VwcG9ydCBvbiBzdG0z
-Mjc0NmctZXZhbAo+ICAgIEFSTTogZHRzOiBzdG0zMjogYWRkIGpveXN0aWNrIHN1cHBvcnQgb24g
-c3RtMzI3NDZnLWV2YWwKPiAgICBBUk06IGR0czogc3RtMzI6IGFkZCBvcmFuZ2UgYW5kIGJsdWUg
-bGVkcyBvbiBzdG0zMjc0NmctZXZhbAo+ICAgIEFSTTogZHRzOiBzdG0zMjogYWRkIFNUTUZYIHN1
-cHBvcnQgb24gc3RtMzJtcDE1N2MtZXYxCj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgam95c3Rp
-Y2sgc3VwcG9ydCBvbiBzdG0zMm1wMTU3Yy1ldjEKPiAKCkRUIHBhdGNoZXMgbG9va3MgZ29vZC4g
-SSdsbCB0YWtlIHRoZW0gaW4gU1RNMzIgc29jIHRyZWUgYXMgc29vbiBhcyBMZWUgCnRha2VzIGRy
-aXZlciBwYXJ0LgoKUmVnYXJkcwpBbGV4CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 2/28/19 12:55 AM, Rob Herring wrote:
+> On Wed, 27 Feb 2019 10:34:46 +0100, Amelie Delaunay wrote:
+>> This patch adds documentation of device tree bindings for the
+>> STMicroelectronics Multi-Function eXpander (STMFX) MFD core.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+>> ---
+>>   Documentation/devicetree/bindings/mfd/stmfx.txt | 28 +++++++++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+>>
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
+> 
+
+I'm sorry Rob, I forgot to add your Reviewed-by on this patch, which is 
+identical to v3.
+
+I reposted the whole series, due to changes in MFD driver with side 
+effect in pinctrl driver, but bindings (MFD and pinctrl) didn't change 
+between the two versions. I stated the changes in cover letter.
+
+Should I have removed the bindings patches from the series ?
