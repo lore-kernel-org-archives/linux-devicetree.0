@@ -1,55 +1,47 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH v2 3/3] nvmem: imx-ocotp: broaden Kconfig dependency
-Date: Thu, 28 Feb 2019 08:01:37 +0100
-Message-ID: <20190228070137.30867-3-l.stach@pengutronix.de>
-References: <20190228070137.30867-1-l.stach@pengutronix.de>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
+Date: Thu, 28 Feb 2019 09:04:50 +0200
+Message-ID: <20190228070450.GB3773@localhost.localdomain>
+References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190228070137.30867-1-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mazziesaccount@gmail.com
+Cc: Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-The i.MX OCOTP controller is used in numerous Freescale/NXP
-SoCs from the MXC family, so the strict dependency on the
-i.MX6 SoC is too narrow. Broaden it to cover all the MXC
-familiy members.
+Hello Lee and Mark,
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
----
-v2:
-- rebased on linux-next
-- collected reviewed-by
----
- drivers/nvmem/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
+> Patch series introducing support for ROHM BD70528 PMIC
+> 
+> ROHM BD70528 is a programmable Power Management IC for battery
+> powered 'ultra low power' systems like the pre-announced NXP
+> i.MX7 ULP. This patch series introduces support for the PMIC. Please
+> note that this driver only supports HW setup where PMIC is connected
+> to I2C on A7 core. The other scenario is to use M4 as a power manager
+> and connect pmic to M4. On such setups the A7 can only access pmic
+> via M4 core using RPMSG virtio. Such setup depends on RPMSG
+> implementation on M4 core and is currently not supported by this
+> patch series.
+> 
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 530d570724c9..9e1d83643e9c 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -25,8 +25,8 @@ config NVMEM_IMX_IIM
- 	  will be called nvmem-imx-iim.
- 
- config NVMEM_IMX_OCOTP
--	tristate "i.MX6 On-Chip OTP Controller support"
--	depends on SOC_IMX6 || SOC_IMX7D || COMPILE_TEST
-+	tristate "i.MX 6/7/8 On-Chip OTP Controller support"
-+	depends on ARCH_MXC || COMPILE_TEST
- 	depends on HAS_IOMEM
- 	help
- 	  This is a driver for the On-Chip OTP Controller (OCOTP) available on
--- 
-2.20.1
+I was wondering if there is anything that could be done to allow the MFD
+part of this series to end up in upstream without having to wait the
+regmap-irq changes
+(https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/commit/?h=topic/irq)
+ to be merged from Linus' tree to MFD tree? If I see it correctly, the
+regmap-irq (main-irq-reg support) changes are not targeted to linux 5.1.
+To me it looks like getting them to MFD via Linus' tree will take a while.
+
+The MFD part depends on the regmap-irq changes and I think that most
+other subsystems want to have the MFD changes in before taking rest of
+the driver in their trees. So it will be a while untill all the changes
+are in. It would really be nice to have the drive in-tree sooner - hence
+I ask if theres a way. (I don't want to push, just ask if it is possible :])
+
+Best Regards
+	Matti Vaittinen
