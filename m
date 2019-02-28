@@ -1,7 +1,8 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 1/6] dt-bindings: nvmem: Add STM32 factory-programmed romem
-Date: Thu, 28 Feb 2019 11:19:51 +0100
-Message-ID: <1551349196-8956-2-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v2 5/6] ARM: dts: stm32: Add romem and temperature calibration
+ on stm32mp157c
+Date: Thu, 28 Feb 2019 11:19:55 +0100
+Message-ID: <1551349196-8956-6-git-send-email-fabrice.gasnier@st.com>
 References: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,54 +22,38 @@ To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, alexandre.torgue@st.com
 Cc: mark.rutland@arm.com, lionel.debieve@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for STMicroelectronics STM32 Factory-programmed
-read only memory area.
+Add & enable stm32 factory-programmed memory. Describe temperature sensor
+calibration cells. Non-volatile calibration data is made available by
+stm32mp157c bootrom in bsec_dataX registers.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
-Changes in v2:
-- update "st,stm32f4-otp" compatible as discussed with Rob
----
- .../devicetree/bindings/nvmem/st,stm32-romem.txt   | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+ arch/arm/boot/dts/stm32mp157c.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
-new file mode 100644
-index 0000000..142a51d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
-@@ -0,0 +1,31 @@
-+STMicroelectronics STM32 Factory-programmed data device tree bindings
-+
-+This represents STM32 Factory-programmed read only non-volatile area: locked
-+flash, OTP, read-only HW regs... This contains various information such as:
-+analog calibration data for temperature sensor (e.g. TS_CAL1, TS_CAL2),
-+internal vref (VREFIN_CAL), unique device ID...
-+
-+Required properties:
-+- compatible:		Should be one of:
-+			"st,stm32f4-otp"
-+			"st,stm32mp15-bsec"
-+- reg:			Offset and length of factory-programmed area.
-+- #address-cells:	Should be '<1>'.
-+- #size-cells:		Should be '<1>'.
-+
-+Optional Data cells:
-+- Must be child nodes as described in nvmem.txt.
-+
-+Example on stm32f4:
-+	romem: nvmem@1fff7800 {
-+		compatible = "st,stm32f4-otp";
-+		reg = <0x1fff7800 0x400>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/* Data cells: ts_cal1 at 0x1fff7a2c */
-+		ts_cal1: calib@22c {
-+			reg = <0x22c 0x2>;
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 8bf1c17..9a7ac80 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -1106,6 +1106,19 @@
+ 			status = "disabled";
+ 		};
+ 
++		bsec: nvmem@5c005000 {
++			compatible = "st,stm32mp15-bsec";
++			reg = <0x5c005000 0x400>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ts_cal1: calib@5c {
++				reg = <0x5c 0x2>;
++			};
++			ts_cal2: calib@5e {
++				reg = <0x5e 0x2>;
++			};
 +		};
-+		...
-+	};
++
+ 		i2c6: i2c@5c009000 {
+ 			compatible = "st,stm32f7-i2c";
+ 			reg = <0x5c009000 0x400>;
 -- 
 2.7.4
