@@ -1,7 +1,8 @@
 From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v3 2/3] arm64: dts: imx8mq: Add the buck vdd_arm regulator
-Date: Thu, 28 Feb 2019 21:42:45 +0000
-Message-ID: <1551390149-15443-3-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v3 3/3] arm64: dts: imx8mq: Add the opp table and cores opp
+ properties
+Date: Thu, 28 Feb 2019 21:42:46 +0000
+Message-ID: <1551390149-15443-4-git-send-email-abel.vesa@nxp.com>
 References: <1551390149-15443-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,70 +15,80 @@ To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland
 Cc: dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-According to the schematics, this is a MP2147 switch converter
-which is controlled by GPIO1_IO13. When set the gpio is set to
-high the regulator output is set to 0.9V. When the gpio is set
-to low the regulator output is set to 1V.
+Add the 0.8GHz and 1GHz opps. According to the datasheet:
+https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
+section 3.1.3 Operating ranges.
+
+The 0.8GHz opp runs in nominal mode with the regulator set to 0.9V.
+The 1GHz runs in overdrive mode with the regulator set to 1V.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 35 ++++++++++++++++++++++++=
-++++
- 1 file changed, 35 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot=
-/dts/freescale/imx8mq-evk.dts
-index 54737bf..afea110 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -31,6 +31,34 @@
- 		gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	buck2_reg: regulator-buck2 {
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_buck2>;
-+		compatible =3D "regulator-gpio";
-+		regulator-name =3D "vdd_arm";
-+		regulator-min-microvolt =3D <900000>;
-+		regulator-max-microvolt =3D <1000000>;
-+		gpios =3D <&gpio1 13 GPIO_ACTIVE_HIGH>;
-+		states =3D <1000000 0x0
-+			  900000 0x1>;
-+	};
-+};
-+
-+&A53_0 {
-+	cpu-supply =3D <&buck2_reg>;
-+};
-+
-+&A53_1 {
-+	cpu-supply =3D <&buck2_reg>;
-+};
-+
-+&A53_2 {
-+	cpu-supply =3D <&buck2_reg>;
-+};
-+
-+&A53_3 {
-+	cpu-supply =3D <&buck2_reg>;
- };
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mq.dtsi
+index 1a89062..306e3e2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -91,6 +91,7 @@
+ 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+ 			enable-method =3D "psci";
+ 			next-level-cache =3D <&A53_L2>;
++			operating-points-v2 =3D <&a53_opp_table>;
+ 		};
 =20
- &fec1 {
-@@ -203,6 +231,13 @@
- };
+ 		A53_1: cpu@1 {
+@@ -101,6 +102,7 @@
+ 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+ 			enable-method =3D "psci";
+ 			next-level-cache =3D <&A53_L2>;
++			operating-points-v2 =3D <&a53_opp_table>;
+ 		};
 =20
- &iomuxc {
-+	pinctrl_buck2: vddarmgrp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13		0x19
-+		>;
+ 		A53_2: cpu@2 {
+@@ -111,6 +113,7 @@
+ 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+ 			enable-method =3D "psci";
+ 			next-level-cache =3D <&A53_L2>;
++			operating-points-v2 =3D <&a53_opp_table>;
+ 		};
+=20
+ 		A53_3: cpu@3 {
+@@ -121,6 +124,7 @@
+ 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
+ 			enable-method =3D "psci";
+ 			next-level-cache =3D <&A53_L2>;
++			operating-points-v2 =3D <&a53_opp_table>;
+ 		};
+=20
+ 		A53_L2: l2-cache0 {
+@@ -666,6 +670,25 @@
+ 			status =3D "disabled";
+ 		};
+=20
 +
-+	};
++		a53_opp_table: opp-table {
++			compatible =3D "operating-points-v2";
++			opp-shared;
 +
- 	pinctrl_fec1: fec1grp {
- 		fsl,pins =3D <
- 			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
++			opp-800000000 {
++				opp-hz =3D /bits/ 64 <800000000>;
++				opp-microvolt =3D <900000>;
++				clock-latency-ns =3D <150000>;
++			};
++
++			opp-1000000000 {
++				opp-hz =3D /bits/ 64 <1000000000>;
++				opp-microvolt =3D <1000000>;
++				clock-latency-ns =3D <150000>;
++				opp-suspend;
++			};
++		};
++
+ 		gic: interrupt-controller@38800000 {
+ 			compatible =3D "arm,gic-v3";
+ 			reg =3D <0x38800000 0x10000>,	/* GIC Dist */
 --=20
 2.7.4
