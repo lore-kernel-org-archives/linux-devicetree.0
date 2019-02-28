@@ -1,146 +1,52 @@
-From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v4 08/17] kunit: test: add support for test abort
-Date: Thu, 28 Feb 2019 10:02:24 -0800
-Message-ID: <155137694423.260864.2846034318906225490@swboyd.mtv.corp.google.com>
-References: <20190214213729.21702-1-brendanhiggins@google.com>
- <20190214213729.21702-9-brendanhiggins@google.com>
- <155121334527.260864.5324117081460979741@swboyd.mtv.corp.google.com>
- <CAFd5g46QCisA4PHQXo57-LC6sNdk=OUjBE0O1s4005uBz_Vo6Q@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC][PATCH] dt-bindings: usb: add non-removable device property
+Date: Thu, 28 Feb 2019 19:06:19 +0100
+Message-ID: <20190228180619.GB30532@kroah.com>
+References: <20190228143344.16312-1-mans@mansr.com>
+ <20190228151330.GA1360@kroah.com>
+ <yw1x8sy0uedr.fsf@mansr.com>
+ <20190228155241.GC12050@kroah.com>
+ <yw1x4l8nvmu6.fsf@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAFd5g46QCisA4PHQXo57-LC6sNdk=OUjBE0O1s4005uBz_Vo6Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: brakmo-b10kYP2dOMg@public.gmane.org, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>, Kees Cook <keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, om-y27Ovi1pjclAfugRpC6u6w@public.gmane.org, Petr Mladek <pmladek@suse.c>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <yw1x4l8nvmu6.fsf@mansr.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brendan Higgins (2019-02-28 01:03:24)
-> On Tue, Feb 26, 2019 at 12:35 PM Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Thu, Feb 28, 2019 at 05:34:25PM +0000, Måns Rullgård wrote:
+> >> --- a/drivers/usb/core/hub.c
+> >> +++ b/drivers/usb/core/hub.c
+> >> @@ -2392,6 +2392,14 @@ static void set_usb_port_removable(struct usb_device *udev)
+> >>                 break;
+> >>         }
+> >>  
+> >> +       /*
+> >> +        * Otherwise, check whether DT indicates this device is non-removable.
+> >> +        */
+> >> +       if (of_property_read_bool(udev->dev.of_node, "non-removable")) {
+> >> +               udev->removable = USB_DEVICE_FIXED;
+> >> +               return;
+> >> +       }
 > >
-> > when they need to abort and then the test runner would detect that error
-> > via the return value from the 'run test' function. That would be a more
-> > direct approach, but also more verbose than a single KUNIT_ASSERT()
-> > line. It would be more kernel idiomatic too because the control flow
+> > Shouldn't this be an attribute of the USB hub's port, not the device
+> > itself?  That's the way it works with ACPI, and odds are any description
+> > of USB devices in DT is also going to look much like how ACPI describes
+> > the devices, let's not try to diverge when it is not necessary.
 > 
-> Yeah, I was intentionally going against that idiom. I think that idiom
-> makes test logic more complicated than it needs to be, especially if
-> the assertion failure happens in a helper function; then you have to
-> pass that error all the way back up. It is important that test code
-> should be as simple as possible to the point of being immediately
-> obviously correct at first glance because there are no tests for
-> tests.
+> Fine with me.  That's why I asked.
 > 
-> The idea with assertions is that you use them to state all the
-> preconditions for your test. Logically speaking, these are the
-> premises of the test case, so if a premise isn't true, there is no
-> point in continuing the test case because there are no conclusions
-> that can be drawn without the premises. Whereas, the expectation is
-> the thing you are trying to prove. It is not used universally in
-> x-unit style test frameworks, but I really like it as a convention.
-> You could still express the idea of a premise using the above idiom,
-> but I think KUNIT_ASSERT_* states the intended idea perfectly.
+> How about a non-removable-ports property in the hub node listing the
+> hardwired ports?
 
-Fair enough. It would be great if these sorts of things were described
-in the commit text.
+Sounds reasonable to me as that should mirror what happens in ACPI, so
+you should be able to just mirror what drivers/usb/core/usb-acpi.c does
+for dt.
 
-Is the assumption that things like held locks and refcounted elements
-won't exist when one of these assertions is made? It sounds like some of
-the cleanup logic could be fairly complicated if a helper function
-changes some state and then an assert fails and we have to unwind all
-the state from a corrupt location. A similar problem exists for a test
-timeout too. How do we get back to a sane state if the test locks up for
-a long time? Just don't try?
+thanks,
 
-> 
-> > isn't hidden inside a macro and it isn't intimately connected with
-> > kthreads and completions.
-> 
-> Yeah, I wasn't a fan of that myself, but it was broadly available. My
-> previous version (still the architecture specific version for UML, not
-> in this patchset though) relies on UML_LONGJMP, but is obviously only
-> works on UML. A number of people wanted support for other
-> architectures. Rob and Luis specifically wanted me to provide a
-> version of abort that would work on any architecture, even if it only
-> had reduced functionality; I thought this fit the bill okay.
-
-Ok.
-
-> 
-> >
-> > >
-> > > diff --git a/kunit/test.c b/kunit/test.c
-> > > index d18c50d5ed671..6e5244642ab07 100644
-> > > --- a/kunit/test.c
-> > > +++ b/kunit/test.c
-> > [...]
-> > > +
-> > > +static void kunit_generic_throw(struct kunit_try_catch *try_catch)
-> > > +{
-> > > +       try_catch->context.try_result = -EFAULT;
-> > > +       complete_and_exit(try_catch->context.try_completion, -EFAULT);
-> > > +}
-> > > +
-> > > +static int kunit_generic_run_threadfn_adapter(void *data)
-> > > +{
-> > > +       struct kunit_try_catch *try_catch = data;
-> > >
-> > > +       try_catch->try(&try_catch->context);
-> > > +
-> > > +       complete_and_exit(try_catch->context.try_completion, 0);
-> >
-> > The exit code doesn't matter, right? If so, it might be clearer to just
-> > return 0 from this function because kthreads exit themselves as far as I
-> > recall.
-> 
-> You mean complete and then return?
-
-Yes. I was confused for a minute because I thought the exit code was
-checked, but it isn't. Instead, the try_catch->context.try_result is
-where the test result goes, so calling exit explicitly doesn't seem to
-be important here, but it is important in the throw case.
-
-> 
-> >
-> > > +       else if (exit_code)
-> > > +               kunit_err(test, "Unknown error: %d", exit_code);
-> > > +}
-> > > +
-> > > +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch)
-> > > +{
-> > > +       try_catch->run = kunit_generic_run_try_catch;
-> >
-> > Is the idea that 'run' would be anything besides
-> > 'kunit_generic_run_try_catch'? If it isn't going to be different, then
-> 
-> Yeah, it can be overridden with an architecture specific version.
-> 
-> > maybe it's simpler to just have a function like
-> > kunit_generic_run_try_catch() that is called by the unit tests instead
-> > of having to write 'try_catch->run(try_catch)' and indirect for the
-> > basic case. Maybe I've missed the point entirely though and this is all
-> > scaffolding for more complicated exception handling later on.
-> 
-> Yeah, the idea is that different architectures can override exception
-> handling with their own implementation. This is just the generic one.
-> For example, UML has one that doesn't depend on kthreads or
-> completions; the UML version also allows recovery from some segfault
-> conditions.
-
-Ok, got it. It may still be nice to have a wrapper or macro for that
-try_catch->run(try_catch) statement so we don't have to know that a
-try_catch struct has a run member.
-
-	static inline void kunit_run_try_catch(struct kunit_try_catch *try_catch)
-	{
-		try_catch->run(try_catch);
-	}
+greg k-h
