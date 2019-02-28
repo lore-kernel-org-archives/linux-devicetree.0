@@ -1,54 +1,55 @@
-From: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Subject: [RFC PATCH 1/2] dt-bindings: spi: Add device tree binding documentation for Zynq QSPI controller
-Date: Thu, 28 Feb 2019 12:31:53 +0530
-Message-ID: <1551337313-9499-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v2 3/3] nvmem: imx-ocotp: broaden Kconfig dependency
+Date: Thu, 28 Feb 2019 08:01:37 +0100
+Message-ID: <20190228070137.30867-3-l.stach@pengutronix.de>
+References: <20190228070137.30867-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: michal.simek@xilinx.com, mark.rutland@arm.com, broonie@kernel.org, bbrezillon@kernel.org, horms+renesas@verge.net.au, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, nagasuresh12@gmail.com, Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190228070137.30867-1-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the dts binding document for Zynq SOC QSPI
-controller.
+The i.MX OCOTP controller is used in numerous Freescale/NXP
+SoCs from the MXC family, so the strict dependency on the
+i.MX6 SoC is too narrow. Broaden it to cover all the MXC
+familiy members.
 
-Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- .../devicetree/bindings/spi/spi-zynq-qspi.txt      | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
+v2:
+- rebased on linux-next
+- collected reviewed-by
+---
+ drivers/nvmem/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-new file mode 100644
-index 0000000..16b734a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-@@ -0,0 +1,25 @@
-+Xilinx Zynq QSPI controller Device Tree Bindings
-+-------------------------------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "xlnx,zynq-qspi-1.0".
-+- reg			: Physical base address and size of QSPI registers map.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- clock-names		: List of input clock names - "ref_clk", "pclk"
-+			  (See clock bindings for details).
-+- clocks		: Clock phandles (see clock bindings for details).
-+
-+Optional properties:
-+- num-cs		: Number of chip selects used.
-+
-+Example:
-+	qspi: spi@e000d000 {
-+		compatible = "xlnx,zynq-qspi-1.0";
-+		reg = <0xe000d000 0x1000>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 19 4>;
-+		clock-names = "ref_clk", "pclk";
-+		clocks = <&clkc 10>, <&clkc 43>;
-+		num-cs = <1>;
-+	};
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index 530d570724c9..9e1d83643e9c 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -25,8 +25,8 @@ config NVMEM_IMX_IIM
+ 	  will be called nvmem-imx-iim.
+ 
+ config NVMEM_IMX_OCOTP
+-	tristate "i.MX6 On-Chip OTP Controller support"
+-	depends on SOC_IMX6 || SOC_IMX7D || COMPILE_TEST
++	tristate "i.MX 6/7/8 On-Chip OTP Controller support"
++	depends on ARCH_MXC || COMPILE_TEST
+ 	depends on HAS_IOMEM
+ 	help
+ 	  This is a driver for the On-Chip OTP Controller (OCOTP) available on
 -- 
-2.7.4
+2.20.1
