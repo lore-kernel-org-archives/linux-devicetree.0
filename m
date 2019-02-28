@@ -1,66 +1,69 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 1/7] drm: atmel-hlcdc: add config option for clock
- selection
-Date: Thu, 28 Feb 2019 22:25:58 +0100
-Message-ID: <20190228212558.GB30188@ravnborg.org>
-References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
- <1551284609-14594-2-git-send-email-claudiu.beznea@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
+Date: Thu, 28 Feb 2019 22:28:40 +0100
+Message-ID: <20190228212840.24964-1-andreas@kemnade.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1551284609-14594-2-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-Hi Claudiu
+The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
+with broadcom internals attached to UART1 and some gpios.
+This addition is in line with similar boards
 
-On Wed, Feb 27, 2019 at 04:24:16PM +0000, Claudiu.Beznea@microchip.com wrote:
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> 
-> SAM9x60 LCD Controller has no option to select clock source as previous
-> controllers have. To be able to use the same driver even for this LCD
-> controller add a config option to know if controller supports this.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 12 +++++++-----
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h   |  2 ++
->  2 files changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-> index 8070a558d7b1..17a7a18f6a07 100644
-> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-> @@ -78,7 +78,8 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
->  	unsigned long mode_rate;
->  	struct videomode vm;
->  	unsigned long prate;
-> -	unsigned int cfg;
-> +	unsigned int mask = ATMEL_HLCDC_CLKDIV_MASK | ATMEL_HLCDC_CLKPOL;
-> +	unsigned int cfg = 0;
->  	int div;
-Here cfg and mask has initial values.
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
->  
->  	vm.vfront_porch = adj->crtc_vsync_start - adj->crtc_vdisplay;
-> @@ -101,7 +102,10 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
->  		     (adj->crtc_hdisplay - 1) |
->  		     ((adj->crtc_vdisplay - 1) << 16));
->  
-> -	cfg = ATMEL_HLCDC_CLKSEL;
-> +	if (!crtc->dc->desc->fixed_clksrc) {
-> +		cfg = ATMEL_HLCDC_CLKSEL;
-> +		mask |= ATMEL_HLCDC_CLKSEL;
-> +	}
-And here mask is bitwise or with ATMEL_HLCDC_CLKSEL - fine.
-But cfg is directly assigned.
-If cfg was bitwise or the ATMEL_HLCDC_CLKSEL value then the code was prepared
-to have extra flags added above these lines.
-
-Only a small change and no functional difference.
-
-With or without this change:
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+index 1db2541135a7..39e206fac4e3 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -69,6 +69,8 @@
+ 		compatible = "mmc-pwrseq-simple";
+ 		pinctrl-names = "default";
+ 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
+ 	};
+ };
+ 
+@@ -122,7 +124,34 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
+ 	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_pins_out>, <&bt_pins_in>;
++		clocks = <&rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_vcc3v3>;
++		vddio-supply = <&reg_vcc3v3>;
++		device-wakeup-gpios = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
++		host-wakeup-gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
++		shutdown-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
++	};
++
++};
++
++&pio {
++	bt_pins_out: bt_out {
++		pins = "PG12", "PG13";
++		function = "gpio_out";
++	};
++
++	bt_pins_in: bt_in {
++		pins = "PG11";
++		function = "gpio_in";
++	};
+ };
+ 
+ &usb_otg {
+-- 
+2.11.0
