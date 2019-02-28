@@ -1,34 +1,22 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: axg-audio: unexpose controller inputs
-Date: Thu, 28 Feb 2019 12:27:31 -0600
-Message-ID: <20190228182731.GA25353@bogus>
-References: <20190213095835.17448-1-jbrunet@baylibre.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V3 2/3] ARM: dts: imx7ulp: add mmdc support
+Date: Thu, 28 Feb 2019 15:27:47 -0300
+Message-ID: <CAOMZO5C8CWu2ArCZ1vMzZsmpFKt9RuR+FrfB_P3S35s8Ynbt2Q@mail.gmail.com>
+References: <1551321831-11597-1-git-send-email-Anson.Huang@nxp.com> <1551321831-11597-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190213095835.17448-1-jbrunet@baylibre.com>
+In-Reply-To: <1551321831-11597-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Maxime Jourdan <mjourdan@baylibre.com>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Feb 2019 10:58:35 +0100, Jerome Brunet wrote:
-> Remove the bindings ID of the clock input of the controller. These
-> clocks are purely internal to the controller, exposing them was a
-> mistake. Actually, these should not even be in the provider and have
-> IDs to begin with.
-> 
-> Unexpose these IDs before:
->  * someone starts using them (even if there no valid reason to do so)
->  * the actual clocks are removed. The fact that they exist is just the
->    result of an ugly hack. This will be resolved in CCF when we can
->    reference DT directly in parent table.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/clk/meson/axg-audio.h              | 20 ++++++++++++++++++++
->  include/dt-bindings/clock/axg-audio-clkc.h | 20 --------------------
->  2 files changed, 20 insertions(+), 20 deletions(-)
-> 
+On Wed, Feb 27, 2019 at 11:48 PM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> i.MX7ULP has a MMDC module to control DDR, it reuses
+> i.MX6Q's MMDC module, add support for it.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
