@@ -1,11 +1,13 @@
 From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH v2 1/3] dt-bindings: imx-ocotp: Add i.MX8MQ compatible
-Date: Thu, 28 Feb 2019 08:01:35 +0100
-Message-ID: <20190228070137.30867-1-l.stach@pengutronix.de>
+Subject: [PATCH v2 2/3] nvmem: imx-ocotp: add support for imx8mq
+Date: Thu, 28 Feb 2019 08:01:36 +0100
+Message-ID: <20190228070137.30867-2-l.stach@pengutronix.de>
+References: <20190228070137.30867-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190228070137.30867-1-l.stach@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,41 +21,43 @@ To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc: devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add compatible for i.MX8MQ and add i.MX7D/S, i.MX7ULP and i.M8MQ
-to the description.
+The i.MX8MQ uses the same OCOTP block as the i.MX7D, but with
+fourfold increase in fuse banks.
 
 Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 ---
 v2:
 - rebased on linux-next
 - collected reviewed
 ---
- Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/nvmem/imx-ocotp.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-index 7a999a135e56..68f7d6fdd140 100644
---- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-+++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-@@ -1,7 +1,8 @@
- Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
+diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+index 08a9b1ef8ae4..e0b22b6c045b 100644
+--- a/drivers/nvmem/imx-ocotp.c
++++ b/drivers/nvmem/imx-ocotp.c
+@@ -444,6 +444,12 @@ static const struct ocotp_params imx7ulp_params = {
+ 	.bank_address_words = 0,
+ };
  
- This binding represents the on-chip eFuse OTP controller found on
--i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6ULL/ULZ and i.MX6SLL SoCs.
-+i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6ULL/ULZ, i.MX6SLL,
-+i.MX7D/S, i.MX7ULP and i.MX8MQ SoCs.
- 
- Required properties:
- - compatible: should be one of
-@@ -13,6 +14,7 @@ Required properties:
- 	"fsl,imx7d-ocotp" (i.MX7D/S),
- 	"fsl,imx6sll-ocotp" (i.MX6SLL),
- 	"fsl,imx7ulp-ocotp" (i.MX7ULP),
-+	"fsl,imx8mq-ocotp" (i.MX8MQ),
- 	followed by "syscon".
- - #address-cells : Should be 1
- - #size-cells : Should be 1
++static const struct ocotp_params imx8mq_params = {
++	.nregs = 256,
++	.bank_address_words = 4,
++	.set_timing = imx_ocotp_set_imx7_timing,
++};
++
+ static const struct of_device_id imx_ocotp_dt_ids[] = {
+ 	{ .compatible = "fsl,imx6q-ocotp",  .data = &imx6q_params },
+ 	{ .compatible = "fsl,imx6sl-ocotp", .data = &imx6sl_params },
+@@ -453,6 +459,7 @@ static const struct of_device_id imx_ocotp_dt_ids[] = {
+ 	{ .compatible = "fsl,imx7d-ocotp",  .data = &imx7d_params },
+ 	{ .compatible = "fsl,imx6sll-ocotp", .data = &imx6sll_params },
+ 	{ .compatible = "fsl,imx7ulp-ocotp", .data = &imx7ulp_params },
++	{ .compatible = "fsl,imx8mq-ocotp", .data = &imx8mq_params },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, imx_ocotp_dt_ids);
 -- 
 2.20.1
