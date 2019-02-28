@@ -1,74 +1,62 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
-Date: Thu, 28 Feb 2019 10:22:48 +0200
-Message-ID: <20190228082248.GC3773@localhost.localdomain>
-References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
- <20190228070450.GB3773@localhost.localdomain>
- <20190228081055.GL4118@dell>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v4 0/9] Introduce STMFX I2C Multi-Function eXpander
+Date: Thu, 28 Feb 2019 09:51:59 +0100
+Message-ID: <aefde9a4-2775-6c36-7c75-b60f39434a53@st.com>
+References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190228081055.GL4118@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee, Mark,
-
-On Thu, Feb 28, 2019 at 08:10:55AM +0000, Lee Jones wrote:
-> On Thu, 28 Feb 2019, Matti Vaittinen wrote:
-> 
-> > Hello Lee and Mark,
-> > 
-> > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
-> > > Patch series introducing support for ROHM BD70528 PMIC
-> > > 
-> > I was wondering if there is anything that could be done to allow the MFD
-> > part of this series to end up in upstream without having to wait the
-> > regmap-irq changes
-> > (https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/commit/?h=topic/irq)
-> >  to be merged from Linus' tree to MFD tree? If I see it correctly, the
-> > regmap-irq (main-irq-reg support) changes are not targeted to linux 5.1.
-> > To me it looks like getting them to MFD via Linus' tree will take a while.
-> > 
-> > The MFD part depends on the regmap-irq changes and I think that most
-> > other subsystems want to have the MFD changes in before taking rest of
-> > the driver in their trees. So it will be a while untill all the changes
-> > are in. It would really be nice to have the drive in-tree sooner - hence
-> > I ask if theres a way. (I don't want to push, just ask if it is possible :])
-> 
-> It's possible, so long as there aren't any build-time dependencies
-> between the subsystems.  Immediate acceptance however isn't possible
-> due to the impending merge-window which opens in 3 days.
-
-Thanks for reply Lee. So merge-window is opening - meaning the 5.1 is
-being baked now(?) 
-
-Anyays to make it clear - there is build time dependency between MFD and
-regmap-irq changes. MFD part won't compile without the changes in regmap
-tree. And theres no new Kconfig to depend on or other compile time
-checks. So REGMAP changes are required for this MFD portion to compile.
-
-So my question actually is if the MFD portion must wait untill REGMAP
-goes to Linus tree (at 5.2(?))- and then get merged to MFD tree later -
-or if the regmap-irq changes can go to MFD via some other route (sorry -
-I don't really know how you guys do maintain the trees - I really lack
-of the insight/skills on that area :])
-
-Rest of the subsystems (regulator, clk, watchdog, gpio) do all depend on
-MFD - but they should have 'depends on' KConfig to MFD meaning they
-won't be built without MFD.
-
-Br,
-	Matti Vaittinen
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+SGkgQW3DqWxpZQoKT24gMi8yNy8xOSAxMDozNCBBTSwgQW1lbGllIERlbGF1bmF5IHdyb3RlOgo+
+IFRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3IgU1RNaWNyb2VsZWN0cm9uaWNzIE11bHRpLUZ1
+bmN0aW9uIGVYcGFuZGVyCj4gKFNUTUZYKSwgdXNlZCBvbiBzb21lIFNUTTMyIGRpc2NvdmVyeSBh
+bmQgZXZhbHVhdGlvbiBib2FyZHMuCj4gCj4gU1RNRlggaXMgYW4gU1RNMzJMMTUyIHNsYXZlIGNv
+bnRyb2xsZXIgd2hvc2UgZmlybXdhcmUgZW1iZWRzIHRoZSBmb2xsb3dpbmcKPiBmZWF0dXJlczoK
+PiAtIEkvTyBleHBhbmRlciAoMTYgR1BJT3MgKyA4IGV4dHJhIGlmIHRoZSBvdGhlciBmZWF0dXJl
+cyBhcmUgbm90IGVuYWJsZWQpLAo+IC0gcmVzaXN0aXZlIHRvdWNoc2NyZWVuIGNvbnRyb2xsZXIs
+Cj4gLSBJREQgbWVhc3VyZW1lbnQuCj4gCj4gSTJDIHN0dWZmIGFuZCBjaGlwIGluaXRpYWxpemF0
+aW9uIGlzIGJhc2VkIG9uIGFuIE1GRCBwYXJlbnQgZHJpdmVyLCB3aGljaAo+IHJlZ2lzdGVycyBT
+VE1GWCBmZWF0dXJlcyBNRkQgY2hpbGRyZW4uCj4gCj4gLS0tCj4gQ2hhbmdlcyBpbiB2NDoKPiAt
+IG1mZDogbW92ZSByZWdpc3RlcnMgI2RlZmluZSBpbnRvIHRoZSBoZWFkZXIKPiAtIG1mZDogbWVy
+Z2Ugc3RtZnggYW5kIHN0bWZ4X2RkYXRhIHN0cnVjdHVyZXMgaW50byBvbmUgc3RtZnggc3RydWN0
+dXJlCj4gLSBtZmQ6IGNoYW5nZSBzdG1meF9jaGlwX2luaXQvZXhpdCBhbmQgc3RtZnhfaXJxX2lu
+aXQvZXhpdCBhcmdzOiB1c2UKPiAgICBpMmNfY2xpZW50IHN0cnVjdCBhbmQgaTJjX2dldF9jbGll
+bnRkYXRhCj4gLSBtZmQ6IGZpeCB0eXBvcwo+IC0gbWZkOiBhZGQgTUZEIGNlbGxzIGZvciBJREQg
+YW5kIFRTIGZlYXR1cmVzCj4gLSBwaW5jdHJsOiByZXdvcmsgcmVnaXN0ZXJzICNkZWZpbmUKPiAt
+IGR0czogYWRkIFNUTUZYIHN1cHBvcnQgb24gc3RtMzJtcDE1N2MtZXYxCj4gQ2hhbmdlcyBpbiB2
+MzoKPiAtIGZpeCBNRkQgaW50ZXJydXB0IGJpbmRpbmdzCj4gLSBmaXggZHJpdmVycy9tZmQvc3Rt
+ZnguYzoxMDM6ODogd2FybmluZzogJ21hc2snIG1heSBiZSB1c2VkIHVuaW5pdGlhbGl6ZWQKPiAg
+ICBpbiB0aGlzIGZ1bmN0aW9uCj4gQ2hhbmdlcyBpbiB2MjoKPiAtIG1vdmUgdG8gTUZEIHBhcmVu
+dCBkcml2ZXIgZm9yIGkyYyBzdHVmZiBhbmQgY2hpcCBpbml0aWFsaXphdGlvbgo+IC0gaW1wcm92
+ZSByZWdtYXAgY29uZmlndXJhdGlvbgo+IC0gdGFrZSBhZHZhbnRhZ2Ugb2YgdGhlIHVzZSBvZiBn
+cGlvLXJhbmdlcwo+IAo+IEFtZWxpZSBEZWxhdW5heSAoOSk6Cj4gICAgZHQtYmluZGluZ3M6IG1m
+ZDogQWRkIFNUIE11bHRpLUZ1bmN0aW9uIGVYcGFuZGVyIChTVE1GWCkgY29yZSBiaW5kaW5ncwo+
+ICAgIG1mZDogQWRkIFNUIE11bHRpLUZ1bmN0aW9uIGVYcGFuZGVyIChTVE1GWCkgY29yZSBkcml2
+ZXIKPiAgICBkdC1iaW5kaW5nczogcGluY3RybDogZG9jdW1lbnQgdGhlIFNUTUZYIHBpbmN0cmwg
+YmluZGluZ3MKPiAgICBwaW5jdHJsOiBBZGQgU1RNRlggR1BJTyBleHBhbmRlciBQaW5jdHJsL0dQ
+SU8gZHJpdmVyCj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgU1RNRlggc3VwcG9ydCBvbiBzdG0z
+Mjc0NmctZXZhbAo+ICAgIEFSTTogZHRzOiBzdG0zMjogYWRkIGpveXN0aWNrIHN1cHBvcnQgb24g
+c3RtMzI3NDZnLWV2YWwKPiAgICBBUk06IGR0czogc3RtMzI6IGFkZCBvcmFuZ2UgYW5kIGJsdWUg
+bGVkcyBvbiBzdG0zMjc0NmctZXZhbAo+ICAgIEFSTTogZHRzOiBzdG0zMjogYWRkIFNUTUZYIHN1
+cHBvcnQgb24gc3RtMzJtcDE1N2MtZXYxCj4gICAgQVJNOiBkdHM6IHN0bTMyOiBhZGQgam95c3Rp
+Y2sgc3VwcG9ydCBvbiBzdG0zMm1wMTU3Yy1ldjEKPiAKCkRUIHBhdGNoZXMgbG9va3MgZ29vZC4g
+SSdsbCB0YWtlIHRoZW0gaW4gU1RNMzIgc29jIHRyZWUgYXMgc29vbiBhcyBMZWUgCnRha2VzIGRy
+aXZlciBwYXJ0LgoKUmVnYXJkcwpBbGV4CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
