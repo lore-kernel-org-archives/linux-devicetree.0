@@ -1,26 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: phy: Add Amlogic G12A USB2 PHY Bindings
-Date: Thu, 28 Feb 2019 09:18:23 -0600
-Message-ID: <20190228151823.GA20865@bogus>
-References: <20190212151413.24632-1-narmstrong@baylibre.com>
- <20190212151413.24632-2-narmstrong@baylibre.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 02/36] arm64: dts: renesas: r8a7796: Enable DMA for SCIF2
+Date: Thu, 28 Feb 2019 10:13:03 -0500
+Message-ID: <20190228151337.12176-2-sashal@kernel.org>
+References: <20190228151337.12176-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190212151413.24632-2-narmstrong@baylibre.com>
+In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Feb 2019 16:14:06 +0100, Neil Armstrong wrote:
-> Add the Amlogic G12A Family USB2 OTG PHY Bindings
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
-> 
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[ Upstream commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4 ]
+
+SCIF2 on R-Car M3-W can be used with both DMAC1 and DMAC2.
+
+Fixes: dbcae5ea4bd27409 ("arm64: dts: r8a7796: Enable SCIF DMA")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 369092e17e341..016b84552a62a 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -937,6 +937,9 @@
+ 				 <&cpg CPG_CORE R8A7796_CLK_S3D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
++			       <&dmac2 0x13>, <&dmac2 0x12>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+ 			resets = <&cpg 310>;
+ 			status = "disabled";
+-- 
+2.19.1
