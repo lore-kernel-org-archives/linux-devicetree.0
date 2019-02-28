@@ -1,52 +1,34 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC][PATCH] dt-bindings: usb: add non-removable device property
-Date: Thu, 28 Feb 2019 19:06:19 +0100
-Message-ID: <20190228180619.GB30532@kroah.com>
-References: <20190228143344.16312-1-mans@mansr.com>
- <20190228151330.GA1360@kroah.com>
- <yw1x8sy0uedr.fsf@mansr.com>
- <20190228155241.GC12050@kroah.com>
- <yw1x4l8nvmu6.fsf@mansr.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 0/7] add LCD support for SAM9X60
+Date: Thu, 28 Feb 2019 19:21:19 +0100
+Message-ID: <20190228182119.GA28318@ravnborg.org>
+References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <yw1x4l8nvmu6.fsf@mansr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Claudiu.Beznea@microchip.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, bbrezillon@kernel.org, airlied@linux.ie, Nicolas.Ferre@microchip.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 05:34:25PM +0000, Måns Rullgård wrote:
-> >> --- a/drivers/usb/core/hub.c
-> >> +++ b/drivers/usb/core/hub.c
-> >> @@ -2392,6 +2392,14 @@ static void set_usb_port_removable(struct usb_device *udev)
-> >>                 break;
-> >>         }
-> >>  
-> >> +       /*
-> >> +        * Otherwise, check whether DT indicates this device is non-removable.
-> >> +        */
-> >> +       if (of_property_read_bool(udev->dev.of_node, "non-removable")) {
-> >> +               udev->removable = USB_DEVICE_FIXED;
-> >> +               return;
-> >> +       }
-> >
-> > Shouldn't this be an attribute of the USB hub's port, not the device
-> > itself?  That's the way it works with ACPI, and odds are any description
-> > of USB devices in DT is also going to look much like how ACPI describes
-> > the devices, let's not try to diverge when it is not necessary.
-> 
-> Fine with me.  That's why I asked.
-> 
-> How about a non-removable-ports property in the hub node listing the
-> hardwired ports?
-
-Sounds reasonable to me as that should mirror what happens in ACPI, so
-you should be able to just mirror what drivers/usb/core/usb-acpi.c does
-for dt.
-
-thanks,
-
-greg k-h
+SGkgQ2xhdWRpdQoKT24gV2VkLCBGZWIgMjcsIDIwMTkgYXQgMDQ6MjQ6MTFQTSArMDAwMCwgQ2xh
+dWRpdS5CZXpuZWFAbWljcm9jaGlwLmNvbSB3cm90ZToKPiBGcm9tOiBDbGF1ZGl1IEJlem5lYSA8
+Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4KPiAKPiBIaSwKPiAKPiBUaGVzZSBwYXRjaGVz
+IGFkZHMgc3VwcG9ydCBmb3IgU0FNOVg2MCdzIExDRCBjb250cm9sbGVyLgpDYW4geW91IGVsYWJv
+cmF0ZSBhIGxpdHRsZSBtb3JlIHdoaWNoIGNoaXBzIHRoYXQgYXJlIHJlbGV2YW50LgpUbyBiZSBh
+YmxlIHRvIGxvb2sgaW50byB0aGUgcmlnaHQgZGF0YS1zaGVldCwgd2hpbGUgcmV2aWV3aW5nLgpM
+aW5rIHRvIGRhdGEtc2hlZXQgd291bGQgYmUgbmljZSB0b28uCgpUaGFua3MgaW4gYWR2YW5jZSwK
+CVNhbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
