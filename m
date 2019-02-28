@@ -1,46 +1,50 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 07/64] ARM: dts: imx6sx: correct backward compatible of gpt
-Date: Thu, 28 Feb 2019 10:10:08 -0500
-Message-ID: <20190228151105.11277-7-sashal@kernel.org>
-References: <20190228151105.11277-1-sashal@kernel.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC][PATCH] dt-bindings: usb: add non-removable device property
+Date: Thu, 28 Feb 2019 16:13:30 +0100
+Message-ID: <20190228151330.GA1360@kroah.com>
+References: <20190228143344.16312-1-mans@mansr.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190228143344.16312-1-mans@mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Anson Huang <anson.huang@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+To: Mans Rullgard <mans@mansr.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <anson.huang@nxp.com>
+On Thu, Feb 28, 2019 at 02:33:44PM +0000, Mans Rullgard wrote:
+> Add a boolean property indicating that a device is hardwired to the
+> upstream port.  Although hubs can provide this information, they are not
+> always configured correctly.  An alternate means of indicating this for
+> built-in USB devices is thus useful.
+> 
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> ---
+> I have a situation where userspace would like to know which USB devices
+> are built-in, but the on-board hub doesn't have the right setting.
+> Also, the hub itself can't be indicated as fixed in any other way that
+> I'm aware of.
 
-[ Upstream commit ba0f4560526ba19300c07ed5a3c1df7592815dc6 ]
+Then that's a firmware bug, right?  We have a way for firmware to export
+this to the USB core, why not use that?  Your on-board hub should get a
+firmware update with this information, let's not try to create
+yet-another-way to define this type of information please.
 
-i.MX6SX has same GPT type as i.MX6DL, in GPT driver, it uses
-below TIMER_OF_DECLARE, so the backward compatible should be
-"fsl,imx6dl-gpt", correct it.
+> In a way, adding this property seems a bit silly since dt can only
+> sensibly be used for hardwired devices in the first place.  Thus the
+> mere presence of a dt node could be taken to indicate the same thing.
+> On the other hand, it's conceivable that someone might dynamically
+> generate a devicetree based on what happens to be connected on boot or
+> something.  For that reason, and explicit property seems safer.
+> ---
+>  Documentation/devicetree/bindings/usb/usb-device.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-TIMER_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
+Can you show some code actually using this?  Again, this should "just
+work" for USB today unless your platform is really broken (and if it is,
+go complain to the vendor...)
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/imx6sx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 844caa39364ff..50083cecc6c97 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -462,7 +462,7 @@
- 			};
- 
- 			gpt: gpt@2098000 {
--				compatible = "fsl,imx6sx-gpt", "fsl,imx31-gpt";
-+				compatible = "fsl,imx6sx-gpt", "fsl,imx6dl-gpt";
- 				reg = <0x02098000 0x4000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
--- 
-2.19.1
+greg k-h
