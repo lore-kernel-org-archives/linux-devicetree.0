@@ -1,94 +1,121 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v3 3/3] arm64: dts: imx8mq: Add the opp table and cores opp
- properties
-Date: Thu, 28 Feb 2019 21:42:46 +0000
-Message-ID: <1551390149-15443-4-git-send-email-abel.vesa@nxp.com>
-References: <1551390149-15443-1-git-send-email-abel.vesa@nxp.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 6/7] drm: atmel-hlcdc: enable sys_clk during
+ initalization.
+Date: Thu, 28 Feb 2019 22:55:19 +0100
+Message-ID: <20190228215519.GE30188@ravnborg.org>
+References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
+ <1551284609-14594-7-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551390149-15443-1-git-send-email-abel.vesa@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1551284609-14594-7-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>, Anson Huang <anson.huang@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
+To: Claudiu.Beznea@microchip.com
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Sandeep.Sheriker@microchip.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the 0.8GHz and 1GHz opps. According to the datasheet:
-https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
-section 3.1.3 Operating ranges.
+Hi Claudiu
 
-The 0.8GHz opp runs in nominal mode with the regulator set to 0.9V.
-The 1GHz runs in overdrive mode with the regulator set to 1V.
+On Wed, Feb 27, 2019 at 04:24:40PM +0000, Claudiu.Beznea@microchip.com wrote:
+> From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+> 
+> For SAM9X60 SoC, sys_clk is through lcd_gclk clock source and this
+> needs to be enabled before enabling lcd_clk.
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+We have "ownership" of the clocks in the mfd device.
+So it would make more sense to let the mfd device handle
+the base clocks.
+In other words - what about pushing enable of perigh_clk and sys_clk to
+the mfd driver.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mq.dtsi
-index 1a89062..306e3e2 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -91,6 +91,7 @@
- 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
- 			enable-method =3D "psci";
- 			next-level-cache =3D <&A53_L2>;
-+			operating-points-v2 =3D <&a53_opp_table>;
- 		};
-=20
- 		A53_1: cpu@1 {
-@@ -101,6 +102,7 @@
- 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
- 			enable-method =3D "psci";
- 			next-level-cache =3D <&A53_L2>;
-+			operating-points-v2 =3D <&a53_opp_table>;
- 		};
-=20
- 		A53_2: cpu@2 {
-@@ -111,6 +113,7 @@
- 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
- 			enable-method =3D "psci";
- 			next-level-cache =3D <&A53_L2>;
-+			operating-points-v2 =3D <&a53_opp_table>;
- 		};
-=20
- 		A53_3: cpu@3 {
-@@ -121,6 +124,7 @@
- 			clocks =3D <&clk IMX8MQ_CLK_ARM>;
- 			enable-method =3D "psci";
- 			next-level-cache =3D <&A53_L2>;
-+			operating-points-v2 =3D <&a53_opp_table>;
- 		};
-=20
- 		A53_L2: l2-cache0 {
-@@ -666,6 +670,25 @@
- 			status =3D "disabled";
- 		};
-=20
-+
-+		a53_opp_table: opp-table {
-+			compatible =3D "operating-points-v2";
-+			opp-shared;
-+
-+			opp-800000000 {
-+				opp-hz =3D /bits/ 64 <800000000>;
-+				opp-microvolt =3D <900000>;
-+				clock-latency-ns =3D <150000>;
-+			};
-+
-+			opp-1000000000 {
-+				opp-hz =3D /bits/ 64 <1000000000>;
-+				opp-microvolt =3D <1000000>;
-+				clock-latency-ns =3D <150000>;
-+				opp-suspend;
-+			};
-+		};
-+
- 		gic: interrupt-controller@38800000 {
- 			compatible =3D "arm,gic-v3";
- 			reg =3D <0x38800000 0x10000>,	/* GIC Dist */
---=20
-2.7.4
+This may have the nice side-effect that we avoid
+that both the drm driver and the pwm driver enable/disable the periph_clk
+as it is today.
+
+Another comment - fixed_clksrc is used to determine if sys_clk is enabled.
+But that flag is about the clksource selection, and it is just a coincidence
+that the same flag can be used here.
+Why we cannot always enable sys_clk? Do we need to do this only
+for sam9x60?
+IF yes, then add a new falg. If no, then skip the flag.
+
+	Sam
+
+
+> 
+> Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+> [claudiu.beznea@microchip.com: add fixed_clksrc checks]
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+> index 0be13eceedba..8bf51f853721 100644
+> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+> @@ -625,10 +625,18 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
+>  	dc->hlcdc = dev_get_drvdata(dev->dev->parent);
+>  	dev->dev_private = dc;
+>  
+> +	if (dc->desc->fixed_clksrc) {
+> +		ret = clk_prepare_enable(dc->hlcdc->sys_clk);
+> +		if (ret) {
+> +			dev_err(dev->dev, "failed to enable sys_clk\n");
+> +			goto err_destroy_wq;
+> +		}
+> +	}
+> +
+>  	ret = clk_prepare_enable(dc->hlcdc->periph_clk);
+>  	if (ret) {
+>  		dev_err(dev->dev, "failed to enable periph_clk\n");
+> -		goto err_destroy_wq;
+> +		goto err_sys_clk_disable;
+>  	}
+>  
+>  	pm_runtime_enable(dev->dev);
+> @@ -664,6 +672,9 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
+>  err_periph_clk_disable:
+>  	pm_runtime_disable(dev->dev);
+>  	clk_disable_unprepare(dc->hlcdc->periph_clk);
+> +err_sys_clk_disable:
+> +	if (dc->desc->fixed_clksrc)
+> +		clk_disable_unprepare(dc->hlcdc->sys_clk);
+>  
+>  err_destroy_wq:
+>  	destroy_workqueue(dc->wq);
+> @@ -688,6 +699,8 @@ static void atmel_hlcdc_dc_unload(struct drm_device *dev)
+>  
+>  	pm_runtime_disable(dev->dev);
+>  	clk_disable_unprepare(dc->hlcdc->periph_clk);
+> +	if (dc->desc->fixed_clksrc)
+> +		clk_disable_unprepare(dc->hlcdc->sys_clk);
+>  	destroy_workqueue(dc->wq);
+>  }
+>  
+> @@ -805,6 +818,8 @@ static int atmel_hlcdc_dc_drm_suspend(struct device *dev)
+>  	regmap_read(regmap, ATMEL_HLCDC_IMR, &dc->suspend.imr);
+>  	regmap_write(regmap, ATMEL_HLCDC_IDR, dc->suspend.imr);
+>  	clk_disable_unprepare(dc->hlcdc->periph_clk);
+> +	if (dc->desc->fixed_clksrc)
+> +		clk_disable_unprepare(dc->hlcdc->sys_clk);
+>  
+>  	return 0;
+>  }
+> @@ -814,6 +829,8 @@ static int atmel_hlcdc_dc_drm_resume(struct device *dev)
+>  	struct drm_device *drm_dev = dev_get_drvdata(dev);
+>  	struct atmel_hlcdc_dc *dc = drm_dev->dev_private;
+>  
+> +	if (dc->desc->fixed_clksrc)
+> +		clk_prepare_enable(dc->hlcdc->sys_clk);
+>  	clk_prepare_enable(dc->hlcdc->periph_clk);
+>  	regmap_write(dc->hlcdc->regmap, ATMEL_HLCDC_IER, dc->suspend.imr);
+>  
+> -- 
+> 2.7.4
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
