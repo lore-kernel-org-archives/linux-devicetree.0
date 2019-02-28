@@ -1,29 +1,37 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 2/3] ARM: dts: imx7ulp: add mmdc support
-Date: Wed, 27 Feb 2019 22:57:24 -0300
-Message-ID: <CAOMZO5BXCgj+uqA0xoOFYo3GxbN_HfbFyfQFmNRa4_AHL3nx0g@mail.gmail.com>
-References: <1551316741-7848-1-git-send-email-Anson.Huang@nxp.com>
- <1551316741-7848-2-git-send-email-Anson.Huang@nxp.com> <CAOMZO5DQM0-rBbWuWa7dZw8es1NbY8DwCGmU4_ZJ2FdFEXYC6Q@mail.gmail.com>
- <DB3PR0402MB391672641C4829C18DA0DB36F5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Seiya Wang <seiya.wang@mediatek.com>
+Subject: Re: [PATCH v2 2/2] clk: mediatek: correct cpu clock name for MT8173
+ SoC
+Date: Thu, 28 Feb 2019 10:03:37 +0800
+Message-ID: <1551319417.3477.0.camel@mtksdccf07>
+References: <20190225065112.3400-1-seiya.wang@mediatek.com>
+         <20190225065112.3400-2-seiya.wang@mediatek.com>
+         <155120509627.260864.5936412356126577519@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB391672641C4829C18DA0DB36F5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <155120509627.260864.5936412356126577519@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+On Tue, 2019-02-26 at 10:18 -0800, Stephen Boyd wrote:
+> Quoting Seiya Wang (2019-02-24 22:51:12)
+> > diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+> > index 8aea623dd518..76e4e5b65353 100644
+> > --- a/include/dt-bindings/clock/mt8173-clk.h
+> > +++ b/include/dt-bindings/clock/mt8173-clk.h
+> > @@ -194,7 +194,8 @@
+> >  #define CLK_INFRA_PMICWRAP             11
+> >  #define CLK_INFRA_CLK_13M              12
+> >  #define CLK_INFRA_CA53SEL               13
+> > -#define CLK_INFRA_CA57SEL               14
+> > +#define CLK_INFRA_CA57SEL               14 /* Deprecated. Don't use it. */
+> > +#define CLK_INFRA_CA72SEL               14
+> 
+> Also, please send a followup patch to remove the deprecated define later
+> when the dts file is fixed up.
+> 
 
-On Wed, Feb 27, 2019 at 10:54 PM Anson Huang <anson.huang@nxp.com> wrote:
-
-> If so, should I change other i.MX6 SoCs with single MMDC node as well?
-> Remove them as well?
-
-Only imx6qp needs the mmdc label.
-
-I can send a patch removing it from the other i.MX SoCs, so don't need
-to worry about it in your series.
-
-Thanks
+Sure. Thank you so much~
