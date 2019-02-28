@@ -1,106 +1,66 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: imx8mq: Add the opp table and cores
- opp properties
-Date: Thu, 28 Feb 2019 22:20:32 +0800
-Message-ID: <20190228142030.GB29231@dragon>
-References: <1550254032-16451-1-git-send-email-abel.vesa@nxp.com>
- <1550254032-16451-4-git-send-email-abel.vesa@nxp.com>
+From: Renato Lui Geh <renatogeh@gmail.com>
+Subject: [PATCH v4 0/9] staging: iio: ad7780: move out of staging
+Date: Thu, 28 Feb 2019 11:23:00 -0300
+Message-ID: <cover.1551358569.git.renatogeh@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1550254032-16451-4-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Angus Ainslie <angus.ainslie@puri.sm>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <anson.huang@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, giuliano.belinassi@usp.br, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 06:07:24PM +0000, Abel Vesa wrote:
-> Add the 0.8GHz and 1GHz opps. According to the datasheet:
-> https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
-> section 3.1.3 Operating ranges.
-> 
-> The 0.8GHz opp runs in nominal mode with the regulator set to 0.9V.
-> The 1GHz runs in overdrive mode with the regulator set to 1V.
-> 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 1a89062..ebdec9e 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -91,6 +91,7 @@
->  			clocks = <&clk IMX8MQ_CLK_ARM>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			operating-points-v2 = <&a53_0_opp_table>;
->  		};
->  
->  		A53_1: cpu@1 {
-> @@ -101,6 +102,7 @@
->  			clocks = <&clk IMX8MQ_CLK_ARM>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			operating-points-v2 = <&a53_0_opp_table>;
->  		};
->  
->  		A53_2: cpu@2 {
-> @@ -111,6 +113,7 @@
->  			clocks = <&clk IMX8MQ_CLK_ARM>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			operating-points-v2 = <&a53_0_opp_table>;
->  		};
->  
->  		A53_3: cpu@3 {
-> @@ -121,6 +124,7 @@
->  			clocks = <&clk IMX8MQ_CLK_ARM>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> +			operating-points-v2 = <&a53_0_opp_table>;
->  		};
->  
->  		A53_L2: l2-cache0 {
-> @@ -666,6 +670,25 @@
->  			status = "disabled";
->  		};
->  
-> +
-> +		a53_0_opp_table: opp-table {
+This series of patches contains the following:
+ - Adds user input for the 'gain' and 'filter' GPIO pins for the ad778x
+   family chips;
+ - Filter reading for the ad778x;
+ - Sets pattern macro values and mask for PATTERN status bits;
+ - Adds ID values for the ad7170, ad7171, ad7780 and ad7781 for ID
+   status bits checking;
+ - Moves regulator initialization to after GPIO init to maintain
+   consistency between probe and remove;
+ - Copyright edits, adding SPDX identifier and new copyright holder;
+ - Moves the ad7780 driver out of staging to the mainline;
+ - Adds device tree binding for the ad7780 driver.
 
-What's the point of having '0' in the label name, considering it's
-actually referred by all CPU nodes?
+Renato Lui Geh (9):
+  staging: iio: ad7780: add gain & filter gpio support
+  staging: iio: ad7780: add filter reading to ad778x
+  staging: iio: ad7780: set pattern values and masks directly
+  staging:iio:ad7780: add chip ID values and mask
+  staging: iio: ad7780: move regulator to after GPIO init
+  staging: iio: ad7780: add SPDX identifier
+  staging: iio: ad7780: add new copyright holder
+  staging: iio: ad7780: moving ad7780 out of staging
+  staging: iio: ad7780: add device tree binding
 
-Shawn
+Changelog:
+*v3
+ - SPDX and regulator init as patches
+ - Renamed filter to odr and ad778x_filter to ad778x_odr_avail
+ - Removed unnecessary regulator disabling
+ - Removed unnecessary AD_SD_CHANNEL macro
+ - Changed unsigned int to unsigned long long to avoid overflow
+*v4
+ - Split gain & filter patch into two, with the new commit adding only
+   filter reading
+ - Changed pattern values to direct values, and added pattern mask
+ - Added ID values and mask
+ - Added new copyright holder
+ - Added device tree binding to the ad7780 driver
 
-> +			compatible = "operating-points-v2";
-> +			opp-shared;
-> +
-> +			opp-800000000 {
-> +				opp-hz = /bits/ 64 <800000000>;
-> +				opp-microvolt = <900000>;
-> +				clock-latency-ns = <150000>;
-> +			};
-> +
-> +			opp-1000000000 {
-> +				opp-hz = /bits/ 64 <1000000000>;
-> +				opp-microvolt = <1000000>;
-> +				clock-latency-ns = <150000>;
-> +				opp-suspend;
-> +			};
-> +		};
-> +
->  		gic: interrupt-controller@38800000 {
->  			compatible = "arm,gic-v3";
->  			reg = <0x38800000 0x10000>,	/* GIC Dist */
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ .../bindings/iio/adc/adi,ad7780.txt           |  48 +++
+ drivers/iio/adc/Kconfig                       |  12 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/ad7780.c                      | 365 ++++++++++++++++++
+ drivers/staging/iio/adc/Kconfig               |  13 -
+ drivers/staging/iio/adc/Makefile              |   1 -
+ drivers/staging/iio/adc/ad7780.c              | 277 -------------
+ 7 files changed, 426 insertions(+), 291 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+ create mode 100644 drivers/iio/adc/ad7780.c
+ delete mode 100644 drivers/staging/iio/adc/ad7780.c
+
+--
+2.21.0
