@@ -1,39 +1,68 @@
-From: Mans Rullgard <mans@mansr.com>
-Subject: [PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
-Date: Thu, 28 Feb 2019 18:45:39 +0000
-Message-ID: <20190228184540.24570-1-mans@mansr.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: power: supply: Add docs for Ingenic
+ JZ47xx SoCs battery.
+Date: Thu, 28 Feb 2019 12:48:22 -0600
+Message-ID: <20190228184822.GA17624@bogus>
+References: <20190217142914.17433-1-contact@artur-rojek.eu>
+ <20190217142914.17433-4-contact@artur-rojek.eu>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190217142914.17433-4-contact@artur-rojek.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Artur Rojek <contact@artur-rojek.eu>
+Cc: Sebastian Reichel <sre@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add a non-removable-ports property that lists the hardwired downstream
-ports of a hub.  Although hubs can provide this information, they are
-not always configured correctly.  An alternate means of indicating this
-for built-in USB devices is thus useful.
+On Sun, Feb 17, 2019 at 03:29:13PM +0100, Artur Rojek wrote:
+> Add documentation for the ingenic-battery driver, used on JZ47xx SoCs.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>  .../bindings/power/supply/ingenic,battery.txt | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
+> new file mode 100644
+> index 000000000000..66430bf73815
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
+> @@ -0,0 +1,31 @@
+> +* Ingenic JZ47xx battery bindings
+> +
+> +Required properties:
+> +
+> +- compatible: Must be "ingenic,jz4740-battery".
+> +- io-channels: phandle and IIO specifier pair to the IIO device.
+> +  Format described in iio-bindings.txt.
+> +- monitored-battery: phandle to a "simple-battery" compatible node.
+> +
+> +The "monitored-battery" property must be a phandle to a node using the format
+> +described in battery.txt, with the following properties being required:
+> +
+> +- voltage-min-design-microvolt: Drained battery voltage.
+> +- voltage-max-design-microvolt: Fully charged battery voltage.
+> +
+> +Example:
+> +
+> +#include <dt-bindings/iio/adc/ingenic,adc.h>
+> +
+> +simple_battery: battery {
+> +	compatible = "simple-battery";
+> +	voltage-min-design-microvolt = <3600000>;
+> +	voltage-max-design-microvolt = <4200000>;
+> +};
+> +
+> +ingenic_battery {
+> +	compatible = "ingenic,jz4740-battery";
+> +	io-channels = <&adc INGENIC_ADC_BATTERY>;
+> +	io-channel-names = "battery";
+> +	monitored-battery = <&simple_battery>;
 
-Signed-off-by: Mans Rullgard <mans@mansr.com>
----
- Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Isn't this just an ADC monitored battery? What's specific to JZ4740?
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-index 036be172b1ae..92d863cc96b6 100644
---- a/Documentation/devicetree/bindings/usb/usb-device.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-@@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
- - #size-cells: shall be 0
- 
- 
-+Optional properties for hub and host-controller nodes:
-+- non-removable-ports: list of hardwired downstream ports
-+
-+
- Example:
- 
- &usb1 {	/* host controller */
--- 
-2.20.1
+Maybe a generic binding is appropriate here?
+
+Rob
