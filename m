@@ -1,88 +1,50 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V7 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
-Date: Thu, 28 Feb 2019 06:18:30 +0000
-Message-ID: <AM6PR0402MB3911278158F4980C83331B40F5750@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
- <20190228031832.GH26041@dragon>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v4 0/3] add AES support for Exynos5433
+Date: Thu, 28 Feb 2019 14:36:03 +0800
+Message-ID: <20190228063603.5qgkmhk4sbp674h5@gondor.apana.org.au>
+References: <CGME20190222122203eucas1p1e87a8066d4348be4beb3ff035ea55828@eucas1p1.samsung.com>
+ <20190222122144.19024-1-k.konieczny@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190228031832.GH26041@dragon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190222122144.19024-1-k.konieczny@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc: "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFNoYXduDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVs
-Lm9yZ10NCj4gU2VudDogMjAxOcTqMtTCMjjI1SAxMToxOQ0KPiBUbzogQW5zb24gSHVhbmcgPGFu
-c29uLmh1YW5nQG54cC5jb20+DQo+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFu
-ZEBhcm0uY29tOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOw0KPiBrZXJuZWxAcGVuZ3V0cm9uaXgu
-ZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsgbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207DQo+IHNib3lk
-QGtlcm5lbC5vcmc7IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBEYW5pZWwg
-QmFsdXRhDQo+IDxkYW5pZWwuYmFsdXRhQG54cC5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGNsa0B2Z2VyLmtlcm5lbC5vcmc7IGRsLWxp
-bnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjcgMS8y
-XSBhcm02NDogZHRzOiBmcmVlc2NhbGU6IGlteDhxeHA6IGFkZCBjcHUgb3BwDQo+IHRhYmxlDQo+
-IA0KPiBPbiBUdWUsIEZlYiAyNiwgMjAxOSBhdCAwNToxNzozMUFNICswMDAwLCBBbnNvbiBIdWFu
-ZyB3cm90ZToNCj4gPiBBZGQgaS5NWDhRWFAgQ1BVIG9wcCB0YWJsZSB0byBzdXBwb3J0IGNwdWZy
-ZXEuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhw
-LmNvbT4NCj4gPiBBY2tlZC1ieTogVmlyZXNoIEt1bWFyIDx2aXJlc2gua3VtYXJAbGluYXJvLm9y
-Zz4NCj4gDQo+IFByZWZpeCAnYXJtNjQ6IGR0czogaW14OHF4cDogJyB3b3VsZCBhbHJlYWR5IGJl
-IGNsZWFyIGVub3VnaC4gIEkgZHJvcHBlZA0KPiAnZnJlZXNjYWxlJyBmcm9tIHRoZXJlIGFuZCBh
-cHBsaWVkIHBhdGNoLg0KPiANCj4gPiAtLS0NCj4gPiBObyBjaGFuZ2VzIHNpbmNlIFY2Lg0KPiA+
-IC0tLQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kgfCAz
-MA0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgMzAgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ID4gaW5kZXggNGMzZGQ5NS4uNDFiZjBjZSAxMDA2NDQN
-Cj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4g
-PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4gPiBA
-QCAtMzQsNiArMzQsOSBAQA0KPiA+ICAJCQlyZWcgPSA8MHgwIDB4MD47DQo+ID4gIAkJCWVuYWJs
-ZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gIAkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JkEzNV9MMj47
-DQo+ID4gKwkJCWNsb2NrcyA9IDwmY2xrIElNWF9BMzVfQ0xLPjsNCj4gPiArCQkJb3BlcmF0aW5n
-LXBvaW50cy12MiA9IDwmYTM1XzBfb3BwX3RhYmxlPjsNCj4gPiArCQkJI2Nvb2xpbmctY2VsbHMg
-PSA8Mj47DQo+ID4gIAkJfTsNCj4gPg0KPiA+ICAJCUEzNV8xOiBjcHVAMSB7DQo+ID4gQEAgLTQy
-LDYgKzQ1LDkgQEANCj4gPiAgCQkJcmVnID0gPDB4MCAweDE+Ow0KPiA+ICAJCQllbmFibGUtbWV0
-aG9kID0gInBzY2kiOw0KPiA+ICAJCQluZXh0LWxldmVsLWNhY2hlID0gPCZBMzVfTDI+Ow0KPiA+
-ICsJCQljbG9ja3MgPSA8JmNsayBJTVhfQTM1X0NMSz47DQo+ID4gKwkJCW9wZXJhdGluZy1wb2lu
-dHMtdjIgPSA8JmEzNV8wX29wcF90YWJsZT47DQo+ID4gKwkJCSNjb29saW5nLWNlbGxzID0gPDI+
-Ow0KPiA+ICAJCX07DQo+ID4NCj4gPiAgCQlBMzVfMjogY3B1QDIgew0KPiA+IEBAIC01MCw2ICs1
-Niw5IEBADQo+ID4gIAkJCXJlZyA9IDwweDAgMHgyPjsNCj4gPiAgCQkJZW5hYmxlLW1ldGhvZCA9
-ICJwc2NpIjsNCj4gPiAgCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmQTM1X0wyPjsNCj4gPiArCQkJ
-Y2xvY2tzID0gPCZjbGsgSU1YX0EzNV9DTEs+Ow0KPiA+ICsJCQlvcGVyYXRpbmctcG9pbnRzLXYy
-ID0gPCZhMzVfMF9vcHBfdGFibGU+Ow0KPiA+ICsJCQkjY29vbGluZy1jZWxscyA9IDwyPjsNCj4g
-PiAgCQl9Ow0KPiA+DQo+ID4gIAkJQTM1XzM6IGNwdUAzIHsNCj4gPiBAQCAtNTgsNiArNjcsOSBA
-QA0KPiA+ICAJCQlyZWcgPSA8MHgwIDB4Mz47DQo+ID4gIAkJCWVuYWJsZS1tZXRob2QgPSAicHNj
-aSI7DQo+ID4gIAkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JkEzNV9MMj47DQo+ID4gKwkJCWNsb2Nr
-cyA9IDwmY2xrIElNWF9BMzVfQ0xLPjsNCj4gPiArCQkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwm
-YTM1XzBfb3BwX3RhYmxlPjsNCj4gPiArCQkJI2Nvb2xpbmctY2VsbHMgPSA8Mj47DQo+ID4gIAkJ
-fTsNCj4gPg0KPiA+ICAJCUEzNV9MMjogbDItY2FjaGUwIHsNCj4gPiBAQCAtNjUsNiArNzcsMjQg
-QEANCj4gPiAgCQl9Ow0KPiA+ICAJfTsNCj4gPg0KPiA+ICsJYTM1XzBfb3BwX3RhYmxlOiBvcHAt
-dGFibGUgew0KPiANCj4gV2hhdCBkb2VzIHRoZSAnMCcgaW4gdGhlIGxhYmVsIG1lYW4/DQoNCkxv
-b2tzIGxpa2UgdGhlICcwJyBpbiB0aGUgbGFiZWwgaXMgTk9UIG5lY2Vzc2FyeSwgd2UgY2FuIGp1
-c3QgdXNlICdhMzVfb3BwX3RhYmxlJywNCmRvIHlvdSB3YW50IG1lIHJlc2VuZCB0aGUgcGF0Y2gg
-dG8gcmVtb3ZlICcwJz8NCg0KQW5zb24uDQoNCj4gDQo+IFNoYXduDQo+IA0KPiA+ICsJCWNvbXBh
-dGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12MiI7DQo+ID4gKwkJb3BwLXNoYXJlZDsNCj4gPiAr
-DQo+ID4gKwkJb3BwLTkwMDAwMDAwMCB7DQo+ID4gKwkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8OTAw
-MDAwMDAwPjsNCj4gPiArCQkJb3BwLW1pY3Jvdm9sdCA9IDwxMDAwMDAwPjsNCj4gPiArCQkJY2xv
-Y2stbGF0ZW5jeS1ucyA9IDwxNTAwMDA+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCW9wcC0x
-MjAwMDAwMDAwIHsNCj4gPiArCQkJb3BwLWh6ID0gL2JpdHMvIDY0IDwxMjAwMDAwMDAwPjsNCj4g
-PiArCQkJb3BwLW1pY3Jvdm9sdCA9IDwxMTAwMDAwPjsNCj4gPiArCQkJY2xvY2stbGF0ZW5jeS1u
-cyA9IDwxNTAwMDA+Ow0KPiA+ICsJCQlvcHAtc3VzcGVuZDsNCj4gPiArCQl9Ow0KPiA+ICsJfTsN
-Cj4gPiArDQo+ID4gIAlnaWM6IGludGVycnVwdC1jb250cm9sbGVyQDUxYTAwMDAwIHsNCj4gPiAg
-CQljb21wYXRpYmxlID0gImFybSxnaWMtdjMiOw0KPiA+ICAJCXJlZyA9IDwweDAgMHg1MWEwMDAw
-MCAwIDB4MTAwMDA+LCAvKiBHSUMgRGlzdCAqLw0KPiA+IC0tDQo+ID4gMi43LjQNCj4gPg0KPiA+
-DQo+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4g
-PiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdA0KPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZw0KPiA+IGh0dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9u
-Lm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRmxpc3QNCj4gPiBzLmluZnJhZGVhZC5vcmcl
-MkZtYWlsbWFuJTJGbGlzdGluZm8lMkZsaW51eC1hcm0tDQo+IGtlcm5lbCZhbXA7ZGF0YT0wMiU3
-Qw0KPiA+DQo+IDAxJTdDYW5zb24uaHVhbmclNDBueHAuY29tJTdDZmU0ZmY5MmE2MzllNDczOWMy
-YTEwOGQ2OWQyYjhlMTIlNw0KPiBDNjg2ZWExDQo+ID4NCj4gZDNiYzJiNGM2ZmE5MmNkOTljNWMz
-MDE2MzUlN0MwJTdDMCU3QzYzNjg2OTIwNzcyODM5ODgwOCZhbXA7c2QNCj4gYXRhPW96JTINCj4g
-PiBGUHlBa2k2ZmtmUVpxYVNZa2pXZm8zbThTNDhzQ3pwRGYybHhESWpLcyUzRCZhbXA7cmVzZXJ2
-ZWQ9MA0K
+On Fri, Feb 22, 2019 at 01:21:41PM +0100, Kamil Konieczny wrote:
+> Add slimSSS node to DT and crypto AES support for Exynos5433. Tested on
+> Exynos5433 board with crypto run-time self tests and with tcrypt with
+> command insmod tcrypt.ko mode=500 sec=1
+> 
+> Changes since v3:
+> - moved bindings documentation out from samsung-sss.txt into separate file
+>   samsung-slimsss.txt
+> 
+> Changes since v2:
+> - address Corentine Labbe note: add "const" to char* in declaration of
+>   struct samsung_aes_variant
+> 
+> Changes since v1:
+> - address Krzysztof Kozlowski review: add missing comma in struct
+>   definition, add goto for error code path, correct indentation,
+>   in documentation add that Exynos5433 has both slimSSS and SSS IPs.
+> 
+> Kamil Konieczny (3):
+>   arm64: dts: exynos: add SlimSSS for Exynos5433
+>   dt-bindings: crypto: document Exynos5433 SlimSSS
+>   crypto: s5p: add AES support for Exynos5433
+> 
+>  .../bindings/crypto/samsung-slimsss.txt       | 19 +++++++
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi    |  9 ++++
+>  drivers/crypto/s5p-sss.c                      | 50 +++++++++++++++++--
+>  3 files changed, 74 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/samsung-slimsss.txt
+
+Patches 2-3 applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
