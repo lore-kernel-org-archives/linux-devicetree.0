@@ -1,83 +1,68 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [RFC][PATCH] dt-bindings: usb: add non-removable device property
-Date: Thu, 28 Feb 2019 15:22:24 +0000
-Message-ID: <yw1x8sy0uedr.fsf@mansr.com>
-References: <20190228143344.16312-1-mans@mansr.com>
-        <20190228151330.GA1360@kroah.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/64] DTS: CI20: Fix bugs in ci20's device tree.
+Date: Thu, 28 Feb 2019 10:10:20 -0500
+Message-ID: <20190228151105.11277-19-sashal@kernel.org>
+References: <20190228151105.11277-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190228151330.GA1360@kroah.com> (Greg Kroah-Hartman's message
-        of "Thu, 28 Feb 2019 16:13:30 +0100")
+In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>, Paul Burton <paul.burton@mips.com>, linux-mips <linux-mips@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com, malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org, syq <syq@debian.org>, "jiaxun . yang" <jiaxun.yang@flygoat.com>, Sasha Levin <sashal@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+From: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
 
-> On Thu, Feb 28, 2019 at 02:33:44PM +0000, Mans Rullgard wrote:
->> Add a boolean property indicating that a device is hardwired to the
->> upstream port.  Although hubs can provide this information, they are not
->> always configured correctly.  An alternate means of indicating this for
->> built-in USB devices is thus useful.
->> 
->> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> ---
->> I have a situation where userspace would like to know which USB devices
->> are built-in, but the on-board hub doesn't have the right setting.
->> Also, the hub itself can't be indicated as fixed in any other way that
->> I'm aware of.
->
-> Then that's a firmware bug, right?  We have a way for firmware to export
-> this to the USB core, why not use that?  Your on-board hub should get a
-> firmware update with this information, let's not try to create
-> yet-another-way to define this type of information please.
+[ Upstream commit 1ca1c87f91d9dc50d6a38e2177b2032996e7901c ]
 
-What firmware?  This is not an ACPI system, obviously, so DT _is_ the
-firmware.
+According to the Schematic, the hardware of ci20 leads to uart3,
+but not to uart2. Uart2 is miswritten in the original code.
 
->> In a way, adding this property seems a bit silly since dt can only
->> sensibly be used for hardwired devices in the first place.  Thus the
->> mere presence of a dt node could be taken to indicate the same thing.
->> On the other hand, it's conceivable that someone might dynamically
->> generate a devicetree based on what happens to be connected on boot or
->> something.  For that reason, and explicit property seems safer.
->> ---
->>  Documentation/devicetree/bindings/usb/usb-device.txt | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->
-> Can you show some code actually using this?  Again, this should "just
-> work" for USB today unless your platform is really broken (and if it is,
-> go complain to the vendor...)
+Signed-off-by: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips <linux-mips@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: mark.rutland@arm.com
+Cc: malat@debian.org
+Cc: ezequiel@collabora.co.uk
+Cc: ulf.hansson@linaro.org
+Cc: syq <syq@debian.org>
+Cc: jiaxun.yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-You know full well that complaining to the vendor is rarely something
-that works.  Especially not when there are already thousands of the
-devices in the field.
-
-This is how I meant to use it:
-
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 3adff4da2ee1..81ef3cb705b7 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -2392,6 +2392,14 @@ static void set_usb_port_removable(struct usb_device *udev)
-                break;
-        }
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 50cff3cbcc6de..4f7b1fa31cf53 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -76,7 +76,7 @@
+ 	status = "okay";
  
-+       /*
-+        * Otherwise, check whether DT indicates this device is non-removable.
-+        */
-+       if (of_property_read_bool(udev->dev.of_node, "non-removable")) {
-+               udev->removable = USB_DEVICE_FIXED;
-+               return;
-+       }
-+
-        /*
-         * Otherwise, check whether the hub knows whether a port is removable
-         * or not
-
-
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pins_uart2>;
++	pinctrl-0 = <&pins_uart3>;
+ };
+ 
+ &uart4 {
+@@ -196,9 +196,9 @@
+ 		bias-disable;
+ 	};
+ 
+-	pins_uart2: uart2 {
+-		function = "uart2";
+-		groups = "uart2-data", "uart2-hwflow";
++	pins_uart3: uart3 {
++		function = "uart3";
++		groups = "uart3-data", "uart3-hwflow";
+ 		bias-disable;
+ 	};
+ 
 -- 
-Måns Rullgård
+2.19.1
