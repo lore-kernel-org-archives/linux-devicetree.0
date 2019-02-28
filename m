@@ -1,79 +1,56 @@
-From: Renato Lui Geh <renatogeh@gmail.com>
-Subject: [PATCH v4 9/9] staging: iio: ad7780: add device tree binding
-Date: Thu, 28 Feb 2019 11:26:28 -0300
-Message-ID: <ac8955ea9d903c106535d76549ff9802f527f4f6.1551358569.git.renatogeh@gmail.com>
-References: <cover.1551358569.git.renatogeh@gmail.com>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH 2/4] ARM: dts: stm32: add DCMI camera interface support on
+ stm32mp157c
+Date: Thu, 28 Feb 2019 15:25:43 +0100
+Message-ID: <1551363945-19497-3-git-send-email-hugues.fruchet@st.com>
+References: <1551363945-19497-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1551358569.git.renatogeh@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, giuliano.belinassi@usp.br, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1551363945-19497-1-git-send-email-hugues.fruchet@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Adds a device tree binding for the ad7780 driver.
+Add DCMI camera interface support on stm32mp157c.
 
-Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- .../bindings/iio/adc/adi,ad7780.txt           | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+ arch/arm/boot/dts/stm32mp157c.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-new file mode 100644
-index 000000000000..440e52555349
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-@@ -0,0 +1,48 @@
-+* Analog Devices AD7170/AD7171/AD7780/AD7781
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 10bf338..1ff331c 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -886,6 +886,18 @@
+ 			status = "disabled";
+ 		};
+ 
++		dcmi: dcmi@4c006000 {
++			compatible = "st,stm32-dcmi";
++			reg = <0x4c006000 0x400>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++			resets = <&rcc CAMITF_R>;
++			clocks = <&rcc DCMI>;
++			clock-names = "mclk";
++			dmas = <&dmamux1 75 0x400 0x0d>;
++			dma-names = "tx";
++			status = "disabled";
++		};
 +
-+Data sheets:
-+
-+- AD7170:
-+	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
-+- AD7171:
-+	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
-+- AD7780:
-+	* https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
-+- AD7781:
-+	* https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
-+
-+Required properties:
-+
-+- compatible: should be one of
-+	* "adi,ad7170"
-+	* "adi,ad7171"
-+	* "adi,ad7780"
-+	* "adi,ad7781"
-+- reg: spi chip select number for the device
-+- vref-supply: the regulator supply for the ADC reference voltage
-+
-+Optional properties:
-+
-+- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
-+		    specified, it will be asserted during driver probe. As the
-+		    line is active high, it should be marked GPIO_ACTIVE_HIGH.
-+- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
-+		    the ad778x chips. If specified, it will be asserted during
-+		    driver probe. As the line is active low, it should be marked
-+		    GPIO_ACTIVE_LOW.
-+- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
-+		    for the ad778x chips. If specified, it will be asserted
-+		    during driver probe. As the line is active low, it should be
-+		    marked GPIO_ACTIVE_LOW.
-+
-+Example:
-+
-+adc@0 {
-+	compatible =  "adi,ad7780";
-+	reg =	      <0>;
-+	vref-supply = <&vdd_supply>
-+
-+	powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
-+	adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
-+	adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-+};
+ 		rcc: rcc@50000000 {
+ 			compatible = "st,stm32mp1-rcc", "syscon";
+ 			reg = <0x50000000 0x1000>;
 -- 
-2.21.0
+2.7.4
