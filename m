@@ -1,89 +1,49 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 3/3] ARM: dts: imx: make MMDC node name generic
-Date: Thu, 28 Feb 2019 01:23:56 +0000
-Message-ID: <1551316741-7848-3-git-send-email-Anson.Huang@nxp.com>
-References: <1551316741-7848-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH 2/2] ARM: dts: imx7ulp: add mmdc support
+Date: Thu, 28 Feb 2019 01:24:34 +0000
+Message-ID: <DB3PR0402MB3916BE64FA76F4145C368504F5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1551261844-23983-1-git-send-email-Anson.Huang@nxp.com>
+ <1551261844-23983-2-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5Css2TvbbQ8cy6EA=2goHHDfDRzP1kVSe_vNaT0DtknLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551316741-7848-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5Css2TvbbQ8cy6EA=2goHHDfDRzP1kVSe_vNaT0DtknLQ@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Node name should be generic, so use "memory-controller"
-instead of "mmdc" for MMDC node name.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 4 ++--
- arch/arm/boot/dts/imx6sl.dtsi  | 2 +-
- arch/arm/boot/dts/imx6sx.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul.dtsi  | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dts=
-i
-index fe17a34..4c7278b 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1129,13 +1129,13 @@
- 				reg =3D <0x021ac000 0x4000>;
- 			};
-=20
--			mmdc0: mmdc@21b0000 { /* MMDC0 */
-+			mmdc0: memory-controller@21b0000 { /* MMDC0 */
- 				compatible =3D "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6QDL_CLK_MMDC_P0_IPG>;
- 			};
-=20
--			mmdc1: mmdc@21b4000 { /* MMDC1 */
-+			mmdc1: memory-controller@21b4000 { /* MMDC1 */
- 				reg =3D <0x021b4000 0x4000>;
- 			};
-=20
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 4b4813f..ac57b42 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -922,7 +922,7 @@
- 				status =3D "disabled";
- 			};
-=20
--			mmdc: mmdc@21b0000 {
-+			mmdc: memory-controller@21b0000 {
- 				compatible =3D "fsl,imx6sl-mmdc", "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6SL_CLK_MMDC_P0_IPG>;
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 5b16e65..3de0f3a 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -1017,7 +1017,7 @@
- 				status =3D "disabled";
- 			};
-=20
--			mmdc: mmdc@21b0000 {
-+			mmdc: memory-controller@21b0000 {
- 				compatible =3D "fsl,imx6sx-mmdc", "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6SX_CLK_MMDC_P0_IPG>;
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 62ed30c..8f17a09 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -914,7 +914,7 @@
- 				status =3D "disabled";
- 			};
-=20
--			mmdc: mmdc@21b0000 {
-+			mmdc: memory-controller@21b0000 {
- 				compatible =3D "fsl,imx6ul-mmdc", "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6UL_CLK_MMDC_P0_IPG>;
---=20
-2.7.4
+SGksIEZhYmlvDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRvOmZlc3RldmFtQGdt
+YWlsLmNvbV0NCj4gU2VudDogMjAxOeW5tDLmnIgyOOaXpSAzOjUwDQo+IFRvOiBBbnNvbiBIdWFu
+ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5y
+dXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0cm9u
+aXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSBBUk06IGR0czogaW14N3VscDogYWRkIG1tZGMgc3VwcG9y
+dA0KPiANCj4gT24gV2VkLCBGZWIgMjcsIDIwMTkgYXQgNzowOCBBTSBBbnNvbiBIdWFuZyA8YW5z
+b24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bS9ib290L2R0cy9pbXg3dWxwLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAu
+ZHRzaSBpbmRleCBmY2E2ZTUwLi5mY2E0YTAxIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2lteDd1bHAuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAu
+ZHRzaQ0KPiA+IEBAIC0yODYsNiArMjg2LDEyIEBADQo+ID4gICAgICAgICAgICAgICAgICAgICAg
+ICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPg0KPiA+
+ICsgICAgICAgICAgICAgICBtbWRjOiBtbWRjQDQwYWIwMDAwIHsNCj4gDQo+IE5vZGUgbmFtZXMg
+c2hvdWxkIGJlIGdlbmVyaWMsIHNvOg0KPiANCj4gbWVtb3J5LWNvbnRyb2xsZXJANDBhYjAwMDAN
+Cg0KVGhhbmtzLCBJIGFsc28gdXBkYXRlIG90aGVyIGkuTVggU29DJ3MgTU1EQyBub2RlIG5hbWUg
+aW4gVjIgcGF0Y2ggc2VyaWVzLg0KDQpBbnNvbi4NCg0KX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
