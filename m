@@ -1,34 +1,38 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] pcie: qcom: Add support for sdm845 PCIe controller
-Date: Thu, 28 Feb 2019 14:39:13 -0600
-Message-ID: <CAErSpo6Tp2_bwjM5bmDG8g8KBiK_vMq0=qg86KNk+5q-ziGfSQ@mail.gmail.com>
-References: <20190226070125.22318-1-bjorn.andersson@linaro.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 0/7] add LCD support for SAM9X60
+Date: Thu, 28 Feb 2019 21:52:14 +0100
+Message-ID: <20190228205214.GD23094@piout.net>
+References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
+ <20190228182119.GA28318@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190226070125.22318-1-bjorn.andersson@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20190228182119.GA28318@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Claudiu.Beznea@microchip.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 1:00 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> The SDM845 has one Gen2 and one Gen3 controller, add support for these.
->
-> Due to lack of hardware only the Gen2 controller has been verified.
+On 28/02/2019 19:21:19+0100, Sam Ravnborg wrote:
+> Hi Claudiu
+> 
+> On Wed, Feb 27, 2019 at 04:24:11PM +0000, Claudiu.Beznea@microchip.com wrote:
+> > From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> > 
+> > Hi,
+> > 
+> > These patches adds support for SAM9X60's LCD controller.
+> Can you elaborate a little more which chips that are relevant.
+> To be able to look into the right data-sheet, while reviewing.
+> Link to data-sheet would be nice too.
+> 
 
-Hi Bjorn,
+sam9x60 is the chip name (i.e. x is not a wildcard). I don't think the
+datasheet is finished/public yet.
 
-I like your name :)
 
-If you post a v2 for any reason, please update the subject like to:
-
-  PCI: qcom: Add support for sdm845 PCIe controller
-
-That way it matches the existing conventions and "git log --oneline
-drivers/pci/controller/dwc/pcie-qcom.c" looks nice.  If there's no
-need for a v2, Lorenzo will likely fix that up for you.
-
-Bjorn
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
