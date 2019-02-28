@@ -1,47 +1,29 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V2 2/3] ARM: dts: imx7ulp: add mmdc support
-Date: Thu, 28 Feb 2019 01:54:41 +0000
-Message-ID: <DB3PR0402MB391672641C4829C18DA0DB36F5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V2 2/3] ARM: dts: imx7ulp: add mmdc support
+Date: Wed, 27 Feb 2019 22:57:24 -0300
+Message-ID: <CAOMZO5BXCgj+uqA0xoOFYo3GxbN_HfbFyfQFmNRa4_AHL3nx0g@mail.gmail.com>
 References: <1551316741-7848-1-git-send-email-Anson.Huang@nxp.com>
- <1551316741-7848-2-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5DQM0-rBbWuWa7dZw8es1NbY8DwCGmU4_ZJ2FdFEXYC6Q@mail.gmail.com>
+ <1551316741-7848-2-git-send-email-Anson.Huang@nxp.com> <CAOMZO5DQM0-rBbWuWa7dZw8es1NbY8DwCGmU4_ZJ2FdFEXYC6Q@mail.gmail.com>
+ <DB3PR0402MB391672641C4829C18DA0DB36F5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DQM0-rBbWuWa7dZw8es1NbY8DwCGmU4_ZJ2FdFEXYC6Q@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <DB3PR0402MB391672641C4829C18DA0DB36F5750@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
+To: Anson Huang <anson.huang@nxp.com>
 Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRvOmZlc3RldmFtQGdt
-YWlsLmNvbV0NCj4gU2VudDogMjAxOeW5tDLmnIgyOOaXpSA5OjMyDQo+IFRvOiBBbnNvbiBIdWFu
-ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5y
-dXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0cm9u
-aXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggVjIgMi8zXSBBUk06IGR0czogaW14N3VscDogYWRkIG1tZGMgc3Vw
-cG9ydA0KPiANCj4gSGkgQW5zb24sDQo+IA0KPiBPbiBXZWQsIEZlYiAyNywgMjAxOSBhdCAxMDoy
-MyBQTSBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4NCj4g
-PiBpLk1YN1VMUCBoYXMgYSBNTURDIG1vZHVsZSB0byBjb250cm9sIEREUiwgaXQgcmV1c2VzIGku
-TVg2USdzIE1NREMNCj4gPiBtb2R1bGUsIGFkZCBzdXBwb3J0IGZvciBpdC4NCj4gPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0K
-PiA+IENoYW5nZXMgc2luY2UgVjE6DQo+ID4gICAgICAgICAtIHVzZSAibWVtb3J5LWNvbnRyb2xs
-ZXIiIGFzIE1NREMgbm9kZSBuYW1lIHRvIG1ha2UgaXQgbW9yZQ0KPiBnZW5lcmljLg0KPiA+IC0t
-LQ0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3dWxwLmR0c2kgfCA2ICsrKysrKw0KPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvaW14N3VscC5kdHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg3
-dWxwLmR0c2kgaW5kZXggZmNhNmU1MC4uNzhmNjExNyAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2Fy
-bS9ib290L2R0cy9pbXg3dWxwLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3
-dWxwLmR0c2kNCj4gPiBAQCAtMjg2LDYgKzI4NiwxMiBAQA0KPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4N
-Cj4gPiArICAgICAgICAgICAgICAgbW1kYzogbWVtb3J5LWNvbnRyb2xsZXJANDBhYjAwMDAgew0K
-PiANCj4gSXQgc2VlbXMgdGhhdCB0aGUgJ21tZGMnIGxhYmVsIGlzIG5vdCBuZWVlZC4NCj4gDQo+
-IFlvdSBjb3VsZCBtYWtlIGl0IHNpbXBsZXIgYXM6DQo+IA0KPiBtZW1vcnktY29udHJvbGxlckA0
-MGFiMDAwMCB7DQoNCklmIHNvLCBzaG91bGQgSSBjaGFuZ2Ugb3RoZXIgaS5NWDYgU29DcyB3aXRo
-IHNpbmdsZSBNTURDIG5vZGUgYXMgd2VsbD8NClJlbW92ZSB0aGVtIGFzIHdlbGw/DQoNCkFuc29u
-Lg0K
+Hi Anson,
+
+On Wed, Feb 27, 2019 at 10:54 PM Anson Huang <anson.huang@nxp.com> wrote:
+
+> If so, should I change other i.MX6 SoCs with single MMDC node as well?
+> Remove them as well?
+
+Only imx6qp needs the mmdc label.
+
+I can send a patch removing it from the other i.MX SoCs, so don't need
+to worry about it in your series.
+
+Thanks
