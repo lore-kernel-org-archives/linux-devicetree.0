@@ -1,44 +1,46 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 08/64] arm64: dts: renesas: r8a7796: Enable DMA for SCIF2
-Date: Thu, 28 Feb 2019 10:10:09 -0500
-Message-ID: <20190228151105.11277-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 07/64] ARM: dts: imx6sx: correct backward compatible of gpt
+Date: Thu, 28 Feb 2019 10:10:08 -0500
+Message-ID: <20190228151105.11277-7-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Anson Huang <anson.huang@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Anson Huang <anson.huang@nxp.com>
 
-[ Upstream commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4 ]
+[ Upstream commit ba0f4560526ba19300c07ed5a3c1df7592815dc6 ]
 
-SCIF2 on R-Car M3-W can be used with both DMAC1 and DMAC2.
+i.MX6SX has same GPT type as i.MX6DL, in GPT driver, it uses
+below TIMER_OF_DECLARE, so the backward compatible should be
+"fsl,imx6dl-gpt", correct it.
 
-Fixes: dbcae5ea4bd27409 ("arm64: dts: r8a7796: Enable SCIF DMA")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+TIMER_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx6sx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index cbd35c00b4af6..33cb0281c39c8 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -1161,6 +1161,9 @@
- 				 <&cpg CPG_CORE R8A7796_CLK_S3D1>,
- 				 <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
-+			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
-+			       <&dmac2 0x13>, <&dmac2 0x12>;
-+			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
- 			resets = <&cpg 310>;
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 844caa39364ff..50083cecc6c97 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -462,7 +462,7 @@
+ 			};
+ 
+ 			gpt: gpt@2098000 {
+-				compatible = "fsl,imx6sx-gpt", "fsl,imx31-gpt";
++				compatible = "fsl,imx6sx-gpt", "fsl,imx6dl-gpt";
+ 				reg = <0x02098000 0x4000>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
 -- 
 2.19.1
