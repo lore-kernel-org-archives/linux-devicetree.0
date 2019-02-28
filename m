@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 25/81] DTS: CI20: Fix bugs in ci20's device tree.
-Date: Thu, 28 Feb 2019 10:07:17 -0500
-Message-ID: <20190228150813.10256-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 20/81] ARM: dts: n900: fix mmc1 card detect gpio polarity
+Date: Thu, 28 Feb 2019 10:07:12 -0500
+Message-ID: <20190228150813.10256-20-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,60 +9,43 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>, Paul Burton <paul.burton@mips.com>, linux-mips <linux-mips@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com, malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org, syq <syq@debian.org>, "jiaxun . yang" <jiaxun.yang@flygoat.com>, Sasha Levin <sashal@kernel.org>
+Cc: Arthur Demchenkov <spinal.by@gmail.com>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
+From: Arthur Demchenkov <spinal.by@gmail.com>
 
-[ Upstream commit 1ca1c87f91d9dc50d6a38e2177b2032996e7901c ]
+[ Upstream commit ac9c908eecde3ed252cb1d67fc79b3c1346f76bc ]
 
-According to the Schematic, the hardware of ci20 leads to uart3,
-but not to uart2. Uart2 is miswritten in the original code.
+Wrong polarity of card detect GPIO pin leads to the system not
+booting from external mmc, if the back cover of N900 is closed.
+When the cover is open the system boots fine.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips <linux-mips@vger.kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: mark.rutland@arm.com
-Cc: malat@debian.org
-Cc: ezequiel@collabora.co.uk
-Cc: ulf.hansson@linaro.org
-Cc: syq <syq@debian.org>
-Cc: jiaxun.yang <jiaxun.yang@flygoat.com>
+This wasn't noticed before, because of a bug, which was fixed
+by commit e63201f19 (mmc: omap_hsmmc: Delete platform data GPIO
+CD and WP).
+
+Kernels up to 4.19 ignored the card detect GPIO from DT.
+
+Fixes: e63201f19438 ("mmc: omap_hsmmc: Delete platform data GPIO CD and WP")
+Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/omap3-n900.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 50cff3cbcc6de..4f7b1fa31cf53 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -76,7 +76,7 @@
- 	status = "okay";
- 
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pins_uart2>;
-+	pinctrl-0 = <&pins_uart3>;
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index 182a53991c901..826920e6b8787 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -814,7 +814,7 @@
+ 	/* For debugging, it is often good idea to remove this GPIO.
+ 	   It means you can remove back cover (to reboot by removing
+ 	   battery) and still use the MMC card. */
+-	cd-gpios = <&gpio6 0 GPIO_ACTIVE_HIGH>; /* 160 */
++	cd-gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
  };
  
- &uart4 {
-@@ -196,9 +196,9 @@
- 		bias-disable;
- 	};
- 
--	pins_uart2: uart2 {
--		function = "uart2";
--		groups = "uart2-data", "uart2-hwflow";
-+	pins_uart3: uart3 {
-+		function = "uart3";
-+		groups = "uart3-data", "uart3-hwflow";
- 		bias-disable;
- 	};
- 
+ /* most boards use vaux3, only some old versions use vmmc2 instead */
 -- 
 2.19.1
