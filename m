@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 19/81] ARM: dts: omap3-gta04: Fix graph_port warning
-Date: Thu, 28 Feb 2019 10:07:11 -0500
-Message-ID: <20190228150813.10256-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 22/81] arm64: dts: add msm8996 compatible to gicv3
+Date: Thu, 28 Feb 2019 10:07:14 -0500
+Message-ID: <20190228150813.10256-22-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,43 +9,40 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, "H . Nikolaus Schaller" <hns@goldelico.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 5b90df44fd9b415d8c5d11b92746212a63d3c47f ]
+[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
 
-We're currently getting a warning with make dtbs:
+Add compatible to gicv3 node to enable quirk required to restrict writing
+to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
 
-arch/arm/boot/dts/omap3-gta04.dtsi:720.7-727.4: Warning (graph_port):
-/ocp@68000000/dss@48050000/encoder@48050c0 0/port: graph node unit
-address error, expected "0"
+With this quirk MSM8996 can at least boot out of mainline, which can help
+community to work with boards based on MSM8996.
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Without this patch Qualcomm DB820c board reboots on mainline.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index d5fe55392230d..68e6752589065 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -714,11 +714,7 @@
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index b29fe80d72883..461612a5ab5e4 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -397,7 +397,7 @@
+ 		};
  
- 	vdda-supply = <&vdac>;
- 
--	#address-cells = <1>;
--	#size-cells = <0>;
--
- 	port {
--		reg = <0>;
- 		venc_out: endpoint {
- 			remote-endpoint = <&opa_in>;
- 			ti,channels = <1>;
+ 		intc: interrupt-controller@9bc0000 {
+-			compatible = "arm,gic-v3";
++			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+ 			#redistributor-regions = <1>;
 -- 
 2.19.1
