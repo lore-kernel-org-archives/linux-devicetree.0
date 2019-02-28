@@ -1,75 +1,59 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v1 07/13] devicetree: bindings: Document first ROHM
- BD70528 bindings
-Date: Thu, 28 Feb 2019 08:49:23 +0200
-Message-ID: <20190228064923.GA3773@localhost.localdomain>
-References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
- <80de7a2b537ae3f414b0281736652256f38cf94c.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
- <20190223003041.GA16670@bogus>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v2 1/3] dt-bindings: imx-ocotp: Add i.MX8MQ compatible
+Date: Thu, 28 Feb 2019 08:01:35 +0100
+Message-ID: <20190228070137.30867-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190223003041.GA16670@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mazziesaccount@gmail.com, lee.jones@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Carlo Caione <ccaione@baylibre.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob, All
+Add compatible for i.MX8MQ and add i.MX7D/S, i.MX7ULP and i.M8MQ
+to the description.
 
-Sorry for long delay - I was ill for a few days. Back at the business
-now =)
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+---
+v2:
+- rebased on linux-next
+- collected reviewed
+---
+ Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Rob, maybe dropping the RFC tag has messed your book keeping? This
-is the latest version:
-https://lore.kernel.org/lkml/90c3b820baf072a7cc3a21aa50c661774a045158.1550148989.git.matti.vaittinen@fi.rohmeurope.com/
-and I thought it already had the Reviewed-by tag from you :)
-
-On Fri, Feb 22, 2019 at 06:30:41PM -0600, Rob Herring wrote:
-> On Tue, Jan 22, 2019 at 11:45:38AM +0200, Matti Vaittinen wrote:
-> > Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
-> > drivers) and 4 GPIO pins which can be configured for I/O or
-> > as interrupt sources withe configurable trigger levels.
-> 
-> 'dt-bindings: mfd: ...' for the subject.
-
-I see at least the patch subject comment is still valid though. Do you
-want me to change it and resubmit the series?
-
-> 
-> > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > ---
-> >  .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 104 +++++++++++++++++++++
-> >  1 file changed, 104 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > new file mode 100644
-> > index 000000000000..21801440a53a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > @@ -0,0 +1,104 @@
-> > +* ROHM BD70528 Power Management Integrated Circuit bindings
-> > +
-> > +BD70528MWV is an ultra-low Iq general purpose single-chip power management IC
-> > +for battery-powered portable devices. The IC integrates 3 ultra-low current
-> > +consumption buck converters, 3 LDOs and 2 LED Drivers. Also included are 4
-> > +GPIOs, a real-time clock (RTC), a 32kHz clock gate, high-accuracy VREF
-> > +for use with an external ADC, flexible dual-input power path, 10 bits SAR ADC
-> > +for battery temperature monitor and 1S battery charger with scalable charge
-> > +currents.
-
-Br,
-	Matti Vaittinen
-
-
+diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+index 7a999a135e56..68f7d6fdd140 100644
+--- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
++++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+@@ -1,7 +1,8 @@
+ Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
+ 
+ This binding represents the on-chip eFuse OTP controller found on
+-i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6ULL/ULZ and i.MX6SLL SoCs.
++i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6ULL/ULZ, i.MX6SLL,
++i.MX7D/S, i.MX7ULP and i.MX8MQ SoCs.
+ 
+ Required properties:
+ - compatible: should be one of
+@@ -13,6 +14,7 @@ Required properties:
+ 	"fsl,imx7d-ocotp" (i.MX7D/S),
+ 	"fsl,imx6sll-ocotp" (i.MX6SLL),
+ 	"fsl,imx7ulp-ocotp" (i.MX7ULP),
++	"fsl,imx8mq-ocotp" (i.MX8MQ),
+ 	followed by "syscon".
+ - #address-cells : Should be 1
+ - #size-cells : Should be 1
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+2.20.1
