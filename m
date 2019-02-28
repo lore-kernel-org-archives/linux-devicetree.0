@@ -1,34 +1,32 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v9 14/27] pwm: jz4740: Improve algorithm of clock calculation
-Date: Thu, 28 Feb 2019 10:42:32 -0800
-Message-ID: <155137935225.16805.10412318501940648799@swboyd.mtv.corp.google.com>
-References: <20181227181319.31095-1-paul@crapouillou.net> <20181227181319.31095-15-paul@crapouillou.net> <20190105195725.cuxfge6zkpbt3cyk@pengutronix.de> <1546722339.30174.0@crapouillou.net> <20190105212711.s765knwwerceytvk@pengutronix.de> <1547129096.16183.0@crapouillou.net> <1550884678.20534.0@crapouillou.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: mediatek: update bindings for MT7629 SoC
+Date: Thu, 28 Feb 2019 12:43:11 -0600
+Message-ID: <20190228184311.GA15417@bogus>
+References: <56a2c38c9efa41be940858e19501fe07fbd5120e.1550233614.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550884678.20534.0@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <56a2c38c9efa41be940858e19501fe07fbd5120e.1550233614.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>, u.kleine-koenig@pengutronix.de
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+To: Ryder Lee <ryder.lee@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Cercueil (2019-02-22 17:17:58)
-> Bump.
->=20
-> What should I do here?
->=20
+On Sun, 17 Feb 2019 21:50:30 +0800, Ryder Lee wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> This updates bindings for MT7629 SoC, which includes very basic items
+> such as system timer, UART, sysirq and scpsys unit.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt     | 5 +++--
+>  Documentation/devicetree/bindings/serial/mtk-uart.txt                | 3 ++-
+>  Documentation/devicetree/bindings/soc/mediatek/scpsys.txt            | 3 ++-
+>  3 files changed, 7 insertions(+), 4 deletions(-)
+> 
 
-I thought I replied to the list but maybe it got rejected because my MUA
-is currently failing hard at sending 8-bit mails without
-using quoted printable. Let me remove all non-ascii characters from this
-mail!
-
-If someone has the mail please rebounce it to the list. Otherwise, I
-think I basically said this is OK because clk_round_rate() semantics are
-specifically vague here to allow the implementation to decide how rates
-are rounded (up, down, closest, etc). As long as the whole rate space is
-searched with a +1 or a -1 style of search it should be work. We're not
-going to add round_up() or round_down() APIs as far as I'm concerned,
-and you can look on the list to see previous proposals on that topic to
-get some background on why they aren't liked.
+Reviewed-by: Rob Herring <robh@kernel.org>
