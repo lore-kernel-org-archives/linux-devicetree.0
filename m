@@ -1,7 +1,7 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 6/6] ARM: dts: stm32: Add romem and temperature calibration on stm32f429
-Date: Thu, 28 Feb 2019 11:19:56 +0100
-Message-ID: <1551349196-8956-7-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v2 3/6] nvmem: stm32: add support for STM32MP15 BSEC to control OTP data
+Date: Thu, 28 Feb 2019 11:19:53 +0100
+Message-ID: <1551349196-8956-4-git-send-email-fabrice.gasnier@st.com>
 References: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,37 +12,195 @@ To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, alexandre.torgue@st.com
 Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, lionel.debieve@st.com, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add & enable stm32 factory-programmed memory. Describe temperature sensor
-calibration cells.
+On STM32MP15, OTP area may be read/written by using BSEC (boot, security
+and OTP control). BSEC registers set is composed of various regions, among
+which control registers and OTP shadow registers.
+Secure monitor calls are involved in this process to allow (or deny)
+access to the full range of OTP data.
+This adds support for reading and writing OTP data using SMC services.
+Data content can be aligned on 16-bits or 8-bits. Then take care of it,
+since BSEC data is 32-bits wide.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/nvmem/stm32-romem.c | 134 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 129 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 8d6f028..8055c98 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -78,6 +78,19 @@
- 	};
+diff --git a/drivers/nvmem/stm32-romem.c b/drivers/nvmem/stm32-romem.c
+index 07e98b5..354be52 100644
+--- a/drivers/nvmem/stm32-romem.c
++++ b/drivers/nvmem/stm32-romem.c
+@@ -6,11 +6,29 @@
+  * Author: Fabrice Gasnier <fabrice.gasnier@st.com> for STMicroelectronics.
+  */
  
- 	soc {
-+		romem: nvmem@1fff7800 {
-+			compatible = "st,stm32f4-otp";
-+			reg = <0x1fff7800 0x400>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ts_cal1: calib@22c {
-+				reg = <0x22c 0x2>;
-+			};
-+			ts_cal2: calib@22e {
-+				reg = <0x22e 0x2>;
-+			};
-+		};
++#include <linux/arm-smccc.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/nvmem-provider.h>
+ #include <linux/of_device.h>
+ 
++/* BSEC secure service access from non-secure */
++#define STM32_SMC_BSEC			0x82001003
++#define STM32_SMC_READ_SHADOW		0x01
++#define STM32_SMC_PROG_OTP		0x02
++#define STM32_SMC_WRITE_SHADOW		0x03
++#define STM32_SMC_READ_OTP		0x04
 +
- 		timer2: timer@40000000 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000000 0x400>;
++/* shadow registers offest */
++#define STM32MP15_BSEC_DATA0		0x200
++
++/* 32 (x 32-bits) lower shadow registers */
++#define STM32MP15_BSEC_NUM_LOWER	32
++
++struct stm32_romem_cfg {
++	int size;
++};
++
+ struct stm32_romem_priv {
+ 	void __iomem *base;
+ 	struct nvmem_config cfg;
+@@ -29,8 +47,98 @@ static int stm32_romem_read(void *context, unsigned int offset, void *buf,
+ 	return 0;
+ }
+ 
++static int stm32_bsec_smc(u8 op, u32 otp, u32 data, u32 *result)
++{
++#if IS_ENABLED(CONFIG_HAVE_ARM_SMCCC)
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(STM32_SMC_BSEC, op, otp, data, 0, 0, 0, 0, &res);
++	if (res.a0)
++		return -EIO;
++
++	if (result)
++		*result = (u32)res.a1;
++
++	return 0;
++#else
++	return -ENXIO;
++#endif
++}
++
++static int stm32_bsec_read(void *context, unsigned int offset, void *buf,
++			   size_t bytes)
++{
++	struct stm32_romem_priv *priv = context;
++	struct device *dev = priv->cfg.dev;
++	u32 roffset, rbytes, val;
++	u8 *buf8 = buf, *val8 = (u8 *)&val;
++	int i, j = 0, ret, skip_bytes, size;
++
++	/* Round unaligned access to 32-bits */
++	roffset = rounddown(offset, 4);
++	skip_bytes = offset & 0x3;
++	rbytes = roundup(bytes + skip_bytes, 4);
++
++	if (roffset + rbytes > priv->cfg.size)
++		return -EINVAL;
++
++	for (i = roffset; (i < roffset + rbytes); i += 4) {
++		u32 otp = i >> 2;
++
++		if (otp < STM32MP15_BSEC_NUM_LOWER) {
++			/* read lower data from shadow registers */
++			val = readl_relaxed(
++				priv->base + STM32MP15_BSEC_DATA0 + i);
++		} else {
++			ret = stm32_bsec_smc(STM32_SMC_READ_SHADOW, otp, 0,
++					     &val);
++			if (ret) {
++				dev_err(dev, "Can't read data%d (%d)\n", otp,
++					ret);
++				return ret;
++			}
++		}
++		/* skip first bytes in case of unaligned read */
++		if (skip_bytes)
++			size = min(bytes, (size_t)(4 - skip_bytes));
++		else
++			size = min(bytes, (size_t)4);
++		memcpy(&buf8[j], &val8[skip_bytes], size);
++		bytes -= size;
++		j += size;
++		skip_bytes = 0;
++	}
++
++	return 0;
++}
++
++static int stm32_bsec_write(void *context, unsigned int offset, void *buf,
++			    size_t bytes)
++{
++	struct stm32_romem_priv *priv = context;
++	struct device *dev = priv->cfg.dev;
++	u32 *buf32 = buf;
++	int ret, i;
++
++	/* Allow only writing complete 32-bits aligned words */
++	if ((bytes % 4) || (offset % 4))
++		return -EINVAL;
++
++	for (i = offset; i < offset + bytes; i += 4) {
++		ret = stm32_bsec_smc(STM32_SMC_PROG_OTP, i >> 2, *buf32++,
++				     NULL);
++		if (ret) {
++			dev_err(dev, "Can't write data%d (%d)\n", i >> 2, ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
+ static int stm32_romem_probe(struct platform_device *pdev)
+ {
++	const struct stm32_romem_cfg *cfg;
+ 	struct device *dev = &pdev->dev;
+ 	struct stm32_romem_priv *priv;
+ 	struct resource *res;
+@@ -45,21 +153,37 @@ static int stm32_romem_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->base);
+ 
+ 	priv->cfg.name = "stm32-romem";
+-	priv->cfg.read_only = true;
+ 	priv->cfg.word_size = 1;
+ 	priv->cfg.stride = 1;
+-	priv->cfg.size = resource_size(res);
+-	priv->cfg.reg_read = stm32_romem_read;
+ 	priv->cfg.dev = dev;
+ 	priv->cfg.priv = priv;
+ 	priv->cfg.owner = THIS_MODULE;
+ 
++	cfg = (const struct stm32_romem_cfg *)
++		of_match_device(dev->driver->of_match_table, dev)->data;
++	if (!cfg) {
++		priv->cfg.read_only = true;
++		priv->cfg.size = resource_size(res);
++		priv->cfg.reg_read = stm32_romem_read;
++	} else {
++		priv->cfg.size = cfg->size;
++		priv->cfg.reg_read = stm32_bsec_read;
++		priv->cfg.reg_write = stm32_bsec_write;
++	}
++
+ 	return PTR_ERR_OR_ZERO(devm_nvmem_register(dev, &priv->cfg));
+ }
+ 
++static const struct stm32_romem_cfg stm32mp15_bsec_cfg = {
++	.size = 384, /* 96 x 32-bits data words */
++};
++
+ static const struct of_device_id stm32_romem_of_match[] = {
+-	{ .compatible = "st,stm32f4-otp", },
+-	{},
++	{ .compatible = "st,stm32f4-otp", }, {
++		.compatible = "st,stm32mp15-bsec",
++		.data = (void *)&stm32mp15_bsec_cfg,
++	}, {
++	},
+ };
+ MODULE_DEVICE_TABLE(of, stm32_romem_of_match);
+ 
 -- 
 2.7.4
