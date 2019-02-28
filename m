@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 02/81] ARM: dts: omap4-droid4: Fix typo in cpcap IRQ flags
-Date: Thu, 28 Feb 2019 10:06:54 -0500
-Message-ID: <20190228150813.10256-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 07/81] ARM: dts: meson8m2: mxiii-plus: mark the SD card detection GPIO active-low
+Date: Thu, 28 Feb 2019 10:06:59 -0500
+Message-ID: <20190228150813.10256-7-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,40 +9,47 @@ Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit ef4a55b9197a8f844ea0663138e902dcce3e2f36 ]
+[ Upstream commit 8615f5596335db0978cea593dcd0070dc5f8b116 ]
 
-We're now getting the following error:
+After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
+tree") SD cards are not detected anymore.
 
-genirq: Setting trigger mode 1 for irq 230 failed
-(regmap_irq_set_type+0x0/0x15c)
-cpcap-usb-phy cpcap-usb-phy.0: could not get irq dp: -524
+The CD GPIO is "active low" on the MXIII-Plus. The MMC dt-bindings
+specify: "[...] using the "cd-inverted" property means, that the CD line
+is active high, i.e. it is high, when a card is inserted".
 
-Cc: Sebastian Reichel <sre@kernel.org>
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Tested-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
+drop the "cd-inverted" property. This makes the definition consistent
+with the existing dt-bindings and fixes the check whether an SD card is
+inserted.
+
+Fixes: 35ee52bea66c74 ("ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-index ddc7a7bb33c0d..f57acf8f66b95 100644
---- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-@@ -105,7 +105,7 @@
- 			interrupts-extended = <
- 				&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
- 				&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
--				&cpcap 48 1
-+				&cpcap 48 0
- 			>;
- 			interrupt-names =
- 				"id_ground", "id_float", "se0conn", "vbusvld",
+diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+index f5853610b20b8..6ac02beb5fa72 100644
+--- a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
++++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+@@ -206,8 +206,7 @@
+ 		cap-sd-highspeed;
+ 		disable-wp;
+ 
+-		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-		cd-inverted;
++		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 		vmmc-supply = <&vcc_3v3>;
+ 	};
 -- 
 2.19.1
