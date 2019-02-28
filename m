@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 04/81] arm: dts: meson: Fix IRQ trigger type for macirq
-Date: Thu, 28 Feb 2019 10:06:56 -0500
-Message-ID: <20190228150813.10256-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 09/81] ARM: dts: imx6sx: correct backward compatible of gpt
+Date: Thu, 28 Feb 2019 10:07:01 -0500
+Message-ID: <20190228150813.10256-9-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,64 +9,38 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Carlo Caione <ccaione@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
+Cc: Anson Huang <anson.huang@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <ccaione@baylibre.com>
+From: Anson Huang <anson.huang@nxp.com>
 
-[ Upstream commit e35e26b26e955c53e61c154ba26b9bb15da6b858 ]
+[ Upstream commit ba0f4560526ba19300c07ed5a3c1df7592815dc6 ]
 
-A long running stress test on a custom board shipping an AXG SoCs and a
-Realtek RTL8211F PHY revealed that after a few hours the connection
-speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
-the 'macirq' (eth0) IRQ would stop being triggered at all and as
-consequence the GMAC IRQs never ACKed.
+i.MX6SX has same GPT type as i.MX6DL, in GPT driver, it uses
+below TIMER_OF_DECLARE, so the backward compatible should be
+"fsl,imx6dl-gpt", correct it.
 
-After a painful investigation the problem seemed to be due to a wrong
-defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
-EDGE_RISING.
+TIMER_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
 
-The change in the macirq IRQ type also solved another long standing
-issue affecting this SoC/PHY where EEE was causing the network
-connection to die after stressing it with iperf3 (even though much
-sooner). It's now possible to remove the 'eee-broken-1000t' quirk as
-well.
-
-Fixes: 9c15795a4f96 ("ARM: dts: meson8b-odroidc1: ethernet support")
-Signed-off-by: Carlo Caione <ccaione@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson.dtsi           | 2 +-
- arch/arm/boot/dts/meson8b-odroidc1.dts | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6sx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
-index 0d9faf1a51eac..a86b890863347 100644
---- a/arch/arm/boot/dts/meson.dtsi
-+++ b/arch/arm/boot/dts/meson.dtsi
-@@ -263,7 +263,7 @@
- 			compatible = "amlogic,meson6-dwmac", "snps,dwmac";
- 			reg = <0xc9410000 0x10000
- 			       0xc1108108 0x4>;
--			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			status = "disabled";
- 		};
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index 58669abda2594..a951a6632d0c7 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -221,7 +221,6 @@
- 		/* Realtek RTL8211F (0x001cc916) */
- 		eth_phy: ethernet-phy@0 {
- 			reg = <0>;
--			eee-broken-1000t;
- 			interrupt-parent = <&gpio_intc>;
- 			/* GPIOH_3 */
- 			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 95a3c1cb877db..89ba48f4273b2 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -462,7 +462,7 @@
+ 			};
+ 
+ 			gpt: gpt@2098000 {
+-				compatible = "fsl,imx6sx-gpt", "fsl,imx31-gpt";
++				compatible = "fsl,imx6sx-gpt", "fsl,imx6dl-gpt";
+ 				reg = <0x02098000 0x4000>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
 -- 
 2.19.1
