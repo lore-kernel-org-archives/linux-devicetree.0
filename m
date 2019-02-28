@@ -1,34 +1,30 @@
 From: Robert Yang <decatf@gmail.com>
-Subject: [PATCH 1/3] dt-bindings: Add vendor prefix for Kionix, Inc.
-Date: Thu, 28 Feb 2019 15:18:09 -0500
-Message-ID: <20190228201811.7582-2-decatf@gmail.com>
-References: <20190228201811.7582-1-decatf@gmail.com>
+Subject: [PATCH 0/3] Add device tree support for kxcjk1013 accelerometer
+Date: Thu, 28 Feb 2019 15:18:08 -0500
+Message-ID: <20190228201811.7582-1-decatf@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190228201811.7582-1-decatf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Yang <decatf@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Kionix manufactured MEMs sensors. There are Kionix acceleromoter sensor
-drivers which can be used with device tree.
+- Add a vendor prefix for Kionix Inc. to device tree bindings.
+  There is already one other Kionix accelerometer (kxsd9) with device tree
+  bindings but this vendor prefix hasn't been documented.
+- Document the kxcjk1013 device tree bindings.
+- Add device tree support for Kionix kxcjk1013 accelerometer sensors.
 
-Signed-off-by: Robert Yang <decatf@gmail.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Robert Yang (3):
+  dt-bindings: Add vendor prefix for Kionix, Inc.
+  dt-bindings: iio: accel: kxcjk1013: Add device tree binding
+    documentation
+  iio: accel: kxcjk1013: Add device tree support
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 01732c887521..e28583ebe5e8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -208,6 +208,7 @@ kiebackpeter    Kieback & Peter GmbH
- kinetic Kinetic Technologies
- kingdisplay	King & Display Technology Co., Ltd.
- kingnovel	Kingnovel Technology Co., Ltd.
-+kionix	Kionix, Inc.
- koe	Kaohsiung Opto-Electronics Inc.
- kosagi	Sutajio Ko-Usagi PTE Ltd.
- kyo	Kyocera Corporation
+ .../bindings/iio/accel/kionix,kxcjk1013.txt    | 18 ++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt    |  1 +
+ drivers/iio/accel/kxcjk-1013.c                 | 11 +++++++++++
+ 3 files changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
+
 -- 
 2.17.1
