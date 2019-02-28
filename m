@@ -1,39 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Add vendor prefix for feiyang
-Date: Thu, 28 Feb 2019 09:16:26 -0600
-Message-ID: <20190228151626.GA17387@bogus>
-References: <20190212115232.4532-1-jagan@amarulasolutions.com>
+Subject: Re: [PATCH 1/8] dt-bindings: phy: Add Amlogic G12A USB2 PHY Bindings
+Date: Thu, 28 Feb 2019 09:18:23 -0600
+Message-ID: <20190228151823.GA20865@bogus>
+References: <20190212151413.24632-1-narmstrong@baylibre.com>
+ <20190212151413.24632-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190212115232.4532-1-jagan@amarulasolutions.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190212151413.24632-2-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 05:22:32PM +0530, Jagan Teki wrote:
-> Add vendor prefix for feiyang, known as
-> Shenzhen Fly Young Technology Co.,LTD. a known producer for LCD modules.
+On Tue, 12 Feb 2019 16:14:06 +0100, Neil Armstrong wrote:
+> Add the Amlogic G12A Family USB2 OTG PHY Bindings
 > 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
-> Note: notation about using 'feiyang' is based on the datasheet 
-> http://files.pine64.org/doc/datasheet/pine64/FY07024DI26A30-D_feiyang_LCD_panel.pdf
+>  .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
 > 
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
 
-Applied.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
