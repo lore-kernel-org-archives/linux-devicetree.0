@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 09/81] ARM: dts: imx6sx: correct backward compatible of gpt
-Date: Thu, 28 Feb 2019 10:07:01 -0500
-Message-ID: <20190228150813.10256-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 06/81] ARM: dts: meson8b: ec100: mark the SD card detection GPIO active-low
+Date: Thu, 28 Feb 2019 10:06:58 -0500
+Message-ID: <20190228150813.10256-6-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,38 +9,47 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Anson Huang <anson.huang@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <anson.huang@nxp.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit ba0f4560526ba19300c07ed5a3c1df7592815dc6 ]
+[ Upstream commit c8bfe65fb1fb7a43d766df1dfa379406112cba61 ]
 
-i.MX6SX has same GPT type as i.MX6DL, in GPT driver, it uses
-below TIMER_OF_DECLARE, so the backward compatible should be
-"fsl,imx6dl-gpt", correct it.
+After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
+tree") SD cards are not detected anymore.
 
-TIMER_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
+The CD GPIO is "active low" on the EC-100. The MMC dt-bindings specify:
+"[...] using the "cd-inverted" property means, that the CD line is active
+high, i.e. it is high, when a card is inserted".
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
+drop the "cd-inverted" property. This makes the definition consistent
+with the existing dt-bindings and fixes the check whether an SD card is
+inserted.
+
+Fixes: bbedc1f1d90e33 ("ARM: dts: meson8b: Add support for the Endless Mini (EC-100)")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/meson8b-ec100.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 95a3c1cb877db..89ba48f4273b2 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -462,7 +462,7 @@
- 			};
+diff --git a/arch/arm/boot/dts/meson8b-ec100.dts b/arch/arm/boot/dts/meson8b-ec100.dts
+index 0872f6e3abf56..d50fc2f60fa31 100644
+--- a/arch/arm/boot/dts/meson8b-ec100.dts
++++ b/arch/arm/boot/dts/meson8b-ec100.dts
+@@ -205,8 +205,7 @@
+ 		cap-sd-highspeed;
+ 		disable-wp;
  
- 			gpt: gpt@2098000 {
--				compatible = "fsl,imx6sx-gpt", "fsl,imx31-gpt";
-+				compatible = "fsl,imx6sx-gpt", "fsl,imx6dl-gpt";
- 				reg = <0x02098000 0x4000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
+-		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-		cd-inverted;
++		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 		vmmc-supply = <&vcc_3v3>;
+ 	};
 -- 
 2.19.1
