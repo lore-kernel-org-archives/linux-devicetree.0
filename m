@@ -1,47 +1,52 @@
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v5 2/4] bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma
- compatbile string
-Date: Fri, 1 Mar 2019 16:36:33 +0000
-Message-ID: <20190301163604.10618-3-daniel.baluta@nxp.com>
+Subject: [PATCH v5 3/4] arm64: dts: imx8mq: Add SAI2 node
+Date: Fri, 1 Mar 2019 16:36:34 +0000
+Message-ID: <20190301163604.10618-4-daniel.baluta@nxp.com>
 References: <20190301163604.10618-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190301163604.10618-1-daniel.baluta@nxp.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, Abel Vesa <abel.vesa@nxp.com>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "spencercw@gmail.com" <spencercw@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.>
+Cc: "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng
 List-Id: devicetree@vger.kernel.org
 
-Add imx8mq sdma support.
+SAI2 is part of AIPS-3 memory region.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 ---
- Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-index 3c9a57a8443b..9d8bbac27d8b 100644
---- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-@@ -9,6 +9,7 @@ Required properties:
-       "fsl,imx53-sdma"
-       "fsl,imx6q-sdma"
-       "fsl,imx7d-sdma"
-+      "fsl,imx8mq-sdma"
-   The -to variants should be preferred since they allow to determine the
-   correct ROM script addresses needed for the driver to work without additional
-   firmware.
--- 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mq.dtsi
+index 9d48450453fb..b39c6c75c043 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -489,6 +489,21 @@
+ 				status =3D "disabled";
+ 			};
+=20
++			sai2: sai@308b0000 {
++				#sound-dai-cells =3D <0>;
++				compatible =3D "fsl,imx8mq-sai",
++					     "fsl,imx6sx-sai";
++				reg =3D <0x308b0000 0x10000>;
++				interrupts =3D <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&clk IMX8MQ_CLK_SAI2_IPG>,
++					 <&clk IMX8MQ_CLK_SAI2_ROOT>,
++					 <&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
++				clock-names =3D "bus", "mclk1", "mclk2", "mclk3";
++				dmas =3D <&sdma1 10 24 0>, <&sdma1 11 24 0>;
++				dma-names =3D "rx", "tx";
++				status =3D "disabled";
++			};
++
+ 			i2c1: i2c@30a20000 {
+ 				compatible =3D "fsl,imx8mq-i2c", "fsl,imx21-i2c";
+ 				reg =3D <0x30a20000 0x10000>;
+--=20
 2.17.1
