@@ -1,44 +1,31 @@
-Return-Path: <SRS0=Q0RW=RE=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH RESEND v2 2/2] media: dt-bindings: media: rcar_vin: Add r8a774a1 support
-Date: Fri,  1 Mar 2019 14:24:13 +0000
-Message-Id: <1551450253-63390-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1551450253-63390-1-git-send-email-biju.das@bp.renesas.com>
-References: <1551450253-63390-1-git-send-email-biju.das@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from imap1.codethink.co.uk ([176.9.8.82]:34210 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387914AbfCAPwv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Mar 2019 10:52:51 -0500
+From: Kejia Hu <kejia.hu@codethink.co.uk>
+Subject: [PATCH v2] tegra2/tegra3 automotive clock init
+Date: Fri,  1 Mar 2019 15:35:34 +0000
+Message-Id: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, digetx@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-Document RZ/G2M (R8A774A1) SoC bindings.
+This is a re-implementation of adding clock initialization for
+tegra2 and tegra3 automotive devices accroding to Dmitry Osipenko's
+feedback on version 1[0].
 
-The RZ/G2M SoC is similar to R-Car M3-W (R8A7796).
+We have moved the initialization from the clock driver to device
+tree, but instead of putting them into a dtsi file, we used
+dt overlay to patch the device tree at runtime, we believe the
+ability to dynamically detect the chipset and apply the right
+settings should be useful according to the discussion[1].
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-V1-->V2
-  * No change
----
- Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
- 1 file changed, 1 insertion(+)
+Changes against v1:
+  - use device tree overlay to introduce the automative clock configs
+  - enable dt overlay for tegra20/30
+  - move the condition "soc_is_tegra_auto" to be after applied
+    clock init table.
 
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-index 224a461..aa217b0 100644
---- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -13,6 +13,7 @@ on Gen3 and RZ/G2 platforms to a CSI-2 receiver.
-    - "renesas,vin-r8a7743" for the R8A7743 device
-    - "renesas,vin-r8a7744" for the R8A7744 device
-    - "renesas,vin-r8a7745" for the R8A7745 device
-+   - "renesas,vin-r8a774a1" for the R8A774A1 device
-    - "renesas,vin-r8a774c0" for the R8A774C0 device
-    - "renesas,vin-r8a7778" for the R8A7778 device
-    - "renesas,vin-r8a7779" for the R8A7779 device
--- 
-2.7.4
+[0] https://www.spinics.net/lists/linux-tegra/msg38347.html
+[1] https://www.spinics.net/lists/arm-kernel/msg665373.html
