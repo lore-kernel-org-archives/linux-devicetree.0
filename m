@@ -1,61 +1,44 @@
-Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from imap1.codethink.co.uk ([176.9.8.82]:34194 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbfCAPwu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Mar 2019 10:52:50 -0500
-From: Kejia Hu <kejia.hu@codethink.co.uk>
-Subject: [PATCH v2 4/6] kconfig: build device tree overlay into tegra20/30
-Date: Fri,  1 Mar 2019 15:35:38 +0000
-Message-Id: <20190301153540.14954-5-kejia.hu@codethink.co.uk>
-In-Reply-To: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
-References: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, digetx@gmail.com
-Cc: Kejia Hu <kejia.hu@codethink.co.uk>
+Return-Path: <SRS0=Q0RW=RE=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH RESEND V2 3/4] media: dt-bindings: media: rcar_vin: Add r8a774a1 support
+Date: Fri,  1 Mar 2019 15:45:35 +0000
+Message-Id: <1551455136-45574-4-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1551455136-45574-1-git-send-email-biju.das@bp.renesas.com>
+References: <1551455136-45574-1-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Kejia Hu <kejia.hu@codethink.co.uk>
----
- drivers/clk/tegra/Makefile | 6 ++++--
- drivers/soc/tegra/Kconfig  | 2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+Document RZ/G2M (R8A774A1) SoC bindings.
 
-diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
-index 6507acc843c7..b9d8281c3629 100644
---- a/drivers/clk/tegra/Makefile
-+++ b/drivers/clk/tegra/Makefile
-@@ -16,8 +16,10 @@ obj-y					+= clk-tegra-pmc.o
- obj-y					+= clk-tegra-fixed.o
- obj-y					+= clk-tegra-super-gen4.o
- obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
--obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
--obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o
-+obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o \
-+					   tegra20_automative_dt_overlay.dtb.o
-+obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o \
-+					   tegra30_automative_dt_overlay.dtb.o
- obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= clk-tegra114.o
- obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124.o
- obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124-dfll-fcpu.o
-diff --git a/drivers/soc/tegra/Kconfig b/drivers/soc/tegra/Kconfig
-index fe4481676da6..a61f34af738d 100644
---- a/drivers/soc/tegra/Kconfig
-+++ b/drivers/soc/tegra/Kconfig
-@@ -15,6 +15,7 @@ config ARCH_TEGRA_2x_SOC
- 	select SOC_TEGRA_FLOWCTRL
- 	select SOC_TEGRA_PMC
- 	select TEGRA_TIMER
-+	select OF_OVERLAY
- 	help
- 	  Support for NVIDIA Tegra AP20 and T20 processors, based on the
- 	  ARM CortexA9MP CPU and the ARM PL310 L2 cache controller
-@@ -28,6 +29,7 @@ config ARCH_TEGRA_3x_SOC
- 	select SOC_TEGRA_FLOWCTRL
- 	select SOC_TEGRA_PMC
- 	select TEGRA_TIMER
-+	select OF_OVERLAY
- 	help
- 	  Support for NVIDIA Tegra T30 processor family, based on the
- 	  ARM CortexA9MP CPU and the ARM PL310 L2 cache controller
+The RZ/G2M SoC is similar to R-Car M3-W (R8A7796).
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+V1-->V2
+  * No change
+---
+ Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+index 224a461..aa217b0 100644
+--- a/Documentation/devicetree/bindings/media/rcar_vin.txt
++++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+@@ -13,6 +13,7 @@ on Gen3 and RZ/G2 platforms to a CSI-2 receiver.
+    - "renesas,vin-r8a7743" for the R8A7743 device
+    - "renesas,vin-r8a7744" for the R8A7744 device
+    - "renesas,vin-r8a7745" for the R8A7745 device
++   - "renesas,vin-r8a774a1" for the R8A774A1 device
+    - "renesas,vin-r8a774c0" for the R8A774C0 device
+    - "renesas,vin-r8a7778" for the R8A7778 device
+    - "renesas,vin-r8a7779" for the R8A7779 device
 -- 
-2.11.0
+2.7.4
