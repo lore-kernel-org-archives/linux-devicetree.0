@@ -1,39 +1,40 @@
 Return-Path: <SRS0=zCA2=RE=pengutronix.de=mfe@kernel.org>
-Date: Fri, 1 Mar 2019 11:52:35 +0100
+Date: Fri, 1 Mar 2019 11:26:48 +0100
 From: Marco Felsch <m.felsch@pengutronix.de>
 Subject: Re: [PATCH 1/3] media: dt-bindings: add bindings for Toshiba TC358746
-Message-ID: <20190301105235.a23jwiwmxejuv2yf@pengutronix.de>
+Message-ID: <20190301102648.aim4h3632tuuras6@pengutronix.de>
 References: <20181218141240.3056-1-m.felsch@pengutronix.de>
  <20181218141240.3056-2-m.felsch@pengutronix.de>
- <20190218100333.qvptfllrd4pyhsyb@paasikivi.fi.intel.com>
+ <20190213175648.l3x2zeych4qj7km7@uno.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190218100333.qvptfllrd4pyhsyb@paasikivi.fi.intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
+In-Reply-To: <20190213175648.l3x2zeych4qj7km7@uno.localdomain>
+To: Jacopo Mondi <jacopo@jmondi.org>
+Cc: hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sakari,
-
-On 19-02-18 12:03, Sakari Ailus wrote:
+On 19-02-13 18:57, Jacopo Mondi wrote:
 > Hi Marco,
+>     thanks for the patch.
 > 
-> My apologies for reviewing this so late. You've received good comments
-> already. I have a few more.
+> I have some comments, which I hope might get the ball rolling...
 
-Thanks for your review for the other patches as well =) Sorry for my
-delayed response.
+Hi Jacopo,
 
+thanks for your review and sorry for the late response. My schedule was
+a bit filled.
+
+> 
 > On Tue, Dec 18, 2018 at 03:12:38PM +0100, Marco Felsch wrote:
 > > Add corresponding dt-bindings for the Toshiba tc358746 device.
-> > 
+> >
 > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > > ---
 > >  .../bindings/media/i2c/toshiba,tc358746.txt   | 80 +++++++++++++++++++
 > >  1 file changed, 80 insertions(+)
 > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
-> > 
+> >
 > > diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
 > > new file mode 100644
 > > index 000000000000..499733df744a
@@ -43,49 +44,115 @@ delayed response.
 > > +* Toshiba TC358746 Parallel to MIPI CSI2-TX or MIPI CSI2-RX to Parallel Bridge
 > > +
 > > +The Toshiba TC358746 is a bridge that converts a Parallel-in stream to MIPI CSI-2 TX
+> 
+> nit:
+> s/is a bridge that/is a bridge device that/
+> or drop is a bridge completely?
+
+You're right, I will drop this statement.
+
+> 
 > > +or a MIPI CSI-2 RX stream into a Parallel-out. It is programmable through I2C.
 > 
-> This is interesting. The driver somehow needs to figure out the direction
-> of the data flow if it does not originate from DT. I guess it shouldn't as
-> it's not the property of an individual device, albeit in practice in all
-> hardware I've seen the direction of the pipeline is determinable and this
-> is visible in the kAPI as well. So I'm suggesting no changes due to this in
-> bindings, likely we'll need to address it somehow elsewhere going forward.
+> From the thin public available datasheet, it seems to support SPI as
+> programming interface, but only when doing Parallel->CSI-2. I would
+> mention that.
 
-What did you mean with "... and this is visible in the kAPI as well"?
-I'm relative new in the linux-media world but I never saw a device which
-supports two directions. Our customer which uses that chip use it
-only in parallel-in/csi-out mode. To be flexible the switching should be
-done by a subdev-ioctl but it is also reasonable to define a default value
-within the DT.
+You're right, the SPI interface is only supported in that mode.
 
+Should I add something like:
+It is programmable trough I2C and SPI. The SPI interface is only
+supported in parallel-in -> csi-out mode.
+ 
 > > +
 > > +Required Properties:
 > > +
 > > +- compatible: should be "toshiba,tc358746"
 > > +- reg: should be <0x0e>
+> 
+> nit: s/should/shall
+
+Okay.
+
 > > +- clocks: should contain a phandle link to the reference clock source
+> 
+> just "phandle to the reference clock source" ?
+
+Okay.
+
 > > +- clock-names: the clock input is named "refclk".
+> 
+> According to the clock bindings this is optional, and since you have
+> a single clock I would drop it.
+
+Yes it's optional, but the device can also act as clock provider (not
+now, patches in my personal queue for rework). So I won't drop it since
+I never linked the generic clock-bindings.
+
 > > +
 > > +Optional Properties:
 > > +
 > > +- reset-gpios: gpio phandle GPIO connected to the reset pin
+> 
+> would you drop one of the two "gpio" here. Like ": phandle to the GPIO
+> connected to the reset input pin"
+
+Okay.
+
 > > +
 > > +Parallel Endpoint:
+> 
+> Here I got confused. The chip supports 2 inputs (parallel and CSI-2)
+> and two outputs (parallel and CSI-2 again). You mention endpoints
+> propery only here, but it seems from the example you want two ports,
+> with one endpoint child-node each.
+
+Nope, the device has one CSI and one Parallel interface. These
+interfaces can be configured as receiver or as transmitter (according to
+the selected mode). I got you but I remember also the discussion with
+Mauro, Hans, Sakari about the TVP5150 ports. The result of that
+discussion was "don't introduce 'virtual' ports". If I got you right
+your Idea will introduce virtual ports too:
+
+/* Parallel */
+port@0{
+	port@0 { ... }; /* input case */
+	port@1 { ... }; /* output case */
+};
+
+/* CSI */
+port@1{
+	port@0 { ... }; /* input case */
+	port@1 { ... }; /* output case */
+};
+
+> Even if the driver does not support CSI-2->Parallel at the moment,
+> bindings should be future-proof, so I would reserve the first two
+> ports for the inputs, and the last two for the output, or, considering
+> that the two input-output combinations are mutually exclusive, provide
+> one "input" port with two optional endpoints, and one "output" port with
+> two optional endpoints.
+
+I wouldn't map the combinations to the device tree since it is the
+hw-abstraction and the signals still routed to the same pads. The only
+difference in the CSI-2->Parallel case is the timing calculation which
+is out of scope for the dt.
+
+> In both cases only one input and one output at the time could be
+> described in DT. Up to you, maybe others have different ideas as
+> well...
+> 
 > > +
 > > +Required Properties:
-> 
-> It'd be nice if the relation between these sections would be somehow
-> apparent. E.g. using different underlining, such as in
-> Documentation/devicetree/bindings/media/ti,omap3isp.txt .
-
-Thats a really good example thanks.
-
-> 
 > > +
 > > +- reg: should be <0>
 > > +- bus-width: the data bus width e.g. <8> for eight bit bus, or <16>
 > > +	     for sixteen bit wide bus.
+> 
+> The chip seems to support up to 24 bits of data bus width
+
+You're right, I will change that.
+
 > > +
 > > +MIPI CSI-2 Endpoint:
 > > +
@@ -95,9 +162,38 @@ Thats a really good example thanks.
 > > +- data-lanes: should be <1 2 3 4> for four-lane operation,
 > > +	      or <1 2> for two-lane operation
 > > +- clock-lanes: should be <0>
+> 
+> Can this be changed? If the chip does not allow lane re-ordering you
+> could drop this.
+
+Nope it can't. Only the data-lanes can be disabled seperatly so I added
+the data-lanes property to determine that number and for the sake of
+completeness I added the clock-lanes property.
+
+> 
 > > +- link-frequencies: List of allowed link frequencies in Hz. Each frequency is
 > > +		    expressed as a 64-bit big-endian integer. The frequency
 > > +		    is half of the bps per lane due to DDR transmission.
+> 
+> Does the chip supports a limited set of bus frequencies, or are this
+> "hints" ? I admit this property actually puzzles me, so I might got it
+> wrong..
+
+That's not that easy to answer. The user can add different link-freq.
+the driver can choose. This is relevant for the Parallel-in --> CSI-out.
+If the external pclk is to slow (due to dyn. fps change) and the link-freq.
+is to fast the internally pixel buffer throws underrun interrupts. The
+user notice that by green pixel artifacts. If the user adds more
+possible link-freq. the driver will switch to that one wich full fill
+the timings to avoid a fifo underrun.
+
+> 
+> Thanks
+>    j
+
+Regards,
+Marco
+
 > > +
 > > +Optional Properties:
 > > +
@@ -111,14 +207,6 @@ Thats a really good example thanks.
 > > +
 > > +&i2c {
 > > +	tc358746: tc358746@0e {
-> 
-> The node name should be a generic name of the type of the device, not the
-> name of the specific device as such. A similar Cadence device uses
-> "csi-bridge".
-
-Okay, I will change that.
-
-> 
 > > +		reg = <0x0e>;
 > > +		compatible = "toshiba,tc358746";
 > > +		pinctrl-names = "default";
@@ -151,13 +239,11 @@ Okay, I will change that.
 > > +		};
 > > +	};
 > > +};
-> 
-> -- 
-> Kind regards,
-> 
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
-> 
+> > --
+> > 2.19.1
+> >
+
+
 
 -- 
 Pengutronix e.K.                           |                             |
