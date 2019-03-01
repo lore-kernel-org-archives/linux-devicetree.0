@@ -1,74 +1,73 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 00/10] Allwinner sunxi message box support
-Date: Fri, 1 Mar 2019 06:53:24 +0100
-Message-ID: <20190301055324.GA563@Red>
-References: <20190301052947.32032-1-samuel@sholland.org>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Subject: Re: [PATCH] ARM: dts: imx6dl-yapp4: Use rgmii-id phy mode on the cpu
+ port
+Date: Fri, 1 Mar 2019 07:29:37 +0100
+Message-ID: <47d36e23-1113-56ff-e285-f9bd274004ff@ysoft.com>
+References: <1550583420-112858-1-git-send-email-michal.vokac@ysoft.com>
+ <20190301021344.GK26041@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBWER4PRQKGQEFFPOPGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190301052947.32032-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190301021344.GK26041@dragon>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 11:29:37PM -0600, Samuel Holland wrote:
-> This series adds support for the "hardware message box" in sun8i, sun9i,
-> and sun50i SoCs, used for communication with the ARISC management
-> processor (the platform's equivalent of the ARM SCP). The end goal is to
-> use the arm_scpi driver as a client, communicating with firmware running
-> on the ARISC CPU, or to use the mailbox to forward NMIs that the
-> firmware picks up from R_INTC.
+On 01. 03. 19 3:13, Shawn Guo wrote:
+> On Tue, Feb 19, 2019 at 02:37:00PM +0100, Michal Vokáč wrote:
+>> The PHY must add delays to both Tx and Rx clock on the cpu port
+>> to work propperly.
+>>
+>> It worked with the rgmii mode before beacause the qca8k driver
+>> (incorrecly) enabled delays in that mode.
+>>
+>> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+>> ---
+>> This imx6dl-yapp4 platform is currently waiting in linux-next.
+>>
+>> Commit 5ecdd77c61c8 ("net: dsa: qca8k: disable delay for RGMII mode"), now
+>> also in linux-next removed the delays from the RGMII mode so the networking
+>> stopped working.
+>>
+>> Recently Koul submitted a patch that implements the rgmii-id mode to fix
+>> the issue [1].
+>>
+>> As the networking is broken at this moment it does not matter which patch
+>> goes in first. It is not neccessary to wait until the Koul's patch is
+>> applied/merged if that should be the case.
+>>
+>> [1] http://patchwork.ozlabs.org/patch/1044505/
 > 
-> Changes from v1:
->   - Marked message box clocks as critical instead of hacks in the driver
->   - 8 unidirectional channels instead of 4 bidirectional pairs
->   - Use per-SoC compatible strings and an A31 fallback compatible
->   - Dropped the mailbox framework patch
->   - Include DT patches for SoCs that document the message box
-> 
-> Samuel Holland (10):
->   clk: sunxi-ng: sun8i: Mark the msgbox clock as critical
->   clk: sunxi-ng: sun9i: Mark the msgbox clock as critical
->   clk: sunxi-ng: sun50i: Mark the msgbox clock as critical
->   dt-bindings: mailbox: Add a sunxi message box binding
->   mailbox: sunxi-msgbox: Add a new mailbox driver
->   ARM: dts: sunxi: a80: Add msgbox node
->   ARM: dts: sunxi: a83t: Add msgbox node
->   ARM: dts: sunxi: h3/h5: Add msgbox node
->   arm64: dts: allwinner: a64: Add msgbox node
->   arm64: dts: allwinner: h6: Add msgbox node
-> 
->  .../bindings/mailbox/sunxi-msgbox.txt         |  44 +++
->  arch/arm/boot/dts/sun8i-a83t.dtsi             |  10 +
->  arch/arm/boot/dts/sun9i-a80.dtsi              |  10 +
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  10 +
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  10 +
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
->  drivers/clk/sunxi-ng/ccu-sun50i-a64.c         |   2 +-
->  drivers/clk/sunxi-ng/ccu-sun50i-h6.c          |   2 +-
->  drivers/clk/sunxi-ng/ccu-sun8i-a23.c          |   2 +-
->  drivers/clk/sunxi-ng/ccu-sun8i-a33.c          |   2 +-
->  drivers/clk/sunxi-ng/ccu-sun8i-a83t.c         |   2 +-
->  drivers/clk/sunxi-ng/ccu-sun8i-h3.c           |   2 +-
->  drivers/clk/sunxi-ng/ccu-sun9i-a80.c          |   2 +-
->  drivers/mailbox/Kconfig                       |  11 +
->  drivers/mailbox/Makefile                      |   2 +
->  drivers/mailbox/sunxi-msgbox.c                | 315 ++++++++++++++++++
->  16 files changed, 429 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
->  create mode 100644 drivers/mailbox/sunxi-msgbox.c
+> Can we have such useful info in the commit log in some proper form?
 
-Hello
+Sure, I will transplant relevant parts of the message into the commit
+log. I just thought that most of this info will be outdated immediately
+after applying.
 
-Appart from applying/compiling/booting, does it exists some way to test it ? check it works ?
+BTW the patch[1] from Vinod is already merged.
 
-Regards
+Michal
+
+>>
+>>   arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+>> index b715ab0fa1ff..091d829f6b05 100644
+>> --- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+>> +++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+>> @@ -125,7 +125,7 @@
+>>   				ethphy0: port@0 {
+>>   					reg = <0>;
+>>   					label = "cpu";
+>> -					phy-mode = "rgmii";
+>> +					phy-mode = "rgmii-id";
+>>   					ethernet = <&fec>;
+>>   
+>>   					fixed-link {
+>> -- 
+>> 2.1.4
+>>
