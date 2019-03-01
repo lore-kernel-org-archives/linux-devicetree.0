@@ -1,75 +1,83 @@
-From: "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
-Subject: Re: [PATCH v4 5/9] staging: iio: ad7780: move regulator to after
- GPIO init
-Date: Fri, 1 Mar 2019 07:38:45 +0000
-Message-ID: <28d78cfc00bc5414c7539879df46200d61e52ee1.camel@analog.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v4 1/9] staging: iio: ad7780: add gain & filter gpio
+ support
+Date: Fri, 1 Mar 2019 10:42:02 +0300
+Message-ID: <20190301074024.GA9828@kadam>
 References: <cover.1551358569.git.renatogeh@gmail.com>
-         <93cabb081605ac356f2f0d9a9a41d5bc5e63820d.1551358569.git.renatogeh@gmail.com>
+ <b83c0558a600cb44677b0d06f31e014be550b8bf.1551358569.git.renatogeh@gmail.com>
+ <4f945f058c8536a2731c4de3e0b9227a41cd2891.camel@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <93cabb081605ac356f2f0d9a9a41d5bc5e63820d.1551358569.git.renatogeh@gmail.com>
-Content-Language: en-US
-Content-ID: <5C1D24390C95A74DA6E0B9CA09D7E998@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "jic23@kernel.org" <jic23@kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "renatogeh@gmail.com" <renatogeh@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <4f945f058c8536a2731c4de3e0b9227a41cd2891.camel@analog.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "lars@metafoo.de" <lars@metafoo.de>, "Hennerich,
+ Michael" <Michael.Hennerich@analog.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "renatogeh@gmail.com" <renatogeh@gmail.com>, "Popa,
+ Stefan Serban" <StefanSerban.Popa@analog.com>, "jic23@kernel.org" <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTAyLTI4IGF0IDExOjI1IC0wMzAwLCBSZW5hdG8gTHVpIEdlaCB3cm90ZToN
-Cj4gDQo+IA0KPiBUbyBtYWludGFpbiBjb25zaXN0ZW5jeSBiZXR3ZWVuIGFkNzc4MF9wcm9iZSBh
-bmQgYWQ3NzgwX3JlbW92ZSBvcmRlcnMsDQo+IHJlZ3VsYXRvciBpbml0aWFsaXphdGlvbiBoYXMg
-YmVlbiBtb3ZlZCB0byBhZnRlciBHUElPIGluaXRpYWxpemF0aW9ucy4NCj4gDQo+IFNpZ25lZC1v
-ZmYtYnk6IFJlbmF0byBMdWkgR2VoIDxyZW5hdG9nZWhAZ21haWwuY29tPg0KPiAtLS0NCj4gIGRy
-aXZlcnMvc3RhZ2luZy9paW8vYWRjL2FkNzc4MC5jIHwgMjYgKysrKysrKysrKysrKy0tLS0tLS0t
-LS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxMyBkZWxldGlvbnMo
-LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDc3ODAuYw0K
-PiBiL2RyaXZlcnMvc3RhZ2luZy9paW8vYWRjL2FkNzc4MC5jDQo+IGluZGV4IGFkNzYxN2EzYTE0
-MS4uMTJhZWYwZjEwMWJjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9h
-ZDc3ODAuYw0KPiArKysgYi9kcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDc3ODAuYw0KPiBAQCAt
-MjU1LDE2ICsyNTUsNiBAQCBzdGF0aWMgaW50IGFkNzc4MF9wcm9iZShzdHJ1Y3Qgc3BpX2Rldmlj
-ZSAqc3BpKQ0KPiANCj4gICAgICAgICBhZF9zZF9pbml0KCZzdC0+c2QsIGluZGlvX2Rldiwgc3Bp
-LCAmYWQ3NzgwX3NpZ21hX2RlbHRhX2luZm8pOw0KPiANCj4gLSAgICAgICBzdC0+cmVnID0gZGV2
-bV9yZWd1bGF0b3JfZ2V0KCZzcGktPmRldiwgImF2ZGQiKTsNCj4gLSAgICAgICBpZiAoSVNfRVJS
-KHN0LT5yZWcpKQ0KPiAtICAgICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoc3QtPnJlZyk7DQo+
-IC0NCj4gLSAgICAgICByZXQgPSByZWd1bGF0b3JfZW5hYmxlKHN0LT5yZWcpOw0KPiAtICAgICAg
-IGlmIChyZXQpIHsNCj4gLSAgICAgICAgICAgICAgIGRldl9lcnIoJnNwaS0+ZGV2LCAiRmFpbGVk
-IHRvIGVuYWJsZSBzcGVjaWZpZWQgQVZkZA0KPiBzdXBwbHlcbiIpOw0KPiAtICAgICAgICAgICAg
-ICAgcmV0dXJuIHJldDsNCj4gLSAgICAgICB9DQo+IC0NCj4gICAgICAgICBzdC0+Y2hpcF9pbmZv
-ID0NCj4gICAgICAgICAgICAgICAgICZhZDc3ODBfY2hpcF9pbmZvX3RibFtzcGlfZ2V0X2Rldmlj
-ZV9pZChzcGkpLQ0KPiA+ZHJpdmVyX2RhdGFdOw0KPiANCj4gQEAgLTI4NCw3ICsyNzQsNyBAQCBz
-dGF0aWMgaW50IGFkNzc4MF9wcm9iZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQ0KPiAgICAgICAg
-ICAgICAgICAgcmV0ID0gUFRSX0VSUihzdC0+cG93ZXJkb3duX2dwaW8pOw0KPiAgICAgICAgICAg
-ICAgICAgZGV2X2Vycigmc3BpLT5kZXYsICJGYWlsZWQgdG8gcmVxdWVzdCBwb3dlcmRvd24gR1BJ
-TzoNCj4gJWRcbiIsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHJldCk7DQo+IC0gICAgICAg
-ICAgICAgICBnb3RvIGVycm9yX2Rpc2FibGVfcmVnOw0KPiArICAgICAgICAgICAgICAgcmV0dXJu
-IHJldDsNCj4gICAgICAgICB9DQo+IA0KPiAgICAgICAgIGlmIChzdC0+Y2hpcF9pbmZvLT5pc19h
-ZDc3OHgpIHsNCj4gQEAgLTI5NSw3ICsyODUsNyBAQCBzdGF0aWMgaW50IGFkNzc4MF9wcm9iZShz
-dHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICByZXQgPSBQ
-VFJfRVJSKHN0LT5nYWluX2dwaW8pOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJy
-KCZzcGktPmRldiwgIkZhaWxlZCB0byByZXF1ZXN0IGdhaW4gR1BJTzoNCj4gJWRcbiIsDQo+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0KTsNCj4gLSAgICAgICAgICAgICAgICAg
-ICAgICAgZ290byBlcnJvcl9kaXNhYmxlX3JlZzsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-cmV0dXJuIHJldDsNCj4gICAgICAgICAgICAgICAgIH0NCj4gDQo+ICAgICAgICAgICAgICAgICBz
-dC0+ZmlsdGVyX2dwaW8gPSBkZXZtX2dwaW9kX2dldF9vcHRpb25hbCgmc3BpLT5kZXYsDQo+IEBA
-IC0zMDYsMTAgKzI5NiwyMCBAQCBzdGF0aWMgaW50IGFkNzc4MF9wcm9iZShzdHJ1Y3Qgc3BpX2Rl
-dmljZSAqc3BpKQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKCZzcGktPmRldiwN
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiRmFpbGVkIHRvIHJlcXVlc3QgZmls
-dGVyIEdQSU86ICVkXG4iLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldCk7
-DQo+IC0gICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyb3JfZGlzYWJsZV9yZWc7DQo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ICAgICAgICAgICAgICAgICB9DQo+
-ICAgICAgICAgfQ0KPiANCj4gKyAgICAgICBzdC0+cmVnID0gZGV2bV9yZWd1bGF0b3JfZ2V0KCZz
-cGktPmRldiwgImF2ZGQiKTsNCj4gKyAgICAgICBpZiAoSVNfRVJSKHN0LT5yZWcpKQ0KPiArICAg
-ICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoc3QtPnJlZyk7DQo+ICsNCj4gKyAgICAgICByZXQg
-PSByZWd1bGF0b3JfZW5hYmxlKHN0LT5yZWcpOw0KPiArICAgICAgIGlmIChyZXQpIHsNCj4gKyAg
-ICAgICAgICAgICAgIGRldl9lcnIoJnNwaS0+ZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBzcGVjaWZp
-ZWQgQVZkZA0KPiBzdXBwbHlcbiIpOw0KPiArICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4g
-KyAgICAgICB9DQo+ICsNCg0KSSdtIHByb2JhYmx5IG1pc3Npbmcgc29tZXRoaW5nLCBidXQgb3Ro
-ZXIgdGhhbiB0aGUgZmFjdCB0aGF0IHRoaXMgbW92ZXMgdGhlDQpyZWd1bGF0b3IgaW5pdCBhZnRl
-ciB0aGUgR1BJT3MgaW5pdCwgaXQgZG9lc24ndCBjaGFuZ2UgbXVjaC4NClRoZSBvcmRlciBvZiB0
-aGUgcHJvYmUgJiByZW1vdmUgaXMgbW9yZS1vci1sZXNzIHRoZSBzYW1lLg0KVGhlIEdQSU9zIHdp
-bGwgYmUgZnJlZSdkIHZpYSBkZXZtXyBBUEkvc3R1ZmYuDQoNCg0KPiAgICAgICAgIHJldCA9IGFk
-X3NkX3NldHVwX2J1ZmZlcl9hbmRfdHJpZ2dlcihpbmRpb19kZXYpOw0KPiAgICAgICAgIGlmIChy
-ZXQpDQo+ICAgICAgICAgICAgICAgICBnb3RvIGVycm9yX2Rpc2FibGVfcmVnOw0KPiAtLQ0KPiAy
-LjIxLjANCj4gDQo=
+On Fri, Mar 01, 2019 at 06:56:14AM +0000, Ardelean, Alexandru wrote:
+> On Thu, 2019-02-28 at 11:23 -0300, Renato Lui Geh wrote:
+> > 
+> > 
+> > Previously, the AD7780 driver only supported gpio for the 'powerdown'
+> > pin. This commit adds suppport for the 'gain' and 'filter' pin.
+> > 
+> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
+> > Signed-off-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
+> > Co-developed-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
+> > ---
+> > Changes in v3:
+> >  - Renamed ad7780_chip_info's filter to odr
+> >  - Renamed ad778x_filter to ad778x_odr_avail
+> >  - Changed vref variable from unsigned int to unsigned long long to avoid
+> >    overflow
+> >  - Removed unnecessary AD_SD_CHANNEL macro
+> > Changes in v4:
+> >  - Removed useless macro
+> >  - Added default case for switch to suppress warning
+> >  - Removed chunks belonging to filter reading, adding these as a
+> >    patch for itself
+> > 
+> >  drivers/staging/iio/adc/ad7780.c | 90 +++++++++++++++++++++++++++++---
+> >  1 file changed, 84 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/staging/iio/adc/ad7780.c
+> > b/drivers/staging/iio/adc/ad7780.c
+> > index c4a85789c2db..87fbcf510d45 100644
+> > --- a/drivers/staging/iio/adc/ad7780.c
+> > +++ b/drivers/staging/iio/adc/ad7780.c
+> > @@ -39,6 +39,12 @@
+> >  #define AD7170_PATTERN         (AD7780_PAT0 | AD7170_PAT2)
+> >  #define AD7170_PATTERN_MASK    (AD7780_PAT0 | AD7780_PAT1 | AD7170_PAT2)
+> > 
+> > +#define AD7780_GAIN_MIDPOINT   64
+> > +#define AD7780_FILTER_MIDPOINT 13350
+> > +
+> > +static const unsigned int ad778x_gain[2]      = { 1, 128 };
+> > +static const unsigned int ad778x_odr_avail[2] = { 10000, 16700 };
+> 
+> ad778x_odr_avail[2] is not used in this patch, so it should probably go
+> into the next one 
+> (i.e. staging: iio: ad7780: add filter reading to ad778x )
+> 
+> one good way of catching stuff like this is to do interactive rebase and
+> compile your driver on each patch to see if the compiler catches this;
+> i suspect the compiler would have thrown an error for this change
+> 
+
+GCC (v7.3) doesn't complain about unused variables if they're const.
+
+regards,
+dan carpenter
