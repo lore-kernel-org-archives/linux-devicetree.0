@@ -1,56 +1,28 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v2] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
-Date: Fri,  1 Mar 2019 19:52:12 +0100
-Message-ID: <20190301185212.26837-1-andreas@kemnade.info>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v4 0/4] enetc: Add mdio support and device
+ tree nodes
+Date: Fri, 01 Mar 2019 11:21:47 -0800 (PST)
+Message-ID: <20190301.112147.2157462489082210936.davem@davemloft.net>
+References: <1551188543-28867-1-git-send-email-claudiu.manoil@nxp.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1551188543-28867-1-git-send-email-claudiu.manoil@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Andreas Kemnade <andreas@kemnade.info>
+To: claudiu.manoil@nxp.com
+Cc: robh+dt@kernel.org, shawnguo@kernel.org, leoyang.li@nxp.com, alexandru.marginean@nxp.com, andrew@lunn.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
-with broadcom internals attached to UART1 and some gpios.
-This addition is in line with similar boards
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Date: Tue, 26 Feb 2019 15:42:19 +0200
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-changes in v2: remove pinctrl things
- arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+> This is the missing part to enable PCI probing of the ENETC ethernet
+> ports on the LS1028A SoC and external traffic on the LS1028A RDB board.
+> It's one of the first items on the TODO list for the recently merged
+> ENETC ethernet driver.
+> 
+> v3: Add DT bindings doc for ENETC connections
+> v4: none
 
-diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-index 1db2541135a7..57432d0500b1 100644
---- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-@@ -69,6 +69,8 @@
- 		compatible = "mmc-pwrseq-simple";
- 		pinctrl-names = "default";
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
- 	};
- };
- 
-@@ -122,7 +124,20 @@
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts;
- 	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		clocks = <&rtc 1>;
-+		clock-names = "lpo";
-+		vbat-supply = <&reg_vcc3v3>;
-+		vddio-supply = <&reg_vcc3v3>;
-+		device-wakeup-gpios = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
-+		host-wakeup-gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
-+		shutdown-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-+	};
-+
- };
- 
- &usb_otg {
--- 
-2.11.0
+Series applied, thank you.
