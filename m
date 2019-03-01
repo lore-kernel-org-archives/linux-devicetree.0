@@ -1,111 +1,114 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v5 4/4] arm64: dts: imx8mq-evk: Enable audio codec wm8524
-Date: Fri, 1 Mar 2019 16:36:36 +0000
-Message-ID: <20190301163604.10618-5-daniel.baluta@nxp.com>
-References: <20190301163604.10618-1-daniel.baluta@nxp.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
+Date: Fri, 1 Mar 2019 17:42:49 +0100
+Message-ID: <20190301174249.59cd960d@aktux>
+References: <20190228212840.24964-1-andreas@kemnade.info>
+        <20190301143632.kzlr4jphq3rceos6@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/0aemLcy6RyPSQCs9We_xvOu"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190301163604.10618-1-daniel.baluta@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190301143632.kzlr4jphq3rceos6@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The main Audio DAC used on the EVK board is wm8524.
-The EVK provides the MCLK to wm8524.
+--Sig_/0aemLcy6RyPSQCs9We_xvOu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Digital interface is SAI2 which includes three signals:
-SYNC_CLK, BCLK and DACDAT.
+On Fri, 1 Mar 2019 15:36:32 +0100
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 
-This patch sets:
-	* SAI2 pinctrl configuration
-	* clock hierarchy
-	* wm8524 codec
+> Hi,
+>=20
+> Thanks for your patch
+>=20
+> On Thu, Feb 28, 2019 at 10:28:40PM +0100, Andreas Kemnade wrote:
+> > The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
+> > with broadcom internals attached to UART1 and some gpios.
+> > This addition is in line with similar boards
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > ---
+> >  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 29 ++++++++++++++=
+++++++++
+> >  1 file changed, 29 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arc=
+h/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> > index 1db2541135a7..39e206fac4e3 100644
+> > --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> > +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> > @@ -69,6 +69,8 @@
+> >  		compatible =3D "mmc-pwrseq-simple";
+> >  		pinctrl-names =3D "default";
+> >  		reset-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+> > +		clocks =3D <&rtc 1>;
+> > +		clock-names =3D "ext_clock";
+> >  	};
+> >  };
+> > =20
+> > @@ -122,7 +124,34 @@
+> >  &uart1 {
+> >  	pinctrl-names =3D "default";
+> >  	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
+> > +	uart-has-rtscts;
+> >  	status =3D "okay";
+> > +
+> > +	bluetooth {
+> > +		compatible =3D "brcm,bcm43438-bt";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&bt_pins_out>, <&bt_pins_in>;
+> > +		clocks =3D <&rtc 1>;
+> > +		clock-names =3D "lpo";
+> > +		vbat-supply =3D <&reg_vcc3v3>;
+> > +		vddio-supply =3D <&reg_vcc3v3>;
+> > +		device-wakeup-gpios =3D <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
+> > +		host-wakeup-gpios =3D <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
+> > +		shutdown-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+> > +	};
+> > +
+> > +};
+> > +
+> > +&pio {
+> > +	bt_pins_out: bt_out {
+> > +		pins =3D "PG12", "PG13";
+> > +		function =3D "gpio_out";
+> > +	};
+> > +
+> > +	bt_pins_in: bt_in {
+> > +		pins =3D "PG11";
+> > +		function =3D "gpio_in";
+> > +	}; =20
+>=20
+> You don't need any of those pinctrl nodes, GPIOs work fine without.
+>=20
+ok, that makes things easier. I will resend a v2 without them.
 
-Then uses simple-card machine driver to connect them
-into a sound card.
+Regards,
+Andreas
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 48 ++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+--Sig_/0aemLcy6RyPSQCs9We_xvOu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot=
-/dts/freescale/imx8mq-evk.dts
-index 54737bf1772f..8666af6bea5b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -31,6 +31,35 @@
- 		gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	wm8524: audio-codec {
-+		#sound-dai-cells =3D <0>;
-+		compatible =3D "wlf,wm8524";
-+		clocks =3D <&clk IMX8MQ_CLK_SAI2_ROOT>;
-+		clock-names =3D "mclk";
-+		wlf,mute-gpios =3D <&gpio1 8 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sound-wm8524 {
-+		compatible =3D "simple-audio-card";
-+		simple-audio-card,name =3D "wm8524-audio";
-+		simple-audio-card,format =3D "i2s";
-+		simple-audio-card,frame-master =3D <&cpudai>;
-+		simple-audio-card,bitclock-master =3D <&cpudai>;
-+		simple-audio-card,widgets =3D
-+			"Line", "Left Line Out Jack",
-+			"Line", "Right Line Out Jack";
-+		simple-audio-card,routing =3D
-+			"Left Line Out Jack", "LINEVOUTL",
-+			"Right Line Out Jack", "LINEVOUTR";
-+		cpudai: simple-audio-card,cpu {
-+			sound-dai =3D <&sai2>;
-+		};
-+		link_codec: simple-audio-card,codec {
-+			sound-dai =3D <&wm8524>;
-+			clocks =3D <&clk IMX8MQ_CLK_SAI2_ROOT>;
-+		};
-+	};
- };
-=20
- &fec1 {
-@@ -52,6 +81,15 @@
- 	};
- };
-=20
-+&sai2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sai2>;
-+	assigned-clocks =3D <&clk IMX8MQ_CLK_SAI2>;
-+	assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates =3D <24576000>;
-+	status =3D "okay";
-+};
-+
- &i2c1 {
- 	clock-frequency =3D <100000>;
- 	pinctrl-names =3D "default";
-@@ -223,6 +261,16 @@
- 		>;
- 	};
-=20
-+	pinctrl_sai2: sai2grp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC     0xd6
-+			MX8MQ_IOMUXC_SAI2_TXC_SAI2_TX_BCLK      0xd6
-+			MX8MQ_IOMUXC_SAI2_MCLK_SAI2_MCLK        0xd6
-+			MX8MQ_IOMUXC_SAI2_TXD0_SAI2_TX_DATA0    0xd6
-+			MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8       0xd6
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins =3D <
- 			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
---=20
-2.17.1
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlx5YQkACgkQfb1qx03i
+kyRfcxAAocObObjJgz3viX72ozjLYYWEsJ61fw6JUaBdH87Lh/gelf1uj+oVDKgH
+LMD7njYsISPqfDmfNwtkwIYu0/NTXqgEOd0WJSEIS4RvTSfTichIx3LpsuVxBdEU
+jw8xDa1f8SfgxMHoFcMxkzBXzcrxIqGELHy66n+NCj+e68vp1YZghFUbwmWbB0Qs
+Z0KWywIP0rTKRSwzPFS5py2f+EHuXiajwiAdirBnwaz4VDqSRtX/ysqPif7LQtyP
+43INhJqI56FpbO2Jrj0ZvgMyopYIbyFD5V8iEGs+u3T9vwwtIYi0MAbIG8bCn8sz
+rTLjE8mb4IYqSZTCUIFiDH+fc5xcGz7kGPg2i3r/UC2TJ/rGkgH/WGk1VOH13GxT
+DJlRL3dxS/xo/p+HcOGSdP9QL/GftSzq+s8ik1jlv35KDcNkryQgxjPBsjlwPH6D
+YBpVnCgn8oYdHBJlzxZ/XgnlViJ8Q8cS+NJbAjtmR7GbLShYz7WicfTtc1HpPOr8
+d9zBCadzvlrlHTuaZIonIw0agfeUa1+D16WzbXZ0drC/Xb29z3w03SfCwk/EhkRN
+LeJyNAsmbKMSDj5oC+ORA2Kd+tCMX8k75Xh7yLpXjeR32VwyhUYWQNuOkk0lVU9M
+2+BVRs6eq9e8x/JP+1vVB4iGcGWYXppdH171yd3XR5cUpva48vE=
+=jpDM
+-----END PGP SIGNATURE-----
+
+--Sig_/0aemLcy6RyPSQCs9We_xvOu--
