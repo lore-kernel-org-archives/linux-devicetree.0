@@ -1,61 +1,72 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH 2/2] PCI: imx6: Add code to request/control "pcie_aux"
- clock for i.MX8MQ
-Date: Thu, 28 Feb 2019 17:16:21 -0800
-Message-ID: <CAHQ1cqHfFivDSwt2Xo7n8qnrnZxSuzmx0he3irYg6Oxp_g=--w@mail.gmail.com>
-References: <20190212015108.16952-1-andrew.smirnov@gmail.com>
- <20190212015108.16952-3-andrew.smirnov@gmail.com> <1549964166.2546.21.camel@pengutronix.de>
- <1551389037.6059.3.camel@impinj.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V4 1/3] dt-bindings: memory-controllers: freescale: add MMDC
+ binding doc
+Date: Fri, 1 Mar 2019 01:24:18 +0000
+Message-ID: <1551403185-16314-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551389037.6059.3.camel@impinj.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>
-Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "hongxing.zhu@nxp.com" <hongxing.zhu@nxp.com>, "cphealy@gmail.com" <cphealy@gmail.com>, "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "robh@kernel.org" <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "leonard.crestez@nxp.com" <leonard.crestez@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 1:24 PM Trent Piepho <tpiepho@impinj.com> wrote:
->
-> On Tue, 2019-02-12 at 10:36 +0100, Lucas Stach wrote:
-> > Am Montag, den 11.02.2019, 17:51 -0800 schrieb Andrey Smirnov:
-> > > PCIe IP block has additional clock, "pcie_aux", that needs to be
-> > > controlled by the driver. Add code to support that.
->
-> This breaks iMX7d.
->
+Freescale MMDC (Multi Mode DDR Controller) driver is supported
+since i.MX6Q, but not yet documented, this patch adds binding
+doc for MMDC module driver.
 
-Ugh, my bad, sorry about that.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V3:
+	- add i.MX6QP compatible name.
+---
+ .../bindings/memory-controllers/fsl/mmdc.txt       | 33 ++++++++++++++++++=
+++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/fs=
+l/mmdc.txt
 
-> > >
-> > > @@ -1049,6 +1059,12 @@ static int imx6_pcie_probe(struct platform_device *pdev)
-> > >                     dev_err(dev, "Failed to get PCIE APPS reset control\n");
-> > >                     return PTR_ERR(imx6_pcie->apps_reset);
-> > >             }
-> > > +
-> > > +           imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
-> > > +           if (IS_ERR(imx6_pcie->pcie_aux)) {
-> > > +                   dev_err(dev, "pcie_aux clock source missing or invalid\n");
-> > > +                   return PTR_ERR(imx6_pcie->pcie_aux);
-> > > +           }
-> > >             break;
-> > >     default:
-> > >             break;
->
-> One can't see enough context in the patch above, but in linux-next this
-> section is under
->
->          case IMX7D:
->          case IMX8MQ:
->
-> It's being applied to imx7d and not just imx8mq and so breaks because
-> imx7d dts files don't have this clock.  Not sure if this is a bug in
-> this commit or some kind of merge/rebase mistake.
->
-
-This is just a regular bug, I spaced out and missed the fact that this
-path is shared between the two. I'll submit a patch moving "pci_aux"
-clock request into a i.MX8MQ specific patch shortly.
-
-Thanks,
-Andrey Smirnov
+diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.=
+txt b/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt
+new file mode 100644
+index 0000000..e4e0b50
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt
+@@ -0,0 +1,33 @@
++Freescale Multi Mode DDR controller (MMDC)
++
++Required properties :
++- compatible : should be one of following:
++	for i.MX6Q/i.MX6DL:
++	- "fsl,imx6q-mmdc";
++	for i.MX6QP:
++	- "fsl,imx6qp-mmdc", "fsl,imx6q-mmdc";
++	for i.MX6SL:
++	- "fsl,imx6sl-mmdc", "fsl,imx6q-mmdc";
++	for i.MX6SLL:
++	- "fsl,imx6sll-mmdc", "fsl,imx6q-mmdc";
++	for i.MX6SX:
++	- "fsl,imx6sx-mmdc", "fsl,imx6q-mmdc";
++	for i.MX6UL/i.MX6ULL/i.MX6ULZ:
++	- "fsl,imx6ul-mmdc", "fsl,imx6q-mmdc";
++	for i.MX7ULP:
++	- "fsl,imx7ulp-mmdc", "fsl,imx6q-mmdc";
++- reg : address and size of MMDC DDR controller registers
++
++Optional properties :
++- clocks : the clock provided by the SoC to access the MMDC registers
++
++Example :
++	mmdc0: memory-controller@21b0000 { /* MMDC0 */
++		compatible =3D "fsl,imx6q-mmdc";
++		reg =3D <0x021b0000 0x4000>;
++		clocks =3D <&clks IMX6QDL_CLK_MMDC_P0_IPG>;
++	};
++
++	mmdc1: memory-controller@21b4000 { /* MMDC1 */
++		reg =3D <0x021b4000 0x4000>;
++	};
+--=20
+2.7.4
