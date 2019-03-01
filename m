@@ -1,45 +1,78 @@
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v5 0/4] Enable wm8524 on i.MX8MQ-EVK
-Date: Fri, 1 Mar 2019 16:36:31 +0000
-Message-ID: <20190301163604.10618-1-daniel.baluta@nxp.com>
+Subject: [PATCH v5 1/4] arm64: dts: imx8mq: Add SDMA nodes
+Date: Fri, 1 Mar 2019 16:36:32 +0000
+Message-ID: <20190301163604.10618-2-daniel.baluta@nxp.com>
+References: <20190301163604.10618-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190301163604.10618-1-daniel.baluta@nxp.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, Anson Huang <anson.huang@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "spencercw@gmail.com" <spencercw@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Changes since v4 (after Fabio's review)
-	- removed mclk0 from sai2 node because it is not yet supported by SAI driv=
-er
-	- s/audio-codec-0/audio-codec
-	- squashed patches 4 and 5
+SDMA1 is part of AIPS-3 region and SDMA2 is part
+of AIPS-1 region.
 
-Changes since v3:
-	- use "arm64: dts: imx8mq-evk" prefix for patches specific to 8MQ-EVK
-	- squash together patches for setting up SAI (previous 3/5 and 4/5)
-	- add back and document "fsl, imx8mq-sdma" compatbile string
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+[initial submit in i.MX internal tree]
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+[adaptation for linux-next]
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Changes since v2:
-        - s/QM/MQ after Chris comments
-
-Changes since v1:
-        - added cover letter
-        - remove "fsl,imx8mq-sdma" compatible for sdma.
-
-Daniel Baluta (4):
-  arm64: dts: imx8mq: Add SDMA nodes
-  bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma compatbile string
-  arm64: dts: imx8mq: Add SAI2 node
-  arm64: dts: imx8mq-evk: Enable audio codec wm8952
-
- .../devicetree/bindings/dma/fsl-imx-sdma.txt  |  1 +
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts  | 48 +++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 37 ++++++++++++++
- 3 files changed, 86 insertions(+)
-
---=20
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 9155bd4784eb..9d48450453fb 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -234,6 +234,17 @@
+ 				status = "disabled";
+ 			};
+ 
++			sdma2: sdma@302c0000 {
++				compatible = "fsl,imx8mq-sdma","fsl,imx7d-sdma";
++				reg = <0x302c0000 0x10000>;
++				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_SDMA2_ROOT>,
++					 <&clk IMX8MQ_CLK_SDMA2_ROOT>;
++				clock-names = "ipg", "ahb";
++				#dma-cells = <3>;
++				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
++			};
++
+ 			iomuxc: iomuxc@30330000 {
+ 				compatible = "fsl,imx8mq-iomuxc";
+ 				reg = <0x30330000 0x10000>;
+@@ -575,6 +586,17 @@
+ 				status = "disabled";
+ 			};
+ 
++			sdma1: sdma@30bd0000 {
++				compatible = "fsl,imx8mq-sdma","fsl,imx7d-sdma";
++				reg = <0x30bd0000 0x10000>;
++				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_SDMA1_ROOT>,
++					 <&clk IMX8MQ_CLK_SDMA1_ROOT>;
++				clock-names = "ipg", "ahb";
++				#dma-cells = <3>;
++				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
++			};
++
+ 			fec1: ethernet@30be0000 {
+ 				compatible = "fsl,imx8mq-fec", "fsl,imx6sx-fec";
+ 				reg = <0x30be0000 0x10000>;
+-- 
 2.17.1
