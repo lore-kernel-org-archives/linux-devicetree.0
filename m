@@ -1,103 +1,49 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ls1088a: add one more thermal zone node
-Date: Fri, 1 Mar 2019 21:38:07 +0800
-Message-ID: <20190301133805.GQ26041@dragon>
-References: <20190225030049.20401-1-andy.tang@nxp.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v2 0/4] add MaxBotix I2CXL ultrasonic iio driver
+Date: Fri, 1 Mar 2019 14:41:27 +0100
+Message-ID: <20190301134125.4zqbyzoc2exxigae@arbad>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190225030049.20401-1-andy.tang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yuantian Tang <andy.tang@nxp.com>
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com
+To: devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org, m.othacehe@gmail.com, nicolas.ferre@microchip.com, pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com, treding@nvidia.com, techsupport@maxbotix.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 25, 2019 at 11:00:49AM +0800, Yuantian Tang wrote:
-> Ls1088a has 2 thermal sensors. This patch adds the second node
-> to dts to enable it.
+This patch series adds support for I2CXL-MaxSonar ultrasonic distance
+sensors of family mb12x2 using the i2c interface of vendor MaxBotix
+    
+Implemented and tested functionality:
+- reading the distance via in_distance_raw
+- buffered mode with trigger
+- make use of status gpio to announce completion of ranging
 
-Can you elaborate on these 2 thermal sensors/zones, ccu and plt?
 
-Shawn
+Changes in v2:
+Thanks to the review of Andreas and Peter there are a couple of changes:
+- rename type wildcard mb12x2 to i2cxl in dt binding
+- split changes in vendor list and dt doc into two patches
+- merge driver source and Kconfig/Makefile change into one patch
+- reword dt documentation
+- use directly __be16 datatype to read directly from i2c
+- use s16 as return value from mb12x2_read_distance()
 
-> 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
->  1 files changed, 39 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 661137f..9f52bc9 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -129,19 +129,19 @@
->  	};
->  
->  	thermal-zones {
-> -		cpu_thermal: cpu-thermal {
-> +		ccu {
->  			polling-delay-passive = <1000>;
->  			polling-delay = <5000>;
->  			thermal-sensors = <&tmu 0>;
->  
->  			trips {
-> -				cpu_alert: cpu-alert {
-> +				ccu_alert: ccu-alert {
->  					temperature = <85000>;
->  					hysteresis = <2000>;
->  					type = "passive";
->  				};
->  
-> -				cpu_crit: cpu-crit {
-> +				ccu_crit: ccu-crit {
->  					temperature = <95000>;
->  					hysteresis = <2000>;
->  					type = "critical";
-> @@ -150,7 +150,42 @@
->  
->  			cooling-maps {
->  				map0 {
-> -					trip = <&cpu_alert>;
-> +					trip = <&ccu_alert>;
-> +					cooling-device =
-> +						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
-> +		};
-> +
-> +		plt {
-> +			polling-delay-passive = <1000>;
-> +			polling-delay = <5000>;
-> +			thermal-sensors = <&tmu 1>;
-> +
-> +			trips {
-> +				plt_alert: plt-alert {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				plt_crit: plt-crit {
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&plt_alert>;
->  					cooling-device =
->  						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->  						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> -- 
-> 1.7.1
-> 
+Andreas Klinger (4):
+  dt-bindings: Add vendor prefix for MaxBotix
+  dt-bindings: maxbotix,i2cxl: Add MaxBotix i2c ultrasonic rangers
+  mb12x2.c: add distance iio sensor with i2c
+  MAINTAINERS: add maintainer for maxbotix ultrasonic driver
+
+ .../bindings/iio/proximity/maxbotix,i2cxl.txt      |  21 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |   7 +
+ drivers/iio/proximity/Kconfig                      |  11 +
+ drivers/iio/proximity/Makefile                     |   1 +
+ drivers/iio/proximity/mb12x2.c                     | 283 +++++++++++++++++++++
+ 6 files changed, 324 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,i2cxl.txt
+ create mode 100644 drivers/iio/proximity/mb12x2.c
+
+-- 
+2.11.0
