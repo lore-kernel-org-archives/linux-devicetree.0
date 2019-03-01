@@ -1,71 +1,61 @@
 Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1410104.outbound.protection.outlook.com ([40.107.141.104]:17488
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727952AbfCAMKB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Mar 2019 07:10:01 -0500
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 1/5] media: dt-bindings: media: rcar-csi2: Add r8a774a1
- support
-Date: Fri, 1 Mar 2019 12:09:55 +0000
-Message-ID: <TYXPR01MB1775F18270FB477D010C180EC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
-References: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
- <1536589878-26218-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1536589878-26218-2-git-send-email-biju.das@bp.renesas.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+Received: from imap1.codethink.co.uk ([176.9.8.82]:34194 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfCAPwu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Mar 2019 10:52:50 -0500
+From: Kejia Hu <kejia.hu@codethink.co.uk>
+Subject: [PATCH v2 4/6] kconfig: build device tree overlay into tegra20/30
+Date: Fri,  1 Mar 2019 15:35:38 +0000
+Message-Id: <20190301153540.14954-5-kejia.hu@codethink.co.uk>
+In-Reply-To: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
+References: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
 Sender: devicetree-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Biju Das <biju.das@bp.renesas.com>, =?iso-8859-1?Q?Niklas_S=F6derlund?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, digetx@gmail.com
+Cc: Kejia Hu <kejia.hu@codethink.co.uk>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Mauro,
+Signed-off-by: Kejia Hu <kejia.hu@codethink.co.uk>
+---
+ drivers/clk/tegra/Makefile | 6 ++++--
+ drivers/soc/tegra/Kconfig  | 2 ++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-This patch has been around for some time now, do you think you can take it?
-
-Cheers,
-Fab
-
-> From: Biju Das <biju.das@bp.renesas.com>
-> Sent: 10 September 2018 15:31
-> Subject: [PATCH 1/5] media: dt-bindings: media: rcar-csi2: Add r8a774a1 s=
-upport
->=20
-> Document RZ/G2M (R8A774A1) SoC bindings.
->=20
-> The RZ/G2M SoC is similar to R-Car M3-W (R8A7796).
->=20
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.tx=
-t
-> b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> index 2d385b6..12fe685 100644
-> --- a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> +++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> @@ -2,12 +2,13 @@ Renesas R-Car MIPI CSI-2
->  ------------------------
->=20
->  The R-Car CSI-2 receiver device provides MIPI CSI-2 capabilities for the
-> -Renesas R-Car family of devices. It is used in conjunction with the
-> -R-Car VIN module, which provides the video capture capabilities.
-> +Renesas R-Car Gen3 and RZ/G2 family of devices. It is used in conjunctio=
-n
-> +with the R-Car VIN module, which provides the video capture capabilities=
-.
->=20
->  Mandatory properties
->  --------------------
->   - compatible: Must be one or more of the following
-> +   - "renesas,r8a774a1-csi2" for the R8A774A1 device.
->     - "renesas,r8a7795-csi2" for the R8A7795 device.
->     - "renesas,r8a7796-csi2" for the R8A7796 device.
->     - "renesas,r8a77965-csi2" for the R8A77965 device.
-> --
-> 2.7.4
+diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
+index 6507acc843c7..b9d8281c3629 100644
+--- a/drivers/clk/tegra/Makefile
++++ b/drivers/clk/tegra/Makefile
+@@ -16,8 +16,10 @@ obj-y					+= clk-tegra-pmc.o
+ obj-y					+= clk-tegra-fixed.o
+ obj-y					+= clk-tegra-super-gen4.o
+ obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
+-obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
+-obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o
++obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o \
++					   tegra20_automative_dt_overlay.dtb.o
++obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o \
++					   tegra30_automative_dt_overlay.dtb.o
+ obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= clk-tegra114.o
+ obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124.o
+ obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124-dfll-fcpu.o
+diff --git a/drivers/soc/tegra/Kconfig b/drivers/soc/tegra/Kconfig
+index fe4481676da6..a61f34af738d 100644
+--- a/drivers/soc/tegra/Kconfig
++++ b/drivers/soc/tegra/Kconfig
+@@ -15,6 +15,7 @@ config ARCH_TEGRA_2x_SOC
+ 	select SOC_TEGRA_FLOWCTRL
+ 	select SOC_TEGRA_PMC
+ 	select TEGRA_TIMER
++	select OF_OVERLAY
+ 	help
+ 	  Support for NVIDIA Tegra AP20 and T20 processors, based on the
+ 	  ARM CortexA9MP CPU and the ARM PL310 L2 cache controller
+@@ -28,6 +29,7 @@ config ARCH_TEGRA_3x_SOC
+ 	select SOC_TEGRA_FLOWCTRL
+ 	select SOC_TEGRA_PMC
+ 	select TEGRA_TIMER
++	select OF_OVERLAY
+ 	help
+ 	  Support for NVIDIA Tegra T30 processor family, based on the
+ 	  ARM CortexA9MP CPU and the ARM PL310 L2 cache controller
+-- 
+2.11.0
