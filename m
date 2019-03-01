@@ -1,7 +1,7 @@
 From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH  1/7] ARM: stm32: add AMBA support for stm32 family
-Date: Fri, 1 Mar 2019 09:47:42 +0100
-Message-ID: <1551430068-9456-2-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH  4/7] ARM: dts: stm32: add sdmmc1 support on stm32h743i disco board
+Date: Fri, 1 Mar 2019 09:47:45 +0100
+Message-ID: <1551430068-9456-5-git-send-email-ludovic.Barre@st.com>
 References: <1551430068-9456-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,48 +14,49 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch enables AMBA support for stm32 family.
-stm32 family embeds different amba pl180 variants.
+This patch adds sdmmc1 support on stm32h743i disco board.
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- arch/arm/mach-stm32/Kconfig | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/arm/boot/dts/stm32h743i-disco.dts | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
-index 713c068..651bdf4 100644
---- a/arch/arm/mach-stm32/Kconfig
-+++ b/arch/arm/mach-stm32/Kconfig
-@@ -4,6 +4,7 @@ menuconfig ARCH_STM32
- 	select HAVE_ARM_ARCH_TIMER if ARCH_MULTI_V7
- 	select ARM_GIC if ARCH_MULTI_V7
- 	select ARM_PSCI if ARCH_MULTI_V7
-+	select ARM_AMBA
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select CLKSRC_STM32
- 	select PINCTRL
-@@ -18,22 +19,18 @@ if ARM_SINGLE_ARMV7M
+diff --git a/arch/arm/boot/dts/stm32h743i-disco.dts b/arch/arm/boot/dts/stm32h743i-disco.dts
+index 45e088c..1aeb5be 100644
+--- a/arch/arm/boot/dts/stm32h743i-disco.dts
++++ b/arch/arm/boot/dts/stm32h743i-disco.dts
+@@ -60,12 +60,32 @@
+ 	aliases {
+ 		serial0 = &usart2;
+ 	};
++
++	v3v3: regulator-v3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "v3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
+ };
  
- config MACH_STM32F429
- 	bool "STMicroelectronics STM32F429"
--	select ARM_AMBA
- 	default y
+ &clk_hse {
+ 	clock-frequency = <25000000>;
+ };
  
- config MACH_STM32F469
- 	bool "STMicroelectronics STM32F469"
--	select ARM_AMBA
- 	default y
- 
- config MACH_STM32F746
- 	bool "STMicroelectronics STM32F746"
--	select ARM_AMBA
- 	default y
- 
- config MACH_STM32F769
- 	bool "STMicroelectronics STM32F769"
--	select ARM_AMBA
- 	default y
- 
- config MACH_STM32H743
++&sdmmc1 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc1_b4_pins_a>;
++	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
++	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
++	broken-cd;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	status = "okay";
++};
++
+ &usart2 {
+ 	pinctrl-0 = <&usart2_pins>;
+ 	pinctrl-names = "default";
 -- 
 2.7.4
