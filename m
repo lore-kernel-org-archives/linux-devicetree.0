@@ -1,93 +1,24 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V4 3/3] ARM: dts: imx: make MMDC node name generic
-Date: Fri, 1 Mar 2019 01:24:26 +0000
-Message-ID: <1551403185-16314-3-git-send-email-Anson.Huang@nxp.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V4 1/3] dt-bindings: memory-controllers: freescale: add
+ MMDC binding doc
+Date: Thu, 28 Feb 2019 22:26:47 -0300
+Message-ID: <CAOMZO5ArmD6eSpQ2Mk20Oaw+n1fXQwJeAKeh=V=GqRjXZDVTaw@mail.gmail.com>
 References: <1551403185-16314-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1551403185-16314-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Node name should be generic, so use "memory-controller"
-instead of "mmdc" for MMDC node name, also remove "mmdc"
-label for platforms with single MMDC node.
+On Thu, Feb 28, 2019 at 10:24 PM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Freescale MMDC (Multi Mode DDR Controller) driver is supported
+> since i.MX6Q, but not yet documented, this patch adds binding
+> doc for MMDC module driver.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
-No changes since V3.
----
- arch/arm/boot/dts/imx6qdl.dtsi | 4 ++--
- arch/arm/boot/dts/imx6sl.dtsi  | 2 +-
- arch/arm/boot/dts/imx6sx.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul.dtsi  | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dts=
-i
-index fe17a34..4c7278b 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1129,13 +1129,13 @@
- 				reg =3D <0x021ac000 0x4000>;
- 			};
-=20
--			mmdc0: mmdc@21b0000 { /* MMDC0 */
-+			mmdc0: memory-controller@21b0000 { /* MMDC0 */
- 				compatible =3D "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6QDL_CLK_MMDC_P0_IPG>;
- 			};
-=20
--			mmdc1: mmdc@21b4000 { /* MMDC1 */
-+			mmdc1: memory-controller@21b4000 { /* MMDC1 */
- 				reg =3D <0x021b4000 0x4000>;
- 			};
-=20
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 4b4813f..733ea50 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -922,7 +922,7 @@
- 				status =3D "disabled";
- 			};
-=20
--			mmdc: mmdc@21b0000 {
-+			memory-controller@21b0000 {
- 				compatible =3D "fsl,imx6sl-mmdc", "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6SL_CLK_MMDC_P0_IPG>;
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 5b16e65..df0c595 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -1017,7 +1017,7 @@
- 				status =3D "disabled";
- 			};
-=20
--			mmdc: mmdc@21b0000 {
-+			memory-controller@21b0000 {
- 				compatible =3D "fsl,imx6sx-mmdc", "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6SX_CLK_MMDC_P0_IPG>;
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 62ed30c..a77bbca 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -914,7 +914,7 @@
- 				status =3D "disabled";
- 			};
-=20
--			mmdc: mmdc@21b0000 {
-+			memory-controller@21b0000 {
- 				compatible =3D "fsl,imx6ul-mmdc", "fsl,imx6q-mmdc";
- 				reg =3D <0x021b0000 0x4000>;
- 				clocks =3D <&clks IMX6UL_CLK_MMDC_P0_IPG>;
---=20
-2.7.4
