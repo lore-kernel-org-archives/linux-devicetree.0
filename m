@@ -1,61 +1,61 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
-Date: Fri,  1 Mar 2019 21:15:19 +0100
-Message-ID: <20190301201519.21953-1-martin.blumenstingl@googlemail.com>
-References: <CA+E=qVdsU7sBkOQUmMprhD-Sdw7TdFnwFdGCv=4iRe++y1AwOg@mail.gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add doc for the ingenic-drm driver
+Date: Fri, 1 Mar 2019 21:16:24 +0100
+Message-ID: <20190301201624.GA22317@ravnborg.org>
+References: <20190228220756.20262-1-paul@crapouillou.net>
+ <20190228220756.20262-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CA+E=qVdsU7sBkOQUmMprhD-Sdw7TdFnwFdGCv=4iRe++y1AwOg@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: anarsoul@gmail.com, alex_lu@realsil.com.cn
-Cc: beagleboard@davidjohnsummers.uk, davem@davemloft.net, devicetree@vger.kernel.org, johan.hedberg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org, marcel@holtmann.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, netdev@vger.kernel.org, robh@kernel.org, stefan.wahren@i2se.com, wens@csie.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190228220756.20262-2-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vasily, Hi Alex,
+Hi Paul.
 
-On 22/02/2019 11:21, Vasily Khoruzhick wrote:
-> I agree with Rob that we should probably use firmware-name here instead.
-Have you considered skipping this property for v1 of this series?
-We can still add that property (as optional one) later on if we really
-see the need for it. (The btrtl code should already support the case
-where NULL is passed as "postfix")
+Good to see work migrating fbdev => drm.
 
-I checked the public rtl8723bs_bt [0] and rtl8723ds_bt [1] git repos and
-they each contain only one config blob. The blob from the rtl8723bs_bt
-repo worked on my two Amlogic boards (data only, sound input/output not
-tested), even though Amlogic seems to ship different blobs: [2]
+Following comments is based on experience while working on migrating
+another driver from fbdev => drm.
 
->> Is there a need to have the board name?
->
-> As far as I understand firmware config depends on board, so I think
-> it's a good idea to use board name here.
-I also added Alex Lu from Realtek / Realsil to this email.
-Alex, I hope that you can help us with the "Bluetooth config" format for
-the Realtek WiFi and Bluetooth combo chips - mainly the ones which
-connect to the host using SDIO.
+On Thu, Feb 28, 2019 at 07:07:54PM -0300, Paul Cercueil wrote:
+> Add documentation for the devicetree bindings of the DRM driver for the
+> JZ47xx family of SoCs from Ingenic.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>  .../devicetree/bindings/display/ingenic,drm.txt    | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,drm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ingenic,drm.txt b/Documentation/devicetree/bindings/display/ingenic,drm.txt
+> new file mode 100644
+> index 000000000000..52a368ec35cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ingenic,drm.txt
+> @@ -0,0 +1,30 @@
+> +Ingenic JZ47xx DRM driver
+> +
+> +Required properties:
+> +- compatible: one of:
+> +  * ingenic,jz4740-drm
+> +  * ingenic,jz4725b-drm
+> +- reg: LCD registers location and length
+The fbdev way of doing this was to hardcode register setttings.
+In the drm world we read the configuration of the panel and let
+this decide the actual configuration.
 
-This is important for us because the question came up whether we can
-describe everything that's part of the "config blob" as device-tree
-properties. If we knew the format we could generate the "config blob"
-on-the-fly (either by fully generating it, taking a blob - maybe with
-only the smallest set of config data - as "template" and update values
-on-the-fly, etc.)
+Note that no drm drivers supports stn displays and that there
+is really no use for this these days. So you can skip the STN parts.
 
-Marcel wrote a tool [3] which handles the basic config format. However,
-we're still missing a lot of details (only 3 offsets are known,
-"UART_CONFIG" contains 16 bytes but we only know the purpose of 4 of
-these, ...).
-I would highly appreciate if you give us enough details so we can extend
-Marcel's tool to display the human-readable representation of the config
-blobs from rtl8723bs_bt [0] and rtl8723ds_bt [1].
+Also the modern way to specify a panel in the DT is using OF graph bindings.
+You can find many examples how to do this.
 
-Vasily, thank you for your effort on this topic so far!
-If you keep me CC'ed on v2 of your series then I can test it on two of
-my Amlogic boards (which come with a RTL8723BS).
+I was there with the atmel LCDC driver (not in the kernel yet),
+and had some challenges with this.
 
-
-[0] https://github.com/lwfinger/rtl8723bs_bt/tree/09eb91f52a639ec5e4c5c4c98dc2afede046cf20
-[1] https://github.com/ayufan-pine64/rtl8723ds_bt/tree/fab21b52250d67857b694f961e1ff8618e678d89/8723D
-[2] https://github.com/khadas/android_hardware_realtek/tree/bd3b113266c353aafcbf528a0334d28090ff249b/rtkbt/system/etc/firmware
-[3] https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/tools/rtlfw.c?id=261948090e9073514ac4b5f64c8715cf0a71eafa
+	Sam
