@@ -1,114 +1,93 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
-Date: Fri, 1 Mar 2019 17:42:49 +0100
-Message-ID: <20190301174249.59cd960d@aktux>
-References: <20190228212840.24964-1-andreas@kemnade.info>
-        <20190301143632.kzlr4jphq3rceos6@flea>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/2] clk: meson-g12a: add cpu clock bindings
+Date: Fri, 1 Mar 2019 17:43:18 +0100
+Message-ID: <d841b285-7994-fd7a-215b-13314bd0b298@baylibre.com>
+References: <20190301102140.7181-1-narmstrong@baylibre.com>
+ <20190301102140.7181-2-narmstrong@baylibre.com>
+ <CAFBinCCtmykL-ccWd9cporEOmxeUKC-RgrP3wfuSuYoAEjrGWA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/0aemLcy6RyPSQCs9We_xvOu"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190301143632.kzlr4jphq3rceos6@flea>
+In-Reply-To: <CAFBinCCtmykL-ccWd9cporEOmxeUKC-RgrP3wfuSuYoAEjrGWA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: jbrunet@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/0aemLcy6RyPSQCs9We_xvOu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Martin,
 
-On Fri, 1 Mar 2019 15:36:32 +0100
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On 01/03/2019 16:26, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Fri, Mar 1, 2019 at 11:22 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Add Amlogic G12A Family CPU clocks bindings, only export CPU_CLK since
+>> it should be the only ID used.
+> is this also true for the CPU post-dividers (APB, ATB, AXI, CPU CLK TRACE)?
 
-> Hi,
->=20
-> Thanks for your patch
->=20
-> On Thu, Feb 28, 2019 at 10:28:40PM +0100, Andreas Kemnade wrote:
-> > The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
-> > with broadcom internals attached to UART1 and some gpios.
-> > This addition is in line with similar boards
-> >=20
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > ---
-> >  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 29 ++++++++++++++=
-++++++++
-> >  1 file changed, 29 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arc=
-h/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> > index 1db2541135a7..39e206fac4e3 100644
-> > --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> > +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> > @@ -69,6 +69,8 @@
-> >  		compatible =3D "mmc-pwrseq-simple";
-> >  		pinctrl-names =3D "default";
-> >  		reset-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-> > +		clocks =3D <&rtc 1>;
-> > +		clock-names =3D "ext_clock";
-> >  	};
-> >  };
-> > =20
-> > @@ -122,7 +124,34 @@
-> >  &uart1 {
-> >  	pinctrl-names =3D "default";
-> >  	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-> > +	uart-has-rtscts;
-> >  	status =3D "okay";
-> > +
-> > +	bluetooth {
-> > +		compatible =3D "brcm,bcm43438-bt";
-> > +		pinctrl-names =3D "default";
-> > +		pinctrl-0 =3D <&bt_pins_out>, <&bt_pins_in>;
-> > +		clocks =3D <&rtc 1>;
-> > +		clock-names =3D "lpo";
-> > +		vbat-supply =3D <&reg_vcc3v3>;
-> > +		vddio-supply =3D <&reg_vcc3v3>;
-> > +		device-wakeup-gpios =3D <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
-> > +		host-wakeup-gpios =3D <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
-> > +		shutdown-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-> > +	};
-> > +
-> > +};
-> > +
-> > +&pio {
-> > +	bt_pins_out: bt_out {
-> > +		pins =3D "PG12", "PG13";
-> > +		function =3D "gpio_out";
-> > +	};
-> > +
-> > +	bt_pins_in: bt_in {
-> > +		pins =3D "PG11";
-> > +		function =3D "gpio_in";
-> > +	}; =20
->=20
-> You don't need any of those pinctrl nodes, GPIOs work fine without.
->=20
-ok, that makes things easier. I will resend a v2 without them.
+Do we need these to be exported ?
 
-Regards,
-Andreas
+> 
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/clk/meson/g12a.h              | 24 +++++++++++++++++++++++-
+>>  include/dt-bindings/clock/g12a-clkc.h |  1 +
+>>  2 files changed, 24 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
+>> index f399dfe1401c..4854750df902 100644
+>> --- a/drivers/clk/meson/g12a.h
+>> +++ b/drivers/clk/meson/g12a.h
+>> @@ -166,8 +166,30 @@
+>>  #define CLKID_MALI_0_DIV                       170
+>>  #define CLKID_MALI_1_DIV                       173
+>>  #define CLKID_MPLL_5OM_DIV                     176
+>> +#define CLKID_PCIE_PLL_DCO                     178
+>> +#define CLKID_PCIE_PLL_DCO_DIV2                        179
+>> +#define CLKID_PCIE_PLL_OD                      180
+> how are these PCIe clock related to the CPU clocks?
 
---Sig_/0aemLcy6RyPSQCs9We_xvOu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Oops, bad merge...
 
------BEGIN PGP SIGNATURE-----
+> 
+>> +#define CLKID_SYS_PLL_DIV16_EN                 181
+>> +#define CLKID_SYS_PLL_DIV16                    182
+>> +#define CLKID_CPU_CLK_DYN0_SEL                 183
+>> +#define CLKID_CPU_CLK_DYN0_DIV                 184
+>> +#define CLKID_CPU_CLK_DYN0                     185
+>> +#define CLKID_CPU_CLK_DYN1_SEL                 186
+>> +#define CLKID_CPU_CLK_DYN1_DIV                 187
+>> +#define CLKID_CPU_CLK_DYN1                     188
+>> +#define CLKID_CPU_CLK_DYN                      189
+>> +#define CLKID_CPU_CLK_DIV16_EN                 191
+>> +#define CLKID_CPU_CLK_DIV16                    192
+>> +#define CLKID_CPU_CLK_APB_DIV                  193
+>> +#define CLKID_CPU_CLK_APB                      194
+>> +#define CLKID_CPU_CLK_ATB_DIV                  195
+>> +#define CLKID_CPU_CLK_ATB                      196
+>> +#define CLKID_CPU_CLK_AXI_DIV                  197
+>> +#define CLKID_CPU_CLK_AXI                      198
+>> +#define CLKID_CPU_CLK_TRACE_DIV                        299
+>> +#define CLKID_CPU_CLK_TRACE                    200
+>>
+>> -#define NR_CLKS                                        178
+>> +#define NR_CLKS                                        201
+> shouldn't all changes to this file (drivers/clk/meson/g12a.h) be part
+> of the patch which adds the actual clocks so the dt-bindings patch is
+> independent of the clock driver patches?
+> in this case the subject should also be updated to "dt-bindings:
+> clock: g12a: ..."
 
-iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlx5YQkACgkQfb1qx03i
-kyRfcxAAocObObjJgz3viX72ozjLYYWEsJ61fw6JUaBdH87Lh/gelf1uj+oVDKgH
-LMD7njYsISPqfDmfNwtkwIYu0/NTXqgEOd0WJSEIS4RvTSfTichIx3LpsuVxBdEU
-jw8xDa1f8SfgxMHoFcMxkzBXzcrxIqGELHy66n+NCj+e68vp1YZghFUbwmWbB0Qs
-Z0KWywIP0rTKRSwzPFS5py2f+EHuXiajwiAdirBnwaz4VDqSRtX/ysqPif7LQtyP
-43INhJqI56FpbO2Jrj0ZvgMyopYIbyFD5V8iEGs+u3T9vwwtIYi0MAbIG8bCn8sz
-rTLjE8mb4IYqSZTCUIFiDH+fc5xcGz7kGPg2i3r/UC2TJ/rGkgH/WGk1VOH13GxT
-DJlRL3dxS/xo/p+HcOGSdP9QL/GftSzq+s8ik1jlv35KDcNkryQgxjPBsjlwPH6D
-YBpVnCgn8oYdHBJlzxZ/XgnlViJ8Q8cS+NJbAjtmR7GbLShYz7WicfTtc1HpPOr8
-d9zBCadzvlrlHTuaZIonIw0agfeUa1+D16WzbXZ0drC/Xb29z3w03SfCwk/EhkRN
-LeJyNAsmbKMSDj5oC+ORA2Kd+tCMX8k75Xh7yLpXjeR32VwyhUYWQNuOkk0lVU9M
-2+BVRs6eq9e8x/JP+1vVB4iGcGWYXppdH171yd3XR5cUpva48vE=
-=jpDM
------END PGP SIGNATURE-----
+I don't have any opinion, Jerome ?
 
---Sig_/0aemLcy6RyPSQCs9We_xvOu--
+> 
+> 
+> Regards
+> Martin
+> 
+
+Thanks !
+
+Neil
