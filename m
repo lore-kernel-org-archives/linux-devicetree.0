@@ -1,53 +1,72 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 0/7] add LCD support for SAM9X60
-Date: Fri, 1 Mar 2019 10:09:26 +0000
-Message-ID: <9ca1bee4-a2b8-6a0f-2d75-857b9096eabe@microchip.com>
-References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
- <20190228182119.GA28318@ravnborg.org> <20190228205214.GD23094@piout.net>
- <20190228211325.GA30188@ravnborg.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 1/2] clk: meson-g12a: add cpu clock bindings
+Date: Fri,  1 Mar 2019 11:21:39 +0100
+Message-ID: <20190301102140.7181-2-narmstrong@baylibre.com>
+References: <20190301102140.7181-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190228211325.GA30188@ravnborg.org>
-Content-Language: en-US
-Content-ID: <FA669EBF19CAF24BBEE2053E638DEB34@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sam@ravnborg.org, alexandre.belloni@bootlin.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bbrezillon@kernel.org, airlied@linux.ie, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org, daniel@ffwll.ch, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190301102140.7181-1-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jbrunet@baylibre.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add Amlogic G12A Family CPU clocks bindings, only export CPU_CLK since
+it should be the only ID used.
 
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/clk/meson/g12a.h              | 24 +++++++++++++++++++++++-
+ include/dt-bindings/clock/g12a-clkc.h |  1 +
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
-On 28.02.2019 23:13, Sam Ravnborg wrote:
-> Hi Alexandre.
-> 
->>>>
->>>> These patches adds support for SAM9X60's LCD controller.
->>> Can you elaborate a little more which chips that are relevant.
->>> To be able to look into the right data-sheet, while reviewing.
->>> Link to data-sheet would be nice too.
->>>
->>
->> sam9x60 is the chip name (i.e. x is not a wildcard). I don't think the
->> datasheet is finished/public yet.
-> 
-> Thanks. I will take a look at the patches but not knowing
-> the specifics of the implementation/IP will makes this less valueable.
-
-At this moment, as Alexandre specified, the datasheet is not published.
-
-Thank you,
-Claudiu Beznea
-
-> 
-> 	Sam
-> 
+diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
+index f399dfe1401c..4854750df902 100644
+--- a/drivers/clk/meson/g12a.h
++++ b/drivers/clk/meson/g12a.h
+@@ -166,8 +166,30 @@
+ #define CLKID_MALI_0_DIV			170
+ #define CLKID_MALI_1_DIV			173
+ #define CLKID_MPLL_5OM_DIV			176
++#define CLKID_PCIE_PLL_DCO			178
++#define CLKID_PCIE_PLL_DCO_DIV2			179
++#define CLKID_PCIE_PLL_OD			180
++#define CLKID_SYS_PLL_DIV16_EN			181
++#define CLKID_SYS_PLL_DIV16			182
++#define CLKID_CPU_CLK_DYN0_SEL			183
++#define CLKID_CPU_CLK_DYN0_DIV			184
++#define CLKID_CPU_CLK_DYN0			185
++#define CLKID_CPU_CLK_DYN1_SEL			186
++#define CLKID_CPU_CLK_DYN1_DIV			187
++#define CLKID_CPU_CLK_DYN1			188
++#define CLKID_CPU_CLK_DYN			189
++#define CLKID_CPU_CLK_DIV16_EN			191
++#define CLKID_CPU_CLK_DIV16			192
++#define CLKID_CPU_CLK_APB_DIV			193
++#define CLKID_CPU_CLK_APB			194
++#define CLKID_CPU_CLK_ATB_DIV			195
++#define CLKID_CPU_CLK_ATB			196
++#define CLKID_CPU_CLK_AXI_DIV			197
++#define CLKID_CPU_CLK_AXI			198
++#define CLKID_CPU_CLK_TRACE_DIV			299
++#define CLKID_CPU_CLK_TRACE			200
+ 
+-#define NR_CLKS					178
++#define NR_CLKS					201
+ 
+ /* include the CLKIDs that have been made part of the DT binding */
+ #include <dt-bindings/clock/g12a-clkc.h>
+diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
+index 83b657038d1e..33aba232282c 100644
+--- a/include/dt-bindings/clock/g12a-clkc.h
++++ b/include/dt-bindings/clock/g12a-clkc.h
+@@ -131,5 +131,6 @@
+ #define CLKID_MALI_1				174
+ #define CLKID_MALI				175
+ #define CLKID_MPLL_5OM				177
++#define CLKID_CPU_CLK				190
+ 
+ #endif /* __G12A_CLKC_H */
+-- 
+2.20.1
