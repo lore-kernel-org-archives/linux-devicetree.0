@@ -1,32 +1,54 @@
-Return-Path: <SRS0=9+Vl=RE=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1551438212-22013-1-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1551438212-22013-1-git-send-email-fabrizio.castro@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 1 Mar 2019 14:32:41 +0100
-Message-ID: <CAMuHMdU60gp+pnCuCv07y30d3Y8ggem8UK7PhPdr-DqQGzwK1Q@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add LEDs support
-Content-Type: text/plain; charset="UTF-8"
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, ebiharaml@si-linux.co.jp
+Return-Path: <SRS0=f0E1=RE=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add LEDs support
+Date: Fri,  1 Mar 2019 11:03:32 +0000
+Message-Id: <1551438212-22013-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, ebiharaml@si-linux.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Mar 1, 2019 at 12:03 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> This patch adds LEDs support to the CAT874 board specific
-> device tree.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+This patch adds LEDs support to the CAT874 board specific
+device tree.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+index 96ee0d2c..f86b3628 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+@@ -22,6 +22,30 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	leds {
++		compatible = "gpio-leds";
++
++		led0 {
++			gpios = <&gpio5 19 GPIO_ACTIVE_HIGH>;
++			label = "LED0";
++		};
++
++		led1 {
++			gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
++			label = "LED1";
++		};
++
++		led2 {
++			gpios = <&gpio4 10 GPIO_ACTIVE_HIGH>;
++			label = "LED2";
++		};
++
++		led3 {
++			gpios = <&gpio6 4 GPIO_ACTIVE_HIGH>;
++			label = "LED3";
++		};
++	};
++
+ 	memory@48000000 {
+ 		device_type = "memory";
+ 		/* first 128MB is reserved for secure area. */
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
