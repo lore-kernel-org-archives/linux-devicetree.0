@@ -1,50 +1,59 @@
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH v2 mailbox 2/3] dt-bindings: mailbox: Document armada-37xx-rwtm-mailbox binding
-Date: Fri,  1 Mar 2019 05:23:40 +0100
-Message-ID: <20190301042341.29484-3-marek.behun@nic.cz>
-References: <20190301042341.29484-1-marek.behun@nic.cz>
+From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 02/10] clk: sunxi-ng: sun9i: Mark the msgbox
+ clock as critical
+Date: Thu, 28 Feb 2019 23:29:39 -0600
+Message-ID: <20190301052947.32032-3-samuel@sholland.org>
+References: <20190301052947.32032-1-samuel@sholland.org>
+Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190301042341.29484-1-marek.behun@nic.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBUEG4PRQKGQED2RTVLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190301052947.32032-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree binding documentation for the rWTM BIU mailbox
-driver on the Armada 37xx SOC (EspressoBin, Turris Mox).
+The msgbox clock is critical because the hardware is shared between
+Linux and system firmware. The message box may be used by the EL3 secure
+monitor's PSCI implementation. On 64-bit sunxi SoCs, this is provided by
+ARM TF-A; 32-bit SoCs use a different implementation. The secure monitor
+uses the message box to forward requests to power management firmware
+running on a separate CPU.
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
+It is not enough for the secure monitor to enable the clock each time
+Linux performs a SMC into EL3, as both the firmware and Linux can run
+concurrently on separate CPUs. So it is never safe for Linux to turn
+this clock off, and it should be marked as critical.
+
+At this time, such power management firmware does not exist for the A80.
+However, it makes sense to take care of all CCU drivers now for
+consistency, and to ease the transition in the future, once firmware is
+ported to this SoC.
+
+Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- .../mailbox/armada-37xx-rwtm-mailbox.txt         | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt
+ drivers/clk/sunxi-ng/ccu-sun9i-a80.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt b/Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt
-new file mode 100644
-index 000000000000..282ab81a4ea6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt
-@@ -0,0 +1,16 @@
-+* rWTM BIU Mailbox driver for Armada 37xx
-+
-+Required properties:
-+- compatible:	must be "marvell,armada-3700-rwtm-mailbox"
-+- reg:		physical base address of the mailbox and length of memory mapped
-+		region
-+- interrupts:	the IRQ line for the mailbox
-+- #mbox-cells:	must be 1
-+
-+Example:
-+	rwtm: mailbox@b0000 {
-+		compatible = "marvell,armada-3700-rwtm-mailbox";
-+		reg = <0xb0000 0x100>;
-+		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+		#mbox-cells = <1>;
-+	};
+diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
+index 8936ef87652c..f9309782e7d8 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
++++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
+@@ -756,7 +756,7 @@ static SUNXI_CCU_GATE(bus_usb_clk,	"bus-usb",	"ahb1",
+ static SUNXI_CCU_GATE(bus_gmac_clk,	"bus-gmac",	"ahb1",
+ 		      0x584, BIT(17), 0);
+ static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
+-		      0x584, BIT(21), 0);
++		      0x584, BIT(21), CLK_IS_CRITICAL);
+ static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
+ 		      0x584, BIT(22), 0);
+ static SUNXI_CCU_GATE(bus_hstimer_clk,	"bus-hstimer",	"ahb1",
 -- 
 2.19.2
