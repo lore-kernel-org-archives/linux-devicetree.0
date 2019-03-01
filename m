@@ -1,66 +1,103 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0
- support
-Date: Fri, 1 Mar 2019 13:38:57 +0000
-Message-ID: <dde90e93-e8ca-acd2-ffd0-976c51ec309f@arm.com>
-References: <1544732284-5951-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <TYXPR01MB1775847A1B243C0B30C69CFBC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: ls1088a: add one more thermal zone node
+Date: Fri, 1 Mar 2019 21:38:07 +0800
+Message-ID: <20190301133805.GQ26041@dragon>
+References: <20190225030049.20401-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <TYXPR01MB1775847A1B243C0B30C69CFBC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190225030049.20401-1-andy.tang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>
+To: Yuantian Tang <andy.tang@nxp.com>
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/2019 11:49, Fabrizio Castro wrote:
-> Hello Marc,
-> 
-> I am sorry to bother you.
-> Do you think you can take this patch?
+On Mon, Feb 25, 2019 at 11:00:49AM +0800, Yuantian Tang wrote:
+> Ls1088a has 2 thermal sensors. This patch adds the second node
+> to dts to enable it.
 
-It already missed the boat for the merge window, as I sent the pull
-request last week. Please resend it after -rc1, and I'll pick it up.
+Can you elaborate on these 2 thermal sensors/zones, ccu and plt?
 
-Thanks,
-
-	M.
+Shawn
 
 > 
-> Thanks,
-> Fab
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
+>  1 files changed, 39 insertions(+), 4 deletions(-)
 > 
->> From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@vger.kernel.org> On Behalf Of Fabrizio Castro
->> Sent: 13 December 2018 20:18
->> Subject: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0 support
->>
->> Document RZ/G2E (R8A774C0) SoC bindings.
->>
->> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->> ---
->>  Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
->> b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
->> index 8de96a4..f977ea7 100644
->> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
->> @@ -16,6 +16,7 @@ Required properties:
->>      - "renesas,irqc-r8a7793" (R-Car M2-N)
->>      - "renesas,irqc-r8a7794" (R-Car E2)
->>      - "renesas,intc-ex-r8a774a1" (RZ/G2M)
->> +    - "renesas,intc-ex-r8a774c0" (RZ/G2E)
->>      - "renesas,intc-ex-r8a7795" (R-Car H3)
->>      - "renesas,intc-ex-r8a7796" (R-Car M3-W)
->>      - "renesas,intc-ex-r8a77965" (R-Car M3-N)
->> --
->> 2.7.4
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index 661137f..9f52bc9 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -129,19 +129,19 @@
+>  	};
+>  
+>  	thermal-zones {
+> -		cpu_thermal: cpu-thermal {
+> +		ccu {
+>  			polling-delay-passive = <1000>;
+>  			polling-delay = <5000>;
+>  			thermal-sensors = <&tmu 0>;
+>  
+>  			trips {
+> -				cpu_alert: cpu-alert {
+> +				ccu_alert: ccu-alert {
+>  					temperature = <85000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu_crit: cpu-crit {
+> +				ccu_crit: ccu-crit {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "critical";
+> @@ -150,7 +150,42 @@
+>  
+>  			cooling-maps {
+>  				map0 {
+> -					trip = <&cpu_alert>;
+> +					trip = <&ccu_alert>;
+> +					cooling-device =
+> +						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +
+> +		plt {
+> +			polling-delay-passive = <1000>;
+> +			polling-delay = <5000>;
+> +			thermal-sensors = <&tmu 1>;
+> +
+> +			trips {
+> +				plt_alert: plt-alert {
+> +					temperature = <85000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				plt_crit: plt-crit {
+> +					temperature = <95000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&plt_alert>;
+>  					cooling-device =
+>  						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>  						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> -- 
+> 1.7.1
 > 
-
-
--- 
-Jazz is not dead. It just smells funny...
