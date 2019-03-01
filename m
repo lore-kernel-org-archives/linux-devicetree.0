@@ -1,41 +1,54 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v2 4/4] MAINTAINERS: add maintainer for maxbotix ultrasonic
- driver
-Date: Fri, 1 Mar 2019 14:43:23 +0100
-Message-ID: <20190301134322.p5pouwmiw6lp5unh@arbad>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0
+ support
+Date: Fri, 1 Mar 2019 13:47:48 +0000
+Message-ID: <TYXPR01MB17757072E9A7E828A92DC6EEC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+References: <1544732284-5951-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TYXPR01MB1775847A1B243C0B30C69CFBC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <dde90e93-e8ca-acd2-ffd0-976c51ec309f@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <dde90e93-e8ca-acd2-ffd0-976c51ec309f@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-iio@vger.kernel.org
-Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org, m.othacehe@gmail.com, nicolas.ferre@microchip.com, pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com, treding@nvidia.com, techsupport@maxbotix.com
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-add a maintainer for the newly created ultrasonic driver family of maxbotix
-
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9919840d54cd..0807d9239e1a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9226,6 +9226,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/sound/max9860.txt
- F:	sound/soc/codecs/max9860.*
- 
-+MAXBOTIX ULTRASONIC RANGER IIO DRIVER
-+M:	Andreas Klinger <ak@it-klinger.de>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/proximity/maxbotix,i2cxl.txt
-+F:	drivers/iio/proximity/mb12x2.c
-+
- MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
- M:	Javier Martinez Canillas <javier@dowhile0.org>
- L:	linux-kernel@vger.kernel.org
--- 
-2.11.0
+SGVsbG8gTWFyYw0KDQo+IEZyb206IGRldmljZXRyZWUtb3duZXJAdmdlci5rZXJuZWwub3JnIDxk
+ZXZpY2V0cmVlLW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIE1hcmMgWnluZ2ll
+cg0KPiBTZW50OiAwMSBNYXJjaCAyMDE5IDEzOjM5DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGR0
+LWJpbmRpbmdzOiBpcnFjaGlwOiByZW5lc2FzLWlycWM6IERvY3VtZW50IHI4YTc3NGMwIHN1cHBv
+cnQNCj4gDQo+IE9uIDAxLzAzLzIwMTkgMTE6NDksIEZhYnJpemlvIENhc3RybyB3cm90ZToNCj4g
+PiBIZWxsbyBNYXJjLA0KPiA+DQo+ID4gSSBhbSBzb3JyeSB0byBib3RoZXIgeW91Lg0KPiA+IERv
+IHlvdSB0aGluayB5b3UgY2FuIHRha2UgdGhpcyBwYXRjaD8NCj4gDQo+IEl0IGFscmVhZHkgbWlz
+c2VkIHRoZSBib2F0IGZvciB0aGUgbWVyZ2Ugd2luZG93LCBhcyBJIHNlbnQgdGhlIHB1bGwNCj4g
+cmVxdWVzdCBsYXN0IHdlZWsuIFBsZWFzZSByZXNlbmQgaXQgYWZ0ZXIgLXJjMSwgYW5kIEknbGwg
+cGljayBpdCB1cC4NCg0KV2lsbCBkby4NCg0KVGhhbmtzLA0KRmFiDQoNCj4gDQo+IFRoYW5rcywN
+Cj4gDQo+IAlNLg0KPiANCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBGYWINCj4gPg0KPiA+PiBGcm9t
+OiBsaW51eC1yZW5lc2FzLXNvYy1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LXJlbmVzYXMt
+c29jLW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIEZhYnJpemlvIENhc3Rybw0K
+PiA+PiBTZW50OiAxMyBEZWNlbWJlciAyMDE4IDIwOjE4DQo+ID4+IFN1YmplY3Q6IFtQQVRDSF0g
+ZHQtYmluZGluZ3M6IGlycWNoaXA6IHJlbmVzYXMtaXJxYzogRG9jdW1lbnQgcjhhNzc0YzAgc3Vw
+cG9ydA0KPiA+Pg0KPiA+PiBEb2N1bWVudCBSWi9HMkUgKFI4QTc3NEMwKSBTb0MgYmluZGluZ3Mu
+DQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2Fz
+dHJvQGJwLnJlbmVzYXMuY29tPg0KPiA+PiAtLS0NCj4gPj4gIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9yZW5lc2FzLGlycWMudHh0IHwgMSAr
+DQo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPj4NCj4gPj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJv
+bGxlci9yZW5lc2FzLGlycWMudHh0DQo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL3JlbmVzYXMsaXJxYy50eHQNCj4gPj4gaW5kZXgg
+OGRlOTZhNC4uZjk3N2VhNyAxMDA2NDQNCj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL3JlbmVzYXMsaXJxYy50eHQNCj4gPj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9s
+bGVyL3JlbmVzYXMsaXJxYy50eHQNCj4gPj4gQEAgLTE2LDYgKzE2LDcgQEAgUmVxdWlyZWQgcHJv
+cGVydGllczoNCj4gPj4gICAgICAtICJyZW5lc2FzLGlycWMtcjhhNzc5MyIgKFItQ2FyIE0yLU4p
+DQo+ID4+ICAgICAgLSAicmVuZXNhcyxpcnFjLXI4YTc3OTQiIChSLUNhciBFMikNCj4gPj4gICAg
+ICAtICJyZW5lc2FzLGludGMtZXgtcjhhNzc0YTEiIChSWi9HMk0pDQo+ID4+ICsgICAgLSAicmVu
+ZXNhcyxpbnRjLWV4LXI4YTc3NGMwIiAoUlovRzJFKQ0KPiA+PiAgICAgIC0gInJlbmVzYXMsaW50
+Yy1leC1yOGE3Nzk1IiAoUi1DYXIgSDMpDQo+ID4+ICAgICAgLSAicmVuZXNhcyxpbnRjLWV4LXI4
+YTc3OTYiIChSLUNhciBNMy1XKQ0KPiA+PiAgICAgIC0gInJlbmVzYXMsaW50Yy1leC1yOGE3Nzk2
+NSIgKFItQ2FyIE0zLU4pDQo+ID4+IC0tDQo+ID4+IDIuNy40DQo+ID4NCj4gDQo+IA0KPiAtLQ0K
+PiBKYXp6IGlzIG5vdCBkZWFkLiBJdCBqdXN0IHNtZWxscyBmdW5ueS4uLg0K
