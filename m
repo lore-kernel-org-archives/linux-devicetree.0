@@ -1,14 +1,11 @@
 From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 2/3] ARM: dts: stm32: enable IPCC mailbox support on
- STM32MP157c-ed1
-Date: Fri, 1 Mar 2019 10:18:38 +0100
-Message-ID: <1551431919-23410-3-git-send-email-fabien.dessenne@st.com>
-References: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH 0/3]  ARM: dts: stm32: IPCC mailbox support on STM32MP157c
+Date: Fri, 1 Mar 2019 10:18:36 +0100
+Message-ID: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,27 +19,17 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxim
 Cc: Fabien Dessenne <fabien.dessenne@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable STM32 IPCC mailbox driver for STM32MP157c-ed1 board.
+Support IPCC mailbox on STM32MP157c-ed1 and STM32MP157a-dk1 boards.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Fabien Dessenne (3):
+  ARM: dts: stm32: add IPCC mailbox support on STM32MP157c
+  ARM: dts: stm32: enable IPCC mailbox support on STM32MP157c-ed1
+  ARM: dts: stm32: enable IPCC mailbox support on STM32MP157a-dk1
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 10dc7c0..626ceb3 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -83,6 +83,10 @@
- 	status = "okay";
- };
- 
-+&ipcc {
-+	status = "okay";
-+};
-+
- &iwdg2 {
- 	timeout-sec = <32>;
- 	status = "okay";
+ arch/arm/boot/dts/stm32mp157a-dk1.dts |  4 ++++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts |  4 ++++
+ arch/arm/boot/dts/stm32mp157c.dtsi    | 15 +++++++++++++++
+ 3 files changed, 23 insertions(+)
+
 -- 
 2.7.4
