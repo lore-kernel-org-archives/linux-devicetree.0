@@ -1,100 +1,45 @@
-Return-Path: <SRS0=AB2r=RH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from aserp2130.oracle.com ([141.146.126.79]:59902 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfCDNX2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Mar 2019 08:23:28 -0500
-Date: Mon, 4 Mar 2019 16:23:13 +0300
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [bug report] of: unittest: Add phandle remapping test
-Message-ID: <20190304132313.GA7035@kadam>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from imap1.codethink.co.uk ([176.9.8.82]:34221 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388736AbfCAPww (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Mar 2019 10:52:52 -0500
+From: Kejia Hu <kejia.hu@codethink.co.uk>
+Subject: [PATCH v2 2/6] soc/tegra: fuse: add is_automotive for tegra30
+Date: Fri,  1 Mar 2019 15:35:36 +0000
+Message-Id: <20190301153540.14954-3-kejia.hu@codethink.co.uk>
+In-Reply-To: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
+References: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
 Sender: devicetree-owner@vger.kernel.org
-To: stephen.boyd@linaro.org
-Cc: devicetree@vger.kernel.org
+To: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, digetx@gmail.com
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Kejia Hu <kejia.hu@codethink.co.uk>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Stephen Boyd,
+From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-The patch 357aa4b61c82: "of: unittest: Add phandle remapping test"
-from Jan 30, 2018, leads to the following static checker warning:
+Add an is_automotive flag to the tegra-sku info, and
+add an implementation for the tegra30 from what we
+know from all the autotmotive parts we've seen.
 
-	drivers/of/unittest.c:567 of_unittest_parse_phandle_with_args_map()
-	error: potential zalloc NULL dereference: 'args.np'
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Kejia Hu <kejia.hu@codethink.co.uk>
+---
+ drivers/soc/tegra/fuse/fuse-tegra30.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-drivers/of/unittest.c
-    511 	for (i = 0; i < 8; i++) {
-    512 		bool passed = true;
-    513 
-    514 		memset(&args, 0, sizeof(args));
-                               ^^^^^
-args.np set to NULL.
-
-    515 		rc = of_parse_phandle_with_args_map(np, "phandle-list",
-    516 						    "phandle", i, &args);
-                                                                          ^^^^^
-
-A bunch of error paths don't set args.np.
-
-    517 
-    518 		/* Test the values from tests-phandle.dtsi */
-    519 		switch (i) {
-    520 		case 0:
-    521 			passed &= !rc;
-    522 			passed &= (args.np == p1);
-    523 			passed &= (args.args_count == 1);
-    524 			passed &= (args.args[0] == 1);
-    525 			break;
-    526 		case 1:
-    527 			passed &= !rc;
-    528 			passed &= (args.np == p3);
-    529 			passed &= (args.args_count == 3);
-    530 			passed &= (args.args[0] == 2);
-    531 			passed &= (args.args[1] == 5);
-    532 			passed &= (args.args[2] == 3);
-    533 			break;
-    534 		case 2:
-    535 			passed &= (rc == -ENOENT);
-    536 			break;
-    537 		case 3:
-    538 			passed &= !rc;
-    539 			passed &= (args.np == p0);
-    540 			passed &= (args.args_count == 0);
-    541 			break;
-    542 		case 4:
-    543 			passed &= !rc;
-    544 			passed &= (args.np == p1);
-    545 			passed &= (args.args_count == 1);
-    546 			passed &= (args.args[0] == 3);
-    547 			break;
-    548 		case 5:
-    549 			passed &= !rc;
-    550 			passed &= (args.np == p0);
-    551 			passed &= (args.args_count == 0);
-    552 			break;
-    553 		case 6:
-    554 			passed &= !rc;
-    555 			passed &= (args.np == p2);
-    556 			passed &= (args.args_count == 2);
-    557 			passed &= (args.args[0] == 15);
-    558 			passed &= (args.args[1] == 0x20);
-    559 			break;
-    560 		case 7:
-    561 			passed &= (rc == -ENOENT);
-    562 			break;
-    563 		default:
-    564 			passed = false;
-    565 		}
-    566 
---> 567 		unittest(passed, "index %i - data error on node %s rc=%i\n",
-    568 			 i, args.np->full_name, rc);
-                                    ^^^^^^^^^^^^^^^^^^
-Potential NULL dereference.
-
-
-    569 	}
-    570 
-
-regards,
-dan carpenter
+diff --git a/drivers/soc/tegra/fuse/fuse-tegra30.c b/drivers/soc/tegra/fuse/fuse-tegra30.c
+index 257e254c6137..d92025e486e0 100644
+--- a/drivers/soc/tegra/fuse/fuse-tegra30.c
++++ b/drivers/soc/tegra/fuse/fuse-tegra30.c
+@@ -106,6 +106,10 @@ static void __init tegra30_fuse_init(struct tegra_fuse *fuse)
+ 	if (fuse->soc->speedo_init)
+ 		fuse->soc->speedo_init(&tegra_sku_info);
+ 
++	if (tegra_sku_info.revision == TEGRA_REVISION_A03 &&
++	    tegra_sku_info.sku_id == 176)
++		tegra_sku_info.is_automotive = true;
++
+ 	tegra30_fuse_add_randomness();
+ }
+ #endif
+-- 
+2.11.0
