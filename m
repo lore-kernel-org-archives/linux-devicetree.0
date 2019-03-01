@@ -1,64 +1,64 @@
 Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1400111.outbound.protection.outlook.com ([40.107.140.111]:15552
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728300AbfCAOw6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:52:58 -0500
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH RESEND v2 1/2] media: dt-bindings: media: rcar-csi2: Add
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:57965 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726416AbfCAOfG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Mar 2019 09:35:06 -0500
+Subject: Re: [PATCH RESEND v2 1/2] media: dt-bindings: media: rcar-csi2: Add
  r8a774a1 support
-Date: Fri, 1 Mar 2019 14:52:51 +0000
-Message-ID: <OSBPR01MB2103FC038B64247EE41AE256B8760@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 References: <1551450253-63390-1-git-send-email-biju.das@bp.renesas.com>
- <615b0c46-5939-bdce-e975-8572d42bdbe8@xs4all.nl>
-In-Reply-To: <615b0c46-5939-bdce-e975-8572d42bdbe8@xs4all.nl>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <615b0c46-5939-bdce-e975-8572d42bdbe8@xs4all.nl>
+Date: Fri, 1 Mar 2019 15:35:02 +0100
 MIME-Version: 1.0
+In-Reply-To: <1551450253-63390-1-git-send-email-biju.das@bp.renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgSGFucywNCg0KVGhhbmtzIGZvciB0aGUgZmVlZGJhY2suDQoNCj4gU3ViamVjdDogUmU6IFtQ
-QVRDSCBSRVNFTkQgdjIgMS8yXSBtZWRpYTogZHQtYmluZGluZ3M6IG1lZGlhOiByY2FyLWNzaTI6
-IEFkZA0KPiByOGE3NzRhMSBzdXBwb3J0DQo+DQo+IE9uIDMvMS8xOSAzOjI0IFBNLCBCaWp1IERh
-cyB3cm90ZToNCj4gPiBEb2N1bWVudCBSWi9HMk0gKFI4QTc3NEExKSBTb0MgYmluZGluZ3MuDQo+
-DQo+IFBsZWFzZSByZXNlbmQgdGhlIHdob2xlIHNlcmllcywgbm90IGp1c3QgdGhlIGR0LWJpbmRp
-bmdzIHBhdGNoZXMuDQo+DQo+IEFsc28gbm90ZSB0aGF0IHRoZSBvcmlnaW5hbCB2MSBzZXJpZXMg
-c2FpZCB0aGF0IHRoZXJlIHdlcmUgNSBwYXRjaGVzIGluIHRoZQ0KPiBzZXJpZXMsIGJ1dCBvbmx5
-IHRoZSBmaXJzdCA0IHdlcmUgcmVjZWl2ZWQgb24gbGludXgtbWVkaWEuIFNvIEkgaGF2ZSBubyBp
-ZGVhDQo+IHdoYXQgdGhlIDV0aCBwYXRjaCB3YXMgKGR0cyBjaGFuZ2UgcGVyaGFwcz8pLg0KDQpZ
-ZXMsICBJdCBpcyBkdHMgcGF0Y2gNCg0KPiBIYXZpbmcgYSBuZXdseSBwb3N0ZWQgcGF0Y2ggc2Vy
-aWVzIGF2b2lkcyBjb25mdXNpb24uDQoNCk9LLiBXaWxsIHNlbmQgdGhlIHdob2xlIHNlcmllcyBh
-Z2Fpbi4uDQoNClJlZ2FyZHMsDQpCaWp1DQoNCj4gPg0KPiA+IFRoZSBSWi9HMk0gU29DIGlzIHNp
-bWlsYXIgdG8gUi1DYXIgTTMtVyAoUjhBNzc5NikuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBC
-aWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEZhYnJp
-emlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPiA+IEFja2VkLWJ5
-OiBOaWtsYXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5z
-ZT4NCj4gPiBSZXZpZXdlZC1ieTogU2ltb24gSG9ybWFuIDxob3JtcytyZW5lc2FzQHZlcmdlLm5l
-dC5hdT4NCj4gPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4g
-PiAtLS0NCj4gPiBWMS0+VjINCj4gPiAgICAqIE5vIGNoYW5nZQ0KPiA+IC0tLQ0KPiA+ICBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvcmVuZXNhcyxyY2FyLWNzaTIudHh0
-IHwgMSArDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+ID4gZGlm
-ZiAtLWdpdA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3Jl
-bmVzYXMscmNhci1jc2kyLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL21lZGlhL3JlbmVzYXMscmNhci1jc2kyLnR4dA0KPiA+IGluZGV4IGQ2MzI3NWUuLjk5MzI0
-NTggMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
-ZGlhL3JlbmVzYXMscmNhci1jc2kyLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZWRpYS9yZW5lc2FzLHJjYXItY3NpMi50eHQNCj4gPiBAQCAtOCw2ICs4
-LDcgQEAgUi1DYXIgVklOIG1vZHVsZSwgd2hpY2ggcHJvdmlkZXMgdGhlIHZpZGVvIGNhcHR1cmUN
-Cj4gY2FwYWJpbGl0aWVzLg0KPiA+ICBNYW5kYXRvcnkgcHJvcGVydGllcw0KPiA+ICAtLS0tLS0t
-LS0tLS0tLS0tLS0tLQ0KPiA+ICAgLSBjb21wYXRpYmxlOiBNdXN0IGJlIG9uZSBvciBtb3JlIG9m
-IHRoZSBmb2xsb3dpbmcNCj4gPiArICAgLSAicmVuZXNhcyxyOGE3NzRhMS1jc2kyIiBmb3IgdGhl
-IFI4QTc3NEExIGRldmljZS4NCj4gPiAgICAgLSAicmVuZXNhcyxyOGE3NzRjMC1jc2kyIiBmb3Ig
-dGhlIFI4QTc3NEMwIGRldmljZS4NCj4gPiAgICAgLSAicmVuZXNhcyxyOGE3Nzk1LWNzaTIiIGZv
-ciB0aGUgUjhBNzc5NSBkZXZpY2UuDQo+ID4gICAgIC0gInJlbmVzYXMscjhhNzc5Ni1jc2kyIiBm
-b3IgdGhlIFI4QTc3OTYgZGV2aWNlLg0KPiA+DQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1
-cm9wZSBHbWJILEdlc2NoYWVmdHNmdWVocmVyL1ByZXNpZGVudCA6IE1pY2hhZWwgSGFubmF3YWxk
-LCBTaXR6IGRlciBHZXNlbGxzY2hhZnQvUmVnaXN0ZXJlZCBvZmZpY2U6IER1ZXNzZWxkb3JmLCBB
-cmNhZGlhc3RyYXNzZSAxMCwgNDA0NzIgRHVlc3NlbGRvcmYsIEdlcm1hbnksSGFuZGVsc3JlZ2lz
-dGVyL0NvbW1lcmNpYWwgUmVnaXN0ZXI6IER1ZXNzZWxkb3JmLCBIUkIgMzcwOCBVU3QtSUROci4v
-VGF4IGlkZW50aWZpY2F0aW9uIG5vLjogREUgMTE5MzUzNDA2IFdFRUUtUmVnLi1Oci4vV0VFRSBy
-ZWcuIG5vLjogREUgMTQ5Nzg2NDcNCg==
+On 3/1/19 3:24 PM, Biju Das wrote:
+> Document RZ/G2M (R8A774A1) SoC bindings.
+
+Please resend the whole series, not just the dt-bindings patches.
+
+Also note that the original v1 series said that there were 5 patches in
+the series, but only the first 4 were received on linux-media. So I have
+no idea what the 5th patch was (dts change perhaps?).
+
+Having a newly posted patch series avoids confusion.
+
+Regards,
+
+	Hans
+
+> 
+> The RZ/G2M SoC is similar to R-Car M3-W (R8A7796).
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> V1->V2
+>    * No change
+> ---
+>  Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> index d63275e..9932458 100644
+> --- a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> +++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> @@ -8,6 +8,7 @@ R-Car VIN module, which provides the video capture capabilities.
+>  Mandatory properties
+>  --------------------
+>   - compatible: Must be one or more of the following
+> +   - "renesas,r8a774a1-csi2" for the R8A774A1 device.
+>     - "renesas,r8a774c0-csi2" for the R8A774C0 device.
+>     - "renesas,r8a7795-csi2" for the R8A7795 device.
+>     - "renesas,r8a7796-csi2" for the R8A7796 device.
+> 
