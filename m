@@ -1,105 +1,74 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
-Date: Fri, 1 Mar 2019 15:36:32 +0100
-Message-ID: <20190301143632.kzlr4jphq3rceos6@flea>
-References: <20190228212840.24964-1-andreas@kemnade.info>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 00/10] Allwinner sunxi message box support
+Date: Fri, 1 Mar 2019 15:47:03 +0100
+Message-ID: <20190301144703.kyqyajysfsdvg3td@flea>
+References: <20190301052947.32032-1-samuel@sholland.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ib4bul6sb7rzbemi"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="ghobjd6npcdkzhom"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2UL4XRQKGQEMAYLX3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190228212840.24964-1-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190301052947.32032-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ib4bul6sb7rzbemi
-Content-Type: text/plain; charset=us-ascii
+--ghobjd6npcdkzhom
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi
 
-Thanks for your patch
+On Thu, Feb 28, 2019 at 11:29:37PM -0600, Samuel Holland wrote:
+> This series adds support for the "hardware message box" in sun8i, sun9i,
+> and sun50i SoCs, used for communication with the ARISC management
+> processor (the platform's equivalent of the ARM SCP). The end goal is to
+> use the arm_scpi driver as a client, communicating with firmware running
+> on the ARISC CPU, or to use the mailbox to forward NMIs that the
+> firmware picks up from R_INTC.
+> 
+> Changes from v1:
+>   - Marked message box clocks as critical instead of hacks in the driver
+>   - 8 unidirectional channels instead of 4 bidirectional pairs
+>   - Use per-SoC compatible strings and an A31 fallback compatible
+>   - Dropped the mailbox framework patch
+>   - Include DT patches for SoCs that document the message box
+>
+> Samuel Holland (10):
+>   clk: sunxi-ng: sun8i: Mark the msgbox clock as critical
+>   clk: sunxi-ng: sun9i: Mark the msgbox clock as critical
+>   clk: sunxi-ng: sun50i: Mark the msgbox clock as critical
+>   dt-bindings: mailbox: Add a sunxi message box binding
+>   mailbox: sunxi-msgbox: Add a new mailbox driver
+>   ARM: dts: sunxi: a80: Add msgbox node
+>   ARM: dts: sunxi: a83t: Add msgbox node
+>   ARM: dts: sunxi: h3/h5: Add msgbox node
+>   arm64: dts: allwinner: a64: Add msgbox node
+>   arm64: dts: allwinner: h6: Add msgbox node
 
-On Thu, Feb 28, 2019 at 10:28:40PM +0100, Andreas Kemnade wrote:
-> The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
-> with broadcom internals attached to UART1 and some gpios.
-> This addition is in line with similar boards
->=20
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
->  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 29 ++++++++++++++++=
-++++++
->  1 file changed, 29 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/=
-arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> index 1db2541135a7..39e206fac4e3 100644
-> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> @@ -69,6 +69,8 @@
->  		compatible =3D "mmc-pwrseq-simple";
->  		pinctrl-names =3D "default";
->  		reset-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-> +		clocks =3D <&rtc 1>;
-> +		clock-names =3D "ext_clock";
->  	};
->  };
-> =20
-> @@ -122,7 +124,34 @@
->  &uart1 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-> +	uart-has-rtscts;
->  	status =3D "okay";
-> +
-> +	bluetooth {
-> +		compatible =3D "brcm,bcm43438-bt";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&bt_pins_out>, <&bt_pins_in>;
-> +		clocks =3D <&rtc 1>;
-> +		clock-names =3D "lpo";
-> +		vbat-supply =3D <&reg_vcc3v3>;
-> +		vddio-supply =3D <&reg_vcc3v3>;
-> +		device-wakeup-gpios =3D <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
-> +		host-wakeup-gpios =3D <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
-> +		shutdown-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-> +	};
-> +
-> +};
-> +
-> +&pio {
-> +	bt_pins_out: bt_out {
-> +		pins =3D "PG12", "PG13";
-> +		function =3D "gpio_out";
-> +	};
-> +
-> +	bt_pins_in: bt_in {
-> +		pins =3D "PG11";
-> +		function =3D "gpio_in";
-> +	};
+It looks good to me but a few things:
 
-You don't need any of those pinctrl nodes, GPIOs work fine without.
+  - There's no reason to split the first three patches, so they should
+    all be merged
 
+  - You might consider using a YAML schemas for your DT bindings
+    documentation. That will bring a more formal descriptiion and DT
+    validation.
+
+Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---ib4bul6sb7rzbemi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXHlDcAAKCRDj7w1vZxhR
-xWn6AP0cj7wtgn87Bf2OYGSm3A4wakfamsXePzKGD2jOfh+OUQD+PQr/iYkj+OYv
-6IvLK6H+eNF9wjDGYohNflqd7siYuwo=
-=Wkrh
------END PGP SIGNATURE-----
-
---ib4bul6sb7rzbemi--
+--ghobjd6npcdkzhom--
