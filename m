@@ -1,44 +1,70 @@
-Return-Path: <SRS0=Q0RW=RE=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1410123.outbound.protection.outlook.com ([40.107.141.123]:14560
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388036AbfCAPS0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Mar 2019 10:18:26 -0500
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH RESEND V2 1/4] media: dt-bindings: media: rcar-csi2: Add r8a774a1 support
-Date: Fri,  1 Mar 2019 15:45:33 +0000
-Message-Id: <1551455136-45574-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1551455136-45574-1-git-send-email-biju.das@bp.renesas.com>
-References: <1551455136-45574-1-git-send-email-biju.das@bp.renesas.com>
+Subject: RE: [PATCH RESEND v2 1/2] media: dt-bindings: media: rcar-csi2: Add
+ r8a774a1 support
+Date: Fri, 1 Mar 2019 15:18:09 +0000
+Message-ID: <OSBPR01MB2103FD41B7BA18CDF16AAE36B8760@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1551450253-63390-1-git-send-email-biju.das@bp.renesas.com>
+ <615b0c46-5939-bdce-e975-8572d42bdbe8@xs4all.nl>
+ <OSBPR01MB2103FC038B64247EE41AE256B8760@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB2103FC038B64247EE41AE256B8760@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document RZ/G2M (R8A774A1) SoC bindings.
-
-The RZ/G2M SoC is similar to R-Car M3-W (R8A7796).
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-V1-->V2
-  * No change
----
- Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-index d63275e..9932458 100644
---- a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-+++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-@@ -8,6 +8,7 @@ R-Car VIN module, which provides the video capture capabilities.
- Mandatory properties
- --------------------
-  - compatible: Must be one or more of the following
-+   - "renesas,r8a774a1-csi2" for the R8A774A1 device.
-    - "renesas,r8a774c0-csi2" for the R8A774C0 device.
-    - "renesas,r8a7795-csi2" for the R8A7795 device.
-    - "renesas,r8a7796-csi2" for the R8A7796 device.
--- 
-2.7.4
+SGkgSGFucywNCg0KPiBTdWJqZWN0OiBSRTogW1BBVENIIFJFU0VORCB2MiAxLzJdIG1lZGlhOiBk
+dC1iaW5kaW5nczogbWVkaWE6IHJjYXItY3NpMjogQWRkDQo+IHI4YTc3NGExIHN1cHBvcnQNCj4N
+Cj4gSGkgSGFucywNCj4NCj4gVGhhbmtzIGZvciB0aGUgZmVlZGJhY2suDQo+DQo+ID4gU3ViamVj
+dDogUmU6IFtQQVRDSCBSRVNFTkQgdjIgMS8yXSBtZWRpYTogZHQtYmluZGluZ3M6IG1lZGlhOg0K
+PiA+IHJjYXItY3NpMjogQWRkDQo+ID4gcjhhNzc0YTEgc3VwcG9ydA0KPiA+DQo+ID4gT24gMy8x
+LzE5IDM6MjQgUE0sIEJpanUgRGFzIHdyb3RlOg0KPiA+ID4gRG9jdW1lbnQgUlovRzJNIChSOEE3
+NzRBMSkgU29DIGJpbmRpbmdzLg0KPiA+DQo+ID4gUGxlYXNlIHJlc2VuZCB0aGUgd2hvbGUgc2Vy
+aWVzLCBub3QganVzdCB0aGUgZHQtYmluZGluZ3MgcGF0Y2hlcy4NCj4gPg0KPiA+IEFsc28gbm90
+ZSB0aGF0IHRoZSBvcmlnaW5hbCB2MSBzZXJpZXMgc2FpZCB0aGF0IHRoZXJlIHdlcmUgNSBwYXRj
+aGVzDQo+ID4gaW4gdGhlIHNlcmllcywgYnV0IG9ubHkgdGhlIGZpcnN0IDQgd2VyZSByZWNlaXZl
+ZCBvbiBsaW51eC1tZWRpYS4gU28gSQ0KPiA+IGhhdmUgbm8gaWRlYSB3aGF0IHRoZSA1dGggcGF0
+Y2ggd2FzIChkdHMgY2hhbmdlIHBlcmhhcHM/KS4NCj4NCj4gWWVzLCAgSXQgaXMgZHRzIHBhdGNo
+Lg0KDQpUaGlzIDV0aCBwYXRjaCBpcyBhbHJlYWR5IGluIG1lZGlhIHRyZWUgLiBjb21taXQgMGM4
+NWU3OGZiMWQzNzQyYyAoImFybTY0OiBkdHM6IHJlbmVzYXM6IHI4YTc3NGExOiBBZGQgVklOIGFu
+ZCBDU0ktMiBub2RlcyIpDQpTbyBJIHdpbGwgcmVzZW5kIHRoZSBwYXRjaCBzZXJpZXMgd2l0aCBm
+aXJzdCA0IHBhdGNoZXMuDQoNClJlZ2FyZHMsDQpCaWp1DQoNCj4NCj4gPiA+DQo+ID4gPiBUaGUg
+UlovRzJNIFNvQyBpcyBzaW1pbGFyIHRvIFItQ2FyIE0zLVcgKFI4QTc3OTYpLg0KPiA+ID4NCj4g
+PiA+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4g
+PiA+IFJldmlld2VkLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5l
+c2FzLmNvbT4NCj4gPiA+IEFja2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8bmlrbGFzLnNvZGVy
+bHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4NCj4gPiA+IFJldmlld2VkLWJ5OiBTaW1vbiBIb3Jt
+YW4gPGhvcm1zK3JlbmVzYXNAdmVyZ2UubmV0LmF1Pg0KPiA+ID4gUmV2aWV3ZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gPiAtLS0NCj4gPiA+IFYxLT5WMg0KPiA+ID4g
+ICAgKiBObyBjaGFuZ2UNCj4gPiA+IC0tLQ0KPiA+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tZWRpYS9yZW5lc2FzLHJjYXItY3NpMi50eHQgfCAxICsNCj4gPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0DQo+ID4g
+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9yZW5lc2FzLHJjYXIt
+Y3NpMi50eHQNCj4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlh
+L3JlbmVzYXMscmNhci1jc2kyLnR4dA0KPiA+ID4gaW5kZXggZDYzMjc1ZS4uOTkzMjQ1OCAxMDA2
+NDQNCj4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9y
+ZW5lc2FzLHJjYXItY3NpMi50eHQNCj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tZWRpYS9yZW5lc2FzLHJjYXItY3NpMi50eHQNCj4gPiA+IEBAIC04LDYgKzgs
+NyBAQCBSLUNhciBWSU4gbW9kdWxlLCB3aGljaCBwcm92aWRlcyB0aGUgdmlkZW8gY2FwdHVyZQ0K
+PiA+IGNhcGFiaWxpdGllcy4NCj4gPiA+ICBNYW5kYXRvcnkgcHJvcGVydGllcw0KPiA+ID4gIC0t
+LS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gPiAgIC0gY29tcGF0aWJsZTogTXVzdCBiZSBvbmUgb3Ig
+bW9yZSBvZiB0aGUgZm9sbG93aW5nDQo+ID4gPiArICAgLSAicmVuZXNhcyxyOGE3NzRhMS1jc2ky
+IiBmb3IgdGhlIFI4QTc3NEExIGRldmljZS4NCj4gPiA+ICAgICAtICJyZW5lc2FzLHI4YTc3NGMw
+LWNzaTIiIGZvciB0aGUgUjhBNzc0QzAgZGV2aWNlLg0KPiA+ID4gICAgIC0gInJlbmVzYXMscjhh
+Nzc5NS1jc2kyIiBmb3IgdGhlIFI4QTc3OTUgZGV2aWNlLg0KPiA+ID4gICAgIC0gInJlbmVzYXMs
+cjhhNzc5Ni1jc2kyIiBmb3IgdGhlIFI4QTc3OTYgZGV2aWNlLg0KPiA+ID4NCg0KDQoNClJlbmVz
+YXMgRWxlY3Ryb25pY3MgRXVyb3BlIEdtYkgsR2VzY2hhZWZ0c2Z1ZWhyZXIvUHJlc2lkZW50IDog
+TWljaGFlbCBIYW5uYXdhbGQsIFNpdHogZGVyIEdlc2VsbHNjaGFmdC9SZWdpc3RlcmVkIG9mZmlj
+ZTogRHVlc3NlbGRvcmYsIEFyY2FkaWFzdHJhc3NlIDEwLCA0MDQ3MiBEdWVzc2VsZG9yZiwgR2Vy
+bWFueSxIYW5kZWxzcmVnaXN0ZXIvQ29tbWVyY2lhbCBSZWdpc3RlcjogRHVlc3NlbGRvcmYsIEhS
+QiAzNzA4IFVTdC1JRE5yLi9UYXggaWRlbnRpZmljYXRpb24gbm8uOiBERSAxMTkzNTM0MDYgV0VF
+RS1SZWcuLU5yLi9XRUVFIHJlZy4gbm8uOiBERSAxNDk3ODY0Nw0K
