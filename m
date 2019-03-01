@@ -1,49 +1,80 @@
-Return-Path: <SRS0=9+Vl=RE=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400103.outbound.protection.outlook.com ([40.107.140.103]:29088
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725978AbfCANMq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Mar 2019 08:12:46 -0500
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH 1/5] media: dt-bindings: media: rcar-csi2: Add r8a774a1
+ support
+Date: Fri, 1 Mar 2019 13:12:37 +0000
+Message-ID: <OSBPR01MB21034BCCB73E585F2BC8C03CB8760@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 References: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
  <1536589878-26218-2-git-send-email-biju.das@bp.renesas.com>
  <TYXPR01MB1775F18270FB477D010C180EC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <8a5429a0-b4c5-a208-3e56-406bd031b01b@xs4all.nl> <CAMuHMdXOcFaQiLUNiuUS_p5H0r3ZWMrWd09m5xZk4qitvLS25g@mail.gmail.com>
+ <8a5429a0-b4c5-a208-3e56-406bd031b01b@xs4all.nl>
+ <CAMuHMdXOcFaQiLUNiuUS_p5H0r3ZWMrWd09m5xZk4qitvLS25g@mail.gmail.com>
  <3b702231-8d50-8434-177c-716203dac7b2@xs4all.nl>
 In-Reply-To: <3b702231-8d50-8434-177c-716203dac7b2@xs4all.nl>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 1 Mar 2019 14:13:29 +0100
-Message-ID: <CAMuHMdUuyaryxPYydkSpEv5rxivrBybCjuJ4m5REygG+xQSyAg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] media: dt-bindings: media: rcar-csi2: Add r8a774a1 support
-Content-Type: text/plain; charset="UTF-8"
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Biju Das <biju.das@bp.renesas.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Hans,
-
-On Fri, Mar 1, 2019 at 2:08 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> On 3/1/19 1:58 PM, Geert Uytterhoeven wrote:
-> > On Fri, Mar 1, 2019 at 1:55 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> >> It looks like this series fell through the cracks.
-> >>
-> >> I looked at it and the main problem is that it is missing a Reviewed-by
-> >> from Rob Herring (devicetree maintainer). It's a bit surprising since he
-> >> is usually fairly prompt.
-> >
-> > He actually did provide his Rb on Sep 17.
->
-> Hmm, I don't see anything about that in my linux-media archive, and patchwork
-> didn't pick that up either.
->
-> Was linux-media in the CC list of Rob's reply?
-
-Yes it was, just like linux-renesas-soc. But lore.kernel.org also has
-no evidence.
-I have received it directly, as I was on CC.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgSGFucywNCg0KVGhhbmtzIGZvciB0aGUgZmVlZGJhY2suDQoNCj4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFucyBWZXJrdWlsIDxodmVya3VpbEB4czRhbGwubmw+DQo+
+IFNlbnQ6IDAxIE1hcmNoIDIwMTkgMTM6MDkNCj4gVG86IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2Vl
+cnRAbGludXgtbTY4ay5vcmc+DQo+IENjOiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ry
+b0BicC5yZW5lc2FzLmNvbT47IE1hdXJvIENhcnZhbGhvDQo+IENoZWhhYiA8bWNoZWhhYkBrZXJu
+ZWwub3JnPjsgQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPjsNCj4gTmlrbGFzIFPD
+tmRlcmx1bmQgPG5pa2xhcy5zb2Rlcmx1bmRAcmFnbmF0ZWNoLnNlPjsgbGludXgtDQo+IG1lZGlh
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtcmVuZXNhcy1zb2NAdmdlci5rZXJuZWwub3JnOw0KPiBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQu
+YXU+OyBHZWVydA0KPiBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPjsgQ2hy
+aXMgUGF0ZXJzb24NCj4gPENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT47IFJvYiBIZXJyaW5n
+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrDQo+IFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
+Y29tPjsgTGF1cmVudCBQaW5jaGFydA0KPiA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQu
+Y29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvNV0gbWVkaWE6IGR0LWJpbmRpbmdzOiBtZWRp
+YTogcmNhci1jc2kyOiBBZGQgcjhhNzc0YTENCj4gc3VwcG9ydA0KPg0KPiBPbiAzLzEvMTkgMTo1
+OCBQTSwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+IEhpIEhhbnMsDQo+ID4NCj4gPiBP
+biBGcmksIE1hciAxLCAyMDE5IGF0IDE6NTUgUE0gSGFucyBWZXJrdWlsIDxodmVya3VpbEB4czRh
+bGwubmw+IHdyb3RlOg0KPiA+PiBJdCBsb29rcyBsaWtlIHRoaXMgc2VyaWVzIGZlbGwgdGhyb3Vn
+aCB0aGUgY3JhY2tzLg0KPiA+Pg0KPiA+PiBJIGxvb2tlZCBhdCBpdCBhbmQgdGhlIG1haW4gcHJv
+YmxlbSBpcyB0aGF0IGl0IGlzIG1pc3NpbmcgYQ0KPiA+PiBSZXZpZXdlZC1ieSBmcm9tIFJvYiBI
+ZXJyaW5nIChkZXZpY2V0cmVlIG1haW50YWluZXIpLiBJdCdzIGEgYml0DQo+ID4+IHN1cnByaXNp
+bmcgc2luY2UgaGUgaXMgdXN1YWxseSBmYWlybHkgcHJvbXB0Lg0KPiA+DQo+ID4gSGUgYWN0dWFs
+bHkgZGlkIHByb3ZpZGUgaGlzIFJiIG9uIFNlcCAxNy4NCj4NCj4gSG1tLCBJIGRvbid0IHNlZSBh
+bnl0aGluZyBhYm91dCB0aGF0IGluIG15IGxpbnV4LW1lZGlhIGFyY2hpdmUsIGFuZA0KPiBwYXRj
+aHdvcmsgZGlkbid0IHBpY2sgdGhhdCB1cCBlaXRoZXIuDQo+DQo+IFdhcyBsaW51eC1tZWRpYSBp
+biB0aGUgQ0MgbGlzdCBvZiBSb2IncyByZXBseT8NCg0KWWVzLiBQbGVhc2Ugc2VlIGJlbG93Lg0K
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2Jo
+QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDE3IFNlcHRlbWJlciAyMDE4IDA2OjQ1DQo+IFRvOiBCaWp1
+IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+IENjOiBNYXVybyBDYXJ2YWxobyBDaGVo
+YWIgPG1jaGVoYWJAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFy
+bS5jb20+OyBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+OyBOaWtsYXMNCj4gU8O2
+ZGVybHVuZCA8bmlrbGFzLnNvZGVybHVuZEByYWduYXRlY2guc2U+OyBsaW51eC1tZWRpYUB2Z2Vy
+Lmtlcm5lbC5vcmc7DQo+IGxpbnV4LXJlbmVzYXMtc29jQHZnZXIua2VybmVsLm9yZzsgZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFNpbW9uDQo+IEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1
+PjsgR2VlcnQgVXl0dGVyaG9ldmVuDQo+IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IENocmlz
+IFBhdGVyc29uDQo+IDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBGYWJyaXppbyBDYXN0
+cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCAxLzVdIG1lZGlhOiBkdC1iaW5kaW5nczogbWVkaWE6IHJjYXItY3NpMjogQWRkIHI4YTc3
+NGExDQo+IHN1cHBvcnQNCj4NCj4gT24gTW9uLCAxMCBTZXAgMjAxOCAxNTozMToxNCArMDEwMCwg
+QmlqdSBEYXMgd3JvdGU6DQo+ID4gRG9jdW1lbnQgUlovRzJNIChSOEE3NzRBMSkgU29DIGJpbmRp
+bmdzLg0KPiA+DQo+ID4gVGhlIFJaL0cyTSBTb0MgaXMgc2ltaWxhciB0byBSLUNhciBNMy1XIChS
+OEE3Nzk2KS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5y
+ZW5lc2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5j
+YXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tZWRpYS9yZW5lc2FzLHJjYXItY3NpMi50eHQgfCA1ICsrKy0tDQo+ID4g
+IDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4N
+Cj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQoNClJlZ2FyZHMs
+DQpCaWp1DQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgR21iSCxHZXNjaGFlZnRzZnVl
+aHJlci9QcmVzaWRlbnQgOiBNaWNoYWVsIEhhbm5hd2FsZCwgU2l0eiBkZXIgR2VzZWxsc2NoYWZ0
+L1JlZ2lzdGVyZWQgb2ZmaWNlOiBEdWVzc2VsZG9yZiwgQXJjYWRpYXN0cmFzc2UgMTAsIDQwNDcy
+IER1ZXNzZWxkb3JmLCBHZXJtYW55LEhhbmRlbHNyZWdpc3Rlci9Db21tZXJjaWFsIFJlZ2lzdGVy
+OiBEdWVzc2VsZG9yZiwgSFJCIDM3MDggVVN0LUlETnIuL1RheCBpZGVudGlmaWNhdGlvbiBuby46
+IERFIDExOTM1MzQwNiBXRUVFLVJlZy4tTnIuL1dFRUUgcmVnLiBuby46IERFIDE0OTc4NjQ3DQo=
