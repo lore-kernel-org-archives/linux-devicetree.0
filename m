@@ -1,12 +1,13 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 09/10] arm64: dts: allwinner: a64: Add msgbox node
-Date: Thu, 28 Feb 2019 23:29:46 -0600
-Message-ID: <20190301052947.32032-10-samuel@sholland.org>
+Subject: [PATCH v2 04/10] dt-bindings: mailbox: Add a sunxi
+ message box binding
+Date: Thu, 28 Feb 2019 23:29:41 -0600
+Message-ID: <20190301052947.32032-5-samuel@sholland.org>
 References: <20190301052947.32032-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBU4G4PRQKGQE3AQKCQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBUEG4PRQKGQED2RTVLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190301052947.32032-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,35 +20,64 @@ To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A64 SoC contains a message box that can be used to send messages and
-interrupts back and forth between the ARM application CPUs and the ARISC
-coprocessor. Add a device tree node for it.
+This mailbox hardware is present in Allwinner sun8i, sun9i, and sun50i
+SoCs. Add a device tree binding for it.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../bindings/mailbox/sunxi-msgbox.txt         | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 2abb335145a6..29ee8f0f833a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -447,6 +447,16 @@
- 			reg = <0x1c14000 0x400>;
- 		};
- 
-+		msgbox: mailbox@1c17000 {
-+			compatible = "allwinner,sun50i-a64-msgbox",
-+				     "allwinner,sun6i-a31-msgbox";
-+			reg = <0x01c17000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MSGBOX>;
-+			resets = <&ccu RST_BUS_MSGBOX>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <1>;
-+		};
+diff --git a/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt b/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+new file mode 100644
+index 000000000000..4560ab8efeca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+@@ -0,0 +1,44 @@
++Allwinner sun6i Message Box
++===========================
 +
- 		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-a33-musb";
- 			reg = <0x01c19000 0x0400>;
++The hardware message box on sun6i and newer sunxi SoCs is a two-user mailbox
++controller containing 8 unidirectional FIFOs. An interrupt is raised for
++received messages, but software must poll to know when a transmitted message has
++been acknowledged by the remote user.
++
++Refer to ./mailbox.txt for generic information about mailbox device-tree
++bindings.
++
++Mailbox Device Node:
++====================
++
++Required properties:
++--------------------
++- compatible:		Must contain at least "allwinner,sun6i-a31-msgbox".
++			Should also contain another SoC-specific string when
++			used on other SoCs which are compatible, e.g.
++			- allwinner,sun6i-a31-msgbox
++			- allwinner,sun8i-a83t-msgbox, allwinner,sun6i-a31-msgbox
++			- allwinner,sun8i-h3-msgbox, allwinner,sun6i-a31-msgbox
++			- allwinner,sun9i-a80-msgbox, allwinner,sun6i-a31-msgbox
++			- allwinner,sun50i-a64-msgbox, allwinner,sun6i-a31-msgbox
++			- allwinner,sun50i-h6-msgbox, allwinner,sun6i-a31-msgbox
++- reg:			Contains the mailbox register address range (base
++			address and length).
++- clocks:		phandle for the bus clock controller and specifier.
++- resets:		phandle for the bus reset controller and specifier.
++- interrupts:		Contains interrupt information for the mailbox.
++- #mbox-cells:		Must be 1.
++
++Example:
++--------
++
++	msgbox: mailbox@1c17000 {
++		compatible = "allwinner,sun8i-h3-msgbox",
++		             "allwinner,sun6i-a31-msgbox";
++		reg = <0x01c17000 0x1000>;
++		clocks = <&ccu CLK_BUS_MSGBOX>;
++		resets = <&ccu RST_BUS_MSGBOX>;
++		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++		#mbox-cells = <1>;
++	};
 -- 
 2.19.2
