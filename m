@@ -1,45 +1,36 @@
-Return-Path: <SRS0=/CI9=RE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from imap1.codethink.co.uk ([176.9.8.82]:34221 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388736AbfCAPww (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Mar 2019 10:52:52 -0500
-From: Kejia Hu <kejia.hu@codethink.co.uk>
-Subject: [PATCH v2 2/6] soc/tegra: fuse: add is_automotive for tegra30
-Date: Fri,  1 Mar 2019 15:35:36 +0000
-Message-Id: <20190301153540.14954-3-kejia.hu@codethink.co.uk>
-In-Reply-To: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
-References: <20190301153540.14954-1-kejia.hu@codethink.co.uk>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, digetx@gmail.com
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Kejia Hu <kejia.hu@codethink.co.uk>
+Return-Path: <SRS0=Q0RW=RE=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH RESEND V2 0/4] Add VIN support to RZ/G2M
+Date: Fri,  1 Mar 2019 15:45:32 +0000
+Message-Id: <1551455136-45574-1-git-send-email-biju.das@bp.renesas.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Ben Dooks <ben.dooks@codethink.co.uk>
+This patch series aims to add VIN support for RZ/G2M SoC.
+RZ/G2M SoC is similar to R-Car Gen3 M3-W SoC.
 
-Add an is_automotive flag to the tegra-sku info, and
-add an implementation for the tegra30 from what we
-know from all the autotmotive parts we've seen.
+This patchset is based on media_tree git
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Kejia Hu <kejia.hu@codethink.co.uk>
----
- drivers/soc/tegra/fuse/fuse-tegra30.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra30.c b/drivers/soc/tegra/fuse/fuse-tegra30.c
-index 257e254c6137..d92025e486e0 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra30.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra30.c
-@@ -106,6 +106,10 @@ static void __init tegra30_fuse_init(struct tegra_fuse *fuse)
- 	if (fuse->soc->speedo_init)
- 		fuse->soc->speedo_init(&tegra_sku_info);
+V1-->V2
+  *Rebased and resent. Not sending patch5 in this patch series since it is
+   present in media tree commit 0c85e78fb1d3742c 
+   ("arm64: dts: renesas: r8a774a1: Add VIN and CSI-2 nodes") 
  
-+	if (tegra_sku_info.revision == TEGRA_REVISION_A03 &&
-+	    tegra_sku_info.sku_id == 176)
-+		tegra_sku_info.is_automotive = true;
-+
- 	tegra30_fuse_add_randomness();
- }
- #endif
+V1:
+   https://www.spinics.net/lists/devicetree/msg247956.html
+
+Biju Das (4):
+  media: dt-bindings: media: rcar-csi2: Add r8a774a1 support
+  media: rcar-csi2: Enable support for r8a774a1
+  media: dt-bindings: media: rcar_vin: Add r8a774a1 support
+  media: rcar-vin: Enable support for r8a774a1
+
+ Documentation/devicetree/bindings/media/rcar_vin.txt          | 1 +
+ Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 1 +
+ drivers/media/platform/rcar-vin/rcar-core.c                   | 4 ++++
+ drivers/media/platform/rcar-vin/rcar-csi2.c                   | 4 ++++
+ 4 files changed, 10 insertions(+)
+
 -- 
-2.11.0
+2.7.4
