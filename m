@@ -1,50 +1,48 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH  5/7] ARM: dts: stm32: add sdmmc1 support on stm32mp157c
-Date: Fri, 1 Mar 2019 09:47:46 +0100
-Message-ID: <1551430068-9456-6-git-send-email-ludovic.Barre@st.com>
-References: <1551430068-9456-1-git-send-email-ludovic.Barre@st.com>
+From: Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH 2/3] ARM: dts: stm32: enable IPCC mailbox support on
+ STM32MP157c-ed1
+Date: Fri, 1 Mar 2019 10:18:38 +0100
+Message-ID: <1551431919-23410-3-git-send-email-fabien.dessenne@st.com>
+References: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551430068-9456-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Cc: Fabien Dessenne <fabien.dessenne@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+Enable STM32 IPCC mailbox driver for STM32MP157c-ed1 board.
 
-This patch adds support of sdmmc1 on stm32mp157c.
-
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index f8bbfff..667f560 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -1050,6 +1050,20 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 10dc7c0..626ceb3 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -83,6 +83,10 @@
+ 	status = "okay";
+ };
  
-+		sdmmc1: sdmmc@58005000 {
-+			compatible = "arm,pl18x", "arm,primecell";
-+			arm,primecell-periphid = <0x10153180>;
-+			reg = <0x58005000 0x1000>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names	= "cmd_irq";
-+			clocks = <&rcc SDMMC1_K>;
-+			clock-names = "apb_pclk";
-+			resets = <&rcc SDMMC1_R>;
-+			cap-sd-highspeed;
-+			cap-mmc-highspeed;
-+			max-frequency = <120000000>;
-+		};
++&ipcc {
++	status = "okay";
++};
 +
- 		crc1: crc@58009000 {
- 			compatible = "st,stm32f7-crc";
- 			reg = <0x58009000 0x400>;
+ &iwdg2 {
+ 	timeout-sec = <32>;
+ 	status = "okay";
 -- 
 2.7.4
