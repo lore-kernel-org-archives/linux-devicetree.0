@@ -1,8 +1,8 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 01/10] clk: sunxi-ng: sun8i: Mark the msgbox
+Subject: [PATCH v2 03/10] clk: sunxi-ng: sun50i: Mark the msgbox
  clock as critical
-Date: Thu, 28 Feb 2019 23:29:38 -0600
-Message-ID: <20190301052947.32032-2-samuel@sholland.org>
+Date: Thu, 28 Feb 2019 23:29:40 -0600
+Message-ID: <20190301052947.32032-4-samuel@sholland.org>
 References: <20190301052947.32032-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
@@ -32,50 +32,22 @@ Linux performs a SMC into EL3, as both the firmware and Linux can run
 concurrently on separate CPUs. So it is never safe for Linux to turn
 this clock off, and it should be marked as critical.
 
-At this time, such power management firmware only exists for the H5.
+At this time, such power management firmware only exists for the A64.
 However, it makes sense to take care of all CCU drivers now for
 consistency, and to ease the transition in the future, once firmware is
 ported to the other SoCs.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-a23.c  | 2 +-
- drivers/clk/sunxi-ng/ccu-sun8i-a33.c  | 2 +-
- drivers/clk/sunxi-ng/ccu-sun8i-a83t.c | 2 +-
- drivers/clk/sunxi-ng/ccu-sun8i-h3.c   | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 2 +-
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
-index a4fa2945f230..22d09cb20326 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
-@@ -263,7 +263,7 @@ static SUNXI_CCU_GATE(bus_de_fe_clk,	"bus-de-fe",	"ahb1",
- static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
- 		      0x064, BIT(20), 0);
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x064, BIT(21), 0);
-+		      0x064, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x064, BIT(22), 0);
- static SUNXI_CCU_GATE(bus_drc_clk,	"bus-drc",	"ahb1",
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
-index c7bf814dfd2b..6d25b7a1c81e 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
-@@ -275,7 +275,7 @@ static SUNXI_CCU_GATE(bus_de_fe_clk,	"bus-de-fe",	"ahb1",
- static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
- 		      0x064, BIT(20), 0);
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x064, BIT(21), 0);
-+		      0x064, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x064, BIT(22), 0);
- static SUNXI_CCU_GATE(bus_drc_clk,	"bus-drc",	"ahb1",
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-index 2d6555d73170..85809c454b1f 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-@@ -347,7 +347,7 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+index 932836d26e2b..7780e855c56f 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+@@ -350,7 +350,7 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
  static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
  		      0x064, BIT(20), 0);
  static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
@@ -84,18 +56,18 @@ index 2d6555d73170..85809c454b1f 100644
  static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
  		      0x064, BIT(22), 0);
  
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-index e71e2451c2e3..d09629688fd4 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-@@ -281,7 +281,7 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
- static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
- 		      0x064, BIT(20), 0);
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x064, BIT(21), 0);
-+		      0x064, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x064, BIT(22), 0);
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+index 139e8389615c..a7fee407a1c8 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+@@ -340,7 +340,7 @@ static SUNXI_CCU_GATE(bus_dma_clk, "bus-dma", "psi-ahb1-ahb2",
+ 		      0x70c, BIT(0), 0);
  
+ static SUNXI_CCU_GATE(bus_msgbox_clk, "bus-msgbox", "psi-ahb1-ahb2",
+-		      0x71c, BIT(0), 0);
++		      0x71c, BIT(0), CLK_IS_CRITICAL);
+ 
+ static SUNXI_CCU_GATE(bus_spinlock_clk, "bus-spinlock", "psi-ahb1-ahb2",
+ 		      0x72c, BIT(0), 0);
 -- 
 2.19.2
