@@ -1,83 +1,266 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v4 1/9] staging: iio: ad7780: add gain & filter gpio
- support
-Date: Fri, 1 Mar 2019 10:42:02 +0300
-Message-ID: <20190301074024.GA9828@kadam>
-References: <cover.1551358569.git.renatogeh@gmail.com>
- <b83c0558a600cb44677b0d06f31e014be550b8bf.1551358569.git.renatogeh@gmail.com>
- <4f945f058c8536a2731c4de3e0b9227a41cd2891.camel@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <4f945f058c8536a2731c4de3e0b9227a41cd2891.camel@analog.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "lars@metafoo.de" <lars@metafoo.de>, "Hennerich,
- Michael" <Michael.Hennerich@analog.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "renatogeh@gmail.com" <renatogeh@gmail.com>, "Popa,
- Stefan Serban" <StefanSerban.Popa@analog.com>, "jic23@kernel.org" <jic23@kernel.org>
+From: Alison Wang <alison.wang@nxp.com>
+Subject: [PATCH v3] arm64: dts: ls1028a: Add Audio DT nodes
+Date: Fri,  1 Mar 2019 15:46:32 +0800
+Message-ID: <20190301074632.887-1-alison.wang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, leoyang.li@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: alison.wang@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 06:56:14AM +0000, Ardelean, Alexandru wrote:
-> On Thu, 2019-02-28 at 11:23 -0300, Renato Lui Geh wrote:
-> > 
-> > 
-> > Previously, the AD7780 driver only supported gpio for the 'powerdown'
-> > pin. This commit adds suppport for the 'gain' and 'filter' pin.
-> > 
-> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-> > Signed-off-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
-> > Co-developed-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
-> > ---
-> > Changes in v3:
-> >  - Renamed ad7780_chip_info's filter to odr
-> >  - Renamed ad778x_filter to ad778x_odr_avail
-> >  - Changed vref variable from unsigned int to unsigned long long to avoid
-> >    overflow
-> >  - Removed unnecessary AD_SD_CHANNEL macro
-> > Changes in v4:
-> >  - Removed useless macro
-> >  - Added default case for switch to suppress warning
-> >  - Removed chunks belonging to filter reading, adding these as a
-> >    patch for itself
-> > 
-> >  drivers/staging/iio/adc/ad7780.c | 90 +++++++++++++++++++++++++++++---
-> >  1 file changed, 84 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/staging/iio/adc/ad7780.c
-> > b/drivers/staging/iio/adc/ad7780.c
-> > index c4a85789c2db..87fbcf510d45 100644
-> > --- a/drivers/staging/iio/adc/ad7780.c
-> > +++ b/drivers/staging/iio/adc/ad7780.c
-> > @@ -39,6 +39,12 @@
-> >  #define AD7170_PATTERN         (AD7780_PAT0 | AD7170_PAT2)
-> >  #define AD7170_PATTERN_MASK    (AD7780_PAT0 | AD7780_PAT1 | AD7170_PAT2)
-> > 
-> > +#define AD7780_GAIN_MIDPOINT   64
-> > +#define AD7780_FILTER_MIDPOINT 13350
-> > +
-> > +static const unsigned int ad778x_gain[2]      = { 1, 128 };
-> > +static const unsigned int ad778x_odr_avail[2] = { 10000, 16700 };
-> 
-> ad778x_odr_avail[2] is not used in this patch, so it should probably go
-> into the next one 
-> (i.e. staging: iio: ad7780: add filter reading to ad778x )
-> 
-> one good way of catching stuff like this is to do interactive rebase and
-> compile your driver on each patch to see if the compiler catches this;
-> i suspect the compiler would have thrown an error for this change
-> 
+This patch adds Audio DT nodes for LS1028ARDB and LS1028AQDS boards.
 
-GCC (v7.3) doesn't complain about unused variables if they're const.
+Signed-off-by: Alison Wang <alison.wang@nxp.com>
+---
+Changes in v3:
+ - Sort EDMA node in unit-address. 
 
-regards,
-dan carpenter
+Changes in v2:
+ - Modify some nodes' names.
+ - Use GIC_SPI and IRQ_TYPE_LEVEL_HIGH.
+
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |   62 ++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   63 +++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   57 +++++++++++++++++++
+ 3 files changed, 182 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index 14c79f4..b359068 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -32,6 +32,49 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x1 0x00000000>;
+ 	};
++
++	sys_mclk: clock-mclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++	};
++
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,widgets =
++			"Microphone", "Microphone Jack",
++			"Headphone", "Headphone Jack",
++			"Speaker", "Speaker Ext",
++			"Line", "Line In Jack";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"Microphone Jack", "Mic Bias",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT",
++			"Speaker Ext", "LINE_OUT";
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai1>;
++			frame-master;
++			bitclock-master;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
++			frame-master;
++			bitclock-master;
++			system-clock-frequency = <25000000>;
++		};
++	};
+ };
+ 
+ &duart0 {
+@@ -89,5 +132,24 @@
+ 				reg = <0x57>;
+ 			};
+ 		};
++
++		i2c@5 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x5>;
++
++			sgtl5000: audio-codec@a {
++				#sound-dai-cells = <0>;
++				compatible = "fsl,sgtl5000";
++				reg = <0xa>;
++				VDDA-supply = <&reg_1p8v>;
++				VDDIO-supply = <&reg_1p8v>;
++				clocks = <&sys_mclk>;
++			};
++		};
+ 	};
+ };
++
++&sai1 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index fdeb417..50ca51a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -28,6 +28,49 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x1 0x0000000>;
+ 	};
++
++	sys_mclk: clock-mclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++	};
++
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,widgets =
++			"Microphone", "Microphone Jack",
++			"Headphone", "Headphone Jack",
++			"Speaker", "Speaker Ext",
++			"Line", "Line In Jack";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"Microphone Jack", "Mic Bias",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT",
++			"Speaker Ext", "LINE_OUT";
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai4>;
++			frame-master;
++			bitclock-master;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
++			frame-master;
++			bitclock-master;
++			system-clock-frequency = <25000000>;
++		};
++	};
+ };
+ 
+ &i2c0 {
+@@ -39,6 +82,22 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x1>;
++
++			sgtl5000: audio-codec@a {
++				#sound-dai-cells = <0>;
++				compatible = "fsl,sgtl5000";
++				reg = <0xa>;
++				VDDA-supply = <&reg_1p8v>;
++				VDDIO-supply = <&reg_1p8v>;
++				clocks = <&sys_mclk>;
++				sclk-strength = <3>;
++			};
++		};
++
+ 		i2c@2 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -71,3 +130,7 @@
+ &duart1 {
+ 	status = "okay";
+ };
++
++&sai4 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 36ef9c5..c085833 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -240,6 +240,21 @@
+ 			status = "disabled";
+ 		};
+ 
++		edma0: dma-controller@22c0000 {
++			#dma-cells = <2>;
++			compatible = "fsl,vf610-edma";
++			reg = <0x0 0x22c0000 0x0 0x10000>,
++			      <0x0 0x22d0000 0x0 0x10000>,
++			      <0x0 0x22e0000 0x0 0x10000>;
++			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "edma-tx", "edma-err";
++			dma-channels = <32>;
++			clock-names = "dmamux0", "dmamux1";
++			clocks = <&clockgen 4 1>,
++				 <&clockgen 4 1>;
++		};
++
+ 		gpio1: gpio@2300000 {
+ 			compatible = "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2300000 0x0 0x10000>;
+@@ -340,5 +355,47 @@
+ 				     <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
++
++		sai1: audio-controller@f100000 {
++			#sound-dai-cells = <0>;
++			compatible = "fsl,vf610-sai";
++			reg = <0x0 0xf100000 0x0 0x10000>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
++				 <&clockgen 4 1>, <&clockgen 4 1>;
++			clock-names = "bus", "mclk1", "mclk2", "mclk3";
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 4>,
++			       <&edma0 1 3>;
++			status = "disabled";
++		};
++
++		sai2: audio-controller@f110000 {
++			#sound-dai-cells = <0>;
++			compatible = "fsl,vf610-sai";
++			reg = <0x0 0xf110000 0x0 0x10000>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
++				 <&clockgen 4 1>, <&clockgen 4 1>;
++			clock-names = "bus", "mclk1", "mclk2", "mclk3";
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 6>,
++			       <&edma0 1 5>;
++			status = "disabled";
++		};
++
++		sai4: audio-controller@f130000 {
++			#sound-dai-cells = <0>;
++			compatible = "fsl,vf610-sai";
++			reg = <0x0 0xf130000 0x0 0x10000>;
++			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
++				 <&clockgen 4 1>, <&clockgen 4 1>;
++			clock-names = "bus", "mclk1", "mclk2", "mclk3";
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 10>,
++			       <&edma0 1 9>;
++			status = "disabled";
++		};
+ 	};
+ };
+-- 
+1.7.1
