@@ -1,93 +1,42 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] clk: meson-g12a: add cpu clock bindings
-Date: Fri, 1 Mar 2019 17:43:18 +0100
-Message-ID: <d841b285-7994-fd7a-215b-13314bd0b298@baylibre.com>
-References: <20190301102140.7181-1-narmstrong@baylibre.com>
- <20190301102140.7181-2-narmstrong@baylibre.com>
- <CAFBinCCtmykL-ccWd9cporEOmxeUKC-RgrP3wfuSuYoAEjrGWA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Subject: [PATCH 1/3] dt-bindings: mmc: Add DTS property to disable DCMDs on Arasan controllers
+Date: Fri,  1 Mar 2019 17:43:45 +0100
+Message-ID: <20190301164349.60589-1-christoph.muellner@theobroma-systems.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCCtmykL-ccWd9cporEOmxeUKC-RgrP3wfuSuYoAEjrGWA@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: jbrunet@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, shawn.lin@rock-chips.com, ulf.hansson@linaro.org, adrian.hunter@intel.com
+Cc: Christoph Muellner <christoph.muellner@theobroma-systems.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Viresh Kumar <viresh.kumar@linaro.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Ezequiel Garcia <ezequiel@collabora.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
+queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
+which exposes a control register bit to enable the feature.
+The current implementation sets this bit unconditionally.
 
-On 01/03/2019 16:26, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> On Fri, Mar 1, 2019 at 11:22 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Add Amlogic G12A Family CPU clocks bindings, only export CPU_CLK since
->> it should be the only ID used.
-> is this also true for the CPU post-dividers (APB, ATB, AXI, CPU CLK TRACE)?
+This patch allows to surpress the feature activation,
+by specifying the property disable-cqe-dcmd.
 
-Do we need these to be exported ?
+Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+---
+ drivers/mmc/host/sdhci-of-arasan.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> 
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  drivers/clk/meson/g12a.h              | 24 +++++++++++++++++++++++-
->>  include/dt-bindings/clock/g12a-clkc.h |  1 +
->>  2 files changed, 24 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
->> index f399dfe1401c..4854750df902 100644
->> --- a/drivers/clk/meson/g12a.h
->> +++ b/drivers/clk/meson/g12a.h
->> @@ -166,8 +166,30 @@
->>  #define CLKID_MALI_0_DIV                       170
->>  #define CLKID_MALI_1_DIV                       173
->>  #define CLKID_MPLL_5OM_DIV                     176
->> +#define CLKID_PCIE_PLL_DCO                     178
->> +#define CLKID_PCIE_PLL_DCO_DIV2                        179
->> +#define CLKID_PCIE_PLL_OD                      180
-> how are these PCIe clock related to the CPU clocks?
-
-Oops, bad merge...
-
-> 
->> +#define CLKID_SYS_PLL_DIV16_EN                 181
->> +#define CLKID_SYS_PLL_DIV16                    182
->> +#define CLKID_CPU_CLK_DYN0_SEL                 183
->> +#define CLKID_CPU_CLK_DYN0_DIV                 184
->> +#define CLKID_CPU_CLK_DYN0                     185
->> +#define CLKID_CPU_CLK_DYN1_SEL                 186
->> +#define CLKID_CPU_CLK_DYN1_DIV                 187
->> +#define CLKID_CPU_CLK_DYN1                     188
->> +#define CLKID_CPU_CLK_DYN                      189
->> +#define CLKID_CPU_CLK_DIV16_EN                 191
->> +#define CLKID_CPU_CLK_DIV16                    192
->> +#define CLKID_CPU_CLK_APB_DIV                  193
->> +#define CLKID_CPU_CLK_APB                      194
->> +#define CLKID_CPU_CLK_ATB_DIV                  195
->> +#define CLKID_CPU_CLK_ATB                      196
->> +#define CLKID_CPU_CLK_AXI_DIV                  197
->> +#define CLKID_CPU_CLK_AXI                      198
->> +#define CLKID_CPU_CLK_TRACE_DIV                        299
->> +#define CLKID_CPU_CLK_TRACE                    200
->>
->> -#define NR_CLKS                                        178
->> +#define NR_CLKS                                        201
-> shouldn't all changes to this file (drivers/clk/meson/g12a.h) be part
-> of the patch which adds the actual clocks so the dt-bindings patch is
-> independent of the clock driver patches?
-> in this case the subject should also be updated to "dt-bindings:
-> clock: g12a: ..."
-
-I don't have any opinion, Jerome ?
-
-> 
-> 
-> Regards
-> Martin
-> 
-
-Thanks !
-
-Neil
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index c9e3e050ccc8..88dc3f00a5be 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -832,7 +832,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+ 		host->mmc_host_ops.start_signal_voltage_switch =
+ 					sdhci_arasan_voltage_switch;
+ 		sdhci_arasan->has_cqe = true;
+-		host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
++		host->mmc->caps2 |= MMC_CAP2_CQE;
++
++		if (!of_property_read_bool(np, "disable-cqe-dcmd"))
++			host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
+ 	}
+ 
+ 	ret = sdhci_arasan_add_host(sdhci_arasan);
+-- 
+2.11.0
