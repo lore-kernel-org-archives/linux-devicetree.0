@@ -1,44 +1,56 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 1/2] clk: meson-g12a: add cpu clock bindings
-Date: Fri, 1 Mar 2019 18:05:12 +0100
-Message-ID: <CAFBinCDt=BB_nAJ5P1TX0ahmOiqTaLGrqv5X4v2u62KCPw1UGQ@mail.gmail.com>
-References: <20190301102140.7181-1-narmstrong@baylibre.com>
- <20190301102140.7181-2-narmstrong@baylibre.com> <CAFBinCCtmykL-ccWd9cporEOmxeUKC-RgrP3wfuSuYoAEjrGWA@mail.gmail.com>
- <d841b285-7994-fd7a-215b-13314bd0b298@baylibre.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2] arm64: dts: allwinner: a64-amarula-relic: Add STLM75 sensor
+Date: Fri,  1 Mar 2019 22:40:51 +0530
+Message-ID: <20190301171051.6964-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d841b285-7994-fd7a-215b-13314bd0b298@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: jbrunet@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+Amarula A64 Relic has STLM75 sensor for digital temperature
+and thermal watchdog.
 
-On Fri, Mar 1, 2019 at 5:43 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi Martin,
->
-> On 01/03/2019 16:26, Martin Blumenstingl wrote:
-> > Hi Neil,
-> >
-> > On Fri, Mar 1, 2019 at 11:22 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>
-> >> Add Amlogic G12A Family CPU clocks bindings, only export CPU_CLK since
-> >> it should be the only ID used.
-> > is this also true for the CPU post-dividers (APB, ATB, AXI, CPU CLK TRACE)?
->
-> Do we need these to be exported ?
-I'm not sure as I couldn't find more details about APB, ATB and AXI on G12A:
-- APB and ATB may be needed by the CoreSight bindings
-(Documentation/devicetree/bindings/arm/coresight.txt)
-- AXI may be needed by the VPU driver (the S912 datasheet mentions in
-OSD1_AFBCD_ENABLE: "id_fifo_thrd : unsigned , default = 64, axi id
-fifo threshold")
+Add support for it.
 
-if you don't know either then I'm fine with skipping them for now, we
-can still export them later.
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- change node name from temp to sensor 
+- compatible patches applied in linux-next,
+  fyi:
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=985e225142cf0cb826401f5448763f13ee712b3a 
 
+ .../dts/allwinner/sun50i-a64-amarula-relic.dts    | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Martin
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index 6cb2b7f0c817..3575db216016 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -34,6 +34,21 @@
+ 	status = "okay";
+ };
+ 
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins>;
++	status = "okay";
++
++	sensor@48 {
++		compatible = "st,stlm75";
++		reg = <0x48>;
++	};
++};
++
++&i2c0_pins {
++	bias-pull-up;
++};
++
+ &mmc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+-- 
+2.18.0.321.gffc6fa0e3
