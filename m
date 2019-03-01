@@ -1,13 +1,12 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 03/10] clk: sunxi-ng: sun50i: Mark the msgbox
- clock as critical
-Date: Thu, 28 Feb 2019 23:29:40 -0600
-Message-ID: <20190301052947.32032-4-samuel@sholland.org>
+Subject: [PATCH v2 06/10] ARM: dts: sunxi: a80: Add msgbox node
+Date: Thu, 28 Feb 2019 23:29:43 -0600
+Message-ID: <20190301052947.32032-7-samuel@sholland.org>
 References: <20190301052947.32032-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBUEG4PRQKGQED2RTVLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBUMG4PRQKGQE2AI2SYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190301052947.32032-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,54 +19,35 @@ To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The msgbox clock is critical because the hardware is shared between
-Linux and system firmware. The message box may be used by the EL3 secure
-monitor's PSCI implementation. On 64-bit sunxi SoCs, this is provided by
-ARM TF-A; 32-bit SoCs use a different implementation. The secure monitor
-uses the message box to forward requests to power management firmware
-running on a separate CPU.
-
-It is not enough for the secure monitor to enable the clock each time
-Linux performs a SMC into EL3, as both the firmware and Linux can run
-concurrently on separate CPUs. So it is never safe for Linux to turn
-this clock off, and it should be marked as critical.
-
-At this time, such power management firmware only exists for the A64.
-However, it makes sense to take care of all CCU drivers now for
-consistency, and to ease the transition in the future, once firmware is
-ported to the other SoCs.
+The A80 SoC contains a message box that can be used to send messages and
+interrupts back and forth between the ARM application CPUs and the ARISC
+coprocessor. Add a device tree node for it.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 2 +-
- drivers/clk/sunxi-ng/ccu-sun50i-h6.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun9i-a80.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-index 932836d26e2b..7780e855c56f 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-@@ -350,7 +350,7 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
- static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
- 		      0x064, BIT(20), 0);
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x064, BIT(21), 0);
-+		      0x064, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x064, BIT(22), 0);
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index d9532fb1ef65..10e878f94fc0 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -283,6 +283,16 @@
+ 			};
+ 		};
  
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-index 139e8389615c..a7fee407a1c8 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-@@ -340,7 +340,7 @@ static SUNXI_CCU_GATE(bus_dma_clk, "bus-dma", "psi-ahb1-ahb2",
- 		      0x70c, BIT(0), 0);
- 
- static SUNXI_CCU_GATE(bus_msgbox_clk, "bus-msgbox", "psi-ahb1-ahb2",
--		      0x71c, BIT(0), 0);
-+		      0x71c, BIT(0), CLK_IS_CRITICAL);
- 
- static SUNXI_CCU_GATE(bus_spinlock_clk, "bus-spinlock", "psi-ahb1-ahb2",
- 		      0x72c, BIT(0), 0);
++		msgbox: mailbox@803000 {
++			compatible = "allwinner,sun9i-a80-msgbox",
++				     "allwinner,sun6i-a31-msgbox";
++			reg = <0x00803000 0x1000>;
++			clocks = <&ccu CLK_BUS_MSGBOX>;
++			resets = <&ccu RST_BUS_MSGBOX>;
++			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			#mbox-cells = <1>;
++		};
++
+ 		ehci0: usb@a00000 {
+ 			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
+ 			reg = <0x00a00000 0x100>;
 -- 
 2.19.2
