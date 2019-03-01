@@ -1,50 +1,44 @@
-Return-Path: <SRS0=Wpk1=RK=ragnatech.se=niklas.soderlund@kernel.org>
-Date: Thu, 7 Mar 2019 01:44:43 +0100
-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH 1/5] media: dt-bindings: media: rcar-csi2: Add r8a774a1
- support
-Message-ID: <20190307004443.GO9239@bigcity.dyn.berto.se>
-References: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
- <1536589878-26218-2-git-send-email-biju.das@bp.renesas.com>
- <TYXPR01MB1775F18270FB477D010C180EC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <8a5429a0-b4c5-a208-3e56-406bd031b01b@xs4all.nl>
- <20190301130613.GB32244@pendragon.ideasonboard.com>
+Return-Path: <SRS0=Q0RW=RE=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH RESEND V2 1/4] media: dt-bindings: media: rcar-csi2: Add r8a774a1 support
+Date: Fri,  1 Mar 2019 15:45:33 +0000
+Message-Id: <1551455136-45574-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1551455136-45574-1-git-send-email-biju.das@bp.renesas.com>
+References: <1551455136-45574-1-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190301130613.GB32244@pendragon.ideasonboard.com>
-To: Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Biju Das <biju.das@bp.renesas.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Hans, Laurent,
+Document RZ/G2M (R8A774A1) SoC bindings.
 
-On 2019-03-01 15:06:13 +0200, Laurent Pinchart wrote:
-> Hi Hans,
-> 
-> On Fri, Mar 01, 2019 at 01:55:53PM +0100, Hans Verkuil wrote:
-> > Hi Fabrizio,
-> > 
-> > It looks like this series fell through the cracks.
-> > 
-> > I looked at it and the main problem is that it is missing a Reviewed-by
-> > from Rob Herring (devicetree maintainer). It's a bit surprising since he
-> > is usually fairly prompt.
-> > 
-> > I recommend that you rebase and repost it and I'll delegate the v2 series
-> > to me so we can hopefully get it in for 5.2 (5.1 is likely too late) once
-> > Rob reviews it.
-> > 
-> > BTW, I'm the one who usually processes rcar patches. But it was delegated in
-> > patchwork to Laurent, so I never saw it.
-> 
-> I handle the VSP and FDP patches. I propose delegating the CSI-2 and VIN
-> to Niklas.
+The RZ/G2M SoC is similar to R-Car M3-W (R8A7796).
 
-I be more then happy to collect patches for R-Car VIN and CSI-2 and send
-PRs for them to you Hans. Would that work for you Hans?
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+V1-->V2
+  * No change
+---
+ Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+index d63275e..9932458 100644
+--- a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
++++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+@@ -8,6 +8,7 @@ R-Car VIN module, which provides the video capture capabilities.
+ Mandatory properties
+ --------------------
+  - compatible: Must be one or more of the following
++   - "renesas,r8a774a1-csi2" for the R8A774A1 device.
+    - "renesas,r8a774c0-csi2" for the R8A774C0 device.
+    - "renesas,r8a7795-csi2" for the R8A7795 device.
+    - "renesas,r8a7796-csi2" for the R8A7796 device.
 -- 
-Regards,
-Niklas S�derlund
+2.7.4
