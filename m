@@ -1,55 +1,75 @@
-From: Alison Wang <alison.wang@nxp.com>
-Subject: RE: [PATCH v2] arm64: dts: ls1028a: Add Audio DT nodes
-Date: Fri, 1 Mar 2019 07:35:20 +0000
-Message-ID: <VI1PR04MB4062B92CC89BA1DC4591426EF4760@VI1PR04MB4062.eurprd04.prod.outlook.com>
-References: <20190220084457.31357-1-alison.wang@nxp.com>
- <20190301024107.GN26041@dragon>
+From: "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
+Subject: Re: [PATCH v4 5/9] staging: iio: ad7780: move regulator to after
+ GPIO init
+Date: Fri, 1 Mar 2019 07:38:45 +0000
+Message-ID: <28d78cfc00bc5414c7539879df46200d61e52ee1.camel@analog.com>
+References: <cover.1551358569.git.renatogeh@gmail.com>
+         <93cabb081605ac356f2f0d9a9a41d5bc5e63820d.1551358569.git.renatogeh@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190301024107.GN26041@dragon>
+In-Reply-To: <93cabb081605ac356f2f0d9a9a41d5bc5e63820d.1551358569.git.renatogeh@gmail.com>
 Content-Language: en-US
+Content-ID: <5C1D24390C95A74DA6E0B9CA09D7E998@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "jic23@kernel.org" <jic23@kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "renatogeh@gmail.com" <renatogeh@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Wed, Feb 20, 2019 at 04:44:57PM +0800, Alison Wang wrote:
-> > This patch adds Audio DT nodes for LS1028ARDB and LS1028AQDS boards.
-> >
-> > Signed-off-by: Alison Wang <alison.wang@nxp.com>
-> > ---
-> > Changes in v2:
-> >  - Modify some nodes' names.
-> >  - Use GIC_SPI and IRQ_TYPE_LEVEL_HIGH.
-> >
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |   62
-> ++++++++++++++++++++
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   63
-> +++++++++++++++++++++
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   57
-> +++++++++++++++++++
-> >  3 files changed, 182 insertions(+), 0 deletions(-)
-> >  <snip>
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > index a8cf92a..de590ec 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > @@ -335,5 +335,62 @@
-> >  				     <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 207
-> IRQ_TYPE_LEVEL_HIGH>,
-> >  				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209
-> IRQ_TYPE_LEVEL_HIGH>;
-> >  		};
-> > +
-> > +		edma0: dma-controller@22c0000 {
->=20
-> Please sort the node in unit-address.
->=20
-[Alison] Ok, I will update it in v3. Thanks.
-
-
-Best Regards,
-Alison Wang
+T24gVGh1LCAyMDE5LTAyLTI4IGF0IDExOjI1IC0wMzAwLCBSZW5hdG8gTHVpIEdlaCB3cm90ZToN
+Cj4gDQo+IA0KPiBUbyBtYWludGFpbiBjb25zaXN0ZW5jeSBiZXR3ZWVuIGFkNzc4MF9wcm9iZSBh
+bmQgYWQ3NzgwX3JlbW92ZSBvcmRlcnMsDQo+IHJlZ3VsYXRvciBpbml0aWFsaXphdGlvbiBoYXMg
+YmVlbiBtb3ZlZCB0byBhZnRlciBHUElPIGluaXRpYWxpemF0aW9ucy4NCj4gDQo+IFNpZ25lZC1v
+ZmYtYnk6IFJlbmF0byBMdWkgR2VoIDxyZW5hdG9nZWhAZ21haWwuY29tPg0KPiAtLS0NCj4gIGRy
+aXZlcnMvc3RhZ2luZy9paW8vYWRjL2FkNzc4MC5jIHwgMjYgKysrKysrKysrKysrKy0tLS0tLS0t
+LS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxMyBkZWxldGlvbnMo
+LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDc3ODAuYw0K
+PiBiL2RyaXZlcnMvc3RhZ2luZy9paW8vYWRjL2FkNzc4MC5jDQo+IGluZGV4IGFkNzYxN2EzYTE0
+MS4uMTJhZWYwZjEwMWJjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9h
+ZDc3ODAuYw0KPiArKysgYi9kcml2ZXJzL3N0YWdpbmcvaWlvL2FkYy9hZDc3ODAuYw0KPiBAQCAt
+MjU1LDE2ICsyNTUsNiBAQCBzdGF0aWMgaW50IGFkNzc4MF9wcm9iZShzdHJ1Y3Qgc3BpX2Rldmlj
+ZSAqc3BpKQ0KPiANCj4gICAgICAgICBhZF9zZF9pbml0KCZzdC0+c2QsIGluZGlvX2Rldiwgc3Bp
+LCAmYWQ3NzgwX3NpZ21hX2RlbHRhX2luZm8pOw0KPiANCj4gLSAgICAgICBzdC0+cmVnID0gZGV2
+bV9yZWd1bGF0b3JfZ2V0KCZzcGktPmRldiwgImF2ZGQiKTsNCj4gLSAgICAgICBpZiAoSVNfRVJS
+KHN0LT5yZWcpKQ0KPiAtICAgICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoc3QtPnJlZyk7DQo+
+IC0NCj4gLSAgICAgICByZXQgPSByZWd1bGF0b3JfZW5hYmxlKHN0LT5yZWcpOw0KPiAtICAgICAg
+IGlmIChyZXQpIHsNCj4gLSAgICAgICAgICAgICAgIGRldl9lcnIoJnNwaS0+ZGV2LCAiRmFpbGVk
+IHRvIGVuYWJsZSBzcGVjaWZpZWQgQVZkZA0KPiBzdXBwbHlcbiIpOw0KPiAtICAgICAgICAgICAg
+ICAgcmV0dXJuIHJldDsNCj4gLSAgICAgICB9DQo+IC0NCj4gICAgICAgICBzdC0+Y2hpcF9pbmZv
+ID0NCj4gICAgICAgICAgICAgICAgICZhZDc3ODBfY2hpcF9pbmZvX3RibFtzcGlfZ2V0X2Rldmlj
+ZV9pZChzcGkpLQ0KPiA+ZHJpdmVyX2RhdGFdOw0KPiANCj4gQEAgLTI4NCw3ICsyNzQsNyBAQCBz
+dGF0aWMgaW50IGFkNzc4MF9wcm9iZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQ0KPiAgICAgICAg
+ICAgICAgICAgcmV0ID0gUFRSX0VSUihzdC0+cG93ZXJkb3duX2dwaW8pOw0KPiAgICAgICAgICAg
+ICAgICAgZGV2X2Vycigmc3BpLT5kZXYsICJGYWlsZWQgdG8gcmVxdWVzdCBwb3dlcmRvd24gR1BJ
+TzoNCj4gJWRcbiIsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHJldCk7DQo+IC0gICAgICAg
+ICAgICAgICBnb3RvIGVycm9yX2Rpc2FibGVfcmVnOw0KPiArICAgICAgICAgICAgICAgcmV0dXJu
+IHJldDsNCj4gICAgICAgICB9DQo+IA0KPiAgICAgICAgIGlmIChzdC0+Y2hpcF9pbmZvLT5pc19h
+ZDc3OHgpIHsNCj4gQEAgLTI5NSw3ICsyODUsNyBAQCBzdGF0aWMgaW50IGFkNzc4MF9wcm9iZShz
+dHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICByZXQgPSBQ
+VFJfRVJSKHN0LT5nYWluX2dwaW8pOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJy
+KCZzcGktPmRldiwgIkZhaWxlZCB0byByZXF1ZXN0IGdhaW4gR1BJTzoNCj4gJWRcbiIsDQo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0KTsNCj4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgZ290byBlcnJvcl9kaXNhYmxlX3JlZzsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+cmV0dXJuIHJldDsNCj4gICAgICAgICAgICAgICAgIH0NCj4gDQo+ICAgICAgICAgICAgICAgICBz
+dC0+ZmlsdGVyX2dwaW8gPSBkZXZtX2dwaW9kX2dldF9vcHRpb25hbCgmc3BpLT5kZXYsDQo+IEBA
+IC0zMDYsMTAgKzI5NiwyMCBAQCBzdGF0aWMgaW50IGFkNzc4MF9wcm9iZShzdHJ1Y3Qgc3BpX2Rl
+dmljZSAqc3BpKQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKCZzcGktPmRldiwN
+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiRmFpbGVkIHRvIHJlcXVlc3QgZmls
+dGVyIEdQSU86ICVkXG4iLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldCk7
+DQo+IC0gICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyb3JfZGlzYWJsZV9yZWc7DQo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ICAgICAgICAgICAgICAgICB9DQo+
+ICAgICAgICAgfQ0KPiANCj4gKyAgICAgICBzdC0+cmVnID0gZGV2bV9yZWd1bGF0b3JfZ2V0KCZz
+cGktPmRldiwgImF2ZGQiKTsNCj4gKyAgICAgICBpZiAoSVNfRVJSKHN0LT5yZWcpKQ0KPiArICAg
+ICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoc3QtPnJlZyk7DQo+ICsNCj4gKyAgICAgICByZXQg
+PSByZWd1bGF0b3JfZW5hYmxlKHN0LT5yZWcpOw0KPiArICAgICAgIGlmIChyZXQpIHsNCj4gKyAg
+ICAgICAgICAgICAgIGRldl9lcnIoJnNwaS0+ZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBzcGVjaWZp
+ZWQgQVZkZA0KPiBzdXBwbHlcbiIpOw0KPiArICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4g
+KyAgICAgICB9DQo+ICsNCg0KSSdtIHByb2JhYmx5IG1pc3Npbmcgc29tZXRoaW5nLCBidXQgb3Ro
+ZXIgdGhhbiB0aGUgZmFjdCB0aGF0IHRoaXMgbW92ZXMgdGhlDQpyZWd1bGF0b3IgaW5pdCBhZnRl
+ciB0aGUgR1BJT3MgaW5pdCwgaXQgZG9lc24ndCBjaGFuZ2UgbXVjaC4NClRoZSBvcmRlciBvZiB0
+aGUgcHJvYmUgJiByZW1vdmUgaXMgbW9yZS1vci1sZXNzIHRoZSBzYW1lLg0KVGhlIEdQSU9zIHdp
+bGwgYmUgZnJlZSdkIHZpYSBkZXZtXyBBUEkvc3R1ZmYuDQoNCg0KPiAgICAgICAgIHJldCA9IGFk
+X3NkX3NldHVwX2J1ZmZlcl9hbmRfdHJpZ2dlcihpbmRpb19kZXYpOw0KPiAgICAgICAgIGlmIChy
+ZXQpDQo+ICAgICAgICAgICAgICAgICBnb3RvIGVycm9yX2Rpc2FibGVfcmVnOw0KPiAtLQ0KPiAy
+LjIxLjANCj4gDQo=
