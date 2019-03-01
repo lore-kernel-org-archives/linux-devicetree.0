@@ -1,49 +1,67 @@
-From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 1/3] ARM: dts: stm32: add IPCC mailbox support on STM32MP157c
-Date: Fri, 1 Mar 2019 10:18:37 +0100
-Message-ID: <1551431919-23410-2-git-send-email-fabien.dessenne@st.com>
-References: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 4/5] dt-bindings: serial: sprd: Add dma properties to
+ support DMA mode
+Date: Fri, 1 Mar 2019 17:42:32 +0800
+Message-ID: <CAMz4kuLQucODjYzei6TY1jRkP8VCY6i_8z963VuW7PWEDJLF2A@mail.gmail.com>
+References: <cover.1550560916.git.baolin.wang@linaro.org> <8f0a032f9bcce28bb0d147f9646950f64fc22a74.1550560916.git.baolin.wang@linaro.org>
+ <20190228195319.GA13133@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <20190228195319.GA13133@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Cc: Fabien Dessenne <fabien.dessenne@st.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Mark Brown <broonie@kernel.org>, lanqing.liu@unisoc.com, linux-serial@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add configuration on DT for IPCC mailbox driver.
+On Fri, 1 Mar 2019 at 03:53, Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Feb 19, 2019 at 03:31:14PM +0800, Baolin Wang wrote:
+> > From: Lanqing Liu <lanqing.liu@unisoc.com>
+> >
+> > This patch adds dmas and dma-names properties for the UART DMA mode.
+> >
+> > Signed-off-by: Lanqing Liu <lanqing.liu@unisoc.com>
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  .../devicetree/bindings/serial/sprd-uart.txt       |    6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> > index 6eb5863..9ac28f6 100644
+> > --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> > +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> > @@ -15,12 +15,18 @@ Required properties:
+> >    UART clock and source clock are optional properties, but enable clock
+> >    is required.
+> >
+> > +Optional properties:
+> > +- dma-names: Should contain "tx" for transmit and "rx" for receive channels.
+>
+> The order here doesn't match the example.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Ah, yes, will update new version to fix this. Thanks.
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 10bf338..c664b55 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -886,6 +886,21 @@
- 			status = "disabled";
- 		};
- 
-+		ipcc: mailbox@4c001000 {
-+			compatible = "st,stm32mp1-ipcc";
-+			#mbox-cells = <1>;
-+			reg = <0x4c001000 0x400>;
-+			st,proc-id = <0>;
-+			interrupts-extended =
-+				<&intc GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				<&exti 61 1>;
-+			interrupt-names = "rx", "tx", "wakeup";
-+			clocks = <&rcc IPCC>;
-+			wakeup-source;
-+			status = "disabled";
-+		};
-+
- 		rcc: rcc@50000000 {
- 			compatible = "st,stm32mp1-rcc", "syscon";
- 			reg = <0x50000000 0x1000>;
+>
+> > +- dmas: A list of dma specifiers, one for each entry in dma-names.
+> > +
+> >  Example:
+> >       uart0: serial@0 {
+> >               compatible = "sprd,sc9860-uart",
+> >                            "sprd,sc9836-uart";
+> >               reg = <0x0 0x100>;
+> >               interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> > +             dma-names = "rx", "tx";
+> > +             dmas = <&ap_dma 19 19>, <&ap_dma 20 20>;
+> >               clock-names = "enable", "uart", "source";
+> >               clocks = <&clk_ap_apb_gates 9>, <&clk_uart0>, <&ext_26m>;
+> >       };
+> > --
+> > 1.7.9.5
+> >
+
+
+
 -- 
-2.7.4
+Baolin Wang
+Best Regards
