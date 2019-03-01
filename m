@@ -1,60 +1,54 @@
-Return-Path: <SRS0=1wp7=R5=linaro.org=rui.silva@kernel.org>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v5 1/6] iio: gyro: add DT bindings to fxas21002c
-Date: Tue, 26 Mar 2019 10:16:46 +0000
-Message-Id: <20190326101651.25056-2-rui.silva@linaro.org>
-In-Reply-To: <20190326101651.25056-1-rui.silva@linaro.org>
-References: <20190326101651.25056-1-rui.silva@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>
+Return-Path: <SRS0=f0E1=RE=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 3/4] arm64: dts: renesas: r8a774c0-cat874: Add USB-HOST support
+Date: Fri,  1 Mar 2019 11:05:47 +0000
+Message-Id: <1551438348-22119-4-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1551438348-22119-1-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1551438348-22119-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, ebiharaml@si-linux.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for the FXAS21002C gyroscope.
+This patch adds USB 2.0 HOST support to the CAT874 board.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
- .../bindings/iio/gyroscope/nxp,fxas21002c.txt | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
-new file mode 100644
-index 000000000000..465e104bbf14
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/nxp,fxas21002c.txt
-@@ -0,0 +1,31 @@
-+* NXP FXAS21002C Gyroscope device tree bindings
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+index f86b3628..7d3b76f 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+@@ -76,10 +76,20 @@
+ 	};
+ };
+ 
++&ehci0 {
++	dr_mode = "host";
++	status = "okay";
++};
 +
-+http://www.nxp.com/products/sensors/gyroscopes/3-axis-digital-gyroscope:FXAS21002C
+ &extal_clk {
+ 	clock-frequency = <48000000>;
+ };
+ 
++&ohci0 {
++	dr_mode = "host";
++	status = "okay";
++};
 +
-+Required properties:
-+  - compatible : should be "nxp,fxas21002c"
-+  - reg : the I2C address of the sensor or SPI chip select number for the
-+          device.
-+  - vdd-supply: phandle to the regulator that provides power to the sensor.
-+  - vddio-supply: phandle to the regulator that provides power to the bus.
+ &pcie_bus_clk {
+ 	clock-frequency = <100000000>;
+ };
+@@ -128,3 +138,8 @@
+ 	sd-uhs-sdr104;
+ 	status = "okay";
+ };
 +
-+Optional properties:
-+  - reset-gpios : gpio used to reset the device, see gpio/gpio.txt
-+  - interrupts : device support 2 interrupts, INT1 and INT2,
-+                 the interrupts can be triggered on rising or falling edges.
-+                 See interrupt-controller/interrupts.txt
-+  - interrupt-names: should contain "INT1" or "INT2", the gyroscope interrupt
-+                     line in use.
-+  - drive-open-drain: the interrupt/data ready line will be configured
-+                      as open drain, which is useful if several sensors share
-+                      the same interrupt line. This is a boolean property.
-+                      (This binding is taken from pinctrl/pinctrl-bindings.txt)
-+
-+Example:
-+
-+gyroscope@20 {
-+	compatible = "nxp,fxas21002c";
-+	reg = <0x20>;
-+	vdd-supply = <&reg_peri_3p15v>;
-+	vddio-supply = <&reg_peri_3p15v>;
++&usb2_phy0 {
++	renesas,no-otg-pins;
++	status = "okay";
 +};
 -- 
-2.21.0
+2.7.4
