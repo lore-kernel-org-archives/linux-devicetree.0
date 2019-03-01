@@ -1,15 +1,15 @@
 Return-Path: <SRS0=Q0RW=RE=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH RESEND V2 3/4] media: dt-bindings: media: rcar_vin: Add r8a774a1 support
-Date: Fri,  1 Mar 2019 15:45:35 +0000
-Message-Id: <1551455136-45574-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1551455136-45574-1-git-send-email-biju.das@bp.renesas.com>
-References: <1551455136-45574-1-git-send-email-biju.das@bp.renesas.com>
+Subject: [PATCH RESEND v2 2/2] media: dt-bindings: media: rcar_vin: Add r8a774a1 support
+Date: Fri,  1 Mar 2019 14:24:13 +0000
+Message-Id: <1551450253-63390-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1551450253-63390-1-git-send-email-biju.das@bp.renesas.com>
+References: <1551450253-63390-1-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
 Document RZ/G2M (R8A774A1) SoC bindings.
