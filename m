@@ -1,12 +1,12 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 06/15] ARM: dts: sunxi: a83t: Add msgbox node
-Date: Fri,  1 Mar 2019 22:29:42 -0600
-Message-ID: <20190302042951.53671-7-samuel@sholland.org>
+Subject: [PATCH v3 09/15] arm64: dts: allwinner: h6: Add msgbox node
+Date: Fri,  1 Mar 2019 22:29:45 -0600
+Message-ID: <20190302042951.53671-10-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBRMN5DRQKGQESSNKOTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBR4N5DRQKGQEX3ILEKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190302042951.53671-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,35 +19,35 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A83T SoC contains a message box that can be used to send messages
-and interrupts back and forth between the ARM application CPUs and the
-ARISC coprocessor. Add a device tree node for it.
+The H6 SoC contains a message box that can be used to send messages and
+interrupts back and forth between the ARM application CPUs and the ARISC
+coprocessor. Add a device tree node for it.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 10 ++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
  1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index b099d2fbb5cd..c80c4f942439 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -546,6 +546,16 @@
- 			reg = <0x1c14000 0x400>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index d93a7add67e7..950681b2f7d9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -189,6 +189,16 @@
+ 			#interrupt-cells = <3>;
  		};
  
-+		msgbox: mailbox@1c17000 {
-+			compatible = "allwinner,sun8i-a83t-msgbox",
++		msgbox: mailbox@3003000 {
++			compatible = "allwinner,sun50i-h6-msgbox",
 +				     "allwinner,sun6i-a31-msgbox";
-+			reg = <0x01c17000 0x1000>;
++			reg = <0x03003000 0x1000>;
 +			clocks = <&ccu CLK_BUS_MSGBOX>;
 +			resets = <&ccu RST_BUS_MSGBOX>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
 +			#mbox-cells = <1>;
 +		};
 +
- 		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-a83t-musb",
- 				     "allwinner,sun8i-a33-musb";
+ 		pio: pinctrl@300b000 {
+ 			compatible = "allwinner,sun50i-h6-pinctrl";
+ 			reg = <0x0300b000 0x400>;
 -- 
 2.19.2
