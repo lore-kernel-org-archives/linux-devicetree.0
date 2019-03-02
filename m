@@ -1,74 +1,73 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Date: Sun, 3 Mar 2019 00:07:25 +0100
-Message-ID: <20190302230725.GA9225@amd>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181023170623.31820-2-dmurphy@ti.com>
- <20181024090421.GB24997@amd>
- <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com>
- <20181024145434.GC9327@bogus>
- <beb1a6e1-8120-be94-b1a4-60ea6721765d@ti.com>
- <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com>
- <20181026083703.GB19434@amd>
- <bdb73aa2-60d9-3356-f934-091f738e20a0@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v10 01/27] dt-bindings: ingenic: Add DT bindings for TCU clocks
+Date: Sat,  2 Mar 2019 20:33:47 -0300
+Message-ID: <20190302233413.14813-2-paul@crapouillou.net>
+References: <20190302233413.14813-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bdb73aa2-60d9-3356-f934-091f738e20a0@ti.com>
+In-Reply-To: <20190302233413.14813-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, lee.jones@linaro.org, tony@atomide.com
+To: Thierry Reding <thierry.reding@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
+This header provides clock numbers for the ingenic,tcu
+DT binding.
 
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+---
 
-Hi!
+Notes:
+         v2: Use SPDX identifier for the license
+    
+         v3: No change
+    
+         v4: No change
+    
+         v5: s/JZ47*_/TCU_/ and dropped *_CLK_LAST defines
+    
+         v6: No change
+    
+         v7: No change
+    
+         v8: No change
+    
+         v9: No change
+    
+         v10: No change
 
-> I just want to follow up here and let you know that I have not abandoned =
-this.
-> I am trying to rework and fix up the ti lmu binding as asked by Pavel.  I=
-ts proving
-> to be a bit of a challenge based on looking forward to what will be the i=
-mplementation.
->=20
-> I also did go offline and speak with Tony.  I have a Droid 4 so I can tes=
-t all of this on
-> production hardware as well.
->=20
-> Updated patchset will take some time to get out.
+ include/dt-bindings/clock/ingenic,tcu.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 include/dt-bindings/clock/ingenic,tcu.h
 
-Is there any progress here?
-
-This is needed for display on Droid 4, so it is somehow
-important... and Milo Kim's patches are pretty reasonable.
-
-I still believe best way forward is to merge them, and let you submit
-any improvements on top of them...
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---5vNYLRcllDrimb99
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlx7DK0ACgkQMOfwapXb+vI9cQCgrs2Ly5FO3fgyUXGv8g9QY/Zl
-F5oAoI8W7cLHWqeJEOhlQxg8yViH1z7Z
-=l6rC
------END PGP SIGNATURE-----
-
---5vNYLRcllDrimb99--
+diff --git a/include/dt-bindings/clock/ingenic,tcu.h b/include/dt-bindings/clock/ingenic,tcu.h
+new file mode 100644
+index 000000000000..d569650a7945
+--- /dev/null
++++ b/include/dt-bindings/clock/ingenic,tcu.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides clock numbers for the ingenic,tcu DT binding.
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
++#define __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
++
++#define TCU_CLK_TIMER0	0
++#define TCU_CLK_TIMER1	1
++#define TCU_CLK_TIMER2	2
++#define TCU_CLK_TIMER3	3
++#define TCU_CLK_TIMER4	4
++#define TCU_CLK_TIMER5	5
++#define TCU_CLK_TIMER6	6
++#define TCU_CLK_TIMER7	7
++#define TCU_CLK_WDT	8
++#define TCU_CLK_OST	9
++
++#endif /* __DT_BINDINGS_CLOCK_INGENIC_TCU_H__ */
+-- 
+2.11.0
