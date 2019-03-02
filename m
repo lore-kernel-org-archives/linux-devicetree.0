@@ -1,40 +1,72 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 07/12] phy: Add usb phy support for hi3660 Soc of Hisilicon
-Date: Sat, 2 Mar 2019 17:56:17 +0200
-Message-ID: <CAHp75VeZWQ42eaGqwUJ6r=XebKRk=nJM9c+OFaKoOT+jXxkDHw@mail.gmail.com>
-References: <20190302090505.65542-1-chenyu56@huawei.com> <20190302090505.65542-8-chenyu56@huawei.com>
+Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
+Date: Sat, 2 Mar 2019 18:01:29 +0200
+Message-ID: <CAHp75VdaNn4OQAQt1cU8CZ+Cton90kxmwQSG5Du7KUzPR3hSCg@mail.gmail.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com> <20190302090505.65542-11-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190302090505.65542-8-chenyu56@huawei.com>
+In-Reply-To: <20190302090505.65542-11-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Yu Chen <chenyu56@huawei.com>
-Cc: USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>, xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>, xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Chunfeng Yun <chunfeng.yun@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 2, 2019 at 11:06 AM Yu Chen <chenyu56@huawei.com> wrote:
+On Sat, Mar 2, 2019 at 11:05 AM Yu Chen <chenyu56@huawei.com> wrote:
 >
-> This driver handles usb phy power on and shutdown for hi3660 Soc of
-> Hisilicon.
+> This driver handles usb hub power on and typeC port event of HiKey960 board:
+> 1)DP&DM switching between usb hub and typeC port base on typeC port
+> state
+> 2)Control power of usb hub on Hikey960
+> 3)Control vbus of typeC port
 
-Few comments below. After fixing them, FWIW
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> +config HISI_HIKEY_USB
+> +       tristate "USB functionality of HiSilicon Hikey Platform"
+> +       depends on OF && GPIOLIB
+> +       help
+> +         If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
 
-> +#define HI3660_USB_DEFAULT_PHY_PARAM           0x1c466e3
+> +#include <linux/of.h>
 
-A bit of description would be nice to have what this value means.
+It's hard to see why this have
+depends on OF followed by above header inclusion.
 
-> +       /* delay for exit from IDDQ mode */
-> +       usleep_range(100, 100);
+> +       hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
+> +                       GPIOD_OUT_LOW);
 
-100,100 ? I think you need to give a room to scheduler, at least 20%
-margin would be good to have.
+> +       if (!hisi_hikey_usb->typec_vbus)
+> +               return -ENOENT;
 
-> +       /* delay for vbus valid */
-> +       usleep_range(100, 100);
+Hmm... Is it possible to get NULL pointer from gpiod_get() at all?
+
+> +       if (!hisi_hikey_usb->otg_switch)
+> +               return -ENOENT;
 
 Ditto.
 
+> +       /* hub-vdd33-en is optional */
+> +       hisi_hikey_usb->hub_vbus = devm_gpiod_get(dev, "hub-vdd33-en",
+> +                       GPIOD_OUT_HIGH);
+
+devm_gpio_get_optional() if it's indeed optional.
+
+> +       hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
+> +       if (!hisi_hikey_usb->role_sw)
+> +               return -EPROBE_DEFER;
+
+> +       else if (IS_ERR(hisi_hikey_usb->role_sw))
+
+Redundant 'else'
+
+> +               return PTR_ERR(hisi_hikey_usb->role_sw);
+
+> +static const struct of_device_id id_table_hisi_hikey_usb[] = {
+> +       {.compatible = "hisilicon,gpio_hubv1"},
+> +       {.compatible = "hisilicon,hikey960_usb"},
+> +       {}
+> +};
+
+MODULE_DEVICE_TABLE()?
 
 -- 
 With Best Regards,
