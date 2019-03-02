@@ -1,100 +1,85 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_3/3=5d_arm64=3a_dts=3a_rockchip=3a_Disable?=
- =?UTF-8?B?IERDTURzIG9uIFJLMzM5OSdzIGVNTUMgY29udHJvbGxlci7jgJDor7fms6jmhI8=?=
- =?UTF-8?B?77yM6YKu5Lu255SxbGludXgtbW1jLW93bmVyQHZnZXIua2VybmVsLm9yZ+S7ow==?=
- =?UTF-8?B?5Y+R44CR?=
-Date: Sat, 2 Mar 2019 08:47:45 +0800
-Message-ID: <185f44f1-c41d-cb67-d5c2-5878c05516ba@rock-chips.com>
-References: <20190301164349.60589-1-christoph.muellner@theobroma-systems.com>
- <20190301164349.60589-3-christoph.muellner@theobroma-systems.com>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v2 08/10] hikey960: Support usb functionality of Hikey960
+Date: Sat, 2 Mar 2019 09:02:51 +0800
+Message-ID: <414a5760-8283-92c6-fab8-88c15194c798@huawei.com>
+References: <20190218112310.17860-1-chenyu56@huawei.com>
+ <20190218112310.17860-9-chenyu56@huawei.com>
+ <1550544615.2210.27.camel@mhfsdcap03>
+ <c02407b4-1825-83f5-2aff-dd41ae16e2ab@huawei.com>
+ <1550820738.2210.39.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190301164349.60589-3-christoph.muellner@theobroma-systems.com>
+In-Reply-To: <1550820738.2210.39.camel@mhfsdcap03>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Muellner <christoph.muellner@theobroma-systems.com>, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, ulf.hansson@linaro.org, adrian.hunter@intel.com
-Cc: shawn.lin@rock-chips.com, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Michal Simek <michal.simek@xilinx.com>, Douglas Anderson <dianders@chromium.org>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Ezequiel Garcia <ezequiel@collabora.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2019/3/2 0:43, Christoph Muellner wrote:
-> When using direct commands (DCMDs) on an RK3399, we get spurious
-> CQE completion interrupts for the DCMD transaction slot (#31):
+Hi Chunfeng Yun,
 
-I didn't see it. Do you try any newer code, for instance, linux-next?
+On 2019/2/22 15:32, Chunfeng Yun wrote:
+> On Tue, 2019-02-19 at 11:20 +0800, Chen Yu wrote:
+>> Hi,
+>>
+>> On 2019/2/19 10:50, Chunfeng Yun wrote:
+>>>> +	if (ret)
+>>>> +		hisi_hikey_usb->typec_vbus_enable_val = 1;
+>>>> +
+>>>> +	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
+>>>> +			hisi_hikey_usb->typec_vbus_enable_val ?
+>>>> +			GPIOD_OUT_LOW : GPIOD_OUT_HIGH);
+>>>> +	if (!hisi_hikey_usb->typec_vbus)
+>>>> +		return -ENOENT;
+>>>> +	else if (IS_ERR(hisi_hikey_usb->typec_vbus))
+>>>> +		return PTR_ERR(hisi_hikey_usb->typec_vbus);
+>>>> +
+>>>> +	gpiod_direction_output(hisi_hikey_usb->typec_vbus,
+>>>> +			!hisi_hikey_usb->typec_vbus_enable_val);
+>>> maybe a simple way if use fixed regulator?
+>>>
+>> The hardware of the Hikey960 board has been fixed, and the type-c
+>> port can act as UFP. So it is better to close the vbus when Hikey960
+>> connect to host(e.g PC).
+> I guess you misunderstand what I mean?
+> Please refer to bindings/regulator/fixed-regulator.txt
+> If you control vbus by gpio, you can use fixed-regulator, it will be
+> easy to make compatible with other cases, think about using a LDO to
+> control vbus
+Sorry for misunderstanding the fixed-regulator and thanks for your advice!
+I have read bindings/regulator/fixed-regulator.txt and I think it is enough
+to use gpiod API right now.
+>>>> +
+>>>> +	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch", GPIOD_IN);
+>>>> +	if (!hisi_hikey_usb->otg_switch)
+>>>> +		return -ENOENT;
+>>>> +	else if (IS_ERR(hisi_hikey_usb->otg_switch))
+>>>> +		return PTR_ERR(hisi_hikey_usb->otg_switch);
+>>>> +
+>>>> +	gpiod_direction_output(hisi_hikey_usb->otg_switch, USB_SWITCH_TO_HUB);
+>>>> +
+>>>> +	/* hub-vdd33-en is optional */
+>>>> +	hisi_hikey_usb->hub_vbus = devm_gpiod_get(dev, "hub-vdd33-en",
+>>>> +			GPIOD_OUT_LOW);
+>>>> +	if (IS_ERR(hisi_hikey_usb->hub_vbus))
+>>>> +		return PTR_ERR(hisi_hikey_usb->hub_vbus);
+>>>> +
+>>>> +	gpiod_direction_output(hisi_hikey_usb->hub_vbus, HUB_VBUS_POWER_ON);
+>>> ditto
+>>>> +
+>>>> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
+>>>> +	if (!hisi_hikey_usb->role_sw)
+>>>> +		return -EPROBE_DEFER;
+>>>> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
+>>>> +		return PTR_ERR(hisi_hikey_usb->role_sw);
+>>>> +
+>>
+>> Thanks
+>> Yu Chen
+>>
+> 
 
-> 
-> [  931.196520] ------------[ cut here ]------------
-> [  931.201702] mmc1: cqhci: spurious TCN for tag 31
-> [  931.206906] WARNING: CPU: 0 PID: 1433 at
-> /usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
-> [  931.206909] Modules linked in:
-> [  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted
-> 4.19.8-rt6-funkadelic #1
-> [  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
-> [  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
-> [  931.206927] pc : cqhci_irq+0x2e4/0x490
-> [  931.206931] lr : cqhci_irq+0x2e4/0x490
-> [  931.206933] sp : ffff00000e54bc80
-> [  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
-> [  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
-> [  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
-> [  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
-> [  931.206953] x21: 0000000000000002 x20: 000000000000001f
-> [  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
-> [  931.206961] x17: 0000000000000000 x16: 0000000000000000
-> [  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
-> [  931.206970] x13: 0720072007200720 x12: 0720072007200720
-> [  931.206975] x11: 0720072007200720 x10: 0720072007200720
-> [  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
-> [  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
-> [  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
-> [  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
-> [  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
-> [  931.207001] Call trace:
-> [  931.207005]  cqhci_irq+0x2e4/0x490
-> [  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
-> [  931.207013]  sdhci_irq+0x98/0x930
-> [  931.207019]  irq_forced_thread_fn+0x2c/0xa0
-> [  931.207023]  irq_thread+0x114/0x1c0
-> [  931.207027]  kthread+0x128/0x130
-> [  931.207032]  ret_from_fork+0x10/0x20
-> [  931.207035] ---[ end trace 0000000000000002 ]---
-> 
-> The driver shows this message only for the first spurious interrupt
-> by using WARN_ONCE(). Changing this to WARN() shows, that this is
-> happening quite frequently (up to once a second).
-> 
-> Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
-> does not mention that spurious TCN interrupts for DCMDs can be simply
-> ignored, we must assume that using this feature is not working reliably.
-> 
-> The current implementation uses DCMD for REQ_OP_FLUSH only, and
-> I could not see any performance/power impact when disabling
-> this optional feature for RK3399.
-> 
-> Therefore this patch disables DCMDs for RK3399.
-
-We need to sort out the problem, and see if it could be solved, or
-we just simply remove MMC_CAP2_CQE_DCMD it from sdhci-of-arasan
-
-> 
-> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-> ---
->   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 6cc1c9fa4ea6..1bbf0da4e01d 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -333,6 +333,7 @@
->   		phys = <&emmc_phy>;
->   		phy-names = "phy_arasan";
->   		power-domains = <&power RK3399_PD_EMMC>;
-> +		disable-cqe-dcmd;
->   		status = "disabled";
->   	};
->   
-> 
+Thanks
+Yu Chen
