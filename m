@@ -1,8 +1,7 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 03/15] dt-bindings: mailbox: Add a sunxi
- message box binding
-Date: Fri,  1 Mar 2019 22:29:39 -0600
-Message-ID: <20190302042951.53671-4-samuel@sholland.org>
+Subject: [PATCH v3 01/15] clk: sunxi-ng: Mark msgbox clocks as critical
+Date: Fri,  1 Mar 2019 22:29:37 -0600
+Message-ID: <20190302042951.53671-2-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
@@ -20,99 +19,138 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This mailbox hardware is present in Allwinner sun8i, sun9i, and sun50i
-SoCs. Add a device tree binding for it.
+The msgbox clock is critical because the hardware it controls is shared
+between Linux and system firmware. The message box may be used by the
+EL3 secure monitor's PSCI implementation. On 64-bit sunxi SoCs, this is
+provided by ARM TF-A; 32-bit SoCs use a different implementation. The
+secure monitor uses the message box to forward requests to power
+management firmware running on a separate CPU.
+
+It is not enough for the secure monitor to enable the clock each time
+Linux performs a SMC into EL3, as both the firmware and Linux can run
+concurrently on separate CPUs. So it is never safe for Linux to turn
+this clock off, and it should be marked as critical.
+
+At this time, such power management firmware only exists for the A64 and
+H5 SoCs.  However, it makes sense to take care of all CCU drivers now
+for consistency, and to ease the transition in the future once firmware
+is ported to the other SoCs.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- .../mailbox/allwinner,sunxi-msgbox.yaml       | 79 +++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 3 ++-
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c  | 3 ++-
+ drivers/clk/sunxi-ng/ccu-sun8i-a23.c  | 3 ++-
+ drivers/clk/sunxi-ng/ccu-sun8i-a33.c  | 3 ++-
+ drivers/clk/sunxi-ng/ccu-sun8i-a83t.c | 3 ++-
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c   | 3 ++-
+ drivers/clk/sunxi-ng/ccu-sun9i-a80.c  | 3 ++-
+ 7 files changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml b/Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
-new file mode 100644
-index 000000000000..f34a1909ab2e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mailbox/allwinner,sunxi-msgbox.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner sunxi Message Box
-+
-+maintainers:
-+  - Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-+
-+description: |
-+  The hardware message box on sun6i and newer sunxi SoCs is a two-user mailbox
-+  controller containing 8 unidirectional FIFOs. An interrupt is raised for
-+  received messages, but software must poll to know when a transmitted message
-+  has been acknowledged by the remote user. Each FIFO can hold four 32-bit
-+  messages; when a FIFO is full, clients must wait before more transmissions.
-+
-+  Refer to ./mailbox.txt for generic information about mailbox device-tree
-+  bindings.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - allwinner,sun8i-a83t-msgbox
-+              - allwinner,sun8i-h3-msgbox
-+              - allwinner,sun9i-a80-msgbox
-+              - allwinner,sun50i-a64-msgbox
-+              - allwinner,sun50i-h6-msgbox
-+          - const: allwinner,sun6i-a31-msgbox
-+      - items:
-+          - const: allwinner,sun6i-a31-msgbox
-+
-+  reg:
-+    items:
-+      - description: MMIO register range
-+
-+  clocks:
-+    maxItems: 1
-+    description: bus clock
-+
-+  resets:
-+    maxItems: 1
-+    description: bus reset
-+
-+  interrupts:
-+    maxItems: 1
-+    description: controller interrupt
-+
-+  '#mbox-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+  - interrupts
-+  - '#mbox-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun8i-h3-ccu.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/reset/sun8i-h3-ccu.h>
-+
-+    msgbox: mailbox@1c17000 {
-+            compatible = "allwinner,sun8i-h3-msgbox",
-+                         "allwinner,sun6i-a31-msgbox";
-+            reg = <0x01c17000 0x1000>;
-+            clocks = <&ccu CLK_BUS_MSGBOX>;
-+            resets = <&ccu RST_BUS_MSGBOX>;
-+            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+            #mbox-cells = <1>;
-+    };
-+
-+...
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+index 932836d26e2b..22c8de3546e6 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+@@ -349,8 +349,9 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
+ 		      0x064, BIT(12), 0);
+ static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
+ 		      0x064, BIT(20), 0);
++/* Used for communication between firmware components at runtime */
+ static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
+-		      0x064, BIT(21), 0);
++		      0x064, BIT(21), CLK_IS_CRITICAL);
+ static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
+ 		      0x064, BIT(22), 0);
+ 
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+index 139e8389615c..02b10ba6f4ce 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+@@ -339,8 +339,9 @@ static SUNXI_CCU_GATE(bus_vp9_clk, "bus-vp9", "psi-ahb1-ahb2",
+ static SUNXI_CCU_GATE(bus_dma_clk, "bus-dma", "psi-ahb1-ahb2",
+ 		      0x70c, BIT(0), 0);
+ 
++/* Used for communication between firmware components at runtime */
+ static SUNXI_CCU_GATE(bus_msgbox_clk, "bus-msgbox", "psi-ahb1-ahb2",
+-		      0x71c, BIT(0), 0);
++		      0x71c, BIT(0), CLK_IS_CRITICAL);
+ 
+ static SUNXI_CCU_GATE(bus_spinlock_clk, "bus-spinlock", "psi-ahb1-ahb2",
+ 		      0x72c, BIT(0), 0);
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+index a4fa2945f230..d4eeef69de52 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+@@ -262,8 +262,9 @@ static SUNXI_CCU_GATE(bus_de_fe_clk,	"bus-de-fe",	"ahb1",
+ 		      0x064, BIT(14), 0);
+ static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
+ 		      0x064, BIT(20), 0);
++/* Used for communication between firmware components at runtime */
+ static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
+-		      0x064, BIT(21), 0);
++		      0x064, BIT(21), CLK_IS_CRITICAL);
+ static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
+ 		      0x064, BIT(22), 0);
+ static SUNXI_CCU_GATE(bus_drc_clk,	"bus-drc",	"ahb1",
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
+index c7bf814dfd2b..66d958ba86cc 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
+@@ -274,8 +274,9 @@ static SUNXI_CCU_GATE(bus_de_fe_clk,	"bus-de-fe",	"ahb1",
+ 		      0x064, BIT(14), 0);
+ static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
+ 		      0x064, BIT(20), 0);
++/* Used for communication between firmware components at runtime */
+ static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
+-		      0x064, BIT(21), 0);
++		      0x064, BIT(21), CLK_IS_CRITICAL);
+ static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
+ 		      0x064, BIT(22), 0);
+ static SUNXI_CCU_GATE(bus_drc_clk,	"bus-drc",	"ahb1",
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
+index 2d6555d73170..24166609fd03 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
+@@ -346,8 +346,9 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
+ 		      0x064, BIT(12), 0);
+ static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
+ 		      0x064, BIT(20), 0);
++/* Used for communication between firmware components at runtime */
+ static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
+-		      0x064, BIT(21), 0);
++		      0x064, BIT(21), CLK_IS_CRITICAL);
+ static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
+ 		      0x064, BIT(22), 0);
+ 
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+index e71e2451c2e3..66777bff86e0 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+@@ -280,8 +280,9 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
+ 		      0x064, BIT(12), 0);
+ static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
+ 		      0x064, BIT(20), 0);
++/* Used for communication between firmware components at runtime */
+ static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
+-		      0x064, BIT(21), 0);
++		      0x064, BIT(21), CLK_IS_CRITICAL);
+ static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
+ 		      0x064, BIT(22), 0);
+ 
+diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
+index 8936ef87652c..40b16cdcc98b 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
++++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
+@@ -755,8 +755,9 @@ static SUNXI_CCU_GATE(bus_usb_clk,	"bus-usb",	"ahb1",
+ 		      0x584, BIT(1), 0);
+ static SUNXI_CCU_GATE(bus_gmac_clk,	"bus-gmac",	"ahb1",
+ 		      0x584, BIT(17), 0);
++/* Used for communication between firmware components at runtime */
+ static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
+-		      0x584, BIT(21), 0);
++		      0x584, BIT(21), CLK_IS_CRITICAL);
+ static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
+ 		      0x584, BIT(22), 0);
+ static SUNXI_CCU_GATE(bus_hstimer_clk,	"bus-hstimer",	"ahb1",
 -- 
 2.19.2
