@@ -1,58 +1,55 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v2 0/2] Bluetooth: mediatek: add support for MediaTek
- MT7663U and MT7668U UART devices
-Date: Sat, 2 Mar 2019 17:50:26 +0100
-Message-ID: <172BBF8E-16EC-4DF8-99D6-B991FADA91B6@holtmann.org>
-References: <cover.1551405664.git.sean.wang@mediatek.com>
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1551405664.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Jonas Karlman <jonas@kwiboo.se>
+Subject: [PATCH 1/3] arm64: dts: rockchip: fix regulator name on rk3328-rock64
+Date: Sat, 2 Mar 2019 16:56:57 +0000
+Message-ID: <AM3PR03MB0966BC227AE6480DC00C8034AC770@AM3PR03MB0966.eurprd03.prod.outlook.com>
+References: <20190302165641.10905-1-jonas@kwiboo.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190302165641.10905-1-jonas@kwiboo.se>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, Jonas Karlman <jonas@kwiboo.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+Update regulator-name to match node and schematics.
 
-> v2: changes since v1
-> - add Rob's review tag
-> - removed these merged patches
-> 
-> This adds the support of enabling MT7668U and MT7663U UART based Bluetooth
-> function running on the top of btmtkuart driver.
-> 
-> We are through several patches to reach the goal and also wish applied
-> the same flow in MediaTek btusb [1] for the transport independence.
-> Once [1] and the series is being merged and then in next step I will
-> consider to add a btmtk.c to hold these independent operations among
-> various transport reused by MediaTek UART, USB and SDIO-based Bluetooth.
-> 
-> Firstly,
-> in patch 1/6 to update the dt-binding document for the kind of devices.
-> in patch 2/6, 3/6 to fix the common error issues in the current code.
-> in Patch 4/6, 5/6 to add the general flow which MT7622 and even MT7663U and
-> MT7668U USB devices also utilize.
-> 
-> Finally, in patch 6/6 to add the specific setups for MediaTek UART-based
-> Bluetooth and enable MT7663U and MT7668U device.
-> 
-> [1] http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017074.html 
-> 
-> Sean Wang (2):
->  dt-bindings: net: bluetooth: add support for MediaTek MT7663U and
->    MT7668U UART devices
->  Bluetooth: mediatek: add support for MediaTek MT7663U and MT7668U UART
->    devices
-> 
-> .../bindings/net/mediatek-bluetooth.txt       |  64 ++++
-> drivers/bluetooth/btmtkuart.c                 | 281 +++++++++++++++++-
-> 2 files changed, 335 insertions(+), 10 deletions(-)
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I applied patch 1/2 but it seems patch 2/2 is missing. Please re-send.
-
-Regards
-
-Marcel
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 2157a528276b..8f3e4b7d55c9 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -218,7 +218,7 @@
+ 			};
+ 
+ 			vcc_18: LDO_REG1 {
+-				regulator-name = "vdd_18";
++				regulator-name = "vcc_18";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
+@@ -230,7 +230,7 @@
+ 			};
+ 
+ 			vcc18_emmc: LDO_REG2 {
+-				regulator-name = "vcc_18emmc";
++				regulator-name = "vcc18_emmc";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
+-- 
+2.17.1
