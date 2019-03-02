@@ -1,13 +1,12 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 10/15] [NOT FOR MERGE] clk: sunxi-ng: sun8i:
- Avoid turning off unused PRCM gates
-Date: Fri,  1 Mar 2019 22:29:46 -0600
-Message-ID: <20190302042951.53671-11-samuel@sholland.org>
+Subject: [PATCH v3 02/15] clk: sunxi-ng: Mark AR100 clocks as critical
+Date: Fri,  1 Mar 2019 22:29:38 -0600
+Message-ID: <20190302042951.53671-3-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBR4N5DRQKGQEX3ILEKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBQUN5DRQKGQEOKLD2LA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190302042951.53671-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,69 +19,56 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hardware attached to AHB0/APB0 and controlled in the PRCM is designed to
-be used by firmware running on the ARISC core. However, some devices in
-this block (specifically the I2C, RSB, PIO, and CIR-RX) have native
-Linux drivers and are already in the device tree. In particular, the RSB
-and I2C buses may have sound chips and display bridges hanging off of
-them that cannot easily be driven from firmware.
+On sun8i, sun9i, and sun50i SoCs, system suspend/resume support requires
+firmware running on the AR100 coprocessor (the "SCP"). Such firmware can
+provide additional features, such as thermal monitoring and poweron/off
+support for boards without a PMIC.
 
-To facilitate sharing this hardware block between Linux and system
-firmware, avoid turning off PRCM clock gates that are unreferenced in
-the device tree. We assume that firmware has already optimally
-configured these clocks before booting Linux.
+Since the AR100 may be running critical firmware, even if Linux does not
+know about it or directly interact with it (all requests may go through
+an intermediary interface such as PSCI), Linux must not turn off its
+clock.
+
+At this time, such power management firmware only exists for the A64 and
+H5 SoCs.  However, it makes sense to take care of all CCU drivers now
+for consistency, and to ease the transition in the future once firmware
+is ported to the other SoCs.
+
+Leaving the clock running is safe even if no firmware is present, since
+the AR100 stays in reset by default. In most cases, the AR100 clock is
+kept enabled by Linux anyway, since it is the parent of all APB0 bus
+peripherals. This change only prevents Linux from turning off the AR100
+clock in the rare case that no peripherals are in use.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-r.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 2 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+index 27554eaf6929..4f822b598ade 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+@@ -45,7 +45,7 @@ static struct ccu_div ar100_clk = {
+ 		.hw.init	= CLK_HW_INIT_PARENTS("ar100",
+ 						      ar100_r_apb2_parents,
+ 						      &ccu_div_ops,
+-						      0),
++						      CLK_IS_CRITICAL),
+ 	},
+ };
+ 
 diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-index 90b3530e2c18..603de1e853e9 100644
+index 71feb7b24e8a..90b3530e2c18 100644
 --- a/drivers/clk/sunxi-ng/ccu-sun8i-r.c
 +++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-@@ -92,19 +92,19 @@ static struct ccu_div apb0_clk = {
- static SUNXI_CCU_M(a83t_apb0_clk, "apb0", "ahb0", 0x0c, 0, 2, 0);
- 
- static SUNXI_CCU_GATE(apb0_pio_clk,	"apb0-pio",	"apb0",
--		      0x28, BIT(0), 0);
-+		      0x28, BIT(0), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_ir_clk,	"apb0-ir",	"apb0",
--		      0x28, BIT(1), 0);
-+		      0x28, BIT(1), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_timer_clk,	"apb0-timer",	"apb0",
--		      0x28, BIT(2), 0);
-+		      0x28, BIT(2), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_rsb_clk,	"apb0-rsb",	"apb0",
--		      0x28, BIT(3), 0);
-+		      0x28, BIT(3), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_uart_clk,	"apb0-uart",	"apb0",
--		      0x28, BIT(4), 0);
-+		      0x28, BIT(4), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_i2c_clk,	"apb0-i2c",	"apb0",
--		      0x28, BIT(6), 0);
-+		      0x28, BIT(6), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_twd_clk,	"apb0-twd",	"apb0",
--		      0x28, BIT(7), 0);
-+		      0x28, BIT(7), CLK_IGNORE_UNUSED);
- 
- static const char * const r_mod0_default_parents[] = { "osc32k", "osc24M" };
- static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
-@@ -113,7 +113,7 @@ static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
- 				  16, 2,	/* P */
- 				  24, 2,	/* mux */
- 				  BIT(31),	/* gate */
--				  0);
-+				  CLK_IGNORE_UNUSED);
- 
- static const char *const a83t_r_mod0_parents[] = { "osc16M", "osc24M" };
- static const struct ccu_mux_fixed_prediv a83t_ir_predivs[] = {
-@@ -138,7 +138,7 @@ static struct ccu_mp a83t_ir_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS("ir",
- 						      a83t_r_mod0_parents,
- 						      &ccu_mp_ops,
+@@ -50,7 +50,7 @@ static struct ccu_div ar100_clk = {
+ 		.hw.init	= CLK_HW_INIT_PARENTS("ar100",
+ 						      ar100_parents,
+ 						      &ccu_div_ops,
 -						      0),
-+						      CLK_IGNORE_UNUSED),
++						      CLK_IS_CRITICAL),
  	},
  };
  
