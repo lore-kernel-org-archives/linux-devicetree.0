@@ -1,49 +1,54 @@
-From: Marek Vasut <marex@denx.de>
-Subject: [PATCH V2 1/2] of: Add vendor prefix for Menlo Systems GmbH
-Date: Sat,  2 Mar 2019 15:50:31 +0100
-Message-ID: <20190302145032.6254-1-marex@denx.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 06/12] usb: dwc3: Increase timeout for CmdAct cleared
+ by device controller
+Date: Sat, 2 Mar 2019 17:47:23 +0200
+Message-ID: <CAHp75Vd+wPU_QvaWHanpG6hjnUj6==4Y3YiOtZnWpk0kyFUQ4A@mail.gmail.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com> <20190302090505.65542-7-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190302090505.65542-7-chenyu56@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yu Chen <chenyu56@huawei.com>
+Cc: USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>, xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Add vendor prefix for Menlo Systems GmbH, http://www.menlosystems.com/ .
+On Sat, Mar 2, 2019 at 11:06 AM Yu Chen <chenyu56@huawei.com> wrote:
+>
+> It needs more time for the device controller to clear the CmdAct of
+> DEPCMD on Hisilicon Kirin Soc.
+>
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-To: linux-arm-kernel@lists.infradead.org
----
-V2: - Rebase on latest next/master
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+5x times more? Can you provide more specific details on that?
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index bb6f6e8a2eee..0ccf97d44a32 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -244,6 +244,7 @@ melexis	Melexis N.V.
- melfas	MELFAS Inc.
- mellanox	Mellanox Technologies
- memsic	MEMSIC Inc.
-+menlo	Menlo Systems GmbH
- merrii	Merrii Technology Co., Ltd.
- micrel	Micrel Inc.
- microchip	Microchip Technology Inc.
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> ---
+>  drivers/usb/dwc3/gadget.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 6c9b76bcc2e1..84d701b37171 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -270,7 +270,7 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
+>  {
+>         const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
+>         struct dwc3             *dwc = dep->dwc;
+> -       u32                     timeout = 1000;
+> +       u32                     timeout = 5000;
+>         u32                     saved_config = 0;
+>         u32                     reg;
+>
+> --
+> 2.15.0-rc2
+>
+
+
 -- 
-2.19.2
+With Best Regards,
+Andy Shevchenko
