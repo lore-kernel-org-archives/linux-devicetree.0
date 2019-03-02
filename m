@@ -1,12 +1,13 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 08/15] arm64: dts: allwinner: a64: Add msgbox node
-Date: Fri,  1 Mar 2019 22:29:44 -0600
-Message-ID: <20190302042951.53671-9-samuel@sholland.org>
+Subject: [PATCH v3 15/15] [NOT FOR MERGE] arm64: dts: allwinner:
+ a64: Remove unused r_intc
+Date: Fri,  1 Mar 2019 22:29:51 -0600
+Message-ID: <20190302042951.53671-16-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBRUN5DRQKGQELY64WPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBSUN5DRQKGQE4M5HDLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190302042951.53671-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,35 +20,33 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A64 SoC contains a message box that can be used to send messages and
-interrupts back and forth between the ARM application CPUs and the ARISC
-coprocessor. Add a device tree node for it.
+Now that r_intc is no longer used directly by Linux, it can be removed
+from the SoC device tree.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 ---------
+ 1 file changed, 9 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 2abb335145a6..29ee8f0f833a 100644
+index 63e33215dea0..163ee3576329 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -447,6 +447,16 @@
- 			reg = <0x1c14000 0x400>;
+@@ -989,15 +989,6 @@
+ 			#clock-cells = <1>;
  		};
  
-+		msgbox: mailbox@1c17000 {
-+			compatible = "allwinner,sun50i-a64-msgbox",
-+				     "allwinner,sun6i-a31-msgbox";
-+			reg = <0x01c17000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MSGBOX>;
-+			resets = <&ccu RST_BUS_MSGBOX>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <1>;
-+		};
-+
- 		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-a33-musb";
- 			reg = <0x01c19000 0x0400>;
+-		r_intc: interrupt-controller@1f00c00 {
+-			compatible = "allwinner,sun50i-a64-r-intc",
+-				     "allwinner,sun6i-a31-r-intc";
+-			interrupt-controller;
+-			#interrupt-cells = <2>;
+-			reg = <0x01f00c00 0x400>;
+-			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+ 		r_ccu: clock@1f01400 {
+ 			compatible = "allwinner,sun50i-a64-r-ccu";
+ 			reg = <0x01f01400 0x100>;
 -- 
 2.19.2
