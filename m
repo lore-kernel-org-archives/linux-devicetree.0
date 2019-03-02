@@ -1,121 +1,77 @@
-From: Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v3 04/12] usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
-Date: Sat, 2 Mar 2019 17:04:57 +0800
-Message-ID: <20190302090505.65542-5-chenyu56@huawei.com>
-References: <20190302090505.65542-1-chenyu56@huawei.com>
+From: =?gb2312?B?wr3W7M6w?= <alex_lu@realsil.com.cn>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIDMvOF0gZHQtYmluZGluZ3M6IG5ldDogYmx1ZXRvb3Ro?= =?gb2312?Q?:_Add_rtl8723bs-bluetooth?=
+Date: Sat, 2 Mar 2019 09:28:46 +0000
+Message-ID: <0551C926975A174EA8972327741C7889EE6B1008@RS-MBS01.realsil.com.cn>
+References: <CA+E=qVdsU7sBkOQUmMprhD-Sdw7TdFnwFdGCv=4iRe++y1AwOg@mail.gmail.com>,<20190301201519.21953-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190302090505.65542-1-chenyu56@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liuyu712@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190301201519.21953-1-martin.blumenstingl@googlemail.com>
+Content-Language: zh-CN
+Sender: netdev-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, "anarsoul@gmail.com" <anarsoul@gmail.com>
+Cc: "beagleboard@davidjohnsummers.uk" <beagleboard@davidjohnsummers.uk>, "davem@davemloft.net" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "johan.hedberg@gmail.com" <johan.hedberg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, "marcel@holtmann.org" <marcel@holtmann.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "wens@csie.org" <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-SPLIT_BOUNDARY_DISABLE should be set for DesignWare USB3 DRD Core
-of Hisilicon Kirin Soc when dwc3 core act as host.
-
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Binghui Wang <wangbinghui@hisilicon.com>
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
----
- drivers/usb/dwc3/core.c | 24 ++++++++++++++++++++++++
- drivers/usb/dwc3/core.h |  6 ++++++
- 2 files changed, 30 insertions(+)
-
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index a1b126f90261..f7d561fe1f04 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -117,6 +117,7 @@ static void __dwc3_set_mode(struct work_struct *work)
- 	struct dwc3 *dwc = work_to_dwc(work);
- 	unsigned long flags;
- 	int ret;
-+	u32 reg;
- 
- 	if (dwc->dr_mode != USB_DR_MODE_OTG)
- 		return;
-@@ -169,6 +170,11 @@ static void __dwc3_set_mode(struct work_struct *work)
- 			phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
- 			phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
- 			phy_calibrate(dwc->usb2_generic_phy);
-+			if (dwc->dis_split_quirk) {
-+				reg = dwc3_readl(dwc->regs, DWC3_GUCTL3);
-+				reg |= DWC3_GUCTL3_SPLITDISABLE;
-+				dwc3_writel(dwc->regs, DWC3_GUCTL3, reg);
-+			}
- 		}
- 		break;
- 	case DWC3_GCTL_PRTCAP_DEVICE:
-@@ -1306,6 +1312,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 	dwc->dis_metastability_quirk = device_property_read_bool(dev,
- 				"snps,dis_metastability_quirk");
- 
-+	dwc->dis_split_quirk = device_property_read_bool(dev,
-+				"snps,dis-split-quirk");
-+
- 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
- 	dwc->tx_de_emphasis = tx_de_emphasis;
- 
-@@ -1825,10 +1834,25 @@ static int dwc3_resume(struct device *dev)
- 
- 	return 0;
- }
-+
-+static void dwc3_complete(struct device *dev)
-+{
-+	struct dwc3	*dwc = dev_get_drvdata(dev);
-+	u32		reg;
-+
-+	if (dwc->current_dr_role == DWC3_GCTL_PRTCAP_HOST &&
-+			dwc->dis_split_quirk) {
-+		dev_dbg(dwc->dev, "set DWC3_GUCTL3_SPLITDISABLE\n");
-+		reg = dwc3_readl(dwc->regs, DWC3_GUCTL3);
-+		reg |= DWC3_GUCTL3_SPLITDISABLE;
-+		dwc3_writel(dwc->regs, DWC3_GUCTL3, reg);
-+	}
-+}
- #endif /* CONFIG_PM_SLEEP */
- 
- static const struct dev_pm_ops dwc3_dev_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(dwc3_suspend, dwc3_resume)
-+	.complete = dwc3_complete,
- 	SET_RUNTIME_PM_OPS(dwc3_runtime_suspend, dwc3_runtime_resume,
- 			dwc3_runtime_idle)
- };
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index df876418cb78..bc2a1ebc0076 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -136,6 +136,7 @@
- #define DWC3_GEVNTCOUNT(n)	(0xc40c + ((n) * 0x10))
- 
- #define DWC3_GHWPARAMS8		0xc600
-+#define DWC3_GUCTL3		0xc60c
- #define DWC3_GFLADJ		0xc630
- 
- /* Device Registers */
-@@ -370,6 +371,9 @@
- /* Global User Control Register 2 */
- #define DWC3_GUCTL2_RST_ACTBITLATER		BIT(14)
- 
-+/* Global User Control Register 3 */
-+#define DWC3_GUCTL3_SPLITDISABLE		BIT(14)
-+
- /* Device Configuration Register */
- #define DWC3_DCFG_DEVADDR(addr)	((addr) << 3)
- #define DWC3_DCFG_DEVADDR_MASK	DWC3_DCFG_DEVADDR(0x7f)
-@@ -1210,6 +1214,8 @@ struct dwc3 {
- 
- 	unsigned		dis_metastability_quirk:1;
- 
-+	unsigned		dis_split_quirk:1;
-+
- 	u16			imod_interval;
- };
- 
--- 
-2.15.0-rc2
+SGkgTWFydGluLApUaGFua3MgZm9yIHlvdXIgaW5mb3JtYXRpb24uClRoZSBjb25maWcgaXMgcmVs
+YXRlZCB0byBlRnVzZSBpbiBjaGlwcy4gSSdtIHNvcnJ5IHRoYXQgdGhlIGRldGFpbHMgY2FuJ3Qg
+YmUgb3Blbi4KT25seSBzb21lIHNwZWNpYWwgY29uZmlndXJhdGlvbnMgYXJlIHJlbGF0ZWQgdG8g
+dGhlIGhvc3QgcGxhdGZvcm1zLCBzdWNoIGFzIFVBUlQgd29ya2luZyBiYXVkcmF0ZSwgaGFyZHdh
+cmUgZmxvdyBjb250cm9sLCBQQ00gc2V0dGluZ3MsIGV0Yy4gVGhlc2UgYXJlIHRoZSBzZXR0aW5n
+cyBmb3IgSENJIFVBUlQgYW5kIFBDTSBJbnRlcmZhY2UuCk1vc3Qgb2YgY29uZmlndXJhdGlvbnMg
+YXJlIG9ubHkgcmVsZXZhbnQgdG8gY2hpcHMuCgpUaGFua3MsCkJScywKQWxleCBMdS4KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwq3orz+yMs6IE1hcnRpbiBCbHVtZW5z
+dGluZ2wgW21hcnRpbi5ibHVtZW5zdGluZ2xAZ29vZ2xlbWFpbC5jb21dCreiy83KsbzkOiAyMDE5
+xOoz1MIyyNUgNDoxNQrK1bz+yMs6IGFuYXJzb3VsQGdtYWlsLmNvbTsgwr3W7M6wCrOty806IGJl
+YWdsZWJvYXJkQGRhdmlkam9obnN1bW1lcnMudWs7IGRhdmVtQGRhdmVtbG9mdC5uZXQ7IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBqb2hhbi5oZWRiZXJnQGdtYWlsLmNvbTsgbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1ibHVldG9vdGhAdmdlci5rZXJuZWwu
+b3JnOyBtYXJjZWxAaG9sdG1hbm4ub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbWF4aW1lLnJp
+cGFyZEBib290bGluLmNvbTsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgcm9iaEBrZXJuZWwub3Jn
+OyBzdGVmYW4ud2FocmVuQGkyc2UuY29tOyB3ZW5zQGNzaWUub3JnOyBNYXJ0aW4gQmx1bWVuc3Rp
+bmdsCtb3zOI6IFJlOiBbUEFUQ0ggMy84XSBkdC1iaW5kaW5nczogbmV0OiBibHVldG9vdGg6IEFk
+ZCBydGw4NzIzYnMtYmx1ZXRvb3RoCgpIaSBWYXNpbHksIEhpIEFsZXgsCgpPbiAyMi8wMi8yMDE5
+IDExOjIxLCBWYXNpbHkgS2hvcnV6aGljayB3cm90ZToKPiBJIGFncmVlIHdpdGggUm9iIHRoYXQg
+d2Ugc2hvdWxkIHByb2JhYmx5IHVzZSBmaXJtd2FyZS1uYW1lIGhlcmUgaW5zdGVhZC4KSGF2ZSB5
+b3UgY29uc2lkZXJlZCBza2lwcGluZyB0aGlzIHByb3BlcnR5IGZvciB2MSBvZiB0aGlzIHNlcmll
+cz8KV2UgY2FuIHN0aWxsIGFkZCB0aGF0IHByb3BlcnR5IChhcyBvcHRpb25hbCBvbmUpIGxhdGVy
+IG9uIGlmIHdlIHJlYWxseQpzZWUgdGhlIG5lZWQgZm9yIGl0LiAoVGhlIGJ0cnRsIGNvZGUgc2hv
+dWxkIGFscmVhZHkgc3VwcG9ydCB0aGUgY2FzZQp3aGVyZSBOVUxMIGlzIHBhc3NlZCBhcyAicG9z
+dGZpeCIpCgpJIGNoZWNrZWQgdGhlIHB1YmxpYyBydGw4NzIzYnNfYnQgWzBdIGFuZCBydGw4NzIz
+ZHNfYnQgWzFdIGdpdCByZXBvcyBhbmQKdGhleSBlYWNoIGNvbnRhaW4gb25seSBvbmUgY29uZmln
+IGJsb2IuIFRoZSBibG9iIGZyb20gdGhlIHJ0bDg3MjNic19idApyZXBvIHdvcmtlZCBvbiBteSB0
+d28gQW1sb2dpYyBib2FyZHMgKGRhdGEgb25seSwgc291bmQgaW5wdXQvb3V0cHV0IG5vdAp0ZXN0
+ZWQpLCBldmVuIHRob3VnaCBBbWxvZ2ljIHNlZW1zIHRvIHNoaXAgZGlmZmVyZW50IGJsb2JzOiBb
+Ml0KCj4+IElzIHRoZXJlIGEgbmVlZCB0byBoYXZlIHRoZSBib2FyZCBuYW1lPwo+Cj4gQXMgZmFy
+IGFzIEkgdW5kZXJzdGFuZCBmaXJtd2FyZSBjb25maWcgZGVwZW5kcyBvbiBib2FyZCwgc28gSSB0
+aGluawo+IGl0J3MgYSBnb29kIGlkZWEgdG8gdXNlIGJvYXJkIG5hbWUgaGVyZS4KSSBhbHNvIGFk
+ZGVkIEFsZXggTHUgZnJvbSBSZWFsdGVrIC8gUmVhbHNpbCB0byB0aGlzIGVtYWlsLgpBbGV4LCBJ
+IGhvcGUgdGhhdCB5b3UgY2FuIGhlbHAgdXMgd2l0aCB0aGUgIkJsdWV0b290aCBjb25maWciIGZv
+cm1hdCBmb3IKdGhlIFJlYWx0ZWsgV2lGaSBhbmQgQmx1ZXRvb3RoIGNvbWJvIGNoaXBzIC0gbWFp
+bmx5IHRoZSBvbmVzIHdoaWNoCmNvbm5lY3QgdG8gdGhlIGhvc3QgdXNpbmcgU0RJTy4KClRoaXMg
+aXMgaW1wb3J0YW50IGZvciB1cyBiZWNhdXNlIHRoZSBxdWVzdGlvbiBjYW1lIHVwIHdoZXRoZXIg
+d2UgY2FuCmRlc2NyaWJlIGV2ZXJ5dGhpbmcgdGhhdCdzIHBhcnQgb2YgdGhlICJjb25maWcgYmxv
+YiIgYXMgZGV2aWNlLXRyZWUKcHJvcGVydGllcy4gSWYgd2Uga25ldyB0aGUgZm9ybWF0IHdlIGNv
+dWxkIGdlbmVyYXRlIHRoZSAiY29uZmlnIGJsb2IiCm9uLXRoZS1mbHkgKGVpdGhlciBieSBmdWxs
+eSBnZW5lcmF0aW5nIGl0LCB0YWtpbmcgYSBibG9iIC0gbWF5YmUgd2l0aApvbmx5IHRoZSBzbWFs
+bGVzdCBzZXQgb2YgY29uZmlnIGRhdGEgLSBhcyAidGVtcGxhdGUiIGFuZCB1cGRhdGUgdmFsdWVz
+Cm9uLXRoZS1mbHksIGV0Yy4pCgpNYXJjZWwgd3JvdGUgYSB0b29sIFszXSB3aGljaCBoYW5kbGVz
+IHRoZSBiYXNpYyBjb25maWcgZm9ybWF0LiBIb3dldmVyLAp3ZSdyZSBzdGlsbCBtaXNzaW5nIGEg
+bG90IG9mIGRldGFpbHMgKG9ubHkgMyBvZmZzZXRzIGFyZSBrbm93biwKIlVBUlRfQ09ORklHIiBj
+b250YWlucyAxNiBieXRlcyBidXQgd2Ugb25seSBrbm93IHRoZSBwdXJwb3NlIG9mIDQgb2YKdGhl
+c2UsIC4uLikuCkkgd291bGQgaGlnaGx5IGFwcHJlY2lhdGUgaWYgeW91IGdpdmUgdXMgZW5vdWdo
+IGRldGFpbHMgc28gd2UgY2FuIGV4dGVuZApNYXJjZWwncyB0b29sIHRvIGRpc3BsYXkgdGhlIGh1
+bWFuLXJlYWRhYmxlIHJlcHJlc2VudGF0aW9uIG9mIHRoZSBjb25maWcKYmxvYnMgZnJvbSBydGw4
+NzIzYnNfYnQgWzBdIGFuZCBydGw4NzIzZHNfYnQgWzFdLgoKVmFzaWx5LCB0aGFuayB5b3UgZm9y
+IHlvdXIgZWZmb3J0IG9uIHRoaXMgdG9waWMgc28gZmFyIQpJZiB5b3Uga2VlcCBtZSBDQydlZCBv
+biB2MiBvZiB5b3VyIHNlcmllcyB0aGVuIEkgY2FuIHRlc3QgaXQgb24gdHdvIG9mCm15IEFtbG9n
+aWMgYm9hcmRzICh3aGljaCBjb21lIHdpdGggYSBSVEw4NzIzQlMpLgoKClswXSBodHRwczovL2dp
+dGh1Yi5jb20vbHdmaW5nZXIvcnRsODcyM2JzX2J0L3RyZWUvMDllYjkxZjUyYTYzOWVjNWU0YzVj
+NGM5OGRjMmFmZWRlMDQ2Y2YyMApbMV0gaHR0cHM6Ly9naXRodWIuY29tL2F5dWZhbi1waW5lNjQv
+cnRsODcyM2RzX2J0L3RyZWUvZmFiMjFiNTIyNTBkNjc4NTdiNjk0Zjk2MWUxZmY4NjE4ZTY3OGQ4
+OS84NzIzRApbMl0gaHR0cHM6Ly9naXRodWIuY29tL2toYWRhcy9hbmRyb2lkX2hhcmR3YXJlX3Jl
+YWx0ZWsvdHJlZS9iZDNiMTEzMjY2YzM1M2FhZmNiZjUyOGEwMzM0ZDI4MDkwZmYyNDliL3J0a2J0
+L3N5c3RlbS9ldGMvZmlybXdhcmUKWzNdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9i
+bHVldG9vdGgvYmx1ZXouZ2l0L3RyZWUvdG9vbHMvcnRsZncuYz9pZD0yNjE5NDgwOTBlOTA3MzUx
+NGFjNGI1ZjY0Yzg3MTVjZjBhNzFlYWZhCg==
