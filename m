@@ -1,123 +1,101 @@
 From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v3 0/4] Enable rk3066 VOP and HDMI for MK808
-Date: Sat,  2 Mar 2019 11:41:12 +0100
-Message-ID: <20190302104116.1535-1-jbx6244@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v3 4/4] dt-bindings: display: rockchip: add document for rk3066 hdmi
+Date: Sat,  2 Mar 2019 11:41:16 +0100
+Message-ID: <20190302104116.1535-5-jbx6244@gmail.com>
+References: <20190302104116.1535-1-jbx6244@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190302104116.1535-1-jbx6244@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, hjc@rock-chips.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, daniel@ffwll.ch, linux-arm-kernel@lists.infradead.org
+Cc: hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Version: V3
+This patch adds a binding that describes the HDMI controller for
+rk3066.
 
-Title: Enable rk3066 VOP and HDMI for MK808.
-
-This patch serie only works in combination with a MK808 TV stick and
-a rk3066 processor. Other boxes and tablets with a rk3066
-need extra software for power management and lcd's.
-
-What does it do:
-
-With these kernel patches a MK808 can show 2 penguins and a console
-on a DVI-D monitor in combination with a framebuffer.
-
-Not tested:
-
-HDMI TV
-DRM
-Xorg
-Display managers
-Android
-etc.
-
-Problems:
-
-DRM functions keep changing every rc
-With v5.0-rc8 the monitor doesn't blank on poweroff, it freezes
-Fixed screen size for DVI-D.
-HDMI sound not included.
-etc.
-
-///////////////////////////////////////////
-
-Changes V2 > V3:
-
-updated to v5.0-rc8
-removed patches that are already added to linux-next
-
-rk3066_hdmi.c
-  removed gpl text
-  small style changes
-  removed unused includes
-  add include for:
-    drm_helper_hpd_irq_event
-    drm_helper_probe_single_connector_modes
-  update drm_hdmi_avi_infoframe_from_display_mode function call
-
-rk3066_hdmi.h
-  removed gpl text
-
-rk3066a.dtsi
-  add extra port for hdmi connector node
-
-rk3066a-mk808.dts
-  add hdmi connector node
-  connect hdmi_out with hdmi_con_in
-
-rk3066-hdmi.txt
-  add extra port for hdmi connector node
-
-///////////////////////////////////////////
-
-# How to make rkfs.cpio
-
-find . | cpio -o --format=newc > ../rkfs.cpio
-
-# How to compile/flash
-
-make menuconfig  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
-make -j4  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
-
-cp ./arch/arm/boot/zImage ../zImage-dtb
-cat ./arch/arm/boot/dts/rk3066a-mk808.dtb >> ../zImage-dtb
-../tools/rkcrc -k ../zImage-dtb ../mk808.img
-sudo ../tools/rkflashtool w 0x4000 0x8000 < ../mk808.img
-sudo ../tools/rkflashtool b
-
-///////////////////////////////////////////
-
-Johan Jonker (2):
-  ARM: dts: rockchip: rk3066a-mk808: enable vop0 and hdmi nodes
-  dt-bindings: display: rockchip: add document for rk3066 hdmi
-
-Zheng Yang (2):
-  drm: rockchip: introduce rk3066 hdmi
-  ARM: dts: rockchip: add rk3066 hdmi nodes
-
- .../bindings/display/rockchip/rk3066-hdmi.txt      |  72 ++
- arch/arm/boot/dts/rk3066a-mk808.dts                |  29 +
- arch/arm/boot/dts/rk3066a.dtsi                     |  52 ++
- drivers/gpu/drm/rockchip/Kconfig                   |   8 +
- drivers/gpu/drm/rockchip/Makefile                  |   1 +
- drivers/gpu/drm/rockchip/rk3066_hdmi.c             | 911 +++++++++++++++++++++
- drivers/gpu/drm/rockchip/rk3066_hdmi.h             | 226 +++++
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
- drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
- 9 files changed, 1302 insertions(+)
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ .../bindings/display/rockchip/rk3066-hdmi.txt      | 72 ++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rk3066-hdmi.txt
- create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.c
- create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.h
 
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rk3066-hdmi.txt b/Documentation/devicetree/bindings/display/rockchip/rk3066-hdmi.txt
+new file mode 100644
+index 000000000..d1ad31bca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/rockchip/rk3066-hdmi.txt
+@@ -0,0 +1,72 @@
++Rockchip specific extensions for rk3066 HDMI
++============================================
++
++Required properties:
++- compatible:
++	"rockchip,rk3066-hdmi";
++- reg:
++	Physical base address and length of the controller's registers.
++- clocks, clock-names:
++	Phandle to HDMI controller clock, name should be "hclk".
++- interrupts:
++	HDMI interrupt number.
++- power-domains:
++	Phandle to the RK3066_PD_VIO power domain.
++- rockchip,grf:
++	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
++- ports:
++	Contains one port node with two endpoints, numbered 0 and 1,
++	connected respectively to vop0 and vop1.
++	Contains one port node with one endpoint
++	connected to a hdmi-connector node.
++- pinctrl-0, pinctrl-name:
++	Switch the iomux for the HPD/I2C pins to HDMI function.
++
++Example:
++	hdmi: hdmi@10116000 {
++		compatible = "rockchip,rk3066-hdmi";
++		reg = <0x10116000 0x2000>;
++		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_HDMI>;
++		clock-names = "hclk";
++		power-domains = <&power RK3066_PD_VIO>;
++		rockchip,grf = <&grf>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			hdmi_in: port@0 {
++				reg = <0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				hdmi_in_vop0: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vop0_out_hdmi>;
++				};
++				hdmi_in_vop1: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&vop1_out_hdmi>;
++				};
++			};
++			hdmi_out: port@1 {
++				reg = <1>;
++				hdmi_out_con: endpoint {
++					remote-endpoint = <&hdmi_con_in>;
++				};
++			};
++		};
++	};
++
++&pinctrl {
++		hdmi {
++			hdmi_hpd: hdmi-hpd {
++				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
++			};
++			hdmii2c_xfer: hdmii2c-xfer {
++				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
++						<0 RK_PA2 1 &pcfg_pull_none>;
++			};
++		};
++};
 -- 
 2.11.0
