@@ -1,46 +1,49 @@
-From: Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH 1/2] dt-bindings: input: add GPIO controllable vibrator
-Date: Sat,  2 Mar 2019 15:11:30 +0100
-Message-ID: <20190302141132.21160-1-luca@z3ntu.xyz>
+From: Marek Vasut <marex@denx.de>
+Subject: [PATCH V2 1/2] of: Add vendor prefix for Menlo Systems GmbH
+Date: Sat,  2 Mar 2019 15:50:31 +0100
+Message-ID: <20190302145032.6254-1-marex@denx.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Luca Weiss <luca@z3ntu.xyz>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:INPUT KEYBOARD, MOUSE, JOYSTICK
-        , TOUCHSCREEN..." <linux-input@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Provide a simple driver for GPIO controllable vibrators.
-It will be used by the Fairphone 2.
+Add vendor prefix for Menlo Systems GmbH, http://www.menlosystems.com/ .
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+To: linux-arm-kernel@lists.infradead.org
 ---
- .../devicetree/bindings/input/gpio-vibrator.txt  | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.txt
+V2: - Rebase on latest next/master
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.txt b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
-new file mode 100644
-index 000000000000..9e2e9acf497b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
-@@ -0,0 +1,16 @@
-+* GPIO vibrator device tree bindings
-+
-+Registers a GPIO device as vibrator, where the vibration motor just has the capability to turn on or off. If the device is connected to a pwm, you should use the pwm-vibrator driver instead.
-+
-+Required properties:
-+- compatible: should contain "gpio-vibrator"
-+- enable-gpios: Should contain a GPIO handle
-+- vcc-supply: Phandle for the regulator supplying power
-+
-+Example from Fairphone 2:
-+
-+vibrator {
-+	compatible = "gpio-vibrator";
-+	enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
-+	vcc-supply = <&pm8941_l18>;
-+};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index bb6f6e8a2eee..0ccf97d44a32 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -244,6 +244,7 @@ melexis	Melexis N.V.
+ melfas	MELFAS Inc.
+ mellanox	Mellanox Technologies
+ memsic	MEMSIC Inc.
++menlo	Menlo Systems GmbH
+ merrii	Merrii Technology Co., Ltd.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
 -- 
-2.21.0
+2.19.2
