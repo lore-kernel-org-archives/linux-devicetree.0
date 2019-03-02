@@ -1,85 +1,118 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v2 08/10] hikey960: Support usb functionality of Hikey960
-Date: Sat, 2 Mar 2019 09:02:51 +0800
-Message-ID: <414a5760-8283-92c6-fab8-88c15194c798@huawei.com>
-References: <20190218112310.17860-1-chenyu56@huawei.com>
- <20190218112310.17860-9-chenyu56@huawei.com>
- <1550544615.2210.27.camel@mhfsdcap03>
- <c02407b4-1825-83f5-2aff-dd41ae16e2ab@huawei.com>
- <1550820738.2210.39.camel@mhfsdcap03>
+From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 03/15] dt-bindings: mailbox: Add a sunxi
+ message box binding
+Date: Fri,  1 Mar 2019 22:29:39 -0600
+Message-ID: <20190302042951.53671-4-samuel@sholland.org>
+References: <20190302042951.53671-1-samuel@sholland.org>
+Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550820738.2210.39.camel@mhfsdcap03>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, john.stultz@linaro.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com, fangshengzhou@hisilicon.com, lipengcheng8@huawei.com, songxiaowei@hisilicon.com, xuyiping@hisilicon.com, xuyoujun4@huawei.com, yudongbin@hisilicon.com, zangleigang@hisilicon.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Binghui Wang <wangbinghui@hisilicon.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBQ4N5DRQKGQELBT7BVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190302042951.53671-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunfeng Yun,
+This mailbox hardware is present in Allwinner sun8i, sun9i, and sun50i
+SoCs. Add a device tree binding for it.
 
-On 2019/2/22 15:32, Chunfeng Yun wrote:
-> On Tue, 2019-02-19 at 11:20 +0800, Chen Yu wrote:
->> Hi,
->>
->> On 2019/2/19 10:50, Chunfeng Yun wrote:
->>>> +	if (ret)
->>>> +		hisi_hikey_usb->typec_vbus_enable_val = 1;
->>>> +
->>>> +	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
->>>> +			hisi_hikey_usb->typec_vbus_enable_val ?
->>>> +			GPIOD_OUT_LOW : GPIOD_OUT_HIGH);
->>>> +	if (!hisi_hikey_usb->typec_vbus)
->>>> +		return -ENOENT;
->>>> +	else if (IS_ERR(hisi_hikey_usb->typec_vbus))
->>>> +		return PTR_ERR(hisi_hikey_usb->typec_vbus);
->>>> +
->>>> +	gpiod_direction_output(hisi_hikey_usb->typec_vbus,
->>>> +			!hisi_hikey_usb->typec_vbus_enable_val);
->>> maybe a simple way if use fixed regulator?
->>>
->> The hardware of the Hikey960 board has been fixed, and the type-c
->> port can act as UFP. So it is better to close the vbus when Hikey960
->> connect to host(e.g PC).
-> I guess you misunderstand what I mean?
-> Please refer to bindings/regulator/fixed-regulator.txt
-> If you control vbus by gpio, you can use fixed-regulator, it will be
-> easy to make compatible with other cases, think about using a LDO to
-> control vbus
-Sorry for misunderstanding the fixed-regulator and thanks for your advice!
-I have read bindings/regulator/fixed-regulator.txt and I think it is enough
-to use gpiod API right now.
->>>> +
->>>> +	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch", GPIOD_IN);
->>>> +	if (!hisi_hikey_usb->otg_switch)
->>>> +		return -ENOENT;
->>>> +	else if (IS_ERR(hisi_hikey_usb->otg_switch))
->>>> +		return PTR_ERR(hisi_hikey_usb->otg_switch);
->>>> +
->>>> +	gpiod_direction_output(hisi_hikey_usb->otg_switch, USB_SWITCH_TO_HUB);
->>>> +
->>>> +	/* hub-vdd33-en is optional */
->>>> +	hisi_hikey_usb->hub_vbus = devm_gpiod_get(dev, "hub-vdd33-en",
->>>> +			GPIOD_OUT_LOW);
->>>> +	if (IS_ERR(hisi_hikey_usb->hub_vbus))
->>>> +		return PTR_ERR(hisi_hikey_usb->hub_vbus);
->>>> +
->>>> +	gpiod_direction_output(hisi_hikey_usb->hub_vbus, HUB_VBUS_POWER_ON);
->>> ditto
->>>> +
->>>> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
->>>> +	if (!hisi_hikey_usb->role_sw)
->>>> +		return -EPROBE_DEFER;
->>>> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
->>>> +		return PTR_ERR(hisi_hikey_usb->role_sw);
->>>> +
->>
->> Thanks
->> Yu Chen
->>
-> 
+Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+---
+ .../mailbox/allwinner,sunxi-msgbox.yaml       | 79 +++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
 
-Thanks
-Yu Chen
+diff --git a/Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml b/Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
+new file mode 100644
+index 000000000000..f34a1909ab2e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mailbox/allwinner,sunxi-msgbox.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner sunxi Message Box
++
++maintainers:
++  - Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
++
++description: |
++  The hardware message box on sun6i and newer sunxi SoCs is a two-user mailbox
++  controller containing 8 unidirectional FIFOs. An interrupt is raised for
++  received messages, but software must poll to know when a transmitted message
++  has been acknowledged by the remote user. Each FIFO can hold four 32-bit
++  messages; when a FIFO is full, clients must wait before more transmissions.
++
++  Refer to ./mailbox.txt for generic information about mailbox device-tree
++  bindings.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - allwinner,sun8i-a83t-msgbox
++              - allwinner,sun8i-h3-msgbox
++              - allwinner,sun9i-a80-msgbox
++              - allwinner,sun50i-a64-msgbox
++              - allwinner,sun50i-h6-msgbox
++          - const: allwinner,sun6i-a31-msgbox
++      - items:
++          - const: allwinner,sun6i-a31-msgbox
++
++  reg:
++    items:
++      - description: MMIO register range
++
++  clocks:
++    maxItems: 1
++    description: bus clock
++
++  resets:
++    maxItems: 1
++    description: bus reset
++
++  interrupts:
++    maxItems: 1
++    description: controller interrupt
++
++  '#mbox-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++  - interrupts
++  - '#mbox-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/sun8i-h3-ccu.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/reset/sun8i-h3-ccu.h>
++
++    msgbox: mailbox@1c17000 {
++            compatible = "allwinner,sun8i-h3-msgbox",
++                         "allwinner,sun6i-a31-msgbox";
++            reg = <0x01c17000 0x1000>;
++            clocks = <&ccu CLK_BUS_MSGBOX>;
++            resets = <&ccu RST_BUS_MSGBOX>;
++            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++            #mbox-cells = <1>;
++    };
++
++...
+-- 
+2.19.2
