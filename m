@@ -1,60 +1,58 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 3/8] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
-Date: Sat, 2 Mar 2019 17:43:58 +0100
-Message-ID: <CAFBinCDFY+fZs2unV1T5Mhh_VVSUfxK75zZXKdanLKG+arRX5g@mail.gmail.com>
-References: <CA+E=qVdsU7sBkOQUmMprhD-Sdw7TdFnwFdGCv=4iRe++y1AwOg@mail.gmail.com>
- <20190301201519.21953-1-martin.blumenstingl@googlemail.com> <0551C926975A174EA8972327741C7889EE6B1008@RS-MBS01.realsil.com.cn>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <0551C926975A174EA8972327741C7889EE6B1008@RS-MBS01.realsil.com.cn>
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?B?6ZmG5pyx5Lyf?= <alex_lu@realsil.com.cn>
-Cc: "anarsoul@gmail.com" <anarsoul@gmail.com>, "beagleboard@davidjohnsummers.uk" <beagleboard@davidjohnsummers.uk>, "davem@davemloft.net" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "johan.hedberg@gmail.com" <johan.hedberg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, "marcel@holtmann.org" <marcel@holtmann.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "wens@csie.org" <wens@csie.org>
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH v2 0/2] Bluetooth: mediatek: add support for MediaTek
+ MT7663U and MT7668U UART devices
+Date: Sat, 2 Mar 2019 17:50:26 +0100
+Message-ID: <172BBF8E-16EC-4DF8-99D6-B991FADA91B6@holtmann.org>
+References: <cover.1551405664.git.sean.wang@mediatek.com>
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1551405664.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
+Hi Sean,
 
-On Sat, Mar 2, 2019 at 10:30 AM =E9=99=86=E6=9C=B1=E4=BC=9F <alex_lu@realsi=
-l.com.cn> wrote:
->
-> Hi Martin,
-> Thanks for your information.
-thank you for the quick reply!
+> v2: changes since v1
+> - add Rob's review tag
+> - removed these merged patches
+> 
+> This adds the support of enabling MT7668U and MT7663U UART based Bluetooth
+> function running on the top of btmtkuart driver.
+> 
+> We are through several patches to reach the goal and also wish applied
+> the same flow in MediaTek btusb [1] for the transport independence.
+> Once [1] and the series is being merged and then in next step I will
+> consider to add a btmtk.c to hold these independent operations among
+> various transport reused by MediaTek UART, USB and SDIO-based Bluetooth.
+> 
+> Firstly,
+> in patch 1/6 to update the dt-binding document for the kind of devices.
+> in patch 2/6, 3/6 to fix the common error issues in the current code.
+> in Patch 4/6, 5/6 to add the general flow which MT7622 and even MT7663U and
+> MT7668U USB devices also utilize.
+> 
+> Finally, in patch 6/6 to add the specific setups for MediaTek UART-based
+> Bluetooth and enable MT7663U and MT7668U device.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017074.html 
+> 
+> Sean Wang (2):
+>  dt-bindings: net: bluetooth: add support for MediaTek MT7663U and
+>    MT7668U UART devices
+>  Bluetooth: mediatek: add support for MediaTek MT7663U and MT7668U UART
+>    devices
+> 
+> .../bindings/net/mediatek-bluetooth.txt       |  64 ++++
+> drivers/bluetooth/btmtkuart.c                 | 281 +++++++++++++++++-
+> 2 files changed, 335 insertions(+), 10 deletions(-)
 
-> The config is related to eFuse in chips. I'm sorry that the details can't=
- be open.
-> Only some special configurations are related to the host platforms, such =
-as UART working baudrate, hardware flow control, PCM settings, etc. These a=
-re the settings for HCI UART and PCM Interface.
-> Most of configurations are only relevant to chips.
-please let me repeat this with my own words to see if I understand the
-"config blob" correctly. Feel free to correct me if anything is wrong:
-- the data in the config blob "patches" eFuse values at runtime (non-persis=
-tent)
-- we know the offsets of the UART_CONFIG, PCM_SETTING and BD_ADDR -
-these can be "board specific" (like baud rate, flow control, ...)
-- most other values from the "config blob" are "chip specific" -
-meaning they are identical for each board and they only depend on the
-chip
+I applied patch 1/2 but it seems patch 2/2 is missing. Please re-send.
 
-do you have any suggestions how we can support multiple boards (the
-main goal of this whole discussion is: how to do this "correct")?
-so far different approaches were discussed (not only in this thread,
-but also in the past):
-- use a separate config blob for each board. this means that whenever
-a new board is supported (for example by adding a .dts for it to the
-mainline kernel) then Bluetooth won't work out-of-the-box unless a
-config is provided.
-- specify the properties of the connection to the chip (for example by
-adding a device-tree property for the speed, flow control, ...) and
-generate the config based on the device-tree properties.
-- (I am open for other suggestions, please let us know if you have any)
+Regards
 
-I would like to hear your opinion on this topic and especially the
-reasons behind your suggestions.
-
-
-Best regards
-Martin
+Marcel
