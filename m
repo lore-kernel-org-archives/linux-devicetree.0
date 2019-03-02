@@ -1,13 +1,13 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 11/15] [NOT FOR MERGE] dt-bindings: Add a
- binding for a mailbox-backed interrupt controller
-Date: Fri,  1 Mar 2019 22:29:47 -0600
-Message-ID: <20190302042951.53671-12-samuel@sholland.org>
+Subject: [PATCH v3 13/15] [NOT FOR MERGE] arm64: dts: allwinner:
+ a64: Add interrupt controller node
+Date: Fri,  1 Mar 2019 22:29:49 -0600
+Message-ID: <20190302042951.53671-14-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBSEN5DRQKGQEAJ3CA4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBSMN5DRQKGQEC4H5GOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190302042951.53671-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,47 +20,26 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a somewhat generic binding for an interrupt controller/forwarder
-implemented in firmware and communicated with using a mailbox.
+In order to give firmware full access to r_intc, Linux needs to avoid
+using it in the device tree. Most IRQ lines attached to r_intc are also
+attached to the GIC. Unfortunately, the NMI is not. For it to be used in
+Linux, we have to forward it in firmware over the mailbox.
+
+Add a node representing this virtual interrupt controller.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- .../interrupt-controller/mbox-intc.txt        | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
-new file mode 100644
-index 000000000000..a0eb7904ca83
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
-@@ -0,0 +1,33 @@
-+Mailbox-backed Interrupt Controller
-+===================================
-+
-+This binding represents an interrupt controller implemented in firmware,
-+that uses a mailbox channel to signal and acknowledge interrupts.
-+
-+Device Node:
-+============
-+
-+Required properties:
-+--------------------
-+- compatible:		Must be one of the following strings:
-+			- allwinner,sunxi-msgbox-intc
-+- interrupt-controller:	Signifies that this node is an interrupt controller.
-+- #interrupt-cells:	Must be 1.
-+- mboxes:		phandle for the mailbox controller and channel
-+			specifier. If the mailbox controller has unidirectional
-+			channels, two entries are required (see below).
-+- mbox-names:		Only required for unidirectional mailbox channels. In
-+			that case, it must contain the strings "tx" and "rx"
-+			(where "tx" and "rx" are from Linux's perspective, not
-+			the direction the interrupts are traveling).
-+
-+Example:
-+--------
-+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 29ee8f0f833a..63e33215dea0 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -128,6 +128,14 @@
+ 		status = "disabled";
+ 	};
+ 
 +	msgbox_intc: interrupt-controller {
 +		compatible = "allwinner,sunxi-msgbox-intc";
 +		interrupt-controller;
@@ -68,5 +47,9 @@ index 000000000000..a0eb7904ca83
 +		mboxes = <&msgbox 6>, <&msgbox 7>;
 +		mbox-names = "tx", "rx";
 +	};
++
+ 	osc24M: osc24M_clk {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
 -- 
 2.19.2
