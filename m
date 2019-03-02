@@ -1,13 +1,12 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 13/15] [NOT FOR MERGE] arm64: dts: allwinner:
- a64: Add interrupt controller node
-Date: Fri,  1 Mar 2019 22:29:49 -0600
-Message-ID: <20190302042951.53671-14-samuel@sholland.org>
+Subject: [PATCH v3 07/15] ARM: dts: sunxi: h3/h5: Add msgbox node
+Date: Fri,  1 Mar 2019 22:29:43 -0600
+Message-ID: <20190302042951.53671-8-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBSMN5DRQKGQEC4H5GOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBRUN5DRQKGQELY64WPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190302042951.53671-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,36 +19,35 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to give firmware full access to r_intc, Linux needs to avoid
-using it in the device tree. Most IRQ lines attached to r_intc are also
-attached to the GIC. Unfortunately, the NMI is not. For it to be used in
-Linux, we have to forward it in firmware over the mailbox.
-
-Add a node representing this virtual interrupt controller.
+The H3 and H5 SoCs contain a message box that can be used to send
+messages and interrupts back and forth between the ARM application CPUs
+and the ARISC coprocessor. Add a device tree node for it.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 29ee8f0f833a..63e33215dea0 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -128,6 +128,14 @@
- 		status = "disabled";
- 	};
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index a4c757c0b741..a42fd3f9739e 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -227,6 +227,16 @@
+ 			#size-cells = <0>;
+ 		};
  
-+	msgbox_intc: interrupt-controller {
-+		compatible = "allwinner,sunxi-msgbox-intc";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		mboxes = <&msgbox 6>, <&msgbox 7>;
-+		mbox-names = "tx", "rx";
-+	};
++		msgbox: mailbox@1c17000 {
++			compatible = "allwinner,sun8i-h3-msgbox",
++				     "allwinner,sun6i-a31-msgbox";
++			reg = <0x01c17000 0x1000>;
++			clocks = <&ccu CLK_BUS_MSGBOX>;
++			resets = <&ccu RST_BUS_MSGBOX>;
++			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			#mbox-cells = <2>;
++		};
 +
- 	osc24M: osc24M_clk {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
+ 		usb_otg: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-h3-musb";
+ 			reg = <0x01c19000 0x400>;
 -- 
 2.19.2
