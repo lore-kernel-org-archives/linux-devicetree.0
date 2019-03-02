@@ -1,13 +1,13 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 04/15] mailbox: sunxi-msgbox: Add a new
- mailbox driver
-Date: Fri,  1 Mar 2019 22:29:40 -0600
-Message-ID: <20190302042951.53671-5-samuel@sholland.org>
+Subject: [PATCH v3 12/15] [NOT FOR MERGE] irqchip/mbox:
+ Introduce a mailbox-backed irqchip driver
+Date: Fri,  1 Mar 2019 22:29:48 -0600
+Message-ID: <20190302042951.53671-13-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBREN5DRQKGQEEB5QL3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBSEN5DRQKGQEAJ3CA4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190302042951.53671-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,371 +20,252 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner sun8i, sun9i, and sun50i SoCs contain a hardware message box
-used for communication between the ARM CPUs and the ARISC management
-coprocessor. The hardware contains 8 unidirectional 4-message FIFOs.
-
-Add a driver for it, so it can be used for SCPI or other communication
-protocols.
+This driver implements a simple interrupt controller using message
+passing over a mailbox channel. The intention is for the other end of
+the channel to be implemented in firmware. This allows filtering and
+forwarding interrupts from one processor to another.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- drivers/mailbox/Kconfig        |  11 ++
- drivers/mailbox/Makefile       |   2 +
- drivers/mailbox/sunxi-msgbox.c | 315 +++++++++++++++++++++++++++++++++
- 3 files changed, 328 insertions(+)
- create mode 100644 drivers/mailbox/sunxi-msgbox.c
+ drivers/irqchip/Kconfig    |   9 ++
+ drivers/irqchip/Makefile   |   1 +
+ drivers/irqchip/irq-mbox.c | 199 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 209 insertions(+)
+ create mode 100644 drivers/irqchip/irq-mbox.c
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index 3eeb12e93e98..6309e755d04a 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -205,4 +205,15 @@ config MTK_CMDQ_MBOX
- 	  mailbox driver. The CMDQ is used to help read/write registers with
- 	  critical time limitation, such as updating display configuration
- 	  during the vblank.
-+
-+config SUNXI_MSGBOX
-+	tristate "Allwinner sunxi Message Box"
-+	depends on ARCH_SUNXI || COMPILE_TEST
-+	default ARCH_SUNXI
-+	help
-+	  Mailbox implementation for the hardware message box present in
-+	  Allwinner sun8i, sun9i, and sun50i SoCs. The hardware message box is
-+	  used for communication between the application CPUs and the power
-+	  management coprocessor.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index c818b5d011ae..f29a119a3fac 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -44,3 +44,5 @@ obj-$(CONFIG_TEGRA_HSP_MBOX)	+= tegra-hsp.o
- obj-$(CONFIG_STM32_IPCC) 	+= stm32-ipcc.o
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 3d1e60779078..d22921276797 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -406,6 +406,15 @@ config IMX_IRQSTEER
+ 	help
+ 	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
  
- obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
++config IRQ_MBOX
++	tristate "Simple mailbox-backed interrupt controller"
++	depends on MAILBOX
++	select IRQ_DOMAIN
++	help
++	  Support for interrupt controllers attached via a mailbox channel.
++	  This allows a coprocessor to inject interrupts via a simple
++	  message-based protocol.
 +
-+obj-$(CONFIG_SUNXI_MSGBOX)	+= sunxi-msgbox.o
-diff --git a/drivers/mailbox/sunxi-msgbox.c b/drivers/mailbox/sunxi-msgbox.c
+ endmenu
+ 
+ config SIFIVE_PLIC
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index c93713d24b86..9de16ab4e69a 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -94,3 +94,4 @@ obj-$(CONFIG_CSKY_APB_INTC)		+= irq-csky-apb-intc.o
+ obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
+ obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
+ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
++obj-$(CONFIG_IRQ_MBOX)			+= irq-mbox.o
+diff --git a/drivers/irqchip/irq-mbox.c b/drivers/irqchip/irq-mbox.c
 new file mode 100644
-index 000000000000..fb0d733dd3b4
+index 000000000000..f7f6b47bc5b9
 --- /dev/null
-+++ b/drivers/mailbox/sunxi-msgbox.c
-@@ -0,0 +1,315 @@
++++ b/drivers/irqchip/irq-mbox.c
+@@ -0,0 +1,199 @@
 +// SPDX-License-Identifier: GPL-2.0
 +//
-+// Copyright (c) 2017-2019 Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
++// Copyright (c) 2018-2019 Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 +
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mailbox_controller.h>
++/*
++ * Simple mailbox-backed interrupt controller driver using 32-bit messages.
++ * The mailbox controller is expected to take a (uint32_t *) message argument.
++ *
++ * Client-to-server messages:
++ *   Byte 3 (MSB) : Reserved
++ *   Byte 2       : Reserved
++ *   Byte 1       : Message type (enumerated below)
++ *   Byte 0 (LSB) : IRQ number
++ *
++ * Server-to-client messages:
++ *   Byte 3 (MSB) : Reserved
++ *   Byte 2       : Reserved
++ *   Byte 1       : Message type (must be zero == interrupt received)
++ *   Byte 0 (LSB) : IRQ number
++ *
++ * IRQ lines must be unmasked before they can be used (generic irqchip code
++ * takes care of that in this driver).
++ */
++
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqdomain.h>
++#include <linux/mailbox_client.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+#include <linux/spinlock.h>
++#include <linux/of_platform.h>
 +
-+#define NUM_CHANS		8
++#define MBOX_INTC_MAX_IRQS 32
 +
-+#define CTRL_REG(n)		(0x0000 + 0x4 * ((n) / 4))
-+#define CTRL_RX(n)		BIT(0 + 8 * ((n) % 4))
-+#define CTRL_TX(n)		BIT(4 + 8 * ((n) % 4))
-+
-+#define REMOTE_IRQ_EN_REG	0x0040
-+#define REMOTE_IRQ_STATUS_REG	0x0050
-+#define LOCAL_IRQ_EN_REG	0x0060
-+#define LOCAL_IRQ_STATUS_REG	0x0070
-+
-+#define RX_IRQ(n)		BIT(0 + 2 * (n))
-+#define RX_IRQ_MASK		0x5555
-+#define TX_IRQ(n)		BIT(1 + 2 * (n))
-+#define TX_IRQ_MASK		0xaaaa
-+
-+#define FIFO_STATUS_REG(n)	(0x0100 + 0x4 * (n))
-+#define FIFO_STATUS_MASK	BIT(0)
-+
-+#define MSG_STATUS_REG(n)	(0x0140 + 0x4 * (n))
-+#define MSG_STATUS_MASK		GENMASK(2, 0)
-+
-+#define MSG_DATA_REG(n)		(0x0180 + 0x4 * (n))
-+
-+#define mbox_dbg(mbox, ...)	dev_dbg((mbox)->controller.dev, __VA_ARGS__)
-+
-+struct sunxi_msgbox {
-+	struct mbox_controller controller;
-+	struct clk *clk;
-+	spinlock_t lock;
-+	void __iomem *regs;
++enum {
++	MSG_EOI    = 0,
++	MSG_MASK   = 1,
++	MSG_UNMASK = 2,
 +};
 +
-+static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan);
-+static bool sunxi_msgbox_peek_data(struct mbox_chan *chan);
++struct mbox_intc {
++	struct irq_chip chip;
++	struct irq_domain *domain;
++	struct mbox_chan *rx_chan;
++	struct mbox_chan *tx_chan;
++	struct mbox_client cl;
++};
 +
-+static inline int channel_number(struct mbox_chan *chan)
++static int mbox_intc_map(struct irq_domain *domain, unsigned int virq,
++			 irq_hw_number_t hwirq)
 +{
-+	return chan - chan->mbox->chans;
-+}
++	struct mbox_intc *intc = domain->host_data;
 +
-+static inline struct sunxi_msgbox *channel_to_msgbox(struct mbox_chan *chan)
-+{
-+	return (struct sunxi_msgbox *)chan->con_priv;
-+}
++	if (hwirq >= MBOX_INTC_MAX_IRQS)
++		return -ENODEV;
 +
-+static irqreturn_t sunxi_msgbox_irq(int irq, void *dev_id)
-+{
-+	struct mbox_chan *chan;
-+	struct sunxi_msgbox *mbox = dev_id;
-+	int n;
-+	uint32_t msg, status;
-+
-+	status = readl(mbox->regs + LOCAL_IRQ_STATUS_REG);
-+	if (!(status & RX_IRQ_MASK))
-+		return IRQ_NONE;
-+
-+	for (n = 0; n < NUM_CHANS; ++n) {
-+		if (!(status & RX_IRQ(n)))
-+			continue;
-+		chan = &mbox->controller.chans[n];
-+		while (sunxi_msgbox_peek_data(chan)) {
-+			msg = readl(mbox->regs + MSG_DATA_REG(n));
-+			mbox_dbg(mbox, "Channel %d received 0x%08x\n", n, msg);
-+			mbox_chan_received_data(chan, &msg);
-+		}
-+		/* The IRQ can be cleared only when the FIFO is empty. */
-+		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STATUS_REG);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sunxi_msgbox_send_data(struct mbox_chan *chan, void *data)
-+{
-+	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-+	int n = channel_number(chan);
-+	uint32_t msg = *(uint32_t *)data;
-+
-+	/* Using a channel backwards gets the hardware into a bad state. */
-+	if (WARN_ON_ONCE(!(readl(mbox->regs + CTRL_REG(n)) & CTRL_TX(n))))
-+		return 0;
-+
-+	/* We cannot post a new message if the FIFO is full. */
-+	if (readl(mbox->regs + FIFO_STATUS_REG(n)) & FIFO_STATUS_MASK) {
-+		mbox_dbg(mbox, "Channel %d busy sending 0x%08x\n", n, msg);
-+		return -EBUSY;
-+	}
-+
-+	writel(msg, mbox->regs + MSG_DATA_REG(n));
-+	mbox_dbg(mbox, "Channel %d sent 0x%08x\n", n, msg);
++	irq_set_chip_data(virq, intc);
++	irq_set_chip_and_handler(virq, &intc->chip, handle_fasteoi_irq);
++	irq_set_status_flags(virq, IRQ_LEVEL);
 +
 +	return 0;
 +}
 +
-+static int sunxi_msgbox_startup(struct mbox_chan *chan)
-+{
-+	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-+	int n = channel_number(chan);
-+
-+	/* The coprocessor is responsible for setting channel directions. */
-+	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-+		/* Clear existing messages in the receive FIFO. */
-+		while (sunxi_msgbox_peek_data(chan))
-+			readl(mbox->regs + MSG_DATA_REG(n));
-+		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STATUS_REG);
-+
-+		/* Enable the receive interrupt. */
-+		spin_lock(&mbox->lock);
-+		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) | RX_IRQ(n),
-+		       mbox->regs + LOCAL_IRQ_EN_REG);
-+		spin_unlock(&mbox->lock);
-+	}
-+
-+	mbox_dbg(mbox, "Channel %d startup\n", n);
-+
-+	return 0;
-+}
-+
-+static void sunxi_msgbox_shutdown(struct mbox_chan *chan)
-+{
-+	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-+	int n = channel_number(chan);
-+
-+	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-+		/* Disable the receive interrupt. */
-+		spin_lock(&mbox->lock);
-+		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) & ~RX_IRQ(n),
-+		       mbox->regs + LOCAL_IRQ_EN_REG);
-+		spin_unlock(&mbox->lock);
-+
-+		/* Clear existing messages in the receive FIFO. */
-+		while (sunxi_msgbox_peek_data(chan))
-+			readl(mbox->regs + MSG_DATA_REG(n));
-+		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STATUS_REG);
-+	}
-+
-+	mbox_dbg(mbox, "Channel %d shutdown\n", n);
-+}
-+
-+static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan)
-+{
-+	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-+	int n = channel_number(chan);
-+
-+	/*
-+	 * The hardware allows snooping on the remote user's IRQ status. We
-+	 * consider a message to be acknowledged only when the receive IRQ for
-+	 * that channel is cleared. As the hardware only allows clearing the
-+	 * IRQ for a channel when the FIFO is empty, this still ensures that
-+	 * the message has actually been read. It also gives the receiver an
-+	 * opportunity to perform minimal processing before acknowledging a
-+	 * message.
-+	 */
-+	return !(readl(mbox->regs + REMOTE_IRQ_STATUS_REG) & RX_IRQ(n));
-+}
-+
-+static bool sunxi_msgbox_peek_data(struct mbox_chan *chan)
-+{
-+	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-+	int n = channel_number(chan);
-+
-+	return (readl(mbox->regs + MSG_STATUS_REG(n)) & MSG_STATUS_MASK) > 0;
-+}
-+
-+static const struct mbox_chan_ops sunxi_msgbox_chan_ops = {
-+	.send_data    = sunxi_msgbox_send_data,
-+	.startup      = sunxi_msgbox_startup,
-+	.shutdown     = sunxi_msgbox_shutdown,
-+	.last_tx_done = sunxi_msgbox_last_tx_done,
-+	.peek_data    = sunxi_msgbox_peek_data,
++static const struct irq_domain_ops mbox_intc_domain_ops = {
++	.map   = mbox_intc_map,
++	.xlate = irq_domain_xlate_onecell,
 +};
 +
-+static int sunxi_msgbox_probe(struct platform_device *pdev)
++static void mbox_intc_rx_callback(struct mbox_client *cl, void *msg)
++{
++	struct mbox_intc *intc = container_of(cl, struct mbox_intc, cl);
++	uint32_t hwirq = *(uint32_t *)msg;
++
++	if (hwirq >= MBOX_INTC_MAX_IRQS)
++		return;
++
++	generic_handle_irq(irq_linear_revmap(intc->domain, hwirq));
++}
++
++static void mbox_intc_tx_msg(struct irq_data *d, uint8_t request)
++{
++	struct mbox_intc *intc = irq_data_get_irq_chip_data(d);
++	uint32_t msg = (request << 8) | (d->hwirq & GENMASK(0, 7));
++
++	/* Since we don't expect an ACK for this message, immediately complete
++	 * the transmission. This ensures that each message is sent out without
++	 * sleeping, and 'data' remains in scope until actual transmission. */
++	if (mbox_send_message(intc->tx_chan, &msg) >= 0)
++		mbox_client_txdone(intc->tx_chan, 0);
++}
++
++static void mbox_intc_irq_mask(struct irq_data *d)
++{
++	mbox_intc_tx_msg(d, MSG_MASK);
++}
++
++static void mbox_intc_irq_unmask(struct irq_data *d)
++{
++	mbox_intc_tx_msg(d, MSG_UNMASK);
++}
++
++static void mbox_intc_irq_eoi(struct irq_data *d)
++{
++	mbox_intc_tx_msg(d, MSG_EOI);
++}
++
++static int mbox_intc_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct mbox_chan *chans;
-+	struct reset_control *reset;
-+	struct resource *res;
-+	struct sunxi_msgbox *mbox;
-+	int i, ret;
++	struct mbox_intc *intc;
++	int ret;
 +
-+	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-+	if (!mbox)
++	intc = devm_kzalloc(dev, sizeof(*intc), GFP_KERNEL);
++	if (!intc)
 +		return -ENOMEM;
 +
-+	chans = devm_kcalloc(dev, NUM_CHANS, sizeof(*chans), GFP_KERNEL);
-+	if (!chans)
-+		return -ENOMEM;
++	intc->cl.dev          = dev;
++	intc->cl.knows_txdone = true;
++	intc->cl.rx_callback  = mbox_intc_rx_callback;
 +
-+	for (i = 0; i < NUM_CHANS; ++i)
-+		chans[i].con_priv = mbox;
-+
-+	mbox->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(mbox->clk)) {
-+		ret = PTR_ERR(mbox->clk);
-+		dev_err(dev, "Failed to get clock: %d\n", ret);
-+		return ret;
++	if (of_get_property(dev->of_node, "mbox-names", NULL)) {
++		intc->rx_chan = mbox_request_channel_byname(&intc->cl, "rx");
++		if (IS_ERR(intc->rx_chan)) {
++			ret = PTR_ERR(intc->rx_chan);
++			dev_err(dev, "Failed to request rx mailbox channel\n");
++			goto err;
++		}
++		intc->tx_chan = mbox_request_channel_byname(&intc->cl, "tx");
++		if (IS_ERR(intc->tx_chan)) {
++			ret = PTR_ERR(intc->tx_chan);
++			dev_err(dev, "Failed to request tx mailbox channel\n");
++			goto err_free_rx_chan;
++		}
++	} else {
++		intc->rx_chan = mbox_request_channel(&intc->cl, 0);
++		intc->tx_chan = intc->rx_chan;
++		if (IS_ERR(intc->tx_chan)) {
++			ret = PTR_ERR(intc->tx_chan);
++			dev_err(dev, "Failed to request mailbox channel\n");
++			goto err;
++		}
 +	}
 +
-+	ret = clk_prepare_enable(mbox->clk);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable clock: %d\n", ret);
-+		return ret;
++	intc->chip.name       = dev_name(dev);
++	intc->chip.irq_mask   = mbox_intc_irq_mask;
++	intc->chip.irq_unmask = mbox_intc_irq_unmask;
++	intc->chip.irq_eoi    = mbox_intc_irq_eoi;
++
++	intc->domain = irq_domain_add_linear(dev->of_node, MBOX_INTC_MAX_IRQS,
++					     &mbox_intc_domain_ops, intc);
++	if (IS_ERR(intc->domain)) {
++		ret = PTR_ERR(intc->domain);
++		dev_err(dev, "Failed to allocate IRQ domain: %d\n", ret);
++		goto err_free_tx_chan;
 +	}
 +
-+	reset = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(reset)) {
-+		ret = PTR_ERR(reset);
-+		dev_err(dev, "Failed to get reset control: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
-+
-+	ret = reset_control_deassert(reset);
-+	if (ret) {
-+		dev_err(dev, "Failed to deassert reset: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		ret = -ENODEV;
-+		goto err_disable_unprepare;
-+	}
-+
-+	mbox->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mbox->regs)) {
-+		ret = PTR_ERR(mbox->regs);
-+		dev_err(dev, "Failed to map MMIO resource: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
-+
-+	/* Disable all interrupts for this end of the msgbox. */
-+	writel(0, mbox->regs + LOCAL_IRQ_EN_REG);
-+
-+	ret = devm_request_irq(dev, irq_of_parse_and_map(dev->of_node, 0),
-+			       sunxi_msgbox_irq, 0, dev_name(dev), mbox);
-+	if (ret) {
-+		dev_err(dev, "Failed to register IRQ handler: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
-+
-+	mbox->controller.dev           = dev;
-+	mbox->controller.ops           = &sunxi_msgbox_chan_ops;
-+	mbox->controller.chans         = chans;
-+	mbox->controller.num_chans     = NUM_CHANS;
-+	mbox->controller.txdone_irq    = false;
-+	mbox->controller.txdone_poll   = true;
-+	mbox->controller.txpoll_period = 5;
-+
-+	spin_lock_init(&mbox->lock);
-+	platform_set_drvdata(pdev, mbox);
-+
-+	ret = mbox_controller_register(&mbox->controller);
-+	if (ret) {
-+		dev_err(dev, "Failed to register controller: %d\n", ret);
-+		goto err_disable_unprepare;
-+	}
++	platform_set_drvdata(pdev, intc);
 +
 +	return 0;
 +
-+err_disable_unprepare:
-+	clk_disable_unprepare(mbox->clk);
-+
++err_free_tx_chan:
++	if (intc->tx_chan != intc->rx_chan)
++		mbox_free_channel(intc->tx_chan);
++err_free_rx_chan:
++	mbox_free_channel(intc->rx_chan);
++err:
 +	return ret;
 +}
 +
-+static int sunxi_msgbox_remove(struct platform_device *pdev)
++static int mbox_intc_remove(struct platform_device *pdev)
 +{
-+	struct sunxi_msgbox *mbox = platform_get_drvdata(pdev);
++	struct mbox_intc *intc = platform_get_drvdata(pdev);
 +
-+	mbox_controller_unregister(&mbox->controller);
-+	clk_disable_unprepare(mbox->clk);
++	irq_domain_remove(intc->domain);
++	if (intc->tx_chan != intc->rx_chan)
++		mbox_free_channel(intc->tx_chan);
++	mbox_free_channel(intc->rx_chan);
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id sunxi_msgbox_of_match[] = {
-+	{ .compatible = "allwinner,sun6i-a31-msgbox", },
++static const struct of_device_id mbox_intc_of_match[] = {
++	{ .compatible = "allwinner,sunxi-msgbox-intc" },
 +	{},
 +};
-+MODULE_DEVICE_TABLE(of, sunxi_msgbox_of_match);
++MODULE_DEVICE_TABLE(of, mbox_intc_of_match);
 +
-+static struct platform_driver sunxi_msgbox_driver = {
++static struct platform_driver mbox_intc_driver = {
 +	.driver = {
-+		.name = "sunxi-msgbox",
-+		.of_match_table = sunxi_msgbox_of_match,
++		.name = KBUILD_MODNAME,
++		.of_match_table = mbox_intc_of_match,
 +	},
-+	.probe  = sunxi_msgbox_probe,
-+	.remove = sunxi_msgbox_remove,
++	.probe  = mbox_intc_probe,
++	.remove = mbox_intc_remove,
 +};
-+module_platform_driver(sunxi_msgbox_driver);
++module_platform_driver(mbox_intc_driver);
 +
 +MODULE_AUTHOR("Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>");
-+MODULE_DESCRIPTION("Allwinner sunxi Message Box");
++MODULE_DESCRIPTION("Simple mailbox-backed interrupt controller");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.19.2
