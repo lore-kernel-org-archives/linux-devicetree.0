@@ -1,137 +1,188 @@
-Return-Path: <SRS0=rvea=RI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10069.outbound.protection.outlook.com ([40.107.1.69]:60741
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725782AbfCEHLG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Mar 2019 02:11:06 -0500
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v2 2/2] usb: typec: add typec switch via GPIO control
-Date: Tue, 5 Mar 2019 07:10:57 +0000
-Message-ID: <AM0PR04MB4547F9988C4618D6CADC385789720@AM0PR04MB4547.eurprd04.prod.outlook.com>
-References: <1551402256-7815-1-git-send-email-jun.li@nxp.com>
- <1551402256-7815-2-git-send-email-jun.li@nxp.com>
- <CAHp75VfT7YY7EZNmAA18wyrxxp2vZrAsdEC-b2q7Sm+mL-1Srg@mail.gmail.com>
-In-Reply-To: <CAHp75VfT7YY7EZNmAA18wyrxxp2vZrAsdEC-b2q7Sm+mL-1Srg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=/7vY=RF=gmail.com=andy.shevchenko@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <1551402256-7815-1-git-send-email-jun.li@nxp.com> <1551402256-7815-2-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1551402256-7815-2-git-send-email-jun.li@nxp.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 2 Mar 2019 18:27:11 +0200
+Message-ID: <CAHp75VfT7YY7EZNmAA18wyrxxp2vZrAsdEC-b2q7Sm+mL-1Srg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] usb: typec: add typec switch via GPIO control
+Content-Type: text/plain; charset="UTF-8"
+To: Jun Li <jun.li@nxp.com>
 Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgQW5keSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNo
-ZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+IFNlbnQ6IDIwMTnlubQz5pyI
-M+aXpSAwOjI3DQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPg0KPiBDYzogcm9iaCtkdEBr
-ZXJuZWwub3JnOyBoZWlra2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tOw0KPiBncmVna2hAbGlu
-dXhmb3VuZGF0aW9uLm9yZzsgaGRlZ29lZGVAcmVkaGF0LmNvbTsgbGludXgtdXNiQHZnZXIua2Vy
-bmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGlu
-dXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMi8yXSB1c2I6IHR5cGVj
-OiBhZGQgdHlwZWMgc3dpdGNoIHZpYSBHUElPIGNvbnRyb2wNCj4gDQo+IE9uIEZyaSwgTWFyIDEs
-IDIwMTkgYXQgMzoyNSBBTSBKdW4gTGkgPGp1bi5saUBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+
-IFRoaXMgcGF0Y2ggYWRkcyBhIHNpbXBsZSB0eXBlYyBzd2l0Y2ggZHJpdmVyIHdoaWNoIG9ubHkg
-bmVlZHMgYSBHUElPDQo+ID4gdG8gc3dpdGNoIHRoZSBzdXBlciBzcGVlZCBhY3RpdmUgY2hhbm5l
-bCBhY2NvcmRpbmcgdG8gdHlwZWMNCj4gPiBvcmllbnRhdGlvbi4NCj4gDQo+IEZXSVcsDQo+IFJl
-dmlld2VkLWJ5OiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+
-IA0KPiBPbmUgbWlub3IgYmVsb3cuDQo+IA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVu
-IDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPg0KPiA+IENoYW5nZXMgZm9yIHYyOg0KPiA+
-IC0gVXNlIHRoZSBjb3JyZWN0IGhlYWQgZmlsZXMgZm9yIGdwaW8gYXBpIGFuZCBvZl9kZXZpY2Vf
-aWQ6DQo+ID4gICAjaW5jbHVkZSA8bGludXgvZ3Bpby9jb25zdW1lci5oPg0KPiA+ICAgI2luY2x1
-ZGUgPGxpbnV4L21vZF9kZXZpY2V0YWJsZS5oPg0KPiA+IC0gQWRkIGRyaXZlciBkZXBlbmRlbmN5
-IG9uIEdQSU9MSUINCj4gPg0KPiA+ICBkcml2ZXJzL3VzYi90eXBlYy9tdXgvS2NvbmZpZyAgICAg
-ICB8ICAgNyArKysNCj4gPiAgZHJpdmVycy91c2IvdHlwZWMvbXV4L01ha2VmaWxlICAgICAgfCAg
-IDEgKw0KPiA+ICBkcml2ZXJzL3VzYi90eXBlYy9tdXgvZ3Bpby1zd2l0Y2guYyB8IDEwNQ0KPiA+
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAzIGZpbGVzIGNoYW5n
-ZWQsIDExMyBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2Iv
-dHlwZWMvbXV4L0tjb25maWcNCj4gPiBiL2RyaXZlcnMvdXNiL3R5cGVjL211eC9LY29uZmlnIGlu
-ZGV4IDAxZWQwZDUuLjI3MTIwZTYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy91c2IvdHlwZWMv
-bXV4L0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJzL3VzYi90eXBlYy9tdXgvS2NvbmZpZw0KPiA+
-IEBAIC05LDQgKzksMTEgQEAgY29uZmlnIFRZUEVDX01VWF9QSTNVU0IzMDUzMg0KPiA+ICAgICAg
-ICAgICBTYXkgWSBvciBNIGlmIHlvdXIgc3lzdGVtIGhhcyBhIFBlcmljb20gUEkzVVNCMzA1MzIg
-VHlwZS1DIGNyb3NzDQo+ID4gICAgICAgICAgIHN3aXRjaCAvIG11eCBjaGlwIGZvdW5kIG9uIHNv
-bWUgZGV2aWNlcyB3aXRoIGEgVHlwZS1DIHBvcnQuDQo+ID4NCj4gPiArY29uZmlnIFRZUEVDX1NX
-SVRDSF9HUElPDQo+ID4gKyAgICAgICB0cmlzdGF0ZSAiU2ltcGxlIFN1cGVyIFNwZWVkIEFjdGl2
-ZSBTd2l0Y2ggdmlhIEdQSU8iDQo+ID4gKyAgICAgICBkZXBlbmRzIG9uIEdQSU9MSUINCj4gPiAr
-ICAgICAgIGhlbHANCj4gPiArICAgICAgICAgU2F5IFkgb3IgTSBpZiB5b3VyIHN5c3RlbSBoYXMg
-YSB0eXBlYyBzdXBlciBzcGVlZCBjaGFubmVsDQo+ID4gKyAgICAgICAgIHN3aXRjaCB2aWEgYSBz
-aW1wbGUgR1BJTyBjb250cm9sLg0KPiA+ICsNCj4gPiAgZW5kbWVudQ0KPiA+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL3VzYi90eXBlYy9tdXgvTWFrZWZpbGUNCj4gPiBiL2RyaXZlcnMvdXNiL3R5cGVj
-L211eC9NYWtlZmlsZSBpbmRleCAxMzMyZTQ2Li5lMjkzNzdjIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
-aXZlcnMvdXNiL3R5cGVjL211eC9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL3R5cGVj
-L211eC9NYWtlZmlsZQ0KPiA+IEBAIC0xLDMgKzEsNCBAQA0KPiA+ICAjIFNQRFgtTGljZW5zZS1J
-ZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4NCj4gPiAgb2JqLSQoQ09ORklHX1RZUEVDX01VWF9QSTNV
-U0IzMDUzMikgICAgKz0gcGkzdXNiMzA1MzIubw0KPiA+ICtvYmotJChDT05GSUdfVFlQRUNfU1dJ
-VENIX0dQSU8pICAgICAgICAgICAgICAgICs9IGdwaW8tc3dpdGNoLm8NCj4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy91c2IvdHlwZWMvbXV4L2dwaW8tc3dpdGNoLmMNCj4gPiBiL2RyaXZlcnMvdXNi
-L3R5cGVjL211eC9ncGlvLXN3aXRjaC5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBp
-bmRleCAwMDAwMDAwLi5iMDE4NDRjDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZl
-cnMvdXNiL3R5cGVjL211eC9ncGlvLXN3aXRjaC5jDQo+ID4gQEAgLTAsMCArMSwxMDUgQEANCj4g
-PiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArLyoqDQo+IA0KPiA+
-ICsgKiBncGlvLXN3aXRjaC5jIC0gdHlwZWMgc3dpdGNoIHZpYSBhIHNpbXBsZSBHUElPIGNvbnRy
-b2wuDQo+IA0KPiBJZiB1bmRlciBhbnkgY2lyY3Vtc3RhbmNlcyBmaWxlIHdpbGwgYmUgcmVuYW1l
-ZCB0aGlzIGJlY29tZSBvdXRkYXRlZC4NCj4gU28sIGJldHRlciBub3QgdG8gaW5jbHVkZSBmaWxl
-IG5hbWUgaW4gdGhlIGZpbGUuDQoNCk9LLCBJIHdpbGwgcmVtb3ZlIHRoaXMuDQoNClRoYW5rcw0K
-TGkgSnVuDQo+IA0KPiA+ICsgKg0KPiA+ICsgKiBDb3B5cmlnaHQgMjAxOSBOWFANCj4gPiArICog
-QXV0aG9yOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPg0KPiA+ICsgKg0KPiA+ICsgKi8NCj4gPiAr
-DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L211
-dGV4Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCj4gPiArI2luY2x1ZGUgPGxp
-bnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvZ3Bpby9jb25zdW1l
-ci5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbW9kX2RldmljZXRhYmxlLmg+DQo+ID4gKyNpbmNs
-dWRlIDxsaW51eC91c2IvdHlwZWNfbXV4Lmg+DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgZ3Bpb190eXBl
-Y19zd2l0Y2ggew0KPiA+ICsgICAgICAgc3RydWN0IHR5cGVjX3N3aXRjaCBzdzsNCj4gPiArICAg
-ICAgIHN0cnVjdCBtdXRleCBsb2NrOw0KPiA+ICsgICAgICAgc3RydWN0IGdwaW9fZGVzYyAqc3Nf
-c2VsOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGludCBzd2l0Y2hfZ3Bpb19zZXQoc3Ry
-dWN0IHR5cGVjX3N3aXRjaCAqc3csDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgZW51
-bSB0eXBlY19vcmllbnRhdGlvbiBvcmllbnRhdGlvbikgew0KPiA+ICsgICAgICAgc3RydWN0IGdw
-aW9fdHlwZWNfc3dpdGNoICpncGlvX3N3ID0gY29udGFpbmVyX29mKHN3LA0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGdwaW9fdHlwZWNfc3dpdGNoLCBzdyk7DQo+
-ID4gKw0KPiA+ICsgICAgICAgbXV0ZXhfbG9jaygmZ3Bpb19zdy0+bG9jayk7DQo+ID4gKw0KPiA+
-ICsgICAgICAgc3dpdGNoIChvcmllbnRhdGlvbikgew0KPiA+ICsgICAgICAgY2FzZSBUWVBFQ19P
-UklFTlRBVElPTl9OT1JNQUw6DQo+ID4gKyAgICAgICAgICAgICAgIGdwaW9kX3NldF92YWx1ZV9j
-YW5zbGVlcChncGlvX3N3LT5zc19zZWwsIDEpOw0KPiA+ICsgICAgICAgICAgICAgICBicmVhazsN
-Cj4gPiArICAgICAgIGNhc2UgVFlQRUNfT1JJRU5UQVRJT05fUkVWRVJTRToNCj4gPiArICAgICAg
-ICAgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKGdwaW9fc3ctPnNzX3NlbCwgMCk7DQo+
-ID4gKyAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+ICsgICAgICAgY2FzZSBUWVBFQ19PUklFTlRB
-VElPTl9OT05FOg0KPiA+ICsgICAgICAgICAgICAgICBicmVhazsNCj4gPiArICAgICAgIH0NCj4g
-PiArDQo+ID4gKyAgICAgICBtdXRleF91bmxvY2soJmdwaW9fc3ctPmxvY2spOw0KPiA+ICsNCj4g
-PiArICAgICAgIHJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHR5cGVj
-X3N3aXRjaF9ncGlvX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4gPiAr
-ICAgICAgIHN0cnVjdCBncGlvX3R5cGVjX3N3aXRjaCAgICAgICAgKmdwaW9fc3c7DQo+ID4gKyAg
-ICAgICBzdHJ1Y3QgZGV2aWNlICAgICAgICAgICAgICAgICAgICpkZXYgPSAmcGRldi0+ZGV2Ow0K
-PiA+ICsgICAgICAgaW50ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXQ7DQo+ID4gKw0K
-PiA+ICsgICAgICAgZ3Bpb19zdyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqZ3Bpb19zdyks
-IEdGUF9LRVJORUwpOw0KPiA+ICsgICAgICAgaWYgKCFncGlvX3N3KQ0KPiA+ICsgICAgICAgICAg
-ICAgICByZXR1cm4gLUVOT01FTTsNCj4gPiArDQo+ID4gKyAgICAgICBwbGF0Zm9ybV9zZXRfZHJ2
-ZGF0YShwZGV2LCBncGlvX3N3KTsNCj4gPiArDQo+ID4gKyAgICAgICBncGlvX3N3LT5zdy5kZXYg
-PSBkZXY7DQo+ID4gKyAgICAgICBncGlvX3N3LT5zdy5zZXQgPSBzd2l0Y2hfZ3Bpb19zZXQ7DQo+
-ID4gKyAgICAgICBtdXRleF9pbml0KCZncGlvX3N3LT5sb2NrKTsNCj4gPiArDQo+ID4gKyAgICAg
-ICAvKiBHZXQgdGhlIHN1cGVyIHNwZWVkIGFjdGl2ZSBjaGFubmVsIHNlbGVjdGlvbiBHUElPICov
-DQo+ID4gKyAgICAgICBncGlvX3N3LT5zc19zZWwgPSBkZXZtX2dwaW9kX2dldChkZXYsIE5VTEws
-IEdQSU9EX09VVF9MT1cpOw0KPiA+ICsgICAgICAgaWYgKElTX0VSUihncGlvX3N3LT5zc19zZWwp
-KQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihncGlvX3N3LT5zc19zZWwpOw0K
-PiA+ICsNCj4gPiArICAgICAgIHJldCA9IHR5cGVjX3N3aXRjaF9yZWdpc3RlcigmZ3Bpb19zdy0+
-c3cpOw0KPiA+ICsgICAgICAgaWYgKHJldCkgew0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJy
-KGRldiwgIkVycm9yIHJlZ2lzdGVyaW5nIHR5cGVjIHN3aXRjaDogJWRcbiIsIHJldCk7DQo+ID4g
-KyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsg
-ICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgdHlwZWNfc3dp
-dGNoX2dwaW9fcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4gPiArICAg
-ICAgIHN0cnVjdCBncGlvX3R5cGVjX3N3aXRjaCAqZ3Bpb19zdyA9DQo+ID4gK3BsYXRmb3JtX2dl
-dF9kcnZkYXRhKHBkZXYpOw0KPiA+ICsNCj4gPiArICAgICAgIHR5cGVjX3N3aXRjaF91bnJlZ2lz
-dGVyKCZncGlvX3N3LT5zdyk7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4gK30N
-Cj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9mX3R5cGVjX3N3
-aXRjaF9ncGlvX21hdGNoW10gPSB7DQo+ID4gKyAgICAgICB7IC5jb21wYXRpYmxlID0gIm54cCxw
-dG4zNjA0MyIgfSwNCj4gPiArICAgICAgIHsgLyogU2VudGluZWwgKi8gfQ0KPiA+ICt9Ow0KPiA+
-ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBvZl90eXBlY19zd2l0Y2hfZ3Bpb19tYXRjaCk7DQo+
-ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciB0eXBlY19zd2l0Y2hfZ3Bp
-b19kcml2ZXIgPSB7DQo+ID4gKyAgICAgICAucHJvYmUgICAgICAgICAgPSB0eXBlY19zd2l0Y2hf
-Z3Bpb19wcm9iZSwNCj4gPiArICAgICAgIC5yZW1vdmUgICAgICAgICA9IHR5cGVjX3N3aXRjaF9n
-cGlvX3JlbW92ZSwNCj4gPiArICAgICAgIC5kcml2ZXIgICAgICAgICA9IHsNCj4gPiArICAgICAg
-ICAgICAgICAgLm5hbWUgICA9ICJ0eXBlYy1zd2l0Y2gtZ3BpbyIsDQo+ID4gKyAgICAgICAgICAg
-ICAgIC5vZl9tYXRjaF90YWJsZSA9IG9mX3R5cGVjX3N3aXRjaF9ncGlvX21hdGNoLA0KPiA+ICsg
-ICAgICAgfSwNCj4gPiArfTsNCj4gPiArDQo+ID4gK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIodHlw
-ZWNfc3dpdGNoX2dwaW9fZHJpdmVyKTsNCj4gPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0K
-PiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlR5cGVDIFN1cGVyIFNwZWVkIFN3aXRjaCBHUElPIGRy
-aXZlciIpOw0KPiA+ICtNT0RVTEVfQVVUSE9SKCJKdW4gTGkgPGp1bi5saUBueHAuY29tPiIpOw0K
-PiA+IC0tDQo+ID4gMi43LjQNCj4gPg0KPiANCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRz
-LA0KPiBBbmR5IFNoZXZjaGVua28NCg==
+On Fri, Mar 1, 2019 at 3:25 AM Jun Li <jun.li@nxp.com> wrote:
+>
+> This patch adds a simple typec switch driver which only needs
+> a GPIO to switch the super speed active channel according to
+> typec orientation.
+
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+One minor below.
+
+>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+>
+> Changes for v2:
+> - Use the correct head files for gpio api and of_device_id:
+>   #include <linux/gpio/consumer.h>
+>   #include <linux/mod_devicetable.h>
+> - Add driver dependency on GPIOLIB
+>
+>  drivers/usb/typec/mux/Kconfig       |   7 +++
+>  drivers/usb/typec/mux/Makefile      |   1 +
+>  drivers/usb/typec/mux/gpio-switch.c | 105 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 113 insertions(+)
+>
+> diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
+> index 01ed0d5..27120e6 100644
+> --- a/drivers/usb/typec/mux/Kconfig
+> +++ b/drivers/usb/typec/mux/Kconfig
+> @@ -9,4 +9,11 @@ config TYPEC_MUX_PI3USB30532
+>           Say Y or M if your system has a Pericom PI3USB30532 Type-C cross
+>           switch / mux chip found on some devices with a Type-C port.
+>
+> +config TYPEC_SWITCH_GPIO
+> +       tristate "Simple Super Speed Active Switch via GPIO"
+> +       depends on GPIOLIB
+> +       help
+> +         Say Y or M if your system has a typec super speed channel
+> +         switch via a simple GPIO control.
+> +
+>  endmenu
+> diff --git a/drivers/usb/typec/mux/Makefile b/drivers/usb/typec/mux/Makefile
+> index 1332e46..e29377c 100644
+> --- a/drivers/usb/typec/mux/Makefile
+> +++ b/drivers/usb/typec/mux/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>
+>  obj-$(CONFIG_TYPEC_MUX_PI3USB30532)    += pi3usb30532.o
+> +obj-$(CONFIG_TYPEC_SWITCH_GPIO)                += gpio-switch.o
+> diff --git a/drivers/usb/typec/mux/gpio-switch.c b/drivers/usb/typec/mux/gpio-switch.c
+> new file mode 100644
+> index 0000000..b01844c
+> --- /dev/null
+> +++ b/drivers/usb/typec/mux/gpio-switch.c
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/**
+
+> + * gpio-switch.c - typec switch via a simple GPIO control.
+
+If under any circumstances file will be renamed this become outdated.
+So, better not to include file name in the file.
+
+> + *
+> + * Copyright 2019 NXP
+> + * Author: Jun Li <jun.li@nxp.com>
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/usb/typec_mux.h>
+> +
+> +struct gpio_typec_switch {
+> +       struct typec_switch sw;
+> +       struct mutex lock;
+> +       struct gpio_desc *ss_sel;
+> +};
+> +
+> +static int switch_gpio_set(struct typec_switch *sw,
+> +                          enum typec_orientation orientation)
+> +{
+> +       struct gpio_typec_switch *gpio_sw = container_of(sw,
+> +                               struct gpio_typec_switch, sw);
+> +
+> +       mutex_lock(&gpio_sw->lock);
+> +
+> +       switch (orientation) {
+> +       case TYPEC_ORIENTATION_NORMAL:
+> +               gpiod_set_value_cansleep(gpio_sw->ss_sel, 1);
+> +               break;
+> +       case TYPEC_ORIENTATION_REVERSE:
+> +               gpiod_set_value_cansleep(gpio_sw->ss_sel, 0);
+> +               break;
+> +       case TYPEC_ORIENTATION_NONE:
+> +               break;
+> +       }
+> +
+> +       mutex_unlock(&gpio_sw->lock);
+> +
+> +       return 0;
+> +}
+> +
+> +static int typec_switch_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct gpio_typec_switch        *gpio_sw;
+> +       struct device                   *dev = &pdev->dev;
+> +       int                             ret;
+> +
+> +       gpio_sw = devm_kzalloc(dev, sizeof(*gpio_sw), GFP_KERNEL);
+> +       if (!gpio_sw)
+> +               return -ENOMEM;
+> +
+> +       platform_set_drvdata(pdev, gpio_sw);
+> +
+> +       gpio_sw->sw.dev = dev;
+> +       gpio_sw->sw.set = switch_gpio_set;
+> +       mutex_init(&gpio_sw->lock);
+> +
+> +       /* Get the super speed active channel selection GPIO */
+> +       gpio_sw->ss_sel = devm_gpiod_get(dev, NULL, GPIOD_OUT_LOW);
+> +       if (IS_ERR(gpio_sw->ss_sel))
+> +               return PTR_ERR(gpio_sw->ss_sel);
+> +
+> +       ret = typec_switch_register(&gpio_sw->sw);
+> +       if (ret) {
+> +               dev_err(dev, "Error registering typec switch: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int typec_switch_gpio_remove(struct platform_device *pdev)
+> +{
+> +       struct gpio_typec_switch *gpio_sw = platform_get_drvdata(pdev);
+> +
+> +       typec_switch_unregister(&gpio_sw->sw);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id of_typec_switch_gpio_match[] = {
+> +       { .compatible = "nxp,ptn36043" },
+> +       { /* Sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, of_typec_switch_gpio_match);
+> +
+> +static struct platform_driver typec_switch_gpio_driver = {
+> +       .probe          = typec_switch_gpio_probe,
+> +       .remove         = typec_switch_gpio_remove,
+> +       .driver         = {
+> +               .name   = "typec-switch-gpio",
+> +               .of_match_table = of_typec_switch_gpio_match,
+> +       },
+> +};
+> +
+> +module_platform_driver(typec_switch_gpio_driver);
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("TypeC Super Speed Switch GPIO driver");
+> +MODULE_AUTHOR("Jun Li <jun.li@nxp.com>");
+> --
+> 2.7.4
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
