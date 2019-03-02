@@ -1,14 +1,12 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 01/15] clk: sunxi-ng: Mark msgbox clocks as critical
-Date: Fri,  1 Mar 2019 22:29:37 -0600
-Message-ID: <20190302042951.53671-2-samuel@sholland.org>
-References: <20190302042951.53671-1-samuel@sholland.org>
+Subject: [PATCH v3 00/15] Allwinner sunxi message box support
+Date: Fri,  1 Mar 2019 22:29:36 -0600
+Message-ID: <20190302042951.53671-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-sunxi+bncBDA2PU6QWEARBQ4N5DRQKGQELBT7BVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190302042951.53671-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,138 +17,112 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The msgbox clock is critical because the hardware it controls is shared
-between Linux and system firmware. The message box may be used by the
-EL3 secure monitor's PSCI implementation. On 64-bit sunxi SoCs, this is
-provided by ARM TF-A; 32-bit SoCs use a different implementation. The
-secure monitor uses the message box to forward requests to power
-management firmware running on a separate CPU.
+This series adds support for the "hardware message box" in sun8i, sun9i,
+and sun50i SoCs, used for communication with the ARISC management
+processor (the platform's equivalent of the ARM SCP). The end goal is to
+use the arm_scpi driver as a client, communicating with firmware running
+on the AR100 CPU, or to use the mailbox to forward NMIs that the
+firmware picks up from R_INTC.
 
-It is not enough for the secure monitor to enable the clock each time
-Linux performs a SMC into EL3, as both the firmware and Linux can run
-concurrently on separate CPUs. So it is never safe for Linux to turn
-this clock off, and it should be marked as critical.
+Unfortunately, the ARM SCPI client no longer works with this driver
+since it now exposes all 8 hardware FIFOs individually. The SCPI client
+could be made to work (and I posted proof-of-concept code to that effect
+with v1 of this series), but that is a low priority, as Linux does not
+directly use SCPI with the current firmware version; all SCPI use goes
+through ATF via PSCI.
 
-At this time, such power management firmware only exists for the A64 and
-H5 SoCs.  However, it makes sense to take care of all CCU drivers now
-for consistency, and to ease the transition in the future once firmware
-is ported to the other SoCs.
+An example usage is included at the end of this patch series. The IRQ
+forwarding code is WIP and not even RFC quality yet, but it does work.
+To build the firmware component, run:
 
-Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
----
- drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 3 ++-
- drivers/clk/sunxi-ng/ccu-sun50i-h6.c  | 3 ++-
- drivers/clk/sunxi-ng/ccu-sun8i-a23.c  | 3 ++-
- drivers/clk/sunxi-ng/ccu-sun8i-a33.c  | 3 ++-
- drivers/clk/sunxi-ng/ccu-sun8i-a83t.c | 3 ++-
- drivers/clk/sunxi-ng/ccu-sun8i-h3.c   | 3 ++-
- drivers/clk/sunxi-ng/ccu-sun9i-a80.c  | 3 ++-
- 7 files changed, 14 insertions(+), 7 deletions(-)
+  git clone https://github.com/crust-firmware/meta meta
+  git clone https://github.com/smaeul/crust -b linux-mailbox-example meta/crust
+  cd meta
+  make
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-index 932836d26e2b..22c8de3546e6 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-@@ -349,8 +349,9 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
- 		      0x064, BIT(12), 0);
- static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
- 		      0x064, BIT(20), 0);
-+/* Used for communication between firmware components at runtime */
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x064, BIT(21), 0);
-+		      0x064, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x064, BIT(22), 0);
- 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-index 139e8389615c..02b10ba6f4ce 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-@@ -339,8 +339,9 @@ static SUNXI_CCU_GATE(bus_vp9_clk, "bus-vp9", "psi-ahb1-ahb2",
- static SUNXI_CCU_GATE(bus_dma_clk, "bus-dma", "psi-ahb1-ahb2",
- 		      0x70c, BIT(0), 0);
- 
-+/* Used for communication between firmware components at runtime */
- static SUNXI_CCU_GATE(bus_msgbox_clk, "bus-msgbox", "psi-ahb1-ahb2",
--		      0x71c, BIT(0), 0);
-+		      0x71c, BIT(0), CLK_IS_CRITICAL);
- 
- static SUNXI_CCU_GATE(bus_spinlock_clk, "bus-spinlock", "psi-ahb1-ahb2",
- 		      0x72c, BIT(0), 0);
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
-index a4fa2945f230..d4eeef69de52 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
-@@ -262,8 +262,9 @@ static SUNXI_CCU_GATE(bus_de_fe_clk,	"bus-de-fe",	"ahb1",
- 		      0x064, BIT(14), 0);
- static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
- 		      0x064, BIT(20), 0);
-+/* Used for communication between firmware components at runtime */
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x064, BIT(21), 0);
-+		      0x064, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x064, BIT(22), 0);
- static SUNXI_CCU_GATE(bus_drc_clk,	"bus-drc",	"ahb1",
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
-index c7bf814dfd2b..66d958ba86cc 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
-@@ -274,8 +274,9 @@ static SUNXI_CCU_GATE(bus_de_fe_clk,	"bus-de-fe",	"ahb1",
- 		      0x064, BIT(14), 0);
- static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
- 		      0x064, BIT(20), 0);
-+/* Used for communication between firmware components at runtime */
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x064, BIT(21), 0);
-+		      0x064, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x064, BIT(22), 0);
- static SUNXI_CCU_GATE(bus_drc_clk,	"bus-drc",	"ahb1",
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-index 2d6555d73170..24166609fd03 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-@@ -346,8 +346,9 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
- 		      0x064, BIT(12), 0);
- static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
- 		      0x064, BIT(20), 0);
-+/* Used for communication between firmware components at runtime */
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x064, BIT(21), 0);
-+		      0x064, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x064, BIT(22), 0);
- 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-index e71e2451c2e3..66777bff86e0 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-@@ -280,8 +280,9 @@ static SUNXI_CCU_GATE(bus_de_clk,	"bus-de",	"ahb1",
- 		      0x064, BIT(12), 0);
- static SUNXI_CCU_GATE(bus_gpu_clk,	"bus-gpu",	"ahb1",
- 		      0x064, BIT(20), 0);
-+/* Used for communication between firmware components at runtime */
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x064, BIT(21), 0);
-+		      0x064, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x064, BIT(22), 0);
- 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
-index 8936ef87652c..40b16cdcc98b 100644
---- a/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80.c
-@@ -755,8 +755,9 @@ static SUNXI_CCU_GATE(bus_usb_clk,	"bus-usb",	"ahb1",
- 		      0x584, BIT(1), 0);
- static SUNXI_CCU_GATE(bus_gmac_clk,	"bus-gmac",	"ahb1",
- 		      0x584, BIT(17), 0);
-+/* Used for communication between firmware components at runtime */
- static SUNXI_CCU_GATE(bus_msgbox_clk,	"bus-msgbox",	"ahb1",
--		      0x584, BIT(21), 0);
-+		      0x584, BIT(21), CLK_IS_CRITICAL);
- static SUNXI_CCU_GATE(bus_spinlock_clk,	"bus-spinlock",	"ahb1",
- 		      0x584, BIT(22), 0);
- static SUNXI_CCU_GATE(bus_hstimer_clk,	"bus-hstimer",	"ahb1",
+That will by default produce a U-Boot + ATF + SCP firmware image in
+[meta/]build/pinebook/u-boot-sunxi-with-spl.bin. See the top-level README.md
+for more information (like cross-compiler setup). The IRQ-forwarding mailbox
+server is implemented in [meta/crust/]common/irqf.c.
+
+With that firmware and the full patch series here (on top of
+torvalds/master), Linux boots and is able to receive NMIs from the PMIC
+(i.e. use `showkey` to see that the power button works, and see that
+/proc/interrupts updates). As an added bonus, suspend/resume also mostly
+works :)
+
+Changes from v2:
+  - Merge patches 1-3
+  - Add a comment in the code explaining the CLK_IS_CRITICAL usage
+  - Add a patch to mark the AR100 clocks as critical
+  - Use YAML for the device tree binding
+  - Include a not-for-merge example usage of the mailbox.
+
+Changes from v1:
+  - Marked message box clocks as critical instead of hacks in the driver
+  - 8 unidirectional channels instead of 4 bidirectional pairs
+  - Use per-SoC compatible strings and an A31 fallback compatible
+  - Dropped the mailbox framework patch
+  - Include DT patches for SoCs that document the message box
+
+Samuel Holland (15):
+  clk: sunxi-ng: Mark msgbox clocks as critical
+  clk: sunxi-ng: Mark AR100 clocks as critical
+  dt-bindings: mailbox: Add a sunxi message box binding
+  mailbox: sunxi-msgbox: Add a new mailbox driver
+  ARM: dts: sunxi: a80: Add msgbox node
+  ARM: dts: sunxi: a83t: Add msgbox node
+  ARM: dts: sunxi: h3/h5: Add msgbox node
+  arm64: dts: allwinner: a64: Add msgbox node
+  arm64: dts: allwinner: h6: Add msgbox node
+  [NOT FOR MERGE] clk: sunxi-ng: sun8i: Avoid turning off unused PRCM
+    gates
+  [NOT FOR MERGE] dt-bindings: Add a binding for a mailbox-backed
+    interrupt controller
+  [NOT FOR MERGE] irqchip/mbox: Introduce a mailbox-backed irqchip
+    driver
+  [NOT FOR MERGE] arm64: dts: allwinner: a64: Add interrupt controller
+    node
+  [NOT FOR MERGE] arm64: dts: allwinner: a64: Convert DTS to use
+    msgbox_intc
+  [NOT FOR MERGE] arm64: dts: allwinner: a64: Remove unused r_intc
+
+ .../interrupt-controller/mbox-intc.txt        |  33 ++
+ .../mailbox/allwinner,sunxi-msgbox.yaml       |  79 +++++
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  10 +
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  10 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  10 +
+ .../allwinner/sun50i-a64-amarula-relic.dts    |   4 +-
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts |   4 +-
+ .../dts/allwinner/sun50i-a64-nanopi-a64.dts   |   4 +-
+ .../dts/allwinner/sun50i-a64-olinuxino.dts    |   4 +-
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |   4 +-
+ .../boot/dts/allwinner/sun50i-a64-pine64.dts  |   4 +-
+ .../dts/allwinner/sun50i-a64-pinebook.dts     |   4 +-
+ .../boot/dts/allwinner/sun50i-a64-sopine.dtsi |   4 +-
+ .../boot/dts/allwinner/sun50i-a64-teres-i.dts |   4 +-
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  27 +-
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c         |   3 +-
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c        |   2 +-
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c          |   3 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-a23.c          |   3 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-a33.c          |   3 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-a83t.c         |   3 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c           |   3 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c            |  20 +-
+ drivers/clk/sunxi-ng/ccu-sun9i-a80.c          |   3 +-
+ drivers/irqchip/Kconfig                       |   9 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-mbox.c                    | 199 +++++++++++
+ drivers/mailbox/Kconfig                       |  11 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/sunxi-msgbox.c                | 315 ++++++++++++++++++
+ 31 files changed, 750 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
+ create mode 100644 drivers/irqchip/irq-mbox.c
+ create mode 100644 drivers/mailbox/sunxi-msgbox.c
+
 -- 
 2.19.2
