@@ -1,7 +1,8 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 09/15] arm64: dts: allwinner: h6: Add msgbox node
-Date: Fri,  1 Mar 2019 22:29:45 -0600
-Message-ID: <20190302042951.53671-10-samuel@sholland.org>
+Subject: [PATCH v3 10/15] [NOT FOR MERGE] clk: sunxi-ng: sun8i:
+ Avoid turning off unused PRCM gates
+Date: Fri,  1 Mar 2019 22:29:46 -0600
+Message-ID: <20190302042951.53671-11-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
@@ -19,35 +20,71 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The H6 SoC contains a message box that can be used to send messages and
-interrupts back and forth between the ARM application CPUs and the ARISC
-coprocessor. Add a device tree node for it.
+Hardware attached to AHB0/APB0 and controlled in the PRCM is designed to
+be used by firmware running on the ARISC core. However, some devices in
+this block (specifically the I2C, RSB, PIO, and CIR-RX) have native
+Linux drivers and are already in the device tree. In particular, the RSB
+and I2C buses may have sound chips and display bridges hanging off of
+them that cannot easily be driven from firmware.
+
+To facilitate sharing this hardware block between Linux and system
+firmware, avoid turning off PRCM clock gates that are unreferenced in
+the device tree. We assume that firmware has already optimally
+configured these clocks before booting Linux.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index d93a7add67e7..950681b2f7d9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -189,6 +189,16 @@
- 			#interrupt-cells = <3>;
- 		};
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
+index 90b3530e2c18..603de1e853e9 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
+@@ -92,19 +92,19 @@ static struct ccu_div apb0_clk = {
+ static SUNXI_CCU_M(a83t_apb0_clk, "apb0", "ahb0", 0x0c, 0, 2, 0);
  
-+		msgbox: mailbox@3003000 {
-+			compatible = "allwinner,sun50i-h6-msgbox",
-+				     "allwinner,sun6i-a31-msgbox";
-+			reg = <0x03003000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MSGBOX>;
-+			resets = <&ccu RST_BUS_MSGBOX>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <1>;
-+		};
-+
- 		pio: pinctrl@300b000 {
- 			compatible = "allwinner,sun50i-h6-pinctrl";
- 			reg = <0x0300b000 0x400>;
+ static SUNXI_CCU_GATE(apb0_pio_clk,	"apb0-pio",	"apb0",
+-		      0x28, BIT(0), 0);
++		      0x28, BIT(0), CLK_IGNORE_UNUSED);
+ static SUNXI_CCU_GATE(apb0_ir_clk,	"apb0-ir",	"apb0",
+-		      0x28, BIT(1), 0);
++		      0x28, BIT(1), CLK_IGNORE_UNUSED);
+ static SUNXI_CCU_GATE(apb0_timer_clk,	"apb0-timer",	"apb0",
+-		      0x28, BIT(2), 0);
++		      0x28, BIT(2), CLK_IGNORE_UNUSED);
+ static SUNXI_CCU_GATE(apb0_rsb_clk,	"apb0-rsb",	"apb0",
+-		      0x28, BIT(3), 0);
++		      0x28, BIT(3), CLK_IGNORE_UNUSED);
+ static SUNXI_CCU_GATE(apb0_uart_clk,	"apb0-uart",	"apb0",
+-		      0x28, BIT(4), 0);
++		      0x28, BIT(4), CLK_IGNORE_UNUSED);
+ static SUNXI_CCU_GATE(apb0_i2c_clk,	"apb0-i2c",	"apb0",
+-		      0x28, BIT(6), 0);
++		      0x28, BIT(6), CLK_IGNORE_UNUSED);
+ static SUNXI_CCU_GATE(apb0_twd_clk,	"apb0-twd",	"apb0",
+-		      0x28, BIT(7), 0);
++		      0x28, BIT(7), CLK_IGNORE_UNUSED);
+ 
+ static const char * const r_mod0_default_parents[] = { "osc32k", "osc24M" };
+ static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
+@@ -113,7 +113,7 @@ static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
+ 				  16, 2,	/* P */
+ 				  24, 2,	/* mux */
+ 				  BIT(31),	/* gate */
+-				  0);
++				  CLK_IGNORE_UNUSED);
+ 
+ static const char *const a83t_r_mod0_parents[] = { "osc16M", "osc24M" };
+ static const struct ccu_mux_fixed_prediv a83t_ir_predivs[] = {
+@@ -138,7 +138,7 @@ static struct ccu_mp a83t_ir_clk = {
+ 		.hw.init	= CLK_HW_INIT_PARENTS("ir",
+ 						      a83t_r_mod0_parents,
+ 						      &ccu_mp_ops,
+-						      0),
++						      CLK_IGNORE_UNUSED),
+ 	},
+ };
+ 
 -- 
 2.19.2
