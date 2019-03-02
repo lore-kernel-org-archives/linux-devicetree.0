@@ -1,36 +1,66 @@
-From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 1/2] dt: bindings: add dt entry for XO calibration support
-Date: Sat,  2 Mar 2019 10:36:34 +0530
-Message-ID: <20190302050635.17694-2-govinds@codeaurora.org>
-References: <20190302050635.17694-1-govinds@codeaurora.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V1 02/11] mmc: sdhci: allow host to specify maximum tuning loops
+Date: Fri, 1 Mar 2019 21:20:16 -0800
+Message-ID: <1551504025-3541-2-git-send-email-skomatineni@nvidia.com>
+References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20190302050635.17694-1-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, riteshh@codeaurora.org
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Sowjanya Komatineni <skomatineni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add dt binding to get xo calibration data support for wifi rf clock.
+As per the Host Controller Standard Specification Version 4.20,
+limitation of tuning iteration count is removed as PLL locking
+time can be longer than UHS-1 tuning due to larger PVT fluctuation
+and it will result in increase of tuning iteration to complete the
+tuning.
 
-Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+This patch creates a hook get_max_tuning_loop_count to allow hosts
+to specify maximum tuning iterations and updates execute_tuning
+to use the specified maximum tuning iteration count.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci.c | 7 +++++--
+ drivers/mmc/host/sdhci.h | 1 +
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index ae661e65354e..ab8042866e83 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -81,6 +81,7 @@ Optional properties:
- 	Definition: Name of external front end module used. Some valid FEM names
- 		    for example: "microsemi-lx5586", "sky85703-11"
- 		    and "sky85803" etc.
-+- xo-cal-data: xo cal offset to be configured in xo trim register.
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index a8141ff9be03..e9e919218006 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2366,12 +2366,15 @@ EXPORT_SYMBOL_GPL(sdhci_send_tuning);
+ static int __sdhci_execute_tuning(struct sdhci_host *host, u32 opcode)
+ {
+ 	int i;
++	int tuning_loop_count = MAX_TUNING_LOOP;
  
- Example (to supply PCI based wifi block details):
++	if (host->ops->get_max_tuning_loop_count)
++		tuning_loop_count = host->ops->get_max_tuning_loop_count(host);
+ 	/*
+ 	 * Issue opcode repeatedly till Execute Tuning is set to 0 or the number
+-	 * of loops reaches 40 times.
++	 * of loops reaches tuning loop count.
+ 	 */
+-	for (i = 0; i < MAX_TUNING_LOOP; i++) {
++	for (i = 0; i < tuning_loop_count; i++) {
+ 		u16 ctrl;
  
+ 		sdhci_send_tuning(host, opcode);
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 01002cba1359..c80e0d6f9b10 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -638,6 +638,7 @@ struct sdhci_ops {
+ 	unsigned int    (*get_ro)(struct sdhci_host *host);
+ 	void		(*reset)(struct sdhci_host *host, u8 mask);
+ 	int	(*platform_execute_tuning)(struct sdhci_host *host, u32 opcode);
++	int	(*get_max_tuning_loop_count)(struct sdhci_host *host);
+ 	void	(*set_uhs_signaling)(struct sdhci_host *host, unsigned int uhs);
+ 	void	(*hw_reset)(struct sdhci_host *host);
+ 	void    (*adma_workaround)(struct sdhci_host *host, u32 intmask);
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
